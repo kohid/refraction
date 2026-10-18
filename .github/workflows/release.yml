@@ -1,14 +1,31 @@
 name: Release
 
-# Pushing a tag such as v0.1.0 builds dist/refraction.zip and attaches it to a GitHub Release.
+# Builds dist/refraction.zip and attaches it (plus a SHA-256 file) to the GitHub Release of a tag.
 # The plugin's built-in updater reads the asset named "refraction.zip" from the latest release.
+#
+# Runs when a tag such as v0.1.2 is pushed, or manually from the Actions tab (Run workflow) with the
+# name of an existing tag. Either way the release for the tag is created if missing and updated
+# (assets replaced) if it already exists, for example one created by hand in the GitHub UI.
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to build and publish, for example v0.1.2'
+        required: true
+        type: string
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
 
 jobs:
   package:
@@ -16,14 +33,28 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Check out
+      - name: Validate tag name
+        run: |
+          if ! printf '%s' "$RELEASE_TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::'$RELEASE_TAG' is not a release tag like v1.2.3"
+            exit 1
+          fi
+
+      - name: Check out the tag
         uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
+
+      # The lock file is generated with this exact npm version. Pinning it keeps `npm ci` deterministic
+      # whatever npm the runner image happens to ship.
+      - name: Pin npm
+        run: npm install -g npm@11.12.1 && npm --version
 
       - name: Set up PHP and Composer
         uses: shivammathur/setup-php@v2
@@ -38,16 +69,38 @@ jobs:
       # Installs production Composer dependencies, runs `npm run build`, packages dist/refraction.zip
       # and fails if the tag (vX.Y.Z) does not match the version in refraction.php, readme.txt and package.json.
       - name: Build release package
-        run: node scripts/build-release.mjs --tag "${GITHUB_REF_NAME}"
+        run: node scripts/build-release.mjs --tag "$RELEASE_TAG"
+
+      - name: Verify package
+        run: |
+          set -euo pipefail
+          test -s dist/refraction.zip || { echo "::error::dist/refraction.zip is missing or empty"; exit 1; }
+          unzip -p dist/refraction.zip refraction/refraction.php | grep -E "^\s*\*\s*Version:\s*${RELEASE_TAG#v}\s*$"
+          unzip -l dist/refraction.zip | grep -q ' refraction/vendor/autoload.php$'
 
       - name: Checksum
-        run: cd dist && sha256sum refraction.zip | tee refraction.zip.sha256
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum refraction.zip | tee refraction.zip.sha256
+          test -s refraction.zip.sha256
 
-      - name: Create GitHub Release
+      - name: Create or update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
           files: |
             dist/refraction.zip
             dist/refraction.zip.sha256
+          fail_on_unmatched_files: true
           generate_release_notes: true
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: ${{ contains(env.RELEASE_TAG, '-') }}
+
+      - name: Verify the release has the asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' | tee /tmp/assets.txt
+          grep -qx 'refraction.zip' /tmp/assets.txt || { echo "::error::release $RELEASE_TAG has no refraction.zip asset"; exit 1; }
+          grep -qx 'refraction.zip.sha256' /tmp/assets.txt || { echo "::error::release $RELEASE_TAG has no refraction.zip.sha256 asset"; exit 1; }
