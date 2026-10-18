@@ -46,7 +46,7 @@ class Refraction_One_Menu_Manager {
 		add_action( 'admin_menu', [ $this, 'build_visible_submenu' ], 10005 );
 		add_filter( 'parent_file', [ $this, 'filter_parent_file' ] );
 		add_filter( 'submenu_file', [ $this, 'filter_submenu_file' ], 10, 2 );
-		add_action( 'admin_head', [ $this, 'hide_legacy_templates_menu' ] );
+		add_action( 'admin_menu', [ $this, 'remove_legacy_templates_menu' ], 10006 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_menu_assets' ] );
 	}
 
@@ -170,14 +170,18 @@ class Refraction_One_Menu_Manager {
 		Plugin::instance()->settings->display_home_screen();
 	}
 
-	public function hide_legacy_templates_menu(): void {
-		?>
-		<style type="text/css">
-			#menu-posts-refraction_library {
-				display: none !important;
-			}
-		</style>
-		<?php
+	/**
+	 * The template library post type adds its own top-level "Templates" menu; its pages live under
+	 * Refraction > Saved Templates now, so the duplicate is removed from the sidebar.
+	 */
+	public function remove_legacy_templates_menu(): void {
+		global $submenu;
+
+		remove_menu_page( Menu_Config::LEGACY_TEMPLATES_SLUG );
+
+		// Also drop its submenu, otherwise WordPress picks it as the parent of the library screens and
+		// "Refraction" is not highlighted there. The pages are already registered under Refraction.
+		unset( $submenu[ Menu_Config::LEGACY_TEMPLATES_SLUG ] );
 	}
 
 	public function register_flyout_items_as_hidden_submenus(): void {
