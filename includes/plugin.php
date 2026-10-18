@@ -802,6 +802,9 @@ class Plugin {
 	private function __construct() {
 		$this->register_autoloader();
 
+		// Self-hosted update check against GitHub releases (see includes/updater.php).
+		Updater::init();
+
 		$this->logger = Log_Manager::instance();
 		$this->data_manager_v2 = Data_Manager_V2::instance();
 
