@@ -469,8 +469,8 @@ body:has(#editor-one-top-bar > *) {
 		@media screen and (min-width: 783px) {
 			position: fixed;
 			inset-block-end: 0;
-			inset-inline-start: calc(var(--editor-one-sidebar-left-offset, 160px) + var(--editor-one-sidebar-navigation-width, 240px));
-			width: calc(100vw - var(--editor-one-sidebar-left-offset, 160px) - var(--editor-one-sidebar-navigation-width, 240px));
+			inset-inline-start: calc(var(--editor-one-sidebar-left-offset, 160px) + var(--editor-one-sidebar-navigation-width, 0px));
+			width: calc(100vw - var(--editor-one-sidebar-left-offset, 160px) - var(--editor-one-sidebar-navigation-width, 0px));
 		}
 	}
 
