@@ -35,7 +35,7 @@ final class Editor_Loader {
 		'wp-media',
 		'editor-current-user',
 		'editor-elements-panel-notice',
-		'editor-embedded-documents-manager',
+		'editor-site-settings',
 	];
 
 	const EXTENSIONS = [

@@ -1,11 +1,9 @@
-import { isAngieAvailable, openAngieInAskMode } from '@refraction/editor-mcp';
 import { HelpIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
 import { type ExtendedWindow } from '../../../types';
 
-const HELP_CENTER_URL = 'https://go.elementor.com/editor-top-bar-learn/';
-const HELP_CENTER_ANGIE_PROMPT = `${ __( 'Help me with', 'refraction' ) } `;
+const HELP_CENTER_URL = 'https://github.com/kohid/refraction';
 
 const dispatchHelpClickEvent = () => {
 	const extendedWindow = window as unknown as ExtendedWindow;
@@ -22,20 +20,6 @@ const dispatchHelpClickEvent = () => {
 };
 
 export default function useActionProps() {
-	const hasAngieActive = isAngieAvailable();
-
-	if ( hasAngieActive ) {
-		return {
-			title: __( 'Help Center', 'refraction' ),
-			icon: HelpIcon,
-			onClick: ( event: React.MouseEvent ) => {
-				event.preventDefault();
-				dispatchHelpClickEvent();
-				openAngieInAskMode( HELP_CENTER_ANGIE_PROMPT );
-			},
-		};
-	}
-
 	return {
 		title: __( 'Help Center', 'refraction' ),
 		href: HELP_CENTER_URL,

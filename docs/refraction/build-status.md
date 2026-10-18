@@ -46,3 +46,32 @@ Output locations: `assets/js` (179 files), `assets/css` (167 files), `assets/js/
   (`app/assets/styles/_base.scss`, `modules/admin-top-bar`, editor font previews).
 * Node 24 and npm 11.16 (`.nvmrc`/`packageManager`) were not available; the build ran on Node 22.
 * No unit tests (jest, phpunit, qunit, playwright) were run in this stage.
+
+## Boot test (stages 3-4 verification)
+
+Done in `/tmp/rsite` with WordPress (latest.zip), the SQLite Database Integration plugin (db.php drop-in), `php -S 127.0.0.1:8765`, wp-cli 2.12,
+PHP 8.3.6, and `dist/refraction.zip` unzipped into `wp-content/plugins/`. `WP_DEBUG` and `WP_DEBUG_LOG` were on.
+
+* Plugin activated with wp-cli: no output in the PHP error log.
+* wp-admin dashboard, Refraction settings/tools/system-info, template library list, plugins and updates screens: HTTP 200. Every plugin asset URL
+  referenced by those pages (83) returned 200. The Refraction "app" page (`page=refraction-app`) returned 403 for the admin in the crawl and was not investigated.
+* Frontend render of a page built with a container + heading + button: correct markup, CSS and JS enqueued.
+* Editor (`post.php?post=N&action=refraction`) in headless Chromium: loaded, panel and app bar present, 59 widgets registered, a container and heading created through
+  `$e.run`, saved, and the saved heading rendered on the frontend. 0 console errors, 0 failed requests. External hosts contacted by the editor page: `fonts.googleapis.com` / `fonts.gstatic.com`
+  (Google Fonts) and `secure.gravatar.com` (avatar). The `refraction-v2-editor-mcp` dependency problem found on the first boot was fixed (see below).
+* Updater: logic verified with mocked GitHub responses (newer, same, older, missing asset, prerelease, bad tag, HTTP error, 404, caching, plugins_api, folder rename, bad package).
+  A real call to `api.github.com/repos/kohid/refraction` returned no usable release (the repository has no release yet). `REFRACTION_DISABLE_UPDATE_CHECK` registers no hooks.
+
+Fixes that came out of the boot test:
+
+* Fresh installs had the Container experiment off because upstream gates it on "installed on or after 3.16.0" and Refraction starts at 0.1.0. Added
+  `REFRACTION_UPSTREAM_VERSION` (4.4.0); install-version checks (`Upgrade\Manager::install_compare`, `had_install_prior_to`, experiments `install_compare`) treat any Refraction install as at least that version.
+* Upstream DB migrations (`_v_0_3_2` ... `_v_3_26_0`) would have been queued on the first Refraction update (their versions are higher than 0.1.0). They are listed in
+  `Upgrade\Manager::LEGACY_UPGRADES` and never queued. New Refraction migrations are any other `_v_X_Y_Z` method.
+* Documents saved by Refraction (`_refraction_version` 0.x) no longer get the `refraction-bc-flex-widget` legacy class.
+* Editor packages that depended on unregistered script handles (`editor-mcp`, `editor-styles-repository`) were silently dropped by WordPress: removed the Angie/Connect/feedback
+  code from `editor-app-bar` and `editor-audits`, dropped `editor-embedded-documents-manager` from the loader, and loaded `editor-site-settings` (needed by `editor-agents`).
+* Template library `onDocumentLoaded` no longer assumes `document.config.remoteLibrary`.
+
+Not tested: Windows hosts, MySQL/MariaDB (SQLite only), multisite, upgrading from an older Refraction zip through the Plugins screen (only the filter logic), the Kit import/export app page, the
+template library UI, popups/forms/other flows in the editor, RTL, and any of the jest / phpunit / qunit / playwright suites (none were run).

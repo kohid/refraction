@@ -124,10 +124,10 @@ class Manager extends Base_Object {
 		if ( empty( $installs_history ) ) {
 			// Fresh installation: upgrade manager hasn't written history yet on this first request.
 			// Use the current plugin version as the effective first-install version.
-			return version_compare( REFRACTION_VERSION, $version, '>=' );
+			return version_compare( REFRACTION_UPSTREAM_VERSION, $version, '>=' );
 		}
 
-		$cleaned_version = preg_replace( '/-(beta|cloud|dev)\d*$/', '', key( $installs_history ) );
+		$cleaned_version = Upgrade_Manager::get_effective_install_version( preg_replace( '/-(beta|cloud|dev)\d*$/', '', key( $installs_history ) ) );
 
 		return version_compare(
 			$cleaned_version,

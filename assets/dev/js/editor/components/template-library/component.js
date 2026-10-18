@@ -103,7 +103,8 @@ export default class Component extends ComponentModalBase {
 	}
 
 	onDocumentLoaded( document ) {
-		this.setDefaultRoute( document.config.remoteLibrary.default_route );
+		// The remote library was removed; only the local library route remains.
+		this.setDefaultRoute( document.config.remoteLibrary?.default_route ?? 'library/templates/my-templates' );
 
 		this.maybeOpenLibrary();
 	}

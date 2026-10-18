@@ -45,7 +45,6 @@
     "@refraction/http-client": "4.4.0",
     "@refraction/editor": "4.4.0",
     "@refraction/editor-documents": "4.4.0",
-    "@refraction/editor-mcp": "4.4.0",
     "@refraction/editor-responsive": "4.4.0",
     "@refraction/editor-v1-adapters": "4.4.0",
     "@elementor/icons": "~1.78.1",

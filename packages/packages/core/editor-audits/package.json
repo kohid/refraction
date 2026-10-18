@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@refraction/editor": "4.4.0",
-    "@refraction/editor-mcp": "4.4.0",
     "@refraction/editor-app-bar": "4.4.0",
     "@refraction/editor-elements": "4.4.0",
     "@refraction/editor-floating-panels": "4.4.0",

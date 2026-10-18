@@ -390,7 +390,11 @@ abstract class Document extends Controls_Stack {
 
 		$version_meta = $this->get_main_meta( '_refraction_version' );
 
-		if ( version_compare( $version_meta, '2.5.0', '<' ) ) {
+		// Documents saved by Refraction itself (0.x) are never "legacy"; documents without a version or
+		// saved by upstream releases older than 2.5.0 still get the flex-widget back-compat class.
+		$is_refraction_series = $version_meta && version_compare( $version_meta, '1.0.0', '<' );
+
+		if ( ! $is_refraction_series && version_compare( $version_meta, '2.5.0', '<' ) ) {
 			$attributes['class'] .= ' refraction-bc-flex-widget';
 		}
 
