@@ -1,0 +1,16 @@
+Refraction
+==========
+
+Refraction is a modified version of Elementor (https://github.com/elementor/elementor),
+version 4.4.0, copyright Elementor Ltd. and contributors, licensed under the
+GNU General Public License, version 3 or later (see license.txt).
+
+Changes made to the original are recorded in this repository's git history,
+starting from the commit "chore: import upstream Elementor 4.4.0 source as
+baseline".
+
+Refraction is not affiliated with, endorsed by, or sponsored by Elementor Ltd.
+"Elementor" is a trademark of its owner. It appears in this repository only to
+state where the code comes from, and in code that has not been renamed yet.
+
+Third-party libraries bundled in this plugin keep their own licenses.
