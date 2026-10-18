@@ -1,0 +1,122 @@
+.elementor-star-rating {
+	color: $gray-mouse;
+	font-family: eicons;
+	display: inline-block;
+
+	i {
+		display: inline-block;
+		position: relative;
+		font-style: normal;
+		cursor: default;
+
+		&:before {
+			content: '\e934';
+			display: block;
+			font-size: inherit;
+			font-family: inherit;
+			position: absolute;
+			inset-block-start: 0;
+			inset-inline-start: 0;
+			overflow: hidden;
+			color: $orange;
+		}
+	}
+
+	.elementor-star-empty:before {
+		content: none;
+	}
+
+	@for $i from 1 through 9 {
+
+		.elementor-star-#{$i} {
+
+			&:before {
+				width: $i * 10%
+			}
+		}
+	}
+
+	&__wrapper {
+		display: flex;
+		align-items: center;
+	}
+
+	&__title {
+		margin-inline-end: 10px;
+	}
+}
+
+@mixin star-rating-align($device) {
+
+	.elementor-star-rating#{$device}--align {
+
+		&-start {
+			.elementor-star-rating__wrapper {
+				text-align: start;
+				justify-content: flex-start;
+			}
+		}
+
+		&-end {
+			.elementor-star-rating__wrapper {
+				text-align: end;
+				justify-content: flex-end;
+			}
+		}
+
+		&-center {
+			.elementor-star-rating__wrapper {
+				text-align: center;
+				justify-content: center;
+			}
+		}
+
+		&-justify {
+			.elementor-star-rating__wrapper {
+				text-align: justify;
+				justify-content: space-between;
+			}
+		}
+	}
+}
+
+@include star-rating-align('');
+
+@media (min-width: $screen-widescreen-min) {
+	@include star-rating-align(-widescreen);
+}
+
+@media (max-width: $screen-laptop-max) {
+	@include star-rating-align(-laptop);
+}
+
+@media (max-width: $screen-tablet-extra-max) {
+	@include star-rating-align(-tablet_extra);
+}
+
+@media (max-width: $screen-tablet-max) {
+	@include star-rating-align(-tablet);
+}
+
+@media (max-width: $screen-mobile-extra-max) {
+	@include star-rating-align(-mobile_extra);
+}
+
+@media (max-width: $screen-mobile-max) {
+	@include star-rating-align(-mobile);
+}
+
+.last-star{
+	letter-spacing: 0;
+}
+
+.elementor--star-style-star_unicode {
+
+	.elementor-star-rating {
+		font-family: 'Arial', 'Helvetica', sans-serif;
+
+		i:not(.elementor-star-empty):before {
+			content: '\002605';
+		}
+	}
+}

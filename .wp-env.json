@@ -1,0 +1,22 @@
+{
+	"core": null,
+	"phpVersion": "8.2",
+	"plugins": [
+		"./build"
+	],
+	"themes": [
+		"https://downloads.wordpress.org/theme/hello-elementor.zip"
+	],
+	"mappings": {
+		"elementor-templates": "./tests/playwright/templates",
+		"elementor-config": "./tests/wp-env/config",
+		"elementor-playwright-templates": "./templates/playwright",
+		"elementor-playwright": "./tests/playwright",
+		"wp-content/mu-plugins": "./tests/playwright/mu-plugins"
+	},
+	"config": {
+		"ELEMENTOR_SHOW_HIDDEN_EXPERIMENTS": true,
+		"SCRIPT_DEBUG": false,
+		"WP_DEBUG": false
+	}
+}

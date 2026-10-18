@@ -1,0 +1,565 @@
+<?php
+namespace Elementor\Testing\Includes;
+
+use Elementor\Plugin;
+use Elementor\Utils;
+use ElementorEditorTesting\Elementor_Test_Base;
+use ElementorEditorTesting\Kses_Test_Expectations;
+
+class Elementor_Test_Utils extends Elementor_Test_Base {
+
+	const BASE_LINK = 'https://elementor.com/pro/?utm_source=wp-role-manager&utm_campaign=gopro&utm_medium=wp-dash';
+
+	public function tearDown(): void {
+		parent::tearDown();
+
+		remove_all_filters( 'elementor/allowed_html_wrapper_tags' );
+		$this->reset_allowed_html_wrapper_tags_cache();
+
+		$_REQUEST  = [];
+		$_FILES = [];
+	}
+
+	public function test_get_allowed_html_wrapper_tags__returns_default_list() {
+		remove_all_filters( 'elementor/allowed_html_wrapper_tags' );
+		$this->reset_allowed_html_wrapper_tags_cache();
+
+		// Act.
+		$tags = Utils::get_allowed_html_wrapper_tags();
+
+		// Assert.
+		$this->assertSame( Utils::ALLOWED_HTML_WRAPPER_TAGS, $tags );
+	}
+
+	public function test_get_allowed_html_wrapper_tags__returns_filter_added_tags() {
+		// Arrange.
+		add_filter(
+			'elementor/allowed_html_wrapper_tags',
+			function ( $tags ) {
+				return array_merge( $tags, [ 'custom-tag' ] );
+			}
+		);
+
+		// Act.
+		$tags = Utils::get_allowed_html_wrapper_tags();
+
+		// Assert.
+		$this->assertContains( 'custom-tag', $tags );
+		$this->assertSame(
+			array_values( array_unique( array_merge( Utils::ALLOWED_HTML_WRAPPER_TAGS, [ 'custom-tag' ] ) ) ),
+			$tags
+		);
+	}
+
+	public function test_get_allowed_html_wrapper_tags__normalizes_filter_values() {
+		// Arrange.
+		add_filter(
+			'elementor/allowed_html_wrapper_tags',
+			function () {
+				return [ 'span', 'SPAN', 'fieldset', 'FIELDSET', 42, null, [ 'invalid' ] ];
+			}
+		);
+
+		// Act.
+		$tags = Utils::get_allowed_html_wrapper_tags();
+
+		// Assert.
+		$this->assertSame( [ 'span', 'fieldset' ], $tags );
+	}
+
+	public function test_validate_html_tag__accepts_filter_added_tag() {
+		// Arrange.
+		add_filter(
+			'elementor/allowed_html_wrapper_tags',
+			function ( $tags ) {
+				return array_merge( $tags, [ 'custom-tag' ] );
+			}
+		);
+
+		// Act & Assert.
+		$this->assertSame( 'custom-tag', Utils::validate_html_tag( 'custom-tag' ) );
+		$this->assertSame( 'div', Utils::validate_html_tag( 'script' ) );
+	}
+
+	public function test_get_allowed_html_wrapper_tags__filter_cannot_reintroduce_forbidden_tags() {
+		// Arrange.
+		add_filter(
+			'elementor/allowed_html_wrapper_tags',
+			function ( $tags ) {
+				return array_merge( $tags, Utils::FORBIDDEN_HTML_WRAPPER_TAGS, [ 'SCRIPT', 'custom-tag' ] );
+			}
+		);
+
+		// Act.
+		$tags = Utils::get_allowed_html_wrapper_tags();
+
+		// Assert.
+		foreach ( Utils::FORBIDDEN_HTML_WRAPPER_TAGS as $forbidden_tag ) {
+			$this->assertNotContains( $forbidden_tag, $tags );
+		}
+
+		$this->assertContains( 'custom-tag', $tags );
+	}
+
+	public function test_validate_html_tag__rejects_forbidden_tag_even_when_filter_allows_it() {
+		// Arrange.
+		add_filter(
+			'elementor/allowed_html_wrapper_tags',
+			function ( $tags ) {
+				return array_merge( $tags, [ 'script', 'IFRAME' ] );
+			}
+		);
+
+		// Act & Assert.
+		$this->assertSame( 'div', Utils::validate_html_tag( 'script' ) );
+		$this->assertSame( 'div', Utils::validate_html_tag( 'iframe' ) );
+	}
+
+	public function test_should_return_elementor_pro_link() {
+		$this->assertSame( self::BASE_LINK . '&utm_term=twentytwenty-one', Utils::get_pro_link( self::BASE_LINK ) );
+	}
+
+	public function test_should_return_source_of_placeholder_image() {
+		$this->assertSame( ELEMENTOR_ASSETS_URL . 'images/placeholder.png', Utils::get_placeholder_image_src() );
+	}
+
+	public function test_should_return_edit_link() {
+		$post_id = $this->factory()->create_and_get_default_post()->ID;
+		$document = Plugin::$instance->documents->get( $post_id );
+		$edit_link = $document->get_edit_url();
+		$this->assertStringContainsString( '/post.php?post=', $edit_link );
+		$this->assertStringContainsString( '&action=elementor', $edit_link );
+	}
+
+	/**
+	 * @todo need to test when DOING_AJAX is 100% defined and when it's not.
+	 */
+	public function test_should_confirm_ajax() {
+		if ( defined( 'DOING_AJAX' ) ) {
+			$this->assertTrue( wp_doing_ajax() );
+		} else {
+			$this->assertFalse( wp_doing_ajax() );
+		}
+	}
+
+	public function test_should_return_false_from_is_script_debug() {
+		$this->assertSame( Utils::is_script_debug(), defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+	}
+
+	public function test_should_get_preview_url() {
+		$post_id = $this->factory()->create_and_get_default_post()->ID;
+		$preview_url = Plugin::$instance->documents->get( $post_id )->get_preview_url();
+		$this->assertStringContainsString( '/?p=', $preview_url );
+		$this->assertStringContainsString( '&elementor-preview=', $preview_url );
+		$this->assertStringContainsString( '&ver=', $preview_url );
+	}
+
+	public function test_should_get_wordpress_preview_url() {
+		$post_id = $this->factory()->create_and_get_default_post()->ID;
+		$wp_preview_url = Plugin::$instance->documents->get( $post_id )->get_wp_preview_url();
+		$this->assertStringContainsString( '/?p=', $wp_preview_url );
+		$this->assertStringContainsString( '&preview_nonce=', $wp_preview_url );
+		$this->assertStringContainsString( '&preview=', $wp_preview_url );
+	}
+
+	/**
+	 * @throws \Exception If an error occurs.
+	 */
+	public function test_should_replace_0_urls() {
+		$this->assertSame( '0 database rows affected.', Utils::replace_urls( 'http://' . home_url() . '/elementor', 'https://' . home_url() . '/elementor' ) );
+	}
+
+	public function test_should_throw_error_because_urls_are_equal() {
+		$this->expectExceptionMessage( 'Couldn’t replace your address because both of the URLs provided are identical. Try again by entering different URLs.' );
+		Utils::replace_urls( 'http://' . home_url() . '/elementor', 'http://' . home_url() . '/elementor' );
+	}
+
+	public function test_should_throw_error_because_urls_are_invalid() {
+		$this->expectExceptionMessage( 'Couldn’t replace your address because at least one of the URLs provided are invalid. Try again by entering valid URLs.' );
+		Utils::replace_urls( 'elementor', '/elementor' );
+	}
+
+	public function test_replace_urls() {
+		// Arrange.
+		$old_url = 'http://example.local/test';
+		$new_url = 'https://example2.local';
+
+		$post_id = $this->factory()->create_and_get_default_post()->ID;
+
+		update_post_meta(
+			$post_id,
+			'_elementor_data',
+			wp_slash( wp_json_encode( $this->create_mocked_elements_data( $old_url ) ) ) // Just like saving elements: \Elementor\Core\Base\Document::save_elements()
+		);
+
+		// Act.
+		Utils::replace_urls( $old_url, $new_url );
+
+		// Assert.
+		$result = json_decode(
+			get_post_meta( $post_id, '_elementor_data', true )
+		);
+
+		$this->assertEquals(
+			$this->create_mocked_elements_data( $new_url ),
+			$result
+		);
+	}
+
+	public function test_should_not_get_exit_to_dashboard_url() {
+		$post_id = $this->factory()->create_and_get_default_post()->ID;
+		$this->assertNull( Plugin::$instance->documents->get( $post_id )->get_exit_to_dashboard_url() );
+	}
+
+	public function test_should_get_updated_timezone_string() {
+		for ( $time_offset = 0; $time_offset < 13; $time_offset++ ) {
+			update_option( 'gmt_offset', $time_offset );
+			$this->assertSame( "UTC+$time_offset", Utils::get_timezone_string() );
+		}
+	}
+
+	public function test_should_get_timezone_string_default_option() {
+		delete_option( 'timezone_string' );
+		delete_option( 'gmt_offset' );
+		$this->assertSame( 'UTC+0', Utils::get_timezone_string() );
+	}
+
+	public function test_should_get_negative_timezone_string() {
+		for ( $time_offset = -1; $time_offset > -13; $time_offset-- ) {
+			update_option( 'gmt_offset', $time_offset );
+			$this->assertSame( "UTC$time_offset", Utils::get_timezone_string() );
+		}
+	}
+
+	public function test_should_get_when_and_how_edited_the_post_last() {
+		$post_id = $this->factory()->create_and_get_default_post()->ID;
+		$this->assertMatchesRegularExpression( '/Last edited on \<time\>.*\<\/time\>\ by .*/', Plugin::$instance->documents->get( $post_id )->get_last_edited() );
+	}
+
+	public function test_should_get_post_auto_save() {
+		$posts = $this->factory()->create_and_get_parent_and_child_posts();
+		$this->assertEquals( $posts['child_id'], Utils::get_post_autosave( $posts['parent_id'], $posts['user_id'] )->ID );
+	}
+
+	public function test_getYoutubeId() {
+		$youtube_id = '9uOETcuFjbE';
+		$youtube_urls = [
+			'https://www.youtube.com/watch?v=' . $youtube_id,
+			'https://www.youtube.com/watch?v=' . $youtube_id . '&feature=player_embedded',
+			'https://youtu.be/' . $youtube_id,
+		];
+
+		foreach ( $youtube_urls as $youtube_url ) {
+			$video_properties = \Elementor\Embed::get_video_properties( $youtube_url );
+
+			$this->assertEquals( $youtube_id, $video_properties['video_id'] );
+		}
+
+		$this->assertNull( \Elementor\Embed::get_video_properties( 'https://www.youtube.com/' ) );
+	}
+
+	/**
+	 * Test Should Receive a string with HTML entities and return the string with the HTML Entities decoded
+	 *
+	 * This tests the urlencode_html_entities() utility method, to see that it properly decodes HTML Entities and then correctly URL-encodes them to be used in URLs, such as social media sharing
+	 */
+	public function test_should_return_decoded_string() {
+		// This is a filter from the WordPress core wp_get_document_title() function.
+		// The filter is used here to make the wp_get_document_title() function return our test title.
+		add_filter( 'document_title_parts', function () {
+			return [
+				'title' => '"This is a string" with a variety of ‘HTML entities’. \'What?\' & (more) #stupid “things”'
+			];
+		} );
+
+		$before_encoding = wp_get_document_title();
+
+		$valid_encoding = '%22This%20is%20a%20string%22%20with%20a%20variety%20of%20%E2%80%98HTML%20entities%E2%80%99.%20%27What%3F%27%20%26%20%28more%29%20%23stupid%20%E2%80%9Cthings%E2%80%9D';
+		$after_encoding = Utils::urlencode_html_entities( $before_encoding );
+
+		$this->assertSame( $valid_encoding, $after_encoding );
+	}
+
+	public function test_is_empty() {
+		$this->assertEquals( false, Utils::is_empty('0' ),
+			"'0' is not empty" );
+
+		$this->assertEquals( true, Utils::is_empty('' ),
+			"'' is empty" );
+
+		$this->assertEquals( true, Utils::is_empty( [], 'key' ),
+			"[] with undefined key, is empty" );
+
+		$this->assertEquals( true, Utils::is_empty( [ 'key' => '' ], 'key' ),
+			"[ 'key' => '' ] is empty" );
+
+		$this->assertEquals( false, Utils::is_empty( [ 'key' => '0' ], 'key' ),
+			"[ 'key' => '0' ] is empty" );
+	}
+
+	public function test_file_get_contents() {
+		// Arrange
+		$file_name = __DIR__ . '/mock/mock-file.txt';
+
+		// Act
+		$content = Utils::file_get_contents( $file_name );
+
+		// Assert
+		$this->assertEquals( "test.\n", $content );
+	}
+
+	public function test_file_get_contents__non_file() {
+		// Arrange
+		// Elementor Logo
+		$file_name = 'https://avatars.githubusercontent.com/u/47606894';
+
+		// Act
+		$content = Utils::file_get_contents( $file_name );
+
+		// Assert
+		$this->assertFalse( $content );
+	}
+
+	public function test_get_super_global_value__returns_value() {
+		// Arrange
+		$_REQUEST['key'] = 'value';
+
+		// Act
+		$value = Utils::get_super_global_value( $_REQUEST,  'key' );
+
+		// Assert
+		$this->assertEquals( 'value', $value );
+	}
+
+	public function test_get_super_global_value__unslashed() {
+		// Arrange
+		$_REQUEST['key'] = 'value\\//';
+
+		// Act
+		$value = Utils::get_super_global_value( $_REQUEST,  'key' );
+
+		// Assert
+		$this->assertEquals( 'value//', $value );
+	}
+
+	public function test_get_super_global_value__returns_sanitized() {
+		// Arrange
+		$_REQUEST['key'] = 'value<script>alert(1)</script>';
+
+		// Act
+		$value = Utils::get_super_global_value( $_REQUEST, 'key' );
+
+		// Assert
+		Kses_Test_Expectations::assert_same_wp_kses_plain_string( $this, $value, 'valuealert(1)', 'value' );
+	}
+
+	public function test_get_super_global_value__returns_sanitized_array() {
+		// Arrange
+		$_REQUEST['key'] = [ 'value<script>alert(1)</script>' ];
+
+		// Act
+		$value = Utils::get_super_global_value( $_REQUEST, 'key' );
+
+		// Assert
+		$this->assertEquals(
+			[ Kses_Test_Expectations::expected_wp_kses_plain_string( 'valuealert(1)', 'value' ) ],
+			$value
+		);
+	}
+
+	public function test_get_super_global_value__returns_sanitized_associative_array() {
+		// Arrange
+		$_REQUEST['key'] = [ 'key' => 'value<script>alert(1)</script>' ];
+
+		// Act
+		$value = Utils::get_super_global_value( $_REQUEST, 'key' );
+
+		// Assert
+		$this->assertEquals(
+			[ 'key' => Kses_Test_Expectations::expected_wp_kses_plain_string( 'valuealert(1)', 'value' ) ],
+			$value
+		);
+	}
+
+	public function test_get_super_global_value__single_file() {
+		// Arrange
+		$_FILES['file'] = [
+			'name' => '..%2ffile_upload_test.php',
+			'type' => 'text/plain',
+			'tmp_name' => '/tmp/php/php123456',
+			'error' => 0,
+			'size' => 123,
+		];
+
+		$sanitized = [
+			'name' => '2ffile_upload_test.php',
+			'type' => 'text/plain',
+			'tmp_name' => '/tmp/php/php123456',
+			'error' => 0,
+			'size' => 123,
+		];
+
+		// Act
+		$file = Utils::get_super_global_value( $_FILES,  'file' );
+
+		// Assert
+		$this->assertEquals( $sanitized, $file);
+	}
+
+	public function test_get_super_global_value__with_multiple_files() {
+		// Arrange
+		$key   = 'test';
+		$value = [
+			[
+				[
+					'name' => 'test file.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => __DIR__ . '/mock/mock-file.txt',
+					'error' => 0,
+					'size' => 123,
+				],
+				[
+					'name' => 'test file.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => __DIR__ . '/mock/mock-file.txt',
+					'error' => 0,
+					'size' => 123,
+				],
+			],
+			[
+				[
+					'name' => 'test file.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => __DIR__ . '/mock/mock-file.txt',
+					'error' => 0,
+					'size' => 123,
+				],
+			],
+		];
+
+		$_FILES[ $key ] = $value;
+
+		// Act
+		$result = Utils::get_super_global_value( $_FILES, $key );
+
+		// Assert
+		$sanitized_files = [
+			[
+				[
+					'name' => 'test-file.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => __DIR__ . '/mock/mock-file.txt',
+					'error' => 0,
+					'size' => 123,
+				],
+				[
+					'name' => 'test-file.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => __DIR__ . '/mock/mock-file.txt',
+					'error' => 0,
+					'size' => 123,
+				],
+			],
+			[
+				[
+					'name' => 'test-file.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => __DIR__ . '/mock/mock-file.txt',
+					'error' => 0,
+					'size' => 123,
+				],
+			],
+		];
+
+		$this->assertEquals( $sanitized_files, $result );
+	}
+
+	public function test_kses_post_deep__strips_disallowed_html_from_strings() {
+		// Arrange
+		$value = '<iframe src="https://evil.example"></iframe><strong>Bold</strong>';
+
+		// Act
+		$result = Utils::kses_post_deep( $value );
+
+		// Assert
+		$this->assertEquals( '<strong>Bold</strong>', $result );
+	}
+
+	public function test_kses_post_deep__preserves_non_string_scalars() {
+		// Arrange
+		$data = [
+			'bool_true' => true,
+			'bool_false' => false,
+			'null_value' => null,
+			'int_value' => 5,
+			'float_value' => 1.5,
+		];
+
+		// Act
+		$result = Utils::kses_post_deep( $data );
+
+		// Assert
+		$this->assertSame( $data, $result );
+	}
+
+	public function test_kses_post_deep__sanitizes_strings_inside_nested_arrays() {
+		// Arrange
+		$data = [
+			'title' => '<iframe src="https://evil.example"></iframe>Title',
+			'nested' => [
+				'description' => '<iframe src="evil"></iframe><em>Description</em>',
+				'z_index' => 10,
+				'is_visible' => false,
+			],
+		];
+
+		// Act
+		$result = Utils::kses_post_deep( $data );
+
+		// Assert
+		$this->assertEquals( [
+			'title' => 'Title',
+			'nested' => [
+				'description' => '<em>Description</em>',
+				'z_index' => 10,
+				'is_visible' => false,
+			],
+		], $result );
+	}
+
+	private function reset_allowed_html_wrapper_tags_cache(): void {
+		$reflection = new \ReflectionClass( Utils::class );
+		$property = $reflection->getProperty( 'resolved_allowed_html_wrapper_tags' );
+		$property->setAccessible( true );
+		$property->setValue( null );
+	}
+
+	private function create_mocked_elements_data( $url ) {
+		return [
+			(object) [
+				'id' => '43eb7878',
+				'elType' => 'container',
+				'settings' => (object) [
+					'background_image' => (object) [
+						"id" => 22,
+						"url" => "{$url}/wp-content/uploads/2023/04/u2.jpg",
+						"size" => "",
+						"source" => "library"
+					],
+				],
+				'elements' => [
+					(object) [
+						'id' => '43eb7879',
+						'elType' => 'widget',
+						'settings' => (object) [
+							"image" => (object) [
+								"id" => 23,
+								"url" => "{$url}/wp-content/uploads/2023/04/u3.jpg"
+							],
+						],
+					]
+				]
+			],
+		];
+	}
+}

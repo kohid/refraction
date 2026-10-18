@@ -1,0 +1,200 @@
+module.exports = elementorModules.Module.extend( {
+
+	CACHE_KEY_NOT_FOUND_ERROR: 'Cache key not found',
+
+	tags: {
+		Base: require( 'elementor-dynamic-tags/tag' ),
+	},
+
+	cache: {},
+
+	cacheRequests: {},
+
+	cacheCallbacks: [],
+
+	getTagRenderPostId( tag ) {
+		return tag.editorRenderPostId ?? elementor.config.document.id;
+	},
+
+	addCacheRequest( tag ) {
+		const postId = this.getTagRenderPostId( tag );
+		const cacheKey = this.createCacheKey( tag );
+
+		if ( ! this.cacheRequests[ postId ] ) {
+			this.cacheRequests[ postId ] = {};
+		}
+
+		this.cacheRequests[ postId ][ cacheKey ] = true;
+	},
+
+	createCacheKey( tag ) {
+		const postId = this.getTagRenderPostId( tag );
+
+		return btoa( tag.getOption( 'name' ) ) + '-' + btoa( encodeURIComponent( JSON.stringify( tag.model ) ) ) + '-' + postId;
+	},
+
+	loadTagDataFromCache( tag ) {
+		var cacheKey = this.createCacheKey( tag );
+
+		if ( undefined !== this.cache[ cacheKey ] ) {
+			return this.cache[ cacheKey ];
+		}
+
+		const postId = this.getTagRenderPostId( tag );
+
+		if ( ! this.cacheRequests[ postId ] || ! this.cacheRequests[ postId ][ cacheKey ] ) {
+			this.addCacheRequest( tag );
+		}
+	},
+
+	loadCacheRequests() {
+		var cacheRequests = this.cacheRequests,
+			cacheCallbacks = this.cacheCallbacks;
+
+		this.cacheRequests = {};
+
+		this.cacheCallbacks = [];
+
+		var postIds = Object.keys( cacheRequests );
+
+		if ( 0 === postIds.length ) {
+			cacheCallbacks.forEach( function( entry ) {
+				entry.callback();
+			} );
+
+			return;
+		}
+
+		var pendingRequests = postIds.length;
+
+		var onRequestComplete = () => {
+			pendingRequests -= 1;
+
+			if ( 0 === pendingRequests ) {
+				cacheCallbacks.forEach( function( entry ) {
+					entry.callback();
+				} );
+			}
+		};
+
+		const needsUniqueIds = postIds.length > 1;
+		const batchId = needsUniqueIds ? elementorCommon.helpers.getUniqueId() : null;
+
+		postIds.forEach( ( postId ) => {
+			elementorCommon.ajax.addRequest( 'render_tags', {
+				...( needsUniqueIds ? { unique_id: `render_tags-${ postId }-${ batchId }` } : {} ),
+				data: {
+					post_id: Number( postId ),
+					tags: Object.keys( cacheRequests[ postId ] ),
+				},
+				success: ( data ) => {
+					this.cache = {
+						...this.cache,
+						...data,
+					};
+
+					onRequestComplete();
+				},
+			} );
+		} );
+	},
+
+	refreshCacheFromServer( callback ) {
+		this.cacheCallbacks.push( { callback } );
+
+		this.loadCacheRequests();
+	},
+
+	getConfig( key ) {
+		return this.getItems( elementor.config.dynamicTags, key );
+	},
+
+	parseTagsText( text, settings, parseCallback ) {
+		var self = this;
+
+		if ( 'object' === settings.returnType ) {
+			return self.parseTagText( text, settings, parseCallback );
+		}
+
+		return text.replace( /\[elementor-tag[^\]]+]/g, function( tagText ) {
+			return self.parseTagText( tagText, settings, parseCallback );
+		} );
+	},
+
+	parseTagText( tagText, settings, parseCallback ) {
+		var tagData = this.tagTextToTagData( tagText );
+
+		if ( ! tagData ) {
+			if ( 'object' === settings.returnType ) {
+				return {};
+			}
+
+			return '';
+		}
+
+		return parseCallback( tagData.id, tagData.name, tagData.settings );
+	},
+
+	tagTextToTagData( tagText ) {
+		var tagIDMatch = tagText.match( /id="(.*?(?="))"/ ),
+			tagNameMatch = tagText.match( /name="(.*?(?="))"/ ),
+			tagSettingsMatch = tagText.match( /settings="(.*?(?="]))/ );
+
+		if ( ! tagIDMatch || ! tagNameMatch || ! tagSettingsMatch ) {
+			return false;
+		}
+
+		return {
+			id: tagIDMatch[ 1 ],
+			name: tagNameMatch[ 1 ],
+			settings: JSON.parse( decodeURIComponent( tagSettingsMatch[ 1 ] ) ),
+		};
+	},
+
+	createTag( tagID, tagName, tagSettings ) {
+		var tagConfig = this.getConfig( 'tags.' + tagName );
+
+		if ( ! tagConfig ) {
+			return;
+		}
+
+		var TagClass = this.tags[ tagName ] || this.tags.Base,
+			model = new elementorModules.editor.elements.models.BaseSettings( tagSettings, {
+				controls: tagConfig.controls,
+			} );
+
+		return new TagClass( { id: tagID, name: tagName, model } );
+	},
+
+	getTagDataContent( tagID, tagName, tagSettings ) {
+		var tag = this.createTag( tagID, tagName, tagSettings );
+
+		if ( ! tag ) {
+			return;
+		}
+
+		return tag.getContent();
+	},
+
+	tagDataToTagText( tagID, tagName, tagSettings ) {
+		tagSettings = encodeURIComponent( JSON.stringify( ( tagSettings && tagSettings.toJSON( { remove: [ 'default' ] } ) ) || {} ) );
+
+		return '[elementor-tag id="' + tagID + '" name="' + tagName + '" settings="' + tagSettings + '"]';
+	},
+
+	tagContainerToTagText( /** Container*/ container ) {
+		return elementor.dynamicTags.tagDataToTagText(
+			container.view.getOption( 'id' ),
+			container.view.getOption( 'name' ),
+			container.view.model,
+		);
+	},
+
+	cleanCache() {
+		this.cache = {};
+	},
+
+	onInit() {
+		this.loadCacheRequests = _.debounce( this.loadCacheRequests, 300 );
+	},
+} );

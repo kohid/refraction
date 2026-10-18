@@ -1,0 +1,210 @@
+//
+// Icon List
+//
+
+.elementor-widget {
+	$e-icon-list-svg-icon-size: var(--e-icon-list-icon-size, 1em);
+
+	&.elementor-icon-list--layout-inline,
+	&:not(:has(.elementor-widget-container)) {
+
+		.elementor-widget-container {
+			overflow: hidden;
+		}
+	}
+
+	.elementor-icon-list-items.elementor-inline-items {
+		display: flex;
+		flex-wrap: wrap;
+		margin-inline: -8px;
+
+		.elementor-inline-item {
+			word-break: break-word;
+		}
+
+		.elementor-icon-list-item {
+			margin-inline: 8px;
+
+			&:after {
+				width: auto;
+				position: relative;
+				inset-inline-start: auto;
+				inset-inline-end: -8px;
+				height: 100%;
+				border-width: 0;
+				border-inline-start-width: 1px;
+				border-style: solid;
+			}
+		}
+	}
+
+	.elementor-icon-list-items {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.elementor-icon-list-item {
+		margin: 0;
+		padding: 0;
+		position: relative;
+
+		&:after {
+			position: absolute;
+			inset-block-end: 0;
+			width: 100%;
+		}
+
+		&, a {
+			display: flex;
+			font-size: inherit;
+			align-items: var(--icon-vertical-align, center);
+		}
+	}
+
+	.elementor-icon-list-icon + .elementor-icon-list-text {
+		align-self: center;
+		padding-inline-start: 5px;
+	}
+
+	.elementor-icon-list-icon {
+		display: flex;
+		position: relative;
+		inset-block-start: var(--icon-vertical-offset, initial);
+
+		svg {
+			width: $e-icon-list-svg-icon-size;
+			height: $e-icon-list-svg-icon-size;
+		}
+
+		i {
+			width: 1.25em;
+			font-size: var(--e-icon-list-icon-size);
+		}
+	}
+
+	// Should be applied only on the icon-list widget, and not on any other widget that rely on this CSS.
+	&.elementor-widget-icon-list {
+
+		.elementor-icon-list-icon {
+			text-align: var(--e-icon-list-icon-align);
+
+			svg {
+				$e-icon-list-svg-icon-margin-default-size: 0 calc(#{$e-icon-list-svg-icon-size} * 0.25) 0 0;
+
+				margin: var(--e-icon-list-icon-margin, $e-icon-list-svg-icon-margin-default-size);
+			}
+		}
+	}
+
+	&.elementor-list-item-link-full_width {
+
+		a {
+			width: 100%;
+		}
+	}
+
+	@mixin align-list( $device ) {
+
+		&.elementor#{$device}-align-center {
+
+			.elementor-icon-list-item {
+
+				&, a {
+					justify-content: center;
+				}
+
+				&:after {
+					margin: auto;
+				}
+			}
+
+			.elementor-inline-items {
+				justify-content: center;
+			}
+		}
+
+		&.elementor#{$device}-align-start {
+
+			.elementor-icon-list-item {
+
+				&, a {
+					justify-content: start;
+					text-align: start;
+				}
+			}
+
+			.elementor-inline-items {
+				justify-content: start;
+			}
+		}
+
+		&.elementor#{$device}-align-end {
+
+			.elementor-icon-list-item {
+
+				&, a {
+					justify-content: end;
+					text-align: end;
+				}
+			}
+
+			.elementor-icon-list-items {
+				justify-content: end;
+			}
+		}
+
+		&:not(.elementor#{$device}-align-end) {
+
+			.elementor-icon-list-item {
+
+				&:after {
+					inset-inline-start: 0;
+				}
+			}
+		}
+
+		&:not(.elementor#{$device}-align-start) {
+
+			.elementor-icon-list-item {
+
+				&:after {
+					inset-inline-end: 0;
+				}
+			}
+		}
+	}
+
+	@include align-list('');
+
+	@media (min-width: $screen-widescreen-min) {
+		@include align-list('-widescreen');
+	}
+
+	@media (max-width: $screen-laptop-max) {
+		@include align-list('-laptop');
+	}
+
+	@media (max-width: $screen-tablet-extra-max) {
+		@include align-list('-tablet_extra');
+	}
+
+	@media (max-width: $screen-tablet-max) {
+		@include align-list('-tablet');
+	}
+
+	@media (max-width: $screen-mobile-extra-max) {
+		@include align-list('-mobile_extra');
+	}
+
+	@media (max-width: $screen-mobile-max) {
+		@include align-list('-mobile');
+	}
+}
+
+// Historical compatibility styles with higher specificity
+#left-area ul.elementor-icon-list-items,
+.elementor .elementor-element ul.elementor-icon-list-items,
+.elementor-edit-area .elementor-element ul.elementor-icon-list-items {
+	padding: 0;
+}

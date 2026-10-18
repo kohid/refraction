@@ -1,0 +1,140 @@
+module.exports = Marionette.ItemView.extend( {
+	tagName: 'main',
+
+	template: '#tmpl-elementor-template-library-connect-states',
+
+	id: 'elementor-template-library-connect-states',
+
+	ui: {
+		selectSourceFilter: '.elementor-template-library-filter-select-source .source-option',
+		title: '.elementor-template-library-blank-title',
+		message: '.elementor-template-library-blank-message',
+		icon: '.elementor-template-library-blank-icon',
+		button: '.elementor-template-library-cloud-empty__button',
+		cloudBadge: '.elementor-template-library-connect-states-badge .source-option-badge.cloud-badge',
+	},
+
+	events: {
+		'click @ui.selectSourceFilter': 'onSelectSourceFilterChange',
+		'click @ui.button': 'onButtonClick',
+	},
+
+	modesStrings() {
+		const defaultIcon = this.getDefaultIcon();
+
+		return {
+			notConnected: {
+				title: elementorAppConfig?.[ 'cloud-library' ]?.library_connect_title_copy ?? __( 'Connect to your Elementor account', 'elementor' ),
+				message: elementorAppConfig?.[ 'cloud-library' ]?.library_connect_sub_title_copy ?? __( 'Then you can find all your templates in one convenient library.', 'elementor' ),
+				icon: defaultIcon,
+				button: `<a class="elementor-button e-primary connect-button" href="${ elementorAppConfig?.[ 'cloud-library' ]?.library_connect_url }" target="_blank">${ elementorAppConfig?.[ 'cloud-library' ]?.library_connect_button_copy ?? __( 'Connect', 'elementor' ) }</a>`,
+			},
+			connectedNoQuota: {
+				title: __( 'It’s time to level up', 'elementor' ),
+				message: __( 'Elementor Pro plans come with Cloud Templates.', 'elementor' ) + '<br>' + __( 'Upgrade now to re-use your templates on all the websites you’re working on.', 'elementor' ),
+				icon: `<i class="eicon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Upgrade now', 'elememntor' ) }"></i>`,
+				button: `<a class="elementor-button e-accent" href="https://go.elementor.com/go-pro-cloud-templates-cloud-tab" target="_blank">${ __( 'Upgrade now', 'elementor' ) }</a>`,
+			},
+			deactivated: {
+				title: __( 'Your library has been deactivated', 'elementor' ),
+				message: __( 'This is because you don’t have an active subscription.', 'elementor' ) + '<br>' + __( 'Your templates are saved for 90 days from the day your subscription expires,', 'elementor' ) + '<br>' + __( 'then they’ll be gone forever.', 'elementor' ),
+				icon: `<i class="eicon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Renew my subscription', 'elememntor' ) }"></i>`,
+				button: `<a class="elementor-button e-accent" href="https://go.elementor.com/renew-license-cloud-templates-cloud-tab" target="_blank">${ __( 'Renew my subscription', 'elementor' ) }</a>`,
+			},
+		};
+	},
+
+	getDefaultIcon() {
+		return `<i class="eicon-library-cloud-connect" aria-hidden="true" title="${ __( 'Empty folder', 'elememntor' ) }"></i>`;
+	},
+
+	getCurrentMode() {
+		if ( ! elementor.config.library_connect.is_connected ) {
+			return 'notConnected';
+		}
+
+		if ( elementor.templates.cloudLibraryIsDeactivated() ) {
+			return 'deactivated';
+		}
+
+		return 'connectedNoQuota';
+	},
+
+	onRender() {
+		this.updateTemplateMarkup();
+
+		this.handleElementorConnect();
+
+		this.handleCloudBadge();
+
+		elementor.templates.layout.getHeaderView()?.tools?.$el[ 0 ]?.classList?.add( 'e-hidden-disabled' );
+
+		elementor.templates.eventManager.sendPageViewEvent( {
+			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTabUpgrade,
+		} );
+	},
+
+	async handleCloudBadge() {
+		if ( ! this.ui.cloudBadge?.length ) {
+			return;
+		}
+
+		const experimentVariant = await elementor.templates.eventManager.getSaveTemplateExperimentVariant();
+
+		this.ui.cloudBadge.toggle( 'B' === experimentVariant );
+	},
+
+	updateTemplateMarkup() {
+		const modeStrings = this.modesStrings()[ this.getCurrentMode() ];
+
+		this.ui.title.html( modeStrings.title );
+
+		this.ui.message.html( modeStrings.message );
+
+		this.ui.button.html( modeStrings.button );
+
+		this.ui.icon.html( modeStrings.icon );
+	},
+
+	handleElementorConnect() {
+		const $connectButton = this.$el.find( '.connect-button' );
+
+		if ( ! $connectButton.length ) {
+			return;
+		}
+
+		$connectButton.elementorConnect( {
+			popup: {
+				width: 726,
+				height: 534,
+			},
+			success: () => {
+				elementor.config.library_connect.is_connected = true;
+
+				elementor.notifications.showToast( {
+					message: __( 'Connected successfully.', 'elementor' ),
+				} );
+
+				$e.routes.refreshContainer( 'library' );
+			},
+			error: () => {
+				elementor.config.library_connect.is_connected = false;
+			},
+		} );
+	},
+
+	onSelectSourceFilterChange( event ) {
+		elementor.templates.onSelectSourceFilterChange( event );
+	},
+
+	onButtonClick() {
+		elementor.templates.eventManager.sendUpgradeClickedEvent( {
+			secondaryLocation: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab,
+			upgradePosition: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab,
+		} );
+	},
+
+	onDestroy() {
+		elementor.templates.layout.getHeaderView()?.tools?.$el[ 0 ]?.classList?.remove( 'e-hidden-disabled' );
+	},
+} );

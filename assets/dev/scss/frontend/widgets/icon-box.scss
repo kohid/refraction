@@ -1,0 +1,99 @@
+//
+// Icon Box
+//
+
+@mixin icon-position($device) {
+	&.elementor#{$device}-position- {
+
+		&inline-end {
+
+			.elementor-icon-box-wrapper {
+				text-align: end;
+				flex-direction: row-reverse;
+			}
+		}
+
+		&inline-start {
+
+			.elementor-icon-box-wrapper {
+				text-align: start;
+				flex-direction: row;
+			}
+		}
+
+		&block-start {
+
+			.elementor-icon-box-wrapper {
+				text-align: center;
+				flex-direction: column;
+				align-items: unset !important; // Specificity override to fix mobile icon alignment issue.
+			}
+		}
+
+		&block-end {
+
+			.elementor-icon-box-wrapper {
+				text-align: center;
+				flex-direction: column-reverse;
+				align-items: unset !important; // Specificity override to fix mobile icon alignment issue.
+			}
+		}
+	}
+}
+
+.elementor-widget-icon-box {
+
+	.elementor-icon-box-wrapper {
+		display: flex;
+		text-align: center;
+		flex-direction: column;
+	}
+
+	.elementor-icon-box-icon {
+		display: inline-block;
+		flex: 0 0 auto; // Hack for Safari
+		line-height: 0;
+	}
+
+	.elementor-icon-box-content {
+		width: 100%;
+		flex-grow: 1;
+	}
+
+	.elementor-icon-box-title {
+
+		a {
+			color: inherit;
+		}
+	}
+
+	.elementor-icon-box-description {
+		margin: 0;
+	}
+
+	@include icon-position('');
+
+	@media (min-width: $screen-widescreen-min) {
+		@include icon-position(-widescreen);
+	}
+
+	@media (max-width: $screen-laptop-max) {
+		@include icon-position(-laptop);
+	}
+
+	@media (max-width: $screen-tablet-extra-max) {
+		@include icon-position(-tablet_extra);
+	}
+
+	@media (max-width: $screen-tablet-max) {
+		@include icon-position(-tablet);
+	}
+
+	@media (max-width: $screen-mobile-extra-max) {
+		@include icon-position(-mobile_extra);
+	}
+
+	@media (max-width: $screen-mobile-max ) {
+		@include icon-position(-mobile);
+	}
+}

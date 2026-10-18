@@ -1,0 +1,609 @@
+import ElementEmpty from './element-empty';
+import RootEmpty from './root-empty';
+
+const NEW_NESTABLE_CLASS = 'elementor-navigator__element-new-nestable';
+
+export default class extends Marionette.CompositeView {
+	getTemplate() {
+		return '#tmpl-elementor-navigator__elements';
+	}
+
+	ui() {
+		return {
+			item: '> .elementor-navigator__item',
+			title: '> .elementor-navigator__item .elementor-navigator__element__title__text',
+			toggle: '> .elementor-navigator__item > .elementor-navigator__element__toggle',
+			toggleList: '> .elementor-navigator__item > .elementor-navigator__element__list-toggle',
+			indicators: '> .elementor-navigator__item > .elementor-navigator__element__indicators',
+			indicator: '> .elementor-navigator__item > .elementor-navigator__element__indicators > .elementor-navigator__element__indicator',
+			elements: '> .elementor-navigator__elements',
+			icon: '> .elementor-navigator__item .elementor-navigator__element__element-type',
+		};
+	}
+
+	events() {
+		return {
+			contextmenu: 'onContextMenu',
+			'click @ui.item': 'onItemClick',
+			'keydown @ui.item': 'onItemPress',
+			'click @ui.toggle': 'onToggleClick',
+			'click @ui.toggleList': 'onToggleListClick',
+			'click @ui.indicator': 'onIndicatorClick',
+			'dblclick @ui.title': 'onTitleDoubleClick',
+			'keydown @ui.title': 'onTitleKeyDown',
+			'paste @ui.title': 'onTitlePaste',
+			'sortstart @ui.elements': 'onSortStart',
+			'sortover @ui.elements': 'onSortOver',
+			'sortout @ui.elements': 'onSortOut',
+			'sortstop @ui.elements': 'onSortStop',
+			'sortupdate @ui.elements': 'onSortUpdate',
+			'sortreceive @ui.elements': 'onSortReceive',
+		};
+	}
+
+	getEmptyView() {
+		if ( this.isNavigatorContainer() ) {
+			return RootEmpty;
+		}
+
+		if ( this.hasChildren() ) {
+			return ElementEmpty;
+		}
+
+		return null;
+	}
+
+	childViewOptions() {
+		return {
+			indent: this.getIndent() + 10,
+		};
+	}
+
+	className() {
+		let classes = 'elementor-navigator__element';
+		const elType = this.model.get( 'elType' );
+
+		if ( ! this.isNavigatorContainer() ) {
+			classes += ' elementor-navigator__element-' + elType;
+			if ( ! this.isExcludedNestableElement() ) {
+				classes += ' ' + NEW_NESTABLE_CLASS;
+			}
+		}
+
+		if ( this.hasChildren() ) {
+			classes += ' elementor-navigator__element--has-children';
+		}
+
+		return classes;
+	}
+
+	getSortableClassName() {
+		const elType = this.model.get( 'elType' );
+		// Excluded nestable elements (section, column) should have their own unique class,
+		// so that they won't be connected with new nestable elements (container, div-block).
+		if ( this.isExcludedNestableElement() ) {
+			return 'elementor-navigator__element-' + elType;
+		}
+
+		return NEW_NESTABLE_CLASS;
+	}
+
+	attributes() {
+		return {
+			'data-id': this.model.id,
+			'data-model-cid': this.model.cid,
+		};
+	}
+
+	templateHelpers() {
+		const helpers = {};
+
+		if ( ! this.isNavigatorContainer() ) {
+			helpers.title = this.model.getTitle();
+
+			helpers.icon = 'section' === this.model.get( 'elType' ) ? '' : this.model.getIcon();
+		}
+
+		return helpers;
+	}
+
+	isProPromotion() {
+		const elType = this.model.get( 'elType' );
+		return !! elementor.widgetsCache?.[ elType ]?.meta?.is_pro_promotion;
+	}
+
+	shouldShowChildrenInStructure() {
+		if ( this.isProPromotion() ) {
+			return false;
+		}
+
+		return elementor.hooks.applyFilters( 'navigator/element/show-children', true, this.model );
+	}
+
+	initialize() {
+		this.collection = this.isProPromotion()
+			? new Backbone.Collection()
+			: this.model.get( 'elements' );
+
+		this.childViewContainer = '.elementor-navigator__elements';
+
+		this.listenTo( this.model, 'change', this.onModelChange )
+			.listenTo( this.model.get( 'settings' ), 'change', this.onModelSettingsChange );
+		this.listenTo( this.model, 'change:editor_settings', this.onModelEditorSettingsChange );
+		this.listenTo( this.model, 'title_external_change', this.onTitleExternalChange );
+		this.listenTo( this.model, 'navigator:add', this.onNavigatorAdd );
+
+		this._onRefreshChildrenRequest = this._onRefreshChildrenRequest.bind( this );
+		window.addEventListener( 'elementor/navigator/refresh-children', this._onRefreshChildrenRequest );
+	}
+
+	onDestroy() {
+		window.removeEventListener( 'elementor/navigator/refresh-children', this._onRefreshChildrenRequest );
+	}
+
+	_onRefreshChildrenRequest( event ) {
+		const targetId = event?.detail?.elementId;
+
+		if ( targetId && this.model.get( 'id' ) !== targetId ) {
+			return;
+		}
+
+		this.render();
+		this.syncNavigatorStructureState();
+		this.updateSelection();
+	}
+
+	addChild( child, ChildView, index ) {
+		if ( ! this.shouldShowChildrenInStructure() ) {
+			return;
+		}
+
+		return Marionette.CompositeView.prototype.addChild.call( this, child, ChildView, index );
+	}
+
+	onNavigatorAdd( childModel, options ) {
+		this._onCollectionAdd( childModel, this.collection, options || {} );
+	}
+
+	onTitleExternalChange() {
+		this.ui.title.text( this.model.getTitle() );
+	}
+
+	onModelEditorSettingsChange( elementModel, editorSettings ) {
+		if ( undefined !== elementModel.changed?.editor_settings?.title ) {
+			this.ui.title.text( editorSettings.title );
+		}
+
+		window.dispatchEvent( new CustomEvent( 'elementor/element/update_editor_settings', {
+			detail: {
+				element: elementModel,
+				editorSettings,
+			},
+		} ) );
+	}
+
+	getIndent() {
+		return this.getOption( 'indent' ) || 0;
+	}
+
+	isExcludedNestableElement() {
+		return [ 'section', 'column' ].includes( this.model.get( 'elType' ) );
+	}
+
+	isNavigatorContainer() {
+		return ! this.model.get( 'elType' );
+	}
+
+	hasChildren() {
+		if ( ! this.shouldShowChildrenInStructure() ) {
+			return false;
+		}
+
+		return this.model.get( 'elements' )?.length || 'widget' !== this.model.get( 'elType' );
+	}
+
+	toggleList( state, callback ) {
+		if ( ! this.hasChildren() || this.isNavigatorContainer() ) {
+			return;
+		}
+
+		const isActive = this.ui.item.hasClass( 'elementor-active' );
+
+		if ( isActive === state ) {
+			return;
+		}
+
+		this.ui.item.toggleClass( 'elementor-active', state );
+
+		let slideMethod = 'slideToggle';
+
+		if ( undefined !== state ) {
+			slideMethod = 'slide' + ( state ? 'Down' : 'Up' );
+		}
+
+		this.ui.elements[ slideMethod ]( 300, callback );
+	}
+
+	toggleHiddenClass() {
+		this.$el.toggleClass( 'elementor-navigator__element--hidden', this.model.getVisibility() );
+	}
+
+	recursiveChildInvoke( method, ...restArgs ) {
+		this[ method ].apply( this, restArgs );
+
+		this.children.each( ( child ) => {
+			if ( ! ( child instanceof this.constructor ) ) {
+				return;
+			}
+
+			child.recursiveChildInvoke.apply( child, arguments );
+		} );
+	}
+
+	recursiveParentInvoke( method, ...restArgs ) {
+		if ( ! ( this._parent instanceof this.constructor ) ) {
+			return;
+		}
+
+		this._parent[ method ].apply( this._parent, restArgs );
+
+		this._parent.recursiveParentInvoke.apply( this._parent, arguments );
+	}
+
+	recursiveChildAgreement( method, ...restArgs ) {
+		if ( ! this[ method ].apply( this, restArgs ) ) {
+			return false;
+		}
+
+		let hasAgreement = true;
+
+		for ( const child of Object.values( this.children._views ) ) {
+			if ( ! ( child instanceof this.constructor ) ) {
+				continue;
+			}
+
+			if ( ! child.recursiveChildAgreement.apply( child, arguments ) ) {
+				hasAgreement = false;
+
+				break;
+			}
+		}
+
+		return hasAgreement;
+	}
+
+	activateMouseInteraction() {
+		this.$el.on( {
+			mouseenter: this.onMouseEnter.bind( this ),
+			mouseleave: this.onMouseLeave.bind( this ),
+		} );
+	}
+
+	deactivateMouseInteraction() {
+		this.$el.off( 'mouseenter mouseleave' );
+	}
+
+	dragShouldBeIgnored( draggedModel ) {
+		return ! this.model.isValidChild( draggedModel );
+	}
+
+	addEditingClass() {
+		this.ui.item.addClass( 'elementor-editing' );
+	}
+
+	removeEditingClass() {
+		this.ui.item.removeClass( 'elementor-editing' );
+	}
+
+	enterTitleEditing() {
+		this.ui.title.attr( 'contenteditable', true ).focus();
+
+		document.execCommand( 'selectAll' );
+
+		elementor.addBackgroundClickListener( 'navigator', {
+			ignore: this.ui.title,
+			callback: this.exitTitleEditing.bind( this ),
+		} );
+	}
+
+	exitTitleEditing() {
+		this.ui.title.attr( 'contenteditable', false );
+
+		const settingsModel = this.model.get( 'settings' ),
+			oldTitle = settingsModel.get( '_title' ),
+			newTitle = this.ui.title.text().trim();
+
+		// When there isn't an old title and a new title, allow backbone to recognize the `set` as a change
+		if ( ! oldTitle ) {
+			settingsModel.unset( '_title', { silent: true } );
+		}
+
+		if ( elementor.helpers.isAtomicWidget( this.model ) ) {
+			const prevEditorSettings = this.model.get( 'editor_settings' );
+
+			this.model.set( 'editor_settings', { ...prevEditorSettings, title: newTitle } );
+		} else {
+			settingsModel.set( '_title', newTitle );
+		}
+
+		// TODO: Remove - After merge pull request #13605.
+		$e.internal( 'document/save/set-is-modified', {
+			status: true,
+		} );
+
+		elementor.removeBackgroundClickListener( 'navigator' );
+	}
+
+	/*
+	* This will initialize all the sortables https://jqueryui.com/sortable/
+	* each component in the navigator is a sortable.
+	* We connect the sortables of the same type so items can be moved between them using the 'connectWith' parameter.
+	 */
+	activateSortable() {
+		if ( ! elementor.userCan( 'design' ) ) {
+			return;
+		}
+
+		this.ui.elements.sortable( {
+			items: '> .elementor-navigator__element',
+			placeholder: 'ui-sortable-placeholder',
+			axis: 'y',
+			forcePlaceholderSize: true,
+			connectWith: '.' + this.getSortableClassName() + ' > .elementor-navigator__elements',
+			cancel: '[contenteditable="true"], [data-locked="true"]',
+		} );
+	}
+
+	renderIndicators() {
+		const settings = this.model.get( 'settings' ).attributes;
+
+		this.ui.indicators.empty();
+
+		jQuery.each( elementor.navigator.indicators, ( indicatorName, indicatorSettings ) => {
+			const isShouldBeIndicated = indicatorSettings.settingKeys.some( ( key ) => settings[ key ] );
+
+			if ( ! isShouldBeIndicated ) {
+				return;
+			}
+
+			const $indicator = jQuery( '<div>', { class: 'elementor-navigator__element__indicator', title: indicatorSettings.title } )
+				.attr( 'data-section', indicatorSettings.section )
+				.html( `<i class="eicon-${ indicatorSettings.icon }"></i>` );
+
+			this.ui.indicators.append( $indicator );
+
+			// Added delay of 500ms because the indicators bar has a CSS transition attribute of .5s
+			$indicator.tipsy( { delayIn: 300, gravity: 's' } );
+		} );
+	}
+
+	/**
+	 * Update the selection of the current navigator element according to it's corresponding document element.
+	 */
+	updateSelection() {
+		if (
+			Object.keys( elementor.selection.elements )
+				.includes( this.model.get( 'id' ) )
+		) {
+			this.select();
+		} else {
+			this.deselect();
+		}
+	}
+
+	/**
+	 * Select the element.
+	 */
+	select() {
+		this.recursiveParentInvoke( 'toggleList', true );
+
+		this.addEditingClass();
+
+		elementor.helpers.scrollToView( this.$el, 400, elementor.navigator.getLayout().elements.$el );
+	}
+
+	/**
+	 * Deselect the element.
+	 */
+	deselect() {
+		this.removeEditingClass();
+	}
+
+	onRender() {
+		this.activateSortable();
+
+		if ( this.isNavigatorContainer() ) {
+			return;
+		}
+
+		this.ui.item.css( 'padding-inline-start', this.getIndent() + 'px' );
+
+		this.toggleHiddenClass();
+		this.renderIndicators();
+		this.syncNavigatorStructureState();
+	}
+
+	onModelChange() {
+		if (
+			undefined !== this.model.changed.hidden ||
+			undefined !== this.model.changed.editor_settings?.is_hidden
+		) {
+			this.toggleHiddenClass();
+		}
+	}
+
+	onModelSettingsChange( settingsModel ) {
+		if ( undefined !== settingsModel.changed._title ) {
+			this.ui.title.text( this.model.getTitle() );
+		}
+
+		if ( undefined !== settingsModel.changed.presetTitle && undefined === settingsModel._title ) {
+			this.ui.title.text( this.model.getTitle() );
+		}
+
+		if ( undefined !== settingsModel.changed.presetIcon ) {
+			this.ui.icon.html( `<i class="${ this.model.attributes.icon }"></i>` );
+		}
+
+		jQuery.each( elementor.navigator.indicators, ( indicatorName, indicatorSettings ) => {
+			if ( Object.keys( settingsModel.changed ).filter( ( key ) => indicatorSettings.settingKeys.includes( key ) ).length ) {
+				this.renderIndicators();
+
+				return false;
+			}
+		} );
+	}
+
+	syncNavigatorStructureState() {
+		if ( this.isNavigatorContainer() ) {
+			return;
+		}
+
+		this.$el.toggleClass( 'elementor-navigator__element--has-children', !! this.hasChildren() );
+	}
+
+	onItemPress( event ) {
+		const ENTER_KEY = 13,
+			SPACE_KEY = 32;
+
+		if ( ENTER_KEY === event.keyCode ) {
+			this.onItemClick( event );
+			return;
+		}
+
+		if ( SPACE_KEY === event.keyCode ) {
+			this.onToggleListClick( event );
+		}
+	}
+
+	onItemClick( event ) {
+		window.dispatchEvent( new CustomEvent( 'elementor/navigator/item/click', {
+			detail: {
+				id: this.model.get( 'id' ),
+				type: this.model.get( 'elType' ),
+			},
+		} ) );
+
+		this.model.trigger( 'request:edit', {
+			append: event.ctrlKey || event.metaKey,
+			scrollIntoView: true,
+		} );
+	}
+
+	onToggleClick( event ) {
+		event.stopPropagation();
+
+		this.model.trigger( 'request:toggleVisibility' );
+	}
+
+	onTitleDoubleClick() {
+		this.enterTitleEditing();
+	}
+
+	onTitleKeyDown( event ) {
+		const ENTER_KEY = 13;
+
+		if ( ENTER_KEY === event.which ) {
+			event.preventDefault();
+
+			this.exitTitleEditing();
+		}
+	}
+
+	onTitlePaste( event ) {
+		event.preventDefault();
+
+		document.execCommand( 'insertHTML', false, event.originalEvent.clipboardData.getData( 'text/plain' ) );
+	}
+
+	onToggleListClick( event ) {
+		event.stopPropagation();
+
+		this.toggleList();
+	}
+
+	onSortStart( event, ui ) {
+		this.model.trigger( 'request:sort:start', event, ui );
+
+		jQuery( ui.item ).children( '.elementor-navigator__item' ).trigger( 'click' );
+
+		elementor.navigator.getLayout().activateElementsMouseInteraction();
+	}
+
+	onSortStop() {
+		elementor.navigator.getLayout().deactivateElementsMouseInteraction();
+	}
+
+	onSortOver( event ) {
+		event.stopPropagation();
+
+		this.$el.addClass( 'elementor-dragging-on-child' );
+	}
+
+	onSortOut( event ) {
+		event.stopPropagation();
+
+		this.$el.removeClass( 'elementor-dragging-on-child' );
+	}
+
+	onSortUpdate( event, ui ) {
+		event.stopPropagation();
+
+		if ( ! this.ui.elements.is( ui.item.parent() ) ) {
+			return;
+		}
+
+		this.model.trigger( 'request:sort:update', ui );
+	}
+
+	onSortReceive( event, ui ) {
+		this.model.trigger( 'request:sort:receive', event, ui );
+	}
+
+	onMouseEnter( event ) {
+		event.stopPropagation();
+
+		const dragShouldBeIgnored = this.recursiveChildAgreement( 'dragShouldBeIgnored', elementor.channels.data.request( 'dragging:model' ) );
+
+		if ( dragShouldBeIgnored ) {
+			return;
+		}
+
+		this.autoExpandTimeout = setTimeout( () => {
+			this.toggleList( true, () => {
+				this.ui.elements.sortable( 'refreshPositions' );
+			} );
+		}, 500 );
+	}
+
+	onMouseLeave( event ) {
+		event.stopPropagation();
+
+		clearTimeout( this.autoExpandTimeout );
+	}
+
+	onContextMenu( event ) {
+		this.model.trigger( 'request:contextmenu', event, { location: elementorCommon.eventsManager.config.locations.structurePanel } );
+	}
+
+	onEditRequest() {
+		elementor.navigator.getLayout().elements.currentView.recursiveChildInvoke( 'removeEditingClass' );
+
+		this.select( true );
+	}
+
+	onIndicatorClick( event ) {
+		const section = event.currentTarget.dataset.section;
+
+		setTimeout( () => {
+			const editor = elementor.getPanelView().currentPageView,
+				tab = editor.getControlModel( section ).get( 'tab' );
+
+			editor.activateSection( section );
+
+			editor.activateTab( tab );
+
+			editor.render();
+		} );
+	}
+}
