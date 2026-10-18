@@ -71,7 +71,7 @@ const EXTERNAL_ELEMENTOR_PKGS = new Set( [
 const URL_TAIL = '[^\\s"\'`)<>\\]\\\\]*';
 const PROTECT = [
 	// attribution lines (whole line)
-	{ name: 'attribution', re: /^.*(?:copyright[^\n]*elementor|based on elementor|written by the elementor|elementor ltd).*$/gim },
+	{ name: 'attribution', re: /^.*(?:copyright[^\n]*elementor|based on elementor|(?:fork|forked|derived) (?:of|from) (?:the )?(?:open-source )?elementor|written by the elementor|elementor ltd).*$/gim },
 	// URLs whose host contains "elementor" (elementor.com, go.elementor.com, elementor.atlassian.net, ...)
 	{ name: 'url-host', re: new RegExp( `(?:https?:)?\\/\\/(?:[\\w-]+\\.)*elementor[\\w-]*\\.[a-z][a-z.]*${ URL_TAIL }`, 'gi' ) },
 	// URLs on github / wordpress.org / npm that point at an elementor repo or package
@@ -82,6 +82,9 @@ const PROTECT = [
 	{ name: 'hello-theme', re: /hello[-_ ]?elementor/gi },
 	// external composer dev packages
 	{ name: 'composer-external', re: /elementor\/(?:elementor-editor-testing|elementor-mcp-composer)/g },
+	// regex-literal forms written by hand in the Vite config: deep imports of the external UI packages
+	// and the "either scope" group that matches workspace and external packages alike.
+	{ name: 'regex-external-scope', re: /@elementor\\\/\(ui\|icons\)|\(\?:refraction\|elementor\)/g },
 	// external npm scopes
 	{
 		name: 'npm-external',

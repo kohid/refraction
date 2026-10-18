@@ -24,6 +24,7 @@ export const PLUGIN_FILE_PATTERNS = [
 	'!assets/js/qunit-tests*',
 	'!bin/**',
 	'!build/**',
+	'!dist/**',
 	'!composer.json',
 	'!composer.lock',
 	'!core/**/assets/**',

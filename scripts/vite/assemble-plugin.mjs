@@ -43,6 +43,7 @@ const PRUNED = [
 	'assets/dev/**',
 	'bin/**',
 	'build/**',
+	'dist/**',
 	'docs/**',
 	'examples/**',
 	'hello-elementor/**',
