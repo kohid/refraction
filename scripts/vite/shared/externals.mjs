@@ -10,7 +10,6 @@ export const BASE_EXTERNALS = {
 	'@refraction/app-ui': 'refractionAppPackages.appUi',
 	'@refraction/components': 'refractionAppPackages.components',
 	'@refraction/hooks': 'refractionAppPackages.hooks',
-	'@refraction/site-editor': 'refractionAppPackages.siteEditor',
 	'@refraction/router': 'refractionAppPackages.router',
 	'@elementor/ui': 'refractionV2.ui',
 	'@elementor/icons': 'refractionV2.icons',

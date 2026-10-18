@@ -38,3 +38,26 @@
 		position: fixed;
 	}
 }
+
+.e-admin-top-bar {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	box-sizing: border-box;
+	height: var(--editor-one-sidebar-admin-top-bar-height, 48px);
+	padding-inline: 20px;
+	background: #fff;
+	border-block-end: 1px solid #dcdcde;
+	z-index: 99;
+
+	&__name {
+		font-weight: 600;
+		font-size: 15px;
+		color: #1d2327;
+	}
+
+	&__title {
+		color: #646970;
+		font-size: 13px;
+	}
+}

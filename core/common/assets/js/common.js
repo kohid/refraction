@@ -3,11 +3,8 @@ import Storage from './utils/storage';
 import Debug from './utils/debug';
 import Ajax from 'refraction-common-modules/ajax/assets/js/ajax';
 import Finder from 'refraction-common-modules/finder/assets/js/finder';
-import Connect from 'refraction-common-modules/connect/assets/js/connect';
 import WordpressComponent from './components/wordpress/component';
-import EventsDispatcherComponent from 'refraction-common-modules/event-tracker/assets/js/data/component';
-import Events from 'refraction-common-modules/event-tracker/assets/js/events';
-import EventsManager from 'refraction-common-modules/events-manager/assets/js/module';
+import EventsManager from './utils/null-events-manager';
 import Notifications from 'refraction-utils/notifications';
 
 class RefractionCommonApp extends refractionModules.ViewModule {
@@ -47,8 +44,6 @@ class RefractionCommonApp extends refractionModules.ViewModule {
 	}
 
 	initComponents() {
-		this.events = new Events();
-
 		this.eventsManager = new EventsManager();
 
 		this.debug = new Debug();
@@ -63,8 +58,6 @@ class RefractionCommonApp extends refractionModules.ViewModule {
 
 		this.api = window.$e;
 
-		$e.components.register( new EventsDispatcherComponent() );
-
 		refractionCommon.elements.$window.on( 'refraction:init-components', () => {
 			$e.components.register( new WordpressComponent() );
 		} );
@@ -78,7 +71,6 @@ class RefractionCommonApp extends refractionModules.ViewModule {
 		const modules = {
 			ajax: Ajax,
 			finder: Finder,
-			connect: Connect,
 		};
 
 		activeModules.forEach( ( name ) => {

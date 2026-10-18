@@ -2,9 +2,7 @@
 
 namespace Refraction\Modules\EditorOne\Components;
 
-use Refraction\Modules\EditorOne\Classes\Refraction_One_Language_Mapper;
 use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Refraction\Modules\EditorOne\Classes\Top_Bar_Locale_Assets;
 use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,7 +15,6 @@ class Top_Bar_Handler {
 
 	public function __construct() {
 		$this->menu_data_provider = Menu_Data_Provider::instance();
-		Top_Bar_Locale_Assets::register_script_loader_filter();
 		$this->register_actions();
 	}
 
@@ -54,19 +51,13 @@ class Top_Bar_Handler {
 			true
 		);
 
-		$wordpress_locale = get_user_locale();
-		$language_codes = Refraction_One_Language_Mapper::get_top_bar_language_codes( $wordpress_locale );
-		$locale_language_base_urls = Top_Bar_Locale_Assets::enqueue_for_languages( $language_codes );
-
 		wp_localize_script(
 			'editor-one-top-bar',
 			'refractionOneTopBarConfig',
 			[
 				'version' => REFRACTION_VERSION,
 				'title' => __( 'website builder', 'refraction' ),
-				'environment' => apply_filters( 'refraction/environment', 'production' ),
-				'locale' => $wordpress_locale,
-				'localeLanguageBaseUrls' => $locale_language_base_urls,
+				'logoUrl' => REFRACTION_ASSETS_URL . 'images/logo-icon.png',
 			]
 		);
 	}

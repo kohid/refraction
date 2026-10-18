@@ -27,12 +27,10 @@ import Events from 'refraction-utils/events';
 import DocumentComponent from './document/component';
 import DataGlobalsComponent from './data/globals/component';
 import ControlConditions from './utils/control-conditions';
-import PromotionModule from 'refraction/modules/promotions/assets/js/editor/module';
 
 import FloatingButtonsLibraryModule from 'refraction/modules/floating-buttons/assets/js/floating-buttons/editor/module';
 import FloatingBarsLibraryModule from 'refraction/modules/floating-buttons/assets/js/floating-bars/editor/module';
 import LinkInBioLibraryModule from 'refraction/modules/link-in-bio/assets/js/editor/module';
-import CloudLibraryModule from 'refraction/modules/cloud-library/assets/js/editor/module';
 
 import * as elementTypes from './elements/types';
 import * as hints from './hints';
@@ -488,10 +486,6 @@ export default class EditorBase extends Marionette.Application {
 		this.modules.floatingBarsLibraryModule = new FloatingBarsLibraryModule();
 
 		this.modules.elementsColorPicker = new ElementsColorPicker();
-
-		this.modules.promotionModule = new PromotionModule();
-
-		this.modules.cloudLibraryModule = new CloudLibraryModule();
 
 		// TODO: Move to refraction:init-data-components
 		$e.components.register( new DataGlobalsComponent() );

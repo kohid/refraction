@@ -8,12 +8,10 @@ import router from './router';
 
 // Alphabetical order.
 import { appUi, components, hooks } from './package';
-import siteEditor from '../../modules/site-editor/assets/js/package';
 
 window.refractionAppPackages = {
 	appUi,
 	components,
 	hooks,
 	router,
-	siteEditor,
 };

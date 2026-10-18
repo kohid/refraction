@@ -11,11 +11,6 @@ import { generateEiconsFile } from './shared/eicons.mjs';
 import { BASE_ENTRIES, FRONTEND_ENTRIES, QUNIT_ENTRIES } from './shared/entries.mjs';
 import { ASSETS_JS } from './shared/paths.mjs';
 import {
-	copyRefractionOneLocales,
-	verifyRefractionOneLocaleAssets,
-} from './shared/refraction-one-locales.mjs';
-import {
-	verifyEditorOneTopBarLocaleLoading,
 	verifyNoUnresolvedImports,
 	verifySelfPublishedGlobals,
 } from './shared/verify-bundles.mjs';
@@ -181,7 +176,6 @@ export async function buildScripts( { targets, watch, devOnly, prodOnly, clean }
 
 	// The frontend entries import the generated icon module, so it has to exist before bundling.
 	generateEiconsFile();
-	copyRefractionOneLocales();
 
 	const watchers = [];
 	const modes = resolveModes( { devOnly, prodOnly } );
@@ -195,9 +189,7 @@ export async function buildScripts( { targets, watch, devOnly, prodOnly, clean }
 	writeRuntimePlaceholders();
 
 	if ( ! watch ) {
-		verifyRefractionOneLocaleAssets();
 		verifyNoUnresolvedImports();
-		verifyEditorOneTopBarLocaleLoading();
 		verifySelfPublishedGlobals();
 		return;
 	}

@@ -58,16 +58,6 @@ if ( file_exists( REFRACTION_PATH . 'vendor/autoload_packages.php' ) ) {
 	// Autoload classmap doesn't include this file.
 }
 
-$deprecation_func_file = REFRACTION_PATH . 'vendor_prefixed/twig/symfony/deprecation-contracts/function.php';
-if ( file_exists( $deprecation_func_file ) ) {
-	require_once $deprecation_func_file;
-	if ( ! function_exists( 'trigger_deprecation' ) ) {
-		function trigger_deprecation( string $package, string $version, string $message, ...$args ): void {
-			\RefractionDeps\trigger_deprecation( $package, $version, $message, ...$args );
-		}
-	}
-}
-
 if ( ! version_compare( PHP_VERSION, '7.4', '>=' ) ) {
 	add_action( 'admin_notices', 'refraction_fail_php_version' );
 } elseif ( ! version_compare( get_bloginfo( 'version' ), REFRACTION_MINIMUM_WP_VERSION, '>=' ) ) {

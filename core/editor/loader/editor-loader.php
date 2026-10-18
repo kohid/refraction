@@ -260,13 +260,13 @@ final class Editor_Loader {
 
 		return [
 			'ace' => [
-				'src' => 'https://cdn.jsdelivr.net/npm/ace-builds@1.43.2/src-min-noconflict/ace.min.js',
+				'src' => "{$assets_url}lib/ace/ace.js",
 				'deps' => [],
 				'ver' => '1.43.2',
 			],
 
 			'ace-language-tools' => [
-				'src' => 'https://cdn.jsdelivr.net/npm/ace-builds@1.43.2/src-min-noconflict/ext-language_tools.js',
+				'src' => "{$assets_url}lib/ace/ext-language_tools.js",
 				'deps' => [ 'ace' ],
 				'ver' => '1.43.2',
 			],
