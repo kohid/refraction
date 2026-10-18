@@ -36,16 +36,14 @@ class Test_Elementor_One_Menu_Manager_Protected_Slugs extends Elementor_Test_Bas
 		$this->reset_menu_data_provider();
 	}
 
-	public function test_hide_flyout_items_from_wp_menu__keeps_agents_ready_like_mcp() {
+	public function test_hide_flyout_items_from_wp_menu__keeps_agents_ready() {
 		// Arrange
 		global $submenu;
 		$submenu[ Menu_Config::ELEMENTOR_HOME_MENU_SLUG ] = [
-			[ 'Elementor MCP', 'manage_options', 'elementor-mcp' ],
 			[ 'Agent Ready', 'manage_options', 'elementor-agents-ready' ],
 			[ 'Element Manager', 'manage_options', 'elementor-element-manager' ],
 		];
 
-		$this->register_flyout_item( 'elementor-mcp' );
 		$this->register_flyout_item( 'elementor-agents-ready' );
 		$this->register_flyout_item( 'elementor-element-manager' );
 
@@ -55,7 +53,6 @@ class Test_Elementor_One_Menu_Manager_Protected_Slugs extends Elementor_Test_Bas
 		// Assert
 		$remaining_slugs = array_column( $submenu[ Menu_Config::ELEMENTOR_HOME_MENU_SLUG ], 2 );
 
-		$this->assertContains( 'elementor-mcp', $remaining_slugs );
 		$this->assertContains( 'elementor-agents-ready', $remaining_slugs );
 		$this->assertNotContains( 'elementor-element-manager', $remaining_slugs );
 	}

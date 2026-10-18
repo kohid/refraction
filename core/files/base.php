@@ -61,7 +61,7 @@ abstract class Base {
 		 *
 		 * Filters the absolute filesystem path of the Elementor files base directory.
 		 * Applies to all `Elementor\Core\Files\Base` consumers (Post CSS, Global CSS,
-		 * Frontend CSS, Google Fonts, atomic CSS, etc.) — not only atomic CSS.
+		 * Frontend CSS, Google Fonts, etc.)
 		 *
 		 * Can be filtered independently of `elementor/files/base_url`:
 		 *  - Filter both to relocate Elementor files (e.g. WP VIP where `uploads/` is read-only).
@@ -99,7 +99,7 @@ abstract class Base {
 		 *
 		 * Filters the public URL of the Elementor files base directory.
 		 * Applies to all `Elementor\Core\Files\Base` consumers (Post CSS, Global CSS,
-		 * Frontend CSS, Google Fonts, atomic CSS, etc.) — not only atomic CSS.
+		 * Frontend CSS, Google Fonts, etc.)
 		 *
 		 * Accepts absolute (`https://cdn.example.com/…`) and protocol-relative
 		 * (`//cdn.example.com/…`) URLs. Can be filtered independently of

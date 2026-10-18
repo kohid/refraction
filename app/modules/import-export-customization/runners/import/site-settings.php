@@ -19,8 +19,6 @@ class Site_Settings extends Import_Runner_Base {
 		'customCode',
 		'customIcons',
 		'customFonts',
-		'classes',
-		'variables',
 	];
 
 	/**

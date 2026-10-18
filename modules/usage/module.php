@@ -3,9 +3,6 @@ namespace Elementor\Modules\Usage;
 
 use Elementor\Core\Base\Document;
 use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Modules\AtomicWidgets\Logger\Logger;
-use Elementor\Modules\AtomicWidgets\Module as Atomic_Widgets_Module;
-use Elementor\Modules\AtomicWidgets\Usage\Atomic_Element_Usage_Calculator;
 use Elementor\Modules\System_Info\Module as System_Info;
 use Elementor\Modules\Usage\Calculators\Legacy_Element_Usage_Calculator;
 use Elementor\Plugin;
@@ -459,7 +456,7 @@ class Module extends BaseModule {
 					$usage = $calculator->calculate( $element, $element_instance, $usage );
 				}
 			} catch ( \Throwable $e ) {
-				Logger::warning(
+				Plugin::$instance->logger->get_logger()->warning(
 					'Usage calculation failed: ' . $e->getMessage(),
 					[
 						'element_type' => $type,
@@ -490,13 +487,7 @@ class Module extends BaseModule {
 		static $registry = null;
 
 		if ( null === $registry ) {
-			$calculators = [];
-
-			if ( Atomic_Widgets_Module::is_active() ) {
-				$calculators[] = new Atomic_Element_Usage_Calculator();
-			}
-
-			$registry = new Element_Usage_Calculator_Registry( $calculators );
+			$registry = new Element_Usage_Calculator_Registry( [] );
 			$registry->set_fallback( new Legacy_Element_Usage_Calculator() );
 		}
 
@@ -526,7 +517,7 @@ class Module extends BaseModule {
 
 				$this->add_to_global( $document->get_name(), $usage );
 			} catch ( \Exception $exception ) {
-				Logger::warning( $exception->getMessage(), [
+				Plugin::$instance->logger->get_logger()->warning( $exception->getMessage(), [
 					'document_id' => $document->get_id(),
 					'document_name' => $document->get_name(),
 				] );

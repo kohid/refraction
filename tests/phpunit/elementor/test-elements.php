@@ -1,7 +1,6 @@
 <?php
 namespace Elementor\Testing;
 
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
 use Elementor\Elements_Manager;
 use Elementor\Plugin;
 use Elementor\Utils;
@@ -118,15 +117,15 @@ class Elementor_Test_Elements extends Elementor_Test_Base {
 
 		// Act
 		$this->invoke_promote_category_after( $manager, 'test-promote-position', [
-			Elements_Manager::CATEGORY_ATOMIC_ELEMENTS,
+			Elements_Manager::CATEGORY_BASIC,
 		] );
 
 		// Assert
 		$keys = array_keys( $manager->get_categories() );
-		$atomic_pos = array_search( Elements_Manager::CATEGORY_ATOMIC_ELEMENTS, $keys, true );
+		$basic_anchor_pos = array_search( Elements_Manager::CATEGORY_BASIC, $keys, true );
 		$target_pos = array_search( 'test-promote-position', $keys, true );
 
-		$this->assertSame( $atomic_pos + 1, $target_pos );
+		$this->assertSame( $basic_anchor_pos + 1, $target_pos );
 	}
 
 	public function test_promote_category_after__uses_first_existing_candidate() {
@@ -137,15 +136,15 @@ class Elementor_Test_Elements extends Elementor_Test_Base {
 		// Act
 		$this->invoke_promote_category_after( $manager, 'test-promote-fallback', [
 			'non-existent-category',
-			Elements_Manager::CATEGORY_ATOMIC_ELEMENTS,
+			Elements_Manager::CATEGORY_BASIC,
 		] );
 
 		// Assert
 		$keys = array_keys( $manager->get_categories() );
-		$atomic_pos = array_search( Elements_Manager::CATEGORY_ATOMIC_ELEMENTS, $keys, true );
+		$basic_anchor_pos = array_search( Elements_Manager::CATEGORY_BASIC, $keys, true );
 		$target_pos = array_search( 'test-promote-fallback', $keys, true );
 
-		$this->assertSame( $atomic_pos + 1, $target_pos );
+		$this->assertSame( $basic_anchor_pos + 1, $target_pos );
 	}
 
 	public function test_promote_category_after__does_nothing_when_category_not_registered() {
@@ -155,7 +154,7 @@ class Elementor_Test_Elements extends Elementor_Test_Base {
 
 		// Act
 		$this->invoke_promote_category_after( $manager, 'non-existent', [
-			Elements_Manager::CATEGORY_ATOMIC_ELEMENTS,
+			Elements_Manager::CATEGORY_BASIC,
 		] );
 
 		// Assert
@@ -186,7 +185,7 @@ class Elementor_Test_Elements extends Elementor_Test_Base {
 
 		// Act
 		$this->invoke_promote_category_after( $manager, 'test-promote-props', [
-			Elements_Manager::CATEGORY_ATOMIC_ELEMENTS,
+			Elements_Manager::CATEGORY_BASIC,
 		] );
 
 		// Assert
@@ -194,49 +193,9 @@ class Elementor_Test_Elements extends Elementor_Test_Base {
 		$this->assertSame( $properties, $categories['test-promote-props'] );
 	}
 
-	public function test_promote_category_after__places_pro_before_layout() {
+	public function test_init_categories__promotes_angie_and_custom_widgets_after_basic() {
 		// Arrange
-		$manager = $this->elementor()->elements_manager;
-		$this->set_categories( $manager, [
-			Elements_Manager::CATEGORY_FAVORITES => [ 'title' => 'Favorites' ],
-			Elements_Manager::CATEGORY_ATOMIC_ELEMENTS => [ 'title' => 'Atomic Elements' ],
-			Elements_Manager::CATEGORY_ATOMIC_FORM => [ 'title' => 'Atomic Form' ],
-			Elements_Manager::CATEGORY_ANGIE_WIDGETS => [ 'title' => 'Angie Widgets' ],
-			Elements_Manager::CATEGORY_CUSTOM_WIDGETS => [ 'title' => 'Custom Widgets' ],
-			'layout' => [ 'title' => 'Layout' ],
-			Elements_Manager::CATEGORY_BASIC => [ 'title' => 'Basic' ],
-			Elements_Manager::CATEGORY_PRO_ELEMENTS => [ 'title' => 'Pro' ],
-		] );
-
-		// Act
-		$this->invoke_promote_category_after( $manager, Elements_Manager::CATEGORY_PRO_ELEMENTS, [
-			Elements_Manager::CATEGORY_CUSTOM_WIDGETS,
-			Elements_Manager::CATEGORY_ANGIE_WIDGETS,
-			Elements_Manager::CATEGORY_ATOMIC_FORM,
-			Elements_Manager::CATEGORY_ATOMIC_ELEMENTS,
-		] );
-
-		// Assert
-		$keys = array_keys( $manager->get_categories() );
-		$custom_pos = array_search( Elements_Manager::CATEGORY_CUSTOM_WIDGETS, $keys, true );
-		$pro_pos = array_search( Elements_Manager::CATEGORY_PRO_ELEMENTS, $keys, true );
-		$layout_pos = array_search( 'layout', $keys, true );
-		$basic_pos = array_search( Elements_Manager::CATEGORY_BASIC, $keys, true );
-
-		$this->assertGreaterThan( $custom_pos, $pro_pos, 'pro-elements should appear after custom-widgets when V4 is active' );
-		$this->assertLessThan( $layout_pos, $pro_pos, 'pro-elements should appear before layout when V4 is active' );
-		$this->assertLessThan( $basic_pos, $pro_pos, 'pro-elements should appear before basic when V4 is active' );
-	}
-
-	public function test_init_categories__v4_active__promotes_pro_before_layout_for_free_users() {
-		if ( Utils::has_pro() ) {
-			$this->markTestSkipped( 'Cannot test free user category order when Pro is already active.' );
-		}
-
-		// Arrange
-		$experiments = Plugin::$instance->experiments;
-		$cb          = $this->register_test_widget_categories();
-		$experiments->set_feature_default_state( 'e_atomic_elements', Experiments_Manager::STATE_ACTIVE );
+		$cb = $this->register_test_widget_categories();
 
 		$manager = $this->elementor()->elements_manager;
 		$this->reset_categories( $manager );
@@ -246,35 +205,6 @@ class Elementor_Test_Elements extends Elementor_Test_Base {
 
 		// Cleanup
 		remove_action( 'elementor/elements/categories_registered', $cb, 20 );
-		$experiments->set_feature_default_state( 'e_atomic_elements', Experiments_Manager::STATE_ACTIVE );
-		$this->reset_categories( $manager );
-
-		// Assert – pro-elements appears after custom-widgets and before layout for free users
-		$custom_pos = array_search( Elements_Manager::CATEGORY_CUSTOM_WIDGETS, $keys, true );
-		$pro_pos    = array_search( Elements_Manager::CATEGORY_PRO_ELEMENTS, $keys, true );
-		$layout_pos = array_search( 'layout', $keys, true );
-		$basic_pos  = array_search( Elements_Manager::CATEGORY_BASIC, $keys, true );
-
-		$this->assertGreaterThan( $custom_pos, $pro_pos, 'pro-elements should appear after custom-widgets when V4 is active' );
-		$this->assertLessThan( $layout_pos, $pro_pos, 'pro-elements should appear before layout when V4 is active' );
-		$this->assertLessThan( $basic_pos, $pro_pos, 'pro-elements should appear before basic when V4 is active' );
-	}
-
-	public function test_init_categories__v4_inactive__promotes_angie_and_custom_widgets_after_basic() {
-		// Arrange
-		$experiments = Plugin::$instance->experiments;
-		$cb          = $this->register_test_widget_categories();
-		$experiments->set_feature_default_state( 'e_atomic_elements', Experiments_Manager::STATE_INACTIVE );
-
-		$manager = $this->elementor()->elements_manager;
-		$this->reset_categories( $manager );
-
-		// Act
-		$keys = array_keys( $manager->get_categories() );
-
-		// Cleanup
-		remove_action( 'elementor/elements/categories_registered', $cb, 20 );
-		$experiments->set_feature_default_state( 'e_atomic_elements', Experiments_Manager::STATE_ACTIVE );
 		$this->reset_categories( $manager );
 
 		// Assert – both sections land after 'basic' and before 'pro-elements'
@@ -287,32 +217,6 @@ class Elementor_Test_Elements extends Elementor_Test_Base {
 		$this->assertLessThan( $pro_pos, $angie_pos, 'angie-widgets should appear before pro-elements' );
 		$this->assertGreaterThan( $basic_pos, $custom_pos, 'custom-widgets should appear after basic' );
 		$this->assertLessThan( $pro_pos, $custom_pos, 'custom-widgets should appear before pro-elements' );
-	}
-
-	public function test_init_categories__v4_active__promotes_angie_and_custom_widgets_after_atomic_elements() {
-		// Arrange
-		$experiments = Plugin::$instance->experiments;
-		$cb          = $this->register_test_widget_categories();
-		$experiments->set_feature_default_state( 'e_atomic_elements', Experiments_Manager::STATE_ACTIVE );
-
-		$manager = $this->elementor()->elements_manager;
-		$this->reset_categories( $manager );
-
-		// Act
-		$keys = array_keys( $manager->get_categories() );
-
-		// Cleanup
-		remove_action( 'elementor/elements/categories_registered', $cb, 20 );
-		$experiments->set_feature_default_state( 'e_atomic_elements', Experiments_Manager::STATE_ACTIVE );
-		$this->reset_categories( $manager );
-
-		// Assert – angie-widgets lands after atomic-elements and before 'basic'
-		$atomic_pos = array_search( Elements_Manager::CATEGORY_ATOMIC_ELEMENTS, $keys, true );
-		$angie_pos  = array_search( Elements_Manager::CATEGORY_ANGIE_WIDGETS, $keys, true );
-		$basic_pos  = array_search( 'basic', $keys, true );
-
-		$this->assertGreaterThan( $atomic_pos, $angie_pos, 'angie-widgets should appear after atomic-elements when V4 is active' );
-		$this->assertLessThan( $basic_pos, $angie_pos, 'angie-widgets should appear before basic when V4 is active' );
 	}
 
 	private function invoke_promote_category_after( $manager, string $category_name, array $after_candidates ): void {

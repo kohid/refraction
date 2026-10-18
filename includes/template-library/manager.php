@@ -6,7 +6,6 @@ use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
 use Elementor\Core\Settings\Manager as SettingsManager;
 use Elementor\Includes\TemplateLibrary\Data\Controller;
 use Elementor\TemplateLibrary\Classes\Import_Images;
-use Elementor\Core\Utils\Template_Library_Import_Export_Utils;
 use Elementor\Plugin;
 use Elementor\User;
 use Elementor\Utils;
@@ -621,8 +620,7 @@ class Manager {
 
 		$source = $this->get_source( $data['source'] ?? 'local' );
 
-		$import_mode = $data['import_mode'] ?? 'match_site';
-		$import_result = $source->import_template( $upload_result['name'], $upload_result['tmp_name'], $import_mode );
+		$import_result = $source->import_template( $upload_result['name'], $upload_result['tmp_name'] );
 
 		// Remove the temporary directory generated for the stream-uploaded file.
 		Plugin::$instance->uploads_manager->remove_file_or_dir( dirname( $upload_result['tmp_name'] ) );
@@ -693,90 +691,6 @@ class Manager {
 			unset( $element_data['htmlCache'] );
 			return $element_data;
 		} );
-	}
-
-	public function process_global_styles( array $args ) {
-		$validate_args = $this->ensure_args( [ 'content', 'import_mode' ], $args );
-
-		if ( is_wp_error( $validate_args ) ) {
-			return $validate_args;
-		}
-
-		$import_mode = Template_Library_Import_Export_Utils::sanitize_import_mode( $args['import_mode'] );
-
-		$content = $this->get_validated_json_arg( $args, 'content' );
-		if ( is_wp_error( $content ) ) {
-			return $content;
-		}
-
-		$global_classes = $this->get_validated_json_arg( $args, 'global_classes', true );
-		if ( is_wp_error( $global_classes ) ) {
-			return $global_classes;
-		}
-
-		$global_variables = $this->get_validated_json_arg( $args, 'global_variables', true );
-		if ( is_wp_error( $global_variables ) ) {
-			return $global_variables;
-		}
-
-		$data = [
-			'global_classes' => $global_classes,
-			'global_variables' => $global_variables,
-		];
-
-		$result = apply_filters(
-			'elementor/template_library/import/process_content',
-			[ 'content' => $content ],
-			$import_mode,
-			$data,
-			null
-		);
-
-		$response = [
-			'content' => $result['content'],
-		];
-
-		if ( ! empty( $result['updated_global_classes'] ) ) {
-			$response['updated_global_classes'] = $result['updated_global_classes'];
-		}
-
-		if ( ! empty( $result['updated_global_variables'] ) ) {
-			$response['updated_global_variables'] = $result['updated_global_variables'];
-		}
-
-		$classes_to_flatten = $result['classes_to_flatten'] ?? [];
-		$variables_to_flatten = $result['variables_to_flatten'] ?? [];
-
-		if ( ! empty( $classes_to_flatten ) ) {
-			$response['flattened_classes_count'] = count( $classes_to_flatten );
-		}
-
-		if ( ! empty( $variables_to_flatten ) ) {
-			$response['flattened_variables_count'] = count( $variables_to_flatten );
-		}
-
-		return $response;
-	}
-
-	private function get_validated_json_arg( array $args, string $key, bool $is_optional = false ) {
-		if ( ! array_key_exists( $key, $args ) || null === $args[ $key ] || '' === $args[ $key ] ) {
-			return $is_optional ? null : new \WP_Error( "invalid_$key", "Invalid $key." );
-		}
-
-		$value = $args[ $key ];
-		if ( is_string( $value ) ) {
-			$decoded = json_decode( $value, true );
-			if ( JSON_ERROR_NONE !== json_last_error() ) {
-				return new \WP_Error( "invalid_$key", "Invalid JSON $key." );
-			}
-			return $decoded;
-		}
-
-		if ( ! is_array( $value ) ) {
-			return new \WP_Error( "invalid_$key", "Invalid $key format." );
-		}
-
-		return $value;
 	}
 
 	public function get_item_children( array $args ) {
@@ -1031,7 +945,6 @@ class Manager {
 			'bulk_undo_delete_items',
 			'get_templates_quota',
 			'template_screenshot_failed',
-			'process_global_styles',
 		];
 
 		foreach ( $library_ajax_requests as $ajax_request ) {

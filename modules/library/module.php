@@ -2,7 +2,6 @@
 namespace Elementor\Modules\Library;
 
 use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Modules\AtomicWidgets\Module as AtomicWidgets_Module;
 use Elementor\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {

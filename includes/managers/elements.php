@@ -17,8 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Elements_Manager {
 
-	const CATEGORY_ATOMIC_ELEMENTS = 'v4-elements';
-	const CATEGORY_ATOMIC_FORM = 'atomic-form';
 	const CATEGORY_FAVORITES = 'favorites';
 	const CATEGORY_ANGIE_WIDGETS = 'angie-widgets';
 	const CATEGORY_CUSTOM_WIDGETS = 'custom-widgets';
@@ -293,10 +291,6 @@ class Elements_Manager {
 	 */
 	private function init_categories() {
 		$this->categories = [
-			self::CATEGORY_ATOMIC_ELEMENTS => [
-				'title' => esc_html__( 'Atomic Elements', 'elementor' ),
-				'hideIfEmpty' => true,
-			],
 			'layout' => [
 				'title' => esc_html__( 'Layout', 'elementor' ),
 				'hideIfEmpty' => true,
@@ -339,29 +333,6 @@ class Elements_Manager {
 			],
 		];
 
-		if ( Plugin::$instance->experiments->is_feature_active( 'e_atomic_elements' ) ) {
-			$atomic_form_category = [
-				'title' => esc_html__( 'Atomic Form', 'elementor' ),
-			];
-
-			if ( Utils::has_pro() && Plugin::$instance->experiments->is_feature_active( 'e_pro_atomic_form' ) ) {
-				$atomic_form_category['hideIfEmpty'] = true;
-			} elseif ( ! Utils::has_pro() ) {
-				$atomic_form_category['hideIfEmpty'] = false;
-				$atomic_form_category['promotion'] = [
-					'url' => esc_url( 'https://go.elementor.com/go-pro-atomic-form-section/' ),
-				];
-			} else {
-				$atomic_form_category['hideIfEmpty'] = true;
-			}
-
-			$this->categories = array_merge(
-				[ self::CATEGORY_ATOMIC_ELEMENTS => $this->categories[ self::CATEGORY_ATOMIC_ELEMENTS ] ],
-				[ self::CATEGORY_ATOMIC_FORM => $atomic_form_category ],
-				array_diff_key( $this->categories, [ self::CATEGORY_ATOMIC_ELEMENTS => true ] )
-			);
-		}
-
 		// Not using the `add_category` because it doesn't allow 3rd party to inject a category on top the others.
 		$this->categories = array_merge_recursive( [
 			self::CATEGORY_FAVORITES => [
@@ -387,21 +358,10 @@ class Elements_Manager {
 		 */
 		do_action( 'elementor/elements/categories_registered', $this );
 
-		$after_candidates = Plugin::$instance->experiments->is_feature_active( 'e_atomic_elements' )
-			? [ self::CATEGORY_ATOMIC_FORM, self::CATEGORY_ATOMIC_ELEMENTS ]
-			: [ self::CATEGORY_BASIC ];
+		$after_candidates = [ self::CATEGORY_BASIC ];
 
 		$this->promote_category_after( self::CATEGORY_ANGIE_WIDGETS, $after_candidates );
 		$this->promote_category_after( self::CATEGORY_CUSTOM_WIDGETS, $after_candidates );
-
-		if ( ! Utils::has_pro() && Plugin::$instance->experiments->is_feature_active( 'e_atomic_elements' ) ) {
-			$this->promote_category_after( self::CATEGORY_PRO_ELEMENTS, [
-				self::CATEGORY_CUSTOM_WIDGETS,
-				self::CATEGORY_ANGIE_WIDGETS,
-				self::CATEGORY_ATOMIC_FORM,
-				self::CATEGORY_ATOMIC_ELEMENTS,
-			] );
-		}
 	}
 
 	public function enqueue_elements_styles() {

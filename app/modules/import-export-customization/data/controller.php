@@ -5,7 +5,6 @@ namespace Elementor\App\Modules\ImportExportCustomization\Data;
 use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Export;
 use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Import;
 use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Import_Runner;
-use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Manager_Url;
 use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Process_Media;
 use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Revert;
 use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Upload;
@@ -30,7 +29,6 @@ class Controller {
 		( new Export() )->register_route( self::API_NAMESPACE, self::API_BASE );
 		( new Import() )->register_route( self::API_NAMESPACE, self::API_BASE );
 		( new Import_Runner() )->register_route( self::API_NAMESPACE, self::API_BASE );
-		( new Manager_Url() )->register_route( self::API_NAMESPACE, self::API_BASE );
 		( new Process_Media() )->register_route( self::API_NAMESPACE, self::API_BASE );
 		( new Revert() )->register_route( self::API_NAMESPACE, self::API_BASE );
 		( new Upload() )->register_route( self::API_NAMESPACE, self::API_BASE );

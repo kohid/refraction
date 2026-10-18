@@ -1461,7 +1461,6 @@ class Frontend extends App {
 			],
 			'nonces' => [
 				'floatingButtonsClickTracking' => wp_create_nonce( Module::CLICK_TRACKING_NONCE ),
-				'atomicFormsSendForm' => wp_create_nonce( 'elementor_pro_atomic_forms_send_form' ),
 			],
 			'swiperClass' => 'swiper',
 		];

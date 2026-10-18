@@ -323,8 +323,5 @@ class Role_Manager extends Settings_Page {
 		add_action( 'elementor/role/restrictions/controls', [ $this, 'get_go_pro_link_html' ] );
 
 		add_filter( 'elementor/editor/user/restrictions', [ $this, 'get_role_manager_advanced_options' ] );
-
-		$content_only_save_guard = new Content_Only_Save_Guard();
-		$content_only_save_guard->register();
 	}
 }

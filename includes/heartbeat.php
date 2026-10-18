@@ -46,11 +46,6 @@ class Heartbeat {
 				do_action( 'elementor/heartbeat/unsaved_signal', $post_id, $data['elementor_has_unsaved'] );
 			}
 
-			$mutation_marker = apply_filters( 'elementor/heartbeat/mutation_marker', null, $post_id );
-			if ( $mutation_marker ) {
-				$response['elementor_mcp_mutation'] = $mutation_marker;
-			}
-
 			$response['elementor_server_time'] = time();
 
 			/** @var Core\Common\Modules\Ajax\Module $ajax */

@@ -96,10 +96,6 @@ class Menu_Config {
 				'position' => 70,
 				'icon' => 'send',
 			],
-			'elementor-mcp' => [
-				'position' => 25,
-				'icon' => 'extension',
-			],
 		];
 
 		return apply_filters( 'elementor/editor-one/menu/position_mapping', $default_mapping );

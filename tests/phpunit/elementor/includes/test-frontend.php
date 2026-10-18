@@ -1,7 +1,6 @@
 <?php
 namespace Elementor\Testing\Includes;
 
-use Elementor\Modules\AtomicWidgets\Elements\Atomic_Heading\Atomic_Heading;
 use Elementor\Plugin;
 use Elementor\Frontend;
 use ElementorEditorTesting\Elementor_Test_Base;

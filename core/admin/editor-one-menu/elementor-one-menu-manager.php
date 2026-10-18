@@ -309,7 +309,6 @@ class Elementor_One_Menu_Manager {
 			Menu_Config::EDITOR_MENU_SLUG,
 			'elementor-theme-builder',
 			'e-form-submissions',
-			'elementor-mcp',
 			'elementor-agents-ready',
 			'elementor-license',
 			'elementor-connect-account',

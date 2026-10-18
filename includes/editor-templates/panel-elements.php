@@ -1,7 +1,6 @@
 <?php
 namespace Elementor;
 
-use Elementor\Core\Utils\Hints;
 use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 use Elementor\Utils;
 
@@ -19,7 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div id="elementor-panel-elements-search-area"></div>
 	<div id="elementor-panel-elements-notice-area"></div>
 	<div id="elementor-panel-elements-wrapper"></div>
-	<div id="elementor-panel-elements-widget-creation-area"></div>
 </script>
 
 <script type="text/template" id="tmpl-elementor-panel-categories">
@@ -79,18 +77,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 </script>
 
 <script type="text/template" id="tmpl-elementor-element-library-element">
-	<# const v4Categories = ['v4-elements', 'atomic-form']; #>
 	<button class="elementor-element" data-library-element-type="{{ elType === 'widget' ? widgetType : elType }}">
 	<# if ( obj.integration ) { #>
 			<i class="eicon-plug"></i>
 		<# } else if ( false === obj.editable ) { #>
 			<i class="eicon-lock"></i>
-		<# } else if ( obj.categories.some( category => v4Categories.includes( category ) ) ) { #>
-			<# if ( obj.isNew ) { #>
-				<span class="e-widget-new-badge" aria-label="<?php echo esc_attr__( 'New', 'elementor' ); ?>"><?php echo esc_html__( 'New', 'elementor' ); ?></span>
-			<# } else { #>
-				<i class="eicon-atomic"></i>
-			<# } #>
 		<# } #>
 		<div class="icon">
 			<i class="{{ icon }}" aria-hidden="true"></i>
@@ -99,27 +90,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="title">{{{ title }}}</div>
 		</div>
 	</button>
-</script>
-
-<?php
-$widget_creation_cta_text = Hints::is_plugin_active( 'angie' )
-	? __( 'Create custom widget', 'elementor' )
-	: __( 'Try for free', 'elementor' );
-?>
-<script type="text/template" id="tmpl-elementor-panel-elements-widget-creation-empty-state">
-	<div class="elementor-panel-elements-widget-creation__title"><?php echo esc_html__( 'No widget found for', 'elementor' ); ?> "{{{ searchTerm }}}"</div>
-	<div class="elementor-panel-elements-widget-creation__message"><?php echo esc_html__( 'Build a custom widget with Angie by describing what you need.', 'elementor' ); ?></div>
-	<?php if ( current_user_can( 'manage_options' ) ) : ?>
-	<button type="button" class="elementor-panel-elements-widget-creation__cta"><?php echo esc_html( $widget_creation_cta_text ); ?></button>
-	<?php endif; ?>
-</script>
-
-<script type="text/template" id="tmpl-elementor-panel-elements-widget-creation-search-footer">
-	<div class="elementor-panel-elements-widget-creation__title"><?php echo esc_html__( "Couldn't find what you're looking for?", 'elementor' ); ?></div>
-	<div class="elementor-panel-elements-widget-creation__message"><?php echo esc_html__( 'Build a custom widget with Angie by describing what you need.', 'elementor' ); ?></div>
-	<?php if ( current_user_can( 'manage_options' ) ) : ?>
-	<button type="button" class="elementor-panel-elements-widget-creation__cta"><?php echo esc_html( $widget_creation_cta_text ); ?></button>
-	<?php endif; ?>
 </script>
 
 <script type="text/template" id="tmpl-elementor-panel-global">

@@ -10,7 +10,6 @@ import { $eType, Device, WindowType, BackboneType, ElementorType, GapControl, Co
 import TopBarSelectors, { TopBarSelector } from '../selectors/top-bar-selectors';
 import Breakpoints from '../assets/breakpoints';
 import { timeouts } from '../config/timeouts';
-import v4Panel from './atomic-elements-panel/v4-elements-panel';
 import { INLINE_EDITING_SELECTORS } from '../sanity/modules/v4-tests/inline-text-editing/selectors/selectors';
 
 let $e: $eType;
@@ -103,7 +102,6 @@ async function assertPublishSaveBuilderSucceeded( saveResponse: Response ): Prom
  * - Prefer adding small helpers over modifying existing ones in a breaking way.
  */
 export default class EditorPage extends BasePage {
-	readonly v4Panel: v4Panel;
 	readonly previewFrame: Frame;
 	postId: number;
 
@@ -116,7 +114,6 @@ export default class EditorPage extends BasePage {
 	 */
 	constructor( page: Page, testInfo: TestInfo, cleanPostId: null | number = null ) {
 		super( page, testInfo );
-		this.v4Panel = new v4Panel( page, testInfo, this );
 		this.previewFrame = this.getPreviewFrame();
 		this.postId = cleanPostId;
 	}
@@ -138,30 +135,6 @@ export default class EditorPage extends BasePage {
 			.replace( /[0-9]{4}\/[0-9]{2}/g, `${ year }/${ month }` )
 			.replace( /[0-9]{4}\\\/[0-9]{2}/g, `${ year }\\/${ month }` );
 		return JSON.parse( updatedData ) as Record<string, unknown>;
-	}
-
-	/**
-	 * Fix atomic widget image validation issues for test environments.
-	 *
-	 * Removes attachment IDs from e-image widgets since test database doesn't have
-	 * the referenced attachments, keeping only the URL for image loading.
-	 *
-	 * @param {Record<string, unknown>} templateData - Template data to fix.
-	 * @return {Record<string, unknown>} Fixed template data.
-	 */
-	fixAtomicWidgetSettings( templateData: Record<string, unknown> ): Record<string, unknown> {
-		const data = JSON.stringify( templateData );
-
-		// Find and fix e-image widgets with both id and url set
-		const fixedData = data.replace(
-			/"widgetType":"e-image"[^}]*"settings":\{[^}]*"image":\{[^}]*"value":\{[^}]*"src":\{[^}]*"value":\{[^}]*"id":(\d+|null)[^}]*"url":"([^"]+)"[^}]*}/g,
-			( match ) => {
-				// Remove the id field, keep only url
-				return match.replace( /"id":(\d+|null),?/, '' );
-			},
-		);
-
-		return JSON.parse( fixedData ) as Record<string, unknown>;
 	}
 
 	/**
@@ -201,7 +174,6 @@ export default class EditorPage extends BasePage {
 			templateData = this.updateImageDates( templateData );
 		}
 
-		templateData = this.fixAtomicWidgetSettings( templateData );
 
 		await this.page.evaluate( ( data ) => {
 			const model = new Backbone.Model( { title: 'test' } );

@@ -4,7 +4,6 @@ namespace Elementor\Core\Editor\Loader;
 use Elementor\Core\Utils\Assets_Config_Provider;
 use Elementor\Core\Utils\Assets_Translation_Loader;
 use Elementor\Core\Utils\Collection;
-use Elementor\Modules\AtomicWidgets\Utils\Image\Placeholder_Image;
 use Elementor\Plugin;
 use Elementor\Utils;
 
@@ -36,7 +35,6 @@ final class Editor_Loader {
 		'wp-media',
 		'editor-current-user',
 		'editor-elements-panel-notice',
-		'elementor-mcp-common',
 		'editor-embedded-documents-manager',
 	];
 
@@ -46,10 +44,6 @@ final class Editor_Loader {
 		'editor-notifications',
 		'editor-panels',
 		'editor-elements-panel',
-		'unlock-v4-promo',
-		'editor-mcp',
-		'elementor-v3-mcp',
-		'elementor-kit-mcp',
 	];
 
 	const ADDITIONAL_DEPS = [
@@ -149,9 +143,6 @@ final class Editor_Loader {
 					'headers' => [
 						'X-WP-Nonce' => wp_create_nonce( 'wp_rest' ),
 					],
-				],
-				'@elementor/editor-controls' => [
-					'background_placeholder_image' => Placeholder_Image::get_background_placeholder_image(),
 				],
 			] );
 

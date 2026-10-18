@@ -85,11 +85,6 @@ class Hints {
 				self::CAPABILITY => 'install_plugins',
 				self::PLUGIN_CONNECTED => [ 'ea11y', 'pojo-accessibility' ],
 			],
-			'ally_atomic_notice' => [
-				self::DISMISSED => 'ally_atomic_notice',
-				self::CAPABILITY => 'install_plugins',
-				self::PLUGIN_CONNECTED => [ 'ea11y', 'pojo-accessibility' ],
-			],
 		];
 		if ( ! $hint_key ) {
 			return $hints;

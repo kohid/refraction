@@ -71,7 +71,7 @@ class Import extends Base_Route {
 			],
 			'include' => [
 				'type' => 'array',
-				'description' => 'Content types to import (e.g. templates, content, plugins, settings, design-system)',
+				'description' => 'Content types to import (e.g. templates, content, plugins, settings)',
 				'required' => false,
 				'default' => [],
 			],

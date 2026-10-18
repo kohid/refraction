@@ -438,10 +438,6 @@ class Admin extends App {
 	public function admin_footer_text( $footer_text ) {
 		$current_screen = get_current_screen();
 
-		if ( $current_screen && str_ends_with( $current_screen->id, 'elementor-mcp' ) ) {
-			return $footer_text;
-		}
-
 		$is_elementor_screen = ( $current_screen && false !== strpos( $current_screen->id, 'elementor' ) );
 
 		if ( $is_elementor_screen ) {

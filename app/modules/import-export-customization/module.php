@@ -7,10 +7,7 @@ use Elementor\App\Modules\ImportExportCustomization\Processes\Revert;
 use Elementor\Core\Base\Module as BaseModule;
 use Elementor\Core\Files\Uploads_Manager;
 use Elementor\Modules\CloudKitLibrary\Module as CloudKitLibrary;
-use Elementor\Modules\GlobalClasses\Global_Classes_REST_API;
 use Elementor\Modules\System_Info\Reporters\Server;
-use Elementor\Modules\Variables\Storage\Constants;
-use Elementor\Modules\Variables\Storage\Variables_Collection;
 use Elementor\Plugin;
 use Elementor\Tools;
 use Elementor\Utils as ElementorUtils;
@@ -634,7 +631,6 @@ class Module extends BaseModule {
 			'manifestVersion' => self::FORMAT_VERSION,
 			'elementorVersion' => ELEMENTOR_VERSION,
 			'upgradeVersionUrl' => admin_url( 'plugins.php' ),
-			'limits' => $this->get_limits(),
 		];
 	}
 
@@ -653,21 +649,6 @@ class Module extends BaseModule {
 		}
 
 		return $export_groups;
-	}
-
-	private function get_limits() {
-		$classes_limit = class_exists( Global_Classes_REST_API::class )
-			? Global_Classes_REST_API::MAX_ITEMS
-			: 100;
-
-		$variables_limit = class_exists( Constants::class )
-			? Constants::TOTAL_VARIABLES_COUNT
-			: 100;
-
-		return [
-			'classes' => $classes_limit,
-			'variables' => $variables_limit,
-		];
 	}
 
 	/**
