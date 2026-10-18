@@ -56,40 +56,68 @@ class Settings extends Settings_Page {
 	const MENU_CAPABILITY_EDIT_POSTS = 'edit_posts';
 
 	/**
-	 * Register admin menu.
+	 * Render the Refraction home screen (the first page of the top-level "Refraction" admin menu).
 	 *
-	 * Add new Refraction Settings admin menu.
-	 *
-	 * Fired by `admin_menu` action.
-	 *
-	 * @since 1.0.0
-	 * @access public
+	 * Local only: it links to pages that exist in this plugin and loads no remote content.
 	 */
-	public function register_admin_menu() {
-		if ( ! current_user_can( self::MENU_CAPABILITY_EDIT_POSTS ) ) {
-			return;
-		}
-
-		add_menu_page(
-			esc_html__( 'Refraction', 'refraction' ),
-			esc_html__( 'Refraction', 'refraction' ),
-			self::MENU_CAPABILITY_EDIT_POSTS,
-			self::PAGE_ID,
-			[ $this, 'display_home_screen' ],
-			'',
-			'58.5'
-		);
-	}
-
 	public function display_home_screen() {
-		// The remote-fed home screen was removed. Render a local-only landing page.
+		$links = [
+			[
+				'cap' => 'edit_posts',
+				'url' => admin_url( 'edit.php?post_type=refraction_library&tabs_group=library' ),
+				'title' => esc_html__( 'My Templates', 'refraction' ),
+				'text' => esc_html__( 'Open, import and export your saved templates.', 'refraction' ),
+			],
+			[
+				'cap' => 'manage_options',
+				'url' => admin_url( 'admin.php?page=refraction-settings' ),
+				'title' => esc_html__( 'Settings', 'refraction' ),
+				'text' => esc_html__( 'Editor behavior, performance and integrations.', 'refraction' ),
+			],
+			[
+				'cap' => 'manage_options',
+				'url' => admin_url( 'admin.php?page=refraction-tools' ),
+				'title' => esc_html__( 'Tools', 'refraction' ),
+				'text' => esc_html__( 'Regenerate CSS, replace URLs, roll back versions.', 'refraction' ),
+			],
+			[
+				'cap' => 'manage_options',
+				'url' => admin_url( 'admin.php?page=refraction-system-info' ),
+				'title' => esc_html__( 'System Info', 'refraction' ),
+				'text' => esc_html__( 'Server and plugin details for troubleshooting.', 'refraction' ),
+			],
+		];
 		?>
-		<div class="wrap">
+		<style>
+			.refraction-home { max-width: 760px; margin: 24px 20px 0 2px; }
+			.refraction-home h1 { font-size: 28px; font-weight: 600; margin: 0 0 6px; padding: 0; }
+			.refraction-home__lead { font-size: 15px; color: #50575e; margin: 0 0 20px; }
+			.refraction-home__links { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+			.refraction-home__links a { display: block; padding: 14px 16px; background: #fff; border: 1px solid #dcdcde; border-inline-start: 3px solid var(--wp-admin-theme-color, #2271b1); border-radius: 2px; text-decoration: none; color: #1d2327; }
+			.refraction-home__links a:hover, .refraction-home__links a:focus { border-color: var(--wp-admin-theme-color, #2271b1); box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #2271b1); }
+			.refraction-home__links strong { display: block; font-size: 14px; margin-bottom: 2px; color: var(--wp-admin-theme-color, #2271b1); }
+			.refraction-home__links span { color: #50575e; font-size: 13px; }
+		</style>
+		<div class="wrap refraction-home">
 			<h1><?php echo esc_html__( 'Refraction', 'refraction' ); ?></h1>
-			<p>
-				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=page' ) ); ?>"><?php echo esc_html__( 'Create new page', 'refraction' ); ?></a>
-				<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=refraction_library&tabs_group=library' ) ); ?>"><?php echo esc_html__( 'My Templates', 'refraction' ); ?></a>
-			</p>
+			<p class="refraction-home__lead"><?php echo esc_html__( 'Build and edit pages visually. Everything runs on your own site.', 'refraction' ); ?></p>
+			<?php if ( current_user_can( 'edit_pages' ) ) : ?>
+				<p>
+					<a class="button button-primary button-hero" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=page' ) ); ?>"><?php echo esc_html__( 'Create new page', 'refraction' ); ?></a>
+				</p>
+			<?php endif; ?>
+			<ul class="refraction-home__links">
+				<?php foreach ( $links as $link ) : ?>
+					<?php if ( current_user_can( $link['cap'] ) ) : ?>
+						<li>
+							<a href="<?php echo esc_url( $link['url'] ); ?>">
+								<strong><?php echo esc_html( $link['title'] ); ?></strong>
+								<span><?php echo esc_html( $link['text'] ); ?></span>
+							</a>
+						</li>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</ul>
 		</div>
 		<?php
 	}
@@ -443,8 +471,6 @@ class Settings extends Settings_Page {
 
 		add_action( 'admin_init', [ $this, 'on_admin_init' ] );
 		add_filter( 'refraction/generator_tag/settings', [ $this, 'add_generator_tag_settings' ] );
-
-		add_action( 'admin_menu', [ $this, 'register_admin_menu' ], 20 );
 
 		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_settings_menu( $menu_data_provider );
