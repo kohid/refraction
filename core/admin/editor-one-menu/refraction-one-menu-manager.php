@@ -34,6 +34,7 @@ class Refraction_One_Menu_Manager {
 
 	private function register_actions(): void {
 		add_action( 'init', [ $this, 'check_if_pro_module_is_enabled' ] );
+		add_action( 'admin_menu', [ $this, 'register_top_level_menu' ], 8 );
 		add_action( 'admin_menu', [ $this, 'register_refraction_home_submenus' ], 9 );
 
 		add_action( 'admin_menu', function () {
@@ -42,11 +43,10 @@ class Refraction_One_Menu_Manager {
 
 		add_action( 'admin_menu', [ $this, 'intercept_legacy_submenus' ], 10003 );
 		add_action( 'admin_menu', [ $this, 'register_flyout_items_as_hidden_submenus' ], 10004 );
-		add_action( 'admin_menu', [ $this, 'remove_all_submenus_for_edit_posts_users' ], 10005 );
-		add_action( 'admin_menu', [ $this, 'override_refraction_page_for_edit_posts_users' ], 1006 );
-		add_action( 'admin_head', [ $this, 'hide_flyout_items_from_wp_menu' ] );
+		add_action( 'admin_menu', [ $this, 'build_visible_submenu' ], 10005 );
+		add_filter( 'parent_file', [ $this, 'filter_parent_file' ] );
+		add_filter( 'submenu_file', [ $this, 'filter_submenu_file' ], 10, 2 );
 		add_action( 'admin_head', [ $this, 'hide_legacy_templates_menu' ] );
-		add_action( 'admin_head', [ $this, 'hide_old_refraction_menu' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_menu_assets' ] );
 	}
 
@@ -58,66 +58,116 @@ class Refraction_One_Menu_Manager {
 		}
 	}
 
+	/**
+	 * The visible top-level "Refraction" item in the WordPress admin sidebar.
+	 * Its children are assembled by build_visible_submenu(). Visible to everyone who can edit posts;
+	 * each child keeps its own capability (manage_options for settings, tools, system pages).
+	 */
+	public function register_top_level_menu(): void {
+		add_menu_page(
+			esc_html__( 'Refraction', 'refraction' ),
+			esc_html__( 'Refraction', 'refraction' ),
+			Menu_Config::CAPABILITY_EDIT_POSTS,
+			Menu_Config::REFRACTION_HOME_MENU_SLUG,
+			[ $this, 'render_editor_page' ],
+			$this->get_menu_icon(),
+			Menu_Config::MENU_POSITION
+		);
+	}
+
+	private function get_menu_icon(): string {
+		// A prism: a triangle with a split beam leaving its right side. WordPress recolors `fill="black"`.
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" fill-rule="evenodd" d="M7.5 2.5 14 15.5H1L7.5 2.5Zm0 3.6L4.2 12.8h6.6L7.5 6.1Z"/><path fill="black" d="m13.1 8.1 6.4-2v1.6l-5.6 1.8-.8-1.4Zm1.6 2.2 4.8.4v1.5l-4.4.2-.4-2.1Z"/></svg>';
+
+		return 'data:image/svg+xml;base64,' . base64_encode( $svg ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+	}
+
 	public function register_refraction_home_submenus(): void {
 		add_submenu_page(
 			Menu_Config::REFRACTION_HOME_MENU_SLUG,
-			esc_html__( 'Editor', 'refraction' ),
-			esc_html__( 'Editor', 'refraction' ),
+			esc_html__( 'Refraction', 'refraction' ),
+			esc_html__( 'Home', 'refraction' ),
 			Menu_Config::CAPABILITY_EDIT_POSTS,
 			Menu_Config::REFRACTION_MENU_SLUG,
 			[ $this, 'render_editor_page' ],
-			20
+			0
 		);
 
 		do_action( 'refraction/editor-one/menu/register_submenus' );
 	}
 
-	public function remove_all_submenus_for_edit_posts_users(): void {
-		$user_capabilities = Menu_Data_Provider::get_current_user_capabilities();
+	/**
+	 * Replace the submenu of the top-level item with the registered menu items the current user can
+	 * open, in priority order. Group parents (Templates, System) are replaced by their children, the
+	 * duplicate "Quick start" entry and non-page entries are dropped.
+	 */
+	public function build_visible_submenu(): void {
+		global $submenu;
 
-		if ( ! $user_capabilities['is_edit_posts_user'] ) {
+		$parent = Menu_Config::REFRACTION_HOME_MENU_SLUG;
+		$registered = $submenu[ $parent ] ?? [];
+
+		$by_slug = [];
+		foreach ( $registered as $entry ) {
+			$by_slug[ $entry[2] ] ??= $entry;
+		}
+
+		$home = $by_slug[ Menu_Config::REFRACTION_MENU_SLUG ] ?? null;
+
+		if ( ! $home ) {
 			return;
+		}
+
+		$visible = [ $home ];
+
+		foreach ( $this->menu_data_provider->get_visible_submenu_items() as $item ) {
+			if ( ! isset( $by_slug[ $item['slug'] ] ) ) {
+				continue;
+			}
+
+			$entry = $by_slug[ $item['slug'] ];
+			$entry[0] = $item['label'];
+			$visible[] = $entry;
+		}
+
+		$submenu[ $parent ] = $visible; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+	}
+
+	/**
+	 * Keep "Refraction" highlighted while viewing the template library or other Refraction post type lists.
+	 */
+	public function filter_parent_file( $parent_file ) {
+		return $this->get_current_refraction_post_type() ? Menu_Config::REFRACTION_HOME_MENU_SLUG : $parent_file;
+	}
+
+	public function filter_submenu_file( $submenu_file, $parent_file ) {
+		$post_type = $this->get_current_refraction_post_type();
+
+		return $post_type ? 'edit.php?post_type=' . $post_type : $submenu_file;
+	}
+
+	private function get_current_refraction_post_type(): string {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+		if ( ! $screen || empty( $screen->post_type ) || ! in_array( $screen->base, [ 'edit', 'post', 'edit-tags' ], true ) ) {
+			return '';
 		}
 
 		global $submenu;
 
-		if ( empty( $submenu[ Menu_Config::REFRACTION_MENU_SLUG ] ) ) {
-			return;
-		}
+		$slug = 'edit.php?post_type=' . $screen->post_type;
 
-		$submenu_items = $submenu[ Menu_Config::REFRACTION_MENU_SLUG ];
-
-		foreach ( $submenu_items as $index => $submenu_item ) {
-			if ( 0 === $index ) {
-				continue;
-			}
-
-			$submenu_slug = $submenu_item[2] ?? '';
-			if ( ! empty( $submenu_slug ) ) {
-				remove_submenu_page( Menu_Config::REFRACTION_MENU_SLUG, $submenu_slug );
+		foreach ( $submenu[ Menu_Config::REFRACTION_HOME_MENU_SLUG ] ?? [] as $entry ) {
+			if ( $slug === $entry[2] ) {
+				return $screen->post_type;
 			}
 		}
+
+		return '';
 	}
 
 	public function render_editor_page(): void {
 		Plugin::instance()->settings->display_home_screen();
-	}
-
-	public function override_refraction_page_for_edit_posts_users(): void {
-		$user_capabilities = Menu_Data_Provider::get_current_user_capabilities();
-
-		if ( ! $user_capabilities['is_edit_posts_user'] ) {
-			return;
-		}
-
-		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
-		if ( Menu_Config::REFRACTION_MENU_SLUG !== $page ) {
-			return;
-		}
-
-		$templates_url = admin_url( 'edit.php?post_type=refraction_library&tabs_group=library' );
-		wp_safe_redirect( $templates_url );
-		exit;
 	}
 
 	public function hide_legacy_templates_menu(): void {
@@ -128,28 +178,6 @@ class Refraction_One_Menu_Manager {
 			}
 		</style>
 		<?php
-	}
-
-	public function hide_old_refraction_menu(): void {
-		$this->remove_refraction_separator();
-		?>
-		<style type="text/css">
-			#toplevel_page_refraction {
-				display: none !important;
-			}
-		</style>
-		<?php
-	}
-
-	private function remove_refraction_separator(): void {
-		global $menu;
-
-		foreach ( $menu as $key => $item ) {
-			if ( isset( $item[2] ) && 'separator-refraction' === $item[2] ) {
-				unset( $menu[ $key ] );
-				break;
-			}
-		}
 	}
 
 	public function register_flyout_items_as_hidden_submenus(): void {
@@ -167,6 +195,12 @@ class Refraction_One_Menu_Manager {
 	}
 
 	private function register_hidden_submenu( string $item_slug, Menu_Item_Interface $item ) {
+		// "Quick start" shares its slug with the Home page, which is registered with a lower capability.
+		// Registering it again at manage_options would mark the page as inaccessible for editors.
+		if ( Menu_Config::REFRACTION_MENU_SLUG === $item_slug ) {
+			return false;
+		}
+
 		$original_parent = $this->get_original_parent_slug( $item );
 		$parent_slug = $this->resolve_hidden_submenu_parent( $original_parent );
 		$has_page = method_exists( $item, 'render' );
@@ -193,6 +227,7 @@ class Refraction_One_Menu_Manager {
 		}
 
 		$refraction_parent_slugs = [
+			Menu_Config::REFRACTION_MENU_SLUG => true,
 			Menu_Config::EDITOR_GROUP_ID => true,
 			Menu_Config::EDITOR_MENU_SLUG => true,
 			Menu_Config::TEMPLATES_GROUP_ID => true,
@@ -226,25 +261,6 @@ class Refraction_One_Menu_Manager {
 		return $item->get_parent_slug();
 	}
 
-	public function hide_flyout_items_from_wp_menu(): void {
-		$protected_wp_menu_slugs = [
-			Menu_Config::EDITOR_MENU_SLUG,
-			'e-form-submissions',
-			'refraction-agents-ready',
-			'refraction-license',
-		];
-
-		$this->iterate_all_flyout_items( function( string $item_slug, Menu_Item_Interface $item ) use ( $protected_wp_menu_slugs ) {
-			if ( in_array( $item_slug, $protected_wp_menu_slugs, true ) ) {
-				return;
-			}
-
-			$original_parent = $this->get_original_parent_slug( $item );
-			$parent_slug = $this->resolve_hidden_submenu_parent( $original_parent );
-			remove_submenu_page( $parent_slug, $item_slug );
-		} );
-	}
-
 	public function intercept_legacy_submenus(): void {
 		$this->legacy_submenu_interceptor->intercept_all( $this->is_pro_module_enabled );
 	}
@@ -260,10 +276,9 @@ class Refraction_One_Menu_Manager {
 			REFRACTION_VERSION
 		);
 
+		// The submenu is a flat list (see build_visible_submenu), so no JS flyout is attached to it.
 		$config = [
-			'editorFlyout' => $this->menu_data_provider->get_third_level_data(
-				Menu_Data_Provider::THIRD_LEVEL_FLYOUT_MENU
-			),
+			'editorFlyout' => [],
 		];
 
 		wp_enqueue_script(

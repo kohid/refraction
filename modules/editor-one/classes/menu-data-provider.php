@@ -128,6 +128,90 @@ class Menu_Data_Provider {
 		return [];
 	}
 
+	/**
+	 * Flat, ordered list of the pages the current user may open, for the WordPress admin submenu.
+	 * Level 3 items are sorted by priority; a group parent (Templates, System, ...) is replaced by its
+	 * own children so every entry is a real page.
+	 *
+	 * @return array<int, array{slug: string, label: string}>
+	 */
+	public function get_visible_submenu_items(): array {
+		$excluded = array_merge(
+			Menu_Config::get_excluded_level3_slugs(),
+			Menu_Config::get_excluded_level4_slugs()
+		);
+
+		$level3 = [];
+
+		foreach ( $this->level3_items as $group_items ) {
+			foreach ( $group_items as $item_slug => $item ) {
+				$level3[] = [
+					'slug' => $item_slug,
+					'item' => $item,
+					'priority' => $this->get_item_priority( $item ),
+				];
+			}
+		}
+
+		usort( $level3, fn( array $a, array $b ): int => $a['priority'] <=> $b['priority'] );
+
+		$entries = [];
+		$seen = [ Menu_Config::REFRACTION_MENU_SLUG => true ];
+
+		$add = function ( string $slug, Menu_Item_Interface $item ) use ( &$entries, &$seen, $excluded ): void {
+			if ( isset( $seen[ $slug ] ) || ! $this->is_item_accessible( $item ) ) {
+				return;
+			}
+
+			if ( 0 === strpos( $slug, 'post-new.php' ) || $this->is_slug_excluded( $slug, $excluded, true ) ) {
+				return;
+			}
+
+			$label = trim( wp_strip_all_tags( $item->get_label() ) );
+
+			if ( '' === $label ) {
+				return;
+			}
+
+			$seen[ $slug ] = true;
+			$entries[] = [
+				'slug' => $slug,
+				'label' => $label,
+			];
+		};
+
+		foreach ( $level3 as $entry ) {
+			$item = $entry['item'];
+
+			if ( ! $item->has_children() ) {
+				$add( $entry['slug'], $item );
+				continue;
+			}
+
+			if ( isset( $seen[ $entry['slug'] ] ) ) {
+				continue;
+			}
+
+			$children = [];
+
+			foreach ( $this->level4_items[ $item->get_group_id() ] ?? [] as $child_slug => $child ) {
+				$children[] = [
+					'slug' => $child_slug,
+					'item' => $child,
+					'priority' => $this->get_item_priority( $child ),
+				];
+			}
+
+			usort( $children, fn( array $a, array $b ): int => $a['priority'] <=> $b['priority'] );
+
+			foreach ( $children as $child ) {
+				$add( $child['slug'], $child['item'] );
+			}
+		}
+
+		return $entries;
+	}
+
 	public function get_level4_flyout_data(): array {
 		if ( null !== $this->cached_level4_sidebar_data ) {
 			return $this->cached_level4_sidebar_data;

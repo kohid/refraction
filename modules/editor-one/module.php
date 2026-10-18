@@ -6,7 +6,6 @@ use Refraction\Core\Admin\EditorOneMenu\Refraction_One_Menu_Manager;
 use Refraction\Core\Base\Module as BaseModule;
 use Refraction\Modules\EditorOne\Classes\Menu_Config;
 use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Refraction\Modules\EditorOne\Components\Sidebar_Navigation_Handler;
 use Refraction\Modules\EditorOne\Components\Top_Bar_Handler;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,7 +26,7 @@ class Module extends BaseModule {
 
 		if ( is_admin() ) {
 			$this->add_component( 'editor-one-menu-manager', new Refraction_One_Menu_Manager() );
-			$this->add_component( 'sidebar-navigation-handler', new Sidebar_Navigation_Handler() );
+			// The in-page React sidebar duplicated the WordPress submenu (and carried an upgrade CTA), so it is not loaded.
 			$this->add_component( 'top-bar-handler', new Top_Bar_Handler() );
 		}
 

@@ -308,7 +308,7 @@ class Admin extends App {
 	 * @return array An array of plugin action links.
 	 */
 	public function plugin_action_links( $links ) {
-		$settings_link = sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . Settings::PAGE_ID ), esc_html__( 'Settings', 'refraction' ) );
+		$settings_link = sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=refraction-settings' ), esc_html__( 'Settings', 'refraction' ) );
 
 		array_unshift( $links, $settings_link );
 
