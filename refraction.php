@@ -3,7 +3,7 @@
  * Plugin Name: Refraction
  * Plugin URI: https://github.com/kohid/refraction
  * Description: Refraction is a visual drag-and-drop page builder for WordPress, a community fork of Elementor. It runs locally and has no accounts, cloud features or upsells.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Refraction contributors (based on Elementor by Elementor.com)
  * Author URI: https://github.com/kohid/refraction
  * License: GPL-3.0-or-later
@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'REFRACTION_VERSION', '0.1.0' );
+define( 'REFRACTION_VERSION', '0.1.1' );
 define( 'REFRACTION_MINIMUM_WP_VERSION', '6.8' );
 
 // The Elementor release this code base was forked from. Feature gates inherited from upstream

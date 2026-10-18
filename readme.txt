@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -34,6 +34,12 @@ To read releases from a different repository (for example your own fork), define
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.1.1 =
+* Fix: the Refraction menu was missing from the WordPress admin sidebar. It is now a visible top-level menu (Home, Settings, Tools, Saved Templates, Floating Elements, Role Manager, System Info) that respects user capabilities; editors see Home and Saved Templates.
+* New: local Refraction home screen with quick links.
+* Fix: the Settings link on the Plugins screen opens the Refraction settings page.
+* Tweak: removed the duplicate in-page navigation sidebar, which also carried an upgrade prompt.
 
 = 0.1.0 =
 * Initial fork from Elementor 4.4.0 (GPL-3.0-or-later).
