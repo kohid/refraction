@@ -35,8 +35,8 @@ const WP = join( SITE, 'wordpress' );
 const LOG = join( SITE, 'php-error.log' );
 
 const USERS = {
-	admin: { login: 'admin', pass: 'admin', expect: [ 'Templates', 'Settings', 'Tools', 'System Info' ] },
-	editor: { login: 'editor', pass: 'editor', expect: [ 'Templates' ] },
+	admin: { login: 'admin', pass: 'admin', expect: [ 'Home', 'Settings', 'Tools', 'Saved Templates', 'Floating Elements', 'Role Manager', 'System Info' ] },
+	editor: { login: 'editor', pass: 'editor', expect: [ 'Home', 'Saved Templates' ], forbid: [ 'Settings', 'Tools', 'System Info' ] },
 };
 
 const failures = [];
@@ -142,6 +142,9 @@ async function checkRole( browser, role, user ) {
 		for ( const want of user.expect ) {
 			if ( ! li.links.some( ( l ) => l.text === want ) ) { fail( `[${ role }] expected submenu "${ want }" missing; have: ${ li.links.map( ( l ) => l.text ).join( ', ' ) }` ); }
 		}
+	}
+	for ( const bad of user.forbid || [] ) {
+		if ( li?.links.some( ( l ) => l.text === bad ) ) { fail( `[${ role }] submenu "${ bad }" must not be listed for this role` ); }
 	}
 	for ( const t of targets ) {
 		const before = logSize();
