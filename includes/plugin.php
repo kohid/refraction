@@ -373,18 +373,6 @@ class Plugin {
 	public $modules_manager;
 
 	/**
-	 * Beta testers.
-	 *
-	 * Holds the plugin beta testers.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @var Beta_Testers
-	 */
-	public $beta_testers;
-
-	/**
 	 * Inspector.
 	 *
 	 * Holds the plugin inspector data.
@@ -717,8 +705,6 @@ class Plugin {
 
 		User::init();
 		User_Data::init();
-		Api::init();
-		Tracker::init();
 
 		$this->upgrade = new Core\Upgrade\Manager();
 		$this->custom_tasks = new Core\Upgrade\Custom_Tasks_Manager();
@@ -729,7 +715,6 @@ class Plugin {
 			$this->heartbeat = new Heartbeat();
 			$this->wordpress_widgets_manager = new WordPress_Widgets_Manager();
 			$this->admin = new Admin();
-			$this->beta_testers = new Beta_Testers();
 		}
 	}
 

@@ -2,7 +2,6 @@
 namespace Elementor;
 
 use Elementor\Core\Files\Fonts\Google_Font;
-use Elementor\Modules\Promotions\Module as Promotions_Module;
 use Elementor\TemplateLibrary\Source_Local;
 use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
 use Elementor\Includes\Settings\AdminMenuItems\Editor_One_Home_Menu;
@@ -26,11 +25,6 @@ class Settings extends Settings_Page {
 	 * Settings page ID for Elementor settings.
 	 */
 	const PAGE_ID = 'elementor';
-
-	/**
-	 * Upgrade menu priority.
-	 */
-	const MENU_PRIORITY_GO_PRO = 502;
 
 	/**
 	 * Settings page field for update time.
@@ -88,7 +82,16 @@ class Settings extends Settings_Page {
 	}
 
 	public function display_home_screen() {
-		echo '<div id="e-home-screen"></div>';
+		// The remote-fed home screen was removed. Render a local-only landing page.
+		?>
+		<div class="wrap">
+			<h1><?php echo esc_html__( 'Elementor', 'elementor' ); ?></h1>
+			<p>
+				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=page' ) ); ?>"><?php echo esc_html__( 'Create new page', 'elementor' ); ?></a>
+				<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=elementor_library&tabs_group=library' ) ); ?>"><?php echo esc_html__( 'My Templates', 'elementor' ); ?></a>
+			</p>
+		</div>
+		<?php
 	}
 
 	private function register_editor_one_settings_menu( Menu_Data_Provider $menu_data_provider ) {
@@ -188,10 +191,6 @@ class Settings extends Settings_Page {
 								],
 							],
 						],
-					],
-					'usage' => [
-						'label' => esc_html__( 'Improve Elementor', 'elementor' ),
-						'fields' => $this->get_usage_fields(),
 					],
 				],
 			],

@@ -40,18 +40,14 @@ class Elementor_One_Menu_Manager {
 			do_action( 'elementor/editor-one/menu/register', $this->menu_data_provider );
 		} );
 
-		add_action( 'admin_menu', [ $this, 'register_pro_submenus' ], 100 );
-
 		add_action( 'admin_menu', [ $this, 'intercept_legacy_submenus' ], 10003 );
 		add_action( 'admin_menu', [ $this, 'register_flyout_items_as_hidden_submenus' ], 10004 );
 		add_action( 'admin_menu', [ $this, 'remove_all_submenus_for_edit_posts_users' ], 10005 );
 		add_action( 'admin_menu', [ $this, 'override_elementor_page_for_edit_posts_users' ], 1006 );
-		add_filter( 'add_menu_classes', [ $this, 'fix_theme_builder_submenu_url' ] );
 		add_action( 'admin_head', [ $this, 'hide_flyout_items_from_wp_menu' ] );
 		add_action( 'admin_head', [ $this, 'hide_legacy_templates_menu' ] );
 		add_action( 'admin_head', [ $this, 'hide_old_elementor_menu' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_menu_assets' ] );
-		add_action( 'admin_print_scripts-toplevel_page_elementor', [ $this, 'enqueue_home_screen_on_editor_page' ] );
 	}
 
 	public function check_if_pro_module_is_enabled(): void {
@@ -74,47 +70,6 @@ class Elementor_One_Menu_Manager {
 		);
 
 		do_action( 'elementor/editor-one/menu/register_submenus' );
-	}
-
-	/**
-	 * TODO: This can be removed in v4.1.0 [ED-22806]
-	 */
-	public function register_pro_submenus(): void {
-		if ( $this->is_pro_module_enabled ) {
-			return;
-		}
-
-		$has_active_pro = Utils::has_pro() &&
-			class_exists( '\ElementorPro\License\API' ) &&
-			\ElementorPro\License\API::is_license_active();
-
-		$is_free = ! Utils::has_pro();
-
-		if ( ! $is_free && ! $has_active_pro ) {
-			return;
-		}
-
-		add_submenu_page(
-			Menu_Config::ELEMENTOR_HOME_MENU_SLUG,
-			esc_html__( 'Theme Builder', 'elementor' ),
-			esc_html__( 'Theme Builder', 'elementor' ),
-			Menu_Config::CAPABILITY_EDIT_POSTS,
-			'elementor-theme-builder',
-			'',
-			70
-		);
-
-		if ( $has_active_pro ) {
-			add_submenu_page(
-				Menu_Config::ELEMENTOR_HOME_MENU_SLUG,
-				esc_html__( 'Submissions', 'elementor' ),
-				esc_html__( 'Submissions', 'elementor' ),
-				'edit_posts',
-				'e-form-submissions',
-				'',
-				80
-			);
-		}
 	}
 
 	public function remove_all_submenus_for_edit_posts_users(): void {
@@ -163,39 +118,6 @@ class Elementor_One_Menu_Manager {
 		$templates_url = admin_url( 'edit.php?post_type=elementor_library&tabs_group=library' );
 		wp_safe_redirect( $templates_url );
 		exit;
-	}
-
-	public function enqueue_home_screen_on_editor_page(): void {
-		$home_module = Plugin::instance()->modules_manager->get_modules( 'home' );
-
-		if ( $home_module && method_exists( $home_module, 'enqueue_home_screen_scripts' ) ) {
-			$home_module->enqueue_home_screen_scripts();
-		}
-	}
-
-	public function fix_theme_builder_submenu_url( $menu ) {
-		global $submenu;
-
-		$menu_slugs = [ Menu_Config::ELEMENTOR_HOME_MENU_SLUG ];
-
-		foreach ( $menu_slugs as $menu_slug ) {
-			if ( empty( $submenu[ $menu_slug ] ) ) {
-				continue;
-			}
-
-			foreach ( $submenu[ $menu_slug ] as &$item ) {
-				if ( 'elementor-theme-builder' === $item[2] ) {
-					$item[2] = $this->get_theme_builder_url(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-					break;
-				}
-			}
-		}
-
-		return $menu;
-	}
-
-	private function get_theme_builder_url(): string {
-		return $this->menu_data_provider->get_theme_builder_url();
 	}
 
 	public function hide_legacy_templates_menu(): void {
@@ -307,11 +229,9 @@ class Elementor_One_Menu_Manager {
 	public function hide_flyout_items_from_wp_menu(): void {
 		$protected_wp_menu_slugs = [
 			Menu_Config::EDITOR_MENU_SLUG,
-			'elementor-theme-builder',
 			'e-form-submissions',
 			'elementor-agents-ready',
 			'elementor-license',
-			'elementor-connect-account',
 		];
 
 		$this->iterate_all_flyout_items( function( string $item_slug, Menu_Item_Interface $item ) use ( $protected_wp_menu_slugs ) {

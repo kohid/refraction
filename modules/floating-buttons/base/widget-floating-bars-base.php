@@ -1525,9 +1525,6 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 
 		$this->end_controls_section();
 
-		Plugin::$instance->controls_manager->add_custom_css_controls( $this, static::TAB_ADVANCED );
-
-		Plugin::$instance->controls_manager->add_custom_attributes_controls( $this, static::TAB_ADVANCED );
 	}
 
 	protected function add_content_tab(): void {

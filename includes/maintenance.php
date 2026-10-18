@@ -31,9 +31,6 @@ class Maintenance {
 	 * @static
 	 */
 	public static function activation( $network_wide ) {
-		wp_clear_scheduled_hook( 'elementor/tracker/send_event' );
-
-		wp_schedule_event( time(), 'daily', 'elementor/tracker/send_event' );
 		flush_rewrite_rules();
 
 		if ( is_multisite() && $network_wide ) {
@@ -49,7 +46,6 @@ class Maintenance {
 		static::create_default_kit();
 		static::insert_defaults_options();
 
-		set_transient( 'elementor_activation_redirect', true, MINUTE_IN_SECONDS );
 	}
 
 	public static function insert_defaults_options() {
@@ -66,27 +62,6 @@ class Maintenance {
 		}
 	}
 
-	public static function deactivation() {
-		Api::get_deactivation_data();
-	}
-
-	/**
-	 * Uninstall Elementor.
-	 *
-	 * Set Elementor uninstallation hook.
-	 *
-	 * Fired by `register_uninstall_hook` when the plugin is uninstalled.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @static
-	 */
-	public static function uninstall() {
-		wp_clear_scheduled_hook( 'elementor/tracker/send_event' );
-
-		Api::get_uninstalled_data();
-	}
-
 	/**
 	 * Init.
 	 *
@@ -98,8 +73,6 @@ class Maintenance {
 	 */
 	public static function init() {
 		register_activation_hook( ELEMENTOR_PLUGIN_BASE, [ __CLASS__, 'activation' ] );
-		register_deactivation_hook( ELEMENTOR_PLUGIN_BASE, [ __CLASS__, 'deactivation' ] );
-		register_uninstall_hook( ELEMENTOR_PLUGIN_BASE, [ __CLASS__, 'uninstall' ] );
 
 		add_action( 'wpmu_new_blog', function ( $site_id ) {
 			if ( ! is_plugin_active_for_network( ELEMENTOR_PLUGIN_BASE ) ) {

@@ -47,16 +47,6 @@ class Module extends BaseModule {
 
 			return $usage;
 		} );
-
-		add_filter( 'elementor/tracker/send_tracking_data_params', function( $params ) {
-			$disabled_elements = Options::get_disabled_elements();
-
-			if ( ! empty( $disabled_elements ) ) {
-				$params['usages']['disabled_elements'] = $disabled_elements;
-			}
-
-			return $params;
-		} );
 	}
 
 	public function enqueue_assets_for_editor_one_menu( array $hooks ): void {

@@ -33,7 +33,7 @@ class Settings_Layout extends Tab_Base {
 	}
 
 	public function get_help_url() {
-		return 'https://go.elementor.com/global-layout/';
+		return '';
 	}
 
 	protected function register_tab_controls() {

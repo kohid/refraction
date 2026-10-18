@@ -2,8 +2,6 @@
 namespace Elementor\Modules\AdminTopBar;
 
 use Elementor\Core\Admin\Admin;
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
-use Elementor\Plugin;
 use Elementor\Core\Base\App as BaseApp;
 use Elementor\Utils;
 
@@ -72,36 +70,6 @@ class Module extends BaseApp {
 	private function add_frontend_settings() {
 		$settings = [];
 		$settings['is_administrator'] = current_user_can( 'manage_options' );
-
-		// TODO: Find a better way to add apps page url to the admin top bar.
-		$settings['apps_url'] = admin_url( 'admin.php?page=elementor-apps' );
-		$settings['promotion'] = [
-			'text' => __( 'Upgrade Now', 'elementor' ),
-			'url' => 'https://go.elementor.com/wp-dash-admin-top-bar-upgrade/',
-		];
-
-		$settings['promotion'] = Filtered_Promotions_Manager::get_filtered_promotion_data(
-			$settings['promotion'],
-			'elementor/admin_top_bar/go_pro_promotion',
-			'url'
-		);
-
-		$current_screen = get_current_screen();
-
-		/** @var \Elementor\Core\Common\Modules\Connect\Apps\Library $library */
-		$library = Plugin::$instance->common->get_component( 'connect' )->get_app( 'library' );
-		if ( $library ) {
-			$settings = array_merge( $settings, [
-				'is_user_connected' => $library->is_connected(),
-				'connect_url' => $library->get_admin_url( 'authorize', [
-					'utm_source' => 'top-bar',
-					'utm_medium' => 'wp-dash',
-					'utm_campaign' => 'connect-account',
-					'utm_content' => $current_screen->id,
-					'source' => 'generic',
-				] ),
-			] );
-		}
 
 		$this->set_settings( $settings );
 

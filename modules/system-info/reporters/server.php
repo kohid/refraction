@@ -1,7 +1,6 @@
 <?php
 namespace Elementor\Modules\System_Info\Reporters;
 
-use Elementor\Api;
 use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,7 +58,6 @@ class Server extends Base {
 			'gd_installed' => 'GD Installed',
 			'zip_installed' => 'ZIP Installed',
 			'write_permissions' => 'Write Permissions',
-			'elementor_library' => 'Elementor Library',
 		];
 	}
 
@@ -166,11 +164,10 @@ class Server extends Base {
 
 		if ( $memory_limit_bytes < $min_recommended_bytes ) {
 			$result['recommendation'] = sprintf(
-				/* translators: 1: Minimum recommended_memory, 2: Preferred memory, 3: WordPress wp-config memory documentation. */
-				__( 'We recommend setting memory to at least %1$s. (%2$s or higher is preferred) For more information, read about <a href="%3$s">how to increase memory allocated to PHP</a>.', 'elementor' ),
+				/* translators: 1: Minimum recommended_memory, 2: Preferred memory. */
+				__( 'We recommend setting memory to at least %1$s. (%2$s or higher is preferred)', 'elementor' ),
 				$min_recommended_memory,
-				$preferred_memory,
-				'https://go.elementor.com/wordpress-wp-config-memory/'
+				$preferred_memory
 			);
 
 			$result['warning'] = true;
@@ -349,67 +346,6 @@ class Server extends Base {
 		return [
 			'value' => $value,
 			'warning' => (bool) $write_problems,
-		];
-	}
-
-	/**
-	 * Check for elementor library connectivity.
-	 *
-	 * Check whether the remote elementor library is reachable.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @return array {
-	 *    Report data.
-	 *
-	 *    @type string $value   The status of elementor library connectivity.
-	 *    @type bool   $warning Whether to display a warning. True if elementor
-	 * *                        library is not reachable, False otherwise.
-	 * }
-	 */
-	public function get_elementor_library() {
-		$response = wp_remote_get(
-			Api::$api_info_url, [
-				'timeout' => 5,
-				'body' => [
-					// Which API version is used
-					'api_version' => ELEMENTOR_VERSION,
-					// Which language to return
-					'site_lang' => get_bloginfo( 'language' ),
-				],
-			]
-		);
-
-		if ( is_wp_error( $response ) ) {
-			return [
-				'value' => 'Not connected (' . $response->get_error_message() . ')',
-				'warning' => true,
-			];
-		}
-
-		$http_response_code = wp_remote_retrieve_response_code( $response );
-
-		if ( 200 !== (int) $http_response_code ) {
-			$error_msg = 'HTTP Error (' . $http_response_code . ')';
-
-			return [
-				'value' => 'Not connected (' . $error_msg . ')',
-				'warning' => true,
-			];
-		}
-
-		$info_data = json_decode( wp_remote_retrieve_body( $response ), true );
-
-		if ( empty( $info_data ) ) {
-			return [
-				'value' => 'Not connected (Returns invalid JSON)',
-				'warning' => true,
-			];
-		}
-
-		return [
-			'value' => 'Connected',
 		];
 	}
 

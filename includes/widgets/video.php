@@ -2,7 +2,6 @@
 namespace Elementor;
 
 use Elementor\Modules\DynamicTags\Module as TagsModule;
-use Elementor\Modules\Promotions\Controls\Promotion_Control;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -109,28 +108,6 @@ class Widget_Video extends Widget_Base {
 
 	public function has_widget_inner_wrapper(): bool {
 		return ! Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
-	}
-
-	/**
-	 * Register video widget controls.
-	 *
-	 * Adds different input fields to allow the user to change and customize the widget settings.
-	 *
-	 * @since 3.19.0
-	 * @access protected
-	 *
-	 * @return array Widget promotion data.
-	 */
-	protected function get_upsale_data() {
-		return [
-			'condition' => ! Utils::has_pro(),
-			'image' => esc_url( ELEMENTOR_ASSETS_URL . 'images/go-pro.svg' ),
-			'image_alt' => esc_attr__( 'Upgrade', 'elementor' ),
-			'title' => esc_html__( "Grab your visitors' attention", 'elementor' ),
-			'description' => esc_html__( 'Get the Video Playlist widget and grow your toolbox with Elementor Pro.', 'elementor' ),
-			'upgrade_url' => esc_url( 'https://go.elementor.com/go-pro-video-widget/' ),
-			'upgrade_text' => esc_html__( 'Upgrade Now', 'elementor' ),
-		];
 	}
 
 	/**
@@ -600,11 +577,7 @@ class Widget_Video extends Widget_Base {
 					'auto' => esc_html__( 'Auto', 'elementor' ),
 					'none' => esc_html__( 'None', 'elementor' ),
 				],
-				'description' => sprintf(
-					'%1$s <a target="_blank" href="https://go.elementor.com/preload-video/">%2$s</a>',
-					esc_html__( 'Preload attribute lets you specify how the video should be loaded when the page loads.', 'elementor' ),
-					esc_html__( 'Learn more', 'elementor' ),
-				),
+				'description' => esc_html__( 'Preload attribute lets you specify how the video should be loaded when the page loads.', 'elementor' ),
 				'default' => 'metadata',
 				'condition' => [
 					'video_type' => 'hosted',

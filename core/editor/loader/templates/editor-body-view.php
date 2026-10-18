@@ -1,13 +1,10 @@
 <?php
 namespace Elementor\Core\Editor\Loader\Templates;
 
-use Elementor\Plugin;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$notice = Plugin::$instance->editor->notice_bar->get_notice();
 ?>
 
 <div id="elementor-loading">
@@ -40,9 +37,7 @@ $notice = Plugin::$instance->editor->notice_bar->get_notice();
 			<div id="elementor-preview-loading">
 				<i class="eicon-loading eicon-animation-spin" aria-hidden="true"></i>
 			</div>
-			<?php if ( $notice ) {
-				$notice->render();
-			} // IFrame will be created here by the Javascript later. ?>
+			<?php // IFrame will be created here by the Javascript later. ?>
 		</div>
 	</main>
 	<aside id="elementor-navigator" aria-labelledby="elementor-navigator__header__title"></aside>

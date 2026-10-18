@@ -6,7 +6,6 @@ use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
 use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
 use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Custom_Url_Interface;
 use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Event_Id_Interface;
-use Elementor\Plugin;
 use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +19,6 @@ class Menu_Data_Provider {
 	private static ?Menu_Data_Provider $instance = null;
 	private array $level3_items = [];
 	private array $level4_items = [];
-	private ?string $theme_builder_url = null;
 	private ?array $cached_level3_sidebar_data = null;
 	private ?array $cached_level4_sidebar_data = null;
 	private ?array $cached_flyout_menu_data = null;
@@ -163,43 +161,6 @@ class Menu_Data_Provider {
 		];
 
 		return $cache;
-	}
-
-	public function get_theme_builder_url(): string {
-		if ( null === $this->theme_builder_url ) {
-			$pro_url = Plugin::$instance->app ? Plugin::$instance->app->get_settings( 'menu_url' ) : null;
-			$return_to = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
-
-			if ( $pro_url ) {
-				if ( false !== strpos( $pro_url, '#' ) ) {
-					$url = $this->add_return_to_url( $pro_url, $return_to );
-				} else {
-					$url = $pro_url;
-				}
-			} else {
-				$url = $this->add_return_to_url(
-					admin_url( 'admin.php?page=elementor-app' ) . '#/site-editor/promotion',
-					$return_to
-				);
-			}
-
-			$this->theme_builder_url = apply_filters( 'elementor/editor-one/menu/theme_builder_url', $url );
-		}
-
-		return $this->theme_builder_url;
-	}
-
-	private function add_return_to_url( string $url, string $return_to ): string {
-		$hash_position = strpos( $url, '#' );
-
-		if ( false === $hash_position ) {
-			return add_query_arg( [ 'return_to' => $return_to ], $url );
-		}
-
-		$base_url = substr( $url, 0, $hash_position );
-		$hash_fragment = substr( $url, $hash_position );
-
-		return add_query_arg( [ 'return_to' => $return_to ], $base_url ) . $hash_fragment;
 	}
 
 	public function get_all_sidebar_page_slugs(): array {
@@ -560,7 +521,6 @@ class Menu_Data_Provider {
 	private function derive_event_id_from_slug( string $slug ): string {
 		$slug_event_map = [
 			'edit.php?post_type=elementor_library' => 'saved_templates',
-			'elementor-app' => 'theme_builder',
 		];
 
 		if ( isset( $slug_event_map[ $slug ] ) ) {

@@ -8,9 +8,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
 use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
 use Elementor\Modules\ContentSanitizer\Interfaces\Sanitizable;
-use Elementor\Core\Utils\Hints;
-use Elementor\Core\Admin\Admin_Notices;
-use Elementor\Modules\Promotions\Controls\Promotion_Control;
 
 /**
  * Elementor heading widget.
@@ -142,27 +139,6 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 	}
 
 	/**
-	 * Get widget upsale data.
-	 *
-	 * Retrieve the widget promotion data.
-	 *
-	 * @since 3.18.0
-	 * @access protected
-	 *
-	 * @return array Widget promotion data.
-	 */
-	protected function get_upsale_data() {
-		return [
-			'condition' => ! Utils::has_pro(),
-			'image' => esc_url( ELEMENTOR_ASSETS_URL . 'images/go-pro.svg' ),
-			'image_alt' => esc_attr__( 'Upgrade', 'elementor' ),
-			'description' => esc_html__( 'Create captivating headings that rotate with the Animated Headline Widget.', 'elementor' ),
-			'upgrade_url' => esc_url( 'https://go.elementor.com/go-pro-heading-widget/' ),
-			'upgrade_text' => esc_html__( 'Upgrade Now', 'elementor' ),
-		];
-	}
-
-	/**
 	 * Register heading widget controls.
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
@@ -247,8 +223,6 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 				'default' => 'h2',
 			]
 		);
-
-		$this->maybe_add_ally_heading_hint();
 
 		$this->end_controls_section();
 
@@ -486,84 +460,6 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		}
 
 		return $md;
-	}
-
-	public function maybe_add_ally_heading_hint() {
-		$notice_id = 'ally_heading_notice';
-		$plugin_slug = 'pojo-accessibility';
-
-		if ( ! Hints::should_display_hint( $notice_id ) ) {
-			return;
-		}
-
-		$one_subscription = Hints::is_plugin_connected_to_one_subscription();
-		$is_installed = Hints::is_plugin_installed( $plugin_slug );
-		$is_active = Hints::is_plugin_active( $plugin_slug );
-
-		if ( $is_active ) {
-			return;
-		}
-
-		if ( $one_subscription ) {
-			if ( ! $is_installed ) {
-				$notice_content = esc_html__( 'Want to ensure this heading is accessible? Your ONE subscription includes Ally. Install it and scan your page.', 'elementor' );
-				$button_text = esc_html__( 'Install now', 'elementor' );
-				$button_url = Hints::get_plugin_install_url( $plugin_slug );
-				$campaign_data = [
-					'name' => 'elementor_ea11y_campaign',
-					'campaign' => 'acc-scanner-plg-heading-one-install',
-					'source' => 'editor-heading-widget-one-install',
-					'medium' => 'editor-one',
-				];
-			} elseif ( ! $is_active ) {
-				$notice_content = esc_html__( 'Keep your content accessible. Activate Ally, included in ONE, to scan this page.', 'elementor' );
-				$button_text = esc_html__( 'Activate now', 'elementor' );
-				$button_url = Hints::get_plugin_activate_url( $plugin_slug );
-				$campaign_data = [
-					'name' => 'elementor_ea11y_campaign',
-					'campaign' => 'acc-scanner-plg-heading-one-activate',
-					'source' => 'editor-heading-widget-one-non-activate',
-					'medium' => 'editor-one',
-				];
-			}
-		} else {
-			$notice_content = esc_html__( 'Make sure your page is structured with accessibility in mind. Ally helps detect and fix common issues across your site.', 'elementor' );
-			if ( ! $is_installed ) {
-				$button_text = esc_html__( 'Install now', 'elementor' );
-				$button_url = Hints::get_plugin_install_url( $plugin_slug );
-			} elseif ( ! $is_active ) {
-				$button_text = esc_html__( 'Activate now', 'elementor' );
-				$button_url = Hints::get_plugin_activate_url( $plugin_slug );
-			}
-			$campaign_data = [
-				'name' => 'elementor_ea11y_campaign',
-				'campaign' => 'acc-scanner-plg-heading',
-				'source' => 'editor-heading-widget',
-				'medium' => 'editor',
-			];
-		}
-
-		$notice_heading = esc_html__( 'Accessible structure matters', 'elementor' );
-
-		$this->add_control(
-			$notice_id,
-			[
-				'type' => Controls_Manager::RAW_HTML,
-				'raw' => Hints::get_notice_template( [
-					'display' => ! Hints::is_dismissed( $notice_id ),
-					'heading' => $notice_heading,
-					'type' => 'info',
-					'content' => $notice_content,
-					'icon' => true,
-					'dismissible' => $notice_id,
-					'button_text' => $button_text,
-					'button_event' => $notice_id,
-					'button_data' => [
-						'action_url' => Admin_Notices::add_plg_campaign_data( $button_url, $campaign_data ),
-					],
-				], true ),
-			]
-		);
 	}
 
 	/**

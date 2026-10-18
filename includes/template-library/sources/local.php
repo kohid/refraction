@@ -7,7 +7,6 @@ use Elementor\Core\Utils\Collection;
 use Elementor\DB;
 use Elementor\Core\Settings\Manager as SettingsManager;
 use Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems\Add_New_Template_Menu_Item;
-use Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems\Saved_Templates_Menu_Item;
 use Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems\Templates_Categories_Menu_Item;
 use Elementor\Modules\Library\Documents\Library_Document;
 use Elementor\Plugin;

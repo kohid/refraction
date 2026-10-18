@@ -42,7 +42,7 @@ class Loading_Inspection_Manager {
 		$debug_data = [
 			'message' => esc_html__( "We’re sorry, but something went wrong. Click on 'Learn more' and follow each of the steps to quickly solve it.", 'elementor' ),
 			'header' => esc_html__( 'The preview could not be loaded', 'elementor' ),
-			'doc_url' => 'https://go.elementor.com/preview-not-loaded/',
+			'doc_url' => '',
 		];
 		foreach ( $this->inspections as $inspection ) {
 			if ( ! $inspection->run() ) {

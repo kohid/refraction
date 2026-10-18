@@ -90,27 +90,6 @@ class Widget_Image_Gallery extends Widget_Base {
 		return [ 'widget-image-gallery' ];
 	}
 
-	/**
-	 * Get widget upsale data.
-	 *
-	 * Retrieve the widget promotion data.
-	 *
-	 * @since 3.18.0
-	 * @access protected
-	 *
-	 * @return array Widget promotion data.
-	 */
-	protected function get_upsale_data() {
-		return [
-			'condition' => ! Utils::has_pro(),
-			'image' => esc_url( ELEMENTOR_ASSETS_URL . 'images/go-pro.svg' ),
-			'image_alt' => esc_attr__( 'Upgrade', 'elementor' ),
-			'description' => esc_html__( 'Use interesting masonry layouts and other overlay features with Elementor\'s Pro Gallery widget.', 'elementor' ),
-			'upgrade_url' => esc_url( 'https://go.elementor.com/go-pro-basic-gallery-widget/' ),
-			'upgrade_text' => esc_html__( 'Upgrade Now', 'elementor' ),
-		];
-	}
-
 	public function has_widget_inner_wrapper(): bool {
 		return ! Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
 	}

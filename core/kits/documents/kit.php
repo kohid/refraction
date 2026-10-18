@@ -69,7 +69,7 @@ class Kit extends PageBase {
 		$config = parent::get_editor_panel_config();
 		$config['default_route'] = 'panel/global/menu';
 
-		$config['needHelpUrl'] = 'https://go.elementor.com/global-settings/';
+		$config['needHelpUrl'] = '';
 
 		return $config;
 	}
@@ -208,8 +208,6 @@ class Kit extends PageBase {
 			'settings-background' => Tabs\Settings_Background::class,
 			'settings-layout' => Tabs\Settings_Layout::class,
 			'settings-lightbox' => Tabs\Settings_Lightbox::class,
-			'settings-page-transitions' => Tabs\Settings_Page_Transitions::class,
-			'settings-custom-css' => Tabs\Settings_Custom_CSS::class,
 		];
 
 		foreach ( $tabs as $id => $class ) {

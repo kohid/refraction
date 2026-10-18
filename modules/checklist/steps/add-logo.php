@@ -42,10 +42,10 @@ class Add_Logo extends Step_Base {
 	}
 
 	public function get_image_src(): string {
-		return 'https://assets.elementor.com/checklist/v1/images/checklist-step-1.jpg';
+		return '';
 	}
 
 	public function get_learn_more_url(): string {
-		return 'http://go.elementor.com/app-website-checklist-logo-article';
+		return '';
 	}
 }

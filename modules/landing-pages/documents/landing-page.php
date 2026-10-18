@@ -93,14 +93,4 @@ class Landing_Page extends PageBase {
 			$this->print_admin_column_type();
 		}
 	}
-
-	protected function get_remote_library_config() {
-		$config = [
-			'type' => 'lp',
-			'default_route' => 'templates/landing-pages',
-			'autoImportSettings' => true,
-		];
-
-		return array_replace_recursive( parent::get_remote_library_config(), $config );
-	}
 }

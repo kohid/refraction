@@ -2,10 +2,8 @@
 /**
  * Plugin Name: Elementor Safe Mode
  * Description: Safe Mode allows you to troubleshoot issues by only loading the editor, without loading the theme or any other plugin.
- * Plugin URI: https://elementor.com/?utm_source=safe-mode&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Author: Elementor.com
  * Version: 1.0.0
- * Author URI: https://elementor.com/?utm_source=safe-mode&utm_campaign=author-uri&utm_medium=wp-dash
  *
  * Text Domain: elementor
  *
@@ -83,37 +81,7 @@ class Safe_Mode {
 		} );
 	}
 
-	/**
-	 * Plugin row meta.
-	 *
-	 * Adds row meta links to the plugin list table
-	 *
-	 * Fired by `plugin_row_meta` filter.
-	 *
-	 * @access public
-	 *
-	 * @param array  $plugin_meta An array of the plugin's metadata, including
-	 *                            the version, author, author URI, and plugin URI.
-	 * @param string $plugin_file Path to the plugin file, relative to the plugins
-	 *                            directory.
-	 *
-	 * @return array An array of plugin row meta links.
-	 */
-	public function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
-		if ( basename( __FILE__ ) === $plugin_file ) {
-			$row_meta = [
-				'docs' => '<a href="https://go.elementor.com/safe-mode/" target="_blank">' . esc_html__( 'Learn More', 'elementor' ) . '</a>',
-			];
-
-			$plugin_meta = array_merge( $plugin_meta, $row_meta );
-		}
-
-		return $plugin_meta;
-	}
-
 	public function __construct() {
-		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 4 );
-
 		$enabled_type = $this->is_enabled();
 
 		if ( ! $enabled_type || ! $this->is_valid_token() ) {

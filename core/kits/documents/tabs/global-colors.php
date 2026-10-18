@@ -33,7 +33,7 @@ class Global_Colors extends Tab_Base {
 	}
 
 	public function get_help_url() {
-		return 'https://go.elementor.com/global-colors/';
+		return '';
 	}
 
 	protected function register_tab_controls() {

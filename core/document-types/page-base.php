@@ -5,7 +5,6 @@ use Elementor\Controls_Manager;
 use Elementor\Core\Base\Document;
 use Elementor\Group_Control_Background;
 use Elementor\Plugin;
-use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,27 +30,6 @@ abstract class PageBase extends Document {
 		$properties['support_wp_page_templates'] = true;
 
 		return $properties;
-	}
-
-	/**
-	 * @since 2.1.2
-	 * @access protected
-	 * @static
-	 */
-	protected static function get_editor_panel_categories() {
-		return Utils::array_inject(
-			parent::get_editor_panel_categories(),
-			'theme-elements',
-			[
-				'theme-elements-single' => [
-					'title' => esc_html__( 'Single', 'elementor' ),
-					'active' => false,
-					'promotion' => [
-						'url' => esc_url( 'https://go.elementor.com/go-pro-section-single-widget-panel/' ),
-					],
-				],
-			]
-		);
 	}
 
 	/**
@@ -168,7 +146,6 @@ abstract class PageBase extends Document {
 
 		$document->end_controls_section();
 
-		Plugin::$instance->controls_manager->add_custom_css_controls( $document );
 	}
 
 	public static function get_labels(): array {
@@ -318,15 +295,5 @@ abstract class PageBase extends Document {
 		}
 
 		parent::__construct( $data );
-	}
-
-	protected function get_remote_library_config() {
-		$config = parent::get_remote_library_config();
-
-		$config['category'] = '';
-		$config['type'] = 'block';
-		$config['default_route'] = 'templates/blocks';
-
-		return $config;
 	}
 }

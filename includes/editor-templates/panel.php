@@ -1,14 +1,10 @@
 <?php
 namespace Elementor;
 
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$show_editing_panel_sticky_promotion = ! Utils::has_pro();
-$editing_panel_sticky_promotion = $show_editing_panel_sticky_promotion ? Filtered_Promotions_Manager::get_editor_panel_sticky_promotion() : [];
 ?>
 <script type="text/template" id="tmpl-elementor-panel">
 	<div id="elementor-panel-state-loading">
@@ -117,30 +113,6 @@ $editing_panel_sticky_promotion = $show_editing_panel_sticky_promotion ? Filtere
 		</div>
 	<# } #>
 
-	<# if ( elementData.upsale_data && elementData.upsale_data.condition ) { #>
-	<div class="elementor-nerd-box elementor-nerd-box--upsale">
-		<# if ( elementData.upsale_data.image ) { #>
-		<img class="elementor-nerd-box-icon" src="{{ elementData.upsale_data.image }}" loading="lazy" alt="{{ elementData.upsale_data.image_alt }}" />
-		<# } #>
-		<# if ( elementData.upsale_data.title ) { #>
-		<div class="elementor-nerd-box-title">{{{ elementData.upsale_data.title }}}</div>
-		<# } #>
-		<# if ( elementData.upsale_data.description ) { #>
-		<div class="elementor-nerd-box-message">{{{ elementData.upsale_data.description }}}</div>
-		<# } #>
-		<# if ( elementData.upsale_data.upgrade_url && elementData.upsale_data.upgrade_text ) { #>
-		<a class="elementor-button go-pro" href="{{ elementData.upsale_data.upgrade_url }}" target="_blank">{{{ elementData.upsale_data.upgrade_text }}}</a>
-		<# } #>
-	</div>
-	<# } #>
-	<?php if ( $show_editing_panel_sticky_promotion ) : ?>
-	<div class="elementor-panel-editor-sticky-promotion">
-		<div class="elementor-get-pro-sticky-message">
-			<?php echo esc_html( $editing_panel_sticky_promotion['message'] ); ?>
-			<a target="_blank" href="<?php echo esc_url( $editing_panel_sticky_promotion['url'] ); ?>"><?php echo esc_html( $editing_panel_sticky_promotion['button_text'] ); ?></a>
-		</div>
-	</div>
-	<?php endif; ?>
 </script>
 
 <script type="text/template" id="tmpl-elementor-panel-schemes-disabled">
@@ -253,19 +225,4 @@ $editing_panel_sticky_promotion = $show_editing_panel_sticky_promotion ? Filtere
 			<i class="eicon-close-circle"></i>
 		</div>
 	<# } #>
-</script>
-
-<script type="text/template" id="tmpl-elementor-dynamic-tags-promo">
-	<div class="elementor-tags-list__teaser">
-		<div class="elementor-tags-list__group-title elementor-tags-list__teaser-title">
-			<i class="eicon-info-circle"></i><?php echo esc_html__( 'Elementor Dynamic Content', 'elementor' ); ?>
-		</div>
-		<div class="elementor-tags-list__teaser-text">
-			<?php echo esc_html__( 'You’re missing out!', 'elementor' ); ?><br />
-			<?php echo esc_html__( 'Get more dynamic capabilities by incorporating dozens of Elementor\'s native dynamic tags.', 'elementor' ); ?>
-			<a href="{{{ promotionUrl }}}" class="elementor-tags-list__teaser-link" target="_blank">
-				<?php echo esc_html__( 'Upgrade', 'elementor' ); ?>
-			</a>
-		</div>
-	</div>
 </script>

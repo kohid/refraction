@@ -2,10 +2,8 @@
 /**
  * Plugin Name: Elementor
  * Description: The Elementor Website Builder has it all: drag and drop page builder, pixel perfect design, global and reusable style systems, mobile responsive editing, and more. Get started now!
- * Plugin URI: https://elementor.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Version: 4.4.0
  * Author: Elementor.com
- * Author URI: https://elementor.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
  * Requires PHP: 7.4
  * Requires at least: 6.8
  * Text Domain: elementor
@@ -45,10 +43,6 @@ define( 'ELEMENTOR_MODULES_PATH', plugin_dir_path( ELEMENTOR__FILE__ ) . '/modul
 define( 'ELEMENTOR_ASSETS_PATH', ELEMENTOR_PATH . 'assets/' );
 define( 'ELEMENTOR_ASSETS_URL', ELEMENTOR_URL . 'assets/' );
 
-if ( ! defined( 'ELEMENTOR_EDITOR_EVENTS_MIXPANEL_TOKEN' ) ) {
-	define( 'ELEMENTOR_EDITOR_EVENTS_MIXPANEL_TOKEN', '' );
-}
-
 if ( file_exists( ELEMENTOR_PATH . 'vendor/autoload_packages.php' ) ) {
 	require_once ELEMENTOR_PATH . 'vendor/autoload_packages.php';
 } elseif ( file_exists( ELEMENTOR_PATH . 'vendor/autoload.php' ) ) {
@@ -86,14 +80,13 @@ if ( ! version_compare( PHP_VERSION, '7.4', '>=' ) ) {
  */
 function elementor_fail_php_version() {
 	$html_message = sprintf(
-		'<div class="error"><h3>%1$s</h3><p>%2$s <a href="https://go.elementor.com/wp-dash-update-php/" target="_blank">%3$s</a></p></div>',
+		'<div class="error"><h3>%1$s</h3><p>%2$s</p></div>',
 		esc_html__( 'Elementor isn’t running because PHP is outdated.', 'elementor' ),
 		sprintf(
 			/* translators: %s: PHP version. */
 			esc_html__( 'Update to version %s and get back to creating!', 'elementor' ),
 			'7.4'
-		),
-		esc_html__( 'Show me how', 'elementor' )
+		)
 	);
 
 	echo wp_kses_post( $html_message );
@@ -110,14 +103,13 @@ function elementor_fail_php_version() {
  */
 function elementor_fail_wp_version() {
 	$html_message = sprintf(
-		'<div class="error"><h3>%1$s</h3><p>%2$s <a href="https://go.elementor.com/wp-dash-update-wordpress/" target="_blank">%3$s</a></p></div>',
+		'<div class="error"><h3>%1$s</h3><p>%2$s</p></div>',
 		esc_html__( 'Elementor isn’t running because WordPress is outdated.', 'elementor' ),
 		sprintf(
 			/* translators: %s: WordPress version. */
 			esc_html__( 'Update to version %s and get back to creating!', 'elementor' ),
 			ELEMENTOR_MINIMUM_WP_VERSION
-		),
-		esc_html__( 'Show me how', 'elementor' )
+		)
 	);
 
 	echo wp_kses_post( $html_message );

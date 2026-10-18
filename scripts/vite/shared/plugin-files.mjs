@@ -68,9 +68,6 @@ export const PLUGIN_FILE_PATTERNS = [
 	'vendor/autoload.php',
 	'vendor/autoload_packages.php',
 	'vendor/composer/**',
-	'vendor/elementor/wp-one-package/**',
-	'vendor/elementor/wp-notifications-package/**',
-	'vendor/elementor/elementor-mcp-composer/**',
 	'vendor/jetpack-autoloader/**',
 	'vendor/wordpress/**',
 ];

@@ -20,5 +20,4 @@ interface Elementor_Adapter_Interface {
 
 	public function get_template_type( $template_id ): string;
 
-	public function get_tier(): string;
 }

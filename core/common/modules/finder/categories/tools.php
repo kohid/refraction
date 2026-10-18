@@ -72,15 +72,6 @@ class Tools extends Base_Category {
 			],
 		];
 
-		if ( ElementorTools::can_user_rollback_versions() ) {
-			$items['version-control'] = [
-				'title' => esc_html__( 'Version Control', 'elementor' ),
-				'icon' => 'time-line',
-				'url' => $tools_url . '#tab-versions',
-				'keywords' => [ 'tools', 'version', 'control', 'rollback', 'beta', 'elementor' ],
-			];
-		}
-
 		return $items;
 	}
 }

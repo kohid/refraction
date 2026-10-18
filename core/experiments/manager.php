@@ -8,7 +8,6 @@ use Elementor\Core\Utils\Collection;
 use Elementor\Modules\System_Info\Module as System_Info;
 use Elementor\Plugin;
 use Elementor\Settings;
-use Elementor\Tracker;
 use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -342,11 +341,7 @@ class Manager extends Base_Object {
 			'name' => 'e_font_icon_svg',
 			'title' => esc_html__( 'Inline Font Icons', 'elementor' ),
 			'tag' => esc_html__( 'Performance', 'elementor' ),
-			'description' => sprintf(
-				'%1$s <a href="https://go.elementor.com/wp-dash-inline-font-awesome/" target="_blank">%2$s</a>',
-				esc_html__( 'The “Inline Font Icons” will render the icons as inline SVG without loading the Font-Awesome and the eicons libraries and its related CSS files and fonts.', 'elementor' ),
-				esc_html__( 'Learn more', 'elementor' )
-			),
+			'description' => esc_html__( 'The “Inline Font Icons” will render the icons as inline SVG without loading the Font-Awesome and the eicons libraries and its related CSS files and fonts.', 'elementor' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'new_site' => [
 				'default_active' => true,
@@ -358,11 +353,7 @@ class Manager extends Base_Object {
 		$this->add_feature( [
 			'name' => 'additional_custom_breakpoints',
 			'title' => esc_html__( 'Additional Custom Breakpoints', 'elementor' ),
-			'description' => sprintf(
-				'%1$s <a href="https://go.elementor.com/wp-dash-additional-custom-breakpoints/" target="_blank">%2$s</a>',
-				esc_html__( 'Get pixel-perfect design for every screen size. You can now add up to 6 customizable breakpoints beyond the default desktop setting: mobile, mobile extra, tablet, tablet extra, laptop, and widescreen.', 'elementor' ),
-				esc_html__( 'Learn more', 'elementor' )
-			),
+			'description' => esc_html__( 'Get pixel-perfect design for every screen size. You can now add up to 6 customizable breakpoints beyond the default desktop setting: mobile, mobile extra, tablet, tablet extra, laptop, and widescreen.', 'elementor' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'default' => self::STATE_ACTIVE,
 			'generator_tag' => true,
@@ -371,14 +362,7 @@ class Manager extends Base_Object {
 		$this->add_feature( [
 			'name' => 'container',
 			'title' => esc_html__( 'Container', 'elementor' ),
-			'description' => sprintf(
-				/* translators: 1: Link opening tag, 2: Link closing tag, 3: Link opening tag, 4: Link closing tag */
-				esc_html__( 'Create advanced layouts and responsive designs with %1$sFlexbox%2$s and %3$sGrid%4$s container elements.', 'elementor' ),
-				'<a target="_blank" href="https://go.elementor.com/wp-dash-flex-container/">',
-				'</a>',
-				'<a target="_blank" href="https://go.elementor.com/wp-dash-grid-container/">',
-				'</a>'
-			),
+			'description' => esc_html__( 'Create advanced layouts and responsive designs with Flexbox and Grid container elements.', 'elementor' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'default' => self::STATE_INACTIVE,
 			'new_site' => [
@@ -386,11 +370,7 @@ class Manager extends Base_Object {
 				'minimum_installation_version' => '3.16.0',
 			],
 			'messages' => [
-				'on_deactivate' => sprintf(
-					'%1$s <a target="_blank" href="https://go.elementor.com/wp-dash-deactivate-container/">%2$s</a>',
-					esc_html__( 'Container-based content will be hidden from your site and may not be recoverable in all cases.', 'elementor' ),
-					esc_html__( 'Learn more', 'elementor' ),
-				),
+				'on_deactivate' => esc_html__( 'Container-based content will be hidden from your site and may not be recoverable in all cases.', 'elementor' ),
 			],
 		] );
 
@@ -508,10 +488,6 @@ class Manager extends Base_Object {
 					],
 				];
 			}
-
-			if ( ! Tracker::is_allow_track() && 'stable' === $section ) {
-				$fields[ $section ] += $settings->get_usage_fields();
-			}
 		}
 
 		$settings->add_tab(
@@ -557,21 +533,12 @@ class Manager extends Base_Object {
 		</h2>
 		<p class="e-experiment__description">
 			<?php
-			printf(
-				/* translators: %1$s Link open tag, %2$s: Link close tag. */
-				esc_html__( 'Personalize your Elementor experience by controlling which features and experiments are active on your site. Help make Elementor better by %1$ssharing your experience and feedback with us%2$s.', 'elementor' ),
-				'<a href="https://go.elementor.com/wp-dash-experiments-report-an-issue/" target="_blank">',
-				'</a>'
-			);
+			echo esc_html__( 'Personalize your Elementor experience by controlling which features and experiments are active on your site.', 'elementor' );
 			?>
 		</p>
 		<p class="e-experiment__description">
 			<?php
-			printf(
-				'%1$s <a href="https://go.elementor.com/wp-dash-experiments/" target="_blank">%2$s</a>',
-				esc_html__( 'To use an experiment or feature on your site, simply click on the dropdown next to it and switch to Active. You can always deactivate them at any time.', 'elementor' ),
-				esc_html__( 'Learn more', 'elementor' ),
-			);
+			echo esc_html__( 'To use an experiment or feature on your site, simply click on the dropdown next to it and switch to Active. You can always deactivate them at any time.', 'elementor' );
 			?>
 		</p>
 

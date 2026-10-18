@@ -1,25 +1,16 @@
 <?php
 namespace Elementor\Modules\ElementManager;
 
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 use Elementor\Modules\Usage\Module as Usage_Module;
-use Elementor\Api;
 use Elementor\Plugin;
 use Elementor\User;
 use Elementor\Utils;
-use Elementor\Core\Utils\Promotions\Validate_Promotion;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 class Ajax {
-
-	const ELEMENT_MANAGER_PROMOTION_URL = 'https://go.elementor.com/go-pro-element-manager/';
-
-	const FREE_TO_PRO_PERMISSIONS_PROMOTION_URL = 'https://go.elementor.com/go-pro-element-manager-permissions/';
-
-	const PRO_TO_ADVANCED_PERMISSIONS_PROMOTION_URL = 'https://go.elementor.com/go-pro-advanced-element-manager-permissions/';
 
 	public function register_endpoints() {
 		add_action( 'wp_ajax_elementor_element_manager_get_admin_app_data', [ $this, 'ajax_get_admin_page_data' ] );
@@ -58,7 +49,6 @@ class Ajax {
 
 		$data = [
 			'disabled_elements' => Options::get_disabled_elements(),
-			'promotion_widgets' => [],
 			'widgets' => $widgets,
 			'plugins' => $plugins,
 			'notice_data' => [
@@ -66,45 +56,11 @@ class Ajax {
 				'is_viewed' => User::is_user_notice_viewed( $notice_id ),
 				'nonce' => wp_create_nonce( 'elementor_set_admin_notice_viewed' ),
 			],
-			'promotion_data' => [
-				'manager_permissions' => [
-					'pro' => $this->get_element_manager_promotion(
-						[
-							'text' => esc_html__( 'Upgrade Now', 'elementor' ),
-							'url' => self::FREE_TO_PRO_PERMISSIONS_PROMOTION_URL,
-						],
-						'pro_permissions'
-					),
-					'advanced' => $this->get_element_manager_promotion(
-						[
-							'text' => esc_html__( 'Upgrade Now', 'elementor' ),
-							'url' => self::PRO_TO_ADVANCED_PERMISSIONS_PROMOTION_URL,
-						],
-						'advanced_permissions'
-					),
-				],
-				'element_manager' => $this->get_element_manager_promotion(
-					[
-						'text' => esc_html__( 'Upgrade Now', 'elementor' ),
-						'url' => self::ELEMENT_MANAGER_PROMOTION_URL,
-					],
-					'element_manager'
-				),
-			],
 		];
-
-		if ( ! Utils::has_pro() ) {
-			$data['promotion_widgets'] = Api::get_promotion_widgets();
-		}
 
 		$data['additional_data'] = apply_filters( 'elementor/element_manager/admin_app_data/additional_data', [] );
 
 		wp_send_json_success( $data );
-	}
-
-	private function get_element_manager_promotion( $promotion_data, $filter_id ): array {
-
-		return Filtered_Promotions_Manager::get_filtered_promotion_data( $promotion_data, 'elementor/element_manager/admin_app_data/promotion_data/' . $filter_id, 'url' );
 	}
 
 	private function verify_permission() {

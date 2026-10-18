@@ -32,22 +32,6 @@ class User {
 	const INTRODUCTION_KEY = 'elementor_introduction';
 
 	/**
-	 * Holds the beta tester key.
-	 *
-	 * @var string Beta tester key.
-	 */
-	const BETA_TESTER_META_KEY = 'elementor_beta_tester';
-
-	/**
-	 * Holds the URL of the Beta Tester Opt-in API.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string API URL.
-	 */
-	const BETA_TESTER_API_URL = 'https://my.elementor.com/api/v1/beta_tester/';
-
-	/**
 	 * Holds the dismissed editor notices key.
 	 *
 	 * @since 3.19.0
@@ -80,7 +64,6 @@ class User {
 	 */
 	public static function register_ajax_actions( Ajax $ajax ) {
 		$ajax->register_ajax_action( 'introduction_viewed', [ __CLASS__, 'set_introduction_viewed' ] );
-		$ajax->register_ajax_action( 'beta_tester_signup', [ __CLASS__, 'register_as_beta_tester' ] );
 		$ajax->register_ajax_action( 'dismissed_editor_notices', [ __CLASS__, 'set_dismissed_editor_notices' ] );
 	}
 
@@ -312,36 +295,6 @@ class User {
 		$user_introduction_meta[ $data['introductionKey'] ] = true;
 
 		update_user_meta( get_current_user_id(), self::INTRODUCTION_KEY, $user_introduction_meta );
-	}
-
-	/**
-	 * @throws \Exception If the user cannot install plugins.
-	 */
-	public static function register_as_beta_tester( array $data ) {
-		if ( ! current_user_can( 'install_plugins' ) ) {
-			throw new \Exception( 'You do not have permission to install plugins.' );
-		}
-
-		update_user_meta( get_current_user_id(), self::BETA_TESTER_META_KEY, true );
-		$response = wp_safe_remote_post(
-			self::BETA_TESTER_API_URL,
-			[
-				'timeout' => 25,
-				'body' => [
-					'api_version' => ELEMENTOR_VERSION,
-					'site_lang' => get_bloginfo( 'language' ),
-					'beta_tester_email' => $data['betaTesterEmail'],
-				],
-			]
-		);
-
-		$response_code = (int) wp_remote_retrieve_response_code( $response );
-
-		if ( 200 === $response_code ) {
-			self::set_introduction_viewed( [
-				'introductionKey' => Beta_Testers::BETA_TESTER_SIGNUP,
-			] );
-		}
 	}
 
 	/**

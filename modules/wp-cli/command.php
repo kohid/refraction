@@ -1,7 +1,6 @@
 <?php
 namespace Elementor\Modules\WpCli;
 
-use Elementor\Api;
 use Elementor\Plugin;
 use Elementor\TemplateLibrary\Source_Local;
 use Elementor\Utils;
@@ -72,22 +71,6 @@ class Command extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Print system info powered by Elementor
-	 *
-	 * ## EXAMPLES
-	 *
-	 *  1. wp elementor system-info
-	 *      - This will print the System Info in JSON format
-	 *
-	 * @since 3.0.11
-	 * @access public
-	 * @alias system-info
-	 */
-	public function system_info() {
-		echo wp_json_encode( \Elementor\Tracker::get_tracking_data() );
-	}
-
-	/**
 	 * Replace old URLs with new URLs in all Elementor pages.
 	 *
 	 * [--force]
@@ -123,31 +106,6 @@ class Command extends \WP_CLI_Command {
 				\WP_CLI::error( $e->getMessage() );
 			}
 		}
-	}
-
-	/**
-	 * Sync Elementor Library.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *  1. wp elementor sync-library
-	 *      - This will sync the library with Elementor cloud library.
-	 *
-	 * @since 2.1.0
-	 * @access public
-	 * @alias sync-library
-	 */
-	public function sync_library( $args, $assoc_args ) {
-		// TODO:
-		// \WP_CLI::warning( 'command is deprecated since 2.8.0 Please use: wp elementor library sync' );
-
-		$data = Api::get_library_data( true );
-
-		if ( empty( $data ) ) {
-			\WP_CLI::error( 'Cannot sync library.' );
-		}
-
-		\WP_CLI::success( 'Library has been synced.' );
 	}
 
 	/**

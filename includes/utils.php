@@ -114,20 +114,6 @@ class Utils {
 	];
 
 	/**
-	 * Variables for free to pro upsale modal promotions
-	 */
-
-	const ANIMATED_HEADLINE = 'animated_headline';
-
-	const CTA = 'cta';
-
-	const VIDEO_PLAYLIST = 'video_playlist';
-
-	const TESTIMONIAL_WIDGET = 'testimonial_widget';
-
-	const IMAGE_CAROUSEL = 'image_carousel';
-
-	/**
 	 * Whether WordPress CLI mode is enabled or not.
 	 *
 	 * @access public
@@ -174,38 +160,6 @@ class Utils {
 	 */
 	public static function is_elementor_tests() {
 		return defined( 'ELEMENTOR_TESTS' ) && ELEMENTOR_TESTS;
-	}
-
-	/**
-	 * Get pro link.
-	 *
-	 * Retrieve the link to Elementor Pro.
-	 *
-	 * @since 1.7.0
-	 * @access public
-	 * @static
-	 *
-	 * @param string $link URL to Elementor pro.
-	 *
-	 * @return string Elementor pro link.
-	 */
-	public static function get_pro_link( $link ) {
-		static $theme_name = false;
-
-		if ( ! $theme_name ) {
-			$theme_obj = wp_get_theme();
-			if ( $theme_obj->parent() ) {
-				$theme_name = $theme_obj->parent()->get( 'Name' );
-			} else {
-				$theme_name = $theme_obj->get( 'Name' );
-			}
-
-			$theme_name = sanitize_key( $theme_name );
-		}
-
-		$link = add_query_arg( 'utm_term', $theme_name, $link );
-
-		return $link;
 	}
 
 	/**

@@ -41,11 +41,7 @@ class Module extends BaseModule {
 		return [
 			'name' => self::EXPERIMENT_NAME,
 			'title' => esc_html__( 'Generate website markdown', 'elementor' ),
-			'description' => sprintf(
-				'%1$s <a href="https://go.elementor.com/wp-dash-generate-website-markdown-article/" target="_blank">%2$s</a>',
-				esc_html__( 'Serve your pages as Markdown files so AI agents can ingest and understand your content more efficiently.', 'elementor' ),
-				esc_html__( 'Learn more', 'elementor' )
-			),
+			'description' => esc_html__( 'Serve your pages as Markdown files so AI agents can ingest and understand your content more efficiently.', 'elementor' ),
 			'default' => Experiments_Manager::STATE_INACTIVE,
 			'release_status' => Experiments_Manager::RELEASE_STATUS_ALPHA,
 		];

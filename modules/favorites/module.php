@@ -47,21 +47,6 @@ class Module extends BaseModule {
 		$this->populate();
 
 		Plugin::instance()->data_manager_v2->register_controller( new Controller() );
-
-		add_filter( 'elementor/tracker/send_tracking_data_params', [ $this, 'add_tracking_data' ] );
-	}
-
-	/**
-	 * Add usage data related to favorites.
-	 *
-	 * @param $params
-	 *
-	 * @return array
-	 */
-	public function add_tracking_data( $params ) {
-		$params['usages']['favorites'] = $this->get();
-
-		return $params;
 	}
 
 	public function get_name() {

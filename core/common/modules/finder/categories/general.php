@@ -3,7 +3,6 @@ namespace Elementor\Core\Common\Modules\Finder\Categories;
 
 use Elementor\Core\Common\Modules\Finder\Base_Category;
 use Elementor\Core\RoleManager\Role_Manager;
-use Elementor\Plugin;
 use Elementor\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -62,23 +61,6 @@ class General extends Base_Category {
 				'icon' => 'person',
 				'url' => Role_Manager::get_url(),
 				'keywords' => [ 'role', 'manager', 'user', 'elementor' ],
-			],
-			'knowledge-base' => [
-				'title' => esc_html__( 'Knowledge Base', 'elementor' ),
-				'url' => 'https://go.elementor.com/docs-admin-menu/',
-				'keywords' => [ 'help', 'knowledge', 'docs', 'elementor' ],
-			],
-			'theme-builder' => [
-				'title' => esc_html__( 'Theme Builder', 'elementor' ),
-				'icon' => 'library-save',
-				'url' => Plugin::$instance->app->get_settings( 'menu_url' ),
-				'keywords' => [ 'template', 'header', 'footer', 'single', 'archive', 'search', '404', 'library' ],
-			],
-			'kit-library' => [
-				'title' => esc_html__( 'Website Templates', 'elementor' ),
-				'icon' => 'kit-parts',
-				'url' => Plugin::$instance->app->get_base_url() . '&source=finder#/kit-library',
-				'keywords' => [ 'Website Templates', 'kit library', 'kit', 'library', 'site parts', 'parts', 'assets', 'templates' ],
 			],
 		];
 	}

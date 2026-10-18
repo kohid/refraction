@@ -266,7 +266,7 @@ abstract class Element_Base extends Controls_Stack {
 	}
 
 	public function get_help_url() {
-		return 'https://go.elementor.com/widget-' . $this->get_name();
+		return '';
 	}
 
 	public function get_custom_help_url() {

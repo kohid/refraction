@@ -6,7 +6,6 @@ use Elementor\App\Modules\ImportExportCustomization\Processes\Import;
 use Elementor\App\Modules\ImportExportCustomization\Processes\Revert;
 use Elementor\Core\Base\Module as BaseModule;
 use Elementor\Core\Files\Uploads_Manager;
-use Elementor\Modules\CloudKitLibrary\Module as CloudKitLibrary;
 use Elementor\Modules\System_Info\Reporters\Server;
 use Elementor\Plugin;
 use Elementor\Tools;
@@ -27,25 +26,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Module extends BaseModule {
 	const FORMAT_VERSION = '3.0';
 
-	const REFERRER_KIT_LIBRARY = 'kit-library';
-
 	const REFERRER_LOCAL = 'local';
 
-	const REFERRER_CLOUD = 'cloud';
-
 	const PLUGIN_PERMISSIONS_ERROR_KEY = 'plugin-installation-permissions-error';
-
-	const KIT_LIBRARY_ERROR_KEY = 'invalid-kit-library-zip-error';
-
-	const CLOUD_KIT_LIBRARY_ERROR_LOADING_RESOURCE = 'error-loading-resource';
 
 	const NO_WRITE_PERMISSIONS_KEY = 'no-write-permissions';
 
 	const THIRD_PARTY_ERROR = 'third-party-error';
 
 	const DOMDOCUMENT_MISSING = 'domdocument-missing';
-
-	const MEDIA_PROCESSING_ERROR = 'media-processing-error';
 
 	const OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS = 'elementor_import_sessions';
 
@@ -55,7 +44,6 @@ class Module extends BaseModule {
 
 	const META_KEY_ELEMENTOR_EDIT_MODE = '_elementor_edit_mode';
 	const IMPORT_PLUGINS_ACTION = 'import-plugins';
-	const EXPORT_SOURCE_CLOUD = 'cloud';
 	const EXPORT_SOURCE_FILE = 'file';
 
 	/**
@@ -99,7 +87,6 @@ class Module extends BaseModule {
 			\WP_CLI::add_command( 'elementor kit', WP_CLI::class );
 		}
 
-		( new Usage() )->register();
 
 		$this->revert = new Revert();
 	}
@@ -134,8 +121,6 @@ class Module extends BaseModule {
 	 * Render the import/export tab content.
 	 */
 	private function render_import_export_tab_content() {
-		$is_cloud_kits_available = CloudKitLibrary::get_app()->check_eligibility()['is_eligible'];
-
 		$content_data = [
 			'export' => [
 				'title' => esc_html__( 'Export this website', 'elementor' ),
@@ -144,31 +129,18 @@ class Module extends BaseModule {
 					'text' => esc_html__( 'Export', 'elementor' ),
 					'id' => 'elementor-import-export__export',
 				],
-				'description' => esc_html__( 'You can download this website as a .zip file, or upload it to the library.', 'elementor' ),
+				'description' => esc_html__( 'You can download this website as a .zip file.', 'elementor' ),
 			],
 			'import' => [
 				'title' => esc_html__( 'Apply a Website Template', 'elementor' ),
 				'button' => [
 					'url' => Plugin::$instance->app->get_base_url() . '#/import-customization',
-					'text' => $is_cloud_kits_available ? esc_html__( 'Upload .zip file', 'elementor' ) : esc_html__( 'Import', 'elementor' ),
+					'text' => esc_html__( 'Import', 'elementor' ),
 					'id' => 'elementor-import-export__import',
 				],
-				'description' => esc_html__( 'You can import design and settings from a .zip file or choose from the library.', 'elementor' ),
+				'description' => esc_html__( 'You can import design and settings from a .zip file.', 'elementor' ),
 			],
 		];
-
-		if ( $is_cloud_kits_available ) {
-			$return_to_url = Tools::get_url() . '#tab-import-export-kit';
-			$kit_library_url = add_query_arg(
-				[ 'return_to' => rawurlencode( $return_to_url ) ],
-				Plugin::$instance->app->get_base_url() . '#/kit-library/cloud'
-			);
-			$content_data['import']['button_secondary'] = [
-				'url' => $kit_library_url,
-				'text' => esc_html__( 'Import from library', 'elementor' ),
-				'id' => 'elementor-import-export__import_from_library',
-			];
-		}
 
 		$last_imported_kit = $this->revert->get_last_import_session();
 		$penultimate_imported_kit = $this->revert->get_penultimate_import_session();
@@ -205,11 +177,7 @@ class Module extends BaseModule {
 		<div class="tab-import-export-kit__content">
 			<p class="tab-import-export-kit__info">
 				<?php
-				printf(
-					'%1$s <a href="https://go.elementor.com/wp-dash-import-export-general/" target="_blank">%2$s</a>',
-					esc_html__( 'Here’s where you can export this website as a .zip file, upload it to the cloud, or start the process of applying an existing template to your site.', 'elementor' ),
-					esc_html__( 'Learn more', 'elementor' ),
-				);
+				echo esc_html__( 'Here’s where you can export this website as a .zip file, or import a template .zip file into your site.', 'elementor' );
 				?>
 			</p>
 
@@ -498,18 +466,6 @@ class Module extends BaseModule {
 			add_filter( 'woocommerce_create_pages', [ $this, 'empty_pages' ], 10, 0 );
 		}
 		// TODO ^^^
-
-		add_filter( 'elementor/import/kit/result', function( $result ) {
-			if ( ! empty( $result['file_url'] ) ) {
-				return [
-					'file_name' => $this->get_remote_kit_zip( $result['file_url'] ),
-					'referrer' => static::REFERRER_KIT_LIBRARY,
-					'file_url' => $result['file_url'],
-				];
-			}
-
-			return $result;
-		} );
 	}
 
 	/**
@@ -575,7 +531,7 @@ class Module extends BaseModule {
 			'elementorImportExport',
 			[
 				'lastImportedSession' => $this->revert->get_last_import_session(),
-				'appUrl' => Plugin::$instance->app->get_base_url() . '#/kit-library',
+				'appUrl' => Plugin::$instance->app->get_base_url(),
 			]
 		);
 
@@ -586,22 +542,6 @@ class Module extends BaseModule {
 			ELEMENTOR_VERSION,
 			true
 		);
-	}
-
-	protected function get_remote_kit_zip( $url ) {
-		$remote_zip_request = wp_safe_remote_get( $url );
-
-		if ( is_wp_error( $remote_zip_request ) ) {
-			Plugin::$instance->logger->get_logger()->error( $remote_zip_request->get_error_message() );
-			throw new \Error( static::KIT_LIBRARY_ERROR_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-		}
-
-		if ( 200 !== $remote_zip_request['response']['code'] ) {
-			Plugin::$instance->logger->get_logger()->error( $remote_zip_request['response']['message'] );
-			throw new \Error( static::KIT_LIBRARY_ERROR_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-		}
-
-		return Plugin::$instance->uploads_manager->create_temp_file( $remote_zip_request['body'], 'kit.zip' );
 	}
 
 	/**

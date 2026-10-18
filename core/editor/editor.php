@@ -57,16 +57,6 @@ class Editor {
 	private $is_edit_mode;
 
 	/**
-	 * @var Notice_Bar
-	 */
-	public $notice_bar;
-
-	/**
-	 * @var Promotion
-	 */
-	public $promotion;
-
-	/**
 	 * @var Editor_Loader
 	 */
 	private $loader;
@@ -590,9 +580,6 @@ class Editor {
 	 */
 	public function __construct() {
 		Plugin::$instance->data_manager_v2->register_controller( new Data\Globals\Controller() );
-
-		$this->notice_bar = new Notice_Bar();
-		$this->promotion = new Promotion();
 
 		add_action( 'admin_action_elementor', [ $this, 'init' ] );
 		add_action( 'template_redirect', [ $this, 'redirect_to_new_url' ] );

@@ -2,7 +2,6 @@
 namespace Elementor;
 
 use Elementor\Core\Frontend\Widget_Content_Render_Mode;
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -105,20 +104,6 @@ abstract class Widget_Base extends Element_Base {
 	 */
 	public function get_categories() {
 		return [ 'general' ];
-	}
-
-	/**
-	 * Get widget upsale data.
-	 *
-	 * Retrieve the widget promotion data.
-	 *
-	 * @since 3.18.0
-	 * @access protected
-	 *
-	 * @return array|null Widget promotion data.
-	 */
-	protected function get_upsale_data() {
-		return null;
 	}
 
 	/**
@@ -381,19 +366,9 @@ abstract class Widget_Base extends Element_Base {
 			'html_wrapper_class' => $this->get_html_wrapper_class(),
 			'show_in_panel' => $this->show_in_panel(),
 			'hide_on_search' => $this->hide_on_search(),
-			'upsale_data' => null,
 			'is_dynamic_content' => $this->is_dynamic_content(),
 			'has_widget_inner_wrapper' => $this->has_widget_inner_wrapper(),
 		];
-
-		if ( isset( $config['upsale_data'] ) && is_array( $config['upsale_data'] ) ) {
-			$filter_name = 'elementor/widgets/' . $this->get_name() . '/custom_promotion';
-			$config['upsale_data'] = Filtered_Promotions_Manager::get_filtered_promotion_data( $config['upsale_data'], $filter_name, 'upgrade_url' );
-		}
-
-		if ( isset( $config['upsale_data']['image'] ) ) {
-			$config['upsale_data']['image'] = esc_url( $config['upsale_data']['image'] );
-		}
 
 		$stack = Plugin::$instance->controls_manager->get_element_stack( $this );
 

@@ -144,11 +144,7 @@ class TextPath extends Widget_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'description' => sprintf(
-					'%1$s <a target="_blank" href="https://go.elementor.com/text-path-create-paths/">%2$s</a>',
-					esc_html__( 'Want to create custom text paths with SVG?', 'elementor' ),
-					esc_html__( 'Learn more', 'elementor' )
-				),
+				'description' => esc_html__( 'Want to create custom text paths with SVG?', 'elementor' ),
 			]
 		);
 

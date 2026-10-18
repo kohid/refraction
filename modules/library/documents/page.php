@@ -84,13 +84,4 @@ class Page extends Library_Document {
 
 		Post::register_style_controls( $this );
 	}
-
-	protected function get_remote_library_config() {
-		$config = parent::get_remote_library_config();
-
-		$config['type'] = 'page';
-		$config['default_route'] = 'templates/pages';
-
-		return $config;
-	}
 }

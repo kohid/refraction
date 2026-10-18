@@ -263,52 +263,6 @@ class Test_Menu_Data_Provider extends Elementor_Test_Base {
 		$this->assertSame( '', $children[0]['group_id'] );
 	}
 
-	public function test_get_theme_builder_url__adds_return_to_only_when_url_has_hash() {
-		$_SERVER['REQUEST_URI'] = '/wp-admin/admin.php?page=elementor-settings';
-
-		$pro_url = admin_url( 'admin.php?page=elementor-app' ) . '#/site-editor';
-
-		\Elementor\Plugin::$instance->app = new class( $pro_url ) {
-			private string $menu_url;
-
-			public function __construct( string $menu_url ) {
-				$this->menu_url = $menu_url;
-			}
-
-			public function get_settings( string $key ) {
-				return 'menu_url' === $key ? $this->menu_url : null;
-			}
-		};
-
-		$url = $this->provider->get_theme_builder_url();
-
-		$this->assertStringContainsString( '#/site-editor', $url );
-		$this->assertStringContainsString( 'return_to=', $url );
-	}
-
-	public function test_get_theme_builder_url__does_not_add_return_to_when_url_has_no_hash() {
-		$_SERVER['REQUEST_URI'] = '/wp-admin/admin.php?page=elementor-settings';
-
-		$pro_url = admin_url( 'admin.php?page=elementor-app' );
-
-		\Elementor\Plugin::$instance->app = new class( $pro_url ) {
-			private string $menu_url;
-
-			public function __construct( string $menu_url ) {
-				$this->menu_url = $menu_url;
-			}
-
-			public function get_settings( string $key ) {
-				return 'menu_url' === $key ? $this->menu_url : null;
-			}
-		};
-
-		$url = $this->provider->get_theme_builder_url();
-
-		$this->assertSame( $pro_url, $url );
-		$this->assertStringNotContainsString( 'return_to=', $url );
-	}
-
 	public function test_get_third_level_data__parent_uses_first_child_custom_url() {
 		$this->set_admin_user();
 		
@@ -350,10 +304,6 @@ class Test_Menu_Data_Provider extends Elementor_Test_Base {
 		$this->assertSame(
 			'saved_templates',
 			$this->invoke_private_method( $this->provider, 'derive_event_id_from_slug', [ 'edit.php?post_type=elementor_library' ] )
-		);
-		$this->assertSame(
-			'theme_builder',
-			$this->invoke_private_method( $this->provider, 'derive_event_id_from_slug', [ 'elementor-app' ] )
 		);
 	}
 

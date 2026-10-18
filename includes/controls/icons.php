@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * A base control for creating a Icons chooser control.
  * Used to select an Icon.
  *
- * Usage: @see https://developers.elementor.com/elementor-controls/icons-control
  *
  * @since 2.6.0
  */

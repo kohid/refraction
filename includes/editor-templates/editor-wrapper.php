@@ -20,7 +20,6 @@ if ( ! Plugin::$instance->role_manager->user_can( 'design' ) ) {
 	$body_classes[] = 'elementor-editor-content-only';
 }
 
-$notice = Plugin::$instance->editor->notice_bar->get_notice();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>

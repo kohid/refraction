@@ -43,6 +43,6 @@ class Htaccess extends Inspection_Base {
 	}
 
 	public function get_help_doc_url() {
-		return 'https://go.elementor.com/preview-not-loaded/#htaccess';
+		return '';
 	}
 }

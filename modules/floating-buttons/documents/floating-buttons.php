@@ -30,7 +30,6 @@ class Floating_Buttons extends PageBase {
 		$properties['support_page_layout'] = false;
 		$properties['library_close_title'] = esc_html__( 'Go To Dashboard', 'elementor' );
 		$properties['publish_button_title'] = esc_html__( 'After publishing this widget, you will be able to set it as visible on the entire site in the Admin Table.', 'elementor' );
-		$properties['allow_closing_remote_library'] = false;
 
 		return $properties;
 	}
@@ -240,15 +239,5 @@ class Floating_Buttons extends PageBase {
 			],
 			admin_url( 'post.php' )
 		);
-	}
-
-	protected function get_remote_library_config() {
-		$config = [
-			'type' => 'floating_button',
-			'default_route' => 'templates/floating-buttons',
-			'autoImportSettings' => true,
-		];
-
-		return array_replace_recursive( parent::get_remote_library_config(), $config );
 	}
 }

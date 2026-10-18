@@ -12,7 +12,6 @@ use Elementor\Plugin;
 use Elementor\Tools;
 use Elementor\Utils as ElementorUtils;
 use Elementor\App\Modules\ImportExport\Utils as ImportExportUtils;
-use Elementor\Modules\CloudKitLibrary\Module as CloudKitLibrary;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -34,15 +33,9 @@ class Module extends BaseModule {
 
 	const IMPORT_RUNNER_TRIGGER_KEY = 'elementor_import_kit__runner';
 
-	const REFERRER_KIT_LIBRARY = 'kit-library';
-
 	const REFERRER_LOCAL = 'local';
 
-	const REFERRER_CLOUD = 'cloud';
-
 	const PLUGIN_PERMISSIONS_ERROR_KEY = 'plugin-installation-permissions-error';
-
-	const KIT_LIBRARY_ERROR_KEY = 'invalid-kit-library-zip-error';
 
 	const NO_WRITE_PERMISSIONS_KEY = 'no-write-permissions';
 
@@ -58,7 +51,6 @@ class Module extends BaseModule {
 
 	const META_KEY_ELEMENTOR_EDIT_MODE = '_elementor_edit_mode';
 	const IMPORT_PLUGINS_ACTION = 'import-plugins';
-	const EXPORT_SOURCE_CLOUD = 'cloud';
 	const EXPORT_SOURCE_FILE = 'file';
 
 	/**
@@ -100,7 +92,6 @@ class Module extends BaseModule {
 			\WP_CLI::add_command( 'elementor kit', WP_CLI::class );
 		}
 
-		( new Usage() )->register();
 
 		$this->revert = new Revert();
 	}
@@ -135,8 +126,6 @@ class Module extends BaseModule {
 	 * Render the import/export tab content.
 	 */
 	private function render_import_export_tab_content() {
-		$is_cloud_kits_available = CloudKitLibrary::get_app()->check_eligibility()['is_eligible'];
-
 		$content_data = [
 			'export' => [
 				'title' => esc_html__( 'Export this website', 'elementor' ),
@@ -145,7 +134,7 @@ class Module extends BaseModule {
 					'text' => esc_html__( 'Export', 'elementor' ),
 					'id' => 'elementor-import-export__export',
 				],
-				'description' => esc_html__( 'You can download this website as a .zip file, or upload it to the library.', 'elementor' ),
+				'description' => esc_html__( 'You can download this website as a .zip file.', 'elementor' ),
 			],
 			'import' => [
 				'title' => esc_html__( 'Import website templates', 'elementor' ),
@@ -154,17 +143,9 @@ class Module extends BaseModule {
 					'text' => esc_html__( 'Import', 'elementor' ),
 					'id' => 'elementor-import-export__import',
 				],
-				'description' => esc_html__( 'You can import design and settings from a .zip file or choose from the library.', 'elementor' ),
+				'description' => esc_html__( 'You can import design and settings from a .zip file.', 'elementor' ),
 			],
 		];
-
-		if ( $is_cloud_kits_available ) {
-			$content_data['import']['button_secondary'] = [
-				'url' => Plugin::$instance->app->get_base_url() . '#/kit-library/cloud',
-				'text' => esc_html__( 'Import from library', 'elementor' ),
-				'id' => 'elementor-import-export__import_from_library',
-			];
-		}
 
 		$last_imported_kit = $this->revert->get_last_import_session();
 		$penultimate_imported_kit = $this->revert->get_penultimate_import_session();
@@ -201,11 +182,7 @@ class Module extends BaseModule {
 		<div class="tab-import-export-kit__content">
 			<p class="tab-import-export-kit__info">
 				<?php
-				printf(
-					'%1$s <a href="https://go.elementor.com/wp-dash-import-export-general/" target="_blank">%2$s</a>',
-					esc_html__( 'Here’s where you can export this website as a .zip file, upload it to the cloud, or start the process of applying an existing template to your site.', 'elementor' ),
-					esc_html__( 'Learn more', 'elementor' ),
-				);
+				echo esc_html__( 'Here’s where you can export this website as a .zip file, or import a template .zip file into your site.', 'elementor' );
 				?>
 			</p>
 
@@ -486,18 +463,6 @@ class Module extends BaseModule {
 			add_filter( 'woocommerce_create_pages', [ $this, 'empty_pages' ], 10, 0 );
 		}
 		// TODO ^^^
-
-		add_filter( 'elementor/import/kit/result', function( $result ) {
-			if ( ! empty( $result['file_url'] ) ) {
-				return [
-					'file_name' => $this->get_remote_kit_zip( $result['file_url'] ),
-					'referrer' => static::REFERRER_KIT_LIBRARY,
-					'file_url' => $result['file_url'],
-				];
-			}
-
-			return $result;
-		} );
 	}
 
 	/**
@@ -563,7 +528,7 @@ class Module extends BaseModule {
 			'elementorImportExport',
 			[
 				'lastImportedSession' => $this->revert->get_last_import_session(),
-				'appUrl' => Plugin::$instance->app->get_base_url() . '#/kit-library',
+				'appUrl' => Plugin::$instance->app->get_base_url(),
 			]
 		);
 	}
@@ -621,41 +586,13 @@ class Module extends BaseModule {
 	 * @throws \Error If operation validation fails or processing errors occur.
 	 */
 	private function handle_upload_kit() {
-		// PHPCS - A URL that should contain special chars (auth headers information).
-		$file_url = isset( $_POST['e_import_file'] )
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			? wp_unslash( $_POST['e_import_file'] )
-			: '';
-
 		// PHPCS - Already validated in caller function
 		$kit_id = ElementorUtils::get_super_global_value( $_POST, 'kit_id' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$source = ElementorUtils::get_super_global_value( $_POST, 'source' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-		$is_import_from_library = ! empty( $file_url );
-
-		if ( $is_import_from_library ) {
-			if (
-				! wp_verify_nonce( ElementorUtils::get_super_global_value( $_POST, 'e_kit_library_nonce' ), 'kit-library-import' )
-			) {
-				throw new \Error( 'Invalid kit library nonce.' );
-			}
-
-			if ( ! filter_var( $file_url, FILTER_VALIDATE_URL ) || 0 !== strpos( $file_url, 'http' ) ) {
-				throw new \Error( static::KIT_LIBRARY_ERROR_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			}
-
-			$import_result = apply_filters( 'elementor/import/kit/result', [ 'file_url' => $file_url ] );
-		} elseif ( ! empty( $source ) ) {
-			$import_result = apply_filters( 'elementor/import/kit/result/' . $source, [
-				'kit_id' => $kit_id,
-				'source' => $source,
-			] );
-		} else {
-			$import_result = [
-				'file_name' => ElementorUtils::get_super_global_value( $_FILES, 'e_import_file' )['tmp_name'],
-				'referrer' => static::REFERRER_LOCAL,
-			];
-		}
+		$import_result = [
+			'file_name' => ElementorUtils::get_super_global_value( $_FILES, 'e_import_file' )['tmp_name'],
+			'referrer' => static::REFERRER_LOCAL,
+		];
 
 		Plugin::$instance->logger->get_logger()->info( 'Uploading Kit: ', [
 			'meta' => [
@@ -664,19 +601,11 @@ class Module extends BaseModule {
 			],
 		] );
 
-		if ( is_wp_error( $import_result ) ) {
-			wp_send_json_error( $import_result->get_error_message() );
-		}
-
 		$uploaded_kit = $this->upload_kit( $import_result['file_name'], $import_result['referrer'], $kit_id );
 
 		$session_dir = $uploaded_kit['session'];
 		$manifest = $uploaded_kit['manifest'];
 		$conflicts = $uploaded_kit['conflicts'];
-
-		if ( $is_import_from_library || ! empty( $source ) ) {
-			Plugin::$instance->uploads_manager->remove_file_or_dir( dirname( $import_result['file_name'] ) );
-		}
 
 		if ( isset( $manifest['plugins'] ) && ! current_user_can( 'install_plugins' ) ) {
 			throw new \Error( static::PLUGIN_PERMISSIONS_ERROR_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
@@ -685,12 +614,7 @@ class Module extends BaseModule {
 		$result = [
 			'session' => $session_dir,
 			'manifest' => $manifest,
-			'file_url' => $import_result['file_url'],
 		];
-
-		if ( ! empty( $import_result['kit'] ) ) {
-			$result['uploaded_kit'] = $import_result['kit'];
-		}
 
 		if ( ! empty( $conflicts ) ) {
 			$result['conflicts'] = $conflicts;
@@ -701,22 +625,6 @@ class Module extends BaseModule {
 		}
 
 		wp_send_json_success( $result );
-	}
-
-	protected function get_remote_kit_zip( $url ) {
-		$remote_zip_request = wp_safe_remote_get( $url );
-
-		if ( is_wp_error( $remote_zip_request ) ) {
-			Plugin::$instance->logger->get_logger()->error( $remote_zip_request->get_error_message() );
-			throw new \Error( static::KIT_LIBRARY_ERROR_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-		}
-
-		if ( 200 !== $remote_zip_request['response']['code'] ) {
-			Plugin::$instance->logger->get_logger()->error( $remote_zip_request['response']['message'] );
-			throw new \Error( static::KIT_LIBRARY_ERROR_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-		}
-
-		return Plugin::$instance->uploads_manager->create_temp_file( $remote_zip_request['body'], 'kit.zip' );
 	}
 
 	/**

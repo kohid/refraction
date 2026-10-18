@@ -4,7 +4,6 @@ namespace Elementor\App\Modules\ImportExport;
 use Elementor\Core\Utils\Collection;
 use Elementor\Core\Utils\Plugins_Manager;
 use Elementor\Plugin;
-use Elementor\App\Modules\KitLibrary\Connect\Kit_Library;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -76,7 +75,7 @@ class Wp_Cli extends \WP_CLI_Command {
 	 *      Templates ids to override conditions for.
 	 *
 	 * [--sourceType]
-	 *      Which source type is used in the current session. Available values are 'local', 'remote', 'library'.
+	 *      Which source type is used in the current session. Available values are 'local', 'remote' (a URL supplied by the user).
 	 *      The default value is 'local'
 	 *
 	 * ## EXAMPLES
@@ -117,12 +116,6 @@ class Wp_Cli extends \WP_CLI_Command {
 		$import_settings['referrer'] = Module::REFERRER_LOCAL;
 
 		switch ( $assoc_args['sourceType'] ) {
-			case 'library':
-				$url = $this->get_url_from_library( $file_path );
-				$zip_path = $this->create_temp_file_from_url( $url );
-				$import_settings['referrer'] = Module::REFERRER_KIT_LIBRARY;
-				break;
-
 			case 'remote':
 				$zip_path = $this->create_temp_file_from_url( $file_path );
 				break;
@@ -220,31 +213,6 @@ class Wp_Cli extends \WP_CLI_Command {
 		}
 
 		\WP_CLI::success( 'Kit reverted successfully.' );
-	}
-
-	/**
-	 * Helper to get kit url by the kit id
-	 * TODO: Maybe extract it.
-	 *
-	 * @param $kit_id
-	 *
-	 * @return string
-	 */
-	private function get_url_from_library( $kit_id ) {
-		/** @var Kit_Library $app */
-		$app = Plugin::$instance->common->get_component( 'connect' )->get_app( 'kit-library' );
-
-		if ( ! $app ) {
-			\WP_CLI::error( 'Kit library app not found' );
-		}
-
-		$response = $app->download_link( $kit_id );
-
-		if ( is_wp_error( $response ) ) {
-			\WP_CLI::error( "Library Response: {$response->get_error_message()}" );
-		}
-
-		return $response->download_link;
 	}
 
 	/**

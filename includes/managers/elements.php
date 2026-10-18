@@ -21,7 +21,6 @@ class Elements_Manager {
 	const CATEGORY_ANGIE_WIDGETS = 'angie-widgets';
 	const CATEGORY_CUSTOM_WIDGETS = 'custom-widgets';
 	const CATEGORY_BASIC = 'basic';
-	const CATEGORY_PRO_ELEMENTS = 'pro-elements';
 	const CATEGORY_WORDPRESS = 'wordpress';
 
 	/**
@@ -299,16 +298,6 @@ class Elements_Manager {
 				'title' => esc_html__( 'Basic', 'elementor' ),
 				'icon' => 'eicon-font',
 			],
-			self::CATEGORY_PRO_ELEMENTS => [
-				'title' => esc_html__( 'Pro', 'elementor' ),
-				'promotion' => [
-					'url' => esc_url( 'https://go.elementor.com/go-pro-section-pro-widget-panel/' ),
-				],
-			],
-			'helloplus' => [
-				'title' => esc_html__( 'Hello+', 'elementor' ),
-				'hideIfEmpty' => true,
-			],
 			'general' => [
 				'title' => esc_html__( 'General', 'elementor' ),
 				'icon' => 'eicon-font',
@@ -316,20 +305,6 @@ class Elements_Manager {
 			'link-in-bio' => [
 				'title' => esc_html__( 'Link In Bio', 'elementor' ),
 				'hideIfEmpty' => true,
-			],
-			'theme-elements' => [
-				'title' => esc_html__( 'Site', 'elementor' ),
-				'active' => false,
-				'promotion' => [
-					'url' => esc_url( 'https://go.elementor.com/go-pro-section-site-widget-panel/' ),
-				],
-			],
-			'woocommerce-elements' => [
-				'title' => esc_html__( 'WooCommerce', 'elementor' ),
-				'active' => false,
-				'promotion' => [
-					'url' => esc_url( 'https://go.elementor.com/go-pro-section-woocommerce-widget-panel/' ),
-				],
 			],
 		];
 

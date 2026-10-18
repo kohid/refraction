@@ -8,7 +8,6 @@ use ElementorEditorTesting\Kses_Test_Expectations;
 
 class Elementor_Test_Utils extends Elementor_Test_Base {
 
-	const BASE_LINK = 'https://elementor.com/pro/?utm_source=wp-role-manager&utm_campaign=gopro&utm_medium=wp-dash';
 
 	public function tearDown(): void {
 		parent::tearDown();
@@ -113,10 +112,6 @@ class Elementor_Test_Utils extends Elementor_Test_Base {
 		// Act & Assert.
 		$this->assertSame( 'div', Utils::validate_html_tag( 'script' ) );
 		$this->assertSame( 'div', Utils::validate_html_tag( 'iframe' ) );
-	}
-
-	public function test_should_return_elementor_pro_link() {
-		$this->assertSame( self::BASE_LINK . '&utm_term=twentytwenty-one', Utils::get_pro_link( self::BASE_LINK ) );
 	}
 
 	public function test_should_return_source_of_placeholder_image() {

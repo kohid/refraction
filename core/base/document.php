@@ -19,7 +19,6 @@ use Elementor\Utils;
 use Elementor\Widget_Base;
 use Elementor\Core\Settings\Page\Manager as PageManager;
 use ElementorPro\Modules\Library\Widgets\Template;
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -173,7 +172,6 @@ abstract class Document extends Controls_Stack {
 			'show_copy_and_share' => false,
 			'library_close_title' => esc_html__( 'Close', 'elementor' ),
 			'publish_button_title' => esc_html__( 'Publish', 'elementor' ),
-			'allow_closing_remote_library' => true,
 		];
 	}
 
@@ -208,46 +206,17 @@ abstract class Document extends Controls_Stack {
 			'show_copy_and_share' => static::get_property( 'show_copy_and_share' ),
 			'library_close_title' => static::get_property( 'library_close_title' ),
 			'publish_button_title' => static::get_property( 'publish_button_title' ),
-			'allow_closing_remote_library' => static::get_property( 'allow_closing_remote_library' ),
 		];
 	}
 
 	public static function get_filtered_editor_panel_categories(): array {
 		$categories = static::get_editor_panel_categories();
-		$has_pro = Utils::has_pro();
 
 		foreach ( $categories as $index => $category ) {
+			// Placeholder categories that only carried an upsell promotion are not supported.
 			if ( isset( $category['promotion'] ) ) {
-				$categories = self::get_panel_category_item( $category['promotion'], $index, $categories, $has_pro );
+				unset( $categories[ $index ] );
 			}
-		}
-
-		return $categories;
-	}
-
-	/**
-	 * @param $promotion
-	 * @param $index
-	 * @param array $categories
-	 *
-	 * @return array
-	 */
-	private static function get_panel_category_item( $promotion, $index, array $categories, bool $has_pro ): array {
-		$keep_promotion = $has_pro && apply_filters(
-			'elementor/document/panel_category_keep_promotion',
-			false,
-			$index,
-			$promotion
-		);
-
-		if ( ! $has_pro || $keep_promotion ) {
-			$categories[ $index ]['promotion'] = Filtered_Promotions_Manager::get_filtered_promotion_data(
-				$promotion,
-				'elementor/panel/' . $index . '/custom_promotion',
-				'url'
-			);
-		} else {
-			unset( $categories[ $index ]['promotion'] );
 		}
 
 		return $categories;
@@ -713,7 +682,6 @@ abstract class Document extends Controls_Stack {
 			'type' => $this->get_name(),
 			'version' => $this->get_main_meta( '_elementor_version' ),
 			'settings' => $settings['page'],
-			'remoteLibrary' => $this->get_remote_library_config(),
 			'last_edited' => $this->get_last_edited(),
 			'panel' => static::get_editor_panel_config(),
 			'container' => 'body',
@@ -1802,17 +1770,6 @@ abstract class Document extends Controls_Stack {
 		}
 
 		return $metadata;
-	}
-
-	protected function get_remote_library_config() {
-		$config = [
-			'type' => 'block',
-			'default_route' => 'templates/blocks',
-			'category' => $this->get_name(),
-			'autoImportSettings' => false,
-		];
-
-		return $config;
 	}
 
 	/**

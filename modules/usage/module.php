@@ -7,7 +7,6 @@ use Elementor\Modules\System_Info\Module as System_Info;
 use Elementor\Modules\Usage\Calculators\Legacy_Element_Usage_Calculator;
 use Elementor\Plugin;
 use Elementor\Settings;
-use Elementor\Tracker;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -59,11 +58,11 @@ class Module extends BaseModule {
 		static $library = null;
 
 		if ( null === $posts ) {
-			$posts = \Elementor\Tracker::get_posts_usage();
+			$posts = self::get_posts_usage();
 		}
 
 		if ( null === $library ) {
-			$library = \Elementor\Tracker::get_library_usage();
+			$library = self::get_library_usage();
 		}
 
 		$posts_usage = $posts;
@@ -245,18 +244,75 @@ class Module extends BaseModule {
 	}
 
 	/**
-	 * Add's tracking data.
+	 * Get posts usage.
 	 *
-	 * Called on elementor/tracker/send_tracking_data_params.
+	 * Retrieve the number of posts using Elementor.
 	 *
-	 * @param array $params
+	 * @since 2.0.0
+	 * @access public
+	 * @static
 	 *
-	 * @return array
+	 * @return array The number of posts using Elementor grouped by post types
+	 *               and post status.
 	 */
-	public function add_tracking_data( $params ) {
-		$params['usages']['elements'] = get_option( self::OPTION_NAME );
+	private static function get_posts_usage() {
+		global $wpdb;
 
-		return $params;
+		$usage = [];
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$results = $wpdb->get_results(
+			"SELECT `post_type`, `post_status`, COUNT(`ID`) `hits`
+				FROM {$wpdb->posts} `p`
+				LEFT JOIN {$wpdb->postmeta} `pm` ON(`p`.`ID` = `pm`.`post_id`)
+				WHERE `post_type` != 'elementor_library'
+					AND `meta_key` = '_elementor_edit_mode' AND `meta_value` = 'builder'
+				GROUP BY `post_type`, `post_status`;"
+		);
+
+		if ( $results ) {
+			foreach ( $results as $result ) {
+				$usage[ $result->post_type ][ $result->post_status ] = (int) $result->hits;
+			}
+		}
+
+		return $usage;
+	}
+
+	/**
+	 * Get library usage.
+	 *
+	 * Retrieve the number of Elementor library items saved.
+	 *
+	 * @since 2.0.0
+	 * @access public
+	 * @static
+	 *
+	 * @return array The number of Elementor library items grouped by post types
+	 *               and meta value.
+	 */
+	private static function get_library_usage() {
+		global $wpdb;
+
+		$usage = [];
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$results = $wpdb->get_results(
+			"SELECT `meta_value`, COUNT(`ID`) `hits`
+				FROM {$wpdb->posts} `p`
+				LEFT JOIN {$wpdb->postmeta} `pm` ON(`p`.`ID` = `pm`.`post_id`)
+				WHERE `post_type` = 'elementor_library'
+					AND `meta_key` = '_elementor_template_type'
+				GROUP BY `post_type`, `meta_value`;"
+		);
+
+		if ( $results ) {
+			foreach ( $results as $result ) {
+				$usage[ $result->meta_value ] = $result->hits;
+			}
+		}
+
+		return $usage;
 	}
 
 	/**
@@ -588,17 +644,11 @@ class Module extends BaseModule {
 	 * @access public
 	 */
 	public function __construct() {
-		if ( ! Tracker::is_allow_track() ) {
-			return;
-		}
-
 		add_action( 'transition_post_status', [ $this, 'on_status_change' ], 10, 3 );
 		add_action( 'before_delete_post', [ $this, 'on_before_delete_post' ] );
 
 		add_action( 'elementor/document/before_save', [ $this, 'before_document_save' ], 10, 2 );
 		add_action( 'elementor/document/after_save', [ $this, 'after_document_save' ] );
-
-		add_filter( 'elementor/tracker/send_tracking_data_params', [ $this, 'add_tracking_data' ] );
 
 		add_action( 'admin_init', [ $this, 'add_system_info_report' ], 50 );
 	}

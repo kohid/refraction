@@ -3119,9 +3119,6 @@ JS;
 
 		$this->end_controls_section();
 
-		Plugin::$instance->controls_manager->add_custom_css_controls( $this, static::TAB_ADVANCED );
-
-		Plugin::$instance->controls_manager->add_custom_attributes_controls( $this, static::TAB_ADVANCED );
 	}
 
 	protected function render(): void {

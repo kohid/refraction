@@ -2,7 +2,6 @@
 
 namespace Elementor\Modules\EditorOne\Components;
 
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 use Elementor\Modules\EditorOne\Classes\Active_Menu_Resolver;
 use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
 use Elementor\Modules\EditorOne\Classes\Url_Matcher;
@@ -13,8 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Sidebar_Navigation_Handler {
-
-	private const PROMOTION_URL = 'https://go.elementor.com/go-pro-upgrade-wp-editor-inner-menu/';
 
 	private Menu_Data_Provider $menu_data_provider;
 
@@ -92,7 +89,6 @@ class Sidebar_Navigation_Handler {
 			Menu_Data_Provider::THIRD_LEVEL_EDITOR_FLYOUT
 		);
 		$level4_groups = $this->menu_data_provider->get_level4_flyout_data();
-		$promotion = $this->get_promotion_data();
 		$active_state = $this->get_active_menu_state( $flyout_data['items'], $level4_groups );
 
 		return [
@@ -102,20 +98,7 @@ class Sidebar_Navigation_Handler {
 			'activeChildSlug' => $active_state['child_slug'],
 			'siteTitle' => esc_html__( 'Editor', 'elementor' ),
 			'hasPro' => Utils::has_pro(),
-			'upgradeUrl' => $promotion['url'],
-			'upgradeText' => $promotion['text'],
 		];
-	}
-
-	private function get_promotion_data(): array {
-		return Filtered_Promotions_Manager::get_filtered_promotion_data(
-			[
-				'text' => esc_html__( 'Upgrade plan', 'elementor' ),
-				'url' => self::PROMOTION_URL,
-			],
-			'elementor/sidebar/promotion',
-			'url'
-		);
 	}
 
 	private function get_active_menu_state( array $menu_items, array $level4_groups ): array {

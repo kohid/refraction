@@ -16,7 +16,7 @@ class Shop_Page_Edit extends Inspection_Base {
 	}
 
 	public function get_help_doc_url() {
-		return 'https://elementor.com/help/the-content-area-was-not-found-error/#error-appears-on-woocommerce-pages';
+		return '';
 	}
 
 	public function get_header_message() {

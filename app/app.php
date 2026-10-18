@@ -1,29 +1,19 @@
 <?php
 namespace Elementor\App;
 
-use Elementor\App\AdminMenuItems\Theme_Builder_Menu_Item;
-use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
 use Elementor\Core\Experiments\Manager as ExperimentsManager;
 use Elementor\Modules\WebCli\Module as WebCLIModule;
 use Elementor\Core\Base\App as BaseApp;
 use Elementor\Core\Settings\Manager as SettingsManager;
 use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
 use Elementor\User;
 use Elementor\Utils;
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 use Elementor\Core\Utils\Assets_Config_Provider;
 use Elementor\Core\Utils\Collection;
 use Elementor\Core\Utils\Assets_Translation_Loader;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\App\AdminMenuItems\Editor_One_Theme_Builder_Menu;
 
 use Elementor\App\Modules\ImportExport\Module as ImportExportModule;
-use Elementor\App\Modules\KitLibrary\Module as KitLibraryModule;
 use Elementor\App\Modules\ImportExportCustomization\Module as ImportExportCustomizationModule;
-use Elementor\App\Modules\SiteEditor\Module as SiteEditorModule;
-use Elementor\App\Modules\Onboarding\Module as OnboardingModule;
-use Elementor\App\Modules\OnboardingNew\Module as OnboardingNewModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -49,33 +39,6 @@ class App extends BaseApp {
 
 	public function get_base_url() {
 		return admin_url( 'admin.php?page=' . self::PAGE_ID . '&ver=' . ELEMENTOR_VERSION );
-	}
-
-	private function register_editor_one_menu( Menu_Data_Provider $menu_data_provider ) {
-		$menu_data_provider->register_menu( new Editor_One_Theme_Builder_Menu() );
-	}
-
-	public function fix_submenu( $menu ) {
-		global $submenu;
-
-		if ( is_multisite() && is_network_admin() ) {
-			return $menu;
-		}
-
-		// Non admin role / custom wp menu.
-		if ( empty( $submenu[ Source_Local::ADMIN_MENU_SLUG ] ) ) {
-			return $menu;
-		}
-
-		// Hack to add a link to sub menu.
-		foreach ( $submenu[ Source_Local::ADMIN_MENU_SLUG ] as &$item ) {
-			if ( self::PAGE_ID === $item[2] ) {
-				$item[2] = $this->get_settings( 'menu_url' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-				$item[4] = 'elementor-app-link'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-			}
-		}
-
-		return $menu;
 	}
 
 	public function is_current() {
@@ -111,7 +74,6 @@ class App extends BaseApp {
 		$referer = wp_get_referer();
 
 		return [
-			'menu_url' => $this->get_base_url() . '#site-editor/promotion',
 			'assets_url' => ELEMENTOR_ASSETS_URL,
 			'pages_url' => admin_url( 'edit.php?post_type=page' ),
 			'return_url' => $referer ? $referer : admin_url(),
@@ -120,11 +82,6 @@ class App extends BaseApp {
 			'login_url' => wp_login_url(),
 			'base_url' => $this->get_base_url(),
 			'home_url' => home_url(),
-			'promotion' => Filtered_Promotions_Manager::get_filtered_promotion_data(
-				[ 'upgrade_url' => 'https://go.elementor.com/go-pro-theme-builder/' ],
-				'elementor/site-editor/promotion',
-				'upgrade_url'
-			),
 		];
 	}
 
@@ -170,7 +127,7 @@ class App extends BaseApp {
 				return ELEMENTOR_ASSETS_PATH . "js/packages/{$name}/{$name}.asset.php";
 			} );
 
-		Collection::make( [ 'ui', 'icons', 'store', 'query', 'utils', 'events', 'onboarding', 'schema' ] )
+		Collection::make( [ 'ui', 'icons', 'store', 'query', 'utils', 'events', 'schema' ] )
 			->each( function( $package ) use ( $assets_config_provider ) {
 				$suffix = Utils::is_script_debug() ? '' : '.min';
 				$config = $assets_config_provider->load( $package )->get( $package );
@@ -257,7 +214,6 @@ class App extends BaseApp {
 				'wp-i18n',
 				'elementor-v2-ui',
 				'elementor-v2-icons',
-				'elementor-v2-onboarding',
 				'react',
 				'react-dom',
 				'select2',
@@ -299,24 +255,8 @@ class App extends BaseApp {
 		] );
 	}
 
-	private function register_e_onboarding_experiment() {
-		Plugin::$instance->experiments->add_feature( [
-			'name' => 'e_onboarding',
-			'title' => esc_html__( 'New Onboarding', 'elementor' ),
-			'hidden' => true,
-			'default' => ExperimentsManager::STATE_INACTIVE,
-			'release_status' => ExperimentsManager::RELEASE_STATUS_DEV,
-		] );
-	}
-
-	private function is_e_onboarding_active(): bool {
-		return Plugin::$instance->experiments->is_feature_active( 'e_onboarding' );
-	}
-
 	public function __construct() {
 		$this->register_import_export_customization_experiment();
-
-		$this->add_component( 'site-editor', new SiteEditorModule() );
 
 		if ( current_user_can( 'manage_options' ) || Utils::is_wp_cli() ) {
 			$this->add_component( 'import-export', new ImportExportModule() );
@@ -324,25 +264,7 @@ class App extends BaseApp {
 			if ( Plugin::$instance->experiments->is_feature_active( 'import-export-customization' ) ) {
 				$this->add_component( 'import-export-customization', new ImportExportCustomizationModule() );
 			}
-
-			// Kit library is depended on import-export
-			$this->add_component( 'kit-library', new KitLibraryModule() );
 		}
-
-		$this->register_e_onboarding_experiment();
-
-		if ( $this->is_e_onboarding_active() ) {
-			$this->add_component( 'onboarding', new OnboardingNewModule() );
-		} else {
-			$this->add_component( 'onboarding', new OnboardingModule() );
-		}
-
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
-			$this->register_editor_one_menu( $menu_data_provider );
-		} );
-
-		// Happens after WP plugin page validation.
-		add_filter( 'add_menu_classes', [ $this, 'fix_submenu' ] );
 
 		if ( $this->is_current() ) {
 			add_action( 'admin_init', [ $this, 'admin_init' ], 0 );

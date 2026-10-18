@@ -1,7 +1,6 @@
 <?php
 namespace Elementor\TemplateLibrary;
 
-use Elementor\Api;
 use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
 use Elementor\Core\Settings\Manager as SettingsManager;
 use Elementor\Includes\TemplateLibrary\Data\Controller;
@@ -223,12 +222,6 @@ class Manager {
 	public function get_library_data( array $args ) {
 		$force_update = ! empty( $args['sync'] );
 
-		$library_data = Api::get_library_data( $force_update );
-
-		if ( empty( $library_data ) ) {
-			return $library_data;
-		}
-
 		// Ensure all document are registered.
 		Plugin::$instance->documents->get_document_types();
 
@@ -236,7 +229,7 @@ class Manager {
 
 		$full_library_data = [
 			'templates' => $this->get_templates( $filter_sources, $force_update ),
-			'config' => $library_data['types_data'],
+			'config' => [],
 		];
 
 		/**
@@ -778,8 +771,7 @@ class Manager {
 	/**
 	 * Register default template sources.
 	 *
-	 * Register the 'local' and 'remote' template sources that Elementor use by
-	 * default.
+	 * Register the 'local' template source.
 	 *
 	 * @since 1.0.0
 	 * @access private
@@ -787,8 +779,6 @@ class Manager {
 	private function register_default_sources() {
 		$sources = [
 			'local',
-			'remote',
-			'cloud',
 		];
 
 		foreach ( $sources as $source_filename ) {
@@ -840,34 +830,6 @@ class Manager {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * @throws \Exception If template import fails, file validation errors occur, or processing encounters issues.
-	 */
-	public function save_template_screenshot( $data ): string {
-		$validate_args = $this->ensure_args( [ 'template_id', 'screenshot' ], $data );
-
-		if ( is_wp_error( $validate_args ) ) {
-			return $validate_args;
-		}
-
-		$raw_binary = base64_decode( substr( $data['screenshot'], strlen( 'data:image/png;base64,' ) ) );
-
-		return $this->get_source( 'cloud' )->save_item_preview( $data['template_id'], $raw_binary );
-	}
-
-	/**
-	 * @throws \Exception If template processing fails or data validation errors occur.
-	 */
-	public function template_screenshot_failed( $data ): string {
-		$validate_args = $this->ensure_args( [ 'template_id' ], $data );
-
-		if ( is_wp_error( $validate_args ) ) {
-			return $validate_args;
-		}
-
-		return $this->get_source( 'cloud' )->mark_preview_as_failed( $data['template_id'], $data['error'] );
 	}
 
 	public function bulk_delete_templates( $data ) {
@@ -936,15 +898,12 @@ class Manager {
 			'load_more_templates',
 			'create_folder',
 			'get_folders',
-			'save_template_screenshot',
 			'move_template',
 			'copy_template',
 			'bulk_move_templates',
 			'bulk_delete_templates',
 			'bulk_copy_templates',
 			'bulk_undo_delete_items',
-			'get_templates_quota',
-			'template_screenshot_failed',
 		];
 
 		foreach ( $library_ajax_requests as $ajax_request ) {
@@ -1142,21 +1101,5 @@ class Manager {
 		}
 
 		return $source->save_bulk_items( $bulk_args );
-	}
-
-	public function get_templates_quota( array $args ) {
-		$validate_args = $this->ensure_args( [ 'source' ], $args );
-
-		if ( is_wp_error( $validate_args ) ) {
-			return $validate_args;
-		}
-
-		$source = $this->get_source( $args['source'] );
-
-		if ( ! $source ) {
-			return new \WP_Error( 'template_error', 'Source not found.' );
-		}
-
-		return $source->get_quota();
 	}
 }

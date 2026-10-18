@@ -25,7 +25,6 @@ abstract class Step_Base {
 	private array $user_progress;
 	protected Wordpress_Adapter_Interface $wordpress_adapter;
 	protected Elementor_Adapter_Interface $elementor_adapter;
-	protected ?array $promotion_data;
 	protected Checklist_Module $module;
 
 	/**
@@ -80,11 +79,10 @@ abstract class Step_Base {
 	 * @param ?Elementor_Adapter_Interface $elementor_adapter
 	 * @return void
 	 */
-	public function __construct( Checklist_Module $module, ?Wordpress_Adapter_Interface $wordpress_adapter = null, ?Elementor_Adapter_Interface $elementor_adapter = null, $promotion_data = null ) {
+	public function __construct( Checklist_Module $module, ?Wordpress_Adapter_Interface $wordpress_adapter = null, ?Elementor_Adapter_Interface $elementor_adapter = null ) {
 		$this->module = $module;
 		$this->wordpress_adapter = $wordpress_adapter ?? new Wordpress_Adapter();
 		$this->elementor_adapter = $elementor_adapter ?? new Elementor_Adapter();
-		$this->promotion_data = $promotion_data;
 
 		$this->user_progress = $module->get_step_progress( $this->get_id() ) ?? $this->get_step_initial_progress();
 	}
@@ -103,7 +101,7 @@ abstract class Step_Base {
 	}
 
 	public function get_learn_more_url(): string {
-		return 'https://go.elementor.com/getting-started-with-elementor/';
+		return '';
 	}
 
 	public function update_step( array $step_data ): void {
@@ -188,13 +186,6 @@ abstract class Step_Base {
 		$this->module->set_step_progress( $this->get_id(), $initial_progress );
 
 		return $initial_progress;
-	}
-
-	/**
-	 * @return ?array
-	 */
-	public function get_promotion_data(): ?array {
-		return $this->promotion_data;
 	}
 
 	/**

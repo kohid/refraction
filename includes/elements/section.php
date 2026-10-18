@@ -467,11 +467,7 @@ class Element_Section extends Element_Base {
 				'return_value' => 'section-stretched',
 				'prefix_class' => 'elementor-',
 				'hide_in_inner' => true,
-				'description' => sprintf(
-					'%1$s <a href="https://go.elementor.com/stretch-section/" target="_blank">%2$s</a>',
-					esc_html__( 'Stretch the section to the full width of the page using JS.', 'elementor' ),
-					esc_html__( 'Learn more', 'elementor' )
-				),
+				'description' => esc_html__( 'Stretch the section to the full width of the page using JS.', 'elementor' ),
 				'render_type' => 'none',
 				'frontend_available' => true,
 			]
@@ -1305,8 +1301,6 @@ class Element_Section extends Element_Base {
 			]
 		);
 
-		Plugin::$instance->controls_manager->add_display_conditions_controls( $this );
-
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -1316,8 +1310,6 @@ class Element_Section extends Element_Base {
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
-
-		Plugin::$instance->controls_manager->add_motion_effects_promotion_control( $this );
 
 		$this->add_responsive_control(
 			'animation',
@@ -1416,9 +1408,6 @@ class Element_Section extends Element_Base {
 
 		$this->end_controls_section();
 
-		Plugin::$instance->controls_manager->add_custom_attributes_controls( $this );
-
-		Plugin::$instance->controls_manager->add_custom_css_controls( $this );
 	}
 
 	/**

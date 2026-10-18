@@ -4,9 +4,6 @@ namespace Elementor\Core\Common;
 use Elementor\Core\Base\App as BaseApp;
 use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
 use Elementor\Core\Common\Modules\Finder\Module as Finder;
-use Elementor\Core\Common\Modules\Connect\Module as Connect;
-use Elementor\Core\Common\Modules\EventTracker\Module as Event_Tracker;
-use Elementor\Core\Common\Modules\EventsManager\Module as Events_Manager;
 use Elementor\Core\Files\Uploads_Manager;
 use Elementor\Icons_Manager;
 use Elementor\Plugin;
@@ -64,16 +61,6 @@ class App extends BaseApp {
 			if ( ! is_customize_preview() ) {
 				$this->add_component( 'finder', new Finder() );
 			}
-		}
-
-		$this->add_component( 'connect', new Connect() );
-
-		$this->add_component( 'event-tracker', new Event_Tracker() );
-
-		Plugin::$instance->experiments->add_feature( Events_Manager::get_experimental_data() );
-
-		if ( Plugin::$instance->experiments->is_feature_active( Events_Manager::EXPERIMENT_NAME ) ) {
-			$this->add_component( 'events-manager', new Events_Manager() );
 		}
 	}
 
@@ -284,7 +271,6 @@ class App extends BaseApp {
 			'filesUpload' => [
 				'unfilteredFiles' => Uploads_Manager::are_unfiltered_uploads_enabled(),
 			],
-			'editor_events' => Events_Manager::get_editor_events_config(),
 			'allowedHTMLWrapperTags' => Utils::get_allowed_html_wrapper_tags(),
 		];
 

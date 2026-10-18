@@ -41,7 +41,7 @@ class Create_Pages extends Step_Base {
 	}
 
 	public function get_learn_more_url(): string {
-		return 'http://go.elementor.com/app-website-checklist-pages-article';
+		return '';
 	}
 
 	public function get_is_completion_immutable(): bool {
@@ -49,6 +49,6 @@ class Create_Pages extends Step_Base {
 	}
 
 	public function get_image_src(): string {
-		return 'https://assets.elementor.com/checklist/v1/images/checklist-step-3.jpg';
+		return '';
 	}
 }

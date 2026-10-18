@@ -1,7 +1,6 @@
 <?php
 namespace Elementor\Core\Upgrade;
 
-use Elementor\Api;
 use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
 use Elementor\Core\Experiments\Manager as Experiments_Manager;
 use Elementor\Core\Settings\Manager as SettingsManager;
@@ -10,7 +9,6 @@ use Elementor\Icons_Manager;
 use Elementor\Includes\Elements\Container;
 use Elementor\Modules\Usage\Module;
 use Elementor\Plugin;
-use Elementor\Tracker;
 use Elementor\App\Modules\ImportExport\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -625,10 +623,6 @@ class Upgrades {
 	 * @return bool
 	 */
 	public static function recalc_usage_data( $updater ) {
-		if ( ! Tracker::is_allow_track() ) {
-			return false;
-		}
-
 		/** @var Module $module */
 		$module = Plugin::$instance->modules_manager->get_modules( 'usage' );
 
@@ -892,7 +886,7 @@ class Upgrades {
 	public static function remove_remote_info_api_data() {
 		global $wpdb;
 
-		$key = Api::TRANSIENT_KEY_PREFIX;
+		$key = 'elementor_remote_info_api_data_';
 
 		return $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '{$key}%';" ); // phpcs:ignore
 	}

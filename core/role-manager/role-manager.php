@@ -1,7 +1,6 @@
 <?php
 namespace Elementor\Core\RoleManager;
 
-use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
 use Elementor\Plugin;
 use Elementor\Settings;
@@ -217,33 +216,6 @@ class Role_Manager extends Settings_Page {
 	 * @since 2.0.0
 	 * @access public
 	 */
-	public function get_go_pro_link_html() {
-		$promotion = $this->get_go_pro_link_content();
-
-		?>
-		<div class="elementor-role-go-pro">
-			<div class="elementor-role-go-pro__desc"><?php echo esc_html( $promotion['description'] ); ?></div>
-			<div class="elementor-role-go-pro__link"><a class="elementor-button go-pro" target="_blank" href="<?php echo esc_url( $promotion['upgrade_url'] ); ?>"><?php echo esc_html( $promotion['upgrade_text'] ); ?></a></div>
-		</div>
-		<?php
-	}
-
-	public function get_go_pro_link_content() {
-		$upgrade_url = 'https://go.elementor.com/go-pro-role-manager/';
-
-		$promotion = [
-			'description' => esc_html__( 'Want to give access only to content?', 'elementor' ),
-			'upgrade_url' => esc_url( $upgrade_url ),
-			'upgrade_text' => esc_html__( 'Upgrade', 'elementor' ),
-		];
-
-		return Filtered_Promotions_Manager::get_filtered_promotion_data( $promotion, 'elementor/role/custom_promotion', 'upgrade_url' );
-	}
-
-	/**
-	 * @since 2.0.0
-	 * @access public
-	 */
 	public function get_user_restrictions_array() {
 		$user = wp_get_current_user();
 		$user_roles = $user->roles;
@@ -320,7 +292,6 @@ class Role_Manager extends Settings_Page {
 
 		add_action( 'elementor/role/restrictions/controls', [ $this, 'add_json_enable_control' ] );
 		add_action( 'elementor/role/restrictions/controls', [ $this, 'add_custom_html_enable_control' ] );
-		add_action( 'elementor/role/restrictions/controls', [ $this, 'get_go_pro_link_html' ] );
 
 		add_filter( 'elementor/editor/user/restrictions', [ $this, 'get_role_manager_advanced_options' ] );
 	}

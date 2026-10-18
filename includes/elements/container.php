@@ -1800,8 +1800,6 @@ class Container extends Element_Base {
 			]
 		);
 
-		Plugin::$instance->controls_manager->add_display_conditions_controls( $this );
-
 		$this->end_controls_section();
 	}
 
@@ -1818,8 +1816,6 @@ class Container extends Element_Base {
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
-
-		Plugin::$instance->controls_manager->add_motion_effects_promotion_control( $this );
 
 		$this->add_responsive_control(
 			'animation',
@@ -1924,9 +1920,6 @@ class Container extends Element_Base {
 
 		$this->register_responsive_controls();
 
-		Plugin::$instance->controls_manager->add_custom_attributes_controls( $this );
-
-		Plugin::$instance->controls_manager->add_custom_css_controls( $this );
 	}
 
 	protected function hook_sticky_notice_into_transform_section() {

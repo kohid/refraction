@@ -827,8 +827,6 @@ class Widget_Common_Base extends Widget_Base {
 			]
 		);
 
-		Plugin::$instance->controls_manager->add_display_conditions_controls( $this );
-
 		$this->end_controls_section();
 	}
 
@@ -845,8 +843,6 @@ class Widget_Common_Base extends Widget_Base {
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
-
-		Plugin::$instance->controls_manager->add_motion_effects_promotion_control( $this );
 
 		$this->add_responsive_control(
 			'_animation',
@@ -1372,17 +1368,5 @@ class Widget_Common_Base extends Widget_Base {
 		$this->register_masking_section();
 
 		$this->register_responsive_section();
-
-		$register_common_controls = apply_filters(
-			'elementor/widget/common/register_css_attributes_control',
-			true,
-			$this
-		);
-
-		if ( $register_common_controls ) {
-			Plugin::$instance->controls_manager->add_custom_attributes_controls( $this );
-
-			Plugin::$instance->controls_manager->add_custom_css_controls( $this );
-		}
 	}
 }
