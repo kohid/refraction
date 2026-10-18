@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import Document from './document';
 import * as commands from './commands/';
 import * as internalCommands from './commands/internal/';
@@ -112,7 +112,7 @@ export default class Component extends ComponentBase {
 	}
 
 	getInitialId() {
-		return elementor.config.initial_document.id;
+		return refraction.config.initial_document.id;
 	}
 
 	setInitialById( id ) {
@@ -122,8 +122,8 @@ export default class Component extends ComponentBase {
 			return;
 		}
 
-		elementor.config.initial_document = document.config;
-		elementorCommon.ajax.addRequestConstant( 'initial_document_id', document.id );
+		refraction.config.initial_document = document.config;
+		refractionCommon.ajax.addRequestConstant( 'initial_document_id', document.id );
 	}
 
 	/**
@@ -145,7 +145,7 @@ export default class Component extends ComponentBase {
 		this.currentDocument = this.documents[ document.id ];
 		this.currentDocument.editor.status = 'open';
 
-		elementorCommon.ajax.addRequestConstant( 'editor_post_id', document.id );
+		refractionCommon.ajax.addRequestConstant( 'editor_post_id', document.id );
 	}
 
 	isCurrent( id ) {
@@ -154,21 +154,21 @@ export default class Component extends ComponentBase {
 
 	unsetCurrent() {
 		this.currentDocument = null;
-		elementorCommon.ajax.addRequestConstant( 'editor_post_id', null );
+		refractionCommon.ajax.addRequestConstant( 'editor_post_id', null );
 	}
 
 	request( id ) {
-		return elementorCommon.ajax.load( this.getRequestArgs( id ), true );
+		return refractionCommon.ajax.load( this.getRequestArgs( id ), true );
 	}
 
 	invalidateCache( id = null ) {
 		if ( id ) {
-			elementorCommon.ajax.invalidateCache( this.getRequestArgs( id ) );
+			refractionCommon.ajax.invalidateCache( this.getRequestArgs( id ) );
 			return;
 		}
 
 		Object.keys( this.documents ).forEach( ( docId ) => {
-			elementorCommon.ajax.invalidateCache( this.getRequestArgs( docId ) );
+			refractionCommon.ajax.invalidateCache( this.getRequestArgs( docId ) );
 		} );
 	}
 
@@ -187,13 +187,13 @@ export default class Component extends ComponentBase {
 				if ( _.isString( data ) ) {
 					message = data;
 				} else if ( data.statusText ) {
-					message = elementor.createAjaxErrorMessage( data );
+					message = refraction.createAjaxErrorMessage( data );
 
 					if ( 0 === data.readyState ) {
-						message += ' ' + __( 'Cannot load editor', 'elementor' );
+						message += ' ' + __( 'Cannot load editor', 'refraction' );
 					}
 				} else if ( data[ 0 ] && data[ 0 ].code ) {
-					message = __( 'Server Error', 'elementor' ) + ' ' + data[ 0 ].code;
+					message = __( 'Server Error', 'refraction' ) + ' ' + data[ 0 ].code;
 				}
 
 				// eslint-disable-next-line no-alert
@@ -204,10 +204,10 @@ export default class Component extends ComponentBase {
 
 	/**
 	 * Temp: Don't request initial document via ajax.
-	 * Keep the event `elementor:init` before `preview:loaded`.
+	 * Keep the event `refraction:init` before `preview:loaded`.
 	 */
 	saveInitialDocumentToCache() {
-		const document = elementor.config.initial_document;
-		elementorCommon.ajax.addRequestCache( this.getRequestArgs( document.id ), document );
+		const document = refraction.config.initial_document;
+		refractionCommon.ajax.addRequestCache( this.getRequestArgs( document.id ), document );
 	}
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Export;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Export;
 
-use Elementor\App\Modules\ImportExportCustomization\Compatibility\Customization;
-use Elementor\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
-use Elementor\Core\Utils\ImportExport\WP_Exporter;
+use Refraction\App\Modules\ImportExportCustomization\Compatibility\Customization;
+use Refraction\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
+use Refraction\Core\Utils\ImportExport\WP_Exporter;
 
 class Wp_Content extends Export_Runner_Base {
 
@@ -29,7 +29,7 @@ class Wp_Content extends Export_Runner_Base {
 
 		$post_types = ImportExportUtils::get_builtin_wp_post_types( $exclude_post_types );
 
-		$post_types = apply_filters( 'elementor/import-export-customization/wp-content/post-types/customization', $post_types, $data, $customization );
+		$post_types = apply_filters( 'refraction/import-export-customization/wp-content/post-types/customization', $post_types, $data, $customization );
 
 		$custom_post_types = isset( $data['selected_custom_post_types'] ) ? $data['selected_custom_post_types'] : [];
 
@@ -81,7 +81,7 @@ class Wp_Content extends Export_Runner_Base {
 			'status' => 'publish',
 			'meta_query' => [
 				[
-					'key' => static::META_KEY_ELEMENTOR_EDIT_MODE,
+					'key' => static::META_KEY_REFRACTION_EDIT_MODE,
 					'compare' => 'NOT EXISTS',
 				],
 			],
@@ -92,7 +92,7 @@ class Wp_Content extends Export_Runner_Base {
 			$exporter_args['limit'] = 20;
 		}
 
-		$exporter_args = apply_filters( 'elementor/import-export-customization/export/wp-content/query-args/customization', $exporter_args, $post_type, $customization );
+		$exporter_args = apply_filters( 'refraction/import-export-customization/export/wp-content/query-args/customization', $exporter_args, $post_type, $customization );
 
 		$wp_exporter = new WP_Exporter( $exporter_args );
 

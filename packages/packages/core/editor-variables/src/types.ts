@@ -1,6 +1,6 @@
 import type * as React from 'react';
-import { type StyleVariables, type Variable } from '@elementor/editor-styles';
-import { type VirtualizedItem } from '@elementor/editor-ui';
+import { type StyleVariables, type Variable } from '@refraction/editor-styles';
+import { type VirtualizedItem } from '@refraction/editor-ui';
 
 export type { StyleVariables, Variable };
 

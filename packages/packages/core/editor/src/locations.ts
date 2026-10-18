@@ -1,4 +1,4 @@
-import { createLocation } from '@elementor/locations';
+import { createLocation } from '@refraction/locations';
 
 export const { Slot: TopSlot, inject: injectIntoTop } = createLocation();
 

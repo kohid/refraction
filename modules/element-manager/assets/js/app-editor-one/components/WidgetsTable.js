@@ -66,7 +66,7 @@ export const WidgetsTable = ( {
 	if ( ! widgets.length ) {
 		return (
 			<Typography color="text.secondary">
-				{ __( 'No elements found.', 'elementor' ) }
+				{ __( 'No elements found.', 'refraction' ) }
 			</Typography>
 		);
 	}
@@ -81,26 +81,26 @@ export const WidgetsTable = ( {
 								active={ isWidgetSorted }
 								direction={ isWidgetSorted ? widgetSortDirection : 'asc' }
 								onClick={ () => onSortingClicked( 'widget' ) }
-								data-id="e-id-elementor-element-manager-button-sort-by-element"
+								data-id="e-id-refraction-element-manager-button-sort-by-element"
 							>
-								{ __( 'Element', 'elementor' ) }
+								{ __( 'Element', 'refraction' ) }
 							</TableSortLabel>
 						</TableCell>
 						<TableCell sx={ ( theme ) => ( { width: theme.spacing( 10 ) } ) }>
-							{ __( 'Status', 'elementor' ) }
+							{ __( 'Status', 'refraction' ) }
 						</TableCell>
 						<TableCell>
 							<TableSortLabel
 								active={ isUsageSorted }
 								direction={ isUsageSorted ? usageSortDirection : 'asc' }
 								onClick={ () => onSortingClicked( 'usage' ) }
-								data-id="e-id-elementor-element-manager-button-sort-by-usage"
+								data-id="e-id-refraction-element-manager-button-sort-by-usage"
 							>
-								{ __( 'Usage', 'elementor' ) }
+								{ __( 'Usage', 'refraction' ) }
 							</TableSortLabel>
 						</TableCell>
 						<TableCell>
-							{ __( 'Plugin', 'elementor' ) }
+							{ __( 'Plugin', 'refraction' ) }
 						</TableCell>
 						<TableCell>
 							<Stack
@@ -110,12 +110,12 @@ export const WidgetsTable = ( {
 								gap={ 1 }
 							>
 								<Box>
-									{ __( 'Permission', 'elementor' ) }
+									{ __( 'Permission', 'refraction' ) }
 								</Box>
 								<Box>
 									<Tooltip
 										placement="top"
-										title={ __( 'Choose which users will have access to each widget.', 'elementor' ) }
+										title={ __( 'Choose which users will have access to each widget.', 'refraction' ) }
 									>
 										<IconButton size="small">
 											<HelpIcon fontSize="small" />
@@ -137,7 +137,7 @@ export const WidgetsTable = ( {
 													: managerPermissions.advanced.text
 											}
 											className="go-pro"
-											data-id="e-id-elementor-element-manager-button-upgrade-permissions"
+											data-id="e-id-refraction-element-manager-button-upgrade-permissions"
 										/>
 									</Box>
 								) }
@@ -167,7 +167,7 @@ export const WidgetsTable = ( {
 									checked={ ! widgetsDisabled.includes( widget.name ) }
 									onChange={ ( event, checked ) => onToggleWidget( widget.name, checked ) }
 									size="small"
-									data-id={ `e-id-elementor-element-manager-toggle-${ widget.name }` }
+									data-id={ `e-id-refraction-element-manager-toggle-${ widget.name }` }
 								/>
 							</TableCell>
 							<TableCell>

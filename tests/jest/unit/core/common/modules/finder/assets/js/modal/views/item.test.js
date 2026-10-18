@@ -1,4 +1,4 @@
-jest.mock( 'elementor-editor-utils/editor-one-events', () => ( {
+jest.mock( 'refraction-editor-utils/editor-one-events', () => ( {
 	EditorOneEventManager: {
 		sendFinderResultSelect: jest.fn(),
 	},
@@ -23,7 +23,7 @@ describe( 'Finder item — app URL interception', () => {
 
 		global.__ = ( text ) => text;
 
-		ItemView = ( await import( 'elementor/core/common/modules/finder/assets/js/modal/views/item' ) ).default;
+		ItemView = ( await import( 'refraction/core/common/modules/finder/assets/js/modal/views/item' ) ).default;
 	} );
 
 	afterEach( () => {
@@ -47,7 +47,7 @@ describe( 'Finder item — app URL interception', () => {
 				return null;
 			}
 			if ( 'url' === key ) {
-				return 'http://example.com/wp-admin/admin.php?page=elementor-app#/site-editor';
+				return 'http://example.com/wp-admin/admin.php?page=refraction-app#/site-editor';
 			}
 			return undefined;
 		} );
@@ -59,7 +59,7 @@ describe( 'Finder item — app URL interception', () => {
 		expect( event.stopImmediatePropagation ).toHaveBeenCalled();
 		expect( $e.run ).toHaveBeenCalledWith( 'finder/close' );
 		expect( $e.run ).toHaveBeenCalledWith( 'app/open', {
-			url: 'http://example.com/wp-admin/admin.php?page=elementor-app#/site-editor',
+			url: 'http://example.com/wp-admin/admin.php?page=refraction-app#/site-editor',
 		} );
 	} );
 
@@ -70,7 +70,7 @@ describe( 'Finder item — app URL interception', () => {
 				return null;
 			}
 			if ( 'url' === key ) {
-				return 'http://example.com/wp-admin/post.php?post=123&action=elementor';
+				return 'http://example.com/wp-admin/post.php?post=123&action=refraction';
 			}
 			return undefined;
 		} );
@@ -91,7 +91,7 @@ describe( 'Finder item — app URL interception', () => {
 				return null;
 			}
 			if ( 'url' === key ) {
-				return 'http://example.com/wp-admin/admin.php?page=elementor-app#/site-editor';
+				return 'http://example.com/wp-admin/admin.php?page=refraction-app#/site-editor';
 			}
 			return undefined;
 		} );

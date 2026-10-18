@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Core\Frontend\RenderModes;
+namespace Refraction\Core\Frontend\RenderModes;
 
-use Elementor\Plugin;
-use Elementor\Core\Base\Document;
-use Elementor\Core\Frontend\Render_Mode_Manager;
+use Refraction\Plugin;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Frontend\Render_Mode_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

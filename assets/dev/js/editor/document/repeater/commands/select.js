@@ -1,5 +1,5 @@
 /**
- * @typedef {import('elementor/assets/dev/js/editor/container/container')} Container
+ * @typedef {import('refraction/assets/dev/js/editor/container/container')} Container
  */
 
 /**
@@ -40,7 +40,7 @@ export class Select extends $e.modules.editor.document.CommandHistoryBase {
 			container,
 			type: 'selected',
 			// Translators: %s is the current item index.
-			subTitle: wp.i18n.sprintf( __( 'Item #%d', 'elementor' ), index ),
+			subTitle: wp.i18n.sprintf( __( 'Item #%d', 'refraction' ), index ),
 			restore: this.constructor.restore,
 			data: {
 				current: index,

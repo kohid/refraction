@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\App;
+namespace Refraction\Core\App;
 
-use Elementor\Core\Base\App as BaseApp;
+use Refraction\Core\Base\App as BaseApp;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class App extends BaseApp {
 
-	const PAGE_ID = 'elementor-app';
+	const PAGE_ID = 'refraction-app';
 
 	public function get_name() {
 		return 'app-bc';

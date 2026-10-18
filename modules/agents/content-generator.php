@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
-use Elementor\Modules\Agents\Classes\Post_Noindex;
-use Elementor\Modules\Agents\Classes\Post_Title;
-use Elementor\Modules\Agents\Components\Readability\Content_Extractor;
-use Elementor\Modules\Agents\Components\Readability\Frontmatter_Builder;
-use Elementor\Plugin;
+use Refraction\Modules\Agents\Classes\Post_Noindex;
+use Refraction\Modules\Agents\Classes\Post_Title;
+use Refraction\Modules\Agents\Components\Readability\Content_Extractor;
+use Refraction\Modules\Agents\Components\Readability\Frontmatter_Builder;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -42,7 +42,7 @@ class Content_Generator {
 	/**
 	 * Default number of posts inlined per post type in llms-full.txt.
 	 * Keeps the inline-content loop bounded so the request cannot time out.
-	 * Overridable per post type via the `elementor/agents/llms_full/posts_per_type` filter.
+	 * Overridable per post type via the `refraction/agents/llms_full/posts_per_type` filter.
 	 */
 	const LLMS_FULL_POSTS_PER_TYPE = 20;
 
@@ -50,9 +50,9 @@ class Content_Generator {
 	 * Post-meta key for the per-post inline-content cache (used in llms-full.txt).
 	 * Bump INLINE_CACHE_VERSION to silently invalidate all cached entries.
 	 */
-	const INLINE_META_KEY           = '_elementor_agents_inline_cache';
+	const INLINE_META_KEY           = '_refraction_agents_inline_cache';
 	const INLINE_CACHE_VERSION      = 1;
-	const INLINE_CACHE_GEN_OPTION   = 'elementor_agents_inline_cache_gen';
+	const INLINE_CACHE_GEN_OPTION   = 'refraction_agents_inline_cache_gen';
 
 	/** Post types that should never appear in the output. */
 	const EXCLUDED_POST_TYPES = [
@@ -68,7 +68,7 @@ class Content_Generator {
 		'wp_template_part',
 		'wp_global_styles',
 		'wp_navigation',
-		'elementor_library',
+		'refraction_library',
 	];
 
 	private Prompt_Injection_Sanitizer $sanitizer;
@@ -233,7 +233,7 @@ class Content_Generator {
 		$warnings = [];
 
 		if ( empty( get_bloginfo( 'description' ) ) ) {
-			$warnings[] = __( 'Site tagline is empty — add one under Settings → General for a better intro summary.', 'elementor' );
+			$warnings[] = __( 'Site tagline is empty — add one under Settings → General for a better intro summary.', 'refraction' );
 		}
 
 		$show_on_front = get_option( 'show_on_front' );
@@ -242,20 +242,20 @@ class Content_Generator {
 			$page_on_front = (int) get_option( 'page_on_front' );
 
 			if ( ! $page_on_front || 'publish' !== get_post_status( $page_on_front ) ) {
-				$warnings[] = __( 'A static front page is configured but the page is missing or not published.', 'elementor' );
+				$warnings[] = __( 'A static front page is configured but the page is missing or not published.', 'refraction' );
 			}
 		}
 
 		$page_count = wp_count_posts( 'page' );
 
 		if ( empty( $page_count->publish ) ) {
-			$warnings[] = __( 'No published pages found — add some pages to populate the Pages section.', 'elementor' );
+			$warnings[] = __( 'No published pages found — add some pages to populate the Pages section.', 'refraction' );
 		}
 
 		$post_count = wp_count_posts( 'post' );
 
 		if ( empty( $post_count->publish ) ) {
-			$warnings[] = __( 'No published posts found — add some posts to populate the Posts section.', 'elementor' );
+			$warnings[] = __( 'No published posts found — add some posts to populate the Posts section.', 'refraction' );
 		}
 
 		return $warnings;
@@ -331,8 +331,8 @@ class Content_Generator {
 	 */
 	public function get_available_post_types(): array {
 		$post_types = [
-			'page' => __( 'Pages', 'elementor' ),
-			'post' => __( 'Posts', 'elementor' ),
+			'page' => __( 'Pages', 'refraction' ),
+			'post' => __( 'Posts', 'refraction' ),
 		];
 
 		foreach ( $this->get_public_custom_post_types() as $cpt ) {
@@ -340,7 +340,7 @@ class Content_Generator {
 		}
 
 		if ( $this->is_woocommerce_active() ) {
-			$post_types['product'] = __( 'Products', 'elementor' );
+			$post_types['product'] = __( 'Products', 'refraction' );
 		}
 
 		/**
@@ -348,7 +348,7 @@ class Content_Generator {
 		 *
 		 * @param array<string, string> $post_types Post type slug => plural label, in output order.
 		 */
-		$filtered = apply_filters( 'elementor/agents/llms_txt/post_types', $post_types );
+		$filtered = apply_filters( 'refraction/agents/llms_txt/post_types', $post_types );
 
 		return is_array( $filtered ) ? $filtered : $post_types;
 	}
@@ -415,7 +415,7 @@ class Content_Generator {
 			return self::MAX_POSTS_PER_TYPE;
 		}
 
-		$limit = apply_filters( 'elementor/agents/llms_full/posts_per_type', self::LLMS_FULL_POSTS_PER_TYPE, $post_type );
+		$limit = apply_filters( 'refraction/agents/llms_full/posts_per_type', self::LLMS_FULL_POSTS_PER_TYPE, $post_type );
 		$limit = is_numeric( $limit ) ? (int) $limit : self::LLMS_FULL_POSTS_PER_TYPE;
 
 		return max( 1, min( $limit, self::MAX_POSTS_PER_TYPE ) );
@@ -534,8 +534,8 @@ class Content_Generator {
 	/**
 	 * Get the inline content for a post to embed in llms-full.txt.
 	 *
-	 * For Elementor documents: uses the Markdown_Renderer.
-	 * For non-Elementor posts: falls back to the post excerpt then stripped content.
+	 * For Refraction documents: uses the Markdown_Renderer.
+	 * For non-Refraction posts: falls back to the post excerpt then stripped content.
 	 *
 	 * @param int $post_id
 	 * @return string Markdown-formatted content, or '' if unavailable.
@@ -600,7 +600,7 @@ class Content_Generator {
 	/**
 	 * Generate inline content for a single post using the Content_Extractor chain.
 	 *
-	 * Handles Elementor, Gutenberg, classic, and third-party builder content.
+	 * Handles Refraction, Gutenberg, classic, and third-party builder content.
 	 * No caching — callers handle cache read/write.
 	 *
 	 * @param int $post_id

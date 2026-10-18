@@ -7702,7 +7702,7 @@
 			"version": "0.0"
 		}
 	],
-	"page_settings": { "template": "elementor_canvas" },
+	"page_settings": { "template": "refraction_canvas" },
 	"title": "Mixed Template",
 	"version": "0.4",
 	"type": "wp-page"

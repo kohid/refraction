@@ -1,5 +1,5 @@
-import { type Props } from '@elementor/editor-props';
-import { type BreakpointId } from '@elementor/editor-responsive';
+import { type Props } from '@refraction/editor-props';
+import { type BreakpointId } from '@refraction/editor-responsive';
 
 export type ClassState =
 	| {

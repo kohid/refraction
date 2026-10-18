@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
-import useAjax from 'elementor-app/hooks/use-ajax';
+import useAjax from 'refraction-app/hooks/use-ajax';
 import { useEffect } from 'react';
 import { addMixpanelTrackingChecklistSteps } from '../../utils/functions';
 import { MIXPANEL_CHECKLIST_STEPS } from '../../utils/consts';
@@ -15,7 +15,7 @@ const SuccessMessage = () => {
 
 		setAjax( {
 			data: {
-				action: 'elementor_ajax',
+				action: 'refraction_ajax',
 				actions: JSON.stringify( {
 					save_editorPreferences_settings: {
 						action: 'save_editorPreferences_settings',
@@ -49,9 +49,9 @@ const SuccessMessage = () => {
 				sx={ { height: 180 } }
 			/>
 			<CardContent sx={ { textAlign: 'center' } }>
-				<Typography variant="h6" color="text.primary">{ __( 'You\'re on your way!', 'elementor' ) }</Typography>
+				<Typography variant="h6" color="text.primary">{ __( 'You\'re on your way!', 'refraction' ) }</Typography>
 				<Typography variant="body2" color="text.secondary" component="p">
-					{ __( 'With these steps, you\'ve got a great base for a robust website. Enjoy your web creation journey!', 'elementor' ) }
+					{ __( 'With these steps, you\'ve got a great base for a robust website. Enjoy your web creation journey!', 'refraction' ) }
 				</Typography>
 			</CardContent>
 			<CardActions sx={ { justifyContent: 'center' } }>
@@ -61,7 +61,7 @@ const SuccessMessage = () => {
 					variant="contained"
 					onClick={ hideChecklist }
 				>
-					{ __( 'Got it', 'elementor' ) }
+					{ __( 'Got it', 'refraction' ) }
 				</Button>
 			</CardActions>
 		</Card>

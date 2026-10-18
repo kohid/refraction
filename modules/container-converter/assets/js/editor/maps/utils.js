@@ -13,7 +13,7 @@
 export function responsive( key, value ) {
 	const breakpoints = [
 		'', // For desktop.
-		...Object.keys( elementorFrontend.config.responsive.activeBreakpoints ),
+		...Object.keys( refractionFrontend.config.responsive.activeBreakpoints ),
 	];
 
 	return Object.fromEntries( breakpoints.map( ( breakpoint ) => {

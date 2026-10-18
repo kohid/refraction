@@ -122,7 +122,7 @@
 	"ebay",
 	"edge",
 	"edge-legacy",
-	"elementor",
+	"refraction",
 	"ello",
 	"ember",
 	"empire",

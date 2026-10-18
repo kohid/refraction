@@ -1,9 +1,9 @@
 import { createHooksRegistry, setupHooksRegistry } from 'test-utils';
-import { notify } from '@elementor/editor-notifications';
+import { notify } from '@refraction/editor-notifications';
 
 import { initHoneypotHint } from '../honeypot-hint';
 
-jest.mock( '@elementor/editor-notifications', () => ( {
+jest.mock( '@refraction/editor-notifications', () => ( {
 	notify: jest.fn(),
 } ) );
 

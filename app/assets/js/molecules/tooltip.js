@@ -42,7 +42,7 @@ export default function Tooltip( props ) {
 
 			import(
 				/* webpackIgnore: true */
-				`${ elementorCommon.config.urls.assets }lib/tipsy/tipsy.min.js?ver=1.0.0`
+				`${ refractionCommon.config.urls.assets }lib/tipsy/tipsy.min.js?ver=1.0.0`
 			).then( () => {
 				if ( ! isAborted.current ) {
 					if ( isLibraryLoaded ) {

@@ -23,7 +23,7 @@ interface RotateIconProps extends SvgIconProps {
 	isOpen: boolean;
 }
 
-// TODO 21/06/2023 : Should replace this with future Rotate component that will be implemented in elementor-ui
+// TODO 21/06/2023 : Should replace this with future Rotate component that will be implemented in refraction-ui
 const RotateIcon = styled( ChevronDownIcon, {
 	shouldForwardProp: ( prop ) => prop !== 'isOpen',
 } )< RotateIconProps >( ( { theme, isOpen } ) => ( {

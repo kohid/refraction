@@ -3,11 +3,11 @@ import {
 	__privateListenTo as listenTo,
 	routeOpenEvent,
 	v1ReadyEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 type ExtendedWindow = Window & {
-	elementor: {
+	refraction: {
 		getPanelView: () => {
 			getHeaderView: () => {
 				setTitle: ( title: string ) => void;
@@ -17,8 +17,8 @@ type ExtendedWindow = Window & {
 };
 
 export default function syncPanelTitle() {
-	const panelTitle = __( 'Elements', 'elementor' );
-	const tabTitle = __( 'Widgets', 'elementor' );
+	const panelTitle = __( 'Elements', 'refraction' );
+	const tabTitle = __( 'Widgets', 'refraction' );
 
 	listenTo( routeOpenEvent( 'panel/elements' ), () => {
 		setPanelTitle( panelTitle );
@@ -34,11 +34,11 @@ export default function syncPanelTitle() {
 }
 
 function setPanelTitle( title: string ) {
-	( window as unknown as ExtendedWindow ).elementor?.getPanelView?.()?.getHeaderView?.()?.setTitle?.( title );
+	( window as unknown as ExtendedWindow ).refraction?.getPanelView?.()?.getHeaderView?.()?.setTitle?.( title );
 }
 
 function setTabTitle( title: string ) {
-	const tab = document.querySelector( '.elementor-component-tab[data-tab="categories"]' );
+	const tab = document.querySelector( '.refraction-component-tab[data-tab="categories"]' );
 
 	if ( tab ) {
 		tab.textContent = title;

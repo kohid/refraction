@@ -1,17 +1,17 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type ExtendedWindow } from '@elementor/editor-responsive';
-import { v1ReadyEvent } from '@elementor/editor-v1-adapters';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type ExtendedWindow } from '@refraction/editor-responsive';
+import { v1ReadyEvent } from '@refraction/editor-v1-adapters';
 
 import { CANVAS_SERVER_NAME } from './widgets-schema-resource';
 
-export const BREAKPOINTS_SCHEMA_URI = 'elementor://breakpoints/list';
+export const BREAKPOINTS_SCHEMA_URI = 'refraction://breakpoints/list';
 export const BREAKPOINTS_SCHEMA_FULL_URI = `${ CANVAS_SERVER_NAME }_${ BREAKPOINTS_SCHEMA_URI }`;
 
 export const initBreakpointsResource = ( reg: MCPRegistryEntry ) => {
 	const { resource, sendResourceUpdated } = reg;
 
 	const getBreakpointsList = () => {
-		const { breakpoints } = ( window as unknown as ExtendedWindow ).elementor?.config?.responsive || {};
+		const { breakpoints } = ( window as unknown as ExtendedWindow ).refraction?.config?.responsive || {};
 		if ( ! breakpoints ) {
 			return [];
 		}

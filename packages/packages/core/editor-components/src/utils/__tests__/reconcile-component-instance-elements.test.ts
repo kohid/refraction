@@ -1,9 +1,9 @@
-import { getWidgetsCache, type V1ElementConfig, type V1ElementData } from '@elementor/editor-elements';
+import { getWidgetsCache, type V1ElementConfig, type V1ElementData } from '@refraction/editor-elements';
 
 import { reconcileComponentInstanceElements } from '../reconcile-component-instance-elements';
 
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	getWidgetsCache: jest.fn(),
 } ) );
 

@@ -5,7 +5,7 @@ import {
 	type PropType,
 	type PropTypeUtil,
 	type PropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 import { MissingPropTypeError } from './errors';
 import { type SetValue, type SetValueMeta } from './prop-context';

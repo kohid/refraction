@@ -1,5 +1,5 @@
-import { getSelectedElements } from '@elementor/editor-elements';
-import { trackEvent } from '@elementor/events';
+import { getSelectedElements } from '@refraction/editor-elements';
+import { trackEvent } from '@refraction/events';
 
 import { eventBus } from '../../services/event-bus';
 import { type initialTransitionValue } from './data';

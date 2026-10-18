@@ -7,11 +7,11 @@ import {
 	SearchField,
 	StyledMenuList,
 	type VirtualizedItem,
-} from '@elementor/editor-ui';
+} from '@refraction/editor-ui';
 import { LibraryIcon } from '@elementor/icons';
-import { useSessionStorage } from '@elementor/session';
+import { useSessionStorage } from '@refraction/session';
 import { Box, CircularProgress, Divider, Link, Stack, styled, Typography } from '@elementor/ui';
-import { useDebounceState } from '@elementor/utils';
+import { useDebounceState } from '@refraction/utils';
 import { __ } from '@wordpress/i18n';
 
 import {
@@ -125,7 +125,7 @@ export const IconLibraryPopover = ( {
 	return (
 		<PopoverBody width={ width } fillWidth id="icon-library">
 			<PopoverHeader
-				title={ __( 'Icon library', 'elementor' ) }
+				title={ __( 'Icon library', 'refraction' ) }
 				onClose={ handleClose }
 				icon={ <LibraryIcon fontSize="tiny" /> }
 				actions={ [
@@ -149,7 +149,7 @@ export const IconLibraryPopover = ( {
 				<SearchField
 					value={ searchInputValue }
 					onSearch={ handleSearchChange }
-					placeholder={ __( 'Search', 'elementor' ) }
+					placeholder={ __( 'Search', 'refraction' ) }
 					id="icon-library-search"
 					sx={ { flex: 1, px: 0, pb: 0 } }
 				/>
@@ -291,7 +291,7 @@ const CatalogUnavailable = () => (
 	<Stack alignItems="center" justifyContent="center" height="100%" p={ 2.5 } gap={ 1.5 }>
 		<SvgElementIcon fontSize="large" />
 		<Typography align="center" variant="subtitle2" color="text.secondary">
-			{ __( "Icons couldn't be loaded.", 'elementor' ) }
+			{ __( "Icons couldn't be loaded.", 'refraction' ) }
 		</Typography>
 	</Stack>
 );
@@ -300,7 +300,7 @@ const NoResults = ( { searchValue, onClear }: { searchValue: string; onClear: ()
 	<Stack alignItems="center" justifyContent="center" height="100%" p={ 2.5 } gap={ 1.5 }>
 		<SvgElementIcon fontSize="large" />
 		<Typography align="center" variant="subtitle2" color="text.secondary">
-			{ __( 'Sorry, nothing matched', 'elementor' ) }
+			{ __( 'Sorry, nothing matched', 'refraction' ) }
 		</Typography>
 		{ searchValue ? (
 			<>
@@ -308,7 +308,7 @@ const NoResults = ( { searchValue, onClear }: { searchValue: string; onClear: ()
 					&ldquo;{ searchValue }&rdquo;.
 				</Typography>
 				<Link color="secondary" variant="caption" component="button" type="button" onClick={ onClear }>
-					{ __( 'Clear & try again', 'elementor' ) }
+					{ __( 'Clear & try again', 'refraction' ) }
 				</Link>
 			</>
 		) : null }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { GLOBAL_STYLES_IMPORTED_EVENT, type ImportedGlobalStylesPayload } from '@elementor/editor-canvas';
-import { __useDispatch as useDispatch } from '@elementor/store';
+import { GLOBAL_STYLES_IMPORTED_EVENT, type ImportedGlobalStylesPayload } from '@refraction/editor-canvas';
+import { __useDispatch as useDispatch } from '@refraction/store';
 
 import { loadCurrentDocumentClasses } from '../load-document-classes';
 import { slice } from '../store';

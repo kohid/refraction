@@ -1,5 +1,5 @@
 import { createMockElementType, createMockPropType } from 'test-utils';
-import { type PropsSchema } from '@elementor/editor-props';
+import { type PropsSchema } from '@refraction/editor-props';
 
 import { type Control } from '../../types';
 import { getElementType } from '../get-element-type';

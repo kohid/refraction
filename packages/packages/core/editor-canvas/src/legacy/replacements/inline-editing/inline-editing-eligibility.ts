@@ -3,7 +3,7 @@ import {
 	htmlV3PropTypeUtil,
 	type PropType,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 type InlineEditingEligibilityArgs = {
 	rawValue: unknown;

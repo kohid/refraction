@@ -1,10 +1,10 @@
 {
-  "name": "@elementor/editor-props",
-  "description": "This package contains the props model for the Elementor editor",
+  "name": "@refraction/editor-props",
+  "description": "This package contains the props model for the Refraction editor",
   "version": "4.4.0",
   "private": false,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,11 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elementor/elementor.git",
+    "url": "git+https://github.com/kohid/refraction.git",
     "directory": "packages/libs/editor-props"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -40,7 +40,7 @@
     "dev": "tsup --config=../../tsup.dev.ts"
   },
   "dependencies": {
-    "@elementor/schema": "4.4.0",
+    "@refraction/schema": "4.4.0",
     "jsonschema": "1.5.0"
   },
   "devDependencies": {

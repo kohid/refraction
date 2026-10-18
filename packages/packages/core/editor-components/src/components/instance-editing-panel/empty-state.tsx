@@ -11,11 +11,11 @@ export const EmptyState = ( { onEditComponent }: { onEditComponent?: () => void 
 	const message = canEdit
 		? __(
 				'Edit the component to add properties, manage them or update the design across all instances.',
-				'elementor'
+				'refraction'
 		  )
 		: __(
 				'With your current role, you cannot edit this component. Contact an administrator to add properties.',
-				'elementor'
+				'refraction'
 		  );
 
 	return (
@@ -29,7 +29,7 @@ export const EmptyState = ( { onEditComponent }: { onEditComponent?: () => void 
 		>
 			<ComponentPropListIcon fontSize="large" />
 			<Typography align="center" variant="subtitle2">
-				{ __( 'No properties yet', 'elementor' ) }
+				{ __( 'No properties yet', 'refraction' ) }
 			</Typography>
 			<Typography align="center" variant="caption" maxWidth="170px">
 				{ message }
@@ -44,7 +44,7 @@ export const EmptyState = ( { onEditComponent }: { onEditComponent?: () => void 
 					onClick={ onEditComponent }
 				>
 					<PencilIcon fontSize="small" />
-					{ __( 'Edit component', 'elementor' ) }
+					{ __( 'Edit component', 'refraction' ) }
 				</Button>
 			) }
 		</Stack>

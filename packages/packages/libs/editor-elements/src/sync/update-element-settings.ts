@@ -1,5 +1,5 @@
-import { type Props } from '@elementor/editor-props';
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
+import { type Props } from '@refraction/editor-props';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
 
 import { type ElementID } from '../types';
 import { getContainer } from './get-container';

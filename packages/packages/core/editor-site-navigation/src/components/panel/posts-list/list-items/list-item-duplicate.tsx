@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { __useNavigateToDocument as useNavigateToDocument } from '@elementor/editor-documents';
+import { __useNavigateToDocument as useNavigateToDocument } from '@refraction/editor-documents';
 import { __ } from '@wordpress/i18n';
 
 import { usePostListContext } from '../../../../contexts/post-list-context';
@@ -33,7 +33,7 @@ export default function ListItemDuplicate() {
 
 	return (
 		<EditModeTemplate
-			postTitle={ `${ editMode.details.title } ${ __( 'copy', 'elementor' ) }` }
+			postTitle={ `${ editMode.details.title } ${ __( 'copy', 'refraction' ) }` }
 			isLoading={ duplicatePost.isPending }
 			callback={ duplicatePostCallback }
 		/>

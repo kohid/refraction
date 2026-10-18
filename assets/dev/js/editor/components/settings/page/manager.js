@@ -1,11 +1,11 @@
 import Component from './component';
-import ChildrenArray from 'elementor-editor/container/model/children-array';
+import ChildrenArray from 'refraction-editor/container/model/children-array';
 
-var BaseSettings = require( 'elementor-editor/components/settings/base/manager' );
+var BaseSettings = require( 'refraction-editor/components/settings/base/manager' );
 
 module.exports = BaseSettings.extend( {
 	getStyleId() {
-		return this.getSettings( 'name' ) + '-' + elementor.documents.getCurrent().id;
+		return this.getSettings( 'name' ) + '-' + refraction.documents.getCurrent().id;
 	},
 
 	onInit() {
@@ -17,7 +17,7 @@ module.exports = BaseSettings.extend( {
 	save() {},
 
 	getDataToSave( data ) {
-		data.id = elementor.config.document.id;
+		data.id = refraction.config.document.id;
 
 		return data;
 	},
@@ -28,23 +28,23 @@ module.exports = BaseSettings.extend( {
 			return this.editedView;
 		}
 
-		const documentElementType = elementor.elementsManager.getElementTypeClass( 'document' ),
+		const documentElementType = refraction.elementsManager.getElementTypeClass( 'document' ),
 			ModelClass = documentElementType.getModel(),
 			type = this.getContainerType(),
 			editModel = new ModelClass( {
 				id: type,
 				elType: type,
 				settings: this.model,
-				elements: elementor.elements,
+				elements: refraction.elements,
 			} ),
-			container = new elementorModules.editor.Container( {
+			container = new refractionModules.editor.Container( {
 				type,
 				id: editModel.id,
 				model: editModel,
 				settings: editModel.get( 'settings' ),
-				label: elementor.config.document.panel.title,
+				label: refraction.config.document.panel.title,
 				controls: this.model.controls,
-				children: new ChildrenArray( ... elementor.elements || [] ),
+				children: new ChildrenArray( ... refraction.elements || [] ),
 				parent: false,
 				// Emulate a view that can render the style.
 				renderer: {
@@ -74,7 +74,7 @@ module.exports = BaseSettings.extend( {
 	 * @deprecated since 3.7.0, use `getContainerType()` instead.
 	 */
 	getContainerId() {
-		elementorDevTools.deprecation.deprecated( 'getContainerId()', '3.7.0', 'getContainerType()' );
+		refractionDevTools.deprecation.deprecated( 'getContainerId()', '3.7.0', 'getContainerType()' );
 
 		return this.getContainerType();
 	},

@@ -90,8 +90,8 @@
 		}
 	}
 
-	#elementor-editor {
-		#elementor-editor-button {
+	#refraction-editor {
+		#refraction-editor-button {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
@@ -99,7 +99,7 @@
 			font-size: 16px;
 		}
 
-		#elementor-go-to-edit-page-link {
+		#refraction-go-to-edit-page-link {
 			text-decoration: none;
 		}
 	}
@@ -189,8 +189,8 @@
 	}
 
 	#wpbody-content,
-	.elementor-settings-form-page,
-	.elementor-settings-form-page > *,
+	.refraction-settings-form-page,
+	.refraction-settings-form-page > *,
 	.form-table,
 	.form-table th,
 	.form-table td,
@@ -290,8 +290,8 @@
 			border-color: var(--e-one-palette-secondary-dark);
 		}
 
-		&.elementor-button-spinner,
-		&.elementor-rollback-button {
+		&.refraction-button-spinner,
+		&.refraction-rollback-button {
 			&:before {
 				inset-block-start: 3px;
 			}
@@ -371,16 +371,16 @@
 		}
 	}
 
-	.elementor-settings-form-page {
+	.refraction-settings-form-page {
 		display: none;
 		color: var(--e-one-palette-text-tertiary);
 
-		&.elementor-active {
+		&.refraction-active {
 			display: block;
 		}
 	}
 
-	.elementor-settings-form-page h2 {
+	.refraction-settings-form-page h2 {
 		margin-block: 1em;
 		font-family: var(--e-one-typography-fontFamily);
 		font-weight: 700;
@@ -394,7 +394,7 @@
 		}
 	}
 
-	.elementor-settings-form-page h2 ~ p {
+	.refraction-settings-form-page h2 ~ p {
 		margin-block: 1em;
 		font-size: 1em;
 		color: var(--e-one-palette-text-tertiary);
@@ -403,8 +403,8 @@
 
 	#post-body-content,
 	#revisionsdiv,
-	#elementor-settings-form {
-		a:not(.button):not(.elementor-button):not(.nav-tab) {
+	#refraction-settings-form {
+		a:not(.button):not(.refraction-button):not(.nav-tab) {
 			color: var(--e-one-palette-info-main);
 			text-decoration: none;
 
@@ -455,7 +455,7 @@
 		max-width: calc(100% - 64px);
 	}
 
-	#elementor-element-manager-wrap {
+	#refraction-element-manager-wrap {
 		width: 100%;
 	}
 }

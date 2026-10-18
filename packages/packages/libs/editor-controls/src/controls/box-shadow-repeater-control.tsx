@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useRef } from 'react';
-import { boxShadowPropTypeUtil, shadowPropTypeUtil, type ShadowPropValue } from '@elementor/editor-props';
+import { boxShadowPropTypeUtil, shadowPropTypeUtil, type ShadowPropValue } from '@refraction/editor-props';
 import { FormLabel, Grid, styled, type SxProps, type Theme, UnstableColorIndicator } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -25,7 +25,7 @@ export const BoxShadowRepeaterControl = createControl( () => {
 	return (
 		<PropProvider propType={ propType } value={ value } setValue={ setValue } isDisabled={ () => disabled }>
 			<ControlRepeater initial={ initialShadow } propTypeUtil={ boxShadowPropTypeUtil }>
-				<RepeaterHeader label={ __( 'Box shadow', 'elementor' ) }>
+				<RepeaterHeader label={ __( 'Box shadow', 'refraction' ) }>
 					<TooltipAddItemAction newItemIndex={ 0 } disabled={ disabled } ariaLabel={ 'Box shadow' } />
 				</RepeaterHeader>
 				<ItemsContainer>
@@ -68,31 +68,31 @@ const Content = () => {
 		<PropProvider { ...context }>
 			<PopoverContent p={ 1.5 }>
 				<PopoverGridContainer>
-					<Control bind="color" label={ __( 'Color', 'elementor' ) }>
+					<Control bind="color" label={ __( 'Color', 'refraction' ) }>
 						<ColorControl anchorEl={ anchorEl } />
 					</Control>
-					<Control bind="position" label={ __( 'Position', 'elementor' ) } sx={ { overflow: 'hidden' } }>
+					<Control bind="position" label={ __( 'Position', 'refraction' ) } sx={ { overflow: 'hidden' } }>
 						<SelectControl
 							options={ [
-								{ label: __( 'Inset', 'elementor' ), value: 'inset' },
-								{ label: __( 'Outset', 'elementor' ), value: null },
+								{ label: __( 'Inset', 'refraction' ), value: 'inset' },
+								{ label: __( 'Outset', 'refraction' ), value: null },
 							] }
 						/>
 					</Control>
 				</PopoverGridContainer>
 				<PopoverGridContainer ref={ rowRef[ 0 ] }>
-					<Control bind="hOffset" label={ __( 'Horizontal', 'elementor' ) }>
+					<Control bind="hOffset" label={ __( 'Horizontal', 'refraction' ) }>
 						<SizeControl anchorRef={ rowRef[ 0 ] } min={ -Number.MAX_SAFE_INTEGER } />
 					</Control>
-					<Control bind="vOffset" label={ __( 'Vertical', 'elementor' ) }>
+					<Control bind="vOffset" label={ __( 'Vertical', 'refraction' ) }>
 						<SizeControl anchorRef={ rowRef[ 0 ] } min={ -Number.MAX_SAFE_INTEGER } />
 					</Control>
 				</PopoverGridContainer>
 				<PopoverGridContainer ref={ rowRef[ 1 ] }>
-					<Control bind="blur" label={ __( 'Blur', 'elementor' ) }>
+					<Control bind="blur" label={ __( 'Blur', 'refraction' ) }>
 						<SizeControl anchorRef={ rowRef[ 1 ] } />
 					</Control>
-					<Control bind="spread" label={ __( 'Spread', 'elementor' ) }>
+					<Control bind="spread" label={ __( 'Spread', 'refraction' ) }>
 						<SizeControl anchorRef={ rowRef[ 1 ] } min={ -Number.MAX_SAFE_INTEGER } />
 					</Control>
 				</PopoverGridContainer>

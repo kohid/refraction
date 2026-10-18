@@ -1,11 +1,11 @@
-import CommonHelper from 'elementor/tests/qunit/tests/core/common/helper';
+import CommonHelper from 'refraction/tests/qunit/tests/core/common/helper';
 import ElementsHelper from '../../elements/helper';
 
 export const Delete = () => {
 	QUnit.test( 'Delete', ( assert ) => {
 		const eButton = ElementsHelper.createWrappedButton();
 
-		elementor.channels.editor.reply( 'contextMenu:targetView', eButton.view );
+		refraction.channels.editor.reply( 'contextMenu:targetView', eButton.view );
 
 		CommonHelper.runShortcut( 46 /* Delete */ );
 

@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import * as commands from './commands/';
 import * as commandsInternal from './commands-internal/';
 
@@ -62,10 +62,10 @@ export default class Component extends ComponentBase {
 				return result;
 			},
 			isPasteEnabled: ( targetContainer ) => {
-				const storage = elementorCommon.storage.get( 'clipboard' );
+				const storage = refractionCommon.storage.get( 'clipboard' );
 
 				// No storage? no paste.
-				if ( ! storage || ! storage?.elements?.length || 'elementor' !== storage?.type ) {
+				if ( ! storage || ! storage?.elements?.length || 'refraction' !== storage?.type ) {
 					return false;
 				}
 
@@ -80,19 +80,19 @@ export default class Component extends ComponentBase {
 				);
 			},
 			allowAddingWidgets() {
-				return elementor.config.document.panel.allow_adding_widgets ?? true;
+				return refraction.config.document.panel.allow_adding_widgets ?? true;
 			},
 			showNavigator() {
-				return elementor.config.document.panel.show_navigator ?? true;
+				return refraction.config.document.panel.show_navigator ?? true;
 			},
 			showCopyAndShareButton() {
-				return elementor.config.document.panel.show_copy_and_share ?? false;
+				return refraction.config.document.panel.show_copy_and_share ?? false;
 			},
 			getTitleForLibraryClose() {
-				return elementor.config.document.panel.library_close_title ?? '';
+				return refraction.config.document.panel.library_close_title ?? '';
 			},
 			getTitleForPublishButton() {
-				return elementor.config.document.panel.publish_button_title ?? '';
+				return refraction.config.document.panel.publish_button_title ?? '';
 			},
 		};
 	}

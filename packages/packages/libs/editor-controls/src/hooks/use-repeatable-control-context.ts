@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { type PropTypeUtil } from '@elementor/editor-props';
+import { type PropTypeUtil } from '@refraction/editor-props';
 
 import type { Item, RepeatablePropValue } from '../components/control-repeater/types';
 

@@ -1,4 +1,4 @@
-import UIHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/ui/helper';
+import UIHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/ui/helper';
 import ElementsHelper from '../../elements/helper';
 
 /**
@@ -78,7 +78,7 @@ export const Paste = () => {
 			hooks.beforeEach = () => {
 				ElementsHelper.empty();
 
-				elementorCommon.storage.set( 'clipboard', '' );
+				refractionCommon.storage.set( 'clipboard', '' );
 			};
 
 			QUnit.test( 'Simple', ( assert ) => {
@@ -104,7 +104,7 @@ export const Paste = () => {
 
 					assert.equal( copiedSuccess, true, 'Element were pasted.' );
 
-					const elements = elementor.getPreviewContainer().model.get( 'elements' ),
+					const elements = refraction.getPreviewContainer().model.get( 'elements' ),
 						sourcePos = elements.findIndex( source.model ),
 						targetPos = elements.findIndex( target.model );
 
@@ -123,7 +123,7 @@ export const Paste = () => {
 
 					assert.equal( copiedSuccess, true, 'Element were pasted.' );
 
-					const elements = elementor.getPreviewContainer().model.get( 'elements' ),
+					const elements = refraction.getPreviewContainer().model.get( 'elements' ),
 						sourcePos = elements.findIndex( source.parent.model ),
 						targetPos = elements.findIndex( target.parent.model );
 
@@ -142,7 +142,7 @@ export const Paste = () => {
 
 					assert.equal( copiedSuccess, true, 'Element were pasted.' );
 
-					const elements = elementor.getPreviewContainer().model.get( 'elements' ),
+					const elements = refraction.getPreviewContainer().model.get( 'elements' ),
 						sourcePos = elements.findIndex( source.parent.parent.model ),
 						targetPos = elements.findIndex( target.parent.parent.model );
 

@@ -1,5 +1,5 @@
 /**
- * @typedef {import ('elementor/modules/history/assets/js/module')} HistoryManager
+ * @typedef {import ('refraction/modules/history/assets/js/module')} HistoryManager
  */
 
 export default class CommandHistoryInternalBase extends $e.modules.editor.CommandContainerInternalBase {
@@ -9,6 +9,6 @@ export default class CommandHistoryInternalBase extends $e.modules.editor.Comman
 		/**
 		 * @type {HistoryManager}
 		 */
-		this.history = elementor.documents.getCurrent().history;
+		this.history = refraction.documents.getCurrent().history;
 	}
 }

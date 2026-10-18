@@ -28,7 +28,7 @@ export const SettingsProvider = ( props ) => {
 	const getInitialSettings = () => {
 		setStatus( 'loading' );
 
-		const kitSettings = elementor.documents.getCurrent().config.settings.settings;
+		const kitSettings = refraction.documents.getCurrent().config.settings.settings;
 
 		var map = new Map( [
 			[ 'colors', new Map( [
@@ -41,7 +41,7 @@ export const SettingsProvider = ( props ) => {
 				[ 'fallback_font', kitSettings.default_generic_fonts ],
 			] ) ],
 			[ 'config', new Map( [
-				[ 'is_debug', elementorCommon.config.isElementorDebug ],
+				[ 'is_debug', refractionCommon.config.isRefractionDebug ],
 			] ) ],
 		] );
 
@@ -149,10 +149,10 @@ export const SettingsProvider = ( props ) => {
 	useEffect( () => {
 		getInitialSettings();
 
-		window.top.addEventListener( 'elementor/commands/run/after', onCommandEvent, { passive: true } );
+		window.top.addEventListener( 'refraction/commands/run/after', onCommandEvent, { passive: true } );
 
 		return () => {
-			window.top.removeEventListener( 'elementor/commands/run/after', onCommandEvent );
+			window.top.removeEventListener( 'refraction/commands/run/after', onCommandEvent );
 		};
 	}, [] );
 

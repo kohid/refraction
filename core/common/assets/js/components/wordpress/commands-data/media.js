@@ -1,5 +1,5 @@
-import CommandData from 'elementor-api/modules/command-data';
-import FilesUploadHandler from 'elementor-editor/utils/files-upload-handler';
+import CommandData from 'refraction-api/modules/command-data';
+import FilesUploadHandler from 'refraction-editor/utils/files-upload-handler';
 
 export class Media extends CommandData {
 	static getEndpointFormat() {
@@ -27,13 +27,13 @@ export class Media extends CommandData {
 		};
 
 		args.query = {
-			uploadTypeCaller: 'elementor-wp-media-upload',
+			uploadTypeCaller: 'refraction-wp-media-upload',
 		};
 
 		args.data = this.file;
 
 		if ( args.options?.progress ) {
-			this.toast = elementor.notifications.showToast( {
+			this.toast = refraction.notifications.showToast( {
 				// eslint-disable-next-line @wordpress/i18n-ellipsis
 				message: __( 'Uploading...' ),
 				sticky: true,
@@ -55,14 +55,14 @@ export class Media extends CommandData {
 		this.file = this.args.file;
 
 		if ( this.file.size > parseInt( window._wpPluploadSettings.defaults.filters.max_file_size, 10 ) ) {
-			throw new Error( __( 'The file exceeds the maximum upload size for this site.', 'elementor' ) );
+			throw new Error( __( 'The file exceeds the maximum upload size for this site.', 'refraction' ) );
 		}
 
 		if (
 			! window._wpPluploadSettings.defaults.filters.mime_types[ 0 ].extensions.split( ',' ).includes(
 				this.file.name.split( '.' ).pop(),
 			) &&
-			! elementor.config.filesUpload.unfilteredFiles
+			! refraction.config.filesUpload.unfilteredFiles
 		) {
 			FilesUploadHandler.getUnfilteredFilesNotEnabledDialog( () => {} ).show();
 			return;

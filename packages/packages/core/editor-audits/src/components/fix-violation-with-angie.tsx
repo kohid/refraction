@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isAngieAvailable, sendPromptToAngie } from '@elementor/editor-mcp';
+import { isAngieAvailable, sendPromptToAngie } from '@refraction/editor-mcp';
 import { AngieIcon } from '@elementor/icons';
 import { Button, IconButton, Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function FixViolationWithAngie( { prompt, panelZIndex, variant = 'icon' }: Props ) {
-	const label = __( 'Fix with Angie', 'elementor' );
+	const label = __( 'Fix with Angie', 'refraction' );
 	const href = `#angie-prompt=${ encodeURIComponent( prompt ) }`;
 
 	const handleClick = ( event: React.MouseEvent< HTMLAnchorElement > ) => {

@@ -14,13 +14,13 @@
 	}
 }
 
-.elementor-panel {
+.refraction-panel {
 
 	// We limit the reset only to the v3 panel to avoid unexpected overrides.
 	:where(
-		#elementor-panel-state-loading,
-		#elementor-panel-header-wrapper,
-		#elementor-panel-content-wrapper
+		#refraction-panel-state-loading,
+		#refraction-panel-header-wrapper,
+		#refraction-panel-content-wrapper
 	) {
 		@import "reset";
 	}
@@ -41,7 +41,7 @@
 		font-size: 13px;
 	}
 
-	.elementor-editor-preview & {
+	.refraction-editor-preview & {
 		--e-is-preview-mode: 1;
 
 		> .ui-resizable-e,
@@ -49,7 +49,7 @@
 			display: none;
 		}
 
-		#elementor-panel-elements-wrapper {
+		#refraction-panel-elements-wrapper {
 			display: flex;
 			flex-direction: column;
 		}
@@ -59,7 +59,7 @@
 		z-index: 2; // Avoid panel elements (like divider control) from appearing above the scrollbar
 	}
 
-	.elementor-responsive-panel {
+	.refraction-responsive-panel {
 		padding: 0 15px;
 		display: grid;
 		gap: 10px;
@@ -93,7 +93,7 @@
 // Panel Elements
 @import "elements";
 
-#elementor-panel-inner {
+#refraction-panel-inner {
 	position: relative;
 	height: 100%;
 	display: flex;
@@ -102,57 +102,57 @@
 }
 
 // Main Panel
-#elementor-panel-content-wrapper {
+#refraction-panel-content-wrapper {
 	position: relative;
 	width: 100%;
 	flex: 1;
 }
 
-.elementor-panel-container {
+.refraction-panel-container {
 	clear: both;
 	padding-inline-start: 15px;
 	padding-inline-end: 15px;
 }
 
-#elementor-panel-get-pro-elements {
+#refraction-panel-get-pro-elements {
 
-	.elementor-nerd-box-message {
+	.refraction-nerd-box-message {
 		margin-block-start: 10px;
 	}
 
-	.elementor-nerd-box-icon {
+	.refraction-nerd-box-icon {
 		margin-block-start: 20px;
 	}
 }
 
-#elementor-panel-content-wrapper:has(> #elementor-panel-page-editor) {
+#refraction-panel-content-wrapper:has(> #refraction-panel-page-editor) {
 	display: flex;
 	flex-direction: column;
 
-	#elementor-panel-page-editor {
+	#refraction-panel-page-editor {
 		display: flex;
 		flex-direction: column;
 		flex: 1;
 		min-height: 0;
 	}
 
-	.elementor-panel-editor-sticky-promotion {
+	.refraction-panel-editor-sticky-promotion {
 		position: sticky;
 		inset-block-end: 0;
 		margin-block-start: auto;
 
-		.elementor-get-pro-sticky-message {
+		.refraction-get-pro-sticky-message {
 			margin-block-start: 0;
 		}
 	}
 }
 
-#elementor-panel-get-pro-elements-sticky {
+#refraction-panel-get-pro-elements-sticky {
 	position: sticky;
 	inset-block-end: 0;
 	margin-block-end: -10px;
 
-	.elementor-get-pro-sticky-message {
+	.refraction-get-pro-sticky-message {
 		margin-block-start: -14px;
 	}
 }
@@ -161,24 +161,24 @@
 // elements page (after the widget creation area), so the page must fill the
 // available height to keep the promotion pinned to the bottom without adding
 // extra scroll space when the content is short.
-#elementor-panel-page-elements:has( > #elementor-panel-get-pro-elements-sticky ) {
+#refraction-panel-page-elements:has( > #refraction-panel-get-pro-elements-sticky ) {
 	display: flex;
 	flex-direction: column;
 	min-height: 100%;
 
-	> #elementor-panel-get-pro-elements-sticky {
+	> #refraction-panel-get-pro-elements-sticky {
 		margin-block-start: auto;
 	}
 }
 
-#elementor-panel-get-pro-elements-sticky,
-.elementor-panel-editor-sticky-promotion {
+#refraction-panel-get-pro-elements-sticky,
+.refraction-panel-editor-sticky-promotion {
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 1.6;
 	background-color: var(--e-a-color-white);
 
-	.elementor-get-pro-sticky-message {
+	.refraction-get-pro-sticky-message {
 		min-height: 40px;
 		display: block;
 		padding: 9px min(35px, 5%);
@@ -201,7 +201,7 @@
 	}
 }
 
-#elementor-panel-notice-wrapper .elementor-panel-notice {
+#refraction-panel-notice-wrapper .refraction-panel-notice {
 	width: 90%;
 	margin: 0 auto;
 	font-style: unset;
@@ -217,8 +217,8 @@
 
 // Notification Center (v1)
 body.e-has-notification {
-	&:not(.e-route-panel-menu) #elementor-panel-header-menu-button,
-	.elementor-panel-menu-item.elementor-panel-menu-item-notification-center .elementor-panel-menu-item-icon {
+	&:not(.e-route-panel-menu) #refraction-panel-header-menu-button,
+	.refraction-panel-menu-item.refraction-panel-menu-item-notification-center .refraction-panel-menu-item-icon {
 		position: relative;
 
 		&:after {

@@ -4,7 +4,7 @@ import {
 	__registerSlice as registerSlice,
 	type SliceState,
 	type Store,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import type { PublishedComponent } from '../../types';
 import { selectArchivedThisSession, selectComponent, selectComponents, slice } from '../store';

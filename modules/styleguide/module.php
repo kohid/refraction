@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Modules\Styleguide;
+namespace Refraction\Modules\Styleguide;
 
-use Elementor\Core\Base\Module as Base_Module;
-use Elementor\Plugin;
-use Elementor\Modules\Styleguide\Controls\Switcher;
+use Refraction\Core\Base\Module as Base_Module;
+use Refraction\Plugin;
+use Refraction\Modules\Styleguide\Controls\Switcher;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Module extends Base_Module {
 
-	const ASSETS_HANDLE = 'elementor-styleguide';
+	const ASSETS_HANDLE = 'refraction-styleguide';
 	const ASSETS_SRC = 'styleguide';
 
 	/**
@@ -21,10 +21,10 @@ class Module extends Base_Module {
 	 */
 	public function __construct() {
 		parent::__construct();
-		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'enqueue_main_scripts' ] );
-		add_action( 'elementor/preview/enqueue_styles', [ $this, 'enqueue_styles' ] );
+		add_action( 'refraction/editor/after_enqueue_scripts', [ $this, 'enqueue_main_scripts' ] );
+		add_action( 'refraction/preview/enqueue_styles', [ $this, 'enqueue_styles' ] );
 
-		add_action( 'elementor/frontend/after_register_scripts', function () {
+		add_action( 'refraction/frontend/after_register_scripts', function () {
 			$is_preview = Plugin::$instance->preview->is_preview();
 
 			if ( ! $is_preview ) {
@@ -34,8 +34,8 @@ class Module extends Base_Module {
 			$this->enqueue_app_initiator( $is_preview );
 		} );
 
-		add_action( 'elementor/controls/register', [ $this, 'register_controls' ] );
-		add_action( 'elementor/element/after_section_start', [ $this, 'add_styleguide_enable_controls' ], 10, 3 );
+		add_action( 'refraction/controls/register', [ $this, 'register_controls' ] );
+		add_action( 'refraction/element/after_section_start', [ $this, 'add_styleguide_enable_controls' ], 10, 3 );
 	}
 
 	/**
@@ -56,18 +56,18 @@ class Module extends Base_Module {
 		wp_enqueue_script(
 			static::ASSETS_HANDLE,
 			$this->get_js_assets_url( static::ASSETS_SRC ),
-			[ 'elementor-editor' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-editor' ],
+			REFRACTION_VERSION,
 			true
 		);
 
 		$kit_id = Plugin::$instance->kits_manager->get_active_id();
 
-		wp_localize_script( static::ASSETS_HANDLE, 'elementorStyleguideConfig', [
+		wp_localize_script( static::ASSETS_HANDLE, 'refractionStyleguideConfig', [
 			'activeKitId' => $kit_id,
 		] );
 
-		wp_set_script_translations( static::ASSETS_HANDLE, 'elementor' );
+		wp_set_script_translations( static::ASSETS_HANDLE, 'refraction' );
 	}
 
 	public function enqueue_app_initiator( $is_preview = false ) {
@@ -85,11 +85,11 @@ class Module extends Base_Module {
 			static::ASSETS_HANDLE . '-app-initiator',
 			$this->get_js_assets_url( static::ASSETS_SRC . '-app-initiator' ),
 			$dependencies,
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		wp_set_script_translations( static::ASSETS_HANDLE . '-app-initiator', 'elementor' );
+		wp_set_script_translations( static::ASSETS_HANDLE . '-app-initiator', 'refraction' );
 	}
 
 	public function enqueue_styles() {
@@ -97,7 +97,7 @@ class Module extends Base_Module {
 			static::ASSETS_HANDLE,
 			$this->get_css_assets_url( 'modules/styleguide/editor' ),
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 	}
 
@@ -124,12 +124,12 @@ class Module extends Base_Module {
 		$element->add_control(
 			$control_name,
 			[
-				'label' => esc_html__( 'Show global settings', 'elementor' ),
+				'label' => esc_html__( 'Show global settings', 'refraction' ),
 				'type' => Switcher::CONTROL_TYPE,
-				'description' => esc_html__( 'Temporarily overlay the canvas with the style guide to preview your changes to global colors and fonts.', 'elementor' ),
+				'description' => esc_html__( 'Temporarily overlay the canvas with the style guide to preview your changes to global colors and fonts.', 'refraction' ),
 				'separator' => 'after',
-				'label_off' => esc_html__( 'No', 'elementor' ),
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
 				'on_change_command' => true,
 			]
 		);

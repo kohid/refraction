@@ -1,4 +1,4 @@
-import { type Dependency, isDependencyMet, type PropValue } from '@elementor/editor-props';
+import { type Dependency, isDependencyMet, type PropValue } from '@refraction/editor-props';
 
 import { generateElementId } from '../sync/generate-element-id';
 import { type V1ElementData } from '../sync/types';

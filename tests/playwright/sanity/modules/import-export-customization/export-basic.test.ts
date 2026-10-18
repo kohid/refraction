@@ -29,7 +29,7 @@ test.describe( 'Import Export Customization - Basic Export @import_export_custom
 		await ImportExportHelpers.verifyContentSection( page, '13 Pages | 2 Floating Elements | 3 Posts | 3 Taxonomies' );
 		await ImportExportHelpers.verifyTemplatesSection( page, 'No templates exported' );
 		await ImportExportHelpers.verifySettingsSection( page, 'Theme | Global Colors | Global Fonts | Theme Style Settings | General Settings | Experiments' );
-		await ImportExportHelpers.verifyPluginsSection( page, 'Elementor | Hello Dolly | WordPress Importer' );
+		await ImportExportHelpers.verifyPluginsSection( page, 'Refraction | Hello Dolly | WordPress Importer' );
 
 		await expect( page.locator( 'text=Is the automatic download not starting?' ) ).toBeVisible();
 		await expect( page.locator( 'text=Download manually.' ) ).toBeVisible();

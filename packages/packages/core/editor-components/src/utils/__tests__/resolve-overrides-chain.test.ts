@@ -1,6 +1,6 @@
 import { createMockContainer } from 'test-utils';
-import { type V1Element } from '@elementor/editor-elements';
-import { type AnyTransformable } from '@elementor/editor-props';
+import { type V1Element } from '@refraction/editor-elements';
+import { type AnyTransformable } from '@refraction/editor-props';
 
 import { type OverridesMapping } from '../../components/instance-editing-panel/utils/resolve-element-settings';
 import { componentInstanceOverridePropTypeUtil } from '../../prop-types/component-instance-override-prop-type';
@@ -11,7 +11,7 @@ import { getContainerByOriginId } from '../get-container-by-origin-id';
 import { getOverridableProp } from '../get-overridable-prop';
 import { buildOverridesMap, resolveOverridesChain } from '../resolve-overrides-chain';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 jest.mock( '../get-container-by-origin-id', () => ( {
 	getContainerByOriginId: jest.fn(),

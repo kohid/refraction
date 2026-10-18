@@ -1,4 +1,4 @@
-import { type Document } from '@elementor/editor-documents';
+import { type Document } from '@refraction/editor-documents';
 
 export default function createMockDocument( {
 	id,

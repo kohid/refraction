@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Modules\GeneratorTag;
+namespace Refraction\Modules\GeneratorTag;
 
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\Core\Base\Module as BaseModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -19,11 +19,11 @@ class Module extends BaseModule {
 		parent::__construct();
 
 		add_action( 'wp_head', [ $this, 'render_generator_tag' ] );
-		add_action( 'elementor/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_admin_settings' ], 100 );
+		add_action( 'refraction/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_admin_settings' ], 100 );
 	}
 
 	public function render_generator_tag() {
-		if ( '1' === get_option( 'elementor_meta_generator_tag' ) ) {
+		if ( '1' === get_option( 'refraction_meta_generator_tag' ) ) {
 			return;
 		}
 
@@ -37,7 +37,7 @@ class Module extends BaseModule {
 		$settings = $this->get_generator_tag_settings();
 
 		$tags = [
-			'Elementor ' . ELEMENTOR_VERSION,
+			'Refraction ' . REFRACTION_VERSION,
 		];
 
 		if ( ! empty( $active_features ) ) {
@@ -64,7 +64,7 @@ class Module extends BaseModule {
 	}
 
 	private function get_generator_tag_settings(): array {
-		return apply_filters( 'elementor/generator_tag/settings', [] );
+		return apply_filters( 'refraction/generator_tag/settings', [] );
 	}
 
 	public function register_admin_settings( Settings $settings ) {
@@ -73,15 +73,15 @@ class Module extends BaseModule {
 			Settings::TAB_ADVANCED,
 			'meta_generator_tag',
 			[
-				'label' => esc_html__( 'Generator Tag', 'elementor' ),
+				'label' => esc_html__( 'Generator Tag', 'refraction' ),
 				'field_args' => [
 					'type' => 'select',
 					'std' => '',
 					'options' => [
-						'' => esc_html__( 'Enable', 'elementor' ),
-						'1' => esc_html__( 'Disable', 'elementor' ),
+						'' => esc_html__( 'Enable', 'refraction' ),
+						'1' => esc_html__( 'Disable', 'refraction' ),
 					],
-					'desc' => esc_html__( 'A generator tag is a meta element that indicates the attributes used to create a webpage. It is used for analytical purposes.', 'elementor' ),
+					'desc' => esc_html__( 'A generator tag is a meta element that indicates the attributes used to create a webpage. It is used for analytical purposes.', 'refraction' ),
 				],
 			]
 		);

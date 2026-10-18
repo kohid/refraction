@@ -1,7 +1,7 @@
-import { injectIntoLogic } from '@elementor/editor';
-import { stylesRepository } from '@elementor/editor-styles-repository';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
-import { __registerSlice as registerSlice } from '@elementor/store';
+import { injectIntoLogic } from '@refraction/editor';
+import { stylesRepository } from '@refraction/editor-styles-repository';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
+import { __registerSlice as registerSlice } from '@refraction/store';
 
 import { loadTemplates, unloadTemplates } from './load-templates';
 import { RenderTemplateStyles } from './render-template-styles';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { GLOBAL_STYLES_IMPORTED_EVENT } from '@elementor/editor-canvas';
+import { GLOBAL_STYLES_IMPORTED_EVENT } from '@refraction/editor-canvas';
 import { act, waitFor } from '@testing-library/react';
 
 import { loadDefaultStyles } from '../../load-default-styles';

@@ -15,8 +15,8 @@ test.describe( 'Icon widget tests', () => {
 		let style = await getComputedStyle( icon, 'before' );
 		expect( style.content.charCodeAt() ).toBe( 34 );
 
-		await page.click( '.elementor-control-media__preview' );
-		await page.click( '.elementor-icons-manager__tab__item__icon.fas.fa-surprise' );
+		await page.click( '.refraction-control-media__preview' );
+		await page.click( '.refraction-icons-manager__tab__item__icon.fas.fa-surprise' );
 		await page.click( 'button:has-text("Insert")' );
 
 		icon = await editor.getPreviewFrame().waitForSelector( 'i.fa-surprise' );
@@ -29,7 +29,7 @@ test.describe( 'Icon widget tests', () => {
 		await editor.setSliderControlValue( 'size', width );
 
 		await expect.poll( async () => {
-			icon = await editor.getPreviewFrame().waitForSelector( '.elementor-icon:first-child' );
+			icon = await editor.getPreviewFrame().waitForSelector( '.refraction-icon:first-child' );
 			style = await getComputedStyle( icon, '' );
 			return style.fontSize;
 		} ).toBe( `${ width }px` );
@@ -47,7 +47,7 @@ test.describe( 'Icon widget tests', () => {
 
 		// Assert 1 - Default behavior (no link)
 		await test.step( 'No link - DIV tag in Editor', async () => {
-			const iconElement = editor.getPreviewFrame().locator( '.elementor-icon' );
+			const iconElement = editor.getPreviewFrame().locator( '.refraction-icon' );
 			await expect( iconElement ).not.toHaveAttribute( 'href' );
 			const tagName = await iconElement.evaluate( ( el ) => el.tagName );
 			expect( tagName ).toBe( 'DIV' );
@@ -55,11 +55,11 @@ test.describe( 'Icon widget tests', () => {
 
 		// Act 2 - Add link
 		await editor.setTextControlValue( 'link', testUrl );
-		await editor.getPreviewFrame().locator( `a.elementor-icon[href="${ testUrl }"]` ).waitFor();
+		await editor.getPreviewFrame().locator( `a.refraction-icon[href="${ testUrl }"]` ).waitFor();
 
 		// Assert 2 - With link the tag becomes anchor tag
 		await test.step( 'Link anchor tag in the Editor', async () => {
-			const iconElement = editor.getPreviewFrame().locator( '.elementor-icon' );
+			const iconElement = editor.getPreviewFrame().locator( '.refraction-icon' );
 			await expect( iconElement ).toHaveAttribute( 'href', testUrl );
 			const tagName = await iconElement.evaluate( ( el ) => el.tagName );
 			expect( tagName ).toBe( 'A' );
@@ -67,7 +67,7 @@ test.describe( 'Icon widget tests', () => {
 
 		await test.step( 'Link anchor tag in the published page', async () => {
 			await editor.publishAndViewPage();
-			const iconElement = page.locator( '.elementor-icon' );
+			const iconElement = page.locator( '.refraction-icon' );
 			await expect( iconElement ).toHaveAttribute( 'href', testUrl );
 			const tagName = await iconElement.evaluate( ( el ) => el.tagName );
 			expect( tagName ).toBe( 'A' );

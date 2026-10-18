@@ -1,4 +1,4 @@
-import { isElementsStylesProvider } from '@elementor/editor-styles-repository';
+import { isElementsStylesProvider } from '@refraction/editor-styles-repository';
 
 import { useElement } from '../../contexts/element-context';
 import { useStyle } from '../../contexts/style-context';

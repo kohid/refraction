@@ -2,7 +2,7 @@
  * @typedef {import('./deprecation').default} Deprecation
  */
 
-/* global elementorDevToolsConfig */
+/* global refractionDevToolsConfig */
 
 export default class Module {
 	/**
@@ -15,7 +15,7 @@ export default class Module {
 	}
 
 	notifyBackendDeprecations() {
-		const notices = elementorDevToolsConfig.deprecation.soft_notices;
+		const notices = refractionDevToolsConfig.deprecation.soft_notices;
 
 		Object.entries( notices ).forEach( ( [ key, notice ] ) => {
 			this.deprecation.deprecated( key, ...notice );
@@ -23,7 +23,7 @@ export default class Module {
 	}
 
 	consoleWarn( ...args ) {
-		const style = `font-size: 12px; background-image: url("${ elementorDevToolsConfig.urls.assets }images/logo-icon.png"); background-repeat: no-repeat; background-size: contain;`;
+		const style = `font-size: 12px; background-image: url("${ refractionDevToolsConfig.urls.assets }images/logo-icon.png"); background-repeat: no-repeat; background-size: contain;`;
 
 		args.unshift( '%c  %c', style, '' );
 

@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Modules\System_Info\Reporters;
+namespace Refraction\Modules\System_Info\Reporters;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor active plugins report.
+ * Refraction active plugins report.
  *
- * Elementor system report handler class responsible for generating a report for
+ * Refraction system report handler class responsible for generating a report for
  * active plugins.
  *
  * @since 1.0.0

@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import * as React from 'react';
-import { useHasContentOnlyAccess } from '@elementor/editor-current-user';
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { useHasContentOnlyAccess } from '@refraction/editor-current-user';
+import { getWidgetsCache } from '@refraction/editor-elements';
 import { Divider, Stack, Tab, TabPanel, Tabs, useTabs } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -76,17 +76,17 @@ const PanelTabContent = () => {
 						} }
 					>
 						{ ! isPromotedElement && (
-							<Tab label={ __( 'General', 'elementor' ) } { ...getTabProps( 'settings' ) } />
+							<Tab label={ __( 'General', 'refraction' ) } { ...getTabProps( 'settings' ) } />
 						) }
 						{ hasDesignTabs && (
 							<Tab
-								label={ withRestrictionInfotip( __( 'Style', 'elementor' ) ) }
+								label={ withRestrictionInfotip( __( 'Style', 'refraction' ) ) }
 								{ ...getDesignTabProps( 'style' ) }
 							/>
 						) }
 						{ hasDesignTabs && (
 							<Tab
-								label={ withRestrictionInfotip( __( 'Interactions', 'elementor' ) ) }
+								label={ withRestrictionInfotip( __( 'Interactions', 'refraction' ) ) }
 								{ ...getDesignTabProps( 'interactions' ) }
 							/>
 						) }

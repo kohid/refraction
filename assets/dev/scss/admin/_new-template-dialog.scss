@@ -1,4 +1,4 @@
-#elementor-new-template, #elementor-new-floating-elements {
+#refraction-new-template, #refraction-new-floating-elements {
 
 	&-modal {
 
@@ -74,7 +74,7 @@
 			font-size: 23px;
 		}
 
-		&__template-type.elementor-form-field__select {
+		&__template-type.refraction-form-field__select {
 			// Override new wp-core-ui class <select> width starting WP v5.3/5.4
 			max-width: initial;
 		}
@@ -97,7 +97,7 @@
 			transform: translateY( -50% );
 		}
 
-		.elementor-form-field {
+		.refraction-form-field {
 
 			&__label {
 				display: block;
@@ -156,7 +156,7 @@
 
 @media (max-width: $editor-screen-md-max) {
 
-	#elementor-new-template {
+	#refraction-new-template {
 
 		&__description {
 			max-width: 250px;
@@ -167,7 +167,7 @@
 
 @media (max-width: $editor-screen-sm-max) {
 
-	#elementor-new-template__description {
+	#refraction-new-template__description {
 		display: none;
 	}
 }

@@ -4,7 +4,7 @@
 // Panel Controls
 //
 
-.elementor-control {
+.refraction-control {
 	--control-title-size: 12px;
 	position: relative;
 	padding: 0 20px 15px;
@@ -21,12 +21,12 @@
 	}
 
 	//Avoid collapsing margin in the repeater control
-	.elementor-control-content {
+	.refraction-control-content {
 		display: flex;
 		flex-direction: column;
 	}
 
-	.elementor-control-title {
+	.refraction-control-title {
 		font-size: var(--control-title-size);
 		line-height: 1;
 		margin-inline-end: 5px;
@@ -36,16 +36,16 @@
 		}
 	}
 
-	.elementor-control-spinner {
+	.refraction-control-spinner {
 		display: flex;
 		align-items: center;
 	}
 
-	&.elementor-control-type-divider {
+	&.refraction-control-type-divider {
 		padding: 0;
 
 
-		.elementor-control-content {
+		.refraction-control-content {
 			margin-inline: 20px;
 			border-width: 0;
 			border-block-start: var(--e-a-border);
@@ -56,7 +56,7 @@
 		}
 	}
 
-	&.elementor-control-separator- {
+	&.refraction-control-separator- {
 
 		&before {
 			padding-block-start: 15px;
@@ -81,48 +81,48 @@
 				background-color: var(--e-a-border-color);
 			}
 
-			+ .elementor-control-type-tabs,
-			&:not(.elementor-hidden-control) {
-				+ .elementor-control-separator-default {
+			+ .refraction-control-type-tabs,
+			&:not(.refraction-hidden-control) {
+				+ .refraction-control-separator-default {
 					padding-block-start: 15px;
 				}
 			}
 		}
 	}
 
-	&.elementor-control-deprecated {
+	&.refraction-control-deprecated {
 		color: var(--e-a-color-warning);
 
-		.elementor-control-field-description {
+		.refraction-control-field-description {
 			color:var(--e-a-color-warning);
 		}
 	}
 
-	&.elementor-control-hidden-label {
+	&.refraction-control-hidden-label {
 
-		> * > .elementor-control-title, > * > * > .elementor-control-title { // Avoid repeater titles to be affected from above
+		> * > .refraction-control-title, > * > * > .refraction-control-title { // Avoid repeater titles to be affected from above
 			display: none;
 		}
 	}
 
-	&.elementor-hidden-control {
+	&.refraction-hidden-control {
 		display: none;
 	}
 
-	&.elementor-control-type-heading {
+	&.refraction-control-type-heading {
 
-		.elementor-control-title {
+		.refraction-control-title {
 			font-weight: bold;
 			margin: 0;
 		}
 	}
 
-	&.elementor-control-responsive- {
+	&.refraction-control-responsive- {
 
 		@each $device in $devices {
 
 			&#{ $device } {
-				body:not(.elementor-device-#{ $device }) & {
+				body:not(.refraction-device-#{ $device }) & {
 					display: none;
 				}
 			}
@@ -133,7 +133,7 @@
 
 		&_top,
 		&_bottom {
-			.elementor-visual-choice-element-image label {
+			.refraction-visual-choice-element-image label {
 				padding: 4px;
 			}
 
@@ -154,7 +154,7 @@
 	&-custom_css_pro,
 	&-custom_attributes_pro {
 
-		.elementor-nerd-box {
+		.refraction-nerd-box {
 
 			&-message {
 				margin-block-start: 5px;
@@ -163,14 +163,14 @@
 	}
 }
 
-.elementor-control,
-.elementor-panel-category,
-.elementor-panel-scheme-item {
+.refraction-control,
+.refraction-panel-category,
+.refraction-panel-scheme-item {
 
 	&.e-open,
-	&.elementor-active{
+	&.refraction-active{
 
-		.elementor-panel-heading-toggle {
+		.refraction-panel-heading-toggle {
 
 			i {
 				transform: rotate(90deg);
@@ -178,9 +178,9 @@
 		}
 	}
 
-	&:not(.e-open):not(.elementor-active) {
+	&:not(.e-open):not(.refraction-active) {
 
-		.elementor-panel-heading-toggle {
+		.refraction-panel-heading-toggle {
 
 			i {
 				scale: calc(1 * var(--direction-multiplier)) 1; // Flip in RTL
@@ -189,7 +189,7 @@
 	}
 }
 
-.elementor-panel-heading {
+.refraction-panel-heading {
 	display: flex;
 	align-items: center;
 	gap: 5px;
@@ -246,37 +246,37 @@
 	}
 }
 
-#elementor-controls,
-#elementor-panel-page-settings-controls,
-#elementor-panel-editorPreferences-settings-controls {
+#refraction-controls,
+#refraction-panel-page-settings-controls,
+#refraction-panel-editorPreferences-settings-controls {
 
-	.elementor-control-type-section:first-child {
+	.refraction-control-type-section:first-child {
 
-		.elementor-panel-heading {
+		.refraction-panel-heading {
 			border-block-start: none;
 		}
 	}
 }
 
-.elementor-control-field {
+.refraction-control-field {
 	display: flex;
 	align-items: center;
 }
 
-.elementor-label-block {
+.refraction-label-block {
 
-	> .elementor-control-content {
+	> .refraction-control-content {
 
-		> .elementor-control-field {
+		> .refraction-control-field {
 			flex-wrap: wrap;
 
-			> .elementor-control-input-wrapper {
+			> .refraction-control-input-wrapper {
 				width: 100%;
 				max-width: 100%;
 				margin-block-start: 10px;
 
 				// TODO: Hack to make choices full width when label is block.
-				> .elementor-choices {
+				> .refraction-choices {
 					label {
 						width: auto;
 						flex: 1 1 27px;
@@ -289,26 +289,26 @@
 		}
 	}
 
-	&.elementor-control-hidden-label:not(.elementor-control-dynamic) {
+	&.refraction-control-hidden-label:not(.refraction-control-dynamic) {
 
-		> .elementor-control-content {
+		> .refraction-control-content {
 
-			> .elementor-control-field {
+			> .refraction-control-field {
 
-				> .elementor-control-input-wrapper {
+				> .refraction-control-input-wrapper {
 					margin-block-start: 0;
 				}
 			}
 		}
 	}
 
-	&.elementor-control-hidden-label.elementor-label-block {
+	&.refraction-control-hidden-label.refraction-label-block {
 
-		> .elementor-control-content {
+		> .refraction-control-content {
 
-			> .elementor-control-field {
+			> .refraction-control-field {
 
-				> .elementor-control-input-wrapper {
+				> .refraction-control-input-wrapper {
 					margin-block-start: 0;
 				}
 			}
@@ -316,37 +316,37 @@
 	}
 }
 
-.elementor-label-inline {
+.refraction-label-inline {
 
-	> .elementor-control-content {
+	> .refraction-control-content {
 
-		> .elementor-control-field {
+		> .refraction-control-field {
 
-			> .elementor-control-title {
+			> .refraction-control-title {
 				flex-shrink: 0;
 				max-width: 60%;
 			}
 
-			> .elementor-control-input-wrapper {
+			> .refraction-control-input-wrapper {
 				margin-inline-start: auto;
 			}
 		}
 	}
 }
 
-.elementor-control-field-description {
-	@extend .elementor-descriptor;
+.refraction-control-field-description {
+	@extend .refraction-descriptor;
 	margin-block-start: 10px;
 }
 
-.elementor-group-control-attachment_alert {
+.refraction-group-control-attachment_alert {
 
-	.elementor-control-field-description {
+	.refraction-control-field-description {
 		margin-block-start: 0;
 	}
 }
 
-	.elementor-control-start-end {
+	.refraction-control-start-end {
 
 		.eicon-text-align-left,
 		.eicon-text-align-right,
@@ -356,23 +356,23 @@
 		}
 	}
 
-.elementor-update-preview {
+.refraction-update-preview {
 	margin: 15px 15px 0;
 	display: flex;
 	align-items: center;
 }
 
-.elementor-update-preview-button-wrapper {
+.refraction-update-preview-button-wrapper {
 	flex-grow: 1;
 	text-align: end;
 }
 
-.elementor-update-preview-button {
+.refraction-update-preview-button {
 	padding: 8px 15px;
 }
 
 // = Set direction control by class
-.elementor-control-direction- {
+.refraction-control-direction- {
 
 	&ltr {
 

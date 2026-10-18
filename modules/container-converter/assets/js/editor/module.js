@@ -1,6 +1,6 @@
 import Component from './component';
 
-class Module extends elementorModules.editor.utils.Module {
+class Module extends refractionModules.editor.utils.Module {
 	onInit() {
 		$e.components.register( new Component() );
 	}

@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\AdminBar;
+namespace Refraction\Modules\AdminBar;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Base\App as BaseApp;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Base\App as BaseApp;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -54,28 +54,28 @@ class Module extends BaseApp {
 			return;
 		}
 
-		// Should load 'elementor-admin-bar' before 'admin-bar'
+		// Should load 'refraction-admin-bar' before 'admin-bar'
 		wp_dequeue_script( 'admin-bar' );
 
 		wp_enqueue_script(
-			'elementor-admin-bar',
-			$this->get_js_assets_url( 'elementor-admin-bar' ),
-			[ 'elementor-frontend-modules' ],
-			ELEMENTOR_VERSION,
+			'refraction-admin-bar',
+			$this->get_js_assets_url( 'refraction-admin-bar' ),
+			[ 'refraction-frontend-modules' ],
+			REFRACTION_VERSION,
 			true
 		);
 
 		// This is a core script of WordPress, it is not required to pass the 'ver' argument.
-		// We should add dependencies to make sure that 'elementor-admin-bar' is loaded before 'admin-bar'.
+		// We should add dependencies to make sure that 'refraction-admin-bar' is loaded before 'admin-bar'.
 		wp_enqueue_script(
 			'admin-bar',
 			null,
-			[ 'elementor-admin-bar' ],
+			[ 'refraction-admin-bar' ],
 			false, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
 			true
 		);
 
-		$this->print_config( 'elementor-admin-bar' );
+		$this->print_config( 'refraction-admin-bar' );
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Module extends BaseApp {
 		$settings = [];
 
 		if ( ! empty( $this->documents ) ) {
-			$settings['elementor_edit_page'] = $this->get_edit_button_config();
+			$settings['refraction_edit_page'] = $this->get_edit_button_config();
 		}
 
 		/**
@@ -99,13 +99,13 @@ class Module extends BaseApp {
 		 *
 		 * @param array $settings the admin_bar config
 		 */
-		$settings = apply_filters( 'elementor/frontend/admin_bar/settings', $settings );
+		$settings = apply_filters( 'refraction/frontend/admin_bar/settings', $settings );
 
 		return $settings;
 	}
 
 	/**
-	 * Creates the config for 'Edit with elementor' menu item.
+	 * Creates the config for 'Edit with refraction' menu item.
 	 *
 	 * @return array
 	 */
@@ -120,12 +120,12 @@ class Module extends BaseApp {
 		}
 
 		return [
-			'id' => 'elementor_edit_page',
-			'title' => esc_html__( 'Edit with Elementor', 'elementor' ),
+			'id' => 'refraction_edit_page',
+			'title' => esc_html__( 'Edit with Refraction', 'refraction' ),
 			'href' => $href,
 			'children' => array_map( function ( $document ) {
 				return [
-					'id' => "elementor_edit_doc_{$document->get_main_id()}",
+					'id' => "refraction_edit_doc_{$document->get_main_id()}",
 					'title' => $document->get_post()->post_title,
 					'sub_title' => $document::get_title(),
 					'href' => $document->get_edit_url(),
@@ -138,15 +138,15 @@ class Module extends BaseApp {
 		if ( current_user_can( 'manage_options' ) ) {
 			$clear_cache_url = add_query_arg(
 				[
-					'_wpnonce' => wp_create_nonce( 'elementor_site_clear_cache' ),
+					'_wpnonce' => wp_create_nonce( 'refraction_site_clear_cache' ),
 				],
-				admin_url( 'admin-post.php?action=elementor_site_clear_cache' ),
+				admin_url( 'admin-post.php?action=refraction_site_clear_cache' ),
 			);
 
-			$admin_bar_config['elementor_edit_page']['children'][] = [
-				'id' => 'elementor_site_clear_cache',
-				'title' => esc_html__( 'Clear Files & Data', 'elementor' ),
-				'sub_title' => esc_html__( 'Site', 'elementor' ),
+			$admin_bar_config['refraction_edit_page']['children'][] = [
+				'id' => 'refraction_site_clear_cache',
+				'title' => esc_html__( 'Clear Files & Data', 'refraction' ),
+				'sub_title' => esc_html__( 'Site', 'refraction' ),
 				'href' => $clear_cache_url,
 			];
 		}
@@ -158,9 +158,9 @@ class Module extends BaseApp {
 	 * Module constructor.
 	 */
 	public function __construct() {
-		add_action( 'elementor/frontend/before_get_builder_content', [ $this, 'add_document_to_admin_bar' ], 10, 2 );
+		add_action( 'refraction/frontend/before_get_builder_content', [ $this, 'add_document_to_admin_bar' ], 10, 2 );
 		add_action( 'wp_footer', [ $this, 'enqueue_scripts' ], 11 /* after third party scripts */ );
 
-		add_filter( 'elementor/frontend/admin_bar/settings', [ $this, 'add_clear_cache_in_admin_bar' ], 500 );
+		add_filter( 'refraction/frontend/admin_bar/settings', [ $this, 'add_clear_cache_in_admin_bar' ], 500 );
 	}
 }

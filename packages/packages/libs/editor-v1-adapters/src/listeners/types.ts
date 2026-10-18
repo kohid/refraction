@@ -1,5 +1,5 @@
 export type ExtendedWindow = Window & {
-	__elementorEditorV1LoadingPromise?: Promise< void >;
+	__refractionEditorV1LoadingPromise?: Promise< void >;
 };
 
 export type CommandEventDescriptor = {

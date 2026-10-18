@@ -1,4 +1,4 @@
-const TOOLBAR_SELECTOR = ':scope > .elementor-element-overlay > .elementor-editor-element-settings';
+const TOOLBAR_SELECTOR = ':scope > .refraction-element-overlay > .refraction-editor-element-settings';
 const WING_OVERHANG = 14;
 const OUTLINE_OVERHANG = 3;
 

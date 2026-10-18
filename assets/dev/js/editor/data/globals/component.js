@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import TypographyComponent from './typography/component';
 import ColorsComponent from './colors/component';
 
@@ -8,7 +8,7 @@ export default class Component extends ComponentBase {
 	__construct( args = {} ) {
 		super.__construct( args );
 
-		elementorCommon.elements.$window.on( 'elementor:loaded', () => this.refreshGlobalData() );
+		refractionCommon.elements.$window.on( 'refraction:loaded', () => this.refreshGlobalData() );
 	}
 
 	getNamespace() {

@@ -1,4 +1,4 @@
-import { getQueryClient } from '@elementor/query';
+import { getQueryClient } from '@refraction/query';
 
 import { apiClient } from './api';
 import { EDITOR_CURRENT_USER_QUERY_KEY } from './use-current-user';

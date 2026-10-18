@@ -1,5 +1,5 @@
-import { injectIntoTop } from '@elementor/editor';
-import { __registerSlice } from '@elementor/store';
+import { injectIntoTop } from '@refraction/editor';
+import { __registerSlice } from '@refraction/store';
 
 import Panels from './components/internal/panels';
 import { slice } from './store';

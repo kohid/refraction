@@ -43,7 +43,7 @@ export default class InstanceType {
 	}
 
 	static getInstanceType() {
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	constructor() {

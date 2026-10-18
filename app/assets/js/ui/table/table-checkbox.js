@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
 import { Context } from './table-context';
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Checkbox from 'elementor-app/ui/atoms/checkbox';
+import Checkbox from 'refraction-app/ui/atoms/checkbox';
 
 export default function TableCheckbox( props ) {
 	const context = useContext( Context ),

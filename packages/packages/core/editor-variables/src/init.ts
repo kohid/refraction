@@ -1,8 +1,8 @@
-import { injectIntoLogic, injectIntoTop } from '@elementor/editor';
-import { registerControlReplacement } from '@elementor/editor-controls';
-import { getMCPByDomain } from '@elementor/editor-mcp';
-import { isTransformable, type PropValue } from '@elementor/editor-props';
-import { controlActionsMenu } from '@elementor/menus';
+import { injectIntoLogic, injectIntoTop } from '@refraction/editor';
+import { registerControlReplacement } from '@refraction/editor-controls';
+import { getMCPByDomain } from '@refraction/editor-mcp';
+import { isTransformable, type PropValue } from '@refraction/editor-props';
+import { controlActionsMenu } from '@refraction/menus';
 
 import { GlobalStylesImportListener } from './components/global-styles-import-listener';
 import { McpVariableConnectListener } from './components/mcp-variable-connect-listener';

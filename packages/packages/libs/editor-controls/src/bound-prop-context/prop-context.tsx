@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, useContext } from 'react';
-import { type CreateOptions, type PropKey, type PropType, type PropValue } from '@elementor/editor-props';
+import { type CreateOptions, type PropKey, type PropType, type PropValue } from '@refraction/editor-props';
 
 import { HookOutsideProviderError } from './errors';
 

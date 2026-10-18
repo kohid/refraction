@@ -1,13 +1,13 @@
 import { createMockElementType, createMockStyleDefinition } from 'test-utils';
-import { stylesRepository } from '@elementor/editor-styles-repository';
+import { stylesRepository } from '@refraction/editor-styles-repository';
 
 import { mockElement } from '../../__tests__/utils';
 import { createMockSnapshotField } from '../../styles-inheritance/__tests__/mock-utils';
 import { getInheritanceSnapshot, initStyleInheritanceMocks } from './styles-inheritance-utils';
 
-jest.mock( '@elementor/editor-styles-repository' );
+jest.mock( '@refraction/editor-styles-repository' );
 jest.mock( '../classes-prop-context' );
-jest.mock( '@elementor/editor-responsive' );
+jest.mock( '@refraction/editor-responsive' );
 jest.mock( '../style-context' );
 
 const mockStyle1 = createMockStyleDefinition( {

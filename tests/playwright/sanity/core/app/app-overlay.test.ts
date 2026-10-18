@@ -4,10 +4,10 @@ import WpAdminPage from '../../../pages/wp-admin-page';
 import { timeouts } from '../../../config/timeouts';
 
 const ADMIN_BAR = '#wpadminbar';
-const ADMIN_BAR_EDIT_MENU = '#wp-admin-bar-elementor_edit_page';
-const ADMIN_BAR_THEME_BUILDER_LINK = '#wp-admin-bar-elementor_app_site_editor > a';
-const APP_IFRAME = 'iframe.elementor-app-iframe';
-const APP_BACKDROP = '.elementor-app-backdrop';
+const ADMIN_BAR_EDIT_MENU = '#wp-admin-bar-refraction_edit_page';
+const ADMIN_BAR_THEME_BUILDER_LINK = '#wp-admin-bar-refraction_app_site_editor > a';
+const APP_IFRAME = 'iframe.refraction-app-iframe';
+const APP_BACKDROP = '.refraction-app-backdrop';
 const THEME_BUILDER_HEADING = 'Theme Builder';
 const MIN_VIEWPORT_COVERAGE_RATIO = 0.8;
 const BACKDROP_EDGE_OFFSET_PX = 1;
@@ -19,7 +19,7 @@ async function openThemeBuilderFromFrontendAdminBar( page: Page ): Promise<void>
 		.toBeVisible( { timeout: timeouts.heavyAction } );
 }
 
-test.describe( 'Elementor App overlay - frontend admin bar @app-overlay', () => {
+test.describe( 'Refraction App overlay - frontend admin bar @app-overlay', () => {
 	test.beforeEach( async ( { page, apiRequests }, testInfo ) => {
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 		await wpAdmin.showAdminBar();

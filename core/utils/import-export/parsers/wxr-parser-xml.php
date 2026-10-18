@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Utils\ImportExport\Parsers;
+namespace Refraction\Core\Utils\ImportExport\Parsers;
 
-use Elementor\Utils;
+use Refraction\Utils;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -187,7 +187,7 @@ class WXR_Parser_XML {
 		xml_parser_free( $xml );
 
 		if ( ! preg_match( '/^\d+\.\d+$/', $this->wxr_version ) ) {
-			return new WP_Error( 'WXR_parse_error', esc_html__( 'This does not appear to be a WXR file, missing/invalid WXR version number', 'elementor' ) );
+			return new WP_Error( 'WXR_parse_error', esc_html__( 'This does not appear to be a WXR file, missing/invalid WXR version number', 'refraction' ) );
 		}
 
 		return [

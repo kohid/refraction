@@ -42,7 +42,7 @@ export function ProInstall() {
 					targetType: 'install',
 					targetName: 'install_pro_on_this_site',
 					stepId: 'pro_install',
-					errorBody: error instanceof Error ? error.message : 'Failed to install Elementor Pro',
+					errorBody: error instanceof Error ? error.message : 'Failed to install Refraction Pro',
 				} );
 				showToast( t( 'error.pro_install_failed' ) );
 				actions.dismissProInstallScreen();

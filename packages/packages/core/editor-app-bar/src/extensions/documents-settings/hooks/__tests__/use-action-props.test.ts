@@ -1,12 +1,12 @@
 import {
 	__privateOpenRoute as openRoute,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import useActionProps from '../use-action-props';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn( () => ( {
 		type: { value: 'page', label: 'Page' },
 	} ) ),
@@ -15,12 +15,12 @@ jest.mock( '@elementor/editor-documents', () => ( {
 	} ) ),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateOpenRoute: jest.fn(),
 	__privateUseRouteStatus: jest.fn( () => ( { isActive: true, isBlocked: true } ) ),
 } ) );
 
-describe( '@elementor/editor-app-bar - useDocumentSettingsPanelActionProps', () => {
+describe( '@refraction/editor-app-bar - useDocumentSettingsPanelActionProps', () => {
 	it( 'should open the page settings on click', () => {
 		// Arrange.
 		const { result } = renderHook( () => useActionProps() );
@@ -46,7 +46,7 @@ describe( '@elementor/editor-app-bar - useDocumentSettingsPanelActionProps', () 
 
 	it( 'should handle no document gracefully', () => {
 		// Arrange.
-		const { __useActiveDocument, __useHostDocument } = require( '@elementor/editor-documents' );
+		const { __useActiveDocument, __useHostDocument } = require( '@refraction/editor-documents' );
 		__useActiveDocument.mockReturnValue( null );
 		__useHostDocument.mockReturnValue( null );
 
@@ -60,7 +60,7 @@ describe( '@elementor/editor-app-bar - useDocumentSettingsPanelActionProps', () 
 
 	it( 'should display document type in title when document is available', () => {
 		// Arrange.
-		const { __useActiveDocument, __useHostDocument } = require( '@elementor/editor-documents' );
+		const { __useActiveDocument, __useHostDocument } = require( '@refraction/editor-documents' );
 		__useActiveDocument.mockReturnValue( {
 			type: { value: 'page', label: 'Page' },
 		} );

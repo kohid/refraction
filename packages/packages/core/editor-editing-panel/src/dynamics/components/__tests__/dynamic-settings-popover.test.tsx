@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderWithTheme } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { ElementProvider } from '../../../contexts/element-context';
@@ -8,8 +8,8 @@ import { useDynamicTag } from '../../hooks/use-dynamic-tag';
 import { type DynamicTag } from '../../types';
 import { DynamicSettingsPopover } from '../dynamic-selection-control';
 
-jest.mock( '@elementor/editor-controls', () => ( {
-	...jest.requireActual( '@elementor/editor-controls' ),
+jest.mock( '@refraction/editor-controls', () => ( {
+	...jest.requireActual( '@refraction/editor-controls' ),
 	useBoundProp: jest.fn(),
 } ) );
 

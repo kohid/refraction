@@ -1,6 +1,6 @@
-import { type Document } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { __createSelector, __createSlice, type PayloadAction, type SliceState } from '@elementor/store';
+import { type Document } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { __createSelector, __createSlice, type PayloadAction, type SliceState } from '@refraction/store';
 
 type State = {
 	entities: Record< Document[ 'id' ], V1ElementData[] >;

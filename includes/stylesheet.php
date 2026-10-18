@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor stylesheet.
+ * Refraction stylesheet.
  *
- * Elementor stylesheet handler class responsible for setting up CSS rules and
+ * Refraction stylesheet handler class responsible for setting up CSS rules and
  * properties, and all the CSS `@media` rule with supported viewport width.
  *
  * @since 1.0.0

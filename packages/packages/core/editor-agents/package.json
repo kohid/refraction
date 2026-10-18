@@ -1,9 +1,9 @@
 {
-  "name": "@elementor/editor-agents",
+  "name": "@refraction/editor-agents",
   "version": "4.4.0",
   "private": false,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -18,11 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elementor/elementor.git",
+    "url": "git+https://github.com/kohid/refraction.git",
     "directory": "packages/core/editor-agents"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -37,9 +37,9 @@
     "dev": "tsup --config=../../tsup.dev.ts"
   },
   "dependencies": {
-    "@elementor/editor-documents": "4.4.0",
-    "@elementor/editor-site-settings": "4.4.0",
-    "@elementor/editor-v1-adapters": "4.4.0",
+    "@refraction/editor-documents": "4.4.0",
+    "@refraction/editor-site-settings": "4.4.0",
+    "@refraction/editor-v1-adapters": "4.4.0",
     "@elementor/ui": "1.41.3",
     "@wordpress/i18n": "^5.13.0"
   },

@@ -1,4 +1,4 @@
-import { type ItemsActionPayload } from '@elementor/editor-controls';
+import { type ItemsActionPayload } from '@refraction/editor-controls';
 import {
 	type CreateElementParams,
 	createElements,
@@ -8,8 +8,8 @@ import {
 	moveElements,
 	removeElements,
 	type V1ElementData,
-} from '@elementor/editor-elements';
-import { booleanPropTypeUtil, escapedHtmlPropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-elements';
+import { booleanPropTypeUtil, escapedHtmlPropTypeUtil } from '@refraction/editor-props';
 import { __, sprintf } from '@wordpress/i18n';
 
 export type AccordionItem = {
@@ -28,7 +28,7 @@ const PARAGRAPH_WIDGET_TYPE = 'e-paragraph';
 
 const getItemTitle = ( position: number ) =>
 	/* translators: %d: Accordion item position. */
-	sprintf( __( 'Accordion Item %d', 'elementor' ), position );
+	sprintf( __( 'Accordion Item %d', 'refraction' ), position );
 
 const TRAILING_NUMBER = /(\d+)\s*$/;
 
@@ -89,7 +89,7 @@ const buildItemModel = ( position: number, showIcon: boolean, differentOpenIcon:
 			{
 				elType: ACCORDION_ITEM_HEADER_ELEMENT_TYPE,
 				id: generateElementId(),
-				editor_settings: { title: __( 'Header', 'elementor' ) },
+				editor_settings: { title: __( 'Header', 'refraction' ) },
 				// Seeded from the root's *current* `show_icon` value, not the schema default: if a user
 				// has already turned Show Icon off, a newly added item must start with its icon hidden
 				// too, not re-show one just because the item itself is brand new. See the comment on
@@ -102,7 +102,7 @@ const buildItemModel = ( position: number, showIcon: boolean, differentOpenIcon:
 					{
 						elType: ACCORDION_ITEM_TITLE_ELEMENT_TYPE,
 						id: generateElementId(),
-						editor_settings: { title: __( 'Title', 'elementor' ) },
+						editor_settings: { title: __( 'Title', 'refraction' ) },
 						elements: [
 							{
 								elType: 'widget',
@@ -122,7 +122,7 @@ const buildItemModel = ( position: number, showIcon: boolean, differentOpenIcon:
 					{
 						elType: ACCORDION_ITEM_ICON_ELEMENT_TYPE,
 						id: generateElementId(),
-						editor_settings: { title: __( 'Icon', 'elementor' ) },
+						editor_settings: { title: __( 'Icon', 'refraction' ) },
 						elements: [],
 						hydrateDefaultChildren: true,
 					},
@@ -131,7 +131,7 @@ const buildItemModel = ( position: number, showIcon: boolean, differentOpenIcon:
 			{
 				elType: ACCORDION_ITEM_CONTENT_ELEMENT_TYPE,
 				id: generateElementId(),
-				editor_settings: { title: __( 'Content', 'elementor' ) },
+				editor_settings: { title: __( 'Content', 'refraction' ) },
 				elements: [],
 				hydrateDefaultChildren: true,
 			},
@@ -168,7 +168,7 @@ export const useActions = () => {
 			const position = getNextItemNumber( titles );
 
 			createElements( {
-				title: __( 'Accordion', 'elementor' ),
+				title: __( 'Accordion', 'refraction' ),
 				elements: [
 					{
 						container: accordion,
@@ -195,14 +195,14 @@ export const useActions = () => {
 
 	const removeItem = ( { items }: { items: ItemsActionPayload< AccordionItem > } ) => {
 		removeElements( {
-			title: __( 'Accordion', 'elementor' ),
+			title: __( 'Accordion', 'refraction' ),
 			elementIds: items.map( ( { item } ) => item.id ),
 		} );
 	};
 
 	const duplicateItem = ( { items }: { items: ItemsActionPayload< AccordionItem > } ) => {
 		duplicateElements( {
-			title: __( 'Duplicate Accordion Item', 'elementor' ),
+			title: __( 'Duplicate Accordion Item', 'refraction' ),
 			elementIds: items.map( ( { item } ) => item.id ),
 		} );
 	};
@@ -224,7 +224,7 @@ export const useActions = () => {
 		}
 
 		moveElements( {
-			title: __( 'Reorder Accordion Items', 'elementor' ),
+			title: __( 'Reorder Accordion Items', 'refraction' ),
 			moves: [
 				{
 					element: movedElement,

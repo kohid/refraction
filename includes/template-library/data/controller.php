@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Includes\TemplateLibrary\Data;
+namespace Refraction\Includes\TemplateLibrary\Data;
 
-use Elementor\User;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Data\V2\Base\Controller as Controller_Base;
+use Refraction\User;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Data\V2\Base\Controller as Controller_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

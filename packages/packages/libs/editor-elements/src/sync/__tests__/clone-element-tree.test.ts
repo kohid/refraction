@@ -16,18 +16,18 @@ type TestElementData = {
 function getUniqueIdMock() {
 	return (
 		window as typeof window & {
-			elementorCommon?: { helpers?: { getUniqueId?: jest.Mock } };
+			refractionCommon?: { helpers?: { getUniqueId?: jest.Mock } };
 		}
-	 ).elementorCommon?.helpers?.getUniqueId;
+	 ).refractionCommon?.helpers?.getUniqueId;
 }
 
 describe( 'cloneElementTree', () => {
 	beforeEach( () => {
 		(
 			window as typeof window & {
-				elementorCommon?: { helpers?: { getUniqueId?: jest.Mock } };
+				refractionCommon?: { helpers?: { getUniqueId?: jest.Mock } };
 			}
-		 ).elementorCommon = {
+		 ).refractionCommon = {
 			helpers: {
 				getUniqueId: jest.fn(),
 			},
@@ -35,7 +35,7 @@ describe( 'cloneElementTree', () => {
 	} );
 
 	afterEach( () => {
-		delete ( window as typeof window & { elementorCommon?: unknown } ).elementorCommon;
+		delete ( window as typeof window & { refractionCommon?: unknown } ).refractionCommon;
 	} );
 
 	it( 'regenerates ids recursively and clears custom element ids', () => {

@@ -126,7 +126,7 @@ describe( 'useRouteStatus', () => {
 } );
 
 function mockEditMode( editMode: EditMode ) {
-	( window as unknown as ExtendedWindow ).elementor = {
+	( window as unknown as ExtendedWindow ).refraction = {
 		changeEditMode: () => {},
 		channels: {
 			dataEditMode: {

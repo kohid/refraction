@@ -1,6 +1,6 @@
-export default class StretchedSection extends elementorModules.frontend.handlers.StretchedElement {
+export default class StretchedSection extends refractionModules.frontend.handlers.StretchedElement {
 	getStretchedClass() {
-		return 'elementor-section-stretched';
+		return 'refraction-section-stretched';
 	}
 
 	getStretchSettingName() {

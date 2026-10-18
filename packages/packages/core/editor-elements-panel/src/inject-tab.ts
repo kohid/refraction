@@ -4,7 +4,7 @@ import {
 	routeOpenEvent,
 	v1ReadyEvent,
 	windowEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 import { LEGACY_ELEMENTS_PANEL_ROUTE_PREFIX } from './consts';
 import { registerTab } from './tabs';
@@ -23,7 +23,7 @@ export function injectTab( { id, label, component, position }: Config ) {
 	registerTab( { id, label, component } );
 
 	listenTo( v1ReadyEvent(), () => {
-		window.elementor?.hooks?.addFilter( 'panel/elements/regionViews', ( regions, { elements } ) => {
+		window.refraction?.hooks?.addFilter( 'panel/elements/regionViews', ( regions, { elements } ) => {
 			// Creating a empty legacy view that will be replaced by react component.
 			regions[ id ] = { region: elements, view: createLegacyView() };
 
@@ -31,7 +31,7 @@ export function injectTab( { id, label, component, position }: Config ) {
 		} );
 	} );
 
-	listenTo( windowEvent( 'elementor/panel/init' ), () => {
+	listenTo( windowEvent( 'refraction/panel/init' ), () => {
 		// when adding a tab to the legacy elements panel, it will generate new route based on the id.
 		getLegacyElementsPanelComponent().addTab( id, { title: label } );
 	} );

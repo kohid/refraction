@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Modules\System_Info\Reporters;
+namespace Refraction\Modules\System_Info\Reporters;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor user report.
+ * Refraction user report.
  *
- * Elementor system report handler class responsible for generating a report for
+ * Refraction system report handler class responsible for generating a report for
  * the user.
  *
  * @since 1.0.0

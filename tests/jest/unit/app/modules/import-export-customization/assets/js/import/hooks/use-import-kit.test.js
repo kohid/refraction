@@ -1,29 +1,29 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useImportKit, IMPORT_PROCESSING_STATUS } from 'elementor/app/modules/import-export-customization/assets/js/import/hooks/use-import-kit';
+import { useImportKit, IMPORT_PROCESSING_STATUS } from 'refraction/app/modules/import-export-customization/assets/js/import/hooks/use-import-kit';
 
 const mockDispatch = jest.fn();
 const mockUseImportContext = jest.fn();
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
-	...jest.requireActual( 'elementor/app/modules/import-export-customization/assets/js/import/context/import-context' ),
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
+	...jest.requireActual( 'refraction/app/modules/import-export-customization/assets/js/import/context/import-context' ),
 	useImportContext: () => mockUseImportContext(),
 } ) );
 
 describe( 'useImportKit Hook', () => {
 	let mockFetch;
-	let mockElementorAppConfig;
+	let mockRefractionAppConfig;
 	let mockWpApiSettings;
 
 	beforeEach( () => {
 		mockFetch = jest.fn();
 		global.fetch = mockFetch;
 		mockDispatch.mockClear();
-		mockElementorAppConfig = {
+		mockRefractionAppConfig = {
 			'import-export-customization': {
-				restApiBaseUrl: 'https://example.com/wp-json/elementor/v1',
+				restApiBaseUrl: 'https://example.com/wp-json/refraction/v1',
 			},
 		};
-		global.elementorAppConfig = mockElementorAppConfig;
+		global.refractionAppConfig = mockRefractionAppConfig;
 		mockWpApiSettings = { nonce: 'wp-nonce' };
 		window.wpApiSettings = mockWpApiSettings;
 	} );
@@ -90,7 +90,7 @@ describe( 'useImportKit Hook', () => {
 		// Assert
 		await waitFor( () => {
 			expect( mockFetch ).toHaveBeenCalledWith(
-				'https://example.com/wp-json/elementor/v1/import',
+				'https://example.com/wp-json/refraction/v1/import',
 				expect.objectContaining( {
 					method: 'POST',
 					headers: expect.objectContaining( { 'X-WP-Nonce': 'wp-nonce' } ),

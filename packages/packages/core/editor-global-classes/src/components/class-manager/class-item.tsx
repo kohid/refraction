@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRef, useState } from 'react';
-import { validateStyleLabel } from '@elementor/editor-styles-repository';
-import { EditableField, EllipsisWithTooltip, MenuListItem, useEditable, WarningInfotip } from '@elementor/editor-ui';
+import { validateStyleLabel } from '@refraction/editor-styles-repository';
+import { EditableField, EllipsisWithTooltip, MenuListItem, useEditable, WarningInfotip } from '@refraction/editor-ui';
 import { DotsVerticalIcon, RefreshIcon, RefreshOffIcon } from '@elementor/icons';
 import {
 	bindMenu,
@@ -110,7 +110,7 @@ export const ClassItem = ( {
 						<Tooltip
 							placement="top"
 							className={ 'class-item-more-actions' }
-							title={ __( 'More actions', 'elementor' ) }
+							title={ __( 'More actions', 'refraction' ) }
 						>
 							<IconButton size="tiny" { ...bindTrigger( popupState ) } aria-label="More actions">
 								<DotsVerticalIcon fontSize="tiny" />
@@ -138,7 +138,7 @@ export const ClassItem = ( {
 					} }
 				>
 					<Typography variant="caption" sx={ { color: 'text.primary' } }>
-						{ __( 'Rename', 'elementor' ) }
+						{ __( 'Rename', 'refraction' ) }
 					</Typography>
 				</MenuListItem>
 				{ onToggleSync && (
@@ -152,8 +152,8 @@ export const ClassItem = ( {
 							{ syncToV3 ? <RefreshOffIcon fontSize="tiny" /> : <RefreshIcon fontSize="tiny" /> }
 							<Typography variant="caption" sx={ { color: 'text.primary' } }>
 								{ syncToV3
-									? __( 'Stop syncing to Global Fonts', 'elementor' )
-									: __( 'Sync to Global Fonts', 'elementor' ) }
+									? __( 'Stop syncing to Global Fonts', 'refraction' )
+									: __( 'Sync to Global Fonts', 'refraction' ) }
 							</Typography>
 						</Stack>
 					</MenuListItem>
@@ -165,7 +165,7 @@ export const ClassItem = ( {
 					} }
 				>
 					<Typography variant="caption" sx={ { color: 'error.light' } }>
-						{ __( 'Delete', 'elementor' ) }
+						{ __( 'Delete', 'refraction' ) }
 					</Typography>
 				</MenuListItem>
 			</Menu>

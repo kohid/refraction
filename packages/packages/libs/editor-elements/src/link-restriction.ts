@@ -1,4 +1,4 @@
-import { type LinkPropValue } from '@elementor/editor-props';
+import { type LinkPropValue } from '@refraction/editor-props';
 
 import { getElementSetting } from './sync/get-element-setting';
 import { getPreviewElementDOM } from './sync/get-preview-element-dom';
@@ -102,7 +102,7 @@ export function isElementAnchored( elementId: string ): boolean {
 
 function doesElementContainAnchor( element: Element ): boolean {
 	for ( const child of Array.from( element.children ) as HTMLElement[] ) {
-		if ( isElementorElement( child ) ) {
+		if ( isRefractionElement( child ) ) {
 			continue;
 		}
 
@@ -146,6 +146,6 @@ function getElementDOM( id: string ) {
 	return getPreviewElementDOM( id );
 }
 
-function isElementorElement( element: Element ): boolean {
+function isRefractionElement( element: Element ): boolean {
 	return element.hasAttribute( 'data-id' );
 }

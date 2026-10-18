@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Modules\Library\Documents;
+namespace Refraction\Modules\Library\Documents;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor section library document.
+ * Refraction section library document.
  *
- * Elementor section library document handler class is responsible for
+ * Refraction section library document handler class is responsible for
  * handling a document of a section type.
  *
  * @since 2.0.0
@@ -40,10 +40,10 @@ class Section extends Library_Document {
 	 * @return string Document title.
 	 */
 	public static function get_title() {
-		return esc_html__( 'Section', 'elementor' );
+		return esc_html__( 'Section', 'refraction' );
 	}
 
 	public static function get_plural_title() {
-		return esc_html__( 'Sections', 'elementor' );
+		return esc_html__( 'Sections', 'refraction' );
 	}
 }

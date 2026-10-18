@@ -1,4 +1,4 @@
-import { convertSizeToFrString, findChildWithAnchor, findParentWithAnchor } from 'elementor-editor-utils/helpers';
+import { convertSizeToFrString, findChildWithAnchor, findParentWithAnchor } from 'refraction-editor-utils/helpers';
 
 describe( 'convertSizeToFrString', () => {
 	test( 'Size 1 to 1fr', () => {

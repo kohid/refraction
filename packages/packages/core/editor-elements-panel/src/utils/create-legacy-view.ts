@@ -5,7 +5,7 @@ export function createLegacyView() {
 		template: `<div></div>`,
 
 		initialize() {
-			getWindow().elementor.getPanelView().getCurrentPageView().search.reset();
+			getWindow().refraction.getPanelView().getCurrentPageView().search.reset();
 		},
 	} );
 }

@@ -7,7 +7,7 @@ describe( 'Document', () => {
 	beforeEach( async () => {
 		childModel = await setupMock();
 
-		document = new ( await import( 'elementor-elements/models/document' ) ).default;
+		document = new ( await import( 'refraction-elements/models/document' ) ).default;
 	} );
 
 	afterEach( freeMock );

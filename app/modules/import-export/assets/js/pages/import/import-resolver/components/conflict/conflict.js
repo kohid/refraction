@@ -4,11 +4,11 @@ import { ImportContext } from '../../../../../context/import-context/import-cont
 import { SharedContext } from '../../../../../context/shared-context/shared-context-provider';
 
 import ConflictCheckbox from './components/conflict-checkbox/conflict-checkbox';
-import Heading from 'elementor-app/ui/atoms/heading';
-import Text from 'elementor-app/ui/atoms/text';
-import Grid from 'elementor-app/ui/grid/grid';
-import Button from 'elementor-app/ui/molecules/button';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import Heading from 'refraction-app/ui/atoms/heading';
+import Text from 'refraction-app/ui/atoms/text';
+import Grid from 'refraction-app/ui/grid/grid';
+import Button from 'refraction-app/ui/molecules/button';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
 export default function Conflict( props ) {
 	const importContext = useContext( ImportContext ),
@@ -17,7 +17,7 @@ export default function Conflict( props ) {
 		{ currentPage } = sharedContext.data,
 		getConflictTitle = ( id ) => {
 			const templateType = manifest.templates[ id ].doc_type,
-				summaryTitle = elementorAppConfig[ 'import-export' ].summaryTitles.templates?.[ templateType ];
+				summaryTitle = refractionAppConfig[ 'import-export' ].summaryTitles.templates?.[ templateType ];
 
 			return summaryTitle?.single || templateType;
 		},
@@ -27,7 +27,7 @@ export default function Conflict( props ) {
 				url={ editUrl }
 				target="_blank"
 				icon="eicon-editor-external-link"
-				text={ __( 'Edit Template', 'elementor' ) }
+				text={ __( 'Edit Template', 'refraction' ) }
 				hideText
 				onClick={ () => {
 					if ( props.onClick ) {
@@ -76,11 +76,11 @@ export default function Conflict( props ) {
 
 				<Grid item>
 					<Text variant="sm" tag="span" className={ getImportedAssetClasses( props.importedId ) }>
-						{ __( 'Imported', 'elementor' ) }: { manifest.templates[ props.importedId ].title }
+						{ __( 'Imported', 'refraction' ) }: { manifest.templates[ props.importedId ].title }
 					</Text>
 
 					<Text style variant="sm" tag="span" className={ getExistingAssetClasses( props.importedId ) }>
-						{ __( 'Existing', 'elementor' ) }: { props.conflictData.template_title } { getEditTemplateButton( props.conflictData.edit_url, props.conflictData.template_title ) }
+						{ __( 'Existing', 'refraction' ) }: { props.conflictData.template_title } { getEditTemplateButton( props.conflictData.edit_url, props.conflictData.template_title ) }
 					</Text>
 				</Grid>
 			</Grid>

@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { styled, SvgIcon, type SvgIconProps, ToggleButton, type ToggleButtonProps } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
-interface StyledElementorLogoProps extends SvgIconProps {
+interface StyledRefractionLogoProps extends SvgIconProps {
 	showMenuIcon?: boolean;
 }
 
 type ToolbarLogoProps = Omit< ToggleButtonProps, 'value' >;
 
-const ElementorLogo = ( props: SvgIconProps ) => {
+const RefractionLogo = ( props: SvgIconProps ) => {
 	return (
 		<SvgIcon viewBox="0 0 32 32" { ...props }>
 			<g>
@@ -35,9 +35,9 @@ const StyledToggleButton = styled( ToggleButton )( ( { theme } ) => ( {
 	},
 } ) );
 
-const StyledElementorLogo = styled( ElementorLogo, {
+const StyledRefractionLogo = styled( RefractionLogo, {
 	shouldForwardProp: ( prop ) => prop !== 'showMenuIcon',
-} )< StyledElementorLogoProps >( ( { theme, showMenuIcon } ) => ( {
+} )< StyledRefractionLogoProps >( ( { theme, showMenuIcon } ) => ( {
 	'& path': {
 		fill: theme.palette.background.default,
 		transition: 'all 0.2s linear',
@@ -74,10 +74,10 @@ export default function ToolbarLogo( props: ToolbarLogoProps ) {
 			onMouseEnter={ () => setIsHoverState( true ) }
 			onMouseLeave={ () => setIsHoverState( false ) }
 		>
-			<StyledElementorLogo
+			<StyledRefractionLogo
 				fontSize="large"
 				showMenuIcon={ showMenuIcon }
-				titleAccess={ __( 'Elementor Logo', 'elementor' ) }
+				titleAccess={ __( 'Refraction Logo', 'refraction' ) }
 			/>
 		</StyledToggleButton>
 	);

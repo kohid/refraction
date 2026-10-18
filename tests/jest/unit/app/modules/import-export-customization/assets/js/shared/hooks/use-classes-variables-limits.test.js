@@ -1,5 +1,5 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useClassesVariablesLimits } from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-classes-variables-limits';
+import { useClassesVariablesLimits } from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-classes-variables-limits';
 
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
@@ -13,12 +13,12 @@ describe( 'useClassesVariablesLimits Hook', () => {
 			nonce: 'test-nonce',
 		};
 
-		global.window.elementorAppConfig = undefined;
+		global.window.refractionAppConfig = undefined;
 	} );
 
 	afterEach( () => {
 		jest.clearAllMocks();
-		global.window.elementorAppConfig = undefined;
+		global.window.refractionAppConfig = undefined;
 	} );
 
 	describe( 'Initial State', () => {
@@ -51,7 +51,7 @@ describe( 'useClassesVariablesLimits Hook', () => {
 
 		it( 'should use limits from config when available', () => {
 			// Arrange
-			global.window.elementorAppConfig = {
+			global.window.refractionAppConfig = {
 				'import-export-customization': {
 					limits: {
 						classes: 200,
@@ -72,7 +72,7 @@ describe( 'useClassesVariablesLimits Hook', () => {
 
 		it( 'should fallback to default limits when config is missing', () => {
 			// Arrange
-			global.window.elementorAppConfig = {
+			global.window.refractionAppConfig = {
 				'import-export-customization': {},
 			};
 
@@ -123,7 +123,7 @@ describe( 'useClassesVariablesLimits Hook', () => {
 
 			expect( mockFetch ).toHaveBeenCalledTimes( 2 );
 			expect( mockFetch ).toHaveBeenCalledWith(
-				'https://example.com/wp-json/elementor/v1/global-classes',
+				'https://example.com/wp-json/refraction/v1/global-classes',
 				expect.objectContaining( {
 					headers: {
 						'X-WP-Nonce': 'test-nonce',
@@ -131,7 +131,7 @@ describe( 'useClassesVariablesLimits Hook', () => {
 				} ),
 			);
 			expect( mockFetch ).toHaveBeenCalledWith(
-				'https://example.com/wp-json/elementor/v1/variables/list',
+				'https://example.com/wp-json/refraction/v1/variables/list',
 				expect.objectContaining( {
 					headers: {
 						'X-WP-Nonce': 'test-nonce',
@@ -234,7 +234,7 @@ describe( 'useClassesVariablesLimits Hook', () => {
 			// Assert
 			await waitFor( () => {
 				expect( mockFetch ).toHaveBeenCalledWith(
-					'/wp-json/elementor/v1/global-classes',
+					'/wp-json/refraction/v1/global-classes',
 					expect.any( Object ),
 				);
 			} );

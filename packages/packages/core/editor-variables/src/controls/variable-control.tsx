@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
-import { type TransformablePropValue } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { type TransformablePropValue } from '@refraction/editor-props';
 
 import { AssignedVariable } from '../components/ui/variable/assigned-variable';
 import { DeletedVariable } from '../components/ui/variable/deleted-variable';

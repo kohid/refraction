@@ -1,6 +1,6 @@
 export class Events {
 	/**
-	 * Dispatch an Elementor event.
+	 * Dispatch a Refraction event.
 	 *
 	 * Will dispatch both native event & jQuery event (as BC).
 	 * By default, `bcEvent` is `null`.

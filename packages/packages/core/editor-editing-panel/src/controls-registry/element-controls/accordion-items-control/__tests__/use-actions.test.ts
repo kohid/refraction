@@ -7,12 +7,12 @@ import {
 	removeElements,
 	type V1Element,
 	type V1ElementData,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 import { renderHook } from '@testing-library/react';
 
 import { useActions } from '../use-actions';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 describe( 'accordion-items-control actions', () => {
 	const ACCORDION_ID = 'accordion-123';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createElement, useRef } from 'react';
-import { EllipsisWithTooltip } from '@elementor/editor-ui';
+import { EllipsisWithTooltip } from '@refraction/editor-ui';
 import { GripVerticalIcon } from '@elementor/icons';
 import { IconButton, Stack, TableRow, type UnstableSortableItemRenderProps } from '@elementor/ui';
 

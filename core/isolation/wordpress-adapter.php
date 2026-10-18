@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Isolation;
+namespace Refraction\Core\Isolation;
 
-use Elementor\Core\Settings\Manager;
-use Elementor\Core\Upgrade\Manager as Upgrade_Manager;
+use Refraction\Core\Settings\Manager;
+use Refraction\Core\Upgrade\Manager as Upgrade_Manager;
 
 class Wordpress_Adapter implements Wordpress_Adapter_Interface {
 

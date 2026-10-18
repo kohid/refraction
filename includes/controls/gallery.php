@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor gallery control.
+ * Refraction gallery control.
  *
  * A base control for creating gallery chooser control. Based on the WordPress
  * media library galleries. Used to select images from the WordPress media library.
@@ -34,7 +34,7 @@ class Control_Gallery extends Base_Data_Control {
 	public function on_export( $settings ) {
 		foreach ( $settings as $attachment ) {
 			if ( ! empty( $attachment['url'] ) ) {
-				do_action( 'elementor/templates/collect_media_url', $attachment['url'], $attachment );
+				do_action( 'refraction/templates/collect_media_url', $attachment['url'], $attachment );
 			}
 		}
 
@@ -45,7 +45,7 @@ class Control_Gallery extends Base_Data_Control {
 	 * Import gallery images.
 	 *
 	 * Used to import gallery control files from external sites while importing
-	 * Elementor template JSON file, and replacing the old data.
+	 * Refraction template JSON file, and replacing the old data.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -60,7 +60,7 @@ class Control_Gallery extends Base_Data_Control {
 				continue;
 			}
 
-			$local_file_path = \Elementor\TemplateLibrary\Classes\Media_Mapper::get_local_file_path( $attachment['url'] );
+			$local_file_path = \Refraction\TemplateLibrary\Classes\Media_Mapper::get_local_file_path( $attachment['url'] );
 			$imported_attachment = false;
 
 			if ( $local_file_path !== $attachment['url'] && file_exists( $local_file_path ) ) {
@@ -92,26 +92,26 @@ class Control_Gallery extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<div class="elementor-control-title">{{{ data.label }}}</div>
-			<div class="elementor-control-input-wrapper">
+		<div class="refraction-control-field">
+			<div class="refraction-control-title">{{{ data.label }}}</div>
+			<div class="refraction-control-input-wrapper">
 				<# if ( data.description ) { #>
-				<div class="elementor-control-field-description">{{{ data.description }}}</div>
+				<div class="refraction-control-field-description">{{{ data.description }}}</div>
 				<# } #>
-				<div class="elementor-control-media__content elementor-control-tag-area">
-					<div class="elementor-control-gallery-status elementor-control-dynamic-switcher-wrapper">
-						<span class="elementor-control-gallery-status-title"></span>
-						<button class="elementor-control-gallery-clear elementor-control-unit-1 tooltip-target" data-tooltip="<?php echo esc_attr__( 'Clear gallery', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Clear gallery', 'elementor' ); ?>">
+				<div class="refraction-control-media__content refraction-control-tag-area">
+					<div class="refraction-control-gallery-status refraction-control-dynamic-switcher-wrapper">
+						<span class="refraction-control-gallery-status-title"></span>
+						<button class="refraction-control-gallery-clear refraction-control-unit-1 tooltip-target" data-tooltip="<?php echo esc_attr__( 'Clear gallery', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Clear gallery', 'refraction' ); ?>">
 							<i class="eicon-trash-o" aria-hidden="true"></i>
 						</button>
 					</div>
-					<div class="elementor-control-gallery-content">
-						<div class="elementor-control-gallery-thumbnails" tabindex="0"></div>
-						<div class="elementor-control-gallery-edit">
+					<div class="refraction-control-gallery-content">
+						<div class="refraction-control-gallery-thumbnails" tabindex="0"></div>
+						<div class="refraction-control-gallery-edit">
 							<span><i class="eicon-pencil" aria-hidden="true"></i></span>
-							<span class="elementor-screen-only"><?php echo esc_html__( 'Edit gallery', 'elementor' ); ?></span>
+							<span class="refraction-screen-only"><?php echo esc_html__( 'Edit gallery', 'refraction' ); ?></span>
 						</div>
-						<button class="elementor-button elementor-control-gallery-add tooltip-target" data-tooltip="<?php echo esc_attr__( 'Add Images', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Add Images', 'elementor' ); ?>">
+						<button class="refraction-button refraction-control-gallery-add tooltip-target" data-tooltip="<?php echo esc_attr__( 'Add Images', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Add Images', 'refraction' ); ?>">
 							<i class="eicon-plus-circle" aria-hidden="true"></i>
 						</button>
 					</div>

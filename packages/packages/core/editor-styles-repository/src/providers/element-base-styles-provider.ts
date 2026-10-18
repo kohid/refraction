@@ -1,4 +1,4 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { getWidgetsCache } from '@refraction/editor-elements';
 
 import { createStylesProvider } from '../utils/create-styles-provider';
 

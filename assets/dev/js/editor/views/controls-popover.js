@@ -2,7 +2,7 @@ export default class ControlsPopover {
 	constructor( child ) {
 		this.child = child;
 
-		this.$popover = jQuery( '<div>', { class: 'elementor-controls-popover' } );
+		this.$popover = jQuery( '<div>', { class: 'refraction-controls-popover' } );
 
 		child.$el.before( this.$popover );
 
@@ -23,10 +23,10 @@ export default class ControlsPopover {
 	createPopoverHeader() {
 		const $popoverToggleControl = this.$popover.prev(),
 			// Get the existing reset button.
-			$resetLabel = $popoverToggleControl.find( '.elementor-control-popover-toggle-reset-label' );
+			$resetLabel = $popoverToggleControl.find( '.refraction-control-popover-toggle-reset-label' );
 
 		this.$popoverHeader = jQuery( '<div>', { class: 'e-group-control-header' } )
-			.html( '<span>' + __( 'Typography', 'elementor' ) + '</span>' );
+			.html( '<span>' + __( 'Typography', 'refraction' ) + '</span>' );
 
 		this.$headerControlsWrapper = jQuery( '<div>', { class: 'e-control-tools' } );
 
@@ -81,7 +81,7 @@ export default class ControlsPopover {
 		this.$addButton.on( 'click', () => this.onAddButtonClick() );
 
 		this.$addButton.tipsy( {
-			title: () => __( 'Create New Global Font', 'elementor' ),
+			title: () => __( 'Create New Global Font', 'refraction' ),
 			gravity: () => 's',
 		} );
 	}

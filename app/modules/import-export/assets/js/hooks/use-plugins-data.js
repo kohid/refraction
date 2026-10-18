@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
 export const PLUGINS_KEYS = Object.freeze( {
-	ELEMENTOR: 'Elementor',
-	ELEMENTOR_PRO: 'Elementor Pro',
+	REFRACTION: 'Refraction',
+	REFRACTION_PRO: 'Refraction Pro',
 } );
 
 export default function usePluginsData( plugins ) {
@@ -11,26 +11,26 @@ export default function usePluginsData( plugins ) {
 			return [];
 		}
 
-		const elementorPlugins = [],
+		const refractionPlugins = [],
 			generalPlugins = [];
 
 		plugins.forEach( ( plugin ) => {
 			switch ( plugin.name ) {
-				case PLUGINS_KEYS.ELEMENTOR:
+				case PLUGINS_KEYS.REFRACTION:
 					// Making sure that the core plugin is always first.
-					elementorPlugins.unshift( plugin );
+					refractionPlugins.unshift( plugin );
 					break;
-				case PLUGINS_KEYS.ELEMENTOR_PRO:
+				case PLUGINS_KEYS.REFRACTION_PRO:
 					// Making sure that the pro plugin is always second.
-					elementorPlugins.push( plugin );
+					refractionPlugins.push( plugin );
 					break;
 				default:
 					generalPlugins.push( plugin );
 			}
 		} );
 
-		// Making sure that the elementor plugins are always first.
-		return elementorPlugins.concat( generalPlugins );
+		// Making sure that the refraction plugins are always first.
+		return refractionPlugins.concat( generalPlugins );
 	};
 
 	return {

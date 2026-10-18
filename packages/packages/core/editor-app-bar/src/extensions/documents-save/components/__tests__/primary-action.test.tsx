@@ -3,18 +3,18 @@ import { createMockDocument, renderWithTheme } from 'test-utils';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
-} from '@elementor/editor-documents';
-import { useEditMode } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-documents';
+import { useEditMode } from '@refraction/editor-v1-adapters';
 import { fireEvent, screen } from '@testing-library/react';
 
 import PrimaryAction from '../primary-action';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useActiveDocumentActions: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 const actionsMock = {
 	save: jest.fn(),
@@ -23,7 +23,7 @@ const actionsMock = {
 	copyAndShare: jest.fn(),
 };
 
-describe( '@elementor/editor-app-bar - Top Bar Primary Action', () => {
+describe( '@refraction/editor-app-bar - Top Bar Primary Action', () => {
 	beforeEach( () => {
 		jest.mocked( useActiveDocumentActions ).mockReturnValue( actionsMock );
 		jest.mocked( useEditMode ).mockReturnValue( 'edit' );

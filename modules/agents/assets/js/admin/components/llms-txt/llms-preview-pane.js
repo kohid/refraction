@@ -17,13 +17,13 @@ export const LlmsPreviewPane = ( { content, hasActions, onEdit, onExpand } ) => 
 			</Typography>
 			{ hasActions && (
 				<Stack direction="row" spacing={ 1 }>
-					<Tooltip title={ __( 'Edit', 'elementor' ) }>
-						<IconButton variant="outlined" size="xsmall" onClick={ onEdit } aria-label={ __( 'Edit', 'elementor' ) }>
+					<Tooltip title={ __( 'Edit', 'refraction' ) }>
+						<IconButton variant="outlined" size="xsmall" onClick={ onEdit } aria-label={ __( 'Edit', 'refraction' ) }>
 							<PencilIcon fontSize="small" />
 						</IconButton>
 					</Tooltip>
-					<Tooltip title={ __( 'Full screen', 'elementor' ) }>
-						<IconButton variant="outlined" size="small" onClick={ onExpand } aria-label={ __( 'Full screen', 'elementor' ) }>
+					<Tooltip title={ __( 'Full screen', 'refraction' ) }>
+						<IconButton variant="outlined" size="small" onClick={ onExpand } aria-label={ __( 'Full screen', 'refraction' ) }>
 							<ArrowsDiagonalIcon fontSize="xsmall" />
 						</IconButton>
 					</Tooltip>

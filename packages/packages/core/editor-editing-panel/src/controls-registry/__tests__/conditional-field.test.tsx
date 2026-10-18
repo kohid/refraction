@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockPropType } from 'test-utils';
-import { PropKeyProvider, PropProvider } from '@elementor/editor-controls';
-import { type Dependency, type PropType, type PropValue } from '@elementor/editor-props';
+import { PropKeyProvider, PropProvider } from '@refraction/editor-controls';
+import { type Dependency, type PropType, type PropValue } from '@refraction/editor-props';
 import { render, screen } from '@testing-library/react';
 
 import { useInheritedValues } from '../../contexts/styles-inheritance-context';

@@ -35,10 +35,10 @@ ModuleMock.extend = function( properties ) {
 	return ChildModuleMock;
 };
 
-global.elementorModules = {
+global.refractionModules = {
 	Module: ModuleMock,
 };
 
-global.elementorAppConfig = {
+global.refractionAppConfig = {
 	hasPro: true,
 };

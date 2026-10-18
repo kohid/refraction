@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Core\Editor\Loader;
+namespace Refraction\Core\Editor\Loader;
 
-use Elementor\Core\Debug\Loading_Inspection_Manager;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Group_Control_Typography;
-use Elementor\Icons_Manager;
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Shapes;
-use Elementor\Tools;
-use Elementor\User;
+use Refraction\Core\Debug\Loading_Inspection_Manager;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Group_Control_Typography;
+use Refraction\Icons_Manager;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\Shapes;
+use Refraction\Tools;
+use Refraction\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -26,13 +26,13 @@ class Editor_Scripts_Settings {
 
 		$page_title_selector = $kits_manager->get_current_settings( 'page_title_selector' );
 
-		$page_title_selector .= ', .elementor-page-title .elementor-heading-title';
+		$page_title_selector .= ', .refraction-page-title .refraction-heading-title';
 
 		$client_env = [
 			'initial_document' => $document->get_config(),
-			'version' => ELEMENTOR_VERSION,
+			'version' => REFRACTION_VERSION,
 			'home_url' => home_url(),
-			'admin_settings_url' => admin_url( 'admin.php?page=' . 'elementor-settings' ),
+			'admin_settings_url' => admin_url( 'admin.php?page=' . 'refraction-settings' ),
 			'admin_tools_url' => admin_url( 'admin.php?page=' . Tools::PAGE_ID ),
 			'autosave_interval' => AUTOSAVE_INTERVAL,
 			'tabs' => Plugin::$instance->controls_manager->get_tabs(),
@@ -47,7 +47,7 @@ class Editor_Scripts_Settings {
 			'icons' => [
 				'libraries' => Icons_Manager::get_icon_manager_tabs_config(),
 			],
-			'fa4_to_fa5_mapping_url' => ELEMENTOR_ASSETS_URL . 'lib/font-awesome/migration/mapping.js',
+			'fa4_to_fa5_mapping_url' => REFRACTION_ASSETS_URL . 'lib/font-awesome/migration/mapping.js',
 			'settings' => $settings,
 			'wp_editor' => static::get_wp_editor_config(),
 			'settings_page_link' => Settings::get_url(),
@@ -75,7 +75,7 @@ class Editor_Scripts_Settings {
 			],
 			// Empty array for BC to avoid errors.
 			'i18n' => [],
-			// 'responsive' contains the custom breakpoints config introduced in Elementor v3.2.0
+			// 'responsive' contains the custom breakpoints config introduced in Refraction v3.2.0
 			'responsive' => [
 				'breakpoints' => Plugin::$instance->breakpoints->get_breakpoints_config(),
 				'icons_map' => Plugin::$instance->breakpoints->get_responsive_icons_classes_map(),
@@ -99,7 +99,7 @@ class Editor_Scripts_Settings {
 		 * @param array $client_env  Editor configuration.
 		 * @param int   $post_id The ID of the current post being edited.
 		 */
-		$client_env = apply_filters( 'elementor/editor/localize_settings', $client_env );
+		$client_env = apply_filters( 'refraction/editor/localize_settings', $client_env );
 
 		return $client_env;
 	}
@@ -107,8 +107,8 @@ class Editor_Scripts_Settings {
 	private static function bc_move_document_filters() {
 		global $wp_filter;
 
-		$old_tag = 'elementor/editor/localize_settings';
-		$new_tag = 'elementor/document/config';
+		$old_tag = 'refraction/editor/localize_settings';
+		$new_tag = 'refraction/document/config';
 
 		if ( ! has_filter( $old_tag ) ) {
 			return;
@@ -128,7 +128,7 @@ class Editor_Scripts_Settings {
 	/**
 	 * Get WordPress editor config.
 	 *
-	 * Config the default WordPress editor with custom settings for Elementor use.
+	 * Config the default WordPress editor with custom settings for Refraction use.
 	 *
 	 * @since 1.9.0
 	 * @access private
@@ -151,9 +151,9 @@ class Editor_Scripts_Settings {
 
 		wp_editor(
 			'%%EDITORCONTENT%%',
-			'elementorwpeditor',
+			'refractionwpeditor',
 			[
-				'editor_class' => 'elementor-wp-editor',
+				'editor_class' => 'refraction-wp-editor',
 				'editor_height' => 250,
 				'drag_drop_upload' => true,
 			]

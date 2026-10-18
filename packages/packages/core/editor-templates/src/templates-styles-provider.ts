@@ -1,5 +1,5 @@
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { createStylesProvider } from '@elementor/editor-styles-repository';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { createStylesProvider } from '@refraction/editor-styles-repository';
 
 let styles: StyleDefinition[] = [];
 const listeners = new Set< () => void >();

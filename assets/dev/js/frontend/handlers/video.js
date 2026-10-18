@@ -1,11 +1,11 @@
-export default class Video extends elementorModules.frontend.handlers.Base {
+export default class Video extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				imageOverlay: '.elementor-custom-embed-image-overlay',
-				video: '.elementor-video',
-				videoIframe: '.elementor-video-iframe',
-				playIcon: '.elementor-custom-embed-play',
+				imageOverlay: '.refraction-custom-embed-image-overlay',
+				video: '.refraction-video',
+				videoIframe: '.refraction-video-iframe',
+				playIcon: '.refraction-custom-embed-play',
 			},
 		};
 	}
@@ -65,13 +65,13 @@ export default class Video extends elementorModules.frontend.handlers.Base {
 	}
 
 	async animateVideo() {
-		const lightbox = await elementorFrontend.utils.lightbox;
+		const lightbox = await refractionFrontend.utils.lightbox;
 
 		lightbox.setEntranceAnimation( this.getCurrentDeviceSetting( 'lightbox_content_animation' ) );
 	}
 
 	async hideLightbox() {
-		const lightbox = await elementorFrontend.utils.lightbox;
+		const lightbox = await refractionFrontend.utils.lightbox;
 
 		lightbox.getModal().hide();
 	}
@@ -135,10 +135,10 @@ export default class Video extends elementorModules.frontend.handlers.Base {
 
 		const elementSettings = this.getElementSettings();
 
-		if ( elementorFrontend.utils[ elementSettings.video_type ] ) {
-			this.apiProvider = elementorFrontend.utils[ elementSettings.video_type ];
+		if ( refractionFrontend.utils[ elementSettings.video_type ] ) {
+			this.apiProvider = refractionFrontend.utils[ elementSettings.video_type ];
 		} else {
-			this.apiProvider = elementorFrontend.utils.baseVideoLoader;
+			this.apiProvider = refractionFrontend.utils.baseVideoLoader;
 		}
 
 		if ( 'youtube' !== elementSettings.video_type ) {
@@ -159,7 +159,7 @@ export default class Video extends elementorModules.frontend.handlers.Base {
 		}
 
 		if ( elementSettings.lazy_load ) {
-			this.intersectionObserver = elementorModules.utils.Scroll.scrollObserver( {
+			this.intersectionObserver = refractionModules.utils.Scroll.scrollObserver( {
 				callback: ( event ) => {
 					if ( event.isInViewport ) {
 						this.intersectionObserver.unobserve( this.elements.$video.parent()[ 0 ] );

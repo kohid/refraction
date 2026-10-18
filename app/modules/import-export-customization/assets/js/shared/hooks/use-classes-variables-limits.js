@@ -5,7 +5,7 @@ const DEFAULT_CLASSES_LIMIT = 100;
 const DEFAULT_VARIABLES_LIMIT = 100;
 
 function getLimitsFromConfig() {
-	const config = window.elementorAppConfig?.[ 'import-export-customization' ];
+	const config = window.refractionAppConfig?.[ 'import-export-customization' ];
 
 	return {
 		classes: config?.limits?.classes ?? DEFAULT_CLASSES_LIMIT,
@@ -34,12 +34,12 @@ export function useClassesVariablesLimits( { open, isImport } ) {
 			const nonce = window.wpApiSettings?.nonce || '';
 
 			const [ classesResponse, variablesResponse ] = await Promise.all( [
-				fetch( `${ baseUrl }elementor/v1/global-classes`, {
+				fetch( `${ baseUrl }refraction/v1/global-classes`, {
 					headers: {
 						'X-WP-Nonce': nonce,
 					},
 				} ),
-				fetch( `${ baseUrl }elementor/v1/variables/list`, {
+				fetch( `${ baseUrl }refraction/v1/variables/list`, {
 					headers: {
 						'X-WP-Nonce': nonce,
 					},

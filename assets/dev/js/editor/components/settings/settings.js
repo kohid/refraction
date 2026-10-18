@@ -1,14 +1,14 @@
 import EditorPreferences from './editor-preferences/manager';
 
-module.exports = elementorModules.Module.extend( {
+module.exports = refractionModules.Module.extend( {
 	modules: {
-		base: require( 'elementor-editor/components/settings/base/manager' ),
-		page: require( 'elementor-editor/components/settings/page/manager' ),
+		base: require( 'refraction-editor/components/settings/base/manager' ),
+		page: require( 'refraction-editor/components/settings/page/manager' ),
 		editorPreferences: EditorPreferences,
 	},
 
 	panelPages: {
-		base: require( 'elementor-editor/components/settings/base/panel' ),
+		base: require( 'refraction-editor/components/settings/base/panel' ),
 	},
 
 	onInit() {
@@ -18,7 +18,7 @@ module.exports = elementorModules.Module.extend( {
 	initSettings() {
 		var self = this;
 
-		_.each( elementor.config.settings, function( config, name ) {
+		_.each( refraction.config.settings, function( config, name ) {
 			var Manager = self.modules[ name ] || self.modules.base;
 
 			self[ name ] = new Manager( config );

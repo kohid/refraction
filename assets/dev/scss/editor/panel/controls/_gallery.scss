@@ -1,6 +1,6 @@
-.elementor-control-type-gallery {
+.refraction-control-type-gallery {
 
-	.elementor-control {
+	.refraction-control {
 
 		&-media__content {
 			border: var(--e-a-border-bold);
@@ -39,7 +39,7 @@
 			&:hover,
 			&:focus {
 
-				+ .elementor-control-gallery-edit {
+				+ .refraction-control-gallery-edit {
 					opacity: 1;
 				}
 			}
@@ -101,34 +101,34 @@
 		}
 	}
 
-	&.elementor-gallery-empty {
+	&.refraction-gallery-empty {
 
-		.elementor-control-gallery-clear,
-		.elementor-control-gallery-thumbnails,
-		.elementor-control-gallery-edit {
+		.refraction-control-gallery-clear,
+		.refraction-control-gallery-thumbnails,
+		.refraction-control-gallery-edit {
 			display: none;
 		}
 
-		.elementor-control-gallery-content {
+		.refraction-control-gallery-content {
 			padding: 10px;
 		}
 	}
 
-	&.elementor-gallery-has-images {
+	&.refraction-gallery-has-images {
 
-		.elementor-control-gallery-add {
+		.refraction-control-gallery-add {
 			display: none;
 		}
 	}
 
-	&.elementor-control-dynamic {
+	&.refraction-control-dynamic {
 
-		.elementor-control-gallery-clear {
+		.refraction-control-gallery-clear {
 			border-inline-start: var(--e-a-border);
 		}
 	}
 
-	.elementor-control-gallery-clear {
+	.refraction-control-gallery-clear {
 		color: currentColor;
 		background-color: transparent;
 		border: none;
@@ -141,7 +141,7 @@
 		}
 	}
 
-	.elementor-control-dynamic-switcher {
+	.refraction-control-dynamic-switcher {
 		border-width: 0;
 		border-inline-start-width: 1px;
 		border-block-end-width: 1px;

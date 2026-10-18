@@ -7,7 +7,7 @@ import { wpCli } from '../../../assets/wp-cli';
 
 test.describe( 'Container tests #3 @container', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	// TODO: to be fixed in ED-23584
@@ -29,7 +29,7 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.setWidgetCustomWidth( '80' );
 
 		await editor.addWidget( { widgetType: 'google_maps', container } );
-		await editor.getPreviewFrame().waitForSelector( '.elementor-widget-google_maps iframe' );
+		await editor.getPreviewFrame().waitForSelector( '.refraction-widget-google_maps iframe' );
 		await editor.hideMapControls();
 		await editor.setWidgetCustomWidth( '40' );
 		await editor.setChooseControlValue( '_flex_size', 'eicon-grow' );
@@ -59,7 +59,7 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.togglePreviewMode();
 
 		// Assert.
-		const containerElement = editor.getPreviewFrame().locator( '.elementor-edit-mode .elementor-element-' + container );
+		const containerElement = editor.getPreviewFrame().locator( '.refraction-edit-mode .refraction-element-' + container );
 		expect.soft( await containerElement.screenshot( {
 			type: 'jpeg',
 			quality: 90,
@@ -98,7 +98,7 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.openPanelTab( 'style' );
 		await editor.setChooseControlValue( 'background_background', 'eicon-video-camera' );
 		await editor.setTextControlValue( 'background_video_link', videoURL );
-		await page.locator( '.elementor-control-background_video_fallback .eicon-plus-circle' ).click();
+		await page.locator( '.refraction-control-background_video_fallback .eicon-plus-circle' ).click();
 		await page.locator( '#menu-item-browse' ).click();
 		await page.setInputFiles( 'input[type="file"]', './tests/playwright/resources/mountain-image.jpeg' );
 		await page.waitForLoadState( 'networkidle' );
@@ -109,7 +109,7 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.togglePreviewMode();
 
 		// Assert.
-		const container = editor.getPreviewFrame().locator( '.elementor-element-' + containerId );
+		const container = editor.getPreviewFrame().locator( '.refraction-element-' + containerId );
 		expect.soft( await container.screenshot( {
 			type: 'jpeg',
 			quality: 90,
@@ -157,7 +157,7 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.setColorControlValue( '_background_color', '#A81830' );
 
 		// Assert.
-		const container = editor.getPreviewFrame().locator( '.elementor-edit-mode .elementor-element-' + containerId );
+		const container = editor.getPreviewFrame().locator( '.refraction-edit-mode .refraction-element-' + containerId );
 		expect.soft( await container.screenshot( {
 			type: 'jpeg',
 			quality: 90,
@@ -220,19 +220,19 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.openPanelTab( 'advanced' );
 		await editor.openSection( '_section_transform' );
 		// Set rotation.
-		await page.locator( '.elementor-control-_transform_rotate_popover .elementor-control-popover-toggle-toggle-label' ).click();
-		await page.locator( '.elementor-control-_transform_rotateZ_effect .elementor-control-input-wrapper input' ).fill( '2' );
-		await page.locator( '.elementor-control-_transform_rotate_popover .elementor-control-popover-toggle-toggle-label' ).click();
+		await page.locator( '.refraction-control-_transform_rotate_popover .refraction-control-popover-toggle-toggle-label' ).click();
+		await page.locator( '.refraction-control-_transform_rotateZ_effect .refraction-control-input-wrapper input' ).fill( '2' );
+		await page.locator( '.refraction-control-_transform_rotate_popover .refraction-control-popover-toggle-toggle-label' ).click();
 		// Set scale.
-		await page.locator( '.elementor-control-_transform_scale_popover .elementor-control-popover-toggle-toggle-label' ).click();
-		await page.locator( '.elementor-control-_transform_scale_effect .elementor-control-input-wrapper input' ).fill( '2' );
-		await page.locator( '.elementor-control-_transform_scale_popover .elementor-control-popover-toggle-toggle-label' ).click();
+		await page.locator( '.refraction-control-_transform_scale_popover .refraction-control-popover-toggle-toggle-label' ).click();
+		await page.locator( '.refraction-control-_transform_scale_effect .refraction-control-input-wrapper input' ).fill( '2' );
+		await page.locator( '.refraction-control-_transform_scale_popover .refraction-control-popover-toggle-toggle-label' ).click();
 
 		await editor.addWidget( { widgetType: 'heading', container: containerId } );
 
 		// Assert.
 		// Check rotate and scale value.
-		const containerSelector = '.elementor-edit-mode .elementor-element-' + containerId;
+		const containerSelector = '.refraction-edit-mode .refraction-element-' + containerId;
 		await expect.soft( editor.getPreviewFrame().locator( containerSelector ) ).toHaveCSS( '--e-con-transform-rotateZ', '2deg' );
 		await expect.soft( editor.getPreviewFrame().locator( containerSelector ) ).toHaveCSS( '--e-con-transform-scale', '2' );
 	} );
@@ -252,9 +252,9 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.openSection( 'section_layout_additional_options' );
 		await editor.setSelectControlValue( 'overflow', 'hidden' );
 
-		const containerSelector = '.elementor-edit-mode .elementor-element-' + containerId;
+		const containerSelector = '.refraction-edit-mode .refraction-element-' + containerId;
 		const container = editor.getPreviewFrame().locator( containerSelector );
-		const handles = container.locator( '> .elementor-element-overlay > .elementor-editor-element-settings' );
+		const handles = container.locator( '> .refraction-element-overlay > .refraction-editor-element-settings' );
 
 		await editor.getPreviewFrame().hover( containerSelector );
 
@@ -268,7 +268,7 @@ test.describe( 'Container tests #3 @container', () => {
 
 async function addContainerAndHover( editor: EditorPage ) {
 	const containerId = await editor.addElement( { elType: 'container' }, 'document' );
-	const containerSelector = '.elementor-edit-mode .elementor-element-' + containerId;
+	const containerSelector = '.refraction-edit-mode .refraction-element-' + containerId;
 	const container = editor.getPreviewFrame().locator( containerSelector );
 	await editor.getPreviewFrame().hover( containerSelector );
 

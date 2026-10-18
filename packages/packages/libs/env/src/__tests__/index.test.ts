@@ -1,6 +1,6 @@
 import { __resetEnv, initEnv, InvalidEnvError, parseEnv } from '../index';
 
-describe( '@elementor/env', () => {
+describe( '@refraction/env', () => {
 	it( 'should warn for non existing env key', () => {
 		// Arrange.
 		const mockConsoleWarn = jest.fn();

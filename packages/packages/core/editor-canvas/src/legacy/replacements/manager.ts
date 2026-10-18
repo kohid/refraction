@@ -132,7 +132,7 @@ export const createTemplatedElementTypeWithReplacements = ( {
 		element,
 	} );
 
-	return class extends legacyWindow.elementor.modules.elements.types.Widget {
+	return class extends legacyWindow.refraction.modules.elements.types.Widget {
 		getType() {
 			return type;
 		}

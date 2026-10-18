@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\NestedElements\Base;
+namespace Refraction\Modules\NestedElements\Base;
 
-use Elementor\Plugin;
-use Elementor\Widget_Base;
+use Refraction\Plugin;
+use Refraction\Widget_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class Widget_Nested_Base extends Widget_Base {
 
 	public function render_markdown(): string {
-		return \Elementor\Element_Base::render_markdown();
+		return \Refraction\Element_Base::render_markdown();
 	}
 
 	/**
@@ -40,14 +40,14 @@ abstract class Widget_Nested_Base extends Widget_Base {
 	 * [
 	 *      'elType' => 'container',
 	 *      'settings' => [
-	 *          '_title' => __( 'Tab #1', 'elementor' ),
+	 *          '_title' => __( 'Tab #1', 'refraction' ),
 	 *      ],
 	 * ],
 	 * @return string
 	 */
 	protected function get_default_children_title() {
 		/* translators: %d: Item index. */
-		return esc_html__( 'Item #%d', 'elementor' );
+		return esc_html__( 'Item #%d', 'refraction' );
 	}
 
 	/**
@@ -139,7 +139,7 @@ abstract class Widget_Nested_Base extends Widget_Base {
 		parent::print_template();
 		if ( $this->get_initial_config()['support_improved_repeaters'] ?? false ) {
 			?>
-			<script type="text/html" id="tmpl-elementor-<?php echo esc_attr( $this->get_name() ); ?>-content-single">
+			<script type="text/html" id="tmpl-refraction-<?php echo esc_attr( $this->get_name() ); ?>-content-single">
 				<?php $this->content_template_single_repeater_item(); ?>
 			</script>
 			<?php

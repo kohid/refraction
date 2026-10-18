@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Core\Utils;
+namespace Refraction\Core\Utils;
 
 require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
 require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 use Plugin_Upgrader;
 use WP_Ajax_Upgrader_Skin;
 

@@ -27,7 +27,7 @@ export default function StatusSection( { label, count, color = 'default', defaul
 			>
 				<IconButton
 					size="small"
-					aria-label={ expanded ? __( 'Collapse', 'elementor' ) : __( 'Expand', 'elementor' ) }
+					aria-label={ expanded ? __( 'Collapse', 'refraction' ) : __( 'Expand', 'refraction' ) }
 				>
 					<ChevronDownIcon
 						fontSize="small"

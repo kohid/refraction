@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, createMockSingleSizeFilterPropType, renderControl } from 'test-utils';
-import { FilterRepeaterControl } from '@elementor/editor-controls';
+import { FilterRepeaterControl } from '@refraction/editor-controls';
 import {
 	backdropFilterPropTypeUtil,
 	blurFilterPropTypeUtil,
@@ -8,7 +8,7 @@ import {
 	dropShadowFilterPropTypeUtil,
 	sizePropTypeUtil,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { screen, waitFor } from '@testing-library/react';
 
 import { colorVariablePropTypeUtil, customSizeVariablePropTypeUtil, sizeVariablePropTypeUtil } from '../../prop-types';

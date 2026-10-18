@@ -1,4 +1,4 @@
-export default class extends elementorModules.ViewModule {
+export default class extends refractionModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {
@@ -24,6 +24,6 @@ export default class extends elementorModules.ViewModule {
 	onCloseClick() {
 		this.elements.$notice.slideUp();
 
-		elementorCommon.ajax.addRequest( 'notice_bar_dismiss' );
+		refractionCommon.ajax.addRequest( 'notice_bar_dismiss' );
 	}
 }

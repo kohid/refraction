@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Modules\Library\Documents;
+namespace Refraction\Modules\Library\Documents;
 
-use Elementor\Core\DocumentTypes\Post;
+use Refraction\Core\DocumentTypes\Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor page library document.
+ * Refraction page library document.
  *
- * Elementor page library document handler class is responsible for
+ * Refraction page library document handler class is responsible for
  * handling a document of a page type.
  *
  * @since 2.0.0
@@ -54,15 +54,15 @@ class Page extends Library_Document {
 	 * @return string Document title.
 	 */
 	public static function get_title() {
-		return esc_html__( 'Page', 'elementor' );
+		return esc_html__( 'Page', 'refraction' );
 	}
 
 	public static function get_plural_title() {
-		return esc_html__( 'Pages', 'elementor' );
+		return esc_html__( 'Pages', 'refraction' );
 	}
 
 	public static function get_add_new_title() {
-		return esc_html__( 'Add New Page Template', 'elementor' );
+		return esc_html__( 'Add New Page Template', 'refraction' );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Page extends Library_Document {
 	 * @access public
 	 */
 	public function get_css_wrapper_selector() {
-		return 'body.elementor-page-' . $this->get_main_id();
+		return 'body.refraction-page-' . $this->get_main_id();
 	}
 
 	/**

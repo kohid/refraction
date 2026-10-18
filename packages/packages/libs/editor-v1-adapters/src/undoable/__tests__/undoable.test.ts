@@ -103,7 +103,7 @@ describe( 'undoable', () => {
 
 	it( 'should fail if history manager is not available', () => {
 		// Arrange.
-		( window as unknown as WindowWithHistoryManager ).elementor = {
+		( window as unknown as WindowWithHistoryManager ).refraction = {
 			documents: {},
 		};
 

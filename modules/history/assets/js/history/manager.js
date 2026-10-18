@@ -3,7 +3,7 @@ import ItemModel from './item-model';
 /**
  * TODO: consider refactor this class.
  * TODO: should be `Document/History` component.
- * TODO: should be attached to elementor.history.history + BC.
+ * TODO: should be attached to refraction.history.history + BC.
  */
 export default class HistoryManager {
 	currentItemID = null;
@@ -14,19 +14,19 @@ export default class HistoryManager {
 
 	translations = {
 		// Alphabetical order.
-		add: __( 'Added', 'elementor' ),
-		change: __( 'Edited', 'elementor' ),
-		disable: __( 'Disabled', 'elementor' ),
-		duplicate: __( 'Duplicate', 'elementor' ),
-		enable: __( 'Enabled', 'elementor' ),
-		import: __( 'Imported', 'elementor' ),
-		move: __( 'Moved', 'elementor' ),
-		paste: __( 'Pasted', 'elementor' ),
-		paste_style: __( 'Style Pasted', 'elementor' ),
-		remove: __( 'Removed', 'elementor' ),
-		reset_settings: __( 'Settings Reset', 'elementor' ),
-		reset_style: __( 'Style Reset', 'elementor' ),
-		selected: __( 'Selected', 'elementor' ),
+		add: __( 'Added', 'refraction' ),
+		change: __( 'Edited', 'refraction' ),
+		disable: __( 'Disabled', 'refraction' ),
+		duplicate: __( 'Duplicate', 'refraction' ),
+		enable: __( 'Enabled', 'refraction' ),
+		import: __( 'Imported', 'refraction' ),
+		move: __( 'Moved', 'refraction' ),
+		paste: __( 'Pasted', 'refraction' ),
+		paste_style: __( 'Style Pasted', 'refraction' ),
+		remove: __( 'Removed', 'refraction' ),
+		reset_settings: __( 'Settings Reset', 'refraction' ),
+		reset_style: __( 'Style Reset', 'refraction' ),
+		selected: __( 'Selected', 'refraction' ),
 	};
 
 	constructor( document ) {
@@ -116,7 +116,7 @@ export default class HistoryManager {
 		if ( ! this.items.length ) {
 			this.items.add( {
 				status: 'not_applied',
-				title: __( 'Editing Started', 'elementor' ),
+				title: __( 'Editing Started', 'refraction' ),
 				subTitle: '',
 				action: '',
 				editing_started: true,
@@ -170,7 +170,7 @@ export default class HistoryManager {
 
 		this.setActive( true );
 
-		const panel = elementor.getPanelView(),
+		const panel = refraction.getPanelView(),
 			panelPage = panel.getCurrentPageView(),
 			editedElementView = panelPage.getOption( 'editedElementView' );
 
@@ -208,8 +208,8 @@ export default class HistoryManager {
 
 		this.updateCurrentItem( item );
 
-		if ( viewToScroll && ! elementor.helpers.isInViewport( viewToScroll.$el[ 0 ], elementor.$previewContents.find( 'html' )[ 0 ] ) ) {
-			elementor.helpers.scrollToView( viewToScroll.$el );
+		if ( viewToScroll && ! refraction.helpers.isInViewport( viewToScroll.$el[ 0 ], refraction.$previewContents.find( 'html' )[ 0 ] ) ) {
+			refraction.helpers.scrollToView( viewToScroll.$el );
 		}
 	}
 
@@ -260,7 +260,7 @@ export default class HistoryManager {
 
 	updatePanelPageCurrentItem() {
 		if ( $e.routes.is( 'panel/history/actions' ) ) {
-			elementor.getPanelView().getCurrentPageView().getCurrentTab().updateCurrentItem();
+			refraction.getPanelView().getCurrentPageView().getCurrentTab().updateCurrentItem();
 		}
 	}
 }

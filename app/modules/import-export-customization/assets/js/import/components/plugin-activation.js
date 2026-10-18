@@ -29,7 +29,7 @@ export function PluginActivation( { plugins } ) {
 	return (
 		<Box>
 			<Typography variant="subtitle1" color="text.secondary" sx={ { mb: 2 } }>
-				{ __( 'Activating plugins:', 'elementor' ) }
+				{ __( 'Activating plugins:', 'refraction' ) }
 			</Typography>
 			<Box
 				sx={ {

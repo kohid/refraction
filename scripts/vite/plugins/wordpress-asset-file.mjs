@@ -42,7 +42,7 @@ return [
  */
 export function wordpressAssetFilePlugin( { entryName, entryHandle, outputDir, extraRequests } ) {
 	return {
-		name: 'elementor-wordpress-asset-file',
+		name: 'refraction-wordpress-asset-file',
 		async writeBundle( _, bundle ) {
 			const requests = new Set( extraRequests ?? [] );
 

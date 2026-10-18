@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Modules\Styleguide\Controls;
+namespace Refraction\Modules\Styleguide\Controls;
 
-use Elementor\Control_Switcher;
+use Refraction\Control_Switcher;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

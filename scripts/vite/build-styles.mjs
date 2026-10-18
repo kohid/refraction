@@ -11,7 +11,7 @@ import { resolveFromRoot } from './shared/paths.mjs';
  * Stylesheets are written directly to their final locations by the plugin, so the bundle
  * Rolldown produces for the virtual entry is discarded into a scratch directory.
  */
-const SCRATCH_OUT_DIR = resolveFromRoot( 'node_modules/.cache/elementor-vite/styles' );
+const SCRATCH_OUT_DIR = resolveFromRoot( 'node_modules/.cache/refraction-vite/styles' );
 
 function createStylesConfig( { watch, devMode } ) {
 	return defineConfig( {

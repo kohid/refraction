@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ClassesVariablesSection } from 'elementor/app/modules/import-export-customization/assets/js/shared/components/classes-variables-section';
+import { ClassesVariablesSection } from 'refraction/app/modules/import-export-customization/assets/js/shared/components/classes-variables-section';
 
 global.__ = jest.fn( ( text ) => text );
 

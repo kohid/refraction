@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -13,7 +13,7 @@ class Settings_Agents extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Agents', 'elementor' );
+		return esc_html__( 'Agents', 'refraction' );
 	}
 
 	public function get_group() {

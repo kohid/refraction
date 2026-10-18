@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createMockMenuAction, createMockMenuLink, createMockMenuToggleAction, renderWithTheme } from 'test-utils';
-import { __flushAllInjections } from '@elementor/locations';
+import { __flushAllInjections } from '@refraction/locations';
 import { act, fireEvent, screen } from '@testing-library/react';
 
-jest.mock( '@elementor/editor-current-user', () => ( {
+jest.mock( '@refraction/editor-current-user', () => ( {
 	useCurrentUserCapabilities: () => ( { isAdmin: true, canUser: jest.fn(), capabilities: [] } ),
 } ) );
 

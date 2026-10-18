@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor box shadow control.
+ * Refraction box shadow control.
  *
  * A base control for creating box shadows control. Displays input fields for
  * horizontal shadow, vertical shadow, shadow blur, shadow spread and shadow
@@ -65,22 +65,22 @@ class Control_Box_Shadow extends Control_Base_Multiple {
 	public function get_sliders() {
 		return [
 			'horizontal' => [
-				'label' => esc_html__( 'Horizontal', 'elementor' ),
+				'label' => esc_html__( 'Horizontal', 'refraction' ),
 				'min' => -100,
 				'max' => 100,
 			],
 			'vertical' => [
-				'label' => esc_html__( 'Vertical', 'elementor' ),
+				'label' => esc_html__( 'Vertical', 'refraction' ),
 				'min' => -100,
 				'max' => 100,
 			],
 			'blur' => [
-				'label' => esc_html__( 'Blur', 'elementor' ),
+				'label' => esc_html__( 'Blur', 'refraction' ),
 				'min' => 0,
 				'max' => 100,
 			],
 			'spread' => [
-				'label' => esc_html__( 'Spread', 'elementor' ),
+				'label' => esc_html__( 'Spread', 'refraction' ),
 				'min' => -100,
 				'max' => 100,
 			],
@@ -99,24 +99,24 @@ class Control_Box_Shadow extends Control_Base_Multiple {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-shadow-box">
-			<div class="elementor-control-field elementor-color-picker-wrapper">
-				<label class="elementor-control-title"><?php echo esc_html__( 'Color', 'elementor' ); ?></label>
-				<div class="elementor-control-input-wrapper elementor-control-unit-1">
-					<div class="elementor-color-picker-placeholder"></div>
+		<div class="refraction-shadow-box">
+			<div class="refraction-control-field refraction-color-picker-wrapper">
+				<label class="refraction-control-title"><?php echo esc_html__( 'Color', 'refraction' ); ?></label>
+				<div class="refraction-control-input-wrapper refraction-control-unit-1">
+					<div class="refraction-color-picker-placeholder"></div>
 				</div>
 			</div>
 			<?php
 			foreach ( $this->get_sliders() as $slider_name => $slider ) :
 				?>
-				<div class="elementor-shadow-slider elementor-control-type-slider">
-					<label for="<?php $this->print_control_uid( $slider_name ); ?>" class="elementor-control-title"><?php
+				<div class="refraction-shadow-slider refraction-control-type-slider">
+					<label for="<?php $this->print_control_uid( $slider_name ); ?>" class="refraction-control-title"><?php
 						// PHPCS - the value of $slider['label'] is already escaped.
 						echo $slider['label']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					?></label>
-					<div class="elementor-control-input-wrapper">
-						<div class="elementor-slider" data-input="<?php echo esc_attr( $slider_name ); ?>"></div>
-						<div class="elementor-slider-input elementor-control-unit-2">
+					<div class="refraction-control-input-wrapper">
+						<div class="refraction-slider" data-input="<?php echo esc_attr( $slider_name ); ?>"></div>
+						<div class="refraction-slider-input refraction-control-unit-2">
 							<input id="<?php $this->print_control_uid( $slider_name ); ?>" type="number" min="<?php echo esc_attr( $slider['min'] ); ?>" max="<?php echo esc_attr( $slider['max'] ); ?>" data-setting="<?php echo esc_attr( $slider_name ); ?>"/>
 						</div>
 					</div>

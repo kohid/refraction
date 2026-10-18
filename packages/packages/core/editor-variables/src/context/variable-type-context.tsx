@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, type PropsWithChildren, useContext } from 'react';
-import { type PropTypeKey } from '@elementor/editor-props';
+import { type PropTypeKey } from '@refraction/editor-props';
 
 import { getVariableType } from '../variables-registry/variable-type-registry';
 

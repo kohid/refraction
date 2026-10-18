@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { StyledToggleButton, StyledToggleButtonGroup } from '@elementor/editor-controls';
+import { StyledToggleButton, StyledToggleButtonGroup } from '@refraction/editor-controls';
 import { ArrowDownSmallIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpSmallIcon } from '@elementor/icons';
 import { Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -44,22 +44,22 @@ export function Direction( { value, onChange, interactionType }: DirectionFieldP
 		() => [
 			{
 				dir: 'top' as Direction,
-				label: isIn ? __( 'From top', 'elementor' ) : __( 'To top', 'elementor' ),
+				label: isIn ? __( 'From top', 'refraction' ) : __( 'To top', 'refraction' ),
 				Icon: isIn ? ArrowDownSmallIcon : ArrowUpSmallIcon,
 			},
 			{
 				dir: 'bottom' as Direction,
-				label: isIn ? __( 'From bottom', 'elementor' ) : __( 'To bottom', 'elementor' ),
+				label: isIn ? __( 'From bottom', 'refraction' ) : __( 'To bottom', 'refraction' ),
 				Icon: isIn ? ArrowUpSmallIcon : ArrowDownSmallIcon,
 			},
 			{
 				dir: 'left' as Direction,
-				label: isIn ? __( 'From left', 'elementor' ) : __( 'To left', 'elementor' ),
+				label: isIn ? __( 'From left', 'refraction' ) : __( 'To left', 'refraction' ),
 				Icon: isIn ? ArrowRightIcon : ArrowLeftIcon,
 			},
 			{
 				dir: 'right' as Direction,
-				label: isIn ? __( 'From right', 'elementor' ) : __( 'To right', 'elementor' ),
+				label: isIn ? __( 'From right', 'refraction' ) : __( 'To right', 'refraction' ),
 				Icon: isIn ? ArrowLeftIcon : ArrowRightIcon,
 			},
 		],

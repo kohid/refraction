@@ -1,17 +1,17 @@
-import Switcher from 'elementor-assets-js/editor/controls/switcher';
-import ControlBaseDataView from 'elementor-controls/base-data';
+import Switcher from 'refraction-assets-js/editor/controls/switcher';
+import ControlBaseDataView from 'refraction-controls/base-data';
 
 export default class extends Switcher {
 	initialize() {
 		ControlBaseDataView.prototype.initialize.apply( this, arguments );
 
-		this.$el.addClass( 'elementor-control-type-switcher' );
+		this.$el.addClass( 'refraction-control-type-switcher' );
 	}
 
 	onBeforeRender( ...args ) {
 		super.onBeforeRender( ...args );
 
-		const actualValue = elementor.getPreferences( 'enable_styleguide_preview' );
+		const actualValue = refraction.getPreferences( 'enable_styleguide_preview' );
 
 		if ( actualValue !== this.getCurrentValue() ) {
 			this.setValue( actualValue );

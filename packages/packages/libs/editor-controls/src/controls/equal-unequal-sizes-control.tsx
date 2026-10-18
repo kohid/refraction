@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type ReactNode, type RefObject, useId, useRef } from 'react';
-import { type PropKey, type PropTypeUtil, type PropValue } from '@elementor/editor-props';
+import { type PropKey, type PropTypeUtil, type PropValue } from '@refraction/editor-props';
 import { bindPopover, bindToggle, Box, Grid, Popover, Stack, Tooltip, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -110,7 +110,7 @@ export function EqualUnequalSizesControl< TMultiPropType extends string, TPropVa
 					<Stack direction="row" alignItems="center" gap={ 1 }>
 						<Box flexGrow={ 1 }>
 							<SizeControl
-								placeholder={ isMixed ? __( 'Mixed', 'elementor' ) : undefined }
+								placeholder={ isMixed ? __( 'Mixed', 'refraction' ) : undefined }
 								enablePropTypeUnits={ ! isMixed || ! isMixedPlaceholder }
 								anchorRef={ rowRefs[ 0 ] }
 							/>

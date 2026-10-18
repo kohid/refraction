@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Admin\EditorOneMenu\Menu;
+namespace Refraction\Core\Admin\EditorOneMenu\Menu;
 
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,7 +16,7 @@ class Third_Party_Pages_Menu implements Menu_Item_Third_Level_Interface {
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_HOME_MENU_SLUG;
+		return Menu_Config::REFRACTION_HOME_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -24,7 +24,7 @@ class Third_Party_Pages_Menu implements Menu_Item_Third_Level_Interface {
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Addons', 'elementor' );
+		return esc_html__( 'Addons', 'refraction' );
 	}
 
 	public function get_position(): int {
@@ -32,7 +32,7 @@ class Third_Party_Pages_Menu implements Menu_Item_Third_Level_Interface {
 	}
 
 	public function get_slug(): string {
-		return 'elementor-third-party-pages';
+		return 'refraction-third-party-pages';
 	}
 
 	public function get_icon(): string {

@@ -1,5 +1,5 @@
-import { useBoundProp } from '@elementor/editor-controls';
-import { colorPropTypeUtil, type createPropUtils, stringPropTypeUtil } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { colorPropTypeUtil, type createPropUtils, stringPropTypeUtil } from '@refraction/editor-props';
 import { renderHook } from '@testing-library/react';
 
 import { colorVariablePropTypeUtil } from '../../prop-types/color-variable-prop-type';
@@ -9,7 +9,7 @@ import { useVariable } from '../use-prop-variables';
 
 type PropTypeUtil = ReturnType< typeof createPropUtils >;
 
-jest.mock( '@elementor/editor-controls', () => ( {
+jest.mock( '@refraction/editor-controls', () => ( {
 	useBoundProp: jest.fn(),
 } ) );
 

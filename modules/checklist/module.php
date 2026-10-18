@@ -1,18 +1,18 @@
 <?php
 
-namespace Elementor\Modules\Checklist;
+namespace Refraction\Modules\Checklist;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Modules\ElementorCounter\Module as Elementor_Counter;
-use Elementor\Core\Isolation\Wordpress_Adapter;
-use Elementor\Core\Isolation\Wordpress_Adapter_Interface;
-use Elementor\Core\Isolation\Elementor_Adapter;
-use Elementor\Core\Isolation\Elementor_Adapter_Interface;
-use Elementor\Core\Isolation\Elementor_Counter_Adapter_Interface;
-use Elementor\Plugin;
-use Elementor\Utils;
-use Elementor\Modules\Checklist\Data\Controller;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Modules\RefractionCounter\Module as Refraction_Counter;
+use Refraction\Core\Isolation\Wordpress_Adapter;
+use Refraction\Core\Isolation\Wordpress_Adapter_Interface;
+use Refraction\Core\Isolation\Refraction_Adapter;
+use Refraction\Core\Isolation\Refraction_Adapter_Interface;
+use Refraction\Core\Isolation\Refraction_Counter_Adapter_Interface;
+use Refraction\Plugin;
+use Refraction\Utils;
+use Refraction\Modules\Checklist\Data\Controller;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Module extends BaseModule implements Checklist_Module_Interface {
 	const EXPERIMENT_NAME = 'launchpad-checklist';
-	const DB_OPTION_KEY = 'elementor_checklist';
+	const DB_OPTION_KEY = 'refraction_checklist';
 	const VISIBILITY_SWITCH_ID = 'show_launchpad_checklist';
 	const FIRST_CLOSED_CHECKLIST_IN_EDITOR = 'first_closed_checklist_in_editor';
 	const LAST_OPENED_TIMESTAMP = 'last_opened_timestamp';
@@ -29,22 +29,22 @@ class Module extends BaseModule implements Checklist_Module_Interface {
 
 	private Steps_Manager $steps_manager;
 	private Wordpress_Adapter_Interface $wordpress_adapter;
-	private Elementor_Adapter_Interface $elementor_adapter;
-	private Elementor_Counter_Adapter_Interface $counter_adapter;
+	private Refraction_Adapter_Interface $refraction_adapter;
+	private Refraction_Counter_Adapter_Interface $counter_adapter;
 	private $user_progress = null;
 
 	/**
 	 * @param ?Wordpress_Adapter_Interface $wordpress_adapter
-	 * @param ?Elementor_Adapter_Interface $elementor_adapter
+	 * @param ?Refraction_Adapter_Interface $refraction_adapter
 	 *
 	 * @return void
 	 */
 	public function __construct(
 		?Wordpress_Adapter_Interface $wordpress_adapter = null,
-		?Elementor_Adapter_Interface $elementor_adapter = null
+		?Refraction_Adapter_Interface $refraction_adapter = null
 	) {
 		$this->wordpress_adapter = $wordpress_adapter ?? new Wordpress_Adapter();
-		$this->elementor_adapter = $elementor_adapter ?? new Elementor_Adapter();
+		$this->refraction_adapter = $refraction_adapter ?? new Refraction_Adapter();
 
 		parent::__construct();
 
@@ -78,8 +78,8 @@ class Module extends BaseModule implements Checklist_Module_Interface {
 	public static function get_experimental_data(): array {
 		return [
 			'name' => self::EXPERIMENT_NAME,
-			'title' => esc_html__( 'Launchpad Checklist', 'elementor' ),
-			'description' => esc_html__( 'Launchpad Checklist feature to boost productivity and deliver your site faster', 'elementor' ),
+			'title' => esc_html__( 'Launchpad Checklist', 'refraction' ),
+			'description' => esc_html__( 'Launchpad Checklist feature to boost productivity and deliver your site faster', 'refraction' ),
 			'hidden' => true,
 			'default' => Experiments_Manager::STATE_INACTIVE,
 			'release_status' => Experiments_Manager::RELEASE_STATUS_STABLE,
@@ -107,7 +107,7 @@ class Module extends BaseModule implements Checklist_Module_Interface {
 
 		$progress = array_merge( $this->get_default_user_progress(), $db_progress );
 
-		$editor_visit_count = $this->elementor_adapter->get_count( Elementor_Counter::EDITOR_COUNTER_KEY );
+		$editor_visit_count = $this->refraction_adapter->get_count( Refraction_Counter::EDITOR_COUNTER_KEY );
 		$progress[ self::SHOULD_OPEN_IN_EDITOR ] = 2 === $editor_visit_count && ! $progress[ self::LAST_OPENED_TIMESTAMP ];
 
 		return $progress;
@@ -155,8 +155,8 @@ class Module extends BaseModule implements Checklist_Module_Interface {
 
 		$this->update_user_progress_in_db();
 
-		if ( isset( $new_data[ Elementor_Counter::EDITOR_COUNTER_KEY ] ) ) {
-			$this->elementor_adapter->set_count( Elementor_Counter::EDITOR_COUNTER_KEY, $new_data[ Elementor_Counter::EDITOR_COUNTER_KEY ] );
+		if ( isset( $new_data[ Refraction_Counter::EDITOR_COUNTER_KEY ] ) ) {
+			$this->refraction_adapter->set_count( Refraction_Counter::EDITOR_COUNTER_KEY, $new_data[ Refraction_Counter::EDITOR_COUNTER_KEY ] );
 		}
 	}
 
@@ -175,33 +175,33 @@ class Module extends BaseModule implements Checklist_Module_Interface {
 	}
 
 	/**
-	 * @return Elementor_Adapter
+	 * @return Refraction_Adapter
 	 */
-	public function get_elementor_adapter(): Elementor_Adapter {
-		return $this->elementor_adapter;
+	public function get_refraction_adapter(): Refraction_Adapter {
+		return $this->refraction_adapter;
 	}
 
 	public function enqueue_editor_scripts(): void {
-		add_action( 'elementor/editor/before_enqueue_scripts', function () {
+		add_action( 'refraction/editor/before_enqueue_scripts', function () {
 			$min_suffix = Utils::is_script_debug() ? '' : '.min';
 
 			wp_enqueue_script(
 				$this->get_name(),
-				ELEMENTOR_ASSETS_URL . 'js/checklist' . $min_suffix . '.js',
+				REFRACTION_ASSETS_URL . 'js/checklist' . $min_suffix . '.js',
 				[
 					'react',
 					'react-dom',
-					'elementor-common',
-					'elementor-v2-ui',
-					'elementor-v2-icons',
-					'elementor-v2-editor-app-bar',
-					'elementor-web-cli',
+					'refraction-common',
+					'refraction-v2-ui',
+					'refraction-v2-icons',
+					'refraction-v2-editor-app-bar',
+					'refraction-web-cli',
 				],
-				ELEMENTOR_VERSION,
+				REFRACTION_VERSION,
 				true
 			);
 
-			wp_set_script_translations( $this->get_name(), 'elementor' );
+			wp_set_script_translations( $this->get_name(), 'refraction' );
 		} );
 	}
 
@@ -216,7 +216,7 @@ class Module extends BaseModule implements Checklist_Module_Interface {
 	}
 
 	public function should_switch_preferences_off(): bool {
-		return ! $this->elementor_adapter->is_active_kit_default() && ! $this->user_progress[ self::LAST_OPENED_TIMESTAMP ] && ! $this->elementor_adapter->get_count( Elementor_Counter::EDITOR_COUNTER_KEY );
+		return ! $this->refraction_adapter->is_active_kit_default() && ! $this->user_progress[ self::LAST_OPENED_TIMESTAMP ] && ! $this->refraction_adapter->get_count( Refraction_Counter::EDITOR_COUNTER_KEY );
 	}
 
 	private function init_user_progress(): void {
@@ -251,7 +251,7 @@ class Module extends BaseModule implements Checklist_Module_Interface {
 			return;
 		}
 
-		add_action( 'elementor/editor/init', function () {
+		add_action( 'refraction/editor/init', function () {
 			$this->wordpress_adapter->set_user_preferences( self::VISIBILITY_SWITCH_ID, '' );
 		}, 11 );
 	}

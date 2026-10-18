@@ -1,16 +1,16 @@
-import { injectIntoLogic } from '@elementor/editor';
+import { injectIntoLogic } from '@refraction/editor';
 import {
 	type CreateTemplatedElementTypeOptions,
 	registerElementType,
 	settingsTransformersRegistry,
-} from '@elementor/editor-canvas';
-import { getV1CurrentDocument } from '@elementor/editor-documents';
-import { registerEditingPanelReplacement } from '@elementor/editor-editing-panel';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { injectTab } from '@elementor/editor-elements-panel';
-import { embeddedDocumentsManager } from '@elementor/editor-embedded-documents-manager';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
-import { __registerSlice as registerSlice } from '@elementor/store';
+} from '@refraction/editor-canvas';
+import { getV1CurrentDocument } from '@refraction/editor-documents';
+import { registerEditingPanelReplacement } from '@refraction/editor-editing-panel';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { injectTab } from '@refraction/editor-elements-panel';
+import { embeddedDocumentsManager } from '@refraction/editor-embedded-documents-manager';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
+import { __registerSlice as registerSlice } from '@refraction/store';
 import { __ } from '@wordpress/i18n';
 
 import { componentInstanceTransformer } from './component-instance-transformer';
@@ -42,11 +42,11 @@ export function init() {
 		} )
 	);
 
-	( window as unknown as ExtendedWindow ).elementorCommon.__beforeSave = beforeSave;
+	( window as unknown as ExtendedWindow ).refractionCommon.__beforeSave = beforeSave;
 
 	injectTab( {
 		id: 'components',
-		label: __( 'Components', 'elementor' ),
+		label: __( 'Components', 'refraction' ),
 		component: Components,
 		position: 1,
 	} );

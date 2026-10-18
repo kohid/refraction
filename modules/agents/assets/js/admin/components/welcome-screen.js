@@ -33,10 +33,10 @@ export const WelcomeScreen = () => {
 			<WelcomeIllustration />
 			<Stack alignItems="center" spacing={ 0.5 } textAlign="center">
 				<Typography variant="h6">
-					{ __( 'Optimize your site for AI agents', 'elementor' ) }
+					{ __( 'Optimize your site for AI agents', 'refraction' ) }
 				</Typography>
 				<Typography variant="body2" color="text.secondary" maxWidth={ 254 }>
-					{ __( 'Enable discovery, access controls, and Markdown tools in one click.', 'elementor' ) }
+					{ __( 'Enable discovery, access controls, and Markdown tools in one click.', 'refraction' ) }
 				</Typography>
 			</Stack>
 			<Button
@@ -46,12 +46,12 @@ export const WelcomeScreen = () => {
 				loading={ isActivating }
 				onClick={ handleActivate }
 			>
-				{ __( 'Activate', 'elementor' ) }
+				{ __( 'Activate', 'refraction' ) }
 			</Button>
 			{ hasError && (
 				<Box maxWidth={ 360 }>
 					<Alert severity="error" variant="standard" size="small">
-						{ __( 'Activation failed. Please try again.', 'elementor' ) }
+						{ __( 'Activation failed. Please try again.', 'refraction' ) }
 					</Alert>
 				</Box>
 			) }

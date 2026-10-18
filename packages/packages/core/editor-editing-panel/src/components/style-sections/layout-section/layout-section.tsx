@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ControlFormLabel } from '@elementor/editor-controls';
-import { useParentElement } from '@elementor/editor-elements';
-import { type StringPropValue } from '@elementor/editor-props';
-import { createLocation } from '@elementor/locations';
+import { ControlFormLabel } from '@refraction/editor-controls';
+import { useParentElement } from '@refraction/editor-elements';
+import { type StringPropValue } from '@refraction/editor-props';
+import { createLocation } from '@refraction/locations';
 import { __ } from '@wordpress/i18n';
 
 import { useElement } from '../../../contexts/element-context';
@@ -29,8 +29,8 @@ import { GridSpanFields } from './grid-span-field';
 import { JustifyContentField } from './justify-content-field';
 import { WrapField } from './wrap-field';
 
-const DISPLAY_LABEL = __( 'Display', 'elementor' );
-const FLEX_WRAP_LABEL = __( 'Flex wrap', 'elementor' );
+const DISPLAY_LABEL = __( 'Display', 'refraction' );
+const FLEX_WRAP_LABEL = __( 'Flex wrap', 'refraction' );
 const DEFAULT_PARENT_FLOW_DIRECTION = 'row';
 
 export const { Slot: GridFieldsSlot, inject: injectIntoGridFields } = createLocation();
@@ -111,7 +111,7 @@ const GridFields = () => (
 const FlexChildFields = ( { parentStyleDirection }: { parentStyleDirection: string } ) => (
 	<>
 		<PanelDivider />
-		<ControlFormLabel>{ __( 'Flex child', 'elementor' ) }</ControlFormLabel>
+		<ControlFormLabel>{ __( 'Flex child', 'refraction' ) }</ControlFormLabel>
 		<AlignSelfChild parentStyleDirection={ parentStyleDirection as FlexDirection } />
 		<FlexOrderField />
 		<FlexSizeField />
@@ -121,7 +121,7 @@ const FlexChildFields = ( { parentStyleDirection }: { parentStyleDirection: stri
 const GridChildFields = ( { parentStyleDirection }: { parentStyleDirection: string } ) => (
 	<>
 		<PanelDivider />
-		<ControlFormLabel>{ __( 'Grid child', 'elementor' ) }</ControlFormLabel>
+		<ControlFormLabel>{ __( 'Grid child', 'refraction' ) }</ControlFormLabel>
 		<GridSpanFields />
 		<AlignSelfGridChild parentStyleDirection={ parentStyleDirection } />
 		<FlexOrderField />

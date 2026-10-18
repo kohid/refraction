@@ -1,4 +1,4 @@
-import { escapedHtmlPropTypeUtil, htmlV3PropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+import { escapedHtmlPropTypeUtil, htmlV3PropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 
 export function isEmpty( value: string | null = '' ) {
 	if ( ! value ) {

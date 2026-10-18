@@ -1,4 +1,4 @@
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	introductionMap = null;
 
 	constructor( ...args ) {
@@ -12,7 +12,7 @@ export default class extends elementorModules.Module {
 	}
 
 	getIntroductionMap() {
-		return this.introductionMap || elementor.config.user.introduction;
+		return this.introductionMap || refraction.config.user.introduction;
 	}
 
 	getDefaultSettings() {
@@ -37,7 +37,7 @@ export default class extends elementorModules.Module {
 			if ( ! dialog ) {
 				const settings = this.getSettings();
 
-				dialog = elementorCommon.dialogsManager.createWidget( settings.dialogType, settings.dialogOptions );
+				dialog = refractionCommon.dialogsManager.createWidget( settings.dialogType, settings.dialogOptions );
 
 				if ( settings.onDialogInitCallback ) {
 					settings.onDialogInitCallback.call( this, dialog );
@@ -80,7 +80,7 @@ export default class extends elementorModules.Module {
 		this.introductionViewed = true;
 
 		return new Promise( ( resolve, reject ) => {
-			elementorCommon.ajax.addRequest( 'introduction_viewed', {
+			refractionCommon.ajax.addRequest( 'introduction_viewed', {
 				data: {
 					introductionKey: this.getSettings( 'introductionKey' ),
 				},

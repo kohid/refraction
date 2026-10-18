@@ -6,23 +6,23 @@ import {
 	mockCurrentUserCapabilities,
 	renderWithStore,
 } from 'test-utils';
-import { ControlActionsProvider, TextControl } from '@elementor/editor-controls';
-import { controlsRegistry, ElementProvider } from '@elementor/editor-editing-panel';
+import { ControlActionsProvider, TextControl } from '@refraction/editor-controls';
+import { controlsRegistry, ElementProvider } from '@refraction/editor-editing-panel';
 import {
 	getContainer,
 	getElementLabel,
 	getElementSettings,
 	getElementType,
 	getWidgetsCache,
-} from '@elementor/editor-elements';
-import { notify } from '@elementor/editor-notifications';
+} from '@refraction/editor-elements';
+import { notify } from '@refraction/editor-notifications';
 import {
 	__createStore,
 	__dispatch as dispatch,
 	__registerSlice as registerSlice,
 	type SliceState,
 	type Store,
-} from '@elementor/store';
+} from '@refraction/store';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { componentInstancePropTypeUtil } from '../../../prop-types/component-instance-prop-type';
@@ -31,9 +31,9 @@ import { detachComponentInstance } from '../../../utils/detach-component-instanc
 import { getContainerByOriginId } from '../../../utils/get-container-by-origin-id';
 import { InstanceEditingPanel } from '../instance-editing-panel';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
-jest.mock( '@elementor/session' );
+jest.mock( '@refraction/session' );
 
 jest.mock( '../../../prop-types/component-instance-prop-type', () => ( {
 	componentInstancePropTypeUtil: {
@@ -42,7 +42,7 @@ jest.mock( '../../../prop-types/component-instance-prop-type', () => ( {
 	},
 } ) );
 
-jest.mock( '@elementor/editor-current-user' );
+jest.mock( '@refraction/editor-current-user' );
 
 jest.mock( '../../../utils/get-container-by-origin-id', () => ( {
 	getContainerByOriginId: jest.fn(),
@@ -52,7 +52,7 @@ jest.mock( '../../../utils/detach-component-instance', () => ( {
 	detachComponentInstance: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-notifications' );
+jest.mock( '@refraction/editor-notifications' );
 
 mockCurrentUserCapabilities( true );
 
@@ -286,7 +286,7 @@ function createMockElementType( widgetType: string ) {
 }
 
 function setupEventsManagerConfig() {
-	( window as unknown as Record< string, unknown > ).elementorCommon = {
+	( window as unknown as Record< string, unknown > ).refractionCommon = {
 		eventsManager: {
 			config: {
 				locations: {
@@ -303,11 +303,11 @@ function setupEventsManagerConfig() {
 }
 
 function cleanupEventsManagerConfig() {
-	delete ( window as unknown as Record< string, unknown > ).elementorCommon;
+	delete ( window as unknown as Record< string, unknown > ).refractionCommon;
 }
 
 type ExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		helpers?: {
 			hasPro?: () => boolean;
 		};
@@ -317,7 +317,7 @@ type ExtendedWindow = Window & {
 describe( '<InstanceEditingPanel />', () => {
 	let store: Store< SliceState< typeof slice > >;
 	const extendedWindow = window as unknown as ExtendedWindow;
-	let originalElementor: ExtendedWindow[ 'elementor' ];
+	let originalRefraction: ExtendedWindow[ 'refraction' ];
 
 	beforeAll( () => {
 		controlsRegistry.register( MOCK_CONTROL_TYPE, TextControl, 'full' );
@@ -325,9 +325,9 @@ describe( '<InstanceEditingPanel />', () => {
 
 	beforeEach( () => {
 		jest.clearAllMocks();
-		originalElementor = extendedWindow.elementor;
-		extendedWindow.elementor = {
-			...extendedWindow.elementor,
+		originalRefraction = extendedWindow.refraction;
+		extendedWindow.refraction = {
+			...extendedWindow.refraction,
 			helpers: { hasPro: () => true },
 		};
 		registerSlice( slice );
@@ -349,7 +349,7 @@ describe( '<InstanceEditingPanel />', () => {
 	} );
 
 	afterEach( () => {
-		extendedWindow.elementor = originalElementor;
+		extendedWindow.refraction = originalRefraction;
 		cleanupEventsManagerConfig();
 	} );
 
@@ -605,8 +605,8 @@ describe( '<InstanceEditingPanel />', () => {
 	describe( 'Pro upgrade alert', () => {
 		it( 'should show upgrade alert when Pro is not installed', () => {
 			// Arrange
-			extendedWindow.elementor = {
-				...extendedWindow.elementor,
+			extendedWindow.refraction = {
+				...extendedWindow.refraction,
 				helpers: { hasPro: () => false },
 			};
 			setupComponent();

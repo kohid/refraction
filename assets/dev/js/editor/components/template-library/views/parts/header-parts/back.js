@@ -1,10 +1,10 @@
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-template-library-header-back',
+	template: '#tmpl-refraction-template-library-header-back',
 
-	id: 'elementor-template-library-header-preview-back',
+	id: 'refraction-template-library-header-preview-back',
 
 	events: {
-		'click .elementor-template-library-header-back-button': 'onClick',
+		'click .refraction-template-library-header-back-button': 'onClick',
 	},
 
 	onClick() {

@@ -1,4 +1,4 @@
-import { __dispatch as dispatch } from '@elementor/store';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { useFloatingPanelActions } from './hooks/use-floating-panel-actions';
 import { useFloatingPanelStatus } from './hooks/use-floating-panel-status';

@@ -2,7 +2,7 @@
 // Dashboard Icon
 #adminmenu {
 
-	#toplevel_page_elementor {
+	#toplevel_page_refraction {
 
 		div.wp-menu-image:before {
 			content: "\e813";
@@ -11,7 +11,7 @@
 			margin-block-start: 1px;
 		}
 
-		a[href="admin.php?page=go_elementor_pro"] {
+		a[href="admin.php?page=go_refraction_pro"] {
 			font-weight: 600;
 			background-color: $wp-admin-brand-color;
 			color: $white;
@@ -29,8 +29,8 @@
 		}
 	}
 
-	#toplevel_page_elementor-home {
-		a[href*="elementor-one-upgrade"] {
+	#toplevel_page_refraction-home {
+		a[href*="refraction-one-upgrade"] {
 			font-weight: 600;
 			background-color: $wp-admin-brand-color;
 			color: $white;
@@ -48,7 +48,7 @@
 		}
 	}
 
-	#menu-posts-elementor_library {
+	#menu-posts-refraction_library {
 
 		.wp-menu-image {
 
@@ -65,7 +65,7 @@
 	color: $success;
 }
 
-.elementor-plugins-gopro {
+.refraction-plugins-gopro {
 	color: $wp-admin-brand-color;
 	font-weight: bold;
 
@@ -76,12 +76,12 @@
 }
 
 // Switcher Editor
-#elementor-switch-mode {
+#refraction-switch-mode {
 	margin: 15px 0;
 }
 
-#elementor-switch-mode-button,
-#elementor-editor-button {
+#refraction-switch-mode-button,
+#refraction-editor-button {
 	outline: none;
 	cursor: pointer;
 
@@ -94,13 +94,13 @@
 
 body {
 
-	&.elementor-editor-active {
+	&.refraction-editor-active {
 
-		.elementor-switch-mode-off {
+		.refraction-switch-mode-off {
 			display: none;
 		}
 
-		#elementor-switch-mode-button {
+		#refraction-switch-mode-button {
 			background-color: #f7f7f7;
 			color: #555;
 			border-color: #ccc;
@@ -127,13 +127,13 @@ body {
 		}
 	}
 
-	&.elementor-editor-inactive {
+	&.refraction-editor-inactive {
 
-		.elementor-switch-mode-on {
+		.refraction-switch-mode-on {
 			display: none;
 		}
 
-		#elementor-editor {
+		#refraction-editor {
 			display: none;
 		}
 	}
@@ -142,7 +142,7 @@ body {
 // Gutenberg Support
 body {
 
-	&.elementor-editor-active {
+	&.refraction-editor-active {
 
 		.editor-block-list__layout {
 			display: none;
@@ -152,7 +152,7 @@ body {
 			flex-basis: auto;
 		}
 
-		#elementor-editor {
+		#refraction-editor {
 			margin-block-end: 50px;
 		}
 
@@ -175,7 +175,7 @@ body {
 
 	.block-editor {
 
-		#elementor-switch-mode {
+		#refraction-switch-mode {
 			margin: 0 15px;
 
 			.button {
@@ -192,14 +192,14 @@ body {
 	}
 }
 
-// General Elementor Buttons
-.elementor-button {
+// General Refraction Buttons
+.refraction-button {
 	font-size: 13px;
 	text-decoration: none;
 	padding: 15px 40px;
 }
 
-#elementor-editor {
+#refraction-editor {
 	height: 300px;
 	width: 100%;
 	transition: all 0.5s ease;
@@ -207,7 +207,7 @@ body {
 	@import "../editor/loader";
 }
 
-#elementor-go-to-edit-page-link {
+#refraction-go-to-edit-page-link {
 	height: 100%;
 	display: flex;
 	justify-content: center;
@@ -226,23 +226,23 @@ body {
 		box-shadow: none;
 	}
 
-	&.elementor-animate {
+	&.refraction-animate {
 
-		#elementor-editor-button {
+		#refraction-editor-button {
 			display: none;
 		}
 	}
 
-	&:not(.elementor-animate) {
+	&:not(.refraction-animate) {
 
-		.elementor-loader-wrapper {
+		.refraction-loader-wrapper {
 			display: none;
 		}
 	}
 }
 
 // Tools
-.elementor-button-spinner {
+.refraction-button-spinner {
 	&:before {
 		font: normal 20px/.5 dashicons;
 		speak: none;
@@ -267,7 +267,7 @@ body {
 
 
 // Blank State (Admin Settings)
-.elementor-blank_state {
+.refraction-blank_state {
 	padding: 5em 0;
 	margin: auto;
 	max-width: 520px;
@@ -292,28 +292,28 @@ body {
 		margin-block-end: 40px;
 	}
 
-	.elementor-button {
+	.refraction-button {
 		display: inline-block;
 	}
 }
 
 // Customizer widget icon
-#available-widgets [class*="elementor-template"] .widget-title:before {
+#available-widgets [class*="refraction-template"] .widget-title:before {
 	content: "\e813";
 	font-family: eicons;
 	font-size: 17px;
 }
 
 // Settings
-.elementor-settings-form-page {
+.refraction-settings-form-page {
 	padding-block-start: 30px;
 
-	&:not(.elementor-active) {
+	&:not(.refraction-active) {
 		display: none;
 	}
 }
 
-._elementor_settings_update_time {
+._refraction_settings_update_time {
 	display: none;
 }
 

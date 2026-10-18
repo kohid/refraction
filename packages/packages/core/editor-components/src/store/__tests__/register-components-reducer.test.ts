@@ -1,4 +1,4 @@
-import { __createStore, __dispatch as dispatch, __registerSlice as registerSlice, type Store } from '@elementor/store';
+import { __createStore, __dispatch as dispatch, __registerSlice as registerSlice, type Store } from '@refraction/store';
 
 import type { ComponentsState } from '../store';
 import { __resetExtraReducers, createComponentsAction, registerComponentsReducer, slice } from '../store';

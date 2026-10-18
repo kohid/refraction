@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { ToggleButtonGroupItem } from '@elementor/editor-controls';
+import type { ToggleButtonGroupItem } from '@refraction/editor-controls';
 import * as Icons from '@elementor/icons';
 
 export type DynamicToggleOption = {

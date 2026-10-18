@@ -1,15 +1,15 @@
-import { getElementorConfig } from '@elementor/editor-v1-adapters';
+import { getRefractionConfig } from '@refraction/editor-v1-adapters';
 
 import { dynamicTagLLMResolver, getDynamicTagNamesByCategories } from '../resolve-dynamic-tag';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	getElementorConfig: jest.fn(),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	getRefractionConfig: jest.fn(),
 } ) );
 
-const mockedGetElementorConfig = getElementorConfig as jest.MockedFunction< typeof getElementorConfig >;
+const mockedGetRefractionConfig = getRefractionConfig as jest.MockedFunction< typeof getRefractionConfig >;
 
 const givenTags = () =>
-	mockedGetElementorConfig.mockReturnValue( {
+	mockedGetRefractionConfig.mockReturnValue( {
 		atomicDynamicTags: {
 			tags: {
 				'post-custom-field': {

@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor group control base.
+ * Refraction group control base.
  *
  * An abstract class for creating new group controls in the panel.
  *
@@ -192,7 +192,7 @@ abstract class Group_Control_Base implements Group_Control_Interface {
 	 * @return string Group control classes.
 	 */
 	public function get_base_group_classes() {
-		return 'elementor-group-control-' . static::get_type() . ' elementor-group-control';
+		return 'refraction-group-control-' . static::get_type() . ' refraction-group-control';
 	}
 
 	/**
@@ -287,7 +287,7 @@ abstract class Group_Control_Base implements Group_Control_Interface {
 			$field_args['section'] = $args['section'];
 		}
 
-		$field_args['classes'] = $this->get_base_group_classes() . ' elementor-group-control-' . $control_id;
+		$field_args['classes'] = $this->get_base_group_classes() . ' refraction-group-control-' . $control_id;
 
 		foreach ( [ 'condition', 'conditions' ] as $condition_type ) {
 			if ( ! empty( $args[ $condition_type ] ) ) {
@@ -427,7 +427,7 @@ abstract class Group_Control_Base implements Group_Control_Interface {
 	 * Used to add the group prefix to controls with conditions, to
 	 * distinguish them from other controls with the same name.
 	 *
-	 * This way Elementor can apply condition logic to a specific control in a
+	 * This way Refraction can apply condition logic to a specific control in a
 	 * group control.
 	 *
 	 * @since 1.2.0
@@ -475,7 +475,7 @@ abstract class Group_Control_Base implements Group_Control_Interface {
 	 * Handle selectors.
 	 *
 	 * Used to process the CSS selector of group control fields. When using
-	 * group control, Elementor needs to apply the selector to different fields.
+	 * group control, Refraction needs to apply the selector to different fields.
 	 * This method handles the process.
 	 *
 	 * In addition, it handles selector values from other fields and process the

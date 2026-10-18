@@ -1,17 +1,17 @@
-import { type V1ElementModelProps } from '@elementor/editor-elements';
+import { type V1ElementModelProps } from '@refraction/editor-elements';
 
 import { type CanvasExtendedWindow } from './types';
 
-const DRAG_GROUPS = [ 'elementor-element' ];
+const DRAG_GROUPS = [ 'refraction-element' ];
 
 export const endDragElementFromPanel = () => {
-	getElementorChannels()?.panelElements?.trigger( 'element:drag:end' );
+	getRefractionChannels()?.panelElements?.trigger( 'element:drag:end' );
 };
 
 export const startDragElementFromPanel = ( props: Omit< V1ElementModelProps, 'id' >, event: React.DragEvent ) => {
 	setDragGroups( event );
 
-	const channels = getElementorChannels();
+	const channels = getRefractionChannels();
 
 	channels?.editor.reply( 'element:dragged', null );
 
@@ -31,13 +31,13 @@ const getDragGroups = ( event: React.DragEvent ) => {
 	return dataContainer ? JSON.parse( dataContainer ).groups : DRAG_GROUPS;
 };
 
-const getElementorChannels = () => {
+const getRefractionChannels = () => {
 	const extendedWindow = window as unknown as CanvasExtendedWindow;
-	const channels = extendedWindow.elementor?.channels;
+	const channels = extendedWindow.refraction?.channels;
 
 	if ( ! channels ) {
 		throw new Error(
-			'Elementor channels not found: Elementor editor is not initialized or channels are unavailable.'
+			'Refraction channels not found: Refraction editor is not initialized or channels are unavailable.'
 		);
 	}
 
@@ -46,10 +46,10 @@ const getElementorChannels = () => {
 
 const getLegacyPanelElementView = ( { settings, ...rest }: Omit< V1ElementModelProps, 'id' > ) => {
 	const extendedWindow = window as unknown as CanvasExtendedWindow;
-	const LegacyElementModel = extendedWindow.elementor?.modules?.elements?.models?.Element;
+	const LegacyElementModel = extendedWindow.refraction?.modules?.elements?.models?.Element;
 
 	if ( ! LegacyElementModel ) {
-		throw new Error( 'Elementor legacy Element model not found in editor modules' );
+		throw new Error( 'Refraction legacy Element model not found in editor modules' );
 	}
 
 	const elementModel = new LegacyElementModel( {

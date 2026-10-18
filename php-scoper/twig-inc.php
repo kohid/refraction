@@ -8,7 +8,7 @@ use Isolated\Symfony\Component\Finder\Finder;
 $finder = Finder::class;
 
 return [
-	'prefix' => 'ElementorDeps',
+	'prefix' => 'RefractionDeps',
 	'finders' => [
 		$finder::create()->files()->in( 'vendor/twig/twig' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 		$finder::create()->files()->in( 'vendor/symfony/polyfill-php80' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
@@ -29,7 +29,7 @@ return [
 				return $content;
 			}
 
-			// Example: "use Twig\Environment;\n" will replaced with "use ElementorDeps\Twig\Environment;\n"
+			// Example: "use Twig\Environment;\n" will replaced with "use RefractionDeps\Twig\Environment;\n"
 			return preg_replace_callback(
 				'/("use )([A-z\\\\]+;[\\\\n]*")/',
 				fn( $matches ) => str_replace( '\\\\', '\\', "{$matches[1]}{$prefix}\\{$matches[2]}" ),

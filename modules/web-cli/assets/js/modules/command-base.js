@@ -1,5 +1,5 @@
 import CommandInfra from './command-infra';
-import Deprecation from 'elementor-api/utils/deprecation';
+import Deprecation from 'refraction-api/utils/deprecation';
 
 /**
  * @name $e.modules.CommandBase
@@ -65,7 +65,7 @@ export default class CommandBase extends CommandInfra {
 		const containers = args.containers || [ args.container ];
 
 		containers.forEach( ( container ) => {
-			this.requireArgumentInstance( 'container', elementorModules.editor.Container, { container } );
+			this.requireArgumentInstance( 'container', refractionModules.editor.Container, { container } );
 		} );
 	}
 }

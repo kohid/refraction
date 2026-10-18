@@ -5,11 +5,11 @@ import {
 	type KeyValuePropValue,
 	selectionSizePropTypeUtil,
 	type SelectionSizePropValue,
-} from '@elementor/editor-props';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
+} from '@refraction/editor-props';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
 import { InfoCircleFilledIcon } from '@elementor/icons';
 import { Alert, AlertTitle, Box, Typography } from '@elementor/ui';
-import { hasProInstalled } from '@elementor/utils';
+import { hasProInstalled } from '@refraction/utils';
 import { __ } from '@wordpress/i18n';
 
 import { useBoundProp } from '../../bound-prop-context';
@@ -62,8 +62,8 @@ const areAllPropertiesUsed = ( value: SelectionSizePropValue[] = [] ) => {
 // See: https://elementor.atlassian.net/browse/ED-20285
 const getSelectionSizeProps = ( recentlyUsedList: string[], disabledItems?: string[], showPromotion?: boolean ) => {
 	return {
-		selectionLabel: __( 'Type', 'elementor' ),
-		sizeLabel: __( 'Duration', 'elementor' ),
+		selectionLabel: __( 'Type', 'refraction' ),
+		sizeLabel: __( 'Duration', 'refraction' ),
 		selectionConfig: {
 			component: TransitionSelector,
 			props: {
@@ -163,10 +163,10 @@ const disableAddItemTooltipContent = (
 		color="secondary"
 		icon={ <InfoCircleFilledIcon /> }
 	>
-		<AlertTitle>{ __( 'Transitions', 'elementor' ) }</AlertTitle>
+		<AlertTitle>{ __( 'Transitions', 'refraction' ) }</AlertTitle>
 		<Box component="span">
 			<Typography variant="body2">
-				{ __( "Switch to 'Normal' state to add a transition.", 'elementor' ) }
+				{ __( "Switch to 'Normal' state to add a transition.", 'refraction' ) }
 			</Typography>
 		</Box>
 	</Alert>
@@ -227,10 +227,10 @@ export const TransitionRepeaterControl = createControl(
 
 		return (
 			<RepeatableControl
-				label={ __( 'Transitions', 'elementor' ) }
-				repeaterLabel={ __( 'Transitions', 'elementor' ) }
+				label={ __( 'Transitions', 'refraction' ) }
+				repeaterLabel={ __( 'Transitions', 'refraction' ) }
 				patternLabel="${value.selection.value.key.value}: ${value.size.value.size}${value.size.value.unit}"
-				placeholder={ __( 'Empty Transition', 'elementor' ) }
+				placeholder={ __( 'Empty Transition', 'refraction' ) }
 				showDuplicate={ false }
 				showToggle={ true }
 				initialValues={ getInitialValue( value ) }

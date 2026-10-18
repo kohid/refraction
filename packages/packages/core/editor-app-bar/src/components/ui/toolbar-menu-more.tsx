@@ -19,7 +19,7 @@ export default function ToolbarMenuMore( { children, id }: ToolbarMenuMoreProps 
 
 	return (
 		<>
-			<ToolbarMenuItem { ...bindTrigger( popupState ) } title={ __( 'More', 'elementor' ) }>
+			<ToolbarMenuItem { ...bindTrigger( popupState ) } title={ __( 'More', 'refraction' ) }>
 				<DotsVerticalIcon />
 			</ToolbarMenuItem>
 			<PopoverMenu onClick={ popupState.close } { ...bindMenu( popupState ) }>

@@ -6,13 +6,13 @@ export class Copy extends $e.modules.editor.CommandContainerBase {
 	apply( args ) {
 		const { storageKey = 'clipboard', containers = [ args.container ] } = args;
 
-		if ( ! elementor.selection.isSameType() ) {
-			elementor.notifications.showToast( {
-				message: __( 'That didn’t work. Try copying one kind of element at a time.', 'elementor' ),
+		if ( ! refraction.selection.isSameType() ) {
+			refraction.notifications.showToast( {
+				message: __( 'That didn’t work. Try copying one kind of element at a time.', 'refraction' ),
 				buttons: [
 					{
 						name: 'got_it',
-						text: __( 'Got it', 'elementor' ),
+						text: __( 'Got it', 'refraction' ),
 					},
 				],
 			} );
@@ -20,19 +20,19 @@ export class Copy extends $e.modules.editor.CommandContainerBase {
 			return false;
 		}
 
-		const elements = elementor.getPreviewView().$el.find( '.elementor-element' );
+		const elements = refraction.getPreviewView().$el.find( '.refraction-element' );
 
 		const elementsData = containers.sort( ( first, second ) => {
 			return elements.index( first.view.el ) - elements.index( second.view.el );
 		} ).map( ( container ) => container.model.toJSON( { copyHtmlCache: true } ) );
 
 		const storageData = {
-			type: 'elementor',
-			siteurl: elementorCommon.config.urls.rest,
+			type: 'refraction',
+			siteurl: refractionCommon.config.urls.rest,
 			elements: elementsData,
 		};
 
-		elementorCommon.storage.set(
+		refractionCommon.storage.set(
 			storageKey,
 			storageData,
 		);

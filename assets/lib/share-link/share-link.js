@@ -1,5 +1,5 @@
 /**
- * By Elementor Team
+ * By Refraction Team
  */
 ( function( $ ) {
 	window.ShareLink = function( element, userSettings ) {

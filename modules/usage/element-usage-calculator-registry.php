@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Usage;
+namespace Refraction\Modules\Usage;
 
-use Elementor\Modules\Usage\Contracts\Element_Usage_Calculator;
+use Refraction\Modules\Usage\Contracts\Element_Usage_Calculator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

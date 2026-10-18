@@ -1,7 +1,7 @@
 /**
  * @typedef {import('../../container/container')} Container
  */
-export default class Manager extends elementorModules.editor.utils.Module {
+export default class Manager extends refractionModules.editor.utils.Module {
 	/**
 	 * Selected elements.
 	 *
@@ -166,7 +166,7 @@ export default class Manager extends elementorModules.editor.utils.Module {
 	 * In case more than one element is selected, currently sorting supposed to be disabled, and vice-versa.
 	 */
 	updateSortable() {
-		elementor.toggleSortableState( ! this.isMultiple() );
+		refraction.toggleSortableState( ! this.isMultiple() );
 	}
 
 	/**
@@ -202,7 +202,7 @@ export default class Manager extends elementorModules.editor.utils.Module {
 			return;
 		}
 
-		elementor.navigator.getLayout()
+		refraction.navigator.getLayout()
 			.elements.currentView.recursiveChildInvoke( 'updateSelection' );
 	}
 
@@ -230,6 +230,6 @@ export default class Manager extends elementorModules.editor.utils.Module {
 	}
 
 	isAllowed() {
-		return 'edit' === elementor.channels.dataEditMode.request( 'activeMode' );
+		return 'edit' === refraction.channels.dataEditMode.request( 'activeMode' );
 	}
 }

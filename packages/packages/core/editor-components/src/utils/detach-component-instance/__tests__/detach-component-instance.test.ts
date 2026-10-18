@@ -1,14 +1,14 @@
 import { createMockContainer, createMockElementData, mockHistoryManager } from 'test-utils';
-import { type Document } from '@elementor/editor-documents';
-import { getContainer, replaceElement, type V1Element } from '@elementor/editor-elements';
+import { type Document } from '@refraction/editor-documents';
+import { getContainer, replaceElement, type V1Element } from '@refraction/editor-elements';
 
 import { getComponentDocumentData } from '../../component-document-data';
 import { detachComponentInstance } from '../detach-component-instance';
 import { resolveDetachedInstance } from '../resolve-detached-instance';
 
-jest.mock( '@elementor/editor-elements' );
-jest.mock( '@elementor/store', () => ( {
-	...jest.requireActual( '@elementor/store' ),
+jest.mock( '@refraction/editor-elements' );
+jest.mock( '@refraction/store', () => ( {
+	...jest.requireActual( '@refraction/store' ),
 	__getState: jest.fn( () => ( {
 		components: {
 			currentComponentId: null,

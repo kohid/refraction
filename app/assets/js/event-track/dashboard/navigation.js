@@ -1,10 +1,10 @@
 import WpDashboardTracking, { NAV_AREAS } from '../wp-dashboard-tracking';
 import BaseTracking from './base-tracking';
 
-const ELEMENTOR_MENU_SELECTORS = {
-	ELEMENTOR_TOP_LEVEL: 'li#toplevel_page_elementor',
-	TEMPLATES_TOP_LEVEL: 'li#menu-posts-elementor_library',
-	ELEMENTOR_HOME_TOP_LEVEL: 'li#toplevel_page_elementor-home',
+const REFRACTION_MENU_SELECTORS = {
+	REFRACTION_TOP_LEVEL: 'li#toplevel_page_refraction',
+	TEMPLATES_TOP_LEVEL: 'li#menu-posts-refraction_library',
+	REFRACTION_HOME_TOP_LEVEL: 'li#toplevel_page_refraction-home',
 	ADMIN_MENU: '#adminmenu',
 	TOP_LEVEL_LINK: '.wp-menu-name',
 	SUBMENU_CONTAINER: '.wp-submenu',
@@ -17,15 +17,15 @@ class NavigationTracking extends BaseTracking {
 	static init() {
 		if ( WpDashboardTracking.isEditorOneActive() ) {
 			this.attachSidebarNavigationTracking();
-			this.attachElementorHomeMenuTracking();
+			this.attachRefractionHomeMenuTracking();
 		} else {
-			this.attachElementorMenuTracking();
+			this.attachRefractionMenuTracking();
 			this.attachTemplatesMenuTracking();
 		}
 	}
 
 	static attachTemplatesMenuTracking() {
-		const templatesMenu = document.querySelector( ELEMENTOR_MENU_SELECTORS.TEMPLATES_TOP_LEVEL );
+		const templatesMenu = document.querySelector( REFRACTION_MENU_SELECTORS.TEMPLATES_TOP_LEVEL );
 
 		if ( ! templatesMenu ) {
 			return;
@@ -34,28 +34,28 @@ class NavigationTracking extends BaseTracking {
 		this.attachMenuTracking( templatesMenu, 'Templates' );
 	}
 
-	static attachElementorHomeMenuTracking() {
-		const elementorHomeMenu = document.querySelector( ELEMENTOR_MENU_SELECTORS.ELEMENTOR_HOME_TOP_LEVEL );
+	static attachRefractionHomeMenuTracking() {
+		const refractionHomeMenu = document.querySelector( REFRACTION_MENU_SELECTORS.REFRACTION_HOME_TOP_LEVEL );
 
-		if ( ! elementorHomeMenu ) {
+		if ( ! refractionHomeMenu ) {
 			return;
 		}
 
-		this.attachMenuTracking( elementorHomeMenu, 'Elementor' );
+		this.attachMenuTracking( refractionHomeMenu, 'Refraction' );
 	}
 
-	static attachElementorMenuTracking() {
-		const elementorMenu = document.querySelector( ELEMENTOR_MENU_SELECTORS.ELEMENTOR_TOP_LEVEL );
+	static attachRefractionMenuTracking() {
+		const refractionMenu = document.querySelector( REFRACTION_MENU_SELECTORS.REFRACTION_TOP_LEVEL );
 
-		if ( ! elementorMenu ) {
+		if ( ! refractionMenu ) {
 			return;
 		}
 
-		this.attachMenuTracking( elementorMenu, 'Elementor' );
+		this.attachMenuTracking( refractionMenu, 'Refraction' );
 	}
 
 	static attachSidebarNavigationTracking() {
-		const sidebar = document.querySelector( ELEMENTOR_MENU_SELECTORS.SIDEBAR_NAVIGATION );
+		const sidebar = document.querySelector( REFRACTION_MENU_SELECTORS.SIDEBAR_NAVIGATION );
 
 		if ( sidebar ) {
 			this.attachSidebarClickListener( sidebar );
@@ -164,10 +164,10 @@ class NavigationTracking extends BaseTracking {
 		const parentMenu = link.closest( 'li.menu-top' );
 
 		if ( parentMenu ) {
-			const isSubmenuItem = link.closest( ELEMENTOR_MENU_SELECTORS.SUBMENU_CONTAINER );
+			const isSubmenuItem = link.closest( REFRACTION_MENU_SELECTORS.SUBMENU_CONTAINER );
 
 			if ( isSubmenuItem ) {
-				const submenuElement = link.closest( ELEMENTOR_MENU_SELECTORS.SUBMENU_ITEM_TOP_LEVEL );
+				const submenuElement = link.closest( REFRACTION_MENU_SELECTORS.SUBMENU_ITEM_TOP_LEVEL );
 
 				if ( submenuElement.classList.contains( 'wp-not-current-submenu' ) ) {
 					return NAV_AREAS.HOVER_MENU;

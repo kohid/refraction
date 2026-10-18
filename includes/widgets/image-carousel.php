@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
 
 /**
- * Elementor image carousel widget.
+ * Refraction image carousel widget.
  *
- * Elementor widget that displays a set of images in a rotating carousel or
+ * Refraction widget that displays a set of images in a rotating carousel or
  * slider.
  *
  * @since 1.0.0
@@ -42,7 +42,7 @@ class Widget_Image_Carousel extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Image Carousel', 'elementor' );
+		return esc_html__( 'Image Carousel', 'refraction' );
 	}
 
 	/**
@@ -121,23 +121,23 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->start_controls_section(
 			'section_image_carousel',
 			[
-				'label' => esc_html__( 'Image Carousel', 'elementor' ),
+				'label' => esc_html__( 'Image Carousel', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'carousel_name',
 			[
-				'label' => esc_html__( 'Carousel Name', 'elementor' ),
+				'label' => esc_html__( 'Carousel Name', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'Image Carousel', 'elementor' ),
+				'default' => esc_html__( 'Image Carousel', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'carousel',
 			[
-				'label' => esc_html__( 'Add Images', 'elementor' ),
+				'label' => esc_html__( 'Add Images', 'refraction' ),
 				'type' => Controls_Manager::GALLERY,
 				'default' => [],
 				'show_label' => false,
@@ -160,46 +160,46 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_responsive_control(
 			'slides_to_show',
 			[
-				'label' => esc_html__( 'Slides to Show', 'elementor' ),
+				'label' => esc_html__( 'Slides to Show', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
 				] + $slides_to_show,
 				'frontend_available' => true,
 				'render_type' => 'template',
 				'selectors' => [
 					'{{WRAPPER}}' => '--e-image-carousel-slides-to-show: {{VALUE}}',
 				],
-				'content_classes' => 'elementor-control-field-select-small',
+				'content_classes' => 'refraction-control-field-select-small',
 			]
 		);
 
 		$this->add_responsive_control(
 			'slides_to_scroll',
 			[
-				'label' => esc_html__( 'Slides to Scroll', 'elementor' ),
+				'label' => esc_html__( 'Slides to Scroll', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
-				'description' => esc_html__( 'Set how many slides are scrolled per swipe.', 'elementor' ),
+				'description' => esc_html__( 'Set how many slides are scrolled per swipe.', 'refraction' ),
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
 				] + $slides_to_show,
 				'condition' => [
 					'slides_to_show!' => '1',
 				],
 				'frontend_available' => true,
-				'content_classes' => 'elementor-control-field-select-small',
+				'content_classes' => 'refraction-control-field-select-small',
 			]
 		);
 
 		$this->add_control(
 			'image_stretch',
 			[
-				'label' => esc_html__( 'Image Stretch', 'elementor' ),
+				'label' => esc_html__( 'Image Stretch', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'no',
 				'options' => [
-					'no' => esc_html__( 'No', 'elementor' ),
-					'yes' => esc_html__( 'Yes', 'elementor' ),
+					'no' => esc_html__( 'No', 'refraction' ),
+					'yes' => esc_html__( 'Yes', 'refraction' ),
 				],
 			]
 		);
@@ -207,14 +207,14 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'navigation',
 			[
-				'label' => esc_html__( 'Navigation', 'elementor' ),
+				'label' => esc_html__( 'Navigation', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'both',
 				'options' => [
-					'both' => esc_html__( 'Arrows and Dots', 'elementor' ),
-					'arrows' => esc_html__( 'Arrows', 'elementor' ),
-					'dots' => esc_html__( 'Dots', 'elementor' ),
-					'none' => esc_html__( 'None', 'elementor' ),
+					'both' => esc_html__( 'Arrows and Dots', 'refraction' ),
+					'arrows' => esc_html__( 'Arrows', 'refraction' ),
+					'dots' => esc_html__( 'Dots', 'refraction' ),
+					'none' => esc_html__( 'None', 'refraction' ),
 				],
 				'frontend_available' => true,
 			]
@@ -223,7 +223,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'navigation_previous_icon',
 			[
-				'label' => esc_html__( 'Previous Arrow Icon', 'elementor' ),
+				'label' => esc_html__( 'Previous Arrow Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -278,7 +278,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'navigation_next_icon',
 			[
-				'label' => esc_html__( 'Next Arrow Icon', 'elementor' ),
+				'label' => esc_html__( 'Next Arrow Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -333,13 +333,13 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'link_to',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'none',
 				'options' => [
-					'none' => esc_html__( 'None', 'elementor' ),
-					'file' => esc_html__( 'Media File', 'elementor' ),
-					'custom' => esc_html__( 'Custom URL', 'elementor' ),
+					'none' => esc_html__( 'None', 'refraction' ),
+					'file' => esc_html__( 'Media File', 'refraction' ),
+					'custom' => esc_html__( 'Custom URL', 'refraction' ),
 				],
 			]
 		);
@@ -347,7 +347,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'condition' => [
 					'link_to' => 'custom',
@@ -362,19 +362,19 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'open_lightbox',
 			[
-				'label' => esc_html__( 'Lightbox', 'elementor' ),
+				'label' => esc_html__( 'Lightbox', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'description' => sprintf(
 					/* translators: 1: Link open tag, 2: Link close tag. */
-					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'elementor' ),
+					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'refraction' ),
 					'<a href="javascript: $e.run( \'panel/global/open\' ).then( () => $e.route( \'panel/global/settings-lightbox\' ) )">',
 					'</a>'
 				),
 				'default' => 'default',
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'yes' => esc_html__( 'Yes', 'elementor' ),
-					'no' => esc_html__( 'No', 'elementor' ),
+					'default' => esc_html__( 'Default', 'refraction' ),
+					'yes' => esc_html__( 'Yes', 'refraction' ),
+					'no' => esc_html__( 'No', 'refraction' ),
 				],
 				'condition' => [
 					'link_to' => 'file',
@@ -385,14 +385,14 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'caption_type',
 			[
-				'label' => esc_html__( 'Caption', 'elementor' ),
+				'label' => esc_html__( 'Caption', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'None', 'elementor' ),
-					'title' => esc_html__( 'Title', 'elementor' ),
-					'caption' => esc_html__( 'Caption', 'elementor' ),
-					'description' => esc_html__( 'Description', 'elementor' ),
+					'' => esc_html__( 'None', 'refraction' ),
+					'title' => esc_html__( 'Title', 'refraction' ),
+					'caption' => esc_html__( 'Caption', 'refraction' ),
+					'description' => esc_html__( 'Description', 'refraction' ),
 				],
 			]
 		);
@@ -402,14 +402,14 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->start_controls_section(
 			'section_additional_options',
 			[
-				'label' => esc_html__( 'Additional Options', 'elementor' ),
+				'label' => esc_html__( 'Additional Options', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'lazyload',
 			[
-				'label' => esc_html__( 'Lazyload', 'elementor' ),
+				'label' => esc_html__( 'Lazyload', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'frontend_available' => true,
 			]
@@ -418,10 +418,10 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'autoplay',
 			[
-				'label' => esc_html__( 'Autoplay', 'elementor' ),
+				'label' => esc_html__( 'Autoplay', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 				'frontend_available' => true,
@@ -431,10 +431,10 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'pause_on_hover',
 			[
-				'label' => esc_html__( 'Pause on Hover', 'elementor' ),
+				'label' => esc_html__( 'Pause on Hover', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 				'condition' => [
@@ -448,10 +448,10 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'pause_on_interaction',
 			[
-				'label' => esc_html__( 'Pause on Interaction', 'elementor' ),
+				'label' => esc_html__( 'Pause on Interaction', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 				'condition' => [
@@ -464,7 +464,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'autoplay_speed',
 			[
-				'label' => esc_html__( 'Autoplay Speed', 'elementor' ),
+				'label' => esc_html__( 'Autoplay Speed', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 5000,
 				'condition' => [
@@ -479,10 +479,10 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'infinite',
 			[
-				'label' => esc_html__( 'Infinite Loop', 'elementor' ),
+				'label' => esc_html__( 'Infinite Loop', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 				'frontend_available' => true,
@@ -492,12 +492,12 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'effect',
 			[
-				'label' => esc_html__( 'Effect', 'elementor' ),
+				'label' => esc_html__( 'Effect', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'slide',
 				'options' => [
-					'slide' => esc_html__( 'Slide', 'elementor' ),
-					'fade' => esc_html__( 'Fade', 'elementor' ),
+					'slide' => esc_html__( 'Slide', 'refraction' ),
+					'fade' => esc_html__( 'Fade', 'refraction' ),
 				],
 				'condition' => [
 					'slides_to_show' => '1',
@@ -509,7 +509,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'speed',
 			[
-				'label' => esc_html__( 'Animation Speed', 'elementor' ),
+				'label' => esc_html__( 'Animation Speed', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 500,
 				'render_type' => 'none',
@@ -520,12 +520,12 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'direction',
 			[
-				'label' => esc_html__( 'Direction', 'elementor' ),
+				'label' => esc_html__( 'Direction', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'ltr',
 				'options' => [
-					'ltr' => esc_html__( 'Left', 'elementor' ),
-					'rtl' => esc_html__( 'Right', 'elementor' ),
+					'ltr' => esc_html__( 'Left', 'refraction' ),
+					'rtl' => esc_html__( 'Right', 'refraction' ),
 				],
 			]
 		);
@@ -535,7 +535,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_navigation',
 			[
-				'label' => esc_html__( 'Navigation', 'elementor' ),
+				'label' => esc_html__( 'Navigation', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'navigation' => [ 'arrows', 'dots', 'both' ],
@@ -546,7 +546,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'heading_style_arrows',
 			[
-				'label' => esc_html__( 'Arrows', 'elementor' ),
+				'label' => esc_html__( 'Arrows', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 				'condition' => [
@@ -558,14 +558,14 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'arrows_position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'inside',
 				'options' => [
-					'inside' => esc_html__( 'Inside', 'elementor' ),
-					'outside' => esc_html__( 'Outside', 'elementor' ),
+					'inside' => esc_html__( 'Inside', 'refraction' ),
+					'outside' => esc_html__( 'Outside', 'refraction' ),
 				],
-				'prefix_class' => 'elementor-arrows-position-',
+				'prefix_class' => 'refraction-arrows-position-',
 				'condition' => [
 					'navigation' => [ 'arrows', 'both' ],
 				],
@@ -575,7 +575,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_responsive_control(
 			'arrows_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -584,7 +584,7 @@ class Widget_Image_Carousel extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-swiper-button.elementor-swiper-button-prev, {{WRAPPER}} .elementor-swiper-button.elementor-swiper-button-next' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-swiper-button.refraction-swiper-button-prev, {{WRAPPER}} .refraction-swiper-button.refraction-swiper-button-next' => 'font-size: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'navigation' => [ 'arrows', 'both' ],
@@ -595,11 +595,11 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'arrows_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-swiper-button.elementor-swiper-button-prev, {{WRAPPER}} .elementor-swiper-button.elementor-swiper-button-next' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-swiper-button.elementor-swiper-button-prev svg, {{WRAPPER}} .elementor-swiper-button.elementor-swiper-button-next svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-swiper-button.refraction-swiper-button-prev, {{WRAPPER}} .refraction-swiper-button.refraction-swiper-button-next' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-swiper-button.refraction-swiper-button-prev svg, {{WRAPPER}} .refraction-swiper-button.refraction-swiper-button-next svg' => 'fill: {{VALUE}};',
 				],
 				'condition' => [
 					'navigation' => [ 'arrows', 'both' ],
@@ -610,7 +610,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'heading_style_dots',
 			[
-				'label' => esc_html__( 'Pagination', 'elementor' ),
+				'label' => esc_html__( 'Pagination', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 				'condition' => [
@@ -622,14 +622,14 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'dots_position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'outside',
 				'options' => [
-					'outside' => esc_html__( 'Outside', 'elementor' ),
-					'inside' => esc_html__( 'Inside', 'elementor' ),
+					'outside' => esc_html__( 'Outside', 'refraction' ),
+					'inside' => esc_html__( 'Inside', 'refraction' ),
 				],
-				'prefix_class' => 'elementor-pagination-position-',
+				'prefix_class' => 'refraction-pagination-position-',
 				'condition' => [
 					'navigation' => [ 'dots', 'both' ],
 				],
@@ -639,7 +639,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_responsive_control(
 			'dots_gap',
 			[
-				'label' => esc_html__( 'Space Between Dots', 'elementor' ),
+				'label' => esc_html__( 'Space Between Dots', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -659,7 +659,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_responsive_control(
 			'dots_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -679,7 +679,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'dots_inactive_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					// The opacity property will override the default inactive dot color which is opacity 0.2.
@@ -694,7 +694,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'dots_color',
 			[
-				'label' => esc_html__( 'Active Color', 'elementor' ),
+				'label' => esc_html__( 'Active Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .swiper-pagination-bullet' => 'background: {{VALUE}};',
@@ -710,7 +710,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_image',
 			[
-				'label' => esc_html__( 'Image', 'elementor' ),
+				'label' => esc_html__( 'Image', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -718,19 +718,19 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_responsive_control(
 			'gallery_vertical_align',
 			[
-				'label' => esc_html__( 'Vertical Align', 'elementor' ),
+				'label' => esc_html__( 'Vertical Align', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'flex-start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-v-align-middle',
 					],
 					'flex-end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -746,11 +746,11 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'image_spacing',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'default' => '',
 				'condition' => [
@@ -762,7 +762,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_responsive_control(
 			'image_spacing_custom',
 			[
-				'label' => esc_html__( 'Image Spacing', 'elementor' ),
+				'label' => esc_html__( 'Image Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px' ],
 				'range' => [
@@ -787,18 +787,18 @@ class Widget_Image_Carousel extends Widget_Base {
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'image_border',
-				'selector' => '{{WRAPPER}} .elementor-image-carousel-wrapper .elementor-image-carousel .swiper-slide-image',
+				'selector' => '{{WRAPPER}} .refraction-image-carousel-wrapper .refraction-image-carousel .swiper-slide-image',
 			]
 		);
 
 		$this->add_responsive_control(
 			'image_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-image-carousel-wrapper .elementor-image-carousel .swiper-slide-image' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-image-carousel-wrapper .refraction-image-carousel .swiper-slide-image' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -808,7 +808,7 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->start_controls_section(
 			'section_caption',
 			[
-				'label' => esc_html__( 'Caption', 'elementor' ),
+				'label' => esc_html__( 'Caption', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'caption_type!' => '',
@@ -819,34 +819,34 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_responsive_control(
 			'caption_align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => esc_html__( 'Justified', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
 				],
 				'default' => 'center',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-image-carousel-caption' => 'text-align: {{VALUE}};',
+					'{{WRAPPER}} .refraction-image-carousel-caption' => 'text-align: {{VALUE}};',
 				],
 			]
 		);
@@ -854,11 +854,11 @@ class Widget_Image_Carousel extends Widget_Base {
 		$this->add_control(
 			'caption_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-image-carousel-caption' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-image-carousel-caption' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -870,7 +870,7 @@ class Widget_Image_Carousel extends Widget_Base {
 				'global' => [
 					'default' => Global_Colors::COLOR_ACCENT,
 				],
-				'selector' => '{{WRAPPER}} .elementor-image-carousel-caption',
+				'selector' => '{{WRAPPER}} .refraction-image-carousel-caption',
 			]
 		);
 
@@ -878,18 +878,18 @@ class Widget_Image_Carousel extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'caption_shadow',
-				'selector' => '{{WRAPPER}} .elementor-image-carousel-caption',
+				'selector' => '{{WRAPPER}} .refraction-image-carousel-caption',
 			]
 		);
 
 		$this->add_responsive_control(
 			'caption_space',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-image-carousel-caption' => 'margin-block-start: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-image-carousel-caption' => 'margin-block-start: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -940,7 +940,7 @@ class Widget_Image_Carousel extends Widget_Base {
 
 				if ( Plugin::$instance->editor->is_edit_mode() ) {
 					$this->add_render_attribute( $link_key, [
-						'class' => 'elementor-clickable',
+						'class' => 'refraction-clickable',
 					] );
 				}
 
@@ -960,7 +960,7 @@ class Widget_Image_Carousel extends Widget_Base {
 				'aria-roledescription' => 'slide',
 				'aria-label' => sprintf(
 					/* translators: 1: Slide count, 2: Total slides count. */
-					esc_html__( '%1$s of %2$s', 'elementor' ),
+					esc_html__( '%1$s of %2$s', 'refraction' ),
 					$slide_count,
 					count( $settings['carousel'] )
 				),
@@ -973,7 +973,7 @@ class Widget_Image_Carousel extends Widget_Base {
 			}
 
 			if ( ! empty( $image_caption ) ) {
-				$slide_html .= '<figcaption class="elementor-image-carousel-caption">' . wp_kses_post( $image_caption ) . '</figcaption>';
+				$slide_html .= '<figcaption class="refraction-image-carousel-caption">' . wp_kses_post( $image_caption ) . '</figcaption>';
 			}
 
 			$slide_html .= '</figure>';
@@ -997,11 +997,11 @@ class Widget_Image_Carousel extends Widget_Base {
 
 		$this->add_render_attribute( [
 			'carousel' => [
-				'class' => 'elementor-image-carousel swiper-wrapper',
+				'class' => 'refraction-image-carousel swiper-wrapper',
 				'aria-live' => $has_autoplay_enabled ? 'off' : 'polite',
 			],
 			'carousel-wrapper' => [
-				'class' => 'elementor-image-carousel-wrapper ' . $swiper_class,
+				'class' => 'refraction-image-carousel-wrapper ' . $swiper_class,
 				'role' => 'region',
 				'aria-roledescription' => 'carousel',
 				'aria-label' => $settings['carousel_name'],
@@ -1025,10 +1025,10 @@ class Widget_Image_Carousel extends Widget_Base {
 			</div>
 			<?php if ( 1 < $slides_count ) : ?>
 				<?php if ( $show_arrows ) : ?>
-					<div class="elementor-swiper-button elementor-swiper-button-prev" role="button" tabindex="0">
+					<div class="refraction-swiper-button refraction-swiper-button-prev" role="button" tabindex="0">
 						<?php $this->render_swiper_button( 'previous' ); ?>
 					</div>
-					<div class="elementor-swiper-button elementor-swiper-button-next" role="button" tabindex="0">
+					<div class="refraction-swiper-button refraction-swiper-button-next" role="button" tabindex="0">
 						<?php $this->render_swiper_button( 'next' ); ?>
 					</div>
 				<?php endif; ?>

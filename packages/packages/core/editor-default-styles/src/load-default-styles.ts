@@ -1,4 +1,4 @@
-import { __dispatch as dispatch } from '@elementor/store';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { apiClient } from './api';
 import { slice } from './store';

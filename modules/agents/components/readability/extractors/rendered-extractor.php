@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Readability\Extractors;
+namespace Refraction\Modules\Agents\Components\Readability\Extractors;
 
-use Elementor\Modules\MarkdownRender\Html_To_Markdown;
+use Refraction\Modules\MarkdownRender\Html_To_Markdown;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Slowest-path extractor: captures the fully rendered page template.
  *
  * Disabled by default.  Enable via:
- *   add_filter( 'elementor/agents/markdown/enable_rendered_fallback', '__return_true' );
+ *   add_filter( 'refraction/agents/markdown/enable_rendered_fallback', '__return_true' );
  *
  * After capturing the template output this extractor strips navigation,
  * header, footer, aside, script, and style elements before converting the
@@ -30,7 +30,7 @@ class Rendered_Extractor implements Extractor_Interface {
 	 * @return bool
 	 */
 	public function can_handle( \WP_Post $post ): bool {
-		return (bool) apply_filters( 'elementor/agents/markdown/enable_rendered_fallback', false );
+		return (bool) apply_filters( 'refraction/agents/markdown/enable_rendered_fallback', false );
 	}
 
 	/**

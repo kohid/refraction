@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { PropKeyProvider, PropProvider, useBoundProp } from '@elementor/editor-controls';
+import { PropKeyProvider, PropProvider, useBoundProp } from '@refraction/editor-controls';
 import {
 	backgroundImageOverlayPropTypeUtil,
 	type BackgroundOverlayImagePropType,
 	type BackgroundOverlayPropType,
 	type ObjectPropType,
 	type UnionPropType,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { DatabaseIcon } from '@elementor/icons';
 
 import { useDynamicTag } from '../hooks/use-dynamic-tag';

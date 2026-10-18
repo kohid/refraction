@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { stringPropTypeUtil } from '@elementor/editor-props';
-import { MenuListItem } from '@elementor/editor-ui';
+import { stringPropTypeUtil } from '@refraction/editor-props';
+import { MenuListItem } from '@refraction/editor-ui';
 import { ArrowsMoveHorizontalIcon, ArrowsMoveVerticalIcon } from '@elementor/icons';
 import { Grid, Select, type SelectChangeEvent, Stack, TextField } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -12,7 +12,7 @@ import ControlActions from '../control-actions/control-actions';
 import { createControl } from '../create-control';
 
 const RATIO_OPTIONS = [
-	{ label: __( 'Auto', 'elementor' ), value: 'auto' },
+	{ label: __( 'Auto', 'refraction' ), value: 'auto' },
 	{ label: '1/1', value: '1/1' },
 	{ label: '4/3', value: '4/3' },
 	{ label: '3/4', value: '3/4' },
@@ -115,7 +115,7 @@ export const AspectRatioControl = createControl( ( { label }: { label: string } 
 							renderValue={ isCustomSelected ? undefined : () => selectedOption?.label }
 							fullWidth
 						>
-							{ [ ...RATIO_OPTIONS, { label: __( 'Custom', 'elementor' ), value: CUSTOM_RATIO } ].map(
+							{ [ ...RATIO_OPTIONS, { label: __( 'Custom', 'refraction' ), value: CUSTOM_RATIO } ].map(
 								( { label: optionLabel, ...props } ) => (
 									<MenuListItem key={ props.value } { ...props } value={ props.value ?? '' }>
 										{ optionLabel }

@@ -1,17 +1,17 @@
 <?php
-namespace Elementor\Core\DynamicTags;
+namespace Refraction\Core\DynamicTags;
 
-use Elementor\Controls_Stack;
-use Elementor\Plugin;
+use Refraction\Controls_Stack;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor base tag.
+ * Refraction base tag.
  *
- * An abstract class to register new Elementor tags.
+ * An abstract class to register new Refraction tags.
  *
  * @since 2.0.0
  * @abstract
@@ -168,7 +168,7 @@ abstract class Base_Tag extends Controls_Stack {
 		Plugin::$instance->controls_manager->open_stack( $this );
 
 		$this->start_controls_section( 'settings', [
-			'label' => esc_html__( 'Settings', 'elementor' ),
+			'label' => esc_html__( 'Settings', 'refraction' ),
 		] );
 
 		if ( $this->has_own_method( '_register_controls' ) ) {

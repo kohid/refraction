@@ -33,7 +33,7 @@ class Router {
 const router = new Router();
 
 // Make router available for use within packages.
-window.elementorAppPackages = {
+window.refractionAppPackages = {
 	router,
 };
 

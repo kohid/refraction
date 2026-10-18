@@ -1,4 +1,4 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlWysiwygItemView;
 
 ControlWysiwygItemView = ControlBaseDataView.extend( {
@@ -8,7 +8,7 @@ ControlWysiwygItemView = ControlBaseDataView.extend( {
 		var ui = ControlBaseDataView.prototype.ui.apply( this, arguments );
 
 		jQuery.extend( ui, {
-			inputWrapper: '.elementor-control-input-wrapper',
+			inputWrapper: '.refraction-control-input-wrapper',
 		} );
 
 		return ui;
@@ -16,7 +16,7 @@ ControlWysiwygItemView = ControlBaseDataView.extend( {
 
 	events() {
 		return _.extend( ControlBaseDataView.prototype.events.apply( this, arguments ), {
-			'keyup textarea.elementor-wp-editor': 'onBaseInputChange',
+			'keyup textarea.refraction-wp-editor': 'onBaseInputChange',
 		} );
 	},
 
@@ -42,7 +42,7 @@ ControlWysiwygItemView = ControlBaseDataView.extend( {
 
 		var self = this;
 
-		self.editorID = 'elementorwpeditor' + self.cid;
+		self.editorID = 'refractionwpeditor' + self.cid;
 
 		// Wait a cycle before initializing the editors.
 		_.defer( function() {
@@ -56,15 +56,15 @@ ControlWysiwygItemView = ControlBaseDataView.extend( {
 				id: self.editorID,
 			} );
 
-			if ( elementor.config.rich_editing_enabled ) {
+			if ( refraction.config.rich_editing_enabled ) {
 				switchEditors.go( self.editorID, 'tmce' );
 			}
 
 			delete QTags.instances[ 0 ];
 		} );
 
-		if ( ! elementor.config.rich_editing_enabled ) {
-			self.$el.addClass( 'elementor-rich-editing-disabled' );
+		if ( ! refraction.config.rich_editing_enabled ) {
+			self.$el.addClass( 'refraction-rich-editing-disabled' );
 
 			return;
 		}
@@ -77,9 +77,9 @@ ControlWysiwygItemView = ControlBaseDataView.extend( {
 			},
 		};
 
-		tinyMCEPreInit.mceInit[ self.editorID ] = _.extend( _.clone( tinyMCEPreInit.mceInit.elementorwpeditor ), editorConfig );
+		tinyMCEPreInit.mceInit[ self.editorID ] = _.extend( _.clone( tinyMCEPreInit.mceInit.refractionwpeditor ), editorConfig );
 
-		if ( ! elementor.config.tinymceHasCustomConfig ) {
+		if ( ! refraction.config.tinymceHasCustomConfig ) {
 			self.rearrangeButtons();
 		}
 	},
@@ -151,11 +151,11 @@ ControlWysiwygItemView = ControlBaseDataView.extend( {
 	},
 
 	onReady() {
-		const $editor = jQuery( elementor.config.wp_editor.replace( /elementorwpeditor/g, this.editorID ).replace( '%%EDITORCONTENT%%', '' ) );
+		const $editor = jQuery( refraction.config.wp_editor.replace( /refractionwpeditor/g, this.editorID ).replace( '%%EDITORCONTENT%%', '' ) );
 
 		$editor.find( '.wp-editor-area' ).text( this.getControlValue() );
 
-		$editor.find( `.wp-editor-tabs` ).addClass( 'elementor-control-dynamic-switcher-wrapper' );
+		$editor.find( `.wp-editor-tabs` ).addClass( 'refraction-control-dynamic-switcher-wrapper' );
 
 		this.ui.inputWrapper.html( $editor );
 
@@ -170,7 +170,7 @@ ControlWysiwygItemView = ControlBaseDataView.extend( {
 		// Remove TinyMCE and QuickTags instances
 		delete QTags.instances[ this.editorID ];
 
-		if ( ! elementor.config.rich_editing_enabled ) {
+		if ( ! refraction.config.rich_editing_enabled ) {
 			return;
 		}
 

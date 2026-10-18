@@ -1,18 +1,18 @@
-import { isAngieAvailable, openAngieInAskMode } from '@elementor/editor-mcp';
+import { isAngieAvailable, openAngieInAskMode } from '@refraction/editor-mcp';
 import { HelpIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
 import { type ExtendedWindow } from '../../../types';
 
 const HELP_CENTER_URL = 'https://go.elementor.com/editor-top-bar-learn/';
-const HELP_CENTER_ANGIE_PROMPT = `${ __( 'Help me with', 'elementor' ) } `;
+const HELP_CENTER_ANGIE_PROMPT = `${ __( 'Help me with', 'refraction' ) } `;
 
 const dispatchHelpClickEvent = () => {
 	const extendedWindow = window as unknown as ExtendedWindow;
-	const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+	const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 	if ( config ) {
-		extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.help, {
+		extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.help, {
 			location: config.locations.topBar,
 			secondaryLocation: config.secondaryLocations.help,
 			trigger: config.triggers.click,
@@ -26,7 +26,7 @@ export default function useActionProps() {
 
 	if ( hasAngieActive ) {
 		return {
-			title: __( 'Help Center', 'elementor' ),
+			title: __( 'Help Center', 'refraction' ),
 			icon: HelpIcon,
 			onClick: ( event: React.MouseEvent ) => {
 				event.preventDefault();
@@ -37,7 +37,7 @@ export default function useActionProps() {
 	}
 
 	return {
-		title: __( 'Help Center', 'elementor' ),
+		title: __( 'Help Center', 'refraction' ),
 		href: HELP_CENTER_URL,
 		icon: HelpIcon,
 		target: '_blank',

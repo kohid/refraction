@@ -10,12 +10,12 @@ test.describe( 'Document tests', async () => {
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 		await wpAdmin.resetExperiments();
 		await page.close();
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	test( 'Converting Gutenberg page to sections columns',
 		async ( { page, apiRequests }, testInfo ) => {
-			await wpCli( 'wp elementor experiments deactivate container' );
+			await wpCli( 'wp refraction experiments deactivate container' );
 
 			const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 			await wpAdmin.openNewWordpressPage();
@@ -27,7 +27,7 @@ test.describe( 'Document tests', async () => {
 			expect( sections ).toEqual( 1 );
 			const columns = await previewFrame.locator( '[data-element_type="column"]' ).count();
 			expect( columns ).toEqual( 1 );
-			const textEditors = await previewFrame.locator( '.elementor-widget-text-editor' ).count();
+			const textEditors = await previewFrame.locator( '.refraction-widget-text-editor' ).count();
 			expect( textEditors ).toEqual( 1 );
 		} );
 
@@ -43,7 +43,7 @@ test.describe( 'Document tests', async () => {
 			const previewFrame = editor.getPreviewFrame();
 			const containers = await previewFrame.locator( '[data-element_type="container"]' ).count();
 			expect( containers ).toEqual( 1 );
-			const textEditors = await previewFrame.locator( '.elementor-widget-text-editor ' ).count();
+			const textEditors = await previewFrame.locator( '.refraction-widget-text-editor ' ).count();
 			expect( textEditors ).toEqual( 1 );
 		} );
 } );

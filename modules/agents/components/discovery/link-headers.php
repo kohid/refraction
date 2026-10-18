@@ -1,17 +1,17 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery;
+namespace Refraction\Modules\Agents\Components\Discovery;
 
-use Elementor\Modules\Agents\Agent_Ready_Settings;
-use Elementor\Modules\Agents\Classes\Feature_Component;
-use Elementor\Modules\Agents\Components\Readability\Markdown_Endpoint;
+use Refraction\Modules\Agents\Agent_Ready_Settings;
+use Refraction\Modules\Agents\Classes\Feature_Component;
+use Refraction\Modules\Agents\Components\Readability\Markdown_Endpoint;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Emits RFC 8288 Link response headers on every front-end and Elementor REST
+ * Emits RFC 8288 Link response headers on every front-end and Refraction REST
  * response, making discovery documents findable without guessing URLs.
  *
  * Site-wide (all frontend responses):
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Guards:
  *   - Skips admin, cron, feeds, and login screens.
  *   - Emits at most once per request (idempotency flag).
- *   - Scopes REST emission to /elementor/* namespaces only.
+ *   - Scopes REST emission to /refraction/* namespaces only.
  */
 class Link_Headers extends Feature_Component {
 
@@ -96,9 +96,9 @@ class Link_Headers extends Feature_Component {
 	}
 
 	/**
-	 * Add Link headers to Elementor REST responses.
+	 * Add Link headers to Refraction REST responses.
 	 *
-	 * Only wires onto /elementor/* routes — skips the WP REST API broadly so
+	 * Only wires onto /refraction/* routes — skips the WP REST API broadly so
 	 * we don't pollute unrelated endpoints.
 	 *
 	 * @param \WP_HTTP_Response $response Response object.
@@ -111,7 +111,7 @@ class Link_Headers extends Feature_Component {
 			return $response;
 		}
 
-		if ( ! $this->is_elementor_rest_request( $request ) ) {
+		if ( ! $this->is_refraction_rest_request( $request ) ) {
 			return $response;
 		}
 
@@ -152,7 +152,7 @@ class Link_Headers extends Feature_Component {
 		 *
 		 * @since 3.30.0
 		 */
-		if ( apply_filters( 'elementor/agents/link_headers/emit_mcp_card', false ) ) {
+		if ( apply_filters( 'refraction/agents/link_headers/emit_mcp_card', false ) ) {
 			$links[] = '<' . $home . '/.well-known/mcp/server-card.json>'
 				. '; rel="mcp-server-card"; type="application/json"';
 		}
@@ -233,12 +233,12 @@ class Link_Headers extends Feature_Component {
 	}
 
 	/**
-	 * Return true if the REST request targets an Elementor namespace.
+	 * Return true if the REST request targets a Refraction namespace.
 	 *
 	 * @param \WP_REST_Request $request
 	 */
-	private function is_elementor_rest_request( $request ): bool {
+	private function is_refraction_rest_request( $request ): bool {
 		$route = $request->get_route();
-		return 0 === strpos( $route, '/elementor/' );
+		return 0 === strpos( $route, '/refraction/' );
 	}
 }

@@ -1,4 +1,4 @@
-class Ally extends elementorModules.editor.utils.Module {
+class Ally extends refractionModules.editor.utils.Module {
 	eventName = 'ally_heading_notice';
 	suffix = '';
 	control = null;
@@ -16,7 +16,7 @@ class Ally extends elementorModules.editor.utils.Module {
 		}
 
 		// Check if the user has dismissed the hint
-		if ( elementor.config.user.dismissed_editor_notices.includes( 'ally_heading_notice' ) ) {
+		if ( refraction.config.user.dismissed_editor_notices.includes( 'ally_heading_notice' ) ) {
 			this.getPromoControl().remove();
 			return;
 		}
@@ -26,7 +26,7 @@ class Ally extends elementorModules.editor.utils.Module {
 
 	registerEvents() {
 		// Handle dismiss and action buttons
-		const dismissBtn = this.getPromoControl().$el.find( '.elementor-control-notice-dismiss' );
+		const dismissBtn = this.getPromoControl().$el.find( '.refraction-control-notice-dismiss' );
 		const onDismissBtnClick = ( event ) => {
 			dismissBtn.off( 'click', onDismissBtnClick ); // Remove the event listener
 			event.preventDefault();
@@ -58,7 +58,7 @@ class Ally extends elementorModules.editor.utils.Module {
 	}
 
 	ajaxRequest( name, data ) {
-		elementorCommon.ajax.addRequest( name, {
+		refractionCommon.ajax.addRequest( name, {
 			data,
 		} );
 	}
@@ -74,7 +74,7 @@ class Ally extends elementorModules.editor.utils.Module {
 
 	ensureNoPromoControlInSession() {
 		// Prevent opening the same hint again in current editor session.
-		elementor.config.user.dismissed_editor_notices.push( this.eventName );
+		refraction.config.user.dismissed_editor_notices.push( this.eventName );
 	}
 
 	onAction( event ) {
@@ -86,8 +86,8 @@ class Ally extends elementorModules.editor.utils.Module {
 		this.ensureNoPromoControlInSession();
 	}
 
-	onElementorLoaded() {
-		elementor.channels.editor.on( 'section:activated', this.onSectionActive.bind( this ) );
+	onRefractionLoaded() {
+		refraction.channels.editor.on( 'section:activated', this.onSectionActive.bind( this ) );
 	}
 }
 

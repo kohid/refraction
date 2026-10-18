@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { useSuppressedMessage } from '@elementor/editor-current-user';
-import { setDocumentModifiedStatus } from '@elementor/editor-documents';
-import { PanelFooter } from '@elementor/editor-panels';
-import { ConfirmationDialog, SaveChangesDialog, useDialog } from '@elementor/editor-ui';
-import { useMutation } from '@elementor/query';
-import { __dispatch as dispatch } from '@elementor/store';
+import { useSuppressedMessage } from '@refraction/editor-current-user';
+import { setDocumentModifiedStatus } from '@refraction/editor-documents';
+import { PanelFooter } from '@refraction/editor-panels';
+import { ConfirmationDialog, SaveChangesDialog, useDialog } from '@refraction/editor-ui';
+import { useMutation } from '@refraction/query';
+import { __dispatch as dispatch } from '@refraction/store';
 import { Alert, Box, Button, Chip, DialogHeader, Divider, ErrorBoundary, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -207,7 +207,7 @@ function ClassManagerPanelContent( {
 								disabled={ ! isDirty }
 								loading={ isPublishing }
 							>
-								{ __( 'Save changes', 'elementor' ) }
+								{ __( 'Save changes', 'refraction' ) }
 							</Button>
 						</PanelFooter>
 					</Stack>
@@ -233,27 +233,27 @@ function ClassManagerPanelContent( {
 				<SaveChangesDialog>
 					<DialogHeader onClose={ closeSaveChangesDialog } logo={ false }>
 						<SaveChangesDialog.Title>
-							{ __( 'You have unsaved changes', 'elementor' ) }
+							{ __( 'You have unsaved changes', 'refraction' ) }
 						</SaveChangesDialog.Title>
 					</DialogHeader>
 					<SaveChangesDialog.Content>
 						<SaveChangesDialog.ContentText>
-							{ __( 'You have unsaved changes in the Class Manager.', 'elementor' ) }
+							{ __( 'You have unsaved changes in the Class Manager.', 'refraction' ) }
 						</SaveChangesDialog.ContentText>
 						<SaveChangesDialog.ContentText>
-							{ __( 'To avoid losing your updates, save your changes before leaving.', 'elementor' ) }
+							{ __( 'To avoid losing your updates, save your changes before leaving.', 'refraction' ) }
 						</SaveChangesDialog.ContentText>
 					</SaveChangesDialog.Content>
 					<SaveChangesDialog.Actions
 						actions={ {
 							discard: {
-								label: __( 'Discard', 'elementor' ),
+								label: __( 'Discard', 'refraction' ),
 								action: () => {
 									resetAndClosePanel();
 								},
 							},
 							confirm: {
-								label: __( 'Save & Continue', 'elementor' ),
+								label: __( 'Save & Continue', 'refraction' ),
 								action: async () => {
 									await publish();
 									closeSaveChangesDialog();
@@ -271,7 +271,7 @@ function ClassManagerPanelContent( {
 const ErrorBoundaryFallback = () => (
 	<Box role="alert" sx={ { minHeight: '100%', p: 2 } }>
 		<Alert severity="error" sx={ { mb: 2, maxWidth: 400, textAlign: 'center' } }>
-			<strong>{ __( 'Something went wrong', 'elementor' ) }</strong>
+			<strong>{ __( 'Something went wrong', 'refraction' ) }</strong>
 		</Alert>
 	</Box>
 );
@@ -325,27 +325,27 @@ const StopSyncConfirmationDialog = ( { open, onClose, onConfirm }: StopSyncConfi
 	return (
 		<ConfirmationDialog open={ open } onClose={ onClose }>
 			<ConfirmationDialog.Title icon={ FlippedColorSwatchIcon } iconColor="primary">
-				{ __( 'Un-sync typography class', 'elementor' ) }
+				{ __( 'Un-sync typography class', 'refraction' ) }
 			</ConfirmationDialog.Title>
 			<ConfirmationDialog.Content>
 				<ConfirmationDialog.ContentText>
-					{ __( "You're about to stop syncing a typography class to Global Fonts.", 'elementor' ) }
+					{ __( "You're about to stop syncing a typography class to Global Fonts.", 'refraction' ) }
 				</ConfirmationDialog.ContentText>
 				<ConfirmationDialog.ContentText sx={ { mt: 1 } }>
 					{ __(
 						"Note that if it's being used anywhere, the affected elements will inherit the default typography.",
-						'elementor'
+						'refraction'
 					) }
 				</ConfirmationDialog.ContentText>
 			</ConfirmationDialog.Content>
 			<ConfirmationDialog.Actions
 				onClose={ onClose }
 				onConfirm={ onConfirm }
-				cancelLabel={ __( 'Cancel', 'elementor' ) }
-				confirmLabel={ __( 'Got it', 'elementor' ) }
+				cancelLabel={ __( 'Cancel', 'refraction' ) }
+				confirmLabel={ __( 'Got it', 'refraction' ) }
 				color="primary"
 				onSuppressMessage={ suppressStopSyncMessage }
-				suppressLabel={ __( "Don't show again", 'elementor' ) }
+				suppressLabel={ __( "Don't show again", 'refraction' ) }
 			/>
 		</ConfirmationDialog>
 	);

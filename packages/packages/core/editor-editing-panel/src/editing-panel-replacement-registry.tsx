@@ -1,5 +1,5 @@
 import { type ComponentType } from 'react';
-import { type Element, type ElementType } from '@elementor/editor-elements';
+import { type Element, type ElementType } from '@refraction/editor-elements';
 
 type EditingPanelReplacement = {
 	condition: ( element: Element, elementType: ElementType ) => boolean;

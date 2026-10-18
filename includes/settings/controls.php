@@ -1,15 +1,15 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor settings controls.
+ * Refraction settings controls.
  *
- * Elementor settings controls handler class responsible for creating the final
- * HTML for various input field types used in Elementor settings pages.
+ * Refraction settings controls handler class responsible for creating the final
+ * HTML for various input field types used in Refraction settings pages.
  *
  * @since 1.0.0
  */
@@ -152,7 +152,7 @@ class Settings_Controls {
 		?>
 		<select name="<?php echo esc_attr( $field['id'] ); ?>">
 			<?php if ( ! empty( $field['show_select'] ) ) : ?>
-				<option value="">— <?php echo esc_html__( 'Select', 'elementor' ); ?> —</option>
+				<option value="">— <?php echo esc_html__( 'Select', 'refraction' ); ?> —</option>
 			<?php endif; ?>
 
 			<?php foreach ( $field['options'] as $value => $label ) : ?>
@@ -190,13 +190,13 @@ class Settings_Controls {
 		);
 
 		/**
-		 * Filters the list of post type objects used by Elementor.
+		 * Filters the list of post type objects used by Refraction.
 		 *
 		 * @since 2.8.0
 		 *
-		 * @param array $post_types_objects List of post type objects used by Elementor.
+		 * @param array $post_types_objects List of post type objects used by Refraction.
 		 */
-		$post_types_objects = apply_filters( 'elementor/settings/controls/checkbox_list_cpt/post_type_objects', $post_types_objects );
+		$post_types_objects = apply_filters( 'refraction/settings/controls/checkbox_list_cpt/post_type_objects', $post_types_objects );
 
 		$field['options'] = [];
 		foreach ( $post_types_objects as $cpt_slug => $post_type ) {
@@ -233,7 +233,7 @@ class Settings_Controls {
 		if ( is_multisite() ) {
 			$roles = [
 				'super_admin' => [
-					'name' => esc_html__( 'Super Admin', 'elementor' ),
+					'name' => esc_html__( 'Super Admin', 'refraction' ),
 				],
 			] + $roles;
 		}

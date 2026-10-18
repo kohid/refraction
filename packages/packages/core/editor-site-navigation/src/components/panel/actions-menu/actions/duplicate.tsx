@@ -27,7 +27,7 @@ export default function Duplicate( { post, popupState }: { post: Post; popupStat
 
 	return (
 		<ActionMenuItem
-			title={ __( 'Duplicate', 'elementor' ) }
+			title={ __( 'Duplicate', 'refraction' ) }
 			icon={ CopyIcon }
 			MenuItemProps={ {
 				disabled: isDisabled,

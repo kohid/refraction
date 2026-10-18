@@ -1,6 +1,6 @@
 export class Open extends $e.modules.CommandBase {
 	apply() {
-		elementor.changeEditMode( 'edit' );
+		refraction.changeEditMode( 'edit' );
 	}
 }
 

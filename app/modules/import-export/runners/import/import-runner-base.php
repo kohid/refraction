@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Import;
+namespace Refraction\App\Modules\ImportExport\Runners\Import;
 
-use Elementor\App\Modules\ImportExport\Runners\Runner_Interface;
+use Refraction\App\Modules\ImportExport\Runners\Runner_Interface;
 
 abstract class Import_Runner_Base implements Runner_Interface {
 
@@ -30,10 +30,10 @@ abstract class Import_Runner_Base implements Runner_Interface {
 	}
 
 	public function set_session_post_meta( $post_id, $meta_value ) {
-		update_post_meta( $post_id, static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID, $meta_value );
+		update_post_meta( $post_id, static::META_KEY_REFRACTION_IMPORT_SESSION_ID, $meta_value );
 	}
 
 	public function set_session_term_meta( $term_id, $meta_value ) {
-		update_term_meta( $term_id, static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID, $meta_value );
+		update_term_meta( $term_id, static::META_KEY_REFRACTION_IMPORT_SESSION_ID, $meta_value );
 	}
 }

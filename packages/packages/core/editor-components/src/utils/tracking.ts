@@ -1,6 +1,6 @@
-import { type V1Element } from '@elementor/editor-elements';
-import { getMixpanel } from '@elementor/events';
-import { __getState as getState } from '@elementor/store';
+import { type V1Element } from '@refraction/editor-elements';
+import { getMixpanel } from '@refraction/events';
+import { __getState as getState } from '@refraction/store';
 
 import { selectCreatedThisSession } from '../store/store';
 import { type ExtendedWindow } from '../types';
@@ -59,7 +59,7 @@ export const onElementDrop = ( _args: unknown, element: V1Element ) => {
 	const createdThisSession = selectCreatedThisSession( getState() );
 	const isSameSessionReuse = componentUID && createdThisSession.includes( componentUID );
 
-	const eventsManagerConfig = ( window as unknown as ExtendedWindow ).elementorCommon.eventsManager.config;
+	const eventsManagerConfig = ( window as unknown as ExtendedWindow ).refractionCommon.eventsManager.config;
 	const { locations, secondaryLocations } = eventsManagerConfig;
 
 	trackComponentEvent( {

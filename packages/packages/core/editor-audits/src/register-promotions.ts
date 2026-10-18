@@ -1,4 +1,4 @@
-import { ElementorCookieIcon, PhotoIcon, ShieldHalfFilledIcon } from '@elementor/icons';
+import { RefractionCookieIcon, PhotoIcon, ShieldHalfFilledIcon } from '@elementor/icons';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { type AuditRun } from './types';
@@ -21,7 +21,7 @@ export const PROMOTIONS: PromotionConfig[] = [
 	{
 		auditId: 'audits/images-alt-text',
 		icon: PhotoIcon,
-		ctaLabel: __( 'Fix with Ally', 'elementor' ),
+		ctaLabel: __( 'Fix with Ally', 'refraction' ),
 		formatSubtitle: ( run ) => {
 			if ( run.result.status !== 'fail' ) {
 				return null;
@@ -35,7 +35,7 @@ export const PROMOTIONS: PromotionConfig[] = [
 
 			return sprintf(
 				/* translators: %d: number of images missing alt text. */
-				_n( '%d image', '%d images', count, 'elementor' ),
+				_n( '%d image', '%d images', count, 'refraction' ),
 				count
 			);
 		},
@@ -43,24 +43,24 @@ export const PROMOTIONS: PromotionConfig[] = [
 	},
 	{
 		auditId: 'audits/cookie-policy',
-		icon: ElementorCookieIcon,
-		ctaLabel: __( 'Fix with Cookiez', 'elementor' ),
+		icon: RefractionCookieIcon,
+		ctaLabel: __( 'Fix with Cookiez', 'refraction' ),
 		formatSubtitle: ( run ) =>
-			run.result.status === 'fail' ? __( 'Generate cookie policy', 'elementor' ) : null,
+			run.result.status === 'fail' ? __( 'Generate cookie policy', 'refraction' ) : null,
 		getCtaUrl: firstFailExternalUrl,
 	},
 	{
 		auditId: 'audits/scan-for-cookies',
-		icon: ElementorCookieIcon,
-		ctaLabel: __( 'Scan', 'elementor' ),
+		icon: RefractionCookieIcon,
+		ctaLabel: __( 'Scan', 'refraction' ),
 		formatSubtitle: ( run ) =>
-			run.result.status === 'fail' ? __( 'Scan this page for cookies', 'elementor' ) : null,
+			run.result.status === 'fail' ? __( 'Scan this page for cookies', 'refraction' ) : null,
 		getCtaUrl: firstFailExternalUrl,
 	},
 	{
 		auditId: 'audits/images-too-large',
 		icon: ShieldHalfFilledIcon,
-		ctaLabel: __( 'Optimize all', 'elementor' ),
+		ctaLabel: __( 'Optimize all', 'refraction' ),
 		formatSubtitle: ( run ) => {
 			if ( run.result.status !== 'fail' ) {
 				return null;
@@ -74,7 +74,7 @@ export const PROMOTIONS: PromotionConfig[] = [
 
 			return sprintf(
 				/* translators: %d: number of oversized images. */
-				_n( '%d image', '%d images', count, 'elementor' ),
+				_n( '%d image', '%d images', count, 'refraction' ),
 				count
 			);
 		},

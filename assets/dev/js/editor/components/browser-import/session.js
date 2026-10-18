@@ -100,7 +100,7 @@ export default class Session {
 	 */
 	resolve( containers ) {
 		if ( Object.values( containers ).some( ( element ) => 'section' === element.model.get( 'elType' ) ) ) {
-			this.target = elementor.getPreviewContainer();
+			this.target = refraction.getPreviewContainer();
 		}
 
 		// eslint-disable-next-line array-callback-return

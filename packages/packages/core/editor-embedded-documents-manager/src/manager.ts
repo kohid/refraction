@@ -1,5 +1,5 @@
-import { type Document } from '@elementor/editor-documents';
-import { ajax } from '@elementor/editor-v1-adapters';
+import { type Document } from '@refraction/editor-documents';
+import { ajax } from '@refraction/editor-v1-adapters';
 
 import { addEmbeddedDocumentStyles, clearEmbeddedDocumentsStyles } from './styles-provider';
 

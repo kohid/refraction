@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type PropsWithChildren } from 'react';
-import { ControlAdornments, ControlFormLabel } from '@elementor/editor-controls';
+import { ControlAdornments, ControlFormLabel } from '@refraction/editor-controls';
 import { type FormLabelProps, Stack } from '@elementor/ui';
 
 type ControlLabelProps = FormLabelProps & PropsWithChildren< object >;

@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@elementor/query';
+import { useMutation, useQueryClient } from '@refraction/query';
 
 import {
 	createRequest,

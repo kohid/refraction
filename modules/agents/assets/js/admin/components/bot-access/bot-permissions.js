@@ -7,19 +7,19 @@ export const getBotPermissions = () => [
 	{
 		permission: BOT_PERMISSION_SEARCH,
 		icon: SearchIcon,
-		title: __( 'Search', 'elementor' ),
-		description: __( 'Use content in search results', 'elementor' ),
+		title: __( 'Search', 'refraction' ),
+		description: __( 'Use content in search results', 'refraction' ),
 	},
 	{
 		permission: BOT_PERMISSION_AI_INPUT,
 		icon: ContentIcon,
-		title: __( 'AI input', 'elementor' ),
-		description: __( 'Use content to answer prompts', 'elementor' ),
+		title: __( 'AI input', 'refraction' ),
+		description: __( 'Use content to answer prompts', 'refraction' ),
 	},
 	{
 		permission: BOT_PERMISSION_AI_TRAIN,
 		icon: AcademyIcon,
-		title: __( 'AI training', 'elementor' ),
-		description: __( 'Use content to train models', 'elementor' ),
+		title: __( 'AI training', 'refraction' ),
+		description: __( 'Use content to train models', 'refraction' ),
 	},
 ];

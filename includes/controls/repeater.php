@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor repeater control.
+ * Refraction repeater control.
  *
  * A base control for creating repeater control. Repeater control allows you to
  * build repeatable blocks of fields. You can create, for example, a set of
@@ -113,7 +113,7 @@ class Control_Repeater extends Base_Data_Control implements Has_Validation {
 	/**
 	 * Import repeater.
 	 *
-	 * Used as a wrapper method for inner controls while importing Elementor
+	 * Used as a wrapper method for inner controls while importing Refraction
 	 * template JSON file, and replacing the old data.
 	 *
 	 * @since 1.8.0
@@ -165,17 +165,17 @@ class Control_Repeater extends Base_Data_Control implements Has_Validation {
 	public function content_template() {
 		?>
 		<label>
-			<span class="elementor-control-title">{{{ data.label }}}</span>
+			<span class="refraction-control-title">{{{ data.label }}}</span>
 		</label>
-		<div class="elementor-repeater-fields-wrapper" role="list"></div>
+		<div class="refraction-repeater-fields-wrapper" role="list"></div>
 		<# if ( itemActions.add ) { #>
-			<div class="elementor-button-wrapper">
-				<button class="elementor-button elementor-repeater-add" type="button">
+			<div class="refraction-button-wrapper">
+				<button class="refraction-button refraction-repeater-add" type="button">
 					<i class="eicon-plus" aria-hidden="true"></i>
 					<# if ( data.button_text ) { #>
 						{{{ data.button_text }}}
 					<# } else { #>
-						<?php echo esc_html__( 'Add Item', 'elementor' ); ?>
+						<?php echo esc_html__( 'Add Item', 'refraction' ); ?>
 					<# } #>
 				</button>
 			</div>
@@ -191,7 +191,7 @@ class Control_Repeater extends Base_Data_Control implements Has_Validation {
 				count( $control_data['default'] ) < $control_data['min_items']
 			) {
 				throw new \Exception(
-					esc_html__( 'In a Repeater control, if you specify a minimum number of items, you must also specify a default value that contains at least that number of items.', 'elementor' )
+					esc_html__( 'In a Repeater control, if you specify a minimum number of items, you must also specify a default value that contains at least that number of items.', 'refraction' )
 				);
 			}
 		}

@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/data/after';
+import After from 'refraction-api/modules/hooks/data/after';
 
 export class ResizeColumn extends After {
 	getCommand() {
@@ -43,7 +43,7 @@ export class ResizeColumn extends After {
 			// Mean, that it was not set before ( first time ).
 			currentSize = container.settings.get( '_column_size' );
 		} else {
-			const totalWidth = parentView.$el.find( ' > .elementor-container' )[ 0 ].getBoundingClientRect().width;
+			const totalWidth = parentView.$el.find( ' > .refraction-container' )[ 0 ].getBoundingClientRect().width;
 			currentSize = +( container.oldValues._inline_size ||
 				( currentColumnView.el.getBoundingClientRect().width / totalWidth * 100 ) );
 		}
@@ -68,7 +68,7 @@ export class ResizeColumn extends After {
 					'resize-column-limit': false,
 				},
 				history: {
-					title: elementor.config.elements.column.controls._inline_size.label,
+					title: refraction.config.elements.column.controls._inline_size.label,
 				},
 				external: true,
 				debounce: true,

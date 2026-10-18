@@ -38,13 +38,13 @@ export const EditConfirmationDialog = ( {
 		<Dialog open onClose={ closeDialog } maxWidth="xs">
 			<DialogTitle display="flex" alignItems="center" gap={ 1 }>
 				<AlertTriangleFilledIcon color="secondary" />
-				{ __( 'Changes to variables go live right away.', 'elementor' ) }
+				{ __( 'Changes to variables go live right away.', 'refraction' ) }
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText variant="body2" color="textPrimary">
 					{ __(
 						"Don't worry - all other changes you make will wait until you publish your site.",
-						'elementor'
+						'refraction'
 					) }
 				</DialogContentText>
 			</DialogContent>
@@ -59,14 +59,14 @@ export const EditConfirmationDialog = ( {
 							size="small"
 						/>
 					}
-					label={ <Typography variant="body2">{ __( "Don't show me again", 'elementor' ) }</Typography> }
+					label={ <Typography variant="body2">{ __( "Don't show me again", 'refraction' ) }</Typography> }
 				/>
 				<div>
 					<Button color="secondary" onClick={ closeDialog }>
-						{ __( 'Keep editing', 'elementor' ) }
+						{ __( 'Keep editing', 'refraction' ) }
 					</Button>
 					<Button variant="contained" color="secondary" onClick={ handleSave } sx={ { ml: 1 } }>
-						{ __( 'Save', 'elementor' ) }
+						{ __( 'Save', 'refraction' ) }
 					</Button>
 				</div>
 			</DialogActions>

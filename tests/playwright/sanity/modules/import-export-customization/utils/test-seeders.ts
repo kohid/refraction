@@ -10,7 +10,7 @@ export interface CreatedItems {
 	categories: Array<{ id: string; name: string; slug: string }>;
 	tags: Array<{ id: string; name: string; slug: string }>;
 	menus: Array<{ id: string; name: string }>;
-	elementorPages: Array<{ id: string }>;
+	refractionPages: Array<{ id: string }>;
 }
 
 export async function setupCompleteTestData( page: Page, testInfo: TestInfo, apiRequests: ApiRequests ): Promise<CreatedItems> {
@@ -21,7 +21,7 @@ export async function setupCompleteTestData( page: Page, testInfo: TestInfo, api
 		categories: [],
 		tags: [],
 		menus: [],
-		elementorPages: [],
+		refractionPages: [],
 	};
 
 	createdItems.pages = await createSampleContent( apiRequests, request, 'pages', [
@@ -35,8 +35,8 @@ export async function setupCompleteTestData( page: Page, testInfo: TestInfo, api
 		{ title: 'Blog Post 2', content: 'Second blog post content' },
 	] );
 
-	const elementorPageId = await createElementorContent( page, testInfo, apiRequests );
-	createdItems.elementorPages.push( { id: elementorPageId } );
+	const refractionPageId = await createRefractionContent( page, testInfo, apiRequests );
+	createdItems.refractionPages.push( { id: refractionPageId } );
 
 	const taxonomies = await createTaxonomies( apiRequests, request );
 	createdItems.categories.push( ...taxonomies.categories );
@@ -64,13 +64,13 @@ export async function createSampleContent( apiRequests: ApiRequests, request: AP
 	return results;
 }
 
-export async function createElementorContent( page: Page, testInfo: TestInfo, apiRequests: ApiRequests ) {
+export async function createRefractionContent( page: Page, testInfo: TestInfo, apiRequests: ApiRequests ) {
 	const wpAdminPage = new WpAdminPage( page, testInfo, apiRequests );
 	const editorPage = await wpAdminPage.openNewPage();
 
 	await editorPage.loadJsonPageTemplate(
 		path.join( __dirname, '..' ),
-		'elementor-custom-page',
+		'refraction-custom-page',
 		'.e-con-inner',
 	);
 
@@ -127,7 +127,7 @@ export async function cleanupCreatedItems( apiRequests: ApiRequests, request: AP
 		await apiRequests.delete( request, 'posts', post.id );
 	}
 
-	for ( const elementorPage of createdItems.elementorPages || [] ) {
-		await apiRequests.delete( request, 'pages', elementorPage.id );
+	for ( const refractionPage of createdItems.refractionPages || [] ) {
+		await apiRequests.delete( request, 'pages', refractionPage.id );
 	}
 }

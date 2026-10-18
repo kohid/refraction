@@ -1,6 +1,6 @@
 import { getClipboardElements } from '../get-clipboard-elements';
 
-const ELEMENTOR_STORAGE_KEY = 'elementor';
+const REFRACTION_STORAGE_KEY = 'refraction';
 const CLIPBOARD_KEY = 'clipboard';
 
 describe( 'getClipboardElements', () => {
@@ -37,7 +37,7 @@ describe( 'getClipboardElements', () => {
 
 		const result = getClipboardElements( CLIPBOARD_KEY );
 
-		expect( localStorage.getItem ).toHaveBeenCalledWith( ELEMENTOR_STORAGE_KEY );
+		expect( localStorage.getItem ).toHaveBeenCalledWith( REFRACTION_STORAGE_KEY );
 		expect( result ).toEqual( elements );
 	} );
 

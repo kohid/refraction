@@ -2,7 +2,7 @@ import { Typography, CloseButton, AppBar, Divider, Toolbar, IconButton } from '@
 import { __ } from '@wordpress/i18n';
 import Progress from './progress';
 import PropTypes from 'prop-types';
-import { useQuery } from '@elementor/query';
+import { useQuery } from '@refraction/query';
 import * as React from 'react';
 import {
 	addMixpanelTrackingChecklistHeader,
@@ -29,7 +29,7 @@ const Header = ( { steps, isMinimized, toggleIsMinimized } ) => {
 		if ( ! closedForFirstTime ) {
 			await updateUserProgress( { [ CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME ]: true } );
 
-			window.dispatchEvent( new CustomEvent( 'elementor/checklist/first_close', { detail: { message: 'firstClose' } } ) );
+			window.dispatchEvent( new CustomEvent( 'refraction/checklist/first_close', { detail: { message: 'firstClose' } } ) );
 		}
 
 		toggleChecklistPopup();
@@ -50,7 +50,7 @@ const Header = ( { steps, isMinimized, toggleIsMinimized } ) => {
 						variant="subtitle1"
 						sx={ { flexGrow: 1 } }
 					>
-						{ __( 'Let\'s make a productivity boost', 'elementor' ) }
+						{ __( 'Let\'s make a productivity boost', 'refraction' ) }
 					</Typography>
 					<IconButton size="small" onClick={ toggleIsMinimized } aria-expanded={ ! isMinimized }>
 						{ isMinimized ? <ExpandDiagonalIcon /> : <MinimizeDiagonalIcon /> }

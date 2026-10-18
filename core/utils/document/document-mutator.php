@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Core\Utils\Document;
+namespace Refraction\Core\Utils\Document;
 
-use Elementor\Core\Base\Document;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,10 +16,10 @@ class Document_Mutator {
 
 	const WIDGET_EL_TYPE = 'widget';
 
-	/** @var \Elementor\Elements_Manager */
+	/** @var \Refraction\Elements_Manager */
 	private $element_manager;
 
-	/** @var \Elementor\Widgets_Manager */
+	/** @var \Refraction\Widgets_Manager */
 	private $widgets_manager;
 
 	public function __construct( $element_manager, $widgets_manager ) {
@@ -111,8 +111,8 @@ class Document_Mutator {
 
 		if ( false === $result ) {
 			return new \WP_Error(
-				'elementor_not_found',
-				__( 'Parent element not found.', 'elementor' ),
+				'refraction_not_found',
+				__( 'Parent element not found.', 'refraction' ),
 				[ 'status' => \WP_Http::NOT_FOUND ]
 			);
 		}
@@ -128,8 +128,8 @@ class Document_Mutator {
 
 		if ( false === $result ) {
 			return new \WP_Error(
-				'elementor_not_found',
-				__( 'Element not found.', 'elementor' ),
+				'refraction_not_found',
+				__( 'Element not found.', 'refraction' ),
 				[ 'status' => \WP_Http::NOT_FOUND ]
 			);
 		}
@@ -145,8 +145,8 @@ class Document_Mutator {
 
 		if ( null === $node ) {
 			return new \WP_Error(
-				'elementor_not_found',
-				__( 'Element not found.', 'elementor' ),
+				'refraction_not_found',
+				__( 'Element not found.', 'refraction' ),
 				[ 'status' => \WP_Http::NOT_FOUND ]
 			);
 		}
@@ -171,8 +171,8 @@ class Document_Mutator {
 
 		if ( null === $location ) {
 			return new \WP_Error(
-				'elementor_not_found',
-				__( 'Element not found.', 'elementor' ),
+				'refraction_not_found',
+				__( 'Element not found.', 'refraction' ),
 				[ 'status' => \WP_Http::NOT_FOUND ]
 			);
 		}
@@ -236,8 +236,8 @@ class Document_Mutator {
 
 		if ( ! $saved ) {
 			return new \WP_Error(
-				'elementor_save_failed',
-				__( 'Could not save document.', 'elementor' ),
+				'refraction_save_failed',
+				__( 'Could not save document.', 'refraction' ),
 				[ 'status' => \WP_Http::INTERNAL_SERVER_ERROR ]
 			);
 		}
@@ -253,8 +253,8 @@ class Document_Mutator {
 
 		if ( ! $main_document instanceof Document ) {
 			return new \WP_Error(
-				'elementor_not_found',
-				__( 'Post not found.', 'elementor' ),
+				'refraction_not_found',
+				__( 'Post not found.', 'refraction' ),
 				[ 'status' => \WP_Http::NOT_FOUND ]
 			);
 		}
@@ -269,8 +269,8 @@ class Document_Mutator {
 
 		if ( ! $autosave instanceof Document ) {
 			return new \WP_Error(
-				'elementor_autosave_failed',
-				__( 'Could not create autosave revision.', 'elementor' ),
+				'refraction_autosave_failed',
+				__( 'Could not create autosave revision.', 'refraction' ),
 				[ 'status' => \WP_Http::INTERNAL_SERVER_ERROR ]
 			);
 		}
@@ -286,8 +286,8 @@ class Document_Mutator {
 
 		if ( false === $result ) {
 			return new \WP_Error(
-				'elementor_not_found',
-				__( 'Element not found.', 'elementor' ),
+				'refraction_not_found',
+				__( 'Element not found.', 'refraction' ),
 				[ 'status' => \WP_Http::NOT_FOUND ]
 			);
 		}
@@ -372,8 +372,8 @@ class Document_Mutator {
 			if ( isset( $node['id'] ) && $node['id'] === $parent_id ) {
 				if ( isset( $node['elType'] ) && self::WIDGET_EL_TYPE === $node['elType'] ) {
 					return new \WP_Error(
-						'elementor_invalid_parent',
-						__( 'Cannot insert into a widget element.', 'elementor' ),
+						'refraction_invalid_parent',
+						__( 'Cannot insert into a widget element.', 'refraction' ),
 						[ 'status' => \WP_Http::BAD_REQUEST ]
 					);
 				}
@@ -440,10 +440,10 @@ class Document_Mutator {
 		}
 
 		return new \WP_Error(
-			'elementor_invalid_parent',
+			'refraction_invalid_parent',
 			sprintf(
 				/* translators: %s: widget type */
-				__( '"%s" is a widget and cannot be a direct child of the document. Wrap it in a container element such as e-flexbox or e-div-block.', 'elementor' ),
+				__( '"%s" is a widget and cannot be a direct child of the document. Wrap it in a container element such as e-flexbox or e-div-block.', 'refraction' ),
 				$element['widgetType'] ?? self::WIDGET_EL_TYPE
 			),
 			[ 'status' => \WP_Http::BAD_REQUEST ]
@@ -471,8 +471,8 @@ class Document_Mutator {
 
 		if ( ! in_array( $child_type, $allowed, true ) ) {
 			return new \WP_Error(
-				'elementor_invalid_parent',
-				__( 'Element type not allowed as child of this parent.', 'elementor' ),
+				'refraction_invalid_parent',
+				__( 'Element type not allowed as child of this parent.', 'refraction' ),
 				[ 'status' => \WP_Http::BAD_REQUEST ]
 			);
 		}

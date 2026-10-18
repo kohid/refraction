@@ -1,10 +1,10 @@
 import apiFetch from '@wordpress/api-fetch';
 
-const AGENT_READY_SETTINGS_PATH = '/elementor/v1/settings/elementor_agent_ready_settings';
+const AGENT_READY_SETTINGS_PATH = '/refraction/v1/settings/refraction_agent_ready_settings';
 const HTTP_NOT_FOUND = 404;
 
 export const activateAgentsReady = () => {
-	return elementorCommon.ajax.addRequest( 'agents_ready_opt_in' );
+	return refractionCommon.ajax.addRequest( 'agents_ready_opt_in' );
 };
 
 // The server merges each module key onto the stored object, so callers send only the modules they changed.
@@ -36,7 +36,7 @@ export const fetchLlmsFile = async ( url ) => {
 
 export const fetchMarkdownPreview = ( postId ) => {
 	return new Promise( ( resolve, reject ) => {
-		elementorCommon.ajax.addRequest( 'agents_ready_preview_markdown', {
+		refractionCommon.ajax.addRequest( 'agents_ready_preview_markdown', {
 			data: { postId },
 			success: ( response ) => resolve( response?.content ?? '' ),
 			error: reject,
@@ -46,7 +46,7 @@ export const fetchMarkdownPreview = ( postId ) => {
 
 export const searchMarkdownItems = ( term ) => {
 	return new Promise( ( resolve, reject ) => {
-		elementorCommon.ajax.addRequest( 'agents_ready_search_markdown', {
+		refractionCommon.ajax.addRequest( 'agents_ready_search_markdown', {
 			data: { term },
 			success: ( response ) => resolve( response?.items ?? [] ),
 			error: reject,
@@ -56,7 +56,7 @@ export const searchMarkdownItems = ( term ) => {
 
 export const saveLlmsContent = ( content ) => {
 	return new Promise( ( resolve, reject ) => {
-		elementorCommon.ajax.addRequest( 'agents_ready_save_llms_content', {
+		refractionCommon.ajax.addRequest( 'agents_ready_save_llms_content', {
 			data: { content },
 			success: resolve,
 			error: reject,

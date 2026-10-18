@@ -1,24 +1,24 @@
-const TemplateLibraryTemplateView = require( 'elementor-templates/views/template/base' );
+const TemplateLibraryTemplateView = require( 'refraction-templates/views/template/base' );
 
 import { SAVE_CONTEXTS } from './../../constants';
-import { rovingTabindex, suppressEscapeKeyUp } from 'elementor-editor-utils/keyboard-nav';
+import { rovingTabindex, suppressEscapeKeyUp } from 'refraction-editor-utils/keyboard-nav';
 
 const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
-	template: '#tmpl-elementor-template-library-template-local',
+	template: '#tmpl-refraction-template-library-template-local',
 
 	ui() {
 		return _.extend( TemplateLibraryTemplateView.prototype.ui.apply( this, arguments ), {
 			bulkSelectionItemCheckbox: '.bulk-selection-item-checkbox',
-			deleteButton: '.elementor-template-library-template-delete',
-			renameButton: '.elementor-template-library-template-rename',
-			moveButton: '.elementor-template-library-template-move',
-			copyButton: '.elementor-template-library-template-copy',
-			exportButton: '.elementor-template-library-template-export',
-			morePopup: '.elementor-template-library-template-more',
-			toggleMore: '.elementor-template-library-template-more-toggle',
-			toggleMoreIcon: '.elementor-template-library-template-more-toggle i',
-			titleCell: '.elementor-template-library-template-name span',
-			resourceIcon: '.elementor-template-library-template-name i',
+			deleteButton: '.refraction-template-library-template-delete',
+			renameButton: '.refraction-template-library-template-rename',
+			moveButton: '.refraction-template-library-template-move',
+			copyButton: '.refraction-template-library-template-copy',
+			exportButton: '.refraction-template-library-template-export',
+			morePopup: '.refraction-template-library-template-more',
+			toggleMore: '.refraction-template-library-template-more-toggle',
+			toggleMoreIcon: '.refraction-template-library-template-more-toggle i',
+			titleCell: '.refraction-template-library-template-name span',
+			resourceIcon: '.refraction-template-library-template-name i',
 		} );
 	},
 
@@ -81,8 +81,8 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 		this.ui.toggleMore.attr( 'aria-expanded', 'true' );
 		this.ui.morePopup.show();
 
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.morePopup,
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.morePopup,
 		} );
 	},
 
@@ -209,7 +209,7 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 		this.ui.titleCell.text( title );
 
 		if ( this.ui.bulkSelectionItemCheckbox.length ) {
-			const ariaLabel = __( 'Select template', 'elementor' ) + ' ' + title;
+			const ariaLabel = __( 'Select template', 'refraction' ) + ' ' + title;
 			this.ui.bulkSelectionItemCheckbox.attr( 'aria-label', ariaLabel );
 		}
 	},
@@ -263,7 +263,7 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 
 		var toggleMoreIcon = this.ui.toggleMoreIcon;
 
-		elementor.templates.deleteTemplate( this.model, {
+		refraction.templates.deleteTemplate( this.model, {
 			onConfirm() {
 				toggleMoreIcon.removeClass( 'eicon-ellipsis-h' ).addClass( 'eicon-loading eicon-animation-spin' );
 			},
@@ -290,8 +290,8 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 			}
 		}
 
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.morePopup,
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.morePopup,
 		} );
 	},
 
@@ -312,7 +312,7 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 		this.closeContextMenu();
 
 		try {
-			await elementor.templates.renameTemplate( this.model, {
+			await refraction.templates.renameTemplate( this.model, {
 				onConfirm: () => this.showToggleMoreLoader(),
 			} );
 		} finally {
@@ -367,15 +367,15 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 		event.stopPropagation();
 
 		if ( event?.target?.checked ) {
-			elementor.templates.addBulkSelectionItem( event.target.dataset.template_id, event.target.dataset.type );
+			refraction.templates.addBulkSelectionItem( event.target.dataset.template_id, event.target.dataset.type );
 			this.$el.addClass( 'bulk-selected-item' );
 		} else {
-			elementor.templates.removeBulkSelectionItem( event.target.dataset.template_id, event.target.dataset.type );
+			refraction.templates.removeBulkSelectionItem( event.target.dataset.template_id, event.target.dataset.type );
 			this.$el.removeClass( 'bulk-selected-item' );
 		}
 
 		this.updateRowSelectionAttributes();
-		elementor.templates.layout.handleBulkActionBarUi();
+		refraction.templates.layout.handleBulkActionBarUi();
 	},
 } );
 

@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor choose control.
+ * Refraction choose control.
  *
  * A base control for creating choose control. Displays radio buttons styled as
  * groups of buttons with icons for each option.
@@ -42,15 +42,15 @@ class Control_Choose extends Base_Data_Control {
 	public function content_template() {
 		$control_uid_input_type = '{{value}}';
 		?>
-		<div class="elementor-control-field">
-			<label class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
-				<div class="elementor-choices">
+		<div class="refraction-control-field">
+			<label class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
+				<div class="refraction-choices">
 					<# _.each( data.options, function( options, value ) { #>
-					<input id="<?php $this->print_control_uid( $control_uid_input_type ); ?>" type="radio" name="elementor-choose-{{ data.name }}-{{ data._cid }}" value="{{ value }}">
-					<label class="elementor-choices-label elementor-control-unit-1 tooltip-target" for="<?php $this->print_control_uid( $control_uid_input_type ); ?>" data-tooltip="{{ options.title }}">
+					<input id="<?php $this->print_control_uid( $control_uid_input_type ); ?>" type="radio" name="refraction-choose-{{ data.name }}-{{ data._cid }}" value="{{ value }}">
+					<label class="refraction-choices-label refraction-control-unit-1 tooltip-target" for="<?php $this->print_control_uid( $control_uid_input_type ); ?>" data-tooltip="{{ options.title }}">
 						<i class="{{ options.icon }}" aria-hidden="true"></i>
-						<span class="elementor-screen-only">{{{ options.title }}}</span>
+						<span class="refraction-screen-only">{{{ options.title }}}</span>
 					</label>
 					<# } ); #>
 				</div>
@@ -58,7 +58,7 @@ class Control_Choose extends Base_Data_Control {
 		</div>
 
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

@@ -21,9 +21,9 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 			const tabTitleOne = frame.locator( '.e-n-tab-title >> nth=0' ),
 				tabTitleTwo = frame.locator( '.e-n-tab-title >> nth=1' ),
 				tabTitleThree = frame.locator( '.e-n-tab-title >> nth=2' ),
-				button1 = frame.locator( '.elementor-button >> nth=0' ),
-				button2 = frame.locator( '.elementor-button >> nth=1' ),
-				buttonBelow = frame.locator( '.elementor-button >> nth=3' );
+				button1 = frame.locator( '.refraction-button >> nth=0' ),
+				button2 = frame.locator( '.refraction-button >> nth=1' ),
+				buttonBelow = frame.locator( '.refraction-button >> nth=3' );
 
 			// Assert.
 			await tabTitleOne.focus();
@@ -71,15 +71,15 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await editor.loadTemplate( filePath, false );
 		await frame.waitForSelector( '.e-n-tabs' );
 		await editor.publishAndViewPage();
-		await page.waitForSelector( '.elementor-widget-n-tabs' );
+		await page.waitForSelector( '.refraction-widget-n-tabs' );
 
 		await test.step( 'Keyboard handling on the Front End', async () => {
 			const tabTitleOne = page.locator( '.e-n-tab-title >> nth=0' ),
 				tabTitleTwo = page.locator( '.e-n-tab-title >> nth=1' ),
 				tabTitleThree = page.locator( '.e-n-tab-title >> nth=2' ),
-				button1 = page.locator( '.elementor-button >> nth=0' ),
-				button2 = page.locator( '.elementor-button >> nth=1' ),
-				buttonBelow = page.locator( '.elementor-button >> nth=3' );
+				button1 = page.locator( '.refraction-button >> nth=0' ),
+				button2 = page.locator( '.refraction-button >> nth=1' ),
+				buttonBelow = page.locator( '.refraction-button >> nth=3' );
 
 			// Assert.
 			await page.locator( '.page-header' ).click();
@@ -116,7 +116,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		} );
 
 		await test.step( '@axe-core/playwright', async () => {
-			await editor.axeCoreAccessibilityTest( page, '.elementor-widget-n-tabs' );
+			await editor.axeCoreAccessibilityTest( page, '.refraction-widget-n-tabs' );
 		} );
 	} );
 
@@ -138,7 +138,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 		// Assert.
 		// Check if title's are aligned on the left.
-		await expect.soft( editor.getPreviewFrame().locator( '.elementor-widget-n-tabs .e-n-tabs-heading .e-n-tab-title[aria-selected="true"]' ) ).toHaveCSS( 'justify-content', 'flex-start' );
+		await expect.soft( editor.getPreviewFrame().locator( '.refraction-widget-n-tabs .e-n-tabs-heading .e-n-tab-title[aria-selected="true"]' ) ).toHaveCSS( 'justify-content', 'flex-start' );
 	} );
 
 	test( 'Verify the separation of the parent and child nested tabs styling', async ( { page, apiRequests }, testInfo ) => {
@@ -147,7 +147,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		const editor = await wpAdmin.openNewPage(),
 			container = await editor.addElement( { elType: 'container' }, 'document' ),
 			parentWidgetId = await editor.addWidget( { widgetType: 'nested-tabs', container } ),
-			tabsContainer = editor.getPreviewFrame().locator( `.elementor-element-${ parentWidgetId } .e-n-tabs-content .e-con.e-active` ),
+			tabsContainer = editor.getPreviewFrame().locator( `.refraction-element-${ parentWidgetId } .e-n-tabs-content .e-con.e-active` ),
 			tabsContainerId = await tabsContainer.getAttribute( 'data-id' );
 
 		await editor.addWidget( { widgetType: 'nested-tabs', container: tabsContainerId } );
@@ -167,13 +167,13 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 		// Assert.
 		// Check if title's are aligned on the left for the parent widget.
-		await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ parentWidgetId } > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"]` ) ).toHaveCSS( 'justify-content', 'flex-start' );
+		await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ parentWidgetId } > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"]` ) ).toHaveCSS( 'justify-content', 'flex-start' );
 		// Check if title's are aligned on the center for the child widget.
-		await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ parentWidgetId } .e-n-tabs-content .elementor-element > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"]` ) ).toHaveCSS( 'justify-content', 'center' );
+		await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ parentWidgetId } .e-n-tabs-content .refraction-element > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"]` ) ).toHaveCSS( 'justify-content', 'center' );
 		// Check if parent widget has red tabs.
-		await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ parentWidgetId } > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"] + .e-n-tab-title` ) ).toHaveCSS( 'background-color', 'rgb(255, 0, 0)' );
+		await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ parentWidgetId } > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"] + .e-n-tab-title` ) ).toHaveCSS( 'background-color', 'rgb(255, 0, 0)' );
 		// Check if child widget doesn't have red tabs.
-		await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ parentWidgetId } .e-n-tabs-content .elementor-element > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"] + .e-n-tab-title` ) ).not.toHaveCSS( 'background-color', 'rgb(255, 0, 0)' );
+		await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ parentWidgetId } .e-n-tabs-content .refraction-element > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"] + .e-n-tab-title` ) ).not.toHaveCSS( 'background-color', 'rgb(255, 0, 0)' );
 	} );
 
 	test( 'Keyboard navigation with arrow keys after changing tab CSS ID', async ( { page, apiRequests }, testInfo ) => {
@@ -196,10 +196,10 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 			await editor.openPanelTab( 'content' );
 			await editor.openSection( 'section_tabs' );
 
-			await page.locator( '.elementor-control-tabs .elementor-repeater-fields' ).nth( 1 ).waitFor( { state: 'visible' } );
-			await page.locator( '.elementor-control-tabs .elementor-repeater-fields' ).nth( 1 ).click();
+			await page.locator( '.refraction-control-tabs .refraction-repeater-fields' ).nth( 1 ).waitFor( { state: 'visible' } );
+			await page.locator( '.refraction-control-tabs .refraction-repeater-fields' ).nth( 1 ).click();
 
-			const elementIdInput = page.locator( '.elementor-control-tabs .elementor-repeater-fields' ).nth( 1 ).locator( '.elementor-control-element_id input' );
+			const elementIdInput = page.locator( '.refraction-control-tabs .refraction-repeater-fields' ).nth( 1 ).locator( '.refraction-control-element_id input' );
 			await elementIdInput.waitFor( { state: 'visible', timeout: 10000 } );
 			await elementIdInput.click();
 			await elementIdInput.fill( customCssId );

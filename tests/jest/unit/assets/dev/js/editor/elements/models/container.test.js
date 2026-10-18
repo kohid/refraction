@@ -7,7 +7,7 @@ describe( 'Container', () => {
 	beforeEach( async () => {
 		childModel = await setupMock();
 
-		container = new ( await import( 'elementor-elements/models/container' ) ).default;
+		container = new ( await import( 'refraction-elements/models/container' ) ).default;
 	} );
 
 	afterEach( freeMock );

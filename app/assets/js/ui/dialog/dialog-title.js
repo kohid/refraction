@@ -1,4 +1,4 @@
-import Heading from 'elementor-app/ui/atoms/heading';
+import Heading from 'refraction-app/ui/atoms/heading';
 
 export default function DialogTitle( props ) {
 	return (

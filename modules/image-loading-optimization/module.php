@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Modules\ImageLoadingOptimization;
+namespace Refraction\Modules\ImageLoadingOptimization;
 
-use Elementor\Core\Base\Module as BaseModule;
+use Refraction\Core\Base\Module as BaseModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -57,13 +57,13 @@ class Module extends BaseModule {
 	/**
 	 * Check whether the "Optimized Image Loading" settings is enabled.
 	 *
-	 * The 'optimized_image_loading' option can be enabled/disabled from the Elementor settings.
+	 * The 'optimized_image_loading' option can be enabled/disabled from the Refraction settings.
 	 *
 	 * @since 3.21.0
 	 * @access private
 	 */
 	private static function is_optimized_image_loading_enabled(): bool {
-		return '1' === get_option( 'elementor_optimized_image_loading', '1' );
+		return '1' === get_option( 'refraction_optimized_image_loading', '1' );
 	}
 
 	/**
@@ -237,7 +237,7 @@ class Module extends BaseModule {
 			if ( false === $maybe_in_viewport ) {
 				_doing_it_wrong(
 					__FUNCTION__,
-					esc_html__( 'An image should not be lazy-loaded and marked as high priority at the same time.', 'elementor' ),
+					esc_html__( 'An image should not be lazy-loaded and marked as high priority at the same time.', 'refraction' ),
 					''
 				);
 
@@ -293,7 +293,7 @@ class Module extends BaseModule {
 		 * @param int $pixels The minimum number of pixels (with * height).
 		 * @return int The filtered value.
 		 */
-		return apply_filters( 'elementor/image-loading-optimization/min_priority_img_pixels', $this->min_priority_img_pixels );
+		return apply_filters( 'refraction/image-loading-optimization/min_priority_img_pixels', $this->min_priority_img_pixels );
 	}
 
 	/**

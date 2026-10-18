@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Core\Debug\Classes;
+namespace Refraction\Core\Debug\Classes;
 
-use Elementor\Modules\SafeMode\Module as Safe_Mode;
-use Elementor\Utils;
+use Refraction\Modules\SafeMode\Module as Safe_Mode;
+use Refraction\Utils;
 
 class Htaccess extends Inspection_Base {
 
 	private $message = '';
 
 	public function __construct() {
-		$this->message = esc_html__( 'Your site\'s .htaccess file appears to be missing.', 'elementor' );
+		$this->message = esc_html__( 'Your site\'s .htaccess file appears to be missing.', 'refraction' );
 	}
 
 	public function run() {
@@ -28,7 +28,7 @@ class Htaccess extends Inspection_Base {
 		if ( strstr( $server, 'APACHE' ) ) {
 			$htaccess_file = get_home_path() . '.htaccess';
 			/* translators: %s: Path to .htaccess file. */
-			$this->message .= ' ' . sprintf( esc_html__( 'File Path: %s', 'elementor' ), $htaccess_file ) . ' ';
+			$this->message .= ' ' . sprintf( esc_html__( 'File Path: %s', 'refraction' ), $htaccess_file ) . ' ';
 			return file_exists( $htaccess_file );
 		}
 		return true;

@@ -1,4 +1,4 @@
-import { $eType, ElementorType, WindowType } from '../types/types';
+import { $eType, RefractionType, WindowType } from '../types/types';
 import EditorPage from '../pages/editor-page';
 
 /**
@@ -11,11 +11,11 @@ import EditorPage from '../pages/editor-page';
  */
 
 let parent: unknown;
-let elementor: ElementorType;
+let refraction: RefractionType;
 let $e: $eType;
 export const addElement = ( props: { model: unknown, container: null | string, isContainerASection: boolean } ): string | undefined => {
 	if ( props.container ) {
-		parent = elementor.getContainer( props.container );
+		parent = refraction.getContainer( props.container );
 	} else {
 		// If a `container` isn't supplied - create a new Section.
 		parent = $e.run(
@@ -23,7 +23,7 @@ export const addElement = ( props: { model: unknown, container: null | string, i
 			{
 				model: { elType: 'section' },
 				columns: 1,
-				container: elementor.getContainer( 'document' ),
+				container: refraction.getContainer( 'document' ),
 			},
 		);
 
@@ -49,7 +49,7 @@ export const addElement = ( props: { model: unknown, container: null | string, i
 };
 
 /**
- * Make an Elementor element CSS selector using Container ID.
+ * Make a Refraction element CSS selector using Container ID.
  *
  * @param {string} id - Container ID.
  *

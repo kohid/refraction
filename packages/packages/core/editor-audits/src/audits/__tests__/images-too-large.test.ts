@@ -1,9 +1,9 @@
-import { getElementStyles } from '@elementor/editor-elements';
+import { getElementStyles } from '@refraction/editor-elements';
 
 import { audit } from '../images-too-large';
 import { makeContainer, makeContext, makeWidget } from './fixtures';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getElementStyles: jest.fn(),
 } ) );
 

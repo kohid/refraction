@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { numberPropTypeUtil, queryPropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+import { numberPropTypeUtil, queryPropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 import { fireEvent, screen, within } from '@testing-library/react';
 
 import * as boundPropContext from '../../bound-prop-context';
@@ -32,7 +32,7 @@ const mockUseQueryAutocomplete = useQueryAutocompleteModule.useQueryAutocomplete
 >;
 
 const queryOptions = {
-	url: '/elementor/v1/post',
+	url: '/refraction/v1/post',
 	params: { included_types: [ 'post', 'page' ] },
 };
 

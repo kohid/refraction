@@ -1,6 +1,6 @@
 import { createMockElement } from 'test-utils';
-import { type V1Element } from '@elementor/editor-elements';
-import { type PropValue } from '@elementor/editor-props';
+import { type V1Element } from '@refraction/editor-elements';
+import { type PropValue } from '@refraction/editor-props';
 
 import { componentInstanceOverridePropTypeUtil } from '../../prop-types/component-instance-override-prop-type';
 import { componentInstanceOverridesPropTypeUtil } from '../../prop-types/component-instance-overrides-prop-type';

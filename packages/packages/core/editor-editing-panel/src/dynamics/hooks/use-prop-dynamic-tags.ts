@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 
 import { getAtomicDynamicTags } from '../sync/get-atomic-dynamic-tags';
 import { type DynamicTag } from '../types';

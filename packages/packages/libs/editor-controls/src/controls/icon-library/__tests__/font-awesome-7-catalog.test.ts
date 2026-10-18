@@ -27,10 +27,10 @@ function createIcon( overrides: Partial< FontAwesome7Icon > = {} ): FontAwesome7
 }
 
 describe( 'font-awesome-7-catalog', () => {
-	const originalElementorCommon = window.elementorCommon;
+	const originalRefractionCommon = window.refractionCommon;
 
 	beforeEach( () => {
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				fontAwesome: {
 					v7: {
@@ -39,11 +39,11 @@ describe( 'font-awesome-7-catalog', () => {
 					},
 				},
 			},
-		} as typeof window.elementorCommon;
+		} as typeof window.refractionCommon;
 	} );
 
 	afterEach( () => {
-		window.elementorCommon = originalElementorCommon;
+		window.refractionCommon = originalRefractionCommon;
 		resetFontAwesome7IconsCache();
 		jest.restoreAllMocks();
 	} );
@@ -149,7 +149,7 @@ describe( 'font-awesome-7-catalog', () => {
 
 	it( 'rejects non-http catalog URLs and unsafe SVG paths', async () => {
 		// Arrange.
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				fontAwesome: {
 					v7: {
@@ -158,14 +158,14 @@ describe( 'font-awesome-7-catalog', () => {
 					},
 				},
 			},
-		} as typeof window.elementorCommon;
+		} as typeof window.refractionCommon;
 		global.fetch = jest.fn();
 
 		// Act.
 		const blockedConfig = getFontAwesome7EditorConfig();
 		const blockedCatalog = await loadFontAwesome7Catalog();
 
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				fontAwesome: {
 					v7: {
@@ -174,7 +174,7 @@ describe( 'font-awesome-7-catalog', () => {
 					},
 				},
 			},
-		} as typeof window.elementorCommon;
+		} as typeof window.refractionCommon;
 		global.fetch = jest.fn().mockResolvedValue( {
 			ok: true,
 			json: () =>

@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Modules\Library\Documents;
+namespace Refraction\Modules\Library\Documents;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor container library document.
+ * Refraction container library document.
  *
- * Elementor container library document handler class is responsible for
+ * Refraction container library document handler class is responsible for
  * handling a document of a container type.
  *
  * @since 2.0.0
@@ -49,7 +49,7 @@ class Container extends Library_Document {
 	 * @return string Document title.
 	 */
 	public static function get_title() {
-		return esc_html__( 'Container', 'elementor' );
+		return esc_html__( 'Container', 'refraction' );
 	}
 
 	/**

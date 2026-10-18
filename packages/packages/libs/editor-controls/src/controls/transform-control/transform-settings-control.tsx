@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PopoverHeader } from '@elementor/editor-ui';
+import { PopoverHeader } from '@refraction/editor-ui';
 import { AdjustmentsIcon } from '@elementor/icons';
 import { bindPopover, Box, Divider, Popover, type PopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -40,7 +40,7 @@ export const TransformSettingsControl = ( {
 			{ ...popupProps }
 		>
 			<PopoverHeader
-				title={ __( 'Transform settings', 'elementor' ) }
+				title={ __( 'Transform settings', 'refraction' ) }
 				onClose={ popupState.close }
 				icon={ <AdjustmentsIcon fontSize={ SIZE } /> }
 			/>

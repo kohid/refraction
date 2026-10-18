@@ -1,26 +1,26 @@
 <?php
-namespace Elementor\Core\Editor;
+namespace Refraction\Core\Editor;
 
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Core\Common\Modules\Ajax\Module;
-use Elementor\Core\Debug\Loading_Inspection_Manager;
-use Elementor\Core\Editor\Loader\Editor_Loader;
-use Elementor\Core\Utils\Assets_Config_Provider;
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
-use Elementor\Core\Editor\Data;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Core\Common\Modules\Ajax\Module;
+use Refraction\Core\Debug\Loading_Inspection_Manager;
+use Refraction\Core\Editor\Loader\Editor_Loader;
+use Refraction\Core\Utils\Assets_Config_Provider;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
+use Refraction\Core\Editor\Data;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor editor.
+ * Refraction editor.
  *
- * Elementor editor handler class is responsible for initializing Elementor
+ * Refraction editor handler class is responsible for initializing Refraction
  * editor and register all the actions needed to display the editor.
  *
  * @since 1.0.0
@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Editor {
 
 	/**
-	 * User capability required to access Elementor editor.
+	 * User capability required to access Refraction editor.
 	 */
 	const EDITING_CAPABILITY = 'edit_posts';
 
@@ -64,10 +64,10 @@ class Editor {
 	/**
 	 * Init.
 	 *
-	 * Initialize Elementor editor. Registers all needed actions to run Elementor,
+	 * Initialize Refraction editor. Registers all needed actions to run Refraction,
 	 * removes conflicting actions etc.
 	 *
-	 * Fired by `admin_action_elementor` action.
+	 * Fired by `admin_action_refraction` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -99,7 +99,7 @@ class Editor {
 		Plugin::$instance->documents->switch_to_document( $document );
 
 		// Change mode to Builder
-		$document->set_is_built_with_elementor( true );
+		$document->set_is_built_with_refraction( true );
 
 		// End BC.
 
@@ -148,7 +148,7 @@ class Editor {
 		// Tell to WP Cache plugins do not cache this request.
 		Utils::do_not_cache();
 
-		do_action( 'elementor/editor/init' );
+		do_action( 'refraction/editor/init' );
 
 		$this->get_loader()->print_root_template();
 
@@ -175,7 +175,7 @@ class Editor {
 	/**
 	 * Redirect to new URL.
 	 *
-	 * Used as a fallback function for the old URL structure of Elementor page
+	 * Used as a fallback function for the old URL structure of Refraction page
 	 * edit URL.
 	 *
 	 * Fired by `template_redirect` action.
@@ -184,17 +184,17 @@ class Editor {
 	 * @access public
 	 */
 	public function redirect_to_new_url() {
-		if ( ! isset( $_GET['elementor'] ) ) {
+		if ( ! isset( $_GET['refraction'] ) ) {
 			return;
 		}
 
 		$document = Plugin::$instance->documents->get( get_the_ID() );
 
 		if ( ! $document ) {
-			wp_die( esc_html__( 'Document not found.', 'elementor' ) );
+			wp_die( esc_html__( 'Document not found.', 'refraction' ) );
 		}
 
-		if ( ! $document->is_editable_by_current_user() || ! $document->is_built_with_elementor() ) {
+		if ( ! $document->is_editable_by_current_user() || ! $document->is_built_with_refraction() ) {
 			return;
 		}
 
@@ -203,14 +203,14 @@ class Editor {
 	}
 
 	/**
-	 * Whether the current request targets the Elementor editor.
+	 * Whether the current request targets the Refraction editor.
 	 *
 	 * Unlike `is_edit_mode()`, this is not affected by temporary `set_edit_mode()` overrides.
 	 *
 	 * @since 4.1.0
 	 * @access public
 	 *
-	 * @return bool Whether the current request targets the Elementor editor.
+	 * @return bool Whether the current request targets the Refraction editor.
 	 */
 	public function is_editor_request() {
 		$common = Plugin::$instance->common;
@@ -242,20 +242,20 @@ class Editor {
 			return false;
 		}
 
-		return isset( $_GET['action'] ) && 'elementor' === $_GET['action'] && in_array( $screen->base, [ 'post', 'toplevel_page_elementor' ], true );
+		return isset( $_GET['action'] ) && 'refraction' === $_GET['action'] && in_array( $screen->base, [ 'post', 'toplevel_page_refraction' ], true );
 	}
 
 	private function is_editor_ajax_request(): bool {
-		$actions = apply_filters( 'elementor/editor/ajax_actions', [
-			'elementor',
+		$actions = apply_filters( 'refraction/editor/ajax_actions', [
+			'refraction',
 
 			// Templates
-			'elementor_get_templates',
-			'elementor_save_template',
-			'elementor_get_template',
-			'elementor_delete_template',
-			'elementor_import_template',
-			'elementor_library_direct_actions',
+			'refraction_get_templates',
+			'refraction_save_template',
+			'refraction_get_template',
+			'refraction_delete_template',
+			'refraction_import_template',
+			'refraction_library_direct_actions',
 		] );
 
 		return isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $actions, true );
@@ -298,15 +298,15 @@ class Editor {
 
 		// Ajax request as Editor mode
 		$actions = [
-			'elementor',
+			'refraction',
 
 			// Templates
-			'elementor_get_templates',
-			'elementor_save_template',
-			'elementor_get_template',
-			'elementor_delete_template',
-			'elementor_import_template',
-			'elementor_library_direct_actions',
+			'refraction_get_templates',
+			'refraction_save_template',
+			'refraction_get_template',
+			'refraction_delete_template',
+			'refraction_import_template',
+			'refraction_library_direct_actions',
 		];
 
 		if ( isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $actions ) ) {
@@ -370,7 +370,7 @@ class Editor {
 	 * @access public
 	 */
 	public function print_editor_template() {
-		include ELEMENTOR_PATH . 'includes/editor-templates/editor-wrapper.php';
+		include REFRACTION_PATH . 'includes/editor-templates/editor-wrapper.php';
 	}
 
 	/**
@@ -395,11 +395,11 @@ class Editor {
 		/**
 		 * Before editor enqueue scripts.
 		 *
-		 * Fires before Elementor editor scripts are enqueued.
+		 * Fires before Refraction editor scripts are enqueued.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/editor/before_enqueue_scripts' );
+		do_action( 'refraction/editor/before_enqueue_scripts' );
 
 		// Tweak for WP Admin menu icons
 		wp_print_styles( 'editor-buttons' );
@@ -411,11 +411,11 @@ class Editor {
 		/**
 		 * After editor enqueue scripts.
 		 *
-		 * Fires after Elementor editor scripts are enqueued.
+		 * Fires after Refraction editor scripts are enqueued.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/editor/after_enqueue_scripts' );
+		do_action( 'refraction/editor/after_enqueue_scripts' );
 	}
 
 	/**
@@ -430,11 +430,11 @@ class Editor {
 		/**
 		 * Before editor enqueue styles.
 		 *
-		 * Fires before Elementor editor styles are enqueued.
+		 * Fires before Refraction editor styles are enqueued.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/editor/before_enqueue_styles' );
+		do_action( 'refraction/editor/before_enqueue_styles' );
 
 		$this->get_loader()->register_styles();
 		$this->get_loader()->enqueue_styles();
@@ -446,19 +446,19 @@ class Editor {
 		// The two breakpoints under 'tablet' need to be checked for values.
 		if ( $breakpoints[ Breakpoints_Manager::BREAKPOINT_KEY_MOBILE ]->is_custom() || $breakpoints[ Breakpoints_Manager::BREAKPOINT_KEY_MOBILE_EXTRA ]->is_enabled() ) {
 			wp_add_inline_style(
-				'elementor-editor',
-				'.elementor-device-tablet #elementor-preview-responsive-wrapper { width: ' . Plugin::$instance->breakpoints->get_device_min_breakpoint( Breakpoints_Manager::BREAKPOINT_KEY_TABLET ) . 'px; }'
+				'refraction-editor',
+				'.refraction-device-tablet #refraction-preview-responsive-wrapper { width: ' . Plugin::$instance->breakpoints->get_device_min_breakpoint( Breakpoints_Manager::BREAKPOINT_KEY_TABLET ) . 'px; }'
 			);
 		}
 
 		/**
 		 * After editor enqueue styles.
 		 *
-		 * Fires after Elementor editor styles are enqueued.
+		 * Fires after Refraction editor styles are enqueued.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/editor/after_enqueue_styles' );
+		do_action( 'refraction/editor/after_enqueue_styles' );
 	}
 
 	private function enqueue_theme_ui_styles() {
@@ -492,9 +492,9 @@ class Editor {
 
 		wp_enqueue_style(
 			'e-theme-ui-' . $ui_theme,
-			ELEMENTOR_ASSETS_URL . 'css/theme-' . $ui_theme . $suffix . '.css',
+			REFRACTION_ASSETS_URL . 'css/theme-' . $ui_theme . $suffix . '.css',
 			[],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			$ui_theme_media_queries
 		);
 	}
@@ -502,7 +502,7 @@ class Editor {
 	/**
 	 * Editor head trigger.
 	 *
-	 * Fires the 'elementor/editor/wp_head' action in the head tag in Elementor
+	 * Fires the 'refraction/editor/wp_head' action in the head tag in Refraction
 	 * editor.
 	 *
 	 * @since 1.0.0
@@ -510,21 +510,21 @@ class Editor {
 	 */
 	public function editor_head_trigger() {
 		/**
-		 * Elementor editor head.
+		 * Refraction editor head.
 		 *
-		 * Fires on Elementor editor head tag.
+		 * Fires on Refraction editor head tag.
 		 *
 		 * Used to prints scripts or any other data in the head tag.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/editor/wp_head' );
+		do_action( 'refraction/editor/wp_head' );
 	}
 
 	/**
 	 * WP footer.
 	 *
-	 * Prints Elementor editor with all the editor templates, and render controls,
+	 * Prints Refraction editor with all the editor templates, and render controls,
 	 * widgets and content elements.
 	 *
 	 * Fired by `wp_footer` action.
@@ -544,15 +544,15 @@ class Editor {
 		$this->get_loader()->register_additional_templates();
 
 		/**
-		 * Elementor editor footer.
+		 * Refraction editor footer.
 		 *
-		 * Fires on Elementor editor before closing the body tag.
+		 * Fires on Refraction editor before closing the body tag.
 		 *
 		 * Used to prints scripts or any other HTML before closing the body tag.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/editor/footer' );
+		do_action( 'refraction/editor/footer' );
 	}
 
 	/**
@@ -572,8 +572,8 @@ class Editor {
 	/**
 	 * Editor constructor.
 	 *
-	 * Initializing Elementor editor and redirect from old URL structure of
-	 * Elementor editor.
+	 * Initializing Refraction editor and redirect from old URL structure of
+	 * Refraction editor.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -581,7 +581,7 @@ class Editor {
 	public function __construct() {
 		Plugin::$instance->data_manager_v2->register_controller( new Data\Globals\Controller() );
 
-		add_action( 'admin_action_elementor', [ $this, 'init' ] );
+		add_action( 'admin_action_refraction', [ $this, 'init' ] );
 		add_action( 'template_redirect', [ $this, 'redirect_to_new_url' ] );
 
 		// Handle autocomplete feature for URL control.
@@ -593,7 +593,7 @@ class Editor {
 
 	/**
 	 * Whether the Document-Isolation-Policy header should be sent on the
-	 * Elementor editor screen and the editor preview iframe.
+	 * Refraction editor screen and the editor preview iframe.
 	 *
 	 * DIP places the document in its own agent cluster, which is the prerequisite
 	 * for cross-origin isolation features such as SharedArrayBuffer (required by
@@ -601,7 +601,7 @@ class Editor {
 	 *
 	 * Both the editor parent document and the preview iframe must send the same
 	 * DIP header so they join the same agent cluster and synchronous DOM access
-	 * between them (e.g. `iframe.contentWindow.elementorFrontend`) keeps working.
+	 * between them (e.g. `iframe.contentWindow.refractionFrontend`) keeps working.
 	 *
 	 * The header is only honored by browsers on a secure context (HTTPS or
 	 * localhost) so the helper short-circuits on insecure origins to avoid
@@ -622,20 +622,20 @@ class Editor {
 		}
 
 		/**
-		 * Filters whether Elementor sends the Document-Isolation-Policy header
+		 * Filters whether Refraction sends the Document-Isolation-Policy header
 		 * on the editor screen and preview iframe.
 		 *
 		 * @since 4.1.0
 		 *
 		 * @param bool $enabled Whether DIP is enabled. Defaults to true on a secure context.
 		 */
-		return (bool) apply_filters( 'elementor/editor/use_document_isolation_policy', true );
+		return (bool) apply_filters( 'refraction/editor/use_document_isolation_policy', true );
 	}
 
 	/**
 	 * Send the Document-Isolation-Policy header for the current response.
 	 *
-	 * Safe to call from both the Elementor editor screen handler and the
+	 * Safe to call from both the Refraction editor screen handler and the
 	 * preview iframe handler. No-op when {@see self::should_use_document_isolation_policy()}
 	 * returns false.
 	 *
@@ -650,9 +650,9 @@ class Editor {
 	}
 
 	/**
-	 * Signals to WordPress that Elementor is replacing the block editor on its own editor page,
+	 * Signals to WordPress that Refraction is replacing the block editor on its own editor page,
 	 * so that block-editor-specific behaviour (e.g. WP 7.0 COOP/COEP isolation headers) is not
-	 * applied when the Elementor editor is active.
+	 * applied when the Refraction editor is active.
 	 *
 	 * @param bool     $replace Whether the editor is being replaced.
 	 * @param \WP_Post $post    The post being edited.
@@ -660,7 +660,7 @@ class Editor {
 	 * @return bool
 	 */
 	public function filter_replace_editor( $replace, $post ) {
-		if ( isset( $_REQUEST['action'] ) && 'elementor' === $_REQUEST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_REQUEST['action'] ) && 'refraction' === $_REQUEST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return true;
 		}
 
@@ -687,7 +687,7 @@ class Editor {
 	public function filter_wp_link_query( $results ) {
 
 		// PHPCS - The user data is not used.
-		if ( isset( $_POST['editor'] ) && 'elementor' === $_POST['editor'] ) {  // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['editor'] ) && 'refraction' === $_POST['editor'] ) {  // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$post_type_object = get_post_type_object( 'post' );
 			$post_label = $post_type_object->labels->singular_name;
 
@@ -714,13 +714,13 @@ class Editor {
 		if ( ! $this->loader ) {
 			$this->loader = new Editor_Loader(
 				new Collection( [
-					'assets_url' => ELEMENTOR_ASSETS_URL,
-					'min_suffix' => ( Utils::is_script_debug() || Utils::is_elementor_tests() ) ? '' : '.min',
+					'assets_url' => REFRACTION_ASSETS_URL,
+					'min_suffix' => ( Utils::is_script_debug() || Utils::is_refraction_tests() ) ? '' : '.min',
 					'direction_suffix' => is_rtl() ? '-rtl' : '',
 				] ),
 				( new Assets_Config_Provider() )->set_path_resolver(
 					function ( $name ) {
-						return ELEMENTOR_ASSETS_PATH . "js/packages/{$name}/{$name}.asset.php";
+						return REFRACTION_ASSETS_PATH . "js/packages/{$name}/{$name}.asset.php";
 					}
 				)
 			);

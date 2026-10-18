@@ -1,7 +1,7 @@
 //
 // Image Carousel
 //
-.elementor-widget-image-carousel {
+.refraction-widget-image-carousel {
 
 	.swiper {
 		position: static; // Allow navigation arrows to stay outside
@@ -20,7 +20,7 @@
 }
 
 // Before the image-carousel layout is calculated by JS. //
-.elementor-image-carousel-wrapper:not(.swiper-initialized) {
+.refraction-image-carousel-wrapper:not(.swiper-initialized) {
 
 	.swiper-slide {
 		max-width: calc(100% / var(--e-image-carousel-slides-to-show, 3));

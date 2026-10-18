@@ -1,7 +1,7 @@
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-empty-preview',
+	template: '#tmpl-refraction-empty-preview',
 
-	className: 'elementor-empty-view',
+	className: 'refraction-empty-view',
 
 	events: {
 		click: 'onClickAdd',
@@ -10,7 +10,7 @@ module.exports = Marionette.ItemView.extend( {
 	behaviors() {
 		return {
 			contextMenu: {
-				behaviorClass: require( 'elementor-behaviors/context-menu' ),
+				behaviorClass: require( 'refraction-behaviors/context-menu' ),
 				groups: this.getContextMenuGroups(),
 			},
 		};
@@ -23,7 +23,7 @@ module.exports = Marionette.ItemView.extend( {
 				actions: [
 					{
 						name: 'paste',
-						title: __( 'Paste', 'elementor' ),
+						title: __( 'Paste', 'refraction' ),
 						isEnabled: () => $e.components.get( 'document/elements' ).utils.isPasteEnabled( this._parent.getContainer() ),
 						callback: () => $e.run( 'document/ui/paste', {
 							container: this._parent.getContainer(),

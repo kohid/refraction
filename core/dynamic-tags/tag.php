@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Core\DynamicTags;
+namespace Refraction\Core\DynamicTags;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor tag.
+ * Refraction tag.
  *
- * An abstract class to register new Elementor tag.
+ * An abstract class to register new Refraction tag.
  *
  * @since 2.0.0
  * @abstract
@@ -37,7 +37,7 @@ abstract class Tag extends Base_Tag {
 		$value = ob_get_clean();
 
 		if ( ! Utils::is_empty( $value ) ) {
-			// TODO: fix spaces in `before`/`after` if WRAPPED_TAG ( conflicted with .elementor-tag { display: inline-flex; } );
+			// TODO: fix spaces in `before`/`after` if WRAPPED_TAG ( conflicted with .refraction-tag { display: inline-flex; } );
 			if ( ! Utils::is_empty( $settings, 'before' ) ) {
 				$value = wp_kses_post( $settings['before'] ) . $value;
 			}
@@ -47,7 +47,7 @@ abstract class Tag extends Base_Tag {
 			}
 
 			if ( static::WRAPPED_TAG ) :
-				$value = '<span id="elementor-tag-' . esc_attr( $this->get_id() ) . '" class="elementor-tag">' . $value . '</span>';
+				$value = '<span id="refraction-tag-' . esc_attr( $this->get_id() ) . '" class="refraction-tag">' . $value . '</span>';
 			endif;
 
 		} elseif ( ! Utils::is_empty( $settings, 'fallback' ) ) {
@@ -85,14 +85,14 @@ abstract class Tag extends Base_Tag {
 		$this->start_controls_section(
 			'advanced',
 			[
-				'label' => esc_html__( 'Advanced', 'elementor' ),
+				'label' => esc_html__( 'Advanced', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'before',
 			[
-				'label' => esc_html__( 'Before', 'elementor' ),
+				'label' => esc_html__( 'Before', 'refraction' ),
 				'ai' => [
 					'active' => false,
 				],
@@ -102,7 +102,7 @@ abstract class Tag extends Base_Tag {
 		$this->add_control(
 			'after',
 			[
-				'label' => esc_html__( 'After', 'elementor' ),
+				'label' => esc_html__( 'After', 'refraction' ),
 				'ai' => [
 					'active' => false,
 				],
@@ -112,7 +112,7 @@ abstract class Tag extends Base_Tag {
 		$this->add_control(
 			'fallback',
 			[
-				'label' => esc_html__( 'Fallback', 'elementor' ),
+				'label' => esc_html__( 'Fallback', 'refraction' ),
 				'ai' => [
 					'active' => false,
 				],

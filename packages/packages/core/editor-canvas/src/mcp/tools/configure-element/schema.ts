@@ -1,4 +1,4 @@
-import { z } from '@elementor/schema';
+import { z } from '@refraction/schema';
 
 import { WIDGET_SCHEMA_URI } from '../../resources/widgets-schema-resource';
 

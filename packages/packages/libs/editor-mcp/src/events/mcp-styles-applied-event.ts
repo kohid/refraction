@@ -1,4 +1,4 @@
-export const MCP_STYLES_APPLIED_EVENT = 'elementor/mcp/styles-applied';
+export const MCP_STYLES_APPLIED_EVENT = 'refraction/mcp/styles-applied';
 
 export type McpStylesAppliedPayload = {
 	styleValue: Record< string, unknown >;

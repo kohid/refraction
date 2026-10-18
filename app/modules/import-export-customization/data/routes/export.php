@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\App\Modules\ImportExportCustomization\Data\Routes;
+namespace Refraction\App\Modules\ImportExportCustomization\Data\Routes;
 
-use Elementor\Plugin;
-use Elementor\App\Modules\ImportExportCustomization\Data\Response;
-use Elementor\Utils as ElementorUtils;
-use Elementor\App\Modules\ImportExportCustomization\Module as ImportExportCustomizationModule;
-use Elementor\App\Modules\ImportExportCustomization\Processes\Import;
+use Refraction\Plugin;
+use Refraction\App\Modules\ImportExportCustomization\Data\Response;
+use Refraction\Utils as RefractionUtils;
+use Refraction\App\Modules\ImportExportCustomization\Module as ImportExportCustomizationModule;
+use Refraction\App\Modules\ImportExportCustomization\Processes\Import;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -44,7 +44,7 @@ class Export extends Base_Route {
 
 			$file_name = $export['file_name'];
 			$file_size = filesize( $file_name );
-			$file = ElementorUtils::file_get_contents( $file_name );
+			$file = RefractionUtils::file_get_contents( $file_name );
 
 			if ( ! $file ) {
 				throw new \Error( Import::ZIP_FILE_ERROR_KEY );
@@ -53,7 +53,7 @@ class Export extends Base_Route {
 			Plugin::$instance->uploads_manager->remove_file_or_dir( dirname( $file_name ) );
 
 			$result = apply_filters(
-				'elementor/export/kit/export-result',
+				'refraction/export/kit/export-result',
 				[
 					'manifest' => $export['manifest'],
 					'file' => base64_encode( $file ),
@@ -99,7 +99,7 @@ class Export extends Base_Route {
 				'description' => 'Kit information',
 				'required' => false,
 				'default' => [
-					'title' => 'Elementor Website Template',
+					'title' => 'Refraction Website Template',
 					'description' => '',
 					'source' => 'local',
 				],

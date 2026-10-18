@@ -18,7 +18,7 @@ export class Import extends $e.modules.editor.document.CommandHistoryBase {
 
 		return {
 			type: 'add',
-			title: __( 'Template', 'elementor' ),
+			title: __( 'Template', 'refraction' ),
 			subTitle: model.get( 'title' ),
 		};
 	}
@@ -26,7 +26,7 @@ export class Import extends $e.modules.editor.document.CommandHistoryBase {
 	apply( args ) {
 		const { data,
 				options = args.options || {},
-				container = args.container || elementor.getPreviewContainer(),
+				container = args.container || refraction.getPreviewContainer(),
 			} = args,
 			result = [];
 
@@ -44,7 +44,7 @@ export class Import extends $e.modules.editor.document.CommandHistoryBase {
 
 		if ( options.withPageSettings ) {
 			$e.run( 'document/elements/settings', {
-				container: elementor.settings.page.getEditedView().getContainer(),
+				container: refraction.settings.page.getEditedView().getContainer(),
 				settings: data.page_settings,
 				options: {
 					external: true,

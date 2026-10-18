@@ -1,4 +1,4 @@
-import Text from 'elementor-app/ui/atoms/text';
+import Text from 'refraction-app/ui/atoms/text';
 
 export default function DialogText( props ) {
 	return (

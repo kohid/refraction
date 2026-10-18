@@ -1,10 +1,10 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
-const NAVIGATION_WRAPPER_ID = 'elementor-panel-elements-navigation';
+const NAVIGATION_WRAPPER_ID = 'refraction-panel-elements-navigation';
 
 const ElementsPanelWrapperElementNotFoundError = createError( {
 	code: 'elements_panel_wrapper_element_not_found',
-	message: 'Elementor Elements Panel wrapper element not found',
+	message: 'Refraction Elements Panel wrapper element not found',
 } );
 
 export function getNavigationWrapperElement() {

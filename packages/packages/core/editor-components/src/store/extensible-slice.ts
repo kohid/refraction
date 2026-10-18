@@ -1,11 +1,11 @@
-import type { V1Document } from '@elementor/editor-documents';
+import type { V1Document } from '@refraction/editor-documents';
 import {
 	__createAction as createAction,
 	__createSlice as createSlice,
 	__dispatch as dispatch,
 	type AnyAction,
 	type PayloadAction,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import type { ComponentId, OverridableProps, PublishedComponent, UnpublishedComponent } from '../types';
 import { type ComponentsState, initialState, type SanitizeAttributes, SLICE_NAME } from './store-types';

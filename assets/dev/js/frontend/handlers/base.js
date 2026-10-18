@@ -1,4 +1,4 @@
-module.exports = elementorModules.ViewModule.extend( {
+module.exports = refractionModules.ViewModule.extend( {
 	$element: null,
 
 	editorListeners: null,
@@ -18,7 +18,7 @@ module.exports = elementorModules.ViewModule.extend( {
 
 		this.$element = settings.$element;
 
-		this.isEdit = this.$element.hasClass( 'elementor-element-edit-mode' );
+		this.isEdit = this.$element.hasClass( 'refraction-element-edit-mode' );
 
 		if ( this.isEdit ) {
 			this.addEditorListeners();
@@ -30,19 +30,19 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	isElementInTheCurrentDocument() {
-		if ( ! elementorFrontend.isEditMode() ) {
+		if ( ! refractionFrontend.isEditMode() ) {
 			return false;
 		}
 
-		return elementor.documents.currentDocument.id.toString() === this.$element[ 0 ].closest( '.elementor' ).dataset.elementorId;
+		return refraction.documents.currentDocument.id.toString() === this.$element[ 0 ].closest( '.refraction' ).dataset.refractionId;
 	},
 
 	findElement( selector ) {
 		var $mainElement = this.$element;
 
 		return $mainElement.find( selector ).filter( function() {
-			// Start `closest` from parent since self can be `.elementor-element`.
-			return jQuery( this ).parent().closest( '.elementor-element' ).is( $mainElement );
+			// Start `closest` from parent since self can be `.refraction-element`.
+			return jQuery( this ).parent().closest( '.refraction-element' ).is( $mainElement );
 		} );
 	},
 
@@ -64,7 +64,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		self.editorListeners = [
 			{
 				event: 'element:destroy',
-				to: elementor.channels.data,
+				to: refraction.channels.data,
 				callback( removedModel ) {
 					if ( removedModel.cid !== self.getModelCID() ) {
 						return;
@@ -86,7 +86,7 @@ module.exports = elementorModules.ViewModule.extend( {
 
 			self.editorListeners.push( {
 				event: eventName,
-				to: elementor.channels.editor,
+				to: refraction.channels.editor,
 				callback( controlView, elementView ) {
 					var elementViewHandlerID = self.getUniqueHandlerID( elementView.model.cid, elementView.$el );
 
@@ -102,7 +102,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		if ( self.onEditSettingsChange ) {
 			self.editorListeners.push( {
 				event: 'change:editSettings',
-				to: elementor.channels.editor,
+				to: refraction.channels.editor,
 				callback( changedModel, view ) {
 					if ( view.model.cid !== self.getModelCID() ) {
 						return;
@@ -121,7 +121,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			if ( self[ listenerMethodName ] ) {
 				self.editorListeners.push( {
 					event: 'change',
-					to: elementor.settings[ settingsType ].model,
+					to: refraction.settings[ settingsType ].model,
 					callback( model ) {
 						self[ listenerMethodName ]( model.changed );
 					},
@@ -142,7 +142,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		var uniqueHandlerID = this.getUniqueHandlerID();
 
 		this.getEditorListeners().forEach( function( listener ) {
-			elementorFrontend.addListenerOnce( uniqueHandlerID, listener.event, listener.callback, listener.to );
+			refractionFrontend.addListenerOnce( uniqueHandlerID, listener.event, listener.callback, listener.to );
 		} );
 	},
 
@@ -150,7 +150,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		var uniqueHandlerID = this.getUniqueHandlerID();
 
 		this.getEditorListeners().forEach( function( listener ) {
-			elementorFrontend.removeListeners( uniqueHandlerID, listener.event, null, listener.to );
+			refractionFrontend.removeListeners( uniqueHandlerID, listener.event, null, listener.to );
 		} );
 	},
 
@@ -182,7 +182,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		const modelCID = this.getModelCID();
 
 		if ( this.isEdit && modelCID ) {
-			const settings = elementorFrontend.config.elements.data[ modelCID ],
+			const settings = refractionFrontend.config.elements.data[ modelCID ],
 				attributes = settings.attributes;
 
 			let type = attributes.widgetType || attributes.elType;
@@ -191,10 +191,10 @@ module.exports = elementorModules.ViewModule.extend( {
 				type = 'inner-' + type;
 			}
 
-			let settingsKeys = elementorFrontend.config.elements.keys[ type ];
+			let settingsKeys = refractionFrontend.config.elements.keys[ type ];
 
 			if ( ! settingsKeys ) {
-				settingsKeys = elementorFrontend.config.elements.keys[ type ] = [];
+				settingsKeys = refractionFrontend.config.elements.keys[ type ] = [];
 
 				jQuery.each( settings.controls, ( name, control ) => {
 					if ( control.frontend_available || control.editor_available ) {
@@ -225,19 +225,19 @@ module.exports = elementorModules.ViewModule.extend( {
 		var attributes = {};
 
 		if ( this.isEdit ) {
-			attributes = elementorFrontend.config.elements.editSettings[ this.getModelCID() ].attributes;
+			attributes = refractionFrontend.config.elements.editSettings[ this.getModelCID() ].attributes;
 		}
 
 		return this.getItems( attributes, setting );
 	},
 
 	getCurrentDeviceSetting( settingKey ) {
-		return elementorFrontend.getCurrentDeviceSetting( this.getElementSettings(), settingKey );
+		return refractionFrontend.getCurrentDeviceSetting( this.getElementSettings(), settingKey );
 	},
 
 	onInit() {
 		if ( this.isActive( this.getSettings() ) ) {
-			elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+			refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 		}
 	},
 

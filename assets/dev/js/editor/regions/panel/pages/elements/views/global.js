@@ -1,9 +1,9 @@
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-panel-global',
+	template: '#tmpl-refraction-panel-global',
 
-	id: 'elementor-panel-global',
+	id: 'refraction-panel-global',
 
 	initialize() {
-		elementor.getPanelView().getCurrentPageView().search.reset();
+		refraction.getPanelView().getCurrentPageView().search.reset();
 	},
 } );

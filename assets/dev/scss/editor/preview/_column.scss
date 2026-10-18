@@ -2,9 +2,9 @@
 // Column - Preview Settings
 //
 
-.elementor-column {
+.refraction-column {
 
-	> .elementor-element-overlay {
+	> .refraction-element-overlay {
 		inset-block-end: 0;
 		inset-inline-start: 0;
 
@@ -17,7 +17,7 @@
 
 	&:hover {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 
 			&:after {
 				content: '';
@@ -25,9 +25,9 @@
 		}
 	}
 
-	&.elementor-element-editable {
+	&.refraction-element-editable {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 
 			&:after {
 				content: '';
@@ -36,9 +36,9 @@
 		}
 	}
 
-	&.elementor-dragging-on-child {
+	&.refraction-dragging-on-child {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 			border: 1px solid var(--e-p-draggable-color);
 
 			&:after {
@@ -69,7 +69,7 @@
 	}
 }
 
-.elementor-editor-column-settings {
+.refraction-editor-column-settings {
 	inset-block-start: -1px;
 	inset-inline-start: -1px;
 	border-start-start-radius: 0;
@@ -79,7 +79,7 @@
 	transform: none;
 	overflow: hidden;
 
-	.elementor-editor-element-setting {
+	.refraction-editor-element-setting {
 		background-color: var(--e-p-border-column);
 
 		&:hover {
@@ -88,7 +88,7 @@
 	}
 }
 
-.elementor-column-placeholder {
+.refraction-column-placeholder {
 	position: relative;
 
 	&:before,
@@ -107,7 +107,7 @@
 	}
 }
 
-.elementor-column-percents-tooltip {
+.refraction-column-percents-tooltip {
 	position: absolute;
 	display: none;
 	pointer-events: none;

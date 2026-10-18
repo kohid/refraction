@@ -16,7 +16,7 @@ export const SettingSection = ( {
 		if ( notExported ) {
 			return (
 				<Typography data-testid={ `${ settingKey }-description` } variant="body1" color="text.secondary">
-					{ __( 'Not exported', 'elementor' ) }
+					{ __( 'Not exported', 'refraction' ) }
 				</Typography>
 			);
 		}

@@ -1,6 +1,6 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Icon from 'elementor-app/ui/atoms/icon';
+import Icon from 'refraction-app/ui/atoms/icon';
 
 import './loader.scss';
 

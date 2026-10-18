@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Classes\Render;
+namespace Refraction\Modules\FloatingButtons\Classes\Render;
 
-use Elementor\Icons_Manager;
+use Refraction\Icons_Manager;
 
 /**
  * Class Floating_Bars_Core_Render.
@@ -61,7 +61,7 @@ class Floating_Bars_Core_Render extends Floating_Bars_Render_Base {
 		$cta_classnames = 'e-floating-bars__cta-button';
 
 		if ( ! empty( $hover_animation ) ) {
-			$cta_classnames .= ' elementor-animation-' . $hover_animation;
+			$cta_classnames .= ' refraction-animation-' . $hover_animation;
 		}
 
 		if ( ! empty( $corners ) ) {
@@ -109,7 +109,7 @@ class Floating_Bars_Core_Render extends Floating_Bars_Render_Base {
 			'class' => $close_button_classnames,
 			'aria-label' => sprintf(
 				/* translators: %s: Accessible name. */
-				esc_html__( 'Close %s', 'elementor' ),
+				esc_html__( 'Close %s', 'refraction' ),
 				$accessible_name,
 			),
 			'type' => 'button',

@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/data/after';
+import After from 'refraction-api/modules/hooks/data/after';
 
 export class KitAfterSave extends After {
 	getCommand() {
@@ -6,7 +6,7 @@ export class KitAfterSave extends After {
 	}
 
 	getConditions( args ) {
-		const { status, document = elementor.documents.getCurrent() } = args;
+		const { status, document = refraction.documents.getCurrent() } = args;
 		return 'publish' === status && 'kit' === document.config.type;
 	}
 
@@ -23,12 +23,12 @@ export class KitAfterSave extends After {
 		this.clearDynamicTagsCache();
 
 		if ( 'publish' === args.status ) {
-			elementor.notifications.showToast( {
-				message: __( 'Your changes have been updated.', 'elementor' ),
+			refraction.notifications.showToast( {
+				message: __( 'Your changes have been updated.', 'refraction' ),
 				buttons: [
 					{
 						name: 'back_to_editor',
-						text: __( 'Back to Editor', 'elementor' ),
+						text: __( 'Back to Editor', 'refraction' ),
 						callback() {
 							$e.run( 'panel/global/close' );
 						},
@@ -37,17 +37,17 @@ export class KitAfterSave extends After {
 			} );
 		}
 
-		if ( elementor.activeBreakpointsUpdated ) {
-			const reloadConfirm = elementorCommon.dialogsManager.createWidget( 'alert', {
-				id: 'elementor-save-kit-refresh-page',
-				headerMessage: __( 'Reload Elementor Editor', 'elementor' ),
-				message: __( 'You have made modifications to the list of Active Breakpoints. For these changes to take effect, you need to reload Elementor Editor.', 'elementor' ),
+		if ( refraction.activeBreakpointsUpdated ) {
+			const reloadConfirm = refractionCommon.dialogsManager.createWidget( 'alert', {
+				id: 'refraction-save-kit-refresh-page',
+				headerMessage: __( 'Reload Refraction Editor', 'refraction' ),
+				message: __( 'You have made modifications to the list of Active Breakpoints. For these changes to take effect, you need to reload Refraction Editor.', 'refraction' ),
 				position: {
 					my: 'center center',
 					at: 'center center',
 				},
 				strings: {
-					confirm: __( 'Reload Now', 'elementor' ),
+					confirm: __( 'Reload Now', 'refraction' ),
 				},
 				onConfirm: () => location.reload(),
 			} );
@@ -67,7 +67,7 @@ export class KitAfterSave extends After {
 		let activeSection = null;
 
 		try {
-			const panelView = elementor.getPanelView();
+			const panelView = refraction.getPanelView();
 			const currentPage = panelView?.getCurrentPageView?.();
 			const contentView = currentPage?.content?.currentView;
 			activeSection = contentView?.activeSection || null;
@@ -83,14 +83,14 @@ export class KitAfterSave extends After {
 	}
 
 	clearDocumentCache() {
-		Object.keys( elementor.documents.documents ).forEach( ( id ) => {
-			elementor.documents.invalidateCache( id );
+		Object.keys( refraction.documents.documents ).forEach( ( id ) => {
+			refraction.documents.invalidateCache( id );
 		} );
 	}
 
 	clearDynamicTagsCache() {
-		elementor.dynamicTags.cleanCache();
-		elementor.dynamicTags.loadCacheRequests();
+		refraction.dynamicTags.cleanCache();
+		refraction.dynamicTags.loadCacheRequests();
 	}
 }
 

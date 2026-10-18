@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
 
 import { type CssClassUsageContent, type EnhancedCssClassUsage } from '../components/css-class-usage/types';
 import { useCssClassUsage } from './use-css-class-usage';

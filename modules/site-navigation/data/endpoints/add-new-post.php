@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Modules\SiteNavigation\Data\Endpoints;
+namespace Refraction\Modules\SiteNavigation\Data\Endpoints;
 
-use Elementor\Data\V2\Base\Endpoint;
-use Elementor\Plugin;
-use Elementor\User;
+use Refraction\Data\V2\Base\Endpoint;
+use Refraction\Plugin;
+use Refraction\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -73,7 +73,7 @@ class Add_New_Post extends Endpoint {
 	}
 
 	/**
-	 * Map post type to Elementor document type.
+	 * Map post type to Refraction document type.
 	 *
 	 * @param $post_type
 	 *

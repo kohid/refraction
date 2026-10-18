@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type PropsWithChildren } from 'react';
-import { FloatingActionsBar } from '@elementor/editor-ui';
+import { FloatingActionsBar } from '@refraction/editor-ui';
 
 import { useBoundProp } from '../bound-prop-context';
 import { useControlActions } from './control-actions-context';

@@ -2,8 +2,8 @@ import WpDashboardTracking from '../wp-dashboard-tracking';
 import BaseTracking from './base-tracking';
 
 const PROMO_MENU_ITEMS = {
-	go_elementor_pro: 'Upgrade',
-	'elementor-one-upgrade': 'Upgrade',
+	go_refraction_pro: 'Upgrade',
+	'refraction-one-upgrade': 'Upgrade',
 };
 
 class MenuPromotionTracking extends BaseTracking {
@@ -59,7 +59,7 @@ class MenuPromotionTracking extends BaseTracking {
 	static handleMenuPromoClick( menuItem, menuItemKey ) {
 		const destination = menuItem.getAttribute( 'href' );
 		const promoName = PROMO_MENU_ITEMS[ menuItemKey ];
-		const path = menuItemKey.replace( 'elementor_', '' ).replace( /_/g, '/' );
+		const path = menuItemKey.replace( 'refraction_', '' ).replace( /_/g, '/' );
 
 		WpDashboardTracking.trackPromoClicked( promoName, destination, path );
 	}

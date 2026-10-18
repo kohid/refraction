@@ -6,8 +6,8 @@ import { ComponentsUpdateAlert } from '../components-update-alert';
 export function ComponentsUpdateNotification() {
 	return (
 		<ComponentsUpdateAlert
-			title={ __( 'Create new Components', 'elementor' ) }
-			description={ __( 'To create new components, update Elementor Pro to the latest version.', 'elementor' ) }
+			title={ __( 'Create new Components', 'refraction' ) }
+			description={ __( 'To create new components, update Refraction Pro to the latest version.', 'refraction' ) }
 		/>
 	);
 }

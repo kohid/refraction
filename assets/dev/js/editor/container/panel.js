@@ -34,13 +34,13 @@ export default class Panel {
 	}
 
 	getControlView( name ) {
-		const editor = elementor.getPanelView().getCurrentPageView();
+		const editor = refraction.getPanelView().getCurrentPageView();
 
 		return editor.children.findByModelCid( this.getControlModel( name ).cid );
 	}
 
 	getControlModel( name ) {
-		const editor = elementor.getPanelView().getCurrentPageView();
+		const editor = refraction.getPanelView().getCurrentPageView();
 
 		return editor.collection.findWhere( { name } );
 	}

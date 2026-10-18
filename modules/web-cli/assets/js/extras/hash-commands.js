@@ -1,4 +1,4 @@
-import Console from 'elementor-api/utils/console';
+import Console from 'refraction-api/utils/console';
 
 export default class HashCommands {
 	/**

@@ -1,4 +1,4 @@
-import type { BreakpointNode } from '@elementor/editor-responsive';
+import type { BreakpointNode } from '@refraction/editor-responsive';
 
 export const createMockBreakpointsTree = (): BreakpointNode => ( {
 	id: 'desktop',

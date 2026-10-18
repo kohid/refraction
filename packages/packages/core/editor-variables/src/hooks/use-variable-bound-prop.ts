@@ -1,5 +1,5 @@
-import { useBoundProp } from '@elementor/editor-controls';
-import { isTransformable, type PropValue } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { isTransformable, type PropValue } from '@refraction/editor-props';
 
 import { useVariableType } from '../context/variable-type-context';
 

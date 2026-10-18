@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, createMockPropUtil, createMockSchema, renderControl } from 'test-utils';
-import { type SizePropValue, type TransformablePropValue } from '@elementor/editor-props';
+import { type SizePropValue, type TransformablePropValue } from '@refraction/editor-props';
 import { fireEvent, screen, within } from '@testing-library/react';
 
 import { type EqualUnequalItems, EqualUnequalSizesControl } from '../equal-unequal-sizes-control';

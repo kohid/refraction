@@ -1,6 +1,6 @@
 $finder-z-index: 99999; // Above Theme Builder Modal
 
-#elementor-finder {
+#refraction-finder {
 
 	&__modal {
 		background: none;
@@ -67,7 +67,7 @@ $finder-z-index: 99999; // Above Theme Builder Modal
 	}
 }
 
-.elementor-finder__results {
+.refraction-finder__results {
 
 	&__category {
 		position: relative;
@@ -80,7 +80,7 @@ $finder-z-index: 99999; // Above Theme Builder Modal
 
 		&--dynamic {
 
-			.elementor-finder__results__category__items {
+			.refraction-finder__results__category__items {
 				min-height: 26px;
 			}
 		}
@@ -104,7 +104,7 @@ $finder-z-index: 99999; // Above Theme Builder Modal
 			color: inherit;
 		}
 
-		&.elementor-active {
+		&.refraction-active {
 			background-color: var(--e-a-bg-hover);
 
 			a {
@@ -112,9 +112,9 @@ $finder-z-index: 99999; // Above Theme Builder Modal
 			}
 		}
 
-		&:not(.elementor-active) {
+		&:not(.refraction-active) {
 
-			.elementor-finder__results__item__actions {
+			.refraction-finder__results__item__actions {
 				display: none;
 			}
 		}

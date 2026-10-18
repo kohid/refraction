@@ -1,4 +1,4 @@
-import { type SizePropValue } from '@elementor/editor-props';
+import { type SizePropValue } from '@refraction/editor-props';
 
 import { getExtendedUnits } from '../sync/get-units';
 import { type ExtendedSizeOption } from '../types';

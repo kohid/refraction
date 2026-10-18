@@ -1,4 +1,4 @@
-import CommandBase from 'elementor-api/modules/command-base';
+import CommandBase from 'refraction-api/modules/command-base';
 
 /**
  * @name $e.modules.editor.CommandContainerBase
@@ -29,7 +29,7 @@ export default class CommandContainerBase extends CommandBase {
 		const containers = args.containers || [ args.container ];
 
 		containers.forEach( ( container ) => {
-			this.requireArgumentInstance( 'container', elementorModules.editor.Container, { container } );
+			this.requireArgumentInstance( 'container', refractionModules.editor.Container, { container } );
 		} );
 	}
 }

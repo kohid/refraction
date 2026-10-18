@@ -1,6 +1,6 @@
-import { injectIntoLogic } from '@elementor/editor';
-import { registerPanel } from '@elementor/editor-panels';
-import { blockCommand } from '@elementor/editor-v1-adapters';
+import { injectIntoLogic } from '@refraction/editor';
+import { registerPanel } from '@refraction/editor-panels';
+import { blockCommand } from '@refraction/editor-v1-adapters';
 
 import { EditingPanelHooks } from './components/editing-panel-hooks';
 import { init as initPromotionsSections } from './components/promotions/init';

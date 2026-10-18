@@ -18,11 +18,11 @@ export const ContentOnlyInfotip = ( { children }: PropsWithChildren ) => {
 			color="secondary"
 			content={
 				<Alert color="secondary" icon={ <InfoCircleFilledIcon /> } size="small">
-					<AlertTitle>{ __( 'Content-only access', 'elementor' ) }</AlertTitle>
+					<AlertTitle>{ __( 'Content-only access', 'refraction' ) }</AlertTitle>
 					<Box component="span">
-						{ __( 'Your Site Admin has limited this role to content editing.', 'elementor' ) }{ ' ' }
+						{ __( 'Your Site Admin has limited this role to content editing.', 'refraction' ) }{ ' ' }
 						<Link href={ LEARN_MORE_URL } target="_blank" rel="noreferrer" color="info.main">
-							{ __( 'Learn More', 'elementor' ) }
+							{ __( 'Learn More', 'refraction' ) }
 						</Link>
 					</Box>
 				</Alert>

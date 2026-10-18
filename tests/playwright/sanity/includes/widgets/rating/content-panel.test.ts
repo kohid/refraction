@@ -11,7 +11,7 @@ iconExperimentStates.forEach( ( iconExperimentState ) => {
 				editor = await wpAdmin.openNewPage(),
 				container = await editor.addElement( { elType: 'container' }, 'document' ),
 				ratingId = await editor.addWidget( { widgetType: 'rating', container } ),
-				ratingElement = editor.getPreviewFrame().locator( `.elementor-element-${ ratingId } .e-rating` );
+				ratingElement = editor.getPreviewFrame().locator( `.refraction-element-${ ratingId } .e-rating` );
 
 			await test.step( 'Rating Scale', async () => {
 				await editor.setSliderControlValue( 'rating_scale', '3' );

@@ -1,23 +1,23 @@
-const TemplateLibraryTemplateModel = require( 'elementor-templates/models/template' );
-const TemplateLibraryCollection = require( 'elementor-templates/collections/templates' );
+const TemplateLibraryTemplateModel = require( 'refraction-templates/models/template' );
+const TemplateLibraryCollection = require( 'refraction-templates/collections/templates' );
 const FolderCollectionView = require( './folders/folders-list' );
 
 const LOAD_MORE_ID = 0;
 
 import { SAVE_CONTEXTS } from './../../constants';
-import { rovingTabindex, suppressEscapeKeyUp } from 'elementor-editor-utils/keyboard-nav';
+import { rovingTabindex, suppressEscapeKeyUp } from 'refraction-editor-utils/keyboard-nav';
 
 const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	tagName: 'main',
 
-	id: 'elementor-template-library-save-template',
+	id: 'refraction-template-library-save-template',
 
-	template: '#tmpl-elementor-template-library-save-template',
+	template: '#tmpl-refraction-template-library-save-template',
 
 	ui() {
 		return {
-			form: '#elementor-template-library-save-template-form',
-			submitButton: '#elementor-template-library-save-template-submit',
+			form: '#refraction-template-library-save-template-form',
+			submitButton: '#refraction-template-library-save-template-submit',
 			ellipsisIcon: '.cloud-library-form-inputs .ellipsis-container',
 			foldersList: '.cloud-folder-selection-dropdown ul',
 			foldersDropdown: '.cloud-folder-selection-dropdown',
@@ -26,12 +26,12 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			selectedFolder: '.selected-folder',
 			selectedFolderText: '.selected-folder-text',
 			hiddenInputSelectedFolder: '#parentId',
-			templateNameInput: '#elementor-template-library-save-template-name',
+			templateNameInput: '#refraction-template-library-save-template-name',
 			localInput: '.source-selections-input.local',
 			cloudInput: '.source-selections-input.cloud',
 			sourceSelectionCheckboxes: '.source-selections-input input[type="checkbox"]',
 			infoIcon: '.source-selections-input.cloud .eicon-info',
-			connect: '#elementor-template-library-connect__badge',
+			connect: '#refraction-template-library-connect__badge',
 			connectBadge: '.source-selections-input.cloud .connect-badge',
 			cloudFormInputs: '.cloud-library-form-inputs',
 			upgradeBadge: '.source-selections-input.cloud .upgrade-badge',
@@ -58,19 +58,19 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	},
 
 	onRender() {
-		if ( 'undefined' === typeof elementorAppConfig[ 'cloud-library' ]?.quota && this.templateHelpers()?.canSaveToCloud ) {
-			elementor.templates.layout.showLoadingView();
+		if ( 'undefined' === typeof refractionAppConfig[ 'cloud-library' ]?.quota && this.templateHelpers()?.canSaveToCloud ) {
+			refraction.templates.layout.showLoadingView();
 
 			$e.components.get( 'cloud-library' ).utils.setQuotaConfig()
 				.then( ( data ) => {
-					elementorAppConfig[ 'cloud-library' ].quota = data;
+					refractionAppConfig[ 'cloud-library' ].quota = data;
 				} )
 				.catch( () => {
-					delete elementorAppConfig[ 'cloud-library' ].quota;
+					delete refractionAppConfig[ 'cloud-library' ].quota;
 				} )
 				.finally( () => {
 					this.handleOnRender();
-					elementor.templates.layout.hideLoadingView();
+					refraction.templates.layout.hideLoadingView();
 				} );
 		} else {
 			this.handleOnRender();
@@ -85,8 +85,8 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 		setTimeout( () => this.ui.templateNameInput.trigger( 'focus' ) );
 		const context = this.getOption( 'context' );
 
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary[ `${ context }Modal` ],
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary[ `${ context }Modal` ],
 		} );
 
 		if ( SAVE_CONTEXTS.SAVE === context ) {
@@ -101,7 +101,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			this.handleBulkActionContextUiState();
 		}
 
-		if ( ! elementor.templates.hasCloudLibraryQuota() ) {
+		if ( ! refraction.templates.hasCloudLibraryQuota() ) {
 			this.handleCloudLibraryPromo();
 		}
 
@@ -109,17 +109,17 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			this.handleCloudLibraryPromo( 'max-capacity' );
 		}
 
-		if ( ! elementor.config.library_connect.is_connected ) {
-			this.handleElementorConnect();
+		if ( ! refraction.config.library_connect.is_connected ) {
+			this.handleRefractionConnect();
 		}
 
 		this.bindDocumentClickHandler();
 	},
 
 	cloudMaxCapacityReached() {
-		return 'undefined' !== typeof elementorAppConfig[ 'cloud-library' ]?.quota &&
-			0 < elementorAppConfig[ 'cloud-library' ].quota?.threshold &&
-			elementorAppConfig[ 'cloud-library' ].quota?.currentUsage >= elementorAppConfig[ 'cloud-library' ].quota?.threshold;
+		return 'undefined' !== typeof refractionAppConfig[ 'cloud-library' ]?.quota &&
+			0 < refractionAppConfig[ 'cloud-library' ].quota?.threshold &&
+			refractionAppConfig[ 'cloud-library' ].quota?.currentUsage >= refractionAppConfig[ 'cloud-library' ].quota?.threshold;
 	},
 
 	handleSaveAction() {
@@ -146,7 +146,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 		const title = this.ui.templateNameInput.val().trim();
 
 		const isTitleFilled = this.ui.templateNameInput.is( ':visible' )
-			? elementor.templates.isTemplateTitleValid( title )
+			? refraction.templates.isTemplateTitleValid( title )
 			: true;
 
 		this.updateSubmitButtonState( ! isAnyChecked || ! isTitleFilled );
@@ -159,7 +159,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	},
 
 	handleContextUiStateCheckboxes() {
-		const fromSource = elementor.templates.getFilter( 'source' );
+		const fromSource = refraction.templates.getFilter( 'source' );
 
 		if ( 'local' === fromSource ) {
 			this.$( '.source-selections-input #cloud' ).prop( 'checked', true );
@@ -179,8 +179,8 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 
 		this.ui.cloudFormInputs.addClass( stateClass );
 
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModalSelectUpgrade,
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModalSelectUpgrade,
 		} );
 	},
 
@@ -191,8 +191,8 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			type = this.model.get( 'type' );
 		} else if ( this.model ) {
 			type = this.model.get( 'elType' );
-		} else if ( elementor.config.document.library && elementor.config.document.library.save_as_same_type ) {
-			type = elementor.config.document.type;
+		} else if ( refraction.config.document.library && refraction.config.document.library.save_as_same_type ) {
+			type = refraction.config.document.type;
 		} else {
 			type = 'page';
 		}
@@ -202,7 +202,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 
 	templateHelpers() {
 		const saveType = this.getSaveType(),
-			templateType = elementor.templates.getTemplateTypes( saveType ),
+			templateType = refraction.templates.getTemplateTypes( saveType ),
 			saveContext = this.getOption( 'context' );
 
 		return templateType[ `${ saveContext }Dialog` ];
@@ -292,12 +292,12 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	async onFormSubmit( event ) {
 		event.preventDefault();
 
-		var formData = this.ui.form.elementorSerializeObject(),
+		var formData = this.ui.form.refractionSerializeObject(),
 			JSONParams = { remove: [ 'default' ] };
 
 		formData.parentTitle = formData.parentId ? this.ui.selectedFolderText.html() : '';
 
-		formData.content = this.model ? [ this.model.toJSON( JSONParams ) ] : elementor.elements.toJSON( JSONParams );
+		formData.content = this.model ? [ this.model.toJSON( JSONParams ) ] : refraction.elements.toJSON( JSONParams );
 
 		this.updateSourceSelections( formData );
 
@@ -307,7 +307,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			return;
 		}
 
-		this.ui.submitButton.addClass( 'elementor-button-state' );
+		this.ui.submitButton.addClass( 'refraction-button-state' );
 
 		this.updateSaveContext( formData );
 
@@ -321,9 +321,9 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			// Proceed even if auto-save fails or is rejected.
 		}
 
-		await elementor.templates.syncGlobalStylesBeforeSave();
+		await refraction.templates.syncGlobalStylesBeforeSave();
 
-		elementor.templates.saveTemplate( this.getSaveType(), formData );
+		refraction.templates.saveTemplate( this.getSaveType(), formData );
 	},
 
 	updateSourceSelections( formData ) {
@@ -339,10 +339,10 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	},
 
 	showEmptySourceErrorDialog() {
-		elementorCommon.dialogsManager.createWidget( 'alert', {
-			id: 'elementor-template-library-error-dialog',
-			headerMessage: __( 'An error occurred.', 'elementor' ),
-			message: __( 'Please select at least one location.', 'elementor' ),
+		refractionCommon.dialogsManager.createWidget( 'alert', {
+			id: 'refraction-template-library-error-dialog',
+			headerMessage: __( 'An error occurred.', 'refraction' ),
+			message: __( 'Please select at least one location.', 'refraction' ),
 		} ).show();
 	},
 
@@ -352,10 +352,10 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 		formData.save_context = saveContext;
 
 		if ( [ SAVE_CONTEXTS.MOVE, SAVE_CONTEXTS.BULK_MOVE, SAVE_CONTEXTS.COPY, SAVE_CONTEXTS.BULK_COPY ].includes( saveContext ) ) {
-			formData.from_source = elementor.templates.getFilter( 'source' );
+			formData.from_source = refraction.templates.getFilter( 'source' );
 			formData.from_template_id = [ SAVE_CONTEXTS.MOVE, SAVE_CONTEXTS.COPY ].includes( saveContext )
 				? this.model.get( 'template_id' )
-				: Array.from( elementor.templates.getBulkSelectionItems() );
+				: Array.from( refraction.templates.getBulkSelectionItems() );
 		}
 	},
 
@@ -376,7 +376,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			? null
 			: this.getToastButtons( lastSource, formData?.parentId?.trim(), formData?.parentTitle?.trim() );
 
-		elementor.templates.setToastConfig( {
+		refraction.templates.setToastConfig( {
 			show: true,
 			options: {
 				message: toastMessage,
@@ -384,7 +384,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 				position: {
 					my: 'right bottom',
 					at: 'right-10 bottom-10',
-					of: '#elementor-template-library-modal .dialog-lightbox-widget-content',
+					of: '#refraction-template-library-modal .dialog-lightbox-widget-content',
 				},
 			},
 		} );
@@ -402,15 +402,15 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 		}
 
 		const lastSource = formData.source.at( -1 );
-		elementor.templates.setSourceSelection( lastSource );
-		elementor.templates.setFilter( 'source', lastSource, true );
+		refraction.templates.setSourceSelection( lastSource );
+		refraction.templates.setFilter( 'source', lastSource, true );
 	},
 
 	getToastMessage( lastSource, saveContext, formData ) {
 		const key = `${ lastSource }_${ saveContext }`;
 
 		if ( formData.source?.length > 1 ) {
-			return __( 'Template saved to your Site and Cloud Templates.', 'elementor' );
+			return __( 'Template saved to your Site and Cloud Templates.', 'refraction' );
 		}
 
 		const actions = {
@@ -430,11 +430,11 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	getFormattedToastMessage( action, title, count ) {
 		if ( count !== undefined ) {
 			/* Translators: 1: Number of templates, 2: Action performed (e.g., "moved", "copied"). */
-			return sprintf( __( '%1$d Template(s) %2$s.', 'elementor' ), count, action );
+			return sprintf( __( '%1$d Template(s) %2$s.', 'refraction' ), count, action );
 		}
 
 		/* Translators: 1: Template title or "Template" fallback, 2: Action performed. */
-		return sprintf( __( '%1$s %2$s.', 'elementor' ), title ? `"${ title }"` : __( 'Template', 'elementor' ), action );
+		return sprintf( __( '%1$s %2$s.', 'refraction' ), title ? `"${ title }"` : __( 'Template', 'refraction' ), action );
 	},
 
 	getToastButtons( lastSource, parentId, parentTitle ) {
@@ -443,22 +443,22 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 		return [
 			{
 				name: 'template_after_save',
-				text: __( 'View', 'elementor' ),
+				text: __( 'View', 'refraction' ),
 				callback: () => this.navigateToSavedSource( lastSource, parsedParentId, parentTitle ),
 			},
 		];
 	},
 
 	navigateToSavedSource( lastSource, parentId, parentTitle ) {
-		elementor.templates.setSourceSelection( lastSource );
-		elementor.templates.setFilter( 'source', lastSource, true );
+		refraction.templates.setSourceSelection( lastSource );
+		refraction.templates.setFilter( 'source', lastSource, true );
 
 		if ( parentId ) {
 			const model = new TemplateLibraryTemplateModel( { template_id: parentId, title: parentTitle } );
 
 			$e.route( 'library/view-folder', { model } );
 
-			elementor.templates.layout.showTemplatesView( new TemplateLibraryCollection( elementor.templates.filterTemplates() ) );
+			refraction.templates.layout.showTemplatesView( new TemplateLibraryCollection( refraction.templates.filterTemplates() ) );
 
 			return;
 		}
@@ -510,8 +510,8 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			this.focusFirstFolderItem();
 		}
 
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModalSelectFolder,
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModalSelectFolder,
 		} );
 	},
 
@@ -568,13 +568,13 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 					resolve( response );
 				},
 				error: ( error ) => {
-					elementor.templates.showErrorDialog( error );
+					refraction.templates.showErrorDialog( error );
 
 					resolve();
 				},
 			};
 
-			elementorCommon.ajax.addRequest( 'get_folders', ajaxOptions );
+			refractionCommon.ajax.addRequest( 'get_folders', ajaxOptions );
 		} );
 	},
 
@@ -658,7 +658,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	addLoadMoreItem() {
 		this.folderCollectionView.collection.add( {
 			template_id: LOAD_MORE_ID,
-			title: __( 'Load More', 'elementor' ),
+			title: __( 'Load More', 'refraction' ),
 		} );
 	},
 
@@ -699,7 +699,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 
 	moreThanOneCheckboxCanBeChecked() {
 		return SAVE_CONTEXTS.SAVE === this.getOption( 'context' ) ||
-			'cloud' !== elementor.templates.getFilter( 'source' );
+			'cloud' !== refraction.templates.getFilter( 'source' );
 	},
 
 	showInfoTip() {
@@ -707,16 +707,16 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			this.infoTipDialog.hide();
 		}
 
-		const message = elementor.templates.hasCloudLibraryQuota()
-			? __( 'Upgrade your subscription to get more space and reuse saved assets across all your sites.', 'elementor' )
-			: __( 'Upgrade your subscription to access Cloud Templates and reuse saved assets across all your sites.', 'elementor' );
+		const message = refraction.templates.hasCloudLibraryQuota()
+			? __( 'Upgrade your subscription to get more space and reuse saved assets across all your sites.', 'refraction' )
+			: __( 'Upgrade your subscription to access Cloud Templates and reuse saved assets across all your sites.', 'refraction' );
 
-		const goLink = elementor.templates.hasCloudLibraryQuota()
+		const goLink = refraction.templates.hasCloudLibraryQuota()
 			? 'https://go.elementor.com/go-pro-cloud-templates-save-to-100-usage-notice'
 			: 'https://go.elementor.com/go-pro-cloud-templates-save-to-free-tooltip/';
 
-		this.infoTipDialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-library--infotip__dialog',
+		this.infoTipDialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-library--infotip__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',
@@ -731,7 +731,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 				name: 'learn_more',
 				text: __(
 					'Upgrade Now',
-					'elementor',
+					'refraction',
 				),
 				classes: '',
 				callback: () => {
@@ -759,8 +759,8 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			this.connectInfoTipDialog.hide();
 		}
 
-		this.connectInfoTipDialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-library--connect_infotip__dialog',
+		this.connectInfoTipDialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-library--connect_infotip__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',
@@ -772,18 +772,18 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 		} )
 			.setMessage(
 				__(
-					'To access the Cloud Templates Library you must have an active Elementor Pro subscription',
-					'elementor',
+					'To access the Cloud Templates Library you must have an active Refraction Pro subscription',
+					'refraction',
 				) +
 				' <i>' +
 				__(
 					'and',
-					'elementor',
+					'refraction',
 				) +
 				'</i> ' +
 				__(
 					'connect your site.',
-					'elementor',
+					'refraction',
 				),
 			);
 
@@ -804,22 +804,22 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 		}
 	},
 
-	handleElementorConnect() {
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModalSelectConnect,
+	handleRefractionConnect() {
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModalSelectConnect,
 		} );
 
-		this.ui.connect.elementorConnect( {
+		this.ui.connect.refractionConnect( {
 			success: () => {
-				elementor.config.library_connect.is_connected = true;
+				refraction.config.library_connect.is_connected = true;
 
 				$e.run( 'library/close' );
-				elementor.notifications.showToast( {
-					message: __( 'Connected successfully.', 'elementor' ),
+				refraction.notifications.showToast( {
+					message: __( 'Connected successfully.', 'refraction' ),
 				} );
 			},
 			error: () => {
-				elementor.config.library_connect.is_connected = false;
+				refraction.config.library_connect.is_connected = false;
 			},
 		} );
 	},
@@ -840,7 +840,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 
 	bindDocumentClickHandler() {
 		this.documentClickHandler = this.hideDropdownIfClickOutside.bind( this );
-		elementor.templates.layout.modalContent.$el.on( 'click', this.documentClickHandler );
+		refraction.templates.layout.modalContent.$el.on( 'click', this.documentClickHandler );
 	},
 
 	unbindDocumentClickHandler() {
@@ -848,7 +848,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			return;
 		}
 
-		elementor.templates.layout.modalContent.$el.off( 'click', this.documentClickHandler );
+		refraction.templates.layout.modalContent.$el.off( 'click', this.documentClickHandler );
 		this.documentClickHandler = null;
 	},
 
@@ -868,10 +868,10 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	},
 
 	onUpgradeBadgeClicked() {
-		const upgradePosition = elementor.templates.hasCloudLibraryQuota() ? 'save to-max' : 'save to-free';
+		const upgradePosition = refraction.templates.hasCloudLibraryQuota() ? 'save to-max' : 'save to-free';
 
-		elementor.templates.eventManager.sendUpgradeClickedEvent( {
-			secondaryLocation: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModal,
+		refraction.templates.eventManager.sendUpgradeClickedEvent( {
+			secondaryLocation: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.saveModal,
 			upgrade_position: upgradePosition,
 		} );
 	},

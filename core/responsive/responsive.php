@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Core\Responsive;
+namespace Refraction\Core\Responsive;
 
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Modules\DevTools\Deprecation;
-use Elementor\Plugin;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Modules\DevTools\Deprecation;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor responsive.
+ * Refraction responsive.
  *
- * Elementor responsive handler class is responsible for setting up Elementor
+ * Refraction responsive handler class is responsible for setting up Refraction
  * responsive breakpoints.
  *
  * @since 1.0.0
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Responsive {
 
 	/**
-	 * The Elementor breakpoint prefix.
+	 * The Refraction breakpoint prefix.
 	 *
 	 * @deprecated 3.2.0
 	 */
@@ -71,14 +71,14 @@ class Responsive {
 	 * Retrieve the default responsive breakpoints.
 	 *
 	 * @since 1.0.0
-	 * @deprecated 3.2.0 Use `Elementor\Core\Breakpoints\Manager::get_default_config()` instead.
+	 * @deprecated 3.2.0 Use `Refraction\Core\Breakpoints\Manager::get_default_config()` instead.
 	 * @access public
 	 * @static
 	 *
 	 * @return array Default breakpoints.
 	 */
 	public static function get_default_breakpoints() {
-		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.2.0', 'Elementor\Core\Breakpoints\Manager::get_default_config()' );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.2.0', 'Refraction\Core\Breakpoints\Manager::get_default_config()' );
 
 		return self::$default_breakpoints;
 	}
@@ -143,24 +143,24 @@ class Responsive {
 
 	/**
 	 * @since 2.1.0
-	 * @deprecated 3.2.0 Use `Elementor\Core\Breakpoints\Manager::get_stylesheet_templates_path()` instead.
+	 * @deprecated 3.2.0 Use `Refraction\Core\Breakpoints\Manager::get_stylesheet_templates_path()` instead.
 	 * @access public
 	 * @static
 	 */
 	public static function get_stylesheet_templates_path() {
-		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.2.0', 'Elementor\Core\Breakpoints\Manager::get_stylesheet_templates_path()' );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.2.0', 'Refraction\Core\Breakpoints\Manager::get_stylesheet_templates_path()' );
 
 		return Breakpoints_Manager::get_stylesheet_templates_path();
 	}
 
 	/**
 	 * @since 2.1.0
-	 * @deprecated 3.2.0 Use `Elementor\Core\Breakpoints\Manager::compile_stylesheet_templates()` instead.
+	 * @deprecated 3.2.0 Use `Refraction\Core\Breakpoints\Manager::compile_stylesheet_templates()` instead.
 	 * @access public
 	 * @static
 	 */
 	public static function compile_stylesheet_templates() {
-		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.2.0', 'Elementor\Core\Breakpoints\Manager::compile_stylesheet_templates()' );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.2.0', 'Refraction\Core\Breakpoints\Manager::compile_stylesheet_templates()' );
 
 		Breakpoints_Manager::compile_stylesheet_templates();
 	}

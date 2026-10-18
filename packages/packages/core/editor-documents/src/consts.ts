@@ -1,1 +1,1 @@
-export const COMPONENT_DOCUMENT_TYPE = 'elementor_component';
+export const COMPONENT_DOCUMENT_TYPE = 'refraction_component';

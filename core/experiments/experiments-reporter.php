@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Core\Experiments;
+namespace Refraction\Core\Experiments;
 
-use Elementor\Modules\System_Info\Reporters\Base;
-use Elementor\Plugin;
+use Refraction\Modules\System_Info\Reporters\Base;
+use Refraction\Plugin;
 
 /**
- * Elementor experiments report.
+ * Refraction experiments report.
  *
- * Elementor experiment report handler class responsible for generating a report for
- * the experiments included in Elementor and their status.
+ * Refraction experiment report handler class responsible for generating a report for
+ * the experiments included in Refraction and their status.
  */
 class Experiments_Reporter extends Base {
 
@@ -18,7 +18,7 @@ class Experiments_Reporter extends Base {
 	 * @return string Reporter title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Elementor Experiments', 'elementor' );
+		return esc_html__( 'Refraction Experiments', 'refraction' );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Experiments_Reporter extends Base {
 	/**
 	 * Get Raw Experiments.
 	 *
-	 * Retrieve a string containing the list of Elementor experiments and each experiment's status (active/inactive).
+	 * Retrieve a string containing the list of Refraction experiments and each experiment's status (active/inactive).
 	 * The string is formatted in a non-table structure, and it is meant for export/download of the system info reports.
 	 *
 	 * @return array
@@ -106,7 +106,7 @@ class Experiments_Reporter extends Base {
 	/**
 	 * Get HTML Experiments.
 	 *
-	 * Retrieve the list of Elementor experiments and each experiment's status (active/inactive), in HTML table format.
+	 * Retrieve the list of Refraction experiments and each experiment's status (active/inactive), in HTML table format.
 	 *
 	 * @return array
 	 */

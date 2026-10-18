@@ -4,7 +4,7 @@ import {
 	__privateUseListenTo as useListenTo,
 	routeCloseEvent,
 	routeOpenEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { Portal as BasePortal, type PortalProps } from '@elementor/ui';
 
 export default function Portal( props: Omit< PortalProps, 'container' > ) {
@@ -22,6 +22,6 @@ export default function Portal( props: Omit< PortalProps, 'container' > ) {
 
 function getContainerRef() {
 	return isRouteActive( 'panel/global' )
-		? { current: document.querySelector( '#elementor-panel-inner' ) }
+		? { current: document.querySelector( '#refraction-panel-inner' ) }
 		: { current: null };
 }

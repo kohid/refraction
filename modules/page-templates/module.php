@@ -1,24 +1,24 @@
 <?php
-namespace Elementor\Modules\PageTemplates;
+namespace Refraction\Modules\PageTemplates;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Document;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Kits\Documents\Kit;
-use Elementor\Plugin;
-use Elementor\Utils;
-use Elementor\Core\DocumentTypes\PageBase;
-use Elementor\Modules\Library\Documents\Page as LibraryPageDocument;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Kits\Documents\Kit;
+use Refraction\Plugin;
+use Refraction\Utils;
+use Refraction\Core\DocumentTypes\PageBase;
+use Refraction\Modules\Library\Documents\Page as LibraryPageDocument;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor page templates module.
+ * Refraction page templates module.
  *
- * Elementor page templates module handler class is responsible for registering
- * and managing Elementor page templates modules.
+ * Refraction page templates module handler class is responsible for registering
+ * and managing Refraction page templates modules.
  *
  * @since 2.0.0
  */
@@ -27,17 +27,17 @@ class Module extends BaseModule {
 	/**
 	 * The of the theme.
 	 */
-	const TEMPLATE_THEME = 'elementor_theme';
+	const TEMPLATE_THEME = 'refraction_theme';
 
 	/**
-	 * Elementor Canvas template name.
+	 * Refraction Canvas template name.
 	 */
-	const TEMPLATE_CANVAS = 'elementor_canvas';
+	const TEMPLATE_CANVAS = 'refraction_canvas';
 
 	/**
-	 * Elementor Header & Footer template name.
+	 * Refraction Header & Footer template name.
 	 */
-	const TEMPLATE_HEADER_FOOTER = 'elementor_header_footer';
+	const TEMPLATE_HEADER_FOOTER = 'refraction_header_footer';
 
 	/**
 	 * Print callback.
@@ -68,7 +68,7 @@ class Module extends BaseModule {
 	/**
 	 * Template include.
 	 *
-	 * Update the path for the Elementor Canvas template.
+	 * Update the path for the Refraction Canvas template.
 	 *
 	 * Fired by `template_include` filter.
 	 *
@@ -88,7 +88,7 @@ class Module extends BaseModule {
 
 				$template_path = $this->get_template_path( $page_template );
 
-				if ( self::TEMPLATE_THEME !== $page_template && ! $template_path && $document->is_built_with_elementor() ) {
+				if ( self::TEMPLATE_THEME !== $page_template && ! $template_path && $document->is_built_with_refraction() ) {
 					$kit_default_template = Plugin::$instance->kits_manager->get_current_settings( 'default_page_template' );
 					$template_path = $this->get_template_path( $kit_default_template );
 				}
@@ -107,8 +107,8 @@ class Module extends BaseModule {
 	/**
 	 * Add WordPress templates.
 	 *
-	 * Adds Elementor templates to all the post types that support
-	 * Elementor.
+	 * Adds Refraction templates to all the post types that support
+	 * Refraction.
 	 *
 	 * Fired by `init` action.
 	 *
@@ -116,7 +116,7 @@ class Module extends BaseModule {
 	 * @access public
 	 */
 	public function add_wp_templates_support() {
-		$post_types = get_post_types_by_support( 'elementor' );
+		$post_types = get_post_types_by_support( 'refraction' );
 
 		foreach ( $post_types as $post_type ) {
 			add_filter( "theme_{$post_type}_templates", [ $this, 'add_page_templates' ], 10, 4 );
@@ -126,7 +126,7 @@ class Module extends BaseModule {
 	/**
 	 * Add page templates.
 	 *
-	 * Add the Elementor page templates to the theme templates.
+	 * Add the Refraction page templates to the theme templates.
 	 *
 	 * Fired by `theme_{$post_type}_templates` filter.
 	 *
@@ -152,9 +152,9 @@ class Module extends BaseModule {
 		}
 
 		$page_templates = [
-			self::TEMPLATE_CANVAS => esc_html__( 'Elementor Canvas', 'elementor' ),
-			self::TEMPLATE_HEADER_FOOTER => esc_html__( 'Elementor Full Width', 'elementor' ),
-			self::TEMPLATE_THEME => esc_html__( 'Theme', 'elementor' ),
+			self::TEMPLATE_CANVAS => esc_html__( 'Refraction Canvas', 'refraction' ),
+			self::TEMPLATE_HEADER_FOOTER => esc_html__( 'Refraction Full Width', 'refraction' ),
+			self::TEMPLATE_THEME => esc_html__( 'Theme', 'refraction' ),
 		] + $page_templates;
 
 		return $page_templates;
@@ -292,11 +292,11 @@ class Module extends BaseModule {
 	public function add_template_controls( Document $document, $control_id, $control_options ) {
 		// Default Control Options
 		$default_control_options = [
-			'label' => esc_html__( 'Page Layout', 'elementor' ),
+			'label' => esc_html__( 'Page Layout', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'default',
 			'options' => [
-				'default' => esc_html__( 'Default', 'elementor' ),
+				'default' => esc_html__( 'Default', 'refraction' ),
 			],
 		];
 
@@ -311,8 +311,8 @@ class Module extends BaseModule {
 			$control_id . '_default_description',
 			[
 				'type' => Controls_Manager::RAW_HTML,
-				'raw' => '<b>' . esc_html__( 'The default page template as defined in Elementor Panel → Hamburger Menu → Site Settings.', 'elementor' ) . '</b>',
-				'content_classes' => 'elementor-descriptor',
+				'raw' => '<b>' . esc_html__( 'The default page template as defined in Refraction Panel → Hamburger Menu → Site Settings.', 'refraction' ) . '</b>',
+				'content_classes' => 'refraction-descriptor',
 				'condition' => [
 					$control_id => 'default',
 				],
@@ -323,8 +323,8 @@ class Module extends BaseModule {
 			$control_id . '_theme_description',
 			[
 				'type' => Controls_Manager::RAW_HTML,
-				'raw' => '<b>' . esc_html__( 'Default Page Template from your theme.', 'elementor' ) . '</b>',
-				'content_classes' => 'elementor-descriptor',
+				'raw' => '<b>' . esc_html__( 'Default Page Template from your theme.', 'refraction' ) . '</b>',
+				'content_classes' => 'refraction-descriptor',
 				'condition' => [
 					$control_id => self::TEMPLATE_THEME,
 				],
@@ -335,8 +335,8 @@ class Module extends BaseModule {
 			$control_id . '_canvas_description',
 			[
 				'type' => Controls_Manager::RAW_HTML,
-				'raw' => '<b>' . esc_html__( 'No header, no footer, just Elementor', 'elementor' ) . '</b>',
-				'content_classes' => 'elementor-descriptor',
+				'raw' => '<b>' . esc_html__( 'No header, no footer, just Refraction', 'refraction' ) . '</b>',
+				'content_classes' => 'refraction-descriptor',
 				'condition' => [
 					$control_id => self::TEMPLATE_CANVAS,
 				],
@@ -347,8 +347,8 @@ class Module extends BaseModule {
 			$control_id . '_header_footer_description',
 			[
 				'type' => Controls_Manager::RAW_HTML,
-				'raw' => '<b>' . esc_html__( 'This template includes the header, full-width content and footer', 'elementor' ) . '</b>',
-				'content_classes' => 'elementor-descriptor',
+				'raw' => '<b>' . esc_html__( 'This template includes the header, full-width content and footer', 'refraction' ) . '</b>',
+				'content_classes' => 'refraction-descriptor',
 				'condition' => [
 					$control_id => self::TEMPLATE_HEADER_FOOTER,
 				],
@@ -360,8 +360,8 @@ class Module extends BaseModule {
 				'reload_preview_description',
 				[
 					'type' => Controls_Manager::RAW_HTML,
-					'raw' => esc_html__( 'Changes will be reflected in the preview only after the page reloads.', 'elementor' ),
-					'content_classes' => 'elementor-descriptor',
+					'raw' => esc_html__( 'Changes will be reflected in the preview only after the page reloads.', 'refraction' ),
+					'content_classes' => 'refraction-descriptor',
 				]
 			);
 		}
@@ -372,7 +372,7 @@ class Module extends BaseModule {
 	 *
 	 * Filters whether to update metadata of a specific type.
 	 *
-	 * Elementor don't allow WordPress to update the parent page template
+	 * Refraction don't allow WordPress to update the parent page template
 	 * during `wp_update_post`.
 	 *
 	 * Fired by `update_{$meta_type}_metadata` filter.
@@ -388,7 +388,7 @@ class Module extends BaseModule {
 	 */
 	public function filter_update_meta( $check, $object_id, $meta_key ) {
 		if ( '_wp_page_template' === $meta_key && Plugin::$instance->common ) {
-			/** @var \Elementor\Core\Common\Modules\Ajax\Module $ajax */
+			/** @var \Refraction\Core\Common\Modules\Ajax\Module $ajax */
 			$ajax = Plugin::$instance->common->get_component( 'ajax' );
 
 			$ajax_data = $ajax->get_current_action_data();
@@ -408,7 +408,7 @@ class Module extends BaseModule {
 	/**
 	 * Page templates module constructor.
 	 *
-	 * Initializing Elementor page templates module.
+	 * Initializing Refraction page templates module.
 	 *
 	 * @since 2.0.0
 	 * @access public
@@ -418,7 +418,7 @@ class Module extends BaseModule {
 
 		add_filter( 'template_include', [ $this, 'template_include' ], 11 /* After Plugins/WooCommerce */ );
 
-		add_action( 'elementor/documents/register_controls', [ $this, 'action_register_template_control' ] );
+		add_action( 'refraction/documents/register_controls', [ $this, 'action_register_template_control' ] );
 
 		add_filter( 'update_post_metadata', [ $this, 'filter_update_meta' ], 10, 3 );
 	}

@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 
 const mockIsAngieAvailable = jest.fn();
 
-jest.mock( '@elementor/editor-mcp', () => ( {
+jest.mock( '@refraction/editor-mcp', () => ( {
 	isAngieAvailable: () => mockIsAngieAvailable(),
 } ) );
 

@@ -46,7 +46,7 @@ export const CollapsibleContent = ( { children, defaultOpen = false, titleEnd = 
 					sx={ { my: 0.5 } }
 					aria-label={ open ? 'Show less' : 'Show more' }
 				>
-					{ open ? __( 'Show less', 'elementor' ) : __( 'Show more', 'elementor' ) }
+					{ open ? __( 'Show less', 'refraction' ) : __( 'Show more', 'refraction' ) }
 				</Button>
 				{ titleEnd && <IndicatorsWrapper>{ getCollapsibleValue( titleEnd, open ) }</IndicatorsWrapper> }
 			</Stack>

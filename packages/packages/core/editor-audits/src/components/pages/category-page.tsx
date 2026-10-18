@@ -27,12 +27,12 @@ export default function CategoryPage( { category, report, onBack }: Props ) {
 			<SubpageHeader
 				title={ CATEGORY_LABELS[ category ] }
 				onBack={ onBack }
-				backLabel={ __( 'Back to all issues', 'elementor' ) }
+				backLabel={ __( 'Back to all issues', 'refraction' ) }
 				icon={ <Icon fontSize="small" color="action" /> }
 			/>
 			<Box sx={ { p: 1 } }>
 				<StatusSection
-					label={ __( 'Failed audits', 'elementor' ) }
+					label={ __( 'Failed audits', 'refraction' ) }
 					count={ totalViolations }
 					color="error"
 					defaultExpanded
@@ -47,7 +47,7 @@ export default function CategoryPage( { category, report, onBack }: Props ) {
 						/>
 					) ) }
 				</StatusSection>
-				<StatusSection label={ __( 'Passed audits', 'elementor' ) } count={ passed.length } color="success">
+				<StatusSection label={ __( 'Passed audits', 'refraction' ) } count={ passed.length } color="success">
 					{ passed.map( ( r ) => (
 						<ViolationRow
 							key={ r.audit.id }
@@ -57,7 +57,7 @@ export default function CategoryPage( { category, report, onBack }: Props ) {
 						/>
 					) ) }
 				</StatusSection>
-				<StatusSection label={ __( 'Skipped audits', 'elementor' ) } count={ skipped.length } color="default">
+				<StatusSection label={ __( 'Skipped audits', 'refraction' ) } count={ skipped.length } color="default">
 					{ skipped.map( ( r ) => (
 						<ViolationRow
 							key={ r.audit.id }

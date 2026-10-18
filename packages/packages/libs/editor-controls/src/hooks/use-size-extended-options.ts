@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type ExtendedOption } from '@elementor/editor-controls';
+import { type ExtendedOption } from '@refraction/editor-controls';
 
 export function useSizeExtendedOptions( options: ExtendedOption[], disableCustom: boolean ) {
 	return useMemo( () => {

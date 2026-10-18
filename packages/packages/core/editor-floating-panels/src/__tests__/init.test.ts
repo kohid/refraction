@@ -1,10 +1,10 @@
-import { injectIntoTop } from '@elementor/editor';
+import { injectIntoTop } from '@refraction/editor';
 
 import { slice } from '../store/slice';
 
 const mockRegisterSlice = jest.fn();
 
-jest.mock( '@elementor/editor', () => ( {
+jest.mock( '@refraction/editor', () => ( {
 	injectIntoTop: jest.fn(),
 } ) );
 
@@ -12,8 +12,8 @@ jest.mock( '../sync', () => ( {
 	sync: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/store', () => {
-	const actual = jest.requireActual( '@elementor/store' );
+jest.mock( '@refraction/store', () => {
+	const actual = jest.requireActual( '@refraction/store' );
 
 	return {
 		...actual,

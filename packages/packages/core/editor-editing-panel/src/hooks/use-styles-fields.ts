@@ -5,12 +5,12 @@ import {
 	type ElementID,
 	getElementLabel,
 	shouldCreateNewLocalStyle,
-} from '@elementor/editor-elements';
-import type { Props } from '@elementor/editor-props';
-import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@elementor/editor-styles';
-import { isElementsStylesProvider, type StylesProvider } from '@elementor/editor-styles-repository';
-import { ELEMENTS_STYLES_RESERVED_LABEL } from '@elementor/editor-styles-repository';
-import { undoable } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import type { Props } from '@refraction/editor-props';
+import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@refraction/editor-styles';
+import { isElementsStylesProvider, type StylesProvider } from '@refraction/editor-styles-repository';
+import { ELEMENTS_STYLES_RESERVED_LABEL } from '@refraction/editor-styles-repository';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { useClassesProp } from '../contexts/classes-prop-context';
@@ -205,7 +205,7 @@ type DefaultHistorySubtitleArgs = {
 const defaultHistoryTitles = {
 	title: ( { provider }: DefaultHistoryTitleArgs ) => {
 		const providerLabel = provider.labels?.singular;
-		return providerLabel ? capitalize( providerLabel ) : __( 'Style', 'elementor' );
+		return providerLabel ? capitalize( providerLabel ) : __( 'Style', 'refraction' );
 	},
 	subtitle: ( { provider, styleId, elementId, propDisplayName }: DefaultHistorySubtitleArgs ) => {
 		const styleLabel = provider.actions.get( styleId, { elementId } )?.label;
@@ -215,7 +215,7 @@ const defaultHistoryTitles = {
 		}
 
 		// translators: %s$1 is the style label, %s$2 is the name of the style property being edited
-		return __( `%s$1 %s$2 edited`, 'elementor' ).replace( '%s$1', styleLabel ).replace( '%s$2', propDisplayName );
+		return __( `%s$1 %s$2 edited`, 'refraction' ).replace( '%s$1', styleLabel ).replace( '%s$2', propDisplayName );
 	},
 };
 
@@ -231,7 +231,7 @@ const localStyleHistoryTitles = {
 	title: ( { elementId }: LocalStyleHistoryTitleArgs ) => getElementLabel( elementId ),
 	subtitle: ( { propDisplayName }: LocalStyleHistorySubtitleArgs ) =>
 		// translators: %s is the name of the style property being edited
-		__( `%s edited`, 'elementor' ).replace( '%s', propDisplayName ),
+		__( `%s edited`, 'refraction' ).replace( '%s', propDisplayName ),
 };
 
 function capitalize( str: string ) {

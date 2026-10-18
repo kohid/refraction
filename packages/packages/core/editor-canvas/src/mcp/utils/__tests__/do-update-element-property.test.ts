@@ -3,14 +3,14 @@ import {
 	getWidgetsCache,
 	updateElementSettings,
 	updateElementStyle,
-} from '@elementor/editor-elements';
-import { Schema } from '@elementor/editor-props';
-import { getStylesSchema, getVariantByMeta } from '@elementor/editor-styles';
-import { __privateRunCommandSync } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import { Schema } from '@refraction/editor-props';
+import { getStylesSchema, getVariantByMeta } from '@refraction/editor-styles';
+import { __privateRunCommandSync } from '@refraction/editor-v1-adapters';
 
 import { doUpdateElementProperty, UnsupportedPropertyError } from '../do-update-element-property';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	createElementStyle: jest.fn(),
 	getElementStyles: jest.fn(),
 	getWidgetsCache: jest.fn(),
@@ -18,7 +18,7 @@ jest.mock( '@elementor/editor-elements', () => ( {
 	updateElementStyle: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-props', () => ( {
+jest.mock( '@refraction/editor-props', () => ( {
 	getPropSchemaFromCache: jest.fn(),
 	Schema: {
 		adjustLlmPropValueSchema: jest.fn( ( value: unknown ) => value ),
@@ -26,12 +26,12 @@ jest.mock( '@elementor/editor-props', () => ( {
 	},
 } ) );
 
-jest.mock( '@elementor/editor-styles', () => ( {
+jest.mock( '@refraction/editor-styles', () => ( {
 	getStylesSchema: jest.fn( () => ( {} ) ),
 	getVariantByMeta: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateRunCommandSync: jest.fn(),
 } ) );
 
@@ -55,7 +55,7 @@ const widgetsCacheFixture = {
 describe( 'doUpdateElementProperty', () => {
 	beforeEach( () => {
 		Object.assign( window, {
-			elementorV2: {
+			refractionV2: {
 				editorVariables: {
 					Utils: {
 						globalVariablesLLMResolvers: [],

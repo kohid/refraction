@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\ElementCache;
+namespace Refraction\Modules\ElementCache;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager as ExperimentsManager;
-use Elementor\Element_Base;
-use Elementor\Plugin;
-use Elementor\Settings;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager as ExperimentsManager;
+use Refraction\Element_Base;
+use Refraction\Plugin;
+use Refraction\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Module extends BaseModule {
 
-	const OPTION_UNIQUE_ID = '_elementor_element_cache_unique_id';
+	const OPTION_UNIQUE_ID = '_refraction_element_cache_unique_id';
 
 	public function get_name() {
 		return 'element-cache';
@@ -25,12 +25,12 @@ class Module extends BaseModule {
 
 		$this->register_shortcode();
 
-		add_filter( 'elementor/element_cache/unique_id', [ $this, 'get_unique_id' ] );
+		add_filter( 'refraction/element_cache/unique_id', [ $this, 'get_unique_id' ] );
 
 		$this->add_advanced_tab_actions();
 
 		if ( is_admin() ) {
-			add_action( 'elementor/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_admin_fields' ], 100 );
+			add_action( 'refraction/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_admin_fields' ], 100 );
 		}
 	}
 
@@ -46,7 +46,7 @@ class Module extends BaseModule {
 	}
 
 	private function register_shortcode() {
-		add_shortcode( 'elementor-element', function ( $atts ) {
+		add_shortcode( 'refraction-element', function ( $atts ) {
 			if ( empty( $atts['data'] ) ) {
 				return '';
 			}
@@ -75,7 +75,7 @@ class Module extends BaseModule {
 
 	private function add_advanced_tab_actions() {
 		$hooks = [
-			'elementor/element/common/_section_style/after_section_end' => '_css_classes', // Widgets
+			'refraction/element/common/_section_style/after_section_end' => '_css_classes', // Widgets
 		];
 
 		foreach ( $hooks as $hook => $injection_position ) {
@@ -98,13 +98,13 @@ class Module extends BaseModule {
 		);
 
 		$control_data = [
-			'label' => esc_html__( 'Cache Settings', 'elementor' ),
+			'label' => esc_html__( 'Cache Settings', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'yes' => esc_html__( 'Inactive', 'elementor' ),
-				'no' => esc_html__( 'Active', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'yes' => esc_html__( 'Inactive', 'refraction' ),
+				'no' => esc_html__( 'Active', 'refraction' ),
 			],
 		];
 
@@ -119,24 +119,24 @@ class Module extends BaseModule {
 			Settings::TAB_PERFORMANCE,
 			'element_cache_ttl',
 			[
-				'label' => esc_html__( 'Element Cache', 'elementor' ),
+				'label' => esc_html__( 'Element Cache', 'refraction' ),
 				'field_args' => [
-					'class' => 'elementor-element-cache-ttl',
+					'class' => 'refraction-element-cache-ttl',
 					'type' => 'select',
 					'std' => '24',
 					'options' => [
-						'disable' => esc_html__( 'Disable', 'elementor' ),
-						'1' => esc_html__( '1 Hour', 'elementor' ),
-						'6' => esc_html__( '6 Hours', 'elementor' ),
-						'12' => esc_html__( '12 Hours', 'elementor' ),
-						'24' => esc_html__( '1 Day', 'elementor' ),
-						'72' => esc_html__( '3 Days', 'elementor' ),
-						'168' => esc_html__( '1 Week', 'elementor' ),
-						'336' => esc_html__( '2 Weeks', 'elementor' ),
-						'720' => esc_html__( '1 Month', 'elementor' ),
-						'8760' => esc_html__( '1 Year', 'elementor' ),
+						'disable' => esc_html__( 'Disable', 'refraction' ),
+						'1' => esc_html__( '1 Hour', 'refraction' ),
+						'6' => esc_html__( '6 Hours', 'refraction' ),
+						'12' => esc_html__( '12 Hours', 'refraction' ),
+						'24' => esc_html__( '1 Day', 'refraction' ),
+						'72' => esc_html__( '3 Days', 'refraction' ),
+						'168' => esc_html__( '1 Week', 'refraction' ),
+						'336' => esc_html__( '2 Weeks', 'refraction' ),
+						'720' => esc_html__( '1 Month', 'refraction' ),
+						'8760' => esc_html__( '1 Year', 'refraction' ),
 					],
-					'desc' => esc_html__( 'Specify the duration for which data is stored in the cache. Elements caching speeds up loading by serving pre-rendered copies of elements, rather than rendering them fresh each time. This control ensures efficient performance and up-to-date content.', 'elementor' ),
+					'desc' => esc_html__( 'Specify the duration for which data is stored in the cache. Elements caching speeds up loading by serving pre-rendered copies of elements, rather than rendering them fresh each time. This control ensures efficient performance and up-to-date content.', 'refraction' ),
 				],
 			]
 		);

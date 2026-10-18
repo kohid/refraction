@@ -5,5 +5,5 @@ interface OnboardingRestConfig {
 }
 
 export function getConfig(): OnboardingRestConfig | null {
-	return window.elementorAppConfig?.onboarding ?? null;
+	return window.refractionAppConfig?.onboarding ?? null;
 }

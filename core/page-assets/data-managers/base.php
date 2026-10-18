@@ -1,19 +1,19 @@
 <?php
-namespace Elementor\Core\Page_Assets\Data_Managers;
+namespace Refraction\Core\Page_Assets\Data_Managers;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Assets Data.
+ * Refraction Assets Data.
  *
  * @since 3.3.0
  */
 abstract class Base {
-	const ASSETS_DATA_KEY = '_elementor_assets_data';
+	const ASSETS_DATA_KEY = '_refraction_assets_data';
 
 	/**
 	 * @var array

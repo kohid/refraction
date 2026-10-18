@@ -1,35 +1,35 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Files\Fonts\Google_Font;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Includes\Settings\AdminMenuItems\Editor_One_Home_Menu;
-use Elementor\Includes\Settings\AdminMenuItems\Editor_One_Settings_Menu;
+use Refraction\Core\Files\Fonts\Google_Font;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Includes\Settings\AdminMenuItems\Editor_One_Home_Menu;
+use Refraction\Includes\Settings\AdminMenuItems\Editor_One_Settings_Menu;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor "Settings" page in WordPress Dashboard.
+ * Refraction "Settings" page in WordPress Dashboard.
  *
- * Elementor settings page handler class responsible for creating and displaying
- * Elementor "Settings" page in WordPress dashboard.
+ * Refraction settings page handler class responsible for creating and displaying
+ * Refraction "Settings" page in WordPress dashboard.
  *
  * @since 1.0.0
  */
 class Settings extends Settings_Page {
 
 	/**
-	 * Settings page ID for Elementor settings.
+	 * Settings page ID for Refraction settings.
 	 */
-	const PAGE_ID = 'elementor';
+	const PAGE_ID = 'refraction';
 
 	/**
 	 * Settings page field for update time.
 	 */
-	const UPDATE_TIME_FIELD = '_elementor_settings_update_time';
+	const UPDATE_TIME_FIELD = '_refraction_settings_update_time';
 
 	/**
 	 * Settings page general tab slug.
@@ -58,7 +58,7 @@ class Settings extends Settings_Page {
 	/**
 	 * Register admin menu.
 	 *
-	 * Add new Elementor Settings admin menu.
+	 * Add new Refraction Settings admin menu.
 	 *
 	 * Fired by `admin_menu` action.
 	 *
@@ -71,8 +71,8 @@ class Settings extends Settings_Page {
 		}
 
 		add_menu_page(
-			esc_html__( 'Elementor', 'elementor' ),
-			esc_html__( 'Elementor', 'elementor' ),
+			esc_html__( 'Refraction', 'refraction' ),
+			esc_html__( 'Refraction', 'refraction' ),
 			self::MENU_CAPABILITY_EDIT_POSTS,
 			self::PAGE_ID,
 			[ $this, 'display_home_screen' ],
@@ -85,10 +85,10 @@ class Settings extends Settings_Page {
 		// The remote-fed home screen was removed. Render a local-only landing page.
 		?>
 		<div class="wrap">
-			<h1><?php echo esc_html__( 'Elementor', 'elementor' ); ?></h1>
+			<h1><?php echo esc_html__( 'Refraction', 'refraction' ); ?></h1>
 			<p>
-				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=page' ) ); ?>"><?php echo esc_html__( 'Create new page', 'elementor' ); ?></a>
-				<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=elementor_library&tabs_group=library' ) ); ?>"><?php echo esc_html__( 'My Templates', 'elementor' ); ?></a>
+				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=page' ) ); ?>"><?php echo esc_html__( 'Create new page', 'refraction' ); ?></a>
+				<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=refraction_library&tabs_group=library' ) ); ?>"><?php echo esc_html__( 'My Templates', 'refraction' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -121,8 +121,8 @@ class Settings extends Settings_Page {
 	 *
 	 * Clear post CSS cache.
 	 *
-	 * Fired by `add_option_elementor_css_print_method` and
-	 * `update_option_elementor_css_print_method` actions.
+	 * Fired by `add_option_refraction_css_print_method` and
+	 * `update_option_refraction_css_print_method` actions.
 	 *
 	 * @since 1.7.5
 	 * @access public
@@ -147,14 +147,14 @@ class Settings extends Settings_Page {
 
 		return [
 			self::TAB_GENERAL => [
-				'label' => esc_html__( 'General', 'elementor' ),
+				'label' => esc_html__( 'General', 'refraction' ),
 				'sections' => [
 					'general' => [
-						'label' => esc_html__( 'General', 'elementor' ),
+						'label' => esc_html__( 'General', 'refraction' ),
 						'callback' => function() {
 							printf(
 								'<p>%s</p><br><hr><br>',
-								esc_html__( 'Tailor how Elementor enhances your site, from post types to other functions.', 'elementor' )
+								esc_html__( 'Tailor how Refraction enhances your site, from post types to other functions.', 'refraction' )
 							);
 						},
 						'fields' => [
@@ -166,28 +166,28 @@ class Settings extends Settings_Page {
 								'setting_args' => [ $validations_class_name, 'current_time' ],
 							],
 							'cpt_support' => [
-								'label' => esc_html__( 'Post Types', 'elementor' ),
+								'label' => esc_html__( 'Post Types', 'refraction' ),
 								'field_args' => [
 									'type' => 'checkbox_list_cpt',
 									'std' => [ 'page', 'post' ],
-									'exclude' => [ 'attachment', 'elementor_library' ],
+									'exclude' => [ 'attachment', 'refraction_library' ],
 								],
 								'setting_args' => [ $validations_class_name, 'checkbox_list' ],
 							],
 							'disable_color_schemes' => [
-								'label' => esc_html__( 'Disable Default Colors', 'elementor' ),
+								'label' => esc_html__( 'Disable Default Colors', 'refraction' ),
 								'field_args' => [
 									'type' => 'checkbox',
 									'value' => 'yes',
-									'sub_desc' => esc_html__( 'Checking this box will disable Elementor\'s Default Colors, and make Elementor inherit the colors from your theme.', 'elementor' ),
+									'sub_desc' => esc_html__( 'Checking this box will disable Refraction\'s Default Colors, and make Refraction inherit the colors from your theme.', 'refraction' ),
 								],
 							],
 							'disable_typography_schemes' => [
-								'label' => esc_html__( 'Disable Default Fonts', 'elementor' ),
+								'label' => esc_html__( 'Disable Default Fonts', 'refraction' ),
 								'field_args' => [
 									'type' => 'checkbox',
 									'value' => 'yes',
-									'sub_desc' => esc_html__( 'Checking this box will disable Elementor\'s Default Fonts, and make Elementor inherit the fonts from your theme.', 'elementor' ),
+									'sub_desc' => esc_html__( 'Checking this box will disable Refraction\'s Default Fonts, and make Refraction inherit the fonts from your theme.', 'refraction' ),
 								],
 							],
 						],
@@ -195,23 +195,23 @@ class Settings extends Settings_Page {
 				],
 			],
 			self::TAB_INTEGRATIONS => [
-				'label' => esc_html__( 'Integrations', 'elementor' ),
+				'label' => esc_html__( 'Integrations', 'refraction' ),
 				'sections' => [
 					'google_maps' => [
-						'label' => esc_html__( 'Google Maps Embed API', 'elementor' ),
+						'label' => esc_html__( 'Google Maps Embed API', 'refraction' ),
 						'callback' => function() {
 							printf(
 								/* translators: 1: Link open tag, 2: Link close tag */
-								esc_html__( 'Google Maps Embed API is a free service by Google that allows embedding Google Maps in your site. For more details, visit Google Maps\' %1$sUsing API Keys%2$s page.', 'elementor' ),
+								esc_html__( 'Google Maps Embed API is a free service by Google that allows embedding Google Maps in your site. For more details, visit Google Maps\' %1$sUsing API Keys%2$s page.', 'refraction' ),
 								'<a target="_blank" href="https://developers.google.com/maps/documentation/embed/get-api-key">',
 								'</a>'
 							);
 						},
 						'fields' => [
 							'google_maps_api_key' => [
-								'label' => esc_html__( 'API Key', 'elementor' ),
+								'label' => esc_html__( 'API Key', 'refraction' ),
 								'field_args' => [
-									'class' => 'elementor_google_maps_api_key',
+									'class' => 'refraction_google_maps_api_key',
 									'type' => 'text',
 								],
 							],
@@ -220,71 +220,71 @@ class Settings extends Settings_Page {
 				],
 			],
 			self::TAB_ADVANCED => [
-				'label' => esc_html__( 'Advanced', 'elementor' ),
+				'label' => esc_html__( 'Advanced', 'refraction' ),
 				'sections' => [
 					'advanced' => [
-						'label' => esc_html__( 'Advanced', 'elementor' ),
+						'label' => esc_html__( 'Advanced', 'refraction' ),
 						'callback' => function() {
 							printf(
 								'<p>%s</p><br><hr><br>',
-								esc_html__( 'Personalize the way Elementor works on your website by choosing the advanced features and how they operate.', 'elementor' )
+								esc_html__( 'Personalize the way Refraction works on your website by choosing the advanced features and how they operate.', 'refraction' )
 							);
 						},
 						'fields' => [
 							'editor_break_lines' => [
-								'label' => esc_html__( 'Switch Editor Loader Method', 'elementor' ),
+								'label' => esc_html__( 'Switch Editor Loader Method', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '',
 									'options' => [
-										'' => esc_html__( 'Disable', 'elementor' ),
-										'1' => esc_html__( 'Enable', 'elementor' ),
+										'' => esc_html__( 'Disable', 'refraction' ),
+										'1' => esc_html__( 'Enable', 'refraction' ),
 									],
-									'desc' => esc_html__( 'For troubleshooting server configuration conflicts.', 'elementor' ),
+									'desc' => esc_html__( 'For troubleshooting server configuration conflicts.', 'refraction' ),
 								],
 							],
 							'unfiltered_files_upload' => [
-								'label' => esc_html__( 'Enable Unfiltered File Uploads', 'elementor' ),
+								'label' => esc_html__( 'Enable Unfiltered File Uploads', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '',
 									'options' => [
-										'' => esc_html__( 'Disable', 'elementor' ),
-										'1' => esc_html__( 'Enable', 'elementor' ),
+										'' => esc_html__( 'Disable', 'refraction' ),
+										'1' => esc_html__( 'Enable', 'refraction' ),
 									],
-									'desc' => esc_html__( 'Please note! Allowing uploads of any files (SVG & JSON included) is a potential security risk.', 'elementor' ) . '<br>' . esc_html__( 'Elementor will try to sanitize the unfiltered files, removing potential malicious code and scripts.', 'elementor' ) . '<br>' . esc_html__( 'We recommend you only enable this feature if you understand the security risks involved.', 'elementor' ),
+									'desc' => esc_html__( 'Please note! Allowing uploads of any files (SVG & JSON included) is a potential security risk.', 'refraction' ) . '<br>' . esc_html__( 'Refraction will try to sanitize the unfiltered files, removing potential malicious code and scripts.', 'refraction' ) . '<br>' . esc_html__( 'We recommend you only enable this feature if you understand the security risks involved.', 'refraction' ),
 								],
 							],
 							'google_font' => [
-								'label' => esc_html__( 'Google Fonts', 'elementor' ),
+								'label' => esc_html__( 'Google Fonts', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '1',
 									'options' => [
-										'1' => esc_html__( 'Enable', 'elementor' ),
-										'0' => esc_html__( 'Disable', 'elementor' ),
+										'1' => esc_html__( 'Enable', 'refraction' ),
+										'0' => esc_html__( 'Disable', 'refraction' ),
 									],
 									'desc' => sprintf(
 										/* translators: 1: Link opening tag, 2: Link closing tag */
-										esc_html__( 'Disable this option if you want to prevent Google Fonts from being loaded. This setting is recommended when loading fonts from a different source (plugin, theme or %1$scustom fonts%2$s).', 'elementor' ),
-										'<a href="' . admin_url( 'admin.php?page=elementor_custom_fonts' ) . '">',
+										esc_html__( 'Disable this option if you want to prevent Google Fonts from being loaded. This setting is recommended when loading fonts from a different source (plugin, theme or %1$scustom fonts%2$s).', 'refraction' ),
+										'<a href="' . admin_url( 'admin.php?page=refraction_custom_fonts' ) . '">',
 										'</a>'
 									),
 								],
 							],
 							'font_display' => [
-								'label' => esc_html__( 'Google Fonts Load', 'elementor' ),
+								'label' => esc_html__( 'Google Fonts Load', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => 'auto',
 									'options' => [
-										'auto' => esc_html__( 'Default', 'elementor' ),
-										'block' => esc_html__( 'Blocking', 'elementor' ),
-										'swap' => esc_html__( 'Swap', 'elementor' ),
-										'fallback' => esc_html__( 'Fallback', 'elementor' ),
-										'optional' => esc_html__( 'Optional', 'elementor' ),
+										'auto' => esc_html__( 'Default', 'refraction' ),
+										'block' => esc_html__( 'Blocking', 'refraction' ),
+										'swap' => esc_html__( 'Swap', 'refraction' ),
+										'fallback' => esc_html__( 'Fallback', 'refraction' ),
+										'optional' => esc_html__( 'Optional', 'refraction' ),
 									],
-									'desc' => esc_html__( 'Font-display property defines how font files are loaded and displayed by the browser.', 'elementor' ) . '<br>' . esc_html__( 'Set the way Google Fonts are being loaded by selecting the font-display property (Recommended: Swap).', 'elementor' ),
+									'desc' => esc_html__( 'Font-display property defines how font files are loaded and displayed by the browser.', 'refraction' ) . '<br>' . esc_html__( 'Set the way Google Fonts are being loaded by selecting the font-display property (Recommended: Swap).', 'refraction' ),
 								],
 							],
 						],
@@ -292,85 +292,85 @@ class Settings extends Settings_Page {
 				],
 			],
 			self::TAB_PERFORMANCE => [
-				'label' => esc_html__( 'Performance', 'elementor' ),
+				'label' => esc_html__( 'Performance', 'refraction' ),
 				'sections' => [
 					'performance' => [
-						'label' => esc_html__( 'Performance', 'elementor' ),
+						'label' => esc_html__( 'Performance', 'refraction' ),
 						'callback' => function() {
 							printf(
 								'<p>%s</p><br><hr><br>',
-								esc_html__( 'Improve loading times on your site by selecting the optimization tools that best fit your requirements.', 'elementor' )
+								esc_html__( 'Improve loading times on your site by selecting the optimization tools that best fit your requirements.', 'refraction' )
 							);
 						},
 						'fields' => [
 							'css_print_method' => [
-								'label' => esc_html__( 'CSS Print Method', 'elementor' ),
+								'label' => esc_html__( 'CSS Print Method', 'refraction' ),
 								'field_args' => [
-									'class' => 'elementor_css_print_method',
+									'class' => 'refraction_css_print_method',
 									'type' => 'select',
 									'std' => 'external',
 									'options' => [
-										'external' => esc_html__( 'External File', 'elementor' ),
-										'internal' => esc_html__( 'Internal Embedding', 'elementor' ),
+										'external' => esc_html__( 'External File', 'refraction' ),
+										'internal' => esc_html__( 'Internal Embedding', 'refraction' ),
 									],
 									'desc' => sprintf(
 										/* translators: %s: <head> tag. */
-										esc_html__( 'Internal Embedding places all CSS in the %s which works great for troubleshooting, while External File uses external CSS file for better performance (recommended).', 'elementor' ),
+										esc_html__( 'Internal Embedding places all CSS in the %s which works great for troubleshooting, while External File uses external CSS file for better performance (recommended).', 'refraction' ),
 										'<code>&lt;head&gt;</code>',
 									),
 								],
 							],
 							'optimized_image_loading' => [
-								'label' => esc_html__( 'Optimized Image Loading', 'elementor' ),
+								'label' => esc_html__( 'Optimized Image Loading', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '1',
 									'options' => [
-										'1' => esc_html__( 'Enable', 'elementor' ),
-										'0' => esc_html__( 'Disable', 'elementor' ),
+										'1' => esc_html__( 'Enable', 'refraction' ),
+										'0' => esc_html__( 'Disable', 'refraction' ),
 									],
 									'desc' => sprintf(
 										/* translators: 1: fetchpriority attribute, 2: lazy loading attribute. */
-										esc_html__( 'Improve performance by applying %1$s on LCP image and %2$s on images below the fold.', 'elementor' ),
+										esc_html__( 'Improve performance by applying %1$s on LCP image and %2$s on images below the fold.', 'refraction' ),
 										'<code>fetchpriority="high"</code>',
 										'<code>loading="lazy"</code>'
 									),
 								],
 							],
 							'optimized_gutenberg_loading' => [
-								'label' => esc_html__( 'Optimized Gutenberg Loading', 'elementor' ),
+								'label' => esc_html__( 'Optimized Gutenberg Loading', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '1',
 									'options' => [
-										'1' => esc_html__( 'Enable', 'elementor' ),
-										'0' => esc_html__( 'Disable', 'elementor' ),
+										'1' => esc_html__( 'Enable', 'refraction' ),
+										'0' => esc_html__( 'Disable', 'refraction' ),
 									],
-									'desc' => esc_html__( 'Reduce unnecessary render-blocking loads by dequeuing unused Gutenberg block editor scripts and styles.', 'elementor' ),
+									'desc' => esc_html__( 'Reduce unnecessary render-blocking loads by dequeuing unused Gutenberg block editor scripts and styles.', 'refraction' ),
 								],
 							],
 							'lazy_load_background_images' => [
-								'label' => esc_html__( 'Lazy Load Background Images', 'elementor' ),
+								'label' => esc_html__( 'Lazy Load Background Images', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '1',
 									'options' => [
-										'1' => esc_html__( 'Enable', 'elementor' ),
-										'0' => esc_html__( 'Disable', 'elementor' ),
+										'1' => esc_html__( 'Enable', 'refraction' ),
+										'0' => esc_html__( 'Disable', 'refraction' ),
 									],
-									'desc' => esc_html__( 'Improve initial page load performance by lazy loading all background images except the first one.', 'elementor' ),
+									'desc' => esc_html__( 'Improve initial page load performance by lazy loading all background images except the first one.', 'refraction' ),
 								],
 							],
 							'local_google_fonts' => [
-								'label' => esc_html__( 'Load Google Fonts Locally', 'elementor' ),
+								'label' => esc_html__( 'Load Google Fonts Locally', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '0',
 									'options' => [
-										'1' => esc_html__( 'Enable', 'elementor' ),
-										'0' => esc_html__( 'Disable', 'elementor' ),
+										'1' => esc_html__( 'Enable', 'refraction' ),
+										'0' => esc_html__( 'Disable', 'refraction' ),
 									],
-									'desc' => esc_html__( 'Load Google fonts locally to benefit from faster performance and ensure GDPR compliance. Fonts will be served from your own server instead of Google’s. Only the very first load (in the editor and on the front end) may take slightly longer.', 'elementor' ),
+									'desc' => esc_html__( 'Load Google fonts locally to benefit from faster performance and ensure GDPR compliance. Fonts will be served from your own server instead of Google’s. Only the very first load (in the editor and on the front end) may take slightly longer.', 'refraction' ),
 								],
 							],
 						],
@@ -391,7 +391,7 @@ class Settings extends Settings_Page {
 	 * @return string Settings page title.
 	 */
 	protected function get_page_title() {
-		return esc_html__( 'Elementor', 'elementor' );
+		return esc_html__( 'Refraction', 'refraction' );
 	}
 
 	/**
@@ -399,18 +399,18 @@ class Settings extends Settings_Page {
 	 * @access private
 	 */
 	private function maybe_remove_all_admin_notices() {
-		$elementor_pages = [
-			'elementor-system-info',
+		$refraction_pages = [
+			'refraction-system-info',
 			'e-form-submissions',
-			'elementor_custom_fonts',
-			'elementor_custom_icons',
-			'elementor-license',
-			'elementor_custom_code',
+			'refraction_custom_fonts',
+			'refraction_custom_icons',
+			'refraction-license',
+			'refraction_custom_code',
 			'popup_templates',
-			'elementor-apps',
+			'refraction-apps',
 		];
 
-		if ( empty( $_GET['page'] ) || ! in_array( $_GET['page'], $elementor_pages, true ) ) {
+		if ( empty( $_GET['page'] ) || ! in_array( $_GET['page'], $refraction_pages, true ) ) {
 			return;
 		}
 
@@ -418,7 +418,7 @@ class Settings extends Settings_Page {
 	}
 
 	public function add_generator_tag_settings( $settings ) {
-		$css_print_method = get_option( 'elementor_css_print_method', 'external' );
+		$css_print_method = get_option( 'refraction_css_print_method', 'external' );
 		$settings[] = 'css_print_method-' . $css_print_method;
 
 		$google_font = Fonts::is_google_fonts_enabled() ? 'enabled' : 'disabled';
@@ -433,7 +433,7 @@ class Settings extends Settings_Page {
 	/**
 	 * Settings page constructor.
 	 *
-	 * Initializing Elementor "Settings" page.
+	 * Initializing Refraction "Settings" page.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -442,11 +442,11 @@ class Settings extends Settings_Page {
 		parent::__construct();
 
 		add_action( 'admin_init', [ $this, 'on_admin_init' ] );
-		add_filter( 'elementor/generator_tag/settings', [ $this, 'add_generator_tag_settings' ] );
+		add_filter( 'refraction/generator_tag/settings', [ $this, 'add_generator_tag_settings' ] );
 
 		add_action( 'admin_menu', [ $this, 'register_admin_menu' ], 20 );
 
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_settings_menu( $menu_data_provider );
 			$this->register_editor_one_home_menu( $menu_data_provider );
 		} );
@@ -455,10 +455,10 @@ class Settings extends Settings_Page {
 
 		// Clear CSS Meta after change css related methods.
 		$css_settings = [
-			'elementor_disable_color_schemes',
-			'elementor_disable_typography_schemes',
-			'elementor_css_print_method',
-			'elementor_local_google_fonts',
+			'refraction_disable_color_schemes',
+			'refraction_disable_typography_schemes',
+			'refraction_css_print_method',
+			'refraction_local_google_fonts',
 		];
 
 		foreach ( $css_settings as $option_name ) {
@@ -466,6 +466,6 @@ class Settings extends Settings_Page {
 			add_action( "update_option_{$option_name}", $clear_cache_callback );
 		}
 
-		add_action( 'update_option_elementor_font_display', [ Google_Font::class, 'clear_cache' ] );
+		add_action( 'update_option_refraction_font_display', [ Google_Font::class, 'clear_cache' ] );
 	}
 }

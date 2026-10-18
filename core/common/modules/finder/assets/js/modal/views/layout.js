@@ -1,9 +1,9 @@
 import ModalContent from './content';
 
-export default class extends elementorModules.common.views.modal.Layout {
+export default class extends refractionModules.common.views.modal.Layout {
 	getModalOptions() {
 		return {
-			id: 'elementor-finder__modal',
+			id: 'refraction-finder__modal',
 			draggable: true,
 			effects: {
 				show: 'show',
@@ -17,7 +17,7 @@ export default class extends elementorModules.common.views.modal.Layout {
 
 	getLogoOptions() {
 		return {
-			title: __( 'Finder', 'elementor' ),
+			title: __( 'Finder', 'refraction' ),
 		};
 	}
 

@@ -6,7 +6,7 @@ import {
 	type PropType,
 	type PropValue,
 	type TransformablePropType,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 import { type RenderContext } from '../legacy/types';
 import { type TransformersRegistry } from '../transformers/create-transformers-registry';

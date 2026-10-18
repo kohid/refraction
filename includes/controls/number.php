@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor number control.
+ * Refraction number control.
  *
  * A base control for creating a number control. Displays a simple number input.
  *
@@ -66,14 +66,14 @@ class Control_Number extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper elementor-control-dynamic-switcher-wrapper">
-				<input id="<?php $this->print_control_uid(); ?>" type="number" min="{{ data.min }}" max="{{ data.max }}" step="{{ data.step }}" class="tooltip-target elementor-control-tag-area elementor-control-unit-2" data-tooltip="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ view.getControlPlaceholder() }}" />
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper refraction-control-dynamic-switcher-wrapper">
+				<input id="<?php $this->print_control_uid(); ?>" type="number" min="{{ data.min }}" max="{{ data.max }}" step="{{ data.step }}" class="tooltip-target refraction-control-tag-area refraction-control-unit-2" data-tooltip="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ view.getControlPlaceholder() }}" />
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

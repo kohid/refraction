@@ -33,7 +33,7 @@ export default class IntroductionTooltipsManager {
 		];
 
 		tooltips.forEach( ( tooltip ) => {
-			if ( ! elementor.config.user.introduction[ tooltip.introductionKey ] ) {
+			if ( ! refraction.config.user.introduction[ tooltip.introductionKey ] ) {
 				tooltip.initTooltip();
 				tooltip.bindEvent();
 			}

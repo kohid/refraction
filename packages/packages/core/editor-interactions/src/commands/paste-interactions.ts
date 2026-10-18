@@ -6,13 +6,13 @@ import {
 	updateElementInteractions,
 	type V1Element,
 	type V1ElementModelProps,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 import {
 	__privateListenTo as listenTo,
 	type CommandEvent,
 	commandStartEvent,
 	undoable,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import type { ElementInteractions } from '../types';
@@ -41,7 +41,7 @@ type PasteInteractionsPayload = {
 };
 
 function getTitleForContainers( containers: V1Element[] ): string {
-	return containers.length > 1 ? __( 'Elements', 'elementor' ) : getElementLabel( containers[ 0 ].id );
+	return containers.length > 1 ? __( 'Elements', 'refraction' ) : getElementLabel( containers[ 0 ].id );
 }
 
 function normalizeClipboardInteractions( raw: V1ElementModelProps[ 'interactions' ] ): ElementInteractions | null {
@@ -104,7 +104,7 @@ export function initPasteInteractionsCommand() {
 		},
 		{
 			title: ( { containers } ) => getTitleForContainers( containers ),
-			subtitle: __( 'Interactions Pasted', 'elementor' ),
+			subtitle: __( 'Interactions Pasted', 'refraction' ),
 		}
 	);
 

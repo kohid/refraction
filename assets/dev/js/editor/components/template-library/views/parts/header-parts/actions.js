@@ -1,15 +1,15 @@
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-template-library-header-actions',
+	template: '#tmpl-refraction-template-library-header-actions',
 
-	id: 'elementor-template-library-header-actions',
+	id: 'refraction-template-library-header-actions',
 
 	ui: {
-		import: '#elementor-template-library-header-import',
-		importIcon: '#elementor-template-library-header-import i',
-		sync: '#elementor-template-library-header-sync',
-		syncIcon: '#elementor-template-library-header-sync i',
-		save: '#elementor-template-library-header-save',
-		saveIcon: '#elementor-template-library-header-save i',
+		import: '#refraction-template-library-header-import',
+		importIcon: '#refraction-template-library-header-import i',
+		sync: '#refraction-template-library-header-sync',
+		syncIcon: '#refraction-template-library-header-sync i',
+		save: '#refraction-template-library-header-save',
+		saveIcon: '#refraction-template-library-header-save i',
 	},
 
 	events: {
@@ -25,7 +25,7 @@ module.exports = Marionette.ItemView.extend( {
 	onRender() {
 		const currentTab = $e.components.get( 'library' ).currentTab ?? '';
 
-		this.ui.import.toggleClass( 'elementor-hidden', 'templates/my-templates' !== currentTab );
+		this.ui.import.toggleClass( 'refraction-hidden', 'templates/my-templates' !== currentTab );
 	},
 
 	onSyncClick() {
@@ -33,7 +33,7 @@ module.exports = Marionette.ItemView.extend( {
 
 		self.ui.syncIcon.addClass( 'eicon-animation-spin' );
 
-		elementor.templates.requestLibraryData( {
+		refraction.templates.requestLibraryData( {
 			onUpdate() {
 				self.ui.syncIcon.removeClass( 'eicon-animation-spin' );
 

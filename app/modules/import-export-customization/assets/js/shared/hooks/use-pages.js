@@ -22,7 +22,7 @@ export function usePages( { skipLoading = false } = {} ) {
 			let allPages = [];
 
 			while ( hasMorePages || 1 === currentPage ) {
-				const requestUrl = `${ elementorCommon.config.urls.rest }wp/v2/pages?page=${ currentPage }&per_page=100&_embed`;
+				const requestUrl = `${ refractionCommon.config.urls.rest }wp/v2/pages?page=${ currentPage }&per_page=100&_embed`;
 
 				const response = await fetch( requestUrl, {
 					method: 'GET',

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
-import { MenuListItem } from '@elementor/editor-ui';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
+import { MenuListItem } from '@refraction/editor-ui';
 import { MenuSubheader } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -24,7 +24,7 @@ export function PseudoStateMenuItems( { states, activeState, onSelectState, onCl
 					pt: 1,
 				} }
 			>
-				{ __( 'States', 'elementor' ) }
+				{ __( 'States', 'refraction' ) }
 			</MenuSubheader>
 			{ states.map( ( state ) => (
 				<MenuListItem

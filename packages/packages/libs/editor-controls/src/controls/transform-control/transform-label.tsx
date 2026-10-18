@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { TransformFunctionsItemPropValue } from '@elementor/editor-props';
+import type { TransformFunctionsItemPropValue } from '@refraction/editor-props';
 import { Box } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -30,13 +30,13 @@ export const TransformLabel = ( props: { value: TransformFunctionsItemPropValue 
 	const { $$type, value } = props.value;
 	switch ( $$type ) {
 		case TransformFunctionKeys.move:
-			return <Label label={ __( 'Move', 'elementor' ) } value={ formatLabel( value, 'move' ) } />;
+			return <Label label={ __( 'Move', 'refraction' ) } value={ formatLabel( value, 'move' ) } />;
 		case TransformFunctionKeys.scale:
-			return <Label label={ __( 'Scale', 'elementor' ) } value={ formatLabel( value, 'scale' ) } />;
+			return <Label label={ __( 'Scale', 'refraction' ) } value={ formatLabel( value, 'scale' ) } />;
 		case TransformFunctionKeys.rotate:
-			return <Label label={ __( 'Rotate', 'elementor' ) } value={ formatLabel( value, 'rotate' ) } />;
+			return <Label label={ __( 'Rotate', 'refraction' ) } value={ formatLabel( value, 'rotate' ) } />;
 		case TransformFunctionKeys.skew:
-			return <Label label={ __( 'Skew', 'elementor' ) } value={ formatLabel( value, 'skew' ) } />;
+			return <Label label={ __( 'Skew', 'refraction' ) } value={ formatLabel( value, 'skew' ) } />;
 		default:
 			return '';
 	}

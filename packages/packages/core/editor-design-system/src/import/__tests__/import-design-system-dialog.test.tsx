@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { GLOBAL_STYLES_IMPORTED_EVENT } from '@elementor/editor-canvas';
-import { useCurrentUserCapabilities } from '@elementor/editor-current-user';
-import { dismissNotification, notify } from '@elementor/editor-notifications';
-import { closeDialog, openDialog } from '@elementor/editor-ui';
-import { __privateRunCommand } from '@elementor/editor-v1-adapters';
-import { httpService } from '@elementor/http-client';
-import { type QueryClient, QueryClientProvider } from '@elementor/query';
+import { GLOBAL_STYLES_IMPORTED_EVENT } from '@refraction/editor-canvas';
+import { useCurrentUserCapabilities } from '@refraction/editor-current-user';
+import { dismissNotification, notify } from '@refraction/editor-notifications';
+import { closeDialog, openDialog } from '@refraction/editor-ui';
+import { __privateRunCommand } from '@refraction/editor-v1-adapters';
+import { httpService } from '@refraction/http-client';
+import { type QueryClient, QueryClientProvider } from '@refraction/query';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { DesignSystemHeaderMenu } from '../../components/design-system-header-menu';
@@ -15,22 +15,22 @@ import { IMPORT_DESIGN_SYSTEM_MUTATION_KEY } from '../hooks/use-import-request';
 import { ImportDesignSystemDialog } from '../import-design-system-dialog';
 import { trackDesignSystem } from '../tracking';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-notifications', () => ( {
+jest.mock( '@refraction/editor-notifications', () => ( {
 	dismissNotification: jest.fn(),
 	notify: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	__privateRunCommand: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => ( {
-	...jest.requireActual( '@elementor/editor-ui' ),
+jest.mock( '@refraction/editor-ui', () => ( {
+	...jest.requireActual( '@refraction/editor-ui' ),
 	openDialog: jest.fn(),
 	closeDialog: jest.fn(),
 } ) );
@@ -40,12 +40,12 @@ jest.mock( '../tracking', () => ( {
 	trackDesignSystem: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-current-user', () => ( {
+jest.mock( '@refraction/editor-current-user', () => ( {
 	useCurrentUserCapabilities: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/query', () => {
-	const actual = jest.requireActual( '@elementor/query' );
+jest.mock( '@refraction/query', () => {
+	const actual = jest.requireActual( '@refraction/query' );
 	const sharedClient = new actual.QueryClient( {
 		defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
 	} );
@@ -59,7 +59,7 @@ jest.mock( '@elementor/query', () => {
 
 const ASYNC_TIMEOUT_MS = 5000;
 
-const sharedQueryClient: QueryClient = require( '@elementor/query' ).__sharedClient;
+const sharedQueryClient: QueryClient = require( '@refraction/query' ).__sharedClient;
 
 const renderWithQuery = ( ui: React.ReactElement ) =>
 	renderWithTheme( <QueryClientProvider client={ sharedQueryClient }>{ ui }</QueryClientProvider> );
@@ -161,7 +161,7 @@ describe( '<ImportDesignSystemDialog />', () => {
 		} );
 
 		const [ uploadUrl, uploadBody, uploadOptions ] = post.mock.calls[ 0 ];
-		expect( uploadUrl ).toBe( 'elementor/v1/import-export-customization/upload' );
+		expect( uploadUrl ).toBe( 'refraction/v1/import-export-customization/upload' );
 		expect( uploadBody ).toBeInstanceOf( FormData );
 		expect( ( uploadBody as FormData ).get( 'e_import_file' ) ).toBe( file );
 		expect( ( uploadOptions as { headers: Record< string, string > } ).headers[ 'Content-Type' ] ).toBe(
@@ -169,7 +169,7 @@ describe( '<ImportDesignSystemDialog />', () => {
 		);
 
 		const [ importUrl, importBody ] = post.mock.calls[ 1 ];
-		expect( importUrl ).toBe( 'elementor/v1/import-export-customization/import' );
+		expect( importUrl ).toBe( 'refraction/v1/import-export-customization/import' );
 		expect( importBody ).toEqual( {
 			session: 'sess-1',
 			include: [ 'design-system' ],
@@ -179,15 +179,15 @@ describe( '<ImportDesignSystemDialog />', () => {
 		expect( post.mock.calls.slice( 2 ).map( ( [ runnerUrl, runnerBody ] ) => [ runnerUrl, runnerBody ] ) ).toEqual(
 			[
 				[
-					'elementor/v1/import-export-customization/import-runner',
+					'refraction/v1/import-export-customization/import-runner',
 					{ session: 'sess-1', runner: 'global-classes' },
 				],
 				[
-					'elementor/v1/import-export-customization/import-runner',
+					'refraction/v1/import-export-customization/import-runner',
 					{ session: 'sess-1', runner: 'global-variables' },
 				],
 				[
-					'elementor/v1/import-export-customization/import-runner',
+					'refraction/v1/import-export-customization/import-runner',
 					{ session: 'sess-1', runner: 'default-styles' },
 				],
 			]
@@ -424,7 +424,7 @@ describe( '<DesignSystemHeaderMenu />', () => {
 		);
 
 		const exportCall = post.mock.calls.find( ( [ url ] ) => url.endsWith( '/export' ) );
-		expect( exportCall?.[ 0 ] ).toBe( 'elementor/v1/import-export-customization/export' );
+		expect( exportCall?.[ 0 ] ).toBe( 'refraction/v1/import-export-customization/export' );
 		expect( exportCall?.[ 1 ] ).toEqual( {
 			include: [ 'settings' ],
 			kitInfo: { title: 'design-system', description: '', source: 'local' },

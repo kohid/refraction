@@ -15,8 +15,8 @@ export const MarkdownPreviewPane = ( { items, selectedItem, content, onSelect, o
 		<>
 			<Stack direction="row" alignItems="center" justifyContent="space-between">
 				<PagePicker items={ items } selectedItem={ selectedItem } onSelect={ onSelect } />
-				<Tooltip title={ __( 'Full screen', 'elementor' ) }>
-					<IconButton variant="outlined" size="small" onClick={ onExpand } aria-label={ __( 'Full screen', 'elementor' ) }>
+				<Tooltip title={ __( 'Full screen', 'refraction' ) }>
+					<IconButton variant="outlined" size="small" onClick={ onExpand } aria-label={ __( 'Full screen', 'refraction' ) }>
 						<ArrowsDiagonalIcon fontSize="xsmall" />
 					</IconButton>
 				</Tooltip>

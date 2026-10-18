@@ -1,38 +1,38 @@
-/* global ElementorConfig */
+/* global RefractionConfig */
 
 import ColorControl from './controls/color';
-import DateTimeControl from 'elementor-controls/date-time';
+import DateTimeControl from 'refraction-controls/date-time';
 import EditorDocuments from './components/documents/component';
-import environment from 'elementor-common/utils/environment';
+import environment from 'refraction-common/utils/environment';
 import ElementsManager from './elements/manager';
 import IntroductionTooltipsManager from './introduction-tooltips/manager';
-import Favorites from 'elementor/modules/favorites/assets/js/editor/module';
-import HistoryManager from 'elementor/modules/history/assets/js/module';
+import Favorites from 'refraction/modules/favorites/assets/js/editor/module';
+import HistoryManager from 'refraction/modules/history/assets/js/module';
 import HotkeysScreen from './components/hotkeys/hotkeys';
 import IconsManager from './components/icons-manager/icons-manager';
 import BrowserImport from './components/browser-import/manager';
 import PreviewComponent from './components/preview/component';
-import PanelMenu from 'elementor-panel/pages/menu/menu';
+import PanelMenu from 'refraction-panel/pages/menu/menu';
 import Promotion from './utils/promotion';
 import KitManager from '../../../../core/kits/assets/js/manager.js';
 import Navigator from './regions/navigator/navigator';
 import NoticeBar from './utils/notice-bar';
-import Preview from 'elementor-views/preview';
-import PopoverToggleControl from 'elementor-controls/popover-toggle';
+import Preview from 'refraction-views/preview';
+import PopoverToggleControl from 'refraction-controls/popover-toggle';
 import Selection from './components/selection/manager';
-import LandingPageLibraryModule from 'elementor/modules/landing-pages/assets/js/editor/module';
-import ElementsColorPicker from 'elementor/modules/elements-color-picker/assets/js/editor/module';
-import Breakpoints from 'elementor-utils/breakpoints';
-import Events from 'elementor-utils/events';
+import LandingPageLibraryModule from 'refraction/modules/landing-pages/assets/js/editor/module';
+import ElementsColorPicker from 'refraction/modules/elements-color-picker/assets/js/editor/module';
+import Breakpoints from 'refraction-utils/breakpoints';
+import Events from 'refraction-utils/events';
 import DocumentComponent from './document/component';
 import DataGlobalsComponent from './data/globals/component';
 import ControlConditions from './utils/control-conditions';
-import PromotionModule from 'elementor/modules/promotions/assets/js/editor/module';
+import PromotionModule from 'refraction/modules/promotions/assets/js/editor/module';
 
-import FloatingButtonsLibraryModule from 'elementor/modules/floating-buttons/assets/js/floating-buttons/editor/module';
-import FloatingBarsLibraryModule from 'elementor/modules/floating-buttons/assets/js/floating-bars/editor/module';
-import LinkInBioLibraryModule from 'elementor/modules/link-in-bio/assets/js/editor/module';
-import CloudLibraryModule from 'elementor/modules/cloud-library/assets/js/editor/module';
+import FloatingButtonsLibraryModule from 'refraction/modules/floating-buttons/assets/js/floating-buttons/editor/module';
+import FloatingBarsLibraryModule from 'refraction/modules/floating-buttons/assets/js/floating-bars/editor/module';
+import LinkInBioLibraryModule from 'refraction/modules/link-in-bio/assets/js/editor/module';
+import CloudLibraryModule from 'refraction/modules/cloud-library/assets/js/editor/module';
 
 import * as elementTypes from './elements/types';
 import * as hints from './hints';
@@ -53,61 +53,61 @@ export default class EditorBase extends Marionette.Application {
 
 	activeBreakpointsUpdated = false;
 
-	helpers = require( 'elementor-editor-utils/helpers' );
-	imagesManager = require( 'elementor-editor-utils/images-manager' ); // TODO: Unused.
-	presetsFactory = require( 'elementor-editor-utils/presets-factory' );
-	templates = require( 'elementor-templates/manager' );
+	helpers = require( 'refraction-editor-utils/helpers' );
+	imagesManager = require( 'refraction-editor-utils/images-manager' ); // TODO: Unused.
+	presetsFactory = require( 'refraction-editor-utils/presets-factory' );
+	templates = require( 'refraction-templates/manager' );
 
 	// TODO = BC Since 2.3.0
-	ajax = elementorCommon.ajax;
+	ajax = refractionCommon.ajax;
 	conditions = new ControlConditions();
-	history = require( 'elementor/modules/history/assets/js/module' );
+	history = require( 'refraction/modules/history/assets/js/module' );
 	hints = new hints.Ally();
 
 	channels = {
-		editor: Backbone.Radio.channel( 'ELEMENTOR:editor' ),
-		data: Backbone.Radio.channel( 'ELEMENTOR:data' ),
-		panelElements: Backbone.Radio.channel( 'ELEMENTOR:panelElements' ),
-		dataEditMode: Backbone.Radio.channel( 'ELEMENTOR:editmode' ),
-		deviceMode: Backbone.Radio.channel( 'ELEMENTOR:deviceMode' ),
-		templates: Backbone.Radio.channel( 'ELEMENTOR:templates' ),
-		responsivePreview: Backbone.Radio.channel( 'ELEMENTOR:responsivePreview' ),
+		editor: Backbone.Radio.channel( 'REFRACTION:editor' ),
+		data: Backbone.Radio.channel( 'REFRACTION:data' ),
+		panelElements: Backbone.Radio.channel( 'REFRACTION:panelElements' ),
+		dataEditMode: Backbone.Radio.channel( 'REFRACTION:editmode' ),
+		deviceMode: Backbone.Radio.channel( 'REFRACTION:deviceMode' ),
+		templates: Backbone.Radio.channel( 'REFRACTION:templates' ),
+		responsivePreview: Backbone.Radio.channel( 'REFRACTION:responsivePreview' ),
 	};
 
 	/**
-	 * @deprecated since 3.0.0, use `elementorCommon.debug` instead.
+	 * @deprecated since 3.0.0, use `refractionCommon.debug` instead.
 	 */
 	get debug() {
-		elementorDevTools.deprecation.deprecated(
-			'elementor.debug',
+		refractionDevTools.deprecation.deprecated(
+			'refraction.debug',
 			'3.0.0',
-			'elementorCommon.debug',
+			'refractionCommon.debug',
 		);
 
-		return elementorCommon.debug;
+		return refractionCommon.debug;
 	}
 
 	backgroundClickListeners = {
 		tooltip: {
 			element: '.dialog-tooltip-widget',
-			ignore: '.dialog-widget, .elementor-controls-popover, .pcr-selection',
+			ignore: '.dialog-widget, .refraction-controls-popover, .pcr-selection',
 		},
 		popover: {
-			element: '.elementor-controls-popover',
-			ignore: '.elementor-control-popover-toggle-toggle, .elementor-control-popover-toggle-toggle-label, .select2-container, .pcr-app, .dialog-tooltip-widget',
+			element: '.refraction-controls-popover',
+			ignore: '.refraction-control-popover-toggle-toggle, .refraction-control-popover-toggle-toggle-label, .select2-container, .pcr-app, .dialog-tooltip-widget',
 		},
 		globalControlsSelect: {
 			element: '.e-global__popover',
 			ignore: '.e-global__popover-toggle',
 		},
 		tagsList: {
-			element: '.elementor-tags-list',
-			ignore: '.elementor-control-dynamic-switcher',
+			element: '.refraction-tags-list',
+			ignore: '.refraction-control-dynamic-switcher',
 		},
 		panelResponsiveSwitchers: {
-			element: '.elementor-control-responsive-switchers',
+			element: '.refraction-control-responsive-switchers',
 			callback: ( $elementsToHide ) => {
-				$elementsToHide.removeClass( 'elementor-responsive-switchers-open' );
+				$elementsToHide.removeClass( 'refraction-responsive-switchers-open' );
 			},
 		},
 		panelUnitControlSwitchers: {
@@ -117,9 +117,9 @@ export default class EditorBase extends Marionette.Application {
 			},
 		},
 		promotion: {
-			ignore: '.elementor-responsive-panel',
+			ignore: '.refraction-responsive-panel',
 			callback: () => {
-				const dialog = elementor.promotion.dialog;
+				const dialog = refraction.promotion.dialog;
 
 				if ( dialog ) {
 					dialog.hide();
@@ -130,16 +130,16 @@ export default class EditorBase extends Marionette.Application {
 
 	/**
 	 * Exporting modules that can be used externally
-	 * TODO: All of the following entries should move to `elementorModules.editor`
+	 * TODO: All of the following entries should move to `refractionModules.editor`
 	 */
 	modules = {
 		/**
-		 * @deprecated since 2.3.0, use `elementorModules.Module` instead.
+		 * @deprecated since 2.3.0, use `refractionModules.Module` instead.
 		 */
 		get Module() {
-			elementorDevTools.deprecation.deprecated( 'elementor.modules.Module', '2.3.0', 'elementorModules.Module' );
+			refractionDevTools.deprecation.deprecated( 'refraction.modules.Module', '2.3.0', 'refractionModules.Module' );
 
-			return elementorModules.Module;
+			return refractionModules.Module;
 		},
 		components: {
 			templateLibrary: {
@@ -148,9 +148,9 @@ export default class EditorBase extends Marionette.Application {
 					 * @deprecated since 2.4.0, use `lementorModules.common.views.modal.Layout` instead.
 					 */
 					get BaseModalLayout() {
-						elementorDevTools.deprecation.deprecated( 'elementor.modules.components.templateLibrary.views.BaseModalLayout', '2.4.0', 'elementorModules.common.views.modal.Layout' );
+						refractionDevTools.deprecation.deprecated( 'refraction.modules.components.templateLibrary.views.BaseModalLayout', '2.4.0', 'refractionModules.common.views.modal.Layout' );
 
-						return elementorModules.common.views.modal.Layout;
+						return refractionModules.common.views.modal.Layout;
 					},
 				},
 			},
@@ -162,55 +162,55 @@ export default class EditorBase extends Marionette.Application {
 		},
 		saver: {
 			/**
-			 * @deprecated since 2.9.0, use `elementor.modules.components.saver.behaviors.FooterSaver` instead.
+			 * @deprecated since 2.9.0, use `refraction.modules.components.saver.behaviors.FooterSaver` instead.
 			 */
 			get footerBehavior() {
-				elementorDevTools.deprecation.deprecated( 'elementor.modules.saver.footerBehavior.',
+				refractionDevTools.deprecation.deprecated( 'refraction.modules.saver.footerBehavior.',
 					'2.9.0',
-					'elementor.modules.components.saver.behaviors.FooterSaver' );
+					'refraction.modules.components.saver.behaviors.FooterSaver' );
 
-				return elementor.modules.components.saver.behaviors.FooterSaver;
+				return refraction.modules.components.saver.behaviors.FooterSaver;
 			},
 		},
 		controls: {
-			Animation: require( 'elementor-controls/select2' ),
-			Base: require( 'elementor-controls/base' ),
-			BaseData: require( 'elementor-controls/base-data' ),
-			BaseMultiple: require( 'elementor-controls/base-multiple' ),
-			Box_shadow: require( 'elementor-controls/box-shadow' ),
-			Button: require( 'elementor-controls/button' ),
-			Choose: require( 'elementor-controls/choose' ),
-			Visual_choice: require( 'elementor-controls/visual-choice' ),
-			Code: require( 'elementor-controls/code' ),
+			Animation: require( 'refraction-controls/select2' ),
+			Base: require( 'refraction-controls/base' ),
+			BaseData: require( 'refraction-controls/base-data' ),
+			BaseMultiple: require( 'refraction-controls/base-multiple' ),
+			Box_shadow: require( 'refraction-controls/box-shadow' ),
+			Button: require( 'refraction-controls/button' ),
+			Choose: require( 'refraction-controls/choose' ),
+			Visual_choice: require( 'refraction-controls/visual-choice' ),
+			Code: require( 'refraction-controls/code' ),
 			Color: ColorControl,
 			Date_time: DateTimeControl,
-			Dimensions: require( 'elementor-controls/dimensions' ),
-			Exit_animation: require( 'elementor-controls/select2' ),
-			Font: require( 'elementor-controls/font' ),
-			Gaps: require( 'elementor-controls/gaps' ),
-			Gallery: require( 'elementor-controls/gallery' ),
-			Hidden: require( 'elementor-controls/hidden' ),
-			Hover_animation: require( 'elementor-controls/select2' ),
-			Icon: require( 'elementor-controls/icon' ),
-			Icons: require( 'elementor-controls/icons' ),
-			Image_dimensions: require( 'elementor-controls/image-dimensions' ),
-			Media: require( 'elementor-controls/media' ),
-			Notice: require( 'elementor-controls/notice' ),
-			Number: require( 'elementor-controls/number' ),
+			Dimensions: require( 'refraction-controls/dimensions' ),
+			Exit_animation: require( 'refraction-controls/select2' ),
+			Font: require( 'refraction-controls/font' ),
+			Gaps: require( 'refraction-controls/gaps' ),
+			Gallery: require( 'refraction-controls/gallery' ),
+			Hidden: require( 'refraction-controls/hidden' ),
+			Hover_animation: require( 'refraction-controls/select2' ),
+			Icon: require( 'refraction-controls/icon' ),
+			Icons: require( 'refraction-controls/icons' ),
+			Image_dimensions: require( 'refraction-controls/image-dimensions' ),
+			Media: require( 'refraction-controls/media' ),
+			Notice: require( 'refraction-controls/notice' ),
+			Number: require( 'refraction-controls/number' ),
 			Popover_toggle: PopoverToggleControl,
-			Repeater: require( 'elementor-controls/repeater' ),
-			RepeaterRow: require( 'elementor-controls/repeater-row' ),
-			Section: require( 'elementor-controls/section' ),
-			Select: require( 'elementor-controls/select' ),
-			Select2: require( 'elementor-controls/select2' ),
-			Slider: require( 'elementor-controls/slider' ),
-			Structure: require( 'elementor-controls/structure' ),
-			Switcher: require( 'elementor-controls/switcher' ),
-			Tab: require( 'elementor-controls/tab' ),
-			Text_shadow: require( 'elementor-controls/box-shadow' ),
-			Url: require( 'elementor-controls/url' ),
-			Wp_widget: require( 'elementor-controls/wp_widget' ),
-			Wysiwyg: require( 'elementor-controls/wysiwyg' ),
+			Repeater: require( 'refraction-controls/repeater' ),
+			RepeaterRow: require( 'refraction-controls/repeater-row' ),
+			Section: require( 'refraction-controls/section' ),
+			Select: require( 'refraction-controls/select' ),
+			Select2: require( 'refraction-controls/select2' ),
+			Slider: require( 'refraction-controls/slider' ),
+			Structure: require( 'refraction-controls/structure' ),
+			Switcher: require( 'refraction-controls/switcher' ),
+			Tab: require( 'refraction-controls/tab' ),
+			Text_shadow: require( 'refraction-controls/box-shadow' ),
+			Url: require( 'refraction-controls/url' ),
+			Wp_widget: require( 'refraction-controls/wp_widget' ),
+			Wysiwyg: require( 'refraction-controls/wysiwyg' ),
 		},
 		elements: {
 			types: {
@@ -219,22 +219,22 @@ export default class EditorBase extends Marionette.Application {
 			},
 			models: {
 				/**
-				 * @deprecated since 2.4.0, use `elementorModules.editor.elements.models.BaseSettings` instead.
+				 * @deprecated since 2.4.0, use `refractionModules.editor.elements.models.BaseSettings` instead.
 				 */
 				get BaseSettings() {
-					elementorDevTools.deprecation.deprecated( 'elementor.modules.elements.models.BaseSettings', '2.4.0', 'elementorModules.editor.elements.models.BaseSettings' );
+					refractionDevTools.deprecation.deprecated( 'refraction.modules.elements.models.BaseSettings', '2.4.0', 'refractionModules.editor.elements.models.BaseSettings' );
 
-					return elementorModules.editor.elements.models.BaseSettings;
+					return refractionModules.editor.elements.models.BaseSettings;
 				},
-				Element: require( 'elementor-elements/models/element' ),
+				Element: require( 'refraction-elements/models/element' ),
 			},
 			views: {
-				BaseElement: require( 'elementor-elements/views/base' ),
-				BaseWidget: require( 'elementor-elements/views/base-widget' ),
-				Widget: require( 'elementor-elements/views/widget' ),
+				BaseElement: require( 'refraction-elements/views/base' ),
+				BaseWidget: require( 'refraction-elements/views/base-widget' ),
+				Widget: require( 'refraction-elements/views/widget' ),
 			},
 			components: {
-				AddSectionView: require( 'elementor-views/add-section/inline' ).default,
+				AddSectionView: require( 'refraction-views/add-section/inline' ).default,
 			},
 		},
 		layouts: {
@@ -242,8 +242,8 @@ export default class EditorBase extends Marionette.Application {
 				pages: {
 					elements: {
 						views: {
-							Global: require( 'elementor-panel/pages/elements/views/global' ),
-							Elements: require( 'elementor-panel/pages/elements/views/elements' ),
+							Global: require( 'refraction-panel/pages/elements/views/global' ),
+							Elements: require( 'refraction-panel/pages/elements/views/elements' ),
 						},
 					},
 					menu: {
@@ -254,12 +254,12 @@ export default class EditorBase extends Marionette.Application {
 		},
 		views: {
 			/**
-			 * @deprecated since 2.4.0, use `elementorModules.editor.views.ControlsStack` instead.
+			 * @deprecated since 2.4.0, use `refractionModules.editor.views.ControlsStack` instead.
 			 */
 			get ControlsStack() {
-				elementorDevTools.deprecation.deprecated( 'elementor.modules.views.ControlsStack', '2.4.0', 'elementorModules.editor.views.ControlsStack' );
+				refractionDevTools.deprecation.deprecated( 'refraction.modules.views.ControlsStack', '2.4.0', 'refractionModules.editor.views.ControlsStack' );
 
-				return elementorModules.editor.views.ControlsStack;
+				return refractionModules.editor.views.ControlsStack;
 			},
 		},
 	};
@@ -269,7 +269,7 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	addControlView( controlID, ControlView ) {
-		this.modules.controls[ elementorCommon.helpers.upperCaseWords( controlID ) ] = ControlView;
+		this.modules.controls[ refractionCommon.helpers.upperCaseWords( controlID ) ] = ControlView;
 	}
 
 	checkEnvCompatibility() {
@@ -295,10 +295,10 @@ export default class EditorBase extends Marionette.Application {
 				 * @param array  commonControls - An array of the default common controls.
 				 * @param string widgetType     - The widget type.
 				 */
-				commonControls = elementor.hooks.applyFilters( 'elements/widget/controls/common/default', commonControls, widgetType );
+				commonControls = refraction.hooks.applyFilters( 'elements/widget/controls/common/default', commonControls, widgetType );
 				jQuery.extend( this.widgetsCache[ widgetType ].controls, commonControls );
 
-				if ( ! this.widgetsCache[ widgetType ].has_widget_inner_wrapper && elementorCommon.config.experimentalFeatures.e_optimized_markup ) {
+				if ( ! this.widgetsCache[ widgetType ].has_widget_inner_wrapper && refractionCommon.config.experimentalFeatures.e_optimized_markup ) {
 					let commonOptimizedControls = this.widgetsCache[ 'common-optimized' ].controls;
 					/**
 					 * Filter widgets common-optimized controls.
@@ -306,25 +306,25 @@ export default class EditorBase extends Marionette.Application {
 					 * @param array  commonOptimizedControls - An array of the default common controls.
 					 * @param string widgetType     - The widget type.
 					 */
-					commonOptimizedControls = elementor.hooks.applyFilters( 'elements/widget/controls/common-optimized/default', commonOptimizedControls, widgetType );
+					commonOptimizedControls = refraction.hooks.applyFilters( 'elements/widget/controls/common-optimized/default', commonOptimizedControls, widgetType );
 					jQuery.extend( this.widgetsCache[ widgetType ].controls, commonOptimizedControls );
 				}
 
-				this.widgetsCache[ widgetType ].controls = elementor.hooks.applyFilters( 'elements/widget/controls/common', this.widgetsCache[ widgetType ].controls, widgetType, this.widgetsCache[ widgetType ] );
+				this.widgetsCache[ widgetType ].controls = refraction.hooks.applyFilters( 'elements/widget/controls/common', this.widgetsCache[ widgetType ].controls, widgetType, this.widgetsCache[ widgetType ] );
 
 				// TODO: Move this code to own file.
 				if ( this.widgetsCache[ widgetType ].controls?._element_cache ) {
-					let elementCacheDescription = __( 'The default cache status for this element:', 'elementor' );
+					let elementCacheDescription = __( 'The default cache status for this element:', 'refraction' );
 
 					elementCacheDescription += ' <strong>';
 					if ( this.widgetsCache[ widgetType ]?.is_dynamic_content ) {
-						elementCacheDescription += __( 'Inactive', 'elementor' );
+						elementCacheDescription += __( 'Inactive', 'refraction' );
 					} else {
-						elementCacheDescription += __( 'Active', 'elementor' );
+						elementCacheDescription += __( 'Active', 'refraction' );
 					}
 					elementCacheDescription += '</strong><br />';
-					elementCacheDescription += __( 'Activating cache improves loading times by storing a static version of this element.', 'elementor' );
-					elementCacheDescription += ' <a href="https://go.elementor.com/element-caching-help/" target="_blank">' + __( 'Learn more', 'elementor' ) + '</a>.';
+					elementCacheDescription += __( 'Activating cache improves loading times by storing a static version of this element.', 'refraction' );
+					elementCacheDescription += ' <a href="https://go.elementor.com/element-caching-help/" target="_blank">' + __( 'Learn more', 'refraction' ) + '</a>.';
 
 					this.widgetsCache[ widgetType ].controls._element_cache.description = elementCacheDescription;
 				}
@@ -343,7 +343,7 @@ export default class EditorBase extends Marionette.Application {
 		const elementConfig = structuredClone( this.config.elements[ elType ] );
 
 		if ( 'section' === elType && model.get( 'isInner' ) ) {
-			elementConfig.title = __( 'Inner Section', 'elementor' );
+			elementConfig.title = __( 'Inner Section', 'refraction' );
 		}
 
 		return elementConfig;
@@ -379,7 +379,7 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	getControlView( controlID ) {
-		const capitalizedControlName = elementorCommon.helpers.upperCaseWords( controlID );
+		const capitalizedControlName = refractionCommon.helpers.upperCaseWords( controlID );
 		let View = this.modules.controls[ capitalizedControlName ];
 
 		if ( ! View ) {
@@ -433,10 +433,10 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	initComponents() {
-		const EventManager = require( 'elementor-utils/hooks' ),
-			DynamicTags = require( 'elementor-dynamic-tags/manager' ),
-			Settings = require( 'elementor-editor/components/settings/settings' ),
-			Notifications = require( 'elementor-utils/notifications' );
+		const EventManager = require( 'refraction-utils/hooks' ),
+			DynamicTags = require( 'refraction-dynamic-tags/manager' ),
+			Settings = require( 'refraction-editor/components/settings/settings' ),
+			Notifications = require( 'refraction-utils/notifications' );
 
 		this.elementsManager = new ElementsManager();
 
@@ -470,16 +470,16 @@ export default class EditorBase extends Marionette.Application {
 
 		this.introductionTooltips = new IntroductionTooltipsManager();
 
-		this.editorEvents = elementorCommon.eventsManager;
+		this.editorEvents = refractionCommon.eventsManager;
 
 		this.documents = $e.components.register( new EditorDocuments() );
 
 		// Adds the Landing Page tab to the Template library modal when editing Landing Pages.
-		if ( elementorCommon.config.experimentalFeatures[ 'landing-pages' ] ) {
+		if ( refractionCommon.config.experimentalFeatures[ 'landing-pages' ] ) {
 			this.modules.landingLibraryPageModule = new LandingPageLibraryModule();
 		}
 
-		if ( elementorCommon.config.experimentalFeatures.container ) {
+		if ( refractionCommon.config.experimentalFeatures.container ) {
 			this.modules.floatingButtonsLibraryModule = new FloatingButtonsLibraryModule();
 		}
 
@@ -493,7 +493,7 @@ export default class EditorBase extends Marionette.Application {
 
 		this.modules.cloudLibraryModule = new CloudLibraryModule();
 
-		// TODO: Move to elementor:init-data-components
+		// TODO: Move to refraction:init-data-components
 		$e.components.register( new DataGlobalsComponent() );
 
 		$e.components.register( new DocumentComponent() );
@@ -501,11 +501,11 @@ export default class EditorBase extends Marionette.Application {
 		$e.components.register( new PreviewComponent() );
 
 		// TODO: Remove, BC Since 2.9.0.
-		elementor.saver = $e.components.get( 'document/save' );
+		refraction.saver = $e.components.get( 'document/save' );
 
 		new FontVariables();
 
-		Events.dispatch( elementorCommon.elements.$window, 'elementor/init-components', null, 'elementor:init-components' );
+		Events.dispatch( refractionCommon.elements.$window, 'refraction/init-components', null, 'refraction:init-components' );
 	}
 
 	/**
@@ -515,8 +515,8 @@ export default class EditorBase extends Marionette.Application {
 	 */
 	toggleSortableState( state = true ) {
 		const sections = [
-			jQuery( '#elementor-navigator' ),
-			elementor.documents.getCurrent()?.$element,
+			jQuery( '#refraction-navigator' ),
+			refraction.documents.getCurrent()?.$element,
 		];
 
 		for ( const $section of sections ) {
@@ -534,7 +534,7 @@ export default class EditorBase extends Marionette.Application {
 
 	// TODO: BC method since 2.3.0
 	initDialogsManager() {
-		this.dialogsManager = elementorCommon.dialogsManager;
+		this.dialogsManager = refractionCommon.dialogsManager;
 	}
 
 	initElements() {
@@ -551,7 +551,7 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	createBackboneElementsCollection( json ) {
-		const ElementCollection = require( 'elementor-elements/collections/elements' );
+		const ElementCollection = require( 'refraction-elements/collections/elements' );
 
 		return new ElementCollection( json );
 	}
@@ -564,18 +564,18 @@ export default class EditorBase extends Marionette.Application {
 
 	initPreview() {
 		const $ = jQuery,
-			previewIframeId = 'elementor-preview-iframe';
+			previewIframeId = 'refraction-preview-iframe';
 
-		this.$previewWrapper = $( '#elementor-preview' );
+		this.$previewWrapper = $( '#refraction-preview' );
 
-		this.$previewResponsiveWrapper = $( '#elementor-preview-responsive-wrapper' );
+		this.$previewResponsiveWrapper = $( '#refraction-preview-responsive-wrapper' );
 
 		// Make sure the iFrame does not exist.
 		if ( ! this.$preview ) {
 			this.$preview = $( '<iframe>', {
 				id: previewIframeId,
 				src: this.config.initial_document.urls.preview,
-				title: __( 'Preview', 'elementor' ),
+				title: __( 'Preview', 'refraction' ),
 				allowfullscreen: 1,
 			} );
 
@@ -586,9 +586,9 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	initPreviewView( document ) {
-		elementor.trigger( 'document:before:preview', document );
+		refraction.trigger( 'document:before:preview', document );
 
-		this.previewView = this.createPreviewView( document.$element[ 0 ], elementor.elementsModel );
+		this.previewView = this.createPreviewView( document.$element[ 0 ], refraction.elementsModel );
 
 		this.renderPreview( this.previewView );
 	}
@@ -618,13 +618,13 @@ export default class EditorBase extends Marionette.Application {
 	initFrontend() {
 		const frontendWindow = this.$preview[ 0 ].contentWindow;
 
-		window.elementorFrontend = frontendWindow.elementorFrontend;
+		window.refractionFrontend = frontendWindow.refractionFrontend;
 
-		frontendWindow.elementor = this;
+		frontendWindow.refraction = this;
 
-		frontendWindow.elementorCommon = elementorCommon;
+		frontendWindow.refractionCommon = refractionCommon;
 
-		elementorFrontend.init();
+		refractionFrontend.init();
 
 		this.trigger( 'frontend:init' );
 	}
@@ -637,17 +637,17 @@ export default class EditorBase extends Marionette.Application {
 				return dialog;
 			}
 
-			dialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-				id: 'elementor-clear-page-dialog',
-				headerMessage: __( 'Delete All Content', 'elementor' ),
-				message: __( 'Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?', 'elementor' ),
+			dialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+				id: 'refraction-clear-page-dialog',
+				headerMessage: __( 'Delete All Content', 'refraction' ),
+				message: __( 'Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?', 'refraction' ),
 				position: {
 					my: 'center center',
 					at: 'center center',
 				},
 				strings: {
-					confirm: __( 'Delete', 'elementor' ),
-					cancel: __( 'Cancel', 'elementor' ),
+					confirm: __( 'Delete', 'refraction' ),
+					cancel: __( 'Cancel', 'refraction' ),
 				},
 				onConfirm: () => $e.run( 'document/elements/empty', { force: true } ),
 			} );
@@ -658,16 +658,16 @@ export default class EditorBase extends Marionette.Application {
 
 	getCurrentElement() {
 		// eslint-disable-next-line @wordpress/no-global-active-element
-		const isPreview = ( -1 !== [ 'BODY', 'IFRAME' ].indexOf( document.activeElement.tagName ) && 'BODY' === elementorFrontend.elements.window.document.activeElement.tagName );
+		const isPreview = ( -1 !== [ 'BODY', 'IFRAME' ].indexOf( document.activeElement.tagName ) && 'BODY' === refractionFrontend.elements.window.document.activeElement.tagName );
 
 		if ( ! isPreview ) {
 			return false;
 		}
 
-		let targetElement = elementor.channels.editor.request( 'contextMenu:targetView' );
+		let targetElement = refraction.channels.editor.request( 'contextMenu:targetView' );
 
 		if ( ! targetElement ) {
-			const panel = elementor.getPanelView();
+			const panel = refraction.getPanelView();
 
 			if ( $e.routes.isPartOf( 'panel/editor' ) ) {
 				targetElement = panel.getCurrentPageView().getOption( 'editedElementView' );
@@ -675,16 +675,16 @@ export default class EditorBase extends Marionette.Application {
 		}
 
 		if ( ! targetElement ) {
-			targetElement = elementor.getPreviewView();
+			targetElement = refraction.getPreviewView();
 		}
 
 		return targetElement;
 	}
 
 	initPanel() {
-		this.addRegions( { panel: require( 'elementor-regions/panel/panel' ) } );
+		this.addRegions( { panel: require( 'refraction-regions/panel/panel' ) } );
 
-		window.dispatchEvent( new CustomEvent( 'elementor/panel/init' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/panel/init' ) );
 
 		this.trigger( 'panel:init' );
 	}
@@ -696,7 +696,7 @@ export default class EditorBase extends Marionette.Application {
 
 		this.addRegions( {
 			navigator: {
-				el: '#elementor-navigator',
+				el: '#refraction-navigator',
 				regionClass: Navigator,
 			},
 		} );
@@ -705,12 +705,12 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	setAjax() {
-		elementorCommon.ajax.addRequestConstant( 'editor_post_id', this.config.document.id );
-		elementorCommon.ajax.addRequestConstant( 'initial_document_id', this.config.initial_document.id );
+		refractionCommon.ajax.addRequestConstant( 'editor_post_id', this.config.document.id );
+		refractionCommon.ajax.addRequestConstant( 'initial_document_id', this.config.initial_document.id );
 
-		elementorCommon.ajax.on( 'request:unhandledError', ( xmlHttpRequest ) => {
-			elementor.notifications.showToast( {
-				message: elementor.createAjaxErrorMessage( xmlHttpRequest ),
+		refractionCommon.ajax.on( 'request:unhandledError', ( xmlHttpRequest ) => {
+			refraction.notifications.showToast( {
+				message: refraction.createAjaxErrorMessage( xmlHttpRequest ),
 			} );
 		} );
 	}
@@ -719,15 +719,15 @@ export default class EditorBase extends Marionette.Application {
 		let message;
 
 		if ( 4 === xmlHttpRequest.readyState ) {
-			message = __( 'Server Error', 'elementor' );
+			message = __( 'Server Error', 'refraction' );
 
 			if ( 200 !== xmlHttpRequest.status ) {
 				message += ' (' + xmlHttpRequest.status + ' ' + xmlHttpRequest.statusText + ')';
 			}
 		} else if ( 0 === xmlHttpRequest.readyState ) {
-			message = __( 'Connection Lost', 'elementor' );
+			message = __( 'Connection Lost', 'refraction' );
 		} else {
-			message = __( 'Unknown Error', 'elementor' );
+			message = __( 'Unknown Error', 'refraction' );
 		}
 
 		return message + '.';
@@ -778,8 +778,8 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	getCurrentDeviceConstrains() {
-		const currentBreakpoint = elementor.channels.deviceMode.request( 'currentMode' ),
-			{ activeBreakpoints } = elementorFrontend.config.responsive,
+		const currentBreakpoint = refraction.channels.deviceMode.request( 'currentMode' ),
+			{ activeBreakpoints } = refractionFrontend.config.responsive,
 			currentBreakpointData = activeBreakpoints[ currentBreakpoint ],
 			currentBreakpointMaxPoint = ( 'widescreen' === currentBreakpoint ) ? 9999 : currentBreakpointData.value;
 
@@ -798,7 +798,7 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	getBreakpointResizeOptions( currentBreakpoint ) {
-		const previewHeight = elementor.$previewWrapper.height(),
+		const previewHeight = refraction.$previewWrapper.height(),
 			specialBreakpointsHeights = {
 				mobile: {
 					minHeight: 480,
@@ -844,7 +844,7 @@ export default class EditorBase extends Marionette.Application {
 
 	updatePreviewResizeOptions( preserveCurrentSize = false ) {
 		const $responsiveWrapper = this.$previewResponsiveWrapper,
-			currentBreakpoint = elementor.channels.deviceMode.request( 'currentMode' );
+			currentBreakpoint = refraction.channels.deviceMode.request( 'currentMode' );
 
 		if ( 'desktop' === currentBreakpoint ) {
 			this.destroyPreviewResizable();
@@ -862,7 +862,7 @@ export default class EditorBase extends Marionette.Application {
 			let widthToShow = breakpointResizeOptions.width ?? breakpointResizeOptions.minWidth;
 
 			if ( preserveCurrentSize ) {
-				const currentSize = elementor.channels.responsivePreview.request( 'size' );
+				const currentSize = refraction.channels.responsivePreview.request( 'size' );
 
 				if ( currentSize.width > breakpointResizeOptions.maxWidth ) {
 					widthToShow = breakpointResizeOptions.maxWidth;
@@ -889,20 +889,20 @@ export default class EditorBase extends Marionette.Application {
 		// Cannot use arrow function here since it use `this.contains`.
 		this.$previewContents.on( 'click', function( event ) {
 			const $target = jQuery( event.target ),
-				isClickInsideElementor = !! $target.closest( '.elementor-edit-area, .pen-menu' ).length,
+				isClickInsideRefraction = !! $target.closest( '.refraction-edit-area, .pen-menu' ).length,
 				isTargetInsideDocument = this.contains( $target[ 0 ] );
 
-			if ( $target.closest( 'a:not(.elementor-clickable)' ).length ) {
+			if ( $target.closest( 'a:not(.refraction-clickable)' ).length ) {
 				event.preventDefault();
 			}
 
-			if ( ( isClickInsideElementor && elementor.getPreviewContainer().isEditable() ) || ! isTargetInsideDocument ) {
+			if ( ( isClickInsideRefraction && refraction.getPreviewContainer().isEditable() ) || ! isTargetInsideDocument ) {
 				return;
 			}
 
 			// It's a click on the preview area, not in the edit area,
 			// and a document is open and has an edit area.
-			if ( ! isClickInsideElementor && elementor.documents.getCurrent()?.$element ) {
+			if ( ! isClickInsideRefraction && refraction.documents.getCurrent()?.$element ) {
 				$e.run( 'document/elements/deselect-all' );
 			}
 		} );
@@ -922,7 +922,7 @@ export default class EditorBase extends Marionette.Application {
 
 	showFatalErrorDialog( options ) {
 		const defaultOptions = {
-			id: 'elementor-fatal-error-dialog',
+			id: 'refraction-fatal-error-dialog',
 			headerMessage: '',
 			message: '',
 			position: {
@@ -930,8 +930,8 @@ export default class EditorBase extends Marionette.Application {
 				at: 'center center',
 			},
 			strings: {
-				confirm: __( 'Learn More', 'elementor' ),
-				cancel: __( 'Go Back', 'elementor' ),
+				confirm: __( 'Learn More', 'refraction' ),
+				cancel: __( 'Go Back', 'refraction' ),
 			},
 			onConfirm: null,
 			onCancel: () => parent.history.go( -1 ),
@@ -943,24 +943,24 @@ export default class EditorBase extends Marionette.Application {
 
 		options = jQuery.extend( true, defaultOptions, options );
 
-		elementorCommon.dialogsManager.createWidget( 'confirm', options ).show();
+		refractionCommon.dialogsManager.createWidget( 'confirm', options ).show();
 	}
 
 	showFlexBoxAttentionDialog() {
-		const introduction = new elementorModules.editor.utils.Introduction( {
+		const introduction = new refractionModules.editor.utils.Introduction( {
 			introductionKey: 'flexbox',
 			dialogType: 'confirm',
 			dialogOptions: {
-				id: 'elementor-flexbox-attention-dialog',
-				headerMessage: __( 'Note: Flexbox Changes', 'elementor' ),
-				message: __( 'Elementor 2.5 introduces key changes to the layout using CSS Flexbox. Your existing pages might have been affected, please review your page before publishing.', 'elementor' ),
+				id: 'refraction-flexbox-attention-dialog',
+				headerMessage: __( 'Note: Flexbox Changes', 'refraction' ),
+				message: __( 'Refraction 2.5 introduces key changes to the layout using CSS Flexbox. Your existing pages might have been affected, please review your page before publishing.', 'refraction' ),
 				position: {
 					my: 'center center',
 					at: 'center center',
 				},
 				strings: {
-					confirm: __( 'Learn More', 'elementor' ),
-					cancel: __( 'Got It', 'elementor' ),
+					confirm: __( 'Learn More', 'refraction' ),
+					cancel: __( 'Got It', 'refraction' ),
 				},
 				hide: {
 					onButtonClick: false,
@@ -978,13 +978,13 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	checkPageStatus() {
-		if ( elementor.documents.getCurrent().isDraft() ) {
+		if ( refraction.documents.getCurrent().isDraft() ) {
 			this.notifications.showToast( {
-				message: __( 'This is just a draft. Play around and when you\'re done - click update.', 'elementor' ),
+				message: __( 'This is just a draft. Play around and when you\'re done - click update.', 'refraction' ),
 				buttons: [
 					{
 						name: 'view_revisions',
-						text: __( 'View All Revisions', 'elementor' ),
+						text: __( 'View All Revisions', 'refraction' ),
 						callback: () => $e.route( 'panel/history/revisions' ),
 					},
 				],
@@ -995,7 +995,7 @@ export default class EditorBase extends Marionette.Application {
 	enterDeviceMode() {
 		this.channels.responsivePreview.trigger( 'open' );
 
-		elementorCommon.elements.$body.addClass( 'e-is-device-mode' );
+		refractionCommon.elements.$body.addClass( 'e-is-device-mode' );
 
 		this.activatePreviewResizable();
 
@@ -1003,7 +1003,7 @@ export default class EditorBase extends Marionette.Application {
 
 		this.broadcastPreviewResize();
 
-		elementorFrontend.elements.$window.on( 'resize.deviceModeDesktop', () => {
+		refractionFrontend.elements.$window.on( 'resize.deviceModeDesktop', () => {
 			if ( this.resizeListenerThrottled ) {
 				return;
 			}
@@ -1021,17 +1021,17 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	exitDeviceMode() {
-		elementorCommon.elements.$body.removeClass( 'e-is-device-mode' );
+		refractionCommon.elements.$body.removeClass( 'e-is-device-mode' );
 
 		this.destroyPreviewResizable();
 
-		elementorCommon.elements.$window.off( 'resize.deviceModeDesktop' );
+		refractionCommon.elements.$window.off( 'resize.deviceModeDesktop' );
 
 		this.channels.deviceMode.trigger( 'close' );
 	}
 
 	isDeviceModeActive() {
-		return elementorCommon.elements.$body.hasClass( 'e-is-device-mode' );
+		return refractionCommon.elements.$body.hasClass( 'e-is-device-mode' );
 	}
 
 	updatePreviewSize( size ) {
@@ -1043,35 +1043,35 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	enterPreviewMode( hidePanel ) {
-		let $elements = elementorFrontend.elements.$body;
+		let $elements = refractionFrontend.elements.$body;
 
 		if ( hidePanel ) {
-			$elements = $elements.add( elementorCommon.elements.$body );
+			$elements = $elements.add( refractionCommon.elements.$body );
 		}
 
 		$elements
-			.removeClass( 'elementor-editor-active' )
-			.addClass( 'elementor-editor-preview' );
+			.removeClass( 'refraction-editor-active' )
+			.addClass( 'refraction-editor-preview' );
 
 		const $element = this.documents.getCurrent().$element;
 
 		if ( $element ) {
-			$element.removeClass( 'elementor-edit-area-active' );
+			$element.removeClass( 'refraction-edit-area-active' );
 		}
 	}
 
 	exitPreviewMode() {
-		elementorFrontend.elements.$body.add( elementorCommon.elements.$body )
-			.removeClass( 'elementor-editor-preview' )
-			.addClass( 'elementor-editor-active' );
+		refractionFrontend.elements.$body.add( refractionCommon.elements.$body )
+			.removeClass( 'refraction-editor-preview' )
+			.addClass( 'refraction-editor-active' );
 
-		if ( elementor.config.document.panel.has_elements ) {
-			this.documents.getCurrent().$element.addClass( 'elementor-edit-area-active' );
+		if ( refraction.config.document.panel.has_elements ) {
+			this.documents.getCurrent().$element.addClass( 'refraction-edit-area-active' );
 		}
 	}
 
 	changeEditMode( newMode ) {
-		const dataEditMode = elementor.channels.dataEditMode,
+		const dataEditMode = refraction.channels.dataEditMode,
 			oldEditMode = dataEditMode.request( 'activeMode' );
 
 		dataEditMode.reply( 'activeMode', newMode );
@@ -1083,7 +1083,7 @@ export default class EditorBase extends Marionette.Application {
 
 	reloadPreview() {
 		// TODO: Should be command?
-		jQuery( '#elementor-preview-loading' ).show();
+		jQuery( '#refraction-preview-loading' ).show();
 
 		this.$preview[ 0 ].src = this.config.initial_document.urls.preview;
 	}
@@ -1095,9 +1095,9 @@ export default class EditorBase extends Marionette.Application {
 			return;
 		}
 
-		elementorCommon.elements.$body
-			.removeClass( 'elementor-device-' + oldDeviceMode )
-			.addClass( 'elementor-device-' + newDeviceMode );
+		refractionCommon.elements.$body
+			.removeClass( 'refraction-device-' + oldDeviceMode )
+			.addClass( 'refraction-device-' + newDeviceMode );
 
 		this.channels.deviceMode
 			.reply( 'previousMode', oldDeviceMode )
@@ -1112,7 +1112,7 @@ export default class EditorBase extends Marionette.Application {
 			this.enterDeviceMode();
 		}
 
-		dispatchEvent( new CustomEvent( 'elementor/device-mode/change', {
+		dispatchEvent( new CustomEvent( 'refraction/device-mode/change', {
 			detail: {
 				activeMode: newDeviceMode,
 
@@ -1126,7 +1126,7 @@ export default class EditorBase extends Marionette.Application {
 			i18nStack = this.config.i18n;
 		}
 
-		return elementorCommon.translate( stringKey, null, templateArgs, i18nStack );
+		return refractionCommon.translate( stringKey, null, templateArgs, i18nStack );
 	}
 
 	requestWidgetsConfig() {
@@ -1138,15 +1138,15 @@ export default class EditorBase extends Marionette.Application {
 			}
 		} );
 
-		elementorCommon.ajax.addRequest( 'get_widgets_config', {
+		refractionCommon.ajax.addRequest( 'get_widgets_config', {
 			data: {
 				exclude: excludeWidgets,
 			},
 			success: ( data ) => {
 				this.addWidgetsCache( data );
 
-				if ( elementor.config.locale !== elementor.config.user.locale ) {
-					this.translateControlsDefaults( elementor.config.locale );
+				if ( refraction.config.locale !== refraction.config.user.locale ) {
+					this.translateControlsDefaults( refraction.config.locale );
 				}
 
 				if ( this.loaded ) {
@@ -1163,20 +1163,20 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	async refreshWidgets() {
-		const data = await elementorCommon.ajax.addRequest( 'refresh_widgets_config' );
+		const data = await refractionCommon.ajax.addRequest( 'refresh_widgets_config' );
 
 		this.widgetsCache = {};
 		this.addWidgetsCache( data.widgets );
 
-		elementor.config.document.panel.elements_categories = data.categories;
+		refraction.config.document.panel.elements_categories = data.categories;
 
-		if ( elementor.config.locale !== elementor.config.user.locale ) {
-			this.translateControlsDefaults( elementor.config.locale );
+		if ( refraction.config.locale !== refraction.config.user.locale ) {
+			this.translateControlsDefaults( refraction.config.locale );
 		}
 
 		this.kitManager.renderGlobalsDefaultCSS();
 
-		elementor.hooks.doAction( 'elementor/widgets/refreshed' );
+		refraction.hooks.doAction( 'refraction/widgets/refreshed' );
 
 		$e.routes.refreshContainer( 'panel' );
 
@@ -1186,7 +1186,7 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	translateControlsDefaults( locale ) {
-		elementorCommon.ajax.addRequest( 'get_widgets_default_value_translations', {
+		refractionCommon.ajax.addRequest( 'get_widgets_default_value_translations', {
 			data: { locale },
 			success: ( data ) => {
 				this.addWidgetsCache( data );
@@ -1195,7 +1195,7 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	getPreferences( key ) {
-		const settings = elementor.settings.editorPreferences.model.attributes;
+		const settings = refraction.settings.editorPreferences.model.attributes;
 
 		if ( key ) {
 			return settings[ key ];
@@ -1205,20 +1205,20 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	getConfig() {
-		return ElementorConfig;
+		return RefractionConfig;
 	}
 
 	onStart() {
 		this.config = this.getConfig();
 
 		Backbone.Radio.DEBUG = false;
-		Backbone.Radio.tuneIn( 'ELEMENTOR' );
+		Backbone.Radio.tuneIn( 'REFRACTION' );
 
 		this.populateActiveBreakpointsConfig();
 
 		this.breakpoints = new Breakpoints( this.config.responsive );
 
-		if ( elementorCommon.config.experimentalFeatures.additional_custom_breakpoints ) {
+		if ( refractionCommon.config.experimentalFeatures.additional_custom_breakpoints ) {
 			// Duplicate responsive controls for section and column default configs.
 			this.generateResponsiveControlsForElements();
 		}
@@ -1239,7 +1239,7 @@ export default class EditorBase extends Marionette.Application {
 
 		this.listenTo( this.channels.dataEditMode, 'switch', this.onEditModeSwitched );
 
-		this.listenTo( elementor.channels.deviceMode, 'change', this.updatePreviewResizeOptions );
+		this.listenTo( refraction.channels.deviceMode, 'change', this.updatePreviewResizeOptions );
 
 		this.initClearPageDialog();
 
@@ -1247,11 +1247,11 @@ export default class EditorBase extends Marionette.Application {
 
 		this.addDeprecatedConfigProperties();
 
-		Events.dispatch( elementorCommon.elements.$window, 'elementor/loaded', null, 'elementor:loaded' );
+		Events.dispatch( refractionCommon.elements.$window, 'refraction/loaded', null, 'refraction:loaded' );
 
 		$e.run( 'editor/documents/open', { id: this.config.initial_document.id } )
 			.then( () => {
-				Events.dispatch( elementorCommon.elements.$window, 'elementor/init', null, 'elementor:init' );
+				Events.dispatch( refractionCommon.elements.$window, 'refraction/init', null, 'refraction:init' );
 				this.initNavigator();
 			} );
 	}
@@ -1259,14 +1259,14 @@ export default class EditorBase extends Marionette.Application {
 	onPreviewLoaded() {
 		const previewWindow = this.$preview[ 0 ].contentWindow;
 
-		if ( ! previewWindow.elementorFrontend ) {
+		if ( ! previewWindow.refractionFrontend ) {
 			this.onPreviewLoadingError();
 
 			return;
 		}
 
 		// Cannot load editor without kit.
-		if ( ! elementor.config.kit_id ) {
+		if ( ! refraction.config.kit_id ) {
 			this.kitNotExistsError();
 
 			return;
@@ -1278,33 +1278,33 @@ export default class EditorBase extends Marionette.Application {
 
 		this.preventClicksInsideEditor();
 
-		this.addBackgroundClickArea( elementorFrontend.elements.window.document );
+		this.addBackgroundClickArea( refractionFrontend.elements.window.document );
 
 		if ( ! this.previewLoadedOnce ) {
 			this.onFirstPreviewLoaded();
 		}
 
-		this.$previewContents.children().addClass( 'elementor-html' );
+		this.$previewContents.children().addClass( 'refraction-html' );
 
-		const $frontendBody = elementorFrontend.elements.$body;
+		const $frontendBody = refractionFrontend.elements.$body;
 
-		$frontendBody.addClass( 'elementor-editor-active' );
+		$frontendBody.addClass( 'refraction-editor-active' );
 
-		if ( ! elementor.userCan( 'design' ) ) {
-			$frontendBody.addClass( 'elementor-editor-content-only' );
+		if ( ! refraction.userCan( 'design' ) ) {
+			$frontendBody.addClass( 'refraction-editor-content-only' );
 		}
 
 		this.changeDeviceMode( 'desktop' );
 
 		_.defer( function() {
-			elementorFrontend.elements.window.jQuery.holdReady( false );
+			refractionFrontend.elements.window.jQuery.holdReady( false );
 		} );
 
-		$e.shortcuts.bindListener( elementorFrontend.elements.$window );
+		$e.shortcuts.bindListener( refractionFrontend.elements.$window );
 
 		this.trigger( 'preview:loaded', ! this.loaded /* IsFirst */ );
 
-		$e.internal( 'editor/documents/attach-preview' ).then( () => jQuery( '#elementor-loading, #elementor-preview-loading' ).fadeOut( 600 ) );
+		$e.internal( 'editor/documents/attach-preview' ).then( () => jQuery( '#refraction-loading, #refraction-preview-loading' ).fadeOut( 600 ) );
 
 		this.loaded = true;
 	}
@@ -1314,17 +1314,17 @@ export default class EditorBase extends Marionette.Application {
 
 		this.previewLoadedOnce = true;
 
-		const eventsManager = elementorCommon.eventsManager;
+		const eventsManager = refractionCommon.eventsManager;
 
 		if ( eventsManager ) {
-			eventsManager.dispatchEvent( eventsManager.config?.names?.elementorEditor?.editorLoaded, {} );
+			eventsManager.dispatchEvent( eventsManager.config?.names?.refractionEditor?.editorLoaded, {} );
 		}
 	}
 
 	onEditModeSwitched() {
 		const activeMode = this.channels.dataEditMode.request( 'activeMode' );
 
-		dispatchEvent( new CustomEvent( 'elementor/edit-mode/change', {
+		dispatchEvent( new CustomEvent( 'refraction/edit-mode/change', {
 			detail: {
 				activeMode,
 			},
@@ -1339,10 +1339,10 @@ export default class EditorBase extends Marionette.Application {
 
 	onEnvNotCompatible() {
 		this.showFatalErrorDialog( {
-			headerMessage: __( 'Your browser isn\'t compatible', 'elementor' ),
-			message: __( 'Your browser isn\'t compatible with all of Elementor\'s editing features. We recommend you switch to another browser like Chrome or Firefox.', 'elementor' ),
+			headerMessage: __( 'Your browser isn\'t compatible', 'refraction' ),
+			message: __( 'Your browser isn\'t compatible with all of Refraction\'s editing features. We recommend you switch to another browser like Chrome or Firefox.', 'refraction' ),
 			strings: {
-				confirm: __( 'Proceed Anyway', 'elementor' ),
+				confirm: __( 'Proceed Anyway', 'refraction' ),
 			},
 			hide: {
 				onButtonClick: true,
@@ -1353,24 +1353,24 @@ export default class EditorBase extends Marionette.Application {
 
 	kitNotExistsError() {
 		this.showFatalErrorDialog( {
-			className: 'elementor-preview-loading-error',
-			headerMessage: __( 'Your site doesn\'t have a default kit', 'elementor' ),
-			message: __( 'Seems like your kit was deleted, please create new one or try restore it from trash.', 'elementor' ),
+			className: 'refraction-preview-loading-error',
+			headerMessage: __( 'Your site doesn\'t have a default kit', 'refraction' ),
+			message: __( 'Seems like your kit was deleted, please create new one or try restore it from trash.', 'refraction' ),
 			strings: {
-				confirm: __( 'Recreate Kit', 'elementor' ),
-				cancel: __( 'Go Back', 'elementor' ),
+				confirm: __( 'Recreate Kit', 'refraction' ),
+				cancel: __( 'Go Back', 'refraction' ),
 			},
-			onConfirm: () => open( elementor.config.admin_tools_url, '_blank' ),
+			onConfirm: () => open( refraction.config.admin_tools_url, '_blank' ),
 		} );
 	}
 
 	onPreviewLoadingError() {
 		const debugUrl = this.config.document.urls.preview + '&preview-debug',
-			previewDebugLinkText = __( 'Click here for preview debug', 'elementor' ),
-			previewDebugLink = '<div id="elementor-preview-debug-link-text"><a href="' + debugUrl + '" target="_blank">' + previewDebugLinkText + '</a></div>',
-			debugData = elementor.config.preview.debug_data,
+			previewDebugLinkText = __( 'Click here for preview debug', 'refraction' ),
+			previewDebugLink = '<div id="refraction-preview-debug-link-text"><a href="' + debugUrl + '" target="_blank">' + previewDebugLinkText + '</a></div>',
+			debugData = refraction.config.preview.debug_data,
 			dialogOptions = {
-				className: 'elementor-preview-loading-error',
+				className: 'refraction-preview-loading-error',
 				headerMessage: debugData.header,
 				message: debugData.message + previewDebugLink,
 				onConfirm: () => open( debugData.doc_url, '_blank' ),
@@ -1385,11 +1385,11 @@ export default class EditorBase extends Marionette.Application {
 			this.showFatalErrorDialog( dialogOptions );
 		} ).fail( ( response ) => { // Iframe can't be loaded
 			this.showFatalErrorDialog( {
-				className: 'elementor-preview-loading-error',
+				className: 'refraction-preview-loading-error',
 				headerMessage: debugData.header,
 				message: response.statusText + ' ' + response.status + ' ' + previewDebugLink,
 				onConfirm: () => {
-					const url = 500 <= response.status ? elementor.config.preview.help_preview_http_error_500_url : elementor.config.preview.help_preview_http_error_url;
+					const url = 500 <= response.status ? refraction.config.preview.help_preview_http_error_500_url : refraction.config.preview.help_preview_http_error_url;
 					open( url, '_blank' );
 				},
 			} );
@@ -1397,13 +1397,13 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	onPreviewElNotFound() {
-		let args = this.$preview[ 0 ].contentWindow.elementorPreviewErrorArgs;
+		let args = this.$preview[ 0 ].contentWindow.refractionPreviewErrorArgs;
 
 		if ( ! args ) {
 			args = {
-				headerMessage: __( 'Sorry, the content area was not found in your page.', 'elementor' ),
-				message: __( 'You must call \'the_content\' function in the current template, in order for Elementor to work on this page.', 'elementor' ),
-				confirmURL: elementor.config.help_the_content_url,
+				headerMessage: __( 'Sorry, the content area was not found in your page.', 'refraction' ),
+				message: __( 'You must call \'the_content\' function in the current template, in order for Refraction to work on this page.', 'refraction' ),
+				confirmURL: refraction.config.help_the_content_url,
 			};
 		}
 
@@ -1451,7 +1451,7 @@ export default class EditorBase extends Marionette.Application {
 
 	addWidgetsCache( widgets ) {
 		jQuery.each( widgets, ( widgetName, widgetConfig ) => {
-			if ( elementorCommon.config.experimentalFeatures.additional_custom_breakpoints ) {
+			if ( refractionCommon.config.experimentalFeatures.additional_custom_breakpoints ) {
 				// When the Responsive Optimization experiment is active, the responsive controls are generated on the
 				// JS side instead of the PHP.
 				widgetConfig.controls = this.generateResponsiveControls( widgetConfig.controls );
@@ -1651,23 +1651,23 @@ export default class EditorBase extends Marionette.Application {
 		const map = {
 			data: {
 				replacement: 'elements',
-				value: () => elementor.config.document.elements,
+				value: () => refraction.config.document.elements,
 			},
 			current_user_can_publish: {
 				replacement: 'user.can_publish',
-				value: () => elementor.config.document.user.can_publish,
+				value: () => refraction.config.document.user.can_publish,
 			},
 			locked_user: {
 				replacement: '',
-				value: () => elementor.config.document.user.locked,
+				value: () => refraction.config.document.user.locked,
 			},
 			revisions_enabled: {
 				replacement: 'revisions.enabled',
-				value: () => elementor.config.document.revisions.enabled,
+				value: () => refraction.config.document.revisions.enabled,
 			},
 			current_revision_id: {
 				replacement: 'revisions.current_id',
-				value: () => elementor.config.document.revisions.current_id,
+				value: () => refraction.config.document.revisions.current_id,
 			},
 		};
 
@@ -1675,13 +1675,13 @@ export default class EditorBase extends Marionette.Application {
 			// Use `defineProperty` because `get property()` fails during the `Marionette...extend`.
 			Object.defineProperty( this.config, key, {
 				get() {
-					const replacement = data.replacement ? 'elementor.config.document.' + data.replacement : '';
-					elementorDevTools.deprecation.deprecated( 'elementor.config.' + key, '2.9.0', replacement );
+					const replacement = data.replacement ? 'refraction.config.document.' + data.replacement : '';
+					refractionDevTools.deprecation.deprecated( 'refraction.config.' + key, '2.9.0', replacement );
 					// Return from current document.
 					return data.value();
 				},
 				set() {
-					elementorDevTools.deprecation.deprecated( 'elementor.config.' + key, '2.9.0', 'elementor.config.document.' + data.replacement );
+					refractionDevTools.deprecation.deprecated( 'refraction.config.' + key, '2.9.0', 'refraction.config.document.' + data.replacement );
 					throw Error( 'Deprecated' );
 				},
 			} );
@@ -1689,34 +1689,34 @@ export default class EditorBase extends Marionette.Application {
 
 		Object.defineProperty( this.config.settings, 'page', {
 			get() {
-				elementorDevTools.deprecation.deprecated( 'elementor.config.settings.page', '2.9.0', 'elementor.config.document.settings' );
-				return elementor.config.document.settings;
+				refractionDevTools.deprecation.deprecated( 'refraction.config.settings.page', '2.9.0', 'refraction.config.document.settings' );
+				return refraction.config.document.settings;
 			},
 		} );
 
 		Object.defineProperty( this.config, 'widgets', {
 			get() {
-				elementorDevTools.deprecation.deprecated( 'elementor.config.widgets', '2.9.0', 'elementor.widgetsCache' );
-				return elementor.widgetsCache;
+				refractionDevTools.deprecation.deprecated( 'refraction.config.widgets', '2.9.0', 'refraction.widgetsCache' );
+				return refraction.widgetsCache;
 			},
 		} );
 
-		Object.defineProperty( this, '$previewElementorEl', {
+		Object.defineProperty( this, '$previewRefractionEl', {
 			get() {
-				elementorDevTools.deprecation.deprecated( 'elementor.$previewElementorEl', '2.9.4', 'elementor.documents.getCurrent().$element' );
+				refractionDevTools.deprecation.deprecated( 'refraction.$previewRefractionEl', '2.9.4', 'refraction.documents.getCurrent().$element' );
 
-				return elementor.documents.getCurrent().$element;
+				return refraction.documents.getCurrent().$element;
 			},
 		} );
 	}
 
 	toggleDocumentCssFiles( document, state ) {
 		const selectors = [
-				`#elementor-post-${ document.config.id }-css`,
-				`#elementor-preview-${ document.config.revisions.current_id }`,
+				`#refraction-post-${ document.config.id }-css`,
+				`#refraction-preview-${ document.config.revisions.current_id }`,
 			],
 			$files = this.$previewContents.find( selectors.join( ',' ) ),
-			type = state ? 'text/css' : 'elementor/disabled-css';
+			type = state ? 'text/css' : 'refraction/disabled-css';
 
 		$files.attr( { type } );
 	}

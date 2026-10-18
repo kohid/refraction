@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Core\Files\File_Types;
+namespace Refraction\Core\Files\File_Types;
 
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Core\Utils\Svg\Svg_Sanitizer;
-use Elementor\Utils;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Core\Utils\Svg\Svg_Sanitizer;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ class Svg extends Base {
 	/**
 	 * Inline svg attachment meta key
 	 */
-	const META_KEY = '_elementor_inline_svg';
+	const META_KEY = '_refraction_inline_svg';
 
 	const SCRIPT_REGEX = '/(?:\w+script|data):/xi';
 
@@ -70,7 +70,7 @@ class Svg extends Base {
 	 */
 	public function validate_file( $file ) {
 		if ( ! $this->sanitize_svg( $file['tmp_name'] ) ) {
-			return new \WP_Error( Exceptions::FORBIDDEN, esc_html__( 'This file is not allowed for security reasons.', 'elementor' ) );
+			return new \WP_Error( Exceptions::FORBIDDEN, esc_html__( 'This file is not allowed for security reasons.', 'refraction' ) );
 		}
 
 		return true;
@@ -242,6 +242,6 @@ class Svg extends Base {
 	public function __construct() {
 		add_filter( 'wp_update_attachment_metadata', [ $this, 'set_svg_meta_data' ], 10, 2 );
 		add_filter( 'wp_prepare_attachment_for_js', [ $this, 'wp_prepare_attachment_for_js' ], 10, 3 );
-		add_action( 'elementor/core/files/clear_cache', [ $this, 'delete_meta_cache' ] );
+		add_action( 'refraction/core/files/clear_cache', [ $this, 'delete_meta_cache' ] );
 	}
 }

@@ -24,7 +24,7 @@ export const ClassManagerSearch = () => {
 							event: 'classManagerSearched',
 						} as TrackingEvent );
 					} }
-					placeholder={ __( 'Search', 'elementor' ) }
+					placeholder={ __( 'Search', 'refraction' ) }
 					onChange={ ( e: React.ChangeEvent< HTMLInputElement > ) => handleChange( e.target.value ) }
 					InputProps={ {
 						startAdornment: (

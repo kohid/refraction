@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\WpRest\Classes;
+namespace Refraction\Modules\WpRest\Classes;
 
-use Elementor\Core\Utils\Collection;
-use Elementor\Modules\WpRest\Base\Query as Base;
+use Refraction\Core\Utils\Collection;
+use Refraction\Modules\WpRest\Base\Query as Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Post_Query extends Base {
 	const ENDPOINT = 'post';
 	const SEARCH_FILTER_ACCEPTED_ARGS = 2;
-	const DEFAULT_FORBIDDEN_POST_TYPES = [ 'e-floating-buttons', 'e-landing-page', 'elementor_library', 'attachment', 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset' ];
+	const DEFAULT_FORBIDDEN_POST_TYPES = [ 'e-floating-buttons', 'e-landing-page', 'refraction_library', 'attachment', 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset' ];
 	const SEARCH_IN_CONTENT_KEY = 'search_in_content';
 	const ALLOWED_KEYS_CONVERSION_MAP = [
 		'ID' => 'id',

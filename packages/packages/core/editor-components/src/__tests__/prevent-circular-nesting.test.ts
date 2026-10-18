@@ -1,4 +1,4 @@
-import { __getState as getState } from '@elementor/store';
+import { __getState as getState } from '@refraction/store';
 
 import {
 	type ClipboardElement,
@@ -7,8 +7,8 @@ import {
 } from '../prevent-circular-nesting';
 import { type ComponentsPathItem, SLICE_NAME } from '../store/store';
 
-jest.mock( '@elementor/store', () => ( {
-	...jest.requireActual( '@elementor/store' ),
+jest.mock( '@refraction/store', () => ( {
+	...jest.requireActual( '@refraction/store' ),
 	__getState: jest.fn(),
 } ) );
 

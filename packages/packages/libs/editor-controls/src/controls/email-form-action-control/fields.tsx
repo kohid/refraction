@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InfoAlert } from '@elementor/editor-ui';
+import { InfoAlert } from '@refraction/editor-ui';
 import { Grid, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -45,13 +45,13 @@ export const SendToField = ( { placeholder }: { placeholder?: string } ) => {
 		<PropKeyProvider bind="to">
 			<Stack gap={ 0.5 }>
 				<EmailChipsField
-					fieldLabel={ __( 'Send to', 'elementor' ) }
+					fieldLabel={ __( 'Send to', 'refraction' ) }
 					placeholder={ placeholder }
 					suggestions={ suggestions }
 				/>
 				{ shouldShowMentionsInfo() && (
 					<InfoAlert>
-						{ __( 'Type @ or an email field name to insert its submitted value.', 'elementor' ) }
+						{ __( 'Type @ or an email field name to insert its submitted value.', 'refraction' ) }
 					</InfoAlert>
 				) }
 			</Stack>
@@ -62,8 +62,8 @@ export const SendToField = ( { placeholder }: { placeholder?: string } ) => {
 export const SubjectField = () => (
 	<FieldValueMentionField
 		bind="subject"
-		label={ __( 'Email subject', 'elementor' ) }
-		placeholder={ __( 'New form submission', 'elementor' ) }
+		label={ __( 'Email subject', 'refraction' ) }
+		placeholder={ __( 'New form submission', 'refraction' ) }
 	/>
 );
 
@@ -74,7 +74,7 @@ export const MessageField = () => {
 		<PropKeyProvider bind="message">
 			<Grid container direction="column" gap={ 0.5 }>
 				<Grid item>
-					<ControlFormLabel>{ __( 'Message', 'elementor' ) }</ControlFormLabel>
+					<ControlFormLabel>{ __( 'Message', 'refraction' ) }</ControlFormLabel>
 				</Grid>
 				<Grid item>
 					<MentionTextAreaControl suggestions={ suggestions } />
@@ -84,9 +84,9 @@ export const MessageField = () => {
 						{ shouldShowMentionsInfo()
 							? __(
 									'[all-fields] shortcode sends all fields. Type @ to insert specific fields and customize your message.',
-									'elementor'
+									'refraction'
 							  )
-							: __( '[all-fields] shortcode sends all fields.', 'elementor' ) }
+							: __( '[all-fields] shortcode sends all fields.', 'refraction' ) }
 					</InfoAlert>
 				</Grid>
 			</Grid>
@@ -97,16 +97,16 @@ export const MessageField = () => {
 export const FromEmailField = () => (
 	<EmailField
 		bind="from"
-		label={ __( 'From email', 'elementor' ) }
-		placeholder={ __( 'What email should appear as the sender?', 'elementor' ) }
+		label={ __( 'From email', 'refraction' ) }
+		placeholder={ __( 'What email should appear as the sender?', 'refraction' ) }
 	/>
 );
 
 export const FromNameField = () => (
 	<FieldValueMentionField
 		bind="from-name"
-		label={ __( 'From name', 'elementor' ) }
-		placeholder={ __( 'What name should appear as the sender?', 'elementor' ) }
+		label={ __( 'From name', 'refraction' ) }
+		placeholder={ __( 'What name should appear as the sender?', 'refraction' ) }
 	/>
 );
 
@@ -117,14 +117,14 @@ export const ReplyToField = () => {
 		<PropKeyProvider bind="reply-to">
 			<Grid container direction="column" gap={ 0.5 }>
 				<Grid item>
-					<ControlFormLabel>{ __( 'Reply-to', 'elementor' ) }</ControlFormLabel>
+					<ControlFormLabel>{ __( 'Reply-to', 'refraction' ) }</ControlFormLabel>
 				</Grid>
 				<Grid item>
 					<MentionTextAreaControl
 						suggestions={ emailSuggestions }
 						rows={ 1 }
 						triggerPosition="start"
-						placeholder={ __( 'You can type @ to insert an email field', 'elementor' ) }
+						placeholder={ __( 'You can type @ to insert an email field', 'refraction' ) }
 					/>
 				</Grid>
 			</Grid>
@@ -137,7 +137,7 @@ export const CcField = () => {
 
 	return (
 		<PropKeyProvider bind="cc">
-			<EmailChipsField fieldLabel={ __( 'Cc', 'elementor' ) } suggestions={ suggestions } />
+			<EmailChipsField fieldLabel={ __( 'Cc', 'refraction' ) } suggestions={ suggestions } />
 		</PropKeyProvider>
 	);
 };
@@ -147,7 +147,7 @@ export const BccField = () => {
 
 	return (
 		<PropKeyProvider bind="bcc">
-			<EmailChipsField fieldLabel={ __( 'Bcc', 'elementor' ) } suggestions={ suggestions } />
+			<EmailChipsField fieldLabel={ __( 'Bcc', 'refraction' ) } suggestions={ suggestions } />
 		</PropKeyProvider>
 	);
 };
@@ -155,14 +155,14 @@ export const BccField = () => {
 export const MetaDataField = () => (
 	<PropKeyProvider bind="meta-data">
 		<Stack gap={ 0.5 }>
-			<ControlFormLabel>{ __( 'Metadata', 'elementor' ) }</ControlFormLabel>
+			<ControlFormLabel>{ __( 'Metadata', 'refraction' ) }</ControlFormLabel>
 			<ChipsControl
 				options={ [
-					{ label: __( 'Date', 'elementor' ), value: 'date' },
-					{ label: __( 'Time', 'elementor' ), value: 'time' },
-					{ label: __( 'Page URL', 'elementor' ), value: 'page-url' },
-					{ label: __( 'User agent', 'elementor' ), value: 'user-agent' },
-					{ label: __( 'Credit', 'elementor' ), value: 'credit' },
+					{ label: __( 'Date', 'refraction' ), value: 'date' },
+					{ label: __( 'Time', 'refraction' ), value: 'time' },
+					{ label: __( 'Page URL', 'refraction' ), value: 'page-url' },
+					{ label: __( 'User agent', 'refraction' ), value: 'user-agent' },
+					{ label: __( 'Credit', 'refraction' ), value: 'credit' },
 				] }
 			/>
 		</Stack>
@@ -173,13 +173,13 @@ export const SendAsField = () => (
 	<PropKeyProvider bind="send-as">
 		<Grid container direction="column" gap={ 0.5 }>
 			<Grid item>
-				<ControlFormLabel>{ __( 'Send as', 'elementor' ) }</ControlFormLabel>
+				<ControlFormLabel>{ __( 'Send as', 'refraction' ) }</ControlFormLabel>
 			</Grid>
 			<Grid item>
 				<SelectControl
 					options={ [
-						{ label: __( 'HTML', 'elementor' ), value: 'html' },
-						{ label: __( 'Plain Text', 'elementor' ), value: 'plain' },
+						{ label: __( 'HTML', 'refraction' ), value: 'html' },
+						{ label: __( 'Plain Text', 'refraction' ), value: 'plain' },
 					] }
 				/>
 			</Grid>

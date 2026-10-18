@@ -1,4 +1,4 @@
-import { getPropSchemaFromCache, isTransformable } from '@elementor/editor-props';
+import { getPropSchemaFromCache, isTransformable } from '@refraction/editor-props';
 
 type VariableInfo = {
 	type: string;

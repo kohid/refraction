@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import * as commands from './commands/';
 import * as uiStates from './ui-states/';
 
@@ -54,7 +54,7 @@ export default class Component extends ComponentBase {
 			const { id } = kit.config,
 				cssVar = `--e-global-color-${ container.id }`;
 
-			elementor.$previewContents[ 0 ].querySelector( `.elementor-kit-${ id }` ).style.setProperty( cssVar, value );
+			refraction.$previewContents[ 0 ].querySelector( `.refraction-kit-${ id }` ).style.setProperty( cssVar, value );
 		}
 	}
 

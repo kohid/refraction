@@ -1,4 +1,4 @@
-import { getPropSchemaFromCache, isTransformable, type PropType } from '@elementor/editor-props';
+import { getPropSchemaFromCache, isTransformable, type PropType } from '@refraction/editor-props';
 
 export const maybeEnqueueFontFromStyleProp = (
 	propType: PropType,

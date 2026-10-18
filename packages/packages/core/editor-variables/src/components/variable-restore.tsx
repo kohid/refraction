@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type KeyboardEvent, useState } from 'react';
-import { PopoverContent, useBoundProp } from '@elementor/editor-controls';
-import { PopoverHeader, SectionPopoverBody } from '@elementor/editor-ui';
+import { PopoverContent, useBoundProp } from '@refraction/editor-controls';
+import { PopoverHeader, SectionPopoverBody } from '@refraction/editor-ui';
 import { Button, CardActions, Divider, FormHelperText, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -104,7 +104,7 @@ export const VariableRestore = ( { variableId, onClose, onSubmit }: Props ) => {
 			<SectionPopoverBody height="auto">
 				<PopoverHeader
 					icon={ <VariableIcon fontSize={ SIZE } /> }
-					title={ __( 'Restore variable', 'elementor' ) }
+					title={ __( 'Restore variable', 'refraction' ) }
 					onClose={ onClose }
 				/>
 
@@ -113,7 +113,7 @@ export const VariableRestore = ( { variableId, onClose, onSubmit }: Props ) => {
 				<PopoverContent p={ 2 }>
 					<FormField
 						id="variable-label"
-						label={ __( 'Name', 'elementor' ) }
+						label={ __( 'Name', 'refraction' ) }
 						errorMsg={ labelFieldError?.message }
 						noticeMsg={ labelHint( label ) }
 					>
@@ -136,7 +136,7 @@ export const VariableRestore = ( { variableId, onClose, onSubmit }: Props ) => {
 						/>
 					</FormField>
 					{ ValueField && (
-						<FormField errorMsg={ valueFieldError } label={ __( 'Value', 'elementor' ) }>
+						<FormField errorMsg={ valueFieldError } label={ __( 'Value', 'refraction' ) }>
 							<Typography variant="h5">
 								<ValueField
 									propTypeKey={ propTypeKey }
@@ -160,7 +160,7 @@ export const VariableRestore = ( { variableId, onClose, onSubmit }: Props ) => {
 
 				<CardActions sx={ { pt: 0.5, pb: 1 } }>
 					<Button size="small" variant="contained" disabled={ isSubmitDisabled } onClick={ handleRestore }>
-						{ __( 'Restore', 'elementor' ) }
+						{ __( 'Restore', 'refraction' ) }
 					</Button>
 				</CardActions>
 			</SectionPopoverBody>

@@ -4,12 +4,12 @@ import { type Audit, type AuditViolation } from '../types';
 
 export const audit: Audit = {
 	id: 'audits/site-identity',
-	title: __( 'Site identity', 'elementor' ),
+	title: __( 'Site identity', 'refraction' ),
 	description: __(
 		'Site name, description, logo, and favicon establish your brand and appear in search results and browser tabs.',
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Open Site Settings → Site Identity and complete all the missing fields.', 'elementor' ),
+	fixHint: __( 'Open Site Settings → Site Identity and complete all the missing fields.', 'refraction' ),
 	categories: [ 'best-practices', 'seo' ],
 	severity: 'info',
 	weight: 7,
@@ -20,7 +20,7 @@ export const audit: Audit = {
 		if ( ! identity.site_name_set ) {
 			violations.push( {
 				auditId: audit.id,
-				label: __( 'Site name is missing or still uses the default.', 'elementor' ),
+				label: __( 'Site name is missing or still uses the default.', 'refraction' ),
 				targetHint: 'site-identity-settings',
 			} );
 		}
@@ -28,7 +28,7 @@ export const audit: Audit = {
 		if ( ! identity.site_description_set ) {
 			violations.push( {
 				auditId: audit.id,
-				label: __( 'Site description is missing or still uses the default.', 'elementor' ),
+				label: __( 'Site description is missing or still uses the default.', 'refraction' ),
 				targetHint: 'site-identity-settings',
 				angieFix: true,
 			} );
@@ -37,7 +37,7 @@ export const audit: Audit = {
 		if ( ! identity.site_logo_set ) {
 			violations.push( {
 				auditId: audit.id,
-				label: __( 'Site logo is not set.', 'elementor' ),
+				label: __( 'Site logo is not set.', 'refraction' ),
 				targetHint: 'site-identity-settings',
 			} );
 		}
@@ -45,7 +45,7 @@ export const audit: Audit = {
 		if ( ! identity.site_favicon_set ) {
 			violations.push( {
 				auditId: audit.id,
-				label: __( 'Site favicon is not set.', 'elementor' ),
+				label: __( 'Site favicon is not set.', 'refraction' ),
 				targetHint: 'site-identity-settings',
 			} );
 		}

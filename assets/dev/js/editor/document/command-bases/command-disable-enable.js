@@ -1,12 +1,12 @@
 import CommandHistoryBase from './command-history-base';
-import ElementsSettings from 'elementor-document/elements/commands/settings';
+import ElementsSettings from 'refraction-document/elements/commands/settings';
 
 /**
  * The class serve as base for commands who needs the 'enable/disable' behavior.
  */
 export default class CommandDisableEnable extends CommandHistoryBase {
 	static getName() {
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	// eslint-disable-next-line jsdoc/require-returns-check
@@ -14,7 +14,7 @@ export default class CommandDisableEnable extends CommandHistoryBase {
 	 * @return {string} Full enable command.
 	 */
 	static getEnableCommand() {
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	// eslint-disable-next-line jsdoc/require-returns-check
@@ -22,7 +22,7 @@ export default class CommandDisableEnable extends CommandHistoryBase {
 	 * @return {string} Full disable command.
 	 */
 	static getDisableCommand() {
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	static restore( historyItem, isRedo ) {
@@ -80,7 +80,7 @@ export default class CommandDisableEnable extends CommandHistoryBase {
 			changes[ id ] = settings;
 		} );
 
-		const subTitle = elementor.translate( this.constructor.getName() ) + ' ' + ElementsSettings.getSubTitle( args ),
+		const subTitle = refraction.translate( this.constructor.getName() ) + ' ' + ElementsSettings.getSubTitle( args ),
 			type = this.type;
 
 		return {

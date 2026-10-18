@@ -23,7 +23,7 @@ describe( 'ThemeSelection', () => {
 			expect( screen.getByTestId( 'theme-selection-step' ) ).toBeInTheDocument();
 			expect( screen.getByText( 'Build faster with Hello Theme' ) ).toBeInTheDocument();
 			expect(
-				screen.getByText( "Use Elementor's lightweight theme for faster setup and full design control." )
+				screen.getByText( "Use Refraction's lightweight theme for faster setup and full design control." )
 			).toBeInTheDocument();
 		} );
 
@@ -31,7 +31,7 @@ describe( 'ThemeSelection', () => {
 			navigateToThemeSelection();
 
 			expect( screen.getByTestId( 'hello-theme-preview' ) ).toBeInTheDocument();
-			expect( screen.getByText( 'by Elementor' ) ).toBeInTheDocument();
+			expect( screen.getByText( 'by Refraction' ) ).toBeInTheDocument();
 		} );
 
 		it( 'renders feature highlights in the step content', () => {
@@ -41,7 +41,7 @@ describe( 'ThemeSelection', () => {
 			expect( screen.queryByTestId( 'footer-highlights' ) ).not.toBeInTheDocument();
 			expect( screen.getByText( 'Fast by design' ) ).toBeInTheDocument();
 			expect( screen.getByText( 'Responsive from the start' ) ).toBeInTheDocument();
-			expect( screen.getByText( 'Built for Elementor' ) ).toBeInTheDocument();
+			expect( screen.getByText( 'Built for Refraction' ) ).toBeInTheDocument();
 		} );
 
 		it( 'does not render Hello Biz, a radiogroup, or a Recommended chip', () => {

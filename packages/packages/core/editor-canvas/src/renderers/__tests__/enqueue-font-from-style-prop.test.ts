@@ -1,10 +1,10 @@
 import { createMockPropType } from 'test-utils';
-import { fontFamilyPropTypeUtil } from '@elementor/editor-props';
-import { enqueueFont } from '@elementor/editor-v1-adapters';
+import { fontFamilyPropTypeUtil } from '@refraction/editor-props';
+import { enqueueFont } from '@refraction/editor-v1-adapters';
 
 import { maybeEnqueueFontFromStyleProp } from '../enqueue-font-from-style-prop';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 describe( 'maybeEnqueueFontFromStyleProp', () => {
 	it( 'should enqueue when prop type implements getEnqueueFontFamily', () => {

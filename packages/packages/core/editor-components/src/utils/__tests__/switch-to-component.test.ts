@@ -1,9 +1,9 @@
-import { invalidateDocumentData, switchToDocument } from '@elementor/editor-documents';
+import { invalidateDocumentData, switchToDocument } from '@refraction/editor-documents';
 
 import { loadComponentsOverridableProps } from '../../store/actions/load-components-overridable-props';
 import { buildUniqueSelector, switchToComponent } from '../switch-to-component';
 
-jest.mock( '@elementor/editor-documents' );
+jest.mock( '@refraction/editor-documents' );
 jest.mock( '../../store/actions/load-components-overridable-props' );
 
 const COMPONENT_A_INSTANCE_1_ID = 'component-a-instance-1';
@@ -21,7 +21,7 @@ describe( 'buildUniqueSelector', () => {
 	it( 'should return selector for single component instance', () => {
 		// Arrange
 		document.body.innerHTML = `
-			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-elementor-id="${ COMPONENT_A_DOCUMENT_ID }">
+			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-refraction-id="${ COMPONENT_A_DOCUMENT_ID }">
 				<div class="content">Component A content</div>
 			</div>
 		`;
@@ -37,9 +37,9 @@ describe( 'buildUniqueSelector', () => {
 	it( 'should return chained selector for nested component instances', () => {
 		// Arrange
 		document.body.innerHTML = `
-			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-elementor-id="${ COMPONENT_A_DOCUMENT_ID }">
-				<div class="elementor elementor-${ COMPONENT_A_DOCUMENT_ID }">
-					<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-elementor-id="${ COMPONENT_B_DOCUMENT_ID }">
+			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-refraction-id="${ COMPONENT_A_DOCUMENT_ID }">
+				<div class="refraction refraction-${ COMPONENT_A_DOCUMENT_ID }">
+					<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-refraction-id="${ COMPONENT_B_DOCUMENT_ID }">
 						<div class="content">Component B content</div>
 					</div>
 				</div>
@@ -57,10 +57,10 @@ describe( 'buildUniqueSelector', () => {
 	it( 'should skip non-component elements in selector chain', () => {
 		// Arrange
 		document.body.innerHTML = `
-			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-elementor-id="${ COMPONENT_A_DOCUMENT_ID }">
-				<div class="elementor">
+			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-refraction-id="${ COMPONENT_A_DOCUMENT_ID }">
+				<div class="refraction">
 					<div data-id="${ REGULAR_ELEMENT_ID }">
-						<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-elementor-id="${ COMPONENT_B_DOCUMENT_ID }">
+						<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-refraction-id="${ COMPONENT_B_DOCUMENT_ID }">
 							<div class="content">Component B content</div>
 						</div>
 					</div>
@@ -80,16 +80,16 @@ describe( 'buildUniqueSelector', () => {
 	it( 'should differentiate between multiple instances of same nested component', () => {
 		// Arrange
 		document.body.innerHTML = `
-			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-elementor-id="${ COMPONENT_A_DOCUMENT_ID }">
-				<div class="elementor">
-					<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-elementor-id="${ COMPONENT_B_DOCUMENT_ID }">
+			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-refraction-id="${ COMPONENT_A_DOCUMENT_ID }">
+				<div class="refraction">
+					<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-refraction-id="${ COMPONENT_B_DOCUMENT_ID }">
 						<div class="content">Component B in instance 1</div>
 					</div>
 				</div>
 			</div>
-			<div data-id="${ COMPONENT_A_INSTANCE_2_ID }" data-elementor-id="${ COMPONENT_A_DOCUMENT_ID }">
-				<div class="elementor">
-					<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-elementor-id="${ COMPONENT_B_DOCUMENT_ID }">
+			<div data-id="${ COMPONENT_A_INSTANCE_2_ID }" data-refraction-id="${ COMPONENT_A_DOCUMENT_ID }">
+				<div class="refraction">
+					<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-refraction-id="${ COMPONENT_B_DOCUMENT_ID }">
 						<div class="content">Component B in instance 2</div>
 					</div>
 				</div>
@@ -114,7 +114,7 @@ describe( 'buildUniqueSelector', () => {
 		expect( selectorForInstance1 ).not.toBe( selectorForInstance2 );
 	} );
 
-	it( 'should return fallback selector for element without data-elementor-id', () => {
+	it( 'should return fallback selector for element without data-refraction-id', () => {
 		// Arrange
 		document.body.innerHTML = `
 			<div data-id="${ REGULAR_ELEMENT_ID }">
@@ -136,14 +136,14 @@ describe( 'buildUniqueSelector', () => {
 		const componentCDocumentId = '300';
 
 		document.body.innerHTML = `
-			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-elementor-id="${ COMPONENT_A_DOCUMENT_ID }">
-				<div class="elementor">
+			<div data-id="${ COMPONENT_A_INSTANCE_1_ID }" data-refraction-id="${ COMPONENT_A_DOCUMENT_ID }">
+				<div class="refraction">
 					<div data-id="container-1">
-						<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-elementor-id="${ COMPONENT_B_DOCUMENT_ID }">
-							<div class="elementor">
+						<div data-id="${ COMPONENT_B_INSTANCE_ID }" data-refraction-id="${ COMPONENT_B_DOCUMENT_ID }">
+							<div class="refraction">
 								<div data-id="container-2">
 									<div data-id="container-3">
-										<div data-id="${ componentCInstanceId }" data-elementor-id="${ componentCDocumentId }">
+										<div data-id="${ componentCInstanceId }" data-refraction-id="${ componentCDocumentId }">
 											<div class="content">Deeply nested component</div>
 										</div>
 									</div>

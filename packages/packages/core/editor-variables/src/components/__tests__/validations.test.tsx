@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { colorPropTypeUtil } from '@elementor/editor-props';
+import { colorPropTypeUtil } from '@refraction/editor-props';
 import { TextIcon } from '@elementor/icons';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
@@ -20,8 +20,8 @@ jest.mock( '../../hooks/use-initial-value', () => ( {
 	useInitialValue: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-controls', () => ( {
-	...jest.requireActual( '@elementor/editor-controls' ),
+jest.mock( '@refraction/editor-controls', () => ( {
+	...jest.requireActual( '@refraction/editor-controls' ),
 	useBoundProp: jest.fn(),
 } ) );
 
@@ -55,7 +55,7 @@ beforeEach( () => {
 	jest.mocked( usePropVariablesModule.createVariable ).mockImplementation( mockCreateVariable );
 	jest.mocked( useInitialValueModule.useInitialValue ).mockImplementation( mockUseInitialValue );
 
-	jest.mocked( require( '@elementor/editor-controls' ).useBoundProp ).mockReturnValue( {
+	jest.mocked( require( '@refraction/editor-controls' ).useBoundProp ).mockReturnValue( {
 		setValue: mockSetVariable,
 		path: [ 'settings', 'color' ],
 	} );

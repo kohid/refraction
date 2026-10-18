@@ -4,9 +4,9 @@ import { type Audit } from '../types';
 
 export const audit: Audit = {
 	id: 'audits/page-featured-image',
-	title: __( 'Page featured image', 'elementor' ),
-	description: __( 'Featured images are used by social shares and many themes for hero visuals.', 'elementor' ),
-	fixHint: __( 'Open Page Settings and set a featured image.', 'elementor' ),
+	title: __( 'Page featured image', 'refraction' ),
+	description: __( 'Featured images are used by social shares and many themes for hero visuals.', 'refraction' ),
+	fixHint: __( 'Open Page Settings and set a featured image.', 'refraction' ),
 	categories: [ 'seo' ],
 	severity: 'info',
 	weight: 5,
@@ -20,7 +20,7 @@ export const audit: Audit = {
 			violations: [
 				{
 					auditId: audit.id,
-					label: __( 'No featured image set.', 'elementor' ),
+					label: __( 'No featured image set.', 'refraction' ),
 					targetHint: 'page-settings',
 				},
 			],

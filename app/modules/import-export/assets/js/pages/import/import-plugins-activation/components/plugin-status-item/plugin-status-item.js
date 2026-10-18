@@ -1,6 +1,6 @@
-import Grid from 'elementor-app/ui/grid/grid';
-import Checkbox from 'elementor-app/ui/atoms/checkbox';
-import Text from 'elementor-app/ui/atoms/text';
+import Grid from 'refraction-app/ui/grid/grid';
+import Checkbox from 'refraction-app/ui/atoms/checkbox';
+import Text from 'refraction-app/ui/atoms/text';
 
 import { PLUGIN_STATUS_MAP } from '../../../../../hooks/use-plugins';
 

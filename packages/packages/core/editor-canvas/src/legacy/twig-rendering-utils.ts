@@ -1,4 +1,4 @@
-import { type V1ElementConfig } from '@elementor/editor-elements';
+import { type V1ElementConfig } from '@refraction/editor-elements';
 
 import { type DomRenderer } from '../renderers/create-dom-renderer';
 import { createPropsResolver, type PropsResolver } from '../renderers/create-props-resolver';

@@ -4,9 +4,9 @@ import EmptyView from './views/empty';
 /**
  * @typedef {import('../../../../../assets/dev/js/editor/elements/types/base/element-base')} ElementBase
  */
-export class NestedElementTypesBase extends elementor.modules.elements.types.Base {
+export class NestedElementTypesBase extends refraction.modules.elements.types.Base {
 	getType() {
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	getView() {

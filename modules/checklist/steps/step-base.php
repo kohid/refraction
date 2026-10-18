@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Modules\Checklist\Steps;
+namespace Refraction\Modules\Checklist\Steps;
 
-use Elementor\Core\Isolation\Wordpress_Adapter;
-use Elementor\Core\Isolation\Wordpress_Adapter_Interface;
-use Elementor\Core\Isolation\Elementor_Adapter;
-use Elementor\Core\Isolation\Elementor_Adapter_Interface;
-use Elementor\Modules\Checklist\Module as Checklist_Module;
+use Refraction\Core\Isolation\Wordpress_Adapter;
+use Refraction\Core\Isolation\Wordpress_Adapter_Interface;
+use Refraction\Core\Isolation\Refraction_Adapter;
+use Refraction\Core\Isolation\Refraction_Adapter_Interface;
+use Refraction\Modules\Checklist\Module as Checklist_Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -24,7 +24,7 @@ abstract class Step_Base {
 
 	private array $user_progress;
 	protected Wordpress_Adapter_Interface $wordpress_adapter;
-	protected Elementor_Adapter_Interface $elementor_adapter;
+	protected Refraction_Adapter_Interface $refraction_adapter;
 	protected Checklist_Module $module;
 
 	/**
@@ -76,13 +76,13 @@ abstract class Step_Base {
 	 *
 	 * @param Checklist_Module             $module
 	 * @param ?Wordpress_Adapter_Interface $wordpress_adapter
-	 * @param ?Elementor_Adapter_Interface $elementor_adapter
+	 * @param ?Refraction_Adapter_Interface $refraction_adapter
 	 * @return void
 	 */
-	public function __construct( Checklist_Module $module, ?Wordpress_Adapter_Interface $wordpress_adapter = null, ?Elementor_Adapter_Interface $elementor_adapter = null ) {
+	public function __construct( Checklist_Module $module, ?Wordpress_Adapter_Interface $wordpress_adapter = null, ?Refraction_Adapter_Interface $refraction_adapter = null ) {
 		$this->module = $module;
 		$this->wordpress_adapter = $wordpress_adapter ?? new Wordpress_Adapter();
-		$this->elementor_adapter = $elementor_adapter ?? new Elementor_Adapter();
+		$this->refraction_adapter = $refraction_adapter ?? new Refraction_Adapter();
 
 		$this->user_progress = $module->get_step_progress( $this->get_id() ) ?? $this->get_step_initial_progress();
 	}
@@ -97,7 +97,7 @@ abstract class Step_Base {
 	}
 
 	public function get_learn_more_text(): string {
-		return esc_html__( 'Learn more', 'elementor' );
+		return esc_html__( 'Learn more', 'refraction' );
 	}
 
 	public function get_learn_more_url(): string {

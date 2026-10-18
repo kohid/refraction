@@ -1,15 +1,15 @@
-export default class LightboxManager extends elementorModules.ViewModule {
+export default class LightboxManager extends refractionModules.ViewModule {
 	static getLightbox() {
 		const lightboxPromise = new Promise( ( resolveLightbox ) => {
 				import(
-					'elementor-frontend/utils/lightbox/lightbox'
+					'refraction-frontend/utils/lightbox/lightbox'
 				).then( ( { default: LightboxModule } ) => resolveLightbox( new LightboxModule() ) );
 			} ),
-			dialogScriptPromise = elementorFrontend.utils.assetsLoader.load( 'script', 'dialog' ),
-			dialogStylePromise = elementorFrontend.utils.assetsLoader.load( 'style', 'dialog' ),
-			shareLinkPromise = elementorFrontend.utils.assetsLoader.load( 'script', 'share-link' ),
-			swiperStylePromise = elementorFrontend.utils.assetsLoader.load( 'style', 'swiper' ),
-			lightboxStylePromise = elementorFrontend.utils.assetsLoader.load( 'style', 'e-lightbox' );
+			dialogScriptPromise = refractionFrontend.utils.assetsLoader.load( 'script', 'dialog' ),
+			dialogStylePromise = refractionFrontend.utils.assetsLoader.load( 'style', 'dialog' ),
+			shareLinkPromise = refractionFrontend.utils.assetsLoader.load( 'script', 'share-link' ),
+			swiperStylePromise = refractionFrontend.utils.assetsLoader.load( 'style', 'swiper' ),
+			lightboxStylePromise = refractionFrontend.utils.assetsLoader.load( 'style', 'e-lightbox' );
 
 		return Promise.all( [
 			lightboxPromise,
@@ -24,8 +24,8 @@ export default class LightboxManager extends elementorModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				links: 'a, [data-elementor-lightbox]',
-				slideshow: '[data-elementor-lightbox-slideshow]',
+				links: 'a, [data-refraction-lightbox]',
+				slideshow: '[data-refraction-lightbox-slideshow]',
 			},
 		};
 	}
@@ -39,12 +39,12 @@ export default class LightboxManager extends elementorModules.ViewModule {
 
 	isLightboxLink( element ) {
 		// Check for lowercase `a` to make sure it works also for links inside SVGs.
-		if ( ( 'a' === element.tagName.toLowerCase() && ( element.hasAttribute( 'download' ) || ! /^[^?]+\.(png|jpe?g|gif|svg|webp|avif)(\?.*)?$/i.test( element.href ) ) ) && ! element.dataset.elementorLightboxVideo ) {
+		if ( ( 'a' === element.tagName.toLowerCase() && ( element.hasAttribute( 'download' ) || ! /^[^?]+\.(png|jpe?g|gif|svg|webp|avif)(\?.*)?$/i.test( element.href ) ) ) && ! element.dataset.refractionLightboxVideo ) {
 			return false;
 		}
 
-		const generalOpenInLightbox = elementorFrontend.getKitSettings( 'global_image_lightbox' ),
-			currentLinkOpenInLightbox = element.dataset.elementorOpenLightbox;
+		const generalOpenInLightbox = refractionFrontend.getKitSettings( 'global_image_lightbox' ),
+			currentLinkOpenInLightbox = element.dataset.refractionOpenLightbox;
 
 		return 'yes' === currentLinkOpenInLightbox || ( generalOpenInLightbox && 'no' !== currentLinkOpenInLightbox );
 	}
@@ -56,12 +56,12 @@ export default class LightboxManager extends elementorModules.ViewModule {
 	async onLinkClick( event ) {
 		const element = event.currentTarget,
 			$target = jQuery( event.target ),
-			editMode = elementorFrontend.isEditMode(),
-			isColorPickingMode = editMode && elementor.$previewContents.find( 'body' ).hasClass( 'elementor-editor__ui-state__color-picker' ),
-			isClickInsideElementor = ! ! $target.closest( '.elementor-edit-area' ).length;
+			editMode = refractionFrontend.isEditMode(),
+			isColorPickingMode = editMode && refraction.$previewContents.find( 'body' ).hasClass( 'refraction-editor__ui-state__color-picker' ),
+			isClickInsideRefraction = ! ! $target.closest( '.refraction-edit-area' ).length;
 
 		if ( ! this.isLightboxLink( element ) ) {
-			if ( editMode && isClickInsideElementor ) {
+			if ( editMode && isClickInsideRefraction ) {
 				event.preventDefault();
 			}
 
@@ -70,7 +70,7 @@ export default class LightboxManager extends elementorModules.ViewModule {
 
 		event.preventDefault();
 
-		if ( editMode && ! elementor.getPreferences( 'lightbox_in_editor' ) ) {
+		if ( editMode && ! refraction.getPreferences( 'lightbox_in_editor' ) ) {
 			return;
 		}
 
@@ -85,7 +85,7 @@ export default class LightboxManager extends elementorModules.ViewModule {
 	}
 
 	bindEvents() {
-		elementorFrontend.elements.$document.on(
+		refractionFrontend.elements.$document.on(
 			'click',
 			this.getSettings( 'selectors.links' ),
 			( event ) => this.onLinkClick( event ),
@@ -95,7 +95,7 @@ export default class LightboxManager extends elementorModules.ViewModule {
 	onInit( ...args ) {
 		super.onInit( ...args );
 
-		if ( elementorFrontend.isEditMode() ) {
+		if ( refractionFrontend.isEditMode() ) {
 			return;
 		}
 

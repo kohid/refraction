@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Import;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Import;
 
-use Elementor\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
+use Refraction\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
 
 class Taxonomies extends Import_Runner_Base {
 
@@ -56,7 +56,7 @@ class Taxonomies extends Import_Runner_Base {
 		return $result;
 	}
 	public function import_with_customization( array $data, array $imported_data, array $customization ) {
-		$result = apply_filters( 'elementor/import-export-customization/import/taxonomies/customization', null, $data, $imported_data, $customization, $this );
+		$result = apply_filters( 'refraction/import-export-customization/import/taxonomies/customization', null, $data, $imported_data, $customization, $this );
 
 		if ( is_array( $result ) ) {
 			return $result;

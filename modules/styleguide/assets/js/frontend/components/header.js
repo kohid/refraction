@@ -87,10 +87,10 @@ export default function Header() {
 	return (
 		<Wrapper>
 			<InnerWrapper>
-				<Title>{ __( 'Show global settings', 'elementor' ) }</Title>
+				<Title>{ __( 'Show global settings', 'refraction' ) }</Title>
 				<ButtonsWrapper>
-					<AreaButton area={ 'colors' }>{ __( 'Colors', 'elementor' ) }</AreaButton>
-					<AreaButton area={ 'fonts' }>{ __( 'Fonts', 'elementor' ) }</AreaButton>
+					<AreaButton area={ 'colors' }>{ __( 'Colors', 'refraction' ) }</AreaButton>
+					<AreaButton area={ 'fonts' }>{ __( 'Fonts', 'refraction' ) }</AreaButton>
 				</ButtonsWrapper>
 			</InnerWrapper>
 		</Wrapper>

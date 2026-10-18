@@ -43,7 +43,7 @@ export function mockDialog() {
 		};
 	} );
 
-	window.elementorCommon = {
+	window.refractionCommon = {
 		dialogsManager: {
 			createWidget,
 		},
@@ -58,7 +58,7 @@ export function mockDialog() {
 }
 
 export function mockExperimentsConfig() {
-	window.elementorAdminConfig = {
+	window.refractionAdminConfig = {
 		experiments: {
 			active_dependency: {
 				name: 'active_dependency',
@@ -125,7 +125,7 @@ export function mockExperimentsConfig() {
 export function mockExperimentsForm() {
 	const form = document.createElement( 'form' );
 
-	Object.values( window.elementorAdminConfig.experiments ).forEach( ( experiment ) => {
+	Object.values( window.refractionAdminConfig.experiments ).forEach( ( experiment ) => {
 		form.innerHTML += `
 			<select data-experiment-id="${ experiment.name }">
 				<option value="default" ${ ( 'default' === experiment.state ) && 'selected' }>

@@ -1,5 +1,5 @@
-import { type BreakpointId } from '@elementor/editor-responsive';
-import { type StyleDefinitionState, type StyleDefinitionVariant } from '@elementor/editor-styles';
+import { type BreakpointId } from '@refraction/editor-responsive';
+import { type StyleDefinitionState, type StyleDefinitionVariant } from '@refraction/editor-styles';
 
 import { type SnapshotPropValue } from './types';
 

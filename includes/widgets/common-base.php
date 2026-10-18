@@ -1,27 +1,27 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor common widget.
+ * Refraction common widget.
  *
- * Elementor base widget that gives you all the advanced options of the basic
+ * Refraction base widget that gives you all the advanced options of the basic
  * widget.
  *
  * @since 1.0.0
  */
 class Widget_Common_Base extends Widget_Base {
 
-	const WRAPPER_SELECTOR = '{{WRAPPER}} .elementor-widget-container';
-	const WRAPPER_SELECTOR_CHILD = '{{WRAPPER}} > .elementor-widget-container';
-	const WRAPPER_SELECTOR_HOVER = '{{WRAPPER}}:hover .elementor-widget-container';
-	const WRAPPER_SELECTOR_HOVER_CHILD = '{{WRAPPER}}:hover > .elementor-widget-container';
-	const MASK_SELECTOR_DEFAULT = '{{WRAPPER}}:not( .elementor-widget-image ) .elementor-widget-container';
-	const MASK_SELECTOR_IMG = '{{WRAPPER}}.elementor-widget-image .elementor-widget-container img';
-	const TRANSFORM_SELECTOR_CLASS = ' > .elementor-widget-container';
+	const WRAPPER_SELECTOR = '{{WRAPPER}} .refraction-widget-container';
+	const WRAPPER_SELECTOR_CHILD = '{{WRAPPER}} > .refraction-widget-container';
+	const WRAPPER_SELECTOR_HOVER = '{{WRAPPER}}:hover .refraction-widget-container';
+	const WRAPPER_SELECTOR_HOVER_CHILD = '{{WRAPPER}}:hover > .refraction-widget-container';
+	const MASK_SELECTOR_DEFAULT = '{{WRAPPER}}:not( .refraction-widget-image ) .refraction-widget-container';
+	const MASK_SELECTOR_IMG = '{{WRAPPER}}.refraction-widget-image .refraction-widget-container img';
+	const TRANSFORM_SELECTOR_CLASS = ' > .refraction-widget-container';
 	const MARGIN = 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};';
 
 	/**
@@ -120,7 +120,7 @@ class Widget_Common_Base extends Widget_Base {
 	 * @return string The shape path in the assets folder.
 	 */
 	private function get_shape_url( $shape ) {
-		return ELEMENTOR_ASSETS_URL . 'mask-shapes/' . $shape . '.svg';
+		return REFRACTION_ASSETS_URL . 'mask-shapes/' . $shape . '.svg';
 	}
 
 	/**
@@ -133,84 +133,84 @@ class Widget_Common_Base extends Widget_Base {
 	private function get_shapes( $custom_button = true ): array {
 		$shapes = [
 			'circle' => [
-				'title' => esc_html__( 'Circle', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/circle.svg',
+				'title' => esc_html__( 'Circle', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/circle.svg',
 			],
 			'oval-vertical' => [
-				'title' => esc_html__( 'Oval vertical', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/oval-vertical.svg',
+				'title' => esc_html__( 'Oval vertical', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/oval-vertical.svg',
 			],
 			'oval-horizontal' => [
-				'title' => esc_html__( 'Oval horizontal', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/oval-horizontal.svg',
+				'title' => esc_html__( 'Oval horizontal', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/oval-horizontal.svg',
 			],
 			'pill-vertical' => [
-				'title' => esc_html__( 'Pill vertical', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/pill-vertical.svg',
+				'title' => esc_html__( 'Pill vertical', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/pill-vertical.svg',
 			],
 			'pill-horizontal' => [
-				'title' => esc_html__( 'Pill horizontal', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/pill-horizontal.svg',
+				'title' => esc_html__( 'Pill horizontal', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/pill-horizontal.svg',
 			],
 			'triangle' => [
-				'title' => esc_html__( 'Triangle', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/triangle.svg',
+				'title' => esc_html__( 'Triangle', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/triangle.svg',
 			],
 			'diamond' => [
-				'title' => esc_html__( 'Diamond', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/diamond.svg',
+				'title' => esc_html__( 'Diamond', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/diamond.svg',
 			],
 			'pentagon' => [
-				'title' => esc_html__( 'Pentagon', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/pentagon.svg',
+				'title' => esc_html__( 'Pentagon', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/pentagon.svg',
 			],
 			'hexagon-vertical' => [
-				'title' => esc_html__( 'Hexagon vertical', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/hexagon-vertical.svg',
+				'title' => esc_html__( 'Hexagon vertical', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/hexagon-vertical.svg',
 			],
 			'hexagon-horizontal' => [
-				'title' => esc_html__( 'Hexagon horizontal', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/hexagon-horizontal.svg',
+				'title' => esc_html__( 'Hexagon horizontal', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/hexagon-horizontal.svg',
 			],
 			'heptagon' => [
-				'title' => esc_html__( 'Heptagon', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/heptagon.svg',
+				'title' => esc_html__( 'Heptagon', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/heptagon.svg',
 			],
 			'octagon' => [
-				'title' => esc_html__( 'Octagon', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/octagon.svg',
+				'title' => esc_html__( 'Octagon', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/octagon.svg',
 			],
 			'parallelogram-right' => [
-				'title' => esc_html__( 'Parallelogram right', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/parallelogram-right.svg',
+				'title' => esc_html__( 'Parallelogram right', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/parallelogram-right.svg',
 			],
 			'parallelogram-left' => [
-				'title' => esc_html__( 'Parallelogram left', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/parallelogram-left.svg',
+				'title' => esc_html__( 'Parallelogram left', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/parallelogram-left.svg',
 			],
 			'trapezoid-up' => [
-				'title' => esc_html__( 'Trapezoid Up', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/trapezoid-up.svg',
+				'title' => esc_html__( 'Trapezoid Up', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/trapezoid-up.svg',
 			],
 			'trapezoid-down' => [
-				'title' => esc_html__( 'Trapezoid Down', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/trapezoid-down.svg',
+				'title' => esc_html__( 'Trapezoid Down', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/trapezoid-down.svg',
 			],
 			'flower' => [
-				'title' => esc_html__( 'Flower', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/flower.svg',
+				'title' => esc_html__( 'Flower', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/flower.svg',
 			],
 			'sketch' => [
-				'title' => esc_html__( 'Sketch', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/sketch.svg',
+				'title' => esc_html__( 'Sketch', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/sketch.svg',
 			],
 			'hexagon' => [
-				'title' => esc_html__( 'Hexagon Donut', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/hexagon.svg',
+				'title' => esc_html__( 'Hexagon Donut', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/hexagon.svg',
 			],
 			'blob' => [
-				'title' => esc_html__( 'Blob', 'elementor' ),
-				'image' => ELEMENTOR_ASSETS_URL . 'mask-shapes/blob.svg',
+				'title' => esc_html__( 'Blob', 'refraction' ),
+				'image' => REFRACTION_ASSETS_URL . 'mask-shapes/blob.svg',
 			],
 		];
 
@@ -219,7 +219,7 @@ class Widget_Common_Base extends Widget_Base {
 		if ( $custom_button ) {
 			$shapes['custom'] = [
 				'type' => 'button',
-				'title' => esc_html__( 'Custom Mask', 'elementor' ),
+				'title' => esc_html__( 'Custom Mask', 'refraction' ),
 			];
 		}
 
@@ -251,7 +251,7 @@ class Widget_Common_Base extends Widget_Base {
 	/**
 	 * Get additional mask shapes.
 	 *
-	 * Used to add custom mask shapes to elementor.
+	 * Used to add custom mask shapes to refraction.
 	 *
 	 * @since 3.30.0
 	 *
@@ -263,13 +263,13 @@ class Widget_Common_Base extends Widget_Base {
 		/**
 		 * Additional mask shapes.
 		 *
-		 * Filters the mask shapes used by Elementor to add additional mask shapes.
+		 * Filters the mask shapes used by Refraction to add additional mask shapes.
 		 *
 		 * @since 3.30.0
 		 *
 		 * @param array $additional_mask_shapes Additional mask shapes.
 		 */
-		return apply_filters( 'elementor/mask_shapes/additional_shapes', $additional_mask_shapes );
+		return apply_filters( 'refraction/mask_shapes/additional_shapes', $additional_mask_shapes );
 	}
 
 	/**
@@ -303,7 +303,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_section(
 			'_section_style',
 			[
-				'label' => esc_html__( 'Layout', 'elementor' ),
+				'label' => esc_html__( 'Layout', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -312,7 +312,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::HIDDEN,
 				'render_type' => 'none',
 			]
@@ -321,7 +321,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_margin',
 			[
-				'label' => esc_html__( 'Margin', 'elementor' ),
+				'label' => esc_html__( 'Margin', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -333,7 +333,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -348,19 +348,19 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_element_width',
 			[
-				'label' => esc_html__( 'Width', 'elementor' ),
+				'label' => esc_html__( 'Width', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'inherit' => esc_html__( 'Full Width', 'elementor' ) . ' (100%)',
-					'auto' => esc_html__( 'Inline', 'elementor' ) . ' (auto)',
-					'initial' => esc_html__( 'Custom', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'inherit' => esc_html__( 'Full Width', 'refraction' ) . ' (100%)',
+					'auto' => esc_html__( 'Inline', 'refraction' ) . ' (auto)',
+					'initial' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'selectors_dictionary' => [
 					'inherit' => '100%',
 				],
-				'prefix_class' => 'elementor-widget%s__width-',
+				'prefix_class' => 'refraction-widget%s__width-',
 				'selectors' => [
 					'{{WRAPPER}}' => 'width: {{VALUE}}; max-width: {{VALUE}}',
 				],
@@ -370,7 +370,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_element_custom_width',
 			[
-				'label' => esc_html__( 'Custom Width', 'elementor' ),
+				'label' => esc_html__( 'Custom Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
@@ -392,7 +392,7 @@ class Widget_Common_Base extends Widget_Base {
 			'_heading_grid_item',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Grid Item', 'elementor' ),
+				'label' => esc_html__( 'Grid Item', 'refraction' ),
 				'separator' => 'before',
 			]
 		);
@@ -400,10 +400,10 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_grid_column',
 			[
-				'label' => esc_html__( 'Column Span', 'elementor' ),
+				'label' => esc_html__( 'Column Span', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => ' ' . esc_html__( 'Default', 'elementor' ),
+					'' => ' ' . esc_html__( 'Default', 'refraction' ),
 					'1' => '1',
 					'2' => '2',
 					'3' => '3',
@@ -416,7 +416,7 @@ class Widget_Common_Base extends Widget_Base {
 					'10' => '10',
 					'11' => '11',
 					'12' => '12',
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => 'grid-column: span {{VALUE}};',
@@ -427,7 +427,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_grid_column_custom',
 			[
-				'label' => esc_html__( 'Custom', 'elementor' ),
+				'label' => esc_html__( 'Custom', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'ai' => [
 					'active' => false,
@@ -444,10 +444,10 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_grid_row',
 			[
-				'label' => esc_html__( 'Row Span', 'elementor' ),
+				'label' => esc_html__( 'Row Span', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => ' ' . esc_html__( 'Default', 'elementor' ),
+					'' => ' ' . esc_html__( 'Default', 'refraction' ),
 					'1' => '1',
 					'2' => '2',
 					'3' => '3',
@@ -460,7 +460,7 @@ class Widget_Common_Base extends Widget_Base {
 					'10' => '10',
 					'11' => '11',
 					'12' => '12',
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => 'grid-row: span {{VALUE}};',
@@ -471,7 +471,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_grid_row_custom',
 			[
-				'label' => esc_html__( 'Custom', 'elementor' ),
+				'label' => esc_html__( 'Custom', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'separator' => 'after',
 				'ai' => [
@@ -494,7 +494,7 @@ class Widget_Common_Base extends Widget_Base {
 					'name' => '_flex',
 					// Hack to increase specificity and make sure that the current widget overrides the
 					// parent flex settings.
-					'selector' => '{{WRAPPER}}.elementor-element',
+					'selector' => '{{WRAPPER}}.refraction-element',
 					'include' => [
 						'align_self',
 						'order',
@@ -525,19 +525,19 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_element_vertical_align',
 			[
-				'label' => esc_html__( 'Vertical Align', 'elementor' ),
+				'label' => esc_html__( 'Vertical Align', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'flex-start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-v-align-middle',
 					],
 					'flex-end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -553,8 +553,8 @@ class Widget_Common_Base extends Widget_Base {
 			[
 				'type' => Controls_Manager::ALERT,
 				'alert_type' => 'warning',
-				'heading' => esc_html__( 'Please note!', 'elementor' ),
-				'content' => esc_html__( 'Custom positioning is not considered best practice for responsive web design and should not be used too frequently.', 'elementor' ),
+				'heading' => esc_html__( 'Please note!', 'refraction' ),
+				'content' => esc_html__( 'Custom positioning is not considered best practice for responsive web design and should not be used too frequently.', 'refraction' ),
 				'render_type' => 'ui',
 				'condition' => [
 					'_position!' => '',
@@ -565,27 +565,27 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'absolute' => esc_html__( 'Absolute', 'elementor' ),
-					'fixed' => esc_html__( 'Fixed', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'absolute' => esc_html__( 'Absolute', 'refraction' ),
+					'fixed' => esc_html__( 'Fixed', 'refraction' ),
 				],
-				'prefix_class' => 'elementor-',
+				'prefix_class' => 'refraction-',
 				'frontend_available' => true,
 				'separator' => 'before',
 			]
 		);
 
-		$start = is_rtl() ? esc_html__( 'Right', 'elementor' ) : esc_html__( 'Left', 'elementor' );
-		$end = ! is_rtl() ? esc_html__( 'Right', 'elementor' ) : esc_html__( 'Left', 'elementor' );
+		$start = is_rtl() ? esc_html__( 'Right', 'refraction' ) : esc_html__( 'Left', 'refraction' );
+		$end = ! is_rtl() ? esc_html__( 'Right', 'refraction' ) : esc_html__( 'Left', 'refraction' );
 
 		$this->add_control(
 			'_offset_orientation_h',
 			[
-				'label' => esc_html__( 'Horizontal Orientation', 'elementor' ),
+				'label' => esc_html__( 'Horizontal Orientation', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'toggle' => false,
 				'default' => 'start',
@@ -599,7 +599,7 @@ class Widget_Common_Base extends Widget_Base {
 						'icon' => 'eicon-h-align-right',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'render_type' => 'ui',
 				'condition' => [
 					'_position!' => '',
@@ -610,7 +610,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_offset_x',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -648,7 +648,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_offset_x_end',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -686,17 +686,17 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_offset_orientation_v',
 			[
-				'label' => esc_html__( 'Vertical Orientation', 'elementor' ),
+				'label' => esc_html__( 'Vertical Orientation', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'toggle' => false,
 				'default' => 'start',
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'end' => [
-						'title' => esc_html__( 'Bottom', 'elementor' ),
+						'title' => esc_html__( 'Bottom', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -710,7 +710,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_offset_y',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -747,7 +747,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_offset_y_end',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -784,7 +784,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_z_index',
 			[
-				'label' => esc_html__( 'Z-Index', 'elementor' ),
+				'label' => esc_html__( 'Z-Index', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'selectors' => [
 					'{{WRAPPER}}' => 'z-index: {{VALUE}};',
@@ -795,7 +795,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_element_id',
 			[
-				'label' => esc_html__( 'CSS ID', 'elementor' ),
+				'label' => esc_html__( 'CSS ID', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -804,16 +804,16 @@ class Widget_Common_Base extends Widget_Base {
 					'active' => false,
 				],
 				'default' => '',
-				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
+				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'refraction' ),
 				'style_transfer' => false,
-				'classes' => 'elementor-control-direction-ltr',
+				'classes' => 'refraction-control-direction-ltr',
 			]
 		);
 
 		$this->add_control(
 			'_css_classes',
 			[
-				'label' => esc_html__( 'CSS Classes', 'elementor' ),
+				'label' => esc_html__( 'CSS Classes', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'ai' => [
 					'active' => false,
@@ -822,8 +822,8 @@ class Widget_Common_Base extends Widget_Base {
 					'active' => true,
 				],
 				'prefix_class' => '',
-				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'elementor' ),
-				'classes' => 'elementor-control-direction-ltr',
+				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'refraction' ),
+				'classes' => 'refraction-control-direction-ltr',
 			]
 		);
 
@@ -839,7 +839,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_section(
 			'section_effects',
 			[
-				'label' => esc_html__( 'Motion Effects', 'elementor' ),
+				'label' => esc_html__( 'Motion Effects', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -847,7 +847,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_animation',
 			[
-				'label' => esc_html__( 'Entrance Animation', 'elementor' ),
+				'label' => esc_html__( 'Entrance Animation', 'refraction' ),
 				'type' => Controls_Manager::ANIMATION,
 				'frontend_available' => true,
 			]
@@ -856,13 +856,13 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'animation_duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ),
+				'label' => esc_html__( 'Animation Duration', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'slow' => esc_html__( 'Slow', 'elementor' ),
-					'' => esc_html__( 'Normal', 'elementor' ),
-					'fast' => esc_html__( 'Fast', 'elementor' ),
+					'slow' => esc_html__( 'Slow', 'refraction' ),
+					'' => esc_html__( 'Normal', 'refraction' ),
+					'fast' => esc_html__( 'Fast', 'refraction' ),
 				],
 				'prefix_class' => 'animated-',
 				'condition' => [
@@ -874,7 +874,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_animation_delay',
 			[
-				'label' => esc_html__( 'Animation Delay', 'elementor' ) . ' (ms)',
+				'label' => esc_html__( 'Animation Delay', 'refraction' ) . ' (ms)',
 				'type' => Controls_Manager::NUMBER,
 				'default' => '',
 				'min' => 0,
@@ -898,7 +898,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_section(
 			'_section_background',
 			[
-				'label' => esc_html__( 'Background', 'elementor' ),
+				'label' => esc_html__( 'Background', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -908,7 +908,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'_tab_background_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -925,7 +925,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'_tab_background_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -940,7 +940,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_background_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -973,7 +973,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_section(
 			'_section_border',
 			[
-				'label' => esc_html__( 'Border', 'elementor' ),
+				'label' => esc_html__( 'Border', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -983,7 +983,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'_tab_border_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -998,7 +998,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -1020,7 +1020,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'_tab_border_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -1035,7 +1035,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_border_radius_hover',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -1055,7 +1055,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_border_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'separator' => 'before',
 				'range' => [
@@ -1088,7 +1088,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_section(
 			'_section_masking',
 			[
-				'label' => esc_html__( 'Mask', 'elementor' ),
+				'label' => esc_html__( 'Mask', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -1096,10 +1096,10 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_mask_switch',
 			[
-				'label' => esc_html__( 'Mask', 'elementor' ),
+				'label' => esc_html__( 'Mask', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'On', 'elementor' ),
-				'label_off' => esc_html__( 'Off', 'elementor' ),
+				'label_on' => esc_html__( 'On', 'refraction' ),
+				'label_off' => esc_html__( 'Off', 'refraction' ),
 				'default' => '',
 			]
 		);
@@ -1107,7 +1107,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_control(
 			'_mask_shape',
 			[
-				'label' => esc_html__( 'Shape', 'elementor' ),
+				'label' => esc_html__( 'Shape', 'refraction' ),
 				'type' => Controls_Manager::VISUAL_CHOICE,
 				'label_block' => true,
 				'columns' => 4,
@@ -1124,7 +1124,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_mask_image',
 			[
-				'label' => esc_html__( 'Image', 'elementor' ),
+				'label' => esc_html__( 'Image', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'media_types' => [ 'image' ],
 				'should_include_svg_inline_option' => true,
@@ -1143,12 +1143,12 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_mask_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'contain' => esc_html__( 'Fit', 'elementor' ),
-					'cover' => esc_html__( 'Fill', 'elementor' ),
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'contain' => esc_html__( 'Fit', 'refraction' ),
+					'cover' => esc_html__( 'Fill', 'refraction' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'default' => 'contain',
 				'selectors' => $this->get_mask_selectors( '-webkit-mask-size: {{VALUE}};' ),
@@ -1161,7 +1161,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_mask_size_scale',
 			[
-				'label' => esc_html__( 'Scale', 'elementor' ),
+				'label' => esc_html__( 'Scale', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -1193,19 +1193,19 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_mask_position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'center center' => esc_html__( 'Center Center', 'elementor' ),
-					'center left' => esc_html__( 'Center Left', 'elementor' ),
-					'center right' => esc_html__( 'Center Right', 'elementor' ),
-					'top center' => esc_html__( 'Top Center', 'elementor' ),
-					'top left' => esc_html__( 'Top Left', 'elementor' ),
-					'top right' => esc_html__( 'Top Right', 'elementor' ),
-					'bottom center' => esc_html__( 'Bottom Center', 'elementor' ),
-					'bottom left' => esc_html__( 'Bottom Left', 'elementor' ),
-					'bottom right' => esc_html__( 'Bottom Right', 'elementor' ),
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'center center' => esc_html__( 'Center Center', 'refraction' ),
+					'center left' => esc_html__( 'Center Left', 'refraction' ),
+					'center right' => esc_html__( 'Center Right', 'refraction' ),
+					'top center' => esc_html__( 'Top Center', 'refraction' ),
+					'top left' => esc_html__( 'Top Left', 'refraction' ),
+					'top right' => esc_html__( 'Top Right', 'refraction' ),
+					'bottom center' => esc_html__( 'Bottom Center', 'refraction' ),
+					'bottom left' => esc_html__( 'Bottom Left', 'refraction' ),
+					'bottom right' => esc_html__( 'Bottom Right', 'refraction' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'default' => 'center center',
 				'selectors' => $this->get_mask_selectors( '-webkit-mask-position: {{VALUE}};' ),
@@ -1218,7 +1218,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_mask_position_x',
 			[
-				'label' => esc_html__( 'X Position', 'elementor' ),
+				'label' => esc_html__( 'X Position', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -1254,7 +1254,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_mask_position_y',
 			[
-				'label' => esc_html__( 'Y Position', 'elementor' ),
+				'label' => esc_html__( 'Y Position', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -1290,15 +1290,15 @@ class Widget_Common_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'_mask_repeat',
 			[
-				'label' => esc_html__( 'Repeat', 'elementor' ),
+				'label' => esc_html__( 'Repeat', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'no-repeat' => esc_html__( 'No-repeat', 'elementor' ),
-					'repeat' => esc_html__( 'Repeat', 'elementor' ),
-					'repeat-x' => esc_html__( 'Repeat-x', 'elementor' ),
-					'repeat-Y' => esc_html__( 'Repeat-y', 'elementor' ),
-					'round' => esc_html__( 'Round', 'elementor' ),
-					'space' => esc_html__( 'Space', 'elementor' ),
+					'no-repeat' => esc_html__( 'No-repeat', 'refraction' ),
+					'repeat' => esc_html__( 'Repeat', 'refraction' ),
+					'repeat-x' => esc_html__( 'Repeat-x', 'refraction' ),
+					'repeat-Y' => esc_html__( 'Repeat-y', 'refraction' ),
+					'round' => esc_html__( 'Round', 'refraction' ),
+					'space' => esc_html__( 'Space', 'refraction' ),
 				],
 				'default' => 'no-repeat',
 				'selectors' => $this->get_mask_selectors( '-webkit-mask-repeat: {{VALUE}};' ),
@@ -1322,7 +1322,7 @@ class Widget_Common_Base extends Widget_Base {
 		$this->start_controls_section(
 			'_section_responsive',
 			[
-				'label' => esc_html__( 'Responsive', 'elementor' ),
+				'label' => esc_html__( 'Responsive', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -1332,12 +1332,12 @@ class Widget_Common_Base extends Widget_Base {
 			[
 				'raw' => sprintf(
 					/* translators: 1: Link open tag, 2: Link close tag. */
-					esc_html__( 'Responsive visibility will take effect only on %1$s preview mode %2$s or live page, and not while editing in Elementor.', 'elementor' ),
+					esc_html__( 'Responsive visibility will take effect only on %1$s preview mode %2$s or live page, and not while editing in Refraction.', 'refraction' ),
 					'<a href="javascript: $e.run( \'panel/close\' )">',
 					'</a>'
 				),
 				'type' => Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-descriptor',
+				'content_classes' => 'refraction-descriptor',
 			]
 		);
 

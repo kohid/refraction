@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor font control.
+ * Refraction font control.
  *
  * A base control for creating font control. Displays font select box. The
  * control allows you to set a list of fonts.
@@ -59,11 +59,11 @@ class Control_Font extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper elementor-control-unit-5">
-				<select id="<?php $this->print_control_uid(); ?>" class="elementor-control-font-family" data-setting="{{ data.name }}">
-					<option value=""><?php echo esc_html__( 'Default', 'elementor' ); ?></option>
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper refraction-control-unit-5">
+				<select id="<?php $this->print_control_uid(); ?>" class="refraction-control-font-family" data-setting="{{ data.name }}">
+					<option value=""><?php echo esc_html__( 'Default', 'refraction' ); ?></option>
 					<# _.each( data.groups, function( group_label, group_name ) {
 						var groupFonts = getFontsByGroups( group_name );
 						if ( ! _.isEmpty( groupFonts ) ) { #>
@@ -78,7 +78,7 @@ class Control_Font extends Base_Data_Control {
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

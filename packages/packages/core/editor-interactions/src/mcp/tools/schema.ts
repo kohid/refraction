@@ -1,4 +1,4 @@
-import { z } from '@elementor/schema';
+import { z } from '@refraction/schema';
 
 export const baseSchema = {
 	trigger: z.enum( [ 'load', 'scrollIn' ] ).optional().describe( 'Event that triggers the animation' ),
@@ -20,7 +20,7 @@ export const baseSchema = {
 		.array( z.enum( [ 'widescreen', 'desktop', 'laptop', 'tablet_extra', 'tablet', 'mobile_extra', 'mobile' ] ) )
 		.optional()
 		.describe(
-			'Breakpoint IDs on which this interaction is disabled (e.g. ["mobile", "tablet"]). Fetch the "elementor://breakpoints/list" resource to get the valid IDs for the current site. Omit to enable on all breakpoints.'
+			'Breakpoint IDs on which this interaction is disabled (e.g. ["mobile", "tablet"]). Fetch the "refraction://breakpoints/list" resource to get the valid IDs for the current site. Omit to enable on all breakpoints.'
 		),
 };
 

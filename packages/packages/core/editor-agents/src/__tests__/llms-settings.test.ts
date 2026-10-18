@@ -1,4 +1,4 @@
-import { getV1CurrentDocument, setDocumentModifiedStatus } from '@elementor/editor-documents';
+import { getV1CurrentDocument, setDocumentModifiedStatus } from '@refraction/editor-documents';
 
 import {
 	AGENTS_SETTINGS_KEY,
@@ -8,7 +8,7 @@ import {
 	writeLlmsContent,
 } from '../llms-settings';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	getV1CurrentDocument: jest.fn(),
 	setDocumentModifiedStatus: jest.fn(),
 } ) );

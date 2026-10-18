@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { createDOMElement, createMockElement, createMockElementType, renderWithTheme } from 'test-utils';
-import { getElements, useSelectedElement } from '@elementor/editor-elements';
+import { getElements, useSelectedElement } from '@refraction/editor-elements';
 import {
 	__privateUseIsRouteActive as useIsRouteActive,
 	isExperimentActive,
 	useEditMode,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { screen, waitFor } from '@testing-library/react';
 
 import { ElementsOverlays } from '../elements-overlays';
 import { CANVAS_WRAPPER_ID } from '../outline-overlay';
 
-jest.mock( '@elementor/editor-elements' );
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-elements' );
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	useEditMode: jest.fn(),
 	__privateUseIsRouteActive: jest.fn(),
 	isExperimentActive: jest.fn(),

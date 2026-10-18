@@ -1,26 +1,26 @@
-const TemplateLibraryInsertTemplateBehavior = require( 'elementor-templates/behaviors/insert-template' );
-const { isTierAtLeast, TIERS } = require( 'elementor-utils/tiers' );
+const TemplateLibraryInsertTemplateBehavior = require( 'refraction-templates/behaviors/insert-template' );
+const { isTierAtLeast, TIERS } = require( 'refraction-utils/tiers' );
 
 const TemplateLibraryTemplateView = Marionette.ItemView.extend( {
 	className() {
-		let classes = 'elementor-template-library-template';
+		let classes = 'refraction-template-library-template';
 		const source = this.model.get( 'source' );
 
-		classes += ' elementor-template-library-template-' + source;
+		classes += ' refraction-template-library-template-' + source;
 
 		if ( 'remote' === source ) {
-			classes += ' elementor-template-library-template-' + this.model.get( 'type' );
+			classes += ' refraction-template-library-template-' + this.model.get( 'type' );
 		}
 
-		if ( elementor.config.library_connect.base_access_tier !== this.model.get( 'accessTier' ) ) {
-			classes += ' elementor-template-library-pro-template';
+		if ( refraction.config.library_connect.base_access_tier !== this.model.get( 'accessTier' ) ) {
+			classes += ' refraction-template-library-pro-template';
 		}
 
-		return elementor.hooks.applyFilters( 'elementor/editor/template-library/template/classes', classes, this );
+		return refraction.hooks.applyFilters( 'refraction/editor/template-library/template/classes', classes, this );
 	},
 
 	attributes() {
-		const userAccessTier = elementor.config.library_connect.current_access_tier;
+		const userAccessTier = refraction.config.library_connect.current_access_tier;
 		const templateAccessTier = this.model.get( 'accessTier' );
 		const canDownloadTemplate = isTierAtLeast( userAccessTier, templateAccessTier );
 
@@ -29,7 +29,7 @@ const TemplateLibraryTemplateView = Marionette.ItemView.extend( {
 			return {};
 		}
 
-		const subscriptionPlans = elementor.config.library_connect.subscription_plans;
+		const subscriptionPlans = refraction.config.library_connect.subscription_plans;
 		let subscriptionPlan = subscriptionPlans[ templateAccessTier ];
 
 		// Free user should see a generic "Pro" badge.
@@ -42,13 +42,13 @@ const TemplateLibraryTemplateView = Marionette.ItemView.extend( {
 		}
 
 		return {
-			style: `--elementor-template-library-subscription-plan-label: "${ subscriptionPlan.label }";--elementor-template-library-subscription-plan-color: ${ subscriptionPlan.color };`,
+			style: `--refraction-template-library-subscription-plan-label: "${ subscriptionPlan.label }";--refraction-template-library-subscription-plan-color: ${ subscriptionPlan.color };`,
 		};
 	},
 
 	ui() {
 		return {
-			previewButton: '.elementor-template-library-template-preview',
+			previewButton: '.refraction-template-library-template-preview',
 		};
 	},
 
@@ -65,7 +65,7 @@ const TemplateLibraryTemplateView = Marionette.ItemView.extend( {
 			},
 		};
 
-		return elementor.hooks.applyFilters( 'elementor/editor/template-library/template/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'refraction/editor/template-library/template/behaviors', behaviors, this );
 	},
 } );
 

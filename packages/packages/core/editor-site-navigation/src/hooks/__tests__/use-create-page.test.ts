@@ -6,7 +6,7 @@ import useCreatePage, { endpointPath } from '../use-create-page';
 // Mock apiFetch to return a promise that resolves to an empty array.
 jest.mock( '@wordpress/api-fetch' );
 
-describe( '@elementor/recently-edited/use-page', () => {
+describe( '@refraction/recently-edited/use-page', () => {
 	beforeEach( () => {
 		jest.mocked( apiFetch ).mockImplementation( () => Promise.resolve( [] ) );
 	} );

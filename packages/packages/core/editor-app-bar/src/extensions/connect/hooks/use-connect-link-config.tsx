@@ -7,10 +7,10 @@ import { type ExtendedWindow } from '../../../types';
 const dispatchConnectClickEvent = ( eventName: string ) => {
 	try {
 		const extendedWindow = window as unknown as ExtendedWindow;
-		const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+		const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 		if ( config ) {
-			extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar[ eventName ], {
+			extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar[ eventName ], {
 				location: config.locations.topBar,
 				secondaryLocation: config.secondaryLocations.eLogoMenu,
 				trigger: config.triggers.dropdownClick,
@@ -26,12 +26,12 @@ const dispatchConnectClickEvent = ( eventName: string ) => {
 export default function useConnectLinkConfig() {
 	const extendedWindow = window as unknown as ExtendedWindow;
 	let isUserConnected = false;
-	const isPro = extendedWindow?.elementor?.helpers.hasPro();
+	const isPro = extendedWindow?.refraction?.helpers.hasPro();
 	let target = '_blank';
 	if ( isPro ) {
-		isUserConnected = extendedWindow?.elementorPro?.config.isActive ?? false;
+		isUserConnected = extendedWindow?.refractionPro?.config.isActive ?? false;
 	} else {
-		isUserConnected = extendedWindow?.elementorCommon?.config.library_connect.is_connected ?? false;
+		isUserConnected = extendedWindow?.refractionCommon?.config.library_connect.is_connected ?? false;
 		target = '_self';
 	}
 
@@ -39,8 +39,8 @@ export default function useConnectLinkConfig() {
 		( event: React.MouseEvent< HTMLElement > ) => {
 			event.preventDefault();
 
-			if ( extendedWindow.jQuery && extendedWindow.jQuery.fn?.elementorConnect ) {
-				const connectUrl = extendedWindow?.elementor?.config.user.top_bar.connect_url;
+			if ( extendedWindow.jQuery && extendedWindow.jQuery.fn?.refractionConnect ) {
+				const connectUrl = extendedWindow?.refraction?.config.user.top_bar.connect_url;
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const $tempButton = ( extendedWindow as any ).jQuery( '<a>' );
 				$tempButton
@@ -50,7 +50,7 @@ export default function useConnectLinkConfig() {
 					?.css( 'display', 'none' )
 					?.appendTo( 'body' );
 
-				$tempButton.elementorConnect( {
+				$tempButton.refractionConnect( {
 					success: () => {
 						dispatchConnectClickEvent( 'accountConnected' );
 
@@ -73,14 +73,14 @@ export default function useConnectLinkConfig() {
 
 	return isUserConnected
 		? {
-				title: __( 'My Elementor', 'elementor' ),
-				href: extendedWindow?.elementor?.config.user.top_bar.my_elementor_url,
+				title: __( 'My Refraction', 'refraction' ),
+				href: extendedWindow?.refraction?.config.user.top_bar.my_refraction_url,
 				icon: UserIcon,
 				target: '_blank',
 		  }
 		: {
-				title: __( 'Connect my account', 'elementor' ),
-				href: extendedWindow?.elementor?.config.user.top_bar.connect_url,
+				title: __( 'Connect my account', 'refraction' ),
+				href: extendedWindow?.refraction?.config.user.top_bar.connect_url,
 				icon: UserIcon,
 				target,
 				onClick: handleConnectClick,

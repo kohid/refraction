@@ -1,9 +1,9 @@
-import { getElementStyles } from '@elementor/editor-elements';
+import { getElementStyles } from '@refraction/editor-elements';
 
 import { makeContainer, makeWidget } from '../../audits/__tests__/fixtures';
 import { walkAllImageSources } from '../all-image-sources';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getElementStyles: jest.fn(),
 } ) );
 

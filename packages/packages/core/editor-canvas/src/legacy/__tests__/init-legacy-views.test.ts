@@ -1,11 +1,11 @@
-import { mockLegacyElementor } from 'test-utils';
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { mockLegacyRefraction } from 'test-utils';
+import { getWidgetsCache } from '@refraction/editor-elements';
 
 import { createTemplatedElementType } from '../create-templated-element-type';
 import { initLegacyViews, registerElementType } from '../init-legacy-views';
 import type { LegacyWindow } from '../types';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getWidgetsCache: jest.fn(),
 } ) );
 
@@ -36,13 +36,13 @@ const createMockElementsManager = () => ( {
 
 const attachMockElementsManager = ( elementsManager: ReturnType< typeof createMockElementsManager > ) => {
 	const legacyWindow = window as unknown as LegacyWindow;
-	legacyWindow.elementor.elementsManager =
-		elementsManager as unknown as LegacyWindow[ 'elementor' ][ 'elementsManager' ];
+	legacyWindow.refraction.elementsManager =
+		elementsManager as unknown as LegacyWindow[ 'refraction' ][ 'elementsManager' ];
 };
 
 describe( 'initLegacyViews', () => {
 	beforeEach( () => {
-		mockLegacyElementor();
+		mockLegacyRefraction();
 	} );
 
 	it( 'should register a late element type via the legacy manager without leaking state', () => {

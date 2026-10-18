@@ -1,11 +1,11 @@
-import { getCurrentDocument } from '@elementor/editor-documents';
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type HttpResponse, httpService } from '@elementor/http-client';
-import { z } from '@elementor/schema';
+import { getCurrentDocument } from '@refraction/editor-documents';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type HttpResponse, httpService } from '@refraction/http-client';
+import { z } from '@refraction/schema';
 
 import { getMcpErrorMessage } from '../../utils/get-mcp-error-message';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 
 type GetPageStructureResponse = {
 	elements: Array< Record< string, unknown > >;
@@ -17,7 +17,7 @@ export const initGetPageStructureTool = ( reg: MCPRegistryEntry ) => {
 	addTool( {
 		name: 'get-page-structure',
 		description:
-			'Returns a lean Elementor element tree skeleton (id, elType, widgetType, title, nested elements) for a post or page. ' +
+			'Returns a lean Refraction element tree skeleton (id, elType, widgetType, title, nested elements) for a post or page. ' +
 			'If no postId is provided, uses the currently open document. Optionally scope to a subtree with elementId. ' +
 			"Set includeContent=true (requires elementId) to also return each node's settings and styles.",
 		schema: {
@@ -25,7 +25,7 @@ export const initGetPageStructureTool = ( reg: MCPRegistryEntry ) => {
 				.number()
 				.optional()
 				.describe(
-					'WordPress post ID of the Elementor document. If omitted, uses the currently open document.'
+					'WordPress post ID of the Refraction document. If omitted, uses the currently open document.'
 				),
 			elementId: z
 				.string()
@@ -42,7 +42,7 @@ export const initGetPageStructureTool = ( reg: MCPRegistryEntry ) => {
 			elements: z
 				.array( z.any() )
 				.describe(
-					'Skeleton of Elementor elements (id, elType, widgetType, title, nested elements). When includeContent is true, each node also includes settings and styles.'
+					'Skeleton of Refraction elements (id, elType, widgetType, title, nested elements). When includeContent is true, each node also includes settings and styles.'
 				),
 		},
 		handler: async ( { postId, elementId, includeContent } ) => {

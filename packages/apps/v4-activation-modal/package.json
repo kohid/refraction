@@ -1,10 +1,10 @@
 {
-  "name": "@elementor/v4-activation-modal",
-  "description": "V4 Activation success modal for Elementor",
+  "name": "@refraction/v4-activation-modal",
+  "description": "V4 Activation success modal for Refraction",
   "version": "4.4.0",
   "private": true,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,11 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elementor/elementor.git",
+    "url": "git+https://github.com/kohid/refraction.git",
     "directory": "packages/apps/v4-activation-modal"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "files": [
     "README.md",
@@ -37,7 +37,7 @@
     "dev": "tsup --config=../../tsup.dev.ts"
   },
   "dependencies": {
-    "@elementor/editor-modal-shell": "4.4.0",
+    "@refraction/editor-modal-shell": "4.4.0",
     "@elementor/icons": "~1.78.1",
     "@elementor/ui": "1.41.3",
     "@wordpress/i18n": "^5.13.0",

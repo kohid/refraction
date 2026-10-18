@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { ITEM_HEIGHT } from '@elementor/editor-ui';
+import { ITEM_HEIGHT } from '@refraction/editor-ui';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { FontFamilyControl } from '../font-family-control/font-family-control';

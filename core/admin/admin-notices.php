@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Core\Admin;
+namespace Refraction\Core\Admin;
 
-use Elementor\Core\Admin\UI\Components\Button;
-use Elementor\Core\Base\Module;
-use Elementor\Utils;
-use Elementor\Core\Admin\Notices\Base_Notice;
+use Refraction\Core\Admin\UI\Components\Button;
+use Refraction\Core\Base\Module;
+use Refraction\Utils;
+use Refraction\Core\Admin\Notices\Base_Notice;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,14 +20,14 @@ class Admin_Notices extends Module {
 		/**
 		 * Admin notices.
 		 *
-		 * Filters Elementor admin notices.
+		 * Filters Refraction admin notices.
 		 *
 		 * This hook can be used by external developers to manage existing
-		 * admin notice or to add new notices for Elementor add-ons.
+		 * admin notice or to add new notices for Refraction add-ons.
 		 *
 		 * @param array $notices A list of notice classes.
 		 */
-		$notices = apply_filters( 'elementor/core/admin/notices', [] );
+		$notices = apply_filters( 'refraction/core/admin/notices', [] );
 
 		return $notices;
 	}
@@ -46,7 +46,7 @@ class Admin_Notices extends Module {
 			'classes' => [ 'notice', 'e-notice' ], // We include WP's default notice class so it will be properly handled by WP's js handler
 			'type' => '',
 			'dismissible' => true,
-			'icon' => 'eicon-elementor-circle',
+			'icon' => 'eicon-refraction-circle',
 			'button' => [],
 			'button_secondary' => [],
 		];
@@ -63,15 +63,15 @@ class Admin_Notices extends Module {
 
 		$wrapper_attributes = [
 			'role' => 'region',
-			'aria-label' => esc_html__( 'Elementor notice', 'elementor' ),
+			'aria-label' => esc_html__( 'Refraction notice', 'refraction' ),
 		];
 
 		if ( $options['dismissible'] ) {
-			$label = esc_html__( 'Dismiss this notice.', 'elementor' );
+			$label = esc_html__( 'Dismiss this notice.', 'refraction' );
 			$notice_classes[] = 'e-notice--dismissible';
 			$dismiss_button = '<i class="e-notice__dismiss" role="button" aria-label="' . $label . '" tabindex="0"></i>';
 
-			$wrapper_attributes['data-nonce'] = wp_create_nonce( 'elementor_set_admin_notice_viewed' );
+			$wrapper_attributes['data-nonce'] = wp_create_nonce( 'refraction_set_admin_notice_viewed' );
 		}
 
 		if ( $options['icon'] ) {

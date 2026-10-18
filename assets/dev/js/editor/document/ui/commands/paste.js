@@ -1,7 +1,7 @@
 export class Paste extends $e.modules.CommandBase {
 	getPasteData( { storageType = 'localstorage', data = '' } ) {
 		if ( 'localstorage' === storageType ) {
-			return elementorCommon.storage.get( 'clipboard' ) || {};
+			return refractionCommon.storage.get( 'clipboard' ) || {};
 		}
 
 		try {
@@ -16,7 +16,7 @@ export class Paste extends $e.modules.CommandBase {
 
 		this.storage = this.getPasteData( args );
 
-		if ( ! this.storage || ! this.storage?.elements?.length || 'elementor' !== this.storage?.type ) {
+		if ( ! this.storage || ! this.storage?.elements?.length || 'refraction' !== this.storage?.type ) {
 			return false;
 		}
 
@@ -82,8 +82,8 @@ export class Paste extends $e.modules.CommandBase {
 			return containers;
 		}
 
-		const selectedContainers = elementor.selection?.getElements() || [];
-		const currentElementContainer = elementor.getCurrentElement()?.getContainer();
+		const selectedContainers = refraction.selection?.getElements() || [];
+		const currentElementContainer = refraction.getCurrentElement()?.getContainer();
 
 		return selectedContainers.length ? selectedContainers : currentElementContainer;
 	}

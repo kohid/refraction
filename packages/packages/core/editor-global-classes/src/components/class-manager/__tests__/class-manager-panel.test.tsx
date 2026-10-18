@@ -7,10 +7,10 @@ import {
 	mockTracking,
 	renderWithStore,
 } from 'test-utils';
-import { getCurrentDocument } from '@elementor/editor-documents';
-import { __privateRunCommand } from '@elementor/editor-v1-adapters';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
-import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@elementor/store';
+import { getCurrentDocument } from '@refraction/editor-documents';
+import { __privateRunCommand } from '@refraction/editor-v1-adapters';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
+import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@refraction/store';
 import { ThemeProvider } from '@elementor/ui';
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 
@@ -42,7 +42,7 @@ jest.mock( '@tanstack/react-virtual', () => ( {
 	} ),
 } ) );
 
-jest.mock( '@elementor/editor-documents' );
+jest.mock( '@refraction/editor-documents' );
 jest.mock( '../class-manager-introduction' );
 jest.mock( '../start-sync-to-v3-modal', () => ( {
 	StartSyncToV3Modal: ( { onConfirm, externalOpen }: { onConfirm?: () => void; externalOpen?: boolean } ) =>
@@ -58,12 +58,12 @@ jest.mock( '../../../load-existing-classes', () => ( {
 	loadExistingClasses: jest.fn().mockResolvedValue( undefined ),
 } ) );
 
-jest.mock( '@elementor/editor-current-user', () => ( {
+jest.mock( '@refraction/editor-current-user', () => ( {
 	useSuppressedMessage: jest.fn().mockReturnValue( [ false, jest.fn() ] ),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	__privateRunCommand: jest.fn(),
 } ) );
 

@@ -39,15 +39,15 @@ export function UpgradeVersionBanner() {
 						/>
 					</SvgIcon>
 					<Typography variant="body2">
-						{ __( 'You’re using an older Elementor version. Update for full customization.', 'elementor' ) }
+						{ __( 'You’re using an older Refraction version. Update for full customization.', 'refraction' ) }
 					</Typography>
 				</Stack>
 				<Button
 					variant="outlined"
-					onClick={ () => window.open( elementorAppConfig[ 'import-export-customization' ]?.upgradeVersionUrl, '_blank' ) }
+					onClick={ () => window.open( refractionAppConfig[ 'import-export-customization' ]?.upgradeVersionUrl, '_blank' ) }
 					color="info"
 				>
-					{ __( 'Update version', 'elementor' ) }
+					{ __( 'Update version', 'refraction' ) }
 				</Button>
 			</Stack>
 		</Paper>

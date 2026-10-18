@@ -4,7 +4,7 @@ import {
 	FilterRepeaterControl,
 	TransformRepeaterControl,
 	TransitionRepeaterControl,
-} from '@elementor/editor-controls';
+} from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { useElement } from '../../../contexts/element-context';
@@ -17,11 +17,11 @@ import { SectionContent } from '../../section-content';
 import { BlendModeField } from './blend-mode-field';
 import { OpacityControlField } from './opacity-control-field';
 
-const BOX_SHADOW_LABEL = __( 'Box shadow', 'elementor' );
-const FILTER_LABEL = __( 'Filters', 'elementor' );
-const TRANSFORM_LABEL = __( 'Transform', 'elementor' );
-const BACKDROP_FILTER_LABEL = __( 'Backdrop filters', 'elementor' );
-const TRANSITIONS_LABEL = __( 'Transitions', 'elementor' );
+const BOX_SHADOW_LABEL = __( 'Box shadow', 'refraction' );
+const FILTER_LABEL = __( 'Filters', 'refraction' );
+const TRANSFORM_LABEL = __( 'Transform', 'refraction' );
+const BACKDROP_FILTER_LABEL = __( 'Backdrop filters', 'refraction' );
+const TRANSITIONS_LABEL = __( 'Transitions', 'refraction' );
 
 export const EffectsSection = () => {
 	const { element } = useElement();

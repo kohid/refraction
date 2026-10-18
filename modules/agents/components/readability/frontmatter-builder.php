@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Readability;
+namespace Refraction\Modules\Agents\Components\Readability;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

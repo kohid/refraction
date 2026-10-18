@@ -18,7 +18,7 @@ const ChecklistCardContent = ( { step, setSteps } ) => {
 	} = step.config;
 
 	const ctaText = promotionData
-			? promotionData?.text || __( 'Upgrade Now', 'elementor' )
+			? promotionData?.text || __( 'Upgrade Now', 'refraction' )
 			: step.config.cta_text,
 		ctaUrl = promotionData ? promotionData.url : step.config.cta_url,
 		{
@@ -35,7 +35,7 @@ const ChecklistCardContent = ( { step, setSteps } ) => {
 			addMixpanelTrackingChecklistSteps( step.config.id, ACTION );
 		}
 
-		if ( ! elementor || ! STEP_IDS_TO_COMPLETE_IN_EDITOR.includes( id ) || ! PANEL_ROUTES[ id ] ) {
+		if ( ! refraction || ! STEP_IDS_TO_COMPLETE_IN_EDITOR.includes( id ) || ! PANEL_ROUTES[ id ] ) {
 			return window.open( ctaUrl, '_blank' );
 		}
 
@@ -93,7 +93,7 @@ const ChecklistCardContent = ( { step, setSteps } ) => {
 							variant="text"
 							onClick={ toggleMarkAsDone }
 					>
-						{ isMarkedCompleted ? __( 'Unmark as done', 'elementor' ) : __( 'Mark as done', 'elementor' ) }
+						{ isMarkedCompleted ? __( 'Unmark as done', 'refraction' ) : __( 'Mark as done', 'refraction' ) }
 					</Button>
 					: null
 				}

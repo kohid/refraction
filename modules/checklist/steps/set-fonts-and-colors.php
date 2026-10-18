@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Checklist\Steps;
+namespace Refraction\Modules\Checklist\Steps;
 
-use Elementor\Core\DocumentTypes\Page;
+use Refraction\Core\DocumentTypes\Page;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -16,7 +16,7 @@ class Set_Fonts_And_Colors extends Step_Base {
 	}
 
 	public function is_absolute_completed(): bool {
-		$settings = $this->elementor_adapter->get_kit_settings();
+		$settings = $this->refraction_adapter->get_kit_settings();
 		$custom_color = $settings['custom_colors'] ?? '';
 		$custom_fonts = $settings['custom_typography'] ?? '';
 
@@ -24,19 +24,19 @@ class Set_Fonts_And_Colors extends Step_Base {
 	}
 
 	public function get_title(): string {
-		return __( 'Set up your Global Fonts & Colors', 'elementor' );
+		return __( 'Set up your Global Fonts & Colors', 'refraction' );
 	}
 
 	public function get_description(): string {
-		return esc_html__( 'Global colors and fonts ensure a cohesive look across your site. Start by defining one color and one font.', 'elementor' );
+		return esc_html__( 'Global colors and fonts ensure a cohesive look across your site. Start by defining one color and one font.', 'refraction' );
 	}
 
 	public function get_cta_text(): string {
-		return esc_html__( 'Go to Site Identity', 'elementor' );
+		return esc_html__( 'Go to Site Identity', 'refraction' );
 	}
 
 	public function get_cta_url(): string {
-		$settings = $this->elementor_adapter->get_kit_settings();
+		$settings = $this->refraction_adapter->get_kit_settings();
 
 		$tab = ! $settings['custom_colors'] ? 'global-typography' : 'global-colors';
 

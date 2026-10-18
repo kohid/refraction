@@ -8,7 +8,7 @@ describe( 'useActiveBreakpoint', () => {
 	function setActiveBreakpoint( active: BreakpointId ) {
 		const extendedWindow = window as unknown as ExtendedWindow;
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			channels: {
 				deviceMode: {
 					request: () => {
@@ -18,7 +18,7 @@ describe( 'useActiveBreakpoint', () => {
 			},
 		};
 
-		dispatchWindowEvent( 'elementor/device-mode/change' );
+		dispatchWindowEvent( 'refraction/device-mode/change' );
 	}
 
 	it( 'should return null when no breakpoint is active', () => {

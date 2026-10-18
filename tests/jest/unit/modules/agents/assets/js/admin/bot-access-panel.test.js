@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { BotAccessPanel } from 'elementor/modules/agents/assets/js/admin/components/bot-access/bot-access-panel';
-import { useBotAccessSettings } from 'elementor/modules/agents/assets/js/admin/hooks/use-bot-access-settings';
+import { BotAccessPanel } from 'refraction/modules/agents/assets/js/admin/components/bot-access/bot-access-panel';
+import { useBotAccessSettings } from 'refraction/modules/agents/assets/js/admin/hooks/use-bot-access-settings';
 
 jest.mock( '@wordpress/i18n', () => ( {
 	__: ( text ) => text,
@@ -11,7 +11,7 @@ jest.mock( '@wordpress/i18n', () => ( {
 		.replace( '%s', arg ), format ),
 } ) );
 
-jest.mock( 'elementor/modules/agents/assets/js/admin/api', () => ( {
+jest.mock( 'refraction/modules/agents/assets/js/admin/api', () => ( {
 	saveAgentReadySettings: jest.fn( () => Promise.resolve() ),
 } ) );
 
@@ -57,7 +57,7 @@ jest.mock( '@elementor/ui/TextField', () => ( { value, onChange, inputProps } ) 
 ) );
 jest.mock( '@elementor/ui/Typography', () => ( { children } ) => <span>{ children }</span> );
 
-import { saveAgentReadySettings } from 'elementor/modules/agents/assets/js/admin/api';
+import { saveAgentReadySettings } from 'refraction/modules/agents/assets/js/admin/api';
 
 const catalog = [
 	{ token: 'GPTBot', name: 'GPTBot', vendor: 'OpenAI', logoUrl: '' },

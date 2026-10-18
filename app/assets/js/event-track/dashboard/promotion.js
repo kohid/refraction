@@ -2,8 +2,8 @@ import WpDashboardTracking from '../wp-dashboard-tracking';
 import BaseTracking from './base-tracking';
 
 const PROMO_SELECTORS = {
-	PROMO_PAGE: '.e-feature-promotion, .elementor-settings-form-page, #elementor-element-manager-wrap',
-	PROMO_BLANK_STATE: '.elementor-blank_state',
+	PROMO_PAGE: '.e-feature-promotion, .refraction-settings-form-page, #refraction-element-manager-wrap',
+	PROMO_BLANK_STATE: '.refraction-blank_state',
 	CTA_BUTTON: '.go-pro',
 	TITLE: 'h3',
 };
@@ -60,10 +60,10 @@ class PromotionTracking extends BaseTracking {
 		const page = urlParams.get( 'page' );
 
 		if ( ! page ) {
-			return 'elementor';
+			return 'refraction';
 		}
 
-		return page.replace( 'elementor_', '' ).replace( /_/g, '/' );
+		return page.replace( 'refraction_', '' ).replace( /_/g, '/' );
 	}
 }
 

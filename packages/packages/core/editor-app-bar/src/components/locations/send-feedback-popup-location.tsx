@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ThemeProvider } from '@elementor/editor-ui';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
-import { useMixpanel } from '@elementor/events';
-import { httpService } from '@elementor/http-client';
+import { ThemeProvider } from '@refraction/editor-ui';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
+import { useMixpanel } from '@refraction/events';
+import { httpService } from '@refraction/http-client';
 import { AlertCircleIcon, CheckIcon } from '@elementor/icons';
 import {
 	bindDialog,
@@ -26,8 +26,8 @@ import { type ExtendedWindow } from '../../types';
 const checkIfUserIsConnected = () => {
 	const extendedWindow = window as unknown as ExtendedWindow;
 	return (
-		extendedWindow?.elementorCommon?.config.library_connect.is_connected ||
-		extendedWindow?.elementorPro?.config.isActive
+		extendedWindow?.refractionCommon?.config.library_connect.is_connected ||
+		extendedWindow?.refractionPro?.config.isActive
 	);
 };
 
@@ -40,7 +40,7 @@ export default function SendFeedbackPopupLocation() {
 	const isActive = isExperimentActive( EXPERIMENT_NAME );
 	const extendedWindow = window as unknown as ExtendedWindow;
 	const [ isUserConnected, setIsUserConnected ] = useState< boolean >( checkIfUserIsConnected() );
-	const connectUrl = extendedWindow?.elementor?.config.user.top_bar.connect_url;
+	const connectUrl = extendedWindow?.refraction?.config.user.top_bar.connect_url;
 	const [ feedbackContent, setFeedbackContent ] = useState( '' );
 	const [ feedbackResult, setFeedbackResult ] = useState< FeedbackResult | null >( null );
 	const [ submitDisabled, setSubmitDisabled ] = useState( true );
@@ -53,7 +53,7 @@ export default function SendFeedbackPopupLocation() {
 	useEffect( () => {
 		const handler = () => {
 			popupState.toggle();
-			// reason to re-check: clicking "connect to elementor" closes the dialog. At this time the user can perform connect, and the state might change externally.
+			// reason to re-check: clicking "connect to refraction" closes the dialog. At this time the user can perform connect, and the state might change externally.
 			setIsUserConnected( checkIfUserIsConnected() );
 			setFeedbackResult( null );
 			trackEvent( 'feedback_modal_opened', {
@@ -84,7 +84,7 @@ export default function SendFeedbackPopupLocation() {
 	const submitFeedback = () => {
 		setIsFetching( true );
 		httpService()
-			.post( 'elementor/v1/feedback/submit', {
+			.post( 'refraction/v1/feedback/submit', {
 				description: feedbackContent.trim(),
 			} )
 			.then( ( response ) => {
@@ -92,7 +92,7 @@ export default function SendFeedbackPopupLocation() {
 					message: response.data.message,
 					success: response.data.success,
 				} );
-				// check if unauthorized - not signed in or expired, needs to reconnect to my-elementor account
+				// check if unauthorized - not signed in or expired, needs to reconnect to my-refraction account
 				if (
 					( ! response.data.success && response.data.code.toString() === '401' ) ||
 					response.data.code.toString() === '403'
@@ -125,7 +125,7 @@ export default function SendFeedbackPopupLocation() {
 								justifyContent="space-between"
 								width="100%"
 							>
-								{ __( 'Submit Feedback', 'elementor' ) }
+								{ __( 'Submit Feedback', 'refraction' ) }
 								<CloseButton onClick={ popupState.close } />
 							</Stack>
 						</DialogTitle>
@@ -138,12 +138,12 @@ export default function SendFeedbackPopupLocation() {
 										autofocus
 										placeholder={ __(
 											'E.g. Can you add ABC features? I want to do ABC and it’s important because …',
-											'elementor'
+											'refraction'
 										) }
 										fullwith
-										label={ __( 'Your Feedback', 'elementor' ) }
+										label={ __( 'Your Feedback', 'refraction' ) }
 										multiline
-										id="elementor-feedback-usercontent"
+										id="refraction-feedback-usercontent"
 										rows={ 6 }
 										cols={ 80 }
 										disabled={ isFetching || feedbackResult?.success }
@@ -165,7 +165,7 @@ export default function SendFeedbackPopupLocation() {
 										) }
 										{ feedbackResult?.success ? (
 											<Button variant="text" onClick={ () => handleStartAnother() }>
-												{ __( 'Submit Another Feedback', 'elementor' ) }
+												{ __( 'Submit Another Feedback', 'refraction' ) }
 											</Button>
 										) : (
 											<Button
@@ -175,7 +175,7 @@ export default function SendFeedbackPopupLocation() {
 												color="primary"
 												size="small"
 											>
-												{ __( 'Submit', 'elementor' ) }
+												{ __( 'Submit', 'refraction' ) }
 											</Button>
 										) }
 									</Stack>
@@ -191,7 +191,7 @@ export default function SendFeedbackPopupLocation() {
 										rel="noopener"
 										onClick={ popupState.close }
 									>
-										{ __( 'Connect to Elementor', 'elementor' ) }
+										{ __( 'Connect to Refraction', 'refraction' ) }
 									</Button>
 								</>
 							) }

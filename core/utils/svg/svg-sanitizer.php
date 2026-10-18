@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Core\Utils\Svg;
+namespace Refraction\Core\Utils\Svg;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor SVG Sanitizer.
+ * Refraction SVG Sanitizer.
  *
  * A class that is responsible for sanitizing SVG files.
  *
@@ -484,7 +484,7 @@ class Svg_Sanitizer {
 		 *
 		 * @param array $allowed_attributes A list of allowed attributes.
 		 */
-		$allowed_attributes = apply_filters( 'elementor/files/svg/allowed_attributes', $allowed_attributes );
+		$allowed_attributes = apply_filters( 'refraction/files/svg/allowed_attributes', $allowed_attributes );
 
 		return $allowed_attributes;
 	}
@@ -578,7 +578,7 @@ class Svg_Sanitizer {
 		 *
 		 * @param array $allowed_elements A list of allowed elements.
 		 */
-		$allowed_elements = apply_filters( 'elementor/files/svg/allowed_elements', $allowed_elements );
+		$allowed_elements = apply_filters( 'refraction/files/svg/allowed_elements', $allowed_elements );
 
 		return $allowed_elements;
 	}

@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Modules\Audits\Data;
+namespace Refraction\Modules\Audits\Data;
 
-use Elementor\Data\V2\Base\Controller as Controller_Base;
-use Elementor\Modules\Audits\Data\Endpoints\Page_Context;
-use Elementor\Modules\Audits\Module;
+use Refraction\Data\V2\Base\Controller as Controller_Base;
+use Refraction\Modules\Audits\Data\Endpoints\Page_Context;
+use Refraction\Modules\Audits\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

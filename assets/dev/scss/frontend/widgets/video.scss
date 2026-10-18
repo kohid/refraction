@@ -1,15 +1,15 @@
 //
 // Video
 //
-.elementor-widget-video {
+.refraction-widget-video {
 
-	.elementor-widget-container,
-	&:not(:has(.elementor-widget-container)) {
+	.refraction-widget-container,
+	&:not(:has(.refraction-widget-container)) {
 		overflow: hidden;
 		transform: translate3d(0, 0, 0); // Allow border-radius in Safari
 	}
 
-	.elementor-wrapper {
+	.refraction-wrapper {
 		aspect-ratio: var( --video-aspect-ratio );
 
 		iframe,
@@ -22,9 +22,9 @@
 		}
 	}
 
-	.elementor-open-inline {
+	.refraction-open-inline {
 
-		.elementor-custom-embed-image-overlay {
+		.refraction-custom-embed-image-overlay {
 			position: absolute;
 			inset: 0;
 			background-size: cover;
@@ -32,13 +32,13 @@
 		}
 	}
 
-	.elementor-custom-embed-image-overlay {
+	.refraction-custom-embed-image-overlay {
 		cursor: pointer;
 		text-align: center;
 
 		&:hover {
 
-			.elementor-custom-embed-play {
+			.refraction-custom-embed-play {
 
 				i {
 					opacity: 1;
@@ -57,7 +57,7 @@
 
 	.e-hosted-video {
 
-		.elementor-video {
+		.refraction-video {
 			object-fit: cover;
 		}
 	}
@@ -66,7 +66,7 @@
 .e-con,
 .e-con-inner {
 
-	> .elementor-widget-video {
+	> .refraction-widget-video {
 		// Fix - Video widget has an undefined height on mobile using 'flex column wrap' inside the flex container (ED-7604).
 		width: var( --container-widget-width );
 		--flex-grow: var( --container-widget-flex-grow );

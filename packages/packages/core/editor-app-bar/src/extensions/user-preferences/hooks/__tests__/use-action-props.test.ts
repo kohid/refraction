@@ -1,17 +1,17 @@
 import {
 	__privateOpenRoute as openRoute,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import useActionProps from '../use-action-props';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateOpenRoute: jest.fn(),
 	__privateUseRouteStatus: jest.fn( () => ( { isActive: true, isBlocked: true } ) ),
 } ) );
 
-describe( '@elementor/editor-app-bar - useUserPreferencesActionProps', () => {
+describe( '@refraction/editor-app-bar - useUserPreferencesActionProps', () => {
 	it( 'should open the user preferences', () => {
 		// Arrange.
 		const route = 'panel/editor-preferences';

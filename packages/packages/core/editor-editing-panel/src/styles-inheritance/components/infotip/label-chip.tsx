@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@elementor/editor-styles-repository';
+import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@refraction/editor-styles-repository';
 import { InfoCircleIcon } from '@elementor/icons';
 import { Chip, type Theme, Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -17,7 +17,7 @@ export const LabelChip = ( { displayLabel, provider }: Props ) => {
 	const isBaseStyle = provider === ELEMENTS_BASE_STYLES_PROVIDER_KEY;
 
 	const chipIcon = isBaseStyle ? (
-		<Tooltip title={ __( 'Inherited from base styles', 'elementor' ) } placement="top">
+		<Tooltip title={ __( 'Inherited from base styles', 'refraction' ) } placement="top">
 			<InfoCircleIcon fontSize={ SIZE } />
 		</Tooltip>
 	) : undefined;

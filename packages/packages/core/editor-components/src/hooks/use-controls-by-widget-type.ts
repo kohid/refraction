@@ -1,4 +1,4 @@
-import { type Control, type ControlItem, getElementType } from '@elementor/editor-elements';
+import { type Control, type ControlItem, getElementType } from '@refraction/editor-elements';
 
 export function useControlsByWidgetType( type: string ): Record< string, Control > {
 	const elementType = getElementType( type );

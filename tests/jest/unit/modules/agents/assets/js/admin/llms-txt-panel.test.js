@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { LlmsTxtPanel } from 'elementor/modules/agents/assets/js/admin/components/llms-txt/llms-txt-panel';
+import { LlmsTxtPanel } from 'refraction/modules/agents/assets/js/admin/components/llms-txt/llms-txt-panel';
 
 jest.mock( '@wordpress/i18n', () => ( {
 	__: ( text ) => text,

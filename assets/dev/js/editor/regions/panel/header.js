@@ -1,15 +1,15 @@
 var PanelHeaderItemView;
 
 PanelHeaderItemView = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-panel-header',
+	template: '#tmpl-refraction-panel-header',
 
-	id: 'elementor-panel-header',
+	id: 'refraction-panel-header',
 
 	ui: {
-		menuButton: '#elementor-panel-header-menu-button',
-		menuIcon: '#elementor-panel-header-menu-button i',
-		title: '#elementor-panel-header-title',
-		addButton: '#elementor-panel-header-add-button',
+		menuButton: '#refraction-panel-header-menu-button',
+		menuIcon: '#refraction-panel-header-menu-button i',
+		title: '#refraction-panel-header-title',
+		addButton: '#refraction-panel-header-add-button',
 	},
 
 	events: {
@@ -18,7 +18,7 @@ PanelHeaderItemView = Marionette.ItemView.extend( {
 	},
 
 	behaviors() {
-		return elementor.hooks.applyFilters( 'panel/header/behaviors', {}, this );
+		return refraction.hooks.applyFilters( 'panel/header/behaviors', {}, this );
 	},
 
 	setTitle( title ) {

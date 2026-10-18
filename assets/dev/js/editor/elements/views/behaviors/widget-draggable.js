@@ -9,7 +9,7 @@ export default class extends Marionette.Behavior {
 	initialize() {
 		super.initialize();
 
-		this.listenTo( elementor.channels.dataEditMode, 'switch', this.toggle );
+		this.listenTo( refraction.channels.dataEditMode, 'switch', this.toggle );
 
 		// Save this instance for external use eg: ( hooks ).
 		this.view.options.draggable = this;
@@ -62,13 +62,13 @@ export default class extends Marionette.Behavior {
 	onDragStop( event, ui ) {
 		event.stopPropagation();
 
-		const currentDeviceMode = elementorFrontend.getCurrentDeviceMode(),
+		const currentDeviceMode = refractionFrontend.getCurrentDeviceMode(),
 			deviceSuffix = 'desktop' === currentDeviceMode ? '' : '_' + currentDeviceMode,
 			editModel = this.view.getEditModel(),
 			hOrientation = editModel.getSetting( '_offset_orientation_h' ),
 			vOrientation = editModel.getSetting( '_offset_orientation_v' ),
 			settingToChange = {},
-			isRTL = elementorFrontend.config.is_rtl;
+			isRTL = refractionFrontend.config.is_rtl;
 
 		const parentWidth = this.$el.offsetParent().width(),
 			elementWidth = this.$el.outerWidth( true ),
@@ -87,7 +87,7 @@ export default class extends Marionette.Behavior {
 
 		const offsetXUnit = editModel.getSetting( offsetX + deviceSuffix ).unit;
 
-		xPos = elementor.helpers.elementSizeToUnit( this.$el, xPos, offsetXUnit );
+		xPos = refraction.helpers.elementSizeToUnit( this.$el, xPos, offsetXUnit );
 
 		const parentHeight = this.$el.offsetParent().height(),
 			elementHeight = this.$el.outerHeight( true );
@@ -99,7 +99,7 @@ export default class extends Marionette.Behavior {
 
 		const offsetYUnit = editModel.getSetting( offsetY + deviceSuffix ).unit;
 
-		yPos = elementor.helpers.elementSizeToUnit( this.$el, yPos, offsetYUnit );
+		yPos = refraction.helpers.elementSizeToUnit( this.$el, yPos, offsetYUnit );
 
 		settingToChange[ offsetX + deviceSuffix ] = { size: xPos, unit: offsetXUnit };
 		settingToChange[ offsetY + deviceSuffix ] = { size: yPos, unit: offsetYUnit };

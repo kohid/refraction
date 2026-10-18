@@ -6,7 +6,7 @@ describe( 'isAtomicWidgetSelected', () => {
 	const getElements = jest.fn();
 
 	beforeEach( () => {
-		window.elementor = {
+		window.refraction = {
 			selection: {
 				getElements,
 			},

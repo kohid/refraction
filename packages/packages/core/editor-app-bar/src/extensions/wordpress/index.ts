@@ -1,4 +1,4 @@
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
 import { WordpressIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -13,19 +13,19 @@ export function init() {
 		useProps: () => {
 			const document = useActiveDocument();
 			return {
-				title: __( 'Exit to WordPress', 'elementor' ),
+				title: __( 'Exit to WordPress', 'refraction' ),
 				href: document?.links?.platformEdit,
 				icon: WordpressIcon,
 				onClick: () => {
 					const extendedWindow = window as unknown as ExtendedWindow;
-					const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+					const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 					if ( config ) {
-						extendedWindow.elementorCommon.eventsManager.dispatchEvent(
+						extendedWindow.refractionCommon.eventsManager.dispatchEvent(
 							config.names.topBar.exitToWordpress,
 							{
 								location: config.locations.topBar,
-								secondaryLocation: config.secondaryLocations.elementorLogo,
+								secondaryLocation: config.secondaryLocations.refractionLogo,
 								trigger: config.triggers.click,
 								element: config.elements.link,
 							}

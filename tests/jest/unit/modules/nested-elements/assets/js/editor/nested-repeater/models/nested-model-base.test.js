@@ -1,7 +1,7 @@
-import { freeMock, setupMock } from 'elementor/tests/jest/unit/assets/dev/js/editor/elements/models/mock/model';
+import { freeMock, setupMock } from 'refraction/tests/jest/unit/assets/dev/js/editor/elements/models/mock/model';
 
-jest.mock( 'elementor/modules/nested-elements/assets/js/editor/utils', () => ( {
-	...jest.requireActual( 'elementor/modules/nested-elements/assets/js/editor/utils' ),
+jest.mock( 'refraction/modules/nested-elements/assets/js/editor/utils', () => ( {
+	...jest.requireActual( 'refraction/modules/nested-elements/assets/js/editor/utils' ),
 	isWidgetSupportNesting: ( name ) => 'nested-tabs' === name,
 } ) );
 
@@ -12,7 +12,7 @@ describe( 'NestedModelBase', () => {
 	beforeEach( async () => {
 		childModel = await setupMock();
 
-		global.elementor = {
+		global.refraction = {
 			modules: {
 				elements: {
 					models: {
@@ -22,11 +22,11 @@ describe( 'NestedModelBase', () => {
 			},
 		};
 
-		nestedModelBase = new ( await import( 'elementor/modules/nested-elements/assets/js/editor/nested-repeater/models/nested-model-base' ) ).default;
+		nestedModelBase = new ( await import( 'refraction/modules/nested-elements/assets/js/editor/nested-repeater/models/nested-model-base' ) ).default;
 	} );
 
 	afterEach( () => {
-		delete global.elementor;
+		delete global.refraction;
 		delete global.$e;
 
 		freeMock();

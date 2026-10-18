@@ -6,7 +6,7 @@ export class Validate extends $e.modules.CommandBase {
 		const { input, options = {} } = args;
 
 		return this.component.manager
-			.createSession( input, elementor.getPreviewContainer(), options )
+			.createSession( input, refraction.getPreviewContainer(), options )
 			.then( ( session ) => session.validate() );
 	}
 }

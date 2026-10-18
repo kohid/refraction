@@ -1,7 +1,7 @@
-import { escapeHTML } from 'elementor-frontend/utils/utils';
+import { escapeHTML } from 'refraction-frontend/utils/utils';
 import DOMPurify from 'dompurify';
 
-export default class TextPathHandler extends elementorModules.frontend.handlers.Base {
+export default class TextPathHandler extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
@@ -197,7 +197,7 @@ export default class TextPathHandler extends elementorModules.frontend.handlers.
 			// Keep an invisible selectable copy of original element for better a11y.
 			const clone = this.elements.textPath.cloneNode();
 			clone.id += '-clone';
-			clone.classList.add( 'elementor-hidden' );
+			clone.classList.add( 'refraction-hidden' );
 			clone.textContent = newText;
 
 			this.elements.textPath.parentNode.appendChild( clone );
@@ -212,7 +212,7 @@ export default class TextPathHandler extends elementorModules.frontend.handlers.
 	 */
 	isRTL() {
 		const { text_path_direction: direction } = this.getElementSettings();
-		let isRTL = elementorFrontend.config.is_rtl;
+		let isRTL = refractionFrontend.config.is_rtl;
 
 		if ( direction ) {
 			isRTL = ( 'rtl' === direction );
@@ -231,13 +231,13 @@ export default class TextPathHandler extends elementorModules.frontend.handlers.
 			return false;
 		}
 
-		const isFirefox = elementorFrontend.utils.environment.firefox;
+		const isFirefox = refractionFrontend.utils.environment.firefox;
 
 		if ( isFirefox ) {
 			return false;
 		}
 
-		const isChromium = elementorFrontend.utils.environment.blink;
+		const isChromium = refractionFrontend.utils.environment.blink;
 
 		if ( isChromium ) {
 			return ! this.isFixedChromiumVersion();

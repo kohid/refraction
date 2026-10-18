@@ -4,8 +4,8 @@ import {
 	getElementStyles,
 	styleRerenderEvents,
 	updateElementStyle,
-} from '@elementor/editor-elements';
-import { __privateListenTo as listenTo } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import { __privateListenTo as listenTo } from '@refraction/editor-v1-adapters';
 
 import { ActiveDocumentMustExistError, InvalidElementsStyleProviderMetaError } from '../errors';
 import { createStylesProvider } from '../utils/create-styles-provider';

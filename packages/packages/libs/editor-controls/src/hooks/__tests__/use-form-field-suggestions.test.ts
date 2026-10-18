@@ -5,12 +5,12 @@ import {
 	dispatchCommandAfter,
 	dispatchV1ReadyEvent,
 } from 'test-utils';
-import { getContainer, getSelectedElements, getWidgetsCache } from '@elementor/editor-elements';
+import { getContainer, getSelectedElements, getWidgetsCache } from '@refraction/editor-elements';
 import { act, renderHook } from '@testing-library/react';
 
 import { useFormFieldSuggestions } from '../use-form-field-suggestions';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getContainer: jest.fn(),
 	getSelectedElements: jest.fn(),
 	getWidgetsCache: jest.fn(),

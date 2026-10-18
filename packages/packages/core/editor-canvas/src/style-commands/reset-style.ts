@@ -1,10 +1,10 @@
-import { type V1Element } from '@elementor/editor-elements';
+import { type V1Element } from '@refraction/editor-elements';
 import {
 	__privateListenTo as listenTo,
 	blockCommand,
 	type CommandEvent,
 	commandStartEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 import { type ContainerArgs, hasAtomicWidgets, isAtomicWidget } from '../utils/command-utils';
 import { undoableResetElementStyle } from './undoable-actions/reset-element-style';

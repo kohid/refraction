@@ -1,4 +1,4 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export const MissingPropTypeError = createError( {
 	code: 'missing_prop_provider_prop_type',

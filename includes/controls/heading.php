@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor heading control.
+ * Refraction heading control.
  *
  * A base control for creating heading control. Displays a text heading between
  * controls in the panel.
@@ -58,8 +58,8 @@ class Control_Heading extends Base_UI_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<h3 class="elementor-control-title">{{{ data.label }}}</h3>
+		<div class="refraction-control-field">
+			<h3 class="refraction-control-title">{{{ data.label }}}</h3>
 		</div>
 		<?php
 	}

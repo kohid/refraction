@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Modules\DevTools;
+namespace Refraction\Modules\DevTools;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -23,7 +23,7 @@ class Deprecation {
 			'soft_notices' => $this->soft_deprecated_notices,
 			'soft_version_count' => self::SOFT_VERSIONS_COUNT,
 			'hard_version_count' => self::HARD_VERSIONS_COUNT,
-			'current_version' => ELEMENTOR_VERSION,
+			'current_version' => REFRACTION_VERSION,
 		];
 	}
 
@@ -212,7 +212,7 @@ class Deprecation {
 				];
 			}
 
-			if ( Utils::is_elementor_debug() ) {
+			if ( Utils::is_refraction_debug() ) {
 				$print_deprecated = true;
 			}
 		}
@@ -284,12 +284,12 @@ class Deprecation {
 			$error_message_args = [ esc_html( $argument ), esc_html( $version ) ];
 
 			if ( $replacement ) {
-				/* translators: 1: Function argument, 2: Elementor version number, 3: Replacement argument name. */
-				$translation_string = esc_html__( 'The %1$s argument is deprecated since version %2$s! Use %3$s instead.', 'elementor' );
+				/* translators: 1: Function argument, 2: Refraction version number, 3: Replacement argument name. */
+				$translation_string = esc_html__( 'The %1$s argument is deprecated since version %2$s! Use %3$s instead.', 'refraction' );
 				$error_message_args[] = $replacement;
 			} else {
-				/* translators: 1: Function argument, 2: Elementor version number. */
-				$translation_string = esc_html__( 'The %1$s argument is deprecated since version %2$s!', 'elementor' );
+				/* translators: 1: Function argument, 2: Refraction version number. */
+				$translation_string = esc_html__( 'The %1$s argument is deprecated since version %2$s!', 'refraction' );
 			}
 
 			trigger_error(
@@ -307,7 +307,7 @@ class Deprecation {
 	/**
 	 * Do Deprecated Action
 	 *
-	 * A method used to run deprecated actions through Elementor's deprecation process.
+	 * A method used to run deprecated actions through Refraction's deprecation process.
 	 *
 	 * @param string      $hook
 	 * @param array       $args
@@ -331,7 +331,7 @@ class Deprecation {
 	/**
 	 * Apply Deprecated Filter
 	 *
-	 * A method used to run deprecated filters through Elementor's deprecation process.
+	 * A method used to run deprecated filters through Refraction's deprecation process.
 	 *
 	 * @param string      $hook
 	 * @param array       $args

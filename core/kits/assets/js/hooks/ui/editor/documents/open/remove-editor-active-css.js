@@ -8,13 +8,13 @@ export class KitRemoveEditorActiveCSSDocumentsOpen extends $e.modules.hookUI.Aft
 	}
 
 	getConditions() {
-		return 'kit' === elementor.documents.getCurrent().config.type;
+		return 'kit' === refraction.documents.getCurrent().config.type;
 	}
 
 	apply() {
-		// TODO: Remove - Temporary fix to avoid conflict with `elementor.exitPreviewMode()`.
+		// TODO: Remove - Temporary fix to avoid conflict with `refraction.exitPreviewMode()`.
 		setTimeout( () => {
-			elementorFrontend.elements.$body.removeClass( 'elementor-editor-active' );
+			refractionFrontend.elements.$body.removeClass( 'refraction-editor-active' );
 		} );
 	}
 }

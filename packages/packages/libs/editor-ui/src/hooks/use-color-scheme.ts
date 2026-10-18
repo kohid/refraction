@@ -4,12 +4,12 @@ import {
 	commandEndEvent,
 	type CommandEvent,
 	v1ReadyEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 export type ColorScheme = 'auto' | 'dark' | 'light';
 
 export type ExtendedWindow = Window & {
-	elementor: {
+	refraction: {
 		getPreferences: ( key: 'ui_theme' ) => ColorScheme;
 	};
 };
@@ -42,5 +42,5 @@ export function useColorScheme() {
 }
 
 function getV1ColorScheme() {
-	return ( window as unknown as ExtendedWindow ).elementor?.getPreferences?.( 'ui_theme' ) || 'auto';
+	return ( window as unknown as ExtendedWindow ).refraction?.getPreferences?.( 'ui_theme' ) || 'auto';
 }

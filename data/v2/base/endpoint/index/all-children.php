@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Data\V2\Base\Endpoint\Index;
+namespace Refraction\Data\V2\Base\Endpoint\Index;
 
-use Elementor\Data\V2\Base\Endpoint\Index;
-use Elementor\Data\V2\Manager;
+use Refraction\Data\V2\Base\Endpoint\Index;
+use Refraction\Data\V2\Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

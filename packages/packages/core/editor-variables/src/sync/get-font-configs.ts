@@ -1,3 +1,3 @@
 export const getFontConfigs = () => {
-	return window.elementor?.config?.controls?.font?.options ?? {};
+	return window.refraction?.config?.controls?.font?.options ?? {};
 };

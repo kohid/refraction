@@ -1,7 +1,7 @@
-import Heading from 'elementor-app/ui/atoms/heading';
-import Text from 'elementor-app/ui/atoms/text';
-import Box from 'elementor-app/ui/atoms/box';
-import Grid from 'elementor-app/ui/grid/grid';
+import Heading from 'refraction-app/ui/atoms/heading';
+import Text from 'refraction-app/ui/atoms/text';
+import Box from 'refraction-app/ui/atoms/box';
+import Grid from 'refraction-app/ui/grid/grid';
 
 import './message-banner.scss';
 

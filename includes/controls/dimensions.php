@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor dimension control.
+ * Refraction dimension control.
  *
  * A base control for creating dimension control. Displays input fields for top,
  * right, bottom, left and the option to link them together.
@@ -79,10 +79,10 @@ class Control_Dimensions extends Control_Base_Units {
 
 	protected function get_dimensions() {
 		return [
-			'top' => __( 'Top', 'elementor' ),
-			'right' => __( 'Right', 'elementor' ),
-			'bottom' => __( 'Bottom', 'elementor' ),
-			'left' => __( 'Left', 'elementor' ),
+			'top' => __( 'Top', 'refraction' ),
+			'right' => __( 'Right', 'refraction' ),
+			'bottom' => __( 'Bottom', 'refraction' ),
+			'left' => __( 'Left', 'refraction' ),
 		];
 	}
 
@@ -99,15 +99,15 @@ class Control_Dimensions extends Control_Base_Units {
 	public function content_template() {
 		$class_name = $this->get_singular_name();
 		?>
-		<div class="elementor-control-field">
-			<label class="elementor-control-title">{{{ data.label }}}</label>
+		<div class="refraction-control-field">
+			<label class="refraction-control-title">{{{ data.label }}}</label>
 			<?php $this->print_units_template(); ?>
-			<div class="elementor-control-input-wrapper">
-				<ul class="elementor-control-<?php echo esc_attr( $class_name ); ?>s">
+			<div class="refraction-control-input-wrapper">
+				<ul class="refraction-control-<?php echo esc_attr( $class_name ); ?>s">
 					<?php
 					foreach ( $this->get_dimensions() as $dimension_key => $dimension_title ) :
 						?>
-						<li class="elementor-control-<?php echo esc_attr( $class_name ); ?>">
+						<li class="refraction-control-<?php echo esc_attr( $class_name ); ?>">
 							<input id="<?php $this->print_control_uid( $dimension_key ); ?>" type="text" data-setting="<?php
 								// PHPCS - the variable $dimension_key is a plain text.
 								echo $dimension_key; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -131,21 +131,21 @@ class Control_Dimensions extends Control_Base_Units {
 								disabled
 								<# } #>
 									/>
-							<label for="<?php $this->print_control_uid( $dimension_key ); ?>" class="elementor-control-<?php echo esc_attr( $class_name ); ?>-label"><?php
+							<label for="<?php $this->print_control_uid( $dimension_key ); ?>" class="refraction-control-<?php echo esc_attr( $class_name ); ?>-label"><?php
 								// PHPCS - the variable $dimension_title holds an escaped translated value.
 								echo $dimension_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							?></label>
 						</li>
 					<?php endforeach; ?>
 					<li>
-						<button class="elementor-link-<?php echo esc_attr( $class_name ); ?>s tooltip-target" data-tooltip="<?php echo esc_attr__( 'Link values together', 'elementor' ); ?>">
-							<span class="elementor-linked">
+						<button class="refraction-link-<?php echo esc_attr( $class_name ); ?>s tooltip-target" data-tooltip="<?php echo esc_attr__( 'Link values together', 'refraction' ); ?>">
+							<span class="refraction-linked">
 								<i class="eicon-link" aria-hidden="true"></i>
-								<span class="elementor-screen-only"><?php echo esc_html__( 'Link values together', 'elementor' ); ?></span>
+								<span class="refraction-screen-only"><?php echo esc_html__( 'Link values together', 'refraction' ); ?></span>
 							</span>
-							<span class="elementor-unlinked">
+							<span class="refraction-unlinked">
 								<i class="eicon-chain-broken" aria-hidden="true"></i>
-								<span class="elementor-screen-only"><?php echo esc_html__( 'Unlinked values', 'elementor' ); ?></span>
+								<span class="refraction-screen-only"><?php echo esc_html__( 'Unlinked values', 'refraction' ); ?></span>
 							</span>
 						</button>
 					</li>
@@ -153,7 +153,7 @@ class Control_Dimensions extends Control_Base_Units {
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

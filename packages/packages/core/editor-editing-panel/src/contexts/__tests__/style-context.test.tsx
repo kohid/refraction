@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { createMockStyleDefinition, createMockStylesProvider, renderWithTheme } from 'test-utils';
-import { stylesRepository, useUserStylesCapability } from '@elementor/editor-styles-repository';
+import { stylesRepository, useUserStylesCapability } from '@refraction/editor-styles-repository';
 import { renderHook } from '@testing-library/react';
 
 import { StylesProviderNotFoundError } from '../../errors';
 import { StyleProvider, useStyle } from '../style-context';
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	useUserStylesCapability: jest.fn().mockReturnValue( { userCan: () => ( { updateProps: true } ) } ),
 	stylesRepository: {
 		getProviders: jest.fn(),

@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Admin\Menu;
+namespace Refraction\Core\Admin\Menu;
 
-use Elementor\Core\Base\Base_Object;
+use Refraction\Core\Base\Base_Object;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -47,7 +47,7 @@ abstract class Base extends Base_Object {
 
 		$this->register_default_submenus();
 
-		do_action( 'elementor/admin/menu_registered/' . $args['menu_slug'], $this );
+		do_action( 'refraction/admin/menu_registered/' . $args['menu_slug'], $this );
 
 		usort( $this->submenus, function( $a, $b ) {
 			return $a['index'] - $b['index'];

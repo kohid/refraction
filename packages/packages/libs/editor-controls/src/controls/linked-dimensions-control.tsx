@@ -7,8 +7,8 @@ import {
 	type PropValue,
 	sizePropTypeUtil,
 	type SizePropValue,
-} from '@elementor/editor-props';
-import { useActiveBreakpoint } from '@elementor/editor-responsive';
+} from '@refraction/editor-props';
+import { useActiveBreakpoint } from '@refraction/editor-responsive';
 import { DetachIcon, LinkIcon, SideBottomIcon, SideLeftIcon, SideRightIcon, SideTopIcon } from '@elementor/icons';
 import { Grid, Stack, Tooltip } from '@elementor/ui';
 import { __, sprintf } from '@wordpress/i18n';
@@ -102,9 +102,9 @@ export const LinkedDimensionsControl = ( { label, isSiteRtl = false, min }: Prop
 
 	const LinkedIcon = isLinked ? LinkIcon : DetachIcon;
 	// translators: %s: Tooltip title.
-	const linkedLabel = __( 'Link %s', 'elementor' ).replace( '%s', tooltipLabel );
+	const linkedLabel = __( 'Link %s', 'refraction' ).replace( '%s', tooltipLabel );
 	// translators: %s: Tooltip title.
-	const unlinkedLabel = __( 'Unlink %s', 'elementor' ).replace( '%s', tooltipLabel );
+	const unlinkedLabel = __( 'Unlink %s', 'refraction' ).replace( '%s', tooltipLabel );
 
 	const disabled = sizeDisabled || dimensionsDisabled;
 
@@ -254,38 +254,38 @@ function getCssDimensionProps( label: string, isSiteRtl: boolean ) {
 		[
 			{
 				bind: 'block-start',
-				label: __( 'Top', 'elementor' ),
+				label: __( 'Top', 'refraction' ),
 				/* translators: %s is the name of the main group (margin or padding) */
-				ariaLabel: sprintf( __( '%s top', 'elementor' ), label ),
+				ariaLabel: sprintf( __( '%s top', 'refraction' ), label ),
 				icon: <SideTopIcon fontSize={ 'tiny' } />,
 			},
 			{
 				bind: 'inline-end',
-				label: isSiteRtl ? __( 'Left', 'elementor' ) : __( 'Right', 'elementor' ),
+				label: isSiteRtl ? __( 'Left', 'refraction' ) : __( 'Right', 'refraction' ),
 				ariaLabel: isSiteRtl
 					? /* translators: %s is the name of the main group (margin or padding) */
-					  sprintf( __( '%s left', 'elementor' ), label )
+					  sprintf( __( '%s left', 'refraction' ), label )
 					: /* translators: %s is the name of the main group (margin or padding) */
-					  sprintf( __( '%s right', 'elementor' ), label ),
+					  sprintf( __( '%s right', 'refraction' ), label ),
 				icon: isSiteRtl ? <SideLeftIcon fontSize={ 'tiny' } /> : <SideRightIcon fontSize={ 'tiny' } />,
 			},
 		],
 		[
 			{
 				bind: 'block-end',
-				label: __( 'Bottom', 'elementor' ),
+				label: __( 'Bottom', 'refraction' ),
 				/* translators: %s is the name of the main group (margin or padding) */
-				ariaLabel: sprintf( __( '%s bottom', 'elementor' ), label ),
+				ariaLabel: sprintf( __( '%s bottom', 'refraction' ), label ),
 				icon: <SideBottomIcon fontSize={ 'tiny' } />,
 			},
 			{
 				bind: 'inline-start',
-				label: isSiteRtl ? __( 'Right', 'elementor' ) : __( 'Left', 'elementor' ),
+				label: isSiteRtl ? __( 'Right', 'refraction' ) : __( 'Left', 'refraction' ),
 				ariaLabel: isSiteRtl
 					? /* translators: %s is the name of the main group (margin or padding) */
-					  sprintf( __( '%s right', 'elementor' ), label )
+					  sprintf( __( '%s right', 'refraction' ), label )
 					: /* translators: %s is the name of the main group (margin or padding) */
-					  sprintf( __( '%s left', 'elementor' ), label ),
+					  sprintf( __( '%s left', 'refraction' ), label ),
 				icon: isSiteRtl ? <SideRightIcon fontSize={ 'tiny' } /> : <SideLeftIcon fontSize={ 'tiny' } />,
 			},
 		],

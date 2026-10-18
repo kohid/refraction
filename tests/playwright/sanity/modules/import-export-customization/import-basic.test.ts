@@ -15,7 +15,7 @@ test.describe( 'Import Export Customization - Basic Import @import_export_custom
 		await ImportExportHelpers.verifyContentSection( page, '13 Pages | 3 Posts | 2 Floating Elements | 4 Taxonomies' );
 		await ImportExportHelpers.verifyTemplatesSection( page, 'No templates imported' );
 		await ImportExportHelpers.verifySettingsSection( page, 'Theme | Global Colors | Global Fonts | Theme Style Settings | General Settings | Experiments' );
-		await ImportExportHelpers.verifyPluginsSection( page, 'Elementor | Hello Dolly | WordPress Importer' );
+		await ImportExportHelpers.verifyPluginsSection( page, 'Refraction | Hello Dolly | WordPress Importer' );
 	} );
 
 	test( 'should validate file upload requirement', async ( { page } ) => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type PropKey, timeRangePropTypeUtil } from '@elementor/editor-props';
+import { type PropKey, timeRangePropTypeUtil } from '@refraction/editor-props';
 import { Grid, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -9,8 +9,8 @@ import { createControl } from '../create-control';
 import { TimeStringControl } from './time-string-control';
 
 const RANGE_LABELS = {
-	min: __( 'Start time', 'elementor' ),
-	max: __( 'End time', 'elementor' ),
+	min: __( 'Start time', 'refraction' ),
+	max: __( 'End time', 'refraction' ),
 };
 
 export const TimeRangeControl = createControl( () => {

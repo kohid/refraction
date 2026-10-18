@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/data/after';
+import After from 'refraction-api/modules/hooks/data/after';
 
 export class SectionColumnsSetStructure extends After {
 	getCommand() {

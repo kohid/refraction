@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -54,7 +54,7 @@ class Ard_Manifest extends Abstract_Well_Known_Endpoint {
 		 * @param array  $manifest The manifest array.
 		 * @param string $home     The site home URL.
 		 */
-		return (array) apply_filters( 'elementor/agents/ard_manifest', $manifest, $home );
+		return (array) apply_filters( 'refraction/agents/ard_manifest', $manifest, $home );
 	}
 
 	// ------------------------------------------------------------------
@@ -108,7 +108,7 @@ class Ard_Manifest extends Abstract_Well_Known_Endpoint {
 		if ( $mcp && $mcp->is_enabled() ) {
 			$caps['mcp'] = [
 				'transport'   => 'streamable-http',
-				'url'         => rest_url( 'elementor/agents-mcp' ),
+				'url'         => rest_url( 'refraction/agents-mcp' ),
 				'spec'        => 'mcp-2025-11-25',
 				'server_card' => $home . '.well-known/mcp/server-card.json',
 			];

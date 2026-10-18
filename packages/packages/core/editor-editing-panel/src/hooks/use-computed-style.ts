@@ -1,9 +1,9 @@
-import { __privateUseListenTo as useListenTo, commandEndEvent, windowEvent } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo, commandEndEvent, windowEvent } from '@refraction/editor-v1-adapters';
 
 export function useComputedStyle( elementId: string | null ) {
 	return useListenTo(
 		[
-			windowEvent( 'elementor/device-mode/change' ),
+			windowEvent( 'refraction/device-mode/change' ),
 			commandEndEvent( 'document/elements/reset-style' ),
 			commandEndEvent( 'document/elements/settings' ),
 			commandEndEvent( 'document/elements/paste-style' ),
@@ -13,7 +13,7 @@ export function useComputedStyle( elementId: string | null ) {
 				return null;
 			}
 
-			const element = window.elementor?.getContainer?.( elementId );
+			const element = window.refraction?.getContainer?.( elementId );
 
 			if ( ! element?.view?.el ) {
 				return null;

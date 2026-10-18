@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Modules\Usage;
+namespace Refraction\Modules\Usage;
 
-use Elementor\Modules\System_Info\Reporters\Base as Base_Reporter;
+use Refraction\Modules\System_Info\Reporters\Base as Base_Reporter;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Settings_Reporter extends Base_Reporter {
 
 	public function get_title() {
-		return esc_html__( 'Settings', 'elementor' );
+		return esc_html__( 'Settings', 'refraction' );
 	}
 
 	public function get_fields() {

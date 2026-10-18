@@ -9,7 +9,7 @@ import {
 	type PropKey,
 	type PropType,
 	type PropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 import { HookOutsideProviderError, MissingPropTypeError, UnsupportedParentError } from './errors';
 import { type SetValue, usePropContext } from './prop-context';

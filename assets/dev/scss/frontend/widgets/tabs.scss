@@ -2,24 +2,24 @@
 // Tabs
 //
 
-.elementor-tab-title {
+.refraction-tab-title {
 	a {
 		color: inherit;
 	}
 }
 
-.elementor-widget-tabs {
+.refraction-widget-tabs {
 
-	&.elementor-tabs-view-vertical {
+	&.refraction-tabs-view-vertical {
 
-		.elementor-tabs-wrapper {
+		.refraction-tabs-wrapper {
 			width: 25%;
 			flex-shrink: 0;
 		}
 
-		.elementor-tab-desktop-title {
+		.refraction-tab-desktop-title {
 
-			&.elementor-active {
+			&.refraction-active {
 				border-inline-end-style: none;
 
 				&:before,
@@ -42,12 +42,12 @@
 		}
 	}
 
-	&.elementor-tabs-view-horizontal {
+	&.refraction-tabs-view-horizontal {
 
-		.elementor-tab-desktop-title {
+		.refraction-tab-desktop-title {
 			display: table-cell;
 
-			&.elementor-active {
+			&.refraction-active {
 				border-block-end-style: none;
 
 				&:before,
@@ -69,35 +69,35 @@
 		}
 	}
 
-	.elementor-tab-title,
-	.elementor-tab-title:before,
-	.elementor-tab-title:after,
-	.elementor-tab-content,
-	.elementor-tabs-content-wrapper {
+	.refraction-tab-title,
+	.refraction-tab-title:before,
+	.refraction-tab-title:after,
+	.refraction-tab-content,
+	.refraction-tabs-content-wrapper {
 		border: 1px none $gray-light;
 	}
 
-	.elementor-tabs {
+	.refraction-tabs {
 		text-align: start;
 	}
 
-	.elementor-tabs-wrapper {
+	.refraction-tabs-wrapper {
 		overflow: hidden;
 	}
 
-	.elementor-tab-title {
+	.refraction-tab-title {
 		cursor: pointer;
 		outline: var(--focus-outline, none);
 	}
 
-	.elementor-tab-desktop-title {
+	.refraction-tab-desktop-title {
 		position: relative;
 		padding: 20px 25px;
 		font-weight: bold;
 		line-height: 1;
 		border: solid transparent;
 
-		&.elementor-active {
+		&.refraction-active {
 			border-color: $gray-light;
 
 			&:before,
@@ -113,12 +113,12 @@
 		}
 	}
 
-	.elementor-tab-mobile-title {
+	.refraction-tab-mobile-title {
 		padding: 10px 10px;
 		cursor: pointer;
 	}
 
-	.elementor-tab-content {
+	.refraction-tab-content {
 	    padding: 20px;
 	    display: none;
 	}
@@ -127,23 +127,23 @@
 // Responsive mode
 @media (max-width: $screen-mobile-max) {
 
-	.elementor-tabs {
+	.refraction-tabs {
 
-		.elementor-tab-title,
-		.elementor-tab-content {
+		.refraction-tab-title,
+		.refraction-tab-content {
 			border-style: solid;
 			border-block-end-style: none;
 		}
 
-		.elementor-tabs-wrapper {
+		.refraction-tabs-wrapper {
 			display: none;
 		}
 
-		.elementor-tabs-content-wrapper {
+		.refraction-tabs-content-wrapper {
 			border-block-end-style: solid;
 		}
 
-		.elementor-tab-content {
+		.refraction-tab-content {
 			padding: 10px;
 		}
 	}
@@ -151,19 +151,19 @@
 
 @media (min-width: $screen-mobile-next) {
 
-	.elementor-widget-tabs {
+	.refraction-widget-tabs {
 
-		&.elementor-tabs-view-vertical {
+		&.refraction-tabs-view-vertical {
 
-			.elementor-tabs {
+			.refraction-tabs {
 				display: flex;
 			}
 
-			.elementor-tabs-wrapper {
+			.refraction-tabs-wrapper {
 				flex-direction: column;
 			}
 
-			.elementor-tabs-content-wrapper {
+			.refraction-tabs-content-wrapper {
 				flex-grow: 1;
 				border-style: solid;
 				border-inline-start-style: none;
@@ -171,59 +171,59 @@
 		}
 	}
 
-	.elementor-widget-tabs {
+	.refraction-widget-tabs {
 
-		&.elementor-tabs-view-horizontal {
+		&.refraction-tabs-view-horizontal {
 
-			.elementor-tab-content {
+			.refraction-tab-content {
 				border-style: solid;
 				border-block-start-style: none;
 			}
 		}
 
-		&.elementor-tabs-alignment- {
+		&.refraction-tabs-alignment- {
 
 			&center,
 			&end,
 			&stretch {
 
-				.elementor-tabs-wrapper {
+				.refraction-tabs-wrapper {
 					display: flex;
 				}
 			}
 
 			&center {
 
-				.elementor-tabs-wrapper {
+				.refraction-tabs-wrapper {
 					justify-content: center;
 				}
 			}
 
 			&end {
-				.elementor-tabs-wrapper {
+				.refraction-tabs-wrapper {
 					justify-content: flex-end;
 				}
 			}
 
-			&stretch.elementor-tabs-view-horizontal  {
+			&stretch.refraction-tabs-view-horizontal  {
 
-				.elementor-tab-title {
+				.refraction-tab-title {
 					width: 100%;
 				}
 			}
 
-			&stretch.elementor-tabs-view-vertical {
+			&stretch.refraction-tabs-view-vertical {
 
-				.elementor-tab-title {
+				.refraction-tab-title {
 					height: 100%;
 				}
 			}
 		}
 	}
 
-	.elementor-tabs {
+	.refraction-tabs {
 
-		.elementor-tab-mobile-title {
+		.refraction-tab-mobile-title {
 			display: none;
 		}
 	}

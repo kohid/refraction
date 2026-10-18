@@ -1,4 +1,4 @@
-import { __useSelector as useSelector } from '@elementor/store';
+import { __useSelector as useSelector } from '@refraction/store';
 
 import { selectActiveDocument } from '../store/selectors';
 

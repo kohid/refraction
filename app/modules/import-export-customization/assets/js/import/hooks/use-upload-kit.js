@@ -11,7 +11,7 @@ export function useUploadKit() {
 		try {
 			setUploading( true );
 			setError( null );
-			const baseUrl = elementorAppConfig[ 'import-export-customization' ].restApiBaseUrl;
+			const baseUrl = refractionAppConfig[ 'import-export-customization' ].restApiBaseUrl;
 			const uploadUrl = `${ baseUrl }/upload`;
 
 			let uploadData = null;

@@ -1,9 +1,9 @@
 {
-  "name": "@elementor/editor-mcp",
+  "name": "@refraction/editor-mcp",
   "version": "4.4.0",
   "private": false,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -18,11 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/elementor/elementor.git",
+    "url": "https://github.com/kohid/refraction.git",
     "directory": "packages/core/editor-mcp"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -43,9 +43,9 @@
   },
   "dependencies": {
     "@elementor-external/angie-sdk": "npm:@elementor/angie-sdk@^1.7.0",
-    "@elementor/editor-v1-adapters": "4.4.0",
-    "@elementor/schema": "4.4.0",
-    "@elementor/store": "4.4.0",
+    "@refraction/editor-v1-adapters": "4.4.0",
+    "@refraction/schema": "4.4.0",
+    "@refraction/store": "4.4.0",
     "@modelcontextprotocol/sdk": "1.27.1",
     "@wordpress/api-fetch": "^6.42.0",
     "zod-to-json-schema": "3.24.6"

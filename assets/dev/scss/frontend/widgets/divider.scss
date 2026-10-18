@@ -2,7 +2,7 @@
 // Divider
 //
 
-.elementor-widget-divider {
+.refraction-widget-divider {
 	--divider-border-style: none;
 	--divider-border-width: 1px;
 	--divider-color: #{$gray-darkest};
@@ -13,7 +13,7 @@
 	--divider-pattern-url: none;
 	--divider-pattern-repeat: repeat-x;
 
-	.elementor-divider {
+	.refraction-divider {
 		display: flex;
 
 		&__text {
@@ -28,11 +28,11 @@
 		}
 	}
 
-	.elementor-icon {
+	.refraction-icon {
 		font-size: var(--divider-icon-size);
 	}
 
-	.elementor-divider-separator {
+	.refraction-divider-separator {
 		display: flex;
 		margin: 0;
 		direction: ltr;
@@ -41,7 +41,7 @@
 	&--view {
 
 		&-line_text, &-line_icon {
-			.elementor-divider-separator{
+			.refraction-divider-separator{
 				align-items: center;
 
 				&:before, &:after {
@@ -60,9 +60,9 @@
 		// TODO: Delete when we fully migrate to logical properties.
 		&-left {
 
-			.elementor-divider {
+			.refraction-divider {
 
-				.elementor-divider-separator > .elementor-divider__svg:first-of-type {
+				.refraction-divider-separator > .refraction-divider__svg:first-of-type {
 					flex-grow: 0;
 					flex-shrink: 100;
 				}
@@ -80,9 +80,9 @@
 		// TODO: Delete when we fully migrate to logical properties.
 		&-right {
 
-			.elementor-divider {
+			.refraction-divider {
 
-				.elementor-divider-separator > .elementor-divider__svg:last-of-type {
+				.refraction-divider-separator > .refraction-divider__svg:last-of-type {
 					flex-grow: 0;
 					flex-shrink: 100;
 				}
@@ -99,9 +99,9 @@
 
 		&-start {
 
-			.elementor-divider {
+			.refraction-divider {
 
-				.elementor-divider-separator > .elementor-divider__svg:first-of-type {
+				.refraction-divider-separator > .refraction-divider__svg:first-of-type {
 					flex-grow: 0;
 					flex-shrink: 100;
 				}
@@ -118,9 +118,9 @@
 
 		&-end {
 
-			.elementor-divider {
+			.refraction-divider {
 
-				.elementor-divider-separator > .elementor-divider__svg:last-of-type {
+				.refraction-divider-separator > .refraction-divider__svg:last-of-type {
 					flex-grow: 0;
 					flex-shrink: 100;
 				}
@@ -136,8 +136,8 @@
 		}		
 	}
 
-	&:not(.elementor-widget-divider--view-line_text):not(.elementor-widget-divider--view-line_icon) {
-		.elementor-divider-separator {
+	&:not(.refraction-widget-divider--view-line_text):not(.refraction-widget-divider--view-line_icon) {
+		.refraction-divider-separator {
 			border-block-start: var(--divider-border-width) var(--divider-border-style) var(--divider-color);
 		}
 	}
@@ -147,10 +147,10 @@
 		&-pattern {
 			--divider-border-style: none;
 
-			&.elementor-widget-divider--view-line .elementor-divider-separator,
-			&:not([class*=elementor-widget-divider--view]) .elementor-divider-separator, // BC since v3.0.10
-			&:not(.elementor-widget-divider--view-line) .elementor-divider-separator:before,
-			&:not(.elementor-widget-divider--view-line) .elementor-divider-separator:after {
+			&.refraction-widget-divider--view-line .refraction-divider-separator,
+			&:not([class*=refraction-widget-divider--view]) .refraction-divider-separator, // BC since v3.0.10
+			&:not(.refraction-widget-divider--view-line) .refraction-divider-separator:before,
+			&:not(.refraction-widget-divider--view-line) .refraction-divider-separator:after {
 				width: 100%;
 				min-height: var(--divider-pattern-height);
 				-webkit-mask-size: var(--divider-pattern-size) 100%;
@@ -173,14 +173,14 @@
 	}
 }
 
-.rtl .elementor-widget-divider .elementor-divider__text {
+.rtl .refraction-widget-divider .refraction-divider__text {
 	direction: rtl;
 }
 
 .e-con,
 .e-con-inner {
 
-	& > .elementor-widget-divider {
+	& > .refraction-widget-divider {
 		// Fix - Divider widget has undefined width and height issues inside the flex container (ED-7722).
 		width: var( --container-widget-width , 100%);
 	  	--flex-grow: var( --container-widget-flex-grow );

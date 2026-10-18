@@ -16,7 +16,7 @@ export default function DragHandle( { panelId, children }: Props ) {
 	return (
 		<Box
 			role="button"
-			aria-label={ __( 'Drag to reposition', 'elementor' ) }
+			aria-label={ __( 'Drag to reposition', 'refraction' ) }
 			onPointerDown={ onPointerDown }
 			onPointerMove={ onPointerMove }
 			onPointerUp={ onPointerUp }

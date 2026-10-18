@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from '@elementor/icons';
 import { styled } from '@elementor/ui';
 
-// TODO: Replace this with future Rotate component that will be implemented in elementor-ui
+// TODO: Replace this with future Rotate component that will be implemented in refraction-ui
 export const CollapseIcon = styled( ChevronDownIcon, {
 	shouldForwardProp: ( prop ) => prop !== 'open' && prop !== 'disabled',
 } )< { open: boolean; disabled?: boolean } >( ( { theme, open, disabled = false } ) => ( {

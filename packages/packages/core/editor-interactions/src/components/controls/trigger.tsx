@@ -8,11 +8,11 @@ import { DEFAULT_VALUES } from '../interaction-details';
 const TRACKING_DATA = { target_name: 'interactions_trigger', location_l2: 'interactions' } as const;
 
 export const TRIGGER_OPTIONS = {
-	load: __( 'Page load', 'elementor' ),
-	scrollIn: __( 'Scroll into view', 'elementor' ),
-	scrollOn: __( 'While scrolling', 'elementor' ),
-	hover: __( 'On hover', 'elementor' ),
-	click: __( 'On click', 'elementor' ),
+	load: __( 'Page load', 'refraction' ),
+	scrollIn: __( 'Scroll into view', 'refraction' ),
+	scrollOn: __( 'While scrolling', 'refraction' ),
+	hover: __( 'On hover', 'refraction' ),
+	click: __( 'On click', 'refraction' ),
 };
 
 export const BASE_TRIGGERS: string[] = [ 'load', 'scrollIn' ];
@@ -32,8 +32,8 @@ export function Trigger( { value, onChange }: FieldProps ) {
 			onChange={ onChange }
 			baseOptions={ baseOptions }
 			disabledOptions={ disabledOptions }
-			promotionLabel={ __( 'PRO triggers', 'elementor' ) }
-			promotionContent={ __( 'Upgrade to unlock more interactions triggers.', 'elementor' ) }
+			promotionLabel={ __( 'PRO triggers', 'refraction' ) }
+			promotionContent={ __( 'Upgrade to unlock more interactions triggers.', 'refraction' ) }
 			upgradeUrl="https://go.elementor.com/go-pro-interactions-triggers-modal/"
 			trackingData={ TRACKING_DATA }
 		/>

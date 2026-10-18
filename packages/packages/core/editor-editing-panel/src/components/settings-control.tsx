@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ControlAdornmentsProvider } from '@elementor/editor-controls';
-import { type Control, type ControlLayout, type ElementControl } from '@elementor/editor-elements';
+import { ControlAdornmentsProvider } from '@refraction/editor-controls';
+import { type Control, type ControlLayout, type ElementControl } from '@refraction/editor-elements';
 import { Divider, styled } from '@elementor/ui';
 
 import { Control as BaseControl } from '../controls-registry/control';

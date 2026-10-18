@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Revert;
+namespace Refraction\App\Modules\ImportExport\Runners\Revert;
 
 class Taxonomies extends Revert_Runner_Base {
 
@@ -24,7 +24,7 @@ class Taxonomies extends Revert_Runner_Base {
 			'get' => 'all',
 			'meta_query' => [
 				[
-					'key'       => static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID,
+					'key'       => static::META_KEY_REFRACTION_IMPORT_SESSION_ID,
 					'value'     => $data['session_id'],
 				],
 			],

@@ -8,11 +8,11 @@ export class BaseGlobalsUpdate extends $e.modules.hookData.After {
 	}
 
 	getRepeaterName() {
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	applyModel( model, id, value ) { // eslint-disable-line no-unused-vars
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	apply( args, result ) {

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { imagePropTypeUtil } from '@elementor/editor-props';
+import { imagePropTypeUtil } from '@refraction/editor-props';
 import { Grid, Stack } from '@elementor/ui';
-import { type MediaType } from '@elementor/wp-media';
+import { type MediaType } from '@refraction/wp-media';
 import { __ } from '@wordpress/i18n';
 
 import { PropKeyProvider, PropProvider, useBoundProp } from '../bound-prop-context';
@@ -20,7 +20,7 @@ type ImageControlProps = {
 };
 
 export const ImageControl = createControl(
-	( { sizes, promotion, label = __( 'Image', 'elementor' ) }: ImageControlProps ) => {
+	( { sizes, promotion, label = __( 'Image', 'refraction' ) }: ImageControlProps ) => {
 		const propContext = useBoundProp( imagePropTypeUtil );
 
 		return (
@@ -33,7 +33,7 @@ export const ImageControl = createControl(
 					<ImageSrcControl label={ label } />
 					<Grid container gap={ 1.5 } alignItems="center" flexWrap="nowrap">
 						<Grid item xs={ 6 }>
-							<ControlFormLabel>{ __( 'Resolution', 'elementor' ) }</ControlFormLabel>
+							<ControlFormLabel>{ __( 'Resolution', 'refraction' ) }</ControlFormLabel>
 						</Grid>
 						<Grid item xs={ 6 } sx={ { overflow: 'hidden' } }>
 							<ImageSizeControl sizes={ sizes } />

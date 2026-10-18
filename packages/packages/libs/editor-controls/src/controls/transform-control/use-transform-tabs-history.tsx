@@ -9,7 +9,7 @@ import {
 	skewTransformPropTypeUtil,
 	type SkewTransformPropValue,
 	type TransformFunctionsItemPropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { useTabs } from '@elementor/ui';
 
 import { useBoundProp } from '../../bound-prop-context';

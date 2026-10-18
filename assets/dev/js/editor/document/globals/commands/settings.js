@@ -1,4 +1,4 @@
-import ElementsSettings from 'elementor-document/elements/commands/settings';
+import ElementsSettings from 'refraction-document/elements/commands/settings';
 
 export class Settings extends $e.modules.editor.document.CommandHistoryDebounceBase {
 	static restore( historyItem, isRedo ) {

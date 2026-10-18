@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Files;
+namespace Refraction\Core\Files;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 abstract class Base {
 
-	const UPLOADS_DIR = 'elementor/';
+	const UPLOADS_DIR = 'refraction/';
 
 	const DEFAULT_FILES_DIR = 'css/';
 
@@ -57,24 +57,24 @@ abstract class Base {
 		}
 
 		/**
-		 * Elementor files base directory.
+		 * Refraction files base directory.
 		 *
-		 * Filters the absolute filesystem path of the Elementor files base directory.
-		 * Applies to all `Elementor\Core\Files\Base` consumers (Post CSS, Global CSS,
+		 * Filters the absolute filesystem path of the Refraction files base directory.
+		 * Applies to all `Refraction\Core\Files\Base` consumers (Post CSS, Global CSS,
 		 * Frontend CSS, Google Fonts, etc.)
 		 *
-		 * Can be filtered independently of `elementor/files/base_url`:
-		 *  - Filter both to relocate Elementor files (e.g. WP VIP where `uploads/` is read-only).
-		 *  - Filter only `elementor/files/base_url` (leaving this untouched) to serve files
+		 * Can be filtered independently of `refraction/files/base_url`:
+		 *  - Filter both to relocate Refraction files (e.g. WP VIP where `uploads/` is read-only).
+		 *  - Filter only `refraction/files/base_url` (leaving this untouched) to serve files
 		 *    from a CDN or an alternate URL (e.g. WPML sub-folder) while keeping local writes.
 		 *
 		 * Only available when the `e_optimized_css_files` experiment is active.
 		 *
 		 * @since 4.4.0
 		 *
-		 * @param string $dir Absolute filesystem path to the Elementor files base directory.
+		 * @param string $dir Absolute filesystem path to the Refraction files base directory.
 		 */
-		$filtered_dir = apply_filters( 'elementor/files/base_dir', $dir );
+		$filtered_dir = apply_filters( 'refraction/files/base_dir', $dir );
 
 		$validated_dir = self::validate_base_dir( $filtered_dir );
 
@@ -95,15 +95,15 @@ abstract class Base {
 		}
 
 		/**
-		 * Elementor files base URL.
+		 * Refraction files base URL.
 		 *
-		 * Filters the public URL of the Elementor files base directory.
-		 * Applies to all `Elementor\Core\Files\Base` consumers (Post CSS, Global CSS,
+		 * Filters the public URL of the Refraction files base directory.
+		 * Applies to all `Refraction\Core\Files\Base` consumers (Post CSS, Global CSS,
 		 * Frontend CSS, Google Fonts, etc.)
 		 *
 		 * Accepts absolute (`https://cdn.example.com/…`) and protocol-relative
 		 * (`//cdn.example.com/…`) URLs. Can be filtered independently of
-		 * `elementor/files/base_dir` — filter only this hook to serve files from a
+		 * `refraction/files/base_dir` — filter only this hook to serve files from a
 		 * CDN or an alternate URL (e.g. WPML sub-folder) while keeping local writes
 		 * at the default location.
 		 *
@@ -111,9 +111,9 @@ abstract class Base {
 		 *
 		 * @since 4.4.0
 		 *
-		 * @param string $url Public URL for the Elementor files base directory.
+		 * @param string $url Public URL for the Refraction files base directory.
 		 */
-		$filtered_url = apply_filters( 'elementor/files/base_url', $url );
+		$filtered_url = apply_filters( 'refraction/files/base_url', $url );
 
 		$validated_url = self::validate_base_url( $filtered_url );
 
@@ -135,16 +135,16 @@ abstract class Base {
 	 */
 	public function __construct( $file_name ) {
 		/**
-		 * Elementor File Name
+		 * Refraction File Name
 		 *
 		 * Filters the File name
 		 *
 		 * @since 2.3.0
 		 *
 		 * @param string   $file_name
-		 * @param object $this The file instance, which inherits Elementor\Core\Files
+		 * @param object $this The file instance, which inherits Refraction\Core\Files
 		 */
-		$file_name = apply_filters( 'elementor/files/file_name', $file_name, $this );
+		$file_name = apply_filters( 'refraction/files/file_name', $file_name, $this );
 
 		$this->set_file_name( $file_name );
 
@@ -385,7 +385,7 @@ abstract class Base {
 		if ( ! is_string( $dir ) || '' === $dir ) {
 			_doing_it_wrong(
 				__METHOD__,
-				'The `elementor/files/base_dir` filter must return a non-empty string.',
+				'The `refraction/files/base_dir` filter must return a non-empty string.',
 				'4.4.0'
 			);
 
@@ -397,7 +397,7 @@ abstract class Base {
 		if ( ! self::is_absolute_path( $dir ) ) {
 			_doing_it_wrong(
 				__METHOD__,
-				'The `elementor/files/base_dir` filter must return an absolute filesystem path.',
+				'The `refraction/files/base_dir` filter must return an absolute filesystem path.',
 				'4.4.0'
 			);
 
@@ -407,7 +407,7 @@ abstract class Base {
 		if ( self::path_contains_traversal( $dir ) ) {
 			_doing_it_wrong(
 				__METHOD__,
-				'The `elementor/files/base_dir` filter must not contain path traversal segments.',
+				'The `refraction/files/base_dir` filter must not contain path traversal segments.',
 				'4.4.0'
 			);
 
@@ -417,7 +417,7 @@ abstract class Base {
 		if ( ! self::is_path_within_allowed_roots( $dir ) ) {
 			_doing_it_wrong(
 				__METHOD__,
-				'The `elementor/files/base_dir` filter must resolve inside `WP_CONTENT_DIR` or the uploads basedir.',
+				'The `refraction/files/base_dir` filter must resolve inside `WP_CONTENT_DIR` or the uploads basedir.',
 				'4.4.0'
 			);
 
@@ -442,7 +442,7 @@ abstract class Base {
 		if ( ! is_string( $url ) || '' === $url ) {
 			_doing_it_wrong(
 				__METHOD__,
-				'The `elementor/files/base_url` filter must return a non-empty string.',
+				'The `refraction/files/base_url` filter must return a non-empty string.',
 				'4.4.0'
 			);
 
@@ -454,7 +454,7 @@ abstract class Base {
 		if ( ! self::is_valid_base_url( $url ) ) {
 			_doing_it_wrong(
 				__METHOD__,
-				'The `elementor/files/base_url` filter must return an absolute or protocol-relative http(s) URL.',
+				'The `refraction/files/base_url` filter must return an absolute or protocol-relative http(s) URL.',
 				'4.4.0'
 			);
 
@@ -546,7 +546,7 @@ abstract class Base {
 	 * @return bool
 	 */
 	private static function is_path_within_allowed_roots( $path ) {
-		if ( defined( 'ELEMENTOR_FILES_ALLOW_EXTERNAL_BASE_DIR' ) && ELEMENTOR_FILES_ALLOW_EXTERNAL_BASE_DIR ) {
+		if ( defined( 'REFRACTION_FILES_ALLOW_EXTERNAL_BASE_DIR' ) && REFRACTION_FILES_ALLOW_EXTERNAL_BASE_DIR ) {
 			return true;
 		}
 
@@ -575,7 +575,7 @@ abstract class Base {
 	 * Resolve the realpath of the deepest existing ancestor of `$path`.
 	 *
 	 * Non-existent targets are common when a host sets the filter to a directory
-	 * that Elementor will create on first write. Walking up to the deepest existing
+	 * that Refraction will create on first write. Walking up to the deepest existing
 	 * ancestor lets us still resolve symlinks and reject paths whose real location
 	 * escapes the allowed roots.
 	 *

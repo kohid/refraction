@@ -17,7 +17,7 @@ export const generateScreenshot = () => {
 
 		const previewUrl = new URL( window.location.origin );
 		previewUrl.searchParams.set( 'kit_thumbnail', '1' );
-		previewUrl.searchParams.set( 'nonce', elementorAppConfig[ 'import-export-customization' ].kitPreviewNonce );
+		previewUrl.searchParams.set( 'nonce', refractionAppConfig[ 'import-export-customization' ].kitPreviewNonce );
 
 		document.body.appendChild( iframe );
 		iframe.src = previewUrl.toString();

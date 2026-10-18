@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Frontend;
+namespace Refraction\Core\Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

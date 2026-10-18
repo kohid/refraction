@@ -1,16 +1,16 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useUploadKit } from 'elementor/app/modules/import-export-customization/assets/js/import/hooks/use-upload-kit';
+import { useUploadKit } from 'refraction/app/modules/import-export-customization/assets/js/import/hooks/use-upload-kit';
 
 const mockDispatch = jest.fn();
 const mockFile = new File( [ 'dummy content' ], 'kit.zip', { type: 'application/zip' } );
 
 const mockUseImportContext = jest.fn();
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
 	useImportContext: () => mockUseImportContext(),
 } ) );
 
 const mockSendKitImportUploadFile = jest.fn();
-jest.mock( 'elementor/app/assets/js/event-track/apps-event-tracking', () => ( {
+jest.mock( 'refraction/app/assets/js/event-track/apps-event-tracking', () => ( {
 	AppsEventTracking: {
 		sendKitImportUploadFile: ( ...args ) => mockSendKitImportUploadFile( ...args ),
 	},
@@ -18,7 +18,7 @@ jest.mock( 'elementor/app/assets/js/event-track/apps-event-tracking', () => ( {
 
 describe( 'useUploadKit Hook', () => {
 	let mockFetch;
-	let mockElementorAppConfig;
+	let mockRefractionAppConfig;
 	let mockWpApiSettings;
 
 	beforeEach( () => {
@@ -26,12 +26,12 @@ describe( 'useUploadKit Hook', () => {
 		global.fetch = mockFetch;
 		mockDispatch.mockClear();
 
-		mockElementorAppConfig = {
+		mockRefractionAppConfig = {
 			'import-export-customization': {
-				restApiBaseUrl: 'https://example.com/wp-json/elementor/v1',
+				restApiBaseUrl: 'https://example.com/wp-json/refraction/v1',
 			},
 		};
-		global.elementorAppConfig = mockElementorAppConfig;
+		global.refractionAppConfig = mockRefractionAppConfig;
 		mockWpApiSettings = { nonce: 'wp-nonce' };
 		window.wpApiSettings = mockWpApiSettings;
 	} );
@@ -63,7 +63,7 @@ describe( 'useUploadKit Hook', () => {
 		// Assert
 		await waitFor( () => {
 			expect( mockFetch ).toHaveBeenCalledWith(
-				'https://example.com/wp-json/elementor/v1/upload',
+				'https://example.com/wp-json/refraction/v1/upload',
 				expect.objectContaining( {
 					method: 'POST',
 					headers: expect.objectContaining( { 'X-WP-Nonce': 'wp-nonce' } ),

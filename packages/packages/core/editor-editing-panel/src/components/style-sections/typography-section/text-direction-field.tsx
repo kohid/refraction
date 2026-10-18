@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ToggleButtonGroupItem, ToggleControl } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleControl } from '@refraction/editor-controls';
 import { TextDirectionLtrIcon, TextDirectionRtlIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -8,18 +8,18 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type Direction = 'ltr' | 'rtl';
 
-const TEXT_DIRECTION_LABEL = __( 'Direction', 'elementor' );
+const TEXT_DIRECTION_LABEL = __( 'Direction', 'refraction' );
 
 const options: ToggleButtonGroupItem< Direction >[] = [
 	{
 		value: 'ltr',
-		label: __( 'Left to right', 'elementor' ),
+		label: __( 'Left to right', 'refraction' ),
 		renderContent: ( { size } ) => <TextDirectionLtrIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'rtl',
-		label: __( 'Right to left', 'elementor' ),
+		label: __( 'Right to left', 'refraction' ),
 		renderContent: ( { size } ) => <TextDirectionRtlIcon fontSize={ size } />,
 		showTooltip: true,
 	},

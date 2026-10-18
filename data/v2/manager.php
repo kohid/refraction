@@ -1,20 +1,20 @@
 <?php
-namespace Elementor\Data\V2;
+namespace Refraction\Data\V2;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Data\V2\Base\Processor;
-use Elementor\Data\V2\Base\Controller;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Data\V2\Base\Processor;
+use Refraction\Data\V2\Base\Controller;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * @method static \Elementor\Data\V2\Manager instance()
+ * @method static \Refraction\Data\V2\Manager instance()
  */
 class Manager extends BaseModule {
 
-	const ROOT_NAMESPACE = 'elementor';
+	const ROOT_NAMESPACE = 'refraction';
 
 	const VERSION = '1';
 
@@ -36,7 +36,7 @@ class Manager extends BaseModule {
 	/**
 	 * Loaded controllers.
 	 *
-	 * @var \Elementor\Data\V2\Base\Controller[]
+	 * @var \Refraction\Data\V2\Base\Controller[]
 	 */
 	public $controllers = [];
 
@@ -52,7 +52,7 @@ class Manager extends BaseModule {
 	}
 
 	/**
-	 * @return \Elementor\Data\V2\Base\Controller[]
+	 * @return \Refraction\Data\V2\Base\Controller[]
 	 */
 	public function get_controllers() {
 		return $this->controllers;
@@ -61,7 +61,7 @@ class Manager extends BaseModule {
 	/**
 	 * @param string $name
 	 *
-	 * @return \Elementor\Data\V2\Base\Controller|false
+	 * @return \Refraction\Data\V2\Base\Controller|false
 	 */
 	public function get_controller( $name ) {
 		if ( isset( $this->controllers[ $name ] ) ) {
@@ -82,9 +82,9 @@ class Manager extends BaseModule {
 	/**
 	 * Register controller.
 	 *
-	 * @param \Elementor\Data\V2\Base\Controller $controller_instance
+	 * @param \Refraction\Data\V2\Base\Controller $controller_instance
 	 *
-	 * @return \Elementor\Data\V2\Base\Controller
+	 * @return \Refraction\Data\V2\Base\Controller
 	 */
 	public function register_controller( Controller $controller_instance ) {
 		$this->controllers[ $controller_instance->get_name() ] = $controller_instance;
@@ -109,7 +109,7 @@ class Manager extends BaseModule {
 	 *
 	 * @param string $command
 	 *
-	 * @return false|\Elementor\Data\V2\Base\Controller
+	 * @return false|\Refraction\Data\V2\Base\Controller
 	 */
 	public function find_controller_instance( $command ) {
 		$command_parts = explode( '/', $command );
@@ -215,7 +215,7 @@ class Manager extends BaseModule {
 			remove_all_actions( 'rest_api_init' );
 
 			// Call custom reset api loader.
-			do_action( 'elementor_rest_api_before_init' );
+			do_action( 'refraction_rest_api_before_init' );
 
 			$this->server = rest_get_server(); // Init API.
 		}
@@ -329,7 +329,7 @@ class Manager extends BaseModule {
 	 * @return array
 	 */
 	public function run_endpoint( $endpoint, $args = [], $method = 'GET' ) {
-		// The method become public since it used in `Elementor\Data\V2\Base\Endpoint\Index\AllChildren`.
+		// The method become public since it used in `Refraction\Data\V2\Base\Endpoint\Index\AllChildren`.
 		$response = $this->run_request( $endpoint, $args, $method );
 
 		return $response->get_data();

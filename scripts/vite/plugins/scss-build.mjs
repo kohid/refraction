@@ -11,7 +11,7 @@ import * as sass from 'sass';
 import { BREAKPOINTS_PROXY, resolveFromRoot, ROOT } from '../shared/paths.mjs';
 import { WidgetsCss } from '../shared/widgets-css.mjs';
 
-const VIRTUAL_ENTRY_ID = 'virtual:elementor-styles';
+const VIRTUAL_ENTRY_ID = 'virtual:refraction-styles';
 const RESOLVED_VIRTUAL_ENTRY_ID = '\0' + VIRTUAL_ENTRY_ID;
 
 const CSSNANO_PRESET = [ 'default', {
@@ -229,7 +229,7 @@ export async function compileStyles( { devMode = false } = {} ) {
 
 export function scssBuildPlugin( { devMode = false } = {} ) {
 	return {
-		name: 'elementor-scss-build',
+		name: 'refraction-scss-build',
 		resolveId( id ) {
 			return VIRTUAL_ENTRY_ID === id ? RESOLVED_VIRTUAL_ENTRY_ID : null;
 		},

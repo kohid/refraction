@@ -1,7 +1,7 @@
 import Component from './component';
 
-class LandingPageLibraryModule extends elementorModules.editor.utils.Module {
-	onElementorLoaded() {
+class LandingPageLibraryModule extends refractionModules.editor.utils.Module {
+	onRefractionLoaded() {
 		this.component = $e.components.register( new Component( { manager: this } ) );
 	}
 }

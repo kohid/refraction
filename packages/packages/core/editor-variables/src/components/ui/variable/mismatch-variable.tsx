@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useId, useRef, useState } from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 import { Backdrop, bindPopover, Box, Infotip, Popover, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -21,7 +21,7 @@ export const MismatchVariable = ( { variable }: Props ) => {
 	const popupId = useId();
 	const popupState = usePopupState( {
 		variant: 'popover',
-		popupId: `elementor-variables-list-${ popupId }`,
+		popupId: `refraction-variables-list-${ popupId }`,
 	} );
 
 	const [ infotipVisible, setInfotipVisible ] = useState( false );
@@ -73,7 +73,7 @@ export const MismatchVariable = ( { variable }: Props ) => {
 				<WarningVariableTag
 					label={ variable.label }
 					onClick={ toggleInfotip }
-					suffix={ __( 'changed', 'elementor' ) }
+					suffix={ __( 'changed', 'refraction' ) }
 				/>
 			</Infotip>
 

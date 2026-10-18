@@ -19,7 +19,7 @@ export const BASE_ENTRIES = {
 	common: 'core/common/assets/js/common.js',
 	'vendors-redux': 'core/common/assets/js/vendors-redux.js',
 	'dev-tools': 'modules/dev-tools/assets/js/index.js',
-	'elementor-admin-bar': 'modules/admin-bar/assets/js/frontend/module.js',
+	'refraction-admin-bar': 'modules/admin-bar/assets/js/frontend/module.js',
 	gutenberg: 'assets/dev/js/admin/gutenberg.js',
 	'new-template': 'assets/dev/js/admin/new-template/new-template.js',
 	app: 'app/assets/js/index.js',

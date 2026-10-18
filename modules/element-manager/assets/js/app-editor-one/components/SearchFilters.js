@@ -89,7 +89,7 @@ export const SearchFilters = ( {
 					color="secondary"
 					value={ searchKeyword }
 					size="small"
-					placeholder={ __( 'Search', 'elementor' ) }
+					placeholder={ __( 'Search', 'refraction' ) }
 					onChange={ ( e ) => onSearchChange( e.target.value ) }
 					sx={ ( theme ) => ( { minWidth: theme.spacing( 14 ) } ) }
 				/>
@@ -99,20 +99,20 @@ export const SearchFilters = ( {
 					color="secondary"
 				>
 					<Select
-						placeholder={ __( 'Plugin', 'elementor' ) }
+						placeholder={ __( 'Plugin', 'refraction' ) }
 						value={ filterByPlugin }
 						onChange={ ( event ) => onPluginFilterChange( event.target.value ) }
-						data-id="elementor-element-manager-select-filter-by-plugin"
+						data-id="refraction-element-manager-select-filter-by-plugin"
 						displayEmpty
 						renderValue={ ( value ) => {
 							if ( '' === value ) {
-								return __( 'All Plugins', 'elementor' );
+								return __( 'All Plugins', 'refraction' );
 							}
 							const selectedPlugin = plugins.find( ( p ) => p.value === value );
 							return selectedPlugin ? selectedPlugin.label : value;
 						} }
 					>
-						<MenuItem value="">{ __( 'All Plugins', 'elementor' ) }</MenuItem>
+						<MenuItem value="">{ __( 'All Plugins', 'refraction' ) }</MenuItem>
 						{ plugins.map( ( plugin ) => (
 							<MenuItem key={ plugin.value } value={ plugin.value }>
 								{ plugin.label }
@@ -128,12 +128,12 @@ export const SearchFilters = ( {
 					<Select
 						value={ filterByStatus }
 						onChange={ ( event ) => onStatusFilterChange( event.target.value ) }
-						data-id="elementor-element-manager-select-filter-by-status"
-						placeholder={ __( 'Status', 'elementor' ) }
+						data-id="refraction-element-manager-select-filter-by-status"
+						placeholder={ __( 'Status', 'refraction' ) }
 					>
-						<MenuItem value="all">{ __( 'All Statuses', 'elementor' ) }</MenuItem>
-						<MenuItem value="active">{ __( 'Active', 'elementor' ) }</MenuItem>
-						<MenuItem value="inactive">{ __( 'Inactive', 'elementor' ) }</MenuItem>
+						<MenuItem value="all">{ __( 'All Statuses', 'refraction' ) }</MenuItem>
+						<MenuItem value="active">{ __( 'Active', 'refraction' ) }</MenuItem>
+						<MenuItem value="inactive">{ __( 'Inactive', 'refraction' ) }</MenuItem>
 					</Select>
 				</StyledFormControl>
 				<Divider
@@ -153,10 +153,10 @@ export const SearchFilters = ( {
 					size="small"
 					disabled={ usageIsLoading }
 					onClick={ onScanUsage }
-					data-id="e-id-elementor-element-manager-button-scan-element-usage"
+					data-id="e-id-refraction-element-manager-button-scan-element-usage"
 					loading={ usageIsLoading }
 				>
-					{ __( 'Scan Element Usage', 'elementor' ) }
+					{ __( 'Scan Element Usage', 'refraction' ) }
 				</StyledButton>
 				<StyledButton
 					variant="outlined"
@@ -164,9 +164,9 @@ export const SearchFilters = ( {
 					size="small"
 					onClick={ onDeactivateUnused }
 					disabled={ null === usageData }
-					data-id="e-id-elementor-element-manager-button-deactivate-unused-elements"
+					data-id="e-id-refraction-element-manager-button-deactivate-unused-elements"
 				>
-					{ __( 'Deactivate Unused Elements', 'elementor' ) }
+					{ __( 'Deactivate Unused Elements', 'refraction' ) }
 				</StyledButton>
 				<StyledButton
 					variant="outlined"
@@ -174,9 +174,9 @@ export const SearchFilters = ( {
 					size="small"
 					disabled={ ! widgetsDisabledCount }
 					onClick={ onEnableAll }
-					data-id="e-id-elementor-element-manager-button-enable-all"
+					data-id="e-id-refraction-element-manager-button-enable-all"
 				>
-					{ __( 'Enable All', 'elementor' ) }
+					{ __( 'Enable All', 'refraction' ) }
 				</StyledButton>
 			</Stack>
 			<StyledButton
@@ -184,11 +184,11 @@ export const SearchFilters = ( {
 				size="small"
 				disabled={ isSaving || ! hasUnsavedChanges }
 				onClick={ onSaveChanges }
-				data-id="e-id-elementor-element-manager-button-save-changes"
+				data-id="e-id-refraction-element-manager-button-save-changes"
 				loading={ isSaving }
 				sx={ { alignSelf: 'flex-start' } }
 			>
-				{ __( 'Save Changes', 'elementor' ) }
+				{ __( 'Save Changes', 'refraction' ) }
 			</StyledButton>
 		</Stack>
 	);

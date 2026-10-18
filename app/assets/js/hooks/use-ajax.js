@@ -23,13 +23,13 @@ export default function useAjax() {
 				}
 
 				if ( ! config.data.nonce ) {
-					formData.append( '_nonce', elementorCommon.config.ajax.nonce );
+					formData.append( '_nonce', refractionCommon.config.ajax.nonce );
 				}
 			}
 
 			const options = {
 				type: 'post',
-				url: elementorCommon.config.ajax.url,
+				url: refractionCommon.config.ajax.url,
 				headers: {},
 				cache: false,
 				contentType: false,

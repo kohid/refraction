@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\MarkdownRender;
+namespace Refraction\Modules\MarkdownRender;
 
-use Elementor\Core\Base\Document;
-use Elementor\Plugin;
+use Refraction\Core\Base\Document;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -33,7 +33,7 @@ class Markdown_Renderer {
 
 			$output = $frontmatter . "\n\n" . $body;
 
-			return apply_filters( 'elementor/markdown/document_output', $output, $document );
+			return apply_filters( 'refraction/markdown/document_output', $output, $document );
 		} );
 	}
 
@@ -119,7 +119,7 @@ class Markdown_Renderer {
 
 		$markdown = $element->render_markdown();
 
-		return apply_filters( 'elementor/markdown/element_output', $markdown, $element, $element_data );
+		return apply_filters( 'refraction/markdown/element_output', $markdown, $element, $element_data );
 	}
 
 	private function escape_yaml_string( string $value ): string {

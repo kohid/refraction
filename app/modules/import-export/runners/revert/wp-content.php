@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Revert;
+namespace Refraction\App\Modules\ImportExport\Runners\Revert;
 
-use Elementor\App\Modules\ImportExport\Utils as ImportExportUtils;
+use Refraction\App\Modules\ImportExport\Utils as ImportExportUtils;
 
 class Wp_Content extends Revert_Runner_Base {
 
@@ -29,11 +29,11 @@ class Wp_Content extends Revert_Runner_Base {
 			'posts_per_page' => -1,
 			'meta_query' => [
 				[
-					'key' => static::META_KEY_ELEMENTOR_EDIT_MODE,
+					'key' => static::META_KEY_REFRACTION_EDIT_MODE,
 					'compare' => 'NOT EXISTS',
 				],
 				[
-					'key' => static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID,
+					'key' => static::META_KEY_REFRACTION_IMPORT_SESSION_ID,
 					'value' => $data['session_id'],
 				],
 			],
@@ -60,7 +60,7 @@ class Wp_Content extends Revert_Runner_Base {
 			'get' => 'all',
 			'meta_query' => [
 				[
-					'key'       => static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID,
+					'key'       => static::META_KEY_REFRACTION_IMPORT_SESSION_ID,
 					'value'     => $data['session_id'],
 				],
 			],

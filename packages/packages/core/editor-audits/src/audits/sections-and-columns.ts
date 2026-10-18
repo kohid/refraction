@@ -5,18 +5,18 @@ import { walkElements } from '../utils/walk';
 
 export const audit: Audit = {
 	id: 'audits/sections-and-columns',
-	title: __( 'Sections and columns', 'elementor' ),
+	title: __( 'Sections and columns', 'refraction' ),
 	description: __(
 		'Sections and columns are legacy elements. Containers render fewer DOM nodes and are more flexible.',
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Use the Container Converter to replace each section/column with a container.', 'elementor' ),
+	fixHint: __( 'Use the Container Converter to replace each section/column with a container.', 'refraction' ),
 	categories: [ 'best-practices', 'performance' ],
 	severity: 'warning',
 	weight: 7,
 	evaluate: ( ctx ) => {
 		if ( ctx.elements.tree.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No elements', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No elements', 'refraction' ) };
 		}
 
 		const violations: AuditViolation[] = [];
@@ -28,8 +28,8 @@ export const audit: Audit = {
 					elementId: node.id,
 					label:
 						node.elType === 'section'
-							? __( 'Section element', 'elementor' )
-							: __( 'Column element', 'elementor' ),
+							? __( 'Section element', 'refraction' )
+							: __( 'Column element', 'refraction' ),
 				} );
 			}
 		} );

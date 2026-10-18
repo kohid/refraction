@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { useSuppressedMessage } from '@elementor/editor-current-user';
+import { useSuppressedMessage } from '@refraction/editor-current-user';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { __ } from '@wordpress/i18n';
 
 import { ClassManagerIntroduction } from '../class-manager-introduction';
 
-jest.mock( '@elementor/editor-current-user' );
+jest.mock( '@refraction/editor-current-user' );
 jest.mock( '@wordpress/i18n' );
 
 describe( 'ClassManagerIntroduction', () => {

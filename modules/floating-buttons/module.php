@@ -1,21 +1,21 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons;
+namespace Refraction\Modules\FloatingButtons;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Document;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Documents_Manager;
-use Elementor\Modules\FloatingButtons\Base\Widget_Floating_Bars_Base;
-use Elementor\Modules\FloatingButtons\Base\Widget_Contact_Button_Base;
-use Elementor\Modules\FloatingButtons\Classes\Action\Action_Handler;
-use Elementor\Modules\FloatingButtons\Control\Hover_Animation_Floating_Buttons;
-use Elementor\Modules\FloatingButtons\Documents\Floating_Buttons;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils as ElementorUtils;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Modules\FloatingButtons\AdminMenuItems\Editor_One_Floating_Elements_Menu;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Documents_Manager;
+use Refraction\Modules\FloatingButtons\Base\Widget_Floating_Bars_Base;
+use Refraction\Modules\FloatingButtons\Base\Widget_Contact_Button_Base;
+use Refraction\Modules\FloatingButtons\Classes\Action\Action_Handler;
+use Refraction\Modules\FloatingButtons\Control\Hover_Animation_Floating_Buttons;
+use Refraction\Modules\FloatingButtons\Documents\Floating_Buttons;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils as RefractionUtils;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\FloatingButtons\AdminMenuItems\Editor_One_Floating_Elements_Menu;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -23,10 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Module extends BaseModule {
 
-	const FLOATING_ELEMENTS_TYPE_META_KEY = '_elementor_floating_elements_type';
-	const ROUTER_OPTION_KEY = 'elementor_floating_buttons_router_version';
-	const META_CLICK_TRACKING = '_elementor_click_tracking';
-	const CLICK_TRACKING_NONCE = 'elementor-conversion-center-click';
+	const FLOATING_ELEMENTS_TYPE_META_KEY = '_refraction_floating_elements_type';
+	const ROUTER_OPTION_KEY = 'refraction_floating_buttons_router_version';
+	const META_CLICK_TRACKING = '_refraction_click_tracking';
+	const CLICK_TRACKING_NONCE = 'refraction-conversion-center-click';
 	const FLOATING_BUTTONS_DOCUMENT_TYPE = 'floating-buttons';
 	const CPT_FLOATING_BUTTONS = 'e-floating-buttons';
 	const ADMIN_PAGE_SLUG_CONTACT = 'edit.php?post_type=e-floating-buttons';
@@ -41,8 +41,8 @@ class Module extends BaseModule {
 
 	public static function get_floating_elements_types() {
 		return [
-			'floating-buttons' => esc_html__( 'Floating Buttons', 'elementor' ),
-			'floating-bars' => esc_html__( 'Floating Bars', 'elementor' ),
+			'floating-buttons' => esc_html__( 'Floating Buttons', 'refraction' ),
+			'floating-bars' => esc_html__( 'Floating Bars', 'refraction' ),
 		];
 	}
 
@@ -68,18 +68,18 @@ class Module extends BaseModule {
 		if ( Floating_Buttons::is_creating_floating_buttons_page() || Floating_Buttons::is_editing_existing_floating_buttons_page() ) {
 			Controls_Manager::add_tab(
 				Widget_Contact_Button_Base::TAB_ADVANCED,
-				esc_html__( 'Advanced', 'elementor' )
+				esc_html__( 'Advanced', 'refraction' )
 			);
 
 			Controls_Manager::add_tab(
 				Widget_Floating_Bars_Base::TAB_ADVANCED,
-				esc_html__( 'Advanced', 'elementor' )
+				esc_html__( 'Advanced', 'refraction' )
 			);
 		}
 
 		$this->register_contact_pages_cpt();
 
-		add_action( 'elementor/documents/register', function ( Documents_Manager $documents_manager ) {
+		add_action( 'refraction/documents/register', function ( Documents_Manager $documents_manager ) {
 			$documents_manager->register_document_type(
 				static::FLOATING_BUTTONS_DOCUMENT_TYPE,
 				Floating_Buttons::get_class_full_name()
@@ -89,28 +89,28 @@ class Module extends BaseModule {
 		add_action( 'current_screen', function() {
 			$screen = get_current_screen();
 			if ( $screen && 'edit-e-floating-buttons' === $screen->id ) {
-				$this->flush_permalinks_on_elementor_version_change();
+				$this->flush_permalinks_on_refraction_version_change();
 			}
 		});
 
-		add_filter( 'elementor/editor-one/menu/elementor_post_types', function ( array $elementor_post_types ): array {
-			$elementor_post_types[ static::CPT_FLOATING_BUTTONS ] = [
-				'menu_slug' => 'elementor-editor-templates',
+		add_filter( 'refraction/editor-one/menu/refraction_post_types', function ( array $refraction_post_types ): array {
+			$refraction_post_types[ static::CPT_FLOATING_BUTTONS ] = [
+				'menu_slug' => 'refraction-editor-templates',
 				'child_slug' => 'edit.php?post_type=e-floating-buttons',
 			];
-			return $elementor_post_types;
+			return $refraction_post_types;
 		} );
 
-		add_action( 'wp_ajax_elementor_send_clicks', [ $this, 'handle_click_tracking' ] );
-		add_action( 'wp_ajax_nopriv_elementor_send_clicks', [ $this, 'handle_click_tracking' ] );
+		add_action( 'wp_ajax_refraction_send_clicks', [ $this, 'handle_click_tracking' ] );
+		add_action( 'wp_ajax_nopriv_refraction_send_clicks', [ $this, 'handle_click_tracking' ] );
 
-		add_action( 'elementor/frontend/after_register_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_styles' ] );
 
-		add_action( 'elementor/controls/register', function ( Controls_Manager $controls_manager ) {
+		add_action( 'refraction/controls/register', function ( Controls_Manager $controls_manager ) {
 			$controls_manager->register( new Hover_Animation_Floating_Buttons() );
 		});
 
-		add_filter( 'elementor/widget/common/register_css_attributes_control', function ( $common_controls ) {
+		add_filter( 'refraction/widget/common/register_css_attributes_control', function ( $common_controls ) {
 			if ( Floating_Buttons::is_creating_floating_buttons_page() || Floating_Buttons::is_editing_existing_floating_buttons_page() ) {
 				return false;
 			}
@@ -118,14 +118,14 @@ class Module extends BaseModule {
 			return $common_controls;
 		} );
 
-		add_filter( 'elementor/settings/controls/checkbox_list_cpt/post_type_objects', function ( $post_types ) {
+		add_filter( 'refraction/settings/controls/checkbox_list_cpt/post_type_objects', function ( $post_types ) {
 			unset( $post_types[ static::CPT_FLOATING_BUTTONS ] );
 
 			return $post_types;
 		} );
 
 		add_filter(
-			'elementor/template_library/sources/local/is_valid_template_type',
+			'refraction/template_library/sources/local/is_valid_template_type',
 			function ( $is_valid_template_type, $cpt ) {
 
 				if ( in_array( static::CPT_FLOATING_BUTTONS, $cpt, true ) ) {
@@ -138,13 +138,13 @@ class Module extends BaseModule {
 			2
 		);
 
-		if ( ! ElementorUtils::has_pro() ) {
+		if ( ! RefractionUtils::has_pro() ) {
 			add_action( 'wp_footer', function () {
 				$this->render_floating_buttons();
 			} );
 		}
 
-		add_action( 'elementor/admin-top-bar/is-active', function ( $is_top_bar_active, $current_screen ) {
+		add_action( 'refraction/admin-top-bar/is-active', function ( $is_top_bar_active, $current_screen ) {
 
 			if ( strpos( $current_screen->id ?? '', static::CPT_FLOATING_BUTTONS ) !== false ) {
 				return true;
@@ -153,19 +153,19 @@ class Module extends BaseModule {
 			return $is_top_bar_active;
 		}, 10, 2 );
 
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_menu( $menu_data_provider );
 		} );
 
-		add_action( 'elementor/admin/localize_settings', function ( array $settings ) {
+		add_action( 'refraction/admin/localize_settings', function ( array $settings ) {
 			return $this->admin_localize_settings( $settings );
 		} );
 
-		add_action( 'elementor/editor/localize_settings', function ( $data ) {
+		add_action( 'refraction/editor/localize_settings', function ( $data ) {
 			return $this->editor_localize_settings( $data );
 		} );
 
-		add_filter( 'elementor/template_library/sources/local/register_taxonomy_cpts', function ( array $cpts ) {
+		add_filter( 'refraction/template_library/sources/local/register_taxonomy_cpts', function ( array $cpts ) {
 			$cpts[] = static::CPT_FLOATING_BUTTONS;
 
 			return $cpts;
@@ -185,10 +185,10 @@ class Module extends BaseModule {
 			$source_local = Plugin::$instance->templates_manager->get_source( 'local' );
 			unset( $posts_columns['date'] );
 			unset( $posts_columns['comments'] );
-			$posts_columns['click_tracking'] = esc_html__( 'Click Tracking', 'elementor' );
+			$posts_columns['click_tracking'] = esc_html__( 'Click Tracking', 'refraction' );
 
-			if ( ! ElementorUtils::has_pro() ) {
-				$posts_columns['instances'] = esc_html__( 'Instances', 'elementor' );
+			if ( ! RefractionUtils::has_pro() ) {
+				$posts_columns['instances'] = esc_html__( 'Instances', 'refraction' );
 			}
 
 			return $source_local->admin_columns_headers( $posts_columns );
@@ -208,8 +208,8 @@ class Module extends BaseModule {
 	}
 
 	public function is_preview_for_document( $post_id ) {
-		$preview_id = ElementorUtils::get_super_global_value( $_GET, 'preview_id' );
-		$preview = ElementorUtils::get_super_global_value( $_GET, 'preview' );
+		$preview_id = RefractionUtils::get_super_global_value( $_GET, 'preview_id' );
+		$preview = RefractionUtils::get_super_global_value( $_GET, 'preview' );
 
 		return 'true' === $preview && (int) $post_id === (int) $preview_id;
 	}
@@ -269,12 +269,12 @@ class Module extends BaseModule {
 				echo esc_html( $click_tracking );
 				break;
 			case 'instances':
-				if ( ElementorUtils::has_pro() ) {
+				if ( RefractionUtils::has_pro() ) {
 					break;
 				}
-				$instances = get_post_meta( $post_id, '_elementor_conditions', true );
+				$instances = get_post_meta( $post_id, '_refraction_conditions', true );
 				if ( $instances ) {
-					echo esc_html__( 'Entire Site', 'elementor' );
+					echo esc_html__( 'Entire Site', 'refraction' );
 				}
 				break;
 			default:
@@ -282,10 +282,10 @@ class Module extends BaseModule {
 		}
 	}
 
-	public function flush_permalinks_on_elementor_version_change() {
-		if ( get_option( static::ROUTER_OPTION_KEY ) !== ELEMENTOR_VERSION ) {
+	public function flush_permalinks_on_refraction_version_change() {
+		if ( get_option( static::ROUTER_OPTION_KEY ) !== REFRACTION_VERSION ) {
 			flush_rewrite_rules();
-			update_option( static::ROUTER_OPTION_KEY, ELEMENTOR_VERSION );
+			update_option( static::ROUTER_OPTION_KEY, REFRACTION_VERSION );
 		}
 	}
 
@@ -308,7 +308,7 @@ class Module extends BaseModule {
 			'post_type' => $cpt,
 			'post_status' => 'trash',
 			'posts_per_page' => 1,
-			'meta_key' => '_elementor_template_type',
+			'meta_key' => '_refraction_template_type',
 			'meta_value' => $document_type,
 		] );
 
@@ -316,7 +316,7 @@ class Module extends BaseModule {
 	}
 
 	private function get_add_new_contact_page_url() {
-		if ( ElementorUtils::has_pro() ) {
+		if ( RefractionUtils::has_pro() ) {
 			return Plugin::$instance->documents->get_create_new_post_url(
 				static::CPT_FLOATING_BUTTONS,
 				static::FLOATING_BUTTONS_DOCUMENT_TYPE
@@ -339,9 +339,9 @@ class Module extends BaseModule {
 			<?php
 			/** @var Source_Local $source_local */
 			$source_local->print_blank_state_template(
-				esc_html__( 'Floating Element', 'elementor' ),
+				esc_html__( 'Floating Element', 'refraction' ),
 				$this->get_add_new_contact_page_url(),
-				nl2br( esc_html__( 'Add a Floating element so your users can easily get in touch!', 'elementor' ) )
+				nl2br( esc_html__( 'Add a Floating element so your users can easily get in touch!', 'refraction' ) )
 			);
 
 			if ( ! empty( $trashed_posts ) ) : ?>
@@ -349,7 +349,7 @@ class Module extends BaseModule {
 					<?php
 					printf(
 						/* translators: %1$s Link open tag, %2$s: Link close tag. */
-						esc_html__( 'Or view %1$sTrashed Items%2$s', 'elementor' ),
+						esc_html__( 'Or view %1$sTrashed Items%2$s', 'refraction' ),
 						'<a href="' . esc_url( admin_url( 'edit.php?post_status=trash&post_type=' . self::CPT_FLOATING_BUTTONS ) ) . '">',
 						'</a>'
 					);
@@ -391,7 +391,7 @@ class Module extends BaseModule {
 		$args = [
 			'labels' => $labels,
 			'public' => true,
-			'show_in_menu' => 'edit.php?post_type=elementor_library&tabs_group=library',
+			'show_in_menu' => 'edit.php?post_type=refraction_library&tabs_group=library',
 			'show_in_nav_menus' => false,
 			'capabilities' => [
 				'edit_post' => 'manage_options',
@@ -417,7 +417,7 @@ class Module extends BaseModule {
 				'thumbnail',
 				'custom-fields',
 				'post-formats',
-				'elementor',
+				'refraction',
 			],
 		];
 
@@ -443,7 +443,7 @@ class Module extends BaseModule {
 			'post_type' => $cpt,
 			'post_status' => 'any',
 			'posts_per_page' => 1,
-			'meta_key' => '_elementor_template_type',
+			'meta_key' => '_refraction_template_type',
 			'meta_value' => $document_type,
 		] );
 
@@ -482,7 +482,7 @@ class Module extends BaseModule {
 
 	private function render_floating_buttons(): void {
 		if ( Plugin::$instance->preview->is_preview_mode() ) {
-			$post_id = ElementorUtils::get_super_global_value( $_GET, 'elementor-preview' );
+			$post_id = RefractionUtils::get_super_global_value( $_GET, 'refraction-preview' );
 			$document = Plugin::$instance->documents->get( $post_id );
 
 			if (
@@ -498,7 +498,7 @@ class Module extends BaseModule {
 			'posts_per_page' => - 1,
 			'post_status' => 'publish',
 			'fields' => 'ids',
-			'meta_key' => '_elementor_conditions',
+			'meta_key' => '_refraction_conditions',
 			'meta_compare' => 'EXISTS',
 		] );
 
@@ -507,7 +507,7 @@ class Module extends BaseModule {
 		}
 
 		foreach ( $query->posts as $post_id ) {
-			$conditions = get_post_meta( $post_id, '_elementor_conditions', true );
+			$conditions = get_post_meta( $post_id, '_refraction_conditions', true );
 
 			if ( ! $conditions ) {
 				continue;
@@ -527,7 +527,7 @@ class Module extends BaseModule {
 	/**
 	 * Register styles.
 	 *
-	 * At build time, Elementor compiles `/modules/floating-buttons/assets/scss/widgets/*.scss`
+	 * At build time, Refraction compiles `/modules/floating-buttons/assets/scss/widgets/*.scss`
 	 * to `/assets/css/widget-*.min.css`.
 	 *
 	 * @return void
@@ -543,8 +543,8 @@ class Module extends BaseModule {
 			wp_register_style(
 				$widget_style_name,
 				$this->get_frontend_file_url( "{$widget_style_name}{$direction_suffix}.min.css", $should_load_responsive_css ),
-				[ 'elementor-frontend', 'elementor-icons' ],
-				$should_load_responsive_css ? null : ELEMENTOR_VERSION
+				[ 'refraction-frontend', 'refraction-icons' ],
+				$should_load_responsive_css ? null : REFRACTION_VERSION
 			);
 		}
 	}

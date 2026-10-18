@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Core\Breakpoints;
+namespace Refraction\Core\Breakpoints;
 
-use Elementor\Core\Base\Module;
-use Elementor\Core\Kits\Documents\Tabs\Settings_Layout;
-use Elementor\Core\Responsive\Files\Frontend;
-use Elementor\Modules\DevTools\Deprecation;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module;
+use Refraction\Core\Kits\Documents\Tabs\Settings_Layout;
+use Refraction\Core\Responsive\Files\Frontend;
+use Refraction\Modules\DevTools\Deprecation;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -311,32 +311,32 @@ class Manager extends Module {
 	public static function get_default_config() {
 		return [
 			self::BREAKPOINT_KEY_MOBILE => [
-				'label' => esc_html__( 'Mobile Portrait', 'elementor' ),
+				'label' => esc_html__( 'Mobile Portrait', 'refraction' ),
 				'default_value' => 767,
 				'direction' => 'max',
 			],
 			self::BREAKPOINT_KEY_MOBILE_EXTRA => [
-				'label' => esc_html__( 'Mobile Landscape', 'elementor' ),
+				'label' => esc_html__( 'Mobile Landscape', 'refraction' ),
 				'default_value' => 880,
 				'direction' => 'max',
 			],
 			self::BREAKPOINT_KEY_TABLET => [
-				'label' => esc_html__( 'Tablet Portrait', 'elementor' ),
+				'label' => esc_html__( 'Tablet Portrait', 'refraction' ),
 				'default_value' => 1024,
 				'direction' => 'max',
 			],
 			self::BREAKPOINT_KEY_TABLET_EXTRA => [
-				'label' => esc_html__( 'Tablet Landscape', 'elementor' ),
+				'label' => esc_html__( 'Tablet Landscape', 'refraction' ),
 				'default_value' => 1200,
 				'direction' => 'max',
 			],
 			self::BREAKPOINT_KEY_LAPTOP => [
-				'label' => esc_html__( 'Laptop', 'elementor' ),
+				'label' => esc_html__( 'Laptop', 'refraction' ),
 				'default_value' => 1366,
 				'direction' => 'max',
 			],
 			self::BREAKPOINT_KEY_WIDESCREEN => [
-				'label' => esc_html__( 'Widescreen', 'elementor' ),
+				'label' => esc_html__( 'Widescreen', 'refraction' ),
 				'default_value' => 2400,
 				'direction' => 'min',
 			],
@@ -406,7 +406,7 @@ class Manager extends Module {
 	 * @static
 	 */
 	public static function get_stylesheet_templates_path() {
-		return ELEMENTOR_ASSETS_PATH . 'css/templates/';
+		return REFRACTION_ASSETS_PATH . 'css/templates/';
 	}
 
 	/**
@@ -445,7 +445,7 @@ class Manager extends Module {
 		if ( Plugin::$instance->experiments->is_feature_active( 'additional_custom_breakpoints' ) ) {
 			$kit_active_id = Plugin::$instance->kits_manager->get_active_id();
 			// Get the breakpoint settings saved in the kit directly from the DB to avoid initializing the kit too early.
-			$raw_kit_settings = get_post_meta( $kit_active_id, '_elementor_page_settings', true );
+			$raw_kit_settings = get_post_meta( $kit_active_id, '_refraction_page_settings', true );
 
 			// If there is an existing kit with an active breakpoints value saved, use it.
 			if ( isset( $raw_kit_settings[ Settings_Layout::ACTIVE_BREAKPOINTS_CONTROL_ID ] ) ) {
@@ -521,15 +521,15 @@ class Manager extends Module {
 			$templates[ $file_name ] = $template_path;
 		}
 
-		$deprecated_hook = 'elementor/core/responsive/get_stylesheet_templates';
-		$replacement_hook = 'elementor/core/breakpoints/get_stylesheet_template';
+		$deprecated_hook = 'refraction/core/responsive/get_stylesheet_templates';
+		$replacement_hook = 'refraction/core/breakpoints/get_stylesheet_template';
 
 		/**
 		 * @type Deprecation $deprecation_module
 		 */
 		$deprecation_module = Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation;
 
-		// TODO: REMOVE THIS DEPRECATED HOOK IN ELEMENTOR v3.10.0/v4.0.0
+		// TODO: REMOVE THIS DEPRECATED HOOK IN REFRACTION v3.10.0/v4.0.0
 		$templates = $deprecation_module->apply_deprecated_filter( $deprecated_hook, [ $templates ], '3.2.0', $replacement_hook );
 
 		return apply_filters( $replacement_hook, $templates );

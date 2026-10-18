@@ -8,7 +8,7 @@ export default {
 		attribute: 'value',
 		attributeValue: 'Structure',
 	},
-	elementorLogo: {
+	refractionLogo: {
 		attribute: 'value',
 		attributeValue: 'selected',
 	},

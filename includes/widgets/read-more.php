@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor HTML widget.
+ * Refraction HTML widget.
  *
- * Elementor widget that insert a custom HTML code into the page.
+ * Refraction widget that insert a custom HTML code into the page.
  */
 class Widget_Read_More extends Widget_Base {
 
@@ -37,7 +37,7 @@ class Widget_Read_More extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Read More', 'elementor' );
+		return esc_html__( 'Read More', 'refraction' );
 	}
 
 	/**
@@ -88,11 +88,11 @@ class Widget_Read_More extends Widget_Base {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'Read More', 'elementor' ),
+				'label' => esc_html__( 'Read More', 'refraction' ),
 			]
 		);
 
-		$default_link_text = esc_html__( 'Continue reading', 'elementor' );
+		$default_link_text = esc_html__( 'Continue reading', 'refraction' );
 
 		/**
 		 * Read More widgets link text.
@@ -103,7 +103,7 @@ class Widget_Read_More extends Widget_Base {
 		 *
 		 * @param string $default_link_text The link text in the "Read More" widget. Default is "Continue reading".
 		 */
-		$default_link_text = apply_filters( 'elementor/widgets/read_more/default_link_text', $default_link_text );
+		$default_link_text = apply_filters( 'refraction/widgets/read_more/default_link_text', $default_link_text );
 
 		$this->add_control(
 			'theme_support',
@@ -112,7 +112,7 @@ class Widget_Read_More extends Widget_Base {
 				'alert_type' => 'warning',
 				'content' => sprintf(
 					/* translators: %s: The `the_content` function. */
-					esc_html__( 'Note: This widget only affects themes that use `%s` in archive pages.', 'elementor' ),
+					esc_html__( 'Note: This widget only affects themes that use `%s` in archive pages.', 'refraction' ),
 					'the_content'
 				),
 			]
@@ -121,7 +121,7 @@ class Widget_Read_More extends Widget_Base {
 		$this->add_control(
 			'link_text',
 			[
-				'label' => esc_html__( 'Read More Text', 'elementor' ),
+				'label' => esc_html__( 'Read More Text', 'refraction' ),
 				'placeholder' => $default_link_text,
 				'default' => $default_link_text,
 				'dynamic' => [

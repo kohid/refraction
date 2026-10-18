@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import DropZone from 'elementor/app/modules/import-export-customization/assets/js/import/components/drop-zone';
+import DropZone from 'refraction/app/modules/import-export-customization/assets/js/import/components/drop-zone';
 
 describe( 'DropZone Component', () => {
 	let mockOnFileSelect;

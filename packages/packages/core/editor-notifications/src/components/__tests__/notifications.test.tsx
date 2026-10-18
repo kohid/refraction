@@ -8,7 +8,7 @@ import {
 	__registerSlice,
 	__StoreProvider as Provider,
 	type Store,
-} from '@elementor/store';
+} from '@refraction/store';
 import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 
 import { notificationsSlice } from '../../slice';

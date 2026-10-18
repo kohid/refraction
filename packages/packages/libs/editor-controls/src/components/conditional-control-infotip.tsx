@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InfoAlert } from '@elementor/editor-ui';
+import { InfoAlert } from '@refraction/editor-ui';
 import { type AlertProps, AlertTitle, Box, Infotip, type InfotipProps, useTheme } from '@elementor/ui';
 import { DirectionProvider } from '@elementor/ui';
 

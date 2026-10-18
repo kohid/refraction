@@ -1,7 +1,7 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlSelect2ItemView;
 
-import Select2 from 'elementor-editor-utils/select2.js';
+import Select2 from 'refraction-editor-utils/select2.js';
 
 ControlSelect2ItemView = ControlBaseDataView.extend( {
 	getSelect2Placeholder() {
@@ -13,7 +13,7 @@ ControlSelect2ItemView = ControlBaseDataView.extend( {
 		const defaultOptions = {
 				allowClear: true,
 				placeholder: this.getSelect2Placeholder(),
-				dir: elementorCommon.config.isRTL ? 'rtl' : 'ltr',
+				dir: refractionCommon.config.isRTL ? 'rtl' : 'ltr',
 			},
 			lockedOptions = this.model.get( 'lockedOptions' );
 
@@ -79,7 +79,7 @@ ControlSelect2ItemView = ControlBaseDataView.extend( {
 	 * @deprecated since 3.0.0
 	 */
 	onReady() {
-		elementorDevTools.deprecation.deprecated( 'onReady()', '3.0.0' );
+		refractionDevTools.deprecation.deprecated( 'onReady()', '3.0.0' );
 	},
 
 	/**

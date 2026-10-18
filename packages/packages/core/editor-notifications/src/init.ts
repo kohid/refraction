@@ -1,5 +1,5 @@
-import { injectIntoTop } from '@elementor/editor';
-import { __registerSlice as registerSlice } from '@elementor/store';
+import { injectIntoTop } from '@refraction/editor';
+import { __registerSlice as registerSlice } from '@refraction/store';
 
 import Wrapper from './components/notifications';
 import { notificationsSlice } from './slice';

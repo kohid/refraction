@@ -1,20 +1,20 @@
-export default class extends elementorModules.ViewModule {
+export default class extends refractionModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				links: 'a[href^="%23elementor-action"], a[href^="#elementor-action"]',
+				links: 'a[href^="%23refraction-action"], a[href^="#refraction-action"]',
 			},
 		};
 	}
 
 	bindEvents() {
-		elementorFrontend.elements.$document.on( 'click', this.getSettings( 'selectors.links' ), this.runLinkAction.bind( this ) );
+		refractionFrontend.elements.$document.on( 'click', this.getSettings( 'selectors.links' ), this.runLinkAction.bind( this ) );
 	}
 
 	initActions() {
 		this.actions = {
 			lightbox: async ( settings ) => {
-				const lightbox = await elementorFrontend.utils.lightbox;
+				const lightbox = await refractionFrontend.utils.lightbox;
 
 				if ( settings.slideshow ) {
 					// Handle slideshow display
@@ -84,7 +84,7 @@ export default class extends elementorModules.ViewModule {
 
 	createActionHash( action, settings ) {
 		// We need to encode the hash tag (#) here, in order to support share links for a variety of providers
-		return encodeURIComponent( `#elementor-action:action=${ action }&settings=${ btoa( JSON.stringify( settings ) ) }` );
+		return encodeURIComponent( `#refraction-action:action=${ action }&settings=${ btoa( JSON.stringify( settings ) ) }` );
 	}
 
 	onInit() {
@@ -92,6 +92,6 @@ export default class extends elementorModules.ViewModule {
 
 		this.initActions();
 
-		elementorFrontend.on( 'components:init', this.runHashAction.bind( this ) );
+		refractionFrontend.on( 'components:init', this.runHashAction.bind( this ) );
 	}
 }

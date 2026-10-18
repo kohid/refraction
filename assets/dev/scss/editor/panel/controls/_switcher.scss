@@ -1,10 +1,10 @@
-.elementor-control-type-switcher {
+.refraction-control-type-switcher {
 
-	.elementor-control-input-wrapper {
+	.refraction-control-input-wrapper {
 		text-align: end;
 	}
 
-	.elementor-switch {
+	.refraction-switch {
 		position: relative;
 		display: inline-block;
 		vertical-align: top;
@@ -14,11 +14,11 @@
 		cursor: pointer;
 	}
 
-	.elementor-switch-input {
+	.refraction-switch-input {
 		display: none;
 	}
 
-	.elementor-switch-label {
+	.refraction-switch-label {
 		position: relative;
 		display: block;
 		height: inherit;
@@ -29,7 +29,7 @@
 		transition-property: opacity, background;
 	}
 
-	.elementor-switch-label {
+	.refraction-switch-label {
 
 		&:before,
 		&:after {
@@ -55,7 +55,7 @@
 		}
 	}
 
-	.elementor-switch-input:checked ~ .elementor-switch-label {
+	.refraction-switch-input:checked ~ .refraction-switch-label {
 		background: var(--e-a-btn-bg-primary);
 
 		&:before {
@@ -67,7 +67,7 @@
 		}
 	}
 
-	.elementor-switch-handle {
+	.refraction-switch-handle {
 		position: absolute;
 		inset-block-start: 1px;
 		inset-inline-start: 1px;
@@ -78,7 +78,7 @@
 		transition: inset-inline-start 0.15s ease-out;
 	}
 
-	.elementor-switch-input:checked ~ .elementor-switch-handle {
+	.refraction-switch-input:checked ~ .refraction-switch-handle {
 		inset-inline-start: initial;
 		inset-inline-end: 1px;
 	}

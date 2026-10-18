@@ -1,4 +1,4 @@
-var ControlBaseView = require( 'elementor-controls/base' );
+var ControlBaseView = require( 'refraction-controls/base' );
 
 module.exports = ControlBaseView.extend( {
 
@@ -17,6 +17,6 @@ module.exports = ControlBaseView.extend( {
 	onButtonClick() {
 		var eventName = this.model.get( 'event' );
 
-		elementor.channels.editor.trigger( eventName, this );
+		refraction.channels.editor.trigger( eventName, this );
 	},
 } );

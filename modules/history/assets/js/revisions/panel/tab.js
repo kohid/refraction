@@ -1,17 +1,17 @@
-import { filterUnknownElements } from 'elementor-frontend-utils/filter-unknown-elements';
+import { filterUnknownElements } from 'refraction-frontend-utils/filter-unknown-elements';
 
 export default Marionette.CompositeView.extend( {
-	id: 'elementor-panel-revisions',
+	id: 'refraction-panel-revisions',
 
-	template: '#tmpl-elementor-panel-revisions',
+	template: '#tmpl-refraction-panel-revisions',
 
 	childView: require( './view' ),
 
-	childViewContainer: '#elementor-revisions-list',
+	childViewContainer: '#refraction-revisions-list',
 
 	ui: {
-		discard: '.elementor-button.e-revision-discard',
-		apply: '.elementor-button.e-revision-save',
+		discard: '.refraction-button.e-revision-discard',
+		apply: '.refraction-button.e-revision-save',
 	},
 
 	events: {
@@ -32,9 +32,9 @@ export default Marionette.CompositeView.extend( {
 
 		this.collection = this.document.revisions.getItems();
 
-		this.listenTo( elementor.channels.editor, 'saved', this.onEditorSaved );
+		this.listenTo( refraction.channels.editor, 'saved', this.onEditorSaved );
 
-		this.currentPreviewId = elementor.config.document.revisions.current_id;
+		this.currentPreviewId = refraction.config.document.revisions.current_id;
 	},
 
 	getRevisionViewData( revisionView ) {
@@ -46,16 +46,16 @@ export default Marionette.CompositeView.extend( {
 					this.document.revisions.setEditorData( sanitizedData.elements );
 				}
 
-				elementor.settings.page.model.set( sanitizedData.settings );
+				refraction.settings.page.model.set( sanitizedData.settings );
 
 				this.setRevisionsButtonsActive( true );
 
-				revisionView.$el.removeClass( 'elementor-revision-item-loading' );
+				revisionView.$el.removeClass( 'refraction-revision-item-loading' );
 
 				this.enterReviewMode();
 			},
 			error: ( errorMessage ) => {
-				revisionView.$el.removeClass( 'elementor-revision-item-loading' );
+				revisionView.$el.removeClass( 'refraction-revision-item-loading' );
 
 				this.currentPreviewItem = null;
 
@@ -75,7 +75,7 @@ export default Marionette.CompositeView.extend( {
 	},
 
 	deleteRevision( revisionView ) {
-		revisionView.$el.addClass( 'elementor-revision-item-loading' );
+		revisionView.$el.addClass( 'refraction-revision-item-loading' );
 
 		this.document.revisions.deleteRevision( revisionView.model, {
 			success: () => {
@@ -86,7 +86,7 @@ export default Marionette.CompositeView.extend( {
 				this.currentPreviewId = null;
 			},
 			error: () => {
-				revisionView.$el.removeClass( 'elementor-revision-item-loading' );
+				revisionView.$el.removeClass( 'refraction-revision-item-loading' );
 
 				// eslint-disable-next-line no-alert
 				alert( 'An error occurred.' );
@@ -95,11 +95,11 @@ export default Marionette.CompositeView.extend( {
 	},
 
 	enterReviewMode() {
-		elementor.changeEditMode( 'review' );
+		refraction.changeEditMode( 'review' );
 	},
 
 	exitReviewMode() {
-		elementor.changeEditMode( 'edit' );
+		refraction.changeEditMode( 'edit' );
 	},
 
 	navigate( reverse ) {
@@ -126,7 +126,7 @@ export default Marionette.CompositeView.extend( {
 
 		this.setRevisionsButtonsActive( false );
 
-		this.currentPreviewId = elementor.config.document.revisions.current_id;
+		this.currentPreviewId = refraction.config.document.revisions.current_id;
 	},
 
 	onApplyClick() {
@@ -143,7 +143,7 @@ export default Marionette.CompositeView.extend( {
 
 	onDiscardClick() {
 		if ( this.document.config.panel.has_elements ) {
-			this.document.revisions.setEditorData( elementor.config.document.elements );
+			this.document.revisions.setEditorData( refraction.config.document.elements );
 		}
 
 		$e.internal( 'document/save/set-is-modified', { status: this.isRevisionApplied } );
@@ -158,7 +158,7 @@ export default Marionette.CompositeView.extend( {
 	},
 
 	onDestroy() {
-		if ( this.currentPreviewId && this.currentPreviewId !== elementor.config.document.revisions.current_id ) {
+		if ( this.currentPreviewId && this.currentPreviewId !== refraction.config.document.revisions.current_id ) {
 			this.onDiscardClick();
 		}
 	},
@@ -173,7 +173,7 @@ export default Marionette.CompositeView.extend( {
 		// Ensure the model is exist and not deleted during a save.
 		if ( currentPreviewModel ) {
 			this.currentPreviewItem = this.children.findByModelCid( currentPreviewModel.cid );
-			this.currentPreviewItem.$el.addClass( 'elementor-revision-current-preview' );
+			this.currentPreviewItem.$el.addClass( 'refraction-revision-current-preview' );
 		}
 	},
 
@@ -185,14 +185,14 @@ export default Marionette.CompositeView.extend( {
 		}
 
 		if ( this.currentPreviewItem ) {
-			this.currentPreviewItem.$el.removeClass( 'elementor-revision-current-preview elementor-revision-item-loading' );
+			this.currentPreviewItem.$el.removeClass( 'refraction-revision-current-preview refraction-revision-item-loading' );
 		}
 
-		childView.$el.addClass( 'elementor-revision-current-preview elementor-revision-item-loading' );
+		childView.$el.addClass( 'refraction-revision-current-preview refraction-revision-item-loading' );
 
-		const revision = ( null === this.currentPreviewId || elementor.config.document.revisions.current_id === this.currentPreviewId );
+		const revision = ( null === this.currentPreviewId || refraction.config.document.revisions.current_id === this.currentPreviewId );
 
-		if ( revision && elementor.saver.isEditorChanged() ) {
+		if ( revision && refraction.saver.isEditorChanged() ) {
 			// TODO: Change to 'document/save/auto' ?.
 			$e.internal( 'document/save/save', {
 				status: 'autosave',

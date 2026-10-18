@@ -18,10 +18,10 @@ export const IconLibraryViewToggle = ( { value, onChange }: IconLibraryViewToggl
 	const isGrid = value === 'grid';
 	const nextView: IconLibraryView = isGrid ? 'list' : 'grid';
 	const ViewIcon = isGrid ? WidgetsIcon : ListIcon;
-	const viewButtonLabel = isGrid ? __( 'Grid view', 'elementor' ) : __( 'List view', 'elementor' );
+	const viewButtonLabel = isGrid ? __( 'Grid view', 'refraction' ) : __( 'List view', 'refraction' );
 	const viewButtonAction = isGrid
-		? __( 'Switch to list view', 'elementor' )
-		: __( 'Switch to grid view', 'elementor' );
+		? __( 'Switch to list view', 'refraction' )
+		: __( 'Switch to grid view', 'refraction' );
 
 	return (
 		<Tooltip

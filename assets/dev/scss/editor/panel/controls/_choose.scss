@@ -1,14 +1,14 @@
-.elementor-control-type-choose {
+.refraction-control-type-choose {
 
-	&.elementor-label-block {
+	&.refraction-label-block {
 
-		.elementor-choices {
+		.refraction-choices {
 			width: 100%;
 		}
 	}
 }
 
-.elementor-choices {
+.refraction-choices {
 	display: flex;
 	height: $control-unit;
 	line-height: $control-unit;
@@ -17,7 +17,7 @@
 	border-radius: var(--e-a-border-radius);
 	overflow: hidden;
 
-	.elementor-choices-label {
+	.refraction-choices-label {
 		border-block-start: var(--e-a-border-bold);
 		border-block-end: var(--e-a-border-bold);
 		border-inline-start: var(--e-a-border-bold);
@@ -43,22 +43,22 @@
 		display: none;
 
 		&:hover {
-			+ .elementor-choices-label {
+			+ .refraction-choices-label {
 				background-color: var(--e-a-bg-hover);
 			}
 		}
 
-		&.e-choose-placeholder + .elementor-choices-label,
-		&:checked + .elementor-choices-label {
+		&.e-choose-placeholder + .refraction-choices-label,
+		&:checked + .refraction-choices-label {
 			background-color: var(--e-a-bg-active-bold);
 			color: var(--e-a-color-txt-accent);
 		}
 	}
 }
 
-.elementor-label-inline {
+.refraction-label-inline {
 
-	.elementor-choices {
+	.refraction-choices {
 		justify-content: flex-end;
 	}
 }

@@ -40,5 +40,5 @@ export const windowEvent = ( event: WindowEventDescriptor[ 'name' ] ): WindowEve
 };
 
 export const v1ReadyEvent = () => {
-	return windowEvent( 'elementor/initialized' );
+	return windowEvent( 'refraction/initialized' );
 };

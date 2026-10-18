@@ -13,7 +13,7 @@ type AjaxErrorLike = {
 };
 
 type SessionWindow = Window & {
-	elementorCommon?: { ajax?: { config?: { url?: string } } };
+	refractionCommon?: { ajax?: { config?: { url?: string } } };
 };
 
 export class SessionExpiredError extends Error {}
@@ -41,7 +41,7 @@ export async function refreshAuditsNonce(): Promise< string > {
 }
 
 async function requestFreshNonce(): Promise< string > {
-	const ajaxUrl = ( window as SessionWindow ).elementorCommon?.ajax?.config?.url ?? DEFAULT_AJAX_URL;
+	const ajaxUrl = ( window as SessionWindow ).refractionCommon?.ajax?.config?.url ?? DEFAULT_AJAX_URL;
 	const url = new URL( ajaxUrl, window.location.origin );
 	url.searchParams.set( 'action', 'rest-nonce' );
 
@@ -57,7 +57,7 @@ async function requestFreshNonce(): Promise< string > {
 		throw new SessionExpiredError( 'Session expired — received invalid nonce' );
 	}
 
-	window.elementorAudits = { ...getWindowConfig(), nonce };
+	window.refractionAudits = { ...getWindowConfig(), nonce };
 
 	return nonce;
 }

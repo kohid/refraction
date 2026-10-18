@@ -6,11 +6,11 @@ import { CompletionScreen } from '../completion-screen';
 
 describe( 'CompletionScreen', () => {
 	beforeEach( () => {
-		window.elementorAppConfig = createMockConfig();
+		window.refractionAppConfig = createMockConfig();
 	} );
 
 	afterEach( () => {
-		window.elementorAppConfig = undefined;
+		window.refractionAppConfig = undefined;
 	} );
 
 	it( 'should render loading title', () => {

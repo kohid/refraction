@@ -1,4 +1,4 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export const ActiveDocumentMustExistError = createError( {
 	code: 'active_document_must_exist',

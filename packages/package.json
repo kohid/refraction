@@ -1,6 +1,6 @@
 {
-  "name": "elementor-packages",
-  "author": "Elementor Team",
+  "name": "refraction-packages",
+  "author": "Refraction Team",
   "license": "GPL-3.0-or-later",
   "engines": {
     "node": ">=24.15.0",

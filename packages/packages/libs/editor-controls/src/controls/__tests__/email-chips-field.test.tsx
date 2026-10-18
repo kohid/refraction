@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderWithTheme } from 'test-utils';
-import { isTransformable, type ObjectPropType, type PropValue, type UnionPropType } from '@elementor/editor-props';
+import { isTransformable, type ObjectPropType, type PropValue, type UnionPropType } from '@refraction/editor-props';
 import { fireEvent, screen, within } from '@testing-library/react';
 
 import { PropKeyProvider, PropProvider } from '../../bound-prop-context';

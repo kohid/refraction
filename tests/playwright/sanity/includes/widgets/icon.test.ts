@@ -23,22 +23,22 @@ test.describe( 'Icon and social icon widget tests', () => {
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 		const editor = await wpAdmin.openNewPage(),
 			iconWidget = await editor.addWidget( { widgetType: 'icon' } ),
-			iconSelector = '.elementor-element-' + iconWidget + ' .elementor-icon';
+			iconSelector = '.refraction-element-' + iconWidget + ' .refraction-icon';
 
 		await test.step( 'Fit Aspect hidden for Icons', async () => {
 			await editor.openPanelTab( 'style' );
-			await expect( page.locator( '.elementor-control-fit_to_size .elementor-switch-label' ) ).toBeHidden();
+			await expect( page.locator( '.refraction-control-fit_to_size .refraction-switch-label' ) ).toBeHidden();
 		} );
 
 		await test.step( 'Act', async () => {
 			await editor.openPanelTab( 'content' );
-			const mediaUploadControl = page.locator( '.elementor-control-selected_icon .elementor-control-media__preview' ).first();
+			const mediaUploadControl = page.locator( '.refraction-control-selected_icon .refraction-control-media__preview' ).first();
 			await mediaUploadControl.hover();
 			await mediaUploadControl.waitFor();
 			await page.getByText( 'Upload SVG' ).first().click();
 			await editor.uploadSVG();
 			await editor.openPanelTab( 'style' );
-			await page.locator( '.elementor-switch-label' ).click();
+			await page.locator( '.refraction-switch-label' ).click();
 			await editor.setSliderControlValue( 'size', '300' );
 		} );
 
@@ -55,7 +55,7 @@ test.describe( 'Icon and social icon widget tests', () => {
 		await test.step( 'FrontEnd Fit-to-size enabled', async () => {
 			await editor.publishAndViewPage();
 
-			await page.waitForSelector( '.elementor-element-' + iconWidget + ' .elementor-icon' );
+			await page.waitForSelector( '.refraction-element-' + iconWidget + ' .refraction-icon' );
 
 			const iconSVG = page.locator( iconSelector ),
 				iconDimensions = await iconSVG.boundingBox();
@@ -73,7 +73,7 @@ test.describe( 'Icon and social icon widget tests', () => {
 		// Act.
 		await editor.addWidget( { widgetType: 'social-icons' } );
 		await page.locator( EditorSelectors.item ).first().click();
-		const mediaUploadControl = page.locator( '.elementor-control-social_icon .elementor-control-media__preview' ).first();
+		const mediaUploadControl = page.locator( '.refraction-control-social_icon .refraction-control-media__preview' ).first();
 		await mediaUploadControl.hover();
 		await mediaUploadControl.waitFor();
 		await page.getByText( 'Upload SVG' ).first().click();

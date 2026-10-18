@@ -2,7 +2,7 @@ import Base from '../../../base';
 import {
 	extractNestedItemTitle,
 	shouldUseAtomicRepeaters,
-} from 'elementor/modules/nested-elements/assets/js/editor/utils';
+} from 'refraction/modules/nested-elements/assets/js/editor/utils';
 
 /**
  * Hook responsible for:
@@ -45,8 +45,8 @@ export class NestedRepeaterCreateContainer extends Base {
 		const widgetType = container.settings.get( 'widgetType' );
 
 		if ( shouldUseAtomicRepeaters( widgetType ) ) {
-			elementor.$preview[ 0 ].contentWindow.dispatchEvent(
-				new CustomEvent( 'elementor/nested-container/atomic-repeater', {
+			refraction.$preview[ 0 ].contentWindow.dispatchEvent(
+				new CustomEvent( 'refraction/nested-container/atomic-repeater', {
 					detail: {
 						container,
 						action: {

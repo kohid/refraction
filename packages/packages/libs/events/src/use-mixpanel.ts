@@ -1,5 +1,5 @@
 export const getMixpanel = () => {
-	const eventsManager = window.elementorCommon?.eventsManager || {};
+	const eventsManager = window.refractionCommon?.eventsManager || {};
 	return {
 		dispatchEvent: eventsManager.dispatchEvent?.bind( eventsManager ),
 		config: eventsManager.config,
@@ -29,7 +29,7 @@ export const trackEvent = < T extends { eventName: string } & Record< string, un
 export const canSendEvents = (): boolean => getMixpanel().canSendEvents?.() ?? false;
 
 export const setCanSendEvents = ( value: boolean ): void => {
-	const editorEvents = window.elementorCommon?.config?.editor_events;
+	const editorEvents = window.refractionCommon?.config?.editor_events;
 	if ( editorEvents ) {
 		editorEvents.can_send_events = value;
 	}

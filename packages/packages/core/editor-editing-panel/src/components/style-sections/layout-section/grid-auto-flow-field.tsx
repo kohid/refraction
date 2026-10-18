@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ControlToggleButtonGroup, type ToggleButtonGroupItem, useBoundProp } from '@elementor/editor-controls';
-import { type StringPropValue } from '@elementor/editor-props';
+import { ControlToggleButtonGroup, type ToggleButtonGroupItem, useBoundProp } from '@refraction/editor-controls';
+import { type StringPropValue } from '@refraction/editor-props';
 import { ArrowDownSmallIcon, ArrowRightIcon, LayoutDashboardIcon } from '@elementor/icons';
 import { Grid, ToggleButton, Tooltip, withDirection } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -12,21 +12,21 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type AutoFlowDirection = 'row' | 'column';
 
-const AUTO_FLOW_LABEL = __( 'Auto flow', 'elementor' );
-const DENSE_LABEL = __( 'Dense', 'elementor' );
+const AUTO_FLOW_LABEL = __( 'Auto flow', 'refraction' );
+const DENSE_LABEL = __( 'Dense', 'refraction' );
 
 const StartIcon = withDirection( ArrowRightIcon );
 
 const directionOptions: ToggleButtonGroupItem< AutoFlowDirection >[] = [
 	{
 		value: 'row',
-		label: __( 'Row', 'elementor' ),
+		label: __( 'Row', 'refraction' ),
 		renderContent: ( { size } ) => <StartIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'column',
-		label: __( 'Column', 'elementor' ),
+		label: __( 'Column', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowDownSmallIcon fontSize={ size } />,
 		showTooltip: true,
 	},

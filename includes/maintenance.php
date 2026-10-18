@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Kits\Manager;
-use Elementor\Core\Upgrade\Manager as Upgrade_Manager;
+use Refraction\Core\Kits\Manager;
+use Refraction\Core\Upgrade\Manager as Upgrade_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor maintenance.
+ * Refraction maintenance.
  *
- * Elementor maintenance handler class is responsible for setting up Elementor
+ * Refraction maintenance handler class is responsible for setting up Refraction
  * activation and uninstallation hooks.
  *
  * @since 1.0.0
@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Maintenance {
 
 	/**
-	 * Activate Elementor.
+	 * Activate Refraction.
 	 *
-	 * Set Elementor activation hook.
+	 * Set Refraction activation hook.
 	 *
 	 * Fired by `register_activation_hook` when the plugin is activated.
 	 *
@@ -52,10 +52,10 @@ class Maintenance {
 		$history = Upgrade_Manager::get_installs_history();
 		if ( empty( $history ) ) {
 			$default_options = [
-				'elementor_font_display' => 'swap',
+				'refraction_font_display' => 'swap',
 			];
 			foreach ( $default_options as $option_name => $option_value ) {
-				if ( \Elementor\Utils::is_empty( get_option( $option_name ) ) ) {
+				if ( \Refraction\Utils::is_empty( get_option( $option_name ) ) ) {
 					add_option( $option_name, $option_value );
 				}
 			}
@@ -65,17 +65,17 @@ class Maintenance {
 	/**
 	 * Init.
 	 *
-	 * Initialize Elementor Maintenance.
+	 * Initialize Refraction Maintenance.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 * @static
 	 */
 	public static function init() {
-		register_activation_hook( ELEMENTOR_PLUGIN_BASE, [ __CLASS__, 'activation' ] );
+		register_activation_hook( REFRACTION_PLUGIN_BASE, [ __CLASS__, 'activation' ] );
 
 		add_action( 'wpmu_new_blog', function ( $site_id ) {
-			if ( ! is_plugin_active_for_network( ELEMENTOR_PLUGIN_BASE ) ) {
+			if ( ! is_plugin_active_for_network( REFRACTION_PLUGIN_BASE ) ) {
 				return;
 			}
 

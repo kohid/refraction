@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Document;
-use Elementor\Core\Files\Uploads_Manager;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Files\Uploads_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -17,7 +17,7 @@ class Settings_Site_Identity extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Site Identity', 'elementor' );
+		return esc_html__( 'Site Identity', 'refraction' );
 	}
 
 	public function get_group() {
@@ -57,7 +57,7 @@ class Settings_Site_Identity extends Tab_Base {
 				'alert_type' => 'info',
 				'content' => sprintf(
 					/* translators: 1: Link open tag, 2: Link open tag, 3: Link close tag. */
-					esc_html__( 'Changes will be reflected only after %1$s saving %3$s and %2$s reloading %3$s preview.', 'elementor' ),
+					esc_html__( 'Changes will be reflected only after %1$s saving %3$s and %2$s reloading %3$s preview.', 'refraction' ),
 					'<a href="javascript: $e.run( \'document/save/default\' )">',
 					'<a href="javascript: $e.run( \'preview/reload\' )">',
 					'</a>'
@@ -68,9 +68,9 @@ class Settings_Site_Identity extends Tab_Base {
 		$this->add_control(
 			'site_name',
 			[
-				'label' => esc_html__( 'Site Name', 'elementor' ),
+				'label' => esc_html__( 'Site Name', 'refraction' ),
 				'default' => get_option( 'blogname' ),
-				'placeholder' => esc_html__( 'Choose name', 'elementor' ),
+				'placeholder' => esc_html__( 'Choose name', 'refraction' ),
 				'label_block' => true,
 				'export' => false,
 			]
@@ -79,9 +79,9 @@ class Settings_Site_Identity extends Tab_Base {
 		$this->add_control(
 			'site_description',
 			[
-				'label' => esc_html__( 'Site Description', 'elementor' ),
+				'label' => esc_html__( 'Site Description', 'refraction' ),
 				'default' => get_option( 'blogdescription' ),
-				'placeholder' => esc_html__( 'Choose description', 'elementor' ),
+				'placeholder' => esc_html__( 'Choose description', 'refraction' ),
 				'label_block' => true,
 				'export' => false,
 			]
@@ -90,7 +90,7 @@ class Settings_Site_Identity extends Tab_Base {
 		$this->add_control(
 			'site_logo',
 			[
-				'label' => esc_html__( 'Site Logo', 'elementor' ),
+				'label' => esc_html__( 'Site Logo', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'should_include_svg_inline_option' => $should_include_svg_inline_option,
 				'default' => [
@@ -99,7 +99,7 @@ class Settings_Site_Identity extends Tab_Base {
 				],
 				'description' => sprintf(
 					/* translators: 1: Width number pixel, 2: Height number pixel. */
-					esc_html__( 'Suggested image dimensions: %1$s × %2$s pixels.', 'elementor' ),
+					esc_html__( 'Suggested image dimensions: %1$s × %2$s pixels.', 'refraction' ),
 					'350',
 					'100'
 				),
@@ -115,14 +115,14 @@ class Settings_Site_Identity extends Tab_Base {
 		$this->add_control(
 			'site_favicon',
 			[
-				'label' => esc_html__( 'Site Favicon', 'elementor' ),
+				'label' => esc_html__( 'Site Favicon', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'should_include_svg_inline_option' => $should_include_svg_inline_option,
 				'default' => [
 					'id' => $site_icon_id,
 					'url' => $site_icon_src ? $site_icon_src[0] : '',
 				],
-				'description' => esc_html__( 'Suggested favicon dimensions: 512 × 512 pixels.', 'elementor' ),
+				'description' => esc_html__( 'Suggested favicon dimensions: 512 × 512 pixels.', 'refraction' ),
 				'export' => false,
 			]
 		);

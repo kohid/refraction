@@ -1,5 +1,5 @@
 import { createMockElement } from 'test-utils';
-import { getElements, getHostDocumentElements } from '@elementor/editor-elements';
+import { getElements, getHostDocumentElements } from '@refraction/editor-elements';
 
 import { type ExtendedWindow } from '../types';
 
@@ -20,7 +20,7 @@ describe( 'getElements', () => {
 			[ 'element', element ],
 		] );
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			documents: {
 				getCurrent: () => ( { container: document } ),
 			},
@@ -62,7 +62,7 @@ describe( 'getHostDocumentElements', () => {
 		const hostContainer = createMockElement( { model: { id: 'host-document', elements: [ element.model ] } } );
 		const activeContainer = createMockElement( { model: { id: 'active-document' } } );
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			documents: {
 				getCurrent: () => ( { container: activeContainer } ),
 				getInitialId: () => 49,
@@ -85,7 +85,7 @@ describe( 'getHostDocumentElements', () => {
 		// Arrange.
 		const extendedWindow = window as unknown as ExtendedWindow;
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			documents: {
 				getInitialId: () => undefined as unknown as number,
 			},

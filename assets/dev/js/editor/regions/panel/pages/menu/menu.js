@@ -1,4 +1,4 @@
-import MenuPageView from 'elementor-panel/pages/menu/base';
+import MenuPageView from 'refraction-panel/pages/menu/base';
 
 export default class PanelMenu extends MenuPageView {
 	initialize() {
@@ -6,15 +6,15 @@ export default class PanelMenu extends MenuPageView {
 	}
 
 	getArrowClass() {
-		return 'eicon-chevron-' + ( elementorCommon.config.isRTL ? 'right' : 'left' );
+		return 'eicon-chevron-' + ( refractionCommon.config.isRTL ? 'right' : 'left' );
 	}
 
 	onRender() {
-		elementor.getPanelView().getHeaderView().ui.menuIcon.removeClass( 'eicon-menu-bar' ).addClass( this.getArrowClass() );
+		refraction.getPanelView().getHeaderView().ui.menuIcon.removeClass( 'eicon-menu-bar' ).addClass( this.getArrowClass() );
 	}
 
 	onDestroy() {
-		elementor.getPanelView().getHeaderView().ui.menuIcon.removeClass( this.getArrowClass() ).addClass( 'eicon-menu-bar' );
+		refraction.getPanelView().getHeaderView().ui.menuIcon.removeClass( this.getArrowClass() ).addClass( 'eicon-menu-bar' );
 	}
 }
 
@@ -26,26 +26,26 @@ PanelMenu.initGroups = () => {
 	// Keep the old `more` for BC, since 3.0.0.
 	PanelMenu.groups.add( {
 		name: 'more',
-		title: __( 'More', 'elementor' ),
+		title: __( 'More', 'refraction' ),
 		items: [],
 	} );
 
 	PanelMenu.groups.add( {
 		name: 'navigate_from_page',
-		title: __( 'Navigate From Page', 'elementor' ),
+		title: __( 'Navigate From Page', 'refraction' ),
 		items: [
 			// Todo: internal command.
 			{
 				name: 'view-page',
 				icon: 'eicon-preview-thin',
-				title: __( 'View Page', 'elementor' ),
+				title: __( 'View Page', 'refraction' ),
 				type: 'link',
-				link: elementor.config.document.urls.permalink,
+				link: refraction.config.document.urls.permalink,
 			},
 		],
 	} );
 
-	if ( elementor.config.user.is_administrator ) {
+	if ( refraction.config.user.is_administrator ) {
 		PanelMenu.addAdminMenu();
 	}
 
@@ -55,12 +55,12 @@ PanelMenu.initGroups = () => {
 PanelMenu.addAdminMenu = () => {
 	PanelMenu.groups.add( {
 		name: 'style',
-		title: __( 'Settings', 'elementor' ),
+		title: __( 'Settings', 'refraction' ),
 		items: [
 			{
 				name: 'editor-preferences',
 				icon: 'eicon-user-preferences',
-				title: __( 'User Preferences', 'elementor' ),
+				title: __( 'User Preferences', 'refraction' ),
 				type: 'page',
 				callback: () => $e.route( 'panel/editor-preferences' ),
 			},
@@ -70,16 +70,16 @@ PanelMenu.addAdminMenu = () => {
 	PanelMenu.addItem( {
 		name: 'finder',
 		icon: 'eicon-search',
-		title: __( 'Finder', 'elementor' ),
+		title: __( 'Finder', 'refraction' ),
 		callback: () => $e.route( 'finder' ),
 	}, 'navigate_from_page', 'view-page' );
 
 	PanelMenu.addItem( {
 		name: 'apps',
 		icon: 'eicon-apps',
-		title: __( 'Add-ons', 'elementor' ),
+		title: __( 'Add-ons', 'refraction' ),
 		type: 'link',
-		link: elementor.config.admin_apps_url,
+		link: refraction.config.admin_apps_url,
 		newTab: true,
 	}, 'navigate_from_page', 'finder' );
 };
@@ -87,7 +87,7 @@ PanelMenu.addAdminMenu = () => {
 PanelMenu.addExitItem = () => {
 	let itemArgs;
 
-	if ( ! elementor.config.user.introduction.exit_to && elementor.config.user.is_administrator ) {
+	if ( ! refraction.config.user.introduction.exit_to && refraction.config.user.is_administrator ) {
 		PanelMenu.exitShouldRedirect = false;
 
 		itemArgs = {
@@ -103,15 +103,15 @@ PanelMenu.addExitItem = () => {
 	PanelMenu.addItem( {
 		name: 'exit',
 		icon: 'eicon-exit',
-		title: __( 'Exit', 'elementor' ),
+		title: __( 'Exit', 'refraction' ),
 		...itemArgs,
 	}, 'navigate_from_page' );
 };
 
 // Callback being used to determine when to open the modal or redirect the user.
 PanelMenu.clickExitItem = () => {
-	const currentValue = elementor.getPreferences( 'exit_to' );
-	const defaultValue = elementor.settings.editorPreferences.getEditedView().getContainer().controls.exit_to.default;
+	const currentValue = refraction.getPreferences( 'exit_to' );
+	const defaultValue = refraction.settings.editorPreferences.getEditedView().getContainer().controls.exit_to.default;
 
 	// The modal will pop if the user has not set the exit to preference yet or if the model never showed before.
 	if ( currentValue !== defaultValue || PanelMenu.exitShouldRedirect ) {
@@ -124,24 +124,24 @@ PanelMenu.clickExitItem = () => {
 };
 
 PanelMenu.createExitIntroductionDialog = () => {
-	const template = document.querySelector( '#tmpl-elementor-exit-dialog' );
-	const { options } = elementor.settings.editorPreferences.getEditedView().getContainer().controls.exit_to;
+	const template = document.querySelector( '#tmpl-refraction-exit-dialog' );
+	const { options } = refraction.settings.editorPreferences.getEditedView().getContainer().controls.exit_to;
 
-	const introduction = new elementorModules.editor.utils.Introduction( {
+	const introduction = new refractionModules.editor.utils.Introduction( {
 		introductionKey: 'exit_to',
 		dialogType: 'confirm',
 		dialogOptions: {
-			id: 'elementor-change-exit-preference-dialog',
+			id: 'refraction-change-exit-preference-dialog',
 			className: 'dialog-exit-preferences',
-			headerMessage: __( 'New options for "Exit to..."', 'elementor' ),
+			headerMessage: __( 'New options for "Exit to..."', 'refraction' ),
 			message: template.innerHTML,
 			position: {
 				my: 'center center',
 				at: 'center center',
 			},
 			strings: {
-				confirm: __( 'Apply', 'elementor' ),
-				cancel: __( 'Decide Later', 'elementor' ),
+				confirm: __( 'Apply', 'refraction' ),
+				cancel: __( 'Decide Later', 'refraction' ),
 			},
 			effects: {
 				show: 'fadeIn',
@@ -149,12 +149,12 @@ PanelMenu.createExitIntroductionDialog = () => {
 			},
 			onShow: () => {
 				introduction.setViewed();
-				elementor.config.user.introduction.exit_to = true;
+				refraction.config.user.introduction.exit_to = true;
 				PanelMenu.exitShouldRedirect = true;
 			},
 			onConfirm: async () => {
 				$e.run( 'document/elements/settings', {
-					container: elementor.settings.editorPreferences.getEditedView().getContainer(),
+					container: refraction.settings.editorPreferences.getEditedView().getContainer(),
 					settings: {
 						exit_to: select.value,
 					},
@@ -163,7 +163,7 @@ PanelMenu.createExitIntroductionDialog = () => {
 					},
 				} );
 
-				await elementor.settings.editorPreferences.save();
+				await refraction.settings.editorPreferences.save();
 				window.location.href = PanelMenu.getExitUrl();
 			},
 			onCancel: () => {
@@ -202,18 +202,18 @@ PanelMenu.createExitIntroductionDialog = () => {
  * Get the exit url according to the 'exit_to' user preference.
  */
 PanelMenu.getExitUrl = () => {
-	const exitPreference = elementor.getPreferences( 'exit_to' );
+	const exitPreference = refraction.getPreferences( 'exit_to' );
 
 	switch ( exitPreference ) {
 		case 'dashboard':
-			return elementor.config.document.urls.main_dashboard;
+			return refraction.config.document.urls.main_dashboard;
 
 		case 'all_posts':
-			return elementor.config.document.urls.all_post_type;
+			return refraction.config.document.urls.all_post_type;
 
 		case 'this_post':
 		default:
-			return elementor.config.document.urls.exit_to_dashboard;
+			return refraction.config.document.urls.exit_to_dashboard;
 	}
 };
 

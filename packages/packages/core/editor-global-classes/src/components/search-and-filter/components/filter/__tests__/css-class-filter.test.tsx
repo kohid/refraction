@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createMockDocument, createMockTrackingModule, mockTracking, renderWithStore } from 'test-utils';
-import { getCurrentDocument } from '@elementor/editor-documents';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
-import { __createStore as createStore, __registerSlice as registerSlice } from '@elementor/store';
+import { getCurrentDocument } from '@refraction/editor-documents';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
+import { __createStore as createStore, __registerSlice as registerSlice } from '@refraction/store';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useFilteredCssClassUsage } from '../../../../../hooks/use-filtered-css-class-usage';
@@ -11,7 +11,7 @@ import { type SearchAndFilterContextType, useSearchAndFilters } from '../../../c
 import { CssClassFilter } from '../css-class-filter';
 import { setupMocks } from './test-utils';
 
-jest.mock( '@elementor/editor-documents' );
+jest.mock( '@refraction/editor-documents' );
 jest.mock( '../../../context' );
 jest.mock( '../../../../../hooks/use-filtered-css-class-usage' );
 

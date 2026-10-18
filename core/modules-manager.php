@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Core;
+namespace Refraction\Core;
 
-use Elementor\Core\Base\Module;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor modules manager.
+ * Refraction modules manager.
  *
- * Elementor modules manager handler class is responsible for registering and
- * managing Elementor modules.
+ * Refraction modules manager handler class is responsible for registering and
+ * managing Refraction modules.
  *
  * @since 1.6.0
  */
@@ -33,7 +33,7 @@ class Modules_Manager {
 	/**
 	 * Modules manager constructor.
 	 *
-	 * Initializing the Elementor modules manager.
+	 * Initializing the Refraction modules manager.
 	 *
 	 * @since 1.6.0
 	 * @access public
@@ -93,7 +93,7 @@ class Modules_Manager {
 			'compatibility-tag',
 			'generator-tag',
 			'elements-color-picker',
-			'elementor-counter',
+			'refraction-counter',
 			'shapes',
 			'favorites',
 			'admin-top-bar',
@@ -160,6 +160,6 @@ class Modules_Manager {
 	 * @return string Modules namespace prefix.
 	 */
 	protected function get_modules_namespace_prefix() {
-		return 'Elementor';
+		return 'Refraction';
 	}
 }

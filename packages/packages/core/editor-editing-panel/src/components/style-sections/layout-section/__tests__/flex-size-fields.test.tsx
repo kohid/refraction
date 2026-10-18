@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createMockPropType, renderWithTheme } from 'test-utils';
-import { ControlActionsProvider } from '@elementor/editor-controls';
-import { type FlexPropValue } from '@elementor/editor-props';
-import { getStylesSchema } from '@elementor/editor-styles';
+import { ControlActionsProvider } from '@refraction/editor-controls';
+import { type FlexPropValue } from '@refraction/editor-props';
+import { getStylesSchema } from '@refraction/editor-styles';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useDirection } from '../../../../hooks/use-direction';
@@ -10,7 +10,7 @@ import { useStylesField } from '../../../../hooks/use-styles-field';
 import { useStylesFields } from '../../../../hooks/use-styles-fields';
 import { FlexSizeField } from '../flex-size-field';
 
-jest.mock( '@elementor/editor-styles' );
+jest.mock( '@refraction/editor-styles' );
 jest.mock( '../../../../hooks/use-direction' );
 jest.mock( '../../../../hooks/use-styles-field' );
 jest.mock( '../../../../hooks/use-styles-fields' );
@@ -38,8 +38,8 @@ jest.mock( '../../../../contexts/style-context', () => ( {
 	} ),
 } ) );
 
-jest.mock( '@elementor/editor-controls', () => {
-	const actual = jest.requireActual( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls', () => {
+	const actual = jest.requireActual( '@refraction/editor-controls' );
 	return {
 		...actual,
 		useControlActions: () => ( {

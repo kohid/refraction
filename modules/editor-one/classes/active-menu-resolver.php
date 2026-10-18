@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\EditorOne\Classes;
+namespace Refraction\Modules\EditorOne\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Active_Menu_Resolver {
 
-	private const HOME_SLUG = 'elementor';
+	private const HOME_SLUG = 'refraction';
 
 	private Url_Matcher $url_matcher;
 
@@ -17,7 +17,7 @@ class Active_Menu_Resolver {
 	}
 
 	public function resolve( array $menu_items, array $level4_groups, string $current_page, string $current_uri ): array {
-		if ( 'elementor-editor' === $current_page || Menu_Config::EDITOR_MENU_SLUG === $current_page || Menu_Config::ELEMENTOR_MENU_SLUG === $current_page ) {
+		if ( 'refraction-editor' === $current_page || Menu_Config::EDITOR_MENU_SLUG === $current_page || Menu_Config::REFRACTION_MENU_SLUG === $current_page ) {
 			return $this->create_active_state( self::HOME_SLUG );
 		}
 
@@ -93,6 +93,6 @@ class Active_Menu_Resolver {
 			return null;
 		}
 
-		return Menu_Data_Provider::get_elementor_post_types()[ $current_post_type ] ?? null;
+		return Menu_Data_Provider::get_refraction_post_types()[ $current_post_type ] ?? null;
 	}
 }

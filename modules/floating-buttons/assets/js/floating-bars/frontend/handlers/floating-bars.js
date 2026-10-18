@@ -1,4 +1,4 @@
-import Base from 'elementor-frontend/handlers/base';
+import Base from 'refraction-frontend/handlers/base';
 import FloatingBarDomHelper from '../classes/floatin-bar-dom';
 import ClickTrackingHandler from '../../../shared/frontend/handlers/click-tracking';
 
@@ -46,8 +46,8 @@ export default class FloatingBarsHandler extends Base {
 	}
 
 	getResponsiveSetting( controlName ) {
-		const currentDevice = elementorFrontend.getCurrentDeviceMode();
-		return elementorFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), controlName, '', currentDevice );
+		const currentDevice = refractionFrontend.getCurrentDeviceMode();
+		return refractionFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), controlName, '', currentDevice );
 	}
 
 	bindEvents() {
@@ -81,7 +81,7 @@ export default class FloatingBarsHandler extends Base {
 	}
 
 	hasStickyElements() {
-		const stickyElements = document.querySelectorAll( '.elementor-sticky' );
+		const stickyElements = document.querySelectorAll( '.refraction-sticky' );
 
 		return stickyElements.length > 0;
 	}
@@ -101,7 +101,7 @@ export default class FloatingBarsHandler extends Base {
 	}
 
 	handleWPAdminBar() {
-		const wpAdminBar = elementorFrontend.elements.$wpAdminBar;
+		const wpAdminBar = refractionFrontend.elements.$wpAdminBar;
 
 		if ( wpAdminBar.length ) {
 			this.elements.main.style.top = `${ wpAdminBar.height() }px`;
@@ -110,8 +110,8 @@ export default class FloatingBarsHandler extends Base {
 
 	handleStickyElements() {
 		const mainHeight = this.elements.main.offsetHeight;
-		const wpAdminBar = elementorFrontend.elements.$wpAdminBar;
-		const stickyElements = document.querySelectorAll( '.elementor-sticky:not(.elementor-sticky__spacer)' );
+		const wpAdminBar = refractionFrontend.elements.$wpAdminBar;
+		const stickyElements = document.querySelectorAll( '.refraction-sticky:not(.refraction-sticky__spacer)' );
 
 		if ( 0 === stickyElements.length ) {
 			return;
@@ -134,7 +134,7 @@ export default class FloatingBarsHandler extends Base {
 				stickyElement.style.bottom = `${ mainHeight }px`;
 			}
 
-			if ( elementorFrontend.isEditMode() ) {
+			if ( refractionFrontend.isEditMode() ) {
 				if ( isTop ) {
 					stickyElement.style.top = this.isStickyTop() ? `${ mainHeight }px` : '0px';
 				} else if ( isBottom ) {
@@ -143,7 +143,7 @@ export default class FloatingBarsHandler extends Base {
 			}
 		} );
 
-		document.querySelectorAll( '.elementor-sticky__spacer' ).forEach( ( stickySpacer ) => {
+		document.querySelectorAll( '.refraction-sticky__spacer' ).forEach( ( stickySpacer ) => {
 			const dataSettings = stickySpacer.getAttribute( 'data-settings' );
 			const stickyPosition = JSON.parse( dataSettings )?.sticky;
 
@@ -158,7 +158,7 @@ export default class FloatingBarsHandler extends Base {
 	closeFloatingBar() {
 		const { isHidden } = this.getSettings( 'constants' );
 
-		if ( ! elementorFrontend.isEditMode() ) {
+		if ( ! refractionFrontend.isEditMode() ) {
 			this.elements.main.classList.add( isHidden );
 
 			if ( this.hasStickyElements() ) {
@@ -226,7 +226,7 @@ export default class FloatingBarsHandler extends Base {
 			this.applyBodyPadding();
 		}
 
-		if ( this.elements.main && ! this.elements.ctaButton.classList.contains( hasEntranceAnimation ) && ! elementorFrontend.isEditMode() ) {
+		if ( this.elements.main && ! this.elements.ctaButton.classList.contains( hasEntranceAnimation ) && ! refractionFrontend.isEditMode() ) {
 			this.focusOnLoad();
 		}
 	}

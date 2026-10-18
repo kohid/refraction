@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createElement, useMemo, useRef } from 'react';
 import { PlusIcon } from '@elementor/icons';
 import { bindMenu, bindTrigger, IconButton, Menu, MenuItem, type PopupState, Typography } from '@elementor/ui';
-import { capitalize } from '@elementor/utils';
+import { capitalize } from '@refraction/utils';
 import { __ } from '@wordpress/i18n';
 
 import { useQuotaPermissions } from '../../hooks/use-quota-permissions';
@@ -66,7 +66,7 @@ export const VariableManagerCreateMenu = ( {
 				ref={ buttonRef }
 				size={ SIZE }
 				variant={ outlinedTrigger ? 'outlined' : undefined }
-				aria-label={ __( 'Add variable', 'elementor' ) }
+				aria-label={ __( 'Add variable', 'refraction' ) }
 			>
 				<PlusIcon fontSize={ SIZE } />
 			</IconButton>

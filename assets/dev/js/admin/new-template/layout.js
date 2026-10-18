@@ -1,22 +1,22 @@
-var NewTemplateView = require( 'elementor-admin/new-template/view' );
+var NewTemplateView = require( 'refraction-admin/new-template/view' );
 import LockPro from './behaviors/lock-pro';
 
-module.exports = elementorModules.common.views.modal.Layout.extend( {
+module.exports = refractionModules.common.views.modal.Layout.extend( {
 
 	getModalOptions() {
 		return {
-			id: 'elementor-new-template-modal',
+			id: 'refraction-new-template-modal',
 		};
 	},
 
 	getLogoOptions() {
 		return {
-			title: __( 'New Template', 'elementor' ),
+			title: __( 'New Template', 'refraction' ),
 		};
 	},
 
 	initialize() {
-		elementorModules.common.views.modal.Layout.prototype.initialize.apply( this, arguments );
+		refractionModules.common.views.modal.Layout.prototype.initialize.apply( this, arguments );
 
 		this.showLogo();
 
@@ -32,18 +32,18 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 
 	setupDynamicControlsVisibility() {
 		// eslint-disable-next-line camelcase
-		const isFormControlsDefined = 'undefined' !== typeof elementor_new_template_form_controls;
+		const isFormControlsDefined = 'undefined' !== typeof refraction_new_template_form_controls;
 
 		if ( ! isFormControlsDefined ) {
 			return;
 		}
 
-		const CONTROL_ID_PREFIX = 'elementor-new-template__form__';
+		const CONTROL_ID_PREFIX = 'refraction-new-template__form__';
 		const templateTypeSelectId = `${ CONTROL_ID_PREFIX }template-type`;
 
 		const dynamicControlsVisibilityListener = () => {
 			// eslint-disable-next-line camelcase
-			elementorAdmin.templateControls.setDynamicControlsVisibility( CONTROL_ID_PREFIX, elementor_new_template_form_controls );
+			refractionAdmin.templateControls.setDynamicControlsVisibility( CONTROL_ID_PREFIX, refraction_new_template_form_controls );
 		};
 
 		this.getModal().onShow = () => {
@@ -58,7 +58,7 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 
 	initElements() {
 		const container = this.$el[ 0 ],
-			root = '#elementor-new-template__form';
+			root = '#refraction-new-template__form';
 
 		this.elements = {
 			form: container.querySelector( root ),

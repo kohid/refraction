@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\EditorOne\Components;
+namespace Refraction\Modules\EditorOne\Components;
 
-use Elementor\Modules\EditorOne\Classes\Active_Menu_Resolver;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Modules\EditorOne\Classes\Url_Matcher;
-use Elementor\Utils;
+use Refraction\Modules\EditorOne\Classes\Active_Menu_Resolver;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\EditorOne\Classes\Url_Matcher;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -34,7 +34,7 @@ class Sidebar_Navigation_Handler {
 			return $classes;
 		}
 
-		$classes .= ' e-has-sidebar-navigation e-has-elementor-home-menu';
+		$classes .= ' e-has-sidebar-navigation e-has-refraction-home-menu';
 
 		return $classes;
 	}
@@ -47,23 +47,23 @@ class Sidebar_Navigation_Handler {
 		$min_suffix = Utils::is_script_debug() ? '' : '.min';
 
 		wp_enqueue_style(
-			'elementor-sidebar-navigation',
-			ELEMENTOR_ASSETS_URL . 'css/modules/editor-one/sidebar-navigation' . $min_suffix . '.css',
+			'refraction-sidebar-navigation',
+			REFRACTION_ASSETS_URL . 'css/modules/editor-one/sidebar-navigation' . $min_suffix . '.css',
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_enqueue_script(
 			'editor-one-sidebar-navigation',
-			ELEMENTOR_ASSETS_URL . 'js/editor-one-sidebar-navigation' . $min_suffix . '.js',
+			REFRACTION_ASSETS_URL . 'js/editor-one-sidebar-navigation' . $min_suffix . '.js',
 			[
 				'react',
 				'react-dom',
-				'elementor-common',
-				'elementor-v2-ui',
-				'elementor-v2-icons',
+				'refraction-common',
+				'refraction-v2-ui',
+				'refraction-v2-icons',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
@@ -73,7 +73,7 @@ class Sidebar_Navigation_Handler {
 			$this->get_sidebar_config()
 		);
 
-		wp_set_script_translations( 'editor-one-sidebar-navigation', 'elementor' );
+		wp_set_script_translations( 'editor-one-sidebar-navigation', 'refraction' );
 	}
 
 	public function render_sidebar_container(): void {
@@ -96,7 +96,7 @@ class Sidebar_Navigation_Handler {
 			'level4Groups' => $level4_groups,
 			'activeMenuSlug' => $active_state['menu_slug'],
 			'activeChildSlug' => $active_state['child_slug'],
-			'siteTitle' => esc_html__( 'Editor', 'elementor' ),
+			'siteTitle' => esc_html__( 'Editor', 'refraction' ),
 			'hasPro' => Utils::has_pro(),
 		];
 	}

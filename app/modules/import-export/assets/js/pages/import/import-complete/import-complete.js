@@ -7,12 +7,12 @@ import { ImportContext } from '../../../context/import-context/import-context-pr
 import Layout from '../../../templates/layout';
 import WizardStep from '../../../ui/wizard-step/wizard-step';
 import KitData from '../../../shared/kit-data/kit-data';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
 
 import FailedPluginsNotice from './components/failed-plugins-notice/failed-plugins-notice';
 import ConnectProNotice from './components/connect-pro-notice/connect-pro-notice';
 import ImportCompleteFooter from './components/import-complete-footer/import-complete-footer';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
 import useImportedKitData from './hooks/use-imported-kit-data';
 
@@ -24,8 +24,8 @@ export default function ImportComplete() {
 		{ referrer } = sharedContext.data || {},
 		{ getTemplates, getContent, getWPContent, getPlugins } = useImportedKitData(),
 		{ activePlugins, failedPlugins } = getPlugins( importedPlugins ),
-		{ elementorHomePageUrl, recentlyEditedElementorPageUrl } = importedData?.configData || {},
-		seeItLiveUrl = elementorHomePageUrl || recentlyEditedElementorPageUrl || null,
+		{ refractionHomePageUrl, recentlyEditedRefractionPageUrl } = importedData?.configData || {},
+		seeItLiveUrl = refractionHomePageUrl || recentlyEditedRefractionPageUrl || null,
 		getKitData = () => {
 			if ( ! uploadedData || ! importedData ) {
 				return {};
@@ -69,9 +69,9 @@ export default function ImportComplete() {
 	return (
 		<Layout type="import" footer={ <ImportCompleteFooter seeItLiveUrl={ seeItLiveUrl } referrer={ referrer } /> }>
 			<WizardStep
-				image={ elementorAppConfig.assets_url + 'images/kit-is-live.svg' }
-				heading={ __( 'We applied your template and your site is online!', 'elementor' ) }
-				description={ __( 'You\'ve imported and applied the following to your site:', 'elementor' ) }
+				image={ refractionAppConfig.assets_url + 'images/kit-is-live.svg' }
+				heading={ __( 'We applied your template and your site is online!', 'refraction' ) }
+				description={ __( 'You\'ve imported and applied the following to your site:', 'refraction' ) }
 				notice={ (
 					<>
 						<InlineLink
@@ -79,8 +79,8 @@ export default function ImportComplete() {
 							italic
 							onClick={ () => eventTracking( 'kit-library/seek-more-info', 'kit is live', 'click', 'app_header' ) }
 						>
-							{ __( 'Click here', 'elementor' ) }
-						</InlineLink> { __( 'to learn more about building your site with Elementor Website Templates', 'elementor' ) }
+							{ __( 'Click here', 'refraction' ) }
+						</InlineLink> { __( 'to learn more about building your site with Refraction Website Templates', 'refraction' ) }
 					</>
 				) }
 			>

@@ -36,7 +36,7 @@ type CachedLibrary = {
 const libraryCache = new Map< string, CachedLibrary >();
 
 export function getFontAwesome7EditorConfig(): FontAwesome7EditorConfig | null {
-	const config = window.elementorCommon?.config?.fontAwesome?.v7;
+	const config = window.refractionCommon?.config?.fontAwesome?.v7;
 
 	if ( ! config || ! Array.isArray( config.jsonFiles ) ) {
 		return null;

@@ -1,5 +1,5 @@
-import { injectIntoLogic, injectIntoTop } from '@elementor/editor';
-import { getMCPByDomain } from '@elementor/editor-mcp';
+import { injectIntoLogic, injectIntoTop } from '@refraction/editor';
+import { getMCPByDomain } from '@refraction/editor-mcp';
 
 import { ClassesRename } from './components/classes-rename';
 import { ElementsOverlays } from './components/elements-overlays';

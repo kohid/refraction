@@ -8,7 +8,7 @@ import {
 	intensityFilterPropTypeUtil,
 	sizePropTypeUtil,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { FilterRepeaterControl } from '../filter-control/filter-repeater-control';

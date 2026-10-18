@@ -1,10 +1,10 @@
 // License Page
-#wpcontent .wrap.elementor-admin-page-license {
+#wpcontent .wrap.refraction-admin-page-license {
 	flex-direction: column;
 	align-items: flex-start;
 	flex-wrap: nowrap;
 
-	.elementor-license-box {
+	.refraction-license-box {
 		width: 100%;
 		max-width: 600px;
 		background: white;
@@ -78,7 +78,7 @@
 			border-block-end: 1px solid #eeeeee;
 		}
 
-		.elementor-upgrade-link {
+		.refraction-upgrade-link {
 			color: $wp-admin-brand-color;
 			border-color: $wp-admin-brand-color;
 
@@ -89,7 +89,7 @@
 			}
 		}
 
-		&.elementor-pro-connect-promotion {
+		&.refraction-pro-connect-promotion {
 			display: flex;
 			flex-direction: row;
 			gap: 40px;
@@ -100,7 +100,7 @@
 				line-height: 24px;
 			}
 
-			.elementor-box-action {
+			.refraction-box-action {
 				justify-content: flex-start;
 			}
 
@@ -121,11 +121,11 @@
 		}
 	}
 
-	.elementor-box-action {
+	.refraction-box-action {
 		display: flex;
 		justify-content: flex-end;
 
-		.elementor-manually-link {
+		.refraction-manually-link {
 			color: #72777c;
 			margin-inline-end: 15px;
 

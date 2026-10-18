@@ -1,11 +1,11 @@
-var ControlBaseView = require( 'elementor-controls/base' );
+var ControlBaseView = require( 'refraction-controls/base' );
 
 module.exports = ControlBaseView.extend( {
 
 	ui() {
 		const ui = ControlBaseView.prototype.ui.apply( this, arguments );
 
-		ui.button = '.elementor-control-notice-dismiss';
+		ui.button = '.refraction-control-notice-dismiss';
 
 		return ui;
 	},
@@ -13,19 +13,19 @@ module.exports = ControlBaseView.extend( {
 	events: {
 		'click @ui.button.e-btn-1': 'onButton1Click',
 		'click @ui.button.e-btn-2': 'onButton2Click',
-		'click @ui.button.elementor-control-notice-dismiss': 'onDismissButtonClick',
+		'click @ui.button.refraction-control-notice-dismiss': 'onDismissButtonClick',
 	},
 
 	onButton1Click() {
 		const eventName = this.model.get( 'event' );
 
-		elementor.channels.editor.trigger( eventName, this );
+		refraction.channels.editor.trigger( eventName, this );
 	},
 
 	onButton2Click() {
 		const eventName = this.model.get( 'event' );
 
-		elementor.channels.editor.trigger( eventName, this );
+		refraction.channels.editor.trigger( eventName, this );
 	},
 
 	getDismissId() {
@@ -40,21 +40,21 @@ module.exports = ControlBaseView.extend( {
 	onDismissButtonClick() {
 		const dismissId = this.getDismissId();
 
-		elementorCommon.ajax.addRequest( 'dismissed_editor_notices', {
+		refractionCommon.ajax.addRequest( 'dismissed_editor_notices', {
 			data: {
 				dismissId,
 			},
 			success: () => {
 				this.$el.remove();
-				const dismissedNotices = elementor?.config?.user?.dismissed_editor_notices ? [ ...elementor.config.user.dismissed_editor_notices ] : [];
-				elementor.config.user.dismissed_editor_notices = [ ...dismissedNotices, dismissId ];
+				const dismissedNotices = refraction?.config?.user?.dismissed_editor_notices ? [ ...refraction.config.user.dismissed_editor_notices ] : [];
+				refraction.config.user.dismissed_editor_notices = [ ...dismissedNotices, dismissId ];
 			},
 		} );
 	},
 
 	templateHelpers() {
 		const controlData = ControlBaseView.prototype.templateHelpers.apply( this, arguments );
-		const dismissedNotices = elementor?.config?.user?.dismissed_editor_notices ? [ ...elementor.config.user.dismissed_editor_notices ] : [];
+		const dismissedNotices = refraction?.config?.user?.dismissed_editor_notices ? [ ...refraction.config.user.dismissed_editor_notices ] : [];
 		const dismissId = this.getDismissId();
 
 		controlData.data.shouldRenderNotice = ! dismissedNotices.includes( dismissId );

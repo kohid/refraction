@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useRef } from 'react';
-import { scaleTransformPropTypeUtil } from '@elementor/editor-props';
+import { scaleTransformPropTypeUtil } from '@refraction/editor-props';
 import { ArrowDownLeftIcon, ArrowDownSmallIcon, ArrowRightIcon } from '@elementor/icons';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -11,17 +11,17 @@ import { ScaleAxisRow } from './scale-axis-row';
 
 const scaleAxisControls: { label: string; bind: 'x' | 'y' | 'z'; startIcon: React.ReactNode }[] = [
 	{
-		label: __( 'Scale X', 'elementor' ),
+		label: __( 'Scale X', 'refraction' ),
 		bind: 'x',
 		startIcon: <ArrowRightIcon fontSize={ 'tiny' } />,
 	},
 	{
-		label: __( 'Scale Y', 'elementor' ),
+		label: __( 'Scale Y', 'refraction' ),
 		bind: 'y',
 		startIcon: <ArrowDownSmallIcon fontSize={ 'tiny' } />,
 	},
 	{
-		label: __( 'Scale Z', 'elementor' ),
+		label: __( 'Scale Z', 'refraction' ),
 		bind: 'z',
 		startIcon: <ArrowDownLeftIcon fontSize={ 'tiny' } />,
 	},

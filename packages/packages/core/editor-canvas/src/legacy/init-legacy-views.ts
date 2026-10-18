@@ -1,5 +1,5 @@
-import { getWidgetsCache, type V1ElementConfig } from '@elementor/editor-elements';
-import { __privateIsReady as isV1Ready, __privateListenTo, v1ReadyEvent } from '@elementor/editor-v1-adapters';
+import { getWidgetsCache, type V1ElementConfig } from '@refraction/editor-elements';
+import { __privateIsReady as isV1Ready, __privateListenTo, v1ReadyEvent } from '@refraction/editor-v1-adapters';
 
 import { createDomRenderer, type DomRenderer } from '../renderers/create-dom-renderer';
 import { createElementType } from './create-element-type';
@@ -102,7 +102,7 @@ function tryRegisterElement(
 		return;
 	}
 
-	const elementsManager = legacyWindow.elementor.elementsManager;
+	const elementsManager = legacyWindow.refraction.elementsManager;
 	const isAlreadyRegistered = Boolean( elementsManager.getElementTypeClass( type ) );
 
 	try {

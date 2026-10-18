@@ -2,7 +2,7 @@ import * as React from 'react';
 import { forwardRef } from 'react';
 import { closeSnackbar, type CustomContentProps, SnackbarProvider } from 'notistack';
 import { AlertCircleFilled, CircleCheckFilledIcon, CrownFilledIcon, InfoCircleFilledIcon } from '@elementor/icons';
-import { __getStore as getStore, __useDispatch as useDispatch, __useSelector as useSelector } from '@elementor/store';
+import { __getStore as getStore, __useDispatch as useDispatch, __useSelector as useSelector } from '@refraction/store';
 import { Alert, SnackbarContent, type SnackbarProps, ThemeProvider } from '@elementor/ui';
 
 import { useEnqueueNotification } from '../hooks/use-enqueue-notifications';

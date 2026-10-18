@@ -1,6 +1,6 @@
-import { STYLE_SECTIONS } from '@elementor/editor-editing-panel';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { hash } from '@elementor/utils';
+import { STYLE_SECTIONS } from '@refraction/editor-editing-panel';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { hash } from '@refraction/utils';
 
 const CUSTOM_CSS_SECTION = 'custom_css';
 

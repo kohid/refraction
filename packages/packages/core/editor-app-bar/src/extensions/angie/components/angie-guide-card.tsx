@@ -17,7 +17,7 @@ export function AngieGuideCard( { imageUrl, description, learnMoreUrl, onInstall
 				<Box sx={ { position: 'relative', p: 1.5 } }>
 					<Image
 						src={ imageUrl }
-						alt={ __( 'Angie', 'elementor' ) }
+						alt={ __( 'Angie', 'refraction' ) }
 						sx={ {
 							width: '100%',
 							maxHeight: 200,
@@ -44,7 +44,7 @@ export function AngieGuideCard( { imageUrl, description, learnMoreUrl, onInstall
 					/>
 				</Box>
 				<Stack px={ 2 } pt={ 0.5 } pb={ 0.5 }>
-					<Typography variant="subtitle2">{ __( 'Generate full pages with AI', 'elementor' ) }</Typography>
+					<Typography variant="subtitle2">{ __( 'Generate full pages with AI', 'refraction' ) }</Typography>
 				</Stack>
 				<Stack px={ 2 } pt={ 0.5 } pb={ 1.5 }>
 					<Typography variant="body2" color="secondary">
@@ -61,11 +61,11 @@ export function AngieGuideCard( { imageUrl, description, learnMoreUrl, onInstall
 							onClose();
 						} }
 					>
-						{ __( 'Learn More', 'elementor' ) }
+						{ __( 'Learn More', 'refraction' ) }
 					</Button>
 					{ onInstall && (
 						<Button variant="contained" size="small" color="primary" onClick={ onInstall }>
-							{ __( 'Build with Angie', 'elementor' ) }
+							{ __( 'Build with Angie', 'refraction' ) }
 						</Button>
 					) }
 				</Stack>

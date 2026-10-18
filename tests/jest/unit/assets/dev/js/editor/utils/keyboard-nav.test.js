@@ -4,15 +4,15 @@ import {
 	getEscapeAnchor,
 	isEditableTarget,
 	isInsideOverlay,
-} from 'elementor-editor-utils/keyboard-nav';
+} from 'refraction-editor-utils/keyboard-nav';
 
 describe( 'keyboard-nav - escapeFromPanelField', () => {
 	let panel;
 
 	const renderPanel = ( html ) => {
-		document.body.innerHTML = `<div id="elementor-panel-inner">${ html }</div>`;
+		document.body.innerHTML = `<div id="refraction-panel-inner">${ html }</div>`;
 
-		panel = document.getElementById( 'elementor-panel-inner' );
+		panel = document.getElementById( 'refraction-panel-inner' );
 
 		return panel;
 	};
@@ -31,14 +31,14 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 
 	it( 'blurs an escaped V1 control input and parks focus on the control wrapper', () => {
 		renderPanel( `
-			<div class="elementor-control elementor-control-type-text">
+			<div class="refraction-control refraction-control-type-text">
 				<label>Title</label>
 				<input type="text" id="title" />
 			</div>
 		` );
 
 		const input = document.getElementById( 'title' );
-		const wrapper = panel.querySelector( '.elementor-control' );
+		const wrapper = panel.querySelector( '.refraction-control' );
 
 		input.focus();
 
@@ -70,7 +70,7 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 	} );
 
 	it( 'stops propagation so the global esc shortcut does not run', () => {
-		renderPanel( '<div class="elementor-control"><input type="text" id="title" /></div>' );
+		renderPanel( '<div class="refraction-control"><input type="text" id="title" /></div>' );
 
 		document.getElementById( 'title' ).focus();
 
@@ -88,7 +88,7 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 	} );
 
 	it( 'lets the global esc shortcut run when nothing editable is focused', () => {
-		renderPanel( '<div class="elementor-control"><button id="reset">Reset</button></div>' );
+		renderPanel( '<div class="refraction-control"><button id="reset">Reset</button></div>' );
 
 		document.getElementById( 'reset' ).focus();
 
@@ -107,7 +107,7 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 	} );
 
 	it( 'ignores an event that was already default prevented', () => {
-		renderPanel( '<div class="elementor-control"><input type="text" id="title" /></div>' );
+		renderPanel( '<div class="refraction-control"><input type="text" id="title" /></div>' );
 
 		const input = document.getElementById( 'title' );
 
@@ -124,7 +124,7 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 	it( 'ignores fields inside an overlay that owns the escape key', () => {
 		renderPanel( `
 			<div role="dialog">
-				<div class="elementor-control"><input type="text" id="title" /></div>
+				<div class="refraction-control"><input type="text" id="title" /></div>
 			</div>
 		` );
 
@@ -140,7 +140,7 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 	} );
 
 	it( 'ignores the second escape press, so the panel can still be exited', () => {
-		renderPanel( '<div class="elementor-control"><input type="text" id="title" /></div>' );
+		renderPanel( '<div class="refraction-control"><input type="text" id="title" /></div>' );
 
 		document.getElementById( 'title' ).focus();
 
@@ -155,8 +155,8 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 
 	it( 'moves focus past the escaped control when tabbing from the wrapper', () => {
 		renderPanel( `
-			<div class="elementor-control"><input type="text" id="title" /></div>
-			<div class="elementor-control"><input type="text" id="subtitle" /></div>
+			<div class="refraction-control"><input type="text" id="title" /></div>
+			<div class="refraction-control"><input type="text" id="subtitle" /></div>
 		` );
 
 		document.getElementById( 'title' ).focus();
@@ -165,7 +165,7 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 
 		pressEscape();
 
-		const wrapper = panel.querySelector( '.elementor-control' );
+		const wrapper = panel.querySelector( '.refraction-control' );
 
 		wrapper.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'Tab', bubbles: true, cancelable: true } ) );
 
@@ -174,8 +174,8 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 
 	it( 'cleans up the temporary tabindex once focus leaves the wrapper', () => {
 		renderPanel( `
-			<div class="elementor-control"><input type="text" id="title" /></div>
-			<div class="elementor-control"><input type="text" id="subtitle" /></div>
+			<div class="refraction-control"><input type="text" id="title" /></div>
+			<div class="refraction-control"><input type="text" id="subtitle" /></div>
 		` );
 
 		document.getElementById( 'title' ).focus();
@@ -184,7 +184,7 @@ describe( 'keyboard-nav - escapeFromPanelField', () => {
 
 		pressEscape();
 
-		const wrapper = panel.querySelector( '.elementor-control' );
+		const wrapper = panel.querySelector( '.refraction-control' );
 
 		document.getElementById( 'subtitle' ).focus();
 

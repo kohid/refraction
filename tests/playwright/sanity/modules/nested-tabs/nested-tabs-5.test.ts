@@ -40,8 +40,8 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await editor.togglePreviewMode();
 
 		// Tabs styling scenario 2: Direction: Left, Align Title: Right, Icon Position: Top.
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs' ).hover();
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs .elementor-editor-element-edit' ).first().click();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs' ).hover();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs .refraction-editor-element-edit' ).first().click();
 		// Set Direction: Left.
 		await editor.openPanelTab( 'content' );
 		await editor.setChooseControlValue( 'tabs_direction', 'eicon-h-align-left' );

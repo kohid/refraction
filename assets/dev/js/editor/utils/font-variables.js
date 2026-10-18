@@ -26,7 +26,7 @@ export class FontVariables {
 			return;
 		}
 
-		const currentPageView = elementor.getPanelView().getCurrentPageView();
+		const currentPageView = refraction.getPanelView().getCurrentPageView();
 
 		const mainTypographyControl = currentPageView.collection.find( ( model ) => args.activeControl === model.get( 'name' ) && 'typography' === model.get( 'groupType' ) );
 
@@ -45,7 +45,7 @@ export class FontVariables {
 		);
 
 		const settingName = fontControlModel.get( 'name' );
-		const controlValue = elementor.getCurrentElement().model.get( 'settings' ).get( settingName );
+		const controlValue = refraction.getCurrentElement().model.get( 'settings' ).get( settingName );
 
 		if ( ! controlValue ) {
 			return;
@@ -93,7 +93,7 @@ export class FontVariables {
 
 	applyFontVariableRange( controls, controlKey, fieldData ) {
 		const controlView = $e.components.get( 'panel' ).getControlViewByPath(
-			elementor.getPanelView().getCurrentPageView(),
+			refraction.getPanelView().getCurrentPageView(),
 			controlKey,
 		);
 
@@ -143,10 +143,10 @@ export class FontVariables {
 	}
 
 	getFontOptions( fontFamily ) {
-		if ( ! elementor.config?.fontVariableRanges ) {
+		if ( ! refraction.config?.fontVariableRanges ) {
 			return null;
 		}
 
-		return elementor.config.fontVariableRanges[ fontFamily ];
+		return refraction.config.fontVariableRanges[ fontFamily ];
 	}
 }

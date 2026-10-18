@@ -4,9 +4,9 @@ import {
 	type V1ElementConfig,
 	type V1ElementData,
 	type V1ElementSettingsProps,
-} from '@elementor/editor-elements';
-import { type AnyTransformable } from '@elementor/editor-props';
-import { hashString } from '@elementor/utils';
+} from '@refraction/editor-elements';
+import { type AnyTransformable } from '@refraction/editor-props';
+import { hashString } from '@refraction/utils';
 
 import {
 	applyOverridesToSettings,

@@ -10,7 +10,7 @@ import { wpCli } from '../../../assets/wp-cli';
 
 test.describe( 'Video tests inside a container @video', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	test.afterAll( async ( { browser, apiRequests }, testInfo ) => {
@@ -38,9 +38,9 @@ test.describe( 'Video tests inside a container @video', () => {
 		await editor.setDimensionsValue( 'padding', '0' );
 
 		// Assert - verify that the container has an equal height to the video iFrame.
-		const container = editor.getPreviewFrame().locator( `.elementor-element-${ containerId }` );
+		const container = editor.getPreviewFrame().locator( `.refraction-element-${ containerId }` );
 		const containerHeight = await container.boundingBox();
-		const videoIframeHeight = await editor.getPreviewFrame().locator( `.elementor-element-${ videoId } iframe` ).boundingBox();
+		const videoIframeHeight = await editor.getPreviewFrame().locator( `.refraction-element-${ videoId } iframe` ).boundingBox();
 		expect( containerHeight.height ).toEqual( videoIframeHeight.height );
 	} );
 
@@ -155,7 +155,7 @@ test.describe( 'Video tests inside a section @video', () => {
 
 		// Act.
 		const sectionId = await editor.addElement( { elType: 'section' }, 'document' );
-		const column = editor.getPreviewFrame().locator( '.elementor-element-' + sectionId + ' .elementor-column' );
+		const column = editor.getPreviewFrame().locator( '.refraction-element-' + sectionId + ' .refraction-column' );
 		const columnId = await column.getAttribute( 'data-id' );
 		const videoId = await editor.addWidget( { widgetType: widgets.video, container: columnId } );
 		await editor.selectElement( columnId );
@@ -164,7 +164,7 @@ test.describe( 'Video tests inside a section @video', () => {
 
 		// Assert - verify that the column has an equal height to the video iFrame.
 		const columnHeight = await column.boundingBox();
-		const videoIframeHeight = await editor.getPreviewFrame().locator( `.elementor-element-${ videoId } iframe` ).boundingBox();
+		const videoIframeHeight = await editor.getPreviewFrame().locator( `.refraction-element-${ videoId } iframe` ).boundingBox();
 		expect( columnHeight.height ).toEqual( videoIframeHeight.height );
 	} );
 } );

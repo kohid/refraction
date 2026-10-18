@@ -1,4 +1,4 @@
-// TODO: Wrong location used as `elementorModules.ForceMethodImplementation(); should be` `elementorUtils.forceMethodImplementation()`;
+// TODO: Wrong location used as `refractionModules.ForceMethodImplementation(); should be` `refractionUtils.forceMethodImplementation()`;
 
 export class ForceMethodImplementation extends Error {
 	constructor( info = {}, args = {} ) {

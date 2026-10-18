@@ -1,4 +1,4 @@
-import { type SizePropValue } from '@elementor/editor-props';
+import { type SizePropValue } from '@refraction/editor-props';
 
 import { EXTENDED_UNITS } from './resolve-size-value';
 

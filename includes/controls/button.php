@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor button control.
+ * Refraction button control.
  *
  * A base control for creating a button control. Displays a button that can
  * trigger an event.
@@ -61,14 +61,14 @@ class Control_Button extends Base_UI_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
-				<button type="button" class="elementor-button elementor-button-{{{ data.button_type }}}" data-event="{{{ data.event }}}">{{{ data.text }}}</button>
+		<div class="refraction-control-field">
+			<label class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
+				<button type="button" class="refraction-button refraction-button-{{{ data.button_type }}}" data-event="{{{ data.event }}}">{{{ data.text }}}</button>
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

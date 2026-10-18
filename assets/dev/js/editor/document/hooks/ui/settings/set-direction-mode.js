@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/ui/after';
+import After from 'refraction-api/modules/hooks/ui/after';
 
 /**
  * @typedef {import('../../../../container/container')} Container

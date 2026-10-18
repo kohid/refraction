@@ -1,4 +1,4 @@
-import { trackEvent } from '@elementor/events';
+import { trackEvent } from '@refraction/events';
 
 type ElementEventData = {
 	eventName: 'add_element';

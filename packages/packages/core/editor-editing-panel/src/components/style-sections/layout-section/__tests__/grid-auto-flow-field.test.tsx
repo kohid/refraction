@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { createMockPropType, renderField } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useDirection } from '../../../../hooks/use-direction';
 import { useStylesFields } from '../../../../hooks/use-styles-fields';
 import { GridAutoFlowField } from '../grid-auto-flow-field';
 
-jest.mock( '@elementor/editor-styles' );
+jest.mock( '@refraction/editor-styles' );
 jest.mock( '../../../../hooks/use-styles-fields' );
 jest.mock( '../../../../hooks/use-direction' );
 jest.mock( '../../../../styles-inheritance/components/styles-inheritance-indicator' );
@@ -16,8 +16,8 @@ jest.mock( '../../../../contexts/styles-inheritance-context', () => ( {
 	useInheritedValues: () => ( {} ),
 } ) );
 
-jest.mock( '@elementor/editor-controls', () => {
-	const actual = jest.requireActual( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls', () => {
+	const actual = jest.requireActual( '@refraction/editor-controls' );
 	return {
 		...actual,
 		useControlActions: () => ( {

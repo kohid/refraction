@@ -1,17 +1,17 @@
 import { createMockDocument, createMockElementData } from 'test-utils';
-import { type Document } from '@elementor/editor-documents';
-import { embeddedDocumentsManager } from '@elementor/editor-embedded-documents-manager';
+import { type Document } from '@refraction/editor-documents';
+import { embeddedDocumentsManager } from '@refraction/editor-embedded-documents-manager';
 
 import { type ComponentDocumentsMap, getComponentDocuments } from '../../utils/get-component-documents';
 import { loadComponentsAssets } from '../actions/load-components-assets';
 import { loadComponentsOverridableProps } from '../actions/load-components-overridable-props';
 
-jest.mock( '@elementor/editor-documents', () => ( {
-	...jest.requireActual( '@elementor/editor-documents' ),
+jest.mock( '@refraction/editor-documents', () => ( {
+	...jest.requireActual( '@refraction/editor-documents' ),
 	setDocumentModifiedStatus: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-embedded-documents-manager', () => ( {
+jest.mock( '@refraction/editor-embedded-documents-manager', () => ( {
 	embeddedDocumentsManager: {
 		setDocument: jest.fn(),
 	},

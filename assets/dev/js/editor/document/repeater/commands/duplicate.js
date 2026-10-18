@@ -12,7 +12,7 @@ export class Duplicate extends $e.modules.editor.document.CommandHistoryBase {
 		return {
 			containers,
 			type: 'duplicate',
-			subTitle: __( 'Item', 'elementor' ),
+			subTitle: __( 'Item', 'refraction' ),
 		};
 	}
 

@@ -1,4 +1,4 @@
-import { __createStore, __deleteStore, __dispatch, __getState, __registerSlice } from '@elementor/store';
+import { __createStore, __deleteStore, __dispatch, __getState, __registerSlice } from '@refraction/store';
 
 import {
 	selectCorner,

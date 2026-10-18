@@ -1,11 +1,11 @@
 import { createMockElement } from 'test-utils';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
 import { loadComponentsAssets } from '../../store/actions/load-components-assets';
 import { initLoadComponentDataAfterInstanceAdded } from '../load-component-data-after-instance-added';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	registerDataHook: jest.fn(),
 } ) );
 

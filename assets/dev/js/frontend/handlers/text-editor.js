@@ -1,12 +1,12 @@
-export default class TextEditor extends elementorModules.frontend.handlers.Base {
+export default class TextEditor extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
 				paragraph: 'p:first',
 			},
 			classes: {
-				dropCap: 'elementor-drop-cap',
-				dropCapLetter: 'elementor-drop-cap-letter',
+				dropCap: 'refraction-drop-cap',
+				dropCapLetter: 'refraction-drop-cap-letter',
 			},
 		};
 	}

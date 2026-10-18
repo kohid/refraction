@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useCurrentUserCapabilities } from '@elementor/editor-current-user';
-import { iconPropTypeUtil, svgSrcPropTypeUtil, urlPropTypeUtil } from '@elementor/editor-props';
+import { useCurrentUserCapabilities } from '@refraction/editor-current-user';
+import { iconPropTypeUtil, svgSrcPropTypeUtil, urlPropTypeUtil } from '@refraction/editor-props';
 import { Box, Card, CardOverlay, Popover, Stack, styled, usePopupState } from '@elementor/ui';
-import { type OpenOptions, useWpMediaAttachment, useWpMediaFrame } from '@elementor/wp-media';
+import { type OpenOptions, useWpMediaAttachment, useWpMediaFrame } from '@refraction/wp-media';
 import { __ } from '@wordpress/i18n';
 
 import { useBoundProp } from '../bound-prop-context';
@@ -55,7 +55,7 @@ type SvgMediaControlProps = {
 };
 
 export const SvgMediaControl = createControl( ( { showIconLibrary = false, label }: SvgMediaControlProps ) => {
-	const groupLabel = label ?? __( 'SVG', 'elementor' );
+	const groupLabel = label ?? __( 'SVG', 'refraction' );
 	const { value: svgValue, setValue: setSvgValue, placeholder: svgPlaceholder } = useBoundProp( svgSrcPropTypeUtil );
 	const { value: iconValue, setValue: setIconValue, placeholder: iconPlaceholder } = useBoundProp( iconPropTypeUtil );
 	const id = svgValue?.id;
@@ -166,7 +166,7 @@ export const SvgMediaControl = createControl( ( { showIconLibrary = false, label
 	const iconLibraryWidth = iconLibraryAnchor?.width ?? ICON_LIBRARY_POPOVER_WIDTH;
 
 	return (
-		<Stack gap={ 1 } aria-label={ __( 'SVG control', 'elementor' ) }>
+		<Stack gap={ 1 } aria-label={ __( 'SVG control', 'refraction' ) }>
 			<EnableUnfilteredModal open={ unfilteredModalOpenState } onClose={ handleCloseUnfilteredModal } />
 			{ showIconLibrary && iconLibraryAnchor ? (
 				<Popover
@@ -227,7 +227,7 @@ export const SvgMediaControl = createControl( ( { showIconLibrary = false, label
 								onSelectSvg={ handleSelectSvg }
 								onUpload={ handleUpload }
 								onOpenIconLibrary={ handleOpenIconLibrary }
-								infotipTitle={ __( "Sorry, you can't upload that file yet.", 'elementor' ) }
+								infotipTitle={ __( "Sorry, you can't upload that file yet.", 'refraction' ) }
 								infotipDescription={ <UnfilteredUploadInfotipDescription /> }
 							/>
 						</CardOverlay>
@@ -240,8 +240,8 @@ export const SvgMediaControl = createControl( ( { showIconLibrary = false, label
 
 const UnfilteredUploadInfotipDescription = () => (
 	<>
-		{ __( 'To upload them anyway, ask the site administrator to enable unfiltered', 'elementor' ) }
+		{ __( 'To upload them anyway, ask the site administrator to enable unfiltered', 'refraction' ) }
 		<br />
-		{ __( 'file uploads.', 'elementor' ) }
+		{ __( 'file uploads.', 'refraction' ) }
 	</>
 );

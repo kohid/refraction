@@ -1,14 +1,14 @@
 /* eslint-disable testing-library/no-test-id-queries */
 import * as React from 'react';
-import { __deleteStore } from '@elementor/store';
+import { __deleteStore } from '@refraction/store';
 import { QueryClient } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { DEFAULT_STRINGS } from '../../utils/default-strings';
 import { App } from '../app';
 
-jest.mock( '@elementor/query', () => {
-	const actual = jest.requireActual( '@elementor/query' );
+jest.mock( '@refraction/query', () => {
+	const actual = jest.requireActual( '@refraction/query' );
 	return {
 		...actual,
 		createQueryClient: () =>
@@ -59,7 +59,7 @@ interface OnboardingConfig {
 
 const defaultConfig: OnboardingConfig = {
 	version: '2.0.0',
-	restUrl: 'https://test.local/wp-json/elementor/v1/onboarding/',
+	restUrl: 'https://test.local/wp-json/refraction/v1/onboarding/',
 	nonce: 'test-nonce',
 	steps: [
 		{
@@ -84,7 +84,7 @@ const defaultConfig: OnboardingConfig = {
 		connect: 'https://test.local/connect',
 		signUp: 'https://test.local/sign-up',
 		comparePlans: 'https://elementor.com/pricing/?utm_source=onboarding&utm_medium=wp-dash',
-		createNewPage: 'https://test.local/wp-admin/edit.php?action=elementor_new_post&post_type=page',
+		createNewPage: 'https://test.local/wp-admin/edit.php?action=refraction_new_post&post_type=page',
 		upgradeUrl:
 			'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar&utm_term=2.0.0',
 	},
@@ -114,14 +114,14 @@ describe( 'App', () => {
 	} );
 
 	afterEach( () => {
-		window.elementorAppConfig = undefined;
+		window.refractionAppConfig = undefined;
 		__deleteStore();
 	} );
 
 	describe( 'Login flow', () => {
 		it( 'should show Login screen when user is not connected', () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: false,
 			} );
 
@@ -134,7 +134,7 @@ describe( 'App', () => {
 
 		it( 'should navigate to first step after clicking "Skip"', async () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: false,
 			} );
 
@@ -152,7 +152,7 @@ describe( 'App', () => {
 
 		it( 'should skip login screen when user is already connected', () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 			} );
 
@@ -166,7 +166,7 @@ describe( 'App', () => {
 
 		it( 'should return guest user to login screen when clicking Back on first step', async () => {
 			// Arrange - user is not connected (guest flow)
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: false,
 			} );
 
@@ -190,7 +190,7 @@ describe( 'App', () => {
 
 		it( 'should NOT return connected user to login screen when clicking Back on first step', () => {
 			// Arrange - user is genuinely connected
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 			} );
 
@@ -208,7 +208,7 @@ describe( 'App', () => {
 	describe( 'Step navigation', () => {
 		it( 'should show onboarding steps when user is connected', () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 			} );
 
@@ -224,7 +224,7 @@ describe( 'App', () => {
 
 		it( 'should call API when clicking Continue', async () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				choices: { site_features: [ 'theme_builder' ] },
 			} );
@@ -248,7 +248,7 @@ describe( 'App', () => {
 
 		it( 'should show "Continue with Free" button on last step', () => {
 			// Arrange - start on last step
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				progress: {
 					current_step_id: 'site_features',
@@ -278,7 +278,7 @@ describe( 'App', () => {
 				},
 			} );
 
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				choices: { site_features: [ 'contact_form' ] },
 				progress: {
@@ -304,7 +304,7 @@ describe( 'App', () => {
 			} );
 
 			await waitFor( () => {
-				expect( capturedHref ).toContain( 'elementor_new_post' );
+				expect( capturedHref ).toContain( 'refraction_new_post' );
 			} );
 		} );
 	} );
@@ -312,7 +312,7 @@ describe( 'App', () => {
 	describe( 'Pro install flow', () => {
 		it( 'should show Pro install screen when connected and eligible', () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				shouldShowProInstallScreen: true,
 			} );
@@ -329,7 +329,7 @@ describe( 'App', () => {
 
 		it( 'should skip Pro install screen when not eligible', () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				shouldShowProInstallScreen: false,
 			} );
@@ -344,7 +344,7 @@ describe( 'App', () => {
 
 		it( 'should not show Pro install screen for guest users', () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: false,
 				shouldShowProInstallScreen: true,
 			} );
@@ -361,7 +361,7 @@ describe( 'App', () => {
 
 		it( 'should dismiss Pro install screen when clicking "I\'ll do it later"', async () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				shouldShowProInstallScreen: true,
 			} );
@@ -381,7 +381,7 @@ describe( 'App', () => {
 
 		it( 'should call install-pro endpoint when clicking install button', async () => {
 			// Arrange
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				shouldShowProInstallScreen: true,
 			} );
@@ -409,7 +409,7 @@ describe( 'App', () => {
 				json: () => Promise.resolve( { data: { success: true, message: 'installed' } } ),
 			} );
 
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				shouldShowProInstallScreen: true,
 			} );
@@ -433,7 +433,7 @@ describe( 'App', () => {
 				json: () => Promise.resolve( { data: { success: true, message: 'installed' } } ),
 			} );
 
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				shouldShowProInstallScreen: true,
 				steps: [
@@ -472,7 +472,7 @@ describe( 'App', () => {
 			const mockOpen = jest.fn();
 			window.open = mockOpen;
 
-			window.elementorAppConfig = createMockConfig( { isConnected: true } );
+			window.refractionAppConfig = createMockConfig( { isConnected: true } );
 
 			render( <App /> );
 
@@ -490,7 +490,7 @@ describe( 'App', () => {
 			const mockOpen = jest.fn();
 			window.open = mockOpen;
 
-			window.elementorAppConfig = createMockConfig( { isConnected: false } );
+			window.refractionAppConfig = createMockConfig( { isConnected: false } );
 
 			render( <App /> );
 
@@ -507,7 +507,7 @@ describe( 'App', () => {
 	describe( 'Progress restoration', () => {
 		it( 'should restore user to saved step index', () => {
 			// Arrange - user was on the only remaining step
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				progress: {
 					current_step_id: 'site_features',
@@ -526,7 +526,7 @@ describe( 'App', () => {
 		} );
 
 		it( 'should fall back to first step when saved progress points to a removed step', () => {
-			window.elementorAppConfig = createMockConfig( {
+			window.refractionAppConfig = createMockConfig( {
 				isConnected: true,
 				progress: {
 					current_step_id: 'experience_level',

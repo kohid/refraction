@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createTransformer } from '@elementor/editor-canvas';
-import { EllipsisWithTooltip } from '@elementor/editor-ui';
+import { createTransformer } from '@refraction/editor-canvas';
+import { EllipsisWithTooltip } from '@refraction/editor-ui';
 import { CardMedia, Stack, type Theme } from '@elementor/ui';
-import { useWpMediaAttachment } from '@elementor/wp-media';
+import { useWpMediaAttachment } from '@refraction/wp-media';
 
 type ImageSrcAttachment = { id: number; url: null };
 

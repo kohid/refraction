@@ -1,19 +1,19 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Processes;
+namespace Refraction\App\Modules\ImportExport\Processes;
 
-use Elementor\App\Modules\ImportExport\Module;
-use Elementor\App\Modules\ImportExport\Utils;
-use Elementor\Core\Utils\Str;
-use Elementor\Plugin;
+use Refraction\App\Modules\ImportExport\Module;
+use Refraction\App\Modules\ImportExport\Utils;
+use Refraction\Core\Utils\Str;
+use Refraction\Plugin;
 
-use Elementor\App\Modules\ImportExport\Runners\Export\Elementor_Content;
-use Elementor\App\Modules\ImportExport\Runners\Export\Export_Runner_Base;
-use Elementor\App\Modules\ImportExport\Runners\Export\Plugins;
-use Elementor\App\Modules\ImportExport\Runners\Export\Site_Settings;
-use Elementor\App\Modules\ImportExport\Runners\Export\Taxonomies;
-use Elementor\App\Modules\ImportExport\Runners\Export\Templates;
-use Elementor\App\Modules\ImportExport\Runners\Export\Wp_Content;
+use Refraction\App\Modules\ImportExport\Runners\Export\Refraction_Content;
+use Refraction\App\Modules\ImportExport\Runners\Export\Export_Runner_Base;
+use Refraction\App\Modules\ImportExport\Runners\Export\Plugins;
+use Refraction\App\Modules\ImportExport\Runners\Export\Site_Settings;
+use Refraction\App\Modules\ImportExport\Runners\Export\Taxonomies;
+use Refraction\App\Modules\ImportExport\Runners\Export\Templates;
+use Refraction\App\Modules\ImportExport\Runners\Export\Wp_Content;
 
 class Export {
 	const ZIP_ARCHIVE_MODULE_MISSING = 'zip-archive-module-is-missing';
@@ -88,7 +88,7 @@ class Export {
 		$this->register( new Plugins() );
 		$this->register( new Templates() );
 		$this->register( new Taxonomies() );
-		$this->register( new Elementor_Content() );
+		$this->register( new Refraction_Content() );
 		$this->register( new Wp_Content() );
 	}
 
@@ -227,7 +227,7 @@ class Export {
 
 	/**
 	 * Get the default settings of all the custom post types that should be exported.
-	 * Should be all the custom post types that are not built in to WordPress and not part of Elementor.
+	 * Should be all the custom post types that are not built in to WordPress and not part of Refraction.
 	 *
 	 * @return array
 	 */
@@ -268,7 +268,7 @@ class Export {
 			'description' => $this->settings_kit_info['description'],
 			'author' => get_the_author_meta( 'display_name', $kit_post->post_author ),
 			'version' => Module::FORMAT_VERSION,
-			'elementor_version' => ELEMENTOR_VERSION,
+			'refraction_version' => REFRACTION_VERSION,
 			'created' => gmdate( 'Y-m-d H:i:s' ),
 			'thumbnail' => get_the_post_thumbnail_url( $kit_post ),
 			'site' => get_site_url(),

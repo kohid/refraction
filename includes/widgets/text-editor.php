@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor text editor widget.
+ * Refraction text editor widget.
  *
- * Elementor widget that displays a WYSIWYG text editor, just like the WordPress
+ * Refraction widget that displays a WYSIWYG text editor, just like the WordPress
  * editor.
  *
  * @since 1.0.0
@@ -43,7 +43,7 @@ class Widget_Text_Editor extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Text Editor', 'elementor' );
+		return esc_html__( 'Text Editor', 'refraction' );
 	}
 
 	/**
@@ -130,7 +130,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->start_controls_section(
 			'section_editor',
 			[
-				'label' => esc_html__( 'Text Editor', 'elementor' ),
+				'label' => esc_html__( 'Text Editor', 'refraction' ),
 			]
 		);
 
@@ -139,17 +139,17 @@ class Widget_Text_Editor extends Widget_Base {
 			[
 				'label' => '',
 				'type' => Controls_Manager::WYSIWYG,
-				'default' => '<p>' . esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor' ) . '</p>',
+				'default' => '<p>' . esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ) . '</p>',
 			]
 		);
 
 		$this->add_control(
 			'drop_cap', [
-				'label' => esc_html__( 'Drop Cap', 'elementor' ),
+				'label' => esc_html__( 'Drop Cap', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Off', 'elementor' ),
-				'label_on' => esc_html__( 'On', 'elementor' ),
-				'prefix_class' => 'elementor-drop-cap-',
+				'label_off' => esc_html__( 'Off', 'refraction' ),
+				'label_on' => esc_html__( 'On', 'refraction' ),
+				'prefix_class' => 'refraction-drop-cap-',
 				'frontend_available' => true,
 				'assets' => [
 					'styles' => [
@@ -174,21 +174,21 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_responsive_control(
 			'text_columns',
 			[
-				'label' => esc_html__( 'Columns', 'elementor' ),
+				'label' => esc_html__( 'Columns', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'separator' => 'before',
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'1' => esc_html__( '1', 'elementor' ),
-					'2' => esc_html__( '2', 'elementor' ),
-					'3' => esc_html__( '3', 'elementor' ),
-					'4' => esc_html__( '4', 'elementor' ),
-					'5' => esc_html__( '5', 'elementor' ),
-					'6' => esc_html__( '6', 'elementor' ),
-					'7' => esc_html__( '7', 'elementor' ),
-					'8' => esc_html__( '8', 'elementor' ),
-					'9' => esc_html__( '9', 'elementor' ),
-					'10' => esc_html__( '10', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'1' => esc_html__( '1', 'refraction' ),
+					'2' => esc_html__( '2', 'refraction' ),
+					'3' => esc_html__( '3', 'refraction' ),
+					'4' => esc_html__( '4', 'refraction' ),
+					'5' => esc_html__( '5', 'refraction' ),
+					'6' => esc_html__( '6', 'refraction' ),
+					'7' => esc_html__( '7', 'refraction' ),
+					'8' => esc_html__( '8', 'refraction' ),
+					'9' => esc_html__( '9', 'refraction' ),
+					'10' => esc_html__( '10', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => 'columns: {{VALUE}};',
@@ -199,7 +199,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_responsive_control(
 			'column_gap',
 			[
-				'label' => esc_html__( 'Columns Gap', 'elementor' ),
+				'label' => esc_html__( 'Columns Gap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -247,7 +247,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->start_controls_section(
 			'section_style',
 			[
-				'label' => esc_html__( 'Text Editor', 'elementor' ),
+				'label' => esc_html__( 'Text Editor', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -255,27 +255,27 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => esc_html__( 'Justified', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
@@ -308,7 +308,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_responsive_control(
 			'paragraph_spacing',
 			[
-				'label' => esc_html__( 'Paragraph Spacing', 'elementor' ),
+				'label' => esc_html__( 'Paragraph Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
@@ -338,14 +338,14 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->start_controls_tab(
 			'colors_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -360,7 +360,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_control(
 			'link_color',
 			[
-				'label' => esc_html__( 'Link Color', 'elementor' ),
+				'label' => esc_html__( 'Link Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} a' => 'color: {{VALUE}};',
@@ -373,14 +373,14 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->start_controls_tab(
 			'colors_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'link_hover_color',
 			[
-				'label' => esc_html__( 'Link Color', 'elementor' ),
+				'label' => esc_html__( 'Link Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} a:hover, {{WRAPPER}} a:focus' => 'color: {{VALUE}};',
@@ -391,7 +391,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_control(
 			'link_hover_color_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
@@ -412,7 +412,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->start_controls_section(
 			'section_drop_cap',
 			[
-				'label' => esc_html__( 'Drop Cap', 'elementor' ),
+				'label' => esc_html__( 'Drop Cap', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'drop_cap' => 'yes',
@@ -423,26 +423,26 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_control(
 			'drop_cap_view',
 			[
-				'label' => esc_html__( 'View', 'elementor' ),
+				'label' => esc_html__( 'View', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'stacked' => esc_html__( 'Stacked', 'elementor' ),
-					'framed' => esc_html__( 'Framed', 'elementor' ),
+					'default' => esc_html__( 'Default', 'refraction' ),
+					'stacked' => esc_html__( 'Stacked', 'refraction' ),
+					'framed' => esc_html__( 'Framed', 'refraction' ),
 				],
 				'default' => 'default',
-				'prefix_class' => 'elementor-drop-cap-view-',
+				'prefix_class' => 'refraction-drop-cap-view-',
 			]
 		);
 
 		$this->add_control(
 			'drop_cap_primary_color',
 			[
-				'label' => esc_html__( 'Primary Color', 'elementor' ),
+				'label' => esc_html__( 'Primary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}}.elementor-drop-cap-view-stacked .elementor-drop-cap' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}.elementor-drop-cap-view-framed .elementor-drop-cap, {{WRAPPER}}.elementor-drop-cap-view-default .elementor-drop-cap' => 'color: {{VALUE}}; border-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-drop-cap-view-stacked .refraction-drop-cap' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-drop-cap-view-framed .refraction-drop-cap, {{WRAPPER}}.refraction-drop-cap-view-default .refraction-drop-cap' => 'color: {{VALUE}}; border-color: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
@@ -453,11 +453,11 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_control(
 			'drop_cap_secondary_color',
 			[
-				'label' => esc_html__( 'Secondary Color', 'elementor' ),
+				'label' => esc_html__( 'Secondary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}}.elementor-drop-cap-view-framed .elementor-drop-cap' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}.elementor-drop-cap-view-stacked .elementor-drop-cap' => 'color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-drop-cap-view-framed .refraction-drop-cap' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-drop-cap-view-stacked .refraction-drop-cap' => 'color: {{VALUE}};',
 				],
 				'condition' => [
 					'drop_cap_view!' => 'default',
@@ -469,14 +469,14 @@ class Widget_Text_Editor extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'drop_cap_shadow',
-				'selector' => '{{WRAPPER}} .elementor-drop-cap',
+				'selector' => '{{WRAPPER}} .refraction-drop-cap',
 			]
 		);
 
 		$this->add_control(
 			'drop_cap_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -494,7 +494,7 @@ class Widget_Text_Editor extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-drop-cap' => 'padding: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-drop-cap' => 'padding: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'drop_cap_view!' => 'default',
@@ -505,7 +505,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_control(
 			'drop_cap_space',
 			[
-				'label' => esc_html__( 'Space', 'elementor' ),
+				'label' => esc_html__( 'Space', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -523,7 +523,7 @@ class Widget_Text_Editor extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-drop-cap' => 'margin-inline-end: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-drop-cap' => 'margin-inline-end: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -531,7 +531,7 @@ class Widget_Text_Editor extends Widget_Base {
 		$this->add_control(
 			'drop_cap_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -543,7 +543,7 @@ class Widget_Text_Editor extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-drop-cap' => 'border-radius: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-drop-cap' => 'border-radius: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'drop_cap_view!' => 'default',
@@ -553,11 +553,11 @@ class Widget_Text_Editor extends Widget_Base {
 
 		$this->add_control(
 			'drop_cap_border_width', [
-				'label' => esc_html__( 'Border Width', 'elementor' ),
+				'label' => esc_html__( 'Border Width', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-drop-cap' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-drop-cap' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 				'condition' => [
 					'drop_cap_view' => 'framed',
@@ -569,7 +569,7 @@ class Widget_Text_Editor extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'drop_cap_typography',
-				'selector' => '{{WRAPPER}} .elementor-drop-cap-letter',
+				'selector' => '{{WRAPPER}} .refraction-drop-cap-letter',
 				'exclude' => [
 					'letter_spacing',
 				],
@@ -598,7 +598,7 @@ class Widget_Text_Editor extends Widget_Base {
 		}
 
 		if ( $should_render_inline_editing ) {
-			$this->add_render_attribute( 'editor', 'class', [ 'elementor-text-editor', 'elementor-clearfix' ] );
+			$this->add_render_attribute( 'editor', 'class', [ 'refraction-text-editor', 'refraction-clearfix' ] );
 		}
 
 		$this->add_inline_editing_attributes( 'editor', 'advanced' );
@@ -644,7 +644,7 @@ class Widget_Text_Editor extends Widget_Base {
 			return '';
 		}
 
-		return \Elementor\Modules\MarkdownRender\Html_To_Markdown::convert( $editor_content );
+		return \Refraction\Modules\MarkdownRender\Html_To_Markdown::convert( $editor_content );
 	}
 
 	protected function content_template() {
@@ -654,10 +654,10 @@ class Widget_Text_Editor extends Widget_Base {
 			return;
 		}
 
-		const shouldRenderInlineEditing = elementorFrontend.isEditMode();
+		const shouldRenderInlineEditing = refractionFrontend.isEditMode();
 
 		if ( shouldRenderInlineEditing ) {
-			view.addRenderAttribute( 'editor', 'class', [ 'elementor-text-editor', 'elementor-clearfix' ] );
+			view.addRenderAttribute( 'editor', 'class', [ 'refraction-text-editor', 'refraction-clearfix' ] );
 		}
 
 		view.addInlineEditingAttributes( 'editor', 'advanced' );

@@ -27,7 +27,7 @@ type KitTypographyRow = {
 };
 
 type AuditWindow = Window & {
-	elementor?: {
+	refraction?: {
 		documents?: {
 			get: ( id: number ) => { config?: { settings?: { settings?: KitDocumentSettings } } } | undefined;
 		};
@@ -143,7 +143,7 @@ function readFontsFromKitDocumentSettings( settings: KitDocumentSettings | null 
 }
 
 function getKitDocumentSettings( kitId: number ): KitDocumentSettings | null {
-	const document = ( window as AuditWindow ).elementor?.documents?.get?.( kitId );
+	const document = ( window as AuditWindow ).refraction?.documents?.get?.( kitId );
 
 	return document?.config?.settings?.settings ?? null;
 }

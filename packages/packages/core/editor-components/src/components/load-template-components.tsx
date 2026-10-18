@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { isHandlingTemplateStyles, useLoadedTemplates } from '@elementor/editor-templates';
+import { isHandlingTemplateStyles, useLoadedTemplates } from '@refraction/editor-templates';
 
 import { loadComponentsAssets } from '../store/actions/load-components-assets';
 

@@ -13,13 +13,13 @@ import ProBanner from './components/pro-banner/pro-banner';
 import ImportPluginsFooter from './components/import-plugins-footer/import-plugins-footer';
 import Loader from '../../../ui/loader/loader';
 
-import Notice from 'elementor-app/ui/molecules/notice';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
+import Notice from 'refraction-app/ui/molecules/notice';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
 
 import usePlugins, { PLUGIN_STATUS_MAP } from '../../../hooks/use-plugins';
 import usePluginsData from '../../../hooks/use-plugins-data';
 import useImportPluginsData from './hooks/use-import-plugins-data';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
 import './import-plugins.scss';
 
@@ -45,8 +45,8 @@ export default function ImportPlugins() {
 			pluginsActions.fetch();
 		},
 		handleProInstallationStatus = () => {
-			// In case that the Pro data is now exist but initially in the elementorAppConfig the value was false, it means that the pro was added during the process.
-			if ( proData && ! elementorAppConfig.hasPro ) {
+			// In case that the Pro data is now exist but initially in the refractionAppConfig the value was false, it means that the pro was added during the process.
+			if ( proData && ! refractionAppConfig.hasPro ) {
 				importContext.dispatch( { type: 'SET_IS_PRO_INSTALLED_DURING_PROCESS', payload: true } );
 			}
 		},
@@ -91,15 +91,15 @@ export default function ImportPlugins() {
 				{ ! importPluginsData && <Loader absoluteCenter />	}
 
 				<PageHeader
-					heading={ __( 'Select which plugins to include', 'elementor' ) }
-					description={ __( 'All items are already selected by default. Uncheck the ones you don\'t want.', 'elementor' ) }
+					heading={ __( 'Select which plugins to include', 'refraction' ) }
+					description={ __( 'All items are already selected by default. Uncheck the ones you don\'t want.', 'refraction' ) }
 				/>
 
 				{
 					! ! minVersionMissing?.length &&
 					// eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace
-					<Notice label={ __( ' Recommended:', 'elementor' ) } className="e-app-import-plugins__versions-notice" color="warning">
-						{ __( 'Head over to Updates and make sure that your plugins are updated to the latest version.', 'elementor' ) } <InlineLink url={ elementorAppConfig.admin_url + 'update-core.php' }>{ __( 'Take me there', 'elementor' ) }</InlineLink>
+					<Notice label={ __( ' Recommended:', 'refraction' ) } className="e-app-import-plugins__versions-notice" color="warning">
+						{ __( 'Head over to Updates and make sure that your plugins are updated to the latest version.', 'refraction' ) } <InlineLink url={ refractionAppConfig.admin_url + 'update-core.php' }>{ __( 'Take me there', 'refraction' ) }</InlineLink>
 					</Notice>
 				}
 

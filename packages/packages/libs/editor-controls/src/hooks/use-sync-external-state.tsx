@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { type CreateOptions } from '@elementor/editor-props';
+import { type CreateOptions } from '@refraction/editor-props';
 
 import { type SetValueMeta } from '../bound-prop-context';
 

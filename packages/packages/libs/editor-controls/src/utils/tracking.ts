@@ -1,5 +1,5 @@
-import { getSelectedElements } from '@elementor/editor-elements';
-import { getMixpanel } from '@elementor/events';
+import { getSelectedElements } from '@refraction/editor-elements';
+import { getMixpanel } from '@refraction/events';
 
 export type PromotionTrackingData = {
 	target_name: string;

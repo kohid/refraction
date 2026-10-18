@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 
 import { SharedContext } from '../../../context/shared-context/shared-context-provider';
 import { ImportContext } from '../../../context/import-context/import-context-provider';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 import Layout from '../../../templates/layout';
 import PageHeader from '../../../ui/page-header/page-header';
 import ImportContentDisplay from './components/import-content-display/import-content-display';
@@ -58,8 +58,8 @@ export default function ImportContent() {
 		<Layout type="import" footer={ getFooter() }>
 			<section className="e-app-import-content">
 				<PageHeader
-					heading={ __( 'Select which parts you want to apply', 'elementor' ) }
-					description={ __( "All items are already selected by default. Uncheck the ones you don't want.", 'elementor' ) }
+					heading={ __( 'Select which parts you want to apply', 'refraction' ) }
+					description={ __( "All items are already selected by default. Uncheck the ones you don't want.", 'refraction' ) }
 				/>
 				<ImportContentDisplay
 					manifest={ uploadedData?.manifest }

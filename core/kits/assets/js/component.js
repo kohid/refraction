@@ -1,7 +1,7 @@
 import * as hooks from './hooks';
 import * as commands from './commands/';
 import Repeater from './repeater';
-import ComponentBase from 'elementor-editor/component-base';
+import ComponentBase from 'refraction-editor/component-base';
 
 export default class extends ComponentBase {
 	pages = {};
@@ -14,15 +14,15 @@ export default class extends ComponentBase {
 	__construct( args ) {
 		super.__construct( args );
 
-		elementor.on( 'panel:init', () => {
+		refraction.on( 'panel:init', () => {
 			args.manager.addPanelPages();
 
 			args.manager.addPanelMenuItem();
 		} );
 
-		elementor.hooks.addFilter( 'panel/header/behaviors', args.manager.addHeaderBehavior );
+		refraction.hooks.addFilter( 'panel/header/behaviors', args.manager.addHeaderBehavior );
 
-		elementor.addControlView( 'global-style-repeater', Repeater );
+		refraction.addControlView( 'global-style-repeater', Repeater );
 	}
 
 	getNamespace() {
@@ -32,7 +32,7 @@ export default class extends ComponentBase {
 	defaultRoutes() {
 		return {
 			menu: () => {
-				elementor.getPanelView().setPage( 'kit_menu' );
+				refraction.getPanelView().setPage( 'kit_menu' );
 				this.currentTab = 'menu';
 			},
 		};
@@ -48,8 +48,8 @@ export default class extends ComponentBase {
 				keys: 'ctrl+k',
 				dependency: () => {
 					return (
-						'kit' !== elementor.documents.getCurrent().config.type &&
-						'edit' === elementor.channels.dataEditMode.request( 'activeMode' )
+						'kit' !== refraction.documents.getCurrent().config.type &&
+						'edit' === refraction.channels.dataEditMode.request( 'activeMode' )
 					);
 				},
 			},
@@ -57,7 +57,7 @@ export default class extends ComponentBase {
 				keys: 'esc',
 				scopes: [ 'panel' ],
 				dependency: () => {
-					return elementor.documents.isCurrent( elementor.config.kit_id ) && ! jQuery( '.dialog-widget:visible' ).length;
+					return refraction.documents.isCurrent( refraction.config.kit_id ) && ! jQuery( '.dialog-widget:visible' ).length;
 				},
 			},
 		};
@@ -71,7 +71,7 @@ export default class extends ComponentBase {
 		if ( tab !== this.currentTab ) {
 			this.currentTab = tab;
 			this.trackVisitedTab( tab );
-			elementor.getPanelView().setPage( 'kit_settings' ).content.currentView.activateTab( tab );
+			refraction.getPanelView().setPage( 'kit_settings' ).content.currentView.activateTab( tab );
 		}
 
 		this.activateControl( args.activeControl );

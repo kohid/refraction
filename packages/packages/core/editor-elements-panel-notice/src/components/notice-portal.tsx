@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { __privateUseListenTo as useListenTo, routeOpenEvent, v1ReadyEvent } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo, routeOpenEvent, v1ReadyEvent } from '@refraction/editor-v1-adapters';
 import { Portal } from '@elementor/ui';
 
-const NOTICE_AREA_ID = 'elementor-panel-elements-notice-area';
+const NOTICE_AREA_ID = 'refraction-panel-elements-notice-area';
 const ELEMENTS_PANEL_ROUTE_PREFIX = 'panel/elements/';
 
 type Props = { component: React.ComponentType };

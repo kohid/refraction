@@ -1,4 +1,4 @@
-import { type StyleDefinition } from '@elementor/editor-styles';
+import { type StyleDefinition } from '@refraction/editor-styles';
 
 import { type ElementID } from '../types';
 import { getContainer } from './get-container';

@@ -7,7 +7,7 @@ import { useAutoShow } from '../use-auto-show';
 const w = window as any;
 
 const setAutoShow = ( value: boolean ) => {
-	w.elementor = { config: { angie: { autoShow: value } } };
+	w.refraction = { config: { angie: { autoShow: value } } };
 };
 
 describe( 'useAutoShow', () => {
@@ -21,7 +21,7 @@ describe( 'useAutoShow', () => {
 	afterEach( () => {
 		jest.useRealTimers();
 		dispatchSpy.mockRestore();
-		delete w.elementor;
+		delete w.refraction;
 	} );
 
 	it( 'should not dispatch any event when autoShow is false', () => {
@@ -33,7 +33,7 @@ describe( 'useAutoShow', () => {
 		expect( dispatchSpy ).not.toHaveBeenCalled();
 	} );
 
-	it( 'should not dispatch any event when elementor config is missing', () => {
+	it( 'should not dispatch any event when refraction config is missing', () => {
 		renderHook( () => useAutoShow() );
 		act( () => jest.runAllTimers() );
 

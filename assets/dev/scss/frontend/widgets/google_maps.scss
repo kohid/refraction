@@ -2,14 +2,14 @@
 // Google Map
 //
 
-.elementor-widget-google_maps {
+.refraction-widget-google_maps {
 
-	.elementor-widget-container,
-	&:not(:has(.elementor-widget-container)) {
+	.refraction-widget-container,
+	&:not(:has(.refraction-widget-container)) {
 		overflow: hidden; // Allow border-radius
 	}
 
-	.elementor-custom-embed {
+	.refraction-custom-embed {
 		line-height: 0; // Remove space
 	}
 

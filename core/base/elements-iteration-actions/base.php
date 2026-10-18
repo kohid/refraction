@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Base\Elements_Iteration_Actions;
+namespace Refraction\Core\Base\Elements_Iteration_Actions;
 
-use Elementor\Element_Base;
+use Refraction\Element_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -11,7 +11,7 @@ abstract class Base {
 	/**
 	 * The current document that the Base class instance was created from.
 	 *
-	 * @var \Elementor\Core\Document
+	 * @var \Refraction\Core\Document
 	 */
 	protected $document;
 

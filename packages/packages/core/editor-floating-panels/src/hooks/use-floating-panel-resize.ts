@@ -1,5 +1,5 @@
 import { type PointerEvent as ReactPointerEvent, useCallback, useRef } from 'react';
-import { __useSelector as useSelector } from '@elementor/store';
+import { __useSelector as useSelector } from '@refraction/store';
 
 import { type GlobalState, selectMinSize } from '../store/selectors';
 import { type LogicalPosition, type LogicalSize } from '../types';

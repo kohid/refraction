@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { createMockPropType, renderControl, renderField } from 'test-utils';
-import { ControlActionsProvider } from '@elementor/editor-controls';
+import { ControlActionsProvider } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useStylesFields } from '../../../../hooks/use-styles-fields';
 import { FontStyleField } from '../font-style-field';
 
-jest.mock( '@elementor/editor-styles' );
+jest.mock( '@refraction/editor-styles' );
 jest.mock( '../../../../hooks/use-styles-fields' );
 jest.mock( '../../../../contexts/styles-inheritance-context', () => ( {
 	useStylesInheritanceChain: () => [],

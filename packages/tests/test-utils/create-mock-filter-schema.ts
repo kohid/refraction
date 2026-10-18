@@ -1,4 +1,4 @@
-import { type TransformablePropType } from '@elementor/editor-props';
+import { type TransformablePropType } from '@refraction/editor-props';
 
 export function createMockSingleSizeFilterPropType() {
 	return {

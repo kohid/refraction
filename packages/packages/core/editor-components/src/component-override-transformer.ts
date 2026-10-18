@@ -1,4 +1,4 @@
-import { createTransformer } from '@elementor/editor-canvas';
+import { createTransformer } from '@refraction/editor-canvas';
 
 import { type ComponentInstanceOverridePropValue } from './prop-types/component-instance-override-prop-type';
 

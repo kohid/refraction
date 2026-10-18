@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { getContainer, getElementSettings, updateElementSettings, type V1Element } from '@elementor/editor-elements';
-import { booleanPropTypeUtil } from '@elementor/editor-props';
-import { undoable } from '@elementor/editor-v1-adapters';
+import { getContainer, getElementSettings, updateElementSettings, type V1Element } from '@refraction/editor-elements';
+import { booleanPropTypeUtil } from '@refraction/editor-props';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { HISTORY_DEBOUNCE_WAIT } from '../../../hooks/use-styles-fields';
@@ -76,8 +76,8 @@ export const cascadeShowIconToHeaders = undoable< CascadeShowIconPayload, Cascad
 		},
 	},
 	{
-		title: __( 'Accordion', 'elementor' ),
-		subtitle: __( 'Show Icon', 'elementor' ),
+		title: __( 'Accordion', 'refraction' ),
+		subtitle: __( 'Show Icon', 'refraction' ),
 		// `undoable()`'s debounce only delays when the *history entry* is pushed onto the undo stack -
 		// the settings write itself (`do()`) still runs synchronously on every call. The root's own
 		// `show_icon` change goes through `SettingsField` -> `useUndoableUpdateElementProp`
@@ -161,8 +161,8 @@ export const cascadeDifferentOpenIconToHeaders = undoable<
 		},
 	},
 	{
-		title: __( 'Accordion', 'elementor' ),
-		subtitle: __( 'Different icon when open', 'elementor' ),
+		title: __( 'Accordion', 'refraction' ),
+		subtitle: __( 'Different icon when open', 'refraction' ),
 		debounce: { wait: HISTORY_DEBOUNCE_WAIT },
 	}
 );

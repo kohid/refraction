@@ -3,17 +3,17 @@ import { createMockDocument, renderWithTheme } from 'test-utils';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import { fireEvent, screen } from '@testing-library/react';
 
 import PrimaryAction from '../primary-action';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useActiveDocumentActions: jest.fn(),
 } ) );
 
-describe( '@elementor/editor-app-bar - Primary action', () => {
+describe( '@refraction/editor-app-bar - Primary action', () => {
 	let saveFn: () => Promise< void >;
 
 	beforeEach( () => {

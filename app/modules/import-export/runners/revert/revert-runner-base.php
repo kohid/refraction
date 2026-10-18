@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Revert;
+namespace Refraction\App\Modules\ImportExport\Runners\Revert;
 
-use Elementor\App\Modules\ImportExport\Runners\Runner_Interface;
+use Refraction\App\Modules\ImportExport\Runners\Runner_Interface;
 
 abstract class Revert_Runner_Base implements Runner_Interface {
 

@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor text control.
+ * Refraction text control.
  *
  * A base control for creating text control. Displays a simple text input.
  *
@@ -42,16 +42,16 @@ class Control_Text extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
+		<div class="refraction-control-field">
 			<# if ( data.label ) {#>
-				<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
+				<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
 			<# } #>
-			<div class="elementor-control-input-wrapper elementor-control-unit-5 elementor-control-dynamic-switcher-wrapper">
-				<input id="<?php $this->print_control_uid(); ?>" type="{{ data.input_type }}" class="tooltip-target elementor-control-tag-area" data-tooltip="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ view.getControlPlaceholder() }}" />
+			<div class="refraction-control-input-wrapper refraction-control-unit-5 refraction-control-dynamic-switcher-wrapper">
+				<input id="<?php $this->print_control_uid(); ?>" type="{{ data.input_type }}" class="tooltip-target refraction-control-tag-area" data-tooltip="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ view.getControlPlaceholder() }}" />
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

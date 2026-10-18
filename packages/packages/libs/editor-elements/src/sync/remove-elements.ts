@@ -1,4 +1,4 @@
-import { undoable } from '@elementor/editor-v1-adapters';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { createElement } from './create-element';
@@ -31,7 +31,7 @@ type RemovedElementsResult = {
 export const removeElements = ( {
 	elementIds,
 	title,
-	subtitle = __( 'Item removed', 'elementor' ),
+	subtitle = __( 'Item removed', 'refraction' ),
 	onRemoveElements,
 	onRestoreElements,
 }: RemoveElementsParams ): RemovedElementsResult => {

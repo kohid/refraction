@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { type PropType, transformFunctionsPropTypeUtil, transformPropTypeUtil } from '@elementor/editor-props';
+import { type PropType, transformFunctionsPropTypeUtil, transformPropTypeUtil } from '@refraction/editor-props';
 import { AdjustmentsIcon, InfoCircleFilledIcon } from '@elementor/icons';
 import { bindTrigger, Box, IconButton, type PopupState, Tooltip, Typography, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -50,7 +50,7 @@ const ToolTip = (
 	>
 		<InfoCircleFilledIcon sx={ { color: 'secondary.main' } } />
 		<Typography variant="body2" color="text.secondary" fontSize="14px">
-			{ __( 'You can use each kind of transform only once per element.', 'elementor' ) }
+			{ __( 'You can use each kind of transform only once per element.', 'refraction' ) }
 		</Typography>
 	</Box>
 );
@@ -81,7 +81,7 @@ const Repeater = ( {
 				propTypeUtil={ transformFunctionsPropTypeUtil }
 			>
 				<RepeaterHeader
-					label={ __( 'Transform', 'elementor' ) }
+					label={ __( 'Transform', 'refraction' ) }
 					adornment={ () => <ControlAdornments customContext={ { path: [ 'transform' ], propType } } /> }
 					ref={ headerRef }
 				>
@@ -121,7 +121,7 @@ const TransformBasePopoverTrigger = ( {
 	repeaterBindKey: string;
 } ) => {
 	const { bind } = useBoundProp();
-	const titleLabel = __( 'Transform settings', 'elementor' );
+	const titleLabel = __( 'Transform settings', 'refraction' );
 
 	return bind !== repeaterBindKey ? null : (
 		<Tooltip title={ titleLabel } placement="top">

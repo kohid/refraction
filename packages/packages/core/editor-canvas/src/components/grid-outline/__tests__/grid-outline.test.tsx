@@ -120,7 +120,7 @@ describe( '<GridOutline />', () => {
 
 			for ( let i = 0; i < 6; i++ ) {
 				const child = document.createElement( 'div' );
-				child.classList.add( 'elementor-element' );
+				child.classList.add( 'refraction-element' );
 				element.appendChild( child );
 			}
 

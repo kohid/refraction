@@ -2,7 +2,7 @@
 // Shape Divider
 //
 
-.elementor-shape {
+.refraction-shape {
 	overflow: hidden;
 	position: absolute;
 	left: 0;
@@ -38,14 +38,14 @@
 
 	&[data-negative="false"] {
 
-		&.elementor-shape-bottom {
+		&.refraction-shape-bottom {
 			transform: rotate(180deg);
 		}
 	}
 
 	&[data-negative="true"] {
 
-		&.elementor-shape-top {
+		&.refraction-shape-top {
 			transform: rotate(180deg);
 		}
 	}
@@ -58,7 +58,7 @@
 		transform: translateX(-50%);
 	}
 
-	.elementor-shape-fill {
+	.refraction-shape-fill {
 		fill: #fff;
 		transform-origin: center;
 		transform: rotateY(0deg); // Reset default for safari

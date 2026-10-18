@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
-use Elementor\Modules\Agents\Agent_Ready_Settings;
+use Refraction\Modules\Agents\Agent_Ready_Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WordPress's normal 404 path — no stub document is ever served for a
  * feature that is not active or not yet applicable.
  *
- * Cache invalidation: listens to elementor/agents/llms_txt/cache_invalidated,
+ * Cache invalidation: listens to refraction/agents/llms_txt/cache_invalidated,
  * which fires on post save, theme switch, plugin activate/deactivate, and
- * Elementor cache clear — covering every scenario that could change a well-known
+ * Refraction cache clear — covering every scenario that could change a well-known
  * document's content.
  */
 class Well_Known_Router {
@@ -44,7 +44,7 @@ class Well_Known_Router {
 	 */
 	public function init(): void {
 		add_action( 'template_redirect', [ $this, 'maybe_handle' ], 1 );
-		add_action( 'elementor/agents/llms_txt/cache_invalidated', [ $this, 'flush_all_caches' ] );
+		add_action( 'refraction/agents/llms_txt/cache_invalidated', [ $this, 'flush_all_caches' ] );
 	}
 
 	/**
@@ -96,7 +96,7 @@ class Well_Known_Router {
 
 	/**
 	 * Flush cached responses for every registered endpoint.
-	 * Hooked into elementor/agents/llms_txt/cache_invalidated.
+	 * Hooked into refraction/agents/llms_txt/cache_invalidated.
 	 */
 	public function flush_all_caches(): void {
 		foreach ( $this->endpoints as $endpoint ) {

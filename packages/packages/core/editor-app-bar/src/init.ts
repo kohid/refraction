@@ -1,4 +1,4 @@
-import { injectIntoTop } from '@elementor/editor';
+import { injectIntoTop } from '@refraction/editor';
 
 import AppBar from './components/app-bar';
 import { init as initExtensions } from './extensions';

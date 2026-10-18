@@ -1,23 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`@elementor/extract-i18n-wordpress-expressions-webpack-plugin should extract translations from scripts 1`] = `
+exports[`@refraction/extract-i18n-wordpress-expressions-webpack-plugin should extract translations from scripts 1`] = `
 "__(
 					'Some long text with multiple lines in the function call',
-					'elementor'
+					'refraction'
 				);
 __( "Unique domain", "some-plugin-slug" );
 // translators: %1$s - special placeholder.
-__('special placeholder %1$s','elementor' );
+__('special placeholder %1$s','refraction' );
 // translators: %s - regular comment.
-__( 'regular comment %s','elementor');
+__( 'regular comment %s','refraction');
 /* translators: %s - comment block. */
-__('comment block %s', 'elementor');
-__( 'inside console log', 'elementor' );
-_n( 'basic with', 'plural', 2, 'elementor' );
-_nx( 'another with' , 'plural' , 2 , 'elementor' );
-_x( 'context', 'elementor' );
-__('hook','elementor');
-__( "Component", 'elementor' );"
+__('comment block %s', 'refraction');
+__( 'inside console log', 'refraction' );
+_n( 'basic with', 'plural', 2, 'refraction' );
+_nx( 'another with' , 'plural' , 2 , 'refraction' );
+_x( 'context', 'refraction' );
+__('hook','refraction');
+__( "Component", 'refraction' );"
 `;
 
-exports[`@elementor/extract-i18n-wordpress-expressions-webpack-plugin should extract translations from scripts 2`] = `"__( 'from app 2', 'elementor' );"`;
+exports[`@refraction/extract-i18n-wordpress-expressions-webpack-plugin should extract translations from scripts 2`] = `"__( 'from app 2', 'refraction' );"`;

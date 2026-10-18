@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type DropShadowFilterPropValue, type FilterItemPropValue } from '@elementor/editor-props';
+import { type DropShadowFilterPropValue, type FilterItemPropValue } from '@refraction/editor-props';
 import { styled, UnstableColorIndicator } from '@elementor/ui';
 
 export const FilterIcon = ( { value }: { value: FilterItemPropValue } ) => {

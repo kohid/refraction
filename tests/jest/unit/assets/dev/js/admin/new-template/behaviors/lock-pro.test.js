@@ -1,5 +1,5 @@
 import { createEvent, fireEvent } from '@testing-library/dom';
-import LockPro from 'elementor-admin/new-template/behaviors/lock-pro';
+import LockPro from 'refraction-admin/new-template/behaviors/lock-pro';
 
 describe( 'New Template - Lock Pro Behavior', () => {
 	let elements = {};

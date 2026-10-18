@@ -1,9 +1,9 @@
 import Component from './component';
 
-class FloatingButtonsLibraryModule extends elementorModules.editor.utils.Module {
-	onElementorLoaded() {
+class FloatingButtonsLibraryModule extends refractionModules.editor.utils.Module {
+	onRefractionLoaded() {
 		this.component = $e.components.register( new Component( { manager: this } ) );
-		elementor.channels.editor.on( 'section:activated', this.hideAdvancedTab.bind( this ) );
+		refraction.channels.editor.on( 'section:activated', this.hideAdvancedTab.bind( this ) );
 	}
 
 	hideAdvancedTab( sectionName, editor ) {
@@ -13,15 +13,15 @@ class FloatingButtonsLibraryModule extends elementorModules.editor.utils.Module 
 			return;
 		}
 
-		const advancedTab = editor?.el.querySelector( '.elementor-tab-control-advanced' ) || false;
+		const advancedTab = editor?.el.querySelector( '.refraction-tab-control-advanced' ) || false;
 
 		if ( advancedTab ) {
 			advancedTab.style.display = 'none';
 		}
 	}
 
-	onElementorInit() {
-		elementor.hooks.addFilter( 'elements/base/behaviors', ( behaviors ) => {
+	onRefractionInit() {
+		refraction.hooks.addFilter( 'elements/base/behaviors', ( behaviors ) => {
 			if ( this.isFloatingButtonDocument() ) {
 				const { contextMenu: { groups } } = behaviors;
 				behaviors.contextMenu.groups = groups
@@ -31,7 +31,7 @@ class FloatingButtonsLibraryModule extends elementorModules.editor.utils.Module 
 			return behaviors;
 		}, 1000 );
 
-		elementor.hooks.addFilter( 'component/modal/close', ( close, component ) => {
+		refraction.hooks.addFilter( 'component/modal/close', ( close, component ) => {
 			if (
 				'library' === component.getNamespace() &&
 				'library/templates/floating-buttons' === component.defaultRoute
@@ -42,8 +42,8 @@ class FloatingButtonsLibraryModule extends elementorModules.editor.utils.Module 
 			return close;
 		}, 1000 );
 
-		elementor.hooks.addFilter(
-			'elementor/editor/template-library/template/promotion-link-search-params',
+		refraction.hooks.addFilter(
+			'refraction/editor/template-library/template/promotion-link-search-params',
 			( queryString, templateData ) => {
 				const { type } = templateData;
 				if ( 'floating_button' === type ) {
@@ -66,7 +66,7 @@ class FloatingButtonsLibraryModule extends elementorModules.editor.utils.Module 
 
 	filterOutUnsupportedActions() {
 		return ( group ) => {
-			const enabledCommands = elementor.helpers.hasPro()
+			const enabledCommands = refraction.helpers.hasPro()
 				? [ 'edit', 'delete', 'resetStyle' ]
 				: [ 'edit', 'delete', 'resetStyle', 'save' ];
 			const { name, actions } = group;
@@ -79,7 +79,7 @@ class FloatingButtonsLibraryModule extends elementorModules.editor.utils.Module 
 	}
 
 	isFloatingButtonDocument() {
-		return 'floating-buttons' === elementor.config.document.type;
+		return 'floating-buttons' === refraction.config.document.type;
 	}
 }
 

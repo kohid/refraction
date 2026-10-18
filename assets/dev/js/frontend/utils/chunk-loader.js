@@ -7,23 +7,23 @@
  * so the entry stays small and each handler ships as its own bundle fetched only when a widget
  * needs it.
  *
- * A chunk bundle is an IIFE that assigns its default export to `window.__elementorChunks[name]`.
- * The `__ELEMENTOR_CHUNK_SUFFIX__` constant is replaced at build time with `.min` for the
+ * A chunk bundle is an IIFE that assigns its default export to `window.__refractionChunks[name]`.
+ * The `__REFRACTION_CHUNK_SUFFIX__` constant is replaced at build time with `.min` for the
  * production build and the empty string otherwise, so a dev frontend loads dev chunks and a prod
  * frontend loads minified ones.
  */
 
-/* global __ELEMENTOR_CHUNK_SUFFIX__ */
+/* global __REFRACTION_CHUNK_SUFFIX__ */
 
 function chunkUrl( name ) {
-	const config = window.elementorFrontendConfig || {};
+	const config = window.refractionFrontendConfig || {};
 	const assetsUrl = config.urls?.assets || '';
 	const version = config.version ? '?ver=' + encodeURIComponent( config.version ) : '';
 
-	return assetsUrl + 'js/chunks/' + name + __ELEMENTOR_CHUNK_SUFFIX__ + '.js' + version;
+	return assetsUrl + 'js/chunks/' + name + __REFRACTION_CHUNK_SUFFIX__ + '.js' + version;
 }
 
-const registry = window.__elementorChunks = window.__elementorChunks || {};
+const registry = window.__refractionChunks = window.__refractionChunks || {};
 const inflight = new Map();
 
 function appendChunkScript( name ) {
@@ -36,10 +36,10 @@ function appendChunkScript( name ) {
 			if ( registry[ name ] ) {
 				resolve( registry[ name ] );
 			} else {
-				reject( new Error( `[elementor] chunk "${ name }" loaded but did not register` ) );
+				reject( new Error( `[refraction] chunk "${ name }" loaded but did not register` ) );
 			}
 		};
-		script.onerror = () => reject( new Error( `[elementor] failed to load chunk "${ name }" from ${ script.src }` ) );
+		script.onerror = () => reject( new Error( `[refraction] failed to load chunk "${ name }" from ${ script.src }` ) );
 		document.head.appendChild( script );
 	} );
 }
@@ -63,4 +63,4 @@ export function loadChunk( name ) {
 	return inflight.get( name );
 }
 
-window.__elementorLoadChunk = loadChunk;
+window.__refractionLoadChunk = loadChunk;

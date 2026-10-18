@@ -4,17 +4,17 @@ import '@testing-library/jest-dom';
 import {
 	__privateFlushListeners as flushListeners,
 	__privateSetReady as setReady,
-} from '@elementor/editor-v1-adapters';
-import { __resetEnv } from '@elementor/env';
-import { __flushAllInjections } from '@elementor/locations';
-import { __deleteStore } from '@elementor/store';
+} from '@refraction/editor-v1-adapters';
+import { __resetEnv } from '@refraction/env';
+import { __flushAllInjections } from '@refraction/locations';
+import { __deleteStore } from '@refraction/store';
 import { cleanup } from '@testing-library/react';
 import { TextEncoder, TextDecoder } from 'util';
 
-jest.mock( '@elementor/http-client' );
-jest.mock( '@elementor/editor-mcp', () => {
-	const { toolPrompts } = jest.requireActual< typeof import( '@elementor/editor-mcp' ) >(
-		'@elementor/editor-mcp'
+jest.mock( '@refraction/http-client' );
+jest.mock( '@refraction/editor-mcp', () => {
+	const { toolPrompts } = jest.requireActual< typeof import( '@refraction/editor-mcp' ) >(
+		'@refraction/editor-mcp'
 	);
 	return { toolPrompts };
 } );
@@ -78,7 +78,7 @@ globalThis.DOMRect = class DOMRect {
 let globalOriginalProps: PropertyKey[];
 
 // disable MCP initialization during tests
-(globalThis as Record<string, unknown>).__ELEMENTOR_MCP_DISABLED__ = true;
+(globalThis as Record<string, unknown>).__REFRACTION_MCP_DISABLED__ = true;
 
 beforeEach( () => {
 	setReady( true );

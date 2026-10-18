@@ -1,11 +1,11 @@
 /**
  * Determines whether a widget should display the "New" badge in the panel.
  *
- * The badge shows when the current Elementor major.minor version is less than
+ * The badge shows when the current Refraction major.minor version is less than
  * or equal to the version the widget shipped in. Patch versions are ignored.
  *
  * @param {{ new_until_version?: string }} item           Widget config object.
- * @param {string}                         currentVersion Elementor version string (e.g. "4.3.1").
+ * @param {string}                         currentVersion Refraction version string (e.g. "4.3.1").
  * @return {boolean} Whether the "New" badge should be shown.
  */
 export function isWidgetNew( item, currentVersion ) {

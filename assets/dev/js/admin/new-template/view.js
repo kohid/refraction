@@ -1,8 +1,8 @@
 module.exports = Marionette.ItemView.extend( {
 
-	id: 'elementor-new-template-dialog-content',
+	id: 'refraction-new-template-dialog-content',
 
-	template: '#tmpl-elementor-new-template',
+	template: '#tmpl-refraction-new-template',
 
 	ui: {},
 

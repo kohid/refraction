@@ -83,7 +83,7 @@ export const AddBotControl = ( { options, isDisabled, onAdd } ) => {
 				ref={ anchorRef }
 				role="combobox"
 				tabIndex={ isFieldDisabled ? -1 : 0 }
-				aria-label={ __( 'Select bot', 'elementor' ) }
+				aria-label={ __( 'Select bot', 'refraction' ) }
 				aria-haspopup="listbox"
 				aria-expanded={ isOpen }
 				aria-controls={ isOpen ? MENU_ID : undefined }
@@ -114,10 +114,10 @@ export const AddBotControl = ( { options, isDisabled, onAdd } ) => {
 					flexGrow={ 1 }
 					noWrap
 				>
-					{ selectedBot ? selectedBot.name : __( 'Add bot rule', 'elementor' ) }
+					{ selectedBot ? selectedBot.name : __( 'Add bot rule', 'refraction' ) }
 				</Typography>
 				{ selectedBot && ! isFieldDisabled && (
-					<IconButton size="small" aria-label={ __( 'Clear', 'elementor' ) } onClick={ handleClear }>
+					<IconButton size="small" aria-label={ __( 'Clear', 'refraction' ) } onClick={ handleClear }>
 						<XIcon fontSize="tiny" />
 					</IconButton>
 				) }
@@ -130,7 +130,7 @@ export const AddBotControl = ( { options, isDisabled, onAdd } ) => {
 				disabled={ isFieldDisabled || ! selectedBot }
 				onClick={ handleAdd }
 			>
-				{ __( 'Add', 'elementor' ) }
+				{ __( 'Add', 'refraction' ) }
 			</Button>
 			<Popover
 				open={ isOpen }
@@ -143,9 +143,9 @@ export const AddBotControl = ( { options, isDisabled, onAdd } ) => {
 			>
 				<Stack direction="row" alignItems="center" pl={ 2 } pr={ 1 } py={ 1 }>
 					<Typography variant="subtitle2" flexGrow={ 1 }>
-						{ __( 'Customize a bot\'s access', 'elementor' ) }
+						{ __( 'Customize a bot\'s access', 'refraction' ) }
 					</Typography>
-					<CloseButton aria-label={ __( 'Close', 'elementor' ) } slotProps={ { icon: { fontSize: 'tiny' } } } onClick={ close } />
+					<CloseButton aria-label={ __( 'Close', 'refraction' ) } slotProps={ { icon: { fontSize: 'tiny' } } } onClick={ close } />
 				</Stack>
 				<Stack px={ 2 } pb={ 1.5 }>
 					<TextField
@@ -154,8 +154,8 @@ export const AddBotControl = ( { options, isDisabled, onAdd } ) => {
 						size="tiny"
 						value={ query }
 						onChange={ ( event ) => setQuery( event.target.value ) }
-						placeholder={ __( 'Search', 'elementor' ) }
-						inputProps={ { 'aria-label': __( 'Search bots', 'elementor' ) } }
+						placeholder={ __( 'Search', 'refraction' ) }
+						inputProps={ { 'aria-label': __( 'Search bots', 'refraction' ) } }
 						InputProps={ {
 							startAdornment: (
 								<InputAdornment position="start">
@@ -188,7 +188,7 @@ export const AddBotControl = ( { options, isDisabled, onAdd } ) => {
 				</MenuList>
 				{ ! filteredOptions.length && (
 					<Typography variant="caption" color="text.secondary" component="p" px={ 2 } pb={ 1.5 }>
-						{ __( 'No bots found', 'elementor' ) }
+						{ __( 'No bots found', 'refraction' ) }
 					</Typography>
 				) }
 			</Popover>

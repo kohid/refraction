@@ -1,6 +1,6 @@
 import Grid from '../ui/grid/grid';
 import HeaderButtons from './header-buttons';
-import usePageTitle from 'elementor-app/hooks/use-page-title';
+import usePageTitle from 'refraction-app/hooks/use-page-title';
 
 export default function Header( props ) {
 	usePageTitle( { title: props.title } );
@@ -19,7 +19,7 @@ export default function Header( props ) {
 	return (
 		<Grid container alignItems="center" justify="space-between" className="eps-app__header">
 			<TitleTag className="eps-app__logo-title-wrapper" { ...titleAttrs }>
-				<i className="eps-app__logo eicon-elementor-circle" />
+				<i className="eps-app__logo eicon-refraction-circle" />
 				<h1 className="eps-app__title">{ props.title }</h1>
 			</TitleTag>
 			<HeaderButtons buttons={ props.buttons } onClose={ props.onClose } />

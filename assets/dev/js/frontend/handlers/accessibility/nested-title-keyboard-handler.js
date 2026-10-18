@@ -10,7 +10,7 @@ export default class NestedTitleKeyboardHandler extends Base {
 	}
 
 	getWidgetNumber() {
-		return this.$element.find( '> .elementor-widget-container > .e-n-tabs, > .e-n-tabs' ).attr( 'data-widget-number' );
+		return this.$element.find( '> .refraction-widget-container > .e-n-tabs, > .e-n-tabs' ).attr( 'data-widget-number' );
 	}
 
 	getDefaultSettings() {
@@ -27,9 +27,9 @@ export default class NestedTitleKeyboardHandler extends Base {
 				titleIndex: 'data-tab-index',
 			},
 			keyDirection: {
-				ArrowLeft: elementorFrontendConfig.is_rtl ? this.directionNext : this.directionPrevious,
+				ArrowLeft: refractionFrontendConfig.is_rtl ? this.directionNext : this.directionPrevious,
 				ArrowUp: this.directionPrevious,
-				ArrowRight: elementorFrontendConfig.is_rtl ? this.directionPrevious : this.directionNext,
+				ArrowRight: refractionFrontendConfig.is_rtl ? this.directionPrevious : this.directionNext,
 				ArrowDown: this.directionNext,
 			},
 		};
@@ -136,7 +136,7 @@ export default class NestedTitleKeyboardHandler extends Base {
 
 			const titleIndex = this.getTitleIndex( event.currentTarget );
 
-			elementorFrontend.elements.$window.trigger( 'elementor/nested-elements/activate-by-keyboard', { widgetId: this.getID(), titleIndex } );
+			refractionFrontend.elements.$window.trigger( 'refraction/nested-elements/activate-by-keyboard', { widgetId: this.getID(), titleIndex } );
 		} else if ( 'Escape' === event.key ) {
 			this.handleTitleEscapeKeyEvents( event );
 		}
@@ -145,7 +145,7 @@ export default class NestedTitleKeyboardHandler extends Base {
 	handeTitleLinkEnterOrSpaceEvent( event ) {
 		const isLinkElement = 'a' === event?.currentTarget?.tagName?.toLowerCase();
 
-		if ( ! elementorFrontend.isEditMode() && isLinkElement ) {
+		if ( ! refractionFrontend.isEditMode() && isLinkElement ) {
 			event?.currentTarget?.click();
 			event.stopPropagation();
 		}

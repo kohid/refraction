@@ -1,11 +1,11 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { __privateListenTo as listenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { __privateListenTo as listenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
 
 type ExtendedWindow = Window & {
 	angieConfig?: {
 		plugins?: Record< string, unknown >;
 	};
-	elementor?: {
+	refraction?: {
 		documents?: {
 			getCurrent?: () => {
 				config?: {
@@ -18,7 +18,7 @@ type ExtendedWindow = Window & {
 	};
 };
 
-export const GENERAL_CONTEXT_URI = 'elementor://context/general';
+export const GENERAL_CONTEXT_URI = 'refraction://context/general';
 
 export const initGeneralContextResource = ( reg: MCPRegistryEntry ) => {
 	const { resource, sendResourceUpdated } = reg;
@@ -27,7 +27,7 @@ export const initGeneralContextResource = ( reg: MCPRegistryEntry ) => {
 
 	const getPageTitle = (): string | null => {
 		const extendedWindow = window as ExtendedWindow;
-		const title = extendedWindow.elementor?.documents?.getCurrent?.()?.config?.settings?.post_title;
+		const title = extendedWindow.refraction?.documents?.getCurrent?.()?.config?.settings?.post_title;
 		if ( ! title?.trim() ) {
 			return null;
 		}
@@ -43,7 +43,7 @@ export const initGeneralContextResource = ( reg: MCPRegistryEntry ) => {
 		const pageTitle = getPageTitle();
 		const urlObject = new URL( window.location.href );
 		const pageUrl = urlObject.pathname + urlObject.search;
-		const pageName = pageTitle || 'Elementor Editor';
+		const pageName = pageTitle || 'Refraction Editor';
 		const plugins = extendedWindow.angieConfig?.plugins;
 
 		return {

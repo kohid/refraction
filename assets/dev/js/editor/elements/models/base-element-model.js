@@ -1,5 +1,5 @@
 /**
- * @typedef {import('elementor/assets/lib/backbone/backbone.marionette')} Backbone
+ * @typedef {import('refraction/assets/lib/backbone/backbone.marionette')} Backbone
  */
 
 /**
@@ -18,6 +18,6 @@ export default class BaseElementModel extends Backbone.Model {
 	 * @return {boolean} Whether the child model is valid or not.
 	 */
 	isValidChild( childModel ) { // eslint-disable-line no-unused-vars
-		elementorModules.ForceMethodImplementation( { attributes: this.attributes } );
+		refractionModules.ForceMethodImplementation( { attributes: this.attributes } );
 	}
 }

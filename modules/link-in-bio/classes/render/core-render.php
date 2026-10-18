@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\LinkInBio\Classes\Render;
+namespace Refraction\Modules\LinkInBio\Classes\Render;
 
 /**
  * Class Core_Render.

@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 
 export default class BackwardsCompatibility {
 	ensureTab( namespace, tabSlug, page = '' ) {
@@ -11,16 +11,16 @@ export default class BackwardsCompatibility {
 				}
 
 				renderTab( tab ) {
-					elementor.getPanelView().setPage( page ).activateTab( tab );
+					refraction.getPanelView().setPage( page ).activateTab( tab );
 				}
 			};
 
 			component = $e.components.register( new Component() );
 		}
 
-		if ( ! component.hasTab( tabSlug ) && elementor.config.tabs[ tabSlug ] ) {
+		if ( ! component.hasTab( tabSlug ) && refraction.config.tabs[ tabSlug ] ) {
 			component.addTab( tabSlug, {
-				title: elementor.config.tabs[ tabSlug ],
+				title: refraction.config.tabs[ tabSlug ],
 			} );
 		}
 	}

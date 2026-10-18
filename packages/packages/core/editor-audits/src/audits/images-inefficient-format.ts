@@ -9,9 +9,9 @@ const LEGACY_RASTER_MIME_TYPES = new Set( [ 'image/jpeg', 'image/png', 'image/gi
 
 export const audit: Audit = {
 	id: 'audits/images-inefficient-format',
-	title: __( 'Inefficient image format', 'elementor' ),
-	description: __( "Image isn't served in a modern, efficient format like WebP or AVIF.", 'elementor' ),
-	fixHint: __( 'Convert the image to a modern format like WebP or AVIF, or enable image optimization.', 'elementor' ),
+	title: __( 'Inefficient image format', 'refraction' ),
+	description: __( "Image isn't served in a modern, efficient format like WebP or AVIF.", 'refraction' ),
+	fixHint: __( 'Convert the image to a modern format like WebP or AVIF, or enable image optimization.', 'refraction' ),
 	categories: [ 'performance' ],
 	severity: 'info',
 	weight: 1,
@@ -45,18 +45,18 @@ export const audit: Audit = {
 		walkAllImageSources( ctx.elements.tree, ( { node, media } ) => evaluateSource( node, media ) );
 
 		if ( ! hasAnyImage ) {
-			return { status: 'skipped', reason: __( 'No images', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No images', 'refraction' ) };
 		}
 
 		const violations: AuditViolation[] = Array.from( offendingElementIds ).map( ( elementId ) => ( {
 			auditId: audit.id,
 			elementId,
 			targetHint: 'element-settings' as const,
-			label: __( "Image isn't served in a modern format like WebP or AVIF.", 'elementor' ),
+			label: __( "Image isn't served in a modern format like WebP or AVIF.", 'refraction' ),
 			externalUrl: isReady
 				? ctx.pageContext.image_optimization_settings_url
 				: ctx.pageContext.image_optimization_plugin_url,
-			ctaLabel: __( 'Optimize all', 'elementor' ),
+			ctaLabel: __( 'Optimize all', 'refraction' ),
 		} ) );
 
 		return violations.length === 0

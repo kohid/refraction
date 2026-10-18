@@ -13,7 +13,7 @@ const ALLOWED_NON_OPERATIONAL_ATTRS = [
 ] as const;
 
 function getAllowedHtmlWrapperTags(): readonly string[] {
-	return window.elementorCommon?.config?.allowedHTMLWrapperTags ?? [];
+	return window.refractionCommon?.config?.allowedHTMLWrapperTags ?? [];
 }
 
 export function sanitizeEscapedHtml( value: string | null ): string {

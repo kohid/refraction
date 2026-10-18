@@ -1,4 +1,4 @@
-import Heartbeat from 'elementor/assets/dev/js/editor/utils/heartbeat';
+import Heartbeat from 'refraction/assets/dev/js/editor/utils/heartbeat';
 
 const makeSpy = () => {
 	const fn = function() {
@@ -30,8 +30,8 @@ QUnit.module( 'File: assets/dev/js/editor/utils/heartbeat.js', ( hooks ) => {
 			editor: { isChanged: false },
 		};
 
-		originalChannelsEditor = elementor.channels.editor;
-		elementor.channels.editor = { on: () => {}, off: () => {}, trigger: () => {} };
+		originalChannelsEditor = refraction.channels.editor;
+		refraction.channels.editor = { on: () => {}, off: () => {}, trigger: () => {} };
 
 		heartbeat = new Heartbeat( mockDocument );
 
@@ -44,7 +44,7 @@ QUnit.module( 'File: assets/dev/js/editor/utils/heartbeat.js', ( hooks ) => {
 	hooks.afterEach( () => {
 		heartbeat.destroy();
 		window.wp = originalWp;
-		elementor.channels.editor = originalChannelsEditor;
+		refraction.channels.editor = originalChannelsEditor;
 	} );
 
 	QUnit.module( 'onDocumentChanged()', () => {
@@ -106,12 +106,12 @@ QUnit.module( 'File: assets/dev/js/editor/utils/heartbeat.js', ( hooks ) => {
 			const dirtyData = {};
 			mockDocument.editor.isChanged = true;
 			heartbeat.onSend( null, dirtyData );
-			assert.equal( dirtyData.elementor_has_unsaved, 123, 'sends document id when dirty' );
+			assert.equal( dirtyData.refraction_has_unsaved, 123, 'sends document id when dirty' );
 
 			const cleanData = {};
 			mockDocument.editor.isChanged = false;
 			heartbeat.onSend( null, cleanData );
-			assert.strictEqual( cleanData.elementor_has_unsaved, null, 'sends null when clean to clear server transient' );
+			assert.strictEqual( cleanData.refraction_has_unsaved, null, 'sends null when clean to clear server transient' );
 		} );
 	} );
 } );

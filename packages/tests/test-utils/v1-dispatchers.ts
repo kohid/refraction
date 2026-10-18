@@ -1,8 +1,8 @@
-import { __privateSetReady } from '@elementor/editor-v1-adapters';
+import { __privateSetReady } from '@refraction/editor-v1-adapters';
 
 export function dispatchCommandBefore( command: string, args: Record< string, unknown > = {} ) {
 	window.dispatchEvent(
-		new CustomEvent( 'elementor/commands/run/before', {
+		new CustomEvent( 'refraction/commands/run/before', {
 			detail: {
 				command,
 				args,
@@ -13,7 +13,7 @@ export function dispatchCommandBefore( command: string, args: Record< string, un
 
 export function dispatchCommandAfter( command: string, args: Record< string, unknown > = {} ) {
 	window.dispatchEvent(
-		new CustomEvent( 'elementor/commands/run/after', {
+		new CustomEvent( 'refraction/commands/run/after', {
 			detail: {
 				command,
 				args,
@@ -24,7 +24,7 @@ export function dispatchCommandAfter( command: string, args: Record< string, unk
 
 export function dispatchDependencyCommand( command: string, args: Record< string, unknown > = {} ) {
 	window.dispatchEvent(
-		new CustomEvent( 'elementor/commands/dependency', {
+		new CustomEvent( 'refraction/commands/dependency', {
 			detail: {
 				command,
 				args,
@@ -35,7 +35,7 @@ export function dispatchDependencyCommand( command: string, args: Record< string
 
 export function dispatchRouteOpen( route: string ) {
 	window.dispatchEvent(
-		new CustomEvent( 'elementor/routes/open', {
+		new CustomEvent( 'refraction/routes/open', {
 			detail: {
 				route,
 			},
@@ -45,7 +45,7 @@ export function dispatchRouteOpen( route: string ) {
 
 export function dispatchRouteClose( route: string ) {
 	window.dispatchEvent(
-		new CustomEvent( 'elementor/routes/close', {
+		new CustomEvent( 'refraction/routes/close', {
 			detail: {
 				route,
 			},
@@ -54,12 +54,12 @@ export function dispatchRouteClose( route: string ) {
 }
 
 export function dispatchEditModeChange() {
-	window.dispatchEvent( new CustomEvent( 'elementor/edit-mode/change' ) );
+	window.dispatchEvent( new CustomEvent( 'refraction/edit-mode/change' ) );
 }
 
 export function dispatchV1ReadyEvent() {
 	__privateSetReady( true );
-	dispatchWindowEvent( 'elementor/initialized' );
+	dispatchWindowEvent( 'refraction/initialized' );
 }
 
 export function dispatchElementEvent( event: string, elementId: string ) {

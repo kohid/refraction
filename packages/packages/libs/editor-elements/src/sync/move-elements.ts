@@ -1,4 +1,4 @@
-import { undoable } from '@elementor/editor-v1-adapters';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { moveElement } from './move-element';
@@ -45,7 +45,7 @@ export type { MoveElementsParams, MoveInput, MovedElement, MovedElementsResult }
 export const moveElements = ( {
 	moves: movesToMake,
 	title,
-	subtitle = __( 'Elements moved', 'elementor' ),
+	subtitle = __( 'Elements moved', 'refraction' ),
 	onMoveElements,
 	onRestoreElements,
 }: MoveElementsParams ): MovedElementsResult => {

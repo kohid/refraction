@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Dayjs } from 'dayjs';
-import { timeStringPropTypeUtil } from '@elementor/editor-props';
+import { timeStringPropTypeUtil } from '@refraction/editor-props';
 import { LocalizationProvider, TimePicker } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

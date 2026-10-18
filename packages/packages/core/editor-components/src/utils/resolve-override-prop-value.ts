@@ -1,4 +1,4 @@
-import { type AnyTransformable, type PropValue } from '@elementor/editor-props';
+import { type AnyTransformable, type PropValue } from '@refraction/editor-props';
 
 import {
 	type ComponentInstanceOverrideProp,

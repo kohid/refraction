@@ -24,7 +24,7 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "paths": {
-      "@elementor/*": [
+      "@refraction/*": [
         "./packages/core/*/src",
         "./packages/libs/*/src",
         "./packages/tools/*/src",

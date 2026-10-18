@@ -1,4 +1,4 @@
-import { type Dependency } from '@elementor/editor-props';
+import { type Dependency } from '@refraction/editor-props';
 
 import { type V1ElementConfig, type V1ElementData } from '../../sync/types';
 import { reconcileInitialChildren } from '../reconcile-initial-children';

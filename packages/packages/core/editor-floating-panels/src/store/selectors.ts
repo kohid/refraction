@@ -1,4 +1,4 @@
-import { __createSelector } from '@elementor/store';
+import { __createSelector } from '@refraction/store';
 
 import { FLOATING_PANEL_Z_INDEX_BASE } from '../constants';
 import { type FloatingPanelsSliceState } from './slice';

@@ -7,7 +7,7 @@ describe( 'Widget', () => {
 	beforeEach( async () => {
 		childModel = await setupMock();
 
-		widget = new ( await import( 'elementor-elements/models/section' ) ).default;
+		widget = new ( await import( 'refraction-elements/models/section' ) ).default;
 	} );
 
 	afterEach( freeMock );

@@ -1,14 +1,14 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners;
 
-use Elementor\App\Modules\ImportExportCustomization\Module;
+use Refraction\App\Modules\ImportExportCustomization\Module;
 
 interface Runner_Interface {
 
-	const META_KEY_ELEMENTOR_IMPORT_SESSION_ID = Module::META_KEY_ELEMENTOR_IMPORT_SESSION_ID;
+	const META_KEY_REFRACTION_IMPORT_SESSION_ID = Module::META_KEY_REFRACTION_IMPORT_SESSION_ID;
 
-	const META_KEY_ELEMENTOR_EDIT_MODE = Module::META_KEY_ELEMENTOR_EDIT_MODE;
+	const META_KEY_REFRACTION_EDIT_MODE = Module::META_KEY_REFRACTION_EDIT_MODE;
 
 	/**
 	 * Get the name of the runners, used to identify the runner.

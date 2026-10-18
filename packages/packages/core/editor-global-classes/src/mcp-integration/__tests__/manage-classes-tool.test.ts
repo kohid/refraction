@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { globalClassesStylesProvider } from '../../global-classes-styles-provider';
 import { slice } from '../../store';
 import { initManageClassesTool } from '../manage-classes-tool';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
 const mockDispatch = jest.fn();
-jest.mock( '@elementor/store', () => ( {
+jest.mock( '@refraction/store', () => ( {
 	__dispatch: ( action: any ) => mockDispatch( action ),
 } ) );
 
@@ -32,7 +32,7 @@ jest.mock( '../../store', () => ( {
 	},
 } ) );
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 
 function createMockRegistry() {
 	let registeredTool: any = null;

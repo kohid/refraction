@@ -1,14 +1,14 @@
 
 // Tools
-#tab-replace_url.elementor-active,
-#tab-fontawesome4_migration.elementor-active,
-#tab-import-export-kit.elementor-active {
+#tab-replace_url.refraction-active,
+#tab-fontawesome4_migration.refraction-active,
+#tab-import-export-kit.refraction-active {
 	~ p.submit {
 		display: none;
 	}
 }
 
-#elementor_replace_url {
+#refraction_replace_url {
 	> div {
 		max-width: 800px;
 
@@ -18,8 +18,8 @@
 	}
 }
 
-#elementor_rollback,
-#elementor_rollback_pro {
+#refraction_rollback,
+#refraction_rollback_pro {
 	> div {
 		display: flex;
 		align-items: center;
@@ -76,7 +76,7 @@
 		font-size: 14px;
 	}
 
-	&__container a:not(.elementor-button),
+	&__container a:not(.refraction-button),
 	&__info a {
 		color: var(--e-a-color-info);
 		text-decoration: underline;
@@ -99,7 +99,7 @@
 			margin: 0;
 		}
 
-		.elementor-button.elementor-button-success {
+		.refraction-button.refraction-button-success {
 			font-weight: bold;
 			padding: 8px 16px;
 			text-transform: initial;

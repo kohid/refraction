@@ -1,4 +1,4 @@
-import BaseStorage from 'elementor-api/core/data/storages/base-storage';
+import BaseStorage from 'refraction-api/core/data/storages/base-storage';
 
 export default class BasePrefixStorage extends BaseStorage {
 	static DEFAULT_KEY_PREFIX = 'e_';

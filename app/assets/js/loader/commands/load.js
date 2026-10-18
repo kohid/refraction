@@ -5,7 +5,7 @@ export class Load extends $e.modules.CommandBase {
 		if ( ! component.iframe ) {
 			// Backdrop — click to close.
 			component.backdrop = document.createElement( 'div' );
-			component.backdrop.className = 'elementor-app-backdrop';
+			component.backdrop.className = 'refraction-app-backdrop';
 			component.backdrop.style.display = 'none';
 			component.backdrop.addEventListener( 'click', () => {
 				$e.run( 'app/close' );
@@ -14,16 +14,16 @@ export class Load extends $e.modules.CommandBase {
 
 			// Iframe — overlay instead of full-screen.
 			component.iframe = document.createElement( 'iframe' );
-			component.iframe.className = 'elementor-app-iframe';
+			component.iframe.className = 'refraction-app-iframe';
 			component.iframe.style.display = 'none';
 
 			// Fade in both iframe and backdrop once content loads.
 			component.iframe.addEventListener( 'load', () => {
 				if ( component.iframe ) {
-					component.iframe.classList.add( 'elementor-app-iframe--visible' );
+					component.iframe.classList.add( 'refraction-app-iframe--visible' );
 				}
 				if ( component.backdrop ) {
-					component.backdrop.classList.add( 'elementor-app-backdrop--visible' );
+					component.backdrop.classList.add( 'refraction-app-backdrop--visible' );
 				}
 			} );
 

@@ -60,8 +60,8 @@ function createGenericWarningModal( IntroductionClass ) {
 		dialogType: 'confirm',
 		dialogOptions: {
 			id: dialogId,
-			headerMessage: __( 'Warning: JSON files may be unsafe', 'elementor' ),
-			message: __( 'Uploading JSON files from unknown sources can be harmful and put your site at risk. For maximum safety, only install JSON files from trusted sources.', 'elementor' ),
+			headerMessage: __( 'Warning: JSON files may be unsafe', 'refraction' ),
+			message: __( 'Uploading JSON files from unknown sources can be harmful and put your site at risk. For maximum safety, only install JSON files from trusted sources.', 'refraction' ),
 			effects: {
 				show: 'fadeIn',
 				hide: 'fadeOut',
@@ -71,8 +71,8 @@ function createGenericWarningModal( IntroductionClass ) {
 				onButtonClick: false,
 			},
 			strings: {
-				confirm: __( 'Continue', 'elementor' ),
-				cancel: __( 'Cancel', 'elementor' ),
+				confirm: __( 'Continue', 'refraction' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 		},
 	} );
@@ -97,7 +97,7 @@ function createCheckboxAndLabel( dialogId ) {
 	const label = document.createElement( 'label' );
 
 	label.htmlFor = checkboxId;
-	label.textContent = __( 'Do not show this message again', 'elementor' );
+	label.textContent = __( 'Do not show this message again', 'refraction' );
 	label.style.display = 'block';
 	label.style.marginTop = '20px';
 	label.style.marginBottom = '20px';

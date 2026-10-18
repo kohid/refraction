@@ -104,8 +104,8 @@ const initialState = {
 export default function ImportContextProvider( props ) {
 	const [ data, dispatch ] = useReducer( importReducer, initialState );
 
-	const isOldExport = isVersionLessThan( data.uploadedData?.manifest?.version, elementorAppConfig[ 'import-export-customization' ].manifestVersion );
-	const isOldElementorVersion = isVersionLessThan( elementorAppConfig[ 'import-export-customization' ].elementorVersion, data.uploadedData?.manifest?.elementor_version );
+	const isOldExport = isVersionLessThan( data.uploadedData?.manifest?.version, refractionAppConfig[ 'import-export-customization' ].manifestVersion );
+	const isOldRefractionVersion = isVersionLessThan( refractionAppConfig[ 'import-export-customization' ].refractionVersion, data.uploadedData?.manifest?.refraction_version );
 
 	return (
 		<ImportContext.Provider value={ {
@@ -117,7 +117,7 @@ export default function ImportContextProvider( props ) {
 			isProcessing: data.importStatus === IMPORT_STATUS.IMPORTING,
 			isCompleted: data.importStatus === IMPORT_STATUS.COMPLETED,
 			isOldExport,
-			isOldElementorVersion,
+			isOldRefractionVersion,
 		} }>
 			{ props.children }
 		</ImportContext.Provider>

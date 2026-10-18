@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-editor/component-base';
+import ComponentBase from 'refraction-editor/component-base';
 import * as commands from './commands/';
 import * as commandsInternal from './commands/internal/';
 
@@ -63,13 +63,13 @@ export default class Component extends ComponentBase {
 	}
 
 	blockUserInteractions() {
-		elementor.panel.$el.addClass( 'e-panel-block-interactions' );
+		refraction.panel.$el.addClass( 'e-panel-block-interactions' );
 
 		this.#userInteractionsBlocked = true;
 	}
 
 	unblockUserInteractions() {
-		elementor.panel.$el.removeClass( 'e-panel-block-interactions' );
+		refraction.panel.$el.removeClass( 'e-panel-block-interactions' );
 
 		this.#userInteractionsBlocked = false;
 	}
@@ -80,5 +80,5 @@ export default class Component extends ComponentBase {
 }
 
 function isEditMode() {
-	return 'edit' === elementor.channels.dataEditMode.request( 'activeMode' );
+	return 'edit' === refraction.channels.dataEditMode.request( 'activeMode' );
 }

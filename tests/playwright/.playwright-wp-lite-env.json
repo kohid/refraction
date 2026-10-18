@@ -2,20 +2,20 @@
 	"core": "7.0.2",
 	"phpVersion": "8.2",
 	"plugins": {
-		"elementor": "./build"
+		"refraction": "./build"
 	},
 	"themes": {
 		"hello-elementor": "./hello-elementor"
 	},
 	"mappings": {
-		"elementor-templates": "./tests/playwright/templates",
-		"elementor-config": "./tests/wp-env/config",
-		"elementor-playwright-templates": "./templates/playwright",
-		"elementor-playwright": "./tests/playwright",
+		"refraction-templates": "./tests/playwright/templates",
+		"refraction-config": "./tests/wp-env/config",
+		"refraction-playwright-templates": "./templates/playwright",
+		"refraction-playwright": "./tests/playwright",
 		"wp-content/mu-plugins": "./tests/playwright/mu-plugins"
 	},
 	"config": {
-		"ELEMENTOR_SHOW_HIDDEN_EXPERIMENTS": true,
+		"REFRACTION_SHOW_HIDDEN_EXPERIMENTS": true,
 		"SCRIPT_DEBUG": false,
 		"WP_DEBUG": false
 	}

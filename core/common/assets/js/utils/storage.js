@@ -1,4 +1,4 @@
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	get( key, options ) {
 		options = options || {};
 
@@ -10,19 +10,19 @@ export default class extends elementorModules.Module {
 			return key ? undefined : {};
 		}
 
-		let elementorStorage = storage.getItem( 'elementor' );
+		let refractionStorage = storage.getItem( 'refraction' );
 
-		if ( elementorStorage ) {
-			elementorStorage = JSON.parse( elementorStorage );
+		if ( refractionStorage ) {
+			refractionStorage = JSON.parse( refractionStorage );
 		} else {
-			elementorStorage = {};
+			refractionStorage = {};
 		}
 
-		if ( ! elementorStorage.__expiration ) {
-			elementorStorage.__expiration = {};
+		if ( ! refractionStorage.__expiration ) {
+			refractionStorage.__expiration = {};
 		}
 
-		const expiration = elementorStorage.__expiration;
+		const expiration = refractionStorage.__expiration;
 
 		let expirationToCheck = [];
 
@@ -38,7 +38,7 @@ export default class extends elementorModules.Module {
 
 		expirationToCheck.forEach( ( expirationKey ) => {
 			if ( new Date( expiration[ expirationKey ] ) < new Date() ) {
-				delete elementorStorage[ expirationKey ];
+				delete refractionStorage[ expirationKey ];
 
 				delete expiration[ expirationKey ];
 
@@ -47,32 +47,32 @@ export default class extends elementorModules.Module {
 		} );
 
 		if ( entryExpired ) {
-			this.save( elementorStorage, options.session );
+			this.save( refractionStorage, options.session );
 		}
 
 		if ( key ) {
-			return elementorStorage[ key ];
+			return refractionStorage[ key ];
 		}
 
-		return elementorStorage;
+		return refractionStorage;
 	}
 
 	set( key, value, options ) {
 		options = options || {};
 
-		const elementorStorage = this.get( null, options );
+		const refractionStorage = this.get( null, options );
 
-		elementorStorage[ key ] = value;
+		refractionStorage[ key ] = value;
 
 		if ( options.lifetimeInSeconds ) {
 			const date = new Date();
 
 			date.setTime( date.getTime() + ( options.lifetimeInSeconds * 1000 ) );
 
-			elementorStorage.__expiration[ key ] = date.getTime();
+			refractionStorage.__expiration[ key ] = date.getTime();
 		}
 
-		this.save( elementorStorage, options.session );
+		this.save( refractionStorage, options.session );
 	}
 
 	save( object, session ) {
@@ -84,6 +84,6 @@ export default class extends elementorModules.Module {
 			return;
 		}
 
-		storage.setItem( 'elementor', JSON.stringify( object ) );
+		storage.setItem( 'refraction', JSON.stringify( object ) );
 	}
 }

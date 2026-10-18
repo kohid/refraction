@@ -1,19 +1,19 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\DocumentTypes\PageBase;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\DocumentTypes\PageBase;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor compatibility.
+ * Refraction compatibility.
  *
- * Elementor compatibility handler class is responsible for compatibility with
+ * Refraction compatibility handler class is responsible for compatibility with
  * external plugins. The class resolves different issues with non-compatible
  * plugins.
  *
@@ -24,7 +24,7 @@ class Compatibility {
 	/**
 	 * Register actions.
 	 *
-	 * Run Elementor compatibility with external plugins using custom filters and
+	 * Run Refraction compatibility with external plugins using custom filters and
 	 * actions.
 	 *
 	 * @since 1.0.0
@@ -42,12 +42,12 @@ class Compatibility {
 			add_filter( 'wxr_importer.pre_process.post_meta', [ __CLASS__, 'on_wxr_importer_pre_process_post_meta' ] );
 		}
 
-		add_action( 'elementor/maintenance_mode/mode_changed', [ __CLASS__, 'clear_3rd_party_cache' ] );
+		add_action( 'refraction/maintenance_mode/mode_changed', [ __CLASS__, 'clear_3rd_party_cache' ] );
 
 		// Enable floating buttons and link in bio experiment for all.
 		// TODO Remove in version 3.26.
-		add_filter( 'pre_option_elementor_experiment-floating-buttons', [ __CLASS__, 'return_active' ] );
-		add_filter( 'pre_option_elementor_experiment-link-in-bio', [ __CLASS__, 'return_active' ] );
+		add_filter( 'pre_option_refraction_experiment-floating-buttons', [ __CLASS__, 'return_active' ] );
+		add_filter( 'pre_option_refraction_experiment-link-in-bio', [ __CLASS__, 'return_active' ] );
 	}
 
 	public static function return_active() {
@@ -75,8 +75,8 @@ class Compatibility {
 	/**
 	 * Add new button to gutenberg.
 	 *
-	 * Insert new "Elementor" button to the gutenberg editor to create new post
-	 * using Elementor page builder.
+	 * Insert new "Refraction" button to the gutenberg editor to create new post
+	 * using Refraction page builder.
 	 *
 	 * @since 1.9.0
 	 * @access public
@@ -109,7 +109,7 @@ class Compatibility {
 
 				var url = '<?php echo esc_url( Plugin::$instance->documents->get_create_new_post_url( $typenow ) ); ?>';
 
-				dropdown.insertAdjacentHTML( 'afterbegin', '<a href="' + url + '">Elementor</a>' );
+				dropdown.insertAdjacentHTML( 'afterbegin', '<a href="' + url + '">Refraction</a>' );
 			} );
 		</script>
 		<?php
@@ -118,7 +118,7 @@ class Compatibility {
 	/**
 	 * Init.
 	 *
-	 * Initialize Elementor compatibility with external plugins.
+	 * Initialize Refraction compatibility with external plugins.
 	 *
 	 * Fired by `init` action.
 	 *
@@ -129,7 +129,7 @@ class Compatibility {
 	public static function init() {
 		// Hotfix for NextGEN Gallery plugin.
 		if ( defined( 'NGG_PLUGIN_VERSION' ) ) {
-			add_filter( 'elementor/document/urls/edit', function( $edit_link ) {
+			add_filter( 'refraction/document/urls/edit', function( $edit_link ) {
 				return add_query_arg( 'display_gallery_iframe', '', $edit_link );
 			} );
 		}
@@ -154,13 +154,13 @@ class Compatibility {
 			return $retval;
 		} );
 
-		// Add the description (content) tab for a new product, so it can be edited with Elementor.
+		// Add the description (content) tab for a new product, so it can be edited with Refraction.
 		add_filter( 'woocommerce_product_tabs', function( $tabs ) {
 			if ( ! isset( $tabs['description'] ) && Plugin::$instance->preview->is_preview_mode() ) {
 				$post = get_post();
 				if ( empty( $post->post_content ) ) {
 					$tabs['description'] = [
-						'title' => esc_html__( 'Description', 'elementor' ),
+						'title' => esc_html__( 'Description', 'refraction' ),
 						'priority' => 10,
 						'callback' => 'woocommerce_product_description_tab',
 					];
@@ -172,13 +172,13 @@ class Compatibility {
 
 		// Fix WC session not defined in editor.
 		if ( class_exists( 'woocommerce' ) ) {
-			add_action( 'elementor/editor/before_enqueue_scripts', function() {
+			add_action( 'refraction/editor/before_enqueue_scripts', function() {
 				remove_action( 'woocommerce_shortcode_before_product_cat_loop', 'wc_print_notices' );
 				remove_action( 'woocommerce_before_shop_loop', 'wc_print_notices' );
 				remove_action( 'woocommerce_before_single_product', 'wc_print_notices' );
 			} );
 
-			add_filter( 'elementor/maintenance_mode/is_login_page', function( $value ) {
+			add_filter( 'refraction/maintenance_mode/is_login_page', function( $value ) {
 
 				// Support Woocommerce Account Page.
 				if ( is_account_page() && ! is_user_logged_in() ) {
@@ -190,7 +190,7 @@ class Compatibility {
 
 		// Fix Jetpack Contact Form in Editor Mode.
 		if ( class_exists( 'Grunion_Editor_View' ) ) {
-			add_action( 'elementor/editor/before_enqueue_scripts', function() {
+			add_action( 'refraction/editor/before_enqueue_scripts', function() {
 				remove_action( 'media_buttons', 'grunion_media_button', 999 );
 				remove_action( 'admin_enqueue_scripts', 'grunion_enable_spam_recheck' );
 
@@ -201,7 +201,7 @@ class Compatibility {
 
 		// Fix Popup Maker in Editor Mode.
 		if ( class_exists( 'PUM_Admin_Shortcode_UI' ) ) {
-			add_action( 'elementor/editor/before_enqueue_scripts', function() {
+			add_action( 'refraction/editor/before_enqueue_scripts', function() {
 				$pum_admin_instance = \PUM_Admin_Shortcode_UI::instance();
 
 				remove_action( 'print_media_templates', [ $pum_admin_instance, 'print_media_templates' ] );
@@ -216,7 +216,7 @@ class Compatibility {
 
 		// Fix Preview URL for https://github.com/wpmudev/domain-mapping plugin.
 		if ( class_exists( 'domain_map' ) ) {
-			add_filter( 'elementor/document/urls/preview', function( $preview_url ) {
+			add_filter( 'refraction/document/urls/preview', function( $preview_url ) {
 				if ( wp_parse_url( $preview_url, PHP_URL_HOST ) !== Utils::get_super_global_value( $_SERVER, 'HTTP_HOST' ) ) {
 					$preview_url = \domain_map::utils()->unswap_url( $preview_url );
 					$preview_url = add_query_arg( [
@@ -243,21 +243,21 @@ class Compatibility {
 	/**
 	 * Polylang compatibility.
 	 *
-	 * Fix Polylang compatibility with Elementor.
+	 * Fix Polylang compatibility with Refraction.
 	 *
 	 * @since 2.0.0
 	 * @access private
 	 * @static
 	 */
 	private static function polylang_compatibility() {
-		// Copy elementor data while polylang creates a translation copy.
+		// Copy refraction data while polylang creates a translation copy.
 		add_filter( 'pll_copy_post_metas', [ __CLASS__, 'save_polylang_meta' ], 10, 4 );
 	}
 
 	/**
 	 * Save polylang meta.
 	 *
-	 * Copy elementor data while polylang creates a translation copy.
+	 * Copy refraction data while polylang creates a translation copy.
 	 *
 	 * Fired by `pll_copy_post_metas` filter.
 	 *
@@ -275,7 +275,7 @@ class Compatibility {
 	public static function save_polylang_meta( $keys, $sync, $from, $to ) {
 		// Copy only for a new post.
 		if ( ! $sync ) {
-			Plugin::$instance->db->copy_elementor_meta( $from, $to );
+			Plugin::$instance->db->copy_refraction_meta( $from, $to );
 		}
 
 		return $keys;
@@ -285,10 +285,10 @@ class Compatibility {
 		add_filter( 'duplicate_post_excludelist_filter', function( $meta_excludelist ) {
 			$exclude_list = [
 				Document::TYPE_META_KEY,
-				'_elementor_page_assets',
-				'_elementor_controls_usage',
-				'_elementor_css',
-				'_elementor_screenshot',
+				'_refraction_page_assets',
+				'_refraction_controls_usage',
+				'_refraction_css',
+				'_refraction_screenshot',
 			];
 
 			return array_merge( $meta_excludelist, $exclude_list );
@@ -305,7 +305,7 @@ class Compatibility {
 	/**
 	 * Process post meta before WP importer.
 	 *
-	 * Normalize Elementor post meta on import, We need the `wp_slash` in order
+	 * Normalize Refraction post meta on import, We need the `wp_slash` in order
 	 * to avoid the unslashing during the `add_post_meta`.
 	 *
 	 * Fired by `wp_import_post_meta` filter.
@@ -323,7 +323,7 @@ class Compatibility {
 
 		if ( $is_wp_importer_before_0_7 ) {
 			foreach ( $post_meta as &$meta ) {
-				if ( '_elementor_data' === $meta['key'] ) {
+				if ( '_refraction_data' === $meta['key'] ) {
 					$meta['value'] = wp_slash( $meta['value'] );
 					break;
 				}
@@ -357,7 +357,7 @@ class Compatibility {
 	/**
 	 * Process post meta before WXR importer.
 	 *
-	 * Normalize Elementor post meta on import with the new WP_importer, We need
+	 * Normalize Refraction post meta on import with the new WP_importer, We need
 	 * the `wp_slash` in order to avoid the unslashing during the `add_post_meta`.
 	 *
 	 * Fired by `wxr_importer.pre_process.post_meta` filter.
@@ -374,7 +374,7 @@ class Compatibility {
 		$is_wp_importer_before_0_7 = self::is_wp_importer_before_0_7();
 
 		if ( $is_wp_importer_before_0_7 ) {
-			if ( '_elementor_data' === $post_meta['key'] ) {
+			if ( '_refraction_data' === $post_meta['key'] ) {
 				$post_meta['value'] = wp_slash( $post_meta['value'] );
 			}
 		}

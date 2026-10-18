@@ -4,18 +4,18 @@ export class View extends $e.components.get( 'nested-elements/nested-repeater' )
 
 		events.click = ( e ) => {
 			// If the clicked Nested Element is not within the currently edited document, don't do anything with it.
-			if ( elementor.documents.currentDocument.id.toString() !== e.target.closest( '.elementor' ).dataset.elementorId ) {
+			if ( refraction.documents.currentDocument.id.toString() !== e.target.closest( '.refraction' ).dataset.refractionId ) {
 				return;
 			}
 
-			const closest = e.target.closest( '.elementor-element' );
+			const closest = e.target.closest( '.refraction-element' );
 
 			let targetContainer = null;
 
 			// For clicks on container/widget.
 			if ( [ 'container', 'widget' ].includes( closest?.dataset.element_type ) ) { // eslint-disable-line camelcase
 				// In case the container empty, click should be handled by the EmptyView.
-				const container = elementor.getContainer( closest.dataset.id );
+				const container = refraction.getContainer( closest.dataset.id );
 
 				if ( container.view.isEmpty() ) {
 					return true;

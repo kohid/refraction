@@ -1,4 +1,4 @@
-@keyframes elementor-animation-wobble-bottom {
+@keyframes refraction-animation-wobble-bottom {
 	16.65% {
 		transform: skew(-12deg);
 	}
@@ -18,13 +18,13 @@
 		transform: skew(0);
 	}
 }
-.elementor-animation-wobble-bottom {
+.refraction-animation-wobble-bottom {
 	transform-origin: 100% 0;
 }
-.elementor-animation-wobble-bottom:active,
-.elementor-animation-wobble-bottom:focus,
-.elementor-animation-wobble-bottom:hover {
-	animation-name: elementor-animation-wobble-bottom;
+.refraction-animation-wobble-bottom:active,
+.refraction-animation-wobble-bottom:focus,
+.refraction-animation-wobble-bottom:hover {
+	animation-name: refraction-animation-wobble-bottom;
 	animation-duration: 1s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: 1;

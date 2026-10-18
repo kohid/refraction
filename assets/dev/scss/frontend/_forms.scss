@@ -2,41 +2,41 @@
 // Forms (Input, Textarea, Select Etc..)
 //
 
-.elementor-form-fields-wrapper {
+.refraction-form-fields-wrapper {
 	display: flex;
 	flex-wrap: wrap;
 
-	&.elementor-labels-above {
+	&.refraction-labels-above {
 
-		.elementor-field-group {
+		.refraction-field-group {
 
-			> input, > textarea, > .elementor-select-wrapper, .elementor-field-subgroup {
+			> input, > textarea, > .refraction-select-wrapper, .refraction-field-subgroup {
 				flex-basis: 100%;
 				max-width: 100%; // Fix for Firefox browser
 			}
 		}
 	}
 
-	&.elementor-labels-inline {
+	&.refraction-labels-inline {
 
-		> .elementor-field-group {
+		> .refraction-field-group {
 
-			> input, .elementor-select-wrapper {
+			> input, .refraction-select-wrapper {
 				flex-grow: 1;
 			}
 		}
 	}
 }
 
-.elementor-field-group {
+.refraction-field-group {
 	flex-wrap: wrap;
 	align-items: center;
 
-	&.elementor-field-type-submit {
+	&.refraction-field-type-submit {
 		align-items: flex-end;
 	}
 
-	.elementor-field-textual {
+	.refraction-field-textual {
 		width: 100%;
 		max-width: 100%; // Tweak for themes that set this property
 		border: 1px solid $gray;
@@ -54,7 +54,7 @@
 		@include input-placeholder();
 	}
 
-	.elementor-select-wrapper {
+	.refraction-select-wrapper {
 		display: flex;
 		position: relative;
 		width: 100%;
@@ -86,46 +86,46 @@
 		}
 	}
 
-	&.elementor-field-type-select-multiple{
-		.elementor-select-wrapper:before {
+	&.refraction-field-type-select-multiple{
+		.refraction-select-wrapper:before {
 			content: '';
 		}
 	}
 }
 
-.elementor-field-subgroup {
+.refraction-field-subgroup {
 	display: flex;
 	flex-wrap: wrap;
 
-	.elementor-field-option {
+	.refraction-field-option {
 
 		label {
 			display: inline-block;
 		}
 	}
 
-	&.elementor-subgroup-inline {
+	&.refraction-subgroup-inline {
 
-		.elementor-field-option {
+		.refraction-field-option {
 			padding-inline-end: 10px;
 		}
 	}
 
-	&:not(.elementor-subgroup-inline) {
+	&:not(.refraction-subgroup-inline) {
 
-		.elementor-field-option {
+		.refraction-field-option {
 			flex-basis: 100%;
 		}
 	}
 }
 
-.elementor-field-type-checkbox,
-.elementor-field-type-radio,
-.elementor-field-type-acceptance {
+.refraction-field-type-checkbox,
+.refraction-field-type-radio,
+.refraction-field-type-acceptance {
 
-	.elementor-field-subgroup {
+	.refraction-field-subgroup {
 
-		.elementor-field-option {
+		.refraction-field-option {
 
 			input,
 			label {
@@ -135,10 +135,10 @@
 	}
 }
 
-.elementor-field-label {
+.refraction-field-label {
 	cursor: pointer;
 
-	.elementor-mark-required &:after {
+	.refraction-mark-required &:after {
 		content: '*';
 		color: red;
 		padding-inline-start: 0.2em;
@@ -146,14 +146,14 @@
 }
 
 // Keep the following out from another parent selector!
-.elementor-field-textual {
+.refraction-field-textual {
 	line-height: 1.4;
 	font-size: 15px; //size-sm
 	min-height: 40px; //size-sm
 	padding: 5px 14px; //size-sm
 	border-radius: 3px; //size-sm
 
-	&.elementor-size- {
+	&.refraction-size- {
 
 		&xs {
 			font-size: 13px;
@@ -191,8 +191,8 @@
 
 @mixin btn-align() {
 	&stretch {
-		.elementor-field-type-submit:not(.e-form__buttons__wrapper) {
-			.elementor-button {
+		.refraction-field-type-submit:not(.e-form__buttons__wrapper) {
+			.refraction-button {
 				flex-basis: 100%;
 			}
 		}
@@ -208,14 +208,14 @@
 	}
 
 	&center {
-		.elementor-field-type-submit,
+		.refraction-field-type-submit,
 		.e-form__buttons {
 			justify-content: center;
 		}
 	}
 
 	&start {
-		.elementor-field-type-submit,
+		.refraction-field-type-submit,
 		.e-form__buttons {
 			justify-content: flex-start;
 
@@ -226,7 +226,7 @@
 	}
 
 	&end {
-		.elementor-field-type-submit,
+		.refraction-field-type-submit,
 		.e-form__buttons {
 			justify-content: flex-end;
 
@@ -239,8 +239,8 @@
 	&center,
 	&start,
 	&end {
-		.elementor-field-type-submit:not(.e-form__buttons__wrapper) {
-			.elementor-button {
+		.refraction-field-type-submit:not(.e-form__buttons__wrapper) {
+			.refraction-button {
 				flex-basis: initial;
 			}
 		}
@@ -256,28 +256,28 @@
 	}
 }
 
-.elementor-button-align- {
+.refraction-button-align- {
 	@include btn-align();
 }
 
 @media screen and ( max-width: $screen-tablet-max ){
 
-	.elementor-tablet-button-align- {
+	.refraction-tablet-button-align- {
 		@include btn-align();
 	}
 }
 
 @media screen and ( max-width: $screen-mobile-max ){
 
-	.elementor-mobile-button-align- {
+	.refraction-mobile-button-align- {
 		@include btn-align();
 	}
 }
 
 // Form Messages
-.elementor-error {
+.refraction-error {
 
-	.elementor-field {
+	.refraction-field {
 		border-color: $danger;
 	}
 
@@ -287,7 +287,7 @@
 	}
 }
 
-.elementor-message {
+.refraction-message {
 	margin: 10px 0;
 	font-size: 1em;
 	line-height: 1;
@@ -302,7 +302,7 @@
 		margin-inline-end: 5px;
 	}
 
-	&.elementor-message-danger {
+	&.refraction-message-danger {
 		color: $danger;
 
 		&:before {
@@ -316,9 +316,9 @@
 }
 
 // Form Submit Button
-.elementor-form {
+.refraction-form {
 
-	.elementor-button {
+	.refraction-button {
 		padding-block-start: 0;
 		padding-block-end: 0;
 		border: none;
@@ -331,7 +331,7 @@
 			gap: 5px;
 		}
 
-		&.elementor-size- {
+		&.refraction-size- {
 
 			&xs {
 				min-height: 33px;

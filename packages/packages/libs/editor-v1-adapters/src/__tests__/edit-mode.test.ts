@@ -1,5 +1,5 @@
 import { dispatchEditModeChange } from 'test-utils';
-import { changeEditMode, type EditMode, useEditMode } from '@elementor/editor-v1-adapters';
+import { changeEditMode, type EditMode, useEditMode } from '@refraction/editor-v1-adapters';
 import { act, renderHook } from '@testing-library/react';
 
 import type { ExtendedWindow } from '../edit-mode';
@@ -28,7 +28,7 @@ describe( 'edit mode', () => {
 function mockEditMode( initialMode: EditMode ) {
 	let currentMode: EditMode = initialMode;
 
-	( window as unknown as ExtendedWindow ).elementor = {
+	( window as unknown as ExtendedWindow ).refraction = {
 		changeEditMode: ( newMode ) => {
 			currentMode = newMode;
 

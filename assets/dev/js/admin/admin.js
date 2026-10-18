@@ -1,42 +1,42 @@
-import LandingPagesModule from 'elementor/modules/landing-pages/assets/js/admin/module';
-import ExperimentsModule from 'elementor/core/experiments/assets/js/admin/module';
+import LandingPagesModule from 'refraction/modules/landing-pages/assets/js/admin/module';
+import ExperimentsModule from 'refraction/core/experiments/assets/js/admin/module';
 import environment from '../../../../core/common/assets/js/utils/environment';
-import Events from 'elementor-utils/events';
+import Events from 'refraction-utils/events';
 import FilesUploadHandler from '../editor/utils/files-upload-handler';
 import TemplateControls from './new-template/template-controls.js';
-import { showJsonUploadWarningMessageIfNeeded } from 'elementor-utils/json-upload-warning-message';
-import FloatingButtonsHandler from 'elementor/modules/floating-buttons/assets/js/floating-buttons/admin/module';
-import 'elementor-app/event-track/wp-dashboard-tracking';
+import { showJsonUploadWarningMessageIfNeeded } from 'refraction-utils/json-upload-warning-message';
+import FloatingButtonsHandler from 'refraction/modules/floating-buttons/assets/js/floating-buttons/admin/module';
+import 'refraction-app/event-track/wp-dashboard-tracking';
 
 ( function( $ ) {
-	var ElementorAdmin = elementorModules.ViewModule.extend( {
+	var RefractionAdmin = refractionModules.ViewModule.extend( {
 
 		maintenanceMode: null,
 
-		config: elementorAdminConfig,
+		config: refractionAdminConfig,
 
 		getDefaultElements() {
 			var elements = {
-				$switchMode: $( '#elementor-switch-mode' ),
-				$goToEditLink: $( '#elementor-go-to-edit-page-link' ),
-				$switchModeInput: $( '#elementor-switch-mode-input' ),
-				$switchModeButton: $( '#elementor-switch-mode-button' ),
-				$elementorLoader: $( '.elementor-loader' ),
-				$builderEditor: $( '#elementor-editor' ),
-				$importButton: $( '#elementor-import-template-trigger' ),
+				$switchMode: $( '#refraction-switch-mode' ),
+				$goToEditLink: $( '#refraction-go-to-edit-page-link' ),
+				$switchModeInput: $( '#refraction-switch-mode-input' ),
+				$switchModeButton: $( '#refraction-switch-mode-button' ),
+				$refractionLoader: $( '.refraction-loader' ),
+				$builderEditor: $( '#refraction-editor' ),
+				$importButton: $( '#refraction-import-template-trigger' ),
 				$importNowButton: $( '#e-import-template-action' ),
-				$importArea: $( '#elementor-import-template-area' ),
-				$importForm: $( '#elementor-import-template-form' ),
-				$importFormFileInput: $( '#elementor-import-template-form input[type="file"]' ),
-				$settingsForm: $( '#elementor-settings-form' ),
-				$settingsTabsWrapper: $( '#elementor-settings-tabs-wrapper' ),
-				$menuGoProLink: $( 'a[href="admin.php?page=go_elementor_pro"], a[href*="admin.php?page=elementor-one-upgrade"]' ),
-				$reMigrateGlobalsButton: $( '.elementor-re-migrate-globals-button' ),
+				$importArea: $( '#refraction-import-template-area' ),
+				$importForm: $( '#refraction-import-template-form' ),
+				$importFormFileInput: $( '#refraction-import-template-form input[type="file"]' ),
+				$settingsForm: $( '#refraction-settings-form' ),
+				$settingsTabsWrapper: $( '#refraction-settings-tabs-wrapper' ),
+				$menuGoProLink: $( 'a[href="admin.php?page=go_refraction_pro"], a[href*="admin.php?page=refraction-one-upgrade"]' ),
+				$reMigrateGlobalsButton: $( '.refraction-re-migrate-globals-button' ),
 			};
 
-			elements.$settingsFormPages = elements.$settingsForm.find( '.elementor-settings-form-page' );
+			elements.$settingsFormPages = elements.$settingsForm.find( '.refraction-settings-form-page' );
 
-			elements.$activeSettingsPage = elements.$settingsFormPages.filter( '.elementor-active' );
+			elements.$activeSettingsPage = elements.$settingsFormPages.filter( '.refraction-active' );
 
 			elements.$settingsTabs = elements.$settingsTabsWrapper.children();
 
@@ -46,11 +46,11 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 		},
 
 		toggleStatus() {
-			var isElementorMode = this.isElementorMode();
+			var isRefractionMode = this.isRefractionMode();
 
-			elementorCommon.elements.$body
-				.toggleClass( 'elementor-editor-active', isElementorMode )
-				.toggleClass( 'elementor-editor-inactive', ! isElementorMode );
+			refractionCommon.elements.$body
+				.toggleClass( 'refraction-editor-active', isRefractionMode )
+				.toggleClass( 'refraction-editor-inactive', ! isRefractionMode );
 		},
 
 		bindEvents() {
@@ -59,13 +59,13 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 			self.elements.$switchModeButton.on( 'click', function( event ) {
 				event.preventDefault();
 
-				if ( self.isElementorMode() ) {
-					elementorCommon.dialogsManager.createWidget( 'confirm', {
-						message: __( 'You are about to switch this page from the Elementor editor to the WordPress editor. Your current layout, design, and content may break and need to be rebuilt. Are you sure you want to continue?', 'elementor' ),
-						headerMessage: __( 'Edit with WordPress?', 'elementor' ),
+				if ( self.isRefractionMode() ) {
+					refractionCommon.dialogsManager.createWidget( 'confirm', {
+						message: __( 'You are about to switch this page from the Refraction editor to the WordPress editor. Your current layout, design, and content may break and need to be rebuilt. Are you sure you want to continue?', 'refraction' ),
+						headerMessage: __( 'Edit with WordPress?', 'refraction' ),
 						strings: {
-							confirm: __( 'Continue', 'elementor' ),
-							cancel: __( 'Cancel', 'elementor' ),
+							confirm: __( 'Continue', 'refraction' ),
+							cancel: __( 'Cancel', 'refraction' ),
 						},
 						defaultOption: 'cancel',
 						onConfirm() {
@@ -79,7 +79,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 					var $wpTitle = $( '#title' );
 
 					if ( ! $wpTitle.val() ) {
-						$wpTitle.val( 'Elementor #' + $( '#post_ID' ).val() );
+						$wpTitle.val( 'Refraction #' + $( '#post_ID' ).val() );
 					}
 
 					if ( wp.autosave ) {
@@ -89,7 +89,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 					self.animateLoader();
 
 					$( document ).on( 'heartbeat-tick.autosave', function() {
-						elementorCommon.elements.$window.off( 'beforeunload.edit-post' );
+						refractionCommon.elements.$window.off( 'beforeunload.edit-post' );
 
 						location.href = self.elements.$goToEditLink.attr( 'href' );
 					} );
@@ -107,7 +107,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 				const $wrapperElm = $( this ).closest( '.e-notice--dismissible' );
 
 				$.post( ajaxurl, {
-					action: 'elementor_set_admin_notice_viewed',
+					action: 'refraction_set_admin_notice_viewed',
 					notice_id: $wrapperElm.data( 'notice_id' ),
 					_wpnonce: $wrapperElm.data( 'nonce' ),
 				} );
@@ -120,13 +120,13 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 			} );
 
 			const campaignNotices = {
-				plugin_image_optimization: 'elementor_image_optimization_campaign',
+				plugin_image_optimization: 'refraction_image_optimization_campaign',
 			};
 
 			Object.keys( campaignNotices ).forEach( ( noticeId ) => {
 				$( `.e-notice--cta.e-notice--dismissible[data-notice_id="${ noticeId }"] a.e-button--cta` ).on( 'click', function() {
 					const $button = $( this );
-					elementorCommon.ajax.addRequest( campaignNotices[ noticeId ], {
+					refractionCommon.ajax.addRequest( campaignNotices[ noticeId ], {
 						data: {
 							campaign: $button?.data( 'campaign' ) || '',
 							source: $button?.data( 'source' ) || '',
@@ -138,7 +138,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 
 			$( '.e-a-apps .e-a-item[data-plugin="image-optimization/image-optimization.php"] a.e-btn' ).on( 'click', function() {
 				const $button = $( this );
-				elementorCommon.ajax.addRequest( 'elementor_image_optimization_campaign', {
+				refractionCommon.ajax.addRequest( 'refraction_image_optimization_campaign', {
 					data: {
 						campaign: $button?.data( 'campaign' ) || '',
 						source: $button?.data( 'source' ) || '',
@@ -147,14 +147,14 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 				} );
 			} );
 
-			$( '#elementor-clear-cache-button' ).on( 'click', function( event ) {
+			$( '#refraction-clear-cache-button' ).on( 'click', function( event ) {
 				event.preventDefault();
 				var $thisButton = $( this );
 
 				$thisButton.removeClass( 'success' ).addClass( 'loading' );
 
 				$.post( ajaxurl, {
-					action: 'elementor_clear_cache',
+					action: 'refraction_clear_cache',
 					_nonce: $thisButton.data( 'nonce' ),
 				} )
 					.done( function() {
@@ -162,14 +162,14 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 					} );
 			} );
 
-			$( '#elementor-library-sync-button' ).on( 'click', function( event ) {
+			$( '#refraction-library-sync-button' ).on( 'click', function( event ) {
 				event.preventDefault();
 				var $thisButton = $( this );
 
 				$thisButton.removeClass( 'success' ).addClass( 'loading' );
 
 				$.post( ajaxurl, {
-					action: 'elementor_reset_library',
+					action: 'refraction_reset_library',
 					_nonce: $thisButton.data( 'nonce' ),
 				} )
 					.done( function() {
@@ -177,7 +177,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 					} );
 			} );
 
-			$( '#elementor-recreate-kit-button' ).on( 'click', function( event ) {
+			$( '#refraction-recreate-kit-button' ).on( 'click', function( event ) {
 				event.preventDefault();
 				var $thisButton = $( this );
 
@@ -185,7 +185,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 					.next( '.e-recreate-kit-error-message' ).remove();
 
 				$.post( ajaxurl, {
-					action: 'elementor_recreate_kit',
+					action: 'refraction_recreate_kit',
 					_nonce: $thisButton.data( 'nonce' ),
 				} )
 					.done( function() {
@@ -200,7 +200,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 					} );
 			} );
 
-			$( '#elementor-replace-url-button' ).on( 'click', function( event ) {
+			$( '#refraction-replace-url-button' ).on( 'click', function( event ) {
 				event.preventDefault();
 				var $this = $( this ),
 					$tr = $this.parents( 'tr' ),
@@ -210,7 +210,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 				$this.removeClass( 'success' ).addClass( 'loading' );
 
 				$.post( ajaxurl, {
-					action: 'elementor_replace_url',
+					action: 'refraction_replace_url',
 					from: $from.val(),
 					to: $to.val(),
 					_nonce: $this.data( 'nonce' ),
@@ -222,24 +222,24 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 							$this.addClass( 'success' );
 						}
 
-						elementorCommon.dialogsManager.createWidget( 'alert', {
+						refractionCommon.dialogsManager.createWidget( 'alert', {
 							message: response.data,
 						} ).show();
 					} );
 			} );
 
-			$( '#elementor_upgrade_fa_button' ).on( 'click', function( event ) {
+			$( '#refraction_upgrade_fa_button' ).on( 'click', function( event ) {
 				event.preventDefault();
 				const $updateButton = $( this );
 				$updateButton.addClass( 'loading' );
 
-				elementorCommon.dialogsManager.createWidget( 'confirm', {
+				refractionCommon.dialogsManager.createWidget( 'confirm', {
 					id: 'confirm_fa_migration_admin_modal',
-					message: __( 'I understand that by upgrading to Font Awesome 5,', 'elementor' ) + '<br>' + __( 'I acknowledge that some changes may affect my website and that this action cannot be undone.', 'elementor' ),
-					headerMessage: __( 'Font Awesome 5 Migration', 'elementor' ),
+					message: __( 'I understand that by upgrading to Font Awesome 5,', 'refraction' ) + '<br>' + __( 'I acknowledge that some changes may affect my website and that this action cannot be undone.', 'refraction' ),
+					headerMessage: __( 'Font Awesome 5 Migration', 'refraction' ),
 					strings: {
-						confirm: __( 'Continue', 'elementor' ),
-						cancel: __( 'Cancel', 'elementor' ),
+						confirm: __( 'Continue', 'refraction' ),
+						cancel: __( 'Cancel', 'refraction' ),
 					},
 					defaultOption: 'confirm',
 					onConfirm: () => {
@@ -258,7 +258,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 								const messageElement = document.createElement( 'p' );
 								messageElement.appendChild( document.createTextNode( response.data.message ) );
 
-								$( '#elementor_upgrade_fa_button' ).parent().append( messageElement );
+								$( '#refraction_upgrade_fa_button' ).parent().append( messageElement );
 
 								if ( redirectUrl ) {
 									location.href = decodeURIComponent( redirectUrl );
@@ -291,9 +291,9 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 				},
 			} );
 
-			$( 'select.elementor-rollback-select' ).on( 'change', function() {
+			$( 'select.refraction-rollback-select' ).on( 'change', function() {
 				var $this = $( this ),
-					$rollbackButton = $this.next( '.elementor-rollback-button' ),
+					$rollbackButton = $this.next( '.refraction-rollback-button' ),
 					placeholderText = $rollbackButton.data( 'placeholder-text' ),
 					placeholderUrl = $rollbackButton.data( 'placeholder-url' );
 
@@ -301,17 +301,17 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 				$rollbackButton.data( 'href', placeholderUrl.replace( 'VERSION', $this.val() ) );
 			} ).trigger( 'change' );
 
-			$( '.elementor-rollback-button' ).on( 'click', function( event ) {
+			$( '.refraction-rollback-button' ).on( 'click', function( event ) {
 				event.preventDefault();
 
 				var $this = $( this );
 
-				elementorCommon.dialogsManager.createWidget( 'confirm', {
-					headerMessage: __( 'Rollback to Previous Version', 'elementor' ),
-					message: __( 'Are you sure you want to reinstall previous version?', 'elementor' ),
+				refractionCommon.dialogsManager.createWidget( 'confirm', {
+					headerMessage: __( 'Rollback to Previous Version', 'refraction' ),
+					message: __( 'Are you sure you want to reinstall previous version?', 'refraction' ),
 					strings: {
-						confirm: __( 'Continue', 'elementor' ),
-						cancel: __( 'Cancel', 'elementor' ),
+						confirm: __( 'Continue', 'refraction' ),
+						cancel: __( 'Cancel', 'refraction' ),
 					},
 					onConfirm() {
 						$this.addClass( 'loading' );
@@ -326,30 +326,30 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 
 				const $this = $( event.currentTarget );
 
-				elementorCommon.dialogsManager.createWidget( 'confirm', {
-					headerMessage: __( 'Migrate to v3.0', 'elementor' ),
-					message: __( 'Please note that this process will revert all changes made to Global Colors and Fonts since upgrading to v3.x.', 'elementor' ),
+				refractionCommon.dialogsManager.createWidget( 'confirm', {
+					headerMessage: __( 'Migrate to v3.0', 'refraction' ),
+					message: __( 'Please note that this process will revert all changes made to Global Colors and Fonts since upgrading to v3.x.', 'refraction' ),
 					strings: {
-						confirm: __( 'Continue', 'elementor' ),
-						cancel: __( 'Cancel', 'elementor' ),
+						confirm: __( 'Continue', 'refraction' ),
+						cancel: __( 'Cancel', 'refraction' ),
 					},
 					onConfirm: () => {
 						$this.removeClass( 'success' ).addClass( 'loading' );
 
-						elementorCommon.ajax.addRequest( 're_migrate_globals', {
+						refractionCommon.ajax.addRequest( 're_migrate_globals', {
 							success: () => $this.removeClass( 'loading' ).addClass( 'success' ),
 						} );
 					},
 				} ).show();
 			} );
 
-			$( '.elementor_google_font select' ).on( 'change', function() {
-				$( '.elementor_font_display' ).toggle( '1' === $( this ).val() );
+			$( '.refraction_google_font select' ).on( 'change', function() {
+				$( '.refraction_font_display' ).toggle( '1' === $( this ).val() );
 			} ).trigger( 'change' );
 		},
 
 		onInit() {
-			elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+			refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 
 			this.initTemplatesImport();
 
@@ -363,11 +363,11 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 
 			this.roleManager.init();
 
-			if ( elementorCommon.config.experimentalFeatures[ 'landing-pages' ] ) {
+			if ( refractionCommon.config.experimentalFeatures[ 'landing-pages' ] ) {
 				new LandingPagesModule();
 			}
 
-			if ( elementorCommon.config.experimentalFeatures.container ) {
+			if ( refractionCommon.config.experimentalFeatures.container ) {
 				new FloatingButtonsHandler();
 			}
 
@@ -409,9 +409,9 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 		},
 
 		initTemplatesImport() {
-			const canImport = elementorAdminConfig.user.is_administrator || ( elementorAdminConfig.user.restrictions?.includes( 'json-upload' ) ?? false );
+			const canImport = refractionAdminConfig.user.is_administrator || ( refractionAdminConfig.user.restrictions?.includes( 'json-upload' ) ?? false );
 
-			if ( ! canImport || ! elementorCommon.elements.$body.hasClass( 'post-type-elementor_library' ) ) {
+			if ( ! canImport || ! refractionCommon.elements.$body.hasClass( 'post-type-refraction_library' ) ) {
 				return;
 			}
 
@@ -433,7 +433,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 			self.elements.$formAnchor.after( $importArea );
 
 			$importButton.on( 'click', function() {
-				$( '#elementor-import-template-area' ).toggle();
+				$( '#refraction-import-template-area' ).toggle();
 			} );
 
 			const messages = {
@@ -448,15 +448,15 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 
 			$importForm.on( 'submit', async ( event ) => {
 				$importNowButton[ 0 ].disabled = true;
-				$importNowButton[ 0 ].value = __( 'Importing...', 'elementor' );
+				$importNowButton[ 0 ].value = __( 'Importing...', 'refraction' );
 
 				if ( ! messages.jsonUploadWarning.shown ) {
 					event.preventDefault();
 
 					try {
 						await showJsonUploadWarningMessageIfNeeded( {
-							IntroductionClass: window.elementorModules.admin.utils.Introduction,
-							introductionMap: window.elementorAdmin.config.user.introduction,
+							IntroductionClass: window.refractionModules.admin.utils.Introduction,
+							introductionMap: window.refractionAdmin.config.user.introduction,
 							waitForSetViewed: true,
 						} );
 
@@ -471,7 +471,7 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 				}
 
 				const hasImportedFiles = $importFormFileInput[ 0 ].files.length;
-				const areUnfilteredFilesEnabled = elementorCommon.config.filesUpload.unfilteredFiles;
+				const areUnfilteredFilesEnabled = refractionCommon.config.filesUpload.unfilteredFiles;
 
 				if ( hasImportedFiles && ! areUnfilteredFilesEnabled && ! messages.enableUnfilteredFiles.shown ) {
 					event.preventDefault();
@@ -492,17 +492,17 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 		},
 
 		initMaintenanceMode() {
-			var MaintenanceMode = require( 'elementor-admin/maintenance-mode' );
+			var MaintenanceMode = require( 'refraction-admin/maintenance-mode' );
 
 			this.maintenanceMode = new MaintenanceMode();
 		},
 
-		isElementorMode() {
+		isRefractionMode() {
 			return ! ! this.elements.$switchModeInput.val();
 		},
 
 		animateLoader() {
-			this.elements.$goToEditLink.addClass( 'elementor-animate' );
+			this.elements.$goToEditLink.addClass( 'refraction-animate' );
 		},
 
 		activateSettingsTab( tabElement ) {
@@ -534,13 +534,13 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 
 			const $activePage = $pages.filter( '#' + tabName );
 
-			this.elements.$activeSettingsPage.removeClass( 'elementor-active' );
+			this.elements.$activeSettingsPage.removeClass( 'refraction-active' );
 
 			this.elements.$activeSettingsTab.removeClass( 'nav-tab-active' );
 
-			const $activeTab = this.elements.$settingsTabs.filter( '#elementor-settings-' + tabName );
+			const $activeTab = this.elements.$settingsTabs.filter( '#refraction-settings-' + tabName );
 
-			$activePage.addClass( 'elementor-active' );
+			$activePage.addClass( 'refraction-active' );
 
 			$activeTab.addClass( 'nav-tab-active' );
 
@@ -552,18 +552,18 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 		},
 
 		translate( stringKey, templateArgs ) {
-			return elementorCommon.translate( stringKey, null, templateArgs, this.config.i18n );
+			return refractionCommon.translate( stringKey, null, templateArgs, this.config.i18n );
 		},
 
 		roleManager: {
 			selectors: {
-				body: 'elementor-role-manager',
-				row: '.elementor-role-row',
-				label: '.elementor-role-label',
-				excludedIndicator: '.elementor-role-excluded-indicator',
-				excludedField: 'input[name="elementor_exclude_user_roles[]"]',
-				controlsContainer: '.elementor-role-controls',
-				toggleHandle: '.elementor-role-toggle',
+				body: 'refraction-role-manager',
+				row: '.refraction-role-row',
+				label: '.refraction-role-label',
+				excludedIndicator: '.refraction-role-excluded-indicator',
+				excludedField: 'input[name="refraction_exclude_user_roles[]"]',
+				controlsContainer: '.refraction-role-controls',
+				toggleHandle: '.refraction-role-toggle',
 				arrowUp: 'dashicons-arrow-up',
 				arrowDown: 'dashicons-arrow-down',
 			},
@@ -624,8 +624,8 @@ import 'elementor-app/event-track/wp-dashboard-tracking';
 	} );
 
 	$( function() {
-		window.elementorAdmin = new ElementorAdmin();
+		window.refractionAdmin = new RefractionAdmin();
 
-		Events.dispatch( elementorCommon.elements.$window, 'elementor/admin/init' );
+		Events.dispatch( refractionCommon.elements.$window, 'refraction/admin/init' );
 	} );
 }( jQuery ) );

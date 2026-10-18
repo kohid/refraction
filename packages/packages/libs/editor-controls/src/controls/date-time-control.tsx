@@ -1,8 +1,8 @@
 import * as React from 'react';
 import type { Dayjs } from 'dayjs';
 import * as dayjs from 'dayjs';
-import { isTransformable, type Props, stringPropTypeUtil } from '@elementor/editor-props';
-import { DateTimePropTypeUtil } from '@elementor/editor-props';
+import { isTransformable, type Props, stringPropTypeUtil } from '@refraction/editor-props';
+import { DateTimePropTypeUtil } from '@refraction/editor-props';
 import { Box, DatePicker, LocalizationProvider, TimePicker } from '@elementor/ui';
 
 import { PropKeyProvider, PropProvider, useBoundProp } from '../bound-prop-context';

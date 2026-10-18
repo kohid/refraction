@@ -1,19 +1,19 @@
-import { type PropType } from '@elementor/editor-props';
+import { type PropType } from '@refraction/editor-props';
 
 import { dynamicTransformer } from '../dynamic-transformer';
 import { DynamicTagsManagerNotFoundError } from '../errors';
 import { type DynamicTagsManager, type TagInstance } from '../types';
 
-jest.mock( '@elementor/editor-v1-adapters', () => {
-	const actual = jest.requireActual( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters', () => {
+	const actual = jest.requireActual( '@refraction/editor-v1-adapters' );
 	return {
 		...actual,
-		getElementorConfig: jest.fn(),
+		getRefractionConfig: jest.fn(),
 	};
 } );
 
 describe( 'dynamicTransformer', () => {
-	const ELEMENTOR_MOCK = {
+	const REFRACTION_MOCK = {
 		dynamicTags: mockDynamicTagsManager(),
 		config: {
 			atomicDynamicTags: {
@@ -37,12 +37,12 @@ describe( 'dynamicTransformer', () => {
 	};
 
 	beforeEach( () => {
-		const { getElementorConfig } = require( '@elementor/editor-v1-adapters' );
-		getElementorConfig.mockImplementation( () => ELEMENTOR_MOCK.config );
+		const { getRefractionConfig } = require( '@refraction/editor-v1-adapters' );
+		getRefractionConfig.mockImplementation( () => REFRACTION_MOCK.config );
 	} );
 
 	afterEach( () => {
-		delete window.elementor;
+		delete window.refraction;
 	} );
 	it( 'should return null when there is no name', () => {
 		// Act.
@@ -54,8 +54,8 @@ describe( 'dynamicTransformer', () => {
 
 	it( 'should throw when the dynamic tags manager cannot be found', () => {
 		// Arrange.
-		window.elementor = {
-			...ELEMENTOR_MOCK,
+		window.refraction = {
+			...REFRACTION_MOCK,
 			dynamicTags: undefined,
 		};
 
@@ -67,7 +67,7 @@ describe( 'dynamicTransformer', () => {
 
 	it( 'should fetch the tag value from server, and load from cache on next requests', async () => {
 		// Arrange.
-		window.elementor = ELEMENTOR_MOCK;
+		window.refraction = REFRACTION_MOCK;
 
 		// Act.
 		const valueFromServer = dynamicTransformer(
@@ -90,8 +90,8 @@ describe( 'dynamicTransformer', () => {
 
 	it( "should return null when tag doesn't exist", async () => {
 		// Arrange.
-		const { getElementorConfig } = require( '@elementor/editor-v1-adapters' );
-		getElementorConfig.mockImplementation( () => ( {
+		const { getRefractionConfig } = require( '@refraction/editor-v1-adapters' );
+		getRefractionConfig.mockImplementation( () => ( {
 			atomicDynamicTags: {
 				tags: {},
 				groups: {},
@@ -110,8 +110,8 @@ describe( 'dynamicTransformer', () => {
 
 	it( "should return default value if it exists when tag doesn't exist", async () => {
 		// Arrange.
-		const { getElementorConfig } = require( '@elementor/editor-v1-adapters' );
-		getElementorConfig.mockImplementation( () => ( {
+		const { getRefractionConfig } = require( '@refraction/editor-v1-adapters' );
+		getRefractionConfig.mockImplementation( () => ( {
 			atomicDynamicTags: {
 				tags: {},
 				groups: {},

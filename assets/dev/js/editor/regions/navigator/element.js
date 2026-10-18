@@ -1,23 +1,23 @@
 import ElementEmpty from './element-empty';
 import RootEmpty from './root-empty';
 
-const NEW_NESTABLE_CLASS = 'elementor-navigator__element-new-nestable';
+const NEW_NESTABLE_CLASS = 'refraction-navigator__element-new-nestable';
 
 export default class extends Marionette.CompositeView {
 	getTemplate() {
-		return '#tmpl-elementor-navigator__elements';
+		return '#tmpl-refraction-navigator__elements';
 	}
 
 	ui() {
 		return {
-			item: '> .elementor-navigator__item',
-			title: '> .elementor-navigator__item .elementor-navigator__element__title__text',
-			toggle: '> .elementor-navigator__item > .elementor-navigator__element__toggle',
-			toggleList: '> .elementor-navigator__item > .elementor-navigator__element__list-toggle',
-			indicators: '> .elementor-navigator__item > .elementor-navigator__element__indicators',
-			indicator: '> .elementor-navigator__item > .elementor-navigator__element__indicators > .elementor-navigator__element__indicator',
-			elements: '> .elementor-navigator__elements',
-			icon: '> .elementor-navigator__item .elementor-navigator__element__element-type',
+			item: '> .refraction-navigator__item',
+			title: '> .refraction-navigator__item .refraction-navigator__element__title__text',
+			toggle: '> .refraction-navigator__item > .refraction-navigator__element__toggle',
+			toggleList: '> .refraction-navigator__item > .refraction-navigator__element__list-toggle',
+			indicators: '> .refraction-navigator__item > .refraction-navigator__element__indicators',
+			indicator: '> .refraction-navigator__item > .refraction-navigator__element__indicators > .refraction-navigator__element__indicator',
+			elements: '> .refraction-navigator__elements',
+			icon: '> .refraction-navigator__item .refraction-navigator__element__element-type',
 		};
 	}
 
@@ -60,18 +60,18 @@ export default class extends Marionette.CompositeView {
 	}
 
 	className() {
-		let classes = 'elementor-navigator__element';
+		let classes = 'refraction-navigator__element';
 		const elType = this.model.get( 'elType' );
 
 		if ( ! this.isNavigatorContainer() ) {
-			classes += ' elementor-navigator__element-' + elType;
+			classes += ' refraction-navigator__element-' + elType;
 			if ( ! this.isExcludedNestableElement() ) {
 				classes += ' ' + NEW_NESTABLE_CLASS;
 			}
 		}
 
 		if ( this.hasChildren() ) {
-			classes += ' elementor-navigator__element--has-children';
+			classes += ' refraction-navigator__element--has-children';
 		}
 
 		return classes;
@@ -82,7 +82,7 @@ export default class extends Marionette.CompositeView {
 		// Excluded nestable elements (section, column) should have their own unique class,
 		// so that they won't be connected with new nestable elements (container, div-block).
 		if ( this.isExcludedNestableElement() ) {
-			return 'elementor-navigator__element-' + elType;
+			return 'refraction-navigator__element-' + elType;
 		}
 
 		return NEW_NESTABLE_CLASS;
@@ -109,7 +109,7 @@ export default class extends Marionette.CompositeView {
 
 	isProPromotion() {
 		const elType = this.model.get( 'elType' );
-		return !! elementor.widgetsCache?.[ elType ]?.meta?.is_pro_promotion;
+		return !! refraction.widgetsCache?.[ elType ]?.meta?.is_pro_promotion;
 	}
 
 	shouldShowChildrenInStructure() {
@@ -117,7 +117,7 @@ export default class extends Marionette.CompositeView {
 			return false;
 		}
 
-		return elementor.hooks.applyFilters( 'navigator/element/show-children', true, this.model );
+		return refraction.hooks.applyFilters( 'navigator/element/show-children', true, this.model );
 	}
 
 	initialize() {
@@ -125,7 +125,7 @@ export default class extends Marionette.CompositeView {
 			? new Backbone.Collection()
 			: this.model.get( 'elements' );
 
-		this.childViewContainer = '.elementor-navigator__elements';
+		this.childViewContainer = '.refraction-navigator__elements';
 
 		this.listenTo( this.model, 'change', this.onModelChange )
 			.listenTo( this.model.get( 'settings' ), 'change', this.onModelSettingsChange );
@@ -134,11 +134,11 @@ export default class extends Marionette.CompositeView {
 		this.listenTo( this.model, 'navigator:add', this.onNavigatorAdd );
 
 		this._onRefreshChildrenRequest = this._onRefreshChildrenRequest.bind( this );
-		window.addEventListener( 'elementor/navigator/refresh-children', this._onRefreshChildrenRequest );
+		window.addEventListener( 'refraction/navigator/refresh-children', this._onRefreshChildrenRequest );
 	}
 
 	onDestroy() {
-		window.removeEventListener( 'elementor/navigator/refresh-children', this._onRefreshChildrenRequest );
+		window.removeEventListener( 'refraction/navigator/refresh-children', this._onRefreshChildrenRequest );
 	}
 
 	_onRefreshChildrenRequest( event ) {
@@ -174,7 +174,7 @@ export default class extends Marionette.CompositeView {
 			this.ui.title.text( editorSettings.title );
 		}
 
-		window.dispatchEvent( new CustomEvent( 'elementor/element/update_editor_settings', {
+		window.dispatchEvent( new CustomEvent( 'refraction/element/update_editor_settings', {
 			detail: {
 				element: elementModel,
 				editorSettings,
@@ -207,13 +207,13 @@ export default class extends Marionette.CompositeView {
 			return;
 		}
 
-		const isActive = this.ui.item.hasClass( 'elementor-active' );
+		const isActive = this.ui.item.hasClass( 'refraction-active' );
 
 		if ( isActive === state ) {
 			return;
 		}
 
-		this.ui.item.toggleClass( 'elementor-active', state );
+		this.ui.item.toggleClass( 'refraction-active', state );
 
 		let slideMethod = 'slideToggle';
 
@@ -225,7 +225,7 @@ export default class extends Marionette.CompositeView {
 	}
 
 	toggleHiddenClass() {
-		this.$el.toggleClass( 'elementor-navigator__element--hidden', this.model.getVisibility() );
+		this.$el.toggleClass( 'refraction-navigator__element--hidden', this.model.getVisibility() );
 	}
 
 	recursiveChildInvoke( method, ...restArgs ) {
@@ -288,11 +288,11 @@ export default class extends Marionette.CompositeView {
 	}
 
 	addEditingClass() {
-		this.ui.item.addClass( 'elementor-editing' );
+		this.ui.item.addClass( 'refraction-editing' );
 	}
 
 	removeEditingClass() {
-		this.ui.item.removeClass( 'elementor-editing' );
+		this.ui.item.removeClass( 'refraction-editing' );
 	}
 
 	enterTitleEditing() {
@@ -300,7 +300,7 @@ export default class extends Marionette.CompositeView {
 
 		document.execCommand( 'selectAll' );
 
-		elementor.addBackgroundClickListener( 'navigator', {
+		refraction.addBackgroundClickListener( 'navigator', {
 			ignore: this.ui.title,
 			callback: this.exitTitleEditing.bind( this ),
 		} );
@@ -318,7 +318,7 @@ export default class extends Marionette.CompositeView {
 			settingsModel.unset( '_title', { silent: true } );
 		}
 
-		if ( elementor.helpers.isAtomicWidget( this.model ) ) {
+		if ( refraction.helpers.isAtomicWidget( this.model ) ) {
 			const prevEditorSettings = this.model.get( 'editor_settings' );
 
 			this.model.set( 'editor_settings', { ...prevEditorSettings, title: newTitle } );
@@ -331,7 +331,7 @@ export default class extends Marionette.CompositeView {
 			status: true,
 		} );
 
-		elementor.removeBackgroundClickListener( 'navigator' );
+		refraction.removeBackgroundClickListener( 'navigator' );
 	}
 
 	/*
@@ -340,16 +340,16 @@ export default class extends Marionette.CompositeView {
 	* We connect the sortables of the same type so items can be moved between them using the 'connectWith' parameter.
 	 */
 	activateSortable() {
-		if ( ! elementor.userCan( 'design' ) ) {
+		if ( ! refraction.userCan( 'design' ) ) {
 			return;
 		}
 
 		this.ui.elements.sortable( {
-			items: '> .elementor-navigator__element',
+			items: '> .refraction-navigator__element',
 			placeholder: 'ui-sortable-placeholder',
 			axis: 'y',
 			forcePlaceholderSize: true,
-			connectWith: '.' + this.getSortableClassName() + ' > .elementor-navigator__elements',
+			connectWith: '.' + this.getSortableClassName() + ' > .refraction-navigator__elements',
 			cancel: '[contenteditable="true"], [data-locked="true"]',
 		} );
 	}
@@ -359,14 +359,14 @@ export default class extends Marionette.CompositeView {
 
 		this.ui.indicators.empty();
 
-		jQuery.each( elementor.navigator.indicators, ( indicatorName, indicatorSettings ) => {
+		jQuery.each( refraction.navigator.indicators, ( indicatorName, indicatorSettings ) => {
 			const isShouldBeIndicated = indicatorSettings.settingKeys.some( ( key ) => settings[ key ] );
 
 			if ( ! isShouldBeIndicated ) {
 				return;
 			}
 
-			const $indicator = jQuery( '<div>', { class: 'elementor-navigator__element__indicator', title: indicatorSettings.title } )
+			const $indicator = jQuery( '<div>', { class: 'refraction-navigator__element__indicator', title: indicatorSettings.title } )
 				.attr( 'data-section', indicatorSettings.section )
 				.html( `<i class="eicon-${ indicatorSettings.icon }"></i>` );
 
@@ -382,7 +382,7 @@ export default class extends Marionette.CompositeView {
 	 */
 	updateSelection() {
 		if (
-			Object.keys( elementor.selection.elements )
+			Object.keys( refraction.selection.elements )
 				.includes( this.model.get( 'id' ) )
 		) {
 			this.select();
@@ -399,7 +399,7 @@ export default class extends Marionette.CompositeView {
 
 		this.addEditingClass();
 
-		elementor.helpers.scrollToView( this.$el, 400, elementor.navigator.getLayout().elements.$el );
+		refraction.helpers.scrollToView( this.$el, 400, refraction.navigator.getLayout().elements.$el );
 	}
 
 	/**
@@ -445,7 +445,7 @@ export default class extends Marionette.CompositeView {
 			this.ui.icon.html( `<i class="${ this.model.attributes.icon }"></i>` );
 		}
 
-		jQuery.each( elementor.navigator.indicators, ( indicatorName, indicatorSettings ) => {
+		jQuery.each( refraction.navigator.indicators, ( indicatorName, indicatorSettings ) => {
 			if ( Object.keys( settingsModel.changed ).filter( ( key ) => indicatorSettings.settingKeys.includes( key ) ).length ) {
 				this.renderIndicators();
 
@@ -459,7 +459,7 @@ export default class extends Marionette.CompositeView {
 			return;
 		}
 
-		this.$el.toggleClass( 'elementor-navigator__element--has-children', !! this.hasChildren() );
+		this.$el.toggleClass( 'refraction-navigator__element--has-children', !! this.hasChildren() );
 	}
 
 	onItemPress( event ) {
@@ -477,7 +477,7 @@ export default class extends Marionette.CompositeView {
 	}
 
 	onItemClick( event ) {
-		window.dispatchEvent( new CustomEvent( 'elementor/navigator/item/click', {
+		window.dispatchEvent( new CustomEvent( 'refraction/navigator/item/click', {
 			detail: {
 				id: this.model.get( 'id' ),
 				type: this.model.get( 'elType' ),
@@ -525,25 +525,25 @@ export default class extends Marionette.CompositeView {
 	onSortStart( event, ui ) {
 		this.model.trigger( 'request:sort:start', event, ui );
 
-		jQuery( ui.item ).children( '.elementor-navigator__item' ).trigger( 'click' );
+		jQuery( ui.item ).children( '.refraction-navigator__item' ).trigger( 'click' );
 
-		elementor.navigator.getLayout().activateElementsMouseInteraction();
+		refraction.navigator.getLayout().activateElementsMouseInteraction();
 	}
 
 	onSortStop() {
-		elementor.navigator.getLayout().deactivateElementsMouseInteraction();
+		refraction.navigator.getLayout().deactivateElementsMouseInteraction();
 	}
 
 	onSortOver( event ) {
 		event.stopPropagation();
 
-		this.$el.addClass( 'elementor-dragging-on-child' );
+		this.$el.addClass( 'refraction-dragging-on-child' );
 	}
 
 	onSortOut( event ) {
 		event.stopPropagation();
 
-		this.$el.removeClass( 'elementor-dragging-on-child' );
+		this.$el.removeClass( 'refraction-dragging-on-child' );
 	}
 
 	onSortUpdate( event, ui ) {
@@ -563,7 +563,7 @@ export default class extends Marionette.CompositeView {
 	onMouseEnter( event ) {
 		event.stopPropagation();
 
-		const dragShouldBeIgnored = this.recursiveChildAgreement( 'dragShouldBeIgnored', elementor.channels.data.request( 'dragging:model' ) );
+		const dragShouldBeIgnored = this.recursiveChildAgreement( 'dragShouldBeIgnored', refraction.channels.data.request( 'dragging:model' ) );
 
 		if ( dragShouldBeIgnored ) {
 			return;
@@ -583,11 +583,11 @@ export default class extends Marionette.CompositeView {
 	}
 
 	onContextMenu( event ) {
-		this.model.trigger( 'request:contextmenu', event, { location: elementorCommon.eventsManager.config.locations.structurePanel } );
+		this.model.trigger( 'request:contextmenu', event, { location: refractionCommon.eventsManager.config.locations.structurePanel } );
 	}
 
 	onEditRequest() {
-		elementor.navigator.getLayout().elements.currentView.recursiveChildInvoke( 'removeEditingClass' );
+		refraction.navigator.getLayout().elements.currentView.recursiveChildInvoke( 'removeEditingClass' );
 
 		this.select( true );
 	}
@@ -596,7 +596,7 @@ export default class extends Marionette.CompositeView {
 		const section = event.currentTarget.dataset.section;
 
 		setTimeout( () => {
-			const editor = elementor.getPanelView().currentPageView,
+			const editor = refraction.getPanelView().currentPageView,
 				tab = editor.getControlModel( section ).get( 'tab' );
 
 			editor.activateSection( section );

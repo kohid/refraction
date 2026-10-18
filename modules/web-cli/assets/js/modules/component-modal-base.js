@@ -40,7 +40,7 @@ export default class ComponentModalBase extends ComponentBase {
 			return false;
 		}
 
-		const close = elementor.hooks.applyFilters(
+		const close = refraction.hooks.applyFilters(
 			'component/modal/close',
 			this.layout.getModal().hide.bind( this.layout.getModal() ),
 			this,

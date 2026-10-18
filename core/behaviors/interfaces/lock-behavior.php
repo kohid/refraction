@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Behaviors\Interfaces;
+namespace Refraction\Core\Behaviors\Interfaces;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

@@ -1,4 +1,4 @@
-import { AxiosError } from '@elementor/http-client';
+import { AxiosError } from '@refraction/http-client';
 
 export function getMcpErrorMessage( error: unknown, toolName: string ): string {
 	if ( error instanceof AxiosError ) {

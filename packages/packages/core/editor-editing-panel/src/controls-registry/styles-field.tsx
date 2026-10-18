@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ControlAdornmentsProvider, PropKeyProvider, PropProvider } from '@elementor/editor-controls';
-import { dimensionsPropTypeUtil, type PropKey, type PropValue, sizePropTypeUtil } from '@elementor/editor-props';
-import { getStylesSchema } from '@elementor/editor-styles';
+import { ControlAdornmentsProvider, PropKeyProvider, PropProvider } from '@refraction/editor-controls';
+import { dimensionsPropTypeUtil, type PropKey, type PropValue, sizePropTypeUtil } from '@refraction/editor-props';
+import { getStylesSchema } from '@refraction/editor-styles';
 
 import { useStylesInheritanceChain } from '../contexts/styles-inheritance-context';
 import { getFieldIndicators } from '../field-indicators-registry';

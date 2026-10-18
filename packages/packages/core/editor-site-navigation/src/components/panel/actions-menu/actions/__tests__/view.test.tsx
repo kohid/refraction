@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import { type Post } from '../../../../../types';
 import View from '../view';
 
-describe( '@elementor/editor-site-navigation - View', () => {
+describe( '@refraction/editor-site-navigation - View', () => {
 	afterAll( () => {
 		jest.clearAllMocks();
 	} );

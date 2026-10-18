@@ -9,8 +9,8 @@ import {
 	type PropsSchema,
 	stringPropTypeUtil,
 	urlPropTypeUtil,
-} from '@elementor/editor-props';
-import { getMediaAttachment } from '@elementor/wp-media';
+} from '@refraction/editor-props';
+import { getMediaAttachment } from '@refraction/wp-media';
 
 import { initSettingsTransformers } from '../init-settings-transformers';
 import { createPropsResolver } from '../renderers/create-props-resolver';
@@ -25,10 +25,10 @@ import {
 	urlPropType,
 } from './prop-types';
 
-jest.mock( '@elementor/wp-media' );
+jest.mock( '@refraction/wp-media' );
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	stylesRepository: {
 		getProviders: jest.fn( () => [] ),
 	},

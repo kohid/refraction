@@ -2,19 +2,19 @@ import Category from './category';
 
 export default class extends Category {
 	className() {
-		return super.className() + ' elementor-finder__results__category--dynamic';
+		return super.className() + ' refraction-finder__results__category--dynamic';
 	}
 
 	ui() {
 		return {
-			title: '.elementor-finder__results__category__title',
+			title: '.refraction-finder__results__category__title',
 		};
 	}
 
 	fetchData() {
 		this.ui.loadingIcon.show();
 
-		elementorCommon.ajax.addRequest( 'finder_get_category_items', {
+		refractionCommon.ajax.addRequest( 'finder_get_category_items', {
 			data: {
 				category: this.model.get( 'name' ),
 				filter: this.getTextFilter(),

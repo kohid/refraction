@@ -1,17 +1,17 @@
 <?php
-namespace Elementor\Core\Kits;
+namespace Refraction\Core\Kits;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Kits\Controls\Repeater;
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Plugin;
-use Elementor\Core\Files\CSS\Post as Post_CSS;
-use Elementor\Core\Files\CSS\Post_Preview;
-use Elementor\Core\Documents_Manager;
-use Elementor\Core\Kits\Documents\Kit;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Kits\Controls\Repeater;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Plugin;
+use Refraction\Core\Files\CSS\Post as Post_CSS;
+use Refraction\Core\Files\CSS\Post_Preview;
+use Refraction\Core\Documents_Manager;
+use Refraction\Core\Kits\Documents\Kit;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Manager {
 
-	const OPTION_ACTIVE = 'elementor_active_kit';
+	const OPTION_ACTIVE = 'refraction_active_kit';
 
-	const OPTION_PREVIOUS = 'elementor_previous_kit';
+	const OPTION_PREVIOUS = 'refraction_previous_kit';
 
 	const E_HASH_COMMAND_OPEN_SITE_SETTINGS = 'e:run:panel/global/open';
 
@@ -136,7 +136,7 @@ class Manager {
 	}
 
 	public function create_new_kit( $kit_name = '', $settings = [], $active = true ) {
-		$kit_name = $kit_name ? $kit_name : esc_html__( 'Custom', 'elementor' );
+		$kit_name = $kit_name ? $kit_name : esc_html__( 'Custom', 'refraction' );
 
 		$current_kit = $this->get_active_kit();
 
@@ -152,7 +152,7 @@ class Manager {
 			update_option( self::OPTION_ACTIVE, $id );
 		}
 
-		do_action( 'elementor/kit/after_new_kit_created', [
+		do_action( 'refraction/kit/after_new_kit_created', [
 			'new_kit_id' => $id,
 			'previous_kit_id' => $current_kit->get_post()->ID,
 		] );
@@ -161,7 +161,7 @@ class Manager {
 	}
 
 	private function get_meta_to_preserve( Kit $current_kit ): array {
-		$meta_keys_to_preserve = apply_filters( 'elementor/kit/meta_to_preserve_on_kit_import', [] );
+		$meta_keys_to_preserve = apply_filters( 'refraction/kit/meta_to_preserve_on_kit_import', [] );
 
 		$kit_meta_data = [];
 
@@ -178,7 +178,7 @@ class Manager {
 
 	public function create_default() {
 		return $this->create( [
-			'post_title' => esc_html__( 'Default Kit', 'elementor' ),
+			'post_title' => esc_html__( 'Default Kit', 'refraction' ),
 		] );
 	}
 
@@ -196,11 +196,11 @@ class Manager {
 		}
 
 		$id = wp_insert_post( [
-			'post_title' => esc_html__( 'Default Kit', 'elementor' ),
+			'post_title' => esc_html__( 'Default Kit', 'refraction' ),
 			'post_type' => Source_Local::CPT,
 			'post_status' => 'publish',
 			'meta_input' => [
-				'_elementor_edit_mode' => 'builder',
+				'_refraction_edit_mode' => 'builder',
 				Document::TYPE_META_KEY => 'kit',
 			],
 		] );
@@ -375,24 +375,24 @@ class Manager {
 	}
 
 	public function is_custom_colors_enabled() {
-		return ! get_option( 'elementor_disable_color_schemes' );
+		return ! get_option( 'refraction_disable_color_schemes' );
 	}
 
 	public function is_custom_typography_enabled() {
-		return ! get_option( 'elementor_disable_typography_schemes' );
+		return ! get_option( 'refraction_disable_typography_schemes' );
 	}
 
 	/**
 	 * Add kit wrapper body class.
 	 *
-	 * It should be added even for non Elementor pages,
+	 * It should be added even for non Refraction pages,
 	 * in order to support embedded templates.
 	 */
 	private function add_body_class() {
 		$kit = $this->get_kit_for_frontend();
 
 		if ( $kit ) {
-			Plugin::$instance->frontend->add_body_class( 'elementor-kit-' . $kit->get_main_id() );
+			Plugin::$instance->frontend->add_body_class( 'refraction-kit-' . $kit->get_main_id() );
 		}
 	}
 
@@ -428,7 +428,7 @@ class Manager {
 	}
 
 	/**
-	 * Add 'Edit with elementor -> Site Settings' in admin bar.
+	 * Add 'Edit with refraction -> Site Settings' in admin bar.
 	 *
 	 * @param [] $admin_bar_config
 	 *
@@ -437,7 +437,7 @@ class Manager {
 	private function add_menu_in_admin_bar( $admin_bar_config ) {
 		$document = Plugin::$instance->documents->get( get_the_ID() );
 
-		if ( ! $document || ! $document->is_built_with_elementor() ) {
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
 			$recent_edited_post = Utils::get_recently_edited_posts_query( [
 				'posts_per_page' => 1,
 			] );
@@ -456,13 +456,13 @@ class Manager {
 				$document->get_edit_url()
 			);
 
-			$admin_bar_config['elementor_edit_page']['children'][] = [
-				'id' => 'elementor_site_settings',
-				'title' => esc_html__( 'Site Settings', 'elementor' ),
-				'sub_title' => esc_html__( 'Site', 'elementor' ),
+			$admin_bar_config['refraction_edit_page']['children'][] = [
+				'id' => 'refraction_site_settings',
+				'title' => esc_html__( 'Site Settings', 'refraction' ),
+				'sub_title' => esc_html__( 'Site', 'refraction' ),
 				'href' => $document_edit_url,
-				'class' => 'elementor-site-settings',
-				'parent_class' => 'elementor-second-section',
+				'class' => 'refraction-site-settings',
+				'parent_class' => 'refraction-second-section',
 			];
 		}
 
@@ -470,12 +470,12 @@ class Manager {
 	}
 
 	public function __construct() {
-		add_action( 'elementor/documents/register', [ $this, 'register_document' ] );
-		add_filter( 'elementor/editor/localize_settings', [ $this, 'localize_settings' ] );
-		add_filter( 'elementor/editor/footer', [ $this, 'render_panel_html' ] );
-		add_action( 'elementor/frontend/after_enqueue_styles', [ $this, 'frontend_before_enqueue_styles' ], 0 );
-		add_action( 'elementor/preview/enqueue_styles', [ $this, 'preview_enqueue_styles' ], 0 );
-		add_action( 'elementor/controls/register', [ $this, 'register_controls' ] );
+		add_action( 'refraction/documents/register', [ $this, 'register_document' ] );
+		add_filter( 'refraction/editor/localize_settings', [ $this, 'localize_settings' ] );
+		add_filter( 'refraction/editor/footer', [ $this, 'render_panel_html' ] );
+		add_action( 'refraction/frontend/after_enqueue_styles', [ $this, 'frontend_before_enqueue_styles' ], 0 );
+		add_action( 'refraction/preview/enqueue_styles', [ $this, 'preview_enqueue_styles' ], 0 );
+		add_action( 'refraction/controls/register', [ $this, 'register_controls' ] );
 
 		add_action( 'wp_trash_post', function ( $post_id ) {
 			$this->before_delete_kit( $post_id );
@@ -497,7 +497,7 @@ class Manager {
 			$this->add_body_class();
 		} );
 
-		add_filter( 'elementor/frontend/admin_bar/settings', function ( $admin_bar_config ) {
+		add_filter( 'refraction/frontend/admin_bar/settings', function ( $admin_bar_config ) {
 			return $this->add_menu_in_admin_bar( $admin_bar_config );
 		}, 9 /* Before site-editor (theme-builder) */ );
 	}

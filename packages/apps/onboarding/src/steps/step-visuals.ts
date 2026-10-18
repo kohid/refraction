@@ -5,7 +5,7 @@ const VIDEOS_BASE_URL = 'https://assets.elementor.com/onboarding/v1/videos/';
 
 const CONTENT_MAX_WIDTH_WIDE_ELEMENT = 724;
 
-const getAssetsBaseUrl = () => window.elementorCommon?.config?.urls?.assets ?? '';
+const getAssetsBaseUrl = () => window.refractionCommon?.config?.urls?.assets ?? '';
 
 export const getOnboardingAssetUrl = ( fileName: string ) => {
 	const baseUrl = getAssetsBaseUrl();

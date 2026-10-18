@@ -4,7 +4,7 @@ export class FloatingButtonsRemoveLibraryTab extends $e.modules.hookUI.After {
 	}
 
 	getId() {
-		return 'elementor-floating-buttons-remove-library-tab';
+		return 'refraction-floating-buttons-remove-library-tab';
 	}
 
 	getConditions( args ) {

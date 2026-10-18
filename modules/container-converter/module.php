@@ -1,19 +1,19 @@
 <?php
 
-namespace Elementor\Modules\ContainerConverter;
+namespace Refraction\Modules\ContainerConverter;
 
-use Elementor\Controls_Manager;
-use Elementor\Controls_Stack;
-use Elementor\Plugin;
+use Refraction\Controls_Manager;
+use Refraction\Controls_Stack;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-class Module extends \Elementor\Core\Base\Module {
+class Module extends \Refraction\Core\Base\Module {
 
 	// Event name dispatched by the buttons.
-	const EVENT_NAME = 'elementorContainerConverter:convert';
+	const EVENT_NAME = 'refractionContainerConverter:convert';
 
 	/**
 	 * Retrieve the module name.
@@ -42,8 +42,8 @@ class Module extends \Elementor\Core\Base\Module {
 		wp_enqueue_script(
 			'container-converter',
 			$this->get_js_assets_url( 'container-converter' ),
-			[ 'elementor-editor' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-editor' ],
+			REFRACTION_VERSION,
 			true
 		);
 	}
@@ -58,14 +58,14 @@ class Module extends \Elementor\Core\Base\Module {
 			'container-converter',
 			$this->get_css_assets_url( 'modules/container-converter/editor' ),
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 	}
 
 	/**
 	 * Add a convert button to sections.
 	 *
-	 * @param \Elementor\Controls_Stack $controls_stack
+	 * @param \Refraction\Controls_Stack $controls_stack
 	 *
 	 * @return void
 	 */
@@ -82,10 +82,10 @@ class Module extends \Elementor\Core\Base\Module {
 			'convert_to_container',
 			[
 				'type' => Controls_Manager::BUTTON,
-				'label' => esc_html__( 'Convert to container', 'elementor' ),
-				'text' => esc_html__( 'Convert', 'elementor' ),
+				'label' => esc_html__( 'Convert to container', 'refraction' ),
+				'text' => esc_html__( 'Convert', 'refraction' ),
 				'button_type' => 'default',
-				'description' => esc_html__( 'Copies all of the selected sections and columns and pastes them in a container beneath the original.', 'elementor' ),
+				'description' => esc_html__( 'Copies all of the selected sections and columns and pastes them in a container beneath the original.', 'refraction' ),
 				'separator' => 'after',
 				'event' => static::EVENT_NAME,
 			]
@@ -97,7 +97,7 @@ class Module extends \Elementor\Core\Base\Module {
 	/**
 	 * Add a convert button to page settings.
 	 *
-	 * @param \Elementor\Controls_Stack $controls_stack
+	 * @param \Refraction\Controls_Stack $controls_stack
 	 *
 	 * @return void
 	 */
@@ -115,10 +115,10 @@ class Module extends \Elementor\Core\Base\Module {
 			'convert_to_container',
 			[
 				'type' => Controls_Manager::BUTTON,
-				'label' => esc_html__( 'Convert to container', 'elementor' ),
-				'text' => esc_html__( 'Convert', 'elementor' ),
+				'label' => esc_html__( 'Convert to container', 'refraction' ),
+				'text' => esc_html__( 'Convert', 'refraction' ),
 				'button_type' => 'default',
-				'description' => esc_html__( 'Copies all of the selected sections and columns and pastes them in a container beneath the original.', 'elementor' ),
+				'description' => esc_html__( 'Copies all of the selected sections and columns and pastes them in a container beneath the original.', 'refraction' ),
 				'separator' => 'after',
 				'event' => static::EVENT_NAME,
 			]
@@ -130,7 +130,7 @@ class Module extends \Elementor\Core\Base\Module {
 	/**
 	 * Checks if document has any Section elements.
 	 *
-	 * @param \Elementor\Controls_Stack $controls_stack
+	 * @param \Refraction\Controls_Stack $controls_stack
 	 *
 	 * @return bool
 	 */
@@ -156,14 +156,14 @@ class Module extends \Elementor\Core\Base\Module {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'enqueue_styles' ] );
+		add_action( 'refraction/editor/after_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'refraction/editor/after_enqueue_styles', [ $this, 'enqueue_styles' ] );
 
-		add_action( 'elementor/element/section/section_layout/after_section_end', function ( Controls_Stack $controls_stack ) {
+		add_action( 'refraction/element/section/section_layout/after_section_end', function ( Controls_Stack $controls_stack ) {
 			$this->add_section_convert_button( $controls_stack );
 		} );
 
-		add_action( 'elementor/documents/register_controls', function ( Controls_Stack $controls_stack ) {
+		add_action( 'refraction/documents/register_controls', function ( Controls_Stack $controls_stack ) {
 			$this->add_page_convert_button( $controls_stack );
 		} );
 	}

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createMockHttpResponse, createMockStyleDefinition, renderWithStore } from 'test-utils';
-import { getCurrentDocument } from '@elementor/editor-documents';
-import { type HttpResponse } from '@elementor/http-client';
-import { __createStore as createStore, __registerSlice as registerSlice } from '@elementor/store';
+import { getCurrentDocument } from '@refraction/editor-documents';
+import { type HttpResponse } from '@refraction/http-client';
+import { __createStore as createStore, __registerSlice as registerSlice } from '@refraction/store';
 import { waitFor } from '@testing-library/react';
 
 import { apiClient, type GlobalClassIndexEntry } from '../../api';
@@ -17,12 +17,12 @@ jest.mock( '../../api', () => ( {
 	},
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	getCurrentDocument: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	registerDataHook: jest.fn(),
 } ) );
 

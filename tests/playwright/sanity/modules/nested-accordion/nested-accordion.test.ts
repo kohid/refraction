@@ -27,8 +27,8 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			editor = await wpAdmin.openNewPage(),
 			container = await editor.addElement( { elType: 'container' }, 'document' ),
 			frame = editor.getPreviewFrame(),
-			accordionWrapper = frame.locator( '.elementor-accordion' ).first(),
-			toggleWrapper = frame.locator( '.elementor-toggle' ).first();
+			accordionWrapper = frame.locator( '.refraction-accordion' ).first(),
+			toggleWrapper = frame.locator( '.refraction-toggle' ).first();
 
 		await test.step( 'Check that Toggle and Accordion widgets appear when Nested Accordion widget does not appear', async () => {
 			// Act
@@ -48,9 +48,9 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			editor = await wpAdmin.openNewPage(),
 			container = await editor.addElement( { elType: 'container' }, 'document' ),
 			frame = editor.getPreviewFrame(),
-			accordionWrapper = frame.locator( '.elementor-accordion' ).first(),
+			accordionWrapper = frame.locator( '.refraction-accordion' ).first(),
 			toggleWidgetInPanel = page.locator( 'i.eicon-toggle' ).first(),
-			widgetSearchBar = '#elementor-panel-elements-search-wrapper input#elementor-panel-elements-search-input',
+			widgetSearchBar = '#refraction-panel-elements-search-wrapper input#refraction-panel-elements-search-input',
 			nestedAccordionItemTitle = frame.locator( '.e-n-accordion-item' ),
 			nestedAccordionItemContent = nestedAccordionItemTitle.locator( '.e-con' );
 
@@ -98,7 +98,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 
 		await test.step( 'Duplicate an item to the repeater', async () => {
 			// Arrange
-			const duplicateButton = page.locator( '.elementor-repeater-tool-duplicate .eicon-copy' ).first(),
+			const duplicateButton = page.locator( '.refraction-repeater-tool-duplicate .eicon-copy' ).first(),
 				numberOfTitles = await nestedAccordionItemTitle.count(),
 				numberOfContents = await nestedAccordionItemContent.count();
 
@@ -163,7 +163,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			editor = await wpAdmin.openNewPage(),
 			frame = editor.getPreviewFrame();
 
-		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-title-and-icons', '.elementor-widget-n-accordion' );
+		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-title-and-icons', '.refraction-widget-n-accordion' );
 		await editor.closeNavigatorIfOpen();
 
 		await test.step( 'Widget Editor Screenshot matches intended design', async () => {
@@ -185,8 +185,8 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 
 		const frame = editor.getPreviewFrame(),
 			nestedAccordionId = await editor.addWidget( { widgetType: 'nested-accordion', container: containerId } ),
-			containerElement = frame.locator( `.elementor-element-${ containerId } .e-con-inner` ),
-			nestedAccordionElement = frame.locator( `.elementor-element-${ nestedAccordionId }.elementor-widget-n-accordion` ),
+			containerElement = frame.locator( `.refraction-element-${ containerId } .e-con-inner` ),
+			nestedAccordionElement = frame.locator( `.refraction-element-${ nestedAccordionId }.refraction-widget-n-accordion` ),
 			containerWidth = ( await containerElement.boundingBox() ).width,
 			nestedAccordionWidth = ( await nestedAccordionElement.boundingBox() ).width;
 
@@ -203,7 +203,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 		await test.step( 'Load Template', async () => {
 			const filePath = _path.resolve( __dirname, `./templates/nested-accordions-parent-child.json` );
 			await editor.loadTemplate( filePath, false );
-			await frame.waitForSelector( '.elementor-widget-n-accordion' );
+			await frame.waitForSelector( '.refraction-widget-n-accordion' );
 			await editor.closeNavigatorIfOpen();
 		} );
 
@@ -222,14 +222,14 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			frame = editor.getPreviewFrame();
 
 		// Load template.
-		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-accessibility', '.elementor-widget-n-accordion' );
+		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-accessibility', '.refraction-widget-n-accordion' );
 		await frame.waitForSelector( '.e-n-accordion' );
 
 		await test.step( 'Keyboard handling inside the Editor', async () => {
 			const accordionTitleOne = frame.locator( '.e-n-accordion-item-title >> nth=0' ),
 				accordionTitleTwo = frame.locator( '.e-n-accordion-item-title >> nth=1' ),
 				accordionTitleThree = frame.locator( '.e-n-accordion-item-title >> nth=2' ),
-				button1 = frame.locator( '.elementor-button >> nth=0' );
+				button1 = frame.locator( '.refraction-button >> nth=0' );
 
 			await checkKeyboardNavigation( page, accordionTitleOne, accordionTitleTwo, button1, accordionTitleThree, false );
 		} );
@@ -242,7 +242,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			frame = editor.getPreviewFrame();
 
 		// Load template.
-		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-accessibility', '.elementor-widget-n-accordion' );
+		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-accessibility', '.refraction-widget-n-accordion' );
 		await frame.waitForSelector( '.e-n-accordion' );
 		await editor.publishAndViewPage();
 		await page.waitForSelector( '.e-n-accordion' );
@@ -251,7 +251,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			const accordionTitleOne = page.locator( '.e-n-accordion-item-title >> nth=0' ),
 				accordionTitleTwo = page.locator( '.e-n-accordion-item-title >> nth=1' ),
 				accordionTitleThree = page.locator( '.e-n-accordion-item-title >> nth=2' ),
-				button1 = page.locator( '.elementor-button >> nth=0' );
+				button1 = page.locator( '.refraction-button >> nth=0' );
 
 			await checkKeyboardNavigation( page, accordionTitleOne, accordionTitleTwo, button1, accordionTitleThree, true );
 		} );

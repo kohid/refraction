@@ -6,7 +6,7 @@ export class Empty extends $e.modules.editor.document.CommandHistoryBase {
 			const data = historyItem.get( 'data' );
 
 			if ( data ) {
-				elementor.getPreviewView().addChildModel( data );
+				refraction.getPreviewView().addChildModel( data );
 			}
 
 			$e.internal( 'document/save/set-is-modified', { status: true } );
@@ -17,8 +17,8 @@ export class Empty extends $e.modules.editor.document.CommandHistoryBase {
 		if ( args.force ) {
 			return {
 				type: 'remove',
-				title: __( 'All Content', 'elementor' ),
-				data: elementor.elements ? elementor.elements.toJSON() : null,
+				title: __( 'All Content', 'refraction' ),
+				data: refraction.elements ? refraction.elements.toJSON() : null,
 				restore: this.constructor.restore,
 			};
 		}
@@ -27,13 +27,13 @@ export class Empty extends $e.modules.editor.document.CommandHistoryBase {
 	}
 
 	apply( args ) {
-		if ( args.force && elementor.elements ) {
-			elementor.elements.reset();
-			elementor.getPreviewContainer().panel.closeEditor();
+		if ( args.force && refraction.elements ) {
+			refraction.elements.reset();
+			refraction.getPreviewContainer().panel.closeEditor();
 			return;
 		}
 
-		elementor.getClearPageDialog().show();
+		refraction.getClearPageDialog().show();
 	}
 
 	isDataChanged() {

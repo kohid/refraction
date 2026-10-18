@@ -10,7 +10,7 @@ type EditorElementsPanelExtendsWindow = Window & {
 		};
 	};
 
-	elementor: {
+	refraction: {
 		getPanelView: () => {
 			getCurrentPageView: () => {
 				search: {

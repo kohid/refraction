@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { getContainer, getElementSetting } from '@elementor/editor-elements';
+import { getContainer, getElementSetting } from '@refraction/editor-elements';
 import { ThemeProvider } from '@elementor/ui';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { type Editor } from '@tiptap/react';
 
 import { InlineEditorToolbar } from '../inline-editor-toolbar';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getContainer: jest.fn(),
 	getElementSetting: jest.fn(),
 } ) );

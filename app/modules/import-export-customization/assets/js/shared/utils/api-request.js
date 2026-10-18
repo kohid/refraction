@@ -15,7 +15,7 @@ export async function apiRequest( { data = null, path, method = HTTP_METHODS.CRE
 
 	try {
 		const requestOptions = {
-			path: `/elementor/v1/import-export-customization/${ path }`,
+			path: `/refraction/v1/import-export-customization/${ path }`,
 			method,
 		};
 

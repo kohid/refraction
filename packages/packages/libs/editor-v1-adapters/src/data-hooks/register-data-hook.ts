@@ -9,7 +9,7 @@ export type WindowWithDataHooks = Window & {
 			currentTrace?: string[];
 		};
 	};
-	elementor?: {
+	refraction?: {
 		documents?: {
 			getCurrent: () => {
 				history?: {
@@ -98,7 +98,7 @@ export function registerDataHook< TArgs extends Args = Args, TResult = unknown >
 			if ( commandsCurrentTrace ) {
 				hookOptions.commandsCurrentTrace = commandsCurrentTrace;
 			}
-			const currentHistoryItemId = currentWindow.elementor?.documents?.getCurrent()?.history?.getCurrentId();
+			const currentHistoryItemId = currentWindow.refraction?.documents?.getCurrent()?.history?.getCurrentId();
 			if ( currentHistoryItemId ) {
 				hookOptions.currentHistoryItemId = currentHistoryItemId;
 			}

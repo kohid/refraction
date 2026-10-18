@@ -1,10 +1,10 @@
 import { createMockElement } from 'test-utils';
-import { getContainer } from '@elementor/editor-elements';
+import { getContainer } from '@refraction/editor-elements';
 
 import { getContainerByOriginId } from '../get-container-by-origin-id';
 
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	getContainer: jest.fn(),
 } ) );
 
@@ -16,13 +16,13 @@ describe( 'getContainerByOriginId', () => {
 	beforeEach( () => {
 		jest.clearAllMocks();
 
-		( window as unknown as { elementor: unknown } ).elementor = {
+		( window as unknown as { refraction: unknown } ).refraction = {
 			getContainerByKeyValue: mockGetContainerByKeyValue,
 		};
 	} );
 
 	afterEach( () => {
-		delete ( window as unknown as { elementor?: unknown } ).elementor;
+		delete ( window as unknown as { refraction?: unknown } ).refraction;
 	} );
 
 	it( 'should fall back to getContainer when no instanceElementId is provided', () => {
@@ -99,7 +99,7 @@ describe( 'getContainerByOriginId', () => {
 		} );
 
 		mockGetContainer.mockReturnValue( instanceContainer );
-		( window as unknown as { elementor: unknown } ).elementor = {};
+		( window as unknown as { refraction: unknown } ).refraction = {};
 
 		// Act
 		const result = getContainerByOriginId( 'elem-1', 'instance-1' );

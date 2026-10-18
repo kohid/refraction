@@ -12,8 +12,8 @@ export const DEFAULT_DEBOUNCE_DELAY = 800;
 export const getDefaultDebounceDelay = () => {
 	let result = DEFAULT_DEBOUNCE_DELAY;
 
-	if ( elementor.config.document && undefined !== elementor.config.document.debounceDelay ) {
-		result = elementor.config.document.debounceDelay;
+	if ( refraction.config.document && undefined !== refraction.config.document.debounceDelay ) {
+		result = refraction.config.document.debounceDelay;
 	}
 
 	return result;

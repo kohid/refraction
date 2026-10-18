@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { extendIconsMap, getIconsMap, resetIconsMap } from '../icons-map';
 
-describe( '@elementor/site-navigation - iconsMap', () => {
+describe( '@refraction/site-navigation - iconsMap', () => {
 	afterEach( () => {
 		resetIconsMap();
 	} );

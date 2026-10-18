@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMemo, useRef } from 'react';
-import { useSelectedElementSettings } from '@elementor/editor-elements';
+import { useSelectedElementSettings } from '@refraction/editor-elements';
 import {
 	type CreateOptions,
 	extractValue,
@@ -12,7 +12,7 @@ import {
 	type QueryPropValue,
 	stringArrayPropTypeUtil,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { PlusIcon } from '@elementor/icons';
 import { Box, Grid, IconButton } from '@elementor/ui';
 import { __, sprintf } from '@wordpress/i18n';
@@ -42,7 +42,7 @@ export const QueryFilterRepeaterControl = createControl(
 	( {
 		allowedKeys,
 		keyConfig,
-		label = __( 'Filter', 'elementor' ),
+		label = __( 'Filter', 'refraction' ),
 		chipsPlaceholder,
 	}: QueryFilterRepeaterControlProps ) => {
 		const { propType, value, setValue } = useBoundProp( queryFilterArrayPropTypeUtil );
@@ -125,7 +125,7 @@ const AddFilterItemAction = ( {
 				disabled={ disabled }
 				onClick={ onClick }
 				/* Translators: %s: Aria label. */
-				aria-label={ sprintf( __( 'Add %s item', 'elementor' ), ariaLabel.toLowerCase() ) }
+				aria-label={ sprintf( __( 'Add %s item', 'refraction' ), ariaLabel.toLowerCase() ) }
 			>
 				<PlusIcon fontSize="tiny" />
 			</IconButton>
@@ -142,7 +142,7 @@ type ItemLabelProps = {
 
 const ItemLabel = ( { value, keyConfig }: ItemLabelProps ) => {
 	const itemKey = stringPropTypeUtil.extract( value?.value?.key );
-	const label = ( itemKey && keyConfig[ itemKey ]?.label ) || __( 'Item', 'elementor' );
+	const label = ( itemKey && keyConfig[ itemKey ]?.label ) || __( 'Item', 'refraction' );
 	const chipLabels = extractChipLabels( value?.value?.values );
 	const taxonomyLabels = extractTaxonomyLabels(
 		value?.value?.taxonomies,
@@ -228,7 +228,7 @@ const ItemContent = ( {
 			<PropProvider { ...propContext } setValue={ handleValueChange }>
 				<PopoverGridContainer flexWrap="wrap">
 					<Grid item xs={ 12 }>
-						<ControlFormLabel>{ __( 'Type', 'elementor' ) }</ControlFormLabel>
+						<ControlFormLabel>{ __( 'Type', 'refraction' ) }</ControlFormLabel>
 					</Grid>
 					<Grid item xs={ 12 }>
 						<PropKeyProvider bind="key">

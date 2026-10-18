@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor icon box widget.
+ * Refraction icon box widget.
  *
- * Elementor widget that displays an icon, a headline and a text.
+ * Refraction widget that displays an icon, a headline and a text.
  *
  * @since 1.0.0
  */
@@ -42,7 +42,7 @@ class Widget_Icon_Box extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Icon Box', 'elementor' );
+		return esc_html__( 'Icon Box', 'refraction' );
 	}
 
 	/**
@@ -107,14 +107,14 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_section(
 			'section_icon',
 			[
-				'label' => esc_html__( 'Icon Box', 'elementor' ),
+				'label' => esc_html__( 'Icon Box', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'selected_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'default' => [
@@ -127,15 +127,15 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'view',
 			[
-				'label' => esc_html__( 'View', 'elementor' ),
+				'label' => esc_html__( 'View', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'stacked' => esc_html__( 'Stacked', 'elementor' ),
-					'framed' => esc_html__( 'Framed', 'elementor' ),
+					'default' => esc_html__( 'Default', 'refraction' ),
+					'stacked' => esc_html__( 'Stacked', 'refraction' ),
+					'framed' => esc_html__( 'Framed', 'refraction' ),
 				],
 				'default' => 'default',
-				'prefix_class' => 'elementor-view-',
+				'prefix_class' => 'refraction-view-',
 				'condition' => [
 					'selected_icon[value]!' => '',
 				],
@@ -145,32 +145,32 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'shape',
 			[
-				'label' => esc_html__( 'Shape', 'elementor' ),
+				'label' => esc_html__( 'Shape', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'square' => esc_html__( 'Square', 'elementor' ),
-					'rounded' => esc_html__( 'Rounded', 'elementor' ),
-					'circle' => esc_html__( 'Circle', 'elementor' ),
+					'square' => esc_html__( 'Square', 'refraction' ),
+					'rounded' => esc_html__( 'Rounded', 'refraction' ),
+					'circle' => esc_html__( 'Circle', 'refraction' ),
 				],
 				'default' => 'circle',
 				'condition' => [
 					'view!' => 'default',
 					'selected_icon[value]!' => '',
 				],
-				'prefix_class' => 'elementor-shape-',
+				'prefix_class' => 'refraction-shape-',
 			]
 		);
 
 		$this->add_control(
 			'title_text',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
 				],
-				'default' => esc_html__( 'This is the heading', 'elementor' ),
-				'placeholder' => esc_html__( 'Enter your title', 'elementor' ),
+				'default' => esc_html__( 'This is the heading', 'refraction' ),
+				'placeholder' => esc_html__( 'Enter your title', 'refraction' ),
 				'label_block' => true,
 			]
 		);
@@ -178,13 +178,13 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'description_text',
 			[
-				'label' => esc_html__( 'Description', 'elementor' ),
+				'label' => esc_html__( 'Description', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
 				],
-				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor' ),
-				'placeholder' => esc_html__( 'Enter your description', 'elementor' ),
+				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ),
+				'placeholder' => esc_html__( 'Enter your description', 'refraction' ),
 				'rows' => 10,
 			]
 		);
@@ -192,7 +192,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -204,7 +204,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'title_size',
 			[
-				'label' => esc_html__( 'Title HTML Tag', 'elementor' ),
+				'label' => esc_html__( 'Title HTML Tag', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'h1' => 'H1',
@@ -226,7 +226,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_box',
 			[
-				'label' => esc_html__( 'Box', 'elementor' ),
+				'label' => esc_html__( 'Box', 'refraction' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -234,36 +234,36 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'position',
 			[
-				'label' => esc_html__( 'Icon Position', 'elementor' ),
+				'label' => esc_html__( 'Icon Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => 'block-start',
 				'mobile_default' => 'block-start',
 				'options' => [
 					'inline-start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'inline-end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 					'block-start' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'block-end' => [
-						'title' => esc_html__( 'Bottom', 'elementor' ),
+						'title' => esc_html__( 'Bottom', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'classes_dictionary' => [
 					'left' => is_rtl() ? 'inline-end' : 'inline-start',
 					'right' => is_rtl() ? 'inline-start' : 'inline-end',
 					'top' => 'block-start',
 					'bottom' => 'block-end',
 				],
-				'prefix_class' => 'elementor%s-position-',
+				'prefix_class' => 'refraction%s-position-',
 				'condition' => [
 					'selected_icon[value]!' => '',
 				],
@@ -273,19 +273,19 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'content_vertical_alignment',
 			[
-				'label' => esc_html__( 'Vertical Alignment', 'elementor' ),
+				'label' => esc_html__( 'Vertical Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'top' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'middle' => [
-						'title' => esc_html__( 'Middle', 'elementor' ),
+						'title' => esc_html__( 'Middle', 'refraction' ),
 						'icon' => 'eicon-v-align-middle',
 					],
 					'bottom' => [
-						'title' => esc_html__( 'Bottom', 'elementor' ),
+						'title' => esc_html__( 'Bottom', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -296,7 +296,7 @@ class Widget_Icon_Box extends Widget_Base {
 					'bottom' => 'end',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-box-wrapper' => 'align-items: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-box-wrapper' => 'align-items: {{VALUE}};',
 				],
 				'condition' => [
 					'selected_icon[value]!' => '',
@@ -308,33 +308,33 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'text_align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => esc_html__( 'Justified', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-box-wrapper' => 'text-align: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-box-wrapper' => 'text-align: {{VALUE}};',
 				],
 				'separator' => 'after',
 			]
@@ -343,7 +343,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_space',
 			[
-				'label' => esc_html__( 'Icon Spacing', 'elementor' ),
+				'label' => esc_html__( 'Icon Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
@@ -361,7 +361,7 @@ class Widget_Icon_Box extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-box-wrapper' => 'gap: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon-box-wrapper' => 'gap: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'selected_icon[value]!' => '',
@@ -372,7 +372,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'title_bottom_space',
 			[
-				'label' => esc_html__( 'Content Spacing', 'elementor' ),
+				'label' => esc_html__( 'Content Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -389,7 +389,7 @@ class Widget_Icon_Box extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-box-title' => 'margin-block-end: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon-box-title' => 'margin-block-end: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -399,7 +399,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'selected_icon[value]!' => '',
@@ -412,22 +412,22 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_tab(
 			'icon_colors_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'primary_color',
 			[
-				'label' => esc_html__( 'Primary Color', 'elementor' ),
+				'label' => esc_html__( 'Primary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
 				],
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}}.elementor-view-stacked .elementor-icon' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}.elementor-view-framed .elementor-icon, {{WRAPPER}}.elementor-view-default .elementor-icon' => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-stacked .refraction-icon' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-framed .refraction-icon, {{WRAPPER}}.refraction-view-default .refraction-icon' => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
 				],
 			]
 		);
@@ -435,15 +435,15 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'secondary_color',
 			[
-				'label' => esc_html__( 'Secondary Color', 'elementor' ),
+				'label' => esc_html__( 'Secondary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'condition' => [
 					'view!' => 'default',
 				],
 				'selectors' => [
-					'{{WRAPPER}}.elementor-view-framed .elementor-icon' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}.elementor-view-stacked .elementor-icon' => 'fill: {{VALUE}}; color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-framed .refraction-icon' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-stacked .refraction-icon' => 'fill: {{VALUE}}; color: {{VALUE}};',
 				],
 			]
 		);
@@ -453,23 +453,23 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_tab(
 			'icon_colors_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'hover_primary_color',
 			[
-				'label' => esc_html__( 'Primary Color', 'elementor' ),
+				'label' => esc_html__( 'Primary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}}.elementor-view-stacked:has(:hover) .elementor-icon,
-					 {{WRAPPER}}.elementor-view-stacked:has(:focus) .elementor-icon' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}.elementor-view-framed:has(:hover) .elementor-icon,
-					 {{WRAPPER}}.elementor-view-default:has(:hover) .elementor-icon,
-					 {{WRAPPER}}.elementor-view-framed:has(:focus) .elementor-icon,
-					 {{WRAPPER}}.elementor-view-default:has(:focus) .elementor-icon' => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-stacked:has(:hover) .refraction-icon,
+					 {{WRAPPER}}.refraction-view-stacked:has(:focus) .refraction-icon' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-framed:has(:hover) .refraction-icon,
+					 {{WRAPPER}}.refraction-view-default:has(:hover) .refraction-icon,
+					 {{WRAPPER}}.refraction-view-framed:has(:focus) .refraction-icon,
+					 {{WRAPPER}}.refraction-view-default:has(:focus) .refraction-icon' => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
 				],
 			]
 		);
@@ -477,17 +477,17 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'hover_secondary_color',
 			[
-				'label' => esc_html__( 'Secondary Color', 'elementor' ),
+				'label' => esc_html__( 'Secondary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'condition' => [
 					'view!' => 'default',
 				],
 				'selectors' => [
-					'{{WRAPPER}}.elementor-view-framed:has(:hover) .elementor-icon,
-					 {{WRAPPER}}.elementor-view-framed:has(:focus) .elementor-icon' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}.elementor-view-stacked:has(:hover) .elementor-icon,
-					 {{WRAPPER}}.elementor-view-stacked:has(:focus) .elementor-icon' => 'fill: {{VALUE}}; color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-framed:has(:hover) .refraction-icon,
+					 {{WRAPPER}}.refraction-view-framed:has(:focus) .refraction-icon' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}}.refraction-view-stacked:has(:hover) .refraction-icon,
+					 {{WRAPPER}}.refraction-view-stacked:has(:focus) .refraction-icon' => 'fill: {{VALUE}}; color: {{VALUE}};',
 				],
 			]
 		);
@@ -495,14 +495,14 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'hover_icon_colors_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
 					'unit' => 's',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon' => 'transition-duration: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon' => 'transition-duration: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -510,7 +510,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 			]
 		);
@@ -522,7 +522,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -532,7 +532,7 @@ class Widget_Icon_Box extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon' => 'font-size: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -540,11 +540,11 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon' => 'padding: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon' => 'padding: {{SIZE}}{{UNIT}};',
 				],
 				'range' => [
 					'px' => [
@@ -582,7 +582,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'rotate',
 			[
-				'label' => esc_html__( 'Rotate', 'elementor' ),
+				'label' => esc_html__( 'Rotate', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'deg', 'grad', 'rad', 'turn', 'custom' ],
 				'default' => [
@@ -596,7 +596,7 @@ class Widget_Icon_Box extends Widget_Base {
 				],
 				'device_args' => $rotate_device_args,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon i' => 'transform: rotate({{SIZE}}{{UNIT}});',
+					'{{WRAPPER}} .refraction-icon i' => 'transform: rotate({{SIZE}}{{UNIT}});',
 				],
 			]
 		);
@@ -604,11 +604,11 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'border_width',
 			[
-				'label' => esc_html__( 'Border Width', 'elementor' ),
+				'label' => esc_html__( 'Border Width', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 				'condition' => [
 					'view' => 'framed',
@@ -619,11 +619,11 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_responsive_control(
 			'border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 				'condition' => [
 					'view!' => 'default',
@@ -637,7 +637,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_content',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -645,7 +645,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'heading_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -655,7 +655,7 @@ class Widget_Icon_Box extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'title_typography',
-				'selector' => '{{WRAPPER}} .elementor-icon-box-title, {{WRAPPER}} .elementor-icon-box-title a',
+				'selector' => '{{WRAPPER}} .refraction-icon-box-title, {{WRAPPER}} .refraction-icon-box-title a',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
@@ -666,7 +666,7 @@ class Widget_Icon_Box extends Widget_Base {
 			Group_Control_Text_Stroke::get_type(),
 			[
 				'name' => 'text_stroke',
-				'selector' => '{{WRAPPER}} .elementor-icon-box-title',
+				'selector' => '{{WRAPPER}} .refraction-icon-box-title',
 			]
 		);
 
@@ -674,7 +674,7 @@ class Widget_Icon_Box extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'title_shadow',
-				'selector' => '{{WRAPPER}} .elementor-icon-box-title',
+				'selector' => '{{WRAPPER}} .refraction-icon-box-title',
 			]
 		);
 
@@ -683,18 +683,18 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_tab(
 			'icon_box_title_colors_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-box-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-box-title' => 'color: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
@@ -707,19 +707,19 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->start_controls_tab(
 			'icon_box_title_colors_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'hover_title_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}}:has(:hover) .elementor-icon-box-title,
-					 {{WRAPPER}}:has(:focus) .elementor-icon-box-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}}:has(:hover) .refraction-icon-box-title,
+					 {{WRAPPER}}:has(:focus) .refraction-icon-box-title' => 'color: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
@@ -730,14 +730,14 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'hover_title_color_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
 					'unit' => 's',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-box-title' => 'transition-duration: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon-box-title' => 'transition-duration: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -749,7 +749,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->add_control(
 			'heading_description',
 			[
-				'label' => esc_html__( 'Description', 'elementor' ),
+				'label' => esc_html__( 'Description', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -759,7 +759,7 @@ class Widget_Icon_Box extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'description_typography',
-				'selector' => '{{WRAPPER}} .elementor-icon-box-description',
+				'selector' => '{{WRAPPER}} .refraction-icon-box-description',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_TEXT,
 				],
@@ -770,18 +770,18 @@ class Widget_Icon_Box extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'description_shadow',
-				'selector' => '{{WRAPPER}} .elementor-icon-box-description',
+				'selector' => '{{WRAPPER}} .refraction-icon-box-description',
 			]
 		);
 
 		$this->add_control(
 			'description_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-box-description' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-box-description' => 'color: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_TEXT,
@@ -805,10 +805,10 @@ class Widget_Icon_Box extends Widget_Base {
 		$has_link = ! empty( $settings['link']['url'] );
 		$html_tag = $has_link ? 'a' : 'span';
 
-		$this->add_render_attribute( 'icon', 'class', 'elementor-icon' );
+		$this->add_render_attribute( 'icon', 'class', 'refraction-icon' );
 
 		if ( ! empty( $settings['hover_animation'] ) ) {
-			$this->add_render_attribute( 'icon', 'class', 'elementor-animation-' . $settings['hover_animation'] );
+			$this->add_render_attribute( 'icon', 'class', 'refraction-animation-' . $settings['hover_animation'] );
 		}
 
 		$has_icon = ! empty( $settings['selected_icon']['value'] );
@@ -836,7 +836,7 @@ class Widget_Icon_Box extends Widget_Base {
 			$this->add_render_attribute( 'i', 'aria-hidden', 'true' );
 		}
 
-		$this->add_render_attribute( 'description_text', 'class', 'elementor-icon-box-description' );
+		$this->add_render_attribute( 'description_text', 'class', 'refraction-icon-box-description' );
 
 		$this->add_inline_editing_attributes( 'title_text', 'none' );
 		$this->add_inline_editing_attributes( 'description_text' );
@@ -844,10 +844,10 @@ class Widget_Icon_Box extends Widget_Base {
 		$migrated = isset( $settings['__fa4_migrated']['selected_icon'] );
 		$is_new = ! isset( $settings['icon'] ) && Icons_Manager::is_migration_allowed();
 		?>
-		<div class="elementor-icon-box-wrapper">
+		<div class="refraction-icon-box-wrapper">
 
 			<?php if ( $has_icon ) : ?>
-			<div class="elementor-icon-box-icon">
+			<div class="refraction-icon-box-icon">
 				<<?php Utils::print_validated_html_tag( $html_tag ); ?> <?php $this->print_render_attribute_string( 'link' ); ?> <?php $this->print_render_attribute_string( 'icon' ); ?>>
 				<?php
 				if ( $is_new || $migrated ) {
@@ -861,10 +861,10 @@ class Widget_Icon_Box extends Widget_Base {
 			<?php endif; ?>
 
 			<?php if ( $has_content ) : ?>
-			<div class="elementor-icon-box-content">
+			<div class="refraction-icon-box-content">
 
 				<?php if ( ! Utils::is_empty( $settings['title_text'] ) ) : ?>
-					<<?php Utils::print_validated_html_tag( $settings['title_size'] ); ?> class="elementor-icon-box-title">
+					<<?php Utils::print_validated_html_tag( $settings['title_size'] ); ?> class="refraction-icon-box-title">
 						<<?php Utils::print_validated_html_tag( $html_tag ); ?> <?php $this->print_render_attribute_string( 'link' ); ?> <?php $this->print_render_attribute_string( 'title_text' ); ?>>
 							<?php echo wp_kses_post( $settings['title_text'] ); ?>
 						</<?php Utils::print_validated_html_tag( $html_tag ); ?>>
@@ -905,36 +905,36 @@ class Widget_Icon_Box extends Widget_Base {
 
 		var hasLink = settings.link?.url,
 			htmlTag = hasLink ? 'a' : 'span',
-			iconHTML = elementor.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' ),
-			migrated = elementor.helpers.isIconMigrated( settings, 'selected_icon' ),
-			titleSizeTag = elementor.helpers.validateHTMLTag( settings.title_size );
+			iconHTML = refraction.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' ),
+			migrated = refraction.helpers.isIconMigrated( settings, 'selected_icon' ),
+			titleSizeTag = refraction.helpers.validateHTMLTag( settings.title_size );
 
-		view.addRenderAttribute( 'icon', 'class', 'elementor-icon' );
+		view.addRenderAttribute( 'icon', 'class', 'refraction-icon' );
 
 		if ( '' !== settings.hover_animation ) {
-			view.addRenderAttribute( 'icon', 'class', 'elementor-animation-' + settings.hover_animation );
+			view.addRenderAttribute( 'icon', 'class', 'refraction-animation-' + settings.hover_animation );
 		}
 
 		if ( hasLink ) {
-			view.addRenderAttribute( 'link', 'href', elementor.helpers.sanitizeUrl( settings.link?.url ) );
+			view.addRenderAttribute( 'link', 'href', refraction.helpers.sanitizeUrl( settings.link?.url ) );
 			view.addRenderAttribute( 'icon', 'tabindex', '-1' );
 			if ( '' !== settings.title_text ) {
 				view.addRenderAttribute( 'icon', 'aria-label', settings.title_text );
 			}
 		}
 
-		view.addRenderAttribute( 'description_text', 'class', 'elementor-icon-box-description' );
+		view.addRenderAttribute( 'description_text', 'class', 'refraction-icon-box-description' );
 
 		view.addInlineEditingAttributes( 'title_text', 'none' );
 		view.addInlineEditingAttributes( 'description_text' );
 		#>
-		<div class="elementor-icon-box-wrapper">
+		<div class="refraction-icon-box-wrapper">
 
 			<# if ( hasIcon ) { #>
-			<div class="elementor-icon-box-icon">
+			<div class="refraction-icon-box-icon">
 				<{{{ htmlTag }}} {{{ view.getRenderAttributeString( 'link' ) }}} {{{ view.getRenderAttributeString( 'icon' ) }}}>
 					<# if ( iconHTML && iconHTML.rendered && ( ! settings.icon || migrated ) ) { #>
-						{{{ elementor.helpers.sanitize( iconHTML.value ) }}}
+						{{{ refraction.helpers.sanitize( iconHTML.value ) }}}
 					<# } else { #>
 						<i class="{{ _.escape( settings.icon ) }}" aria-hidden="true"></i>
 					<# } #>
@@ -943,18 +943,18 @@ class Widget_Icon_Box extends Widget_Base {
 			<# } #>
 
 			<# if ( hasContent ) { #>
-			<div class="elementor-icon-box-content">
+			<div class="refraction-icon-box-content">
 
 				<# if ( settings.title_text ) { #>
-				<{{{ titleSizeTag }}} class="elementor-icon-box-title">
+				<{{{ titleSizeTag }}} class="refraction-icon-box-title">
 					<{{{ htmlTag }}} {{{ view.getRenderAttributeString( 'link' ) }}} {{{ view.getRenderAttributeString( 'title_text' ) }}}>
-						{{{ elementor.helpers.sanitize( settings.title_text ) }}}
+						{{{ refraction.helpers.sanitize( settings.title_text ) }}}
 					</{{{ htmlTag }}}>
 				</{{{ titleSizeTag }}}>
 				<# } #>
 
 				<# if ( settings.description_text ) { #>
-				<p {{{ view.getRenderAttributeString( 'description_text' ) }}}>{{{ elementor.helpers.sanitize( settings.description_text ) }}}</p>
+				<p {{{ view.getRenderAttributeString( 'description_text' ) }}}>{{{ refraction.helpers.sanitize( settings.description_text ) }}}</p>
 				<# } #>
 
 			</div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Repeater, type SetRepeaterValuesMeta } from '@elementor/editor-controls';
+import { Repeater, type SetRepeaterValuesMeta } from '@refraction/editor-controls';
 import { InfoCircleFilledIcon, PlayerPlayIcon } from '@elementor/icons';
 import { Alert, AlertTitle, Box, IconButton, Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -63,11 +63,11 @@ export function InteractionsList( props: InteractionListProps ) {
 
 	const infotipContent = isMaxNumberOfInteractionsReached ? (
 		<Alert color="secondary" icon={ <InfoCircleFilledIcon /> } size="small">
-			<AlertTitle>{ __( 'Interactions', 'elementor' ) }</AlertTitle>
+			<AlertTitle>{ __( 'Interactions', 'refraction' ) }</AlertTitle>
 			<Box component="span">
 				{ __(
 					"You've reached the limit of 5 interactions for this element. Please remove an interaction before creating a new one.",
-					'elementor'
+					'refraction'
 				) }
 			</Box>
 		</Alert>
@@ -121,7 +121,7 @@ export function InteractionsList( props: InteractionListProps ) {
 			<Repeater
 				openOnAdd
 				openItem={ triggerCreateOnShowEmpty ? 0 : undefined }
-				label={ __( 'Interactions', 'elementor' ) }
+				label={ __( 'Interactions', 'refraction' ) }
 				values={ interactions.items }
 				setValues={ handleRepeaterChange }
 				showDuplicate={ false }
@@ -150,9 +150,9 @@ export function InteractionsList( props: InteractionListProps ) {
 						}
 					},
 					actions: ( value: InteractionItemPropValue ) => (
-						<Tooltip key="preview" placement="top" title={ __( 'Preview', 'elementor' ) }>
+						<Tooltip key="preview" placement="top" title={ __( 'Preview', 'refraction' ) }>
 							<IconButton
-								aria-label={ __( 'Play interaction', 'elementor' ) }
+								aria-label={ __( 'Play interaction', 'refraction' ) }
 								size="tiny"
 								onClick={ () => onPlayInteraction( extractString( value.value.interaction_id ) ) }
 							>

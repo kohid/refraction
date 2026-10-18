@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\Agents\AdminMenuItems;
+namespace Refraction\Modules\Agents\AdminMenuItems;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
-use Elementor\Modules\Agents\Module;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
+use Refraction\Modules\Agents\Module;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,7 +20,7 @@ class Editor_One_Agents_Ready_Menu implements Menu_Item_Third_Level_Interface, A
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_HOME_MENU_SLUG;
+		return Menu_Config::REFRACTION_HOME_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -32,7 +32,7 @@ class Editor_One_Agents_Ready_Menu implements Menu_Item_Third_Level_Interface, A
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Agent Ready', 'elementor' );
+		return esc_html__( 'Agent Ready', 'refraction' );
 	}
 
 	public function get_position(): int {

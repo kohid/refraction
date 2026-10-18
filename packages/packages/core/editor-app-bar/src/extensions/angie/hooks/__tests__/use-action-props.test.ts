@@ -5,11 +5,11 @@ import { useActionProps } from '../use-action-props';
 const mockIsAngieAvailable = jest.fn();
 const mockTrackEvent = jest.fn();
 
-jest.mock( '@elementor/editor-mcp', () => ( {
+jest.mock( '@refraction/editor-mcp', () => ( {
 	isAngieAvailable: () => mockIsAngieAvailable(),
 } ) );
 
-jest.mock( '@elementor/events', () => ( {
+jest.mock( '@refraction/events', () => ( {
 	trackEvent: ( ...args: unknown[] ) => mockTrackEvent( ...args ),
 } ) );
 
@@ -44,7 +44,7 @@ describe( 'useAngieActionProps', () => {
 
 		expect( dispatchSpy ).toHaveBeenCalledTimes( 1 );
 		const event = dispatchSpy.mock.calls[ 0 ][ 0 ] as CustomEvent;
-		expect( event.type ).toBe( 'elementor/editor/toggle-angie-guide' );
+		expect( event.type ).toBe( 'refraction/editor/toggle-angie-guide' );
 
 		dispatchSpy.mockRestore();
 	} );

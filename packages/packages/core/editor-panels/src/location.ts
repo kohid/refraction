@@ -1,5 +1,5 @@
 import { type ComponentType } from 'react';
-import { __registerFlushInjections, createLocation } from '@elementor/locations';
+import { __registerFlushInjections, createLocation } from '@refraction/locations';
 
 type PanelsInjectionMeta = {
 	keepMounted?: boolean;

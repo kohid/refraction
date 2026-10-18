@@ -1,4 +1,4 @@
-import { type PropValue } from '@elementor/editor-props';
+import { type PropValue } from '@refraction/editor-props';
 
 const CUSTOM_EFFECT_TYPE = 'custom-effect';
 const KEYFRAMES_TYPE = 'keyframes';

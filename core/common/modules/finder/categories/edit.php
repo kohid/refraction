@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Core\Common\Modules\Finder\Categories;
+namespace Refraction\Core\Common\Modules\Finder\Categories;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Common\Modules\Finder\Base_Category;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Common\Modules\Finder\Base_Category;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -27,7 +27,7 @@ class Edit extends Base_Category {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Edit', 'elementor' );
+		return esc_html__( 'Edit', 'refraction' );
 	}
 
 	public function get_id() {
@@ -77,7 +77,7 @@ class Edit extends Base_Category {
 			'posts_per_page' => '10',
 			'meta_query' => [
 				[
-					'key' => '_elementor_edit_mode',
+					'key' => '_refraction_edit_mode',
 					'value' => 'builder',
 				],
 				[
@@ -115,7 +115,7 @@ class Edit extends Base_Category {
 			$icon = 'document-file';
 
 			if ( $is_template ) {
-				$description = esc_html__( 'Template', 'elementor' ) . ' / ' . $description;
+				$description = esc_html__( 'Template', 'refraction' ) . ' / ' . $description;
 
 				$icon = 'post-title';
 			}

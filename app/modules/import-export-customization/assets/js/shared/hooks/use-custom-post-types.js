@@ -3,10 +3,10 @@ export function useCustomPostTypes( { include = [] } = {} ) {
 	const [ customPostTypes, setCustomPostTypes ] = useState( [] );
 
 	useEffect( () => {
-		const cpt = Object.assign( {}, elementorAppConfig[ 'import-export-customization' ]?.summaryTitles?.content?.customPostTypes || {} );
+		const cpt = Object.assign( {}, refractionAppConfig[ 'import-export-customization' ]?.summaryTitles?.content?.customPostTypes || {} );
 
 		if ( include.length ) {
-			Object.entries( elementorAppConfig[ 'import-export-customization' ]?.summaryTitles?.content || {} ).forEach( ( [ postType, post ] ) => {
+			Object.entries( refractionAppConfig[ 'import-export-customization' ]?.summaryTitles?.content || {} ).forEach( ( [ postType, post ] ) => {
 				if ( include.includes( postType ) ) {
 					cpt[ postType ] = post;
 				}

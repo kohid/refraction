@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { createMockElementType, renderWithTheme } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
-import { useElementChildren, useElementEditorSettings } from '@elementor/editor-elements';
-import { type PropType } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { useElementChildren, useElementEditorSettings } from '@refraction/editor-elements';
+import { type PropType } from '@refraction/editor-props';
 import { screen } from '@testing-library/react';
 
 import { mockElement } from '../../../../__tests__/utils';
 import { useElement } from '../../../../contexts/element-context';
 import { TabsControlContent } from '../tabs-control';
 
-jest.mock( '@elementor/editor-controls', () => {
-	const actual = jest.requireActual( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls', () => {
+	const actual = jest.requireActual( '@refraction/editor-controls' );
 
 	return {
 		...actual,
 		useBoundProp: jest.fn(),
 	};
 } );
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 jest.mock( '../../../../contexts/element-context' );
 
 describe( '<TabsControlContent />', () => {

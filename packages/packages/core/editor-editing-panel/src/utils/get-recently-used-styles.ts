@@ -1,6 +1,6 @@
-import { createPropsResolver, styleTransformersRegistry } from '@elementor/editor-canvas';
-import { getElementStyles } from '@elementor/editor-elements';
-import { getStylesSchema } from '@elementor/editor-styles';
+import { createPropsResolver, styleTransformersRegistry } from '@refraction/editor-canvas';
+import { getElementStyles } from '@refraction/editor-elements';
+import { getStylesSchema } from '@refraction/editor-styles';
 
 export const getRecentlyUsedList = async ( elementId: string ) => {
 	if ( ! elementId ) {

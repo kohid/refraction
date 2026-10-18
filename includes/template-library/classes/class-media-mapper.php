@@ -1,20 +1,20 @@
 <?php
-namespace Elementor\TemplateLibrary\Classes;
+namespace Refraction\TemplateLibrary\Classes;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor media mapper.
+ * Refraction media mapper.
  *
  * Maps media URLs to their corresponding filenames.
  */
 class Media_Mapper {
 
-	const TRANSIENT_KEY = 'elementor_media_mapping';
+	const TRANSIENT_KEY = 'refraction_media_mapping';
 
 	public static function set_mapping( $mapping, $media_dir = '' ) {
 		$mapping = is_array( $mapping ) ? $mapping : [];

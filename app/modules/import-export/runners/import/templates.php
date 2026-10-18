@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\App\Modules\ImportExport\Runners\Import;
+namespace Refraction\App\Modules\ImportExport\Runners\Import;
 
-use Elementor\App\Modules\ImportExport\Utils as ImportExportUtils;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
+use Refraction\App\Modules\ImportExport\Utils as ImportExportUtils;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
 
 class Templates extends Import_Runner_Base {
 	private $import_session_id;
@@ -71,11 +71,11 @@ class Templates extends Import_Runner_Base {
 			$this->set_session_post_meta( $attachment_id, $this->import_session_id );
 		};
 
-		add_filter( 'elementor/template_library/import_images/new_attachment', $new_attachment_callback );
+		add_filter( 'refraction/template_library/import_images/new_attachment', $new_attachment_callback );
 
 		$new_document->import( $template_data );
 
-		remove_filter( 'elementor/template_library/import_images/new_attachment', $new_attachment_callback );
+		remove_filter( 'refraction/template_library/import_images/new_attachment', $new_attachment_callback );
 
 		$document_id = $new_document->get_main_id();
 

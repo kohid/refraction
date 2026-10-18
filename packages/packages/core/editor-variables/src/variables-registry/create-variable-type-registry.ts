@@ -3,14 +3,14 @@ import {
 	type AnyTransformer,
 	stylesInheritanceTransformersRegistry,
 	styleTransformersRegistry,
-} from '@elementor/editor-canvas';
+} from '@refraction/editor-canvas';
 import {
 	type createPropUtils,
 	type PropType,
 	type PropTypeKey,
 	type PropTypeUtil,
 	type PropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { type SvgIconProps } from '@elementor/ui';
 
 import { type VariableManagerMenuAction } from '../components/variables-manager/ui/variable-edit-menu';

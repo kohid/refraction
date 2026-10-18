@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type SyntheticEvent, useCallback, useMemo, useState } from 'react';
-import { ControlFormLabel, PopoverContent } from '@elementor/editor-controls';
-import { useBreakpoints } from '@elementor/editor-responsive';
+import { ControlFormLabel, PopoverContent } from '@refraction/editor-controls';
+import { useBreakpoints } from '@refraction/editor-responsive';
 import { Autocomplete, Chip, Grid, Stack, TextField } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -70,7 +70,7 @@ export const InteractionSettings = ( { interaction, onChange }: InteractionSetti
 				<Grid item xs={ 12 }>
 					<Stack direction="column" gap={ 1 }>
 						<ControlFormLabel sx={ { width: '100%' } }>
-							{ __( 'Trigger on', 'elementor' ) }
+							{ __( 'Trigger on', 'refraction' ) }
 						</ControlFormLabel>
 						<Autocomplete
 							fullWidth

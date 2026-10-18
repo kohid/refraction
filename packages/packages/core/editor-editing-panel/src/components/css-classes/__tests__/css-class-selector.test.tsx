@@ -8,8 +8,8 @@ import {
 	mockHistoryManager,
 	renderWithTheme,
 } from 'test-utils';
-import { getElementLabel, getElementSetting, updateElementSettings } from '@elementor/editor-elements';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
+import { getElementLabel, getElementSetting, updateElementSettings } from '@refraction/editor-elements';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
 import {
 	ELEMENTS_STYLES_PROVIDER_KEY_PREFIX,
 	stylesRepository,
@@ -17,7 +17,7 @@ import {
 	useProviders,
 	useUserStylesCapability,
 	validateStyleLabel,
-} from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles-repository';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { __ } from '@wordpress/i18n';
 
@@ -26,9 +26,9 @@ import { ElementProvider } from '../../../contexts/element-context';
 import { StyleProvider } from '../../../contexts/style-context';
 import { CssClassSelector } from '../css-class-selector';
 
-jest.mock( '@elementor/editor-styles-repository', () => {
-	const mock = jest.createMockFromModule( '@elementor/editor-styles-repository' ) as object;
-	const actual = jest.requireActual( '@elementor/editor-styles-repository' );
+jest.mock( '@refraction/editor-styles-repository', () => {
+	const mock = jest.createMockFromModule( '@refraction/editor-styles-repository' ) as object;
+	const actual = jest.requireActual( '@refraction/editor-styles-repository' );
 
 	return {
 		...mock,
@@ -37,8 +37,8 @@ jest.mock( '@elementor/editor-styles-repository', () => {
 	};
 } );
 
-jest.mock( '@elementor/editor-elements' );
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-elements' );
+jest.mock( '@refraction/editor-documents', () => ( {
 	setDocumentModifiedStatus: jest.fn(),
 } ) );
 
@@ -605,14 +605,14 @@ describe( '<CssClassSelector />', () => {
 		const chipGroups = screen.getAllByRole( 'group' );
 
 		const chipMenus = chipGroups.map( ( chipGroup ) =>
-			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) )
+			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) )
 		);
 
 		// Assert.
 		chipGroups.forEach( ( chipGroup ) => {
 			expect( chipGroup ).toBeInTheDocument();
 			expect(
-				within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) )
+				within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) )
 			).toBeInTheDocument();
 		} );
 
@@ -631,14 +631,14 @@ describe( '<CssClassSelector />', () => {
 		const chipGroups = screen.getAllByRole( 'group' );
 
 		const chipMenus = chipGroups.map( ( chipGroup ) =>
-			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) )
+			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) )
 		);
 
 		// Assert.
 		chipGroups.forEach( ( chipGroup ) => {
 			expect( chipGroup ).toBeInTheDocument();
 			expect(
-				within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) )
+				within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) )
 			).toBeInTheDocument();
 		} );
 
@@ -663,7 +663,7 @@ describe( '<CssClassSelector />', () => {
 		const chipGroups = screen.getAllByRole( 'group' );
 
 		const chipMenus = chipGroups.map( ( chipGroup ) =>
-			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) )
+			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) )
 		);
 
 		// Act.
@@ -708,7 +708,7 @@ describe( '<CssClassSelector />', () => {
 		const chipGroups = screen.getAllByRole( 'group' );
 
 		const chipMenus = chipGroups.map( ( chipGroup ) =>
-			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) )
+			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) )
 		);
 
 		// Act - Open the CSS class menu.
@@ -858,7 +858,7 @@ describe( '<CssClassSelector />', () => {
 		const chipGroups = screen.getAllByRole( 'group' );
 
 		const chipMenus = chipGroups.map( ( chipGroup ) =>
-			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) )
+			within( chipGroup ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) )
 		);
 
 		fireEvent.click( chipMenus[ 0 ] );
@@ -918,7 +918,7 @@ describe( '<CssClassSelector />', () => {
 		// Act.
 		renderComponent( { active: 'local', appliedClasses: [ 'local' ] } );
 		const localChipMenu = within( screen.getAllByRole( 'group' )[ 0 ] ).getByLabelText(
-			__( 'Open CSS Class Menu', 'elementor' )
+			__( 'Open CSS Class Menu', 'refraction' )
 		);
 		fireEvent.click( localChipMenu );
 
@@ -968,7 +968,7 @@ describe( '<CssClassSelector />', () => {
 		);
 
 		const chipGroups = screen.getAllByRole( 'group' );
-		const chipMenuTrigger = within( chipGroups[ 0 ] ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) );
+		const chipMenuTrigger = within( chipGroups[ 0 ] ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) );
 		fireEvent.click( chipMenuTrigger );
 
 		const menu = screen.getByRole( 'menu' );
@@ -990,9 +990,9 @@ describe( '<CssClassSelector />', () => {
 			jest.mocked( stylesRepository.getProviderByKey ).mockReturnValue( localProvider );
 
 			// Act.
-			const localClass = screen.getByRole( 'group', { name: __( 'Edit Local', 'elementor' ) } );
+			const localClass = screen.getByRole( 'group', { name: __( 'Edit Local', 'refraction' ) } );
 			const classToRemoveMenuTrigger = within( localClass ).getByLabelText(
-				__( 'Open CSS Class Menu', 'elementor' )
+				__( 'Open CSS Class Menu', 'refraction' )
 			);
 
 			fireEvent.click( classToRemoveMenuTrigger );
@@ -1013,9 +1013,9 @@ describe( '<CssClassSelector />', () => {
 			jest.mocked( stylesRepository.getProviderByKey ).mockReturnValue( provider1 );
 
 			// Act.
-			const classToRemove = screen.getByRole( 'group', { name: __( 'Edit Provider-1-b', 'elementor' ) } );
+			const classToRemove = screen.getByRole( 'group', { name: __( 'Edit Provider-1-b', 'refraction' ) } );
 			const classToRemoveMenuTrigger = within( classToRemove ).getByLabelText(
-				__( 'Open CSS Class Menu', 'elementor' )
+				__( 'Open CSS Class Menu', 'refraction' )
 			);
 
 			fireEvent.click( classToRemoveMenuTrigger );
@@ -1052,9 +1052,9 @@ describe( '<CssClassSelector />', () => {
 			renderComponent( { active: 'provider-1-b', appliedClasses: [ 'local', 'provider-1-b', 'provider-1-a' ] } );
 
 			// Act.
-			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'elementor' ) } );
+			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'refraction' ) } );
 			const classToRenameMenuTrigger = within( classToRename ).getByLabelText(
-				__( 'Open CSS Class Menu', 'elementor' )
+				__( 'Open CSS Class Menu', 'refraction' )
 			);
 
 			fireEvent.click( classToRenameMenuTrigger );
@@ -1098,9 +1098,9 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'provider-1-b', appliedClasses: [ 'local', 'provider-1-b', 'provider-1-a' ] } );
 
-			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'elementor' ) } );
+			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'refraction' ) } );
 			const classToRenameMenuTrigger = within( classToRename ).getByLabelText(
-				__( 'Open CSS Class Menu', 'elementor' )
+				__( 'Open CSS Class Menu', 'refraction' )
 			);
 			fireEvent.click( classToRenameMenuTrigger );
 			const menu = screen.getByRole( 'menu' );
@@ -1160,9 +1160,9 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'provider-1-b', appliedClasses: [ 'local', 'provider-1-b', 'provider-1-a' ] } );
 
-			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'elementor' ) } );
+			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'refraction' ) } );
 			const classToRenameMenuTrigger = within( classToRename ).getByLabelText(
-				__( 'Open CSS Class Menu', 'elementor' )
+				__( 'Open CSS Class Menu', 'refraction' )
 			);
 
 			fireEvent.click( classToRenameMenuTrigger );
@@ -1237,9 +1237,9 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'provider-1-b', appliedClasses: [ 'local', 'provider-1-b', 'provider-1-a' ] } );
 
-			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'elementor' ) } );
+			const classToRename = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'refraction' ) } );
 			const classToRenameMenuTrigger = within( classToRename ).getByLabelText(
-				__( 'Open CSS Class Menu', 'elementor' )
+				__( 'Open CSS Class Menu', 'refraction' )
 			);
 
 			fireEvent.click( classToRenameMenuTrigger );
@@ -1259,7 +1259,7 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'local', appliedClasses: [ 'local', 'provider-1-b', 'provider-1-a' ] } );
 
-			const localClass = screen.getByRole( 'group', { name: __( 'Edit Local', 'elementor' ) } );
+			const localClass = screen.getByRole( 'group', { name: __( 'Edit Local', 'refraction' ) } );
 			const classToRemoveMenuTrigger = within( localClass ).getByLabelText( 'Open CSS Class Menu' );
 
 			fireEvent.click( classToRemoveMenuTrigger );
@@ -1298,8 +1298,8 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'provider-1-b', appliedClasses } );
 
-			const classChip = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'elementor' ) } );
-			const menuTrigger = within( classChip ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) );
+			const classChip = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'refraction' ) } );
+			const menuTrigger = within( classChip ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) );
 			fireEvent.click( menuTrigger );
 
 			const menu = screen.getByRole( 'menu' );
@@ -1315,8 +1315,8 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'local', appliedClasses: [ 'local', 'provider-1-b' ] } );
 
-			const localClass = screen.getByRole( 'group', { name: __( 'Edit Local', 'elementor' ) } );
-			const menuTrigger = within( localClass ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) );
+			const localClass = screen.getByRole( 'group', { name: __( 'Edit Local', 'refraction' ) } );
+			const menuTrigger = within( localClass ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) );
 			fireEvent.click( menuTrigger );
 
 			const menu = screen.getByRole( 'menu' );
@@ -1349,8 +1349,8 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'provider-1-b', setActive, appliedClasses } );
 
-			const classChip = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'elementor' ) } );
-			const menuTrigger = within( classChip ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) );
+			const classChip = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'refraction' ) } );
+			const menuTrigger = within( classChip ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) );
 			fireEvent.click( menuTrigger );
 
 			const menu = screen.getByRole( 'menu' );
@@ -1402,8 +1402,8 @@ describe( '<CssClassSelector />', () => {
 			// Act.
 			renderComponent( { active: 'provider-1-b', appliedClasses: [ 'local', 'provider-1-b', 'provider-1-a' ] } );
 
-			const classChip = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'elementor' ) } );
-			const menuTrigger = within( classChip ).getByLabelText( __( 'Open CSS Class Menu', 'elementor' ) );
+			const classChip = screen.getByRole( 'group', { name: __( 'Edit Provider-1-a', 'refraction' ) } );
+			const menuTrigger = within( classChip ).getByLabelText( __( 'Open CSS Class Menu', 'refraction' ) );
 			fireEvent.click( menuTrigger );
 
 			const menu = screen.getByRole( 'menu' );

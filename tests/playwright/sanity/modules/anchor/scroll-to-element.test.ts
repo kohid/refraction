@@ -26,7 +26,7 @@ test.describe( 'Scrolling tests in editor @scroll-to-element', () => {
 		await editor.selectElement( spacerID );
 		await editor.setSliderControlValue( 'space', '1500' );
 
-		const buttonElem = editor.getPreviewFrame().locator( `[data-id="${ buttonID }"] a.elementor-button-link` );
+		const buttonElem = editor.getPreviewFrame().locator( `[data-id="${ buttonID }"] a.refraction-button-link` );
 		await buttonElem.click();
 
 		const scrollToElem = editor.getPreviewFrame().locator( `[data-id="${ elemWithID }"]` );

@@ -1,4 +1,4 @@
-import { type UseQueryResult } from '@elementor/query';
+import { type UseQueryResult } from '@refraction/query';
 import { act, renderHook } from '@testing-library/react';
 
 import { type User } from '../types';

@@ -1,5 +1,5 @@
-import { type V1Document } from '@elementor/editor-documents';
-import { type V1Element, type V1ElementData } from '@elementor/editor-elements';
+import { type V1Document } from '@refraction/editor-documents';
+import { type V1Element, type V1ElementData } from '@refraction/editor-elements';
 
 import { type DocumentSaveStatus } from '../types';
 import { publishDraftComponentsInPageBeforeSave } from './publish-draft-components-in-page-before-save';

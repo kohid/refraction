@@ -1,6 +1,6 @@
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
 export default function GoProButton( props ) {
 	const baseClassName = 'e-app-go-pro-button',
@@ -27,5 +27,5 @@ GoProButton.defaultProps = {
 	color: 'cta',
 	target: '_blank',
 	rel: 'noopener noreferrer',
-	text: __( 'Upgrade Now', 'elementor' ),
+	text: __( 'Upgrade Now', 'refraction' ),
 };

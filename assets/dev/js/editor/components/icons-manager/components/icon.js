@@ -9,10 +9,10 @@ export default class Icon extends Component {
 		return (
 			// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
 			<div className={ this.props.containerClass } key={ this.props.keyID } onClick={ this.setSelected } filter={ this.props.data.filter }>
-				<div className="elementor-icons-manager__tab__item__content">
-					<i className={ 'elementor-icons-manager__tab__item__icon ' + this.props.className }>
+				<div className="refraction-icons-manager__tab__item__content">
+					<i className={ 'refraction-icons-manager__tab__item__icon ' + this.props.className }>
 					</i>
-					<div className={ 'elementor-icons-manager__tab__item__name' } title={ this.props.data.name }>{ this.props.data.name }</div>
+					<div className={ 'refraction-icons-manager__tab__item__name' } title={ this.props.data.name }>{ this.props.data.name }</div>
 				</div>
 			</div>
 		);

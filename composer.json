@@ -1,8 +1,8 @@
 {
-    "name": "elementor/elementor",
-    "description": "WordPress website builder, with no limits of design. A website builder that delivers high-end page designs and advanced capabilities, never before seen on WordPress.",
+    "name": "refraction/refraction",
+    "description": "Refraction - a local-first visual page builder for WordPress, based on Elementor (GPL-3.0-or-later).",
     "type": "project",
-    "license": "GNU General Public License v3.0",
+    "license": "GPL-3.0-or-later",
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.4",
@@ -80,7 +80,7 @@
     },
     "authors": [
         {
-            "name": "Elementor team"
+            "name": "Refraction contributors"
         }
     ]
 }

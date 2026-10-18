@@ -1,5 +1,5 @@
-import { createPropUtils, type PropTypeUtil, type PropValue } from '@elementor/editor-props';
-import { z, type ZodRawShape, type ZodTypeAny } from '@elementor/schema';
+import { createPropUtils, type PropTypeUtil, type PropValue } from '@refraction/editor-props';
+import { z, type ZodRawShape, type ZodTypeAny } from '@refraction/schema';
 
 type Params = ZodRawShape;
 

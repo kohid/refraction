@@ -1,7 +1,7 @@
 import { Link, LocationProvider } from '@reach/router';
-import router from '@elementor/router';
+import router from '@refraction/router';
 
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
 import './inline-link.scss';
 

@@ -137,7 +137,7 @@ export default function Font( props ) {
 			onClick={ onClick }
 		>
 			<Title>{ title }</Title>
-			<Content style={ generateStyle }>{ __( 'The five boxing wizards jump quickly.', 'elementor' ) }</Content>
+			<Content style={ generateStyle }>{ __( 'The five boxing wizards jump quickly.', 'refraction' ) }</Content>
 		</ElementWrapper>
 	);
 }

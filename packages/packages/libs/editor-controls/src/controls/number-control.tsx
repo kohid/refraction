@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef, useState } from 'react';
-import { numberPropTypeUtil, type PropType } from '@elementor/editor-props';
+import { numberPropTypeUtil, type PropType } from '@refraction/editor-props';
 import { InputAdornment, Typography } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

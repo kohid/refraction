@@ -41,17 +41,17 @@ export const IntroductionModal = ( { open, handleClose, title, children }: Intro
 						/>
 					}
 					label={
-						<Typography variant={ 'body2' }>{ __( "Don't show this again", 'elementor' ) }</Typography>
+						<Typography variant={ 'body2' }>{ __( "Don't show this again", 'refraction' ) }</Typography>
 					}
 				/>
 				<Button
 					size={ 'medium' }
 					variant="contained"
 					sx={ { minWidth: '135px' } }
-					aria-label={ __( 'Got it introduction', 'elementor' ) }
+					aria-label={ __( 'Got it introduction', 'refraction' ) }
 					onClick={ () => handleClose( shouldShowAgain ) }
 				>
-					{ __( 'Got it', 'elementor' ) }
+					{ __( 'Got it', 'refraction' ) }
 				</Button>
 			</DialogActions>
 		</Dialog>

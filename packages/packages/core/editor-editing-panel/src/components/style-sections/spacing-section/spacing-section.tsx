@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LinkedDimensionsControl } from '@elementor/editor-controls';
+import { LinkedDimensionsControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
@@ -7,8 +7,8 @@ import { useDirection } from '../../../hooks/use-direction';
 import { PanelDivider } from '../../panel-divider';
 import { SectionContent } from '../../section-content';
 
-const MARGIN_LABEL = __( 'Margin', 'elementor' );
-const PADDING_LABEL = __( 'Padding', 'elementor' );
+const MARGIN_LABEL = __( 'Margin', 'refraction' );
+const PADDING_LABEL = __( 'Padding', 'refraction' );
 
 export const SpacingSection = () => {
 	const { isSiteRtl } = useDirection();

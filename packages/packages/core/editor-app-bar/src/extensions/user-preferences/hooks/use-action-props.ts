@@ -1,7 +1,7 @@
 import {
 	__privateOpenRoute as openRoute,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { ToggleRightIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -12,15 +12,15 @@ export default function useActionProps(): ToggleActionProps {
 
 	return {
 		icon: ToggleRightIcon,
-		title: __( 'User Preferences', 'elementor' ),
+		title: __( 'User Preferences', 'refraction' ),
 		onClick: () => {
 			const extendedWindow = window as unknown as ExtendedWindow;
-			const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+			const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 			if ( config ) {
-				extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.userPreferences, {
+				extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.userPreferences, {
 					location: config.locations.topBar,
-					secondaryLocation: config.secondaryLocations.elementorLogo,
+					secondaryLocation: config.secondaryLocations.refractionLogo,
 					trigger: config.triggers.click,
 					element: config.elements.link,
 				} );

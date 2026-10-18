@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { UrlControl } from '@elementor/editor-controls';
+import { UrlControl } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 const propType = createMockPropType( { kind: 'plain' } );

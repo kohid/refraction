@@ -1,20 +1,20 @@
 <?php
-namespace Elementor\TemplateLibrary;
+namespace Refraction\TemplateLibrary;
 
-use Elementor\Controls_Stack;
-use Elementor\Core\Settings\Page\Model;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Controls_Stack;
+use Refraction\Core\Settings\Page\Model;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor template library source base.
+ * Refraction template library source base.
  *
- * Elementor template library source base handler class is responsible for
- * initializing all the methods controlling the source of Elementor templates.
+ * Refraction template library source base handler class is responsible for
+ * initializing all the methods controlling the source of Refraction templates.
  *
  * @since 1.0.0
  * @abstract
@@ -207,7 +207,7 @@ abstract class Source_Base {
 	/**
 	 * Get current user meta.
 	 *
-	 * Retrieve Elementor meta data for the current user.
+	 * Retrieve Refraction meta data for the current user.
 	 *
 	 * @since 1.9.0
 	 * @access public
@@ -263,13 +263,13 @@ abstract class Source_Base {
 	/**
 	 * Replace elements IDs.
 	 *
-	 * For any given Elementor content/data, replace the IDs with new randomly
+	 * For any given Refraction content/data, replace the IDs with new randomly
 	 * generated IDs.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param array $content Any type of Elementor data.
+	 * @param array $content Any type of Refraction data.
 	 *
 	 * @return mixed Iterated data.
 	 */
@@ -277,14 +277,14 @@ abstract class Source_Base {
 		return Plugin::$instance->db->iterate_data( $content, function( $element ) {
 			$element['id'] = Utils::generate_random_string();
 
-			return apply_filters( 'elementor/document/element/replace_id', $element );
+			return apply_filters( 'refraction/document/element/replace_id', $element );
 		} );
 	}
 
 	/**
-	 * Get Elementor library user meta prefix.
+	 * Get Refraction library user meta prefix.
 	 *
-	 * Retrieve user meta prefix used to save Elementor data.
+	 * Retrieve user meta prefix used to save Refraction data.
 	 *
 	 * @since 1.9.0
 	 * @access protected
@@ -292,7 +292,7 @@ abstract class Source_Base {
 	 * @return string User meta prefix.
 	 */
 	protected function get_user_meta_prefix() {
-		return 'elementor_library_' . $this->get_id();
+		return 'refraction_library_' . $this->get_id();
 	}
 
 	/**
@@ -397,7 +397,7 @@ abstract class Source_Base {
 
 	/**
 	 * @param int $template_id
-	 * @return \Elementor\Core\Base\Document|\WP_Error
+	 * @return \Refraction\Core\Base\Document|\WP_Error
 	 */
 	public function create_document_for_preview( int $template_id ) {
 		return new \WP_Error( 'template_error', 'Can not generate preview for this source' );
@@ -477,7 +477,7 @@ abstract class Source_Base {
 		$content = $this->process_export_import_content( $content, 'on_import' );
 
 		$content = apply_filters(
-			"elementor/template_library/sources/{$this->get_id()}/import/elements",
+			"refraction/template_library/sources/{$this->get_id()}/import/elements",
 			$content
 		);
 

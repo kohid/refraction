@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Core\Page_Assets;
+namespace Refraction\Core\Page_Assets;
 
-use Elementor\Core\Base\Module;
-use Elementor\Plugin;
-use Elementor\Control_Animation;
-use Elementor\Control_Exit_Animation;
-use Elementor\Control_Hover_Animation;
+use Refraction\Core\Base\Module;
+use Refraction\Plugin;
+use Refraction\Control_Animation;
+use Refraction\Control_Exit_Animation;
+use Refraction\Control_Hover_Animation;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor assets loader.
+ * Refraction assets loader.
  *
  * A class that is responsible for conditionally enqueuing styles and script assets that were pre-enabled.
  *
@@ -38,12 +38,12 @@ class Loader extends Module {
 		$styles = [
 			'e-shapes' => [
 				'src' => $this->get_css_assets_url( 'shapes', 'assets/css/conditionals/' ),
-				'version' => ELEMENTOR_VERSION,
+				'version' => REFRACTION_VERSION,
 				'dependencies' => [],
 			],
 			'e-swiper' => [
 				'src' => $this->get_css_assets_url( 'e-swiper', 'assets/css/conditionals/' ),
-				'version' => ELEMENTOR_VERSION,
+				'version' => REFRACTION_VERSION,
 				'dependencies' => [ 'swiper' ],
 			],
 			'swiper' => [
@@ -83,7 +83,7 @@ class Loader extends Module {
 
 			$styles[ 'e-animation-' . $animation ] = [
 				'src' => $this->get_css_assets_url( $style_prefix . $animation, 'assets/lib/animations/styles/' ),
-				'version' => ELEMENTOR_VERSION,
+				'version' => REFRACTION_VERSION,
 				'dependencies' => [],
 			];
 		}

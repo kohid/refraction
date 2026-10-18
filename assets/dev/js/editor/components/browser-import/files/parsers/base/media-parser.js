@@ -1,4 +1,4 @@
-import FileParserBase from 'elementor-editor/components/browser-import/files/file-parser-base';
+import FileParserBase from 'refraction-editor/components/browser-import/files/file-parser-base';
 
 /**
  * @abstract
@@ -19,7 +19,7 @@ export class MediaParser extends FileParserBase {
 				...options,
 			},
 		} ).catch( ( result ) => {
-			elementor.notifications.showToast( {
+			refraction.notifications.showToast( {
 				message: result.message,
 			} );
 

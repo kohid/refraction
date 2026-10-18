@@ -1,7 +1,7 @@
 import { createMockPropType, createMockStyleDefinition } from 'test-utils';
-import type { PlainPropType } from '@elementor/editor-props';
-import type { StyleDefinitionVariant } from '@elementor/editor-styles';
-import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@elementor/editor-styles-repository';
+import type { PlainPropType } from '@refraction/editor-props';
+import type { StyleDefinitionVariant } from '@refraction/editor-styles';
+import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@refraction/editor-styles-repository';
 
 import { type SnapshotPropValue } from '../types';
 import { createMockSnapshotField } from './mock-utils';

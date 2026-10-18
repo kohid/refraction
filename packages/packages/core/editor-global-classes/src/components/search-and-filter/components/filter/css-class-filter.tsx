@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { PopoverBody, PopoverHeader } from '@elementor/editor-ui';
+import { PopoverBody, PopoverHeader } from '@refraction/editor-ui';
 import { FilterIcon } from '@elementor/icons';
 import { bindPopover, bindToggle, Divider, Popover, ToggleButton, Tooltip, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -31,7 +31,7 @@ export const CssClassFilter = () => {
 
 	return (
 		<>
-			<Tooltip title={ __( 'Filters', 'elementor' ) } placement="top">
+			<Tooltip title={ __( 'Filters', 'refraction' ) } placement="top">
 				<ToggleButton
 					value="filter"
 					size={ 'tiny' }
@@ -62,13 +62,13 @@ export const CssClassFilter = () => {
 									<ClearIconButton
 										trigger="menu"
 										key="clear-all-button"
-										tooltipText={ __( 'Clear all', 'elementor' ) }
+										tooltipText={ __( 'Clear all', 'refraction' ) }
 									/>,
 							  ]
 							: []
 					}
 					onClose={ popupState.close }
-					title={ __( 'Filters', 'elementor' ) }
+					title={ __( 'Filters', 'refraction' ) }
 					icon={ <FilterIcon fontSize={ 'tiny' } /> }
 				/>
 				<Divider

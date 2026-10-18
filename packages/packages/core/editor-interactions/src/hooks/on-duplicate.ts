@@ -1,5 +1,5 @@
-import { type ElementID, getAllDescendants, getContainer, type V1Element } from '@elementor/editor-elements';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { type ElementID, getAllDescendants, getContainer, type V1Element } from '@refraction/editor-elements';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
 import type { ElementInteractions } from '../types';
 import { createString } from '../utils/prop-value-utils';
@@ -17,7 +17,7 @@ export function initCleanInteractionIdsOnDuplicate() {
 			cleanInteractionIdsRecursive( container.id );
 		} );
 
-		window.dispatchEvent( new CustomEvent( 'elementor/element/update_interactions' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/element/update_interactions' ) );
 	} );
 }
 

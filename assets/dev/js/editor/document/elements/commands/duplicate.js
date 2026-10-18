@@ -17,13 +17,13 @@ export class Duplicate extends $e.modules.editor.document.CommandHistoryBase {
 			result = [];
 		let at = containers[ containers.length - 1 ].view._index;
 
-		if ( ! elementor.selection.isSameType() ) {
-			elementor.notifications.showToast( {
-				message: __( 'That didn’t work. Try duplicating one kind of element at a time.', 'elementor' ),
+		if ( ! refraction.selection.isSameType() ) {
+			refraction.notifications.showToast( {
+				message: __( 'That didn’t work. Try duplicating one kind of element at a time.', 'refraction' ),
 				buttons: [
 					{
 						name: 'got_it',
-						text: __( 'Got it', 'elementor' ),
+						text: __( 'Got it', 'refraction' ),
 					},
 				],
 			} );

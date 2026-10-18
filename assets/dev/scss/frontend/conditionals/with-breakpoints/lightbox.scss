@@ -1,7 +1,7 @@
 @import "../../../helpers/variables";
 @import "../../../frontend/breakpoints/proxy";
 
-:where(.elementor-lightbox) {
+:where(.refraction-lightbox) {
 	--lightbox-ui-color: #{$slides_gui};
 	--lightbox-ui-color-hover: #fff;
 	--lightbox-text-color: var(--lightbox-ui-color);
@@ -9,9 +9,9 @@
 	--lightbox-navigation-icons-size: 25px;
 }
 
-.elementor-lightbox {
+.refraction-lightbox {
 
-	&:not(.elementor-popup-modal) {
+	&:not(.refraction-popup-modal) {
 
 		.dialog-header,
 		.dialog-message {
@@ -60,7 +60,7 @@
 	}
 
 	.dialog-lightbox-close-button,
-	.elementor-swiper-button {
+	.refraction-swiper-button {
 		color: var(--lightbox-ui-color);
 		transition: $transition-hover;
 		opacity: 1;
@@ -82,7 +82,7 @@
 		height: 100%;
 	}
 
-	.elementor-lightbox-item {
+	.refraction-lightbox-item {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -97,7 +97,7 @@
 		}
 	}
 
-	.elementor-lightbox-image {
+	.refraction-lightbox-image {
 		max-height: 100%;
 		user-select: none;
 
@@ -109,21 +109,21 @@
 		}
 	}
 
-	.elementor-lightbox-image {
+	.refraction-lightbox-image {
 		box-shadow: 0 0 30px rgba( 0,0,0,0.3 ), 0 0 8px -5px rgba( 0,0,0,0.3 );
 		border-radius: 2px;
 	}
 
-	.elementor-video-container {
+	.refraction-video-container {
 		width: 100%;
 		position: absolute;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 
-		.elementor-video-square,
-		.elementor-video-landscape,
-		.elementor-video-portrait {
+		.refraction-video-square,
+		.refraction-video-landscape,
+		.refraction-video-portrait {
 			width: 100%;
 			height: 100%;
 			margin: auto;
@@ -139,7 +139,7 @@
 			}
 		}
 
-		.elementor-video-square {
+		.refraction-video-square {
 
 			iframe,
 			video {
@@ -148,7 +148,7 @@
 			}
 		}
 
-		.elementor-video-landscape {
+		.refraction-video-landscape {
 
 			iframe,
 			video {
@@ -158,7 +158,7 @@
 			}
 		}
 
-		.elementor-video-portrait {
+		.refraction-video-portrait {
 
 			iframe,
 			video {
@@ -169,12 +169,12 @@
 
 		@media (min-width: $screen-tablet-next) {
 
-			.elementor-video-landscape {
+			.refraction-video-landscape {
 				width: 85vw;
 				max-height: 85vh;
 			}
 
-			.elementor-video-portrait {
+			.refraction-video-portrait {
 				height: 85vh;
 				max-width: 85vw;
 			}
@@ -182,12 +182,12 @@
 
 		@media (max-width: $screen-tablet-max) {
 
-			.elementor-video-landscape {
+			.refraction-video-landscape {
 				width: 95vw;
 				max-height: 95vh;
 			}
 
-			.elementor-video-portrait {
+			.refraction-video-portrait {
 				height: 95vh;
 				max-width: 95vw;
 			}
@@ -196,7 +196,7 @@
 
 	.swiper {
 
-		.elementor-swiper-button {
+		.refraction-swiper-button {
 
 			&-prev {
 				left: 0;
@@ -213,7 +213,7 @@
 		}
 	}
 
-	.elementor-swiper-button {
+	.refraction-swiper-button {
 		&:focus {
 			outline-width: 1px;
 		}
@@ -291,7 +291,7 @@
 	}
 }
 
-.elementor-slideshow {
+.refraction-slideshow {
 	&__counter {
 		color: currentColor;
 		font-size: .75em;
@@ -347,11 +347,11 @@
 			}
 		}
 
-		.elementor-slideshow__counter {
+		.refraction-slideshow__counter {
 			margin-inline-end: auto;
 		}
 
-		.elementor-icon-share {
+		.refraction-icon-share {
 			z-index: 5;
 		}
 	}
@@ -365,7 +365,7 @@
 		transition: background-color 400ms;
 
 		// This is to overcome a specificity override by Theme Style
-		.elementor-slideshow__share-links a {
+		.refraction-slideshow__share-links a {
 			color: $gray-darkest;
 		}
 	}
@@ -445,14 +445,14 @@
 	}
 
 	&--ui-hidden {
-		.elementor-slideshow {
+		.refraction-slideshow {
 			&__header, &__footer {
 				opacity: 0;
 				pointer-events: none;
 			}
 		}
 
-		.elementor-swiper-button {
+		.refraction-swiper-button {
 			&-prev, &-next {
 				opacity: 0;
 			}
@@ -460,19 +460,19 @@
 	}
 
 	&--fullscreen-mode {
-		.elementor-video-container {
+		.refraction-video-container {
 			width: 100%;
 		}
 	}
 
 	&--zoom-mode {
-		.elementor-slideshow {
+		.refraction-slideshow {
 			&__header, &__footer {
 				background-color: rgba(0, 0, 0, 0.5);
 			}
 		}
 
-		.elementor-swiper-button {
+		.refraction-swiper-button {
 			&-prev, &-next {
 				opacity: 0;
 				pointer-events: none;
@@ -482,7 +482,7 @@
 
 	&--share-mode {
 
-		.elementor-slideshow {
+		.refraction-slideshow {
 
 			&__share-menu {
 				top: 0;

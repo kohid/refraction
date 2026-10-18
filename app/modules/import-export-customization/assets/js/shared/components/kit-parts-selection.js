@@ -3,7 +3,7 @@ import { Box, Typography, Stack, Checkbox, FormControlLabel, Button, Tooltip } f
 import { AlertTriangleFilledIcon } from '@elementor/icons';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 import kitContentData from '../kit-content-data';
 import useContextDetection from '../hooks/use-context-detection';
 import { useClassesVariablesLimits } from '../hooks/use-classes-variables-limits';
@@ -11,7 +11,7 @@ import { ReExportBanner } from './re-export-banner';
 import { UpgradeVersionBanner } from './upgrade-version-banner';
 
 function isExperimentActive( experimentName ) {
-	const common = typeof globalThis !== 'undefined' ? globalThis.elementorCommon : undefined;
+	const common = typeof globalThis !== 'undefined' ? globalThis.refractionCommon : undefined;
 	return !! common?.config?.experimentalFeatures?.[ experimentName ];
 }
 
@@ -94,7 +94,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 	};
 
 	const isDisabled = ( item ) => {
-		if ( item.data.features?.locked && ! elementorAppConfig.hasPro ) {
+		if ( item.data.features?.locked && ! refractionAppConfig.hasPro ) {
 			return true;
 		}
 
@@ -115,7 +115,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 	};
 
 	const getDialogComponent = ( item ) => {
-		const reg = window.elementorModules?.importExport?.customizationDialogsRegistry;
+		const reg = window.refractionModules?.importExport?.customizationDialogsRegistry;
 		const registered = reg?.get?.( item.type );
 		return registered?.component || item.dialog;
 	};
@@ -134,7 +134,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 		);
 
 		return isLockedFeaturesNoPro ? (
-			<Tooltip title={ item.data.features?.tooltip || __( 'This feature requires Elementor Pro', 'elementor' ) } arrow placement="top">
+			<Tooltip title={ item.data.features?.tooltip || __( 'This feature requires Refraction Pro', 'refraction' ) } arrow placement="top">
 				{ description }
 			</Tooltip>
 		) : description;
@@ -177,7 +177,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 					data-type={ item.type }
 					disabled={ isEditDisabled( item ) }
 				>
-					{ __( 'Upgrade', 'elementor' ) }
+					{ __( 'Upgrade', 'refraction' ) }
 				</Button>
 			);
 		}
@@ -191,7 +191,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 					data-type={ item.type }
 					disabled={ isEditDisabled( item ) }
 				>
-					{ __( 'Edit', 'elementor' ) }
+					{ __( 'Edit', 'refraction' ) }
 				</Button>
 			);
 		}
@@ -205,7 +205,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 					data-type={ item.type }
 					disabled={ isEditDisabled( item ) }
 				>
-					{ __( 'Edit', 'elementor' ) }
+					{ __( 'Edit', 'refraction' ) }
 				</Button>
 			) : (
 				<Typography
@@ -213,7 +213,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 					color="text.disabled"
 					sx={ { alignSelf: 'center' } }
 				>
-					{ __( 'Not exported', 'elementor' ) }
+					{ __( 'Not exported', 'refraction' ) }
 				</Typography>
 			);
 	};
@@ -223,11 +223,11 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 			{ contextData?.isOldExport && (
 				<ReExportBanner />
 			) }
-			{ contextData?.isOldElementorVersion && (
+			{ contextData?.isOldRefractionVersion && (
 				<UpgradeVersionBanner />
 			) }
 			{ kitContentData.map( ( item ) => {
-				const isLockedFeaturesNoPro = item.data.features?.locked && ! elementorAppConfig.hasPro;
+				const isLockedFeaturesNoPro = item.data.features?.locked && ! refractionAppConfig.hasPro;
 				const disabled = isDisabled( item );
 				const DialogComponent = getDialogComponent( item );
 
@@ -250,7 +250,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 										{ renderCheckboxControl( item, disabled ) }
 										{ 'settings' === item.type && hasSettingsLimitWarning && (
 											<Tooltip
-												title={ __( 'Limit exceeded. Click \'Edit\' to review conflicts or override existing items', 'elementor' ) }
+												title={ __( 'Limit exceeded. Click \'Edit\' to review conflicts or override existing items', 'refraction' ) }
 												placement="top"
 												arrow
 											>
@@ -278,7 +278,7 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 								handleSaveChanges={ handleSaveCustomization }
 								isImport={ isImport }
 								isOldExport={ contextData.isOldExport }
-								isOldElementorVersion={ contextData.isOldElementorVersion }
+								isOldRefractionVersion={ contextData.isOldRefractionVersion }
 								isCloudKitsEligible={ isCloudKitsEligible }
 								showMediaFormatValidation={ showMediaFormatValidation }
 							/>

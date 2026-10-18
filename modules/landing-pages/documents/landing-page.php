@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\LandingPages\Documents;
+namespace Refraction\Modules\LandingPages\Documents;
 
-use Elementor\Core\DocumentTypes\PageBase;
-use Elementor\Modules\LandingPages\Module as Landing_Pages_Module;
-use Elementor\Modules\Library\Traits\Library;
-use Elementor\Modules\PageTemplates\Module as Page_Templates_Module;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\DocumentTypes\PageBase;
+use Refraction\Modules\LandingPages\Module as Landing_Pages_Module;
+use Refraction\Modules\Library\Traits\Library;
+use Refraction\Modules\PageTemplates\Module as Page_Templates_Module;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -43,7 +43,7 @@ class Landing_Page extends PageBase {
 	 * @static
 	 */
 	public static function get_title() {
-		return esc_html__( 'Landing Page', 'elementor' );
+		return esc_html__( 'Landing Page', 'refraction' );
 	}
 
 	/**
@@ -51,7 +51,7 @@ class Landing_Page extends PageBase {
 	 * @static
 	 */
 	public static function get_plural_title() {
-		return esc_html__( 'Landing Pages', 'elementor' );
+		return esc_html__( 'Landing Pages', 'refraction' );
 	}
 
 	public static function get_create_url() {
@@ -61,7 +61,7 @@ class Landing_Page extends PageBase {
 	/**
 	 * Save Document.
 	 *
-	 * Save an Elementor document.
+	 * Save a Refraction document.
 	 *
 	 * @since 3.1.0
 	 * @access public
@@ -89,7 +89,7 @@ class Landing_Page extends PageBase {
 	 * @access public
 	 */
 	public function admin_columns_content( $column_name ) {
-		if ( 'elementor_library_type' === $column_name ) {
+		if ( 'refraction_library_type' === $column_name ) {
 			$this->print_admin_column_type();
 		}
 	}

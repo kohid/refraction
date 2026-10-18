@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor exit animation control.
+ * Refraction exit animation control.
  *
  * A control for creating exit animation. Displays a select box
  * with the available exit animation effects @see Control_Exit_Animation::get_animations() .
@@ -49,13 +49,13 @@ class Control_Exit_Animation extends Control_Animation {
 		 * Filters the animations list displayed in the exit animations control.
 		 *
 		 * This hook can be used to register new animations in addition to the
-		 * basic Elementor exit animations.
+		 * basic Refraction exit animations.
 		 *
 		 * @since 2.5.0
 		 *
 		 * @param array $additional_animations Additional animations array.
 		 */
-		$additional_animations = apply_filters( 'elementor/controls/exit-animations/additional_animations', $additional_animations );
+		$additional_animations = apply_filters( 'refraction/controls/exit-animations/additional_animations', $additional_animations );
 
 		return array_merge( static::get_default_animations(), $additional_animations );
 	}

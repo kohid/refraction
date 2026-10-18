@@ -3,7 +3,7 @@ import { createMockDocument, renderWithTheme } from 'test-utils';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useNavigateToDocument as useNavigateToDocument,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import useCreatePage from '../../../hooks/use-create-page';
@@ -12,7 +12,7 @@ import useUser from '../../../hooks/use-user';
 import { type RecentPost } from '../../../types';
 import RecentlyEdited from '../recently-edited';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useHostDocument: jest.fn(),
 	__useNavigateToDocument: jest.fn(),
@@ -40,7 +40,7 @@ jest.mock( '../../../hooks/use-user', () => ( {
 	__esModule: true,
 } ) );
 
-describe( '@elementor/recently-edited - Top bar add new page', () => {
+describe( '@refraction/recently-edited - Top bar add new page', () => {
 	beforeEach( () => {
 		jest.mocked( useActiveDocument ).mockReturnValue( createMockDocument() );
 	} );

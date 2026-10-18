@@ -1,8 +1,8 @@
 import { type Dispatch, type SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
-import { type BreakpointId, useBreakpoints } from '@elementor/editor-responsive';
-import { isClassState, type StyleDefinition, type StyleDefinitionClassState } from '@elementor/editor-styles';
-import { type StylesProvider, stylesRepository } from '@elementor/editor-styles-repository';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { type BreakpointId, useBreakpoints } from '@refraction/editor-responsive';
+import { isClassState, type StyleDefinition, type StyleDefinitionClassState } from '@refraction/editor-styles';
+import { type StylesProvider, stylesRepository } from '@refraction/editor-styles-repository';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
 import { type RendererStyleDefinition, type StyleItem, type StyleRenderer } from '../renderers/create-styles-renderer';
 import { abortPreviousRuns } from '../utils/abort-previous-runs';

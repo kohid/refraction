@@ -1,5 +1,5 @@
-import type { Unit } from '@elementor/editor-controls';
-import { type SizePropValue } from '@elementor/editor-props';
+import type { Unit } from '@refraction/editor-controls';
+import { type SizePropValue } from '@refraction/editor-props';
 
 import { useSyncExternalState } from '../hooks/use-sync-external-state';
 

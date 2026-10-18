@@ -6,14 +6,14 @@ import BasePage from './base-page';
 import EditorSelectors from '../selectors/editor-selectors';
 import _path, { resolve as pathResolve } from 'path';
 import AxeBuilder from '@axe-core/playwright';
-import { $eType, Device, WindowType, BackboneType, ElementorType, GapControl, ContainerType, ContainerPreset } from '../types/types';
+import { $eType, Device, WindowType, BackboneType, RefractionType, GapControl, ContainerType, ContainerPreset } from '../types/types';
 import TopBarSelectors, { TopBarSelector } from '../selectors/top-bar-selectors';
 import Breakpoints from '../assets/breakpoints';
 import { timeouts } from '../config/timeouts';
 import { INLINE_EDITING_SELECTORS } from '../sanity/modules/v4-tests/inline-text-editing/selectors/selectors';
 
 let $e: $eType;
-let elementor: ElementorType;
+let refraction: RefractionType;
 let Backbone: BackboneType;
 let window: WindowType;
 
@@ -106,7 +106,7 @@ export default class EditorPage extends BasePage {
 	postId: number;
 
 	/**
-	 * Create an Elementor editor page.
+	 * Create a Refraction editor page.
 	 *
 	 * @param {Page}     page        - Playwright page instance.
 	 * @param {TestInfo} testInfo    - Test information.
@@ -189,8 +189,8 @@ export default class EditorPage extends BasePage {
 		}, templateData );
 
 		await this.page
-			.frameLocator( '#elementor-preview-iframe' )
-			.locator( '.elementor-element' )
+			.frameLocator( '#refraction-preview-iframe' )
+			.locator( '.refraction-element' )
 			.first()
 			.waitFor( { timeout: timeouts.heavyAction } );
 	}
@@ -212,8 +212,8 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async waitForPanelToLoad(): Promise<void> {
-		await this.page.waitForSelector( '.elementor-panel-loading', { state: 'detached' } );
-		await this.page.waitForSelector( '#elementor-loading', { state: 'hidden' } );
+		await this.page.waitForSelector( '.refraction-panel-loading', { state: 'detached' } );
+		await this.page.waitForSelector( '#refraction-loading', { state: 'hidden' } );
 	}
 
 	/**
@@ -239,7 +239,7 @@ export default class EditorPage extends BasePage {
 	async removeElement( elementId: string ): Promise<void> {
 		await this.page.evaluate( ( { id } ) => {
 			$e.run( 'document/elements/delete', {
-				container: elementor.getContainer( id ),
+				container: refraction.getContainer( id ),
 			} );
 		}, { id: elementId } );
 	}
@@ -291,7 +291,7 @@ export default class EditorPage extends BasePage {
 	}
 
 	/**
-	 * Add a page by importing a Json page object from PostMeta _elementor_data into Tests
+	 * Add a page by importing a Json page object from PostMeta _refraction_data into Tests
 	 *
 	 * @param {string}  dirName              - Directory name, use `__dirname` for the current directory.
 	 * @param {string}  fileName             - Name of the file without extension.
@@ -309,7 +309,7 @@ export default class EditorPage extends BasePage {
 			content: templateData,
 			page_settings: [],
 			version: '0.4',
-			title: 'Elementor Test',
+			title: 'Refraction Test',
 			type: 'page',
 		};
 
@@ -348,9 +348,9 @@ export default class EditorPage extends BasePage {
 	}
 
 	async waitForPreviewFrame(): Promise<Frame> {
-		await this.page.waitForSelector( '[id="elementor-preview-iframe"]', { timeout: timeouts.longAction } );
+		await this.page.waitForSelector( '[id="refraction-preview-iframe"]', { timeout: timeouts.longAction } );
 
-		const frame = this.page.frame( { name: 'elementor-preview-iframe' } );
+		const frame = this.page.frame( { name: 'refraction-preview-iframe' } );
 		if ( ! frame ) {
 			throw new Error( 'Iframe is null even after it appeared in the DOM.' );
 		}
@@ -359,12 +359,12 @@ export default class EditorPage extends BasePage {
 	}
 
 	/**
-	 * Get the frame of the Elementor editor preview.
+	 * Get the frame of the Refraction editor preview.
 	 *
 	 * @return {Frame}
 	 */
 	getPreviewFrame(): Frame {
-		return this.page.frame( { name: 'elementor-preview-iframe' } );
+		return this.page.frame( { name: 'refraction-preview-iframe' } );
 	}
 
 	/**
@@ -377,12 +377,12 @@ export default class EditorPage extends BasePage {
 	async selectElement( elementId: string ): Promise<Locator> {
 		await this.page.evaluate( ( { id } ) => {
 			$e.run( 'document/elements/select', {
-				container: elementor.getContainer( id ),
+				container: refraction.getContainer( id ),
 			} );
 		}, { id: elementId } );
 
-		await this.getPreviewFrame().waitForSelector( '.elementor-element-' + elementId + '.elementor-element-editable' );
-		return this.getPreviewFrame().locator( '.elementor-element-' + elementId );
+		await this.getPreviewFrame().waitForSelector( '.refraction-element-' + elementId + '.refraction-element-editable' );
+		return this.getPreviewFrame().locator( '.refraction-element-' + elementId );
 	}
 
 	/**
@@ -395,7 +395,7 @@ export default class EditorPage extends BasePage {
 	 */
 	async addNewContainerPreset( element: ContainerType, preset: ContainerPreset ): Promise<void> {
 		const frame = this.getPreviewFrame();
-		await frame.locator( '.elementor-add-section-button' ).click();
+		await frame.locator( '.refraction-add-section-button' ).click();
 		await frame.locator( `.${ element }-preset-button` ).click();
 		const presetSelector = 'grid' === element
 			? `[data-structure="${ preset }"]`
@@ -411,15 +411,15 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async openAddElementSection( elementId: string ): Promise<void> {
-		const element = this.getPreviewFrame().locator( `.elementor-edit-mode .elementor-element-${ elementId }` );
+		const element = this.getPreviewFrame().locator( `.refraction-edit-mode .refraction-element-${ elementId }` );
 		await element.hover();
-		const elementAddButton = this.getPreviewFrame().locator( `.elementor-edit-mode .elementor-element-${ elementId } > .elementor-element-overlay > .elementor-editor-element-settings > .elementor-editor-element-add` );
+		const elementAddButton = this.getPreviewFrame().locator( `.refraction-edit-mode .refraction-element-${ elementId } > .refraction-element-overlay > .refraction-editor-element-settings > .refraction-editor-element-add` );
 		await elementAddButton.click();
-		await this.getPreviewFrame().waitForSelector( '.elementor-add-section-inline' );
+		await this.getPreviewFrame().waitForSelector( '.refraction-add-section-inline' );
 	}
 
 	async setWidgetTab( tab: 'content' | 'style' | 'advanced' ): Promise<void> {
-		await this.page.locator( `.elementor-tab-control-${ tab }` ).click();
+		await this.page.locator( `.refraction-tab-control-${ tab }` ).click();
 	}
 
 	/**
@@ -430,15 +430,15 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async openPanelTab( panelId: string ): Promise<void> {
-		await this.page.waitForSelector( `.elementor-tab-control-${ panelId } span` );
+		await this.page.waitForSelector( `.refraction-tab-control-${ panelId } span` );
 
 		// Check if panel has been activated already.
-		if ( await this.page.$( `.elementor-tab-control-${ panelId }.elementor-active` ) ) {
+		if ( await this.page.$( `.refraction-tab-control-${ panelId }.refraction-active` ) ) {
 			return;
 		}
 
-		await this.page.locator( `.elementor-tab-control-${ panelId } span` ).click();
-		await this.page.waitForSelector( `.elementor-tab-control-${ panelId }.elementor-active` );
+		await this.page.locator( `.refraction-tab-control-${ panelId } span` ).click();
+		await this.page.waitForSelector( `.refraction-tab-control-${ panelId }.refraction-active` );
 	}
 
 	/**
@@ -449,19 +449,19 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async openSection( sectionId: string ): Promise<void> {
-		const sectionSelector = `.elementor-control-${ sectionId }`,
+		const sectionSelector = `.refraction-control-${ sectionId }`,
 			isOpenSection = await this.page.evaluate( ( selector ) => {
 				const sectionElement = document.querySelector( selector );
 
-				return sectionElement?.classList.contains( 'e-open' ) || sectionElement?.classList.contains( 'elementor-open' );
+				return sectionElement?.classList.contains( 'e-open' ) || sectionElement?.classList.contains( 'refraction-open' );
 			}, sectionSelector ),
-			section = await this.page.$( sectionSelector + ':not( .e-open ):not( .elementor-open ):visible' );
+			section = await this.page.$( sectionSelector + ':not( .e-open ):not( .refraction-open ):visible' );
 
 		if ( ! section || isOpenSection ) {
 			return;
 		}
 
-		await this.page.locator( sectionSelector + ':not( .e-open ):not( .elementor-open ):visible' + ' .elementor-panel-heading' ).click();
+		await this.page.locator( sectionSelector + ':not( .e-open ):not( .refraction-open ):visible' + ' .refraction-panel-heading' ).click();
 	}
 
 	/**
@@ -472,11 +472,11 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async closeSection( sectionId: string ): Promise<void> {
-		const sectionSelector = `.elementor-control-${ sectionId }`,
+		const sectionSelector = `.refraction-control-${ sectionId }`,
 			isOpenSection = await this.page.evaluate( ( selector ) => {
 				const sectionElement = document.querySelector( selector );
 
-				return sectionElement?.classList.contains( 'e-open' ) || sectionElement?.classList.contains( 'elementor-open' );
+				return sectionElement?.classList.contains( 'e-open' ) || sectionElement?.classList.contains( 'refraction-open' );
 			}, sectionSelector ),
 			section = await this.page.$( sectionSelector + '.e-open:visible' );
 
@@ -484,7 +484,7 @@ export default class EditorPage extends BasePage {
 			return;
 		}
 
-		await this.page.locator( sectionSelector + '.e-open:visible .elementor-panel-heading' ).click();
+		await this.page.locator( sectionSelector + '.e-open:visible .refraction-panel-heading' ).click();
 	}
 
 	/**
@@ -530,7 +530,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setTabControlValue( controlId: string, tabId: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } .elementor-control-${ tabId }` ).first().click();
+		await this.page.locator( `.refraction-control-${ controlId } .refraction-control-${ tabId }` ).first().click();
 	}
 
 	/**
@@ -542,7 +542,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setTextControlValue( controlId: string, value: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } input` ).nth( 0 ).fill( value.toString() );
+		await this.page.locator( `.refraction-control-${ controlId } input` ).nth( 0 ).fill( value.toString() );
 	}
 
 	/**
@@ -554,7 +554,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setTextareaControlValue( controlId: string, value: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } textarea` ).fill( value.toString() );
+		await this.page.locator( `.refraction-control-${ controlId } textarea` ).fill( value.toString() );
 	}
 
 	/**
@@ -566,7 +566,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setNumberControlValue( controlId: string, value: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } input >> nth=0` ).fill( value.toString() );
+		await this.page.locator( `.refraction-control-${ controlId } input >> nth=0` ).fill( value.toString() );
 	}
 
 	/**
@@ -576,7 +576,7 @@ export default class EditorPage extends BasePage {
 	 * @param {string} value     - The value to set.
 	 */
 	async setSliderControlValue( controlId: string, value: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } .elementor-slider-input input` ).fill( value );
+		await this.page.locator( `.refraction-control-${ controlId } .refraction-slider-input input` ).fill( value );
 	}
 
 	/**
@@ -588,7 +588,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setSelectControlValue( controlId: string, value: string ): Promise<void> {
-		const selectLocator = this.page.locator( `.elementor-control-${ controlId } select` );
+		const selectLocator = this.page.locator( `.refraction-control-${ controlId } select` );
 		await selectLocator.waitFor( { state: 'visible', timeout: timeouts.longAction } );
 		await selectLocator.selectOption( value, { timeout: timeouts.longAction } );
 	}
@@ -603,7 +603,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setSelect2ControlValue( controlId: string, value: string, exactMatch: boolean = true ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } .select2:not( .select2-container--disabled )` ).click();
+		await this.page.locator( `.refraction-control-${ controlId } .select2:not( .select2-container--disabled )` ).click();
 		await this.page.locator( '.select2-search--dropdown input[type="search"]' ).fill( value );
 
 		if ( exactMatch ) {
@@ -624,7 +624,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setDimensionsValue( controlId: string, value: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } .elementor-control-dimensions li:first-child input` ).fill( value );
+		await this.page.locator( `.refraction-control-${ controlId } .refraction-control-dimensions li:first-child input` ).fill( value );
 	}
 
 	/**
@@ -638,7 +638,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setChooseControlValue( controlId: string, icon: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } .${ icon }` ).click();
+		await this.page.locator( `.refraction-control-${ controlId } .${ icon }` ).click();
 	}
 
 	/**
@@ -650,7 +650,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setColorControlValue( controlId: string, value: string ): Promise<void> {
-		const controlSelector = `.elementor-control-${ controlId }`;
+		const controlSelector = `.refraction-control-${ controlId }`;
 
 		await this.page.locator( controlSelector + ' .pcr-button' ).click();
 		await this.page.locator( '.pcr-app.visible .pcr-interaction input.pcr-result' ).fill( value );
@@ -666,8 +666,8 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setSwitcherControlValue( controlId: string, value: boolean = true ): Promise<void> {
-		const controlSelector = `.elementor-control-${ controlId }`,
-			controlLabel = this.page.locator( controlSelector + ' label.elementor-switch' ),
+		const controlSelector = `.refraction-control-${ controlId }`,
+			controlLabel = this.page.locator( controlSelector + ' label.refraction-switch' ),
 			currentState = await this.page.locator( controlSelector + ' input[type="checkbox"]' ).isChecked();
 
 		if ( currentState !== Boolean( value ) ) {
@@ -684,14 +684,14 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setGapControlValue( controlId: string, value: GapControl ): Promise<void> {
-		const control = this.page.locator( `.elementor-control-${ controlId }` );
+		const control = this.page.locator( `.refraction-control-${ controlId }` );
 
 		if ( 'string' === typeof value ) {
-			await control.locator( '.elementor-control-gap >> nth=0' ).locator( 'input' ).fill( value );
+			await control.locator( '.refraction-control-gap >> nth=0' ).locator( 'input' ).fill( value );
 		} else if ( 'object' === typeof value ) {
-			await control.locator( '.elementor-link-gaps' ).click();
-			await control.locator( '.elementor-control-gap input[data-setting="column"]' ).fill( value.column );
-			await control.locator( '.elementor-control-gap input[data-setting="row"]' ).fill( value.row );
+			await control.locator( '.refraction-link-gaps' ).click();
+			await control.locator( '.refraction-control-gap input[data-setting="column"]' ).fill( value.column );
+			await control.locator( '.refraction-control-gap input[data-setting="row"]' ).fill( value.row );
 			if ( value.unit ) {
 				await control.locator( '.e-units-switcher' ).click();
 				await control.locator( `[data-choose="${ value.unit }"]` ).click();
@@ -708,7 +708,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setMediaControlImageValue( controlId: string, imageTitle: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId } .elementor-control-media__preview` ).click();
+		await this.page.locator( `.refraction-control-${ controlId } .refraction-control-media__preview` ).click();
 		await this.page.getByRole( 'tab', { name: 'Media Library' } ).click();
 		await this.page.locator( `[aria-label="${ imageTitle }"]` ).click();
 		await this.page.locator( '.button.media-button' ).click();
@@ -723,7 +723,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setTypographyControlValue( controlId: string, fontsize: string ): Promise<void> {
-		const controlSelector = `.elementor-control-${ controlId }_typography .eicon-edit`;
+		const controlSelector = `.refraction-control-${ controlId }_typography .eicon-edit`;
 
 		await this.page.locator( controlSelector ).click();
 		await this.setSliderControlValue( controlId + '_font_size', fontsize );
@@ -731,16 +731,16 @@ export default class EditorPage extends BasePage {
 	}
 
 	async setShadowControlValue( controlId: string, shadowType: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId }_${ shadowType }_shadow_type i.eicon-edit` ).click();
-		await this.page.locator( `.elementor-control-${ controlId }_${ shadowType }_shadow_type label` ).first().click();
+		await this.page.locator( `.refraction-control-${ controlId }_${ shadowType }_shadow_type i.eicon-edit` ).click();
+		await this.page.locator( `.refraction-control-${ controlId }_${ shadowType }_shadow_type label` ).first().click();
 	}
 
 	async setTextStrokeControlValue( controlId: string, strokeType: string, value: number, color: string ): Promise<void> {
-		await this.page.locator( `.elementor-control-${ controlId }_${ strokeType }_stroke_type i.eicon-edit` ).click();
-		await this.page.locator( `.elementor-control-${ controlId }_${ strokeType }_stroke input[type="number"]` ).first().fill( value.toString() );
-		await this.page.locator( `.elementor-control-${ controlId }_stroke_color .pcr-button` ).first().click();
+		await this.page.locator( `.refraction-control-${ controlId }_${ strokeType }_stroke_type i.eicon-edit` ).click();
+		await this.page.locator( `.refraction-control-${ controlId }_${ strokeType }_stroke input[type="number"]` ).first().fill( value.toString() );
+		await this.page.locator( `.refraction-control-${ controlId }_stroke_color .pcr-button` ).first().click();
 		await this.page.locator( '.pcr-app.visible .pcr-result' ).first().fill( color );
-		await this.page.locator( `.elementor-control-${ controlId }_${ strokeType }_stroke_type label` ).first().click();
+		await this.page.locator( `.refraction-control-${ controlId }_${ strokeType }_stroke_type label` ).first().click();
 	}
 
 	async setWidgetMask(): Promise<void> {
@@ -757,9 +757,9 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async hideVideoControls(): Promise<void> {
-		await this.getPreviewFrame().waitForSelector( '.elementor-video' );
+		await this.getPreviewFrame().waitForSelector( '.refraction-video' );
 
-		const videoFrame = this.getPreviewFrame().frameLocator( '.elementor-video' ),
+		const videoFrame = this.getPreviewFrame().frameLocator( '.refraction-video' ),
 			videoButton = videoFrame.locator( 'button.ytp-large-play-button.ytp-button.ytp-large-play-button-red-bg' ),
 			videoGradient = videoFrame.locator( '.ytp-gradient-top' ),
 			videoTitle = videoFrame.locator( '.ytp-show-cards-title' ),
@@ -777,9 +777,9 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async hideMapControls(): Promise<void> {
-		await this.getPreviewFrame().waitForSelector( '.elementor-widget-google_maps iframe' );
+		await this.getPreviewFrame().waitForSelector( '.refraction-widget-google_maps iframe' );
 
-		const mapFrame = this.getPreviewFrame().frameLocator( '.elementor-widget-google_maps iframe' ),
+		const mapFrame = this.getPreviewFrame().frameLocator( '.refraction-widget-google_maps iframe' ),
 			mapText = mapFrame.locator( '.gm-style iframe + div + div' ),
 			mapInset = mapFrame.locator( 'button.gm-inset-map.gm-inset-light' ),
 			mapControls = mapFrame.locator( '.gmnoprint.gm-bundled-control.gm-bundled-control-on-bottom' );
@@ -795,24 +795,24 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async togglePreviewMode(): Promise<void> {
-		if ( ! await this.page.$( 'body.elementor-editor-preview' ) ) {
-			await this.page.locator( '#elementor-mode-switcher' ).click();
-			await this.page.waitForSelector( 'body.elementor-editor-preview' );
+		if ( ! await this.page.$( 'body.refraction-editor-preview' ) ) {
+			await this.page.locator( '#refraction-mode-switcher' ).click();
+			await this.page.waitForSelector( 'body.refraction-editor-preview' );
 			await this.page.waitForTimeout( 500 );
 		} else {
-			await this.page.locator( '#elementor-mode-switcher-preview' ).click();
-			await this.page.waitForSelector( 'body.elementor-editor-active' );
+			await this.page.locator( '#refraction-mode-switcher-preview' ).click();
+			await this.page.waitForSelector( 'body.refraction-editor-active' );
 		}
 	}
 
 	/**
-	 * Wait for the Elementor preview to finish loading.
+	 * Wait for the Refraction preview to finish loading.
 	 *
 	 * @return {Promise<void>}
 	 */
 	async waitForPreviewToLoad(): Promise<void> {
-		await this.page.waitForSelector( '#elementor-preview-loading' );
-		await this.page.waitForSelector( '#elementor-preview-loading', { state: 'hidden' } );
+		await this.page.waitForSelector( '#refraction-preview-loading' );
+		await this.page.waitForSelector( '#refraction-preview-loading', { state: 'hidden' } );
 	}
 
 	/**
@@ -821,7 +821,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async hideEditorElements(): Promise<void> {
-		const css = '<style>.elementor-element-overlay,.elementor-empty-view{opacity: 0;}.elementor-widget,.elementor-widget:hover{box-shadow:none!important;}</style>';
+		const css = '<style>.refraction-element-overlay,.refraction-empty-view{opacity: 0;}.refraction-widget,.refraction-widget:hover{box-shadow:none!important;}</style>';
 
 		await this.addWidget( { widgetType: 'html' } );
 		await this.setTextareaControlValue( 'type-code', css );
@@ -856,7 +856,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async clickTopBarMenuItem( menuLabel?: string ): Promise<void> {
-		await this.clickTopBarItem( TopBarSelectors.elementorLogo );
+		await this.clickTopBarItem( TopBarSelectors.refractionLogo );
 		await this.page.waitForTimeout( 100 );
 
 		if ( menuLabel ) {
@@ -908,7 +908,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	private async openSiteSettingsInnerPanel( innerPanelSection: string ): Promise<void> {
-		await this.page.locator( `.elementor-panel-menu-item.elementor-panel-menu-item-${ innerPanelSection }` ).click();
+		await this.page.locator( `.refraction-panel-menu-item.refraction-panel-menu-item-${ innerPanelSection }` ).click();
 	}
 
 	/**
@@ -928,7 +928,7 @@ export default class EditorPage extends BasePage {
 	 */
 	async closeNavigatorIfOpen(): Promise<void> {
 		await this.waitForPreviewFrame();
-		const isOpen = await this.getPreviewFrame().evaluate( () => elementor.navigator.isOpen() );
+		const isOpen = await this.getPreviewFrame().evaluate( () => refraction.navigator.isOpen() );
 
 		if ( ! isOpen ) {
 			return;
@@ -951,15 +951,15 @@ export default class EditorPage extends BasePage {
 		switch ( template ) {
 			case 'default':
 				templateValue = 'default';
-				templateClass = '.elementor-default';
+				templateClass = '.refraction-default';
 				break;
 			case 'canvas':
-				templateValue = 'elementor_canvas';
-				templateClass = '.elementor-template-canvas';
+				templateValue = 'refraction_canvas';
+				templateClass = '.refraction-template-canvas';
 				break;
 			case 'full-width':
-				templateValue = 'elementor_header_footer';
-				templateClass = '.elementor-template-full-width';
+				templateValue = 'refraction_header_footer';
+				templateClass = '.refraction-template-full-width';
 				break;
 		}
 
@@ -1059,7 +1059,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<string>}
 	 */
 	async getPageId(): Promise<string> {
-		return await this.page.evaluate( () => elementor.config.initial_document.id );
+		return await this.page.evaluate( () => refraction.config.initial_document.id );
 	}
 
 	/**
@@ -1087,7 +1087,7 @@ export default class EditorPage extends BasePage {
 	async applyElementSettings( elementId: string, settings: unknown ): Promise<void> {
 		await this.page.evaluate(
 			( args ) => $e.run( 'document/elements/settings', {
-				container: elementor.getContainer( args.elementId ),
+				container: refraction.getContainer( args.elementId ),
 				settings: args.settings,
 			} ),
 			{ elementId, settings },
@@ -1404,7 +1404,7 @@ export default class EditorPage extends BasePage {
 			const reloadButton = this.page.locator( EditorSelectors.refreshPopup.reloadButton );
 			await reloadButton.waitFor( { state: 'visible', timeout: timeouts.longAction } );
 			await reloadButton.click( { timeout: timeouts.longAction } );
-			await this.page.locator( '#elementor-editor-wrapper' ).waitFor( { state: 'visible', timeout: timeouts.heavyAction } );
+			await this.page.locator( '#refraction-editor-wrapper' ).waitFor( { state: 'visible', timeout: timeouts.heavyAction } );
 		}
 	}
 
@@ -1417,14 +1417,14 @@ export default class EditorPage extends BasePage {
 	}
 
 	async triggerEditingElement( elementId: string, waitFor: boolean = true ): Promise<Locator> {
-		const element = this.previewFrame.locator( `.elementor-element-${ elementId }` );
+		const element = this.previewFrame.locator( `.refraction-element-${ elementId }` );
 
 		await this.page.keyboard.press( 'Escape' );
 		await this.page.waitForTimeout( timeouts.veryShort );
 		await element.waitFor();
 		await element[ INLINE_EDITING_SELECTORS.triggerEvent ]();
 
-		const inlineEditor = this.previewFrame.locator( `.elementor-element-${ elementId } ${ INLINE_EDITING_SELECTORS.canvas.inlineEditor }` );
+		const inlineEditor = this.previewFrame.locator( `.refraction-element-${ elementId } ${ INLINE_EDITING_SELECTORS.canvas.inlineEditor }` );
 
 		if ( waitFor ) {
 			await inlineEditor.waitFor( { timeout: timeouts.action } );

@@ -1,5 +1,5 @@
-import { type V1ElementData } from '@elementor/editor-elements';
-import { hashString } from '@elementor/utils';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { hashString } from '@refraction/utils';
 
 const ELEMENT_ID_LENGTH = 7;
 // The purpose of this function is to solve the issue of component inner elements having the same ID

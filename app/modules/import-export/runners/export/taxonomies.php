@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\App\Modules\ImportExport\Runners\Export;
+namespace Refraction\App\Modules\ImportExport\Runners\Export;
 
-use Elementor\App\Modules\ImportExport\Utils as ImportExportUtils;
+use Refraction\App\Modules\ImportExport\Utils as ImportExportUtils;
 
 class Taxonomies extends Export_Runner_Base {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -38,12 +38,12 @@ class Oauth_Protected_Resource extends Abstract_Well_Known_Endpoint {
 	 * this document describes.
 	 */
 	public function is_applicable(): bool {
-		return (bool) apply_filters( 'elementor/agents/link_headers/emit_mcp_card', false );
+		return (bool) apply_filters( 'refraction/agents/link_headers/emit_mcp_card', false );
 	}
 
 	protected function generate_content(): array {
 		$home         = trailingslashit( home_url() );
-		$mcp_endpoint = rest_url( 'elementor/agents-mcp' );
+		$mcp_endpoint = rest_url( 'refraction/agents-mcp' );
 
 		$document = [
 			// The resource URI this metadata describes.
@@ -75,7 +75,7 @@ class Oauth_Protected_Resource extends Abstract_Well_Known_Endpoint {
 		 * @param array  $document The metadata document.
 		 * @param string $home     The site home URL.
 		 */
-		return (array) apply_filters( 'elementor/agents/oauth_protected_resource', $document, $home );
+		return (array) apply_filters( 'refraction/agents/oauth_protected_resource', $document, $home );
 	}
 
 	private function get_scopes(): array {
@@ -87,6 +87,6 @@ class Oauth_Protected_Resource extends Abstract_Well_Known_Endpoint {
 		 *
 		 * @param string[] $scopes Current scope list.
 		 */
-		return (array) apply_filters( 'elementor/agents/oauth/scopes', [] );
+		return (array) apply_filters( 'refraction/agents/oauth/scopes', [] );
 	}
 }

@@ -1,36 +1,36 @@
 import ElementsHelper from '../helper';
 import HistoryHelper from '../../history/helper';
-import { DEFAULT_INNER_SECTION_COLUMNS } from 'elementor-elements/views/section';
+import { DEFAULT_INNER_SECTION_COLUMNS } from 'refraction-elements/views/section';
 
 export const Create = () => {
 	QUnit.module( 'Create', () => {
 		QUnit.module( 'Single Selection', () => {
 			QUnit.test( 'Section', ( assert ) => {
 				const eSection = ElementsHelper.createSection( 1 ),
-					isSectionCreated = !! elementor.getPreviewContainer().children.find(
+					isSectionCreated = !! refraction.getPreviewContainer().children.find(
 						( section ) => eSection.id === section.id,
 					);
 
 				// Check.
 				assert.equal( isSectionCreated, true, 'Section were created.' );
-				assert.equal( elementor.saver.isEditorChanged(), true, 'Command applied the saver editor is changed.' );
+				assert.equal( refraction.saver.isEditorChanged(), true, 'Command applied the saver editor is changed.' );
 			} );
 
 			QUnit.test( 'Column', ( assert ) => {
 				const eColumn = ElementsHelper.createSection( 1, true ),
-					isColumnCreated = !! elementor.getPreviewContainer().children[ 0 ].children.find(
+					isColumnCreated = !! refraction.getPreviewContainer().children[ 0 ].children.find(
 						( column ) => eColumn.id === column.id,
 					);
 
 				// Check column exist.
 				assert.equal( isColumnCreated, true, 'Column were created.' );
-				assert.equal( elementor.saver.isEditorChanged(), true, 'Command applied the saver editor is changed.' );
+				assert.equal( refraction.saver.isEditorChanged(), true, 'Command applied the saver editor is changed.' );
 			} );
 
 			QUnit.test( 'Widget', ( assert ) => {
 				const eColumn = ElementsHelper.createSection( 1, true ),
 					eButton = ElementsHelper.createWidgetButton( eColumn ),
-					isButtonCreated = !! elementor.getPreviewContainer().children[ 0 ].children[ 0 ].children.find(
+					isButtonCreated = !! refraction.getPreviewContainer().children[ 0 ].children[ 0 ].children.find(
 						( widget ) => widget.id === eButton.id,
 					);
 
@@ -59,8 +59,8 @@ export const Create = () => {
 				const done = assert.async();
 
 				setTimeout( () => {
-					assert.equal( eButton.view.$el.hasClass( 'elementor-absolute' ), true, '',
-						'Widget have "elementor-absolute" class.' );
+					assert.equal( eButton.view.$el.hasClass( 'refraction-absolute' ), true, '',
+						'Widget have "refraction-absolute" class.' );
 					done();
 				} );
 			} );
@@ -177,7 +177,7 @@ export const Create = () => {
 				// Check columns exist.
 				let count = 1;
 				eColumns.forEach( ( eColumn ) => {
-					const isColumnCreated = !! elementor.getPreviewContainer().children.find( ( section ) =>
+					const isColumnCreated = !! refraction.getPreviewContainer().children.find( ( section ) =>
 						!! section.children.find( ( column ) => eColumn.id === column.id ),
 					);
 
@@ -324,13 +324,13 @@ export const Create = () => {
 			} );
 
 			QUnit.test( 'Widget: Inner Section into Preview', ( assert ) => {
-				elementorCommonConfig.experimentalFeatures.container = false;
+				refractionCommonConfig.experimentalFeatures.container = false;
 
-				const eInnerSection = elementor.getPreviewContainer().view.createElementFromModel( {
+				const eInnerSection = refraction.getPreviewContainer().view.createElementFromModel( {
 						elType: 'section',
 						isInner: true,
 					} ),
-					ePreviewChildren = elementor.getPreviewContainer().children,
+					ePreviewChildren = refraction.getPreviewContainer().children,
 					isInnerSectionCreated = !! ePreviewChildren[ ePreviewChildren.length - 1 ].children[ 0 ].children
 						.find( ( widget ) => eInnerSection.id === widget.id );
 
@@ -338,7 +338,7 @@ export const Create = () => {
 				assert.equal( eInnerSection.children.length, DEFAULT_INNER_SECTION_COLUMNS,
 					`'${ DEFAULT_INNER_SECTION_COLUMNS }' columns were created in the inner section.` );
 
-				elementorCommonConfig.experimentalFeatures.container = true;
+				refractionCommonConfig.experimentalFeatures.container = true;
 			} );
 		} );
 	} );

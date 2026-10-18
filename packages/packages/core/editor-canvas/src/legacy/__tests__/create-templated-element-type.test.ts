@@ -1,4 +1,4 @@
-import { mockLegacyElementor } from 'test-utils';
+import { mockLegacyRefraction } from 'test-utils';
 
 import {
 	canBeTemplated,
@@ -26,7 +26,7 @@ const createMockElementConfig = () => ( {
 
 describe( 'createTemplatedElementType', () => {
 	beforeEach( () => {
-		mockLegacyElementor();
+		mockLegacyRefraction();
 	} );
 
 	it( 'should return the correct element type', () => {
@@ -65,7 +65,7 @@ describe( 'createTemplatedElementType', () => {
 
 describe( 'createTemplatedElementView', () => {
 	beforeEach( () => {
-		mockLegacyElementor();
+		mockLegacyRefraction();
 	} );
 
 	describe( 'class structure', () => {

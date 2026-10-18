@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Import;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Import;
 
-use Elementor\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
-use Elementor\Modules\Library\Documents\Library_Document;
+use Refraction\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
+use Refraction\Modules\Library\Documents\Library_Document;
 
 class Templates extends Import_Runner_Base {
 	private $import_session_id;
@@ -36,7 +36,7 @@ class Templates extends Import_Runner_Base {
 	}
 
 	private function import_with_customization( array $data, array $imported_data, array $customization ) {
-		$result = apply_filters( 'elementor/import-export-customization/import/templates/customization', null, $data, $imported_data, $customization, $this );
+		$result = apply_filters( 'refraction/import-export-customization/import/templates/customization', null, $data, $imported_data, $customization, $this );
 
 		if ( is_array( $result ) ) {
 			return $result;
@@ -63,7 +63,7 @@ class Templates extends Import_Runner_Base {
 		 * @param object $runner The runner instance.
 		 */
 		$customization = $data['customization']['templates'] ?? null;
-		$result = apply_filters( 'elementor/import-export-customization/import/templates_result', $result, $data, $customization, $this );
+		$result = apply_filters( 'refraction/import-export-customization/import/templates_result', $result, $data, $customization, $this );
 
 		return $result;
 	}
@@ -122,11 +122,11 @@ class Templates extends Import_Runner_Base {
 			$this->set_session_post_meta( $attachment_id, $this->import_session_id );
 		};
 
-		add_filter( 'elementor/template_library/import_images/new_attachment', $new_attachment_callback );
+		add_filter( 'refraction/template_library/import_images/new_attachment', $new_attachment_callback );
 
 		$new_document->import( $template_data );
 
-		remove_filter( 'elementor/template_library/import_images/new_attachment', $new_attachment_callback );
+		remove_filter( 'refraction/template_library/import_images/new_attachment', $new_attachment_callback );
 
 		$document_id = $new_document->get_main_id();
 

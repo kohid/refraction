@@ -1,9 +1,9 @@
 import BaseAddSectionView from './base';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 class AddSectionView extends BaseAddSectionView {
 	className() {
-		return super.className() + ' elementor-add-section-inline';
+		return super.className() + ' refraction-add-section-inline';
 	}
 
 	fadeToDeath() {

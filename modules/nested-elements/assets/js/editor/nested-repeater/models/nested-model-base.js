@@ -1,8 +1,8 @@
-import { isWidgetSupportNesting } from 'elementor/modules/nested-elements/assets/js/editor/utils';
+import { isWidgetSupportNesting } from 'refraction/modules/nested-elements/assets/js/editor/utils';
 
-export default class NestedModelBase extends elementor.modules.elements.models.Element {
+export default class NestedModelBase extends refraction.modules.elements.models.Element {
 	initialize( options ) {
-		this.config = elementor.widgetsCache[ options.widgetType ];
+		this.config = refraction.widgetsCache[ options.widgetType ];
 
 		this.set( 'supportRepeaterChildren', true );
 
@@ -33,7 +33,7 @@ export default class NestedModelBase extends elementor.modules.elements.models.E
 			result = [];
 
 		defaults.elements.forEach( ( element ) => {
-			element.id = elementorCommon.helpers.getUniqueId();
+			element.id = refractionCommon.helpers.getUniqueId();
 			element.settings = element.settings || {};
 			element.elements = element.elements || [];
 			element.isLocked = true;

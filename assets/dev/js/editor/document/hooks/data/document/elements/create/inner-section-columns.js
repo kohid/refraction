@@ -1,6 +1,6 @@
-import After from 'elementor-api/modules/hooks/data/after';
+import After from 'refraction-api/modules/hooks/data/after';
 import Helper from '../helper';
-import { DEFAULT_INNER_SECTION_COLUMNS } from 'elementor-elements/views/section';
+import { DEFAULT_INNER_SECTION_COLUMNS } from 'refraction-elements/views/section';
 
 /**
  * @typedef {import('../../../../../../container/container')} Container

@@ -1,4 +1,4 @@
-import { createV4GridFromPreset } from 'elementor-editor-utils/v4-grid-preset';
+import { createV4GridFromPreset } from 'refraction-editor-utils/v4-grid-preset';
 
 const gridTrackSizeProp = ( size ) => ( {
 	$$type: 'grid-track-size',
@@ -21,12 +21,12 @@ describe( 'createV4GridFromPreset', () => {
 		uniqueCounter = 0;
 
 		originalEnv = {
-			elementor: global.elementor,
-			elementorCommon: global.elementorCommon,
+			refraction: global.refraction,
+			refractionCommon: global.refractionCommon,
 			$e: global.$e,
 		};
 
-		global.elementor = {
+		global.refraction = {
 			getPreviewContainer: () => makeFakeContainer( 'document' ),
 			presetsFactory: {
 				getParsedGridStructure: ( structure ) => {
@@ -40,7 +40,7 @@ describe( 'createV4GridFromPreset', () => {
 			},
 		};
 
-		global.elementorCommon = {
+		global.refractionCommon = {
 			helpers: {
 				getUniqueId: () => `u${ ++uniqueCounter }`,
 			},
@@ -72,8 +72,8 @@ describe( 'createV4GridFromPreset', () => {
 	} );
 
 	afterEach( () => {
-		global.elementor = originalEnv.elementor;
-		global.elementorCommon = originalEnv.elementorCommon;
+		global.refraction = originalEnv.refraction;
+		global.refractionCommon = originalEnv.refractionCommon;
 		global.$e = originalEnv.$e;
 	} );
 

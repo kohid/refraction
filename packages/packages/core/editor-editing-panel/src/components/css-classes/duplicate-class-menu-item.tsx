@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { stylesRepository, useUserStylesCapability } from '@elementor/editor-styles-repository';
-import { MenuListItem } from '@elementor/editor-ui';
-import { useSessionStorage } from '@elementor/session';
+import { stylesRepository, useUserStylesCapability } from '@refraction/editor-styles-repository';
+import { MenuListItem } from '@refraction/editor-ui';
+import { useSessionStorage } from '@refraction/session';
 import { __ } from '@wordpress/i18n';
 
 import { trackStyles } from '../../utils/tracking/subscribe';
@@ -64,5 +64,5 @@ export function DuplicateClassMenuItem( { closeMenu }: { closeMenu: () => void }
 		closeMenu();
 	};
 
-	return <MenuListItem onClick={ handleDuplicate }>{ __( 'Duplicate', 'elementor' ) }</MenuListItem>;
+	return <MenuListItem onClick={ handleDuplicate }>{ __( 'Duplicate', 'refraction' ) }</MenuListItem>;
 }

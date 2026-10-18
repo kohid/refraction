@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { type StringPropValue } from '@elementor/editor-props';
+import { type StringPropValue } from '@refraction/editor-props';
 import { type ToggleButtonProps, useTheme } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -15,7 +15,7 @@ type Props = {
 	disableRotationForReversed?: boolean;
 };
 
-const FLEX_DIRECTION_LABEL = __( 'Flex direction', 'elementor' );
+const FLEX_DIRECTION_LABEL = __( 'Flex direction', 'refraction' );
 
 const CLOCKWISE_ANGLES: Record< FlexDirection, number > = {
 	row: 0,

@@ -1,4 +1,4 @@
-import { ELEMENTS_BASE_STYLES_PROVIDER_KEY, isElementsStylesProvider } from '@elementor/editor-styles-repository';
+import { ELEMENTS_BASE_STYLES_PROVIDER_KEY, isElementsStylesProvider } from '@refraction/editor-styles-repository';
 import { type ChipProps, type Theme } from '@elementor/ui';
 
 import { getStyleProviderColors } from '../provider-colors-registry';

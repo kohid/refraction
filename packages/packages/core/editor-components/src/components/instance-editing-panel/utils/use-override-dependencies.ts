@@ -5,9 +5,9 @@ import {
 	extractOrderedDependencies,
 	getElementSettingsWithDefaults,
 	getUpdatedValues,
-} from '@elementor/editor-editing-panel';
-import { type ElementType } from '@elementor/editor-elements';
-import { type AnyTransformable } from '@elementor/editor-props';
+} from '@refraction/editor-editing-panel';
+import { type ElementType } from '@refraction/editor-elements';
+import { type AnyTransformable } from '@refraction/editor-props';
 
 import { type ComponentInstanceOverride } from '../../../prop-types/component-instance-overrides-prop-type';
 import { resolveOverridePropValue } from '../../../utils/resolve-override-prop-value';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { __useSelector } from '@elementor/store';
+import { __useSelector } from '@refraction/store';
 
 import { selectIsConnected, selectIsGuest } from '../store/selectors';
 import { canSendEvents, initializeAndEnableTracking } from './init-tracking';

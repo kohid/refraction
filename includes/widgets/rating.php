@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Icons_Manager;
+use Refraction\Icons_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor (new) rating widget.
+ * Refraction (new) rating widget.
  *
  * @since 3.17.0
  */
@@ -19,7 +19,7 @@ class Widget_Rating extends Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Rating', 'elementor' );
+		return esc_html__( 'Rating', 'refraction' );
 	}
 
 	public function get_icon() {
@@ -49,7 +49,7 @@ class Widget_Rating extends Widget_Base {
 		$this->start_controls_section(
 			'section_icon_style',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -57,7 +57,7 @@ class Widget_Rating extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -82,7 +82,7 @@ class Widget_Rating extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_gap',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -107,7 +107,7 @@ class Widget_Rating extends Widget_Base {
 		$this->add_control(
 			'icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}}' => '--e-rating-icon-marked-color: {{VALUE}}',
@@ -119,7 +119,7 @@ class Widget_Rating extends Widget_Base {
 		$this->add_control(
 			'icon_unmarked_color',
 			[
-				'label' => esc_html__( 'Unmarked Color', 'elementor' ),
+				'label' => esc_html__( 'Unmarked Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}}' => '--e-rating-icon-color: {{VALUE}}',
@@ -137,14 +137,14 @@ class Widget_Rating extends Widget_Base {
 		$this->start_controls_section(
 			'section_rating',
 			[
-				'label' => esc_html__( 'Rating', 'elementor' ),
+				'label' => esc_html__( 'Rating', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'rating_scale',
 			[
-				'label' => esc_html__( 'Rating Scale', 'elementor' ),
+				'label' => esc_html__( 'Rating Scale', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -161,7 +161,7 @@ class Widget_Rating extends Widget_Base {
 		$this->add_control(
 			'rating_value',
 			[
-				'label' => esc_html__( 'Rating', 'elementor' ),
+				'label' => esc_html__( 'Rating', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'min' => 0,
 				'step' => 0.5,
@@ -174,7 +174,7 @@ class Widget_Rating extends Widget_Base {
 		$this->add_control(
 			'rating_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -196,19 +196,19 @@ class Widget_Rating extends Widget_Base {
 		);
 
 		$this->add_responsive_control( 'icon_alignment', [
-			'label' => esc_html__( 'Alignment', 'elementor' ),
+			'label' => esc_html__( 'Alignment', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => "eicon-align-$start_logical-h",
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-align-center-h',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => "eicon-align-$end_logical-h",
 				],
 			],
@@ -307,7 +307,7 @@ class Widget_Rating extends Widget_Base {
 			'role' => 'img',
 			'aria-label' => sprintf(
 				/* translators: 1: Rating value, 2: Rating scale. */
-				esc_html__( 'Rated %1$s out of %2$s', 'elementor' ),
+				esc_html__( 'Rated %1$s out of %2$s', 'refraction' ),
 				$this->get_rating_value(),
 				$this->get_rating_scale()
 			),

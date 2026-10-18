@@ -14,7 +14,7 @@ test.describe( 'Tabs widget tests', () => {
 		await editor.addWidget( { widgetType: 'tabs' } );
 
 		// Assert.
-		await expect( editor.page.locator( '.elementor-control-alert.elementor-panel-alert.elementor-panel-alert-info' ) )
+		await expect( editor.page.locator( '.refraction-control-alert.refraction-panel-alert.refraction-panel-alert-info' ) )
 			.toContainText( 'You are currently editing a Tabs Widget in its old version.' );
 	} );
 

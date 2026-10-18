@@ -1,10 +1,10 @@
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-panel-revisions-revision-item',
+	template: '#tmpl-refraction-panel-revisions-revision-item',
 
-	className: 'elementor-revision-item',
+	className: 'refraction-revision-item',
 
 	ui: {
-		detailsArea: '.elementor-revision-item__details',
+		detailsArea: '.refraction-revision-item__details',
 	},
 
 	triggers: {

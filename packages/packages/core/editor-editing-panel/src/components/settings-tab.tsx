@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { type Control, type ControlItem, type Element, type ElementControl } from '@elementor/editor-elements';
-import { type Props, type PropsSchema } from '@elementor/editor-props';
-import { SessionStorageProvider } from '@elementor/session';
+import { type Control, type ControlItem, type Element, type ElementControl } from '@refraction/editor-elements';
+import { type Props, type PropsSchema } from '@refraction/editor-props';
+import { SessionStorageProvider } from '@refraction/session';
 
 import { useElement } from '../contexts/element-context';
 import { useDefaultPanelSettings } from '../hooks/use-default-panel-settings';

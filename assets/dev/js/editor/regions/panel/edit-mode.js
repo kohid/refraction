@@ -1,17 +1,17 @@
-import environment from 'elementor-common/utils/environment';
+import environment from 'refraction-common/utils/environment';
 
 var EditModeItemView;
 
 EditModeItemView = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-mode-switcher-content',
+	template: '#tmpl-refraction-mode-switcher-content',
 
-	id: 'elementor-mode-switcher-inner',
+	id: 'refraction-mode-switcher-inner',
 
 	ui: {
-		previewButton: '#elementor-mode-switcher-preview-input',
-		previewLabel: '#elementor-mode-switcher-preview',
-		previewLabelIcon: '#elementor-mode-switcher-preview i',
-		previewLabelA11yText: '#elementor-mode-switcher-preview .elementor-screen-only',
+		previewButton: '#refraction-mode-switcher-preview-input',
+		previewLabel: '#refraction-mode-switcher-preview',
+		previewLabelIcon: '#refraction-mode-switcher-preview i',
+		previewLabelA11yText: '#refraction-mode-switcher-preview .refraction-screen-only',
 	},
 
 	events: {
@@ -20,7 +20,7 @@ EditModeItemView = Marionette.ItemView.extend( {
 	},
 
 	initialize() {
-		this.listenTo( elementor.channels.dataEditMode, 'switch', this.onEditModeChanged );
+		this.listenTo( refraction.channels.dataEditMode, 'switch', this.onEditModeChanged );
 	},
 
 	getCurrentMode() {
@@ -65,7 +65,7 @@ EditModeItemView = Marionette.ItemView.extend( {
 	onEditModeChanged( activeMode ) {
 		const ctrlLabel = environment.mac ? '\u2318' : 'Ctrl';
 
-		let text = 'preview' === activeMode ? __( 'Show Panel', 'elementor' ) : __( 'Hide Panel', 'elementor' );
+		let text = 'preview' === activeMode ? __( 'Show Panel', 'refraction' ) : __( 'Hide Panel', 'refraction' );
 		text += ` (${ ctrlLabel } + P)`;
 
 		this.ui.previewLabel.attr( 'title', text );

@@ -1,6 +1,6 @@
 import type { PointerEvent } from 'react';
 import { renderHookWithStore } from 'test-utils';
-import { __createStore, __deleteStore, __dispatch, __getState, __getStore, __registerSlice } from '@elementor/store';
+import { __createStore, __deleteStore, __dispatch, __getState, __getStore, __registerSlice } from '@refraction/store';
 import { act } from '@testing-library/react';
 
 import { selectPosition } from '../../store/selectors';
@@ -57,7 +57,7 @@ function setupViewport() {
 	Object.defineProperty( window, 'innerHeight', { configurable: true, value: VIEWPORT_HEIGHT_PX } );
 
 	const sidePanel = document.createElement( 'div' );
-	sidePanel.id = 'elementor-panel';
+	sidePanel.id = 'refraction-panel';
 	jest.spyOn( sidePanel, 'getBoundingClientRect' ).mockReturnValue( { width: SIDE_PANEL_WIDTH_PX } as DOMRect );
 	document.body.appendChild( sidePanel );
 	sidePanelElement = sidePanel;

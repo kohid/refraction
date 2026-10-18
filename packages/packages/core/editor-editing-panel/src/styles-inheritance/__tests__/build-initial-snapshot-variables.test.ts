@@ -1,15 +1,15 @@
 import { createMockBreakpointsTree, createMockStyleDefinitionWithVariants, createMockStylesProvider } from 'test-utils';
-import { type BreakpointId } from '@elementor/editor-responsive';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
-import { hasVariable } from '@elementor/editor-variables';
+import { type BreakpointId } from '@refraction/editor-responsive';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
+import { hasVariable } from '@refraction/editor-variables';
 
 import { getProviderByStyleId } from '../../contexts/style-context';
 import { createStylesInheritance } from '../create-styles-inheritance';
 
-jest.mock( '@elementor/editor-responsive' );
+jest.mock( '@refraction/editor-responsive' );
 jest.mock( '../../contexts/style-context' );
-jest.mock( '@elementor/editor-variables', () => ( {
-	...jest.requireActual( '@elementor/editor-variables' ),
+jest.mock( '@refraction/editor-variables', () => ( {
+	...jest.requireActual( '@refraction/editor-variables' ),
 	hasVariable: jest.fn(),
 } ) );
 

@@ -1,7 +1,7 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -23,15 +23,15 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 
 		$fields['items_grid'] = [
 			'type' => Controls_Manager::HEADING,
-			'label' => esc_html__( 'Items', 'elementor' ),
+			'label' => esc_html__( 'Items', 'refraction' ),
 			'separator' => 'before',
 		];
 
 		$fields['outline'] = [
-			'label' => esc_html__( 'Grid Outline', 'elementor' ),
+			'label' => esc_html__( 'Grid Outline', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
-			'label_on' => esc_html__( 'Show', 'elementor' ),
-			'label_off' => esc_html__( 'Hide', 'elementor' ),
+			'label_on' => esc_html__( 'Show', 'refraction' ),
+			'label_off' => esc_html__( 'Hide', 'refraction' ),
 			'default' => 'yes',
 			'editor_available' => true,
 		];
@@ -39,7 +39,7 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		$responsive_unit_defaults = $this->get_responsive_unit_defaults();
 
 		$fields['columns_grid'] = [
-			'label' => esc_html__( 'Columns', 'elementor' ),
+			'label' => esc_html__( 'Columns', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [
 				'fr' => [
@@ -68,7 +68,7 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		] + $responsive_unit_defaults;
 
 		$fields['rows_grid'] = [
-			'label' => esc_html__( 'Rows', 'elementor' ),
+			'label' => esc_html__( 'Rows', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [
 				'fr' => [
@@ -93,7 +93,7 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		] + $responsive_unit_defaults;
 
 		$fields['gaps'] = [
-			'label' => esc_html__( 'Gaps', 'elementor' ),
+			'label' => esc_html__( 'Gaps', 'refraction' ),
 			'type' => Controls_Manager::GAPS,
 			'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 			'default' => [
@@ -112,11 +112,11 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		];
 
 		$fields['auto_flow'] = [
-			'label' => esc_html__( 'Auto Flow', 'elementor' ),
+			'label' => esc_html__( 'Auto Flow', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'options' => [
-				'row' => esc_html__( 'Row', 'elementor' ),
-				'column' => esc_html__( 'Column', 'elementor' ),
+				'row' => esc_html__( 'Row', 'refraction' ),
+				'column' => esc_html__( 'Column', 'refraction' ),
 			],
 			'default' => 'row',
 			'separator' => 'before',
@@ -128,23 +128,23 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		] + $this->get_responsive_autoflow_defaults();
 
 		$fields['justify_items'] = [
-			'label' => esc_html__( 'Justify Items', 'elementor' ),
+			'label' => esc_html__( 'Justify Items', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-align-' . $icon_start . '-h',
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-align-center-h',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-align-' . $icon_end . '-h',
 				],
 				'stretch' => [
-					'title' => esc_html__( 'Stretch', 'elementor' ),
+					'title' => esc_html__( 'Stretch', 'refraction' ),
 					'icon' => 'eicon-align-stretch-h',
 				],
 			],
@@ -156,23 +156,23 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		];
 
 		$fields['align_items'] = [
-			'label' => esc_html__( 'Align Items', 'elementor' ),
+			'label' => esc_html__( 'Align Items', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-align-start-v',
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-align-center-v',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-align-end-v',
 				],
 				'stretch' => [
-					'title' => esc_html__( 'Stretch', 'elementor' ),
+					'title' => esc_html__( 'Stretch', 'refraction' ),
 					'icon' => 'eicon-align-stretch-v',
 				],
 			],
@@ -183,33 +183,33 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		];
 
 		$fields['justify_content'] = [
-			'label' => esc_html__( 'Justify Content', 'elementor' ),
+			'label' => esc_html__( 'Justify Content', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'label_block' => true,
 			'default' => '',
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-justify-start-h',
 				],
 				'center' => [
-					'title' => esc_html__( 'Middle', 'elementor' ),
+					'title' => esc_html__( 'Middle', 'refraction' ),
 					'icon' => 'eicon-justify-center-h',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-justify-end-h',
 				],
 				'space-between' => [
-					'title' => esc_html__( 'Space Between', 'elementor' ),
+					'title' => esc_html__( 'Space Between', 'refraction' ),
 					'icon' => 'eicon-justify-space-between-h',
 				],
 				'space-around' => [
-					'title' => esc_html__( 'Space Around', 'elementor' ),
+					'title' => esc_html__( 'Space Around', 'refraction' ),
 					'icon' => 'eicon-justify-space-around-h',
 				],
 				'space-evenly' => [
-					'title' => esc_html__( 'Space Evenly', 'elementor' ),
+					'title' => esc_html__( 'Space Evenly', 'refraction' ),
 					'icon' => 'eicon-justify-space-evenly-h',
 				],
 			],
@@ -223,33 +223,33 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 		];
 
 		$fields['align_content'] = [
-			'label' => esc_html__( 'Align Content', 'elementor' ),
+			'label' => esc_html__( 'Align Content', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'label_block' => true,
 			'default' => '',
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-justify-start-v',
 				],
 				'center' => [
-					'title' => esc_html__( 'Middle', 'elementor' ),
+					'title' => esc_html__( 'Middle', 'refraction' ),
 					'icon' => 'eicon-justify-center-v',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-justify-end-v',
 				],
 				'space-between' => [
-					'title' => esc_html__( 'Space Between', 'elementor' ),
+					'title' => esc_html__( 'Space Between', 'refraction' ),
 					'icon' => 'eicon-justify-space-between-v',
 				],
 				'space-around' => [
-					'title' => esc_html__( 'Space Around', 'elementor' ),
+					'title' => esc_html__( 'Space Around', 'refraction' ),
 					'icon' => 'eicon-justify-space-around-v',
 				],
 				'space-evenly' => [
-					'title' => esc_html__( 'Space Evenly', 'elementor' ),
+					'title' => esc_html__( 'Space Evenly', 'refraction' ),
 					'icon' => 'eicon-justify-space-evenly-v',
 				],
 			],

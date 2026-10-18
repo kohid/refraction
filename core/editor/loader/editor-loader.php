@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Core\Editor\Loader;
+namespace Refraction\Core\Editor\Loader;
 
-use Elementor\Core\Utils\Assets_Config_Provider;
-use Elementor\Core\Utils\Assets_Translation_Loader;
-use Elementor\Core\Utils\Collection;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Utils\Assets_Config_Provider;
+use Refraction\Core\Utils\Assets_Translation_Loader;
+use Refraction\Core\Utils\Collection;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -48,7 +48,7 @@ final class Editor_Loader {
 
 	const ADDITIONAL_DEPS = [
 		'editor-v1-adapters' => [
-			'elementor-web-cli',
+			'refraction-web-cli',
 		],
 		'wp-media' => [
 			'media-models',
@@ -90,20 +90,20 @@ final class Editor_Loader {
 		foreach ( $this->assets_config_provider->all() as $package => $config ) {
 			if ( self::ENV_PACKAGE === $package ) {
 				wp_register_script(
-					'elementor-editor-environment',
+					'refraction-editor-environment',
 					"{$assets_url}js/editor-environment{$min_suffix}.js",
 					[ $config['handle'] ],
-					ELEMENTOR_VERSION,
+					REFRACTION_VERSION,
 					true
 				);
 			}
 
 			if ( self::APP_PACKAGE === $package ) {
 				wp_register_script(
-					'elementor-editor-loader',
+					'refraction-editor-loader',
 					"{$assets_url}js/editor-loader{$min_suffix}.js",
-					[ 'elementor-editor', $config['handle'] ],
-					ELEMENTOR_VERSION,
+					[ 'refraction-editor', $config['handle'] ],
+					REFRACTION_VERSION,
 					true
 				);
 			}
@@ -115,14 +115,14 @@ final class Editor_Loader {
 				$config['handle'],
 				"{$assets_url}js/packages/{$package}/{$package}{$min_suffix}.js",
 				$deps,
-				ELEMENTOR_VERSION,
+				REFRACTION_VERSION,
 				true
 			);
 		}
 
 		$packages_handles = $this->assets_config_provider->pluck( 'handle' )->all();
 
-		Assets_Translation_Loader::for_handles( $packages_handles, 'elementor' );
+		Assets_Translation_Loader::for_handles( $packages_handles, 'refraction' );
 
 		$this->do_editor_action( 'scripts/register' );
 	}
@@ -130,15 +130,15 @@ final class Editor_Loader {
 	public function enqueue_scripts() {
 		$this->do_editor_action( 'scripts/enqueue/before' );
 
-		wp_enqueue_script( 'elementor-responsive-bar' );
+		wp_enqueue_script( 'refraction-responsive-bar' );
 
-		wp_enqueue_script( 'elementor-editor-environment' );
+		wp_enqueue_script( 'refraction-editor-environment' );
 
 		$env_config = $this->assets_config_provider->get( self::ENV_PACKAGE );
 
 		if ( $env_config ) {
 			$client_env = $this->apply_editor_filter( 'scripts/env', [
-				'@elementor/http-client' => [
+				'@refraction/http-client' => [
 					'base_url' => rest_url(),
 					'headers' => [
 						'X-WP-Nonce' => wp_create_nonce( 'wp_rest' ),
@@ -148,7 +148,7 @@ final class Editor_Loader {
 
 			Utils::print_js_config(
 				$env_config['handle'],
-				'elementorEditorEnv',
+				'refractionEditorEnv',
 				$client_env
 			);
 		}
@@ -162,12 +162,12 @@ final class Editor_Loader {
 		$this->do_editor_action( 'scripts/enqueue' );
 
 		Utils::print_js_config(
-			'elementor-editor',
-			'ElementorConfig',
+			'refraction-editor',
+			'RefractionConfig',
 			Editor_Scripts_Settings::get()
 		);
 
-		wp_enqueue_script( 'elementor-editor-loader' );
+		wp_enqueue_script( 'refraction-editor-loader' );
 
 		$this->do_editor_action( 'scripts/enqueue/after' );
 	}
@@ -180,10 +180,10 @@ final class Editor_Loader {
 
 		foreach ( $this->get_styles() as $style ) {
 			wp_register_style(
-				"elementor-{$style}",
+				"refraction-{$style}",
 				"{$assets_url}css/{$style}{$min_suffix}.css",
-				[ 'elementor-editor' ],
-				ELEMENTOR_VERSION
+				[ 'refraction-editor' ],
+				REFRACTION_VERSION
 			);
 		}
 
@@ -191,11 +191,11 @@ final class Editor_Loader {
 	}
 
 	public function enqueue_styles() {
-		wp_enqueue_style( 'elementor-editor' );
-		wp_enqueue_style( 'elementor-responsive-bar' );
+		wp_enqueue_style( 'refraction-editor' );
+		wp_enqueue_style( 'refraction-responsive-bar' );
 
 		foreach ( $this->get_styles() as $style ) {
-			wp_enqueue_style( "elementor-{$style}" );
+			wp_enqueue_style( "refraction-{$style}" );
 		}
 
 		$this->do_editor_action( 'styles/enqueue' );
@@ -204,7 +204,7 @@ final class Editor_Loader {
 	public function print_root_template() {
 		$body_file_path = __DIR__ . '/templates/editor-body-view.php';
 
-		include ELEMENTOR_PATH . 'includes/editor-templates/editor-wrapper.php';
+		include REFRACTION_PATH . 'includes/editor-templates/editor-wrapper.php';
 	}
 
 	public function register_additional_templates() {
@@ -219,10 +219,10 @@ final class Editor_Loader {
 			'responsive-bar',
 		];
 
-		$templates = apply_filters( 'elementor/editor/templates', $templates );
+		$templates = apply_filters( 'refraction/editor/templates', $templates );
 
 		foreach ( $templates as $template ) {
-			Plugin::$instance->common->add_template( ELEMENTOR_PATH . "includes/editor-templates/{$template}.php" );
+			Plugin::$instance->common->add_template( REFRACTION_PATH . "includes/editor-templates/{$template}.php" );
 		}
 	}
 
@@ -240,18 +240,18 @@ final class Editor_Loader {
 
 	private function do_editor_action( string $hook_suffix ): void {
 		if ( 'init' !== $hook_suffix ) {
-			do_action( 'elementor/editor/' . $hook_suffix );
+			do_action( 'refraction/editor/' . $hook_suffix );
 		}
 
-		do_action( 'elementor/editor/v1/' . $hook_suffix );
-		do_action( 'elementor/editor/v2/' . $hook_suffix );
+		do_action( 'refraction/editor/v1/' . $hook_suffix );
+		do_action( 'refraction/editor/v2/' . $hook_suffix );
 	}
 
 	private function apply_editor_filter( string $hook_suffix, $value ) {
-		$value = apply_filters( 'elementor/editor/' . $hook_suffix, $value );
-		$value = apply_filters( 'elementor/editor/v1/' . $hook_suffix, $value );
+		$value = apply_filters( 'refraction/editor/' . $hook_suffix, $value );
+		$value = apply_filters( 'refraction/editor/v1/' . $hook_suffix, $value );
 
-		return apply_filters( 'elementor/editor/v2/' . $hook_suffix, $value );
+		return apply_filters( 'refraction/editor/v2/' . $hook_suffix, $value );
 	}
 
 	private function scripts_source_map() {
@@ -296,7 +296,7 @@ final class Editor_Loader {
 				'ver' => '4.7.0',
 			],
 
-			'elementor-select2' => [
+			'refraction-select2' => [
 				'src' => "{$assets_url}lib/e-select2/css/e-select2{$min_suffix}.css",
 				'deps' => [],
 				'ver' => '4.0.6-rc.1',
@@ -321,18 +321,18 @@ final class Editor_Loader {
 		$min_suffix = $this->config->get( 'min_suffix' );
 
 		wp_register_script(
-			'elementor-editor-modules',
+			'refraction-editor-modules',
 			"{$assets_url}js/editor-modules{$min_suffix}.js",
-			[ 'elementor-common-modules' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-common-modules' ],
+			REFRACTION_VERSION,
 			true
 		);
 
 		wp_register_script(
-			'elementor-editor-document',
+			'refraction-editor-document',
 			"{$assets_url}js/editor-document{$min_suffix}.js",
-			[ 'elementor-common-modules' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-common-modules' ],
+			REFRACTION_VERSION,
 			true
 		);
 
@@ -369,7 +369,7 @@ final class Editor_Loader {
 		);
 
 		wp_register_script(
-			'jquery-elementor-select2',
+			'jquery-refraction-select2',
 			"{$assets_url}lib/e-select2/js/e-select2.full{$min_suffix}.js",
 			[ 'jquery' ],
 			'4.0.6-rc.1',
@@ -404,7 +404,7 @@ final class Editor_Loader {
 			);
 		}
 
-		add_action( 'elementor/assets-manager/register_scripts', function( $assets ) use ( $source_map ) {
+		add_action( 'refraction/assets-manager/register_scripts', function( $assets ) use ( $source_map ) {
 			foreach ( $source_map as $handle => $script ) {
 				$assets->append(
 					$handle,
@@ -416,12 +416,12 @@ final class Editor_Loader {
 		} );
 
 		wp_register_script(
-			'elementor-editor',
+			'refraction-editor',
 			"{$assets_url}js/editor{$min_suffix}.js",
 			[
-				'elementor-common',
-				'elementor-editor-modules',
-				'elementor-editor-document',
+				'refraction-common',
+				'refraction-editor-modules',
+				'refraction-editor-document',
 				'wp-auth-check',
 				'jquery-ui-sortable',
 				'jquery-ui-resizable',
@@ -430,7 +430,7 @@ final class Editor_Loader {
 				'tipsy',
 				'imagesloaded',
 				'heartbeat',
-				'jquery-elementor-select2',
+				'jquery-refraction-select2',
 				'flatpickr',
 				'ace',
 				'ace-language-tools',
@@ -440,21 +440,21 @@ final class Editor_Loader {
 				'react',
 				'react-dom',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		wp_set_script_translations( 'elementor-editor', 'elementor' );
+		wp_set_script_translations( 'refraction-editor', 'refraction' );
 
 		wp_register_script(
-			'elementor-responsive-bar',
+			'refraction-responsive-bar',
 			"{$assets_url}js/responsive-bar{$min_suffix}.js",
-			[ 'elementor-editor' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-editor' ],
+			REFRACTION_VERSION,
 			true
 		);
 
-		wp_set_script_translations( 'elementor-responsive-bar', 'elementor' );
+		wp_set_script_translations( 'refraction-responsive-bar', 'refraction' );
 	}
 
 	private function register_base_styles() {
@@ -466,7 +466,7 @@ final class Editor_Loader {
 			'google-font-roboto',
 			'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700',
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		$source_map = $this->styles_source_map();
@@ -480,7 +480,7 @@ final class Editor_Loader {
 			);
 		}
 
-		add_action( 'elementor/assets-manager/register_styles', function( $assets ) use ( $source_map ) {
+		add_action( 'refraction/assets-manager/register_styles', function( $assets ) use ( $source_map ) {
 			foreach ( $source_map as $handle => $style ) {
 				$assets->append(
 					$handle,
@@ -492,25 +492,25 @@ final class Editor_Loader {
 		} );
 
 		wp_register_style(
-			'elementor-editor',
+			'refraction-editor',
 			"{$assets_url}css/editor{$direction_suffix}{$min_suffix}.css",
 			[
-				'elementor-common',
-				'elementor-select2',
-				'elementor-icons',
+				'refraction-common',
+				'refraction-select2',
+				'refraction-icons',
 				'wp-auth-check',
 				'google-font-roboto',
 				'flatpickr',
 				'pickr',
 			],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_register_style(
-			'elementor-responsive-bar',
+			'refraction-responsive-bar',
 			"{$assets_url}css/responsive-bar{$min_suffix}.css",
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 	}
 }

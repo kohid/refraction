@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { useSuppressedMessage } from '@elementor/editor-current-user';
-import { notify } from '@elementor/editor-notifications';
+import { useSuppressedMessage } from '@refraction/editor-current-user';
+import { notify } from '@refraction/editor-notifications';
 import { __ } from '@wordpress/i18n';
 
 const MESSAGE_KEY = 'atomic_elements_promo';
@@ -13,7 +13,7 @@ export const usePromoSuppressedMessage = () => {
 			setSuppressMessage();
 			notify( {
 				type: 'default',
-				message: __( 'You can enable the Atomic editor anytime from Editor Settings.', 'elementor' ),
+				message: __( 'You can enable the Atomic editor anytime from Editor Settings.', 'refraction' ),
 				id: MESSAGE_KEY,
 			} );
 		}

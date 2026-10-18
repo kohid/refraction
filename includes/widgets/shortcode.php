@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor shortcode widget.
+ * Refraction shortcode widget.
  *
- * Elementor widget that insert any shortcodes into the page.
+ * Refraction widget that insert any shortcodes into the page.
  *
  * @since 1.0.0
  */
@@ -39,7 +39,7 @@ class Widget_Shortcode extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Shortcode', 'elementor' );
+		return esc_html__( 'Shortcode', 'refraction' );
 	}
 
 	/**
@@ -100,14 +100,14 @@ class Widget_Shortcode extends Widget_Base {
 		$this->start_controls_section(
 			'section_shortcode',
 			[
-				'label' => esc_html__( 'Shortcode', 'elementor' ),
+				'label' => esc_html__( 'Shortcode', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'shortcode',
 			[
-				'label' => esc_html__( 'Enter your shortcode', 'elementor' ),
+				'label' => esc_html__( 'Enter your shortcode', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
@@ -140,7 +140,7 @@ class Widget_Shortcode extends Widget_Base {
 
 		$shortcode = do_shortcode( shortcode_unautop( $shortcode ) );
 		?>
-		<div class="elementor-shortcode"><?php echo $shortcode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+		<div class="refraction-shortcode"><?php echo $shortcode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 		<?php
 	}
 

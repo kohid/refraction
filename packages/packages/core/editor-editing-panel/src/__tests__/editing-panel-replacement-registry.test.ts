@@ -1,4 +1,4 @@
-import { type ElementType } from '@elementor/editor-elements';
+import { type ElementType } from '@refraction/editor-elements';
 
 import { getEditingPanelReplacement, registerEditingPanelReplacement } from '../editing-panel-replacement-registry';
 import { mockElement } from './utils';

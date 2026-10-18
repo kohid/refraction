@@ -1,12 +1,12 @@
 import { isScrollSnapActive } from './utils';
 
-module.exports = elementorModules.ViewModule.extend( {
+module.exports = refractionModules.ViewModule.extend( {
 	getDefaultSettings() {
 		return {
 			scrollDuration: 500,
 			selectors: {
 				links: 'a[href*="#"]',
-				targets: '.elementor-element, .elementor-menu-anchor',
+				targets: '.refraction-element, .refraction-menu-anchor',
 				scrollable: isScrollSnapActive() ? 'body' : 'html, body',
 			},
 		};
@@ -22,7 +22,7 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	bindEvents() {
-		elementorFrontend.elements.$document.on( 'click', this.getSettings( 'selectors.links' ), this.handleAnchorLinks );
+		refractionFrontend.elements.$document.on( 'click', this.getSettings( 'selectors.links' ), this.handleAnchorLinks );
 	},
 
 	handleAnchorLinks( event ) {
@@ -46,8 +46,8 @@ module.exports = elementorModules.ViewModule.extend( {
 		}
 
 		var scrollTop = $anchor.offset().top,
-			$wpAdminBar = elementorFrontend.elements.$wpAdminBar,
-			$activeStickies = jQuery( '.elementor-section.elementor-sticky--active:visible' ),
+			$wpAdminBar = refractionFrontend.elements.$wpAdminBar,
+			$activeStickies = jQuery( '.refraction-section.refraction-sticky--active:visible' ),
 			maxStickyHeight = 0;
 
 		if ( $wpAdminBar.length > 0 ) {
@@ -65,11 +65,11 @@ module.exports = elementorModules.ViewModule.extend( {
 
 		event.preventDefault();
 
-		scrollTop = elementorFrontend.hooks.applyFilters( 'frontend/handlers/menu_anchor/scroll_top_distance', scrollTop );
+		scrollTop = refractionFrontend.hooks.applyFilters( 'frontend/handlers/menu_anchor/scroll_top_distance', scrollTop );
 
 		// On scroll animation start: remove scroll-snap.
 		if ( isScrollSnapActive() ) {
-			elementorFrontend.elements.$body.css( 'scroll-snap-type', 'none' );
+			refractionFrontend.elements.$body.css( 'scroll-snap-type', 'none' );
 		}
 
 		this.elements.$scrollable.animate( {
@@ -77,12 +77,12 @@ module.exports = elementorModules.ViewModule.extend( {
 		}, this.getSettings( 'scrollDuration' ), 'linear', () => {
 			// On scroll animation complete: add scroll-snap back.
 			if ( isScrollSnapActive() ) {
-				elementorFrontend.elements.$body.css( 'scroll-snap-type', '' );
+				refractionFrontend.elements.$body.css( 'scroll-snap-type', '' );
 			}
 		} );
 	},
 
 	onInit() {
-		elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+		refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 	},
 } );

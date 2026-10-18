@@ -1,6 +1,6 @@
 import BaseElementModel from './base-element-model';
 
-var ColumnSettingsModel = require( 'elementor-elements/models/column-settings' ),
+var ColumnSettingsModel = require( 'refraction-elements/models/column-settings' ),
 	ElementModel;
 
 /**
@@ -29,7 +29,7 @@ ElementModel = BaseElementModel.extend( {
 			elements = this.get( 'elements' );
 
 		if ( undefined !== elements ) {
-			var ElementsCollection = require( 'elementor-elements/collections/elements' );
+			var ElementsCollection = require( 'refraction-elements/collections/elements' );
 
 			this.set( 'elements', new ElementsCollection( elements ) );
 		}
@@ -61,7 +61,7 @@ ElementModel = BaseElementModel.extend( {
 			settingModels = {
 				column: ColumnSettingsModel,
 			},
-			SettingsModel = settingModels[ elType ] || elementorModules.editor.elements.models.BaseSettings;
+			SettingsModel = settingModels[ elType ] || refractionModules.editor.elements.models.BaseSettings;
 
 		if ( jQuery.isEmptyObject( settings ) ) {
 			settings = structuredClone( settings );
@@ -82,12 +82,12 @@ ElementModel = BaseElementModel.extend( {
 		}
 
 		settings = new SettingsModel( settings, {
-			controls: elementor.getElementControls( this ),
+			controls: refraction.getElementControls( this ),
 		} );
 
 		this.set( 'settings', settings );
 
-		elementorFrontend.config.elements.data[ this.cid ] = settings;
+		refractionFrontend.config.elements.data[ this.cid ] = settings;
 	},
 
 	initEditSettings() {
@@ -95,7 +95,7 @@ ElementModel = BaseElementModel.extend( {
 
 		this.set( 'editSettings', editSettings );
 
-		elementorFrontend.config.elements.editSettings[ this.cid ] = editSettings;
+		refractionFrontend.config.elements.editSettings[ this.cid ] = editSettings;
 	},
 
 	setSetting( key, value ) {
@@ -146,7 +146,7 @@ ElementModel = BaseElementModel.extend( {
 	},
 
 	getDefaultTitle() {
-		return elementor.getElementData( this ).title;
+		return refraction.getElementData( this ).title;
 	},
 
 	getTitle() {
@@ -167,7 +167,7 @@ ElementModel = BaseElementModel.extend( {
 	},
 
 	getVisibility() {
-		if ( elementor.helpers.isAtomicWidget( this ) ) {
+		if ( refraction.helpers.isAtomicWidget( this ) ) {
 			return !! this.get( 'editor_settings' )?.is_hidden;
 		}
 
@@ -175,7 +175,7 @@ ElementModel = BaseElementModel.extend( {
 	},
 
 	setVisibility( isHidden = false ) {
-		if ( elementor.helpers.isAtomicWidget( this ) ) {
+		if ( refraction.helpers.isAtomicWidget( this ) ) {
 			const prevEditorSettings = this.get( 'editor_settings' ) || {};
 
 			this.set( 'editor_settings', { ...prevEditorSettings, is_hidden: isHidden } );
@@ -191,7 +191,7 @@ ElementModel = BaseElementModel.extend( {
 	},
 
 	getIcon() {
-		const mainIcon = elementor.getElementData( this ).icon,
+		const mainIcon = refraction.getElementData( this ).icon,
 			custom = this.get( 'custom' );
 
 		if ( custom?.isPreset ?? false ) {
@@ -210,7 +210,7 @@ ElementModel = BaseElementModel.extend( {
 	createRemoteRenderRequest() {
 		var data = this.toJSON();
 
-		return elementorCommon.ajax.addRequest( 'render_widget', {
+		return refractionCommon.ajax.addRequest( 'render_widget', {
 			unique_id: this.cid,
 			data: {
 				data,
@@ -245,9 +245,9 @@ ElementModel = BaseElementModel.extend( {
 	},
 
 	clone() {
-		var newModel = new this.constructor( elementorCommon.helpers.cloneObject( this.attributes ) );
+		var newModel = new this.constructor( refractionCommon.helpers.cloneObject( this.attributes ) );
 
-		newModel.set( 'id', elementorCommon.helpers.getUniqueId() );
+		newModel.set( 'id', refractionCommon.helpers.getUniqueId() );
 
 		newModel.setHtmlCache( this.getHtmlCache() );
 

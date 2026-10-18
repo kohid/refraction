@@ -1,9 +1,9 @@
-module.exports = elementorModules.Module.extend( {
+module.exports = refractionModules.Module.extend( {
 
 	CACHE_KEY_NOT_FOUND_ERROR: 'Cache key not found',
 
 	tags: {
-		Base: require( 'elementor-dynamic-tags/tag' ),
+		Base: require( 'refraction-dynamic-tags/tag' ),
 	},
 
 	cache: {},
@@ -13,7 +13,7 @@ module.exports = elementorModules.Module.extend( {
 	cacheCallbacks: [],
 
 	getTagRenderPostId( tag ) {
-		return tag.editorRenderPostId ?? elementor.config.document.id;
+		return tag.editorRenderPostId ?? refraction.config.document.id;
 	},
 
 	addCacheRequest( tag ) {
@@ -78,10 +78,10 @@ module.exports = elementorModules.Module.extend( {
 		};
 
 		const needsUniqueIds = postIds.length > 1;
-		const batchId = needsUniqueIds ? elementorCommon.helpers.getUniqueId() : null;
+		const batchId = needsUniqueIds ? refractionCommon.helpers.getUniqueId() : null;
 
 		postIds.forEach( ( postId ) => {
-			elementorCommon.ajax.addRequest( 'render_tags', {
+			refractionCommon.ajax.addRequest( 'render_tags', {
 				...( needsUniqueIds ? { unique_id: `render_tags-${ postId }-${ batchId }` } : {} ),
 				data: {
 					post_id: Number( postId ),
@@ -106,7 +106,7 @@ module.exports = elementorModules.Module.extend( {
 	},
 
 	getConfig( key ) {
-		return this.getItems( elementor.config.dynamicTags, key );
+		return this.getItems( refraction.config.dynamicTags, key );
 	},
 
 	parseTagsText( text, settings, parseCallback ) {
@@ -116,7 +116,7 @@ module.exports = elementorModules.Module.extend( {
 			return self.parseTagText( text, settings, parseCallback );
 		}
 
-		return text.replace( /\[elementor-tag[^\]]+]/g, function( tagText ) {
+		return text.replace( /\[refraction-tag[^\]]+]/g, function( tagText ) {
 			return self.parseTagText( tagText, settings, parseCallback );
 		} );
 	},
@@ -159,7 +159,7 @@ module.exports = elementorModules.Module.extend( {
 		}
 
 		var TagClass = this.tags[ tagName ] || this.tags.Base,
-			model = new elementorModules.editor.elements.models.BaseSettings( tagSettings, {
+			model = new refractionModules.editor.elements.models.BaseSettings( tagSettings, {
 				controls: tagConfig.controls,
 			} );
 
@@ -179,11 +179,11 @@ module.exports = elementorModules.Module.extend( {
 	tagDataToTagText( tagID, tagName, tagSettings ) {
 		tagSettings = encodeURIComponent( JSON.stringify( ( tagSettings && tagSettings.toJSON( { remove: [ 'default' ] } ) ) || {} ) );
 
-		return '[elementor-tag id="' + tagID + '" name="' + tagName + '" settings="' + tagSettings + '"]';
+		return '[refraction-tag id="' + tagID + '" name="' + tagName + '" settings="' + tagSettings + '"]';
 	},
 
 	tagContainerToTagText( /** Container*/ container ) {
-		return elementor.dynamicTags.tagDataToTagText(
+		return refraction.dynamicTags.tagDataToTagText(
 			container.view.getOption( 'id' ),
 			container.view.getOption( 'name' ),
 			container.view.model,

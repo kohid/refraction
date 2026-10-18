@@ -1,4 +1,4 @@
-const ControlBaseDataView = require( 'elementor-controls/base-data' );
+const ControlBaseDataView = require( 'refraction-controls/base-data' );
 
 export default class extends ControlBaseDataView {
 	onReady() {
@@ -30,7 +30,7 @@ export default class extends ControlBaseDataView {
 		const startDateTimestamp = new Date( startDate ).getTime();
 		const endDateTimestamp = new Date( endDate ).getTime();
 
-		if ( elementor.conditions.compare( startDateTimestamp, endDateTimestamp, operator ) ) {
+		if ( refraction.conditions.compare( startDateTimestamp, endDateTimestamp, operator ) ) {
 			this.ui.input.val( '' );
 		}
 	}

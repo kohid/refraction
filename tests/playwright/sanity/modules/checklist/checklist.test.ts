@@ -97,7 +97,7 @@ test.describe( 'Launchpad checklist tests', () => {
 			checklist = editor.page.locator( selectors.popup ),
 			infotip = editor.page.locator( selectors.infotipFirstTimeClosed ),
 			infotipCloseButton = editor.page.locator( selectors.infotipFirstTimeClosedButton ),
-			url = '/wp-json/elementor/v1/checklist/user-progress';
+			url = '/wp-json/refraction/v1/checklist/user-progress';
 
 		const returnDataMock = ( firstClosedChecklistInEditor ) => {
 			return {
@@ -158,7 +158,7 @@ test.describe( 'Launchpad checklist tests', () => {
 			await editor.openUserPreferencesPanel();
 			await editor.openSection( 'preferences' );
 
-			await expect.soft( page.locator( `.elementor-control-${ controlIds.preferencePanel.checklistSwitcher }` ) )
+			await expect.soft( page.locator( `.refraction-control-${ controlIds.preferencePanel.checklistSwitcher }` ) )
 				.toHaveScreenshot( 'checklist-switch-on.png' );
 			await expect( page.locator( selectors.topBarIcon ) ).toBeVisible();
 		} );
@@ -183,7 +183,7 @@ test.describe( 'Launchpad checklist tests', () => {
 			await editor.openUserPreferencesPanel();
 			await editor.openSection( 'preferences' );
 
-			await expect.soft( page.locator( `.elementor-control-${ controlIds.preferencePanel.checklistSwitcher }` ) )
+			await expect.soft( page.locator( `.refraction-control-${ controlIds.preferencePanel.checklistSwitcher }` ) )
 				.toHaveScreenshot( 'checklist-switch-off.png' );
 			await expect( page.locator( selectors.topBarIcon ) ).toBeHidden();
 		} );
@@ -270,7 +270,7 @@ test.describe( 'Launchpad checklist tests', () => {
 			checklist = editor.page.locator( selectors.popup ),
 			allDone = editor.page.locator( selectors.allDone ),
 			gotItButton = editor.page.locator( selectors.gotItButton ),
-			url = '/wp-json/elementor/v1/checklist/steps';
+			url = '/wp-json/refraction/v1/checklist/steps';
 
 		const checklistHelper = new ChecklistHelper( page, testInfo, apiRequests );
 
@@ -365,19 +365,19 @@ test.describe( 'Launchpad checklist tests', () => {
 		await expect( page.locator( checklistHelper.getStepItemSelector( 'add_logo', '[data-is-checked="false"]' ) ) ).toBeVisible();
 		await checklistHelper.clickStepCta( 'add_logo', 'editor' );
 
-		await page.locator( '.elementor-control-site_logo' ).waitFor();
-		await page.locator( '.elementor-control-site_logo .eicon-plus-circle' ).click();
+		await page.locator( '.refraction-control-site_logo' ).waitFor();
+		await page.locator( '.refraction-control-site_logo .eicon-plus-circle' ).click();
 		await page.getByRole( 'tab', { name: 'Media Library' } ).click();
 		await page.locator( '.thumbnail' ).first().waitFor();
 		await page.locator( '.thumbnail' ).first().click();
 		await page.locator( '.button.media-button' ).click();
-		await page.locator( '.elementor-panel button', { hasText: 'Save Changes' } ).click();
+		await page.locator( '.refraction-panel button', { hasText: 'Save Changes' } ).click();
 
 		await page.locator( checklistHelper.getStepItemSelector( 'add_logo', '[data-is-checked="true"]' ) ).waitFor();
 
-		await page.locator( '.elementor-control-site_logo .elementor-control-media__content' ).hover();
-		await page.locator( '.elementor-control-site_logo .elementor-control-media__content .elementor-control-media__remove' ).click();
-		await page.locator( '.elementor-panel button', { hasText: 'Save Changes' } ).click();
+		await page.locator( '.refraction-control-site_logo .refraction-control-media__content' ).hover();
+		await page.locator( '.refraction-control-site_logo .refraction-control-media__content .refraction-control-media__remove' ).click();
+		await page.locator( '.refraction-panel button', { hasText: 'Save Changes' } ).click();
 
 		await page.locator( checklistHelper.getStepItemSelector( 'add_logo', '[data-is-checked="false"]' ) ).waitFor();
 	} );
@@ -394,7 +394,7 @@ test.describe( 'Launchpad checklist tests', () => {
 			await editor.openUserPreferencesPanel();
 
 			// See if the checklist switcher is visible for admin role users
-			await expect( editor.page.locator( `.elementor-control-${ controlIds.preferencePanel.checklistSwitcher }` ) ).toBeVisible();
+			await expect( editor.page.locator( `.refraction-control-${ controlIds.preferencePanel.checklistSwitcher }` ) ).toBeVisible();
 		} );
 
 		await test.step( 'Checklist not visible to author role', async () => {
@@ -412,7 +412,7 @@ test.describe( 'Launchpad checklist tests', () => {
 			await editor.openUserPreferencesPanel();
 
 			// See if the checklist switcher is not visible for admin role users
-			await expect( editor.page.locator( `.elementor-control-${ controlIds.preferencePanel.checklistSwitcher }` ) ).toBeHidden();
+			await expect( editor.page.locator( `.refraction-control-${ controlIds.preferencePanel.checklistSwitcher }` ) ).toBeHidden();
 		} );
 	} );
 } );

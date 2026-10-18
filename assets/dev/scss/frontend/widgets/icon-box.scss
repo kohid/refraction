@@ -3,11 +3,11 @@
 //
 
 @mixin icon-position($device) {
-	&.elementor#{$device}-position- {
+	&.refraction#{$device}-position- {
 
 		&inline-end {
 
-			.elementor-icon-box-wrapper {
+			.refraction-icon-box-wrapper {
 				text-align: end;
 				flex-direction: row-reverse;
 			}
@@ -15,7 +15,7 @@
 
 		&inline-start {
 
-			.elementor-icon-box-wrapper {
+			.refraction-icon-box-wrapper {
 				text-align: start;
 				flex-direction: row;
 			}
@@ -23,7 +23,7 @@
 
 		&block-start {
 
-			.elementor-icon-box-wrapper {
+			.refraction-icon-box-wrapper {
 				text-align: center;
 				flex-direction: column;
 				align-items: unset !important; // Specificity override to fix mobile icon alignment issue.
@@ -32,7 +32,7 @@
 
 		&block-end {
 
-			.elementor-icon-box-wrapper {
+			.refraction-icon-box-wrapper {
 				text-align: center;
 				flex-direction: column-reverse;
 				align-items: unset !important; // Specificity override to fix mobile icon alignment issue.
@@ -41,33 +41,33 @@
 	}
 }
 
-.elementor-widget-icon-box {
+.refraction-widget-icon-box {
 
-	.elementor-icon-box-wrapper {
+	.refraction-icon-box-wrapper {
 		display: flex;
 		text-align: center;
 		flex-direction: column;
 	}
 
-	.elementor-icon-box-icon {
+	.refraction-icon-box-icon {
 		display: inline-block;
 		flex: 0 0 auto; // Hack for Safari
 		line-height: 0;
 	}
 
-	.elementor-icon-box-content {
+	.refraction-icon-box-content {
 		width: 100%;
 		flex-grow: 1;
 	}
 
-	.elementor-icon-box-title {
+	.refraction-icon-box-title {
 
 		a {
 			color: inherit;
 		}
 	}
 
-	.elementor-icon-box-description {
+	.refraction-icon-box-description {
 		margin: 0;
 	}
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor;
+namespace Refraction;
 
 /**
- * Elementor has validation interface.
+ * Refraction has validation interface.
  *
  * @param array $control_data The value to validate.
  * @return bool True on valid, throws an exception on error.

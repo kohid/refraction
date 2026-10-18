@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DEFAULT_PSEUDO_STATES, PseudoStateMenuItems } from '@elementor/editor-editing-panel';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
+import { DEFAULT_PSEUDO_STATES, PseudoStateMenuItems } from '@refraction/editor-editing-panel';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
 import { bindMenu, Menu, type PopupState } from '@elementor/ui';
 
 type TagStateMenuProps = {

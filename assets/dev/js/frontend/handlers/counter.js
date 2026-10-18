@@ -1,8 +1,8 @@
-export default class Counter extends elementorModules.frontend.handlers.Base {
+export default class Counter extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				counterNumber: '.elementor-counter-number',
+				counterNumber: '.refraction-counter-number',
 			},
 		};
 	}
@@ -17,7 +17,7 @@ export default class Counter extends elementorModules.frontend.handlers.Base {
 	onInit() {
 		super.onInit();
 
-		this.intersectionObserver = elementorModules.utils.Scroll.scrollObserver( {
+		this.intersectionObserver = refractionModules.utils.Scroll.scrollObserver( {
 			callback: ( event ) => {
 				if ( event.isInViewport ) {
 					this.intersectionObserver.unobserve( this.elements.$counterNumber[ 0 ] );

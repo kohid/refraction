@@ -1,11 +1,11 @@
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
 import { type CssClassUsage } from './components/css-class-usage/types';
 import { type GlobalClasses } from './store';
 
 const RESOURCE_URL = '/global-classes';
-const BASE_URL = 'elementor/v1';
+const BASE_URL = 'refraction/v1';
 const RESOURCE_USAGE_URL = `${ RESOURCE_URL }/usage`;
 const RESOURCE_POST_URL = `${ RESOURCE_URL }/post`;
 const RESOURCE_STYLES_URL = `${ RESOURCE_URL }/styles`;

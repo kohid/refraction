@@ -10,8 +10,8 @@ export type TVariable = {
 
 export type TVariablesList = Record< string, TVariable >;
 
-const STORAGE_KEY = 'elementor-global-variables';
-const STORAGE_WATERMARK_KEY = 'elementor-global-variables-watermark';
+const STORAGE_KEY = 'refraction-global-variables';
+const STORAGE_WATERMARK_KEY = 'refraction-global-variables-watermark';
 
 export const STORAGE_UPDATED_EVENT = 'variables:updated';
 

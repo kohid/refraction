@@ -27,7 +27,7 @@ export function ComponentsUpdateAlert( { title, description }: ComponentsUpdateA
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{ __( 'Upgrade Now', 'elementor' ) }
+						{ __( 'Upgrade Now', 'refraction' ) }
 					</AlertAction>
 				}
 				sx={ { m: 2, mt: 1 } }

@@ -4,9 +4,9 @@ import {
 	createPropsResolver,
 	type PropsResolver,
 	stylesInheritanceTransformersRegistry,
-} from '@elementor/editor-canvas';
-import { type PropKey, type PropType } from '@elementor/editor-props';
-import { PopoverHeader, useSectionWidth } from '@elementor/editor-ui';
+} from '@refraction/editor-canvas';
+import { type PropKey, type PropType } from '@refraction/editor-props';
+import { PopoverHeader, useSectionWidth } from '@refraction/editor-ui';
 import {
 	Backdrop,
 	Box,
@@ -109,7 +109,7 @@ export const StylesInheritanceInfotip = ( {
 						backgroundColor: 'background.paper',
 					} }
 				>
-					<PopoverHeader title={ __( 'Style origin', 'elementor' ) } onClose={ closeInfotip } />
+					<PopoverHeader title={ __( 'Style origin', 'refraction' ) } onClose={ closeInfotip } />
 				</Box>
 
 				<CardContent
@@ -133,7 +133,7 @@ export const StylesInheritanceInfotip = ( {
 									gap={ 0.5 }
 									role="listitem"
 									// translators: %s is the display label of the inheritance item
-									aria-label={ __( 'Inheritance item: %s', 'elementor' ).replace(
+									aria-label={ __( 'Inheritance item: %s', 'refraction' ).replace(
 										'%s',
 										item.displayLabel
 									) }
@@ -224,7 +224,7 @@ function TooltipOrInfotip( {
 	}
 
 	return (
-		<Tooltip title={ __( 'Style origin', 'elementor' ) } placement="top">
+		<Tooltip title={ __( 'Style origin', 'refraction' ) } placement="top">
 			{ children }
 		</Tooltip>
 	);

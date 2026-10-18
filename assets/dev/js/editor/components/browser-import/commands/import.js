@@ -3,7 +3,7 @@ export class Import extends $e.modules.CommandBase {
 	 * @inheritDoc
 	 */
 	validateArgs() {
-		this.requireArgumentInstance( 'target', elementorModules.editor.Container );
+		this.requireArgumentInstance( 'target', refractionModules.editor.Container );
 	}
 
 	/**

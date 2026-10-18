@@ -1,5 +1,5 @@
-import { type V1Element, type V1ElementData } from '@elementor/editor-elements';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { type V1Element, type V1ElementData } from '@refraction/editor-elements';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
 import { loadComponentsAssets } from '../store/actions/load-components-assets';
 

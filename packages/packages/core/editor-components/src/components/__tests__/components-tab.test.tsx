@@ -6,7 +6,7 @@ import {
 	__registerSlice as registerSlice,
 	type SliceState,
 	type Store,
-} from '@elementor/store';
+} from '@refraction/store';
 import { act, fireEvent, screen } from '@testing-library/react';
 
 import { slice } from '../../store/store';
@@ -18,12 +18,12 @@ import { ComponentsList } from '../components-tab/components-list';
 import { SearchProvider } from '../components-tab/search-provider';
 
 type ExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		helpers?: {
 			hasPro?: () => boolean;
 		};
 	};
-	elementorPro?: {
+	refractionPro?: {
 		config?: {
 			isActive?: boolean;
 			version?: string;
@@ -31,13 +31,13 @@ type ExtendedWindow = Window & {
 	};
 };
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	getV1DocumentsManager: jest.fn(),
 	setDocumentModifiedStatus: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-mcp', () => {
-	const { toolPrompts } = jest.requireActual( '@elementor/editor-mcp' ) as {
+jest.mock( '@refraction/editor-mcp', () => {
+	const { toolPrompts } = jest.requireActual( '@refraction/editor-mcp' ) as {
 		toolPrompts: ( name: string ) => unknown;
 	};
 	return {
@@ -49,7 +49,7 @@ jest.mock( '@elementor/editor-mcp', () => {
 	};
 } );
 
-jest.mock( '@elementor/editor-current-user' );
+jest.mock( '@refraction/editor-current-user' );
 
 mockCurrentUserCapabilities( true );
 
@@ -66,26 +66,26 @@ const mockComponents = [
 const extendedWindow = window as unknown as ExtendedWindow;
 
 function setHasPro( value: boolean, version = '4.0' ) {
-	extendedWindow.elementor = {
-		...extendedWindow.elementor,
+	extendedWindow.refraction = {
+		...extendedWindow.refraction,
 		helpers: {
-			...extendedWindow.elementor?.helpers,
+			...extendedWindow.refraction?.helpers,
 			hasPro: () => value,
 		},
 	};
 
-	extendedWindow.elementorPro = value ? { config: { isActive: true, version } } : undefined;
+	extendedWindow.refractionPro = value ? { config: { isActive: true, version } } : undefined;
 }
 
 describe( 'ComponentsTab', () => {
 	let store: Store< SliceState< typeof slice > >;
-	let originalElementor: ExtendedWindow[ 'elementor' ];
-	let originalElementorPro: ExtendedWindow[ 'elementorPro' ];
+	let originalRefraction: ExtendedWindow[ 'refraction' ];
+	let originalRefractionPro: ExtendedWindow[ 'refractionPro' ];
 
 	beforeEach( () => {
 		jest.useFakeTimers();
-		originalElementor = extendedWindow.elementor;
-		originalElementorPro = extendedWindow.elementorPro;
+		originalRefraction = extendedWindow.refraction;
+		originalRefractionPro = extendedWindow.refractionPro;
 		setHasPro( true );
 		registerSlice( slice );
 		store = __createStore();
@@ -95,8 +95,8 @@ describe( 'ComponentsTab', () => {
 	} );
 
 	afterEach( () => {
-		extendedWindow.elementor = originalElementor;
-		extendedWindow.elementorPro = originalElementorPro;
+		extendedWindow.refraction = originalRefraction;
+		extendedWindow.refractionPro = originalRefractionPro;
 		if ( jest.isMockFunction( setTimeout ) ) {
 			jest.runOnlyPendingTimers();
 			jest.clearAllTimers();

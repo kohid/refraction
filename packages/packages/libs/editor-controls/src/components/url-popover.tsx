@@ -52,7 +52,7 @@ export const UrlPopover = ( {
 					onChange={ onChange }
 					size="tiny"
 					fullWidth
-					placeholder={ __( 'Type a URL', 'elementor' ) }
+					placeholder={ __( 'Type a URL', 'refraction' ) }
 					inputProps={ { ref: inputRef } }
 					color="secondary"
 					InputProps={ { sx: { borderRadius: '8px' } } }
@@ -60,13 +60,13 @@ export const UrlPopover = ( {
 						event.key === 'Enter' && handleClose()
 					}
 				/>
-				<Tooltip title={ __( 'Open in a new tab', 'elementor' ) }>
+				<Tooltip title={ __( 'Open in a new tab', 'refraction' ) }>
 					<ToggleButton
 						size="tiny"
 						value="newTab"
 						selected={ openInNewTab }
 						onClick={ onToggleNewTab }
-						aria-label={ __( 'Open in a new tab', 'elementor' ) }
+						aria-label={ __( 'Open in a new tab', 'refraction' ) }
 						sx={ { borderRadius: '8px' } }
 					>
 						<ExternalLinkIcon fontSize="tiny" />

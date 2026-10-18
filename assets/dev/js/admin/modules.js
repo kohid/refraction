@@ -1,7 +1,7 @@
-import MenuHandler from 'elementor-admin/menu-handler';
+import MenuHandler from 'refraction-admin/menu-handler';
 import Introduction from '../utils/introduction';
 
-elementorModules.admin = {
+refractionModules.admin = {
 	MenuHandler,
 
 	utils: {

@@ -1,4 +1,4 @@
-import { type ControlComponent, TextControl } from '@elementor/editor-controls';
+import { type ControlComponent, TextControl } from '@refraction/editor-controls';
 import {
 	booleanPropTypeUtil,
 	imagePropTypeUtil,
@@ -8,7 +8,7 @@ import {
 	stringArrayPropTypeUtil,
 	stringPropTypeUtil,
 	svgSrcPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 import { ControlTypeAlreadyRegisteredError, ControlTypeNotRegisteredError } from '../../errors';
 import { controlsRegistry, type ControlType } from '../controls-registry';

@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import * as commands from './commands/';
 
 export default class Component extends ComponentBase {
@@ -12,7 +12,7 @@ export default class Component extends ComponentBase {
 
 	defaultShortcuts() {
 		const shouldRun = () => {
-			const selectedElements = elementor.selection.getElements();
+			const selectedElements = refraction.selection.getElements();
 
 			if ( ! selectedElements.length ) {
 				return false;

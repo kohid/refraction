@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Checklist\Steps;
+namespace Refraction\Modules\Checklist\Steps;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,15 +20,15 @@ class Assign_Homepage extends Step_Base {
 	}
 
 	public function get_title(): string {
-		return esc_html__( 'Assign a homepage', 'elementor' );
+		return esc_html__( 'Assign a homepage', 'refraction' );
 	}
 
 	public function get_description(): string {
-		return esc_html__( 'Before your launch, make sure to assign a homepage so visitors have a clear entry point into your site.', 'elementor' );
+		return esc_html__( 'Before your launch, make sure to assign a homepage so visitors have a clear entry point into your site.', 'refraction' );
 	}
 
 	public function get_cta_text(): string {
-		return esc_html__( 'Assign homepage', 'elementor' );
+		return esc_html__( 'Assign homepage', 'refraction' );
 	}
 
 	public function get_cta_url(): string {

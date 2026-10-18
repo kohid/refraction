@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Upgrade;
+namespace Refraction\Core\Upgrade;
 
-use Elementor\Core\Base\Background_Task;
-use Elementor\Core\Base\DB_Upgrades_Manager;
+use Refraction\Core\Base\Background_Task;
+use Refraction\Core\Base\DB_Upgrades_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

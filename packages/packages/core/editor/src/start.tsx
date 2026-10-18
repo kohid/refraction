@@ -2,10 +2,10 @@ import * as React from 'react';
 import { type JSX } from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
-import { GlobalDialog } from '@elementor/editor-ui';
-import { __privateDispatchReadyEvent as dispatchReadyEvent } from '@elementor/editor-v1-adapters';
-import { createQueryClient, QueryClientProvider } from '@elementor/query';
-import { __createStore, __StoreProvider as StoreProvider } from '@elementor/store';
+import { GlobalDialog } from '@refraction/editor-ui';
+import { __privateDispatchReadyEvent as dispatchReadyEvent } from '@refraction/editor-v1-adapters';
+import { createQueryClient, QueryClientProvider } from '@refraction/query';
+import { __createStore, __StoreProvider as StoreProvider } from '@refraction/store';
 import { DirectionProvider, ThemeProvider } from '@elementor/ui';
 
 import Shell from './components/shell';

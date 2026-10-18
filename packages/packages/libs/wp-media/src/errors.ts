@@ -1,4 +1,4 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export const WpMediaNotAvailableError = createError( {
 	code: 'wp_media_not_available',

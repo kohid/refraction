@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
-import { PopoverBody, PopoverHeader, PopoverMenuList, SearchField } from '@elementor/editor-ui';
+import { PopoverBody, PopoverHeader, PopoverMenuList, SearchField } from '@refraction/editor-ui';
 import { Box, Divider, Link, Stack, Typography } from '@elementor/ui';
-import { debounce } from '@elementor/utils';
+import { debounce } from '@refraction/utils';
 import { __ } from '@wordpress/i18n';
 
 import { type SelectableItem, useFilteredItemsList } from '../hooks/use-filtered-items-list';
@@ -64,7 +64,7 @@ export const ItemSelector = ( {
 			<SearchField
 				value={ searchValue }
 				onSearch={ handleSearch }
-				placeholder={ __( 'Search', 'elementor' ) }
+				placeholder={ __( 'Search', 'refraction' ) }
 				id={ id + '-search' }
 			/>
 
@@ -93,7 +93,7 @@ export const ItemSelector = ( {
 						<IconComponent fontSize="large" />
 						<Box sx={ { maxWidth: 160, overflow: 'hidden' } }>
 							<Typography align="center" variant="subtitle2" color="text.secondary">
-								{ __( 'Sorry, nothing matched', 'elementor' ) }
+								{ __( 'Sorry, nothing matched', 'refraction' ) }
 							</Typography>
 							<Typography
 								variant="subtitle2"
@@ -116,14 +116,14 @@ export const ItemSelector = ( {
 							color="text.secondary"
 							sx={ { display: 'flex', flexDirection: 'column' } }
 						>
-							{ __( 'Try something else.', 'elementor' ) }
+							{ __( 'Try something else.', 'refraction' ) }
 							<Link
 								color="secondary"
 								variant="caption"
 								component="button"
 								onClick={ () => setSearchValue( '' ) }
 							>
-								{ __( 'Clear & try again', 'elementor' ) }
+								{ __( 'Clear & try again', 'refraction' ) }
 							</Link>
 						</Typography>
 					</Stack>

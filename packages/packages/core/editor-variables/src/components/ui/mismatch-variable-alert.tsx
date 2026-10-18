@@ -9,14 +9,14 @@ type AlertProps = {
 };
 
 const i18n = {
-	title: __( 'Variable has changed', 'elementor' ),
+	title: __( 'Variable has changed', 'refraction' ),
 	message: __(
 		`This variable is no longer compatible with this property. You can clear it or select a different one.`,
-		'elementor'
+		'refraction'
 	),
 	buttons: {
-		clear: __( 'Clear', 'elementor' ),
-		select: __( 'Select variable', 'elementor' ),
+		clear: __( 'Clear', 'refraction' ),
+		select: __( 'Select variable', 'refraction' ),
 	},
 };
 

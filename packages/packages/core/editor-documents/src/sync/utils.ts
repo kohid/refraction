@@ -1,16 +1,16 @@
 import {
 	__privateRunCommand as runCommand,
 	__privateRunCommandSync as runCommandSync,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 import { getCurrentDocument } from '../store/get-current-document';
 import { type Document, type ExtendedWindow, type V1Document } from '../types';
 
 export function getV1DocumentsManager() {
-	const documentsManager = ( window as unknown as ExtendedWindow ).elementor?.documents;
+	const documentsManager = ( window as unknown as ExtendedWindow ).refraction?.documents;
 
 	if ( ! documentsManager ) {
-		throw new Error( 'Elementor Editor V1 documents manager not found' );
+		throw new Error( 'Refraction Editor V1 documents manager not found' );
 	}
 
 	return documentsManager;
@@ -18,7 +18,7 @@ export function getV1DocumentsManager() {
 
 export function getV1DocumentsExitTo( documentData: V1Document ) {
 	const exitPreference =
-		( window as unknown as ExtendedWindow ).elementor?.getPreferences?.( 'exit_to' ) || 'this_post';
+		( window as unknown as ExtendedWindow ).refraction?.getPreferences?.( 'exit_to' ) || 'this_post';
 
 	switch ( exitPreference ) {
 		case 'dashboard':
@@ -84,7 +84,7 @@ export function setDocumentModifiedStatus( status: boolean ) {
 }
 
 export function getV1CurrentDocument(): V1Document {
-	return ( window as unknown as ExtendedWindow ).elementor?.documents?.getCurrent();
+	return ( window as unknown as ExtendedWindow ).refraction?.documents?.getCurrent();
 }
 
 export function isDocumentDirty( document: Document ) {

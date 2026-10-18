@@ -1,12 +1,12 @@
-import ContainerHelper from 'elementor-editor-utils/container-helper';
-import environment from 'elementor-common/utils/environment';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import ContainerHelper from 'refraction-editor-utils/container-helper';
+import environment from 'refraction-common/utils/environment';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 /**
  * @typedef {import('../../container/container')} Container
  */
 class AddSectionBase extends Marionette.ItemView {
-	static IS_CONTAINER_ACTIVE = ! ! elementorCommon.config.experimentalFeatures.container;
+	static IS_CONTAINER_ACTIVE = ! ! refractionCommon.config.experimentalFeatures.container;
 
 	// Views.
 	static VIEW_CHOOSE_ACTION = 'choose-action';
@@ -26,25 +26,25 @@ class AddSectionBase extends Marionette.ItemView {
 	}
 
 	template() {
-		return Marionette.TemplateCache.get( '#tmpl-elementor-add-section' );
+		return Marionette.TemplateCache.get( '#tmpl-refraction-add-section' );
 	}
 
 	attributes() {
 		return {
-			'aria-label': __( 'Add new layout element', 'elementor' ),
+			'aria-label': __( 'Add new layout element', 'refraction' ),
 			'data-view': AddSectionBase.VIEW_CHOOSE_ACTION,
 		};
 	}
 
 	ui() {
 		return {
-			addNewSection: '.elementor-add-new-section',
-			closeButton: '.elementor-add-section-close',
-			backButton: '.elementor-add-section-back',
-			addSectionButton: '.elementor-add-section-button',
-			addTemplateButton: '.elementor-add-template-button',
-			selectPreset: '.elementor-select-preset',
-			presets: '.elementor-preset',
+			addNewSection: '.refraction-add-new-section',
+			closeButton: '.refraction-add-section-close',
+			backButton: '.refraction-add-section-back',
+			addSectionButton: '.refraction-add-section-button',
+			addTemplateButton: '.refraction-add-template-button',
+			selectPreset: '.refraction-select-preset',
+			presets: '.refraction-preset',
 			flexPresetButton: '.flex-preset-button',
 			gridPresetButton: '.grid-preset-button',
 			chooseFlexPreset: '.e-con-select-preset-flex .e-con-preset',
@@ -69,13 +69,13 @@ class AddSectionBase extends Marionette.ItemView {
 	behaviors() {
 		const behaviors = {
 			contextMenu: {
-				behaviorClass: require( 'elementor-behaviors/context-menu' ),
+				behaviorClass: require( 'refraction-behaviors/context-menu' ),
 				groups: this.getContextMenuGroups(),
-				eventTargets: [ '.elementor-add-section-inner' ],
+				eventTargets: [ '.refraction-add-section-inner' ],
 			},
 		};
 
-		return elementor.hooks.applyFilters( 'views/add-section/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'views/add-section/behaviors', behaviors, this );
 	}
 
 	tagName() {
@@ -83,7 +83,7 @@ class AddSectionBase extends Marionette.ItemView {
 	}
 
 	className() {
-		return 'elementor-add-section elementor-visible-desktop';
+		return 'refraction-add-section refraction-visible-desktop';
 	}
 
 	setView( view ) {
@@ -108,7 +108,7 @@ class AddSectionBase extends Marionette.ItemView {
 
 	getContextMenuGroups() {
 		var hasContent = function() {
-			return elementor.elements.length > 0;
+			return refraction.elements.length > 0;
 		};
 
 		const controlSign = environment.mac ? '&#8984;' : '^';
@@ -119,11 +119,11 @@ class AddSectionBase extends Marionette.ItemView {
 				actions: [
 					{
 						name: 'paste',
-						title: __( 'Paste', 'elementor' ),
+						title: __( 'Paste', 'refraction' ),
 						shortcut: controlSign + '+V',
-						isEnabled: () => $e.components.get( 'document/elements' ).utils.isPasteEnabled( elementor.getPreviewContainer() ),
+						isEnabled: () => $e.components.get( 'document/elements' ).utils.isPasteEnabled( refraction.getPreviewContainer() ),
 						callback: () => $e.run( 'document/ui/paste', {
-							container: elementor.getPreviewContainer(),
+							container: refraction.getPreviewContainer(),
 							options: {
 								at: this.getOption( 'at' ),
 								rebuild: true,
@@ -133,9 +133,9 @@ class AddSectionBase extends Marionette.ItemView {
 					}, {
 						name: 'paste_area',
 						icon: 'eicon-import-export',
-						title: __( 'Paste from other site', 'elementor' ),
+						title: __( 'Paste from other site', 'refraction' ),
 						callback: () => $e.run( 'document/elements/paste-area', {
-							container: elementor.getPreviewContainer(),
+							container: refraction.getPreviewContainer(),
 							options: {
 								at: this.getOption( 'at' ),
 								rebuild: true,
@@ -148,12 +148,12 @@ class AddSectionBase extends Marionette.ItemView {
 				actions: [
 					{
 						name: 'copy_all_content',
-						title: __( 'Copy All Content', 'elementor' ),
+						title: __( 'Copy All Content', 'refraction' ),
 						isEnabled: hasContent,
 						callback: () => $e.run( 'document/elements/copy-all' ),
 					}, {
 						name: 'delete_all_content',
-						title: __( 'Delete All Content', 'elementor' ),
+						title: __( 'Delete All Content', 'refraction' ),
 						isEnabled: hasContent,
 						callback: () => $e.run( 'document/elements/empty' ),
 					},
@@ -176,10 +176,10 @@ class AddSectionBase extends Marionette.ItemView {
 	onRender() {
 		this.$el.html5Droppable( {
 			axis: [ 'vertical' ],
-			groups: [ 'elementor-element' ],
+			groups: [ 'refraction-element' ],
 			placeholder: false,
-			currentElementClass: 'elementor-html5dnd-current-element',
-			hasDraggingOnChildClass: 'elementor-dragging-on-child',
+			currentElementClass: 'refraction-html5dnd-current-element',
+			hasDraggingOnChildClass: 'refraction-dragging-on-child',
 			// Merge different options if provided by child elements
 			...this.getDroppableOptions(),
 		} );
@@ -188,10 +188,10 @@ class AddSectionBase extends Marionette.ItemView {
 	getDroppableOptions() {
 		return {
 			isDroppingAllowed: () => {
-				return ! elementor.channels.editor.request( 'element:dragged' )?.el?.dataset?.id;
+				return ! refraction.channels.editor.request( 'element:dragged' )?.el?.dataset?.id;
 			},
 			onDropping: ( side, event ) => {
-				elementor.getPreviewView().onDrop(
+				refraction.getPreviewView().onDrop(
 					event,
 					{ side, at: this.getOption( 'at' ) },
 				);
@@ -216,7 +216,7 @@ class AddSectionBase extends Marionette.ItemView {
 
 		const newContainer = ContainerHelper.createContainerFromGridPreset(
 			selectedStructure,
-			elementor.getPreviewContainer(),
+			refraction.getPreviewContainer(),
 			this.options,
 		);
 
@@ -231,13 +231,13 @@ class AddSectionBase extends Marionette.ItemView {
 		this.closeSelectPresets();
 
 		const selectedStructure = event.currentTarget.dataset.structure,
-			parsedStructure = elementor.presetsFactory.getParsedStructure( selectedStructure );
+			parsedStructure = refraction.presetsFactory.getParsedStructure( selectedStructure );
 
 		$e.run( 'document/elements/create', {
 			model: {
 				elType: 'section',
 			},
-			container: elementor.getPreviewContainer(),
+			container: refraction.getPreviewContainer(),
 			columns: parsedStructure.columnsCount,
 			structure: selectedStructure,
 			options: Object.assign( {}, this.options ),
@@ -267,13 +267,13 @@ class AddSectionBase extends Marionette.ItemView {
 
 		return ContainerHelper.createContainerFromPreset(
 			preset,
-			elementor.getPreviewContainer(),
+			refraction.getPreviewContainer(),
 			this.options,
 		);
 	}
 
 	onDropping() {
-		elementor.getPreviewView().addElementFromPanel();
+		refraction.getPreviewView().addElementFromPanel();
 	}
 
 	onAfterPaste() {}

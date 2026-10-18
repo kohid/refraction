@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ImportComplete from 'elementor/app/modules/import-export-customization/assets/js/import/pages/import-complete';
-import eventsConfig from 'elementor/core/common/modules/events-manager/assets/js/events-config';
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import ImportComplete from 'refraction/app/modules/import-export-customization/assets/js/import/pages/import-complete';
+import eventsConfig from 'refraction/core/common/modules/events-manager/assets/js/events-config';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
 
 const mockUseImportContext = jest.fn();
 const mockNavigate = jest.fn();
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection' );
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection' );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
 	useImportContext: () => mockUseImportContext(),
 } ) );
 
@@ -19,7 +19,7 @@ jest.mock( '@reach/router', () => ( {
 
 const mockSendPageViewsWebsiteTemplates = jest.fn();
 const mockSendImportKitCustomization = jest.fn();
-jest.mock( 'elementor/app/assets/js/event-track/apps-event-tracking', () => ( {
+jest.mock( 'refraction/app/assets/js/event-track/apps-event-tracking', () => ( {
 	AppsEventTracking: {
 		sendPageViewsWebsiteTemplates: ( ...args ) => mockSendPageViewsWebsiteTemplates( ...args ),
 		sendImportKitCustomization: ( ...args ) => mockSendImportKitCustomization( ...args ),
@@ -32,8 +32,8 @@ describe( 'ImportComplete Page', () => {
 			isImport: true,
 			contextData: { data: { kitUploadParams: { source: 'cloud' } } },
 		} ) );
-		global.elementorAppConfig = { assets_url: 'http://localhost/assets/' };
-		global.elementorCommon = {
+		global.refractionAppConfig = { assets_url: 'http://localhost/assets/' };
+		global.refractionCommon = {
 			eventsManager: {
 				config: eventsConfig,
 			},
@@ -41,8 +41,8 @@ describe( 'ImportComplete Page', () => {
 	} );
 
 	afterEach( () => {
-		delete global.elementorAppConfig;
-		delete global.elementorCommon;
+		delete global.refractionAppConfig;
+		delete global.refractionCommon;
 	} );
 
 	function setup( { isCompleted = true } = {} ) {
@@ -106,7 +106,7 @@ describe( 'ImportComplete Page', () => {
 
 	describe( 'getContentSummary function', () => {
 		beforeEach( () => {
-			global.elementorAppConfig = {
+			global.refractionAppConfig = {
 				assets_url: 'http://localhost/assets/',
 				'import-export-customization': {
 					summaryTitles: {
@@ -206,14 +206,14 @@ describe( 'ImportComplete Page', () => {
 			expect( screen.getByText( '3 Pages | 1 Product' ) ).toBeTruthy();
 		} );
 
-		it( 'counts succeed items from elementor-content section', () => {
+		it( 'counts succeed items from refraction-content section', () => {
 			// Arrange
 			mockUseImportContext.mockReturnValue( {
 				isCompleted: true,
 				data: { includes: [ 'content' ] },
 				runnersState: {
 					plugins: [],
-					'elementor-content': {
+					'refraction-content': {
 						page: {
 							succeed: { 1: 101 },
 							failed: [],
@@ -344,7 +344,7 @@ describe( 'ImportComplete Page', () => {
 							failed: [],
 						},
 					},
-					'elementor-content': {
+					'refraction-content': {
 						page: {
 							succeed: { 4: 104, 5: 105 },
 							failed: [],
@@ -459,14 +459,14 @@ describe( 'ImportComplete Page', () => {
 			expect( screen.getByText( '1 Menu' ) ).toBeTruthy();
 		} );
 
-		it( 'counts nav menu items from elementor-content section', () => {
+		it( 'counts nav menu items from refraction-content section', () => {
 			// Arrange
 			mockUseImportContext.mockReturnValue( {
 				isCompleted: true,
 				data: { includes: [ 'content' ] },
 				runnersState: {
 					plugins: [],
-					'elementor-content': {
+					'refraction-content': {
 						nav_menu_item: {
 							succeed: { 1: 101, 2: 102 },
 							failed: [],
@@ -499,7 +499,7 @@ describe( 'ImportComplete Page', () => {
 							failed: [],
 						},
 					},
-					'elementor-content': {
+					'refraction-content': {
 						nav_menu_item: {
 							succeed: { 4: 104, 5: 105 },
 							failed: [],
@@ -594,7 +594,7 @@ describe( 'ImportComplete Page', () => {
 				isCompleted: true,
 				data: { includes: [ 'content' ] },
 				runnersState: {
-					plugins: [ 'Elementor' ],
+					plugins: [ 'Refraction' ],
 					taxonomies: {
 						post: {
 							category: [

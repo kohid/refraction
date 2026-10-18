@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { SizeControl } from '@elementor/editor-controls';
+import { SizeControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const WORD_SPACING_LABEL = __( 'Word spacing', 'elementor' );
+const WORD_SPACING_LABEL = __( 'Word spacing', 'refraction' );
 
 export const WordSpacingField = () => {
 	const rowRef = useRef< HTMLDivElement >( null );

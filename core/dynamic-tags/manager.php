@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Core\DynamicTags;
+namespace Refraction\Core\DynamicTags;
 
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Files\CSS\Post;
-use Elementor\Core\Files\CSS\Post_Preview;
-use Elementor\Plugin;
-use Elementor\User;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Files\CSS\Post;
+use Refraction\Core\Files\CSS\Post_Preview;
+use Refraction\Plugin;
+use Refraction\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Manager {
 
-	const TAG_LABEL = 'elementor-tag';
+	const TAG_LABEL = 'refraction-tag';
 
 	const MODE_RENDER = 'render';
 
@@ -32,7 +32,7 @@ class Manager {
 	/**
 	 * Dynamic tags manager constructor.
 	 *
-	 * Initializing Elementor dynamic tags manager.
+	 * Initializing Refraction dynamic tags manager.
 	 *
 	 * @since 2.0.0
 	 * @access public
@@ -270,36 +270,36 @@ class Manager {
 	 * @access public
 	 */
 	public function get_tags() {
-		if ( ! did_action( 'elementor/dynamic_tags/register_tags' ) ) {
+		if ( ! did_action( 'refraction/dynamic_tags/register_tags' ) ) {
 			/**
 			 * Register dynamic tags.
 			 *
-			 * Fires when Elementor registers dynamic tags.
+			 * Fires when Refraction registers dynamic tags.
 			 *
 			 * @since 2.0.9
-			 * @deprecated 3.5.0 Use `elementor/dynamic_tags/register` hook instead.
+			 * @deprecated 3.5.0 Use `refraction/dynamic_tags/register` hook instead.
 			 *
 			 * @param Manager $this Dynamic tags manager.
 			 */
 			Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->do_deprecated_action(
-				'elementor/dynamic_tags/register_tags',
+				'refraction/dynamic_tags/register_tags',
 				[ $this ],
 				'3.5.0',
-				'elementor/dynamic_tags/register'
+				'refraction/dynamic_tags/register'
 			);
 		}
 
-		if ( ! did_action( 'elementor/dynamic_tags/register' ) ) {
+		if ( ! did_action( 'refraction/dynamic_tags/register' ) ) {
 			/**
 			 * Register dynamic tags.
 			 *
-			 * Fires when Elementor registers dynamic tags.
+			 * Fires when Refraction registers dynamic tags.
 			 *
 			 * @since 3.5.0
 			 *
 			 * @param Manager $this Dynamic tags manager.
 			 */
-			do_action( 'elementor/dynamic_tags/register', $this );
+			do_action( 'refraction/dynamic_tags/register', $this );
 		}
 
 		return $this->tags_info;
@@ -453,11 +453,11 @@ class Manager {
 		/**
 		 * Before dynamic tags rendered.
 		 *
-		 * Fires before Elementor renders the dynamic tags.
+		 * Fires before Refraction renders the dynamic tags.
 		 *
 		 * @since 2.0.0
 		 */
-		do_action( 'elementor/dynamic_tags/before_render' );
+		do_action( 'refraction/dynamic_tags/before_render' );
 
 		$tags_data = [];
 
@@ -476,11 +476,11 @@ class Manager {
 		/**
 		 * After dynamic tags rendered.
 		 *
-		 * Fires after Elementor renders the dynamic tags.
+		 * Fires after Refraction renders the dynamic tags.
 		 *
 		 * @since 2.0.0
 		 */
-		do_action( 'elementor/dynamic_tags/after_render' );
+		do_action( 'refraction/dynamic_tags/after_render' );
 
 		return $tags_data;
 	}
@@ -530,7 +530,7 @@ class Manager {
 	 */
 	public function after_enqueue_post_css( $css_file ) {
 		$post_id = $css_file->get_post_id();
-		$should_enqueue = apply_filters( 'elementor/css-file/dynamic/should_enqueue', true, $post_id );
+		$should_enqueue = apply_filters( 'refraction/css-file/dynamic/should_enqueue', true, $post_id );
 
 		if ( $should_enqueue ) {
 			$css_file = Dynamic_CSS::create( $post_id, $css_file );
@@ -551,7 +551,7 @@ class Manager {
 	 * @access private
 	 */
 	private function add_actions() {
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
-		add_action( 'elementor/css-file/post/enqueue', [ $this, 'after_enqueue_post_css' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/css-file/post/enqueue', [ $this, 'after_enqueue_post_css' ] );
 	}
 }

@@ -1,16 +1,16 @@
-export default class BackgroundSlideshow extends elementorModules.frontend.handlers.SwiperBase {
+export default class BackgroundSlideshow extends refractionModules.frontend.handlers.SwiperBase {
 	getDefaultSettings() {
 		return {
 			classes: {
-				swiperContainer: 'elementor-background-slideshow swiper',
+				swiperContainer: 'refraction-background-slideshow swiper',
 				swiperWrapper: 'swiper-wrapper',
-				swiperSlide: 'elementor-background-slideshow__slide swiper-slide',
+				swiperSlide: 'refraction-background-slideshow__slide swiper-slide',
 				swiperPreloader: 'swiper-lazy-preloader',
-				slideBackground: 'elementor-background-slideshow__slide__image',
-				kenBurns: 'elementor-ken-burns',
-				kenBurnsActive: 'elementor-ken-burns--active',
-				kenBurnsIn: 'elementor-ken-burns--in',
-				kenBurnsOut: 'elementor-ken-burns--out',
+				slideBackground: 'refraction-background-slideshow__slide__image',
+				kenBurns: 'refraction-ken-burns',
+				kenBurnsActive: 'refraction-ken-burns--active',
+				kenBurnsIn: 'refraction-ken-burns--in',
+				kenBurnsOut: 'refraction-ken-burns--out',
 			},
 		};
 	}
@@ -27,7 +27,7 @@ export default class BackgroundSlideshow extends elementorModules.frontend.handl
 					delay: elementSettings.background_slideshow_slide_duration,
 					stopOnLastSlide: ! elementSettings.background_slideshow_loop,
 				},
-				handleElementorBreakpoints: true,
+				handleRefractionBreakpoints: true,
 				on: {
 					slideChange: () => {
 						if ( elementSettings.background_slideshow_ken_burns ) {
@@ -133,7 +133,7 @@ export default class BackgroundSlideshow extends elementorModules.frontend.handl
 
 		const elementSettings = this.getElementSettings();
 
-		const Swiper = elementorFrontend.utils.swiper;
+		const Swiper = refractionFrontend.utils.swiper;
 
 		this.swiper = await new Swiper( this.elements.$backgroundSlideShowContainer, this.getSwiperOptions() );
 

@@ -3,7 +3,7 @@ import { useNavigate } from '@reach/router';
 
 import { SharedContext } from '../../../context/shared-context/shared-context-provider';
 
-import useAction from 'elementor-app/hooks/use-action';
+import useAction from 'refraction-app/hooks/use-action';
 
 export default function useImportActions() {
 	const sharedContext = useContext( SharedContext ),

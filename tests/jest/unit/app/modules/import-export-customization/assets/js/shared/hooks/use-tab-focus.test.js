@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { useTabFocus } from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-tab-focus';
+import { useTabFocus } from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-tab-focus';
 
 describe( 'useTabFocus', () => {
 	let addEventListenerSpy;

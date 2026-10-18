@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useId } from 'react';
-import { type SizePropValue } from '@elementor/editor-props';
-import { MenuListItem } from '@elementor/editor-ui';
+import { type SizePropValue } from '@refraction/editor-props';
+import { MenuListItem } from '@refraction/editor-ui';
 import { bindMenu, bindTrigger, Button, Menu, styled, usePopupState } from '@elementor/ui';
 
 type Props< T = SizePropValue[ 'value' ][ 'unit' ] > = {

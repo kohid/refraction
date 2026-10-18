@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Import;
+namespace Refraction\App\Modules\ImportExport\Runners\Import;
 
-use Elementor\Plugin;
-use Elementor\Core\Settings\Page\Manager as PageManager;
-use Elementor\App\Modules\ImportExport\Utils;
-use Elementor\Core\Experiments\Manager as ExperimentsManager;
+use Refraction\Plugin;
+use Refraction\Core\Settings\Page\Manager as PageManager;
+use Refraction\App\Modules\ImportExport\Utils;
+use Refraction\Core\Experiments\Manager as ExperimentsManager;
 
 class Site_Settings extends Import_Runner_Base {
 
@@ -152,7 +152,7 @@ class Site_Settings extends Import_Runner_Base {
 		if ( $current_theme->get_stylesheet() === $theme_slug ) {
 			$result['succeed'][ $theme_slug ] = sprintf(
 				/* translators: %s: Theme name. */
-				__( 'Theme: %1$s is already used', 'elementor' ),
+				__( 'Theme: %1$s is already used', 'refraction' ),
 				$theme_name
 			);
 			return $result;
@@ -164,7 +164,7 @@ class Site_Settings extends Import_Runner_Base {
 				$this->activated_theme = $theme_slug;
 				$result['succeed'][ $theme_slug ] = sprintf(
 					/* translators: %s: Theme name. */
-					__( 'Theme: %1$s has already been installed and activated', 'elementor' ),
+					__( 'Theme: %1$s has already been installed and activated', 'refraction' ),
 					$theme_name
 				);
 				return $result;
@@ -175,7 +175,7 @@ class Site_Settings extends Import_Runner_Base {
 			if ( is_wp_error( $import ) ) {
 				$result['failed'][ $theme_slug ] = sprintf(
 					/* translators: %s: Theme name. */
-					__( 'Failed to install theme: %1$s', 'elementor' ),
+					__( 'Failed to install theme: %1$s', 'refraction' ),
 					$theme_name
 				);
 				return $result;
@@ -183,7 +183,7 @@ class Site_Settings extends Import_Runner_Base {
 
 			$result['succeed'][ $theme_slug ] = sprintf(
 				/* translators: %s: Theme name. */
-				__( 'Theme: %1$s has been successfully installed', 'elementor' ),
+				__( 'Theme: %1$s has been successfully installed', 'refraction' ),
 				$theme_name
 			);
 			$this->installed_theme = $theme_slug;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Database;
+namespace Refraction\Core\Database;
 
 abstract class Base_Migration {
 	/**

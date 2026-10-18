@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type SizePropValue } from '@elementor/editor-props';
+import { type SizePropValue } from '@refraction/editor-props';
 
 import { useSyncExternalState } from '../../../hooks/use-sync-external-state';
 import { type SetSizeValue } from '../types';

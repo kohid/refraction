@@ -1,18 +1,18 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Base\Base_Object;
-use Elementor\Core\DynamicTags\Manager;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Core\Frontend\Performance;
-use Elementor\Utils;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Core\DynamicTags\Manager;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Core\Frontend\Performance;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor controls stack.
+ * Refraction controls stack.
  *
  * An abstract class that provides the needed properties and methods to
  * manage and handle controls in the editor panel to inheriting classes.
@@ -82,7 +82,7 @@ abstract class Controls_Stack extends Base_Object {
 	/**
 	 * The configuration.
 	 *
-	 * Holds the configuration used to generate the Elementor editor. It includes
+	 * Holds the configuration used to generate the Refraction editor. It includes
 	 * the element name, icon, categories, etc.
 	 *
 	 * @access private
@@ -1420,12 +1420,12 @@ abstract class Controls_Stack extends Base_Object {
 	/**
 	 * Get Responsive Control Device Suffix
 	 *
-	 * @deprecated 3.7.6 Use `Elementor\Controls_Manager::get_responsive_control_device_suffix()` instead.
+	 * @deprecated 3.7.6 Use `Refraction\Controls_Manager::get_responsive_control_device_suffix()` instead.
 	 * @param array $control
 	 * @return string $device suffix
 	 */
 	protected function get_responsive_control_device_suffix( $control ) {
-		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.7.6', 'Elementor\Controls_Manager::get_responsive_control_device_suffix()' );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.7.6', 'Refraction\Controls_Manager::get_responsive_control_device_suffix()' );
 
 		return Controls_Manager::get_responsive_control_device_suffix( $control );
 	}
@@ -1561,7 +1561,7 @@ abstract class Controls_Stack extends Base_Object {
 		/**
 		 * Before section start.
 		 *
-		 * Fires before Elementor section starts in the editor panel.
+		 * Fires before Refraction section starts in the editor panel.
 		 *
 		 * @since 1.4.0
 		 *
@@ -1569,12 +1569,12 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param string         $section_id Section ID.
 		 * @param array          $args       Section arguments.
 		 */
-		do_action( 'elementor/element/before_section_start', $this, $section_id, $args );
+		do_action( 'refraction/element/before_section_start', $this, $section_id, $args );
 
 		/**
 		 * Before section start.
 		 *
-		 * Fires before Elementor section starts in the editor panel.
+		 * Fires before Refraction section starts in the editor panel.
 		 *
 		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
 		 *
@@ -1583,10 +1583,10 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param Controls_Stack $this The control.
 		 * @param array          $args Section arguments.
 		 */
-		do_action( "elementor/element/{$stack_name}/{$section_id}/before_section_start", $this, $args );
+		do_action( "refraction/element/{$stack_name}/{$section_id}/before_section_start", $this, $args );
 
 		if ( $this->should_manually_trigger_common_action( $stack_name ) ) {
-			do_action( "elementor/element/common/{$section_id}/before_section_start", $this, $args );
+			do_action( "refraction/element/common/{$section_id}/before_section_start", $this, $args );
 		}
 
 		$args['type'] = Controls_Manager::SECTION;
@@ -1594,7 +1594,7 @@ abstract class Controls_Stack extends Base_Object {
 		$this->add_control( $section_id, $args );
 
 		if ( null !== $this->current_section ) {
-			wp_die( sprintf( 'Elementor: You can\'t start a section before the end of the previous section "%s".', $this->current_section['section'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			wp_die( sprintf( 'Refraction: You can\'t start a section before the end of the previous section "%s".', $this->current_section['section'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$this->current_section = $this->get_section_args( $section_id );
@@ -1606,7 +1606,7 @@ abstract class Controls_Stack extends Base_Object {
 		/**
 		 * After section start.
 		 *
-		 * Fires after Elementor section starts in the editor panel.
+		 * Fires after Refraction section starts in the editor panel.
 		 *
 		 * @since 1.4.0
 		 *
@@ -1614,12 +1614,12 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param string         $section_id Section ID.
 		 * @param array          $args       Section arguments.
 		 */
-		do_action( 'elementor/element/after_section_start', $this, $section_id, $args );
+		do_action( 'refraction/element/after_section_start', $this, $section_id, $args );
 
 		/**
 		 * After section start.
 		 *
-		 * Fires after Elementor section starts in the editor panel.
+		 * Fires after Refraction section starts in the editor panel.
 		 *
 		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
 		 *
@@ -1628,10 +1628,10 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param Controls_Stack $this The control.
 		 * @param array          $args Section arguments.
 		 */
-		do_action( "elementor/element/{$stack_name}/{$section_id}/after_section_start", $this, $args );
+		do_action( "refraction/element/{$stack_name}/{$section_id}/after_section_start", $this, $args );
 
 		if ( $this->should_manually_trigger_common_action( $stack_name ) ) {
-			do_action( "elementor/element/common/{$section_id}/after_section_start", $this, $args );
+			do_action( "refraction/element/common/{$section_id}/after_section_start", $this, $args );
 		}
 	}
 
@@ -1659,7 +1659,7 @@ abstract class Controls_Stack extends Base_Object {
 		/**
 		 * Before section end.
 		 *
-		 * Fires before Elementor section ends in the editor panel.
+		 * Fires before Refraction section ends in the editor panel.
 		 *
 		 * @since 1.4.0
 		 *
@@ -1667,12 +1667,12 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param string         $section_id Section ID.
 		 * @param array          $args       Section arguments.
 		 */
-		do_action( 'elementor/element/before_section_end', $this, $section_id, $args );
+		do_action( 'refraction/element/before_section_end', $this, $section_id, $args );
 
 		/**
 		 * Before section end.
 		 *
-		 * Fires before Elementor section ends in the editor panel.
+		 * Fires before Refraction section ends in the editor panel.
 		 *
 		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
 		 *
@@ -1681,10 +1681,10 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param Controls_Stack $this The control.
 		 * @param array          $args Section arguments.
 		 */
-		do_action( "elementor/element/{$stack_name}/{$section_id}/before_section_end", $this, $args );
+		do_action( "refraction/element/{$stack_name}/{$section_id}/before_section_end", $this, $args );
 
 		if ( $this->should_manually_trigger_common_action( $stack_name ) ) {
-			do_action( "elementor/element/common/{$section_id}/before_section_end", $this, $args );
+			do_action( "refraction/element/common/{$section_id}/before_section_end", $this, $args );
 		}
 
 		$this->current_section = null;
@@ -1692,7 +1692,7 @@ abstract class Controls_Stack extends Base_Object {
 		/**
 		 * After section end.
 		 *
-		 * Fires after Elementor section ends in the editor panel.
+		 * Fires after Refraction section ends in the editor panel.
 		 *
 		 * @since 1.4.0
 		 *
@@ -1700,12 +1700,12 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param string         $section_id Section ID.
 		 * @param array          $args       Section arguments.
 		 */
-		do_action( 'elementor/element/after_section_end', $this, $section_id, $args );
+		do_action( 'refraction/element/after_section_end', $this, $section_id, $args );
 
 		/**
 		 * After section end.
 		 *
-		 * Fires after Elementor section ends in the editor panel.
+		 * Fires after Refraction section ends in the editor panel.
 		 *
 		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
 		 *
@@ -1714,10 +1714,10 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param Controls_Stack $this The control.
 		 * @param array          $args Section arguments.
 		 */
-		do_action( "elementor/element/{$stack_name}/{$section_id}/after_section_end", $this, $args );
+		do_action( "refraction/element/{$stack_name}/{$section_id}/after_section_end", $this, $args );
 
 		if ( $this->should_manually_trigger_common_action( $stack_name ) ) {
-			do_action( "elementor/element/common/{$section_id}/after_section_end", $this, $args );
+			do_action( "refraction/element/common/{$section_id}/after_section_end", $this, $args );
 		}
 	}
 
@@ -1728,11 +1728,11 @@ abstract class Controls_Stack extends Base_Object {
 	 * - 'common' refers to the existing Advanced Tab.
 	 * - 'common-optimized' refers to the new Advanced Tab for optimized widgets.
 	 *
-	 * Third-party developers may have used hooks like 'elementor/element/common/_section_background/before_section_end'
+	 * Third-party developers may have used hooks like 'refraction/element/common/_section_background/before_section_end'
 	 * to add controls to the Advanced Tab. However, this hook will now only work on widgets that are not optimized.
 	 *
-	 * This method checks whether the 'elementor/element/common/...' hooks should be manually executed
-	 * to prevent third parties from needing to add equivalent hooks for 'elementor/element/common-optimized/...'.
+	 * This method checks whether the 'refraction/element/common/...' hooks should be manually executed
+	 * to prevent third parties from needing to add equivalent hooks for 'refraction/element/common-optimized/...'.
 	 *
 	 * @todo Remove this method and the manual execution of 'common' hooks when the feature is merged.
 	 *
@@ -1764,7 +1764,7 @@ abstract class Controls_Stack extends Base_Object {
 	 */
 	public function start_controls_tabs( $tabs_id, array $args = [] ) {
 		if ( null !== $this->current_tab ) {
-			wp_die( sprintf( 'Elementor: You can\'t start tabs before the end of the previous tabs "%s".', $this->current_tab['tabs_wrapper'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			wp_die( sprintf( 'Refraction: You can\'t start tabs before the end of the previous tabs "%s".', $this->current_tab['tabs_wrapper'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$args['type'] = Controls_Manager::TABS;
@@ -1819,7 +1819,7 @@ abstract class Controls_Stack extends Base_Object {
 	 */
 	public function start_controls_tab( $tab_id, $args ) {
 		if ( ! empty( $this->current_tab['inner_tab'] ) ) {
-			wp_die( sprintf( 'Elementor: You can\'t start a tab before the end of the previous tab "%s".', $this->current_tab['inner_tab'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			wp_die( sprintf( 'Refraction: You can\'t start a tab before the end of the previous tab "%s".', $this->current_tab['inner_tab'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$args['type'] = Controls_Manager::TAB;
@@ -2121,13 +2121,13 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param string         $content_template The controls stack template in the editor.
 		 * @param Controls_Stack $this             The controls stack.
 		 */
-		$template_content = apply_filters( "elementor/{$element_type}/print_template", $template_content, $this );
+		$template_content = apply_filters( "refraction/{$element_type}/print_template", $template_content, $this );
 
 		if ( empty( $template_content ) ) {
 			return;
 		}
 		?>
-		<script type="text/html" id="tmpl-elementor-<?php echo esc_attr( $this->get_name() ); ?>-content">
+		<script type="text/html" id="tmpl-refraction-<?php echo esc_attr( $this->get_name() ); ?>-content">
 			<?php $this->print_template_content( $template_content ); ?>
 		</script>
 		<?php

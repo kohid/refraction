@@ -17,7 +17,7 @@ describe( 'ElementsManager', () => {
 
 	test( 'registerElementType() -- Sanity', async () => {
 		// Arrange.
-		const WidgetBase = ( await import( 'elementor-elements/types/widget' ) ).default,
+		const WidgetBase = ( await import( 'refraction-elements/types/widget' ) ).default,
 			WidgetTest = class extends WidgetBase {
 				getType() {
 					return 'widget-test';

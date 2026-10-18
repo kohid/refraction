@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useElement } from '@elementor/editor-editing-panel';
-import { type ElementType, getElementSettings, getElementType } from '@elementor/editor-elements';
-import { type AnyTransformable, type PropValue } from '@elementor/editor-props';
+import { useElement } from '@refraction/editor-editing-panel';
+import { type ElementType, getElementSettings, getElementType } from '@refraction/editor-elements';
+import { type AnyTransformable, type PropValue } from '@refraction/editor-props';
 
 import { componentInstanceOverridePropTypeUtil } from '../../../prop-types/component-instance-override-prop-type';
 import { type ComponentInstanceOverridesPropValue } from '../../../prop-types/component-instance-overrides-prop-type';

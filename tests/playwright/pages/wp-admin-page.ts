@@ -3,10 +3,10 @@ import ApiRequests from '../assets/api-requests';
 import { wpCli } from '../assets/wp-cli';
 import { timeouts } from '../config/timeouts';
 import topBarSelectors from '../selectors/top-bar-selectors';
-import { ElementorType, WindowType } from '../types/types';
+import { RefractionType, WindowType } from '../types/types';
 import BasePage from './base-page';
 import EditorPage from './editor-page';
-let elementor: ElementorType;
+let refraction: RefractionType;
 
 export default class WpAdminPage extends BasePage {
 	protected readonly apiRequests: ApiRequests;
@@ -48,25 +48,25 @@ export default class WpAdminPage extends BasePage {
 	/**
 	 * Go to the WordPress Settings pages.
 	 *
-	 * @param {('tab-general' | 'tab-integrations' | 'tab-advanced' | 'tab-performance' | 'tab-experiments')} tab - The Elementor settings tab to open.
+	 * @param {('tab-general' | 'tab-integrations' | 'tab-advanced' | 'tab-performance' | 'tab-experiments')} tab - The Refraction settings tab to open.
 	 *
 	 * @return {Promise<void>}
 	 */
-	async openElementorSettings( tab: 'tab-general' | 'tab-integrations' | 'tab-advanced' | 'tab-performance' | 'tab-experiments' ): Promise<void> {
-		await this.page.goto( `/wp-admin/admin.php?page=elementor-settings#${ tab }` );
-		await this.page.locator( `#elementor-settings-${ tab }` ).waitFor();
+	async openRefractionSettings( tab: 'tab-general' | 'tab-integrations' | 'tab-advanced' | 'tab-performance' | 'tab-experiments' ): Promise<void> {
+		await this.page.goto( `/wp-admin/admin.php?page=refraction-settings#${ tab }` );
+		await this.page.locator( `#refraction-settings-${ tab }` ).waitFor();
 	}
 
 	/**
-	 * Set settings in Elementor advanced/performance tab, as they both have only select-based options.
+	 * Set settings in Refraction advanced/performance tab, as they both have only select-based options.
 	 *
-	 * @param {('tab-advanced' | 'tab-performance')} tab      - Either Elementor advanced or performance tab.
+	 * @param {('tab-advanced' | 'tab-performance')} tab      - Either Refraction advanced or performance tab.
 	 * @param {Object}                               settings - Settings to set ( `{ setting_id: setting_value }` );
 	 *
 	 * @return {Promise<void>}
 	 */
-	async setElementorSettings( tab: 'tab-advanced' | 'tab-performance', settings: { [ n: string ]: string } ): Promise<void> {
-		await this.openElementorSettings( tab );
+	async setRefractionSettings( tab: 'tab-advanced' | 'tab-performance', settings: { [ n: string ]: string } ): Promise<void> {
+		await this.openRefractionSettings( tab );
 
 		for ( const [ selector, state ] of Object.entries( settings ) ) {
 			const selectLocator = this.page.locator( `select[name="${ selector }"]` );
@@ -123,7 +123,7 @@ export default class WpAdminPage extends BasePage {
 	}
 
 	/**
-	 * Open a new Elementor page.
+	 * Open a new Refraction page.
 	 *
 	 * @param {boolean} setWithApi  - Optional. Whether to create the page with the API. Default is true.
 	 * @param {boolean} setPageName - Optional. Whether to set the page name. Default is true.
@@ -145,7 +145,7 @@ export default class WpAdminPage extends BasePage {
 	}
 
 	/**
-	 * Edit an existing Elementor page.
+	 * Edit an existing Refraction page.
 	 *
 	 * @param {string}   postId        - The ID of the page to edit.
 	 * @param {Object}   prop          - Properties object.
@@ -153,8 +153,8 @@ export default class WpAdminPage extends BasePage {
 	 * @param {TestInfo} prop.testInfo - Playwright TestInfo object.
 	 * @return {Promise<EditorPage>}
 	 */
-	async editExistingPostWithElementor( postId: string, { page, testInfo }: { page: Page; testInfo: TestInfo; } ): Promise<EditorPage> {
-		await page.goto( `/wp-admin/post.php?post=${ postId }&action=elementor` );
+	async editExistingPostWithRefraction( postId: string, { page, testInfo }: { page: Page; testInfo: TestInfo; } ): Promise<EditorPage> {
+		await page.goto( `/wp-admin/post.php?post=${ postId }&action=refraction` );
 
 		await page.waitForLoadState( 'load', { timeout: 20000 } );
 		await this.waitForPanel();
@@ -164,7 +164,7 @@ export default class WpAdminPage extends BasePage {
 	}
 
 	/**
-	 * Create a new page with the API and open it in Elementor.
+	 * Create a new page with the API and open it in Refraction.
 	 *
 	 * @return {Promise<string>}
 	 */
@@ -180,7 +180,7 @@ export default class WpAdminPage extends BasePage {
 			};
 
 		await this.apiRequests.create( request, `pages/${ postId }`, postDataUpdated );
-		await this.page.goto( `/wp-admin/post.php?post=${ postId }&action=elementor` );
+		await this.page.goto( `/wp-admin/post.php?post=${ postId }&action=refraction` );
 
 		return postId;
 	}
@@ -212,30 +212,30 @@ export default class WpAdminPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setPageName(): Promise<void> {
-		const topbarLocator = this.page.locator( '#elementor-editor-wrapper-v2' );
+		const topbarLocator = this.page.locator( '#refraction-editor-wrapper-v2' );
 
 		await topbarLocator.locator( `button[${ topBarSelectors.pageSettings.attribute }="${ topBarSelectors.pageSettings.attributeValue }"]` ).click();
 
-		const pageId = await this.page.evaluate( () => elementor.config.initial_document.id );
-		await this.page.locator( '.elementor-control-post_title input' ).fill( `Playwright Test Page #${ pageId }` );
+		const pageId = await this.page.evaluate( () => refraction.config.initial_document.id );
+		await this.page.locator( '.refraction-control-post_title input' ).fill( `Playwright Test Page #${ pageId }` );
 
 		await topbarLocator.locator( `button[${ topBarSelectors.saveOptions.attribute }="${ topBarSelectors.saveOptions.attributeValue }"]` ).click();
 		await this.page.getByRole( 'menuitem', { name: 'Save Draft' } ).click();
-		await this.page.locator( '#elementor-panel-header-add-button' ).click();
+		await this.page.locator( '#refraction-panel-header-add-button' ).click();
 	}
 
 	/**
-	 * Convert the current page from Gutenberg to Elementor.
+	 * Convert the current page from Gutenberg to Refraction.
 	 *
 	 * @return {Promise<EditorPage>}
 	 */
 	async convertFromGutenberg(): Promise<EditorPage> {
 		await Promise.all( [
 			this.page.waitForResponse( async ( response ) => await this.blockUrlResponse( response ) ),
-			this.page.click( '#elementor-switch-mode' ),
+			this.page.click( '#refraction-switch-mode' ),
 		] );
 
-		await this.page.waitForURL( '**/post.php?post=*&action=elementor' );
+		await this.page.waitForURL( '**/post.php?post=*&action=refraction' );
 		await this.page.waitForLoadState( 'load', { timeout: 20000 } );
 		await this.waitForPanel();
 
@@ -258,27 +258,27 @@ export default class WpAdminPage extends BasePage {
 	}
 
 	/**
-	 * Wait for the Elementor editor panel to finish loading.
+	 * Wait for the Refraction editor panel to finish loading.
 	 *
 	 * @return {Promise<void>}
 	 */
 	async waitForPanel(): Promise<void> {
-		await this.page.waitForSelector( '.elementor-panel-loading', { state: 'detached', timeout: timeouts.heavyAction } );
-		await this.page.waitForSelector( '#elementor-loading', { state: 'hidden', timeout: timeouts.heavyAction } );
-		// The DOM signals above hide before the editor bootstrap assigns `window.elementor` and
+		await this.page.waitForSelector( '.refraction-panel-loading', { state: 'detached', timeout: timeouts.heavyAction } );
+		await this.page.waitForSelector( '#refraction-loading', { state: 'hidden', timeout: timeouts.heavyAction } );
+		// The DOM signals above hide before the editor bootstrap assigns `window.refraction` and
 		// registers the `document` container, so a test that immediately does
-		// `elementor.getContainer( 'document' )` can get back `undefined` rather than a
+		// `refraction.getContainer( 'document' )` can get back `undefined` rather than a
 		// `ReferenceError`. Polling the container itself, not just the method, closes that race
 		// deterministically for the common case of adding elements right after the panel loads.
 		await this.page.waitForFunction(
-			() => Boolean( ( window as unknown as { elementor?: { getContainer?: ( id: string ) => unknown } } ).elementor?.getContainer?.( 'document' ) ),
+			() => Boolean( ( window as unknown as { refraction?: { getContainer?: ( id: string ) => unknown } } ).refraction?.getContainer?.( 'document' ) ),
 			null,
 			{ timeout: timeouts.heavyAction },
 		);
 	}
 
 	/**
-	 * Activate and deactivate Elementor experiments.
+	 * Activate and deactivate Refraction experiments.
 	 *
 	 * @param {Object}            experiments - Experiments settings ( `{ experiment_id: true / false }` );
 	 * @param {(boolean|string)=} oldUrl      - Optional. Whether to use the old URL structure. Default is false.
@@ -287,10 +287,10 @@ export default class WpAdminPage extends BasePage {
 	 */
 	async setExperiments( experiments: { [ n: string ]: boolean | string }, oldUrl: boolean = false ): Promise<void> {
 		if ( oldUrl ) {
-			await this.page.goto( '/wp-admin/admin.php?page=elementor#tab-experiments' );
-			await this.page.click( '#elementor-settings-tab-experiments' );
+			await this.page.goto( '/wp-admin/admin.php?page=refraction#tab-experiments' );
+			await this.page.click( '#refraction-settings-tab-experiments' );
 		} else {
-			await this.openElementorSettings( 'tab-experiments' );
+			await this.openRefractionSettings( 'tab-experiments' );
 		}
 
 		const prefix = 'e-experiment';
@@ -311,7 +311,7 @@ export default class WpAdminPage extends BasePage {
 				if ( element ) {
 					element.style.display = 'block';
 				}
-			}, `.elementor_experiment-${ id }` );
+			}, `.refraction_experiment-${ id }` );
 
 			let optionValue: string;
 
@@ -330,12 +330,12 @@ export default class WpAdminPage extends BasePage {
 	}
 
 	/**
-	 * Reset all Elementor experiments to their default settings.
+	 * Reset all Refraction experiments to their default settings.
 	 *
 	 * @return {Promise<void>}
 	 */
 	async resetExperiments(): Promise<void> {
-		await this.openElementorSettings( 'tab-experiments' );
+		await this.openRefractionSettings( 'tab-experiments' );
 		await this.page.getByRole( 'button', { name: 'default' } ).click();
 	}
 
@@ -383,7 +383,7 @@ export default class WpAdminPage extends BasePage {
 	}
 
 	/**
-	 * Confirm the Elementor experiment modal if it's open.
+	 * Confirm the Refraction experiment modal if it's open.
 	 *
 	 * @return {Promise<void>}
 	 */
@@ -420,7 +420,7 @@ export default class WpAdminPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async enableAdvancedUploads(): Promise<void> {
-		await this.setElementorSettings( 'tab-advanced', { elementor_unfiltered_files_upload: '1' } );
+		await this.setRefractionSettings( 'tab-advanced', { refraction_unfiltered_files_upload: '1' } );
 	}
 
 	/**
@@ -429,11 +429,11 @@ export default class WpAdminPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async disableAdvancedUploads(): Promise<void> {
-		await this.setElementorSettings( 'tab-advanced', { elementor_unfiltered_files_upload: '' } );
+		await this.setRefractionSettings( 'tab-advanced', { refraction_unfiltered_files_upload: '' } );
 	}
 
 	/**
-	 * Close the Elementor announcements if they are visible.
+	 * Close the Refraction announcements if they are visible.
 	 *
 	 * @return {Promise<void>}
 	 */
@@ -456,12 +456,12 @@ export default class WpAdminPage extends BasePage {
 	}
 
 	/**
-	 * Edit the page with Elementor.
+	 * Edit the page with Refraction.
 	 *
 	 * @return {Promise<void>}
 	 */
-	async editWithElementor(): Promise<void> {
-		await this.page.getByRole( 'link', { name: ' Edit with Elementor' } ).click();
+	async editWithRefraction(): Promise<void> {
+		await this.page.getByRole( 'link', { name: ' Edit with Refraction' } ).click();
 	}
 
 	/**
@@ -470,7 +470,7 @@ export default class WpAdminPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async closeBlockEditorPopupIfVisible(): Promise<void> {
-		await this.page.locator( '#elementor-switch-mode-button' ).waitFor();
+		await this.page.locator( '#refraction-switch-mode-button' ).waitFor();
 		if ( await this.page.getByRole( 'button', { name: 'Close' } ).isVisible() ) {
 			await this.page.getByRole( 'button', { name: 'Close' } ).click();
 		}

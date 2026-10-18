@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\SiteNavigation\Data\Endpoints;
+namespace Refraction\Modules\SiteNavigation\Data\Endpoints;
 
-use Elementor\Data\V2\Base\Endpoint;
+use Refraction\Data\V2\Base\Endpoint;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

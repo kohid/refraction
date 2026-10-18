@@ -1,11 +1,11 @@
-import { injectIntoRepeaterItemIcon, injectIntoRepeaterItemLabel } from '@elementor/editor-controls';
-import { type PropValue } from '@elementor/editor-props';
+import { injectIntoRepeaterItemIcon, injectIntoRepeaterItemLabel } from '@refraction/editor-controls';
+import { type PropValue } from '@refraction/editor-props';
 
 import { customSizeVariablePropTypeUtil, sizeVariablePropTypeUtil } from '../prop-types';
 import { registerRepeaterInjections } from '../repeater-injections';
 
-jest.mock( '@elementor/editor-controls', () => {
-	const actual = jest.requireActual( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls', () => {
+	const actual = jest.requireActual( '@refraction/editor-controls' );
 	return {
 		...actual,
 		injectIntoRepeaterItemIcon: jest.fn(),

@@ -20,7 +20,7 @@ describe( 'app/close command', () => {
 			},
 		};
 
-		Close = ( await import( 'elementor/app/assets/js/loader/commands/close' ) ).Close;
+		Close = ( await import( 'refraction/app/assets/js/loader/commands/close' ) ).Close;
 	} );
 
 	afterEach( () => {

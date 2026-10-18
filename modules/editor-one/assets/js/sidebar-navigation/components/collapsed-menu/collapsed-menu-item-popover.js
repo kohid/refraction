@@ -1,5 +1,5 @@
 import { List, ListItem, ListItemText } from '@elementor/ui';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 import PropTypes from 'prop-types';
 import {
 	MenuItemButton,

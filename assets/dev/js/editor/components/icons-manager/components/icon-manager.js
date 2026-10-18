@@ -4,7 +4,7 @@ import {
 	Fragment,
 	createRef,
 } from 'react';
-import ReactUtils from 'elementor-utils/react';
+import ReactUtils from 'refraction-utils/react';
 import Tab from './tab';
 import IconsGoPro from './icons-go-pro';
 
@@ -16,7 +16,7 @@ class IconsManager extends Component {
 			library: '',
 			value: '',
 		},
-		iconTabs: elementor.config.icons.libraries,
+		iconTabs: refraction.config.icons.libraries,
 		loaded: this.props.loaded,
 		filter: '',
 	};
@@ -34,7 +34,7 @@ class IconsManager extends Component {
 				return;
 			}
 
-			elementor.iconManager.library.initIconType( { ... tabSettings }, ( library ) => {
+			refraction.iconManager.library.initIconType( { ... tabSettings }, ( library ) => {
 				this.cache[ library.name ] = library;
 				loaded[ tabSettings.name ] = true;
 			} );
@@ -76,7 +76,7 @@ class IconsManager extends Component {
 			return this.loadAllTabs();
 		}
 
-		elementor.iconManager.library.initIconType( { ... tabSettings }, ( library ) => {
+		refraction.iconManager.library.initIconType( { ... tabSettings }, ( library ) => {
 			this.cache[ library.name ] = library;
 			this.updateLoaded( library.name );
 		} );
@@ -101,10 +101,10 @@ class IconsManager extends Component {
 
 			const isCurrentTab = tab.name === this.state.activeTab;
 
-			let className = 'elementor-icons-manager__tab-link';
+			let className = 'refraction-icons-manager__tab-link';
 
 			if ( isCurrentTab ) {
-				className += ' elementor-active';
+				className += ' refraction-active';
 			}
 
 			return (
@@ -144,13 +144,13 @@ class IconsManager extends Component {
 
 		if ( ! this.state.loaded[ activeTab ] ) {
 			const librarySettings = this.props.icons.filter( ( library ) => activeTab === library.name );
-			return elementor.iconManager.library.initIconType( { ... librarySettings[ 0 ] }, ( library ) => {
+			return refraction.iconManager.library.initIconType( { ... librarySettings[ 0 ] }, ( library ) => {
 				this.cache[ library.name ] = library;
 				this.updateLoaded( library.name );
 			} );
 		}
 
-		return elementor.iconManager.store.getIcons( activeTab );
+		return refraction.iconManager.store.getIcons( activeTab );
 	};
 
 	getAllIcons = () => {
@@ -184,7 +184,7 @@ class IconsManager extends Component {
 	};
 
 	setSelected = ( selected ) => {
-		elementor.iconManager.setSettings( 'selectedIcon', selected );
+		refraction.iconManager.setSettings( 'selectedIcon', selected );
 
 		this.setState( { selected } );
 	};
@@ -212,16 +212,16 @@ class IconsManager extends Component {
 		}
 
 		return (
-			<div id="elementor-icons-manager__upload">
-				<div id="elementor-icons-manager__upload__title">{ __( 'My Libraries', 'elementor' ) }</div>
-				<button id="elementor-icons-manager__upload__button" className="elementor-button" onClick={ onClick }>{ __( 'Upload', 'elementor' ) }</button>
+			<div id="refraction-icons-manager__upload">
+				<div id="refraction-icons-manager__upload__title">{ __( 'My Libraries', 'refraction' ) }</div>
+				<button id="refraction-icons-manager__upload__button" className="refraction-button" onClick={ onClick }>{ __( 'Upload', 'refraction' ) }</button>
 			</div>
 		);
 	}
 
 	getSearchHTML() {
 		return (
-			<div id="elementor-icons-manager__search">
+			<div id="refraction-icons-manager__search">
 				<input placeholder={ 'Filter by name...' } onInput={ this.handleSearch } />
 				<i className={ 'eicon-search' }></i>
 			</div>
@@ -247,20 +247,20 @@ class IconsManager extends Component {
 		const selected = this.getSelected();
 		return (
 			<Fragment>
-				<div id="elementor-icons-manager__sidebar" className={ 'elementor-templates-modal__sidebar' }>
-					<div id="elementor-icons-manager__tab-links">
+				<div id="refraction-icons-manager__sidebar" className={ 'refraction-templates-modal__sidebar' }>
+					<div id="refraction-icons-manager__tab-links">
 						{ this.getIconTabsLinks() }
 						{ this.getUploadCustomButton() }
 						{ this.getIconTabsLinks( false ) }
 					</div>
 				</div>
-				<div id="elementor-icons-manager__main" className={ 'elementor-templates-modal__content' }>
+				<div id="refraction-icons-manager__main" className={ 'refraction-templates-modal__content' }>
 					{ 'GoPro' === activeTabName ? <IconsGoPro />
 						: <Fragment>
 							{ showSearch ? this.getSearchHTML() : '' }
-							<div id="elementor-icons-manager__tab__wrapper" ref={ this.scrollViewRef }>
-								<div id="elementor-icons-manager__tab__title">{ activeTab.label }</div>
-								<div id="elementor-icons-manager__tab__content_wrapper">
+							<div id="refraction-icons-manager__tab__wrapper" ref={ this.scrollViewRef }>
+								<div id="refraction-icons-manager__tab__title">{ activeTab.label }</div>
+								<div id="refraction-icons-manager__tab__content_wrapper">
 									<input type="hidden" name="icon_value" id="icon_value" value={ selected.value } />
 									<input type="hidden" name="icon_type" id="icon_type" value={ selected.library } />
 									{ this.state.loaded[ activeTab.name ] ? (
@@ -287,7 +287,7 @@ class IconsManager extends Component {
 export default IconsManager;
 
 const renderIconManager = function( props ) {
-	const containerElement = document.querySelector( '#elementor-icons-manager-modal .dialog-content' );
+	const containerElement = document.querySelector( '#refraction-icons-manager-modal .dialog-content' );
 
 	return ReactUtils.render( (
 		<IconsManager

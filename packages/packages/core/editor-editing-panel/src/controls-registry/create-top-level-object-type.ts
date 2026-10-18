@@ -1,4 +1,4 @@
-import { type ObjectPropType, type PropsSchema } from '@elementor/editor-props';
+import { type ObjectPropType, type PropsSchema } from '@refraction/editor-props';
 
 export const createTopLevelObjectType = ( { schema }: { schema: PropsSchema } ) => {
 	const schemaPropType: ObjectPropType = {

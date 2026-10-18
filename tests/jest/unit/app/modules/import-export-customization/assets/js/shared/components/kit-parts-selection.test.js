@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import eventsConfig from 'elementor/core/common/modules/events-manager/assets/js/events-config';
-import KitPartsSelection from 'elementor/app/modules/import-export-customization/assets/js/shared/components/kit-parts-selection';
+import eventsConfig from 'refraction/core/common/modules/events-manager/assets/js/events-config';
+import KitPartsSelection from 'refraction/app/modules/import-export-customization/assets/js/shared/components/kit-parts-selection';
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-classes-variables-limits', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-classes-variables-limits', () => ( {
 	useClassesVariablesLimits: jest.fn( () => ( {
 		existingClassesCount: 0,
 		existingVariablesCount: 0,
@@ -22,7 +22,7 @@ jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/h
 	} ) ),
 } ) );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/kit-content-data', () => [
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/kit-content-data', () => [
 	{
 		type: 'templates',
 		data: {
@@ -58,7 +58,7 @@ jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/k
 	},
 ] );
 
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
 
 describe( 'KitPartsSelection Component', () => {
 	const mockOnCheckboxChange = jest.fn();
@@ -71,8 +71,8 @@ describe( 'KitPartsSelection Component', () => {
 	beforeEach( () => {
 		jest.clearAllMocks();
 		global.__ = jest.fn( ( text ) => text );
-		global.elementorAppConfig = {};
-		global.elementorCommon = {
+		global.refractionAppConfig = {};
+		global.refractionCommon = {
 			eventsManager: {
 				dispatchEvent: jest.fn(),
 				config: eventsConfig,

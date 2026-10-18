@@ -1,5 +1,5 @@
-import HistoryManager from 'elementor/modules/history/assets/js/history/manager';
-import RevisionsManager from 'elementor/modules/history/assets/js/revisions/manager';
+import HistoryManager from 'refraction/modules/history/assets/js/history/manager';
+import RevisionsManager from 'refraction/modules/history/assets/js/revisions/manager';
 import Editor from './models/editor';
 
 /**

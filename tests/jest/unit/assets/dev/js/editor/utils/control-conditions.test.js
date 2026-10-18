@@ -1,4 +1,4 @@
-import ControlConditions from 'elementor-editor-utils/control-conditions';
+import ControlConditions from 'refraction-editor-utils/control-conditions';
 
 describe( 'Control Conditions', () => {
 	test( 'Convert Condition To Conditions', () => {

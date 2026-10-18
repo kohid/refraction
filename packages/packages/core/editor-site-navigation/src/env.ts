@@ -1,8 +1,8 @@
-import { parseEnv } from '@elementor/env';
+import { parseEnv } from '@refraction/env';
 
 export const { env } = parseEnv< {
 	is_pages_panel_active: boolean;
-} >( '@elementor/editor-site-navigation', ( envData ) => {
+} >( '@refraction/editor-site-navigation', ( envData ) => {
 	return envData as {
 		is_pages_panel_active: boolean;
 	};

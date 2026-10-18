@@ -7,8 +7,8 @@ type UnmountEntry = {
 
 const unmountCallbacks = new WeakMap< Element, UnmountEntry >();
 
-const ELEMENT_RENDERED_EVENT_NAME = 'elementor/element/rendered';
-const ELEMENT_DESTROYED_EVENT_NAME = 'elementor/element/destroyed';
+const ELEMENT_RENDERED_EVENT_NAME = 'refraction/element/rendered';
+const ELEMENT_DESTROYED_EVENT_NAME = 'refraction/element/destroyed';
 
 type LifecycleEventParams = {
 	element: Element;

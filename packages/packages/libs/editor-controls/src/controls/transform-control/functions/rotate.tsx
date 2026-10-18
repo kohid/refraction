@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useRef } from 'react';
-import { rotateTransformPropTypeUtil } from '@elementor/editor-props';
+import { rotateTransformPropTypeUtil } from '@refraction/editor-props';
 import { Arrow360Icon, RotateClockwiseIcon } from '@elementor/icons';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -12,17 +12,17 @@ import { AxisRow } from './axis-row';
 
 const rotateAxisControls: { label: string; bind: 'x' | 'y' | 'z'; startIcon: React.ReactNode }[] = [
 	{
-		label: __( 'Rotate X', 'elementor' ),
+		label: __( 'Rotate X', 'refraction' ),
 		bind: 'x',
 		startIcon: <Arrow360Icon fontSize={ 'tiny' } />,
 	},
 	{
-		label: __( 'Rotate Y', 'elementor' ),
+		label: __( 'Rotate Y', 'refraction' ),
 		bind: 'y',
 		startIcon: <Arrow360Icon fontSize="tiny" style={ { transform: 'scaleX(-1) rotate(-90deg)' } } />,
 	},
 	{
-		label: __( 'Rotate Z', 'elementor' ),
+		label: __( 'Rotate Z', 'refraction' ),
 		bind: 'z',
 		startIcon: <RotateClockwiseIcon fontSize={ 'tiny' } />,
 	},

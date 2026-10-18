@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Utils;
+namespace Refraction\Core\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Ab_Test {
 
-	const PREFIX_CACHE_KEY = '_elementor_ab_test_';
+	const PREFIX_CACHE_KEY = '_refraction_ab_test_';
 	const CACHE_TTL = 90 * DAY_IN_SECONDS;
 
 	/**

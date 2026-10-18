@@ -1,4 +1,4 @@
-import Conditions from 'elementor-editor-utils/conditions';
+import Conditions from 'refraction-editor-utils/conditions';
 
 describe( 'Conditions', () => {
 	test( 'Compare', () => {

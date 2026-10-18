@@ -26,7 +26,7 @@ function isPackageSource( id ) {
  */
 export function typescriptPlugin() {
 	return {
-		name: 'elementor-packages-typescript',
+		name: 'refraction-packages-typescript',
 		enforce: 'pre',
 		async transform( code, id ) {
 			if ( ! isPackageSource( id ) ) {
@@ -61,7 +61,7 @@ export function typescriptPlugin() {
  */
 export function emotionBabelPlugin() {
 	return {
-		name: 'elementor-packages-emotion',
+		name: 'refraction-packages-emotion',
 		async transform( code, id ) {
 			if ( ! isPackageSource( id ) ) {
 				return null;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { type Components, type Menu } from '@elementor/menus';
+import { type Components, type Menu } from '@refraction/menus';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { integrationsMenu, mainMenu, toolsMenu, utilitiesMenu } from '../locations';

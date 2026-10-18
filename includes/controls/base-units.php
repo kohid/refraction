@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor control base units.
+ * Refraction control base units.
  *
  * An abstract class for creating new unit controls in the panel.
  *
@@ -127,15 +127,15 @@ abstract class Control_Base_Units extends Control_Base_Multiple {
 				<span></span>
 				<i class="eicon-edit" aria-hidden="true"></i>
 				<i class="eicon-angle-right" aria-hidden="true"></i>
-				<span class="elementor-screen-only"><?php echo esc_html__( 'Switch units', 'elementor' ); ?></span>
+				<span class="refraction-screen-only"><?php echo esc_html__( 'Switch units', 'refraction' ); ?></span>
 			</div>
 			<div class="e-units-choices">
 				<# _.each( data.size_units, function( unit ) { #>
-				<input id="elementor-choose-{{ data._cid + data.name + unit }}" type="radio" name="elementor-choose-{{ data.name + data._cid }}" data-setting="unit" value="{{ unit }}">
-				<label class="elementor-units-choices-label" for="elementor-choose-{{ data._cid + data.name + unit }}" data-choose="{{{ unit }}}">
+				<input id="refraction-choose-{{ data._cid + data.name + unit }}" type="radio" name="refraction-choose-{{ data.name + data._cid }}" data-setting="unit" value="{{ unit }}">
+				<label class="refraction-units-choices-label" for="refraction-choose-{{ data._cid + data.name + unit }}" data-choose="{{{ unit }}}">
 					<# if ( 'custom' === unit ) { #>
 						<i class="eicon-edit" aria-hidden="true"></i>
-						<span class="elementor-screen-only"><?php echo esc_html__( 'Custom unit', 'elementor' ); ?></span>
+						<span class="refraction-screen-only"><?php echo esc_html__( 'Custom unit', 'refraction' ); ?></span>
 					<# } else { #>
 						<span>{{{ unit }}}</span>
 					<# } #>

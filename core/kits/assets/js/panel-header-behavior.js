@@ -6,8 +6,8 @@ import {
 export default class extends Marionette.Behavior {
 	ui() {
 		return {
-			buttonClose: '#elementor-panel-header-kit-close',
-			buttonBack: '#elementor-panel-header-kit-back',
+			buttonClose: '#refraction-panel-header-kit-close',
+			buttonBack: '#refraction-panel-header-kit-back',
 		};
 	}
 
@@ -19,8 +19,8 @@ export default class extends Marionette.Behavior {
 	}
 
 	onBeforeShow() {
-		this.$el.prepend( elementor.compileTemplate( buttonBack, { Back: __( 'Back', 'elementor' ) } ) );
-		this.$el.append( elementor.compileTemplate( buttonClose, { Close: __( 'Close', 'elementor' ) } ) );
+		this.$el.prepend( refraction.compileTemplate( buttonBack, { Back: __( 'Back', 'refraction' ) } ) );
+		this.$el.append( refraction.compileTemplate( buttonClose, { Close: __( 'Close', 'refraction' ) } ) );
 	}
 
 	onClickClose() {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 const fetchTaxonomies = async () => {
-	const requestUrl = `${ elementorCommon.config.urls.rest }wp/v2/taxonomies`;
+	const requestUrl = `${ refractionCommon.config.urls.rest }wp/v2/taxonomies`;
 
 	const response = await fetch( requestUrl, {
 		headers: {

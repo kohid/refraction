@@ -3,7 +3,7 @@ import {
 	getFontAwesome7IconName,
 	resolveFontAwesome7Icon,
 	resolveProviderIconSvg,
-} from '@elementor/editor-controls';
+} from '@refraction/editor-controls';
 
 import { createTransformer } from '../create-transformer';
 import type { TransformerOptions } from '../types';
@@ -50,7 +50,7 @@ export const iconTransformer = createTransformer( async ( value: IconValue, { si
 } );
 
 async function resolveDefaultSvg( signal?: AbortSignal ) {
-	const assetsUrl = window.elementorCommon?.config?.urls?.assets;
+	const assetsUrl = window.refractionCommon?.config?.urls?.assets;
 
 	if ( typeof assetsUrl !== 'string' || assetsUrl === '' ) {
 		return EMPTY_ICON_RESULT;

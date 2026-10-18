@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type Document } from '@elementor/editor-documents';
+import { type Document } from '@refraction/editor-documents';
 import { Stack, Tooltip as BaseTooltip, type TooltipProps, Typography } from '@elementor/ui';
 
 type Props = {

@@ -1,4 +1,4 @@
-import { type V1ElementData } from '@elementor/editor-elements';
+import { type V1ElementData } from '@refraction/editor-elements';
 
 import { formatComponentElementsId } from '../format-component-elements-id';
 

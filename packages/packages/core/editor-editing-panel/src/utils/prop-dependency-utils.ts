@@ -11,8 +11,8 @@ import {
 	type PropType,
 	rewrapOverridableValue,
 	type TransformablePropValue,
-} from '@elementor/editor-props';
-import { getSessionStorageItem, removeSessionStorageItem, setSessionStorageItem } from '@elementor/session';
+} from '@refraction/editor-props';
+import { getSessionStorageItem, removeSessionStorageItem, setSessionStorageItem } from '@refraction/session';
 
 type Value = TransformablePropValue< string > | null;
 
@@ -284,7 +284,7 @@ function handleUnmetCondition( props: {
 }
 
 function savePreviousValueToStorage( { path, elementId, value }: { path: string; elementId: string; value: unknown } ) {
-	const prefix = `elementor/${ elementId }`;
+	const prefix = `refraction/${ elementId }`;
 	const savedValue = retrievePreviousValueFromStorage( { path, elementId } );
 
 	if ( savedValue ) {
@@ -297,14 +297,14 @@ function savePreviousValueToStorage( { path, elementId, value }: { path: string;
 }
 
 function retrievePreviousValueFromStorage< T >( { path, elementId }: { path: string; elementId: string } ) {
-	const prefix = `elementor/${ elementId }`;
+	const prefix = `refraction/${ elementId }`;
 	const key = `${ prefix }:${ path }`;
 
 	return getSessionStorageItem< T >( key ) ?? null;
 }
 
 function removePreviousValueFromStorage( { path, elementId }: { path: string; elementId: string } ) {
-	const prefix = `elementor/${ elementId }`;
+	const prefix = `refraction/${ elementId }`;
 	const key = `${ prefix }:${ path }`;
 
 	removeSessionStorageItem( key );

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { type ElementID, type ElementInteractions, getElementInteractions } from '@elementor/editor-elements';
-import { __privateUseListenTo as useListenTo, windowEvent } from '@elementor/editor-v1-adapters';
+import { type ElementID, type ElementInteractions, getElementInteractions } from '@refraction/editor-elements';
+import { __privateUseListenTo as useListenTo, windowEvent } from '@refraction/editor-v1-adapters';
 
 import { filterInteractions } from '../utils/filter-interactions';
 
@@ -13,7 +13,7 @@ export const useElementInteractions = ( elementId: ElementID ) => {
 	} );
 
 	useListenTo(
-		windowEvent( 'elementor/element/update_interactions' ),
+		windowEvent( 'refraction/element/update_interactions' ),
 		() => {
 			const newInteractions = getElementInteractions( elementId );
 			const filteredInteractions = filterInteractions( newInteractions?.items ?? [] );

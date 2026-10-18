@@ -1,13 +1,13 @@
 import { type ExtendedWindow } from './types';
 
-const getElementorConfig = () => {
+const getRefractionConfig = () => {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
-	return extendedWindow.elementor?.config ?? {};
+	return extendedWindow.refraction?.config ?? {};
 };
 
 export const getStylesSchema = () => {
-	const config = getElementorConfig();
+	const config = getRefractionConfig();
 	const styleSchema = config?.atomic?.styles_schema ?? {};
 
 	return styleSchema;

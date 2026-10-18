@@ -2,7 +2,7 @@ import { createMockDocument, createMockStyleDefinition } from 'test-utils';
 
 import { embeddedDocumentsManager, setCurrentDocumentId } from '../manager';
 
-jest.mock( '@elementor/editor-styles-repository', () => {
+jest.mock( '@refraction/editor-styles-repository', () => {
 	let capturedConfig: {
 		subscribe: ( cb: () => void ) => () => void;
 		actions: {
@@ -29,7 +29,7 @@ jest.mock( '@elementor/editor-styles-repository', () => {
 	};
 } );
 
-const { __getProvider } = require( '@elementor/editor-styles-repository' );
+const { __getProvider } = require( '@refraction/editor-styles-repository' );
 
 describe( 'styles-provider', () => {
 	afterEach( () => {

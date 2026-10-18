@@ -4,7 +4,7 @@ import domReady from '@wordpress/dom-ready';
 import { AppModern } from './app-editor-one';
 
 domReady( () => {
-	const htmlOutput = document.getElementById( 'elementor-element-manager-wrap' );
+	const htmlOutput = document.getElementById( 'refraction-element-manager-wrap' );
 
 	if ( ! htmlOutput ) {
 		return;

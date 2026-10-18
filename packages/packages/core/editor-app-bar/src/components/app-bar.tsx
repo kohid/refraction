@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
 import { AppBar as BaseAppBar, Box, Divider, Grid, ThemeProvider, Toolbar } from '@elementor/ui';
 
 import { MIN_APP_BAR_WIDTH } from '../constants';

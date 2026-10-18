@@ -1,4 +1,4 @@
-import { useQuery } from '@elementor/query';
+import { useQuery } from '@refraction/query';
 
 import { type FontAwesome7Icon, loadFontAwesome7Catalog } from './font-awesome-7-catalog';
 

@@ -5,7 +5,7 @@ import { wpCli } from '../../../assets/wp-cli';
 
 test.describe( 'Column tests @column', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments deactivate container' );
+		await wpCli( 'wp refraction experiments deactivate container' );
 	} );
 
 	test.afterAll( async ( { browser, apiRequests }, testInfo ) => {
@@ -14,7 +14,7 @@ test.describe( 'Column tests @column', () => {
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 		await wpAdmin.resetExperiments();
 		await page.close();
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	test( 'Section Background slideshow', async ( { page, apiRequests }, testInfo ) => {
@@ -35,14 +35,14 @@ test.describe( 'Column tests @column', () => {
 			await editor.togglePreviewMode();
 			const slideshow = editor
 				.getPreviewFrame()
-				.locator( '.elementor-column .elementor-background-slideshow' );
+				.locator( '.refraction-column .refraction-background-slideshow' );
 			await expect.soft( slideshow ).toHaveScreenshot( 'editor-section-background-slideshow.png' );
 			await editor.togglePreviewMode();
 			await editor.publishAndViewPage();
 		} );
 
 		await test.step( 'Verify background slideshow on the frontend', async () => {
-			await expect.soft( page.locator( '.elementor-column .elementor-background-slideshow' ) ).toHaveScreenshot( 'frontend-section-background-slideshow.png' );
+			await expect.soft( page.locator( '.refraction-column .refraction-background-slideshow' ) ).toHaveScreenshot( 'frontend-section-background-slideshow.png' );
 		} );
 	} );
 } );

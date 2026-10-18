@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Kits\Controls\Repeater as Global_Style_Repeater;
-use Elementor\Repeater;
+use Refraction\Controls_Manager;
+use Refraction\Core\Kits\Controls\Repeater as Global_Style_Repeater;
+use Refraction\Repeater;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,7 +21,7 @@ class Global_Colors extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Global Colors', 'elementor' );
+		return esc_html__( 'Global Colors', 'refraction' );
 	}
 
 	public function get_group() {
@@ -40,7 +40,7 @@ class Global_Colors extends Tab_Base {
 		$this->start_controls_section(
 			'section_global_colors',
 			[
-				'label' => esc_html__( 'Global Colors', 'elementor' ),
+				'label' => esc_html__( 'Global Colors', 'refraction' ),
 				'tab' => $this->get_id(),
 			]
 		);
@@ -74,22 +74,22 @@ class Global_Colors extends Tab_Base {
 		$default_colors = [
 			[
 				'_id' => 'primary',
-				'title' => esc_html__( 'Primary', 'elementor' ),
+				'title' => esc_html__( 'Primary', 'refraction' ),
 				'color' => '#6EC1E4',
 			],
 			[
 				'_id' => 'secondary',
-				'title' => esc_html__( 'Secondary', 'elementor' ),
+				'title' => esc_html__( 'Secondary', 'refraction' ),
 				'color' => '#54595F',
 			],
 			[
 				'_id' => 'text',
-				'title' => esc_html__( 'Text', 'elementor' ),
+				'title' => esc_html__( 'Text', 'refraction' ),
 				'color' => '#7A7A7A',
 			],
 			[
 				'_id' => 'accent',
-				'title' => esc_html__( 'Accent', 'elementor' ),
+				'title' => esc_html__( 'Accent', 'refraction' ),
 				'color' => '#61CE70',
 			],
 		];
@@ -98,7 +98,7 @@ class Global_Colors extends Tab_Base {
 			'heading_system_colors',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'System Colors', 'elementor' ),
+				'label' => esc_html__( 'System Colors', 'refraction' ),
 			]
 		);
 
@@ -120,7 +120,7 @@ class Global_Colors extends Tab_Base {
 			'heading_custom_colors',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Custom Colors', 'elementor' ),
+				'label' => esc_html__( 'Custom Colors', 'refraction' ),
 			]
 		);
 
@@ -132,7 +132,7 @@ class Global_Colors extends Tab_Base {
 			]
 		);
 
-		do_action( 'elementor/kit/global-colors/register_controls', $this );
+		do_action( 'refraction/kit/global-colors/register_controls', $this );
 
 		$this->end_controls_section();
 	}

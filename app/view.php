@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\App;
+namespace Refraction\App;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 
-$theme_class = 'dark' === $this->get_elementor_ui_theme_preference() ? 'eps-theme-dark' : '';
+$theme_class = 'dark' === $this->get_refraction_ui_theme_preference() ? 'eps-theme-dark' : '';
 
 ?>
 <!DOCTYPE html>
@@ -20,7 +20,7 @@ $theme_class = 'dark' === $this->get_elementor_ui_theme_preference() ? 'eps-them
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title><?php echo esc_html__( 'Elementor', 'elementor' ) . ' ... '; ?></title>
+		<title><?php echo esc_html__( 'Refraction', 'refraction' ) . ' ... '; ?></title>
 		<base target="_parent">
 		<?php wp_print_styles(); ?>
 	</head>

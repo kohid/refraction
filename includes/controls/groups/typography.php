@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Settings\Page\Manager as PageManager;
+use Refraction\Core\Settings\Page\Manager as PageManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor typography control.
+ * Refraction typography control.
  *
  * A base control for creating typography control. Displays input fields to define
  * the content typography including font size, font family, font weight, text
@@ -103,14 +103,14 @@ class Group_Control_Typography extends Group_Control_Base {
 		}
 
 		$fields['font_family'] = [
-			'label' => esc_html_x( 'Family', 'Typography Control', 'elementor' ),
+			'label' => esc_html_x( 'Family', 'Typography Control', 'refraction' ),
 			'type' => Controls_Manager::FONT,
 			'default' => '',
 			'selector_value' => 'font-family: "{{VALUE}}"' . $default_fonts . ';',
 		];
 
 		$fields['font_size'] = [
-			'label' => esc_html_x( 'Size', 'Typography Control', 'elementor' ),
+			'label' => esc_html_x( 'Size', 'Typography Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em', 'rem', 'vw', 'custom' ],
 			'range' => [
@@ -135,67 +135,67 @@ class Group_Control_Typography extends Group_Control_Base {
 		];
 
 		$fields['font_weight'] = [
-			'label' => esc_html_x( 'Weight', 'Typography Control', 'elementor' ),
+			'label' => esc_html_x( 'Weight', 'Typography Control', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'100' => '100 ' . esc_html_x( '(Thin)', 'Typography Control', 'elementor' ),
-				'200' => '200 ' . esc_html_x( '(Extra Light)', 'Typography Control', 'elementor' ),
-				'300' => '300 ' . esc_html_x( '(Light)', 'Typography Control', 'elementor' ),
-				'400' => '400 ' . esc_html_x( '(Normal)', 'Typography Control', 'elementor' ),
-				'500' => '500 ' . esc_html_x( '(Medium)', 'Typography Control', 'elementor' ),
-				'600' => '600 ' . esc_html_x( '(Semi Bold)', 'Typography Control', 'elementor' ),
-				'700' => '700 ' . esc_html_x( '(Bold)', 'Typography Control', 'elementor' ),
-				'800' => '800 ' . esc_html_x( '(Extra Bold)', 'Typography Control', 'elementor' ),
-				'900' => '900 ' . esc_html_x( '(Black)', 'Typography Control', 'elementor' ),
-				'' => esc_html__( 'Default', 'elementor' ),
-				'normal' => esc_html__( 'Normal', 'elementor' ),
-				'bold' => esc_html__( 'Bold', 'elementor' ),
+				'100' => '100 ' . esc_html_x( '(Thin)', 'Typography Control', 'refraction' ),
+				'200' => '200 ' . esc_html_x( '(Extra Light)', 'Typography Control', 'refraction' ),
+				'300' => '300 ' . esc_html_x( '(Light)', 'Typography Control', 'refraction' ),
+				'400' => '400 ' . esc_html_x( '(Normal)', 'Typography Control', 'refraction' ),
+				'500' => '500 ' . esc_html_x( '(Medium)', 'Typography Control', 'refraction' ),
+				'600' => '600 ' . esc_html_x( '(Semi Bold)', 'Typography Control', 'refraction' ),
+				'700' => '700 ' . esc_html_x( '(Bold)', 'Typography Control', 'refraction' ),
+				'800' => '800 ' . esc_html_x( '(Extra Bold)', 'Typography Control', 'refraction' ),
+				'900' => '900 ' . esc_html_x( '(Black)', 'Typography Control', 'refraction' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'normal' => esc_html__( 'Normal', 'refraction' ),
+				'bold' => esc_html__( 'Bold', 'refraction' ),
 			],
 		];
 
 		$fields = $this->add_font_variables_fields( $fields );
 
 		$fields['text_transform'] = [
-			'label' => esc_html_x( 'Transform', 'Typography Control', 'elementor' ),
+			'label' => esc_html_x( 'Transform', 'Typography Control', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'uppercase' => esc_html_x( 'Uppercase', 'Typography Control', 'elementor' ),
-				'lowercase' => esc_html_x( 'Lowercase', 'Typography Control', 'elementor' ),
-				'capitalize' => esc_html_x( 'Capitalize', 'Typography Control', 'elementor' ),
-				'none' => esc_html__( 'Normal', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'uppercase' => esc_html_x( 'Uppercase', 'Typography Control', 'refraction' ),
+				'lowercase' => esc_html_x( 'Lowercase', 'Typography Control', 'refraction' ),
+				'capitalize' => esc_html_x( 'Capitalize', 'Typography Control', 'refraction' ),
+				'none' => esc_html__( 'Normal', 'refraction' ),
 			],
 		];
 
 		$fields['font_style'] = [
-			'label' => esc_html_x( 'Style', 'Typography Control', 'elementor' ),
+			'label' => esc_html_x( 'Style', 'Typography Control', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'normal' => esc_html__( 'Normal', 'elementor' ),
-				'italic' => esc_html_x( 'Italic', 'Typography Control', 'elementor' ),
-				'oblique' => esc_html_x( 'Oblique', 'Typography Control', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'normal' => esc_html__( 'Normal', 'refraction' ),
+				'italic' => esc_html_x( 'Italic', 'Typography Control', 'refraction' ),
+				'oblique' => esc_html_x( 'Oblique', 'Typography Control', 'refraction' ),
 			],
 		];
 
 		$fields['text_decoration'] = [
-			'label' => esc_html_x( 'Decoration', 'Typography Control', 'elementor' ),
+			'label' => esc_html_x( 'Decoration', 'Typography Control', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'underline' => esc_html_x( 'Underline', 'Typography Control', 'elementor' ),
-				'overline' => esc_html_x( 'Overline', 'Typography Control', 'elementor' ),
-				'line-through' => esc_html_x( 'Line Through', 'Typography Control', 'elementor' ),
-				'none' => esc_html__( 'None', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'underline' => esc_html_x( 'Underline', 'Typography Control', 'refraction' ),
+				'overline' => esc_html_x( 'Overline', 'Typography Control', 'refraction' ),
+				'line-through' => esc_html_x( 'Line Through', 'Typography Control', 'refraction' ),
+				'none' => esc_html__( 'None', 'refraction' ),
 			],
 		];
 
 		$fields['line_height'] = [
-			'label' => esc_html__( 'Line Height', 'elementor' ),
+			'label' => esc_html__( 'Line Height', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'desktop_default' => [
 				'unit' => 'em',
@@ -217,7 +217,7 @@ class Group_Control_Typography extends Group_Control_Base {
 		];
 
 		$fields['letter_spacing'] = [
-			'label' => esc_html__( 'Letter Spacing', 'elementor' ),
+			'label' => esc_html__( 'Letter Spacing', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 			'range' => [
@@ -242,7 +242,7 @@ class Group_Control_Typography extends Group_Control_Base {
 		];
 
 		$fields['word_spacing'] = [
-			'label' => esc_html__( 'Word Spacing', 'elementor' ),
+			'label' => esc_html__( 'Word Spacing', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 			'range' => [
@@ -296,7 +296,7 @@ class Group_Control_Typography extends Group_Control_Base {
 
 		if ( ! empty( $font_variables_conditions['weight'] ) ) {
 			$fields['weight'] = [
-				'label' => esc_html_x( 'Weight', 'Typography Control', 'elementor' ),
+				'label' => esc_html_x( 'Weight', 'Typography Control', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -318,7 +318,7 @@ class Group_Control_Typography extends Group_Control_Base {
 
 		if ( ! empty( $font_variables_conditions['width'] ) ) {
 			$fields['width'] = [
-				'label' => esc_html_x( 'Width', 'Typography Control', 'elementor' ),
+				'label' => esc_html_x( 'Width', 'Typography Control', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -345,14 +345,14 @@ class Group_Control_Typography extends Group_Control_Base {
 		static $font_variables = null;
 
 		if ( null === $font_variables ) {
-			$font_variables = apply_filters( 'elementor/typography/font_variables', [] );
+			$font_variables = apply_filters( 'refraction/typography/font_variables', [] );
 		}
 
 		return $font_variables;
 	}
 
 	public static function get_font_variable_ranges() {
-		return apply_filters( 'elementor/typography/font_variable_ranges', [] );
+		return apply_filters( 'refraction/typography/font_variable_ranges', [] );
 	}
 
 	/**
@@ -433,7 +433,7 @@ class Group_Control_Typography extends Group_Control_Base {
 		return [
 			'popover' => [
 				'starter_name' => 'typography',
-				'starter_title' => esc_html__( 'Typography', 'elementor' ),
+				'starter_title' => esc_html__( 'Typography', 'refraction' ),
 				'settings' => [
 					'render_type' => 'ui',
 					'groupType' => 'typography',

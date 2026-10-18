@@ -37,11 +37,11 @@ describe( 'refreshAuditsNonce', () => {
 	const originalFetch = global.fetch;
 
 	beforeEach( () => {
-		( window as unknown as { elementorAudits: unknown } ).elementorAudits = {
-			restNamespace: 'elementor/v1',
+		( window as unknown as { refractionAudits: unknown } ).refractionAudits = {
+			restNamespace: 'refraction/v1',
 			nonce: 'stale-nonce',
 		};
-		( window as unknown as { elementorCommon?: unknown } ).elementorCommon = {
+		( window as unknown as { refractionCommon?: unknown } ).refractionCommon = {
 			ajax: { config: { url: 'https://example.test/wp-admin/admin-ajax.php' } },
 		};
 	} );
@@ -65,7 +65,7 @@ describe( 'refreshAuditsNonce', () => {
 		expect( requestOptions ).toEqual( { credentials: 'same-origin' } );
 	} );
 
-	it( 'updates window.elementorAudits.nonce with the fresh nonce', async () => {
+	it( 'updates window.refractionAudits.nonce with the fresh nonce', async () => {
 		// Arrange.
 		global.fetch = jest.fn().mockResolvedValue( {
 			ok: true,
@@ -76,7 +76,7 @@ describe( 'refreshAuditsNonce', () => {
 		await refreshAuditsNonce();
 
 		// Assert.
-		expect( ( window as unknown as { elementorAudits: { nonce: string } } ).elementorAudits.nonce ).toBe(
+		expect( ( window as unknown as { refractionAudits: { nonce: string } } ).refractionAudits.nonce ).toBe(
 			'fresh-nonce'
 		);
 	} );

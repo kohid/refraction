@@ -1,6 +1,6 @@
-.elementor-control-type-slider {
+.refraction-control-type-slider {
 
-	&.elementor-control-dynamic {
+	&.refraction-control-dynamic {
 
 		input {
 			border-start-start-radius: var(--e-a-border-radius);
@@ -10,14 +10,14 @@
 		}
 	}
 
-	.elementor-control-unit-2 {
+	.refraction-control-unit-2 {
 		width: 21%;
 	}
 
 	// Hard selector
-	&.elementor-control-type-slider--multiple {
+	&.refraction-control-type-slider--multiple {
 
-		.elementor-control-input-wrapper  {
+		.refraction-control-input-wrapper  {
 			display: block;
 		}
 	}
@@ -25,7 +25,7 @@
 	&--multiple {
 		padding-block-end: 40px;
 
-		.elementor-slider {
+		.refraction-slider {
 			margin-block-start: 12px;
 			width: 98%;
 		}
@@ -35,7 +35,7 @@
 
 		&-range {
 
-			.elementor-slider {
+			.refraction-slider {
 
 				.noUi-handle {
 					border-radius: 0;
@@ -73,7 +73,7 @@
 		}
 	}
 
-	.elementor-control-dynamic-switcher {
+	.refraction-control-dynamic-switcher {
 		border-inline-start-width: 0;
 		border-start-start-radius: 0;
 		border-start-end-radius: var(--e-a-border-radius);
@@ -81,18 +81,18 @@
 		border-end-end-radius: var(--e-a-border-radius);
 	}
 
-	.elementor-control-input-wrapper {
+	.refraction-control-input-wrapper {
 		display: flex;
 		align-items: center;
 	}
 
-	.elementor-dynamic-cover {
+	.refraction-dynamic-cover {
 		margin-block-start: 10px;
 	}
 
 	&.e-units-custom {
 
-		.elementor-slider {
+		.refraction-slider {
 			display: none;
 
 			&-input {
@@ -104,7 +104,7 @@
 	}
 }
 
-.elementor-slider {
+.refraction-slider {
 	flex-grow: 1;
 	height: 4px;
 	background-color: var(--e-a-border-color-bold);

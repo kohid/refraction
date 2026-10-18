@@ -4,14 +4,14 @@ import { type Audit } from '../types';
 
 export const audit: Audit = {
 	id: 'audits/robots-noindex',
-	title: __( 'Search engine visibility', 'elementor' ),
+	title: __( 'Search engine visibility', 'refraction' ),
 	description: __(
 		'When search engine visibility is checked in WordPress Settings -> Reading -> Search Engine Visibility, search engines are discouraged from indexing the website.',
-		'elementor'
+		'refraction'
 	),
 	fixHint: __(
 		'Go to Settings → Reading in the WordPress admin and uncheck "Discourage search engines from indexing this site" when the website should be indexed.',
-		'elementor'
+		'refraction'
 	),
 	categories: [ 'seo' ],
 	severity: 'error',
@@ -26,7 +26,7 @@ export const audit: Audit = {
 			violations: [
 				{
 					auditId: audit.id,
-					label: __( 'Search engines are discouraged from indexing this website.', 'elementor' ),
+					label: __( 'Search engines are discouraged from indexing this website.', 'refraction' ),
 					externalUrl: ctx.pageContext.reading_settings_url,
 				},
 			],

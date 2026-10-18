@@ -1,4 +1,4 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { getWidgetsCache } from '@refraction/editor-elements';
 import { __ } from '@wordpress/i18n';
 
 import { type Audit, type AuditViolation, type ElementSnapshotNode } from '../types';
@@ -16,18 +16,18 @@ function isNestingElement( node: ElementSnapshotNode, widgetsCache: ReturnType< 
 
 export const audit: Audit = {
 	id: 'audits/deep-nesting',
-	title: __( 'Deep container nesting', 'elementor' ),
+	title: __( 'Deep container nesting', 'refraction' ),
 	description: __(
 		'Container nesting exceeds the recommended depth. Deep DOM trees hurt rendering performance and readability.',
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Flatten the layout by removing unnecessary wrapper containers.', 'elementor' ),
+	fixHint: __( 'Flatten the layout by removing unnecessary wrapper containers.', 'refraction' ),
 	categories: [ 'performance', 'best-practices' ],
 	severity: 'warning',
 	weight: 5,
 	evaluate: ( ctx ) => {
 		if ( ctx.elements.tree.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No elements', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No elements', 'refraction' ) };
 		}
 
 		const widgetsCache = getWidgetsCache();
@@ -45,7 +45,7 @@ export const audit: Audit = {
 					auditId: audit.id,
 					elementId: node.id,
 					targetHint: 'element-settings',
-					label: __( 'Container nesting is too deep.', 'elementor' ),
+					label: __( 'Container nesting is too deep.', 'refraction' ),
 				} );
 			}
 		} );

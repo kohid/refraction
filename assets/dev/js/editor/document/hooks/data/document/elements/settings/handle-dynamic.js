@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/data/after';
+import After from 'refraction-api/modules/hooks/data/after';
 
 export class HandleDynamic extends After {
 	getCommand() {
@@ -24,7 +24,7 @@ export class HandleDynamic extends After {
 
 		containers.forEach( ( /** Container*/ container ) => {
 			if ( 'dynamic' === container.type ) {
-				const tagText = elementor.dynamicTags.tagContainerToTagText( container ),
+				const tagText = refraction.dynamicTags.tagContainerToTagText( container ),
 					commandArgs = {
 						container: container.parent,
 						settings: {

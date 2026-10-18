@@ -1,10 +1,10 @@
-import LocalizedValueStore from 'elementor-editor-utils/localized-value-store';
-import { createDebouncedWidgetPanelSearch } from 'elementor-editor-utils/editor-one-events';
+import LocalizedValueStore from 'refraction-editor-utils/localized-value-store';
+import { createDebouncedWidgetPanelSearch } from 'refraction-editor-utils/editor-one-events';
 
 const WIDGET_PANEL_SEARCH_DEBOUNCE_MS = 2000;
 
 const PanelElementsSearchView = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-panel-element-search',
+	template: '#tmpl-refraction-panel-element-search',
 
 	localizedValue: '',
 	localizedValueStore: new LocalizedValueStore(),
@@ -12,7 +12,7 @@ const PanelElementsSearchView = Marionette.ItemView.extend( {
 
 	tagName: 'search',
 
-	id: 'elementor-panel-elements-search-wrapper',
+	id: 'refraction-panel-elements-search-wrapper',
 
 	ui: {
 		input: 'input',
@@ -32,8 +32,8 @@ const PanelElementsSearchView = Marionette.ItemView.extend( {
 	},
 
 	getVisibleWidgetsCount() {
-		const $widgetsContainer = jQuery( '#elementor-panel-elements' );
-		return $widgetsContainer.find( '.elementor-element:visible' ).length;
+		const $widgetsContainer = jQuery( '#refraction-panel-elements' );
+		return $widgetsContainer.find( '.refraction-element:visible' ).length;
 	},
 
 	trackWidgetSearch() {
@@ -54,7 +54,7 @@ const PanelElementsSearchView = Marionette.ItemView.extend( {
 			this.clearInput();
 		}
 		this.localizedValue = this.localizedValueStore.appendAndParseLocalizedData( event );
-		elementor.channels.panelElements.reply( 'filter:localized', this.localizedValue );
+		refraction.channels.panelElements.reply( 'filter:localized', this.localizedValue );
 		this.triggerMethod( 'search:change:input' );
 
 		this.trackWidgetSearch();

@@ -13,25 +13,25 @@ type Repeaters = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat';
 const repeatControlOptions: ToggleButtonGroupItem< Repeaters >[] = [
 	{
 		value: 'repeat',
-		label: __( 'Repeat', 'elementor' ),
+		label: __( 'Repeat', 'refraction' ),
 		renderContent: ( { size } ) => <GridDotsIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'repeat-x',
-		label: __( 'Repeat-x', 'elementor' ),
+		label: __( 'Repeat-x', 'refraction' ),
 		renderContent: ( { size } ) => <DotsHorizontalIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'repeat-y',
-		label: __( 'Repeat-y', 'elementor' ),
+		label: __( 'Repeat-y', 'refraction' ),
 		renderContent: ( { size } ) => <DotsVerticalIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'no-repeat',
-		label: __( 'No-repeat', 'elementor' ),
+		label: __( 'No-repeat', 'refraction' ),
 		renderContent: ( { size } ) => <XIcon fontSize={ size } />,
 		showTooltip: true,
 	},
@@ -41,7 +41,7 @@ export const BackgroundImageOverlayRepeat = () => {
 	return (
 		<PopoverGridContainer>
 			<Grid item xs={ 6 }>
-				<ControlFormLabel>{ __( 'Repeat', 'elementor' ) }</ControlFormLabel>
+				<ControlFormLabel>{ __( 'Repeat', 'refraction' ) }</ControlFormLabel>
 			</Grid>
 			<Grid item xs={ 6 } sx={ { display: 'flex', justifyContent: 'flex-end' } }>
 				<ToggleControl options={ repeatControlOptions } />

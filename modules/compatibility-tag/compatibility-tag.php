@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Modules\CompatibilityTag;
+namespace Refraction\Modules\CompatibilityTag;
 
-use Elementor\Plugin;
-use Elementor\Core\Utils\Version;
-use Elementor\Core\Base\Base_Object;
-use Elementor\Core\Utils\Collection;
+use Refraction\Plugin;
+use Refraction\Core\Utils\Version;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Core\Utils\Collection;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

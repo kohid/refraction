@@ -1422,7 +1422,7 @@ readers do not read off random characters that represent icons */
 .fa-eject:before {
   content: "\f052"; }
 
-.fa-elementor:before {
+.fa-refraction:before {
   content: "\f430"; }
 
 .fa-ellipsis-h:before {

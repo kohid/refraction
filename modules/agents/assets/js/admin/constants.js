@@ -43,22 +43,22 @@ export const MODULE_STATUS_WARNING = 'warning';
 export const getModules = () => [
 	{
 		id: MODULE_LLMS_TXT,
-		title: __( 'LLMs.txt', 'elementor' ),
-		description: __( 'Guide AI agents through your site', 'elementor' ),
+		title: __( 'LLMs.txt', 'refraction' ),
+		description: __( 'Guide AI agents through your site', 'refraction' ),
 	},
 	{
 		id: MODULE_MARKDOWN_CONTENT,
-		title: __( 'Markdown content', 'elementor' ),
-		description: __( 'Make your content easier to read', 'elementor' ),
+		title: __( 'Markdown content', 'refraction' ),
+		description: __( 'Make your content easier to read', 'refraction' ),
 	},
 	{
 		id: MODULE_BOT_ACCESS_CONTROL,
-		title: __( 'Bot access control', 'elementor' ),
-		description: __( 'Control how agents use your content', 'elementor' ),
+		title: __( 'Bot access control', 'refraction' ),
+		description: __( 'Control how agents use your content', 'refraction' ),
 	},
 	{
 		id: MODULE_AGENT_DISCOVERY,
-		title: __( 'Agent discovery', 'elementor' ),
-		description: __( 'Tell agents what this site offers them', 'elementor' ),
+		title: __( 'Agent discovery', 'refraction' ),
+		description: __( 'Tell agents what this site offers them', 'refraction' ),
 	},
 ];

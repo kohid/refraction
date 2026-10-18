@@ -23,27 +23,27 @@ export type FilterGroup = {
 export const FILTERS_BY_GROUP: Record< FilterFunctionGroup, FilterGroup > = {
 	blur: {
 		blur: {
-			name: __( 'Blur', 'elementor' ),
-			valueName: __( 'Radius', 'elementor' ),
+			name: __( 'Blur', 'refraction' ),
+			valueName: __( 'Radius', 'refraction' ),
 		},
 	},
 	intensity: {
-		brightness: { name: __( 'Brightness', 'elementor' ) },
-		contrast: { name: __( 'Contrast', 'elementor' ) },
-		saturate: { name: __( 'Saturate', 'elementor' ) },
+		brightness: { name: __( 'Brightness', 'refraction' ) },
+		contrast: { name: __( 'Contrast', 'refraction' ) },
+		saturate: { name: __( 'Saturate', 'refraction' ) },
 	},
 	'hue-rotate': {
 		'hue-rotate': {
-			name: __( 'Hue Rotate', 'elementor' ),
-			valueName: __( 'Angle', 'elementor' ),
+			name: __( 'Hue Rotate', 'refraction' ),
+			valueName: __( 'Angle', 'refraction' ),
 		},
 	},
 	'color-tone': {
-		grayscale: { name: __( 'Grayscale', 'elementor' ) },
-		invert: { name: __( 'Invert', 'elementor' ) },
-		sepia: { name: __( 'Sepia', 'elementor' ) },
+		grayscale: { name: __( 'Grayscale', 'refraction' ) },
+		invert: { name: __( 'Invert', 'refraction' ) },
+		sepia: { name: __( 'Sepia', 'refraction' ) },
 	},
 	'drop-shadow': {
-		'drop-shadow': { name: __( 'Drop shadow', 'elementor' ), valueName: __( 'Drop-shadow', 'elementor' ) },
+		'drop-shadow': { name: __( 'Drop shadow', 'refraction' ), valueName: __( 'Drop-shadow', 'refraction' ) },
 	},
 };

@@ -1,5 +1,5 @@
-import { injectIntoLogic } from '@elementor/editor';
-import { __registerSlice } from '@elementor/store';
+import { injectIntoLogic } from '@refraction/editor';
+import { __registerSlice } from '@refraction/store';
 
 import { LogicHooks } from './components/logic-hooks';
 import { slice } from './store';

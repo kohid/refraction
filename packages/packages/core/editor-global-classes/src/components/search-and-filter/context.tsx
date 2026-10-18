@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, useContext, useState } from 'react';
-import { useDebounceState } from '@elementor/utils';
+import { useDebounceState } from '@refraction/utils';
 
 export type CheckedFilters = {
 	empty: boolean;
@@ -37,9 +37,9 @@ export const SearchAndFilterProvider = ( { children }: React.PropsWithChildren )
 	const [ filters, setFilters ] = useState< CheckedFilters >( INIT_CHECKED_FILTERS );
 
 	const getInitialSearchValue = () => {
-		const storedValue = localStorage.getItem( 'elementor-global-classes-search' );
+		const storedValue = localStorage.getItem( 'refraction-global-classes-search' );
 		if ( storedValue ) {
-			localStorage.removeItem( 'elementor-global-classes-search' );
+			localStorage.removeItem( 'refraction-global-classes-search' );
 			return storedValue;
 		}
 		return '';

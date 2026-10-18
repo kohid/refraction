@@ -2,27 +2,27 @@
 // Icon List
 //
 
-.elementor-widget {
+.refraction-widget {
 	$e-icon-list-svg-icon-size: var(--e-icon-list-icon-size, 1em);
 
-	&.elementor-icon-list--layout-inline,
-	&:not(:has(.elementor-widget-container)) {
+	&.refraction-icon-list--layout-inline,
+	&:not(:has(.refraction-widget-container)) {
 
-		.elementor-widget-container {
+		.refraction-widget-container {
 			overflow: hidden;
 		}
 	}
 
-	.elementor-icon-list-items.elementor-inline-items {
+	.refraction-icon-list-items.refraction-inline-items {
 		display: flex;
 		flex-wrap: wrap;
 		margin-inline: -8px;
 
-		.elementor-inline-item {
+		.refraction-inline-item {
 			word-break: break-word;
 		}
 
-		.elementor-icon-list-item {
+		.refraction-icon-list-item {
 			margin-inline: 8px;
 
 			&:after {
@@ -38,13 +38,13 @@
 		}
 	}
 
-	.elementor-icon-list-items {
+	.refraction-icon-list-items {
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
 	}
 
-	.elementor-icon-list-item {
+	.refraction-icon-list-item {
 		margin: 0;
 		padding: 0;
 		position: relative;
@@ -62,12 +62,12 @@
 		}
 	}
 
-	.elementor-icon-list-icon + .elementor-icon-list-text {
+	.refraction-icon-list-icon + .refraction-icon-list-text {
 		align-self: center;
 		padding-inline-start: 5px;
 	}
 
-	.elementor-icon-list-icon {
+	.refraction-icon-list-icon {
 		display: flex;
 		position: relative;
 		inset-block-start: var(--icon-vertical-offset, initial);
@@ -84,9 +84,9 @@
 	}
 
 	// Should be applied only on the icon-list widget, and not on any other widget that rely on this CSS.
-	&.elementor-widget-icon-list {
+	&.refraction-widget-icon-list {
 
-		.elementor-icon-list-icon {
+		.refraction-icon-list-icon {
 			text-align: var(--e-icon-list-icon-align);
 
 			svg {
@@ -97,7 +97,7 @@
 		}
 	}
 
-	&.elementor-list-item-link-full_width {
+	&.refraction-list-item-link-full_width {
 
 		a {
 			width: 100%;
@@ -106,9 +106,9 @@
 
 	@mixin align-list( $device ) {
 
-		&.elementor#{$device}-align-center {
+		&.refraction#{$device}-align-center {
 
-			.elementor-icon-list-item {
+			.refraction-icon-list-item {
 
 				&, a {
 					justify-content: center;
@@ -119,14 +119,14 @@
 				}
 			}
 
-			.elementor-inline-items {
+			.refraction-inline-items {
 				justify-content: center;
 			}
 		}
 
-		&.elementor#{$device}-align-start {
+		&.refraction#{$device}-align-start {
 
-			.elementor-icon-list-item {
+			.refraction-icon-list-item {
 
 				&, a {
 					justify-content: start;
@@ -134,14 +134,14 @@
 				}
 			}
 
-			.elementor-inline-items {
+			.refraction-inline-items {
 				justify-content: start;
 			}
 		}
 
-		&.elementor#{$device}-align-end {
+		&.refraction#{$device}-align-end {
 
-			.elementor-icon-list-item {
+			.refraction-icon-list-item {
 
 				&, a {
 					justify-content: end;
@@ -149,14 +149,14 @@
 				}
 			}
 
-			.elementor-icon-list-items {
+			.refraction-icon-list-items {
 				justify-content: end;
 			}
 		}
 
-		&:not(.elementor#{$device}-align-end) {
+		&:not(.refraction#{$device}-align-end) {
 
-			.elementor-icon-list-item {
+			.refraction-icon-list-item {
 
 				&:after {
 					inset-inline-start: 0;
@@ -164,9 +164,9 @@
 			}
 		}
 
-		&:not(.elementor#{$device}-align-start) {
+		&:not(.refraction#{$device}-align-start) {
 
-			.elementor-icon-list-item {
+			.refraction-icon-list-item {
 
 				&:after {
 					inset-inline-end: 0;
@@ -203,8 +203,8 @@
 }
 
 // Historical compatibility styles with higher specificity
-#left-area ul.elementor-icon-list-items,
-.elementor .elementor-element ul.elementor-icon-list-items,
-.elementor-edit-area .elementor-element ul.elementor-icon-list-items {
+#left-area ul.refraction-icon-list-items,
+.refraction .refraction-element ul.refraction-icon-list-items,
+.refraction-edit-area .refraction-element ul.refraction-icon-list-items {
 	padding: 0;
 }

@@ -11,14 +11,14 @@ const MOCK_TRANSLATIONS: Record< string, string > = {
 const CONFIG_KEY = 'e-test-module';
 
 function setTranslations( translations: Record< string, string > | undefined ) {
-	window.elementorAppConfig = {
+	window.refractionAppConfig = {
 		[ CONFIG_KEY ]: { translations },
-	} as typeof window.elementorAppConfig;
+	} as typeof window.refractionAppConfig;
 }
 
 describe( 'createTranslate', () => {
 	afterEach( () => {
-		window.elementorAppConfig = undefined;
+		window.refractionAppConfig = undefined;
 	} );
 
 	describe( 'key lookup', () => {
@@ -50,8 +50,8 @@ describe( 'createTranslate', () => {
 			expect( t( 'any.key' ) ).toBe( 'any.key' );
 		} );
 
-		it( 'should return the key when elementorAppConfig is undefined', () => {
-			window.elementorAppConfig = undefined;
+		it( 'should return the key when refractionAppConfig is undefined', () => {
+			window.refractionAppConfig = undefined;
 			const t = createTranslate( { configKey: CONFIG_KEY } );
 
 			expect( t( 'any.key' ) ).toBe( 'any.key' );
@@ -77,7 +77,7 @@ describe( 'createTranslate', () => {
 			setTranslations( MOCK_TRANSLATIONS );
 			const t = createTranslate( { configKey: CONFIG_KEY } );
 
-			expect( t( 'test.with_sequential', 'Alice', 'Elementor' ) ).toBe( 'Hello Alice, welcome to Elementor' );
+			expect( t( 'test.with_sequential', 'Alice', 'Refraction' ) ).toBe( 'Hello Alice, welcome to Refraction' );
 		} );
 
 		it( 'should not modify the string when no args are provided', () => {
@@ -97,7 +97,7 @@ describe( 'createTranslate', () => {
 
 	describe( 'default translations fallback', () => {
 		it( 'should use default translations when no remote translations are available', () => {
-			window.elementorAppConfig = undefined;
+			window.refractionAppConfig = undefined;
 			const t = createTranslate( {
 				configKey: CONFIG_KEY,
 				defaultStrings: { 'fallback.key': 'Fallback Value' },

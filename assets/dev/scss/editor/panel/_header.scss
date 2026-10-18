@@ -2,7 +2,7 @@
 // Panel Header
 //
 
-#elementor-panel-header {
+#refraction-panel-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -18,13 +18,13 @@
 	}
 }
 
-.elementor-header-button {
+.refraction-header-button {
 	width: 40px;
 	border: 0;
 	color: currentColor;
 	background-color: transparent;
 
-	.elementor-icon {
+	.refraction-icon {
 		cursor: pointer;
 		display: block;
 		font-size: 19px;
@@ -43,7 +43,7 @@
 	}
 }
 
-#elementor-panel-header-title {
+#refraction-panel-header-title {
 	flex: 1;
 	font-size: 15px;
 	font-weight: 700;

@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor tabs control.
+ * Refraction tabs control.
  *
  * A base control for creating tabs control. Displays a tabs header for `tab`
  * controls.

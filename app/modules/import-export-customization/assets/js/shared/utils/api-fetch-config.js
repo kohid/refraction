@@ -8,7 +8,7 @@ export function configureApiFetch() {
 		return;
 	}
 
-	const config = window.elementorAppConfig?.[ 'import-export-customization' ];
+	const config = window.refractionAppConfig?.[ 'import-export-customization' ];
 
 	if ( ! config ) {
 		throw new ImportExportError( 'Configuration not found. Please refresh the page.', 'config_missing' );

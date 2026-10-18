@@ -1,19 +1,19 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Data;
+namespace Refraction\App\Modules\ImportExportCustomization\Data;
 
-use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Export;
-use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Import;
-use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Import_Runner;
-use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Revert;
-use Elementor\App\Modules\ImportExportCustomization\Data\Routes\Upload;
+use Refraction\App\Modules\ImportExportCustomization\Data\Routes\Export;
+use Refraction\App\Modules\ImportExportCustomization\Data\Routes\Import;
+use Refraction\App\Modules\ImportExportCustomization\Data\Routes\Import_Runner;
+use Refraction\App\Modules\ImportExportCustomization\Data\Routes\Revert;
+use Refraction\App\Modules\ImportExportCustomization\Data\Routes\Upload;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 class Controller {
-	const API_NAMESPACE = 'elementor/v1';
+	const API_NAMESPACE = 'refraction/v1';
 	const API_BASE = 'import-export-customization';
 
 	public static function register_hooks() {

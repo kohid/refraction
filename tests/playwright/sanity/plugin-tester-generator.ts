@@ -10,41 +10,41 @@ const isBelowVersion = ( currentVersion?: string, minVersion?: string ) => {
 };
 
 const pluginList: { pluginName: string, installSource: 'api' | 'cli' | 'zip', hasInstallationPage?: boolean, dependency?: string, minPhp?: string, minWp?: string }[] = [
-	{ pluginName: 'essential-addons-for-elementor-lite', installSource: 'api' },
-	{ pluginName: 'jetsticky-for-elementor', installSource: 'api' },
+	{ pluginName: 'essential-addons-for-refraction-lite', installSource: 'api' },
+	{ pluginName: 'jetsticky-for-refraction', installSource: 'api' },
 	{ pluginName: 'jetgridbuilder', installSource: 'api' },
-	{ pluginName: 'the-plus-addons-for-elementor-page-builder', installSource: 'api' },
+	{ pluginName: 'the-plus-addons-for-refraction-page-builder', installSource: 'api' },
 	{ pluginName: 'stratum', installSource: 'api' },
 	// { pluginName: 'bdthemes-prime-slider-lite', installSource: 'api' },
-	{ pluginName: 'addon-elements-for-elementor-page-builder', installSource: 'api' },
-	{ pluginName: 'anywhere-elementor', installSource: 'api' },
+	{ pluginName: 'addon-elements-for-refraction-page-builder', installSource: 'api' },
+	{ pluginName: 'anywhere-refraction', installSource: 'api' },
 	{ pluginName: 'astra-sites', installSource: 'api', hasInstallationPage: true },
-	{ pluginName: 'connect-polylang-elementor', installSource: 'api', dependency: 'polylang' },
-	{ pluginName: 'dynamic-visibility-for-elementor', installSource: 'api' },
+	{ pluginName: 'connect-polylang-refraction', installSource: 'api', dependency: 'polylang' },
+	{ pluginName: 'dynamic-visibility-for-refraction', installSource: 'api' },
 	{ pluginName: 'elementskit-lite', installSource: 'api' },
-	{ pluginName: 'exclusive-addons-for-elementor', installSource: 'api', hasInstallationPage: true },
-	{ pluginName: 'header-footer-elementor', installSource: 'api' },
-	{ pluginName: 'jeg-elementor-kit', installSource: 'cli' },
-	{ pluginName: 'make-column-clickable-elementor', installSource: 'api' },
+	{ pluginName: 'exclusive-addons-for-refraction', installSource: 'api', hasInstallationPage: true },
+	{ pluginName: 'header-footer-refraction', installSource: 'api' },
+	{ pluginName: 'jeg-refraction-kit', installSource: 'cli' },
+	{ pluginName: 'make-column-clickable-refraction', installSource: 'api' },
 	{ pluginName: 'metform', installSource: 'cli' },
-	{ pluginName: 'music-player-for-elementor', installSource: 'cli' },
-	{ pluginName: 'ooohboi-steroids-for-elementor', installSource: 'api' },
-	{ pluginName: 'post-grid-elementor-addon', installSource: 'api' },
-	{ pluginName: 'powerpack-lite-for-elementor', installSource: 'api', hasInstallationPage: true },
-	{ pluginName: 'premium-addons-for-elementor', installSource: 'cli', hasInstallationPage: true },
-	{ pluginName: 'rife-elementor-extensions', installSource: 'api' },
-	{ pluginName: 'royal-elementor-addons', installSource: 'cli' },
-	{ pluginName: 'sb-elementor-contact-form-db', installSource: 'cli' },
-	{ pluginName: 'skyboot-custom-icons-for-elementor', installSource: 'api', hasInstallationPage: true },
-	{ pluginName: 'sticky-header-effects-for-elementor', installSource: 'api' },
-	{ pluginName: 'timeline-widget-addon-for-elementor', installSource: 'cli', hasInstallationPage: true },
-	{ pluginName: 'unlimited-elements-for-elementor', installSource: 'api' },
-	{ pluginName: 'visibility-logic-elementor', installSource: 'api' },
-	{ pluginName: 'ht-mega-for-elementor', installSource: 'api' },
-	{ pluginName: 'tutor-lms-elementor-addons', installSource: 'api' },
-	{ pluginName: 'code-block-for-elementor', installSource: 'api' },
-	{ pluginName: 'jetwidgets-for-elementor', installSource: 'api' },
-	{ pluginName: 'happy-elementor-addons', installSource: 'cli', hasInstallationPage: true },
+	{ pluginName: 'music-player-for-refraction', installSource: 'cli' },
+	{ pluginName: 'ooohboi-steroids-for-refraction', installSource: 'api' },
+	{ pluginName: 'post-grid-refraction-addon', installSource: 'api' },
+	{ pluginName: 'powerpack-lite-for-refraction', installSource: 'api', hasInstallationPage: true },
+	{ pluginName: 'premium-addons-for-refraction', installSource: 'cli', hasInstallationPage: true },
+	{ pluginName: 'rife-refraction-extensions', installSource: 'api' },
+	{ pluginName: 'royal-refraction-addons', installSource: 'cli' },
+	{ pluginName: 'sb-refraction-contact-form-db', installSource: 'cli' },
+	{ pluginName: 'skyboot-custom-icons-for-refraction', installSource: 'api', hasInstallationPage: true },
+	{ pluginName: 'sticky-header-effects-for-refraction', installSource: 'api' },
+	{ pluginName: 'timeline-widget-addon-for-refraction', installSource: 'cli', hasInstallationPage: true },
+	{ pluginName: 'unlimited-elements-for-refraction', installSource: 'api' },
+	{ pluginName: 'visibility-logic-refraction', installSource: 'api' },
+	{ pluginName: 'ht-mega-for-refraction', installSource: 'api' },
+	{ pluginName: 'tutor-lms-refraction-addons', installSource: 'api' },
+	{ pluginName: 'code-block-for-refraction', installSource: 'api' },
+	{ pluginName: 'jetwidgets-for-refraction', installSource: 'api' },
+	{ pluginName: 'happy-refraction-addons', installSource: 'cli', hasInstallationPage: true },
 	{ pluginName: 'enqueue-media-on-front', installSource: 'zip' },
 	{ pluginName: 'akismet', installSource: 'api' },
 	{ pluginName: 'wordpress-seo', installSource: 'api', hasInstallationPage: true, minWp: '6.9' },
@@ -71,7 +71,7 @@ export const generatePluginTests = ( testType: string ) => {
 					await wpCli( `wp plugin install ${ plugin.pluginName } --activate` );
 					break;
 				case 'zip':
-					await wpCli( `wp plugin install elementor-playwright/plugin-tester-plugins/${ plugin.pluginName }.zip --activate` );
+					await wpCli( `wp plugin install refraction-playwright/plugin-tester-plugins/${ plugin.pluginName }.zip --activate` );
 					break;
 			}
 
@@ -86,7 +86,7 @@ export const generatePluginTests = ( testType: string ) => {
 					const admin = document.getElementById( selector );
 					admin.remove();
 				}, adminBar );
-				await editor.removeClasses( 'elementor-motion-effects-element' );
+				await editor.removeClasses( 'refraction-motion-effects-element' );
 				const progressWidget = page.locator( '[data-widget_type="progress.default"]' ).first();
 				await progressWidget.scrollIntoViewIfNeeded();
 				await expect( progressWidget ).toBeVisible();
@@ -100,21 +100,21 @@ export const generatePluginTests = ( testType: string ) => {
 					}
 				}
 
-				await page.goto( '/law-firm-about/?elementor' );
+				await page.goto( '/law-firm-about/?refraction' );
 
-				if ( 'connect-polylang-elementor' === plugin.pluginName && page.url().includes( 'page=mlang_wizard' ) ) {
+				if ( 'connect-polylang-refraction' === plugin.pluginName && page.url().includes( 'page=mlang_wizard' ) ) {
 					await page.getByRole( 'link', { name: 'Not right now' } ).click();
-					await page.goto( '/law-firm-about/?elementor' );
+					await page.goto( '/law-firm-about/?refraction' );
 				}
 
-				if ( 'header-footer-elementor' === plugin.pluginName && page.url().includes( 'page=hfe' ) ) {
+				if ( 'header-footer-refraction' === plugin.pluginName && page.url().includes( 'page=hfe' ) ) {
 					await page.getByText( 'Exit Guided Setup' ).click();
-					await page.goto( '/law-firm-about/?elementor' );
+					await page.goto( '/law-firm-about/?refraction' );
 				}
 
 				await wpAdmin.closeAnnouncementsIfVisible();
 
-				if ( 'the-plus-addons-for-elementor-page-builder' === plugin.pluginName ) {
+				if ( 'the-plus-addons-for-refraction-page-builder' === plugin.pluginName ) {
 					const plusAddonTemplateModal = new ImportTemplatesModal( page );
 					await plusAddonTemplateModal.skipTemplatesImportIfVisible();
 				}

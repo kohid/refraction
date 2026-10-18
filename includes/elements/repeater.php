@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor repeater element.
+ * Refraction repeater element.
  *
- * Elementor repeater handler class is responsible for initializing the repeater.
+ * Refraction repeater handler class is responsible for initializing the repeater.
  *
  * @since 1.0.0
  */
@@ -37,7 +37,7 @@ class Repeater extends Element_Base {
 	/**
 	 * Repeater constructor.
 	 *
-	 * Initializing Elementor repeater element.
+	 * Initializing Refraction repeater element.
 	 *
 	 * @since 1.0.7
 	 * @access public

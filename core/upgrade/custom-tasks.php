@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Upgrade;
+namespace Refraction\Core\Upgrade;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

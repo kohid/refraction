@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useId, useMemo, useRef, useState } from 'react';
-import { enqueueFont, ItemSelector, useFontFamilies } from '@elementor/editor-controls';
-import { useSectionWidth } from '@elementor/editor-ui';
+import { enqueueFont, ItemSelector, useFontFamilies } from '@refraction/editor-controls';
+import { useSectionWidth } from '@refraction/editor-ui';
 import { ChevronDownIcon, TextIcon } from '@elementor/icons';
 import { bindPopover, bindTrigger, Popover, UnstableTag, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -74,7 +74,7 @@ export const FontField = ( { value, onChange, onValidationChange }: FontFieldPro
 					onItemChange={ handleFontFamilyChange }
 					onClose={ fontPopoverState.close }
 					sectionWidth={ sectionWidth }
-					title={ __( 'Font family', 'elementor' ) }
+					title={ __( 'Font family', 'refraction' ) }
 					itemStyle={ ( item ) => ( { fontFamily: item.value } ) }
 					onDebounce={ enqueueFont }
 					icon={ TextIcon as React.ElementType< { fontSize: string } > }

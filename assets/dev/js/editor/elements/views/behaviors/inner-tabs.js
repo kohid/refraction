@@ -14,7 +14,7 @@ InnerTabsBehavior = Marionette.Behavior.extend( {
 			} );
 
 		_.each( tabsWrappers, function( view ) {
-			view.$el.find( '.elementor-control-content' ).remove();
+			view.$el.find( '.refraction-control-content' ).remove();
 
 			var tabsId = view.model.get( 'name' ),
 				tabs = parent.children.filter( function( childView ) {
@@ -65,7 +65,7 @@ InnerTabsBehavior = Marionette.Behavior.extend( {
 			}
 		} );
 
-		elementor.getPanelView().updateScrollbar();
+		refraction.getPanelView().updateScrollbar();
 	},
 } );
 

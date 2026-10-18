@@ -51,7 +51,7 @@ export const BotAccessRow = ( { bot, catalogBot, isDisabled, onTogglePermission,
 						onChange={ () => onTogglePermission( bot.token, permission ) }
 						inputProps={ {
 							/* Translators: 1: Permission name, 2: Bot name. */
-							'aria-label': sprintf( __( '%1$s for %2$s', 'elementor' ), title, catalogBot.name ),
+							'aria-label': sprintf( __( '%1$s for %2$s', 'refraction' ), title, catalogBot.name ),
 						} }
 						sx={ wpAdminSwitchSx }
 					/>
@@ -71,7 +71,7 @@ export const BotAccessRow = ( { bot, catalogBot, isDisabled, onTogglePermission,
 						disabled={ isDisabled }
 						onClick={ () => onSetRow( bot.token, true ) }
 					>
-						{ __( 'Enable', 'elementor' ) }
+						{ __( 'Enable', 'refraction' ) }
 					</Button>
 				) : (
 					<IconButton
@@ -79,7 +79,7 @@ export const BotAccessRow = ( { bot, catalogBot, isDisabled, onTogglePermission,
 						disabled={ isDisabled }
 						onClick={ () => onSetRow( bot.token, false ) }
 						/* Translators: %s: Bot name. */
-						aria-label={ sprintf( __( 'Block %s', 'elementor' ), catalogBot.name ) }
+						aria-label={ sprintf( __( 'Block %s', 'refraction' ), catalogBot.name ) }
 					>
 						<BanIcon fontSize="small" />
 					</IconButton>

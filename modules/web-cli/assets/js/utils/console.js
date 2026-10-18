@@ -13,7 +13,7 @@ export default class Console {
 	}
 
 	static warn( ... args ) {
-		const style = `font-size: 12px; background-image: url("${ elementorWebCliConfig.urls.assets }images/logo-icon.png"); background-repeat: no-repeat; background-size: contain;`;
+		const style = `font-size: 12px; background-image: url("${ refractionWebCliConfig.urls.assets }images/logo-icon.png"); background-repeat: no-repeat; background-size: contain;`;
 
 		args.unshift( '%c  %c', style, '' );
 

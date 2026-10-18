@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type BreakpointId, useBreakpoints } from '@elementor/editor-responsive';
+import { type BreakpointId, useBreakpoints } from '@refraction/editor-responsive';
 import {
 	DesktopIcon,
 	LaptopIcon,

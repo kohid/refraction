@@ -3,7 +3,7 @@
  * DB-less unit bootstrap for fast local PHPUnit runs.
  *
  * No WordPress, no MySQL, no plugin boot. It only defines ABSPATH and registers an autoloader
- * that resolves `Elementor\...` classes straight to their files using the same name->path
+ * that resolves `Refraction\...` classes straight to their files using the same name->path
  * transform as includes/autoloader.php. Use it for pure unit tests whose subjects don't call
  * WordPress at load/run time (e.g. css-converter, prop-types). Run via tests/phpunit/run-unit.sh.
  */
@@ -84,7 +84,7 @@ $root = dirname( __DIR__, 2 ) . '/';
 require $root . 'vendor/autoload.php';
 
 spl_autoload_register( function ( $class ) use ( $root ) {
-	$namespace = 'Elementor\\';
+	$namespace = 'Refraction\\';
 
 	if ( 0 !== strpos( $class, $namespace ) ) {
 		return;

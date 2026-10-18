@@ -1,9 +1,9 @@
-import { rovingTabindex } from 'elementor-editor-utils/keyboard-nav';
+import { rovingTabindex } from 'refraction-editor-utils/keyboard-nav';
 
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-template-library-header-menu',
+	template: '#tmpl-refraction-template-library-header-menu',
 
-	id: 'elementor-template-library-header-menu',
+	id: 'refraction-template-library-header-menu',
 
 	ui: {
 		tabs: '[role="tab"]',
@@ -22,7 +22,7 @@ module.exports = Marionette.ItemView.extend( {
 	attributes() {
 		return {
 			role: 'tablist',
-			'aria-label': __( 'Library sections', 'elementor' ),
+			'aria-label': __( 'Library sections', 'refraction' ),
 		};
 	},
 
@@ -53,7 +53,7 @@ module.exports = Marionette.ItemView.extend( {
 		try {
 			libraryComponent.activateTab( targetTabName );
 
-			const $tabAfterRerender = jQuery( `#elementor-template-library-header-menu [data-tab="${ targetTabName }"]` );
+			const $tabAfterRerender = jQuery( `#refraction-template-library-header-menu [data-tab="${ targetTabName }"]` );
 			if ( $tabAfterRerender.length ) {
 				$tabAfterRerender.trigger( 'focus' );
 			}

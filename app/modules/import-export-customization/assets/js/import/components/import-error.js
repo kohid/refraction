@@ -9,7 +9,7 @@ export default function ImportError( { statusText } ) {
 	const { dispatch } = useImportContext();
 	const handleTryAgain = () => {
 		dispatch( { type: 'RESET_STATE' } );
-		window.location.href = elementorAppConfig.base_url + '#/import-customization/';
+		window.location.href = refractionAppConfig.base_url + '#/import-customization/';
 	};
 
 	const handleLearnMore = () => {
@@ -37,10 +37,10 @@ export default function ImportError( { statusText } ) {
 
 			<Stack direction="row" spacing={ 2 }>
 				<Button variant="contained" onClick={ handleTryAgain } data-testid="import-error-try-again-button">
-					{ __( 'Try Again', 'elementor' ) }
+					{ __( 'Try Again', 'refraction' ) }
 				</Button>
 				<Button variant="outlined" onClick={ handleLearnMore } data-testid="import-error-learn-more-button">
-					{ __( 'Learn More', 'elementor' ) }
+					{ __( 'Learn More', 'refraction' ) }
 				</Button>
 			</Stack>
 		</>

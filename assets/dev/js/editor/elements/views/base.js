@@ -1,10 +1,10 @@
-import environment from 'elementor-common/utils/environment';
-import ElementTypeNotFound from 'elementor-editor/errors/element-type-not-found';
-import { getAllElementTypes } from 'elementor-editor/utils/element-types';
+import environment from 'refraction-common/utils/environment';
+import ElementTypeNotFound from 'refraction-editor/errors/element-type-not-found';
+import { getAllElementTypes } from 'refraction-editor/utils/element-types';
 
-var ControlsCSSParser = require( 'elementor-editor-utils/controls-css-parser' ),
-	Validator = require( 'elementor-validator/base' ),
-	BaseContainer = require( 'elementor-views/base-container' ),
+var ControlsCSSParser = require( 'refraction-editor-utils/controls-css-parser' ),
+	Validator = require( 'refraction-validator/base' ),
+	BaseContainer = require( 'refraction-views/base-container' ),
 	BaseElementView;
 
 /**
@@ -31,10 +31,10 @@ BaseElementView = BaseContainer.extend( {
 	isRendering: false,
 
 	className() {
-		let classes = 'elementor-element elementor-element-edit-mode ' + this.getElementUniqueID();
+		let classes = 'refraction-element refraction-element-edit-mode ' + this.getElementUniqueID();
 
 		if ( this.toggleEditTools ) {
-			classes += ' elementor-element--toggle-edit-tools';
+			classes += ' refraction-element--toggle-edit-tools';
 		}
 
 		return classes;
@@ -50,27 +50,27 @@ BaseElementView = BaseContainer.extend( {
 
 	ui() {
 		return {
-			tools: '> .elementor-element-overlay > .elementor-editor-element-settings',
-			editButton: '> .elementor-element-overlay .elementor-editor-element-edit',
-			duplicateButton: '> .elementor-element-overlay .elementor-editor-element-duplicate',
-			addButton: '> .elementor-element-overlay .elementor-editor-element-add',
-			removeButton: '> .elementor-element-overlay .elementor-editor-element-remove',
+			tools: '> .refraction-element-overlay > .refraction-editor-element-settings',
+			editButton: '> .refraction-element-overlay .refraction-editor-element-edit',
+			duplicateButton: '> .refraction-element-overlay .refraction-editor-element-duplicate',
+			addButton: '> .refraction-element-overlay .refraction-editor-element-add',
+			removeButton: '> .refraction-element-overlay .refraction-editor-element-remove',
 		};
 	},
 
 	behaviors() {
 		const elementType = this.options.model.get( 'elType' );
 
-		const groups = elementor.hooks.applyFilters( `elements/${ elementType }/contextMenuGroups`, this.getContextMenuGroups(), this );
+		const groups = refraction.hooks.applyFilters( `elements/${ elementType }/contextMenuGroups`, this.getContextMenuGroups(), this );
 
 		const behaviors = {
 			contextMenu: {
-				behaviorClass: require( 'elementor-behaviors/context-menu' ),
+				behaviorClass: require( 'refraction-behaviors/context-menu' ),
 				groups,
 			},
 		};
 
-		return elementor.hooks.applyFilters( 'elements/base/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'elements/base/behaviors', behaviors, this );
 	},
 
 	getBehavior( name ) {
@@ -97,18 +97,18 @@ BaseElementView = BaseContainer.extend( {
 	},
 
 	getChildType() {
-		return elementor.helpers.getElementChildType( this.getElementType() );
+		return refraction.helpers.getElementChildType( this.getElementType() );
 	},
 
 	getChildView( model ) {
 		const elementType = model.get( 'widgetType' ) || model.get( 'elType' ),
-			elementTypeClass = elementor.elementsManager.getElementTypeClass( elementType );
+			elementTypeClass = refraction.elementsManager.getElementTypeClass( elementType );
 
 		if ( ! elementTypeClass ) {
 			throw new ElementTypeNotFound( elementType );
 		}
 
-		return elementor.hooks.applyFilters( 'element/view', elementTypeClass.getView(), model, this );
+		return refraction.hooks.applyFilters( 'element/view', elementTypeClass.getView(), model, this );
 	},
 
 	getTemplateType() {
@@ -123,14 +123,14 @@ BaseElementView = BaseContainer.extend( {
 		if ( ! this.container ) {
 			const settingsModel = this.model.get( 'settings' );
 
-			this.container = new elementorModules.editor.Container( {
+			this.container = new refractionModules.editor.Container( {
 				type: this.model.get( 'elType' ),
 				id: this.model.id,
 				model: this.model,
 				settings: settingsModel,
 				view: this,
 				parent: this._parent ? this._parent.getContainer() : false,
-				label: elementor.helpers.getModelLabel( this.model ),
+				label: refraction.helpers.getModelLabel( this.model ),
 				controls: settingsModel.options.controls,
 			} );
 		}
@@ -149,16 +149,16 @@ BaseElementView = BaseContainer.extend( {
 						name: 'edit',
 						icon: 'eicon-edit',
 						/* Translators: %s: Element Name. */
-						title: () => sprintf( __( 'Edit %s', 'elementor' ), elementor.selection.isMultiple() ? '' : this.options.model.getTitle() ),
-						isEnabled: () => ! elementor.selection.isMultiple(),
+						title: () => sprintf( __( 'Edit %s', 'refraction' ), refraction.selection.isMultiple() ? '' : this.options.model.getTitle() ),
+						isEnabled: () => ! refraction.selection.isMultiple(),
 						callback: () => $e.run( 'document/elements/select', { container: this.getContainer() } ),
 					}, {
 						name: 'duplicate',
 						icon: 'eicon-clone',
-						title: __( 'Duplicate', 'elementor' ),
+						title: __( 'Duplicate', 'refraction' ),
 						shortcut: controlSign + '+D',
-						isEnabled: () => elementor.selection.isSameType() && ! this.getContainer().isLocked(),
-						callback: () => $e.run( 'document/elements/duplicate', { containers: elementor.selection.getElements( this.getContainer() ) } ),
+						isEnabled: () => refraction.selection.isSameType() && ! this.getContainer().isLocked(),
+						callback: () => $e.run( 'document/elements/duplicate', { containers: refraction.selection.getElements( this.getContainer() ) } ),
 					},
 				],
 			}, {
@@ -166,55 +166,55 @@ BaseElementView = BaseContainer.extend( {
 				actions: [
 					{
 						name: 'copy',
-						title: __( 'Copy', 'elementor' ),
+						title: __( 'Copy', 'refraction' ),
 						shortcut: controlSign + '+C',
-						isEnabled: () => elementor.selection.isSameType() && ! this.getContainer().isLocked(),
+						isEnabled: () => refraction.selection.isSameType() && ! this.getContainer().isLocked(),
 						callback: () => $e.run( 'document/elements/copy', {
-							containers: elementor.selection.getElements( this.getContainer() ),
+							containers: refraction.selection.getElements( this.getContainer() ),
 						} ),
 					}, {
 						name: 'paste',
-						title: __( 'Paste', 'elementor' ),
+						title: __( 'Paste', 'refraction' ),
 						shortcut: controlSign + '+V',
 						isEnabled: () => $e.components.get( 'document/elements' ).utils.isPasteEnabled( this.getContainer() ) &&
-							elementor.selection.isSameType(),
+							refraction.selection.isSameType(),
 						callback: () => $e.run( 'document/ui/paste', {
 							container: this.getContainer(),
 						} ),
 					}, {
 						name: 'pasteStyle',
-						title: __( 'Paste style', 'elementor' ),
+						title: __( 'Paste style', 'refraction' ),
 						shortcut: controlSign + '+⇧+V',
-						isEnabled: () => !! elementorCommon.storage.get( 'clipboard' ),
-						callback: () => $e.run( 'document/elements/paste-style', { containers: elementor.selection.getElements( this.getContainer() ) } ),
+						isEnabled: () => !! refractionCommon.storage.get( 'clipboard' ),
+						callback: () => $e.run( 'document/elements/paste-style', { containers: refraction.selection.getElements( this.getContainer() ) } ),
 					}, {
 						name: 'pasteInteractions',
-						title: __( 'Paste interactions', 'elementor' ),
+						title: __( 'Paste interactions', 'refraction' ),
 						isEnabled: () => {
-							const clipboard = elementorCommon.storage.get( 'clipboard' );
+							const clipboard = refractionCommon.storage.get( 'clipboard' );
 							if ( ! clipboard ) {
 								return false;
 							}
-							const elements = elementor.selection.getElements( this.getContainer() );
-							return elements.length > 0 && elements.every( ( c ) => elementor.helpers.isAtomicWidget( c.model ) );
+							const elements = refraction.selection.getElements( this.getContainer() );
+							return elements.length > 0 && elements.every( ( c ) => refraction.helpers.isAtomicWidget( c.model ) );
 						},
 						callback: () => {
 							$e.run( 'document/elements/paste-interactions', {
-								containers: elementor.selection.getElements( this.getContainer() ),
+								containers: refraction.selection.getElements( this.getContainer() ),
 							} );
 						},
 					}, {
 						name: 'pasteArea',
 						icon: 'eicon-import-export',
-						title: __( 'Paste from other site', 'elementor' ),
+						title: __( 'Paste from other site', 'refraction' ),
 						callback: () => $e.run( 'document/elements/paste-area', {
 							container: this.getContainer(),
 						} ),
 					}, {
 						name: 'resetStyle',
-						title: __( 'Reset style', 'elementor' ),
+						title: __( 'Reset style', 'refraction' ),
 						callback: () => $e.run( 'document/elements/reset-style', {
-							containers: elementor.selection.getElements( this.getContainer() ),
+							containers: refraction.selection.getElements( this.getContainer() ),
 						} ),
 					},
 				],
@@ -231,7 +231,7 @@ BaseElementView = BaseContainer.extend( {
 		 * @param array  customGroups - An array of group objects.
 		 * @param string elementType - The current element type.
 		 */
-		customGroups = elementor.hooks.applyFilters( 'elements/context-menu/groups', customGroups, this.options.model.get( 'elType' ) );
+		customGroups = refraction.hooks.applyFilters( 'elements/context-menu/groups', customGroups, this.options.model.get( 'elType' ) );
 
 		if ( customGroups.length ) {
 			groups = [ ...groups, ...customGroups ];
@@ -244,14 +244,14 @@ BaseElementView = BaseContainer.extend( {
 					name: 'delete',
 					icon: 'eicon-trash',
 					title: () => {
-						if ( elementor.selection.isMultiple() ) {
+						if ( refraction.selection.isMultiple() ) {
 							// Translators: %d: Elements count.
-							return sprintf( __( 'Delete %d items', 'elementor' ), elementor.selection.getElements().length );
+							return sprintf( __( 'Delete %d items', 'refraction' ), refraction.selection.getElements().length );
 						}
-						return __( 'Delete', 'elementor' );
+						return __( 'Delete', 'refraction' );
 					},
 					shortcut: '⌦',
-					callback: () => $e.run( 'document/elements/delete', { containers: elementor.selection.getElements( this.getContainer() ), callerName: 'context_menu' } ),
+					callback: () => $e.run( 'document/elements/delete', { containers: refraction.selection.getElements( this.getContainer() ), callerName: 'context_menu' } ),
 					isEnabled: () => ! this.getContainer().isLocked(),
 				},
 			],
@@ -270,12 +270,12 @@ BaseElementView = BaseContainer.extend( {
 		const editModel = this.getEditModel();
 
 		if ( this.collection && this.onCollectionChanged ) {
-			elementorDevTools.deprecation.deprecated( 'onCollectionChanged', '2.8.0', '$e.hooks' );
+			refractionDevTools.deprecation.deprecated( 'onCollectionChanged', '2.8.0', '$e.hooks' );
 			this.listenTo( this.collection, 'add remove reset', this.onCollectionChanged, this );
 		}
 
 		if ( this.onSettingsChanged ) {
-			elementorDevTools.deprecation.deprecated( 'onSettingsChanged', '2.8.0', '$e.hooks' );
+			refractionDevTools.deprecation.deprecated( 'onSettingsChanged', '2.8.0', '$e.hooks' );
 			this.listenTo( editModel.get( 'settings' ), 'change', this.onSettingsChanged );
 		}
 
@@ -289,7 +289,7 @@ BaseElementView = BaseContainer.extend( {
 			this.onDynamicServerRequestEnd = _.debounce( () => {
 				this.render();
 
-				this.$el.removeClass( 'elementor-loading' );
+				this.$el.removeClass( 'refraction-loading' );
 			}, 100 );
 		}
 	},
@@ -297,7 +297,7 @@ BaseElementView = BaseContainer.extend( {
 	getHandlesOverlay() {
 		const elementType = this.getElementType();
 
-		if ( ! elementor.userCan( 'design' ) && elementType !== 'widget' ) {
+		if ( ! refraction.userCan( 'design' ) && elementType !== 'widget' ) {
 			return;
 		}
 
@@ -306,10 +306,10 @@ BaseElementView = BaseContainer.extend( {
 		}
 
 		const isElement = getAllElementTypes().includes( elementType );
-		const	$handlesOverlay = jQuery( '<div>', { class: 'elementor-element-overlay' } ),
-			$overlayList = jQuery( '<ul>', { class: `elementor-editor-element-settings elementor-editor-${ elementType }-settings ${ isElement ? 'elementor-editor-element-overlay-settings' : '' }` } ),
-			editButtonsEnabled = elementor.getPreferences( 'edit_buttons' ),
-			elementData = elementor.getElementData( this.model );
+		const	$handlesOverlay = jQuery( '<div>', { class: 'refraction-element-overlay' } ),
+			$overlayList = jQuery( '<ul>', { class: `refraction-editor-element-settings refraction-editor-${ elementType }-settings ${ isElement ? 'refraction-editor-element-overlay-settings' : '' }` } ),
+			editButtonsEnabled = refraction.getPreferences( 'edit_buttons' ),
+			elementData = refraction.getElementData( this.model );
 
 		let editButtons = this.getEditButtons();
 		const shouldShowEditButtons = editButtonsEnabled || 'widget' === elementType;
@@ -325,7 +325,7 @@ BaseElementView = BaseContainer.extend( {
 			 *
 			 * @param array editButtons An array of buttons.
 			 */
-			editButtons = elementor.hooks.applyFilters( `elements/edit-buttons`, editButtons );
+			editButtons = refraction.hooks.applyFilters( `elements/edit-buttons`, editButtons );
 
 			/**
 			 * Filter edit buttons.
@@ -338,21 +338,21 @@ BaseElementView = BaseContainer.extend( {
 			 *
 			 * @param array editButtons An array of buttons.
 			 */
-			editButtons = elementor.hooks.applyFilters( `elements/edit-buttons/${ elementType }`, editButtons );
+			editButtons = refraction.hooks.applyFilters( `elements/edit-buttons/${ elementType }`, editButtons );
 		}
 
 		// Only sections always have the remove button, even if the Editing Handles preference is off.
 		if ( 'section' === elementType || editButtonsEnabled ) {
 			editButtons.remove = {
 				/* Translators: %s: Element Name. */
-				title: sprintf( __( 'Delete %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Delete %s', 'refraction' ), elementData.title ),
 				icon: 'close',
 			};
 		}
 
 		jQuery.each( editButtons, ( toolName, tool ) => {
 			const $item = jQuery( '<li>', {
-				class: `elementor-editor-element-setting elementor-editor-element-${ toolName }`,
+				class: `refraction-editor-element-setting refraction-editor-element-${ toolName }`,
 				title: tool.title,
 				'aria-label': tool.title,
 			} );
@@ -389,8 +389,8 @@ BaseElementView = BaseContainer.extend( {
 	toggleVisibilityClass() {
 		const isVisible = this.model.getVisibility();
 
-		if ( ! elementor.helpers.isAtomicWidget( this.model ) ) {
-			this.$el.toggleClass( 'elementor-edit-hidden', isVisible );
+		if ( ! refraction.helpers.isAtomicWidget( this.model ) ) {
+			this.$el.toggleClass( 'refraction-edit-hidden', isVisible );
 
 			return;
 		}
@@ -422,12 +422,12 @@ BaseElementView = BaseContainer.extend( {
 	addElementFromPanel( options ) {
 		options = options || {};
 
-		const elementView = elementor.channels.panelElements.request( 'element:selected' ),
+		const elementView = refraction.channels.panelElements.request( 'element:selected' ),
 			model = {
 				elType: elementView.model.get( 'elType' ),
 			};
 
-		if ( elementor.helpers.maybeDisableWidget() ) {
+		if ( refraction.helpers.maybeDisableWidget() ) {
 			return;
 		}
 
@@ -452,7 +452,7 @@ BaseElementView = BaseContainer.extend( {
 		}
 
 		// Reset the selected element cache.
-		elementor.channels.panelElements.reply( 'element:selected', null );
+		refraction.channels.panelElements.reply( 'element:selected', null );
 
 		return $e.run( 'document/elements/create', {
 			container: this.getContainer(),
@@ -553,7 +553,7 @@ BaseElementView = BaseContainer.extend( {
 				return;
 			}
 
-			elementor.helpers.enqueueIconFonts( iconType.library );
+			refraction.helpers.enqueueIconFonts( iconType.library );
 		} );
 	},
 
@@ -569,7 +569,7 @@ BaseElementView = BaseContainer.extend( {
 			settings.attributes,
 			this.getEditModel().get( 'settings' ).controls,
 			[ /{{ID}}/g, /{{WRAPPER}}/g ],
-			[ this.getID(), '.elementor-' + elementor.config.document.id + ' .elementor-element.' + this.getElementUniqueID() ] );
+			[ this.getID(), '.refraction-' + refraction.config.document.id + ' .refraction-element.' + this.getElementUniqueID() ] );
 
 		this.controlsCSSParser.addStyleToDocument();
 	},
@@ -604,7 +604,7 @@ BaseElementView = BaseContainer.extend( {
 				}
 			}
 
-			const isVisible = elementor.helpers.isActiveControl( control, settings.attributes, settings.controls );
+			const isVisible = refraction.helpers.isActiveControl( control, settings.attributes, settings.controls );
 
 			if ( isVisible && ( classValue || 0 === classValue ) ) {
 				self.$el.addClass( control.prefix_class + classValue );
@@ -635,15 +635,15 @@ BaseElementView = BaseContainer.extend( {
 		const self = this;
 
 		_.defer( function() {
-			elementorFrontend.elementsHandler.runReadyTrigger( self.el );
+			refractionFrontend.elementsHandler.runReadyTrigger( self.el );
 
-			if ( ! elementorFrontend.isEditMode() ) {
+			if ( ! refractionFrontend.isEditMode() ) {
 				return;
 			}
 
 			// In edit mode - handle an external elements that loaded by another elements like shortcode etc.
-			self.$el.find( '.elementor-element.elementor-' + self.model.get( 'elType' ) + ':not(.elementor-element-edit-mode)' ).each( function() {
-				elementorFrontend.elementsHandler.runReadyTrigger( this );
+			self.$el.find( '.refraction-element.refraction-' + self.model.get( 'elType' ) + ':not(.refraction-element-edit-mode)' ).each( function() {
+				refractionFrontend.elementsHandler.runReadyTrigger( this );
 			} );
 		} );
 	},
@@ -653,7 +653,7 @@ BaseElementView = BaseContainer.extend( {
 	},
 
 	getElementUniqueID() {
-		return 'elementor-element-' + this.getID();
+		return 'refraction-element-' + this.getID();
 	},
 
 	renderHTML() {
@@ -671,7 +671,7 @@ BaseElementView = BaseContainer.extend( {
 
 	renderChanges( settings ) {
 		// Make sure is correct model
-		if ( settings instanceof elementorModules.editor.elements.models.BaseSettings ) {
+		if ( settings instanceof refractionModules.editor.elements.models.BaseSettings ) {
 			const hasChanged = settings.hasChanged();
 			let isContentChanged = ! hasChanged,
 				isRenderRequired = ! hasChanged;
@@ -790,7 +790,7 @@ BaseElementView = BaseContainer.extend( {
 
 		$dataBinding.each( ( index, current ) => {
 			// To support nested data-binding bypass nested data-binding that are not part of the current.
-			if ( jQuery( current ).closest( '.elementor-element' ).data( 'id' ) === id ) {
+			if ( jQuery( current ).closest( '.refraction-element' ).data( 'id' ) === id ) {
 				if ( current.dataset.bindingType ) {
 					this.dataBindings.push( {
 						el: current,
@@ -947,7 +947,7 @@ BaseElementView = BaseContainer.extend( {
 
 		return {
 			onServerRequestStart() {
-				self.$el.addClass( 'elementor-loading' );
+				self.$el.addClass( 'refraction-loading' );
 			},
 			onServerRequestEnd: self.onDynamicServerRequestEnd,
 		};
@@ -962,7 +962,7 @@ BaseElementView = BaseContainer.extend( {
 	},
 
 	save() {
-		elementor.templates.eventManager.sendNewSaveTemplateClickedEvent();
+		refraction.templates.eventManager.sendNewSaveTemplateClickedEvent();
 
 		$e.route( 'library/save-template', {
 			model: this.model,
@@ -992,9 +992,9 @@ BaseElementView = BaseContainer.extend( {
 			// Since this.ui.tools does not exist while testing.
 			if ( this.ui.tools ) {
 				this.ui.tools.hoverIntent( function() {
-					editButton.addClass( 'elementor-active' );
+					editButton.addClass( 'refraction-active' );
 				}, function() {
-					editButton.removeClass( 'elementor-active' );
+					editButton.removeClass( 'refraction-active' );
 				}, { timeout: 500 } );
 			}
 		}
@@ -1003,7 +1003,7 @@ BaseElementView = BaseContainer.extend( {
 		setTimeout( () => {
 			this.initDraggable();
 			this.dispatchElementLifeCycleEvent( 'rendered' );
-			elementorFrontend.elements.$window.on( 'elementor/elements/link-data-bindings', this.linkDataBindings.bind( this ) );
+			refractionFrontend.elements.$window.on( 'refraction/elements/link-data-bindings', this.linkDataBindings.bind( this ) );
 		} );
 	},
 
@@ -1013,21 +1013,21 @@ BaseElementView = BaseContainer.extend( {
 		// Event name set like this for maintainability.
 		switch ( eventType ) {
 			case 'rendered':
-				event = 'elementor/editor/element-rendered';
+				event = 'refraction/editor/element-rendered';
 				break;
 			case 'destroyed':
-				event = 'elementor/editor/element-destroyed';
+				event = 'refraction/editor/element-destroyed';
 				break;
 		}
 
 		const renderedEvent = new CustomEvent( event, { detail: { elementView: this } } );
-		elementor.$preview[ 0 ].contentWindow.dispatchEvent( renderedEvent );
+		refraction.$preview[ 0 ].contentWindow.dispatchEvent( renderedEvent );
 
 		window.top.dispatchEvent( renderedEvent );
 	},
 
 	onEditSettingsChanged( changedModel ) {
-		elementor.channels.editor.trigger( 'change:editSettings', changedModel, this );
+		refraction.channels.editor.trigger( 'change:editSettings', changedModel, this );
 	},
 
 	onEditButtonClick( event ) {
@@ -1040,14 +1040,14 @@ BaseElementView = BaseContainer.extend( {
 		}
 
 		const model = this.getEditModel(),
-			panel = elementor.getPanelView();
+			panel = refraction.getPanelView();
 
 		if ( $e.routes.isPartOf( 'panel/editor' ) && panel.getCurrentPageView().model === model ) {
 			return;
 		}
 
 		if ( options.scrollIntoView ) {
-			elementor.helpers.scrollToView( this.getDomElement(), 200 );
+			refraction.helpers.scrollToView( this.getDomElement(), 200 );
 		}
 
 		$e.run( 'document/elements/toggle-selection', {
@@ -1060,14 +1060,14 @@ BaseElementView = BaseContainer.extend( {
 	 * Select current element.
 	 */
 	select() {
-		this.$el.addClass( 'elementor-element-editable' );
+		this.$el.addClass( 'refraction-element-editable' );
 	},
 
 	/**
 	 * Deselect current element.
 	 */
 	deselect() {
-		this.$el.removeClass( 'elementor-element-editable' );
+		this.$el.removeClass( 'refraction-element-editable' );
 	},
 
 	onDuplicateButtonClick( event ) {
@@ -1089,7 +1089,7 @@ BaseElementView = BaseContainer.extend( {
 			anchor?.getAttribute( 'href' ) ||
 			this.model?.get( 'settings' )?.get( 'link' )?.url ||
 			'';
-		if ( hash && hash.startsWith( '#' ) && ! hash.includes( 'elementor-action' ) ) {
+		if ( hash && hash.startsWith( '#' ) && ! hash.includes( 'refraction-action' ) ) {
 			const scrollTargetElem = event.target?.ownerDocument.querySelector( hash );
 
 			if ( scrollTargetElem ) {
@@ -1097,7 +1097,7 @@ BaseElementView = BaseContainer.extend( {
 			}
 		}
 
-		if ( elementor.helpers.isElementAtomic( this.getContainer().id ) ) {
+		if ( refraction.helpers.isElementAtomic( this.getContainer().id ) ) {
 			event.preventDefault();
 		}
 	},
@@ -1106,11 +1106,11 @@ BaseElementView = BaseContainer.extend( {
 	 * event on the currently active element. Therefor, we need to blur the active element manually.
 	 */
 	onMouseDown( event ) {
-		if ( jQuery( event.target ).closest( '.elementor-inline-editing' ).length ) {
+		if ( jQuery( event.target ).closest( '.refraction-inline-editing' ).length ) {
 			return;
 		}
 
-		elementorFrontend.elements.window.document.activeElement.blur();
+		refractionFrontend.elements.window.document.activeElement.blur();
 	},
 
 	onDestroy() {
@@ -1122,7 +1122,7 @@ BaseElementView = BaseContainer.extend( {
 
 		this.getEditModel().get( 'settings' ).validators = {};
 
-		elementor.channels.data.trigger( 'element:destroy', this.model );
+		refraction.channels.data.trigger( 'element:destroy', this.model );
 
 		// Defer so the event is fired after the element is removed from the DOM.
 		setTimeout( () => this.dispatchElementLifeCycleEvent( 'destroyed' ) );
@@ -1155,7 +1155,7 @@ BaseElementView = BaseContainer.extend( {
 		const model = this.getEditModel();
 
 		const helper = document.createElement( 'div' );
-		helper.classList.add( 'elementor-sortable-helper', `elementor-sortable-helper-${ model.get( 'elType' ) }` );
+		helper.classList.add( 'refraction-sortable-helper', `refraction-sortable-helper-${ model.get( 'elType' ) }` );
 
 		helper.innerHTML = `
 			<div class="icon">
@@ -1177,7 +1177,7 @@ BaseElementView = BaseContainer.extend( {
 	 * Initialize the Droppable instance.
 	 */
 	initDraggable() {
-		if ( ! elementor.userCan( 'design' ) ) {
+		if ( ! refraction.userCan( 'design' ) ) {
 			return;
 		}
 
@@ -1220,7 +1220,7 @@ BaseElementView = BaseContainer.extend( {
 
 				this.onDragStart( e );
 
-				elementor.channels.editor.reply( 'element:dragged', this );
+				refraction.channels.editor.reply( 'element:dragged', this );
 			},
 			onDragEnd: ( e ) => {
 				e.stopPropagation();
@@ -1228,22 +1228,22 @@ BaseElementView = BaseContainer.extend( {
 				this.onDragEnd( e );
 			},
 
-			groups: [ 'elementor-element' ],
+			groups: [ 'refraction-element' ],
 		} );
 	},
 
 	async getDataFromCacheOrBackend( valueToParse, dynamicSettings ) {
 		try {
-			return elementor.dynamicTags.parseTagsText( valueToParse, dynamicSettings, elementor.dynamicTags.getTagDataContent );
+			return refraction.dynamicTags.parseTagsText( valueToParse, dynamicSettings, refraction.dynamicTags.getTagDataContent );
 		} catch {
 			await new Promise( ( resolve ) => {
-				elementor.dynamicTags.refreshCacheFromServer( () => {
+				refraction.dynamicTags.refreshCacheFromServer( () => {
 					resolve();
 				} );
 			} );
 
-			return ! _.isEmpty( elementor.dynamicTags.cache )
-				? elementor.dynamicTags.parseTagsText( valueToParse, dynamicSettings, elementor.dynamicTags.getTagDataContent )
+			return ! _.isEmpty( refraction.dynamicTags.cache )
+				? refraction.dynamicTags.parseTagsText( valueToParse, dynamicSettings, refraction.dynamicTags.getTagDataContent )
 				: false;
 		}
 	},

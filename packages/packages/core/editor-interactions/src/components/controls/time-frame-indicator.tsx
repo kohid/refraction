@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type FocusEvent, useCallback } from 'react';
-import { SizeComponent } from '@elementor/editor-controls';
-import { type SizePropValue } from '@elementor/editor-props';
+import { SizeComponent } from '@refraction/editor-controls';
+import { type SizePropValue } from '@refraction/editor-props';
 
 import { DEFAULT_TIME_UNIT, TIME_UNITS } from '../../configs/time-constants';
 import { type FieldProps, type SizeStringValue } from '../../types';

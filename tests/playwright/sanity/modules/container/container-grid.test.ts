@@ -6,8 +6,8 @@ import { wpCli } from '../../../assets/wp-cli';
 
 test.describe( 'Container Grid tests @container', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments activate container' );
-		await wpCli( 'wp elementor experiments deactivate e_opt_in_v4' );
+		await wpCli( 'wp refraction experiments activate container' );
+		await wpCli( 'wp refraction experiments deactivate e_opt_in_v4' );
 	} );
 
 	test( 'Test grid container', async ( { page, apiRequests }, testInfo ) => {
@@ -35,17 +35,17 @@ test.describe( 'Container Grid tests @container', () => {
 		await test.step( 'Mobile rows unit are on FR', async () => {
 			await editor.changeResponsiveView( 'mobile' );
 
-			const rowsMobileUnitLabel = page.locator( '.elementor-group-control-rows_grid .e-units-switcher' ).first();
+			const rowsMobileUnitLabel = page.locator( '.refraction-group-control-rows_grid .e-units-switcher' ).first();
 			await expect( rowsMobileUnitLabel ).toHaveAttribute( 'data-selected', 'fr' );
 
 			await editor.changeResponsiveView( 'desktop' );
 		} );
 
 		await test.step( 'Assert Align Content control to be visible when Rows Grid is set to custom', async () => {
-			const alignContentControl = page.locator( '.elementor-control-grid_align_content' );
+			const alignContentControl = page.locator( '.refraction-control-grid_align_content' );
 			await expect( alignContentControl ).toBeHidden();
 
-			const gridRowsControl = page.locator( '.elementor-control-grid_rows_grid' );
+			const gridRowsControl = page.locator( '.refraction-control-grid_rows_grid' );
 			await gridRowsControl.locator( '.e-units-switcher' ).click();
 			await gridRowsControl.locator( '[data-choose="custom"]' ).click();
 
@@ -53,10 +53,10 @@ test.describe( 'Container Grid tests @container', () => {
 		} );
 
 		await test.step( 'Assert Justify content control to be visible when Columns Grid is set to custom', async () => {
-			const justifyContentControl = page.locator( '.elementor-control-grid_justify_content' );
+			const justifyContentControl = page.locator( '.refraction-control-grid_justify_content' );
 			await expect( justifyContentControl ).toBeHidden();
 
-			const gridColumnsControl = page.locator( '.elementor-control-grid_columns_grid' );
+			const gridColumnsControl = page.locator( '.refraction-control-grid_columns_grid' );
 			await gridColumnsControl.locator( '.e-units-switcher' ).click();
 			await gridColumnsControl.locator( '[data-choose="custom"]' ).click();
 
@@ -64,22 +64,22 @@ test.describe( 'Container Grid tests @container', () => {
 		} );
 
 		await test.step( 'Assert justify and align start', async () => {
-			await page.locator( '.elementor-control-grid_justify_content [data-tooltip="Start"]' ).click();
-			await page.locator( '.elementor-control-grid_align_content [data-tooltip="Start"]' ).click();
+			await page.locator( '.refraction-control-grid_justify_content [data-tooltip="Start"]' ).click();
+			await page.locator( '.refraction-control-grid_align_content [data-tooltip="Start"]' ).click();
 			await expect( container ).toHaveCSS( 'justify-content', 'start' );
 			await expect( container ).toHaveCSS( 'align-content', 'start' );
 		} );
 
 		await test.step( 'Assert justify align and content middle', async () => {
-			await page.locator( '.elementor-control-grid_justify_content [data-tooltip="Middle"]' ).click();
-			await page.locator( '.elementor-control-grid_align_content [data-tooltip="Middle"]' ).click();
+			await page.locator( '.refraction-control-grid_justify_content [data-tooltip="Middle"]' ).click();
+			await page.locator( '.refraction-control-grid_align_content [data-tooltip="Middle"]' ).click();
 			await expect( container ).toHaveCSS( 'justify-content', 'center' );
 			await expect( container ).toHaveCSS( 'align-content', 'center' );
 		} );
 
 		await test.step( 'Assert justify align and content end', async () => {
-			await page.locator( '.elementor-control-grid_justify_content [data-tooltip="End"]' ).click();
-			await page.locator( '.elementor-control-grid_align_content [data-tooltip="End"]' ).click();
+			await page.locator( '.refraction-control-grid_justify_content [data-tooltip="End"]' ).click();
+			await page.locator( '.refraction-control-grid_align_content [data-tooltip="End"]' ).click();
 			await expect( container ).toHaveCSS( 'justify-content', 'end' );
 			await expect( container ).toHaveCSS( 'align-content', 'end' );
 		} );
@@ -93,25 +93,25 @@ test.describe( 'Container Grid tests @container', () => {
 
 		await test.step( 'Assert justify align and content start on full width', async () => {
 			await editor.setSelectControlValue( 'content_width', 'full' );
-			await page.locator( '.elementor-control-grid_justify_content [data-tooltip="Start"]' ).click();
-			await page.locator( '.elementor-control-grid_align_content [data-tooltip="Start"]' ).click();
-			container = frame.locator( `.elementor-element-${ containerId }` );
+			await page.locator( '.refraction-control-grid_justify_content [data-tooltip="Start"]' ).click();
+			await page.locator( '.refraction-control-grid_align_content [data-tooltip="Start"]' ).click();
+			container = frame.locator( `.refraction-element-${ containerId }` );
 			await expect( container ).toHaveCSS( 'justify-content', 'start' );
 			await expect( container ).toHaveCSS( 'align-content', 'start' );
 		} );
 
 		await test.step( 'Assert justify align and content middle on full width', async () => {
-			await page.locator( '.elementor-control-grid_justify_content [data-tooltip="Middle"]' ).click();
-			await page.locator( '.elementor-control-grid_align_content [data-tooltip="Middle"]' ).click();
-			container = frame.locator( `.elementor-element-${ containerId }` );
+			await page.locator( '.refraction-control-grid_justify_content [data-tooltip="Middle"]' ).click();
+			await page.locator( '.refraction-control-grid_align_content [data-tooltip="Middle"]' ).click();
+			container = frame.locator( `.refraction-element-${ containerId }` );
 			await expect( container ).toHaveCSS( 'justify-content', 'center' );
 			await expect( container ).toHaveCSS( 'align-content', 'center' );
 		} );
 
 		await test.step( 'Assert justify align and content end on full width', async () => {
-			await page.locator( '.elementor-control-grid_justify_content [data-tooltip="End"]' ).click();
-			await page.locator( '.elementor-control-grid_align_content [data-tooltip="End"]' ).click();
-			container = frame.locator( `.elementor-element-${ containerId }` );
+			await page.locator( '.refraction-control-grid_justify_content [data-tooltip="End"]' ).click();
+			await page.locator( '.refraction-control-grid_align_content [data-tooltip="End"]' ).click();
+			container = frame.locator( `.refraction-element-${ containerId }` );
 			await expect( container ).toHaveCSS( 'justify-content', 'end' );
 			await expect( container ).toHaveCSS( 'align-content', 'end' );
 		} );
@@ -119,7 +119,7 @@ test.describe( 'Container Grid tests @container', () => {
 		await test.step( 'Assert that the drag area is visible when using boxed width', async () => {
 			await editor.setSelectControlValue( 'content_width', 'boxed' );
 			const dragAreaIsVisible = await editor.getPreviewFrame()
-				.locator( '.elementor-empty-view' )
+				.locator( '.refraction-empty-view' )
 				.evaluate( ( element: HTMLElement ) => {
 					return 99 < element.offsetWidth; // The min-width is 100px.
 				} );
@@ -135,20 +135,20 @@ test.describe( 'Container Grid tests @container', () => {
 
 			// Assert.
 			const gridDragAreaOffsetLeft = await editor.getPreviewFrame()
-					.locator( '.e-grid .elementor-empty-view' )
+					.locator( '.e-grid .refraction-empty-view' )
 					.evaluate( ( gridContent: HTMLElement ) => gridContent.offsetLeft ),
 				flexDragAreaOffsetLeft = await editor.getPreviewFrame()
-					.locator( '.e-flex .elementor-empty-view' )
+					.locator( '.e-flex .refraction-empty-view' )
 					.evaluate( ( flexContent: HTMLElement ) => flexContent.offsetLeft );
 			expect( gridDragAreaOffsetLeft ).toEqual( flexDragAreaOffsetLeft );
 
 			// Add heading.
 			await editor.addWidget( { widgetType: 'heading', container: flexContainerId } );
-			await editor.getPreviewFrame().waitForSelector( '.elementor-widget-heading' );
+			await editor.getPreviewFrame().waitForSelector( '.refraction-widget-heading' );
 
 			// Assert.
 			const headingOffsetLeft = await editor.getPreviewFrame()
-				.locator( '.elementor-widget-heading' )
+				.locator( '.refraction-widget-heading' )
 				.evaluate( ( heading: HTMLElement ) => heading.offsetLeft );
 			expect( gridDragAreaOffsetLeft ).toEqual( headingOffsetLeft );
 
@@ -161,9 +161,9 @@ test.describe( 'Container Grid tests @container', () => {
 			await expect( frame.locator( '.e-con' ).first() ).toHaveAttribute( 'data-id', containerId );
 
 			await editor.openAddElementSection( containerId );
-			await frame.locator( '.elementor-add-section-inline .elementor-add-section-button' ).click();
-			await frame.locator( '.elementor-add-section-inline .grid-preset-button' ).click();
-			await frame.locator( `.elementor-add-section-inline [data-structure="2-1"]` ).click();
+			await frame.locator( '.refraction-add-section-inline .refraction-add-section-button' ).click();
+			await frame.locator( '.refraction-add-section-inline .grid-preset-button' ).click();
+			await frame.locator( `.refraction-add-section-inline [data-structure="2-1"]` ).click();
 
 			// First container should be the new container.
 			const newContainerId = await frame.locator( '.e-con >> nth=0' ).getAttribute( 'data-id' );
@@ -178,21 +178,21 @@ test.describe( 'Container Grid tests @container', () => {
 		await test.step( 'Assert correct icons for Justify Items and Align Items', async () => {
 			await editor.selectElement( containerId );
 			await expect( page
-				.locator( '.elementor-control-grid_justify_items .elementor-choices label >> nth=0' )
+				.locator( '.refraction-control-grid_justify_items .refraction-choices label >> nth=0' )
 				.locator( 'i' ) )
 				.toHaveClass( /eicon-align-start-h/ );
 			await expect( page
-				.locator( '.elementor-control-grid_align_items .elementor-choices label >> nth=0' )
+				.locator( '.refraction-control-grid_align_items .refraction-choices label >> nth=0' )
 				.locator( 'i' ) )
 				.toHaveClass( /eicon-align-start-v/ );
 
 			await editor.setSelectControlValue( 'grid_auto_flow', 'column' );
 			await expect( page
-				.locator( '.elementor-control-grid_justify_items .elementor-choices label >> nth=0' )
+				.locator( '.refraction-control-grid_justify_items .refraction-choices label >> nth=0' )
 				.locator( 'i' ) )
 				.not.toHaveCSS( 'transform', 'matrix( 0, -1, 1, 0, 0, 0 )' );
 			await expect( page
-				.locator( '.elementor-control-grid_align_items .elementor-choices label >> nth=0' )
+				.locator( '.refraction-control-grid_align_items .refraction-choices label >> nth=0' )
 				.locator( 'i' ) )
 				.not.toHaveCSS( 'transform', 'matrix( 0, -1, 1, 0, 0, 0 )' );
 			await editor.setSelectControlValue( 'grid_auto_flow', 'row' );
@@ -215,7 +215,7 @@ test.describe( 'Container Grid tests @container', () => {
 		await test.step( 'Elements with class .ui-resizable-e inside grid-containers should not be visible', async () => {
 			// Act
 			const buttonID = await editor.addWidget( { widgetType: 'button', container: containerId } ),
-				buttonSelector = `.elementor-element-${ buttonID }`,
+				buttonSelector = `.refraction-element-${ buttonID }`,
 				buttonHandle = frame.locator( buttonSelector ).locator( '.ui-resizable-e' );
 
 			// Assert
@@ -230,7 +230,7 @@ test.describe( 'Container Grid tests @container', () => {
 			// Act
 			const flexContainerId = await editor.addElement( { elType: 'container' }, 'document' ),
 				buttonID = await editor.addWidget( { widgetType: 'button', container: flexContainerId } ),
-				buttonSelector = `.elementor-element-${ buttonID }`,
+				buttonSelector = `.refraction-element-${ buttonID }`,
 				buttonHandle = frame.locator( buttonSelector ).locator( '.ui-resizable-e' );
 
 			// Assert
@@ -382,10 +382,10 @@ test.describe( 'Container Grid tests @container', () => {
 
 		await test.step( 'Check that Custom control is set to grid outline', async () => {
 			const desiredCustomValue = '50px 150px 100px 100px';
-			const gridColumnsControl = page.locator( '.elementor-control-grid_columns_grid' );
+			const gridColumnsControl = page.locator( '.refraction-control-grid_columns_grid' );
 			await gridColumnsControl.locator( '.e-units-switcher' ).click();
 			await gridColumnsControl.locator( '[data-choose="custom"]' ).click();
-			await gridColumnsControl.locator( '.elementor-slider-input input' ).fill( '50px 150px repeat(2, 100px)' );
+			await gridColumnsControl.locator( '.refraction-slider-input input' ).fill( '50px 150px repeat(2, 100px)' );
 
 			await expect( gridOutline ).toHaveCSS( 'grid-template-columns', desiredCustomValue );
 		} );
@@ -404,8 +404,8 @@ test.describe( 'Container Grid tests @container', () => {
 		} );
 
 		const frame = editor.getPreviewFrame(),
-			emptyView = frame.locator( '.elementor-empty-view' ),
-			gridRowsControl = page.locator( '.elementor-control-grid_rows_grid' );
+			emptyView = frame.locator( '.refraction-empty-view' ),
+			gridRowsControl = page.locator( '.refraction-control-grid_rows_grid' );
 
 		await test.step( 'Empty view min-height should be auto when grid-rows unit is set to custom', async () => {
 			// Arrange.
@@ -415,7 +415,7 @@ test.describe( 'Container Grid tests @container', () => {
 			// Act.
 			await gridRowsControl.locator( '.e-units-switcher' ).click();
 			await gridRowsControl.locator( '[data-choose="custom"]' ).click();
-			await gridRowsControl.locator( '.elementor-slider-input input' ).fill( desiredCustomValue );
+			await gridRowsControl.locator( '.refraction-slider-input input' ).fill( desiredCustomValue );
 
 			// Assert.
 			await expect( emptyView ).toHaveCSS( 'min-height', desiredMinHeight );
@@ -429,7 +429,7 @@ test.describe( 'Container Grid tests @container', () => {
 			// Act.
 			await gridRowsControl.locator( '.e-units-switcher' ).click();
 			await gridRowsControl.locator( '[data-choose="custom"]' ).click();
-			await gridRowsControl.locator( '.elementor-slider-input input' ).fill( desiredCustomValue );
+			await gridRowsControl.locator( '.refraction-slider-input input' ).fill( desiredCustomValue );
 
 			// Assert.
 			await expect( emptyView ).toHaveCSS( 'min-height', desiredMinHeight );
@@ -443,7 +443,7 @@ test.describe( 'Container Grid tests @container', () => {
 			// Act.
 			await gridRowsControl.locator( '.e-units-switcher' ).click();
 			await gridRowsControl.locator( '[data-choose="custom"]' ).click();
-			await gridRowsControl.locator( '.elementor-slider-input input' ).fill( desiredCustomValue );
+			await gridRowsControl.locator( '.refraction-slider-input input' ).fill( desiredCustomValue );
 
 			// Assert.
 			await expect( emptyView ).toHaveCSS( 'min-height', desiredMinHeight );
@@ -457,7 +457,7 @@ test.describe( 'Container Grid tests @container', () => {
 			// Act.
 			await gridRowsControl.locator( '.e-units-switcher' ).click();
 			await gridRowsControl.locator( '[data-choose="fr"]' ).click();
-			await gridRowsControl.locator( '.elementor-slider-input input' ).fill( desiredNumberOfRows );
+			await gridRowsControl.locator( '.refraction-slider-input input' ).fill( desiredNumberOfRows );
 
 			// Assert.
 			await expect( emptyView ).toHaveCSS( 'min-height', desiredMinHeight );
@@ -471,11 +471,11 @@ test.describe( 'Container Grid tests @container', () => {
 		await editor.closeNavigatorIfOpen();
 
 		const frame = editor.getPreviewFrame();
-		await frame.locator( '.elementor-add-section-button' ).click();
+		await frame.locator( '.refraction-add-section-button' ).click();
 
 		await test.step( 'Assert back arrow in flex presets', async () => {
 			await frame.locator( '.flex-preset-button' ).click();
-			const backArrow = frame.locator( '.elementor-add-section-back' );
+			const backArrow = frame.locator( '.refraction-add-section-back' );
 			await expect( backArrow ).toBeVisible();
 			await backArrow.click();
 			const selectTypeView = frame.locator( '[data-view="select-type"]' );
@@ -484,7 +484,7 @@ test.describe( 'Container Grid tests @container', () => {
 
 		await test.step( 'Assert back arrow in grid presets', async () => {
 			await frame.locator( '.grid-preset-button' ).click();
-			const backArrow = frame.locator( '.elementor-add-section-back' );
+			const backArrow = frame.locator( '.refraction-add-section-back' );
 			await expect( backArrow ).toBeVisible();
 			await backArrow.click();
 			const selectTypeView = frame.locator( '[data-view="select-type"]' );
@@ -494,8 +494,8 @@ test.describe( 'Container Grid tests @container', () => {
 		await test.step( 'Assert back arrow in not visible when clicked on plus button', async () => {
 			await frame.locator( '.grid-preset-button' ).click();
 			await frame.locator( '[data-structure="2-2"]' ).click();
-			await frame.locator( '.elementor-editor-element-add' ).click();
-			const backArrow = frame.locator( '.elementor-add-section-back' ).first();
+			await frame.locator( '.refraction-editor-element-add' ).click();
+			const backArrow = frame.locator( '.refraction-add-section-back' ).first();
 			await expect( backArrow ).toBeHidden();
 		} );
 	} );
@@ -538,13 +538,13 @@ test.describe( 'Container Grid tests @container', () => {
 		} );
 
 		await test.step( 'After a widget is added', async () => {
-			await expect( editor.getPreviewFrame().locator( '.elementor-first-add' ) ).toHaveCount( 1 );
+			await expect( editor.getPreviewFrame().locator( '.refraction-first-add' ) ).toHaveCount( 1 );
 		} );
 
 		await test.step( 'On initial page load when container is not empty', async () => {
 			await editor.saveAndReloadPage();
 			await editor.waitForPanelToLoad();
-			await expect( editor.getPreviewFrame().locator( '.elementor-first-add' ) ).toHaveCount( 1 );
+			await expect( editor.getPreviewFrame().locator( '.refraction-first-add' ) ).toHaveCount( 1 );
 		} );
 	} );
 
@@ -568,12 +568,12 @@ test.describe( 'Container Grid tests @container', () => {
 		} );
 
 		await test.step( 'Empty item should not be presented', async () => {
-			await expect( editor.getPreviewFrame().locator( '.elementor-empty-view' ) ).toBeHidden();
+			await expect( editor.getPreviewFrame().locator( '.refraction-empty-view' ) ).toBeHidden();
 		} );
 
 		await test.step( 'Add one more item to see empty item', async () => {
 			const latestAddedWidgetId = await editor.addWidget( { widgetType: 'heading', container: containerId } );
-			await expect( editor.getPreviewFrame().locator( '.elementor-empty-view' ) ).toBeVisible();
+			await expect( editor.getPreviewFrame().locator( '.refraction-empty-view' ) ).toBeVisible();
 
 			await editor.removeElement( latestAddedWidgetId );
 		} );
@@ -581,7 +581,7 @@ test.describe( 'Container Grid tests @container', () => {
 		await test.step( 'Increase number of rows to see empty item', async () => {
 			await editor.selectElement( containerId );
 			await editor.setSliderControlValue( 'grid_rows_grid', '3' );
-			await expect( editor.getPreviewFrame().locator( '.elementor-empty-view' ) ).toBeVisible();
+			await expect( editor.getPreviewFrame().locator( '.refraction-empty-view' ) ).toBeVisible();
 		} );
 	} );
 
@@ -605,20 +605,20 @@ test.describe( 'Container Grid tests @container', () => {
 		} );
 
 		await test.step( 'Empty item should not be presented', async () => {
-			await expect( editor.getPreviewFrame().locator( '.elementor-empty-view' ) ).toBeHidden();
+			await expect( editor.getPreviewFrame().locator( '.refraction-empty-view' ) ).toBeHidden();
 		} );
 
 		//
 		await test.step( 'Empty item should not be present in tablet', async () => {
 			await editor.changeResponsiveView( 'tablet' );
-			await expect( editor.getPreviewFrame().locator( '.elementor-empty-view' ) ).toBeHidden();
+			await expect( editor.getPreviewFrame().locator( '.refraction-empty-view' ) ).toBeHidden();
 		} );
 
 		await test.step( 'Change number of rows and columns to see empty item', async () => {
 			await editor.selectElement( containerId );
 			await editor.setSliderControlValue( 'grid_rows_grid_tablet', '2' );
 			await editor.setSliderControlValue( 'grid_columns_grid_tablet', '4' );
-			await expect( editor.getPreviewFrame().locator( '.elementor-empty-view' ) ).toBeVisible();
+			await expect( editor.getPreviewFrame().locator( '.refraction-empty-view' ) ).toBeVisible();
 		} );
 	} );
 
@@ -638,7 +638,7 @@ test.describe( 'Container Grid tests @container', () => {
 			await editor.setSelectControlValue( 'container_type', 'flex' );
 
 			// Assert
-			const linkElement = page.locator( '#elementor-panel__editor__help__link' );
+			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
 			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container' );
 		} );
 
@@ -647,18 +647,18 @@ test.describe( 'Container Grid tests @container', () => {
 			await editor.setSelectControlValue( 'container_type', 'grid' );
 
 			// Assert
-			const linkElement = page.locator( '#elementor-panel__editor__help__link' );
+			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
 			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container-grid' );
 		} );
 
 		await test.step( 'Add a grid container', async () => {
 			// Act
-			await frame.locator( '.elementor-add-section-area-button' ).first().click();
+			await frame.locator( '.refraction-add-section-area-button' ).first().click();
 			await frame.locator( '.e-con-select-type__icons__icon.grid-preset-button' ).click();
 			await frame.locator( '.e-con-select-preset-grid .e-con-preset' ).first().click();
 
 			// Assert
-			const linkElement = page.locator( '#elementor-panel__editor__help__link' );
+			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
 			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container-grid' );
 		} );
 
@@ -667,11 +667,11 @@ test.describe( 'Container Grid tests @container', () => {
 			await editor.selectElement( containerId );
 
 			// Assert
-			const linkElement = page.locator( '#elementor-panel__editor__help__link' );
+			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
 			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container-grid' );
 		} );
 
-		await page.waitForSelector( '#elementor-panel__editor__help__link' );
+		await page.waitForSelector( '#refraction-panel__editor__help__link' );
 	} );
 } );
 
@@ -680,7 +680,7 @@ function hasWhiteSpace( s ) {
 }
 
 async function testPreset( frame, editor, rows, cols ) {
-	await frame.locator( '.elementor-add-section-button' ).click();
+	await frame.locator( '.refraction-add-section-button' ).click();
 	await frame.locator( '.grid-preset-button' ).click();
 	await frame.locator( `[data-structure="${ rows }-${ cols }"]` ).click();
 

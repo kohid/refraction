@@ -22,7 +22,7 @@ export const Delete = () => {
 				// Validate.
 				assert.equal( eColumn.children.length, 0, 'Button #2 were deleted.' );
 
-				assert.equal( elementor.saver.isEditorChanged(), true,
+				assert.equal( refraction.saver.isEditorChanged(), true,
 					'Command applied the saver editor is changed.' );
 			} );
 

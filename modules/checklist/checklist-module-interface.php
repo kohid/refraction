@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\Checklist;
+namespace Refraction\Modules\Checklist;
 
-use Elementor\Core\Isolation\Wordpress_Adapter;
-use Elementor\Core\Isolation\Elementor_Adapter;
+use Refraction\Core\Isolation\Wordpress_Adapter;
+use Refraction\Core\Isolation\Refraction_Adapter;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -22,5 +22,5 @@ interface Checklist_Module_Interface {
 
 	public function get_wordpress_adapter(): Wordpress_Adapter;
 
-	public function get_elementor_adapter(): Elementor_Adapter;
+	public function get_refraction_adapter(): Refraction_Adapter;
 }

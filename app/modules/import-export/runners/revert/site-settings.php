@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Revert;
+namespace Refraction\App\Modules\ImportExport\Runners\Revert;
 
-use Elementor\Plugin;
-use Elementor\Core\Experiments\Manager as ExperimentsManager;
+use Refraction\Plugin;
+use Refraction\Core\Experiments\Manager as ExperimentsManager;
 
 class Site_Settings extends Revert_Runner_Base {
 

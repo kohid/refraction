@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor settings page.
+ * Refraction settings page.
  *
  * An abstract class that provides the needed properties and methods to handle
  * WordPress dashboard settings pages in inheriting classes.
@@ -85,13 +85,13 @@ abstract class Settings_Page {
 	 * @return string Settings tab URL.
 	 */
 	final public static function get_settings_tab_url( $tab_id ): string {
-		return admin_url( "admin.php?page=elementor-settings#tab-$tab_id" );
+		return admin_url( "admin.php?page=refraction-settings#tab-$tab_id" );
 	}
 
 	/**
 	 * Settings page constructor.
 	 *
-	 * Initializing Elementor settings page.
+	 * Initializing Refraction settings page.
 	 *
 	 * @since 1.5.0
 	 * @access public
@@ -252,7 +252,7 @@ abstract class Settings_Page {
 		foreach ( $tabs as $tab_id => $tab ) {
 
 			foreach ( $tab['sections'] as $section_id => $section ) {
-				$full_section_id = 'elementor_' . $section_id . '_section';
+				$full_section_id = 'refraction_' . $section_id . '_section';
 
 				$label = isset( $section['label'] ) ? $section['label'] : '';
 
@@ -261,7 +261,7 @@ abstract class Settings_Page {
 				add_settings_section( $full_section_id, $label, $section_callback, static::PAGE_ID );
 
 				foreach ( $section['fields'] as $field_id => $field ) {
-					$full_field_id = ! empty( $field['full_field_id'] ) ? $field['full_field_id'] : 'elementor_' . $field_id;
+					$full_field_id = ! empty( $field['full_field_id'] ) ? $field['full_field_id'] : 'refraction_' . $field_id;
 
 					$field['field_args']['id'] = $full_field_id;
 
@@ -313,7 +313,7 @@ abstract class Settings_Page {
 		?>
 		<div class="wrap">
 			<h1 class="wp-heading-inline"><?php echo esc_html( $this->get_page_title() ); ?></h1>
-			<div id="elementor-settings-tabs-wrapper" class="nav-tab-wrapper">
+			<div id="refraction-settings-tabs-wrapper" class="nav-tab-wrapper">
 				<?php
 				foreach ( $tabs as $tab_id => $tab ) {
 					if ( ! $this->should_render_tab( $tab ) ) {
@@ -330,11 +330,11 @@ abstract class Settings_Page {
 					$sanitized_tab_label = esc_html( $tab['label'] );
 
 					// PHPCS - Escaped the relevant strings above.
-					echo "<a id='elementor-settings-tab-{$sanitized_tab_id}' class='nav-tab{$active_class}' href='#tab-{$sanitized_tab_id}'>{$sanitized_tab_label}</a>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo "<a id='refraction-settings-tab-{$sanitized_tab_id}' class='nav-tab{$active_class}' href='#tab-{$sanitized_tab_id}'>{$sanitized_tab_label}</a>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 				?>
 			</div>
-			<form id="elementor-settings-form" method="post" action="options.php">
+			<form id="refraction-settings-form" method="post" action="options.php">
 				<?php
 				settings_fields( static::PAGE_ID );
 
@@ -346,20 +346,20 @@ abstract class Settings_Page {
 					$active_class = '';
 
 					if ( 'general' === $tab_id ) {
-						$active_class = ' elementor-active';
+						$active_class = ' refraction-active';
 					}
 
 					$sanitized_tab_id = esc_attr( $tab_id );
 
 					// PHPCS - $active_class is a non-dynamic string and $sanitized_tab_id is escaped above.
-					echo "<div id='tab-{$sanitized_tab_id}' class='elementor-settings-form-page{$active_class}'>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo "<div id='tab-{$sanitized_tab_id}' class='refraction-settings-form-page{$active_class}'>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 					foreach ( $tab['sections'] as $section_id => $section ) {
 						if ( ! $this->should_render_section( $section ) ) {
 							continue;
 						}
 
-						$full_section_id = 'elementor_' . $section_id . '_section';
+						$full_section_id = 'refraction_' . $section_id . '_section';
 
 						if ( ! empty( $section['label'] ) ) {
 							echo '<h2>' . esc_html( $section['label'] ) . '</h2>';
@@ -379,7 +379,7 @@ abstract class Settings_Page {
 					echo '</div>';
 				}
 
-				submit_button( __( 'Save Changes', 'elementor' ), 'primary', 'submit', true, [ 'data-id' => 'elementor-settings-button-save-changes' ] );
+				submit_button( __( 'Save Changes', 'refraction' ), 'primary', 'submit', true, [ 'data-id' => 'refraction-settings-button-save-changes' ] );
 				?>
 			</form>
 		</div><!-- /.wrap -->
@@ -404,7 +404,7 @@ abstract class Settings_Page {
 			/**
 			 * After create settings.
 			 *
-			 * Fires after the settings are created in Elementor admin page.
+			 * Fires after the settings are created in Refraction admin page.
 			 *
 			 * The dynamic portion of the hook name, `$page_id`, refers to the current page ID.
 			 *
@@ -412,7 +412,7 @@ abstract class Settings_Page {
 			 *
 			 * @param Settings_Page $this The settings page.
 			 */
-			do_action( "elementor/admin/after_create_settings/{$page_id}", $this );
+			do_action( "refraction/admin/after_create_settings/{$page_id}", $this );
 		}
 	}
 

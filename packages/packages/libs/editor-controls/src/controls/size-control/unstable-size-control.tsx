@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useRef } from 'react';
-import { type CreateOptions, sizePropTypeUtil, type SizePropValue } from '@elementor/editor-props';
+import { type CreateOptions, sizePropTypeUtil, type SizePropValue } from '@refraction/editor-props';
 
 import { type SetValueMeta, useBoundProp } from '../../bound-prop-context';
 import ControlActions from '../../control-actions/control-actions';

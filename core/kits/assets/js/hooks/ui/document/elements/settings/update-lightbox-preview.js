@@ -15,7 +15,7 @@ export class KitUpdateLightboxPreview extends $e.modules.hookUI.After {
 	}
 
 	getConditions() {
-		return 'kit' === elementor.documents.getCurrent().config.type;
+		return 'kit' === refraction.documents.getCurrent().config.type;
 	}
 
 	apply( args ) {
@@ -23,7 +23,7 @@ export class KitUpdateLightboxPreview extends $e.modules.hookUI.After {
 
 		Object.entries( settings ).forEach( ( [ key, value ] ) => {
 			if ( -1 !== key.indexOf( 'lightbox' ) ) {
-				elementorFrontend.config.kit[ key ] = value;
+				refractionFrontend.config.kit[ key ] = value;
 			}
 		} );
 	}

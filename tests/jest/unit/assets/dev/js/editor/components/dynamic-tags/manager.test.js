@@ -1,4 +1,4 @@
-jest.mock( 'elementor-dynamic-tags/tag', () => class Tag {} );
+jest.mock( 'refraction-dynamic-tags/tag', () => class Tag {} );
 
 describe( 'assets/dev/js/editor/components/dynamic-tags/manager.js', () => {
 	let DynamicTagsManager;
@@ -10,7 +10,7 @@ describe( 'assets/dev/js/editor/components/dynamic-tags/manager.js', () => {
 			debounce: ( fn ) => fn,
 		};
 
-		global.elementorModules = {
+		global.refractionModules = {
 			Module: {
 				extend: ( proto ) => {
 					class Manager {
@@ -38,7 +38,7 @@ describe( 'assets/dev/js/editor/components/dynamic-tags/manager.js', () => {
 			},
 		};
 
-		global.elementor = {
+		global.refraction = {
 			config: {
 				document: {
 					id: 100,
@@ -54,7 +54,7 @@ describe( 'assets/dev/js/editor/components/dynamic-tags/manager.js', () => {
 		};
 
 		ajaxAddRequest = jest.fn();
-		global.elementorCommon = {
+		global.refractionCommon = {
 			ajax: {
 				addRequest: ajaxAddRequest,
 			},
@@ -64,7 +64,7 @@ describe( 'assets/dev/js/editor/components/dynamic-tags/manager.js', () => {
 		};
 
 		jest.isolateModules( () => {
-			DynamicTagsManager = require( 'elementor/assets/dev/js/editor/components/dynamic-tags/manager.js' );
+			DynamicTagsManager = require( 'refraction/assets/dev/js/editor/components/dynamic-tags/manager.js' );
 		} );
 
 		manager = new DynamicTagsManager();

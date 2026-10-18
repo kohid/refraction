@@ -7,11 +7,11 @@ import {
 	removeElements,
 	type V1Element,
 	type V1ElementData,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 
 import { addItem, duplicateItem, moveItem, removeItem } from '../list-actions';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 describe( 'list-items-control actions', () => {
 	beforeEach( () => {

@@ -1,22 +1,22 @@
 //
 // Alert
 //
-.elementor-alert {
+.refraction-alert {
 	padding: 15px;
 	border-inline-start: 5px solid transparent;
 	position: relative;
 	text-align: start;
 
-	.elementor-alert-title {
+	.refraction-alert-title {
 		display: block;
 		font-weight: bold;
 	}
 
-	.elementor-alert-description {
+	.refraction-alert-description {
 		font-size: 13px;
 	}
 
-	button.elementor-alert-dismiss {
+	button.refraction-alert-dismiss {
 		position: absolute;
 		inset-inline-end: var(--dismiss-icon-horizontal-position, 10px);
 		inset-block-start: var(--dismiss-icon-vertical-position, 10px);
@@ -46,32 +46,32 @@
 	}
 }
 
-.elementor-alert-info {
-	.elementor-alert {
+.refraction-alert-info {
+	.refraction-alert {
 		color: $info-text;
 		background-color: $info-bg;
 		border-color: $info-border;
 	}
 }
 
-.elementor-alert-success {
-	.elementor-alert {
+.refraction-alert-success {
+	.refraction-alert {
 		color: $success-text;
 		background-color: $success-bg;
 		border-color: $success-border;
 	}
 }
 
-.elementor-alert-warning {
-	.elementor-alert {
+.refraction-alert-warning {
+	.refraction-alert {
 		color: $warning-text;
 		background-color: $warning-bg;
 		border-color: $warning-border;
 	}
 }
 
-.elementor-alert-danger {
-	.elementor-alert {
+.refraction-alert-danger {
+	.refraction-alert {
 		color: $danger-text;
 		background-color: $danger-bg;
 		border-color: $danger-border;
@@ -81,10 +81,10 @@
 // Responsive mode
 @media (max-width: $screen-mobile-max) {
 
-	.elementor-alert {
+	.refraction-alert {
 		padding: 10px;
 
-		button.elementor-alert-dismiss {
+		button.refraction-alert-dismiss {
 			inset-inline-end: 7px;
 			inset-block-start: 7px;
 		}

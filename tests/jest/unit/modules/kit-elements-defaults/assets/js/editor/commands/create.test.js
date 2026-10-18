@@ -1,7 +1,7 @@
-import { getElementDefaults, updateElementDefaults } from 'elementor/modules/kit-elements-defaults/assets/js/editor/api';
-import createContainer from 'elementor/tests/jest/utils/create-container';
+import { getElementDefaults, updateElementDefaults } from 'refraction/modules/kit-elements-defaults/assets/js/editor/api';
+import createContainer from 'refraction/tests/jest/utils/create-container';
 
-jest.mock( 'elementor/modules/kit-elements-defaults/assets/js/editor/api', () => ( {
+jest.mock( 'refraction/modules/kit-elements-defaults/assets/js/editor/api', () => ( {
 	__esModule: true,
 	updateElementDefaults: jest.fn(),
 	getElementDefaults: jest.fn(),
@@ -21,19 +21,19 @@ describe( `$e.run( 'kit-elements-defaults/create' )`, () => {
 			},
 		};
 
-		global.elementor = {
+		global.refraction = {
 			notifications: {
 				showToast: jest.fn(),
 			},
 		};
 
 		// Need to import dynamically since the command extends a global variable which isn't available in regular import.
-		CreateCommand = ( await import( 'elementor/modules/kit-elements-defaults/assets/js/editor/commands/create' ) ).default;
+		CreateCommand = ( await import( 'refraction/modules/kit-elements-defaults/assets/js/editor/commands/create' ) ).default;
 	} );
 
 	afterEach( () => {
 		delete global.$e;
-		delete global.elementor;
+		delete global.refraction;
 
 		jest.resetAllMocks();
 	} );
@@ -59,8 +59,8 @@ describe( `$e.run( 'kit-elements-defaults/create' )`, () => {
 					invalid_control2: 'invalid', // Should be removed since it's not a control.
 				},
 				__dynamic__: {
-					link: "[elementor-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
-					text: "[elementor-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]", // Should be removed since it has local value.
+					link: "[refraction-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
+					text: "[refraction-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]", // Should be removed since it has local value.
 				},
 			},
 			controls: {
@@ -88,7 +88,7 @@ describe( `$e.run( 'kit-elements-defaults/create' )`, () => {
 				background_color: 'globals/colors?id=secondary',
 			},
 			__dynamic__: {
-				link: "[elementor-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
+				link: "[refraction-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
 			},
 		} );
 	} );
@@ -132,7 +132,7 @@ describe( `$e.run( 'kit-elements-defaults/create' )`, () => {
 
 		let restoreCallback;
 
-		elementor.notifications.showToast.mockImplementation( ( options ) => {
+		refraction.notifications.showToast.mockImplementation( ( options ) => {
 			restoreCallback = options.buttons[ 0 ].callback;
 		} );
 

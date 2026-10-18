@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Core\Page_Assets\Data_Managers\Font_Icon_Svg;
+namespace Refraction\Core\Page_Assets\Data_Managers\Font_Icon_Svg;
 
-use Elementor\Core\Base\Base_Object;
+use Refraction\Core\Base\Base_Object;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Font Icon Svg Manager.
+ * Refraction Font Icon Svg Manager.
  *
  * @since 3.4.0
  */

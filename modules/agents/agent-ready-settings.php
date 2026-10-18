@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Shared settings object for every Agent Ready module, stored in one option.
  *
- * The admin app writes it through the central `elementor/v1/settings/{key}`
+ * The admin app writes it through the central `refraction/v1/settings/{key}`
  * REST route, which replaces the whole option value. The sanitize filter
  * therefore merges incoming module keys onto the stored value, so a save from
  * one module never wipes another module's data.
  */
 class Agent_Ready_Settings {
 
-	const OPTION = 'elementor_agent_ready_settings';
+	const OPTION = 'refraction_agent_ready_settings';
 
 	const MODULE_LLMS_TXT = 'llms_txt';
 	const MODULE_MARKDOWN_CONTENT = 'markdown_content';

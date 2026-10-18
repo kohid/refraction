@@ -1,5 +1,5 @@
 import { renderHookWithStore } from 'test-utils';
-import { __createStore, __deleteStore, __dispatch, __getStore, __registerSlice } from '@elementor/store';
+import { __createStore, __deleteStore, __dispatch, __getStore, __registerSlice } from '@refraction/store';
 
 import { FLOATING_PANEL_Z_INDEX_BASE } from '../../constants';
 import { slice } from '../../store/slice';

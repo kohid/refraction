@@ -1,19 +1,19 @@
 @import "../../../helpers/variables.scss";
 
-.elementor-control-type-visual_choice {
+.refraction-control-type-visual_choice {
 	width: 100%;
 }
 
-.elementor-visual-choice-choices {
+.refraction-visual-choice-choices {
 	display: grid;
 	gap: 8px;
-	grid-template-columns: repeat(var(--elementor-visual-choice-columns), 1fr);
+	grid-template-columns: repeat(var(--refraction-visual-choice-columns), 1fr);
 	text-align: center;
 	border-radius: var(--e-a-border-radius);
 	overflow: hidden;
 }
 
-.elementor-visual-choice {
+.refraction-visual-choice {
 	&-element {
 		display: flex;
 		flex-direction: column;
@@ -61,7 +61,7 @@
 		}
 
 		&-button {
-			grid-column: span var(--elementor-visual-choice-columns);
+			grid-column: span var(--refraction-visual-choice-columns);
 
 			label {
 				width: fit-content;
@@ -69,12 +69,12 @@
 
 			input {
 
-				&:checked + .elementor-button,
-				&:hover + .elementor-button {
+				&:checked + .refraction-button,
+				&:hover + .refraction-button {
 					background-color: var(--e-a-bg-active-bold);
 				}
 
-				&:checked + .elementor-button {
+				&:checked + .refraction-button {
 					border-color: var(--e-a-color-primary-bold);
 				}
 			}
@@ -82,9 +82,9 @@
 	}
 }
 
-.elementor-label-inline {
+.refraction-label-inline {
 
-	.elementor-visual-choice-choices {
+	.refraction-visual-choice-choices {
 		justify-content: flex-end;
 	}
 }

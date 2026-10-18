@@ -1,5 +1,5 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $wp_version;
 
 $body_classes = [
-	'elementor-editor-active',
+	'refraction-editor-active',
 	'wp-version-' . str_replace( '.', '-', $wp_version ),
 ];
 
@@ -17,7 +17,7 @@ if ( is_rtl() ) {
 }
 
 if ( ! Plugin::$instance->role_manager->user_can( 'design' ) ) {
-	$body_classes[] = 'elementor-editor-content-only';
+	$body_classes[] = 'refraction-editor-content-only';
 }
 
 ?>
@@ -28,7 +28,7 @@ if ( ! Plugin::$instance->role_manager->user_can( 'design' ) ) {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title><?php printf(
 		/* translators: %s: Page title. */
-		esc_html__( 'Edit "%s" with Elementor', 'elementor' ),
+		esc_html__( 'Edit "%s" with Refraction', 'refraction' ),
 		esc_html( get_the_title() )
 	); ?></title>
 	<?php wp_head(); ?>

@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Files\Fonts;
+namespace Refraction\Core\Files\Fonts;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Google_Font {
 
-	const FOLDER_BASE = 'elementor/google-fonts';
+	const FOLDER_BASE = 'refraction/google-fonts';
 
 	const FOLDER_CSS = 'css';
 
@@ -33,7 +33,7 @@ class Google_Font {
 			return true;
 		}
 
-		$is_local_gf_enabled = (bool) get_option( 'elementor_local_google_fonts', '0' );
+		$is_local_gf_enabled = (bool) get_option( 'refraction_local_google_fonts', '0' );
 		if ( ! $is_local_gf_enabled ) {
 			$force_enqueue_from_cdn = true;
 		}
@@ -60,7 +60,7 @@ class Google_Font {
 		}
 
 		wp_enqueue_style(
-			'elementor-gf-local-' . $sanitize_font_name,
+			'refraction-gf-local-' . $sanitize_font_name,
 			$font_data['url'],
 			[],
 			$font_data['version']
@@ -76,7 +76,7 @@ class Google_Font {
 	}
 
 	private static function get_local_google_fonts(): array {
-		return (array) get_option( '_elementor_local_google_fonts', [] );
+		return (array) get_option( '_refraction_local_google_fonts', [] );
 	}
 
 	private static function set_local_google_fonts( string $font_name, array $font_data ): void {
@@ -84,7 +84,7 @@ class Google_Font {
 
 		$local_google_fonts[ $font_name ] = $font_data;
 
-		update_option( '_elementor_local_google_fonts', $local_google_fonts );
+		update_option( '_refraction_local_google_fonts', $local_google_fonts );
 	}
 
 	private static function fetch_font_data( string $font_name, string $font_type ): bool {
@@ -259,7 +259,7 @@ class Google_Font {
 		$sanitize_font_name = static::sanitize_font_name( $font_name );
 
 		wp_enqueue_style(
-			'elementor-gf-' . $sanitize_font_name,
+			'refraction-gf-' . $sanitize_font_name,
 			$font_url,
 			[],
 			null
@@ -277,6 +277,6 @@ class Google_Font {
 			}
 		}
 
-		delete_option( '_elementor_local_google_fonts' );
+		delete_option( '_refraction_local_google_fonts' );
 	}
 }

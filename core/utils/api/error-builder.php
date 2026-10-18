@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Utils\Api;
+namespace Refraction\Core\Utils\Api;
 
 class Error_Builder {
 	private string $message;

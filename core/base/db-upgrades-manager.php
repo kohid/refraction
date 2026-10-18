@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Base;
+namespace Refraction\Core\Base;
 
-use Elementor\Core\Admin\Admin_Notices;
-use Elementor\Plugin;
+use Refraction\Core\Admin\Admin_Notices;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -19,7 +19,7 @@ abstract class DB_Upgrades_Manager extends Background_Task_Manager {
 	abstract public function get_updater_label();
 
 	public function get_task_runner_class() {
-		return 'Elementor\Core\Upgrade\Updater';
+		return 'Refraction\Core\Upgrade\Updater';
 	}
 
 	public function get_query_limit() {
@@ -53,15 +53,15 @@ abstract class DB_Upgrades_Manager extends Background_Task_Manager {
 	public function on_runner_start() {
 		parent::on_runner_start();
 
-		if ( ! defined( 'IS_ELEMENTOR_UPGRADE' ) ) {
-			define( 'IS_ELEMENTOR_UPGRADE', true );
+		if ( ! defined( 'IS_REFRACTION_UPGRADE' ) ) {
+			define( 'IS_REFRACTION_UPGRADE', true );
 		}
 	}
 
 	public function on_runner_complete( $did_tasks = false ) {
 		$logger = Plugin::$instance->logger->get_logger();
 
-		$logger->info( 'Elementor data updater process has been completed.', [
+		$logger->info( 'Refraction data updater process has been completed.', [
 			'meta' => [
 				'plugin' => $this->get_plugin_label(),
 				'from' => $this->current_version,
@@ -90,11 +90,11 @@ abstract class DB_Upgrades_Manager extends Background_Task_Manager {
 
 		$options = [
 			'title' => $this->get_updater_label(),
-			'description' => esc_html__( 'Your site database needs to be updated to the latest version.', 'elementor' ),
+			'description' => esc_html__( 'Your site database needs to be updated to the latest version.', 'refraction' ),
 			'type' => 'error',
 			'icon' => false,
 			'button' => [
-				'text' => esc_html__( 'Update Now', 'elementor' ),
+				'text' => esc_html__( 'Update Now', 'refraction' ),
 				'url' => $this->get_start_action_url(),
 				'class' => 'e-button e-button--cta',
 			],
@@ -111,11 +111,11 @@ abstract class DB_Upgrades_Manager extends Background_Task_Manager {
 
 		$options = [
 			'title' => $this->get_updater_label(),
-			'description' => esc_html__( 'Database update process is running in the background. Taking a while?', 'elementor' ),
+			'description' => esc_html__( 'Database update process is running in the background. Taking a while?', 'refraction' ),
 			'type' => 'warning',
 			'icon' => false,
 			'button' => [
-				'text' => esc_html__( 'Click here to run it now', 'elementor' ),
+				'text' => esc_html__( 'Click here to run it now', 'refraction' ),
 				'url' => $this->get_continue_action_url(),
 				'class' => 'e-button e-button--primary',
 			],
@@ -127,7 +127,7 @@ abstract class DB_Upgrades_Manager extends Background_Task_Manager {
 	public function admin_notice_upgrade_is_completed() {
 		$this->delete_flag( 'completed' );
 
-		$message = esc_html__( 'The database update process is now complete. Thank you for updating to the latest version!', 'elementor' );
+		$message = esc_html__( 'The database update process is now complete. Thank you for updating to the latest version!', 'refraction' );
 
 		/**
 		 * @var Admin_Notices $admin_notices
@@ -173,7 +173,7 @@ abstract class DB_Upgrades_Manager extends Background_Task_Manager {
 
 		$updater->save()->dispatch();
 
-		Plugin::$instance->logger->get_logger()->info( 'Elementor data updater process has been queued.', [
+		Plugin::$instance->logger->get_logger()->info( 'Refraction data updater process has been queued.', [
 			'meta' => [
 				'plugin' => $this->get_plugin_label(),
 				'from' => $this->current_version,

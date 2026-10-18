@@ -1,21 +1,21 @@
-var TemplateLibraryTemplateLocalView = require( 'elementor-templates/views/template/local' ),
+var TemplateLibraryTemplateLocalView = require( 'refraction-templates/views/template/local' ),
 	TemplateLibraryTemplateCloudView;
 
 TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 	className() {
-		const view = elementor.templates.getViewSelection(),
+		const view = refraction.templates.getViewSelection(),
 			subType = 'FOLDER' === this.model.get( 'subType' ) ? 'folder' : 'template';
 
 		let classes = TemplateLibraryTemplateLocalView.prototype.className.apply( this, arguments );
 
-		classes += ' elementor-template-library-template-view-' + view;
-		classes += ' elementor-template-library-template-type-' + subType;
+		classes += ' refraction-template-library-template-view-' + view;
+		classes += ' refraction-template-library-template-type-' + subType;
 
 		return classes;
 	},
 
 	attributes() {
-		if ( 'grid' === elementor.templates.getViewSelection() ) {
+		if ( 'grid' === refraction.templates.getViewSelection() ) {
 			const data = this.model.toJSON();
 
 			return {
@@ -30,8 +30,8 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 
 	ui() {
 		return _.extend( TemplateLibraryTemplateLocalView.prototype.ui.apply( this, arguments ), {
-			previewImg: '.elementor-template-library-template-thumbnail img',
-			insertButton: '.elementor-template-library-template-insert',
+			previewImg: '.refraction-template-library-template-thumbnail img',
+			insertButton: '.refraction-template-library-template-insert',
 		} );
 	},
 
@@ -46,7 +46,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 	} ),
 
 	onGridCardKeyDown( event ) {
-		if ( 'grid' !== elementor.templates.getViewSelection() ) {
+		if ( 'grid' !== refraction.templates.getViewSelection() ) {
 			return;
 		}
 
@@ -62,7 +62,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 				$e.route( 'library/view-folder', {
 					model: this.model,
 					onAfter: () => {
-						elementor.templates.resetBulkActionBar();
+						refraction.templates.resetBulkActionBar();
 					},
 				} );
 			} else {
@@ -75,7 +75,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 		const previewUrl = this.model.get( 'preview_url' );
 
 		if ( this.shouldGeneratePreview() ) {
-			this.iframe = elementor.templates.layout.createScreenshotIframe( this.model.get( 'generate_preview_url' ) );
+			this.iframe = refraction.templates.layout.createScreenshotIframe( this.model.get( 'generate_preview_url' ) );
 			this.isGeneratingPreview = true;
 		}
 
@@ -120,7 +120,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 	},
 
 	shouldGeneratePreview() {
-		const view = elementor.templates.getViewSelection();
+		const view = refraction.templates.getViewSelection();
 
 		return 'FOLDER' !== this.model.get( 'subType' ) &&
 			this.model.get( 'generate_preview_url' ) &&
@@ -136,7 +136,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 			$e.route( 'library/view-folder', {
 				model: this.model,
 				onAfter: () => {
-					elementor.templates.resetBulkActionBar();
+					refraction.templates.resetBulkActionBar();
 				},
 			} );
 		}
@@ -160,7 +160,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 	handleDeleteFolderClick() {
 		const toggleMoreIcon = this.ui.toggleMoreIcon;
 
-		elementor.templates.deleteFolder( this.model, {
+		refraction.templates.deleteFolder( this.model, {
 			onConfirm() {
 				toggleMoreIcon.removeClass( 'eicon-ellipsis-h' ).addClass( 'eicon-loading eicon-animation-spin' );
 			},
@@ -171,7 +171,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 	},
 
 	handleItemSingleClick() {
-		if ( 'grid' === elementor.templates.getViewSelection() ) {
+		if ( 'grid' === refraction.templates.getViewSelection() ) {
 			this.handleGridViewItemSingleClick();
 		} else {
 			this.handleListViewItemSingleClick();
@@ -183,7 +183,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 			$e.route( 'library/view-folder', {
 				model: this.model,
 				onAfter: () => {
-					elementor.templates.resetBulkActionBar();
+					refraction.templates.resetBulkActionBar();
 				},
 			} );
 		}
@@ -193,13 +193,13 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 		const itemIsSelected = this.$el.hasClass( 'bulk-selected-item' );
 
 		if ( itemIsSelected ) {
-			elementor.templates.removeBulkSelectionItem( this.model.get( 'template_id' ), this.model.get( 'type' ) );
+			refraction.templates.removeBulkSelectionItem( this.model.get( 'template_id' ), this.model.get( 'type' ) );
 		} else {
-			elementor.templates.addBulkSelectionItem( this.model.get( 'template_id' ), this.model.get( 'type' ) );
+			refraction.templates.addBulkSelectionItem( this.model.get( 'template_id' ), this.model.get( 'type' ) );
 		}
 
 		this.$el.toggleClass( 'bulk-selected-item' );
-		elementor.templates.layout.handleBulkActionBar();
+		refraction.templates.layout.handleBulkActionBar();
 	},
 } );
 

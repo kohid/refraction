@@ -1,4 +1,4 @@
-var Validator = require( 'elementor-validator/base' );
+var Validator = require( 'refraction-validator/base' );
 
 module.exports = Validator.extend( {
 	validationMethod( newValue ) {

@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor box shadow control.
+ * Refraction box shadow control.
  *
  * A base control for creating box shadow control. Displays input fields to define
  * the box shadow including the horizontal shadow, vertical shadow, shadow blur,
@@ -58,7 +58,7 @@ class Group_Control_Box_Shadow extends Group_Control_Base {
 		$controls = [];
 
 		$controls['box_shadow'] = [
-			'label' => esc_html__( 'Box Shadow', 'elementor' ),
+			'label' => esc_html__( 'Box Shadow', 'refraction' ),
 			'type' => Controls_Manager::BOX_SHADOW,
 			'selectors' => [
 				'{{SELECTOR}}' => 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}} {{box_shadow_position.VALUE}};',
@@ -66,11 +66,11 @@ class Group_Control_Box_Shadow extends Group_Control_Base {
 		];
 
 		$controls['box_shadow_position'] = [
-			'label' => esc_html__( 'Position', 'elementor' ),
+			'label' => esc_html__( 'Position', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'options' => [
-				' ' => esc_html_x( 'Outline', 'Box Shadow Control', 'elementor' ),
-				'inset' => esc_html_x( 'Inset', 'Box Shadow Control', 'elementor' ),
+				' ' => esc_html_x( 'Outline', 'Box Shadow Control', 'refraction' ),
+				'inset' => esc_html_x( 'Inset', 'Box Shadow Control', 'refraction' ),
 			],
 			'default' => ' ',
 			'render_type' => 'ui',
@@ -93,7 +93,7 @@ class Group_Control_Box_Shadow extends Group_Control_Base {
 	protected function get_default_options() {
 		return [
 			'popover' => [
-				'starter_title' => esc_html__( 'Box Shadow', 'elementor' ),
+				'starter_title' => esc_html__( 'Box Shadow', 'refraction' ),
 				'starter_name' => 'box_shadow_type',
 				'starter_value' => 'yes',
 				'settings' => [

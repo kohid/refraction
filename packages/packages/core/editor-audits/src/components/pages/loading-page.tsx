@@ -6,7 +6,7 @@ export default function LoadingPage() {
 	return (
 		<Box sx={ { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5, p: 4 } }>
 			<CircularProgress size={ 32 } />
-			<Typography variant="body2">{ __( 'Audit in progress.', 'elementor' ) }</Typography>
+			<Typography variant="body2">{ __( 'Audit in progress.', 'refraction' ) }</Typography>
 		</Box>
 	);
 }

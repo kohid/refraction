@@ -1,5 +1,5 @@
 import { createMockElement } from 'test-utils';
-import { getElementLabel } from '@elementor/editor-elements';
+import { getElementLabel } from '@refraction/editor-elements';
 
 import { ElementLabelNotExistsError, ElementTypeNotExistsError } from '../../errors';
 import { getContainer } from '../get-container';
@@ -22,7 +22,7 @@ describe( 'getElementLabel', () => {
 				: null;
 		} );
 
-		eWindow.elementor = {
+		eWindow.refraction = {
 			widgetsCache: {
 				'test-element-type': {
 					title: 'Test Element',
@@ -57,7 +57,7 @@ describe( 'getElementLabel', () => {
 				: null;
 		} );
 
-		eWindow.elementor = {
+		eWindow.refraction = {
 			widgetsCache: {
 				'test-element-type': {
 					title: 'Test Element',

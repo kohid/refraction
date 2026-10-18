@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { type MouseEvent } from 'react';
-import { EllipsisWithTooltip, type VirtualizedItem } from '@elementor/editor-ui';
+import { EllipsisWithTooltip, type VirtualizedItem } from '@refraction/editor-ui';
 import { EditIcon } from '@elementor/icons';
 import { Box, IconButton, ListItemIcon, Tooltip, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
 const SIZE = 'tiny';
-const EDIT_LABEL = __( 'Edit variable', 'elementor' );
+const EDIT_LABEL = __( 'Edit variable', 'refraction' );
 
 type MenuItemContentProps< T, V extends string > = {
 	item: VirtualizedItem< T, V >;

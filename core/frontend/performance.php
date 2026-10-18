@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Frontend;
+namespace Refraction\Core\Frontend;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 class Performance {
 

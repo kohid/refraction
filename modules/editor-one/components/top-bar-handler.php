@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\EditorOne\Components;
+namespace Refraction\Modules\EditorOne\Components;
 
-use Elementor\Modules\EditorOne\Classes\Elementor_One_Language_Mapper;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Modules\EditorOne\Classes\Top_Bar_Locale_Assets;
-use Elementor\Utils;
+use Refraction\Modules\EditorOne\Classes\Refraction_One_Language_Mapper;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\EditorOne\Classes\Top_Bar_Locale_Assets;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -34,37 +34,37 @@ class Top_Bar_Handler {
 		$min_suffix = Utils::is_script_debug() ? '' : '.min';
 
 		wp_enqueue_style(
-			'elementor-one-top-bar',
-			ELEMENTOR_ASSETS_URL . 'css/modules/editor-one/top-bar' . $min_suffix . '.css',
+			'refraction-one-top-bar',
+			REFRACTION_ASSETS_URL . 'css/modules/editor-one/top-bar' . $min_suffix . '.css',
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_enqueue_script(
 			'editor-one-top-bar',
-			ELEMENTOR_ASSETS_URL . 'js/editor-one-top-bar' . $min_suffix . '.js',
+			REFRACTION_ASSETS_URL . 'js/editor-one-top-bar' . $min_suffix . '.js',
 			[
 				'react',
 				'react-dom',
-				'elementor-common',
-				'elementor-v2-ui',
-				'elementor-v2-icons',
+				'refraction-common',
+				'refraction-v2-ui',
+				'refraction-v2-icons',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
 		$wordpress_locale = get_user_locale();
-		$language_codes = Elementor_One_Language_Mapper::get_top_bar_language_codes( $wordpress_locale );
+		$language_codes = Refraction_One_Language_Mapper::get_top_bar_language_codes( $wordpress_locale );
 		$locale_language_base_urls = Top_Bar_Locale_Assets::enqueue_for_languages( $language_codes );
 
 		wp_localize_script(
 			'editor-one-top-bar',
-			'elementorOneTopBarConfig',
+			'refractionOneTopBarConfig',
 			[
-				'version' => ELEMENTOR_VERSION,
-				'title' => __( 'website builder', 'elementor' ),
-				'environment' => apply_filters( 'elementor/environment', 'production' ),
+				'version' => REFRACTION_VERSION,
+				'title' => __( 'website builder', 'refraction' ),
+				'environment' => apply_filters( 'refraction/environment', 'production' ),
 				'locale' => $wordpress_locale,
 				'localeLanguageBaseUrls' => $locale_language_base_urls,
 			]

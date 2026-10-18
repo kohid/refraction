@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { updateElementEditorSettings, useElementEditorSettings } from '@elementor/editor-elements';
+import { updateElementEditorSettings, useElementEditorSettings } from '@refraction/editor-elements';
 import { Box, Switch } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
 import { useElement } from '../../../contexts/element-context';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const GRID_OUTLINE_LABEL = __( 'Show Grid Outline', 'elementor' );
+const GRID_OUTLINE_LABEL = __( 'Show Grid Outline', 'refraction' );
 
 export const GridOutlineField = () => {
 	const { element } = useElement();

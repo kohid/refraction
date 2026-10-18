@@ -1,13 +1,13 @@
 import { renderHookWithStore } from 'test-utils';
-import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
-import { __createStore, __registerSlice, type SliceState, type Store } from '@elementor/store';
+import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
+import { __createStore, __registerSlice, type SliceState, type Store } from '@refraction/store';
 
 import { slice } from '../../store';
 import useActiveDocumentActions from '../use-active-document-actions';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
-describe( '@elementor/editor-documents - useActiveDocumentActions', () => {
+describe( '@refraction/editor-documents - useActiveDocumentActions', () => {
 	let store: Store< SliceState< typeof slice > >;
 
 	beforeEach( () => {

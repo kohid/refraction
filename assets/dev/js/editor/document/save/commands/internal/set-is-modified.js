@@ -4,7 +4,7 @@ export class SetIsModified extends $e.modules.CommandInternalBase {
 	}
 
 	apply( args ) {
-		const { status, document = elementor.documents.getCurrent() } = args;
+		const { status, document = refraction.documents.getCurrent() } = args;
 
 		// Save document for hooks.
 		args.document = document;
@@ -20,7 +20,7 @@ export class SetIsModified extends $e.modules.CommandInternalBase {
 		}
 
 		// TODO: BC.
-		elementor.channels.editor
+		refraction.channels.editor
 			.reply( 'status', status )
 			.trigger( 'status:change', status );
 

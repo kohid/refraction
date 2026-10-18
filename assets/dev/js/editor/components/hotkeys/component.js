@@ -1,4 +1,4 @@
-import ComponentModalBase from 'elementor-api/modules/component-modal-base';
+import ComponentModalBase from 'refraction-api/modules/component-modal-base';
 import ModalLayout from './modal-layout';
 
 export default class Component extends ComponentModalBase {

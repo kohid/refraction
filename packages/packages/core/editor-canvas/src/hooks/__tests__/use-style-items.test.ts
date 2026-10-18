@@ -1,21 +1,21 @@
 import { createMockStyleDefinition, createMockStyleDefinitionWithVariants, createMockStylesProvider } from 'test-utils';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { stylesRepository } from '@elementor/editor-styles-repository';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { stylesRepository } from '@refraction/editor-styles-repository';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 import { act, renderHook } from '@testing-library/react';
 
 import { useStyleItems } from '../use-style-items';
 import { useStyleRenderer } from '../use-style-renderer';
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	stylesRepository: {
 		getProviders: jest.fn(),
 	},
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	registerDataHook: jest.fn(),
 } ) );
 
@@ -27,7 +27,7 @@ jest.mock( '../use-style-renderer', () => ( {
 	useStyleRenderer: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-responsive', () => ( {
+jest.mock( '@refraction/editor-responsive', () => ( {
 	useBreakpoints: jest.fn().mockReturnValue( [
 		{ id: 'desktop', label: 'Desktop' },
 		{ id: 'tablet', label: 'Tablet' },

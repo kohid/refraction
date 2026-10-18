@@ -14,59 +14,59 @@ import {
 	xTwitter,
 	zoomInBold,
 	zoomOutBold,
-} from '@elementor/e-icons';
+} from '@refraction/e-icons';
 
-module.exports = elementorModules.ViewModule.extend( {
+module.exports = refractionModules.ViewModule.extend( {
 	oldAnimation: null,
 
 	swiper: null,
 
 	player: null,
 
-	isFontIconSvgExperiment: elementorFrontend.config.experimentalFeatures.e_font_icon_svg,
+	isFontIconSvgExperiment: refractionFrontend.config.experimentalFeatures.e_font_icon_svg,
 
 	getDefaultSettings() {
 		return {
 			classes: {
-				item: 'elementor-lightbox-item',
-				image: 'elementor-lightbox-image',
-				videoContainer: 'elementor-video-container',
-				videoWrapper: 'elementor-video-wrapper',
-				playButton: 'elementor-custom-embed-play',
+				item: 'refraction-lightbox-item',
+				image: 'refraction-lightbox-image',
+				videoContainer: 'refraction-video-container',
+				videoWrapper: 'refraction-video-wrapper',
+				playButton: 'refraction-custom-embed-play',
 				playButtonIcon: 'fa',
-				playing: 'elementor-playing',
-				hidden: 'elementor-hidden',
-				invisible: 'elementor-invisible',
-				preventClose: 'elementor-lightbox-prevent-close',
+				playing: 'refraction-playing',
+				hidden: 'refraction-hidden',
+				invisible: 'refraction-invisible',
+				preventClose: 'refraction-lightbox-prevent-close',
 				slideshow: {
 					container: 'swiper',
 					slidesWrapper: 'swiper-wrapper',
-					prevButton: 'elementor-swiper-button elementor-swiper-button-prev',
-					nextButton: 'elementor-swiper-button elementor-swiper-button-next',
+					prevButton: 'refraction-swiper-button refraction-swiper-button-prev',
+					nextButton: 'refraction-swiper-button refraction-swiper-button-next',
 					prevButtonIcon: 'eicon-chevron-left',
 					nextButtonIcon: 'eicon-chevron-right',
 					slide: 'swiper-slide',
-					header: 'elementor-slideshow__header',
-					footer: 'elementor-slideshow__footer',
-					title: 'elementor-slideshow__title',
-					description: 'elementor-slideshow__description',
-					counter: 'elementor-slideshow__counter',
+					header: 'refraction-slideshow__header',
+					footer: 'refraction-slideshow__footer',
+					title: 'refraction-slideshow__title',
+					description: 'refraction-slideshow__description',
+					counter: 'refraction-slideshow__counter',
 					iconExpand: 'eicon-frame-expand',
 					iconShrink: 'eicon-frame-minimize',
 					iconZoomIn: 'eicon-zoom-in-bold',
 					iconZoomOut: 'eicon-zoom-out-bold',
 					iconShare: 'eicon-share-arrow',
-					shareMenu: 'elementor-slideshow__share-menu',
-					shareLinks: 'elementor-slideshow__share-links',
-					hideUiVisibility: 'elementor-slideshow--ui-hidden',
-					shareMode: 'elementor-slideshow--share-mode',
-					fullscreenMode: 'elementor-slideshow--fullscreen-mode',
-					zoomMode: 'elementor-slideshow--zoom-mode',
+					shareMenu: 'refraction-slideshow__share-menu',
+					shareLinks: 'refraction-slideshow__share-links',
+					hideUiVisibility: 'refraction-slideshow--ui-hidden',
+					shareMode: 'refraction-slideshow--share-mode',
+					fullscreenMode: 'refraction-slideshow--fullscreen-mode',
+					zoomMode: 'refraction-slideshow--zoom-mode',
 				},
 			},
 			selectors: {
-				image: '.elementor-lightbox-image',
-				links: 'a, [data-elementor-lightbox]',
+				image: '.refraction-lightbox-image',
+				links: 'a, [data-refraction-lightbox]',
 				slideshow: {
 					activeSlide: '.swiper-slide-active',
 					prevSlide: '.swiper-slide-prev',
@@ -74,7 +74,7 @@ module.exports = elementorModules.ViewModule.extend( {
 				},
 			},
 			modalOptions: {
-				id: 'elementor-lightbox',
+				id: 'refraction-lightbox',
 				entranceAnimation: 'zoomIn',
 				videoAspectRatio: 169,
 				position: {
@@ -102,15 +102,15 @@ module.exports = elementorModules.ViewModule.extend( {
 			closeIcon.iconClass = 'eicon-close';
 		}
 
-		const modal = module.exports.modal = elementorFrontend.getDialogsManager().createWidget( 'lightbox', {
-			className: 'elementor-lightbox',
+		const modal = module.exports.modal = refractionFrontend.getDialogsManager().createWidget( 'lightbox', {
+			className: 'refraction-lightbox',
 			closeButton: true,
 			closeButtonOptions: {
 				...closeIcon,
 				attributes: {
 					role: 'button',
 					tabindex: 0,
-					'aria-label': elementorFrontend.config.i18n.close + ' (Esc)',
+					'aria-label': refractionFrontend.config.i18n.close + ' (Esc)',
 				},
 			},
 			selectors: {
@@ -203,8 +203,8 @@ module.exports = elementorModules.ViewModule.extend( {
 	createLightbox( element ) {
 		let lightboxData = {};
 
-		if ( element.dataset.elementorLightbox ) {
-			lightboxData = JSON.parse( element.dataset.elementorLightbox );
+		if ( element.dataset.refractionLightbox ) {
+			lightboxData = JSON.parse( element.dataset.refractionLightbox );
 		}
 
 		if ( lightboxData.type && 'slideshow' !== lightboxData.type ) {
@@ -213,7 +213,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			return;
 		}
 
-		if ( ! element.dataset.elementorLightboxSlideshow ) {
+		if ( ! element.dataset.refractionLightboxSlideshow ) {
 			const slideshowID = 'single-img';
 
 			this.showModal( {
@@ -221,24 +221,24 @@ module.exports = elementorModules.ViewModule.extend( {
 				id: slideshowID,
 				url: element.href,
 				hash: element.getAttribute( 'data-e-action-hash' ),
-				title: element.dataset.elementorLightboxTitle,
-				description: element.dataset.elementorLightboxDescription,
+				title: element.dataset.refractionLightboxTitle,
+				description: element.dataset.refractionLightboxDescription,
 				modalOptions: {
-					id: 'elementor-lightbox-slideshow-' + slideshowID,
+					id: 'refraction-lightbox-slideshow-' + slideshowID,
 				},
 			} );
 
 			return;
 		}
 
-		const initialSlideURL = element.dataset.elementorLightboxVideo || element.href;
+		const initialSlideURL = element.dataset.refractionLightboxVideo || element.href;
 
-		this.openSlideshow( element.dataset.elementorLightboxSlideshow, initialSlideURL );
+		this.openSlideshow( element.dataset.refractionLightboxSlideshow, initialSlideURL );
 	},
 
 	setHTMLContent( html ) {
-		if ( window.elementorCommon ) {
-			elementorDevTools.deprecation.deprecated( 'elementorFrontend.utils.lightbox.setHTMLContent()', '3.1.4' );
+		if ( window.refractionCommon ) {
+			refractionDevTools.deprecation.deprecated( 'refractionFrontend.utils.lightbox.setHTMLContent()', '3.1.4' );
 		}
 
 		this.getModal().setMessage( DOMPurify.sanitize( html ) );
@@ -264,9 +264,9 @@ module.exports = elementorModules.ViewModule.extend( {
 			let apiProvider;
 
 			if ( -1 !== options.url.indexOf( 'vimeo.com' ) ) {
-				apiProvider = elementorFrontend.utils.vimeo;
+				apiProvider = refractionFrontend.utils.vimeo;
 			} else if ( options.url.match( /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com|youtube-nocookie\.com)/ ) ) {
-				apiProvider = elementorFrontend.utils.youtube;
+				apiProvider = refractionFrontend.utils.youtube;
 			} else {
 				return;
 			}
@@ -285,7 +285,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			aspectRatio = this.getRatioDictionry( this.getSettings( 'modalOptions.videoAspectRatio' ) ),
 			$videoContainer = $( '<div>', { class: `${ classes.videoContainer } ${ classes.preventClose }` } ),
 			$videoWrapper = $( '<div>', {
-				class: `${ classes.videoWrapper } elementor-video-${ this.getRatioType( aspectRatio ) }`,
+				class: `${ classes.videoWrapper } refraction-video-${ this.getRatioType( aspectRatio ) }`,
 				style: '--video-aspect-ratio: ' + aspectRatio },
 			);
 
@@ -303,7 +303,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			this.$buttons = jQuery();
 			this.focusedButton = null;
 
-			modal.getElements( 'message' ).removeClass( 'elementor-video-wrapper' );
+			modal.getElements( 'message' ).removeClass( 'refraction-video-wrapper' );
 		};
 	},
 
@@ -333,7 +333,7 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	getShareLinks() {
-		const { i18n } = elementorFrontend.config,
+		const { i18n } = refractionFrontend.config,
 			socialNetworks = {
 				facebook: {
 					label: i18n.shareOnFacebook,
@@ -354,7 +354,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			$linkList = $( '<div>', { class: classes.slideshow.shareLinks } ),
 			$activeSlide = this.getSlide( 'active' ),
 			$image = $activeSlide.find( selectors.image ),
-			videoUrl = $activeSlide.data( 'elementor-slideshow-video' );
+			videoUrl = $activeSlide.data( 'refraction-slideshow-video' );
 
 		let itemUrl;
 
@@ -399,12 +399,12 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	getSlideshowHeader() {
-		const { i18n } = elementorFrontend.config,
+		const { i18n } = refractionFrontend.config,
 			$ = jQuery,
-			showCounter = 'yes' === elementorFrontend.getKitSettings( 'lightbox_enable_counter' ),
-			showFullscreen = 'yes' === elementorFrontend.getKitSettings( 'lightbox_enable_fullscreen' ),
-			showZoom = 'yes' === elementorFrontend.getKitSettings( 'lightbox_enable_zoom' ),
-			showShare = 'yes' === elementorFrontend.getKitSettings( 'lightbox_enable_share' ),
+			showCounter = 'yes' === refractionFrontend.getKitSettings( 'lightbox_enable_counter' ),
+			showFullscreen = 'yes' === refractionFrontend.getKitSettings( 'lightbox_enable_fullscreen' ),
+			showZoom = 'yes' === refractionFrontend.getKitSettings( 'lightbox_enable_zoom' ),
+			showShare = 'yes' === refractionFrontend.getKitSettings( 'lightbox_enable_share' ),
 			classes = this.getSettings( 'classes' ),
 			slideshowClasses = classes.slideshow,
 			elements = this.elements;
@@ -674,11 +674,11 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	setSlideshowContent( options ) {
-		const { i18n } = elementorFrontend.config,
+		const { i18n } = refractionFrontend.config,
 			$ = jQuery,
 			isSingleSlide = 1 === options.slides.length,
-			hasTitle = '' !== elementorFrontend.getKitSettings( 'lightbox_title_src' ),
-			hasDescription = '' !== elementorFrontend.getKitSettings( 'lightbox_description_src' ),
+			hasTitle = '' !== refractionFrontend.getKitSettings( 'lightbox_title_src' ),
+			hasDescription = '' !== refractionFrontend.getKitSettings( 'lightbox_description_src' ),
 			showFooter = hasTitle || hasDescription,
 			classes = this.getSettings( 'classes' ),
 			slideshowClasses = classes.slideshow,
@@ -704,7 +704,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			const $slide = $( '<div>', { class: slideClass } );
 
 			if ( isVideo ) {
-				$slide.attr( 'data-elementor-slideshow-video', slide.video );
+				$slide.attr( 'data-refraction-slideshow-video', slide.video );
 
 				const playVideoLoadingElement = this.isFontIconSvgExperiment ? loading.element : '<i>',
 					$playIcon = $( '<div>', { class: classes.playButton } )
@@ -801,7 +801,7 @@ module.exports = elementorModules.ViewModule.extend( {
 				runCallbacksOnInit: false,
 				loop: true,
 				keyboard: true,
-				handleElementorBreakpoints: true,
+				handleRefractionBreakpoints: true,
 			};
 
 			if ( ! isSingleSlide ) {
@@ -815,7 +815,7 @@ module.exports = elementorModules.ViewModule.extend( {
 				$.extend( swiperOptions, options.swiper );
 			}
 
-			const Swiper = elementorFrontend.utils.swiper;
+			const Swiper = refractionFrontend.utils.swiper;
 
 			this.swiper = await new Swiper( $container, swiperOptions );
 
@@ -917,7 +917,7 @@ module.exports = elementorModules.ViewModule.extend( {
 
 		const classes = this.getSettings( 'classes' ),
 			$activeSlide = this.getSlide( 'active' ),
-			$image = $activeSlide.find( '.elementor-lightbox-image' ),
+			$image = $activeSlide.find( '.refraction-lightbox-image' ),
 			titleText = $image.data( 'title' ),
 			descriptionText = $image.data( 'description' ),
 			$title = this.elements.$footer.find( '.' + classes.slideshow.title ),
@@ -929,7 +929,7 @@ module.exports = elementorModules.ViewModule.extend( {
 
 	playSlideVideo() {
 		const $activeSlide = this.getSlide( 'active' ),
-			videoURL = $activeSlide.data( 'elementor-slideshow-video' );
+			videoURL = $activeSlide.data( 'refraction-slideshow-video' );
 
 		if ( ! videoURL ) {
 			return;
@@ -939,7 +939,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			aspectRatio = this.getRatioDictionry( this.getSettings( 'modalOptions.videoAspectRatio' ) ),
 			$videoContainer = jQuery( '<div>', { class: classes.videoContainer + ' ' + classes.invisible } ),
 			$videoWrapper = jQuery( '<div>', {
-				class: `${ classes.videoWrapper } elementor-video-${ this.getRatioType( aspectRatio ) }`,
+				class: `${ classes.videoWrapper } refraction-video-${ this.getRatioType( aspectRatio ) }`,
 				style: '--video-aspect-ratio: ' + aspectRatio },
 			),
 			$playIcon = $activeSlide.children( '.' + classes.playButton );
@@ -952,10 +952,10 @@ module.exports = elementorModules.ViewModule.extend( {
 
 		if ( -1 !== videoURL.indexOf( 'vimeo.com' ) ) {
 			videoType = 'vimeo';
-			apiProvider = elementorFrontend.utils.vimeo;
+			apiProvider = refractionFrontend.utils.vimeo;
 		} else if ( videoURL.match( /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com)/ ) ) {
 			videoType = 'youtube';
-			apiProvider = elementorFrontend.utils.youtube;
+			apiProvider = refractionFrontend.utils.youtube;
 		}
 
 		const videoID = apiProvider.getVideoIDFromURL( videoURL );
@@ -983,7 +983,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			startStateCode = YT.PlayerState.UNSTARTED;
 		}
 
-		$videoContainer.addClass( 'elementor-loading' + ' ' + classes.invisible );
+		$videoContainer.addClass( 'refraction-loading' + ' ' + classes.invisible );
 
 		this.player = new YT.Player( $videoPlaceholderElement[ 0 ], {
 			videoId: videoID,
@@ -997,7 +997,7 @@ module.exports = elementorModules.ViewModule.extend( {
 				},
 				onStateChange: ( event ) => {
 					if ( event.data === startStateCode ) {
-						$videoContainer.removeClass( 'elementor-loading' + ' ' + classes.invisible );
+						$videoContainer.removeClass( 'refraction-loading' + ' ' + classes.invisible );
 					}
 				},
 			},
@@ -1028,7 +1028,7 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	setEntranceAnimation( animation ) {
-		animation = animation || elementorFrontend.getCurrentDeviceSetting( this.getSettings( 'modalOptions' ), 'entranceAnimation' );
+		animation = animation || refractionFrontend.getCurrentDeviceSetting( this.getSettings( 'modalOptions' ), 'entranceAnimation' );
 
 		const $widgetMessage = this.getModal().getElements( 'message' );
 
@@ -1047,7 +1047,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		const $allSlideshowLinks = jQuery( this.getSettings( 'selectors.links' ) ).filter( ( index, element ) => {
 			const $element = jQuery( element );
 
-			return slideshowID === element.dataset.elementorLightboxSlideshow && ! $element.parent( '.swiper-slide-duplicate' ).length && ! $element.parents( '.slick-cloned' ).length;
+			return slideshowID === element.dataset.refractionLightboxSlideshow && ! $element.parent( '.swiper-slide-duplicate' ).length && ! $element.parents( '.slick-cloned' ).length;
 		} );
 
 		const slides = [];
@@ -1055,9 +1055,9 @@ module.exports = elementorModules.ViewModule.extend( {
 		let initialSlideIndex = 0;
 
 		$allSlideshowLinks.each( function() {
-			const slideVideo = this.dataset.elementorLightboxVideo;
+			const slideVideo = this.dataset.refractionLightboxVideo;
 
-			let slideIndex = this.dataset.elementorLightboxIndex;
+			let slideIndex = this.dataset.refractionLightboxIndex;
 
 			if ( undefined === slideIndex ) {
 				slideIndex = $allSlideshowLinks.index( this );
@@ -1070,8 +1070,8 @@ module.exports = elementorModules.ViewModule.extend( {
 			const slideData = {
 				image: this.href,
 				index: slideIndex,
-				title: this.dataset.elementorLightboxTitle,
-				description: this.dataset.elementorLightboxDescription,
+				title: this.dataset.refractionLightboxTitle,
+				description: this.dataset.refractionLightboxDescription,
 				hash: this.getAttribute( 'data-e-action-hash' ),
 			};
 
@@ -1088,7 +1088,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			type: 'slideshow',
 			id: slideshowID,
 			modalOptions: {
-				id: 'elementor-lightbox-slideshow-' + slideshowID,
+				id: 'refraction-lightbox-slideshow-' + slideshowID,
 			},
 			slideshow: {
 				slides,

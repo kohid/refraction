@@ -1,14 +1,14 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { type HttpResponse, httpService } from '@elementor/http-client';
-import { z } from '@elementor/schema';
-import { __dispatch as dispatch } from '@elementor/store';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { type HttpResponse, httpService } from '@refraction/http-client';
+import { z } from '@refraction/schema';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { globalClassesStylesProvider } from '../global-classes-styles-provider';
 import { slice } from '../store';
 import { GLOBAL_CLASSES_URI } from './classes-resource';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 const TOOL_NAME = 'manage-classes';
 
 type ManageClassesResponse = {

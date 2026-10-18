@@ -1,4 +1,4 @@
-import CreateBase from 'elementor-editor/data/globals/base/create-base';
+import CreateBase from 'refraction-editor/data/globals/base/create-base';
 
 export class Create extends CreateBase {
 	apply( args = {} ) {
@@ -12,7 +12,7 @@ export class Create extends CreateBase {
 		}
 
 		// `args.id` used by tests.
-		const id = args.id || elementorCommon.helpers.getUniqueId();
+		const id = args.id || refractionCommon.helpers.getUniqueId();
 
 		result = $e.data.create( `globals/colors?id=${ id }`, {
 			title,

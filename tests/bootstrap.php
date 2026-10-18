@@ -9,8 +9,8 @@ if ( ! file_exists( $composer_autoloader_file ) ) {
 require $composer_autoloader_file;
 
 
-use Elementor\Autoloader;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Autoloader;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
@@ -18,8 +18,8 @@ if ( getenv( 'WP_PHPUNIT__DIR' ) ) {
 	$_tests_dir = getenv( 'WP_PHPUNIT__DIR' );
 }
 
-define( 'ELEMENTOR_TESTS', true );
-define( 'ELEMENTOR_DEBUG', true );
+define( 'REFRACTION_TESTS', true );
+define( 'REFRACTION_DEBUG', true );
 
 /**
  * Change PLUGIN_FILE env in phpunit.xml
@@ -55,7 +55,7 @@ require __DIR__ . '/phpunit/class-kses-test-expectations.php';
 
 require_once dirname( __DIR__ ) . '/includes/autoloader.php';
 
-require __DIR__ . '/phpunit/elementor/schemas/bootstrap.php';
+require __DIR__ . '/phpunit/refraction/schemas/bootstrap.php';
 
 Autoloader::run();
 
@@ -64,7 +64,7 @@ remove_action( 'admin_init', '_maybe_update_core' );
 remove_action( 'admin_init', '_maybe_update_plugins' );
 
 // The following action activates all registered experiments in order for them to be able to be tested.
-add_action( 'elementor/experiments/feature-registered', function ( Experiments_Manager $experiments_manager, array $experimental_data ) {
+add_action( 'refraction/experiments/feature-registered', function ( Experiments_Manager $experiments_manager, array $experimental_data ) {
 	$exclude = [];
 
 	// Immutable experiments are not real experiments and should not be activated.
@@ -76,13 +76,13 @@ add_action( 'elementor/experiments/feature-registered', function ( Experiments_M
 }, 10, 2 );
 
 // Make sure the main class is running
-\Elementor\Plugin::instance();
+\Refraction\Plugin::instance();
 
 // Run fake actions
 do_action( 'init' );
 do_action( 'plugins_loaded' );
 
-\Elementor\Plugin::$instance->init_common();
+\Refraction\Plugin::$instance->init_common();
 
 /**
  * Copying language files is required to run before WordPress initializes.
@@ -101,7 +101,7 @@ function copy_language_files( $_tests_dir ) {
 
 	touch( $tests_lang_dir . '/he_IL.mo' );
 	copy(
-		__DIR__ . '/phpunit/resources/languages/plugins/elementor-he_IL.mo',
-		"{$tests_plugins_lang_dir}/elementor-he_IL.mo"
+		__DIR__ . '/phpunit/resources/languages/plugins/refraction-he_IL.mo',
+		"{$tests_plugins_lang_dir}/refraction-he_IL.mo"
 	);
 }

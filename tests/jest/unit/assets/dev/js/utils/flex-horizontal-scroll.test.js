@@ -1,4 +1,4 @@
-import { changeScrollStatus, setHorizontalTitleScrollValues, setHorizontalScrollAlignment } from 'elementor/assets/dev/js/frontend/utils/flex-horizontal-scroll';
+import { changeScrollStatus, setHorizontalTitleScrollValues, setHorizontalScrollAlignment } from 'refraction/assets/dev/js/frontend/utils/flex-horizontal-scroll';
 
 // Mock HTMLElement
 global.HTMLElement = class {
@@ -22,8 +22,8 @@ global.HTMLElement = class {
 // Mock getComputedStyle
 window.getComputedStyle = jest.fn().mockReturnValue( { gap: 10 } );
 
-// Mock elementorFrontend
-global.elementorFrontend = { config: { is_rtl: false } };
+// Mock refractionFrontend
+global.refractionFrontend = { config: { is_rtl: false } };
 
 describe( 'Test horizontal scroll functions', () => {
 	test( 'changeScrollStatus', () => {

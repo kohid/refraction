@@ -1,4 +1,4 @@
-import { getHostDocumentElements, getHostDocumentId } from '@elementor/editor-elements';
+import { getHostDocumentElements, getHostDocumentId } from '@refraction/editor-elements';
 
 import { fetchPageContext } from './api/page-context-client';
 import { getRegisteredAudits } from './registry';

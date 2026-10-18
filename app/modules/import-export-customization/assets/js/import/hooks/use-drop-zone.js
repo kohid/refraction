@@ -59,7 +59,7 @@ const useDropZone = ( { onFileSelect, onError, filetypes, isLoading, onButtonCli
 		} else {
 			onError( {
 				id: 'file_not_allowed',
-				message: __( 'This file type is not allowed', 'elementor' ),
+				message: __( 'This file type is not allowed', 'refraction' ),
 			} );
 		}
 	};
@@ -77,7 +77,7 @@ const useDropZone = ( { onFileSelect, onError, filetypes, isLoading, onButtonCli
 		if ( ! isValidFileType( file.type, file.name, filetypes ) ) {
 			onError( {
 				id: 'file_not_allowed',
-				message: __( 'This file type is not allowed', 'elementor' ),
+				message: __( 'This file type is not allowed', 'refraction' ),
 			} );
 			return;
 		}

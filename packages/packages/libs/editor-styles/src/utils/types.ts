@@ -1,7 +1,7 @@
-import { type PropType } from '@elementor/editor-props';
+import { type PropType } from '@refraction/editor-props';
 
 export type ExtendedWindow = Window & {
-	elementor: {
+	refraction: {
 		config: {
 			atomic?: {
 				styles_schema: Record< string, PropType< { key?: string } > >;

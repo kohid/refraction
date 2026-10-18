@@ -1,4 +1,4 @@
-import { injectIntoTop } from '@elementor/editor';
+import { injectIntoTop } from '@refraction/editor';
 
 import { mainMenu } from '../../locations';
 import PortalledPrimaryAction from './components/portalled-primary-action';

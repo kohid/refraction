@@ -5,21 +5,21 @@ import { __, sprintf } from '@wordpress/i18n';
 import { type TVariable, type TVariablesList } from '../storage';
 
 export const ERROR_MESSAGES = {
-	MISSING_VARIABLE_NAME: __( 'Give your variable a name.', 'elementor' ),
-	MISSING_VARIABLE_VALUE: __( 'Add a value to complete your variable.', 'elementor' ),
-	INVALID_CHARACTERS: __( 'Use letters, numbers, dashes (-), or underscores (_) for the name.', 'elementor' ),
-	NO_NON_SPECIAL_CHARACTER: __( 'Names have to include at least one non-special character.', 'elementor' ),
-	VARIABLE_LABEL_MAX_LENGTH: __( 'Keep names up to 50 characters.', 'elementor' ),
-	DUPLICATED_LABEL: __( 'This variable name already exists. Please choose a unique name.', 'elementor' ),
-	UNEXPECTED_ERROR: __( 'There was a glitch. Try saving your variable again.', 'elementor' ),
+	MISSING_VARIABLE_NAME: __( 'Give your variable a name.', 'refraction' ),
+	MISSING_VARIABLE_VALUE: __( 'Add a value to complete your variable.', 'refraction' ),
+	INVALID_CHARACTERS: __( 'Use letters, numbers, dashes (-), or underscores (_) for the name.', 'refraction' ),
+	NO_NON_SPECIAL_CHARACTER: __( 'Names have to include at least one non-special character.', 'refraction' ),
+	VARIABLE_LABEL_MAX_LENGTH: __( 'Keep names up to 50 characters.', 'refraction' ),
+	DUPLICATED_LABEL: __( 'This variable name already exists. Please choose a unique name.', 'refraction' ),
+	UNEXPECTED_ERROR: __( 'There was a glitch. Try saving your variable again.', 'refraction' ),
 	BATCH: {
 		DUPLICATED_LABELS: ( count: number, name: string ) =>
 			// eslint-disable-next-line @wordpress/i18n-translator-comments
-			sprintf( __( 'We found %1$d duplicated %2$s.', 'elementor' ), count, name ),
-		UNEXPECTED_ERROR: __( 'There was a glitch.', 'elementor' ),
-		DUPLICATED_LABEL_ACTION: __( 'Take me there', 'elementor' ),
-		DUPLICATED_LABEL_ACTION_MESSAGE: __( 'Please rename the variables.', 'elementor' ),
-		UNEXPECTED_ERROR_ACTION_MESSAGE: __( 'Try saving your variables again.', 'elementor' ),
+			sprintf( __( 'We found %1$d duplicated %2$s.', 'refraction' ), count, name ),
+		UNEXPECTED_ERROR: __( 'There was a glitch.', 'refraction' ),
+		DUPLICATED_LABEL_ACTION: __( 'Take me there', 'refraction' ),
+		DUPLICATED_LABEL_ACTION_MESSAGE: __( 'Please rename the variables.', 'refraction' ),
+		UNEXPECTED_ERROR_ACTION_MESSAGE: __( 'Try saving your variables again.', 'refraction' ),
 	},
 } as const;
 

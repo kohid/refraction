@@ -1,9 +1,9 @@
-import BreakpointValidator from 'elementor-validator/breakpoint';
+import BreakpointValidator from 'refraction-validator/breakpoint';
 
-var ControlBaseView = require( 'elementor-controls/base' ),
-	TagsBehavior = require( 'elementor-dynamic-tags/control-behavior' ),
-	Validator = require( 'elementor-validator/base' ),
-	NumberValidator = require( 'elementor-validator/number' ),
+var ControlBaseView = require( 'refraction-controls/base' ),
+	TagsBehavior = require( 'refraction-dynamic-tags/control-behavior' ),
+	Validator = require( 'refraction-validator/base' ),
+	NumberValidator = require( 'refraction-validator/number' ),
 	ControlBaseDataView;
 
 ControlBaseDataView = ControlBaseView.extend( {
@@ -23,7 +23,7 @@ ControlBaseDataView = ControlBaseView.extend( {
 			select: 'select[data-setting]',
 			textarea: 'textarea[data-setting]',
 			responsiveSwitchersSibling: `${ ui.controlTitle }[data-e-responsive-switcher-sibling!="false"]`,
-			responsiveSwitchers: '.elementor-responsive-switcher',
+			responsiveSwitchers: '.refraction-responsive-switcher',
 			contentEditable: '[contenteditable="true"]',
 		} );
 
@@ -55,11 +55,11 @@ ControlBaseDataView = ControlBaseView.extend( {
 			dynamicSettings = this.options.model.get( 'dynamic' );
 
 		if ( dynamicSettings && dynamicSettings.active ) {
-			const tags = _.filter( elementor.dynamicTags.getConfig( 'tags' ), function( tag ) {
+			const tags = _.filter( refraction.dynamicTags.getConfig( 'tags' ), function( tag ) {
 				return tag.editable && _.intersection( tag.categories, dynamicSettings.categories ).length;
 			} );
 
-			if ( tags.length || elementor.config.user.is_administrator ) {
+			if ( tags.length || refraction.config.user.is_administrator ) {
 				behaviors.tags = {
 					behaviorClass: TagsBehavior,
 					tags,
@@ -107,7 +107,7 @@ ControlBaseDataView = ControlBaseView.extend( {
 
 		if ( controlGlobalArgs?.default ) {
 			// If the control is a color/typography control and default colors/typography are disabled, don't return the global value.
-			if ( ! elementor.config.globals.defaults_enabled[ this.getGlobalMeta().controlType ] ) {
+			if ( ! refraction.config.globals.defaults_enabled[ this.getGlobalMeta().controlType ] ) {
 				return '';
 			}
 
@@ -436,20 +436,20 @@ ControlBaseDataView = ControlBaseView.extend( {
 			$switchersWrapper = this.ui.responsiveSwitchersWrapper,
 			selectedOption = $switcher.index();
 
-		$switchersWrapper.toggleClass( 'elementor-responsive-switchers-open' );
+		$switchersWrapper.toggleClass( 'refraction-responsive-switchers-open' );
 		$switchersWrapper[ 0 ].style.setProperty( '--selected-option', selectedOption );
 
 		this.triggerMethod( 'responsive:switcher:click', device );
 
-		elementor.changeDeviceMode( device );
+		refraction.changeDeviceMode( device );
 	},
 
 	renderResponsiveSwitchers() {
-		var templateHtml = Marionette.Renderer.render( '#tmpl-elementor-control-responsive-switchers', this.model.attributes );
+		var templateHtml = Marionette.Renderer.render( '#tmpl-refraction-control-responsive-switchers', this.model.attributes );
 
 		this.ui.responsiveSwitchersSibling.after( templateHtml );
 
-		this.ui.responsiveSwitchersWrapper = this.$el.find( '.elementor-control-responsive-switchers' );
+		this.ui.responsiveSwitchersWrapper = this.$el.find( '.refraction-control-responsive-switchers' );
 	},
 
 	onAfterExternalChange() {

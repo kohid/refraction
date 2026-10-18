@@ -7,7 +7,7 @@ interface CreateTranslateOptions {
 
 export function createTranslate( { configKey, defaultStrings = {} }: CreateTranslateOptions ): TranslateFunction {
 	return ( key: string, ...args: string[] ): string => {
-		const appConfig = window.elementorAppConfig as
+		const appConfig = window.refractionAppConfig as
 			| Record< string, { translations?: Record< string, string > } >
 			| undefined;
 		const remoteStrings = Object.fromEntries(

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { urlPropTypeUtil, videoSrcPropTypeUtil } from '@elementor/editor-props';
+import { urlPropTypeUtil, videoSrcPropTypeUtil } from '@refraction/editor-props';
 import { Card, CardMedia, CardOverlay, CircularProgress } from '@elementor/ui';
-import { useWpMediaAttachment, useWpMediaFrame } from '@elementor/wp-media';
+import { useWpMediaAttachment, useWpMediaFrame } from '@refraction/wp-media';
 import { __ } from '@wordpress/i18n';
 
 import { useBoundProp } from '../bound-prop-context';
@@ -10,13 +10,13 @@ import { createControl } from '../create-control';
 import { MediaSelectActions } from './media-select-actions';
 import { TILES_GRADIENT_FORMULA } from './svg-media-control';
 
-const PLACEHOLDER_IMAGE = window.elementorCommon?.config?.urls?.assets + '/shapes/play-triangle.svg';
+const PLACEHOLDER_IMAGE = window.refractionCommon?.config?.urls?.assets + '/shapes/play-triangle.svg';
 
 type VideoMediaControlProps = {
 	label?: string;
 };
 
-export const VideoMediaControl = createControl( ( { label = __( 'Video', 'elementor' ) }: VideoMediaControlProps ) => {
+export const VideoMediaControl = createControl( ( { label = __( 'Video', 'refraction' ) }: VideoMediaControlProps ) => {
 	const { value, setValue, propType } = useBoundProp( videoSrcPropTypeUtil );
 	const { id, url } = value ?? {};
 
@@ -87,7 +87,7 @@ const VideoPreview = ( { isFetching = false, videoUrl }: { isFetching?: boolean;
 	if ( videoUrl ) {
 		return (
 			<video
-				aria-label={ __( 'Video preview', 'elementor' ) }
+				aria-label={ __( 'Video preview', 'refraction' ) }
 				src={ videoUrl }
 				muted
 				preload="metadata"

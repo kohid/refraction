@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useNavigateToDocument as useNavigateToDocument,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import { DotsVerticalIcon, HomeIcon } from '@elementor/icons';
 import {
 	bindMenu,
@@ -87,7 +87,7 @@ export default function ListItemView( { post }: { post: Post } ) {
 						<ListItemText disableTypography={ true }>
 							<PageTitleAndStatus title={ title } status={ status } />
 						</ListItemText>
-						{ post.isHome && <HomeIcon titleAccess={ __( 'Homepage', 'elementor' ) } color="disabled" /> }
+						{ post.isHome && <HomeIcon titleAccess={ __( 'Homepage', 'refraction' ) } color="disabled" /> }
 					</ListItemButton>
 				</ListItem>
 			</DisabledPostTooltip>

@@ -1,14 +1,14 @@
-import { Save } from 'elementor-document/save/commands/internal/save.js';
+import { Save } from 'refraction-document/save/commands/internal/save.js';
 
 describe( 'Save', () => {
 	let save;
 	let settings;
 	let container;
-	let elementor;
+	let refraction;
 
 	beforeEach( () => {
-		elementor = global.elementor = {};
-		elementor.config = {};
+		refraction = global.refraction = {};
+		refraction.config = {};
 		save = new Save();
 		settings = {};
 		container = {
@@ -22,7 +22,7 @@ describe( 'Save', () => {
 	} );
 
 	it( 'adds missing persistent settings to payload', () => {
-		elementor.config.persistent_keys = [ 'key1', 'key3' ];
+		refraction.config.persistent_keys = [ 'key1', 'key3' ];
 		save.addPersistentSettingsToPayload( settings, container );
 		expect( settings ).toEqual( {
 			key1: 'value1',
@@ -30,7 +30,7 @@ describe( 'Save', () => {
 	} );
 
 	it( 'does not modify payload if all persistent settings are present', () => {
-		elementor.config.persistent_keys = [ 'key1' ];
+		refraction.config.persistent_keys = [ 'key1' ];
 		settings.key1 = 'value';
 		save.addPersistentSettingsToPayload( settings, container );
 		expect( settings ).toEqual( {
@@ -39,7 +39,7 @@ describe( 'Save', () => {
 	} );
 
 	it( 'does not add non-persistent settings to payload', () => {
-		elementor.config.persistent_keys = [ 'key1', 'key3' ];
+		refraction.config.persistent_keys = [ 'key1', 'key3' ];
 		settings.key2 = 'value';
 		save.addPersistentSettingsToPayload( settings, container );
 		expect( settings ).toEqual( {

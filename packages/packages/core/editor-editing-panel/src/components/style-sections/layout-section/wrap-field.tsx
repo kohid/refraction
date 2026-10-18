@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ToggleButtonGroupItem, ToggleControl } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleControl } from '@refraction/editor-controls';
 import { ArrowBackIcon, ArrowForwardIcon, ArrowRightIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -9,24 +9,24 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type FlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
-const FLEX_WRAP_LABEL = __( 'Wrap', 'elementor' );
+const FLEX_WRAP_LABEL = __( 'Wrap', 'refraction' );
 
 const options: ToggleButtonGroupItem< FlexWrap >[] = [
 	{
 		value: 'nowrap',
-		label: __( 'No wrap', 'elementor' ),
+		label: __( 'No wrap', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowRightIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'wrap',
-		label: __( 'Wrap', 'elementor' ),
+		label: __( 'Wrap', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowBackIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'wrap-reverse',
-		label: __( 'Reversed wrap', 'elementor' ),
+		label: __( 'Reversed wrap', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowForwardIcon fontSize={ size } />,
 		showTooltip: true,
 	},

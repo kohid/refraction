@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { getHostDocumentId } from '@elementor/editor-elements';
-import { FloatingPanelBody, FloatingPanelFooter, FloatingPanelHeader } from '@elementor/editor-floating-panels';
+import { getHostDocumentId } from '@refraction/editor-elements';
+import { FloatingPanelBody, FloatingPanelFooter, FloatingPanelHeader } from '@refraction/editor-floating-panels';
 import { Box, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -24,8 +24,8 @@ export default function AuditPanel() {
 		<>
 			<FloatingPanelHeader
 				panelId={ AUDIT_PANEL_ID }
-				title={ __( 'Page Audit', 'elementor' ) }
-				badge={ __( 'Beta', 'elementor' ) }
+				title={ __( 'Page Audit', 'refraction' ) }
+				badge={ __( 'Beta', 'refraction' ) }
 				titleVariant="subtitle2"
 			/>
 			<FloatingPanelBody
@@ -43,7 +43,7 @@ export default function AuditPanel() {
 			<FloatingPanelFooter>
 				{ lastScanLabel ? (
 					<Typography variant="caption" sx={ { flex: 1 } }>
-						{ __( 'Last scan:', 'elementor' ) } { lastScanLabel }
+						{ __( 'Last scan:', 'refraction' ) } { lastScanLabel }
 					</Typography>
 				) : (
 					<Box sx={ { flex: 1 } } />

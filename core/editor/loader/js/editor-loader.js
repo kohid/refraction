@@ -1,17 +1,17 @@
-window.__elementorEditorV1LoadingPromise = new Promise( ( resolve ) => {
-	window.addEventListener( 'elementor/init', () => {
+window.__refractionEditorV1LoadingPromise = new Promise( ( resolve ) => {
+	window.addEventListener( 'refraction/init', () => {
 		resolve();
 	}, { once: true } );
 } );
 
-window.elementor.start();
+window.refraction.start();
 
-if ( ! window.elementorV2?.editor ) {
-	throw new Error( 'The "@elementor/editor" package was not loaded.' );
+if ( ! window.refractionV2?.editor ) {
+	throw new Error( 'The "@refraction/editor" package was not loaded.' );
 }
 
-window.elementorV2
+window.refractionV2
 	.editor
 	.start(
-		document.getElementById( 'elementor-editor-wrapper-v2' ),
+		document.getElementById( 'refraction-editor-wrapper-v2' ),
 	);

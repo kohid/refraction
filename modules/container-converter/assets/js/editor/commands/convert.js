@@ -6,8 +6,8 @@ import Migrator from '../migrator';
 export class Convert extends $e.modules.editor.document.CommandHistoryBase {
 	getHistory() {
 		return {
-			type: __( 'Converted to Container', 'elementor' ),
-			title: __( 'Section', 'elementor' ),
+			type: __( 'Converted to Container', 'refraction' ),
+			title: __( 'Section', 'refraction' ),
 		};
 	}
 

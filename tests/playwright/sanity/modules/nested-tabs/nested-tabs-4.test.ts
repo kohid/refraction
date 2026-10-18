@@ -44,8 +44,8 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 			contentContainerThree = editor.getPreviewFrame().locator( `.e-n-tabs-content .e-con >> nth=2` ),
 			contentContainerThreeId = await contentContainerThree.getAttribute( 'data-id' ),
 			videoUrl = 'https://youtu.be/XNoaN8qu4fg',
-			videoContainer = editor.getPreviewFrame().locator( '.elementor-element-' + contentContainerOneId + ' .elementor-background-video-container iframe' ),
-			firstTabContainer = editor.getPreviewFrame().locator( '.elementor-element-' + contentContainerOneId ),
+			videoContainer = editor.getPreviewFrame().locator( '.refraction-element-' + contentContainerOneId + ' .refraction-background-video-container iframe' ),
+			firstTabContainer = editor.getPreviewFrame().locator( '.refraction-element-' + contentContainerOneId ),
 			firstTabContainerModelCId = await firstTabContainer.getAttribute( 'data-model-cid' );
 
 		await setBackgroundVideoUrl( editor, contentContainerOneId, videoUrl );
@@ -58,17 +58,17 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 		await page.waitForTimeout( 3000 );
 		// Assert that the iframe loaded. It's impossible to check if the video is playing due to issue in Chromium.
-		await expect.soft( contentContainerThree.locator( '.elementor-background-video-container iframe' ) ).toHaveCount( 1 );
+		await expect.soft( contentContainerThree.locator( '.refraction-background-video-container iframe' ) ).toHaveCount( 1 );
 
 		await clickTabByPosition( editor.getPreviewFrame(), 1 );
 		await page.waitForTimeout( 3000 );
 		// Assert that the iframe loaded. It's impossible to check if the video is playing due to issue in Chromium.
-		await expect.soft( contentContainerTwo.locator( '.elementor-background-video-container iframe' ) ).toHaveCount( 1 );
+		await expect.soft( contentContainerTwo.locator( '.refraction-background-video-container iframe' ) ).toHaveCount( 1 );
 
 		await clickTabByPosition( editor.getPreviewFrame(), 0 );
 		await page.waitForTimeout( 3000 );
 		// Assert that the iframe loaded. It's impossible to check if the video is playing due to issue in Chromium.
-		await expect.soft( contentContainerOne.locator( '.elementor-background-video-container iframe' ) ).toHaveCount( 1 );
+		await expect.soft( contentContainerOne.locator( '.refraction-background-video-container iframe' ) ).toHaveCount( 1 );
 	} );
 
 	test( 'Nested tabs horizontal scroll', async ( { page, apiRequests }, testInfo ) => {
@@ -87,7 +87,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 			await editor.openSection( 'section_tabs' );
 			Array.from( { length: 3 }, async () => {
-				await page.locator( '.elementor-control-tabs .elementor-repeater-fields:nth-child( 2 ) .elementor-repeater-row-tools .elementor-repeater-tool-duplicate' ).click();
+				await page.locator( '.refraction-control-tabs .refraction-repeater-fields:nth-child( 2 ) .refraction-repeater-row-tools .refraction-repeater-tool-duplicate' ).click();
 			} );
 
 			await editor.openPanelTab( 'style' );
@@ -190,7 +190,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 			await editor.openSection( 'section_tabs' );
 			Array.from( { length: 3 }, async () => {
-				await page.locator( '.elementor-control-tabs .elementor-repeater-fields:nth-child( 2 ) .elementor-repeater-row-tools .elementor-repeater-tool-duplicate' ).click();
+				await page.locator( '.refraction-control-tabs .refraction-repeater-fields:nth-child( 2 ) .refraction-repeater-row-tools .refraction-repeater-tool-duplicate' ).click();
 			} );
 		} );
 
@@ -296,7 +296,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Act.
 		// Open front end.
 		await editor.publishAndViewPage();
-		await page.waitForSelector( '.elementor-widget-n-tabs' );
+		await page.waitForSelector( '.refraction-widget-n-tabs' );
 
 		// Assert
 		await page.setViewportSize( viewportSize.mobile );
@@ -319,7 +319,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 			// Open front end.
 			await editor.publishAndViewPage();
-			await page.waitForSelector( '.elementor-widget-n-tabs' );
+			await page.waitForSelector( '.refraction-widget-n-tabs' );
 		} );
 
 		const secondTab = page.locator( '.e-n-tab-title >> nth=1' ),
@@ -360,7 +360,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Act.
 		// Open front end.
 		await editor.publishAndViewPage();
-		await page.waitForSelector( '.elementor-widget-n-tabs' );
+		await page.waitForSelector( '.refraction-widget-n-tabs' );
 
 		// Assert
 		expect.soft( await page.locator( '.e-con' ).first().screenshot( {

@@ -1,9 +1,9 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
-export const DYNAMIC_TAGS_URI = 'elementor://dynamic-tags';
+export const DYNAMIC_TAGS_URI = 'refraction://dynamic-tags';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 
 // NOTE: JSON-encoded array of dynamic tag entries; shape defined by List_Dynamic_Tags_Ability::execute() in modules/mcp/abilities/list-dynamic-tags-ability.php
 const fetchDynamicTags = async (): Promise< string > => {

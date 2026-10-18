@@ -1,4 +1,4 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
 import './checkbox.scss';
 

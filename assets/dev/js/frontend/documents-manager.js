@@ -1,6 +1,6 @@
 import Document from './document';
 
-export default class extends elementorModules.ViewModule {
+export default class extends refractionModules.ViewModule {
 	constructor( ...args ) {
 		super( ...args );
 
@@ -14,7 +14,7 @@ export default class extends elementorModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				document: '.elementor',
+				document: '.refraction',
 			},
 		};
 	}
@@ -32,7 +32,7 @@ export default class extends elementorModules.ViewModule {
 			base: Document,
 		};
 
-		elementorFrontend.hooks.doAction( 'elementor/frontend/documents-manager/init-classes', this );
+		refractionFrontend.hooks.doAction( 'refraction/frontend/documents-manager/init-classes', this );
 	}
 
 	addDocumentClass( documentType, documentClass ) {
@@ -45,8 +45,8 @@ export default class extends elementorModules.ViewModule {
 
 	attachDocumentClass( $document ) {
 		const documentData = $document.data(),
-			documentID = documentData.elementorId,
-			documentType = documentData.elementorType,
+			documentID = documentData.refractionId,
+			documentType = documentData.refractionType,
 			DocumentClass = this.documentClasses[ documentType ] || this.documentClasses.base;
 
 		this.documents[ documentID ] = new DocumentClass( {

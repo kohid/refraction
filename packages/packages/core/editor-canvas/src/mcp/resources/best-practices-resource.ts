@@ -1,8 +1,8 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
-export const BEST_PRACTICES_URI = 'elementor://style/best-practices';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
+export const BEST_PRACTICES_URI = 'refraction://style/best-practices';
 
 export const initBestPracticesResource = ( reg: MCPRegistryEntry ) => {
 	const { resource } = reg;

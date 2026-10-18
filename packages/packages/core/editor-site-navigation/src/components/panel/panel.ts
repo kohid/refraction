@@ -1,4 +1,4 @@
-import { createPanel } from '@elementor/editor-panels';
+import { createPanel } from '@refraction/editor-panels';
 
 import Shell from './shell';
 

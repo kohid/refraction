@@ -1,13 +1,13 @@
 <?php
-namespace Elementor\Core\Common;
+namespace Refraction\Core\Common;
 
-use Elementor\Core\Base\App as BaseApp;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Common\Modules\Finder\Module as Finder;
-use Elementor\Core\Files\Uploads_Manager;
-use Elementor\Icons_Manager;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\App as BaseApp;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Common\Modules\Finder\Module as Finder;
+use Refraction\Core\Files\Uploads_Manager;
+use Refraction\Icons_Manager;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * App
  *
- * Elementor's common app that groups shared functionality, components and configuration
+ * Refraction's common app that groups shared functionality, components and configuration
  *
  * @since 2.3.0
  */
@@ -33,15 +33,15 @@ class App extends BaseApp {
 	public function __construct() {
 		$this->add_default_templates();
 
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'register_scripts' ], 9 );
+		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'register_scripts' ], 9 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ], 9 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ], 9 );
 
-		add_action( 'elementor/editor/before_enqueue_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/editor/before_enqueue_styles', [ $this, 'register_styles' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_styles' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_styles' ], 9 );
 
-		add_action( 'elementor/editor/footer', [ $this, 'print_templates' ] );
+		add_action( 'refraction/editor/footer', [ $this, 'print_templates' ] );
 		add_action( 'admin_footer', [ $this, 'print_templates' ] );
 		add_action( 'wp_footer', [ $this, 'print_templates' ] );
 	}
@@ -88,23 +88,23 @@ class App extends BaseApp {
 	 */
 	public function register_scripts() {
 		wp_register_script(
-			'elementor-vendors-redux',
+			'refraction-vendors-redux',
 			$this->get_js_assets_url( 'vendors-redux' ),
 			[
 				'react',
 				'react-dom',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
 		wp_register_script(
-			'elementor-common-modules',
+			'refraction-common-modules',
 			$this->get_js_assets_url( 'common-modules' ),
 			[
-				'elementor-vendors-redux',
+				'refraction-vendors-redux',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
@@ -129,7 +129,7 @@ class App extends BaseApp {
 		);
 
 		wp_register_script(
-			'elementor-dialog',
+			'refraction-dialog',
 			$this->get_js_assets_url( 'dialog', 'assets/lib/dialog/' ),
 			[
 				'jquery-ui-position',
@@ -139,29 +139,29 @@ class App extends BaseApp {
 		);
 
 		wp_enqueue_script(
-			'elementor-common',
+			'refraction-common',
 			$this->get_js_assets_url( 'common' ),
 			[
 				'jquery',
 				'jquery-ui-draggable',
 				'backbone-marionette',
 				'backbone-radio',
-				'elementor-common-modules',
-				'elementor-web-cli',
-				'elementor-dialog',
+				'refraction-common-modules',
+				'refraction-web-cli',
+				'refraction-dialog',
 				'wp-api-request',
-				'elementor-dev-tools',
+				'refraction-dev-tools',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		wp_set_script_translations( 'elementor-common', 'elementor' );
+		wp_set_script_translations( 'refraction-common', 'refraction' );
 
 		$this->print_config();
 
 		// Used for external plugins.
-		do_action( 'elementor/common/after_register_scripts', $this );
+		do_action( 'refraction/common/after_register_scripts', $this );
 	}
 
 	/**
@@ -174,26 +174,26 @@ class App extends BaseApp {
 	 */
 	public function register_styles() {
 		wp_register_style(
-			'elementor-icons',
-			$this->get_css_assets_url( 'elementor-icons', 'assets/lib/eicons/css/' ),
+			'refraction-icons',
+			$this->get_css_assets_url( 'refraction-icons', 'assets/lib/eicons/css/' ),
 			[],
-			Icons_Manager::ELEMENTOR_ICONS_VERSION
+			Icons_Manager::REFRACTION_ICONS_VERSION
 		);
 
 		wp_enqueue_style(
-			'elementor-common',
+			'refraction-common',
 			$this->get_css_assets_url( 'common', null, 'default', true ),
 			[
-				'elementor-icons',
+				'refraction-icons',
 			],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_enqueue_style(
 			'e-theme-ui-light',
 			$this->get_css_assets_url( 'theme-light' ),
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 	}
 
@@ -257,15 +257,15 @@ class App extends BaseApp {
 		);
 
 		$config = [
-			'version' => ELEMENTOR_VERSION,
+			'version' => REFRACTION_VERSION,
 			'isRTL' => is_rtl(),
 			'isDebug' => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
-			'isElementorDebug' => Utils::is_elementor_debug(),
+			'isRefractionDebug' => Utils::is_refraction_debug(),
 			'activeModules' => array_keys( $this->get_components() ),
 			'experimentalFeatures' => $active_experimental_features,
 			'allExperimentalFeatures' => $all_experimental_features,
 			'urls' => [
-				'assets' => ELEMENTOR_ASSETS_URL,
+				'assets' => REFRACTION_ASSETS_URL,
 				'rest' => get_rest_url(),
 			],
 			'filesUpload' => [
@@ -283,7 +283,7 @@ class App extends BaseApp {
 		 *
 		 * @param array $config  Common configuration.
 		 */
-		return apply_filters( 'elementor/common/localize_settings', $config );
+		return apply_filters( 'refraction/common/localize_settings', $config );
 	}
 
 	/**
@@ -300,7 +300,7 @@ class App extends BaseApp {
 		];
 
 		foreach ( $default_templates as $template ) {
-			$this->add_template( ELEMENTOR_PATH . $template );
+			$this->add_template( REFRACTION_PATH . $template );
 		}
 	}
 }

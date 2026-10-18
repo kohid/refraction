@@ -1,7 +1,7 @@
-import { injectIntoLogic } from '@elementor/editor';
-import { registerElementPanelDefaults } from '@elementor/editor-editing-panel';
-import { stylesRepository } from '@elementor/editor-styles-repository';
-import { __registerSlice as registerSlice } from '@elementor/store';
+import { injectIntoLogic } from '@refraction/editor';
+import { registerElementPanelDefaults } from '@refraction/editor-editing-panel';
+import { stylesRepository } from '@refraction/editor-styles-repository';
+import { __registerSlice as registerSlice } from '@refraction/store';
 
 import { GlobalStylesImportListener } from './components/global-styles-import-listener';
 import { PopulateStore } from './components/populate-store';

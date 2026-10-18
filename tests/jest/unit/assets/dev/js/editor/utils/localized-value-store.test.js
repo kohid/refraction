@@ -1,4 +1,4 @@
-import LocalizedValueStore from 'elementor-editor-utils/localized-value-store';
+import LocalizedValueStore from 'refraction-editor-utils/localized-value-store';
 
 describe( 'Localized value store', () => {
 	test( 'Should localize non english values', () => {

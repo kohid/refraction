@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import * as commands from './commands/';
 
 export default class Component extends ComponentBase {
@@ -20,7 +20,7 @@ export default class Component extends ComponentBase {
 		return {
 			toggle: {
 				keys: 'ctrl+i',
-				dependency: () => elementor.getPreviewContainer().isEditable(),
+				dependency: () => refraction.getPreviewContainer().isEditable(),
 			},
 		};
 	}

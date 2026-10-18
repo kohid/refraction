@@ -1,25 +1,25 @@
 <?php
-namespace Elementor\Core\Settings\Page;
+namespace Refraction\Core\Settings\Page;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Files\CSS\Base;
-use Elementor\Core\Files\CSS\Post;
-use Elementor\Core\Files\CSS\Post_Preview;
-use Elementor\Core\Settings\Base\CSS_Manager;
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Core\Settings\Base\Model as BaseModel;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Files\CSS\Base;
+use Refraction\Core\Files\CSS\Post;
+use Refraction\Core\Files\CSS\Post_Preview;
+use Refraction\Core\Settings\Base\CSS_Manager;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Core\Settings\Base\Model as BaseModel;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor page settings manager.
+ * Refraction page settings manager.
  *
- * Elementor page settings manager handler class is responsible for registering
- * and managing Elementor page settings managers.
+ * Refraction page settings manager handler class is responsible for registering
+ * and managing Refraction page settings managers.
  *
  * @since 1.6.0
  */
@@ -28,7 +28,7 @@ class Manager extends CSS_Manager {
 	/**
 	 * Meta key for the page settings.
 	 */
-	const META_KEY = '_elementor_page_settings';
+	const META_KEY = '_refraction_page_settings';
 
 	/**
 	 * Get manager name.
@@ -174,19 +174,19 @@ class Manager extends CSS_Manager {
 	protected function print_editor_template_content( $name ) {
 		?>
 		<#
-		const tabs = elementor.config.document.settings.tabs;
+		const tabs = refraction.config.document.settings.tabs;
 
 		if ( Object.values( tabs ).length > 1 ) { #>
-		<div class="elementor-panel-navigation">
+		<div class="refraction-panel-navigation">
 			<# _.each( tabs, function( tabTitle, tabSlug ) {
 			$e.bc.ensureTab( 'panel/page-settings', tabSlug ); #>
-			<button class="elementor-component-tab elementor-panel-navigation-tab elementor-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
+			<button class="refraction-component-tab refraction-panel-navigation-tab refraction-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
 				<span>{{{ tabTitle }}}</span>
 			</button>
 			<# } ); #>
 		</div>
 		<# } #>
-		<div id="elementor-panel-<?php echo esc_attr( $name ); ?>-settings-controls"></div>
+		<div id="refraction-panel-<?php echo esc_attr( $name ); ?>-settings-controls"></div>
 		<?php
 	}
 

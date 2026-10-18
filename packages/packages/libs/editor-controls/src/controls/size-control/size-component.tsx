@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type RefObject, useEffect } from 'react';
-import type { SizePropValue } from '@elementor/editor-props';
-import { useActiveBreakpoint } from '@elementor/editor-responsive';
+import type { SizePropValue } from '@refraction/editor-props';
+import { useActiveBreakpoint } from '@refraction/editor-responsive';
 import { Box, usePopupState } from '@elementor/ui';
 
 import { SizeField, type SizeFieldProps } from './size-field';

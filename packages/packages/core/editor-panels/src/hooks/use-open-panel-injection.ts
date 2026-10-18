@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { __useSelector as useSelector } from '@elementor/store';
+import { __useSelector as useSelector } from '@refraction/store';
 
 import { usePanelsInjections } from '../location';
 import { selectOpenId } from '../store';

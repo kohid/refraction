@@ -1,11 +1,11 @@
 import { dispatchCommandAfter } from 'test-utils';
-import { __privateSetReady as setReady } from '@elementor/editor-v1-adapters';
+import { __privateSetReady as setReady } from '@refraction/editor-v1-adapters';
 import {
 	__createStore as createStore,
 	__dispatch as dispatch,
 	__getState as getState,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { selectIsStale } from '../store/selectors';
 import { slice } from '../store/slice';

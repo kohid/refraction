@@ -8,8 +8,8 @@ import {
 	SizeControl,
 	type ToggleButtonGroupItem,
 	useBoundProp,
-} from '@elementor/editor-controls';
-import { flexPropTypeUtil, type FlexPropValue, numberPropTypeUtil, sizePropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-controls';
+import { flexPropTypeUtil, type FlexPropValue, numberPropTypeUtil, sizePropTypeUtil } from '@refraction/editor-props';
 import { ExpandIcon, PencilIcon, ShrinkIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -21,26 +21,26 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type GroupItem = 'flex-grow' | 'flex-shrink' | 'custom';
 
-const FLEX_SIZE_LABEL = __( 'Flex Size', 'elementor' );
+const FLEX_SIZE_LABEL = __( 'Flex Size', 'refraction' );
 
 const DEFAULT = 1;
 
 const items: ToggleButtonGroupItem< GroupItem >[] = [
 	{
 		value: 'flex-grow',
-		label: __( 'Grow', 'elementor' ),
+		label: __( 'Grow', 'refraction' ),
 		renderContent: ( { size } ) => <ExpandIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'flex-shrink',
-		label: __( 'Shrink', 'elementor' ),
+		label: __( 'Shrink', 'refraction' ),
 		renderContent: ( { size } ) => <ShrinkIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'custom',
-		label: __( 'Custom', 'elementor' ),
+		label: __( 'Custom', 'refraction' ),
 		renderContent: ( { size } ) => <PencilIcon fontSize={ size } />,
 		showTooltip: true,
 	},
@@ -164,17 +164,17 @@ const FlexCustomField = () => {
 	return (
 		<PropProvider { ...context }>
 			<>
-				<StylesFieldLayout label={ __( 'Grow', 'elementor' ) }>
+				<StylesFieldLayout label={ __( 'Grow', 'refraction' ) }>
 					<PropKeyProvider bind="flexGrow">
 						<NumberControl min={ 0 } shouldForceInt={ true } />
 					</PropKeyProvider>
 				</StylesFieldLayout>
-				<StylesFieldLayout label={ __( 'Shrink', 'elementor' ) }>
+				<StylesFieldLayout label={ __( 'Shrink', 'refraction' ) }>
 					<PropKeyProvider bind="flexShrink">
 						<NumberControl min={ 0 } shouldForceInt={ true } />
 					</PropKeyProvider>
 				</StylesFieldLayout>
-				<StylesFieldLayout label={ __( 'Basis', 'elementor' ) } ref={ flexBasisRowRef }>
+				<StylesFieldLayout label={ __( 'Basis', 'refraction' ) } ref={ flexBasisRowRef }>
 					<PropKeyProvider bind="flexBasis">
 						<SizeControl extendedOptions={ [ 'auto' ] } anchorRef={ flexBasisRowRef } />
 					</PropKeyProvider>

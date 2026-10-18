@@ -1,5 +1,5 @@
-import createContainer from 'elementor/tests/jest/utils/create-container';
-import { introductionManager, removeConfirmCreationDialog } from 'elementor/modules/kit-elements-defaults/assets/js/editor/confirm-creation-dialog';
+import createContainer from 'refraction/tests/jest/utils/create-container';
+import { introductionManager, removeConfirmCreationDialog } from 'refraction/modules/kit-elements-defaults/assets/js/editor/confirm-creation-dialog';
 
 describe( `$e.run( 'kit-elements-defaults/confirm-creation' )`, () => {
 	let ConfirmCreationCommand;
@@ -14,7 +14,7 @@ describe( `$e.run( 'kit-elements-defaults/confirm-creation' )`, () => {
 			},
 		};
 
-		global.elementorModules = {
+		global.refractionModules = {
 			editor: {
 				utils: {
 					Introduction: class {
@@ -32,7 +32,7 @@ describe( `$e.run( 'kit-elements-defaults/confirm-creation' )`, () => {
 			},
 		};
 
-		global.elementor = {
+		global.refraction = {
 			config: {
 				user: {
 					introduction: {},
@@ -41,13 +41,13 @@ describe( `$e.run( 'kit-elements-defaults/confirm-creation' )`, () => {
 		};
 
 		// Need to import dynamically since the command extends a global variable which isn't available in regular import.
-		ConfirmCreationCommand = ( await import( 'elementor/modules/kit-elements-defaults/assets/js/editor/commands/confirm-creation' ) ).default;
+		ConfirmCreationCommand = ( await import( 'refraction/modules/kit-elements-defaults/assets/js/editor/commands/confirm-creation' ) ).default;
 	} );
 
 	afterEach( () => {
 		delete global.$e;
-		delete global.elementorModules;
-		delete global.elementor;
+		delete global.refractionModules;
+		delete global.refraction;
 
 		removeConfirmCreationDialog();
 
@@ -56,7 +56,7 @@ describe( `$e.run( 'kit-elements-defaults/confirm-creation' )`, () => {
 
 	it( 'should call `create` command without open confirm dialog when config filled', () => {
 		// Arrange
-		elementor.config.user.introduction = { kit_elements_defaults_create_dialog: true };
+		refraction.config.user.introduction = { kit_elements_defaults_create_dialog: true };
 
 		const container = createContainer();
 		const command = new ConfirmCreationCommand();

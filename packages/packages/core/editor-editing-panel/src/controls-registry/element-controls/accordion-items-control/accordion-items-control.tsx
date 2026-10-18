@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ControlFormLabel, Repeater, type RepeaterItem, type SetRepeaterValuesMeta } from '@elementor/editor-controls';
-import { updateElementEditorSettings, useElementChildren, useElementEditorSettings } from '@elementor/editor-elements';
-import { booleanPropTypeUtil, type CreateOptions } from '@elementor/editor-props';
+import { ControlFormLabel, Repeater, type RepeaterItem, type SetRepeaterValuesMeta } from '@refraction/editor-controls';
+import { updateElementEditorSettings, useElementChildren, useElementEditorSettings } from '@refraction/editor-elements';
+import { booleanPropTypeUtil, type CreateOptions } from '@refraction/editor-props';
 import { Stack, TextField } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -92,7 +92,7 @@ export const AccordionItemsControl = ( { label }: { label: string } ) => {
 			adornment={ () => null }
 			itemSettings={ {
 				getId: ( { item } ) => item.id,
-				initialValues: { id: '', title: __( 'Accordion Item', 'elementor' ) },
+				initialValues: { id: '', title: __( 'Accordion Item', 'refraction' ) },
 				Label: ItemLabel,
 				Content: ItemContent,
 				Icon: () => null,
@@ -139,7 +139,7 @@ const ItemNameControl = ( { elementId }: { elementId: string } ) => {
 
 	return (
 		<Stack gap={ 1 }>
-			<ControlFormLabel>{ __( 'Name', 'elementor' ) }</ControlFormLabel>
+			<ControlFormLabel>{ __( 'Name', 'refraction' ) }</ControlFormLabel>
 			<TextField
 				size="tiny"
 				value={ label }

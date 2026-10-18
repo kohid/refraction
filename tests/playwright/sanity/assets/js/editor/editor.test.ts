@@ -40,7 +40,7 @@ test.describe( 'Editor tests', () => {
 		await editor.openElementsPanel();
 
 		// Assert
-		expect.soft( await editor.page.locator( 'aside#elementor-panel' ).screenshot( {
+		expect.soft( await editor.page.locator( 'aside#refraction-panel' ).screenshot( {
 			type: 'jpeg',
 			quality: 70,
 		} ) ).toMatchSnapshot( 'editor-panel.jpg', { maxDiffPixels: 100 } );

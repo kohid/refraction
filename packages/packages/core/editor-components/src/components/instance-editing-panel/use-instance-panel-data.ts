@@ -1,4 +1,4 @@
-import { useElement } from '@elementor/editor-editing-panel';
+import { useElement } from '@refraction/editor-editing-panel';
 
 import { useSanitizeOverridableProps } from '../../hooks/use-sanitize-overridable-props';
 import { type ComponentInstanceOverridesPropValue } from '../../prop-types/component-instance-overrides-prop-type';

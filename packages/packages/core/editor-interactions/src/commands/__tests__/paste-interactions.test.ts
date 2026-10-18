@@ -7,14 +7,14 @@ import {
 	getWidgetsCache,
 	updateElementInteractions,
 	type V1ElementModelProps,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 
 import { createInteractionItemValue } from '../../__tests__/utils';
 import { getInteractionsControlOptions } from '../../interactions-controls-registry';
 import { getClipboardElements } from '../get-clipboard-elements';
 import { initPasteInteractionsCommand } from '../paste-interactions';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 jest.mock( '../../interactions-controls-registry', () => ( {
 	getInteractionsControlOptions: jest.fn(),

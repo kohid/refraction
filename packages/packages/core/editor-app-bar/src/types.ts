@@ -1,5 +1,5 @@
 export type ExtendedWindow = Window & {
-	elementorCommon: {
+	refractionCommon: {
 		eventsManager: {
 			dispatchEvent: ( name: string, data: Record< string, string > ) => void;
 			config: {
@@ -20,27 +20,27 @@ export type ExtendedWindow = Window & {
 		};
 	};
 
-	elementor: {
+	refraction: {
 		helpers: {
 			hasPro: () => boolean;
 		};
 		config: {
 			user: {
 				top_bar: {
-					my_elementor_url: string;
+					my_refraction_url: string;
 					connect_url: string;
 				};
 			};
 		};
 	};
-	elementorPro: {
+	refractionPro: {
 		config: {
 			isActive: boolean;
 		};
 	};
 	jQuery: {
 		fn?: {
-			elementorConnect?: ( selector: string ) => never;
+			refractionConnect?: ( selector: string ) => never;
 		};
 	};
 };

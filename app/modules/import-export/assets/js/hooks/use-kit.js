@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import useAjax from 'elementor-app/hooks/use-ajax';
+import useAjax from 'refraction-app/hooks/use-ajax';
 
 export const KIT_SOURCE_MAP = {
 	CLOUD: 'cloud',
@@ -14,10 +14,10 @@ const KIT_STATUS_MAP = Object.freeze( {
 		EXPORTED: 'exported',
 		ERROR: 'error',
 	} ),
-	UPLOAD_KIT_KEY = 'elementor_upload_kit',
-	IMPORT_KIT_KEY = 'elementor_import_kit',
-	EXPORT_KIT_KEY = 'elementor_export_kit',
-	RUN_RUNNER_KEY = 'elementor_import_kit__runner';
+	UPLOAD_KIT_KEY = 'refraction_upload_kit',
+	IMPORT_KIT_KEY = 'refraction_import_kit',
+	EXPORT_KIT_KEY = 'refraction_export_kit',
+	RUN_RUNNER_KEY = 'refraction_import_kit__runner';
 
 export default function useKit() {
 	const { ajaxState, setAjax, ajaxActions, runRequest } = useAjax(),

@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Core\Breakpoints;
+namespace Refraction\Core\Breakpoints;
 
-use Elementor\Core\Base\Base_Object;
-use Elementor\Plugin;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Plugin;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

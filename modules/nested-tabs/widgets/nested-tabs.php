@@ -1,20 +1,20 @@
 <?php
-namespace Elementor\Modules\NestedTabs\Widgets;
+namespace Refraction\Modules\NestedTabs\Widgets;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Text_Shadow;
-use Elementor\Group_Control_Text_Stroke;
-use Elementor\Group_Control_Typography;
-use Elementor\Icons_Manager;
-use Elementor\Modules\NestedElements\Base\Widget_Nested_Base;
-use Elementor\Modules\NestedElements\Controls\Control_Nested_Repeater;
-use Elementor\Plugin;
-use Elementor\Repeater;
+use Refraction\Controls_Manager;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Text_Shadow;
+use Refraction\Group_Control_Text_Stroke;
+use Refraction\Group_Control_Typography;
+use Refraction\Icons_Manager;
+use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
+use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
+use Refraction\Plugin;
+use Refraction\Repeater;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,7 +31,7 @@ class NestedTabs extends Widget_Nested_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Tabs', 'elementor' );
+		return esc_html__( 'Tabs', 'refraction' );
 	}
 
 	public function get_icon() {
@@ -60,7 +60,7 @@ class NestedTabs extends Widget_Nested_Base {
 			'settings' => [
 				'_title' => sprintf(
 					/* translators: %d: Tab index. */
-					__( 'Tab #%d', 'elementor' ),
+					__( 'Tab #%d', 'refraction' ),
 					$index
 				),
 				'content_width' => 'full',
@@ -82,7 +82,7 @@ class NestedTabs extends Widget_Nested_Base {
 
 	protected function get_default_children_title() {
 		/* translators: %d: Tab index. */
-		return esc_html__( 'Tab #%d', 'elementor' );
+		return esc_html__( 'Tab #%d', 'refraction' );
 	}
 
 	protected function get_default_children_placeholder_selector() {
@@ -90,35 +90,35 @@ class NestedTabs extends Widget_Nested_Base {
 	}
 
 	protected function get_html_wrapper_class() {
-		return 'elementor-widget-n-tabs';
+		return 'refraction-widget-n-tabs';
 	}
 
 	protected function register_controls() {
 		if ( null === $this->optimized_markup ) {
 			$this->optimized_markup = Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' ) && ! $this->has_widget_inner_wrapper();
-			$this->widget_container_selector = $this->optimized_markup ? '' : ' > .elementor-widget-container';
+			$this->widget_container_selector = $this->optimized_markup ? '' : ' > .refraction-widget-container';
 		}
 
 		$start = is_rtl() ? 'right' : 'left';
 		$end = is_rtl() ? 'left' : 'right';
 		$start_logical = is_rtl() ? 'end' : 'start';
 		$end_logical = is_rtl() ? 'start' : 'end';
-		$heading_selector_non_touch_device = "{{WRAPPER}}.elementor-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs[data-touch-mode='false'] > .e-n-tabs-heading";
-		$heading_selector_touch_device = "{{WRAPPER}}.elementor-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs[data-touch-mode='true'] > .e-n-tabs-heading";
-		$heading_selector = "{{WRAPPER}}.elementor-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs > .e-n-tabs-heading";
-		$content_selector = ":where( {{WRAPPER}}.elementor-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs > .e-n-tabs-content ) > .e-con";
+		$heading_selector_non_touch_device = "{{WRAPPER}}.refraction-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs[data-touch-mode='false'] > .e-n-tabs-heading";
+		$heading_selector_touch_device = "{{WRAPPER}}.refraction-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs[data-touch-mode='true'] > .e-n-tabs-heading";
+		$heading_selector = "{{WRAPPER}}.refraction-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs > .e-n-tabs-heading";
+		$content_selector = ":where( {{WRAPPER}}.refraction-widget-n-tabs{$this->widget_container_selector} > .e-n-tabs > .e-n-tabs-content ) > .e-con";
 
 		$this->start_controls_section( 'section_tabs', [
-			'label' => esc_html__( 'Tabs', 'elementor' ),
+			'label' => esc_html__( 'Tabs', 'refraction' ),
 		] );
 
 		$repeater = new Repeater();
 
 		$repeater->add_control( 'tab_title', [
-			'label' => esc_html__( 'Title', 'elementor' ),
+			'label' => esc_html__( 'Title', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
-			'default' => esc_html__( 'Tab Title', 'elementor' ),
-			'placeholder' => esc_html__( 'Tab Title', 'elementor' ),
+			'default' => esc_html__( 'Tab Title', 'refraction' ),
+			'placeholder' => esc_html__( 'Tab Title', 'refraction' ),
 			'label_block' => true,
 			'dynamic' => [
 				'active' => true,
@@ -128,7 +128,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$repeater->add_control(
 			'tab_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -139,7 +139,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$repeater->add_control(
 			'tab_icon_active',
 			[
-				'label' => esc_html__( 'Active Icon', 'elementor' ),
+				'label' => esc_html__( 'Active Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -153,7 +153,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$repeater->add_control(
 			'element_id',
 			[
-				'label' => esc_html__( 'CSS ID', 'elementor' ),
+				'label' => esc_html__( 'CSS ID', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'ai' => [
@@ -162,29 +162,29 @@ class NestedTabs extends Widget_Nested_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
+				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'refraction' ),
 				'style_transfer' => false,
-				'classes' => 'elementor-control-direction-ltr',
+				'classes' => 'refraction-control-direction-ltr',
 			]
 		);
 
 		$this->add_control( 'tabs', [
-			'label' => esc_html__( 'Tabs Items', 'elementor' ),
+			'label' => esc_html__( 'Tabs Items', 'refraction' ),
 			'type' => Control_Nested_Repeater::CONTROL_TYPE,
 			'fields' => $repeater->get_controls(),
 			'default' => [
 				[
-					'tab_title' => esc_html__( 'Tab #1', 'elementor' ),
+					'tab_title' => esc_html__( 'Tab #1', 'refraction' ),
 				],
 				[
-					'tab_title' => esc_html__( 'Tab #2', 'elementor' ),
+					'tab_title' => esc_html__( 'Tab #2', 'refraction' ),
 				],
 				[
-					'tab_title' => esc_html__( 'Tab #3', 'elementor' ),
+					'tab_title' => esc_html__( 'Tab #3', 'refraction' ),
 				],
 			],
 			'title_field' => '{{{ tab_title }}}',
-			'button_text' => esc_html__( 'Add Tab', 'elementor' ),
+			'button_text' => esc_html__( 'Add Tab', 'refraction' ),
 		] );
 
 		$styling_block_start = '--n-tabs-direction: column; --n-tabs-heading-direction: row; --n-tabs-heading-width: initial; --n-tabs-title-flex-basis: content; --n-tabs-title-flex-shrink: 0;';
@@ -193,23 +193,23 @@ class NestedTabs extends Widget_Nested_Base {
 		$styling_inline_start = '--n-tabs-direction: row; --n-tabs-heading-direction: column; --n-tabs-heading-width: 240px; --n-tabs-title-flex-basis: initial; --n-tabs-title-flex-shrink: initial;';
 
 		$this->add_responsive_control( 'tabs_direction', [
-			'label' => esc_html__( 'Direction', 'elementor' ),
+			'label' => esc_html__( 'Direction', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'block-start' => [
-					'title' => esc_html__( 'Above', 'elementor' ),
+					'title' => esc_html__( 'Above', 'refraction' ),
 					'icon' => 'eicon-v-align-top',
 				],
 				'block-end' => [
-					'title' => esc_html__( 'Below', 'elementor' ),
+					'title' => esc_html__( 'Below', 'refraction' ),
 					'icon' => 'eicon-v-align-bottom',
 				],
 				'inline-end' => [
-					'title' => esc_html__( 'After', 'elementor' ),
+					'title' => esc_html__( 'After', 'refraction' ),
 					'icon' => 'eicon-h-align-' . $end,
 				],
 				'inline-start' => [
-					'title' => esc_html__( 'Before', 'elementor' ),
+					'title' => esc_html__( 'Before', 'refraction' ),
 					'icon' => 'eicon-h-align-' . $start,
 				],
 			],
@@ -232,23 +232,23 @@ class NestedTabs extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'tabs_justify_horizontal', [
-			'label' => esc_html__( 'Justify', 'elementor' ),
+			'label' => esc_html__( 'Justify', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => "eicon-align-$start_logical-h",
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-align-center-h',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => "eicon-align-$end_logical-h",
 				],
 				'stretch' => [
-					'title' => esc_html__( 'Stretch', 'elementor' ),
+					'title' => esc_html__( 'Stretch', 'refraction' ),
 					'icon' => 'eicon-align-stretch-h',
 				],
 			],
@@ -274,23 +274,23 @@ class NestedTabs extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'tabs_justify_vertical', [
-			'label' => esc_html__( 'Justify', 'elementor' ),
+			'label' => esc_html__( 'Justify', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-align-start-v',
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-align-center-v',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-align-end-v',
 				],
 				'stretch' => [
-					'title' => esc_html__( 'Stretch', 'elementor' ),
+					'title' => esc_html__( 'Stretch', 'refraction' ),
 					'icon' => 'eicon-align-stretch-v',
 				],
 			],
@@ -314,7 +314,7 @@ class NestedTabs extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'tabs_width', [
-			'label' => esc_html__( 'Width', 'elementor' ),
+			'label' => esc_html__( 'Width', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [
 				'%' => [
@@ -344,19 +344,19 @@ class NestedTabs extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'title_alignment', [
-			'label' => esc_html__( 'Align Title', 'elementor' ),
+			'label' => esc_html__( 'Align Title', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-text-align-left',
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-text-align-center',
 				],
 				'end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-text-align-right',
 				],
 			],
@@ -373,18 +373,18 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_tabs_responsive', [
-			'label' => esc_html__( 'Additional Settings', 'elementor' ),
+			'label' => esc_html__( 'Additional Settings', 'refraction' ),
 		] );
 
 		$this->add_responsive_control(
 			'horizontal_scroll',
 			[
-				'label' => esc_html__( 'Horizontal Scroll', 'elementor' ),
+				'label' => esc_html__( 'Horizontal Scroll', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
-				'description' => esc_html__( 'Note: Scroll tabs if they don’t fit into their parent container.', 'elementor' ),
+				'description' => esc_html__( 'Note: Scroll tabs if they don’t fit into their parent container.', 'refraction' ),
 				'options' => [
-					'disable' => esc_html__( 'Disable', 'elementor' ),
-					'enable' => esc_html__( 'Enable', 'elementor' ),
+					'disable' => esc_html__( 'Disable', 'refraction' ),
+					'enable' => esc_html__( 'Enable', 'refraction' ),
 				],
 				'default' => 'disable',
 				'selectors_dictionary' => [
@@ -408,7 +408,7 @@ class NestedTabs extends Widget_Nested_Base {
 		);
 
 		$dropdown_options = [
-			'none' => esc_html__( 'None', 'elementor' ),
+			'none' => esc_html__( 'None', 'refraction' ),
 		];
 		$excluded_breakpoints = [
 			'laptop',
@@ -424,7 +424,7 @@ class NestedTabs extends Widget_Nested_Base {
 
 			$dropdown_options[ $breakpoint_key ] = sprintf(
 				/* translators: 1: Breakpoint label, 2: `>` character, 3: Breakpoint value. */
-				esc_html__( '%1$s (%2$s %3$dpx)', 'elementor' ),
+				esc_html__( '%1$s (%2$s %3$dpx)', 'refraction' ),
 				$breakpoint_instance->get_label(),
 				'>',
 				$breakpoint_instance->get_value()
@@ -434,9 +434,9 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->add_control(
 			'breakpoint_selector',
 			[
-				'label' => esc_html__( 'Breakpoint', 'elementor' ),
+				'label' => esc_html__( 'Breakpoint', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
-				'description' => esc_html__( 'Note: Choose at which breakpoint tabs will automatically switch to a vertical (“accordion”) layout.', 'elementor' ),
+				'description' => esc_html__( 'Note: Choose at which breakpoint tabs will automatically switch to a vertical (“accordion”) layout.', 'refraction' ),
 				'options' => $dropdown_options,
 				'default' => 'mobile',
 				'prefix_class' => 'e-n-tabs-',
@@ -446,12 +446,12 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_tabs_style', [
-			'label' => esc_html__( 'Tabs', 'elementor' ),
+			'label' => esc_html__( 'Tabs', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
 		] );
 
 		$this->add_responsive_control( 'tabs_title_space_between', [
-			'label' => esc_html__( 'Gap between tabs', 'elementor' ),
+			'label' => esc_html__( 'Gap between tabs', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 			'range' => [
@@ -471,7 +471,7 @@ class NestedTabs extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'tabs_title_spacing', [
-			'label' => esc_html__( 'Distance from content', 'elementor' ),
+			'label' => esc_html__( 'Distance from content', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 			'range' => [
@@ -495,7 +495,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'tabs_title_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -508,7 +508,7 @@ class NestedTabs extends Widget_Nested_Base {
 				'selector' => "{{WRAPPER}}{$this->widget_container_selector} > .e-n-tabs > .e-n-tabs-heading > .e-n-tab-title[aria-selected='false']:not( :hover )",
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Background Color', 'elementor' ),
+						'label' => esc_html__( 'Background Color', 'refraction' ),
 						'selectors' => [
 							'{{SELECTOR}}' => 'background: {{VALUE}}',
 						],
@@ -524,10 +524,10 @@ class NestedTabs extends Widget_Nested_Base {
 				'selector' => "{$heading_selector} > .e-n-tab-title[aria-selected=\"false\"]:not( :hover )",
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Border Color', 'elementor' ),
+						'label' => esc_html__( 'Border Color', 'refraction' ),
 					],
 					'width' => [
-						'label' => esc_html__( 'Border Width', 'elementor' ),
+						'label' => esc_html__( 'Border Width', 'refraction' ),
 					],
 				],
 			]
@@ -547,7 +547,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'tabs_title_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -566,7 +566,7 @@ class NestedTabs extends Widget_Nested_Base {
 						'global' => [
 							'default' => Global_Colors::COLOR_ACCENT,
 						],
-						'label' => esc_html__( 'Background Color', 'elementor' ),
+						'label' => esc_html__( 'Background Color', 'refraction' ),
 						'selectors' => [
 							'{{SELECTOR}}' => 'background: {{VALUE}};',
 						],
@@ -582,10 +582,10 @@ class NestedTabs extends Widget_Nested_Base {
 				'selector' => "{$heading_selector_non_touch_device} > .e-n-tab-title[aria-selected=\"false\"]:hover",
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Border Color', 'elementor' ),
+						'label' => esc_html__( 'Border Color', 'refraction' ),
 					],
 					'width' => [
-						'label' => esc_html__( 'Border Width', 'elementor' ),
+						'label' => esc_html__( 'Border Width', 'refraction' ),
 					],
 				],
 			]
@@ -603,7 +603,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->add_control(
 			'hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 			]
 		);
@@ -611,7 +611,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->add_control(
 			'tabs_title_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'selectors' => [
 					'{{WRAPPER}}' => '--n-tabs-title-transition: {{SIZE}}s',
@@ -631,7 +631,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'tabs_title_active',
 			[
-				'label' => esc_html__( 'Active', 'elementor' ),
+				'label' => esc_html__( 'Active', 'refraction' ),
 			]
 		);
 
@@ -650,7 +650,7 @@ class NestedTabs extends Widget_Nested_Base {
 						'global' => [
 							'default' => Global_Colors::COLOR_ACCENT,
 						],
-						'label' => esc_html__( 'Background Color', 'elementor' ),
+						'label' => esc_html__( 'Background Color', 'refraction' ),
 						'selectors' => [
 							'{{SELECTOR}}' => 'background: {{VALUE}};',
 						],
@@ -666,10 +666,10 @@ class NestedTabs extends Widget_Nested_Base {
 				'selector' => "{$heading_selector} > .e-n-tab-title[aria-selected=\"true\"], {$heading_selector_touch_device} > .e-n-tab-title[aria-selected=\"false\"]:hover",
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Border Color', 'elementor' ),
+						'label' => esc_html__( 'Border Color', 'refraction' ),
 					],
 					'width' => [
-						'label' => esc_html__( 'Border Width', 'elementor' ),
+						'label' => esc_html__( 'Border Width', 'refraction' ),
 					],
 				],
 			]
@@ -690,7 +690,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'tabs_title_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'separator' => 'before',
@@ -703,7 +703,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -715,7 +715,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_title_style', [
-			'label' => esc_html__( 'Titles', 'elementor' ),
+			'label' => esc_html__( 'Titles', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
 		] );
 
@@ -739,14 +739,14 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'title_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title_text_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}}' => '--n-tabs-title-color: {{VALUE}}',
@@ -775,14 +775,14 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'title_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title_text_color_hover',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} [data-touch-mode="false"] .e-n-tab-title[aria-selected="false"]:hover' => '--n-tabs-title-color-hover: {{VALUE}}',
@@ -811,14 +811,14 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'title_active',
 			[
-				'label' => esc_html__( 'Active', 'elementor' ),
+				'label' => esc_html__( 'Active', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title_text_color_active',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}}' => '--n-tabs-title-color-active: {{VALUE}}',
@@ -849,7 +849,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'icon_section_style', [
-			'label' => esc_html__( 'Icon', 'elementor' ),
+			'label' => esc_html__( 'Icon', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
 		] );
 
@@ -859,23 +859,23 @@ class NestedTabs extends Widget_Nested_Base {
 		$styling_inline_end = '--n-tabs-title-direction: row; --n-tabs-icon-order: 1; --n-tabs-title-justify-content-toggle: initial; --n-tabs-title-align-items-toggle: center;';
 
 		$this->add_responsive_control( 'icon_position', [
-			'label' => esc_html__( 'Position', 'elementor' ),
+			'label' => esc_html__( 'Position', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'block-start' => [
-					'title' => esc_html__( 'Above', 'elementor' ),
+					'title' => esc_html__( 'Above', 'refraction' ),
 					'icon' => 'eicon-v-align-top',
 				],
 				'inline-end' => [
-					'title' => esc_html__( 'After', 'elementor' ),
+					'title' => esc_html__( 'After', 'refraction' ),
 					'icon' => 'eicon-h-align-' . $end,
 				],
 				'block-end' => [
-					'title' => esc_html__( 'Below', 'elementor' ),
+					'title' => esc_html__( 'Below', 'refraction' ),
 					'icon' => 'eicon-v-align-bottom',
 				],
 				'inline-start' => [
-					'title' => esc_html__( 'Before', 'elementor' ),
+					'title' => esc_html__( 'Before', 'refraction' ),
 					'icon' => 'eicon-h-align-' . $start,
 				],
 			],
@@ -897,7 +897,7 @@ class NestedTabs extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'icon_size', [
-			'label' => esc_html__( 'Size', 'elementor' ),
+			'label' => esc_html__( 'Size', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [
 				'px' => [
@@ -917,7 +917,7 @@ class NestedTabs extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'icon_spacing', [
-			'label' => esc_html__( 'Spacing', 'elementor' ),
+			'label' => esc_html__( 'Spacing', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [
 				'px' => [
@@ -939,12 +939,12 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'icon_section_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control( 'icon_color', [
-			'label' => esc_html__( 'Color', 'elementor' ),
+			'label' => esc_html__( 'Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [
 				'{{WRAPPER}}' => '--n-tabs-icon-color: {{VALUE}};',
@@ -956,12 +956,12 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'icon_section_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control( 'icon_color_hover', [
-			'label' => esc_html__( 'Color', 'elementor' ),
+			'label' => esc_html__( 'Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [
 				'{{WRAPPER}} [data-touch-mode="false"] .e-n-tab-title[aria-selected="false"]:hover' => '--n-tabs-icon-color-hover: {{VALUE}};',
@@ -973,12 +973,12 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->start_controls_tab(
 			'icon_section_active',
 			[
-				'label' => esc_html__( 'Active', 'elementor' ),
+				'label' => esc_html__( 'Active', 'refraction' ),
 			]
 		);
 
 		$this->add_control( 'icon_color_active', [
-			'label' => esc_html__( 'Color', 'elementor' ),
+			'label' => esc_html__( 'Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [
 				'{{WRAPPER}}' => '--n-tabs-icon-color-active: {{VALUE}};',
@@ -992,7 +992,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_box_style', [
-			'label' => esc_html__( 'Content', 'elementor' ),
+			'label' => esc_html__( 'Content', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
 		] );
 
@@ -1005,7 +1005,7 @@ class NestedTabs extends Widget_Nested_Base {
 				'selector' => $content_selector,
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Background Color', 'elementor' ),
+						'label' => esc_html__( 'Background Color', 'refraction' ),
 					],
 				],
 			]
@@ -1018,10 +1018,10 @@ class NestedTabs extends Widget_Nested_Base {
 				'selector' => $content_selector,
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Border Color', 'elementor' ),
+						'label' => esc_html__( 'Border Color', 'refraction' ),
 					],
 					'width' => [
-						'label' => esc_html__( 'Border Width', 'elementor' ),
+						'label' => esc_html__( 'Border Width', 'refraction' ),
 					],
 				],
 			]
@@ -1030,7 +1030,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'box_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -1053,7 +1053,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'box_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -1071,7 +1071,7 @@ class NestedTabs extends Widget_Nested_Base {
 		$css_classes = [ 'e-n-tab-title' ];
 
 		if ( $item_settings['settings']['hover_animation'] ) {
-			$css_classes[] = 'elementor-animation-' . $item_settings['settings']['hover_animation'];
+			$css_classes[] = 'refraction-animation-' . $item_settings['settings']['hover_animation'];
 		}
 
 		$this->add_render_attribute( $setting_key, [
@@ -1144,11 +1144,11 @@ class NestedTabs extends Widget_Nested_Base {
 			return $should_render;
 		};
 
-		add_filter( 'elementor/frontend/container/should_render', $add_attribute_to_container, 10, 3 );
+		add_filter( 'refraction/frontend/container/should_render', $add_attribute_to_container, 10, 3 );
 		if ( isset( $children[ $index ] ) ) {
 			$children[ $index ]->print_element();
 		}
-		remove_filter( 'elementor/frontend/container/should_render', $add_attribute_to_container );
+		remove_filter( 'refraction/frontend/container/should_render', $add_attribute_to_container );
 	}
 
 	protected function add_attributes_to_container( $container, $item_settings ) {
@@ -1167,20 +1167,20 @@ class NestedTabs extends Widget_Nested_Base {
 		$widget_number = $this->get_id_int();
 
 		if ( ! empty( $settings['link'] ) ) {
-			$this->add_link_attributes( 'elementor-tabs', $settings['link'] );
+			$this->add_link_attributes( 'refraction-tabs', $settings['link'] );
 		}
 
-		$this->add_render_attribute( 'elementor-tabs', [
+		$this->add_render_attribute( 'refraction-tabs', [
 			'class' => 'e-n-tabs',
 			'data-widget-number' => $widget_number,
-			'aria-label' => esc_html__( 'Tabs. Open items with Enter or Space, close with Escape and navigate using the Arrow keys.', 'elementor' ),
+			'aria-label' => esc_html__( 'Tabs. Open items with Enter or Space, close with Escape and navigate using the Arrow keys.', 'refraction' ),
 		] );
 
 		$this->add_render_attribute( 'tab-title-text', 'class', 'e-n-tab-title-text' );
 		$this->add_render_attribute( 'tab-icon', 'class', 'e-n-tab-icon' );
 		$this->add_render_attribute( 'tab-icon-active', 'class', [ 'e-n-tab-icon' ] );
 		?>
-		<div <?php $this->print_render_attribute_string( 'elementor-tabs' ); ?>>
+		<div <?php $this->print_render_attribute_string( 'refraction-tabs' ); ?>>
 			<div class="e-n-tabs-heading" role="tablist">
 			<?php
 			foreach ( $settings['tabs'] as $index => $item ) {
@@ -1230,7 +1230,7 @@ class NestedTabs extends Widget_Nested_Base {
 			item = data,
 			hoverAnimationSetting = view?.container?.settings?.attributes?.hover_animation;
 			hoverAnimationClass = hoverAnimationSetting
-				? `elementor-animation-${ hoverAnimationSetting }`
+				? `refraction-animation-${ hoverAnimationSetting }`
 				: '';
 		#>
 		<?php $this->content_template_single_item( '{{ tabIndex }}', '{{ item }}', '{{ elementUid }}', '{{ hoverAnimationClass }}' );
@@ -1239,14 +1239,14 @@ class NestedTabs extends Widget_Nested_Base {
 	protected function content_template() {
 		?>
 		<# const elementUid = view.getIDInt().toString(); #>
-		<div class="e-n-tabs" data-widget-number="{{ elementUid }}" aria-label="<?php echo esc_html__( 'Tabs. Open items with Enter or Space, close with Escape and navigate using the Arrow keys.', 'elementor' ); ?>">
+		<div class="e-n-tabs" data-widget-number="{{ elementUid }}" aria-label="<?php echo esc_html__( 'Tabs. Open items with Enter or Space, close with Escape and navigate using the Arrow keys.', 'refraction' ); ?>">
 			<# if ( settings['tabs'] ) { #>
 			<div class="e-n-tabs-heading" role="tablist">
 				<# _.each( settings['tabs'], function( item, index ) {
 					const tabIndex = index,
 						hoverAnimationSetting = settings['hover_animation'],
 						hoverAnimationClass = hoverAnimationSetting
-							? `elementor-animation-${ hoverAnimationSetting }`
+							? `refraction-animation-${ hoverAnimationSetting }`
 							: '';
 				#>
 				<?php $this->content_template_single_item( '{{ tabIndex }}', '{{ item }}', '{{ elementUid }}', '{{ hoverAnimationClass }}' ); ?>
@@ -1267,9 +1267,9 @@ class NestedTabs extends Widget_Nested_Base {
 				? item.element_id
 				: tabTitleId,
 			tabUid = elementUid + tabCount,
-			tabIcon = elementor.helpers.renderIcon( view, item.tab_icon, { 'aria-hidden': true }, 'i' , 'object' ),
+			tabIcon = refraction.helpers.renderIcon( view, item.tab_icon, { 'aria-hidden': true }, 'i' , 'object' ),
 			activeTabIcon = item.tab_icon_active.value
-				? elementor.helpers.renderIcon( view, item.tab_icon_active, { 'aria-hidden': true }, 'i' , 'object' )
+				? refraction.helpers.renderIcon( view, item.tab_icon_active, { 'aria-hidden': true }, 'i' , 'object' )
 				: tabIcon,
 			escapedHoverAnimationClass = _.escape( hoverAnimationClass );
 

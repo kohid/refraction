@@ -3,24 +3,24 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
-} from '@elementor/editor-documents';
-import { SaveChangesDialog, ThemeProvider, useDialog } from '@elementor/editor-ui';
+} from '@refraction/editor-documents';
+import { SaveChangesDialog, ThemeProvider, useDialog } from '@refraction/editor-ui';
 import {
 	__privateListenTo as listenTo,
 	__privateOpenRoute as openRoute,
 	routeOpenEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { usePanelActions, usePanelStatus } from '../design-system-panel';
 import { type DesignSystemTab, getActiveDesignSystemTab, setPendingDesignSystemTab } from '../initial-tab';
 
 const V1_ELEMENTS_PANEL_ROUTE = 'panel/elements/categories';
-const EVENT_OPEN_DEFAULTS = 'elementor/open-default-styles';
-const EVENT_OPEN_VARIABLES = 'elementor/open-variables-manager';
-const EVENT_OPEN_CLASSES = 'elementor/open-global-classes-manager';
-const EVENT_TOGGLE = 'elementor/toggle-design-system';
-const EVENT_SET_TAB = 'elementor/design-system/set-tab';
+const EVENT_OPEN_DEFAULTS = 'refraction/open-default-styles';
+const EVENT_OPEN_VARIABLES = 'refraction/open-variables-manager';
+const EVENT_OPEN_CLASSES = 'refraction/open-global-classes-manager';
+const EVENT_TOGGLE = 'refraction/toggle-design-system';
+const EVENT_SET_TAB = 'refraction/design-system/set-tab';
 
 const ACTIVE_PANEL_PARAM = 'active-panel';
 const PANEL_ID = 'design-system';
@@ -204,23 +204,23 @@ export function DesignSystemEntrypoints() {
 	return isSaveDialogOpen ? (
 		<ThemeProvider>
 			<SaveChangesDialog>
-				<SaveChangesDialog.Title>{ __( 'You have unsaved changes', 'elementor' ) }</SaveChangesDialog.Title>
+				<SaveChangesDialog.Title>{ __( 'You have unsaved changes', 'refraction' ) }</SaveChangesDialog.Title>
 				<SaveChangesDialog.Content>
 					<SaveChangesDialog.ContentText sx={ { mb: 2 } }>
 						{ __(
 							"To open the Design System, save your page first. You can't continue without saving.",
-							'elementor'
+							'refraction'
 						) }
 					</SaveChangesDialog.ContentText>
 				</SaveChangesDialog.Content>
 				<SaveChangesDialog.Actions
 					actions={ {
 						cancel: {
-							label: __( 'Stay here', 'elementor' ),
+							label: __( 'Stay here', 'refraction' ),
 							action: handleStayHere,
 						},
 						confirm: {
-							label: __( 'Save & Continue', 'elementor' ),
+							label: __( 'Save & Continue', 'refraction' ),
 							action: handleSaveAndContinue,
 						},
 					} }

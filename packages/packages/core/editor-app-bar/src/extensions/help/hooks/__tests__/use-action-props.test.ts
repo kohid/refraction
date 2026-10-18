@@ -5,7 +5,7 @@ import useActionProps from '../use-action-props';
 const mockIsAngieAvailable = jest.fn();
 const mockOpenAngieInAskMode = jest.fn();
 
-jest.mock( '@elementor/editor-mcp', () => ( {
+jest.mock( '@refraction/editor-mcp', () => ( {
 	isAngieAvailable: () => mockIsAngieAvailable(),
 	openAngieInAskMode: ( ...args: unknown[] ) => mockOpenAngieInAskMode( ...args ),
 } ) );
@@ -17,7 +17,7 @@ describe( 'useHelpCenterActionProps', () => {
 		mockIsAngieAvailable.mockReset();
 		mockOpenAngieInAskMode.mockReset();
 		mockDispatchEvent = jest.fn();
-		window.elementorCommon = {
+		window.refractionCommon = {
 			eventsManager: {
 				dispatchEvent: mockDispatchEvent,
 				config: {
@@ -40,7 +40,7 @@ describe( 'useHelpCenterActionProps', () => {
 					},
 				},
 			},
-		} as unknown as typeof window.elementorCommon;
+		} as unknown as typeof window.refractionCommon;
 	} );
 
 	it( 'returns an external link when Angie is inactive', () => {

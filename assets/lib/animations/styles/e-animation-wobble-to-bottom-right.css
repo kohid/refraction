@@ -1,4 +1,4 @@
-@keyframes elementor-animation-wobble-to-bottom-right {
+@keyframes refraction-animation-wobble-to-bottom-right {
 	16.65% {
 		transform: translate(8px, 8px);
 	}
@@ -18,10 +18,10 @@
 		transform: translate(0, 0);
 	}
 }
-.elementor-animation-wobble-to-bottom-right:active,
-.elementor-animation-wobble-to-bottom-right:focus,
-.elementor-animation-wobble-to-bottom-right:hover {
-	animation-name: elementor-animation-wobble-to-bottom-right;
+.refraction-animation-wobble-to-bottom-right:active,
+.refraction-animation-wobble-to-bottom-right:focus,
+.refraction-animation-wobble-to-bottom-right:hover {
+	animation-name: refraction-animation-wobble-to-bottom-right;
 	animation-duration: 1s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: 1;

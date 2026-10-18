@@ -1,4 +1,4 @@
-import { __createAsyncThunk as createAsyncThunk } from '@elementor/store';
+import { __createAsyncThunk as createAsyncThunk } from '@refraction/store';
 
 import { apiClient } from '../api';
 

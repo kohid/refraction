@@ -7,7 +7,7 @@ module.exports = Marionette.Region.extend( {
 	constructor() {
 		Marionette.Region.prototype.constructor.apply( this, arguments );
 
-		var savedStorage = elementorCommon.storage.get( this.getStorageKey() );
+		var savedStorage = refractionCommon.storage.get( this.getStorageKey() );
 
 		this.storage = savedStorage ? savedStorage : this.getDefaultStorage();
 
@@ -17,12 +17,12 @@ module.exports = Marionette.Region.extend( {
 	saveStorage( key, value ) {
 		this.storage[ key ] = value;
 
-		elementorCommon.storage.set( this.getStorageKey(), this.storage );
+		refractionCommon.storage.set( this.getStorageKey(), this.storage );
 	},
 
 	saveSize( size ) {
 		if ( ! size ) {
-			size = elementor.helpers.getElementInlineStyle( this.$el, this.storageSizeKeys );
+			size = refraction.helpers.getElementInlineStyle( this.$el, this.storageSizeKeys );
 		}
 
 		this.saveStorage( 'size', size );

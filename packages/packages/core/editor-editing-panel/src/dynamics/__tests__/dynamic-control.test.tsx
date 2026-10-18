@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { DynamicControl } from '../dynamic-control';
@@ -14,7 +14,7 @@ describe( '<DynamicControl />', () => {
 	beforeEach( () => {
 		jest.mocked( useAllPropDynamicTags ).mockReturnValue( [
 			{
-				meta: { origin: 'elementor', required_license: 'dynamic-tags' },
+				meta: { origin: 'refraction', required_license: 'dynamic-tags' },
 				name: 'author-info',
 				categories: [ 'text' ],
 				label: 'Author Info',

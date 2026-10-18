@@ -6,7 +6,7 @@ export function createGetInitialState( exportGroup, additionalProps = {} ) {
 		if ( isImport ) {
 			isEnabled = false;
 			const templates = data.uploadedData.manifest.templates;
-			const exportGroups = elementorAppConfig?.[ 'import-export-customization' ]?.exportGroups || {};
+			const exportGroups = refractionAppConfig?.[ 'import-export-customization' ]?.exportGroups || {};
 
 			for ( const templateId in templates ) {
 				const template = templates[ templateId ];

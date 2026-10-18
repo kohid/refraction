@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { createMockPropType, renderWithTheme } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
-import { dimensionsPropTypeUtil, sizePropTypeUtil } from '@elementor/editor-props';
-import { getStylesSchema } from '@elementor/editor-styles';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { useBoundProp } from '@refraction/editor-controls';
+import { dimensionsPropTypeUtil, sizePropTypeUtil } from '@refraction/editor-props';
+import { getStylesSchema } from '@refraction/editor-styles';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useStylesFields } from '../../hooks/use-styles-fields';
 import { StylesField } from '../styles-field';
 
-jest.mock( '@elementor/editor-styles' );
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-styles' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mock( '../../hooks/use-styles-fields' );
 jest.mock( '../../contexts/style-context', () => ( {
 	useStyle: jest.fn().mockReturnValue( { canEdit: true } ),

@@ -14,7 +14,7 @@ describe( `$e.run( 'editor/documents/close' ) -- RemoveActiveTabQueryParam`, () 
 			},
 		};
 
-		const HookClass = ( await import( 'elementor-editor/components/documents/hooks/ui/close/remove-active-tab-query-param' ) ).RemoveActiveTabQueryParam;
+		const HookClass = ( await import( 'refraction-editor/components/documents/hooks/ui/close/remove-active-tab-query-param' ) ).RemoveActiveTabQueryParam;
 
 		RemoveActiveTabQueryParam = new HookClass();
 	} );

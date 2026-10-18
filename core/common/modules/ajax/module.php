@@ -1,26 +1,26 @@
 <?php
-namespace Elementor\Core\Common\Modules\Ajax;
+namespace Refraction\Core\Common\Modules\Ajax;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor ajax manager.
+ * Refraction ajax manager.
  *
- * Elementor ajax manager handler class is responsible for handling Elementor
+ * Refraction ajax manager handler class is responsible for handling Refraction
  * ajax requests, ajax responses and registering actions applied on them.
  *
  * @since 2.0.0
  */
 class Module extends BaseModule {
 
-	const NONCE_KEY = 'elementor_ajax';
+	const NONCE_KEY = 'refraction_ajax';
 
 	/**
 	 * Ajax actions.
@@ -73,13 +73,13 @@ class Module extends BaseModule {
 	/**
 	 * Ajax manager constructor.
 	 *
-	 * Initializing Elementor ajax manager.
+	 * Initializing Refraction ajax manager.
 	 *
 	 * @since 2.0.0
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_elementor_ajax', [ $this, 'handle_ajax_request' ] );
+		add_action( 'wp_ajax_refraction_ajax', [ $this, 'handle_ajax_request' ] );
 	}
 
 	/**
@@ -109,8 +109,8 @@ class Module extends BaseModule {
 	 * @param callable $callback The callback function.
 	 */
 	public function register_ajax_action( $tag, $callback ) {
-		if ( ! did_action( 'elementor/ajax/register_actions' ) ) {
-			_doing_it_wrong( __METHOD__, esc_html( sprintf( 'Use `%s` hook to register ajax action.', 'elementor/ajax/register_actions' ) ), '2.0.0' );
+		if ( ! did_action( 'refraction/ajax/register_actions' ) ) {
+			_doing_it_wrong( __METHOD__, esc_html( sprintf( 'Use `%s` hook to register ajax action.', 'refraction/ajax/register_actions' ) ), '2.0.0' );
 		}
 
 		$this->ajax_actions[ $tag ] = compact( 'tag', 'callback' );
@@ -121,14 +121,14 @@ class Module extends BaseModule {
 	 *
 	 * Verify ajax nonce, and run all the registered actions for this request.
 	 *
-	 * Fired by `wp_ajax_elementor_ajax` action.
+	 * Fired by `wp_ajax_refraction_ajax` action.
 	 *
 	 * @since 2.0.0
 	 * @access public
 	 */
 	public function handle_ajax_request() {
 		if ( ! $this->verify_request_nonce() ) {
-			$this->add_response_data( false, esc_html__( 'Token Expired.', 'elementor' ) )
+			$this->add_response_data( false, esc_html__( 'Token Expired.', 'refraction' ) )
 				->send_error( Exceptions::UNAUTHORIZED );
 		}
 
@@ -151,7 +151,7 @@ class Module extends BaseModule {
 		 *
 		 * @param self $this An instance of ajax manager.
 		 */
-		do_action( 'elementor/ajax/register_actions', $this );
+		do_action( 'refraction/ajax/register_actions', $this );
 
 		if ( ! empty( $_REQUEST['actions'] ) ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, each action should sanitize its own data.
@@ -162,7 +162,7 @@ class Module extends BaseModule {
 			$this->current_action_id = $id;
 
 			if ( ! isset( $this->ajax_actions[ $action_data['action'] ] ) ) {
-				$this->add_response_data( false, esc_html__( 'Action not found.', 'elementor' ), Exceptions::BAD_REQUEST );
+				$this->add_response_data( false, esc_html__( 'Action not found.', 'refraction' ), Exceptions::BAD_REQUEST );
 
 				continue;
 			}
@@ -212,7 +212,7 @@ class Module extends BaseModule {
 	 * Create nonce.
 	 *
 	 * Creates a cryptographic token to
-	 * give the user an access to Elementor ajax actions.
+	 * give the user an access to Refraction ajax actions.
 	 *
 	 * @since 2.3.0
 	 * @access public

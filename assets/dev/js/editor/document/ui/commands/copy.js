@@ -1,6 +1,6 @@
 export class Copy extends $e.modules.CommandBase {
 	apply() {
-		const selectedElements = elementor.selection.getElements();
+		const selectedElements = refraction.selection.getElements();
 
 		if ( selectedElements.length ) {
 			return $e.run( 'document/elements/copy', {

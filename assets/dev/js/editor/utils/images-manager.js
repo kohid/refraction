@@ -31,17 +31,17 @@ ImagesManager = function() {
 	var viewsToUpdate = {};
 
 	self.updateOnReceiveImage = function() {
-		var elementView = elementor.getPanelView().getCurrentPageView().getOption( 'editedElementView' );
+		var elementView = refraction.getPanelView().getCurrentPageView().getOption( 'editedElementView' );
 
-		elementView.$el.addClass( 'elementor-loading' );
+		elementView.$el.addClass( 'refraction-loading' );
 		// Add per cid for multiple images in a single view.
 		viewsToUpdate[ elementView.cid ] = elementView;
 
-		elementor.channels.editor.once( 'imagesManager:detailsReceived', function() {
+		refraction.channels.editor.once( 'imagesManager:detailsReceived', function() {
 			if ( ! _.isEmpty( viewsToUpdate ) ) {
 				_( viewsToUpdate ).each( function( view ) {
 					view.render();
-					view.$el.removeClass( 'elementor-loading' );
+					view.$el.removeClass( 'refraction-loading' );
 				} );
 			}
 			viewsToUpdate = {};
@@ -127,7 +127,7 @@ ImagesManager = function() {
 			} );
 		}
 
-		elementorCommon.ajax.send(
+		refractionCommon.ajax.send(
 			'get_images_details', {
 				data: {
 					items: requestedItems,
@@ -147,7 +147,7 @@ ImagesManager = function() {
 					}
 					registeredItems = [];
 
-					elementor.channels.editor.trigger( 'imagesManager:detailsReceived', data );
+					refraction.channels.editor.trigger( 'imagesManager:detailsReceived', data );
 				},
 			},
 		);

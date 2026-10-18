@@ -1,9 +1,9 @@
-import type { DropShadowFilterPropValue, PropType, SizePropValue, UnionPropType } from '@elementor/editor-props';
+import type { DropShadowFilterPropValue, PropType, SizePropValue, UnionPropType } from '@refraction/editor-props';
 import { __ } from '@wordpress/i18n';
 
 import { type FilterFunction, type FilterFunctionGroup, FILTERS_BY_GROUP } from './configs';
 
-const AMOUNT_VALUE_NAME = __( 'Amount', 'elementor' );
+const AMOUNT_VALUE_NAME = __( 'Amount', 'refraction' );
 
 type SingleArgFilterFuncPropType = PropType & {
 	shape: {

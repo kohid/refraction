@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 
-import { arrayToObjectByKey } from 'elementor-app/utils/utils.js';
+import { arrayToObjectByKey } from 'refraction-app/utils/utils.js';
 
 import { PLUGIN_STATUS_MAP } from '../../../../hooks/use-plugins';
 
 const MISSING_PLUGINS_KEY = 'missing',
 	EXISTING_PLUGINS_KEY = 'existing',
-	ELEMENTOR_PRO_PLUGIN_KEY = 'Elementor Pro';
+	REFRACTION_PRO_PLUGIN_KEY = 'Refraction Pro';
 
 export default function useImportPluginsData( pluginsToInstall, existingPlugins ) {
 	const getIsMinVersionExist = ( installedPluginVersion, kitPluginVersion ) => installedPluginVersion.localeCompare( kitPluginVersion ) > -1,
@@ -30,7 +30,7 @@ export default function useImportPluginsData( pluginsToInstall, existingPlugins 
 				}
 
 				// In case that the Pro plugin exist saving the data separately for easily knowing if the pro exist or not.
-				if ( ELEMENTOR_PRO_PLUGIN_KEY === pluginData.name ) {
+				if ( REFRACTION_PRO_PLUGIN_KEY === pluginData.name ) {
 					data.proData = pluginData;
 				}
 

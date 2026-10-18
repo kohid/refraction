@@ -14,7 +14,7 @@ export const DuplicateItemAction = () => {
 		return null;
 	}
 
-	const duplicateLabel = __( 'Duplicate', 'elementor' );
+	const duplicateLabel = __( 'Duplicate', 'refraction' );
 	const item = items[ index ]?.item;
 
 	const onClick = ( ev: React.MouseEvent ) => {

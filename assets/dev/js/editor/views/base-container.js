@@ -1,9 +1,9 @@
-import ContainerHelper from 'elementor-editor-utils/container-helper';
-import { cloneElementTree } from 'elementor/packages/packages/libs/editor-elements/src/sync/clone-element-tree';
-import { isCompoundAtomicType } from 'elementor-editor/utils/element-types';
+import ContainerHelper from 'refraction-editor-utils/container-helper';
+import { cloneElementTree } from 'refraction/packages/packages/libs/editor-elements/src/sync/clone-element-tree';
+import { isCompoundAtomicType } from 'refraction-editor/utils/element-types';
 
 /**
- * @typedef {import('elementor/assets/lib/backbone/backbone.marionette')} Marionette
+ * @typedef {import('refraction/assets/lib/backbone/backbone.marionette')} Marionette
  * @name BaseContainer
  * @augments {Marionette.CompositeView}
  */
@@ -80,7 +80,7 @@ module.exports = Marionette.CompositeView.extend( {
 			elType = newItem.get( 'elType' );
 		} else {
 			newItem = {
-				id: elementorCommon.helpers.getUniqueId(),
+				id: refractionCommon.helpers.getUniqueId(),
 				elType: childTypes[ 0 ],
 				settings: {},
 				elements: [],
@@ -105,7 +105,7 @@ module.exports = Marionette.CompositeView.extend( {
 		}
 
 		if ( options.trigger ) {
-			elementor.channels.data.trigger( options.trigger.beforeAdd, newItem );
+			refraction.channels.data.trigger( options.trigger.beforeAdd, newItem );
 		}
 
 		if ( options.onBeforeAdd ) {
@@ -124,10 +124,10 @@ module.exports = Marionette.CompositeView.extend( {
 		}
 
 		if ( options.trigger ) {
-			elementor.channels.data.trigger( options.trigger.afterAdd, newItem );
+			refraction.channels.data.trigger( options.trigger.afterAdd, newItem );
 		}
 
-		if ( options.edit && elementor.documents.getCurrent().history.getActive() ) {
+		if ( options.edit && refraction.documents.getCurrent().history.getActive() ) {
 			// Ensure container is created. TODO: Open editor via UI hook after `document/elements/create`.
 			newView.getContainer();
 			newView._openEditingPanel( options );
@@ -149,7 +149,7 @@ module.exports = Marionette.CompositeView.extend( {
 			model = model.toJSON();
 		}
 
-		if ( elementor.helpers.maybeDisableWidget( model.widgetType ) ) {
+		if ( refraction.helpers.maybeDisableWidget( model.widgetType ) ) {
 			return;
 		}
 
@@ -171,7 +171,7 @@ module.exports = Marionette.CompositeView.extend( {
 		if ( useHistory ) {
 			historyId = $e.internal( 'document/history/start-log', {
 				type: this.getHistoryType( options.event ),
-				title: elementor.helpers.getModelLabel( model ),
+				title: refraction.helpers.getModelLabel( model ),
 			} );
 		}
 
@@ -196,7 +196,7 @@ module.exports = Marionette.CompositeView.extend( {
 	},
 
 	getWrappingContainer( container, model, settings ) {
-		const isAtomic = elementor.helpers.isAtomicWidget( model ) || isCompoundAtomicType( model.elType );
+		const isAtomic = refraction.helpers.isAtomicWidget( model ) || isCompoundAtomicType( model.elType );
 		const options = { at: settings.at, scrollIntoView: settings.scrollIntoView, useHistory: settings?.useHistory ?? true };
 
 		if ( isAtomic ) {
@@ -211,7 +211,7 @@ module.exports = Marionette.CompositeView.extend( {
 	},
 
 	getV3Container( container, options ) {
-		const isContainerExperimentActive = elementorCommon.config.experimentalFeatures.container;
+		const isContainerExperimentActive = refractionCommon.config.experimentalFeatures.container;
 
 		container = ContainerHelper.createContainerFromModel(
 			{ elType: isContainerExperimentActive ? 'container' : 'section' },
@@ -244,7 +244,7 @@ module.exports = Marionette.CompositeView.extend( {
 		const args = {};
 
 		args.model = Object.fromEntries(
-			Object.entries( elementor.channels.panelElements.request( 'element:selected' )?.model.attributes )
+			Object.entries( refraction.channels.panelElements.request( 'element:selected' )?.model.attributes )
 				// The `custom` property is responsible for storing global-widgets related data.
 				.filter( ( [ key ] ) => [ 'elType', 'widgetType', 'custom', 'editor_settings' ].includes( key ) ),
 		);
@@ -254,12 +254,12 @@ module.exports = Marionette.CompositeView.extend( {
 
 		$e.run( 'preview/drop', args );
 
-		if ( elementorCommon?.eventsManager?.dispatchEvent && args?.model ) {
+		if ( refractionCommon?.eventsManager?.dispatchEvent && args?.model ) {
 			const elType = args.model?.elType ?? '';
 			const widgetType = args.model?.widgetType ?? '';
 			const elementName = 'widget' === elType ? widgetType : elType;
 
-			elementorCommon.eventsManager.dispatchEvent( 'add_element', {
+			refractionCommon.eventsManager.dispatchEvent( 'add_element', {
 				location: 'editor_panel',
 				element_name: elementName,
 				element_type: elType,
@@ -311,9 +311,9 @@ module.exports = Marionette.CompositeView.extend( {
 /**
  * Source: https://marionettejs.com/docs/v2.4.5/marionette.collectionview.html#collectionviews-buildchildview
  *
- * Since Elementor created custom container(bridge) between view, model, settings, children, parent and so on,
+ * Since Refraction created custom container(bridge) between view, model, settings, children, parent and so on,
  * the container requires the parent view for proper work, but in 'marionettejs', the parent view is not available
- * during the `buildChildView` method, but actually exist, Elementor modified the `buildChildView` method to
+ * during the `buildChildView` method, but actually exist, Refraction modified the `buildChildView` method to
  * set the parent view as a property `_parent` of the child view.
  * Anyways later, the `_parent` property is set by: 'marionettejs' to same view.
  */
@@ -325,7 +325,7 @@ Marionette.CollectionView.prototype.buildChildView = function( child, ChildViewC
 	const options = _.extend( { model: child }, childViewOptions ),
 		childView = new ChildViewClass( options );
 
-	// `ELEMENTOR EDITING`: Fix `_parent` not available on render.
+	// `REFRACTION EDITING`: Fix `_parent` not available on render.
 	childView._parent = this;
 
 	Marionette.MonitorDOMRefresh( childView );

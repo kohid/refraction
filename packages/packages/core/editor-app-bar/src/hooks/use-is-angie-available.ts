@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { isAngieAvailable } from '@elementor/editor-mcp';
+import { isAngieAvailable } from '@refraction/editor-mcp';
 
 export function useIsAngieAvailable(): boolean {
 	const [ available, setAvailable ] = useState( () => isAngieAvailable() );

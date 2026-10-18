@@ -1,15 +1,15 @@
-var TemplateLibraryHeaderActionsView = require( 'elementor-templates/views/parts/header-parts/actions' ),
-	TemplateLibraryHeaderMenuView = require( 'elementor-templates/views/parts/header-parts/menu' ),
-	TemplateLibraryHeaderPreviewView = require( 'elementor-templates/views/parts/header-parts/preview' ),
-	TemplateLibraryHeaderBackView = require( 'elementor-templates/views/parts/header-parts/back' ),
-	TemplateLibraryCollectionView = require( 'elementor-templates/views/parts/templates' ),
-	TemplateLibrarySaveTemplateView = require( 'elementor-templates/views/parts/save-template' ),
-	TemplateLibrarySaveTemplateVariantBView = require( 'elementor-templates/views/parts/save-template-variant-b' ),
-	TemplateLibraryImportView = require( 'elementor-templates/views/parts/import' ),
-	TemplateLibraryConnectView = require( 'elementor-templates/views/parts/connect' ),
-	TemplateLibraryCloudStateView = require( 'elementor-templates/views/parts/cloud-states' ),
-	TemplateLibraryPreviewView = require( 'elementor-templates/views/parts/preview' ),
-	TemplateLibraryNavigationContainerView = require( 'elementor-templates/views/parts/navigation-container' );
+var TemplateLibraryHeaderActionsView = require( 'refraction-templates/views/parts/header-parts/actions' ),
+	TemplateLibraryHeaderMenuView = require( 'refraction-templates/views/parts/header-parts/menu' ),
+	TemplateLibraryHeaderPreviewView = require( 'refraction-templates/views/parts/header-parts/preview' ),
+	TemplateLibraryHeaderBackView = require( 'refraction-templates/views/parts/header-parts/back' ),
+	TemplateLibraryCollectionView = require( 'refraction-templates/views/parts/templates' ),
+	TemplateLibrarySaveTemplateView = require( 'refraction-templates/views/parts/save-template' ),
+	TemplateLibrarySaveTemplateVariantBView = require( 'refraction-templates/views/parts/save-template-variant-b' ),
+	TemplateLibraryImportView = require( 'refraction-templates/views/parts/import' ),
+	TemplateLibraryConnectView = require( 'refraction-templates/views/parts/connect' ),
+	TemplateLibraryCloudStateView = require( 'refraction-templates/views/parts/cloud-states' ),
+	TemplateLibraryPreviewView = require( 'refraction-templates/views/parts/preview' ),
+	TemplateLibraryNavigationContainerView = require( 'refraction-templates/views/parts/navigation-container' );
 
 import { SAVE_CONTEXTS } from './../constants';
 
@@ -24,23 +24,23 @@ function resolveSaveTemplateByVariant( variant ) {
 	}
 }
 
-module.exports = elementorModules.common.views.modal.Layout.extend( {
+module.exports = refractionModules.common.views.modal.Layout.extend( {
 	getModalOptions() {
-		const allowClosingModal = window?.elementor?.config?.document?.panel?.allow_closing_remote_library ?? true;
+		const allowClosingModal = window?.refraction?.config?.document?.panel?.allow_closing_remote_library ?? true;
 
 		return {
-			id: 'elementor-template-library-modal',
+			id: 'refraction-template-library-modal',
 			hide: {
 				onOutsideClick: allowClosingModal,
 				onBackgroundClick: allowClosingModal,
 				onEscKeyPress: allowClosingModal,
-				ignore: '.dialog-widget-content, .dialog-buttons-undo_bulk_delete, .dialog-buttons-template_after_save, #elementor-library--infotip__dialog, #elementor-template-library-rename-dialog, #elementor-template-library-delete-dialog',
+				ignore: '.dialog-widget-content, .dialog-buttons-undo_bulk_delete, .dialog-buttons-template_after_save, #refraction-library--infotip__dialog, #refraction-template-library-rename-dialog, #refraction-template-library-delete-dialog',
 			},
 		};
 	},
 
 	initModal() {
-		elementorModules.common.views.modal.Layout.prototype.initModal.call( this );
+		refractionModules.common.views.modal.Layout.prototype.initModal.call( this );
 
 		const $widget = this.modal.getElements( 'widget' );
 		if ( $widget.length && 'true' === $widget.attr( 'aria-modal' ) ) {
@@ -89,7 +89,7 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 
 	getLogoOptions() {
 		return {
-			title: __( 'Library', 'elementor' ),
+			title: __( 'Library', 'refraction' ),
 			click() {
 				$e.run( 'library/open', { toDefault: true } );
 			},
@@ -97,25 +97,25 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 	},
 
 	getTemplateActionButton( templateData ) {
-		const subscriptionPlans = elementor.config.library_connect.subscription_plans,
-			baseAccessTier = elementor.config.library_connect.base_access_tier,
+		const subscriptionPlans = refraction.config.library_connect.subscription_plans,
+			baseAccessTier = refraction.config.library_connect.base_access_tier,
 			templateAccessTier = templateData.accessTier,
 			shouldUpgrade = baseAccessTier !== templateAccessTier;
 
-		let viewId = '#tmpl-elementor-template-library-' + ( shouldUpgrade ? 'upgrade-plan-button' : 'insert-button' );
+		let viewId = '#tmpl-refraction-template-library-' + ( shouldUpgrade ? 'upgrade-plan-button' : 'insert-button' );
 
-		viewId = elementor.hooks.applyFilters( 'elementor/editor/template-library/template/action-button', viewId, templateData );
+		viewId = refraction.hooks.applyFilters( 'refraction/editor/template-library/template/action-button', viewId, templateData );
 
 		const template = Marionette.TemplateCache.get( viewId );
 		const subscriptionPlan = subscriptionPlans[ templateAccessTier ];
-		const promotionText = elementorAppConfig.hasPro ? 'Upgrade' : `Go ${ subscriptionPlan.label }`;
+		const promotionText = refractionAppConfig.hasPro ? 'Upgrade' : `Go ${ subscriptionPlan.label }`;
 
 		try {
 			const promotionUrlPieces = new URL( subscriptionPlan.promotion_url );
 			const queryString = promotionUrlPieces.searchParams.toString();
 
-			const promotionLinkQueryString = elementor.hooks.applyFilters(
-				'elementor/editor/template-library/template/promotion-link-search-params',
+			const promotionLinkQueryString = refraction.hooks.applyFilters(
+				'refraction/editor/template-library/template/promotion-link-search-params',
 				queryString,
 				templateData,
 			);
@@ -225,7 +225,7 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 	},
 
 	showCloudStateView() {
-		elementor.templates.layout.hideLoadingView();
+		refraction.templates.layout.hideLoadingView();
 		this.modalContent.show( new TemplateLibraryCloudStateView() );
 	},
 
@@ -238,9 +238,9 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 			headerView.logoArea.show( new TemplateLibraryHeaderBackView() );
 		}
 
-		const experimentVariant = await elementor.templates.eventManager.getSaveTemplateExperimentVariant();
+		const experimentVariant = await refraction.templates.eventManager.getSaveTemplateExperimentVariant();
 		const SaveTemplateView = resolveSaveTemplateByVariant( experimentVariant );
-		elementor.templates.eventManager.startSaveTemplateExperiment( experimentVariant );
+		refraction.templates.eventManager.startSaveTemplateExperiment( experimentVariant );
 
 		this.modalContent.show( new SaveTemplateView( { model: elementModel, context } ) );
 	},
@@ -263,11 +263,11 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 
 	async showFolderView( elementModel ) {
 		try {
-			elementor.templates.layout.showLoadingView();
+			refraction.templates.layout.showLoadingView();
 
-			await elementor.templates.getFolderTemplates( elementModel );
+			await refraction.templates.getFolderTemplates( elementModel );
 		} finally {
-			elementor.templates.layout.hideLoadingView();
+			refraction.templates.layout.hideLoadingView();
 		}
 	},
 
@@ -297,11 +297,11 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 	},
 
 	handleBulkActionBar() {
-		const selectedCount = elementor.templates.getBulkSelectionItems().size ?? 0;
+		const selectedCount = refraction.templates.getBulkSelectionItems().size ?? 0;
 		const display = 0 === selectedCount ? 'none' : 'flex';
 
 		const countText = `${ selectedCount } Selected`;
-		const announcementText = 0 === selectedCount ? '' : `${ selectedCount } ${ 1 === selectedCount ? __( 'template', 'elementor' ) : __( 'templates', 'elementor' ) } ${ __( 'selected. Bulk actions available.', 'elementor' ) }`;
+		const announcementText = 0 === selectedCount ? '' : `${ selectedCount } ${ 1 === selectedCount ? __( 'template', 'refraction' ) : __( 'templates', 'refraction' ) } ${ __( 'selected. Bulk actions available.', 'refraction' ) }`;
 
 		this.modalContent.currentView.ui.bulkSelectedCount.html( countText );
 		if ( announcementText && this.modalContent.currentView.ui.bulkSelectedCount.length ) {
@@ -327,7 +327,7 @@ module.exports = elementorModules.common.views.modal.Layout.extend( {
 	},
 
 	isListView() {
-		return 'list' === elementor.templates.getViewSelection();
+		return 'list' === refraction.templates.getViewSelection();
 	},
 
 	resetSortingUI() {

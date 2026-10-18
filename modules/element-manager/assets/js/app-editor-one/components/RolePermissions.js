@@ -32,7 +32,7 @@ const RolesList = ( { roles, widgetRoleRestrictions } ) => {
 	if ( ! rolesEnabled.length ) {
 		return (
 			<Typography component="span" variant="body2" color="text.primary">
-				({ __( 'Admin', 'elementor' ) })
+				({ __( 'Admin', 'refraction' ) })
 			</Typography>
 		);
 	}
@@ -40,7 +40,7 @@ const RolesList = ( { roles, widgetRoleRestrictions } ) => {
 	if ( rolesEnabled.length === roles.length ) {
 		return (
 			<Typography component="span" variant="body2" color="text.primary">
-				({ __( 'All Roles', 'elementor' ) })
+				({ __( 'All Roles', 'refraction' ) })
 			</Typography>
 		);
 	}
@@ -105,9 +105,9 @@ export const RolePermissions = ( {
 				onClick={ handleClick }
 				aria-expanded={ isOpen }
 				aria-haspopup="true"
-				className={ `e-id-elementor-element-manager-button-edit-permissions-${ widgetName }` }
+				className={ `e-id-refraction-element-manager-button-edit-permissions-${ widgetName }` }
 			>
-				{ __( 'Edit', 'elementor' ) }
+				{ __( 'Edit', 'refraction' ) }
 			</Button>
 			<RolesList
 				roles={ roles }
@@ -137,7 +137,7 @@ export const RolePermissions = ( {
 								color="secondary"
 							/>
 						}
-						label={ __( 'All', 'elementor' ) }
+						label={ __( 'All', 'refraction' ) }
 					/>
 				</MenuItem>
 				{ roles.map( ( role ) => (
@@ -184,9 +184,9 @@ export const EditButtonDisabled = ( { widgetName = 'unknown' } ) => {
 			color="secondary"
 			size="small"
 			disabled
-			className={ `e-id-elementor-element-manager-button-edit-permissions-${ widgetName }` }
+			className={ `e-id-refraction-element-manager-button-edit-permissions-${ widgetName }` }
 		>
-			{ __( 'Edit', 'elementor' ) }
+			{ __( 'Edit', 'refraction' ) }
 		</Button>
 	);
 };

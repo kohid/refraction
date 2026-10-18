@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import { Button, CircularProgress, Paper } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -26,7 +26,7 @@ export default function PrimaryAction() {
 				sx={ { width: '100%' } }
 				onClick={ () => ( document && ! document.isSaving ? save() : null ) }
 			>
-				{ document?.isSaving ? <CircularProgress /> : __( 'Save Changes', 'elementor' ) }
+				{ document?.isSaving ? <CircularProgress /> : __( 'Save Changes', 'refraction' ) }
 			</Button>
 		</Paper>
 	);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCallback, useState } from 'react';
-import { SessionStorageProvider } from '@elementor/session';
+import { SessionStorageProvider } from '@refraction/session';
 import { Stack } from '@elementor/ui';
 
 import { InteractionsProvider, useInteractionsContext } from '../contexts/interactions-context';

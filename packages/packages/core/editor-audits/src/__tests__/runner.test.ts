@@ -1,4 +1,4 @@
-import { getHostDocumentElements, getHostDocumentId } from '@elementor/editor-elements';
+import { getHostDocumentElements, getHostDocumentId } from '@refraction/editor-elements';
 
 import { fetchPageContext } from '../api/page-context-client';
 import { clearAuditRegistry, registerAudit } from '../registry';
@@ -7,7 +7,7 @@ import { type Audit, type AuditResult, type PageContextResponse } from '../types
 
 jest.mock( '../api/page-context-client' );
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getHostDocumentElements: jest.fn(),
 	getHostDocumentId: jest.fn( () => 1 ),
 } ) );

@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Modules\SiteNavigation\Data\Endpoints;
+namespace Refraction\Modules\SiteNavigation\Data\Endpoints;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Kits\Documents\Kit;
-use Elementor\Data\V2\Base\Endpoint;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Kits\Documents\Kit;
+use Refraction\Data\V2\Base\Endpoint;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -15,11 +15,11 @@ jest.mock( '../../../../../hooks/use-posts-actions', () => ( {
 	} ),
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 } ) );
 
-describe( '@elementor/editor-site-navigation/pages-panel-actions - Delete', () => {
+describe( '@refraction/editor-site-navigation/pages-panel-actions - Delete', () => {
 	afterAll( () => {
 		jest.clearAllMocks();
 	} );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { fetchCssClassUsage } from '../../../../service/css-class-usage-service';

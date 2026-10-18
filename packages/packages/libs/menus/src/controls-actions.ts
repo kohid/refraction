@@ -1,4 +1,4 @@
-import { PopoverAction } from '@elementor/editor-ui';
+import { PopoverAction } from '@refraction/editor-ui';
 
 import Action from './action';
 import { createMenu } from './create-menu';

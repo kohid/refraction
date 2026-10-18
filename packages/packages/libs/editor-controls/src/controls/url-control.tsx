@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { urlPropTypeUtil } from '@elementor/editor-props';
+import { urlPropTypeUtil } from '@refraction/editor-props';
 import { TextField } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

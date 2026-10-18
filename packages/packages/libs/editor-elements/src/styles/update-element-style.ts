@@ -1,5 +1,5 @@
-import { mergeProps } from '@elementor/editor-props';
-import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@elementor/editor-styles';
+import { mergeProps } from '@refraction/editor-props';
+import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@refraction/editor-styles';
 
 import { StyleNotFoundError } from '../errors';
 import { type ElementID } from '../types';

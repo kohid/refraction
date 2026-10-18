@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import type { PropTypeKey } from '@elementor/editor-props';
+import type { PropTypeKey } from '@refraction/editor-props';
 
 import { PopoverContentRefContextProvider } from '../context/variable-selection-popover.context';
 import { VariableTypeProvider } from '../context/variable-type-context';
@@ -28,7 +28,7 @@ export const VariableSelectionPopover = ( { closePopover, propTypeKey, selectedV
 	const [ editId, setEditId ] = useState< string >( '' );
 	const onSettingsAvailable = () => {
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/toggle-design-system', { detail: { tab: 'variables' as const } } )
+			new CustomEvent( 'refraction/toggle-design-system', { detail: { tab: 'variables' as const } } )
 		);
 	};
 

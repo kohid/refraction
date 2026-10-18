@@ -9,7 +9,7 @@ var Debug = function() {
 		settings = {
 			debounceDelay: 500,
 			urlsToWatch: [
-				'elementor/assets',
+				'refraction/assets',
 			],
 		};
 	};
@@ -113,11 +113,11 @@ var Debug = function() {
 		elements.$window.off( 'error', onError );
 
 		jQuery.ajax( {
-			url: elementorCommon.config.ajax.url,
+			url: refractionCommon.config.ajax.url,
 			method: 'POST',
 			data: {
-				action: 'elementor_js_log',
-				_nonce: elementorCommon.ajax.getSettings( 'nonce' ),
+				action: 'refraction_js_log',
+				_nonce: refractionCommon.ajax.getSettings( 'nonce' ),
 				data: errorStack,
 			},
 			success() {

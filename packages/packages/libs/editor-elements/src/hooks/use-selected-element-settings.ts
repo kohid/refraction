@@ -1,5 +1,5 @@
-import { type AnyTransformable } from '@elementor/editor-props';
-import { __privateUseListenTo as useListenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
+import { type AnyTransformable } from '@refraction/editor-props';
+import { __privateUseListenTo as useListenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
 
 import { getElementSettings } from '../sync/get-element-setting';
 import { getSelectedElement } from '../sync/get-selected-elements';

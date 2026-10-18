@@ -1,4 +1,4 @@
-import DisableEnable from 'elementor-document/dynamic/commands/base/disable-enable';
+import DisableEnable from 'refraction-document/dynamic/commands/base/disable-enable';
 
 jQuery( () => {
 	QUnit.module( 'File: assets/dev/js/editor/document/dynamic/commands/base/disable-enable.js', () => {

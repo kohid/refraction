@@ -1,7 +1,7 @@
-import { updateElementInteractions } from '@elementor/editor-elements';
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { z } from '@elementor/schema';
-import { isProActive } from '@elementor/utils';
+import { updateElementInteractions } from '@refraction/editor-elements';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { z } from '@refraction/schema';
+import { isProActive } from '@refraction/utils';
 
 import { interactionsRepository } from '../../interactions-repository';
 import { type ElementInteractions } from '../../types';
@@ -23,7 +23,7 @@ const EMPTY_INTERACTIONS: ElementInteractions = {
 
 const EFFECTS_WITHOUT_TYPE = [ 'custom' ];
 
-const BREAKPOINTS_SCHEMA_URI = 'elementor://breakpoints/list';
+const BREAKPOINTS_SCHEMA_URI = 'refraction://breakpoints/list';
 
 export const initManageElementInteractionTool = ( reg: MCPRegistryEntry ) => {
 	const { addTool } = reg;

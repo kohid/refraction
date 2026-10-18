@@ -2,10 +2,10 @@ import { parallelTest as test } from '../../../parallelTest';
 import { expect } from '@playwright/test';
 import WpAdminPage from '../../../pages/wp-admin-page';
 
-const TEMPLATE_LIBRARY_URL = '/wp-admin/edit.php?post_type=elementor_library&tabs_group=library';
-const ADD_NEW_TEMPLATE_SELECTOR = 'a.page-title-action[href*="post-new.php?post_type=elementor_library"]';
-const MODAL_SELECTOR = '#elementor-new-template-modal';
-const MODAL_CLOSE_SELECTOR = '.elementor-templates-modal__header__close';
+const TEMPLATE_LIBRARY_URL = '/wp-admin/edit.php?post_type=refraction_library&tabs_group=library';
+const ADD_NEW_TEMPLATE_SELECTOR = 'a.page-title-action[href*="post-new.php?post_type=refraction_library"]';
+const MODAL_SELECTOR = '#refraction-new-template-modal';
+const MODAL_CLOSE_SELECTOR = '.refraction-templates-modal__header__close';
 
 test.describe( 'New Template Modal', () => {
 	test( 'Opens modal when clicking Add New Template and closes when clicking close button', async ( { page, apiRequests }, testInfo ) => {

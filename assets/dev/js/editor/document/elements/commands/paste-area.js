@@ -1,4 +1,4 @@
-import environment from 'elementor-common/utils/environment';
+import environment from 'refraction-common/utils/environment';
 
 export class PasteArea extends $e.modules.editor.document.CommandHistoryBase {
 	static dialog = null;
@@ -19,10 +19,10 @@ export class PasteArea extends $e.modules.editor.document.CommandHistoryBase {
 		const $messageContainer = jQuery( '<div>', {
 			class: 'e-dialog-description',
 		} )
-			.html( __( 'To paste the element from your other site.', 'elementor' ) );
+			.html( __( 'To paste the element from your other site.', 'refraction' ) );
 
 		const $inputArea = jQuery( '<input>', {
-			id: 'elementor-paste-area-dialog__input',
+			id: 'refraction-paste-area-dialog__input',
 			type: 'text',
 		} )
 			.attr( 'autocomplete', 'off' )
@@ -57,10 +57,10 @@ export class PasteArea extends $e.modules.editor.document.CommandHistoryBase {
 			} );
 
 		const $errorArea = jQuery( '<div>', {
-			id: 'elementor-paste-area-dialog__error',
+			id: 'refraction-paste-area-dialog__error',
 			style: `display: none`,
 		} )
-			.html( __( 'Make sure that both sites are updated to last version of Elementor and have enabled the features relevant to the copied element before trying again.', 'elementor' ) );
+			.html( __( 'Make sure that both sites are updated to last version of Refraction and have enabled the features relevant to the copied element before trying again.', 'refraction' ) );
 
 		const $loadingArea = jQuery( '<i>', {
 			class: 'eicon-loading eicon-animation-spin',
@@ -73,8 +73,8 @@ export class PasteArea extends $e.modules.editor.document.CommandHistoryBase {
 
 		const ctrlLabel = environment.mac ? '&#8984;' : 'Ctrl';
 
-		this.dialog = elementorCommon.dialogsManager.createWidget( 'lightbox', {
-			id: 'elementor-paste-area-dialog',
+		this.dialog = refractionCommon.dialogsManager.createWidget( 'lightbox', {
+			id: 'refraction-paste-area-dialog',
 			headerMessage: `${ ctrlLabel } + V`,
 			message: $messageContainer,
 			position: {

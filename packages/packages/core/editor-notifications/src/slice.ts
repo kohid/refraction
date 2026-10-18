@@ -1,4 +1,4 @@
-import { __createSlice as createSlice } from '@elementor/store';
+import { __createSlice as createSlice } from '@refraction/store';
 
 import { type Notifications } from './types';
 

@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { BaseLayout, TopBar, Footer, PageHeader, CenteredContent, CompleteIcon, CompleteHeading, CompleteSummary, DownloadLink } from '../../shared/components';
 import { useExportContext } from '../context/export-context';
 import { buildKitSettingsSummary } from '../../shared/utils/utils';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 
 const INVALID_FILENAME_CHARS = /[<>:"/\\|?*]/g;
 
@@ -21,7 +21,7 @@ export default function ExportComplete() {
 		if ( ! downloadLink.current ) {
 			const link = document.createElement( 'a' );
 
-			const defaultKitName = 'elementor-kit';
+			const defaultKitName = 'refraction-kit';
 			const kitName = kitInfo.title || defaultKitName;
 			const sanitizedKitName = kitName
 				.replace( INVALID_FILENAME_CHARS, '' )
@@ -46,7 +46,7 @@ export default function ExportComplete() {
 	}, [ exportedData, kitInfo.source ] );
 
 	useEffect( () => {
-		AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportSummary );
+		AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportSummary );
 	}, [] );
 
 	useEffect( () => {
@@ -69,7 +69,7 @@ export default function ExportComplete() {
 	}, [ includes, exportedData?.manifest, analytics?.customization, kitInfo.description ] );
 
 	const handleDone = () => {
-		window.top.location = elementorAppConfig.admin_url;
+		window.top.location = refractionAppConfig.admin_url;
 	};
 
 	if ( ! isCompleted ) {
@@ -88,7 +88,7 @@ export default function ExportComplete() {
 					onClick={ () => navigate( '/kit-library/cloud' ) }
 					data-testid="view-in-library-button"
 				>
-					{ __( 'View in Library', 'elementor' ) }
+					{ __( 'View in Library', 'refraction' ) }
 				</Button>
 			) : (
 				<Button
@@ -98,21 +98,21 @@ export default function ExportComplete() {
 					onClick={ handleDone }
 					data-testid="done-button"
 				>
-					{ __( 'Done', 'elementor' ) }
+					{ __( 'Done', 'refraction' ) }
 				</Button>
 			) }
 		</Stack>
 	);
 
 	const headerContent = (
-		<PageHeader title={ __( 'Export', 'elementor' ) } />
+		<PageHeader title={ __( 'Export', 'refraction' ) } />
 	);
 
 	const getTemplatesSummary = () => {
 		const templates = exportedData?.manifest?.templates;
 
 		if ( ! templates ) {
-			return __( 'No templates exported', 'elementor' );
+			return __( 'No templates exported', 'refraction' );
 		}
 
 		const templatesByType = {};
@@ -125,7 +125,7 @@ export default function ExportComplete() {
 			templatesByType[ docType ]++;
 		} );
 
-		const summaryTitles = elementorAppConfig[ 'import-export-customization' ]?.summaryTitles?.templates || {};
+		const summaryTitles = refractionAppConfig[ 'import-export-customization' ]?.summaryTitles?.templates || {};
 
 		const summaryParts = Object.entries( templatesByType )
 			.map( ( [ docType, count ] ) => {
@@ -138,7 +138,7 @@ export default function ExportComplete() {
 				return `${ count } ${ title }`;
 			} ).filter( ( part ) => part !== null );
 
-		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No templates exported', 'elementor' );
+		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No templates exported', 'refraction' );
 	};
 
 	const getContentCounts = () => {
@@ -166,10 +166,10 @@ export default function ExportComplete() {
 		const taxonomies = exportedData?.manifest?.taxonomies;
 
 		if ( ! content && ! wpContent && ! taxonomies ) {
-			return __( 'No content exported', 'elementor' );
+			return __( 'No content exported', 'refraction' );
 		}
 
-		const summaryTitles = elementorAppConfig[ 'import-export-customization' ]?.summaryTitles?.content || {};
+		const summaryTitles = refractionAppConfig[ 'import-export-customization' ]?.summaryTitles?.content || {};
 		const counts = getContentCounts();
 
 		const summaryPartsMap = {};
@@ -199,47 +199,47 @@ export default function ExportComplete() {
 			if ( allTaxonomiesSet.size ) {
 				summaryPartsMap.taxonomies = {
 					count: allTaxonomiesSet.size,
-					title: __( 'Taxonomies', 'elementor' ),
+					title: __( 'Taxonomies', 'refraction' ),
 				};
 			}
 		}
 
 		const summaryParts = Object.values( summaryPartsMap ).map( ( { count, title } ) => `${ count } ${ title }` );
 
-		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No content exported', 'elementor' );
+		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No content exported', 'refraction' );
 	};
 
 	const getPluginsSummary = () => {
-		return exportedData?.manifest?.plugins ? exportedData?.manifest?.plugins.map( ( plugin ) => plugin.name ).join( ' | ' ) : __( 'No plugins exported', 'elementor' );
+		return exportedData?.manifest?.plugins ? exportedData?.manifest?.plugins.map( ( plugin ) => plugin.name ).join( ' | ' ) : __( 'No plugins exported', 'refraction' );
 	};
 
 	const getSettingsSummary = () => {
 		const siteSettings = exportedData?.manifest?.[ 'site-settings' ];
 
 		if ( ! siteSettings ) {
-			return __( 'No settings exported', 'elementor' );
+			return __( 'No settings exported', 'refraction' );
 		}
 
 		const summary = buildKitSettingsSummary( siteSettings );
 
-		return summary.length > 0 ? summary : __( 'No settings exported', 'elementor' );
+		return summary.length > 0 ? summary : __( 'No settings exported', 'refraction' );
 	};
 
 	const summaryData = {
 		content: {
-			title: __( 'Content', 'elementor' ),
+			title: __( 'Content', 'refraction' ),
 			subTitle: getContentSummary(),
 		},
 		templates: {
-			title: __( 'Templates', 'elementor' ),
+			title: __( 'Templates', 'refraction' ),
 			subTitle: getTemplatesSummary(),
 		},
 		settings: {
-			title: __( 'Site settings', 'elementor' ),
+			title: __( 'Site settings', 'refraction' ),
 			subTitle: getSettingsSummary(),
 		},
 		plugins: {
-			title: __( 'Plugins', 'elementor' ),
+			title: __( 'Plugins', 'refraction' ),
 			subTitle: getPluginsSummary(),
 		},
 	};
@@ -252,22 +252,22 @@ export default function ExportComplete() {
 			<CenteredContent hasFooter={ true } maxWidth="800px">
 				<Stack spacing={ 3 } alignItems="center" data-testid="export-complete-content">
 					<CompleteIcon
-						imageSrc={ elementorAppConfig.assets_url + 'images/kit-is-live.svg' }
+						imageSrc={ refractionAppConfig.assets_url + 'images/kit-is-live.svg' }
 						altText=""
 						testId="export-complete-icon"
 					/>
 
 					<CompleteHeading
 						title={ isCloudExport
-							? __( 'Your website template is now saved to the library!', 'elementor' )
-							: __( 'Your .zip file is ready', 'elementor' )
+							? __( 'Your website template is now saved to the library!', 'refraction' )
+							: __( 'Your .zip file is ready', 'refraction' )
 						}
 						subtitle={ isCloudExport
-							? __( 'You can find it in the My Website Templates tab.', 'elementor' )
-							: __( 'Once the download is complete, you can upload it to be used for other sites.', 'elementor' )
+							? __( 'You can find it in the My Website Templates tab.', 'refraction' )
+							: __( 'Once the download is complete, you can upload it to be used for other sites.', 'refraction' )
 						}
-						linkText={ isCloudExport ? __( 'Take me there', 'elementor' ) : undefined }
-						linkHref={ isCloudExport ? elementorAppConfig.base_url + '#/kit-library/cloud' : undefined }
+						linkText={ isCloudExport ? __( 'Take me there', 'refraction' ) : undefined }
+						linkHref={ isCloudExport ? refractionAppConfig.base_url + '#/kit-library/cloud' : undefined }
 						testId="export-complete-heading"
 					/>
 
@@ -278,8 +278,8 @@ export default function ExportComplete() {
 
 					{ ! isCloudExport && (
 						<DownloadLink
-							message={ __( 'Is the automatic download not starting?', 'elementor' ) }
-							linkText={ __( 'Download manually', 'elementor' ) }
+							message={ __( 'Is the automatic download not starting?', 'refraction' ) }
+							linkText={ __( 'Download manually', 'refraction' ) }
 							onClick={ downloadFile }
 							testId="export-complete-download-link"
 						/>

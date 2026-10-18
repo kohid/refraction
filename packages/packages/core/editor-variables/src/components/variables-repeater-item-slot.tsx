@@ -10,7 +10,7 @@ import {
 	selectionSizePropTypeUtil,
 	type SelectionSizePropValue,
 	shadowPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { Box } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -90,7 +90,7 @@ export const FilterDropShadowRepeaterLabel = ( { value }: Props ) => {
 
 	return (
 		<Box component="span">
-			{ __( 'Drop shadow:', 'elementor' ) } { labels.join( ' ' ) }
+			{ __( 'Drop shadow:', 'refraction' ) } { labels.join( ' ' ) }
 		</Box>
 	);
 };
@@ -120,7 +120,7 @@ export const TransformRepeaterLabel = ( { value }: Props ) => {
 	const labels: string[] = [];
 
 	if ( moveTransformPropTypeUtil.isValid( value ) ) {
-		labels.push( __( 'Move:', 'elementor' ) );
+		labels.push( __( 'Move:', 'refraction' ) );
 
 		const { x, y, z } = moveTransformPropTypeUtil.extract( value ) || {};
 

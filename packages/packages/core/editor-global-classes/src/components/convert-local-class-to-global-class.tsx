@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { validateStyleLabel } from '@elementor/editor-styles-repository';
-import { MenuListItem } from '@elementor/editor-ui';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { validateStyleLabel } from '@refraction/editor-styles-repository';
+import { MenuListItem } from '@refraction/editor-ui';
 import { Divider } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -50,7 +50,7 @@ export const ConvertLocalClassToGlobalClass = ( props: OwnProps ) => {
 					},
 				} }
 			>
-				{ __( 'Convert to global class', 'elementor' ) }
+				{ __( 'Convert to global class', 'refraction' ) }
 			</MenuListItem>
 			<Divider />
 		</>

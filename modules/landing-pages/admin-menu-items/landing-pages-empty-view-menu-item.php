@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Modules\LandingPages\AdminMenuItems;
+namespace Refraction\Modules\LandingPages\AdminMenuItems;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

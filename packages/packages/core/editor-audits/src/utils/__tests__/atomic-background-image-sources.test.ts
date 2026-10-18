@@ -1,10 +1,10 @@
-import { getElementStyles } from '@elementor/editor-elements';
-import { type StyleDefinition } from '@elementor/editor-styles';
+import { getElementStyles } from '@refraction/editor-elements';
+import { type StyleDefinition } from '@refraction/editor-styles';
 
 import { type ElementSnapshotNode } from '../../types';
 import { walkAtomicBackgroundImageSources } from '../atomic-background-image-sources';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getElementStyles: jest.fn(),
 } ) );
 

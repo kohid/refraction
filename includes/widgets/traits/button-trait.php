@@ -1,17 +1,17 @@
 <?php
-namespace Elementor\Includes\Widgets\Traits;
+namespace Refraction\Includes\Widgets\Traits;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Text_Shadow;
-use Elementor\Group_Control_Typography;
-use Elementor\Icons_Manager;
-use Elementor\Widget_Base;
-use Elementor\Plugin;
+use Refraction\Controls_Manager;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Text_Shadow;
+use Refraction\Group_Control_Typography;
+use Refraction\Icons_Manager;
+use Refraction\Widget_Base;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,11 +31,11 @@ trait Button_Trait {
 	 */
 	public static function get_button_sizes() {
 		return [
-			'xs' => esc_html__( 'Extra Small', 'elementor' ),
-			'sm' => esc_html__( 'Small', 'elementor' ),
-			'md' => esc_html__( 'Medium', 'elementor' ),
-			'lg' => esc_html__( 'Large', 'elementor' ),
-			'xl' => esc_html__( 'Extra Large', 'elementor' ),
+			'xs' => esc_html__( 'Extra Small', 'refraction' ),
+			'sm' => esc_html__( 'Small', 'refraction' ),
+			'md' => esc_html__( 'Medium', 'refraction' ),
+			'lg' => esc_html__( 'Large', 'refraction' ),
+			'xl' => esc_html__( 'Extra Large', 'refraction' ),
 		];
 	}
 
@@ -54,8 +54,8 @@ trait Button_Trait {
 	protected function register_button_content_controls( $args = [] ) {
 		$default_args = [
 			'section_condition' => [],
-			'button_default_text' => esc_html__( 'Click here', 'elementor' ),
-			'text_control_label' => esc_html__( 'Text', 'elementor' ),
+			'button_default_text' => esc_html__( 'Click here', 'refraction' ),
+			'text_control_label' => esc_html__( 'Text', 'refraction' ),
 			'icon_exclude_inline_options' => [],
 		];
 
@@ -64,17 +64,17 @@ trait Button_Trait {
 		$this->add_control(
 			'button_type',
 			[
-				'label' => esc_html__( 'Type', 'elementor' ),
+				'label' => esc_html__( 'Type', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'info' => esc_html__( 'Info', 'elementor' ),
-					'success' => esc_html__( 'Success', 'elementor' ),
-					'warning' => esc_html__( 'Warning', 'elementor' ),
-					'danger' => esc_html__( 'Danger', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'info' => esc_html__( 'Info', 'refraction' ),
+					'success' => esc_html__( 'Success', 'refraction' ),
+					'warning' => esc_html__( 'Warning', 'refraction' ),
+					'danger' => esc_html__( 'Danger', 'refraction' ),
 				],
-				'prefix_class' => 'elementor-button-',
+				'prefix_class' => 'refraction-button-',
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -96,7 +96,7 @@ trait Button_Trait {
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -111,7 +111,7 @@ trait Button_Trait {
 		$this->add_control(
 			'size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'sm',
 				'options' => self::get_button_sizes(),
@@ -123,7 +123,7 @@ trait Button_Trait {
 		$this->add_control(
 			'selected_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -136,26 +136,26 @@ trait Button_Trait {
 		$this->add_control(
 			'icon_align',
 			[
-				'label' => esc_html__( 'Icon Position', 'elementor' ),
+				'label' => esc_html__( 'Icon Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => is_rtl() ? 'row-reverse' : 'row',
 				'options' => [
 					'row' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'row-reverse' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'row-reverse' : 'row',
 					'right' => is_rtl() ? 'row' : 'row-reverse',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button-content-wrapper' => 'flex-direction: {{VALUE}};',
+					'{{WRAPPER}} .refraction-button-content-wrapper' => 'flex-direction: {{VALUE}};',
 				],
 				'condition' => array_merge(
 					$args['section_condition'],
@@ -170,7 +170,7 @@ trait Button_Trait {
 		$this->add_control(
 			'icon_indent',
 			[
-				'label' => esc_html__( 'Icon Spacing', 'elementor' ),
+				'label' => esc_html__( 'Icon Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -185,7 +185,7 @@ trait Button_Trait {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button .elementor-button-content-wrapper' => 'gap: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-button .refraction-button-content-wrapper' => 'gap: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => array_merge(
 					$args['section_condition'],
@@ -200,7 +200,7 @@ trait Button_Trait {
 		$this->add_control(
 			'button_css_id',
 			[
-				'label' => esc_html__( 'Button ID', 'elementor' ),
+				'label' => esc_html__( 'Button ID', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -209,10 +209,10 @@ trait Button_Trait {
 					'active' => false,
 				],
 				'default' => '',
-				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
+				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'refraction' ),
 				'description' => sprintf(
 					/* translators: 1: `<code>` opening tag, 2: `</code>` closing tag. */
-					esc_html__( 'Please make sure the ID is unique and not used elsewhere on the page. This field allows %1$sA-z 0-9%2$s & underscore chars without spaces.', 'elementor' ),
+					esc_html__( 'Please make sure the ID is unique and not used elsewhere on the page. This field allows %1$sA-z 0-9%2$s & underscore chars without spaces.', 'refraction' ),
 					'<code>',
 					'</code>'
 				),
@@ -238,7 +238,7 @@ trait Button_Trait {
 		$default_args = [
 			'section_condition' => [],
 			'alignment_default' => '',
-			'alignment_control_prefix_class' => 'elementor%s-align-',
+			'alignment_control_prefix_class' => 'refraction%s-align-',
 			'content_alignment_default' => '',
 		];
 
@@ -247,23 +247,23 @@ trait Button_Trait {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left'    => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => esc_html__( 'Left', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-h-align-center',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => esc_html__( 'Right', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Stretch', 'elementor' ),
+						'title' => esc_html__( 'Stretch', 'refraction' ),
 						'icon' => 'eicon-h-align-stretch',
 					],
 				],
@@ -276,30 +276,30 @@ trait Button_Trait {
 		$this->add_responsive_control(
 			'content_align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start'    => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'space-between' => [
-						'title' => esc_html__( 'Space between', 'elementor' ),
+						'title' => esc_html__( 'Space between', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
 				'default' => $args['content_alignment_default'],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button .elementor-button-content-wrapper' => 'justify-content: {{VALUE}};',
+					'{{WRAPPER}} .refraction-button .refraction-button-content-wrapper' => 'justify-content: {{VALUE}};',
 				],
 				'condition' => array_merge( $args['section_condition'], [ 'align' => 'justify' ] ),
 			]
@@ -312,7 +312,7 @@ trait Button_Trait {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_ACCENT,
 				],
-				'selector' => '{{WRAPPER}} .elementor-button',
+				'selector' => '{{WRAPPER}} .refraction-button',
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -321,7 +321,7 @@ trait Button_Trait {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'text_shadow',
-				'selector' => '{{WRAPPER}} .elementor-button',
+				'selector' => '{{WRAPPER}} .refraction-button',
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -333,7 +333,7 @@ trait Button_Trait {
 		$this->start_controls_tab(
 			'tab_button_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -341,11 +341,11 @@ trait Button_Trait {
 		$this->add_control(
 			'button_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button' => 'fill: {{VALUE}}; color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-button' => 'fill: {{VALUE}}; color: {{VALUE}};',
 				],
 				'condition' => $args['section_condition'],
 			]
@@ -357,7 +357,7 @@ trait Button_Trait {
 				'name' => 'background',
 				'types' => [ 'classic', 'gradient' ],
 				'exclude' => [ 'image' ],
-				'selector' => '{{WRAPPER}} .elementor-button',
+				'selector' => '{{WRAPPER}} .refraction-button',
 				'fields_options' => [
 					'background' => [
 						'default' => 'classic',
@@ -376,7 +376,7 @@ trait Button_Trait {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'button_box_shadow',
-				'selector' => '{{WRAPPER}} .elementor-button',
+				'selector' => '{{WRAPPER}} .refraction-button',
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -386,7 +386,7 @@ trait Button_Trait {
 		$this->start_controls_tab(
 			'tab_button_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -394,11 +394,11 @@ trait Button_Trait {
 		$this->add_control(
 			'hover_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-button:hover svg, {{WRAPPER}} .elementor-button:focus svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-button:hover, {{WRAPPER}} .refraction-button:focus' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-button:hover svg, {{WRAPPER}} .refraction-button:focus svg' => 'fill: {{VALUE}};',
 				],
 				'condition' => $args['section_condition'],
 			]
@@ -410,7 +410,7 @@ trait Button_Trait {
 				'name' => 'button_background_hover',
 				'types' => [ 'classic', 'gradient' ],
 				'exclude' => [ 'image' ],
-				'selector' => '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus',
+				'selector' => '{{WRAPPER}} .refraction-button:hover, {{WRAPPER}} .refraction-button:focus',
 				'fields_options' => [
 					'background' => [
 						'default' => 'classic',
@@ -423,10 +423,10 @@ trait Button_Trait {
 		$this->add_control(
 			'button_hover_border_color',
 			[
-				'label' => esc_html__( 'Border Color', 'elementor' ),
+				'label' => esc_html__( 'Border Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-button:hover, {{WRAPPER}} .refraction-button:focus' => 'border-color: {{VALUE}};',
 				],
 				'condition' => $args['section_condition'],
 			]
@@ -436,7 +436,7 @@ trait Button_Trait {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'button_hover_box_shadow',
-				'selector' => '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus',
+				'selector' => '{{WRAPPER}} .refraction-button:hover, {{WRAPPER}} .refraction-button:focus',
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -444,14 +444,14 @@ trait Button_Trait {
 		$this->add_control(
 			'button_hover_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
 					'unit' => 's',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button' => 'transition-duration: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-button' => 'transition-duration: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -459,7 +459,7 @@ trait Button_Trait {
 		$this->add_control(
 			'hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 				'condition' => $args['section_condition'],
 			]
@@ -473,7 +473,7 @@ trait Button_Trait {
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'border',
-				'selector' => '{{WRAPPER}} .elementor-button',
+				'selector' => '{{WRAPPER}} .refraction-button',
 				'separator' => 'before',
 				'condition' => $args['section_condition'],
 			]
@@ -482,11 +482,11 @@ trait Button_Trait {
 		$this->add_responsive_control(
 			'border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 				'condition' => $args['section_condition'],
 			]
@@ -495,11 +495,11 @@ trait Button_Trait {
 		$this->add_responsive_control(
 			'text_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 				'separator' => 'before',
 				'condition' => $args['section_condition'],
@@ -512,7 +512,7 @@ trait Button_Trait {
 	 *
 	 * Written in PHP and used to generate the final HTML.
 	 *
-	 * @param \Elementor\Widget_Base|null $instance
+	 * @param \Refraction\Widget_Base|null $instance
 	 *
 	 * @since  3.4.0
 	 * @access protected
@@ -530,13 +530,13 @@ trait Button_Trait {
 
 		$optimized_markup = Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
 
-		$instance->add_render_attribute( 'wrapper', 'class', 'elementor-button-wrapper' );
+		$instance->add_render_attribute( 'wrapper', 'class', 'refraction-button-wrapper' );
 
-		$instance->add_render_attribute( 'button', 'class', 'elementor-button' );
+		$instance->add_render_attribute( 'button', 'class', 'refraction-button' );
 
 		if ( ! empty( $settings['link']['url'] ) ) {
 			$instance->add_link_attributes( 'button', $settings['link'] );
-			$instance->add_render_attribute( 'button', 'class', 'elementor-button-link' );
+			$instance->add_render_attribute( 'button', 'class', 'refraction-button-link' );
 		} else {
 			$instance->add_render_attribute( 'button', 'role', 'button' );
 		}
@@ -546,13 +546,13 @@ trait Button_Trait {
 		}
 
 		if ( ! empty( $settings['size'] ) ) {
-			$instance->add_render_attribute( 'button', 'class', 'elementor-size-' . $settings['size'] );
+			$instance->add_render_attribute( 'button', 'class', 'refraction-size-' . $settings['size'] );
 		} else {
-			$instance->add_render_attribute( 'button', 'class', 'elementor-size-sm' ); // BC, to make sure the class is always present
+			$instance->add_render_attribute( 'button', 'class', 'refraction-size-sm' ); // BC, to make sure the class is always present
 		}
 
 		if ( ! empty( $settings['hover_animation'] ) ) {
-			$instance->add_render_attribute( 'button', 'class', 'elementor-animation-' . $settings['hover_animation'] );
+			$instance->add_render_attribute( 'button', 'class', 'refraction-animation-' . $settings['hover_animation'] );
 		}
 		?>
 		<?php if ( ! $optimized_markup ) : ?>
@@ -582,15 +582,15 @@ trait Button_Trait {
 			return;
 		}
 
-		const optimized_markup = elementorCommon.config.experimentalFeatures.e_optimized_markup;
+		const optimized_markup = refractionCommon.config.experimentalFeatures.e_optimized_markup;
 
-		view.addRenderAttribute( 'wrapper', 'class', 'elementor-button-wrapper' );
+		view.addRenderAttribute( 'wrapper', 'class', 'refraction-button-wrapper' );
 
-		view.addRenderAttribute( 'button', 'class', 'elementor-button' );
+		view.addRenderAttribute( 'button', 'class', 'refraction-button' );
 
 		if ( '' !== settings.link?.url ) {
-			view.addRenderAttribute( 'button', 'href', elementor.helpers.sanitizeUrl( settings.link?.url ) );
-			view.addRenderAttribute( 'button', 'class', 'elementor-button-link' );
+			view.addRenderAttribute( 'button', 'href', refraction.helpers.sanitizeUrl( settings.link?.url ) );
+			view.addRenderAttribute( 'button', 'class', 'refraction-button-link' );
 		} else {
 			view.addRenderAttribute( 'button', 'role', 'button' );
 		}
@@ -600,24 +600,24 @@ trait Button_Trait {
 		}
 
 		if ( '' !== settings.size ) {
-			view.addRenderAttribute( 'button', 'class', 'elementor-size-' + settings.size );
+			view.addRenderAttribute( 'button', 'class', 'refraction-size-' + settings.size );
 		}
 
 		if ( '' !== settings.hover_animation ) {
-			view.addRenderAttribute( 'button', 'class', 'elementor-animation-' + settings.hover_animation );
+			view.addRenderAttribute( 'button', 'class', 'refraction-animation-' + settings.hover_animation );
 		}
 
-		view.addRenderAttribute( 'icon', 'class', 'elementor-button-icon' );
-		view.addRenderAttribute( 'text', 'class', 'elementor-button-text' );
+		view.addRenderAttribute( 'icon', 'class', 'refraction-button-icon' );
+		view.addRenderAttribute( 'text', 'class', 'refraction-button-text' );
 		view.addInlineEditingAttributes( 'text', 'none' );
-		var iconHTML = elementor.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' ),
-		migrated = elementor.helpers.isIconMigrated( settings, 'selected_icon' );
+		var iconHTML = refraction.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' ),
+		migrated = refraction.helpers.isIconMigrated( settings, 'selected_icon' );
 		#>
 		<# if ( ! optimized_markup ) { #>
 		<div {{{ view.getRenderAttributeString( 'wrapper' ) }}}>
 		<# } #>
 			<a {{{ view.getRenderAttributeString( 'button' ) }}}>
-				<span class="elementor-button-content-wrapper">
+				<span class="refraction-button-content-wrapper">
 					<# if ( settings.icon || settings.selected_icon ) { #>
 					<span {{{ view.getRenderAttributeString( 'icon' ) }}}>
 						<# if ( ( migrated || ! settings.icon ) && iconHTML.rendered ) { #>
@@ -643,7 +643,7 @@ trait Button_Trait {
 	 *
 	 * Render button widget text.
 	 *
-	 * @param \Elementor\Widget_Base|null $instance
+	 * @param \Refraction\Widget_Base|null $instance
 	 *
 	 * @since  3.4.0
 	 * @access protected
@@ -661,13 +661,13 @@ trait Button_Trait {
 
 		$instance->add_render_attribute( [
 			'content-wrapper' => [
-				'class' => 'elementor-button-content-wrapper',
+				'class' => 'refraction-button-content-wrapper',
 			],
 			'icon' => [
-				'class' => 'elementor-button-icon',
+				'class' => 'refraction-button-icon',
 			],
 			'text' => [
-				'class' => 'elementor-button-text',
+				'class' => 'refraction-button-text',
 			],
 		] );
 

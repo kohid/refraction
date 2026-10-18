@@ -7,7 +7,7 @@
 #   tests/phpunit/run-unit.sh <test-file> [<test-file> ...] [extra phpunit args]
 #
 # Examples:
-#   tests/phpunit/run-unit.sh tests/phpunit/elementor/modules/usage/test-module.php
+#   tests/phpunit/run-unit.sh tests/phpunit/refraction/modules/usage/test-module.php
 #   tests/phpunit/run-unit.sh tests/phpunit/.../test-css-converter.php --filter test_convert
 #   tests/phpunit/run-unit.sh tests/phpunit/.../test-css-converter.php tests/phpunit/.../test-converter-registry.php
 #

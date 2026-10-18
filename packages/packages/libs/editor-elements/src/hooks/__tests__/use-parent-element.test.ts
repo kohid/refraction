@@ -23,7 +23,7 @@ describe( 'useParentElement', () => {
 		};
 		dispatchElementEvent( 'document/elements/create', 'mockId' );
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			getContainer: jest.fn().mockReturnValue( mockElement ),
 		};
 
@@ -37,7 +37,7 @@ describe( 'useParentElement', () => {
 
 	it( 'should return null when element not found', () => {
 		// Arrange
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			getContainer: jest.fn().mockReturnValue( undefined ),
 		};
 		dispatchElementEvent( 'document/elements/create', 'mockId' );
@@ -50,7 +50,7 @@ describe( 'useParentElement', () => {
 
 	it( 'should return null when getContainer not defined', () => {
 		// Arrange
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			getContainer: undefined,
 		};
 

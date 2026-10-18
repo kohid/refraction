@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Modules\FloatingButtons\Base;
+namespace Refraction\Modules\FloatingButtons\Base;
 
-use Elementor\Modules\FloatingButtons\Classes\Render\Floating_Bars_Core_Render;
-use Elementor\Core\Base\Providers\Social_Network_Provider;
+use Refraction\Modules\FloatingButtons\Classes\Render\Floating_Bars_Core_Render;
+use Refraction\Core\Base\Providers\Social_Network_Provider;
 
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Typography;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Typography;
 
-use Elementor\Plugin;
-use Elementor\Repeater;
-use Elementor\Controls_Manager;
-use Elementor\Widget_Base;
+use Refraction\Plugin;
+use Refraction\Repeater;
+use Refraction\Controls_Manager;
+use Refraction\Widget_Base;
 
 abstract class Widget_Floating_Bars_Base extends Widget_Base {
 
@@ -21,7 +21,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 
 		$style_depends = Plugin::$instance->experiments->is_feature_active( 'e_font_icon_svg' )
 			? parent::get_style_depends()
-			: [ 'elementor-icons-fa-solid', 'elementor-icons-fa-brands', 'elementor-icons-fa-regular' ];
+			: [ 'refraction-icons-fa-solid', 'refraction-icons-fa-brands', 'refraction-icons-fa-regular' ];
 
 		$style_depends[] = 'widget-floating-bars-base';
 
@@ -60,13 +60,13 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 						'value' => 'fas fa-tshirt',
 						'library' => 'fa-solid',
 					],
-					'text_label' => esc_html__( 'Text', 'elementor' ),
-					'text_default' => esc_html__( 'Just in! Cool summer tees', 'elementor' ),
+					'text_label' => esc_html__( 'Text', 'refraction' ),
+					'text_default' => esc_html__( 'Just in! Cool summer tees', 'refraction' ),
 				],
 				'floating_bar_section' => [
 					'close_switch_default' => 'yes',
 					'has_pause_switch' => false,
-					'accessible_name_default' => esc_html__( 'Banner', 'elementor' ),
+					'accessible_name_default' => esc_html__( 'Banner', 'refraction' ),
 				],
 			],
 			'style' => [
@@ -102,7 +102,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'announcement_content_section',
 			[
-				'label' => __( 'Announcement', 'elementor' ),
+				'label' => __( 'Announcement', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -110,7 +110,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'announcement_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'default' => $config['content']['announcement_section']['icon_default'],
@@ -128,7 +128,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Enter your text here', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your text here', 'refraction' ),
 				'default' => $config['content']['announcement_section']['text_default'],
 			]
 		);
@@ -140,7 +140,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'cta_button_content_section',
 			[
-				'label' => __( 'CTA Button', 'elementor' ),
+				'label' => __( 'CTA Button', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -148,22 +148,22 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'cta_text',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Enter text', 'elementor' ),
-				'default' => esc_html__( 'Shop now', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter text', 'refraction' ),
+				'default' => esc_html__( 'Shop now', 'refraction' ),
 			],
 		);
 
 		$this->add_control(
 			'cta_link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
-				'placeholder' => esc_html__( 'Paste URL or type', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste URL or type', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -178,7 +178,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'cta_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -196,12 +196,12 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'accessible_name',
 			[
-				'label' => esc_html__( 'Accessible Name', 'elementor' ),
+				'label' => esc_html__( 'Accessible Name', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Enter text', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter text', 'refraction' ),
 				'default' => $config['content']['floating_bar_section']['accessible_name_default'],
 				'condition' => [
 					'floating_bar_close_switch' => 'yes',
@@ -216,7 +216,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'floating_bar_content_section',
 			[
-				'label' => __( 'Floating Bar', 'elementor' ),
+				'label' => __( 'Floating Bar', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -225,10 +225,10 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 			$this->add_control(
 				'floating_bar_pause_switch',
 				[
-					'label' => esc_html__( 'Pause and Play', 'elementor' ),
+					'label' => esc_html__( 'Pause and Play', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'Show', 'elementor' ),
-					'label_off' => esc_html__( 'Hide', 'elementor' ),
+					'label_on' => esc_html__( 'Show', 'refraction' ),
+					'label_off' => esc_html__( 'Hide', 'refraction' ),
 					'return_value' => 'yes',
 					'default' => 'no',
 				]
@@ -237,7 +237,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 			$this->add_control(
 				'floating_bar_pause_icon',
 				[
-					'label' => esc_html__( 'Pause Icon', 'elementor' ),
+					'label' => esc_html__( 'Pause Icon', 'refraction' ),
 					'type' => Controls_Manager::ICONS,
 					'fa4compatibility' => 'icon',
 					'default' => [
@@ -264,7 +264,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 			$this->add_control(
 				'floating_bar_play_icon',
 				[
-					'label' => esc_html__( 'Play Icon', 'elementor' ),
+					'label' => esc_html__( 'Play Icon', 'refraction' ),
 					'type' => Controls_Manager::ICONS,
 					'fa4compatibility' => 'icon',
 					'default' => [
@@ -292,10 +292,10 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_close_switch',
 			[
-				'label' => esc_html__( 'Close Button', 'elementor' ),
+				'label' => esc_html__( 'Close Button', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Show', 'elementor' ),
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => $config['content']['floating_bar_section']['close_switch_default'],
 			]
@@ -312,7 +312,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'headlines_content',
 			[
-				'label' => esc_html__( 'Headlines', 'elementor' ),
+				'label' => esc_html__( 'Headlines', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -322,7 +322,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$repeater->add_control(
 			'headlines_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -334,10 +334,10 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$repeater->add_control(
 			'headlines_text',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'placeholder' => esc_html__( 'Enter your text', 'elementor' ),
-				'default' => esc_html__( 'Item Title', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your text', 'refraction' ),
+				'default' => esc_html__( 'Item Title', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -347,9 +347,9 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$repeater->add_control(
 			'headlines_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
-				'placeholder' => esc_html__( 'Paste URL or type', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste URL or type', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -364,16 +364,16 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'fields' => $repeater->get_controls(),
 				'title_field' => '{{{ headlines_text }}}',
 				'prevent_empty' => true,
-				'button_text' => esc_html__( 'Add Item', 'elementor' ),
+				'button_text' => esc_html__( 'Add Item', 'refraction' ),
 				'default' => [
 					[
-						'headlines_text' => esc_html__( 'Item #1', 'elementor' ),
+						'headlines_text' => esc_html__( 'Item #1', 'refraction' ),
 					],
 					[
-						'headlines_text' => esc_html__( 'Item #2', 'elementor' ),
+						'headlines_text' => esc_html__( 'Item #2', 'refraction' ),
 					],
 					[
-						'headlines_text' => esc_html__( 'Item #3', 'elementor' ),
+						'headlines_text' => esc_html__( 'Item #3', 'refraction' ),
 					],
 				],
 			]
@@ -388,7 +388,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'style_announcement',
 			[
-				'label' => esc_html__( 'Announcement', 'elementor' ),
+				'label' => esc_html__( 'Announcement', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -396,7 +396,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_announcement_icon_heading',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'conditions' => [
 					'relation' => 'and',
@@ -419,7 +419,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_announcement_icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-announcement-icon-color: {{VALUE}}',
@@ -445,15 +445,15 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_announcement_icon_position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => esc_html__( 'Left', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'end' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => esc_html__( 'Right', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -487,7 +487,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_announcement_icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -537,7 +537,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_announcement_text_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-announcement-text-color: {{VALUE}}',
@@ -552,7 +552,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'style_cta_button',
 			[
-				'label' => esc_html__( 'CTA Button', 'elementor' ),
+				'label' => esc_html__( 'CTA Button', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -560,12 +560,12 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_type',
 			[
-				'label' => esc_html__( 'Type', 'elementor' ),
+				'label' => esc_html__( 'Type', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'button',
 				'options' => [
-					'button' => esc_html__( 'Button', 'elementor' ),
-					'link' => esc_html__( 'Link', 'elementor' ),
+					'button' => esc_html__( 'Button', 'refraction' ),
+					'link' => esc_html__( 'Link', 'refraction' ),
 				],
 			]
 		);
@@ -573,17 +573,17 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_cta_icon_position',
 			[
-				'label' => esc_html__( 'Icon Position', 'elementor' ),
+				'label' => esc_html__( 'Icon Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => is_rtl() ? 'row-reverse' : 'row',
 				'toggle' => false,
 				'options' => [
 					'row' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'row-reverse' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -603,7 +603,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_icon_spacing',
 			[
-				'label' => esc_html__( 'Icon Spacing', 'elementor' ),
+				'label' => esc_html__( 'Icon Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -653,14 +653,14 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'style_cta_button_tabs_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'style_cta_button_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-cta-button-text-color: {{VALUE}}',
@@ -671,7 +671,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_bg_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-cta-button-bg-color: {{VALUE}}',
@@ -687,14 +687,14 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'style_cta_button_tabs_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'style_cta_button_text_color_hover',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-cta-button-text-color-hover: {{VALUE}}',
@@ -705,7 +705,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_bg_color_hover',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-cta-button-bg-color-hover: {{VALUE}}',
@@ -719,7 +719,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_border_color_hover',
 			[
-				'label' => esc_html__( 'Border Color', 'elementor' ),
+				'label' => esc_html__( 'Border Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-cta-button-border-color-hover: {{VALUE}}',
@@ -745,7 +745,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 				'frontend_available' => true,
 			]
@@ -758,10 +758,10 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_show_border',
 			[
-				'label' => esc_html__( 'Border', 'elementor' ),
+				'label' => esc_html__( 'Border', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 				'separator' => 'before',
@@ -774,7 +774,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_cta_button_border_width',
 			[
-				'label' => esc_html__( 'Border Width', 'elementor' ),
+				'label' => esc_html__( 'Border Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'%' => [
@@ -811,7 +811,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_border_color',
 			[
-				'label' => esc_html__( 'Border Color', 'elementor' ),
+				'label' => esc_html__( 'Border Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-cta-button-border-color: {{VALUE}}',
@@ -837,13 +837,13 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_corners',
 			[
-				'label' => esc_html__( 'Corners', 'elementor' ),
+				'label' => esc_html__( 'Corners', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'round',
 				'options' => [
-					'round' => esc_html__( 'Round', 'elementor' ),
-					'rounded' => esc_html__( 'Rounded', 'elementor' ),
-					'sharp' => esc_html__( 'Sharp', 'elementor' ),
+					'round' => esc_html__( 'Round', 'refraction' ),
+					'rounded' => esc_html__( 'Rounded', 'refraction' ),
+					'sharp' => esc_html__( 'Sharp', 'refraction' ),
 				],
 				'condition' => [
 					'style_cta_type' => 'button',
@@ -854,7 +854,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_cta_button_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem' ],
 				'selectors' => [
@@ -870,7 +870,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_cta_button_animation',
 			[
-				'label' => esc_html__( 'Entrance Animation', 'elementor' ),
+				'label' => esc_html__( 'Entrance Animation', 'refraction' ),
 				'type' => Controls_Manager::ANIMATION,
 				'frontend_available' => true,
 				'separator' => 'before',
@@ -880,13 +880,13 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_animation_duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ),
+				'label' => esc_html__( 'Animation Duration', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '1000',
 				'options' => [
-					'2000' => esc_html__( 'Slow', 'elementor' ),
-					'1000' => esc_html__( 'Normal', 'elementor' ),
-					'800' => esc_html__( 'Fast', 'elementor' ),
+					'2000' => esc_html__( 'Slow', 'refraction' ),
+					'1000' => esc_html__( 'Normal', 'refraction' ),
+					'800' => esc_html__( 'Fast', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-cta-button-animation-duration: {{VALUE}}ms',
@@ -913,7 +913,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_cta_button_animation_delay',
 			[
-				'label' => esc_html__( 'Animation Delay', 'elementor' ) . ' (ms)',
+				'label' => esc_html__( 'Animation Delay', 'refraction' ) . ' (ms)',
 				'type' => Controls_Manager::NUMBER,
 				'min' => 0,
 				'step' => 100,
@@ -949,7 +949,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_background_heading',
 			[
-				'label' => esc_html__( 'Background', 'elementor' ),
+				'label' => esc_html__( 'Background', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -978,7 +978,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_background_overlay_heading',
 			[
-				'label' => esc_html__( 'Background Overlay', 'elementor' ),
+				'label' => esc_html__( 'Background Overlay', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1007,7 +1007,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'floating_bar_background_overlay_opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'%' => [
@@ -1033,7 +1033,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_close_button_heading',
 			[
-				'label' => esc_html__( 'Close Button', 'elementor' ),
+				'label' => esc_html__( 'Close Button', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 				'condition' => [
@@ -1046,15 +1046,15 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 			$this->add_responsive_control(
 				'floating_bar_close_button_position',
 				[
-					'label' => esc_html__( 'Horizontal position', 'elementor' ),
+					'label' => esc_html__( 'Horizontal position', 'refraction' ),
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'start' => [
-							'title' => esc_html__( 'Left', 'elementor' ),
+							'title' => esc_html__( 'Left', 'refraction' ),
 							'icon' => 'eicon-h-align-left',
 						],
 						'end' => [
-							'title' => esc_html__( 'Right', 'elementor' ),
+							'title' => esc_html__( 'Right', 'refraction' ),
 							'icon' => 'eicon-h-align-right',
 						],
 					],
@@ -1071,7 +1071,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_close_button_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-close-button-color: {{VALUE}}',
@@ -1085,7 +1085,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_floating_bar_close_button_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -1107,7 +1107,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 			$this->add_control(
 				'floating_bar_close_bg_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-close-button-bg-color: {{VALUE}}',
@@ -1127,7 +1127,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_pause_button_heading',
 			[
-				'label' => esc_html__( 'Pause and Play', 'elementor' ),
+				'label' => esc_html__( 'Pause and Play', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'condition' => [
 					'floating_bar_pause_switch' => 'yes',
@@ -1138,7 +1138,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_pause_button_color',
 			[
-				'label' => esc_html__( 'Icon Color', 'elementor' ),
+				'label' => esc_html__( 'Icon Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-pause-play-icon-color: {{VALUE}}',
@@ -1152,7 +1152,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'floating_bar_pause_bg_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-pause-play-bg-color: {{VALUE}}',
@@ -1170,7 +1170,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'style_floating_bar',
 			[
-				'label' => esc_html__( 'Floating Bar', 'elementor' ),
+				'label' => esc_html__( 'Floating Bar', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1180,25 +1180,25 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_floating_bar_elements_align',
 			[
-				'label' => esc_html__( 'Align Elements', 'elementor' ),
+				'label' => esc_html__( 'Align Elements', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'toggle' => false,
 				'default' => 'center',
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-align-start-h',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-align-center-h',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-align-end-h',
 					],
 					'space-between' => [
-						'title' => esc_html__( 'Stretch', 'elementor' ),
+						'title' => esc_html__( 'Stretch', 'refraction' ),
 						'icon' => 'eicon-align-stretch-h',
 					],
 				],
@@ -1210,7 +1210,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_floating_bar_elements_spacing',
 			[
-				'label' => esc_html__( 'Element spacing', 'elementor' ),
+				'label' => esc_html__( 'Element spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -1238,7 +1238,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_floating_bar_elements_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem' ],
 				'selectors' => [
@@ -1256,7 +1256,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'style_headlines',
 			[
-				'label' => esc_html__( 'Headline', 'elementor' ),
+				'label' => esc_html__( 'Headline', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1264,7 +1264,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_headlines_icon_heading',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -1272,7 +1272,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_headlines_icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-headline-icon-color: {{VALUE}}',
@@ -1283,17 +1283,17 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_headlines_icon_position',
 			[
-				'label' => esc_html__( 'Icon Position', 'elementor' ),
+				'label' => esc_html__( 'Icon Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => is_rtl() ? 'row-reverse' : 'row',
 				'toggle' => false,
 				'options' => [
 					'row' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'row-reverse' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -1310,7 +1310,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_headlines_icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -1328,7 +1328,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_responsive_control(
 			'style_headlines_icon_spacing',
 			[
-				'label' => esc_html__( 'Icon Spacing', 'elementor' ),
+				'label' => esc_html__( 'Icon Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -1350,7 +1350,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'style_headline_text_heading',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1371,14 +1371,14 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'style_headline_tabs_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'style_headline_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-headline-text-color: {{VALUE}}',
@@ -1391,14 +1391,14 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_tab(
 			'style_headline_tabs_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'style_headline_text_color_hover',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-floating-bars' => '--e-floating-bars-headline-text-color-hover: {{VALUE}}',
@@ -1416,13 +1416,13 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 	protected function add_advanced_tab(): void {
 		Controls_Manager::add_tab(
 			static::TAB_ADVANCED,
-			esc_html__( 'Advanced', 'elementor' )
+			esc_html__( 'Advanced', 'refraction' )
 		);
 
 		$this->start_controls_section(
 			'advanced_layout_section',
 			[
-				'label' => esc_html__( 'Layout', 'elementor' ),
+				'label' => esc_html__( 'Layout', 'refraction' ),
 				'tab' => static::TAB_ADVANCED,
 			]
 		);
@@ -1430,15 +1430,15 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'advanced_vertical_position',
 			[
-				'label' => esc_html__( 'Vertical Position', 'elementor' ),
+				'label' => esc_html__( 'Vertical Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'top' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'bottom' => [
-						'title' => esc_html__( 'Bottom', 'elementor' ),
+						'title' => esc_html__( 'Bottom', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -1450,10 +1450,10 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'advanced_toggle_sticky',
 			[
-				'label' => esc_html__( 'Sticky', 'elementor' ),
+				'label' => esc_html__( 'Sticky', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 			]
@@ -1464,7 +1464,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'advanced_responsive_section',
 			[
-				'label' => esc_html__( 'Responsive', 'elementor' ),
+				'label' => esc_html__( 'Responsive', 'refraction' ),
 				'tab' => static::TAB_ADVANCED,
 			]
 		);
@@ -1472,9 +1472,9 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'responsive_description',
 			[
-				'raw' => __( 'Responsive visibility will take effect only on preview mode or live page, and not while editing in Elementor.', 'elementor' ),
+				'raw' => __( 'Responsive visibility will take effect only on preview mode or live page, and not while editing in Refraction.', 'refraction' ),
 				'type' => Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-descriptor',
+				'content_classes' => 'refraction-descriptor',
 			]
 		);
 
@@ -1485,7 +1485,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->start_controls_section(
 			'advanced_custom_controls_section',
 			[
-				'label' => esc_html__( 'CSS', 'elementor' ),
+				'label' => esc_html__( 'CSS', 'refraction' ),
 				'tab' => static::TAB_ADVANCED,
 			]
 		);
@@ -1493,7 +1493,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'advanced_custom_css_id',
 			[
-				'label' => esc_html__( 'CSS ID', 'elementor' ),
+				'label' => esc_html__( 'CSS ID', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'ai' => [
@@ -1502,7 +1502,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
+				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'refraction' ),
 				'style_transfer' => false,
 			]
 		);
@@ -1510,7 +1510,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 		$this->add_control(
 			'advanced_custom_css_classes',
 			[
-				'label' => esc_html__( 'CSS Classes', 'elementor' ),
+				'label' => esc_html__( 'CSS Classes', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'ai' => [
@@ -1519,7 +1519,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'elementor' ),
+				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'refraction' ),
 			]
 		);
 

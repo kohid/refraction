@@ -1,4 +1,4 @@
-import { getContainer } from '@elementor/editor-elements';
+import { getContainer } from '@refraction/editor-elements';
 
 export const canElementHaveChildren = ( elementId: string ): boolean => {
 	const container = getContainer( elementId );

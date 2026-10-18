@@ -28,7 +28,7 @@ import { ModuleAccordion } from './module-accordion';
 import { ModulesStatus } from './modules-status';
 import { PageTitle } from './page-title';
 
-const SCORE_TOOLTIP_CONTENT = __( 'This score shows how many checks your site passes to help agents access and understand your content.', 'elementor' );
+const SCORE_TOOLTIP_CONTENT = __( 'This score shows how many checks your site passes to help agents access and understand your content.', 'refraction' );
 
 const scoreInfoIcon = (
 	<Infotip content={ SCORE_TOOLTIP_CONTENT }>

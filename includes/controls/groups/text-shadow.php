@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor text shadow control.
+ * Refraction text shadow control.
  *
  * A base control for creating text shadow control. Displays input fields to define
  * the text shadow including the horizontal shadow, vertical shadow, shadow blur and
@@ -58,7 +58,7 @@ class Group_Control_Text_Shadow extends Group_Control_Base {
 		$controls = [];
 
 		$controls['text_shadow'] = [
-			'label' => esc_html__( 'Text Shadow', 'elementor' ),
+			'label' => esc_html__( 'Text Shadow', 'refraction' ),
 			'type' => Controls_Manager::TEXT_SHADOW,
 			'selectors' => [
 				'{{SELECTOR}}' => 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
@@ -82,7 +82,7 @@ class Group_Control_Text_Shadow extends Group_Control_Base {
 	protected function get_default_options() {
 		return [
 			'popover' => [
-				'starter_title' => esc_html__( 'Text Shadow', 'elementor' ),
+				'starter_title' => esc_html__( 'Text Shadow', 'refraction' ),
 				'starter_name' => 'text_shadow_type',
 				'starter_value' => 'yes',
 				'settings' => [

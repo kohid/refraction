@@ -10,7 +10,7 @@ export class ImportExportHelpers {
 	}
 
 	static async navigateToToolsPage( page: Page ): Promise<void> {
-		await page.goto( '/wp-admin/admin.php?page=elementor-tools' );
+		await page.goto( '/wp-admin/admin.php?page=refraction-tools' );
 		await page.waitForLoadState( 'networkidle' );
 	}
 

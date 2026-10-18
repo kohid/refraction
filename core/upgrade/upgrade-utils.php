@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Upgrade;
+namespace Refraction\Core\Upgrade;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -24,7 +24,7 @@ class Upgrade_Utils {
 		$post_ids = $updater->query_col(
 			'SELECT `post_id`
 					FROM `' . $wpdb->postmeta . '`
-					WHERE `meta_key` = "_elementor_data"
+					WHERE `meta_key` = "_refraction_data"
 					AND `meta_value` LIKE \'%"widgetType":"' . $widget_id . '"%\';'
 		);
 
@@ -68,7 +68,7 @@ class Upgrade_Utils {
 				// We need the `wp_slash` in order to avoid the unslashing during the `update_metadata`
 				$json_value = wp_slash( wp_json_encode( $data ) );
 
-				update_metadata( 'post', $post_id, '_elementor_data', $json_value );
+				update_metadata( 'post', $post_id, '_refraction_data', $json_value );
 			}
 		}
 

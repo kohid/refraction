@@ -1,4 +1,4 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlWPWidgetItemView;
 
 ControlWPWidgetItemView = ControlBaseDataView.extend( {
@@ -20,7 +20,7 @@ ControlWPWidgetItemView = ControlBaseDataView.extend( {
 
 	onFormChanged() {
 		var idBase = 'widget-' + this.model.get( 'id_base' ),
-			settings = this.ui.form.elementorSerializeObject()[ idBase ].REPLACE_TO_ID;
+			settings = this.ui.form.refractionSerializeObject()[ idBase ].REPLACE_TO_ID;
 
 		this.setValue( settings );
 	},
@@ -28,7 +28,7 @@ ControlWPWidgetItemView = ControlBaseDataView.extend( {
 	onReady() {
 		var self = this;
 
-		elementorCommon.ajax.addRequest( 'editor_get_wp_widget_form', {
+		refractionCommon.ajax.addRequest( 'editor_get_wp_widget_form', {
 			data: {
 				// Fake Widget ID
 				id: self.model.cid,
@@ -52,7 +52,7 @@ ControlWPWidgetItemView = ControlBaseDataView.extend( {
 
 				const widgetType = self.model.get( 'widget' );
 
-				elementor.hooks.doAction( `panel/widgets/${ widgetType }/controls/wp_widget/loaded`, self );
+				refraction.hooks.doAction( `panel/widgets/${ widgetType }/controls/wp_widget/loaded`, self );
 			},
 		} );
 	},

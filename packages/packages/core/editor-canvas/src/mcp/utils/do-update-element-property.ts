@@ -4,19 +4,19 @@ import {
 	getWidgetsCache,
 	updateElementSettings,
 	updateElementStyle,
-} from '@elementor/editor-elements';
-import { getPropSchemaFromCache, type PropValue, Schema, type TransformablePropValue } from '@elementor/editor-props';
-import { type CustomCss, getStylesSchema, getVariantByMeta } from '@elementor/editor-styles';
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
-import { type Utils as IUtils } from '@elementor/editor-variables';
-import { type z } from '@elementor/schema';
+} from '@refraction/editor-elements';
+import { getPropSchemaFromCache, type PropValue, Schema, type TransformablePropValue } from '@refraction/editor-props';
+import { type CustomCss, getStylesSchema, getVariantByMeta } from '@refraction/editor-styles';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
+import { type Utils as IUtils } from '@refraction/editor-variables';
+import { type z } from '@refraction/schema';
 
 import { mergeCustomCssText, readStoredCustomCssText } from './merge-custom-css';
 import { resolveCanonicalPropName } from './resolve-canonical-prop-name';
 import { DYNAMIC_PROP_TYPE_KEY, dynamicTagLLMResolver } from './resolve-dynamic-tag';
 
 // TODO: see https://elementor.atlassian.net/browse/ED-22513 for better cross-module access
-type XElementor = z.infer< z.ZodAny >;
+type XRefraction = z.infer< z.ZodAny >;
 const LOCAL_STYLE_META = {
 	breakpoint: 'desktop',
 	state: null,
@@ -49,7 +49,7 @@ type OwnParams = {
 
 export function resolvePropValue( value: unknown, forceKey?: string ): PropValue {
 	// TODO: see https://elementor.atlassian.net/browse/ED-22513 for better cross-module access
-	const Utils = ( ( ( window as XElementor ).elementorV2 as XElementor ).editorVariables as XElementor )
+	const Utils = ( ( ( window as XRefraction ).refractionV2 as XRefraction ).editorVariables as XRefraction )
 		.Utils as typeof IUtils;
 	return Schema.adjustLlmPropValueSchema( value as PropValue, {
 		forceKey,

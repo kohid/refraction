@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
-import { type PropType } from '@elementor/editor-props';
-import { type PopoverActionProps } from '@elementor/editor-ui';
+import { useBoundProp } from '@refraction/editor-controls';
+import { type PropType } from '@refraction/editor-props';
+import { type PopoverActionProps } from '@refraction/editor-ui';
 import { ColorFilterIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -16,7 +16,7 @@ export const usePropVariableAction = (): PopoverActionProps => {
 	return {
 		visible: Boolean( variable ),
 		icon: ColorFilterIcon,
-		title: __( 'Variables', 'elementor' ),
+		title: __( 'Variables', 'refraction' ),
 		content: ( { close: closePopover } ) => {
 			if ( ! variable ) {
 				return null;

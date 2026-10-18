@@ -1,10 +1,10 @@
 import { createMockElement } from 'test-utils';
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
 
 import { replaceElement } from '../replace-element';
 import { type ExtendedWindow, type V1ElementModelProps } from '../types';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 const mockRunCommandSync = jest.mocked( runCommandSync );
 
@@ -32,7 +32,7 @@ describe( 'replaceElement', () => {
 
 	it( 'should replace element', () => {
 		// Arrange.
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			getContainer: ( id ) => {
 				switch ( id ) {
 					case currentElement.id:
@@ -67,7 +67,7 @@ describe( 'replaceElement', () => {
 		} );
 		const createdContainerElement = createMockElement( { model: { id: 'created-container-id' } } );
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			getContainer: ( id ) => {
 				switch ( id ) {
 					case currentElement.id:

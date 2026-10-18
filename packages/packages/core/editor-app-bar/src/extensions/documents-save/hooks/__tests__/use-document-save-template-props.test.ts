@@ -1,9 +1,9 @@
-import { __useActiveDocumentActions as useActiveDocumentActions } from '@elementor/editor-documents';
+import { __useActiveDocumentActions as useActiveDocumentActions } from '@refraction/editor-documents';
 import { renderHook } from '@testing-library/react';
 
 import useDocumentSaveTemplateProps from '../use-document-save-template-props';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocumentActions: jest.fn(),
 } ) );
 
@@ -14,7 +14,7 @@ const documentActions = {
 	copyAndShare: jest.fn(),
 };
 
-describe( '@elementor/editor-app-bar - useDocumentSaveTemplateProps', () => {
+describe( '@refraction/editor-app-bar - useDocumentSaveTemplateProps', () => {
 	it( 'should open the "save as template" modal', () => {
 		// Arrange.
 		jest.mocked( useActiveDocumentActions ).mockReturnValue( documentActions );

@@ -1,6 +1,6 @@
 export default class View extends Marionette.ItemView {
 	getTemplate() {
-		return '#tmpl-elementor-templates-responsive-bar';
+		return '#tmpl-refraction-templates-responsive-bar';
 	}
 
 	id() {
@@ -39,10 +39,10 @@ export default class View extends Marionette.ItemView {
 	}
 
 	initialize() {
-		this.listenTo( elementor.channels.deviceMode, 'change', this.onDeviceModeChange );
-		this.listenTo( elementor.channels.responsivePreview, 'resize', this.onPreviewResize );
-		this.listenTo( elementor.channels.responsivePreview, 'open', this.onPreviewOpen );
-		this.listenTo( elementor.channels.deviceMode, 'close', this.resetScale );
+		this.listenTo( refraction.channels.deviceMode, 'change', this.onDeviceModeChange );
+		this.listenTo( refraction.channels.responsivePreview, 'resize', this.onPreviewResize );
+		this.listenTo( refraction.channels.responsivePreview, 'open', this.onPreviewOpen );
+		this.listenTo( refraction.channels.deviceMode, 'close', this.resetScale );
 	}
 
 	addTipsyToIconButtons() {
@@ -58,7 +58,7 @@ export default class View extends Marionette.ItemView {
 	}
 
 	restoreLastValidPreviewSize() {
-		const lastSize = elementor.channels.responsivePreview.request( 'size' );
+		const lastSize = refraction.channels.responsivePreview.request( 'size' );
 
 		this.ui.sizeInputWidth
 			.val( lastSize.width )
@@ -66,7 +66,7 @@ export default class View extends Marionette.ItemView {
 				html: true,
 				trigger: 'manual',
 				gravity: 'n',
-				title: () => __( 'The value inserted isn\'t in the breakpoint boundaries', 'elementor' ),
+				title: () => __( 'The value inserted isn\'t in the breakpoint boundaries', 'refraction' ),
 			} );
 
 		const tipsy = this.ui.sizeInputWidth.data( 'tipsy' );
@@ -78,8 +78,8 @@ export default class View extends Marionette.ItemView {
 
 	autoScale() {
 		const handlesWidth = 40 * this.scalePercentage / 100,
-			previewWidth = elementor.$previewWrapper.width() - handlesWidth,
-			iframeWidth = parseInt( elementor.$preview.css( '--e-editor-preview-width' ) ),
+			previewWidth = refraction.$previewWrapper.width() - handlesWidth,
+			iframeWidth = parseInt( refraction.$preview.css( '--e-editor-preview-width' ) ),
 			iframeScaleWidth = iframeWidth * this.scalePercentage / 100;
 
 		if ( iframeScaleWidth > previewWidth ) {
@@ -95,7 +95,7 @@ export default class View extends Marionette.ItemView {
 
 	scalePreview() {
 		const scale = this.scalePercentage / 100;
-		elementor.$previewWrapper.css( '--e-preview-scale', scale );
+		refraction.$previewWrapper.css( '--e-preview-scale', scale );
 	}
 
 	resetScale() {
@@ -114,7 +114,7 @@ export default class View extends Marionette.ItemView {
 	}
 
 	onDeviceModeChange() {
-		const currentDeviceMode = elementor.channels.deviceMode.request( 'currentMode' ),
+		const currentDeviceMode = refraction.channels.deviceMode.request( 'currentMode' ),
 			$currentDeviceSwitcherInput = this.ui.switcherInput.filter( '[value=' + currentDeviceMode + ']' );
 
 		this.setWidthHeightInputsEditableState();
@@ -130,19 +130,19 @@ export default class View extends Marionette.ItemView {
 	onBreakpointSelected( e ) {
 		const selectedDeviceMode = e.target.value;
 
-		elementor.changeDeviceMode( selectedDeviceMode, false );
+		refraction.changeDeviceMode( selectedDeviceMode, false );
 
 		this.autoScale();
 	}
 
 	onBreakpointSettingsOpen() {
-		const isWPPreviewMode = elementorCommon.elements.$body.hasClass( 'elementor-editor-preview' );
+		const isWPPreviewMode = refractionCommon.elements.$body.hasClass( 'refraction-editor-preview' );
 
 		if ( isWPPreviewMode ) {
-			elementor.exitPreviewMode();
+			refraction.exitPreviewMode();
 		}
 
-		const isInSettingsPanelActive = 'panel/global/menu' === elementor.documents.currentDocument.config.panel.default_route;
+		const isInSettingsPanelActive = 'panel/global/menu' === refraction.documents.currentDocument.config.panel.default_route;
 
 		if ( isInSettingsPanelActive ) {
 			$e.run( 'panel/global/close' );
@@ -152,12 +152,12 @@ export default class View extends Marionette.ItemView {
 
 		//  Open Settings Panel for Global/Layout/Breakpoints Settings
 		$e.run( 'editor/documents/switch', {
-			id: elementor.config.kit_id,
+			id: refraction.config.kit_id,
 			mode: 'autosave',
 		} )
 			.then( () => $e.route( 'panel/global/settings-layout' ) )
 			// TODO: Replace with a standard routing solution once one is available
-			.then( () => jQuery( '.elementor-control-section_breakpoints' ).trigger( 'click' ) );
+			.then( () => jQuery( '.refraction-control-section_breakpoints' ).trigger( 'click' ) );
 	}
 
 	onPreviewResize() {
@@ -165,7 +165,7 @@ export default class View extends Marionette.ItemView {
 			return;
 		}
 
-		const size = elementor.channels.responsivePreview.request( 'size' );
+		const size = refraction.channels.responsivePreview.request( 'size' );
 
 		this.ui.sizeInputWidth.val( Math.round( size.width ) );
 		this.ui.sizeInputHeight.val( Math.round( size.height ) );
@@ -176,7 +176,7 @@ export default class View extends Marionette.ItemView {
 	}
 
 	setWidthHeightInputsEditableState() {
-		const currentDeviceMode = elementor.channels.deviceMode.request( 'currentMode' );
+		const currentDeviceMode = refraction.channels.deviceMode.request( 'currentMode' );
 		// TODO: disable inputs
 		if ( 'desktop' === currentDeviceMode ) {
 			this.ui.sizeInputWidth.attr( 'disabled', 'disabled' );
@@ -188,9 +188,9 @@ export default class View extends Marionette.ItemView {
 	}
 
 	onCloseButtonClick() {
-		elementor.changeDeviceMode( 'desktop' );
+		refraction.changeDeviceMode( 'desktop' );
 		// Force exit if device mode is already desktop
-		elementor.exitDeviceMode();
+		refraction.exitDeviceMode();
 	}
 
 	onSizeInputChange() {
@@ -201,7 +201,7 @@ export default class View extends Marionette.ItemView {
 			height: this.ui.sizeInputHeight.val(),
 		};
 
-		const currentDeviceConstrains = elementor.getCurrentDeviceConstrains();
+		const currentDeviceConstrains = refraction.getCurrentDeviceConstrains();
 
 		if ( size.width < currentDeviceConstrains.minWidth || size.width > currentDeviceConstrains.maxWidth ) {
 			this.restorePreviewSizeTimeout = setTimeout( () => this.restoreLastValidPreviewSize(), 1500 );
@@ -213,7 +213,7 @@ export default class View extends Marionette.ItemView {
 
 		setTimeout( () => this.updatingPreviewSize = false, 300 );
 
-		elementor.updatePreviewSize( size );
+		refraction.updatePreviewSize( size );
 
 		this.autoScale();
 	}

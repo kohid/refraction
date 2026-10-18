@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
-import { type NumberPropValue, type SizePropValue, type StringPropValue } from '@elementor/editor-props';
-import { useSessionStorage } from '@elementor/session';
+import { type NumberPropValue, type SizePropValue, type StringPropValue } from '@refraction/editor-props';
+import { useSessionStorage } from '@refraction/session';
 import { styled } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -26,8 +26,8 @@ type DependentValues = {
 
 const POSITION_STATIC = 'static';
 
-const POSITION_LABEL = __( 'Position', 'elementor' );
-const DIMENSIONS_LABEL = __( 'Dimensions', 'elementor' );
+const POSITION_LABEL = __( 'Position', 'refraction' );
+const DIMENSIONS_LABEL = __( 'Dimensions', 'refraction' );
 
 const DEPENDENT_PROP_NAMES: Array< keyof DependentValues > = [
 	'inset-block-start',

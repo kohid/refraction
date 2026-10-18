@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems;
+namespace Refraction\Includes\TemplateLibrary\Sources\AdminMenuItems;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item;
-use Elementor\Core\Editor\Editor;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item;
+use Refraction\Core\Editor\Editor;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,7 +20,7 @@ class Add_New_Template_Menu_Item implements Admin_Menu_Item {
 	}
 
 	public function get_label() {
-		return esc_html__( 'Add New', 'elementor' );
+		return esc_html__( 'Add New', 'refraction' );
 	}
 
 	public function get_capability() {

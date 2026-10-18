@@ -1,11 +1,11 @@
-module.exports = elementorModules.Module.extend( {
+module.exports = refractionModules.Module.extend( {
 	initToast() {
-		var toast = elementorCommon.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-toast',
+		var toast = refractionCommon.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-toast',
 			position: {
 				my: 'center bottom',
 				at: 'center bottom-10',
-				of: '#elementor-panel-inner',
+				of: '#refraction-panel-inner',
 				autoRefresh: true,
 			},
 			hide: {

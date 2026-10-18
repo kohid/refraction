@@ -1,4 +1,4 @@
-import { stylesRepository } from '@elementor/editor-styles-repository';
+import { stylesRepository } from '@refraction/editor-styles-repository';
 
 import { createTransformer } from '../create-transformer';
 

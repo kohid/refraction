@@ -1,7 +1,7 @@
-import environment from 'elementor-common/utils/environment';
-import AddSectionBase from 'elementor-views/add-section/base';
+import environment from 'refraction-common/utils/environment';
+import AddSectionBase from 'refraction-views/add-section/base';
 
-var ContextMenu = require( 'elementor-editor-utils/context-menu' );
+var ContextMenu = require( 'refraction-editor-utils/context-menu' );
 
 module.exports = Marionette.Behavior.extend( {
 
@@ -52,7 +52,7 @@ module.exports = Marionette.Behavior.extend( {
 					{
 						name: 'navigator',
 						icon: 'eicon-navigator',
-						title: __( 'Structure', 'elementor' ),
+						title: __( 'Structure', 'refraction' ),
 						shortcut: controlSign + '+I',
 						callback: () => $e.route( 'navigator', {
 							reOpen: true,
@@ -76,7 +76,7 @@ module.exports = Marionette.Behavior.extend( {
 			this.initContextMenu();
 		}
 
-		if ( 'preview' === this.getOption( 'context' ) && ! elementor.selection.has( this.view.getContainer?.() ) ) {
+		if ( 'preview' === this.getOption( 'context' ) && ! refraction.selection.has( this.view.getContainer?.() ) ) {
 			$e.run( 'document/elements/deselect-all' );
 		}
 
@@ -105,10 +105,10 @@ module.exports = Marionette.Behavior.extend( {
 			this.view._parent.triggerMethod( 'toggleSortMode', false );
 		}
 
-		const location = options.location || elementorCommon.eventsManager.config.locations.canvas;
+		const location = options.location || refractionCommon.eventsManager.config.locations.canvas;
 		this.getContextMenu().show( event, { location } );
 
-		elementor.channels.editor.reply( 'contextMenu:targetView', this.view );
+		refraction.channels.editor.reply( 'contextMenu:targetView', this.view );
 	},
 
 	onRequestContextMenu( event, options ) {
@@ -134,7 +134,7 @@ module.exports = Marionette.Behavior.extend( {
 			this.view._parent.triggerMethod( 'toggleSortMode', true );
 		}
 
-		elementor.channels.editor.reply( 'contextMenu:targetView', null );
+		refraction.channels.editor.reply( 'contextMenu:targetView', null );
 	},
 
 	onDestroy() {

@@ -45,7 +45,7 @@ function createPackageConfig( { name, path: entryPath }, isProduction, watch ) {
 		} ),
 		wordpressAssetFilePlugin( {
 			entryName: name,
-			entryHandle: `elementor-v2-${ name }`,
+			entryHandle: `refraction-v2-${ name }`,
 			outputDir: resolve( PACKAGES_OUTPUT_DIR, name ),
 			extraRequests: cjsRequests,
 		} ),
@@ -90,7 +90,7 @@ function createPackageConfig( { name, path: entryPath }, isProduction, watch ) {
 					globals: ( id ) => resolvePackageGlobal( id ) ?? undefined,
 					// `EntryInitializationWebpackPlugin` appended this to every entry so each
 					// library can opt into an `init()` that runs as soon as it is registered.
-					footer: `window.elementorV2.${ globalName }?.init?.();`,
+					footer: `window.refractionV2.${ globalName }?.init?.();`,
 				},
 			},
 		},

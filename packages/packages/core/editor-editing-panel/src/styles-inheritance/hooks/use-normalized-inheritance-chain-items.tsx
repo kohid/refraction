@@ -1,13 +1,13 @@
 import { isValidElement, type ReactNode, useEffect, useState } from 'react';
-import { type PropsResolver, UnknownStyleStateError } from '@elementor/editor-canvas';
-import { type PropKey } from '@elementor/editor-props';
+import { type PropsResolver, UnknownStyleStateError } from '@refraction/editor-canvas';
+import { type PropKey } from '@refraction/editor-props';
 import {
 	isClassState,
 	isPseudoState,
 	type StyleDefinitionState,
 	type StyleDefinitionVariant,
-} from '@elementor/editor-styles';
-import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles';
+import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@refraction/editor-styles-repository';
 import { __ } from '@wordpress/i18n';
 
 import { type SnapshotPropValue } from '../types';
@@ -43,7 +43,7 @@ export const useNormalizedInheritanceChainItems = (
 					displayLabel:
 						ELEMENTS_BASE_STYLES_PROVIDER_KEY !== item.provider
 							? item.displayLabel
-							: __( 'Base', 'elementor' ),
+							: __( 'Base', 'refraction' ),
 				} ) )
 				.filter( ( item ) => ! item.value || item.displayLabel !== '' )
 				.slice( 0, MAXIMUM_ITEMS );

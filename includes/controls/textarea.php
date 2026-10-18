@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor textarea control.
+ * Refraction textarea control.
  *
  * A base control for creating textarea control. Displays a classic textarea.
  *
@@ -68,14 +68,14 @@ class Control_Textarea extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper elementor-control-dynamic-switcher-wrapper">
-				<textarea id="<?php $this->print_control_uid(); ?>" class="elementor-control-tag-area" rows="{{ data.rows }}" data-setting="{{ data.name }}" placeholder="{{ view.getControlPlaceholder() }}"></textarea>
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper refraction-control-dynamic-switcher-wrapper">
+				<textarea id="<?php $this->print_control_uid(); ?>" class="refraction-control-tag-area" rows="{{ data.rows }}" data-setting="{{ data.name }}" placeholder="{{ view.getControlPlaceholder() }}"></textarea>
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

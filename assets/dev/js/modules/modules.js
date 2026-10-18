@@ -24,10 +24,10 @@ const baseModules = {
 	},
 };
 
-if ( ! window.elementorModules ) {
-	window.elementorModules = baseModules;
+if ( ! window.refractionModules ) {
+	window.refractionModules = baseModules;
 } else {
-	Object.assign( window.elementorModules, baseModules );
+	Object.assign( window.refractionModules, baseModules );
 }
 
-export default window.elementorModules;
+export default window.refractionModules;

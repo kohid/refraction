@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 
 import { ImportContext } from '../../../../../../../context/import-context/import-context-provider';
 
-import Checkbox from 'elementor-app/ui/atoms/checkbox';
+import Checkbox from 'refraction-app/ui/atoms/checkbox';
 
 export default function ConflictCheckbox( props ) {
 	const importContext = useContext( ImportContext ),

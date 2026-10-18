@@ -17,6 +17,6 @@ export const CtaButton = ( { href, children, showIcon = true, ...props }: CtaBut
 		startIcon={ showIcon ? <CrownFilledIcon /> : undefined }
 		{ ...props }
 	>
-		{ children ?? __( 'Upgrade Now', 'elementor' ) }
+		{ children ?? __( 'Upgrade Now', 'refraction' ) }
 	</Button>
 );

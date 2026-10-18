@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useFloatingPanelZIndex } from '@elementor/editor-floating-panels';
+import { useFloatingPanelZIndex } from '@refraction/editor-floating-panels';
 import { ReloadIcon } from '@elementor/icons';
 import { Badge, Button, Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -18,7 +18,7 @@ export default function RescanButton( { hasScanned, isStale, disabled, onClick }
 
 	return (
 		<Tooltip
-			title={ __( 'Page content changed - rescan advised', 'elementor' ) }
+			title={ __( 'Page content changed - rescan advised', 'refraction' ) }
 			disableHoverListener={ ! isStale }
 			PopperProps={ { sx: { zIndex: panelZIndex } } }
 		>
@@ -30,7 +30,7 @@ export default function RescanButton( { hasScanned, isStale, disabled, onClick }
 					onClick={ onClick }
 					disabled={ disabled }
 				>
-					{ hasScanned ? __( 'Rescan', 'elementor' ) : __( 'Run page audit', 'elementor' ) }
+					{ hasScanned ? __( 'Rescan', 'refraction' ) : __( 'Run page audit', 'refraction' ) }
 				</Button>
 			</Badge>
 		</Tooltip>

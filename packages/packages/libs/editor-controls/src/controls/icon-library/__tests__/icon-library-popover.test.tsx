@@ -119,8 +119,8 @@ describe( 'IconLibraryPopover', () => {
 		jest.useRealTimers();
 		document.documentElement.removeAttribute( 'dir' );
 		restoreClientWidth();
-		delete ( window as { elementor?: typeof window.elementor } ).elementor;
-		window.elementorCommon = undefined as unknown as typeof window.elementorCommon;
+		delete ( window as { refraction?: typeof window.refraction } ).refraction;
+		window.refractionCommon = undefined as unknown as typeof window.refractionCommon;
 	} );
 
 	it( 'opens in grid view by default', () => {
@@ -651,8 +651,8 @@ describe( 'IconLibraryPopover', () => {
 			glyphClass: 'my-icons my-icons-badge',
 		};
 
-		window.elementor = {
-			...window.elementor,
+		window.refraction = {
+			...window.refraction,
 			config: {
 				icons: {
 					libraries: [
@@ -670,7 +670,7 @@ describe( 'IconLibraryPopover', () => {
 			helpers: {
 				enqueueIconFonts: jest.fn(),
 			},
-		} as typeof window.elementor;
+		} as typeof window.refraction;
 		jest.mocked( useIconLibraryProviderIcons ).mockReturnValue( {
 			data: [ customIcon ],
 			isLoading: false,
@@ -703,8 +703,8 @@ describe( 'IconLibraryPopover', () => {
 			paths: [ 'M1 1' ],
 		};
 
-		window.elementor = {
-			...window.elementor,
+		window.refraction = {
+			...window.refraction,
 			config: {
 				icons: {
 					libraries: [
@@ -722,8 +722,8 @@ describe( 'IconLibraryPopover', () => {
 			helpers: {
 				enqueueIconFonts: jest.fn(),
 			},
-		} as typeof window.elementor;
-		window.elementorCommon = {
+		} as typeof window.refraction;
+		window.refractionCommon = {
 			config: {
 				fontAwesome: {
 					v7: {
@@ -740,7 +740,7 @@ describe( 'IconLibraryPopover', () => {
 					},
 				},
 			},
-		} as typeof window.elementorCommon;
+		} as typeof window.refractionCommon;
 		jest.mocked( useIconLibraryProviderIcons ).mockReturnValue( {
 			data: [ customIcon ],
 			isLoading: false,
@@ -801,7 +801,7 @@ describe( 'IconLibraryPopover', () => {
 
 	it( 'shows the upload action in the header without hiding the icons', () => {
 		// Arrange.
-		window.elementor = { config: { v4Promotions: {} } } as unknown as typeof window.elementor;
+		window.refraction = { config: { v4Promotions: {} } } as unknown as typeof window.refraction;
 		renderPopover();
 
 		// Act.
@@ -815,7 +815,7 @@ describe( 'IconLibraryPopover', () => {
 
 	it( 'keeps the picker state when the upload promotion is opened and closed', async () => {
 		// Arrange.
-		window.elementor = { config: { v4Promotions: {} } } as unknown as typeof window.elementor;
+		window.refraction = { config: { v4Promotions: {} } } as unknown as typeof window.refraction;
 		const onClose = jest.fn();
 		renderPopover( { onClose } );
 		fireEvent.change( screen.getByPlaceholderText( 'Search' ), { target: { value: 'star' } } );

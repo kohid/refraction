@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
-import Dialog from 'elementor-app/ui/dialog/dialog';
+import Dialog from 'refraction-app/ui/dialog/dialog';
 
-import useAjax from 'elementor-app/hooks/use-ajax';
+import useAjax from 'refraction-app/hooks/use-ajax';
 
 export default function UnfilteredFilesDialog( props ) {
 	const { show, setShow, onReady, onCancel, onDismiss, onLoad, onEnable, onClose } = props,
@@ -17,7 +17,7 @@ export default function UnfilteredFilesDialog( props ) {
 
 			setAjax( {
 				data: {
-					action: 'elementor_ajax',
+					action: 'refraction_ajax',
 					actions: JSON.stringify( {
 						enable_unfiltered_files_upload: {
 							action: 'enable_unfiltered_files_upload',
@@ -63,23 +63,23 @@ export default function UnfilteredFilesDialog( props ) {
 				isEnableError
 					? (
 						<Dialog
-							title={ __( 'Something went wrong.', 'elementor' ) }
+							title={ __( 'Something went wrong.', 'refraction' ) }
 							text={ props.errorModalText }
 							approveButtonColor="link"
-							approveButtonText={ __( 'Continue', 'elementor' ) }
+							approveButtonText={ __( 'Continue', 'refraction' ) }
 							approveButtonOnClick={ onReady }
-							dismissButtonText={ __( 'Go Back', 'elementor' ) }
+							dismissButtonText={ __( 'Go Back', 'refraction' ) }
 							dismissButtonOnClick={ onCancel }
 							onClose={ onCancel }
 						/>
 					) : (
 						<Dialog
-							title={ __( 'First, enable unfiltered file uploads.', 'elementor' ) }
+							title={ __( 'First, enable unfiltered file uploads.', 'refraction' ) }
 							text={ props.confirmModalText }
 							approveButtonColor="link"
-							approveButtonText={ __( 'Enable', 'elementor' ) }
+							approveButtonText={ __( 'Enable', 'refraction' ) }
 							approveButtonOnClick={ () => setEnableUnfilteredFiles( true ) }
-							dismissButtonText={ __( 'Skip', 'elementor' ) }
+							dismissButtonText={ __( 'Skip', 'refraction' ) }
 							dismissButtonOnClick={ onDismiss || onReady }
 							onClose={ onClose || onDismiss || onReady }
 						/>

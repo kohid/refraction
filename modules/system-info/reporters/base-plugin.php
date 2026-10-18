@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Modules\System_Info\Reporters;
+namespace Refraction\Modules\System_Info\Reporters;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

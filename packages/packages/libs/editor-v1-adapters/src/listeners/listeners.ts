@@ -51,7 +51,7 @@ function registerCommandListener(
 	state: CommandEventDescriptor[ 'state' ],
 	callback: ListenerCallback
 ) {
-	return registerWindowEventListener( `elementor/commands/run/${ state }`, ( e ) => {
+	return registerWindowEventListener( `refraction/commands/run/${ state }`, ( e ) => {
 		const shouldRunCallback = e.type === 'command' && e.command === command;
 
 		if ( shouldRunCallback ) {
@@ -65,7 +65,7 @@ function registerRouteListener(
 	state: RouteEventDescriptor[ 'state' ],
 	callback: ListenerCallback
 ) {
-	return registerWindowEventListener( `elementor/routes/${ state }`, ( e ) => {
+	return registerWindowEventListener( `refraction/routes/${ state }`, ( e ) => {
 		const shouldRunCallback = e.type === 'route' && e.route.startsWith( route );
 
 		if ( shouldRunCallback ) {
@@ -74,7 +74,7 @@ function registerRouteListener(
 	} );
 }
 
-const V1_READY_EVENT_NAME = 'elementor/initialized';
+const V1_READY_EVENT_NAME = 'refraction/initialized';
 
 function registerWindowEventListener( event: WindowEventDescriptor[ 'name' ], callback: ListenerCallback ) {
 	const isFirstListener = ! callbacksByEvent.has( event );

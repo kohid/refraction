@@ -1,4 +1,4 @@
-import { type ItemsActionPayload } from '@elementor/editor-controls';
+import { type ItemsActionPayload } from '@refraction/editor-controls';
 import {
 	type CreateElementParams,
 	createElements,
@@ -8,8 +8,8 @@ import {
 	moveElements,
 	removeElements,
 	type V1ElementData,
-} from '@elementor/editor-elements';
-import { booleanPropTypeUtil, escapedHtmlPropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-elements';
+import { booleanPropTypeUtil, escapedHtmlPropTypeUtil } from '@refraction/editor-props';
 import { __ } from '@wordpress/i18n';
 
 export type ListItem = {
@@ -63,7 +63,7 @@ const buildItemModel = ( position: number, showMarkers: boolean ): V1ElementData
 				elType: LIST_ITEM_MARKER_ELEMENT_TYPE,
 				id: generateElementId(),
 				editor_settings: {
-					title: __( 'Marker', 'elementor' ),
+					title: __( 'Marker', 'refraction' ),
 				},
 				elements: [],
 				hydrateDefaultChildren: true,
@@ -72,7 +72,7 @@ const buildItemModel = ( position: number, showMarkers: boolean ): V1ElementData
 				elType: LIST_ITEM_CONTENT_ELEMENT_TYPE,
 				id: generateElementId(),
 				editor_settings: {
-					title: __( 'Content', 'elementor' ),
+					title: __( 'Content', 'refraction' ),
 				},
 				elements: [
 					{
@@ -93,7 +93,7 @@ const buildItemModel = ( position: number, showMarkers: boolean ): V1ElementData
 export const duplicateItem = ( { items }: { items: ItemsActionPayload< ListItem > } ) => {
 	duplicateElements( {
 		elementIds: items.map( ( { item } ) => item.id ),
-		title: __( 'Duplicate List Item', 'elementor' ),
+		title: __( 'Duplicate List Item', 'refraction' ),
 	} );
 };
 
@@ -114,7 +114,7 @@ export const moveItem = ( {
 	}
 
 	moveElements( {
-		title: __( 'Reorder List Items', 'elementor' ),
+		title: __( 'Reorder List Items', 'refraction' ),
 		moves: [
 			{
 				element: movedElement,
@@ -127,7 +127,7 @@ export const moveItem = ( {
 
 export const removeItem = ( { items }: { items: ItemsActionPayload< ListItem > } ) => {
 	removeElements( {
-		title: __( 'List Items', 'elementor' ),
+		title: __( 'List Items', 'refraction' ),
 		elementIds: items.map( ( { item } ) => item.id ),
 	} );
 };
@@ -155,7 +155,7 @@ export const addItem = ( {
 		const position = getNextItemNumber( titles );
 
 		createElements( {
-			title: __( 'List Items', 'elementor' ),
+			title: __( 'List Items', 'refraction' ),
 			elements: [
 				{
 					container: listContainer,

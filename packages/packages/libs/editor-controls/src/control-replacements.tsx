@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type ComponentType, createContext, type PropsWithChildren, useContext } from 'react';
-import { type PropValue } from '@elementor/editor-props';
+import { type PropValue } from '@refraction/editor-props';
 
 import { useBoundProp } from './bound-prop-context';
 

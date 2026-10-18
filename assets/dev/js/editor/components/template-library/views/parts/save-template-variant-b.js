@@ -1,16 +1,16 @@
 const TemplateLibrarySaveTemplateView = require( './save-template' );
 
 const TemplateLibrarySaveTemplateVariantBView = TemplateLibrarySaveTemplateView.extend( {
-	id: 'elementor-template-library-save-template-variant-b',
+	id: 'refraction-template-library-save-template-variant-b',
 
-	template: '#tmpl-elementor-template-library-save-template-variant-b',
+	template: '#tmpl-refraction-template-library-save-template-variant-b',
 
 	ui() {
 		return _.extend( TemplateLibrarySaveTemplateView.prototype.ui.apply( this, arguments ), {
 			selectFolderLink: '.select-folder-link',
 			cloudAccountBadge: '.cloud-account-badge',
 			siteAccountBadge: '.site-account-badge',
-			connect: '#elementor-template-library-connect__badge-variant-b',
+			connect: '#refraction-template-library-connect__badge-variant-b',
 		} );
 	},
 
@@ -39,12 +39,12 @@ const TemplateLibrarySaveTemplateVariantBView = TemplateLibrarySaveTemplateView.
 			this.infoTipDialog.hide();
 		}
 
-		const message = elementor.templates.hasCloudLibraryQuota()
-			? __( 'Upgrade your subscription to get more space and reuse saved assets across all your sites.', 'elementor' )
-			: __( 'Upgrade your subscription to access Cloud Templates and reuse saved assets across all your sites.', 'elementor' );
+		const message = refraction.templates.hasCloudLibraryQuota()
+			? __( 'Upgrade your subscription to get more space and reuse saved assets across all your sites.', 'refraction' )
+			: __( 'Upgrade your subscription to access Cloud Templates and reuse saved assets across all your sites.', 'refraction' );
 
-		this.infoTipDialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-library--infotip__dialog',
+		this.infoTipDialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-library--infotip__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',
@@ -70,12 +70,12 @@ const TemplateLibrarySaveTemplateVariantBView = TemplateLibrarySaveTemplateView.
 			this.cloudAccountBadgeDialog.hide();
 		}
 
-		const emailReplacement = elementor.config.library_connect.is_connected ? elementor.config.library_connect.user_email : __( 'connected', 'elementor' );
+		const emailReplacement = refraction.config.library_connect.is_connected ? refraction.config.library_connect.user_email : __( 'connected', 'refraction' );
 		/* Translators: %s: User's email. */
-		const message = sprintf( __( 'Only %s Elementor account can access Cloud Templates from any connected site.', 'elementor' ), emailReplacement );
+		const message = sprintf( __( 'Only %s Refraction account can access Cloud Templates from any connected site.', 'refraction' ), emailReplacement );
 
-		this.cloudAccountBadgeDialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-library--cloud-upgrade__dialog',
+		this.cloudAccountBadgeDialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-library--cloud-upgrade__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',
@@ -104,10 +104,10 @@ const TemplateLibrarySaveTemplateVariantBView = TemplateLibrarySaveTemplateView.
 			this.siteAccountBadgeDialog.hide();
 		}
 
-		const message = __( 'Authorized users on this site can access Site Templates.', 'elementor' );
+		const message = __( 'Authorized users on this site can access Site Templates.', 'refraction' );
 
-		this.siteAccountBadgeDialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-library--site-info__dialog',
+		this.siteAccountBadgeDialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-library--site-info__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',
@@ -135,7 +135,7 @@ const TemplateLibrarySaveTemplateVariantBView = TemplateLibrarySaveTemplateView.
 	},
 
 	sendCTBadgeEvent( badgeType ) {
-		elementor.templates.eventManager.sendCTBadgeEvent( {
+		refraction.templates.eventManager.sendCTBadgeEvent( {
 			ct_badge_hover_position: this.getOption( 'context' ),
 			ct_badge_type: badgeType,
 			ct_position_state: this.getPositionState(),
@@ -143,11 +143,11 @@ const TemplateLibrarySaveTemplateVariantBView = TemplateLibrarySaveTemplateView.
 	},
 
 	getPositionState() {
-		if ( ! elementor.config.library_connect.is_connected ) {
+		if ( ! refraction.config.library_connect.is_connected ) {
 			return 'connect';
 		}
 
-		if ( ! elementor.templates.hasCloudLibraryQuota() || this.cloudMaxCapacityReached() ) {
+		if ( ! refraction.templates.hasCloudLibraryQuota() || this.cloudMaxCapacityReached() ) {
 			return 'upgrade';
 		}
 

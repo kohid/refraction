@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Import;
+namespace Refraction\App\Modules\ImportExport\Runners\Import;
 
-use Elementor\App\Modules\ImportExport\Utils as ImportExportUtils;
-use Elementor\Core\Utils\ImportExport\WP_Import;
+use Refraction\App\Modules\ImportExport\Utils as ImportExportUtils;
+use Refraction\Core\Utils\ImportExport\WP_Import;
 
 class Wp_Content extends Import_Runner_Base {
 
@@ -66,10 +66,10 @@ class Wp_Content extends Import_Runner_Base {
 			'terms' => $imported_terms,
 			'taxonomies' => ! empty( $taxonomies[ $post_type ] ) ? $taxonomies[ $post_type ] : [],
 			'posts_meta' => [
-				static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID => $this->import_session_id,
+				static::META_KEY_REFRACTION_IMPORT_SESSION_ID => $this->import_session_id,
 			],
 			'terms_meta' => [
-				static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID => $this->import_session_id,
+				static::META_KEY_REFRACTION_IMPORT_SESSION_ID => $this->import_session_id,
 			],
 		];
 

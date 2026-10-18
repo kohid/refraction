@@ -5,8 +5,8 @@ import {
 	NumberControl,
 	type ToggleButtonGroupItem,
 	useBoundProp,
-} from '@elementor/editor-controls';
-import { type NumberPropValue } from '@elementor/editor-props';
+} from '@refraction/editor-controls';
+import { type NumberPropValue } from '@refraction/editor-props';
 import { ArrowDownSmallIcon, ArrowUpSmallIcon, PencilIcon } from '@elementor/icons';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -20,7 +20,7 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type GroupControlItemOption = 'first' | 'last' | 'custom';
 
-const ORDER_LABEL = __( 'Order', 'elementor' );
+const ORDER_LABEL = __( 'Order', 'refraction' );
 
 export const FIRST_DEFAULT_VALUE = -99999;
 export const LAST_DEFAULT_VALUE = 99999;
@@ -37,19 +37,19 @@ const orderValueMap = {
 const items: ToggleButtonGroupItem< GroupControlItemOption >[] = [
 	{
 		value: FIRST,
-		label: __( 'First', 'elementor' ),
+		label: __( 'First', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowUpSmallIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: LAST,
-		label: __( 'Last', 'elementor' ),
+		label: __( 'Last', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowDownSmallIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: CUSTOM,
-		label: __( 'Custom', 'elementor' ),
+		label: __( 'Custom', 'refraction' ),
 		renderContent: ( { size } ) => <PencilIcon fontSize={ size } />,
 		showTooltip: true,
 	},
@@ -138,7 +138,7 @@ function FlexOrderFieldContent() {
 			{ isCustomVisible && (
 				<Grid container gap={ 2 } alignItems="center" flexWrap="nowrap">
 					<Grid item xs={ 6 }>
-						<ControlLabel>{ __( 'Custom order', 'elementor' ) }</ControlLabel>
+						<ControlLabel>{ __( 'Custom order', 'refraction' ) }</ControlLabel>
 					</Grid>
 					<Grid item xs={ 6 } sx={ { display: 'flex', justifyContent: 'end' } }>
 						<NumberControl

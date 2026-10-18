@@ -1,75 +1,75 @@
 <?php
-namespace Elementor\TemplateLibrary;
+namespace Refraction\TemplateLibrary;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Editor\Editor;
-use Elementor\Core\Utils\Collection;
-use Elementor\DB;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems\Add_New_Template_Menu_Item;
-use Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems\Templates_Categories_Menu_Item;
-use Elementor\Modules\Library\Documents\Library_Document;
-use Elementor\Plugin;
-use Elementor\Utils;
-use Elementor\User;
-use Elementor\Core\Isolation\Wordpress_Adapter;
-use Elementor\Core\Isolation\Wordpress_Adapter_Interface;
-use Elementor\Core\Isolation\Elementor_Adapter_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems\Editor_One_Saved_Templates_Menu;
-use Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems\Editor_One_Templates_Menu;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Editor\Editor;
+use Refraction\Core\Utils\Collection;
+use Refraction\DB;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Includes\TemplateLibrary\Sources\AdminMenuItems\Add_New_Template_Menu_Item;
+use Refraction\Includes\TemplateLibrary\Sources\AdminMenuItems\Templates_Categories_Menu_Item;
+use Refraction\Modules\Library\Documents\Library_Document;
+use Refraction\Plugin;
+use Refraction\Utils;
+use Refraction\User;
+use Refraction\Core\Isolation\Wordpress_Adapter;
+use Refraction\Core\Isolation\Wordpress_Adapter_Interface;
+use Refraction\Core\Isolation\Refraction_Adapter_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Includes\TemplateLibrary\Sources\AdminMenuItems\Editor_One_Saved_Templates_Menu;
+use Refraction\Includes\TemplateLibrary\Sources\AdminMenuItems\Editor_One_Templates_Menu;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor template library local source.
+ * Refraction template library local source.
  *
- * Elementor template library local source handler class is responsible for
- * handling local Elementor templates saved by the user locally on his site.
+ * Refraction template library local source handler class is responsible for
+ * handling local Refraction templates saved by the user locally on his site.
  *
  * @since 1.0.0
  */
 class Source_Local extends Source_Base {
 
 	/**
-	 * Elementor template-library post-type slug.
+	 * Refraction template-library post-type slug.
 	 */
-	const CPT = 'elementor_library';
+	const CPT = 'refraction_library';
 
 	/**
-	 * Elementor template-library taxonomy slug.
+	 * Refraction template-library taxonomy slug.
 	 */
-	const TAXONOMY_TYPE_SLUG = 'elementor_library_type';
+	const TAXONOMY_TYPE_SLUG = 'refraction_library_type';
 
 	/**
-	 * Elementor template-library category slug.
+	 * Refraction template-library category slug.
 	 */
-	const TAXONOMY_CATEGORY_SLUG = 'elementor_library_category';
+	const TAXONOMY_CATEGORY_SLUG = 'refraction_library_category';
 
 	/**
-	 * Elementor template-library meta key.
+	 * Refraction template-library meta key.
 	 *
-	 * @deprecated 2.3.0 Use `Elementor\Core\Base\Document::TYPE_META_KEY` const instead.
+	 * @deprecated 2.3.0 Use `Refraction\Core\Base\Document::TYPE_META_KEY` const instead.
 	 */
-	const TYPE_META_KEY = '_elementor_template_type';
+	const TYPE_META_KEY = '_refraction_template_type';
 
 	/**
-	 * Elementor template-library temporary files folder.
+	 * Refraction template-library temporary files folder.
 	 */
-	const TEMP_FILES_DIR = 'elementor/tmp';
+	const TEMP_FILES_DIR = 'refraction/tmp';
 
 	/**
-	 * Elementor template-library bulk export action name.
+	 * Refraction template-library bulk export action name.
 	 */
-	const BULK_EXPORT_ACTION = 'elementor_export_multiple_templates';
+	const BULK_EXPORT_ACTION = 'refraction_export_multiple_templates';
 
-	const ADMIN_MENU_SLUG = 'edit.php?post_type=elementor_library';
+	const ADMIN_MENU_SLUG = 'edit.php?post_type=refraction_library';
 
 	const ADMIN_MENU_PRIORITY = 10;
 
-	const ADMIN_SCREEN_ID = 'edit-elementor_library';
+	const ADMIN_SCREEN_ID = 'edit-refraction_library';
 
 	/**
 	 * Template types.
@@ -100,9 +100,9 @@ class Source_Local extends Source_Base {
 	protected $wordpress_adapter = null;
 
 	/**
-	 * @var Elementor_Adapter_Interface
+	 * @var Refraction_Adapter_Interface
 	 */
-	protected $elementor_adapter = null;
+	protected $refraction_adapter = null;
 
 	/**
 	 * @since 2.3.0
@@ -219,7 +219,7 @@ class Source_Local extends Source_Base {
 	 * @return string The local template title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Local', 'elementor' );
+		return esc_html__( 'Local', 'refraction' );
 	}
 
 	/**
@@ -228,8 +228,8 @@ class Source_Local extends Source_Base {
 	 * Used to register custom template data like a post type, a taxonomy or any
 	 * other data.
 	 *
-	 * The local template class registers a new `elementor_library` post type
-	 * and an `elementor_library_type` taxonomy. They are used to store data for
+	 * The local template class registers a new `refraction_library` post type
+	 * and an `refraction_library_type` taxonomy. They are used to store data for
 	 * local templates saved by the user on his site.
 	 *
 	 * @since 1.0.0
@@ -237,19 +237,19 @@ class Source_Local extends Source_Base {
 	 */
 	public function register_data() {
 		$labels = [
-			'name' => esc_html_x( 'My Templates', 'Template Library', 'elementor' ),
-			'singular_name' => esc_html_x( 'Template', 'Template Library', 'elementor' ),
-			'add_new' => esc_html__( 'Add New Template', 'elementor' ),
-			'add_new_item' => esc_html__( 'Add New Template', 'elementor' ),
-			'edit_item' => esc_html__( 'Edit Template', 'elementor' ),
-			'new_item' => esc_html__( 'New Template', 'elementor' ),
-			'all_items' => esc_html__( 'All Templates', 'elementor' ),
-			'view_item' => esc_html__( 'View Template', 'elementor' ),
-			'search_items' => esc_html__( 'Search Template', 'elementor' ),
-			'not_found' => esc_html__( 'No Templates found', 'elementor' ),
-			'not_found_in_trash' => esc_html__( 'No Templates found in Trash', 'elementor' ),
-			'parent_item_colon' => esc_html__( 'Parent Template:', 'elementor' ),
-			'menu_name' => esc_html_x( 'Templates', 'Template Library', 'elementor' ),
+			'name' => esc_html_x( 'My Templates', 'Template Library', 'refraction' ),
+			'singular_name' => esc_html_x( 'Template', 'Template Library', 'refraction' ),
+			'add_new' => esc_html__( 'Add New Template', 'refraction' ),
+			'add_new_item' => esc_html__( 'Add New Template', 'refraction' ),
+			'edit_item' => esc_html__( 'Edit Template', 'refraction' ),
+			'new_item' => esc_html__( 'New Template', 'refraction' ),
+			'all_items' => esc_html__( 'All Templates', 'refraction' ),
+			'view_item' => esc_html__( 'View Template', 'refraction' ),
+			'search_items' => esc_html__( 'Search Template', 'refraction' ),
+			'not_found' => esc_html__( 'No Templates found', 'refraction' ),
+			'not_found_in_trash' => esc_html__( 'No Templates found in Trash', 'refraction' ),
+			'parent_item_colon' => esc_html__( 'Parent Template:', 'refraction' ),
+			'menu_name' => esc_html_x( 'Templates', 'Template Library', 'refraction' ),
 		];
 
 		$args = [
@@ -263,7 +263,7 @@ class Source_Local extends Source_Base {
 			'exclude_from_search' => true,
 			'capability_type' => 'post',
 			'hierarchical' => false,
-			'supports' => [ 'title', 'thumbnail', 'author', 'elementor', 'custom-fields' ],
+			'supports' => [ 'title', 'thumbnail', 'author', 'refraction', 'custom-fields' ],
 			'show_in_rest' => true,
 		];
 
@@ -272,13 +272,13 @@ class Source_Local extends Source_Base {
 		/**
 		 * Register template library post type args.
 		 *
-		 * Filters the post type arguments when registering elementor template library post type.
+		 * Filters the post type arguments when registering refraction template library post type.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param array $args Arguments for registering a post type.
 		 */
-		$args = apply_filters( 'elementor/template_library/sources/local/register_post_type_args', $args );
+		$args = apply_filters( 'refraction/template_library/sources/local/register_post_type_args', $args );
 
 		$this->post_type_object = register_post_type( self::CPT, $args );
 
@@ -290,32 +290,32 @@ class Source_Local extends Source_Base {
 			'query_var' => is_admin(),
 			'rewrite' => false,
 			'public' => false,
-			'label' => esc_html_x( 'Type', 'Template Library', 'elementor' ),
+			'label' => esc_html_x( 'Type', 'Template Library', 'refraction' ),
 		];
 
 		/**
 		 * Register template library taxonomy args.
 		 *
-		 * Filters the taxonomy arguments when registering elementor template library taxonomy.
+		 * Filters the taxonomy arguments when registering refraction template library taxonomy.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param array $args Arguments for registering a taxonomy.
 		 */
-		$args = apply_filters( 'elementor/template_library/sources/local/register_taxonomy_args', $args );
+		$args = apply_filters( 'refraction/template_library/sources/local/register_taxonomy_args', $args );
 
 		$cpts_to_associate = [ self::CPT ];
 
 		/**
 		 * Custom post types to associate.
 		 *
-		 * Filters the list of custom post types when registering elementor template library taxonomy.
+		 * Filters the list of custom post types when registering refraction template library taxonomy.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array $cpts_to_associate Custom post types. Default is `elementor_library` post type.
+		 * @param array $cpts_to_associate Custom post types. Default is `refraction_library` post type.
 		 */
-		$cpts_to_associate = apply_filters( 'elementor/template_library/sources/local/register_taxonomy_cpts', $cpts_to_associate );
+		$cpts_to_associate = apply_filters( 'refraction/template_library/sources/local/register_taxonomy_cpts', $cpts_to_associate );
 
 		register_taxonomy( self::TAXONOMY_TYPE_SLUG, $cpts_to_associate, $args );
 
@@ -331,22 +331,22 @@ class Source_Local extends Source_Base {
 			'rewrite' => false,
 			'public' => false,
 			'labels' => [
-				'name' => esc_html_x( 'Categories', 'Template Library', 'elementor' ),
-				'singular_name' => esc_html_x( 'Category', 'Template Library', 'elementor' ),
-				'all_items' => esc_html_x( 'All Categories', 'Template Library', 'elementor' ),
+				'name' => esc_html_x( 'Categories', 'Template Library', 'refraction' ),
+				'singular_name' => esc_html_x( 'Category', 'Template Library', 'refraction' ),
+				'all_items' => esc_html_x( 'All Categories', 'Template Library', 'refraction' ),
 			],
 		];
 
 		/**
 		 * Register template library category args.
 		 *
-		 * Filters the category arguments when registering elementor template library category.
+		 * Filters the category arguments when registering refraction template library category.
 		 *
 		 * @since 2.4.0
 		 *
 		 * @param array $args Arguments for registering a category.
 		 */
-		$args = apply_filters( 'elementor/template_library/sources/local/register_category_args', $args );
+		$args = apply_filters( 'refraction/template_library/sources/local/register_category_args', $args );
 
 		register_taxonomy( self::TAXONOMY_CATEGORY_SLUG, self::CPT, $args );
 	}
@@ -393,24 +393,24 @@ class Source_Local extends Source_Base {
 			$labels->name = $template_plural;
 			$labels->singular_name = $template_singular;
 			/* translators: %s: Template label (plural). */
-			$labels->all_items = sprintf( esc_html__( 'All %s', 'elementor' ), $template_plural );
+			$labels->all_items = sprintf( esc_html__( 'All %s', 'refraction' ), $template_plural );
 			/* translators: %s: Template label (singular). */
-			$labels->add_new = sprintf( esc_html__( 'Add New %s', 'elementor' ), $template_singular );
+			$labels->add_new = sprintf( esc_html__( 'Add New %s', 'refraction' ), $template_singular );
 			$labels->add_new_item = $labels->add_new;
 			/* translators: %s: Template label (singular). */
-			$labels->edit_item = sprintf( esc_html__( 'Edit %s', 'elementor' ), $template_singular );
+			$labels->edit_item = sprintf( esc_html__( 'Edit %s', 'refraction' ), $template_singular );
 			/* translators: %s: Template label (singular). */
-			$labels->new_item = sprintf( esc_html__( 'New %s', 'elementor' ), $template_singular );
+			$labels->new_item = sprintf( esc_html__( 'New %s', 'refraction' ), $template_singular );
 			/* translators: %s: Template label (singular). */
-			$labels->view_item = sprintf( esc_html__( 'View %s', 'elementor' ), $template_singular );
+			$labels->view_item = sprintf( esc_html__( 'View %s', 'refraction' ), $template_singular );
 			/* translators: %s: Template label (plural). */
-			$labels->search_items = sprintf( esc_html__( 'Search %s', 'elementor' ), $template_plural );
+			$labels->search_items = sprintf( esc_html__( 'Search %s', 'refraction' ), $template_plural );
 			/* translators: %s: Template label (plural). */
-			$labels->not_found = sprintf( esc_html__( 'No %s found', 'elementor' ), $template_plural );
+			$labels->not_found = sprintf( esc_html__( 'No %s found', 'refraction' ), $template_plural );
 			/* translators: %s: Template label (plural). */
-			$labels->not_found_in_trash = sprintf( esc_html__( 'No %s found in Trash', 'elementor' ), $template_plural );
+			$labels->not_found_in_trash = sprintf( esc_html__( 'No %s found in Trash', 'refraction' ), $template_plural );
 			/* translators: %s: Template label (singular). */
-			$labels->parent_item_colon = sprintf( esc_html__( 'Parent %s:', 'elementor' ), $template_singular );
+			$labels->parent_item_colon = sprintf( esc_html__( 'Parent %s:', 'refraction' ), $template_singular );
 			$labels->menu_name = $template_plural;
 			$post_type_object->labels = $labels;
 		}
@@ -480,11 +480,11 @@ class Source_Local extends Source_Base {
 	 */
 	public function save_item( $template_data ) {
 		if ( ! current_user_can( $this->post_type_object->cap->edit_posts ) ) {
-			return new \WP_Error( 'save_error', esc_html__( 'Access denied.', 'elementor' ) );
+			return new \WP_Error( 'save_error', esc_html__( 'Access denied.', 'refraction' ) );
 		}
 
 		$defaults = [
-			'title' => esc_html__( '(no title)', 'elementor' ),
+			'title' => esc_html__( '(no title)', 'refraction' ),
 			'page_settings' => [],
 		];
 
@@ -499,7 +499,7 @@ class Source_Local extends Source_Base {
 				$should_check_template_type &&
 				! $this->is_valid_template_type( $template_data['type'] )
 		) {
-			return new \WP_Error( 'invalid_template_type', esc_html__( 'Invalid template type.', 'elementor' ) );
+			return new \WP_Error( 'invalid_template_type', esc_html__( 'Invalid template type.', 'refraction' ) );
 		}
 
 		$document = Plugin::$instance->documents->create(
@@ -531,26 +531,26 @@ class Source_Local extends Source_Base {
 		/**
 		 * After template library save.
 		 *
-		 * Fires after Elementor template library was saved.
+		 * Fires after Refraction template library was saved.
 		 *
 		 * @since 1.0.1
 		 *
 		 * @param int   $template_id   The ID of the template.
 		 * @param array $template_data The template data.
 		 */
-		do_action( 'elementor/template-library/after_save_template', $template_id, $template_data );
+		do_action( 'refraction/template-library/after_save_template', $template_id, $template_data );
 
 		/**
 		 * After template library update.
 		 *
-		 * Fires after Elementor template library was updated.
+		 * Fires after Refraction template library was updated.
 		 *
 		 * @since 1.0.1
 		 *
 		 * @param int   $template_id   The ID of the template.
 		 * @param array $template_data The template data.
 		 */
-		do_action( 'elementor/template-library/after_update_template', $template_id, $template_data );
+		do_action( 'refraction/template-library/after_update_template', $template_id, $template_data );
 
 		return $template_id;
 	}
@@ -571,7 +571,7 @@ class Source_Local extends Source_Base {
 		$is_valid_template_type = in_array( static::CPT, $cpt, true );
 
 		return apply_filters(
-			'elementor/template_library/sources/local/is_valid_template_type',
+			'refraction/template_library/sources/local/is_valid_template_type',
 			$is_valid_template_type,
 			$cpt,
 		);
@@ -596,13 +596,13 @@ class Source_Local extends Source_Base {
 	 */
 	public function update_item( $new_data ) {
 		if ( ! current_user_can( $this->post_type_object->cap->edit_post, $new_data['id'] ) ) {
-			return new \WP_Error( 'save_error', esc_html__( 'Access denied.', 'elementor' ) );
+			return new \WP_Error( 'save_error', esc_html__( 'Access denied.', 'refraction' ) );
 		}
 
 		$document = Plugin::$instance->documents->get( $new_data['id'] );
 
 		if ( ! $document ) {
-			return new \WP_Error( 'save_error', esc_html__( 'Template not exist.', 'elementor' ) );
+			return new \WP_Error( 'save_error', esc_html__( 'Template not exist.', 'refraction' ) );
 		}
 
 		$save_data = [];
@@ -620,14 +620,14 @@ class Source_Local extends Source_Base {
 		/**
 		 * After template library update.
 		 *
-		 * Fires after Elementor template library was updated.
+		 * Fires after Refraction template library was updated.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param int   $new_data_id The ID of the new template.
 		 * @param array $new_data    The new template data.
 		 */
-		do_action( 'elementor/template-library/after_update_template', $new_data['id'], $new_data );
+		do_action( 'refraction/template-library/after_update_template', $new_data['id'], $new_data );
 
 		return true;
 	}
@@ -682,7 +682,7 @@ class Source_Local extends Source_Base {
 		 *
 		 * @param array $data Template data.
 		 */
-		$data = apply_filters( 'elementor/template-library/get_template', $data );
+		$data = apply_filters( 'refraction/template-library/get_template', $data );
 
 		return $data;
 	}
@@ -728,7 +728,7 @@ class Source_Local extends Source_Base {
 				 * @param array $content     The template content data.
 				 * @param int   $template_id The template ID.
 				 */
-				$content = apply_filters( 'elementor/frontend/builder_content_data', $content, $template_id );
+				$content = apply_filters( 'refraction/frontend/builder_content_data', $content, $template_id );
 			}
 		}
 
@@ -760,7 +760,7 @@ class Source_Local extends Source_Base {
 	 */
 	public function delete_template( $template_id ) {
 		if ( ! current_user_can( $this->post_type_object->cap->delete_post, $template_id ) ) {
-			return new \WP_Error( 'template_error', esc_html__( 'Access denied.', 'elementor' ) );
+			return new \WP_Error( 'template_error', esc_html__( 'Access denied.', 'refraction' ) );
 		}
 
 		return wp_delete_post( $template_id, true );
@@ -769,7 +769,7 @@ class Source_Local extends Source_Base {
 	public function bulk_delete_items( array $template_ids ) {
 		foreach ( $template_ids as $template_id ) {
 			if ( ! current_user_can( $this->post_type_object->cap->delete_post, $template_id ) ) {
-				return new \WP_Error( 'template_error', esc_html__( 'Access denied.', 'elementor' ) );
+				return new \WP_Error( 'template_error', esc_html__( 'Access denied.', 'refraction' ) );
 			}
 		}
 
@@ -815,16 +815,16 @@ class Source_Local extends Source_Base {
 	private function validate_template_export_permissions( $template_id ) {
 		$post_id = intval( $template_id );
 		if ( get_post_type( $post_id ) !== self::CPT ) {
-			return new \WP_Error( 'template_error', esc_html__( 'Invalid template type or template does not exist.', 'elementor' ) );
+			return new \WP_Error( 'template_error', esc_html__( 'Invalid template type or template does not exist.', 'refraction' ) );
 		}
 
 		$post_status = get_post_status( $post_id );
 		if ( 'private' === $post_status && ! current_user_can( 'read_private_posts', $post_id ) ) {
-			return new \WP_Error( 'template_error', esc_html__( 'You do not have permission to access this template.', 'elementor' ) );
+			return new \WP_Error( 'template_error', esc_html__( 'You do not have permission to access this template.', 'refraction' ) );
 		}
 
 		if ( 'publish' !== $post_status && ! current_user_can( 'edit_post', $post_id ) ) {
-			return new \WP_Error( 'template_error', esc_html__( 'You do not have permission to export this template.', 'elementor' ) );
+			return new \WP_Error( 'template_error', esc_html__( 'You do not have permission to export this template.', 'refraction' ) );
 		}
 
 		return null;
@@ -879,7 +879,7 @@ class Source_Local extends Source_Base {
 		}
 
 		// Create temporary .zip file
-		$zip_archive_filename = 'elementor-templates-' . gmdate( 'Y-m-d' ) . '.zip';
+		$zip_archive_filename = 'refraction-templates-' . gmdate( 'Y-m-d' ) . '.zip';
 
 		$zip_archive = new \ZipArchive();
 
@@ -923,8 +923,8 @@ class Source_Local extends Source_Base {
 			return new \WP_Error( 'file_error', 'Please upload a file to import' );
 		}
 
-		// Set the Request's state as an Elementor upload request, in order to support unfiltered file uploads.
-		Plugin::$instance->uploads_manager->set_elementor_upload_state( true );
+		// Set the Request's state as a Refraction upload request, in order to support unfiltered file uploads.
+		Plugin::$instance->uploads_manager->set_refraction_upload_state( true );
 
 		$items = [];
 
@@ -990,11 +990,11 @@ class Source_Local extends Source_Base {
 		if ( self::is_base_templates_screen() ) {
 			if ( $this->is_template_supports_export( $post->ID ) ) {
 				$template_labels = $this->get_template_labels_by_type( self::get_template_type( $post->ID ) );
-				$export_label = esc_html__( 'Export Template', 'elementor' );
+				$export_label = esc_html__( 'Export Template', 'refraction' );
 
 				if ( $template_labels['singular'] ) {
 					/* translators: %s: Template label (singular). */
-					$export_label = sprintf( esc_html__( 'Export %s', 'elementor' ), $template_labels['singular'] );
+					$export_label = sprintf( esc_html__( 'Export %s', 'refraction' ), $template_labels['singular'] );
 				}
 
 				$actions['export-template'] = sprintf( '<a href="%1$s">%2$s</a>', $this->get_export_link( $post->ID ), $export_label );
@@ -1021,37 +1021,37 @@ class Source_Local extends Source_Base {
 			return;
 		}
 
-		/** @var \Elementor\Core\Common\Modules\Ajax\Module $ajax */
+		/** @var \Refraction\Core\Common\Modules\Ajax\Module $ajax */
 		$ajax = Plugin::$instance->common->get_component( 'ajax' );
 		$template_labels = $this->get_current_template_labels();
-		$import_label = esc_html__( 'Import Templates', 'elementor' );
-		$description = esc_html__( 'Choose an Elementor template JSON file or a .zip archive of Elementor templates, and add them to the list of templates available in your library.', 'elementor' );
+		$import_label = esc_html__( 'Import Templates', 'refraction' );
+		$description = esc_html__( 'Choose a Refraction template JSON file or a .zip archive of Refraction templates, and add them to the list of templates available in your library.', 'refraction' );
 
 		if ( $template_labels['plural'] ) {
 			/* translators: %s: Template label (plural). */
-			$import_label = sprintf( esc_html__( 'Import %s', 'elementor' ), $template_labels['plural'] );
+			$import_label = sprintf( esc_html__( 'Import %s', 'refraction' ), $template_labels['plural'] );
 		}
 
 		if ( $template_labels['singular'] && $template_labels['plural'] ) {
 			$description = sprintf(
 				/* translators: 1: Template label (singular). 2: Template label (plural). */
-				esc_html__( 'Choose an Elementor %1$s JSON file or a .zip archive of Elementor %2$s, and add them to the list of %2$s available in your library.', 'elementor' ),
+				esc_html__( 'Choose a Refraction %1$s JSON file or a .zip archive of Refraction %2$s, and add them to the list of %2$s available in your library.', 'refraction' ),
 				$template_labels['singular'],
 				$template_labels['plural']
 			);
 		}
 		?>
-		<div id="elementor-hidden-area">
-			<a id="elementor-import-template-trigger" class="page-title-action button button-secondary"><?php echo esc_html( $import_label ); ?></a>
-			<div id="elementor-import-template-area">
-				<div id="elementor-import-template-title"><?php echo esc_html( $description ); ?></div>
-				<form id="elementor-import-template-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
-					<input type="hidden" name="action" value="elementor_library_direct_actions">
+		<div id="refraction-hidden-area">
+			<a id="refraction-import-template-trigger" class="page-title-action button button-secondary"><?php echo esc_html( $import_label ); ?></a>
+			<div id="refraction-import-template-area">
+				<div id="refraction-import-template-title"><?php echo esc_html( $description ); ?></div>
+				<form id="refraction-import-template-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
+					<input type="hidden" name="action" value="refraction_library_direct_actions">
 					<input type="hidden" name="library_action" value="direct_import_template">
 					<input type="hidden" name="_nonce" value="<?php Utils::print_unescaped_internal_string( $ajax->create_nonce() ); ?>">
-					<fieldset id="elementor-import-template-form-inputs">
+					<fieldset id="refraction-import-template-form-inputs">
 						<input type="file" name="file" accept=".json,application/json,.zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed" required>
-						<input id="e-import-template-action" type="submit" class="button" value="<?php echo esc_attr__( 'Import Now', 'elementor' ); ?>">
+						<input id="e-import-template-action" type="submit" class="button" value="<?php echo esc_attr__( 'Import Now', 'refraction' ); ?>">
 					</fieldset>
 				</form>
 			</div>
@@ -1121,17 +1121,17 @@ class Source_Local extends Source_Base {
 		 *                             Default is true.
 		 * @param int  $template_id    Post ID.
 		 */
-		$export_support = apply_filters( 'elementor/template_library/is_template_supports_export', $export_support, $template_id );
+		$export_support = apply_filters( 'refraction/template_library/is_template_supports_export', $export_support, $template_id );
 
 		return $export_support;
 	}
 
 	/**
-	 * Remove Elementor post state.
+	 * Remove Refraction post state.
 	 *
-	 * Remove the 'elementor' post state from the display states of the post.
+	 * Remove the 'refraction' post state from the display states of the post.
 	 *
-	 * Used to remove the 'elementor' post state from the template library items.
+	 * Used to remove the 'refraction' post state from the template library items.
 	 *
 	 * Fired by `display_post_states` filter.
 	 *
@@ -1143,9 +1143,9 @@ class Source_Local extends Source_Base {
 	 *
 	 * @return array Updated array of post display states.
 	 */
-	public function remove_elementor_post_state_from_library( $post_states, $post ) {
-		if ( self::CPT === $post->post_type && isset( $post_states['elementor'] ) ) {
-			unset( $post_states['elementor'] );
+	public function remove_refraction_post_state_from_library( $post_states, $post ) {
+		if ( self::CPT === $post->post_type && isset( $post_states['refraction'] ) ) {
+			unset( $post_states['refraction'] );
 		}
 		return $post_states;
 	}
@@ -1165,15 +1165,15 @@ class Source_Local extends Source_Base {
 	 */
 	private function get_export_link( $template_id ) {
 		// TODO: BC since 2.3.0 - Use `$ajax->create_nonce()`
-		/** @var \Elementor\Core\Common\Modules\Ajax\Module $ajax */
+		/** @var \Refraction\Core\Common\Modules\Ajax\Module $ajax */
 		// $ajax = Plugin::$instance->common->get_component( 'ajax' );
 
 		return add_query_arg(
 			[
-				'action' => 'elementor_library_direct_actions',
+				'action' => 'refraction_library_direct_actions',
 				'library_action' => 'export_template',
 				'source' => $this->get_id(),
-				'_nonce' => wp_create_nonce( 'elementor_ajax' ),
+				'_nonce' => wp_create_nonce( 'refraction_ajax' ),
 				'template_id' => $template_id,
 			],
 			admin_url( 'admin-ajax.php' )
@@ -1234,7 +1234,7 @@ class Source_Local extends Source_Base {
 	 * Adds an 'Export' action to the Bulk Actions drop-down in the template
 	 * library.
 	 *
-	 * Fired by `bulk_actions-edit-elementor_library` filter.
+	 * Fired by `bulk_actions-edit-refraction_library` filter.
 	 *
 	 * @since 1.6.0
 	 * @access public
@@ -1244,7 +1244,7 @@ class Source_Local extends Source_Base {
 	 * @return array An array of the available bulk actions.
 	 */
 	public function admin_add_bulk_export_action( $actions ) {
-		$actions[ self::BULK_EXPORT_ACTION ] = esc_html__( 'Export', 'elementor' );
+		$actions[ self::BULK_EXPORT_ACTION ] = esc_html__( 'Export', 'refraction' );
 
 		return $actions;
 	}
@@ -1254,7 +1254,7 @@ class Source_Local extends Source_Base {
 	 *
 	 * Handles the template library bulk export action.
 	 *
-	 * Fired by `handle_bulk_actions-edit-elementor_library` filter.
+	 * Fired by `handle_bulk_actions-edit-refraction_library` filter.
 	 *
 	 * @since 1.6.0
 	 * @access public
@@ -1282,7 +1282,7 @@ class Source_Local extends Source_Base {
 	 *
 	 * Used to output the template library tabs with their labels.
 	 *
-	 * Fired by `views_edit-elementor_library` filter.
+	 * Fired by `views_edit-refraction_library` filter.
 	 *
 	 * @since 2.0.0
 	 * @access public
@@ -1321,12 +1321,12 @@ class Source_Local extends Source_Base {
 		}
 
 		?>
-		<div id="elementor-template-library-tabs-wrapper" class="nav-tab-wrapper">
+		<div id="refraction-template-library-tabs-wrapper" class="nav-tab-wrapper">
 			<a class="nav-tab<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $baseurl ); ?>">
 				<?php
 				$all_title = $this->get_library_title();
 				if ( ! $all_title ) {
-					$all_title = esc_html__( 'All', 'elementor' );
+					$all_title = esc_html__( 'All', 'refraction' );
 				}
 				Utils::print_unescaped_internal_string( $all_title ); ?>
 			</a>
@@ -1367,7 +1367,7 @@ class Source_Local extends Source_Base {
 
 		$args = wp_parse_args( $args, [
 			'cpt' => self::CPT,
-			'post_type' => get_query_var( 'elementor_library_type' ),
+			'post_type' => get_query_var( 'refraction_library_type' ),
 		] );
 
 		if ( $args['cpt'] !== $post_type || 'bottom' !== $which ) {
@@ -1408,7 +1408,7 @@ class Source_Local extends Source_Base {
 
 			$current_type = 'template';
 
-			$args['additional_inline_style'] = '#elementor-template-library-tabs-wrapper {display: none;}';
+			$args['additional_inline_style'] = '#refraction-template-library-tabs-wrapper {display: none;}';
 		}
 
 		$this->render_blank_state( $current_type, $args );
@@ -1417,12 +1417,12 @@ class Source_Local extends Source_Base {
 	private function render_blank_state( $current_type, array $args = [] ) {
 		$current_type_label = $this->get_template_label_by_type( $current_type );
 		$type_labels = $this->get_template_labels_by_type( $current_type );
-		$description = esc_html__( 'Add templates and reuse them across your website. Easily export and import them to any other project, for an optimized workflow.', 'elementor' );
+		$description = esc_html__( 'Add templates and reuse them across your website. Easily export and import them to any other project, for an optimized workflow.', 'refraction' );
 
 		if ( $type_labels['plural'] ) {
 			$description = sprintf(
 				/* translators: %s: Template label (plural). */
-				esc_html__( 'Add %s and reuse them across your website. Easily export and import them to any other project, for an optimized workflow.', 'elementor' ),
+				esc_html__( 'Add %s and reuse them across your website. Easily export and import them to any other project, for an optimized workflow.', 'refraction' ),
 				$type_labels['plural']
 			);
 		}
@@ -1436,7 +1436,7 @@ class Source_Local extends Source_Base {
 		$inline_style .= $args['additional_inline_style'];
 		?>
 		<style type="text/css"><?php Utils::print_unescaped_internal_string( $inline_style ); ?></style>
-		<div class="elementor-template_library-blank_state">
+		<div class="refraction-template_library-blank_state">
 			<?php $this->print_blank_state_template( $current_type_label, $args['href'], $args['description'] ); ?>
 		</div>
 		<?php
@@ -1459,19 +1459,19 @@ class Source_Local extends Source_Base {
 	 */
 	public function print_blank_state_template( $current_type_label, $href, $description ) {
 		?>
-			<div class="elementor-blank_state">
+			<div class="refraction-blank_state">
 				<i class="eicon-folder"></i>
 				<h3>
 					<?php
 					/* translators: %s: Template type label. */
-					printf( esc_html__( 'Create Your First %s', 'elementor' ), esc_html( $current_type_label ) );
+					printf( esc_html__( 'Create Your First %s', 'refraction' ), esc_html( $current_type_label ) );
 					?>
 				</h3>
 				<p><?php echo wp_kses_post( $description ); ?></p>
-				<a id="elementor-template-library-add-new" class="elementor-button e-primary" href="<?php echo esc_url( $href ); ?>">
+				<a id="refraction-template-library-add-new" class="refraction-button e-primary" href="<?php echo esc_url( $href ); ?>">
 					<?php
 					/* translators: %s: Template type label. */
-					printf( esc_html__( 'Add New %s', 'elementor' ), esc_html( $current_type_label ) );
+					printf( esc_html__( 'Add New %s', 'refraction' ), esc_html( $current_type_label ) );
 					?>
 				</a>
 			</div>
@@ -1481,7 +1481,7 @@ class Source_Local extends Source_Base {
 	/**
 	 * Add filter by category.
 	 *
-	 * In the templates library, add a filter by Elementor library category.
+	 * In the templates library, add a filter by Refraction library category.
 	 *
 	 * @access public
 	 *
@@ -1510,7 +1510,7 @@ class Source_Local extends Source_Base {
 		printf(
 			'<label class="screen-reader-text" for="%1$s">%2$s</label>',
 			esc_attr( self::TAXONOMY_CATEGORY_SLUG ),
-			esc_html_x( 'Filter by category', 'Template Library', 'elementor' )
+			esc_html_x( 'Filter by category', 'Template Library', 'refraction' )
 		);
 		wp_dropdown_categories( $dropdown_options );
 	}
@@ -1575,7 +1575,7 @@ class Source_Local extends Source_Base {
 		}
 
 		$content = apply_filters(
-			'elementor/template_library/sources/local/export/elements',
+			'refraction/template_library/sources/local/export/elements',
 			$template_data['content']
 		);
 
@@ -1588,7 +1588,7 @@ class Source_Local extends Source_Base {
 		];
 
 		return [
-			'name' => 'elementor-' . $template_id . '-' . gmdate( 'Y-m-d' ) . '.json',
+			'name' => 'refraction-' . $template_id . '-' . gmdate( 'Y-m-d' ) . '.json',
 			'content' => wp_json_encode( $export_data ),
 		];
 	}
@@ -1624,7 +1624,7 @@ class Source_Local extends Source_Base {
 		 * @param string $template_label Template label.
 		 * @param string $template_type  Template type.
 		 */
-		$template_label = apply_filters( 'elementor/template-library/get_template_label_by_type', $template_label, $template_type );
+		$template_label = apply_filters( 'refraction/template-library/get_template_label_by_type', $template_label, $template_type );
 
 		return $template_label;
 	}
@@ -1736,23 +1736,23 @@ class Source_Local extends Source_Base {
 		if ( is_admin() ) {
 			add_action( 'admin_init', [ $this, 'redirect_categories_page_to_saved_templates_page' ] );
 
-			add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+			add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 				$this->register_editor_one_menu( $menu_data_provider );
 			} );
 
-			add_action( 'elementor/editor-one/menu/excluded_level4_slugs', function ( array $excluded_slugs ): array {
-				$excluded_slugs[] = 'edit.php?post_type=elementor_library#add_new';
-				$excluded_slugs[] = 'edit-tags.php?taxonomy=elementor_library_category&amp;post_type=elementor_library';
+			add_action( 'refraction/editor-one/menu/excluded_level4_slugs', function ( array $excluded_slugs ): array {
+				$excluded_slugs[] = 'edit.php?post_type=refraction_library#add_new';
+				$excluded_slugs[] = 'edit-tags.php?taxonomy=refraction_library_category&amp;post_type=refraction_library';
 				return $excluded_slugs;
 			} );
 
-			add_filter( 'elementor/editor-one/menu/elementor_post_types', function ( array $elementor_post_types ): array {
-				$elementor_post_types[ self::CPT ] = [];
+			add_filter( 'refraction/editor-one/menu/refraction_post_types', function ( array $refraction_post_types ): array {
+				$refraction_post_types[ self::CPT ] = [];
 
-				return $elementor_post_types;
+				return $refraction_post_types;
 			} );
 
-			add_filter( 'elementor/editor-one/admin-edit-post-types', function ( array $post_types ): array {
+			add_filter( 'refraction/editor-one/admin-edit-post-types', function ( array $post_types ): array {
 				$post_types[] = self::CPT;
 
 				return $post_types;
@@ -1763,7 +1763,7 @@ class Source_Local extends Source_Base {
 			add_filter( 'post_row_actions', [ $this, 'post_row_actions' ], 10, 2 );
 			add_action( 'admin_footer', [ $this, 'admin_import_template_form' ] );
 			add_action( 'save_post', [ $this, 'on_save_post' ], 10, 2 );
-			add_filter( 'display_post_states', [ $this, 'remove_elementor_post_state_from_library' ], 11, 2 );
+			add_filter( 'display_post_states', [ $this, 'remove_refraction_post_state_from_library' ], 11, 2 );
 
 			add_action( 'parse_query', [ $this, 'admin_query_filter_types' ] );
 
@@ -1775,8 +1775,8 @@ class Source_Local extends Source_Base {
 			add_action( 'manage_' . self::CPT . '_posts_custom_column', [ $this, 'admin_columns_content' ], 10, 2 );
 
 			// Template library bulk actions.
-			add_filter( 'bulk_actions-edit-elementor_library', [ $this, 'admin_add_bulk_export_action' ] );
-			add_filter( 'handle_bulk_actions-edit-elementor_library', [ $this, 'admin_export_multiple_templates' ], 10, 3 );
+			add_filter( 'bulk_actions-edit-refraction_library', [ $this, 'admin_add_bulk_export_action' ] );
+			add_filter( 'handle_bulk_actions-edit-refraction_library', [ $this, 'admin_export_multiple_templates' ], 10, 3 );
 
 			// Print template library tabs.
 			add_filter( 'views_edit-' . self::CPT, [ $this, 'admin_print_tabs' ] );
@@ -1785,20 +1785,20 @@ class Source_Local extends Source_Base {
 			add_action( 'manage_posts_extra_tablenav', [ $this, 'maybe_render_blank_state' ] );
 		}
 
-		add_action( 'elementor/document/after_save', [ $this, 'on_template_update' ], 10, 2 );
+		add_action( 'refraction/document/after_save', [ $this, 'on_template_update' ], 10, 2 );
 
 		add_action( 'template_redirect', [ $this, 'block_template_frontend' ] );
 
-		// Remove elementor library templates from WP Sitemap
+		// Remove refraction library templates from WP Sitemap
 		add_filter(
 			'wp_sitemaps_post_types',
 			function( $post_types ) {
-				return $this->remove_elementor_cpt_from_sitemap( $post_types );
+				return $this->remove_refraction_cpt_from_sitemap( $post_types );
 			}
 		);
 	}
 
-	public function on_template_update( \Elementor\Core\Base\Document $document, array $data ) {
+	public function on_template_update( \Refraction\Core\Base\Document $document, array $data ) {
 		if ( ! empty( $data['post_title'] ) ) {
 			wp_update_post( [
 				'ID' => $document->get_main_id(),
@@ -1812,7 +1812,7 @@ class Source_Local extends Source_Base {
 	 * @access public
 	 */
 	public function admin_columns_content( $column_name, $post_id ) {
-		if ( 'elementor_library_type' === $column_name ) {
+		if ( 'refraction_library_type' === $column_name ) {
 			/** @var Document $document */
 			$document = Plugin::$instance->documents->get( $post_id );
 
@@ -1828,12 +1828,12 @@ class Source_Local extends Source_Base {
 	 */
 	public function admin_columns_headers( $posts_columns ) {
 		// Replace original column that bind to the taxonomy - with another column.
-		unset( $posts_columns['taxonomy-elementor_library_type'] );
+		unset( $posts_columns['taxonomy-refraction_library_type'] );
 
 		$offset = 2;
 
 		$posts_columns = array_slice( $posts_columns, 0, $offset, true ) + [
-			'elementor_library_type' => esc_html__( 'Type', 'elementor' ),
+			'refraction_library_type' => esc_html__( 'Type', 'refraction' ),
 		] + array_slice( $posts_columns, $offset, null, true );
 
 		return $posts_columns;
@@ -1860,9 +1860,9 @@ class Source_Local extends Source_Base {
 
 			if ( $current_tab_group ) {
 				$titles = [
-					'library' => esc_html__( 'Saved Templates', 'elementor' ),
-					'theme' => esc_html__( 'Theme Builder', 'elementor' ),
-					'popup' => esc_html__( 'Popups', 'elementor' ),
+					'library' => esc_html__( 'Saved Templates', 'refraction' ),
+					'theme' => esc_html__( 'Theme Builder', 'refraction' ),
+					'popup' => esc_html__( 'Popups', 'refraction' ),
 				];
 
 				if ( ! empty( $titles[ $current_tab_group ] ) ) {
@@ -1885,7 +1885,7 @@ class Source_Local extends Source_Base {
 	 *
 	 * @return array
 	 */
-	private function remove_elementor_cpt_from_sitemap( array $post_types ) {
+	private function remove_refraction_cpt_from_sitemap( array $post_types ) {
 		unset( $post_types[ self::CPT ] );
 
 		return $post_types;
@@ -1895,7 +1895,7 @@ class Source_Local extends Source_Base {
 		add_filter( 'rest_pre_dispatch', function ( $value, \WP_REST_Server $server, \WP_REST_Request $request ) {
 			if ( strpos( $request->get_route(), self::CPT ) !== false ) {
 				if ( ! current_user_can( 'manage_options' ) ) {
-					return new \WP_Error( 'rest_forbidden', esc_html__( 'Sorry, you are not allowed to do that.', 'elementor' ), [ 'status' => rest_authorization_required_code() ] );
+					return new \WP_Error( 'rest_forbidden', esc_html__( 'Sorry, you are not allowed to do that.', 'refraction' ), [ 'status' => rest_authorization_required_code() ] );
 				}
 			}
 
@@ -1971,7 +1971,7 @@ class Source_Local extends Source_Base {
 		] ) ) {
 			return new \WP_Error(
 				'template_error',
-				esc_html__( 'You do not have permission to access this template.', 'elementor' )
+				esc_html__( 'You do not have permission to access this template.', 'refraction' )
 			);
 		}
 
@@ -2003,14 +2003,14 @@ class Source_Local extends Source_Base {
 
 		$can_read_template = $this->wordpress_adapter->current_user_can( 'edit_post', $post_id );
 
-		return apply_filters( 'elementor/template-library/is_allowed_to_read_template', $can_read_template, $args );
+		return apply_filters( 'refraction/template-library/is_allowed_to_read_template', $can_read_template, $args );
 	}
 
 	public function set_wordpress_adapter( Wordpress_Adapter_Interface $wordpress_adapter ) {
 		$this->wordpress_adapter = $wordpress_adapter;
 	}
 
-	public function set_elementor_adapter( Elementor_Adapter_Interface $elementor_adapter ): void {
-		$this->elementor_adapter = $elementor_adapter;
+	public function set_refraction_adapter( Refraction_Adapter_Interface $refraction_adapter ): void {
+		$this->refraction_adapter = $refraction_adapter;
 	}
 }

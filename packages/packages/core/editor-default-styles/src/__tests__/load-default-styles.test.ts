@@ -3,7 +3,7 @@ import {
 	__createStore as createStore,
 	__getState as getState,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { apiClient } from '../api';
 import { loadDefaultStyles } from '../load-default-styles';

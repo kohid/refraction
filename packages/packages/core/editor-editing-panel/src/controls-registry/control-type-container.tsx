@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ControlLayout } from '@elementor/editor-elements';
+import { type ControlLayout } from '@refraction/editor-elements';
 import { Box, type BoxProps, styled } from '@elementor/ui';
 
 export const ControlTypeContainer = ( { children, layout }: React.PropsWithChildren< { layout?: ControlLayout } > ) => {

@@ -1,8 +1,8 @@
 import Component from './component';
 import DefaultConfig from './default-config';
-import ItemCollection from 'elementor-editor/components/browser-import/items/item-collection';
+import ItemCollection from 'refraction-editor/components/browser-import/items/item-collection';
 import Normalizer from './normalizer';
-import Session from 'elementor-editor/components/browser-import/session';
+import Session from 'refraction-editor/components/browser-import/session';
 
 /**
  * @typedef {import('../../container/container')} Container
@@ -14,7 +14,7 @@ import Session from 'elementor-editor/components/browser-import/session';
  * @typedef {import('./files/file-parser-base')} FileParserBase
  */
 
-export default class Manager extends elementorModules.editor.utils.Module {
+export default class Manager extends refractionModules.editor.utils.Module {
 	/**
 	 * File-readers list.
 	 *

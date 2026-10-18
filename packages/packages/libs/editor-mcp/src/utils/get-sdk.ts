@@ -26,7 +26,7 @@ const sleep = ( ms = 10_000 ) =>
 
 export const getSDK = () => {
 	// @ts-ignore - QUnit fails this
-	const isMCPDisabled = !! ( globalThis as Record< string, unknown > ).__ELEMENTOR_MCP_DISABLED__;
+	const isMCPDisabled = !! ( globalThis as Record< string, unknown > ).__REFRACTION_MCP_DISABLED__;
 	if ( isMCPDisabled ) {
 		return {} as unknown as AngieMcpSdk;
 	}

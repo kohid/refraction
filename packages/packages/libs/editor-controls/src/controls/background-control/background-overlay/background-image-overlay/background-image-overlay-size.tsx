@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { backgroundImageSizeScalePropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+import { backgroundImageSizeScalePropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 import {
 	ArrowBarBothIcon,
 	ArrowsMaximizeIcon,
@@ -26,25 +26,25 @@ type Sizes = 'auto' | 'cover' | 'contain' | 'custom';
 const sizeControlOptions: ToggleButtonGroupItem< Sizes >[] = [
 	{
 		value: 'auto',
-		label: __( 'Auto', 'elementor' ),
+		label: __( 'Auto', 'refraction' ),
 		renderContent: ( { size } ) => <LetterAIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'cover',
-		label: __( 'Cover', 'elementor' ),
+		label: __( 'Cover', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowsMaximizeIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'contain',
-		label: __( 'Contain', 'elementor' ),
+		label: __( 'Contain', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowBarBothIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'custom',
-		label: __( 'Custom', 'elementor' ),
+		label: __( 'Custom', 'refraction' ),
 		renderContent: ( { size } ) => <PencilIcon fontSize={ size } />,
 		showTooltip: true,
 	},
@@ -70,7 +70,7 @@ export const BackgroundImageOverlaySize = () => {
 			<Grid item xs={ 12 }>
 				<PopoverGridContainer>
 					<Grid item xs={ 6 }>
-						<ControlFormLabel>{ __( 'Size', 'elementor' ) }</ControlFormLabel>
+						<ControlFormLabel>{ __( 'Size', 'refraction' ) }</ControlFormLabel>
 					</Grid>
 					<Grid item xs={ 6 } sx={ { display: 'flex', justifyContent: 'flex-end' } }>
 						<ControlToggleButtonGroup

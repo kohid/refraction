@@ -1,4 +1,4 @@
-@keyframes elementor-animation-wobble-horizontal {
+@keyframes refraction-animation-wobble-horizontal {
 	16.65% {
 		transform: translateX(8px);
 	}
@@ -18,10 +18,10 @@
 		transform: translateX(0);
 	}
 }
-.elementor-animation-wobble-horizontal:active,
-.elementor-animation-wobble-horizontal:focus,
-.elementor-animation-wobble-horizontal:hover {
-	animation-name: elementor-animation-wobble-horizontal;
+.refraction-animation-wobble-horizontal:active,
+.refraction-animation-wobble-horizontal:focus,
+.refraction-animation-wobble-horizontal:hover {
+	animation-name: refraction-animation-wobble-horizontal;
 	animation-duration: 1s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: 1;

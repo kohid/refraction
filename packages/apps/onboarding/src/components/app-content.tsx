@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { getMixpanel } from '@elementor/events';
+import { getMixpanel } from '@refraction/events';
 import { Box } from '@elementor/ui';
 
 import type { ConnectSuccessData } from '../analytics';
 import { canSendEvents, initializeAndEnableTracking, setCanSendEvents, updateLibraryConnectConfig } from '../analytics';
 import { useCheckProInstallScreen } from '../hooks/use-check-pro-install-screen';
-import { useElementorConnect } from '../hooks/use-elementor-connect';
+import { useRefractionConnect } from '../hooks/use-refraction-connect';
 import { useInstallTheme } from '../hooks/use-install-theme';
 import { useOnboarding } from '../hooks/use-onboarding';
 import { useOnboardingEvent } from '../hooks/use-onboarding-event';
@@ -127,7 +127,7 @@ export function AppContent( { onClose }: AppContentProps ) {
 	const checkProInstallScreen = useCheckProInstallScreen();
 
 	const handleConnectSuccess = useCallback(
-		async ( data: ConnectSuccessData, loginType: 'elementor_login' | 'social_login' ) => {
+		async ( data: ConnectSuccessData, loginType: 'refraction_login' | 'social_login' ) => {
 			trackConnect( true );
 			trackLoginType( loginType );
 
@@ -156,12 +156,12 @@ export function AppContent( { onClose }: AppContentProps ) {
 		[ actions, checkProInstallScreen, trackConnect, trackLoginType, activateTracking, flushQueue ]
 	);
 
-	const handleConnect = useElementorConnect( {
+	const handleConnect = useRefractionConnect( {
 		connectUrl: urls.connect,
-		onSuccess: ( data ) => handleConnectSuccess( data, 'elementor_login' ),
+		onSuccess: ( data ) => handleConnectSuccess( data, 'refraction_login' ),
 	} );
 
-	const handleSignUp = useElementorConnect( {
+	const handleSignUp = useRefractionConnect( {
 		connectUrl: urls.signUp,
 		onSuccess: ( data ) => handleConnectSuccess( data, 'social_login' ),
 	} );

@@ -28,7 +28,7 @@ test.describe( 'Import Export Customization - Content Customization @import_expo
 		await ImportExportHelpers.verifyContentSection( page, 'No content exported' );
 		await ImportExportHelpers.verifyTemplatesSection( page, 'No templates exported' );
 		await ImportExportHelpers.verifySettingsSection( page, 'No settings exported' );
-		await ImportExportHelpers.verifyPluginsSection( page, 'Elementor | Hello Dolly | WordPress Importer' );
+		await ImportExportHelpers.verifyPluginsSection( page, 'Refraction | Hello Dolly | WordPress Importer' );
 	} );
 
 	test( 'should export kit with Posts unchecked in Content dialog', async ( { page } ) => {
@@ -62,18 +62,18 @@ test.describe( 'Import Export Customization - Content Customization @import_expo
 		await ImportExportHelpers.verifySettingsSection( page, 'Global Colors | Global Fonts | Theme Style Settings | General Settings | Experiments' );
 	} );
 
-	test( 'should export kit with only Elementor plugin selected in Plugins dialog', async ( { page } ) => {
+	test( 'should export kit with only Refraction plugin selected in Plugins dialog', async ( { page } ) => {
 		await ImportExportHelpers.navigateToExportCustomizationPage( page );
 
 		await ImportExportHelpers.customizePluginsSection( page, true, true );
 
-		await ImportExportHelpers.fillKitInfo( page, 'test-kit-elementor-only', 'Test Description' );
+		await ImportExportHelpers.fillKitInfo( page, 'test-kit-refraction-only', 'Test Description' );
 
 		await ImportExportHelpers.startExport( page );
 
 		await ImportExportHelpers.waitForExportProcess( page );
 		await ImportExportHelpers.waitForExportComplete( page );
 
-		await ImportExportHelpers.verifyPluginsSection( page, 'Elementor' );
+		await ImportExportHelpers.verifyPluginsSection( page, 'Refraction' );
 	} );
 } );

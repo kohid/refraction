@@ -1,18 +1,18 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Base\App;
-use Elementor\Core\Editor\Editor;
-use Elementor\Core\Settings\Manager as SettingsManager;
+use Refraction\Core\Base\App;
+use Refraction\Core\Editor\Editor;
+use Refraction\Core\Settings\Manager as SettingsManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor preview.
+ * Refraction preview.
  *
- * Elementor preview handler class is responsible for initializing Elementor in
+ * Refraction preview handler class is responsible for initializing Refraction in
  * preview mode.
  *
  * @since 1.0.0
@@ -68,7 +68,7 @@ class Preview extends App {
 	/**
 	 * Init.
 	 *
-	 * Initialize Elementor preview mode.
+	 * Initialize Refraction preview mode.
 	 *
 	 * Fired by `template_redirect` action.
 	 *
@@ -84,7 +84,7 @@ class Preview extends App {
 			register_shutdown_function( function () {
 				$e = error_get_last();
 				if ( $e ) {
-					echo '<div id="elementor-preview-debug-error"><pre>';
+					echo '<div id="refraction-preview-debug-error"><pre>';
 					Utils::print_unescaped_internal_string( $e['message'] );
 					echo '</pre></div>';
 				}
@@ -96,7 +96,7 @@ class Preview extends App {
 
 		// Send Document-Isolation-Policy on the preview iframe so it shares
 		// an agent cluster with the editor parent and synchronous DOM access
-		// (e.g. iframe.contentWindow.elementorFrontend) keeps working.
+		// (e.g. iframe.contentWindow.refractionFrontend) keeps working.
 		Editor::send_document_isolation_policy_header();
 
 		// Don't redirect to permalink.
@@ -129,14 +129,14 @@ class Preview extends App {
 		/**
 		 * Preview init.
 		 *
-		 * Fires on Elementor preview init, after Elementor preview has finished
+		 * Fires on Refraction preview init, after Refraction preview has finished
 		 * loading but before any headers are sent.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param Preview $this The current preview.
 		 */
-		do_action( 'elementor/preview/init', $this );
+		do_action( 'refraction/preview/init', $this );
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Preview extends App {
 	/**
 	 * Is Preview.
 	 *
-	 * Whether current request is the elementor preview iframe.
+	 * Whether current request is the refraction preview iframe.
 	 * The flag is not related to a specific post or edit permissions.
 	 *
 	 * @since 2.9.5
@@ -181,7 +181,7 @@ class Preview extends App {
 	 * @return bool Whether preview mode is active.
 	 */
 	public function is_preview_mode( $post_id = 0 ) {
-		if ( ! isset( $_GET['elementor-preview'] ) ) {
+		if ( ! isset( $_GET['refraction-preview'] ) ) {
 			return false;
 		}
 
@@ -193,7 +193,7 @@ class Preview extends App {
 			return false;
 		}
 
-		if ( $post_id !== (int) $_GET['elementor-preview'] ) {
+		if ( $post_id !== (int) $_GET['refraction-preview'] ) {
 			return false;
 		}
 
@@ -201,7 +201,7 @@ class Preview extends App {
 	}
 
 	/**
-	 * Whether WordPress post preview or Elementor preview iframe is active.
+	 * Whether WordPress post preview or Refraction preview iframe is active.
 	 *
 	 * @since 4.1.0
 	 * @access public
@@ -262,26 +262,26 @@ class Preview extends App {
 		$direction_suffix = is_rtl() ? '-rtl' : '';
 
 		wp_register_style(
-			'elementor-select2',
-			ELEMENTOR_ASSETS_URL . 'lib/e-select2/css/e-select2' . $suffix . '.css',
+			'refraction-select2',
+			REFRACTION_ASSETS_URL . 'lib/e-select2/css/e-select2' . $suffix . '.css',
 			[],
 			'4.0.6-rc.1'
 		);
 
 		wp_register_style(
 			'editor-preview',
-			ELEMENTOR_ASSETS_URL . 'css/editor-preview' . $direction_suffix . $suffix . '.css',
+			REFRACTION_ASSETS_URL . 'css/editor-preview' . $direction_suffix . $suffix . '.css',
 			[
-				'elementor-select2',
+				'refraction-select2',
 			],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_enqueue_style(
 			'e-theme-ui-light',
 			$this->get_css_assets_url( 'theme-light' ),
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_enqueue_style( 'editor-preview' );
@@ -292,11 +292,11 @@ class Preview extends App {
 		/**
 		 * Preview enqueue styles.
 		 *
-		 * Fires after Elementor preview styles are enqueued.
+		 * Fires after Refraction preview styles are enqueued.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/preview/enqueue_styles' );
+		do_action( 'refraction/preview/enqueue_styles' );
 	}
 
 	/**
@@ -318,10 +318,10 @@ class Preview extends App {
 		$suffix = Utils::is_script_debug() ? '' : '.min';
 
 		wp_enqueue_script(
-			'elementor-inline-editor',
-			ELEMENTOR_ASSETS_URL . 'lib/inline-editor/js/inline-editor' . $suffix . '.js',
+			'refraction-inline-editor',
+			REFRACTION_ASSETS_URL . 'lib/inline-editor/js/inline-editor' . $suffix . '.js',
 			[],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
@@ -331,11 +331,11 @@ class Preview extends App {
 		/**
 		 * Preview enqueue scripts.
 		 *
-		 * Fires after Elementor preview scripts are enqueued.
+		 * Fires after Refraction preview scripts are enqueued.
 		 *
 		 * @since 1.5.4
 		 */
-		do_action( 'elementor/preview/enqueue_scripts' );
+		do_action( 'refraction/preview/enqueue_scripts' );
 	}
 
 	public function rocket_loader_filter( $tag, $handle, $src ) {
@@ -343,7 +343,7 @@ class Preview extends App {
 	}
 
 	/**
-	 * Elementor Preview footer scripts and styles.
+	 * Refraction Preview footer scripts and styles.
 	 *
 	 * Handle styles and scripts from frontend.
 	 *
@@ -354,7 +354,7 @@ class Preview extends App {
 	 */
 	public function wp_footer() {
 		$frontend = Plugin::$instance->frontend;
-		if ( $frontend->has_elementor_in_page() ) {
+		if ( $frontend->has_refraction_in_page() ) {
 			// Has header/footer/widget-template - enqueue all style/scripts/fonts.
 			$frontend->wp_footer();
 		} else {
@@ -366,7 +366,7 @@ class Preview extends App {
 	/**
 	 * Preview constructor.
 	 *
-	 * Initializing Elementor preview.
+	 * Initializing Refraction preview.
 	 *
 	 * @since 1.0.0
 	 * @access public

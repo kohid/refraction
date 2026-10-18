@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { NumberControl } from '@elementor/editor-controls';
+import { NumberControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const COLUMN_COUNT_LABEL = __( 'Columns', 'elementor' );
+const COLUMN_COUNT_LABEL = __( 'Columns', 'refraction' );
 
 export const ColumnCountField = () => {
 	return (

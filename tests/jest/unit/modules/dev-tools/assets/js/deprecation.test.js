@@ -1,10 +1,10 @@
-import Deprecation from 'elementor/modules/dev-tools/assets/js/deprecation';
+import Deprecation from 'refraction/modules/dev-tools/assets/js/deprecation';
 
 const deprecation = new Deprecation();
 
 describe( 'modules/dev-tools/assets/js/deprecation.js', () => {
 	beforeEach( () => {
-		global.elementorDevToolsConfig = {
+		global.refractionDevToolsConfig = {
 			isDebug: true,
 			urls: {
 				assets: 'https://localtest/assets/',
@@ -17,14 +17,14 @@ describe( 'modules/dev-tools/assets/js/deprecation.js', () => {
 			},
 		};
 
-		global.elementorDevTools = {
+		global.refractionDevTools = {
 			consoleWarn: jest.fn(),
 		};
 	} );
 
 	afterAll( () => {
-		delete global.elementorDevToolsConfig;
-		delete global.elementorDevTools;
+		delete global.refractionDevToolsConfig;
+		delete global.refractionDevTools;
 	} );
 
 	test( 'deprecated() -- Should print soft deprecation', () => {
@@ -32,13 +32,13 @@ describe( 'modules/dev-tools/assets/js/deprecation.js', () => {
 		deprecation.deprecated( 'test', '3.0.0', 'anything' );
 
 		// Assert.
-		expect( elementorDevTools.consoleWarn ).toBeCalledWith( '`test` is soft deprecated since 3.0.0 - Use `anything` instead' );
+		expect( refractionDevTools.consoleWarn ).toBeCalledWith( '`test` is soft deprecated since 3.0.0 - Use `anything` instead' );
 	} );
 
 	test( 'deprecated() -- Should print hard deprecation', () => {
 		deprecation.deprecated( 'test', '0.0.0', 'anything' );
 
-		expect( elementorDevTools.consoleWarn ).toBeCalledWith( expect.stringContaining( 'hard' ) );
+		expect( refractionDevTools.consoleWarn ).toBeCalledWith( expect.stringContaining( 'hard' ) );
 	} );
 
 	test( 'parseVersion() -- Sanity', () => {

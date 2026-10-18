@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { RefObject } from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import type { SizePropValue } from '@elementor/editor-props';
+import type { SizePropValue } from '@refraction/editor-props';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { getAngleUnits, getLengthUnits, getTimeUnits } from '../sync/get-units';

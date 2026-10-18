@@ -1,4 +1,4 @@
-import { type SliceState } from '@elementor/store';
+import { type SliceState } from '@refraction/store';
 
 import type slice from './slice';
 

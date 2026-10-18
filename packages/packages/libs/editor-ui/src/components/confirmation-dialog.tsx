@@ -67,7 +67,7 @@ const ConfirmationDialogActions = ( {
 	confirmLabel,
 	color = 'error',
 	onSuppressMessage,
-	suppressLabel = __( "Don't show this again", 'elementor' ),
+	suppressLabel = __( "Don't show this again", 'refraction' ),
 }: ConfirmationDialogActionsProps ) => {
 	const [ dontShowAgain, setDontShowAgain ] = useState( false );
 
@@ -101,11 +101,11 @@ const ConfirmationDialogActions = ( {
 			) }
 			<div>
 				<Button color="secondary" onClick={ onClose }>
-					{ cancelLabel ?? __( 'Not now', 'elementor' ) }
+					{ cancelLabel ?? __( 'Not now', 'refraction' ) }
 				</Button>
 				{ /* eslint-disable-next-line jsx-a11y/no-autofocus */ }
 				<Button autoFocus variant="contained" color={ color } onClick={ handleConfirm } sx={ { ml: 1 } }>
-					{ confirmLabel ?? __( 'Delete', 'elementor' ) }
+					{ confirmLabel ?? __( 'Delete', 'refraction' ) }
 				</Button>
 			</div>
 		</DialogActions>

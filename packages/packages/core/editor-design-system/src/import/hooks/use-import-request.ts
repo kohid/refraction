@@ -1,11 +1,11 @@
-import { GLOBAL_STYLES_IMPORTED_EVENT } from '@elementor/editor-canvas';
-import { __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
-import { type HttpResponse, httpService } from '@elementor/http-client';
-import { useMutation } from '@elementor/query';
+import { GLOBAL_STYLES_IMPORTED_EVENT } from '@refraction/editor-canvas';
+import { __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
+import { type HttpResponse, httpService } from '@refraction/http-client';
+import { useMutation } from '@refraction/query';
 
 import { type ConflictStrategy } from '../types';
 
-const IMPORT_BASE_PATH = 'elementor/v1/import-export-customization';
+const IMPORT_BASE_PATH = 'refraction/v1/import-export-customization';
 
 const IMPORT_REQUEST_TIMEOUT_MS = 120_000;
 

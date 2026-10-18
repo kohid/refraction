@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Data\V2\Base;
+namespace Refraction\Data\V2\Base;
 
-use Elementor\Data\V2\Manager;
+use Refraction\Data\V2\Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -11,14 +11,14 @@ abstract class Endpoint extends Base_Route {
 	/**
 	 * Current parent.
 	 *
-	 * @var \Elementor\Data\V2\Base\Controller|\Elementor\Data\V2\Base\Endpoint
+	 * @var \Refraction\Data\V2\Base\Controller|\Refraction\Data\V2\Base\Endpoint
 	 */
 	protected $parent;
 
 	/**
 	 * Loaded sub endpoint(s).
 	 *
-	 * @var \Elementor\Data\V2\Base\Endpoint[]
+	 * @var \Refraction\Data\V2\Base\Endpoint[]
 	 */
 	protected $sub_endpoints = [];
 
@@ -41,7 +41,7 @@ abstract class Endpoint extends Base_Route {
 	/**
 	 * Get controller.
 	 *
-	 * @return \Elementor\Data\V2\Base\Controller
+	 * @return \Refraction\Data\V2\Base\Controller
 	 */
 	public function get_controller() {
 		return $this->controller;
@@ -50,7 +50,7 @@ abstract class Endpoint extends Base_Route {
 	/**
 	 * Get current parent.
 	 *
-	 * @return \Elementor\Data\V2\Base\Controller|\Elementor\Data\V2\Base\Endpoint
+	 * @return \Refraction\Data\V2\Base\Controller|\Refraction\Data\V2\Base\Endpoint
 	 */
 	public function get_parent() {
 		return $this->parent;
@@ -99,9 +99,9 @@ abstract class Endpoint extends Base_Route {
 	/**
 	 * Register sub endpoint.
 	 *
-	 * @param \Elementor\Data\V2\Base\Endpoint $endpoint
+	 * @param \Refraction\Data\V2\Base\Endpoint $endpoint
 	 *
-	 * @return \Elementor\Data\V2\Base\Endpoint
+	 * @return \Refraction\Data\V2\Base\Endpoint
 	 */
 	public function register_sub_endpoint( Endpoint $endpoint ) {
 		$command = $endpoint->get_full_command();
@@ -117,7 +117,7 @@ abstract class Endpoint extends Base_Route {
 	/**
 	 * Get ancestors.
 	 *
-	 * @return \Elementor\Data\V2\Base\Endpoint[]
+	 * @return \Refraction\Data\V2\Base\Endpoint[]
 	 */
 	private function get_ancestors() {
 		$ancestors = [];
@@ -137,7 +137,7 @@ abstract class Endpoint extends Base_Route {
 	/**
 	 * Endpoint constructor.
 	 *
-	 * @param \Elementor\Data\V2\Base\Controller|\Elementor\Data\V2\Base\Endpoint $parent_endpoint
+	 * @param \Refraction\Data\V2\Base\Controller|\Refraction\Data\V2\Base\Endpoint $parent_endpoint
 	 * @param string                                                              $route
 	 */
 	public function __construct( $parent_endpoint, $route = '/' ) {

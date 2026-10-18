@@ -1,33 +1,33 @@
 <?php
-namespace Elementor\Core\Files;
+namespace Refraction\Core\Files;
 
-use Elementor\Core\Base\Base_Object;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Files\File_Types\Base as File_Type_Base;
-use Elementor\Core\Files\File_Types\Json;
-use Elementor\Core\Files\File_Types\Svg;
-use Elementor\Core\Files\File_Types\Zip;
-use Elementor\Core\Files\Fonts\Google_Font;
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Fonts;
-use Elementor\User;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Files\File_Types\Base as File_Type_Base;
+use Refraction\Core\Files\File_Types\Json;
+use Refraction\Core\Files\File_Types\Svg;
+use Refraction\Core\Files\File_Types\Zip;
+use Refraction\Core\Files\Fonts\Google_Font;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Fonts;
+use Refraction\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor uploads manager.
+ * Refraction uploads manager.
  *
- * Elementor uploads manager handler class is responsible for handling file uploads that are not done with WP Media.
+ * Refraction uploads manager handler class is responsible for handling file uploads that are not done with WP Media.
  *
  * @since 3.3.0
  */
 class Uploads_Manager extends Base_Object {
 
-	const UNFILTERED_FILE_UPLOADS_KEY = 'elementor_unfiltered_files_upload';
+	const UNFILTERED_FILE_UPLOADS_KEY = 'refraction_unfiltered_files_upload';
 	const INVALID_FILE_CONTENT = 'Invalid Content In File';
-	const ELEMENTOR_UPLOAD_DIR = 'elementor';
+	const REFRACTION_UPLOAD_DIR = 'refraction';
 
 	/**
 	 * @var File_Type_Base[]
@@ -39,7 +39,7 @@ class Uploads_Manager extends Base_Object {
 	/**
 	 * @var bool
 	 */
-	private $is_elementor_upload = false;
+	private $is_refraction_upload = false;
 
 	/**
 	 * @var string
@@ -49,7 +49,7 @@ class Uploads_Manager extends Base_Object {
 	/**
 	 * Register File Types
 	 *
-	 * To Add a new file type to Elementor, with its own handling logic, you need to add it to the $file_types array here.
+	 * To Add a new file type to Refraction, with its own handling logic, you need to add it to the $file_types array here.
 	 *
 	 * @since 3.3.0
 	 * @access public
@@ -111,7 +111,7 @@ class Uploads_Manager extends Base_Object {
 	}
 
 	/**
-	 * Handle Elementor Upload
+	 * Handle Refraction Upload
 	 *
 	 * This method receives a $file array. If the received file is a Base64 string, the $file array should include a
 	 * 'fileData' property containing the string, which is decoded and has its contents stored in a temporary file.
@@ -128,7 +128,7 @@ class Uploads_Manager extends Base_Object {
 	 * upload.
 	 * @return array|\WP_Error
 	 */
-	public function handle_elementor_upload( array $data, $allowed_file_extensions = null ) {
+	public function handle_refraction_upload( array $data, $allowed_file_extensions = null ) {
 		// If $file['fileData'] is set, it signals that the passed file is a Base64 string that needs to be decoded and
 		// saved to a temporary file.
 		if ( isset( $data['fileData'] ) ) {
@@ -141,15 +141,15 @@ class Uploads_Manager extends Base_Object {
 
 		if ( ! isset( $data['fileData'] ) ) {
 			if ( empty( $data['tmp_name'] ) ) {
-				return new \WP_Error( 'file_error', esc_html__( 'Invalid temporary file path.', 'elementor' ) );
+				return new \WP_Error( 'file_error', esc_html__( 'Invalid temporary file path.', 'refraction' ) );
 			}
 
 			// Path validation only applies to direct calls (e.g. import_template) where
-			// tmp_name originates from user input. When is_elementor_upload is true, this
+			// tmp_name originates from user input. When is_refraction_upload is true, this
 			// method is used as a WordPress filter (wp_handle_sideload_prefilter) and
 			// tmp_name is set by WordPress core.
-			if ( ! $this->is_elementor_upload && ! $this->is_path_in_allowed_dir( $data['tmp_name'] ) ) {
-				return new \WP_Error( 'file_error', esc_html__( 'Invalid temporary file path.', 'elementor' ) );
+			if ( ! $this->is_refraction_upload && ! $this->is_path_in_allowed_dir( $data['tmp_name'] ) ) {
+				return new \WP_Error( 'file_error', esc_html__( 'Invalid temporary file path.', 'refraction' ) );
 			}
 		}
 
@@ -188,17 +188,17 @@ class Uploads_Manager extends Base_Object {
 		 *
 		 * @param bool $enabled Whether upload is enabled or not.
 		 */
-		$enabled = apply_filters( 'elementor/files/allow_unfiltered_upload', $enabled );
+		$enabled = apply_filters( 'refraction/files/allow_unfiltered_upload', $enabled );
 
 		return $enabled;
 	}
 
 	/**
-	 * Handle Elementor WP Media Upload
+	 * Handle Refraction WP Media Upload
 	 *
 	 * Runs on `wp_handle_upload_prefilter` and `wp_handle_sideload_prefilter`.
-	 * Validates any Elementor upload (`is_elementor_upload()`), not only
-	 * `uploadTypeCaller=elementor-wp-media-upload`.
+	 * Validates any Refraction upload (`is_refraction_upload()`), not only
+	 * `uploadTypeCaller=refraction-wp-media-upload`.
 	 *
 	 * @since 3.2.0
 	 * @access public
@@ -206,9 +206,9 @@ class Uploads_Manager extends Base_Object {
 	 * @param $file
 	 * @return mixed
 	 */
-	public function handle_elementor_wp_media_upload( $file ) {
-		// If it isn't a file uploaded by Elementor, we do not intervene.
-		if ( ! $this->is_elementor_upload() ) {
+	public function handle_refraction_wp_media_upload( $file ) {
+		// If it isn't a file uploaded by Refraction, we do not intervene.
+		if ( ! $this->is_refraction_upload() ) {
 			return $file;
 		}
 
@@ -275,11 +275,11 @@ class Uploads_Manager extends Base_Object {
 	}
 
 	/**
-	 * Check if path is within the allowed Elementor uploads directory.
+	 * Check if path is within the allowed Refraction uploads directory.
 	 *
 	 * Prevents path traversal and arbitrary directory deletion by ensuring the path
-	 * resolves under wp-content/uploads/elementor/ or under the configured temp dir
-	 * (elementor/files/temp-dir filter), so that cleanup works when temp dir is customized.
+	 * resolves under wp-content/uploads/refraction/ or under the configured temp dir
+	 * (refraction/files/temp-dir filter), so that cleanup works when temp dir is customized.
 	 *
 	 * @since 3.35.4
 	 * @access private
@@ -302,10 +302,10 @@ class Uploads_Manager extends Base_Object {
 		}
 
 		$wp_upload_dir = wp_upload_dir();
-		$elementor_base = realpath( $wp_upload_dir['basedir'] . DIRECTORY_SEPARATOR . self::ELEMENTOR_UPLOAD_DIR );
+		$refraction_base = realpath( $wp_upload_dir['basedir'] . DIRECTORY_SEPARATOR . self::REFRACTION_UPLOAD_DIR );
 
-		if ( false !== $elementor_base ) {
-			$allowed = $real_path === $elementor_base || 0 === strpos( $real_path, $elementor_base . DIRECTORY_SEPARATOR );
+		if ( false !== $refraction_base ) {
+			$allowed = $real_path === $refraction_base || 0 === strpos( $real_path, $refraction_base . DIRECTORY_SEPARATOR );
 			if ( $allowed ) {
 				return true;
 			}
@@ -324,7 +324,7 @@ class Uploads_Manager extends Base_Object {
 	 * Remove File Or Directory
 	 *
 	 * Directory is deleted recursively with all of its contents (subdirectories and files).
-	 * Only paths under wp-content/uploads/elementor/ are allowed (security: prevents arbitrary directory deletion).
+	 * Only paths under wp-content/uploads/refraction/ are allowed (security: prevents arbitrary directory deletion).
 	 *
 	 * @since 3.3.0
 	 * @access public
@@ -359,7 +359,7 @@ class Uploads_Manager extends Base_Object {
 		$file_name = str_replace( ' ', '', sanitize_file_name( $file_name ) );
 
 		if ( empty( $file_name ) ) {
-			return new \WP_Error( 'invalid_file_name', esc_html__( 'Invalid file name.', 'elementor' ) );
+			return new \WP_Error( 'invalid_file_name', esc_html__( 'Invalid file name.', 'refraction' ) );
 		}
 
 		$temp_filename = $this->create_unique_dir() . $file_name;
@@ -373,7 +373,7 @@ class Uploads_Manager extends Base_Object {
 		 *
 		 * @param string full path to file
 		 */
-		$temp_filename = apply_filters( 'elementor/files/temp-file-path', $temp_filename );
+		$temp_filename = apply_filters( 'refraction/files/temp-file-path', $temp_filename );
 
 		file_put_contents( $temp_filename, $file_content ); // phpcs:ignore
 
@@ -394,7 +394,7 @@ class Uploads_Manager extends Base_Object {
 		if ( ! $this->temp_dir ) {
 			$wp_upload_dir = wp_upload_dir();
 
-			$temp_dir = implode( DIRECTORY_SEPARATOR, [ $wp_upload_dir['basedir'], self::ELEMENTOR_UPLOAD_DIR, 'tmp' ] ) . DIRECTORY_SEPARATOR;
+			$temp_dir = implode( DIRECTORY_SEPARATOR, [ $wp_upload_dir['basedir'], self::REFRACTION_UPLOAD_DIR, 'tmp' ] ) . DIRECTORY_SEPARATOR;
 
 			/**
 			 * Temp File Path
@@ -405,7 +405,7 @@ class Uploads_Manager extends Base_Object {
 			 *
 			 * @param string temporary directory
 			 */
-			$this->temp_dir = apply_filters( 'elementor/files/temp-dir', $temp_dir );
+			$this->temp_dir = apply_filters( 'refraction/files/temp-dir', $temp_dir );
 
 			if ( ! is_dir( $this->temp_dir ) ) {
 				wp_mkdir_p( $this->temp_dir );
@@ -436,7 +436,7 @@ class Uploads_Manager extends Base_Object {
 	/**
 	 * Register Ajax Actions
 	 *
-	 * Runs on the 'elementor/ajax/register_actions' hook. Receives the AJAX module as a parameter and registers
+	 * Runs on the 'refraction/ajax/register_actions' hook. Receives the AJAX module as a parameter and registers
 	 * callbacks for specified action IDs.
 	 *
 	 * @since 3.5.0
@@ -482,9 +482,9 @@ class Uploads_Manager extends Base_Object {
 	/**
 	 * Support Unfiltered File Uploads
 	 *
-	 * When uploading a file within Elementor, this method adds the registered
+	 * When uploading a file within Refraction, this method adds the registered
 	 * file types to WordPress' allowed mimes list. This will only happen if the user allowed unfiltered file uploads
-	 * in Elementor's settings in the admin dashboard.
+	 * in Refraction's settings in the admin dashboard.
 	 *
 	 * @since 3.5.0
 	 * @access public
@@ -492,8 +492,8 @@ class Uploads_Manager extends Base_Object {
 	 * @param array $allowed_mimes
 	 * @return array allowed mime types
 	 */
-	final public function support_unfiltered_elementor_file_uploads( $allowed_mimes ) {
-		if ( $this->is_elementor_upload() && $this->are_unfiltered_uploads_enabled() ) {
+	final public function support_unfiltered_refraction_file_uploads( $allowed_mimes ) {
+		if ( $this->is_refraction_upload() && $this->are_unfiltered_uploads_enabled() ) {
 			foreach ( $this->file_type_handlers as $file_type_handler ) {
 				$allowed_mimes[ $file_type_handler->get_file_extension() ] = $file_type_handler->get_mime_type();
 			}
@@ -503,35 +503,35 @@ class Uploads_Manager extends Base_Object {
 	}
 
 	/**
-	 * Set Elementor Upload State
+	 * Set Refraction Upload State
 	 *
 	 * @since 3.5.0
 	 * @access public
 	 *
 	 * @param $state
 	 */
-	public function set_elementor_upload_state( $state ) {
-		$this->is_elementor_upload = $state;
+	public function set_refraction_upload_state( $state ) {
+		$this->is_refraction_upload = $state;
 	}
 
 	/**
-	 * Is Elementor Upload
+	 * Is Refraction Upload
 	 *
-	 * This method checks if the current session includes a request to upload files made via Elementor.
+	 * This method checks if the current session includes a request to upload files made via Refraction.
 	 *
 	 * @since 3.5.0
 	 * @access private
 	 *
 	 * @return bool
 	 */
-	private function is_elementor_upload() {
-		return $this->is_elementor_upload || $this->is_elementor_media_upload() || $this->is_elementor_wp_media_upload();
+	private function is_refraction_upload() {
+		return $this->is_refraction_upload || $this->is_refraction_media_upload() || $this->is_refraction_wp_media_upload();
 	}
 
 	/**
-	 * Is Elementor Media Upload
+	 * Is Refraction Media Upload
 	 *
-	 * Checks whether the current request includes uploading files via Elementor which are not destined for the Media
+	 * Checks whether the current request includes uploading files via Refraction which are not destined for the Media
 	 * Library.
 	 *
 	 * @since 3.5.0
@@ -539,24 +539,24 @@ class Uploads_Manager extends Base_Object {
 	 *
 	 * @return bool
 	 */
-	public function is_elementor_media_upload() {
+	public function is_refraction_media_upload() {
 		// Sometimes `uploadTypeCaller` passed as a GET parameter when using the WP Media Library REST API, where the
 		// whole request body is occupied by the uploaded file.
-		return isset( $_REQUEST['uploadTypeCaller'] ) && 'elementor-media-upload' === $_REQUEST['uploadTypeCaller']; // phpcs:ignore
+		return isset( $_REQUEST['uploadTypeCaller'] ) && 'refraction-media-upload' === $_REQUEST['uploadTypeCaller']; // phpcs:ignore
 	}
 
 	/**
-	 * Is Elementor WP Media Upload
+	 * Is Refraction WP Media Upload
 	 *
-	 * Checks whether the current request is a request to upload files into the WP Media Library via Elementor.
+	 * Checks whether the current request is a request to upload files into the WP Media Library via Refraction.
 	 *
 	 * @since 3.3.0
 	 * @access private
 	 *
 	 * @return bool
 	 */
-	private function is_elementor_wp_media_upload() {
-		return isset( $_REQUEST['uploadTypeCaller'] ) && 'elementor-wp-media-upload' === $_REQUEST['uploadTypeCaller']; // phpcs:ignore
+	private function is_refraction_wp_media_upload() {
+		return isset( $_REQUEST['uploadTypeCaller'] ) && 'refraction-wp-media-upload' === $_REQUEST['uploadTypeCaller']; // phpcs:ignore
 	}
 
 	/**
@@ -581,7 +581,7 @@ class Uploads_Manager extends Base_Object {
 	/**
 	 * Save Base64 as File
 	 *
-	 * Saves a Base64 string as a .tmp file in Elementor's temporary files directory.
+	 * Saves a Base64 string as a .tmp file in Refraction's temporary files directory.
 	 *
 	 * @since 3.3.0
 	 * @access private
@@ -639,7 +639,7 @@ class Uploads_Manager extends Base_Object {
 
 		$file_extension = pathinfo( $uploaded_file_name, PATHINFO_EXTENSION );
 
-		if ( ! $this->is_elementor_wp_media_upload() ) {
+		if ( ! $this->is_refraction_wp_media_upload() ) {
 			$is_file_type_allowed = $this->is_file_type_allowed( $file_extension, $file_extensions );
 
 			if ( is_wp_error( $is_file_type_allowed ) ) {
@@ -649,7 +649,7 @@ class Uploads_Manager extends Base_Object {
 
 		$file_type_handler = $this->get_file_type_handlers( $file_extension );
 
-		// If Elementor does not have a handler for this file type, don't block it.
+		// If Refraction does not have a handler for this file type, don't block it.
 		if ( ! $file_type_handler ) {
 			return true;
 		}
@@ -658,8 +658,8 @@ class Uploads_Manager extends Base_Object {
 		// we check if unfiltered file uploads are enabled or not before allowing it.
 		if ( ! self::are_unfiltered_uploads_enabled() ) {
 			$error = 'json' === $file_extension
-				? esc_html__( 'You do not have permission to upload JSON files.', 'elementor' )
-				: esc_html__( 'This file is not allowed for security reasons.', 'elementor' );
+				? esc_html__( 'You do not have permission to upload JSON files.', 'refraction' )
+				: esc_html__( 'This file is not allowed for security reasons.', 'refraction' );
 			return new \WP_Error( Exceptions::FORBIDDEN, $error );
 		}
 
@@ -704,7 +704,7 @@ class Uploads_Manager extends Base_Object {
 		}
 
 		/**
-		 * Elementor File Type Allowed
+		 * Refraction File Type Allowed
 		 *
 		 * Allows setting file types
 		 *
@@ -712,7 +712,7 @@ class Uploads_Manager extends Base_Object {
 		 *
 		 * @param bool|\WP_Error $is_allowed
 		 */
-		return apply_filters( 'elementor/files/allow-file-type/' . $file_extension, $is_allowed );
+		return apply_filters( 'refraction/files/allow-file-type/' . $file_extension, $is_allowed );
 	}
 
 	/**
@@ -766,12 +766,12 @@ class Uploads_Manager extends Base_Object {
 	public function __construct() {
 		$this->register_file_types();
 
-		add_filter( 'upload_mimes', [ $this, 'support_unfiltered_elementor_file_uploads' ] );
-		add_filter( 'wp_handle_upload_prefilter', [ $this, 'handle_elementor_wp_media_upload' ] );
-		add_filter( 'wp_handle_sideload_prefilter', [ $this, 'handle_elementor_wp_media_upload' ] );
+		add_filter( 'upload_mimes', [ $this, 'support_unfiltered_refraction_file_uploads' ] );
+		add_filter( 'wp_handle_upload_prefilter', [ $this, 'handle_refraction_wp_media_upload' ] );
+		add_filter( 'wp_handle_sideload_prefilter', [ $this, 'handle_refraction_wp_media_upload' ] );
 		add_filter( 'wp_check_filetype_and_ext', [ $this, 'check_filetype_and_ext' ], 10, 4 );
 
 		// Ajax.
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 	}
 }

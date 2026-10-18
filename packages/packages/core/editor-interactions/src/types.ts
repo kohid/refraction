@@ -1,5 +1,5 @@
 import { type RefObject } from 'react';
-import { type Unit } from '@elementor/editor-controls';
+import { type Unit } from '@refraction/editor-controls';
 import type {
 	AnimationPresetPropValue,
 	BooleanPropValue,
@@ -11,7 +11,7 @@ import type {
 	NumberPropValue,
 	StringPropValue,
 	TimingConfigPropValue,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 
 export type {
 	BooleanPropValue,

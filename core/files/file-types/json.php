@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Files\File_Types;
+namespace Refraction\Core\Files\File_Types;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

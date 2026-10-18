@@ -1,9 +1,9 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Grid from 'elementor-app/ui/grid/grid';
-import Icon from 'elementor-app/ui/atoms/icon';
-import Heading from 'elementor-app/ui/atoms/heading';
-import Text from 'elementor-app/ui/atoms/text';
+import Grid from 'refraction-app/ui/grid/grid';
+import Icon from 'refraction-app/ui/atoms/icon';
+import Heading from 'refraction-app/ui/atoms/heading';
+import Text from 'refraction-app/ui/atoms/text';
 
 import './wizard-step.scss';
 

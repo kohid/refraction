@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Data\V2\Base\Processor;
+namespace Refraction\Data\V2\Base\Processor;
 
-use Elementor\Data\V2\Base\Processor;
+use Refraction\Data\V2\Base\Processor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

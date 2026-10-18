@@ -3,8 +3,8 @@ import {
 	__privateRunCommand as runCommand,
 	__privateUseRouteStatus as useRouteStatus,
 	type UseRouteStatusOptions,
-} from '@elementor/editor-v1-adapters';
-import { __useDispatch as useDispatch, __useSelector as useSelector } from '@elementor/store';
+} from '@refraction/editor-v1-adapters';
+import { __useDispatch as useDispatch, __useSelector as useSelector } from '@refraction/store';
 
 import { injectIntoPanels } from './location';
 import { selectOpenId, slice } from './store';
@@ -108,7 +108,7 @@ function createUseActions< TOnOpenReturn >(
 				}
 				if ( isOpenPreviousElement ) {
 					previousSelectedElement =
-						window.elementor?.selection?.getElements?.()[ 0 ]?.model.get( 'id' ) ?? null;
+						window.refraction?.selection?.getElements?.()[ 0 ]?.model.get( 'id' ) ?? null;
 				}
 
 				dispatch( slice.actions.open( id ) );
@@ -126,7 +126,7 @@ function createUseActions< TOnOpenReturn >(
 
 				if ( previousSelectedElement ) {
 					try {
-						const container = window.elementor?.getContainer?.( previousSelectedElement );
+						const container = window.refraction?.getContainer?.( previousSelectedElement );
 						runCommand( 'document/elements/select', { container } );
 					} catch {}
 					previousSelectedElement = null;

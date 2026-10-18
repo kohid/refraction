@@ -6,15 +6,15 @@ const kitContentData = [
 	{
 		type: 'content',
 		data: {
-			title: __( 'Content', 'elementor' ),
+			title: __( 'Content', 'refraction' ),
 			features: {
 				open: [
-					__( 'Elementor Pages', 'elementor' ),
-					__( 'Elementor Posts', 'elementor' ),
-					__( 'WP Pages', 'elementor' ),
-					__( 'WP Posts', 'elementor' ),
-					__( 'WP Menus', 'elementor' ),
-					__( 'Custom Post Types', 'elementor' ),
+					__( 'Refraction Pages', 'refraction' ),
+					__( 'Refraction Posts', 'refraction' ),
+					__( 'WP Pages', 'refraction' ),
+					__( 'WP Posts', 'refraction' ),
+					__( 'WP Menus', 'refraction' ),
+					__( 'Custom Post Types', 'refraction' ),
 				],
 			},
 		},
@@ -24,23 +24,23 @@ const kitContentData = [
 	{
 		type: 'templates',
 		data: {
-			title: __( 'Templates', 'elementor' ),
+			title: __( 'Templates', 'refraction' ),
 			features: {
 				open: [
-					__( 'Saved Templates', 'elementor' ),
+					__( 'Saved Templates', 'refraction' ),
 				],
 				locked: [
-					__( 'Headers', 'elementor' ),
-					__( 'Footers', 'elementor' ),
-					__( 'Archives', 'elementor' ),
-					__( 'Single Posts', 'elementor' ),
-					__( 'Single Pages', 'elementor' ),
-					__( 'Search Results', 'elementor' ),
-					__( '404 Error Page', 'elementor' ),
-					__( 'Popups', 'elementor' ),
-					__( 'Global widgets', 'elementor' ),
+					__( 'Headers', 'refraction' ),
+					__( 'Footers', 'refraction' ),
+					__( 'Archives', 'refraction' ),
+					__( 'Single Posts', 'refraction' ),
+					__( 'Single Pages', 'refraction' ),
+					__( 'Search Results', 'refraction' ),
+					__( '404 Error Page', 'refraction' ),
+					__( 'Popups', 'refraction' ),
+					__( 'Global widgets', 'refraction' ),
 				],
-				tooltip: __( 'To import or export these components, you’ll need Elementor Pro.', 'elementor' ),
+				tooltip: __( 'To import or export these components, you’ll need Refraction Pro.', 'refraction' ),
 			},
 		},
 		dialog: null,
@@ -49,21 +49,21 @@ const kitContentData = [
 	{
 		type: 'settings',
 		data: {
-			title: __( 'Settings & configurations', 'elementor' ),
+			title: __( 'Settings & configurations', 'refraction' ),
 			features: {
 				open: [
-					__( 'Classes', 'elementor' ),
-					__( 'Default Styles', 'elementor' ),
-					__( 'Variables', 'elementor' ),
-					__( 'Global Colors', 'elementor' ),
-					__( 'Global Fonts', 'elementor' ),
-					__( 'Theme Style Settings', 'elementor' ),
-					__( 'Layout Settings', 'elementor' ),
-					__( 'Lightbox Settings', 'elementor' ),
-					__( 'Background Settings', 'elementor' ),
-					__( 'Custom Fonts', 'elementor' ),
-					__( 'Icons', 'elementor' ),
-					__( 'Code', 'elementor' ),
+					__( 'Classes', 'refraction' ),
+					__( 'Default Styles', 'refraction' ),
+					__( 'Variables', 'refraction' ),
+					__( 'Global Colors', 'refraction' ),
+					__( 'Global Fonts', 'refraction' ),
+					__( 'Theme Style Settings', 'refraction' ),
+					__( 'Layout Settings', 'refraction' ),
+					__( 'Lightbox Settings', 'refraction' ),
+					__( 'Background Settings', 'refraction' ),
+					__( 'Custom Fonts', 'refraction' ),
+					__( 'Icons', 'refraction' ),
+					__( 'Code', 'refraction' ),
 				],
 			},
 		},
@@ -73,10 +73,10 @@ const kitContentData = [
 	{
 		type: 'plugins',
 		data: {
-			title: __( 'Plugins', 'elementor' ),
+			title: __( 'Plugins', 'refraction' ),
 			features: {
 				open: [
-					__( 'All plugins are required for this website templates to work', 'elementor' ),
+					__( 'All plugins are required for this website templates to work', 'refraction' ),
 				],
 			},
 		},

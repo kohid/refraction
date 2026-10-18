@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useId, useRef, useState } from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
-import { type PropTypeKey } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { type PropTypeKey } from '@refraction/editor-props';
 import { Backdrop, bindPopover, Box, Infotip, Popover, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -42,7 +42,7 @@ export const DeletedVariable = ( { variable, propTypeKey }: Props ) => {
 	const popupId = useId();
 	const popupState = usePopupState( {
 		variant: 'popover',
-		popupId: `elementor-variables-restore-${ popupId }`,
+		popupId: `refraction-variables-restore-${ popupId }`,
 	} );
 
 	const handlers: Handlers = {};
@@ -107,7 +107,7 @@ export const DeletedVariable = ( { variable, propTypeKey }: Props ) => {
 					<WarningVariableTag
 						label={ variable.label }
 						onClick={ toggleInfotip }
-						suffix={ __( 'deleted', 'elementor' ) }
+						suffix={ __( 'deleted', 'refraction' ) }
 					/>
 				</Infotip>
 

@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Core\Utils;
+namespace Refraction\Core\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor exceptions.
+ * Refraction exceptions.
  *
- * Elementor exceptions handler class is responsible for handling exceptions.
+ * Refraction exceptions handler class is responsible for handling exceptions.
  *
  * @since 2.0.0
  */

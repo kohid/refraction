@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core;
+namespace Refraction\Core;
 
-use Elementor\Core\Utils\Collection;
+use Refraction\Core\Utils\Collection;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

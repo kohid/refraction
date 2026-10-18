@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { getV1DocumentsManager } from '@elementor/editor-documents';
-import { type StyleDefinition } from '@elementor/editor-styles';
+import { getV1DocumentsManager } from '@refraction/editor-documents';
+import { type StyleDefinition } from '@refraction/editor-styles';
 import { render } from '@testing-library/react';
 
 import { ClassesRename } from '../classes-rename';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	getV1DocumentsManager: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
+jest.mock( '@refraction/editor-styles-repository', () => ( {
 	stylesRepository: {
 		subscribe: jest.fn(),
 		register: jest.fn(),
@@ -48,7 +48,7 @@ interface StylesMap {
 
 describe( 'ClassesRename', () => {
 	const mockGetV1DocumentsManager = jest.mocked( getV1DocumentsManager );
-	const { stylesRepository } = jest.requireMock( '@elementor/editor-styles-repository' );
+	const { stylesRepository } = jest.requireMock( '@refraction/editor-styles-repository' );
 	const mockSubscribe = jest.mocked( stylesRepository.subscribe ).mockReturnValue( jest.fn() );
 
 	const triggerStylesChange = ( previousStyles: StylesMap, currentStyles: StylesMap ) => {
@@ -306,6 +306,6 @@ describe( 'ClassesRename', () => {
 
 		// Assert.
 		// eslint-disable-next-line testing-library/no-node-access
-		expect( mockContainer.view.el.querySelectorAll ).toHaveBeenCalledWith( '.elementor .test-class' );
+		expect( mockContainer.view.el.querySelectorAll ).toHaveBeenCalledWith( '.refraction .test-class' );
 	} );
 } );

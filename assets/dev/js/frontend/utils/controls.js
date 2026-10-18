@@ -3,7 +3,7 @@ export default class Controls {
 	 * Get Control Value
 	 *
 	 * Retrieves a control value.
-	 * This function has been copied from `elementor/assets/dev/js/editor/utils/conditions.js`.
+	 * This function has been copied from `refraction/assets/dev/js/editor/utils/conditions.js`.
 	 *
 	 * @since 3.11.0
 	 *
@@ -38,7 +38,7 @@ export default class Controls {
 	 * @return {*} Control Value
 	 */
 	getResponsiveControlValue( controlSettings, controlKey, controlSubKey = '', device = null ) {
-		const currentDeviceMode = device || elementorFrontend.getCurrentDeviceMode(),
+		const currentDeviceMode = device || refractionFrontend.getCurrentDeviceMode(),
 			controlValueDesktop = this.getControlValue( controlSettings, controlKey, controlSubKey );
 
 		// Set the control value for the current device mode.
@@ -50,7 +50,7 @@ export default class Controls {
 		}
 
 		// Loop through all responsive and desktop device modes.
-		const activeBreakpoints = elementorFrontend.breakpoints.getActiveBreakpointsList( { withDesktop: true } );
+		const activeBreakpoints = refractionFrontend.breakpoints.getActiveBreakpointsList( { withDesktop: true } );
 
 		let parentDeviceMode = currentDeviceMode,
 			deviceIndex = activeBreakpoints.indexOf( currentDeviceMode ),

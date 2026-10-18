@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { colorPropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+import { colorPropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 import { TextIcon } from '@elementor/icons';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 

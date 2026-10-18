@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { closeDialog, FileUploadDropzone, FileUploadRow, openDialog } from '@elementor/editor-ui';
+import { closeDialog, FileUploadDropzone, FileUploadRow, openDialog } from '@refraction/editor-ui';
 import { HelpIcon } from '@elementor/icons';
 import { Button, DialogActions, DialogContent, DialogHeader, DialogTitle, Link, Stack } from '@elementor/ui';
 import { __, sprintf } from '@wordpress/i18n';
@@ -70,7 +70,7 @@ export const ImportDesignSystemDialog = ( { onClose }: Props ) => {
 	return (
 		<>
 			<DialogHeader logo={ false }>
-				<DialogTitle>{ __( 'Import Design System', 'elementor' ) }</DialogTitle>
+				<DialogTitle>{ __( 'Import Design System', 'refraction' ) }</DialogTitle>
 			</DialogHeader>
 			<DialogContent>
 				<Stack spacing={ 3 }>
@@ -81,10 +81,10 @@ export const ImportDesignSystemDialog = ( { onClose }: Props ) => {
 							onFileSelected={ handleFileSelected }
 							allowedFileTypes={ ALLOWED_FILE_TYPES }
 							accept={ FILE_INPUT_ACCEPT }
-							regionLabel={ __( 'Design system file dropzone', 'elementor' ) }
+							regionLabel={ __( 'Design system file dropzone', 'refraction' ) }
 							helperText={ sprintf(
 								// translators: %d is the maximum file size in megabytes.
-								__( 'zip (max. %dMB)', 'elementor' ),
+								__( 'zip (max. %dMB)', 'refraction' ),
 								MAX_FILE_SIZE_MB
 							) }
 						/>
@@ -100,14 +100,14 @@ export const ImportDesignSystemDialog = ( { onClose }: Props ) => {
 							variant="caption"
 							color="text.tertiary"
 						>
-							{ __( 'Learn how design system imports work', 'elementor' ) }
+							{ __( 'Learn how design system imports work', 'refraction' ) }
 						</Link>
 					</Stack>
 				</Stack>
 			</DialogContent>
 			<DialogActions>
 				<Button size="medium" color="secondary" onClick={ onClose }>
-					{ __( 'Cancel', 'elementor' ) }
+					{ __( 'Cancel', 'refraction' ) }
 				</Button>
 				<Button
 					size="medium"
@@ -116,7 +116,7 @@ export const ImportDesignSystemDialog = ( { onClose }: Props ) => {
 					disabled={ ! isImportEnabled }
 					onClick={ handleImport }
 				>
-					{ __( 'Import', 'elementor' ) }
+					{ __( 'Import', 'refraction' ) }
 				</Button>
 			</DialogActions>
 		</>

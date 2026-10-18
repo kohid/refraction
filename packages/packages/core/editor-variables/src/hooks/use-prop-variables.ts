@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
-import { type PropKey } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { type PropKey } from '@refraction/editor-props';
 
 import { useVariableType } from '../context/variable-type-context';
 import { type CreateVariableOptions, service, type UpdateVariableOptions } from '../service';

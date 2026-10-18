@@ -1,6 +1,6 @@
-import { toolPrompts } from '@elementor/editor-mcp';
+import { toolPrompts } from '@refraction/editor-mcp';
 
-export const APPLY_GLOBAL_CLASS_GUIDE_URI = 'elementor://global-classes/tools/apply-global-class-guide';
+export const APPLY_GLOBAL_CLASS_GUIDE_URI = 'refraction://global-classes/tools/apply-global-class-guide';
 
 export const generateApplyGlobalClassGuidePrompt = () => {
 	const prompt = toolPrompts( 'apply-global-class' );
@@ -22,7 +22,7 @@ export const generateApplyGlobalClassGuidePrompt = () => {
 
 	prompt.instruction(
 		`## Prerequisites:
-- **REQUIRED**: Get the list of available global classes from 'elementor://global-classes' resource
+- **REQUIRED**: Get the list of available global classes from 'refraction://global-classes' resource
 - **REQUIRED**: Get element IDs from the page structure or selected element resources
 - Ensure you have the most up-to-date list of classes applied to the element to avoid duplicates
 - Make sure you have the correct class ID that you want to apply`

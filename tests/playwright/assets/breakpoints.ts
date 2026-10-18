@@ -39,16 +39,16 @@ export default class {
 		await editor.saveSiteSettings( true );
 
 		if ( experimentPostId ) {
-			await this.page.goto( `/wp-admin/post.php?post=${ experimentPostId }&action=elementor` );
+			await this.page.goto( `/wp-admin/post.php?post=${ experimentPostId }&action=refraction` );
 		} else {
 			await this.page.reload();
 
-			if ( await this.page.$( '#elementor-panel-header-kit-close' ) ) {
-				await this.page.locator( '#elementor-panel-header-kit-close' ).click( { timeout: 30000 } );
+			if ( await this.page.$( '#refraction-panel-header-kit-close' ) ) {
+				await this.page.locator( '#refraction-panel-header-kit-close' ).click( { timeout: 30000 } );
 			}
 		}
 
-		await this.page.waitForSelector( '#elementor-editor-wrapper' );
+		await this.page.waitForSelector( '#refraction-editor-wrapper' );
 	}
 
 	async resetBreakpoints( editor: EditorPage ) {

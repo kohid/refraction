@@ -41,7 +41,7 @@ export default class Data extends HooksBase {
 	}
 
 	shouldRun( callbacks ) {
-		return super.shouldRun( callbacks ) && elementor.documents.getCurrent().history.getActive();
+		return super.shouldRun( callbacks ) && refraction.documents.getCurrent().history.getActive();
 	}
 
 	onRun( command, args, event ) {

@@ -24,7 +24,7 @@ export default class TemplateControls {
 		const targetControlWrapper = document.getElementById( lookupControlIdPrefix + controlId + '__wrapper' );
 		const lookupControl = document.getElementById( lookupControlIdPrefix + conditionKey );
 
-		targetControlWrapper.classList.toggle( 'elementor-hidden', ! lookupControl || conditionValue !== lookupControl.value );
+		targetControlWrapper.classList.toggle( 'refraction-hidden', ! lookupControl || conditionValue !== lookupControl.value );
 	}
 }
 

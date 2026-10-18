@@ -6,7 +6,7 @@ export class RevertKitHandler {
 	static URL_PARAM_REFERRER_KIT = 'referrer_kit';
 	static URL_PARAM_RETURN_TO = 'return_to';
 	static URL_PARAM_NO_AUTOMATIC_REDIRECT = 'no_automatic_redirect';
-	static KIT_DATA_KEY = 'elementor-kit-data';
+	static KIT_DATA_KEY = 'refraction-kit-data';
 	static NAME_SEPARATOR_PATTERN = /[-_]+/;
 
 	constructor( { revertButton, onError } = {} ) {
@@ -64,28 +64,28 @@ export class RevertKitHandler {
 	}
 
 	handleRevertNoSessions( responseData ) {
-		elementorCommon.dialogsManager
+		refractionCommon.dialogsManager
 			.createWidget( 'alert', {
 				message:
 					responseData.message ||
-					__( 'No import sessions available to revert.', 'elementor' ),
+					__( 'No import sessions available to revert.', 'refraction' ),
 			} )
 			.show();
 	}
 
 	async showConfirmationDialog( activeKitName ) {
 		return new Promise( ( resolve ) => {
-			elementorCommon.dialogsManager
+			refractionCommon.dialogsManager
 				.createWidget( 'confirm', {
-					headerMessage: __( 'Are you sure?', 'elementor' ),
+					headerMessage: __( 'Are you sure?', 'refraction' ),
 					/* Translators: %s: Kit name */
 					message: __(
 						"Removing %s will permanently delete changes made to the Website Template's content and site settings",
-						'elementor',
+						'refraction',
 					).replace( '%s', activeKitName ),
 					strings: {
-						confirm: __( 'Delete', 'elementor' ),
-						cancel: __( 'Cancel', 'elementor' ),
+						confirm: __( 'Delete', 'refraction' ),
+						cancel: __( 'Cancel', 'refraction' ),
 					},
 					onConfirm: () => resolve( true ),
 					onCancel: () => resolve( false ),
@@ -98,30 +98,30 @@ export class RevertKitHandler {
 		const { activeKitName } = this.getDataFromCache();
 
 		/* Translators: %s: Kit name */
-		return __( '%s was successfully deleted', 'elementor' ).replace(
+		return __( '%s was successfully deleted', 'refraction' ).replace(
 			'%s',
 			activeKitName,
 		);
 	}
 
 	showRevertSuccessDialog() {
-		elementorCommon.dialogsManager
+		refractionCommon.dialogsManager
 			.createWidget( 'confirm', {
 				id: RevertKitHandler.DIALOG_ID,
 				headerMessage: this.createSuccessHeaderMessage(),
 				message: __(
 					'Try a different Website Template or build your site from scratch.',
-					'elementor',
+					'refraction',
 				),
 				strings: {
-					confirm: __( 'OK', 'elementor' ),
-					cancel: __( 'Library', 'elementor' ),
+					confirm: __( 'OK', 'refraction' ),
+					cancel: __( 'Library', 'refraction' ),
 				},
 				onConfirm: () => {
 					location.reload();
 				},
 				onCancel: () => {
-					location.href = elementorImportExport.appUrl;
+					location.href = refractionImportExport.appUrl;
 				},
 			} )
 			.show();
@@ -132,14 +132,14 @@ export class RevertKitHandler {
 	showReferrerKitDialog( referrerKitId ) {
 		const { returnTo, noAutomaticRedirect } = this.getDataFromCache();
 
-		elementorCommon.dialogsManager
+		refractionCommon.dialogsManager
 			.createWidget( 'confirm', {
 				id: RevertKitHandler.DIALOG_ID,
 				headerMessage: this.createSuccessHeaderMessage(),
-				message: __( "You're ready to apply a new Kit!", 'elementor' ),
+				message: __( "You're ready to apply a new Kit!", 'refraction' ),
 				strings: {
-					confirm: __( 'Continue to new Kit', 'elementor' ),
-					cancel: __( 'Close', 'elementor' ),
+					confirm: __( 'Continue to new Kit', 'refraction' ),
+					cancel: __( 'Close', 'refraction' ),
 				},
 				onConfirm: () => {
 					location.href = this.buildPreviewUrl( referrerKitId, returnTo, noAutomaticRedirect );
@@ -154,7 +154,7 @@ export class RevertKitHandler {
 	}
 
 	buildPreviewUrl( referrerKitId, returnTo, noAutomaticRedirect ) {
-		const baseUrl = elementorImportExport.appUrl + '/preview/' + referrerKitId;
+		const baseUrl = refractionImportExport.appUrl + '/preview/' + referrerKitId;
 		const url = new URL( baseUrl );
 
 		if ( returnTo ) {
@@ -183,7 +183,7 @@ export class RevertKitHandler {
 	}
 
 	getActiveKitName() {
-		const lastKit = elementorImportExport.lastImportedSession;
+		const lastKit = refractionImportExport.lastImportedSession;
 
 		if ( lastKit.kit_title ) {
 			return lastKit.kit_title;
@@ -193,7 +193,7 @@ export class RevertKitHandler {
 			return this.convertNameToTitle( lastKit.kit_name );
 		}
 
-		return __( 'Your Kit', 'elementor' );
+		return __( 'Your Kit', 'refraction' );
 	}
 
 	convertNameToTitle( name ) {
@@ -202,7 +202,7 @@ export class RevertKitHandler {
 			.filter( ( word ) => word.length > 0 );
 
 		if ( 0 === words.length ) {
-			return __( 'Your Kit', 'elementor' );
+			return __( 'Your Kit', 'refraction' );
 		}
 
 		return words
@@ -265,11 +265,11 @@ export class RevertKitHandler {
 	}
 
 	defaultErrorHandler() {
-		elementorCommon.dialogsManager
+		refractionCommon.dialogsManager
 			.createWidget( 'alert', {
 				message: __(
 					'An error occurred while reverting the kit. Please try again.',
-					'elementor',
+					'refraction',
 				),
 			} )
 			.show();

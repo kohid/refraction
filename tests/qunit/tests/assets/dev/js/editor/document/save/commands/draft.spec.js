@@ -1,4 +1,4 @@
-import ElementsHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
+import ElementsHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
 
 let tempPostStatus,
 	tempEditorStatus;
@@ -7,7 +7,7 @@ export const Draft = () => {
 	QUnit.module( 'Draft', ( hooks ) => {
 		hooks.before( () => {
 			// Save the 'post_status' before the test, to put it back later.
-			const currentDocument = elementor.documents.getCurrent();
+			const currentDocument = refraction.documents.getCurrent();
 
 			tempPostStatus = currentDocument.config.settings.settings.post_status;
 			tempEditorStatus = currentDocument.editor.status;
@@ -15,14 +15,14 @@ export const Draft = () => {
 
 		hooks.after( () => {
 			// Put back as it was before.
-			const currentDocument = elementor.documents.getCurrent();
+			const currentDocument = refraction.documents.getCurrent();
 
 			currentDocument.container.settings.set( 'post_status', tempPostStatus );
 			currentDocument.editor.status = tempEditorStatus;
 		} );
 
 		QUnit.test( 'Document post_status is "publish"', async ( assert ) => {
-			const document = elementor.documents.getCurrent();
+			const document = refraction.documents.getCurrent();
 
 			document.editor.status = 'open';
 
@@ -38,7 +38,7 @@ export const Draft = () => {
 		} );
 
 		QUnit.test( 'Document post_status is "private"', async ( assert ) => {
-			const document = elementor.documents.getCurrent();
+			const document = refraction.documents.getCurrent();
 
 			document.editor.status = 'open';
 
@@ -54,7 +54,7 @@ export const Draft = () => {
 		} );
 
 		QUnit.test( 'Document post_status is "draft"', async ( assert ) => {
-			const document = elementor.documents.getCurrent();
+			const document = refraction.documents.getCurrent();
 
 			document.editor.status = 'open';
 
@@ -70,7 +70,7 @@ export const Draft = () => {
 
 		QUnit.test( 'rejected: "Document is not editable"', ( assert ) => {
 			// Create fake document.
-			const document = elementor.documents.getCurrent(),
+			const document = refraction.documents.getCurrent(),
 				defaultStatus = document.editor.status;
 
 			// Editor is not edit able!

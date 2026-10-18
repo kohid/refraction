@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, useEffect, useRef } from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
-import { isDependency, isDependencyMet, type PropKey, type PropType, type PropValue } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { isDependency, isDependencyMet, type PropKey, type PropType, type PropValue } from '@refraction/editor-props';
 
 import { useInheritedValues } from '../contexts/styles-inheritance-context';
 import { useStylesFields } from '../hooks/use-styles-fields';

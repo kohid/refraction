@@ -2,7 +2,7 @@ export class Do extends $e.modules.CommandBase {
 	apply( args ) {
 		const { index } = args;
 
-		return elementor.documents.getCurrent().history.doItem( index );
+		return refraction.documents.getCurrent().history.doItem( index );
 	}
 }
 

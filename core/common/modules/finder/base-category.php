@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Common\Modules\Finder;
+namespace Refraction\Core\Common\Modules\Finder;
 
-use Elementor\Core\Base\Base_Object;
-use Elementor\Plugin;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Base Category
  *
- * Base class for Elementor Finder categories.
+ * Base class for Refraction Finder categories.
  */
 abstract class Base_Category extends Base_Object {
 

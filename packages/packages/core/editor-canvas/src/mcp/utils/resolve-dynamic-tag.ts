@@ -1,5 +1,5 @@
-import { type PropType, type PropValue } from '@elementor/editor-props';
-import { getElementorConfig } from '@elementor/editor-v1-adapters';
+import { type PropType, type PropValue } from '@refraction/editor-props';
+import { getRefractionConfig } from '@refraction/editor-v1-adapters';
 
 export const DYNAMIC_PROP_TYPE_KEY = 'dynamic';
 
@@ -22,7 +22,7 @@ type LlmDynamicValue = {
 };
 
 export const getAtomicDynamicTags = (): Record< string, AtomicDynamicTag > => {
-	const config = getElementorConfig() as { atomicDynamicTags?: { tags?: Record< string, AtomicDynamicTag > } };
+	const config = getRefractionConfig() as { atomicDynamicTags?: { tags?: Record< string, AtomicDynamicTag > } };
 	return config.atomicDynamicTags?.tags ?? {};
 };
 

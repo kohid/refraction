@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Core\Admin\UI\Components;
+namespace Refraction\Core\Admin\UI\Components;
 
-use Elementor\Core\Base\Base_Object;
-use Elementor\Utils;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

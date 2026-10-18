@@ -1,4 +1,4 @@
-import { type PropValue, sizePropTypeUtil } from '@elementor/editor-props';
+import { type PropValue, sizePropTypeUtil } from '@refraction/editor-props';
 
 import { getVariable } from '../hooks/use-prop-variables';
 import { customSizeVariablePropTypeUtil, sizeVariablePropTypeUtil } from '../prop-types';

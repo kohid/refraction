@@ -1,22 +1,22 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { KitPluginsCustomizationDialog } from 'elementor/app/modules/import-export-customization/assets/js/shared/components/kit-plugins-customization-dialog';
+import { KitPluginsCustomizationDialog } from 'refraction/app/modules/import-export-customization/assets/js/shared/components/kit-plugins-customization-dialog';
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-plugins' );
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-plugins' );
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
 
-import useKitPlugins from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-plugins';
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
-import eventsConfig from 'elementor/core/common/modules/events-manager/assets/js/events-config';
+import useKitPlugins from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-plugins';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import eventsConfig from 'refraction/core/common/modules/events-manager/assets/js/events-config';
 
 global.__ = jest.fn( ( text ) => text );
 
 const mockSendKitImportUploadFile = jest.fn();
 const mockSendPageViewsWebsiteTemplates = jest.fn();
-jest.mock( 'elementor/app/assets/js/event-track/apps-event-tracking', () => ( {
+jest.mock( 'refraction/app/assets/js/event-track/apps-event-tracking', () => ( {
 	AppsEventTracking: {
 		sendKitImportUploadFile: ( ...args ) => mockSendKitImportUploadFile( ...args ),
 		sendPageViewsWebsiteTemplates: ( ...args ) => mockSendPageViewsWebsiteTemplates( ...args ),
@@ -28,9 +28,9 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 	const mockHandleSaveChanges = jest.fn();
 
 	const mockPluginsList = {
-		'elementor/elementor': {
-			name: 'Elementor',
-			plugin: 'elementor/elementor',
+		'refraction/refraction': {
+			name: 'Refraction',
+			plugin: 'refraction/refraction',
 			version: '3.18.0',
 			pluginUri: 'https://elementor.com',
 		},
@@ -66,11 +66,11 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 			isImport: false,
 			contextData: {
 				data: mockData,
-				isOldElementorVersion: false,
+				isOldRefractionVersion: false,
 			},
 		} );
 
-		global.elementorCommon = {
+		global.refractionCommon = {
 			eventsManager: {
 				config: eventsConfig,
 			},
@@ -183,7 +183,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				/>,
 			);
 
-			expect( screen.getByText( 'Elementor' ) ).toBeTruthy();
+			expect( screen.getByText( 'Refraction' ) ).toBeTruthy();
 			expect( screen.getByText( 'Advanced Custom Fields' ) ).toBeTruthy();
 			expect( screen.getByText( 'Contact Form 7' ) ).toBeTruthy();
 		} );
@@ -226,7 +226,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				includes: [ 'plugins' ],
 				customization: {
 					plugins: {
-						'elementor/elementor': true,
+						'refraction/refraction': true,
 						'advanced-custom-fields/acf': false,
 						'contact-form-7/wp-contact-form-7': true,
 					},
@@ -237,7 +237,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				isImport: false,
 				contextData: {
 					data: dataWithCustomization,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -249,18 +249,18 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				/>,
 			);
 
-			const elementorCheckbox = screen.getByLabelText( 'Elementor' );
+			const refractionCheckbox = screen.getByLabelText( 'Refraction' );
 			const acfCheckbox = screen.getByLabelText( 'Advanced Custom Fields' );
 			const cf7Checkbox = screen.getByLabelText( 'Contact Form 7' );
 
-			expect( elementorCheckbox.checked ).toBe( true );
+			expect( refractionCheckbox.checked ).toBe( true );
 			expect( acfCheckbox.checked ).toBe( false );
 			expect( cf7Checkbox.checked ).toBe( true );
 		} );
 	} );
 
 	describe( 'Required Plugins Behavior', () => {
-		it( 'should disable Elementor checkbox as it is required', () => {
+		it( 'should disable Refraction checkbox as it is required', () => {
 			render(
 				<KitPluginsCustomizationDialog
 					open={ true }
@@ -270,9 +270,9 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				/>,
 			);
 
-			const elementorCheckbox = screen.getByLabelText( 'Elementor' );
-			expect( elementorCheckbox.disabled ).toBe( true );
-			expect( elementorCheckbox.checked ).toBe( true );
+			const refractionCheckbox = screen.getByLabelText( 'Refraction' );
+			expect( refractionCheckbox.disabled ).toBe( true );
+			expect( refractionCheckbox.checked ).toBe( true );
 		} );
 
 		it( 'should always keep required plugins checked', () => {
@@ -287,7 +287,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				isImport: false,
 				contextData: {
 					data: dataWithoutPlugins,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -299,8 +299,8 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				/>,
 			);
 
-			const elementorCheckbox = screen.getByLabelText( 'Elementor' );
-			expect( elementorCheckbox.checked ).toBe( true );
+			const refractionCheckbox = screen.getByLabelText( 'Refraction' );
+			expect( refractionCheckbox.checked ).toBe( true );
 		} );
 	} );
 
@@ -338,7 +338,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				includes: [ 'plugins' ],
 				customization: {
 					plugins: {
-						'elementor/elementor': true,
+						'refraction/refraction': true,
 						'advanced-custom-fields/acf': false,
 						'contact-form-7/wp-contact-form-7': true,
 					},
@@ -349,7 +349,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				isImport: false,
 				contextData: {
 					data: dataWithPartialSelection,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -383,7 +383,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				isImport: false,
 				contextData: {
 					data: dataWithoutPlugins,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -398,12 +398,12 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 			const allPluginsCheckbox = screen.getByLabelText( 'All plugins' );
 			const acfCheckbox = screen.getByLabelText( 'Advanced Custom Fields' );
 			const cf7Checkbox = screen.getByLabelText( 'Contact Form 7' );
-			const elementorCheckbox = screen.getByLabelText( 'Elementor' );
+			const refractionCheckbox = screen.getByLabelText( 'Refraction' );
 
 			expect( allPluginsCheckbox.checked ).toBe( false );
 			expect( acfCheckbox.checked ).toBe( false );
 			expect( cf7Checkbox.checked ).toBe( false );
-			expect( elementorCheckbox.checked ).toBe( true );
+			expect( refractionCheckbox.checked ).toBe( true );
 
 			expect( allPluginsCheckbox ).toBeTruthy();
 			expect( allPluginsCheckbox.disabled ).toBe( false );
@@ -441,12 +441,12 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				/>,
 			);
 
-			const elementorCheckbox = screen.getByLabelText( 'Elementor' );
-			const initialState = elementorCheckbox.checked;
+			const refractionCheckbox = screen.getByLabelText( 'Refraction' );
+			const initialState = refractionCheckbox.checked;
 
-			fireEvent.click( elementorCheckbox );
+			fireEvent.click( refractionCheckbox );
 
-			expect( elementorCheckbox.checked ).toBe( initialState );
+			expect( refractionCheckbox.checked ).toBe( initialState );
 		} );
 	} );
 
@@ -483,7 +483,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 			expect( mockHandleSaveChanges ).toHaveBeenCalledWith(
 				'plugins',
 				{
-					'elementor/elementor': true,
+					'refraction/refraction': true,
 					'advanced-custom-fields/acf': true,
 					'contact-form-7/wp-contact-form-7': true,
 				},
@@ -491,7 +491,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				{
 					'advanced-custom-fields/acf': true,
 					'contact-form-7/wp-contact-form-7': true,
-					'elementor/elementor': true,
+					'refraction/refraction': true,
 				},
 			);
 			expect( mockHandleClose ).toHaveBeenCalledTimes( 1 );
@@ -516,7 +516,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 			expect( mockHandleSaveChanges ).toHaveBeenCalledWith(
 				'plugins',
 				{
-					'elementor/elementor': true,
+					'refraction/refraction': true,
 					'advanced-custom-fields/acf': false,
 					'contact-form-7/wp-contact-form-7': true,
 				},
@@ -524,7 +524,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 				{
 					'advanced-custom-fields/acf': false,
 					'contact-form-7/wp-contact-form-7': true,
-					'elementor/elementor': true,
+					'refraction/refraction': true,
 				},
 			);
 		} );
@@ -560,7 +560,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 			);
 
 			expect( screen.getByText( 'All plugins' ) ).toBeTruthy();
-			expect( screen.queryByText( 'Elementor' ) ).toBeFalsy();
+			expect( screen.queryByText( 'Refraction' ) ).toBeFalsy();
 		} );
 	} );
 } );

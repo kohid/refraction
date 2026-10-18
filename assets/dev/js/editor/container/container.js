@@ -165,7 +165,7 @@ export default class Container extends ArgsObject {
 		}
 
 		if ( ! this.document ) {
-			this.document = elementor.documents.getCurrent();
+			this.document = refraction.documents.getCurrent();
 		}
 
 		this.dynamic = new Backbone.Model( this.settings.get( '__dynamic__' ) );
@@ -195,7 +195,7 @@ export default class Container extends ArgsObject {
 
 		// Require it, unless it's forced to be `false`.
 		if ( false !== args.parent ) {
-			this.requireArgumentInstance( 'parent', elementorModules.editor.Container, args );
+			this.requireArgumentInstance( 'parent', refractionModules.editor.Container, args );
 		}
 	}
 
@@ -350,7 +350,7 @@ export default class Container extends ArgsObject {
 				name: control.name,
 			} );
 
-			this.repeaters[ control.name ] = new elementorModules.editor.Container( {
+			this.repeaters[ control.name ] = new refractionModules.editor.Container( {
 				type: Container.TYPE_REPEATER,
 				id: control.name,
 				model,
@@ -375,7 +375,7 @@ export default class Container extends ArgsObject {
 			if ( ! this.model.get( 'supportRepeaterChildren' ) && 1 === repeaters.length ) {
 				Object.defineProperty( this, 'children', {
 					get() {
-						elementorDevTools.deprecation.deprecated( 'children', '3.0.0', 'container.repeaters[ repeaterName ].children' );
+						refractionDevTools.deprecation.deprecated( 'children', '3.0.0', 'container.repeaters[ repeaterName ].children' );
 						return this.repeaters[ repeaters[ 0 ].name ].children;
 					},
 				} );
@@ -399,11 +399,11 @@ export default class Container extends ArgsObject {
 
 		// TODO: Temp backwards compatibility. since 2.8.0.
 		if ( ! rowId ) {
-			rowId = 'bc-' + elementorCommon.helpers.getUniqueId();
+			rowId = 'bc-' + refractionCommon.helpers.getUniqueId();
 			rowSettingsModel.set( '_id', rowId );
 		}
 
-		this.repeaters[ repeaterName ].children.splice( index, 0, new elementorModules.editor.Container( {
+		this.repeaters[ repeaterName ].children.splice( index, 0, new refractionModules.editor.Container( {
 			type: Container.TYPE_REPEATER_ITEM,
 			id: rowSettingsModel.get( '_id' ),
 			model: new Backbone.Model( {
@@ -412,7 +412,7 @@ export default class Container extends ArgsObject {
 			settings: rowSettingsModel,
 			view: this.view,
 			parent: this.repeaters[ repeaterName ],
-			label: this.label + ' ' + __( 'Item', 'elementor' ),
+			label: this.label + ' ' + __( 'Item', 'refraction' ),
 			controls: rowSettingsModel.options.controls,
 			renderer: this.renderer,
 		} ) );
@@ -473,7 +473,7 @@ export default class Container extends ArgsObject {
 	 * @deprecated since 3.5.0, use `container.children.findRecursive( callback )` instead.
 	 */
 	findChildrenRecursive( callback ) {
-		elementorDevTools.deprecation.deprecated(
+		refractionDevTools.deprecation.deprecated(
 			'container.findChildrenRecursive( callback )',
 			'3.5.0',
 			'container.children.findRecursive( callback )',
@@ -487,7 +487,7 @@ export default class Container extends ArgsObject {
 	 * @deprecated since 3.5.0, use `container.children.forEachRecursive( callback )` instead.
 	 */
 	forEachChildrenRecursive( callback ) {
-		elementorDevTools.deprecation.deprecated(
+		refractionDevTools.deprecation.deprecated(
 			'container.forEachChildrenRecursive( callback )',
 			'3.5.0',
 			'container.children.forEachRecursive( callback )',
@@ -522,13 +522,13 @@ export default class Container extends ArgsObject {
 	}
 
 	isEditable() {
-		return 'edit' === elementor.channels.dataEditMode.request( 'activeMode' ) &&
+		return 'edit' === refraction.channels.dataEditMode.request( 'activeMode' ) &&
 			'open' === this.document.editor.status &&
 			! this.model?.get?.( 'editSettings' )?.get?.( 'inactive' );
 	}
 
 	isDesignable() {
-		return elementor.userCan( 'design' ) && this.isEditable();
+		return refraction.userCan( 'design' ) && this.isEditable();
 	}
 
 	isGridContainer() {
@@ -592,11 +592,11 @@ export default class Container extends ArgsObject {
 		// It's a global settings with additional controls in group.
 		if ( control.groupType ) {
 			// A regex containing all of the active breakpoints' prefixes ('_mobile', '_tablet' etc.).
-			const responsivePrefixRegex = elementor.breakpoints.getActiveMatchRegex();
+			const responsivePrefixRegex = refraction.breakpoints.getActiveMatchRegex();
 
 			let propertyName = control.name.replace( control.groupPrefix, '' ).replace( responsivePrefixRegex, '' );
 
-			if ( ! data.value[ elementor.config.kit_config.typography_prefix + propertyName ] ) {
+			if ( ! data.value[ refraction.config.kit_config.typography_prefix + propertyName ] ) {
 				return;
 			}
 
@@ -604,8 +604,8 @@ export default class Container extends ArgsObject {
 
 			value = `var( --e-global-${ control.groupType }-${ id }-${ propertyName } )`;
 
-			if ( elementor.config.ui.defaultGenericFonts && control.groupPrefix + 'font_family' === control.name ) {
-				value += `, ${ elementor.config.ui.defaultGenericFonts }`;
+			if ( refraction.config.ui.defaultGenericFonts && control.groupPrefix + 'font_family' === control.name ) {
+				value += `, ${ refraction.config.ui.defaultGenericFonts }`;
 			}
 		} else {
 			value = `var( --e-global-${ control.type }-${ id } )`;
@@ -638,7 +638,7 @@ export default class Container extends ArgsObject {
 			// End temp fix
 
 			// If the control is a color/typography control and default colors/typography are disabled, don't return the global value.
-			if ( ! elementor.config.globals.defaults_enabled[ controlType ] ) {
+			if ( ! refraction.config.globals.defaults_enabled[ controlType ] ) {
 				return '';
 			}
 

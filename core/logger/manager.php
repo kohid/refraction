@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Core\Logger;
+namespace Refraction\Core\Logger;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Common\Modules\Ajax\Module;
-use Elementor\Core\Editor\Editor;
-use Elementor\Core\Logger\Loggers\Logger_Interface;
-use Elementor\Core\Logger\Items\PHP;
-use Elementor\Core\Logger\Items\JS;
-use Elementor\Plugin;
-use Elementor\Modules\System_Info\Module as System_Info;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Common\Modules\Ajax\Module;
+use Refraction\Core\Editor\Editor;
+use Refraction\Core\Logger\Loggers\Logger_Interface;
+use Refraction\Core\Logger\Items\PHP;
+use Refraction\Core\Logger\Items\JS;
+use Refraction\Plugin;
+use Refraction\Modules\System_Info\Module as System_Info;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -38,7 +38,7 @@ class Manager extends BaseModule {
 			return;
 		}
 
-		if ( ! Utils::is_elementor_path( $last_error['file'] ) ) {
+		if ( ! Utils::is_refraction_path( $last_error['file'] ) ) {
 			return;
 		}
 
@@ -67,7 +67,7 @@ class Manager extends BaseModule {
 			'line' => $error_line,
 		] );
 
-		if ( ! Utils::is_elementor_path( $error_file ) ) {
+		if ( ! Utils::is_refraction_path( $error_file ) ) {
 			// Do execute PHP internal error handler.
 			return false;
 		}
@@ -91,7 +91,7 @@ class Manager extends BaseModule {
 				echo wp_json_encode( $error_data );
 			} else {
 				echo wp_json_encode( [
-					'message' => 'Server error, see Elementor => System Info',
+					'message' => 'Server error, see Refraction => System Info',
 				] );
 			}
 		}
@@ -115,9 +115,9 @@ class Manager extends BaseModule {
 	/**
 	 * Javascript log.
 	 *
-	 * Log Elementor errors and save them in the database.
+	 * Log Refraction errors and save them in the database.
 	 *
-	 * Fired by `wp_ajax_elementor_js_log` action.
+	 * Fired by `wp_ajax_refraction_js_log` action.
 	 */
 	public function js_log() {
 		/** @var Module $ajax */
@@ -165,7 +165,7 @@ class Manager extends BaseModule {
 	}
 
 	public function register_default_loggers() {
-		$this->register_logger( 'db', 'Elementor\Core\Logger\Loggers\Db' );
+		$this->register_logger( 'db', 'Refraction\Core\Logger\Loggers\Db' );
 		$this->set_default_logger( 'db' );
 	}
 
@@ -262,8 +262,8 @@ class Manager extends BaseModule {
 	}
 
 	private function register_loggers() {
-		if ( ! did_action( 'elementor/loggers/register' ) ) {
-			do_action( 'elementor/loggers/register', $this );
+		if ( ! did_action( 'refraction/loggers/register' ) ) {
+			do_action( 'refraction/loggers/register', $this );
 		}
 	}
 
@@ -272,8 +272,8 @@ class Manager extends BaseModule {
 
 		add_action( 'admin_init', [ $this, 'add_system_info_report' ], 80 );
 
-		add_action( 'wp_ajax_elementor_js_log', [ $this, 'js_log' ] );
+		add_action( 'wp_ajax_refraction_js_log', [ $this, 'js_log' ] );
 
-		add_action( 'elementor/loggers/register', [ $this, 'register_default_loggers' ] );
+		add_action( 'refraction/loggers/register', [ $this, 'register_default_loggers' ] );
 	}
 }

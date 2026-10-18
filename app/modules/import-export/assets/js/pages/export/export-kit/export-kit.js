@@ -9,9 +9,9 @@ import PageHeader from '../../../ui/page-header/page-header';
 import KitContent from '../../../shared/kit-content/kit-content';
 import KitInformation from './components/kit-information/kit-information';
 import ActionsFooter from '../../../shared/actions-footer/actions-footer';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
-import Button from 'elementor-app/ui/molecules/button';
-import Grid from 'elementor-app/ui/grid/grid';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
+import Button from 'refraction-app/ui/molecules/button';
+import Grid from 'refraction-app/ui/grid/grid';
 
 import kitContentData from '../../../shared/kit-content-data/kit-content-data';
 
@@ -24,7 +24,7 @@ export default function ExportKit() {
 			<ActionsFooter>
 				<Button
 					variant="contained"
-					text={ __( 'Next', 'elementor' ) }
+					text={ __( 'Next', 'refraction' ) }
 					color={ exportContext.data.kitInfo.title ? 'primary' : 'disabled' }
 					url={ exportContext.data.kitInfo.title ? '/export/plugins' : '' }
 				/>
@@ -32,13 +32,13 @@ export default function ExportKit() {
 		),
 		getLearnMoreLink = () => (
 			<InlineLink url="https://go.elementor.com/app-what-are-kits" italic>
-				{ __( 'Learn More', 'elementor' ) }
+				{ __( 'Learn More', 'refraction' ) }
 			</InlineLink>
 		);
 
 	useEffect( () => {
 		exportContext.dispatch( { type: 'SET_IS_EXPORT_PROCESS_STARTED', payload: true } );
-		sharedContext.dispatch( { type: 'SET_CPT', payload: cptObjectToOptionsArray( elementorAppConfig[ 'import-export' ].summaryTitles.content?.customPostTypes, 'plural' ) } );
+		sharedContext.dispatch( { type: 'SET_CPT', payload: cptObjectToOptionsArray( refractionAppConfig[ 'import-export' ].summaryTitles.content?.customPostTypes, 'plural' ) } );
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [] );
 
@@ -46,11 +46,11 @@ export default function ExportKit() {
 		<Layout type="export" footer={ getFooter() }>
 			<section className="e-app-export-kit">
 				<PageHeader
-					heading={ __( 'Select which items to export', 'elementor' ) }
+					heading={ __( 'Select which items to export', 'refraction' ) }
 					description={ [
-						__( 'You can export the content, site settings, and templates as a Website Template to be reused in the future.', 'elementor' ),
+						__( 'You can export the content, site settings, and templates as a Website Template to be reused in the future.', 'refraction' ),
 						<React.Fragment key="description-secondary-line">
-							{ __( 'Uncheck the items you don\'t want to include.', 'elementor' ) } { getLearnMoreLink() }
+							{ __( 'Uncheck the items you don\'t want to include.', 'refraction' ) } { getLearnMoreLink() }
 						</React.Fragment>,
 					] }
 				/>

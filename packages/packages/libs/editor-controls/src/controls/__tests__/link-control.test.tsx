@@ -6,15 +6,15 @@ import {
 	getLinkInLinkRestriction,
 	type LinkInLinkRestriction,
 	selectElement,
-} from '@elementor/editor-elements';
-import { useSessionStorage } from '@elementor/session';
+} from '@refraction/editor-elements';
+import { useSessionStorage } from '@refraction/session';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { LinkControl } from '../link-control';
 
 const buildContainerWithDocId = ( docId: string ) => {
 	const root = document.createElement( 'div' );
-	root.setAttribute( 'data-elementor-id', docId );
+	root.setAttribute( 'data-refraction-id', docId );
 	const el = document.createElement( 'div' );
 	root.appendChild( el );
 	return { view: { el } } as unknown as ReturnType< typeof getContainer >;
@@ -41,9 +41,9 @@ const propType = createMockPropType( {
 	},
 } );
 
-jest.mock( '@elementor/session' );
+jest.mock( '@refraction/session' );
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 const globalProps = {
 	context: { elementId: '1' },
@@ -686,7 +686,7 @@ describe( '<LinkControl />', () => {
 	} );
 
 	it( 'should hide "Take me there" button when target element lives in a different document', async () => {
-		// Arrange - target's data-elementor-id (200) differs from current document (100).
+		// Arrange - target's data-refraction-id (200) differs from current document (100).
 		jest.mocked( getLinkInLinkRestriction ).mockReturnValue( {
 			shouldRestrict: true,
 			reason: 'descendant',

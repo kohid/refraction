@@ -1,16 +1,16 @@
 <?php
 
-namespace Elementor\Modules\WpRest\Base;
+namespace Refraction\Modules\WpRest\Base;
 
-use Elementor\Core\Utils\Api\Error_Builder;
-use Elementor\Core\Utils\Collection;
+use Refraction\Core\Utils\Api\Error_Builder;
+use Refraction\Core\Utils\Collection;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 abstract class Query {
-	const NAMESPACE = 'elementor/v1';
+	const NAMESPACE = 'refraction/v1';
 	const NONCE_KEY = 'x_wp_nonce';
 
 	const KEYS_CONVERSION_MAP_KEY = 'keys_conversion_map';

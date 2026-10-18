@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
-import { __useDispatch as useDispatch } from '@elementor/store';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
+import { __useDispatch as useDispatch } from '@refraction/store';
 import { List, Stack, styled, Typography, type TypographyProps } from '@elementor/ui';
 import { defaultRangeExtractor, useVirtualizer } from '@tanstack/react-virtual';
 import { __ } from '@wordpress/i18n';
@@ -212,12 +212,12 @@ const EmptyState = () => (
 	<Stack alignItems="center" gap={ 1.5 } pt={ 10 } px={ 0.5 } maxWidth="260px" margin="auto">
 		<FlippedColorSwatchIcon fontSize="large" />
 		<StyledHeader variant="subtitle2" component="h2" color="text.secondary">
-			{ __( 'There are no global classes yet.', 'elementor' ) }
+			{ __( 'There are no global classes yet.', 'refraction' ) }
 		</StyledHeader>
 		<Typography align="center" variant="caption" color="text.secondary">
 			{ __(
 				'CSS classes created in the editor panel will appear here. Once they are available, you can arrange their hierarchy, rename them, or delete them as needed.',
-				'elementor'
+				'refraction'
 			) }
 		</Typography>
 	</Stack>

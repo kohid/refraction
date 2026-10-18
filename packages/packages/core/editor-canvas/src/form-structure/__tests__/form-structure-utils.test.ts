@@ -1,4 +1,4 @@
-import type { V1Element } from '@elementor/editor-elements';
+import type { V1Element } from '@refraction/editor-elements';
 
 import { parseXml } from '../../__tests__/parse-xml';
 import {

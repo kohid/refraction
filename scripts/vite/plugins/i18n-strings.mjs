@@ -60,7 +60,7 @@ export function getStringsScanPattern( entryName, entrySourcePath ) {
  */
 export function i18nStringsPlugin( { entryName, entrySourcePath, outputDir, scanPattern } ) {
 	return {
-		name: 'elementor-i18n-strings',
+		name: 'refraction-i18n-strings',
 		async writeBundle() {
 			const pattern = scanPattern ?? getStringsScanPattern( entryName, entrySourcePath );
 			const filePaths = await glob( pattern, {

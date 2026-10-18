@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Core\RoleManager;
+namespace Refraction\Core\RoleManager;
 
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Settings_Page;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\Settings_Page;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Role_Manager extends Settings_Page {
 
-	const PAGE_ID = 'elementor-role-manager';
+	const PAGE_ID = 'refraction-role-manager';
 
 	const ROLE_MANAGER_OPTION_NAME = 'exclude_user_roles';
 
@@ -25,11 +25,11 @@ class Role_Manager extends Settings_Page {
 	 * @access public
 	 */
 	public function get_role_manager_options() {
-		return get_option( 'elementor_' . self::ROLE_MANAGER_OPTION_NAME, [] );
+		return get_option( 'refraction_' . self::ROLE_MANAGER_OPTION_NAME, [] );
 	}
 
 	public function get_role_manager_advanced_options() {
-		return get_option( 'elementor_' . self::ROLE_MANAGER_ADVANCED, [] );
+		return get_option( 'refraction_' . self::ROLE_MANAGER_ADVANCED, [] );
 	}
 
 	public function get_user_advanced_options() {
@@ -46,7 +46,7 @@ class Role_Manager extends Settings_Page {
 	 * @access protected
 	 */
 	protected function get_page_title() {
-		return esc_html__( 'Role Manager', 'elementor' );
+		return esc_html__( 'Role Manager', 'refraction' );
 	}
 
 	/**
@@ -54,15 +54,15 @@ class Role_Manager extends Settings_Page {
 	 * @access protected
 	 */
 	protected function create_tabs() {
-		$validation_class = 'Elementor\Settings_Validations';
+		$validation_class = 'Refraction\Settings_Validations';
 		return [
 			'general' => [
-				'label' => esc_html__( 'General', 'elementor' ),
+				'label' => esc_html__( 'General', 'refraction' ),
 				'sections' => [
 					'tools' => [
 						'fields' => [
 							'exclude_user_roles' => [
-								'label' => esc_html__( 'Exclude Roles', 'elementor' ),
+								'label' => esc_html__( 'Exclude Roles', 'refraction' ),
 								'field_args' => [
 									'type' => 'checkbox_list_roles',
 									'exclude' => [ 'super_admin', 'administrator' ],
@@ -102,19 +102,19 @@ class Role_Manager extends Settings_Page {
 			<h1 class="wp-heading-inline"><?php echo esc_html( $this->get_page_title() ); ?></h1>
 
 			<div>
-				<div id="elementor-role-manager">
-					<h2><?php echo esc_html__( 'Manage What Your Users Can Edit In Elementor', 'elementor' ); ?></h2>
-					<form id="elementor-settings-form" method="post" action="options.php">
+				<div id="refraction-role-manager">
+					<h2><?php echo esc_html__( 'Manage What Your Users Can Edit In Refraction', 'refraction' ); ?></h2>
+					<form id="refraction-settings-form" method="post" action="options.php">
 						<?php
 						settings_fields( static::PAGE_ID );
-						echo '<div class="elementor-settings-form-page elementor-active">';
+						echo '<div class="refraction-settings-form-page refraction-active">';
 						foreach ( get_editable_roles() as $role_slug => $role_data ) {
 							if ( 'administrator' === $role_slug ) {
 								continue;
 							}
 							$this->display_role_controls( $role_slug, $role_data );
 						}
-						submit_button( __( 'Save Changes', 'elementor' ), 'primary', 'submit', true, [ 'data-id' => 'elementor-role-manager-button-save-changes' ] );
+						submit_button( __( 'Save Changes', 'refraction' ), 'primary', 'submit', true, [ 'data-id' => 'refraction-role-manager-button-save-changes' ] );
 						?>
 					</form>
 				</div>
@@ -136,23 +136,23 @@ class Role_Manager extends Settings_Page {
 			$excluded_options = $this->get_role_manager_options();
 		}
 
-		$row_classes = 'elementor-role-row ' . esc_attr( $role_slug ) . ' e-editor-one';
+		$row_classes = 'refraction-role-row ' . esc_attr( $role_slug ) . ' e-editor-one';
 
 		?>
 		<div class="<?php echo esc_attr( $row_classes ); ?>">
-			<div class="elementor-role-label">
-				<span class="elementor-role-name"><?php echo esc_html( translate_user_role( $role_data['name'] ) ); ?></span>
-				<span data-excluded-label="<?php esc_attr_e( 'Role Excluded', 'elementor' ); ?>" class="elementor-role-excluded-indicator"></span>
-				<span class="elementor-role-toggle" data-id="<?php echo esc_attr( $role_slug ); ?>-toggle"><span class="dashicons dashicons-arrow-down"></span></span>
+			<div class="refraction-role-label">
+				<span class="refraction-role-name"><?php echo esc_html( translate_user_role( $role_data['name'] ) ); ?></span>
+				<span data-excluded-label="<?php esc_attr_e( 'Role Excluded', 'refraction' ); ?>" class="refraction-role-excluded-indicator"></span>
+				<span class="refraction-role-toggle" data-id="<?php echo esc_attr( $role_slug ); ?>-toggle"><span class="dashicons dashicons-arrow-down"></span></span>
 			</div>
-			<div class="elementor-role-controls hidden">
-				<div class="elementor-role-control">
+			<div class="refraction-role-controls hidden">
+				<div class="refraction-role-control">
 					<label>
-						<input type="checkbox" name="elementor_exclude_user_roles[]" value="<?php echo esc_attr( $role_slug ); ?>"<?php checked( in_array( $role_slug, $excluded_options, true ), true ); ?>>
-						<?php echo esc_html__( 'No access to editor', 'elementor' ); ?>
+						<input type="checkbox" name="refraction_exclude_user_roles[]" value="<?php echo esc_attr( $role_slug ); ?>"<?php checked( in_array( $role_slug, $excluded_options, true ), true ); ?>>
+						<?php echo esc_html__( 'No access to editor', 'refraction' ); ?>
 					</label>
 				</div>
-				<div class="elementor-role-controls-advanced">
+				<div class="refraction-role-controls-advanced">
 					<?php
 					/**
 					 * Role restrictions controls.
@@ -168,7 +168,7 @@ class Role_Manager extends Settings_Page {
 					 * @param string $role_slug The role slug.
 					 * @param array  $role_data An array with role data.
 					 */
-					do_action( 'elementor/role/restrictions/controls', $role_slug, $role_data );
+					do_action( 'refraction/role/restrictions/controls', $role_slug, $role_data );
 					?>
 				</div>
 			</div>
@@ -179,17 +179,17 @@ class Role_Manager extends Settings_Page {
 	public function add_json_enable_control( $role_slug ) {
 		$value = 'json-upload';
 		$id = self::ROLE_MANAGER_ADVANCED . '_' . $role_slug . '_' . $value;
-		$name = 'elementor_' . self::ROLE_MANAGER_ADVANCED . '[' . $role_slug . '][]';
+		$name = 'refraction_' . self::ROLE_MANAGER_ADVANCED . '[' . $role_slug . '][]';
 
 		$advanced_options = $this->get_user_advanced_options();
 		$checked = isset( $advanced_options[ $role_slug ] ) ? $advanced_options[ $role_slug ] : [];
 		?>
-		<div class="elementor-role-control">
+		<div class="refraction-role-control">
 			<label for="<?php echo esc_attr( $id ); ?>">
 				<input type="checkbox" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $value ); ?>" <?php checked( in_array( $value, $checked, true ), true ); ?>>
-				<?php echo esc_html__( 'Enable the option to upload JSON files', 'elementor' ); ?>
+				<?php echo esc_html__( 'Enable the option to upload JSON files', 'refraction' ); ?>
 			</label>
-			<p class="elementor-role-control-warning"><strong><?php echo esc_html__( 'Heads up', 'elementor' ); ?>:</strong> <?php echo esc_html__( 'Giving broad access to upload JSON files can pose a security risk to your website because such files may contain malicious scripts, etc.', 'elementor' ); ?></p>
+			<p class="refraction-role-control-warning"><strong><?php echo esc_html__( 'Heads up', 'refraction' ); ?>:</strong> <?php echo esc_html__( 'Giving broad access to upload JSON files can pose a security risk to your website because such files may contain malicious scripts, etc.', 'refraction' ); ?></p>
 		</div>
 		<?php
 	}
@@ -197,17 +197,17 @@ class Role_Manager extends Settings_Page {
 	public function add_custom_html_enable_control( $role_slug ) {
 		$value = 'custom-html';
 		$id = self::ROLE_MANAGER_ADVANCED . '_' . $role_slug . '_' . $value;
-		$name = 'elementor_' . self::ROLE_MANAGER_ADVANCED . '[' . $role_slug . '][]';
+		$name = 'refraction_' . self::ROLE_MANAGER_ADVANCED . '[' . $role_slug . '][]';
 
 		$advanced_options = $this->get_user_advanced_options();
 		$checked = isset( $advanced_options[ $role_slug ] ) ? $advanced_options[ $role_slug ] : [];
 		?>
-		<div class="elementor-role-control">
+		<div class="refraction-role-control">
 			<label for="<?php echo esc_attr( $id ); ?>">
 				<input type="checkbox" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $value ); ?>" <?php checked( in_array( $value, $checked, true ), true ); ?>>
-				<?php echo esc_html__( 'Enable the option to use the HTML widget', 'elementor' ); ?>
+				<?php echo esc_html__( 'Enable the option to use the HTML widget', 'refraction' ); ?>
 			</label>
-			<p class="elementor-role-control-warning"><strong><?php echo esc_html__( 'Heads up', 'elementor' ); ?>:</strong> <?php echo esc_html__( 'Giving broad access to edit the HTML widget can pose a security risk to your website because it enables users to run malicious scripts, etc.', 'elementor' ); ?></p>
+			<p class="refraction-role-control-warning"><strong><?php echo esc_html__( 'Heads up', 'refraction' ); ?>:</strong> <?php echo esc_html__( 'Giving broad access to edit the HTML widget can pose a security risk to your website because it enables users to run malicious scripts, etc.', 'refraction' ); ?></p>
 		</div>
 		<?php
 	}
@@ -252,7 +252,7 @@ class Role_Manager extends Settings_Page {
 			 *
 			 * @param array $restrictions User restrictions.
 			 */
-			$restrictions = apply_filters( 'elementor/editor/user/restrictions', $restrictions );
+			$restrictions = apply_filters( 'refraction/editor/user/restrictions', $restrictions );
 		}
 		return $restrictions;
 	}
@@ -286,13 +286,13 @@ class Role_Manager extends Settings_Page {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_menu( $menu_data_provider );
 		} );
 
-		add_action( 'elementor/role/restrictions/controls', [ $this, 'add_json_enable_control' ] );
-		add_action( 'elementor/role/restrictions/controls', [ $this, 'add_custom_html_enable_control' ] );
+		add_action( 'refraction/role/restrictions/controls', [ $this, 'add_json_enable_control' ] );
+		add_action( 'refraction/role/restrictions/controls', [ $this, 'add_custom_html_enable_control' ] );
 
-		add_filter( 'elementor/editor/user/restrictions', [ $this, 'get_role_manager_advanced_options' ] );
+		add_filter( 'refraction/editor/user/restrictions', [ $this, 'get_role_manager_advanced_options' ] );
 	}
 }

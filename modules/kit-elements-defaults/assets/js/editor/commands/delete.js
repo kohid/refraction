@@ -7,12 +7,12 @@ export default class Delete extends $e.modules.CommandBase {
 		try {
 			await deleteElementDefaults( type );
 
-			elementor.notifications.showToast( {
-				message: __( 'Default settings has been reset.', 'elementor' ),
+			refraction.notifications.showToast( {
+				message: __( 'Default settings has been reset.', 'refraction' ),
 			} );
 		} catch ( e ) {
-			elementor.notifications.showToast( {
-				message: __( 'An error occurred.', 'elementor' ),
+			refraction.notifications.showToast( {
+				message: __( 'An error occurred.', 'refraction' ),
 			} );
 
 			throw e;

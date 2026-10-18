@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ToggleButtonGroupItem, ToggleControl } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleControl } from '@refraction/editor-controls';
 import {
 	LayoutAlignCenterIcon as CenterIcon,
 	LayoutAlignLeftIcon,
@@ -16,7 +16,7 @@ import { RotatedIcon } from './utils/rotated-icon';
 
 type AlignItems = 'start' | 'center' | 'end' | 'stretch';
 
-const ALIGN_ITEMS_LABEL = __( 'Align items', 'elementor' );
+const ALIGN_ITEMS_LABEL = __( 'Align items', 'refraction' );
 
 const StartIcon = withDirection( LayoutAlignLeftIcon );
 const EndIcon = withDirection( LayoutAlignRightIcon );
@@ -29,25 +29,25 @@ const iconProps = {
 const options: ToggleButtonGroupItem< AlignItems >[] = [
 	{
 		value: 'start',
-		label: __( 'Start', 'elementor' ),
+		label: __( 'Start', 'refraction' ),
 		renderContent: ( { size } ) => <RotatedIcon icon={ StartIcon } size={ size } { ...iconProps } />,
 		showTooltip: true,
 	},
 	{
 		value: 'center',
-		label: __( 'Center', 'elementor' ),
+		label: __( 'Center', 'refraction' ),
 		renderContent: ( { size } ) => <RotatedIcon icon={ CenterIcon } size={ size } { ...iconProps } />,
 		showTooltip: true,
 	},
 	{
 		value: 'end',
-		label: __( 'End', 'elementor' ),
+		label: __( 'End', 'refraction' ),
 		renderContent: ( { size } ) => <RotatedIcon icon={ EndIcon } size={ size } { ...iconProps } />,
 		showTooltip: true,
 	},
 	{
 		value: 'stretch',
-		label: __( 'Stretch', 'elementor' ),
+		label: __( 'Stretch', 'refraction' ),
 		renderContent: ( { size } ) => <RotatedIcon icon={ JustifyIcon } size={ size } { ...iconProps } />,
 		showTooltip: true,
 	},

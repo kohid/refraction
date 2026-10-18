@@ -1,4 +1,4 @@
-import { useMutation } from '@elementor/query';
+import { useMutation } from '@refraction/query';
 
 import { getConfig } from '../utils/get-config';
 import { withRetry } from '../utils/retry';
@@ -20,7 +20,7 @@ async function installProRequest(): Promise< { success: boolean; message: string
 
 	if ( ! response.ok ) {
 		const error = await response.json().catch( () => null );
-		throw new Error( error?.message || 'Failed to install Elementor Pro' );
+		throw new Error( error?.message || 'Failed to install Refraction Pro' );
 	}
 
 	const json = await response.json();

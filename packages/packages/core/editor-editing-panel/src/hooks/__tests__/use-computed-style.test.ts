@@ -13,7 +13,7 @@ describe( 'useComputedStyle', () => {
 
 	it( 'should return the style of the element on device-mode/change event', () => {
 		// Arrange
-		window.elementor = {
+		window.refraction = {
 			getContainer: jest.fn().mockReturnValue( mockElement ),
 		};
 		const ele = createDOMElement( {
@@ -26,7 +26,7 @@ describe( 'useComputedStyle', () => {
 		mockElement.view.el = ele;
 		document.body.appendChild( ele );
 
-		dispatchElementEvent( 'elementor/device-mode/change', 'mockId' );
+		dispatchElementEvent( 'refraction/device-mode/change', 'mockId' );
 
 		// Act
 		const { result } = renderHook( () => useComputedStyle( 'mockId' ) );
@@ -37,7 +37,7 @@ describe( 'useComputedStyle', () => {
 
 	it( 'should return the style of the element on elements/reset-style event', () => {
 		// Arrange
-		window.elementor = {
+		window.refraction = {
 			getContainer: jest.fn().mockReturnValue( mockElement ),
 		};
 		const ele = createDOMElement( {
@@ -61,7 +61,7 @@ describe( 'useComputedStyle', () => {
 
 	it( 'should return the style of the element on elements/settings event', () => {
 		// Arrange
-		window.elementor = {
+		window.refraction = {
 			getContainer: jest.fn().mockReturnValue( mockElement ),
 		};
 		const ele = createDOMElement( {
@@ -85,7 +85,7 @@ describe( 'useComputedStyle', () => {
 
 	it( 'should return the style of the element on elements/paste-style event', () => {
 		// Arrange
-		window.elementor = {
+		window.refraction = {
 			getContainer: jest.fn().mockReturnValue( mockElement ),
 		};
 		const ele = createDOMElement( {
@@ -107,9 +107,9 @@ describe( 'useComputedStyle', () => {
 		expect( result.current?.display ).toBe( 'flex' );
 	} );
 
-	it( 'should return null when elementor not defined', () => {
+	it( 'should return null when refraction not defined', () => {
 		// Arrange
-		window.elementor = undefined;
+		window.refraction = undefined;
 
 		// Act
 		const { result } = renderHook( () => useComputedStyle( 'mockId' ) );
@@ -119,7 +119,7 @@ describe( 'useComputedStyle', () => {
 
 	it( 'should return null when getContainer not defined', () => {
 		// Arrange
-		window.elementor = {
+		window.refraction = {
 			getContainer: undefined,
 		};
 
@@ -131,7 +131,7 @@ describe( 'useComputedStyle', () => {
 
 	it( 'should return null when element not found', () => {
 		// Arrange
-		window.elementor = {
+		window.refraction = {
 			getContainer: jest.fn().mockReturnValue( undefined ),
 		};
 
@@ -143,7 +143,7 @@ describe( 'useComputedStyle', () => {
 
 	it( 'should return null when element view undefined', () => {
 		// Arrange
-		window.elementor = {
+		window.refraction = {
 			getContainer: jest.fn().mockReturnValue( undefined ),
 		};
 

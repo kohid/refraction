@@ -1,7 +1,7 @@
-import { getElementStyles } from '@elementor/editor-elements';
-import { type ClassesPropValue, type PropKey } from '@elementor/editor-props';
-import { type StyleDefinitionID } from '@elementor/editor-styles';
-import { useProviders } from '@elementor/editor-styles-repository';
+import { getElementStyles } from '@refraction/editor-elements';
+import { type ClassesPropValue, type PropKey } from '@refraction/editor-props';
+import { type StyleDefinitionID } from '@refraction/editor-styles';
+import { useProviders } from '@refraction/editor-styles-repository';
 
 import { useElement, usePanelElementSetting } from '../contexts/element-context';
 import { useStateByElement } from './use-state-by-element';

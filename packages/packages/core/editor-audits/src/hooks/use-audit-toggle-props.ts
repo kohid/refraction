@@ -1,4 +1,4 @@
-import { type ToggleActionProps } from '@elementor/editor-app-bar';
+import { type ToggleActionProps } from '@refraction/editor-app-bar';
 import { __ } from '@wordpress/i18n';
 
 import AuditToggleIcon from '../components/audit-toggle-icon';
@@ -9,7 +9,7 @@ export function useAuditToggleProps(): ToggleActionProps {
 	const { toggle } = auditPanel.useFloatingPanelActions();
 
 	return {
-		title: __( 'Audit Page', 'elementor' ),
+		title: __( 'Audit Page', 'refraction' ),
 		icon: AuditToggleIcon,
 		selected: isOpen,
 		onClick: () => toggle(),

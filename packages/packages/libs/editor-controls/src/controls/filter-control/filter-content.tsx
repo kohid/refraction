@@ -4,7 +4,7 @@ import {
 	cssFilterFunctionPropUtil,
 	type FilterItemPropValue,
 	type PropKey,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -46,7 +46,7 @@ export const FilterContent = () => {
 				<PopoverContent p={ 1.5 }>
 					<PopoverGridContainer>
 						<Grid item xs={ 6 }>
-							<ControlFormLabel>{ __( 'Filter', 'elementor' ) }</ControlFormLabel>
+							<ControlFormLabel>{ __( 'Filter', 'refraction' ) }</ControlFormLabel>
 						</Grid>
 						<Grid item xs={ 6 }>
 							<PropKeyProvider bind="func">

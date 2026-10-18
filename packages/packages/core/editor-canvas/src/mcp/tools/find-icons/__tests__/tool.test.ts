@@ -1,8 +1,8 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { initFindIconsTool } from '../tool';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 	AxiosError: class AxiosError extends Error {},
 } ) );
@@ -67,7 +67,7 @@ describe( 'find-icons tool', () => {
 		await handler( { queries: [ 'add to cart', 'free shipping' ] } );
 
 		// Assert
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			tool: 'find-icons',
 			input: { queries: [ 'add to cart', 'free shipping' ] },
 		} );
@@ -88,7 +88,7 @@ describe( 'find-icons tool', () => {
 		} );
 
 		// Assert
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			tool: 'find-icons',
 			input: {
 				queries: [ 'cart' ],

@@ -2,24 +2,24 @@ import { WIDGET_SCHEMA_URI } from './resources/widgets-schema-resource';
 
 const ELEMENT_SCHEMA_URI = WIDGET_SCHEMA_URI.replace( '{widgetType}', 'element-schema' );
 
-export const mcpDescription = `Elementor Canvas MCP
-This MCP enables configuration and styling of existing V4 elements on the Elementor canvas using the configure-element tool.
+export const mcpDescription = `Refraction Canvas MCP
+This MCP enables configuration and styling of existing V4 elements on the Refraction canvas using the configure-element tool.
 
 # Core Concepts
 
 ## PropValues Structure
-All data in Elementor uses PropValues - a typed wrapper for values:
+All data in Refraction uses PropValues - a typed wrapper for values:
 \`\`\`json
 {
   "$$type": "the-prop-type-schema-kind",
   "value": "the-actual-value-as-defined-for-the-propType"
 }
 \`\`\`
-The \`$$type\` defines how Elementor interprets the value. Providing the correct \`$$type\` is critical - incorrect types will be rejected.
+The \`$$type\` defines how Refraction interprets the value. Providing the correct \`$$type\` is critical - incorrect types will be rejected.
 
 ## Design System Resources
-- **Global Variables**: Reusable colors, sizes, and fonts (\`elementor://global-variables\`)
-- **Global Classes**: Reusable style sets that can be applied to elements (\`elementor://global-classes\`)
+- **Global Variables**: Reusable colors, sizes, and fonts (\`refraction://global-variables\`)
+- **Global Classes**: Reusable style sets that can be applied to elements (\`refraction://global-classes\`)
 - **Widget Schemas**: Configuration options for each widget type (\`${ WIDGET_SCHEMA_URI }\`)
 
 # Configuring Elements with configure-element
@@ -33,8 +33,8 @@ Understand what needs to change: content, settings, or styling on existing eleme
 
 ### 2. Check Global Resources FIRST
 Always check existing resources before styling:
-- List \`elementor://global-variables\` for available variables (colors, sizes, fonts)
-- List \`elementor://global-classes\` for available style sets
+- List \`refraction://global-variables\` for available variables (colors, sizes, fonts)
+- List \`refraction://global-classes\` for available style sets
 - **Always prefer using existing global resources over creating inline styles**
 
 ### 3. Retrieve Widget Schemas

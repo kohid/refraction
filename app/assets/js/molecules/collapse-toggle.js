@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { arrayToClassName, pxToRem } from 'elementor-app/utils/utils.js';
+import { arrayToClassName, pxToRem } from 'refraction-app/utils/utils.js';
 
 import { CollapseContext } from './collapse-context';
 

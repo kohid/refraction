@@ -6,7 +6,7 @@ import {
 	getContainer,
 	type V1Element,
 	type V1ElementModelProps,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 
 import { type ElementView } from './types';
 

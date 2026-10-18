@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { useFloatingPanelZIndex } from '@elementor/editor-floating-panels';
+import { useFloatingPanelZIndex } from '@refraction/editor-floating-panels';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { AUDIT_PANEL_ID } from '../../constants';
 import RescanButton from '../rescan-button';
 
-jest.mock( '@elementor/editor-floating-panels', () => ( {
+jest.mock( '@refraction/editor-floating-panels', () => ( {
 	useFloatingPanelZIndex: jest.fn( () => 1000 ),
 } ) );
 

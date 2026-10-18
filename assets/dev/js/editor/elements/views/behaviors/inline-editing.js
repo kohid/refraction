@@ -23,7 +23,7 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 	},
 
 	getEditingSettingKey() {
-		return this.$currentEditingArea.data().elementorSettingKey;
+		return this.$currentEditingArea.data().refractionSettingKey;
 	},
 
 	startEditing( $element ) {
@@ -35,9 +35,9 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 			return;
 		}
 
-		var elementorSettingKey = $element.data().elementorSettingKey,
-			settingKey = elementorSettingKey,
-			keyParts = elementorSettingKey.split( '.' ),
+		var refractionSettingKey = $element.data().refractionSettingKey,
+			settingKey = refractionSettingKey,
+			keyParts = refractionSettingKey.split( '.' ),
 			isRepeaterKey = 3 === keyParts.length,
 			settingsModel = this.view.getEditModel().get( 'settings' );
 
@@ -57,10 +57,10 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 		this.$currentEditingArea = $element;
 
 		var elementData = this.$currentEditingArea.data(),
-			elementDataToolbar = elementData.elementorInlineEditingToolbar,
+			elementDataToolbar = elementData.refractionInlineEditingToolbar,
 			mode = 'advanced' === elementDataToolbar ? 'advanced' : 'basic',
 			editModel = this.view.getEditModel(),
-			inlineEditingConfig = elementor.config.inlineEditing,
+			inlineEditingConfig = refraction.config.inlineEditing,
 			contentHTML = editModel.getSetting( this.getEditingSettingKey() );
 
 		if ( 'advanced' === mode ) {
@@ -73,7 +73,7 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 		 */
 		this.$currentEditingArea.html( contentHTML );
 
-		var ElementorInlineEditor = elementorFrontend.elements.window.ElementorInlineEditor;
+		var RefractionInlineEditor = refractionFrontend.elements.window.RefractionInlineEditor;
 
 		this.editing = true;
 
@@ -82,14 +82,14 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 		// Avoid retrieving of old content (e.g. in case of sorting)
 		this.view.model.setHtmlCache( '' );
 
-		this.editor = new ElementorInlineEditor( {
+		this.editor = new RefractionInlineEditor( {
 			linksInNewWindow: true,
 			stay: false,
 			editor: this.$currentEditingArea[ 0 ],
 			mode,
 			list: 'none' === elementDataToolbar ? [] : inlineEditingConfig.toolbar[ elementDataToolbar || 'basic' ],
 			cleanAttrs: [ 'id', 'class', 'name' ],
-			placeholder: __( 'Type Here', 'elementor' ) + '...',
+			placeholder: __( 'Type Here', 'refraction' ) + '...',
 			toolbarIconsPrefix: 'eicon-editor-',
 			toolbarIconsDictionary: {
 				externalLink: {
@@ -135,7 +135,7 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 
 		this.$currentEditingArea.on( 'blur', this.onInlineEditingBlur );
 
-		elementorCommon.elements.$body.on( 'mousedown', this.onInlineEditingBlur );
+		refractionCommon.elements.$body.on( 'mousedown', this.onInlineEditingBlur );
 	},
 
 	stopEditing() {
@@ -143,7 +143,7 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 
 		this.$currentEditingArea.off( 'blur', this.onInlineEditingBlur );
 
-		elementorCommon.elements.$body.off( 'mousedown', this.onInlineEditingBlur );
+		refractionCommon.elements.$body.off( 'mousedown', this.onInlineEditingBlur );
 
 		this.editor.destroy();
 
@@ -154,7 +154,7 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 		 * we need to rerender the area. To prevent multiple renderings, we will render only areas that
 		 * use advanced toolbars.
 		 */
-		if ( 'advanced' === this.$currentEditingArea.data().elementorInlineEditingToolbar ) {
+		if ( 'advanced' === this.$currentEditingArea.data().refractionInlineEditingToolbar ) {
 			this.view.getEditModel().renderRemoteServer();
 		}
 	},
@@ -184,7 +184,7 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 		 * toolbar action. This prevent the blur and allows the user to continue the inline editing.
 		 */
 		setTimeout( () => {
-			const selection = elementorFrontend.elements.window.getSelection(),
+			const selection = refractionFrontend.elements.window.getSelection(),
 				$focusNode = jQuery( selection.focusNode );
 
 			if ( $focusNode.closest( '.pen-input-wrapper' ).length ) {

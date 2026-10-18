@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor element base.
+ * Refraction element base.
  *
- * An abstract class to register new Elementor elements. It extended the
+ * An abstract class to register new Refraction elements. It extended the
  * `Controls_Stack` class to inherit its properties.
  *
  * This abstract class must be extended in order to register new elements.
@@ -121,7 +121,7 @@ abstract class Element_Base extends Controls_Stack {
 	}
 
 	public function get_global_scripts() {
-		return [ 'elementor-frontend' ];
+		return [ 'refraction-frontend' ];
 	}
 
 	/**
@@ -197,7 +197,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * @static
 	 */
 	final public static function is_edit_buttons_enabled() {
-		return get_option( 'elementor_edit_buttons' );
+		return get_option( 'refraction_edit_buttons' );
 	}
 
 	/**
@@ -417,7 +417,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * Used to add link tag attributes to a specific HTML element.
 	 *
 	 * The HTML link tag is represented by the element parameter. The `url_control` parameter
-	 * needs to be an array of link settings in the same format they are set by Elementor's URL control.
+	 * needs to be an array of link settings in the same format they are set by Refraction's URL control.
 	 *
 	 * Example usage:
 	 *
@@ -482,27 +482,27 @@ abstract class Element_Base extends Controls_Stack {
 		$element_type = $this->get_type();
 
 		if ( $this->should_render_shortcode() ) {
-			$unique_id = apply_filters( 'elementor/element_cache/unique_id', '' );
+			$unique_id = apply_filters( 'refraction/element_cache/unique_id', '' );
 
-			echo '[elementor-element k="' . esc_attr( $unique_id ) . '" data="' . esc_attr( base64_encode( wp_json_encode( $this->get_raw_data() ) ) ) . '"]';
+			echo '[refraction-element k="' . esc_attr( $unique_id ) . '" data="' . esc_attr( base64_encode( wp_json_encode( $this->get_raw_data() ) ) ) . '"]';
 			return;
 		}
 
 		/**
 		 * Before frontend element render.
 		 *
-		 * Fires before Elementor element is rendered in the frontend.
+		 * Fires before Refraction element is rendered in the frontend.
 		 *
 		 * @since 2.2.0
 		 *
 		 * @param Element_Base $this The element.
 		 */
-		do_action( 'elementor/frontend/before_render', $this );
+		do_action( 'refraction/frontend/before_render', $this );
 
 		/**
 		 * Before frontend element render.
 		 *
-		 * Fires before Elementor element is rendered in the frontend.
+		 * Fires before Refraction element is rendered in the frontend.
 		 *
 		 * The dynamic portion of the hook name, `$element_type`, refers to the element type.
 		 *
@@ -510,7 +510,7 @@ abstract class Element_Base extends Controls_Stack {
 		 *
 		 * @param Element_Base $this The element.
 		 */
-		do_action( "elementor/frontend/{$element_type}/before_render", $this );
+		do_action( "refraction/frontend/{$element_type}/before_render", $this );
 
 		ob_start();
 
@@ -536,7 +536,7 @@ abstract class Element_Base extends Controls_Stack {
 		 * @param bool true The element.
 		 * @param Element_Base $this The element.
 		 */
-		$should_render = apply_filters( "elementor/frontend/{$element_type}/should_render", $should_render, $this );
+		$should_render = apply_filters( "refraction/frontend/{$element_type}/should_render", $should_render, $this );
 
 		if ( $should_render ) {
 			if ( $this->has_own_method( '_add_render_attributes', self::class ) ) {
@@ -561,7 +561,7 @@ abstract class Element_Base extends Controls_Stack {
 		/**
 		 * After frontend element render.
 		 *
-		 * Fires after Elementor element is rendered in the frontend.
+		 * Fires after Refraction element is rendered in the frontend.
 		 *
 		 * The dynamic portion of the hook name, `$element_type`, refers to the element type.
 		 *
@@ -569,22 +569,22 @@ abstract class Element_Base extends Controls_Stack {
 		 *
 		 * @param Element_Base $this The element.
 		 */
-		do_action( "elementor/frontend/{$element_type}/after_render", $this );
+		do_action( "refraction/frontend/{$element_type}/after_render", $this );
 
 		/**
 		 * After frontend element render.
 		 *
-		 * Fires after Elementor element is rendered in the frontend.
+		 * Fires after Refraction element is rendered in the frontend.
 		 *
 		 * @since 2.3.0
 		 *
 		 * @param Element_Base $this The element.
 		 */
-		do_action( 'elementor/frontend/after_render', $this );
+		do_action( 'refraction/frontend/after_render', $this );
 	}
 
 	protected function should_render_shortcode() {
-		$should_render_shortcode = apply_filters( 'elementor/element/should_render_shortcode', false );
+		$should_render_shortcode = apply_filters( 'refraction/element/should_render_shortcode', false );
 
 		if ( ! $should_render_shortcode ) {
 			return false;
@@ -600,7 +600,7 @@ abstract class Element_Base extends Controls_Stack {
 			return true;
 		}
 
-		$is_dynamic_content = apply_filters( 'elementor/element/is_dynamic_content', false, $raw_data, $this );
+		$is_dynamic_content = apply_filters( 'refraction/element/is_dynamic_content', false, $raw_data, $this );
 
 		$has_dynamic_tag = $this->has_element_dynamic_tag( $raw_data['settings'] );
 
@@ -635,7 +635,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * Retrieve the raw element data, including the id, type, settings, child
 	 * elements and whether it is an inner element.
 	 *
-	 * The data with the HTML used always to display the data, but the Elementor
+	 * The data with the HTML used always to display the data, but the Refraction
 	 * editor uses the raw data without the HTML in order not to render the data
 	 * again.
 	 *
@@ -696,7 +696,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * Get unique selector.
 	 *
 	 * Retrieve the unique selector of the element. Used to set a unique HTML
-	 * class for each HTML element. This way Elementor can set custom styles for
+	 * class for each HTML element. This way Refraction can set custom styles for
 	 * each element.
 	 *
 	 * @since 1.0.0
@@ -705,7 +705,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * @return string Unique selector.
 	 */
 	public function get_unique_selector() {
-		return '.elementor-element-' . $this->get_id();
+		return '.refraction-element-' . $this->get_id();
 	}
 
 	/**
@@ -793,8 +793,8 @@ abstract class Element_Base extends Controls_Stack {
 
 		$this->add_render_attribute( '_wrapper', [
 			'class' => [
-				'elementor-element',
-				'elementor-element-' . $id,
+				'refraction-element',
+				'refraction-element-' . $id,
 			],
 			'data-id' => $id,
 			'data-element_type' => $this->get_type(),
@@ -832,7 +832,7 @@ abstract class Element_Base extends Controls_Stack {
 
 			if ( ! $is_static_render_mode ) {
 				// Hide the element until the animation begins.
-				$this->add_render_attribute( '_wrapper', 'class', 'elementor-invisible' );
+				$this->add_render_attribute( '_wrapper', 'class', 'refraction-invisible' );
 			}
 		}
 
@@ -853,7 +853,7 @@ abstract class Element_Base extends Controls_Stack {
 		 *
 		 * @param Element_Base $this The element.
 		 */
-		do_action( 'elementor/element/after_add_attributes', $this );
+		do_action( 'refraction/element/after_add_attributes', $this );
 	}
 
 	/**
@@ -867,7 +867,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * @since 3.9.0
 	 * @access protected
 	 */
-	protected function register_transform_section( $element_selector = '', $transform_selector_class = ' > .elementor-widget-container' ) {
+	protected function register_transform_section( $element_selector = '', $transform_selector_class = ' > .refraction-widget-container' ) {
 		$default_unit_values_deg = [];
 		$default_unit_values_ms = [];
 
@@ -889,7 +889,7 @@ abstract class Element_Base extends Controls_Stack {
 		$this->start_controls_section(
 			'_section_transform',
 			[
-				'label' => esc_html__( 'Transform', 'elementor' ),
+				'label' => esc_html__( 'Transform', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -911,14 +911,14 @@ abstract class Element_Base extends Controls_Stack {
 			$this->start_controls_tab(
 				"_tab_positioning{$tab}",
 				[
-					'label' => '' === $tab ? esc_html__( 'Normal', 'elementor' ) : esc_html__( 'Hover', 'elementor' ),
+					'label' => '' === $tab ? esc_html__( 'Normal', 'refraction' ) : esc_html__( 'Hover', 'refraction' ),
 				]
 			);
 
 			$this->add_control(
 				"_transform_rotate_popover{$tab}",
 				[
-					'label' => esc_html__( 'Rotate', 'elementor' ),
+					'label' => esc_html__( 'Rotate', 'refraction' ),
 					'type' => Controls_Manager::POPOVER_TOGGLE,
 					'prefix_class' => $transform_prefix_class,
 					'return_value' => $transform_return_value,
@@ -930,7 +930,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_rotateZ_effect{$tab}",
 				[
-					'label' => esc_html__( 'Rotate', 'elementor' ) . ' (deg)',
+					'label' => esc_html__( 'Rotate', 'refraction' ) . ' (deg)',
 					'type' => Controls_Manager::SLIDER,
 					'device_args' => $default_unit_values_deg,
 					'range' => [
@@ -952,10 +952,10 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_control(
 				"_transform_rotate_3d{$tab}",
 				[
-					'label' => esc_html__( '3D Rotate', 'elementor' ),
+					'label' => esc_html__( '3D Rotate', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'On', 'elementor' ),
-					'label_off' => esc_html__( 'Off', 'elementor' ),
+					'label_on' => esc_html__( 'On', 'refraction' ),
+					'label_off' => esc_html__( 'Off', 'refraction' ),
 					'selectors' => [
 						"{{WRAPPER}}{$transform_selector_class}{$state}" => '--e-' . $transform_css_modifier . 'transform-rotateX: 1{{UNIT}};  --e-' . $transform_css_modifier . 'transform-perspective: 20px;',
 					],
@@ -969,7 +969,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_rotateX_effect{$tab}",
 				[
-					'label' => esc_html__( 'Rotate X', 'elementor' ) . ' (deg)',
+					'label' => esc_html__( 'Rotate X', 'refraction' ) . ' (deg)',
 					'type' => Controls_Manager::SLIDER,
 					'device_args' => $default_unit_values_deg,
 					'range' => [
@@ -992,7 +992,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_rotateY_effect{$tab}",
 				[
-					'label' => esc_html__( 'Rotate Y', 'elementor' ) . ' (deg)',
+					'label' => esc_html__( 'Rotate Y', 'refraction' ) . ' (deg)',
 					'type' => Controls_Manager::SLIDER,
 					'device_args' => $default_unit_values_deg,
 					'range' => [
@@ -1015,7 +1015,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_perspective_effect{$tab}",
 				[
-					'label' => esc_html__( 'Perspective', 'elementor' ) . ' (px)',
+					'label' => esc_html__( 'Perspective', 'refraction' ) . ' (px)',
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						'px' => [
@@ -1038,7 +1038,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_control(
 				"_transform_translate_popover{$tab}",
 				[
-					'label' => esc_html__( 'Offset', 'elementor' ),
+					'label' => esc_html__( 'Offset', 'refraction' ),
 					'type' => Controls_Manager::POPOVER_TOGGLE,
 					'prefix_class' => $transform_prefix_class,
 					'return_value' => $transform_return_value,
@@ -1050,7 +1050,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_translateX_effect{$tab}",
 				[
-					'label' => esc_html__( 'Offset X', 'elementor' ),
+					'label' => esc_html__( 'Offset X', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 					'range' => [
@@ -1076,7 +1076,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_translateY_effect{$tab}",
 				[
-					'label' => esc_html__( 'Offset Y', 'elementor' ),
+					'label' => esc_html__( 'Offset Y', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'custom' ],
 					'range' => [
@@ -1104,7 +1104,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_control(
 				"_transform_scale_popover{$tab}",
 				[
-					'label' => esc_html__( 'Scale', 'elementor' ),
+					'label' => esc_html__( 'Scale', 'refraction' ),
 					'type' => Controls_Manager::POPOVER_TOGGLE,
 					'prefix_class' => $transform_prefix_class,
 					'return_value' => $transform_return_value,
@@ -1116,10 +1116,10 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_control(
 				"_transform_keep_proportions{$tab}",
 				[
-					'label' => esc_html__( 'Keep Proportions', 'elementor' ),
+					'label' => esc_html__( 'Keep Proportions', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'On', 'elementor' ),
-					'label_off' => esc_html__( 'Off', 'elementor' ),
+					'label_on' => esc_html__( 'On', 'refraction' ),
+					'label_off' => esc_html__( 'Off', 'refraction' ),
 					'default' => 'yes',
 				]
 			);
@@ -1127,7 +1127,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_scale_effect{$tab}",
 				[
-					'label' => esc_html__( 'Scale', 'elementor' ),
+					'label' => esc_html__( 'Scale', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						'px' => [
@@ -1149,7 +1149,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_scaleX_effect{$tab}",
 				[
-					'label' => esc_html__( 'Scale X', 'elementor' ),
+					'label' => esc_html__( 'Scale X', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						'px' => [
@@ -1171,7 +1171,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_scaleY_effect{$tab}",
 				[
-					'label' => esc_html__( 'Scale Y', 'elementor' ),
+					'label' => esc_html__( 'Scale Y', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						'px' => [
@@ -1195,7 +1195,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_control(
 				"_transform_skew_popover{$tab}",
 				[
-					'label' => esc_html__( 'Skew', 'elementor' ),
+					'label' => esc_html__( 'Skew', 'refraction' ),
 					'type' => Controls_Manager::POPOVER_TOGGLE,
 					'prefix_class' => $transform_prefix_class,
 					'return_value' => $transform_return_value,
@@ -1207,7 +1207,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_skewX_effect{$tab}",
 				[
-					'label' => esc_html__( 'Skew X', 'elementor' ) . ' (deg)',
+					'label' => esc_html__( 'Skew X', 'refraction' ) . ' (deg)',
 					'type' => Controls_Manager::SLIDER,
 					'device_args' => $default_unit_values_deg,
 					'range' => [
@@ -1229,7 +1229,7 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_responsive_control(
 				"_transform_skewY_effect{$tab}",
 				[
-					'label' => esc_html__( 'Skew Y', 'elementor' ) . ' (deg)',
+					'label' => esc_html__( 'Skew Y', 'refraction' ) . ' (deg)',
 					'type' => Controls_Manager::SLIDER,
 					'device_args' => $default_unit_values_deg,
 					'range' => [
@@ -1253,11 +1253,11 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_control(
 				"_transform_flipX_effect{$tab}",
 				[
-					'label' => esc_html__( 'Flip Horizontal', 'elementor' ),
+					'label' => esc_html__( 'Flip Horizontal', 'refraction' ),
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'transform' => [
-							'title' => esc_html__( 'Flip Horizontal', 'elementor' ),
+							'title' => esc_html__( 'Flip Horizontal', 'refraction' ),
 							'icon' => 'eicon-flip eicon-tilted',
 						],
 					],
@@ -1272,11 +1272,11 @@ abstract class Element_Base extends Controls_Stack {
 			$this->add_control(
 				"_transform_flipY_effect{$tab}",
 				[
-					'label' => esc_html__( 'Flip Vertical', 'elementor' ),
+					'label' => esc_html__( 'Flip Vertical', 'refraction' ),
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'transform' => [
-							'title' => esc_html__( 'Flip Vertical', 'elementor' ),
+							'title' => esc_html__( 'Flip Vertical', 'refraction' ),
 							'icon' => 'eicon-flip',
 						],
 					],
@@ -1292,7 +1292,7 @@ abstract class Element_Base extends Controls_Stack {
 				$this->add_control(
 					'_transform_transition_hover',
 					[
-						'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (ms)',
+						'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (ms)',
 						'type' => Controls_Manager::SLIDER,
 						'device_args' => $default_unit_values_ms,
 						'range' => [
@@ -1346,19 +1346,19 @@ abstract class Element_Base extends Controls_Stack {
 		$this->add_responsive_control(
 			'motion_fx_transform_x_anchor_point',
 			[
-				'label' => esc_html__( 'X Anchor Point', 'elementor' ),
+				'label' => esc_html__( 'X Anchor Point', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => esc_html__( 'Left', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-h-align-center',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => esc_html__( 'Right', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -1374,19 +1374,19 @@ abstract class Element_Base extends Controls_Stack {
 		$this->add_responsive_control(
 			'motion_fx_transform_y_anchor_point',
 			[
-				'label' => esc_html__( 'Y Anchor Point', 'elementor' ),
+				'label' => esc_html__( 'Y Anchor Point', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'top' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-v-align-middle',
 					],
 					'bottom' => [
-						'title' => esc_html__( 'Bottom', 'elementor' ),
+						'title' => esc_html__( 'Bottom', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -1414,21 +1414,21 @@ abstract class Element_Base extends Controls_Stack {
 		$active_breakpoints = Plugin::$instance->breakpoints->get_active_breakpoints();
 
 		foreach ( $active_devices as $breakpoint_key ) {
-			$label = 'desktop' === $breakpoint_key ? esc_html__( 'Desktop', 'elementor' ) : $active_breakpoints[ $breakpoint_key ]->get_label();
+			$label = 'desktop' === $breakpoint_key ? esc_html__( 'Desktop', 'refraction' ) : $active_breakpoints[ $breakpoint_key ]->get_label();
 
 			$this->add_control(
 				'hide_' . $breakpoint_key,
 				[
 					'label' => sprintf(
 						/* translators: %s: Device name. */
-						esc_html__( 'Hide On %s', 'elementor' ),
+						esc_html__( 'Hide On %s', 'refraction' ),
 						$label
 					),
 					'type' => Controls_Manager::SWITCHER,
 					'default' => '',
-					'prefix_class' => 'elementor-',
-					'label_on' => esc_html__( 'Hide', 'elementor' ),
-					'label_off' => esc_html__( 'Show', 'elementor' ),
+					'prefix_class' => 'refraction-',
+					'label_on' => esc_html__( 'Hide', 'refraction' ),
+					'label_off' => esc_html__( 'Show', 'refraction' ),
 					'return_value' => 'hidden-' . $breakpoint_key,
 				]
 			);
@@ -1562,7 +1562,7 @@ abstract class Element_Base extends Controls_Stack {
 		 * @param array        $element_data The original element ID.
 		 * @param Element_Base $this         The original element.
 		 */
-		$child_type = apply_filters( 'elementor/element/get_child_type', $child_type, $element_data, $this );
+		$child_type = apply_filters( 'refraction/element/get_child_type', $child_type, $element_data, $this );
 
 		return $child_type;
 	}
@@ -1603,7 +1603,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * Initializing the element base class using `$data` and `$args`.
 	 *
 	 * The `$data` parameter is required for a normal instance because of the
-	 * way Elementor renders data when initializing elements.
+	 * way Refraction renders data when initializing elements.
 	 *
 	 * @since 1.0.0
 	 * @access public

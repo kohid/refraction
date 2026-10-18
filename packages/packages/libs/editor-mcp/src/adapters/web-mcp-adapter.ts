@@ -1,5 +1,5 @@
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import { z, type z3 } from '@elementor/schema';
+import { z, type z3 } from '@refraction/schema';
 
 import { type ModelContextRegisterTool, registerModelContextTool } from '../utils/register-model-context-tool';
 import {
@@ -45,7 +45,7 @@ export class WebMCPAdapter implements IMcpRegistrationAdapter {
 					uri: {
 						type: 'string',
 						description:
-							'A full resource URI (e.g. elementor://style/best-practices) or a partial string to search across available resource patterns.',
+							'A full resource URI (e.g. refraction://style/best-practices) or a partial string to search across available resource patterns.',
 					},
 				},
 				required: [ 'uri' ],

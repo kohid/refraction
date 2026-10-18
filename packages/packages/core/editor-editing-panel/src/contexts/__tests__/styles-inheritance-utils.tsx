@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createMockBreakpointsTree, createMockStylesProvider } from 'test-utils';
-import { type Element, type ElementType } from '@elementor/editor-elements';
-import { getBreakpointsTree } from '@elementor/editor-responsive';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { ELEMENTS_STYLES_PROVIDER_KEY_PREFIX, stylesRepository } from '@elementor/editor-styles-repository';
+import { type Element, type ElementType } from '@refraction/editor-elements';
+import { getBreakpointsTree } from '@refraction/editor-responsive';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { ELEMENTS_STYLES_PROVIDER_KEY_PREFIX, stylesRepository } from '@refraction/editor-styles-repository';
 import { renderHook } from '@testing-library/react';
 
 import { ElementProvider } from '../../contexts/element-context';

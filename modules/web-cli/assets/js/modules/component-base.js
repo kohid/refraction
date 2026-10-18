@@ -1,9 +1,9 @@
-import CommandCallbackBase from 'elementor-api/modules/command-callback-base';
+import CommandCallbackBase from 'refraction-api/modules/command-callback-base';
 
 import { createSlice } from '@reduxjs/toolkit';
-import Module from 'elementor/assets/dev/js/modules/imports/module.js';
+import Module from 'refraction/assets/dev/js/modules/imports/module.js';
 import ForceMethodImplementation from '../utils/force-method-implementation';
-import Deprecation from 'elementor-api/utils/deprecation';
+import Deprecation from 'refraction-api/utils/deprecation';
 
 /**
  * @typedef {import('./command-infra')} CommandInfra
@@ -380,14 +380,14 @@ export default class ComponentBase extends Module {
 	activateTab( tab, args ) {
 		this.renderTab( tab, args );
 
-		jQuery( this.getTabsWrapperSelector() + ' .elementor-component-tab' )
+		jQuery( this.getTabsWrapperSelector() + ' .refraction-component-tab' )
 			.off( 'click' )
 			.on( 'click', ( event ) => {
 				$e.route( this.getTabRoute( event.currentTarget.dataset.tab ), args );
 			} )
-			.removeClass( 'elementor-active' )
+			.removeClass( 'refraction-active' )
 			.filter( '[data-tab="' + tab + '"]' )
-			.addClass( 'elementor-active' );
+			.addClass( 'refraction-active' );
 	}
 	getActiveTabConfig() {
 		return this.tabs[ this.currentTab ] || {};

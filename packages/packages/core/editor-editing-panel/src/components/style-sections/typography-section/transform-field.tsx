@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ToggleButtonGroupItem, ToggleControl } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleControl } from '@refraction/editor-controls';
 import { LetterCaseIcon, LetterCaseLowerIcon, LetterCaseUpperIcon, MinusIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -8,30 +8,30 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type Transforms = 'none' | 'capitalize' | 'uppercase' | 'lowercase';
 
-const TEXT_TRANSFORM_LABEL = __( 'Text transform', 'elementor' );
+const TEXT_TRANSFORM_LABEL = __( 'Text transform', 'refraction' );
 
 const options: ToggleButtonGroupItem< Transforms >[] = [
 	{
 		value: 'none',
-		label: __( 'None', 'elementor' ),
+		label: __( 'None', 'refraction' ),
 		renderContent: ( { size } ) => <MinusIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'capitalize',
-		label: __( 'Capitalize', 'elementor' ),
+		label: __( 'Capitalize', 'refraction' ),
 		renderContent: ( { size } ) => <LetterCaseIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'uppercase',
-		label: __( 'Uppercase', 'elementor' ),
+		label: __( 'Uppercase', 'refraction' ),
 		renderContent: ( { size } ) => <LetterCaseUpperIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'lowercase',
-		label: __( 'Lowercase', 'elementor' ),
+		label: __( 'Lowercase', 'refraction' ),
 		renderContent: ( { size } ) => <LetterCaseLowerIcon fontSize={ size } />,
 		showTooltip: true,
 	},

@@ -3,7 +3,7 @@
 import { appendCss, appendJs } from './utils';
 
 async function enqueueAssets( w, utils ) {
-	const assets = w.elementorAssetsManager ?? {};
+	const assets = w.refractionAssetsManager ?? {};
 
 	for ( const handle of assets.styles?.priority_queue ?? [] ) {
 		if ( ! assets.styles?.map?.[ handle ] ) {

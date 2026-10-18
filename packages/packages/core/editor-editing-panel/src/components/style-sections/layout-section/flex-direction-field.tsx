@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ToggleButtonGroupItem, ToggleControl } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleControl } from '@refraction/editor-controls';
 import { ArrowDownSmallIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpSmallIcon } from '@elementor/icons';
 import { withDirection } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -10,12 +10,12 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 export type FlexDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse';
 
-const FLEX_DIRECTION_LABEL = __( 'Direction', 'elementor' );
+const FLEX_DIRECTION_LABEL = __( 'Direction', 'refraction' );
 
 const options: ToggleButtonGroupItem< FlexDirection >[] = [
 	{
 		value: 'row',
-		label: __( 'Row', 'elementor' ),
+		label: __( 'Row', 'refraction' ),
 		renderContent: ( { size } ) => {
 			const StartIcon = withDirection( ArrowRightIcon );
 			return <StartIcon fontSize={ size } />;
@@ -24,13 +24,13 @@ const options: ToggleButtonGroupItem< FlexDirection >[] = [
 	},
 	{
 		value: 'column',
-		label: __( 'Column', 'elementor' ),
+		label: __( 'Column', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowDownSmallIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'row-reverse',
-		label: __( 'Reversed row', 'elementor' ),
+		label: __( 'Reversed row', 'refraction' ),
 		renderContent: ( { size } ) => {
 			const EndIcon = withDirection( ArrowLeftIcon );
 			return <EndIcon fontSize={ size } />;
@@ -39,7 +39,7 @@ const options: ToggleButtonGroupItem< FlexDirection >[] = [
 	},
 	{
 		value: 'column-reverse',
-		label: __( 'Reversed column', 'elementor' ),
+		label: __( 'Reversed column', 'refraction' ),
 		renderContent: ( { size } ) => <ArrowUpSmallIcon fontSize={ size } />,
 		showTooltip: true,
 	},

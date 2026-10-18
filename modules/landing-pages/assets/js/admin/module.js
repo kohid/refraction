@@ -1,10 +1,10 @@
 import LandingPagesHandler from './landing-pages';
 
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	constructor() {
 		super();
 
-		elementorCommon.elements.$window.on( 'elementor/admin/init', () => {
+		refractionCommon.elements.$window.on( 'refraction/admin/init', () => {
 			this.runHandler();
 		} );
 	}
@@ -13,12 +13,12 @@ export default class extends elementorModules.Module {
 		const pageName = 'e-landing-page',
 			paths = {
 				landingPagesTablePage: 'edit.php?post_type=' + pageName,
-				landingPagesAddNewPage: 'edit.php?post_type=elementor_library&page=' + pageName,
+				landingPagesAddNewPage: 'edit.php?post_type=refraction_library&page=' + pageName,
 				landingPagesTrashPage: 'edit.php?post_status=trash&post_type=' + pageName,
 			},
 			args = {
-				path: elementorAdmin.config.landingPages?.landingPagesHasPages ? paths.landingPagesTablePage : paths.landingPagesAddNewPage,
-				isLandingPageAdminEdit: elementorAdmin.config.landingPages?.isLandingPageAdminEdit,
+				path: refractionAdmin.config.landingPages?.landingPagesHasPages ? paths.landingPagesTablePage : paths.landingPagesAddNewPage,
+				isLandingPageAdminEdit: refractionAdmin.config.landingPages?.isLandingPageAdminEdit,
 				paths,
 			};
 

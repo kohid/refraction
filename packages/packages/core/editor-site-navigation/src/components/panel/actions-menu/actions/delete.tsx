@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
 import { TrashIcon } from '@elementor/icons';
 import {
 	Button,
@@ -31,7 +31,7 @@ export default function Delete( { post }: { post: Post } ) {
 	return (
 		<>
 			<ActionMenuItem
-				title={ __( 'Delete', 'elementor' ) }
+				title={ __( 'Delete', 'refraction' ) }
 				icon={ TrashIcon }
 				MenuItemProps={ {
 					disabled: isDisabled,
@@ -57,7 +57,7 @@ function DeleteDialog( {
 	const { setError } = usePostListContext();
 
 	/* translators: %s: Post title. */
-	const dialogTitle = sprintf( __( 'Delete "%s"?', 'elementor' ), post.title.rendered );
+	const dialogTitle = sprintf( __( 'Delete "%s"?', 'refraction' ), post.title.rendered );
 
 	const deletePage = async () => {
 		try {
@@ -84,7 +84,7 @@ function DeleteDialog( {
 				<DialogContentText>
 					{ __(
 						'The page and its content will be deleted forever and we won’t be able to recover them.',
-						'elementor'
+						'refraction'
 					) }
 				</DialogContentText>
 			</DialogContent>
@@ -95,10 +95,10 @@ function DeleteDialog( {
 					onClick={ handleCancel }
 					disabled={ deletePost.isPending }
 				>
-					{ __( 'Cancel', 'elementor' ) }
+					{ __( 'Cancel', 'refraction' ) }
 				</Button>
 				<Button variant="contained" color="error" onClick={ deletePage } disabled={ deletePost.isPending }>
-					{ ! deletePost.isPending ? __( 'Delete', 'elementor' ) : <CircularProgress /> }
+					{ ! deletePost.isPending ? __( 'Delete', 'refraction' ) : <CircularProgress /> }
 				</Button>
 			</DialogActions>
 		</Dialog>

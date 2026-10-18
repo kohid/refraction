@@ -13,7 +13,7 @@ export class Move extends $e.modules.editor.document.CommandHistoryBase {
 		return {
 			containers,
 			type: 'move',
-			subTitle: __( 'Item', 'elementor' ),
+			subTitle: __( 'Item', 'refraction' ),
 		};
 	}
 
@@ -23,7 +23,7 @@ export class Move extends $e.modules.editor.document.CommandHistoryBase {
 
 		containers.forEach( ( container ) => {
 			const collection = container.settings.get( name ),
-				model = elementorCommon.helpers.cloneObject( collection.at( sourceIndex ) );
+				model = refractionCommon.helpers.cloneObject( collection.at( sourceIndex ) );
 
 			$e.run( 'document/repeater/remove', {
 				container,

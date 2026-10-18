@@ -4,14 +4,14 @@ import {
 	__useActiveDocument as useActiveDocument,
 	__useHostDocument as useHostDocument,
 	__useNavigateToDocument as useNavigateToDocument,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import { fireEvent, screen } from '@testing-library/react';
 
 import useRecentPosts from '../../../hooks/use-recent-posts';
 import { type RecentPost } from '../../../types';
 import RecentlyEdited from '../recently-edited';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useHostDocument: jest.fn(),
 	__useNavigateToDocument: jest.fn(),
@@ -34,7 +34,7 @@ jest.mock( '../../../hooks/use-user', () => ( {
 	__esModule: true,
 } ) );
 
-describe( '@elementor/recently-edited - Top bar Recently Edited', () => {
+describe( '@refraction/recently-edited - Top bar Recently Edited', () => {
 	it( 'should show the title of the active document without its status when the document is published', async () => {
 		// Arrange.
 		jest.mocked( useActiveDocument ).mockReturnValue(

@@ -1,6 +1,6 @@
-import ComponentBase from 'elementor-api/modules/component-base';
-import CommonHelper from 'elementor/tests/qunit/tests/core/common/helper';
-import ComponentBaseModal from 'elementor-api/modules/component-modal-base';
+import ComponentBase from 'refraction-api/modules/component-base';
+import CommonHelper from 'refraction/tests/qunit/tests/core/common/helper';
+import ComponentBaseModal from 'refraction-api/modules/component-modal-base';
 
 jQuery( () => {
 	QUnit.module( 'File: modules/web-cli/assets/js/core/routes.js', () => {
@@ -155,8 +155,8 @@ jQuery( () => {
 
 			const $fixture = jQuery(
 				'<div id="' + namespace + '">' +
-				'<div class="elementor-component-tab" data-tab="tabA"></div>' +
-				'<div class="elementor-component-tab" data-tab="tabB"></div>' +
+				'<div class="refraction-component-tab" data-tab="tabA"></div>' +
+				'<div class="refraction-component-tab" data-tab="tabB"></div>' +
 				'</div>',
 			);
 
@@ -164,11 +164,11 @@ jQuery( () => {
 
 			$e.route( namespace + '/tabA' );
 
-			assert.equal( $fixture.find( '.elementor-active' ).data( 'tab' ), 'tabA' );
+			assert.equal( $fixture.find( '.refraction-active' ).data( 'tab' ), 'tabA' );
 
 			$e.route( namespace + '/tabB' );
 
-			assert.equal( $fixture.find( '.elementor-active' ).data( 'tab' ), 'tabB' );
+			assert.equal( $fixture.find( '.refraction-active' ).data( 'tab' ), 'tabB' );
 
 			$fixture.remove();
 		} );
@@ -207,14 +207,14 @@ jQuery( () => {
 			);
 
 			jQuery.each( component.getTabs(), ( tab ) => {
-				$fixture.append( '<div class="elementor-component-tab" data-tab="' + tab + '"></div>' );
+				$fixture.append( '<div class="refraction-component-tab" data-tab="' + tab + '"></div>' );
 			} );
 
 			jQuery( 'body' ).append( $fixture );
 
 			$e.route( namespace + '/tabB' );
 
-			assert.equal( $fixture.find( '.elementor-active' ).data( 'tab' ), 'tabB' );
+			assert.equal( $fixture.find( '.refraction-active' ).data( 'tab' ), 'tabB' );
 
 			assert.equal( $fixture.find( '[data-tab=tabB]' ).index(), newTabIndex );
 
@@ -664,7 +664,7 @@ jQuery( () => {
 					}
 
 					getModalLayout() {
-						const layout = class extends elementorModules.common.views.modal.Layout {
+						const layout = class extends refractionModules.common.views.modal.Layout {
 							initialize() { /* Do not render */ }
 						};
 
@@ -689,7 +689,7 @@ jQuery( () => {
 					}
 
 					getModalLayout() {
-						const layout = class extends elementorModules.common.views.modal.Layout {
+						const layout = class extends refractionModules.common.views.modal.Layout {
 							initialize() { /* Do not render */ }
 						};
 

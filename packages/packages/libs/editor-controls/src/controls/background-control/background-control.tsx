@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { backgroundPropTypeUtil } from '@elementor/editor-props';
+import { backgroundPropTypeUtil } from '@refraction/editor-props';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -11,14 +11,14 @@ import { SelectControl } from '../select-control';
 import { BackgroundOverlayRepeaterControl } from './background-overlay/background-overlay-repeater-control';
 
 const clipOptions = [
-	{ label: __( 'Full element', 'elementor' ), value: 'border-box' },
-	{ label: __( 'Padding edges', 'elementor' ), value: 'padding-box' },
-	{ label: __( 'Content edges', 'elementor' ), value: 'content-box' },
-	{ label: __( 'Text', 'elementor' ), value: 'text' },
+	{ label: __( 'Full element', 'refraction' ), value: 'border-box' },
+	{ label: __( 'Padding edges', 'refraction' ), value: 'padding-box' },
+	{ label: __( 'Content edges', 'refraction' ), value: 'content-box' },
+	{ label: __( 'Text', 'refraction' ), value: 'text' },
 ];
 
-const colorLabel = __( 'Color', 'elementor' );
-const clipLabel = __( 'Clipping', 'elementor' );
+const colorLabel = __( 'Color', 'refraction' );
+const clipLabel = __( 'Clipping', 'refraction' );
 
 export const BackgroundControl = createControl( () => {
 	const propContext = useBoundProp( backgroundPropTypeUtil );

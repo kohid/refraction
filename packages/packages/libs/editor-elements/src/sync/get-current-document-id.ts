@@ -4,7 +4,7 @@ export function getCurrentDocumentId() {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
 	try {
-		return extendedWindow.elementor?.documents?.getCurrentId?.() ?? null;
+		return extendedWindow.refraction?.documents?.getCurrentId?.() ?? null;
 	} catch {
 		return null;
 	}

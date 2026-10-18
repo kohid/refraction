@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { injectIntoTop } from '@elementor/editor';
-import { __privateListenTo as listenTo, v1ReadyEvent } from '@elementor/editor-v1-adapters';
+import { injectIntoTop } from '@refraction/editor';
+import { __privateListenTo as listenTo, v1ReadyEvent } from '@refraction/editor-v1-adapters';
 
 import { NoticePortal } from './components/notice-portal';
 import { createNoticeView } from './utils/create-notice-view';
@@ -12,7 +12,7 @@ export function register( Component: React.ComponentType ) {
 	} );
 
 	listenTo( v1ReadyEvent(), () => {
-		window.elementor?.hooks?.addFilter(
+		window.refraction?.hooks?.addFilter(
 			'panel/elements/regionViews',
 			( regionViews, { notice }: Record< string, unknown > ) => {
 				regionViews.notice = {

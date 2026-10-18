@@ -1,10 +1,10 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 
-export const AVAILABLE_WIDGETS_URI = 'elementor://context/available-widgets';
-export const AVAILABLE_WIDGETS_URI_V4 = 'elementor://context/available-widgets/v4';
+export const AVAILABLE_WIDGETS_URI = 'refraction://context/available-widgets';
+export const AVAILABLE_WIDGETS_URI_V4 = 'refraction://context/available-widgets/v4';
 
 type WidgetSummary = {
 	type: string;

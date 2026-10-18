@@ -2,11 +2,11 @@
 // Grid
 //
 // Section
-.elementor-section {
+.refraction-section {
 	position: relative;
 
 	// Container
-	.elementor-container {
+	.refraction-container {
 		display: flex;
 		margin-inline: auto;
 		position: relative;
@@ -17,38 +17,38 @@
 	}
 
 	// Max-width of container depending on section settings
-	&.elementor-section-boxed {
-		& > .elementor-container {
+	&.refraction-section-boxed {
+		& > .refraction-container {
 			max-width: 1140px;
 		}
 	}
 
 	// Stretched section settings
-	&.elementor-section-stretched {
+	&.refraction-section-stretched {
 		position: relative;
 		width: 100%;
 	}
 
 	// In section min-height / fit to screen mode
-	&.elementor-section-items- {
+	&.refraction-section-items- {
 
 		&top {
 
-			> .elementor-container {
+			> .refraction-container {
 				align-items: flex-start;
 			}
 		}
 
 		&middle {
 
-			> .elementor-container {
+			> .refraction-container {
 				align-items: center;
 			}
 		}
 
 		&bottom {
 
-			> .elementor-container {
+			> .refraction-container {
 				align-items: flex-end;
 			}
 		}
@@ -57,10 +57,10 @@
 	@media (min-width:$screen-mobile-next) {
 
 		// Section Full Height (note: don't be smart - min-height does not work well with the content position)
-		&.elementor-section-height-full {
+		&.refraction-section-height-full {
 			height: 100vh;
 
-			> .elementor-container {
+			> .refraction-container {
 				height: 100%;
 			}
 		}
@@ -68,41 +68,41 @@
 }
 
 // TODO: BC since 2.7.0
-.elementor-bc-flex-widget {
+.refraction-bc-flex-widget {
 
-	.elementor-section-content-top {
+	.refraction-section-content-top {
 
-		> .elementor-container {
+		> .refraction-container {
 
-			> .elementor-column {
+			> .refraction-column {
 
-				> .elementor-widget-wrap {
+				> .refraction-widget-wrap {
 					align-items: flex-start;
 				}
 			}
 		}
 	}
 
-	.elementor-section-content-middle {
+	.refraction-section-content-middle {
 
-		> .elementor-container {
+		> .refraction-container {
 
-			> .elementor-column {
+			> .refraction-column {
 
-				> .elementor-widget-wrap {
+				> .refraction-widget-wrap {
 					align-items: center;
 				}
 			}
 		}
 	}
 
-	.elementor-section-content-bottom {
+	.refraction-section-content-bottom {
 
-		> .elementor-container {
+		> .refraction-container {
 
-			> .elementor-column {
+			> .refraction-column {
 
-				> .elementor-widget-wrap {
+				> .refraction-widget-wrap {
 					align-items: flex-end;
 				}
 			}
@@ -111,17 +111,17 @@
 }
 
 // Widget
-.elementor-widget-wrap {
+.refraction-widget-wrap {
 	position: relative;
 	width: 100%;
 	flex-wrap: wrap;
 	align-content: flex-start;
 
-	.elementor:not(.elementor-bc-flex-widget) & {
+	.refraction:not(.refraction-bc-flex-widget) & {
 		display: flex;
 	}
 
-	> .elementor-element {
+	> .refraction-element {
 		width: 100%;
 	}
 
@@ -131,42 +131,42 @@
 	}
 }
 
-.elementor-widget {
+.refraction-widget {
 	position: relative;
 
 	&:not(:last-child) {
 		margin-block-end: var(--kit-widget-spacing, 20px);
 
-		&.elementor-widget__width-auto,
-		&.elementor-widget__width-initial,
-		&.elementor-absolute {
+		&.refraction-widget__width-auto,
+		&.refraction-widget__width-initial,
+		&.refraction-absolute {
 			margin-block-end: 0;
 		}
 	}
 }
 
 // Columns
-.elementor-column {
+.refraction-column {
 	position: relative;
 	min-height: 1px;
 	display: flex;
 }
 
-@mixin elementor-grid-classes {
+@mixin refraction-grid-classes {
 
 	@each $sizeKey, $size in $column-sizes {
 
-		&.elementor-col-#{$sizeKey}, &[data-col="#{$sizeKey}"] {
+		&.refraction-col-#{$sizeKey}, &[data-col="#{$sizeKey}"] {
 			width: $size;
 		}
 	}
 }
 
-@mixin elementor-responsive($breakpoint-name) {
+@mixin refraction-responsive($breakpoint-name) {
 
 	@each $size-name, $size in $column-sizes {
 
-		&.elementor-#{$breakpoint-name}-#{$size-name} {
+		&.refraction-#{$breakpoint-name}-#{$size-name} {
 			width: $size;
 		}
 	}
@@ -174,38 +174,38 @@
 }
 
 // Columns Gap
-.elementor-column {
+.refraction-column {
 
-	> .elementor-element-populated {
+	> .refraction-element-populated {
 
-		.elementor-column-gap-narrow  > & {
+		.refraction-column-gap-narrow  > & {
 			padding: 5px;
 		}
 
-		.elementor-column-gap-default > & {
+		.refraction-column-gap-default > & {
 			padding: 10px;
 		}
 
-		.elementor-column-gap-extended > & {
+		.refraction-column-gap-extended > & {
 			padding: 15px;
 		}
 
-		.elementor-column-gap-wide > & {
+		.refraction-column-gap-wide > & {
 			padding: 20px;
 		}
 
-		.elementor-column-gap-wider > & {
+		.refraction-column-gap-wider > & {
 			padding: 30px;
 		}
 	}
 }
 
 // Columns Gap for Inner section
-.elementor-inner-section {
+.refraction-inner-section {
 
-	.elementor-column-gap-no {
+	.refraction-column-gap-no {
 
-		.elementor-element-populated {
+		.refraction-element-populated {
 			padding: 0;
 		}
 	}
@@ -214,29 +214,29 @@
 // Responsive Grid
 @media (min-width:$screen-mobile-next) {
 
-	.elementor-column {
-		@include elementor-grid-classes;
+	.refraction-column {
+		@include refraction-grid-classes;
 	}
 }
 
-.elementor-column {
+.refraction-column {
 
 	@media (max-width: 479px) {
-		@include elementor-responsive(xs);
+		@include refraction-responsive(xs);
 	}
 
 	@media (max-width: $screen-mobile-max) {
-		@include elementor-responsive(sm);
+		@include refraction-responsive(sm);
 	}
 
 	@media (min-width:$screen-mobile-next) and (max-width: $screen-tablet-max) {
-		@include elementor-responsive(md);
+		@include refraction-responsive(md);
 	}
 }
 
 @mixin reverse-columns($device) {
 
-	.elementor-reverse#{$device} > .elementor-container {
+	.refraction-reverse#{$device} > .refraction-container {
 		@for $i from 1 through 10 {
 			> :nth-child(#{$i}) {
 				order: -$i + 11;
@@ -247,7 +247,7 @@
 
 @mixin reverse-columns-initial($device) {
 
-	.elementor-reverse#{$device} > .elementor-container {
+	.refraction-reverse#{$device} > .refraction-container {
 		@for $i from 1 through 10 {
 			> :nth-child(#{$i}) {
 				order: initial;
@@ -289,31 +289,31 @@
 @media (max-width: $screen-mobile-max) {
 	@include reverse-columns(-mobile);
 
-	.elementor-column {
+	.refraction-column {
 		width: 100%; //Default width for mobile
 	}
 }
 
 // Simple 12 Columns responsive grid
-.elementor-grid {
+.refraction-grid {
 	display: grid;
 	grid-column-gap: var(--grid-column-gap);
 	grid-row-gap: var(--grid-row-gap);
 
-	.elementor-grid-item {
+	.refraction-grid-item {
 		min-width: 0; // Prevent columns from overflowing the grid area in Firefox browser (Doesn't seem to do anything  --Josh)
 	}
 
 	@mixin grid_loop($device) {
 
 		&#{$device}-0 {
-			.elementor-grid {
+			.refraction-grid {
 				display: inline-block;
 				width: 100%;
 				word-spacing: var(--grid-column-gap);
 				margin-block-end: calc(-1 * var(--grid-row-gap));
 
-				.elementor-grid-item {
+				.refraction-grid-item {
 					display: inline-block;
 					margin-block-end: var(--grid-row-gap);
 					word-break: break-word;
@@ -324,7 +324,7 @@
 		@for $i from 1 through 12 {
 
 			&#{$device}-#{$i} {
-				.elementor-grid {
+				.refraction-grid {
 					grid-template-columns: repeat(#{$i} , 1fr);
 				}
 			}

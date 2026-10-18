@@ -1,4 +1,4 @@
-import { getQueryParam, removeQueryParam } from 'elementor-editor-utils/query-params';
+import { getQueryParam, removeQueryParam } from 'refraction-editor-utils/query-params';
 
 export class RemoveActiveTabQueryParam extends $e.modules.hookUI.After {
 	getCommand() {

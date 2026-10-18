@@ -10,7 +10,7 @@ import router from './router';
 import { appUi, components, hooks } from './package';
 import siteEditor from '../../modules/site-editor/assets/js/package';
 
-window.elementorAppPackages = {
+window.refractionAppPackages = {
 	appUi,
 	components,
 	hooks,

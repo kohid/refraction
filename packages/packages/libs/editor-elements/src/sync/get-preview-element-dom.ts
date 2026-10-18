@@ -1,7 +1,7 @@
 import { getContainer } from './get-container';
 
 type ExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		getPreviewContainer?: () => { view?: { el?: HTMLElement } } | undefined;
 	};
 };
@@ -21,7 +21,7 @@ export function getPreviewElementDOM( id: string ): HTMLElement | null {
 }
 
 function queryPreviewDOMByElementId( id: string ): HTMLElement | null {
-	const previewDocument = ( window as unknown as ExtendedWindow ).elementor?.getPreviewContainer?.()?.view?.el
+	const previewDocument = ( window as unknown as ExtendedWindow ).refraction?.getPreviewContainer?.()?.view?.el
 		?.ownerDocument;
 
 	if ( ! previewDocument ) {

@@ -1,11 +1,11 @@
 import { createMockElement } from 'test-utils';
-import { addModelToParent, findModelInDocument, type V1ElementModelProps } from '@elementor/editor-elements';
+import { addModelToParent, findModelInDocument, type V1ElementModelProps } from '@refraction/editor-elements';
 
 import { createPendingElement } from '../create-pending-element';
 import { type ElementView } from '../types';
 
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	addModelToParent: jest.fn(),
 	findModelInDocument: jest.fn(),
 	getContainer: jest.fn(),
@@ -18,9 +18,9 @@ describe( 'createPendingElement', () => {
 	beforeEach( () => {
 		(
 			window as typeof window & {
-				elementorCommon?: { helpers?: { getUniqueId?: jest.Mock } };
+				refractionCommon?: { helpers?: { getUniqueId?: jest.Mock } };
 			}
-		 ).elementorCommon = {
+		 ).refractionCommon = {
 			helpers: {
 				getUniqueId: jest
 					.fn()
@@ -36,7 +36,7 @@ describe( 'createPendingElement', () => {
 	} );
 
 	afterEach( () => {
-		delete ( window as typeof window & { elementorCommon?: unknown } ).elementorCommon;
+		delete ( window as typeof window & { refractionCommon?: unknown } ).refractionCommon;
 	} );
 
 	it( 'regenerates ids before pending clone insertion', () => {

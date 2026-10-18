@@ -1,4 +1,4 @@
-import HookDataAfter from 'elementor-api/modules/hooks/data/after';
+import HookDataAfter from 'refraction-api/modules/hooks/data/after';
 
 export class RevisionsAfterSave extends HookDataAfter {
 	getCommand() {
@@ -11,7 +11,7 @@ export class RevisionsAfterSave extends HookDataAfter {
 
 	apply( args, result ) {
 		const { data } = result,
-			revisionsModule = elementor.documents.getCurrent().revisions;
+			revisionsModule = refraction.documents.getCurrent().revisions;
 
 		if ( data.latest_revisions ) {
 			revisionsModule.addRevisions( data.latest_revisions );

@@ -1,11 +1,11 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type HttpResponse, httpService } from '@elementor/http-client';
-import { z } from '@elementor/schema';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type HttpResponse, httpService } from '@refraction/http-client';
+import { z } from '@refraction/schema';
 
 import { getMcpErrorMessage } from '../../utils/get-mcp-error-message';
 import { findIconsToolPrompt } from './prompt';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 
 const MAX_QUERIES = 10;
 

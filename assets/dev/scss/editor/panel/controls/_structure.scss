@@ -1,12 +1,12 @@
 //TODO: Remove after container is merged for good
 
-.elementor-control-type-structure {
+.refraction-control-type-structure {
 
-	.elementor-control-field {
+	.refraction-control-field {
 		display: initial;
 	}
 
-	.elementor-control-structure-preset {
+	.refraction-control-structure-preset {
 		padding: 3px;
 		border-radius: var(--e-border-radius);
 		display: inline-block;
@@ -22,7 +22,7 @@
 		}
 	}
 
-	.elementor-control-structure-reset {
+	.refraction-control-structure-reset {
 		padding: 15px 20px 0;
 		font-size: 11px;
 		cursor: pointer;
@@ -35,7 +35,7 @@
 		}
 	}
 
-	.elementor-control-structure-title {
+	.refraction-control-structure-title {
 		margin: 10px -20px 0;
 
 		&:before {
@@ -44,7 +44,7 @@
 		}
 	}
 
-	.elementor-control-structure-presets {
+	.refraction-control-structure-presets {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
@@ -52,7 +52,7 @@
 		input {
 			display: none;
 
-			&:checked + .elementor-control-structure-preset {
+			&:checked + .refraction-control-structure-preset {
 
 				path {
 					fill: var(--e-a-border-color-focus);
@@ -61,11 +61,11 @@
 		}
 	}
 
-	.elementor-control-structure-preset-wrapper {
+	.refraction-control-structure-preset-wrapper {
 		margin-block-end: 15px;
 	}
 
-	.elementor-control-structure-preset-title {
+	.refraction-control-structure-preset-title {
 		text-align: center;
 		padding-block-start: 5px;
 		font-style: italic;

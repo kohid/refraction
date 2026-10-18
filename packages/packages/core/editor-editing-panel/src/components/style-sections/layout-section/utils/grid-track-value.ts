@@ -3,7 +3,7 @@ import {
 	type GridTrackSizePropValue,
 	type PropValue,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 export type GridTrackUnit = 'fr' | 'custom';
 

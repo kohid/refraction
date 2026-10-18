@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Testing\Core\Utils\Document;
+namespace Refraction\Testing\Core\Utils\Document;
 
-use Elementor\Core\Utils\Document\Document_Mutator;
+use Refraction\Core\Utils\Document\Document_Mutator;
 use PHPUnit\Framework\TestCase;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,8 +16,8 @@ class Document_Mutator_Test extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		$this->mutator = new Document_Mutator(
-			$this->createMock( \Elementor\Elements_Manager::class ),
-			$this->createMock( \Elementor\Widgets_Manager::class )
+			$this->createMock( \Refraction\Elements_Manager::class ),
+			$this->createMock( \Refraction\Widgets_Manager::class )
 		);
 	}
 
@@ -121,7 +121,7 @@ class Document_Mutator_Test extends TestCase {
 		$result = $this->mutator->insert_at( $tree, 'w1', null, $new );
 
 		// Assert
-		$this->assertWPError( $result, 'elementor_invalid_parent' );
+		$this->assertWPError( $result, 'refraction_invalid_parent' );
 	}
 
 	public function test_insert_at_unknown_parent_returns_not_found_error() {
@@ -133,7 +133,7 @@ class Document_Mutator_Test extends TestCase {
 		$result = $this->mutator->insert_at( $tree, 'ghost', null, $new );
 
 		// Assert
-		$this->assertWPError( $result, 'elementor_not_found' );
+		$this->assertWPError( $result, 'refraction_not_found' );
 	}
 
 	// remove
@@ -170,7 +170,7 @@ class Document_Mutator_Test extends TestCase {
 		$result = $this->mutator->remove( $tree, 'ghost' );
 
 		// Assert
-		$this->assertWPError( $result, 'elementor_not_found' );
+		$this->assertWPError( $result, 'refraction_not_found' );
 	}
 
 	// patch_settings
@@ -197,7 +197,7 @@ class Document_Mutator_Test extends TestCase {
 		$result = $this->mutator->patch_settings( $tree, 'ghost', [ 'color' => 'blue' ] );
 
 		// Assert
-		$this->assertWPError( $result, 'elementor_not_found' );
+		$this->assertWPError( $result, 'refraction_not_found' );
 	}
 
 	// move
@@ -227,7 +227,7 @@ class Document_Mutator_Test extends TestCase {
 		$result = $this->mutator->move( $tree, 'ghost', 'c1', null );
 
 		// Assert
-		$this->assertWPError( $result, 'elementor_not_found' );
+		$this->assertWPError( $result, 'refraction_not_found' );
 	}
 
 	public function test_move_to_invalid_parent_returns_error() {
@@ -240,7 +240,7 @@ class Document_Mutator_Test extends TestCase {
 		$result = $this->mutator->move( $tree, 'w1', 'w2', null );
 
 		// Assert
-		$this->assertWPError( $result, 'elementor_invalid_parent' );
+		$this->assertWPError( $result, 'refraction_invalid_parent' );
 	}
 
 	// build_ref_index
@@ -292,7 +292,7 @@ class Document_Mutator_Test extends TestCase {
 
 		$result = $this->mutator->duplicate( $tree, 'ghost' );
 
-		$this->assertWPError( $result, 'elementor_not_found' );
+		$this->assertWPError( $result, 'refraction_not_found' );
 	}
 
 	// child-type restrictions
@@ -305,10 +305,10 @@ class Document_Mutator_Test extends TestCase {
 			}
 		};
 
-		$mock_element_manager = $this->createMock( \Elementor\Elements_Manager::class );
+		$mock_element_manager = $this->createMock( \Refraction\Elements_Manager::class );
 		$mock_element_manager->method( 'get_element_types' )->willReturn( $mock_instance );
 
-		$mutator = new Document_Mutator( $mock_element_manager, $this->createMock( \Elementor\Widgets_Manager::class ) );
+		$mutator = new Document_Mutator( $mock_element_manager, $this->createMock( \Refraction\Widgets_Manager::class ) );
 
 		$parent = $this->make_container( 'c1' );
 		$tree   = [ $parent ];
@@ -318,7 +318,7 @@ class Document_Mutator_Test extends TestCase {
 		$result = $mutator->insert_at( $tree, 'c1', null, $child );
 
 		// Assert
-		$this->assertWPError( $result, 'elementor_invalid_parent' );
+		$this->assertWPError( $result, 'refraction_invalid_parent' );
 	}
 
 	public function test_insert_at_allows_child_when_type_in_allowed_list() {
@@ -329,10 +329,10 @@ class Document_Mutator_Test extends TestCase {
 			}
 		};
 
-		$mock_element_manager = $this->createMock( \Elementor\Elements_Manager::class );
+		$mock_element_manager = $this->createMock( \Refraction\Elements_Manager::class );
 		$mock_element_manager->method( 'get_element_types' )->willReturn( $mock_instance );
 
-		$mutator = new Document_Mutator( $mock_element_manager, $this->createMock( \Elementor\Widgets_Manager::class ) );
+		$mutator = new Document_Mutator( $mock_element_manager, $this->createMock( \Refraction\Widgets_Manager::class ) );
 
 		$parent = $this->make_container( 'c1' );
 		$tree   = [ $parent ];

@@ -1,7 +1,7 @@
 
 // Loading Editor screen
 
-#elementor-loading {
+#refraction-loading {
 	position: fixed;
 	inset: 0;
 	background: var(--e-a-bg-default);
@@ -10,7 +10,7 @@
 
 // Loading after APPLY button
 
-#elementor-preview-loading {
+#refraction-preview-loading {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -24,7 +24,7 @@
 	}
 }
 
-.elementor-nerd-box {
+.refraction-nerd-box {
 	padding: 30px;
 	text-align: center;
 
@@ -45,19 +45,19 @@
 		font-size: 11px;
 	}
 
-	.elementor-button {
+	.refraction-button {
 		margin-block-start: 20px;
 	}
 
 	&--upsale {
 		padding: 15px 30px 30px;
 
-		.elementor-nerd-box-title {
+		.refraction-nerd-box-title {
 			font-weight: 500;
 			line-height: 1.2;
 		}
 
-		.elementor-nerd-box-message {
+		.refraction-nerd-box-message {
 			line-height: 1.5;
 		}
 	}

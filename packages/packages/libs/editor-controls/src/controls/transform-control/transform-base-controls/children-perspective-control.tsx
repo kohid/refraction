@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { perspectiveOriginPropTypeUtil } from '@elementor/editor-props';
+import { perspectiveOriginPropTypeUtil } from '@refraction/editor-props';
 import { Grid, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -19,19 +19,19 @@ type FieldProps = {
 const ORIGIN_UNITS: LengthUnit[] = [ 'px', '%', 'em', 'rem' ];
 
 const PERSPECTIVE_CONTROL_FIELD: FieldProps = {
-	label: __( 'Perspective', 'elementor' ),
+	label: __( 'Perspective', 'refraction' ),
 	bind: 'perspective',
 	units: [ 'px', 'em', 'rem', 'vw', 'vh' ],
 };
 
 const CHILDREN_PERSPECTIVE_FIELDS: FieldProps[] = [
 	{
-		label: __( 'Origin X', 'elementor' ),
+		label: __( 'Origin X', 'refraction' ),
 		bind: 'x',
 		units: ORIGIN_UNITS,
 	},
 	{
-		label: __( 'Origin Y', 'elementor' ),
+		label: __( 'Origin Y', 'refraction' ),
 		bind: 'y',
 		units: ORIGIN_UNITS,
 	},
@@ -40,7 +40,7 @@ const CHILDREN_PERSPECTIVE_FIELDS: FieldProps[] = [
 export const ChildrenPerspectiveControl = () => {
 	return (
 		<Stack direction="column" spacing={ 1.5 }>
-			<ControlFormLabel>{ __( 'Children perspective', 'elementor' ) }</ControlFormLabel>
+			<ControlFormLabel>{ __( 'Children perspective', 'refraction' ) }</ControlFormLabel>
 			<PerspectiveControl />
 			<PerspectiveOriginControl />
 		</Stack>

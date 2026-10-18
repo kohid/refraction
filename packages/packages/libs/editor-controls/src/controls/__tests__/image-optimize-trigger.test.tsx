@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { ajax } from '@elementor/editor-v1-adapters';
+import { ajax } from '@refraction/editor-v1-adapters';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { ImageControl } from '../image-control';
@@ -8,8 +8,8 @@ import { ImageMediaControl } from '../image-media-control';
 
 jest.mock( '../image-media-control' );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	ajax: {
 		load: jest.fn(),
 	},
@@ -48,7 +48,7 @@ describe( 'ImageOptimizeTrigger', () => {
 	beforeEach( () => {
 		jest.mocked( ImageMediaControl ).mockImplementation( () => <></> );
 		jest.mocked( ajax.load ).mockResolvedValue( {} );
-		( window as unknown as { elementor: unknown } ).elementor = {
+		( window as unknown as { refraction: unknown } ).refraction = {
 			config: { user: { dismissed_editor_notices: [] } },
 		};
 	} );
@@ -137,9 +137,9 @@ describe( 'ImageOptimizeTrigger', () => {
 		expect( ajax.load ).not.toHaveBeenCalled();
 
 		const extendedWindow = window as unknown as {
-			elementor: { config: { user: { dismissed_editor_notices: string[] } } };
+			refraction: { config: { user: { dismissed_editor_notices: string[] } } };
 		};
-		expect( extendedWindow.elementor.config.user.dismissed_editor_notices ).toContain( 'image_optimizer_hint' );
+		expect( extendedWindow.refraction.config.user.dismissed_editor_notices ).toContain( 'image_optimizer_hint' );
 	} );
 
 	it( 'should persist the dismissal and hide the trigger', () => {

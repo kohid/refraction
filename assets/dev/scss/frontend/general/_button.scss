@@ -1,5 +1,5 @@
 // Shared button style.
-.elementor-button {
+.refraction-button {
 	display: inline-block;
 	line-height: 1;
 	background-color: $gray;
@@ -42,7 +42,7 @@
 		display: inline-block;
 	}
 
-	&.elementor-size- {
+	&.refraction-size- {
 		&xs {
 			font-size: 13px;
 			padding: 10px 20px;
@@ -77,14 +77,14 @@
 	}
 }
 
-.elementor-element.elementor-button- {
-	@include button-types( '.elementor-button' );
+.refraction-element.refraction-button- {
+	@include button-types( '.refraction-button' );
 
 }
 
-.elementor-widget-button {
-	.elementor-button {
-		.elementor-button- {
+.refraction-widget-button {
+	.refraction-button {
+		.refraction-button- {
 
 			@include button-types( '' );
 		}

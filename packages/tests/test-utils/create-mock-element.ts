@@ -3,7 +3,7 @@ import {
 	type V1Element,
 	type V1ElementModelProps,
 	type V1ElementSettingsProps,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 
 type MockElementProps = {
 	model?: Partial< V1ElementModelProps >;

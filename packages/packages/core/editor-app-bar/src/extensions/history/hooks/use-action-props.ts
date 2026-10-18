@@ -1,7 +1,7 @@
 import {
 	__privateOpenRoute as openRoute,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { HistoryIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -11,16 +11,16 @@ export default function useActionProps() {
 	const { isActive, isBlocked } = useRouteStatus( 'panel/history' );
 
 	return {
-		title: __( 'History', 'elementor' ),
+		title: __( 'History', 'refraction' ),
 		icon: HistoryIcon,
 		onClick: () => {
 			const extendedWindow = window as unknown as ExtendedWindow;
-			const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+			const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 			if ( config ) {
-				extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.history, {
+				extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.history, {
 					location: config.locations.topBar,
-					secondaryLocation: config.secondaryLocations.elementorLogo,
+					secondaryLocation: config.secondaryLocations.refractionLogo,
 					trigger: config.triggers.click,
 					element: config.elements.link,
 				} );

@@ -1,4 +1,4 @@
-import { isWidgetSupportNesting } from 'elementor/modules/nested-elements/assets/js/editor/utils';
+import { isWidgetSupportNesting } from 'refraction/modules/nested-elements/assets/js/editor/utils';
 
 export default class Base extends $e.modules.hookData.After {
 	getContainerType() {

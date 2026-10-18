@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Modules\System_Info\Reporters;
+namespace Refraction\Modules\System_Info\Reporters;
 
-use Elementor\Modules\System_Info\Helpers\Model_Helper;
-use Elementor\Utils;
+use Refraction\Modules\System_Info\Helpers\Model_Helper;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor base reporter.
+ * Refraction base reporter.
  *
  * A base abstract class that provides the needed properties and methods to
  * manage and handle reporter in inheriting classes.
@@ -69,7 +69,7 @@ abstract class Base {
 
 	public function print_html() {
 		foreach ( $this->get_report( 'html' ) as $field ) {
-			$warning_class = ! empty( $field['warning'] ) ? ' class="elementor-warning"' : '';
+			$warning_class = ! empty( $field['warning'] ) ? ' class="refraction-warning"' : '';
 			$log_label = ! empty( $field['label'] ) ? $field['label'] . ':' : '';
 			?>
 			<tr<?php Utils::print_unescaped_internal_string( $warning_class ); ?>>

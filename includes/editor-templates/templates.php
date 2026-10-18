@@ -1,33 +1,33 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 ?>
-<script type="text/template" id="tmpl-elementor-template-library-header-actions">
+<script type="text/template" id="tmpl-refraction-template-library-header-actions">
 	<?php if ( User::is_current_user_can_upload_json() ) { ?>
-		<button type="button" id="elementor-template-library-header-import" class="elementor-templates-modal__header__item" aria-label="<?php echo esc_attr__( 'Import Template', 'elementor' ); ?>">
+		<button type="button" id="refraction-template-library-header-import" class="refraction-templates-modal__header__item" aria-label="<?php echo esc_attr__( 'Import Template', 'refraction' ); ?>">
 			<i class="eicon-upload-circle-o" aria-hidden="true"></i>
-			<span class="elementor-screen-only"><?php echo esc_html__( 'Import Template', 'elementor' ); ?></span>
+			<span class="refraction-screen-only"><?php echo esc_html__( 'Import Template', 'refraction' ); ?></span>
 		</button>
 	<?php } ?>
-	<button type="button" id="elementor-template-library-header-save" class="elementor-templates-modal__header__item" aria-label="<?php echo esc_attr__( 'Save', 'elementor' ); ?>">
+	<button type="button" id="refraction-template-library-header-save" class="refraction-templates-modal__header__item" aria-label="<?php echo esc_attr__( 'Save', 'refraction' ); ?>">
 		<i class="eicon-save-o" aria-hidden="true"></i>
-		<span class="elementor-screen-only"><?php echo esc_html__( 'Save', 'elementor' ); ?></span>
+		<span class="refraction-screen-only"><?php echo esc_html__( 'Save', 'refraction' ); ?></span>
 	</button>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-header-menu">
+<script type="text/template" id="tmpl-refraction-template-library-header-menu">
 	<# jQuery.each( tabs, ( tab, args ) => { #>
 		<button
 			role="tab"
 			id="tab-{{{ tab }}}"
-			aria-controls="elementor-template-library-templates-container"
+			aria-controls="refraction-template-library-templates-container"
 			aria-selected="false"
 			tabindex="-1"
-			class="elementor-component-tab elementor-template-library-menu-item"
+			class="refraction-component-tab refraction-template-library-menu-item"
 			data-tab="{{{ tab }}}"
 		>
 			{{{ args.title }}}
@@ -35,247 +35,247 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<# } ); #>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-header-preview">
-	<div id="elementor-template-library-header-preview-insert-wrapper" class="elementor-templates-modal__header__item">
-		{{{ elementor.templates.layout.getTemplateActionButton( obj ) }}}
+<script type="text/template" id="tmpl-refraction-template-library-header-preview">
+	<div id="refraction-template-library-header-preview-insert-wrapper" class="refraction-templates-modal__header__item">
+		{{{ refraction.templates.layout.getTemplateActionButton( obj ) }}}
 	</div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-header-back">
-	<button type="button" class="elementor-template-library-header-back-button" aria-label="<?php echo esc_attr__( 'Back to Library', 'elementor' ); ?>">
+<script type="text/template" id="tmpl-refraction-template-library-header-back">
+	<button type="button" class="refraction-template-library-header-back-button" aria-label="<?php echo esc_attr__( 'Back to Library', 'refraction' ); ?>">
 		<i class="eicon-chevron-left" aria-hidden="true"></i>
-		<span><?php echo esc_html__( 'Back to Library', 'elementor' ); ?></span>
+		<span><?php echo esc_html__( 'Back to Library', 'refraction' ); ?></span>
 	</button>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-loading">
-	<div class="elementor-loader-wrapper">
-		<div class="elementor-loader">
-			<div class="elementor-loader-boxes">
-				<div class="elementor-loader-box"></div>
-				<div class="elementor-loader-box"></div>
-				<div class="elementor-loader-box"></div>
-				<div class="elementor-loader-box"></div>
+<script type="text/template" id="tmpl-refraction-template-library-loading">
+	<div class="refraction-loader-wrapper">
+		<div class="refraction-loader">
+			<div class="refraction-loader-boxes">
+				<div class="refraction-loader-box"></div>
+				<div class="refraction-loader-box"></div>
+				<div class="refraction-loader-box"></div>
+				<div class="refraction-loader-box"></div>
 			</div>
 		</div>
-		<div class="elementor-loading-title"><?php echo esc_html__( 'Loading', 'elementor' ); ?></div>
+		<div class="refraction-loading-title"><?php echo esc_html__( 'Loading', 'refraction' ); ?></div>
 	</div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-templates">
+<script type="text/template" id="tmpl-refraction-template-library-templates">
 	<#
-		var activeSource = elementor.templates.getFilter('source');
+		var activeSource = refraction.templates.getFilter('source');
 	#>
-	<div id="elementor-template-library-toolbar">
-		<div class="elementor-template-library-filter-toolbar-side-actions">
-			<div id="elementor-template-library-filter-text-wrapper">
-				<label for="elementor-template-library-filter-text" class="elementor-screen-only"><?php echo esc_html__( 'Search Templates:', 'elementor' ); ?></label>
-				<input type="search" id="elementor-template-library-filter-text" placeholder="<?php echo esc_attr__( 'Search', 'elementor' ); ?>">
+	<div id="refraction-template-library-toolbar">
+		<div class="refraction-template-library-filter-toolbar-side-actions">
+			<div id="refraction-template-library-filter-text-wrapper">
+				<label for="refraction-template-library-filter-text" class="refraction-screen-only"><?php echo esc_html__( 'Search Templates:', 'refraction' ); ?></label>
+				<input type="search" id="refraction-template-library-filter-text" placeholder="<?php echo esc_attr__( 'Search', 'refraction' ); ?>">
 				<i class="eicon-search" aria-hidden="true"></i>
 			</div>
 		</div>
 	</div>
-	<div class="elementor-screen-only" aria-live="polite" id="elementor-template-library-sort-status" aria-atomic="true"></div>
-	<div class="elementor-screen-only" aria-live="polite" id="elementor-template-library-load-status" aria-atomic="true"></div>
+	<div class="refraction-screen-only" aria-live="polite" id="refraction-template-library-sort-status" aria-atomic="true"></div>
+	<div class="refraction-screen-only" aria-live="polite" id="refraction-template-library-load-status" aria-atomic="true"></div>
 	<# if ( 'local' === activeSource ) { #>
 		<div class="toolbar-container">
-				<section class="bulk-selection-action-bar" role="region" aria-label="<?php echo esc_attr__( 'Bulk actions', 'elementor' ); ?>">
-					<button type="button" class="clear-bulk-selections" aria-label="<?php echo esc_attr__( 'Deselect all and close bulk selection', 'elementor' ); ?>">
+				<section class="bulk-selection-action-bar" role="region" aria-label="<?php echo esc_attr__( 'Bulk actions', 'refraction' ); ?>">
+					<button type="button" class="clear-bulk-selections" aria-label="<?php echo esc_attr__( 'Deselect all and close bulk selection', 'refraction' ); ?>">
 						<i class="eicon-editor-close" aria-hidden="true"></i>
 					</button>
 					<span class="selected-count" aria-live="polite"></span>
-					<button type="button" class="bulk-delete" aria-label="<?php echo esc_attr__( 'Delete selected templates', 'elementor' ); ?>">
+					<button type="button" class="bulk-delete" aria-label="<?php echo esc_attr__( 'Delete selected templates', 'refraction' ); ?>">
 						<i class="eicon-library-delete" aria-hidden="true"></i>
 					</button>
 				</section>
-			<div id="elementor-template-library-navigation-container"></div>
+			<div id="refraction-template-library-navigation-container"></div>
 		</div>
-		<div id="elementor-template-library-order-toolbar-local">
-			<div class="elementor-template-library-local-column-1">
+		<div id="refraction-template-library-order-toolbar-local">
+			<div class="refraction-template-library-local-column-1">
 				<input type="checkbox" id="bulk-select-all">
-				<input type="radio" id="elementor-template-library-order-local-title" class="elementor-template-library-order-input" name="elementor-template-library-order-local" value="title" data-default-ordering-direction="asc">
-				<label for="elementor-template-library-order-local-title" class="elementor-template-library-order-label"><?php echo esc_html__( 'Name', 'elementor' ); ?></label>
+				<input type="radio" id="refraction-template-library-order-local-title" class="refraction-template-library-order-input" name="refraction-template-library-order-local" value="title" data-default-ordering-direction="asc">
+				<label for="refraction-template-library-order-local-title" class="refraction-template-library-order-label"><?php echo esc_html__( 'Name', 'refraction' ); ?></label>
 			</div>
-			<div class="elementor-template-library-local-column-2">
-				<input type="radio" id="elementor-template-library-order-local-type" class="elementor-template-library-order-input" name="elementor-template-library-order-local" value="type" data-default-ordering-direction="asc">
-				<label for="elementor-template-library-order-local-type" class="elementor-template-library-order-label"><?php echo esc_html__( 'Type', 'elementor' ); ?></label>
+			<div class="refraction-template-library-local-column-2">
+				<input type="radio" id="refraction-template-library-order-local-type" class="refraction-template-library-order-input" name="refraction-template-library-order-local" value="type" data-default-ordering-direction="asc">
+				<label for="refraction-template-library-order-local-type" class="refraction-template-library-order-label"><?php echo esc_html__( 'Type', 'refraction' ); ?></label>
 			</div>
-			<div class="elementor-template-library-local-column-3">
-				<input type="radio" id="elementor-template-library-order-local-author" class="elementor-template-library-order-input" name="elementor-template-library-order-local" value="author" data-default-ordering-direction="asc">
-				<label for="elementor-template-library-order-local-author" class="elementor-template-library-order-label"><?php echo esc_html__( 'Created By', 'elementor' ); ?></label>
+			<div class="refraction-template-library-local-column-3">
+				<input type="radio" id="refraction-template-library-order-local-author" class="refraction-template-library-order-input" name="refraction-template-library-order-local" value="author" data-default-ordering-direction="asc">
+				<label for="refraction-template-library-order-local-author" class="refraction-template-library-order-label"><?php echo esc_html__( 'Created By', 'refraction' ); ?></label>
 			</div>
-			<div class="elementor-template-library-local-column-4">
-				<input type="radio" id="elementor-template-library-order-local-date" class="elementor-template-library-order-input" name="elementor-template-library-order-local" value="date">
-				<label for="elementor-template-library-order-local-date" class="elementor-template-library-order-label"><?php echo esc_html__( 'Creation Date', 'elementor' ); ?></label>
+			<div class="refraction-template-library-local-column-4">
+				<input type="radio" id="refraction-template-library-order-local-date" class="refraction-template-library-order-input" name="refraction-template-library-order-local" value="date">
+				<label for="refraction-template-library-order-local-date" class="refraction-template-library-order-label"><?php echo esc_html__( 'Creation Date', 'refraction' ); ?></label>
 			</div>
-			<div class="elementor-template-library-local-column-5">
-				<div class="elementor-template-library-order-label"><?php echo esc_html__( 'Actions', 'elementor' ); ?></div>
+			<div class="refraction-template-library-local-column-5">
+				<div class="refraction-template-library-order-label"><?php echo esc_html__( 'Actions', 'refraction' ); ?></div>
 			</div>
 		</div>
 	<# } #>
-	<div id="elementor-template-library-templates-container" role="tabpanel"></div>
+	<div id="refraction-template-library-templates-container" role="tabpanel"></div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-navigation-container">
-	<button class="elementor-template-library-navigation-back-button elementor-button e-button">
+<script type="text/template" id="tmpl-refraction-template-library-navigation-container">
+	<button class="refraction-template-library-navigation-back-button refraction-button e-button">
 		<i class="eicon-chevron-left"></i>
-		<?php echo esc_html__( 'Back', 'elementor' ); ?>
+		<?php echo esc_html__( 'Back', 'refraction' ); ?>
 	</button>
-	<span class="elementor-template-library-current-folder-title"></span>
+	<span class="refraction-template-library-current-folder-title"></span>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-template-local">
-	<div class="elementor-template-library-template-name elementor-template-library-local-column-1">
-		<input type="checkbox" class="bulk-selection-item-checkbox" data-template_id="{{ template_id }}" data-type="{{ type }}" data-status="{{ status }}" aria-label="<?php echo esc_attr__( 'Select template', 'elementor' ); ?> {{{ title }}}" aria-checked="false">
+<script type="text/template" id="tmpl-refraction-template-library-template-local">
+	<div class="refraction-template-library-template-name refraction-template-library-local-column-1">
+		<input type="checkbox" class="bulk-selection-item-checkbox" data-template_id="{{ template_id }}" data-type="{{ type }}" data-status="{{ status }}" aria-label="<?php echo esc_attr__( 'Select template', 'refraction' ); ?> {{{ title }}}" aria-checked="false">
 		<span>{{ title }}</span>
 	</div>
-	<div class="elementor-template-library-template-meta elementor-template-library-template-type elementor-template-library-local-column-2">{{{ elementor.translate( type ) }}}</div>
-	<div class="elementor-template-library-template-meta elementor-template-library-template-author elementor-template-library-local-column-3">{{{ author }}}</div>
-	<div class="elementor-template-library-template-meta elementor-template-library-template-date elementor-template-library-local-column-4">{{{ human_date }}}</div>
-	<div class="elementor-template-library-template-controls elementor-template-library-local-column-5">
-		<button type="button" class="elementor-template-library-template-preview elementor-button e-btn-txt">
+	<div class="refraction-template-library-template-meta refraction-template-library-template-type refraction-template-library-local-column-2">{{{ refraction.translate( type ) }}}</div>
+	<div class="refraction-template-library-template-meta refraction-template-library-template-author refraction-template-library-local-column-3">{{{ author }}}</div>
+	<div class="refraction-template-library-template-meta refraction-template-library-template-date refraction-template-library-local-column-4">{{{ human_date }}}</div>
+	<div class="refraction-template-library-template-controls refraction-template-library-local-column-5">
+		<button type="button" class="refraction-template-library-template-preview refraction-button e-btn-txt">
 			<i class="eicon-preview-medium" aria-hidden="true"></i>
-			<span class="elementor-template-library-template-control-title"><?php echo esc_html__( 'Preview', 'elementor' ); ?></span>
+			<span class="refraction-template-library-template-control-title"><?php echo esc_html__( 'Preview', 'refraction' ); ?></span>
 		</button>
-		<button class="elementor-template-library-template-action elementor-template-library-template-insert elementor-button e-primary e-btn-txt">
+		<button class="refraction-template-library-template-action refraction-template-library-template-insert refraction-button e-primary e-btn-txt">
 			<i class="eicon-library-download" aria-hidden="true"></i>
-			<span class="elementor-button-title"><?php echo esc_html__( 'Insert', 'elementor' ); ?></span>
+			<span class="refraction-button-title"><?php echo esc_html__( 'Insert', 'refraction' ); ?></span>
 		</button>
-		<button type="button" class="elementor-template-library-template-more-toggle" aria-haspopup="menu" aria-expanded="false" aria-label="<?php echo esc_attr__( 'More actions for template', 'elementor' ); ?> {{{ title }}}">
+		<button type="button" class="refraction-template-library-template-more-toggle" aria-haspopup="menu" aria-expanded="false" aria-label="<?php echo esc_attr__( 'More actions for template', 'refraction' ); ?> {{{ title }}}">
 			<i class="eicon-ellipsis-h" aria-hidden="true"></i>
-			<span class="elementor-screen-only"><?php echo esc_html__( 'More actions', 'elementor' ); ?></span>
+			<span class="refraction-screen-only"><?php echo esc_html__( 'More actions', 'refraction' ); ?></span>
 		</button>
-		<ul class="elementor-template-library-template-more" role="menu" aria-label="<?php echo esc_attr__( 'More actions for template', 'elementor' ); ?> {{{ title }}}">
+		<ul class="refraction-template-library-template-more" role="menu" aria-label="<?php echo esc_attr__( 'More actions for template', 'refraction' ); ?> {{{ title }}}">
 			<li role="menuitem">
-				<a href="{{ export_link }}" class="elementor-template-library-template-export">
+				<a href="{{ export_link }}" class="refraction-template-library-template-export">
 					<i class="eicon-library-download" aria-hidden="true"></i>
-					<span class="elementor-template-library-template-control-title"><?php echo esc_html__( 'Export', 'elementor' ); ?></span>
+					<span class="refraction-template-library-template-control-title"><?php echo esc_html__( 'Export', 'refraction' ); ?></span>
 				</a>
 			</li>
 			<li role="menuitem">
-				<button type="button" class="elementor-template-library-template-rename">
+				<button type="button" class="refraction-template-library-template-rename">
 					<i class="eicon-library-edit" aria-hidden="true"></i>
-					<span class="elementor-template-library-template-control-title"><?php echo esc_html__( 'Rename', 'elementor' ); ?></span>
+					<span class="refraction-template-library-template-control-title"><?php echo esc_html__( 'Rename', 'refraction' ); ?></span>
 				</button>
 			</li>
 			<li role="menuitem">
-				<button type="button" class="elementor-template-library-template-delete">
+				<button type="button" class="refraction-template-library-template-delete">
 					<i class="eicon-library-delete" aria-hidden="true"></i>
-					<span class="elementor-template-library-template-control-title"><?php echo esc_html__( 'Delete', 'elementor' ); ?></span>
+					<span class="refraction-template-library-template-control-title"><?php echo esc_html__( 'Delete', 'refraction' ); ?></span>
 				</button>
 			</li>
 		</ul>
 	</div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-insert-button">
-	<a class="elementor-template-library-template-action elementor-template-library-template-insert elementor-button e-primary" role="button" tabindex="0">
+<script type="text/template" id="tmpl-refraction-template-library-insert-button">
+	<a class="refraction-template-library-template-action refraction-template-library-template-insert refraction-button e-primary" role="button" tabindex="0">
 		<i class="eicon-library-download" aria-hidden="true"></i>
-		<span class="elementor-button-title"><?php echo esc_html__( 'Insert', 'elementor' ); ?></span>
+		<span class="refraction-button-title"><?php echo esc_html__( 'Insert', 'refraction' ); ?></span>
 	</a>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-apply-ai-button">
-	<a class="elementor-template-library-template-action elementor-template-library-template-apply-ai elementor-button e-primary">
+<script type="text/template" id="tmpl-refraction-template-library-apply-ai-button">
+	<a class="refraction-template-library-template-action refraction-template-library-template-apply-ai refraction-button e-primary">
 		<i class="eicon-file-download" aria-hidden="true"></i>
-		<span class="elementor-button-title"><?php echo esc_html__( 'Apply', 'elementor' ); ?></span>
+		<span class="refraction-button-title"><?php echo esc_html__( 'Apply', 'refraction' ); ?></span>
 	</a>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-insert-and-ai-variations-buttons">
-	<a class="elementor-template-library-template-action elementor-template-library-template-insert elementor-button e-primary" role="button" tabindex="0">
+<script type="text/template" id="tmpl-refraction-template-library-insert-and-ai-variations-buttons">
+	<a class="refraction-template-library-template-action refraction-template-library-template-insert refraction-button e-primary" role="button" tabindex="0">
 		<i class="eicon-library-download" aria-hidden="true"></i>
-		<span class="elementor-button-title"><?php echo esc_html__( 'Insert', 'elementor' ); ?></span>
+		<span class="refraction-button-title"><?php echo esc_html__( 'Insert', 'refraction' ); ?></span>
 	</a>
-	<a class="elementor-template-library-template-action elementor-template-library-template-generate-variation elementor-button e-btn-txt e-btn-txt-border" role="button" tabindex="0">
+	<a class="refraction-template-library-template-action refraction-template-library-template-generate-variation refraction-button e-btn-txt e-btn-txt-border" role="button" tabindex="0">
 		<i class="eicon-ai" aria-hidden="true"></i>
-		<span class="elementor-button-title"><?php echo esc_html__( 'Generate Variations', 'elementor' ); ?></span>
+		<span class="refraction-button-title"><?php echo esc_html__( 'Generate Variations', 'refraction' ); ?></span>
 	</a>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-save-template">
-	<div class="elementor-template-library-blank-icon">
+<script type="text/template" id="tmpl-refraction-template-library-save-template">
+	<div class="refraction-template-library-blank-icon">
 		<#
 			const templateIcon = typeof icon === 'undefined' ? '<i class="eicon-library-upload" aria-hidden="true"></i>' : icon;
 			print( templateIcon );
 		#>
-		<span class="elementor-screen-only"><?php echo esc_html__( 'Save', 'elementor' ); ?></span>
+		<span class="refraction-screen-only"><?php echo esc_html__( 'Save', 'refraction' ); ?></span>
 	</div>
-	<div class="elementor-template-library-blank-title">{{{ title }}}</div>
-	<div class="elementor-template-library-blank-message">{{{ description }}}</div>
-	<form id="elementor-template-library-save-template-form">
+	<div class="refraction-template-library-blank-title">{{{ title }}}</div>
+	<div class="refraction-template-library-blank-message">{{{ description }}}</div>
+	<form id="refraction-template-library-save-template-form">
 		<input type="hidden" name="post_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
-		<input id="elementor-template-library-save-template-name" name="title" placeholder="<?php echo esc_attr__( 'Enter Template Name', 'elementor' ); ?>" required>
-		<button id="elementor-template-library-save-template-submit" class="elementor-button e-primary">
-			<span class="elementor-state-icon">
+		<input id="refraction-template-library-save-template-name" name="title" placeholder="<?php echo esc_attr__( 'Enter Template Name', 'refraction' ); ?>" required>
+		<button id="refraction-template-library-save-template-submit" class="refraction-button e-primary">
+			<span class="refraction-state-icon">
 				<i class="eicon-loading eicon-animation-spin" aria-hidden="true"></i>
 			</span>
-			<?php echo esc_html__( 'Save', 'elementor' ); ?>
+			<?php echo esc_html__( 'Save', 'refraction' ); ?>
 		</button>
 	</form>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-import">
-	<form id="elementor-template-library-import-form">
-		<div class="elementor-template-library-blank-icon">
+<script type="text/template" id="tmpl-refraction-template-library-import">
+	<form id="refraction-template-library-import-form">
+		<div class="refraction-template-library-blank-icon">
 			<i class="eicon-library-upload" aria-hidden="true"></i>
 		</div>
-		<div class="elementor-template-library-blank-title"><?php echo esc_html__( 'Import Template to Your Library', 'elementor' ); ?></div>
-		<div class="elementor-template-library-blank-message"><?php echo esc_html__( 'Drag & drop your .JSON or .zip template file', 'elementor' ); ?></div>
-		<div id="elementor-template-library-import-form-or"><?php echo esc_html__( 'or', 'elementor' ); ?></div>
-		<label for="elementor-template-library-import-form-input" id="elementor-template-library-import-form-label" class="elementor-button e-primary"><?php echo esc_html__( 'Select File', 'elementor' ); ?></label>
-		<input id="elementor-template-library-import-form-input" type="file" name="file" accept=".json,.zip" required/>
+		<div class="refraction-template-library-blank-title"><?php echo esc_html__( 'Import Template to Your Library', 'refraction' ); ?></div>
+		<div class="refraction-template-library-blank-message"><?php echo esc_html__( 'Drag & drop your .JSON or .zip template file', 'refraction' ); ?></div>
+		<div id="refraction-template-library-import-form-or"><?php echo esc_html__( 'or', 'refraction' ); ?></div>
+		<label for="refraction-template-library-import-form-input" id="refraction-template-library-import-form-label" class="refraction-button e-primary"><?php echo esc_html__( 'Select File', 'refraction' ); ?></label>
+		<input id="refraction-template-library-import-form-input" type="file" name="file" accept=".json,.zip" required/>
 	</form>
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-templates-empty">
-	<div class="elementor-template-library-blank-icon"></div>
-	<div class="elementor-template-library-blank-title"></div>
-	<div class="elementor-template-library-blank-message"></div>
+<script type="text/template" id="tmpl-refraction-template-library-templates-empty">
+	<div class="refraction-template-library-blank-icon"></div>
+	<div class="refraction-template-library-blank-title"></div>
+	<div class="refraction-template-library-blank-message"></div>
 
 </script>
 
-<script type="text/template" id="tmpl-elementor-template-library-preview">
+<script type="text/template" id="tmpl-refraction-template-library-preview">
 	<iframe></iframe>
 </script>
 
-<script type="text/template" id="tmpl-elementor-global-styles-dialog">
-	<div class="elementor-global-styles-dialog">
-		<div class="elementor-global-styles-dialog__header">
-			<h2><?php echo esc_html__( 'Choose how to apply styles', 'elementor' ); ?></h2>
-			<p><?php echo esc_html__( 'This affects page settings, classes, and variables.', 'elementor' ); ?></p>
+<script type="text/template" id="tmpl-refraction-global-styles-dialog">
+	<div class="refraction-global-styles-dialog">
+		<div class="refraction-global-styles-dialog__header">
+			<h2><?php echo esc_html__( 'Choose how to apply styles', 'refraction' ); ?></h2>
+			<p><?php echo esc_html__( 'This affects page settings, classes, and variables.', 'refraction' ); ?></p>
 		</div>
-		<div class="elementor-global-styles-dialog__options">
-			<label class="elementor-global-styles-dialog__radio-card">
-				<input type="radio" name="elementor-global-styles-mode" id="elementor-global-styles-match" value="match_site" checked>
-				<div class="elementor-global-styles-dialog__radio-card-content">
-					<div class="elementor-global-styles-dialog__radio-label"><?php echo esc_html__( 'Use this site’s style', 'elementor' ); ?></div>
-					<div class="elementor-global-styles-dialog__radio-description">
-						<?php echo esc_html__( 'Apply your site styles to the imported template.', 'elementor' ); ?>
+		<div class="refraction-global-styles-dialog__options">
+			<label class="refraction-global-styles-dialog__radio-card">
+				<input type="radio" name="refraction-global-styles-mode" id="refraction-global-styles-match" value="match_site" checked>
+				<div class="refraction-global-styles-dialog__radio-card-content">
+					<div class="refraction-global-styles-dialog__radio-label"><?php echo esc_html__( 'Use this site’s style', 'refraction' ); ?></div>
+					<div class="refraction-global-styles-dialog__radio-description">
+						<?php echo esc_html__( 'Apply your site styles to the imported template.', 'refraction' ); ?>
 					</div>
 				</div>
 			</label>
-			<label class="elementor-global-styles-dialog__radio-card elementor-global-styles-dialog__radio-card--keep">
-				<input type="radio" name="elementor-global-styles-mode" id="elementor-global-styles-keep" value="keep">
-				<div class="elementor-global-styles-dialog__radio-card-content">
-					<div class="elementor-global-styles-dialog__radio-label"><?php echo esc_html__( 'Keep the template styles', 'elementor' ); ?></div>
-					<div class="elementor-global-styles-dialog__radio-description">
-						<?php echo esc_html__( 'The template will keep its original design.', 'elementor' ); ?>
+			<label class="refraction-global-styles-dialog__radio-card refraction-global-styles-dialog__radio-card--keep">
+				<input type="radio" name="refraction-global-styles-mode" id="refraction-global-styles-keep" value="keep">
+				<div class="refraction-global-styles-dialog__radio-card-content">
+					<div class="refraction-global-styles-dialog__radio-label"><?php echo esc_html__( 'Keep the template styles', 'refraction' ); ?></div>
+					<div class="refraction-global-styles-dialog__radio-description">
+						<?php echo esc_html__( 'The template will keep its original design.', 'refraction' ); ?>
 					</div>
 				</div>
 			</label>
-			<div class="elementor-global-styles-dialog__checkbox-container" style="display: none;">
-				<label class="elementor-global-styles-dialog__checkbox-option">
-					<input type="checkbox" id="elementor-global-styles-create" checked>
-					<span class="elementor-global-styles-dialog__checkbox-label">
-						<?php echo esc_html__( 'Add the template’s classes and variables to my site.', 'elementor' ); ?>
+			<div class="refraction-global-styles-dialog__checkbox-container" style="display: none;">
+				<label class="refraction-global-styles-dialog__checkbox-option">
+					<input type="checkbox" id="refraction-global-styles-create" checked>
+					<span class="refraction-global-styles-dialog__checkbox-label">
+						<?php echo esc_html__( 'Add the template’s classes and variables to my site.', 'refraction' ); ?>
 					</span>
 				</label>
 			</div>
 		</div>
-		<div class="elementor-global-styles-dialog__footer">
-			<button type="button" class="elementor-global-styles-dialog__button-cancel" id="elementor-global-styles-cancel"><?php echo esc_html__( 'Cancel', 'elementor' ); ?></button>
-			<button type="button" class="elementor-global-styles-dialog__button-insert" id="elementor-global-styles-insert"><?php echo esc_html__( 'Insert', 'elementor' ); ?></button>
+		<div class="refraction-global-styles-dialog__footer">
+			<button type="button" class="refraction-global-styles-dialog__button-cancel" id="refraction-global-styles-cancel"><?php echo esc_html__( 'Cancel', 'refraction' ); ?></button>
+			<button type="button" class="refraction-global-styles-dialog__button-insert" id="refraction-global-styles-insert"><?php echo esc_html__( 'Insert', 'refraction' ); ?></button>
 		</div>
 	</div>
 </script>

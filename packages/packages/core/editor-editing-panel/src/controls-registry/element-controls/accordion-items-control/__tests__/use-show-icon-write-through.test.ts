@@ -1,5 +1,5 @@
 import { mockHistoryManager } from 'test-utils';
-import { getContainer, getElementSettings, updateElementSettings, type V1Element } from '@elementor/editor-elements';
+import { getContainer, getElementSettings, updateElementSettings, type V1Element } from '@refraction/editor-elements';
 import { renderHook } from '@testing-library/react';
 
 import { HISTORY_DEBOUNCE_WAIT } from '../../../../hooks/use-styles-fields';
@@ -10,7 +10,7 @@ import {
 	useShowIconWriteThrough,
 } from '../use-show-icon-write-through';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 describe( 'useShowIconWriteThrough / cascadeShowIconToHeaders', () => {
 	const ACCORDION_ID = 'accordion-1';

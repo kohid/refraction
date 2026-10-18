@@ -1,9 +1,9 @@
-import ElementsHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
+import ElementsHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
 
 export const KitGlobalsUpdateColors = () => {
 	QUnit.module( 'KitGlobalsUpdateColors', () => {
 		QUnit.test( 'Simple', async ( assert ) => {
-			const kitDocument = elementor.documents.getCurrent(),
+			const kitDocument = refraction.documents.getCurrent(),
 				container = kitDocument.container;
 
 			// Set custom color.

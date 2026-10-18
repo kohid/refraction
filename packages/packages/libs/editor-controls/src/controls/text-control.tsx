@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { stringPropTypeUtil } from '@elementor/editor-props';
+import { stringPropTypeUtil } from '@refraction/editor-props';
 import { type SxProps, TextField } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

@@ -1,6 +1,6 @@
-import ComponentBase from 'elementor-editor/component-base';
+import ComponentBase from 'refraction-editor/component-base';
 import * as commands from './commands/';
-import { SetDirectionMode } from 'elementor-document/hooks';
+import { SetDirectionMode } from 'refraction-document/hooks';
 
 export default class Component extends ComponentBase {
 	__construct( args ) {
@@ -17,10 +17,10 @@ export default class Component extends ComponentBase {
 
 	defaultTabs() {
 		return {
-			content: { title: __( 'Content', 'elementor' ) },
-			style: { title: __( 'Style', 'elementor' ) },
-			advanced: { title: __( 'Advanced', 'elementor' ) },
-			layout: { title: __( 'Layout', 'elementor' ) },
+			content: { title: __( 'Content', 'refraction' ) },
+			style: { title: __( 'Style', 'refraction' ) },
+			advanced: { title: __( 'Advanced', 'refraction' ) },
+			layout: { title: __( 'Layout', 'refraction' ) },
 		};
 	}
 
@@ -29,7 +29,7 @@ export default class Component extends ComponentBase {
 	}
 
 	getTabsWrapperSelector() {
-		return '.elementor-panel-navigation';
+		return '.refraction-panel-navigation';
 	}
 
 	renderTab( tab, args ) {
@@ -37,23 +37,23 @@ export default class Component extends ComponentBase {
 
 		let elementTitle = model?.attributes?.custom?.isPreset || model?.changed?.title
 			? model.attributes.title
-			: elementor.getElementData( model ).title;
+			: refraction.getElementData( model ).title;
 
 		if ( model.attributes.settings.attributes.presetTitle ) {
 			elementTitle = model.attributes.settings.attributes.presetTitle;
 		}
 
 		/* Translators: %s: Element name. */
-		const title = sprintf( __( 'Edit %s', 'elementor' ), elementTitle );
+		const title = sprintf( __( 'Edit %s', 'refraction' ), elementTitle );
 
 		if ( this.shouldRenderPage( tab, args.model.id ) ) {
 			this.activeModelId = args.model.id;
 			this.activeTabs[ args.model.id ] = tab;
 
-			elementor.getPanelView().setPage( 'editor', title, {
+			refraction.getPanelView().setPage( 'editor', title, {
 				tab,
 				model,
-				controls: elementor.getElementControls( model ),
+				controls: refraction.getElementControls( model ),
 				editedElementView: view,
 			} );
 		}
@@ -62,7 +62,7 @@ export default class Component extends ComponentBase {
 	}
 
 	shouldRenderPage( tab, modelId ) {
-		const currentPanelView = elementor.getPanelView();
+		const currentPanelView = refraction.getPanelView();
 
 		const isSamePage = 'editor' === currentPanelView.getCurrentPageName();
 		const isSameTab = tab === currentPanelView.getCurrentPageView().activeTab;
@@ -84,7 +84,7 @@ export default class Component extends ComponentBase {
 
 		if ( defaultTab ) {
 			// Ensure tab is exist.
-			const controlsTabs = elementor.getElementData( args.model ).tabs_controls;
+			const controlsTabs = refraction.getElementData( args.model ).tabs_controls;
 
 			// Fallback to first tab.
 			if ( ! controlsTabs[ defaultTab ] ) {

@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 
 export default class Component extends ComponentBase {
 	getNamespace() {
@@ -7,8 +7,8 @@ export default class Component extends ComponentBase {
 
 	defaultTabs() {
 		return {
-			actions: { title: __( 'Actions', 'elementor' ) },
-			revisions: { title: __( 'Revisions', 'elementor' ) },
+			actions: { title: __( 'Actions', 'refraction' ) },
+			revisions: { title: __( 'Revisions', 'refraction' ) },
 		};
 	}
 
@@ -16,13 +16,13 @@ export default class Component extends ComponentBase {
 		return {
 			actions: {
 				keys: 'ctrl+shift+h',
-				dependency: () => 'edit' === elementor.channels.dataEditMode.request( 'activeMode' ),
+				dependency: () => 'edit' === refraction.channels.dataEditMode.request( 'activeMode' ),
 			},
 		};
 	}
 
 	renderTab( tab ) {
-		elementor.getPanelView().setPage( 'historyPage' ).showView( tab );
+		refraction.getPanelView().setPage( 'historyPage' ).showView( tab );
 	}
 
 	activate() {
@@ -31,6 +31,6 @@ export default class Component extends ComponentBase {
 	}
 
 	getTabsWrapperSelector() {
-		return '#elementor-panel-elements-navigation';
+		return '#refraction-panel-elements-navigation';
 	}
 }

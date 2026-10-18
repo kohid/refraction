@@ -1,16 +1,16 @@
-import Controls from 'elementor-frontend-utils/controls';
+import Controls from 'refraction-frontend-utils/controls';
 const responsiveSettingsObject = require( './responsiveSettings.json' );
 
 describe( 'Controls', () => {
 	beforeAll( async () => {
-		global.elementorFrontend = {
+		global.refractionFrontend = {
 			getCurrentDeviceMode: jest.fn(),
 			breakpoints: {
 				getActiveBreakpointsList: jest.fn(),
 			},
 		};
 
-		elementorFrontend.breakpoints.getActiveBreakpointsList.mockReturnValue( [
+		refractionFrontend.breakpoints.getActiveBreakpointsList.mockReturnValue( [
 			'mobile',
 			'mobile_extra',
 			'tablet',
@@ -22,7 +22,7 @@ describe( 'Controls', () => {
 	} );
 
 	afterAll( () => {
-		delete global.elementorFrontend;
+		delete global.refractionFrontend;
 	} );
 
 	test( 'Test responsive control values', () => {
@@ -63,7 +63,7 @@ describe( 'Controls', () => {
 async function responsiveControlValueTest( deviceMode, expectedValue1, expectedValue2 ) {
 	// Arrange.
 	const controls = new Controls();
-	elementorFrontend.getCurrentDeviceMode.mockReturnValue( deviceMode );
+	refractionFrontend.getCurrentDeviceMode.mockReturnValue( deviceMode );
 
 	// Act.
 	const responsiveSingleControlValue = controls.getResponsiveControlValue( responsiveSettingsObject, 'testControlSingle' ),

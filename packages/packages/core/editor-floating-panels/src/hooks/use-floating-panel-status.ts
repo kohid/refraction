@@ -1,4 +1,4 @@
-import { __createSelector, __useSelector as useSelector } from '@elementor/store';
+import { __createSelector, __useSelector as useSelector } from '@refraction/store';
 
 import { type GlobalState, selectCorner, selectIsOpen, selectPosition, selectSize } from '../store/selectors';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { notify } from '@elementor/editor-notifications';
+import { notify } from '@refraction/editor-notifications';
 import { DetachIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -30,7 +30,7 @@ export const DetachAction = ( {
 		} catch {
 			notify( {
 				type: 'error',
-				message: __( 'Failed to detach component instance.', 'elementor' ),
+				message: __( 'Failed to detach component instance.', 'refraction' ),
 				id: 'detach-component-instance-failed',
 			} );
 		}
@@ -44,7 +44,7 @@ export const DetachAction = ( {
 		setIsDetachDialogOpen( true );
 	};
 
-	const detachLabel = __( 'Detach from Component', 'elementor' );
+	const detachLabel = __( 'Detach from Component', 'refraction' );
 
 	return (
 		<>
@@ -60,7 +60,7 @@ export const DetachAction = ( {
 
 function getDetachTrackingInfo() {
 	const extendedWindow = window as unknown as ExtendedWindow;
-	const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+	const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 	if ( ! config ) {
 		return {

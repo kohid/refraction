@@ -1,4 +1,4 @@
-import { type UserCapabilities } from '@elementor/editor-styles-repository';
+import { type UserCapabilities } from '@refraction/editor-styles-repository';
 
 export const UPDATE_DEFAULT_STYLES_CAPABILITY_KEY = 'manage_options';
 

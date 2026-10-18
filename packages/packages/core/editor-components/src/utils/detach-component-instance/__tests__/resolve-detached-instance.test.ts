@@ -1,5 +1,5 @@
-import { type V1ElementData } from '@elementor/editor-elements';
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
 
 import { type ComponentInstanceOverride } from '../../../prop-types/component-instance-overrides-prop-type';
 import { resolveDetachedInstance } from '../resolve-detached-instance';

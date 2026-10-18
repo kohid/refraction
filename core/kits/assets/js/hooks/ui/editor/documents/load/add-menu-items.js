@@ -8,11 +8,11 @@ export class KitAddMenuItems extends $e.modules.hookUI.Before {
 	}
 
 	getConditions() {
-		return 'kit' === elementor.documents.getCurrent().config.type && ! Object.keys( $e.components.get( 'panel/global' ).getTabs() ).length;
+		return 'kit' === refraction.documents.getCurrent().config.type && ! Object.keys( $e.components.get( 'panel/global' ).getTabs() ).length;
 	}
 
 	apply() {
-		const document = elementor.documents.getCurrent();
+		const document = refraction.documents.getCurrent();
 
 		Object.entries( document.config.tabs ).forEach( ( [ tabId, tabConfig ] ) => {
 			$e.components.get( 'panel/global' ).addTab( tabId, tabConfig );

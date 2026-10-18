@@ -1,8 +1,8 @@
-import CommandHistoryBase from 'elementor-document/command-bases/command-history-base';
-import CommandInfra from 'elementor-api/modules/command-infra';
-import CommandBase from 'elementor-api/modules/command-base';
-import CommandHistoryDebounceBase from 'elementor-document/command-bases/command-history-debounce-base';
-import CommandContainerBase from 'elementor-editor/command-bases/command-container-base';
+import CommandHistoryBase from 'refraction-document/command-bases/command-history-base';
+import CommandInfra from 'refraction-api/modules/command-infra';
+import CommandBase from 'refraction-api/modules/command-base';
+import CommandHistoryDebounceBase from 'refraction-document/command-bases/command-history-debounce-base';
+import CommandContainerBase from 'refraction-editor/command-bases/command-container-base';
 import CommandHistoryDebounceBaseMock, { CommandHistoryDebounceBaseExportedMock } from './mock/command-history-debounce-base.spec';
 
 jQuery( () => {

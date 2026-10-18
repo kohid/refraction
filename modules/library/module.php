@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Modules\Library;
+namespace Refraction\Modules\Library;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor library module.
+ * Refraction library module.
  *
- * Elementor library module handler class is responsible for registering and
- * managing Elementor library modules.
+ * Refraction library module handler class is responsible for registering and
+ * managing Refraction library modules.
  *
  * @since 2.0.0
  */
@@ -35,13 +35,13 @@ class Module extends BaseModule {
 	/**
 	 * Library module constructor.
 	 *
-	 * Initializing Elementor library module.
+	 * Initializing Refraction library module.
 	 *
 	 * @since 2.0.0
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'elementor/documents/register', [ $this, 'register_documents' ] );
+		add_action( 'refraction/documents/register', [ $this, 'register_documents' ] );
 	}
 
 	public function register_documents() {

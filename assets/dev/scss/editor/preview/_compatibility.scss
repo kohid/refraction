@@ -1,10 +1,10 @@
-// Compatibility elementor editor for themes and plugins (Preview)
+// Compatibility refraction editor for themes and plugins (Preview)
 
-body.elementor-editor-active {
+body.refraction-editor-active {
 
-	.elementor {
+	.refraction {
 
-		&.elementor-edit-mode {
+		&.refraction-edit-mode {
 
 			// Hack for pojo.me themes
 			&.layout-section {
@@ -20,22 +20,22 @@ body.elementor-editor-active {
 			}
 
 			// Hack for Zerif Pro theme
-			.elementor-element-overlay {
+			.refraction-element-overlay {
 
-				.elementor-editor-element-settings {
+				.refraction-editor-element-settings {
 					clear: unset;
 				}
 			}
 
 			// Hack for some stupid themes
-			.elementor-element.elementor-section {
+			.refraction-element.refraction-section {
 				overflow: visible;
 			}
 		}
 	}
 }
 
-.elementor-edit-area{
+.refraction-edit-area{
 
 	// Prevent external animate.css embed which causing elements overlay issue
 	.animated {
@@ -43,7 +43,7 @@ body.elementor-editor-active {
 	}
 
 	// Hack for Make theme issue
-	ul.elementor-editor-element-settings {
+	ul.refraction-editor-element-settings {
 		word-break: normal;
 
 		// Hack for Divi theme

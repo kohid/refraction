@@ -2,41 +2,41 @@ import { memo } from 'react';
 
 import SiteArea from './components/site-area/site-area';
 import Included from './components/included/included';
-import DataTable from 'elementor-app/molecules/data-table';
+import DataTable from 'refraction-app/molecules/data-table';
 
 import useKitData from './hooks/use-kit-data';
 
 import './kit-data.scss';
 
-const siteEditorPath = elementorAppConfig.hasPro ? '#/site-editor' : '#/site-editor/promotion';
+const siteEditorPath = refractionAppConfig.hasPro ? '#/site-editor' : '#/site-editor/promotion';
 
 function KitData( { data } ) {
 	const { templates, siteSettings, content, plugins } = useKitData( data ),
-		{ elementorHomePageUrl, recentlyEditedElementorPageUrl } = data?.configData || elementorAppConfig[ 'import-export' ],
-		siteSettingsUrl = elementorHomePageUrl || recentlyEditedElementorPageUrl,
+		{ refractionHomePageUrl, recentlyEditedRefractionPageUrl } = data?.configData || refractionAppConfig[ 'import-export' ],
+		siteSettingsUrl = refractionHomePageUrl || recentlyEditedRefractionPageUrl,
 		headers = [
-			__( 'Site Area', 'elementor' ),
-			__( 'Included', 'elementor' ),
+			__( 'Site Area', 'refraction' ),
+			__( 'Included', 'refraction' ),
 		],
 		rowsData = [
 			{
-				siteArea: __( 'Elementor Templates', 'elementor' ),
-				link: elementorAppConfig.base_url + siteEditorPath,
+				siteArea: __( 'Refraction Templates', 'refraction' ),
+				link: refractionAppConfig.base_url + siteEditorPath,
 				included: templates,
 			},
 			{
-				siteArea: __( 'Site Settings', 'elementor' ),
+				siteArea: __( 'Site Settings', 'refraction' ),
 				link: siteSettingsUrl ? siteSettingsUrl + '#e:run:panel/global/open' : '',
 				included: siteSettings,
 			},
 			{
-				siteArea: __( 'Content', 'elementor' ),
-				link: elementorAppConfig.admin_url + 'edit.php?post_type=page',
+				siteArea: __( 'Content', 'refraction' ),
+				link: refractionAppConfig.admin_url + 'edit.php?post_type=page',
 				included: content,
 			},
 			{
-				siteArea: __( 'Plugins', 'elementor' ),
-				link: elementorAppConfig.admin_url + 'plugins.php',
+				siteArea: __( 'Plugins', 'refraction' ),
+				link: refractionAppConfig.admin_url + 'plugins.php',
 				included: plugins,
 			},
 		],

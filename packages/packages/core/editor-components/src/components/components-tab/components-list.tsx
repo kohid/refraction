@@ -65,11 +65,11 @@ const ProUpgradeEmptyState = () => {
 				<ComponentsIcon fontSize="large" sx={ { color: 'text.secondary' } } />
 
 				<Typography align="center" variant="subtitle2" color="text.secondary" sx={ SUBTITLE_OVERRIDE_SX }>
-					{ __( 'Create Reusable Components', 'elementor' ) }
+					{ __( 'Create Reusable Components', 'refraction' ) }
 				</Typography>
 
 				<Typography align="center" variant="caption" color="secondary" sx={ { maxWidth: 200 } }>
-					{ __( 'Create design elements that sync across your entire site.', 'elementor' ) }
+					{ __( 'Create design elements that sync across your entire site.', 'refraction' ) }
 				</Typography>
 			</Stack>
 
@@ -82,7 +82,7 @@ const ProUpgradeEmptyState = () => {
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				{ __( 'Upgrade now', 'elementor' ) }
+				{ __( 'Upgrade now', 'refraction' ) }
 			</Button>
 		</Stack>
 	);
@@ -102,15 +102,15 @@ const ProOutdatedEmptyState = () => {
 				<ComponentsIcon fontSize="large" sx={ { color: 'text.secondary' } } />
 
 				<Typography align="center" variant="subtitle2" color="text.secondary" sx={ SUBTITLE_OVERRIDE_SX }>
-					{ __( 'Create Reusable Components', 'elementor' ) }
+					{ __( 'Create Reusable Components', 'refraction' ) }
 				</Typography>
 
 				<Typography align="center" variant="caption" color="secondary">
-					{ __( 'Create design elements that sync across your entire site.', 'elementor' ) }
+					{ __( 'Create design elements that sync across your entire site.', 'refraction' ) }
 				</Typography>
 
 				<Typography align="center" variant="caption" color="secondary" sx={ { mt: 1 } }>
-					{ __( 'To create components, update Elementor Pro to the latest version.', 'elementor' ) }
+					{ __( 'To create components, update Refraction Pro to the latest version.', 'refraction' ) }
 				</Typography>
 			</Stack>
 
@@ -122,7 +122,7 @@ const ProOutdatedEmptyState = () => {
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				{ __( 'Update Elementor Pro', 'elementor' ) }
+				{ __( 'Update Refraction Pro', 'refraction' ) }
 			</Button>
 		</Stack>
 	);
@@ -144,17 +144,17 @@ const EmptyState = () => {
 				<ComponentsIcon fontSize="large" sx={ { color: 'text.secondary' } } />
 
 				<Typography align="center" variant="subtitle2" color="text.secondary" sx={ SUBTITLE_OVERRIDE_SX }>
-					{ __( 'No components yet', 'elementor' ) }
+					{ __( 'No components yet', 'refraction' ) }
 				</Typography>
 
 				<Typography align="center" variant="caption" color="secondary" sx={ { maxWidth: 200 } }>
-					{ __( 'Components are reusable blocks that sync across your site.', 'elementor' ) }
+					{ __( 'Components are reusable blocks that sync across your site.', 'refraction' ) }
 					<br />
 					{ canCreate
-						? __( 'Create once, use everywhere.', 'elementor' )
+						? __( 'Create once, use everywhere.', 'refraction' )
 						: __(
 								'With your current role, you cannot create components. Contact an administrator to create one.',
-								'elementor'
+								'refraction'
 						  ) }
 				</Typography>
 				<Link
@@ -164,7 +164,7 @@ const EmptyState = () => {
 					variant="caption"
 					color="info.main"
 				>
-					{ __( 'Learn more about components', 'elementor' ) }
+					{ __( 'Learn more about components', 'refraction' ) }
 				</Link>
 			</Stack>
 
@@ -178,13 +178,13 @@ const EmptyState = () => {
 							color="text.secondary"
 							sx={ SUBTITLE_OVERRIDE_SX }
 						>
-							{ __( 'Create your first one:', 'elementor' ) }
+							{ __( 'Create your first one:', 'refraction' ) }
 						</Typography>
 
 						<Typography align="center" variant="caption" color="secondary" sx={ { maxWidth: 228 } }>
 							{ __(
 								'Right-click any div-block or flexbox on your canvas or structure and select "Create component"',
-								'elementor'
+								'refraction'
 							) }
 						</Typography>
 					</Stack>
@@ -212,7 +212,7 @@ export const EmptySearchResult = () => {
 				} }
 			>
 				<Typography align="center" variant="subtitle2" color="inherit" sx={ SUBTITLE_OVERRIDE_SX }>
-					{ __( 'Sorry, nothing matched', 'elementor' ) }
+					{ __( 'Sorry, nothing matched', 'refraction' ) }
 				</Typography>
 				{ searchValue && (
 					<Typography
@@ -240,11 +240,11 @@ export const EmptySearchResult = () => {
 				) }
 			</Box>
 			<Typography align="center" variant="caption" color="inherit">
-				{ __( 'Try something else.', 'elementor' ) }
+				{ __( 'Try something else.', 'refraction' ) }
 			</Typography>
 			<Typography align="center" variant="caption" color="inherit">
 				<Link color="secondary" variant="caption" component="button" onClick={ clearSearch }>
-					{ __( 'Clear & try again', 'elementor' ) }
+					{ __( 'Clear & try again', 'refraction' ) }
 				</Link>
 			</Typography>
 		</Stack>

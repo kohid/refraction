@@ -2,7 +2,7 @@ import {
 	ANALYTICS_TRANSFORM_RULES,
 	getTotalAvailableCount,
 	transformValueForAnalytics,
-} from 'elementor/app/modules/import-export-customization/assets/js/shared/utils/analytics-transformer';
+} from 'refraction/app/modules/import-export-customization/assets/js/shared/utils/analytics-transformer';
 
 describe( 'Analytics Transformer', () => {
 	describe( 'ANALYTICS_TRANSFORM_RULES', () => {

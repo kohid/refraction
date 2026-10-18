@@ -33,7 +33,7 @@ export function useOnboardingEvent() {
 	return useMemo(
 		() => ( {
 			trackOnboardingInitialized: () => trackOnboardingInitialized( isActive ),
-			trackLoginType: ( loginType: 'social_login' | 'elementor_login' | 'guest' ) =>
+			trackLoginType: ( loginType: 'social_login' | 'refraction_login' | 'guest' ) =>
 				trackLoginType( isActive, loginType ),
 			trackConnect: ( success: boolean, error?: string ) => trackConnect( isActive, success, error ),
 			trackProInstall: ( action: 'install' | 'later' ) => trackProInstall( isActive, action ),

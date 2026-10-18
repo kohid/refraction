@@ -1,4 +1,4 @@
-import { __createSlice, type PayloadAction } from '@elementor/store';
+import { __createSlice, type PayloadAction } from '@refraction/store';
 
 import { type FloatingPanelDefaults, type FloatingPanelState, type LogicalPosition, type LogicalSize } from '../types';
 import { buildInitialPosition, type PanelCorner } from '../utils/corner-position';

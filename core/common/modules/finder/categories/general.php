@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Core\Common\Modules\Finder\Categories;
+namespace Refraction\Core\Common\Modules\Finder\Categories;
 
-use Elementor\Core\Common\Modules\Finder\Base_Category;
-use Elementor\Core\RoleManager\Role_Manager;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\Common\Modules\Finder\Base_Category;
+use Refraction\Core\RoleManager\Role_Manager;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * General Category
  *
- * Provides general items related to Elementor Admin.
+ * Provides general items related to Refraction Admin.
  */
 class General extends Base_Category {
 
@@ -25,7 +25,7 @@ class General extends Base_Category {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'General', 'elementor' );
+		return esc_html__( 'General', 'refraction' );
 	}
 
 	public function get_id() {
@@ -45,22 +45,22 @@ class General extends Base_Category {
 	public function get_category_items( array $options = [] ) {
 		return [
 			'saved-templates' => [
-				'title' => esc_html__( 'Saved Templates', 'elementor' ),
+				'title' => esc_html__( 'Saved Templates', 'refraction' ),
 				'icon' => 'library-save',
 				'url' => Source_Local::get_admin_url(),
 				'keywords' => [ 'template', 'section', 'page', 'library' ],
 			],
 			'system-info' => [
-				'title' => esc_html__( 'System Info', 'elementor' ),
+				'title' => esc_html__( 'System Info', 'refraction' ),
 				'icon' => 'info-circle-o',
-				'url' => admin_url( 'admin.php?page=elementor-system-info' ),
-				'keywords' => [ 'system', 'info', 'environment', 'elementor' ],
+				'url' => admin_url( 'admin.php?page=refraction-system-info' ),
+				'keywords' => [ 'system', 'info', 'environment', 'refraction' ],
 			],
 			'role-manager' => [
-				'title' => esc_html__( 'Role Manager', 'elementor' ),
+				'title' => esc_html__( 'Role Manager', 'refraction' ),
 				'icon' => 'person',
 				'url' => Role_Manager::get_url(),
-				'keywords' => [ 'role', 'manager', 'user', 'elementor' ],
+				'keywords' => [ 'role', 'manager', 'user', 'refraction' ],
 			],
 		];
 	}

@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor animation control.
+ * Refraction animation control.
  *
  * A base control for creating entrance animation control. Displays a select box
  * with the available entrance animation effects @see Control_Animation::get_animations() .
@@ -67,13 +67,13 @@ class Control_Animation extends Base_Data_Control {
 		 * Filters the animations list displayed in the animations control.
 		 *
 		 * This hook can be used to register animations in addition to the
-		 * basic Elementor animations.
+		 * basic Refraction animations.
 		 *
 		 * @since 2.4.0
 		 *
 		 * @param array $additional_animations Additional animations array.
 		 */
-		$additional_animations = apply_filters( 'elementor/controls/animations/additional_animations', $additional_animations );
+		$additional_animations = apply_filters( 'refraction/controls/animations/additional_animations', $additional_animations );
 
 		return array_merge( static::get_default_animations(), $additional_animations );
 	}
@@ -147,12 +147,12 @@ class Control_Animation extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
 				<select id="<?php $this->print_control_uid(); ?>" data-setting="{{ data.name }}">
-					<option value=""><?php echo esc_html__( 'Default', 'elementor' ); ?></option>
-					<option value="none"><?php echo esc_html__( 'None', 'elementor' ); ?></option>
+					<option value=""><?php echo esc_html__( 'Default', 'refraction' ); ?></option>
+					<option value="none"><?php echo esc_html__( 'None', 'refraction' ); ?></option>
 					<?php foreach ( static::get_animations() as $animations_group_name => $animations_group ) : ?>
 						<optgroup label="<?php echo esc_attr( $animations_group_name ); ?>">
 							<?php foreach ( $animations_group as $animation_name => $animation_title ) : ?>
@@ -164,7 +164,7 @@ class Control_Animation extends Base_Data_Control {
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

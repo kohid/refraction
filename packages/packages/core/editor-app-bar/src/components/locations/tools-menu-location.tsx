@@ -26,7 +26,7 @@ export default function ToolsMenuLocation() {
 			<SendFeedbackPopupLocation />
 			<IntegrationsMenuLocation />
 			{ popoverMenuItems.length > 0 && (
-				<ToolbarMenuMore id="elementor-editor-app-bar-tools-more">
+				<ToolbarMenuMore id="refraction-editor-app-bar-tools-more">
 					{ popoverMenuItems.map( ( { MenuItem, id } ) => (
 						<MenuItem key={ id } />
 					) ) }

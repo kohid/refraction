@@ -1,4 +1,4 @@
-import { canSendEvents, getMixpanel } from '@elementor/events';
+import { canSendEvents, getMixpanel } from '@refraction/events';
 
 import { CORE_FEATURE_IDS } from './core-feature-ids';
 import { clearEventQueue, enqueueEvent, getEventQueue } from './event-queue';
@@ -63,7 +63,7 @@ export function trackOnboardingInitialized( isActive: boolean ): void {
 	} );
 }
 
-export function trackLoginType( isActive: boolean, loginType: 'social_login' | 'elementor_login' | 'guest' ): void {
+export function trackLoginType( isActive: boolean, loginType: 'social_login' | 'refraction_login' | 'guest' ): void {
 	trackEvent( isActive, OnboardingEventName.LOGIN_TYPE, {
 		interaction_type: 'click',
 		target_type: 'button',
@@ -258,7 +258,7 @@ export function trackSummary( isActive: boolean, snapshot: ObSummarySnapshot ): 
 	const metadata: ObSummaryMetadataItem[] = [
 		{
 			key: 'login_type',
-			value: toSummaryValue( snapshot.isGuest ? 'guest' : 'elementor_login' ),
+			value: toSummaryValue( snapshot.isGuest ? 'guest' : 'refraction_login' ),
 		},
 		{ key: 'connect', value: snapshot.isConnected },
 		{

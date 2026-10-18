@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { Mention } from 'primereact/mention';
-import { stringPropTypeUtil } from '@elementor/editor-props';
+import { stringPropTypeUtil } from '@refraction/editor-props';
 import { styled } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

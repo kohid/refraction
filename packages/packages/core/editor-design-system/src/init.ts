@@ -1,6 +1,6 @@
-import { injectIntoLogic } from '@elementor/editor';
-import { toolsMenu } from '@elementor/editor-app-bar';
-import { registerPanel } from '@elementor/editor-panels';
+import { injectIntoLogic } from '@refraction/editor';
+import { toolsMenu } from '@refraction/editor-app-bar';
+import { registerPanel } from '@refraction/editor-panels';
 
 import { DesignSystemEntrypoints } from './components/design-system-entrypoints';
 import { panel } from './design-system-panel';

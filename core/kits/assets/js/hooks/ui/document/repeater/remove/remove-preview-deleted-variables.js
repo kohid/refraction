@@ -21,7 +21,7 @@ export class KitRemovePreviewDeletedVariables extends $e.modules.hookUI.Before {
 	}
 
 	getConditions( args ) {
-		return this.controls.includes( args.name ) && 'kit' === elementor.documents.getCurrent().config.type;
+		return this.controls.includes( args.name ) && 'kit' === refraction.documents.getCurrent().config.type;
 	}
 
 	apply( args ) {
@@ -30,11 +30,11 @@ export class KitRemovePreviewDeletedVariables extends $e.modules.hookUI.Before {
 		this.component.tempStyle = this.component.tempStyle || {};
 
 		const { containers = [ args.container ] } = args,
-			kitCSSId = `elementor-style-page-${ elementor.config.kit_id }`;
+			kitCSSId = `refraction-style-page-${ refraction.config.kit_id }`;
 
 		containers.forEach( ( container ) => {
 			const item = container.repeaters[ args.name ].children[ args.index ],
-				stylesheets = Object.values( elementor.$previewContents[ 0 ].styleSheets )
+				stylesheets = Object.values( refraction.$previewContents[ 0 ].styleSheets )
 					.filter( ( stylesheet ) => {
 					// Don't touch the kit CSS itself.
 						return kitCSSId !== stylesheet.ownerNode.id && stylesheet.ownerNode.innerHTML.includes( item.id );

@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Editor\Editor;
-use Elementor\Core\Utils\Collection;
+use Refraction\Core\Editor\Editor;
+use Refraction\Core\Utils\Collection;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor images manager.
+ * Refraction images manager.
  *
- * Elementor images manager handler class is responsible for retrieving image
+ * Refraction images manager handler class is responsible for retrieving image
  * details.
  *
  * @since 1.0.0
@@ -23,7 +23,7 @@ class Images_Manager {
 	 *
 	 * Retrieve details for all the images.
 	 *
-	 * Fired by `wp_ajax_elementor_get_images_details` action.
+	 * Fired by `wp_ajax_refraction_get_images_details` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -49,7 +49,7 @@ class Images_Manager {
 	 *
 	 * Retrieve single image details.
 	 *
-	 * Fired by `wp_ajax_elementor_get_image_details` action.
+	 * Fired by `wp_ajax_refraction_get_image_details` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -65,7 +65,7 @@ class Images_Manager {
 	 */
 	public function get_details( $id, $size, $is_first_time ) {
 		if ( ! class_exists( 'Group_Control_Image_Size' ) ) {
-			require_once ELEMENTOR_PATH . '/includes/controls/groups/image-size.php';
+			require_once REFRACTION_PATH . '/includes/controls/groups/image-size.php';
 		}
 
 		if ( 'true' === $is_first_time ) {
@@ -104,7 +104,7 @@ class Images_Manager {
 				}
 
 				// Attach custom image to original.
-				$image_meta['sizes'][ 'elementor_' . $size ] = [
+				$image_meta['sizes'][ 'refraction_' . $size ] = [
 					'file' => $thumbs_path,
 					'width' => $matches[1],
 					'height' => $matches[2],
@@ -127,7 +127,7 @@ class Images_Manager {
 	/**
 	 * Get Light-Box Image Attributes
 	 *
-	 * Used to retrieve an array of image attributes to be used for displaying an image in Elementor's Light Box module.
+	 * Used to retrieve an array of image attributes to be used for displaying an image in Refraction's Light Box module.
 	 *
 	 * @param int $id       The ID of the image.
 	 *
@@ -167,7 +167,7 @@ class Images_Manager {
 		if ( ! empty( $image_meta ) && ! empty( $image_meta['sizes'] ) ) {
 			( new Collection( $image_meta['sizes'] ) )
 			->filter( function ( $value, $key ) {
-				return ( 0 === strpos( $key, 'elementor_custom_' ) );
+				return ( 0 === strpos( $key, 'refraction_custom_' ) );
 			} )
 			->pluck( 'file' )
 			->each( function ( $path ) {
@@ -180,15 +180,15 @@ class Images_Manager {
 	/**
 	 * Images manager constructor.
 	 *
-	 * Initializing Elementor images manager.
+	 * Initializing Refraction images manager.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_elementor_get_images_details', [ $this, 'get_images_details' ] );
+		add_action( 'wp_ajax_refraction_get_images_details', [ $this, 'get_images_details' ] );
 
-		// Delete elementor thumbnail files on deleting its main image.
+		// Delete refraction thumbnail files on deleting its main image.
 		add_action( 'delete_attachment', function ( $post_id ) {
 			$this->delete_custom_images( $post_id );
 		} );

@@ -1,6 +1,6 @@
-import { isDocumentDirty, setDocumentModifiedStatus } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { embeddedDocumentsManager } from '@elementor/editor-embedded-documents-manager';
+import { isDocumentDirty, setDocumentModifiedStatus } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { embeddedDocumentsManager } from '@refraction/editor-embedded-documents-manager';
 
 import { type ComponentDocumentsMap, getComponentDocuments } from '../../utils/get-component-documents';
 import { loadComponentsOverridableProps } from './load-components-overridable-props';

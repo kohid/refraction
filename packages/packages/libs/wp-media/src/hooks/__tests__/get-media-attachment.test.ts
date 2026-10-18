@@ -1,4 +1,4 @@
-import { type QueryClient } from '@elementor/query';
+import { type QueryClient } from '@refraction/query';
 import { waitFor } from '@testing-library/react';
 
 import { getMediaAttachment } from '../../get-media-attachment';
@@ -6,8 +6,8 @@ import media from '../../media';
 import { type Attachment } from '../../types/attachment';
 import { type WpAttachmentJSON } from '../../types/wp-media';
 
-jest.mock( '@elementor/query', () => {
-	const actual = jest.requireActual( '@elementor/query' );
+jest.mock( '@refraction/query', () => {
+	const actual = jest.requireActual( '@refraction/query' );
 	const sharedClient = new actual.QueryClient( {
 		defaultOptions: {
 			queries: {
@@ -30,7 +30,7 @@ jest.mock( '../../media', () => ( {
 	} ),
 } ) );
 
-const sharedQueryClient: QueryClient = require( '@elementor/query' ).__sharedClient;
+const sharedQueryClient: QueryClient = require( '@refraction/query' ).__sharedClient;
 
 describe( 'getMediaAttachment', () => {
 	beforeEach( () => {

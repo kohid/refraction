@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Checklist\Steps;
+namespace Refraction\Modules\Checklist\Steps;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -17,7 +17,7 @@ class Create_Pages extends Step_Base {
 
 	public function is_absolute_completed(): bool {
 		$pages = $this->wordpress_adapter->get_pages( [
-			'meta_key' => '_elementor_version',
+			'meta_key' => '_refraction_version',
 			'number' => 3,
 		] ) ?? [];
 
@@ -25,15 +25,15 @@ class Create_Pages extends Step_Base {
 	}
 
 	public function get_title(): string {
-		return esc_html__( 'Create your first 3 pages', 'elementor' );
+		return esc_html__( 'Create your first 3 pages', 'refraction' );
 	}
 
 	public function get_description(): string {
-		return esc_html__( 'Jumpstart your creation with professional designs from the Template Library or start from scratch.', 'elementor' );
+		return esc_html__( 'Jumpstart your creation with professional designs from the Template Library or start from scratch.', 'refraction' );
 	}
 
 	public function get_cta_text(): string {
-		return esc_html__( 'Create a new page', 'elementor' );
+		return esc_html__( 'Create a new page', 'refraction' );
 	}
 
 	public function get_cta_url(): string {

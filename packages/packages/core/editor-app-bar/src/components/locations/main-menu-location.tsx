@@ -13,17 +13,17 @@ export default function MainMenuLocation() {
 
 	const popupState = usePopupState( {
 		variant: 'popover',
-		popupId: 'elementor-v2-app-bar-main-menu',
+		popupId: 'refraction-v2-app-bar-main-menu',
 	} );
 
 	const toolbarLogoProps = bindTrigger( popupState );
 
 	const onToolbarClick: React.MouseEventHandler = ( e ) => {
 		const extendedWindow = window as unknown as ExtendedWindow;
-		const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+		const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 		if ( config ) {
-			extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.elementorLogoDropdown, {
+			extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.refractionLogoDropdown, {
 				location: config.locations.topBar,
 				secondaryLocation: config.secondaryLocations.eLogoMenu,
 				trigger: config.triggers.dropdownClick,

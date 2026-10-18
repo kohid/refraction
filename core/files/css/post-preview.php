@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Core\Files\CSS;
+namespace Refraction\Core\Files\CSS;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor post preview CSS file.
+ * Refraction post preview CSS file.
  *
- * Elementor CSS file handler class is responsible for generating the post
+ * Refraction CSS file handler class is responsible for generating the post
  * preview CSS file.
  *
  * @since 1.9.0
@@ -60,6 +60,6 @@ class Post_Preview extends Post_Local_Cache {
 	 * @return string CSS file handle ID.
 	 */
 	protected function get_file_handle_id() {
-		return 'elementor-preview-' . $this->get_post_id_for_data();
+		return 'refraction-preview-' . $this->get_post_id_for_data();
 	}
 }

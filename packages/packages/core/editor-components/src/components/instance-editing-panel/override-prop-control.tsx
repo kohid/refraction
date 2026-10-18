@@ -6,7 +6,7 @@ import {
 	PropProvider,
 	type SetValueMeta,
 	useBoundProp,
-} from '@elementor/editor-controls';
+} from '@refraction/editor-controls';
 import {
 	BaseControl,
 	controlsRegistry,
@@ -17,15 +17,15 @@ import {
 	isDynamicPropValue,
 	SettingsField,
 	useElement,
-} from '@elementor/editor-editing-panel';
-import { type Control } from '@elementor/editor-elements';
+} from '@refraction/editor-editing-panel';
+import { type Control } from '@refraction/editor-elements';
 import {
 	type AnyTransformable,
 	type CreateOptions,
 	isEmpty,
 	type PropType,
 	type PropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { Box } from '@elementor/ui';
 
 import { useControlsByWidgetType } from '../../hooks/use-controls-by-widget-type';

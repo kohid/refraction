@@ -14,23 +14,23 @@ import {
 	getWidgetsCache,
 	updateElementSettings,
 	updateElementStyle,
-} from '@elementor/editor-elements';
-import { classesPropTypeUtil } from '@elementor/editor-props';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { ELEMENTS_STYLES_RESERVED_LABEL } from '@elementor/editor-styles-repository';
+} from '@refraction/editor-elements';
+import { classesPropTypeUtil } from '@refraction/editor-props';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { ELEMENTS_STYLES_RESERVED_LABEL } from '@refraction/editor-styles-repository';
 
 import { getClipboardElements } from '../../utils/command-utils';
 import { initPasteStyleCommand } from '../paste-style';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 jest.mock( '../../utils/command-utils', () => ( {
 	...jest.requireActual( '../../utils/command-utils' ),
 	getClipboardElements: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	blockCommand: jest.fn(),
 } ) );
 

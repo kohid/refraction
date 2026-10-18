@@ -5,7 +5,7 @@ export default class extends ControlBaseDataView {
 	ui() {
 		const ui = super.ui();
 
-		ui.pickerContainer = '.elementor-color-picker-placeholder';
+		ui.pickerContainer = '.refraction-color-picker-placeholder';
 
 		return ui;
 	}
@@ -62,7 +62,7 @@ export default class extends ControlBaseDataView {
 
 		this.$pickerButton.on( 'click', () => this.onPickerButtonClick() );
 
-		jQuery( this.colorPicker.picker.getRoot().root ).addClass( 'elementor-control-unit-1 elementor-control-tag-area' );
+		jQuery( this.colorPicker.picker.getRoot().root ).addClass( 'refraction-control-unit-1 refraction-control-tag-area' );
 	}
 
 	hidePickerOnPreviewClick() {
@@ -71,7 +71,7 @@ export default class extends ControlBaseDataView {
 
 		// Adding to the eventBindings to unbind in the picker's destroy
 		picker._eventBindings.push(
-			pickerUtils.on( elementorFrontend.elements.window.document, [ 'touchstart', 'pointerdown' ], () => {
+			pickerUtils.on( refractionFrontend.elements.window.document, [ 'touchstart', 'pointerdown' ], () => {
 				if ( picker.isOpen() ) {
 					picker.hide();
 				}
@@ -86,7 +86,7 @@ export default class extends ControlBaseDataView {
 
 				// If there is a global enabled for the control, but the global has no value.
 				if ( this.getGlobalKey() && ! currentValue ) {
-					currentValue = `${ __( 'Invalid Global Color', 'elementor' ) }`;
+					currentValue = `${ __( 'Invalid Global Color', 'refraction' ) }`;
 				}
 
 				return currentValue || '';
@@ -97,7 +97,7 @@ export default class extends ControlBaseDataView {
 	}
 
 	addEyedropper() {
-		const $colorPicker = jQuery( Marionette.Renderer.render( '#tmpl-elementor-control-element-color-picker' ) ),
+		const $colorPicker = jQuery( Marionette.Renderer.render( '#tmpl-refraction-control-element-color-picker' ) ),
 			$colorPickerToolsContainer = this.colorPicker.$pickerToolsContainer,
 			container = this.getOption( 'container' );
 
@@ -111,7 +111,7 @@ export default class extends ControlBaseDataView {
 		// Add a tooltip to the Eye Dropper.
 		$colorPicker.tipsy( {
 			title() {
-				return __( 'Color Sampler', 'elementor' );
+				return __( 'Color Sampler', 'refraction' );
 			},
 			gravity: 's',
 		} );
@@ -138,15 +138,15 @@ export default class extends ControlBaseDataView {
 	}
 
 	getNameAlreadyExistsMessage() {
-		return '<i class="eicon-info-circle"></i> ' + __( 'Please note that the same exact color already exists in your Global Colors list. Are you sure you want to create it?', 'elementor' );
+		return '<i class="eicon-info-circle"></i> ' + __( 'Please note that the same exact color already exists in your Global Colors list. Are you sure you want to create it?', 'refraction' );
 	}
 
 	getConfirmTextMessage() {
-		return __( 'Are you sure you want to create a new Global Color?', 'elementor' );
+		return __( 'Are you sure you want to create a new Global Color?', 'refraction' );
 	}
 
 	getAddGlobalConfirmMessage( globalColors ) {
-		const colorTitle = __( 'New Global Color', 'elementor' ),
+		const colorTitle = __( 'New Global Color', 'refraction' ),
 			currentValue = this.getCurrentValue(),
 			$message = jQuery( '<div>', { class: 'e-global__confirm-message' } ),
 			$messageText = jQuery( '<div>', { class: 'e-global__confirm-message-text' } ),
@@ -166,7 +166,7 @@ export default class extends ControlBaseDataView {
 				messageContent = this.getConfirmTextMessage();
 				break;
 			} else {
-				messageContent = __( 'Are you sure you want to create a new Global Color?', 'elementor' );
+				messageContent = __( 'Are you sure you want to create a new Global Color?', 'refraction' );
 			}
 		}
 
@@ -237,14 +237,14 @@ export default class extends ControlBaseDataView {
 
 		if ( v4Colors.length ) {
 			$globalPreviewItemsContainer.append(
-				this.createHeaderItemMarkup( __( 'Atomic Variables', 'elementor' ) ),
+				this.createHeaderItemMarkup( __( 'Atomic Variables', 'refraction' ) ),
 			);
 
 			v4Colors.forEach( ( color ) => {
 				$globalPreviewItemsContainer.append( this.createGlobalItemMarkup( color ) );
 			} );
 
-			$globalPreviewItemsContainer.append( this.createHeaderItemMarkup( __( 'Global Colors', 'elementor' ) ) );
+			$globalPreviewItemsContainer.append( this.createHeaderItemMarkup( __( 'Global Colors', 'refraction' ) ) );
 		}
 
 		v3Colors.forEach( ( color ) => {

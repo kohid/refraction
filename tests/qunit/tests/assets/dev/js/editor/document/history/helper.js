@@ -39,18 +39,18 @@ export default class HistoryHelper {
 	}
 
 	static resetItems() {
-		elementor.documents.getCurrent().history.getItems().reset();
+		refraction.documents.getCurrent().history.getItems().reset();
 	}
 
 	static getFirstItem() {
-		return elementor.documents.getCurrent().history.getItems().at( 0 );
+		return refraction.documents.getCurrent().history.getItems().at( 0 );
 	}
 
 	static printHumanReadable() {
 		// eslint-disable-next-line no-console
 		console.log( '--------------------------------------------------------------' );
 
-		Object.entries( elementor.history.history.getItems().models ).forEach( ( model ) => {
+		Object.entries( refraction.history.history.getItems().models ).forEach( ( model ) => {
 			const modelItem = model[ 1 ],
 				modelAttribute = modelItem.attributes,
 				subItemModels = modelAttribute.items.models;

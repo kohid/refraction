@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type KeyboardEvent, useRef, useState } from 'react';
-import { WarningInfotip } from '@elementor/editor-ui';
+import { WarningInfotip } from '@refraction/editor-ui';
 import { TextField, type TextFieldProps } from '@elementor/ui';
 
 import { type TVariablesList } from '../../storage';

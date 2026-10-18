@@ -1,5 +1,5 @@
 import { createMockStyleDefinition } from 'test-utils';
-import { stylesRepository, validateStyleLabel } from '@elementor/editor-styles-repository';
+import { stylesRepository, validateStyleLabel } from '@refraction/editor-styles-repository';
 
 jest.mock( '../../styles-repository' );
 

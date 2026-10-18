@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { ColorControl } from '@elementor/editor-controls';
+import { ColorControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const BORDER_COLOR_LABEL = __( 'Border color', 'elementor' );
+const BORDER_COLOR_LABEL = __( 'Border color', 'refraction' );
 
 export const BorderColorField = () => (
 	<StylesField bind="border-color" propDisplayName={ BORDER_COLOR_LABEL }>

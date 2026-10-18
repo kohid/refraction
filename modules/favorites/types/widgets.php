@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\Favorites\Types;
+namespace Refraction\Modules\Favorites\Types;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Modules\Favorites\Favorites_Type;
-use Elementor\Plugin;
+use Refraction\Modules\Favorites\Favorites_Type;
+use Refraction\Plugin;
 
 class Widgets extends Favorites_Type {
 	const CATEGORY_SLUG = 'favorites';
@@ -17,7 +17,7 @@ class Widgets extends Favorites_Type {
 	public function __construct( array $items = [] ) {
 		parent::__construct( $items );
 
-		add_action( 'elementor/document/before_get_config', [ $this, 'update_widget_categories' ], 10, 1 );
+		add_action( 'refraction/document/before_get_config', [ $this, 'update_widget_categories' ], 10, 1 );
 	}
 
 	public function get_name() {

@@ -1,6 +1,6 @@
 export class EditorOneEventManager {
 	static getEventsManager() {
-		return elementorCommon?.eventsManager;
+		return refractionCommon?.eventsManager;
 	}
 
 	static getConfig() {
@@ -8,7 +8,7 @@ export class EditorOneEventManager {
 	}
 
 	static canSendEvents() {
-		return elementorCommon?.config?.editor_events?.can_send_events || false;
+		return refractionCommon?.config?.editor_events?.can_send_events || false;
 	}
 
 	static isEventsManagerAvailable() {
@@ -45,7 +45,7 @@ export class EditorOneEventManager {
 	}
 
 	static isInEditorContext() {
-		return 'undefined' !== typeof window.elementor && !! window.elementor?.documents;
+		return 'undefined' !== typeof window.refraction && !! window.refraction?.documents;
 	}
 
 	static getFinderContext() {
@@ -119,9 +119,9 @@ export class EditorOneEventManager {
 			target_type: config?.targetTypes?.tab,
 			target_name: this.toLowerSnake( tabName ),
 			interaction_result: config?.interactionResults?.tabChanged,
-			target_location: this.toLowerSnake( config?.locations?.elementorLibrary ),
+			target_location: this.toLowerSnake( config?.locations?.refractionLibrary ),
 			location_l1: this.toLowerSnake( config?.secondaryLocations?.libraryTabs ),
-			interaction_description: 'User navigates within elementor library',
+			interaction_description: 'User navigates within refraction library',
 		} ) );
 	}
 
@@ -132,10 +132,10 @@ export class EditorOneEventManager {
 			target_type: config?.targetTypes?.button,
 			target_name: String( assetId ),
 			interaction_result: config?.interactionResults?.assetInserted,
-			target_location: this.toLowerSnake( config?.locations?.elementorLibrary ),
+			target_location: this.toLowerSnake( config?.locations?.refractionLibrary ),
 			location_l1: this.toLowerSnake( libraryType ),
 			location_l2: this.toLowerSnake( config?.secondaryLocations?.assetCard ),
-			interaction_description: 'User inserts block/pages from elementor library',
+			interaction_description: 'User inserts block/pages from refraction library',
 			metadata: {
 				template_id: String( assetId ),
 				template_name: this.decodeHtmlEntities( assetName ) || '',
@@ -157,10 +157,10 @@ export class EditorOneEventManager {
 			target_name: String( assetId ),
 			interaction_result: config?.interactionResults?.assetFavorite,
 			target_value: Boolean( isFavorite ),
-			target_location: this.toLowerSnake( config?.locations?.elementorLibrary ),
+			target_location: this.toLowerSnake( config?.locations?.refractionLibrary ),
 			location_l1: this.toLowerSnake( libraryType ),
 			location_l2: this.toLowerSnake( config?.secondaryLocations?.assetCard ),
-			interaction_description: 'User favorite block/pages from elementor library',
+			interaction_description: 'User favorite block/pages from refraction library',
 			metadata: {
 				template_id: String( assetId ),
 				template_name: this.decodeHtmlEntities( assetName ) || '',
@@ -181,7 +181,7 @@ export class EditorOneEventManager {
 			target_type: config?.targetTypes?.button,
 			target_name: String( assetId ),
 			interaction_result: config?.interactionResults?.aiGenerate,
-			target_location: this.toLowerSnake( config?.locations?.elementorLibrary ),
+			target_location: this.toLowerSnake( config?.locations?.refractionLibrary ),
 			location_l1: this.toLowerSnake( libraryType ),
 			location_l2: this.toLowerSnake( config?.secondaryLocations?.assetCard ),
 			interaction_description: 'User generated block/page based on a library asset',
@@ -289,15 +289,15 @@ export class EditorOneEventManager {
 		} );
 	}
 
-	static sendWpDashElementorMenuClick() {
+	static sendWpDashRefractionMenuClick() {
 		const config = this.getConfig();
-		return this.dispatchEvent( config?.names?.editorOne?.wpDashElementorMenuClick, this.createWpDashPayload( {
+		return this.dispatchEvent( config?.names?.editorOne?.wpDashRefractionMenuClick, this.createWpDashPayload( {
 			interaction_type: this.toLowerSnake( config?.triggers?.click ),
 			target_type: config?.targetTypes?.wpDashAdminMenuItem,
-			target_name: 'elementor_menu_item',
-			interaction_result: config?.interactionResults?.elementorSideMenuOpened,
-			location_l1: this.toLowerSnake( config?.secondaryLocations?.wpDashElementorCoreMenu ),
-			interaction_description: 'core_user_clicked_elementor_menu_item',
+			target_name: 'refraction_menu_item',
+			interaction_result: config?.interactionResults?.refractionSideMenuOpened,
+			location_l1: this.toLowerSnake( config?.secondaryLocations?.wpDashRefractionCoreMenu ),
+			interaction_description: 'core_user_clicked_refraction_menu_item',
 		} ) );
 	}
 
@@ -308,7 +308,7 @@ export class EditorOneEventManager {
 			target_type: config?.targetTypes?.wpDashEditorMenu,
 			target_name: 'wpdash_editor_sub_menu',
 			interaction_result: config?.interactionResults?.editorSubMenuOpened,
-			location_l1: this.toLowerSnake( config?.secondaryLocations?.wpDashElementorCoreSubMenu ),
+			location_l1: this.toLowerSnake( config?.secondaryLocations?.wpDashRefractionCoreSubMenu ),
 			interaction_description: 'core_user_hovered_sub_menu',
 		} ) );
 	}

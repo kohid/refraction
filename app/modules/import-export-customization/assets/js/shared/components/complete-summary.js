@@ -17,7 +17,7 @@ export default function CompleteSummary( {
 			textAlign: 'start',
 		} } data-testid={ testId }>
 			<Typography variant="subtitle1" color="text.primary" sx={ { mb: 2 } }>
-				{ __( 'What\'s included:', 'elementor' ) }
+				{ __( 'What\'s included:', 'refraction' ) }
 			</Typography>
 
 			<Stack spacing={ 2 } sx={ { maxWidth: '1075px' } } >

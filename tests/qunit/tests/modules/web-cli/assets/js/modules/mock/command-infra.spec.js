@@ -1,4 +1,4 @@
-import CommandInfra from 'elementor-api/modules/command-infra';
+import CommandInfra from 'refraction-api/modules/command-infra';
 
 export default class CommandInfraMock extends CommandInfra {}
 

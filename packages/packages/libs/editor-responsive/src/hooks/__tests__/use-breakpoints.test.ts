@@ -7,7 +7,7 @@ describe( 'useBreakpoints', () => {
 	function setBreakpoints( breakpoints: Partial< V1Breakpoints > ) {
 		const extendedWindow = window as unknown as ExtendedWindow;
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			config: {
 				responsive: {
 					breakpoints: breakpoints as V1Breakpoints,

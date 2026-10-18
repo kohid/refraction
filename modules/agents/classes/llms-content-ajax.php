@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\Agents\Classes;
+namespace Refraction\Modules\Agents\Classes;
 
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Modules\Agents\Agent_Ready_Settings;
-use Elementor\Modules\Agents\Llms_Manual_Content;
-use Elementor\Modules\Agents\Module;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Modules\Agents\Agent_Ready_Settings;
+use Refraction\Modules\Agents\Llms_Manual_Content;
+use Refraction\Modules\Agents\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,11 +29,11 @@ class Llms_Content_Ajax {
 	 */
 	public function handle( array $data ): array {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			throw new \Exception( esc_html__( 'Permission denied.', 'elementor' ), Exceptions::FORBIDDEN ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new \Exception( esc_html__( 'Permission denied.', 'refraction' ), Exceptions::FORBIDDEN ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		if ( Module::has_physical_llms_file() ) {
-			throw new \Exception( esc_html__( 'LLMs.txt file already exists and can’t be managed here.', 'elementor' ), Exceptions::BAD_REQUEST ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new \Exception( esc_html__( 'LLMs.txt file already exists and can’t be managed here.', 'refraction' ), Exceptions::BAD_REQUEST ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		$content = is_string( $data['content'] ?? null ) ? $data['content'] : '';

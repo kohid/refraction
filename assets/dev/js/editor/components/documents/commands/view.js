@@ -5,7 +5,7 @@ export class View extends $e.modules.CommandBase {
 
 	async apply( args ) {
 		const { id } = args,
-			document = elementor.documents.get( id );
+			document = refraction.documents.get( id );
 
 		// Open immediately in order to avoid popup blockers.
 		open( document.config.urls.permalink, `wp-view-${ document.id }` );

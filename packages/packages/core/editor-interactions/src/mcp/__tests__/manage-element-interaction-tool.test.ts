@@ -1,4 +1,4 @@
-import { updateElementInteractions } from '@elementor/editor-elements';
+import { updateElementInteractions } from '@refraction/editor-elements';
 
 import { interactionsRepository } from '../../interactions-repository';
 import { createInteractionItem } from '../../utils/prop-value-utils';
@@ -11,7 +11,7 @@ jest.mock( '../../interactions-repository', () => ( {
 	},
 } ) );
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	updateElementInteractions: jest.fn(),
 } ) );
 

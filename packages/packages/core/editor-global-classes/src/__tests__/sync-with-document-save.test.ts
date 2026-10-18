@@ -1,25 +1,25 @@
 import { createMockStyleDefinition } from 'test-utils';
-import { getCurrentUser, isContentOnlyUser } from '@elementor/editor-current-user';
+import { getCurrentUser, isContentOnlyUser } from '@refraction/editor-current-user';
 import {
 	__privateRunCommandSync as runCommandSync,
 	type HookOptions,
 	registerDataHook,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import {
 	__createStore as createStore,
 	__dispatch as dispatch,
 	__getState as getState,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { apiClient } from '../api';
 import { UPDATE_CLASS_CAPABILITY_KEY } from '../capabilities';
 import { selectFrontendInitialData, selectIsDirty, selectPreviewInitialData, slice } from '../store';
 import { syncWithDocumentSave } from '../sync-with-document-save';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mock( '../api' );
-jest.mock( '@elementor/editor-current-user' );
+jest.mock( '@refraction/editor-current-user' );
 
 describe( 'syncWithDocumentSave', () => {
 	beforeEach( () => {

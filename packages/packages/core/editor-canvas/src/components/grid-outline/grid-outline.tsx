@@ -57,7 +57,7 @@ const renderLines = ( tracks: GridTracks, width: number, height: number ) => {
 const isDragActiveFromDom = ( element: HTMLElement | null ): boolean => {
 	return Boolean(
 		element?.querySelector(
-			'.e-dragging-over, .elementor-dragging-on-child, .elementor-draggable-over, .elementor-widget-placeholder, .elementor-sortable-placeholder'
+			'.e-dragging-over, .refraction-dragging-on-child, .refraction-draggable-over, .refraction-widget-placeholder, .refraction-sortable-placeholder'
 		)
 	);
 };

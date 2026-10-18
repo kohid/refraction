@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Revert;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Revert;
 
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Core\Base\Document;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Core\Base\Document;
 
 class Templates extends Revert_Runner_Base {
 	public static function get_name(): string {
@@ -31,7 +31,7 @@ class Templates extends Revert_Runner_Base {
 					'value' => $template_types,
 				],
 				[
-					'key' => static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID,
+					'key' => static::META_KEY_REFRACTION_IMPORT_SESSION_ID,
 					'value' => $data['session_id'],
 				],
 			],
@@ -44,6 +44,6 @@ class Templates extends Revert_Runner_Base {
 			$template_document->delete();
 		}
 
-		do_action( 'elementor/import-export-customization/revert/templates', $data );
+		do_action( 'refraction/import-export-customization/revert/templates', $data );
 	}
 }

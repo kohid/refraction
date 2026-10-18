@@ -1,4 +1,4 @@
-import CommandBase from 'elementor-api/modules/command-base';
+import CommandBase from 'refraction-api/modules/command-base';
 
 export class Toggle extends CommandBase {
 	apply() {

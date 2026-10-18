@@ -1,5 +1,5 @@
-.elementor-widget-heading .elementor-heading-title {
-	&[class*="elementor-size-"] {
+.refraction-widget-heading .refraction-heading-title {
+	&[class*="refraction-size-"] {
 
 		> a {
 			color: inherit;
@@ -8,7 +8,7 @@
 		}
 	}
 
-	&.elementor-size- {
+	&.refraction-size- {
 		&small {
 			font-size: 15px;
 		}

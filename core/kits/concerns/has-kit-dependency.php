@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Kits\Concerns;
+namespace Refraction\Core\Kits\Concerns;
 
-use Elementor\Core\Kits\Documents\Kit;
-use Elementor\Plugin;
+use Refraction\Core\Kits\Documents\Kit;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -1,4 +1,4 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export type HistoryItem = {
 	title: string;
@@ -10,7 +10,7 @@ export type HistoryItem = {
 type AddHistoryItem = ( item: HistoryItem ) => void;
 
 export type WindowWithHistoryManager = Window & {
-	elementor?: {
+	refraction?: {
 		documents?: {
 			getCurrent?: () => {
 				history?: {
@@ -29,7 +29,7 @@ const HistoryManagerNotAvailable = createError( {
 export function getHistoryManager() {
 	const extendedWindow = window as unknown as WindowWithHistoryManager;
 
-	const historyManger = extendedWindow.elementor?.documents?.getCurrent?.()?.history;
+	const historyManger = extendedWindow.refraction?.documents?.getCurrent?.()?.history;
 
 	if ( ! historyManger ) {
 		throw new HistoryManagerNotAvailable();

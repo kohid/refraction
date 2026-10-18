@@ -1,13 +1,13 @@
-const PanelMenuItemView = require( 'elementor-panel/pages/menu/views/item' );
+const PanelMenuItemView = require( 'refraction-panel/pages/menu/views/item' );
 
 module.exports = Marionette.CompositeView.extend( {
-	template: '#tmpl-elementor-panel-menu-group',
+	template: '#tmpl-refraction-panel-menu-group',
 
-	className: 'elementor-panel-menu-group',
+	className: 'refraction-panel-menu-group',
 
 	childView: PanelMenuItemView,
 
-	childViewContainer: '.elementor-panel-menu-items',
+	childViewContainer: '.refraction-panel-menu-items',
 
 	initialize() {
 		this.collection = new Backbone.Collection( this.model.get( 'items' ) );

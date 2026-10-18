@@ -18,18 +18,18 @@ export const MissingVariableAlert = ( { onClose, onClear }: MissingVariableAlert
 					<>
 						{ onClear && (
 							<AlertAction variant="contained" onClick={ onClear }>
-								{ __( 'Clear', 'elementor' ) }
+								{ __( 'Clear', 'refraction' ) }
 							</AlertAction>
 						) }
 					</>
 				}
 				sx={ { maxWidth: 300 } }
 			>
-				<AlertTitle>{ __( 'This variable is missing', 'elementor' ) }</AlertTitle>
+				<AlertTitle>{ __( 'This variable is missing', 'refraction' ) }</AlertTitle>
 				<Typography variant="body2" color="textPrimary">
 					{ __(
 						'It may have been deleted. Try clearing this field and select a different value or variable.',
-						'elementor'
+						'refraction'
 					) }
 				</Typography>
 			</Alert>

@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor google maps widget.
+ * Refraction google maps widget.
  *
- * Elementor widget that displays an embedded google map.
+ * Refraction widget that displays an embedded google map.
  *
  * @since 1.0.0
  */
@@ -41,7 +41,7 @@ class Widget_Google_Maps extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Google Maps', 'elementor' );
+		return esc_html__( 'Google Maps', 'refraction' );
 	}
 
 	/**
@@ -122,12 +122,12 @@ class Widget_Google_Maps extends Widget_Base {
 		$this->start_controls_section(
 			'section_map',
 			[
-				'label' => esc_html__( 'Google Maps', 'elementor' ),
+				'label' => esc_html__( 'Google Maps', 'refraction' ),
 			]
 		);
 
 		if ( Plugin::$instance->editor->is_edit_mode() ) {
-			$api_key = get_option( 'elementor_google_maps_api_key' );
+			$api_key = get_option( 'refraction_google_maps_api_key' );
 
 			if ( ! $api_key ) {
 				$this->add_control(
@@ -137,7 +137,7 @@ class Widget_Google_Maps extends Widget_Base {
 						'alert_type' => 'info',
 						'content' => sprintf(
 							/* translators: 1: Integration settings link open tag, 2: Create API key link open tag, 3: Link close tag. */
-							esc_html__( 'Set your Google Maps API Key in Elementor\'s %1$sIntegrations Settings%3$s page. Create your key %2$shere.%3$s', 'elementor' ),
+							esc_html__( 'Set your Google Maps API Key in Refraction\'s %1$sIntegrations Settings%3$s page. Create your key %2$shere.%3$s', 'refraction' ),
 							'<a href="' . Settings::get_settings_tab_url( 'integrations' ) . '" target="_blank">',
 							'<a href="https://developers.google.com/maps/documentation/embed/get-api-key" target="_blank">',
 							'</a>'
@@ -147,11 +147,11 @@ class Widget_Google_Maps extends Widget_Base {
 			}
 		}
 
-		$default_address = esc_html__( 'London Eye, London, United Kingdom', 'elementor' );
+		$default_address = esc_html__( 'London Eye, London, United Kingdom', 'refraction' );
 		$this->add_control(
 			'address',
 			[
-				'label' => esc_html__( 'Location', 'elementor' ),
+				'label' => esc_html__( 'Location', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -171,7 +171,7 @@ class Widget_Google_Maps extends Widget_Base {
 		$this->add_control(
 			'zoom',
 			[
-				'label' => esc_html__( 'Zoom', 'elementor' ),
+				'label' => esc_html__( 'Zoom', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 10,
@@ -189,7 +189,7 @@ class Widget_Google_Maps extends Widget_Base {
 		$this->add_responsive_control(
 			'height',
 			[
-				'label' => esc_html__( 'Height', 'elementor' ),
+				'label' => esc_html__( 'Height', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -209,7 +209,7 @@ class Widget_Google_Maps extends Widget_Base {
 		$this->start_controls_section(
 			'section_map_style',
 			[
-				'label' => esc_html__( 'Google Maps', 'elementor' ),
+				'label' => esc_html__( 'Google Maps', 'refraction' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -218,7 +218,7 @@ class Widget_Google_Maps extends Widget_Base {
 
 		$this->start_controls_tab( 'normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -234,7 +234,7 @@ class Widget_Google_Maps extends Widget_Base {
 
 		$this->start_controls_tab( 'hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -249,7 +249,7 @@ class Widget_Google_Maps extends Widget_Base {
 		$this->add_control(
 			'hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -290,7 +290,7 @@ class Widget_Google_Maps extends Widget_Base {
 			$settings['zoom']['size'] = 10;
 		}
 
-		$api_key = esc_html( get_option( 'elementor_google_maps_api_key' ) );
+		$api_key = esc_html( get_option( 'refraction_google_maps_api_key' ) );
 
 		$params = [
 			rawurlencode( $settings['address'] ),
@@ -306,7 +306,7 @@ class Widget_Google_Maps extends Widget_Base {
 		}
 
 		?>
-		<div class="elementor-custom-embed">
+		<div class="refraction-custom-embed">
 			<iframe loading="lazy"
 					src="<?php echo esc_url( vsprintf( $url, $params ) ); ?>"
 					title="<?php echo esc_attr( $settings['address'] ); ?>"

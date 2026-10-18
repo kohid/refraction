@@ -58,7 +58,7 @@ export const SvgMediaOverlay = ( {
 				color="inherit"
 				variant="text"
 				startIcon={ <LibraryIcon sx={ { height: '18px', width: '16px' } } /> }
-				aria-label={ __( 'Icon library', 'elementor' ) }
+				aria-label={ __( 'Icon library', 'refraction' ) }
 				onClick={ onOpenIconLibrary }
 				sx={ {
 					height: '28px',
@@ -66,7 +66,7 @@ export const SvgMediaOverlay = ( {
 					'.MuiButton-icon': { ml: 0 },
 				} }
 			>
-				<Typography>{ __( 'Icon library', 'elementor' ) }</Typography>
+				<Typography>{ __( 'Icon library', 'refraction' ) }</Typography>
 			</Button>
 		) : null }
 	</Stack>

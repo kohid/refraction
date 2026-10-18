@@ -20,7 +20,7 @@ describe( 'app/load command', () => {
 			backdrop: null,
 		};
 
-		Load = ( await import( 'elementor/app/assets/js/loader/commands/load' ) ).Load;
+		Load = ( await import( 'refraction/app/assets/js/loader/commands/load' ) ).Load;
 	} );
 
 	afterEach( () => {
@@ -34,12 +34,12 @@ describe( 'app/load command', () => {
 		cmd.apply( { url: 'http://example.com/app' } );
 
 		expect( component.backdrop ).not.toBeNull();
-		expect( component.backdrop.className ).toBe( 'elementor-app-backdrop' );
+		expect( component.backdrop.className ).toBe( 'refraction-app-backdrop' );
 		expect( component.backdrop.style.display ).toBe( 'none' );
 		expect( document.body.contains( component.backdrop ) ).toBe( true );
 
 		expect( component.iframe ).not.toBeNull();
-		expect( component.iframe.className ).toBe( 'elementor-app-iframe' );
+		expect( component.iframe.className ).toBe( 'refraction-app-iframe' );
 		expect( component.iframe.style.display ).toBe( 'none' );
 		expect( document.body.contains( component.iframe ) ).toBe( true );
 	} );
@@ -82,8 +82,8 @@ describe( 'app/load command', () => {
 
 		component.iframe.dispatchEvent( new Event( 'load' ) );
 
-		expect( component.iframe.classList.contains( 'elementor-app-iframe--visible' ) ).toBe( true );
-		expect( component.backdrop.classList.contains( 'elementor-app-backdrop--visible' ) ).toBe( true );
+		expect( component.iframe.classList.contains( 'refraction-app-iframe--visible' ) ).toBe( true );
+		expect( component.backdrop.classList.contains( 'refraction-app-backdrop--visible' ) ).toBe( true );
 	} );
 
 	it( 'should close app when backdrop is clicked', () => {

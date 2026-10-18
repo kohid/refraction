@@ -5,7 +5,7 @@ describe( 'TextPathHandler', () => {
 	beforeEach( async () => {
 		jest.resetModules();
 
-		global.elementorModules = {
+		global.refractionModules = {
 			frontend: {
 				handlers: {
 					Base: class {
@@ -17,7 +17,7 @@ describe( 'TextPathHandler', () => {
 			},
 		};
 
-		const HandlerClass = ( await import( 'elementor/modules/shapes/assets/js/frontend/handlers/text-path' ) ).default;
+		const HandlerClass = ( await import( 'refraction/modules/shapes/assets/js/frontend/handlers/text-path' ) ).default;
 
 		TextPath = new HandlerClass();
 
@@ -102,15 +102,15 @@ describe( 'TextPathHandler', () => {
 		userAgent.mockReturnValue( ua );
 
 		// Mock for Chromium.
-		// @see `elementor-common/utils/environment`.
+		// @see `refraction-common/utils/environment`.
 		global.CSS = {};
 
-		global.elementorFrontend = {
+		global.refractionFrontend = {
 			config: {
 				is_rtl: isRTL.site,
 			},
 			utils: {
-				environment: ( await import( 'elementor-common/utils/environment' ) ).default,
+				environment: ( await import( 'refraction-common/utils/environment' ) ).default,
 			},
 		};
 

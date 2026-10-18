@@ -1,17 +1,17 @@
 module.exports = Marionette.ItemView.extend( {
 	tagName: 'main',
 
-	template: '#tmpl-elementor-template-library-connect-states',
+	template: '#tmpl-refraction-template-library-connect-states',
 
-	id: 'elementor-template-library-connect-states',
+	id: 'refraction-template-library-connect-states',
 
 	ui: {
-		selectSourceFilter: '.elementor-template-library-filter-select-source .source-option',
-		title: '.elementor-template-library-blank-title',
-		message: '.elementor-template-library-blank-message',
-		icon: '.elementor-template-library-blank-icon',
-		button: '.elementor-template-library-cloud-empty__button',
-		cloudBadge: '.elementor-template-library-connect-states-badge .source-option-badge.cloud-badge',
+		selectSourceFilter: '.refraction-template-library-filter-select-source .source-option',
+		title: '.refraction-template-library-blank-title',
+		message: '.refraction-template-library-blank-message',
+		icon: '.refraction-template-library-blank-icon',
+		button: '.refraction-template-library-cloud-empty__button',
+		cloudBadge: '.refraction-template-library-connect-states-badge .source-option-badge.cloud-badge',
 	},
 
 	events: {
@@ -24,22 +24,22 @@ module.exports = Marionette.ItemView.extend( {
 
 		return {
 			notConnected: {
-				title: elementorAppConfig?.[ 'cloud-library' ]?.library_connect_title_copy ?? __( 'Connect to your Elementor account', 'elementor' ),
-				message: elementorAppConfig?.[ 'cloud-library' ]?.library_connect_sub_title_copy ?? __( 'Then you can find all your templates in one convenient library.', 'elementor' ),
+				title: refractionAppConfig?.[ 'cloud-library' ]?.library_connect_title_copy ?? __( 'Connect to your Refraction account', 'refraction' ),
+				message: refractionAppConfig?.[ 'cloud-library' ]?.library_connect_sub_title_copy ?? __( 'Then you can find all your templates in one convenient library.', 'refraction' ),
 				icon: defaultIcon,
-				button: `<a class="elementor-button e-primary connect-button" href="${ elementorAppConfig?.[ 'cloud-library' ]?.library_connect_url }" target="_blank">${ elementorAppConfig?.[ 'cloud-library' ]?.library_connect_button_copy ?? __( 'Connect', 'elementor' ) }</a>`,
+				button: `<a class="refraction-button e-primary connect-button" href="${ refractionAppConfig?.[ 'cloud-library' ]?.library_connect_url }" target="_blank">${ refractionAppConfig?.[ 'cloud-library' ]?.library_connect_button_copy ?? __( 'Connect', 'refraction' ) }</a>`,
 			},
 			connectedNoQuota: {
-				title: __( 'It’s time to level up', 'elementor' ),
-				message: __( 'Elementor Pro plans come with Cloud Templates.', 'elementor' ) + '<br>' + __( 'Upgrade now to re-use your templates on all the websites you’re working on.', 'elementor' ),
+				title: __( 'It’s time to level up', 'refraction' ),
+				message: __( 'Refraction Pro plans come with Cloud Templates.', 'refraction' ) + '<br>' + __( 'Upgrade now to re-use your templates on all the websites you’re working on.', 'refraction' ),
 				icon: `<i class="eicon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Upgrade now', 'elememntor' ) }"></i>`,
-				button: `<a class="elementor-button e-accent" href="https://go.elementor.com/go-pro-cloud-templates-cloud-tab" target="_blank">${ __( 'Upgrade now', 'elementor' ) }</a>`,
+				button: `<a class="refraction-button e-accent" href="https://go.elementor.com/go-pro-cloud-templates-cloud-tab" target="_blank">${ __( 'Upgrade now', 'refraction' ) }</a>`,
 			},
 			deactivated: {
-				title: __( 'Your library has been deactivated', 'elementor' ),
-				message: __( 'This is because you don’t have an active subscription.', 'elementor' ) + '<br>' + __( 'Your templates are saved for 90 days from the day your subscription expires,', 'elementor' ) + '<br>' + __( 'then they’ll be gone forever.', 'elementor' ),
+				title: __( 'Your library has been deactivated', 'refraction' ),
+				message: __( 'This is because you don’t have an active subscription.', 'refraction' ) + '<br>' + __( 'Your templates are saved for 90 days from the day your subscription expires,', 'refraction' ) + '<br>' + __( 'then they’ll be gone forever.', 'refraction' ),
 				icon: `<i class="eicon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Renew my subscription', 'elememntor' ) }"></i>`,
-				button: `<a class="elementor-button e-accent" href="https://go.elementor.com/renew-license-cloud-templates-cloud-tab" target="_blank">${ __( 'Renew my subscription', 'elementor' ) }</a>`,
+				button: `<a class="refraction-button e-accent" href="https://go.elementor.com/renew-license-cloud-templates-cloud-tab" target="_blank">${ __( 'Renew my subscription', 'refraction' ) }</a>`,
 			},
 		};
 	},
@@ -49,11 +49,11 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	getCurrentMode() {
-		if ( ! elementor.config.library_connect.is_connected ) {
+		if ( ! refraction.config.library_connect.is_connected ) {
 			return 'notConnected';
 		}
 
-		if ( elementor.templates.cloudLibraryIsDeactivated() ) {
+		if ( refraction.templates.cloudLibraryIsDeactivated() ) {
 			return 'deactivated';
 		}
 
@@ -63,14 +63,14 @@ module.exports = Marionette.ItemView.extend( {
 	onRender() {
 		this.updateTemplateMarkup();
 
-		this.handleElementorConnect();
+		this.handleRefractionConnect();
 
 		this.handleCloudBadge();
 
-		elementor.templates.layout.getHeaderView()?.tools?.$el[ 0 ]?.classList?.add( 'e-hidden-disabled' );
+		refraction.templates.layout.getHeaderView()?.tools?.$el[ 0 ]?.classList?.add( 'e-hidden-disabled' );
 
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTabUpgrade,
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTabUpgrade,
 		} );
 	},
 
@@ -79,7 +79,7 @@ module.exports = Marionette.ItemView.extend( {
 			return;
 		}
 
-		const experimentVariant = await elementor.templates.eventManager.getSaveTemplateExperimentVariant();
+		const experimentVariant = await refraction.templates.eventManager.getSaveTemplateExperimentVariant();
 
 		this.ui.cloudBadge.toggle( 'B' === experimentVariant );
 	},
@@ -96,45 +96,45 @@ module.exports = Marionette.ItemView.extend( {
 		this.ui.icon.html( modeStrings.icon );
 	},
 
-	handleElementorConnect() {
+	handleRefractionConnect() {
 		const $connectButton = this.$el.find( '.connect-button' );
 
 		if ( ! $connectButton.length ) {
 			return;
 		}
 
-		$connectButton.elementorConnect( {
+		$connectButton.refractionConnect( {
 			popup: {
 				width: 726,
 				height: 534,
 			},
 			success: () => {
-				elementor.config.library_connect.is_connected = true;
+				refraction.config.library_connect.is_connected = true;
 
-				elementor.notifications.showToast( {
-					message: __( 'Connected successfully.', 'elementor' ),
+				refraction.notifications.showToast( {
+					message: __( 'Connected successfully.', 'refraction' ),
 				} );
 
 				$e.routes.refreshContainer( 'library' );
 			},
 			error: () => {
-				elementor.config.library_connect.is_connected = false;
+				refraction.config.library_connect.is_connected = false;
 			},
 		} );
 	},
 
 	onSelectSourceFilterChange( event ) {
-		elementor.templates.onSelectSourceFilterChange( event );
+		refraction.templates.onSelectSourceFilterChange( event );
 	},
 
 	onButtonClick() {
-		elementor.templates.eventManager.sendUpgradeClickedEvent( {
-			secondaryLocation: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab,
-			upgradePosition: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab,
+		refraction.templates.eventManager.sendUpgradeClickedEvent( {
+			secondaryLocation: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab,
+			upgradePosition: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab,
 		} );
 	},
 
 	onDestroy() {
-		elementor.templates.layout.getHeaderView()?.tools?.$el[ 0 ]?.classList?.remove( 'e-hidden-disabled' );
+		refraction.templates.layout.getHeaderView()?.tools?.$el[ 0 ]?.classList?.remove( 'e-hidden-disabled' );
 	},
 } );

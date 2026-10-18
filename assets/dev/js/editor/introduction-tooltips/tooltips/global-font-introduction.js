@@ -27,26 +27,26 @@ export default class GlobalFontIntroduction {
 			return null;
 		}
 
-		const editor = elementor.getPanelView().getCurrentPageView();
+		const editor = refraction.getPanelView().getCurrentPageView();
 		const currentView = editor.content ? editor.content.currentView : editor;
 
 		return $e.components.get( 'panel' ).getControlViewByPath( currentView, control );
 	}
 
 	initTooltip() {
-		this.tooltip = new elementorModules.editor.utils.Introduction( {
+		this.tooltip = new refractionModules.editor.utils.Introduction( {
 			introductionKey: this.introductionKey,
 			dialogType: 'tooltip',
 			dialogOptions: {
-				headerMessage: __( 'Check out Global Fonts', 'elementor' ),
+				headerMessage: __( 'Check out Global Fonts', 'refraction' ),
 				message: sprintf(
 					// eslint-disable-next-line @wordpress/i18n-translator-comments
-					__( 'Save time by applying Global Fonts to change the style of multiple elements at once. Click %s to see what Global Fonts you already have.', 'elementor' ),
+					__( 'Save time by applying Global Fonts to change the style of multiple elements at once. Click %s to see what Global Fonts you already have.', 'refraction' ),
 					"<i class='eicon-globe'></i>",
 				),
 				position: {
-					my: ( elementorCommon.config.isRTL ? 'left' : 'right' ) + '0 top0',
-					at: ( elementorCommon.config.isRTL ? 'left' : 'right' ) + ' top-10',
+					my: ( refractionCommon.config.isRTL ? 'left' : 'right' ) + '0 top0',
+					at: ( refractionCommon.config.isRTL ? 'left' : 'right' ) + ' top-10',
 				},
 				hide: {
 					onOutsideClick: false,
@@ -58,8 +58,8 @@ export default class GlobalFontIntroduction {
 
 		this.tooltip.getDialog().addButton( {
 			name: 'action',
-			text: __( 'Got it!', 'elementor' ),
-			classes: 'elementor-button e-primary',
+			text: __( 'Got it!', 'refraction' ),
+			classes: 'refraction-button e-primary',
 			callback: () => this.tooltip.getDialog().hide(),
 		} );
 	}

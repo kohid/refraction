@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Data\V2\Base\Endpoint\Index;
+namespace Refraction\Data\V2\Base\Endpoint\Index;
 
-use Elementor\Data\V2\Base\Endpoint\Index;
+use Refraction\Data\V2\Base\Endpoint\Index;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Sub_Index_Endpoint extends Index {
 	/***
-	 * @var \Elementor\Data\V2\Base\Controller
+	 * @var \Refraction\Data\V2\Base\Controller
 	 */
 	public $controller;
 

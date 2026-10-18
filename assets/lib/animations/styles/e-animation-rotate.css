@@ -1,9 +1,9 @@
-.elementor-animation-rotate {
+.refraction-animation-rotate {
 	transition-duration: 0.3s;
 	transition-property: transform;
 }
-.elementor-animation-rotate:active,
-.elementor-animation-rotate:focus,
-.elementor-animation-rotate:hover {
+.refraction-animation-rotate:active,
+.refraction-animation-rotate:focus,
+.refraction-animation-rotate:hover {
 	transform: rotate(4deg);
 }

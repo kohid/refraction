@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { getHostDocumentId } from '@elementor/editor-elements';
+import { getHostDocumentId } from '@refraction/editor-elements';
 import {
 	__createStore,
 	__deleteStore,
 	__getStore,
 	__registerSlice,
 	__StoreProvider as StoreProvider,
-} from '@elementor/store';
+} from '@refraction/store';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { runPageAudit } from '../../runner';
@@ -16,7 +16,7 @@ import { getPersistedReport, persistReport } from '../../utils/report-storage';
 import { SessionExpiredError } from '../../utils/session-expiration';
 import { useAuditReport } from '../use-audit-report';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getHostDocumentId: jest.fn(),
 } ) );
 

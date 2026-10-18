@@ -1,23 +1,23 @@
 <?php
-namespace Elementor\Core;
+namespace Refraction\Core;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\DocumentTypes\Page;
-use Elementor\Core\DocumentTypes\Post;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\DocumentTypes\Page;
+use Refraction\Core\DocumentTypes\Post;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor documents manager.
+ * Refraction documents manager.
  *
- * Elementor documents manager handler class is responsible for registering and
- * managing Elementor documents.
+ * Refraction documents manager handler class is responsible for registering and
+ * managing Refraction documents.
  *
  * @since 2.0.0
  */
@@ -76,18 +76,18 @@ class Documents_Manager {
 	/**
 	 * Documents manager constructor.
 	 *
-	 * Initializing the Elementor documents manager.
+	 * Initializing the Refraction documents manager.
 	 *
 	 * @since 2.0.0
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'elementor/documents/register', [ $this, 'register_default_types' ], 0 );
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/documents/register', [ $this, 'register_default_types' ], 0 );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 		add_filter( 'post_row_actions', [ $this, 'filter_post_row_actions' ], 11, 2 );
 		add_filter( 'page_row_actions', [ $this, 'filter_post_row_actions' ], 11, 2 );
 		add_filter( 'user_has_cap', [ $this, 'remove_user_edit_cap' ], 10, 3 );
-		add_filter( 'elementor/editor/localize_settings', [ $this, 'localize_settings' ] );
+		add_filter( 'refraction/editor/localize_settings', [ $this, 'localize_settings' ] );
 		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
 	}
 
@@ -96,7 +96,7 @@ class Documents_Manager {
 	 *
 	 * Process ajax action handles when saving data and discarding changes.
 	 *
-	 * Fired by `elementor/ajax/register_actions` action.
+	 * Fired by `refraction/ajax/register_actions` action.
 	 *
 	 * @since 2.0.0
 	 * @access public
@@ -192,7 +192,7 @@ class Documents_Manager {
 		 *
 		 * @param int $post_id The post ID of the document.
 		 */
-		$post_id = apply_filters( 'elementor/documents/get/post_id', $post_id );
+		$post_id = apply_filters( 'refraction/documents/get/post_id', $post_id );
 
 		if ( ! $from_cache || ! isset( $this->documents[ $post_id ] ) ) {
 			$doc_type = $this->get_doc_type_by_id( $post_id );
@@ -381,18 +381,18 @@ class Documents_Manager {
 		}
 
 		if ( empty( $post_data['post_title'] ) ) {
-			$post_data['post_title'] = esc_html__( 'Elementor', 'elementor' );
+			$post_data['post_title'] = esc_html__( 'Refraction', 'refraction' );
 			if ( 'post' !== $type ) {
 				$post_data['post_title'] = sprintf(
 					/* translators: %s: Document title. */
-					__( 'Elementor %s', 'elementor' ),
+					__( 'Refraction %s', 'refraction' ),
 					call_user_func( [ $class, 'get_title' ] )
 				);
 			}
 			$update_title = true;
 		}
 
-		$meta_data['_elementor_edit_mode'] = 'builder';
+		$meta_data['_refraction_edit_mode'] = 'builder';
 
 		// Save the type as-is for plugins that hooked at `wp_insert_post`.
 		$meta_data[ Document::TYPE_META_KEY ] = $type;
@@ -504,14 +504,14 @@ class Documents_Manager {
 	 *
 	 * @param array $request Post ID.
 	 *
-	 * @throws \Exception If current user don't have permissions to edit the post or the post is not using Elementor.
+	 * @throws \Exception If current user don't have permissions to edit the post or the post is not using Refraction.
 	 *
 	 * @return array The document data after saving.
 	 */
 	public function ajax_save( $request ) {
 		$document = $this->get( $request['editor_post_id'] );
 
-		if ( ! $document->is_built_with_elementor() || ! $document->is_editable_by_current_user() ) {
+		if ( ! $document->is_built_with_refraction() || ! $document->is_editable_by_current_user() ) {
 			throw new \Exception( 'Access denied.' );
 		}
 
@@ -584,7 +584,7 @@ class Documents_Manager {
 		 * @param array    $return_data The returned data.
 		 * @param Document $document    The document instance.
 		 */
-		$return_data = apply_filters( 'elementor/documents/ajax_save/return_data', $return_data, $document );
+		$return_data = apply_filters( 'refraction/documents/ajax_save/return_data', $return_data, $document );
 
 		return $return_data;
 	}
@@ -597,7 +597,7 @@ class Documents_Manager {
 	 * @param array $request
 	 *
 	 * @return bool True if changes discarded, False otherwise.
-	 * @throws \Exception If current user don't have permissions to edit the post or the post is not using Elementor.
+	 * @throws \Exception If current user don't have permissions to edit the post or the post is not using Refraction.
 	 *
 	 * @since 2.0.0
 	 * @access public
@@ -637,7 +637,7 @@ class Documents_Manager {
 		$this->switch_to_document( $document );
 
 		// Change mode to Builder
-		$document->set_is_built_with_elementor( true );
+		$document->set_is_built_with_refraction( true );
 
 		$doc_config = $document->get_config();
 
@@ -715,31 +715,31 @@ class Documents_Manager {
 	}
 
 	private function register_types() {
-		if ( ! did_action( 'elementor/documents/register' ) ) {
+		if ( ! did_action( 'refraction/documents/register' ) ) {
 			/**
-			 * Register Elementor documents.
+			 * Register Refraction documents.
 			 *
 			 * @since 2.0.0
 			 *
 			 * @param Documents_Manager $this The document manager instance.
 			 */
-			do_action( 'elementor/documents/register', $this );
+			do_action( 'refraction/documents/register', $this );
 		}
 	}
 
 	/**
 	 * Get create new post URL.
 	 *
-	 * Retrieve a custom URL for creating a new post/page using Elementor.
+	 * Retrieve a custom URL for creating a new post/page using Refraction.
 	 *
 	 * @param string      $post_type Optional. Post type slug. Default is 'page'.
 	 * @param string|null $template_type Optional. Query arg 'template_type'. Default is null.
 	 *
-	 * @return string A URL for creating new post using Elementor.
+	 * @return string A URL for creating new post using Refraction.
 	 */
 	public static function get_create_new_post_url( $post_type = 'page', $template_type = null ) {
 		$query_args = [
-			'action' => 'elementor_new_post',
+			'action' => 'refraction_new_post',
 			'post_type' => $post_type,
 		];
 
@@ -749,7 +749,7 @@ class Documents_Manager {
 
 		$new_post_url = add_query_arg( $query_args, admin_url( 'edit.php' ) );
 
-		$new_post_url = add_query_arg( '_wpnonce', wp_create_nonce( 'elementor_action_new_post' ), $new_post_url );
+		$new_post_url = add_query_arg( '_wpnonce', wp_create_nonce( 'refraction_action_new_post' ), $new_post_url );
 
 		return $new_post_url;
 	}
@@ -760,21 +760,21 @@ class Documents_Manager {
 			$post_id = wp_get_post_parent_id( $post_id );
 		}
 
-		// Content built with Elementor.
+		// Content built with Refraction.
 		$template_type = get_post_meta( $post_id, Document::TYPE_META_KEY, true );
 
 		if ( $template_type && isset( $this->types[ $template_type ] ) ) {
 			return $template_type;
 		}
 
-		// Elementor installation on a site with existing content (which doesn't contain Elementor's meta).
+		// Refraction installation on a site with existing content (which doesn't contain Refraction's meta).
 		$post_type = get_post_type( $post_id );
 
 		return $this->cpt[ $post_type ] ?? 'post';
 	}
 
 	public function register_rest_routes() {
-		register_rest_route('elementor/v1/documents', '/(?P<id>\d+)/media/import', [
+		register_rest_route('refraction/v1/documents', '/(?P<id>\d+)/media/import', [
 			'methods' => \WP_REST_Server::CREATABLE,
 			'callback' => function( $request ) {
 				$post_id = $request->get_param( 'id' );
@@ -799,7 +799,7 @@ class Documents_Manager {
 
 				} catch ( \Exception $e ) {
 					return new \WP_Error(
-						'elementor_import_error',
+						'refraction_import_error',
 						$e->getMessage(),
 						[ 'status' => 500 ]
 					);

@@ -1,5 +1,5 @@
 import { useState } from '@wordpress/element';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 import PropTypes from 'prop-types';
 import { DEFAULT_ICON, ICON_MAP } from '../shared';
 import CollapsedMenuItemPopover from './collapsed-menu-item-popover';

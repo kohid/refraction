@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { type StyleDefinition } from '@elementor/editor-styles';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { type StyleDefinition } from '@refraction/editor-styles';
 
 import { addTemplateStyles } from './templates-styles-provider';
 import { useLoadedTemplates } from './use-loaded-templates';

@@ -40,4 +40,4 @@ RUN npm run install:ci && npm run composer:no-dev
 RUN npm run build
 
 FROM scratch AS output
-COPY --from=builder /app/build /elementor
+COPY --from=builder /app/build /refraction

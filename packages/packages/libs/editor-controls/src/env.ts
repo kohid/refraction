@@ -1,5 +1,5 @@
-import { parseEnv } from '@elementor/env';
+import { parseEnv } from '@refraction/env';
 
 export const { env } = parseEnv< {
 	background_placeholder_image: string;
-} >( '@elementor/editor-controls' );
+} >( '@refraction/editor-controls' );

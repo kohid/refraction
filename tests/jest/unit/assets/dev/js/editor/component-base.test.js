@@ -1,28 +1,28 @@
-jest.mock( 'elementor/assets/dev/js/modules/imports/module.js', () => {
+jest.mock( 'refraction/assets/dev/js/modules/imports/module.js', () => {
 	return class Module {};
 } );
 
-jest.mock( 'elementor-panel/pages/editor', () => {
+jest.mock( 'refraction-panel/pages/editor', () => {
 	return class Module {};
 } );
 
-jest.mock( 'elementor-controls/base-data', () => {
+jest.mock( 'refraction-controls/base-data', () => {
 	return class Module {};
 } );
 
-import ComponentBase from 'elementor-editor/component-base';
+import ComponentBase from 'refraction-editor/component-base';
 
 describe( 'ComponentBase', () => {
 	window.document.body.innerHTML = `
-		<div class="elementor-control elementor-control-system_colors">
-			<div class="elementor-repeater-row-controls">
-				<div class="elementor elementor-control elementor-control-_id">
-					<div class="elementor-control-content">
+		<div class="refraction-control refraction-control-system_colors">
+			<div class="refraction-repeater-row-controls">
+				<div class="refraction refraction-control refraction-control-_id">
+					<div class="refraction-control-content">
 						<input type="hidden" data-setting="_id" value="primary">
 					</div>
 				</div>
-				<div class="elementor elementor-control elementor-control-_id">
-					<div class="elementor-control-content">
+				<div class="refraction refraction-control refraction-control-_id">
+					<div class="refraction-control-content">
 						<input type="hidden" data-setting="_id" value="secondary">
 					</div>
 				</div>
@@ -36,13 +36,13 @@ describe( 'ComponentBase', () => {
 	document.querySelector( 'div.pickr button.pcr-button' ).addEventListener( 'click', mockCallBack );
 
 	beforeAll( async () => {
-		global.elementor = {
+		global.refraction = {
 			getPanelView: () => ( {
 				getCurrentPageView: () => ( {
 					content: {
 						currentView: {
 							getControlViewByName: ( name ) => {
-								if ( ! document.querySelector( `div.elementor-control-${ name }` ) ) {
+								if ( ! document.querySelector( `div.refraction-control-${ name }` ) ) {
 									throw new TypeError( 'Document does not have control' );
 								}
 
@@ -64,7 +64,7 @@ describe( 'ComponentBase', () => {
 	} );
 
 	afterAll( () => {
-		delete global.elementor;
+		delete global.refraction;
 
 		jest.resetAllMocks();
 	} );

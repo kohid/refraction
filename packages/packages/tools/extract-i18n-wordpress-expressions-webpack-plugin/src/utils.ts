@@ -11,7 +11,7 @@ const COMMENTS_REGEXPS = [
 ] as const;
 
 const TRANSLATIONS_REGEXPS = [
-	// Matches translation functions: `__('Hello', 'elementor')`, `_n('Me', 'Us', 2, 'elementor-pro')`.
+	// Matches translation functions: `__('Hello', 'refraction')`, `_n('Me', 'Us', 2, 'refraction-pro')`.
 	/\b_(?:_|n|nx|x)\(.*?,\s*(?<c>['"`])[\w-]+\k<c>\s*?\)/gs,
 ] as const;
 

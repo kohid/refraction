@@ -14,17 +14,17 @@ type Props = {
 
 export const EmptyState = ( { icon, title, message, onAdd, children }: Props ) => {
 	const canAdd = usePermissions().canAdd();
-	const displayTitle = canAdd ? title : __( 'There are no variables', 'elementor' );
+	const displayTitle = canAdd ? title : __( 'There are no variables', 'refraction' );
 	const displayMessage = canAdd
 		? message
-		: __( 'With your current role, you can only connect and detach variables.', 'elementor' );
+		: __( 'With your current role, you can only connect and detach variables.', 'refraction' );
 
 	return (
 		<Content title={ displayTitle } message={ displayMessage } icon={ icon }>
 			{ children ||
 				( onAdd && (
 					<Button variant="outlined" color="secondary" size="small" onClick={ onAdd }>
-						{ __( 'Create a variable', 'elementor' ) }
+						{ __( 'Create a variable', 'refraction' ) }
 					</Button>
 				) ) }
 		</Content>

@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor color control.
+ * Refraction color control.
  *
  * A base control for creating color control. Displays a color picker field with
  * an alpha slider. Includes a customizable color palette that can be preset by
@@ -45,14 +45,14 @@ class Control_Color extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label class="elementor-control-title">{{{ data.label || '' }}}</label>
-			<div class="elementor-control-input-wrapper elementor-control-dynamic-switcher-wrapper elementor-control-unit-5">
-				<div class="elementor-color-picker-placeholder"></div>
+		<div class="refraction-control-field">
+			<label class="refraction-control-title">{{{ data.label || '' }}}</label>
+			<div class="refraction-control-input-wrapper refraction-control-dynamic-switcher-wrapper refraction-control-unit-5">
+				<div class="refraction-color-picker-placeholder"></div>
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

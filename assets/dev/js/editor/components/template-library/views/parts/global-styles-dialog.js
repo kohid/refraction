@@ -2,10 +2,10 @@ export function showGlobalStylesDialog() {
 	return new Promise( ( resolve, reject ) => {
 		let settled = false;
 
-		const dialog = elementorCommon.dialogsManager.createWidget( 'lightbox', {
-			id: 'elementor-global-styles-dialog',
+		const dialog = refractionCommon.dialogsManager.createWidget( 'lightbox', {
+			id: 'refraction-global-styles-dialog',
 			headerMessage: '',
-			message: wp.template( 'elementor-global-styles-dialog' )(),
+			message: wp.template( 'refraction-global-styles-dialog' )(),
 			position: {
 				my: 'center',
 				at: 'center',
@@ -48,22 +48,22 @@ export function showGlobalStylesDialog() {
 
 function setupDialogEventListeners( dialog, resolve, reject ) {
 	const $content = dialog.getElements( 'message' );
-	const $matchRadio = $content.find( '#elementor-global-styles-match' );
-	const $keepRadio = $content.find( '#elementor-global-styles-keep' );
-	const $createCheckbox = $content.find( '#elementor-global-styles-create' );
-	const $checkboxContainer = $content.find( '.elementor-global-styles-dialog__checkbox-container' );
-	const $insertBtn = $content.find( '#elementor-global-styles-insert' );
-	const $cancelBtn = $content.find( '#elementor-global-styles-cancel' );
+	const $matchRadio = $content.find( '#refraction-global-styles-match' );
+	const $keepRadio = $content.find( '#refraction-global-styles-keep' );
+	const $createCheckbox = $content.find( '#refraction-global-styles-create' );
+	const $checkboxContainer = $content.find( '.refraction-global-styles-dialog__checkbox-container' );
+	const $insertBtn = $content.find( '#refraction-global-styles-insert' );
+	const $cancelBtn = $content.find( '#refraction-global-styles-cancel' );
 
-	$matchRadio.off( '.elementorGlobalStyles' ).on( 'change.elementorGlobalStyles', () => {
+	$matchRadio.off( '.refractionGlobalStyles' ).on( 'change.refractionGlobalStyles', () => {
 		$checkboxContainer.hide();
 	} );
 
-	$keepRadio.off( '.elementorGlobalStyles' ).on( 'change.elementorGlobalStyles', () => {
+	$keepRadio.off( '.refractionGlobalStyles' ).on( 'change.refractionGlobalStyles', () => {
 		$checkboxContainer.show();
 	} );
 
-	$insertBtn.off( '.elementorGlobalStyles' ).on( 'click.elementorGlobalStyles', () => {
+	$insertBtn.off( '.refractionGlobalStyles' ).on( 'click.refractionGlobalStyles', () => {
 		let mode;
 
 		if ( $matchRadio.is( ':checked' ) ) {
@@ -77,7 +77,7 @@ function setupDialogEventListeners( dialog, resolve, reject ) {
 		resolve( { mode } );
 	} );
 
-	$cancelBtn.off( '.elementorGlobalStyles' ).on( 'click.elementorGlobalStyles', () => {
+	$cancelBtn.off( '.refractionGlobalStyles' ).on( 'click.refractionGlobalStyles', () => {
 		reject( new Error( 'User cancelled' ) );
 	} );
 }

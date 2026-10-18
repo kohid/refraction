@@ -7,7 +7,7 @@ export class Preview extends $e.modules.CommandBase {
 	async apply( args ) {
 		const { id } = args,
 			{ footerSaver } = $e.components.get( 'document/save' ),
-			document = elementor.documents.get( id );
+			document = refraction.documents.get( id );
 
 		if ( document.editor.isChanged ) {
 			// Force save even if it's saving now.

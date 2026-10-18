@@ -58,11 +58,11 @@ export default class AssetsLoader {
 	}
 }
 
-const assetsUrl = elementorFrontendConfig.urls.assets;
+const assetsUrl = refractionFrontendConfig.urls.assets;
 
-const fileSuffix = elementorFrontendConfig.environmentMode.isScriptDebug ? '' : '.min';
+const fileSuffix = refractionFrontendConfig.environmentMode.isScriptDebug ? '' : '.min';
 
-const pluginVersion = elementorFrontendConfig.version;
+const pluginVersion = refractionFrontendConfig.version;
 
 AssetsLoader.assets = {
 	script: {
@@ -83,14 +83,14 @@ AssetsLoader.assets = {
 			parent: 'head',
 		},
 		'e-lightbox': {
-			src: elementorFrontendConfig?.responsive?.hasCustomBreakpoints
-				? `${ elementorFrontendConfig.urls.uploadUrl }/elementor/css/custom-lightbox.min.css?ver=${ pluginVersion }`
+			src: refractionFrontendConfig?.responsive?.hasCustomBreakpoints
+				? `${ refractionFrontendConfig.urls.uploadUrl }/refraction/css/custom-lightbox.min.css?ver=${ pluginVersion }`
 				: `${ assetsUrl }css/conditionals/lightbox${ fileSuffix }.css?ver=${ pluginVersion }`,
 		},
 		dialog: {
 			src: `${ assetsUrl }css/conditionals/dialog${ fileSuffix }.css?ver=${ pluginVersion }`,
 			parent: 'head',
-			before: '#elementor-frontend-css',
+			before: '#refraction-frontend-css',
 		},
 	},
 };

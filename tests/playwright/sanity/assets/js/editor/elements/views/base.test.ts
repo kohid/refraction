@@ -8,7 +8,7 @@ test( 'renderDataBindings() sanity test', async ( { page, apiRequests }, testInf
 		editor = await wpAdmin.openNewPage(),
 		elementId = await editor.addWidget( { widgetType: 'testimonial' } ),
 		elementHandle = await editor.getElementHandle( elementId ),
-		elementContent = await elementHandle.$( '.elementor-testimonial-image' );
+		elementContent = await elementHandle.$( '.refraction-testimonial-image' );
 
 	// Act - Edit element content.
 	await page.click( 'textarea' );

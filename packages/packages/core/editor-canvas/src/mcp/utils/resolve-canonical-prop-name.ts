@@ -1,5 +1,5 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
-import { type PropsSchema } from '@elementor/editor-props';
+import { getWidgetsCache } from '@refraction/editor-elements';
+import { type PropsSchema } from '@refraction/editor-props';
 
 function buildAliasToCanonicalMap( schema: PropsSchema ): Record< string, string > {
 	const aliasToCanonical: Record< string, string > = {};

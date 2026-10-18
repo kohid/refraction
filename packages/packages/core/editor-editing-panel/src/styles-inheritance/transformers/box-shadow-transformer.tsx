@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type ReactNode } from 'react';
-import { createTransformer } from '@elementor/editor-canvas';
+import { createTransformer } from '@refraction/editor-canvas';
 
 type Shadow = {
 	hOffset?: string;

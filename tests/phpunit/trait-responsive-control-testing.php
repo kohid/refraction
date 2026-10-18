@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Tests\Phpunit;
+namespace Refraction\Tests\Phpunit;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 trait Responsive_Control_Testing_Trait {
 

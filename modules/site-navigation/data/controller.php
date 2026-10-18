@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Modules\SiteNavigation\Data;
+namespace Refraction\Modules\SiteNavigation\Data;
 
-use Elementor\Plugin;
-use Elementor\Data\V2\Base\Controller as Base_Controller;
-use Elementor\Modules\SiteNavigation\Data\Endpoints\Add_New_Post;
-use Elementor\Modules\SiteNavigation\Data\Endpoints\Duplicate_Post;
-use Elementor\Modules\SiteNavigation\Data\Endpoints\Homepage;
-use Elementor\Modules\SiteNavigation\Data\Endpoints\Recent_Posts;
+use Refraction\Plugin;
+use Refraction\Data\V2\Base\Controller as Base_Controller;
+use Refraction\Modules\SiteNavigation\Data\Endpoints\Add_New_Post;
+use Refraction\Modules\SiteNavigation\Data\Endpoints\Duplicate_Post;
+use Refraction\Modules\SiteNavigation\Data\Endpoints\Homepage;
+use Refraction\Modules\SiteNavigation\Data\Endpoints\Recent_Posts;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

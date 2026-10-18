@@ -29,7 +29,7 @@ describe( 'useSyncDocumentTitle', () => {
 		const { rerender } = renderHook( useSyncDocumentTitle );
 
 		// Assert.
-		expect( window.document.title ).toBe( 'Edit "Initial Document" with Elementor' );
+		expect( window.document.title ).toBe( 'Edit "Initial Document" with Refraction' );
 
 		// Arrange - set the new document.
 		jest.mocked( useActiveDocument ).mockReturnValue(
@@ -46,7 +46,7 @@ describe( 'useSyncDocumentTitle', () => {
 		rerender();
 
 		// Assert.
-		expect( window.document.title ).toBe( 'Edit "New Document" with Elementor' );
+		expect( window.document.title ).toBe( 'Edit "New Document" with Refraction' );
 	} );
 
 	it( 'should use the host document title when the active document is a kit', () => {
@@ -77,7 +77,7 @@ describe( 'useSyncDocumentTitle', () => {
 		renderHook( useSyncDocumentTitle );
 
 		// Assert.
-		expect( window.document.title ).toBe( 'Edit "My Page" with Elementor' );
+		expect( window.document.title ).toBe( 'Edit "My Page" with Refraction' );
 	} );
 
 	it( 'should not modify the title when there is no active document', () => {
@@ -105,6 +105,6 @@ describe( 'useSyncDocumentTitle', () => {
 		renderHook( useSyncDocumentTitle );
 
 		// Assert.
-		expect( window.document.title ).toBe( 'Edit "" with Elementor' );
+		expect( window.document.title ).toBe( 'Edit "" with Refraction' );
 	} );
 } );

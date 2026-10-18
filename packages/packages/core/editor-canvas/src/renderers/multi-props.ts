@@ -1,4 +1,4 @@
-import { type Props, type PropValue } from '@elementor/editor-props';
+import { type Props, type PropValue } from '@refraction/editor-props';
 
 type MultiProps = {
 	'$$multi-props': true;

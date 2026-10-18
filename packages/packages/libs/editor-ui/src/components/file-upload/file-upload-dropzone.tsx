@@ -57,7 +57,7 @@ export const FileUploadDropzone = ( {
 		<Card
 			variant="outlined"
 			role="region"
-			aria-label={ regionLabel ?? __( 'File dropzone', 'elementor' ) }
+			aria-label={ regionLabel ?? __( 'File dropzone', 'refraction' ) }
 			onDrop={ dropZoneProps.onDrop }
 			onDragEnter={ dropZoneProps.onDragEnter }
 			onDragLeave={ dropZoneProps.onDragLeave }
@@ -69,10 +69,10 @@ export const FileUploadDropzone = ( {
 				<Stack direction="row" spacing={ 0.5 } alignItems="center">
 					<Link component="button" type="button" underline="always" onClick={ handleBrowseClick }>
 						<Typography variant="body1" component="span">
-							{ primaryLabel ?? __( 'Upload file', 'elementor' ) }
+							{ primaryLabel ?? __( 'Upload file', 'refraction' ) }
 						</Typography>
 					</Link>
-					<Typography variant="body1">{ secondaryLabel ?? __( 'or drag and drop', 'elementor' ) }</Typography>
+					<Typography variant="body1">{ secondaryLabel ?? __( 'or drag and drop', 'refraction' ) }</Typography>
 				</Stack>
 				{ helperText ? (
 					<Typography variant="caption" color="text.secondary">

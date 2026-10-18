@@ -1,10 +1,10 @@
 import { createMockDocument, renderHookWithStore } from 'test-utils';
-import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@elementor/store';
+import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@refraction/store';
 
 import { slice } from '../../store';
 import useActiveDocument from '../use-active-document';
 
-describe( '@elementor/editor-documents - useActiveDocument', () => {
+describe( '@refraction/editor-documents - useActiveDocument', () => {
 	let store: Store< SliceState< typeof slice > >;
 
 	beforeEach( () => {

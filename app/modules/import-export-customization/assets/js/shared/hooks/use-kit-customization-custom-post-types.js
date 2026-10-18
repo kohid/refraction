@@ -35,9 +35,9 @@ export function useKitCustomizationCustomPostTypes( { data } ) {
 			const isInWpContent = wpContentObject && 'object' === typeof wpContentObject && Object.keys( wpContentObject ).length > 0;
 
 			const contentObject = content[ postTypeValue ];
-			const isInElementorContent = contentObject && 'object' === typeof contentObject && Object.keys( contentObject ).length > 0;
+			const isInRefractionContent = contentObject && 'object' === typeof contentObject && Object.keys( contentObject ).length > 0;
 
-			return isInWpContent || isInElementorContent;
+			return isInWpContent || isInRefractionContent;
 		} );
 	}, [ isImport, data?.uploadedData, builtInCustomPostTypes ] );
 

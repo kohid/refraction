@@ -4,16 +4,16 @@ export const Default = () => {
 	QUnit.module( 'Default', ( hooks ) => {
 		hooks.before( () => {
 			// Save the 'post_status' before the test, to put it back later.
-			tempPostStatus = elementor.documents.getCurrent().config.settings.settings.post_status;
+			tempPostStatus = refraction.documents.getCurrent().config.settings.settings.post_status;
 		} );
 
 		hooks.after( () => {
 			// Put back as it was before.
-			elementor.documents.getCurrent().container.settings.set( 'post_status', tempPostStatus );
+			refraction.documents.getCurrent().container.settings.set( 'post_status', tempPostStatus );
 		} );
 
 		QUnit.test( 'Document post_status is "draft"', async ( assert ) => {
-			const document = elementor.documents.getCurrent();
+			const document = refraction.documents.getCurrent();
 
 			document.container.settings.set( 'post_status', 'draft' );
 
@@ -24,7 +24,7 @@ export const Default = () => {
 		} );
 
 		QUnit.test( 'Document post_status is "draft" and user cannot publish', async ( assert ) => {
-			const document = elementor.documents.getCurrent();
+			const document = refraction.documents.getCurrent();
 
 			document.container.settings.set( 'post_status', 'draft' );
 
@@ -43,7 +43,7 @@ export const Default = () => {
 		QUnit.test( 'Document post_status is "publish", "future", "private" ', async ( assert ) => {
 			// TODO: There is real bug with 'future'.
 			const testStatuses = [ 'publish', 'private' /* , 'future' */ ],
-				document = elementor.documents.getCurrent();
+				document = refraction.documents.getCurrent();
 
 			for ( const status of testStatuses ) {
 				document.container.settings.set( 'post_status', status );
@@ -56,7 +56,7 @@ export const Default = () => {
 		} );
 
 		QUnit.test( 'Document post_status is "pending"', async ( assert ) => {
-			const document = elementor.documents.getCurrent();
+			const document = refraction.documents.getCurrent();
 
 			document.container.settings.set( 'post_status', 'pending' );
 
@@ -67,7 +67,7 @@ export const Default = () => {
 		} );
 
 		QUnit.test( 'Document post_status is "pending" and user cannot publish', async ( assert ) => {
-			const document = elementor.documents.getCurrent();
+			const document = refraction.documents.getCurrent();
 
 			document.container.settings.set( 'post_status', 'pending' );
 

@@ -1,5 +1,5 @@
-import { type V1Document } from '@elementor/editor-documents';
-import { __dispatch as dispatch, __getStore as getStore } from '@elementor/store';
+import { type V1Document } from '@refraction/editor-documents';
+import { __dispatch as dispatch, __getStore as getStore } from '@refraction/store';
 
 import { type ComponentId, type OverridableProps, type PublishedComponent, type UnpublishedComponent } from '../types';
 import { type ComponentsPathItem, type SanitizeAttributes, slice } from './store';

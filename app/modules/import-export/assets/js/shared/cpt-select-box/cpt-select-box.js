@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { SharedContext } from '../../context/shared-context/shared-context-provider';
-import Select2 from 'elementor-app/ui/molecules/select2';
-import Text from 'elementor-app/ui/atoms/text';
-import TextField from 'elementor-app/ui/atoms/text-field';
+import Select2 from 'refraction-app/ui/molecules/select2';
+import Text from 'refraction-app/ui/atoms/text';
+import TextField from 'refraction-app/ui/atoms/text-field';
 
 export default function CptSelectBox() {
 	const sharedContext = useContext( SharedContext ),
@@ -28,7 +28,7 @@ export default function CptSelectBox() {
 	return (
 		<>
 			<Text variant="sm" tag="p" className="e-app-export-kit-content__description">
-				{ __( 'Custom Post Type', 'elementor' ) }
+				{ __( 'Custom Post Type', 'refraction' ) }
 			</Text>
 			{ customPostTypes.length > 0
 				? (
@@ -38,19 +38,19 @@ export default function CptSelectBox() {
 						options={ customPostTypes }
 						onChange={ ( e ) => selectedCpt( e.target.selectedOptions ) }
 						value={ selected }
-						placeholder={ __( 'Click to select custom post types', 'elementor' ) }
+						placeholder={ __( 'Click to select custom post types', 'refraction' ) }
 					/>
 				) : (
 					<TextField
 						variant="outlined"
 						// eslint-disable-next-line @wordpress/i18n-ellipsis
-						placeholder={ __( 'No custom post types in your site...', 'elementor' ) }
+						placeholder={ __( 'No custom post types in your site...', 'refraction' ) }
 						className="e-app-export-kit-content__disabled"
 					/>
 				)
 			}
 			<Text variant="sm" tag="span" className="e-app-export-kit-content__small-notice">
-				{ __( 'Add the custom posts types to export. The latest 20 items from each type will be included.', 'elementor' ) }
+				{ __( 'Add the custom posts types to export. The latest 20 items from each type will be included.', 'refraction' ) }
 			</Text>
 		</>
 	);

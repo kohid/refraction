@@ -4,7 +4,7 @@ export class LandingPageRemoveLibraryTab extends $e.modules.hookUI.After {
 	}
 
 	getId() {
-		return 'elementor-landing-pages-remove-library-tab';
+		return 'refraction-landing-pages-remove-library-tab';
 	}
 
 	getConditions( args ) {

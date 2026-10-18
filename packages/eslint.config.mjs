@@ -23,7 +23,7 @@ function getImportSortGroups() {
 	return [
 		[ '^\\u0000' ],
 		[ '^node:' ],
-		[ '^react$', '^react-dom$', '^react-dom\\/', '^\\w', '^@elementor\\/', '^@?\\w' ],
+		[ '^react$', '^react-dom$', '^react-dom\\/', '^\\w', '^@refraction\\/', '^@?\\w' ],
 		[ '^' ],
 		[ '^\\.' ],
 	];
@@ -123,7 +123,7 @@ export default [
 	{
 		files: [ '**/packages/@(core|libs)/**/*.[tj]s?(x)' ],
 		rules: {
-			'@wordpress/i18n-text-domain': [ 'error', { allowedTextDomain: 'elementor' } ],
+			'@wordpress/i18n-text-domain': [ 'error', { allowedTextDomain: 'refraction' } ],
 		},
 	},
 	{

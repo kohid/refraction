@@ -1,18 +1,18 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Base;
+namespace Refraction\Modules\FloatingButtons\Base;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Providers\Social_Network_Provider;
-use Elementor\Core\Base\Traits\Shared_Widget_Controls_Trait;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Typography;
-use Elementor\Modules\FloatingButtons\Classes\Render\Contact_Buttons_Core_Render;
-use Elementor\Modules\FloatingButtons\Documents\Floating_Buttons;
-use Elementor\Plugin;
-use Elementor\Repeater;
-use Elementor\Utils;
-use Elementor\Widget_Base;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Providers\Social_Network_Provider;
+use Refraction\Core\Base\Traits\Shared_Widget_Controls_Trait;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Typography;
+use Refraction\Modules\FloatingButtons\Classes\Render\Contact_Buttons_Core_Render;
+use Refraction\Modules\FloatingButtons\Documents\Floating_Buttons;
+use Refraction\Plugin;
+use Refraction\Repeater;
+use Refraction\Utils;
+use Refraction\Widget_Base;
 
 abstract class Widget_Contact_Button_Base extends Widget_Base {
 
@@ -33,7 +33,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 
 		$style_depends = Plugin::$instance->experiments->is_feature_active( 'e_font_icon_svg' )
 			? parent::get_style_depends()
-			: [ 'elementor-icons-fa-solid', 'elementor-icons-fa-brands', 'elementor-icons-fa-regular' ];
+			: [ 'refraction-icons-fa-solid', 'refraction-icons-fa-brands', 'refraction-icons-fa-regular' ];
 
 		$style_depends[] = 'widget-contact-buttons-base';
 
@@ -62,7 +62,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		return [
 			'content' => [
 				'chat_button_section' => [
-					'section_name' => esc_html__( 'Chat Button', 'elementor' ),
+					'section_name' => esc_html__( 'Chat Button', 'refraction' ),
 					'has_platform' => true,
 					'has_icon' => false,
 					'icon_default' => [
@@ -83,7 +83,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'has_notification_dot_default_enabled' => true,
 					'has_active_tab' => false,
 					'has_display_text' => false,
-					'display_text_label' => esc_html__( 'Call now', 'elementor' ),
+					'display_text_label' => esc_html__( 'Call now', 'refraction' ),
 					'has_display_text_select' => true,
 					'platform' => [
 						'group' => [
@@ -113,22 +113,22 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'has_accessible_name' => true,
 				],
 				'top_bar_section' => [
-					'section_name' => esc_html__( 'Top Bar', 'elementor' ),
+					'section_name' => esc_html__( 'Top Bar', 'refraction' ),
 					'has_image' => true,
 					'has_active_dot' => true,
 					'has_subtitle' => true,
 					'title' => [
-						'label' => esc_html__( 'Name', 'elementor' ),
-						'default' => esc_html__( 'Rob Jones', 'elementor' ),
-						'placeholder' => esc_html__( 'Type your name here', 'elementor' ),
+						'label' => esc_html__( 'Name', 'refraction' ),
+						'default' => esc_html__( 'Rob Jones', 'refraction' ),
+						'placeholder' => esc_html__( 'Type your name here', 'refraction' ),
 						'dynamic' => false,
 						'ai' => false,
 						'label_block' => false,
 					],
 					'subtitle' => [
-						'label' => esc_html__( 'Title', 'elementor' ),
-						'default' => esc_html__( 'Store Manager', 'elementor' ),
-						'placeholder' => esc_html__( 'Type your title here', 'elementor' ),
+						'label' => esc_html__( 'Title', 'refraction' ),
+						'default' => esc_html__( 'Store Manager', 'refraction' ),
+						'placeholder' => esc_html__( 'Type your title here', 'refraction' ),
 						'dynamic' => false,
 						'ai' => false,
 						'label_block' => false,
@@ -138,13 +138,13 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'has_typing_animation' => true,
 				],
 				'contact_section' => [
-					'section_name' => esc_html__( 'Contact Buttons', 'elementor' ),
+					'section_name' => esc_html__( 'Contact Buttons', 'refraction' ),
 					'has_cta_text' => true,
 					'repeater' => [
 						'has_tooltip' => false,
-						'tooltip_label' => esc_html__( 'Text', 'elementor' ),
-						'tooltip_default' => esc_html__( 'Tooltip', 'elementor' ),
-						'tooltip_placeholder' => esc_html__( 'Enter icon text', 'elementor' ),
+						'tooltip_label' => esc_html__( 'Text', 'refraction' ),
+						'tooltip_default' => esc_html__( 'Tooltip', 'refraction' ),
+						'tooltip_placeholder' => esc_html__( 'Enter icon text', 'refraction' ),
 						'has_title' => false,
 						'has_description' => false,
 					],
@@ -180,10 +180,10 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'has_accessible_name' => true,
 				],
 				'send_button_section' => [
-					'section_name' => esc_html__( 'Send Button', 'elementor' ),
+					'section_name' => esc_html__( 'Send Button', 'refraction' ),
 					'has_link' => false,
 					'text' => [
-						'default' => esc_html__( 'Click to start chat', 'elementor' ),
+						'default' => esc_html__( 'Click to start chat', 'refraction' ),
 					],
 				],
 			],
@@ -202,12 +202,12 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'has_tabs' => true,
 					'has_platform_color_controls' => false,
 					'hover_animation_type' => 'default',
-					'icon_color_label' => esc_html__( 'Icon Color', 'elementor' ),
+					'icon_color_label' => esc_html__( 'Icon Color', 'refraction' ),
 				],
 				'top_bar_section' => [
 					'has_title_heading' => true,
-					'title_heading_label' => esc_html__( 'Name', 'elementor' ),
-					'subtitle_heading_label' => esc_html__( 'Title', 'elementor' ),
+					'title_heading_label' => esc_html__( 'Name', 'refraction' ),
+					'subtitle_heading_label' => esc_html__( 'Title', 'refraction' ),
 					'has_style_close_button' => true,
 					'has_close_button_heading' => false,
 					'has_background' => true,
@@ -218,7 +218,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 				],
 				'contact_section' => [
 					'has_buttons_heading' => true,
-					'buttons_heading_label' => esc_html__( 'Buttons', 'elementor' ),
+					'buttons_heading_label' => esc_html__( 'Buttons', 'refraction' ),
 					'has_buttons_size' => true,
 					'has_box_shadow' => false,
 					'has_buttons_spacing' => false,
@@ -232,7 +232,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'has_padding' => false,
 					'has_button_corners' => false,
 					'has_typography' => false,
-					'icon_color_label' => esc_html__( 'Icon Color', 'elementor' ),
+					'icon_color_label' => esc_html__( 'Icon Color', 'refraction' ),
 					'has_hover_transition_duration' => false,
 				],
 				'send_button_section' => [
@@ -244,7 +244,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'typography_selector' => '{{WRAPPER}} .e-contact-buttons__send-cta',
 				],
 				'chat_box_section' => [
-					'section_name' => esc_html__( 'Chat Box', 'elementor' ),
+					'section_name' => esc_html__( 'Chat Box', 'refraction' ),
 					'has_width' => true,
 					'has_padding' => false,
 				],
@@ -282,7 +282,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_mail',
 			[
-				'label' => esc_html__( 'Email', 'elementor' ),
+				'label' => esc_html__( 'Email', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -291,7 +291,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'active' => false,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( '@', 'elementor' ),
+				'placeholder' => esc_html__( '@', 'refraction' ),
 				'default' => $config['content']['chat_button_section']['defaults']['mail'],
 				'condition' => [
 					'chat_button_platform' => Social_Network_Provider::EMAIL,
@@ -302,7 +302,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_mail_subject',
 			[
-				'label' => esc_html__( 'Subject', 'elementor' ),
+				'label' => esc_html__( 'Subject', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -318,7 +318,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_mail_body',
 			[
-				'label' => esc_html__( 'Message', 'elementor' ),
+				'label' => esc_html__( 'Message', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'default' => $config['content']['chat_button_section']['defaults']['mail_body'],
 				'condition' => [
@@ -330,7 +330,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_number',
 			[
-				'label' => esc_html__( 'Number', 'elementor' ),
+				'label' => esc_html__( 'Number', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -339,7 +339,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'active' => false,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( '+', 'elementor' ),
+				'placeholder' => esc_html__( '+', 'refraction' ),
 				'default' => $config['content']['chat_button_section']['defaults']['number'],
 				'condition' => [
 					'chat_button_platform' => [
@@ -355,7 +355,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_username',
 			[
-				'label' => esc_html__( 'Username', 'elementor' ),
+				'label' => esc_html__( 'Username', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -377,7 +377,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_viber_action',
 			[
-				'label' => esc_html__( 'Action', 'elementor' ),
+				'label' => esc_html__( 'Action', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'chat',
 				'options' => [
@@ -393,7 +393,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_waze',
 			[
-				'label' => esc_html__( 'Location', 'elementor' ),
+				'label' => esc_html__( 'Location', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -402,7 +402,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'active' => false,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( 'Paste Waze link', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste Waze link', 'refraction' ),
 				'default' => $config['content']['chat_button_section']['defaults']['location'],
 				'condition' => [
 					'chat_button_platform' => [
@@ -415,7 +415,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'chat_button_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -460,10 +460,10 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'chat_aria_label',
 				[
-					'label' => esc_html__( 'Accessible name', 'elementor' ),
+					'label' => esc_html__( 'Accessible name', 'refraction' ),
 					'type' => Controls_Manager::TEXT,
 					'default' => $config['content']['chat_button_section']['chat_aria_label'],
-					'placeholder' => esc_html__( 'Add accessible name', 'elementor' ),
+					'placeholder' => esc_html__( 'Add accessible name', 'refraction' ),
 					'dynamic' => [
 						'active' => true,
 					],
@@ -476,7 +476,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'chat_button_platform',
 				[
-					'label' => esc_html__( 'Platform', 'elementor' ),
+					'label' => esc_html__( 'Platform', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => $config['content']['chat_button_section']['platform']['default'],
 					'options' => Social_Network_Provider::get_social_networks_text(
@@ -492,7 +492,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'chat_button_icon',
 				[
-					'label' => esc_html__( 'Icon', 'elementor' ),
+					'label' => esc_html__( 'Icon', 'refraction' ),
 					'type' => Controls_Manager::ICONS,
 					'default' => $config['content']['chat_button_section']['icon_default'],
 					'recommended' => $config['content']['chat_button_section']['icons_recommended'],
@@ -513,10 +513,10 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'chat_button_show_dot',
 				[
-					'label' => esc_html__( 'Notification Dot', 'elementor' ),
+					'label' => esc_html__( 'Notification Dot', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'Show', 'elementor' ),
-					'label_off' => esc_html__( 'Hide', 'elementor' ),
+					'label_on' => esc_html__( 'Show', 'refraction' ),
+					'label_off' => esc_html__( 'Hide', 'refraction' ),
 					'return_value' => $notification_dot_return_value,
 					'default' => $notification_dot_default,
 				]
@@ -529,12 +529,12 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 				$this->add_control(
 					'chat_button_display_text_select',
 					[
-						'label' => esc_html__( 'Display Text', 'elementor' ),
+						'label' => esc_html__( 'Display Text', 'refraction' ),
 						'type'  => Controls_Manager::SELECT,
 						'default' => 'details',
 						'options' => [
-							'details' => esc_html__( 'Contact Details', 'elementor' ),
-							'cta' => esc_html__( 'Call to Action', 'elementor' ),
+							'details' => esc_html__( 'Contact Details', 'refraction' ),
+							'cta' => esc_html__( 'Call to Action', 'refraction' ),
 						],
 					]
 				);
@@ -543,13 +543,13 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'chat_button_display_text',
 				[
-					'label' => esc_html__( 'Call to Action Text', 'elementor' ),
+					'label' => esc_html__( 'Call to Action Text', 'refraction' ),
 					'type' => Controls_Manager::TEXT,
 					'dynamic' => [
 						'active' => true,
 					],
 					'label_block' => true,
-					'placeholder' => esc_html__( 'Enter the text', 'elementor' ),
+					'placeholder' => esc_html__( 'Enter the text', 'refraction' ),
 					'default' => $config['content']['chat_button_section']['display_text_label'],
 					'condition' => $this->get_display_text_condition([
 						'chat_button_display_text_select' => 'cta',
@@ -610,7 +610,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'top_bar_image',
 				[
-					'label' => esc_html__( 'Profile Image', 'elementor' ),
+					'label' => esc_html__( 'Profile Image', 'refraction' ),
 					'type' => Controls_Manager::MEDIA,
 					'default' => [
 						'url' => Utils::get_placeholder_image_src(),
@@ -623,10 +623,10 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'top_bar_show_dot',
 				[
-					'label' => esc_html__( 'Active Dot', 'elementor' ),
+					'label' => esc_html__( 'Active Dot', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'Show', 'elementor' ),
-					'label_off' => esc_html__( 'Hide', 'elementor' ),
+					'label_on' => esc_html__( 'Show', 'refraction' ),
+					'label_off' => esc_html__( 'Hide', 'refraction' ),
 					'return_value' => 'yes',
 					'default' => 'yes',
 				]
@@ -642,7 +642,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->start_controls_section(
 			'message_bubble_section',
 			[
-				'label' => esc_html__( 'Message Bubble', 'elementor' ),
+				'label' => esc_html__( 'Message Bubble', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -650,36 +650,36 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$this->add_control(
 			'message_bubble_name',
 			[
-				'label' => esc_html__( 'Name', 'elementor' ),
+				'label' => esc_html__( 'Name', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'Rob', 'elementor' ),
-				'placeholder' => esc_html__( 'Type your name here', 'elementor' ),
+				'default' => esc_html__( 'Rob', 'refraction' ),
+				'placeholder' => esc_html__( 'Type your name here', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'message_bubble_body',
 			[
-				'label' => esc_html__( 'Message', 'elementor' ),
+				'label' => esc_html__( 'Message', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
 				],
 				'label_block' => true,
-				'default' => esc_html__( 'Hey, how can I help you today?', 'elementor' ),
-				'placeholder' => esc_html__( 'Message', 'elementor' ),
+				'default' => esc_html__( 'Hey, how can I help you today?', 'refraction' ),
+				'placeholder' => esc_html__( 'Message', 'refraction' ),
 			],
 		);
 
 		$this->add_control(
 			'chat_button_time_format',
 			[
-				'label' => esc_html__( 'Time format', 'elementor' ),
+				'label' => esc_html__( 'Time format', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '12h',
 				'options' => [
-					'12h' => esc_html__( '2:20 PM', 'elementor' ),
-					'24h' => esc_html__( '14:20', 'elementor' ),
+					'12h' => esc_html__( '2:20 PM', 'refraction' ),
+					'24h' => esc_html__( '14:20', 'refraction' ),
 				],
 			]
 		);
@@ -688,10 +688,10 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'chat_button_show_animation',
 				[
-					'label' => esc_html__( 'Typing Animation', 'elementor' ),
+					'label' => esc_html__( 'Typing Animation', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'Show', 'elementor' ),
-					'label_off' => esc_html__( 'Hide', 'elementor' ),
+					'label_on' => esc_html__( 'Show', 'refraction' ),
+					'label_off' => esc_html__( 'Hide', 'refraction' ),
 					'return_value' => 'yes',
 					'default' => 'yes',
 				]
@@ -716,10 +716,10 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'contact_aria_label',
 				[
-					'label' => esc_html__( 'Accessible name', 'elementor' ),
+					'label' => esc_html__( 'Accessible name', 'refraction' ),
 					'type' => Controls_Manager::TEXT,
 					'default' => $config['content']['chat_button_section']['chat_aria_label'],
-					'placeholder' => esc_html__( 'Add accessible name', 'elementor' ),
+					'placeholder' => esc_html__( 'Add accessible name', 'refraction' ),
 					'dynamic' => [
 						'active' => true,
 					],
@@ -731,10 +731,10 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 			$this->add_control(
 				'contact_cta_text',
 				[
-					'label' => esc_html__( 'Call to Action Text', 'elementor' ),
+					'label' => esc_html__( 'Call to Action Text', 'refraction' ),
 					'type' => Controls_Manager::TEXT,
-					'default' => esc_html__( 'Start conversation:', 'elementor' ),
-					'placeholder' => esc_html__( 'Type your text here', 'elementor' ),
+					'default' => esc_html__( 'Start conversation:', 'refraction' ),
+					'placeholder' => esc_html__( 'Type your text here', 'refraction' ),
 					'label_block' => true,
 				]
 			);
@@ -749,7 +749,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 						'alert_type' => 'info',
 						'content' => sprintf(
 							/* translators: 1: Minimum items, 2: Items limit. */
-							esc_html__( 'Add between %1$s to %2$s contact buttons', 'elementor' ),
+							esc_html__( 'Add between %1$s to %2$s contact buttons', 'refraction' ),
 							'<b>' . $config['content']['contact_section']['platform']['min_items'] . '</b>',
 							'<b>' . $config['content']['contact_section']['platform']['limit'] . '</b>'
 						),
@@ -763,7 +763,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 						'alert_type' => 'info',
 						'content' => sprintf(
 							/* translators: %s: Items limit. */
-							esc_html__( 'Add up to %s contact buttons', 'elementor' ),
+							esc_html__( 'Add up to %s contact buttons', 'refraction' ),
 							'<b>' . $config['content']['contact_section']['platform']['limit'] . '</b>'
 						),
 					]
@@ -776,7 +776,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_platform',
 			[
-				'label' => esc_html__( 'Platform', 'elementor' ),
+				'label' => esc_html__( 'Platform', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => Social_Network_Provider::get_social_networks_text(
 					$config['content']['contact_section']['platform']['group-1']
@@ -810,7 +810,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 						'active' => true,
 					],
 					'default' => 'Title',
-					'placeholder' => esc_html__( 'Enter title', 'elementor' ),
+					'placeholder' => esc_html__( 'Enter title', 'refraction' ),
 				],
 			);
 		}
@@ -825,7 +825,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 						'active' => true,
 					],
 					'default' => 'Description',
-					'placeholder' => esc_html__( 'Enter description', 'elementor' ),
+					'placeholder' => esc_html__( 'Enter description', 'refraction' ),
 				],
 			);
 		}
@@ -833,9 +833,9 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_mail',
 			[
-				'label' => esc_html__( 'Email', 'elementor' ),
+				'label' => esc_html__( 'Email', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'placeholder' => esc_html__( 'Enter your email', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your email', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -854,9 +854,9 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_mail_subject',
 			[
-				'label' => esc_html__( 'Subject', 'elementor' ),
+				'label' => esc_html__( 'Subject', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'placeholder' => esc_html__( 'Subject', 'elementor' ),
+				'placeholder' => esc_html__( 'Subject', 'refraction' ),
 				'label_block' => true,
 				'condition' => [
 					'contact_icon_platform' => [
@@ -869,9 +869,9 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_mail_body',
 			[
-				'label' => esc_html__( 'Message', 'elementor' ),
+				'label' => esc_html__( 'Message', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'placeholder' => esc_html__( 'Message', 'elementor' ),
+				'placeholder' => esc_html__( 'Message', 'refraction' ),
 				'label_block' => true,
 				'condition' => [
 					'contact_icon_platform' => [
@@ -884,7 +884,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_number',
 			[
-				'label' => esc_html__( 'Number', 'elementor' ),
+				'label' => esc_html__( 'Number', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -893,7 +893,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'active' => false,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( '+', 'elementor' ),
+				'placeholder' => esc_html__( '+', 'refraction' ),
 				'condition' => [
 					'contact_icon_platform' => [
 						Social_Network_Provider::SMS,
@@ -908,7 +908,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_username',
 			[
-				'label' => esc_html__( 'Username', 'elementor' ),
+				'label' => esc_html__( 'Username', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -917,7 +917,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'active' => false,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( 'Enter your username', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your username', 'refraction' ),
 				'condition' => [
 					'contact_icon_platform' => [
 						Social_Network_Provider::MESSENGER,
@@ -930,7 +930,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -948,14 +948,14 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 				'default' => [
 					'is_external' => true,
 				],
-				'placeholder' => esc_html__( 'Paste URL or type', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste URL or type', 'refraction' ),
 			],
 		);
 
 		$repeater->add_control(
 			'contact_icon_waze',
 			[
-				'label' => esc_html__( 'Location', 'elementor' ),
+				'label' => esc_html__( 'Location', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'default' => [
 					'is_external' => true,
@@ -964,7 +964,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 					'active' => true,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( 'Paste Waze link', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste Waze link', 'refraction' ),
 				'condition' => [
 					'contact_icon_platform' => [
 						Social_Network_Provider::WAZE,
@@ -979,7 +979,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 		$repeater->add_control(
 			'contact_icon_viber_action',
 			[
-				'label' => esc_html__( 'Action', 'elementor' ),
+				'label' => esc_html__( 'Action', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'chat',
 				'dynamic' => [
@@ -1004,7 +1004,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 				'fields' => $repeater->get_controls(),
 				'title_field' => $this->get_icon_title_field(),
 				'prevent_empty' => true,
-				'button_text' => esc_html__( 'Add Item', 'elementor' ),
+				'button_text' => esc_html__( 'Add Item', 'refraction' ),
 				'default' => $config['content']['contact_section']['default'],
 			]
 		);
@@ -1018,8 +1018,8 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 
 		return <<<JS
 	<#
-	elementor.helpers.enqueueIconFonts( 'fa-solid' );
-	elementor.helpers.enqueueIconFonts( 'fa-brands' );
+	refraction.helpers.enqueueIconFonts( 'fa-solid' );
+	refraction.helpers.enqueueIconFonts( 'fa-brands' );
 	const mapping = {$platform_icons_js};
 	const text_mapping = {$platform_text_js};
 	#>
@@ -1041,10 +1041,10 @@ JS;
 		$this->add_control(
 			'send_button_text',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => $config['content']['send_button_section']['text']['default'],
-				'placeholder' => esc_html__( 'Type your text here', 'elementor' ),
+				'placeholder' => esc_html__( 'Type your text here', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -1058,7 +1058,7 @@ JS;
 			$this->add_control(
 				'send_button_url',
 				[
-					'label' => esc_html__( 'Link', 'elementor' ),
+					'label' => esc_html__( 'Link', 'refraction' ),
 					'type' => Controls_Manager::URL,
 					'default' => [
 						'is_external' => true,
@@ -1113,13 +1113,13 @@ JS;
 			$this->add_control(
 				'style_chat_button_size',
 				[
-					'label' => esc_html__( 'Size', 'elementor' ),
+					'label' => esc_html__( 'Size', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => $config['style']['chat_button_section']['button_size_default'],
 					'options' => [
-						'small' => esc_html__( 'Small', 'elementor' ),
-						'medium' => esc_html__( 'Medium', 'elementor' ),
-						'large' => esc_html__( 'Large', 'elementor' ),
+						'small' => esc_html__( 'Small', 'refraction' ),
+						'medium' => esc_html__( 'Medium', 'refraction' ),
+						'large' => esc_html__( 'Large', 'refraction' ),
 					],
 				]
 			);
@@ -1129,15 +1129,15 @@ JS;
 			$this->add_responsive_control(
 				'style_chat_button_horizontal_position',
 				[
-					'label' => esc_html__( 'Icon Position', 'elementor' ),
+					'label' => esc_html__( 'Icon Position', 'refraction' ),
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'start' => [
-							'title' => esc_html__( 'Left', 'elementor' ),
+							'title' => esc_html__( 'Left', 'refraction' ),
 							'icon' => 'eicon-h-align-left',
 						],
 						'end' => [
-							'title' => esc_html__( 'Right', 'elementor' ),
+							'title' => esc_html__( 'Right', 'refraction' ),
 							'icon' => 'eicon-h-align-right',
 						],
 					],
@@ -1159,7 +1159,7 @@ JS;
 			$this->add_responsive_control(
 				'style_chat_button_spacing',
 				[
-					'label' => esc_html__( 'Icon Spacing', 'elementor' ),
+					'label' => esc_html__( 'Icon Spacing', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						'%' => [
@@ -1198,7 +1198,7 @@ JS;
 			$this->start_controls_tab(
 				'style_button_color_tabs_normal',
 				[
-					'label' => esc_html__( 'Normal', 'elementor' ),
+					'label' => esc_html__( 'Normal', 'refraction' ),
 				]
 			);
 
@@ -1206,12 +1206,12 @@ JS;
 				$this->add_control(
 					'style_button_color_select',
 					[
-						'label' => esc_html__( 'Colors', 'elementor' ),
+						'label' => esc_html__( 'Colors', 'refraction' ),
 						'type' => Controls_Manager::SELECT,
 						'default' => 'default',
 						'options' => [
-							'default' => esc_html__( 'Default', 'elementor' ),
-							'custom' => esc_html__( 'Custom', 'elementor' ),
+							'default' => esc_html__( 'Default', 'refraction' ),
+							'custom' => esc_html__( 'Custom', 'refraction' ),
 						],
 					]
 				);
@@ -1234,7 +1234,7 @@ JS;
 			$this->add_control(
 				'style_button_color_background',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-button-bg: {{VALUE}}',
@@ -1250,7 +1250,7 @@ JS;
 			$this->start_controls_tab(
 				'style_button_color_tabs_hover',
 				[
-					'label' => esc_html__( 'Hover', 'elementor' ),
+					'label' => esc_html__( 'Hover', 'refraction' ),
 				]
 			);
 
@@ -1258,12 +1258,12 @@ JS;
 				$this->add_control(
 					'style_button_color_select_hover',
 					[
-						'label' => esc_html__( 'Colors', 'elementor' ),
+						'label' => esc_html__( 'Colors', 'refraction' ),
 						'type' => Controls_Manager::SELECT,
 						'default' => 'default',
 						'options' => [
-							'default' => esc_html__( 'Default', 'elementor' ),
-							'custom' => esc_html__( 'Custom', 'elementor' ),
+							'default' => esc_html__( 'Default', 'refraction' ),
+							'custom' => esc_html__( 'Custom', 'refraction' ),
 						],
 					]
 				);
@@ -1286,7 +1286,7 @@ JS;
 			$this->add_control(
 				'style_button_color_background_hover',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-button-bg-hover: {{VALUE}}',
@@ -1309,14 +1309,14 @@ JS;
 				$this->start_controls_tab(
 					'style_button_color_tabs_active',
 					[
-						'label' => esc_html__( 'Active', 'elementor' ),
+						'label' => esc_html__( 'Active', 'refraction' ),
 					]
 				);
 
 				$this->add_control(
 					'style_button_color_icon_active',
 					[
-						'label' => esc_html__( 'Icon Color', 'elementor' ),
+						'label' => esc_html__( 'Icon Color', 'refraction' ),
 						'type' => Controls_Manager::COLOR,
 						'selectors' => [
 							'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-active-button-color: {{VALUE}}',
@@ -1327,7 +1327,7 @@ JS;
 				$this->add_control(
 					'style_button_color_background_active',
 					[
-						'label' => esc_html__( 'Background Color', 'elementor' ),
+						'label' => esc_html__( 'Background Color', 'refraction' ),
 						'type' => Controls_Manager::COLOR,
 						'selectors' => [
 							'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-active-button-bg: {{VALUE}}',
@@ -1345,12 +1345,12 @@ JS;
 			$this->add_control(
 				'style_platform_control_select',
 				[
-					'label' => esc_html__( 'Colors', 'elementor' ),
+					'label' => esc_html__( 'Colors', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'default',
 					'options' => [
-						'default' => esc_html__( 'Default', 'elementor' ),
-						'custom' => esc_html__( 'Custom', 'elementor' ),
+						'default' => esc_html__( 'Default', 'refraction' ),
+						'custom' => esc_html__( 'Custom', 'refraction' ),
 					],
 					'separator' => 'before',
 				]
@@ -1373,7 +1373,7 @@ JS;
 			$this->add_control(
 				'style_button_color_background',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-button-bg: {{VALUE}}',
@@ -1389,7 +1389,7 @@ JS;
 			$this->add_responsive_control(
 				'style_chat_button_animation',
 				[
-					'label' => esc_html__( 'Entrance Animation', 'elementor' ),
+					'label' => esc_html__( 'Entrance Animation', 'refraction' ),
 					'type' => Controls_Manager::ANIMATION,
 					'frontend_available' => true,
 					'separator' => 'before',
@@ -1399,13 +1399,13 @@ JS;
 			$this->add_control(
 				'style_chat_button_animation_duration',
 				[
-					'label' => esc_html__( 'Animation Duration', 'elementor' ),
+					'label' => esc_html__( 'Animation Duration', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'normal',
 					'options' => [
-						'slow' => esc_html__( 'Slow', 'elementor' ),
-						'normal' => esc_html__( 'Normal', 'elementor' ),
-						'fast' => esc_html__( 'Fast', 'elementor' ),
+						'slow' => esc_html__( 'Slow', 'refraction' ),
+						'normal' => esc_html__( 'Normal', 'refraction' ),
+						'fast' => esc_html__( 'Fast', 'refraction' ),
 					],
 					'prefix_class' => 'animated-',
 				]
@@ -1414,7 +1414,7 @@ JS;
 			$this->add_control(
 				'style_chat_button_animation_delay',
 				[
-					'label' => esc_html__( 'Animation Delay', 'elementor' ) . ' (ms)',
+					'label' => esc_html__( 'Animation Delay', 'refraction' ) . ' (ms)',
 					'type' => Controls_Manager::NUMBER,
 					'min' => 0,
 					'step' => 100,
@@ -1458,7 +1458,7 @@ JS;
 			$this->add_responsive_control(
 				'style_chat_button_padding',
 				[
-					'label' => esc_html__( 'Padding', 'elementor' ),
+					'label' => esc_html__( 'Padding', 'refraction' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%', 'em', 'rem' ],
 					'selectors' => [
@@ -1473,7 +1473,7 @@ JS;
 			$this->add_control(
 				'style_chat_button_custom_animation_heading',
 				[
-					'label' => esc_html__( 'Hover Animation', 'elementor' ),
+					'label' => esc_html__( 'Hover Animation', 'refraction' ),
 					'type' => Controls_Manager::HEADING,
 					'separator' => 'before',
 				]
@@ -1484,14 +1484,14 @@ JS;
 				[
 					'type' => Controls_Manager::ALERT,
 					'alert_type' => 'info',
-					'content' => __( 'Hover animation is <b>desktop only</b>', 'elementor' ),
+					'content' => __( 'Hover animation is <b>desktop only</b>', 'refraction' ),
 				]
 			);
 
 			$this->add_control(
 				'style_chat_button_custom_animation_transition',
 				[
-					'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+					'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						's' => [
@@ -1529,7 +1529,7 @@ JS;
 			$this->add_control(
 				'style_top_bar_profile_heading',
 				[
-					'label' => esc_html__( 'Profile Image', 'elementor' ),
+					'label' => esc_html__( 'Profile Image', 'refraction' ),
 					'type' => Controls_Manager::HEADING,
 					'separator' => 'before',
 				]
@@ -1538,13 +1538,13 @@ JS;
 			$this->add_control(
 				'style_top_bar_image_size',
 				[
-					'label' => esc_html__( 'Size', 'elementor' ),
+					'label' => esc_html__( 'Size', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'medium',
 					'options' => [
-						'small' => esc_html__( 'Small', 'elementor' ),
-						'medium' => esc_html__( 'Medium', 'elementor' ),
-						'large' => esc_html__( 'Large', 'elementor' ),
+						'small' => esc_html__( 'Small', 'refraction' ),
+						'medium' => esc_html__( 'Medium', 'refraction' ),
+						'large' => esc_html__( 'Large', 'refraction' ),
 					],
 				]
 			);
@@ -1554,12 +1554,12 @@ JS;
 			$this->add_control(
 				'style_top_bar_colors',
 				[
-					'label' => esc_html__( 'Colors', 'elementor' ),
+					'label' => esc_html__( 'Colors', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'default',
 					'options' => [
-						'default' => esc_html__( 'Default', 'elementor' ),
-						'custom' => esc_html__( 'Custom', 'elementor' ),
+						'default' => esc_html__( 'Default', 'refraction' ),
+						'custom' => esc_html__( 'Custom', 'refraction' ),
 					],
 					'separator' => 'before',
 				]
@@ -1580,7 +1580,7 @@ JS;
 		$this->add_control(
 			'style_top_bar_title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-top-bar-title: {{VALUE}}',
@@ -1612,7 +1612,7 @@ JS;
 			$this->add_control(
 				'style_top_bar_subtitle_color',
 				[
-					'label' => esc_html__( 'Text Color', 'elementor' ),
+					'label' => esc_html__( 'Text Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-top-bar-subtitle: {{VALUE}}',
@@ -1640,7 +1640,7 @@ JS;
 				$this->add_control(
 					'style_top_bar_close_button_heading',
 					[
-						'label' => esc_html__( 'Close Button', 'elementor' ),
+						'label' => esc_html__( 'Close Button', 'refraction' ),
 						'type' => Controls_Manager::HEADING,
 						'separator' => $close_and_background_partial_divider,
 						'condition' => $this->get_platform_color_condition( [
@@ -1654,7 +1654,7 @@ JS;
 			$this->add_control(
 				'style_top_bar_close_button_color',
 				[
-					'label' => esc_html__( 'Close Button Color', 'elementor' ),
+					'label' => esc_html__( 'Close Button Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-close-button-color: {{VALUE}}',
@@ -1675,7 +1675,7 @@ JS;
 				$this->add_control(
 					'style_top_bar_background_heading',
 					[
-						'label' => esc_html__( 'Background', 'elementor' ),
+						'label' => esc_html__( 'Background', 'refraction' ),
 						'type' => Controls_Manager::HEADING,
 						'separator' => $close_and_background_partial_divider,
 						'condition' => $this->get_platform_color_condition( [
@@ -1689,7 +1689,7 @@ JS;
 			$this->add_control(
 				'style_top_bar_background_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-top-bar-bg: {{VALUE}}',
@@ -1711,7 +1711,7 @@ JS;
 		$this->start_controls_section(
 			'style_bubble_section',
 			[
-				'label' => esc_html__( 'Message Bubble', 'elementor' ),
+				'label' => esc_html__( 'Message Bubble', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1720,12 +1720,12 @@ JS;
 			$this->add_control(
 				'style_bubble_colors',
 				[
-					'label' => esc_html__( 'Colors', 'elementor' ),
+					'label' => esc_html__( 'Colors', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'default',
 					'options' => [
-						'default' => esc_html__( 'Default', 'elementor' ),
-						'custom' => esc_html__( 'Custom', 'elementor' ),
+						'default' => esc_html__( 'Default', 'refraction' ),
+						'custom' => esc_html__( 'Custom', 'refraction' ),
 					],
 				]
 			);
@@ -1734,7 +1734,7 @@ JS;
 		$this->add_control(
 			'style_bubble_name_heading',
 			[
-				'label' => esc_html__( 'Name', 'elementor' ),
+				'label' => esc_html__( 'Name', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => false,
 			]
@@ -1743,7 +1743,7 @@ JS;
 		$this->add_control(
 			'style_bubble_name_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-message-bubble-name: {{VALUE}}',
@@ -1765,7 +1765,7 @@ JS;
 		$this->add_control(
 			'style_bubble_message_heading',
 			[
-				'label' => esc_html__( 'Message', 'elementor' ),
+				'label' => esc_html__( 'Message', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => false,
 			]
@@ -1774,7 +1774,7 @@ JS;
 		$this->add_control(
 			'style_bubble_message_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-message-bubble-body: {{VALUE}}',
@@ -1796,7 +1796,7 @@ JS;
 		$this->add_control(
 			'style_bubble_time_heading',
 			[
-				'label' => esc_html__( 'Time', 'elementor' ),
+				'label' => esc_html__( 'Time', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => false,
 			]
@@ -1805,7 +1805,7 @@ JS;
 		$this->add_control(
 			'style_bubble_time_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-message-bubble-time: {{VALUE}}',
@@ -1827,7 +1827,7 @@ JS;
 		$this->add_control(
 			'style_bubble_background_color',
 			[
-				'label' => esc_html__( 'Bubble Background Color', 'elementor' ),
+				'label' => esc_html__( 'Bubble Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-message-bubble-bubble-bg: {{VALUE}}',
@@ -1843,7 +1843,7 @@ JS;
 			$this->add_control(
 				'style_bubble_chat_color',
 				[
-					'label' => esc_html__( 'Chat Background Color', 'elementor' ),
+					'label' => esc_html__( 'Chat Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-message-bubble-chat-bg: {{VALUE}}',
@@ -1873,7 +1873,7 @@ JS;
 			$this->add_control(
 				'style_contact_text_heading',
 				[
-					'label' => esc_html__( 'Call to Action Text', 'elementor' ),
+					'label' => esc_html__( 'Call to Action Text', 'refraction' ),
 					'type' => Controls_Manager::HEADING,
 					'separator' => false,
 					'condition' => $this->get_platform_color_condition( [
@@ -1885,7 +1885,7 @@ JS;
 			$this->add_control(
 				'style_contact_text_color',
 				[
-					'label' => esc_html__( 'Color', 'elementor' ),
+					'label' => esc_html__( 'Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-text: {{VALUE}}',
@@ -1920,13 +1920,13 @@ JS;
 			$this->add_control(
 				'style_contact_button_size',
 				[
-					'label' => esc_html__( 'Size', 'elementor' ),
+					'label' => esc_html__( 'Size', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'small',
 					'options' => [
-						'small' => esc_html__( 'Small', 'elementor' ),
-						'medium' => esc_html__( 'Medium', 'elementor' ),
-						'large' => esc_html__( 'Large', 'elementor' ),
+						'small' => esc_html__( 'Small', 'refraction' ),
+						'medium' => esc_html__( 'Medium', 'refraction' ),
+						'large' => esc_html__( 'Large', 'refraction' ),
 					],
 				]
 			);
@@ -1959,7 +1959,7 @@ JS;
 			$this->add_control(
 				'style_contact_button_bg_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-button-bg: {{VALUE}}',
@@ -1976,7 +1976,7 @@ JS;
 			$this->start_controls_tab(
 				'style_contact_button_color_tabs_normal',
 				[
-					'label' => esc_html__( 'Normal', 'elementor' ),
+					'label' => esc_html__( 'Normal', 'refraction' ),
 				]
 			);
 
@@ -1995,7 +1995,7 @@ JS;
 				$this->add_control(
 					'style_contact_button_color_background',
 					[
-						'label' => esc_html__( 'Background Color', 'elementor' ),
+						'label' => esc_html__( 'Background Color', 'refraction' ),
 						'type' => Controls_Manager::COLOR,
 						'selectors' => [
 							'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-button-bg: {{VALUE}}',
@@ -2009,14 +2009,14 @@ JS;
 			$this->start_controls_tab(
 				'style_contact_button_color_tabs_hover',
 				[
-					'label' => esc_html__( 'Hover', 'elementor' ),
+					'label' => esc_html__( 'Hover', 'refraction' ),
 				]
 			);
 
 			$this->add_control(
 				'style_contact_button_color_icon_hover',
 				[
-					'label' => esc_html__( 'Icon Color', 'elementor' ),
+					'label' => esc_html__( 'Icon Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-button-icon-hover: {{VALUE}}',
@@ -2028,7 +2028,7 @@ JS;
 				$this->add_control(
 					'style_contact_button_color_background_hover',
 					[
-						'label' => esc_html__( 'Background Color', 'elementor' ),
+						'label' => esc_html__( 'Background Color', 'refraction' ),
 						'type' => Controls_Manager::COLOR,
 						'selectors' => [
 							'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-button-bg-hover: {{VALUE}}',
@@ -2053,7 +2053,7 @@ JS;
 			$this->add_responsive_control(
 				'style_contact_buttons_spacing',
 				[
-					'label' => esc_html__( 'Buttons Spacing', 'elementor' ),
+					'label' => esc_html__( 'Buttons Spacing', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						'%' => [
@@ -2078,13 +2078,13 @@ JS;
 			$this->add_control(
 				'style_contact_corners',
 				[
-					'label' => esc_html__( 'Corners', 'elementor' ),
+					'label' => esc_html__( 'Corners', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'round',
 					'options' => [
-						'round' => esc_html__( 'Round', 'elementor' ),
-						'rounded' => esc_html__( 'Rounded', 'elementor' ),
-						'sharp' => esc_html__( 'Sharp', 'elementor' ),
+						'round' => esc_html__( 'Round', 'refraction' ),
+						'rounded' => esc_html__( 'Rounded', 'refraction' ),
+						'sharp' => esc_html__( 'Sharp', 'refraction' ),
 					],
 				]
 			);
@@ -2104,7 +2104,7 @@ JS;
 			$this->add_control(
 				'style_contact_tooltip_heading',
 				[
-					'label' => esc_html__( 'Tooltips', 'elementor' ),
+					'label' => esc_html__( 'Tooltips', 'refraction' ),
 					'type' => Controls_Manager::HEADING,
 					'separator' => 'before',
 				]
@@ -2113,7 +2113,7 @@ JS;
 			$this->add_control(
 				'style_contact_tooltip_text_color',
 				[
-					'label' => esc_html__( 'Text Color', 'elementor' ),
+					'label' => esc_html__( 'Text Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-tooltip-text: {{VALUE}}',
@@ -2132,7 +2132,7 @@ JS;
 			$this->add_control(
 				'style_contact_tooltip_bg_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-tooltip-bg: {{VALUE}}',
@@ -2149,7 +2149,7 @@ JS;
 			$this->add_control(
 				'style_contact_button_bar_heading',
 				[
-					'label' => esc_html__( 'Button Bar', 'elementor' ),
+					'label' => esc_html__( 'Button Bar', 'refraction' ),
 					'type' => Controls_Manager::HEADING,
 					'separator' => 'before',
 				]
@@ -2158,7 +2158,7 @@ JS;
 			$this->add_control(
 				'style_contact_button_bar_bg_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-button-bar-bg: {{VALUE}}',
@@ -2169,13 +2169,13 @@ JS;
 			$this->add_control(
 				'style_contact_button_bar_corners',
 				[
-					'label' => esc_html__( 'Corners', 'elementor' ),
+					'label' => esc_html__( 'Corners', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'round',
 					'options' => [
-						'round' => esc_html__( 'Round', 'elementor' ),
-						'rounded' => esc_html__( 'Rounded', 'elementor' ),
-						'sharp' => esc_html__( 'Sharp', 'elementor' ),
+						'round' => esc_html__( 'Round', 'refraction' ),
+						'rounded' => esc_html__( 'Rounded', 'refraction' ),
+						'sharp' => esc_html__( 'Sharp', 'refraction' ),
 					],
 				]
 			);
@@ -2183,7 +2183,7 @@ JS;
 			$this->add_responsive_control(
 				'style_contact_button_bar_padding',
 				[
-					'label' => esc_html__( 'Padding', 'elementor' ),
+					'label' => esc_html__( 'Padding', 'refraction' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%', 'em', 'rem' ],
 					'selectors' => [
@@ -2198,7 +2198,7 @@ JS;
 			$this->add_responsive_control(
 				'style_contact_padding',
 				[
-					'label' => esc_html__( 'Padding', 'elementor' ),
+					'label' => esc_html__( 'Padding', 'refraction' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%', 'em', 'rem' ],
 					'selectors' => [
@@ -2213,7 +2213,7 @@ JS;
 			$this->add_control(
 				'style_contact_custom_animation_heading',
 				[
-					'label' => esc_html__( 'Animation', 'elementor' ),
+					'label' => esc_html__( 'Animation', 'refraction' ),
 					'type' => Controls_Manager::HEADING,
 				]
 			);
@@ -2223,14 +2223,14 @@ JS;
 				[
 					'type' => Controls_Manager::ALERT,
 					'alert_type' => 'info',
-					'content' => __( 'Adjust transition duration to change the speed of the <b>hover animation on desktop</b> and the <b>click animation on touchscreen</b>.', 'elementor' ),
+					'content' => __( 'Adjust transition duration to change the speed of the <b>hover animation on desktop</b> and the <b>click animation on touchscreen</b>.', 'refraction' ),
 				]
 			);
 
 			$this->add_control(
 				'style_contact_custom_animation_transition',
 				[
-					'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+					'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						's' => [
@@ -2253,7 +2253,7 @@ JS;
 		$this->start_controls_section(
 			'style_resource_links_section',
 			[
-				'label' => esc_html__( 'Resource Links', 'elementor' ),
+				'label' => esc_html__( 'Resource Links', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -2261,7 +2261,7 @@ JS;
 		$this->add_control(
 			'style_resource_links_icons_heading',
 			[
-				'label' => esc_html__( 'Icons', 'elementor' ),
+				'label' => esc_html__( 'Icons', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => false,
 			]
@@ -2270,13 +2270,13 @@ JS;
 		$this->add_control(
 			'style_resource_links_button_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'small',
 				'options' => [
-					'small' => esc_html__( 'Small', 'elementor' ),
-					'medium' => esc_html__( 'Medium', 'elementor' ),
-					'large' => esc_html__( 'Large', 'elementor' ),
+					'small' => esc_html__( 'Small', 'refraction' ),
+					'medium' => esc_html__( 'Medium', 'refraction' ),
+					'large' => esc_html__( 'Large', 'refraction' ),
 				],
 			]
 		);
@@ -2284,12 +2284,12 @@ JS;
 		$this->add_control(
 			'style_resource_links_color_select',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'custom',
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'custom'  => esc_html__( 'Custom', 'elementor' ),
+					'default' => esc_html__( 'Default', 'refraction' ),
+					'custom'  => esc_html__( 'Custom', 'refraction' ),
 				],
 			]
 		);
@@ -2297,7 +2297,7 @@ JS;
 		$this->add_control(
 			'style_contact_icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-button-icon: {{VALUE}}',
@@ -2311,7 +2311,7 @@ JS;
 		$this->add_control(
 			'style_resource_links_title_heading',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => false,
 			]
@@ -2320,7 +2320,7 @@ JS;
 		$this->add_control(
 			'style_resource_links_title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-title-text-color: {{VALUE}}',
@@ -2339,7 +2339,7 @@ JS;
 		$this->add_control(
 			'style_resource_links_description_heading',
 			[
-				'label' => esc_html__( 'Description', 'elementor' ),
+				'label' => esc_html__( 'Description', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => false,
 			]
@@ -2348,7 +2348,7 @@ JS;
 		$this->add_control(
 			'style_resource_links_description_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-description-text-color: {{VALUE}}',
@@ -2367,7 +2367,7 @@ JS;
 		$this->add_control(
 			'style_resource_links_bg_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-contact-button-bg: {{VALUE}}',
@@ -2387,7 +2387,7 @@ JS;
 		$this->start_controls_section(
 			'style_info_links_section',
 			[
-				'label' => esc_html__( 'Info Links', 'elementor' ),
+				'label' => esc_html__( 'Info Links', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -2395,15 +2395,15 @@ JS;
 		$this->add_control(
 			'style_info_links_icon_position',
 			[
-				'label' => esc_html__( 'Icon Position', 'elementor' ),
+				'label' => esc_html__( 'Icon Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => esc_html__( 'Left', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'end' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => esc_html__( 'Right', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -2415,7 +2415,7 @@ JS;
 		$this->add_control(
 			'style_info_links_icon_spacing',
 			[
-				'label' => esc_html__( 'Icon Spacing', 'elementor' ),
+				'label' => esc_html__( 'Icon Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'%' => [
@@ -2437,7 +2437,7 @@ JS;
 		$this->add_responsive_control(
 			'style_info_links_link_spacing',
 			[
-				'label' => esc_html__( 'Link Spacing', 'elementor' ),
+				'label' => esc_html__( 'Link Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'%' => [
@@ -2471,14 +2471,14 @@ JS;
 		$this->start_controls_tab(
 			'style_info_links_tabs_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'style_info_links_normal_text_color',
 			[
-				'label' => esc_html__( 'Text and Icon Color', 'elementor' ),
+				'label' => esc_html__( 'Text and Icon Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-icon-link-text-color: {{VALUE}}',
@@ -2491,14 +2491,14 @@ JS;
 		$this->start_controls_tab(
 			'style_info_links_tabs_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'style_info_links_hover_text_color',
 			[
-				'label'     => esc_html__( 'Text and Icon Color', 'elementor' ),
+				'label'     => esc_html__( 'Text and Icon Color', 'refraction' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-icon-link-text-color-hover: {{VALUE}}',
@@ -2509,7 +2509,7 @@ JS;
 		$this->add_control(
 			'style_info_links_hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 				'frontend_available' => true,
 			]
@@ -2522,10 +2522,10 @@ JS;
 		$this->add_control(
 			'style_info_links_dividers',
 			[
-				'label' => esc_html__( 'Dividers', 'elementor' ),
+				'label' => esc_html__( 'Dividers', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Show', 'elementor' ),
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 				'separator' => 'before',
@@ -2535,7 +2535,7 @@ JS;
 		$this->add_control(
 			'style_info_links_divider_color',
 			[
-				'label'     => esc_html__( 'Color', 'elementor' ),
+				'label'     => esc_html__( 'Color', 'refraction' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-icon-link-divider-color: {{VALUE}}',
@@ -2549,7 +2549,7 @@ JS;
 		$this->add_responsive_control(
 			'style_info_links_divider_weight',
 			[
-				'label' => esc_html__( 'Weight', 'elementor' ),
+				'label' => esc_html__( 'Weight', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'%' => [
@@ -2602,7 +2602,7 @@ JS;
 		$this->start_controls_tab(
 			'style_send_tabs_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -2610,12 +2610,12 @@ JS;
 			$this->add_control(
 				'style_send_normal_colors',
 				[
-					'label' => esc_html__( 'Colors', 'elementor' ),
+					'label' => esc_html__( 'Colors', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'default',
 					'options' => [
-						'default' => esc_html__( 'Default', 'elementor' ),
-						'custom'  => esc_html__( 'Custom', 'elementor' ),
+						'default' => esc_html__( 'Default', 'refraction' ),
+						'custom'  => esc_html__( 'Custom', 'refraction' ),
 					],
 				]
 			);
@@ -2625,7 +2625,7 @@ JS;
 			$this->add_control(
 				'style_send_normal_icon_color',
 				[
-					'label' => esc_html__( 'Icon Color', 'elementor' ),
+					'label' => esc_html__( 'Icon Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-send-button-icon: {{VALUE}}',
@@ -2641,7 +2641,7 @@ JS;
 			$this->add_control(
 				'style_send_normal_text_color',
 				[
-					'label' => esc_html__( 'Text Color', 'elementor' ),
+					'label' => esc_html__( 'Text Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-send-button-text: {{VALUE}}',
@@ -2654,7 +2654,7 @@ JS;
 			$this->add_control(
 				'style_send_normal_background_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-send-button-bg: {{VALUE}}',
@@ -2671,7 +2671,7 @@ JS;
 		$this->start_controls_tab(
 			'style_send_tabs_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -2679,12 +2679,12 @@ JS;
 			$this->add_control(
 				'style_send_hover_colors',
 				[
-					'label' => esc_html__( 'Colors', 'elementor' ),
+					'label' => esc_html__( 'Colors', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'default',
 					'options' => [
-						'default' => esc_html__( 'Default', 'elementor' ),
-						'custom' => esc_html__( 'Custom', 'elementor' ),
+						'default' => esc_html__( 'Default', 'refraction' ),
+						'custom' => esc_html__( 'Custom', 'refraction' ),
 					],
 				]
 			);
@@ -2694,7 +2694,7 @@ JS;
 			$this->add_control(
 				'style_send_hover_icon_color',
 				[
-					'label' => esc_html__( 'Icon Color', 'elementor' ),
+					'label' => esc_html__( 'Icon Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-send-button-icon-hover: {{VALUE}}',
@@ -2710,7 +2710,7 @@ JS;
 			$this->add_control(
 				'style_send_hover_text_color',
 				[
-					'label' => esc_html__( 'Text Color', 'elementor' ),
+					'label' => esc_html__( 'Text Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-send-button-text-hover: {{VALUE}}',
@@ -2723,7 +2723,7 @@ JS;
 			$this->add_control(
 				'style_send_hover_background_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-send-button-bg-hover: {{VALUE}}',
@@ -2746,7 +2746,7 @@ JS;
 		$this->add_responsive_control(
 			'style_chat_button_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem' ],
 				'selectors' => [
@@ -2763,7 +2763,7 @@ JS;
 		$this->add_responsive_control(
 			'style_chat_box_entrance_animation',
 			[
-				'label' => esc_html__( 'Open Animation', 'elementor' ),
+				'label' => esc_html__( 'Open Animation', 'refraction' ),
 				'type' => Controls_Manager::ANIMATION,
 				'frontend_available' => true,
 				'separator' => 'before',
@@ -2773,7 +2773,7 @@ JS;
 		$this->add_responsive_control(
 			'style_chat_box_exit_animation',
 			[
-				'label' => esc_html__( 'Close Animation', 'elementor' ),
+				'label' => esc_html__( 'Close Animation', 'refraction' ),
 				'type' => Controls_Manager::EXIT_ANIMATION,
 				'frontend_available' => true,
 			]
@@ -2782,13 +2782,13 @@ JS;
 		$this->add_control(
 			'style_chat_box_animation_duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ),
+				'label' => esc_html__( 'Animation Duration', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'normal',
 				'options' => [
-					'slow' => esc_html__( 'Slow', 'elementor' ),
-					'normal' => esc_html__( 'Normal', 'elementor' ),
-					'fast' => esc_html__( 'Fast', 'elementor' ),
+					'slow' => esc_html__( 'Slow', 'refraction' ),
+					'normal' => esc_html__( 'Normal', 'refraction' ),
+					'fast' => esc_html__( 'Fast', 'refraction' ),
 				],
 				'prefix_class' => 'animated-',
 			]
@@ -2810,12 +2810,12 @@ JS;
 			$this->add_control(
 				'style_chat_box_bg_select',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'default',
 					'options' => [
-						'default' => esc_html__( 'Default', 'elementor' ),
-						'custom' => esc_html__( 'Custom', 'elementor' ),
+						'default' => esc_html__( 'Default', 'refraction' ),
+						'custom' => esc_html__( 'Custom', 'refraction' ),
 					],
 				]
 			);
@@ -2824,7 +2824,7 @@ JS;
 		$this->add_control(
 			'style_chat_box_bg_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-contact-buttons' => '--e-contact-buttons-chat-box-bg: {{VALUE}}',
@@ -2839,7 +2839,7 @@ JS;
 			$this->add_responsive_control(
 				'style_chat_box_width',
 				[
-					'label' => esc_html__( 'Width', 'elementor' ),
+					'label' => esc_html__( 'Width', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'range' => [
 						'%' => [
@@ -2862,13 +2862,13 @@ JS;
 		$this->add_control(
 			'style_chat_box_corners',
 			[
-				'label' => esc_html__( 'Corners', 'elementor' ),
+				'label' => esc_html__( 'Corners', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'rounded',
 				'options' => [
-					'round' => esc_html__( 'Round', 'elementor' ),
-					'rounded' => esc_html__( 'Rounded', 'elementor' ),
-					'sharp' => esc_html__( 'Sharp', 'elementor' ),
+					'round' => esc_html__( 'Round', 'refraction' ),
+					'rounded' => esc_html__( 'Rounded', 'refraction' ),
+					'sharp' => esc_html__( 'Sharp', 'refraction' ),
 				],
 				'separator' => 'before',
 			]
@@ -2886,7 +2886,7 @@ JS;
 			$this->add_responsive_control(
 				'style_chat_box_padding',
 				[
-					'label' => esc_html__( 'Padding', 'elementor' ),
+					'label' => esc_html__( 'Padding', 'refraction' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%', 'em', 'rem' ],
 					'selectors' => [
@@ -2918,14 +2918,14 @@ JS;
 
 		Controls_Manager::add_tab(
 			static::TAB_ADVANCED,
-			esc_html__( 'Advanced', 'elementor' )
+			esc_html__( 'Advanced', 'refraction' )
 		);
 
 		if ( $config['advanced']['has_layout_position'] ) {
 			$this->start_controls_section(
 				'advanced_layout_section',
 				[
-					'label' => esc_html__( 'Layout', 'elementor' ),
+					'label' => esc_html__( 'Layout', 'refraction' ),
 					'tab' => static::TAB_ADVANCED,
 				]
 			);
@@ -2933,19 +2933,19 @@ JS;
 			$this->add_control(
 				'advanced_horizontal_position',
 				[
-					'label' => esc_html__( 'Horizontal Position', 'elementor' ),
+					'label' => esc_html__( 'Horizontal Position', 'refraction' ),
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'start' => [
-							'title' => esc_html__( 'Left', 'elementor' ),
+							'title' => esc_html__( 'Left', 'refraction' ),
 							'icon' => 'eicon-h-align-left',
 						],
 						'center' => [
-							'title' => esc_html__( 'Center', 'elementor' ),
+							'title' => esc_html__( 'Center', 'refraction' ),
 							'icon' => 'eicon-h-align-center',
 						],
 						'end' => [
-							'title' => esc_html__( 'Right', 'elementor' ),
+							'title' => esc_html__( 'Right', 'refraction' ),
 							'icon' => 'eicon-h-align-right',
 						],
 					],
@@ -2958,7 +2958,7 @@ JS;
 				$this->add_responsive_control(
 					'advanced_horizontal_offset',
 					[
-						'label' => esc_html__( 'Offset', 'elementor' ),
+						'label' => esc_html__( 'Offset', 'refraction' ),
 						'type' => Controls_Manager::SLIDER,
 						'range' => [
 							'%' => [
@@ -2987,19 +2987,19 @@ JS;
 			$this->add_control(
 				'advanced_vertical_position',
 				[
-					'label' => esc_html__( 'Vertical Position', 'elementor' ),
+					'label' => esc_html__( 'Vertical Position', 'refraction' ),
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'top' => [
-							'title' => esc_html__( 'Top', 'elementor' ),
+							'title' => esc_html__( 'Top', 'refraction' ),
 							'icon' => 'eicon-v-align-top',
 						],
 						'middle' => [
-							'title' => esc_html__( 'Middle', 'elementor' ),
+							'title' => esc_html__( 'Middle', 'refraction' ),
 							'icon' => 'eicon-v-align-middle',
 						],
 						'bottom' => [
-							'title' => esc_html__( 'Bottom', 'elementor' ),
+							'title' => esc_html__( 'Bottom', 'refraction' ),
 							'icon' => 'eicon-v-align-bottom',
 						],
 					],
@@ -3012,7 +3012,7 @@ JS;
 				$this->add_responsive_control(
 					'advanced_vertical_offset',
 					[
-						'label' => esc_html__( 'Offset', 'elementor' ),
+						'label' => esc_html__( 'Offset', 'refraction' ),
 						'type' => Controls_Manager::SLIDER,
 						'range' => [
 							'%' => [
@@ -3042,10 +3042,10 @@ JS;
 				$this->add_control(
 					'advanced_mobile_full_width',
 					[
-						'label' => esc_html__( 'Full Width on Mobile', 'elementor' ),
+						'label' => esc_html__( 'Full Width on Mobile', 'refraction' ),
 						'type' => Controls_Manager::SWITCHER,
-						'label_on' => esc_html__( 'Yes', 'elementor' ),
-						'label_off' => esc_html__( 'No', 'elementor' ),
+						'label_on' => esc_html__( 'Yes', 'refraction' ),
+						'label_off' => esc_html__( 'No', 'refraction' ),
 						'return_value' => 'yes',
 						'default' => 'yes',
 					]
@@ -3058,7 +3058,7 @@ JS;
 		$this->start_controls_section(
 			'advanced_responsive_section',
 			[
-				'label' => esc_html__( 'Responsive', 'elementor' ),
+				'label' => esc_html__( 'Responsive', 'refraction' ),
 				'tab' => static::TAB_ADVANCED,
 			]
 		);
@@ -3066,9 +3066,9 @@ JS;
 		$this->add_control(
 			'responsive_description',
 			[
-				'raw' => __( 'Responsive visibility will take effect only on preview mode or live page, and not while editing in Elementor.', 'elementor' ),
+				'raw' => __( 'Responsive visibility will take effect only on preview mode or live page, and not while editing in Refraction.', 'refraction' ),
 				'type' => Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-descriptor',
+				'content_classes' => 'refraction-descriptor',
 			]
 		);
 
@@ -3079,7 +3079,7 @@ JS;
 		$this->start_controls_section(
 			'advanced_custom_controls_section',
 			[
-				'label' => esc_html__( 'CSS', 'elementor' ),
+				'label' => esc_html__( 'CSS', 'refraction' ),
 				'tab' => static::TAB_ADVANCED,
 			]
 		);
@@ -3087,7 +3087,7 @@ JS;
 		$this->add_control(
 			'advanced_custom_css_id',
 			[
-				'label' => esc_html__( 'CSS ID', 'elementor' ),
+				'label' => esc_html__( 'CSS ID', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'ai' => [
@@ -3096,7 +3096,7 @@ JS;
 				'dynamic' => [
 					'active' => true,
 				],
-				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
+				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'refraction' ),
 				'style_transfer' => false,
 			]
 		);
@@ -3104,7 +3104,7 @@ JS;
 		$this->add_control(
 			'advanced_custom_css_classes',
 			[
-				'label' => esc_html__( 'CSS Classes', 'elementor' ),
+				'label' => esc_html__( 'CSS Classes', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'ai' => [
@@ -3113,7 +3113,7 @@ JS;
 				'dynamic' => [
 					'active' => true,
 				],
-				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'elementor' ),
+				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'refraction' ),
 			]
 		);
 

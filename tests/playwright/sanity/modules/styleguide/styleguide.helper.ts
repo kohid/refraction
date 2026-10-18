@@ -9,7 +9,7 @@ export const getInSettingsTab = async ( page: Page, testInfo: TestInfo, apiReque
 	page.setDefaultTimeout( timeouts.longAction );
 
 	await page.evaluate( ( isOpen ) => $e.run( 'document/elements/settings', {
-		container: elementor.settings.editorPreferences.getEditedView().getContainer(),
+		container: refraction.settings.editorPreferences.getEditedView().getContainer(),
 		settings: {
 			enable_styleguide_preview: isOpen ? 'yes' : '',
 		},

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { trackUpgradePromotionClick, trackViewPromotion } from '@elementor/editor-controls';
+import { trackUpgradePromotionClick, trackViewPromotion } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { InteractionsPromotionChip } from '../interactions-promotion-chip';
 
-jest.mock( '@elementor/editor-controls', () => ( {
-	...jest.requireActual( '@elementor/editor-controls' ),
+jest.mock( '@refraction/editor-controls', () => ( {
+	...jest.requireActual( '@refraction/editor-controls' ),
 	trackViewPromotion: jest.fn(),
 	trackUpgradePromotionClick: jest.fn(),
 } ) );

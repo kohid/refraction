@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Classes\Render;
+namespace Refraction\Modules\FloatingButtons\Classes\Render;
 
-use Elementor\Modules\FloatingButtons\Base\Widget_Floating_Bars_Base;
+use Refraction\Modules\FloatingButtons\Base\Widget_Floating_Bars_Base;
 
 /**
  * Class Floating_Bars_Render_Base.

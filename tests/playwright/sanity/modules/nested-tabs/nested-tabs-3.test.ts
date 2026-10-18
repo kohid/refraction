@@ -61,7 +61,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await test.step( 'Test animation class inside Editor', async () => {
 			// Assert.
 			// Test inside editor.
-			await expect( editor.getPreviewFrame().locator( '.e-n-tab-title[aria-selected="true"]' ) ).toHaveClass( 'e-n-tab-title elementor-animation-grow' );
+			await expect( editor.getPreviewFrame().locator( '.e-n-tab-title[aria-selected="true"]' ) ).toHaveClass( 'e-n-tab-title refraction-animation-grow' );
 
 			// Test on the front end.
 			// Open the front end.
@@ -69,10 +69,10 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		} );
 
 		await test.step( 'Test hover animation settings on the frontend', async () => {
-			const widget = page.locator( '.elementor-widget-n-tabs' );
+			const widget = page.locator( '.refraction-widget-n-tabs' );
 			await widget.waitFor();
 
-			await expect( page.locator( '.e-n-tab-title[aria-selected="true"]' ) ).toHaveClass( 'e-n-tab-title elementor-animation-grow' );
+			await expect( page.locator( '.e-n-tab-title[aria-selected="true"]' ) ).toHaveClass( 'e-n-tab-title refraction-animation-grow' );
 
 			// Test the hover animation.
 			const tabNormal = page.locator( '.e-n-tab-title[aria-selected="false"]' ).last();
@@ -91,7 +91,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await test.step( 'Test mobile on the frontend', async () => {
 			// Test on mobile.
 			await page.setViewportSize( viewportSize.mobile );
-			await expect( page.locator( '.e-n-tab-title[aria-selected="true"]' ) ).toHaveClass( 'e-n-tab-title elementor-animation-grow' );
+			await expect( page.locator( '.e-n-tab-title[aria-selected="true"]' ) ).toHaveClass( 'e-n-tab-title refraction-animation-grow' );
 		} );
 	} );
 
@@ -127,7 +127,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		const activeContainerId = await editTab( editor, 1 );
 		await editor.addWidget( { widgetType: 'image-carousel', container: activeContainerId } );
 		// Add images to the image-carousel widget.
-		await page.locator( '.elementor-control-carousel .elementor-control-gallery-add' ).click();
+		await page.locator( '.refraction-control-carousel .refraction-control-gallery-add' ).click();
 		await page.locator( '.media-modal .media-router #menu-item-browse' ).click();
 		for ( let i = 0; i <= 4; i++ ) {
 			await page.locator( `.media-modal .attachments .attachment>>nth=${ i }` ).click();
@@ -172,7 +172,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await expect( lastTab ).toHaveAttribute( 'aria-selected', 'true' );
 
 		// Act.
-		const lastContentContainer = editor.getPreviewFrame().locator( `.elementor-element-${ tabsWidgetId } .e-n-tabs-content .e-con` ).last(),
+		const lastContentContainer = editor.getPreviewFrame().locator( `.refraction-element-${ tabsWidgetId } .e-n-tabs-content .e-con` ).last(),
 			lastContentContainerId = await lastContentContainer.getAttribute( 'data-id' );
 		// Add content to the last tab.
 		await editor.addWidget( { widgetType: 'heading', container: lastContentContainerId } );
@@ -267,7 +267,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await editor.getPreviewFrame().waitForSelector( locators.selectedTabTitle );
 
 		// Act.
-		await page.locator( '.elementor-control-tabs .elementor-repeater-fields:nth-child(2) .elementor-repeater-tool-duplicate' ).click();
+		await page.locator( '.refraction-control-tabs .refraction-repeater-fields:nth-child(2) .refraction-repeater-tool-duplicate' ).click();
 
 		await clickTabByPosition( editor.getPreviewFrame(), 2 );
 
@@ -362,7 +362,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Test.
 		for ( const widgetIdentifier in widgetsToTest ) {
 			const widgetToTest = widgetsToTest[ widgetIdentifier ],
-				widgetSelector = `.elementor-widget-n-tabs.elementor-element-${ widgetToTest.widgetId }`,
+				widgetSelector = `.refraction-widget-n-tabs.refraction-element-${ widgetToTest.widgetId }`,
 				activeContainer = editor.getPreviewFrame().locator( `${ widgetSelector } .e-n-tabs-content > .e-con.e-active` );
 
 			for ( const valueToTest in widgetToTest ) {

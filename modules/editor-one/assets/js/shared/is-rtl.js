@@ -1,3 +1,3 @@
 export default function isRTL() {
-	return elementorCommon?.config?.isRTL ?? false;
+	return refractionCommon?.config?.isRTL ?? false;
 }

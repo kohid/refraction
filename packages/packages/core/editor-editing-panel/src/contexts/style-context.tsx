@@ -5,8 +5,8 @@ import {
 	type StyleDefinitionID,
 	type StyleDefinitionState,
 	type StyleDefinitionVariant,
-} from '@elementor/editor-styles';
-import { type StylesProvider, stylesRepository, useUserStylesCapability } from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles';
+import { type StylesProvider, stylesRepository, useUserStylesCapability } from '@refraction/editor-styles-repository';
 
 import { StylesProviderNotFoundError } from '../errors';
 

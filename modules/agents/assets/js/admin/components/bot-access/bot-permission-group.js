@@ -35,9 +35,9 @@ export const BotPermissionGroup = ( { icon: Icon, title, description, isAllBlock
 					disabled={ isDisabled }
 					onClick={ () => onSetAll( true ) }
 					/* Translators: %s: Permission name. */
-					aria-label={ sprintf( __( 'Enable all %s', 'elementor' ), title ) }
+					aria-label={ sprintf( __( 'Enable all %s', 'refraction' ), title ) }
 				>
-					{ __( 'Enable all', 'elementor' ) }
+					{ __( 'Enable all', 'refraction' ) }
 				</Button>
 			) : (
 				<Button
@@ -48,9 +48,9 @@ export const BotPermissionGroup = ( { icon: Icon, title, description, isAllBlock
 					disabled={ isDisabled }
 					onClick={ () => onSetAll( false ) }
 					/* Translators: %s: Permission name. */
-					aria-label={ sprintf( __( 'Block all %s', 'elementor' ), title ) }
+					aria-label={ sprintf( __( 'Block all %s', 'refraction' ), title ) }
 				>
-					{ __( 'Block all', 'elementor' ) }
+					{ __( 'Block all', 'refraction' ) }
 				</Button>
 			) }
 		</Stack>

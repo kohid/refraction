@@ -35,7 +35,7 @@ const DropZone = ( {
 	error,
 	onButtonClick,
 	onFileChoose,
-	helperText = __( 'Upload a .zip file', 'elementor' ),
+	helperText = __( 'Upload a .zip file', 'refraction' ),
 	...props
 } ) => {
 	const {
@@ -99,7 +99,7 @@ const DropZone = ( {
 								onClick={ handleUploadClick }
 								data-testid="click-to-upload"
 							>
-								{ __( 'Click to upload', 'elementor' ) }
+								{ __( 'Click to upload', 'refraction' ) }
 							</Link>
 							<Typography
 								variant="body1"
@@ -107,7 +107,7 @@ const DropZone = ( {
 								color="text.primary"
 								sx={ { marginLeft: 0.5 } }
 							>
-								{ __( 'or drag and drop', 'elementor' ) }
+								{ __( 'or drag and drop', 'refraction' ) }
 							</Typography>
 						</Box>
 						<Typography

@@ -48,7 +48,7 @@ export const Select = () => {
 				RepeaterHelper.select( eTabs, indexToSelect );
 
 				// Assert.
-				assert.equal( elementor.history.history.getItems().length, 4 );
+				assert.equal( refraction.history.history.getItems().length, 4 );
 			} );
 		} );
 	} );

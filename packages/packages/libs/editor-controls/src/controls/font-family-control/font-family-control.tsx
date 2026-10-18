@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { fontFamilyPropTypeUtil } from '@elementor/editor-props';
+import { fontFamilyPropTypeUtil } from '@refraction/editor-props';
 import { ChevronDownIcon, TextIcon } from '@elementor/icons';
 import { bindPopover, bindTrigger, Popover, UnstableTag, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -82,7 +82,7 @@ export const FontFamilyControl = createControl(
 						onItemChange={ setFontFamily }
 						onClose={ popoverState.close }
 						sectionWidth={ sectionWidth }
-						title={ __( 'Font family', 'elementor' ) }
+						title={ __( 'Font family', 'refraction' ) }
 						itemStyle={ ( item ) => ( { fontFamily: item.value } ) }
 						onDebounce={ enqueueFont }
 						icon={ TextIcon as React.ElementType< { fontSize: string } > }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { stringPropTypeUtil } from '@elementor/editor-props';
+import { stringPropTypeUtil } from '@refraction/editor-props';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { SelectControl } from '../select-control';

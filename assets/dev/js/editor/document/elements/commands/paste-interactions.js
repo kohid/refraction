@@ -3,7 +3,7 @@ export class PasteInteractions extends $e.modules.editor.CommandContainerBase {
 		this.requireContainer( args );
 
 		const { storageKey = 'clipboard' } = args;
-		const storageData = elementorCommon.storage.get( storageKey );
+		const storageData = refractionCommon.storage.get( storageKey );
 
 		this.requireArgumentType( 'storageData', 'object', { storageData } );
 	}

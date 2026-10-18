@@ -1,4 +1,4 @@
-jest.mock( 'elementor-dynamic-tags/tag-panel-view', () => {} );
+jest.mock( 'refraction-dynamic-tags/tag-panel-view', () => {} );
 
 describe( 'assets/dev/js/editor/components/dynamic-tags/control-behavior.js', () => {
 	let controlBehavior;
@@ -13,7 +13,7 @@ describe( 'assets/dev/js/editor/components/dynamic-tags/control-behavior.js', ()
 			},
 		};
 
-		controlBehavior = await import( 'elementor/assets/dev/js/editor/components/dynamic-tags/control-behavior.js' );
+		controlBehavior = await import( 'refraction/assets/dev/js/editor/components/dynamic-tags/control-behavior.js' );
 
 		controlBehavior.getOption = jest.fn();
 	} );
@@ -117,7 +117,7 @@ describe( 'assets/dev/js/editor/components/dynamic-tags/control-behavior.js', ()
 			}
 		} );
 
-		global.elementor = {
+		global.refraction = {
 			helpers: {
 				hasPro: () => options.hasPro,
 				hasProAndNotConnected: () => options.hasPro && ! options.isProConnected,

@@ -1,6 +1,6 @@
 import { type FloatingPanelState, type PanelCorner } from './types';
 
-export const PERSISTENCE_STORAGE_KEY = 'elementor_floating_panels_state';
+export const PERSISTENCE_STORAGE_KEY = 'refraction_floating_panels_state';
 
 const VALID_PANEL_CORNERS = new Set< PanelCorner >( [
 	'block-start-inline-start',

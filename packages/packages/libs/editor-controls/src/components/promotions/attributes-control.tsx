@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { createControl } from '../../create-control';
 import { PromotionTrigger, type PromotionTriggerRef } from './promotion-trigger';
 
-const ARIA_LABEL = __( 'Attributes', 'elementor' );
+const ARIA_LABEL = __( 'Attributes', 'refraction' );
 const TRACKING_DATA = { target_name: 'attributes', location_l2: 'general' } as const;
 
 export const AttributesControl = createControl( () => {

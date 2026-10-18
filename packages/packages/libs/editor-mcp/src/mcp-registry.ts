@@ -1,4 +1,4 @@
-import { z, type z3 } from '@elementor/schema';
+import { z, type z3 } from '@refraction/schema';
 import { McpServer, type ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { type RequestHandlerExtra } from '@modelcontextprotocol/sdk/shared/protocol.js';
 import { type ServerNotification, type ServerRequest } from '@modelcontextprotocol/sdk/types.js';
@@ -105,7 +105,7 @@ const isAlphabet = ( str: string ): string | never => {
  * @param options
  * @param options.instructions Short hint about the MCP and its toolset (MCP SDK `instructions`; keeps payload small).
  * @param options.docs         Full documentation registered as a lazy-loaded resource.
- *                             When provided, it is registered at elementor://{namespace}/server-docs
+ *                             When provided, it is registered at refraction://{namespace}/server-docs
  *                             and auto-injected into every tool's requiredResources.
  */
 export const getMCPByDomain = (
@@ -131,7 +131,7 @@ export const getMCPByDomain = (
 		}
 	}
 	const mcpServer = mcpRegistry[ namespace ];
-	const serverDocsUri = options?.docs ? `elementor://${ namespace }/server-docs` : undefined;
+	const serverDocsUri = options?.docs ? `refraction://${ namespace }/server-docs` : undefined;
 	const { addTool } = createToolRegistry( mcpServer, mcpName, serverDocsUri );
 	return {
 		waitForReady: () => readyPromise,

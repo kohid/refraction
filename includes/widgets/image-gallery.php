@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor image gallery widget.
+ * Refraction image gallery widget.
  *
- * Elementor widget that displays a set of images in an aligned grid.
+ * Refraction widget that displays a set of images in an aligned grid.
  *
  * @since 1.0.0
  */
@@ -41,7 +41,7 @@ class Widget_Image_Gallery extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Basic Gallery', 'elementor' );
+		return esc_html__( 'Basic Gallery', 'refraction' );
 	}
 
 	/**
@@ -106,14 +106,14 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->start_controls_section(
 			'section_gallery',
 			[
-				'label' => esc_html__( 'Basic Gallery', 'elementor' ),
+				'label' => esc_html__( 'Basic Gallery', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'wp_gallery',
 			[
-				'label' => esc_html__( 'Add Images', 'elementor' ),
+				'label' => esc_html__( 'Add Images', 'refraction' ),
 				'type' => Controls_Manager::GALLERY,
 				'show_label' => false,
 				'dynamic' => [
@@ -136,7 +136,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'gallery_columns',
 			[
-				'label' => esc_html__( 'Columns', 'elementor' ),
+				'label' => esc_html__( 'Columns', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 4,
 				'options' => $gallery_columns,
@@ -146,12 +146,12 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'gallery_display_caption',
 			[
-				'label' => esc_html__( 'Caption', 'elementor' ),
+				'label' => esc_html__( 'Caption', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'none' => esc_html__( 'None', 'elementor' ),
-					'' => esc_html__( 'Attachment Caption', 'elementor' ),
+					'none' => esc_html__( 'None', 'refraction' ),
+					'' => esc_html__( 'Attachment Caption', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item .gallery-caption' => 'display: {{VALUE}};',
@@ -162,13 +162,13 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'gallery_link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'file',
 				'options' => [
-					'file' => esc_html__( 'Media File', 'elementor' ),
-					'attachment' => esc_html__( 'Attachment Page', 'elementor' ),
-					'none' => esc_html__( 'None', 'elementor' ),
+					'file' => esc_html__( 'Media File', 'refraction' ),
+					'attachment' => esc_html__( 'Attachment Page', 'refraction' ),
+					'none' => esc_html__( 'None', 'refraction' ),
 				],
 			]
 		);
@@ -176,19 +176,19 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'open_lightbox',
 			[
-				'label' => esc_html__( 'Lightbox', 'elementor' ),
+				'label' => esc_html__( 'Lightbox', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'description' => sprintf(
 					/* translators: 1: Link open tag, 2: Link close tag. */
-					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'elementor' ),
+					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'refraction' ),
 					'<a href="javascript: $e.run( \'panel/global/open\' ).then( () => $e.route( \'panel/global/settings-lightbox\' ) )">',
 					'</a>'
 				),
 				'default' => 'default',
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'yes' => esc_html__( 'Yes', 'elementor' ),
-					'no' => esc_html__( 'No', 'elementor' ),
+					'default' => esc_html__( 'Default', 'refraction' ),
+					'yes' => esc_html__( 'Yes', 'refraction' ),
+					'no' => esc_html__( 'No', 'refraction' ),
 				],
 				'condition' => [
 					'gallery_link' => 'file',
@@ -239,11 +239,11 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'gallery_rand',
 			[
-				'label' => esc_html__( 'Order By', 'elementor' ),
+				'label' => esc_html__( 'Order By', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'rand' => esc_html__( 'Random', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'rand' => esc_html__( 'Random', 'refraction' ),
 				],
 				'default' => '',
 			]
@@ -254,7 +254,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->start_controls_section(
 			'section_gallery_images',
 			[
-				'label' => esc_html__( 'Images', 'elementor' ),
+				'label' => esc_html__( 'Images', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -262,11 +262,11 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'image_spacing',
 			[
-				'label' => esc_html__( 'Gap', 'elementor' ),
+				'label' => esc_html__( 'Gap', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'prefix_class' => 'gallery-spacing-',
 				'default' => '',
@@ -279,7 +279,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'image_spacing_custom',
 			[
-				'label' => esc_html__( 'Custom Gap', 'elementor' ),
+				'label' => esc_html__( 'Custom Gap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -318,7 +318,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_responsive_control(
 			'image_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -332,7 +332,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->start_controls_section(
 			'section_caption',
 			[
-				'label' => esc_html__( 'Caption', 'elementor' ),
+				'label' => esc_html__( 'Caption', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'gallery_display_caption' => '',
@@ -343,27 +343,27 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => esc_html__( 'Justified', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
@@ -381,7 +381,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_control(
 			'text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -421,7 +421,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_responsive_control(
 			'caption_space',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -468,7 +468,7 @@ class Widget_Image_Gallery extends Widget_Base {
 			$this->add_render_attribute( 'shortcode', 'orderby', $settings['gallery_rand'] );
 		}
 		?>
-		<div class="elementor-image-gallery">
+		<div class="refraction-image-gallery">
 			<?php
 			add_filter( 'wp_get_attachment_link', [ $this, 'add_lightbox_data_to_image_link' ], 10, 2 );
 

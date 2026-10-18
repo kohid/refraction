@@ -5,9 +5,9 @@ import {
 	PropKeyProvider,
 	PropProvider,
 	useBoundProp,
-} from '@elementor/editor-controls';
-import type { Control, ControlLayout, ControlsSection } from '@elementor/editor-elements';
-import { PopoverHeader, SectionPopoverBody } from '@elementor/editor-ui';
+} from '@refraction/editor-controls';
+import type { Control, ControlLayout, ControlsSection } from '@refraction/editor-elements';
+import { PopoverHeader, SectionPopoverBody } from '@refraction/editor-ui';
 import { DatabaseIcon, SettingsIcon, XIcon } from '@elementor/icons';
 import {
 	bindPopover,
@@ -90,7 +90,7 @@ export const DynamicSelectionControl = ( { OriginalControl, ...props }: { Origin
 						<IconButton
 							size={ SIZE }
 							onClick={ removeDynamicTag }
-							aria-label={ __( 'Remove dynamic value', 'elementor' ) }
+							aria-label={ __( 'Remove dynamic value', 'refraction' ) }
 						>
 							<XIcon fontSize={ SIZE } />
 						</IconButton>
@@ -107,7 +107,7 @@ export const DynamicSelectionControl = ( { OriginalControl, ...props }: { Origin
 				} }
 				{ ...bindPopover( selectionPopoverState ) }
 			>
-				<SectionPopoverBody aria-label={ __( 'Dynamic tags', 'elementor' ) }>
+				<SectionPopoverBody aria-label={ __( 'Dynamic tags', 'refraction' ) }>
 					<DynamicSelection close={ selectionPopoverState.close } expired={ readonly } />
 				</SectionPopoverBody>
 			</Popover>
@@ -136,7 +136,7 @@ export const DynamicSettingsPopover = ( {
 				size={ SIZE }
 				disabled={ disabled }
 				{ ...( ! disabled && bindTrigger( popupState ) ) }
-				aria-label={ __( 'Dynamic settings', 'elementor' ) }
+				aria-label={ __( 'Dynamic settings', 'refraction' ) }
 			>
 				<SettingsIcon fontSize={ SIZE } />
 			</IconButton>
@@ -150,7 +150,7 @@ export const DynamicSettingsPopover = ( {
 				} }
 				{ ...bindPopover( popupState ) }
 			>
-				<SectionPopoverBody aria-label={ __( 'Dynamic settings', 'elementor' ) }>
+				<SectionPopoverBody aria-label={ __( 'Dynamic settings', 'refraction' ) }>
 					<PopoverHeader
 						title={ dynamicTag.label }
 						onClose={ popupState.close }

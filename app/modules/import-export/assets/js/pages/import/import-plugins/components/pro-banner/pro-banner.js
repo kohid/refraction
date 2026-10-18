@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import MessageBanner from '../../../../../ui/message-banner/message-banner';
-import GoProButton from 'elementor-app/molecules/go-pro-button';
-import Dialog from 'elementor-app/ui/dialog/dialog';
+import GoProButton from 'refraction-app/molecules/go-pro-button';
+import Dialog from 'refraction-app/ui/dialog/dialog';
 
 import './pro-banner.scss';
 
@@ -24,20 +24,20 @@ export default function ProBanner( { onRefresh } ) {
 	return (
 		<>
 			<MessageBanner
-				heading={ __( 'Install Elementor Pro', 'elementor' ) }
-				description={ __( "Without Elementor Pro, importing components like templates, widgets and popups won't work.", 'elementor' ) }
+				heading={ __( 'Install Refraction Pro', 'refraction' ) }
+				description={ __( "Without Refraction Pro, importing components like templates, widgets and popups won't work.", 'refraction' ) }
 				button={ <GoProButton onClick={ handleGoPro } /> }
 			/>
 
 			{
 				showInfoDialog &&
 				<Dialog
-					title={ __( 'Is your Elementor Pro ready?', 'elementor' ) }
-					text={ __( 'If you’ve purchased, installed & activated Elementor Pro, we can continue importing all the parts of this site.', 'elementor' ) }
+					title={ __( 'Is your Refraction Pro ready?', 'refraction' ) }
+					text={ __( 'If you’ve purchased, installed & activated Refraction Pro, we can continue importing all the parts of this site.', 'refraction' ) }
 					approveButtonColor="primary"
-					approveButtonText={ __( 'Yes', 'elementor' ) }
+					approveButtonText={ __( 'Yes', 'refraction' ) }
 					approveButtonOnClick={ onDialogApprove }
-					dismissButtonText={ __( 'Not yet', 'elementor' ) }
+					dismissButtonText={ __( 'Not yet', 'refraction' ) }
 					dismissButtonOnClick={ onDialogDismiss }
 					onClose={ onDialogDismiss }
 				/>

@@ -1,8 +1,8 @@
-export default class Progress extends elementorModules.frontend.handlers.Base {
+export default class Progress extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				progressNumber: '.elementor-progress-bar',
+				progressNumber: '.refraction-progress-bar',
 			},
 		};
 	}

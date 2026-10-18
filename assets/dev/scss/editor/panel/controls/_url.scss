@@ -1,16 +1,16 @@
-.elementor-control-type-url {
+.refraction-control-type-url {
 
-	.elementor-control-field {
+	.refraction-control-field {
 		position: relative;
 	}
 
-	.elementor-control-input-wrapper {
+	.refraction-control-input-wrapper {
 		display: flex;
 	}
 
-	&.elementor-control-dynamic {
+	&.refraction-control-dynamic {
 
-		.elementor-control-url-more-options {
+		.refraction-control-url-more-options {
 
 			input {
 				border-radius: var(--e-a-border-radius);
@@ -18,20 +18,20 @@
 		}
 	}
 
-	&.elementor-control-dynamic-value {
+	&.refraction-control-dynamic-value {
 
 		.e-input-style {
 			border-start-end-radius: 0;
 			border-end-end-radius: 0;
 		}
 
-		.elementor-control-url-more {
+		.refraction-control-url-more {
 			border-start-end-radius: var(--e-a-border-radius);
 			border-end-end-radius: var(--e-a-border-radius);
 		}
 	}
 
-	.elementor-control-url {
+	.refraction-control-url {
 
 		&-more {
 			display: flex;
@@ -52,7 +52,7 @@
 				display: none;
 				padding-block-start: 10px;
 
-				.elementor-control-field-description {
+				.refraction-control-field-description {
 					margin-block-start: 10px;
 				}
 			}
@@ -105,7 +105,7 @@
 		}
 	}
 
-	.elementor-input {
+	.refraction-input {
 
 		&:focus {
 
@@ -117,7 +117,7 @@
 }
 
 //Autocomplete URL
-.elementor-autocomplete-menu {
+.refraction-autocomplete-menu {
 	position: absolute;
 	background: var(--e-a-bg-default);
 	border: var(--e-a-border);
@@ -152,7 +152,7 @@
 		}
 	}
 
-	.elementor-autocomplete-item-info {
+	.refraction-autocomplete-item-info {
 		font-size: 10px;
 		padding-block-start: 2px;
 	}

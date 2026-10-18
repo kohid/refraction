@@ -5,7 +5,7 @@ import {
 	type CreateElementStyleArgs,
 	deleteElementStyle,
 	getElementLabel,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 import { renderHook } from '@testing-library/react';
 
 import { useClassesProp } from '../../contexts/classes-prop-context';
@@ -16,8 +16,8 @@ import { useStylesFields } from '../use-styles-fields';
 jest.mock( '../../contexts/element-context' );
 jest.mock( '../../contexts/style-context' );
 jest.mock( '../../contexts/classes-prop-context' );
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	deleteElementStyle: jest.fn(),
 	getElementLabel: jest.fn(),
 	createElementStyle: jest.fn(),

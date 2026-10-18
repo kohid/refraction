@@ -1,5 +1,5 @@
-import { settingsTransformersRegistry, type TransformerOptions } from '@elementor/editor-canvas';
-import { type TransformablePropValue } from '@elementor/editor-props';
+import { settingsTransformersRegistry, type TransformerOptions } from '@refraction/editor-canvas';
+import { type TransformablePropValue } from '@refraction/editor-props';
 
 import { componentOverridableTransformer } from '../../component-overridable-transformer';
 import { componentOverrideTransformer } from '../../component-override-transformer';

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { type PropKey } from '@elementor/editor-props';
-import { type StyleDefinitionVariant } from '@elementor/editor-styles';
-import { isElementsStylesProvider } from '@elementor/editor-styles-repository';
+import { type PropKey } from '@refraction/editor-props';
+import { type StyleDefinitionVariant } from '@refraction/editor-styles';
+import { isElementsStylesProvider } from '@refraction/editor-styles-repository';
 import { Stack, Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -33,11 +33,11 @@ export const StylesInheritanceSectionIndicators = ( { fields }: Props ) => {
 		return null;
 	}
 
-	const hasValueLabel = __( 'Has effective styles', 'elementor' );
-	const hasOverridesLabel = __( 'Has overridden styles', 'elementor' );
+	const hasValueLabel = __( 'Has effective styles', 'refraction' );
+	const hasOverridesLabel = __( 'Has overridden styles', 'refraction' );
 
 	return (
-		<Tooltip title={ __( 'Has styles', 'elementor' ) } placement="top">
+		<Tooltip title={ __( 'Has styles', 'refraction' ) } placement="top">
 			<Stack direction="row" sx={ { '& > *': { marginInlineStart: -0.25 } } } role="list">
 				{ hasValues && provider && (
 					<StyleIndicator

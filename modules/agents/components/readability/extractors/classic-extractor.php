@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Readability\Extractors;
+namespace Refraction\Modules\Agents\Components\Readability\Extractors;
 
-use Elementor\Modules\MarkdownRender\Html_To_Markdown;
+use Refraction\Modules\MarkdownRender\Html_To_Markdown;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

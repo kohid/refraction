@@ -6,7 +6,7 @@ import { ALL_CATEGORIES } from '../../constants';
 import { type AuditMeta, type AuditResult, type AuditRun, type PageAuditReport } from '../../types';
 import ReportShell from '../report-shell';
 
-jest.mock( '@elementor/editor-floating-panels', () => ( {
+jest.mock( '@refraction/editor-floating-panels', () => ( {
 	useFloatingPanelZIndex: jest.fn( () => 1000 ),
 } ) );
 

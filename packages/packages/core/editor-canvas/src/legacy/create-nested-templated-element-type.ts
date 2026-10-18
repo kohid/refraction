@@ -1,4 +1,4 @@
-import { ELEMENT_STYLE_CHANGE_EVENT, type V1ElementModelProps } from '@elementor/editor-elements';
+import { ELEMENT_STYLE_CHANGE_EVENT, type V1ElementModelProps } from '@refraction/editor-elements';
 
 import { computeHtmlTag } from '../renderers/compute-html-tag';
 import { type DomRenderer } from '../renderers/create-dom-renderer';
@@ -50,7 +50,7 @@ export function createNestedTemplatedElementType( {
 }: CreateNestedTemplatedElementTypeOptions ): typeof ElementType {
 	const legacyWindow = window as unknown as LegacyWindow;
 
-	return class extends legacyWindow.elementor.modules.elements.types.Base {
+	return class extends legacyWindow.refraction.modules.elements.types.Base {
 		getType() {
 			return type;
 		}
@@ -60,7 +60,7 @@ export function createNestedTemplatedElementType( {
 		}
 
 		getModel() {
-			const BaseModel = legacyWindow.elementor.modules.elements.models.AtomicElementBase;
+			const BaseModel = legacyWindow.refraction.modules.elements.models.AtomicElementBase;
 
 			if ( modelExtensions && Object.keys( modelExtensions ).length > 0 ) {
 				return BaseModel.extend( modelExtensions ) as typeof BaseModel;
@@ -92,7 +92,7 @@ export function buildEditorAttributes( model: ElementView[ 'model' ] ): string {
 function buildEditorClasses( model: { get: ( key: 'id' ) => string } ): string {
 	const id = model.get( 'id' );
 
-	return [ 'elementor-element', 'elementor-element-edit-mode', `elementor-element-${ id }` ].join( ' ' );
+	return [ 'refraction-element', 'refraction-element-edit-mode', `refraction-element-${ id }` ].join( ' ' );
 }
 
 type CreateNestedTemplatedElementViewOptions = Omit< CreateNestedTemplatedElementTypeOptions, 'modelExtensions' >;
@@ -110,7 +110,7 @@ export function createNestedTemplatedElementView( {
 		element,
 	} );
 
-	const AtomicElementBaseView = legacyWindow.elementor.modules.elements.views.createAtomicElementBase( type );
+	const AtomicElementBaseView = legacyWindow.refraction.modules.elements.views.createAtomicElementBase( type );
 	const parentRenderChildren = AtomicElementBaseView.prototype._renderChildren;
 	const parentOpenEditingPanel = AtomicElementBaseView.prototype._openEditingPanel;
 	const parentAddElement = AtomicElementBaseView.prototype.addElement;
@@ -163,12 +163,12 @@ export function createNestedTemplatedElementView( {
 		},
 
 		_onTemplateReady() {
-			this.dispatchPreviewEvent( 'elementor/element/render' );
+			this.dispatchPreviewEvent( 'refraction/element/render' );
 		},
 
 		_afterRender() {
 			createAfterRender( this );
-			this.dispatchPreviewEvent( 'elementor/element/rendered' );
+			this.dispatchPreviewEvent( 'refraction/element/rendered' );
 
 			requestAnimationFrame( () => {
 				this._initAlpine();
@@ -327,7 +327,7 @@ export function createNestedTemplatedElementView( {
 
 			const placeholderComment = Array.from( el.childNodes ).find(
 				( node ) =>
-					node.nodeType === Node.COMMENT_NODE && node.nodeValue?.trim() === 'elementor-children-placeholder'
+					node.nodeType === Node.COMMENT_NODE && node.nodeValue?.trim() === 'refraction-children-placeholder'
 			);
 
 			placeholderComment?.remove();
@@ -347,7 +347,7 @@ export function createNestedTemplatedElementView( {
 			// Find the placeholder comment
 			const placeholderComment = Array.from( el.childNodes ).find(
 				( node ) =>
-					node.nodeType === Node.COMMENT_NODE && node.nodeValue?.trim() === 'elementor-children-placeholder'
+					node.nodeType === Node.COMMENT_NODE && node.nodeValue?.trim() === 'refraction-children-placeholder'
 			);
 
 			if ( placeholderComment ) {
@@ -369,7 +369,7 @@ export function createNestedTemplatedElementView( {
 		},
 
 		onDestroy() {
-			this.dispatchPreviewEvent( 'elementor/element/destroy' );
+			this.dispatchPreviewEvent( 'refraction/element/destroy' );
 		},
 
 		_destroyAlpine() {

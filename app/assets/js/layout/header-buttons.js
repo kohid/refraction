@@ -1,4 +1,4 @@
-import useAction from 'elementor-app/hooks/use-action';
+import useAction from 'refraction-app/hooks/use-action';
 
 import Button from './header-button';
 
@@ -30,7 +30,7 @@ export default function HeaderButtons( props ) {
 	return (
 		<div className="eps-app__header-buttons">
 			<Button
-				text={ __( 'Close', 'elementor' ) }
+				text={ __( 'Close', 'refraction' ) }
 				icon="eicon-close"
 				className="eps-app__close-button"
 				onClick={ actionOnClose }

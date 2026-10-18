@@ -54,22 +54,22 @@
 }
 
 // Hidden WP Admin Bar
-html.elementor-html {
+html.refraction-html {
 	margin-block-start: 0 !important;
 }
 
-.elementor-edit-area {
+.refraction-edit-area {
 	position: relative;
 }
 
-.elementor {
+.refraction {
 
 	&.loading {
 		opacity: 0.5;
 	}
 }
 
-.elementor-edit-area-active {
+.refraction-edit-area-active {
 
 	--primary-color: var(--e-p-border-con);
 	--secondary-color: var(--e-p-border-con-hover);
@@ -83,8 +83,8 @@ html.elementor-html {
 		// Add an outline to the currently dragged over Container, so the user will be able to differentiate
 		// between Containers.
 		&.e-dragging-over,
-		&.elementor-dragging-on-child,
-		&.e-con-boxed.elementor-html5dnd-current-element {
+		&.refraction-dragging-on-child,
+		&.e-con-boxed.refraction-html5dnd-current-element {
 			outline: 1px solid var( --outline-color );
 		}
 	}
@@ -93,7 +93,7 @@ html.elementor-html {
 		display: none;
 	}
 
-	.elementor-element-editable.e-grid {
+	.refraction-element-editable.e-grid {
 
 		&.e-con-full {
 
@@ -124,16 +124,16 @@ html.elementor-html {
 		}
 	}
 
-	.elementor-inner-section {
+	.refraction-inner-section {
 
 		&:first-child {
 			margin-block-start: 15px;
 		}
 	}
 
-	.elementor-widget-wrap {
+	.refraction-widget-wrap {
 
-		&.elementor-element-empty {
+		&.refraction-element-empty {
 
 			min-height: 30px; // In case of section with non-default content position
 
@@ -143,21 +143,21 @@ html.elementor-html {
 		}
 	}
 
-	.elementor-column {
+	.refraction-column {
 		min-width: 25px;
 	}
 
-	.elementor-widget {
+	.refraction-widget {
 
-		&.elementor-loading {
+		&.refraction-loading {
 			opacity: .3;
 		}
 
-		&.elementor-element-edit-mode:hover {
+		&.refraction-element-edit-mode:hover {
 			box-shadow: 0 0 0 1px var(--e-p-border-widget);
 		}
 
-		&.elementor-element-editable {
+		&.refraction-element-editable {
 
 			&,
 			&:hover {
@@ -167,7 +167,7 @@ html.elementor-html {
 
 		&:not(:hover) {
 
-			.elementor-editor-element-settings {
+			.refraction-editor-element-settings {
 				display: none;
 			}
 		}
@@ -178,7 +178,7 @@ html.elementor-html {
 	}
 
 	// It's here in order to override some themes default css
-	.elementor-editor-element-setting {
+	.refraction-editor-element-setting {
 		cursor: pointer;
 		display: flex;
 		align-items: center;
@@ -191,30 +191,30 @@ html.elementor-html {
 		transition: var(--e-a-transition-hover);
 	}
 
-	.elementor-inline-editing {
+	.refraction-inline-editing {
 		min-height: 15px;
 	}
 
-	.elementor-edit-hidden {
+	.refraction-edit-hidden {
 		display: none;
 	}
 }
 
-.elementor-section-wrap {
+.refraction-section-wrap {
 	&:empty {
 		min-height: 25px;
 	}
 
 	// Make the first child's overlay higher than the others to fix bug ED-5010 where the overlays overlap each other.
-	> :first-child > .elementor-element-overlay {
+	> :first-child > .refraction-element-overlay {
 		z-index: $editor-layer;
 	}
 }
 
 // Element
-.elementor-element {
+.refraction-element {
 
-	> .elementor-element-overlay {
+	> .refraction-element-overlay {
 		position: absolute;
 		inset-block-start: 0;
 		inset-inline-end: 0;
@@ -225,15 +225,15 @@ html.elementor-html {
 
 	&-empty {
 
-		.elementor-sortable-placeholder {
+		.refraction-sortable-placeholder {
 			display: none;
 		}
 	}
 
-	&.elementor-widget-empty {
+	&.refraction-widget-empty {
 		background-color: fade_out($editor-lightest, .2);
 
-		.elementor-widget-empty-icon {
+		.refraction-widget-empty-icon {
 			color: $editor-lighter;
 			font-size: 22px;
 			display: block;
@@ -241,7 +241,7 @@ html.elementor-html {
 			padding: 10px 0;
 		}
 
-		&[data-atomic] .elementor-widget-empty-icon {
+		&[data-atomic] .refraction-widget-empty-icon {
 			background-color: rgb(243, 243, 244);
 			width: 100%;
 		}
@@ -249,11 +249,11 @@ html.elementor-html {
 
 	&:not(:hover) {
 
-		&:not(.elementor-element-editable) {
+		&:not(.refraction-element-editable) {
 
-			> .elementor-element-overlay {
+			> .refraction-element-overlay {
 
-				.elementor-editor-element-settings {
+				.refraction-editor-element-settings {
 					display: none;
 				}
 			}
@@ -262,11 +262,11 @@ html.elementor-html {
 
 	&--toggle-edit-tools {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 
-			.elementor-editor-element-edit {
+			.refraction-editor-element-edit {
 
-				&:not(.elementor-active) {
+				&:not(.refraction-active) {
 
 					~ * {
 						width: 0;
@@ -277,7 +277,7 @@ html.elementor-html {
 		}
 	}
 
-	&[data-side="top"], &[data-side="bottom"] + .elementor-element {
+	&[data-side="top"], &[data-side="bottom"] + .refraction-element {
 
 		&:before {
 			content: '';
@@ -303,8 +303,8 @@ html.elementor-html {
 		}
 	}
 
-	&.elementor-absolute,
-	&.elementor-fixed {
+	&.refraction-absolute,
+	&.refraction-fixed {
 		cursor: grab;
 
 		&:active {
@@ -321,7 +321,7 @@ html.elementor-html {
 }
 
 // General - Overlay Settings
-.elementor-editor-element-settings {
+.refraction-editor-element-settings {
 	position: absolute;
 	display: flex;
 	height: 26px;
@@ -338,20 +338,20 @@ html.elementor-html {
 	transition: var(--e-a-transition-hover);
 }
 
-.elementor-editor-element-edit {
+.refraction-editor-element-edit {
 
 	@media(min-width: $editor-screen-lg-min) {
 		cursor: move;
 	}
 }
 
-.elementor-empty-view {
+.refraction-empty-view {
 	position: absolute;
 	inset: 0;
 	z-index: $first-layer;
 }
 
-.elementor-first-add {
+.refraction-first-add {
 	text-align: center;
 	border: 1px dashed var(--e-a-border-color-bold);
 	display: flex;
@@ -361,14 +361,14 @@ html.elementor-html {
 	align-items: center;
 	justify-content: center;
 
-	.elementor-icon {
+	.refraction-icon {
 		font-size: 19px;
 		color: $editor-light;
 		cursor: pointer;
 	}
 }
 
-.elementor-sortable-helper {
+.refraction-sortable-helper {
 	position: absolute;
 	cursor: move;
 	border: var(--e-a-border);
@@ -397,9 +397,9 @@ html.elementor-html {
 }
 
 // Drag/sort placeholder
-.elementor-sortable-placeholder {
+.refraction-sortable-placeholder {
 
-	&:not(.elementor-column-placeholder) {
+	&:not(.refraction-column-placeholder) {
 		background-color: var(--e-p-draggable-color);
 		animation-duration: 250ms;
 		opacity: .9;
@@ -407,7 +407,7 @@ html.elementor-html {
 		align-self: stretch;
 
 		// Make the placeholder centered in container element, like in other places.
-		.e-con .elementor-first-add & {
+		.e-con .refraction-first-add & {
 			align-self: center;
 		}
 
@@ -418,12 +418,12 @@ html.elementor-html {
 	}
 }
 
-.elementor-section-placeholder {
+.refraction-section-placeholder {
 	height: $section-placeholder-size;
 	animation-name: placeholder-section;
 }
 
-.elementor-widget-placeholder {
+.refraction-widget-placeholder {
 	height: $widget-placeholder-size;
 	animation-name: placeholder-widget;
 
@@ -436,8 +436,8 @@ html.elementor-html {
 	}
 }
 
-.elementor-draggable-over:not([data-dragged-element="section"]):not([data-dragged-is-inner="true"]) > .elementor-empty-view > .elementor-first-add,
-.elementor-first-add.elementor-html5dnd-current-element {
+.refraction-draggable-over:not([data-dragged-element="section"]):not([data-dragged-is-inner="true"]) > .refraction-empty-view > .refraction-first-add,
+.refraction-first-add.refraction-html5dnd-current-element {
 
 	&:after {
 		content: '';
@@ -454,54 +454,54 @@ html.elementor-html {
 		}
 	}
 
-	.elementor-icon {
+	.refraction-icon {
 		display: none;
 	}
 }
 
-.elementor-draggable-over[data-dragged-element="section"][data-dragged-is-inner="true"] {
+.refraction-draggable-over[data-dragged-element="section"][data-dragged-is-inner="true"] {
 
-	.elementor-inner-column {
+	.refraction-inner-column {
 
-		.elementor-sortable-placeholder {
+		.refraction-sortable-placeholder {
 			display: none;
 		}
 	}
 }
 
 // Preview Mode
-.elementor-editor-preview {
+.refraction-editor-preview {
 
-	.elementor-element-overlay,
-	.elementor-empty,
-	.elementor-add-section,
-	.elementor-add-section-inline,
-	.elementor-empty-view,
-	.elementor-widget-empty {
+	.refraction-element-overlay,
+	.refraction-empty,
+	.refraction-add-section,
+	.refraction-add-section-inline,
+	.refraction-empty-view,
+	.refraction-widget-empty {
 		display: none;
 	}
 
 	// Show elements overlays when an embedded document is being edited
 	// For example, when a component is being edited.
-	:where(.elementor-edit-area-active) {
-		.elementor-element-overlay,
-		.elementor-empty,
-		.elementor-empty-view,
-		.elementor-widget-empty 
+	:where(.refraction-edit-area-active) {
+		.refraction-element-overlay,
+		.refraction-empty,
+		.refraction-empty-view,
+		.refraction-widget-empty 
 		{
 			display: revert;
 		}
 	}
 
 	// Component editing mode - change top level element overlay outline color to global element color
-	:where(.elementor-edit-area-active.elementor-widget-e-component) {
-		> .elementor-section-wrap > :first-child {
-			> .elementor-element-overlay::after {
+	:where(.refraction-edit-area-active.refraction-widget-e-component) {
+		> .refraction-section-wrap > :first-child {
+			> .refraction-element-overlay::after {
 				outline-color: var(--e-p-border-global-element);
 			}
 
-			&.elementor-element-editable {
-				> .elementor-element-overlay::after {
+			&.refraction-element-editable {
+				> .refraction-element-overlay::after {
 					// When selected, the outline should be inside the element, to avoid overlapping with component edit mode backdrop
 					outline-offset: -1px;
 				}
@@ -511,21 +511,21 @@ html.elementor-html {
 }
 
 // Muted elements in the editor
-.e-preview--show-hidden-elements[data-elementor-device-mode="widescreen"] .elementor-edit-area-active .elementor-hidden-widescreen,
-.e-preview--show-hidden-elements[data-elementor-device-mode="desktop"] .elementor-edit-area-active .elementor-hidden-desktop,
-.e-preview--show-hidden-elements[data-elementor-device-mode="laptop"] .elementor-edit-area-active .elementor-hidden-laptop,
-.e-preview--show-hidden-elements[data-elementor-device-mode="tablet_extra"] .elementor-edit-area-active .elementor-hidden-tablet_extra,
-.e-preview--show-hidden-elements[data-elementor-device-mode="tablet"] .elementor-edit-area-active .elementor-hidden-tablet,
-.e-preview--show-hidden-elements[data-elementor-device-mode="mobile_extra"] .elementor-edit-area-active .elementor-hidden-mobile_extra,
-.e-preview--show-hidden-elements[data-elementor-device-mode="mobile"] .elementor-edit-area-active .elementor-hidden-mobile {
+.e-preview--show-hidden-elements[data-refraction-device-mode="widescreen"] .refraction-edit-area-active .refraction-hidden-widescreen,
+.e-preview--show-hidden-elements[data-refraction-device-mode="desktop"] .refraction-edit-area-active .refraction-hidden-desktop,
+.e-preview--show-hidden-elements[data-refraction-device-mode="laptop"] .refraction-edit-area-active .refraction-hidden-laptop,
+.e-preview--show-hidden-elements[data-refraction-device-mode="tablet_extra"] .refraction-edit-area-active .refraction-hidden-tablet_extra,
+.e-preview--show-hidden-elements[data-refraction-device-mode="tablet"] .refraction-edit-area-active .refraction-hidden-tablet,
+.e-preview--show-hidden-elements[data-refraction-device-mode="mobile_extra"] .refraction-edit-area-active .refraction-hidden-mobile_extra,
+.e-preview--show-hidden-elements[data-refraction-device-mode="mobile"] .refraction-edit-area-active .refraction-hidden-mobile {
 	display: inherit; //to overcome the display:none;
 	background: repeating-linear-gradient(125deg,rgba(0, 0, 0, 0.05),rgba(0, 0, 0, 0.05) 1px,transparent 2px,transparent 9px);
 	border: 1px solid rgba(0, 0, 0, 0.02);
 
-	&.elementor-section,
+	&.refraction-section,
 	&.e-con {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 			background-color: var(--e-a-bg-hover);
 			mix-blend-mode: color;
 		}
@@ -541,25 +541,25 @@ html.elementor-html {
 	}
 
 	&.e-con {
-		// Containers inherit "display: block" from `elementor-hidden-{device}`'s `display: inherit` above.
+		// Containers inherit "display: block" from `refraction-hidden-{device}`'s `display: inherit` above.
 		// This line makes sure containers maintain their intended display mode.
 		display: var( --display );
 	}
 
-	&.elementor-inner-section {
+	&.refraction-inner-section {
 
-		.elementor-container {
+		.refraction-container {
 			width: 100%;//to handle with display: inherit; > issues#12376
 		}
 	}
 
-	> .elementor-widget-container, > .elementor-widget-wrap,
-	&:not(:has(> .elementor-widget-container)) {
+	> .refraction-widget-container, > .refraction-widget-wrap,
+	&:not(:has(> .refraction-widget-container)) {
 		filter: opacity(0.4) saturate(0);
 	}
 
 	//Compatibility for hidden element by the navigator
-	&.elementor-edit-hidden {
+	&.refraction-edit-hidden {
 		display: none;
 	}
 }
@@ -569,14 +569,14 @@ html.elementor-html {
 }
 
 
-.elementor-widget-e-component[data-atomic] {
-	&.elementor-edit-area-active {
+.refraction-widget-e-component[data-atomic] {
+	&.refraction-edit-area-active {
 		& > * > * {
 			pointer-events: initial;
 		}
 	}
 
-	&:not(.elementor-edit-area-active) {
+	&:not(.refraction-edit-area-active) {
 		& > * > * {
 			pointer-events: none;
 		}

@@ -3,23 +3,23 @@ import { createMockDocument, renderWithTheme } from 'test-utils';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
-} from '@elementor/editor-documents';
-import { __privateIsRouteActive as isRouteActive } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-documents';
+import { __privateIsRouteActive as isRouteActive } from '@refraction/editor-v1-adapters';
 import { act, screen } from '@testing-library/react';
 
 import PortalledPrimaryAction from '../portalled-primary-action';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	__privateIsRouteActive: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useActiveDocumentActions: jest.fn(),
 } ) );
 
-describe( '@elementor/editor-app-bar - Portalled primary action', () => {
+describe( '@refraction/editor-app-bar - Portalled primary action', () => {
 	beforeEach( () => {
 		jest.mocked( useActiveDocument ).mockReturnValue( createMockDocument() );
 
@@ -86,7 +86,7 @@ describe( '@elementor/editor-app-bar - Portalled primary action', () => {
 	} );
 } );
 
-function createRootElement( id = 'elementor-panel-inner' ) {
+function createRootElement( id = 'refraction-panel-inner' ) {
 	const el = document.createElement( 'div' );
 
 	el.setAttribute( 'id', id );
@@ -97,7 +97,7 @@ function createRootElement( id = 'elementor-panel-inner' ) {
 function navigateTo( route: string ) {
 	act( () => {
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/routes/open', {
+			new CustomEvent( 'refraction/routes/open', {
 				detail: { route },
 			} )
 		);

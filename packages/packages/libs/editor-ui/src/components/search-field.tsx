@@ -45,7 +45,7 @@ export const SearchField = ( { value, onSearch, placeholder, id, sx }: Props ) =
 						</InputAdornment>
 					),
 					endAdornment: value && (
-						<IconButton size={ SIZE } onClick={ handleClear } aria-label={ __( 'Clear', 'elementor' ) }>
+						<IconButton size={ SIZE } onClick={ handleClear } aria-label={ __( 'Clear', 'refraction' ) }>
 							<XIcon color="action" fontSize={ SIZE } />
 						</IconButton>
 					),

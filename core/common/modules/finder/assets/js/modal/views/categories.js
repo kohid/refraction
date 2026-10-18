@@ -3,13 +3,13 @@ import DynamicCategory from './dynamic-category';
 
 export default class extends Marionette.CompositeView {
 	id() {
-		return 'elementor-finder__results-container';
+		return 'refraction-finder__results-container';
 	}
 
 	ui() {
 		this.selectors = {
-			noResults: '#elementor-finder__no-results',
-			categoryItem: '.elementor-finder__results__item',
+			noResults: '#refraction-finder__no-results',
+			categoryItem: '.refraction-finder__results__item',
 		};
 
 		return this.selectors;
@@ -22,7 +22,7 @@ export default class extends Marionette.CompositeView {
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-finder-results-container';
+		return '#tmpl-refraction-finder-results-container';
 	}
 
 	getChildView( childModel ) {
@@ -32,17 +32,17 @@ export default class extends Marionette.CompositeView {
 	initialize() {
 		this.$activeItem = null;
 
-		this.childViewContainer = '#elementor-finder__results';
+		this.childViewContainer = '#refraction-finder__results';
 
-		this.collection = new Backbone.Collection( Object.values( elementorCommon.finder.getSettings( 'data' ) ) );
+		this.collection = new Backbone.Collection( Object.values( refractionCommon.finder.getSettings( 'data' ) ) );
 	}
 
 	activateItem( $item ) {
 		if ( this.$activeItem ) {
-			this.$activeItem.removeClass( 'elementor-active' );
+			this.$activeItem.removeClass( 'refraction-active' );
 		}
 
-		$item.addClass( 'elementor-active' );
+		$item.addClass( 'refraction-active' );
 
 		this.$activeItem = $item;
 	}

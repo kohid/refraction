@@ -15,7 +15,7 @@ const STEP_SUBTITLE = "We'll use this to tailor suggestions for you.";
 const BUILT_IN_LABEL = 'Included';
 const FINISH_BUTTON_LABEL = 'Continue with Free';
 const USER_CHOICES_ENDPOINT = 'user-choices';
-const PRO_PLAN_NOTICE_PATTERN = /Elementor (Pro|One)/;
+const PRO_PLAN_NOTICE_PATTERN = /Refraction (Pro|One)/;
 
 const getFirstProOption = () => {
 	const option = FEATURE_OPTIONS.find( ( featureOption ) => featureOption.licenseType === 'pro' );
@@ -240,7 +240,7 @@ describe( 'SiteFeatures', () => {
 				choices: { site_features: [ firstProOption.id ] },
 			} );
 
-			expect( screen.getByText( /Elementor Pro/ ) ).toBeInTheDocument();
+			expect( screen.getByText( /Refraction Pro/ ) ).toBeInTheDocument();
 		} );
 
 		it( 'shows One notice when a one-license feature is selected', () => {
@@ -251,7 +251,7 @@ describe( 'SiteFeatures', () => {
 				choices: { site_features: [ firstOneOption.id ] },
 			} );
 
-			expect( screen.getByText( /Elementor One/ ) ).toBeInTheDocument();
+			expect( screen.getByText( /Refraction One/ ) ).toBeInTheDocument();
 		} );
 
 		it( 'shows One notice when Cookie Consent is selected', () => {
@@ -261,7 +261,7 @@ describe( 'SiteFeatures', () => {
 				choices: { site_features: [ COOKIE_CONSENT_FEATURE_ID ] },
 			} );
 
-			expect( screen.getByText( /Elementor One/ ) ).toBeInTheDocument();
+			expect( screen.getByText( /Refraction One/ ) ).toBeInTheDocument();
 		} );
 
 		it( 'shows One notice when both pro and one-license features are selected', () => {
@@ -273,7 +273,7 @@ describe( 'SiteFeatures', () => {
 				choices: { site_features: [ firstProOption.id, firstOneOption.id ] },
 			} );
 
-			expect( screen.getByText( /Elementor One/ ) ).toBeInTheDocument();
+			expect( screen.getByText( /Refraction One/ ) ).toBeInTheDocument();
 		} );
 	} );
 } );

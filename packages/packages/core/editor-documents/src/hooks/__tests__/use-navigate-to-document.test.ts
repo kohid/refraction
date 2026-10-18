@@ -5,7 +5,7 @@ import { useNavigateToDocument } from '../index';
 
 jest.mock( '../../sync/utils' );
 
-describe( '@elementor/editor-documents - useNavigateToDocument', () => {
+describe( '@refraction/editor-documents - useNavigateToDocument', () => {
 	const originalReplaceState = history.replaceState;
 	const originalLocation = window.location;
 

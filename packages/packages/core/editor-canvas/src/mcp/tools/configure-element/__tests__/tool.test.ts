@@ -1,18 +1,18 @@
-import { getContainer, getWidgetsCache } from '@elementor/editor-elements';
+import { getContainer, getWidgetsCache } from '@refraction/editor-elements';
 
 import { doUpdateElementProperty, UnsupportedPropertyError } from '../../../utils/do-update-element-property';
 import { initConfigureElementTool } from '../tool';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getContainer: jest.fn(),
 	getWidgetsCache: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-mcp', () => ( {
+jest.mock( '@refraction/editor-mcp', () => ( {
 	dispatchMcpStylesAppliedEvent: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-props', () => ( {
+jest.mock( '@refraction/editor-props', () => ( {
 	Schema: { isPropKeyConfigurable: () => true },
 } ) );
 
@@ -22,11 +22,11 @@ jest.mock( '../prompt', () => ( {
 } ) );
 
 jest.mock( '../../../resources/widgets-schema-resource', () => ( {
-	WIDGET_SCHEMA_URI: 'elementor://widgets/schema/{widgetType}',
+	WIDGET_SCHEMA_URI: 'refraction://widgets/schema/{widgetType}',
 } ) );
 
 jest.mock( '../../../resources/dynamic-tags-resource', () => ( {
-	DYNAMIC_TAGS_URI: 'elementor://dynamic-tags',
+	DYNAMIC_TAGS_URI: 'refraction://dynamic-tags',
 } ) );
 
 jest.mock( '../../../utils/resolve-canonical-prop-name', () => ( {

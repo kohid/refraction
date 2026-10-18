@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useCallback } from 'react';
-import { getCurrentUser } from '@elementor/editor-current-user';
-import { notify } from '@elementor/editor-notifications';
-import { ThemeProvider } from '@elementor/editor-ui';
-import { httpService } from '@elementor/http-client';
+import { getCurrentUser } from '@refraction/editor-current-user';
+import { notify } from '@refraction/editor-notifications';
+import { ThemeProvider } from '@refraction/editor-ui';
+import { httpService } from '@refraction/http-client';
 import { Box, Button, Chip, CloseButton, Divider, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -18,14 +18,14 @@ export function AtomicElementsPromo() {
 
 	const activateAtomicElements = useCallback( async () => {
 		try {
-			const response = await httpService().post( 'elementor/v1/operations/opt-in-v4' );
+			const response = await httpService().post( 'refraction/v1/operations/opt-in-v4' );
 			if ( response.data.success ) {
 				window.location.reload();
 			}
 		} catch {
 			notify( {
 				type: 'error',
-				message: __( 'Failed to activate Atomic elements', 'elementor' ),
+				message: __( 'Failed to activate Atomic elements', 'refraction' ),
 				id: 'atomic-elements-promo-error',
 			} );
 		}
@@ -59,8 +59,8 @@ export function AtomicElementsPromo() {
 						variant="subtitle2"
 						sx={ { flexGrow: 1, gap: 1, display: 'flex', alignItems: 'center' } }
 					>
-						{ __( 'Atomic Elements', 'elementor' ) }
-						<Chip label={ __( 'New', 'elementor' ) } size="tiny" variant="standard" color="secondary" />
+						{ __( 'Atomic Elements', 'refraction' ) }
+						<Chip label={ __( 'New', 'refraction' ) } size="tiny" variant="standard" color="secondary" />
 					</Typography>
 					<CloseButton slotProps={ { icon: { fontSize: 'small' } } } onClick={ toggleSuppressMessage } />
 				</Box>
@@ -89,7 +89,7 @@ export function AtomicElementsPromo() {
 					<Typography variant="caption" color="text.tertiary">
 						{ __(
 							'Build with modern, flexible elements designed for reusable styles and cleaner layouts. Your existing site and content stay exactly the same.',
-							'elementor'
+							'refraction'
 						) }
 					</Typography>
 				</Box>
@@ -106,7 +106,7 @@ export function AtomicElementsPromo() {
 					} }
 				>
 					<Button variant="text" size="small" color="secondary" href={ LEARN_MORE_URL } target="_blank">
-						{ __( 'Learn more', 'elementor' ) }
+						{ __( 'Learn more', 'refraction' ) }
 					</Button>
 					<Button
 						variant="contained"
@@ -119,7 +119,7 @@ export function AtomicElementsPromo() {
 						} }
 						onClick={ activateAtomicElements }
 					>
-						{ __( 'Activate now', 'elementor' ) }
+						{ __( 'Activate now', 'refraction' ) }
 					</Button>
 				</Box>
 			</Box>

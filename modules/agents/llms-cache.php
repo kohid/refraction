@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Llms_Cache {
 
-	const TRANSIENT_LLMS      = 'elementor_agents_llms_txt';
-	const TRANSIENT_LLMS_FULL = 'elementor_agents_llms_full_txt';
-	const TRANSIENT_MODIFIED  = 'elementor_agents_llms_modified';
+	const TRANSIENT_LLMS      = 'refraction_agents_llms_txt';
+	const TRANSIENT_LLMS_FULL = 'refraction_agents_llms_full_txt';
+	const TRANSIENT_MODIFIED  = 'refraction_agents_llms_modified';
 
 	/** Default TTL: 1 hour (3600 s). Long enough to be useful, short enough to self-heal. */
 	const DEFAULT_TTL = 3600;
@@ -104,7 +104,7 @@ class Llms_Cache {
 		 *
 		 * @param int $ttl Cache lifetime in seconds. Default: HOUR_IN_SECONDS.
 		 */
-		$ttl = (int) apply_filters( 'elementor/agents/llms_txt/cache_ttl', self::DEFAULT_TTL );
+		$ttl = (int) apply_filters( 'refraction/agents/llms_txt/cache_ttl', self::DEFAULT_TTL );
 		return max( 0, $ttl );
 	}
 

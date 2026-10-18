@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type PropType } from '@elementor/editor-props';
+import { type PropType } from '@refraction/editor-props';
 
 import { useControlAdornments } from './control-adornments-context';
 

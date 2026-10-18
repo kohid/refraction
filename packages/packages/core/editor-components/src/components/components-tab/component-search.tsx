@@ -16,7 +16,7 @@ export const ComponentSearch = () => {
 					fullWidth
 					size={ 'tiny' }
 					value={ inputValue }
-					placeholder={ __( 'Search', 'elementor' ) }
+					placeholder={ __( 'Search', 'refraction' ) }
 					onChange={ ( e: React.ChangeEvent< HTMLInputElement > ) => handleChange( e.target.value ) }
 					InputProps={ {
 						startAdornment: (

@@ -1,7 +1,7 @@
-import { type Document } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { createStylesProvider } from '@elementor/editor-styles-repository';
+import { type Document } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { createStylesProvider } from '@refraction/editor-styles-repository';
 
 let styles: StyleDefinition[] = [];
 let documentStyles = new Map< number, StyleDefinition[] >();

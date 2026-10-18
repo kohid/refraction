@@ -1,9 +1,9 @@
-import Base from 'elementor-frontend/handlers/base';
+import Base from 'refraction-frontend/handlers/base';
 import {
 	changeScrollStatus,
 	setHorizontalScrollAlignment,
 	setHorizontalTitleScrollValues,
-} from 'elementor-frontend-utils/flex-horizontal-scroll';
+} from 'refraction-frontend-utils/flex-horizontal-scroll';
 
 export default class NestedTabs extends Base {
 	/**
@@ -43,7 +43,7 @@ export default class NestedTabs extends Base {
 	}
 
 	getWidgetNumber() {
-		return this.$element.find( '> .elementor-widget-container > .e-n-tabs, > .e-n-tabs' ).attr( 'data-widget-number' );
+		return this.$element.find( '> .refraction-widget-container > .e-n-tabs, > .e-n-tabs' ).attr( 'data-widget-number' );
 	}
 
 	getDefaultSettings() {
@@ -178,9 +178,9 @@ export default class NestedTabs extends Base {
 	}
 
 	onShowTabContent( $requestedContent ) {
-		elementorFrontend.elements.$window.trigger( 'elementor-pro/motion-fx/recalc' );
-		elementorFrontend.elements.$window.trigger( 'elementor/nested-tabs/activate', $requestedContent );
-		elementorFrontend.elements.$window.trigger( 'elementor/bg-video/recalc' );
+		refractionFrontend.elements.$window.trigger( 'refraction-pro/motion-fx/recalc' );
+		refractionFrontend.elements.$window.trigger( 'refraction/nested-tabs/activate', $requestedContent );
+		refractionFrontend.elements.$window.trigger( 'refraction/bg-video/recalc' );
 	}
 
 	isActiveTab( tabIndex ) {
@@ -217,22 +217,22 @@ export default class NestedTabs extends Base {
 		this.elements.$tabTitles.on( this.getTabEvents() );
 		this.elements.$headingContainer.on( this.getHeadingEvents() );
 
-		elementorFrontend.elements.$window.on( 'resize', this.onResizeUpdateHorizontalScrolling.bind( this ) );
-		elementorFrontend.elements.$window.on( 'resize', this.setTouchMode.bind( this ) );
-		elementorFrontend.elements.$window.on( 'elementor/nested-tabs/activate', this.reInitSwipers );
-		elementorFrontend.elements.$window.on( 'elementor/nested-elements/activate-by-keyboard', this.changeActiveTabByKeyboard.bind( this ) );
-		elementorFrontend.elements.$window.on( 'elementor/nested-container/atomic-repeater', this.linkContainer.bind( this ) );
+		refractionFrontend.elements.$window.on( 'resize', this.onResizeUpdateHorizontalScrolling.bind( this ) );
+		refractionFrontend.elements.$window.on( 'resize', this.setTouchMode.bind( this ) );
+		refractionFrontend.elements.$window.on( 'refraction/nested-tabs/activate', this.reInitSwipers );
+		refractionFrontend.elements.$window.on( 'refraction/nested-elements/activate-by-keyboard', this.changeActiveTabByKeyboard.bind( this ) );
+		refractionFrontend.elements.$window.on( 'refraction/nested-container/atomic-repeater', this.linkContainer.bind( this ) );
 	}
 
 	unbindEvents() {
 		this.elements.$tabTitles.off();
 		this.elements.$headingContainer.off();
 		this.elements.$tabContents.children().off();
-		elementorFrontend.elements.$window.off( 'resize', this.onResizeUpdateHorizontalScrolling.bind( this ) );
-		elementorFrontend.elements.$window.off( 'resize', this.setTouchMode.bind( this ) );
-		elementorFrontend.elements.$window.off( 'elementor/nested-tabs/activate', this.reInitSwipers );
-		elementorFrontend.elements.$window.off( 'elementor/nested-elements/activate-by-keyboard', this.changeActiveTabByKeyboard.bind( this ) );
-		elementorFrontend.elements.$window.off( 'elementor/nested-container/atomic-repeater', this.linkContainer.bind( this ) );
+		refractionFrontend.elements.$window.off( 'resize', this.onResizeUpdateHorizontalScrolling.bind( this ) );
+		refractionFrontend.elements.$window.off( 'resize', this.setTouchMode.bind( this ) );
+		refractionFrontend.elements.$window.off( 'refraction/nested-tabs/activate', this.reInitSwipers );
+		refractionFrontend.elements.$window.off( 'refraction/nested-elements/activate-by-keyboard', this.changeActiveTabByKeyboard.bind( this ) );
+		refractionFrontend.elements.$window.off( 'refraction/nested-container/atomic-repeater', this.linkContainer.bind( this ) );
 	}
 
 	/**
@@ -269,7 +269,7 @@ export default class NestedTabs extends Base {
 		this.setTouchMode();
 
 		if ( 'nested-tabs.default' === this.getSettings( 'elementName' ) ) {
-			import( /* webpackChunkName: 'nested-title-keyboard-handler' */ 'elementor-frontend/handlers/accessibility/nested-title-keyboard-handler' ).then( ( { default: NestedTitleKeyboardHandler } ) => {
+			import( /* webpackChunkName: 'nested-title-keyboard-handler' */ 'refraction-frontend/handlers/accessibility/nested-title-keyboard-handler' ).then( ( { default: NestedTitleKeyboardHandler } ) => {
 				new NestedTitleKeyboardHandler( this.getKeyboardNavigationSettings() );
 			} ).catch( ( error ) => {
 				// eslint-disable-next-line no-console
@@ -306,7 +306,7 @@ export default class NestedTabs extends Base {
 		// is in the currently-edited document, and only when its not internal call,
 		if ( fromUser && this.isEdit && this.isElementInTheCurrentDocument() ) {
 			return window.top.$e.run( 'document/repeater/select', {
-				container: elementor.getContainer( this.$element.attr( 'data-id' ) ),
+				container: refraction.getContainer( this.$element.attr( 'data-id' ) ),
 				index: parseInt( tabIndex ),
 			} );
 		}
@@ -349,13 +349,13 @@ export default class NestedTabs extends Base {
 	}
 
 	forceActiveTabToBeInViewport( tabIndex ) {
-		if ( ! elementorFrontend.isEditMode() ) {
+		if ( ! refractionFrontend.isEditMode() ) {
 			return;
 		}
 
 		const $activeTabTitle = this.elements.$tabTitles.filter( this.getTabTitleFilterSelector( tabIndex ) );
 
-		if ( ! elementor.helpers.isInViewport( $activeTabTitle[ 0 ] ) ) {
+		if ( ! refraction.helpers.isInViewport( $activeTabTitle[ 0 ] ) ) {
 			$activeTabTitle[ 0 ].scrollIntoView( { block: 'center' } );
 		}
 	}
@@ -367,13 +367,13 @@ export default class NestedTabs extends Base {
 	}
 
 	getTabsDirection() {
-		const currentDevice = elementorFrontend.getCurrentDeviceMode();
-		return elementorFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'tabs_justify_horizontal', '', currentDevice );
+		const currentDevice = refractionFrontend.getCurrentDeviceMode();
+		return refractionFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'tabs_justify_horizontal', '', currentDevice );
 	}
 
 	getHorizontalScrollSetting() {
-		const currentDevice = elementorFrontend.getCurrentDeviceMode();
-		return elementorFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'horizontal_scroll', '', currentDevice );
+		const currentDevice = refractionFrontend.getCurrentDeviceMode();
+		return refractionFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'horizontal_scroll', '', currentDevice );
 	}
 
 	isAccordionVersion() {
@@ -383,9 +383,9 @@ export default class NestedTabs extends Base {
 	setTouchMode() {
 		const widgetSelector = this.getSettings( 'selectors' ).widgetContainer;
 
-		if ( elementorFrontend.isEditMode() || 'resize' === event?.type ) {
+		if ( refractionFrontend.isEditMode() || 'resize' === event?.type ) {
 			const responsiveDevices = [ 'mobile', 'mobile_extra', 'tablet', 'tablet_extra' ],
-				currentDevice = elementorFrontend.getCurrentDeviceMode();
+				currentDevice = refractionFrontend.getCurrentDeviceMode();
 
 			if ( -1 !== responsiveDevices.indexOf( currentDevice ) ) {
 				this.$element.find( widgetSelector ).attr( 'data-touch-mode', 'true' );
@@ -408,7 +408,7 @@ export default class NestedTabs extends Base {
 		if ( id === currentId ) {
 			this.updateIndexValues();
 			this.updateListeners( view );
-			elementor.$preview[ 0 ].contentWindow.dispatchEvent( new CustomEvent( 'elementor/elements/link-data-bindings' ) );
+			refraction.$preview[ 0 ].contentWindow.dispatchEvent( new CustomEvent( 'refraction/elements/link-data-bindings' ) );
 		}
 
 		if ( ! this.getActiveTabIndex() ) {

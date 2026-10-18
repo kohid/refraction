@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor divider control.
+ * Refraction divider control.
  *
  * A base control for creating divider control. Displays horizontal line in
  * the panel.

@@ -5,7 +5,7 @@ import PanelPage from './panel-page';
 
 export default class Manager {
 	constructor() {
-		elementorCommon.elements.$window.on( 'elementor:loaded', this.init );
+		refractionCommon.elements.$window.on( 'refraction:loaded', this.init );
 	}
 
 	init() {
@@ -13,29 +13,29 @@ export default class Manager {
 		$e.components.register( new HistoryComponent() );
 		$e.components.register( new RevisionsComponent() );
 
-		elementor.on( 'panel:init', () => {
-			elementor.getPanelView().addPage( 'historyPage', {
+		refraction.on( 'panel:init', () => {
+			refraction.getPanelView().addPage( 'historyPage', {
 				view: PanelPage,
-				title: __( 'History', 'elementor' ),
+				title: __( 'History', 'refraction' ),
 			} );
 		} );
 	}
 
 	/**
-	 * @deprecated since 2.9.0, use `elementor.documents.getCurrent().history` instead.
+	 * @deprecated since 2.9.0, use `refraction.documents.getCurrent().history` instead.
 	 */
 	get history() {
-		elementorDevTools.deprecation.deprecated( 'elementor.history.history', '2.9.0', 'elementor.documents.getCurrent().history' );
+		refractionDevTools.deprecation.deprecated( 'refraction.history.history', '2.9.0', 'refraction.documents.getCurrent().history' );
 
-		return elementor.documents.getCurrent().history;
+		return refraction.documents.getCurrent().history;
 	}
 
 	/**
-	 * @deprecated since 2.9.0, use `elementor.documents.getCurrent().revisions` instead.
+	 * @deprecated since 2.9.0, use `refraction.documents.getCurrent().revisions` instead.
 	 */
 	get revisions() {
-		elementorDevTools.deprecation.deprecated( 'elementor.history.revisions', '2.9.0', 'elementor.documents.getCurrent().revisions' );
+		refractionDevTools.deprecation.deprecated( 'refraction.history.revisions', '2.9.0', 'refraction.documents.getCurrent().revisions' );
 
-		return elementor.documents.getCurrent().revisions;
+		return refraction.documents.getCurrent().revisions;
 	}
 }

@@ -1,4 +1,4 @@
-import { __createSlice, __registerSlice, type PayloadAction } from '@elementor/store';
+import { __createSlice, __registerSlice, type PayloadAction } from '@refraction/store';
 
 import type { OnboardingChoices, OnboardingState, Step, StepIdType, StepType } from '../types';
 import { StepId } from '../types';
@@ -87,7 +87,7 @@ function getEmptyState(): OnboardingState {
 }
 
 function buildStateFromConfig(
-	config: NonNullable< typeof window.elementorAppConfig >[ 'onboarding' ]
+	config: NonNullable< typeof window.refractionAppConfig >[ 'onboarding' ]
 ): OnboardingState {
 	if ( ! config ) {
 		return getEmptyState();
@@ -141,7 +141,7 @@ export const slice = __createSlice( {
 	initialState: getEmptyState(),
 	reducers: {
 		initFromConfig: ( state ) => {
-			const config = window.elementorAppConfig?.onboarding;
+			const config = window.refractionAppConfig?.onboarding;
 
 			if ( config ) {
 				return buildStateFromConfig( config );

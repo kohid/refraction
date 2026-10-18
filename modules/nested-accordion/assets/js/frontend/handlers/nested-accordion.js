@@ -1,4 +1,4 @@
-import Base from 'elementor-frontend/handlers/base';
+import Base from 'refraction-frontend/handlers/base';
 import NestedAccordionTitleKeyboardHandler from './nested-accordion-title-keyboard-handler';
 
 export default class NestedAccordion extends Base {
@@ -84,7 +84,7 @@ export default class NestedAccordion extends Base {
 			this.updateIndexValues();
 			this.updateListeners( view );
 
-			elementor.$preview[ 0 ].contentWindow.dispatchEvent( new CustomEvent( 'elementor/elements/link-data-bindings' ) );
+			refraction.$preview[ 0 ].contentWindow.dispatchEvent( new CustomEvent( 'refraction/elements/link-data-bindings' ) );
 		}
 	}
 
@@ -118,7 +118,7 @@ export default class NestedAccordion extends Base {
 
 	bindEvents() {
 		this.elements.$accordionTitles.on( 'click', this.clickListener.bind( this ) );
-		elementorFrontend.elements.$window.on( 'elementor/nested-container/atomic-repeater', this.linkContainer.bind( this ) );
+		refractionFrontend.elements.$window.on( 'refraction/nested-container/atomic-repeater', this.linkContainer.bind( this ) );
 	}
 
 	unbindEvents() {

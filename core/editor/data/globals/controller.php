@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Core\Editor\Data\Globals;
+namespace Refraction\Core\Editor\Data\Globals;
 
-use Elementor\Data\V2\Base\Controller as Controller_Base;
-use Elementor\Data\V2\Base\Endpoint;
-use Elementor\Plugin;
+use Refraction\Data\V2\Base\Controller as Controller_Base;
+use Refraction\Data\V2\Base\Endpoint;
+use Refraction\Plugin;
 
 class Controller extends Controller_Base {
 	public function get_name() {

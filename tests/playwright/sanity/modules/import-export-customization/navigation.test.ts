@@ -3,7 +3,7 @@ import { parallelTest as test } from '../../../parallelTest';
 import { NavigationHelpers } from './helpers/navigation-helpers';
 
 test.describe( 'Import Export Customization - Navigation @import_export_customization', () => {
-	test( 'should navigate to export page from Elementor Tools', async ( { page } ) => {
+	test( 'should navigate to export page from Refraction Tools', async ( { page } ) => {
 		await NavigationHelpers.navigateToExportCustomizationPage( page );
 
 		await expect( page ).toHaveURL( /.*export-customization.*/ );
@@ -22,7 +22,7 @@ test.describe( 'Import Export Customization - Navigation @import_export_customiz
 		await NavigationHelpers.visitExportCustomizationPage( page );
 
 		await expect( page.locator( 'text=Content' ).first() ).toBeVisible();
-		await expect( page.locator( 'text=Elementor Pages, Elementor Posts, WP Pages, WP Posts, WP Menus, Custom Post Types' ) ).toBeVisible();
+		await expect( page.locator( 'text=Refraction Pages, Refraction Posts, WP Pages, WP Posts, WP Menus, Custom Post Types' ) ).toBeVisible();
 
 		await expect( page.locator( 'text=Templates' ).first() ).toBeVisible();
 		await expect( page.locator( 'text=Saved Templates, Headers, Footers, Archives, Single Posts, Single Pages, Search Results, 404 Error Page, Popups, Global widgets' ) ).toBeVisible();

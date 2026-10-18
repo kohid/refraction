@@ -1,15 +1,15 @@
 import ColorPicker from './color-picker';
-import DocumentHelper from 'elementor-editor/document/helper-bc';
-import ContainerHelper from 'elementor-editor-utils/container-helper';
+import DocumentHelper from 'refraction-editor/document/helper-bc';
+import ContainerHelper from 'refraction-editor-utils/container-helper';
 import DOMPurify from 'dompurify';
 
 /**
  * PHP (`Utils::get_allowed_html_wrapper_tags()`) is the single source of truth for this
- * list; it's localized via `elementorCommon.config`. If it's ever missing, fail closed
+ * list; it's localized via `refractionCommon.config`. If it's ever missing, fail closed
  * (no tags allowed) rather than fall back to a second hardcoded copy that could drift.
  */
 function getAllowedHTMLWrapperTags() {
-	const { allowedHTMLWrapperTags } = globalThis.elementorCommon?.config ?? {};
+	const { allowedHTMLWrapperTags } = globalThis.refractionCommon?.config ?? {};
 
 	return Array.isArray( allowedHTMLWrapperTags ) ? allowedHTMLWrapperTags : [];
 }
@@ -67,19 +67,19 @@ module.exports = {
 	},
 
 	enqueuePreviewStylesheet( url ) {
-		this.enqueueCSS( url, elementor.$previewContents );
+		this.enqueueCSS( url, refraction.$previewContents );
 	},
 
 	enqueueEditorStylesheet( url ) {
-		this.enqueueCSS( url, elementorCommon.elements.$document );
+		this.enqueueCSS( url, refractionCommon.elements.$document );
 	},
 
 	/**
 	 * @param {string} url
-	 * @deprecated since 2.6.0, use `elementor.helpers.enqueuePreviewStylesheet()` instead.
+	 * @deprecated since 2.6.0, use `refraction.helpers.enqueuePreviewStylesheet()` instead.
 	 */
 	enqueueStylesheet( url ) {
-		elementorDevTools.deprecation.deprecated( 'elementor.helpers.enqueueStylesheet()', '2.6.0', 'elementor.helpers.enqueuePreviewStylesheet()' );
+		refractionDevTools.deprecation.deprecated( 'refraction.helpers.enqueueStylesheet()', '2.6.0', 'refraction.helpers.enqueuePreviewStylesheet()' );
 		this.enqueuePreviewStylesheet( url );
 	},
 
@@ -109,13 +109,13 @@ module.exports = {
 				if ( view ) {
 					view.render();
 				}
-				elementor.channels.editor.trigger( 'svg:insertion', data, value.id );
+				refraction.channels.editor.trigger( 'svg:insertion', data, value.id );
 			}
 		} );
 	},
 
 	enqueueIconFonts( iconType ) {
-		if ( -1 !== this._enqueuedIconFonts.indexOf( iconType ) || !! elementor.config.icons_update_needed ) {
+		if ( -1 !== this._enqueuedIconFonts.indexOf( iconType ) || !! refraction.config.icons_update_needed ) {
 			return;
 		}
 
@@ -140,11 +140,11 @@ module.exports = {
 
 		this._enqueuedIconFonts.push( iconType );
 
-		elementor.channels.editor.trigger( 'fontIcon:insertion', iconType, iconSetting );
+		refraction.channels.editor.trigger( 'fontIcon:insertion', iconType, iconSetting );
 	},
 
 	getIconLibrarySettings( iconType ) {
-		const iconSetting = elementor.config.icons.libraries.filter( ( library ) => iconType === library.name );
+		const iconSetting = refraction.config.icons.libraries.filter( ( library ) => iconType === library.name );
 		if ( iconSetting[ 0 ] && iconSetting[ 0 ].name ) {
 			return iconSetting[ 0 ];
 		}
@@ -187,7 +187,7 @@ module.exports = {
 			if ( 'panel' === returnType ) {
 				return '<' + tag + ' class="' + iconValue + '"></' + tag + '>';
 			}
-			const tagUniqueID = tag + elementorCommon.helpers.getUniqueId();
+			const tagUniqueID = tag + refractionCommon.helpers.getUniqueId();
 			view.addRenderAttribute( tagUniqueID, attributes );
 			view.addRenderAttribute( tagUniqueID, 'class', iconValue );
 			const htmlTag = '<' + tag + ' ' + view.getRenderAttributeString( tagUniqueID ) + '></' + tag + '>';
@@ -199,7 +199,7 @@ module.exports = {
 			}
 			return htmlTag;
 		}
-		elementor.channels.editor.trigger( 'Icon:insertion', iconType, iconValue, attributes, tag, view );
+		refraction.channels.editor.trigger( 'Icon:insertion', iconType, iconValue, attributes, tag, view );
 		if ( 'object' === returnType ) {
 			return {
 				rendered: false,
@@ -213,11 +213,11 @@ module.exports = {
 
 	fetchFa4ToFa5Mapping() {
 		const storageKey = 'fa4Tofa5Mapping';
-		let mapping = elementorCommon.storage.get( storageKey );
+		let mapping = refractionCommon.storage.get( storageKey );
 		if ( ! mapping ) {
-			jQuery.getJSON( elementor.config.fa4_to_fa5_mapping_url, ( data ) => {
+			jQuery.getJSON( refraction.config.fa4_to_fa5_mapping_url, ( data ) => {
 				mapping = data;
-				elementorCommon.storage.set( storageKey, data );
+				refractionCommon.storage.set( storageKey, data );
 			} );
 		}
 		return mapping;
@@ -245,7 +245,7 @@ module.exports = {
 			return;
 		}
 
-		const fontType = elementor.config.controls.font.options[ font ],
+		const fontType = refraction.config.controls.font.options[ font ],
 			subsets = {
 				ru_RU: 'cyrillic',
 				uk: 'cyrillic',
@@ -263,14 +263,14 @@ module.exports = {
 			case 'googlefonts':
 				fontUrl = 'https://fonts.googleapis.com/css?family=' + font + ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic';
 
-				if ( subsets[ elementor.config.locale ] ) {
-					fontUrl += '&subset=' + subsets[ elementor.config.locale ];
+				if ( subsets[ refraction.config.locale ] ) {
+					fontUrl += '&subset=' + subsets[ refraction.config.locale ];
 				}
 
 				enqueueOptions.crossOrigin = true;
 
 				if ( 'preview' === target ) {
-					elementorCommon.ajax.addRequest( 'enqueue_google_fonts', {
+					refractionCommon.ajax.addRequest( 'enqueue_google_fonts', {
 						data: { font_name: font },
 						unique_id: 'enqueue_google_fonts_' + font,
 					}, true );
@@ -290,15 +290,15 @@ module.exports = {
 		if ( ! _.isEmpty( fontUrl ) ) {
 			if ( 'editor' === target ) {
 				// TODO: Find better solution, temporary fix, covering issue: 'fonts does not rendered in global styles'.
-				this.enqueueCSS( fontUrl, elementorCommon.elements.$document );
+				this.enqueueCSS( fontUrl, refractionCommon.elements.$document );
 			} else {
-				this.enqueueCSS( fontUrl, elementor.$previewContents, enqueueOptions );
+				this.enqueueCSS( fontUrl, refraction.$previewContents, enqueueOptions );
 			}
 		}
 
 		this._enqueuedFonts[ target ].push( font );
 
-		elementor.channels.editor.trigger( 'font:insertion', fontType, font );
+		refraction.channels.editor.trigger( 'font:insertion', fontType, font );
 	},
 
 	resetEnqueuedFontsCache() {
@@ -341,12 +341,12 @@ module.exports = {
 	},
 
 	/**
-	 * @deprecated since 3.0.0, use `elementorCommon.helpers.getUniqueId()` instead.
+	 * @deprecated since 3.0.0, use `refractionCommon.helpers.getUniqueId()` instead.
 	 */
 	getUniqueID() {
-		elementorDevTools.deprecation.deprecated( 'elementor.helpers.getUniqueID()', '3.0.0', 'elementorCommon.helpers.getUniqueId()' );
+		refractionDevTools.deprecation.deprecated( 'refraction.helpers.getUniqueID()', '3.0.0', 'refractionCommon.helpers.getUniqueId()' );
 
-		return elementorCommon.helpers.getUniqueId();
+		return refractionCommon.helpers.getUniqueId();
 	},
 
 	getSocialNetworkNameFromIcon( iconsControl, fallbackControl, toUpperCase = false, migrated = null, withIcon = false ) {
@@ -370,7 +370,7 @@ module.exports = {
 			social = social.split( '-' ).join( ' ' );
 			social = social.replace( /\b\w/g, ( letter ) => letter.toUpperCase() );
 		}
-		social = elementor.hooks.applyFilters( 'elementor/social_icons/network_name', social, iconsControl, fallbackControl, toUpperCase, withIcon );
+		social = refraction.hooks.applyFilters( 'refraction/social_icons/network_name', social, iconsControl, fallbackControl, toUpperCase, withIcon );
 		if ( withIcon ) {
 			social = icon + ' ' + social;
 		}
@@ -378,7 +378,7 @@ module.exports = {
 	},
 
 	getSimpleDialog( id, title, message, confirmString, onConfirm ) {
-		return elementorCommon.dialogsManager.createWidget( 'confirm', {
+		return refractionCommon.dialogsManager.createWidget( 'confirm', {
 			id,
 			headerMessage: title,
 			message,
@@ -388,20 +388,20 @@ module.exports = {
 			},
 			strings: {
 				confirm: confirmString,
-				cancel: __( 'Cancel', 'elementor' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			onConfirm,
 		} );
 	},
 
 	maybeDisableWidget( givenWidgetType = null ) {
-		if ( ! elementor.config.icons_update_needed ) {
+		if ( ! refraction.config.icons_update_needed ) {
 			return false;
 		}
 
-		const elementView = elementor.channels.panelElements.request( 'element:selected' ),
+		const elementView = refraction.channels.panelElements.request( 'element:selected' ),
 			widgetType = givenWidgetType || elementView.model.get( 'widgetType' ),
-			widgetData = elementor.widgetsCache[ widgetType ],
+			widgetData = refraction.widgetsCache[ widgetType ],
 			hasControlOfType = ( controls, type ) => {
 				let has = false;
 				jQuery.each( controls, ( controlName, controlData ) => {
@@ -423,16 +423,16 @@ module.exports = {
 			const hasIconsControl = hasControlOfType( widgetData.controls, 'icons' );
 			if ( hasIconsControl ) {
 				const onConfirm = () => {
-					window.location.href = elementor.config.tools_page_link +
-						'&redirect_to_document=' + elementor.documents.getCurrent()?.id +
-						'&_wpnonce=' + elementor.config.tools_page_nonce +
+					window.location.href = refraction.config.tools_page_link +
+						'&redirect_to_document=' + refraction.documents.getCurrent()?.id +
+						'&_wpnonce=' + refraction.config.tools_page_nonce +
 						'#tab-fontawesome4_migration';
 				};
-				elementor.helpers.getSimpleDialog(
-					'elementor-enable-fa5-dialog',
-					__( 'Elementor\'s New Icon Library', 'elementor' ),
-					__( 'Elementor v2.6 includes an upgrade from Font Awesome 4 to 5. In order to continue using icons, be sure to click "Update".', 'elementor' ) + ' <a href="https://go.elementor.com/fontawesome-migration/" target="_blank">' + __( 'Learn More', 'elementor' ) + '</a>',
-					__( 'Update', 'elementor' ),
+				refraction.helpers.getSimpleDialog(
+					'refraction-enable-fa5-dialog',
+					__( 'Refraction\'s New Icon Library', 'refraction' ),
+					__( 'Refraction v2.6 includes an upgrade from Font Awesome 4 to 5. In order to continue using icons, be sure to click "Update".', 'refraction' ) + ' <a href="https://go.elementor.com/fontawesome-migration/" target="_blank">' + __( 'Learn More', 'refraction' ) + '</a>',
+					__( 'Update', 'refraction' ),
 					onConfirm,
 				).show();
 				return true;
@@ -447,7 +447,7 @@ module.exports = {
 	 * @deprecated since 2.0.0, use native JS `.replace()` method.
 	 */
 	stringReplaceAll( string, replaces ) {
-		elementorDevTools.deprecation.deprecated( 'elementor.helpers.stringReplaceAll()', '2.0.0', 'Use native JS `.replace()` method.' );
+		refractionDevTools.deprecation.deprecated( 'refraction.helpers.stringReplaceAll()', '2.0.0', 'Use native JS `.replace()` method.' );
 
 		var re = new RegExp( Object.keys( replaces ).join( '|' ), 'gi' );
 
@@ -465,7 +465,7 @@ module.exports = {
 			const terms = [];
 
 			Object.entries( condition ).forEach( ( [ conditionName, conditionValue ] ) => {
-				const convertedCondition = elementor.conditions.convertConditionToConditions( conditionName, conditionValue, controlModel, values, controls );
+				const convertedCondition = refraction.conditions.convertConditionToConditions( conditionName, conditionValue, controlModel, values, controls );
 
 				terms.push( convertedCondition );
 			} );
@@ -476,17 +476,17 @@ module.exports = {
 			};
 		}
 
-		return ! ( conditions && ! elementor.conditions.check( conditions, values, controls ) );
+		return ! ( conditions && ! refraction.conditions.check( conditions, values, controls ) );
 	},
 
 	/**
 	 * @param {Object} object - An object to clone.
-	 * @deprecated since 2.3.0, use `elementorCommon.helpers.cloneObject()` instead.
+	 * @deprecated since 2.3.0, use `refractionCommon.helpers.cloneObject()` instead.
 	 */
 	cloneObject( object ) {
-		elementorDevTools.deprecation.deprecated( 'elementor.helpers.cloneObject( object )', '2.3.0', 'elementorCommon.helpers.cloneObject( object )' );
+		refractionDevTools.deprecation.deprecated( 'refraction.helpers.cloneObject( object )', '2.3.0', 'refractionCommon.helpers.cloneObject( object )' );
 
-		return elementorCommon.helpers.cloneObject( object );
+		return refractionCommon.helpers.cloneObject( object );
 	},
 
 	disableElementEvents( $element ) {
@@ -523,7 +523,7 @@ module.exports = {
 	 * @deprecated since 2.8.0, use `new ColorPicker( { picker: { el: $element } } )` instead.
 	 */
 	wpColorPicker( $element ) {
-		elementorDevTools.deprecation.deprecated( 'elementor.helpers.wpColorPicker( $element )', '2.8.0', 'new ColorPicker( { picker: { el: $element } } )' );
+		refractionDevTools.deprecation.deprecated( 'refraction.helpers.wpColorPicker( $element )', '2.8.0', 'new ColorPicker( { picker: { el: $element } } )' );
 
 		return new ColorPicker( { picker: { el: $element } } );
 	},
@@ -545,12 +545,12 @@ module.exports = {
 		}
 
 		let $scrolled = $parent;
-		const $elementorFrontendWindow = elementorFrontend.elements.$window;
+		const $refractionFrontendWindow = refractionFrontend.elements.$window;
 
 		if ( ! $parent ) {
-			$parent = $elementorFrontendWindow;
+			$parent = $refractionFrontendWindow;
 
-			$scrolled = elementor.$previewContents.find( 'html, body' );
+			$scrolled = refraction.$previewContents.find( 'html, body' );
 		}
 
 		setTimeout( function() {
@@ -561,7 +561,7 @@ module.exports = {
 
 			const parentHeight = $parent.height(),
 				parentScrollTop = $parent.scrollTop(),
-				elementTop = $parent === $elementorFrontendWindow ? $element.offset().top : $element[ 0 ].offsetTop,
+				elementTop = $parent === $refractionFrontendWindow ? $element.offset().top : $element[ 0 ].offsetTop,
 				topToCheck = elementTop - parentScrollTop;
 
 			if ( topToCheck > 0 && topToCheck < parentHeight ) {
@@ -602,7 +602,7 @@ module.exports = {
 	},
 
 	elementSizeToUnit( $element, size, unit ) {
-		const window = elementorFrontend.elements.window;
+		const window = refractionFrontend.elements.window;
 
 		switch ( unit ) {
 			case '%':
@@ -641,7 +641,7 @@ module.exports = {
 				valueB = versionBParts[ i ] || 0;
 
 			if ( valueA !== valueB ) {
-				return elementor.conditions.compare( valueA, valueB, operator );
+				return refraction.conditions.compare( valueA, valueB, operator );
 			}
 		}
 	},
@@ -662,18 +662,18 @@ module.exports = {
 		}
 
 		if ( ! result ) {
-			result = elementor.getElementData( model ).title;
+			result = refraction.getElementData( model ).title;
 		}
 
 		return result;
 	},
 
 	hasPro() {
-		return !! window.elementorPro;
+		return !! window.refractionPro;
 	},
 
 	hasProAndNotConnected() {
-		return elementor.helpers.hasPro() && elementorProEditorConfig.urls.connect;
+		return refraction.helpers.hasPro() && refractionProEditorConfig.urls.connect;
 	},
 
 	/**
@@ -735,7 +735,7 @@ module.exports = {
 	},
 
 	getAtomicElementTypes() {
-		const { elements } = elementor.config;
+		const { elements } = refraction.config;
 
 		return Object.keys( elements )
 			.filter( ( elementKey ) => Object.keys( elements[ elementKey ] )
@@ -743,7 +743,7 @@ module.exports = {
 	},
 
 	isElementAtomic( elementId ) {
-		const { type: elType = null } = elementor.getContainer( elementId ) || {};
+		const { type: elType = null } = refraction.getContainer( elementId ) || {};
 
 		return this.getAtomicElementTypes().includes( elType );
 	},
@@ -754,7 +754,7 @@ module.exports = {
 		const widgetType = isModel ? model.get( 'widgetType' ) : model?.widgetType;
 		const elementType = 'widget' === elType ? widgetType : elType;
 
-		return elementor.widgetsCache[ elementType ];
+		return refraction.widgetsCache[ elementType ];
 	},
 
 	isAtomicWidget( model ) {

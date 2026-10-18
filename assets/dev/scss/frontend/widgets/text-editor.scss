@@ -1,12 +1,12 @@
-.elementor-widget-text-editor {
+.refraction-widget-text-editor {
 
-	&.elementor-drop-cap {
+	&.refraction-drop-cap {
 
 		&-view- {
 
 			&stacked {
 
-				.elementor-drop-cap {
+				.refraction-drop-cap {
 					background-color: $gray;
 					color: #fff;
 				}
@@ -14,7 +14,7 @@
 
 			&framed {
 
-				.elementor-drop-cap {
+				.refraction-drop-cap {
 					color: $gray;
 					border: 3px solid;
 					background-color: transparent;
@@ -23,9 +23,9 @@
 		}
 	}
 
-	&:not(.elementor-drop-cap-view-default) {
+	&:not(.refraction-drop-cap-view-default) {
 
-		.elementor-drop-cap {
+		.refraction-drop-cap {
 			margin-block-start: 8px;
 
 			&-letter {
@@ -35,7 +35,7 @@
 		}
 	}
 
-	.elementor-drop-cap {
+	.refraction-drop-cap {
 		float: inline-start;
 		text-align: center;
 		line-height: 1;

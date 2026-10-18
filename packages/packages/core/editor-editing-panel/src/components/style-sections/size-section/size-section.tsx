@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useRef } from 'react';
-import { AspectRatioControl, type ExtendedOption, PositionControl, SizeControl } from '@elementor/editor-controls';
+import { AspectRatioControl, type ExtendedOption, PositionControl, SizeControl } from '@refraction/editor-controls';
 import { Grid, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -16,36 +16,36 @@ const CssSizeProps = [
 	[
 		{
 			bind: 'width',
-			label: __( 'Width', 'elementor' ),
+			label: __( 'Width', 'refraction' ),
 		},
 		{
 			bind: 'height',
-			label: __( 'Height', 'elementor' ),
+			label: __( 'Height', 'refraction' ),
 		},
 	],
 	[
 		{
 			bind: 'min-width',
-			label: __( 'Min width', 'elementor' ),
+			label: __( 'Min width', 'refraction' ),
 		},
 		{
 			bind: 'min-height',
-			label: __( 'Min height', 'elementor' ),
+			label: __( 'Min height', 'refraction' ),
 		},
 	],
 	[
 		{
 			bind: 'max-width',
-			label: __( 'Max width', 'elementor' ),
+			label: __( 'Max width', 'refraction' ),
 		},
 		{
 			bind: 'max-height',
-			label: __( 'Max height', 'elementor' ),
+			label: __( 'Max height', 'refraction' ),
 		},
 	],
 ];
 
-const ASPECT_RATIO_LABEL = __( 'Aspect Ratio', 'elementor' );
+const ASPECT_RATIO_LABEL = __( 'Aspect Ratio', 'refraction' );
 
 export const SizeSection = () => {
 	const gridRowRefs: RefObject< HTMLDivElement >[] = [ useRef( null ), useRef( null ), useRef( null ) ];
@@ -73,7 +73,7 @@ export const SizeSection = () => {
 					</StylesField>
 					<PanelDivider />
 					<ObjectFitField />
-					<StylesField bind="object-position" propDisplayName={ __( 'Object position', 'elementor' ) }>
+					<StylesField bind="object-position" propDisplayName={ __( 'Object position', 'refraction' ) }>
 						<Grid item xs={ 6 }>
 							<PositionControl />
 						</Grid>

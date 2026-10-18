@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { type SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { DefaultStylesTabEmbedded, trackDefaultStyles } from '@elementor/editor-default-styles';
-import { ClassManagerPanelEmbedded, trackGlobalClasses } from '@elementor/editor-global-classes';
-import { Panel, PanelBody, PanelHeader, PanelHeaderTitle } from '@elementor/editor-panels';
-import { ThemeProvider } from '@elementor/editor-ui';
-import { trackVariablesManagerEvent, VariablesManagerPanelEmbedded } from '@elementor/editor-variables';
+import { DefaultStylesTabEmbedded, trackDefaultStyles } from '@refraction/editor-default-styles';
+import { ClassManagerPanelEmbedded, trackGlobalClasses } from '@refraction/editor-global-classes';
+import { Panel, PanelBody, PanelHeader, PanelHeaderTitle } from '@refraction/editor-panels';
+import { ThemeProvider } from '@refraction/editor-ui';
+import { trackVariablesManagerEvent, VariablesManagerPanelEmbedded } from '@refraction/editor-variables';
 import { ColorFilterIcon, ColorSwatchIcon, TextIcon } from '@elementor/icons';
 import { Box, CloseButton, Divider, Stack, Tab, Tabs, useTabs } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -30,7 +30,7 @@ export type DesignSystemPanelContentProps = {
 	onRequestClose: () => void | Promise< void >;
 };
 
-const EVENT_SET_TAB = 'elementor/design-system/set-tab';
+const EVENT_SET_TAB = 'refraction/design-system/set-tab';
 
 const trackDesignSystemTabOpened = ( tab: DesignSystemTab ) => {
 	switch ( tab ) {
@@ -136,11 +136,11 @@ export function DesignSystemPanelContent( { onRequestClose }: DesignSystemPanelC
 				<PanelHeader>
 					<Stack p={ 1 } pl={ 2 } width="100%" direction="row" alignItems="center" spacing={ 0.5 }>
 						<PanelHeaderTitle sx={ { flex: 1, minWidth: 0 } }>
-							{ __( 'Design system', 'elementor' ) }
+							{ __( 'Design system', 'refraction' ) }
 						</PanelHeaderTitle>
 						<DesignSystemHeaderMenu />
 						<CloseButton
-							aria-label={ __( 'Close', 'elementor' ) }
+							aria-label={ __( 'Close', 'refraction' ) }
 							sx={ { flexShrink: 0 } }
 							onClick={ () => void handleHeaderClose() }
 						/>
@@ -171,19 +171,19 @@ export function DesignSystemPanelContent( { onRequestClose }: DesignSystemPanelC
 								} }
 							>
 								<Tab
-									label={ __( 'Defaults', 'elementor' ) }
+									label={ __( 'Defaults', 'refraction' ) }
 									icon={ <TextIcon fontSize="small" /> }
 									iconPosition="start"
 									{ ...getTabProps( 'defaults' ) }
 								/>
 								<Tab
-									label={ __( 'Variables', 'elementor' ) }
+									label={ __( 'Variables', 'refraction' ) }
 									icon={ <ColorFilterIcon fontSize="small" /> }
 									iconPosition="start"
 									{ ...getTabProps( 'variables' ) }
 								/>
 								<Tab
-									label={ __( 'Classes', 'elementor' ) }
+									label={ __( 'Classes', 'refraction' ) }
 									icon={ <ColorSwatchIcon fontSize="small" /> }
 									iconPosition="start"
 									{ ...getTabProps( 'classes' ) }

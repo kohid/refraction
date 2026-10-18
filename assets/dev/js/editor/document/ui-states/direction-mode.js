@@ -1,4 +1,4 @@
-import UiStateBase from 'elementor-api/core/states/ui-state-base';
+import UiStateBase from 'refraction-api/core/states/ui-state-base';
 
 export const DIRECTION_ROW = 'row';
 export const DIRECTION_ROW_REVERSE = 'row-reverse';
@@ -22,7 +22,7 @@ export class DirectionMode extends UiStateBase {
 	getScopes() {
 		return [
 			window.document.body,
-			elementor.$previewContents[ 0 ].body,
+			refraction.$previewContents[ 0 ].body,
 		];
 	}
 }

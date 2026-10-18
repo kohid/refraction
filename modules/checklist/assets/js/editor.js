@@ -6,15 +6,15 @@ import { fetchUserProgress, toggleChecklistPopup, dispatchChecklistOpenEvent } f
 $e.components.register( new Component() );
 editorAppBarLink();
 
-elementorCommon.elements.$window.on( 'elementor:loaded', elementorLoaded );
+refractionCommon.elements.$window.on( 'refraction:loaded', refractionLoaded );
 
-function elementorLoaded() {
-	elementor.on( 'document:loaded', checklistStartup );
-	elementorCommon.elements.$window.off( 'elementor:loaded', elementorLoaded );
+function refractionLoaded() {
+	refraction.on( 'document:loaded', checklistStartup );
+	refractionCommon.elements.$window.off( 'refraction:loaded', refractionLoaded );
 }
 
 async function checklistStartup() {
-	const shouldHide = 'yes' !== elementor.getPreferences( 'show_launchpad_checklist' );
+	const shouldHide = 'yes' !== refraction.getPreferences( 'show_launchpad_checklist' );
 
 	if ( shouldHide ) {
 		$e.commands.run( 'checklist/toggle-icon', false );
@@ -27,5 +27,5 @@ async function checklistStartup() {
 		}
 	}
 
-	elementor.off( 'document:loaded', checklistStartup );
+	refraction.off( 'document:loaded', checklistStartup );
 }

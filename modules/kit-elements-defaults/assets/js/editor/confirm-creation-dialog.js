@@ -13,7 +13,7 @@ export let introductionManager = null;
 export function getConfirmCreationDialog( { onConfirm } ) {
 	if ( ! introductionManager ) {
 		introductionManager = createIntroductionManager();
-		introductionManager.introductionViewed = !! elementor.config.user.introduction?.[ introductionKey ];
+		introductionManager.introductionViewed = !! refraction.config.user.introduction?.[ introductionKey ];
 	}
 
 	const dialog = introductionManager.getDialog();
@@ -40,14 +40,14 @@ export function removeConfirmCreationDialog() {
 function createIntroductionManager() {
 	const dialogId = 'e-kit-elements-defaults-create-dialog';
 
-	const introduction = new elementorModules.editor.utils.Introduction( {
+	const introduction = new refractionModules.editor.utils.Introduction( {
 		introductionKey,
 		dialogType: 'confirm',
 		dialogOptions: {
 			id: dialogId,
-			headerMessage: __( 'Sure you want to change default settings?', 'elementor' ),
+			headerMessage: __( 'Sure you want to change default settings?', 'refraction' ),
 			// Translators: %1$s: Opening strong tag, %2$s: Closing strong tag.
-			message: __( 'Your changes will automatically be saved for future uses of this element. %1$sNote:%2$s This includes sensitive information like emails, API keys, etc.', 'elementor' )
+			message: __( 'Your changes will automatically be saved for future uses of this element. %1$sNote:%2$s This includes sensitive information like emails, API keys, etc.', 'refraction' )
 				.replace( '%1$s', '<strong>' )
 				.replace( '%2$s', '</strong>' ),
 			effects: {
@@ -58,8 +58,8 @@ function createIntroductionManager() {
 				onBackgroundClick: true,
 			},
 			strings: {
-				confirm: __( 'Save', 'elementor' ),
-				cancel: __( 'Cancel', 'elementor' ),
+				confirm: __( 'Save', 'refraction' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			onShow() {
 				this.getElements( 'checkbox-dont-show-again' )?.prop( 'checked', true );
@@ -88,7 +88,7 @@ function createCheckboxAndLabel( dialogId ) {
 	const label = document.createElement( 'label' );
 
 	label.htmlFor = checkboxId;
-	label.textContent = __( 'Do not show this message again', 'elementor' );
+	label.textContent = __( 'Do not show this message again', 'refraction' );
 	label.prepend( checkbox );
 
 	return { checkbox, label };

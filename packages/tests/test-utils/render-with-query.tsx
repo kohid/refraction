@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 
 import { renderWithTheme } from './render-with-theme';
 

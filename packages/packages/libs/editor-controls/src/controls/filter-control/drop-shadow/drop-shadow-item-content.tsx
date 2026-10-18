@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { dropShadowFilterPropTypeUtil } from '@elementor/editor-props';
+import { dropShadowFilterPropTypeUtil } from '@refraction/editor-props';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -13,22 +13,22 @@ import { SizeControl } from '../../size-control';
 const items = [
 	{
 		bind: 'xAxis',
-		label: __( 'X-axis', 'elementor' ),
+		label: __( 'X-axis', 'refraction' ),
 		rowIndex: 0,
 	},
 	{
 		bind: 'yAxis',
-		label: __( 'Y-axis', 'elementor' ),
+		label: __( 'Y-axis', 'refraction' ),
 		rowIndex: 0,
 	},
 	{
 		bind: 'blur',
-		label: __( 'Blur', 'elementor' ),
+		label: __( 'Blur', 'refraction' ),
 		rowIndex: 1,
 	},
 	{
 		bind: 'color',
-		label: __( 'Color', 'elementor' ),
+		label: __( 'Color', 'refraction' ),
 		rowIndex: 1,
 	},
 ];

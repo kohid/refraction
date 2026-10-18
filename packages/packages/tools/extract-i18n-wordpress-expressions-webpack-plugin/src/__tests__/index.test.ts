@@ -11,7 +11,7 @@ import { ExtractI18nWordpressExpressionsWebpackPlugin } from '../index';
 
 jest.mock( 'fs', () => jest.requireActual( 'memfs' ) );
 
-describe( '@elementor/extract-i18n-wordpress-expressions-webpack-plugin', () => {
+describe( '@refraction/extract-i18n-wordpress-expressions-webpack-plugin', () => {
 	beforeEach( () => {
 		// Entry file.
 		fs.mkdirSync( path.resolve( '/app/dist' ), { recursive: true } );
@@ -29,7 +29,7 @@ describe( '@elementor/extract-i18n-wordpress-expressions-webpack-plugin', () => 
 			path.resolve( '/app/src/components/component.js' ),
 			`
 			export default function Component() {
-				return __( "Component", 'elementor' );
+				return __( "Component", 'refraction' );
 			}
 		`
 		);
@@ -38,7 +38,7 @@ describe( '@elementor/extract-i18n-wordpress-expressions-webpack-plugin', () => 
 			path.resolve( '/app/src/hooks/hook.ts' ),
 			`
 			export default function useHook() {
-				return __('hook','elementor');
+				return __('hook','refraction');
 			}
 		`
 		);
@@ -49,27 +49,27 @@ describe( '@elementor/extract-i18n-wordpress-expressions-webpack-plugin', () => 
 			export default function Index() {
 				__(
 					'Some long text with multiple lines in the function call',
-					'elementor'
+					'refraction'
 				);
 
 				__( "Unique domain", "some-plugin-slug" );
 
 				// translators: %1$s - special placeholder.
-				const withSpecialPlaceHolder = __('special placeholder %1$s','elementor' );
+				const withSpecialPlaceHolder = __('special placeholder %1$s','refraction' );
 
 				// translators: %s - regular comment.
-				const withComment = __( 'regular comment %s','elementor');
+				const withComment = __( 'regular comment %s','refraction');
 
 				/* translators: %s - comment block. */
-				const withCommentBlock = __('comment block %s', 'elementor');
+				const withCommentBlock = __('comment block %s', 'refraction');
 
-				console.log(__( 'inside console log', 'elementor' ))
+				console.log(__( 'inside console log', 'refraction' ))
 
 				return [
-					_n( 'basic with', 'plural', 2, 'elementor' ),
-					_nx( 'another with' , 'plural' , 2 , 'elementor' ),
-					_x( 'context', 'elementor' ),
-					invalid__( 'invalid', 'elementor' ),
+					_n( 'basic with', 'plural', 2, 'refraction' ),
+					_nx( 'another with' , 'plural' , 2 , 'refraction' ),
+					_x( 'context', 'refraction' ),
+					invalid__( 'invalid', 'refraction' ),
 				];
 			}
 		`
@@ -79,14 +79,14 @@ describe( '@elementor/extract-i18n-wordpress-expressions-webpack-plugin', () => 
 		fs.writeFileSync(
 			path.resolve( '/app2/src/index.js' ),
 			`
-			export const test = __( 'from app 2', 'elementor' );
+			export const test = __( 'from app 2', 'refraction' );
 		`
 		);
 
 		// Should not be in output.
 		const ignoredContent = `
 			export default function ShouldIgnoreComponent() {
-				return __('should ignore','elementor');
+				return __('should ignore','refraction');
 			}
 		`;
 

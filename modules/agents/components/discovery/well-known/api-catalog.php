@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -46,16 +46,16 @@ class Api_Catalog extends Abstract_Well_Known_Endpoint {
 			],
 		];
 
-		// Elementor Agents MCP server — present when active.
+		// Refraction Agents MCP server — present when active.
 		$module = Plugin::$instance->modules_manager->get_modules( 'agents' );
 		$mcp    = $module ? $module->get_component( 'agents_mcp_server' ) : null;
 
 		if ( $mcp && $mcp->is_enabled() ) {
 			$apis[] = [
-				'id'          => 'elementor-agents-mcp',
-				'title'       => 'Elementor Agent Ready MCP',
+				'id'          => 'refraction-agents-mcp',
+				'title'       => 'Refraction Agent Ready MCP',
 				'description' => 'Model Context Protocol server exposing site content and capabilities to AI agents.',
-				'url'         => rest_url( 'elementor/agents-mcp' ),
+				'url'         => rest_url( 'refraction/agents-mcp' ),
 				'spec_url'    => $home . '.well-known/mcp/server-card.json',
 				'type'        => 'mcp',
 				'spec'        => 'mcp-2025-11-25',
@@ -82,6 +82,6 @@ class Api_Catalog extends Abstract_Well_Known_Endpoint {
 		 * @param array  $apis    The apis array before embedding.
 		 * @param string $home    The site home URL.
 		 */
-		return (array) apply_filters( 'elementor/agents/api_catalog', $catalog, $apis, $home );
+		return (array) apply_filters( 'refraction/agents/api_catalog', $catalog, $apis, $home );
 	}
 }

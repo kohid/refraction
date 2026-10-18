@@ -1,4 +1,4 @@
-import { getMediaAttachment } from '@elementor/wp-media';
+import { getMediaAttachment } from '@refraction/wp-media';
 
 import { createTransformer } from '../create-transformer';
 import type { TransformerOptions } from '../types';

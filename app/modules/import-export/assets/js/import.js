@@ -2,7 +2,7 @@ import SharedContextProvider from './context/shared-context/shared-context-provi
 import ImportContextProvider from './context/import-context/import-context-provider';
 
 import { LocationProvider, Router } from '@reach/router';
-import router from '@elementor/router';
+import router from '@refraction/router';
 
 import ImportKit from './pages/import/import-kit/import-kit';
 import ImportContent from './pages/import/import-content/import-content';

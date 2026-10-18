@@ -1,4 +1,4 @@
-import Tooltip from 'elementor-app/molecules/tooltip';
+import Tooltip from 'refraction-app/molecules/tooltip';
 
 import './templates-features.scss';
 

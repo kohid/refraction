@@ -1,9 +1,9 @@
-import { type PregeneratedLinkItem } from '@elementor/editor-styles-repository';
-import { getCanvasIframeDocument } from '@elementor/editor-v1-adapters';
+import { type PregeneratedLinkItem } from '@refraction/editor-styles-repository';
+import { getCanvasIframeDocument } from '@refraction/editor-v1-adapters';
 
 import { removeProviderPregeneratedLinks, resetRemovedProviders } from '../pregenerated-links-removal';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	getCanvasIframeDocument: jest.fn(),
 } ) );
 
@@ -26,7 +26,7 @@ describe( 'pregenerated-links-removal', () => {
 		head.appendChild( createLink( 'global-preview-mobile_extra-css', 'global-preview-mobile_extra.css' ) );
 		head.appendChild( createLink( 'local-123-preview-desktop-css', 'local-123-preview-desktop.css' ) );
 		head.appendChild( createLink( 'local-456-preview-desktop-css', 'local-456-preview-desktop.css' ) );
-		head.appendChild( createLink( 'elementor-post-123-css', 'elementor-post-123.css' ) );
+		head.appendChild( createLink( 'refraction-post-123-css', 'refraction-post-123.css' ) );
 		head.appendChild( createLink( 'other-plugin-css', 'other-plugin.css' ) );
 		return head;
 	};
@@ -127,7 +127,7 @@ describe( 'pregenerated-links-removal', () => {
 			expect( remainingLinkIds ).not.toContain( 'global-preview-desktop-css' );
 			expect( remainingLinkIds ).not.toContain( 'local-123-preview-desktop-css' );
 			expect( remainingLinkIds ).toContain( 'base-desktop-css' );
-			expect( remainingLinkIds ).toContain( 'elementor-post-123-css' );
+			expect( remainingLinkIds ).toContain( 'refraction-post-123-css' );
 			expect( remainingLinkIds ).toContain( 'other-plugin-css' );
 		} );
 

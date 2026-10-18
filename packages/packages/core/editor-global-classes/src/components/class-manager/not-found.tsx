@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type FC } from 'react';
-import type { StyleDefinition } from '@elementor/editor-styles';
+import type { StyleDefinition } from '@refraction/editor-styles';
 import { ColorSwatchIcon, PhotoIcon } from '@elementor/icons';
 import { Box, Link, Stack, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -32,18 +32,18 @@ export type NotFoundType = 'filter' | 'search' | 'filterAndSearch';
 
 const notFound = {
 	filterAndSearch: {
-		mainText: __( 'Sorry, nothing matched.', 'elementor' ),
-		sceneryText: __( 'Try something else.', 'elementor' ),
+		mainText: __( 'Sorry, nothing matched.', 'refraction' ),
+		sceneryText: __( 'Try something else.', 'refraction' ),
 		icon: <PhotoIcon color="inherit" fontSize="large" />,
 	},
 	search: {
-		mainText: __( 'Sorry, nothing matched', 'elementor' ),
-		sceneryText: __( 'Clear your input and try something else.', 'elementor' ),
+		mainText: __( 'Sorry, nothing matched', 'refraction' ),
+		sceneryText: __( 'Clear your input and try something else.', 'refraction' ),
 		icon: <PhotoIcon color="inherit" fontSize="large" />,
 	},
 	filter: {
-		mainText: __( 'Sorry, nothing matched that search.', 'elementor' ),
-		sceneryText: __( 'Clear the filters and try something else.', 'elementor' ),
+		mainText: __( 'Sorry, nothing matched that search.', 'refraction' ),
+		sceneryText: __( 'Clear the filters and try something else.', 'refraction' ),
 		icon: <ColorSwatchIcon color="inherit" fontSize="large" />,
 	},
 };
@@ -131,7 +131,7 @@ export const NotFoundLayout: FC< NotFoundLayoutProps > = ( { onClear, searchValu
 		</Typography>
 		<Typography align="center" variant="caption" color="inherit">
 			<Link color="secondary" variant="caption" component="button" onClick={ onClear }>
-				{ __( 'Clear & try again', 'elementor' ) }
+				{ __( 'Clear & try again', 'refraction' ) }
 			</Link>
 		</Typography>
 	</Stack>

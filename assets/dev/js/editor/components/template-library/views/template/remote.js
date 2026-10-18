@@ -1,10 +1,10 @@
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
-var TemplateLibraryTemplateView = require( 'elementor-templates/views/template/base' ),
+var TemplateLibraryTemplateView = require( 'refraction-templates/views/template/base' ),
 	TemplateLibraryTemplateRemoteView;
 
 TemplateLibraryTemplateRemoteView = TemplateLibraryTemplateView.extend( {
-	template: '#tmpl-elementor-template-library-template-remote',
+	template: '#tmpl-refraction-template-library-template-remote',
 
 	attributes() {
 		return jQuery.extend( TemplateLibraryTemplateView.prototype.attributes.apply( this, arguments ), {
@@ -15,7 +15,7 @@ TemplateLibraryTemplateRemoteView = TemplateLibraryTemplateView.extend( {
 
 	ui() {
 		return jQuery.extend( TemplateLibraryTemplateView.prototype.ui.apply( this, arguments ), {
-			favoriteCheckbox: '.elementor-template-library-template-favorite-input',
+			favoriteCheckbox: '.refraction-template-library-template-favorite-input',
 		} );
 	},
 
@@ -36,9 +36,9 @@ TemplateLibraryTemplateRemoteView = TemplateLibraryTemplateView.extend( {
 
 		this.model.set( 'favorite', isFavorite );
 
-		elementor.templates.markAsFavorite( this.model, isFavorite );
+		refraction.templates.markAsFavorite( this.model, isFavorite );
 
-		const baseTier = elementor.config.library_connect?.base_access_tier;
+		const baseTier = refraction.config.library_connect?.base_access_tier;
 		const templateTier = this.model.get( 'accessTier' );
 
 		EditorOneEventManager.sendELibraryFavorite( {
@@ -49,8 +49,8 @@ TemplateLibraryTemplateRemoteView = TemplateLibraryTemplateView.extend( {
 			proRequired: baseTier !== templateTier,
 		} );
 
-		if ( ! isFavorite && elementor.templates.getFilter( 'favorite' ) ) {
-			elementor.channels.templates.trigger( 'filter:change' );
+		if ( ! isFavorite && refraction.templates.getFilter( 'favorite' ) ) {
+			refraction.channels.templates.trigger( 'filter:change' );
 		}
 	},
 } );

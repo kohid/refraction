@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Modules\EditorOne\Classes;
+namespace Refraction\Modules\EditorOne\Classes;
 
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Custom_Url_Interface;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Event_Id_Interface;
-use Elementor\Utils;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Custom_Url_Interface;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Event_Id_Interface;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -165,7 +165,7 @@ class Menu_Data_Provider {
 
 	public function get_all_sidebar_page_slugs(): array {
 		$base_slugs = [
-			Menu_Config::ELEMENTOR_MENU_SLUG,
+			Menu_Config::REFRACTION_MENU_SLUG,
 			Menu_Config::EDITOR_MENU_SLUG,
 		];
 
@@ -177,14 +177,14 @@ class Menu_Data_Provider {
 		return array_values( array_unique( $slugs ) );
 	}
 
-	public function is_elementor_editor_page(): bool {
+	public function is_refraction_editor_page(): bool {
 		if ( ! get_current_screen() ) {
 			return false;
 		}
 
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
 
-		if ( Menu_Config::ELEMENTOR_HOME_MENU_SLUG === $page ) {
+		if ( Menu_Config::REFRACTION_HOME_MENU_SLUG === $page ) {
 			return false;
 		}
 
@@ -194,7 +194,7 @@ class Menu_Data_Provider {
 
 		$post_type = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
 
-		return $this->is_elementor_post_type( $post_type );
+		return $this->is_refraction_post_type( $post_type );
 	}
 
 	public function is_editor_one_post_edit_screen(): bool {
@@ -208,25 +208,25 @@ class Menu_Data_Provider {
 			return false;
 		}
 
-		$post_types = apply_filters( 'elementor/editor-one/admin-edit-post-types', [] );
+		$post_types = apply_filters( 'refraction/editor-one/admin-edit-post-types', [] );
 
 		return in_array( $screen->post_type, $post_types, true );
 	}
 
 	public function is_editor_one_admin_page(): bool {
-		return $this->is_elementor_editor_page() || $this->is_editor_one_post_edit_screen();
+		return $this->is_refraction_editor_page() || $this->is_editor_one_post_edit_screen();
 	}
 
-	private function is_elementor_post_type( string $post_type ): bool {
+	private function is_refraction_post_type( string $post_type ): bool {
 		if ( empty( $post_type ) ) {
 			return false;
 		}
 
-		return isset( Menu_Config::get_elementor_post_types()[ $post_type ] );
+		return isset( Menu_Config::get_refraction_post_types()[ $post_type ] );
 	}
 
-	public static function get_elementor_post_types(): array {
-		return Menu_Config::get_elementor_post_types();
+	public static function get_refraction_post_types(): array {
+		return Menu_Config::get_refraction_post_types();
 	}
 
 	private function get_dynamic_page_slugs(): array {
@@ -242,7 +242,7 @@ class Menu_Data_Provider {
 			}
 		}
 
-		$allowed_prefixes = [ 'elementor', 'e-', 'popup_templates' ];
+		$allowed_prefixes = [ 'refraction', 'e-', 'popup_templates' ];
 
 		return array_values( array_filter( $slugs, function( string $slug ) use ( $allowed_prefixes ): bool {
 			foreach ( $allowed_prefixes as $prefix ) {
@@ -520,14 +520,14 @@ class Menu_Data_Provider {
 
 	private function derive_event_id_from_slug( string $slug ): string {
 		$slug_event_map = [
-			'edit.php?post_type=elementor_library' => 'saved_templates',
+			'edit.php?post_type=refraction_library' => 'saved_templates',
 		];
 
 		if ( isset( $slug_event_map[ $slug ] ) ) {
 			return $slug_event_map[ $slug ];
 		}
 
-		$event_id = preg_replace( '/^elementor-/', '', $slug );
+		$event_id = preg_replace( '/^refraction-/', '', $slug );
 		$event_id = preg_replace( '/[?#].*$/', '', $event_id );
 		$event_id = str_replace( [ '-', ' ' ], '_', $event_id );
 

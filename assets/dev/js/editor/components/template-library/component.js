@@ -1,23 +1,23 @@
-import ComponentModalBase from 'elementor-api/modules/component-modal-base';
+import ComponentModalBase from 'refraction-api/modules/component-modal-base';
 import * as commands from './commands/';
 import * as commandsData from './commands-data/';
 import { SAVE_CONTEXTS } from './constants';
 import { showGlobalStylesDialog } from './views/parts/global-styles-dialog';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
-const TemplateLibraryLayoutView = require( 'elementor-templates/views/library-layout' );
+const TemplateLibraryLayoutView = require( 'refraction-templates/views/library-layout' );
 
 export default class Component extends ComponentModalBase {
 	__construct( args ) {
 		super.__construct( args );
 
 		// When switching documents update defaultTabs.
-		elementor.on( 'document:loaded', this.onDocumentLoaded.bind( this ) );
+		refraction.on( 'document:loaded', this.onDocumentLoaded.bind( this ) );
 
 		// Remove whole component cache data.
 		$e.data.deleteCache( this, 'library' );
 
-		elementor.channels.templates.on( 'quota:update', ( { force } = {} ) => {
+		refraction.channels.templates.on( 'quota:update', ( { force } = {} ) => {
 			$e.components.get( 'cloud-library' ).utils.setQuotaConfig( force );
 		} );
 	}
@@ -29,25 +29,25 @@ export default class Component extends ComponentModalBase {
 	defaultTabs() {
 		return {
 			'templates/blocks': {
-				title: __( 'Blocks', 'elementor' ),
+				title: __( 'Blocks', 'refraction' ),
 				getFilter: () => ( {
 					source: 'remote',
 					type: 'block',
-					subtype: elementor.config.document.remoteLibrary.category,
+					subtype: refraction.config.document.remoteLibrary.category,
 				} ),
 			},
 			'templates/pages': {
-				title: __( 'Pages', 'elementor' ),
+				title: __( 'Pages', 'refraction' ),
 				filter: {
 					source: 'remote',
 					type: 'page',
 				},
 			},
 			'templates/my-templates': {
-				title: __( 'Templates', 'elementor' ),
+				title: __( 'Templates', 'refraction' ),
 				getFilter: () => ( {
-					source: elementor.templates.getSourceSelection() ?? 'local',
-					view: elementor.templates.getViewSelection() ?? 'list',
+					source: refraction.templates.getSourceSelection() ?? 'local',
+					view: refraction.templates.getViewSelection() ?? 'list',
 				} ),
 			},
 		};
@@ -66,9 +66,9 @@ export default class Component extends ComponentModalBase {
 			},
 			connect: ( args ) => {
 				args.texts = {
-					title: __( 'Connect to Template Library', 'elementor' ),
-					message: __( 'Access this template and our entire library by creating a free personal account', 'elementor' ),
-					button: __( 'Get Started', 'elementor' ),
+					title: __( 'Connect to Template Library', 'refraction' ),
+					message: __( 'Access this template and our entire library by creating a free personal account', 'refraction' ),
+					button: __( 'Get Started', 'refraction' ),
 				};
 
 				this.manager.layout.showConnectView( args );
@@ -191,7 +191,7 @@ export default class Component extends ComponentModalBase {
 			const templateType = model.get( 'type' );
 			const templateTitle = model.get( 'title' );
 			const templateId = model.get( 'template_id' );
-			const baseTier = elementor.config.library_connect?.base_access_tier;
+			const baseTier = refraction.config.library_connect?.base_access_tier;
 			const templateTier = model.get( 'accessTier' );
 
 			$e.run( 'document/elements/import', {
@@ -215,7 +215,7 @@ export default class Component extends ComponentModalBase {
 	}
 
 	downloadTemplate( args, callback ) {
-		const autoImportSettings = elementor.config.document.remoteLibrary.autoImportSettings,
+		const autoImportSettings = refraction.config.document.remoteLibrary.autoImportSettings,
 			model = args.model;
 
 		let { withPageSettings = null } = args;
@@ -283,7 +283,7 @@ export default class Component extends ComponentModalBase {
 
 		try {
 			const result = await new Promise( ( resolve, reject ) => {
-				elementorCommon.ajax.addRequest( 'process_global_styles', {
+				refractionCommon.ajax.addRequest( 'process_global_styles', {
 					data: {
 						content: JSON.stringify( data.content ),
 						import_mode: mode,
@@ -303,7 +303,7 @@ export default class Component extends ComponentModalBase {
 			};
 
 			if ( result.updated_global_classes || result.updated_global_variables ) {
-				window.dispatchEvent( new CustomEvent( 'elementor/global-styles/imported', {
+				window.dispatchEvent( new CustomEvent( 'refraction/global-styles/imported', {
 					detail: {
 						global_classes: result.updated_global_classes,
 						global_variables: result.updated_global_variables,
@@ -336,7 +336,7 @@ export default class Component extends ComponentModalBase {
 						model,
 						withPageSettings: true,
 						onAfter: () => {
-							elementor.templates.eventManager.sendInsertApplySettingsEvent( {
+							refraction.templates.eventManager.sendInsertApplySettingsEvent( {
 								apply_modal_result: 'apply',
 								library_type: model.get( 'source' ),
 							} );
@@ -349,7 +349,7 @@ export default class Component extends ComponentModalBase {
 						model,
 						withPageSettings: false,
 						onAfter: () => {
-							elementor.templates.eventManager.sendInsertApplySettingsEvent( {
+							refraction.templates.eventManager.sendInsertApplySettingsEvent( {
 								apply_modal_result: `don't apply`,
 								library_type: model.get( 'source' ),
 							} );
@@ -365,7 +365,7 @@ export default class Component extends ComponentModalBase {
 
 				dialog.onConfirm = function() {
 					importOptions.withPageSettings = true;
-					elementor.templates.eventManager.sendInsertApplySettingsEvent( {
+					refraction.templates.eventManager.sendInsertApplySettingsEvent( {
 						apply_modal_result: 'apply',
 						library_type: model.get( 'source' ),
 					} );
@@ -375,7 +375,7 @@ export default class Component extends ComponentModalBase {
 
 				dialog.onCancel = function() {
 					importOptions.withPageSettings = false;
-					elementor.templates.eventManager.sendInsertApplySettingsEvent( {
+					refraction.templates.eventManager.sendInsertApplySettingsEvent( {
 						apply_modal_result: `don't apply`,
 						library_type: model.get( 'source' ),
 					} );
@@ -387,15 +387,15 @@ export default class Component extends ComponentModalBase {
 			},
 
 			initDialog( model ) {
-				InsertTemplateHandler.dialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-					id: 'elementor-insert-template-settings-dialog',
+				InsertTemplateHandler.dialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+					id: 'refraction-insert-template-settings-dialog',
 					/* Translators: %s is the type content */
-					headerMessage: __( 'Apply the settings of this %s too?', 'elementor' ).replace( '%s', elementor.translate( model.attributes.type ) ),
+					headerMessage: __( 'Apply the settings of this %s too?', 'refraction' ).replace( '%s', refraction.translate( model.attributes.type ) ),
 					/* Translators: %s is the type content */
-					message: __( 'This will override the design, layout, and other settings of the %s you’re working on.', 'elementor' ).replace( '%s', elementor.documents.getCurrent().container.label ),
+					message: __( 'This will override the design, layout, and other settings of the %s you’re working on.', 'refraction' ).replace( '%s', refraction.documents.getCurrent().container.label ),
 					strings: {
-						confirm: __( 'Apply', 'elementor' ),
-						cancel: __( 'Don’t apply', 'elementor' ),
+						confirm: __( 'Apply', 'refraction' ),
+						cancel: __( 'Don’t apply', 'refraction' ),
 					},
 				} );
 			},
@@ -413,7 +413,7 @@ export default class Component extends ComponentModalBase {
 	}
 
 	getTabsWrapperSelector() {
-		return '#elementor-template-library-header-menu';
+		return '#refraction-template-library-header-menu';
 	}
 
 	getModalLayout() {
@@ -439,14 +439,14 @@ export default class Component extends ComponentModalBase {
 		let message;
 
 		if ( flattenedClassesCount > 0 && flattenedVariablesCount > 0 ) {
-			message = __( 'Some styles were added as static values because the style limits were reached.', 'elementor' );
+			message = __( 'Some styles were added as static values because the style limits were reached.', 'refraction' );
 		} else if ( flattenedClassesCount > 0 ) {
-			message = __( 'Some styles were added as static values because the class limit was reached.', 'elementor' );
+			message = __( 'Some styles were added as static values because the class limit was reached.', 'refraction' );
 		} else {
-			message = __( 'Some styles were added as static values because the variable limit was reached.', 'elementor' );
+			message = __( 'Some styles were added as static values because the variable limit was reached.', 'refraction' );
 		}
 
-		elementor.notifications.showToast( {
+		refraction.notifications.showToast( {
 			message,
 		} );
 	}

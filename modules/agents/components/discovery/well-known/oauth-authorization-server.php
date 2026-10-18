@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * rather than a misleading stub.
  *
  * When the OAuth module activates:
- *   add_filter( 'elementor/agents/oauth_authorization_server/is_applicable', '__return_true' );
- *   add_filter( 'elementor/agents/oauth_authorization_server/token_endpoint', fn() => '...' );
+ *   add_filter( 'refraction/agents/oauth_authorization_server/is_applicable', '__return_true' );
+ *   add_filter( 'refraction/agents/oauth_authorization_server/token_endpoint', fn() => '...' );
  *
  * @see https://www.rfc-editor.org/rfc/rfc8414
  */
@@ -37,7 +37,7 @@ class Oauth_Authorization_Server extends Abstract_Well_Known_Endpoint {
 		/**
 		 * @param bool $applicable Default false until OAuth module activates.
 		 */
-		return (bool) apply_filters( 'elementor/agents/oauth_authorization_server/is_applicable', false );
+		return (bool) apply_filters( 'refraction/agents/oauth_authorization_server/is_applicable', false );
 	}
 
 	protected function generate_content(): array {
@@ -47,16 +47,16 @@ class Oauth_Authorization_Server extends Abstract_Well_Known_Endpoint {
 		 * @param string $url Token endpoint URL. Provided by the OAuth module.
 		 */
 		$token_endpoint = (string) apply_filters(
-			'elementor/agents/oauth_authorization_server/token_endpoint',
-			rest_url( 'elementor/agents/oauth/token' )
+			'refraction/agents/oauth_authorization_server/token_endpoint',
+			rest_url( 'refraction/agents/oauth/token' )
 		);
 
 		/**
 		 * @param string $url Authorization endpoint URL.
 		 */
 		$auth_endpoint = (string) apply_filters(
-			'elementor/agents/oauth_authorization_server/authorization_endpoint',
-			rest_url( 'elementor/agents/oauth/authorize' )
+			'refraction/agents/oauth_authorization_server/authorization_endpoint',
+			rest_url( 'refraction/agents/oauth/authorize' )
 		);
 
 		$document = [
@@ -80,7 +80,7 @@ class Oauth_Authorization_Server extends Abstract_Well_Known_Endpoint {
 		 * @param array  $document The authorization server metadata.
 		 * @param string $home     The site home URL.
 		 */
-		return (array) apply_filters( 'elementor/agents/oauth_authorization_server', $document, $home );
+		return (array) apply_filters( 'refraction/agents/oauth_authorization_server', $document, $home );
 	}
 
 	private function get_scopes(): array {
@@ -90,6 +90,6 @@ class Oauth_Authorization_Server extends Abstract_Well_Known_Endpoint {
 		 *
 		 * @see Oauth_Protected_Resource::get_scopes() — same filter.
 		 */
-		return (array) apply_filters( 'elementor/agents/oauth/scopes', [] );
+		return (array) apply_filters( 'refraction/agents/oauth/scopes', [] );
 	}
 }

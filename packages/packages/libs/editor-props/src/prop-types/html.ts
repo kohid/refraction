@@ -1,4 +1,4 @@
-import { z } from '@elementor/schema';
+import { z } from '@refraction/schema';
 
 import { createPropUtils } from '../utils/create-prop-utils';
 

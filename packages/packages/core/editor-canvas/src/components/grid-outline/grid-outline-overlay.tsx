@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useElementEditorSettings } from '@elementor/editor-elements';
+import { useElementEditorSettings } from '@refraction/editor-elements';
 import { Box } from '@elementor/ui';
 import { FloatingPortal } from '@floating-ui/react';
 

@@ -6,24 +6,24 @@
 body {
 	--e-preview-width: calc(100% - var(--e-editor-panel-width, 300px));
 
-	&.elementor-navigator-docked {
+	&.refraction-navigator-docked {
 		--e-preview-width: calc(100% - var(--e-editor-panel-width, 300px) - var(--e-editor-navigator-width, 0px));
 	}
 
-	&.elementor-device-desktop {
+	&.refraction-device-desktop {
 
-		#elementor-preview {
+		#refraction-preview {
 			overflow-y: hidden;
 			align-items: flex-start;
 		}
 	}
 
-	&:not(.elementor-device-desktop) & {
+	&:not(.refraction-device-desktop) & {
 		overflow-y: auto;
 	}
 }
 
-#elementor-preview {
+#refraction-preview {
 	background-color: #333;
 	height: 100%;
 	border: 0;
@@ -43,13 +43,13 @@ body {
 	}
 }
 
-#elementor-preview-responsive-wrapper {
+#refraction-preview-responsive-wrapper {
 	transform-origin: top center;
 	margin: 20px;
 	transform: scale( var( --e-preview-scale, 1 ) );
 	overflow: hidden;
 
-	.elementor-device-desktop & {
+	.refraction-device-desktop & {
 		min-width: map.get($breakpoints, lg);
 		width: 100%;
 		height: 100%;
@@ -57,7 +57,7 @@ body {
 		position: relative;
 	}
 
-	body.e-is-device-mode:not(.elementor-device-desktop) & {
+	body.e-is-device-mode:not(.refraction-device-desktop) & {
 		width: var(--e-editor-preview-width);
 		height: var(--e-editor-preview-height);
 		margin: 20px Max(calc((100vw - var(--e-editor-panel-width) - var(--e-editor-preview-width)) / 2), 20px );
@@ -146,7 +146,7 @@ body {
 	}
 }
 
-#elementor-preview-iframe {
+#refraction-preview-iframe {
 	width: 100%;
 	height: 100%;
 	background-color: #fff;

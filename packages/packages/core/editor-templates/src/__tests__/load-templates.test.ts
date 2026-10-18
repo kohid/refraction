@@ -1,26 +1,26 @@
 import { createDOMElement } from 'test-utils';
-import { type Document, getV1CurrentDocument } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { ajax, getCanvasIframeDocument } from '@elementor/editor-v1-adapters';
-import { __dispatch as dispatch } from '@elementor/store';
+import { type Document, getV1CurrentDocument } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { ajax, getCanvasIframeDocument } from '@refraction/editor-v1-adapters';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { loadTemplates, unloadTemplates } from '../load-templates';
 import { slice } from '../store';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	getCanvasIframeDocument: jest.fn(),
 	ajax: {
 		load: jest.fn(),
 	},
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	getV1CurrentDocument: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/store', () => ( {
-	...jest.requireActual( '@elementor/store' ),
+jest.mock( '@refraction/store', () => ( {
+	...jest.requireActual( '@refraction/store' ),
 	__dispatch: jest.fn(),
 } ) );
 
@@ -32,8 +32,8 @@ function createTemplateElement( documentId: string ) {
 	return createDOMElement( {
 		tag: 'div',
 		attrs: {
-			'data-elementor-id': documentId,
-			'data-elementor-post-type': 'elementor_library',
+			'data-refraction-id': documentId,
+			'data-refraction-post-type': 'refraction_library',
 		},
 	} );
 }
@@ -63,7 +63,7 @@ describe( 'loadTemplates', () => {
 		// Arrange.
 		const body = createDOMElement( {
 			tag: 'body',
-			children: [ createDOMElement( { tag: 'div', attrs: { 'data-elementor-id': '100' } } ) ],
+			children: [ createDOMElement( { tag: 'div', attrs: { 'data-refraction-id': '100' } } ) ],
 		} );
 
 		jest.mocked( getCanvasIframeDocument ).mockReturnValue( { body } as unknown as globalThis.Document );
@@ -86,7 +86,7 @@ describe( 'loadTemplates', () => {
 			children: [
 				createDOMElement( {
 					tag: 'div',
-					attrs: { 'data-elementor-id': '100' },
+					attrs: { 'data-refraction-id': '100' },
 				} ),
 				createTemplateElement( '200' ),
 				createTemplateElement( '300' ),
@@ -130,12 +130,12 @@ describe( 'loadTemplates', () => {
 			children: [
 				createDOMElement( {
 					tag: 'div',
-					attrs: { 'data-elementor-id': '100' },
+					attrs: { 'data-refraction-id': '100' },
 				} ),
 				createTemplateElement( '200' ),
 				createDOMElement( {
 					tag: 'div',
-					attrs: { 'data-elementor-id': '500', 'data-elementor-type': 'wp-post' },
+					attrs: { 'data-refraction-id': '500', 'data-refraction-type': 'wp-post' },
 				} ),
 			],
 		} );
@@ -161,7 +161,7 @@ describe( 'loadTemplates', () => {
 			children: [
 				createDOMElement( {
 					tag: 'div',
-					attrs: { 'data-elementor-id': '100' },
+					attrs: { 'data-refraction-id': '100' },
 				} ),
 				createTemplateElement( '200' ),
 				createTemplateElement( '300' ),
@@ -194,7 +194,7 @@ describe( 'loadTemplates', () => {
 			children: [
 				createDOMElement( {
 					tag: 'div',
-					attrs: { 'data-elementor-id': '100' },
+					attrs: { 'data-refraction-id': '100' },
 				} ),
 				createTemplateElement( '200' ),
 				createTemplateElement( '200' ),

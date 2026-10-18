@@ -1,16 +1,16 @@
 /**
- * Elementor App
+ * Refraction App
  */
 import { useContext } from 'react';
-import router from '@elementor/router';
+import router from '@refraction/router';
 import { Router, LocationProvider, createHistory } from '@reach/router';
 import { createHashSource } from 'reach-router-hash-history';
-import NotFound from 'elementor-app/pages/not-found';
-import Index from 'elementor-app/pages/index';
-import ErrorBoundary from 'elementor-app/organisms/error-boundary';
+import NotFound from 'refraction-app/pages/not-found';
+import Index from 'refraction-app/pages/index';
+import ErrorBoundary from 'refraction-app/organisms/error-boundary';
 import './app.scss';
 
-import { AppContext } from 'elementor-app/app-context';
+import { AppContext } from 'refraction-app/app-context';
 
 import { ThemeProvider } from 'styled-components';
 

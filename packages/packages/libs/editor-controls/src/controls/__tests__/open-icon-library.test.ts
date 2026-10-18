@@ -1,10 +1,10 @@
 import { openIconLibrary } from '../open-icon-library';
 
 describe( 'openIconLibrary', () => {
-	const originalElementor = window.elementor;
+	const originalRefraction = window.refraction;
 
 	afterEach( () => {
-		window.elementor = originalElementor;
+		window.refraction = originalRefraction;
 	} );
 
 	it( 'should load libraries and show the icon manager modal', () => {
@@ -12,12 +12,12 @@ describe( 'openIconLibrary', () => {
 		const loadIconLibraries = jest.fn();
 		const show = jest.fn();
 
-		window.elementor = {
+		window.refraction = {
 			iconManager: {
 				loadIconLibraries,
 				show,
 			},
-		} as typeof window.elementor;
+		} as typeof window.refraction;
 
 		// Act
 		openIconLibrary();
@@ -41,12 +41,12 @@ describe( 'openIconLibrary', () => {
 		const onSelect = jest.fn();
 		const show = jest.fn();
 
-		window.elementor = {
+		window.refraction = {
 			iconManager: {
 				loadIconLibraries: jest.fn(),
 				show,
 			},
-		} as typeof window.elementor;
+		} as typeof window.refraction;
 
 		openIconLibrary( { onSelect } );
 
@@ -66,12 +66,12 @@ describe( 'openIconLibrary', () => {
 		const show = jest.fn();
 		const selected = { value: 'fas fa-heart', library: 'fa-solid' };
 
-		window.elementor = {
+		window.refraction = {
 			iconManager: {
 				loadIconLibraries: jest.fn(),
 				show,
 			},
-		} as typeof window.elementor;
+		} as typeof window.refraction;
 
 		// Act
 		openIconLibrary( { selected } );
@@ -82,7 +82,7 @@ describe( 'openIconLibrary', () => {
 
 	it( 'should not throw when the icon manager is unavailable', () => {
 		// Arrange
-		window.elementor = undefined;
+		window.refraction = undefined;
 
 		// Act & Assert
 		expect( () => openIconLibrary() ).not.toThrow();

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { trackUpgradePromotionClick, trackViewPromotion } from '@elementor/editor-controls';
+import { trackUpgradePromotionClick, trackViewPromotion } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { usePersistDynamicValue } from '../../../hooks/use-persist-dynamic-value';
@@ -9,8 +9,8 @@ import { getAtomicDynamicTags } from '../../sync/get-atomic-dynamic-tags';
 import { type DynamicTag } from '../../types';
 import { DynamicSelection } from '../dynamic-selection';
 
-jest.mock( '@elementor/editor-controls', () => ( {
-	...jest.requireActual( '@elementor/editor-controls' ),
+jest.mock( '@refraction/editor-controls', () => ( {
+	...jest.requireActual( '@refraction/editor-controls' ),
 	trackViewPromotion: jest.fn(),
 	trackUpgradePromotionClick: jest.fn(),
 } ) );

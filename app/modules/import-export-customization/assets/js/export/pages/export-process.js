@@ -24,18 +24,18 @@ export default function ExportProcess() {
 
 	const getStatusText = () => {
 		if ( status === STATUS_PROCESSING ) {
-			return __( 'Setting up your website template...', 'elementor' );
+			return __( 'Setting up your website template...', 'refraction' );
 		}
 
 		if ( status === STATUS_PROCESSING_MEDIA ) {
-			return __( 'Processing media files...', 'elementor' );
+			return __( 'Processing media files...', 'refraction' );
 		}
 
-		return __( 'Export failed', 'elementor' );
+		return __( 'Export failed', 'refraction' );
 	};
 
 	const headerContent = (
-		<PageHeader title={ __( 'Export', 'elementor' ) } />
+		<PageHeader title={ __( 'Export', 'refraction' ) } />
 	);
 
 	const handleTryAgain = () => {

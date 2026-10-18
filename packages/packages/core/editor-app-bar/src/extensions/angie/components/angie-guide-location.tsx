@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useCurrentUserCapabilities } from '@elementor/editor-current-user';
-import { ThemeProvider } from '@elementor/editor-ui';
-import { useMixpanel } from '@elementor/events';
+import { useCurrentUserCapabilities } from '@refraction/editor-current-user';
+import { ThemeProvider } from '@refraction/editor-ui';
+import { useMixpanel } from '@refraction/events';
 import { Infotip } from '@elementor/ui';
 
 import {

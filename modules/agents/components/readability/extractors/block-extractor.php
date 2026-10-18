@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Readability\Extractors;
+namespace Refraction\Modules\Agents\Components\Readability\Extractors;
 
-use Elementor\Modules\MarkdownRender\Html_To_Markdown;
-use Elementor\Modules\MarkdownRender\Module;
+use Refraction\Modules\MarkdownRender\Html_To_Markdown;
+use Refraction\Modules\MarkdownRender\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * walked separately when that rendered markdown is empty, to avoid duplicating
  * content that `render_block()` already includes.
  *
- * Priority: 20 (runs after Elementor_Extractor).
+ * Priority: 20 (runs after Refraction_Extractor).
  */
 class Block_Extractor implements Extractor_Interface {
 

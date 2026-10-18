@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor skins manager.
+ * Refraction skins manager.
  *
- * Elementor skins manager handler class is responsible for registering and
+ * Refraction skins manager handler class is responsible for registering and
  * initializing all the supported skins.
  *
  * @since 1.0.0
@@ -35,8 +35,8 @@ class Skins_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Widget_Base $widget Elementor widget.
-	 * @param Skin_Base   $skin   Elementor skin.
+	 * @param Widget_Base $widget Refraction widget.
+	 * @param Skin_Base   $skin   Refraction skin.
 	 *
 	 * @return true True if skin added.
 	 */
@@ -60,8 +60,8 @@ class Skins_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Widget_Base $widget  Elementor widget.
-	 * @param string      $skin_id Elementor skin ID.
+	 * @param Widget_Base $widget  Refraction widget.
+	 * @param string      $skin_id Refraction skin ID.
 	 *
 	 * @return true|\WP_Error True if skin removed, `WP_Error` otherwise.
 	 */
@@ -85,7 +85,7 @@ class Skins_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Widget_Base $widget Elementor widget.
+	 * @param Widget_Base $widget Refraction widget.
 	 *
 	 * @return false|array Skins if the widget has skins, False otherwise.
 	 */
@@ -102,12 +102,12 @@ class Skins_Manager {
 	/**
 	 * Skins manager constructor.
 	 *
-	 * Initializing Elementor skins manager by requiring the skin base class.
+	 * Initializing Refraction skins manager by requiring the skin base class.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
 	public function __construct() {
-		require ELEMENTOR_PATH . 'includes/base/skin-base.php';
+		require REFRACTION_PATH . 'includes/base/skin-base.php';
 	}
 }

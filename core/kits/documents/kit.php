@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Core\Kits\Documents;
+namespace Refraction\Core\Kits\Documents;
 
-use Elementor\Core\DocumentTypes\PageBase;
-use Elementor\Core\Files\CSS\Post as Post_CSS;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Core\Settings\Page\Manager as PageManager;
-use Elementor\Plugin;
+use Refraction\Core\DocumentTypes\PageBase;
+use Refraction\Core\Files\CSS\Post as Post_CSS;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Core\Settings\Page\Manager as PageManager;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -40,7 +40,7 @@ class Kit extends PageBase {
 	}
 
 	public static function get_title() {
-		return esc_html__( 'Kit', 'elementor' );
+		return esc_html__( 'Kit', 'refraction' );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class Kit extends PageBase {
 	}
 
 	public function get_css_wrapper_selector() {
-		return '.elementor-kit-' . $this->get_main_id();
+		return '.refraction-kit-' . $this->get_main_id();
 	}
 
 	public function save( $data ) {
@@ -151,8 +151,8 @@ class Kit extends PageBase {
 
 	protected function get_post_statuses() {
 		return [
-			'draft' => sprintf( '%s (%s)', esc_html__( 'Disabled', 'elementor' ), esc_html__( 'Draft', 'elementor' ) ),
-			'publish' => esc_html__( 'Published', 'elementor' ),
+			'draft' => sprintf( '%s (%s)', esc_html__( 'Disabled', 'refraction' ), esc_html__( 'Draft', 'refraction' ) ),
+			'publish' => esc_html__( 'Published', 'refraction' ),
 		];
 	}
 
@@ -214,6 +214,6 @@ class Kit extends PageBase {
 			$this->register_tab( $id, $class );
 		}
 
-		do_action( 'elementor/kit/register_tabs', $this );
+		do_action( 'refraction/kit/register_tabs', $this );
 	}
 }

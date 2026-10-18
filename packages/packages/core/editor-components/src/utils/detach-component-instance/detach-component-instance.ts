@@ -1,13 +1,13 @@
-import { doAfterRender } from '@elementor/editor-canvas';
+import { doAfterRender } from '@refraction/editor-canvas';
 import {
 	getContainer,
 	replaceElement,
 	selectElement,
 	type V1Element,
 	type V1ElementModelProps,
-} from '@elementor/editor-elements';
-import { undoable } from '@elementor/editor-v1-adapters';
-import { __getState as getState } from '@elementor/store';
+} from '@refraction/editor-elements';
+import { undoable } from '@refraction/editor-v1-adapters';
+import { __getState as getState } from '@refraction/store';
 import { __ } from '@wordpress/i18n';
 
 import { componentInstanceOverridesPropTypeUtil } from '../../prop-types/component-instance-overrides-prop-type';
@@ -49,9 +49,9 @@ type UndoDetachEventData = {
 
 type RedoDetachEventData = DetachEventData;
 
-const DETACH_EVENT = 'elementor/components/detach-instance';
-const DETACH_UNDO_EVENT = 'elementor/components/undo-detach-instance';
-const DETACH_REDO_EVENT = 'elementor/components/redo-detach-instance';
+const DETACH_EVENT = 'refraction/components/detach-instance';
+const DETACH_UNDO_EVENT = 'refraction/components/undo-detach-instance';
+const DETACH_REDO_EVENT = 'refraction/components/redo-detach-instance';
 
 export async function detachComponentInstance( {
 	instanceId,
@@ -176,8 +176,8 @@ export async function detachComponentInstance( {
 			},
 		},
 		{
-			title: __( 'Detach from Component', 'elementor' ),
-			subtitle: __( 'Instance detached', 'elementor' ),
+			title: __( 'Detach from Component', 'refraction' ),
+			subtitle: __( 'Instance detached', 'refraction' ),
 		}
 	);
 

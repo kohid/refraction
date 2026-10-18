@@ -1,21 +1,21 @@
 import FilesUploadHandler from '../utils/files-upload-handler';
 
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlMediaItemView;
 
 ControlMediaItemView = ControlBaseDataView.extend( {
 	ui() {
 		var ui = ControlBaseDataView.prototype.ui.apply( this, arguments );
 
-		ui.addImages = '.elementor-control-gallery-add';
-		ui.clearGallery = '.elementor-control-gallery-clear';
-		ui.galleryThumbnails = '.elementor-control-gallery-thumbnails';
-		ui.status = '.elementor-control-gallery-status-title';
+		ui.addImages = '.refraction-control-gallery-add';
+		ui.clearGallery = '.refraction-control-gallery-clear';
+		ui.galleryThumbnails = '.refraction-control-gallery-thumbnails';
+		ui.status = '.refraction-control-gallery-status-title';
 		// eslint-disable-next-line capitalized-comments
-		// ui.warnings = '.elementor-control-media__warnings';
-		ui.promotions = '.elementor-control-media__promotions';
-		ui.promotions_dismiss = '.elementor-control-media__promotions .elementor-control-notice-dismiss';
-		ui.promotions_action = '.elementor-control-media__promotions .elementor-control-notice-main-actions button';
+		// ui.warnings = '.refraction-control-media__warnings';
+		ui.promotions = '.refraction-control-media__promotions';
+		ui.promotions_dismiss = '.refraction-control-media__promotions .refraction-control-notice-dismiss';
+		ui.promotions_action = '.refraction-control-media__promotions .refraction-control-notice-main-actions button';
 
 		return ui;
 	},
@@ -44,21 +44,21 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 			imagesWithoutOptimization = 0,
 			promotionsAlwaysOn = false;
 
-		const hasPromotions = this.ui.promotions.length && ! elementor.config.user.dismissed_editor_notices.includes( this.getDismissPromotionEventName() );
+		const hasPromotions = this.ui.promotions.length && ! refraction.config.user.dismissed_editor_notices.includes( this.getDismissPromotionEventName() );
 
 		this.$el
-			.toggleClass( 'elementor-gallery-has-images', hasImages )
-			.toggleClass( 'elementor-gallery-empty', ! hasImages );
+			.toggleClass( 'refraction-gallery-has-images', hasImages )
+			.toggleClass( 'refraction-gallery-empty', ! hasImages );
 
 		var $galleryThumbnails = this.ui.galleryThumbnails;
 
 		$galleryThumbnails.empty();
 
 		/* Translators: %s: Selected images count. */
-		this.ui.status.text( hasImages ? sprintf( __( '%s Images Selected', 'elementor' ), imagesCount ) : __( 'No Images Selected', 'elementor' ) );
+		this.ui.status.text( hasImages ? sprintf( __( '%s Images Selected', 'refraction' ), imagesCount ) : __( 'No Images Selected', 'refraction' ) );
 
 		if ( hasPromotions ) {
-			promotionsAlwaysOn = this.ui.promotions.find( '.elementor-control-notice' ).data( 'display' ) || false;
+			promotionsAlwaysOn = this.ui.promotions.find( '.refraction-control-notice' ).data( 'display' ) || false;
 		}
 		if ( ! hasImages ) {
 			return;
@@ -68,7 +68,7 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 
 		this.getControlValue().forEach( ( image, thumbIndex ) => {
 			const $thumbnail = jQuery( '<img>', {
-				class: 'elementor-control-gallery-thumbnail',
+				class: 'refraction-control-gallery-thumbnail',
 				src: image.url,
 				alt: 'gallery-thumbnail-' + thumbIndex,
 			} );
@@ -147,7 +147,7 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 			multiple: true,
 			state: frameStates[ action ],
 			button: {
-				text: __( 'Insert Media', 'elementor' ),
+				text: __( 'Insert Media', 'refraction' ),
 			},
 		};
 
@@ -237,7 +237,7 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 
 	getDismissPromotionEventName() {
 		const $promotions = this.ui.promotions;
-		const $dismissButton = $promotions.find( '.elementor-control-notice-dismiss' );
+		const $dismissButton = $promotions.find( '.refraction-control-notice-dismiss' );
 		// Remove listener
 		$dismissButton.off( 'click' );
 		return $dismissButton[ 0 ]?.dataset?.event || false;
@@ -250,7 +250,7 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 			eventName = this.getDismissPromotionEventName();
 		}
 		// Prevent opening the same promotion again in current editor session.
-		elementor.config.user.dismissed_editor_notices.push( eventName );
+		refraction.config.user.dismissed_editor_notices.push( eventName );
 	},
 
 	onPromotionAction( event ) {
@@ -271,7 +271,7 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 			window.open( actionURL, '_blank' );
 		}
 
-		elementorCommon.ajax.addRequest( 'elementor_image_optimization_campaign', {
+		refractionCommon.ajax.addRequest( 'refraction_image_optimization_campaign', {
 			data: {
 				source,
 			},
@@ -284,14 +284,14 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 		const $promotions = this.ui.promotions;
 		$promotions.hide();
 		if ( eventName ) {
-			elementorCommon.ajax.addRequest( 'dismissed_editor_notices', {
+			refractionCommon.ajax.addRequest( 'dismissed_editor_notices', {
 				data: {
 					dismissId: eventName,
 				},
 			} );
 
 			// Prevent opening the same promotion again in current editor session.
-			elementor.config.user.dismissed_editor_notices.push( eventName );
+			refraction.config.user.dismissed_editor_notices.push( eventName );
 		}
 	},
 
@@ -321,12 +321,12 @@ ControlMediaItemView = ControlBaseDataView.extend( {
 
 		this.getRemoveDialog = function() {
 			if ( ! removeDialog ) {
-				removeDialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-					message: __( 'Are you sure you want to clear this gallery?', 'elementor' ),
-					headerMessage: __( 'Clear gallery', 'elementor' ),
+				removeDialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+					message: __( 'Are you sure you want to clear this gallery?', 'refraction' ),
+					headerMessage: __( 'Clear gallery', 'refraction' ),
 					strings: {
-						confirm: __( 'Clear', 'elementor' ),
-						cancel: __( 'Cancel', 'elementor' ),
+						confirm: __( 'Clear', 'refraction' ),
+						cancel: __( 'Cancel', 'refraction' ),
 					},
 					defaultOption: 'confirm',
 					onConfirm: this.clearGallery.bind( this ),

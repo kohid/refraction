@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type RefObject, useCallback, useEffect, useMemo } from 'react';
-import { type PropType, sizePropTypeUtil, type SizePropValue } from '@elementor/editor-props';
-import { useActiveBreakpoint } from '@elementor/editor-responsive';
+import { type PropType, sizePropTypeUtil, type SizePropValue } from '@refraction/editor-props';
+import { useActiveBreakpoint } from '@refraction/editor-responsive';
 import { usePopupState } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

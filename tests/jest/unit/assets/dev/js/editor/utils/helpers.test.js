@@ -1,8 +1,8 @@
-import { sanitizeUrl, validateHTMLTag } from 'elementor-editor-utils/helpers';
+import { sanitizeUrl, validateHTMLTag } from 'refraction-editor-utils/helpers';
 
 const TEST_ALLOWED_HTML_WRAPPER_TAGS = [ 'a', 'div', 'form', 'span' ];
 
-describe( 'elementor.helpers.sanitizeUrl', () => {
+describe( 'refraction.helpers.sanitizeUrl', () => {
 	test( 'should not affect valid URL', () => {
 		expect( sanitizeUrl( 'https://example.com/?param=1' ) )
 			.toBe( 'https://example.com/?param=1' );
@@ -30,9 +30,9 @@ describe( 'elementor.helpers.sanitizeUrl', () => {
 	} );
 } );
 
-describe( 'elementor.helpers.validateHTMLTag', () => {
+describe( 'refraction.helpers.validateHTMLTag', () => {
 	beforeEach( () => {
-		global.elementorCommon = {
+		global.refractionCommon = {
 			config: {
 				allowedHTMLWrapperTags: TEST_ALLOWED_HTML_WRAPPER_TAGS,
 			},
@@ -40,7 +40,7 @@ describe( 'elementor.helpers.validateHTMLTag', () => {
 	} );
 
 	afterEach( () => {
-		delete global.elementorCommon;
+		delete global.refractionCommon;
 	} );
 
 	test( 'should return the tag when it is in the localized allowed list', () => {
@@ -49,13 +49,13 @@ describe( 'elementor.helpers.validateHTMLTag', () => {
 	} );
 
 	test( 'should return the tag when it is added via localized config', () => {
-		global.elementorCommon.config.allowedHTMLWrapperTags = [ ...TEST_ALLOWED_HTML_WRAPPER_TAGS, 'custom-tag' ];
+		global.refractionCommon.config.allowedHTMLWrapperTags = [ ...TEST_ALLOWED_HTML_WRAPPER_TAGS, 'custom-tag' ];
 
 		expect( validateHTMLTag( 'custom-tag' ) ).toBe( 'custom-tag' );
 	} );
 
 	test( 'should fail closed to div when the localized config is missing, even for an otherwise-safe tag', () => {
-		delete global.elementorCommon;
+		delete global.refractionCommon;
 
 		expect( validateHTMLTag( 'a' ) ).toBe( 'div' );
 	} );

@@ -1,4 +1,4 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export const InvalidElementsStyleProviderMetaError = createError< { meta: Record< string, unknown > } >( {
 	code: 'invalid_elements_style_provider_meta',

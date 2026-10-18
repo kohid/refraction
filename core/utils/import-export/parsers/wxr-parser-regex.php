@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Utils\ImportExport\Parsers;
+namespace Refraction\Core\Utils\ImportExport\Parsers;
 
 use WP_Error;
 
@@ -143,7 +143,7 @@ class WXR_Parser_Regex {
 		}
 
 		if ( ! $wxr_version ) {
-			return new WP_Error( 'WXR_parse_error', esc_html__( 'This does not appear to be a WXR file, missing/invalid WXR version number', 'elementor' ) );
+			return new WP_Error( 'WXR_parse_error', esc_html__( 'This does not appear to be a WXR file, missing/invalid WXR version number', 'refraction' ) );
 		}
 
 		return [

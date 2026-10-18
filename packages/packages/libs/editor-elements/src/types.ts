@@ -1,5 +1,5 @@
-import { type PropsSchema } from '@elementor/editor-props';
-import { type ClassState } from '@elementor/editor-styles';
+import { type PropsSchema } from '@refraction/editor-props';
+import { type ClassState } from '@refraction/editor-styles';
 
 export type ElementID = string;
 

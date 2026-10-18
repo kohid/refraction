@@ -1,10 +1,10 @@
-import { type StyleDefinition } from '@elementor/editor-styles';
+import { type StyleDefinition } from '@refraction/editor-styles';
 import {
 	__createStore as createStore,
 	__dispatch as dispatch,
 	__getState as getState,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { GlobalClassNotFoundError } from '../errors';
 import { globalClassesStylesProvider } from '../global-classes-styles-provider';

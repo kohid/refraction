@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Modules\Favorites;
+namespace Refraction\Modules\Favorites;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Data\V2\Base\Controller as Controller_Base;
-use Elementor\Plugin;
+use Refraction\Data\V2\Base\Controller as Controller_Base;
+use Refraction\Plugin;
 
 class Controller extends Controller_Base {
 

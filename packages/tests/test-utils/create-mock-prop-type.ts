@@ -4,7 +4,7 @@ import {
 	type PlainPropType,
 	type PropType,
 	type UnionPropType,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 type ReturnValue< T extends Partial< PropType > > = T[ 'kind' ] extends 'array'
 	? ArrayPropType

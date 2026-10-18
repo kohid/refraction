@@ -19,7 +19,7 @@ import {
 	windowEvent,
 } from '../index';
 
-describe( '@elementor/editor-v1-adapters/listeners', () => {
+describe( '@refraction/editor-v1-adapters/listeners', () => {
 	beforeEach( () => {
 		jest.useFakeTimers();
 	} );
@@ -260,7 +260,7 @@ describe( '@elementor/editor-v1-adapters/listeners', () => {
 		const callback = jest.fn();
 		const extendedWindow = window as unknown as ExtendedWindow;
 
-		extendedWindow.__elementorEditorV1LoadingPromise = new Promise( ( resolve ) => {
+		extendedWindow.__refractionEditorV1LoadingPromise = new Promise( ( resolve ) => {
 			setTimeout( resolve, 1000 );
 		} );
 
@@ -297,7 +297,7 @@ describe( '@elementor/editor-v1-adapters/listeners', () => {
 		try {
 			await dispatchReadyEvent();
 		} catch ( e ) {
-			expect( e ).toBe( 'Elementor Editor V1 is not loaded' );
+			expect( e ).toBe( 'Refraction Editor V1 is not loaded' );
 		}
 
 		expect.assertions( 1 );
@@ -318,7 +318,7 @@ describe( '@elementor/editor-v1-adapters/listeners', () => {
 		expect( callback ).toHaveBeenCalledTimes( 1 );
 		expect( callback ).toHaveBeenCalledWith( {
 			type: 'window-event',
-			event: 'elementor/initialized',
+			event: 'refraction/initialized',
 			originalEvent: expect.any( CustomEvent ),
 		} );
 	} );

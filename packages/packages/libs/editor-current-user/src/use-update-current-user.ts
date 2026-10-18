@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@elementor/query';
+import { useMutation, useQueryClient } from '@refraction/query';
 
 import { apiClient } from './api';
 import { EDITOR_CURRENT_USER_QUERY_KEY } from './use-current-user';

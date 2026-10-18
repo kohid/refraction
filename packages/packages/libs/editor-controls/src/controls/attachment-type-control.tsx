@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InfoAlert } from '@elementor/editor-ui';
+import { InfoAlert } from '@refraction/editor-ui';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -27,7 +27,7 @@ export const AttachmentTypeControl = createControl( ( { label, options }: Props 
 				<InfoAlert>
 					{ __(
 						'Linked uploads are saved to the server. Direct attachments will not appear under Submissions.',
-						'elementor'
+						'refraction'
 					) }
 				</InfoAlert>
 			</Grid>

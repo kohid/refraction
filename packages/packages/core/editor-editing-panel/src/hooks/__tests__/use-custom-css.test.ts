@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createMockStylesProvider, mockHistoryManager } from 'test-utils';
-import { createElementStyle } from '@elementor/editor-elements';
-import { encodeString } from '@elementor/utils';
+import { createElementStyle } from '@refraction/editor-elements';
+import { encodeString } from '@refraction/utils';
 import { renderHook } from '@testing-library/react';
 
 import { useClassesProp } from '../../contexts/classes-prop-context';
@@ -12,8 +12,8 @@ import { useCustomCss } from '../use-custom-css';
 jest.mock( '../../contexts/element-context' );
 jest.mock( '../../contexts/style-context' );
 jest.mock( '../../contexts/classes-prop-context' );
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	getElementLabel: jest.fn(),
 	createElementStyle: jest.fn(),
 } ) );

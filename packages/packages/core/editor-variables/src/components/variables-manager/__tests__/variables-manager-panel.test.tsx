@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useDialog } from '@elementor/editor-ui';
+import { useDialog } from '@refraction/editor-ui';
 import { type BoxProps, type ButtonProps, type IconButtonProps, type StackProps } from '@elementor/ui';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import { VariablesManagerPanelEmbedded } from '../variables-manager-panel';
 
-jest.mock( '@elementor/editor-panels', () => ( {
+jest.mock( '@refraction/editor-panels', () => ( {
 	PanelBody: ( { children, sx }: { children: React.ReactNode; sx?: StackProps[ 'sx' ] } ) => (
 		<div role="region" data-props={ JSON.stringify( { sx } ) }>
 			{ children }
@@ -23,8 +23,8 @@ jest.mock( '../../ui/no-search-results', () => ( {
 	),
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => {
-	const actual = jest.requireActual( '@elementor/editor-ui' );
+jest.mock( '@refraction/editor-ui', () => {
+	const actual = jest.requireActual( '@refraction/editor-ui' );
 
 	return {
 		__esModule: true,
@@ -38,7 +38,7 @@ jest.mock( '@elementor/editor-ui', () => {
 	};
 } );
 
-jest.mock( '@elementor/editor-current-user', () => ( {
+jest.mock( '@refraction/editor-current-user', () => ( {
 	useSuppressedMessage: jest.fn().mockReturnValue( [ false, jest.fn() ] ),
 } ) );
 

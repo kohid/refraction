@@ -2,7 +2,7 @@
     position: relative;
     outline: none;
 
-	&:not([data-elementor-inline-editing-toolbar="advanced"]) {
+	&:not([data-refraction-inline-editing-toolbar="advanced"]) {
 		white-space: pre-wrap;
 	}
 
@@ -137,7 +137,7 @@
 	}
 }
 
-.elementor-inline-editing {
+.refraction-inline-editing {
 
 	i:not( [class] ) {
 		font-style: italic;

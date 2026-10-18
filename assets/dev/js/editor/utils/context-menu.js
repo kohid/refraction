@@ -1,4 +1,4 @@
-module.exports = elementorModules.Module.extend( {
+module.exports = refractionModules.Module.extend( {
 
 	openMenuEvent: null,
 	location: null,
@@ -8,19 +8,19 @@ module.exports = elementorModules.Module.extend( {
 			context: 'preview',
 			actions: {},
 			classes: {
-				list: 'elementor-context-menu-list',
-				group: 'elementor-context-menu-list__group',
-				groupPrefix: 'elementor-context-menu-list__group-',
-				item: 'elementor-context-menu-list__item',
-				itemTypePrefix: 'elementor-context-menu-list__item-',
-				itemTitle: 'elementor-context-menu-list__item__title',
-				itemShortcut: 'elementor-context-menu-list__item__shortcut',
-				iconShortcut: 'elementor-context-menu-list__item__icon',
-				itemDisabled: 'elementor-context-menu-list__item--disabled',
-				itemHasShortcutAction: 'elementor-context-menu-list__item--has-shortcut-action',
-				divider: 'elementor-context-menu-list__divider',
-				hidden: 'elementor-hidden',
-				promotionLink: 'elementor-context-menu-list__item__shortcut--link-fullwidth',
+				list: 'refraction-context-menu-list',
+				group: 'refraction-context-menu-list__group',
+				groupPrefix: 'refraction-context-menu-list__group-',
+				item: 'refraction-context-menu-list__item',
+				itemTypePrefix: 'refraction-context-menu-list__item-',
+				itemTitle: 'refraction-context-menu-list__item__title',
+				itemShortcut: 'refraction-context-menu-list__item__shortcut',
+				iconShortcut: 'refraction-context-menu-list__item__icon',
+				itemDisabled: 'refraction-context-menu-list__item--disabled',
+				itemHasShortcutAction: 'refraction-context-menu-list__item--has-shortcut-action',
+				divider: 'refraction-context-menu-list__divider',
+				hidden: 'refraction-hidden',
+				promotionLink: 'refraction-context-menu-list__item__shortcut--link-fullwidth',
 			},
 		};
 	},
@@ -104,14 +104,14 @@ module.exports = elementorModules.Module.extend( {
 
 	maybeAddPromotionLink( action ) {
 		if ( this.shouldAddPromotionLink( action ) ) {
-			const iconContainer = action.$item.find( 'div.elementor-context-menu-list__item__shortcut' )[ 0 ];
+			const iconContainer = action.$item.find( 'div.refraction-context-menu-list__item__shortcut' )[ 0 ];
 			iconContainer.insertAdjacentHTML( 'beforeend', `<a href='${ action.promotionURL }' target="_blank" class="${ this.getSettings( 'classes.promotionLink' ) }"></a>` );
 		}
 	},
 
 	shouldAddPromotionLink( action ) {
 		return !! ( action.promotionURL &&
-			! action.$item.find( 'a.elementor-context-menu-list__item__shortcut--link-fullwidth' )[ 0 ] &&
+			! action.$item.find( 'a.refraction-context-menu-list__item__shortcut--link-fullwidth' )[ 0 ] &&
 			action.$item.find( 'i.eicon-pro-icon' )[ 0 ] );
 	},
 
@@ -152,8 +152,8 @@ module.exports = elementorModules.Module.extend( {
 
 		action.callback( this.openMenuEvent, {
 			location: this.location,
-			secondaryLocation: elementorCommon.eventsManager.config.secondaryLocations.contextMenu,
-			trigger: elementorCommon.eventsManager.config.triggers.rightClick,
+			secondaryLocation: refractionCommon.eventsManager.config.secondaryLocations.contextMenu,
+			trigger: refractionCommon.eventsManager.config.triggers.rightClick,
 		} );
 
 		this.getModal().hide();
@@ -164,10 +164,10 @@ module.exports = elementorModules.Module.extend( {
 
 		this.getModal = function() {
 			if ( ! modal ) {
-				modal = elementorCommon.dialogsManager.createWidget( 'simple', {
-					className: 'elementor-context-menu',
+				modal = refractionCommon.dialogsManager.createWidget( 'simple', {
+					className: 'refraction-context-menu',
 					message: this.buildActionsList(),
-					iframe: 'preview' === this.getSettings( 'context' ) ? elementor.$preview : null,
+					iframe: 'preview' === this.getSettings( 'context' ) ? refraction.$preview : null,
 					effects: {
 						hide: 'hide',
 						show: 'show',
@@ -176,7 +176,7 @@ module.exports = elementorModules.Module.extend( {
 						onOutsideContextMenu: true,
 					},
 					position: {
-						my: ( elementorCommon.config.isRTL ? 'right' : 'left' ) + ' top',
+						my: ( refractionCommon.config.isRTL ? 'right' : 'left' ) + ' top',
 						collision: 'fit',
 					},
 				} );
@@ -219,7 +219,7 @@ module.exports = elementorModules.Module.extend( {
 
 		modal.show();
 
-		elementor.templates.eventManager.sendContextMenuExposureEvent();
+		refraction.templates.eventManager.sendContextMenuExposureEvent();
 	},
 
 	destroy() {

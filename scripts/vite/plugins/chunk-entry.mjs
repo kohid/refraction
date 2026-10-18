@@ -1,7 +1,7 @@
-export const CHUNK_ENTRY_ID = '\0elementor-chunk-entry';
+export const CHUNK_ENTRY_ID = '\0refraction-chunk-entry';
 
 /**
- * Publishes a chunk's exports on `window.__elementorChunks[name]` so `utils/chunk-loader.js` can
+ * Publishes a chunk's exports on `window.__refractionChunks[name]` so `utils/chunk-loader.js` can
  * hand them to callers of `loadChunk( name )`.
  *
  * IIFE format has no `export` mechanism, so the assignment is written explicitly by wrapping the
@@ -10,7 +10,7 @@ export const CHUNK_ENTRY_ID = '\0elementor-chunk-entry';
  */
 export function chunkEntryPlugin( { entryPath, chunkName } ) {
 	return {
-		name: 'elementor-chunk-entry',
+		name: 'refraction-chunk-entry',
 		resolveId( source ) {
 			return source === CHUNK_ENTRY_ID ? CHUNK_ENTRY_ID : null;
 		},
@@ -25,7 +25,7 @@ export function chunkEntryPlugin( { entryPath, chunkName } ) {
 			return [
 				`import * as chunk from ${ JSON.stringify( entryPath ) };`,
 				'',
-				'(window.__elementorChunks = window.__elementorChunks || {})' +
+				'(window.__refractionChunks = window.__refractionChunks || {})' +
 					`[ ${ JSON.stringify( chunkName ) } ] = chunk;`,
 			].join( '\n' );
 		},

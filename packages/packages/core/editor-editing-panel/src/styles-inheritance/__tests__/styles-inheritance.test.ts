@@ -1,13 +1,13 @@
 import { createMockBreakpointsTree, createMockStyleDefinitionWithVariants, createMockStylesProvider } from 'test-utils';
-import { type BreakpointId } from '@elementor/editor-responsive';
-import { type StyleDefinition, type StyleDefinitionState, type StyleDefinitionVariant } from '@elementor/editor-styles';
+import { type BreakpointId } from '@refraction/editor-responsive';
+import { type StyleDefinition, type StyleDefinitionState, type StyleDefinitionVariant } from '@refraction/editor-styles';
 
 import { getProviderByStyleId } from '../../contexts/style-context';
 import { createStylesInheritance } from '../create-styles-inheritance';
 import { type StyleDefinitionStateWithNormal, type StylesInheritanceSnapshot } from '../types';
 import { createMockSnapshotField } from './mock-utils';
 
-jest.mock( '@elementor/editor-responsive' );
+jest.mock( '@refraction/editor-responsive' );
 jest.mock( '../../contexts/style-context' );
 
 type ExpectedSnapshots = Partial<

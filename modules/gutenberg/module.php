@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Modules\Gutenberg;
+namespace Refraction\Modules\Gutenberg;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Plugin;
-use Elementor\User;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Plugin;
+use Refraction\User;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -36,9 +36,9 @@ class Module extends BaseModule {
 	 * @since 2.1.0
 	 * @access public
 	 */
-	public function register_elementor_rest_field() {
+	public function register_refraction_rest_field() {
 		register_rest_field( get_post_types( '', 'names' ),
-			'gutenberg_elementor_mode', [
+			'gutenberg_refraction_mode', [
 				'update_callback' => function( $request_value, $obj ) {
 					if ( ! User::is_current_user_can_edit( $obj->ID ) ) {
 						return false;
@@ -50,7 +50,7 @@ class Module extends BaseModule {
 						return false;
 					}
 
-					$document->set_is_built_with_elementor( false );
+					$document->set_is_built_with_refraction( false );
 
 					return true;
 				},
@@ -73,13 +73,13 @@ class Module extends BaseModule {
 
 		$suffix = Utils::is_script_debug() ? '' : '.min';
 
-		wp_enqueue_script( 'elementor-gutenberg', ELEMENTOR_ASSETS_URL . 'js/gutenberg' . $suffix . '.js', [ 'jquery' ], ELEMENTOR_VERSION, true );
+		wp_enqueue_script( 'refraction-gutenberg', REFRACTION_ASSETS_URL . 'js/gutenberg' . $suffix . '.js', [ 'jquery' ], REFRACTION_VERSION, true );
 
-		$elementor_settings = [
-			'isElementorMode' => $document->is_built_with_elementor(),
+		$refraction_settings = [
+			'isRefractionMode' => $document->is_built_with_refraction(),
 			'editLink' => $document->get_edit_url(),
 		];
-		Utils::print_js_config( 'elementor-gutenberg', 'ElementorGutenbergSettings', $elementor_settings );
+		Utils::print_js_config( 'refraction-gutenberg', 'RefractionGutenbergSettings', $refraction_settings );
 	}
 
 	/**
@@ -92,49 +92,49 @@ class Module extends BaseModule {
 		}
 
 		?>
-		<script id="elementor-gutenberg-button-switch-mode" type="text/html">
-			<div id="elementor-switch-mode">
-				<button id="elementor-switch-mode-button" type="button" class="button button-primary button-large">
-					<span class="elementor-switch-mode-on">
+		<script id="refraction-gutenberg-button-switch-mode" type="text/html">
+			<div id="refraction-switch-mode">
+				<button id="refraction-switch-mode-button" type="button" class="button button-primary button-large">
+					<span class="refraction-switch-mode-on">
 						<i class="eicon-wordpress" aria-hidden="true"></i>
-						<?php echo esc_html__( 'Edit with WordPress', 'elementor' ); ?>
+						<?php echo esc_html__( 'Edit with WordPress', 'refraction' ); ?>
 					</span>
-					<span class="elementor-switch-mode-off">
-						<i class="eicon-elementor-square" aria-hidden="true"></i>
-						<?php echo esc_html__( 'Edit with Elementor', 'elementor' ); ?>
+					<span class="refraction-switch-mode-off">
+						<i class="eicon-refraction-square" aria-hidden="true"></i>
+						<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 					</span>
 				</button>
 			</div>
 		</script>
 
-		<script id="elementor-gutenberg-panel" type="text/html">
-			<div id="elementor-editor">
-				<div id="elementor-go-to-edit-page-link">
-					<button id="elementor-editor-button" class="button button-primary button-hero">
-						<i class="eicon-elementor-square" aria-hidden="true"></i>
-						<?php echo esc_html__( 'Edit with Elementor', 'elementor' ); ?>
+		<script id="refraction-gutenberg-panel" type="text/html">
+			<div id="refraction-editor">
+				<div id="refraction-go-to-edit-page-link">
+					<button id="refraction-editor-button" class="button button-primary button-hero">
+						<i class="eicon-refraction-square" aria-hidden="true"></i>
+						<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 					</button>
-					<div class="elementor-loader-wrapper">
-						<div class="elementor-loader">
-							<div class="elementor-loader-boxes">
-								<div class="elementor-loader-box"></div>
-								<div class="elementor-loader-box"></div>
-								<div class="elementor-loader-box"></div>
-								<div class="elementor-loader-box"></div>
+					<div class="refraction-loader-wrapper">
+						<div class="refraction-loader">
+							<div class="refraction-loader-boxes">
+								<div class="refraction-loader-box"></div>
+								<div class="refraction-loader-box"></div>
+								<div class="refraction-loader-box"></div>
+								<div class="refraction-loader-box"></div>
 							</div>
 						</div>
-						<div class="elementor-loading-title"><?php echo esc_html__( 'Loading', 'elementor' ); ?></div>
+						<div class="refraction-loading-title"><?php echo esc_html__( 'Loading', 'refraction' ); ?></div>
 					</div>
 				</div>
 			</div>
 		</script>
 
-		<script id="elementor-gutenberg-button-tmpl" type="text/html">
-			<div id="elementor-edit-button-gutenberg">
-				<button id="elementor-edit-mode-button" type="button" class="button button-primary button-large">
-					<span class="elementor-edit-mode-gutenberg">
-						<i class="eicon-elementor-square" aria-hidden="true"></i>
-						<?php echo esc_html__( 'Edit with Elementor', 'elementor' ); ?>
+		<script id="refraction-gutenberg-button-tmpl" type="text/html">
+			<div id="refraction-edit-button-gutenberg">
+				<button id="refraction-edit-mode-button" type="button" class="button button-primary button-large">
+					<span class="refraction-edit-mode-gutenberg">
+						<i class="eicon-refraction-square" aria-hidden="true"></i>
+						<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 					</span>
 				</button>
 			</div>
@@ -147,7 +147,7 @@ class Module extends BaseModule {
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'rest_api_init', [ $this, 'register_elementor_rest_field' ] );
+		add_action( 'rest_api_init', [ $this, 'register_refraction_rest_field' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_assets' ] );
 		add_action( 'admin_footer', [ $this, 'print_admin_js_template' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'dequeue_assets' ], 999 );
@@ -171,14 +171,14 @@ class Module extends BaseModule {
 	/**
 	 * Check whether the "Optimized Gutenberg Loading" settings is enabled.
 	 *
-	 * The 'elementor_optimized_gutenberg_loading' option can be enabled/disabled from the Elementor settings.
+	 * The 'refraction_optimized_gutenberg_loading' option can be enabled/disabled from the Refraction settings.
 	 * For BC, when the option has not been saved in the database, the default '1' value is returned.
 	 *
 	 * @since 3.21.0
 	 * @access private
 	 */
 	private static function is_optimized_gutenberg_loading_enabled(): bool {
-		return (bool) get_option( 'elementor_optimized_gutenberg_loading', '1' );
+		return (bool) get_option( 'refraction_optimized_gutenberg_loading', '1' );
 	}
 
 	private static function should_dequeue_gutenberg_assets(): bool {
@@ -188,7 +188,7 @@ class Module extends BaseModule {
 			return false;
 		}
 
-		if ( ! static::is_built_with_elementor( $post ) ) {
+		if ( ! static::is_built_with_refraction( $post ) ) {
 			return false;
 		}
 
@@ -199,10 +199,10 @@ class Module extends BaseModule {
 		return true;
 	}
 
-	private static function is_built_with_elementor( $post ): bool {
+	private static function is_built_with_refraction( $post ): bool {
 		$document = Plugin::$instance->documents->get( $post->ID );
 
-		if ( ! $document || ! $document->is_built_with_elementor() ) {
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
 			return false;
 		}
 

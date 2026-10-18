@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Data\Base;
+namespace Refraction\Data\Base;
 
 /**
  * TODO: Add test.
@@ -26,7 +26,7 @@ abstract class SubEndpoint extends Endpoint {
 	/**
 	 * Get parent route.
 	 *
-	 * @return \Elementor\Data\Base\Endpoint
+	 * @return \Refraction\Data\Base\Endpoint
 	 */
 	public function get_parent() {
 		return $this->parent_endpoint;

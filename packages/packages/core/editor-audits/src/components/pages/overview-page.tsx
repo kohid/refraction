@@ -27,7 +27,7 @@ export default function OverviewPage( { onCategoryClick, report }: Props ) {
 			<SeveritySummaryCards report={ report } />
 			<Box display="flex" flexDirection="column" gap={ 1 }>
 				<Typography variant="subtitle1" component="h2">
-					{ __( 'All issues', 'elementor' ) }
+					{ __( 'All issues', 'refraction' ) }
 				</Typography>
 				<Box display="flex" flexDirection="column" gap={ 1 }>
 					{ categoryRows.map( ( { category, counts } ) => (

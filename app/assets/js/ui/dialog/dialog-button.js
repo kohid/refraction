@@ -1,4 +1,4 @@
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
 export default function DialogButton( props ) {
 	return (

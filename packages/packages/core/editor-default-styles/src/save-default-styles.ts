@@ -1,5 +1,5 @@
-import { __dispatch as dispatch, __getState as getState } from '@elementor/store';
-import { hash } from '@elementor/utils';
+import { __dispatch as dispatch, __getState as getState } from '@refraction/store';
+import { hash } from '@refraction/utils';
 
 import { type AllowedHtmlTag } from './allowed-tags';
 import { apiClient } from './api';

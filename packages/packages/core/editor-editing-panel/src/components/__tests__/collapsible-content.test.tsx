@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { CollapsibleContent } from '@elementor/editor-ui';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { CollapsibleContent } from '@refraction/editor-ui';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 describe( '<CollapsibleContent />', () => {
 	it( 'should be closed by default', () => {

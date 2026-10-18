@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * which methods are accepted and how to obtain credentials.
  *
  * MCP endpoint, server card, and protected-resource URLs are included only
- * when `elementor/agents/link_headers/emit_mcp_card` is true, matching
+ * when `refraction/agents/link_headers/emit_mcp_card` is true, matching
  * Link headers and Oauth_Protected_Resource.
  *
  * Content type: text/markdown
@@ -85,7 +85,7 @@ Authorization: Basic base64(username:application_password)
 ```
 
 **Permissions:** An application password grants exactly the capabilities of the
-WordPress user it belongs to. There is no separate Elementor role or scope to
+WordPress user it belongs to. There is no separate Refraction role or scope to
 assign. The discovery documents and Markdown page variants on this site are
 public and require no credentials.
 {$audit_log}
@@ -98,11 +98,11 @@ MD;
 		 * @param string $markdown Generated Markdown.
 		 * @param string $home     The site home URL.
 		 */
-		return (string) apply_filters( 'elementor/agents/auth_md_content', $markdown, $home );
+		return (string) apply_filters( 'refraction/agents/auth_md_content', $markdown, $home );
 	}
 
 	private function is_mcp_advertised(): bool {
-		return (bool) apply_filters( 'elementor/agents/link_headers/emit_mcp_card', false );
+		return (bool) apply_filters( 'refraction/agents/link_headers/emit_mcp_card', false );
 	}
 
 	private function metadata_lines( string $home, bool $advertise_mcp ): string {
@@ -122,7 +122,7 @@ MD;
 	}
 
 	private function mcp_endpoint_section(): string {
-		$mcp_endpoint = rest_url( 'elementor/agents-mcp' );
+		$mcp_endpoint = rest_url( 'refraction/agents-mcp' );
 		$is_ssl       = is_ssl() ? 'yes' : 'no (HTTPS required in production)';
 
 		return <<<MD
@@ -155,15 +155,15 @@ MD;
 	}
 
 	private function oauth_section( string $home ): string {
-		$applicable = (bool) apply_filters( 'elementor/agents/oauth_authorization_server/is_applicable', false );
+		$applicable = (bool) apply_filters( 'refraction/agents/oauth_authorization_server/is_applicable', false );
 
 		if ( ! $applicable ) {
 			return '';
 		}
 
 		$token_url = (string) apply_filters(
-			'elementor/agents/oauth_authorization_server/token_endpoint',
-			rest_url( 'elementor/agents/oauth/token' )
+			'refraction/agents/oauth_authorization_server/token_endpoint',
+			rest_url( 'refraction/agents/oauth/token' )
 		);
 
 		return <<<MD

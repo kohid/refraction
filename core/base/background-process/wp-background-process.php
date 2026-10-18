@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Base\BackgroundProcess;
+namespace Refraction\Core\Base\BackgroundProcess;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -476,7 +476,7 @@ abstract class WP_Background_Process extends WP_Async_Request {
 			'interval' => MINUTE_IN_SECONDS * $interval,
 			'display' => sprintf(
 				/* translators: %d: Interval in minutes. */
-				esc_html__( 'Every %d minutes', 'elementor' ),
+				esc_html__( 'Every %d minutes', 'refraction' ),
 				$interval,
 			),
 		];

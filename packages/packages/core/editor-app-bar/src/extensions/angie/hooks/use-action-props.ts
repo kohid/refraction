@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { trackEvent } from '@elementor/events';
+import { trackEvent } from '@refraction/events';
 import { AngieIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -23,7 +23,7 @@ export function useActionProps() {
 	}, [ visible ] );
 
 	return {
-		title: __( 'Angie', 'elementor' ),
+		title: __( 'Angie', 'refraction' ),
 		icon: AngieIcon,
 		onClick: () => {
 			window.dispatchEvent( new CustomEvent( ANGIE_GUIDE_TOGGLE_EVENT ) );

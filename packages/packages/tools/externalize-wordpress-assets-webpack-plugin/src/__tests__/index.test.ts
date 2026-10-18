@@ -11,11 +11,11 @@ import { ExternalizeWordPressAssetsWebpackPlugin } from '../index';
 
 jest.mock( 'fs', () => jest.requireActual( 'memfs' ) );
 
-describe( '@elementor/externalize-wordpress-assets-webpack-plugin', () => {
+describe( '@refraction/externalize-wordpress-assets-webpack-plugin', () => {
 	beforeEach( () => {
 		const fileContent = `
-			import editor from '@elementor/editor';
-			import editorPanels from '@elementor/editor-panels';
+			import editor from '@refraction/editor';
+			import editorPanels from '@refraction/editor-panels';
 			import wp from '@wordpress/element';
 			import React from 'react';
 			import ReactDOM from 'react-dom';
@@ -38,7 +38,7 @@ describe( '@elementor/externalize-wordpress-assets-webpack-plugin', () => {
 		vol.reset();
 	} );
 
-	xit( 'should externalize Elementor & WordPress assets', ( done ) => {
+	xit( 'should externalize Refraction & WordPress assets', ( done ) => {
 		// Arrange.
 		const compiler = webpack( {
 			mode: 'development',
@@ -52,11 +52,11 @@ describe( '@elementor/externalize-wordpress-assets-webpack-plugin', () => {
 			},
 			plugins: [
 				new ExternalizeWordPressAssetsWebpackPlugin( {
-					global: ( entryName ) => [ 'elementorPackages', entryName ],
+					global: ( entryName ) => [ 'refractionPackages', entryName ],
 					map: [
 						{ request: 'react', global: 'React' },
 						{ request: 'react-dom', global: 'ReactDOM' },
-						{ request: /^@elementor\/(.+)$/, global: [ 'elementorPackages', '$1' ] },
+						{ request: /^@refraction\/(.+)$/, global: [ 'refractionPackages', '$1' ] },
 						{ request: /^@wordpress\/(.+)$/, global: [ 'wp', '$1' ] },
 						{ request: '@other/package-name', global: 'otherPackageName' },
 					],

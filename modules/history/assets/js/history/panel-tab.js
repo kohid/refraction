@@ -2,13 +2,13 @@ import ItemView from './item-view';
 import EmptyView from './empty';
 
 module.exports = Marionette.CompositeView.extend( {
-	id: 'elementor-panel-history',
+	id: 'refraction-panel-history',
 
-	template: '#tmpl-elementor-panel-history-tab',
+	template: '#tmpl-refraction-panel-history-tab',
 
 	childView: ItemView,
 
-	childViewContainer: '#elementor-history-list',
+	childViewContainer: '#refraction-history-list',
 
 	emptyView: EmptyView,
 
@@ -30,7 +30,7 @@ module.exports = Marionette.CompositeView.extend( {
 				return;
 			}
 
-			const currentItemClass = 'elementor-history-item-current';
+			const currentItemClass = 'refraction-history-item-current';
 
 			if ( this.currentItem ) {
 				this.currentItem.removeClass( currentItemClass );
@@ -47,7 +47,7 @@ module.exports = Marionette.CompositeView.extend( {
 	},
 
 	onRenderEmpty() {
-		this.$el.addClass( 'elementor-empty' );
+		this.$el.addClass( 'refraction-empty' );
 	},
 
 	onChildviewClick( childView, event ) {

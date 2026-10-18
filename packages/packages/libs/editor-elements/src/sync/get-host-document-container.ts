@@ -9,5 +9,5 @@ export function getHostDocumentContainer(): V1Element | null {
 		return null;
 	}
 
-	return extendedWindow.elementor?.documents?.get?.( hostId )?.container ?? null;
+	return extendedWindow.refraction?.documents?.get?.( hostId )?.container ?? null;
 }

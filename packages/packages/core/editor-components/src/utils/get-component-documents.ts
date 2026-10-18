@@ -1,5 +1,5 @@
-import { type Document } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
+import { type Document } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
 
 import { type ComponentInstanceProp } from '../prop-types/component-instance-prop-type';
 import { getComponentDocumentData } from './component-document-data';

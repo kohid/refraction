@@ -1,8 +1,8 @@
 {
-  "name": "@elementor/generate-font-awesome-7",
+  "name": "@refraction/generate-font-awesome-7",
   "version": "4.4.0",
   "private": true,
-  "author": "Elementor Team",
+  "author": "Refraction Team",
   "license": "GPL-3.0-or-later",
   "type": "module",
   "scripts": {

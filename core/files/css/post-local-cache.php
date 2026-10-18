@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Core\Files\CSS;
+namespace Refraction\Core\Files\CSS;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

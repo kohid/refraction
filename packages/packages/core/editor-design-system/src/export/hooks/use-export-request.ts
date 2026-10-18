@@ -1,7 +1,7 @@
-import { type HttpResponse, httpService } from '@elementor/http-client';
-import { useMutation } from '@elementor/query';
+import { type HttpResponse, httpService } from '@refraction/http-client';
+import { useMutation } from '@refraction/query';
 
-const EXPORT_BASE_PATH = 'elementor/v1/import-export-customization';
+const EXPORT_BASE_PATH = 'refraction/v1/import-export-customization';
 
 export const EXPORT_DESIGN_SYSTEM_MUTATION_KEY = 'design-system-export' as const;
 

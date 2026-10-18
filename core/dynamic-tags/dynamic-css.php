@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Core\DynamicTags;
+namespace Refraction\Core\DynamicTags;
 
-use Elementor\Controls_Stack;
-use Elementor\Core\Files\CSS\Post as Post_CSS;
-use Elementor\Core\Files\CSS\Post_Local_Cache;
-use Elementor\Core\Files\CSS\Post_Preview;
-use Elementor\Element_Base;
+use Refraction\Controls_Stack;
+use Refraction\Core\Files\CSS\Post as Post_CSS;
+use Refraction\Core\Files\CSS\Post_Local_Cache;
+use Refraction\Core\Files\CSS\Post_Preview;
+use Refraction\Element_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -94,7 +94,7 @@ class Dynamic_CSS extends Post_Local_Cache {
 	 * @access protected
 	 */
 	protected function get_file_handle_id() {
-		return 'elementor-post-dynamic-' . $this->get_post_id_for_data();
+		return 'refraction-post-dynamic-' . $this->get_post_id_for_data();
 	}
 
 	/**

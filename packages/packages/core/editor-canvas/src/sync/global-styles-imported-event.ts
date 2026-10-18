@@ -1,6 +1,6 @@
-import { type StyleDefinitionID, type StyleDefinitionsMap, type StyleVariables } from '@elementor/editor-styles';
+import { type StyleDefinitionID, type StyleDefinitionsMap, type StyleVariables } from '@refraction/editor-styles';
 
-export const GLOBAL_STYLES_IMPORTED_EVENT = 'elementor/global-styles/imported';
+export const GLOBAL_STYLES_IMPORTED_EVENT = 'refraction/global-styles/imported';
 
 export type ImportedGlobalStylesPayload = {
 	global_variables?: { data: StyleVariables };

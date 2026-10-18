@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Core\Frontend;
+namespace Refraction\Core\Frontend;
 
-use Elementor\Core\Frontend\RenderModes\Render_Mode_Base;
-use Elementor\Core\Frontend\RenderModes\Render_Mode_Normal;
+use Refraction\Core\Frontend\RenderModes\Render_Mode_Base;
+use Refraction\Core\Frontend\RenderModes\Render_Mode_Normal;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -152,7 +152,7 @@ class Render_Mode_Manager {
 	public function __construct() {
 		$this->register_render_mode( Render_Mode_Normal::class );
 
-		do_action( 'elementor/frontend/render_mode/register', $this );
+		do_action( 'refraction/frontend/render_mode/register', $this );
 
 		$this->choose_render_mode();
 		$this->add_current_actions();

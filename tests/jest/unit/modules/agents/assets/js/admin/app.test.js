@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { App } from 'elementor/modules/agents/assets/js/admin/app';
-import { ModulesStatus } from 'elementor/modules/agents/assets/js/admin/components/modules-status';
-import { WelcomeScreen } from 'elementor/modules/agents/assets/js/admin/components/welcome-screen';
+import { App } from 'refraction/modules/agents/assets/js/admin/app';
+import { ModulesStatus } from 'refraction/modules/agents/assets/js/admin/components/modules-status';
+import { WelcomeScreen } from 'refraction/modules/agents/assets/js/admin/components/welcome-screen';
 
 jest.mock( '@wordpress/i18n', () => ( {
 	__: ( text ) => text,
 	sprintf: ( format, ...args ) => args.reduce( ( text, arg ) => text.replace( /%[sd]/, arg ), format ),
 } ) );
 
-jest.mock( 'elementor/modules/agents/assets/js/admin/api', () => ( {
+jest.mock( 'refraction/modules/agents/assets/js/admin/api', () => ( {
 	activateAgentsReady: jest.fn(),
 	fetchLlmsFile: jest.fn( () => new Promise( () => {} ) ),
 	saveAgentReadySettings: jest.fn( () => Promise.resolve() ),
@@ -80,7 +80,7 @@ jest.mock( '@elementor/ui', () => ( {
 	ThemeProvider: ( { children, palette } ) => <div data-testid="theme-provider" data-palette={ palette }>{ children }</div>,
 } ) );
 
-import { activateAgentsReady, saveAgentReadySettings } from 'elementor/modules/agents/assets/js/admin/api';
+import { activateAgentsReady, saveAgentReadySettings } from 'refraction/modules/agents/assets/js/admin/api';
 
 const llmsConfig = {
 	enabled: true,

@@ -1,10 +1,10 @@
 import { createHooksRegistry, setupHooksRegistry } from 'test-utils';
-import { type V1Element } from '@elementor/editor-elements';
-import { notify } from '@elementor/editor-notifications';
+import { type V1Element } from '@refraction/editor-elements';
+import { notify } from '@refraction/editor-notifications';
 
 import { initDuplicateHoneypotPrevention } from '../prevent-duplicate-honeypot-commands';
 
-jest.mock( '@elementor/editor-notifications', () => ( {
+jest.mock( '@refraction/editor-notifications', () => ( {
 	notify: jest.fn(),
 } ) );
 

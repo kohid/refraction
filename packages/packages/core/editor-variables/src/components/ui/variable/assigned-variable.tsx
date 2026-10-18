@@ -1,7 +1,7 @@
 import { useId, useRef } from 'react';
 import * as React from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
-import { type PropTypeKey } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { type PropTypeKey } from '@refraction/editor-props';
 import { ColorFilterIcon } from '@elementor/icons';
 import { bindPopover, bindTrigger, Box, Popover, usePopupState } from '@elementor/ui';
 
@@ -24,7 +24,7 @@ export const AssignedVariable = ( { variable, propTypeKey }: Props ) => {
 	const popupId = useId();
 	const popupState = usePopupState( {
 		variant: 'popover',
-		popupId: `elementor-variables-list-${ popupId }`,
+		popupId: `refraction-variables-list-${ popupId }`,
 	} );
 
 	const unlinkVariable = createUnlinkHandler( variable, propTypeKey, setValue );

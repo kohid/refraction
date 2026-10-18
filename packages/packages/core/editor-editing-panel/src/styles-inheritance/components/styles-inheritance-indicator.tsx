@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { type ComponentProps } from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
-import { isEmpty, type PropType } from '@elementor/editor-props';
-import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@elementor/editor-styles-repository';
+import { useBoundProp } from '@refraction/editor-controls';
+import { isEmpty, type PropType } from '@refraction/editor-props';
+import { ELEMENTS_BASE_STYLES_PROVIDER_KEY } from '@refraction/editor-styles-repository';
 import { __ } from '@wordpress/i18n';
 
 import { StyleIndicator } from '../../components/style-indicator';
@@ -77,12 +77,12 @@ const Indicator = ( { inheritanceChain, path, propType, isDisabled }: IndicatorP
 
 const getLabel = ( { isFinalValue, hasValue }: { isFinalValue: boolean; hasValue: boolean } ) => {
 	if ( isFinalValue ) {
-		return __( 'This is the final value', 'elementor' );
+		return __( 'This is the final value', 'refraction' );
 	}
 
 	if ( hasValue ) {
-		return __( 'This value is overridden by another style', 'elementor' );
+		return __( 'This value is overridden by another style', 'refraction' );
 	}
 
-	return __( 'This has value from another style', 'elementor' );
+	return __( 'This has value from another style', 'refraction' );
 };

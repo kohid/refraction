@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { CLASSES_PROP_KEY } from '@elementor/editor-props';
-import { useActiveBreakpoint } from '@elementor/editor-responsive';
-import { type StyleDefinitionID, type StyleDefinitionState } from '@elementor/editor-styles';
-import { createLocation } from '@elementor/locations';
-import { SessionStorageProvider } from '@elementor/session';
+import { CLASSES_PROP_KEY } from '@refraction/editor-props';
+import { useActiveBreakpoint } from '@refraction/editor-responsive';
+import { type StyleDefinitionID, type StyleDefinitionState } from '@refraction/editor-styles';
+import { createLocation } from '@refraction/locations';
+import { SessionStorageProvider } from '@refraction/session';
 import { Box, Divider, Stack } from '@elementor/ui';
 
 import { ClassesPropProvider } from '../contexts/classes-prop-context';

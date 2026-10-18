@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createContext, useContext, useState } from 'react';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { ConfirmationDialog } from '@elementor/editor-ui';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { ConfirmationDialog } from '@refraction/editor-ui';
 import { Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -53,21 +53,21 @@ const DeleteClassDialog = ( { label, id }: DeleteClassDialogProps ) => {
 		total && content.length
 			? __(
 					'Will permanently remove it from your project and may affect the design across all elements using it. Used %1 times across %2 pages. This action cannot be undone.',
-					'elementor'
+					'refraction'
 			  )
 					.replace( '%1', total.toString() )
 					.replace( '%2', content.length.toString() )
 			: __(
 					'Will permanently remove it from your project and may affect the design across all elements using it. This action cannot be undone.',
-					'elementor'
+					'refraction'
 			  );
 
 	return (
 		<ConfirmationDialog open onClose={ closeDialog }>
-			<ConfirmationDialog.Title>{ __( 'Delete this class?', 'elementor' ) }</ConfirmationDialog.Title>
+			<ConfirmationDialog.Title>{ __( 'Delete this class?', 'refraction' ) }</ConfirmationDialog.Title>
 			<ConfirmationDialog.Content>
 				<ConfirmationDialog.ContentText>
-					{ __( 'Deleting', 'elementor' ) }
+					{ __( 'Deleting', 'refraction' ) }
 					<Typography variant="subtitle2" component="span">
 						&nbsp;{ label }&nbsp;
 					</Typography>

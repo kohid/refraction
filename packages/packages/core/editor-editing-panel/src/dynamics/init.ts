@@ -1,13 +1,13 @@
-import { settingsTransformersRegistry, styleTransformersRegistry } from '@elementor/editor-canvas';
+import { settingsTransformersRegistry, styleTransformersRegistry } from '@refraction/editor-canvas';
 import {
 	type ControlComponent,
 	injectIntoRepeaterItemIcon,
 	injectIntoRepeaterItemLabel,
 	registerControlReplacement,
-} from '@elementor/editor-controls';
-import { type BackgroundOverlayPropType, type PropValue } from '@elementor/editor-props';
-import { type InjectedComponent } from '@elementor/locations';
-import { controlActionsMenu } from '@elementor/menus';
+} from '@refraction/editor-controls';
+import { type BackgroundOverlayPropType, type PropValue } from '@refraction/editor-props';
+import { type InjectedComponent } from '@refraction/locations';
+import { controlActionsMenu } from '@refraction/menus';
 
 import {
 	BackgroundControlDynamicTagIcon,

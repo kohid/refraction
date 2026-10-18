@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\App\Modules\ImportExport\Processes;
+namespace Refraction\App\Modules\ImportExport\Processes;
 
-use Elementor\App\Modules\ImportExport\Module;
-use Elementor\App\Modules\ImportExport\Runners\Revert\Elementor_Content;
-use Elementor\App\Modules\ImportExport\Runners\Revert\Revert_Runner_Base;
-use Elementor\App\Modules\ImportExport\Runners\Revert\Plugins;
-use Elementor\App\Modules\ImportExport\Runners\Revert\Site_Settings;
-use Elementor\App\Modules\ImportExport\Runners\Revert\Taxonomies;
-use Elementor\App\Modules\ImportExport\Runners\Revert\Templates;
-use Elementor\App\Modules\ImportExport\Runners\Revert\Wp_Content;
-use Elementor\App\Modules\ImportExport\Utils;
+use Refraction\App\Modules\ImportExport\Module;
+use Refraction\App\Modules\ImportExport\Runners\Revert\Refraction_Content;
+use Refraction\App\Modules\ImportExport\Runners\Revert\Revert_Runner_Base;
+use Refraction\App\Modules\ImportExport\Runners\Revert\Plugins;
+use Refraction\App\Modules\ImportExport\Runners\Revert\Site_Settings;
+use Refraction\App\Modules\ImportExport\Runners\Revert\Taxonomies;
+use Refraction\App\Modules\ImportExport\Runners\Revert\Templates;
+use Refraction\App\Modules\ImportExport\Runners\Revert\Wp_Content;
+use Refraction\App\Modules\ImportExport\Utils;
 
 class Revert {
 
@@ -41,7 +41,7 @@ class Revert {
 		$this->register( new Plugins() );
 		$this->register( new Templates() );
 		$this->register( new Taxonomies() );
-		$this->register( new Elementor_Content() );
+		$this->register( new Refraction_Content() );
 		$this->register( new Wp_Content() );
 	}
 
@@ -92,7 +92,7 @@ class Revert {
 	}
 
 	public static function get_revert_sessions() {
-		$revert_sessions = get_option( Module::OPTION_KEY_ELEMENTOR_REVERT_SESSIONS );
+		$revert_sessions = get_option( Module::OPTION_KEY_REFRACTION_REVERT_SESSIONS );
 
 		if ( ! $revert_sessions ) {
 			return [];
@@ -147,8 +147,8 @@ class Revert {
 			'revert_timestamp' => current_time( 'timestamp' ),
 		];
 
-		update_option( Module::OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS, $import_sessions, false );
-		update_option( Module::OPTION_KEY_ELEMENTOR_REVERT_SESSIONS, $revert_sessions, false );
+		update_option( Module::OPTION_KEY_REFRACTION_IMPORT_SESSIONS, $import_sessions, false );
+		update_option( Module::OPTION_KEY_REFRACTION_REVERT_SESSIONS, $revert_sessions, false );
 
 		$this->import_sessions = $import_sessions;
 		$this->revert_sessions = $revert_sessions;
@@ -161,7 +161,7 @@ class Revert {
 			'posts_per_page' => -1,
 			'meta_query' => [
 				[
-					'key' => Module::META_KEY_ELEMENTOR_IMPORT_SESSION_ID,
+					'key' => Module::META_KEY_REFRACTION_IMPORT_SESSION_ID,
 					'value' => $data['session_id'],
 				],
 			],

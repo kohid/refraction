@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\App\Modules\ImportExport\Runners\Export;
+namespace Refraction\App\Modules\ImportExport\Runners\Export;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 class Site_Settings extends Export_Runner_Base {
 

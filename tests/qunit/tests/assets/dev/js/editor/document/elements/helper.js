@@ -7,7 +7,7 @@ export default class ElementsHelper {
 
 		switch ( elType ) {
 			case 'document':
-				result = elementor.getPreviewContainer();
+				result = refraction.getPreviewContainer();
 				break;
 
 			case 'section':
@@ -65,7 +65,7 @@ export default class ElementsHelper {
 			model: {
 				elType: 'section',
 			},
-			container: elementor.getPreviewContainer(),
+			container: refraction.getPreviewContainer(),
 			columns,
 			options,
 		} );
@@ -82,7 +82,7 @@ export default class ElementsHelper {
 			model: {
 				elType: 'container',
 			},
-			container: elementor.getPreviewContainer(),
+			container: refraction.getPreviewContainer(),
 			options,
 		} );
 	}
@@ -92,7 +92,7 @@ export default class ElementsHelper {
 			model: {
 				elType: 'section',
 			},
-			container: elementor.getPreviewContainer(),
+			container: refraction.getPreviewContainer(),
 			columns,
 			structure,
 			options,

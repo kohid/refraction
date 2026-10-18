@@ -12,8 +12,8 @@ const mockRedirectToAppAdmin = jest.fn();
 const mockSendPromptToAngie = jest.fn();
 const mockRedirectToInstallation = jest.fn();
 
-jest.mock( '@elementor/editor-mcp', () => {
-	const { toolPrompts } = jest.requireActual( '@elementor/editor-mcp' ) as { toolPrompts: unknown };
+jest.mock( '@refraction/editor-mcp', () => {
+	const { toolPrompts } = jest.requireActual( '@refraction/editor-mcp' ) as { toolPrompts: unknown };
 	return {
 		toolPrompts,
 		isAngieAvailable: () => mockIsAngieAvailable(),
@@ -25,11 +25,11 @@ jest.mock( '@elementor/editor-mcp', () => {
 	};
 } );
 
-jest.mock( '@elementor/events', () => ( {
+jest.mock( '@refraction/events', () => ( {
 	trackEvent: ( ...args: unknown[] ) => mockTrackEvent( ...args ),
 } ) );
 
-const CREATE_WIDGET_EVENT = 'elementor/editor/create-widget';
+const CREATE_WIDGET_EVENT = 'refraction/editor/create-widget';
 
 function dispatchCreateWidgetEvent( detail: { prompt?: string; entry_point: string } ) {
 	window.dispatchEvent( new CustomEvent( CREATE_WIDGET_EVENT, { detail } ) );

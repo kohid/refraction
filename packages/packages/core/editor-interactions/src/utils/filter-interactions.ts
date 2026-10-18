@@ -1,4 +1,4 @@
-import { type InteractionItemPropValue } from '@elementor/editor-elements';
+import { type InteractionItemPropValue } from '@refraction/editor-elements';
 
 import { isSupportedInteractionItem } from './is-supported-interaction-item';
 

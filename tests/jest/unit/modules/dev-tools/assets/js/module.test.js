@@ -1,17 +1,17 @@
-import Module from 'elementor/modules/dev-tools/assets/js/module';
+import Module from 'refraction/modules/dev-tools/assets/js/module';
 
 describe( 'modules/dev-tools/assets/js/module.js', () => {
 	beforeEach( () => {
-		global.elementorDevToolsConfig = {
+		global.refractionDevToolsConfig = {
 			deprecation: {
 				soft_notices: {
-					'elementor/old/hook': [
+					'refraction/old/hook': [
 						'3.5.0',
-						'elementor/new/hook',
+						'refraction/new/hook',
 					],
-					'elementor/old/hook2': [
+					'refraction/old/hook2': [
 						'3.6.0',
-						'elementor/new/hook2',
+						'refraction/new/hook2',
 					],
 				},
 			},
@@ -31,7 +31,7 @@ describe( 'modules/dev-tools/assets/js/module.js', () => {
 
 		// Assert.
 		expect( deprecationMock.deprecated ).toBeCalledTimes( 2 );
-		expect( deprecationMock.deprecated ).toBeCalledWith( 'elementor/old/hook', '3.5.0', 'elementor/new/hook' );
-		expect( deprecationMock.deprecated ).toBeCalledWith( 'elementor/old/hook2', '3.6.0', 'elementor/new/hook2' );
+		expect( deprecationMock.deprecated ).toBeCalledWith( 'refraction/old/hook', '3.5.0', 'refraction/new/hook' );
+		expect( deprecationMock.deprecated ).toBeCalledWith( 'refraction/old/hook2', '3.6.0', 'refraction/new/hook2' );
 	} );
 } );

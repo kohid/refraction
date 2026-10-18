@@ -1,9 +1,9 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { getWidgetsCache } from '@refraction/editor-elements';
 
 import { audit } from '../deprecated-widgets';
 import { makeContext, makeWidget } from './fixtures';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getWidgetsCache: jest.fn(),
 } ) );
 

@@ -1,4 +1,4 @@
-import { useMutation } from '@elementor/query';
+import { useMutation } from '@refraction/query';
 
 import { getConfig } from '../utils/get-config';
 import { withRetry } from '../utils/retry';

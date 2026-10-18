@@ -1,6 +1,6 @@
 import Component from './component';
 
-const BaseRegion = require( 'elementor-regions/base' );
+const BaseRegion = require( 'refraction-regions/base' );
 
 import NavigatorLayout from './layout';
 
@@ -15,7 +15,7 @@ export default class extends BaseRegion {
 
 		this.indicators = {
 			customPosition: {
-				title: __( 'Custom Positioning', 'elementor' ),
+				title: __( 'Custom Positioning', 'refraction' ),
 				icon: 'cursor-move',
 				settingKeys: [ '_position' ],
 				section: '_section_position',
@@ -24,11 +24,11 @@ export default class extends BaseRegion {
 
 		this.ensurePosition = this.ensurePosition.bind( this );
 
-		this.listenTo( elementor.channels.dataEditMode, 'switch', this.onEditModeSwitched );
+		this.listenTo( refraction.channels.dataEditMode, 'switch', this.onEditModeSwitched );
 
 		// TODO: Move to hook on 'editor/documents/load'.
-		elementor.on( 'document:loaded', this.onDocumentLoaded.bind( this ) );
-		elementor.on( 'document:unloaded', this.onDocumentUnloaded.bind( this ) );
+		refraction.on( 'document:loaded', this.onDocumentLoaded.bind( this ) );
+		refraction.on( 'document:unloaded', this.onDocumentUnloaded.bind( this ) );
 	}
 
 	getStorageKey() {
@@ -56,7 +56,7 @@ export default class extends BaseRegion {
 	getDraggableOptions() {
 		return {
 			iframeFix: true,
-			handle: '#elementor-navigator__header',
+			handle: '#refraction-navigator__header',
 			drag: this.onDrag.bind( this ),
 			stop: this.onDragStop.bind( this ),
 		};
@@ -70,15 +70,15 @@ export default class extends BaseRegion {
 			maxWidth: 500,
 			minHeight: 240,
 			start: () => {
-				elementor.$previewWrapper.addClass( 'ui-resizable-resizing' );
+				refraction.$previewWrapper.addClass( 'ui-resizable-resizing' );
 			},
 			stop: () => {
-				elementor.$previewWrapper.removeClass( 'ui-resizable-resizing' );
+				refraction.$previewWrapper.removeClass( 'ui-resizable-resizing' );
 
 				if ( this.isDocked ) {
-					this.storage.size.width = elementor.helpers.getElementInlineStyle( this.$el, [ 'width' ] ).width;
+					this.storage.size.width = refraction.helpers.getElementInlineStyle( this.$el, [ 'width' ] ).width;
 
-					elementorCommon.storage.set( 'navigator', this.storage );
+					refractionCommon.storage.set( 'navigator', this.storage );
 				} else {
 					this.saveSize();
 				}
@@ -117,7 +117,7 @@ export default class extends BaseRegion {
 
 		this.ensurePosition();
 
-		elementorCommon.elements.$window.on( 'resize', this.ensurePosition );
+		refractionCommon.elements.$window.on( 'resize', this.ensurePosition );
 	}
 
 	close( silent ) {
@@ -135,7 +135,7 @@ export default class extends BaseRegion {
 			this.$el.resizable( 'destroy' );
 		}
 
-		elementorCommon.elements.$window.off( 'resize', this.ensurePosition );
+		refractionCommon.elements.$window.off( 'resize', this.ensurePosition );
 	}
 
 	isOpen() {
@@ -143,7 +143,7 @@ export default class extends BaseRegion {
 	}
 
 	dock() {
-		elementorCommon.elements.$body.addClass( 'elementor-navigator-docked' );
+		refractionCommon.elements.$body.addClass( 'refraction-navigator-docked' );
 		this.setSize();
 
 		const resizableOptions = this.getResizableOptions();
@@ -160,7 +160,7 @@ export default class extends BaseRegion {
 			this.$el.resizable( 'destroy' );
 		}
 
-		resizableOptions.handles = elementorCommon.config.isRTL ? 'e' : 'w';
+		resizableOptions.handles = refractionCommon.config.isRTL ? 'e' : 'w';
 
 		this.$el.resizable( resizableOptions );
 
@@ -170,10 +170,10 @@ export default class extends BaseRegion {
 	}
 
 	undock( silent ) {
-		elementorCommon.elements.$body.removeClass( 'elementor-navigator-docked' );
+		refractionCommon.elements.$body.removeClass( 'refraction-navigator-docked' );
 		this.setSize();
 
-		elementor.$previewWrapper.css( elementorCommon.config.isRTL ? 'left' : 'right', '' );
+		refraction.$previewWrapper.css( refractionCommon.config.isRTL ? 'left' : 'right', '' );
 
 		if ( this.$el.resizable( 'instance' ) ) {
 			this.$el.resizable( 'destroy' );
@@ -197,11 +197,11 @@ export default class extends BaseRegion {
 		if ( size ) {
 			this.storage.size.width = size;
 		} else {
-			this.storage.size.width = this.storage.size.width || elementorCommon.elements.$body.css( '--e-editor-navigator-width' );
+			this.storage.size.width = this.storage.size.width || refractionCommon.elements.$body.css( '--e-editor-navigator-width' );
 		}
 
 		// Set the navigator size using a CSS variable, and remove the inline CSS that was set by jQuery Resizeable.
-		elementorCommon.elements.$body.css( '--e-editor-navigator-width', this.storage.size.width );
+		refractionCommon.elements.$body.css( '--e-editor-navigator-width', this.storage.size.width );
 		this.$el.css( 'width', '' );
 	}
 
@@ -247,7 +247,7 @@ export default class extends BaseRegion {
 		const isOutOfLeft = 0 > ui.position.left,
 			isOutOfRight = ui.position.left + this.el.offsetWidth > innerWidth;
 
-		if ( elementorCommon.config.isRTL ) {
+		if ( refractionCommon.config.isRTL ) {
 			if ( isOutOfRight ) {
 				ui.position.left = innerWidth - this.el.offsetWidth;
 			}
@@ -255,7 +255,7 @@ export default class extends BaseRegion {
 			ui.position.left = 0;
 		}
 
-		elementorCommon.elements.$body.toggleClass( 'elementor-navigator--dock-hint', elementorCommon.config.isRTL ? isOutOfLeft : isOutOfRight );
+		refractionCommon.elements.$body.toggleClass( 'refraction-navigator--dock-hint', refractionCommon.config.isRTL ? isOutOfLeft : isOutOfRight );
 	}
 
 	onDragStop( event, ui ) {
@@ -271,7 +271,7 @@ export default class extends BaseRegion {
 			this.dock();
 		}
 
-		elementorCommon.elements.$body.removeClass( 'elementor-navigator--dock-hint' );
+		refractionCommon.elements.$body.removeClass( 'refraction-navigator--dock-hint' );
 	}
 
 	onEditModeSwitched( activeMode ) {
@@ -292,7 +292,7 @@ export default class extends BaseRegion {
 		if ( document.config.panel.has_elements ) {
 			this.initLayout();
 
-			if ( false !== this.storage.visible && ! elementor.config.starter ) {
+			if ( false !== this.storage.visible && ! refraction.config.starter ) {
 				$e.route( 'navigator' );
 			}
 		}

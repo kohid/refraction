@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor date/time control.
+ * Refraction date/time control.
  *
  * A base control for creating date time control. Displays a date/time picker
  * based on the Flatpickr library @see https://chmln.github.io/flatpickr/ .
@@ -66,14 +66,14 @@ class Control_Date_Time extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper elementor-control-dynamic-switcher-wrapper">
-				<input id="<?php $this->print_control_uid(); ?>" placeholder="{{ view.getControlPlaceholder() }}" class="elementor-date-time-picker flatpickr elementor-control-tag-area" type="text" data-setting="{{ data.name }}">
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper refraction-control-dynamic-switcher-wrapper">
+				<input id="<?php $this->print_control_uid(); ?>" placeholder="{{ view.getControlPlaceholder() }}" class="refraction-date-time-picker flatpickr refraction-control-tag-area" type="text" data-setting="{{ data.name }}">
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

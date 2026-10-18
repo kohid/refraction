@@ -1,4 +1,4 @@
-import { getAllDescendants, type V1Element } from '@elementor/editor-elements';
+import { getAllDescendants, type V1Element } from '@refraction/editor-elements';
 
 type Model = {
 	elType?: string;

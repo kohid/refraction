@@ -197,7 +197,7 @@ export default class Routes extends Commands {
 	}
 
 	dispatchOnOpen( route ) {
-		window.dispatchEvent( new CustomEvent( 'elementor/routes/open', {
+		window.dispatchEvent( new CustomEvent( 'refraction/routes/open', {
 			detail: {
 				route,
 			},
@@ -205,7 +205,7 @@ export default class Routes extends Commands {
 	}
 
 	dispatchOnClose( route ) {
-		window.dispatchEvent( new CustomEvent( 'elementor/routes/close', {
+		window.dispatchEvent( new CustomEvent( 'refraction/routes/close', {
 			detail: {
 				route,
 			},

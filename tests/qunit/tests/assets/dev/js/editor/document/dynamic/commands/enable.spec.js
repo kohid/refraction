@@ -6,14 +6,14 @@ export const Enable = () => {
 		QUnit.module( 'Single Selection', () => {
 			QUnit.test( 'Simple', ( assert ) => {
 				const eButton = ElementsHelper.createWrappedButton(),
-					dynamicTag = '[elementor-tag id="33e3c57" name="post-custom-field" settings="%7B%7D"]',
+					dynamicTag = '[refraction-tag id="33e3c57" name="post-custom-field" settings="%7B%7D"]',
 					dynamicValue = '{ dynamic text }',
-					{ id, name, settings } = elementor.dynamicTags.tagTextToTagData( dynamicTag ),
-					tag = elementor.dynamicTags.createTag( id, name, settings ),
-					key = elementor.dynamicTags.createCacheKey( tag );
+					{ id, name, settings } = refraction.dynamicTags.tagTextToTagData( dynamicTag ),
+					tag = refraction.dynamicTags.createTag( id, name, settings ),
+					key = refraction.dynamicTags.createCacheKey( tag );
 
 				// Set fake data.
-				elementor.dynamicTags.cache[ key ] = dynamicValue;
+				refraction.dynamicTags.cache[ key ] = dynamicValue;
 
 				let doneEnable; // eslint-disable-line prefer-const
 
@@ -37,14 +37,14 @@ export const Enable = () => {
 		QUnit.module( 'Multiple Selection', () => {
 			QUnit.test( 'Simple', ( assert ) => {
 				const eButtons = ElementsHelper.multiCreateWrappedButton(),
-					dynamicTag = '[elementor-tag id="33e3c57" name="post-custom-field" settings="%7B%7D"]',
+					dynamicTag = '[refraction-tag id="33e3c57" name="post-custom-field" settings="%7B%7D"]',
 					dynamicValue = '{ dynamic text }',
-					{ id, name, settings } = elementor.dynamicTags.tagTextToTagData( dynamicTag ),
-					tag = elementor.dynamicTags.createTag( id, name, settings ),
-					key = elementor.dynamicTags.createCacheKey( tag );
+					{ id, name, settings } = refraction.dynamicTags.tagTextToTagData( dynamicTag ),
+					tag = refraction.dynamicTags.createTag( id, name, settings ),
+					key = refraction.dynamicTags.createCacheKey( tag );
 
 				// Set fake data.
-				elementor.dynamicTags.cache[ key ] = dynamicValue;
+				refraction.dynamicTags.cache[ key ] = dynamicValue;
 
 				let doneEnable; // eslint-disable-line prefer-const
 

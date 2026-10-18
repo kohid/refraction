@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Modules\LinkInBio\Classes\Render;
+namespace Refraction\Modules\LinkInBio\Classes\Render;
 
-use Elementor\Core\Base\Providers\Social_Network_Provider;
-use Elementor\Core\Base\Traits\Shared_Widget_Controls_Trait;
-use Elementor\Icons_Manager;
-use Elementor\Modules\LinkInBio\Base\Widget_Link_In_Bio_Base;
-use Elementor\Utils;
+use Refraction\Core\Base\Providers\Social_Network_Provider;
+use Refraction\Core\Base\Traits\Shared_Widget_Controls_Trait;
+use Refraction\Icons_Manager;
+use Refraction\Modules\LinkInBio\Base\Widget_Link_In_Bio_Base;
+use Refraction\Utils;
 
 /**
  * Class Render_Base.

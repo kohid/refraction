@@ -1,8 +1,8 @@
-jest.mock( 'elementor/assets/dev/js/frontend/utils/video-api/base-loader', () => {
+jest.mock( 'refraction/assets/dev/js/frontend/utils/video-api/base-loader', () => {
 	return class {};
 } );
 
-import VimeoLoader from 'elementor/assets/dev/js/frontend/utils/video-api/vimeo-loader';
+import VimeoLoader from 'refraction/assets/dev/js/frontend/utils/video-api/vimeo-loader';
 
 describe( 'VimeoLoader', () => {
 	let vimeoLoader;

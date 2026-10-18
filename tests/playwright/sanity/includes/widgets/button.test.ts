@@ -34,8 +34,8 @@ test( 'Button controls should return to default', async ( { page, apiRequests },
 	await editor.getPreviewFrame().waitForSelector( EditorSelectors.button.getByName( defaultBtnName ) );
 
 	const widget = editor.getPreviewFrame().locator( EditorSelectors.widget ),
-		controlSelector = 'div.elementor-control-responsive-desktop:has-text("Position") label[data-tooltip="Center"]',
-		alignCenterClassRegex = /elementor-align-center/;
+		controlSelector = 'div.refraction-control-responsive-desktop:has-text("Position") label[data-tooltip="Center"]',
+		alignCenterClassRegex = /refraction-align-center/;
 
 	// Act
 	await editor.page.click( controlSelector );
@@ -68,18 +68,18 @@ test( 'Verify Button with Icon styling', async ( { page, apiRequests }, testInfo
 
 	const filePath = _path.resolve( __dirname, `./../../templates/button-icon-styling.json` );
 	await editor.loadTemplate( filePath, false );
-	await editor.getPreviewFrame().locator( '.elementor-widget-button' ).first().waitFor();
+	await editor.getPreviewFrame().locator( '.refraction-widget-button' ).first().waitFor();
 	await editor.closeNavigatorIfOpen();
 
 	// Assert
 	await expect.soft( editor.getPreviewFrame().locator( '.e-con' ) ).toHaveScreenshot( 'button-container.png' );
 
-	const buttonFirst = editor.getPreviewFrame().locator( '.elementor-widget-button a' ).first();
+	const buttonFirst = editor.getPreviewFrame().locator( '.refraction-widget-button a' ).first();
 	await buttonFirst.hover();
 
 	await expect.soft( buttonFirst ).toHaveScreenshot( 'button-hover-first.png' );
 
-	const buttonLast = editor.getPreviewFrame().locator( '.elementor-widget-button a' ).last();
+	const buttonLast = editor.getPreviewFrame().locator( '.refraction-widget-button a' ).last();
 	await buttonLast.hover();
 
 	await expect.soft( buttonLast ).toHaveScreenshot( 'button-hover-last.png' );

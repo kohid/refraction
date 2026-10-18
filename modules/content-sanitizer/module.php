@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\ContentSanitizer;
+namespace Refraction\Modules\ContentSanitizer;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -16,7 +16,7 @@ class Module extends BaseModule {
 	public function __construct() {
 		parent::__construct();
 
-		add_filter( 'elementor/document/save/data', [ $this, 'sanitize_content' ], 10, 2 );
+		add_filter( 'refraction/document/save/data', [ $this, 'sanitize_content' ], 10, 2 );
 	}
 
 	public function get_name() {

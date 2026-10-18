@@ -1,10 +1,10 @@
 {
-  "name": "@elementor/commitlint-plugin-editor",
+  "name": "@refraction/commitlint-plugin-editor",
   "description": "Internal Commitlint plugin",
   "version": "4.4.0",
   "private": true,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -18,11 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elementor/elementor.git",
+    "url": "git+https://github.com/kohid/refraction.git",
     "directory": "packages/tools/commitlint-plugin-editor"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "publishConfig": {
     "access": "restricted"

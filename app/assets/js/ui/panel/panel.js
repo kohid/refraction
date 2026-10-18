@@ -1,7 +1,7 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Card from 'elementor-app/ui/card/card';
-import Collapse from 'elementor-app/molecules/collapse';
+import Card from 'refraction-app/ui/card/card';
+import Collapse from 'refraction-app/molecules/collapse';
 import PanelHeader from './panel-header';
 import PanelHeadline from './panel-headline';
 import PanelBody from './panel-body';

@@ -1,4 +1,4 @@
-import type { HistoryItem, WindowWithHistoryManager } from '@elementor/editor-v1-adapters';
+import type { HistoryItem, WindowWithHistoryManager } from '@refraction/editor-v1-adapters';
 
 export function mockHistoryManager() {
 	const history = createFakeHistory();
@@ -9,10 +9,10 @@ export function mockHistoryManager() {
 		beforeEach: () => {
 			const extendedWindow = window as unknown as Window & WindowWithHistoryManager;
 
-			extendedWindow.elementor = {
-				...extendedWindow.elementor,
+			extendedWindow.refraction = {
+				...extendedWindow.refraction,
 				documents: {
-					...extendedWindow.elementor?.documents,
+					...extendedWindow.refraction?.documents,
 					getCurrent: () => ( { history } ),
 				},
 			};

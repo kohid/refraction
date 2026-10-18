@@ -9,15 +9,15 @@ function isBoxed( settings: Record< string, unknown > ): boolean {
 
 export const audit: Audit = {
 	id: 'audits/nested-boxed-containers',
-	title: __( 'Boxed container nested inside a boxed parent', 'elementor' ),
-	description: __( 'An inner container does not need to be boxed when its parent already is.', 'elementor' ),
-	fixHint: __( "Change the inner container's content width to Full Width.", 'elementor' ),
+	title: __( 'Boxed container nested inside a boxed parent', 'refraction' ),
+	description: __( 'An inner container does not need to be boxed when its parent already is.', 'refraction' ),
+	fixHint: __( "Change the inner container's content width to Full Width.", 'refraction' ),
 	categories: [ 'best-practices', 'performance' ],
 	severity: 'info',
 	weight: 5,
 	evaluate: ( ctx ) => {
 		if ( ctx.elements.tree.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No elements', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No elements', 'refraction' ) };
 		}
 
 		const violations: AuditViolation[] = [];
@@ -34,11 +34,11 @@ export const audit: Audit = {
 					auditId: audit.id,
 					elementId: node.id,
 					targetHint: 'element-settings',
-					label: __( 'Nested boxed container.', 'elementor' ),
+					label: __( 'Nested boxed container.', 'refraction' ),
 					angieFix: true,
 					angiePrompt: __(
 						'Find containers that have nested containers. Containers can be deep-nested. Update the nested container styling so that when a parent container already uses a boxed setting, any inner container inside it is set to Full Width. Keep the first parent container boxed, remove all boxed styling from the nested inner containers, and preserve the inner container’s content, spacing, alignment, and hierarchy.',
-						'elementor'
+						'refraction'
 					),
 				} );
 			}

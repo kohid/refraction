@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Modules\AdminTopBar;
+namespace Refraction\Modules\AdminTopBar;
 
-use Elementor\Core\Admin\Admin;
-use Elementor\Core\Base\App as BaseApp;
-use Elementor\Utils;
+use Refraction\Core\Admin\Admin;
+use Refraction\Core\Base\App as BaseApp;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -36,31 +36,31 @@ class Module extends BaseApp {
 	 * Enqueue admin scripts
 	 */
 	private function enqueue_scripts() {
-		wp_enqueue_style( 'elementor-admin-top-bar-fonts', 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap', [], ELEMENTOR_VERSION );
+		wp_enqueue_style( 'refraction-admin-top-bar-fonts', 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap', [], REFRACTION_VERSION );
 
-		wp_enqueue_style( 'elementor-admin-top-bar', $this->get_css_assets_url( 'admin-top-bar' ), [], ELEMENTOR_VERSION );
+		wp_enqueue_style( 'refraction-admin-top-bar', $this->get_css_assets_url( 'admin-top-bar' ), [], REFRACTION_VERSION );
 
 		/**
 		 * Before admin top bar enqueue scripts.
 		 *
-		 * Fires before Elementor admin top bar scripts are enqueued.
+		 * Fires before Refraction admin top bar scripts are enqueued.
 		 *
 		 * @since 3.19.0
 		 */
-		do_action( 'elementor/admin_top_bar/before_enqueue_scripts', $this );
+		do_action( 'refraction/admin_top_bar/before_enqueue_scripts', $this );
 
-		wp_enqueue_script( 'elementor-admin-top-bar', $this->get_js_assets_url( 'admin-top-bar' ), [
-			'elementor-common',
+		wp_enqueue_script( 'refraction-admin-top-bar', $this->get_js_assets_url( 'admin-top-bar' ), [
+			'refraction-common',
 			'react',
 			'react-dom',
 			'tipsy',
-		], ELEMENTOR_VERSION, true );
+		], REFRACTION_VERSION, true );
 
-		wp_set_script_translations( 'elementor-admin-top-bar', 'elementor' );
+		wp_set_script_translations( 'refraction-admin-top-bar', 'refraction' );
 
 		$min_suffix = Utils::is_script_debug() ? '' : '.min';
 
-		wp_enqueue_script( 'tipsy', ELEMENTOR_ASSETS_URL . 'lib/tipsy/tipsy' . $min_suffix . '.js', [
+		wp_enqueue_script( 'tipsy', REFRACTION_ASSETS_URL . 'lib/tipsy/tipsy' . $min_suffix . '.js', [
 			'jquery',
 		], '1.0.0', true );
 
@@ -73,15 +73,15 @@ class Module extends BaseApp {
 
 		$this->set_settings( $settings );
 
-		do_action( 'elementor/admin-top-bar/init', $this );
+		do_action( 'refraction/admin-top-bar/init', $this );
 	}
 
 	private function is_top_bar_active() {
 		$current_screen = get_current_screen();
 
 		return apply_filters(
-			'elementor/admin-top-bar/is-active',
-			Admin::is_elementor_admin_page( $current_screen ),
+			'refraction/admin-top-bar/is-active',
+			Admin::is_refraction_admin_page( $current_screen ),
 			$current_screen
 		);
 	}

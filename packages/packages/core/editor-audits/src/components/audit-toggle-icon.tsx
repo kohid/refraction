@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ShieldCheckIcon } from '@elementor/icons';
-import { __useSelector as useSelector } from '@elementor/store';
+import { __useSelector as useSelector } from '@refraction/store';
 import { Badge } from '@elementor/ui';
 
 import { type GlobalState, selectIsStale } from '../store';

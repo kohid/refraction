@@ -1,8 +1,8 @@
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
-import useAction from 'elementor-app/hooks/use-action';
+import useAction from 'refraction-app/hooks/use-action';
 
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
 export default function DashboardButton( props ) {
 	const action = useAction(),
@@ -28,5 +28,5 @@ DashboardButton.defaultProps = {
 	className: '',
 	variant: 'contained',
 	color: 'primary',
-	text: __( 'Back to dashboard', 'elementor' ),
+	text: __( 'Back to dashboard', 'refraction' ),
 };

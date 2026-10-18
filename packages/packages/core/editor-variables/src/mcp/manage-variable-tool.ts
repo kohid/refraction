@@ -1,14 +1,14 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { type HttpResponse, httpService } from '@elementor/http-client';
-import { z } from '@elementor/schema';
-import { isProActive } from '@elementor/utils';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { type HttpResponse, httpService } from '@refraction/http-client';
+import { z } from '@refraction/schema';
+import { isProActive } from '@refraction/utils';
 
 import { applyLocalMutation } from '../service';
 import { type TVariable } from '../storage';
 import { MANAGE_VARIABLES_GUIDE_URI } from './variable-tool-prompt';
 import { GLOBAL_VARIABLES_URI } from './variables-resource';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 const TOOL_NAME = 'manage-global-variable';
 
 type ManageVariableResponse = {

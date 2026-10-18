@@ -1,13 +1,13 @@
-var ControlBaseUnitsItemView = require( 'elementor-controls/base-units' ),
+var ControlBaseUnitsItemView = require( 'refraction-controls/base-units' ),
 	ControlSliderItemView;
 
-import { convertSizeToFrString } from 'elementor-editor-utils/helpers';
+import { convertSizeToFrString } from 'refraction-editor-utils/helpers';
 
 ControlSliderItemView = ControlBaseUnitsItemView.extend( {
 	ui() {
 		var ui = ControlBaseUnitsItemView.prototype.ui.apply( this, arguments );
 
-		ui.slider = '.elementor-slider';
+		ui.slider = '.refraction-slider';
 
 		return ui;
 	},
@@ -39,7 +39,7 @@ ControlSliderItemView = ControlBaseUnitsItemView.extend( {
 		this.destroySlider();
 
 		const isMultiple = this.isMultiple(),
-			unitRange = elementorCommon.helpers.cloneObject( this.getCurrentRange() ),
+			unitRange = refractionCommon.helpers.cloneObject( this.getCurrentRange() ),
 			step = unitRange.step;
 
 		let sizes = this.getSize();
@@ -124,7 +124,7 @@ ControlSliderItemView = ControlBaseUnitsItemView.extend( {
 
 	onReady() {
 		if ( this.isMultiple() ) {
-			this.$el.addClass( 'elementor-control-type-slider--multiple elementor-control-type-slider--handles-' + this.model.get( 'handles' ) );
+			this.$el.addClass( 'refraction-control-type-slider--multiple refraction-control-type-slider--handles-' + this.model.get( 'handles' ) );
 		}
 
 		this.initSlider();
@@ -132,7 +132,7 @@ ControlSliderItemView = ControlBaseUnitsItemView.extend( {
 
 	onSlideChange( values, index ) {
 		if ( this.isMultiple() ) {
-			const sizes = elementorCommon.helpers.cloneObject( this.getSize() ),
+			const sizes = refractionCommon.helpers.cloneObject( this.getSize() ),
 				key = Object.keys( sizes )[ index ];
 
 			sizes[ key ] = values[ index ];
@@ -222,7 +222,7 @@ ControlSliderItemView = ControlBaseUnitsItemView.extend( {
 	},
 
 	onDeviceModeChange() {
-		const currentDeviceMode = elementor.channels.deviceMode.request( 'currentMode' ),
+		const currentDeviceMode = refraction.channels.deviceMode.request( 'currentMode' ),
 			isMobile = 'mobile' === currentDeviceMode,
 			isMobileValue = this.model.get( 'name' ).includes( '_mobile' ),
 			hasDefault = this.model.get( 'default' ),

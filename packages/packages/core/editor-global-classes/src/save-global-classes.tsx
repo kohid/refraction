@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { openDialog } from '@elementor/editor-ui';
-import { __dispatch as dispatch, __getState as getState } from '@elementor/store';
-import { hash } from '@elementor/utils';
+import { openDialog } from '@refraction/editor-ui';
+import { __dispatch as dispatch, __getState as getState } from '@refraction/store';
+import { hash } from '@refraction/utils';
 
 import { API_ERROR_CODES, apiClient, type ApiContext } from './api';
 import { DuplicateLabelDialog } from './components/class-manager/duplicate-label-dialog';

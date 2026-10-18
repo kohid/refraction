@@ -5,24 +5,24 @@ import {
 	getCurrentDocumentId,
 	type LinkInLinkRestriction,
 	selectElement,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 import { InfoCircleFilledIcon } from '@elementor/icons';
 import { Alert, AlertAction, AlertTitle, Box, Infotip, Link } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
 const learnMoreButton = {
-	label: __( 'Learn More', 'elementor' ),
+	label: __( 'Learn More', 'refraction' ),
 	href: 'https://go.elementor.com/element-link-inside-link-infotip',
 };
 
 const INFOTIP_CONTENT = {
 	descendant: __(
 		'To add a link or action to this element, first remove the link or action from the elements inside of it.',
-		'elementor'
+		'refraction'
 	),
 	ancestor: __(
 		'To add a link or action to this container, first remove the link or action from its parent container.',
-		'elementor'
+		'refraction'
 	),
 };
 
@@ -42,7 +42,7 @@ function isTargetInCurrentDocument( elementId: string | null | undefined ): bool
 		return false;
 	}
 
-	const targetDocId = el.closest( '[data-elementor-id]' )?.getAttribute( 'data-elementor-id' );
+	const targetDocId = el.closest( '[data-refraction-id]' )?.getAttribute( 'data-refraction-id' );
 	const currentDocId = String( getCurrentDocumentId() ?? '' );
 
 	return !! ( targetDocId && currentDocId && targetDocId === currentDocId );
@@ -76,12 +76,12 @@ export const RestrictedLinkInfotip: React.FC< RestrictedLinkInfotipProps > = ( {
 						color="secondary"
 						onClick={ handleTakeMeClick }
 					>
-						{ __( 'Take me there', 'elementor' ) }
+						{ __( 'Take me there', 'refraction' ) }
 					</AlertAction>
 				) : undefined
 			}
 		>
-			<AlertTitle>{ __( 'Nested links', 'elementor' ) }</AlertTitle>
+			<AlertTitle>{ __( 'Nested links', 'refraction' ) }</AlertTitle>
 			<Box component="span">
 				{ INFOTIP_CONTENT[ reason ?? 'descendant' ] }{ ' ' }
 				<Link href={ learnMoreButton.href } target="_blank" color="info.main">

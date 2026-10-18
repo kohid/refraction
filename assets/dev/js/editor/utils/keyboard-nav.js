@@ -16,7 +16,7 @@ const ESCAPE_OWNER_SELECTOR = [
 	'.select2-container--open',
 ].join( ', ' );
 
-const CONTROL_ANCHOR_SELECTOR = '.elementor-control, [data-type="settings-field"], [role="group"]';
+const CONTROL_ANCHOR_SELECTOR = '.refraction-control, [data-type="settings-field"], [role="group"]';
 
 const FOCUSABLE_SELECTOR = [
 	'a[href]',
@@ -282,7 +282,7 @@ function parkFocusOnAnchor( anchor, root ) {
  * route away to the menu. A second Escape is left unhandled, so it exits the panel as usual.
  *
  * @param {KeyboardEvent|jQuery.Event} event
- * @param {HTMLElement}                root  - Panel element the event was delegated from. `#elementor-panel-inner`
+ * @param {HTMLElement}                root  - Panel element the event was delegated from. `#refraction-panel-inner`
  *                                           hosts the V4 panel portal too, so this covers V1 and V4 controls alike.
  * @return {boolean} Whether the event was handled.
  */

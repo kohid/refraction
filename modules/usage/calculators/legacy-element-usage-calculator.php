@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\Usage\Calculators;
+namespace Refraction\Modules\Usage\Calculators;
 
-use Elementor\Core\DynamicTags\Manager;
-use Elementor\Modules\Usage\Contracts\Element_Usage_Calculator;
+use Refraction\Core\DynamicTags\Manager;
+use Refraction\Modules\Usage\Contracts\Element_Usage_Calculator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

@@ -4,7 +4,7 @@ import {
 	scaleTransformPropTypeUtil,
 	skewTransformPropTypeUtil,
 	type TransformFunctionsItemPropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 export type TransformFunction = 'transform-move' | 'transform-scale' | 'transform-rotate' | 'transform-skew';
 

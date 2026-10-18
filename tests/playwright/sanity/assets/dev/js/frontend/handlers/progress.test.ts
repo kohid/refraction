@@ -14,7 +14,7 @@ test.describe( 'ProgressBar test', () => {
 		await editor.addWidget( { widgetType: 'progress' } );
 		await editor.publishAndViewPage();
 
-		const progressBar = page.locator( '.elementor-progress-bar' );
+		const progressBar = page.locator( '.refraction-progress-bar' );
 
 		// Assert.
 		await expect( progressBar ).not.toHaveCSS( 'width', '50%' );

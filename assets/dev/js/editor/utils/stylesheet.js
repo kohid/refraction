@@ -26,7 +26,7 @@
 					endPoint = queryParts[ 0 ],
 					deviceName = queryParts[ 1 ];
 
-				query[ endPoint ] = 'max' === endPoint ? devices[ deviceName ] : elementorFrontend.breakpoints.getDeviceMinBreakpoint( deviceName );
+				query[ endPoint ] = 'max' === endPoint ? devices[ deviceName ] : refractionFrontend.breakpoints.getDeviceMinBreakpoint( deviceName );
 			} );
 
 			return query;

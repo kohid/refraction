@@ -14,7 +14,7 @@ export default function IntegrationsMenuLocation() {
 
 	const popupState = usePopupState( {
 		variant: 'popover',
-		popupId: 'elementor-v2-app-bar-integrations',
+		popupId: 'refraction-v2-app-bar-integrations',
 	} );
 
 	if ( menuItems.default.length === 0 ) {
@@ -23,7 +23,7 @@ export default function IntegrationsMenuLocation() {
 
 	return (
 		<>
-			<ToolbarMenuItem { ...bindTrigger( popupState ) } title={ __( 'Integrations', 'elementor' ) }>
+			<ToolbarMenuItem { ...bindTrigger( popupState ) } title={ __( 'Integrations', 'refraction' ) }>
 				<PlugIcon />
 			</ToolbarMenuItem>
 			<PopoverMenu

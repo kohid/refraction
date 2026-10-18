@@ -51,7 +51,7 @@
 	}
 
 	td > label,
-	td > .elementor-field-row {
+	td > .refraction-field-row {
 		display: block;
 		position: relative;
 		padding-inline-start: 24px;
@@ -230,7 +230,7 @@
 	}
 }
 
-#elementor-element-manager-wrap {
+#refraction-element-manager-wrap {
 	.wp-list-table {
 		thead th {
 			&.sortable,
@@ -302,7 +302,7 @@
 }
 
 @media screen and (min-width: 783px) {
-	body.post-type-elementor_library {
+	body.post-type-refraction_library {
 		.wp-list-table {
 			thead th {
 				&#title,

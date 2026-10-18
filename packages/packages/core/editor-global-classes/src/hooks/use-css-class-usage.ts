@@ -1,4 +1,4 @@
-import { useQuery, type UseQueryResult } from '@elementor/query';
+import { useQuery, type UseQueryResult } from '@refraction/query';
 
 import { fetchCssClassUsage } from '../../service/css-class-usage-service';
 import { type EnhancedCssClassUsage, QUERY_KEY } from '../components/css-class-usage/types';

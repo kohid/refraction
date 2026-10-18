@@ -1,6 +1,6 @@
-import { invalidateDocumentData, switchToDocument } from '@elementor/editor-documents';
-import { getCurrentDocumentContainer, selectElement } from '@elementor/editor-elements';
-import { __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
+import { invalidateDocumentData, switchToDocument } from '@refraction/editor-documents';
+import { getCurrentDocumentContainer, selectElement } from '@refraction/editor-elements';
+import { __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
 
 import { loadComponentsOverridableProps } from '../store/actions/load-components-overridable-props';
 
@@ -56,7 +56,7 @@ export function buildUniqueSelector( element: HTMLElement ): string {
 
 	while ( current ) {
 		const dataId = current.dataset.id;
-		const isComponentInstance = current.hasAttribute( 'data-elementor-id' );
+		const isComponentInstance = current.hasAttribute( 'data-refraction-id' );
 
 		if ( isComponentInstance ) {
 			selectors.unshift( `[data-id="${ dataId }"]` );

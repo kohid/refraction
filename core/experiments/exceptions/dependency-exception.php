@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Experiments\Exceptions;
+namespace Refraction\Core\Experiments\Exceptions;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

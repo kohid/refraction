@@ -1,5 +1,5 @@
-import { type PregeneratedLinkItem } from '@elementor/editor-styles-repository';
-import { getCanvasIframeDocument } from '@elementor/editor-v1-adapters';
+import { type PregeneratedLinkItem } from '@refraction/editor-styles-repository';
+import { getCanvasIframeDocument } from '@refraction/editor-v1-adapters';
 
 const removedProviderKeys = new Set< string >();
 

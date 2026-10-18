@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\EditorOne\Classes;
+namespace Refraction\Modules\EditorOne\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Top_Bar_Locale_Assets {
 
-	private const LOCALES_RELATIVE_DIRECTORY = 'js/locales/elementor-one-assets/';
-	private const SCRIPT_HANDLE_PREFIX = 'elementor-one-top-bar-locale-';
+	private const LOCALES_RELATIVE_DIRECTORY = 'js/locales/refraction-one-assets/';
+	private const SCRIPT_HANDLE_PREFIX = 'refraction-one-top-bar-locale-';
 
 	public static function register_script_loader_filter(): void {
 		add_filter( 'script_loader_tag', [ self::class, 'filter_locale_json_script_tag' ], 10, 3 );
@@ -31,13 +31,13 @@ class Top_Bar_Locale_Assets {
 		$language_base_urls = [];
 
 		foreach ( $language_codes as $language_code ) {
-			$language_directory = ELEMENTOR_ASSETS_PATH . self::LOCALES_RELATIVE_DIRECTORY . $language_code;
+			$language_directory = REFRACTION_ASSETS_PATH . self::LOCALES_RELATIVE_DIRECTORY . $language_code;
 
 			if ( ! is_dir( $language_directory ) ) {
 				continue;
 			}
 
-			$language_base_urls[ $language_code ] = ELEMENTOR_ASSETS_URL . self::LOCALES_RELATIVE_DIRECTORY . $language_code . '/';
+			$language_base_urls[ $language_code ] = REFRACTION_ASSETS_URL . self::LOCALES_RELATIVE_DIRECTORY . $language_code . '/';
 
 			$locale_files = glob( $language_directory . '/*.json' );
 
@@ -54,7 +54,7 @@ class Top_Bar_Locale_Assets {
 					$handle,
 					$url,
 					[ 'editor-one-top-bar' ],
-					ELEMENTOR_VERSION,
+					REFRACTION_VERSION,
 					true
 				);
 			}

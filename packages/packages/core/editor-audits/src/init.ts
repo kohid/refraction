@@ -1,5 +1,5 @@
-import { registerFloatingPanel } from '@elementor/editor-floating-panels';
-import { __registerSlice as registerSlice } from '@elementor/store';
+import { registerFloatingPanel } from '@refraction/editor-floating-panels';
+import { __registerSlice as registerSlice } from '@refraction/store';
 
 import { registerAppBarAuditsToggle } from './editor-app-bar';
 import { auditPanel } from './editor-panel';

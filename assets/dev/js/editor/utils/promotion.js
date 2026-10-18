@@ -1,4 +1,4 @@
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	defaultOptions = {
 		title: '',
 		content: '',
@@ -10,7 +10,7 @@ export default class extends elementorModules.Module {
 		actionButton: {
 			url: null,
 			text: null,
-			classes: [ 'elementor-button', 'e-accent' ],
+			classes: [ 'refraction-button', 'e-accent' ],
 		},
 		hideProTag: false,
 	};
@@ -29,8 +29,8 @@ export default class extends elementorModules.Module {
 	}
 
 	initDialog() {
-		this.dialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-element--promotion__dialog',
+		this.dialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-element--promotion__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',
@@ -39,7 +39,7 @@ export default class extends elementorModules.Module {
 				onOutsideClick: false,
 			},
 			position: {
-				my: ( elementorCommon.config.isRTL ? 'right' : 'left' ) + '+5 top',
+				my: ( refractionCommon.config.isRTL ? 'right' : 'left' ) + '+5 top',
 			},
 			onHide: () => {
 				if ( this.hideProTag ) {
@@ -50,7 +50,7 @@ export default class extends elementorModules.Module {
 
 		this.elements.$header = this.dialog.getElements( 'header' );
 
-		this.elements.$title = jQuery( '<div>', { id: 'elementor-element--promotion__dialog__title' } );
+		this.elements.$title = jQuery( '<div>', { id: 'refraction-element--promotion__dialog__title' } );
 		this.elements.$titleBadge = jQuery( '<i>', { class: 'eicon-pro-icon' } );
 		this.elements.$closeButton = jQuery( '<i>', { class: 'eicon-close' } );
 
@@ -140,7 +140,7 @@ export default class extends elementorModules.Module {
 
 		this.elements.$title.text( options.title );
 
-		const inlineStartKey = elementorCommon.config.isRTL ? 'left' : 'right';
+		const inlineStartKey = refractionCommon.config.isRTL ? 'left' : 'right';
 
 		this.dialog
 			.setMessage( options.content )

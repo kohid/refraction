@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InteractionsTab as InteractionsTabContent } from '@elementor/editor-interactions';
+import { InteractionsTab as InteractionsTabContent } from '@refraction/editor-interactions';
 
 import { useElement } from '../contexts/element-context';
 import { SectionsList } from './sections-list';

@@ -4,7 +4,7 @@ import {
 	__dispatch as dispatch,
 	__getState as getState,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { apiClient } from '../api';
 import { saveDefaultStyles } from '../save-default-styles';
@@ -15,7 +15,7 @@ jest.mock( '../api' );
 
 jest.mock( '../utils/tracking' );
 
-jest.mock( '@elementor/editor-editing-panel', () => ( {
+jest.mock( '@refraction/editor-editing-panel', () => ( {
 	STYLE_SECTIONS: [
 		{ name: 'Spacing', fields: [ 'margin', 'padding' ] },
 		{ name: 'Typography', fields: [ 'font-size', 'color' ] },

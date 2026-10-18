@@ -1,33 +1,33 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Core\Kits\Documents\Kit;
-use Elementor\Core\Kits\Documents\Tabs\Settings_Agents;
-use Elementor\Modules\Agents\AdminMenuItems\Editor_One_Agents_Ready_Menu;
-use Elementor\Modules\Agents\Classes\Feature_Component;
-use Elementor\Modules\Agents\Classes\Feature_Registry;
-use Elementor\Modules\Agents\Classes\Llms_Content_Ajax;
-use Elementor\Modules\Agents\Classes\Markdown_Content_Catalog;
-use Elementor\Modules\Agents\Classes\Markdown_Preview_Ajax;
-use Elementor\Modules\Agents\Classes\Markdown_Search_Ajax;
-use Elementor\Modules\Agents\Classes\Request_Path;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Agent_Skills;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Api_Catalog;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Ard_Manifest;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Auth_Md;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Oauth_Authorization_Server;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Oauth_Protected_Resource;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Webmcp_Manifest;
-use Elementor\Modules\Agents\Components\Discovery\Well_Known\Well_Known_Router;
-use Elementor\Modules\Agents\Components\Discovery\Link_Headers;
-use Elementor\Modules\Agents\Components\Readability\Markdown_Endpoint;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Core\Kits\Documents\Kit;
+use Refraction\Core\Kits\Documents\Tabs\Settings_Agents;
+use Refraction\Modules\Agents\AdminMenuItems\Editor_One_Agents_Ready_Menu;
+use Refraction\Modules\Agents\Classes\Feature_Component;
+use Refraction\Modules\Agents\Classes\Feature_Registry;
+use Refraction\Modules\Agents\Classes\Llms_Content_Ajax;
+use Refraction\Modules\Agents\Classes\Markdown_Content_Catalog;
+use Refraction\Modules\Agents\Classes\Markdown_Preview_Ajax;
+use Refraction\Modules\Agents\Classes\Markdown_Search_Ajax;
+use Refraction\Modules\Agents\Classes\Request_Path;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Agent_Skills;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Api_Catalog;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Ard_Manifest;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Auth_Md;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Oauth_Authorization_Server;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Oauth_Protected_Resource;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Webmcp_Manifest;
+use Refraction\Modules\Agents\Components\Discovery\Well_Known\Well_Known_Router;
+use Refraction\Modules\Agents\Components\Discovery\Link_Headers;
+use Refraction\Modules\Agents\Components\Readability\Markdown_Endpoint;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -44,13 +44,13 @@ class Module extends BaseModule {
 	/** Default HTTP max-age for the served response (5 minutes). */
 	const DEFAULT_CACHE_MAX_AGE = 300;
 
-	const PAGE_ID = 'elementor-agents-ready';
+	const PAGE_ID = 'refraction-agents-ready';
 
 	const MOUNT_ID = 'e-agents-ready';
 
 	const SCRIPT_HANDLE = 'e-agents-ready-app';
 
-	const CONFIG_OBJECT_NAME = 'elementorAgentsReadyConfig';
+	const CONFIG_OBJECT_NAME = 'refractionAgentsReadyConfig';
 
 	const AJAX_OPT_IN_ACTION = 'agents_ready_opt_in';
 
@@ -63,13 +63,13 @@ class Module extends BaseModule {
 	 * activated, a physical llms.txt already existed in the web root.
 	 * Value: 'keep' | 'replace' | '' (not decided yet).
 	 */
-	const OPTION_EXISTING_FILE_DECISION = 'elementor_agents_llms_existing_file_decision';
+	const OPTION_EXISTING_FILE_DECISION = 'refraction_agents_llms_existing_file_decision';
 
 	/**
 	 * Option name that stores per-file overrides the admin can edit:
 	 * 'intro' and 'optional' keys.
 	 */
-	const OPTION_OVERRIDES = 'elementor_agents_llms_overrides';
+	const OPTION_OVERRIDES = 'refraction_agents_llms_overrides';
 
 	private Feature_Registry $feature_registry;
 	private Llms_Cache $cache;
@@ -88,8 +88,8 @@ class Module extends BaseModule {
 	public static function get_experimental_data() {
 		return [
 			'name'           => self::EXPERIMENT_NAME,
-			'title'          => esc_html__( 'Agent Ready', 'elementor' ),
-			'description'    => esc_html__( 'Make your site fully discoverable and readable by AI agents: auto-generated llms.txt, markdown endpoints for every page, and per-bot robots.txt controls.', 'elementor' ),
+			'title'          => esc_html__( 'Agent Ready', 'refraction' ),
+			'description'    => esc_html__( 'Make your site fully discoverable and readable by AI agents: auto-generated llms.txt, markdown endpoints for every page, and per-bot robots.txt controls.', 'refraction' ),
 			'hidden'         => true,
 			'default'        => Experiments_Manager::STATE_INACTIVE,
 			'release_status' => Experiments_Manager::RELEASE_STATUS_DEV,
@@ -125,7 +125,7 @@ class Module extends BaseModule {
 			add_action( "update_option_{$option}", [ $this, 'on_settings_change' ] );
 		}
 
-		add_action( 'elementor/kit/register_tabs', [ $this, 'register_kit_tabs' ] );
+		add_action( 'refraction/kit/register_tabs', [ $this, 'register_kit_tabs' ] );
 
 		add_action( 'template_redirect', [ $this, 'maybe_serve_llms_txt' ], 1 );
 		add_action( 'template_redirect', [ $this, 'maybe_serve_llms_full_txt' ], 1 );
@@ -134,13 +134,13 @@ class Module extends BaseModule {
 		add_action( 'trashed_post', [ $this, 'on_post_state_change' ] );
 		add_action( 'untrashed_post', [ $this, 'on_post_state_change' ] );
 		add_action( 'before_delete_post', [ $this, 'on_post_state_change' ] );
-		add_action( 'elementor/document/after_save', [ $this, 'on_elementor_document_save' ] );
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/document/after_save', [ $this, 'on_refraction_document_save' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 
 		add_action( 'switch_theme', [ $this, 'on_global_change' ] );
 		add_action( 'activated_plugin', [ $this, 'on_global_change' ] );
 		add_action( 'deactivated_plugin', [ $this, 'on_global_change' ] );
-		add_action( 'elementor/core/files/clear_cache', [ $this, 'on_global_change' ] );
+		add_action( 'refraction/core/files/clear_cache', [ $this, 'on_global_change' ] );
 
 		$this->robots_handler->register();
 
@@ -161,11 +161,11 @@ class Module extends BaseModule {
 		$this->register_component( new Link_Headers( $this->markdown_endpoint, $this->settings ) );
 		$this->register_component( $this->markdown_endpoint );
 
-		add_filter( 'elementor/editor/v2/packages', [ $this, 'add_packages' ] );
+		add_filter( 'refraction/editor/v2/packages', [ $this, 'add_packages' ] );
 		add_action( 'admin_init', [ $this, 'maybe_detect_existing_file' ] );
 
-		add_action( 'elementor/editor-one/menu/register', [ $this, 'register_editor_one_menu' ], self::EDITOR_ONE_MENU_REGISTER_PRIORITY );
-		add_action( 'elementor/editor-one/menu/after_register_hidden_submenus', [ $this, 'enqueue_assets_for_editor_one_menu' ] );
+		add_action( 'refraction/editor-one/menu/register', [ $this, 'register_editor_one_menu' ], self::EDITOR_ONE_MENU_REGISTER_PRIORITY );
+		add_action( 'refraction/editor-one/menu/after_register_hidden_submenus', [ $this, 'enqueue_assets_for_editor_one_menu' ] );
 	}
 
 	// -------------------------------------------------------------------------
@@ -204,8 +204,8 @@ class Module extends BaseModule {
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
 			$this->get_js_assets_url( 'agents-ready' ),
-			[ 'react', 'react-dom', 'elementor-common', 'elementor-v2-ui', 'wp-api-fetch' ],
-			ELEMENTOR_VERSION,
+			[ 'react', 'react-dom', 'refraction-common', 'refraction-v2-ui', 'wp-api-fetch' ],
+			REFRACTION_VERSION,
 			true
 		);
 
@@ -215,7 +215,7 @@ class Module extends BaseModule {
 			$this->get_app_config()
 		);
 
-		wp_set_script_translations( self::SCRIPT_HANDLE, 'elementor' );
+		wp_set_script_translations( self::SCRIPT_HANDLE, 'refraction' );
 	}
 
 	public function register_ajax_actions( Ajax $ajax ): void {
@@ -406,11 +406,11 @@ class Module extends BaseModule {
 	}
 
 	/**
-	 * Invalidate cache on Elementor document saves (handles kit saves too).
+	 * Invalidate cache on Refraction document saves (handles kit saves too).
 	 *
 	 * @param mixed $document
 	 */
-	public function on_elementor_document_save( $document ) {
+	public function on_refraction_document_save( $document ) {
 		if ( ! ( $document instanceof Kit ) ) {
 			return;
 		}
@@ -430,7 +430,7 @@ class Module extends BaseModule {
 	 * @param mixed $document
 	 */
 	public function maybe_invalidate_llms_txt_cache( $document ) {
-		$this->on_elementor_document_save( $document );
+		$this->on_refraction_document_save( $document );
 	}
 
 	/**
@@ -438,12 +438,12 @@ class Module extends BaseModule {
 	 * assembled-output transients.
 	 *
 	 * Triggered by events that can affect the rendered output of every post at
-	 * once — theme switch, plugin (de)activation, Elementor cache clear.
+	 * once — theme switch, plugin (de)activation, Refraction cache clear.
 	 */
 	public function on_global_change(): void {
 		$this->generator->clear_all_post_caches();
 		$this->cache->invalidate();
-		do_action( 'elementor/agents/llms_txt/cache_invalidated', 0 );
+		do_action( 'refraction/agents/llms_txt/cache_invalidated', 0 );
 	}
 
 	/**
@@ -472,7 +472,7 @@ class Module extends BaseModule {
 			// Override the default to inactive so new installs don't collide.
 			// (Existing explicit activations are not reverted.)
 			add_filter(
-				'elementor/experiments/feature_defaults',
+				'refraction/experiments/feature_defaults',
 				function ( array $defaults ) {
 					$defaults[ self::EXPERIMENT_NAME ] = Experiments_Manager::STATE_INACTIVE;
 					return $defaults;
@@ -536,7 +536,7 @@ class Module extends BaseModule {
 
 		if ( self::has_physical_llms_file() ) {
 			// Store a transient so the admin notice can surface the conflict.
-			set_transient( 'elementor_agents_llms_existing_file_detected', true, DAY_IN_SECONDS );
+			set_transient( 'refraction_agents_llms_existing_file_detected', true, DAY_IN_SECONDS );
 		}
 	}
 
@@ -565,7 +565,7 @@ class Module extends BaseModule {
 		}
 
 		update_option( self::OPTION_EXISTING_FILE_DECISION, $decision, false );
-		delete_transient( 'elementor_agents_llms_existing_file_detected' );
+		delete_transient( 'refraction_agents_llms_existing_file_detected' );
 	}
 
 	/**
@@ -573,7 +573,7 @@ class Module extends BaseModule {
 	 * made a decision about it.
 	 */
 	public function has_pending_existing_file_conflict(): bool {
-		return (bool) get_transient( 'elementor_agents_llms_existing_file_detected' );
+		return (bool) get_transient( 'refraction_agents_llms_existing_file_detected' );
 	}
 
 	// -------------------------------------------------------------------------
@@ -673,7 +673,7 @@ class Module extends BaseModule {
 		 *
 		 * @param int $post_id The post ID that triggered the invalidation (0 if unknown).
 		 */
-		do_action( 'elementor/agents/llms_txt/cache_invalidated', $post_id );
+		do_action( 'refraction/agents/llms_txt/cache_invalidated', $post_id );
 	}
 
 	private function get_app_config(): array {
@@ -782,7 +782,7 @@ class Module extends BaseModule {
 		 *
 		 * @param int $max_age Cache lifetime in seconds.
 		 */
-		$max_age = (int) apply_filters( 'elementor/agents/llms_txt/cache_max_age', self::DEFAULT_CACHE_MAX_AGE );
+		$max_age = (int) apply_filters( 'refraction/agents/llms_txt/cache_max_age', self::DEFAULT_CACHE_MAX_AGE );
 
 		return max( 0, $max_age );
 	}
@@ -881,7 +881,7 @@ class Module extends BaseModule {
 	 * register() is a no-op. Disabled/inapplicable endpoints are still
 	 * registered so the router and registry are always complete.
 	 *
-	 * @param \Elementor\Modules\Agents\Components\Discovery\Well_Known\Abstract_Well_Known_Endpoint $endpoint
+	 * @param \Refraction\Modules\Agents\Components\Discovery\Well_Known\Abstract_Well_Known_Endpoint $endpoint
 	 */
 	private function register_well_known_endpoint( $endpoint ): void {
 		$this->feature_registry->register( $endpoint );

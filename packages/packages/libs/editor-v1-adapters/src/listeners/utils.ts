@@ -4,15 +4,15 @@ import { type ExtendedWindow, type ListenerEvent } from './types';
 export function dispatchReadyEvent() {
 	return getV1LoadingPromise().then( () => {
 		setReady( true );
-		window.dispatchEvent( new CustomEvent( 'elementor/initialized' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/initialized' ) );
 	} );
 }
 
 function getV1LoadingPromise() {
-	const v1LoadingPromise = ( window as unknown as ExtendedWindow ).__elementorEditorV1LoadingPromise;
+	const v1LoadingPromise = ( window as unknown as ExtendedWindow ).__refractionEditorV1LoadingPromise;
 
 	if ( ! v1LoadingPromise ) {
-		return Promise.reject( 'Elementor Editor V1 is not loaded' );
+		return Promise.reject( 'Refraction Editor V1 is not loaded' );
 	}
 
 	return v1LoadingPromise;

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import PropTypes from 'prop-types';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 export default function EmptyComponent( { container } = {} ) {
 	const handleClick = () => {
@@ -17,8 +17,8 @@ export default function EmptyComponent( { container } = {} ) {
 	};
 
 	return (
-		<div className="elementor-first-add">
-			<div className="elementor-icon eicon-plus" onClick={ handleClick } />
+		<div className="refraction-first-add">
+			<div className="refraction-icon eicon-plus" onClick={ handleClick } />
 		</div>
 	);
 }

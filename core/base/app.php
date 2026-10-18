@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Core\Base;
+namespace Refraction\Core\Base;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,12 +31,12 @@ abstract class App extends Module {
 	final protected function print_config( $handle = null ) {
 		$name = $this->get_name();
 
-		$js_var = 'elementor' . str_replace( ' ', '', ucwords( str_replace( '-', ' ', $name ) ) ) . 'Config';
+		$js_var = 'refraction' . str_replace( ' ', '', ucwords( str_replace( '-', ' ', $name ) ) ) . 'Config';
 
 		$config = $this->get_settings() + $this->get_components_config();
 
 		if ( ! $handle ) {
-			$handle = 'elementor-' . $name;
+			$handle = 'refraction-' . $name;
 		}
 
 		Utils::print_js_config( $handle, $js_var, $config );

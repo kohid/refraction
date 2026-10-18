@@ -11,7 +11,7 @@ test.describe( 'Verify floating buttons editor, admin page and front page behavi
 			apiRequests,
 		}, testInfo ) => {
 		const floatingElPage = new FloatingElementPage( page, testInfo, apiRequests );
-		const editor = await floatingElPage.goToFloatingButtonElementorEditor();
+		const editor = await floatingElPage.goToFloatingButtonRefractionEditor();
 		await floatingElPage.waitForPanel();
 
 		await test.step( 'Check that the Top Bar has no "Add Element" and no "Site Settings" buttons', async () => {
@@ -22,16 +22,16 @@ test.describe( 'Verify floating buttons editor, admin page and front page behavi
 		} );
 
 		await test.step( 'Check that the floating element has been selected correctly when opening.', async () => {
-			const panelTitle = page.locator( '#elementor-panel-header-title' );
+			const panelTitle = page.locator( '#refraction-panel-header-title' );
 			await expect( panelTitle ).toHaveText( 'Edit Single Chat' );
 		} );
 
-		const advancedSettingsCustom = page.locator( '.elementor-tab-control-advanced-tab-floating-buttons' );
+		const advancedSettingsCustom = page.locator( '.refraction-tab-control-advanced-tab-floating-buttons' );
 
 		await test.step( 'Check that we are displaying three tabs for the widget, and that we are displaying our custom Advanced Tab.', async () => {
-			const panelTitle = page.locator( '#elementor-panel-header-title' );
+			const panelTitle = page.locator( '#refraction-panel-header-title' );
 			await expect( panelTitle ).toHaveText( 'Edit Single Chat' );
-			const navigationContainer = page.locator( '.elementor-panel-navigation' );
+			const navigationContainer = page.locator( '.refraction-panel-navigation' );
 			const buttons = navigationContainer.locator( 'button' );
 			const visibleButtons = buttons.filter( { has: page.locator( ':visible' ) } );
 			await expect( visibleButtons ).toHaveCount( 3 );
@@ -40,14 +40,14 @@ test.describe( 'Verify floating buttons editor, admin page and front page behavi
 
 		await test.step( 'Check that  our custom advanced tab has the five expected sections and no others.', async () => {
 			await advancedSettingsCustom.click();
-			const elementorControlsContainer = page.locator( '#elementor-controls' );
+			const refractionControlsContainer = page.locator( '#refraction-controls' );
 
 			EditorSelectors.floatingElements.floatingButtons.controls.advanced.sections.forEach( async ( control ) => {
-				const element = elementorControlsContainer.locator( control );
+				const element = refractionControlsContainer.locator( control );
 				await expect( element ).toBeVisible();
 			} );
 
-			const sections = elementorControlsContainer.locator( '.elementor-control-type-section' );
+			const sections = refractionControlsContainer.locator( '.refraction-control-type-section' );
 			await expect( sections ).toHaveCount( 5 );
 		} );
 
@@ -65,16 +65,16 @@ test.describe( 'Verify floating buttons editor, admin page and front page behavi
 				const contactButtonWidget = container.locator( EditorSelectors.getWidgetByName( 'contact-buttons' ) );
 				await expect( contactButtonWidget ).toBeVisible();
 
-				const contactButtonActionsContainer = container.locator( '.elementor-editor-container-settings' );
+				const contactButtonActionsContainer = container.locator( '.refraction-editor-container-settings' );
 				const actions = contactButtonActionsContainer.locator( 'li' );
 				await expect( actions ).toHaveCount( 1 );
 
 				const contactButtonElement = editor.getPreviewFrame().locator( '.e-contact-buttons' );
 
 				await contactButtonElement.hover();
-				const deleteContainer = contactButtonActionsContainer.locator( '.elementor-editor-element-remove' );
+				const deleteContainer = contactButtonActionsContainer.locator( '.refraction-editor-element-remove' );
 				await deleteContainer.click();
-				const libraryModal = page.locator( '#elementor-template-library-modal' );
+				const libraryModal = page.locator( '#refraction-template-library-modal' );
 				await expect( libraryModal ).toBeVisible();
 				await libraryModal.focus();
 				await page.keyboard.press( 'Escape' );
@@ -151,36 +151,36 @@ test.describe( 'Verify floating buttons editor, admin page and front page behavi
 			'Verify that creating a new floating element works as expected. Starting the process opens a Modal',
 			async () => {
 				await addNewButton.click();
-				const modal = page.locator( '#elementor-new-floating-elements-modal' );
+				const modal = page.locator( '#refraction-new-floating-elements-modal' );
 				await expect( modal ).toBeVisible();
 
-				const optionsField = page.locator( 'select[name="meta[_elementor_floating_elements_type]"] option' );
+				const optionsField = page.locator( 'select[name="meta[_refraction_floating_elements_type]"] option' );
 				await expect( optionsField ).toHaveCount( 2 );
 
-				const hiddenField = page.locator( '#elementor-new-floating-elements__form input[name="post_type"]' );
+				const hiddenField = page.locator( '#refraction-new-floating-elements__form input[name="post_type"]' );
 				await expect( hiddenField ).toHaveAttribute( 'value', 'e-floating-buttons' );
 
 				const titleField = page.locator( 'input[name="post_data[post_title]"]' );
 				await expect( titleField ).toBeVisible();
 				await titleField.fill( 'New Floating Button' );
 
-				const createElement = page.locator( '#elementor-new-floating-elements__form__submit' );
+				const createElement = page.locator( '#refraction-new-floating-elements__form__submit' );
 				await createElement.click();
-				await page.waitForURL( /\/wp-admin\/post\.php\?post=\d+&action=elementor&floating_element=floating-buttons/ );
+				await page.waitForURL( /\/wp-admin\/post\.php\?post=\d+&action=refraction&floating_element=floating-buttons/ );
 			} );
 
 		await test.step(
 			'The modal closes and the editor opens when data is submitted. The library modal redirects to the admin when closing.',
 			async () => {
-				const libraryModal = page.locator( '#elementor-template-library-modal' );
+				const libraryModal = page.locator( '#refraction-template-library-modal' );
 				await expect( libraryModal ).toBeVisible();
-				const footerSelector = '.elementor-template-library-template-footer';
+				const footerSelector = '.refraction-template-library-template-footer';
 				const footer = page.locator( footerSelector );
-				await page.hover( '.elementor-template-library-template' );
+				await page.hover( '.refraction-template-library-template' );
 				await page.waitForSelector( footerSelector );
 				await expect( footer.first() ).toBeVisible();
 
-				const closeIcon = page.locator( '.elementor-templates-modal__header__close i' );
+				const closeIcon = page.locator( '.refraction-templates-modal__header__close i' );
 				await expect( closeIcon ).toHaveAttribute( 'class', 'eicon-close' );
 				await closeIcon.click();
 				await page.waitForURL( '/wp-admin/edit.php?post_type=e-floating-buttons' );
@@ -191,7 +191,7 @@ test.describe( 'Verify floating buttons editor, admin page and front page behavi
 			async () => {
 				const floatingElementTitle = page.locator( '.wp-list-table a.row-title:has-text("New Floating Button")' );
 				await expect( floatingElementTitle ).toBeVisible();
-				await expect( page.locator( '.wp-list-table td.elementor_library_type:has-text("Floating Buttons")' ) ).toHaveCount( 2 );
+				await expect( page.locator( '.wp-list-table td.refraction_library_type:has-text("Floating Buttons")' ) ).toHaveCount( 2 );
 			} );
 	} );
 } );

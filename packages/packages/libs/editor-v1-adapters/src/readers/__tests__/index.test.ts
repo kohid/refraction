@@ -8,7 +8,7 @@ type ExtendedWindow = Window & {
 	};
 };
 
-describe( '@elementor/editor-v1-adapters - Readers', () => {
+describe( '@refraction/editor-v1-adapters - Readers', () => {
 	let eIsPartOf: jest.Mock;
 
 	beforeEach( () => {

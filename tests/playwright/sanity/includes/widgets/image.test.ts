@@ -3,7 +3,7 @@ import { parallelTest as test } from '../../../parallelTest';
 import WpAdminPage from '../../../pages/wp-admin-page';
 import EditorPage from '../../../pages/editor-page';
 import EditorSelectors from '../../../selectors/editor-selectors';
-import Content from '../../../pages/elementor-panel-tabs/content';
+import Content from '../../../pages/refraction-panel-tabs/content';
 
 test.describe( 'Image widget tests @styleguide_image_link', () => {
 	const data = [
@@ -67,7 +67,7 @@ test.describe( 'Image widget tests @styleguide_image_link', () => {
 						className: `size-${ imageSize[ id ] }`,
 						isPublished: true,
 					} );
-				await wpAdmin.editWithElementor();
+				await wpAdmin.editWithRefraction();
 				await page.waitForLoadState( 'load' );
 			}
 		} );
@@ -109,12 +109,12 @@ test.describe( 'Image widget tests @styleguide_image_link', () => {
 		await editor.setSelectControlValue( 'link_to', 'file' );
 		await editor.setSelectControlValue( 'open_lightbox', 'yes' );
 		await expect( editor.getPreviewFrame().locator( EditorSelectors.image.link ),
-		).toHaveAttribute( 'data-elementor-open-lightbox', 'yes' );
+		).toHaveAttribute( 'data-refraction-open-lightbox', 'yes' );
 		await editor.getPreviewFrame().locator( EditorSelectors.image.image ).click();
 		await expect( editor.getPreviewFrame().locator( EditorSelectors.image.lightBox ) ).toBeVisible();
 
-		const title = editor.getPreviewFrame().locator( '.elementor-slideshow__title' );
-		const description = editor.getPreviewFrame().locator( '.elementor-slideshow__description' );
+		const title = editor.getPreviewFrame().locator( '.refraction-slideshow__title' );
+		const description = editor.getPreviewFrame().locator( '.refraction-slideshow__description' );
 		await expect( title ).toHaveCSS( 'text-align', 'center' );
 		await expect( description ).toHaveCSS( 'text-align', 'center' );
 

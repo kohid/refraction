@@ -170,7 +170,7 @@ function restrictFrameMenu( frame: MediaFrame ) {
 }
 
 function setTypeCaller( frame: MediaFrame ) {
-	frame.uploader.uploader.param( 'uploadTypeCaller', 'elementor-wp-media-upload' );
+	frame.uploader.uploader.param( 'uploadTypeCaller', 'refraction-wp-media-upload' );
 }
 
 function handleExtensions( frame: MediaFrame, mediaTypes: MediaType[] ) {

@@ -1,4 +1,4 @@
-.elementor-control-type-popover_toggle {
+.refraction-control-type-popover_toggle {
 
 	input {
 		display: none;
@@ -8,17 +8,17 @@
 		cursor: pointer;
 	}
 
-	.elementor-control-input-wrapper {
+	.refraction-control-input-wrapper {
 		display: flex;
 		flex-direction: row-reverse;
 		align-items: center;
 	}
 
-	.elementor-control-popover-toggle-toggle {
+	.refraction-control-popover-toggle-toggle {
 
 		&:checked {
 
-			+ .elementor-control-popover-toggle-toggle-label {
+			+ .refraction-control-popover-toggle-toggle-label {
 				color: var(--e-a-color-txt-active);
 				background-color: var(--e-a-bg-active-bold);
 			}
@@ -26,13 +26,13 @@
 
 		&:not(:checked) {
 
-			~ .elementor-control-popover-toggle-reset-label {
+			~ .refraction-control-popover-toggle-reset-label {
 				display: none;
 			}
 		}
 	}
 
-	.elementor-control-popover-toggle-toggle-label {
+	.refraction-control-popover-toggle-toggle-label {
 		height: $control-unit;
 		display: inline-flex;
 		align-items: center;
@@ -46,7 +46,7 @@
 		}
 	}
 
-	.elementor-control-popover-toggle-reset-label {
+	.refraction-control-popover-toggle-reset-label {
 		color: var(--e-a-color-txt-muted);
 		margin-inline-end: 5px;
 
@@ -56,7 +56,7 @@
 	}
 }
 
-.elementor-controls-popover {
+.refraction-controls-popover {
 
 	&.e-controls-popover--typography {
 		padding-block-start: 0;
@@ -65,7 +65,7 @@
 
 .e-control-global {
 
-	.elementor-control-popover-toggle-toggle-label {
+	.refraction-control-popover-toggle-toggle-label {
 		border-start-start-radius: 0;
 		border-start-end-radius: var(--e-a-border-radius);
 		border-end-start-radius: 0;

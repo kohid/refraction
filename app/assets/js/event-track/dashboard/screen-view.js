@@ -6,10 +6,10 @@ const SCREEN_SELECTORS = {
 	NAV_TAB_WRAPPER: '.nav-tab-wrapper',
 	NAV_TAB: '.nav-tab',
 	NAV_TAB_ACTIVE: '.nav-tab-active',
-	SETTINGS_FORM_PAGE: '.elementor-settings-form-page',
-	SETTINGS_FORM_PAGE_ACTIVE: '.elementor-settings-form-page.elementor-active',
-	FLOATING_ELEMENTS_MODAL: '#elementor-new-floating-elements-modal',
-	TEMPLATE_DIALOG_MODAL: '#elementor-new-template-dialog-content',
+	SETTINGS_FORM_PAGE: '.refraction-settings-form-page',
+	SETTINGS_FORM_PAGE_ACTIVE: '.refraction-settings-form-page.refraction-active',
+	FLOATING_ELEMENTS_MODAL: '#refraction-new-floating-elements-modal',
+	TEMPLATE_DIALOG_MODAL: '#refraction-new-template-dialog-content',
 };
 
 const TRACKED_MODALS = [
@@ -21,7 +21,7 @@ class ScreenViewTracking extends BaseTracking {
 	static trackedScreens = new Set();
 
 	static init() {
-		if ( ! DashboardUtils.isElementorPage() ) {
+		if ( ! DashboardUtils.isRefractionPage() ) {
 			return;
 		}
 
@@ -55,7 +55,7 @@ class ScreenViewTracking extends BaseTracking {
 			screenId = this.getScreenIdFromBody();
 		}
 
-		if ( this.isElementorAppPage() ) {
+		if ( this.isRefractionAppPage() ) {
 			const appScreenData = this.getAppScreenData( hash );
 			if ( appScreenData ) {
 				return appScreenData;
@@ -65,7 +65,7 @@ class ScreenViewTracking extends BaseTracking {
 		const hasNavTabs = document.querySelector( SCREEN_SELECTORS.NAV_TAB_WRAPPER );
 		const hasSettingsTabs = document.querySelectorAll( SCREEN_SELECTORS.SETTINGS_FORM_PAGE ).length > 1;
 
-		if ( hasNavTabs || hasSettingsTabs || ( hash && ! this.isElementorAppPage() ) ) {
+		if ( hasNavTabs || hasSettingsTabs || ( hash && ! this.isRefractionAppPage() ) ) {
 			screenType = SCREEN_TYPES.TAB;
 
 			if ( hash ) {
@@ -98,9 +98,9 @@ class ScreenViewTracking extends BaseTracking {
 		return { screenId, screenType };
 	}
 
-	static isElementorAppPage() {
+	static isRefractionAppPage() {
 		const urlParams = new URLSearchParams( window.location.search );
-		return 'elementor-app' === urlParams.get( 'page' );
+		return 'refraction-app' === urlParams.get( 'page' );
 	}
 
 	static getAppScreenData( hash ) {
@@ -131,12 +131,12 @@ class ScreenViewTracking extends BaseTracking {
 		const bodyClasses = body.className.split( ' ' );
 
 		for ( const cls of bodyClasses ) {
-			if ( cls.startsWith( 'elementor' ) && ( cls.includes( 'page' ) || cls.includes( 'post-type' ) ) ) {
+			if ( cls.startsWith( 'refraction' ) && ( cls.includes( 'page' ) || cls.includes( 'post-type' ) ) ) {
 				return cls;
 			}
 		}
 
-		return 'elementor-unknown';
+		return 'refraction-unknown';
 	}
 
 	static sanitizeScreenId( text ) {

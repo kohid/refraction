@@ -6,15 +6,15 @@ import { hasMeaningfulAlt, isImageSourcePresent } from '../utils/image-alt';
 
 export const audit: Audit = {
 	id: 'audits/images-alt-text',
-	title: __( 'Images alt text', 'elementor' ),
-	description: __( 'Every image needs a meaningful alt attribute for screen readers and image-search.', 'elementor' ),
-	fixHint: __( "Open the image's settings and add an Alt Text describing the image.", 'elementor' ),
+	title: __( 'Images alt text', 'refraction' ),
+	description: __( 'Every image needs a meaningful alt attribute for screen readers and image-search.', 'refraction' ),
+	fixHint: __( "Open the image's settings and add an Alt Text describing the image.", 'refraction' ),
 	categories: [ 'seo', 'accessibility' ],
 	severity: 'error',
 	weight: 10,
 	evaluate: ( ctx ) => {
 		if ( ! hasAltTextImages( ctx.elements.tree ) ) {
-			return { status: 'skipped', reason: __( 'No images', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No images', 'refraction' ) };
 		}
 
 		const isReady = ctx.pageContext.ally_plugin_active;
@@ -35,9 +35,9 @@ export const audit: Audit = {
 					auditId: audit.id,
 					elementId: node.id,
 					targetHint: 'element-settings',
-					label: __( 'Image is missing alt text.', 'elementor' ),
+					label: __( 'Image is missing alt text.', 'refraction' ),
 					externalUrl: isReady ? ctx.pageContext.ally_scan_url : ctx.pageContext.ally_plugin_url,
-					ctaLabel: __( 'Fix with Ally', 'elementor' ),
+					ctaLabel: __( 'Fix with Ally', 'refraction' ),
 				} );
 			}
 		} );

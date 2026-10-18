@@ -1,4 +1,4 @@
-import { z } from '@elementor/schema';
+import { z } from '@refraction/schema';
 
 const transformableSchema = z.object( {
 	$$type: z.string(),

@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Tests\Phpunit;
+namespace Refraction\Tests\Phpunit;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Upgrade\Manager;
-use Elementor\Core\Upgrade\Updater;
-use Elementor\Tests\Phpunit\Elementor\Modules\Usage\Test_Module;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Upgrade\Manager;
+use Refraction\Core\Upgrade\Updater;
+use Refraction\Tests\Phpunit\Refraction\Modules\Usage\Test_Module;
 
 trait Test_Upgrades_Trait {
 
@@ -43,7 +43,7 @@ trait Test_Upgrades_Trait {
 			'post_type' => $post_type,
 		] );
 
-		$document = self::elementor()->documents->get( $post->ID );
+		$document = self::refraction()->documents->get( $post->ID );
 		$document->save_template_type();
 
 		return $document;
@@ -63,7 +63,7 @@ trait Test_Upgrades_Trait {
 
 		$post = $this->factory()->create_and_get_custom_post( $data );
 
-		$document = self::elementor()->documents->get( $post->ID );
+		$document = self::refraction()->documents->get( $post->ID );
 		$document->save_template_type();
 
 		return $document;

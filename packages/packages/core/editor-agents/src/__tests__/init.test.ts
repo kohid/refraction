@@ -1,8 +1,8 @@
-import { injectSiteSettingsTab } from '@elementor/editor-site-settings';
+import { injectSiteSettingsTab } from '@refraction/editor-site-settings';
 
 const mockInjectSiteSettingsTab = injectSiteSettingsTab as jest.MockedFunction< typeof injectSiteSettingsTab >;
 
-jest.mock( '@elementor/editor-site-settings', () => ( {
+jest.mock( '@refraction/editor-site-settings', () => ( {
 	injectSiteSettingsTab: jest.fn(),
 } ) );
 
@@ -10,11 +10,11 @@ import { AGENTS_SITE_SETTINGS_TAB_ID, AgentsSettingsTab } from '../components/ag
 import { init } from '../init';
 
 describe( 'init', () => {
-	const originalExperimentalFeatures = window.elementorCommon?.config?.experimentalFeatures;
+	const originalExperimentalFeatures = window.refractionCommon?.config?.experimentalFeatures;
 
 	afterEach( () => {
-		if ( window.elementorCommon?.config ) {
-			window.elementorCommon.config.experimentalFeatures = originalExperimentalFeatures ?? {};
+		if ( window.refractionCommon?.config ) {
+			window.refractionCommon.config.experimentalFeatures = originalExperimentalFeatures ?? {};
 		}
 
 		jest.clearAllMocks();
@@ -22,13 +22,13 @@ describe( 'init', () => {
 
 	it( 'registers the agents site settings tab when the experiment is active', () => {
 		// Arrange.
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				experimentalFeatures: {
 					agent_ready: true,
 				},
 			},
-		} as typeof window.elementorCommon;
+		} as typeof window.refractionCommon;
 
 		// Act.
 		init();
@@ -42,11 +42,11 @@ describe( 'init', () => {
 
 	it( 'does not register the agents site settings tab when the experiment is inactive', () => {
 		// Arrange.
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				experimentalFeatures: {},
 			},
-		} as typeof window.elementorCommon;
+		} as typeof window.refractionCommon;
 
 		// Act.
 		init();

@@ -1,4 +1,4 @@
-import { type PropTypeKey } from '@elementor/editor-props';
+import { type PropTypeKey } from '@refraction/editor-props';
 
 import { type AnyTransformer, type TransformersMap } from './types';
 

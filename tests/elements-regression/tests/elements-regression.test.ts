@@ -4,7 +4,7 @@ import WpAdminPage from '../../playwright/pages/wp-admin-page';
 import EditorPage from '../../playwright/pages/editor-page';
 import ElementRegressionHelper from '../helper';
 
-test.describe( 'Elementor regression tests with templates for CORE', () => {
+test.describe( 'Refraction regression tests with templates for CORE', () => {
 	test.beforeAll( async ( { browser, apiRequests }, testInfo ) => {
 		const page = await browser.newPage();
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
@@ -66,8 +66,8 @@ test.describe( 'Elementor regression tests with templates for CORE', () => {
 				button_hover: 'a',
 				image_hover: 'img',
 				image_box_hover: 'img',
-				icon_hover: '.elementor-icon.elementor-animation-rotate',
-				social_icons_hover: '.elementor-social-icon-facebook',
+				icon_hover: '.refraction-icon.refraction-animation-rotate',
+				social_icons_hover: '.refraction-social-icon-facebook',
 				text_path_hover: 'textPath',
 			};
 

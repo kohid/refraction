@@ -1,21 +1,21 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Utils\Force_Locale;
-use Elementor\Modules\NestedAccordion\Widgets\Nested_Accordion;
-use Elementor\Modules\NestedTabs\Widgets\NestedTabs;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Utils\Force_Locale;
+use Refraction\Modules\NestedAccordion\Widgets\Nested_Accordion;
+use Refraction\Modules\NestedTabs\Widgets\NestedTabs;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor widgets manager.
+ * Refraction widgets manager.
  *
- * Elementor widgets manager handler class is responsible for registering and
- * initializing all the supported Elementor widgets.
+ * Refraction widgets manager handler class is responsible for registering and
+ * initializing all the supported Refraction widgets.
  *
  * @since 1.0.0
  */
@@ -55,8 +55,8 @@ class Widgets_Manager {
 	/**
 	 * Init widgets.
 	 *
-	 * Initialize Elementor widgets manager. Include all the widgets files
-	 * and register each Elementor and WordPress widget.
+	 * Initialize Refraction widgets manager. Include all the widgets files
+	 * and register each Refraction and WordPress widget.
 	 *
 	 * @since 2.0.0
 	 * @access private
@@ -104,7 +104,7 @@ class Widgets_Manager {
 		$this->register_promoted_widgets();
 
 		foreach ( $build_widgets_filename as $widget_filename ) {
-			include ELEMENTOR_PATH . 'includes/widgets/' . $widget_filename . '.php';
+			include REFRACTION_PATH . 'includes/widgets/' . $widget_filename . '.php';
 
 			$class_name = str_replace( '-', '_', $widget_filename );
 
@@ -118,30 +118,30 @@ class Widgets_Manager {
 		/**
 		 * After widgets registered.
 		 *
-		 * Fires after Elementor widgets are registered.
+		 * Fires after Refraction widgets are registered.
 		 *
 		 * @since 1.0.0
-		 * @deprecated 3.5.0 Use `elementor/widgets/register` hook instead.
+		 * @deprecated 3.5.0 Use `refraction/widgets/register` hook instead.
 		 *
 		 * @param Widgets_Manager $this The widgets manager.
 		 */
 		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->do_deprecated_action(
-			'elementor/widgets/widgets_registered',
+			'refraction/widgets/widgets_registered',
 			[ $this ],
 			'3.5.0',
-			'elementor/widgets/register'
+			'refraction/widgets/register'
 		);
 
 		/**
 		 * After widgets registered.
 		 *
-		 * Fires after Elementor widgets are registered.
+		 * Fires after Refraction widgets are registered.
 		 *
 		 * @since 3.5.0
 		 *
 		 * @param Widgets_Manager $this The widgets manager.
 		 */
-		do_action( 'elementor/widgets/register', $this );
+		do_action( 'refraction/widgets/register', $this );
 	}
 
 	/**
@@ -149,7 +149,7 @@ class Widgets_Manager {
 	 *
 	 * Add native WordPress widget to the list of registered widget types.
 	 *
-	 * Exclude the widgets that are in Elementor widgets black list. Theme and
+	 * Exclude the widgets that are in Refraction widgets black list. Theme and
 	 * plugin authors can filter the black list.
 	 *
 	 * @since 2.0.0
@@ -162,7 +162,7 @@ class Widgets_Manager {
 		$black_list = [];
 
 		/**
-		 * Elementor widgets black list.
+		 * Refraction widgets black list.
 		 *
 		 * Filters the widgets black list that won't be displayed in the panel.
 		 *
@@ -170,7 +170,7 @@ class Widgets_Manager {
 		 *
 		 * @param array $black_list A black list of widgets. Default is an empty array.
 		 */
-		$black_list = apply_filters( 'elementor/widgets/black_list', $black_list );
+		$black_list = apply_filters( 'refraction/widgets/black_list', $black_list );
 
 		foreach ( $wp_widget_factory->widgets as $widget_class => $widget_obj ) {
 
@@ -178,10 +178,10 @@ class Widgets_Manager {
 				continue;
 			}
 
-			$elementor_widget_class = __NAMESPACE__ . '\Widget_WordPress';
+			$refraction_widget_class = __NAMESPACE__ . '\Widget_WordPress';
 
 			$this->register(
-				new $elementor_widget_class( [], [
+				new $refraction_widget_class( [], [
 					'widget_name' => $widget_class,
 				] )
 			);
@@ -191,13 +191,13 @@ class Widgets_Manager {
 	/**
 	 * Require files.
 	 *
-	 * Require Elementor widget base class.
+	 * Require Refraction widget base class.
 	 *
 	 * @since 2.0.0
 	 * @access private
 	 */
 	private function require_files() {
-		require ELEMENTOR_PATH . 'includes/base/widget-base.php';
+		require REFRACTION_PATH . 'includes/base/widget-base.php';
 	}
 
 	private function pluck_default_controls( $controls ) {
@@ -220,7 +220,7 @@ class Widgets_Manager {
 	 * @access public
 	 * @deprecated 3.5.0 Use `register()` method instead.
 	 *
-	 * @param Widget_Base $widget Elementor widget.
+	 * @param Widget_Base $widget Refraction widget.
 	 *
 	 * @return true True if the widget was registered.
 	 */
@@ -237,7 +237,7 @@ class Widgets_Manager {
 	/**
 	 * Register a new widget type.
 	 *
-	 * @param \Elementor\Widget_Base $widget_instance Elementor Widget.
+	 * @param \Refraction\Widget_Base $widget_instance Refraction Widget.
 	 *
 	 * @return bool True if the widget was registered.
 	 * @since 3.5.0
@@ -254,9 +254,9 @@ class Widgets_Manager {
 		 * @since 3.18.0
 		 *
 		 * @param bool $should_register Should widget be registered. Default is `true`.
-		 * @param \Elementor\Widget_Base $widget_instance Widget instance.
+		 * @param \Refraction\Widget_Base $widget_instance Widget instance.
 		 */
-		$should_register = apply_filters( 'elementor/widgets/is_widget_enabled', true, $widget_instance );
+		$should_register = apply_filters( 'refraction/widgets/is_widget_enabled', true, $widget_instance );
 
 		if ( ! $should_register ) {
 			return false;
@@ -450,9 +450,9 @@ class Widgets_Manager {
 	/**
 	 * Ajax render widget.
 	 *
-	 * Ajax handler for Elementor render_widget.
+	 * Ajax handler for Refraction render_widget.
 	 *
-	 * Fired by `wp_ajax_elementor_render_widget` action.
+	 * Fired by `wp_ajax_refraction_render_widget` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -496,9 +496,9 @@ class Widgets_Manager {
 	/**
 	 * Ajax get WordPress widget form.
 	 *
-	 * Ajax handler for Elementor editor get_wp_widget_form.
+	 * Ajax handler for Refraction editor get_wp_widget_form.
 	 *
-	 * Fired by `wp_ajax_elementor_editor_get_wp_widget_form` action.
+	 * Fired by `wp_ajax_refraction_editor_get_wp_widget_form` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -725,7 +725,7 @@ class Widgets_Manager {
 	/**
 	 * Widgets manager constructor.
 	 *
-	 * Initializing Elementor widgets manager.
+	 * Initializing Refraction widgets manager.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -733,7 +733,7 @@ class Widgets_Manager {
 	public function __construct() {
 		$this->require_files();
 
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 	}
 
 	/**

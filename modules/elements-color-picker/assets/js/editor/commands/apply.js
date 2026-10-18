@@ -27,7 +27,7 @@ export class Apply extends $e.modules.CommandBase {
 			const prevText = trigger.swatch.dataset.text;
 
 			// Show `Selected!` message.
-			trigger.swatch.dataset.text = __( 'Selected', 'elementor' );
+			trigger.swatch.dataset.text = __( 'Selected', 'refraction' );
 
 			// Hide message after a second.
 			setTimeout( () => {

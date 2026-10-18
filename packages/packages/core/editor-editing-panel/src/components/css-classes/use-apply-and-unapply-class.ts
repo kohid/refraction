@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
-import { getElementLabel } from '@elementor/editor-elements';
-import { type StyleDefinitionID } from '@elementor/editor-styles';
-import { useGetStylesRepositoryCreateAction } from '@elementor/editor-styles-repository';
-import { undoable } from '@elementor/editor-v1-adapters';
+import { getElementLabel } from '@refraction/editor-elements';
+import { type StyleDefinitionID } from '@refraction/editor-styles';
+import { useGetStylesRepositoryCreateAction } from '@refraction/editor-styles-repository';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { doApplyClasses, doGetAppliedClasses } from '../../apply-unapply-actions';
@@ -50,7 +50,7 @@ export function useUndoableApplyClass() {
 				title: getElementLabel( element.id ),
 				subtitle: ( { classLabel } ) => {
 					/* translators: %s is the class name. */
-					return __( `class %s applied`, 'elementor' ).replace( '%s', classLabel );
+					return __( `class %s applied`, 'refraction' ).replace( '%s', classLabel );
 				},
 			}
 		);
@@ -83,7 +83,7 @@ export function useUndoableUnapplyClass() {
 				title: getElementLabel( element.id ),
 				subtitle: ( { classLabel } ) => {
 					/* translators: %s is the class name. */
-					return __( `class %s removed`, 'elementor' ).replace( '%s', classLabel );
+					return __( `class %s removed`, 'refraction' ).replace( '%s', classLabel );
 				},
 			}
 		);
@@ -131,10 +131,10 @@ export function useCreateAndApplyClass() {
 				},
 			},
 			{
-				title: __( 'Class', 'elementor' ),
+				title: __( 'Class', 'refraction' ),
 				subtitle: ( { classLabel } ) => {
 					/* translators: %s is the class name. */
-					return __( `%s created`, 'elementor' ).replace( '%s', classLabel );
+					return __( `%s created`, 'refraction' ).replace( '%s', classLabel );
 				},
 			}
 		);

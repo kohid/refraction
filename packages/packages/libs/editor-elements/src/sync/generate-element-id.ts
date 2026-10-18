@@ -4,7 +4,7 @@ export const generateElementId = () => {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
 	return (
-		extendedWindow.elementorCommon?.helpers?.getUniqueId?.() ??
+		extendedWindow.refractionCommon?.helpers?.getUniqueId?.() ??
 		`el-${ Date.now() }-${ Math.random().toString( 36 ).substring( 2, 9 ) }`
 	);
 };

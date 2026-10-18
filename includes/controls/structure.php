@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor structure control.
+ * Refraction structure control.
  *
  * A base control for creating structure control. A private control for section
  * columns structure.
@@ -41,32 +41,32 @@ class Control_Structure extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<div class="elementor-control-input-wrapper">
+		<div class="refraction-control-field">
+			<div class="refraction-control-input-wrapper">
 				<#
 				var morePresets = getMorePresets();
 
 				if ( morePresets.length ) { #>
-					<div class="elementor-control-structure-presets">
+					<div class="refraction-control-structure-presets">
 						<# _.each( morePresets, function( preset ) { #>
-							<div class="elementor-control-structure-preset-wrapper">
-								<input id="<?php $this->print_control_uid( '{{ preset.key }}' ); ?>" type="radio" name="elementor-control-structure-preset-{{ data._cid }}" data-setting="structure" value="{{ preset.key }}">
-								<label for="<?php $this->print_control_uid( '{{ preset.key }}' ); ?>" class="elementor-control-structure-preset">
-									{{{ elementor.presetsFactory.getPresetSVG( preset.preset, 102, 42 ).outerHTML }}}
+							<div class="refraction-control-structure-preset-wrapper">
+								<input id="<?php $this->print_control_uid( '{{ preset.key }}' ); ?>" type="radio" name="refraction-control-structure-preset-{{ data._cid }}" data-setting="structure" value="{{ preset.key }}">
+								<label for="<?php $this->print_control_uid( '{{ preset.key }}' ); ?>" class="refraction-control-structure-preset">
+									{{{ refraction.presetsFactory.getPresetSVG( preset.preset, 102, 42 ).outerHTML }}}
 								</label>
-								<div class="elementor-control-structure-preset-title">{{{ preset.preset.join( ', ' ) }}}</div>
+								<div class="refraction-control-structure-preset-title">{{{ preset.preset.join( ', ' ) }}}</div>
 							</div>
 						<# } ); #>
 					</div>
 				<# } #>
 			</div>
-			<div class="elementor-control-structure-reset">
+			<div class="refraction-control-structure-reset">
 				<i class="eicon-undo" aria-hidden="true"></i>
-				<?php echo esc_html__( 'Reset', 'elementor' ); ?>
+				<?php echo esc_html__( 'Reset', 'refraction' ); ?>
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

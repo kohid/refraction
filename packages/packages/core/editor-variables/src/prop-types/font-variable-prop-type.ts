@@ -1,4 +1,4 @@
-import { createPropUtils } from '@elementor/editor-props';
-import { z } from '@elementor/schema';
+import { createPropUtils } from '@refraction/editor-props';
+import { z } from '@refraction/schema';
 
 export const fontVariablePropTypeUtil = createPropUtils( 'global-font-variable', z.string() );

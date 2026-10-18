@@ -1,4 +1,4 @@
-var ControlBaseMultipleItemView = require( 'elementor-controls/base-multiple' ),
+var ControlBaseMultipleItemView = require( 'refraction-controls/base-multiple' ),
 	ControlBaseUnitsItemView;
 
 ControlBaseUnitsItemView = ControlBaseMultipleItemView.extend( {

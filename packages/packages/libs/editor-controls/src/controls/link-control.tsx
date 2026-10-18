@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { getLinkInLinkRestriction, type LinkInLinkRestriction } from '@elementor/editor-elements';
-import { linkPropTypeUtil, type LinkPropValue } from '@elementor/editor-props';
-import { __privateUseListenTo as useListenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
+import { getLinkInLinkRestriction, type LinkInLinkRestriction } from '@refraction/editor-elements';
+import { linkPropTypeUtil, type LinkPropValue } from '@refraction/editor-props';
+import { __privateUseListenTo as useListenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
 import { MinusIcon, PlusIcon } from '@elementor/icons';
-import { useSessionStorage } from '@elementor/session';
+import { useSessionStorage } from '@refraction/session';
 import { Collapse, Grid, IconButton, Stack } from '@elementor/ui';
-import { useDebouncedCallback } from '@elementor/utils';
+import { useDebouncedCallback } from '@refraction/utils';
 import { __ } from '@wordpress/i18n';
 
 import { PropKeyProvider, PropProvider, useBoundProp } from '../bound-prop-context';
@@ -55,7 +55,7 @@ export const LinkControl = createControl( ( props: Props ) => {
 		placeholder,
 		minInputLength = 2,
 		context: { elementId },
-		label = __( 'Link', 'elementor' ),
+		label = __( 'Link', 'refraction' ),
 		ariaLabel,
 	} = props || {};
 
@@ -102,10 +102,10 @@ export const LinkControl = createControl( ( props: Props ) => {
 			debouncedSyncLinkRestriction();
 		};
 
-		window.addEventListener( 'elementor:inline-link-changed', handleInlineLinkChanged );
+		window.addEventListener( 'refraction:inline-link-changed', handleInlineLinkChanged );
 
 		return () => {
-			window.removeEventListener( 'elementor:inline-link-changed', handleInlineLinkChanged );
+			window.removeEventListener( 'refraction:inline-link-changed', handleInlineLinkChanged );
 		};
 	}, [ elementId, debouncedSyncLinkRestriction ] );
 
@@ -160,7 +160,7 @@ export const LinkControl = createControl( ( props: Props ) => {
 						<IconButton
 							size={ SIZE }
 							onClick={ onEnabledChange }
-							aria-label={ __( 'Toggle link', 'elementor' ) }
+							aria-label={ __( 'Toggle link', 'refraction' ) }
 							disabled={ shouldDisableAddingLink }
 						>
 							{ isActive ? <MinusIcon fontSize={ SIZE } /> : <PlusIcon fontSize={ SIZE } /> }
@@ -182,7 +182,7 @@ export const LinkControl = createControl( ( props: Props ) => {
 						<PropKeyProvider bind={ 'isTargetBlank' }>
 							<Grid container alignItems="center" flexWrap="nowrap" justifyContent="space-between">
 								<Grid item>
-									<ControlFormLabel>{ __( 'Open in a new tab', 'elementor' ) }</ControlFormLabel>
+									<ControlFormLabel>{ __( 'Open in a new tab', 'refraction' ) }</ControlFormLabel>
 								</Grid>
 								<Grid item sx={ { marginInlineEnd: -1 } }>
 									<SwitchControl />

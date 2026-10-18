@@ -1,4 +1,4 @@
-@keyframes elementor-animation-wobble-vertical {
+@keyframes refraction-animation-wobble-vertical {
 	16.65% {
 		transform: translateY(8px);
 	}
@@ -18,10 +18,10 @@
 		transform: translateY(0);
 	}
 }
-.elementor-animation-wobble-vertical:active,
-.elementor-animation-wobble-vertical:focus,
-.elementor-animation-wobble-vertical:hover {
-	animation-name: elementor-animation-wobble-vertical;
+.refraction-animation-wobble-vertical:active,
+.refraction-animation-wobble-vertical:focus,
+.refraction-animation-wobble-vertical:hover {
+	animation-name: refraction-animation-wobble-vertical;
 	animation-duration: 1s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: 1;

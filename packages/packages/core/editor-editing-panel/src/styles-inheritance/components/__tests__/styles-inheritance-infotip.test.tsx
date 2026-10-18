@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockPropType, initMockStylesTransformersRegistry, renderWithTheme } from 'test-utils';
-import { createTransformer, stylesInheritanceTransformersRegistry } from '@elementor/editor-canvas';
-import { useBreakpoints } from '@elementor/editor-responsive';
+import { createTransformer, stylesInheritanceTransformersRegistry } from '@refraction/editor-canvas';
+import { useBreakpoints } from '@refraction/editor-responsive';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 
 import {
@@ -15,8 +15,8 @@ import {
 import { initStylesInheritanceTransformers } from '../../init-styles-inheritance-transformers';
 import { calculatePopoverOffset, StylesInheritanceInfotip } from '../styles-inheritance-infotip';
 
-jest.mock( '@elementor/editor-responsive', () => ( {
-	...jest.requireActual( '@elementor/editor-responsive' ),
+jest.mock( '@refraction/editor-responsive', () => ( {
+	...jest.requireActual( '@refraction/editor-responsive' ),
 	useBreakpoints: jest.fn(),
 } ) );
 

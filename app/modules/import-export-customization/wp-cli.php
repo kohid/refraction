@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\App\Modules\ImportExportCustomization;
+namespace Refraction\App\Modules\ImportExportCustomization;
 
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Utils\Plugins_Manager;
-use Elementor\Plugin;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Utils\Plugins_Manager;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -22,10 +22,10 @@ class Wp_Cli extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * 1. wp elementor kit export path/to/export-file-name.zip
+	 * 1. wp refraction kit export path/to/export-file-name.zip
 	 *      - This will export all site data to the specified file name.
 	 *
-	 * 2. wp elementor kit export path/to/export-file-name.zip --include=kit-settings,content
+	 * 2. wp refraction kit export path/to/export-file-name.zip --include=kit-settings,content
 	 *      - This will export only site settings and content.
 	 *
 	 * @param array $args
@@ -80,16 +80,16 @@ class Wp_Cli extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * 1. wp elementor kit import path/to/elementor-kit.zip
+	 * 1. wp refraction kit import path/to/refraction-kit.zip
 	 *      - This will import the whole kit file content.
 	 *
-	 * 2. wp elementor kit import path/to/elementor-kit.zip --include=site-settings,content
+	 * 2. wp refraction kit import path/to/refraction-kit.zip --include=site-settings,content
 	 *      - This will import only site settings and content.
 	 *
-	 * 3. wp elementor kit import path/to/elementor-kit.zip --overrideConditions=3478,4520
+	 * 3. wp refraction kit import path/to/refraction-kit.zip --overrideConditions=3478,4520
 	 *      - This will import all content and will override conditions for the given template ids.
 	 *
-	 * 4. wp elementor kit import path/to/elementor-kit.zip --unfilteredFilesUpload=enable
+	 * 4. wp refraction kit import path/to/refraction-kit.zip --unfilteredFilesUpload=enable
 	 *      - This will allow the import process to import unfiltered files.
 	 *
 	 * @param array $args
@@ -168,7 +168,7 @@ class Wp_Cli extends \WP_CLI_Command {
 			 *
 			 * @param array $manifest_data The Kit's Manifest data
 			 */
-			$manifest_data = apply_filters( 'elementor/import-export/wp-cli/manifest_data', $manifest_data );
+			$manifest_data = apply_filters( 'refraction/import-export/wp-cli/manifest_data', $manifest_data );
 
 			\WP_CLI::line( 'Removing temp files...' );
 
@@ -235,13 +235,13 @@ class Wp_Cli extends \WP_CLI_Command {
 			\WP_CLI::error( "Download file url: {$response['response']['message']}" );
 		}
 
-		// Set the Request's state as an Elementor upload request, in order to support unfiltered file uploads.
-		Plugin::$instance->uploads_manager->set_elementor_upload_state( true );
+		// Set the Request's state as a Refraction upload request, in order to support unfiltered file uploads.
+		Plugin::$instance->uploads_manager->set_refraction_upload_state( true );
 
 		$file = Plugin::$instance->uploads_manager->create_temp_file( $response['body'], 'kit.zip' );
 
-		// After the upload complete, set the elementor upload state back to false.
-		Plugin::$instance->uploads_manager->set_elementor_upload_state( false );
+		// After the upload complete, set the refraction upload state back to false.
+		Plugin::$instance->uploads_manager->set_refraction_upload_state( false );
 
 		return $file;
 	}

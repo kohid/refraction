@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Logger\Items;
+namespace Refraction\Core\Logger\Items;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Interface Log_Item_Interface
  *
- * @package Elementor\Core\Logger
+ * @package Refraction\Core\Logger
  *
  * @property string $date
  * @property string $type

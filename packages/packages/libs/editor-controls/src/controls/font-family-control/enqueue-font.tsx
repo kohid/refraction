@@ -1,7 +1,7 @@
 type EnqueueFont = ( fontFamily: string, context?: 'preview' | 'editor' ) => void;
 
 type ExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		helpers?: {
 			enqueueFont?: EnqueueFont;
 		};
@@ -11,5 +11,5 @@ type ExtendedWindow = Window & {
 export const enqueueFont: EnqueueFont = ( fontFamily, context = 'editor' ) => {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
-	return extendedWindow.elementor?.helpers?.enqueueFont?.( fontFamily, context ) ?? null;
+	return extendedWindow.refraction?.helpers?.enqueueFont?.( fontFamily, context ) ?? null;
 };

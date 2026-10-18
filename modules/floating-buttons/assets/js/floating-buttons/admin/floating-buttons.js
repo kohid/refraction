@@ -1,4 +1,4 @@
-import AdminMenuHandler from 'elementor-admin/menu-handler';
+import AdminMenuHandler from 'refraction-admin/menu-handler';
 
 export default class FloatingButtonsHandler extends AdminMenuHandler {
 	getDefaultSettings() {
@@ -6,13 +6,13 @@ export default class FloatingButtonsHandler extends AdminMenuHandler {
 			adminMenuSelectors = {
 				// The escaping is done because jQuery requires it for selectors.
 				contactPagesTablePage: 'a[href="edit.php?post_type=' + pageName + '"]',
-				contactPagesAddNewPage: 'a[href="edit.php?post_type=elementor_library&page=' + pageName + '"]',
+				contactPagesAddNewPage: 'a[href="edit.php?post_type=refraction_library&page=' + pageName + '"]',
 			};
 
 		return {
 			selectors: {
 				addButton: '.page-title-action:first',
-				templatesMenuItem: '.menu-icon-elementor_library',
+				templatesMenuItem: '.menu-icon-refraction_library',
 				contactPagesMenuItem: `${ adminMenuSelectors.contactPagesTablePage }, ${ adminMenuSelectors.contactPagesAddNewPage }`,
 			},
 		};
@@ -37,9 +37,9 @@ export default class FloatingButtonsHandler extends AdminMenuHandler {
 
 		// We need this because there is a complex bug in the WordPress admin menu that causes the Contact Menu to be broken
 		// When the links page has at least one post and the contact page has none.
-		if ( elementorAdminConfig.urls?.viewContactPageUrl ) {
+		if ( refractionAdminConfig.urls?.viewContactPageUrl ) {
 			this.elements.$templatesMenuItem.find( 'li.submenu-e-contact a' )
-				.attr( 'href', elementorAdminConfig.urls.viewContactPageUrl );
+				.attr( 'href', refractionAdminConfig.urls.viewContactPageUrl );
 		}
 
 		if ( isContactPagesTablePage || isContactPagesTrashPage || isLContactPagesCreateYourFirstPage ) {
@@ -47,7 +47,7 @@ export default class FloatingButtonsHandler extends AdminMenuHandler {
 
 			this.highlightSubMenuItem( this.elements.$contactPagesMenuItem );
 
-			jQuery( settings.selectors.addButton ).attr( 'href', elementorAdminConfig.urls.addNewLinkUrlContact );
+			jQuery( settings.selectors.addButton ).attr( 'href', refractionAdminConfig.urls.addNewLinkUrlContact );
 		}
 	}
 }

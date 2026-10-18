@@ -1,4 +1,4 @@
-export default class MenuHandler extends elementorModules.ViewModule {
+export default class MenuHandler extends refractionModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {

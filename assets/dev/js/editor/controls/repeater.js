@@ -1,11 +1,11 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
-	RepeaterRowView = require( 'elementor-controls/repeater-row' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
+	RepeaterRowView = require( 'refraction-controls/repeater-row' ),
 	ControlRepeaterItemView;
 
 ControlRepeaterItemView = ControlBaseDataView.extend( {
 	ui: {
-		btnAddRow: '.elementor-repeater-add',
-		fieldContainer: '.elementor-repeater-fields-wrapper',
+		btnAddRow: '.refraction-repeater-add',
+		fieldContainer: '.refraction-repeater-fields-wrapper',
 	},
 
 	events() {
@@ -19,7 +19,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 
 	childView: RepeaterRowView,
 
-	childViewContainer: '.elementor-repeater-fields-wrapper',
+	childViewContainer: '.refraction-repeater-fields-wrapper',
 
 	templateHelpers() {
 		return {
@@ -42,7 +42,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 	createItemModel( attrs, options, controlView ) {
 		options.controls = controlView.model.get( 'fields' );
 
-		return new elementorModules.editor.elements.models.BaseSettings( attrs, options );
+		return new refractionModules.editor.elements.models.BaseSettings( attrs, options );
 	},
 
 	fillCollection() {
@@ -81,7 +81,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 			currentEditable.removeClass( 'editable' );
 
 			// If the repeater contains TinyMCE editors, fire the `hide` trigger to hide floated toolbars
-			currentEditable.find( '.elementor-wp-editor' ).each( function() {
+			currentEditable.find( '.refraction-wp-editor' ).each( function() {
 				tinymce.get( this.id ).fire( 'hide' );
 			} );
 		}
@@ -109,7 +109,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 			return;
 		}
 
-		this.$el.toggleClass( 'elementor-repeater-has-maximum-rows', maxItems <= this.collection.length );
+		this.$el.toggleClass( 'refraction-repeater-has-maximum-rows', maxItems <= this.collection.length );
 	},
 
 	getMinItems() {
@@ -131,7 +131,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 			return;
 		}
 
-		this.$el.toggleClass( 'elementor-repeater-has-minimum-rows', minItems >= this.collection.length );
+		this.$el.toggleClass( 'refraction-repeater-has-minimum-rows', minItems >= this.collection.length );
 	},
 
 	updateActiveRow() {
@@ -157,8 +157,8 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 	getSortableParams: () => {
 		return {
 			axis: 'y',
-			handle: '.elementor-repeater-row-tools',
-			items: ' > :not(.elementor-repeater-row--disable-sort)',
+			handle: '.refraction-repeater-row-tools',
+			items: ' > :not(.refraction-repeater-row--disable-sort)',
 			cancel: '', // Elements that do not allow sorting (by default it includes buttons).
 		};
 	},
@@ -230,7 +230,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 			} );
 
 		if ( ! isInChildren.length ) {
-			elementorDevTools.deprecation.deprecated( 'Don\'t add models directly to the repeater.', '3.0.0', '$e.run( \'document/repeater/insert\' )' );
+			refractionDevTools.deprecation.deprecated( 'Don\'t add models directly to the repeater.', '3.0.0', '$e.run( \'document/repeater/insert\' )' );
 			this.options.container.addRepeaterItem( this.model.get( 'name' ), model, model.collection.indexOf( model ) );
 		}
 	},
@@ -241,7 +241,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 	 * @deprecated since 3.0.0, use `$e.run( 'document/repeater/remove' )` instead.
 	 */
 	resetContainer() {
-		elementorDevTools.deprecation.deprecated( 'Don\'t reset repeater collection directly.', '3.0.0', '$e.run( \'document/repeater/remove\' )' );
+		refractionDevTools.deprecation.deprecated( 'Don\'t reset repeater collection directly.', '3.0.0', '$e.run( \'document/repeater/remove\' )' );
 		this.options.container.repeaters[ this.model.get( 'name' ) ].children = [];
 	},
 

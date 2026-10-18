@@ -1,26 +1,26 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-customization-custom-post-types', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-customization-custom-post-types', () => ( {
 	useKitCustomizationCustomPostTypes: jest.fn(),
 } ) );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
 
-jest.mock( 'elementor-app/event-track/apps-event-tracking', () => ( {
+jest.mock( 'refraction-app/event-track/apps-event-tracking', () => ( {
 	AppsEventTracking: {
 		sendPageViewsWebsiteTemplates: jest.fn(),
 	},
 } ) );
 
-import { useKitCustomizationCustomPostTypes } from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-customization-custom-post-types';
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { useKitCustomizationCustomPostTypes } from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-kit-customization-custom-post-types';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 
-import { KitContentCustomizationDialog } from 'elementor/app/modules/import-export-customization/assets/js/shared/components/kit-content-customization-dialog';
+import { KitContentCustomizationDialog } from 'refraction/app/modules/import-export-customization/assets/js/shared/components/kit-content-customization-dialog';
 
 global.__ = jest.fn( ( text ) => text );
 
@@ -42,7 +42,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 	beforeEach( () => {
 		jest.clearAllMocks();
 
-		global.elementorCommon = {
+		global.refractionCommon = {
 			eventsManager: {
 				config: {
 					secondaryLocations: {
@@ -58,7 +58,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 			isImport: false,
 			contextData: {
 				data: mockData,
-				isOldElementorVersion: false,
+				isOldRefractionVersion: false,
 			},
 		} );
 
@@ -177,7 +177,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 				isImport: false,
 				contextData: {
 					data,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -293,7 +293,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 				isImport: true,
 				contextData: {
 					data: importData,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -521,7 +521,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 				isImport: true,
 				contextData: {
 					data: mockData,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -690,13 +690,13 @@ describe( 'KitContentCustomizationDialog Component', () => {
 	} );
 
 	describe( 'Upgrade Version Banner', () => {
-		it( 'should render upgrade version banner when isOldElementorVersion is true', () => {
+		it( 'should render upgrade version banner when isOldRefractionVersion is true', () => {
 			// Arrange
 			useContextDetection.mockReturnValue( {
 				isImport: false,
 				contextData: {
 					data: mockData,
-					isOldElementorVersion: true,
+					isOldRefractionVersion: true,
 				},
 			} );
 
@@ -714,14 +714,14 @@ describe( 'KitContentCustomizationDialog Component', () => {
 			expect( screen.getByText( 'Custom post types' ) ).toBeTruthy();
 		} );
 
-		it( 'should not render upgrade version banner when isOldElementorVersion is false', () => {
+		it( 'should not render upgrade version banner when isOldRefractionVersion is false', () => {
 			// Arrange
 			const props = {
 				data: mockData,
 				open: true,
 				handleClose: mockHandleClose,
 				handleSaveChanges: mockHandleSaveChanges,
-				isOldElementorVersion: false,
+				isOldRefractionVersion: false,
 			};
 
 			// Act
@@ -784,7 +784,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 				isImport: true,
 				contextData: {
 					data: malformedData,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -817,7 +817,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 				isImport: true,
 				contextData: {
 					data: incompleteData,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -848,7 +848,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 				isImport: true,
 				contextData: {
 					data: emptyData,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 
@@ -887,7 +887,7 @@ describe( 'KitContentCustomizationDialog Component', () => {
 				isImport: true,
 				contextData: {
 					data: validData,
-					isOldElementorVersion: false,
+					isOldRefractionVersion: false,
 				},
 			} );
 

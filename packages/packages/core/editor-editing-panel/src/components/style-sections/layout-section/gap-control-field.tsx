@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GapControl } from '@elementor/editor-controls';
+import { GapControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 
-const GAPS_LABEL = __( 'Gaps', 'elementor' );
+const GAPS_LABEL = __( 'Gaps', 'refraction' );
 
 export const GapControlField = () => {
 	return (

@@ -4,7 +4,7 @@ const TEST_ALLOWED_HTML_WRAPPER_TAGS = [ 'a', 'div', 'span', 'strong' ];
 
 describe( 'sanitizeEscapedHtml', () => {
 	beforeEach( () => {
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				allowedHTMLWrapperTags: TEST_ALLOWED_HTML_WRAPPER_TAGS,
 			},
@@ -12,7 +12,7 @@ describe( 'sanitizeEscapedHtml', () => {
 	} );
 
 	afterEach( () => {
-		delete window.elementorCommon;
+		delete window.refractionCommon;
 	} );
 
 	it( 'returns an empty string for nullish values', () => {
@@ -34,7 +34,7 @@ describe( 'sanitizeEscapedHtml', () => {
 
 	it( 'fails closed when the localized allowlist is missing', () => {
 		// Arrange.
-		delete window.elementorCommon;
+		delete window.refractionCommon;
 		const value = '<strong>world</strong>';
 
 		// Act.

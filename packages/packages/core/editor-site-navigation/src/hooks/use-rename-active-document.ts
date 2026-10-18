@@ -1,11 +1,11 @@
-import { type ExtendedWindow } from '@elementor/editor-documents';
-import { __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
+import { type ExtendedWindow } from '@refraction/editor-documents';
+import { __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
 
 function getV1DocumentsManager() {
-	const documentsManager = ( window as unknown as ExtendedWindow ).elementor?.documents;
+	const documentsManager = ( window as unknown as ExtendedWindow ).refraction?.documents;
 
 	if ( ! documentsManager ) {
-		throw new Error( 'Elementor Editor V1 documents manager not found' );
+		throw new Error( 'Refraction Editor V1 documents manager not found' );
 	}
 
 	return documentsManager;

@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor embed.
+ * Refraction embed.
  *
- * Elementor embed handler class is responsible for Elementor embed functionality.
+ * Refraction embed handler class is responsible for Refraction embed functionality.
  * The class holds the supported providers with their embed patters, and handles
  * their custom properties to create custom HTML with the embedded content.
  *
@@ -20,7 +20,7 @@ class Embed {
 	 * Embeddable background video providers.
 	 *
 	 * Holds the list of providers whose background video is rendered as an embedded
-	 * iframe player (.elementor-background-video-embed) rather than a hosted <video>
+	 * iframe player (.refraction-background-video-embed) rather than a hosted <video>
 	 * element. This is intentionally a SUBSET of the providers recognized by
 	 * get_video_properties() — the frontend background-video handler only mounts
 	 * YouTube/Vimeo players, so other providers must fall through to hosted rendering.
@@ -210,12 +210,12 @@ class Embed {
 		$video_properties = self::get_video_properties( $video_url );
 
 		$default_frame_attributes = [
-			'class' => 'elementor-video-iframe',
+			'class' => 'refraction-video-iframe',
 			'allowfullscreen',
 			'allow' => 'clipboard-write',
 			'title' => sprintf(
 				/* translators: %s: Video provider */
-				__( '%s Video Player', 'elementor' ),
+				__( '%s Video Player', 'refraction' ),
 				$video_properties['provider']
 			),
 		];
@@ -266,7 +266,7 @@ class Embed {
 	 * @return array|null
 	 */
 	public static function get_oembed_data( $oembed_url, $cached_post_id ) {
-		$cached_oembed_data = json_decode( get_post_meta( $cached_post_id, '_elementor_oembed_cache', true ), true );
+		$cached_oembed_data = json_decode( get_post_meta( $cached_post_id, '_refraction_oembed_cache', true ), true );
 
 		if ( isset( $cached_oembed_data[ $oembed_url ] ) ) {
 			return $cached_oembed_data[ $oembed_url ];
@@ -278,7 +278,7 @@ class Embed {
 			$cached_oembed_data = [];
 		}
 
-		update_post_meta( $cached_post_id, '_elementor_oembed_cache', wp_json_encode( array_merge(
+		update_post_meta( $cached_post_id, '_refraction_oembed_cache', wp_json_encode( array_merge(
 			$cached_oembed_data,
 			[
 				$oembed_url => $normalize_oembed_data,
@@ -320,6 +320,6 @@ class Embed {
 			return null;
 		}
 
-		return '<div class="elementor-image">' . sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="%3$s" loading="lazy" />', $oembed_data['thumbnail_url'], esc_attr( $oembed_data['title'] ), '100%' ) . '</div>';
+		return '<div class="refraction-image">' . sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="%3$s" loading="lazy" />', $oembed_data['thumbnail_url'], esc_attr( $oembed_data['title'] ), '100%' ) . '</div>';
 	}
 }

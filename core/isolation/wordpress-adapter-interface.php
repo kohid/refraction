@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Isolation;
+namespace Refraction\Core\Isolation;
 
 interface Wordpress_Adapter_Interface {
 

@@ -1,7 +1,7 @@
-var BaseRegion = require( 'elementor-regions/base' );
+var BaseRegion = require( 'refraction-regions/base' );
 
 module.exports = BaseRegion.extend( {
-	el: '#elementor-panel',
+	el: '#refraction-panel',
 
 	getStorageKey() {
 		return 'panel';
@@ -18,7 +18,7 @@ module.exports = BaseRegion.extend( {
 	constructor() {
 		BaseRegion.prototype.constructor.apply( this, arguments );
 
-		var PanelLayoutView = require( 'elementor-regions/panel/layout' );
+		var PanelLayoutView = require( 'refraction-regions/panel/layout' );
 
 		this.show( new PanelLayoutView() );
 
@@ -26,34 +26,34 @@ module.exports = BaseRegion.extend( {
 
 		this.setSize();
 
-		this.listenTo( elementor.channels.dataEditMode, 'switch', this.onEditModeSwitched );
+		this.listenTo( refraction.channels.dataEditMode, 'switch', this.onEditModeSwitched );
 	},
 
 	setSize() {
 		const savedWidth = this.storage.size.width;
 
-		elementorCommon.elements.$body.css( '--e-editor-panel-width', savedWidth );
+		refractionCommon.elements.$body.css( '--e-editor-panel-width', savedWidth );
 	},
 
 	resizable() {
 		var self = this;
 
 		self.$el.resizable( {
-			handles: elementorCommon.config.isRTL ? 'w' : 'e',
+			handles: refractionCommon.config.isRTL ? 'w' : 'e',
 			minWidth: 250,
 			maxWidth: 680,
 			start() {
-				elementor.$previewWrapper.addClass( 'ui-resizable-resizing' );
+				refraction.$previewWrapper.addClass( 'ui-resizable-resizing' );
 			},
 			stop( event, ui ) {
-				elementor.$previewWrapper.removeClass( 'ui-resizable-resizing' );
+				refraction.$previewWrapper.removeClass( 'ui-resizable-resizing' );
 
-				elementor.getPanelView().updateScrollbar();
+				refraction.getPanelView().updateScrollbar();
 
 				self.saveSize( { width: ui.size.width + 'px' } );
 			},
 			resize( event, ui ) {
-				elementorCommon.elements.$body.css( '--e-editor-panel-width', ui.size.width + 'px' );
+				refractionCommon.elements.$body.css( '--e-editor-panel-width', ui.size.width + 'px' );
 
 				self.$el.css( {
 					width: '',

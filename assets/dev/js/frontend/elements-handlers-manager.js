@@ -3,7 +3,7 @@ import containerHandlers from './handlers/container/container';
 import sectionHandlers from './handlers/section/section';
 import columnHandlers from './handlers/column';
 
-/* global elementorFrontendConfig */
+/* global refractionFrontendConfig */
 
 module.exports = function( $ ) {
 	const handlersInstances = {};
@@ -24,17 +24,17 @@ module.exports = function( $ ) {
 		column: columnHandlers,
 	};
 
-	if ( elementorFrontendConfig.experimentalFeatures.container ) {
-		this.elementsHandlers[ 'nested-tabs.default' ] = () => import( /* webpackChunkName: 'nested-tabs' */ 'elementor/modules/nested-tabs/assets/js/frontend/handlers/nested-tabs' );
-		this.elementsHandlers[ 'nested-accordion.default' ] = () => import( /* webpackChunkName: 'nested-accordion' */ 'elementor/modules/nested-accordion/assets/js/frontend/handlers/nested-accordion' );
+	if ( refractionFrontendConfig.experimentalFeatures.container ) {
+		this.elementsHandlers[ 'nested-tabs.default' ] = () => import( /* webpackChunkName: 'nested-tabs' */ 'refraction/modules/nested-tabs/assets/js/frontend/handlers/nested-tabs' );
+		this.elementsHandlers[ 'nested-accordion.default' ] = () => import( /* webpackChunkName: 'nested-accordion' */ 'refraction/modules/nested-accordion/assets/js/frontend/handlers/nested-accordion' );
 	}
 
-	if ( elementorFrontendConfig.experimentalFeatures.container ) {
-		this.elementsHandlers[ 'contact-buttons.default' ] = () => import( /* webpackChunkName: 'contact-buttons' */ 'elementor/modules/floating-buttons/assets/js/floating-buttons/frontend/handlers/contact-buttons' );
-		this.elementsHandlers[ 'floating-bars-var-1.default' ] = () => import( /* webpackChunkName: 'floating-bars' */ 'elementor/modules/floating-buttons/assets/js/floating-bars/frontend/handlers/floating-bars' );
+	if ( refractionFrontendConfig.experimentalFeatures.container ) {
+		this.elementsHandlers[ 'contact-buttons.default' ] = () => import( /* webpackChunkName: 'contact-buttons' */ 'refraction/modules/floating-buttons/assets/js/floating-buttons/frontend/handlers/contact-buttons' );
+		this.elementsHandlers[ 'floating-bars-var-1.default' ] = () => import( /* webpackChunkName: 'floating-bars' */ 'refraction/modules/floating-buttons/assets/js/floating-bars/frontend/handlers/floating-bars' );
 	}
 
-	const addGlobalHandlers = () => elementorFrontend.hooks.addAction( 'frontend/element_ready/global', globalHandler );
+	const addGlobalHandlers = () => refractionFrontend.hooks.addAction( 'frontend/element_ready/global', globalHandler );
 
 	const addElementsHandlers = () => {
 		$.each( this.elementsHandlers, ( elementName, Handlers ) => {
@@ -55,7 +55,7 @@ module.exports = function( $ ) {
 
 		const elementName = elementBaseName + skin;
 
-		elementorFrontend.hooks.addAction( `frontend/element_ready/${ elementName }`, ( $element ) => {
+		refractionFrontend.hooks.addAction( `frontend/element_ready/${ elementName }`, ( $element ) => {
 			if ( isClassHandler( Handler ) ) {
 				this.addHandler( Handler, { $element, elementName }, true );
 			} else {
@@ -98,7 +98,7 @@ module.exports = function( $ ) {
 
 		const newHandler = new HandlerClass( options );
 
-		elementorFrontend.hooks.doAction( `frontend/element_handler_ready/${ options.elementName }`, options.$element, $ );
+		refractionFrontend.hooks.doAction( `frontend/element_handler_ready/${ options.elementName }`, options.$element, $ );
 
 		if ( elementID ) {
 			handlersInstances[ elementID ][ handlerID ] = newHandler;
@@ -129,10 +129,10 @@ module.exports = function( $ ) {
 
 	/**
 	 * @param {string} handlerName
-	 * @deprecated since 3.1.0, use `elementorFrontend.elementsHandler.getHandler` instead.
+	 * @deprecated since 3.1.0, use `refractionFrontend.elementsHandler.getHandler` instead.
 	 */
 	this.getHandlers = function( handlerName ) {
-		elementorDevTools.deprecation.deprecated( 'getHandlers', '3.1.0', 'elementorFrontend.elementsHandler.getHandler' );
+		refractionDevTools.deprecation.deprecated( 'getHandlers', '3.1.0', 'refractionFrontend.elementsHandler.getHandler' );
 
 		if ( handlerName ) {
 			return this.getHandler( handlerName );
@@ -144,7 +144,7 @@ module.exports = function( $ ) {
 	this.runReadyTrigger = function( scope ) {
 		const isDelayChildHandlers = !! scope.closest( '[data-delay-child-handlers="true"]' ) && 0 !== scope.closest( '[data-delay-child-handlers="true"]' ).length;
 
-		if ( elementorFrontend.config.is_static || isDelayChildHandlers ) {
+		if ( refractionFrontend.config.is_static || isDelayChildHandlers ) {
 			return;
 		}
 
@@ -156,13 +156,13 @@ module.exports = function( $ ) {
 			return;
 		}
 
-		elementorFrontend.hooks.doAction( 'frontend/element_ready/global', $scope, $ );
+		refractionFrontend.hooks.doAction( 'frontend/element_ready/global', $scope, $ );
 
-		elementorFrontend.hooks.doAction( `frontend/element_ready/${ elementType }`, $scope, $ );
+		refractionFrontend.hooks.doAction( `frontend/element_ready/${ elementType }`, $scope, $ );
 
 		if ( 'widget' === elementType ) {
 			const widgetType = $scope.attr( 'data-widget_type' );
-			elementorFrontend.hooks.doAction( `frontend/element_ready/${ widgetType }`, $scope, $ );
+			refractionFrontend.hooks.doAction( `frontend/element_ready/${ widgetType }`, $scope, $ );
 		}
 	};
 

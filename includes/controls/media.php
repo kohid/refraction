@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor media control.
+ * Refraction media control.
  *
  * A base control for creating a media chooser control. Based on the WordPress
  * media library. Used to select an image from the WordPress media library.
@@ -52,7 +52,7 @@ class Control_Media extends Control_Base_Multiple {
 
 	public function on_export( $settings ) {
 		if ( ! empty( $settings['url'] ) ) {
-			do_action( 'elementor/templates/collect_media_url', $settings['url'], $settings );
+			do_action( 'refraction/templates/collect_media_url', $settings['url'], $settings );
 		}
 
 		return $settings;
@@ -62,7 +62,7 @@ class Control_Media extends Control_Base_Multiple {
 	 * Import media images.
 	 *
 	 * Used to import media control files from external sites while importing
-	 * Elementor template JSON file, and replacing the old data.
+	 * Refraction template JSON file, and replacing the old data.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -76,7 +76,7 @@ class Control_Media extends Control_Base_Multiple {
 			return $settings;
 		}
 
-		$local_file_path = \Elementor\TemplateLibrary\Classes\Media_Mapper::get_local_file_path( $settings['url'] );
+		$local_file_path = \Refraction\TemplateLibrary\Classes\Media_Mapper::get_local_file_path( $settings['url'] );
 		$imported_attachment = false;
 
 		if ( $local_file_path !== $settings['url'] && file_exists( $local_file_path ) ) {
@@ -204,62 +204,62 @@ class Control_Media extends Control_Base_Multiple {
 			const getButtonLabel = ( mediaType ) => {
 				switch( mediaType ) {
 					case 'image':
-						return '<?php esc_html_e( 'Choose Image', 'elementor' ); ?>';
+						return '<?php esc_html_e( 'Choose Image', 'refraction' ); ?>';
 
 					case 'video':
-						return '<?php esc_html_e( 'Choose Video', 'elementor' ); ?>';
+						return '<?php esc_html_e( 'Choose Video', 'refraction' ); ?>';
 
 					case 'svg':
-						return '<?php esc_html_e( 'Choose SVG', 'elementor' ); ?>';
+						return '<?php esc_html_e( 'Choose SVG', 'refraction' ); ?>';
 
 					default:
-						return '<?php esc_html_e( 'Choose File', 'elementor' ); ?>';
+						return '<?php esc_html_e( 'Choose File', 'refraction' ); ?>';
 				}
 			}
 		#>
-		<div class="elementor-control-field elementor-control-media">
-			<label class="elementor-control-title">{{{ data.label }}}</label>
+		<div class="refraction-control-field refraction-control-media">
+			<label class="refraction-control-title">{{{ data.label }}}</label>
 			<#
 			if ( isViewable() ) {
-				let inputWrapperClasses = 'elementor-control-input-wrapper';
+				let inputWrapperClasses = 'refraction-control-input-wrapper';
 
 				if ( ! data.label_block ) {
-					inputWrapperClasses += ' elementor-control-unit-5';
+					inputWrapperClasses += ' refraction-control-unit-5';
 				}
 			#>
 				<div class="{{{ inputWrapperClasses }}}">
-					<div class="elementor-control-media__content elementor-control-tag-area elementor-control-preview-area">
-						<div class="elementor-control-media-area">
-							<div class="elementor-control-media__remove elementor-control-media__content__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'elementor' ); ?>">
+					<div class="refraction-control-media__content refraction-control-tag-area refraction-control-preview-area">
+						<div class="refraction-control-media-area">
+							<div class="refraction-control-media__remove refraction-control-media__content__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">
 								<i class="eicon-trash-o" aria-hidden="true"></i>
-								<span class="elementor-screen-only"><?php echo esc_html__( 'Remove', 'elementor' ); ?></span>
+								<span class="refraction-screen-only"><?php echo esc_html__( 'Remove', 'refraction' ); ?></span>
 							</div>
 							<#
 								switch( getPreviewType() ) {
 									case 'image':
 										#>
-										<div class="elementor-control-media__preview"></div>
+										<div class="refraction-control-media__preview"></div>
 										<#
 										break;
 
 									case 'video':
 										#>
-										<video class="elementor-control-media-video" preload="metadata"></video>
+										<video class="refraction-control-media-video" preload="metadata"></video>
 										<i class="eicon-video-camera" aria-hidden="true"></i>
 										<#
 										break;
 								}
 							#>
 						</div>
-						<div class="elementor-control-media-upload-button elementor-control-media__content__upload-button">
+						<div class="refraction-control-media-upload-button refraction-control-media__content__upload-button">
 							<i class="eicon-plus-circle" aria-hidden="true"></i>
-							<span class="elementor-screen-only"><?php echo esc_html__( 'Add', 'elementor' ); ?></span>
+							<span class="refraction-screen-only"><?php echo esc_html__( 'Add', 'refraction' ); ?></span>
 						</div>
-						<div class="elementor-control-media__tools elementor-control-dynamic-switcher-wrapper">
+						<div class="refraction-control-media__tools refraction-control-dynamic-switcher-wrapper">
 							<#
 								data.media_types.forEach( ( type ) => {
 									#>
-									<div class="elementor-control-media__tool elementor-control-media__replace" data-media-type="{{{ type }}}">{{{ getButtonLabel( type ) }}}</div>
+									<div class="refraction-control-media__tool refraction-control-media__replace" data-media-type="{{{ type }}}">{{{ getButtonLabel( type ) }}}</div>
 									<#
 								} );
 							#>
@@ -268,37 +268,37 @@ class Control_Media extends Control_Base_Multiple {
 
 				</div>
 			<# } /* endif isViewable() */ else { #>
-				<div class="elementor-control-media__file elementor-control-preview-area">
-					<div class="elementor-control-media__file__content">
-						<div class="elementor-control-media__file__content__label"><?php echo esc_html__( 'Click the media icon to upload file', 'elementor' ); ?></div>
-						<div class="elementor-control-media__file__content__info">
-							<div class="elementor-control-media__file__content__info__icon">
+				<div class="refraction-control-media__file refraction-control-preview-area">
+					<div class="refraction-control-media__file__content">
+						<div class="refraction-control-media__file__content__label"><?php echo esc_html__( 'Click the media icon to upload file', 'refraction' ); ?></div>
+						<div class="refraction-control-media__file__content__info">
+							<div class="refraction-control-media__file__content__info__icon">
 								<i class="eicon-document-file"></i>
 							</div>
-							<div class="elementor-control-media__file__content__info__name"></div>
+							<div class="refraction-control-media__file__content__info__name"></div>
 						</div>
 					</div>
-					<div class="elementor-control-media__file__controls">
-						<div class="elementor-control-media__remove elementor-control-media__file__controls__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'elementor' ); ?>">
+					<div class="refraction-control-media__file__controls">
+						<div class="refraction-control-media__remove refraction-control-media__file__controls__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">
 							<i class="eicon-trash-o" aria-hidden="true"></i>
-							<span class="elementor-screen-only"><?php echo esc_html__( 'Remove', 'elementor' ); ?></span>
+							<span class="refraction-screen-only"><?php echo esc_html__( 'Remove', 'refraction' ); ?></span>
 						</div>
-						<div class="elementor-control-media__file__controls__upload-button elementor-control-media-upload-button" data-tooltip="<?php echo esc_attr__( 'Upload', 'elementor' ); ?>">
+						<div class="refraction-control-media__file__controls__upload-button refraction-control-media-upload-button" data-tooltip="<?php echo esc_attr__( 'Upload', 'refraction' ); ?>">
 							<i class="eicon-upload" aria-hidden="true"></i>
-							<span class="elementor-screen-only"><?php echo esc_html__( 'Upload', 'elementor' ); ?></span>
+							<span class="refraction-screen-only"><?php echo esc_html__( 'Upload', 'refraction' ); ?></span>
 						</div>
 					</div>
 				</div>
 			<# } #>
 			<# if ( data.description ) { #>
-				<div class="elementor-control-field-description">{{{ data.description }}}</div>
+				<div class="refraction-control-field-description">{{{ data.description }}}</div>
 			<# } #>
 
 			<# if ( data.has_sizes ) { #>
-			<div class="elementor-control-type-select e-control-image-size">
-				<div class="elementor-control-field">
-					<label class="elementor-control-title" data-e-responsive-switcher-sibling="false" for="<?php $this->print_control_uid( 'size' ); ?>"><?php echo esc_html__( 'Image Resolution', 'elementor' ); ?></label>
-					<div class="elementor-control-input-wrapper elementor-control-unit-5">
+			<div class="refraction-control-type-select e-control-image-size">
+				<div class="refraction-control-field">
+					<label class="refraction-control-title" data-e-responsive-switcher-sibling="false" for="<?php $this->print_control_uid( 'size' ); ?>"><?php echo esc_html__( 'Image Resolution', 'refraction' ); ?></label>
+					<div class="refraction-control-input-wrapper refraction-control-unit-5">
 						<select class="e-image-size-select" id="<?php $this->print_control_uid( 'size' ); ?>" data-setting="size">
 							<?php foreach ( $this->get_image_sizes() as $size_key => $size_title ) : ?>
 								<option value="<?php echo esc_attr( $size_key ); ?>"><?php echo esc_html( $size_title ); ?></option>
@@ -307,7 +307,7 @@ class Control_Media extends Control_Base_Multiple {
 					</div>
 				</div>
 
-				<div class="elementor-control-field-description"><?php echo esc_html__( 'Image size settings don’t apply to Dynamic Images.', 'elementor' ); ?></div>
+				<div class="refraction-control-field-description"><?php echo esc_html__( 'Image size settings don’t apply to Dynamic Images.', 'refraction' ); ?></div>
 			</div>
 			<# } #>
 
@@ -330,7 +330,7 @@ class Control_Media extends Control_Base_Multiple {
 			$image_sizes[ $size_key ] = $control_title;
 		}
 
-		$image_sizes[''] = esc_html_x( 'Full', 'Image Size Control', 'elementor' );
+		$image_sizes[''] = esc_html_x( 'Full', 'Image Size Control', 'refraction' );
 
 		return $image_sizes;
 	}

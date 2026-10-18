@@ -1,5 +1,5 @@
 import FilesUploadHandler from '../../../../utils/files-upload-handler';
-import { showJsonUploadWarningMessageIfNeeded } from 'elementor-utils/json-upload-warning-message';
+import { showJsonUploadWarningMessageIfNeeded } from 'refraction-utils/json-upload-warning-message';
 import { showGlobalStylesDialog } from './global-styles-dialog';
 
 var TemplateLibraryImportView;
@@ -7,14 +7,14 @@ var TemplateLibraryImportView;
 TemplateLibraryImportView = Marionette.ItemView.extend( {
 	tagName: 'main',
 
-	template: '#tmpl-elementor-template-library-import',
+	template: '#tmpl-refraction-template-library-import',
 
-	id: 'elementor-template-library-import',
+	id: 'refraction-template-library-import',
 
 	ui: {
-		uploadForm: '#elementor-template-library-import-form',
-		fileInput: '#elementor-template-library-import-form-input',
-		icon: '.elementor-template-library-blank-icon i',
+		uploadForm: '#refraction-template-library-import-form',
+		fileInput: '#refraction-template-library-import-form-input',
+		icon: '.refraction-template-library-blank-icon i',
 	},
 
 	events: {
@@ -44,8 +44,8 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 	},
 
 	async importTemplate( fileName, fileData ) {
-		const layout = elementor.templates.layout;
-		const activeSource = elementor.templates.getFilter( 'source' );
+		const layout = refraction.templates.layout;
+		const activeSource = refraction.templates.getFilter( 'source' );
 
 		this.options = {
 			data: {
@@ -54,31 +54,31 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 				source: activeSource,
 			},
 			success: ( successData ) => {
-				elementor.templates.clearLastRemovedItems();
-				elementor.templates.getTemplatesCollection().add( successData );
-				elementor.templates.setToastConfig( {
+				refraction.templates.clearLastRemovedItems();
+				refraction.templates.getTemplatesCollection().add( successData );
+				refraction.templates.setToastConfig( {
 					show: true,
 					options: {
 						/* Translators: 1: Number of templates */
-						message: sprintf( __( 'You successfully imported %1$d template(s).', 'elementor' ), successData.length ),
+						message: sprintf( __( 'You successfully imported %1$d template(s).', 'refraction' ), successData.length ),
 						position: {
 							my: 'right bottom',
 							at: 'right-10 bottom-10',
-							of: '#elementor-template-library-modal .dialog-lightbox-widget-content',
+							of: '#refraction-template-library-modal .dialog-lightbox-widget-content',
 						},
 					},
 				} );
 
 				$e.route( 'library/templates/my-templates' );
-				elementor.templates.triggerQuotaUpdate();
-				elementor.templates.eventManager.sendTemplateImportEvent( {
+				refraction.templates.triggerQuotaUpdate();
+				refraction.templates.eventManager.sendTemplateImportEvent( {
 					library_type: activeSource,
 					file_type: fileName.split( '.' ).pop(),
 					template_count: successData.length,
 				} );
 			},
 			error: ( errorData ) => {
-				elementor.templates.showErrorDialog( errorData );
+				refraction.templates.showErrorDialog( errorData );
 
 				layout.showImportView();
 			},
@@ -88,14 +88,14 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 		};
 
 		await showJsonUploadWarningMessageIfNeeded( {
-			introductionMap: window.elementor.config.user.introduction,
-			IntroductionClass: window.elementorModules.editor.utils.Introduction,
+			introductionMap: window.refraction.config.user.introduction,
+			IntroductionClass: window.refractionModules.editor.utils.Introduction,
 		} );
 
 		if ( fileName.endsWith( '.json' ) ) {
 			try {
 				const jsonContent = JSON.parse( atob( fileData ) );
-				if ( elementor.templates.hasGlobalStyles( jsonContent ) ) {
+				if ( refraction.templates.hasGlobalStyles( jsonContent ) ) {
 					try {
 						const { mode } = await showGlobalStylesDialog();
 						this.options.data.import_mode = mode;
@@ -108,7 +108,7 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 			}
 		}
 
-		if ( ! elementorCommon.config.filesUpload.unfilteredFiles ) {
+		if ( ! refractionCommon.config.filesUpload.unfilteredFiles ) {
 			const enableUnfilteredFilesModal = FilesUploadHandler.getUnfilteredFilesNotEnabledImportTemplateDialog( () => this.sendImportRequest() );
 
 			enableUnfilteredFilesModal.show();
@@ -118,9 +118,9 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 	},
 
 	sendImportRequest() {
-		elementorCommon.ajax.addRequest( 'import_template', this.options );
+		refractionCommon.ajax.addRequest( 'import_template', this.options );
 
-		elementor.templates.layout.showLoadingView();
+		refraction.templates.layout.showLoadingView();
 	},
 
 	onRender() {
@@ -133,13 +133,13 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 
 		this.resolveIcon();
 
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.importModal,
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.importModal,
 		} );
 	},
 
 	resolveIcon() {
-		const activeSource = elementor.templates.getFilter( 'source' ) || 'local';
+		const activeSource = refraction.templates.getFilter( 'source' ) || 'local';
 
 		const className = 'local' === activeSource ? 'eicon-library-upload' : 'eicon-library-import';
 
@@ -152,7 +152,7 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 	},
 
 	onFormDragEnter() {
-		this.ui.uploadForm.addClass( 'elementor-drag-over' );
+		this.ui.uploadForm.addClass( 'refraction-drag-over' );
 	},
 
 	onFormDragLeave( event ) {
@@ -160,7 +160,7 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 			return;
 		}
 
-		this.ui.uploadForm.removeClass( 'elementor-drag-over' );
+		this.ui.uploadForm.removeClass( 'refraction-drag-over' );
 	},
 
 	onFormDrop( event ) {

@@ -1,4 +1,4 @@
-import WizardFooter from 'elementor-app/organisms/wizard-footer';
+import WizardFooter from 'refraction-app/organisms/wizard-footer';
 
 export default function ActionsFooter( props ) {
 	return (

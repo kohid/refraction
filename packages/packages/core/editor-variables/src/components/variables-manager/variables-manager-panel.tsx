@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { useSuppressedMessage } from '@elementor/editor-current-user';
-import { PanelBody, PanelFooter } from '@elementor/editor-panels';
-import { ConfirmationDialog, SaveChangesDialog, SearchField, useDialog } from '@elementor/editor-ui';
+import { useSuppressedMessage } from '@refraction/editor-current-user';
+import { PanelBody, PanelFooter } from '@refraction/editor-panels';
+import { ConfirmationDialog, SaveChangesDialog, SearchField, useDialog } from '@refraction/editor-ui';
 import { AlertTriangleFilledIcon, ColorFilterIcon, CopyIcon, TrashIcon } from '@elementor/icons';
 import { Alert, AlertAction, AlertTitle, Box, Button, Divider, Infotip, Stack, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -198,7 +198,7 @@ function VariablesManagerPanelContent( { onRequestClose, onExposeCloseAttempt }:
 			} );
 
 			const duplicateAction = {
-				name: __( 'Duplicate', 'elementor' ),
+				name: __( 'Duplicate', 'refraction' ),
 				icon: CopyIcon,
 				color: 'text.primary',
 				onClick: ( itemId: string ) => {
@@ -214,7 +214,7 @@ function VariablesManagerPanelContent( { onRequestClose, onExposeCloseAttempt }:
 			};
 
 			const deleteAction = {
-				name: __( 'Delete', 'elementor' ),
+				name: __( 'Delete', 'refraction' ),
 				icon: TrashIcon,
 				color: 'error.main',
 				onClick: ( itemId: string ) => {
@@ -259,7 +259,7 @@ function VariablesManagerPanelContent( { onRequestClose, onExposeCloseAttempt }:
 					} }
 				>
 					<SearchField
-						placeholder={ __( 'Search', 'elementor' ) }
+						placeholder={ __( 'Search', 'refraction' ) }
 						value={ searchValue }
 						onSearch={ handleSearch }
 						sx={ {
@@ -311,10 +311,10 @@ function VariablesManagerPanelContent( { onRequestClose, onExposeCloseAttempt }:
 
 					{ ! hasVariables && ! searchValue && (
 						<EmptyState
-							title={ __( 'Create your first variable', 'elementor' ) }
+							title={ __( 'Create your first variable', 'refraction' ) }
 							message={ __(
 								'Variables are saved attributes that you can apply anywhere on your site.',
-								'elementor'
+								'refraction'
 							) }
 							icon={ <ColorFilterIcon fontSize="large" /> }
 							onAdd={ createMenuState.open }
@@ -378,7 +378,7 @@ function VariablesManagerPanelContent( { onRequestClose, onExposeCloseAttempt }:
 							onClick={ handleSaveClick }
 							loading={ isSaving }
 						>
-							{ __( 'Save changes', 'elementor' ) }
+							{ __( 'Save changes', 'refraction' ) }
 						</Button>
 					</Infotip>
 				</PanelFooter>
@@ -406,27 +406,27 @@ function VariablesManagerPanelContent( { onRequestClose, onExposeCloseAttempt }:
 			{ isSaveChangesDialogOpen && (
 				<SaveChangesDialog>
 					<SaveChangesDialog.Title onClose={ closeSaveChangesDialog }>
-						{ __( 'You have unsaved changes', 'elementor' ) }
+						{ __( 'You have unsaved changes', 'refraction' ) }
 					</SaveChangesDialog.Title>
 					<SaveChangesDialog.Content>
 						<SaveChangesDialog.ContentText>
-							{ __( 'You have unsaved changes in the Variables Manager.', 'elementor' ) }
+							{ __( 'You have unsaved changes in the Variables Manager.', 'refraction' ) }
 						</SaveChangesDialog.ContentText>
 						<SaveChangesDialog.ContentText>
-							{ __( 'To avoid losing your updates, save your changes before leaving.', 'elementor' ) }
+							{ __( 'To avoid losing your updates, save your changes before leaving.', 'refraction' ) }
 						</SaveChangesDialog.ContentText>
 					</SaveChangesDialog.Content>
 					<SaveChangesDialog.Actions
 						actions={ {
 							discard: {
-								label: __( 'Discard', 'elementor' ),
+								label: __( 'Discard', 'refraction' ),
 								action: () => {
 									closeSaveChangesDialog();
 									void onRequestClose();
 								},
 							},
 							confirm: {
-								label: __( 'Save', 'elementor' ),
+								label: __( 'Save', 'refraction' ),
 								action: async () => {
 									const result = await handleSaveClick();
 									closeSaveChangesDialog();
@@ -465,24 +465,24 @@ const StopSyncConfirmationDialog = ( { open, onClose, onConfirm }: StopSyncConfi
 	return (
 		<ConfirmationDialog open={ open } onClose={ onClose }>
 			<ConfirmationDialog.Title icon={ ColorFilterIcon } iconColor="primary">
-				{ __( 'Stop syncing variable color', 'elementor' ) }
+				{ __( 'Stop syncing variable color', 'refraction' ) }
 			</ConfirmationDialog.Title>
 			<ConfirmationDialog.Content>
 				<ConfirmationDialog.ContentText>
 					{ __(
 						'This will disconnect the variable color from Global Colors. Existing uses on your site will automatically switch to a default color.',
-						'elementor'
+						'refraction'
 					) }
 				</ConfirmationDialog.ContentText>
 			</ConfirmationDialog.Content>
 			<ConfirmationDialog.Actions
 				onClose={ onClose }
 				onConfirm={ onConfirm }
-				cancelLabel={ __( 'Cancel', 'elementor' ) }
-				confirmLabel={ __( 'Got it', 'elementor' ) }
+				cancelLabel={ __( 'Cancel', 'refraction' ) }
+				confirmLabel={ __( 'Got it', 'refraction' ) }
 				color="primary"
 				onSuppressMessage={ suppressStopSyncMessage }
-				suppressLabel={ __( "Don't show again", 'elementor' ) }
+				suppressLabel={ __( "Don't show again", 'refraction' ) }
 			/>
 		</ConfirmationDialog>
 	);

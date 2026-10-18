@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor sidebar widget.
+ * Refraction sidebar widget.
  *
- * Elementor widget that insert any sidebar into the page.
+ * Refraction widget that insert any sidebar into the page.
  *
  * @since 1.0.0
  */
@@ -39,7 +39,7 @@ class Widget_Sidebar extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Sidebar', 'elementor' );
+		return esc_html__( 'Sidebar', 'refraction' );
 	}
 
 	/**
@@ -88,9 +88,9 @@ class Widget_Sidebar extends Widget_Base {
 		$options = [];
 
 		if ( ! $wp_registered_sidebars ) {
-			$options[''] = esc_html__( 'No sidebars were found', 'elementor' );
+			$options[''] = esc_html__( 'No sidebars were found', 'refraction' );
 		} else {
-			$options[''] = esc_html__( 'Choose Sidebar', 'elementor' );
+			$options[''] = esc_html__( 'Choose Sidebar', 'refraction' );
 
 			foreach ( $wp_registered_sidebars as $sidebar_id => $sidebar ) {
 				$options[ $sidebar_id ] = $sidebar['name'];
@@ -103,14 +103,14 @@ class Widget_Sidebar extends Widget_Base {
 		$this->start_controls_section(
 			'section_sidebar',
 			[
-				'label' => esc_html__( 'Sidebar', 'elementor' ),
+				'label' => esc_html__( 'Sidebar', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'sidebar',
 			[
-				'label' => esc_html__( 'Choose Sidebar', 'elementor' ),
+				'label' => esc_html__( 'Choose Sidebar', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => $default_key,
 				'options' => $options,

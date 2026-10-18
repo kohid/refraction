@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 import { Backdrop, Infotip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -37,7 +37,7 @@ export const MissingVariable = () => {
 					},
 				} }
 			>
-				<WarningVariableTag label={ __( 'Missing variable', 'elementor' ) } onClick={ toggleInfotip } />
+				<WarningVariableTag label={ __( 'Missing variable', 'refraction' ) } onClick={ toggleInfotip } />
 			</Infotip>
 		</>
 	);

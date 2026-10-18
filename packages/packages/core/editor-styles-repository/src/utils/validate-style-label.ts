@@ -1,4 +1,4 @@
-import { z } from '@elementor/schema';
+import { z } from '@refraction/schema';
 import { __ } from '@wordpress/i18n';
 
 import { ELEMENTS_STYLES_RESERVED_LABEL } from '../providers/document-elements-styles-provider';
@@ -14,20 +14,20 @@ const RESERVED_CLASS_NAMES = [ 'container' ];
 
 const schema = z
 	.string()
-	.max( 50, __( 'Class name is too long. Please keep it under 50 characters.', 'elementor' ) )
-	.regex( NO_START_DIGIT_REGEX, __( 'Class names must start with a letter.', 'elementor' ) )
-	.regex( NO_SPACES_REGEX, __( 'Class names can’t contain spaces.', 'elementor' ) )
+	.max( 50, __( 'Class name is too long. Please keep it under 50 characters.', 'refraction' ) )
+	.regex( NO_START_DIGIT_REGEX, __( 'Class names must start with a letter.', 'refraction' ) )
+	.regex( NO_SPACES_REGEX, __( 'Class names can’t contain spaces.', 'refraction' ) )
 	.regex(
 		NO_SPECIAL_CHARS_REGEX,
-		__( 'Class names can only use letters, numbers, dashes (-), and underscores (_).', 'elementor' )
+		__( 'Class names can only use letters, numbers, dashes (-), and underscores (_).', 'refraction' )
 	)
-	.regex( NO_DOUBLE_HYPHEN_START_REGEX, __( 'Double hyphens are reserved for custom properties.', 'elementor' ) )
+	.regex( NO_DOUBLE_HYPHEN_START_REGEX, __( 'Double hyphens are reserved for custom properties.', 'refraction' ) )
 	.regex(
 		NO_HYPHEN_DIGIT_START_REGEX,
-		__( 'Class names can’t start with a hyphen followed by a number.', 'elementor' )
+		__( 'Class names can’t start with a hyphen followed by a number.', 'refraction' )
 	)
 	.refine( ( value ) => ! RESERVED_CLASS_NAMES.includes( value ), {
-		message: __( 'This name is reserved and can’t be used. Try something more specific.', 'elementor' ),
+		message: __( 'This name is reserved and can’t be used. Try something more specific.', 'refraction' ),
 	} );
 
 type ValidationEvent = 'inputChange' | 'create' | 'rename';
@@ -43,10 +43,10 @@ export function validateStyleLabel( label: string, event: ValidationEvent | 'ren
 
 	const result = schema
 		.refine( ( value ) => ! ( fullValidationEvent && value.length < 2 ), {
-			message: __( 'Class name is too short. Use at least 2 characters.', 'elementor' ),
+			message: __( 'Class name is too short. Use at least 2 characters.', 'refraction' ),
 		} )
 		.refine( ( value ) => ! ( fullValidationEvent && existingLabels.has( value ) ), {
-			message: __( 'This class name already exists. Please choose a unique name.', 'elementor' ),
+			message: __( 'This class name already exists. Please choose a unique name.', 'refraction' ),
 		} )
 		.safeParse( label.toLowerCase() );
 

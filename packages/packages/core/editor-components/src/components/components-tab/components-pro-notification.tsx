@@ -8,8 +8,8 @@ export const UPGRADE_URL = 'https://go.elementor.com/go-pro-components-exist-foo
 export function ComponentsProNotification() {
 	return (
 		<ComponentsUpgradeAlert
-			title={ __( 'Create new components', 'elementor' ) }
-			description={ __( 'Creating new components requires an active Pro subscription.', 'elementor' ) }
+			title={ __( 'Create new components', 'refraction' ) }
+			description={ __( 'Creating new components requires an active Pro subscription.', 'refraction' ) }
 			upgradeUrl={ UPGRADE_URL }
 		/>
 	);

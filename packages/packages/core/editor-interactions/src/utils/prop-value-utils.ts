@@ -1,5 +1,5 @@
-import { type Unit } from '@elementor/editor-controls';
-import { type PropValue, sizePropTypeUtil, type SizePropValue } from '@elementor/editor-props';
+import { type Unit } from '@refraction/editor-controls';
+import { type PropValue, sizePropTypeUtil, type SizePropValue } from '@refraction/editor-props';
 
 import { DEFAULT_TIME_UNIT, TIME_UNITS } from '../configs/time-constants';
 import {

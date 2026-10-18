@@ -9,15 +9,15 @@ const EXCLUDED_SELECTORS = {
 	WP_ADMIN_BAR: '#wpadminbar',
 	SUBMENU: '.wp-submenu',
 	PROMO_PAGE: '.e-feature-promotion',
-	PROMO_BLANK_STATE: '.elementor-blank_state',
+	PROMO_BLANK_STATE: '.refraction-blank_state',
 	APP: '.e-app',
 	SIDEBAR_NAVIGATION: '#editor-one-sidebar-navigation',
-	FLYOUT_MENU: '.elementor-submenu-flyout',
+	FLYOUT_MENU: '.refraction-submenu-flyout',
 };
 
 class ActionControlTracking extends BaseTracking {
 	static init() {
-		if ( ! DashboardUtils.isElementorPage() ) {
+		if ( ! DashboardUtils.isRefractionPage() ) {
 			return;
 		}
 
@@ -63,8 +63,8 @@ class ActionControlTracking extends BaseTracking {
 		let screenPrefix = '';
 
 		switch ( true ) {
-			case body.classList.contains( 'post-type-elementor_library' ):
-				screenPrefix = 'elementor_library-library';
+			case body.classList.contains( 'post-type-refraction_library' ):
+				screenPrefix = 'refraction_library-library';
 				break;
 			case body.classList.contains( 'post-type-e-floating-buttons' ):
 				screenPrefix = 'e-floating-buttons';
@@ -124,7 +124,7 @@ class ActionControlTracking extends BaseTracking {
 					return;
 				}
 
-				const toggle = base.closest( '.elementor-role-toggle' );
+				const toggle = base.closest( '.refraction-role-toggle' );
 
 				if ( toggle && ! this.isExcludedElement( toggle ) ) {
 					this.trackControl( toggle, CONTROL_TYPES.TOGGLE );

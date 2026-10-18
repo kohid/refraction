@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { forwardRef } from 'react';
-import { EditableField, EllipsisWithTooltip } from '@elementor/editor-ui';
+import { EditableField, EllipsisWithTooltip } from '@refraction/editor-ui';
 import { ComponentsIcon } from '@elementor/icons';
 import { Box, ListItemButton, ListItemIcon, styled, type Theme, Typography } from '@elementor/ui';
 

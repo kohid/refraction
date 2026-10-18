@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { trackUpgradePromotionClick } from '@elementor/editor-controls';
-import { colorPropTypeUtil, sizePropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
-import { CtaButton } from '@elementor/editor-ui';
+import { trackUpgradePromotionClick } from '@refraction/editor-controls';
+import { colorPropTypeUtil, sizePropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
+import { CtaButton } from '@refraction/editor-ui';
 import { BrushIcon, ExpandDiagonalIcon, RefreshIcon, RefreshOffIcon, TextIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -29,14 +29,14 @@ export function registerVariableTypes() {
 
 			if ( variable.sync_to_v3 ) {
 				actions.push( {
-					name: __( 'Stop syncing to Global Colors', 'elementor' ),
+					name: __( 'Stop syncing to Global Colors', 'refraction' ),
 					icon: RefreshOffIcon,
 					color: 'text.primary',
 					onClick: () => handlers.onStopSync( variableId ),
 				} );
 			} else {
 				actions.push( {
-					name: __( 'Sync to Global Colors', 'elementor' ),
+					name: __( 'Sync to Global Colors', 'refraction' ),
 					icon: RefreshIcon,
 					color: 'text.primary',
 					onClick: () => handlers.onStartSync( variableId ),

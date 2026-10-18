@@ -30,14 +30,14 @@ export default class ReverseColumns {
 	async init() {
 		await this.wpAdmin.openNewPage();
 		await this.editor.closeNavigatorIfOpen();
-		await this.editor.getPreviewFrame().locator( '.elementor-add-section-inner' ).click( { button: 'right' } );
-		await this.editor.getPreviewFrame().click( '.elementor-add-section-button', { delay: 500, clickCount: 2 } );
-		await this.editor.getPreviewFrame().click( '.elementor-select-preset-list button:nth-child(2)' );
+		await this.editor.getPreviewFrame().locator( '.refraction-add-section-inner' ).click( { button: 'right' } );
+		await this.editor.getPreviewFrame().click( '.refraction-add-section-button', { delay: 500, clickCount: 2 } );
+		await this.editor.getPreviewFrame().click( '.refraction-select-preset-list button:nth-child(2)' );
 	}
 
 	async initAdditionalBreakpoints() {
 		const editor = await this.wpAdmin.openNewPage();
-		await this.editor.getPreviewFrame().locator( '.elementor-add-section-inner' ).click( { button: 'right' } );
+		await this.editor.getPreviewFrame().locator( '.refraction-add-section-inner' ).click( { button: 'right' } );
 		const pageUrl = new URL( this.page.url() );
 		const searchParams = pageUrl.searchParams;
 

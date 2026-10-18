@@ -7,7 +7,7 @@ import { wpCli } from '../../../../assets/wp-cli';
 
 test.describe( 'Section tests', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments deactivate container' );
+		await wpCli( 'wp refraction experiments deactivate container' );
 	} );
 
 	test.afterAll( async ( { browser, apiRequests }, testInfo ) => {
@@ -16,7 +16,7 @@ test.describe( 'Section tests', () => {
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 		await wpAdmin.resetExperiments();
 		await page.close();
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	test( 'Verify that elements are in the correct order after passing into a new section', async ( { page, apiRequests }, testInfo ) => {
@@ -26,9 +26,9 @@ test.describe( 'Section tests', () => {
 		const editor = await wpAdmin.openNewPage(),
 			sectionId1 = await editor.addElement( { elType: 'section' }, 'document' ),
 			sectionId2 = await editor.addElement( { elType: 'section' }, 'document' ),
-			section1Column = editor.getPreviewFrame().locator( '.elementor-element-' + sectionId1 + ' .elementor-column' ),
+			section1Column = editor.getPreviewFrame().locator( '.refraction-element-' + sectionId1 + ' .refraction-column' ),
 			section1ColumnId = await section1Column.getAttribute( 'data-id' ),
-			section2Column = editor.getPreviewFrame().locator( '.elementor-element-' + sectionId2 + ' .elementor-column' ),
+			section2Column = editor.getPreviewFrame().locator( '.refraction-element-' + sectionId2 + ' .refraction-column' ),
 			section2ColumnId = await section2Column.getAttribute( 'data-id' );
 
 		// Add widgets.
@@ -42,17 +42,17 @@ test.describe( 'Section tests', () => {
 		await editor.openAddElementSection( sectionId2 );
 
 		// Paste section 1 onto New section element.
-		await contextMenu.pasteElement( '.elementor-add-section-inline' );
+		await contextMenu.pasteElement( '.refraction-add-section-inline' );
 
 		// Assert.
 		// Verify that the first section has a `data-id` value of `sectionId1`.
-		await expect( editor.getPreviewFrame().locator( '.elementor-section >> nth=0' ) ).toHaveAttribute( 'data-id', sectionId1 );
+		await expect( editor.getPreviewFrame().locator( '.refraction-section >> nth=0' ) ).toHaveAttribute( 'data-id', sectionId1 );
 		// Verify that the second section doesn't have a `data-id` value of `sectionId1` or `sectionId2`.
-		await expect( editor.getPreviewFrame().locator( '.elementor-section >> nth=1' ) ).not.toHaveAttribute( 'data-id', sectionId1 );
-		await expect( editor.getPreviewFrame().locator( '.elementor-section >> nth=1' ) ).not.toHaveAttribute( 'data-id', sectionId2 );
+		await expect( editor.getPreviewFrame().locator( '.refraction-section >> nth=1' ) ).not.toHaveAttribute( 'data-id', sectionId1 );
+		await expect( editor.getPreviewFrame().locator( '.refraction-section >> nth=1' ) ).not.toHaveAttribute( 'data-id', sectionId2 );
 		// Verify that the second section has a button widget.
-		await expect( editor.getPreviewFrame().locator( '.elementor-section >> nth=1' ).locator( '.elementor-widget' ) ).toHaveClass( /elementor-widget-button/ );
+		await expect( editor.getPreviewFrame().locator( '.refraction-section >> nth=1' ).locator( '.refraction-widget' ) ).toHaveClass( /refraction-widget-button/ );
 		// Verify that the third section has `a `data-id` value of `sectionId2`.
-		await expect( editor.getPreviewFrame().locator( '.elementor-section >> nth=2' ) ).toHaveAttribute( 'data-id', sectionId2 );
+		await expect( editor.getPreviewFrame().locator( '.refraction-section >> nth=2' ) ).toHaveAttribute( 'data-id', sectionId2 );
 	} );
 } );

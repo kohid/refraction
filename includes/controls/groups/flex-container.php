@@ -1,5 +1,5 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,28 +21,28 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 
 		$fields['items'] = [
 			'type' => Controls_Manager::HEADING,
-			'label' => esc_html__( 'Items', 'elementor' ),
+			'label' => esc_html__( 'Items', 'refraction' ),
 			'separator' => 'before',
 		];
 
 		$fields['direction'] = [
-			'label' => esc_html__( 'Direction', 'elementor' ),
+			'label' => esc_html__( 'Direction', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'row' => [
-					'title' => esc_html__( 'Row - horizontal', 'elementor' ),
+					'title' => esc_html__( 'Row - horizontal', 'refraction' ),
 					'icon' => 'eicon-arrow-' . $end,
 				],
 				'column' => [
-					'title' => esc_html__( 'Column - vertical', 'elementor' ),
+					'title' => esc_html__( 'Column - vertical', 'refraction' ),
 					'icon' => 'eicon-arrow-down',
 				],
 				'row-reverse' => [
-					'title' => esc_html__( 'Row - reversed', 'elementor' ),
+					'title' => esc_html__( 'Row - reversed', 'refraction' ),
 					'icon' => 'eicon-arrow-' . $start,
 				],
 				'column-reverse' => [
-					'title' => esc_html__( 'Column - reversed', 'elementor' ),
+					'title' => esc_html__( 'Column - reversed', 'refraction' ),
 					'icon' => 'eicon-arrow-up',
 				],
 			],
@@ -88,33 +88,33 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 		] );
 
 		$fields['justify_content'] = [
-			'label' => esc_html__( 'Justify Content', 'elementor' ),
+			'label' => esc_html__( 'Justify Content', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'label_block' => true,
 			'default' => '',
 			'options' => [
 				'flex-start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-flex eicon-justify-start-h',
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-flex eicon-justify-center-h',
 				],
 				'flex-end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-flex eicon-justify-end-h',
 				],
 				'space-between' => [
-					'title' => esc_html__( 'Space Between', 'elementor' ),
+					'title' => esc_html__( 'Space Between', 'refraction' ),
 					'icon' => 'eicon-flex eicon-justify-space-between-h',
 				],
 				'space-around' => [
-					'title' => esc_html__( 'Space Around', 'elementor' ),
+					'title' => esc_html__( 'Space Around', 'refraction' ),
 					'icon' => 'eicon-flex eicon-justify-space-around-h',
 				],
 				'space-evenly' => [
-					'title' => esc_html__( 'Space Evenly', 'elementor' ),
+					'title' => esc_html__( 'Space Evenly', 'refraction' ),
 					'icon' => 'eicon-flex eicon-justify-space-evenly-h',
 				],
 			],
@@ -125,24 +125,24 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 		];
 
 		$fields['align_items'] = [
-			'label' => esc_html__( 'Align Items', 'elementor' ),
+			'label' => esc_html__( 'Align Items', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'default' => '',
 			'options' => [
 				'flex-start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-flex eicon-align-start-v',
 				],
 				'center' => [
-					'title' => esc_html__( 'Center', 'elementor' ),
+					'title' => esc_html__( 'Center', 'refraction' ),
 					'icon' => 'eicon-flex eicon-align-center-v',
 				],
 				'flex-end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-flex eicon-align-end-v',
 				],
 				'stretch' => [
-					'title' => esc_html__( 'Stretch', 'elementor' ),
+					'title' => esc_html__( 'Stretch', 'refraction' ),
 					'icon' => 'eicon-flex eicon-align-stretch-v',
 				],
 			],
@@ -153,7 +153,7 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 		];
 
 		$fields['gap'] = [
-			'label' => esc_html__( 'Gaps', 'elementor' ),
+			'label' => esc_html__( 'Gaps', 'refraction' ),
 			'type' => Controls_Manager::GAPS,
 			'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 			'default' => [
@@ -180,19 +180,19 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 		];
 
 		$fields['wrap'] = [
-			'label' => esc_html__( 'Wrap', 'elementor' ),
+			'label' => esc_html__( 'Wrap', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'nowrap' => [
-					'title' => esc_html__( 'No Wrap', 'elementor' ),
+					'title' => esc_html__( 'No Wrap', 'refraction' ),
 					'icon' => 'eicon-flex eicon-nowrap',
 				],
 				'wrap' => [
-					'title' => esc_html__( 'Wrap', 'elementor' ),
+					'title' => esc_html__( 'Wrap', 'refraction' ),
 					'icon' => 'eicon-flex eicon-wrap',
 				],
 			],
-			'description' => esc_html__( 'Items within the container can stay in a single line (No wrap), or break into multiple lines (Wrap).', 'elementor' ),
+			'description' => esc_html__( 'Items within the container can stay in a single line (No wrap), or break into multiple lines (Wrap).', 'refraction' ),
 			'default' => '',
 			'selectors' => [
 				'{{SELECTOR}}' => '--flex-wrap: {{VALUE}};',
@@ -201,33 +201,33 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 		];
 
 		$fields['align_content'] = [
-			'label' => esc_html__( 'Align Content', 'elementor' ),
+			'label' => esc_html__( 'Align Content', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'label_block' => true,
 			'default' => '',
 			'options' => [
 				'flex-start' => [
-					'title' => esc_html__( 'Start', 'elementor' ),
+					'title' => esc_html__( 'Start', 'refraction' ),
 					'icon' => 'eicon-justify-start-v',
 				],
 				'center' => [
-					'title' => esc_html__( 'Middle', 'elementor' ),
+					'title' => esc_html__( 'Middle', 'refraction' ),
 					'icon' => 'eicon-justify-center-v',
 				],
 				'flex-end' => [
-					'title' => esc_html__( 'End', 'elementor' ),
+					'title' => esc_html__( 'End', 'refraction' ),
 					'icon' => 'eicon-justify-end-v',
 				],
 				'space-between' => [
-					'title' => esc_html__( 'Space Between', 'elementor' ),
+					'title' => esc_html__( 'Space Between', 'refraction' ),
 					'icon' => 'eicon-justify-space-between-v',
 				],
 				'space-around' => [
-					'title' => esc_html__( 'Space Around', 'elementor' ),
+					'title' => esc_html__( 'Space Around', 'refraction' ),
 					'icon' => 'eicon-justify-space-around-v',
 				],
 				'space-evenly' => [
-					'title' => esc_html__( 'Space Evenly', 'elementor' ),
+					'title' => esc_html__( 'Space Evenly', 'refraction' ),
 					'icon' => 'eicon-justify-space-evenly-v',
 				],
 			],

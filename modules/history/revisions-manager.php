@@ -1,21 +1,21 @@
 <?php
-namespace Elementor\Modules\History;
+namespace Refraction\Modules\History;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Files\CSS\Post as Post_CSS;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Files\CSS\Post as Post_CSS;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor history revisions manager.
+ * Refraction history revisions manager.
  *
- * Elementor history revisions manager handler class is responsible for
- * registering and managing Elementor revisions manager.
+ * Refraction history revisions manager handler class is responsible for
+ * registering and managing Refraction revisions manager.
  *
  * @since 1.7.0
  */
@@ -40,7 +40,7 @@ class Revisions_Manager {
 	/**
 	 * History revisions manager constructor.
 	 *
-	 * Initializing Elementor history revisions manager.
+	 * Initializing Refraction history revisions manager.
 	 *
 	 * @since 1.7.0
 	 * @access public
@@ -73,8 +73,8 @@ class Revisions_Manager {
 		// in edit-form-advanced.php:210
 		$document = Plugin::$instance->documents->get( $post_id );
 
-		if ( $document && $document->is_built_with_elementor() ) {
-			$post_content .= '<!-- Created with Elementor -->';
+		if ( $document && $document->is_built_with_refraction() ) {
+			$post_content .= '<!-- Created with Refraction -->';
 		}
 
 		return $post_content;
@@ -90,11 +90,11 @@ class Revisions_Manager {
 
 		$document = Plugin::$instance->documents->get( $post->ID );
 
-		if ( ! $document || ! $document->is_built_with_elementor() ) {
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
 			return;
 		}
 
-		$post->post_content = str_replace( '<!-- Created with Elementor -->', '', $post->post_content );
+		$post->post_content = str_replace( '<!-- Created with Refraction -->', '', $post->post_content );
 	}
 
 	/**
@@ -150,19 +150,19 @@ class Revisions_Manager {
 
 		/** @var \WP_Post $revision */
 		foreach ( $posts as $revision ) {
-			$date = date_i18n( _x( 'M j @ H:i', 'revision date format', 'elementor' ), strtotime( $revision->post_modified ) );
+			$date = date_i18n( _x( 'M j @ H:i', 'revision date format', 'refraction' ), strtotime( $revision->post_modified ) );
 
 			$human_time = human_time_diff( strtotime( $revision->post_modified ), $current_time );
 
 			if ( $revision->ID === $post->ID ) {
 				$type = 'current';
-				$type_label = esc_html__( 'Current Version', 'elementor' );
+				$type_label = esc_html__( 'Current Version', 'refraction' );
 			} elseif ( false !== strpos( $revision->post_name, 'autosave' ) ) {
 				$type = 'autosave';
-				$type_label = esc_html__( 'Autosave', 'elementor' );
+				$type_label = esc_html__( 'Autosave', 'refraction' );
 			} else {
 				$type = 'revision';
-				$type_label = esc_html__( 'Revision', 'elementor' );
+				$type_label = esc_html__( 'Revision', 'refraction' );
 			}
 
 			if ( ! isset( self::$authors[ $revision->post_author ] ) ) {
@@ -178,7 +178,7 @@ class Revisions_Manager {
 				'timestamp' => strtotime( $revision->post_modified ),
 				'date' => sprintf(
 					/* translators: 1: Human readable time difference, 2: Date. */
-					esc_html__( '%1$s ago (%2$s)', 'elementor' ),
+					esc_html__( '%1$s ago (%2$s)', 'refraction' ),
 					'<time>' . $human_time . '</time>',
 					'<time>' . $date . '</time>'
 				),
@@ -209,7 +209,7 @@ class Revisions_Manager {
 		$parent_id = wp_is_post_revision( $revision_id );
 
 		if ( $parent_id ) {
-			Plugin::$instance->db->safe_copy_elementor_meta( $parent_id, $revision_id );
+			Plugin::$instance->db->safe_copy_refraction_meta( $parent_id, $revision_id );
 		}
 	}
 
@@ -226,15 +226,15 @@ class Revisions_Manager {
 			return;
 		}
 
-		$is_built_with_elementor = $revision->is_built_with_elementor();
+		$is_built_with_refraction = $revision->is_built_with_refraction();
 
-		$parent->set_is_built_with_elementor( $is_built_with_elementor );
+		$parent->set_is_built_with_refraction( $is_built_with_refraction );
 
-		if ( ! $is_built_with_elementor ) {
+		if ( ! $is_built_with_refraction ) {
 			return;
 		}
 
-		Plugin::$instance->db->copy_elementor_meta( $revision_id, $parent_id );
+		Plugin::$instance->db->copy_refraction_meta( $revision_id, $parent_id );
 
 		$post_css = Post_CSS::create( $parent_id );
 
@@ -270,7 +270,7 @@ class Revisions_Manager {
 	 * @static
 	 */
 	public static function add_revision_support_for_all_post_types() {
-		$post_types = get_post_types_by_support( 'elementor' );
+		$post_types = get_post_types_by_support( 'refraction' );
 		foreach ( $post_types as $post_type ) {
 			add_post_type_support( $post_type, 'revisions' );
 		}
@@ -345,7 +345,7 @@ class Revisions_Manager {
 	 *
 	 * Add new localized settings for the revisions manager.
 	 *
-	 * Fired by `elementor/editor/editor_settings` filter.
+	 * Fired by `refraction/editor/editor_settings` filter.
 	 *
 	 * @since 1.7.0
 	 * @deprecated 3.1.0
@@ -385,18 +385,18 @@ class Revisions_Manager {
 	private static function register_actions() {
 		add_action( 'wp_restore_post_revision', [ __CLASS__, 'restore_revision' ], 10, 2 );
 		add_action( 'init', [ __CLASS__, 'add_revision_support_for_all_post_types' ], 9999 );
-		add_filter( 'elementor/document/config', [ __CLASS__, 'document_config' ], 10, 2 );
-		add_action( 'elementor/db/before_save', [ __CLASS__, 'db_before_save' ], 10, 2 );
+		add_filter( 'refraction/document/config', [ __CLASS__, 'document_config' ], 10, 2 );
+		add_action( 'refraction/db/before_save', [ __CLASS__, 'db_before_save' ], 10, 2 );
 		add_action( '_wp_put_post_revision', [ __CLASS__, 'save_revision' ] );
 		add_action( 'wp_creating_autosave', [ __CLASS__, 'update_autosave' ] );
-		add_action( 'elementor/ajax/register_actions', [ __CLASS__, 'register_ajax_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ __CLASS__, 'register_ajax_actions' ] );
 
 		// Hack to avoid delete the auto-save revision in WP editor.
 		add_filter( 'edit_post_content', [ __CLASS__, 'avoid_delete_auto_save' ], 10, 2 );
 		add_action( 'edit_form_after_title', [ __CLASS__, 'remove_temp_post_content' ] );
 
 		if ( wp_doing_ajax() ) {
-			add_filter( 'elementor/documents/ajax_save/return_data', [ __CLASS__, 'on_ajax_save_builder_data' ], 10, 2 );
+			add_filter( 'refraction/documents/ajax_save/return_data', [ __CLASS__, 'on_ajax_save_builder_data' ], 10, 2 );
 		}
 	}
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\Agents\Classes;
+namespace Refraction\Modules\Agents\Classes;
 
-use Elementor\Modules\Agents\Module;
-use Elementor\Plugin;
+use Refraction\Modules\Agents\Module;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

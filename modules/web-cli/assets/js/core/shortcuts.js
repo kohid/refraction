@@ -1,5 +1,5 @@
-import environment from 'elementor-api/utils/environment';
-import Console from 'elementor-api/utils/console';
+import environment from 'refraction-api/utils/environment';
+import Console from 'refraction-api/utils/console';
 
 export default class Shortcuts {
 	constructor( $window ) {
@@ -73,7 +73,7 @@ export default class Shortcuts {
 			if ( handler.exclude && -1 !== handler.exclude.indexOf( 'input' ) ) {
 				const $target = jQuery( event.target );
 
-				if ( $target.is( ':input, .elementor-input' ) || $target.closest( '[contenteditable="true"]' ).length ) {
+				if ( $target.is( ':input, .refraction-input' ) || $target.closest( '[contenteditable="true"]' ).length ) {
 					return false;
 				}
 			}
@@ -94,7 +94,7 @@ export default class Shortcuts {
 			return;
 		}
 
-		if ( 1 < filteredHandlers.length && elementorWebCliConfig.isDebug ) {
+		if ( 1 < filteredHandlers.length && refractionWebCliConfig.isDebug ) {
 			Console.warn( 'Multiple handlers for shortcut.', filteredHandlers, event );
 		}
 

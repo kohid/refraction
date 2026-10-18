@@ -7,7 +7,7 @@ import {
 	__getStore,
 	__registerSlice,
 	__StoreProvider as StoreProvider,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import PanelWindow from '../components/internal/panel-window';
 import { slice } from '../store/slice';

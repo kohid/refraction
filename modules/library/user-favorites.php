@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\Library;
+namespace Refraction\Modules\Library;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 class User_Favorites {
-	const USER_META_KEY = 'elementor_library_favorites';
+	const USER_META_KEY = 'refraction_library_favorites';
 
 	/**
 	 * @var int

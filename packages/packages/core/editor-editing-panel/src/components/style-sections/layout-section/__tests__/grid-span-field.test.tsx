@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import { useStylesFields } from '../../../../hooks/use-styles-fields';
 import { GridSpanFields } from '../grid-span-field';
 
-jest.mock( '@elementor/editor-styles' );
+jest.mock( '@refraction/editor-styles' );
 jest.mock( '../../../../hooks/use-styles-fields' );
 jest.mock( '../../../../styles-inheritance/components/styles-inheritance-indicator' );
 jest.mock( '../../../../contexts/styles-inheritance-context', () => ( {
@@ -13,8 +13,8 @@ jest.mock( '../../../../contexts/styles-inheritance-context', () => ( {
 	useInheritedValues: () => ( {} ),
 } ) );
 
-jest.mock( '@elementor/editor-controls', () => {
-	const actual = jest.requireActual( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls', () => {
+	const actual = jest.requireActual( '@refraction/editor-controls' );
 	return {
 		...actual,
 		useControlActions: () => ( {

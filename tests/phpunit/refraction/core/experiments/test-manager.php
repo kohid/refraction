@@ -1,0 +1,1052 @@
+<?php
+namespace Refraction\Tests\Phpunit\Refraction\Core\Experiments;
+
+use Refraction\Core\Experiments\Exceptions\Dependency_Exception;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Core\Experiments\Non_Existing_Dependency;
+use Refraction\Core\Experiments\Wrap_Core_Dependency;
+use Refraction\Core\Upgrade\Manager;
+use Refraction\Tests\Phpunit\Refraction\Core\Experiments\Mock\Modules\Module_A;
+use Refraction\Tests\Phpunit\Refraction\Core\Experiments\Mock\Modules\Module_B;
+use RefractionEditorTesting\Refraction_Test_Base;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+class Test_Manager extends Refraction_Test_Base {
+	/**
+	 * @var \Refraction\Core\Experiments\Manager
+	 */
+	private $experiments;
+
+	/**
+	 * @var array The state of the experiments before the bootstrap file of the tests changes it.
+	 */
+	private $experiments_state = [];
+
+	public function setUp(): void {
+		parent::setUp();
+
+		add_action( 'refraction/experiments/feature-registered', [ $this, 'set_original_experiments_state' ], 1, 2 );
+
+		add_action( 'refraction/experiments/feature-registered', [ $this, 'reset_experiments_state' ], 9999, 2 );
+
+		$this->experiments = new Experiments_Manager();
+	}
+
+	public function set_original_experiments_state( Experiments_Manager $experiments_manager, array $experimental_data ) {
+		$this->experiments_state[ $experimental_data['name'] ] = $experimental_data['default'];
+	}
+
+	public function reset_experiments_state( Experiments_Manager $experiments_manager, array $experimental_data ) {
+		$original_experiment_state = $this->experiments_state[ $experimental_data['name'] ];
+		$experiments_manager->set_feature_default_state( $experimental_data['name'], $original_experiment_state );
+	}
+
+	public function test_add_default_experiments() {
+		// we ensure that the default features are added, and no dependency is initialized incorrectly.
+		// what we are really testing here is no exceptions thrown on initialization.
+		$features = $this->experiments->get_features();
+
+		$this->assertNotEmpty( $features, 'Default registered features' );
+	}
+
+	public function test_add_feature() {
+		$test_feature_data = [
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'unaccepted_key' => 'some value',
+		];
+
+		$test_set = [
+			'tag' => '',
+			'description' => '',
+			'release_status' => Experiments_Manager::RELEASE_STATUS_ALPHA,
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'name' => 'test_feature',
+			'state' => Experiments_Manager::STATE_DEFAULT,
+			'on_state_change' => null,
+			'new_site' => [
+				'always_active' => false,
+				'default_active' => false,
+				'default_inactive' => false,
+				'minimum_installation_version' => null,
+			],
+			'mutable' => true,
+			'hidden' => false,
+			'generator_tag' => false,
+			'tags' => [],
+			'deprecated' => false,
+		];
+
+		$new_feature = $this->add_test_feature( $test_feature_data );
+
+		$re_added_feature = $this->add_test_feature( $test_feature_data );
+
+		$this->assertEquals( $test_set, $new_feature );
+		$this->assertEquals( null, $re_added_feature );
+	}
+
+	/**
+	 * @dataProvider get_tags_data_provider
+	 */
+	public function test_add_feature__with_tags( $name, $data, $expected ) {
+		// Act.
+		$new_feature = $this->add_test_feature( [
+			'name' => $name,
+			'tag' => $data['tag'] ?? '',
+			'tags' => $data['tags'] ?? [],
+		] );
+
+		// Assert.
+		$this->assertEquals( $expected['tag'], $new_feature['tag'] );
+		$this->assertEquals( $expected['tags'], $new_feature['tags'] );
+	}
+
+	public function get_tags_data_provider() {
+		return [
+			'New feature passing one tag to "tag" as a string' => [
+				'name' => 'test_feature_with_tags1',
+				'data' => [
+					'tag' => 'First tag',
+				],
+				'expected' => [
+					'tag' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						]
+					],
+					'tags' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						]
+					],
+				]
+			],
+			'New feature passing two tags to "tag" as a comma separated string' => [
+				'name' => 'test_feature_with_tags2',
+				'data' => [
+					'tag' => 'First tag, Second tag',
+				],
+				'expected' => [
+					'tag' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+						[
+							'type' => 'default',
+							'label' => 'Second tag',
+						],
+					],
+					'tags' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+						[
+							'type' => 'default',
+							'label' => 'Second tag',
+						],
+					],
+				]
+			],
+			'New feature passing two tags to "tag" as a comma separated string with a trailing comma' => [
+				'name' => 'test_feature_with_tags3',
+				'data' => [
+					'tag' => 'First tag, Second tag,',
+				],
+				'expected' => [
+					'tag' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+						[
+							'type' => 'default',
+							'label' => 'Second tag',
+						],
+					],
+					'tags' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+						[
+							'type' => 'default',
+							'label' => 'Second tag',
+						],
+					],
+				]
+			],
+			'New feature passing two tags to "tag" as an incorrectly structured array' => [
+				'name' => 'test_feature_with_tags4',
+				'data' => [
+					'tag' => [
+						'First tag',
+						'Second tag',
+					],
+				],
+				'expected' => [
+					'tag' => [],
+					'tags' => [],
+				]
+			],
+			'New feature passing two tags to "tags" as an incorrectly structured array' => [
+				'name' => 'test_feature_with_tags5',
+				'data' => [
+					'tags' => [
+						'First tag',
+						'Second tag',
+					],
+				],
+				'expected' => [
+					'tag' => '',
+					'tags' => [],
+				]
+			],
+			'New feature passing two tags to "tags" as a correctly structured array' => [
+				'name' => 'test_feature_with_tags6',
+				'data' => [
+					'tags' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+						[
+							'type' => 'secondary',
+							'label' => 'Second tag',
+						],
+					],
+				],
+				'expected' => [
+					'tag' => '',
+					'tags' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+						[
+							'type' => 'secondary',
+							'label' => 'Second tag',
+						],
+					],
+				],
+			],
+			'New feature passing tags to both "tag" and "tags"' => [
+				'name' => 'test_feature_with_tags7',
+				'data' => [
+					'tag' => 'First tag',
+					'tags' => [
+						[
+							'type' => 'default',
+							'label' => 'Second tag',
+						],
+						[
+							'type' => 'secondary',
+							'label' => 'Third tag',
+						],
+					],
+				],
+				'expected' => [
+					'tag' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+					],
+					'tags' => [
+						[
+							'type' => 'default',
+							'label' => 'First tag',
+						],
+						[
+							'type' => 'default',
+							'label' => 'Second tag',
+						],
+						[
+							'type' => 'secondary',
+							'label' => 'Third tag',
+						],
+					],
+				]
+			],
+		];
+	}
+
+	public function test_add_feature__ensure_wrap_core_dependency() {
+		// Arrange.
+		$test_core_feature = [
+			'name' => 'core_feature',
+			'state' => Experiments_Manager::STATE_INACTIVE,
+		];
+
+		$depended_feature = [
+			'name' => 'depended_feature',
+			'state' => Experiments_Manager::STATE_INACTIVE,
+			'dependencies' => [
+				'core_feature',
+			],
+		];
+
+		$this->add_test_feature( $test_core_feature );
+
+		// Act.
+		$depended_feature = $this->add_test_feature( $depended_feature );
+
+		$depended_feature_dependency = $depended_feature['dependencies'][0];
+
+		// Assert.
+		$this->assertTrue( $depended_feature_dependency instanceof Wrap_Core_Dependency );
+		$this->assertEquals( 'core_feature', $depended_feature_dependency->get_name() );
+	}
+
+	public function test_add_feature__ensure_default_state_wrap_core_dependency() {
+		// Arrange.
+		$dependency_feature_1 = [
+			'name' => 'dependency_feature_1',
+			'state' => Experiments_Manager::STATE_DEFAULT,
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'mutable' => false,
+		];
+
+		$dependency_feature_2 = [
+			'name' => 'dependency_feature_2',
+			'state' => Experiments_Manager::STATE_DEFAULT,
+			'default' => Experiments_Manager::STATE_INACTIVE,
+			'mutable' => false,
+		];
+
+
+		$depended_feature = [
+			'name' => 'depended_feature',
+			'state' => Experiments_Manager::STATE_DEFAULT,
+			'dependencies' => [
+				'dependency_feature_1',
+				'dependency_feature_2',
+			],
+			'default' => Experiments_Manager::STATE_ACTIVE,
+		];
+
+		$dependency_feature_1 = $this->add_test_feature( $dependency_feature_1 );
+		$dependency_feature_2 = $this->add_test_feature( $dependency_feature_2 );
+
+		// Act.
+		$depended_feature = $this->add_test_feature( $depended_feature );
+
+		$depended_feature_dependency = $depended_feature['dependencies'][0];
+
+		// Assert.
+		$this->assertTrue( $depended_feature_dependency instanceof Wrap_Core_Dependency );
+		$this->assertEquals( 'dependency_feature_1', $depended_feature_dependency->get_name() );
+		$this->assertTrue( $depended_feature['default'] === Experiments_Manager::STATE_INACTIVE );
+		$this->assertEquals( Experiments_Manager::STATE_DEFAULT, $dependency_feature_1['state'] );
+		$this->assertEquals( Experiments_Manager::STATE_ACTIVE, $dependency_feature_1['default'] );
+	}
+
+	public function test_add_feature__adding_non_existing_dependency() {
+		$this->expect_experiment_dep_compat_warnings_if_debug( 1 );
+
+		// Arrange.
+		$test_feature_data = [
+			'name' => 'test_feature',
+			'state' => Experiments_Manager::STATE_INACTIVE,
+			'dependencies' => [
+				'feature-that-not-exists',
+			],
+		];
+
+		// Act.
+		$feature = $this->add_test_feature( $test_feature_data );
+
+		// Assert.
+		$this->assertNotEmpty( $feature );
+		$this->assertInstanceOf( Non_Existing_Dependency::class, $feature['dependencies'][0] );
+	}
+
+	public function test_add_feature__missing_dependency_warns_when_wp_debug_enabled() {
+		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+			$this->markTestSkipped( 'WP_DEBUG is required to assert _doing_it_wrong.' );
+		}
+
+		$this->expect_doing_it_wrong( 'Refraction\Core\Experiments\Manager::warn_removed_or_hidden_dependency' );
+
+		$this->add_test_feature( [
+			'name' => 'test_feature_wp_debug',
+			'dependencies' => [
+				'feature-that-not-exists',
+			],
+		] );
+	}
+
+	public function test_feature_can_be_added_as_hidden() {
+		// Act
+		$args = [ 'hidden' => true ];
+		$this->add_test_feature( $args );
+
+		// Assert
+		$feature = $this->experiments->get_features( 'test_feature' );
+		$this->assertNotEmpty( $feature );
+		$this->assertTrue( $feature['hidden'] );
+	}
+
+	public function test_add_feature__allows_hidden_dependency_for_compatibility() {
+		$this->expect_experiment_dep_compat_warnings_if_debug( 1 );
+
+		// Arrange.
+		$this->add_test_feature( [
+			'name' => 'regular-dependency',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+		] );
+
+		$this->add_test_feature( [
+			'name' => 'hidden-dependency',
+			'default' => Experiments_Manager::STATE_INACTIVE,
+			'hidden' => true,
+		] );
+
+		// Act.
+		$dependant = $this->add_test_feature( [
+			'name' => 'dependant',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'dependencies' => [
+				'regular-dependency',
+				'hidden-dependency',
+			],
+		] );
+
+		// Assert.
+		$this->assertNotEmpty( $dependant );
+		$this->assertInstanceOf( Wrap_Core_Dependency::class, $dependant['dependencies'][0] );
+		$this->assertInstanceOf( Wrap_Core_Dependency::class, $dependant['dependencies'][1] );
+		$this->assertEquals( Experiments_Manager::STATE_INACTIVE, $dependant['default'] );
+		$this->experiments->set_feature_default_state( 'dependant', Experiments_Manager::STATE_ACTIVE );
+		$this->assertTrue( $this->experiments->is_feature_active( 'dependant', true ) );
+	}
+
+	public function test_get_features() {
+		$experiments = $this->experiments;
+
+		// Assert that `get_features` is called correctly even before adding any feature
+		$experiments->get_features();
+
+		$this->add_test_feature();
+
+		$features = $experiments->get_features();
+
+		$test_feature = $experiments->get_features( 'test_feature' );
+
+		$this->assert_array_have_keys( [ 'test_feature' ], $features );
+
+		$this->assertNotEmpty( $test_feature );
+	}
+
+	public function test_get_active_features() {
+		$this->add_test_feature();
+
+		$experiments = $this->experiments;
+
+		$experiments->set_feature_default_state( 'test_feature', Experiments_Manager::STATE_DEFAULT );
+
+		$default_activated_test_feature_data = [
+			'name' => 'default_activated_test_feature',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+		];
+
+		$this->add_test_feature( $default_activated_test_feature_data );
+
+		$active_features = $this->experiments->get_active_features();
+
+		$this->assertArrayHasKey( 'default_activated_test_feature', $active_features );
+	}
+
+	public function test_is_feature_active() {
+		$this->add_test_feature( [
+			'name' => 'test_feature',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+		] );
+
+		$is_test_feature_active = $this->experiments->is_feature_active( 'test_feature' );
+
+		$this->assertTrue( $is_test_feature_active );
+	}
+
+    public function is_feature_active_new_site_with_beta_data_provider() {
+        return [
+            'new_site_active' => [
+                'versions_history' => [
+                    '3.1.0' => time(),
+                ],
+                'minimum_installation_version' => '3.1.0',
+                'expected' => true,
+            ],
+            'new_site_inactive' => [
+                'versions_history' => [
+                    '3.0.0' => time(),
+                ],
+                'minimum_installation_version' => '3.1.0',
+                'expected' => false,
+            ],
+            'empty_history_current_version_meets_minimum' => [
+                'versions_history' => [],
+                'minimum_installation_version' => '3.1.0',
+                'expected' => true,
+            ],
+            'empty_history_current_version_below_minimum' => [
+                'versions_history' => [],
+                'minimum_installation_version' => '999.0.0',
+                'expected' => false,
+            ],
+            'new_site_with_beta_active' => [
+                'versions_history' => [
+                    '3.1.0-beta1' => time(),
+                    '3.1.0-beta2' => time() + 1,
+
+                ],
+                'minimum_installation_version' => '3.1.0',
+                'expected' => true,
+            ],
+            'new_site_with_beta_inactive' => [
+                'versions_history' => [
+                    '3.0.0-beta' => time(),
+                ],
+                'minimum_installation_version' => '3.1.0',
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider is_feature_active_new_site_with_beta_data_provider
+     */
+	public function test_is_feature_active__new_site( $versions_history, $minimum_installation_version, $expected ) {
+		update_option( Manager::get_install_history_meta(), $versions_history );
+
+		$this->experiments->add_feature( [
+			'name' => 'test_feature',
+			'default' => Experiments_Manager::STATE_INACTIVE,
+			'new_site' => [
+				'default_active' => true,
+				'minimum_installation_version' => $minimum_installation_version,
+			],
+		] );
+
+		$is_test_feature_active = $this->experiments->is_feature_active( 'test_feature' );
+
+		$this->assertEquals( $expected, $is_test_feature_active );
+	}
+
+	public function test_is_feature_active__immutable() {
+		update_option( Manager::get_install_history_meta(), [
+			'3.1.0' => time(),
+		] );
+
+		$this->add_test_feature( [
+			'default' => Experiments_Manager::STATE_INACTIVE,
+			'new_site' => [
+				'always_active' => true,
+				'minimum_installation_version' => '3.1.0',
+			],
+		] );
+
+		$experiments = $this->experiments;
+
+		$is_test_feature_active = $experiments->is_feature_active( 'test_feature' );
+
+		$test_feature = $experiments->get_features( 'test_feature' );
+
+		$this->assertTrue( $is_test_feature_active );
+
+		$this->assertFalse( $test_feature['mutable'] );
+	}
+
+	public function test_is_feature_active__default_activated() {
+		$experiments = $this->experiments;
+
+		$default_activated_test_feature_data = [
+			'default' => Experiments_Manager::STATE_ACTIVE,
+		];
+
+		$this->add_test_feature( $default_activated_test_feature_data );
+
+		$is_default_activated_test_feature_active = $experiments->is_feature_active( 'test_feature' );
+
+		$this->assertTrue( $is_default_activated_test_feature_active );
+	}
+
+	public function test_is_feature_active__not_exists() {
+		$experiments = $this->experiments;
+
+		$is_non_exist_active = $experiments->is_feature_active( 'not_exists_feature' );
+
+		$this->assertFalse( $is_non_exist_active );
+	}
+
+	public function test_is_feature_active__missing_dependency_fails_closed_and_hidden_dependency_is_satisfied() {
+		$this->expect_experiment_dep_compat_warnings_if_debug( 2 );
+
+		$this->add_test_feature( [
+			'name' => 'dependant-missing-dep',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'dependencies' => [
+				'removed-experiment',
+			],
+		] );
+
+		$this->add_test_feature( [
+			'name' => 'hidden-dependency',
+			'default' => Experiments_Manager::STATE_INACTIVE,
+			'hidden' => true,
+		] );
+
+		$this->add_test_feature( [
+			'name' => 'dependant-hidden-dep',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'dependencies' => [
+				'hidden-dependency',
+			],
+		] );
+
+		$this->experiments->set_feature_default_state( 'dependant-hidden-dep', Experiments_Manager::STATE_ACTIVE );
+
+		$this->assertFalse( $this->experiments->is_feature_active( 'dependant-missing-dep', true ) );
+		$this->assertTrue( $this->experiments->is_feature_active( 'dependant-hidden-dep', true ) );
+	}
+
+	public function test_is_feature_active__missing_dependency_fails_closed_without_check_dependencies() {
+		$this->expect_experiment_dep_compat_warnings_if_debug( 1 );
+
+		$this->add_test_feature( [
+			'name' => 'dependant-plain-call',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'dependencies' => [
+				'removed-experiment',
+			],
+		] );
+
+		$this->assertFalse( $this->experiments->is_feature_active( 'dependant-plain-call' ) );
+	}
+
+	public function test_is_feature_active__class_based_dependency_stays_active() {
+		$this->expect_experiment_dep_compat_warnings_if_debug( 1 );
+
+		$this->add_test_feature( [
+			'name' => 'dependant-class-dep',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'dependencies' => [
+				Module_B::class,
+			],
+		] );
+
+		$this->assertTrue( $this->experiments->is_feature_active( 'dependant-class-dep' ) );
+	}
+
+	public function test_is_feature_active__fails_closed_when_dependency_feature_is_removed() {
+		$this->add_test_feature( [
+			'name' => 'removed-later',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+		] );
+
+		$this->add_test_feature( [
+			'name' => 'dependant-of-removed-later',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'dependencies' => [
+				'removed-later',
+			],
+		] );
+
+		$this->experiments->remove_feature( 'removed-later' );
+
+		$this->assertFalse( $this->experiments->is_feature_active( 'dependant-of-removed-later' ) );
+	}
+
+	public function test_is_feature_active__re_resolves_late_registered_dependency() {
+		$this->expect_experiment_dep_compat_warnings_if_debug( 1 );
+
+		$this->add_test_feature( [
+			'name' => 'dependant-of-late-dep',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+			'dependencies' => [
+				'late-dependency',
+			],
+		] );
+
+		$this->assertFalse( $this->experiments->is_feature_active( 'dependant-of-late-dep' ) );
+
+		$this->add_test_feature( [
+			'name' => 'late-dependency',
+			'default' => Experiments_Manager::STATE_ACTIVE,
+		] );
+
+		$feature = $this->experiments->get_features( 'dependant-of-late-dep' );
+
+		$this->assertInstanceOf( Wrap_Core_Dependency::class, $feature['dependencies'][0] );
+		$this->assertTrue( $this->experiments->is_feature_active( 'dependant-of-late-dep' ) );
+	}
+
+	public function test_is_feature_active__saved_state() {
+		add_option( 'refraction_experiment-test_feature', Experiments_Manager::STATE_ACTIVE );
+
+		$this->add_test_feature();
+
+		$experiments = $this->experiments;
+
+		$is_test_feature_active = $experiments->is_feature_active( 'test_feature' );
+
+		$this->assertTrue( $is_test_feature_active );
+	}
+
+	public function test_set_feature_default_state() {
+		$this->add_test_feature();
+
+		$experiments = $this->experiments;
+
+		$experiments->set_feature_default_state( 'test_feature', Experiments_Manager::STATE_ACTIVE );
+
+		$feature = $experiments->get_features( 'test_feature' );
+
+		$this->assertEquals( Experiments_Manager::STATE_ACTIVE, $feature['default'] );
+	}
+
+	public function test_remove_feature() {
+		$this->add_test_feature();
+
+		$experiments = $this->experiments;
+
+		$experiments->remove_feature( 'test_feature' );
+
+		$feature = $experiments->get_features( 'test_feature' );
+
+		$this->assertNull( $feature );
+	}
+
+	public function test_validate_dependency__allows_activation_when_a_dependency_is_not_available() {
+		$this->expect_experiment_dep_compat_warnings_if_debug( 2 );
+
+		// Arrange.
+		$test_feature_data = [
+			'name' => Module_A::instance()->get_name(),
+			'state' => Experiments_Manager::STATE_INACTIVE,
+			'dependencies' => [
+				Module_B::class,
+			],
+		];
+
+		$this->add_test_feature( $test_feature_data );
+
+		// Act.
+		update_option(
+			$this->experiments->get_feature_option_key( $test_feature_data['name'] ),
+			Experiments_Manager::STATE_ACTIVE
+		);
+
+		// Assert.
+		$this->assertEquals(
+			Experiments_Manager::STATE_ACTIVE,
+			get_option( $this->experiments->get_feature_option_key( $test_feature_data['name'] ) )
+		);
+	}
+
+	public function test_validate_dependency__throws_when_a_dependency_is_inactive_and_user_activates_a_dependant_experiment() {
+		// Arrange.
+		$dependant = [
+			'name' => Module_A::instance()->get_name(),
+			'dependencies' => [
+				Module_B::instance()->get_name(),
+			],
+		];
+
+		$dependency = [
+			'name' => Module_B::instance()->get_name(),
+		];
+
+
+		$this->add_test_feature( $dependency );
+		$this->add_test_feature( $dependant );
+		$this->experiments->set_feature_default_state( $dependency['name'], Experiments_Manager::STATE_INACTIVE );
+		$this->experiments->set_feature_default_state( $dependant['name'], Experiments_Manager::STATE_INACTIVE );
+
+		// Assert.
+		$this->expectException( \WPDieException::class );
+		$this->expectExceptionMessage( '<p>To turn on `module-a`, Experiment: `module-b` activity is required!</p><p><a href="#" onclick="location.href=\'http://example.org/wp-admin/admin.php?page=refraction-settings#tab-experiments\'">Back</a></p>' );
+
+		// Act.
+		update_option(
+			$this->experiments->get_feature_option_key( $dependant['name'] ),
+			Experiments_Manager::STATE_ACTIVE
+		);
+	}
+
+	public function test_validate_dependency__deactivates_an_experiment_when_its_dependency_is_inactivated() {
+		// Arrange.
+		$dependant = [
+			'name' => Module_A::instance()->get_name(),
+			'dependencies' => [
+				Module_B::instance()->get_name(),
+			],
+		];
+
+		$dependency = [
+			'name' => Module_B::instance()->get_name(),
+		];
+
+
+		$this->add_test_feature( $dependency );
+		$this->add_test_feature( $dependant );
+		$this->experiments->set_feature_default_state( $dependant['name'], Experiments_Manager::STATE_ACTIVE );
+		$this->experiments->set_feature_default_state( $dependency['name'], Experiments_Manager::STATE_ACTIVE );
+
+		// Act.
+		update_option(
+			$this->experiments->get_feature_option_key( $dependency['name'] ),
+			Experiments_Manager::STATE_INACTIVE
+		);
+
+		// Assert.
+		$this->assertEquals(
+			Experiments_Manager::STATE_INACTIVE,
+			get_option( $this->experiments->get_feature_option_key( $dependant['name'] ) )
+		);
+	}
+
+	public function test_sort_allowed_options_by_dependencies() {
+		// Backup current filters and admin state
+		global $wp_filter, $current_screen;
+		$filters_backup = isset( $wp_filter['allowed_options'] ) ? $wp_filter['allowed_options'] : null;
+		$screen_backup = $current_screen;
+		
+		// Set admin context to ensure the filter is registered
+		set_current_screen( 'dashboard' );
+		
+		// Remove all existing filters on allowed_options to ensure clean state
+		remove_all_filters( 'allowed_options' );
+		
+		// Re-register the experiments manager's filter using reflection to access private method
+		$experiments = $this->experiments;
+		add_filter( 'allowed_options', function ( $allowed_options ) use ( $experiments ) {
+			$reflection = new \ReflectionMethod( $experiments, 'sort_allowed_options_by_dependencies' );
+			$reflection->setAccessible( true );
+			return $reflection->invoke( $experiments, $allowed_options );
+		}, 11 );
+		
+		// Arrange
+		$this->experiments->add_feature( [
+			'name' => 'test_A',
+		] );
+
+		$this->experiments->add_feature( [
+			'name' => 'test_B',
+			'dependencies' => [
+				'test_A',
+			],
+		] );
+
+		$this->experiments->add_feature( [
+			'name' => 'test_C',
+			'dependencies' => [ 'test_B' ],
+		] );
+
+		$this->experiments->add_feature( [
+			'name' => 'test_D',
+		] );
+
+		$this->experiments->add_feature( [
+			'name' => 'test_E',
+			'dependencies' => [ 'test_A' ],
+		] );
+
+		// Act
+		$result = apply_filters(
+			'allowed_options',
+			[
+				'not-refraction' => [
+					'option_a',
+				],
+				'refraction' => [
+					'not_experiment',
+					'refraction_experiment-test_C',
+					'refraction_experiment-test_B',
+					'refraction_experiment-test_D',
+					'refraction_experiment-test_E',
+					'not_experiment_2',
+					'refraction_experiment-test_A',
+				],
+			]
+		);
+
+		// Assert
+		$this->assertEqualSets(
+			[
+				'not-refraction' => [
+					'option_a',
+				],
+				'refraction' => [
+					'not_experiment',
+					'not_experiment_2',
+					'refraction_experiment-test_A',
+					'refraction_experiment-test_B',
+					'refraction_experiment-test_C',
+					'refraction_experiment-test_D',
+					'refraction_experiment-test_E',
+				],
+			],
+			$result
+		);
+
+		// Cleanup - Remove test features
+		$this->experiments->remove_feature( 'test_A' );
+		$this->experiments->remove_feature( 'test_B' );
+		$this->experiments->remove_feature( 'test_C' );
+		$this->experiments->remove_feature( 'test_D' );
+		$this->experiments->remove_feature( 'test_E' );
+		
+		// Restore original filters and admin state
+		if ( $filters_backup ) {
+			$wp_filter['allowed_options'] = $filters_backup;
+		}
+		$current_screen = $screen_backup;
+	}
+
+	private function add_test_feature( array $args = [] ) {
+		$test_feature_data = [
+			'name' => 'test_feature',
+		];
+
+		if ( $args ) {
+			$test_feature_data = array_merge( $test_feature_data, $args );
+		}
+
+		return $this->experiments->add_feature( $test_feature_data );
+	}
+
+	private function expect_experiment_dep_compat_warnings_if_debug( int $count ): void {
+		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+			return;
+		}
+
+		for ( $i = 0; $i < $count; $i++ ) {
+			$this->expect_doing_it_wrong( 'Refraction\Core\Experiments\Manager::warn_removed_or_hidden_dependency' );
+		}
+	}
+
+	public function test_on_state_change_callback() {
+		$test_feature_data = [
+			'name' => 'test_feature_callback',
+			'state' => Experiments_Manager::STATE_ACTIVE,
+			'on_state_change' => function( $old_state, $new_state ) {
+				// Throw exception for assert
+				throw new \Exception( 'on_state_change_callback '. $new_state  );
+			},
+		];
+
+		$this->add_test_feature( $test_feature_data );
+
+		// Assert.
+		$this->expectException( \Exception::class );
+		$this->expectExceptionMessage( 'on_state_change_callback '. Experiments_Manager::STATE_INACTIVE );
+
+		// Act.
+		update_option(
+			$this->experiments->get_feature_option_key( $test_feature_data['name'] ),
+			Experiments_Manager::STATE_INACTIVE
+		);
+
+	}
+
+	/**
+	 * If a feature is dependent on other features, it should be active only if all its dependencies are active.
+	 * @dataProvider get_dependency_data_provider
+	 */
+	public function test__feature_state_depends_on_dependency_states( $dependent_state, $dependency_states, $expected ) {
+		// Arrange.
+		$dependant = [
+			'name' => 'dependant',
+			'new_site' => [
+				'default_active' => $dependent_state,
+			],
+			'dependencies' => [
+				'dependency_a',
+				'dependency_b',
+			],
+		];
+
+		$dependency_a = [
+			'name' => 'dependency_a',
+			'new_site' => [
+				'default_active' => $dependency_states['dependency_a'],
+			]
+		];
+
+		$dependency_b = [
+			'name' => 'dependency_b',
+			'new_site' => [
+				'default_active' => $dependency_states['dependency_a'],
+			]
+		];
+
+		$this->add_test_feature( $dependency_a );
+		$this->add_test_feature( $dependency_b );
+		$this->add_test_feature( $dependant );
+
+		// Act.
+		$is_dependant_active = $this->experiments->is_feature_active( $dependant['name'], true );
+
+		// Assert.
+		$this->assertEquals( $expected, $is_dependant_active );
+	}
+
+	public function get_dependency_data_provider() : array {
+		return [
+			[
+				'dependent_state' => false,
+				'dependency_states' => [
+					'dependency_a' => false,
+					'dependency_b' => false,
+				],
+				'expected' => false,
+			],
+			[
+				'dependent_state' => false,
+				'dependency_states' => [
+					'dependency_a' => false,
+					'dependency_b' => true,
+				],
+				'expected' => false,
+			],
+			[
+				'dependent_state' => false,
+				'dependency_states' => [
+					'dependency_a' => true,
+					'dependency_b' => false,
+				],
+				'expected' => false,
+			],
+			[
+				'dependent_state' => true,
+				'dependency_states' => [
+					'dependency_a' => false,
+					'dependency_b' => true,
+				],
+				'expected' => false,
+			],
+			[
+				'dependent_state' => true,
+				'dependency_states' => [
+					'dependency_a' => false,
+					'dependency_b' => false,
+				],
+				'expected' => false,
+			],
+			[
+				'dependent_state' => true,
+				'dependency_states' => [
+					'dependency_a' => true,
+					'dependency_b' => true,
+				],
+				'expected' => true,
+			],
+		];
+	}
+}

@@ -1,12 +1,12 @@
-import { type ItemsActionPayload, useBoundProp } from '@elementor/editor-controls';
+import { type ItemsActionPayload, useBoundProp } from '@refraction/editor-controls';
 import {
 	createElements,
 	duplicateElements,
 	getContainer,
 	moveElements,
 	removeElements,
-} from '@elementor/editor-elements';
-import { numberPropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-elements';
+import { numberPropTypeUtil } from '@refraction/editor-props';
 import { __ } from '@wordpress/i18n';
 
 export type TabItem = {
@@ -44,7 +44,7 @@ export const useActions = () => {
 
 			duplicateElements( {
 				elementIds: [ tabId, tabContentId ],
-				title: __( 'Duplicate Tab', 'elementor' ),
+				title: __( 'Duplicate Tab', 'refraction' ),
 				onDuplicateElements: () => {
 					if ( newDefault !== defaultActiveTab ) {
 						setDefaultActiveTab( newDefault, {}, { withHistory: false } );
@@ -92,7 +92,7 @@ export const useActions = () => {
 		} );
 
 		moveElements( {
-			title: __( 'Reorder Tabs', 'elementor' ),
+			title: __( 'Reorder Tabs', 'refraction' ),
 			moves: [
 				{
 					element: movedElement,
@@ -131,7 +131,7 @@ export const useActions = () => {
 		} );
 
 		removeElements( {
-			title: __( 'Tabs', 'elementor' ),
+			title: __( 'Tabs', 'refraction' ),
 			elementIds: items.flatMap( ( { item, index } ) => {
 				const tabId = item.id as string;
 				const tabContentContainer = getContainer( tabContentAreaId );
@@ -176,7 +176,7 @@ export const useActions = () => {
 			const position = index + 1;
 
 			createElements( {
-				title: __( 'Tabs', 'elementor' ),
+				title: __( 'Tabs', 'refraction' ),
 				elements: [
 					{
 						container: tabContentArea,

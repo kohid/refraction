@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { SizeControl } from '@elementor/editor-controls';
+import { SizeControl } from '@refraction/editor-controls';
 import { SideBottomIcon, SideLeftIcon, SideRightIcon, SideTopIcon } from '@elementor/icons';
 import { Grid, Stack, withDirection } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -24,10 +24,10 @@ const sideIcons = {
 };
 
 const getInlineStartLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Right', 'elementor' ) : __( 'Left', 'elementor' );
+	isSiteRtl ? __( 'Right', 'refraction' ) : __( 'Left', 'refraction' );
 
 const getInlineEndLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Left', 'elementor' ) : __( 'Right', 'elementor' );
+	isSiteRtl ? __( 'Left', 'refraction' ) : __( 'Right', 'refraction' );
 
 export const DimensionsField = () => {
 	const { isSiteRtl } = useDirection();
@@ -36,7 +36,7 @@ export const DimensionsField = () => {
 	return (
 		<UiProviders>
 			<Stack direction="row" gap={ 2 } flexWrap="nowrap" ref={ rowRefs[ 0 ] }>
-				<DimensionField side="inset-block-start" label={ __( 'Top', 'elementor' ) } rowRef={ rowRefs[ 0 ] } />
+				<DimensionField side="inset-block-start" label={ __( 'Top', 'refraction' ) } rowRef={ rowRefs[ 0 ] } />
 				<DimensionField
 					side="inset-inline-end"
 					label={ getInlineEndLabel( isSiteRtl ) }
@@ -44,7 +44,7 @@ export const DimensionsField = () => {
 				/>
 			</Stack>
 			<Stack direction="row" gap={ 2 } flexWrap="nowrap" ref={ rowRefs[ 1 ] }>
-				<DimensionField side="inset-block-end" label={ __( 'Bottom', 'elementor' ) } rowRef={ rowRefs[ 1 ] } />
+				<DimensionField side="inset-block-end" label={ __( 'Bottom', 'refraction' ) } rowRef={ rowRefs[ 1 ] } />
 				<DimensionField
 					side="inset-inline-start"
 					label={ getInlineStartLabel( isSiteRtl ) }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
 import { DotsVerticalIcon } from '@elementor/icons';
 import {
 	type AutocompleteRenderGetTagProps,
@@ -79,7 +79,7 @@ export function TagChip( { label, chipProps, activeState, onSelectState }: TagCh
 					shape="rounded"
 					color="default"
 					{ ...bindTrigger( popupState ) }
-					aria-label={ __( 'Open tag state menu', 'elementor' ) }
+					aria-label={ __( 'Open tag state menu', 'refraction' ) }
 					sx={ ( theme: Theme ) => ( {
 						borderRadius: `${ theme.shape.borderRadius * 0.75 }px`,
 						paddingRight: 0,

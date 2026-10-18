@@ -4,7 +4,7 @@ import Widgets from './types/widgets/widgets';
 /**
  * @typedef {import('./favorite-type')} FavoriteType
  */
-class FavoritesModule extends elementorModules.editor.utils.Module {
+class FavoritesModule extends refractionModules.editor.utils.Module {
 	types = {};
 
 	constructor() {
@@ -17,7 +17,7 @@ class FavoritesModule extends elementorModules.editor.utils.Module {
 		types.forEach( ( classRef ) => this.register( classRef ) );
 	}
 
-	onElementorLoaded() {
+	onRefractionLoaded() {
 		this.component = $e.components.register(
 			new Component( { manager: this } ),
 		);

@@ -5,9 +5,9 @@ import { screen } from '@testing-library/react';
 import { documentOptionsMenu } from '../../locations';
 import PrimaryActionMenu from '../primary-action-menu';
 
-jest.mock( '@elementor/editor-documents' );
+jest.mock( '@refraction/editor-documents' );
 
-describe( '@elementor/editor-app-bar - Primary action menu', () => {
+describe( '@refraction/editor-app-bar - Primary action menu', () => {
 	it( 'should render the actions ordered properly (save, default)', () => {
 		// Arrange.
 		documentOptionsMenu.registerAction( {

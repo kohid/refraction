@@ -2,10 +2,10 @@ import { useRef, useEffect } from 'react';
 import { Button, Stack, CircularProgress } from '@elementor/ui';
 import { useNavigate } from '@reach/router';
 
-import useCloudKitsEligibility from 'elementor-app/hooks/use-cloud-kits-eligibility';
+import useCloudKitsEligibility from 'refraction-app/hooks/use-cloud-kits-eligibility';
 import useConnectState from '../../shared/hooks/use-connect-state';
 import { useExportContext, EXPORT_STATUS } from '../context/export-context';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 
 export default function ExportKitFooter() {
 	const connectButtonRef = useRef();
@@ -24,7 +24,7 @@ export default function ExportKitFooter() {
 			return;
 		}
 
-		jQuery( connectButtonRef.current ).elementorConnect( {
+		jQuery( connectButtonRef.current ).refractionConnect( {
 			popup: {
 				width: 600,
 				height: 700,
@@ -67,7 +67,7 @@ export default function ExportKitFooter() {
 	}, [ isExporting, navigate ] );
 
 	const handleUpgradeClick = () => {
-		AppsEventTracking.sendKitsCloudUpgradeClicked( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomization );
+		AppsEventTracking.sendKitsCloudUpgradeClicked( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomization );
 		navigate( '/kit-library/cloud' );
 	};
 
@@ -105,10 +105,10 @@ export default function ExportKitFooter() {
 					color="secondary"
 					size="small"
 					disabled={ hasValidationErrors }
-					href={ elementorAppConfig?.[ 'cloud-library' ]?.library_connect_url?.replace( /&#038;/g, '&' ) || '#' }
+					href={ refractionAppConfig?.[ 'cloud-library' ]?.library_connect_url?.replace( /&#038;/g, '&' ) || '#' }
 					data-testid="export-kit-footer-save-to-library-button"
 				>
-					{ __( 'Save to library', 'elementor' ) }
+					{ __( 'Save to library', 'refraction' ) }
 				</Button>
 			);
 		}
@@ -123,7 +123,7 @@ export default function ExportKitFooter() {
 					startIcon={ <CircularProgress size={ 16 } /> }
 					data-testid="export-kit-footer-save-to-library-button"
 				>
-					{ __( 'Save to library', 'elementor' ) }
+					{ __( 'Save to library', 'refraction' ) }
 				</Button>
 			);
 		}
@@ -138,7 +138,7 @@ export default function ExportKitFooter() {
 					onClick={ handleUpgradeClick }
 					data-testid="export-kit-footer-save-to-library-button"
 				>
-					{ __( 'Save to library', 'elementor' ) }
+					{ __( 'Save to library', 'refraction' ) }
 				</Button>
 			);
 		}
@@ -152,7 +152,7 @@ export default function ExportKitFooter() {
 				onClick={ handleUploadClick }
 				data-testid="export-kit-footer-save-to-library-button"
 			>
-				{ __( 'Save to library', 'elementor' ) }
+				{ __( 'Save to library', 'refraction' ) }
 			</Button>
 		);
 	};
@@ -168,7 +168,7 @@ export default function ExportKitFooter() {
 				onClick={ handleExportAsZip }
 				data-testid="export-kit-footer-export-zip-button"
 			>
-				{ __( 'Export as .zip', 'elementor' ) }
+				{ __( 'Export as .zip', 'refraction' ) }
 			</Button>
 		</Stack>
 	);

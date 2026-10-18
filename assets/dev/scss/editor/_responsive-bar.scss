@@ -8,13 +8,13 @@
 	--e-is-device-mode: 1;
 }
 
-#elementor-responsive-bar {
+#refraction-responsive-bar {
 	position: sticky;
 	height: calc(40px * var(--e-is-device-mode));
 	align-self: stretch;
 	flex-shrink: 0;
 	transition: height .2s ease-in-out, opacity .1s ;
-	left: 0; // Fix position:sticky for RTL [ _devices.scss -> #elementor-preview ] ( browser bug )
+	left: 0; // Fix position:sticky for RTL [ _devices.scss -> #refraction-preview ] ( browser bug )
 	top: 0;
 	z-index: 100;
 	opacity: var(--e-is-device-mode);

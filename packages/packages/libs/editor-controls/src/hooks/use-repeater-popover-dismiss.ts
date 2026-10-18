@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { type Breakpoint, useActiveBreakpoint, useBreakpoints } from '@elementor/editor-responsive';
+import { type Breakpoint, useActiveBreakpoint, useBreakpoints } from '@refraction/editor-responsive';
 
 const serializeBreakpoints = ( breakpoints: Breakpoint[] ) =>
 	breakpoints.map( ( b ) => [ b.id, b.width ?? '', b.type ?? '' ].join( ':' ) ).join( '|' );

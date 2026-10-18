@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { createMockElementType, createMockPropType, renderWithTheme } from 'test-utils';
-import { type Control, type ControlsSection, type ElementControl, getElementLabel } from '@elementor/editor-elements';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { type Control, type ControlsSection, type ElementControl, getElementLabel } from '@refraction/editor-elements';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { screen } from '@testing-library/react';
 
 import { useElement } from '../../contexts/element-context';
 import { useDefaultPanelSettings } from '../../hooks/use-default-panel-settings';
 import { SettingsTab } from '../settings-tab';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mock( '../../contexts/element-context' );
 jest.mock( '../../hooks/use-default-panel-settings' );
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	getElementLabel: jest.fn(),
 } ) );
 

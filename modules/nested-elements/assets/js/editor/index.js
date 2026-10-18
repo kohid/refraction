@@ -1,22 +1,22 @@
-import Events from 'elementor-utils/events';
+import Events from 'refraction-utils/events';
 
-elementorCommon.elements.$window.on( 'elementor:init-components', () => {
+refractionCommon.elements.$window.on( 'refraction:init-components', () => {
 	// Put promise of loading so other modules can use/await it.
-	elementor.modules.nestedElements = import( '../editor/module' );
+	refraction.modules.nestedElements = import( '../editor/module' );
 
-	elementor.modules.nestedElements.then( ( module ) => {
-		elementor.modules.nestedElements = new module.default;
-		elementor.modules.elements.types.NestedElementBase = import( './nested-element-types-base' );
+	refraction.modules.nestedElements.then( ( module ) => {
+		refraction.modules.nestedElements = new module.default;
+		refraction.modules.elements.types.NestedElementBase = import( './nested-element-types-base' );
 
-		elementor.modules.elements.types.NestedElementBase.then( ( nestedElementBaseModule ) => {
-			elementor.modules.elements.types.NestedElementBase = nestedElementBaseModule.default;
+		refraction.modules.elements.types.NestedElementBase.then( ( nestedElementBaseModule ) => {
+			refraction.modules.elements.types.NestedElementBase = nestedElementBaseModule.default;
 
 			import( './views/view' )
 				.then( ( View ) => {
 					$e.components.get( 'nested-elements' ).exports = { NestedView: View.default };
 				} )
 				.then( () => {
-					Events.dispatch( elementorCommon.elements.$window, 'elementor/nested-element-type-loaded' );
+					Events.dispatch( refractionCommon.elements.$window, 'refraction/nested-element-type-loaded' );
 				} );
 		} );
 	} );

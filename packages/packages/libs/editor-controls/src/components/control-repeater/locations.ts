@@ -1,5 +1,5 @@
-import { type PropValue } from '@elementor/editor-props';
-import { createLocation, createReplaceableLocation } from '@elementor/locations';
+import { type PropValue } from '@refraction/editor-props';
+import { createLocation, createReplaceableLocation } from '@refraction/locations';
 
 // Repeaters
 export const { Slot: RepeaterItemIconSlot, inject: injectIntoRepeaterItemIcon } = createReplaceableLocation< {

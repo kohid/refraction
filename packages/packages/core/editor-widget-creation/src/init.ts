@@ -1,4 +1,4 @@
-import { injectIntoTop } from '@elementor/editor';
+import { injectIntoTop } from '@refraction/editor';
 
 import { CreateWidget } from './components/create-widget';
 

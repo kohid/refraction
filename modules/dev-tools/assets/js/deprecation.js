@@ -13,7 +13,7 @@
  */
 
 const softDeprecated = ( name, version, replacement ) => {
-	if ( elementorDevToolsConfig.isDebug ) {
+	if ( refractionDevToolsConfig.isDebug ) {
 		deprecatedMessage( 'soft', name, version, replacement );
 	}
 };
@@ -29,7 +29,7 @@ const deprecatedMessage = ( type, name, version, replacement ) => {
 		message += ` - Use \`${ replacement }\` instead`;
 	}
 
-	elementorDevTools.consoleWarn( message );
+	refractionDevTools.consoleWarn( message );
 };
 
 export default class Deprecation {
@@ -103,9 +103,9 @@ export default class Deprecation {
 	 * @return {boolean}
 	 */
 	isSoftDeprecated( version ) {
-		const total = this.compareVersion( version, elementorDevToolsConfig.deprecation.current_version );
+		const total = this.compareVersion( version, refractionDevToolsConfig.deprecation.current_version );
 
-		return total <= elementorDevToolsConfig.deprecation.soft_version_count;
+		return total <= refractionDevToolsConfig.deprecation.soft_version_count;
 	}
 
 	/**
@@ -113,9 +113,9 @@ export default class Deprecation {
 	 * @return {boolean}
 	 */
 	isHardDeprecated( version ) {
-		const total = this.compareVersion( version, elementorDevToolsConfig.deprecation.current_version );
+		const total = this.compareVersion( version, refractionDevToolsConfig.deprecation.current_version );
 
-		return total < 0 || total >= elementorDevToolsConfig.deprecation.hard_version_count;
+		return total < 0 || total >= refractionDevToolsConfig.deprecation.hard_version_count;
 	}
 }
 

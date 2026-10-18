@@ -1,9 +1,9 @@
-import { extractNestedItemTitle } from 'elementor/modules/nested-elements/assets/js/editor/utils';
+import { extractNestedItemTitle } from 'refraction/modules/nested-elements/assets/js/editor/utils';
 
-export default class Repeater extends elementor.modules.controls.Repeater {
+export default class Repeater extends refraction.modules.controls.Repeater {
 	className() {
-		// Repeater Panel CSS, depends on 'elementor-control-type-repeater` control.
-		// `elementor-control-type-nested-elements-repeater` to `elementor-control-type-repeater`
+		// Repeater Panel CSS, depends on 'refraction-control-type-repeater` control.
+		// `refraction-control-type-nested-elements-repeater` to `refraction-control-type-repeater`
 		return super.className().replace( 'nested-elements-repeater', 'repeater' );
 	}
 

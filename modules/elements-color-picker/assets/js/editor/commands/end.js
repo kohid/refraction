@@ -15,16 +15,16 @@ export class End extends $e.modules.CommandBase {
 		this.component.inactivate();
 
 		// Remove all elements & event listeners.
-		elementor.$previewContents[ 0 ].querySelectorAll( '.e-element-color-picker' ).forEach( ( picker ) => {
+		refraction.$previewContents[ 0 ].querySelectorAll( '.e-element-color-picker' ).forEach( ( picker ) => {
 			jQuery( picker ).tipsy( 'hide' );
 			picker.remove();
 		} );
 
-		const elementorElements = elementor.$previewContents[ 0 ].querySelectorAll( '.elementor-element' );
+		const refractionElements = refraction.$previewContents[ 0 ].querySelectorAll( '.refraction-element' );
 
-		removeNamespaceHandler( elementorElements, 'click.color-picker' );
+		removeNamespaceHandler( refractionElements, 'click.color-picker' );
 
-		removeNamespaceHandler( elementor.$previewWrapper[ 0 ], 'mouseleave.color-picker' );
+		removeNamespaceHandler( refraction.$previewWrapper[ 0 ], 'mouseleave.color-picker' );
 
 		// Set the picking process trigger to inactive mode.
 		// eslint-disable-next-line no-unused-expressions

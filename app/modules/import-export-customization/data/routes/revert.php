@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\App\Modules\ImportExportCustomization\Data\Routes;
+namespace Refraction\App\Modules\ImportExportCustomization\Data\Routes;
 
-use Elementor\App\Modules\ImportExportCustomization\Module as ImportExportCustomizationModule;
-use Elementor\Plugin;
-use Elementor\App\Modules\ImportExportCustomization\Data\Response;
+use Refraction\App\Modules\ImportExportCustomization\Module as ImportExportCustomizationModule;
+use Refraction\Plugin;
+use Refraction\App\Modules\ImportExportCustomization\Data\Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

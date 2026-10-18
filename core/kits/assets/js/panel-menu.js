@@ -1,4 +1,4 @@
-import MenuPageView from 'elementor-panel/pages/menu/base';
+import MenuPageView from 'refraction-panel/pages/menu/base';
 
 export default class PanelMenu extends MenuPageView {
 	initialize() {
@@ -28,9 +28,9 @@ PanelMenu.initGroups = () => {
 		additionalSettingsProps = {
 			name: 'settings-additional-settings',
 			icon: 'eicon-tools',
-			title: __( 'Additional Settings', 'elementor' ),
+			title: __( 'Additional Settings', 'refraction' ),
 			type: 'link',
-			link: elementor.config.admin_settings_url,
+			link: refraction.config.admin_settings_url,
 			newTab: true,
 		};
 
@@ -39,12 +39,12 @@ PanelMenu.initGroups = () => {
 	const groups = [
 		{
 			name: 'design_system',
-			title: __( 'Design System', 'elementor' ),
+			title: __( 'Design System', 'refraction' ),
 			items: PanelMenu.createGroupItems( 'global' ),
 		},
 		{
 			name: 'theme_style',
-			title: __( 'Theme Style', 'elementor' ),
+			title: __( 'Theme Style', 'refraction' ),
 			items: PanelMenu.createGroupItems( 'theme-style' ),
 		},
 	];
@@ -52,14 +52,14 @@ PanelMenu.initGroups = () => {
 	if ( agentsItems.length ) {
 		groups.push( {
 			name: 'agents',
-			title: __( 'Agents', 'elementor' ),
+			title: __( 'Agents', 'refraction' ),
 			items: agentsItems,
 		} );
 	}
 
 	groups.push( {
 		name: 'settings',
-		title: __( 'Settings', 'elementor' ),
+		title: __( 'Settings', 'refraction' ),
 		items: settingsItems,
 	} );
 

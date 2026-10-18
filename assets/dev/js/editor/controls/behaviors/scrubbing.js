@@ -1,4 +1,4 @@
-import { ScrubbingMode } from 'elementor-document/ui-states';
+import { ScrubbingMode } from 'refraction-document/ui-states';
 
 const SCRUB_REGULAR = 'UPDATE-VALUE';
 const SCRUB_ENHANCED = 'UPDATE-VALUE-ENHANCED';
@@ -28,7 +28,7 @@ export default class Scrubbing extends Marionette.Behavior {
 	ui() {
 		return {
 			input: 'input[type=number]',
-			label: 'label[for^="elementor-control-"]',
+			label: 'label[for^="refraction-control-"]',
 		};
 	}
 

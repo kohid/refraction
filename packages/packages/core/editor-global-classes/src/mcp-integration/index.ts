@@ -1,4 +1,4 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
 
 import { initClassesResource } from './classes-resource';
 import { initManageClassesTool } from './manage-classes-tool';

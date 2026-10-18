@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\Checklist\Data\Endpoints;
+namespace Refraction\Modules\Checklist\Data\Endpoints;
 
-use Elementor\Data\V2\Base\Endpoint as Endpoint_Base;
-use Elementor\Modules\Checklist\Module as Checklist_Module;
+use Refraction\Data\V2\Base\Endpoint as Endpoint_Base;
+use Refraction\Modules\Checklist\Module as Checklist_Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

@@ -1,4 +1,4 @@
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 import { renderHook } from '@testing-library/react';
 
 import { useVariableType } from '../context/variable-type-context';
@@ -8,7 +8,7 @@ import { getVariableType, getVariableTypes } from '../variables-registry/variabl
 
 jest.mock( '../service' );
 
-jest.mock( '@elementor/editor-controls', () => ( {
+jest.mock( '@refraction/editor-controls', () => ( {
 	useBoundProp: jest.fn(),
 } ) );
 

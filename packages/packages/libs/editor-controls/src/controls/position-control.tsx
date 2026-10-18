@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { positionPropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
-import { MenuListItem } from '@elementor/editor-ui';
+import { positionPropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
+import { MenuListItem } from '@refraction/editor-ui';
 import { LetterXIcon, LetterYIcon } from '@elementor/icons';
 import { Grid, Select, type SelectChangeEvent } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -23,16 +23,16 @@ type Positions =
 	| 'custom';
 
 const positionOptions = [
-	{ label: __( 'Center center', 'elementor' ), value: 'center center' },
-	{ label: __( 'Center left', 'elementor' ), value: 'center left' },
-	{ label: __( 'Center right', 'elementor' ), value: 'center right' },
-	{ label: __( 'Top center', 'elementor' ), value: 'top center' },
-	{ label: __( 'Top left', 'elementor' ), value: 'top left' },
-	{ label: __( 'Top right', 'elementor' ), value: 'top right' },
-	{ label: __( 'Bottom center', 'elementor' ), value: 'bottom center' },
-	{ label: __( 'Bottom left', 'elementor' ), value: 'bottom left' },
-	{ label: __( 'Bottom right', 'elementor' ), value: 'bottom right' },
-	{ label: __( 'Custom', 'elementor' ), value: 'custom' },
+	{ label: __( 'Center center', 'refraction' ), value: 'center center' },
+	{ label: __( 'Center left', 'refraction' ), value: 'center left' },
+	{ label: __( 'Center right', 'refraction' ), value: 'center right' },
+	{ label: __( 'Top center', 'refraction' ), value: 'top center' },
+	{ label: __( 'Top left', 'refraction' ), value: 'top left' },
+	{ label: __( 'Top right', 'refraction' ), value: 'top right' },
+	{ label: __( 'Bottom center', 'refraction' ), value: 'bottom center' },
+	{ label: __( 'Bottom left', 'refraction' ), value: 'bottom left' },
+	{ label: __( 'Bottom right', 'refraction' ), value: 'bottom right' },
+	{ label: __( 'Custom', 'refraction' ), value: 'custom' },
 ];
 
 export const PositionControl = () => {
@@ -58,7 +58,7 @@ export const PositionControl = () => {
 			<Grid item xs={ 12 }>
 				<Grid container gap={ 2 } alignItems="center" flexWrap="nowrap">
 					<Grid item xs={ 6 }>
-						<ControlFormLabel>{ __( 'Object position', 'elementor' ) }</ControlFormLabel>
+						<ControlFormLabel>{ __( 'Object position', 'refraction' ) }</ControlFormLabel>
 					</Grid>
 					<Grid item xs={ 6 } sx={ { overflow: 'hidden' } }>
 						<Select

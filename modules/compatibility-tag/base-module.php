@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Modules\CompatibilityTag;
+namespace Refraction\Modules\CompatibilityTag;
 
-use Elementor\Plugin;
-use Elementor\Core\Utils\Version;
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Modules\System_Info\Module as System_Info;
+use Refraction\Plugin;
+use Refraction\Core\Utils\Version;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Modules\System_Info\Module as System_Info;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -45,7 +45,7 @@ abstract class Base_Module extends BaseModule {
 	 *
 	 * @return array
 	 */
-	protected function enable_elementor_headers( array $headers, $compatibility_tag_header ) {
+	protected function enable_refraction_headers( array $headers, $compatibility_tag_header ) {
 		$headers[] = $compatibility_tag_header;
 
 		return $headers;
@@ -122,14 +122,14 @@ abstract class Base_Module extends BaseModule {
 	 */
 	public function __construct() {
 		add_filter( 'extra_plugin_headers', function ( array $headers ) {
-			return $this->enable_elementor_headers( $headers, $this->get_plugin_header() );
+			return $this->enable_refraction_headers( $headers, $this->get_plugin_header() );
 		} );
 
 		add_action( 'in_plugin_update_message-' . $this->get_plugin_name(), function ( array $args ) {
 			$this->on_plugin_update_message( $args );
 		}, 11 /* After the warning message for backup */ );
 
-		add_action( 'elementor/system_info/get_allowed_reports', function () {
+		add_action( 'refraction/system_info/get_allowed_reports', function () {
 			$plugin_short_name = basename( $this->get_plugin_name(), '.php' );
 
 			System_Info::add_report(

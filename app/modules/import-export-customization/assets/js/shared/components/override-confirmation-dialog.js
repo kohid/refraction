@@ -14,19 +14,19 @@ const getDialogContent = ( type ) => {
 	switch ( type ) {
 		case 'both':
 			return {
-				title: __( 'Override all classes and variables?', 'elementor' ),
-				description: __( 'This will delete all existing classes and variables and replace them with the imported ones. This action cannot be undone.', 'elementor' ),
+				title: __( 'Override all classes and variables?', 'refraction' ),
+				description: __( 'This will delete all existing classes and variables and replace them with the imported ones. This action cannot be undone.', 'refraction' ),
 			};
 		case 'variables':
 			return {
-				title: __( 'Override all variables?', 'elementor' ),
-				description: __( 'This will delete all existing variables and replace them with the imported ones. This action cannot be undone.', 'elementor' ),
+				title: __( 'Override all variables?', 'refraction' ),
+				description: __( 'This will delete all existing variables and replace them with the imported ones. This action cannot be undone.', 'refraction' ),
 			};
 		case 'classes':
 		default:
 			return {
-				title: __( 'Override all classes?', 'elementor' ),
-				description: __( 'This will delete all existing classes and replace them with the imported ones. This action cannot be undone.', 'elementor' ),
+				title: __( 'Override all classes?', 'refraction' ),
+				description: __( 'This will delete all existing classes and replace them with the imported ones. This action cannot be undone.', 'refraction' ),
 			};
 	}
 };
@@ -92,7 +92,7 @@ export function OverrideConfirmationDialog( {
 					color="secondary"
 					variant="text"
 				>
-					{ __( 'Cancel', 'elementor' ) }
+					{ __( 'Cancel', 'refraction' ) }
 				</Button>
 				<Button
 					onClick={ onConfirm }
@@ -105,7 +105,7 @@ export function OverrideConfirmationDialog( {
 						},
 					} }
 				>
-					{ __( 'Save and override', 'elementor' ) }
+					{ __( 'Save and override', 'refraction' ) }
 				</Button>
 			</DialogActions>
 		</Dialog>

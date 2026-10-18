@@ -3,14 +3,14 @@ var ControlBaseView;
 ControlBaseView = Marionette.CompositeView.extend( {
 	ui() {
 		return {
-			controlTitle: '.elementor-control-title',
+			controlTitle: '.refraction-control-title',
 		};
 	},
 
 	behaviors() {
 		var behaviors = {};
 
-		return elementor.hooks.applyFilters( 'controls/base/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'controls/base/behaviors', behaviors, this );
 	},
 
 	getBehavior( name ) {
@@ -19,7 +19,7 @@ ControlBaseView = Marionette.CompositeView.extend( {
 
 	className() {
 		// TODO: Any better classes for that?
-		var classes = 'elementor-control elementor-control-' + this.model.get( 'name' ) + ' elementor-control-type-' + this.model.get( 'type' ),
+		var classes = 'refraction-control refraction-control-' + this.model.get( 'name' ) + ' refraction-control-type-' + this.model.get( 'type' ),
 			modelClasses = this.model.get( 'classes' ),
 			responsive = this.model.get( 'responsive' );
 
@@ -30,7 +30,7 @@ ControlBaseView = Marionette.CompositeView.extend( {
 		if ( ! _.isEmpty( responsive ) ) {
 			const responsiveControlName = responsive.max || responsive.min;
 
-			classes += ' elementor-control-responsive-' + responsiveControlName;
+			classes += ' refraction-control-responsive-' + responsiveControlName;
 		}
 
 		return classes;
@@ -48,7 +48,7 @@ ControlBaseView = Marionette.CompositeView.extend( {
 	},
 
 	getTemplate() {
-		return Marionette.TemplateCache.get( '#tmpl-elementor-control-' + this.model.get( 'type' ) + '-content' );
+		return Marionette.TemplateCache.get( '#tmpl-refraction-control-' + this.model.get( 'type' ) + '-content' );
 	},
 
 	initialize( options ) {
@@ -66,11 +66,11 @@ ControlBaseView = Marionette.CompositeView.extend( {
 						options.container = view.getContainer();
 					} else {
 						if ( ! settingsModel.id ) {
-							settingsModel.id = 'bc-' + elementorCommon.helpers.getUniqueId();
+							settingsModel.id = 'bc-' + refractionCommon.helpers.getUniqueId();
 						}
 
 						// Document/General/Other control.
-						options.container = new elementorModules.editor.Container( {
+						options.container = new refractionModules.editor.Container( {
 							type: 'bc-container',
 							id: settingsModel.id,
 							model: settingsModel,
@@ -91,14 +91,14 @@ ControlBaseView = Marionette.CompositeView.extend( {
 		// Use `defineProperty` because `get elementSettingsModel()` fails during the `Marionette.CompositeView.extend`.
 		Object.defineProperty( this, 'elementSettingsModel', {
 			get() {
-				elementorDevTools.deprecation.deprecated( 'elementSettingsModel', '2.8.0', 'container.settings' );
+				refractionDevTools.deprecation.deprecated( 'elementSettingsModel', '2.8.0', 'container.settings' );
 
 				return options.container ? options.container.settings : options.elementSettingsModel;
 			},
 		} );
 
 		var controlType = this.model.get( 'type' ),
-			controlSettings = jQuery.extend( true, {}, elementor.config.controls[ controlType ], this.model.attributes );
+			controlSettings = jQuery.extend( true, {}, refraction.config.controls[ controlType ], this.model.attributes );
 
 		this.model.set( controlSettings );
 
@@ -110,12 +110,12 @@ ControlBaseView = Marionette.CompositeView.extend( {
 		if ( this.model.attributes.responsive ) {
 			this.onDeviceModeChange = this.onDeviceModeChange.bind( this );
 
-			elementor.listenTo( elementor.channels.deviceMode, 'change', this.onDeviceModeChange );
+			refraction.listenTo( refraction.channels.deviceMode, 'change', this.onDeviceModeChange );
 		}
 	},
 
 	onDestroy() {
-		elementor.stopListening( elementor.channels.deviceMode, 'change', this.onDeviceModeChange );
+		refraction.stopListening( refraction.channels.deviceMode, 'change', this.onDeviceModeChange );
 	},
 
 	onDeviceModeChange() {
@@ -130,22 +130,22 @@ ControlBaseView = Marionette.CompositeView.extend( {
 		// TODO: this.elementSettingsModel is deprecated since 2.8.0.
 		const settings = this.container ? this.container.settings : this.elementSettingsModel;
 
-		var isVisible = elementor.helpers.isActiveControl( this.model, settings.attributes, settings.controls );
+		var isVisible = refraction.helpers.isActiveControl( this.model, settings.attributes, settings.controls );
 
-		this.$el.toggleClass( 'elementor-hidden-control', ! isVisible );
+		this.$el.toggleClass( 'refraction-hidden-control', ! isVisible );
 
-		elementor.getPanelView().updateScrollbar();
+		refraction.getPanelView().updateScrollbar();
 	},
 
 	onRender() {
 		var layoutType = this.model.get( 'label_block' ) ? 'block' : 'inline',
 			showLabel = this.model.get( 'show_label' ),
-			elClasses = 'elementor-label-' + layoutType;
+			elClasses = 'refraction-label-' + layoutType;
 
-		elClasses += ' elementor-control-separator-' + this.model.get( 'separator' );
+		elClasses += ' refraction-control-separator-' + this.model.get( 'separator' );
 
 		if ( ! showLabel ) {
-			elClasses += ' elementor-control-hidden-label';
+			elClasses += ' refraction-control-hidden-label';
 		}
 
 		this.$el.addClass( elClasses );
@@ -172,7 +172,7 @@ ControlBaseView = Marionette.CompositeView.extend( {
 		let controlPath = this.model.get( 'name' ),
 			parent = this._parent;
 
-		while ( ! parent.$el.hasClass( 'elementor-controls-stack' ) ) {
+		while ( ! parent.$el.hasClass( 'refraction-controls-stack' ) ) {
 			const parentName = parent.model.get( 'name' ) || parent.model.get( '_id' );
 			controlPath = parentName + '/' + controlPath;
 

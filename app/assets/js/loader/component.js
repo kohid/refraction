@@ -1,4 +1,4 @@
-import ComponentModalBase from 'elementor-api/modules/component-base';
+import ComponentModalBase from 'refraction-api/modules/component-base';
 import * as commands from './commands/';
 
 export default class Component extends ComponentModalBase {
@@ -9,7 +9,7 @@ export default class Component extends ComponentModalBase {
 	defaultRoutes() {
 		return {
 			'': ( args ) => {
-				args.url = args.url || elementorAppConfig.menu_url;
+				args.url = args.url || refractionAppConfig.menu_url;
 
 				$e.run( 'app/load', args );
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\WpRest\Classes;
+namespace Refraction\Modules\WpRest\Classes;
 
-use Elementor\Core\Utils\Collection;
-use Elementor\Modules\WpRest\Base\Query as Base;
+use Refraction\Core\Utils\Collection;
+use Refraction\Modules\WpRest\Base\Query as Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -77,7 +77,7 @@ class User_Query extends Base {
 		], 200 );
 
 		_doing_it_wrong(
-			'elementor/v1/user',
+			'refraction/v1/user',
 			'Use wp/v2/users instead. This endpoint will be removed in 4.6.0 version.',
 			'4.0.4'
 		);

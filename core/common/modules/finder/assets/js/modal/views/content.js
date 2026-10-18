@@ -1,20 +1,20 @@
 import CategoriesView from './categories';
-import { createDebouncedFinderSearch } from 'elementor-editor-utils/editor-one-events';
+import { createDebouncedFinderSearch } from 'refraction-editor-utils/editor-one-events';
 
 const FINDER_SEARCH_DEBOUNCE_MS = 300;
 
 export default class extends Marionette.LayoutView {
 	id() {
-		return 'elementor-finder';
+		return 'refraction-finder';
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-finder';
+		return '#tmpl-refraction-finder';
 	}
 
 	ui() {
 		return {
-			searchInput: '#elementor-finder__search__input',
+			searchInput: '#refraction-finder__search__input',
 		};
 	}
 
@@ -26,7 +26,7 @@ export default class extends Marionette.LayoutView {
 
 	regions() {
 		return {
-			content: '#elementor-finder__content',
+			content: '#refraction-finder__content',
 		};
 	}
 
@@ -43,7 +43,7 @@ export default class extends Marionette.LayoutView {
 			return 0;
 		}
 
-		const $visibleItems = this.content.currentView.$el.find( '.elementor-finder__results__item:visible' );
+		const $visibleItems = this.content.currentView.$el.find( '.refraction-finder__results__item:visible' );
 		return $visibleItems.length;
 	}
 
@@ -51,7 +51,7 @@ export default class extends Marionette.LayoutView {
 		const value = this.ui.searchInput.val();
 
 		if ( value ) {
-			elementorCommon.finder.channel
+			refractionCommon.finder.channel
 				.reply( 'filter:text', value )
 				.trigger( 'filter:change' );
 

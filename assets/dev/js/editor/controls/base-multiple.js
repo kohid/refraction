@@ -1,4 +1,4 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlBaseMultipleItemView;
 
 ControlBaseMultipleItemView = ControlBaseDataView.extend( {
@@ -34,7 +34,7 @@ ControlBaseMultipleItemView = ControlBaseDataView.extend( {
 			return value;
 		}
 
-		return elementorCommon.helpers.cloneObject( values );
+		return refractionCommon.helpers.cloneObject( values );
 	},
 
 	/**

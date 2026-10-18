@@ -1,12 +1,12 @@
-import { getContainer, getElementSetting, updateElementSettings, type V1Element } from '@elementor/editor-elements';
-import { classesPropTypeUtil, type ClassesPropValue } from '@elementor/editor-props';
-import { type StyleDefinition } from '@elementor/editor-styles';
+import { getContainer, getElementSetting, updateElementSettings, type V1Element } from '@refraction/editor-elements';
+import { classesPropTypeUtil, type ClassesPropValue } from '@refraction/editor-props';
+import { type StyleDefinition } from '@refraction/editor-styles';
 import {
 	__privateListenTo as listenTo,
 	blockCommand,
 	type CommandEvent,
 	commandStartEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 import {
 	type ContainerArgs,

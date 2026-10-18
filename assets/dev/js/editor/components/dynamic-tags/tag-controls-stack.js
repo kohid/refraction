@@ -1,6 +1,6 @@
-var EmptyView = require( 'elementor-dynamic-tags/tag-controls-stack-empty' );
+var EmptyView = require( 'refraction-dynamic-tags/tag-controls-stack-empty' );
 
-module.exports = elementorModules.editor.views.ControlsStack.extend( {
+module.exports = refractionModules.editor.views.ControlsStack.extend( {
 	activeTab: 'content',
 
 	template: _.noop,
@@ -19,7 +19,7 @@ module.exports = elementorModules.editor.views.ControlsStack.extend( {
 	},
 
 	getNamespaceArray() {
-		var currentPageView = elementor.getPanelView().getCurrentPageView(),
+		var currentPageView = refraction.getPanelView().getCurrentPageView(),
 			eventNamespace = currentPageView.getNamespaceArray();
 
 		eventNamespace.push( currentPageView.activeSection );

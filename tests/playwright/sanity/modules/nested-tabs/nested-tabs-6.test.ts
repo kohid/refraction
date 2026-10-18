@@ -7,7 +7,7 @@ import { wpCli } from '../../../assets/wp-cli';
 
 test.describe( 'Nested Tabs tests (e_font_icon_svg: active) @nested-tabs', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments activate e_font_icon_svg' );
+		await wpCli( 'wp refraction experiments activate e_font_icon_svg' );
 	} );
 
 	test.afterAll( async ( { browser, apiRequests }, testInfo ) => {
@@ -23,11 +23,11 @@ test.describe( 'Nested Tabs tests (e_font_icon_svg: active) @nested-tabs', () =>
 		const editor = await wpAdmin.openNewPage();
 		await editor.loadTemplate( templatePath );
 		await editor.publishAndViewPage();
-		await page.waitForSelector( '.elementor-widget-n-tabs' );
+		await page.waitForSelector( '.refraction-widget-n-tabs' );
 
 		// Set published page variables
-		const icon = page.locator( '.elementor-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:first-child' ).first(),
-			activeTabIcon = page.locator( '.elementor-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:last-child' ).first(),
+		const icon = page.locator( '.refraction-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:first-child' ).first(),
+			activeTabIcon = page.locator( '.refraction-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:last-child' ).first(),
 			currentContext = page;
 
 		// Assert
@@ -45,16 +45,16 @@ test.describe( 'Nested Tabs tests (e_font_icon_svg: active) @nested-tabs', () =>
 		await editor.closeNavigatorIfOpen();
 
 		// Set icon size.
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs' ).hover();
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs .elementor-editor-element-edit' ).first().click();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs' ).hover();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs .refraction-editor-element-edit' ).first().click();
 		await editor.openPanelTab( 'style' );
 		await editor.openSection( 'icon_section_style' );
 		await editor.setSliderControlValue( 'icon_size', '50' );
 		await editor.publishAndViewPage();
 
 		// Set published page variables
-		const icon = page.locator( '.elementor-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:first-child' ).first(),
-			activeTabIcon = page.locator( '.elementor-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:last-child' ).first(),
+		const icon = page.locator( '.refraction-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:first-child' ).first(),
+			activeTabIcon = page.locator( '.refraction-widget-n-tabs .e-n-tab-title .e-n-tab-icon svg:last-child' ).first(),
 			currentContext = page;
 
 		// Assert
@@ -76,7 +76,7 @@ test.describe( 'Nested Tabs tests (e_font_icon_svg: active) @nested-tabs', () =>
 		// Act.
 		// Open front end.
 		await editor.publishAndViewPage();
-		await page.waitForSelector( '.elementor-widget-n-tabs' );
+		await page.waitForSelector( '.refraction-widget-n-tabs' );
 
 		// Assert
 		await page.setViewportSize( viewportSize.mobile );

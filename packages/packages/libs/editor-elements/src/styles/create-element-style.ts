@@ -1,10 +1,10 @@
-import { classesPropTypeUtil } from '@elementor/editor-props';
+import { classesPropTypeUtil } from '@refraction/editor-props';
 import {
 	generateId,
 	type StyleDefinition,
 	type StyleDefinitionID,
 	type StyleDefinitionVariant,
-} from '@elementor/editor-styles';
+} from '@refraction/editor-styles';
 
 import { getElementSetting } from '../sync/get-element-setting';
 import { updateElementSettings } from '../sync/update-element-settings';

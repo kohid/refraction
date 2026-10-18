@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Classes;
+namespace Refraction\Modules\Agents\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,12 +20,12 @@ class Feature_Registry {
 
 	/**
 	 * Return all registered feature components.
-	 * Applies elementor/agents/features filter for third-party contribution.
+	 * Applies refraction/agents/features filter for third-party contribution.
 	 *
 	 * @return Feature_Component[]
 	 */
 	public function get_features(): array {
-		return apply_filters( 'elementor/agents/features', $this->features );
+		return apply_filters( 'refraction/agents/features', $this->features );
 	}
 
 	/**

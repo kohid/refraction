@@ -1,5 +1,5 @@
 import { dispatchWindowEvent } from 'test-utils';
-import { ELEMENT_STYLE_CHANGE_EVENT } from '@elementor/editor-elements';
+import { ELEMENT_STYLE_CHANGE_EVENT } from '@refraction/editor-elements';
 import { act, renderHook } from '@testing-library/react';
 
 import { useGridTracks } from '../use-grid-tracks';
@@ -28,7 +28,7 @@ const DEFAULT_STYLE: Style = {
 	'--e-a-border-color-bold': '',
 };
 
-const DEVICE_MODE_CHANGE_EVENT = 'elementor/device-mode/change';
+const DEVICE_MODE_CHANGE_EVENT = 'refraction/device-mode/change';
 
 function mockElement( style: Partial< Style > = {} ) {
 	const resolved: Style = { ...DEFAULT_STYLE, ...style };

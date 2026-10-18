@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createDOMElement, renderWithTheme } from 'test-utils';
-import { useElementEditorSettings } from '@elementor/editor-elements';
+import { useElementEditorSettings } from '@refraction/editor-elements';
 import { screen } from '@testing-library/react';
 
 import { useElementRect } from '../../../hooks/use-element-rect';
@@ -9,7 +9,7 @@ import { type GridTracks, useGridTracks } from '../../../hooks/use-grid-tracks';
 import { CANVAS_WRAPPER_ID } from '../../outline-overlay';
 import { GridOutlineOverlay } from '../grid-outline-overlay';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 jest.mock( '../../../hooks/use-element-rect' );
 jest.mock( '../../../hooks/use-grid-tracks' );
 jest.mock( '../../../hooks/use-floating-on-element' );

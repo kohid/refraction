@@ -1,6 +1,6 @@
 import AddSectionView from '../../views/add-section/inline';
 
-const BaseElementView = require( 'elementor-elements/views/base' );
+const BaseElementView = require( 'refraction-elements/views/base' );
 
 const DEFAULT_INNER_SECTION_COLUMNS = 2,
 	DEFAULT_MIN_COLUMN_SIZE = 2,
@@ -8,10 +8,10 @@ const DEFAULT_INNER_SECTION_COLUMNS = 2,
 
 const SectionView = BaseElementView.extend( {
 	childViewContainer() {
-		return '> .elementor-container';
+		return '> .refraction-container';
 	},
 
-	template: Marionette.TemplateCache.get( '#tmpl-elementor-section-content' ),
+	template: Marionette.TemplateCache.get( '#tmpl-refraction-section-content' ),
 
 	addSectionView: null,
 
@@ -21,11 +21,11 @@ const SectionView = BaseElementView.extend( {
 	_checkIsFull() {
 		this.toggleSectionIsFull();
 
-		elementorDevTools.deprecation.deprecated( '_checkIsFull()', '2.9.0', 'toggleSectionIsFull()' );
+		refractionDevTools.deprecation.deprecated( '_checkIsFull()', '2.9.0', 'toggleSectionIsFull()' );
 	},
 
 	toggleSectionIsFull() {
-		this.$el.toggleClass( 'elementor-section-filled', this.isCollectionFilled() );
+		this.$el.toggleClass( 'refraction-section-filled', this.isCollectionFilled() );
 	},
 
 	addChildModel( model ) {
@@ -47,7 +47,7 @@ const SectionView = BaseElementView.extend( {
 		var classes = BaseElementView.prototype.className.apply( this, arguments ),
 			type = this.isInner() ? 'inner' : 'top';
 
-		return classes + ' elementor-section elementor-' + type + '-section';
+		return classes + ' refraction-section refraction-' + type + '-section';
 	},
 
 	tagName() {
@@ -59,12 +59,12 @@ const SectionView = BaseElementView.extend( {
 
 		_.extend( behaviors, {
 			Sortable: {
-				behaviorClass: require( 'elementor-behaviors/sortable' ),
+				behaviorClass: require( 'refraction-behaviors/sortable' ),
 				elChildType: 'column',
 			},
 		} );
 
-		return elementor.hooks.applyFilters( 'elements/section/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'elements/section/behaviors', behaviors, this );
 	},
 
 	initialize() {
@@ -78,27 +78,27 @@ const SectionView = BaseElementView.extend( {
 			return {};
 		}
 
-		const elementData = elementor.getElementData( this.model ),
+		const elementData = refraction.getElementData( this.model ),
 			editTools = {};
 
 		if ( ! this.isInner() ) {
 			editTools.add = {
 				/* Translators: %s: Element name. */
-				title: sprintf( __( 'Add %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Add %s', 'refraction' ), elementData.title ),
 				icon: 'plus',
 			};
 		}
 
 		editTools.edit = {
 			/* Translators: %s: Element name. */
-			title: sprintf( __( 'Edit %s', 'elementor' ), elementData.title ),
+			title: sprintf( __( 'Edit %s', 'refraction' ), elementData.title ),
 			icon: 'handle',
 		};
 
-		if ( elementor.getPreferences( 'edit_buttons' ) ) {
+		if ( refraction.getPreferences( 'edit_buttons' ) ) {
 			editTools.duplicate = {
 				/* Translators: %s: Element name. */
-				title: sprintf( __( 'Duplicate %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Duplicate %s', 'refraction' ), elementData.title ),
 				icon: 'clone',
 			};
 		}
@@ -114,9 +114,9 @@ const SectionView = BaseElementView.extend( {
 			actions: [
 				{
 					name: 'save',
-					title: __( 'Save as a template', 'elementor' ),
-					shortcut: `<span class="elementor-context-menu-list__item__shortcut__new-badge">${ __( 'New', 'elementor' ) }</span>`,
-					isEnabled: () => ! elementor.selection.isMultiple(),
+					title: __( 'Save as a template', 'refraction' ),
+					shortcut: `<span class="refraction-context-menu-list__item__shortcut__new-badge">${ __( 'New', 'refraction' ) }</span>`,
+					isEnabled: () => ! refraction.selection.isMultiple(),
 					callback: this.save.bind( this ),
 				},
 			],
@@ -126,12 +126,12 @@ const SectionView = BaseElementView.extend( {
 	},
 
 	getSortableOptions() {
-		var sectionConnectClass = this.isInner() ? '.elementor-inner-section' : '.elementor-top-section';
+		var sectionConnectClass = this.isInner() ? '.refraction-inner-section' : '.refraction-top-section';
 
 		return {
 			connectWith: sectionConnectClass + this.childViewContainer(),
-			handle: '> .elementor-element-overlay .elementor-editor-element-edit',
-			items: '> .elementor-column',
+			handle: '> .refraction-element-overlay .refraction-editor-element-edit',
+			items: '> .refraction-column',
 			forcePlaceholderSize: true,
 			tolerance: 'pointer',
 		};
@@ -175,7 +175,7 @@ const SectionView = BaseElementView.extend( {
 	},
 
 	setStructure( structure, shouldAdjustColumns = true ) {
-		const parsedStructure = elementor.presetsFactory.getParsedStructure( structure );
+		const parsedStructure = refraction.presetsFactory.getParsedStructure( structure );
 
 		if ( +parsedStructure.columnsCount !== this.collection.length ) {
 			throw new TypeError( 'The provided structure doesn\'t match the columns count.' );
@@ -193,7 +193,7 @@ const SectionView = BaseElementView.extend( {
 	},
 
 	adjustColumns() {
-		const preset = elementor.presetsFactory.getPresetByStructure( this.getStructure() );
+		const preset = refraction.presetsFactory.getPresetByStructure( this.getStructure() );
 
 		this.children.each( ( columnView, index ) => {
 			const container = columnView.getContainer();
@@ -233,11 +233,11 @@ const SectionView = BaseElementView.extend( {
 	showChildrenPercentsTooltip( columnView, nextColumnView ) {
 		columnView.ui.percentsTooltip.show();
 
-		columnView.ui.percentsTooltip.attr( 'data-side', elementorCommon.config.isRTL ? 'right' : 'left' );
+		columnView.ui.percentsTooltip.attr( 'data-side', refractionCommon.config.isRTL ? 'right' : 'left' );
 
 		nextColumnView.ui.percentsTooltip.show();
 
-		nextColumnView.ui.percentsTooltip.attr( 'data-side', elementorCommon.config.isRTL ? 'left' : 'right' );
+		nextColumnView.ui.percentsTooltip.attr( 'data-side', refractionCommon.config.isRTL ? 'left' : 'right' );
 	},
 
 	hideChildrenPercentsTooltip( columnView, nextColumnView ) {
@@ -297,7 +297,7 @@ const SectionView = BaseElementView.extend( {
 
 		var $iframes = columnView.$el.find( 'iframe' ).add( nextColumnView.$el.find( 'iframe' ) );
 
-		elementor.helpers.disableElementEvents( $iframes );
+		refraction.helpers.disableElementEvents( $iframes );
 	},
 
 	onChildviewRequestResizeStop( columnView ) {
@@ -311,7 +311,7 @@ const SectionView = BaseElementView.extend( {
 
 		var $iframes = columnView.$el.find( 'iframe' ).add( nextColumnView.$el.find( 'iframe' ) );
 
-		elementor.helpers.enableElementEvents( $iframes );
+		refraction.helpers.enableElementEvents( $iframes );
 	},
 
 	onChildviewRequestResize( columnView, ui ) {

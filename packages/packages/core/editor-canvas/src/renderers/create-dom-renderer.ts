@@ -1,4 +1,4 @@
-import { createArrayLoader, createEnvironment, type TwingArrayLoader, type TwingEnvironment } from '@elementor/twing';
+import { createArrayLoader, createEnvironment, type TwingArrayLoader, type TwingEnvironment } from '@refraction/twing';
 
 export type DomRenderer = {
 	register: TwingArrayLoader[ 'setTemplate' ];
@@ -20,11 +20,11 @@ export function createDomRenderer(): DomRenderer {
 
 /**
  * PHP (`Utils::get_allowed_html_wrapper_tags()`) is the single source of truth for this
- * list; it's localized via `elementorCommon.config`. If it's ever missing, fail closed
+ * list; it's localized via `refractionCommon.config`. If it's ever missing, fail closed
  * (no tags allowed) rather than fall back to a second hardcoded copy that could drift.
  */
 function getAllowedHtmlWrapperTags(): readonly string[] {
-	return window.elementorCommon?.config?.allowedHTMLWrapperTags ?? [];
+	return window.refractionCommon?.config?.allowedHTMLWrapperTags ?? [];
 }
 
 function escapeHtmlTag( value: string ) {

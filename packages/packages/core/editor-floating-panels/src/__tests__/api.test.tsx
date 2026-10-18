@@ -8,7 +8,7 @@ import {
 	__getStore,
 	__registerSlice,
 	__StoreProvider as StoreProvider,
-} from '@elementor/store';
+} from '@refraction/store';
 import { act, fireEvent, renderHook, screen } from '@testing-library/react';
 
 import { createFloatingPanel, registerFloatingPanel } from '../api';

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { useFloatingPanelZIndex } from '@elementor/editor-floating-panels';
-import { notify } from '@elementor/editor-notifications';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
-import { httpService } from '@elementor/http-client';
+import { useFloatingPanelZIndex } from '@refraction/editor-floating-panels';
+import { notify } from '@refraction/editor-notifications';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
+import { httpService } from '@refraction/http-client';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { AUDIT_PANEL_ID, FEEDBACK_ENTRY_POINT } from '../../constants';
@@ -11,24 +11,24 @@ import AuditFeedback from '../audit-feedback';
 
 const mockTrackEvent = jest.fn();
 
-jest.mock( '@elementor/events', () => ( {
+jest.mock( '@refraction/events', () => ( {
 	useMixpanel: () => ( { dispatchEvent: mockTrackEvent } ),
 } ) );
 
-jest.mock( '@elementor/editor-floating-panels', () => ( {
+jest.mock( '@refraction/editor-floating-panels', () => ( {
 	useFloatingPanelZIndex: jest.fn( () => 1000 ),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	isExperimentActive: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-notifications', () => ( {
+jest.mock( '@refraction/editor-notifications', () => ( {
 	notify: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
@@ -41,7 +41,7 @@ const mockPost = ( implementation: ( ...args: unknown[] ) => Promise< unknown > 
 };
 
 const mockConnected = ( isConnected: boolean ) => {
-	window.elementorCommon = { config: { library_connect: { is_connected: isConnected } } };
+	window.refractionCommon = { config: { library_connect: { is_connected: isConnected } } };
 };
 
 describe( 'AuditFeedback', () => {
@@ -53,8 +53,8 @@ describe( 'AuditFeedback', () => {
 	} );
 
 	afterEach( () => {
-		delete window.elementorCommon;
-		delete window.elementorPro;
+		delete window.refractionCommon;
+		delete window.refractionPro;
 	} );
 
 	it( 'reads the audit panel z-index so the trigger tooltip renders above the floating panel', () => {
@@ -75,13 +75,13 @@ describe( 'AuditFeedback', () => {
 
 	it( 'still renders the trigger button when the user is not connected but a connect URL is available', () => {
 		mockConnected( false );
-		window.elementor = { config: { user: { top_bar: { connect_url: 'https://my.elementor.com/connect' } } } };
+		window.refraction = { config: { user: { top_bar: { connect_url: 'https://my.elementor.com/connect' } } } };
 
 		renderWithTheme( <AuditFeedback /> );
 
 		expect( screen.getByRole( 'button', { name: 'Give feedback' } ) ).toBeInTheDocument();
 
-		delete window.elementor;
+		delete window.refraction;
 	} );
 
 	it( 'renders nothing when the user is not connected and no connect URL is available', () => {
@@ -106,7 +106,7 @@ describe( 'AuditFeedback', () => {
 
 	it( 'opens the connect URL in a new tab and does not open the dialog when the user is not connected', () => {
 		mockConnected( false );
-		window.elementor = { config: { user: { top_bar: { connect_url: 'https://my.elementor.com/connect' } } } };
+		window.refraction = { config: { user: { top_bar: { connect_url: 'https://my.elementor.com/connect' } } } };
 		const windowOpenSpy = jest.spyOn( window, 'open' ).mockImplementation( () => null );
 
 		renderWithTheme( <AuditFeedback /> );
@@ -120,7 +120,7 @@ describe( 'AuditFeedback', () => {
 		} );
 
 		windowOpenSpy.mockRestore();
-		delete window.elementor;
+		delete window.refraction;
 	} );
 
 	it( 'closes the dialog without submitting and tracks the cancel event when Cancel is clicked', async () => {
@@ -161,7 +161,7 @@ describe( 'AuditFeedback', () => {
 		} );
 		fireEvent.click( screen.getByRole( 'button', { name: 'Send' } ) );
 
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/feedback/submit', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/feedback/submit', {
 			subject: 'Page Audit Tool',
 			description: 'Great feature, but slow.',
 		} );

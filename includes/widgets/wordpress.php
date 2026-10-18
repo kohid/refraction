@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor WordPress widget.
+ * Refraction WordPress widget.
  *
- * Elementor widget that displays all the WordPress widgets.
+ * Refraction widget that displays all the WordPress widgets.
  *
  * @since 1.0.0
  */
@@ -161,7 +161,7 @@ class Widget_WordPress extends Widget_Base {
 	/**
 	 * Retrieve WordPress widget form.
 	 *
-	 * Returns the WordPress widget form, to be used in Elementor.
+	 * Returns the WordPress widget form, to be used in Refraction.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -186,7 +186,7 @@ class Widget_WordPress extends Widget_Base {
 	/**
 	 * Retrieve WordPress widget instance.
 	 *
-	 * Returns an instance of WordPress widget, to be used in Elementor.
+	 * Returns an instance of WordPress widget, to be used in Refraction.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -211,7 +211,7 @@ class Widget_WordPress extends Widget_Base {
 	/**
 	 * Retrieve WordPress widget parsed settings.
 	 *
-	 * Returns the WordPress widget settings, to be used in Elementor.
+	 * Returns the WordPress widget settings, to be used in Refraction.
 	 *
 	 * @access protected
 	 * @since 2.3.0
@@ -243,7 +243,7 @@ class Widget_WordPress extends Widget_Base {
 		$this->add_control(
 			'wp',
 			[
-				'label' => esc_html__( 'Form', 'elementor' ),
+				'label' => esc_html__( 'Form', 'refraction' ),
 				'type' => Controls_Manager::WP_WIDGET,
 				'widget' => $this->get_name(),
 				'id_base' => $this->get_widget_instance()->id_base,
@@ -271,14 +271,14 @@ class Widget_WordPress extends Widget_Base {
 		/**
 		 * WordPress widget args.
 		 *
-		 * Filters the WordPress widget arguments when they are rendered in Elementor panel.
+		 * Filters the WordPress widget arguments when they are rendered in Refraction panel.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param array            $default_widget_args Default widget arguments.
 		 * @param Widget_WordPress $this                The WordPress widget.
 		 */
-		$default_widget_args = apply_filters( 'elementor/widgets/wordpress/widget_args', $default_widget_args, $this );
+		$default_widget_args = apply_filters( 'refraction/widgets/wordpress/widget_args', $default_widget_args, $this );
 		$is_gallery_widget = 'wp-widget-media_gallery' === $this->get_name();
 
 		if ( $is_gallery_widget ) {

@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Export;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Export;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 class Site_Settings extends Export_Runner_Base {
 	const ALLOWED_SETTINGS = [
@@ -85,7 +85,7 @@ class Site_Settings extends Export_Runner_Base {
 	}
 
 	private function export_customization( $data, $customization ) {
-		$result = apply_filters( 'elementor/import-export-customization/export/site-settings/customization', null, $data, $customization, $this );
+		$result = apply_filters( 'refraction/import-export-customization/export/site-settings/customization', null, $data, $customization, $this );
 
 		if ( is_array( $result ) ) {
 			return $result;

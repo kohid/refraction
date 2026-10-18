@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor social icons widget.
+ * Refraction social icons widget.
  *
- * Elementor widget that displays icons to social pages like Facebook and Twitter.
+ * Refraction widget that displays icons to social pages like Facebook and Twitter.
  *
  * @since 1.0.0
  */
@@ -39,7 +39,7 @@ class Widget_Social_Icons extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Social Icons', 'elementor' );
+		return esc_html__( 'Social Icons', 'refraction' );
 	}
 
 	/**
@@ -104,7 +104,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->start_controls_section(
 			'section_social_icon',
 			[
-				'label' => esc_html__( 'Social Icons', 'elementor' ),
+				'label' => esc_html__( 'Social Icons', 'refraction' ),
 			]
 		);
 
@@ -113,7 +113,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$repeater->add_control(
 			'social_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'social',
 				'default' => [
@@ -131,7 +131,7 @@ class Widget_Social_Icons extends Widget_Base {
 						'deviantart',
 						'digg',
 						'dribbble',
-						'elementor',
+						'refraction',
 						'facebook',
 						'flickr',
 						'foursquare',
@@ -191,7 +191,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$repeater->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'default' => [
 					'is_external' => 'true',
@@ -205,12 +205,12 @@ class Widget_Social_Icons extends Widget_Base {
 		$repeater->add_control(
 			'item_icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'default',
 				'options' => [
-					'default' => esc_html__( 'Official Color', 'elementor' ),
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'default' => esc_html__( 'Official Color', 'refraction' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 			]
 		);
@@ -218,13 +218,13 @@ class Widget_Social_Icons extends Widget_Base {
 		$repeater->add_control(
 			'item_icon_primary_color',
 			[
-				'label' => esc_html__( 'Primary Color', 'elementor' ),
+				'label' => esc_html__( 'Primary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'condition' => [
 					'item_icon_color' => 'custom',
 				],
 				'selectors' => [
-					'{{WRAPPER}} {{CURRENT_ITEM}}.elementor-social-icon' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} {{CURRENT_ITEM}}.refraction-social-icon' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -232,14 +232,14 @@ class Widget_Social_Icons extends Widget_Base {
 		$repeater->add_control(
 			'item_icon_secondary_color',
 			[
-				'label' => esc_html__( 'Secondary Color', 'elementor' ),
+				'label' => esc_html__( 'Secondary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'condition' => [
 					'item_icon_color' => 'custom',
 				],
 				'selectors' => [
-					'{{WRAPPER}} {{CURRENT_ITEM}}.elementor-social-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} {{CURRENT_ITEM}}.elementor-social-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} {{CURRENT_ITEM}}.refraction-social-icon i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} {{CURRENT_ITEM}}.refraction-social-icon svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -247,7 +247,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'social_icon_list',
 			[
-				'label' => esc_html__( 'Social Icons', 'elementor' ),
+				'label' => esc_html__( 'Social Icons', 'refraction' ),
 				'type' => Controls_Manager::REPEATER,
 				'fields' => $repeater->get_controls(),
 				'default' => [
@@ -270,33 +270,33 @@ class Widget_Social_Icons extends Widget_Base {
 						],
 					],
 				],
-				'title_field' => '<# var migrated = "undefined" !== typeof __fa4_migrated, social = ( "undefined" === typeof social ) ? false : social; #>{{{ elementor.helpers.getSocialNetworkNameFromIcon( social_icon, social, true, migrated, true ) }}}',
+				'title_field' => '<# var migrated = "undefined" !== typeof __fa4_migrated, social = ( "undefined" === typeof social ) ? false : social; #>{{{ refraction.helpers.getSocialNetworkNameFromIcon( social_icon, social, true, migrated, true ) }}}',
 			]
 		);
 
 		$this->add_control(
 			'shape',
 			[
-				'label' => esc_html__( 'Shape', 'elementor' ),
+				'label' => esc_html__( 'Shape', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'rounded',
 				'options' => [
-					'square' => esc_html__( 'Square', 'elementor' ),
-					'rounded' => esc_html__( 'Rounded', 'elementor' ),
-					'circle' => esc_html__( 'Circle', 'elementor' ),
+					'square' => esc_html__( 'Square', 'refraction' ),
+					'rounded' => esc_html__( 'Rounded', 'refraction' ),
+					'circle' => esc_html__( 'Circle', 'refraction' ),
 				],
-				'prefix_class' => 'elementor-shape-',
+				'prefix_class' => 'refraction-shape-',
 			]
 		);
 
 		$this->add_responsive_control(
 			'columns',
 			[
-				'label' => esc_html__( 'Columns', 'elementor' ),
+				'label' => esc_html__( 'Columns', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '0',
 				'options' => [
-					'0' => esc_html__( 'Auto', 'elementor' ),
+					'0' => esc_html__( 'Auto', 'refraction' ),
 					'1' => '1',
 					'2' => '2',
 					'3' => '3',
@@ -304,7 +304,7 @@ class Widget_Social_Icons extends Widget_Base {
 					'5' => '5',
 					'6' => '6',
 				],
-				'prefix_class' => 'elementor-grid%s-',
+				'prefix_class' => 'refraction-grid%s-',
 				'selectors' => [
 					'{{WRAPPER}}' => '--grid-template-columns: repeat({{VALUE}}, auto);',
 				],
@@ -313,24 +313,24 @@ class Widget_Social_Icons extends Widget_Base {
 
 		$align_selector = Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' ) && ! $this->has_widget_inner_wrapper()
 			? '{{WRAPPER}}'
-			: '{{WRAPPER}} .elementor-widget-container';
+			: '{{WRAPPER}} .refraction-widget-container';
 
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left'    => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => esc_html__( 'Left', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => esc_html__( 'Right', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -347,7 +347,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->start_controls_section(
 			'section_social_style',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -355,12 +355,12 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'default',
 				'options' => [
-					'default' => esc_html__( 'Official Color', 'elementor' ),
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'default' => esc_html__( 'Official Color', 'refraction' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 			]
 		);
@@ -368,13 +368,13 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'icon_primary_color',
 			[
-				'label' => esc_html__( 'Primary Color', 'elementor' ),
+				'label' => esc_html__( 'Primary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'condition' => [
 					'icon_color' => 'custom',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-social-icon' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-social-icon' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -382,14 +382,14 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'icon_secondary_color',
 			[
-				'label' => esc_html__( 'Secondary Color', 'elementor' ),
+				'label' => esc_html__( 'Secondary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'condition' => [
 					'icon_color' => 'custom',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-social-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-social-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-social-icon i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-social-icon svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -397,7 +397,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				// The `%' and `em` units are not supported as the widget implements icons differently then other icons.
 				'size_units' => [ 'px', 'rem', 'vw', 'custom' ],
@@ -416,12 +416,12 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				// The `%' unit is not supported.
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-social-icon' => '--icon-padding: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-social-icon' => '--icon-padding: {{SIZE}}{{UNIT}}',
 				],
 				'default' => [
 					'unit' => 'em',
@@ -451,7 +451,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_spacing',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -479,7 +479,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_responsive_control(
 			'row_gap',
 			[
-				'label' => esc_html__( 'Rows Gap', 'elementor' ),
+				'label' => esc_html__( 'Rows Gap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -495,7 +495,7 @@ class Widget_Social_Icons extends Widget_Base {
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'image_border', // We know this mistake - TODO: 'icon_border' (for hover control condition also)
-				'selector' => '{{WRAPPER}} .elementor-social-icon',
+				'selector' => '{{WRAPPER}} .refraction-social-icon',
 				'separator' => 'before',
 			]
 		);
@@ -503,11 +503,11 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_responsive_control(
 			'border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -517,7 +517,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->start_controls_section(
 			'section_social_hover',
 			[
-				'label' => esc_html__( 'Icon Hover', 'elementor' ),
+				'label' => esc_html__( 'Icon Hover', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -525,14 +525,14 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'hover_primary_color',
 			[
-				'label' => esc_html__( 'Primary Color', 'elementor' ),
+				'label' => esc_html__( 'Primary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'condition' => [
 					'icon_color' => 'custom',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-social-icon:hover' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-social-icon:hover' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -540,15 +540,15 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'hover_secondary_color',
 			[
-				'label' => esc_html__( 'Secondary Color', 'elementor' ),
+				'label' => esc_html__( 'Secondary Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'condition' => [
 					'icon_color' => 'custom',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-social-icon:hover i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-social-icon:hover svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-social-icon:hover i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-social-icon:hover svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -556,14 +556,14 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'hover_border_color',
 			[
-				'label' => esc_html__( 'Border Color', 'elementor' ),
+				'label' => esc_html__( 'Border Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'condition' => [
 					'image_border_border!' => '',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-social-icon:hover' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-social-icon:hover' => 'border-color: {{VALUE}};',
 				],
 			]
 		);
@@ -571,7 +571,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 			]
 		);
@@ -590,8 +590,8 @@ class Widget_Social_Icons extends Widget_Base {
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 
-		$this->add_render_attribute( 'wrapper', 'class', [ 'elementor-social-icons-wrapper', 'elementor-grid' ] );
-		$this->add_render_attribute( 'item_wrapper', 'class', 'elementor-grid-item' );
+		$this->add_render_attribute( 'wrapper', 'class', [ 'refraction-social-icons-wrapper', 'refraction-grid' ] );
+		$this->add_render_attribute( 'item_wrapper', 'class', 'refraction-grid-item' );
 
 		if ( count( $settings['social_icon_list'] ) > 1 ) {
 			$this->add_render_attribute( 'wrapper', 'role', 'list' );
@@ -607,7 +607,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$class_animation = '';
 
 		if ( ! empty( $settings['hover_animation'] ) ) {
-			$class_animation = ' elementor-animation-' . $settings['hover_animation'];
+			$class_animation = ' refraction-animation-' . $settings['hover_animation'];
 		}
 
 		$migration_allowed = Icons_Manager::is_migration_allowed();
@@ -644,10 +644,10 @@ class Widget_Social_Icons extends Widget_Base {
 				$link_key = 'link_' . $index;
 
 				$this->add_render_attribute( $link_key, 'class', [
-					'elementor-icon',
-					'elementor-social-icon',
-					'elementor-social-icon-' . $social . $class_animation,
-					'elementor-repeater-item-' . $item['_id'],
+					'refraction-icon',
+					'refraction-social-icon',
+					'refraction-social-icon-' . $social . $class_animation,
+					'refraction-repeater-item-' . $item['_id'],
 				] );
 
 				$this->add_link_attributes( $link_key, $item['link'] );
@@ -655,7 +655,7 @@ class Widget_Social_Icons extends Widget_Base {
 				?>
 				<span <?php $this->print_render_attribute_string( 'item_wrapper' ); ?>>
 					<a <?php $this->print_render_attribute_string( $link_key ); ?>>
-						<span class="elementor-screen-only"><?php echo esc_html( ucwords( $social ) ); ?></span>
+						<span class="refraction-screen-only"><?php echo esc_html( ucwords( $social ) ); ?></span>
 						<?php
 						if ( $is_new || $migrated ) {
 							Icons_Manager::render_icon( $item['social_icon'], [ 'aria-hidden' => 'true' ] );
@@ -680,8 +680,8 @@ class Widget_Social_Icons extends Widget_Base {
 	protected function content_template() {
 		?>
 		<#
-		view.addRenderAttribute( 'wrapper', 'class', [ 'elementor-social-icons-wrapper', 'elementor-grid' ] );
-		view.addRenderAttribute( 'item_wrapper', 'class', 'elementor-grid-item' );
+		view.addRenderAttribute( 'wrapper', 'class', [ 'refraction-social-icons-wrapper', 'refraction-grid' ] );
+		view.addRenderAttribute( 'item_wrapper', 'class', 'refraction-grid-item' );
 
 		if ( settings.social_icon_list.length > 1 ) {
 			view.addRenderAttribute( 'wrapper', 'role', 'list' );
@@ -693,14 +693,14 @@ class Widget_Social_Icons extends Widget_Base {
 		<div {{{ view.getRenderAttributeString( 'wrapper' ) }}}>
 			<# _.each( settings.social_icon_list, function( item, index ) {
 				var link = item.link ? item.link.url : '',
-					migrated = elementor.helpers.isIconMigrated( item, 'social_icon' );
-					social = elementor.helpers.getSocialNetworkNameFromIcon( item.social_icon, item.social, false, migrated );
+					migrated = refraction.helpers.isIconMigrated( item, 'social_icon' );
+					social = refraction.helpers.getSocialNetworkNameFromIcon( item.social_icon, item.social, false, migrated );
 				#>
 				<span {{{ view.getRenderAttributeString( 'item_wrapper' ) }}}>
-					<a class="elementor-icon elementor-social-icon elementor-social-icon-{{ social }} elementor-animation-{{ settings.hover_animation }} elementor-repeater-item-{{item._id}}" href="{{ elementor.helpers.sanitizeUrl( link ) }}">
-						<span class="elementor-screen-only">{{{ social }}}</span>
+					<a class="refraction-icon refraction-social-icon refraction-social-icon-{{ social }} refraction-animation-{{ settings.hover_animation }} refraction-repeater-item-{{item._id}}" href="{{ refraction.helpers.sanitizeUrl( link ) }}">
+						<span class="refraction-screen-only">{{{ social }}}</span>
 						<#
-							iconsHTML[ index ] = elementor.helpers.renderIcon( view, item.social_icon, {}, 'i', 'object' );
+							iconsHTML[ index ] = refraction.helpers.renderIcon( view, item.social_icon, {}, 'i', 'object' );
 							if ( ( ! item.social || migrated ) && iconsHTML[ index ] && iconsHTML[ index ].rendered ) { #>
 								{{{ iconsHTML[ index ].value }}}
 							<# } else { #>

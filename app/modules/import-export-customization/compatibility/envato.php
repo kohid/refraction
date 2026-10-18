@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Compatibility;
+namespace Refraction\App\Modules\ImportExportCustomization\Compatibility;
 
-use Elementor\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
-use Elementor\Plugin;
+use Refraction\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -69,8 +69,8 @@ class Envato extends Base_Adapter {
 	}
 
 	public function adapt_template( array $template_data, array $template_settings ) {
-		if ( ! empty( $template_data['metadata']['elementor_pro_conditions'] ) ) {
-			foreach ( $template_data['metadata']['elementor_pro_conditions'] as $condition ) {
+		if ( ! empty( $template_data['metadata']['refraction_pro_conditions'] ) ) {
+			foreach ( $template_data['metadata']['refraction_pro_conditions'] as $condition ) {
 				list ( $type, $name, $sub_name, $sub_id ) = array_pad( explode( '/', $condition ), 4, '' );
 
 				$template_data['import_settings']['conditions'][] = compact( 'type', 'name', 'sub_name', 'sub_id' );

@@ -1,4 +1,4 @@
-import { __getStore, __subscribeWithSelector } from '@elementor/store';
+import { __getStore, __subscribeWithSelector } from '@refraction/store';
 
 import { decodePersistedState, encodePersistedState, PERSISTENCE_STORAGE_KEY } from './persistence';
 import { type GlobalState } from './store/selectors';

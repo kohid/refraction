@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\TemplateLibrary\Forms;
+namespace Refraction\TemplateLibrary\Forms;
 
-use Elementor\Controls_Manager;
-use Elementor\Controls_Stack;
+use Refraction\Controls_Manager;
+use Refraction\Controls_Stack;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -30,15 +30,15 @@ class New_Template_Form extends Controls_Stack {
 	}
 
 	private function render_select( $control_settings ) {
-		$control_id = "elementor-new-template__form__{$control_settings['name']}";
+		$control_id = "refraction-new-template__form__{$control_settings['name']}";
 		$wrapper_class = isset( $control_settings['wrapper_class'] ) ? $control_settings['wrapper_class'] : '';
 		?>
-		<div id="<?php echo esc_attr( $control_id ); ?>__wrapper" class="elementor-form-field <?php echo esc_attr( $wrapper_class ); ?>">
-			<label for="<?php echo esc_attr( $control_id ); ?>" class="elementor-form-field__label">
+		<div id="<?php echo esc_attr( $control_id ); ?>__wrapper" class="refraction-form-field <?php echo esc_attr( $wrapper_class ); ?>">
+			<label for="<?php echo esc_attr( $control_id ); ?>" class="refraction-form-field__label">
 				<?php echo esc_html( $control_settings['label'] ); ?>
 			</label>
-			<div class="elementor-form-field__select__wrapper">
-				<select id="<?php echo esc_attr( $control_id ); ?>" class="elementor-form-field__select" name="meta[<?php echo esc_html( $control_settings['name'] ); ?>]">
+			<div class="refraction-form-field__select__wrapper">
+				<select id="<?php echo esc_attr( $control_id ); ?>" class="refraction-form-field__select" name="meta[<?php echo esc_html( $control_settings['name'] ); ?>]">
 					<?php
 					foreach ( $control_settings['options'] as $key => $value ) {
 						printf( '<option value="%1$s">%2$s</option>', esc_html( $key ), esc_html( $value ) );

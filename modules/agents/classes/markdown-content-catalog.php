@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Classes;
+namespace Refraction\Modules\Agents\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

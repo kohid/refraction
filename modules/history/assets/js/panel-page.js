@@ -5,14 +5,14 @@ import TabRevisionsView from './revisions/panel/tab';
 import TabRevisionsEmptyView from './revisions/panel/empty';
 
 export default Marionette.LayoutView.extend( {
-	template: '#tmpl-elementor-panel-history-page',
+	template: '#tmpl-refraction-panel-history-page',
 
 	regions: {
-		content: '#elementor-panel-history-content',
+		content: '#refraction-panel-history-content',
 	},
 
 	ui: {
-		tabs: '.elementor-panel-navigation-tab',
+		tabs: '.refraction-panel-navigation-tab',
 	},
 
 	regionViews: {},
@@ -25,7 +25,7 @@ export default Marionette.LayoutView.extend( {
 	document: null,
 
 	initialize( options ) {
-		this.document = options.document || elementor.documents.getCurrent();
+		this.document = options.document || refraction.documents.getCurrent();
 
 		this.initRegionViews();
 	},

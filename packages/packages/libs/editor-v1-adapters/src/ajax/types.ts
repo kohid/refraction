@@ -11,7 +11,7 @@ type Headers< TRequestData = object, TResponseData = object > = RequestParams< T
 };
 
 export type ExtendedWindow = Window & {
-	elementorCommon?: {
+	refractionCommon?: {
 		ajax?: {
 			load: < TRequestData = object, TResponseData = object >(
 				data: Headers< TRequestData, TResponseData >

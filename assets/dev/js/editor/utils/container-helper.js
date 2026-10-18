@@ -19,7 +19,7 @@ export class ContainerHelper {
 	static V4_DEFAULT_CONTAINER_TYPE = 'e-flexbox';
 
 	static isV4OptIn() {
-		return !! elementorCommon?.config?.experimentalFeatures?.e_opt_in_v4;
+		return !! refractionCommon?.config?.experimentalFeatures?.e_opt_in_v4;
 	}
 
 	/**
@@ -157,12 +157,12 @@ export class ContainerHelper {
 	 *
 	 * @return {Container} - Container created on.
 	 */
-	static createContainerFromGridPreset( structure, target = elementor.getPreviewContainer(), options = {}, modelAttributes = {} ) {
+	static createContainerFromGridPreset( structure, target = refraction.getPreviewContainer(), options = {}, modelAttributes = {} ) {
 		if ( ContainerHelper.isV4OptIn() ) {
 			return createV4GridFromPreset( structure, target, options );
 		}
 
-		const parsedStructure = elementor.presetsFactory.getParsedGridStructure( structure );
+		const parsedStructure = refraction.presetsFactory.getParsedGridStructure( structure );
 
 		return ContainerHelper.createContainer(
 			{
@@ -183,7 +183,7 @@ export class ContainerHelper {
 			target,
 			options,
 			{
-				title: __( 'Grid', 'elementor' ),
+				title: __( 'Grid', 'refraction' ),
 				custom: {
 					isPreset: true,
 					preset_settings: {
@@ -205,14 +205,14 @@ export class ContainerHelper {
 	 *
 	 * @return {Container} - Container created on.
 	 */
-	static createContainerFromPreset( preset, target = elementor.getPreviewContainer(), options ) {
+	static createContainerFromPreset( preset, target = refraction.getPreviewContainer(), options ) {
 		if ( ContainerHelper.isV4OptIn() ) {
 			return createV4FlexboxFromPreset( preset, target, options );
 		}
 
 		const historyId = $e.internal( 'document/history/start-log', {
 				type: 'add',
-				title: __( 'Container', 'elementor' ),
+				title: __( 'Container', 'refraction' ),
 			} ),
 			{ createWrapper = true } = options;
 

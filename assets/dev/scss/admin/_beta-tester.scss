@@ -1,20 +1,20 @@
-#elementor-beta-tester-modal {
+#refraction-beta-tester-modal {
 	color: var(--e-a-color-txt);
 
-	.elementor-templates-modal__header__items-area {
+	.refraction-templates-modal__header__items-area {
 
 		color: var(--e-a-color-txt);
 		cursor: pointer;
 
 		&:hover {
 
-			.elementor-beta-tester-do-not-show-again,
-			.elementor-templates-modal__header__item > i {
+			.refraction-beta-tester-do-not-show-again,
+			.refraction-templates-modal__header__item > i {
 				color: var(--e-a-color-txt-hover)
 			}
 		}
 
-		.elementor-beta-tester-do-not-show-again {
+		.refraction-beta-tester-do-not-show-again {
 			text-transform: uppercase;
 			font-weight: bold;
 			font-size: 12px;
@@ -35,7 +35,7 @@
 	}
 }
 
-#elementor-beta-tester-form {
+#refraction-beta-tester-form {
 
 	&__caption {
 		font-weight: bold;
@@ -51,7 +51,7 @@
 		display:flex;
 		margin-block-start: 30px;
 
-		.elementor-button {
+		.refraction-button {
 			border-start-start-radius: 0;
 			border-start-end-radius: 3px;
 			border-end-start-radius: 0;

@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Modules\WpCli;
+namespace Refraction\Modules\WpCli;
 
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Page Builder cli tools.
+ * Refraction Page Builder cli tools.
  */
 class Library extends \WP_CLI_Command {
 
@@ -22,11 +22,11 @@ class Library extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *  1. wp elementor library import <file-path>
+	 *  1. wp refraction library import <file-path>
 	 *      - This will import a file or a zip of multiple files to the library.
 	 *      - file-path can be a path or url.
 	 *
-	 *  2. wp elementor library import <file-path> --returnType=info,ids
+	 *  2. wp refraction library import <file-path> --returnType=info,ids
 	 *
 	 * @param $args
 	 * @param $assoc_args
@@ -82,7 +82,7 @@ class Library extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *  1. wp elementor library import-dir <file-path>
+	 *  1. wp refraction library import-dir <file-path>
 	 *      - This will import all JSON files from <file-path>
 	 *
 	 * @param $args

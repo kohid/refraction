@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ControlAdornmentsProvider } from '@elementor/editor-controls';
-import { getFieldIndicators } from '@elementor/editor-editing-panel';
-import { PanelBody } from '@elementor/editor-panels';
+import { ControlAdornmentsProvider } from '@refraction/editor-controls';
+import { getFieldIndicators } from '@refraction/editor-editing-panel';
+import { PanelBody } from '@refraction/editor-panels';
 import { Divider, Stack } from '@elementor/ui';
 
 import { type OverridablePropsGroup } from '../../types';

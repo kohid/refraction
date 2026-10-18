@@ -1,10 +1,10 @@
-import { type PropsSchema } from '@elementor/editor-props';
-import { getSessionStorageItem, removeSessionStorageItem } from '@elementor/session';
+import { type PropsSchema } from '@refraction/editor-props';
+import { getSessionStorageItem, removeSessionStorageItem } from '@refraction/session';
 import { describe, expect, it } from '@jest/globals';
 
 import { getElementSettingsWithDefaults, getUpdatedValues } from '../prop-dependency-utils';
 
-jest.mock( '@elementor/session' );
+jest.mock( '@refraction/session' );
 
 const str = ( value: string ) => ( { $$type: 'string' as const, value } );
 const arr = ( ...items: string[] ) => ( {
@@ -183,7 +183,7 @@ describe( 'getElementSettingsWithDefaults', () => {
 
 describe( 'getUpdatedValues — overridable shape mismatch on restore', () => {
 	const ELEMENT_ID = 'el-1';
-	const STORAGE_PREFIX = `elementor/${ ELEMENT_ID }`;
+	const STORAGE_PREFIX = `refraction/${ ELEMENT_ID }`;
 
 	const overridable = ( overrideKey: string, origin: { $$type: string; value: unknown } ) => ( {
 		$$type: 'overridable' as const,

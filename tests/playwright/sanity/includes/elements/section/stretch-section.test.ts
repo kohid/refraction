@@ -23,7 +23,7 @@ async function testStretchedSection( page: Page, editor: EditorPage, direction: 
 	await editor.closeNavigatorIfOpen();
 
 	await editor.getPreviewFrame().evaluate( () => {
-		const sectionWrap: HTMLElement = document.querySelector( '.elementor-section-wrap:first-child' );
+		const sectionWrap: HTMLElement = document.querySelector( '.refraction-section-wrap:first-child' );
 
 		sectionWrap.style.width = '800px';
 		sectionWrap.style.margin = '0 auto';
@@ -31,7 +31,7 @@ async function testStretchedSection( page: Page, editor: EditorPage, direction: 
 
 	// Act.
 	const sectionID = await editor.addElement( { elType: 'section' }, 'document' ),
-		sectionElement = editor.getPreviewFrame().locator( `.elementor-element-${ sectionID }` );
+		sectionElement = editor.getPreviewFrame().locator( `.refraction-element-${ sectionID }` );
 
 	await editor.selectElement( sectionID );
 	await editor.openPanelTab( 'style' );
@@ -72,7 +72,7 @@ async function testStretchedSection( page: Page, editor: EditorPage, direction: 
 
 	if ( 'rtl' === direction ) {
 		const isSectionConsideringScrollbar = await editor.getPreviewFrame().evaluate( ( { selector } ) => {
-			const section = document.querySelector( '.elementor-element-' + selector ),
+			const section = document.querySelector( '.refraction-element-' + selector ),
 				sectionBoundingBox = section.getBoundingClientRect(),
 				scrollbarWidth = window.innerWidth - document.body.clientWidth;
 
@@ -90,7 +90,7 @@ async function testStretchedSection( page: Page, editor: EditorPage, direction: 
 
 	// Act.
 	await page.evaluate( () => {
-		const sectionWrap: HTMLElement = document.querySelector( 'div[data-elementor-type="wp-page"]' );
+		const sectionWrap: HTMLElement = document.querySelector( 'div[data-refraction-type="wp-page"]' );
 
 		sectionWrap.style.width = '960px';
 		sectionWrap.style.margin = '0 auto';
@@ -98,7 +98,7 @@ async function testStretchedSection( page: Page, editor: EditorPage, direction: 
 		window.dispatchEvent( new Event( 'resize' ) );
 	} );
 
-	const sectionElementFE = page.locator( `.elementor-element-${ sectionID }` );
+	const sectionElementFE = page.locator( `.refraction-element-${ sectionID }` );
 
 	// Assert (Stretched).
 	expect( await sectionElementFE.screenshot( {

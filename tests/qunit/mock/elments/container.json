@@ -37,7 +37,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--flex-direction: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-flex_direction",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-flex_direction",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -62,7 +62,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--flex-direction: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-flex_direction",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-flex_direction",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -87,7 +87,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--flex-direction: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-flex_direction",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-flex_direction",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -120,7 +120,7 @@
 					}
 				]
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-_flex_is_row",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-_flex_is_row",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -140,7 +140,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--flex-wrap: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-flex_wrap",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-flex_wrap",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -164,7 +164,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--flex-wrap: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-flex_wrap",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-flex_wrap",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -188,7 +188,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--flex-wrap: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-flex_wrap",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-flex_wrap",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -215,7 +215,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--justify-content: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-justify_content",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-justify_content",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -242,7 +242,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--justify-content: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-justify_content",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-justify_content",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -269,7 +269,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--justify-content: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-justify_content",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-justify_content",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -294,7 +294,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--align-items: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-align_items",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-align_items",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -319,7 +319,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--align-items: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-align_items",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-align_items",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -344,7 +344,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--align-items: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-align_items",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-align_items",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -389,7 +389,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--align-content: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-align_content",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-align_content",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -434,7 +434,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--align-content: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-align_content",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-align_content",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -479,7 +479,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--align-content: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-align_content",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-align_content",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -511,7 +511,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--gap: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-gap",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-gap",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -547,7 +547,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--gap: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-gap",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-gap",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -583,7 +583,7 @@
 			"selectors": {
 				"{{WRAPPER}}": "--gap: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-container elementor-group-control elementor-group-control-gap",
+			"classes": "refraction-group-control-flex-container refraction-group-control refraction-group-control-gap",
 			"condition": {
 				"container_type": "flex"
 			},
@@ -625,7 +625,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-basis: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_basis",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_basis",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -658,7 +658,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-basis: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_basis",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_basis",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -691,7 +691,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-basis: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_basis",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_basis",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -710,7 +710,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-grow: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_grow",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_grow",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -725,7 +725,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-grow: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_grow",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_grow",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -740,7 +740,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-grow: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_grow",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_grow",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -755,7 +755,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-shrink: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_shrink",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_shrink",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -770,7 +770,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-shrink: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_shrink",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_shrink",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -785,7 +785,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--flex-shrink: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_shrink",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_shrink",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -800,7 +800,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--order: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-order",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-order",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -815,7 +815,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--order: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-order",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-order",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -830,7 +830,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--order: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-order",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-order",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -854,7 +854,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--align-self: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-align_self",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-align_self",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -878,7 +878,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--align-self: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-align_self",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-align_self",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -902,7 +902,7 @@
 			"selectors": {
 				"{{WRAPPER}} > *": "--align-self: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-align_self",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-align_self",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -936,7 +936,7 @@
 				}
 			},
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-background",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-background",
 			"name": "background_background",
 			"default": ""
 		},
@@ -956,7 +956,7 @@
 					"gradient"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color",
 			"name": "background_color"
 		},
 		"background_color_stop": {
@@ -979,7 +979,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_stop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_stop",
 			"name": "background_color_stop"
 		},
 		"background_color_b": {
@@ -995,7 +995,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_b",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_b",
 			"name": "background_color_b"
 		},
 		"background_color_b_stop": {
@@ -1018,7 +1018,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_b_stop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_b_stop",
 			"name": "background_color_b_stop"
 		},
 		"background_gradient_type": {
@@ -1038,7 +1038,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_type",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_type",
 			"name": "background_gradient_type"
 		},
 		"background_gradient_angle": {
@@ -1069,7 +1069,7 @@
 				"background_gradient_type": "linear"
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_angle",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_angle",
 			"name": "background_gradient_angle"
 		},
 		"background_gradient_position": {
@@ -1099,7 +1099,7 @@
 				"background_gradient_type": "radial"
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_position",
 			"name": "background_gradient_position"
 		},
 		"background_image": {
@@ -1120,7 +1120,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -1148,7 +1148,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -1176,7 +1176,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -1213,7 +1213,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -1247,7 +1247,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -1281,7 +1281,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -1330,7 +1330,7 @@
 				"background_image[url]!": ""
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -1382,7 +1382,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -1434,7 +1434,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -1487,7 +1487,7 @@
 				"background_image[url]!": ""
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -1539,7 +1539,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -1591,7 +1591,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -1622,14 +1622,14 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-attachment",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-attachment",
 			"name": "background_attachment"
 		},
 		"background_attachment_alert": {
 			"type": "raw_html",
 			"tab": "style",
 			"section": "section_style",
-			"content_classes": "elementor-control-field-description",
+			"content_classes": "refraction-control-field-description",
 			"raw": "Note: Attachment Fixed works only on desktop.",
 			"separator": "none",
 			"condition": {
@@ -1639,7 +1639,7 @@
 				"background_image[url]!": "",
 				"background_attachment": "fixed"
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-attachment_alert",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-attachment_alert",
 			"name": "background_attachment_alert"
 		},
 		"background_repeat": {
@@ -1663,7 +1663,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -1691,7 +1691,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -1719,7 +1719,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -1747,7 +1747,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -1775,7 +1775,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -1803,7 +1803,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -1848,7 +1848,7 @@
 				],
 				"background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -1896,7 +1896,7 @@
 					"initial"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -1944,7 +1944,7 @@
 					"initial"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -1978,7 +1978,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_link",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_link",
 			"name": "background_video_link"
 		},
 		"background_video_start": {
@@ -1995,7 +1995,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_start",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_start",
 			"name": "background_video_start",
 			"default": ""
 		},
@@ -2013,7 +2013,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_end",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_end",
 			"name": "background_video_end",
 			"default": ""
 		},
@@ -2029,7 +2029,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-play_once",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-play_once",
 			"name": "background_play_once",
 			"default": ""
 		},
@@ -2045,7 +2045,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-play_on_mobile",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-play_on_mobile",
 			"name": "background_play_on_mobile",
 			"default": ""
 		},
@@ -2062,7 +2062,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-privacy_mode",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-privacy_mode",
 			"name": "background_privacy_mode",
 			"default": ""
 		},
@@ -2084,7 +2084,7 @@
 				"{{WRAPPER}}": "background: url(\"{{URL}}\") 50% 50%; background-size: cover;"
 			},
 			"of_type": "video",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_fallback",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_fallback",
 			"name": "background_video_fallback",
 			"default": {
 				"url": "",
@@ -2104,7 +2104,7 @@
 			"show_label": false,
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_gallery",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_gallery",
 			"name": "background_slideshow_gallery",
 			"default": []
 		},
@@ -2121,7 +2121,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_loop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_loop",
 			"name": "background_slideshow_loop"
 		},
 		"background_slideshow_slide_duration": {
@@ -2136,7 +2136,7 @@
 				]
 			},
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_slide_duration",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_slide_duration",
 			"name": "background_slideshow_slide_duration"
 		},
 		"background_slideshow_slide_transition": {
@@ -2159,7 +2159,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_slide_transition",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_slide_transition",
 			"name": "background_slideshow_slide_transition"
 		},
 		"background_slideshow_transition_duration": {
@@ -2174,7 +2174,7 @@
 				]
 			},
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_transition_duration",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_transition_duration",
 			"name": "background_slideshow_transition_duration"
 		},
 		"background_slideshow_background_size": {
@@ -2189,14 +2189,14 @@
 				"contain": "Contain"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-background-slideshow__slide__image": "background-size: {{VALUE}};"
+				"{{WRAPPER}} .refraction-background-slideshow__slide__image": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"background_background": [
 					"slideshow"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_background_size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_background_size",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2215,14 +2215,14 @@
 				"contain": "Contain"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-background-slideshow__slide__image": "background-size: {{VALUE}};"
+				"{{WRAPPER}} .refraction-background-slideshow__slide__image": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"background_background": [
 					"slideshow"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_background_size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_background_size",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2241,14 +2241,14 @@
 				"contain": "Contain"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-background-slideshow__slide__image": "background-size: {{VALUE}};"
+				"{{WRAPPER}} .refraction-background-slideshow__slide__image": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"background_background": [
 					"slideshow"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_background_size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_background_size",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2273,14 +2273,14 @@
 				"bottom right": "Bottom Right"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-background-slideshow__slide__image": "background-position: {{VALUE}};"
+				"{{WRAPPER}} .refraction-background-slideshow__slide__image": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"background_background": [
 					"slideshow"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_background_position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_background_position",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2305,14 +2305,14 @@
 				"bottom right": "Bottom Right"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-background-slideshow__slide__image": "background-position: {{VALUE}};"
+				"{{WRAPPER}} .refraction-background-slideshow__slide__image": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"background_background": [
 					"slideshow"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_background_position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_background_position",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2337,14 +2337,14 @@
 				"bottom right": "Bottom Right"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-background-slideshow__slide__image": "background-position: {{VALUE}};"
+				"{{WRAPPER}} .refraction-background-slideshow__slide__image": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"background_background": [
 					"slideshow"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_background_position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_background_position",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2364,7 +2364,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_ken_burns",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_ken_burns",
 			"name": "background_slideshow_ken_burns",
 			"default": ""
 		},
@@ -2386,7 +2386,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_ken_burns_zoom_direction",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_ken_burns_zoom_direction",
 			"name": "background_slideshow_ken_burns_zoom_direction"
 		},
 		"padding": {
@@ -2441,7 +2441,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-basis: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_basis",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_basis",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2474,7 +2474,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-basis: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_basis",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_basis",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2507,7 +2507,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-basis: {{SIZE}}{{UNIT}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_basis",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_basis",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2526,7 +2526,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-grow: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_grow",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_grow",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2541,7 +2541,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-grow: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_grow",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_grow",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2556,7 +2556,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-grow: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_grow",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_grow",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2571,7 +2571,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-shrink: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_shrink",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_shrink",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2586,7 +2586,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-shrink: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_shrink",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_shrink",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2601,7 +2601,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--flex-shrink: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-flex_shrink",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-flex_shrink",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2616,7 +2616,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--order: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-order",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-order",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2631,7 +2631,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--order: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-order",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-order",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2646,7 +2646,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--order: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-order",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-order",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2670,7 +2670,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--align-self: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-align_self",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-align_self",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2694,7 +2694,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--align-self: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-align_self",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-align_self",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2718,7 +2718,7 @@
 			"selectors": {
 				"{{WRAPPER}}.e-con": "--align-self: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-flex-item elementor-group-control elementor-group-control-align_self",
+			"classes": "refraction-group-control-flex-item refraction-group-control refraction-group-control-align_self",
 			"responsive": {
 				"max": "mobile"
 			},

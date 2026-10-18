@@ -1,6 +1,6 @@
 const PLAYGROUND_TARGET = 'playground';
 const PLAYGROUND_DEFAULT_URL = 'http://127.0.0.1:9400';
-const PLAYGROUND_BRIDGE_PATH = '/wp-content/plugins/elementor/tests/playwright/playground/wp-cli-bridge.php';
+const PLAYGROUND_BRIDGE_PATH = '/wp-content/plugins/refraction/tests/playwright/playground/wp-cli-bridge.php';
 
 const isPlaygroundTarget = () => process.env.WP_CLI_TARGET === PLAYGROUND_TARGET;
 

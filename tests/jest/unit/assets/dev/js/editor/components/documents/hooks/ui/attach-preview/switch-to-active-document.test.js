@@ -1,4 +1,4 @@
-import { mockLocation, runHook } from 'elementor/tests/jest/unit/assets/dev/js/editor/components/documents/hooks/utils';
+import { mockLocation, runHook } from 'refraction/tests/jest/unit/assets/dev/js/editor/components/documents/hooks/utils';
 
 describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDocument`, () => {
 	let SwitchToActiveDocument;
@@ -13,7 +13,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 			run: jest.fn( () => Promise.resolve() ),
 		};
 
-		global.elementor = {
+		global.refraction = {
 			documents: {
 				getCurrentId: jest.fn(),
 			},
@@ -26,7 +26,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 		mockLocation();
 
-		const HookClass = ( await import( 'elementor-editor/components/documents/hooks/ui/attach-preview/switch-to-active-document' ) ).SwitchToActiveDocument;
+		const HookClass = ( await import( 'refraction-editor/components/documents/hooks/ui/attach-preview/switch-to-active-document' ) ).SwitchToActiveDocument;
 
 		SwitchToActiveDocument = new HookClass();
 	} );
@@ -39,7 +39,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 	it( 'Should run only once', async () => {
 		// Arrange.
-		elementor.documents.getCurrentId.mockReturnValue( 1 );
+		refraction.documents.getCurrentId.mockReturnValue( 1 );
 		window.location = new URL( 'http://localhost/?active-document=2' );
 
 		// Act.
@@ -53,7 +53,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 	it( 'Should not run when switching from the non-initial document', async () => {
 		// Arrange.
-		elementor.documents.getCurrentId.mockReturnValue( 2 );
+		refraction.documents.getCurrentId.mockReturnValue( 2 );
 
 		// Act.
 		await runHook( SwitchToActiveDocument, { id: 3 } );
@@ -64,7 +64,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 	it( 'Should not run when there is no `active-document` query param', async () => {
 		// Arrange.
-		elementor.documents.getCurrentId.mockReturnValue( 1 );
+		refraction.documents.getCurrentId.mockReturnValue( 1 );
 		window.location = new URL( 'http://localhost/' );
 
 		// Act.
@@ -76,7 +76,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 	it( 'Should not run when the `active-document` query param is not a number', async () => {
 		// Arrange.
-		elementor.documents.getCurrentId.mockReturnValue( 1 );
+		refraction.documents.getCurrentId.mockReturnValue( 1 );
 		window.location = new URL( 'http://localhost/?active-document=test' );
 
 		// Act.
@@ -88,7 +88,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 	it( 'Should not run when the `active-document` query param is the currently loaded one', async () => {
 		// Arrange.
-		elementor.documents.getCurrentId.mockReturnValue( 1 );
+		refraction.documents.getCurrentId.mockReturnValue( 1 );
 		window.location = new URL( 'http://localhost/?active-document=1' );
 
 		// Act.
@@ -100,7 +100,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 	it( 'Should switch to the `active-document` and keep the query param', async () => {
 		// Arrange.
-		elementor.documents.getCurrentId.mockReturnValue( 1 );
+		refraction.documents.getCurrentId.mockReturnValue( 1 );
 		window.location = new URL( 'http://localhost/?active-document=2' );
 
 		// Act.;
@@ -118,7 +118,7 @@ describe( `$e.internal( 'editor/documents/attach-preview' ) -- SwitchToActiveDoc
 
 	it( 'Should fallback to the main document and remove the query param when the `active-document` can\'t be loaded', async () => {
 		// Arrange.
-		elementor.documents.getCurrentId.mockReturnValue( 1 );
+		refraction.documents.getCurrentId.mockReturnValue( 1 );
 		window.location = new URL( 'http://localhost/?active-document=2&other-param=test' );
 
 		$e.run.mockImplementationOnce( () => Promise.reject() );

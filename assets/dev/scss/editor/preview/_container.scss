@@ -1,10 +1,10 @@
 // Container in preview
 
 // Section & Container
-.elementor-section,
+.refraction-section,
 .e-con {
 
-	> .elementor-element-overlay {
+	> .refraction-element-overlay {
 		inset-block-end: 0;
 		inset-inline-start: 0;
 
@@ -18,7 +18,7 @@
 
 	&:hover {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 
 			&:after {
 				content: '';
@@ -26,9 +26,9 @@
 		}
 	}
 
-	&.elementor-element-editable {
+	&.refraction-element-editable {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 
 			&:after {
 				content: '';
@@ -44,16 +44,16 @@
 
 		.e-con.e-child {
 
-			> .elementor-element-overlay {
+			> .refraction-element-overlay {
 
 				&:after {
 					outline: 1px dashed var(--e-p-border-con-in);
 				}
 			}
 
-			&.elementor-element-editable {
+			&.refraction-element-editable {
 
-				> .elementor-element-overlay {
+				> .refraction-element-overlay {
 
 					&:after {
 						outline: 2px solid var(--e-p-border-con-in);
@@ -63,7 +63,7 @@
 		}
 	}
 
-	.elementor-empty-view {
+	.refraction-empty-view {
 		position: relative;
 		width: 100%;
 		height: 100%;
@@ -72,7 +72,7 @@
 		stroke-width: 0;
 		-webkit-text-stroke: 0 transparent;
 
-		.elementor-first-add {
+		.refraction-first-add {
 			width: auto;
 			height: auto;
 			inset: 0;
@@ -81,7 +81,7 @@
 
 	&:not(.e-grid) {
 
-		.elementor-empty-view {
+		.refraction-empty-view {
 			// Use the Container's `min-height` or default to 100px.
 			min-height: var( --min-height, 100px );
 		}
@@ -89,12 +89,12 @@
 
 	&.e-grid {
 
-		.elementor-empty-view {
+		.refraction-empty-view {
 			min-width: 100px;
 		}
 	}
 
-	.elementor-widget-placeholder {
+	.refraction-widget-placeholder {
 		--size: 10px;
 		--margin-start: calc( -1 * var( --size ) );
 		--margin-end: calc( -2 * var( --size ) );
@@ -110,8 +110,8 @@
 		&,
 		& > .e-con-inner {
 
-			> .elementor-widget-placeholder,
-			> .elementor-element[data-atomic] > .elementor-widget-placeholder {
+			> .refraction-widget-placeholder,
+			> .refraction-element[data-atomic] > .refraction-widget-placeholder {
 				position: relative;
 				z-index: $editor-layer; // To put it above the element overlay.
 				width: var( --size );
@@ -131,13 +131,13 @@
 			& > .e-con-inner {
 
 				// Any placeholder which is not on first widget.
-				> .elementor-widget-placeholder {
+				> .refraction-widget-placeholder {
 					margin-inline-end: 0;
 					margin-inline-start: calc( var( --margin-start ) + var( --margin-end ) );
 				}
 
 				// Placeholder on first widget.
-				> :not( .elementor-element ) + .elementor-widget-placeholder {
+				> :not( .refraction-element ) + .refraction-widget-placeholder {
 					margin-inline-end: var( --margin-end );
 					margin-inline-start: var( --margin-start );
 				}
@@ -145,7 +145,7 @@
 		}
 	}
 
-	> .elementor-sortable-placeholder.elementor-widget-placeholder.e-placeholder--overlay {
+	> .refraction-sortable-placeholder.refraction-widget-placeholder.e-placeholder--overlay {
 		position: absolute;
 		top: var( --e-placeholder-top );
 		left: var( --e-placeholder-left );
@@ -164,7 +164,7 @@
 		&,
 		& > .e-con-inner {
 
-			.elementor-widget-placeholder {
+			.refraction-widget-placeholder {
 
 				&.e-dragging {
 
@@ -196,7 +196,7 @@
 		&,
 		& > .e-con-inner {
 
-			> .elementor-widget-placeholder {
+			> .refraction-widget-placeholder {
 				height: var( --size );
 				// To make sure that it doesn't push & break the layout when appearing.
 				margin-block-start: var( --margin-start );
@@ -205,7 +205,7 @@
 			}
 		}
 
-		> .elementor-widget-placeholder {
+		> .refraction-widget-placeholder {
 
 			// Hack to fix placeholder placement in Chrome when it's last (ED-5486).
 			&:nth-last-child( 2 ) {
@@ -216,7 +216,7 @@
 
 		& > .e-con-inner {
 
-			> .elementor-widget-placeholder {
+			> .refraction-widget-placeholder {
 
 				&:last-child {
 					--margin-end: 0;
@@ -226,7 +226,7 @@
 	}
 
 	// Extracted from the inline CSS of `behaviors/sortable.js`.
-	.elementor-sortable-helper {
+	.refraction-sortable-helper {
 		height: 84px;
 		width: 125px;
 		z-index: -1;
@@ -238,9 +238,9 @@
 	&-inner > &,
 	&.e-child {
 
-		> .elementor-element-overlay {
+		> .refraction-element-overlay {
 
-			.elementor-editor-element-setting {
+			.refraction-editor-element-setting {
 				position: relative;
 				background-color: var(--e-p-border-con-in);
 
@@ -249,15 +249,15 @@
 				}
 
 				// Hide any unwanted setting controls.
-				&.elementor-editor-element-add,
-				&.elementor-editor-element-edit + .elementor-editor-element-remove,
+				&.refraction-editor-element-add,
+				&.refraction-editor-element-edit + .refraction-editor-element-remove,
 				&:first-child::before,
 				&:last-child::after {
 					display: none;
 				}
 
 				// Extended actions ("editing handles").
-				&:not( .elementor-editor-element-edit ) {
+				&:not( .refraction-editor-element-edit ) {
 					margin-inline-start: -25px;
 					z-index: -1;
 					transition: .3s all;
@@ -265,13 +265,13 @@
 				}
 			}
 
-			> .elementor-editor-element-settings:hover {
-				> :is( .elementor-editor-element-duplicate, .elementor-editor-element-remove ) {
+			> .refraction-editor-element-settings:hover {
+				> :is( .refraction-editor-element-duplicate, .refraction-editor-element-remove ) {
 					margin-inline-start: 0;
 				}
 			}
 
-			.elementor-editor-element-settings {
+			.refraction-editor-element-settings {
 				inset: initial;
 				transform: none;
 				inset-inline-start: 0;
@@ -296,15 +296,15 @@
 	// Scoped to a direct child: the 120px canvas placeholder must not leak onto ancestor
 	// atomic elements, where it beat the element's own `min-height` (Settings -> Size).
 	// `:where()` keeps the original specificity, so decorative opt-out doesn't change what overrides the placeholder height.
-	&:not( :where( [data-e-decorative] ) ):has( > .elementor-empty-view ) {
+	&:not( :where( [data-e-decorative] ) ):has( > .refraction-empty-view ) {
 		min-height: 120px;
 	}
 
-	& > .elementor-empty-view.elementor-empty-view {
+	& > .refraction-empty-view.refraction-empty-view {
 		min-height: inherit;
 	}
 
-	&[data-e-decorative] > .elementor-empty-view.elementor-empty-view {
+	&[data-e-decorative] > .refraction-empty-view.refraction-empty-view {
 		min-height: 0;
 		min-width: 0;
 	}
@@ -312,14 +312,14 @@
 
 .e-grid-base {
 
-	> .elementor-empty-view.elementor-empty-view {
+	> .refraction-empty-view.refraction-empty-view {
 
-		> .elementor-first-add {
+		> .refraction-first-add {
 			opacity: 0;
 		}
 	}
 
-	&:has( > .elementor-element ) > .elementor-empty-view.elementor-empty-view {
+	&:has( > .refraction-element ) > .refraction-empty-view.refraction-empty-view {
 		position: absolute;
 		grid-row: var( --e-grid-empty-cell-row, 1 ) / span 1;
 		grid-column: var( --e-grid-empty-cell-col, 1 ) / span 1;
@@ -331,16 +331,16 @@
 		min-height: 0;
 	}
 
-	.elementor-element:has( > .elementor-widget-placeholder.e-dragging-top ),
-	.elementor-element:has( > .elementor-widget-placeholder.e-dragging-bottom ),
-	.elementor-element > :has( > .elementor-widget-placeholder.e-dragging-top ),
-	.elementor-element > :has( > .elementor-widget-placeholder.e-dragging-bottom ) {
+	.refraction-element:has( > .refraction-widget-placeholder.e-dragging-top ),
+	.refraction-element:has( > .refraction-widget-placeholder.e-dragging-bottom ),
+	.refraction-element > :has( > .refraction-widget-placeholder.e-dragging-top ),
+	.refraction-element > :has( > .refraction-widget-placeholder.e-dragging-bottom ) {
 		position: relative;
 	}
 
-	.elementor-element {
+	.refraction-element {
 
-		.elementor-widget-placeholder {
+		.refraction-widget-placeholder {
 			--size: 10px;
 
 			&.e-dragging-top,
@@ -372,7 +372,7 @@ body.rtl {
 		&,
 		& > .e-con-inner {
 
-			.elementor-widget-placeholder {
+			.refraction-widget-placeholder {
 
 				&.e-dragging {
 

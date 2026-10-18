@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Audits\Data\Endpoints;
+namespace Refraction\Modules\Audits\Data\Endpoints;
 
-use Elementor\Data\V2\Base\Endpoint as Endpoint_Base;
+use Refraction\Data\V2\Base\Endpoint as Endpoint_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -33,7 +33,7 @@ class Page_Context extends Endpoint_Base {
 				'site_logo_set' => has_custom_logo(),
 				'site_favicon_set' => $this->is_site_favicon_set(),
 			],
-			'kit_id' => (int) get_option( 'elementor_active_kit' ),
+			'kit_id' => (int) get_option( 'refraction_active_kit' ),
 			'kit_is_default_unchanged' => $this->is_default_kit_unchanged(),
 
 			'post_title' => $post && '' !== $post->post_title ? $post->post_title : null,
@@ -135,7 +135,7 @@ class Page_Context extends Endpoint_Base {
 	}
 
 	private function is_default_kit_unchanged(): bool {
-		$kit_id = (int) get_option( 'elementor_active_kit' );
+		$kit_id = (int) get_option( 'refraction_active_kit' );
 
 		if ( ! $kit_id ) {
 			return false;

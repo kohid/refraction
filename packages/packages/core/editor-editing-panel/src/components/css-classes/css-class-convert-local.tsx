@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { deleteElementStyle, getElementSetting, updateElementSettings } from '@elementor/editor-elements';
-import { classesPropTypeUtil, type ClassesPropValue } from '@elementor/editor-props';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { createLocation } from '@elementor/locations';
-import { useSessionStorage } from '@elementor/session';
+import { deleteElementStyle, getElementSetting, updateElementSettings } from '@refraction/editor-elements';
+import { classesPropTypeUtil, type ClassesPropValue } from '@refraction/editor-props';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { createLocation } from '@refraction/locations';
+import { useSessionStorage } from '@refraction/session';
 
 import { useClassesProp } from '../../contexts/classes-prop-context';
 import { useElement } from '../../contexts/element-context';

@@ -1,14 +1,14 @@
 // Used in Icon, Icon Box and Divider (with icon).
-.elementor-view-stacked {
-	.elementor-icon {
+.refraction-view-stacked {
+	.refraction-icon {
 		padding: .5em;
 		background-color: $gray;
 		color: #fff;
 		fill: #fff;
 	}
 }
-.elementor-view-framed {
-	.elementor-icon {
+.refraction-view-framed {
+	.refraction-icon {
 		padding: .5em;
 		color: $gray;
 		border: 3px solid $gray;
@@ -18,7 +18,7 @@
 }
 
 // For the all elements with icon options.
-.elementor-icon {
+.refraction-icon {
 	display: inline-block;
 	line-height: 1;
 	transition: $transition-hover;
@@ -49,19 +49,19 @@
 }
 
 // Used in Icon, Icon Box and Social Icons.
-.elementor-shape {
+.refraction-shape {
 	&-square {
-		.elementor-icon {
+		.refraction-icon {
 			border-radius: 0;
 		}
 	}
 	&-rounded {
-		.elementor-icon {
+		.refraction-icon {
 			border-radius: 10%;
 		}
 	}
 	&-circle {
-		.elementor-icon {
+		.refraction-icon {
 			border-radius: 50%;
 		}
 	}

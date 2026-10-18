@@ -1,4 +1,4 @@
-import { __createSlice, type PayloadAction } from '@elementor/store';
+import { __createSlice, type PayloadAction } from '@refraction/store';
 
 const initialState: {
 	openId: string | null;

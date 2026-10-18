@@ -1,4 +1,4 @@
-import { hasProInstalled, isProAtLeast } from '@elementor/utils';
+import { hasProInstalled, isProAtLeast } from '@refraction/utils';
 
 const MIN_PRO_VERSION_FOR_COMPONENTS = '4.0';
 

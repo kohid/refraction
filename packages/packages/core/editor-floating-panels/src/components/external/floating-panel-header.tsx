@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type ComponentType } from 'react';
 import { XIcon } from '@elementor/icons';
-import { __useSelector as useSelector } from '@elementor/store';
+import { __useSelector as useSelector } from '@refraction/store';
 import { Box, Chip, IconButton, Stack, Tooltip, Typography, type TypographyProps } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -110,7 +110,7 @@ export default function FloatingPanelHeader( { panelId, title, icon: Icon, actio
 			<IconButton
 				size="small"
 				color="inherit"
-				aria-label={ __( 'Close panel', 'elementor' ) }
+				aria-label={ __( 'Close panel', 'refraction' ) }
 				onClick={ close }
 				sx={ { borderRadius: 0, p: 1 } }
 			>

@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Import;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Import;
 
-use Elementor\Plugin;
-use Elementor\Core\Settings\Page\Manager as PageManager;
-use Elementor\App\Modules\ImportExportCustomization\Utils;
-use Elementor\Core\Experiments\Manager as ExperimentsManager;
+use Refraction\Plugin;
+use Refraction\Core\Settings\Page\Manager as PageManager;
+use Refraction\App\Modules\ImportExportCustomization\Utils;
+use Refraction\Core\Experiments\Manager as ExperimentsManager;
 
 class Site_Settings extends Import_Runner_Base {
 
@@ -100,7 +100,7 @@ class Site_Settings extends Import_Runner_Base {
 	}
 
 	private function import_with_customization( array $data, array $imported_data, array $customization ) {
-		$result = apply_filters( 'elementor/import-export-customization/import/site-settings/customization', null, $data, $imported_data, $customization, $this );
+		$result = apply_filters( 'refraction/import-export-customization/import/site-settings/customization', null, $data, $imported_data, $customization, $this );
 
 		if ( is_array( $result ) ) {
 			return $result;
@@ -298,7 +298,7 @@ class Site_Settings extends Import_Runner_Base {
 		if ( $current_theme->get_stylesheet() === $theme_slug ) {
 			$result['succeed'][ $theme_slug ] = sprintf(
 				/* translators: %s: Theme name. */
-				__( 'Theme: %s is already used', 'elementor' ),
+				__( 'Theme: %s is already used', 'refraction' ),
 				$theme_name
 			);
 			return $result;
@@ -310,7 +310,7 @@ class Site_Settings extends Import_Runner_Base {
 				$this->activated_theme = $theme_slug;
 				$result['succeed'][ $theme_slug ] = sprintf(
 					/* translators: %s: Theme name. */
-					__( 'Theme: %s has already been installed and activated', 'elementor' ),
+					__( 'Theme: %s has already been installed and activated', 'refraction' ),
 					$theme_name
 				);
 				return $result;
@@ -321,7 +321,7 @@ class Site_Settings extends Import_Runner_Base {
 			if ( is_wp_error( $import ) ) {
 				$result['failed'][ $theme_slug ] = sprintf(
 					/* translators: %s: Theme name. */
-					__( 'Failed to install theme: %s', 'elementor' ),
+					__( 'Failed to install theme: %s', 'refraction' ),
 					$theme_name
 				);
 				return $result;
@@ -329,7 +329,7 @@ class Site_Settings extends Import_Runner_Base {
 
 			$result['succeed'][ $theme_slug ] = sprintf(
 				/* translators: %s: Theme name. */
-				__( 'Theme: %s has been successfully installed', 'elementor' ),
+				__( 'Theme: %s has been successfully installed', 'refraction' ),
 				$theme_name
 			);
 			$this->installed_theme = $theme_slug;

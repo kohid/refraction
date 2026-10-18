@@ -1,5 +1,5 @@
-import { createTransformer } from '@elementor/editor-canvas';
-import { isTransformable, type Props } from '@elementor/editor-props';
+import { createTransformer } from '@refraction/editor-canvas';
+import { isTransformable, type Props } from '@refraction/editor-props';
 
 import { DynamicTagsManagerNotFoundError } from './errors';
 import { isDynamicTagSupported } from './utils';
@@ -32,7 +32,7 @@ function simpleTransform( props: Props ) {
 }
 
 function getDynamicValue( name: string, settings: Record< string, unknown >, renderPostId?: number ) {
-	const { dynamicTags } = window.elementor ?? {};
+	const { dynamicTags } = window.refraction ?? {};
 
 	if ( ! dynamicTags ) {
 		throw new DynamicTagsManagerNotFoundError();

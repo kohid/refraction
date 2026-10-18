@@ -1,10 +1,10 @@
-import { getElementStyles } from '@elementor/editor-elements';
+import { getElementStyles } from '@refraction/editor-elements';
 import {
 	backgroundImageOverlayPropTypeUtil,
 	backgroundOverlayPropTypeUtil,
 	backgroundPropTypeUtil,
-} from '@elementor/editor-props';
-import { type StyleDefinition } from '@elementor/editor-styles';
+} from '@refraction/editor-props';
+import { type StyleDefinition } from '@refraction/editor-styles';
 
 import { type ElementSnapshotNode } from '../types';
 import { extractAtomicImageMedia } from './atomic-image-sources';

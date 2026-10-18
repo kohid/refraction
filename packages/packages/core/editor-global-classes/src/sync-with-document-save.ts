@@ -1,7 +1,7 @@
-import { getCurrentUser, isContentOnlyUser } from '@elementor/editor-current-user';
-import { setDocumentModifiedStatus } from '@elementor/editor-documents';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
-import { __getState as getState, __subscribeWithSelector as subscribeWithSelector } from '@elementor/store';
+import { getCurrentUser, isContentOnlyUser } from '@refraction/editor-current-user';
+import { setDocumentModifiedStatus } from '@refraction/editor-documents';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
+import { __getState as getState, __subscribeWithSelector as subscribeWithSelector } from '@refraction/store';
 
 import { UPDATE_CLASS_CAPABILITY_KEY } from './capabilities';
 import { saveGlobalClasses } from './save-global-classes';
@@ -62,7 +62,7 @@ function bindSaveAction( panelActions?: { open: () => void } ) {
 }
 
 function bindBeforeSaveTemplateAction() {
-	window.addEventListener( 'elementor/global-styles/before-save', ( ( event: CustomEvent ) => {
+	window.addEventListener( 'refraction/global-styles/before-save', ( ( event: CustomEvent ) => {
 		if ( ! pendingSave && isDirty() ) {
 			triggerSave();
 		}

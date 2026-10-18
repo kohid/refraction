@@ -1,42 +1,42 @@
-const TemplateLibraryTemplateLocalView = require( 'elementor-templates/views/template/local' );
-const TemplateLibraryTemplateRemoteView = require( 'elementor-templates/views/template/remote' );
-const TemplateLibraryTemplateCloudView = require( 'elementor-templates/views/template/cloud' );
+const TemplateLibraryTemplateLocalView = require( 'refraction-templates/views/template/local' );
+const TemplateLibraryTemplateRemoteView = require( 'refraction-templates/views/template/remote' );
+const TemplateLibraryTemplateCloudView = require( 'refraction-templates/views/template/cloud' );
 
-import Select2 from 'elementor-editor-utils/select2.js';
-import { rovingTabindex } from 'elementor-editor-utils/keyboard-nav';
+import Select2 from 'refraction-editor-utils/select2.js';
+import { rovingTabindex } from 'refraction-editor-utils/keyboard-nav';
 import { SAVE_CONTEXTS, QUOTA_WARNINGS, QUOTA_BAR_STATES } from './../../constants';
 
 const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	tagName: 'main',
 
-	template: '#tmpl-elementor-template-library-templates',
+	template: '#tmpl-refraction-template-library-templates',
 
-	id: 'elementor-template-library-templates',
+	id: 'refraction-template-library-templates',
 
-	childViewContainer: '#elementor-template-library-templates-container',
+	childViewContainer: '#refraction-template-library-templates-container',
 
 	reorderOnSort: true,
 
 	emptyView() {
-		var EmptyView = require( 'elementor-templates/views/parts/templates-empty' );
+		var EmptyView = require( 'refraction-templates/views/parts/templates-empty' );
 
 		return new EmptyView();
 	},
 
 	ui: {
-		textFilter: '#elementor-template-library-filter-text',
-		selectFilter: '.elementor-template-library-filter-select',
-		myFavoritesFilter: '#elementor-template-library-filter-my-favorites',
-		orderInputs: '.elementor-template-library-order-input',
-		orderLabels: 'label.elementor-template-library-order-label',
-		searchInputIcon: '#elementor-template-library-filter-text-wrapper i',
-		loadMoreAnchor: '#elementor-template-library-load-more-anchor',
-		sourceFilterRadiogroup: '.elementor-template-library-filter-select-source',
-		selectSourceFilter: '.elementor-template-library-filter-select-source .source-option',
-		addNewFolder: '#elementor-template-library-add-new-folder',
-		addNewFolderDivider: '.elementor-template-library-filter-toolbar-side-actions .divider',
-		selectGridView: '#elementor-template-library-view-grid',
-		selectListView: '#elementor-template-library-view-list',
+		textFilter: '#refraction-template-library-filter-text',
+		selectFilter: '.refraction-template-library-filter-select',
+		myFavoritesFilter: '#refraction-template-library-filter-my-favorites',
+		orderInputs: '.refraction-template-library-order-input',
+		orderLabels: 'label.refraction-template-library-order-label',
+		searchInputIcon: '#refraction-template-library-filter-text-wrapper i',
+		loadMoreAnchor: '#refraction-template-library-load-more-anchor',
+		sourceFilterRadiogroup: '.refraction-template-library-filter-select-source',
+		selectSourceFilter: '.refraction-template-library-filter-select-source .source-option',
+		addNewFolder: '#refraction-template-library-add-new-folder',
+		addNewFolderDivider: '.refraction-template-library-filter-toolbar-side-actions .divider',
+		selectGridView: '#refraction-template-library-view-grid',
+		selectListView: '#refraction-template-library-view-list',
 		bulkSelectionActionBar: '.bulk-selection-action-bar',
 		bulkActionBarDelete: '.bulk-selection-action-bar .bulk-delete',
 		bulkSelectedCount: '.bulk-selection-action-bar .selected-count',
@@ -49,13 +49,13 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 		quotaValue: '.quota-progress-container .quota-progress-bar-value',
 		quotaWarning: '.quota-progress-container .progress-bar-container .quota-warning',
 		quotaUpgrade: '.quota-progress-container .progress-bar-container .quota-warning a',
-		quotaStatus: '#elementor-template-library-quota-status',
-		navigationContainer: '#elementor-template-library-navigation-container',
+		quotaStatus: '#refraction-template-library-quota-status',
+		navigationContainer: '#refraction-template-library-navigation-container',
 		sourceOptionBadges: '.source-option-badge.variant-b-only',
 		cloudBadge: '.source-option-badge.cloud-badge',
 		siteBadge: '.source-option-badge.site-badge',
-		sortStatus: '#elementor-template-library-sort-status',
-		loadStatus: '#elementor-template-library-load-status',
+		sortStatus: '#refraction-template-library-sort-status',
+		loadStatus: '#refraction-template-library-load-status',
 	},
 
 	events: {
@@ -114,7 +114,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	handleQuotaBar() {
-		const quota = elementorAppConfig?.[ 'cloud-library' ]?.quota;
+		const quota = refractionAppConfig?.[ 'cloud-library' ]?.quota;
 
 		const value = quota ? Math.round( ( quota.currentUsage / quota.threshold ) * 100 ) : 0;
 
@@ -142,7 +142,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 			// Translators: %1$s: current usage number, %2$s: threshold number
 			const statusText = sprintf(
 				// Translators: %1$s: current usage number, %2$s: threshold number
-				__( '%1$s of %2$s templates used', 'elementor' ),
+				__( '%1$s of %2$s templates used', 'refraction' ),
 				quota.currentUsage.toLocaleString(),
 				quota.threshold.toLocaleString(),
 			);
@@ -161,14 +161,14 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	onClearBulkSelections() {
-		elementor.templates.clearBulkSelectionItems();
-		elementor.templates.layout.handleBulkActionBar();
-		elementor.templates.layout.selectAllCheckboxNormal();
+		refraction.templates.clearBulkSelectionItems();
+		refraction.templates.layout.handleBulkActionBar();
+		refraction.templates.layout.selectAllCheckboxNormal();
 		this.deselectAllBulkItems();
 	},
 
 	deselectAllBulkItems() {
-		if ( 'list' === elementor.templates.getViewSelection() || 'local' === elementor.templates.getFilter( 'source' ) ) {
+		if ( 'list' === refraction.templates.getViewSelection() || 'local' === refraction.templates.getFilter( 'source' ) ) {
 			this.ui.bulkSelectAllCheckbox.prop( 'checked', false ).trigger( 'change' );
 		} else {
 			document.querySelectorAll( '.bulk-selected-item' ).forEach( function( item ) {
@@ -189,12 +189,12 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 		const isChecked = this.$( '#bulk-select-all:checked' ).length > 0;
 
 		if ( isChecked ) {
-			elementor.templates.layout.selectAllCheckboxNormal();
+			refraction.templates.layout.selectAllCheckboxNormal();
 		}
 
 		this.updateBulkSelectedItems( isChecked );
 
-		elementor.templates.layout.handleBulkActionBarUi();
+		refraction.templates.layout.handleBulkActionBarUi();
 	},
 
 	updateBulkSelectedItems( isChecked ) {
@@ -204,13 +204,13 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 
 			const templateId = checkbox.dataset.template_id;
 			const type = checkbox.dataset.type;
-			const parentDiv = checkbox.closest( '.elementor-template-library-template' );
+			const parentDiv = checkbox.closest( '.refraction-template-library-template' );
 
 			if ( isChecked ) {
-				elementor.templates.addBulkSelectionItem( templateId, type );
+				refraction.templates.addBulkSelectionItem( templateId, type );
 				parentDiv?.classList.add( 'bulk-selected-item' );
 			} else {
-				elementor.templates.removeBulkSelectionItem( templateId, type );
+				refraction.templates.removeBulkSelectionItem( templateId, type );
 				parentDiv?.classList.remove( 'bulk-selected-item' );
 			}
 
@@ -224,10 +224,10 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	onBulkDeleteClick() {
 		this.ui.bulkActionBarDelete.toggleClass( 'disabled' );
 
-		elementor.templates.onBulkDeleteClick()
+		refraction.templates.onBulkDeleteClick()
 			.finally( () => {
 				this.ui.bulkActionBarDelete.toggleClass( 'disabled' );
-				elementor.templates.layout.handleBulkActionBar();
+				refraction.templates.layout.handleBulkActionBar();
 			} );
 	},
 
@@ -270,7 +270,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 		 * @param bool   isRemote     - If `true` the source is a remote source.
 		 * @param string activeSource - The current template source.
 		 */
-		const isRemote = elementor.hooks.applyFilters( 'templates/source/is-remote', 'remote' === activeSource, activeSource );
+		const isRemote = refraction.hooks.applyFilters( 'templates/source/is-remote', 'remote' === activeSource, activeSource );
 
 		return isRemote
 			? TemplateLibraryTemplateRemoteView
@@ -281,15 +281,15 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 		this.handleQuotaBar = this.handleQuotaBar.bind( this );
 		this.handleQuotaUpdate = this.handleQuotaUpdate.bind( this );
 		this.handleSourceFilterChange = this.handleSourceFilterChange.bind( this );
-		this.listenTo( elementor.channels.templates, 'filter:change', this._renderChildren );
-		this.listenTo( elementor.channels.templates, 'filter:change', this.handleSourceOptionBadges );
-		this.listenTo( elementor.channels.templates, 'filter:change', this.handleSourceFilterChange );
-		this.listenTo( elementor.channels.templates, 'quota:updated', this.handleQuotaUpdate );
+		this.listenTo( refraction.channels.templates, 'filter:change', this._renderChildren );
+		this.listenTo( refraction.channels.templates, 'filter:change', this.handleSourceOptionBadges );
+		this.listenTo( refraction.channels.templates, 'filter:change', this.handleSourceFilterChange );
+		this.listenTo( refraction.channels.templates, 'quota:updated', this.handleQuotaUpdate );
 		this.debouncedSearchTemplates = _.debounce( this.searchTemplates, 300 );
 	},
 
 	handleQuotaUpdate() {
-		const activeSource = elementor.templates.getFilter( 'source' ) ?? 'local';
+		const activeSource = refraction.templates.getFilter( 'source' ) ?? 'local';
 
 		if ( 'cloud' === activeSource ) {
 			$e.components.get( 'cloud-library' ).utils.getQuotaConfig()
@@ -301,7 +301,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 
 	handleSourceFilterChange( filterName ) {
 		if ( 'source' === filterName ) {
-			const activeSource = elementor.templates.getFilter( 'source' ) ?? 'local';
+			const activeSource = refraction.templates.getFilter( 'source' ) ?? 'local';
 			this.updateSourceFilterAriaAttributes( activeSource );
 		}
 	},
@@ -324,17 +324,17 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	filter( childModel ) {
-		const activeSource = elementor.templates.getFilter( 'source' );
+		const activeSource = refraction.templates.getFilter( 'source' );
 
 		if ( 'cloud' === activeSource ) {
 			return true; // Filtering happens on the backend.
 		}
 
-		var filterTerms = elementor.templates.getFilterTerms(),
+		var filterTerms = refraction.templates.getFilterTerms(),
 			passingFilter = true;
 
 		jQuery.each( filterTerms, function( filterTermName ) {
-			var filterValue = elementor.templates.getFilter( filterTermName );
+			var filterValue = refraction.templates.getFilter( filterTermName );
 
 			if ( ! filterValue ) {
 				return;
@@ -365,7 +365,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	order( by, reverseOrder ) {
 		let comparator = this.comparators[ by ] || by;
 
-		if ( 'cloud' === elementor.templates.getFilter( 'source' ) ) {
+		if ( 'cloud' === refraction.templates.getFilter( 'source' ) ) {
 			this.handleCloudOrder( by, reverseOrder );
 
 			return;
@@ -384,15 +384,15 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 
 	announceSortStatus( by, reverseOrder ) {
 		const orderLabels = {
-			title: __( 'Name', 'elementor' ),
-			type: __( 'Type', 'elementor' ),
-			author: __( 'Created By', 'elementor' ),
-			date: __( 'Creation Date', 'elementor' ),
+			title: __( 'Name', 'refraction' ),
+			type: __( 'Type', 'refraction' ),
+			author: __( 'Created By', 'refraction' ),
+			date: __( 'Creation Date', 'refraction' ),
 		};
 
-		const orderDirection = reverseOrder ? __( 'descending', 'elementor' ) : __( 'ascending', 'elementor' );
+		const orderDirection = reverseOrder ? __( 'descending', 'refraction' ) : __( 'ascending', 'refraction' );
 		const sortLabel = orderLabels[ by ] || by;
-		const message = __( 'Sorted by', 'elementor' ) + ' ' + sortLabel + ', ' + orderDirection;
+		const message = __( 'Sorted by', 'refraction' ) + ' ' + sortLabel + ', ' + orderDirection;
 
 		if ( this.ui.sortStatus.length ) {
 			this.ui.sortStatus.text( message );
@@ -400,7 +400,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	announceLoadStatus( count ) {
-		const message = count + ' ' + __( 'more templates loaded', 'elementor' );
+		const message = count + ' ' + __( 'more templates loaded', 'refraction' );
 
 		if ( this.ui.loadStatus.length ) {
 			this.ui.loadStatus.text( message );
@@ -408,18 +408,18 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	handleCloudOrder( by, reverseOrder ) {
-		elementor.templates.setFilter( 'orderby', by );
-		elementor.templates.setFilter( 'order', reverseOrder ? 'desc' : 'asc' );
+		refraction.templates.setFilter( 'orderby', by );
+		refraction.templates.setFilter( 'order', reverseOrder ? 'desc' : 'asc' );
 
 		this.onClearBulkSelections();
 
 		this.collection.reset();
 
-		elementor.templates.layout.showLoadingView();
+		refraction.templates.layout.showLoadingView();
 
-		elementor.templates.loadMore( {
+		refraction.templates.loadMore( {
 			onUpdate: () => {
-				elementor.templates.layout.hideLoadingView();
+				refraction.templates.layout.hideLoadingView();
 				this.announceSortStatus( by, reverseOrder );
 			},
 			search: this.ui.textFilter.val(),
@@ -461,11 +461,11 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	addSourceData() {
 		var isEmpty = this.children.isEmpty();
 
-		this.$el.attr( 'data-template-source', isEmpty ? 'empty' : elementor.templates.getFilter( 'source' ) );
+		this.$el.attr( 'data-template-source', isEmpty ? 'empty' : refraction.templates.getFilter( 'source' ) );
 	},
 
 	addViewData() {
-		const view = elementor.templates.getViewSelection();
+		const view = refraction.templates.getViewSelection();
 
 		this.$el.attr( 'data-template-view', view );
 	},
@@ -474,7 +474,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 		if ( ! this.select2Instance && this.$( this.ui.selectFilter ).length ) {
 			const $filters = this.$( this.ui.selectFilter ),
 				select2Options = {
-					placeholder: __( 'Category', 'elementor' ),
+					placeholder: __( 'Category', 'refraction' ),
 					allowClear: true,
 					width: 150,
 					dropdownParent: this.$el,
@@ -488,7 +488,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	setMasonrySkin() {
-		var masonry = new elementorModules.utils.Masonry( {
+		var masonry = new refractionModules.utils.Masonry( {
 			container: this.$childViewContainer,
 			items: this.$childViewContainer.children(),
 		} );
@@ -497,11 +497,11 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	toggleFilterClass() {
-		this.$el.toggleClass( 'elementor-templates-filter-active', ! ! ( elementor.templates.getFilter( 'text' ) || elementor.templates.getFilter( 'favorite' ) ) );
+		this.$el.toggleClass( 'refraction-templates-filter-active', ! ! ( refraction.templates.getFilter( 'text' ) || refraction.templates.getFilter( 'favorite' ) ) );
 	},
 
 	isPageOrLandingPageTemplates() {
-		const templatesType = elementor.templates.getFilter( 'type' );
+		const templatesType = refraction.templates.getFilter( 'type' );
 
 		return 'page' === templatesType || 'lp' === templatesType;
 	},
@@ -513,7 +513,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	async shouldShowVariantB() {
-		const experimentVariant = await elementor.templates.eventManager.getSaveTemplateExperimentVariant();
+		const experimentVariant = await refraction.templates.eventManager.getSaveTemplateExperimentVariant();
 		return 'B' === experimentVariant;
 	},
 
@@ -525,35 +525,35 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 			return;
 		}
 
-		const activeSource = elementor.templates.getFilter( 'source' );
+		const activeSource = refraction.templates.getFilter( 'source' );
 
 		this.$( '.source-option-badge.site-badge' ).toggle( 'local' === activeSource );
 		this.$( '.source-option-badge.cloud-badge' ).toggle( 'cloud' === activeSource );
 	},
 
 	onRender() {
-		elementor.templates.clearBulkSelectionItems();
-		const activeSource = elementor.templates.getFilter( 'source' );
-		const templateType = elementor.templates.getFilter( 'type' );
+		refraction.templates.clearBulkSelectionItems();
+		const activeSource = refraction.templates.getFilter( 'source' );
+		const templateType = refraction.templates.getFilter( 'type' );
 
 		if ( 'remote' === activeSource && 'page' !== templateType && 'lb' !== templateType ) {
 			this.setFiltersUI();
 		}
 
 		if ( 'cloud' === activeSource ) {
-			const isFolderView = elementor.templates.getFilter( 'parentId' );
+			const isFolderView = refraction.templates.getFilter( 'parentId' );
 			const location = isFolderView
-				? elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTabFolder
-				: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab;
+				? refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTabFolder
+				: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTab;
 
-			elementor.templates.eventManager.sendPageViewEvent( { location } );
+			refraction.templates.eventManager.sendPageViewEvent( { location } );
 
 			this.handleQuotaBar();
 		}
 
 		if ( 'local' === activeSource ) {
-			elementor.templates.eventManager.sendPageViewEvent( {
-				location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.siteTab,
+			refraction.templates.eventManager.sendPageViewEvent( {
+				location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.siteTab,
 			} );
 		}
 
@@ -565,7 +565,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 
 		this.toggleFilterClass();
 
-		const activeSource = elementor.templates.getFilter( 'source' );
+		const activeSource = refraction.templates.getFilter( 'source' );
 
 		if ( 'remote' === activeSource && ! this.isPageOrLandingPageTemplates() ) {
 			this.setMasonrySkin();
@@ -587,11 +587,11 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	onTextFilterInput() {
-		const activeSource = elementor.templates.getFilter( 'source' );
+		const activeSource = refraction.templates.getFilter( 'source' );
 
 		if ( [ 'cloud', 'local' ].includes( activeSource ) ) {
-			elementor.templates.clearBulkSelectionItems();
-			elementor.templates.layout.handleBulkActionBar();
+			refraction.templates.clearBulkSelectionItems();
+			refraction.templates.layout.handleBulkActionBar();
 		}
 
 		if ( 'cloud' === activeSource ) {
@@ -599,14 +599,14 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 			return;
 		}
 
-		elementor.templates.setFilter( 'text', this.ui.textFilter.val() );
+		refraction.templates.setFilter( 'text', this.ui.textFilter.val() );
 	},
 
 	async searchTemplates( source ) {
 		this.showLoadingSpinner();
 
 		try {
-			await elementor.templates.searchTemplates( {
+			await refraction.templates.searchTemplates( {
 				source,
 				search: this.ui.textFilter.val(),
 			} );
@@ -625,13 +625,13 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 
 	onSelectFilterChange( event ) {
 		var $select = jQuery( event.currentTarget ),
-			filterName = $select.data( 'elementor-filter' );
+			filterName = $select.data( 'refraction-filter' );
 
-		elementor.templates.setFilter( filterName, $select.val() );
+		refraction.templates.setFilter( filterName, $select.val() );
 	},
 
 	onSelectSourceFilterChange( event ) {
-		elementor.templates.onSelectSourceFilterChange( event );
+		refraction.templates.onSelectSourceFilterChange( event );
 	},
 
 	onSelectSourceFilterKeyDown( event ) {
@@ -653,15 +653,15 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	onSelectGridViewClick() {
-		elementor.templates.onSelectViewChange( 'grid' );
+		refraction.templates.onSelectViewChange( 'grid' );
 	},
 
 	onSelectListViewClick() {
-		elementor.templates.onSelectViewChange( 'list' );
+		refraction.templates.onSelectViewChange( 'list' );
 	},
 
 	onMyFavoritesFilterChange() {
-		elementor.templates.setFilter( 'favorite', this.ui.myFavoritesFilter[ 0 ].checked );
+		refraction.templates.setFilter( 'favorite', this.ui.myFavoritesFilter[ 0 ].checked );
 	},
 
 	onOrderLabelsClick( event ) {
@@ -671,12 +671,12 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 		if ( ! $clickedInput[ 0 ].checked ) {
 			toggle = 'asc' !== $clickedInput.data( 'default-ordering-direction' );
 		} else {
-			toggle = ! $clickedInput.hasClass( 'elementor-template-library-order-reverse' );
+			toggle = ! $clickedInput.hasClass( 'refraction-template-library-order-reverse' );
 		}
 
 		$clickedInput.prop( 'checked', true );
 
-		$clickedInput.toggleClass( 'elementor-template-library-order-reverse', toggle );
+		$clickedInput.toggleClass( 'refraction-template-library-order-reverse', toggle );
 
 		this.order( $clickedInput.val(), toggle );
 	},
@@ -686,7 +686,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 			this.removeScrollListener();
 		}
 
-		const scrollableContainer = elementor?.templates?.layout?.modal.getElements( 'message' );
+		const scrollableContainer = refraction?.templates?.layout?.modal.getElements( 'message' );
 
 		const listener = () => {
 			const scrollTop = scrollableContainer.scrollTop();
@@ -695,20 +695,20 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 
 			const scrollPercentage = ( scrollTop / ( scrollHeight - clientHeight ) ) * 100;
 
-			const canLoadMore = elementor.templates.canLoadMore() && ! elementor.templates.isLoading();
+			const canLoadMore = refraction.templates.canLoadMore() && ! refraction.templates.isLoading();
 
 			if ( scrollPercentage < 90 || ! canLoadMore ) {
 				return;
 			}
 
-			this.ui.loadMoreAnchor.toggleClass( 'elementor-visibility-hidden' );
-			elementor.templates.layout.selectAllCheckboxMinus();
+			this.ui.loadMoreAnchor.toggleClass( 'refraction-visibility-hidden' );
+			refraction.templates.layout.selectAllCheckboxMinus();
 
 			const previousCount = this.collection.length;
 
-			elementor.templates.loadMore( {
+			refraction.templates.loadMore( {
 				onUpdate: () => {
-					this.ui.loadMoreAnchor.toggleClass( 'elementor-visibility-hidden' );
+					this.ui.loadMoreAnchor.toggleClass( 'refraction-visibility-hidden' );
 					const newCount = this.collection.length;
 					const loadedCount = newCount - previousCount;
 					if ( loadedCount > 0 ) {
@@ -723,7 +723,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 
 		// QA #13: Also trigger load-more when keyboard focus reaches the last few items
 		const focusListener = ( event ) => {
-			const canLoadMore = elementor.templates.canLoadMore() && ! elementor.templates.isLoading();
+			const canLoadMore = refraction.templates.canLoadMore() && ! refraction.templates.isLoading();
 
 			if ( ! canLoadMore ) {
 				return;
@@ -745,14 +745,14 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 			const focusedIndex = $children.index( $target.closest( $children ) );
 
 			if ( focusedIndex >= totalChildren - 2 ) {
-				this.ui.loadMoreAnchor.toggleClass( 'elementor-visibility-hidden' );
-				elementor.templates.layout.selectAllCheckboxMinus();
+				this.ui.loadMoreAnchor.toggleClass( 'refraction-visibility-hidden' );
+				refraction.templates.layout.selectAllCheckboxMinus();
 
 				const previousCount = this.collection.length;
 
-				elementor.templates.loadMore( {
+				refraction.templates.loadMore( {
 					onUpdate: () => {
-						this.ui.loadMoreAnchor.toggleClass( 'elementor-visibility-hidden' );
+						this.ui.loadMoreAnchor.toggleClass( 'refraction-visibility-hidden' );
 						const newCount = this.collection.length;
 						const loadedCount = newCount - previousCount;
 						if ( loadedCount > 0 ) {
@@ -773,13 +773,13 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	onCreateNewFolderClick() {
-		const activeSource = elementor.templates.getFilter( 'source' );
+		const activeSource = refraction.templates.getFilter( 'source' );
 
 		if ( 'cloud' !== activeSource ) {
 			return;
 		}
 
-		elementor.templates.createFolder( {
+		refraction.templates.createFolder( {
 			source: activeSource,
 		},
 		{
@@ -811,7 +811,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	hasFolderInBulkSelection() {
-		const bulkSelectedItems = elementor.templates.getBulkSelectionItems();
+		const bulkSelectedItems = refraction.templates.getBulkSelectionItems();
 
 		return this.collection.some( ( model ) => {
 			const templateId = model.get( 'template_id' );
@@ -822,7 +822,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	hasLockedTemplatesInBulkSelection() {
-		const bulkSelectedItems = elementor.templates.getBulkSelectionItems();
+		const bulkSelectedItems = refraction.templates.getBulkSelectionItems();
 
 		return this.collection.some( ( model ) => {
 			const templateId = model.get( 'template_id' );
@@ -843,12 +843,12 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	onQuotaUpgradeClicked() {
-		const quota = elementorAppConfig?.[ 'cloud-library' ]?.quota;
+		const quota = refractionAppConfig?.[ 'cloud-library' ]?.quota;
 
 		const value = quota ? Math.round( ( quota.currentUsage / quota.threshold ) * 100 ) : 0;
 
-		elementor.templates.eventManager.sendUpgradeClickedEvent( {
-			secondaryLocation: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.quotaBar,
+		refraction.templates.eventManager.sendUpgradeClickedEvent( {
+			secondaryLocation: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.quotaBar,
 			upgrade_position: `quota bar ${ value ? value + '%' : '' }`,
 		} );
 	},
@@ -858,12 +858,12 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 			this.cloudBadgeDialog.hide();
 		}
 
-		const emailReplacement = elementor.config.library_connect.is_connected ? elementor.config.library_connect.user_email : __( 'connected', 'elementor' );
+		const emailReplacement = refraction.config.library_connect.is_connected ? refraction.config.library_connect.user_email : __( 'connected', 'refraction' );
 		/* Translators: %s: User's email. */
-		const message = sprintf( __( 'Only %s Elementor account can access Cloud Templates from any connected site.', 'elementor' ), emailReplacement );
+		const message = sprintf( __( 'Only %s Refraction account can access Cloud Templates from any connected site.', 'refraction' ), emailReplacement );
 
-		this.cloudBadgeDialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-library--cloud-upgrade__dialog',
+		this.cloudBadgeDialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-library--cloud-upgrade__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',
@@ -892,10 +892,10 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 			this.siteBadgeDialog.hide();
 		}
 
-		const message = __( 'Authorized users on this site can access Site Templates.', 'elementor' );
+		const message = __( 'Authorized users on this site can access Site Templates.', 'refraction' );
 
-		this.siteBadgeDialog = elementor.dialogsManager.createWidget( 'buttons', {
-			id: 'elementor-library--site-info__dialog',
+		this.siteBadgeDialog = refraction.dialogsManager.createWidget( 'buttons', {
+			id: 'refraction-library--site-info__dialog',
 			effects: {
 				show: 'show',
 				hide: 'hide',

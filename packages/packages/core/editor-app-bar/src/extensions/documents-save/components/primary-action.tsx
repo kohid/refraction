@@ -3,8 +3,8 @@ import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
 	type Document,
-} from '@elementor/editor-documents';
-import { useEditMode } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-documents';
+import { useEditMode } from '@refraction/editor-v1-adapters';
 import { ChevronDownIcon } from '@elementor/icons';
 import {
 	bindMenu,
@@ -50,10 +50,10 @@ export default function PrimaryAction() {
 				<Button
 					onClick={ () => {
 						const extendedWindow = window as unknown as ExtendedWindow;
-						const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+						const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 						if ( config ) {
-							extendedWindow.elementorCommon.eventsManager.dispatchEvent(
+							extendedWindow.refractionCommon.eventsManager.dispatchEvent(
 								config.names.topBar.publishButton,
 								{
 									location: config.locations.topBar,
@@ -82,7 +82,7 @@ export default function PrimaryAction() {
 				</Button>
 
 				<Tooltip
-					title={ __( 'Save Options', 'elementor' ) }
+					title={ __( 'Save Options', 'refraction' ) }
 					PopperProps={ {
 						sx: {
 							'&.MuiTooltip-popper .MuiTooltip-tooltip.MuiTooltip-tooltipPlacementBottom': {
@@ -98,7 +98,7 @@ export default function PrimaryAction() {
 							{ ...bindTrigger( popupState ) }
 							sx={ { px: 0, height: '100%', borderRadius: 0 } }
 							disabled={ isSaveOptionsDisabled }
-							aria-label={ __( 'Save Options', 'elementor' ) }
+							aria-label={ __( 'Save Options', 'refraction' ) }
 						>
 							<ChevronDownIcon />
 						</Button>
@@ -111,7 +111,7 @@ export default function PrimaryAction() {
 }
 
 function getLabel( document: Document ) {
-	return document.userCan.publish ? __( 'Publish', 'elementor' ) : __( 'Submit', 'elementor' );
+	return document.userCan.publish ? __( 'Publish', 'refraction' ) : __( 'Submit', 'refraction' );
 }
 
 function isPublishEnabled( document: Document ) {

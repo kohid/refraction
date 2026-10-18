@@ -1,20 +1,20 @@
 <?php
-namespace Elementor\Includes\Elements;
+namespace Refraction\Includes\Elements;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Element_Base;
-use Elementor\Embed;
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Css_Filter;
-use Elementor\Group_Control_Flex_Container;
-use Elementor\Group_Control_Flex_Item;
-use Elementor\Group_Control_Grid_Container;
-use Elementor\Plugin;
-use Elementor\Shapes;
-use Elementor\Utils;
+use Refraction\Controls_Manager;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Element_Base;
+use Refraction\Embed;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Css_Filter;
+use Refraction\Group_Control_Flex_Container;
+use Refraction\Group_Control_Flex_Item;
+use Refraction\Group_Control_Grid_Container;
+use Refraction\Plugin;
+use Refraction\Shapes;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Container extends Element_Base {
 
 	/**
-	 * @var \Elementor\Core\Kits\Documents\Kit
+	 * @var \Refraction\Core\Kits\Documents\Kit
 	 */
 	private $active_kit;
 
@@ -69,7 +69,7 @@ class Container extends Element_Base {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Container', 'elementor' );
+		return esc_html__( 'Container', 'refraction' );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Container extends Element_Base {
 					'controls' => [
 						'container_type' => [ 'default' => 'grid' ],
 					],
-					'title' => esc_html__( 'Grid', 'elementor' ),
+					'title' => esc_html__( 'Grid', 'refraction' ),
 					'icon' => 'eicon-container-grid',
 					'custom' => [
 						'isPreset' => true,
@@ -101,7 +101,7 @@ class Container extends Element_Base {
 						'presetWidget' => 'container_grid',
 						'preset_settings' => [
 							'container_type' => 'grid',
-							'presetTitle' => esc_html__( 'Grid', 'elementor' ),
+							'presetTitle' => esc_html__( 'Grid', 'refraction' ),
 							'presetIcon' => 'eicon-container-grid',
 						],
 					],
@@ -166,21 +166,21 @@ class Container extends Element_Base {
 			view.addRenderAttribute(
 				'background-video-container',
 				{
-					'class': 'elementor-background-video-container',
+					'class': 'refraction-background-video-container',
 				}
 			);
 
 			if ( ! settings.background_play_on_mobile ) {
-				view.addRenderAttribute( 'background-video-container', 'class', 'elementor-hidden-mobile' );
+				view.addRenderAttribute( 'background-video-container', 'class', 'refraction-hidden-mobile' );
 			}
 			#>
 			<div {{{ view.getRenderAttributeString( 'background-video-container' ) }}}>
-				<div class="elementor-background-video-embed" role="presentation"></div>
-				<video class="elementor-background-video-hosted" role="presentation" {{ videoAttributes }}></video>
+				<div class="refraction-background-video-embed" role="presentation"></div>
+				<video class="refraction-background-video-hosted" role="presentation" {{ videoAttributes }}></video>
 			</div>
 		<# } #>
-		<div class="elementor-shape elementor-shape-top" aria-hidden="true"></div>
-		<div class="elementor-shape elementor-shape-bottom" aria-hidden="true"></div>
+		<div class="refraction-shape refraction-shape-top" aria-hidden="true"></div>
+		<div class="refraction-shape refraction-shape-bottom" aria-hidden="true"></div>
 		<# if ( 'boxed' === settings.content_width ) { #>
 			</div>
 		<# } #>
@@ -208,17 +208,17 @@ class Container extends Element_Base {
 		$this->add_render_attribute(
 			'background-video-container',
 			[
-				'class' => 'elementor-background-video-container',
+				'class' => 'refraction-background-video-container',
 			]
 		);
 
 		if ( ! $settings['background_play_on_mobile'] ) {
-			$this->add_render_attribute( 'background-video-container', 'class', 'elementor-hidden-mobile' );
+			$this->add_render_attribute( 'background-video-container', 'class', 'refraction-hidden-mobile' );
 		}
 
 		?><div <?php $this->print_render_attribute_string( 'background-video-container' ); ?>>
 			<?php if ( $is_embed_video ) : ?>
-				<div class="elementor-background-video-embed" role="presentation"></div>
+				<div class="refraction-background-video-embed" role="presentation"></div>
 				<?php
 			else :
 				$video_tag_attributes = 'autoplay muted playsinline';
@@ -227,7 +227,7 @@ class Container extends Element_Base {
 					$video_tag_attributes .= ' loop';
 				}
 				?>
-				<video class="elementor-background-video-hosted" role="presentation" <?php echo esc_attr( $video_tag_attributes ); ?>></video>
+				<video class="refraction-background-video-hosted" role="presentation" <?php echo esc_attr( $video_tag_attributes ); ?>></video>
 			<?php endif; ?>
 		</div><?php
 	}
@@ -252,7 +252,7 @@ class Container extends Element_Base {
 			return;
 		}
 		?>
-		<div class="elementor-shape elementor-shape-<?php echo esc_attr( $side ); ?>" aria-hidden="true" data-negative="<?php
+		<div class="refraction-shape refraction-shape-<?php echo esc_attr( $side ); ?>" aria-hidden="true" data-negative="<?php
 			Utils::print_unescaped_internal_string( $negative ? 'true' : 'false' );
 		?>">
 			<?php
@@ -331,7 +331,7 @@ class Container extends Element_Base {
 	 *
 	 * @param array $element_data
 	 *
-	 * @return \Elementor\Element_Base|\Elementor\Widget_Base|null
+	 * @return \Refraction\Element_Base|\Refraction\Widget_Base|null
 	 */
 	protected function _get_default_child_type( array $element_data ) {
 		$el_types = array_keys( Plugin::$instance->elements_manager->get_element_types() );
@@ -356,7 +356,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_layout_container',
 			[
-				'label' => esc_html__( 'Container', 'elementor' ),
+				'label' => esc_html__( 'Container', 'refraction' ),
 				'tab' => Controls_Manager::TAB_LAYOUT,
 			]
 		);
@@ -372,13 +372,13 @@ class Container extends Element_Base {
 		$this->add_control(
 			'container_type',
 			[
-				'label' => esc_html__( 'Container Layout', 'elementor' ),
+				'label' => esc_html__( 'Container Layout', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'flex',
 				'prefix_class' => 'e-',
 				'options' => [
-					'flex' => esc_html__( 'Flexbox', 'elementor' ),
-					'grid' => esc_html__( 'Grid', 'elementor' ),
+					'flex' => esc_html__( 'Flexbox', 'refraction' ),
+					'grid' => esc_html__( 'Grid', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--display: {{VALUE}}',
@@ -391,12 +391,12 @@ class Container extends Element_Base {
 		$this->add_control(
 			'content_width',
 			[
-				'label' => esc_html__( 'Content Width', 'elementor' ),
+				'label' => esc_html__( 'Content Width', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'boxed',
 				'options' => [
-					'boxed' => esc_html__( 'Boxed', 'elementor' ),
-					'full' => esc_html__( 'Full Width', 'elementor' ),
+					'boxed' => esc_html__( 'Boxed', 'refraction' ),
+					'full' => esc_html__( 'Full Width', 'refraction' ),
 				],
 				'render_type' => 'template',
 				'prefix_class' => 'e-con-',
@@ -405,7 +405,7 @@ class Container extends Element_Base {
 		);
 
 		$width_control_settings = [
-			'label' => esc_html__( 'Width', 'elementor' ),
+			'label' => esc_html__( 'Width', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 			'range' => [
@@ -484,7 +484,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'min_height',
 			[
-				'label' => esc_html__( 'Min Height', 'elementor' ),
+				'label' => esc_html__( 'Min Height', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
@@ -494,7 +494,7 @@ class Container extends Element_Base {
 				],
 				'description' => sprintf(
 					/* translators: %s: 100vh. */
-					esc_html__( 'To achieve full height Container use %s.', 'elementor' ),
+					esc_html__( 'To achieve full height Container use %s.', 'refraction' ),
 					'100vh'
 				),
 				'selectors' => [
@@ -510,7 +510,7 @@ class Container extends Element_Base {
 				'selector' => '{{WRAPPER}}',
 				'fields_options' => [
 					'gap' => [
-						'label' => esc_html__( 'Gaps', 'elementor' ),
+						'label' => esc_html__( 'Gaps', 'refraction' ),
 						'device_args' => [
 							Breakpoints_Manager::BREAKPOINT_KEY_DESKTOP => [
 								// Use the default gap from the kit as a placeholder.
@@ -548,7 +548,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_layout_additional_options',
 			[
-				'label' => esc_html__( 'Additional Options', 'elementor' ),
+				'label' => esc_html__( 'Additional Options', 'refraction' ),
 				'tab' => Controls_Manager::TAB_LAYOUT,
 			]
 		);
@@ -556,13 +556,13 @@ class Container extends Element_Base {
 		$this->add_control(
 			'overflow',
 			[
-				'label' => esc_html__( 'Overflow', 'elementor' ),
+				'label' => esc_html__( 'Overflow', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'hidden' => esc_html__( 'Hidden', 'elementor' ),
-					'auto' => esc_html__( 'Auto', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'hidden' => esc_html__( 'Hidden', 'refraction' ),
+					'auto' => esc_html__( 'Auto', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--overflow: {{VALUE}}',
@@ -579,17 +579,17 @@ class Container extends Element_Base {
 			'section' => 'section',
 			'aside' => 'aside',
 			'nav' => 'nav',
-			'a' => 'a ' . esc_html__( '(link)', 'elementor' ),
+			'a' => 'a ' . esc_html__( '(link)', 'refraction' ),
 		];
 
 		$options = [
-			'' => esc_html__( 'Default', 'elementor' ),
+			'' => esc_html__( 'Default', 'refraction' ),
 		] + $possible_tags;
 
 		$this->add_control(
 			'html_tag',
 			[
-				'label' => esc_html__( 'HTML Tag', 'elementor' ),
+				'label' => esc_html__( 'HTML Tag', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => $options,
 			]
@@ -600,7 +600,7 @@ class Container extends Element_Base {
 			[
 				'type' => Controls_Manager::ALERT,
 				'alert_type' => 'warning',
-				'content' => esc_html__( 'Don’t add links to elements nested in this container - it will break the layout.', 'elementor' ),
+				'content' => esc_html__( 'Don’t add links to elements nested in this container - it will break the layout.', 'refraction' ),
 				'condition' => [
 					'html_tag' => 'a',
 				],
@@ -610,7 +610,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -644,7 +644,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_background',
 			[
-				'label' => esc_html__( 'Background', 'elementor' ),
+				'label' => esc_html__( 'Background', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -657,7 +657,7 @@ class Container extends Element_Base {
 		$this->start_controls_tab(
 			'tab_background_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -719,7 +719,7 @@ class Container extends Element_Base {
 		$this->start_controls_tab(
 			'tab_background_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -734,7 +734,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'background_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 0.3,
@@ -773,7 +773,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_background_overlay',
 			[
-				'label' => esc_html__( 'Background Overlay', 'elementor' ),
+				'label' => esc_html__( 'Background Overlay', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -786,11 +786,11 @@ class Container extends Element_Base {
 		$this->start_controls_tab(
 			'tab_background_overlay',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
-		$background_overlay_selector = '{{WRAPPER}}::before, {{WRAPPER}} > .elementor-background-video-container::before, {{WRAPPER}} > .e-con-inner > .elementor-background-video-container::before, {{WRAPPER}} > .elementor-background-slideshow::before, {{WRAPPER}} > .e-con-inner > .elementor-background-slideshow::before, {{WRAPPER}} > .elementor-motion-effects-container > .elementor-motion-effects-layer::before';
+		$background_overlay_selector = '{{WRAPPER}}::before, {{WRAPPER}} > .refraction-background-video-container::before, {{WRAPPER}} > .e-con-inner > .refraction-background-video-container::before, {{WRAPPER}} > .refraction-background-slideshow::before, {{WRAPPER}} > .e-con-inner > .refraction-background-slideshow::before, {{WRAPPER}} > .refraction-motion-effects-container > .refraction-motion-effects-layer::before';
 
 		$this->add_group_control(
 			Group_Control_Background::get_type(),
@@ -811,7 +811,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'background_overlay_opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => .5,
@@ -857,19 +857,19 @@ class Container extends Element_Base {
 		$this->add_control(
 			'overlay_blend_mode',
 			[
-				'label' => esc_html__( 'Blend Mode', 'elementor' ),
+				'label' => esc_html__( 'Blend Mode', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Normal', 'elementor' ),
-					'multiply' => esc_html__( 'Multiply', 'elementor' ),
-					'screen' => esc_html__( 'Screen', 'elementor' ),
-					'overlay' => esc_html__( 'Overlay', 'elementor' ),
-					'darken' => esc_html__( 'Darken', 'elementor' ),
-					'lighten' => esc_html__( 'Lighten', 'elementor' ),
-					'color-dodge' => esc_html__( 'Color Dodge', 'elementor' ),
-					'saturation' => esc_html__( 'Saturation', 'elementor' ),
-					'color' => esc_html__( 'Color', 'elementor' ),
-					'luminosity' => esc_html__( 'Luminosity', 'elementor' ),
+					'' => esc_html__( 'Normal', 'refraction' ),
+					'multiply' => esc_html__( 'Multiply', 'refraction' ),
+					'screen' => esc_html__( 'Screen', 'refraction' ),
+					'overlay' => esc_html__( 'Overlay', 'refraction' ),
+					'darken' => esc_html__( 'Darken', 'refraction' ),
+					'lighten' => esc_html__( 'Lighten', 'refraction' ),
+					'color-dodge' => esc_html__( 'Color Dodge', 'refraction' ),
+					'saturation' => esc_html__( 'Saturation', 'refraction' ),
+					'color' => esc_html__( 'Color', 'refraction' ),
+					'luminosity' => esc_html__( 'Luminosity', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--overlay-mix-blend-mode: {{VALUE}}',
@@ -900,11 +900,11 @@ class Container extends Element_Base {
 		$this->start_controls_tab(
 			'tab_background_overlay_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
-		$background_overlay_hover_selector = '{{WRAPPER}}:hover::before, {{WRAPPER}}:hover > .elementor-background-video-container::before, {{WRAPPER}}:hover > .e-con-inner > .elementor-background-video-container::before, {{WRAPPER}} > .elementor-background-slideshow:hover::before, {{WRAPPER}} > .e-con-inner > .elementor-background-slideshow:hover::before';
+		$background_overlay_hover_selector = '{{WRAPPER}}:hover::before, {{WRAPPER}}:hover > .refraction-background-video-container::before, {{WRAPPER}}:hover > .e-con-inner > .refraction-background-video-container::before, {{WRAPPER}} > .refraction-background-slideshow:hover::before, {{WRAPPER}} > .e-con-inner > .refraction-background-slideshow:hover::before';
 
 		$this->add_group_control(
 			Group_Control_Background::get_type(),
@@ -925,7 +925,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'background_overlay_hover_opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => .5,
@@ -948,7 +948,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'background_overlay_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -992,7 +992,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_border',
 			[
-				'label' => esc_html__( 'Border', 'elementor' ),
+				'label' => esc_html__( 'Border', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1005,7 +1005,7 @@ class Container extends Element_Base {
 		$this->start_controls_tab(
 			'tab_border',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -1037,7 +1037,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -1061,7 +1061,7 @@ class Container extends Element_Base {
 		$this->start_controls_tab(
 			'tab_border_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -1088,7 +1088,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'border_radius_hover',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -1108,7 +1108,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'border_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'separator' => 'before',
 				'default' => [
@@ -1174,7 +1174,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_shape_divider',
 			[
-				'label' => esc_html__( 'Shape Divider', 'elementor' ),
+				'label' => esc_html__( 'Shape Divider', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1182,8 +1182,8 @@ class Container extends Element_Base {
 		$this->start_controls_tabs( 'tabs_shape_dividers' );
 
 		foreach ( [
-			'top' => esc_html__( 'Top', 'elementor' ),
-			'bottom' => esc_html__( 'Bottom', 'elementor' ),
+			'top' => esc_html__( 'Top', 'refraction' ),
+			'bottom' => esc_html__( 'Bottom', 'refraction' ),
 		] as $side => $side_label ) {
 			$base_control_key = "shape_divider_$side";
 
@@ -1197,7 +1197,7 @@ class Container extends Element_Base {
 			$this->add_control(
 				$base_control_key,
 				[
-					'label' => esc_html__( 'Type', 'elementor' ),
+					'label' => esc_html__( 'Type', 'refraction' ),
 					'type' => Controls_Manager::VISUAL_CHOICE,
 					'label_block' => true,
 					'columns' => 2,
@@ -1226,13 +1226,13 @@ class Container extends Element_Base {
 			$this->add_control(
 				$base_control_key . '_color',
 				[
-					'label' => esc_html__( 'Color', 'elementor' ),
+					'label' => esc_html__( 'Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'condition' => [
 						"shape_divider_$side!" => '',
 					],
 					'selectors' => [
-						"{{WRAPPER}} > .elementor-shape-$side .elementor-shape-fill, {{WRAPPER}} > .e-con-inner > .elementor-shape-$side .elementor-shape-fill" => 'fill: {{UNIT}};',
+						"{{WRAPPER}} > .refraction-shape-$side .refraction-shape-fill, {{WRAPPER}} > .e-con-inner > .refraction-shape-$side .refraction-shape-fill" => 'fill: {{UNIT}};',
 					],
 				]
 			);
@@ -1240,7 +1240,7 @@ class Container extends Element_Base {
 			$this->add_responsive_control(
 				$base_control_key . '_width',
 				[
-					'label' => esc_html__( 'Width', 'elementor' ),
+					'label' => esc_html__( 'Width', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'size_units' => [ '%', 'vw', 'custom' ],
 					'default' => [
@@ -1266,7 +1266,7 @@ class Container extends Element_Base {
 						"shape_divider_$side" => array_keys( Shapes::filter_shapes( 'height_only', Shapes::FILTER_EXCLUDE ) ),
 					],
 					'selectors' => [
-						"{{WRAPPER}} > .elementor-shape-$side svg, {{WRAPPER}} > .e-con-inner > .elementor-shape-$side svg" => 'width: calc({{SIZE}}{{UNIT}} + 1.3px)',
+						"{{WRAPPER}} > .refraction-shape-$side svg, {{WRAPPER}} > .e-con-inner > .refraction-shape-$side svg" => 'width: calc({{SIZE}}{{UNIT}} + 1.3px)',
 					],
 				]
 			);
@@ -1274,7 +1274,7 @@ class Container extends Element_Base {
 			$this->add_responsive_control(
 				$base_control_key . '_height',
 				[
-					'label' => esc_html__( 'Height', 'elementor' ),
+					'label' => esc_html__( 'Height', 'refraction' ),
 					'type' => Controls_Manager::SLIDER,
 					'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 					'range' => [
@@ -1292,7 +1292,7 @@ class Container extends Element_Base {
 						"shape_divider_$side!" => '',
 					],
 					'selectors' => [
-						"{{WRAPPER}} > .elementor-shape-$side svg, {{WRAPPER}} > .e-con-inner > .elementor-shape-$side svg" => 'height: {{SIZE}}{{UNIT}};',
+						"{{WRAPPER}} > .refraction-shape-$side svg, {{WRAPPER}} > .e-con-inner > .refraction-shape-$side svg" => 'height: {{SIZE}}{{UNIT}};',
 					],
 				]
 			);
@@ -1300,13 +1300,13 @@ class Container extends Element_Base {
 			$this->add_control(
 				$base_control_key . '_flip',
 				[
-					'label' => esc_html__( 'Flip', 'elementor' ),
+					'label' => esc_html__( 'Flip', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
 					'condition' => [
 						"shape_divider_$side" => array_keys( Shapes::filter_shapes( 'has_flip' ) ),
 					],
 					'selectors' => [
-						"{{WRAPPER}} > .elementor-shape-$side svg, {{WRAPPER}} > .e-con-inner > .elementor-shape-$side svg" => 'transform: translateX(-50%) rotateY(180deg)',
+						"{{WRAPPER}} > .refraction-shape-$side svg, {{WRAPPER}} > .e-con-inner > .refraction-shape-$side svg" => 'transform: translateX(-50%) rotateY(180deg)',
 					],
 				]
 			);
@@ -1314,7 +1314,7 @@ class Container extends Element_Base {
 			$this->add_control(
 				$base_control_key . '_negative',
 				[
-					'label' => esc_html__( 'Invert', 'elementor' ),
+					'label' => esc_html__( 'Invert', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
 					'frontend_available' => true,
 					'condition' => [
@@ -1327,10 +1327,10 @@ class Container extends Element_Base {
 			$this->add_control(
 				$base_control_key . '_above_content',
 				[
-					'label' => esc_html__( 'Bring to Front', 'elementor' ),
+					'label' => esc_html__( 'Bring to Front', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
 					'selectors' => [
-						"{{WRAPPER}} > .elementor-shape-$side, {{WRAPPER}} > .e-con-inner > .elementor-shape-$side" => 'z-index: 2; pointer-events: none',
+						"{{WRAPPER}} > .refraction-shape-$side, {{WRAPPER}} > .e-con-inner > .refraction-shape-$side" => 'z-index: 2; pointer-events: none',
 					],
 					'condition' => [
 						"shape_divider_$side!" => '',
@@ -1369,7 +1369,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_layout',
 			[
-				'label' => esc_html__( 'Layout', 'elementor' ),
+				'label' => esc_html__( 'Layout', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -1377,7 +1377,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'margin',
 			[
-				'label' => esc_html__( 'Margin', 'elementor' ),
+				'label' => esc_html__( 'Margin', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -1389,7 +1389,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -1402,7 +1402,7 @@ class Container extends Element_Base {
 			'heading_grid_item',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Grid Item', 'elementor' ),
+				'label' => esc_html__( 'Grid Item', 'refraction' ),
 				'separator' => 'before',
 			]
 		);
@@ -1410,10 +1410,10 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'grid_column',
 			[
-				'label' => esc_html__( 'Column Span', 'elementor' ),
+				'label' => esc_html__( 'Column Span', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => ' ' . esc_html__( 'Default', 'elementor' ),
+					'' => ' ' . esc_html__( 'Default', 'refraction' ),
 					'1' => '1',
 					'2' => '2',
 					'3' => '3',
@@ -1426,7 +1426,7 @@ class Container extends Element_Base {
 					'10' => '10',
 					'11' => '11',
 					'12' => '12',
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => 'grid-column: span {{VALUE}};',
@@ -1437,7 +1437,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'grid_column_custom',
 			[
-				'label' => esc_html__( 'Custom', 'elementor' ),
+				'label' => esc_html__( 'Custom', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'ai' => [
 					'active' => false,
@@ -1454,10 +1454,10 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'grid_row',
 			[
-				'label' => esc_html__( 'Row Span', 'elementor' ),
+				'label' => esc_html__( 'Row Span', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => ' ' . esc_html__( 'Default', 'elementor' ),
+					'' => ' ' . esc_html__( 'Default', 'refraction' ),
 					'1' => '1',
 					'2' => '2',
 					'3' => '3',
@@ -1470,7 +1470,7 @@ class Container extends Element_Base {
 					'10' => '10',
 					'11' => '11',
 					'12' => '12',
-					'custom' => esc_html__( 'Custom', 'elementor' ),
+					'custom' => esc_html__( 'Custom', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => 'grid-row: span {{VALUE}};',
@@ -1481,7 +1481,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'grid_row_custom',
 			[
-				'label' => esc_html__( 'Custom', 'elementor' ),
+				'label' => esc_html__( 'Custom', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'separator' => 'after',
 				'ai' => [
@@ -1518,8 +1518,8 @@ class Container extends Element_Base {
 			[
 				'type' => Controls_Manager::ALERT,
 				'alert_type' => 'warning',
-				'heading' => esc_html__( 'Please note!', 'elementor' ),
-				'content' => esc_html__( 'Custom positioning is not considered best practice for responsive web design and should not be used too frequently.', 'elementor' ),
+				'heading' => esc_html__( 'Please note!', 'refraction' ),
+				'content' => esc_html__( 'Custom positioning is not considered best practice for responsive web design and should not be used too frequently.', 'refraction' ),
 				'render_type' => 'ui',
 				'condition' => [
 					'position!' => '',
@@ -1531,13 +1531,13 @@ class Container extends Element_Base {
 		$this->add_control(
 			'position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'absolute' => esc_html__( 'Absolute', 'elementor' ),
-					'fixed' => esc_html__( 'Fixed', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'absolute' => esc_html__( 'Absolute', 'refraction' ),
+					'fixed' => esc_html__( 'Fixed', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--position: {{VALUE}};',
@@ -1547,8 +1547,8 @@ class Container extends Element_Base {
 			]
 		);
 
-		$left = esc_html__( 'Left', 'elementor' );
-		$right = esc_html__( 'Right', 'elementor' );
+		$left = esc_html__( 'Left', 'refraction' );
+		$right = esc_html__( 'Right', 'refraction' );
 
 		$start = is_rtl() ? $right : $left;
 		$end = ! is_rtl() ? $right : $left;
@@ -1556,7 +1556,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'_offset_orientation_h',
 			[
-				'label' => esc_html__( 'Horizontal Orientation', 'elementor' ),
+				'label' => esc_html__( 'Horizontal Orientation', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'toggle' => false,
 				'default' => 'start',
@@ -1570,7 +1570,7 @@ class Container extends Element_Base {
 						'icon' => 'eicon-h-align-right',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'render_type' => 'ui',
 				'condition' => [
 					'position!' => '',
@@ -1581,7 +1581,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'_offset_x',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -1619,7 +1619,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'_offset_x_end',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -1657,17 +1657,17 @@ class Container extends Element_Base {
 		$this->add_control(
 			'_offset_orientation_v',
 			[
-				'label' => esc_html__( 'Vertical Orientation', 'elementor' ),
+				'label' => esc_html__( 'Vertical Orientation', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'toggle' => false,
 				'default' => 'start',
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'end' => [
-						'title' => esc_html__( 'Bottom', 'elementor' ),
+						'title' => esc_html__( 'Bottom', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -1681,7 +1681,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'_offset_y',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -1718,7 +1718,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'_offset_y_end',
 			[
-				'label' => esc_html__( 'Offset', 'elementor' ),
+				'label' => esc_html__( 'Offset', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -1755,7 +1755,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'z_index',
 			[
-				'label' => esc_html__( 'Z-Index', 'elementor' ),
+				'label' => esc_html__( 'Z-Index', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'min' => 0,
 				'selectors' => [
@@ -1767,7 +1767,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'_element_id',
 			[
-				'label' => esc_html__( 'CSS ID', 'elementor' ),
+				'label' => esc_html__( 'CSS ID', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'ai' => [
@@ -1776,16 +1776,16 @@ class Container extends Element_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
+				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'refraction' ),
 				'style_transfer' => false,
-				'classes' => 'elementor-control-direction-ltr',
+				'classes' => 'refraction-control-direction-ltr',
 			]
 		);
 
 		$this->add_control(
 			'css_classes',
 			[
-				'label' => esc_html__( 'CSS Classes', 'elementor' ),
+				'label' => esc_html__( 'CSS Classes', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'ai' => [
@@ -1795,8 +1795,8 @@ class Container extends Element_Base {
 					'active' => true,
 				],
 				'prefix_class' => '',
-				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'elementor' ),
-				'classes' => 'elementor-control-direction-ltr',
+				'title' => esc_html__( 'Add your custom class WITHOUT the dot. e.g: my-class', 'refraction' ),
+				'classes' => 'refraction-control-direction-ltr',
 			]
 		);
 
@@ -1812,7 +1812,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'section_effects',
 			[
-				'label' => esc_html__( 'Motion Effects', 'elementor' ),
+				'label' => esc_html__( 'Motion Effects', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -1820,7 +1820,7 @@ class Container extends Element_Base {
 		$this->add_responsive_control(
 			'animation',
 			[
-				'label' => esc_html__( 'Entrance Animation', 'elementor' ),
+				'label' => esc_html__( 'Entrance Animation', 'refraction' ),
 				'type' => Controls_Manager::ANIMATION,
 				'frontend_available' => true,
 			]
@@ -1829,13 +1829,13 @@ class Container extends Element_Base {
 		$this->add_control(
 			'animation_duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ),
+				'label' => esc_html__( 'Animation Duration', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'slow' => esc_html__( 'Slow', 'elementor' ),
-					'' => esc_html__( 'Normal', 'elementor' ),
-					'fast' => esc_html__( 'Fast', 'elementor' ),
+					'slow' => esc_html__( 'Slow', 'refraction' ),
+					'' => esc_html__( 'Normal', 'refraction' ),
+					'fast' => esc_html__( 'Fast', 'refraction' ),
 				],
 				'prefix_class' => 'animated-',
 				'condition' => [
@@ -1847,7 +1847,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'animation_delay',
 			[
-				'label' => esc_html__( 'Animation Delay', 'elementor' ) . ' (ms)',
+				'label' => esc_html__( 'Animation Delay', 'refraction' ) . ' (ms)',
 				'type' => Controls_Manager::NUMBER,
 				'default' => '',
 				'min' => 0,
@@ -1872,7 +1872,7 @@ class Container extends Element_Base {
 		$this->start_controls_section(
 			'_section_responsive',
 			[
-				'label' => esc_html__( 'Responsive', 'elementor' ),
+				'label' => esc_html__( 'Responsive', 'refraction' ),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			]
 		);
@@ -1880,7 +1880,7 @@ class Container extends Element_Base {
 		$this->add_control(
 			'heading_visibility',
 			[
-				'label' => esc_html__( 'Visibility', 'elementor' ),
+				'label' => esc_html__( 'Visibility', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -1890,12 +1890,12 @@ class Container extends Element_Base {
 			[
 				'raw' => sprintf(
 					/* translators: 1: Link open tag, 2: Link close tag. */
-					esc_html__( 'Responsive visibility will take effect only on %1$s preview mode %2$s or live page, and not while editing in Elementor.', 'elementor' ),
+					esc_html__( 'Responsive visibility will take effect only on %1$s preview mode %2$s or live page, and not while editing in Refraction.', 'refraction' ),
 					'<a href="javascript: $e.run( \'panel/close\' )">',
 					'</a>'
 				),
 				'type' => Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-descriptor',
+				'content_classes' => 'refraction-descriptor',
 			]
 		);
 
@@ -1923,7 +1923,7 @@ class Container extends Element_Base {
 	}
 
 	protected function hook_sticky_notice_into_transform_section() {
-		add_action( 'elementor/element/container/_section_transform/after_section_start', function( Container $container ) {
+		add_action( 'refraction/element/container/_section_transform/after_section_start', function( Container $container ) {
 			if ( ! empty( $container->get_controls( 'transform_sticky_notice' ) ) ) {
 				return;
 			}
@@ -1933,7 +1933,7 @@ class Container extends Element_Base {
 				[
 					'type' => Controls_Manager::ALERT,
 					'alert_type' => 'warning',
-					'content' => esc_html__( 'Note: Avoid applying transform properties on sticky containers. Doing so might cause unexpected results.', 'elementor' ),
+					'content' => esc_html__( 'Note: Avoid applying transform properties on sticky containers. Doing so might cause unexpected results.', 'refraction' ),
 				]
 			);
 		} );

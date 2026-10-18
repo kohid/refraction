@@ -1,4 +1,4 @@
-import getUserTimestamp from 'elementor-utils/time';
+import getUserTimestamp from 'refraction-utils/time';
 
 describe( 'Time Utility', () => {
 	test( 'getUserTimestamp()', () => {

@@ -89,7 +89,7 @@ export type $eType = {
 	}
 }
 
-export type ElementorType = {
+export type RefractionType = {
 	navigator?: {
 		isOpen: ()=> unknown
 	},

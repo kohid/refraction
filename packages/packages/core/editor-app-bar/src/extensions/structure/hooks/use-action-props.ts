@@ -1,7 +1,7 @@
 import {
 	__privateRunCommand as runCommand,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { StructureIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -11,14 +11,14 @@ export default function useActionProps(): ToggleActionProps {
 	const { isActive, isBlocked } = useRouteStatus( 'navigator' );
 
 	return {
-		title: __( 'Structure', 'elementor' ),
+		title: __( 'Structure', 'refraction' ),
 		icon: StructureIcon,
 		onClick: () => {
 			const extendedWindow = window as unknown as ExtendedWindow;
-			const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+			const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 			if ( config ) {
-				extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.structure, {
+				extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.structure, {
 					location: config.locations.topBar,
 					secondaryLocation: config.secondaryLocations.structure,
 					trigger: config.triggers.toggleClick,

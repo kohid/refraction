@@ -1,4 +1,4 @@
-export default class BaseLoader extends elementorModules.ViewModule {
+export default class BaseLoader extends refractionModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			isInserted: false,

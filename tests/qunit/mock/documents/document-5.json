@@ -183,7 +183,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_family",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_family",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"popover": {
@@ -219,7 +219,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -260,7 +260,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -301,7 +301,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -339,7 +339,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_weight",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_weight",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_font_weight"
@@ -362,7 +362,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-text_transform",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-text_transform",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_text_transform"
@@ -384,7 +384,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_style",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_style",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_font_style"
@@ -407,7 +407,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-text_decoration",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-text_decoration",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_text_decoration"
@@ -432,7 +432,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -465,7 +465,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -498,7 +498,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -529,7 +529,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -560,7 +560,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -591,7 +591,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -690,7 +690,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_family",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_family",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"popover": {
@@ -726,7 +726,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -767,7 +767,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -808,7 +808,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -846,7 +846,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_weight",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_weight",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_font_weight"
@@ -869,7 +869,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-text_transform",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-text_transform",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_text_transform"
@@ -891,7 +891,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_style",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_style",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_font_style"
@@ -914,7 +914,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-text_decoration",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-text_decoration",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"name": "typography_text_decoration"
@@ -939,7 +939,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -972,7 +972,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -1005,7 +1005,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -1036,7 +1036,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -1067,7 +1067,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -1098,7 +1098,7 @@
 			"condition": {
 			  "typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"groupPrefix": "typography_",
 			"groupType": "typography",
 			"responsive": {
@@ -1166,7 +1166,7 @@
 		"condition": {
 		  "h1_typography_typography!": ""
 		},
-		"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_family",
+		"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_family",
 		"groupPrefix": "h1_typography_",
 		"groupType": "typography",
 		"popover": {
@@ -1215,10 +1215,10 @@
 	"current_id": 5
   },
   "urls": {
-    "exit_to_dashboard": "http: //localhost/elementor/wp-admin/post.php?post=1&action=edit",
+    "exit_to_dashboard": "http: //localhost/refraction/wp-admin/post.php?post=1&action=edit",
     "preview": "",
-    "wp_preview": "http://localhost/elementor/?p=1&preview_id=1&preview_nonce=d50fde90b&preview=true",
-    "permalink": "http://localhost/elementor/?p=1",
-    "screenshot": "http://localhost/elementor/?p=1&elementor-screenshot=1&ver=123&&nonce=testnonce"
+    "wp_preview": "http://localhost/refraction/?p=1&preview_id=1&preview_nonce=d50fde90b&preview=true",
+    "permalink": "http://localhost/refraction/?p=1",
+    "screenshot": "http://localhost/refraction/?p=1&refraction-screenshot=1&ver=123&&nonce=testnonce"
   }
 }

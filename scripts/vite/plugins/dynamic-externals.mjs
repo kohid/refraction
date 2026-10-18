@@ -16,11 +16,11 @@ const STATIC_DYNAMIC_IMPORT = /\bimport\(\s*(["'`])([^"'`$]+)\1\s*\)/g;
  * component this way, so the App rendered nothing for either route.
  *
  * The global is wrapped in a promise because callers treat the result as a module namespace, which
- * is exactly what `window.elementorV2.<name>` holds.
+ * is exactly what `window.refractionV2.<name>` holds.
  */
 export function dynamicExternalsPlugin( { resolve = resolveGlobal } = {} ) {
 	return {
-		name: 'elementor-dynamic-externals',
+		name: 'refraction-dynamic-externals',
 		transform( code ) {
 			let didReplace = false;
 

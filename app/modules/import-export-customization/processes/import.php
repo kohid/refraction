@@ -1,25 +1,25 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Processes;
+namespace Refraction\App\Modules\ImportExportCustomization\Processes;
 
-use Elementor\App\Modules\ImportExportCustomization\Compatibility\Base_Adapter;
-use Elementor\App\Modules\ImportExportCustomization\Compatibility\Envato;
-use Elementor\App\Modules\ImportExportCustomization\Compatibility\Kit_Library;
-use Elementor\App\Modules\ImportExportCustomization\Compatibility\Customization;
-use Elementor\App\Modules\ImportExportCustomization\Utils;
-use Elementor\Core\Base\Document;
-use Elementor\Core\Kits\Documents\Kit;
-use Elementor\Plugin;
+use Refraction\App\Modules\ImportExportCustomization\Compatibility\Base_Adapter;
+use Refraction\App\Modules\ImportExportCustomization\Compatibility\Envato;
+use Refraction\App\Modules\ImportExportCustomization\Compatibility\Kit_Library;
+use Refraction\App\Modules\ImportExportCustomization\Compatibility\Customization;
+use Refraction\App\Modules\ImportExportCustomization\Utils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Kits\Documents\Kit;
+use Refraction\Plugin;
 
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Elementor_Content;
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Import_Runner_Base;
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Plugins;
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Site_Settings;
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Taxonomies;
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Templates;
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Wp_Content;
-use Elementor\App\Modules\ImportExportCustomization\Module;
-use Elementor\App\Modules\ImportExportCustomization\Runners\Import\Floating_Elements;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Refraction_Content;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Import_Runner_Base;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Plugins;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Site_Settings;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Taxonomies;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Templates;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Wp_Content;
+use Refraction\App\Modules\ImportExportCustomization\Module;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Import\Floating_Elements;
 
 class Import {
 	const MANIFEST_ERROR_KEY = 'manifest-error';
@@ -105,7 +105,7 @@ class Import {
 	private $settings_conflicts;
 
 	/**
-	 * Selected elementor templates conditions to override.
+	 * Selected refraction templates conditions to override.
 	 *
 	 * @var array
 	 */
@@ -162,8 +162,8 @@ class Import {
 			if ( is_file( $path ) ) {
 				$this->extracted_directory_path = $this->extract_zip( $path );
 			} else {
-				$elementor_tmp_directory = Plugin::$instance->uploads_manager->get_temp_dir();
-				$path = $elementor_tmp_directory . basename( $path );
+				$refraction_tmp_directory = Plugin::$instance->uploads_manager->get_temp_dir();
+				$path = $refraction_tmp_directory . basename( $path );
 
 				if ( ! is_dir( $path ) ) {
 					throw new \Exception( 'Couldn’t execute the import process because the import session does not exist.' );
@@ -261,7 +261,7 @@ class Import {
 		$this->register( new Plugins() );
 		$this->register( new Templates() );
 		$this->register( new Taxonomies() );
-		$this->register( new Elementor_Content() );
+		$this->register( new Refraction_Content() );
 		$this->register( new Wp_Content() );
 		$this->register( new Floating_Elements() );
 	}
@@ -311,11 +311,11 @@ class Import {
 
 		$this->init_import_session();
 
-		remove_filter( 'elementor/document/save/data', [ Plugin::$instance->modules_manager->get_modules( 'content-sanitizer' ), 'sanitize_content' ] );
-		add_filter( 'elementor/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10, 2 );
+		remove_filter( 'refraction/document/save/data', [ Plugin::$instance->modules_manager->get_modules( 'content-sanitizer' ), 'sanitize_content' ] );
+		add_filter( 'refraction/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10, 2 );
 
-		// Set the Request's state as an Elementor upload request, in order to support unfiltered file uploads.
-		Plugin::$instance->uploads_manager->set_elementor_upload_state( true );
+		// Set the Request's state as a Refraction upload request, in order to support unfiltered file uploads.
+		Plugin::$instance->uploads_manager->set_refraction_upload_state( true );
 
 		foreach ( $this->runners as $runner ) {
 			if ( $runner->should_import( $data ) ) {
@@ -326,10 +326,10 @@ class Import {
 			}
 		}
 
-		// After the upload complete, set the elementor upload state back to false.
-		Plugin::$instance->uploads_manager->set_elementor_upload_state( false );
+		// After the upload complete, set the refraction upload state back to false.
+		Plugin::$instance->uploads_manager->set_refraction_upload_state( false );
 
-		remove_filter( 'elementor/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10 );
+		remove_filter( 'refraction/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10 );
 
 		$this->finalize_import_session_option();
 
@@ -355,10 +355,10 @@ class Import {
 
 		$data = $this->build_runner_data();
 
-		add_filter( 'elementor/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10, 2 );
+		add_filter( 'refraction/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10, 2 );
 
-		// Set the Request's state as an Elementor upload request, in order to support unfiltered file uploads.
-		Plugin::$instance->uploads_manager->set_elementor_upload_state( true );
+		// Set the Request's state as a Refraction upload request, in order to support unfiltered file uploads.
+		Plugin::$instance->uploads_manager->set_refraction_upload_state( true );
 
 		$runner = $this->runners[ $runner_name ];
 
@@ -373,10 +373,10 @@ class Import {
 			$this->runners_import_metadata[ $runner::get_name() ] = $runner->get_import_session_metadata();
 		}
 
-		// After the upload complete, set the elementor upload state back to false.
-		Plugin::$instance->uploads_manager->set_elementor_upload_state( false );
+		// After the upload complete, set the refraction upload state back to false.
+		Plugin::$instance->uploads_manager->set_refraction_upload_state( false );
 
-		remove_filter( 'elementor/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10 );
+		remove_filter( 'refraction/document/save/data', [ $this, 'prevent_saving_elements_on_post_creation' ], 10 );
 
 		$is_last_runner = key( array_slice( $this->runners, -1, 1, true ) ) === $runner_name;
 		if ( $is_last_runner ) {
@@ -436,7 +436,7 @@ class Import {
 			];
 		}
 
-		update_option( Module::OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS, $import_sessions, false );
+		update_option( Module::OPTION_KEY_REFRACTION_IMPORT_SESSIONS, $import_sessions, false );
 	}
 
 	/**
@@ -449,7 +449,7 @@ class Import {
 			return $this->manifest['thumbnail'];
 		}
 
-		return apply_filters( 'elementor/import/kit_thumbnail', '', $this->kit_id, $this->settings_referrer );
+		return apply_filters( 'refraction/import/kit_thumbnail', '', $this->kit_id, $this->settings_referrer );
 	}
 
 	public function get_runners_name(): array {
@@ -583,7 +583,7 @@ class Import {
 	}
 
 	/**
-	 * Prevent saving elements on elementor post creation.
+	 * Prevent saving elements on refraction post creation.
 	 *
 	 * @param array    $data
 	 * @param Document $document
@@ -700,7 +700,7 @@ class Import {
 	}
 
 	/**
-	 * Get the default settings of elementor templates conditions to override.
+	 * Get the default settings of refraction templates conditions to override.
 	 *
 	 * @return array
 	 */
@@ -709,11 +709,11 @@ class Import {
 			return [];
 		}
 
-		return apply_filters( 'elementor/import/get_default_settings_conflicts', [], $this->manifest['templates'] );
+		return apply_filters( 'refraction/import/get_default_settings_conflicts', [], $this->manifest['templates'] );
 	}
 
 	/**
-	 * Get the default settings of elementor templates conditions to override.
+	 * Get the default settings of refraction templates conditions to override.
 	 *
 	 * @return array
 	 */
@@ -774,7 +774,7 @@ class Import {
 	}
 
 	/**
-	 * Save the prevented elements on elementor post creation elements.
+	 * Save the prevented elements on refraction post creation elements.
 	 * Handle the replacement of all the dynamic content of the elements that probably have been changed during the import.
 	 */
 	private function save_elements_of_imported_posts() {
@@ -808,7 +808,7 @@ class Import {
 		$import_sessions[ $this->session_id ]['instance_data']['imported_data'] = $this->imported_data;
 		$import_sessions[ $this->session_id ]['instance_data']['runners_import_metadata'] = $this->runners_import_metadata;
 
-		update_option( Module::OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS, $import_sessions, false );
+		update_option( Module::OPTION_KEY_REFRACTION_IMPORT_SESSIONS, $import_sessions, false );
 	}
 
 	public function finalize_import_session_option() {
@@ -823,7 +823,7 @@ class Import {
 		$import_sessions[ $this->session_id ]['end_timestamp'] = current_time( 'timestamp' );
 		$import_sessions[ $this->session_id ]['runners'] = $this->runners_import_metadata;
 
-		update_option( Module::OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS, $import_sessions, false );
+		update_option( Module::OPTION_KEY_REFRACTION_IMPORT_SESSIONS, $import_sessions, false );
 	}
 
 	/**

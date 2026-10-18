@@ -22,7 +22,7 @@ export class Unlink extends $e.modules.editor.CommandContainerBase {
 
 				if ( groupPrefix ) {
 					Object.entries( value ).forEach( ( [ dataKey, dataValue ] ) => {
-						dataKey = dataKey.replace( elementor.config.kit_config.typography_prefix, groupPrefix );
+						dataKey = dataKey.replace( refraction.config.kit_config.typography_prefix, groupPrefix );
 						localSettings[ dataKey ] = dataValue;
 					} );
 				} else {

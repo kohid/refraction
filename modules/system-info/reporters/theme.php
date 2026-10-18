@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Modules\System_Info\Reporters;
+namespace Refraction\Modules\System_Info\Reporters;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor theme report.
+ * Refraction theme report.
  *
- * Elementor system report handler class responsible for generating a report for
+ * Refraction system report handler class responsible for generating a report for
  * the theme.
  *
  * @since 1.0.0
@@ -202,7 +202,7 @@ class Theme extends Base {
 		];
 
 		if ( ! $is_child_theme ) {
-			$result['recommendation'] = __( 'If you want to modify the source code of your theme, we recommend using a child theme.', 'elementor' );
+			$result['recommendation'] = __( 'If you want to modify the source code of your theme, we recommend using a child theme.', 'refraction' );
 		}
 
 		return $result;

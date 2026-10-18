@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor image widget.
+ * Refraction image widget.
  *
- * Elementor widget that displays an image into the page.
+ * Refraction widget that displays an image into the page.
  *
  * @since 1.0.0
  */
@@ -42,7 +42,7 @@ class Widget_Image extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Image', 'elementor' );
+		return esc_html__( 'Image', 'refraction' );
 	}
 
 	/**
@@ -123,14 +123,14 @@ class Widget_Image extends Widget_Base {
 		$this->start_controls_section(
 			'section_image',
 			[
-				'label' => esc_html__( 'Image', 'elementor' ),
+				'label' => esc_html__( 'Image', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'image',
 			[
-				'label' => esc_html__( 'Choose Image', 'elementor' ),
+				'label' => esc_html__( 'Choose Image', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'dynamic' => [
 					'active' => true,
@@ -155,12 +155,12 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'caption_source',
 			[
-				'label' => esc_html__( 'Caption', 'elementor' ),
+				'label' => esc_html__( 'Caption', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'none' => esc_html__( 'None', 'elementor' ),
-					'attachment' => esc_html__( 'Attachment Caption', 'elementor' ),
-					'custom' => esc_html__( 'Custom Caption', 'elementor' ),
+					'none' => esc_html__( 'None', 'refraction' ),
+					'attachment' => esc_html__( 'Attachment Caption', 'refraction' ),
+					'custom' => esc_html__( 'Custom Caption', 'refraction' ),
 				],
 				'default' => 'none',
 				'condition' => [
@@ -172,10 +172,10 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'caption',
 			[
-				'label' => esc_html__( 'Custom Caption', 'elementor' ),
+				'label' => esc_html__( 'Custom Caption', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
-				'placeholder' => esc_html__( 'Enter your image caption', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your image caption', 'refraction' ),
 				'condition' => [
 					'image[url]!' => '',
 					'caption_source' => 'custom',
@@ -189,13 +189,13 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'link_to',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'none',
 				'options' => [
-					'none' => esc_html__( 'None', 'elementor' ),
-					'file' => esc_html__( 'Media File', 'elementor' ),
-					'custom' => esc_html__( 'Custom URL', 'elementor' ),
+					'none' => esc_html__( 'None', 'refraction' ),
+					'file' => esc_html__( 'Media File', 'refraction' ),
+					'custom' => esc_html__( 'Custom URL', 'refraction' ),
 				],
 				'condition' => [
 					'image[url]!' => '',
@@ -206,7 +206,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -222,19 +222,19 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'open_lightbox',
 			[
-				'label' => esc_html__( 'Lightbox', 'elementor' ),
+				'label' => esc_html__( 'Lightbox', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'description' => sprintf(
 					/* translators: 1: Link open tag, 2: Link close tag. */
-					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'elementor' ),
+					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'refraction' ),
 					'<a href="javascript: $e.run( \'panel/global/open\' ).then( () => $e.route( \'panel/global/settings-lightbox\' ) )">',
 					'</a>'
 				),
 				'default' => 'default',
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'yes' => esc_html__( 'Yes', 'elementor' ),
-					'no' => esc_html__( 'No', 'elementor' ),
+					'default' => esc_html__( 'Default', 'refraction' ),
+					'yes' => esc_html__( 'Yes', 'refraction' ),
+					'no' => esc_html__( 'No', 'refraction' ),
 				],
 				'condition' => [
 					'image[url]!' => '',
@@ -248,7 +248,7 @@ class Widget_Image extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_image',
 			[
-				'label' => esc_html__( 'Image', 'elementor' ),
+				'label' => esc_html__( 'Image', 'refraction' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -256,23 +256,23 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
@@ -286,7 +286,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'width',
 			[
-				'label' => esc_html__( 'Width', 'elementor' ),
+				'label' => esc_html__( 'Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'unit' => '%',
@@ -321,7 +321,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'space',
 			[
-				'label' => esc_html__( 'Max Width', 'elementor' ),
+				'label' => esc_html__( 'Max Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'unit' => '%',
@@ -356,7 +356,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'height',
 			[
-				'label' => esc_html__( 'Height', 'elementor' ),
+				'label' => esc_html__( 'Height', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
@@ -378,17 +378,17 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'object-fit',
 			[
-				'label' => esc_html__( 'Object Fit', 'elementor' ),
+				'label' => esc_html__( 'Object Fit', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'condition' => [
 					'height[size]!' => '',
 				],
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'fill' => esc_html__( 'Fill', 'elementor' ),
-					'cover' => esc_html__( 'Cover', 'elementor' ),
-					'contain' => esc_html__( 'Contain', 'elementor' ),
-					'scale-down' => esc_html__( 'Scale Down', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'fill' => esc_html__( 'Fill', 'refraction' ),
+					'cover' => esc_html__( 'Cover', 'refraction' ),
+					'contain' => esc_html__( 'Contain', 'refraction' ),
+					'scale-down' => esc_html__( 'Scale Down', 'refraction' ),
 				],
 				'default' => '',
 				'selectors' => [
@@ -400,18 +400,18 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'object-position',
 			[
-				'label' => esc_html__( 'Object Position', 'elementor' ),
+				'label' => esc_html__( 'Object Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'center center' => esc_html__( 'Center Center', 'elementor' ),
-					'center left' => esc_html__( 'Center Left', 'elementor' ),
-					'center right' => esc_html__( 'Center Right', 'elementor' ),
-					'top center' => esc_html__( 'Top Center', 'elementor' ),
-					'top left' => esc_html__( 'Top Left', 'elementor' ),
-					'top right' => esc_html__( 'Top Right', 'elementor' ),
-					'bottom center' => esc_html__( 'Bottom Center', 'elementor' ),
-					'bottom left' => esc_html__( 'Bottom Left', 'elementor' ),
-					'bottom right' => esc_html__( 'Bottom Right', 'elementor' ),
+					'center center' => esc_html__( 'Center Center', 'refraction' ),
+					'center left' => esc_html__( 'Center Left', 'refraction' ),
+					'center right' => esc_html__( 'Center Right', 'refraction' ),
+					'top center' => esc_html__( 'Top Center', 'refraction' ),
+					'top left' => esc_html__( 'Top Left', 'refraction' ),
+					'top right' => esc_html__( 'Top Right', 'refraction' ),
+					'bottom center' => esc_html__( 'Bottom Center', 'refraction' ),
+					'bottom left' => esc_html__( 'Bottom Left', 'refraction' ),
+					'bottom right' => esc_html__( 'Bottom Right', 'refraction' ),
 				],
 				'default' => 'center center',
 				'selectors' => [
@@ -436,14 +436,14 @@ class Widget_Image extends Widget_Base {
 
 		$this->start_controls_tab( 'normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -470,14 +470,14 @@ class Widget_Image extends Widget_Base {
 
 		$this->start_controls_tab( 'hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'opacity_hover',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -503,7 +503,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'background_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -521,7 +521,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 			]
 		);
@@ -542,7 +542,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'image_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -567,7 +567,7 @@ class Widget_Image extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_caption',
 			[
-				'label' => esc_html__( 'Caption', 'elementor' ),
+				'label' => esc_html__( 'Caption', 'refraction' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'image[url]!' => '',
@@ -579,27 +579,27 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'caption_align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => esc_html__( 'Justified', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
@@ -614,7 +614,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -629,7 +629,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_control(
 			'caption_background_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .widget-image-caption' => 'background-color: {{VALUE}};',
@@ -659,7 +659,7 @@ class Widget_Image extends Widget_Base {
 		$this->add_responsive_control(
 			'caption_space',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -745,7 +745,7 @@ class Widget_Image extends Widget_Base {
 
 			if ( Plugin::$instance->editor->is_edit_mode() ) {
 				$this->add_render_attribute( 'link', [
-					'class' => 'elementor-clickable',
+					'class' => 'refraction-clickable',
 				] );
 			}
 
@@ -849,7 +849,7 @@ class Widget_Image extends Widget_Base {
 				model: view.getEditModel()
 			};
 
-			var image_url = elementor.imagesManager.getImageUrl( image );
+			var image_url = refraction.imagesManager.getImageUrl( image );
 
 			if ( ! image_url ) {
 				return;
@@ -898,7 +898,7 @@ class Widget_Image extends Widget_Base {
 			var imgClass = '';
 
 			if ( '' !== settings.hover_animation ) {
-				imgClass = 'elementor-animation-' + settings.hover_animation;
+				imgClass = 'refraction-animation-' + settings.hover_animation;
 			}
 
 			if ( hasCaption() ) {
@@ -906,7 +906,7 @@ class Widget_Image extends Widget_Base {
 			}
 
 			if ( link_url ) {
-					#><a class="elementor-clickable" data-elementor-open-lightbox="{{ settings.open_lightbox }}" href="{{ elementor.helpers.sanitizeUrl( link_url ) }}"><#
+					#><a class="refraction-clickable" data-refraction-open-lightbox="{{ settings.open_lightbox }}" href="{{ refraction.helpers.sanitizeUrl( link_url ) }}"><#
 			}
 						#><img src="{{ image_url }}" class="{{ imgClass }}" /><#
 

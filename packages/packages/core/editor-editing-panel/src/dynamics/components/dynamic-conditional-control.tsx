@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { isDependencyMet, type PropsSchema, type PropType, type PropValue } from '@elementor/editor-props';
+import { isDependencyMet, type PropsSchema, type PropType, type PropValue } from '@refraction/editor-props';
 
 import { type DynamicPropValue } from '../types';
 

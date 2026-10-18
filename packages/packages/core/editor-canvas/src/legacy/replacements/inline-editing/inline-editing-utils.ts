@@ -1,13 +1,13 @@
 import { type CSSProperties, useCallback, useEffect, useState } from 'react';
-import { type InlineEditorToolbarProps } from '@elementor/editor-controls';
-import { type V1Element } from '@elementor/editor-elements';
+import { type InlineEditorToolbarProps } from '@refraction/editor-controls';
+import { type V1Element } from '@refraction/editor-elements';
 import { type MiddlewareReturn, type MiddlewareState } from '@floating-ui/react';
 
 import { type LegacyWindow } from '../../types';
 
-const TOP_BAR_SELECTOR = '#elementor-editor-wrapper-v2';
-const NAVIGATOR_SELECTOR = '#elementor-navigator';
-const EDITING_PANEL = '#elementor-panel';
+const TOP_BAR_SELECTOR = '#refraction-editor-wrapper-v2';
+const NAVIGATOR_SELECTOR = '#refraction-navigator';
+const EDITING_PANEL = '#refraction-panel';
 
 const EDITOR_ELEMENTS_OUT_OF_IFRAME = [ TOP_BAR_SELECTOR, NAVIGATOR_SELECTOR, EDITING_PANEL ];
 

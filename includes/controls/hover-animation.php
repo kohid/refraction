@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor hover animation control.
+ * Refraction hover animation control.
  *
  * A base control for creating hover animation control. Displays a select box
  * with the available hover animation effects @see Control_Hover_Animation::get_animations()
@@ -64,13 +64,13 @@ class Control_Hover_Animation extends Base_Data_Control {
 			 * Filters the animations list displayed in the hover animations control.
 			 *
 			 * This hook can be used to register new animations in addition to the
-			 * basic Elementor hover animations.
+			 * basic Refraction hover animations.
 			 *
 			 * @since 2.4.0
 			 *
 			 * @param array $additional_animations Additional animations array.
 			 */
-			$additional_animations = apply_filters( 'elementor/controls/hover_animations/additional_animations', $additional_animations );
+			$additional_animations = apply_filters( 'refraction/controls/hover_animations/additional_animations', $additional_animations );
 
 			self::$_animations = array_merge( self::$_animations, $additional_animations );
 		}
@@ -122,11 +122,11 @@ class Control_Hover_Animation extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
 				<select id="<?php $this->print_control_uid(); ?>" data-setting="{{ data.name }}">
-					<option value=""><?php echo esc_html__( 'None', 'elementor' ); ?></option>
+					<option value=""><?php echo esc_html__( 'None', 'refraction' ); ?></option>
 					<?php foreach ( static::get_animations() as $animation_name => $animation_title ) : ?>
 						<option value="<?php Utils::print_unescaped_internal_string( $animation_name ); ?>"><?php Utils::print_unescaped_internal_string( $animation_title ); ?></option>
 					<?php endforeach; ?>
@@ -134,7 +134,7 @@ class Control_Hover_Animation extends Base_Data_Control {
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

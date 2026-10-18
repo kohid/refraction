@@ -6,8 +6,8 @@ import {
 	type BackgroundImageOverlayPropValue,
 	type BackgroundOverlayItemPropValue,
 	colorPropTypeUtil,
-} from '@elementor/editor-props';
-import { initEnv } from '@elementor/env';
+} from '@refraction/editor-props';
+import { initEnv } from '@refraction/env';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useRepeaterContext } from '../../components/control-repeater/context/repeater-context';
@@ -171,7 +171,7 @@ const createMockImageOverlay = (
 describe( 'ItemContent', () => {
 	beforeEach( () => {
 		initEnv( {
-			'@elementor/editor-controls': {
+			'@refraction/editor-controls': {
 				background_placeholder_image: 'https://test-site/wp-content/uploads/bg-test.jpg',
 			},
 		} );

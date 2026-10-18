@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\KitElementsDefaults\Data;
+namespace Refraction\Modules\KitElementsDefaults\Data;
 
-use Elementor\Core\Frontend\Performance;
-use Elementor\Modules\KitElementsDefaults\Module;
-use Elementor\Modules\KitElementsDefaults\Utils\Settings_Sanitizer;
-use Elementor\Plugin;
-use Elementor\Data\V2\Base\Exceptions\Error_404;
-use Elementor\Data\V2\Base\Controller as Base_Controller;
+use Refraction\Core\Frontend\Performance;
+use Refraction\Modules\KitElementsDefaults\Module;
+use Refraction\Modules\KitElementsDefaults\Utils\Settings_Sanitizer;
+use Refraction\Plugin;
+use Refraction\Data\V2\Base\Exceptions\Error_404;
+use Refraction\Data\V2\Base\Controller as Base_Controller;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

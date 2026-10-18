@@ -11,7 +11,7 @@ export default function View( { post }: { post: Post } ) {
 	const { type } = usePostListContext();
 
 	// translators: %s: Post type (e.g. Page, Post, etc.)
-	const title = __( 'View %s', 'elementor' ).replace( '%s', postTypesMap[ type ].labels.singular_name );
+	const title = __( 'View %s', 'refraction' ).replace( '%s', postTypesMap[ type ].labels.singular_name );
 
 	return (
 		<ActionMenuItem

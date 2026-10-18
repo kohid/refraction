@@ -5,8 +5,8 @@ export default class Widgets extends FavoriteType {
 	constructor() {
 		super();
 
-		elementor.hooks.addFilter( 'panel/category/behaviors', this.addCategoryBehavior.bind( this ) );
-		elementor.hooks.addFilter( 'panel/element/contextMenuGroups', this.addContextMenuGroups.bind( this ) );
+		refraction.hooks.addFilter( 'panel/category/behaviors', this.addCategoryBehavior.bind( this ) );
+		refraction.hooks.addFilter( 'panel/element/contextMenuGroups', this.addContextMenuGroups.bind( this ) );
 	}
 
 	getName() {
@@ -132,14 +132,14 @@ export default class Widgets extends FavoriteType {
 							? 'eicon-heart-o'
 							: 'eicon-heart',
 						title: this.isFavorite( widget )
-							? __( 'Remove from Favorites', 'elementor' )
-							: __( 'Add to Favorites', 'elementor' ),
+							? __( 'Remove from Favorites', 'refraction' )
+							: __( 'Add to Favorites', 'refraction' ),
 						callback: () => {
 							this.toggle( widget );
 
 							if ( this.isFavorite( widget ) ) {
-								elementor.notifications.showToast( {
-									message: __( 'Added', 'elementor' ),
+								refraction.notifications.showToast( {
+									message: __( 'Added', 'refraction' ),
 								} );
 							}
 						},
@@ -154,7 +154,7 @@ export default class Widgets extends FavoriteType {
 	 * scroll position.
 	 */
 	refreshCategories() {
-		const psElement = elementor.getPanelView().perfectScrollbar.element,
+		const psElement = refraction.getPanelView().perfectScrollbar.element,
 			psScrollTop = psElement.scrollTop,
 			psHeight = psElement.scrollHeight;
 
@@ -173,6 +173,6 @@ export default class Widgets extends FavoriteType {
 	 * @return {{}} widget cache object
 	 */
 	getWidgetCache( widget ) {
-		return elementor.widgetsCache[ widget ];
+		return refraction.widgetsCache[ widget ];
 	}
 }

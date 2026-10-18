@@ -1,5 +1,5 @@
-import { createLocation } from '@elementor/locations';
-import { capitalize } from '@elementor/utils';
+import { createLocation } from '@refraction/locations';
+import { capitalize } from '@refraction/utils';
 
 import { createRegisterItem, type RegisterItem } from './create-register-item';
 import { createUseMenuItems, type UseMenuItems } from './create-use-menu-items';

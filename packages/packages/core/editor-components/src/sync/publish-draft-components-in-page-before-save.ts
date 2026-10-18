@@ -1,7 +1,7 @@
-import { invalidateDocumentData, isDocumentDirty } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { notify } from '@elementor/editor-notifications';
-import { AxiosError } from '@elementor/http-client';
+import { invalidateDocumentData, isDocumentDirty } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { notify } from '@refraction/editor-notifications';
+import { AxiosError } from '@refraction/http-client';
 import { __ } from '@wordpress/i18n';
 
 import { apiClient } from '../api';
@@ -54,7 +54,7 @@ function notifyPublishUpgrade() {
 		id: PUBLISH_UPGRADE_NOTIFICATION_ID,
 		message: __(
 			'You have unpublished component on this page. You need a pro version to publish it.',
-			'elementor'
+			'refraction'
 		),
 		additionalActionProps: [
 			{
@@ -63,7 +63,7 @@ function notifyPublishUpgrade() {
 				color: 'promotion',
 				href: PUBLISH_UPGRADE_URL,
 				target: '_blank',
-				children: __( 'Upgrade Now', 'elementor' ),
+				children: __( 'Upgrade Now', 'refraction' ),
 			},
 		],
 	} );

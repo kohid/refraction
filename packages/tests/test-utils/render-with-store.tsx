@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type PropsWithChildren } from 'react';
-import { __StoreProvider as StoreProvider, type Store } from '@elementor/store';
+import { __StoreProvider as StoreProvider, type Store } from '@refraction/store';
 
 import { renderWithTheme } from './render-with-theme';
 

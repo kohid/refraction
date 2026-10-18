@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Admin\Notices;
+namespace Refraction\Core\Admin\Notices;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -17,7 +17,7 @@ abstract class Base_Notice {
 	 * Returns the config of the notice itself.
 	 * based on that config the notice will be printed.
 	 *
-	 * @see \Elementor\Core\Admin\Admin_Notices::admin_notices
+	 * @see \Refraction\Core\Admin\Admin_Notices::admin_notices
 	 *
 	 * @return array
 	 */

@@ -7,8 +7,8 @@ import {
 	type PropValue,
 	sizePropTypeUtil,
 	type SizePropValue,
-} from '@elementor/editor-props';
-import { useActiveBreakpoint } from '@elementor/editor-responsive';
+} from '@refraction/editor-props';
+import { useActiveBreakpoint } from '@refraction/editor-responsive';
 import { DetachIcon, LinkIcon } from '@elementor/icons';
 import { Grid, Stack, Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -86,9 +86,9 @@ export const GapControl = ( { label }: { label: string } ) => {
 
 	const LinkedIcon = isLinked ? LinkIcon : DetachIcon;
 	// translators: %s: Tooltip title.
-	const linkedLabel = __( 'Link %s', 'elementor' ).replace( '%s', tooltipLabel );
+	const linkedLabel = __( 'Link %s', 'refraction' ).replace( '%s', tooltipLabel );
 	// translators: %s: Tooltip title.
-	const unlinkedLabel = __( 'Unlink %s', 'elementor' ).replace( '%s', tooltipLabel );
+	const unlinkedLabel = __( 'Unlink %s', 'refraction' ).replace( '%s', tooltipLabel );
 
 	const disabled = sizeDisabled || directionDisabled;
 
@@ -140,12 +140,12 @@ export const GapControl = ( { label }: { label: string } ) => {
 			<Stack direction="row" gap={ 2 } flexWrap="nowrap" ref={ stackRef }>
 				<Grid container gap={ 0.75 } alignItems="center">
 					<Grid item xs={ 12 }>
-						<ControlFormLabel>{ __( 'Column', 'elementor' ) }</ControlFormLabel>
+						<ControlFormLabel>{ __( 'Column', 'refraction' ) }</ControlFormLabel>
 					</Grid>
 					<Grid item xs={ 12 }>
 						<Control
 							bind={ 'column' }
-							ariaLabel={ __( 'Column gap', 'elementor' ) }
+							ariaLabel={ __( 'Column gap', 'refraction' ) }
 							isLinked={ isLinked }
 							anchorRef={ stackRef }
 							placeholder={ getEffectivePlaceholder( 'column' ) ?? undefined }
@@ -154,12 +154,12 @@ export const GapControl = ( { label }: { label: string } ) => {
 				</Grid>
 				<Grid container gap={ 0.75 } alignItems="center">
 					<Grid item xs={ 12 }>
-						<ControlFormLabel>{ __( 'Row', 'elementor' ) }</ControlFormLabel>
+						<ControlFormLabel>{ __( 'Row', 'refraction' ) }</ControlFormLabel>
 					</Grid>
 					<Grid item xs={ 12 }>
 						<Control
 							bind={ 'row' }
-							ariaLabel={ __( 'Row gap', 'elementor' ) }
+							ariaLabel={ __( 'Row gap', 'refraction' ) }
 							isLinked={ isLinked }
 							anchorRef={ stackRef }
 							placeholder={ getEffectivePlaceholder( 'row' ) ?? undefined }

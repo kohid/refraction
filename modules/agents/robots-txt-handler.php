@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Manages the Elementor Agent Ready block in WordPress's virtual robots.txt.
+ * Manages the Refraction Agent Ready block in WordPress's virtual robots.txt.
  *
  * Adds an Allow rule and a Content-Signal line for every bot the site owner
  * manages in the Bot access control module. Bots outside that list get no
@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * The rules are wrapped in a delimited block so they can be identified and
  * replaced idempotently:
  *
- *   # BEGIN Elementor Agent Ready
+ *   # BEGIN Refraction Agent Ready
  *   ...rules...
- *   # END Elementor Agent Ready
+ *   # END Refraction Agent Ready
  *
  * Important: if a *physical* robots.txt exists in the web root, WordPress does
  * not invoke the `robots_txt` filter — the physical file is served directly.
@@ -27,8 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Robots_Txt_Handler {
 
-	const BLOCK_BEGIN = '# BEGIN Elementor Agent Ready';
-	const BLOCK_END   = '# END Elementor Agent Ready';
+	const BLOCK_BEGIN = '# BEGIN Refraction Agent Ready';
+	const BLOCK_END   = '# END Refraction Agent Ready';
 
 	const SITE_WIDE_CONTENT_SIGNAL = [
 		Agent_Ready_Settings::BOT_PERMISSION_SEARCH   => true,
@@ -74,7 +74,7 @@ class Robots_Txt_Handler {
 	}
 
 	/**
-	 * Append, replace, or remove the Elementor Agent Ready block in the robots.txt output.
+	 * Append, replace, or remove the Refraction Agent Ready block in the robots.txt output.
 	 *
 	 * @param string $output Robots.txt content built by WordPress so far.
 	 * @param bool   $public Whether the site is public (discourage search engines is off).

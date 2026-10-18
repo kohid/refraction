@@ -17,11 +17,11 @@ export default class Create extends $e.modules.editor.CommandContainerBase {
 		try {
 			await updateElementDefaults( type, newDefaults );
 
-			elementor.notifications.showToast( {
-				message: __( 'Default settings changed.', 'elementor' ),
+			refraction.notifications.showToast( {
+				message: __( 'Default settings changed.', 'refraction' ),
 				buttons: [ {
 					name: 'undo',
-					text: __( 'Undo', 'elementor' ),
+					text: __( 'Undo', 'refraction' ),
 					callback() {
 						$e.run( 'kit-elements-defaults/restore', {
 							type,
@@ -31,8 +31,8 @@ export default class Create extends $e.modules.editor.CommandContainerBase {
 				} ],
 			} );
 		} catch ( error ) {
-			elementor.notifications.showToast( {
-				message: __( 'An error occurred.', 'elementor' ),
+			refraction.notifications.showToast( {
+				message: __( 'An error occurred.', 'refraction' ),
 			} );
 
 			throw error;

@@ -1,4 +1,4 @@
-import { rgbToHex } from 'elementor-app/utils/utils';
+import { rgbToHex } from 'refraction-app/utils/utils';
 
 /**
  * @typedef {import('../../../../../../assets/dev/js/editor/container/container')} Container
@@ -62,9 +62,9 @@ export class ShowSwatches extends $e.modules.CommandBase {
 			x = Math.round( e.clientX - rect.left ) + 'px',
 			y = Math.round( e.clientY - rect.top ) + 'px';
 
-		this.container = elementor.getContainer( id );
+		this.container = refraction.getContainer( id );
 
-		const activePicker = elementor.$previewContents[ 0 ].querySelector( this.selectors.picker );
+		const activePicker = refraction.$previewContents[ 0 ].querySelector( this.selectors.picker );
 
 		// If there is a picker already, remove it.
 		if ( activePicker ) {
@@ -123,7 +123,7 @@ export class ShowSwatches extends $e.modules.CommandBase {
 
 			// Determine if the current control is active.
 			const isActive = () => {
-				return ( elementor.helpers.isActiveControl( container.controls[ control ], container.settings.attributes, container.settings.controls ) );
+				return ( refraction.helpers.isActiveControl( container.controls[ control ], container.settings.attributes, container.settings.controls ) );
 			};
 
 			// Throw non-color and non-background-image controls.
@@ -305,14 +305,14 @@ export class ShowSwatches extends $e.modules.CommandBase {
 			className: this.classes.tooltip,
 			trigger: 'manual',
 			title: () => {
-				return __( 'Select a color from any image, or from an element whose color you\'ve manually defined.', 'elementor' );
+				return __( 'Select a color from any image, or from an element whose color you\'ve manually defined.', 'refraction' );
 			},
 		} ).tipsy( 'show' );
 
 		// Hack to move Tipsy to the preview wrapper because it defaults to the editor's `document.body`.
 		// TODO: Use something other than Tipsy.
 		const tooltip = document.querySelector( this.selectors.tooltip );
-		elementor.$previewWrapper[ 0 ].appendChild( tooltip );
+		refraction.$previewWrapper[ 0 ].appendChild( tooltip );
 
 		// Hack to prevent hover on tooltip triggering a `mouseleave` event on the preview wrapper.
 		tooltip.style.pointerEvents = 'none';
@@ -354,7 +354,7 @@ export class ShowSwatches extends $e.modules.CommandBase {
 		this.container.view.$el[ 0 ].append( picker );
 
 		// Check if the picker is overflowing out of the parent.
-		const observer = elementorModules.utils.Scroll.scrollObserver( {
+		const observer = refractionModules.utils.Scroll.scrollObserver( {
 			callback: ( event ) => {
 				observer.unobserve( picker );
 

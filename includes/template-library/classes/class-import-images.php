@@ -1,19 +1,19 @@
 <?php
-namespace Elementor\TemplateLibrary\Classes;
+namespace Refraction\TemplateLibrary\Classes;
 
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Files\Uploads_Manager;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Files\Uploads_Manager;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor template library import images.
+ * Refraction template library import images.
  *
- * Elementor template library import images handler class is responsible for
+ * Refraction template library import images handler class is responsible for
  * importing remote images used by the template library.
  *
  * @since 1.0.0
@@ -71,7 +71,7 @@ class Import_Images {
 		$post_id = $wpdb->get_var(
 			$wpdb->prepare(
 				'SELECT `post_id` FROM `' . $wpdb->postmeta . '`
-					WHERE `meta_key` = \'_elementor_source_image_hash\'
+					WHERE `meta_key` = \'_refraction_source_image_hash\'
 						AND `meta_value` = %s
 				;',
 				$this->get_hash_image( $attachment['url'] )
@@ -180,12 +180,12 @@ class Import_Images {
 		} else {
 			// For now just return the origin attachment
 			return $attachment;
-			// return new \WP_Error( 'attachment_processing_error', esc_html__( 'Invalid file type.', 'elementor' ) );
+			// return new \WP_Error( 'attachment_processing_error', esc_html__( 'Invalid file type.', 'refraction' ) );
 		}
 
 		$post_id = wp_insert_attachment( $post, $upload['file'], $parent_post_id );
 
-		apply_filters( 'elementor/template_library/import_images/new_attachment', $post_id );
+		apply_filters( 'refraction/template_library/import_images/new_attachment', $post_id );
 
 		// On REST requests.
 		if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
@@ -200,7 +200,7 @@ class Import_Images {
 			$post_id,
 			wp_generate_attachment_metadata( $post_id, $upload['file'] )
 		);
-		update_post_meta( $post_id, '_elementor_source_image_hash', $this->get_hash_image( $attachment['url'] ) );
+		update_post_meta( $post_id, '_refraction_source_image_hash', $this->get_hash_image( $attachment['url'] ) );
 
 		$new_attachment = [
 			'id' => $post_id,
@@ -254,7 +254,7 @@ class Import_Images {
 			return false;
 		}
 
-		apply_filters( 'elementor/template_library/import_images/new_attachment', $attachment_id );
+		apply_filters( 'refraction/template_library/import_images/new_attachment', $attachment_id );
 
 		return [
 			'id' => $attachment_id,

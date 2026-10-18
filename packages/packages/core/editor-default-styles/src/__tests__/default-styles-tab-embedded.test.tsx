@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { renderWithStore } from 'test-utils';
-import { useUserStylesCapability } from '@elementor/editor-styles-repository';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
-import { setSessionStorageItem } from '@elementor/session';
-import { __createStore as createStore, __registerSlice as registerSlice, type Store } from '@elementor/store';
+import { useUserStylesCapability } from '@refraction/editor-styles-repository';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
+import { setSessionStorageItem } from '@refraction/session';
+import { __createStore as createStore, __registerSlice as registerSlice, type Store } from '@refraction/store';
 import { act, screen } from '@testing-library/react';
 
 import { DefaultStylesTabEmbedded } from '../components/default-styles-tab-embedded';
 import { slice } from '../store';
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	useUserStylesCapability: jest.fn( () => ( {
 		userCan: () => ( {
 			create: true,
@@ -21,13 +21,13 @@ jest.mock( '@elementor/editor-styles-repository', () => ( {
 	} ) ),
 } ) );
 
-jest.mock( '@elementor/editor-controls', () => ( {
+jest.mock( '@refraction/editor-controls', () => ( {
 	ControlActionsProvider: ( { children }: React.PropsWithChildren ) => children,
 	ControlReplacementsProvider: ( { children }: React.PropsWithChildren ) => children,
 	getControlReplacements: () => ( {} ),
 } ) );
 
-jest.mock( '@elementor/editor-editing-panel', () => ( {
+jest.mock( '@refraction/editor-editing-panel', () => ( {
 	ClassesPropProvider: ( { children }: React.PropsWithChildren ) => children,
 	CreatableAutocomplete: ( { selected }: { selected: { label: string }[] } ) => <div>{ selected[ 0 ]?.label }</div>,
 	ElementProvider: ( { children }: React.PropsWithChildren ) => children,
@@ -38,18 +38,18 @@ jest.mock( '@elementor/editor-editing-panel', () => ( {
 	StyleTabSlot: () => null,
 } ) );
 
-jest.mock( '@elementor/editor-responsive', () => ( {
+jest.mock( '@refraction/editor-responsive', () => ( {
 	useActiveBreakpoint: () => 'desktop',
 } ) );
 
-jest.mock( '@elementor/menus', () => ( {
+jest.mock( '@refraction/menus', () => ( {
 	controlActionsMenu: {
 		useMenuItems: () => ( { default: [] } ),
 	},
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => ( {
-	...jest.requireActual( '@elementor/editor-ui' ),
+jest.mock( '@refraction/editor-ui', () => ( {
+	...jest.requireActual( '@refraction/editor-ui' ),
 	ThemeProvider: ( { children }: { children: React.ReactNode } ) => <>{ children }</>,
 } ) );
 
@@ -85,13 +85,13 @@ describe( 'DefaultStylesTabEmbedded', () => {
 
 		(
 			window as unknown as {
-				elementor: {
+				refraction: {
 					config: {
 						atomic: { default_styles: { allowed_tags: string[] } };
 					};
 				};
 			}
-		 ).elementor = {
+		 ).refraction = {
 			config: {
 				atomic: {
 					default_styles: {

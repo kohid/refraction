@@ -1,5 +1,5 @@
-import { type NotificationData, notify } from '@elementor/editor-notifications';
-import { blockCommand } from '@elementor/editor-v1-adapters';
+import { type NotificationData, notify } from '@refraction/editor-notifications';
+import { blockCommand } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import {
@@ -16,7 +16,7 @@ import {
 
 const FORM_NESTING_ALERT: NotificationData = {
 	type: 'default',
-	message: __( "Forms can't be nested. Create separate forms instead.", 'elementor' ),
+	message: __( "Forms can't be nested. Create separate forms instead.", 'refraction' ),
 	id: 'form-nesting-blocked',
 };
 
@@ -75,8 +75,8 @@ function blockFormPaste( args: PasteArgs ): boolean {
 	}
 
 	const data = (
-		window as { elementorCommon?: { storage?: { get: () => StorageContent } } }
-	 )?.elementorCommon?.storage?.get();
+		window as { refractionCommon?: { storage?: { get: () => StorageContent } } }
+	 )?.refractionCommon?.storage?.get();
 
 	if ( ! data?.clipboard?.elements ) {
 		return false;

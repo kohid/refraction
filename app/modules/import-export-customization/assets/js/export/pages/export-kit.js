@@ -6,7 +6,7 @@ import ExportIntro from '../components/export-intro';
 import ExportKitFooter from '../components/export-kit-footer';
 import KitContent from '../components/export-kit-parts-selection';
 import KitInfo from '../components/kit-info';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 
 export default function ExportKit() {
 	const { dispatch } = useExportContext();
@@ -18,11 +18,11 @@ export default function ExportKit() {
 	const footerContent = <ExportKitFooter />;
 
 	const headerContent = (
-		<PageHeader title={ __( 'Export', 'elementor' ) } />
+		<PageHeader title={ __( 'Export', 'refraction' ) } />
 	);
 
 	useEffect( () => {
-		AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomization );
+		AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomization );
 	}, [] );
 
 	return (

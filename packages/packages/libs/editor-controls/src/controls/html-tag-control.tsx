@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { getElementLabel } from '@elementor/editor-elements';
-import { stringPropTypeUtil, type StringPropValue } from '@elementor/editor-props';
-import { MenuListItem } from '@elementor/editor-ui';
+import { getElementLabel } from '@refraction/editor-elements';
+import { stringPropTypeUtil, type StringPropValue } from '@refraction/editor-props';
+import { MenuListItem } from '@refraction/editor-ui';
 import { Select, type SelectChangeEvent, styled, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -43,11 +43,11 @@ export const HtmlTagControl = createControl( ( props: Props ) => {
 
 	const elementLabel = getElementLabel( elementId ) ?? 'element';
 	const infoTipProps = {
-		title: __( 'HTML Tag', 'elementor' ),
+		title: __( 'HTML Tag', 'refraction' ),
 		/* translators: %s is the element name. */
 		description: __(
 			`The tag is locked to 'a' tag because this %s has a link. To pick a different tag, remove the link first.`,
-			'elementor'
+			'refraction'
 		).replace( '%s', elementLabel ),
 		isEnabled: !! disabled,
 	};

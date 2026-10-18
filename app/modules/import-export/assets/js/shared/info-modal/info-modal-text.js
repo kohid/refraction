@@ -1,6 +1,6 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Text from 'elementor-app/ui/atoms/text';
+import Text from 'refraction-app/ui/atoms/text';
 
 export default function InfoModalText( props ) {
 	return (

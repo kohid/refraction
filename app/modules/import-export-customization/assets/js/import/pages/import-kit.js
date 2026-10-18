@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { useNavigate } from '@reach/router';
 import { Box, Typography, Link, CircularProgress, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
-import useQueryParams from 'elementor-app/hooks/use-query-params';
+import useQueryParams from 'refraction-app/hooks/use-query-params';
 import { BaseLayout, TopBar, PageHeader, CenteredContent } from '../../shared/components';
 import DropZone from '../components/drop-zone';
 import { IMPORT_STATUS, ACTION_TYPE, useImportContext } from '../context/import-context';
 import { useUploadKit } from '../hooks/use-upload-kit';
 import { ProcessingErrorDialog } from '../../shared/components/error/processing-error-dialog';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 import useReturnToRedirect from '../../shared/hooks/use-return-to-redirect';
 
 export default function ImportKit() {
@@ -21,7 +21,7 @@ export default function ImportKit() {
 	const { attemptRedirect } = useReturnToRedirect( data.returnTo );
 
 	const headerContent = (
-		<PageHeader title={ __( 'Import', 'elementor' ) } />
+		<PageHeader title={ __( 'Import', 'refraction' ) } />
 	);
 
 	const onFileSelect = ( file ) => {
@@ -41,14 +41,14 @@ export default function ImportKit() {
 			return dispatch( { type: 'SET_EXPORT_STATUS', payload: IMPORT_STATUS.CUSTOMIZING } );
 		}
 
-		let path = 'admin.php?page=elementor-tools#tab-import-export-kit';
+		let path = 'admin.php?page=refraction-tools#tab-import-export-kit';
 		if ( 'cloud' === data?.kitUploadParams?.source ) {
-			path = 'admin.php?page=elementor-app&source=kit_import#kit-library/cloud';
+			path = 'admin.php?page=refraction-app&source=kit_import#kit-library/cloud';
 		} else if ( 'kit-library' === data?.kitUploadParams?.source ) {
-			path = `admin.php?page=elementor-app&source=kit_import#kit-library`;
+			path = `admin.php?page=refraction-app&source=kit_import#kit-library`;
 		}
 
-		window.top.location = elementorAppConfig.admin_url + path;
+		window.top.location = refractionAppConfig.admin_url + path;
 	};
 
 	useEffect( () => {
@@ -103,7 +103,7 @@ export default function ImportKit() {
 	}, [ id, referrer, fileUrl, actionType, nonce, returnToParam, noAutomaticRedirectParam, dispatch ] );
 
 	useEffect( () => {
-		AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitImportUploadBox );
+		AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitImportUploadBox );
 	}, [] );
 
 	const renderContent = () => {
@@ -134,7 +134,7 @@ export default function ImportKit() {
 						color="text.primary"
 						data-testid="import-title"
 					>
-						{ __( 'Import a website template', 'elementor' ) }
+						{ __( 'Import a website template', 'refraction' ) }
 					</Typography>
 					<Typography
 						variant="body1"
@@ -142,14 +142,14 @@ export default function ImportKit() {
 						data-testid="import-description"
 					>
 						{ /* eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace */ }
-						{ __( 'Upload a file with templates, site settings, content, etc., and apply them to your site ', 'elementor' ) }
+						{ __( 'Upload a file with templates, site settings, content, etc., and apply them to your site ', 'refraction' ) }
 						<Link
 							href="#"
 							color="info.light"
 							sx={ { ml: 1, textDecoration: 'none' } }
 							data-testid="import-learn-more-link"
 						>
-							{ __( 'Learn more', 'elementor' ) }
+							{ __( 'Learn more', 'refraction' ) }
 						</Link>
 					</Typography>
 				</Stack>

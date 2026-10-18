@@ -1,8 +1,8 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { type User } from './types';
 
-const RESOURCE_URL = 'elementor/v1/user-data/current-user';
+const RESOURCE_URL = 'refraction/v1/user-data/current-user';
 
 type GetUserPayload = {
 	params?: { context?: 'edit' };

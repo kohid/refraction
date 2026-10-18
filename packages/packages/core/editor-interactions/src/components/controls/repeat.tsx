@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { type ToggleButtonGroupItem, ToggleButtonGroupUi } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleButtonGroupUi } from '@refraction/editor-controls';
 import { Number123Icon, RepeatIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -10,13 +10,13 @@ import { PromotionOverlayLayout } from '../../ui/promotion-overlay-layout';
 const TRACKING_DATA = { target_name: 'interactions_repeat', location_l2: 'interactions' } as const;
 
 export const REPEAT_OPTIONS = {
-	times: __( 'times', 'elementor' ),
-	loop: __( 'loop', 'elementor' ),
+	times: __( 'times', 'refraction' ),
+	loop: __( 'loop', 'refraction' ),
 };
 
 export const REPEAT_TOOLTIPS = {
-	times: __( 'Enable number', 'elementor' ),
-	loop: __( 'Infinite repeat', 'elementor' ),
+	times: __( 'Enable number', 'refraction' ),
+	loop: __( 'Infinite repeat', 'refraction' ),
 };
 
 export function Repeat() {
@@ -44,7 +44,7 @@ export function Repeat() {
 			ref={ repeatContainerRef }
 			promotionChip={
 				<InteractionsPromotionChip
-					content={ __( 'Upgrade to control how many times the animation repeats.', 'elementor' ) }
+					content={ __( 'Upgrade to control how many times the animation repeats.', 'refraction' ) }
 					upgradeUrl={ 'https://go.elementor.com/go-pro-interactions-repeat-modal/' }
 					anchorRef={ repeatContainerRef }
 					trackingData={ TRACKING_DATA }

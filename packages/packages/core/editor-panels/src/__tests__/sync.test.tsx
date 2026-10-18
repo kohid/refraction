@@ -2,24 +2,24 @@ import {
 	__privateIsRouteActive as isRouteActive,
 	__privateOpenRoute as openRoute,
 	__privateRegisterRoute as registerRoute,
-} from '@elementor/editor-v1-adapters';
-import { __createStore, __dispatch, __getState, __registerSlice } from '@elementor/store';
+} from '@refraction/editor-v1-adapters';
+import { __createStore, __dispatch, __getState, __registerSlice } from '@refraction/store';
 
 import { selectOpenId, slice } from '../store';
 import { sync } from '../sync';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	__privateRegisterRoute: jest.fn(),
 	__privateOpenRoute: jest.fn(),
 	__privateIsRouteActive: jest.fn(),
 } ) );
 
-describe( '@elementor/editor-panels sync', () => {
+describe( '@refraction/editor-panels sync', () => {
 	const v1PanelElementsIds = [
-		'elementor-panel-header-wrapper',
-		'elementor-panel-content-wrapper',
-		'elementor-panel-state-loading',
+		'refraction-panel-header-wrapper',
+		'refraction-panel-content-wrapper',
+		'refraction-panel-state-loading',
 	];
 
 	beforeEach( () => {
@@ -34,7 +34,7 @@ describe( '@elementor/editor-panels sync', () => {
 
 	it( 'should register the empty route on init', () => {
 		// Arrange & Act.
-		window.dispatchEvent( new CustomEvent( 'elementor/panel/init' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/panel/init' ) );
 
 		// Assert.
 		expect( registerRoute ).toHaveBeenCalledTimes( 1 );
@@ -43,7 +43,7 @@ describe( '@elementor/editor-panels sync', () => {
 
 	it( 'should open v1 route `panels/empty` when triggering `open` action', () => {
 		// Arrange.
-		window.dispatchEvent( new CustomEvent( 'elementor/panel/init' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/panel/init' ) );
 
 		// Act.
 		__dispatch( slice.actions.open( 'test' ) );
@@ -55,7 +55,7 @@ describe( '@elementor/editor-panels sync', () => {
 
 	it( 'should close v1 route `panel/v2` when triggering `close` action and set default v1 route', () => {
 		// Arrange.
-		window.dispatchEvent( new CustomEvent( 'elementor/panel/init' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/panel/init' ) );
 
 		jest.mocked( isRouteActive ).mockImplementation( ( route ) => route === 'panel/v2' );
 
@@ -74,7 +74,7 @@ describe( '@elementor/editor-panels sync', () => {
 
 	it( 'should not navigate to v1 default route if the route is not `panel/v2`', () => {
 		// Arrange.
-		window.dispatchEvent( new CustomEvent( 'elementor/panel/init' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/panel/init' ) );
 
 		jest.mocked( isRouteActive ).mockImplementation( () => false );
 
@@ -94,7 +94,7 @@ describe( '@elementor/editor-panels sync', () => {
 
 		// Act.
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/routes/close', {
+			new CustomEvent( 'refraction/routes/close', {
 				detail: { route: 'panel/v2' },
 			} )
 		);
@@ -109,7 +109,7 @@ describe( '@elementor/editor-panels sync', () => {
 
 		// Act.
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/routes/open', {
+			new CustomEvent( 'refraction/routes/open', {
 				detail: { route: 'panel/v2' },
 			} )
 		);
@@ -128,7 +128,7 @@ describe( '@elementor/editor-panels sync', () => {
 
 		// Act.
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/routes/close', {
+			new CustomEvent( 'refraction/routes/close', {
 				detail: { route: 'panel/v2' },
 			} )
 		);

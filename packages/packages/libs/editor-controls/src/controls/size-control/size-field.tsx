@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { SizePropValue } from '@elementor/editor-props';
+import type { SizePropValue } from '@refraction/editor-props';
 import { MathFunctionIcon } from '@elementor/icons';
 import { InputAdornment, type TextFieldProps } from '@elementor/ui';
 

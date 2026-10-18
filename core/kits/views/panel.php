@@ -1,15 +1,15 @@
-<script type="text/template" id="tmpl-elementor-kit-panel">
-	<main id="elementor-kit__panel-content__wrapper" class="elementor-panel-content-wrapper"></main>
+<script type="text/template" id="tmpl-refraction-kit-panel">
+	<main id="refraction-kit__panel-content__wrapper" class="refraction-panel-content-wrapper"></main>
 </script>
 
-<script type="text/template" id="tmpl-elementor-kit-panel-content">
-	<div id="elementor-kit-panel-content-controls"></div>
+<script type="text/template" id="tmpl-refraction-kit-panel-content">
+	<div id="refraction-kit-panel-content-controls"></div>
 	<#
 	const tabConfig = $e.components.get( 'panel/global' ).getActiveTabConfig();
 	if ( tabConfig.helpUrl ) { #>
-	<div id="elementor-panel__editor__help">
-		<a id="elementor-panel__editor__help__link" href="{{ tabConfig.helpUrl }}" target="_blank">
-			<?php echo esc_html__( 'Need Help', 'elementor' ); ?>
+	<div id="refraction-panel__editor__help">
+		<a id="refraction-panel__editor__help__link" href="{{ tabConfig.helpUrl }}" target="_blank">
+			<?php echo esc_html__( 'Need Help', 'refraction' ); ?>
 			<i class="eicon-help-o"></i>
 		</a>
 	</div>
@@ -22,7 +22,7 @@
 	#>
 </script>
 
-<script type="text/template" id="tmpl-elementor-global-style-repeater-row">
+<script type="text/template" id="tmpl-refraction-global-style-repeater-row">
 	<# let removeClass = 'remove',
 			removeIcon = 'eicon-trash-o';
 
@@ -33,14 +33,14 @@
 	}
 	#>
 	<# if ( itemActions.sort ) { #>
-	<button class="elementor-repeater-row-tool elementor-repeater-row-tools elementor-repeater-tool-sort" aria-label="<?php echo esc_attr__( 'Reorder', 'elementor' ); ?>">
+	<button class="refraction-repeater-row-tool refraction-repeater-row-tools refraction-repeater-tool-sort" aria-label="<?php echo esc_attr__( 'Reorder', 'refraction' ); ?>">
 		<i class="eicon-cursor-move" aria-hidden="true"></i>
 	</button>
 	<# } #>
-	<button class="elementor-repeater-row-tool elementor-repeater-tool-{{{ removeClass }}}" aria-label="<?php echo esc_attr__( 'Remove', 'elementor' ); ?>">
+	<button class="refraction-repeater-row-tool refraction-repeater-tool-{{{ removeClass }}}" aria-label="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">
 		<i class="{{{ removeIcon }}}" aria-hidden="true"></i>
 		<# if ( itemActions.remove ) { #>
 		<# } #>
 	</button>
-	<div class="elementor-repeater-row-controls"></div>
+	<div class="refraction-repeater-row-controls"></div>
 </script>

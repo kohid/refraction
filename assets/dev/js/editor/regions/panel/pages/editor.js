@@ -1,12 +1,12 @@
-var ControlsStack = elementorModules.editor.views.ControlsStack,
+var ControlsStack = refractionModules.editor.views.ControlsStack,
 	EditorView;
 
 EditorView = ControlsStack.extend( {
 	template: Marionette.TemplateCache.get( '#tmpl-editor-content' ),
 
-	id: 'elementor-panel-page-editor',
+	id: 'refraction-panel-page-editor',
 
-	childViewContainer: '#elementor-controls',
+	childViewContainer: '#refraction-controls',
 
 	childViewOptions() {
 		return {
@@ -20,7 +20,7 @@ EditorView = ControlsStack.extend( {
 	},
 
 	getNamespaceArray() {
-		var eventNamespace = elementorModules.editor.views.ControlsStack.prototype.getNamespaceArray();
+		var eventNamespace = refractionModules.editor.views.ControlsStack.prototype.getNamespaceArray();
 
 		const model = this.getOption( 'editedElementView' ).getEditModel(),
 			currentElementType = model.get( 'elType' );
@@ -66,15 +66,15 @@ EditorView = ControlsStack.extend( {
 	openActiveSection() {
 		ControlsStack.prototype.openActiveSection.apply( this, arguments );
 
-		elementor.channels.editor.trigger( 'section:activated', this.activeSection, this );
+		refraction.channels.editor.trigger( 'section:activated', this.activeSection, this );
 	},
 
 	isVisibleSectionControl( sectionControlModel ) {
-		return ControlsStack.prototype.isVisibleSectionControl.apply( this, arguments ) && elementor.helpers.isActiveControl( sectionControlModel, this.model.get( 'settings' ).attributes, this.model.get( 'settings' ).controls );
+		return ControlsStack.prototype.isVisibleSectionControl.apply( this, arguments ) && refraction.helpers.isActiveControl( sectionControlModel, this.model.get( 'settings' ).attributes, this.model.get( 'settings' ).controls );
 	},
 
 	scrollToEditedElement() {
-		elementor.helpers.scrollToView( this.getOption( 'editedElementView' ).$el );
+		refraction.helpers.scrollToView( this.getOption( 'editedElementView' ).$el );
 	},
 
 	onDestroy() {
@@ -97,7 +97,7 @@ EditorView = ControlsStack.extend( {
 			editedElementType = editedElementView.model.get( 'widgetType' );
 		}
 
-		elementor.channels.editor
+		refraction.channels.editor
 			.trigger( 'change', childView, editedElementView )
 			.trigger( 'change:' + editedElementType, childView, editedElementView )
 			.trigger( 'change:' + editedElementType + ':' + childView.model.get( 'name' ), childView, editedElementView );

@@ -1,6 +1,6 @@
 import FilesUploadHandler from '../utils/files-upload-handler';
 
-const ControlMultipleBaseItemView = require( 'elementor-controls/base-multiple' );
+const ControlMultipleBaseItemView = require( 'refraction-controls/base-multiple' );
 
 class ControlIconsView extends ControlMultipleBaseItemView {
 	constructor( ...args ) {
@@ -19,7 +19,7 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 	}
 
 	enqueueIconFonts( iconType ) {
-		const iconSetting = elementor.helpers.getIconLibrarySettings( iconType );
+		const iconSetting = refraction.helpers.getIconLibrarySettings( iconType );
 		if ( false === iconSetting || ! this.isMigrationAllowed() ) {
 			return;
 		}
@@ -27,15 +27,15 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 		if ( iconSetting.enqueue ) {
 			iconSetting.enqueue.forEach( ( assetURL ) => {
 				const versionAddedURL = `${ assetURL }${ iconSetting?.ver ? '?ver=' + iconSetting.ver : '' }`;
-				elementor.helpers.enqueueEditorStylesheet( versionAddedURL );
-				elementor.helpers.enqueuePreviewStylesheet( versionAddedURL );
+				refraction.helpers.enqueueEditorStylesheet( versionAddedURL );
+				refraction.helpers.enqueuePreviewStylesheet( versionAddedURL );
 			} );
 		}
 
 		if ( iconSetting.url ) {
 			const versionAddedURL = `${ iconSetting.url }${ iconSetting?.ver ? '?ver=' + iconSetting.ver : '' }`;
-			elementor.helpers.enqueueEditorStylesheet( versionAddedURL );
-			elementor.helpers.enqueuePreviewStylesheet( versionAddedURL );
+			refraction.helpers.enqueueEditorStylesheet( versionAddedURL );
+			refraction.helpers.enqueuePreviewStylesheet( versionAddedURL );
 		}
 	}
 
@@ -43,14 +43,14 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 		const ui = super.ui(),
 			skin = this.model.get( 'skin' );
 
-		ui.controlMedia = '.elementor-control-media';
-		ui.svgUploader = 'media' === skin ? '.elementor-control-svg-uploader' : '.elementor-control-icons--inline__svg';
-		ui.iconPickers = 'media' === skin ? '.elementor-control-icon-picker, .elementor-control-media__preview, .elementor-control-media-upload-button' : '.elementor-control-icons--inline__icon';
-		ui.deleteButton = 'media' === skin ? '.elementor-control-media__remove' : '.elementor-control-icons--inline__none';
-		ui.previewPlaceholder = '.elementor-control-media__preview';
-		ui.previewContainer = '.elementor-control-preview-area';
-		ui.inlineIconContainer = '.elementor-control-inline-icon';
-		ui.inlineDisplayedIcon = '.elementor-control-icons--inline__displayed-icon';
+		ui.controlMedia = '.refraction-control-media';
+		ui.svgUploader = 'media' === skin ? '.refraction-control-svg-uploader' : '.refraction-control-icons--inline__svg';
+		ui.iconPickers = 'media' === skin ? '.refraction-control-icon-picker, .refraction-control-media__preview, .refraction-control-media-upload-button' : '.refraction-control-icons--inline__icon';
+		ui.deleteButton = 'media' === skin ? '.refraction-control-media__remove' : '.refraction-control-icons--inline__none';
+		ui.previewPlaceholder = '.refraction-control-media__preview';
+		ui.previewContainer = '.refraction-control-preview-area';
+		ui.inlineIconContainer = '.refraction-control-inline-icon';
+		ui.inlineDisplayedIcon = '.refraction-control-icons--inline__displayed-icon';
 		ui.radioInputs = '[type="radio"]';
 
 		return ui;
@@ -96,7 +96,7 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 	}
 
 	migrateFa4toFa5( fa4Value ) {
-		const fa5Value = elementor.helpers.mapFa4ToFa5( fa4Value );
+		const fa5Value = refraction.helpers.mapFa4ToFa5( fa4Value );
 		this.cache.migratedFlag[ this.model.get( 'name' ) ] = fa5Value;
 		this.enqueueIconFonts( fa5Value.library );
 		return fa5Value;
@@ -109,7 +109,7 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 	}
 
 	isMigrationAllowed() {
-		return ! elementor.config.icons_update_needed;
+		return ! refraction.config.icons_update_needed;
 	}
 
 	getValueToMigrate() {
@@ -137,16 +137,16 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 				event.stopPropagation();
 
 				const onConfirm = () => {
-					window.location.href = elementor.config.tools_page_link +
-						'&redirect_to_document=' + elementor.documents.getCurrent()?.id +
-						'&_wpnonce=' + elementor.config.tools_page_nonce +
+					window.location.href = refraction.config.tools_page_link +
+						'&redirect_to_document=' + refraction.documents.getCurrent()?.id +
+						'&_wpnonce=' + refraction.config.tools_page_nonce +
 						'#tab-fontawesome4_migration';
 				};
-				const enableMigrationDialog = elementor.helpers.getSimpleDialog(
-					'elementor-enable-fa5-dialog',
-					__( 'Elementor\'s New Icon Library', 'elementor' ),
-					__( 'Elementor v2.6 includes an upgrade from Font Awesome 4 to 5. In order to continue using icons, be sure to click "Update".', 'elementor' ) + ' <a href="https://go.elementor.com/fontawesome-migration/" target="_blank">' + __( 'Learn More', 'elementor' ) + '</a>',
-					__( 'Update', 'elementor' ),
+				const enableMigrationDialog = refraction.helpers.getSimpleDialog(
+					'refraction-enable-fa5-dialog',
+					__( 'Refraction\'s New Icon Library', 'refraction' ),
+					__( 'Refraction v2.6 includes an upgrade from Font Awesome 4 to 5. In order to continue using icons, be sure to click "Update".', 'refraction' ) + ' <a href="https://go.elementor.com/fontawesome-migration/" target="_blank">' + __( 'Learn More', 'refraction' ) + '</a>',
+					__( 'Update', 'refraction' ),
 					onConfirm,
 				);
 				enableMigrationDialog.show();
@@ -166,21 +166,21 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 	onRender() {
 		super.onRender();
 		if ( this.isMigrationAllowed() ) {
-			elementor.iconManager.loadIconLibraries();
+			refraction.iconManager.loadIconLibraries();
 		}
 	}
 
 	initFrame() {
 		// Set current doc id to attach uploaded images.
-		wp.media.view.settings.post.id = elementor.config.document.id;
+		wp.media.view.settings.post.id = refraction.config.document.id;
 		this.frame = wp.media( {
 			button: {
-				text: __( 'Insert Media', 'elementor' ),
+				text: __( 'Insert Media', 'refraction' ),
 			},
 			library: { type: [ 'image/svg+xml' ] },
 			states: [
 				new wp.media.controller.Library( {
-					title: __( 'Insert Media', 'elementor' ),
+					title: __( 'Insert Media', 'refraction' ),
 					library: wp.media.query( { type: [ 'image/svg+xml' ] } ),
 					multiple: false,
 					date: false,
@@ -259,7 +259,7 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 	}
 
 	openPicker() {
-		elementor.iconManager.show( { view: this } );
+		refraction.iconManager.show( { view: this } );
 	}
 
 	applySavedValue() {
@@ -296,7 +296,7 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 		}
 
 		if ( 'svg' === iconType && 'inline' !== skin ) {
-			return elementor.helpers.fetchInlineSvg( iconValue.url, ( data ) => {
+			return refraction.helpers.fetchInlineSvg( iconValue.url, ( data ) => {
 				this.ui.previewPlaceholder.html( data );
 			} );
 		}

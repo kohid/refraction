@@ -1,14 +1,14 @@
 import { createMockDocument } from 'test-utils';
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
-import { __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
+import { __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import useActionProps from '../use-action-props';
 
-jest.mock( '@elementor/editor-documents' );
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-documents' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
-describe( '@elementor/editor-app-bar - useDocumentPreviewProps', () => {
+describe( '@refraction/editor-app-bar - useDocumentPreviewProps', () => {
 	it( 'should open the document preview', () => {
 		// Arrange.
 		jest.mocked( useActiveDocument ).mockReturnValue( createMockDocument() );

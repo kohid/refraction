@@ -1,5 +1,5 @@
 import { createMockChild, createMockContainer } from 'test-utils';
-import { type Dependency } from '@elementor/editor-props';
+import { type Dependency } from '@refraction/editor-props';
 
 import { getContainer } from '../../sync/get-container';
 import { addModelToParent, removeModelFromParent } from '../../sync/resolve-element';
@@ -239,7 +239,7 @@ describe( 'bindSettingsReconcile', () => {
 		expect( mockRemoveModelFromParent ).not.toHaveBeenCalled();
 	} );
 
-	it( 'dispatches elementor/navigator/refresh-children after attaching a child', () => {
+	it( 'dispatches refraction/navigator/refresh-children after attaching a child', () => {
 		mockGetContainer.mockReturnValue( createMockContainer( 'parent-1', [] ) );
 		const settings = createReactiveSettings( paginationOff );
 		const model = createReactiveModel( 'parent-1', settings );
@@ -256,7 +256,7 @@ describe( 'bindSettingsReconcile', () => {
 
 		const refreshEvents = dispatchSpy.mock.calls
 			.map( ( args: unknown[] ) => args[ 0 ] as Event )
-			.filter( ( event: Event ) => event.type === 'elementor/navigator/refresh-children' );
+			.filter( ( event: Event ) => event.type === 'refraction/navigator/refresh-children' );
 
 		expect( refreshEvents ).toHaveLength( 1 );
 		expect( ( refreshEvents[ 0 ] as CustomEvent ).detail ).toEqual( { elementId: 'parent-1' } );
@@ -264,7 +264,7 @@ describe( 'bindSettingsReconcile', () => {
 		dispatchSpy.mockRestore();
 	} );
 
-	it( 'dispatches elementor/navigator/refresh-children after detaching a child', () => {
+	it( 'dispatches refraction/navigator/refresh-children after detaching a child', () => {
 		const pagination = createMockChild( { id: 'pag-1', elType: 'e-pagination' } );
 		mockGetContainer.mockReturnValue( createMockContainer( 'parent-1', [ pagination ] ) );
 		const settings = createReactiveSettings( paginationOn );
@@ -280,7 +280,7 @@ describe( 'bindSettingsReconcile', () => {
 
 		const refreshEvents = dispatchSpy.mock.calls
 			.map( ( args: unknown[] ) => args[ 0 ] as Event )
-			.filter( ( event: Event ) => event.type === 'elementor/navigator/refresh-children' );
+			.filter( ( event: Event ) => event.type === 'refraction/navigator/refresh-children' );
 
 		expect( refreshEvents ).toHaveLength( 1 );
 		expect( ( refreshEvents[ 0 ] as CustomEvent ).detail ).toEqual( { elementId: 'parent-1' } );
@@ -308,7 +308,7 @@ describe( 'bindSettingsReconcile', () => {
 		expect(
 			dispatchSpy.mock.calls
 				.map( ( args: unknown[] ) => args[ 0 ] as Event )
-				.some( ( event: Event ) => event.type === 'elementor/navigator/refresh-children' )
+				.some( ( event: Event ) => event.type === 'refraction/navigator/refresh-children' )
 		).toBe( false );
 
 		dispatchSpy.mockRestore();
@@ -333,7 +333,7 @@ describe( 'bindSettingsReconcile', () => {
 		expect(
 			dispatchSpy.mock.calls
 				.map( ( args: unknown[] ) => args[ 0 ] as Event )
-				.some( ( event: Event ) => event.type === 'elementor/navigator/refresh-children' )
+				.some( ( event: Event ) => event.type === 'refraction/navigator/refresh-children' )
 		).toBe( false );
 
 		dispatchSpy.mockRestore();

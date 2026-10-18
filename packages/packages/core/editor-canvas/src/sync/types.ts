@@ -1,4 +1,4 @@
-import { type V1ElementModelProps, type V1ElementSettingsProps } from '@elementor/editor-elements';
+import { type V1ElementModelProps, type V1ElementSettingsProps } from '@refraction/editor-elements';
 
 import { type StorageContent } from '../prevent-link-in-link-commands';
 
@@ -14,15 +14,15 @@ type Channel = {
 	trigger: ( event: string ) => void;
 };
 
-type ElementorChannels = {
+type RefractionChannels = {
 	editor: Channel;
 	panelElements: Channel;
 };
 
 export type CanvasExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		$preview?: [ HTMLIFrameElement ];
-		channels?: ElementorChannels;
+		channels?: RefractionChannels;
 		modules?: {
 			elements?: {
 				models?: {
@@ -31,7 +31,7 @@ export type CanvasExtendedWindow = Window & {
 			};
 		};
 	};
-	elementorCommon?: {
+	refractionCommon?: {
 		storage?: {
 			get: ( key?: string ) => StorageContent;
 		};

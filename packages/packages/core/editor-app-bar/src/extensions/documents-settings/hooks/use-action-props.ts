@@ -1,11 +1,11 @@
 import {
 	__useActiveDocument as useActiveDocument,
 	__useHostDocument as useHostDocument,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import {
 	__privateOpenRoute as openRoute,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { FileSettingsIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -20,8 +20,8 @@ export default function useActionProps() {
 
 	const ButtonTitle = document
 		? /* translators: %s: Post type label. */
-		  __( '%s Settings', 'elementor' ).replace( '%s', document.type.label )
-		: __( 'Document Settings', 'elementor' );
+		  __( '%s Settings', 'refraction' ).replace( '%s', document.type.label )
+		: __( 'Document Settings', 'refraction' );
 
 	return {
 		title: ButtonTitle,
@@ -32,10 +32,10 @@ export default function useActionProps() {
 			}
 
 			const extendedWindow = window as unknown as ExtendedWindow;
-			const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+			const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 			if ( config ) {
-				extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.documentSettings, {
+				extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.documentSettings, {
 					location: config.locations.topBar,
 					secondaryLocation: config.secondaryLocations[ 'document-settings' ],
 					trigger: config.triggers.click,

@@ -1,7 +1,7 @@
 import ImportContextProvider from './context/import-context';
 
 import { LocationProvider, Router } from '@reach/router';
-import router from '@elementor/router';
+import router from '@refraction/router';
 
 import ImportKit from './pages/import-kit';
 import ImportComplete from './pages/import-complete';

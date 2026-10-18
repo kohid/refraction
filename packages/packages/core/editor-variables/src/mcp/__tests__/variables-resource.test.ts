@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { STORAGE_UPDATED_EVENT } from '../../storage';
 import { GLOBAL_VARIABLES_URI, initVariablesResource } from '../variables-resource';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateListenTo: jest.fn(),
 	commandEndEvent: jest.fn( ( name: string ) => `commandEnd:${ name }` ),
 } ) );
@@ -49,7 +49,7 @@ describe( 'variables-resource (thin proxy wrapper)', () => {
 		const uri = new URL( GLOBAL_VARIABLES_URI );
 		const result = await canvas.getHandler()( uri );
 
-		expect( httpMock.get ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( httpMock.get ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			params: { uri: uri.href },
 		} );
 		expect( result.contents[ 0 ].mimeType ).toBe( 'application/json' );

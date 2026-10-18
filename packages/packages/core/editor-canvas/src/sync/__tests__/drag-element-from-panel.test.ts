@@ -1,7 +1,7 @@
 import { endDragElementFromPanel, startDragElementFromPanel } from '../drag-element-from-panel';
 import { type CanvasExtendedWindow } from '../types';
 
-const EXPECTED_DRAG_GROUPS = [ 'elementor-element' ];
+const EXPECTED_DRAG_GROUPS = [ 'refraction-element' ];
 
 const mockTrigger = jest.fn();
 const mockReply = jest.fn( () => ( { trigger: mockTrigger } ) );
@@ -9,7 +9,7 @@ const mockReply = jest.fn( () => ( { trigger: mockTrigger } ) );
 describe( 'drag-element-from-panel', () => {
 	const extendedWindow = window as unknown as CanvasExtendedWindow;
 
-	extendedWindow.elementor = {
+	extendedWindow.refraction = {
 		channels: {
 			editor: { reply: mockReply },
 			panelElements: { reply: mockReply, trigger: mockTrigger },

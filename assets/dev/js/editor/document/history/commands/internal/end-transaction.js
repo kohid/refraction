@@ -14,7 +14,7 @@ export class EndTransaction extends CommandInternalBase {
 
 		// 'elements' title for multiple containers.
 		if ( transactions.length > 1 ) {
-			title = __( 'Elements', 'elementor' );
+			title = __( 'Elements', 'refraction' );
 			subTitle = '';
 		}
 

@@ -5,10 +5,10 @@ class Admin {
 	constructor() {
 		const urlParams = new URLSearchParams( window.location.search );
 
-		if ( 'elementor-tools' === urlParams.get( 'page' ) ) {
+		if ( 'refraction-tools' === urlParams.get( 'page' ) ) {
 			this.sendPageToolsViewedEvent();
 
-			elementorAdmin.elements.$settingsTabs.on( 'focus', () => {
+			refractionAdmin.elements.$settingsTabs.on( 'focus', () => {
 				const location = window.location.hash.slice( 1 );
 
 				this.maybeSendImportExportLocationEvent( location );
@@ -17,10 +17,10 @@ class Admin {
 			this.maybeSendImportExportLocationEvent( window.location.hash.slice( 1 ) );
 		}
 
-		this.revertButton = document.getElementById( 'elementor-import-export__revert_kit' );
-		this.importFroLibraryButton = document.getElementById( 'elementor-import-export__import_from_library' );
-		this.importButton = document.getElementById( 'elementor-import-export__import' );
-		this.exportButton = document.getElementById( 'elementor-import-export__export' );
+		this.revertButton = document.getElementById( 'refraction-import-export__revert_kit' );
+		this.importFroLibraryButton = document.getElementById( 'refraction-import-export__import_from_library' );
+		this.importButton = document.getElementById( 'refraction-import-export__import' );
+		this.exportButton = document.getElementById( 'refraction-import-export__export' );
 
 		this.initializeRevertHandler();
 		this.bindEventListeners();
@@ -55,12 +55,12 @@ class Admin {
 	}
 
 	sendPageToolsViewedEvent() {
-		AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.admin.pluginToolsTab );
+		AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.admin.pluginToolsTab );
 	}
 
 	maybeSendImportExportLocationEvent( location ) {
 		if ( 'tab-import-export-kit' === location ) {
-			AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.admin.pluginWebsiteTemplatesTab );
+			AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.admin.pluginWebsiteTemplatesTab );
 		}
 	}
 

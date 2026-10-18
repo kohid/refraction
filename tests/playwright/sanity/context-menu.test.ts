@@ -43,7 +43,7 @@ test.describe( 'Context menu', () => {
 		const editor = new EditorPage( page, testInfo );
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 		const contextMenu = new ContextMenu( page, testInfo );
-		const headingSelector = '.elementor-heading-title';
+		const headingSelector = '.refraction-heading-title';
 
 		await wpAdmin.openNewPage();
 		await editor.addWidget( { widgetType: 'heading' } );
@@ -63,7 +63,7 @@ test.describe( 'Context menu', () => {
 		await editor.addWidget( { widgetType: 'heading' } );
 		await editor.openElementsPanel();
 		await contextMenu.selectWidgetContextMenuItem( 'heading', 'Structure' );
-		await expect( page.locator( '#elementor-navigator' ) ).toBeVisible();
+		await expect( page.locator( '#refraction-navigator' ) ).toBeVisible();
 	} );
 
 	test( 'Delete widget test', async ( { page, apiRequests }, testInfo ) => {

@@ -14,7 +14,7 @@ describe( `$e.run( 'editor/documents/close' ) -- RemoveActiveDocumentQueryParam`
 			},
 		};
 
-		const HookClass = ( await import( 'elementor-editor/components/documents/hooks/ui/close/remove-active-document-query-param' ) ).RemoveActiveDocumentQueryParam;
+		const HookClass = ( await import( 'refraction-editor/components/documents/hooks/ui/close/remove-active-document-query-param' ) ).RemoveActiveDocumentQueryParam;
 
 		RemoveActiveDocumentQueryParam = new HookClass();
 	} );

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useFloatingPanelZIndex } from '@elementor/editor-floating-panels';
-import { notify } from '@elementor/editor-notifications';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
-import { useMixpanel } from '@elementor/events';
-import { httpService } from '@elementor/http-client';
+import { useFloatingPanelZIndex } from '@refraction/editor-floating-panels';
+import { notify } from '@refraction/editor-notifications';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
+import { useMixpanel } from '@refraction/events';
+import { httpService } from '@refraction/http-client';
 import { MessageLinesIcon } from '@elementor/icons';
 import {
 	Button,
@@ -32,27 +32,27 @@ import {
 } from '../constants';
 
 const FEEDBACK_SUBJECT = 'Page Audit Tool';
-const FEEDBACK_SUBJECT_LABEL = __( 'Page Audit Tool', 'elementor' );
+const FEEDBACK_SUBJECT_LABEL = __( 'Page Audit Tool', 'refraction' );
 const SUCCESS_NOTIFICATION_ID = 'audit-feedback-success';
 const ERROR_NOTIFICATION_ID = 'audit-feedback-error';
 const DIALOG_TITLE_ID = 'audit-feedback-dialog-title';
 const DIALOG_DESCRIPTION_ID = 'audit-feedback-dialog-description';
 
 const isUserConnected = () =>
-	Boolean( window.elementorCommon?.config?.library_connect?.is_connected || window.elementorPro?.config?.isActive );
+	Boolean( window.refractionCommon?.config?.library_connect?.is_connected || window.refractionPro?.config?.isActive );
 
 const notifySuccess = () =>
 	notify( {
 		id: SUCCESS_NOTIFICATION_ID,
 		type: 'success',
-		message: __( 'Feedback sent. Thanks for helping us out.', 'elementor' ),
+		message: __( 'Feedback sent. Thanks for helping us out.', 'refraction' ),
 	} );
 
 const notifyError = () =>
 	notify( {
 		id: ERROR_NOTIFICATION_ID,
 		type: 'error',
-		message: __( 'Something went wrong. Please try sending your feedback again.', 'elementor' ),
+		message: __( 'Something went wrong. Please try sending your feedback again.', 'refraction' ),
 	} );
 
 export default function AuditFeedback() {
@@ -67,13 +67,13 @@ export default function AuditFeedback() {
 	}
 
 	const connected = isUserConnected();
-	const connectUrl = window.elementor?.config?.user?.top_bar?.connect_url;
+	const connectUrl = window.refraction?.config?.user?.top_bar?.connect_url;
 
 	if ( ! connected && ! connectUrl ) {
 		return null;
 	}
 
-	const triggerLabel = __( 'Give feedback', 'elementor' );
+	const triggerLabel = __( 'Give feedback', 'refraction' );
 
 	const handleOpen = () => {
 		if ( ! connected ) {
@@ -99,7 +99,7 @@ export default function AuditFeedback() {
 		setIsSubmitting( true );
 
 		httpService()
-			.post( 'elementor/v1/feedback/submit', {
+			.post( 'refraction/v1/feedback/submit', {
 				subject: FEEDBACK_SUBJECT,
 				description: feedbackText.trim(),
 			} )
@@ -134,7 +134,7 @@ export default function AuditFeedback() {
 			>
 				<DialogHeader logo={ false } onClose={ handleClose }>
 					<DialogTitle id={ DIALOG_TITLE_ID }>
-						{ __( 'Let us know what you think', 'elementor' ) }
+						{ __( 'Let us know what you think', 'refraction' ) }
 					</DialogTitle>
 				</DialogHeader>
 				<DialogContent dividers>
@@ -143,7 +143,7 @@ export default function AuditFeedback() {
 						<TextField
 							placeholder={ __(
 								'Tell us what you had in mind, what we can improve or fix to make this feature better.',
-								'elementor'
+								'refraction'
 							) }
 							fullWidth
 							multiline
@@ -157,14 +157,14 @@ export default function AuditFeedback() {
 						<Typography id={ DIALOG_DESCRIPTION_ID } variant="caption" color="text.secondary">
 							{ __(
 								"We appreciate your feedback! While we review all submissions, we can't guarantee that every suggestion will result in a change or update.",
-								'elementor'
+								'refraction'
 							) }
 						</Typography>
 					</Stack>
 				</DialogContent>
 				<DialogActions>
 					<Button variant="text" color="secondary" onClick={ handleCancel }>
-						{ __( 'Cancel', 'elementor' ) }
+						{ __( 'Cancel', 'refraction' ) }
 					</Button>
 					<Button
 						variant="contained"
@@ -172,7 +172,7 @@ export default function AuditFeedback() {
 						disabled={ isSubmitting || feedbackText.trim().length === 0 }
 						onClick={ handleSubmit }
 					>
-						{ __( 'Send', 'elementor' ) }
+						{ __( 'Send', 'refraction' ) }
 					</Button>
 				</DialogActions>
 			</Dialog>

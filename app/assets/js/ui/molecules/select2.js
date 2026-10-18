@@ -11,7 +11,7 @@ import './select2.scss';
 const getDefaultSettings = () => ( {
 	allowClear: true,
 	placeholder: '',
-	dir: elementorCommon.config.isRTL ? 'rtl' : 'ltr',
+	dir: refractionCommon.config.isRTL ? 'rtl' : 'ltr',
 } );
 /**
  * Main component

@@ -1,9 +1,9 @@
-import * as EditorAppBar from '@elementor/editor-app-bar';
+import * as EditorAppBar from '@refraction/editor-app-bar';
 import { __ } from '@wordpress/i18n';
 import * as React from 'react';
 import TopBarIcon from './topbar-icon';
 import { toggleChecklistPopup, addMixpanelTrackingChecklistTopBar } from './utils/functions';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 import { TogglePopup } from './commands';
 
 const queryClient = new QueryClient();
@@ -16,7 +16,7 @@ export const editorAppBarLink = () => {
 		priority: 5,
 		useProps: () => {
 			return {
-				title: __( 'Checklist', 'elementor' ),
+				title: __( 'Checklist', 'refraction' ),
 				icon: () => <QueryClientProvider client={ queryClient }>
 					<TopBarIcon />
 				</QueryClientProvider>,

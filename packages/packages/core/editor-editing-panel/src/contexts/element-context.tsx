@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createContext, type PropsWithChildren, useContext } from 'react';
-import { type Element, type ElementType } from '@elementor/editor-elements';
-import { type AnyTransformable } from '@elementor/editor-props';
+import { type Element, type ElementType } from '@refraction/editor-elements';
+import { type AnyTransformable } from '@refraction/editor-props';
 
 type ContextValue = {
 	element: Element;

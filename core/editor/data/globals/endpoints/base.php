@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Core\Editor\Data\Globals\Endpoints;
+namespace Refraction\Core\Editor\Data\Globals\Endpoints;
 
-use Elementor\Data\V2\Base\Endpoint;
-use Elementor\Data\V2\Base\Exceptions\Data_Exception;
-use Elementor\Data\V2\Base\Exceptions\Error_404;
-use Elementor\Plugin;
+use Refraction\Data\V2\Base\Endpoint;
+use Refraction\Data\V2\Base\Exceptions\Data_Exception;
+use Refraction\Data\V2\Base\Exceptions\Error_404;
+use Refraction\Plugin;
 
 abstract class Base extends Endpoint {
 	protected function register() {
@@ -25,13 +25,13 @@ abstract class Base extends Endpoint {
 
 	/**
 	 * @inheritDoc
-	 * @throws \Elementor\Data\V2\Base\Exceptions\Error_404 If the item is not found.
+	 * @throws \Refraction\Data\V2\Base\Exceptions\Error_404 If the item is not found.
 	 */
 	public function get_item( $id, $request ) {
 		$items = $this->get_kit_items();
 
 		if ( ! isset( $items[ $id ] ) ) {
-			throw new Error_404( esc_html__( 'The Global value you are trying to use is not available.', 'elementor' ),
+			throw new Error_404( esc_html__( 'The Global value you are trying to use is not available.', 'refraction' ),
 				'global_not_found'
 			);
 		}
@@ -43,7 +43,7 @@ abstract class Base extends Endpoint {
 		$item = $request->get_body_params();
 
 		if ( ! isset( $item['title'] ) ) {
-			return new Data_Exception( esc_html__( 'Invalid title', 'elementor' ), 'invalid_title' );
+			return new Data_Exception( esc_html__( 'Invalid title', 'refraction' ), 'invalid_title' );
 		}
 
 		$kit = Plugin::$instance->kits_manager->get_active_kit();

@@ -1,20 +1,20 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
-use Elementor\Core\Kits\Manager;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Includes\Settings\AdminMenuItems\Editor_One_Tools_Menu;
+use Refraction\Core\Admin\Menu\Admin_Menu_Manager;
+use Refraction\Core\Kits\Manager;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Includes\Settings\AdminMenuItems\Editor_One_Tools_Menu;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor "Tools" page in WordPress Dashboard.
+ * Refraction "Tools" page in WordPress Dashboard.
  *
- * Elementor settings page handler class responsible for creating and displaying
- * Elementor "Tools" page in WordPress dashboard.
+ * Refraction settings page handler class responsible for creating and displaying
+ * Refraction "Tools" page in WordPress dashboard.
  *
  * @since 1.0.0
  */
@@ -23,9 +23,9 @@ class Tools extends Settings_Page {
 	const CAPABILITY = 'manage_options';
 
 	/**
-	 * Settings page ID for Elementor tools.
+	 * Settings page ID for Refraction tools.
 	 */
-	const PAGE_ID = 'elementor-tools';
+	const PAGE_ID = 'refraction-tools';
 
 	/**
 	 * Clear cache.
@@ -33,13 +33,13 @@ class Tools extends Settings_Page {
 	 * Delete post meta containing the post CSS file data. And delete the actual
 	 * CSS files from the upload directory.
 	 *
-	 * Fired by `wp_ajax_elementor_clear_cache` action.
+	 * Fired by `wp_ajax_refraction_clear_cache` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function ajax_elementor_clear_cache() {
-		check_ajax_referer( 'elementor_clear_cache', '_nonce' );
+	public function ajax_refraction_clear_cache() {
+		check_ajax_referer( 'refraction_clear_cache', '_nonce' );
 
 		if ( ! current_user_can( static::CAPABILITY ) ) {
 			wp_send_json_error( 'Permission denied' );
@@ -50,8 +50,8 @@ class Tools extends Settings_Page {
 		wp_send_json_success();
 	}
 
-	public function admin_post_elementor_site_clear_cache() {
-		check_ajax_referer( 'elementor_site_clear_cache' );
+	public function admin_post_refraction_site_clear_cache() {
+		check_ajax_referer( 'refraction_site_clear_cache' );
 
 		if ( ! current_user_can( static::CAPABILITY ) ) {
 			wp_die( 'Permission denied' );
@@ -73,13 +73,13 @@ class Tools extends Settings_Page {
 	 *
 	 * Recreate default kit (only when default kit does not exist).
 	 *
-	 * Fired by `wp_ajax_elementor_recreate_kit` action.
+	 * Fired by `wp_ajax_refraction_recreate_kit` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function ajax_elementor_recreate_kit() {
-		check_ajax_referer( 'elementor_recreate_kit', '_nonce' );
+	public function ajax_refraction_recreate_kit() {
+		check_ajax_referer( 'refraction_recreate_kit', '_nonce' );
 
 		if ( ! current_user_can( static::CAPABILITY ) ) {
 			wp_send_json_error( 'Permission denied' );
@@ -88,33 +88,33 @@ class Tools extends Settings_Page {
 		$kit = Plugin::$instance->kits_manager->get_active_kit();
 
 		if ( $kit->get_id() ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'There\'s already an active kit.', 'elementor' ) ], 400 );
+			wp_send_json_error( [ 'message' => esc_html__( 'There\'s already an active kit.', 'refraction' ) ], 400 );
 		}
 
 		$created_default_kit = Plugin::$instance->kits_manager->create_default();
 
 		if ( ! $created_default_kit ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'An error occurred while trying to create a kit.', 'elementor' ) ], 500 );
+			wp_send_json_error( [ 'message' => esc_html__( 'An error occurred while trying to create a kit.', 'refraction' ) ], 500 );
 		}
 
 		update_option( Manager::OPTION_ACTIVE, $created_default_kit );
 
-		wp_send_json_success( esc_html__( 'New kit have been created successfully', 'elementor' ) );
+		wp_send_json_success( esc_html__( 'New kit have been created successfully', 'refraction' ) );
 	}
 
 	/**
 	 * Replace URLs.
 	 *
 	 * Sends an ajax request to replace old URLs to new URLs. This method also
-	 * updates all the Elementor data.
+	 * updates all the Refraction data.
 	 *
-	 * Fired by `wp_ajax_elementor_replace_url` action.
+	 * Fired by `wp_ajax_refraction_replace_url` action.
 	 *
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function ajax_elementor_replace_url() {
-		check_ajax_referer( 'elementor_replace_url', '_nonce' );
+	public function ajax_refraction_replace_url() {
+		check_ajax_referer( 'refraction_replace_url', '_nonce' );
 
 		if ( ! current_user_can( static::CAPABILITY ) ) {
 			wp_send_json_error( 'Permission denied' );
@@ -134,7 +134,7 @@ class Tools extends Settings_Page {
 	/**
 	 * Tools page constructor.
 	 *
-	 * Initializing Elementor "Tools" page.
+	 * Initializing Refraction "Tools" page.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -142,14 +142,14 @@ class Tools extends Settings_Page {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_menu( $menu_data_provider );
 		} );
 
-		add_action( 'wp_ajax_elementor_clear_cache', [ $this, 'ajax_elementor_clear_cache' ] );
-		add_action( 'admin_post_elementor_site_clear_cache', [ $this, 'admin_post_elementor_site_clear_cache' ] );
-		add_action( 'wp_ajax_elementor_replace_url', [ $this, 'ajax_elementor_replace_url' ] );
-		add_action( 'wp_ajax_elementor_recreate_kit', [ $this, 'ajax_elementor_recreate_kit' ] );
+		add_action( 'wp_ajax_refraction_clear_cache', [ $this, 'ajax_refraction_clear_cache' ] );
+		add_action( 'admin_post_refraction_site_clear_cache', [ $this, 'admin_post_refraction_site_clear_cache' ] );
+		add_action( 'wp_ajax_refraction_replace_url', [ $this, 'ajax_refraction_replace_url' ] );
+		add_action( 'wp_ajax_refraction_recreate_kit', [ $this, 'ajax_refraction_recreate_kit' ] );
 	}
 
 	private function register_editor_one_menu( Menu_Data_Provider $menu_data_provider ) {
@@ -174,16 +174,16 @@ class Tools extends Settings_Page {
 	protected function create_tabs() {
 		$tabs = [
 			'general' => [
-				'label' => esc_html__( 'General', 'elementor' ),
+				'label' => esc_html__( 'General', 'refraction' ),
 				'sections' => [
 					'tools' => [
 						'fields' => [
 							'clear_cache' => [
-								'label' => esc_html__( 'Elementor Cache', 'elementor' ),
+								'label' => esc_html__( 'Refraction Cache', 'refraction' ),
 								'field_args' => [
 									'type' => 'raw_html',
-									'html' => sprintf( '<button data-nonce="%s" data-id="elementor-tools-general-button-clear-files-data" class="button elementor-button-spinner" id="elementor-clear-cache-button">%s</button>', wp_create_nonce( 'elementor_clear_cache' ), esc_html__( 'Clear Files & Data', 'elementor' ) ),
-									'desc' => esc_html__( "Clear outdated CSS files and cached data in the database (rendered HTML, JS/CSS assets, etc.). We'll regenerate those files the next time someone visits any page on your website.", 'elementor' ),
+									'html' => sprintf( '<button data-nonce="%s" data-id="refraction-tools-general-button-clear-files-data" class="button refraction-button-spinner" id="refraction-clear-cache-button">%s</button>', wp_create_nonce( 'refraction_clear_cache' ), esc_html__( 'Clear Files & Data', 'refraction' ) ),
+									'desc' => esc_html__( "Clear outdated CSS files and cached data in the database (rendered HTML, JS/CSS assets, etc.). We'll regenerate those files the next time someone visits any page on your website.", 'refraction' ),
 								],
 							],
 						],
@@ -191,24 +191,24 @@ class Tools extends Settings_Page {
 				],
 			],
 			'replace_url' => [
-				'label' => esc_html__( 'Replace URL', 'elementor' ),
+				'label' => esc_html__( 'Replace URL', 'refraction' ),
 				'sections' => [
 					'replace_url' => [
 						'callback' => function() {
-							echo '<h2>' . esc_html__( 'Replace URL', 'elementor' ) . '</h2>';
+							echo '<h2>' . esc_html__( 'Replace URL', 'refraction' ) . '</h2>';
 							printf(
 								'<p><strong>%1$s</strong> %2$s</p>',
-								esc_html__( 'Important:', 'elementor' ),
-								esc_html__( 'It is strongly recommended to back up the database before replacing URLs.', 'elementor' )
+								esc_html__( 'Important:', 'refraction' ),
+								esc_html__( 'It is strongly recommended to back up the database before replacing URLs.', 'refraction' )
 							);
 						},
 						'fields' => [
 							'replace_url' => [
-								'label' => esc_html__( 'Update Site Address (URL)', 'elementor' ),
+								'label' => esc_html__( 'Update Site Address (URL)', 'refraction' ),
 								'field_args' => [
 									'type' => 'raw_html',
-									'html' => sprintf( '<input type="text" name="from" placeholder="https://old.example.com" class="large-text"><input type="text" name="to" placeholder="https://new.example.com" class="large-text"><button data-nonce="%s" data-id="elementor-tools-replace_url-button-replace-url" class="button elementor-button-spinner" id="elementor-replace-url-button">%s</button>', wp_create_nonce( 'elementor_replace_url' ), esc_html__( 'Replace URL', 'elementor' ) ),
-									'desc' => esc_html__( 'Enter your old and new URLs for your WordPress installation, to update all Elementor data (Relevant for domain transfers or move to \'HTTPS\').', 'elementor' ),
+									'html' => sprintf( '<input type="text" name="from" placeholder="https://old.example.com" class="large-text"><input type="text" name="to" placeholder="https://new.example.com" class="large-text"><button data-nonce="%s" data-id="refraction-tools-replace_url-button-replace-url" class="button refraction-button-spinner" id="refraction-replace-url-button">%s</button>', wp_create_nonce( 'refraction_replace_url' ), esc_html__( 'Replace URL', 'refraction' ) ),
+									'desc' => esc_html__( 'Enter your old and new URLs for your WordPress installation, to update all Refraction data (Relevant for domain transfers or move to \'HTTPS\').', 'refraction' ),
 								],
 							],
 						],
@@ -219,11 +219,11 @@ class Tools extends Settings_Page {
 
 		if ( ! Plugin::$instance->kits_manager->get_active_kit()->get_id() ) {
 			$tabs['general']['sections']['tools']['fields']['recreate_kit'] = [
-				'label' => esc_html__( 'Recreate Kit', 'elementor' ),
+				'label' => esc_html__( 'Recreate Kit', 'refraction' ),
 				'field_args' => [
 					'type' => 'raw_html',
-					'html' => sprintf( '<button data-nonce="%s" class="button elementor-button-spinner" id="elementor-recreate-kit-button">%s</button>', wp_create_nonce( 'elementor_recreate_kit' ), esc_html__( 'Recreate Kit', 'elementor' ) ),
-					'desc' => esc_html__( 'It seems like your site doesn\'t have any active Kit. The active Kit includes all of your Site Settings. By recreating your Kit you will able to start edit your Site Settings again.', 'elementor' ),
+					'html' => sprintf( '<button data-nonce="%s" class="button refraction-button-spinner" id="refraction-recreate-kit-button">%s</button>', wp_create_nonce( 'refraction_recreate_kit' ), esc_html__( 'Recreate Kit', 'refraction' ) ),
+					'desc' => esc_html__( 'It seems like your site doesn\'t have any active Kit. The active Kit includes all of your Site Settings. By recreating your Kit you will able to start edit your Site Settings again.', 'refraction' ),
 				],
 			];
 		}
@@ -241,6 +241,6 @@ class Tools extends Settings_Page {
 	 * @return string Tools page title.
 	 */
 	protected function get_page_title() {
-		return esc_html__( 'Tools', 'elementor' );
+		return esc_html__( 'Tools', 'refraction' );
 	}
 }

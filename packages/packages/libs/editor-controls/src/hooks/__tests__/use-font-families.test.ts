@@ -1,12 +1,12 @@
-import { getElementorConfig } from '@elementor/editor-v1-adapters';
+import { getRefractionConfig } from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import { useFontFamilies } from '../use-font-families';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 const mockFontConfig = ( groups: Record< string, string >, options: Record< string, string > ) => {
-	jest.mocked( getElementorConfig ).mockReturnValue( {
+	jest.mocked( getRefractionConfig ).mockReturnValue( {
 		controls: {
 			font: { groups, options },
 		},
@@ -190,7 +190,7 @@ describe( 'useFontFamilies', () => {
 
 	it( 'should return empty array when font options are not available', () => {
 		// Arrange.
-		jest.mocked( getElementorConfig ).mockReturnValue( {
+		jest.mocked( getRefractionConfig ).mockReturnValue( {
 			controls: {
 				font: {
 					options: undefined,
@@ -207,7 +207,7 @@ describe( 'useFontFamilies', () => {
 
 	it( 'should return empty array when font groups are not available', () => {
 		// Arrange.
-		jest.mocked( getElementorConfig ).mockReturnValue( {
+		jest.mocked( getRefractionConfig ).mockReturnValue( {
 			controls: {
 				font: {
 					groups: undefined,

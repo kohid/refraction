@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useCurrentUserCapabilities } from '@elementor/editor-current-user';
-import { closeDialog, openDialog } from '@elementor/editor-ui';
+import { useCurrentUserCapabilities } from '@refraction/editor-current-user';
+import { closeDialog, openDialog } from '@refraction/editor-ui';
 import { DotsVerticalIcon, DownloadIcon, UploadIcon } from '@elementor/icons';
-import { useIsMutating } from '@elementor/query';
+import { useIsMutating } from '@refraction/query';
 import {
 	bindMenu,
 	bindTrigger,
@@ -62,14 +62,14 @@ export const DesignSystemHeaderMenu = () => {
 		void runExport();
 	};
 
-	const triggerLabel = __( 'Design system actions', 'elementor' );
+	const triggerLabel = __( 'Design system actions', 'refraction' );
 	const currentlyExportingLabel = __(
 		`Export is in progress. The file will be downloaded when it's complete.`,
-		'elementor'
+		'refraction'
 	);
 	const currentlyImportingLabel = __(
 		`Import is in progress. You will receive a notification when it's complete.`,
-		'elementor'
+		'refraction'
 	);
 	let tooltipLabel = triggerLabel;
 	if ( isInProgress ) {
@@ -104,13 +104,13 @@ export const DesignSystemHeaderMenu = () => {
 					<ListItemIcon>
 						<DownloadIcon fontSize="tiny" />
 					</ListItemIcon>
-					<ListItemText>{ __( 'Import', 'elementor' ) }</ListItemText>
+					<ListItemText>{ __( 'Import', 'refraction' ) }</ListItemText>
 				</MenuItem>
 				<MenuItem onClick={ handleExport } disabled={ isExporting }>
 					<ListItemIcon>
 						<UploadIcon fontSize="tiny" />
 					</ListItemIcon>
-					<ListItemText>{ __( 'Export', 'elementor' ) }</ListItemText>
+					<ListItemText>{ __( 'Export', 'refraction' ) }</ListItemText>
 				</MenuItem>
 			</Menu>
 		</>

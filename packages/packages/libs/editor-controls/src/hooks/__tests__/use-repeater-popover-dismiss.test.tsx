@@ -2,12 +2,12 @@ import { renderHook } from '@testing-library/react';
 
 import { usePopoverDismiss } from '../use-repeater-popover-dismiss';
 
-jest.mock( '@elementor/editor-responsive', () => ( {
+jest.mock( '@refraction/editor-responsive', () => ( {
 	useActiveBreakpoint: jest.fn( () => 'desktop' ),
 	useBreakpoints: jest.fn( () => [ { id: 'desktop', label: 'Desktop', width: undefined, type: undefined } ] ),
 } ) );
 
-import { useActiveBreakpoint, useBreakpoints } from '@elementor/editor-responsive';
+import { useActiveBreakpoint, useBreakpoints } from '@refraction/editor-responsive';
 
 const desktopOnlyBreakpoints = [ { id: 'desktop', label: 'Desktop', width: undefined, type: undefined } ] as const;
 

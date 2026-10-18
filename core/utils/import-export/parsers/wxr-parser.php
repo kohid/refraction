@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Utils\ImportExport\Parsers;
+namespace Refraction\Core\Utils\ImportExport\Parsers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

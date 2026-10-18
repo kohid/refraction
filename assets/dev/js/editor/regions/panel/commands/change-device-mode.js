@@ -1,10 +1,10 @@
 export class ChangeDeviceMode extends $e.modules.CommandBase {
 	apply( args = {} ) {
-		const devices = elementor.breakpoints.getActiveBreakpointsList( { largeToSmall: true, withDesktop: true } );
+		const devices = refraction.breakpoints.getActiveBreakpointsList( { largeToSmall: true, withDesktop: true } );
 		let { device } = args;
 
 		if ( ! device ) {
-			const currentDeviceMode = elementor.channels.deviceMode.request( 'currentMode' );
+			const currentDeviceMode = refraction.channels.deviceMode.request( 'currentMode' );
 			let modeIndex = devices.indexOf( currentDeviceMode );
 
 			modeIndex++;
@@ -16,7 +16,7 @@ export class ChangeDeviceMode extends $e.modules.CommandBase {
 			device = devices[ modeIndex ];
 		}
 
-		elementor.changeDeviceMode( device );
+		refraction.changeDeviceMode( device );
 	}
 }
 

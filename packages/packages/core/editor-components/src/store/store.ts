@@ -1,4 +1,4 @@
-import { __createSelector as createSelector, __useSelector as useSelector, type SliceState } from '@elementor/store';
+import { __createSelector as createSelector, __useSelector as useSelector, type SliceState } from '@refraction/store';
 
 import type { ComponentId, OverridableProps, PublishedComponent, UnpublishedComponent } from '../types';
 import { type slice } from './extensible-slice';

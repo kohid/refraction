@@ -49,7 +49,7 @@ export const Item = < T extends RepeatablePropValue >( { Label, Icon, actions }:
 					<Label value={ value as T } />
 				</RepeaterItemLabelSlot>
 			}
-			aria-label={ __( 'Open item', 'elementor' ) }
+			aria-label={ __( 'Open item', 'refraction' ) }
 			{ ...triggerProps }
 			onClick={ onClick }
 			startIcon={

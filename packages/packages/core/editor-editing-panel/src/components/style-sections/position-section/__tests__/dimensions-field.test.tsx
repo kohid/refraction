@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import { useStylesFields } from '../../../../hooks/use-styles-fields';
 import { DimensionsField } from '../dimensions-field';
 
-jest.mock( '@elementor/editor-styles' );
+jest.mock( '@refraction/editor-styles' );
 jest.mock( '../../../../hooks/use-styles-fields' );
 jest.mock( '../../../../styles-inheritance/components/styles-inheritance-indicator' );
 jest.mock( '../../../../contexts/styles-inheritance-context', () => ( {

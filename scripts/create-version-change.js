@@ -201,21 +201,21 @@ async function main() {
       console.log('Skipping branch creation as requested.');
     }
 
-    // Update elementor.php
-    if (fs.existsSync('elementor.php')) {
-      console.log('Updating elementor.php to next version...');
-      updateVersionInFile('elementor.php', versionToUse, [
+    // Update refraction.php
+    if (fs.existsSync('refraction.php')) {
+      console.log('Updating refraction.php to next version...');
+      updateVersionInFile('refraction.php', versionToUse, [
         {
           regex: /(\* Version: )[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9]+)?/,
           replacement: (version, match, prefix) => `${prefix}${version}`
         },
         {
-          regex: /(define\( 'ELEMENTOR_VERSION', ')[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9]+)?'( \);)/,
+          regex: /(define\( 'REFRACTION_VERSION', ')[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9]+)?'( \);)/,
           replacement: (version, match, prefix, _preRelease, suffix) => `${prefix}${version}'${suffix}`
         }
       ], dryRun);
     } else {
-      console.error('elementor.php not found!');
+      console.error('refraction.php not found!');
       process.exit(1);
     }
 

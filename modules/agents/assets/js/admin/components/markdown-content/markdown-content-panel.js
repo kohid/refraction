@@ -58,13 +58,13 @@ export const MarkdownContentPanel = ( { settings } ) => {
 		<Stack direction="row" width="100%" maxWidth="100%" minWidth={ 0 } overflow="auto">
 			<Stack spacing={ 3 } px={ 6 } py={ 3 } flexGrow={ 1 } flexShrink={ 1 } flexBasis={ 0 } minWidth={ 0 }>
 				<Stack spacing={ 1 }>
-					<Typography variant="subtitle1">{ __( 'Make your content easier to read', 'elementor' ) }</Typography>
+					<Typography variant="subtitle1">{ __( 'Make your content easier to read', 'refraction' ) }</Typography>
 					<Typography variant="body2" color="text.secondary">
-						{ __( 'Give agents a clean Markdown version of your content', 'elementor' ) }
+						{ __( 'Give agents a clean Markdown version of your content', 'refraction' ) }
 					</Typography>
 				</Stack>
 				<Stack spacing={ 1 }>
-					<Typography variant="subtitle1">{ __( 'Choose what to include', 'elementor' ) }</Typography>
+					<Typography variant="subtitle1">{ __( 'Choose what to include', 'refraction' ) }</Typography>
 					<PostTypeList
 						postTypes={ postTypes }
 						isDisabled={ ! isEnabled || isSaving }

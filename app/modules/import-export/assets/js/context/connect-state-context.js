@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 export const ConnectStateContext = createContext();
 
 export function ConnectStateProvider( { children } ) {
-	const [ isConnected, setIsConnected ] = useState( elementorCommon.config.library_connect.is_connected );
+	const [ isConnected, setIsConnected ] = useState( refractionCommon.config.library_connect.is_connected );
 	const [ isConnecting, setIsConnecting ] = useState( false );
 
 	const handleConnectSuccess = useCallback( ( callback ) => {
 		setIsConnecting( true );
 		setIsConnected( true );
 
-		elementorCommon.config.library_connect.is_connected = true;
+		refractionCommon.config.library_connect.is_connected = true;
 
 		if ( callback ) {
 			callback();
@@ -22,7 +22,7 @@ export function ConnectStateProvider( { children } ) {
 		setIsConnected( false );
 		setIsConnecting( false );
 
-		elementorCommon.config.library_connect.is_connected = false;
+		refractionCommon.config.library_connect.is_connected = false;
 
 		if ( callback ) {
 			callback();

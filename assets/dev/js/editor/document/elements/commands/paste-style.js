@@ -7,7 +7,7 @@ export class PasteStyle extends $e.modules.editor.document.CommandHistoryBase {
 
 		// Validate if storage have data.
 		const { storageKey = 'clipboard' } = args,
-			storageData = elementorCommon.storage.get( storageKey );
+			storageData = refractionCommon.storage.get( storageKey );
 
 		this.requireArgumentType( 'storageData', 'object', { storageData } );
 	}
@@ -40,9 +40,9 @@ export class PasteStyle extends $e.modules.editor.document.CommandHistoryBase {
 
 	apply( args ) {
 		const { containers = [ args.container ], storageKey = 'clipboard' } = args,
-			storageData = elementorCommon.storage.get( storageKey );
+			storageData = refractionCommon.storage.get( storageKey );
 
-		if ( ! storageData || ! storageData?.elements?.length || 'elementor' !== storageData?.type ) {
+		if ( ! storageData || ! storageData?.elements?.length || 'refraction' !== storageData?.type ) {
 			return false;
 		}
 
@@ -99,7 +99,7 @@ export class PasteStyle extends $e.modules.editor.document.CommandHistoryBase {
 					}
 
 					if ( controlSourceValue === controlTargetValue ||
-						! elementor.getControlView( control.type ).onPasteStyle( control, controlSourceValue ) ) {
+						! refraction.getControlView( control.type ).onPasteStyle( control, controlSourceValue ) ) {
 						return;
 					}
 

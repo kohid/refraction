@@ -1,4 +1,4 @@
-import { createFloatingPanel } from '@elementor/editor-floating-panels';
+import { createFloatingPanel } from '@refraction/editor-floating-panels';
 
 import AuditPanel from './components/audit-panel';
 import { AUDIT_PANEL_ID } from './constants';

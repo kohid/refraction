@@ -1,9 +1,9 @@
-import { __privateIsRouteActive as isRouteActive } from '@elementor/editor-v1-adapters';
+import { __privateIsRouteActive as isRouteActive } from '@refraction/editor-v1-adapters';
 
 import syncPanelTitle from '../sync-panel-title';
 
 type ExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		getPanelView: () => {
 			getHeaderView: () => {
 				setTitle: jest.Mock;
@@ -12,20 +12,20 @@ type ExtendedWindow = Window & {
 	};
 };
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	__privateIsRouteActive: jest.fn().mockReturnValue( false ),
 } ) );
 
 const mockIsRouteActive = jest.mocked( isRouteActive );
 
-describe( '@elementor/editor-app-bar - syncPanelTitle', () => {
+describe( '@refraction/editor-app-bar - syncPanelTitle', () => {
 	let mockSetTitle: jest.Mock;
 
 	beforeEach( () => {
 		mockSetTitle = jest.fn();
 
-		( window as unknown as ExtendedWindow ).elementor = {
+		( window as unknown as ExtendedWindow ).refraction = {
 			getPanelView: () => ( {
 				getHeaderView: () => ( {
 					setTitle: mockSetTitle,
@@ -40,7 +40,7 @@ describe( '@elementor/editor-app-bar - syncPanelTitle', () => {
 
 		// Act.
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/routes/open', {
+			new CustomEvent( 'refraction/routes/open', {
 				detail: {
 					route: 'panel/elements/categories',
 				},
@@ -57,7 +57,7 @@ describe( '@elementor/editor-app-bar - syncPanelTitle', () => {
 		syncPanelTitle();
 
 		// Act.
-		window.dispatchEvent( new CustomEvent( 'elementor/initialized' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/initialized' ) );
 
 		// Assert.
 		expect( mockSetTitle ).toHaveBeenCalledWith( 'Elements' );
@@ -70,7 +70,7 @@ describe( '@elementor/editor-app-bar - syncPanelTitle', () => {
 		syncPanelTitle();
 
 		// Act.
-		window.dispatchEvent( new CustomEvent( 'elementor/initialized' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/initialized' ) );
 
 		// Assert.
 		expect( mockSetTitle ).not.toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe( '@elementor/editor-app-bar - syncPanelTitle', () => {
 
 		// Act.
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/routes/open', {
+			new CustomEvent( 'refraction/routes/open', {
 				detail: {
 					route: 'panel/global/menu',
 				},

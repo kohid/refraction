@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Readability\Extractors;
+namespace Refraction\Modules\Agents\Components\Readability\Extractors;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Contract for all content extractors in the readability chain.
  *
- * Each extractor is responsible for a single content source (Elementor,
+ * Each extractor is responsible for a single content source (Refraction,
  * block editor, classic editor, or full rendered template).  The chain
  * walks extractors in ascending priority order and uses the first one
  * whose `can_handle()` returns true and whose `extract()` result

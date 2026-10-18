@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Core\Files\Assets;
+namespace Refraction\Core\Files\Assets;
 
-use Elementor\Core\Files\Assets\Svg\Svg_Handler;
+use Refraction\Core\Files\Assets\Svg\Svg_Handler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor files manager.
+ * Refraction files manager.
  *
- * Elementor files manager handler class is responsible for creating files.
+ * Refraction files manager handler class is responsible for creating files.
  *
  * @since 2.6.0
  */
@@ -26,20 +26,20 @@ class Manager {
 	/**
 	 * Assets manager constructor.
 	 *
-	 * Initializing the Elementor assets manager.
+	 * Initializing the Refraction assets manager.
 	 *
 	 * @access public
 	 */
 	public function __construct() {
 		$this->register_asset_types();
 		/**
-		 * Elementor files assets registered.
+		 * Refraction files assets registered.
 		 *
-		 * Fires after Elementor registers assets types
+		 * Fires after Refraction registers assets types
 		 *
 		 * @since 2.6.0
 		 */
-		do_action( 'elementor/core/files/assets/assets_registered', $this );
+		do_action( 'refraction/core/files/assets/assets_registered', $this );
 	}
 
 	public function get_asset( $name ) {
@@ -59,7 +59,7 @@ class Manager {
 	/**
 	 * Register Asset Types
 	 *
-	 * Registers Elementor Asset Types
+	 * Registers Refraction Asset Types
 	 */
 	private function register_asset_types() {
 		$this->add_asset( new Svg_Handler() );

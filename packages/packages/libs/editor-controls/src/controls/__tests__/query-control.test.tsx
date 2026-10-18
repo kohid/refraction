@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { QueryControl } from '../query-control';
@@ -13,7 +13,7 @@ const queryPropType = createMockPropType( {
 	},
 } );
 
-jest.mock( '@elementor/http-client' );
+jest.mock( '@refraction/http-client' );
 
 const baseProps = {
 	bind: 'query',

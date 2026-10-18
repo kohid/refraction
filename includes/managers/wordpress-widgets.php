@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor WordPress widgets manager.
+ * Refraction WordPress widgets manager.
  *
- * Elementor WordPress widgets manager handler class is responsible for
+ * Refraction WordPress widgets manager handler class is responsible for
  * registering and initializing all the supported controls, both regular
  * controls and the group controls.
  *
@@ -19,7 +19,7 @@ class WordPress_Widgets_Manager {
 	/**
 	 * WordPress widgets manager constructor.
 	 *
-	 * Initializing the WordPress widgets manager in Elementor editor.
+	 * Initializing the WordPress widgets manager in Refraction editor.
 	 *
 	 * @since 1.5.0
 	 * @access public
@@ -29,17 +29,17 @@ class WordPress_Widgets_Manager {
 			return;
 		}
 
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'before_enqueue_scripts' ] );
-		add_action( 'elementor/editor/footer', [ $this, 'footer' ] );
+		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'before_enqueue_scripts' ] );
+		add_action( 'refraction/editor/footer', [ $this, 'footer' ] );
 	}
 
 	/**
 	 * Before enqueue scripts.
 	 *
-	 * Prints custom scripts required to run WordPress widgets in Elementor
+	 * Prints custom scripts required to run WordPress widgets in Refraction
 	 * editor.
 	 *
-	 * Fired by `elementor/editor/before_enqueue_scripts` action.
+	 * Fired by `refraction/editor/before_enqueue_scripts` action.
 	 *
 	 * @since 1.5.0
 	 * @access public
@@ -73,9 +73,9 @@ class WordPress_Widgets_Manager {
 	/**
 	 * WordPress widgets footer.
 	 *
-	 * Prints WordPress widgets scripts in Elementor editor footer.
+	 * Prints WordPress widgets scripts in Refraction editor footer.
 	 *
-	 * Fired by `elementor/editor/footer` action.
+	 * Fired by `refraction/editor/footer` action.
 	 *
 	 * @since 1.5.0
 	 * @access public

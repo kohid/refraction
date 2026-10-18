@@ -1,7 +1,7 @@
 import {
 	__privateRunCommand as runCommand,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { SettingsIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -13,14 +13,14 @@ export default function useActionProps(): ToggleActionProps {
 	} );
 
 	return {
-		title: __( 'Site Settings', 'elementor' ),
+		title: __( 'Site Settings', 'refraction' ),
 		icon: SettingsIcon,
 		onClick: () => {
 			const extendedWindow = window as unknown as ExtendedWindow;
-			const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+			const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 			if ( config ) {
-				extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.siteSettings, {
+				extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.siteSettings, {
 					location: config.locations.topBar,
 					secondaryLocation: config.secondaryLocations.siteSettings,
 					trigger: config.triggers.toggleClick,

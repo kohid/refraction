@@ -19,7 +19,7 @@ export type LogicalPosition = {
 /**
  * Public API for declaring a floating panel's initial dimensions.
  *
- * Sizes use physical names (width/height) intentionally — Elementor renders
+ * Sizes use physical names (width/height) intentionally — Refraction renders
  * in horizontal writing mode only, so these are equivalent to logical
  * inline-size/block-size. Positioning continues to use logical names
  * because position is genuinely direction-sensitive.

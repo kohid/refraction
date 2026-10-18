@@ -8,10 +8,10 @@ import { DEFAULT_VALUES } from '../interaction-details';
 const TRACKING_DATA = { target_name: 'interactions_effect', location_l2: 'interactions' } as const;
 
 export const EFFECT_OPTIONS = {
-	fade: __( 'Fade', 'elementor' ),
-	slide: __( 'Slide', 'elementor' ),
-	scale: __( 'Scale', 'elementor' ),
-	custom: __( 'Custom', 'elementor' ),
+	fade: __( 'Fade', 'refraction' ),
+	slide: __( 'Slide', 'refraction' ),
+	scale: __( 'Scale', 'refraction' ),
+	custom: __( 'Custom', 'refraction' ),
 };
 
 export const BASE_EFFECTS: string[] = [ 'fade', 'slide', 'scale' ];
@@ -31,10 +31,10 @@ export function Effect( { value, onChange }: FieldProps ) {
 			onChange={ onChange }
 			baseOptions={ baseOptions }
 			disabledOptions={ disabledOptions }
-			promotionLabel={ __( 'PRO effects', 'elementor' ) }
+			promotionLabel={ __( 'PRO effects', 'refraction' ) }
 			promotionContent={ __(
 				'Upgrade to further customize your animation with opacity, scale, move, rotate and more.',
-				'elementor'
+				'refraction'
 			) }
 			upgradeUrl="https://go.elementor.com/go-pro-interactions-custom-effect-modal/"
 			trackingData={ TRACKING_DATA }

@@ -1,11 +1,11 @@
 import AddSectionView from './add-section/independent';
 
-const BaseSectionsContainerView = require( 'elementor-views/base-sections-container' );
-const { isCompoundAtomicType } = require( 'elementor-editor/utils/element-types' );
+const BaseSectionsContainerView = require( 'refraction-views/base-sections-container' );
+const { isCompoundAtomicType } = require( 'refraction-editor/utils/element-types' );
 
 const Preview = BaseSectionsContainerView.extend( {
 	initialize() {
-		this.$childViewContainer = jQuery( '<div>', { class: 'elementor-section-wrap' } );
+		this.$childViewContainer = jQuery( '<div>', { class: 'refraction-section-wrap' } );
 
 		this.config = {
 			allowEdit: true,
@@ -26,7 +26,7 @@ const Preview = BaseSectionsContainerView.extend( {
 		var parentBehaviors = BaseSectionsContainerView.prototype.behaviors.apply( this, arguments ),
 			behaviors = {
 				contextMenu: {
-					behaviorClass: require( 'elementor-behaviors/context-menu' ),
+					behaviorClass: require( 'refraction-behaviors/context-menu' ),
 					groups: this.getContextMenuGroups(),
 				},
 			};
@@ -35,12 +35,12 @@ const Preview = BaseSectionsContainerView.extend( {
 	},
 
 	getContainer() {
-		return elementor.settings.page.getEditedView().getContainer();
+		return refraction.settings.page.getEditedView().getContainer();
 	},
 
 	getContextMenuGroups() {
 		var hasContent = function() {
-			return elementor.elements.length > 0;
+			return refraction.elements.length > 0;
 		};
 
 		return [
@@ -49,7 +49,7 @@ const Preview = BaseSectionsContainerView.extend( {
 				actions: [
 					{
 						name: 'paste',
-						title: __( 'Paste', 'elementor' ),
+						title: __( 'Paste', 'refraction' ),
 						isEnabled: () => $e.components.get( 'document/elements' ).utils.isPasteEnabled( this.getContainer() ),
 						callback: ( at ) => $e.run( 'document/ui/paste', {
 							container: this.getContainer(),
@@ -65,12 +65,12 @@ const Preview = BaseSectionsContainerView.extend( {
 				actions: [
 					{
 						name: 'copy_all_content',
-						title: __( 'Copy All Content', 'elementor' ),
+						title: __( 'Copy All Content', 'refraction' ),
 						isEnabled: hasContent,
 						callback: () => $e.run( 'document/elements/copy-all' ),
 					}, {
 						name: 'delete_all_content',
-						title: __( 'Delete All Content', 'elementor' ),
+						title: __( 'Delete All Content', 'refraction' ),
 						isEnabled: hasContent,
 						callback: () => $e.run( 'document/elements/empty' ),
 					},
@@ -90,22 +90,22 @@ const Preview = BaseSectionsContainerView.extend( {
 	},
 
 	addElementFromPanel( options ) {
-		if ( ! this.config.allowEdit || elementor.helpers.maybeDisableWidget() ) {
+		if ( ! this.config.allowEdit || refraction.helpers.maybeDisableWidget() ) {
 			return;
 		}
 
-		const isContainerActive = ! ! elementorCommon.config.experimentalFeatures.container;
+		const isContainerActive = ! ! refractionCommon.config.experimentalFeatures.container;
 
-		const selectedElement = elementor.channels.panelElements.request( 'element:selected' ),
+		const selectedElement = refraction.channels.panelElements.request( 'element:selected' ),
 			historyId = $e.internal( 'document/history/start-log', {
 				type: 'add',
-				title: elementor.helpers.getModelLabel( selectedElement.model ),
+				title: refraction.helpers.getModelLabel( selectedElement.model ),
 			} ),
 			containingElement = $e.run( 'document/elements/create', {
 				model: {
 					elType: isContainerActive ? 'container' : 'section',
 				},
-				container: elementor.getPreviewContainer(),
+				container: refraction.getPreviewContainer(),
 				columns: 1,
 				options: {
 					at: this.getOption( 'at' ),
@@ -125,7 +125,7 @@ const Preview = BaseSectionsContainerView.extend( {
 	},
 
 	shouldRenderAddNewSectionArea() {
-		return this.config.allowEdit && elementor.userCan( 'design' );
+		return this.config.allowEdit && refraction.userCan( 'design' );
 	},
 
 	onRender() {

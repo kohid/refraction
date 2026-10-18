@@ -1,11 +1,11 @@
 import ExperimentsMessages from './behaviors/experiments-messages';
 
-export default class ExperimentsModule extends elementorModules.ViewModule {
+export default class ExperimentsModule extends refractionModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {
 				experimentIndicators: '.e-experiment__title__indicator',
-				experimentForm: '#elementor-settings-form',
+				experimentForm: '#refraction-settings-form',
 				experimentSelects: '.e-experiment__select',
 				experimentsButtons: '.e-experiment__button',
 			},
@@ -61,7 +61,7 @@ export default class ExperimentsModule extends elementorModules.ViewModule {
 		if ( this.elements.$experimentIndicators.length ) {
 			import(
 				/* webpackIgnore: true */
-				`${ elementorCommon.config.urls.assets }lib/tipsy/tipsy.min.js?ver=1.0.0` )
+				`${ refractionCommon.config.urls.assets }lib/tipsy/tipsy.min.js?ver=1.0.0` )
 				.then( () => this.addIndicatorsTooltips() );
 		}
 	}

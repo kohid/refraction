@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { SizeControl } from '@elementor/editor-controls';
+import { SizeControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const FONT_SIZE_LABEL = __( 'Font size', 'elementor' );
+const FONT_SIZE_LABEL = __( 'Font size', 'refraction' );
 
 export const FontSizeField = () => {
 	const rowRef = useRef< HTMLDivElement >( null );

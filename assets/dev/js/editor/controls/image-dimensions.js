@@ -1,6 +1,6 @@
 import Scrubbing from './behaviors/scrubbing';
 
-var ControlMultipleBaseItemView = require( 'elementor-controls/base-multiple' ),
+var ControlMultipleBaseItemView = require( 'refraction-controls/base-multiple' ),
 	ControlImageDimensionsItemView;
 
 ControlImageDimensionsItemView = ControlMultipleBaseItemView.extend( {
@@ -20,7 +20,7 @@ ControlImageDimensionsItemView = ControlMultipleBaseItemView.extend( {
 			inputWidth: 'input[data-setting="width"]',
 			inputHeight: 'input[data-setting="height"]',
 
-			btnApply: 'button.elementor-image-dimensions-apply-button',
+			btnApply: 'button.refraction-image-dimensions-apply-button',
 		};
 	},
 

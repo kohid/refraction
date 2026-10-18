@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor select2 control.
+ * Refraction select2 control.
  *
  * A base control for creating select2 control. Displays a select box control
  * based on select2 jQuery plugin @see https://select2.github.io/ .
@@ -65,13 +65,13 @@ class Control_Select2 extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
+		<div class="refraction-control-field">
 			<# if ( data.label ) {#>
-				<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
+				<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
 			<# } #>
-			<div class="elementor-control-input-wrapper elementor-control-unit-5">
+			<div class="refraction-control-input-wrapper refraction-control-unit-5">
 				<# var multiple = ( data.multiple ) ? 'multiple' : ''; #>
-				<select id="<?php $this->print_control_uid(); ?>" class="elementor-select2" type="select2" {{ multiple }} data-setting="{{ data.name }}">
+				<select id="<?php $this->print_control_uid(); ?>" class="refraction-select2" type="select2" {{ multiple }} data-setting="{{ data.name }}">
 					<# _.each( data.options, function( option_title, option_value ) {
 						var value = data.controlValue;
 						if ( typeof value == 'string' ) {
@@ -87,7 +87,7 @@ class Control_Select2 extends Base_Data_Control {
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

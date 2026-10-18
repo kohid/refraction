@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Modules\MarkdownRender;
+namespace Refraction\Modules\MarkdownRender;
 
 use WP_HTML_Processor;
 

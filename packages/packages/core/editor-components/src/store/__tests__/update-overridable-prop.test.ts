@@ -1,4 +1,4 @@
-import { __dispatch as dispatch, __getState as getState } from '@elementor/store';
+import { __dispatch as dispatch, __getState as getState } from '@refraction/store';
 
 import { componentInstanceOverridePropTypeUtil } from '../../prop-types/component-instance-override-prop-type';
 import { componentOverridablePropTypeUtil } from '../../prop-types/component-overridable-prop-type';
@@ -6,8 +6,8 @@ import type { OriginPropFields, PublishedComponent } from '../../types';
 import { updateOverridableProp } from '../actions/update-overridable-prop';
 import { SLICE_NAME } from '../store';
 
-jest.mock( '@elementor/store', () => ( {
-	...jest.requireActual( '@elementor/store' ),
+jest.mock( '@refraction/store', () => ( {
+	...jest.requireActual( '@refraction/store' ),
 	__getState: jest.fn(),
 	__dispatch: jest.fn(),
 } ) );

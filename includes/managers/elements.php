@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Includes\Elements\Container;
+use Refraction\Includes\Elements\Container;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor elements manager.
+ * Refraction elements manager.
  *
- * Elementor elements manager handler class is responsible for registering and
+ * Refraction elements manager handler class is responsible for registering and
  * initializing all the supported elements.
  *
  * @since 1.0.0
@@ -48,7 +48,7 @@ class Elements_Manager {
 	/**
 	 * Elements constructor.
 	 *
-	 * Initializing Elementor elements manager.
+	 * Initializing Refraction elements manager.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -249,8 +249,8 @@ class Elements_Manager {
 	/**
 	 * Init elements.
 	 *
-	 * Initialize Elementor elements by registering the supported elements.
-	 * Elementor supports by default `section` element and `column` element.
+	 * Initialize Refraction elements by registering the supported elements.
+	 * Refraction supports by default `section` element and `column` element.
 	 *
 	 * @since 2.0.0
 	 * @access private
@@ -273,11 +273,11 @@ class Elements_Manager {
 		/**
 		 * After elements registered.
 		 *
-		 * Fires after Elementor elements are registered.
+		 * Fires after Refraction elements are registered.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/elements/elements_registered', $this );
+		do_action( 'refraction/elements/elements_registered', $this );
 	}
 
 	/**
@@ -291,19 +291,19 @@ class Elements_Manager {
 	private function init_categories() {
 		$this->categories = [
 			'layout' => [
-				'title' => esc_html__( 'Layout', 'elementor' ),
+				'title' => esc_html__( 'Layout', 'refraction' ),
 				'hideIfEmpty' => true,
 			],
 			'basic' => [
-				'title' => esc_html__( 'Basic', 'elementor' ),
+				'title' => esc_html__( 'Basic', 'refraction' ),
 				'icon' => 'eicon-font',
 			],
 			'general' => [
-				'title' => esc_html__( 'General', 'elementor' ),
+				'title' => esc_html__( 'General', 'refraction' ),
 				'icon' => 'eicon-font',
 			],
 			'link-in-bio' => [
-				'title' => esc_html__( 'Link In Bio', 'elementor' ),
+				'title' => esc_html__( 'Link In Bio', 'refraction' ),
 				'hideIfEmpty' => true,
 			],
 		];
@@ -311,7 +311,7 @@ class Elements_Manager {
 		// Not using the `add_category` because it doesn't allow 3rd party to inject a category on top the others.
 		$this->categories = array_merge_recursive( [
 			self::CATEGORY_FAVORITES => [
-				'title' => esc_html__( 'Favorites', 'elementor' ),
+				'title' => esc_html__( 'Favorites', 'refraction' ),
 				'icon' => 'eicon-heart',
 				'sort' => 'a-z',
 				'hideIfEmpty' => false,
@@ -331,7 +331,7 @@ class Elements_Manager {
 		 *
 		 * @param Elements_Manager $this Elements manager instance.
 		 */
-		do_action( 'elementor/elements/categories_registered', $this );
+		do_action( 'refraction/elements/categories_registered', $this );
 
 		$after_candidates = [ self::CATEGORY_BASIC ];
 
@@ -389,17 +389,17 @@ class Elements_Manager {
 	/**
 	 * Require files.
 	 *
-	 * Require Elementor element base class and column, section and repeater
+	 * Require Refraction element base class and column, section and repeater
 	 * elements.
 	 *
 	 * @since 1.0.0
 	 * @access private
 	 */
 	private function require_files() {
-		require_once ELEMENTOR_PATH . 'includes/base/element-base.php';
+		require_once REFRACTION_PATH . 'includes/base/element-base.php';
 
-		require ELEMENTOR_PATH . 'includes/elements/column.php';
-		require ELEMENTOR_PATH . 'includes/elements/section.php';
-		require ELEMENTOR_PATH . 'includes/elements/repeater.php';
+		require REFRACTION_PATH . 'includes/elements/column.php';
+		require REFRACTION_PATH . 'includes/elements/section.php';
+		require REFRACTION_PATH . 'includes/elements/repeater.php';
 	}
 }

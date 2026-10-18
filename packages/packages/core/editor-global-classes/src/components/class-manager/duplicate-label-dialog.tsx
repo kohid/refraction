@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { closeDialog, EllipsisWithTooltip } from '@elementor/editor-ui';
+import { closeDialog, EllipsisWithTooltip } from '@refraction/editor-ui';
 import { InfoCircleFilledIcon } from '@elementor/icons';
 import {
 	Alert,
@@ -27,7 +27,7 @@ export const DuplicateLabelDialog = ( {
 	onApprove?: () => void;
 } ) => {
 	const handleButtonClick = () => {
-		localStorage.setItem( 'elementor-global-classes-search', DUP_PREFIX );
+		localStorage.setItem( 'refraction-global-classes-search', DUP_PREFIX );
 		onApprove?.();
 		closeDialog();
 	};
@@ -40,7 +40,7 @@ export const DuplicateLabelDialog = ( {
 						<InfoCircleFilledIcon fontSize="medium" />
 					</Icon>
 					<Typography variant="subtitle1">
-						{ __( "We've published your page and updated class names.", 'elementor' ) }
+						{ __( "We've published your page and updated class names.", 'refraction' ) }
 					</Typography>
 				</Box>
 			</DialogHeader>
@@ -49,7 +49,7 @@ export const DuplicateLabelDialog = ( {
 					<Typography variant="body2">
 						{ __(
 							'Some new classes used the same names as existing ones. To prevent conflicts, we added the prefix',
-							'elementor'
+							'refraction'
 						) }
 						<strong> { DUP_PREFIX }</strong>
 					</Typography>
@@ -73,7 +73,7 @@ export const DuplicateLabelDialog = ( {
 									minWidth: 0,
 								} }
 							>
-								{ __( 'Before', 'elementor' ) }
+								{ __( 'Before', 'refraction' ) }
 							</Typography>
 							<Typography
 								variant="subtitle2"
@@ -86,7 +86,7 @@ export const DuplicateLabelDialog = ( {
 									maxWidth: '200px',
 								} }
 							>
-								{ __( 'After', 'elementor' ) }
+								{ __( 'After', 'refraction' ) }
 							</Typography>
 						</Box>
 						<Divider sx={ { mt: 0.5, mb: 0.5 } } />
@@ -135,10 +135,10 @@ export const DuplicateLabelDialog = ( {
 						</Stack>
 						<Box>
 							<Alert severity="info" size="small" color="secondary">
-								<strong>{ __( 'Your designs and classes are safe.', 'elementor' ) }</strong>
+								<strong>{ __( 'Your designs and classes are safe.', 'refraction' ) }</strong>
 								{ __(
 									'Only the prefixes were added. Find them in Class Manager by searching',
-									'elementor'
+									'refraction'
 								) }
 								<strong>{ DUP_PREFIX }</strong>
 							</Alert>
@@ -148,10 +148,10 @@ export const DuplicateLabelDialog = ( {
 			</DialogContent>
 			<DialogActions>
 				<Button color="secondary" variant="text" onClick={ handleButtonClick }>
-					{ __( 'Go to Class Manager', 'elementor' ) }
+					{ __( 'Go to Class Manager', 'refraction' ) }
 				</Button>
 				<Button color="secondary" variant="contained" onClick={ closeDialog }>
-					{ __( 'Done', 'elementor' ) }
+					{ __( 'Done', 'refraction' ) }
 				</Button>
 			</DialogActions>
 		</>

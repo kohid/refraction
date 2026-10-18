@@ -1,4 +1,4 @@
-import AdminMenuHandler from 'elementor-admin/menu-handler';
+import AdminMenuHandler from 'refraction-admin/menu-handler';
 
 export default class LandingPagesHandler extends AdminMenuHandler {
 	getDefaultSettings() {
@@ -6,7 +6,7 @@ export default class LandingPagesHandler extends AdminMenuHandler {
 			adminMenuSelectors = {
 				// The escaping is done because jQuery requires it for selectors.
 				landingPagesTablePage: 'a[href="edit.php?post_type=' + pageName + '"]',
-				landingPagesAddNewPage: 'a[href="edit.php?post_type=elementor_library&page=' + pageName + '"]',
+				landingPagesAddNewPage: 'a[href="edit.php?post_type=refraction_library&page=' + pageName + '"]',
 			};
 
 		return {
@@ -14,7 +14,7 @@ export default class LandingPagesHandler extends AdminMenuHandler {
 				addButton: '.page-title-action:first',
 				pagesMenuItemAndLink: '#menu-pages, #menu-pages > a',
 				landingPagesMenuItem: `${ adminMenuSelectors.landingPagesTablePage }, ${ adminMenuSelectors.landingPagesAddNewPage }`,
-				templatesMenuItem: '.menu-icon-elementor_library',
+				templatesMenuItem: '.menu-icon-refraction_library',
 			},
 		};
 	}
@@ -46,8 +46,8 @@ export default class LandingPagesHandler extends AdminMenuHandler {
 
 			this.highlightSubMenuItem( this.elements.$landingPagesMenuItem );
 
-			// Overwrite the 'Add New' button at the top of the page to open in Elementor with the library module open.
-			jQuery( settings.selectors.addButton ).attr( 'href', elementorAdminConfig.urls.addNewLandingPageUrl );
+			// Overwrite the 'Add New' button at the top of the page to open in Refraction with the library module open.
+			jQuery( settings.selectors.addButton ).attr( 'href', refractionAdminConfig.urls.addNewLandingPageUrl );
 		}
 	}
 }

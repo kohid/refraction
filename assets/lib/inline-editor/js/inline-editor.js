@@ -1,7 +1,7 @@
 /**
  * Licensed under MIT, https://github.com/sofish/pen
  *
- * Customized and fixed by Elementor team
+ * Customized and fixed by Refraction team
  */
 
 (function(root, doc) {
@@ -1194,7 +1194,7 @@
 	};
 
 	// a fallback for old browers
-	root.ElementorInlineEditor = function(config) {
+	root.RefractionInlineEditor = function(config) {
 		if (!config) return utils.log('can\'t find config', true);
 
 		var defaults = utils.merge(config)
@@ -1238,7 +1238,7 @@
 	// make it accessible
 	if (doc.getSelection) {
 		selection = doc.getSelection();
-		root.ElementorInlineEditor = InlineEditor;
+		root.RefractionInlineEditor = InlineEditor;
 	}
 
 }(window, document));

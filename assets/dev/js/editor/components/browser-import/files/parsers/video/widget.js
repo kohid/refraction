@@ -37,7 +37,7 @@ export class Widget extends MediaParser {
 			$e.internal( 'document/elements/set-settings', {
 				// The reason we use the container id and not the container instance itself is that the container
 				// created above is just a placeholder, which later recreated using the same id.
-				container: elementor.getContainer( container.id ),
+				container: refraction.getContainer( container.id ),
 				settings: {
 					hosted_url: {
 						url: data.source_url,
@@ -46,14 +46,14 @@ export class Widget extends MediaParser {
 				},
 			} );
 		} ).catch( () => {
-			elementor.documents.getCurrent().history.setActive( false );
+			refraction.documents.getCurrent().history.setActive( false );
 
 			$e.run( 'document/elements/reset-settings', {
-				container: elementor.getContainer( container.id ),
+				container: refraction.getContainer( container.id ),
 				options: { external: true },
 			} );
 
-			elementor.documents.getCurrent().history.setActive( true );
+			refraction.documents.getCurrent().history.setActive( true );
 		} );
 
 		return container;

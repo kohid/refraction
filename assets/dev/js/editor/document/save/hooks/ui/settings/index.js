@@ -1,4 +1,4 @@
-import HookUIAfter from 'elementor-api/modules/hooks/ui/after';
+import HookUIAfter from 'refraction-api/modules/hooks/ui/after';
 
 export class FooterSeverRefreshMenu extends HookUIAfter {
 	getCommand() {

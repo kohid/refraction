@@ -1,13 +1,13 @@
-import { ElementorError, type ElementorErrorOptions } from './elementor-error';
+import { RefractionError, type RefractionErrorOptions } from './refraction-error';
 
 export type CreateErrorParams = {
-	code: ElementorErrorOptions[ 'code' ];
+	code: RefractionErrorOptions[ 'code' ];
 	message: string;
 };
 
-export const createError = < T extends ElementorErrorOptions[ 'context' ] >( { code, message }: CreateErrorParams ) => {
-	return class extends ElementorError {
-		constructor( { cause, context }: { cause?: ElementorErrorOptions[ 'cause' ]; context?: T } = {} ) {
+export const createError = < T extends RefractionErrorOptions[ 'context' ] >( { code, message }: CreateErrorParams ) => {
+	return class extends RefractionError {
+		constructor( { cause, context }: { cause?: RefractionErrorOptions[ 'cause' ]; context?: T } = {} ) {
 			super( message, { cause, code, context } );
 		}
 	};

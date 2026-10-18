@@ -1,11 +1,11 @@
 export const ImportExportSelectors = {
 	toolsMenu: '[data-testid="tools-menu"]',
-	websiteTemplatesTab: '#elementor-settings-tab-import-export-kit',
-	exportButton: '#elementor-import-export__export',
-	importNavigationButton: '#elementor-import-export__import',
+	websiteTemplatesTab: '#refraction-settings-tab-import-export-kit',
+	exportButton: '#refraction-import-export__export',
+	importNavigationButton: '#refraction-import-export__import',
 	tabContent: '#tab-import-export-kit',
 
-	exportCustomizationPage: '/wp-admin/admin.php?page=elementor-app&ver=3.33.0#/export-customization',
+	exportCustomizationPage: '/wp-admin/admin.php?page=refraction-app&ver=3.33.0#/export-customization',
 
 	kitNameInput: 'input[placeholder="Type name here..."]',
 	kitDescriptionInput: 'textarea[placeholder="Type description here..."]',

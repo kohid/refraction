@@ -1,5 +1,5 @@
 import { type ComponentType } from 'react';
-import { type PropValue } from '@elementor/editor-props';
+import { type PropValue } from '@refraction/editor-props';
 
 import {
 	type DirectionFieldProps,

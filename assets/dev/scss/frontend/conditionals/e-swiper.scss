@@ -1,6 +1,6 @@
 @import "../../helpers/variables";
 
-.elementor {
+.refraction {
 
 	&-element,
 	&-lightbox {
@@ -18,12 +18,12 @@
 				}
 			}
 
-			.elementor-lightbox-content-source {
+			.refraction-lightbox-content-source {
 				display: none;
 			}
 
-			.elementor-swiper-button,
-			~ .elementor-swiper-button {
+			.refraction-swiper-button,
+			~ .refraction-swiper-button {
 				position: absolute;
 				display: inline-flex; // Position exactly in center
 				z-index: 1;
@@ -75,8 +75,8 @@
 			// Fix for Safari - Navigation arrows don't appear in cube mode without adding a 1px translateZ
 			&.swiper-cube {
 
-				.elementor-swiper-button,
-				~ .elementor-swiper-button {
+				.refraction-swiper-button,
+				~ .refraction-swiper-button {
 					transform: translate3d(0, -50%, 1px);
 				}
 			}
@@ -103,36 +103,36 @@
 			}
 		}
 
-		&.elementor-pagination-position-outside {
+		&.refraction-pagination-position-outside {
 			$caption-space: 30px;
 
 			.swiper {
 				padding-bottom: $caption-space;
 
-				.elementor-swiper-button,
-				~ .elementor-swiper-button {
+				.refraction-swiper-button,
+				~ .refraction-swiper-button {
 					top: calc(50% - #{$caption-space} / 2);
 				}
 			}
 		}
 
-		.elementor-swiper {
+		.refraction-swiper {
 			position: relative;
 		}
 
-		.elementor-main-swiper {
+		.refraction-main-swiper {
 			position: static;
 		}
 
-		&.elementor-arrows-position- {
+		&.refraction-arrows-position- {
 
 			&outside {
 
 				.swiper {
 					width: calc(100% - 60px);
 
-					.elementor-swiper-button,
-					~ .elementor-swiper-button {
+					.refraction-swiper-button,
+					~ .refraction-swiper-button {
 
 						&-prev {
 							left: 0;

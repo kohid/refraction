@@ -32,10 +32,10 @@ export function countSeverities( report: PageAuditReport, category?: AuditCatego
 export function severityPluralLabel( severity: AuditSeverity ): string {
 	switch ( severity ) {
 		case 'error':
-			return __( 'Errors', 'elementor' );
+			return __( 'Errors', 'refraction' );
 		case 'warning':
-			return __( 'Warnings', 'elementor' );
+			return __( 'Warnings', 'refraction' );
 		case 'info':
-			return __( 'Suggestions', 'elementor' );
+			return __( 'Suggestions', 'refraction' );
 	}
 }

@@ -6,14 +6,14 @@ import {
 	mockTracking,
 	renderWithStore,
 } from 'test-utils';
-import { getCurrentDocument } from '@elementor/editor-documents';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { validateStyleLabel } from '@elementor/editor-styles-repository';
+import { getCurrentDocument } from '@refraction/editor-documents';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { validateStyleLabel } from '@refraction/editor-styles-repository';
 import {
 	__createStore as createStore,
 	__dispatch as dispatch,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 
 import { useFilters } from '../../../hooks/use-filters';
@@ -45,14 +45,14 @@ jest.mock( '@tanstack/react-virtual', () => ( {
 	} ),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	blockCommand: jest.fn(),
 } ) );
-jest.mock( '@elementor/editor-documents' );
+jest.mock( '@refraction/editor-documents' );
 jest.mock( '../../../hooks/use-filters' );
 jest.mock( '../../search-and-filter/context' );
-jest.mock( '@elementor/editor-styles-repository' );
+jest.mock( '@refraction/editor-styles-repository' );
 jest.mock( '../../../hooks/use-css-class-usage', () => ( {
 	useCssClassUsage: jest.fn().mockReturnValue( {
 		data: {}, // or whatever shape your hook expects

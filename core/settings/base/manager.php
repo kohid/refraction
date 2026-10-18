@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Core\Settings\Base;
+namespace Refraction\Core\Settings\Base;
 
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Plugin;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor settings base manager.
+ * Refraction settings base manager.
  *
- * Elementor settings base manager handler class is responsible for registering
- * and managing Elementor settings base managers.
+ * Refraction settings base manager handler class is responsible for registering
+ * and managing Refraction settings base managers.
  *
  * @since 1.6.0
  * @abstract
@@ -34,15 +34,15 @@ abstract class Manager {
 	/**
 	 * Settings base manager constructor.
 	 *
-	 * Initializing Elementor settings base manager.
+	 * Initializing Refraction settings base manager.
 	 *
 	 * @since 1.6.0
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'elementor/editor/init', [ $this, 'on_elementor_editor_init' ] );
+		add_action( 'refraction/editor/init', [ $this, 'on_refraction_editor_init' ] );
 
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 	}
 
 	/**
@@ -50,7 +50,7 @@ abstract class Manager {
 	 *
 	 * Add new actions to handle data after an ajax requests returned.
 	 *
-	 * Fired by `elementor/ajax/register_actions` action.
+	 * Fired by `refraction/ajax/register_actions` action.
 	 *
 	 * @since 2.0.0
 	 * @access public
@@ -149,7 +149,7 @@ abstract class Manager {
 		 * @param int   $id                    Settings ID.
 		 * @param array $data                  Settings data.
 		 */
-		$success_response_data = apply_filters( "elementor/settings/{$settings_name}/success_response_data", $success_response_data, $id, $data );
+		$success_response_data = apply_filters( "refraction/settings/{$settings_name}/success_response_data", $success_response_data, $id, $data );
 
 		return $success_response_data;
 	}
@@ -185,16 +185,16 @@ abstract class Manager {
 	}
 
 	/**
-	 * On Elementor init.
+	 * On Refraction init.
 	 *
 	 * Add editor template for the settings
 	 *
-	 * Fired by `elementor/init` action.
+	 * Fired by `refraction/init` action.
 	 *
 	 * @since 2.3.0
 	 * @access public
 	 */
-	public function on_elementor_editor_init() {
+	public function on_refraction_editor_init() {
 		Plugin::$instance->common->add_template( $this->get_editor_template(), 'text' );
 	}
 
@@ -268,25 +268,25 @@ abstract class Manager {
 	protected function print_editor_template_content( $name ) {
 		?>
 		<#
-		const tabs = elementor.config.settings.<?php
+		const tabs = refraction.config.settings.<?php
 			// PHPCS - the variable $name does not contain a user input value.
 			echo $name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>.tabs;
 
 		if ( Object.values( tabs ).length > 1 ) { #>
-			<div class="elementor-panel-navigation">
+			<div class="refraction-panel-navigation">
 				<# _.each( tabs, function( tabTitle, tabSlug ) {
 					$e.bc.ensureTab( 'panel/<?php
 						// PHPCS - the variable $name does not contain a user input value.
 						echo $name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					?>-settings', tabSlug ); #>
-					<button class="elementor-component-tab elementor-panel-navigation-tab elementor-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
+					<button class="refraction-component-tab refraction-panel-navigation-tab refraction-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
 						<span>{{{ tabTitle }}}</span>
 					</button>
 				<# } ); #>
 			</div>
 		<# } #>
-		<div id="elementor-panel-<?php echo esc_attr( $name ); ?>-settings-controls"></div>
+		<div id="refraction-panel-<?php echo esc_attr( $name ); ?>-settings-controls"></div>
 		<?php
 	}
 
@@ -329,7 +329,7 @@ abstract class Manager {
 
 		ob_start();
 		?>
-		<script type="text/template" id="tmpl-elementor-panel-<?php echo esc_attr( $name ); ?>-settings">
+		<script type="text/template" id="tmpl-refraction-panel-<?php echo esc_attr( $name ); ?>-settings">
 			<?php $this->print_editor_template_content( $name ); ?>
 		</script>
 		<?php

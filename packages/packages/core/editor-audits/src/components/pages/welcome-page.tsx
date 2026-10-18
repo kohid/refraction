@@ -4,8 +4,8 @@ import { __ } from '@wordpress/i18n';
 
 const INFORMATION_IMAGE_PATH = 'images/information.svg';
 
-type ElementorCommonWindow = Window & {
-	elementorCommon?: {
+type RefractionCommonWindow = Window & {
+	refractionCommon?: {
 		config?: {
 			urls?: {
 				assets?: string;
@@ -15,7 +15,7 @@ type ElementorCommonWindow = Window & {
 };
 
 export default function WelcomePage() {
-	const assetsUrl = ( window as ElementorCommonWindow ).elementorCommon?.config?.urls?.assets ?? '';
+	const assetsUrl = ( window as RefractionCommonWindow ).refractionCommon?.config?.urls?.assets ?? '';
 
 	return (
 		<Box
@@ -29,18 +29,18 @@ export default function WelcomePage() {
 			} }
 		>
 			<img
-				className="elementor-nerd-box-icon"
+				className="refraction-nerd-box-icon"
 				src={ `${ assetsUrl }${ INFORMATION_IMAGE_PATH }` }
 				loading="lazy"
-				alt={ __( 'Elementor', 'elementor' ) }
+				alt={ __( 'Refraction', 'refraction' ) }
 			/>
 			<Typography variant="subtitle1" component="h3" sx={ { marginBlockStart: 2 } }>
-				{ __( 'Audit your page!', 'elementor' ) }
+				{ __( 'Audit your page!', 'refraction' ) }
 			</Typography>
 			<Typography variant="caption" textAlign="center">
 				{ __(
 					'Check SEO, accessibility, performance, and best practices. Click "Run page audit" to begin.',
-					'elementor'
+					'refraction'
 				) }
 			</Typography>
 		</Box>

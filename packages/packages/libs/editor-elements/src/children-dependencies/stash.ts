@@ -1,9 +1,9 @@
-import { getSessionStorageItem, removeSessionStorageItem, setSessionStorageItem } from '@elementor/session';
+import { getSessionStorageItem, removeSessionStorageItem, setSessionStorageItem } from '@refraction/session';
 
 import { type V1ElementData } from '../sync/types';
 import { type ChildrenStash } from './types';
 
-const STASH_KEY_PREFIX = 'elementor/editor-state';
+const STASH_KEY_PREFIX = 'refraction/editor-state';
 const STASH_KEY_SEGMENT = 'children-deps';
 
 export function createChildrenStash(): ChildrenStash {

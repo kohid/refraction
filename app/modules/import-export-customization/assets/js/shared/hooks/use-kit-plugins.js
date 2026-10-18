@@ -7,7 +7,7 @@ export default function useKitPlugins( { open } ) {
 	const fetchPlugins = useCallback( async () => {
 		setIsLoading( true );
 		try {
-			const requestUrl = `${ elementorCommon.config.urls.rest }wp/v2/plugins/`;
+			const requestUrl = `${ refractionCommon.config.urls.rest }wp/v2/plugins/`;
 			const response = await fetch( requestUrl, {
 				method: 'GET',
 				headers: {

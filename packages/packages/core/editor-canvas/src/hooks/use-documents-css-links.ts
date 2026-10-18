@@ -2,11 +2,11 @@ import {
 	__privateUseListenTo as useListenTo,
 	commandEndEvent,
 	getCanvasIframeDocument,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 const REMOVED_ATTR = 'data-e-removed';
-const DOCUMENT_WRAPPER_ATTR = 'data-elementor-id';
-const CSS_LINK_ID_PREFIX = 'elementor-post-';
+const DOCUMENT_WRAPPER_ATTR = 'data-refraction-id';
+const CSS_LINK_ID_PREFIX = 'refraction-post-';
 const CSS_LINK_ID_SUFFIX = '-css';
 
 export function useDocumentsCssLinks() {

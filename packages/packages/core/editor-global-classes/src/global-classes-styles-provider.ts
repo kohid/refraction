@@ -3,13 +3,13 @@ import {
 	type StyleDefinition,
 	type StyleDefinitionID,
 	type StyleDefinitionVariant,
-} from '@elementor/editor-styles';
-import { createStylesProvider } from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles';
+import { createStylesProvider } from '@refraction/editor-styles-repository';
 import {
 	__dispatch as dispatch,
 	__getState as getState,
 	__subscribeWithSelector as subscribeWithSelector,
-} from '@elementor/store';
+} from '@refraction/store';
 import { __ } from '@wordpress/i18n';
 
 import { getCapabilities } from './capabilities';
@@ -38,8 +38,8 @@ export const globalClassesStylesProvider = createStylesProvider( {
 	limit: MAX_CLASSES,
 	isPregeneratedLink: ( { id } ) => PREGENERATED_LINK_PATTERN.test( id ),
 	labels: {
-		singular: __( 'class', 'elementor' ),
-		plural: __( 'classes', 'elementor' ),
+		singular: __( 'class', 'refraction' ),
+		plural: __( 'classes', 'refraction' ),
 	},
 	subscribe: ( cb ) => subscribeWithStates( cb ),
 	capabilities: getCapabilities(),

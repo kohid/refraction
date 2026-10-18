@@ -1,8 +1,8 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { type OperationType } from './batch-operations';
 
-const BASE_PATH = 'elementor/v1/variables';
+const BASE_PATH = 'refraction/v1/variables';
 
 type RestoreVariablePayload = {
 	id: string;

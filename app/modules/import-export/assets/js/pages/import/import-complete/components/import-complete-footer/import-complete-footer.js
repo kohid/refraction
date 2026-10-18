@@ -1,7 +1,7 @@
 import ActionsFooter from '../../../../../shared/actions-footer/actions-footer';
-import Button from 'elementor-app/ui/molecules/button';
-import useAction from 'elementor-app/hooks/use-action';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import Button from 'refraction-app/ui/molecules/button';
+import useAction from 'refraction-app/hooks/use-action';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
 export default function ImportCompleteFooter( { seeItLiveUrl, referrer } ) {
 	const action = useAction(),
@@ -23,7 +23,7 @@ export default function ImportCompleteFooter( { seeItLiveUrl, referrer } ) {
 			{
 				seeItLiveUrl &&
 				<Button
-					text={ __( 'See It Live', 'elementor' ) }
+					text={ __( 'See It Live', 'refraction' ) }
 					variant="contained"
 					onClick={ () => {
 						eventTracking( 'kit-library/see-it-live' );
@@ -33,7 +33,7 @@ export default function ImportCompleteFooter( { seeItLiveUrl, referrer } ) {
 			}
 
 			<Button
-				text={ __( 'Got It', 'elementor' ) }
+				text={ __( 'Got It', 'refraction' ) }
 				variant="contained"
 				color="primary"
 				onClick={ () => {

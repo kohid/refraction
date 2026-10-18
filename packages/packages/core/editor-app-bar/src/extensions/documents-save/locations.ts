@@ -1,4 +1,4 @@
-import { createMenu } from '@elementor/menus';
+import { createMenu } from '@refraction/menus';
 
 import Action from '../../components/actions/action';
 import Link from '../../components/actions/link';

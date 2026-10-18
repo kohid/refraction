@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Usage\Contracts;
+namespace Refraction\Modules\Usage\Contracts;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

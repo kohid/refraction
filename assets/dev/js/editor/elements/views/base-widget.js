@@ -1,4 +1,4 @@
-const BaseElementView = require( 'elementor-elements/views/base' );
+const BaseElementView = require( 'refraction-elements/views/base' );
 
 /**
  * @augments BaseElementView
@@ -31,7 +31,7 @@ class BaseWidgetView extends BaseElementView {
 	className() {
 		const baseClasses = super.className();
 
-		return baseClasses + ' elementor-widget ' + elementor.getElementData( this.getEditModel() ).html_wrapper_class;
+		return baseClasses + ' refraction-widget ' + refraction.getElementData( this.getEditModel() ).html_wrapper_class;
 	}
 
 	normalizeAttributes() {
@@ -40,8 +40,8 @@ class BaseWidgetView extends BaseElementView {
 
 		this.$el
 			.attr( 'data-widget_type', editModel.get( 'widgetType' ) + '.' + skinType )
-			.removeClass( 'elementor-widget-empty' )
-			.children( '.elementor-widget-empty-icon' )
+			.removeClass( 'refraction-widget-empty' )
+			.children( '.refraction-widget-empty-icon' )
 			.remove();
 	}
 
@@ -49,26 +49,26 @@ class BaseWidgetView extends BaseElementView {
 		const editModel = this.getEditModel();
 
 		if ( 'remote' !== this.getTemplateType() ) {
-			return Marionette.TemplateCache.get( '#tmpl-elementor-' + editModel.get( 'widgetType' ) + '-content' );
+			return Marionette.TemplateCache.get( '#tmpl-refraction-' + editModel.get( 'widgetType' ) + '-content' );
 		}
 
 		return _.template( '' );
 	}
 
 	getEditButtons() {
-		const elementData = elementor.getElementData( this.model ),
+		const elementData = refraction.getElementData( this.model ),
 			editTools = {};
 
 		editTools.edit = {
 			/* Translators: %s: Element name. */
-			title: sprintf( __( 'Edit %s', 'elementor' ), elementData.title ),
+			title: sprintf( __( 'Edit %s', 'refraction' ), elementData.title ),
 			icon: 'edit',
 		};
 
-		if ( elementor.getPreferences( 'edit_buttons' ) ) {
+		if ( refraction.getPreferences( 'edit_buttons' ) ) {
 			editTools.duplicate = {
 				/* Translators: %s: Element name. */
-				title: sprintf( __( 'Duplicate %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Duplicate %s', 'refraction' ), elementData.title ),
 				icon: 'clone',
 			};
 		}
@@ -81,7 +81,7 @@ class BaseWidgetView extends BaseElementView {
 	}
 
 	onModelBeforeRemoteRender() {
-		this.$el.addClass( 'elementor-loading' );
+		this.$el.addClass( 'refraction-loading' );
 	}
 
 	onModelRemoteRender() {
@@ -89,10 +89,10 @@ class BaseWidgetView extends BaseElementView {
 			return;
 		}
 
-		this.$el.removeClass( 'elementor-loading' );
+		this.$el.removeClass( 'refraction-loading' );
 
 		// If container document has been changed during the remote request, don't render.
-		if ( this.getContainer().document.id !== elementor.documents.getCurrent().id ) {
+		if ( this.getContainer().document.id !== refraction.documents.getCurrent().id ) {
 			return;
 		}
 
@@ -101,7 +101,7 @@ class BaseWidgetView extends BaseElementView {
 
 	onBeforeDestroy() {
 		// Remove old style from the DOM.
-		elementor.$previewContents.find( '#elementor-style-' + this.model.get( 'id' ) ).remove();
+		refraction.$previewContents.find( '#refraction-style-' + this.model.get( 'id' ) ).remove();
 	}
 }
 

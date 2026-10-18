@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCallback, useState } from 'react';
-import { __privateUseListenTo as useListenTo, routeOpenEvent } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo, routeOpenEvent } from '@refraction/editor-v1-adapters';
 import { Box, Stack, TextField, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -27,9 +27,9 @@ export function AgentsSettingsTab() {
 	return (
 		<Box sx={ { p: 2 } }>
 			<Stack spacing={ 1.5 }>
-				<Typography variant="subtitle2">{ __( 'Agents', 'elementor' ) }</Typography>
+				<Typography variant="subtitle2">{ __( 'Agents', 'refraction' ) }</Typography>
 				<TextField
-					label={ __( 'llms.txt', 'elementor' ) }
+					label={ __( 'llms.txt', 'refraction' ) }
 					value={ value }
 					onChange={ handleChange }
 					multiline
@@ -38,8 +38,8 @@ export function AgentsSettingsTab() {
 					disabled={ ! isSettingsAvailable }
 					helperText={
 						isSettingsAvailable
-							? __( 'Content served at /llms.txt when saved. Leave empty to disable.', 'elementor' )
-							: __( 'Kit settings are unavailable. Reopen Site Settings and try again.', 'elementor' )
+							? __( 'Content served at /llms.txt when saved. Leave empty to disable.', 'refraction' )
+							: __( 'Kit settings are unavailable. Reopen Site Settings and try again.', 'refraction' )
 					}
 				/>
 			</Stack>

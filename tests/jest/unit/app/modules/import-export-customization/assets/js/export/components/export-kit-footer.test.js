@@ -1,16 +1,16 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ExportKitFooter from 'elementor/app/modules/import-export-customization/assets/js/export/components/export-kit-footer';
+import ExportKitFooter from 'refraction/app/modules/import-export-customization/assets/js/export/components/export-kit-footer';
 
 const mockNavigate = jest.fn();
 
-jest.mock( 'elementor-app/hooks/use-cloud-kits-eligibility', () => jest.fn() );
+jest.mock( 'refraction-app/hooks/use-cloud-kits-eligibility', () => jest.fn() );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-connect-state', () => jest.fn() );
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-connect-state', () => jest.fn() );
 
 jest.mock( '@reach/router' );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/export/context/export-context', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/export/context/export-context', () => ( {
 	useExportContext: jest.fn(),
 	EXPORT_STATUS: {
 		PENDING: 'PENDING',
@@ -19,13 +19,13 @@ jest.mock( 'elementor/app/modules/import-export-customization/assets/js/export/c
 	},
 } ) );
 
-import useCloudKitsEligibility from 'elementor-app/hooks/use-cloud-kits-eligibility';
-import useConnectState from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-connect-state';
-import { useExportContext } from 'elementor/app/modules/import-export-customization/assets/js/export/context/export-context';
+import useCloudKitsEligibility from 'refraction-app/hooks/use-cloud-kits-eligibility';
+import useConnectState from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-connect-state';
+import { useExportContext } from 'refraction/app/modules/import-export-customization/assets/js/export/context/export-context';
 import { useNavigate } from '@reach/router';
 
 describe( 'ExportKitFooter Component', () => {
-	let mockElementorAppConfig;
+	let mockRefractionAppConfig;
 	let mockDispatch;
 	let mockRefetchEligibility;
 	let mockHandleConnectSuccess;
@@ -35,16 +35,16 @@ describe( 'ExportKitFooter Component', () => {
 	beforeEach( () => {
 		useNavigate.mockReturnValue( mockNavigate );
 
-		mockElementorAppConfig = {
-			base_url: 'https://example.com/elementor',
+		mockRefractionAppConfig = {
+			base_url: 'https://example.com/refraction',
 			'cloud-library': {
 				library_connect_url: 'https://example.com/connect',
 			},
 		};
-		global.elementorAppConfig = mockElementorAppConfig;
+		global.refractionAppConfig = mockRefractionAppConfig;
 
 		global.jQuery = jest.fn( () => ( {
-			elementorConnect: jest.fn(),
+			refractionConnect: jest.fn(),
 		} ) );
 
 		mockDispatch = jest.fn();

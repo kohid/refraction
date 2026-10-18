@@ -1,5 +1,5 @@
-import { V1Document } from '@elementor/editor-documents';
-import { V1ElementData } from '@elementor/editor-elements';
+import { V1Document } from '@refraction/editor-documents';
+import { V1ElementData } from '@refraction/editor-elements';
 
 
 export function createMockDocumentData( {

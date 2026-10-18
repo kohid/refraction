@@ -1,5 +1,5 @@
-import { dismissNotification, notify } from '@elementor/editor-notifications';
-import { getQueryClient } from '@elementor/query';
+import { dismissNotification, notify } from '@refraction/editor-notifications';
+import { getQueryClient } from '@refraction/query';
 import { __ } from '@wordpress/i18n';
 
 import { IMPORT_DESIGN_SYSTEM_MUTATION_KEY } from './hooks/use-import-request';
@@ -12,7 +12,7 @@ export const notifyImportInProgress = () => {
 	notify( {
 		id: IMPORT_STARTED_NOTIFICATION_ID,
 		type: 'info',
-		message: __( 'Import in Progress. You will be notified when the import is complete.', 'elementor' ),
+		message: __( 'Import in Progress. You will be notified when the import is complete.', 'refraction' ),
 	} );
 };
 
@@ -22,7 +22,7 @@ export const notifyImportSuccess = () => {
 	notify( {
 		id: SUCCESS_NOTIFICATION_ID,
 		type: 'success',
-		message: __( 'Design system imported', 'elementor' ),
+		message: __( 'Design system imported', 'refraction' ),
 	} );
 };
 
@@ -32,13 +32,13 @@ export const notifyImportFailure = ( onRetry: () => void ) => {
 	notify( {
 		id: FAILURE_NOTIFICATION_ID,
 		type: 'error',
-		message: __( 'Your design system import failed', 'elementor' ),
+		message: __( 'Your design system import failed', 'refraction' ),
 		additionalActionProps: [
 			{
 				size: 'small',
 				variant: 'outlined',
 				color: 'error',
-				children: __( 'Try again', 'elementor' ),
+				children: __( 'Try again', 'refraction' ),
 				onClick: () => {
 					dismissNotification( FAILURE_NOTIFICATION_ID );
 

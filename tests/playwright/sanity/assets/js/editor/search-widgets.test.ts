@@ -8,7 +8,7 @@ test( 'Visible widgets should be shown in search result', async ( { page, apiReq
 	await wpAdmin.openNewPage();
 
 	// Act - search for a visible widget.
-	const widgetSearchBar = 'input#elementor-panel-elements-search-input';
+	const widgetSearchBar = 'input#refraction-panel-elements-search-input';
 	await page.waitForSelector( widgetSearchBar );
 	await page.locator( widgetSearchBar ).fill( 'Spacer' );
 
@@ -16,7 +16,7 @@ test( 'Visible widgets should be shown in search result', async ( { page, apiReq
 	await page.waitForLoadState( 'networkidle' );
 
 	// Assert - the widget should be shown in search result.
-	const widgetsInSearchResult = page.locator( '#elementor-panel-elements .elementor-element-wrapper .elementor-element' );
+	const widgetsInSearchResult = page.locator( '#refraction-panel-elements .refraction-element-wrapper .refraction-element' );
 	await expect( widgetsInSearchResult ).toHaveCount( 1 );
 } );
 
@@ -26,7 +26,7 @@ test( 'WordPress widgets hidden from panel should still appear in search results
 	await wpAdmin.openNewPage();
 
 	// Act - search for a WordPress widget hidden from the panel.
-	const widgetSearchBar = 'input#elementor-panel-elements-search-input';
+	const widgetSearchBar = 'input#refraction-panel-elements-search-input';
 	await page.waitForSelector( widgetSearchBar );
 	await page.locator( widgetSearchBar ).fill( 'RSS' );
 
@@ -34,7 +34,7 @@ test( 'WordPress widgets hidden from panel should still appear in search results
 	await page.waitForLoadState( 'networkidle' );
 
 	// Assert - the RSS WordPress widget should appear in search even though its panel section is hidden.
-	const rssWidget = page.locator( '#elementor-panel-elements .elementor-element-wrapper .elementor-element', { hasText: 'RSS' } );
+	const rssWidget = page.locator( '#refraction-panel-elements .refraction-element-wrapper .refraction-element', { hasText: 'RSS' } );
 	await expect( rssWidget ).toHaveCount( 1 );
 } );
 
@@ -44,6 +44,6 @@ test( 'WordPress category should not be visible in the panel without a search te
 	await wpAdmin.openNewPage();
 
 	// Assert - the WordPress category section should not be visible when there is no search term.
-	const wordpressCategory = page.locator( '#elementor-panel-elements-wrapper [data-category="wordpress"]' );
+	const wordpressCategory = page.locator( '#refraction-panel-elements-wrapper [data-category="wordpress"]' );
 	await expect( wordpressCategory ).toHaveCount( 0 );
 } );

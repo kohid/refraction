@@ -1,4 +1,4 @@
-export default class GridContainer extends elementorModules.frontend.handlers.Base {
+export default class GridContainer extends refractionModules.frontend.handlers.Base {
 	static cacheByValues = new Map();
 
 	static isDeviceModeListenerBound = false;
@@ -10,7 +10,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 
 		GridContainer.isDeviceModeListenerBound = true;
 
-		elementor.channels.deviceMode.on( 'change', () => {
+		refraction.channels.deviceMode.on( 'change', () => {
 			GridContainer.clearCache();
 		} );
 	}
@@ -32,13 +32,13 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	}
 
 	static buildCalculationKey( handler ) {
-		const device = elementor.channels.deviceMode.request( 'currentMode' ),
+		const device = refraction.channels.deviceMode.request( 'currentMode' ),
 			elementSettings = handler.getElementSettings(),
 			{ grid_auto_flow: gridAutoFlow } = elementSettings,
-			rowsSize = elementorFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_rows_grid', 'size', device ),
-			columnsSize = elementorFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_columns_grid', 'size', device ),
-			rowsUnit = elementorFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_rows_grid', 'unit', device ),
-			columnsUnit = elementorFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_columns_grid', 'unit', device ),
+			rowsSize = refractionFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_rows_grid', 'size', device ),
+			columnsSize = refractionFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_columns_grid', 'size', device ),
+			rowsUnit = refractionFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_rows_grid', 'unit', device ),
+			columnsUnit = refractionFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_columns_grid', 'unit', device ),
 			keyParts = [
 				device,
 				gridAutoFlow,
@@ -65,24 +65,24 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 
 	static computeMaxElementsNumber( handler, gridDimensions ) {
 		const elementSettings = handler.getElementSettings(),
-			device = elementor.channels.deviceMode.request( 'currentMode' ),
+			device = refraction.channels.deviceMode.request( 'currentMode' ),
 			{ grid_auto_flow: gridAutoFlow } = elementSettings;
 
 		if ( 'row' === gridAutoFlow ) {
-			const rows = elementorFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_rows_grid', 'size', device ),
+			const rows = refractionFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_rows_grid', 'size', device ),
 				rowsLength = isNaN( rows ) ? String( rows ).split( ' ' ).length : rows;
 
 			return gridDimensions.columns.length * rowsLength;
 		}
 
-		const columns = elementorFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_columns_grid', 'size', device ),
+		const columns = refractionFrontend.utils.controls.getResponsiveControlValue( elementSettings, 'grid_columns_grid', 'size', device ),
 			columnsLength = isNaN( columns ) ? String( columns ).split( ' ' ).length : columns;
 
 		return gridDimensions.rows.length * columnsLength;
 	}
 
 	static computeDimensionsCache( handler ) {
-		const currentDevice = elementor.channels.deviceMode.request( 'currentMode' ),
+		const currentDevice = refraction.channels.deviceMode.request( 'currentMode' ),
 			dimensions = {
 				rows: handler.getControlValues( 'grid_rows_grid', currentDevice, 'grid-template-rows' ) || 1,
 				columns: handler.getControlValues( 'grid_columns_grid', currentDevice, 'grid-template-columns' ) || 1,
@@ -142,7 +142,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	}
 
 	isActive() {
-		return elementorFrontend.isEditMode();
+		return refractionFrontend.isEditMode();
 	}
 
 	getDefaultSettings() {
@@ -159,14 +159,14 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 			'grid_row_custom',
 		];
 
-		const gridItemControls = gridItemSuffixes.map( ( suffix ) => `[class*="elementor-control-${ suffix }"]` ).join( ', ' );
+		const gridItemControls = gridItemSuffixes.map( ( suffix ) => `[class*="refraction-control-${ suffix }"]` ).join( ', ' );
 
 		return {
 			selectors: {
 				gridOutline: '.e-grid-outline',
 				directGridOverlay: ':scope > .e-grid-outline',
 				boxedContainer: ':scope > .e-con-inner',
-				emptyView: '.elementor-empty-view',
+				emptyView: '.refraction-empty-view',
 			},
 			classes: {
 				outline: 'e-grid-outline',
@@ -192,7 +192,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 		super.onInit();
 		this.scheduleInitLayoutOverlay();
 		this.updateEmptyViewHeight();
-		elementor.hooks.addAction( 'panel/open_editor/container', this.onPanelShow );
+		refraction.hooks.addAction( 'panel/open_editor/container', this.onPanelShow );
 	}
 
 	handleGridControls( sectionName, editor ) {
@@ -232,7 +232,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	onPanelShow( panel, model ) {
 		const settingsModel = model.get( 'settings' ),
 			containerType = settingsModel.get( 'container_type' ),
-			$linkElement = panel.$el.find( '#elementor-panel__editor__help__link' ),
+			$linkElement = panel.$el.find( '#refraction-panel__editor__help__link' ),
 			href = 'grid' === containerType
 				? 'https://go.elementor.com/widget-container-grid'
 				: 'https://go.elementor.com/widget-container';
@@ -244,23 +244,23 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 
 	bindEvents() {
 		GridContainer.bindDeviceModeListener();
-		elementor.channels.deviceMode.on( 'change', this.onDeviceModeChange );
-		elementorFrontend.elements.$window.on( 'resize', this.onDeviceModeChange );
-		elementorFrontend.elements.$window.on( 'resize', this.updateEmptyViewHeight );
+		refraction.channels.deviceMode.on( 'change', this.onDeviceModeChange );
+		refractionFrontend.elements.$window.on( 'resize', this.onDeviceModeChange );
+		refractionFrontend.elements.$window.on( 'resize', this.updateEmptyViewHeight );
 		this.addChildLifeCycleEventListeners();
-		elementor.channels.editor.on( 'section:activated', this.handleGridControls.bind( this ) );
+		refraction.channels.editor.on( 'section:activated', this.handleGridControls.bind( this ) );
 	}
 
 	onDestroy() {
-		elementorModules.frontend.handlers.Base.prototype.onDestroy.apply( this, arguments );
+		refractionModules.frontend.handlers.Base.prototype.onDestroy.apply( this, arguments );
 	}
 
 	unbindEvents() {
 		this.removeChildLifeCycleEventListeners();
-		elementor.channels.deviceMode.off( 'change', this.onDeviceModeChange );
-		elementorFrontend.elements.$window.off( 'resize', this.onDeviceModeChange );
-		elementorFrontend.elements.$window.off( 'resize', this.updateEmptyViewHeight );
-		elementor.channels.editor.off( 'section:activated', this.handleGridControls.bind( this ) );
+		refraction.channels.deviceMode.off( 'change', this.onDeviceModeChange );
+		refractionFrontend.elements.$window.off( 'resize', this.onDeviceModeChange );
+		refractionFrontend.elements.$window.off( 'resize', this.updateEmptyViewHeight );
+		refraction.channels.editor.off( 'section:activated', this.handleGridControls.bind( this ) );
 	}
 
 	initLayoutOverlay() {
@@ -389,7 +389,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 		const elementSettings = this.getElementSettings(),
 			{ unit, size } = elementSettings[ control ],
 			{ outlineParentContainer } = this.elements,
-			controlValueForCurrentDevice = elementorFrontend.utils.controls.getResponsiveControlValue( elementSettings, control, 'size', device ),
+			controlValueForCurrentDevice = refractionFrontend.utils.controls.getResponsiveControlValue( elementSettings, control, 'size', device ),
 			controlValue = this.getComputedStyle( outlineParentContainer, property ),
 			computedStyleLength = controlValue.split( ' ' ).length;
 
@@ -451,7 +451,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	 * @return {Array}
 	 */
 	getResponsiveControlNames( propsThatTriggerGridLayoutRender ) {
-		const activeBreakpoints = elementorFrontend.breakpoints.getActiveBreakpointsList();
+		const activeBreakpoints = refractionFrontend.breakpoints.getActiveBreakpointsList();
 		const responsiveControlNames = [];
 
 		for ( const prop of propsThatTriggerGridLayoutRender ) {
@@ -514,13 +514,13 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	addChildLifeCycleEventListeners() {
 		this.lifecycleChangeListener = this.onChildLifecycleEvent.bind( this );
 
-		window.addEventListener( 'elementor/editor/element-rendered', this.lifecycleChangeListener );
-		window.addEventListener( 'elementor/editor/element-destroyed', this.lifecycleChangeListener );
+		window.addEventListener( 'refraction/editor/element-rendered', this.lifecycleChangeListener );
+		window.addEventListener( 'refraction/editor/element-destroyed', this.lifecycleChangeListener );
 	}
 
 	removeChildLifeCycleEventListeners() {
-		window.removeEventListener( 'elementor/editor/element-rendered', this.lifecycleChangeListener );
-		window.removeEventListener( 'elementor/editor/element-destroyed', this.lifecycleChangeListener );
+		window.removeEventListener( 'refraction/editor/element-rendered', this.lifecycleChangeListener );
+		window.removeEventListener( 'refraction/editor/element-destroyed', this.lifecycleChangeListener );
 
 		if ( this.layoutOverlayAnimationFrame ) {
 			cancelAnimationFrame( this.layoutOverlayAnimationFrame );
@@ -531,7 +531,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	updateEmptyViewHeight() {
 		if ( this.shouldUpdateEmptyViewHeight() ) {
 			const { emptyView } = this.elements,
-				currentDevice = elementor.channels.deviceMode.request( 'currentMode' ),
+				currentDevice = refraction.channels.deviceMode.request( 'currentMode' ),
 				elementSettings = this.getElementSettings(),
 				gridRows = 'desktop' === currentDevice ? elementSettings.grid_rows_grid : elementSettings.grid_rows_grid + '_' + currentDevice;
 
@@ -549,7 +549,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	}
 
 	shouldUpdateEmptyViewHeight() {
-		return !! this.elements.container.querySelector( '.elementor-empty-view' );
+		return !! this.elements.container.querySelector( '.refraction-empty-view' );
 	}
 
 	hasCustomUnit( gridRows ) {
@@ -567,7 +567,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	}
 
 	shouldRemoveEmptyView() {
-		const childrenLength = this.elements.outlineParentContainer.querySelectorAll( ':scope > .elementor-element' ).length;
+		const childrenLength = this.elements.outlineParentContainer.querySelectorAll( ':scope > .refraction-element' ).length;
 
 		if ( 0 === childrenLength ) {
 			return false;
@@ -588,7 +588,7 @@ export default class GridContainer extends elementorModules.frontend.handlers.Ba
 	}
 
 	getMaxOutlineElementsNumber() {
-		const childrenLength = this.elements.outlineParentContainer.querySelectorAll( ':scope > .elementor-element' ).length;
+		const childrenLength = this.elements.outlineParentContainer.querySelectorAll( ':scope > .refraction-element' ).length;
 
 		return GridContainer.getCachedMaxOutlineElementsNumber( this, childrenLength );
 	}

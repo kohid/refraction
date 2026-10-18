@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\LazyLoad;
+namespace Refraction\Modules\LazyLoad;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -77,7 +77,7 @@ class Module extends BaseModule {
 					};
 					const events = [
 						'DOMContentLoaded',
-						'elementor/lazyload/observe',
+						'refraction/lazyload/observe',
 					];
 					events.forEach( ( event ) => {
 						document.addEventListener( event, lazyloadRunObserver );
@@ -93,6 +93,6 @@ class Module extends BaseModule {
 	}
 
 	private static function is_lazy_load_background_images_enabled(): bool {
-		return '1' === get_option( 'elementor_lazy_load_background_images', '1' );
+		return '1' === get_option( 'refraction_lazy_load_background_images', '1' );
 	}
 }

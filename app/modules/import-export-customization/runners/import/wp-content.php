@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Import;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Import;
 
-use Elementor\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
-use Elementor\Core\Utils\ImportExport\WP_Import;
+use Refraction\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
+use Refraction\Core\Utils\ImportExport\WP_Import;
 
 class Wp_Content extends Import_Runner_Base {
 
@@ -67,15 +67,15 @@ class Wp_Content extends Import_Runner_Base {
 			'terms' => $imported_terms,
 			'taxonomies' => ! empty( $taxonomies[ $post_type ] ) ? $taxonomies[ $post_type ] : [],
 			'posts_meta' => [
-				static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID => $this->import_session_id,
+				static::META_KEY_REFRACTION_IMPORT_SESSION_ID => $this->import_session_id,
 			],
 			'terms_meta' => [
-				static::META_KEY_ELEMENTOR_IMPORT_SESSION_ID => $this->import_session_id,
+				static::META_KEY_REFRACTION_IMPORT_SESSION_ID => $this->import_session_id,
 			],
 			'include' => 'page' === $post_type ? $customization['pages'] ?? null : null,
 		];
 
-		$args = apply_filters( 'elementor/import-export-customization/import/wp-content/query-args/customization', $args, $post_type, $customization );
+		$args = apply_filters( 'refraction/import-export-customization/import/wp-content/query-args/customization', $args, $post_type, $customization );
 
 		$file = $path . $post_type . '/' . $post_type . '.xml';
 
@@ -103,7 +103,7 @@ class Wp_Content extends Import_Runner_Base {
 
 		$post_types = array_merge( $wp_builtin_post_types, $this->selected_custom_post_types );
 
-		$post_types = apply_filters( 'elementor/import-export-customization/wp-content/post-types/customization', $post_types, $data, $customization );
+		$post_types = apply_filters( 'refraction/import-export-customization/wp-content/post-types/customization', $post_types, $data, $customization );
 
 		$post_types = array_unique( $this->force_element_to_be_last_by_value( $post_types, 'nav_menu_item' ) );
 

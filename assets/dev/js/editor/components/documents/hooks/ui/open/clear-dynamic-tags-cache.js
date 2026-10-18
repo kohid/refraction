@@ -8,7 +8,7 @@ export class ClearDynamicTagsCache extends $e.modules.hookUI.Before {
 	}
 
 	apply() {
-		elementor.dynamicTags.cleanCache();
+		refraction.dynamicTags.cleanCache();
 	}
 }
 

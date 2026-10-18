@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, useContext, useMemo } from 'react';
-import { cssFilterFunctionPropUtil, type PropType } from '@elementor/editor-props';
+import { cssFilterFunctionPropUtil, type PropType } from '@refraction/editor-props';
 
 import { useBoundProp } from '../../../bound-prop-context';
 import { type FilterFunction } from '../configs';

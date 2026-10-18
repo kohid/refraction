@@ -1,7 +1,7 @@
-.elementor-control-type-textarea,
-.elementor-control-type-code {
+.refraction-control-type-textarea,
+.refraction-control-type-code {
 
-	.elementor-control-dynamic-switcher {
+	.refraction-control-dynamic-switcher {
 		border-inline-start-width: 1px;
 		border-start-start-radius: 0;
 		border-start-end-radius: 0;
@@ -9,9 +9,9 @@
 		border-end-start-radius: var(--e-a-border-radius);
 	}
 
-	&:not(.elementor-control-dynamic-value) {
+	&:not(.refraction-control-dynamic-value) {
 
-		.elementor-control-dynamic-switcher {
+		.refraction-control-dynamic-switcher {
 			position: absolute;
 			inset-block-start: 0;
 			inset-inline-end: 0;
@@ -19,7 +19,7 @@
 		}
 	}
 
-	.elementor-control-input-wrapper {
+	.refraction-control-input-wrapper {
 		position: relative;
 	}
 
@@ -29,7 +29,7 @@
 
 		&:focus {
 
-			+ .elementor-control-dynamic-switcher {
+			+ .refraction-control-dynamic-switcher {
 				display: none;
 			}
 		}
@@ -38,7 +38,7 @@
 	pre {
 		&:focus-within {
 
-			+ .elementor-control-dynamic-switcher {
+			+ .refraction-control-dynamic-switcher {
 				display: none;
 			}
 		}

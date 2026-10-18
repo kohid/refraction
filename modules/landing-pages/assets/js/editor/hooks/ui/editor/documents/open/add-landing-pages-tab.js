@@ -4,17 +4,17 @@ export class LandingPageAddLibraryTab extends $e.modules.hookUI.After {
 	}
 
 	getId() {
-		return 'elementor-landing-pages-add-library-tab';
+		return 'refraction-landing-pages-add-library-tab';
 	}
 
 	getConditions( args ) {
-		const document = elementor.documents.get( args.id );
+		const document = refraction.documents.get( args.id );
 		return 'landing-page' === document.config.type;
 	}
 
 	apply() {
 		$e.components.get( 'library' ).addTab( 'templates/landing-pages', {
-			title: __( 'Landing Pages', 'elementor' ),
+			title: __( 'Landing Pages', 'refraction' ),
 			filter: {
 				source: 'remote',
 				type: 'lp',

@@ -1,25 +1,25 @@
 <?php
-namespace Elementor\Core\Upgrade;
+namespace Refraction\Core\Upgrade;
 
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Core\Settings\Page\Manager as SettingsPageManager;
-use Elementor\Icons_Manager;
-use Elementor\Includes\Elements\Container;
-use Elementor\Modules\Usage\Module;
-use Elementor\Plugin;
-use Elementor\App\Modules\ImportExport\Utils;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Core\Settings\Page\Manager as SettingsPageManager;
+use Refraction\Icons_Manager;
+use Refraction\Includes\Elements\Container;
+use Refraction\Modules\Usage\Module;
+use Refraction\Plugin;
+use Refraction\App\Modules\ImportExport\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor upgrades.
+ * Refraction upgrades.
  *
- * Elementor upgrades handler class is responsible for updating different
- * Elementor versions.
+ * Refraction upgrades handler class is responsible for updating different
+ * Refraction versions.
  *
  * @since 1.0.0
  */
@@ -39,7 +39,7 @@ class Upgrades {
 	}
 
 	/**
-	 * Upgrade Elementor 0.3.2
+	 * Upgrade Refraction 0.3.2
 	 *
 	 * Change the image widget link URL, setting is to `custom` link.
 	 *
@@ -52,7 +52,7 @@ class Upgrades {
 
 		$post_ids = $wpdb->get_col(
 			'SELECT `post_id` FROM `' . $wpdb->postmeta . '`
-					WHERE `meta_key` = \'_elementor_version\'
+					WHERE `meta_key` = \'_refraction_version\'
 						AND `meta_value` = \'0.1\';'
 		);
 
@@ -92,7 +92,7 @@ class Upgrades {
 	}
 
 	/**
-	 * Upgrade Elementor 0.9.2
+	 * Upgrade Refraction 0.9.2
 	 *
 	 * Change the icon widget, icon-box widget and the social-icons widget,
 	 * setting their icon padding size to an empty string.
@@ -109,7 +109,7 @@ class Upgrades {
 		// Fix Icon/Icon Box Widgets padding.
 		$post_ids = $wpdb->get_col(
 			'SELECT `post_id` FROM `' . $wpdb->postmeta . '`
-					WHERE `meta_key` = \'_elementor_version\'
+					WHERE `meta_key` = \'_refraction_version\'
 						AND `meta_value` = \'0.2\';'
 		);
 
@@ -157,7 +157,7 @@ class Upgrades {
 	}
 
 	/**
-	 * Upgrade Elementor 0.11.0
+	 * Upgrade Refraction 0.11.0
 	 *
 	 * Change the button widget sizes, setting up new button sizes.
 	 *
@@ -171,7 +171,7 @@ class Upgrades {
 		// Fix Button widget to new sizes options.
 		$post_ids = $wpdb->get_col(
 			'SELECT `post_id` FROM `' . $wpdb->postmeta . '`
-					WHERE `meta_key` = \'_elementor_version\'
+					WHERE `meta_key` = \'_refraction_version\'
 						AND `meta_value` = \'0.3\';'
 		);
 
@@ -225,7 +225,7 @@ class Upgrades {
 	}
 
 	/**
-	 * Upgrade Elementor 2.0.0
+	 * Upgrade Refraction 2.0.0
 	 *
 	 * Fix post titles for old autosave drafts that saved with the format 'Auto Save 2018-03-18 17:24'.
 	 *
@@ -242,7 +242,7 @@ class Upgrades {
 					LEFT JOIN `' . $wpdb->postmeta . '` m ON p.ID = m.post_id
 					WHERE `post_status` = \'inherit\'
 					AND `post_title` = CONCAT(\'Auto Save \', DATE_FORMAT(post_date, "%Y-%m-%d %H:%i"))
-					AND  m.`meta_key` = \'_elementor_data\';'
+					AND  m.`meta_key` = \'_refraction_data\';'
 		);
 
 		if ( empty( $posts ) ) {
@@ -258,7 +258,7 @@ class Upgrades {
 	}
 
 	/**
-	 * Upgrade Elementor 2.0.1
+	 * Upgrade Refraction 2.0.1
 	 *
 	 * Fix post titles for old autosave drafts that saved with the format 'Auto Save...'.
 	 *
@@ -275,7 +275,7 @@ class Upgrades {
 					LEFT JOIN `' . $wpdb->postmeta . '` m ON p.ID = m.post_id
 					WHERE `post_status` = \'inherit\'
 					AND `post_title` REGEXP \'^Auto Save [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$\'
-					AND  m.`meta_key` = \'_elementor_data\';'
+					AND  m.`meta_key` = \'_refraction_data\';'
 		);
 
 		if ( empty( $posts ) ) {
@@ -294,7 +294,7 @@ class Upgrades {
 	}
 
 	/**
-	 * Upgrade Elementor 2.0.10
+	 * Upgrade Refraction 2.0.10
 	 *
 	 * Fix post titles for old autosave drafts that saved with the format 'Auto Save...'.
 	 * Fix also Translated titles.
@@ -312,7 +312,7 @@ class Upgrades {
 					LEFT JOIN `' . $wpdb->postmeta . '` m ON p.ID = m.post_id
 					WHERE `post_status` = \'inherit\'
 					AND `post_title` REGEXP \'[[:alnum:]]+ [[:alnum:]]+ [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$\'
-					AND  m.`meta_key` = \'_elementor_data\';'
+					AND  m.`meta_key` = \'_refraction_data\';'
 		);
 
 		if ( empty( $posts ) ) {
@@ -335,7 +335,7 @@ class Upgrades {
 
 		// upgrade `video` widget settings (merge providers).
 		$post_ids = $wpdb->get_col(
-			'SELECT `post_id` FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_elementor_data" AND `meta_value` LIKE \'%"widgetType":"video"%\';'
+			'SELECT `post_id` FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_refraction_data" AND `meta_value` LIKE \'%"widgetType":"video"%\';'
 		);
 
 		if ( empty( $post_ids ) ) {
@@ -399,7 +399,7 @@ class Upgrades {
 			// We need the `wp_slash` in order to avoid the unslashing during the `update_post_meta`
 			$json_value = wp_slash( wp_json_encode( $data ) );
 
-			update_metadata( 'post', $post_id, '_elementor_data', $json_value );
+			update_metadata( 'post', $post_id, '_refraction_data', $json_value );
 
 			// Clear WP cache for next step.
 			wp_cache_flush();
@@ -416,7 +416,7 @@ class Upgrades {
 
 		// upgrade `video` widget settings (merge providers).
 		$post_ids = $updater->query_col(
-			'SELECT `post_id` FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_elementor_data" AND (
+			'SELECT `post_id` FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_refraction_data" AND (
 			`meta_value` LIKE \'%"widgetType":"image"%\'
 			OR `meta_value` LIKE \'%"widgetType":"theme-post-featured-image"%\'
 			OR `meta_value` LIKE \'%"widgetType":"theme-site-logo"%\'
@@ -477,7 +477,7 @@ class Upgrades {
 			// We need the `wp_slash` in order to avoid the unslashing during the `update_post_meta`
 			$json_value = wp_slash( wp_json_encode( $data ) );
 
-			update_metadata( 'post', $post_id, '_elementor_data', $json_value );
+			update_metadata( 'post', $post_id, '_refraction_data', $json_value );
 		}
 
 		return $updater->should_run_again( $post_ids );
@@ -495,8 +495,8 @@ class Upgrades {
 			'SELECT p.ID
 					FROM `' . $wpdb->posts . '` AS p
 					LEFT JOIN `' . $wpdb->postmeta . '` AS pm1 ON (p.ID = pm1.post_id)
-					LEFT JOIN `' . $wpdb->postmeta . '` AS pm2 ON (pm1.post_id = pm2.post_id AND pm2.meta_key = "_elementor_template_type")
-					WHERE p.post_status != "inherit" AND pm1.`meta_key` = "_elementor_data" AND pm2.post_id IS NULL;'
+					LEFT JOIN `' . $wpdb->postmeta . '` AS pm2 ON (pm1.post_id = pm2.post_id AND pm2.meta_key = "_refraction_template_type")
+					WHERE p.post_status != "inherit" AND pm1.`meta_key` = "_refraction_data" AND pm2.post_id IS NULL;'
 		);
 
 		if ( empty( $post_ids ) ) {
@@ -523,8 +523,8 @@ class Upgrades {
 	 * Set FontAwesome Migration needed flag
 	 */
 	public static function _v_2_6_0_fa4_migration_flag() {
-		add_option( 'elementor_icon_manager_needs_update', 'yes' );
-		add_option( 'elementor_load_fa4_shim', 'yes' );
+		add_option( 'refraction_icon_manager_needs_update', 'yes' );
+		add_option( 'refraction_load_fa4_shim', 'yes' );
 	}
 
 	/**
@@ -566,7 +566,7 @@ class Upgrades {
 	public static function _v_2_6_6_fa4_migration_button( $updater ) {
 		$changes = [
 			[
-				'callback' => [ 'Elementor\Core\Upgrade\Upgrades', '_migrate_icon_fa4_value' ],
+				'callback' => [ 'Refraction\Core\Upgrade\Upgrades', '_migrate_icon_fa4_value' ],
 				'control_ids' => [
 					'icon' => 'selected_icon',
 				],
@@ -600,7 +600,7 @@ class Upgrades {
 
 		$wpdb->query( $wpdb->prepare(
 			"UPDATE $wpdb->postmeta SET meta_value = %s
-			WHERE meta_key = '_elementor_template_type' && post_id in ( %s );
+			WHERE meta_key = '_refraction_template_type' && post_id in ( %s );
 		 ", 'wp-' . $type, $sql_post_ids ) );
 
 		return $updater->should_run_again( $post_ids );
@@ -608,11 +608,11 @@ class Upgrades {
 
 	/**
 	 * Don't use the old data anymore.
-	 * Since 2.7.1 the key was changed from `elementor_elements_usage` to `elementor_controls_usage`.
+	 * Since 2.7.1 the key was changed from `refraction_elements_usage` to `refraction_controls_usage`.
 	 */
 	public static function _v_2_7_1_remove_old_usage_data() {
-		delete_option( 'elementor_elements_usage' );
-		delete_post_meta_by_key( '_elementor_elements_usage' );
+		delete_option( 'refraction_elements_usage' );
+		delete_post_meta_by_key( '_refraction_elements_usage' );
 	}
 
 	/**
@@ -657,11 +657,11 @@ class Upgrades {
 			}
 
 			$meta_key = SettingsPageManager::META_KEY;
-			$current_settings = get_option( '_elementor_general_settings', [] );
+			$current_settings = get_option( '_refraction_general_settings', [] );
 			// Take the `space_between_widgets` from the option due to a bug on E < 3.0.0 that the value `0` is stored separated.
-			$current_settings['space_between_widgets'] = get_option( 'elementor_space_between_widgets', '' );
-			$current_settings[ Breakpoints_Manager::BREAKPOINT_SETTING_PREFIX . 'md' ] = get_option( 'elementor_viewport_md', '' );
-			$current_settings[ Breakpoints_Manager::BREAKPOINT_SETTING_PREFIX . 'lg' ] = get_option( 'elementor_viewport_lg', '' );
+			$current_settings['space_between_widgets'] = get_option( 'refraction_space_between_widgets', '' );
+			$current_settings[ Breakpoints_Manager::BREAKPOINT_SETTING_PREFIX . 'md' ] = get_option( 'refraction_viewport_md', '' );
+			$current_settings[ Breakpoints_Manager::BREAKPOINT_SETTING_PREFIX . 'lg' ] = get_option( 'refraction_viewport_lg', '' );
 
 			$kit_settings = $kit->get_meta( $meta_key );
 
@@ -680,7 +680,7 @@ class Upgrades {
 				$kit_settings = [];
 			}
 
-			// Convert some setting to Elementor slider format.
+			// Convert some setting to Refraction slider format.
 			$settings_to_slider = [
 				'container_width',
 				'space_between_widgets',
@@ -754,10 +754,10 @@ class Upgrades {
 		}
 	}
 
-	public static function _v_3_5_0_remove_old_elementor_scheme() {
+	public static function _v_3_5_0_remove_old_refraction_scheme() {
 		global $wpdb;
 
-		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'elementor_scheme_%';" );
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'refraction_scheme_%';" );
 	}
 
 	public static function _v_3_8_0_fix_php8_image_custom_size() {
@@ -767,7 +767,7 @@ class Upgrades {
 			'SELECT `post_id` FROM `' . $wpdb->postmeta . '`
 				WHERE `meta_key` = "_wp_attachment_metadata"
 					AND (
-						`meta_value` LIKE \'%elementor_custom_%\'
+						`meta_value` LIKE \'%refraction_custom_%\'
 					);'
 		);
 
@@ -779,7 +779,7 @@ class Upgrades {
 
 			$old_attachment_metadata = $attachment_metadata;
 			foreach ( $attachment_metadata['sizes'] as $size_key => $size_value ) {
-				if ( 0 !== strpos( $size_key, 'elementor_custom_' ) ) {
+				if ( 0 !== strpos( $size_key, 'refraction_custom_' ) ) {
 					continue;
 				}
 
@@ -825,7 +825,7 @@ class Upgrades {
 	}
 
 	public static function _v_3_17_0_site_settings_updates() {
-		$options = [ 'elementor_active_kit', 'elementor_previous_kit' ];
+		$options = [ 'refraction_active_kit', 'refraction_previous_kit' ];
 
 		foreach ( $options as $option_name ) {
 			self::maybe_add_gap_control_data( $option_name );
@@ -833,33 +833,33 @@ class Upgrades {
 	}
 
 	/**
-	 * Upgrade Elementor 3.26.0 - Delete old experiments from the DB.
+	 * Upgrade Refraction 3.26.0 - Delete old experiments from the DB.
 	 *
 	 * @since 3.26.0
 	 * @static
 	 * @access public
 	 */
 	public static function _v_3_26_0() {
-		delete_option( 'elementor_experiment-ai-layout' );
-		delete_option( 'elementor_experiment-block_editor_assets_optimize' );
-		delete_option( 'elementor_experiment-container_grid' );
-		delete_option( 'elementor_experiment-display-conditions' );
-		delete_option( 'elementor_experiment-e_dom_optimization' );
-		delete_option( 'elementor_experiment-e_global_styleguide' );
-		delete_option( 'elementor_experiment-e_image_loading_optimization' );
-		delete_option( 'elementor_experiment-e_lazyload' );
-		delete_option( 'elementor_experiment-e_optimized_assets_loading' );
-		delete_option( 'elementor_experiment-e_optimized_css_loading' );
-		delete_option( 'elementor_experiment-e_scroll_snap' );
-		delete_option( 'elementor_experiment-floating-buttons' );
-		delete_option( 'elementor_experiment-form-submissions' );
-		delete_option( 'elementor_experiment-link-in-bio' );
-		delete_option( 'elementor_experiment-loop' );
-		delete_option( 'elementor_experiment-notes' );
-		delete_option( 'elementor_experiment-off-canvas' );
-		delete_option( 'elementor_experiment-page-transitions' );
-		delete_option( 'elementor_experiment-search' );
-		delete_option( 'elementor_experiment-taxonomy-filter' );
+		delete_option( 'refraction_experiment-ai-layout' );
+		delete_option( 'refraction_experiment-block_editor_assets_optimize' );
+		delete_option( 'refraction_experiment-container_grid' );
+		delete_option( 'refraction_experiment-display-conditions' );
+		delete_option( 'refraction_experiment-e_dom_optimization' );
+		delete_option( 'refraction_experiment-e_global_styleguide' );
+		delete_option( 'refraction_experiment-e_image_loading_optimization' );
+		delete_option( 'refraction_experiment-e_lazyload' );
+		delete_option( 'refraction_experiment-e_optimized_assets_loading' );
+		delete_option( 'refraction_experiment-e_optimized_css_loading' );
+		delete_option( 'refraction_experiment-e_scroll_snap' );
+		delete_option( 'refraction_experiment-floating-buttons' );
+		delete_option( 'refraction_experiment-form-submissions' );
+		delete_option( 'refraction_experiment-link-in-bio' );
+		delete_option( 'refraction_experiment-loop' );
+		delete_option( 'refraction_experiment-notes' );
+		delete_option( 'refraction_experiment-off-canvas' );
+		delete_option( 'refraction_experiment-page-transitions' );
+		delete_option( 'refraction_experiment-search' );
+		delete_option( 'refraction_experiment-taxonomy-filter' );
 	}
 
 	private static function maybe_add_gap_control_data( $option_name ) {
@@ -869,7 +869,7 @@ class Upgrades {
 			return;
 		}
 
-		$kit_data_array = get_post_meta( (int) $kit_id, '_elementor_page_settings', true );
+		$kit_data_array = get_post_meta( (int) $kit_id, '_refraction_page_settings', true );
 
 		$setting_not_exist = ! isset( $kit_data_array['space_between_widgets'] );
 		$already_processed = isset( $kit_data_array['space_between_widgets']['column'] );
@@ -880,13 +880,13 @@ class Upgrades {
 
 		$kit_data_array['space_between_widgets'] = Utils::update_space_between_widgets_values( $kit_data_array['space_between_widgets'] );
 
-		update_post_meta( (int) $kit_id, '_elementor_page_settings', $kit_data_array );
+		update_post_meta( (int) $kit_id, '_refraction_page_settings', $kit_data_array );
 	}
 
 	public static function remove_remote_info_api_data() {
 		global $wpdb;
 
-		$key = 'elementor_remote_info_api_data_';
+		$key = 'refraction_remote_info_api_data_';
 
 		return $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '{$key}%';" ); // phpcs:ignore
 	}
@@ -942,7 +942,7 @@ class Upgrades {
 		return $updater->query_col(
 			'SELECT `post_id`
 					FROM `' . $wpdb->postmeta . '`
-					WHERE `meta_key` = "_elementor_data"
+					WHERE `meta_key` = "_refraction_data"
 					AND `meta_value` LIKE \'%"elType":"' . $element_type . '"%\';'
 		);
 	}
@@ -1007,6 +1007,6 @@ class Upgrades {
 	private static function save_updated_document( $post_id, $data ) {
 		$json_value = wp_slash( wp_json_encode( $data ) );
 
-		update_metadata( 'post', $post_id, '_elementor_data', $json_value );
+		update_metadata( 'post', $post_id, '_refraction_data', $json_value );
 	}
 }

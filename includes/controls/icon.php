@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor icon control.
+ * Refraction icon control.
  *
  * A base control for creating an icon control. Displays a font icon select box
  * field. The control accepts `include` or `exclude` arguments to set a partial
@@ -870,11 +870,11 @@ class Control_Icon extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
-				<select id="<?php $this->print_control_uid(); ?>" class="elementor-control-icon" data-setting="{{ data.name }}" data-placeholder="<?php echo esc_attr__( 'Select Icon', 'elementor' ); ?>">
-					<option value=""><?php echo esc_html__( 'Select Icon', 'elementor' ); ?></option>
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
+				<select id="<?php $this->print_control_uid(); ?>" class="refraction-control-icon" data-setting="{{ data.name }}" data-placeholder="<?php echo esc_attr__( 'Select Icon', 'refraction' ); ?>">
+					<option value=""><?php echo esc_html__( 'Select Icon', 'refraction' ); ?></option>
 					<# _.each( data.options, function( option_title, option_value ) { #>
 					<option value="{{ option_value }}">{{{ option_title }}}</option>
 					<# } ); #>
@@ -882,7 +882,7 @@ class Control_Icon extends Base_Data_Control {
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{ data.description }}</div>
+		<div class="refraction-control-field-description">{{ data.description }}</div>
 		<# } #>
 		<?php
 	}

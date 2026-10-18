@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { forwardRef, useRef } from 'react';
-import { strokePropTypeUtil } from '@elementor/editor-props';
+import { strokePropTypeUtil } from '@refraction/editor-props';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -27,10 +27,10 @@ export const StrokeControl = createControl( () => {
 	return (
 		<PropProvider { ...propContext }>
 			<SectionContent gap={ 2 }>
-				<Control bind="width" label={ __( 'Stroke width', 'elementor' ) } ref={ rowRef }>
+				<Control bind="width" label={ __( 'Stroke width', 'refraction' ) } ref={ rowRef }>
 					<SizeControl units={ units } anchorRef={ rowRef } />
 				</Control>
-				<Control bind="color" label={ __( 'Stroke color', 'elementor' ) }>
+				<Control bind="color" label={ __( 'Stroke color', 'refraction' ) }>
 					<ColorControl />
 				</Control>
 			</SectionContent>

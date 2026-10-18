@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { getCanvasIframeDocument } from '@elementor/editor-v1-adapters';
+import { getCanvasIframeDocument } from '@refraction/editor-v1-adapters';
 
 export const useCanvasClickHandler = ( isActive: boolean, onClickAway: ( e: MouseEvent ) => void ) => {
 	useEffect( () => {

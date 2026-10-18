@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Data\V2\Base;
+namespace Refraction\Data\V2\Base;
 
-use Elementor\Data\V2\Base\Exceptions\Data_Exception;
-use Elementor\Data\V2\Base\Exceptions\Error_500;
+use Refraction\Data\V2\Base\Exceptions\Data_Exception;
+use Refraction\Data\V2\Base\Exceptions\Error_500;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +24,7 @@ abstract class Base_Route {
 	/**
 	 * Controller of current endpoint.
 	 *
-	 * @var \Elementor\Data\V2\Base\Controller
+	 * @var \Refraction\Data\V2\Base\Controller
 	 */
 	protected $controller;
 
@@ -361,7 +361,7 @@ abstract class Base_Route {
 	 *
 	 * Run `$this->register()`.
 	 *
-	 * @param \Elementor\Data\V2\Base\Controller $controller
+	 * @param \Refraction\Data\V2\Base\Controller $controller
 	 * @param string                             $route
 	 */
 	protected function __construct( Controller $controller, $route ) {

@@ -6,13 +6,13 @@ jest.mock( '@wordpress/i18n', () => ( {
 
 const mockHasProInstalled = jest.fn( () => false );
 
-jest.mock( '@elementor/utils', () => ( {
-	...jest.requireActual( '@elementor/utils' ),
+jest.mock( '@refraction/utils', () => ( {
+	...jest.requireActual( '@refraction/utils' ),
 	hasProInstalled: () => mockHasProInstalled(),
 } ) );
 
 const setSiteDirection = ( isRtl: boolean ) => {
-	window.elementorFrontend = {
+	window.refractionFrontend = {
 		config: {
 			is_rtl: isRtl,
 		},
@@ -21,14 +21,14 @@ const setSiteDirection = ( isRtl: boolean ) => {
 
 const setProInstalled = ( version?: string ) => {
 	if ( version ) {
-		window.elementorPro = {
+		window.refractionPro = {
 			config: {
 				version,
 			},
 		};
 		mockHasProInstalled.mockReturnValue( true );
 	} else {
-		delete window.elementorPro;
+		delete window.refractionPro;
 		mockHasProInstalled.mockReturnValue( false );
 	}
 };
@@ -47,8 +47,8 @@ const getCategory = ( categoryLabel: string ) => {
 
 describe( 'transitionProperties RTL support', () => {
 	beforeEach( () => {
-		delete window.elementorFrontend;
-		delete window.elementorPro;
+		delete window.refractionFrontend;
+		delete window.refractionPro;
 		mockHasProInstalled.mockReturnValue( false );
 		jest.resetModules();
 	} );
@@ -99,8 +99,8 @@ describe( 'transitionProperties RTL support', () => {
 
 describe( 'transitionProperties Pro version handling', () => {
 	beforeEach( () => {
-		delete window.elementorFrontend;
-		delete window.elementorPro;
+		delete window.refractionFrontend;
+		delete window.refractionPro;
 		mockHasProInstalled.mockReturnValue( false );
 		jest.resetModules();
 	} );
@@ -159,7 +159,7 @@ describe( 'transitionProperties Pro version handling', () => {
 
 	it( 'should show only Default category when Pro is installed but version is undefined', () => {
 		mockHasProInstalled.mockReturnValue( true );
-		window.elementorPro = {
+		window.refractionPro = {
 			config: {},
 		};
 

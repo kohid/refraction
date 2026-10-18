@@ -44,7 +44,7 @@ const SubSettingRow = ( {
 					{ label }
 				</Typography>
 				<Typography variant="body1" color="text.secondary">
-					{ __( 'Not exported', 'elementor' ) }
+					{ __( 'Not exported', 'refraction' ) }
 				</Typography>
 			</Box>
 		);
@@ -66,7 +66,7 @@ const SubSettingRow = ( {
 
 				{ limitExceeded && overLimitCount > 0 && (
 					<Chip
-						label={ `${ overLimitCount } ${ __( 'over limit', 'elementor' ) }` }
+						label={ `${ overLimitCount } ${ __( 'over limit', 'refraction' ) }` }
 						size="tiny"
 						sx={ {
 							height: 20,
@@ -98,7 +98,7 @@ const SubSettingRow = ( {
 							},
 						} }
 					>
-						{ __( 'Review', 'elementor' ) }
+						{ __( 'Review', 'refraction' ) }
 						<ExternalLinkIcon sx={ { fontSize: 16 } } />
 					</Link>
 				) }
@@ -117,7 +117,7 @@ const SubSettingRow = ( {
 									sx={ { p: 0 } }
 								/>
 							}
-							label={ __( 'Override all', 'elementor' ) }
+							label={ __( 'Override all', 'refraction' ) }
 							sx={ {
 								gap: 1,
 								mr: 0,
@@ -127,7 +127,7 @@ const SubSettingRow = ( {
 							} }
 						/>
 						<Tooltip
-							title={ __( 'This will delete all existing items and replace them with the imported ones', 'elementor' ) }
+							title={ __( 'This will delete all existing items and replace them with the imported ones', 'refraction' ) }
 							placement="top"
 							arrow
 						>
@@ -198,7 +198,7 @@ export function ClassesVariablesSection( {
 			<Stack spacing={ 2.5 }>
 				<Box sx={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } }>
 					<Typography variant="h6">
-						{ __( 'Classes, variables & default styles', 'elementor' ) }
+						{ __( 'Classes, variables & default styles', 'refraction' ) }
 					</Typography>
 				</Box>
 
@@ -222,17 +222,17 @@ export function ClassesVariablesSection( {
 							sx={ { fontWeight: 500 } }
 							color="text.secondary"
 						>
-							{ __( 'Import limit reached.', 'elementor' ) }
+							{ __( 'Import limit reached.', 'refraction' ) }
 						</Typography>
 						<Typography variant="body2" component="span" color="text.secondary">
-							{ __( 'To resolve this, review existing items or choose to override', 'elementor' ) }
+							{ __( 'To resolve this, review existing items or choose to override', 'refraction' ) }
 						</Typography>
 					</Alert>
 				) }
 
 				<Stack spacing={ 1.5 }>
 					<SubSettingRow
-						label={ __( 'Classes', 'elementor' ) }
+						label={ __( 'Classes', 'refraction' ) }
 						checked={ settings.classes ?? false }
 						onChange={ ( isChecked ) => onSettingChange( 'classes', isChecked ) }
 						disabled={ disabled }
@@ -249,7 +249,7 @@ export function ClassesVariablesSection( {
 					/>
 
 					<SubSettingRow
-						label={ __( 'Variables', 'elementor' ) }
+						label={ __( 'Variables', 'refraction' ) }
 						checked={ settings.variables ?? false }
 						onChange={ ( isChecked ) => onSettingChange( 'variables', isChecked ) }
 						disabled={ disabled }
@@ -266,7 +266,7 @@ export function ClassesVariablesSection( {
 					/>
 
 					<SubSettingRow
-						label={ __( 'Default Styles', 'elementor' ) }
+						label={ __( 'Default Styles', 'refraction' ) }
 						checked={ settings.defaultStyles ?? false }
 						onChange={ ( isChecked ) => onSettingChange( 'defaultStyles', isChecked ) }
 						disabled={ disabled }

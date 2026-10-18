@@ -3,7 +3,7 @@ import {
 	routeCloseEvent,
 	routeOpenEvent,
 	v1ReadyEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 import { LEGACY_ELEMENTS_PANEL_ROUTE_PREFIX } from '../consts';
 import { getTab } from '../tabs';

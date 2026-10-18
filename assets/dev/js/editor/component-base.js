@@ -1,8 +1,8 @@
-import { default as ApiComponentBase } from 'elementor-api/modules/component-base';
+import { default as ApiComponentBase } from 'refraction-api/modules/component-base';
 
 /**
- * @typedef {import('elementor-panel/pages/editor').default} EditorView
- * @typedef {import('elementor-controls/base-data').default} ControlBaseDataView
+ * @typedef {import('refraction-panel/pages/editor').default} EditorView
+ * @typedef {import('refraction-controls/base-data').default} ControlBaseDataView
  */
 
 export default class ComponentBase extends ApiComponentBase {
@@ -16,7 +16,7 @@ export default class ComponentBase extends ApiComponentBase {
 			return;
 		}
 
-		const editor = elementor.getPanelView().getCurrentPageView();
+		const editor = refraction.getPanelView().getCurrentPageView();
 		const currentView = editor.content ? editor.content.currentView : editor;
 
 		const controlView = this.getControlViewByPath( currentView, controlPath );

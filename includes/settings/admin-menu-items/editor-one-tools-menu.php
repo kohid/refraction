@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Includes\Settings\AdminMenuItems;
+namespace Refraction\Includes\Settings\AdminMenuItems;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
-use Elementor\Plugin;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +18,7 @@ class Editor_One_Tools_Menu implements Menu_Item_Third_Level_Interface, Admin_Me
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -30,7 +30,7 @@ class Editor_One_Tools_Menu implements Menu_Item_Third_Level_Interface, Admin_Me
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Tools', 'elementor' );
+		return esc_html__( 'Tools', 'refraction' );
 	}
 
 	public function get_position(): int {
@@ -38,7 +38,7 @@ class Editor_One_Tools_Menu implements Menu_Item_Third_Level_Interface, Admin_Me
 	}
 
 	public function get_slug(): string {
-		return 'elementor-tools';
+		return 'refraction-tools';
 	}
 
 	public function get_icon(): string {

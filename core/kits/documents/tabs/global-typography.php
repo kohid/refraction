@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Kits\Controls\Repeater as Global_Style_Repeater;
-use Elementor\Group_Control_Typography;
-use Elementor\Repeater;
+use Refraction\Controls_Manager;
+use Refraction\Core\Kits\Controls\Repeater as Global_Style_Repeater;
+use Refraction\Group_Control_Typography;
+use Refraction\Repeater;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -25,7 +25,7 @@ class Global_Typography extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Global Fonts', 'elementor' );
+		return esc_html__( 'Global Fonts', 'refraction' );
 	}
 
 	public function get_group() {
@@ -44,7 +44,7 @@ class Global_Typography extends Tab_Base {
 		$this->start_controls_section(
 			'section_text_style',
 			[
-				'label' => esc_html__( 'Global Fonts', 'elementor' ),
+				'label' => esc_html__( 'Global Fonts', 'refraction' ),
 				'tab' => $this->get_id(),
 			]
 		);
@@ -125,28 +125,28 @@ class Global_Typography extends Tab_Base {
 		$default_typography = [
 			[
 				'_id' => 'primary',
-				'title' => esc_html__( 'Primary', 'elementor' ),
+				'title' => esc_html__( 'Primary', 'refraction' ),
 				$typography_key => 'custom',
 				$font_family_key => 'Roboto',
 				$font_weight_key => '600',
 			],
 			[
 				'_id' => 'secondary',
-				'title' => esc_html__( 'Secondary', 'elementor' ),
+				'title' => esc_html__( 'Secondary', 'refraction' ),
 				$typography_key => 'custom',
 				$font_family_key => 'Roboto Slab',
 				$font_weight_key => '400',
 			],
 			[
 				'_id' => 'text',
-				'title' => esc_html__( 'Text', 'elementor' ),
+				'title' => esc_html__( 'Text', 'refraction' ),
 				$typography_key => 'custom',
 				$font_family_key => 'Roboto',
 				$font_weight_key => '400',
 			],
 			[
 				'_id' => 'accent',
-				'title' => esc_html__( 'Accent', 'elementor' ),
+				'title' => esc_html__( 'Accent', 'refraction' ),
 				$typography_key => 'custom',
 				$font_family_key => 'Roboto',
 				$font_weight_key => '500',
@@ -157,7 +157,7 @@ class Global_Typography extends Tab_Base {
 			'heading_system_typography',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'System Fonts', 'elementor' ),
+				'label' => esc_html__( 'System Fonts', 'refraction' ),
 			]
 		);
 
@@ -179,7 +179,7 @@ class Global_Typography extends Tab_Base {
 			'heading_custom_typography',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Custom Fonts', 'elementor' ),
+				'label' => esc_html__( 'Custom Fonts', 'refraction' ),
 			]
 		);
 
@@ -194,10 +194,10 @@ class Global_Typography extends Tab_Base {
 		$this->add_control(
 			'default_generic_fonts',
 			[
-				'label' => esc_html__( 'Fallback Font Family', 'elementor' ),
+				'label' => esc_html__( 'Fallback Font Family', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Sans-serif',
-				'description' => esc_html__( 'The list of fonts used if the chosen font is not available.', 'elementor' ),
+				'description' => esc_html__( 'The list of fonts used if the chosen font is not available.', 'refraction' ),
 				'label_block' => true,
 				'separator' => 'before',
 				'ai' => [
@@ -206,7 +206,7 @@ class Global_Typography extends Tab_Base {
 			]
 		);
 
-		do_action( 'elementor/kit/global-typography/register_controls', $this );
+		do_action( 'refraction/kit/global-typography/register_controls', $this );
 
 		$this->end_controls_section();
 	}

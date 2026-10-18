@@ -1,6 +1,6 @@
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
-import { __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
-import { useMixpanel } from '@elementor/events';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
+import { __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
+import { useMixpanel } from '@refraction/events';
 import { EyeIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -10,7 +10,7 @@ export default function useDocumentViewPageProps() {
 
 	return {
 		icon: EyeIcon,
-		title: __( 'View Page', 'elementor' ),
+		title: __( 'View Page', 'refraction' ),
 		onClick: () => {
 			const eventName = config?.names?.editorOne?.topBarPublishDropdown;
 			if ( eventName ) {

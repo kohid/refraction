@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Upgrade\Manager as Upgrade_Manager;
+use Refraction\Core\Upgrade\Manager as Upgrade_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor fonts.
+ * Refraction fonts.
  *
- * Elementor fonts handler class is responsible for registering the supported
- * fonts used by Elementor.
+ * Refraction fonts handler class is responsible for registering the supported
+ * fonts used by Refraction.
  *
  * @since 1.0.0
  */
@@ -68,26 +68,26 @@ class Fonts {
 	public static function get_font_groups() {
 		if ( null === self::$font_groups ) {
 			$font_groups = [
-				self::SYSTEM => esc_html__( 'System', 'elementor' ),
+				self::SYSTEM => esc_html__( 'System', 'refraction' ),
 			];
 
 			if ( static::is_google_fonts_enabled() ) {
 				$font_groups = array_merge( $font_groups, [
-					self::GOOGLE => esc_html__( 'Google', 'elementor' ),
-					self::EARLYACCESS => esc_html__( 'Google (Early Access)', 'elementor' ),
+					self::GOOGLE => esc_html__( 'Google', 'refraction' ),
+					self::EARLYACCESS => esc_html__( 'Google (Early Access)', 'refraction' ),
 				] );
 			}
 
 			/**
 			 * Font groups.
 			 *
-			 * Filters the fonts groups used by Elementor.
+			 * Filters the fonts groups used by Refraction.
 			 *
 			 * @since 1.9.4
 			 *
 			 * @param array $font_groups Font groups.
 			 */
-			$font_groups = apply_filters( 'elementor/fonts/groups', $font_groups );
+			$font_groups = apply_filters( 'refraction/fonts/groups', $font_groups );
 
 			self::$font_groups = $font_groups;
 		}
@@ -113,13 +113,13 @@ class Fonts {
 			/**
 			 * Additional fonts.
 			 *
-			 * Filters the fonts used by Elementor to add additional fonts.
+			 * Filters the fonts used by Refraction to add additional fonts.
 			 *
 			 * @since 1.9.4
 			 *
-			 * @param array $additional_fonts Additional Elementor fonts.
+			 * @param array $additional_fonts Additional Refraction fonts.
 			 */
-			$additional_fonts = apply_filters( 'elementor/fonts/additional_fonts', $additional_fonts );
+			$additional_fonts = apply_filters( 'refraction/fonts/additional_fonts', $additional_fonts );
 
 			self::$fonts = array_replace( self::get_native_fonts(), $additional_fonts );
 		}
@@ -128,7 +128,7 @@ class Fonts {
 	}
 
 	/**
-	 * Get Elementor native fonts.
+	 * Get Refraction native fonts.
 	 *
 	 * Retrieve the list of supported fonts.
 	 *
@@ -1869,7 +1869,7 @@ class Fonts {
 			// $is_new_site = Upgrade_Manager::install_compare( '3.10.0', '>=' );
 			// $default_value = $is_new_site ? '0' : '1';.
 
-			$option = get_option( 'elementor_google_font', $default_value );
+			$option = get_option( 'refraction_google_font', $default_value );
 
 			static::$is_google_fonts_enabled = '1' === $option;
 		}
@@ -1878,7 +1878,7 @@ class Fonts {
 	}
 
 	public static function get_font_display_setting() {
-		return get_option( 'elementor_font_display', 'auto' );
+		return get_option( 'refraction_font_display', 'auto' );
 	}
 
 	public static function reset_local_cache() {

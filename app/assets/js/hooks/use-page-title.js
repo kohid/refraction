@@ -5,7 +5,7 @@ export default function usePageTitle( { title, prefix } ) {
 
 	useEffect( () => {
 		if ( ! prefix ) {
-			prefixRef.current = __( 'Elementor', 'elementor' );
+			prefixRef.current = __( 'Refraction', 'refraction' );
 		}
 
 		document.title = `${ prefixRef.current } | ${ title }`;

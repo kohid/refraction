@@ -1,4 +1,4 @@
-import { __privateUseListenTo as useListenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
 
 import { getSelectedElement } from '../sync/get-selected-elements';
 

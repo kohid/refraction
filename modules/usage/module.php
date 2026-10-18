@@ -1,27 +1,27 @@
 <?php
-namespace Elementor\Modules\Usage;
+namespace Refraction\Modules\Usage;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Modules\System_Info\Module as System_Info;
-use Elementor\Modules\Usage\Calculators\Legacy_Element_Usage_Calculator;
-use Elementor\Plugin;
-use Elementor\Settings;
+use Refraction\Core\Base\Document;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Modules\System_Info\Module as System_Info;
+use Refraction\Modules\Usage\Calculators\Legacy_Element_Usage_Calculator;
+use Refraction\Plugin;
+use Refraction\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor usage module.
+ * Refraction usage module.
  *
- * Elementor usage module handler class is responsible for registering and
- * managing Elementor usage data.
+ * Refraction usage module handler class is responsible for registering and
+ * managing Refraction usage data.
  */
 class Module extends BaseModule {
 	const GENERAL_TAB = 'general';
-	const META_KEY = '_elementor_controls_usage';
-	const OPTION_NAME = 'elementor_controls_usage';
+	const META_KEY = '_refraction_controls_usage';
+	const OPTION_NAME = 'refraction_controls_usage';
 
 	/**
 	 * @var bool
@@ -48,7 +48,7 @@ class Module extends BaseModule {
 	 *
 	 * Remove 'wp-' from $doc_type for BC, support doc type change since 2.7.0.
 	 *
-	 * @param \Elementor\Core\Documents_Manager $doc_class
+	 * @param \Refraction\Core\Documents_Manager $doc_class
 	 * @param String                            $doc_type
 	 *
 	 * @return int
@@ -123,7 +123,7 @@ class Module extends BaseModule {
 					$widget_title = $element_type;
 				}
 
-				$widget_title = apply_filters( 'elementor/usage/elements/element_title', $widget_title, $element_type );
+				$widget_title = apply_filters( 'refraction/usage/elements/element_title', $widget_title, $element_type );
 
 				$elements[ $widget_title ] = $data['count'];
 			}
@@ -155,7 +155,7 @@ class Module extends BaseModule {
 	/**
 	 * Before document Save.
 	 *
-	 * Called on elementor/document/before_save, remove document from global & set saving flag.
+	 * Called on refraction/document/before_save, remove document from global & set saving flag.
 	 *
 	 * @param Document $document
 	 * @param array    $data new settings to save.
@@ -174,7 +174,7 @@ class Module extends BaseModule {
 	/**
 	 * After document save.
 	 *
-	 * Called on elementor/document/after_save, adds document to global & clear saving flag.
+	 * Called on refraction/document/after_save, adds document to global & clear saving flag.
 	 *
 	 * @param Document $document
 	 */
@@ -200,7 +200,7 @@ class Module extends BaseModule {
 			return;
 		}
 
-		// If it's from elementor editor, the usage should be saved via `before_document_save`/`after_document_save`.
+		// If it's from refraction editor, the usage should be saved via `before_document_save`/`after_document_save`.
 		if ( $this->is_document_saving ) {
 			return;
 		}
@@ -246,13 +246,13 @@ class Module extends BaseModule {
 	/**
 	 * Get posts usage.
 	 *
-	 * Retrieve the number of posts using Elementor.
+	 * Retrieve the number of posts using Refraction.
 	 *
 	 * @since 2.0.0
 	 * @access public
 	 * @static
 	 *
-	 * @return array The number of posts using Elementor grouped by post types
+	 * @return array The number of posts using Refraction grouped by post types
 	 *               and post status.
 	 */
 	private static function get_posts_usage() {
@@ -265,8 +265,8 @@ class Module extends BaseModule {
 			"SELECT `post_type`, `post_status`, COUNT(`ID`) `hits`
 				FROM {$wpdb->posts} `p`
 				LEFT JOIN {$wpdb->postmeta} `pm` ON(`p`.`ID` = `pm`.`post_id`)
-				WHERE `post_type` != 'elementor_library'
-					AND `meta_key` = '_elementor_edit_mode' AND `meta_value` = 'builder'
+				WHERE `post_type` != 'refraction_library'
+					AND `meta_key` = '_refraction_edit_mode' AND `meta_value` = 'builder'
 				GROUP BY `post_type`, `post_status`;"
 		);
 
@@ -282,13 +282,13 @@ class Module extends BaseModule {
 	/**
 	 * Get library usage.
 	 *
-	 * Retrieve the number of Elementor library items saved.
+	 * Retrieve the number of Refraction library items saved.
 	 *
 	 * @since 2.0.0
 	 * @access public
 	 * @static
 	 *
-	 * @return array The number of Elementor library items grouped by post types
+	 * @return array The number of Refraction library items grouped by post types
 	 *               and meta value.
 	 */
 	private static function get_library_usage() {
@@ -301,8 +301,8 @@ class Module extends BaseModule {
 			"SELECT `meta_value`, COUNT(`ID`) `hits`
 				FROM {$wpdb->posts} `p`
 				LEFT JOIN {$wpdb->postmeta} `pm` ON(`p`.`ID` = `pm`.`post_id`)
-				WHERE `post_type` = 'elementor_library'
-					AND `meta_key` = '_elementor_template_type'
+				WHERE `post_type` = 'refraction_library'
+					AND `meta_key` = '_refraction_template_type'
 				GROUP BY `post_type`, `meta_value`;"
 		);
 
@@ -318,7 +318,7 @@ class Module extends BaseModule {
 	/**
 	 * Recalculate usage.
 	 *
-	 * Recalculate usage for all elementor posts.
+	 * Recalculate usage for all refraction posts.
 	 *
 	 * @param int $limit
 	 * @param int $offset
@@ -336,7 +336,7 @@ class Module extends BaseModule {
 
 		$query = new \WP_Query( [
 			'no_found_rows' => true,
-			'meta_key' => '_elementor_data',
+			'meta_key' => '_refraction_data',
 			'post_type' => $post_types,
 			'post_status' => [ 'publish', 'private' ],
 			'posts_per_page' => $limit,
@@ -558,12 +558,12 @@ class Module extends BaseModule {
 	 * @param Document $document
 	 */
 	private function save_document_usage( Document $document ) {
-		if ( ! $document::get_property( 'is_editable' ) && ! $document->is_built_with_elementor() ) {
+		if ( ! $document::get_property( 'is_editable' ) && ! $document->is_built_with_refraction() ) {
 			return;
 		}
 
-		// Get data manually to avoid conflict with `\Elementor\Core\Base\Document::get_elements_data... convert_to_elementor`.
-		$data = $document->get_json_meta( '_elementor_data' );
+		// Get data manually to avoid conflict with `\Refraction\Core\Base\Document::get_elements_data... convert_to_refraction`.
+		$data = $document->get_json_meta( '_refraction_data' );
 
 		if ( ! empty( $data ) ) {
 			try {
@@ -600,7 +600,7 @@ class Module extends BaseModule {
 					continue;
 				}
 
-				$setting_value = get_option( 'elementor_' . $field_name );
+				$setting_value = get_option( 'refraction_' . $field_name );
 
 				if ( empty( $setting_value ) ) {
 					continue;
@@ -616,7 +616,7 @@ class Module extends BaseModule {
 			}
 		}
 
-		$usage = apply_filters( 'elementor/system-info/usage/settings', $usage );
+		$usage = apply_filters( 'refraction/system-info/usage/settings', $usage );
 
 		return $usage;
 	}
@@ -639,7 +639,7 @@ class Module extends BaseModule {
 	/**
 	 * Usage module constructor.
 	 *
-	 * Initializing Elementor usage module.
+	 * Initializing Refraction usage module.
 	 *
 	 * @access public
 	 */
@@ -647,8 +647,8 @@ class Module extends BaseModule {
 		add_action( 'transition_post_status', [ $this, 'on_status_change' ], 10, 3 );
 		add_action( 'before_delete_post', [ $this, 'on_before_delete_post' ] );
 
-		add_action( 'elementor/document/before_save', [ $this, 'before_document_save' ], 10, 2 );
-		add_action( 'elementor/document/after_save', [ $this, 'after_document_save' ] );
+		add_action( 'refraction/document/before_save', [ $this, 'before_document_save' ], 10, 2 );
+		add_action( 'refraction/document/after_save', [ $this, 'after_document_save' ] );
 
 		add_action( 'admin_init', [ $this, 'add_system_info_report' ], 50 );
 	}

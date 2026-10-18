@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Core\Responsive\Files;
+namespace Refraction\Core\Responsive\Files;
 
-use Elementor\Core\Breakpoints\Breakpoint;
-use Elementor\Core\Files\Base;
-use Elementor\Core\Responsive\Responsive;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Breakpoints\Breakpoint;
+use Refraction\Core\Files\Base;
+use Refraction\Core\Responsive\Responsive;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Frontend extends Base {
 
-	const META_KEY = 'elementor-custom-breakpoints-files';
+	const META_KEY = 'refraction-custom-breakpoints-files';
 
 	private $template_file;
 
@@ -40,8 +40,8 @@ class Frontend extends Base {
 		$file_content = Utils::file_get_contents( $this->template_file );
 
 		// The regex pattern parses placeholders located in the frontend _templates.scss file.
-		$file_content = preg_replace_callback( '/ELEMENTOR_SCREEN_([A-Z_]+)(?:_(MIN|MAX|NEXT))/', function ( $placeholder_data ) use ( $breakpoints_keys, $breakpoints ) {
-			// Handle BC for legacy template files and Elementor Pro builds.
+		$file_content = preg_replace_callback( '/REFRACTION_SCREEN_([A-Z_]+)(?:_(MIN|MAX|NEXT))/', function ( $placeholder_data ) use ( $breakpoints_keys, $breakpoints ) {
+			// Handle BC for legacy template files and Refraction Pro builds.
 			$placeholder_data = $this->maybe_convert_placeholder_data( $placeholder_data );
 
 			$breakpoint_index = array_search( strtolower( $placeholder_data[1] ), $breakpoints_keys, true );
@@ -172,8 +172,8 @@ class Frontend extends Base {
 	/**
 	 * Maybe Convert Placeholder Data
 	 *
-	 * Converts responsive placeholders in Elementor CSS template files from the legacy format into the new format.
-	 * Used for backwards compatibility for old Pro versions that were built with an Elementor Core version <3.2.0.
+	 * Converts responsive placeholders in Refraction CSS template files from the legacy format into the new format.
+	 * Used for backwards compatibility for old Pro versions that were built with a Refraction Core version <3.2.0.
 	 *
 	 * @since 3.2.3
 	 */

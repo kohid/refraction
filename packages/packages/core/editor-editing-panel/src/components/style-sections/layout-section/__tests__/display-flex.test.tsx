@@ -7,12 +7,12 @@ import {
 	createMockStyleDefinition,
 	createMockStylesProvider,
 } from 'test-utils';
-import { ControlActionsProvider } from '@elementor/editor-controls';
-import { getBreakpointsTree } from '@elementor/editor-responsive';
-import { getStylesSchema, type StyleDefinition } from '@elementor/editor-styles';
-import { stylesRepository } from '@elementor/editor-styles-repository';
-import { ThemeProvider } from '@elementor/editor-ui';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { ControlActionsProvider } from '@refraction/editor-controls';
+import { getBreakpointsTree } from '@refraction/editor-responsive';
+import { getStylesSchema, type StyleDefinition } from '@refraction/editor-styles';
+import { stylesRepository } from '@refraction/editor-styles-repository';
+import { ThemeProvider } from '@refraction/editor-ui';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { mockElement } from '../../../../__tests__/utils';
@@ -23,18 +23,18 @@ import { StyleInheritanceProvider, useStylesInheritanceChain } from '../../../..
 import { useStylesFields } from '../../../../hooks/use-styles-fields';
 import { DisplayField } from '../display-field';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mock( '../../../../hooks/use-styles-fields' );
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	useUserStylesCapability: jest.fn().mockReturnValue( { userCan: () => ( { updateProps: true } ) } ),
 	stylesRepository: {
 		getProviders: jest.fn(),
 		all: jest.fn(),
 	},
 } ) );
-jest.mock( '@elementor/editor-responsive' );
+jest.mock( '@refraction/editor-responsive' );
 jest.mock( '../../../../styles-inheritance/components/styles-inheritance-indicator' );
 jest.mock( '../../../../contexts/styles-inheritance-context', () => ( {
 	...jest.requireActual( '../../../../contexts/styles-inheritance-context' ),

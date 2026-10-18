@@ -1,4 +1,4 @@
-import { getSelectedElements, getWidgetsCache } from '@elementor/editor-elements';
+import { getSelectedElements, getWidgetsCache } from '@refraction/editor-elements';
 
 export const isAtomicWidgetSelected = () => {
 	const selectedElements = getSelectedElements();

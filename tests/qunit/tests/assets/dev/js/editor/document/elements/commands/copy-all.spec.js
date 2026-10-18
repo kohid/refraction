@@ -15,9 +15,9 @@ export const CopyAll = () => {
 
 			ElementsHelper.empty();
 
-			ElementsHelper.paste( elementor.getPreviewContainer(), true );
+			ElementsHelper.paste( refraction.getPreviewContainer(), true );
 
-			assert.equal( elementor.elements.at( 0 ).get( 'elements' ).at( 1 ).get( 'elements' ).length, eButtonsCount,
+			assert.equal( refraction.elements.at( 0 ).get( 'elements' ).at( 1 ).get( 'elements' ).length, eButtonsCount,
 				`'${ eButtonsCount }' buttons were created.` );
 		} );
 	} );

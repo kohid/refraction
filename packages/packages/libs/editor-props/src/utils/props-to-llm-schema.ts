@@ -152,7 +152,7 @@ function convertDynamicPropType( propType: PropType ): JsonSchema7 {
 		type: 'object',
 		description:
 			'Bind THIS value to a dynamic tag instead of a static value (this may be a nested field, ' +
-			'e.g. an image\'s "src"). Look up the chosen tag in the "elementor://dynamic-tags" resource ' +
+			'e.g. an image\'s "src"). Look up the chosen tag in the "refraction://dynamic-tags" resource ' +
 			'and populate "settings" exactly as its schema requires.',
 		properties: {
 			$$type: { type: 'string', const: DYNAMIC_PROP_TYPE_KEY },
@@ -161,7 +161,7 @@ function convertDynamicPropType( propType: PropType ): JsonSchema7 {
 				properties: {
 					name: {
 						type: 'string',
-						description: 'Dynamic tag name from "elementor://dynamic-tags".',
+						description: 'Dynamic tag name from "refraction://dynamic-tags".',
 						...( allowedTagNames.length ? { enum: allowedTagNames } : {} ),
 					},
 					settings: {

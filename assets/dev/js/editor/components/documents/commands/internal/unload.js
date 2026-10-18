@@ -9,35 +9,35 @@ export class Unload extends $e.modules.CommandInternalBase {
 		return new Promise( ( resolve, reject ) => {
 			const { document } = args;
 
-			if ( document.id !== elementor.config.document.id ) {
+			if ( document.id !== refraction.config.document.id ) {
 				reject();
 			}
 
-			elementor.elements = [];
+			refraction.elements = [];
 
-			elementor.saver.stopAutoSave( document );
+			refraction.saver.stopAutoSave( document );
 
-			elementor.channels.dataEditMode.trigger( 'switch', 'preview' );
+			refraction.channels.dataEditMode.trigger( 'switch', 'preview' );
 
 			if ( document.$element ) {
 				document.$element
-					.removeClass( 'elementor-edit-area-active elementor-edit-mode' )
-					.addClass( 'elementor-editor-preview' );
+					.removeClass( 'refraction-edit-area-active refraction-edit-mode' )
+					.addClass( 'refraction-editor-preview' );
 			}
 
-			elementorCommon.elements.$body.removeClass( `elementor-editor-${ document.config.type }` );
+			refractionCommon.elements.$body.removeClass( `refraction-editor-${ document.config.type }` );
 
-			elementor.settings.page.destroy();
+			refraction.settings.page.destroy();
 
-			elementor.heartbeat.destroy();
+			refraction.heartbeat.destroy();
 
 			document.editor.status = 'closed';
 
-			elementor.config.document = {};
+			refraction.config.document = {};
 
-			elementor.documents.unsetCurrent();
+			refraction.documents.unsetCurrent();
 
-			elementor.trigger( 'document:unloaded', document );
+			refraction.trigger( 'document:unloaded', document );
 
 			resolve();
 		} );

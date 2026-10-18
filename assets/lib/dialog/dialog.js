@@ -106,14 +106,14 @@
 		};
 
 		this.maybeLoadAssets = async function () {
-			const isFrontend = !! window.elementorFrontend?.utils?.assetsLoader;
+			const isFrontend = !! window.refractionFrontend?.utils?.assetsLoader;
 
 			if ( ! isFrontend ) {
 				return;
 			}
 
 			try {
-				await elementorFrontend.utils.assetsLoader.load( 'style', 'dialog' );
+				await refractionFrontend.utils.assetsLoader.load( 'style', 'dialog' );
 			} catch ( error ) {
 				console.error( 'Failed to load assets:', error );
 			}

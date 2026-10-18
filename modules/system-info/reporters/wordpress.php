@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Modules\System_Info\Reporters;
+namespace Refraction\Modules\System_Info\Reporters;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor WordPress environment report.
+ * Refraction WordPress environment report.
  *
- * Elementor system report handler class responsible for generating a report for
+ * Refraction system report handler class responsible for generating a report for
  * the WordPress environment.
  *
  * @since 1.0.0

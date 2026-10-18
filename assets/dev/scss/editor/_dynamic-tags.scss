@@ -1,4 +1,4 @@
-.elementor-tags-list {
+.refraction-tags-list {
 	display: none;
 	position: absolute;
 	width: 260px;
@@ -61,7 +61,7 @@
 	}
 }
 
-.elementor-dynamic-cover {
+.refraction-dynamic-cover {
 	display: flex;
 	align-items: center;
 	width: 100%;
@@ -84,12 +84,12 @@
 		}
 	}
 
-	.elementor-control-type-wysiwyg & {
+	.refraction-control-type-wysiwyg & {
 		margin-block-start: 10px;
 	}
 }
 
-.elementor-tag-settings-popup {
+.refraction-tag-settings-popup {
 	position: absolute;
 	width: 260px;
 	background-color: var(--e-a-bg-default);
@@ -108,7 +108,7 @@
 		border-block-end-color: var(--e-a-border-color);
 	}
 
-	.elementor-control {
+	.refraction-control {
 
 		&-type-section {
 
@@ -119,14 +119,14 @@
 	}
 }
 
-.elementor-tag-controls-stack-empty {
+.refraction-tag-controls-stack-empty {
 	background-color: var(--e-a-bg-default);
 	padding: 10px;
 	font-size: 13px;
 	text-align: center;
 }
 
-.elementor-control-dynamic {
+.refraction-control-dynamic {
 
 	input {
 		// Equivalent to `3px 0 0 3px` in LTR.
@@ -174,8 +174,8 @@
 
 	&-value {
 
-		.elementor-control-tag-area,
-		.elementor-control-dynamic-switcher,
+		.refraction-control-tag-area,
+		.refraction-control-dynamic-switcher,
 		.e-global__popover-toggle {
 			display: none;
 		}

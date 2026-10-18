@@ -1,4 +1,4 @@
-import ElementsHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
+import ElementsHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
 
 QUnit.module( 'File: assets/dev/js/editor/container/model/children-array.js', ( hooks ) => {
 	hooks.beforeEach( () => {
@@ -31,7 +31,7 @@ QUnit.module( 'File: assets/dev/js/editor/container/model/children-array.js', ( 
 
 		eWidgets.forEach( ( eWidget ) => {
 			// Act.
-			const foundChildren = elementor.getPreviewContainer().children.findRecursive(
+			const foundChildren = refraction.getPreviewContainer().children.findRecursive(
 				( container ) => container.id === eWidget.id,
 			);
 
@@ -52,7 +52,7 @@ QUnit.module( 'File: assets/dev/js/editor/container/model/children-array.js', ( 
 			actualIds = [];
 
 		// Act.
-		elementor.getPreviewContainer().children.forEachRecursive( ( container ) => actualIds.push( container.id ) );
+		refraction.getPreviewContainer().children.forEachRecursive( ( container ) => actualIds.push( container.id ) );
 
 		// Assert.
 		assert.deepEqual( actualIds, expectedIds );
@@ -90,7 +90,7 @@ QUnit.module( 'File: assets/dev/js/editor/container/model/children-array.js', ( 
 		let iterationCounter = 0;
 
 		// Act.
-		elementor.getPreviewContainer().children.someRecursive( ( container ) => {
+		refraction.getPreviewContainer().children.someRecursive( ( container ) => {
 			if ( container.id === eButtonInSection2.id ) {
 				return true;
 			}

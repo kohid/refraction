@@ -4,12 +4,12 @@ import { type Audit } from '../types';
 
 export const audit: Audit = {
 	id: 'audits/scan-for-cookies',
-	title: __( 'Scan for cookies', 'elementor' ),
+	title: __( 'Scan for cookies', 'refraction' ),
 	description: __(
 		"Your site may be setting cookies you haven't disclosed. Some countries require a banner even without a full consent policy. Scan to see what needs disclosure.",
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Run a Cookiez scan on this page to see which cookies need disclosure.', 'elementor' ),
+	fixHint: __( 'Run a Cookiez scan on this page to see which cookies need disclosure.', 'refraction' ),
 	categories: [ 'compliance' ],
 	severity: 'info',
 	weight: 0,
@@ -21,7 +21,7 @@ export const audit: Audit = {
 			violations: [
 				{
 					auditId: audit.id,
-					label: __( 'This page has not been scanned for cookies yet.', 'elementor' ),
+					label: __( 'This page has not been scanned for cookies yet.', 'refraction' ),
 					externalUrl: isReady ? ctx.pageContext.cookiez_scan_url : ctx.pageContext.cookiez_plugin_action_url,
 				},
 			],

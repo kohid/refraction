@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type MouseEvent, useRef } from 'react';
-import { type PromotionTrackingData } from '@elementor/editor-controls';
-import { MenuListItem } from '@elementor/editor-ui';
+import { type PromotionTrackingData } from '@refraction/editor-controls';
+import { MenuListItem } from '@refraction/editor-ui';
 import { MenuSubheader, Select, type SelectChangeEvent } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -60,7 +60,7 @@ export function PromotionSelect( {
 					promotionRef.current?.toggle();
 				} }
 			>
-				{ promotionLabel ?? __( 'PRO features', 'elementor' ) }
+				{ promotionLabel ?? __( 'PRO features', 'refraction' ) }
 				<InteractionsPromotionChip
 					content={ promotionContent }
 					upgradeUrl={ upgradeUrl }

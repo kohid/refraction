@@ -16,18 +16,18 @@ export const EmptyState = ( { onCreateInteraction }: { onCreateInteraction: () =
 			<SwipeIcon fontSize="large" />
 
 			<Typography align="center" variant="subtitle2">
-				{ __( 'Animate elements with Interactions', 'elementor' ) }
+				{ __( 'Animate elements with Interactions', 'refraction' ) }
 			</Typography>
 
 			<Typography align="center" variant="caption" maxWidth="170px">
 				{ __(
 					'Add entrance animations and effects triggered by user interactions such as page load or scroll.',
-					'elementor'
+					'refraction'
 				) }
 			</Typography>
 
 			<Button variant="outlined" color="secondary" size="small" sx={ { mt: 1 } } onClick={ onCreateInteraction }>
-				{ __( 'Create an interaction', 'elementor' ) }
+				{ __( 'Create an interaction', 'refraction' ) }
 			</Button>
 		</Stack>
 	);

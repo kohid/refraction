@@ -8,7 +8,7 @@ export type Settings = {
 type Homepage = number;
 
 export const getSettings = () => {
-	const baseUri = '/elementor/v1/site-navigation/homepage';
+	const baseUri = '/refraction/v1/site-navigation/homepage';
 
 	const uri = baseUri;
 

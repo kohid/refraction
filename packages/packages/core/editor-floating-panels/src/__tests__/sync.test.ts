@@ -1,4 +1,4 @@
-import { __createStore, __deleteStore, __dispatch, __registerSlice } from '@elementor/store';
+import { __createStore, __deleteStore, __dispatch, __registerSlice } from '@refraction/store';
 
 import { encodePersistedState } from '../persistence';
 import { slice } from '../store/slice';

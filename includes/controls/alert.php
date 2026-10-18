@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor alert control.
+ * Refraction alert control.
  *
  * A base control for creating alerts in the Editor panels.
  *
@@ -45,14 +45,14 @@ class Control_Alert extends Base_UI_Control {
 		if ( ! validAlertTypes.includes( data.alert_type ) ) {
 			data.alert_type = 'info';
 		}
-		data.content = elementor.compileTemplate( data.content, { view } );
+		data.content = refraction.compileTemplate( data.content, { view } );
 		#>
-		<div class="elementor-control-alert elementor-panel-alert elementor-panel-alert-{{ data.alert_type }}">
+		<div class="refraction-control-alert refraction-panel-alert refraction-panel-alert-{{ data.alert_type }}">
 			<# if ( data.heading ) { #>
-			<div class="elementor-control-alert-heading">{{{ data.heading }}}</div>
+			<div class="refraction-control-alert-heading">{{{ data.heading }}}</div>
 			<# } #>
 			<# if ( data.content ) { #>
-			<div class="elementor-control-alert-content ">{{{ data.content }}}</div>
+			<div class="refraction-control-alert-content ">{{{ data.content }}}</div>
 			<# } #>
 		</div>
 		<?php

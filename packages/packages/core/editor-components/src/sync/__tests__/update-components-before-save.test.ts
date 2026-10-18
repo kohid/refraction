@@ -1,17 +1,17 @@
 import { createMockDocument } from 'test-utils';
-import { invalidateDocumentData } from '@elementor/editor-documents';
-import { notify } from '@elementor/editor-notifications';
-import { AxiosError } from '@elementor/http-client';
+import { invalidateDocumentData } from '@refraction/editor-documents';
+import { notify } from '@refraction/editor-notifications';
+import { AxiosError } from '@refraction/http-client';
 
 import { apiClient } from '../../api';
 import { type ComponentDocumentsMap, getComponentDocuments } from '../../utils/get-component-documents';
 import { publishDraftComponentsInPageBeforeSave } from '../publish-draft-components-in-page-before-save';
 
-jest.mock( '@elementor/editor-documents', () => ( {
-	...jest.requireActual( '@elementor/editor-documents' ),
+jest.mock( '@refraction/editor-documents', () => ( {
+	...jest.requireActual( '@refraction/editor-documents' ),
 	invalidateDocumentData: jest.fn(),
 } ) );
-jest.mock( '@elementor/editor-notifications' );
+jest.mock( '@refraction/editor-notifications' );
 jest.mock( '../../utils/get-component-documents' );
 jest.mock( '../../api' );
 

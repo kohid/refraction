@@ -5,9 +5,9 @@ import {
 	type BackgroundOverlayItemPropValue,
 	backgroundOverlayPropTypeUtil,
 	colorPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { Box, CardMedia, styled, Tab, TabPanel, Tabs, type Theme, UnstableColorIndicator } from '@elementor/ui';
-import { useWpMediaAttachment } from '@elementor/wp-media';
+import { useWpMediaAttachment } from '@refraction/wp-media';
 import { __ } from '@wordpress/i18n';
 
 import { PropKeyProvider, PropProvider, useBoundProp } from '../../../bound-prop-context';
@@ -71,10 +71,10 @@ export const getInitialBackgroundOverlay = (): BackgroundOverlayItemPropValue =>
 } );
 
 const backgroundResolutionOptions = [
-	{ label: __( 'Thumbnail - 150 x 150', 'elementor' ), value: 'thumbnail' },
-	{ label: __( 'Medium - 300 x 300', 'elementor' ), value: 'medium' },
-	{ label: __( 'Large 1024 x 1024', 'elementor' ), value: 'large' },
-	{ label: __( 'Full', 'elementor' ), value: 'full' },
+	{ label: __( 'Thumbnail - 150 x 150', 'refraction' ), value: 'thumbnail' },
+	{ label: __( 'Medium - 300 x 300', 'refraction' ), value: 'medium' },
+	{ label: __( 'Large 1024 x 1024', 'refraction' ), value: 'large' },
+	{ label: __( 'Full', 'refraction' ), value: 'full' },
 ];
 
 export const BackgroundOverlayRepeaterControl = createControl( () => {
@@ -86,7 +86,7 @@ export const BackgroundOverlayRepeaterControl = createControl( () => {
 				initial={ getInitialBackgroundOverlay() as RepeatablePropValue }
 				propTypeUtil={ backgroundOverlayPropTypeUtil as CollectionPropUtil< RepeatablePropValue > }
 			>
-				<RepeaterHeader label={ __( 'Overlay', 'elementor' ) }>
+				<RepeaterHeader label={ __( 'Overlay', 'refraction' ) }>
 					<TooltipAddItemAction newItemIndex={ 0 } />
 				</RepeaterHeader>
 				<ItemsContainer>
@@ -126,11 +126,11 @@ export const ItemContent = () => {
 					size="small"
 					variant="fullWidth"
 					{ ...getTabsProps() }
-					aria-label={ __( 'Background Overlay', 'elementor' ) }
+					aria-label={ __( 'Background Overlay', 'refraction' ) }
 				>
-					<Tab label={ __( 'Image', 'elementor' ) } { ...getTabProps( 'image' ) } />
-					<Tab label={ __( 'Gradient', 'elementor' ) } { ...getTabProps( 'gradient' ) } />
-					<Tab label={ __( 'Color', 'elementor' ) } { ...getTabProps( 'color' ) } />
+					<Tab label={ __( 'Image', 'refraction' ) } { ...getTabProps( 'image' ) } />
+					<Tab label={ __( 'Gradient', 'refraction' ) } { ...getTabProps( 'gradient' ) } />
+					<Tab label={ __( 'Color', 'refraction' ) } { ...getTabProps( 'color' ) } />
 				</Tabs>
 			</Box>
 			<TabPanel sx={ { p: 1.5 } } { ...getTabPanelProps( 'image' ) }>
@@ -224,10 +224,10 @@ const ItemLabelImage = ( { value }: { value: BackgroundImageOverlay } ) => {
 
 const ItemLabelGradient = ( { value }: { value: BackgroundOverlayItemPropValue } ) => {
 	if ( value.value.type.value === 'linear' ) {
-		return <span>{ __( 'Linear Gradient', 'elementor' ) }</span>;
+		return <span>{ __( 'Linear Gradient', 'refraction' ) }</span>;
 	}
 
-	return <span>{ __( 'Radial Gradient', 'elementor' ) }</span>;
+	return <span>{ __( 'Radial Gradient', 'refraction' ) }</span>;
 };
 
 const ColorOverlayContent = ( { anchorEl }: { anchorEl: HTMLElement | null } ) => {

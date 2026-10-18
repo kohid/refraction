@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { ajax } from '@elementor/editor-v1-adapters';
+import { ajax } from '@refraction/editor-v1-adapters';
 import { BulbIcon } from '@elementor/icons';
 import { Alert, AlertAction, type AlertProps, AlertTitle, styled, Typography } from '@elementor/ui';
 
@@ -8,7 +8,7 @@ import { createControl } from '../create-control';
 
 type NoticeType = 'info' | 'success' | 'warning' | 'danger';
 
-// Elementor's `Alert` forces `.MuiAlertTitle-root { marginBottom: 0 }` via a selector scoped to the
+// Refraction's `Alert` forces `.MuiAlertTitle-root { marginBottom: 0 }` via a selector scoped to the
 // Alert's own class. Repeating the `.MuiAlertTitle-root` class here matches that selector's specificity
 // so this override applies reliably regardless of stylesheet insertion order.
 const NoticeTitle = styled( AlertTitle )( {
@@ -28,7 +28,7 @@ type NoticeControlProps = {
 };
 
 type ExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		config?: {
 			user?: {
 				dismissed_editor_notices?: string[];
@@ -38,7 +38,7 @@ type ExtendedWindow = Window & {
 };
 
 export const markNoticeAsDismissedInSession = ( dismissId: string ) => {
-	const dismissedNotices = ( window as ExtendedWindow ).elementor?.config?.user?.dismissed_editor_notices;
+	const dismissedNotices = ( window as ExtendedWindow ).refraction?.config?.user?.dismissed_editor_notices;
 
 	if ( dismissedNotices && ! dismissedNotices.includes( dismissId ) ) {
 		dismissedNotices.push( dismissId );
@@ -50,7 +50,7 @@ export const isNoticeDismissed = ( dismissId?: string ) => {
 		return false;
 	}
 
-	const dismissedNotices = ( window as ExtendedWindow ).elementor?.config?.user?.dismissed_editor_notices;
+	const dismissedNotices = ( window as ExtendedWindow ).refraction?.config?.user?.dismissed_editor_notices;
 
 	return !! dismissedNotices?.includes( dismissId );
 };

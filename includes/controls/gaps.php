@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor gap control.
+ * Refraction gap control.
  *
  * A base control for creating a gap control. Displays input fields for two values,
  * row/column, height/width and the option to link them together.
@@ -54,8 +54,8 @@ class Control_Gaps extends Control_Dimensions {
 
 	protected function get_dimensions() {
 		return [
-			'column' => esc_html__( 'Column', 'elementor' ),
-			'row' => esc_html__( 'Row', 'elementor' ),
+			'column' => esc_html__( 'Column', 'refraction' ),
+			'row' => esc_html__( 'Row', 'refraction' ),
 		];
 	}
 

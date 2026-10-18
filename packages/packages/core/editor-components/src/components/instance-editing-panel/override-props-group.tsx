@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useId } from 'react';
-import { useStateByElement } from '@elementor/editor-editing-panel';
-import { CollapseIcon } from '@elementor/editor-ui';
+import { useStateByElement } from '@refraction/editor-editing-panel';
+import { CollapseIcon } from '@refraction/editor-ui';
 import { Box, Collapse, ListItemButton, ListItemText, Stack } from '@elementor/ui';
 
 import { type OverridablePropsGroup } from '../../types';

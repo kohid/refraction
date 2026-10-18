@@ -45,7 +45,7 @@ export function KitCustomizationDialog( {
 					onClick={ handleClose }
 					color="secondary"
 				>
-					{ __( 'Cancel', 'elementor' ) }
+					{ __( 'Cancel', 'refraction' ) }
 				</Button>
 				<Button
 					disabled={ saveDisabled }
@@ -53,7 +53,7 @@ export function KitCustomizationDialog( {
 					variant="contained"
 					color="primary"
 				>
-					{ __( 'Save changes', 'elementor' ) }
+					{ __( 'Save changes', 'refraction' ) }
 				</Button>
 			</DialogActions>
 		</Dialog>

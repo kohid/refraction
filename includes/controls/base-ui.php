@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor base UI control.
+ * Refraction base UI control.
  *
  * An abstract class for creating new UI controls in the panel.
  *

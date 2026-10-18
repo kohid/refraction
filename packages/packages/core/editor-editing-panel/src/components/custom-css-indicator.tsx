@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { type BreakpointId, type BreakpointNode, getBreakpointsTree } from '@elementor/editor-responsive';
-import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@elementor/editor-styles';
+import { type BreakpointId, type BreakpointNode, getBreakpointsTree } from '@refraction/editor-responsive';
+import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@refraction/editor-styles';
 
 import { useElement } from '../contexts/element-context';
 import { useStyle } from '../contexts/style-context';

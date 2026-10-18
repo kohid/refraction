@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { __dispatch as dispatch } from '@elementor/store';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { loadComponents } from './store/thunks';
 

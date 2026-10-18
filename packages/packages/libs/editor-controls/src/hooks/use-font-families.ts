@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getElementorConfig } from '@elementor/editor-v1-adapters';
+import { getRefractionConfig } from '@refraction/editor-v1-adapters';
 
 import { type FontCategory } from '../controls/font-family-control/font-family-control';
 
@@ -9,7 +9,7 @@ type FontControlConfig = {
 };
 
 const getFontControlConfig = (): FontControlConfig => {
-	const { controls } = getElementorConfig();
+	const { controls } = getRefractionConfig();
 
 	return controls?.font ?? {};
 };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Fragment, useEffect, useState } from 'react';
-import { trackUpgradePromotionClick, trackViewPromotion, useBoundProp } from '@elementor/editor-controls';
-import { CtaButton, PopoverHeader, PopoverMenuList, SearchField, SectionPopoverBody } from '@elementor/editor-ui';
+import { trackUpgradePromotionClick, trackViewPromotion, useBoundProp } from '@refraction/editor-controls';
+import { CtaButton, PopoverHeader, PopoverMenuList, SearchField, SectionPopoverBody } from '@refraction/editor-ui';
 import { DatabaseIcon } from '@elementor/icons';
 import { Divider, Link, Stack, Typography, useTheme } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -101,7 +101,7 @@ export const DynamicSelection = ( { close: closePopover, expired = false }: Dyna
 				<SearchField
 					value={ searchValue }
 					onSearch={ handleSearch }
-					placeholder={ __( 'Search dynamic tags…', 'elementor' ) }
+					placeholder={ __( 'Search dynamic tags…', 'refraction' ) }
 				/>
 
 				<Divider />
@@ -123,9 +123,9 @@ export const DynamicSelection = ( { close: closePopover, expired = false }: Dyna
 	};
 
 	return (
-		<SectionPopoverBody aria-label={ __( 'Dynamic tags', 'elementor' ) }>
+		<SectionPopoverBody aria-label={ __( 'Dynamic tags', 'refraction' ) }>
 			<PopoverHeader
-				title={ __( 'Dynamic tags', 'elementor' ) }
+				title={ __( 'Dynamic tags', 'refraction' ) }
 				onClose={ closePopover }
 				icon={ <DatabaseIcon fontSize={ SIZE } /> }
 			/>
@@ -146,14 +146,14 @@ const NoResults = ( { searchValue, onClear }: NoResultsProps ) => (
 	>
 		<DatabaseIcon fontSize="large" />
 		<Typography align="center" variant="subtitle2">
-			{ __( 'Sorry, nothing matched', 'elementor' ) }
+			{ __( 'Sorry, nothing matched', 'refraction' ) }
 			<br />
 			&ldquo;{ searchValue }&rdquo;.
 		</Typography>
 		<Typography align="center" variant="caption" sx={ { display: 'flex', flexDirection: 'column' } }>
-			{ __( 'Try something else.', 'elementor' ) }
+			{ __( 'Try something else.', 'refraction' ) }
 			<Link color="text.secondary" variant="caption" component="button" onClick={ onClear }>
-				{ __( 'Clear & try again', 'elementor' ) }
+				{ __( 'Clear & try again', 'refraction' ) }
 			</Link>
 		</Typography>
 	</Stack>
@@ -173,10 +173,10 @@ const NoDynamicTags = () => (
 		>
 			<DatabaseIcon fontSize="large" />
 			<Typography align="center" variant="subtitle2">
-				{ __( 'Streamline your workflow with dynamic tags', 'elementor' ) }
+				{ __( 'Streamline your workflow with dynamic tags', 'refraction' ) }
 			</Typography>
 			<Typography align="center" variant="caption" width={ PROMO_TEXT_WIDTH }>
-				{ __( 'Upgrade now to display your content dynamically.', 'elementor' ) }
+				{ __( 'Upgrade now to display your content dynamically.', 'refraction' ) }
 			</Typography>
 			<CtaButton
 				size="small"
@@ -201,16 +201,16 @@ const ExpiredDynamicTags = () => (
 		>
 			<DatabaseIcon fontSize="large" />
 			<Typography align="center" variant="subtitle2">
-				{ __( 'Unlock your Dynamic tags again', 'elementor' ) }
+				{ __( 'Unlock your Dynamic tags again', 'refraction' ) }
 			</Typography>
 			<Typography align="center" variant="caption" width={ PROMO_TEXT_WIDTH }>
-				{ __( 'Dynamic tags need Elementor Pro. Renew now to keep them active.', 'elementor' ) }
+				{ __( 'Dynamic tags need Refraction Pro. Renew now to keep them active.', 'refraction' ) }
 			</Typography>
 			<CtaButton
 				size="small"
 				href={ RENEW_DYNAMIC_TAGS_URL }
 				onClick={ () => trackUpgradePromotionClick( { target_name: 'dynamic_tags' } ) }
-				children={ __( 'Renew Now', 'elementor' ) }
+				children={ __( 'Renew Now', 'refraction' ) }
 			/>
 		</Stack>
 	</>

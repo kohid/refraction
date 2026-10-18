@@ -29,7 +29,7 @@ export default class extends Marionette.LayoutView {
 
 	initModal() {
 		const modalOptions = {
-			className: 'elementor-templates-modal',
+			className: 'refraction-templates-modal',
 			closeButton: false,
 			draggable: false,
 			hide: {
@@ -40,7 +40,7 @@ export default class extends Marionette.LayoutView {
 
 		jQuery.extend( true, modalOptions, this.getModalOptions() );
 
-		this.modal = elementorCommon.dialogsManager.createWidget( 'lightbox', modalOptions );
+		this.modal = refractionCommon.dialogsManager.createWidget( 'lightbox', modalOptions );
 
 		this.modal.getElements( 'message' ).append( this.modal.addElement( 'content' ), this.modal.addElement( 'loading' ) );
 

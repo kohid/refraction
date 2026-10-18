@@ -9,7 +9,7 @@ import { wpCli } from '../../../assets/wp-cli';
 
 test.describe( 'Container tests #2 @container', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	test( 'Justify icons are displayed correctly', async ( { page, apiRequests }, testInfo ) => {
@@ -85,7 +85,7 @@ test.describe( 'Container tests #2 @container', () => {
 
 		// Assert - Check container settings are set as expected in the editor.
 		for ( const container of containers ) {
-			const element = editor.getPreviewFrame().locator( `.elementor-element-${ container.id }.e-grid .e-con-inner` );
+			const element = editor.getPreviewFrame().locator( `.refraction-element-${ container.id }.e-grid .e-con-inner` );
 			await expect.soft( element ).toHaveCSS( 'justify-items', container.setting );
 			await expect.soft( element ).toHaveCSS( 'align-items', container.setting );
 		}
@@ -94,7 +94,7 @@ test.describe( 'Container tests #2 @container', () => {
 
 		// Assert - Check container settings are set as expected on frontend.
 		for ( const container of containers ) {
-			const element = page.locator( `.elementor-element-${ container.id }.e-grid .e-con-inner` );
+			const element = page.locator( `.refraction-element-${ container.id }.e-grid .e-con-inner` );
 			await expect.soft( element ).toHaveCSS( 'justify-items', container.setting );
 			await expect.soft( element ).toHaveCSS( 'align-items', container.setting );
 		}
@@ -120,17 +120,17 @@ test.describe( 'Container tests #2 @container', () => {
 		// Copy container 2 and paste it at the top of the page.
 		await contextMenu.copyElement( containerId2 );
 		await editor.openAddElementSection( containerId1 );
-		await contextMenu.pasteElement( '.elementor-add-section-inline' );
+		await contextMenu.pasteElement( '.refraction-add-section-inline' );
 
 		// Copy container 3 and paste it above container 2.
 		await contextMenu.copyElement( containerId3 );
 		await editor.openAddElementSection( containerId2 );
-		await contextMenu.pasteElement( '.elementor-add-section-inline' );
+		await contextMenu.pasteElement( '.refraction-add-section-inline' );
 
 		// Copy the heading widget and paste it above container 3.
 		await contextMenu.copyElement( headingId );
 		await editor.openAddElementSection( containerId3 );
-		await contextMenu.pasteElement( '.elementor-add-section-inline' );
+		await contextMenu.pasteElement( '.refraction-add-section-inline' );
 
 		// Assert.
 		// Expected order:
@@ -142,24 +142,24 @@ test.describe( 'Container tests #2 @container', () => {
 		// 6. Container 3.
 		await expect.soft( editor.getPreviewFrame()
 			.locator( '.e-con >> nth=0' )
-			.locator( '.elementor-widget' ) )
-			.toHaveClass( /elementor-widget-heading/ );
+			.locator( '.refraction-widget' ) )
+			.toHaveClass( /refraction-widget-heading/ );
 		await expect.soft( editor.getPreviewFrame()
 			.locator( '.e-con >> nth=1' ),
 		)
 			.toHaveAttribute( 'data-id', containerId1 );
 		await expect.soft( editor.getPreviewFrame()
 			.locator( '.e-con >> nth=2' )
-			.locator( '.elementor-widget' ) )
-			.toHaveClass( /elementor-widget-spacer/ );
+			.locator( '.refraction-widget' ) )
+			.toHaveClass( /refraction-widget-spacer/ );
 		await expect.soft( editor.getPreviewFrame()
 			.locator( '.e-con >> nth=3' ),
 		)
 			.toHaveAttribute( 'data-id', containerId2 );
 		await expect.soft( editor.getPreviewFrame()
 			.locator( '.e-con >> nth=4' )
-			.locator( '.elementor-widget' ) )
-			.toHaveClass( /elementor-widget-heading/ );
+			.locator( '.refraction-widget' ) )
+			.toHaveClass( /refraction-widget-heading/ );
 		await expect.soft( editor.getPreviewFrame()
 			.locator( '.e-con >> nth=5' ),
 		)
@@ -172,24 +172,24 @@ test.describe( 'Container tests #2 @container', () => {
 		const frame = editor.getPreviewFrame();
 
 		await test.step( 'Test container type selector', async () => {
-			await frame.locator( '.elementor-add-section-button' ).click();
+			await frame.locator( '.refraction-add-section-button' ).click();
 			const toFlex = frame.locator( '.flex-preset-button' );
 			const toGrid = frame.locator( '.grid-preset-button' );
 			await expect.soft( toFlex ).toBeVisible();
 			await expect.soft( toGrid ).toBeVisible();
-			await frame.locator( '.elementor-add-section-close' ).click();
+			await frame.locator( '.refraction-add-section-close' ).click();
 		} );
 
 		await test.step( 'Test wizard flex container', async () => {
-			await frame.locator( '.elementor-add-section-button' ).click();
+			await frame.locator( '.refraction-add-section-button' ).click();
 			await frame.locator( '.flex-preset-button' ).click();
 			const flexList = frame.locator( '.e-con-select-preset-flex .e-con-select-preset__list' );
 			await expect.soft( flexList ).toBeVisible();
-			await frame.locator( '.elementor-add-section-close' ).click();
+			await frame.locator( '.refraction-add-section-close' ).click();
 		} );
 
 		await test.step( 'Test wizard grid container', async () => {
-			await frame.locator( '.elementor-add-section-button' ).click();
+			await frame.locator( '.refraction-add-section-button' ).click();
 			await frame.locator( '.grid-preset-button' ).click();
 			const gridList = frame.locator( '.e-con-select-preset-grid .e-con-select-preset__list' );
 			await expect.soft( gridList ).toBeVisible();
@@ -213,10 +213,10 @@ async function captureJustifySnapShot(
 	direction: string,
 	page: Page,
 	snapshotPrefix: string ) {
-	await editor.page.click( `.elementor-control-responsive-${ breakpoints[ i ] } .eicon-arrow-${ direction }` );
+	await editor.page.click( `.refraction-control-responsive-${ breakpoints[ i ] } .eicon-arrow-${ direction }` );
 
-	const justifyControlsClass = `.elementor-group-control-justify_content.elementor-control-responsive-${ breakpoints[ i ] }`;
-	const justifyControlsContent = await page.$( `${ justifyControlsClass } .elementor-control-content ` );
+	const justifyControlsClass = `.refraction-group-control-justify_content.refraction-control-responsive-${ breakpoints[ i ] }`;
+	const justifyControlsContent = await page.$( `${ justifyControlsClass } .refraction-control-content ` );
 	await page.waitForLoadState( 'domcontentloaded', { timeout: 5000 } ); // Let the icons rotate
 	expect.soft( await justifyControlsContent.screenshot( {
 		type: 'jpeg',

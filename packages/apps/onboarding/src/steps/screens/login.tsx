@@ -8,7 +8,7 @@ import {
 	SocialIconWrapper,
 	TextButton,
 } from '../../components/fullscreen-card';
-import { ElementorIcon } from '../../components/ui/elementor-icon';
+import { RefractionIcon } from '../../components/ui/refraction-icon';
 import { AppleIcon, FacebookIcon, GoogleIcon } from '../../icons';
 import { t } from '../../utils/translations';
 
@@ -24,7 +24,7 @@ export function Login( { onConnect, onSignUp, onContinueAsGuest }: LoginProps ) 
 	return (
 		<FullscreenCard data-testid="login-screen">
 			<Stack display="flex" alignItems="center" marginBottom={ -1 }>
-				<ElementorIcon sx={ { width: 32, height: 32 } } />
+				<RefractionIcon sx={ { width: 32, height: 32 } } />
 			</Stack>
 			<Typography variant="h5" color="text.primary" align="center" fontWeight={ 500 } fontFamily="Poppins">
 				{ t( 'login.title' ) }

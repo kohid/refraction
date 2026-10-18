@@ -4,13 +4,13 @@ import type {
 	CreateTemplatedElementTypeOptions,
 	ElementModel,
 	LegacyWindow,
-} from '@elementor/editor-canvas';
-import { notify } from '@elementor/editor-notifications';
+} from '@refraction/editor-canvas';
+import { notify } from '@refraction/editor-notifications';
 
 import { COMPONENT_WIDGET_TYPE, createComponentType } from '../create-component-type';
 import type { ExtendedWindow } from '../types';
 
-jest.mock( '@elementor/editor-notifications' );
+jest.mock( '@refraction/editor-notifications' );
 
 const mockNotify = jest.mocked( notify );
 
@@ -37,7 +37,7 @@ type ComponentViewInstance = {
 };
 
 describe( 'createComponentType', () => {
-	let mockElementorWindow: LegacyWindow[ 'elementor' ];
+	let mockRefractionWindow: LegacyWindow[ 'refraction' ];
 
 	beforeEach( () => {
 		const mockBaseView = class {
@@ -90,7 +90,7 @@ describe( 'createComponentType', () => {
 			}
 		};
 
-		mockElementorWindow = {
+		mockRefractionWindow = {
 			modules: {
 				elements: {
 					types: {
@@ -109,13 +109,13 @@ describe( 'createComponentType', () => {
 				},
 			},
 			createBackboneElementsCollection: jest.fn(),
-		} as unknown as LegacyWindow[ 'elementor' ];
+		} as unknown as LegacyWindow[ 'refraction' ];
 
 		const testWindow = window as unknown as TestWindow;
 
-		testWindow.elementor = mockElementorWindow;
+		testWindow.refraction = mockRefractionWindow;
 
-		testWindow.elementorCommon = {
+		testWindow.refractionCommon = {
 			eventsManager: {
 				config: {
 					triggers: {
@@ -138,7 +138,7 @@ describe( 'createComponentType', () => {
 
 	afterEach( () => {
 		jest.clearAllMocks();
-		delete window.elementorPro;
+		delete window.refractionPro;
 	} );
 
 	const setProState = ( {
@@ -150,13 +150,13 @@ describe( 'createComponentType', () => {
 		active: boolean;
 		version?: string;
 	} ) => {
-		( window as unknown as TestWindow ).elementor.helpers = { hasPro: () => installed };
-		window.elementorPro = { config: { isActive: active, version } };
+		( window as unknown as TestWindow ).refraction.helpers = { hasPro: () => installed };
+		window.refractionPro = { config: { isActive: active, version } };
 	};
 
 	const createMockViewInstance = ( isAdministrator: boolean ) => {
-		( window as unknown as TestWindow ).elementor = {
-			...mockElementorWindow,
+		( window as unknown as TestWindow ).refraction = {
+			...mockRefractionWindow,
 			config: {
 				user: {
 					is_administrator: isAdministrator,
@@ -280,8 +280,8 @@ describe( 'createComponentType', () => {
 	} );
 
 	it( 'should return groups without modifications when componentId is not available', () => {
-		( window as unknown as TestWindow ).elementor = {
-			...mockElementorWindow,
+		( window as unknown as TestWindow ).refraction = {
+			...mockRefractionWindow,
 			config: {
 				user: {
 					is_administrator: true,

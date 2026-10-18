@@ -31,7 +31,7 @@ function isFirstPartySource( id ) {
  */
 export function babelLegacyPlugin( { presets, sourcemap } ) {
 	return {
-		name: 'elementor-babel-legacy',
+		name: 'refraction-babel-legacy',
 		enforce: 'pre',
 		async transform( code, id ) {
 			if ( ! isFirstPartySource( id ) ) {

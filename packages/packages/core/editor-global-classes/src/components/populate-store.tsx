@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
 import { loadCurrentDocumentClasses } from '../load-document-classes';
 

@@ -5,10 +5,10 @@ import _path from 'path';
 export const locators = {
 	tabTitle: '.e-n-tabs-heading .e-n-tab-title',
 	selectedTabTitle: '.e-n-tabs-heading .e-n-tab-title[aria-selected="true"]',
-	activeTab: '.e-n-tabs-content .e-con.e-active.elementor-element-edit-mode',
-	repeaterAddButton: '.elementor-repeater-add',
-	repeaterDeleteButton: '.elementor-repeater-row-tool.elementor-repeater-tool-remove .eicon-close',
-	repeaterCloneButton: '.elementor-repeater-tool-duplicate',
+	activeTab: '.e-n-tabs-content .e-con.e-active.refraction-element-edit-mode',
+	repeaterAddButton: '.refraction-repeater-add',
+	repeaterDeleteButton: '.refraction-repeater-row-tool.refraction-repeater-tool-remove .eicon-close',
+	repeaterCloneButton: '.refraction-repeater-tool-duplicate',
 };
 
 export const templatePath = _path.resolve( __dirname, '../../../templates/nested-tabs-with-icons.json' );
@@ -32,9 +32,9 @@ export async function setTabItemColor(
 ) {
 	await editor.openPanelTab( 'style' );
 	if ( 'tabs' !== panelClass ) {
-		await editor.page.locator( `.elementor-control-${ panelClass }` ).click();
+		await editor.page.locator( `.refraction-control-${ panelClass }` ).click();
 	}
-	await editor.page.locator( `.elementor-control-${ tabState }` ).click();
+	await editor.page.locator( `.refraction-control-${ tabState }` ).click();
 	await editor.setColorControlValue( colorPickerClass, color );
 }
 
@@ -55,7 +55,7 @@ export async function setTabBorderColor(
 }
 
 export async function selectDropdownContainer( editor: EditorPage, widgetId = '', itemNumber = 0 ) {
-	const widgetSelector = !! widgetId ? `.elementor-element-${ widgetId } ` : '',
+	const widgetSelector = !! widgetId ? `.refraction-element-${ widgetId } ` : '',
 		activeContainerSelector = `${ widgetSelector } .e-n-tabs-content > .e-con`,
 		isActiveTab = await editor.getPreviewFrame()
 			.locator( `${ widgetSelector }.e-n-tab-title >> nth=${ String( itemNumber ) }` )
@@ -67,7 +67,7 @@ export async function selectDropdownContainer( editor: EditorPage, widgetId = ''
 
 	await editor.getPreviewFrame().locator( activeContainerSelector ).nth( itemNumber ).hover();
 	const elementEditButton = editor.getPreviewFrame()
-		.locator( activeContainerSelector ).nth( itemNumber ).locator( '> .elementor-element-overlay > .elementor-editor-element-settings > .elementor-editor-element-edit' );
+		.locator( activeContainerSelector ).nth( itemNumber ).locator( '> .refraction-element-overlay > .refraction-editor-element-settings > .refraction-editor-element-edit' );
 	await elementEditButton.click();
 	await editor.getPreviewFrame().locator( activeContainerSelector ).nth( itemNumber ).waitFor();
 	return editor.getPreviewFrame().locator( activeContainerSelector ).nth( itemNumber ).getAttribute( 'data-id' );
@@ -88,12 +88,12 @@ export async function isTabTitleVisible( context: Page | Frame, positionIndex: n
 }
 
 export async function deleteItemFromRepeater( editor: EditorPage, widgetID: string ): Promise<void> {
-	const nestedItemTitle = editor.getPreviewFrame().locator( `.elementor-element-${ widgetID } .e-n-tab-title` );
-	const nestedItemContent = editor.getPreviewFrame().locator( `.elementor-element-${ widgetID } .e-n-tabs-content > .e-con` );
+	const nestedItemTitle = editor.getPreviewFrame().locator( `.refraction-element-${ widgetID } .e-n-tab-title` );
+	const nestedItemContent = editor.getPreviewFrame().locator( `.refraction-element-${ widgetID } .e-n-tabs-content > .e-con` );
 	const initialCount = await nestedItemTitle.count();
 
 	await editor.page.locator( locators.repeaterDeleteButton ).last().click();
-	await editor.getPreviewFrame().locator( `.elementor-element-${ widgetID }` ).waitFor();
+	await editor.getPreviewFrame().locator( `.refraction-element-${ widgetID }` ).waitFor();
 
 	await expect.soft( nestedItemTitle ).toHaveCount( initialCount - 1 );
 	await expect.soft( nestedItemContent ).toHaveCount( initialCount - 1 );
@@ -102,15 +102,15 @@ export async function deleteItemFromRepeater( editor: EditorPage, widgetID: stri
 export async function addItemFromRepeater( editor: EditorPage, widgetID: string ) {
 	// Arrange
 	const addItemButton = editor.page.locator( locators.repeaterAddButton ),
-		nestedItemTitle = editor.getPreviewFrame().locator( `.elementor-element-${ widgetID } .e-n-tab-title` ),
-		nestedItemContent = editor.getPreviewFrame().locator( `.elementor-element-${ widgetID } > .e-n-tabs > .e-n-tabs-content > .e-con` ),
+		nestedItemTitle = editor.getPreviewFrame().locator( `.refraction-element-${ widgetID } .e-n-tab-title` ),
+		nestedItemContent = editor.getPreviewFrame().locator( `.refraction-element-${ widgetID } > .e-n-tabs > .e-n-tabs-content > .e-con` ),
 		numberOfTitles = await nestedItemTitle.count(),
 		numberOfContents = await nestedItemContent.count();
 
 	// Act
 	await addItemButton.click( { force: true } );
 
-	await editor.getPreviewFrame().locator( `.elementor-element-${ widgetID }` ).waitFor();
+	await editor.getPreviewFrame().locator( `.refraction-element-${ widgetID }` ).waitFor();
 
 	// Assert
 	await expect.soft( nestedItemTitle ).toHaveCount( numberOfTitles + 1 );
@@ -119,14 +119,14 @@ export async function addItemFromRepeater( editor: EditorPage, widgetID: string 
 
 export async function cloneItemFromRepeater( editor: EditorPage, widgetID: string, position: number ) {
 	// Arrange
-	const nestedItemTitle = editor.getPreviewFrame().locator( `.elementor-element-${ widgetID } .e-n-tab-title` ),
-		nestedItemContent = editor.getPreviewFrame().locator( `.elementor-element-${ widgetID } .e-n-tabs-content > .e-con` ),
+	const nestedItemTitle = editor.getPreviewFrame().locator( `.refraction-element-${ widgetID } .e-n-tab-title` ),
+		nestedItemContent = editor.getPreviewFrame().locator( `.refraction-element-${ widgetID } .e-n-tabs-content > .e-con` ),
 		numberOfTitles = await nestedItemTitle.count(),
 		numberOfContents = await nestedItemContent.count(),
 		cloneItemButton = editor.page.locator( locators.repeaterCloneButton ).nth( position );
 
 	await cloneItemButton.click( { force: true } );
-	await editor.getPreviewFrame().locator( `.elementor-element-${ widgetID }` ).waitFor();
+	await editor.getPreviewFrame().locator( `.refraction-element-${ widgetID }` ).waitFor();
 
 	const currentTitle = nestedItemTitle.nth( position ),
 		currentTitleId = await currentTitle.getAttribute( 'id' ),

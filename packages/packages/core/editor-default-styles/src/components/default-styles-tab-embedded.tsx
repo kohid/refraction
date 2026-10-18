@@ -4,7 +4,7 @@ import {
 	ControlActionsProvider,
 	ControlReplacementsProvider,
 	getControlReplacements,
-} from '@elementor/editor-controls';
+} from '@refraction/editor-controls';
 import {
 	ClassesPropProvider,
 	CreatableAutocomplete,
@@ -15,16 +15,16 @@ import {
 	StyleProvider,
 	StyleSections,
 	StyleTabSlot,
-} from '@elementor/editor-editing-panel';
-import { type Element, type ElementType } from '@elementor/editor-elements';
-import { useActiveBreakpoint } from '@elementor/editor-responsive';
-import { type StyleDefinitionID, type StyleDefinitionState } from '@elementor/editor-styles';
-import { useUserStylesCapability } from '@elementor/editor-styles-repository';
-import { SaveChangesDialog, ThemeProvider, useDialog } from '@elementor/editor-ui';
-import { controlActionsMenu } from '@elementor/menus';
-import { useMutation } from '@elementor/query';
-import { getSessionStorageItem, SessionStorageProvider, setSessionStorageItem } from '@elementor/session';
-import { __dispatch as dispatch, __getState as getState, __useSelector as useSelector } from '@elementor/store';
+} from '@refraction/editor-editing-panel';
+import { type Element, type ElementType } from '@refraction/editor-elements';
+import { useActiveBreakpoint } from '@refraction/editor-responsive';
+import { type StyleDefinitionID, type StyleDefinitionState } from '@refraction/editor-styles';
+import { useUserStylesCapability } from '@refraction/editor-styles-repository';
+import { SaveChangesDialog, ThemeProvider, useDialog } from '@refraction/editor-ui';
+import { controlActionsMenu } from '@refraction/menus';
+import { useMutation } from '@refraction/query';
+import { getSessionStorageItem, SessionStorageProvider, setSessionStorageItem } from '@refraction/session';
+import { __dispatch as dispatch, __getState as getState, __useSelector as useSelector } from '@refraction/store';
 import {
 	type AutocompleteChangeReason,
 	Box,
@@ -80,7 +80,7 @@ const shimElementType: ElementType = {
 	key: 'default-style',
 	controls: [],
 	propsSchema: {},
-	title: __( 'Default Style', 'elementor' ),
+	title: __( 'Default Style', 'refraction' ),
 };
 
 export type DefaultStylesTabEmbeddedProps = {
@@ -182,12 +182,12 @@ export function DefaultStylesTabEmbedded( { onRequestClose, onExposeCloseAttempt
 								<Stack sx={ { px: 2, pt: 1, gap: 1 } }>
 									<FormControl fullWidth size="small">
 										<FormLabel htmlFor={ TAG_SELECTOR_ID } size="small" sx={ { mb: 1 } }>
-											{ __( 'Tag', 'elementor' ) }
+											{ __( 'Tag', 'refraction' ) }
 										</FormLabel>
 										<CreatableAutocomplete< Option >
 											id={ TAG_SELECTOR_ID }
 											size="tiny"
-											placeholder={ __( 'Type tag name', 'elementor' ) }
+											placeholder={ __( 'Type tag name', 'refraction' ) }
 											options={ tagOptions }
 											selected={ [ toTagChip( selectedTag ) ] }
 											onSelect={ handleTagSelect }
@@ -248,7 +248,7 @@ export function DefaultStylesTabEmbedded( { onRequestClose, onExposeCloseAttempt
 										disabled={ ! isDirty }
 										loading={ isSaving }
 									>
-										{ __( 'Save changes', 'elementor' ) }
+										{ __( 'Save changes', 'refraction' ) }
 									</Button>
 								</Box>
 							) : null }
@@ -259,24 +259,24 @@ export function DefaultStylesTabEmbedded( { onRequestClose, onExposeCloseAttempt
 				{ canEdit && isSaveChangesDialogOpen && (
 					<SaveChangesDialog>
 						<SaveChangesDialog.Title onClose={ closeSaveChangesDialog }>
-							{ __( 'You have unsaved changes', 'elementor' ) }
+							{ __( 'You have unsaved changes', 'refraction' ) }
 						</SaveChangesDialog.Title>
 						<SaveChangesDialog.Content>
 							<SaveChangesDialog.ContentText>
-								{ __( 'You have unsaved changes in Default Styles.', 'elementor' ) }
+								{ __( 'You have unsaved changes in Default Styles.', 'refraction' ) }
 							</SaveChangesDialog.ContentText>
 							<SaveChangesDialog.ContentText>
-								{ __( 'To avoid losing your updates, save your changes before leaving.', 'elementor' ) }
+								{ __( 'To avoid losing your updates, save your changes before leaving.', 'refraction' ) }
 							</SaveChangesDialog.ContentText>
 						</SaveChangesDialog.Content>
 						<SaveChangesDialog.Actions
 							actions={ {
 								discard: {
-									label: __( 'Discard', 'elementor' ),
+									label: __( 'Discard', 'refraction' ),
 									action: resetAndClosePanel,
 								},
 								confirm: {
-									label: __( 'Save & Continue', 'elementor' ),
+									label: __( 'Save & Continue', 'refraction' ),
 									action: handleSaveAndContinue,
 								},
 							} }

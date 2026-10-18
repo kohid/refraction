@@ -13,7 +13,7 @@ const EDITOR_MIN_ROWS = 20;
 
 const getErrorMessage = ( reason ) => ( 'string' === typeof reason && reason )
 	? reason
-	: __( 'Something went wrong. Please try again.', 'elementor' );
+	: __( 'Something went wrong. Please try again.', 'refraction' );
 
 export const LlmsPreviewDialog = ( { content, isEditing, onClose, onSave } ) => {
 	const [ draft, setDraft ] = useState( content );
@@ -37,10 +37,10 @@ export const LlmsPreviewDialog = ( { content, isEditing, onClose, onSave } ) => 
 	const actions = isEditing ? (
 		<>
 			<Button color="secondary" onClick={ onClose }>
-				{ __( 'Cancel', 'elementor' ) }
+				{ __( 'Cancel', 'refraction' ) }
 			</Button>
 			<Button variant="contained" onClick={ handleSave } disabled={ isSaveDisabled }>
-				{ __( 'Save', 'elementor' ) }
+				{ __( 'Save', 'refraction' ) }
 			</Button>
 		</>
 	) : null;

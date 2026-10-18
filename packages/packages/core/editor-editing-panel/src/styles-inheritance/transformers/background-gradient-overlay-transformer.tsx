@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTransformer } from '@elementor/editor-canvas';
+import { createTransformer } from '@refraction/editor-canvas';
 import { Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -31,10 +31,10 @@ const ItemIconGradient = ( { value }: { value: Gradient } ) => {
 
 const ItemLabelGradient = ( { value }: { value: Gradient } ) => {
 	if ( value.type === 'linear' ) {
-		return <span>{ __( 'Linear gradient', 'elementor' ) }</span>;
+		return <span>{ __( 'Linear gradient', 'refraction' ) }</span>;
 	}
 
-	return <span>{ __( 'Radial gradient', 'elementor' ) }</span>;
+	return <span>{ __( 'Radial gradient', 'refraction' ) }</span>;
 };
 
 const getGradientValue = ( gradient: Gradient ) => {

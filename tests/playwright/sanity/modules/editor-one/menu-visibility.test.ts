@@ -41,15 +41,15 @@ test.describe( 'Editor One Menu Visibility', () => {
 		await context.close();
 	} );
 
-	test( 'Admin user: Elementor menu is visible with correct submenu items', async ( { page, apiRequests }, testInfo ) => {
+	test( 'Admin user: Refraction menu is visible with correct submenu items', async ( { page, apiRequests }, testInfo ) => {
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 
 		await wpAdmin.openWordPressDashboard();
 
-		const elementorMenu = page.locator( '#toplevel_page_elementor-home' );
-		await expect( elementorMenu ).toBeVisible();
+		const refractionMenu = page.locator( '#toplevel_page_refraction-home' );
+		await expect( refractionMenu ).toBeVisible();
 
-		await page.goto( '/wp-admin/admin.php?page=elementor' );
+		await page.goto( '/wp-admin/admin.php?page=refraction' );
 
 		const sidebar = page.locator( '#editor-one-sidebar-navigation' );
 		await expect( sidebar ).toBeVisible();
@@ -62,7 +62,7 @@ test.describe( 'Editor One Menu Visibility', () => {
 		await expect( sidebar.getByRole( 'button', { name: 'Templates' } ).first() ).toBeVisible();
 	} );
 
-	test( 'Editor user: Elementor menu is visible with correct submenu items', async ( { browser, apiRequests }, testInfo ) => {
+	test( 'Editor user: Refraction menu is visible with correct submenu items', async ( { browser, apiRequests }, testInfo ) => {
 		const editorContext = await browser.newContext( { storageState: undefined } );
 		const editorPage = await editorContext.newPage();
 		const wpAdmin = new WpAdminPage( editorPage, testInfo, apiRequests );
@@ -70,12 +70,12 @@ test.describe( 'Editor One Menu Visibility', () => {
 		await wpAdmin.customLogin( editorUser.username, editorUser.password );
 		await wpAdmin.openWordPressDashboard();
 
-		const elementorMenu = editorPage.locator( '#toplevel_page_elementor-home' );
-		await expect( elementorMenu ).toBeVisible();
+		const refractionMenu = editorPage.locator( '#toplevel_page_refraction-home' );
+		await expect( refractionMenu ).toBeVisible();
 
-		await elementorMenu.click();
+		await refractionMenu.click();
 
-		await editorPage.waitForURL( /edit\.php\?post_type=elementor_library/ );
+		await editorPage.waitForURL( /edit\.php\?post_type=refraction_library/ );
 
 		const sidebar = editorPage.locator( '#editor-one-sidebar-navigation' );
 		await expect( sidebar ).toBeVisible();
@@ -105,7 +105,7 @@ test.describe( 'Editor One Menu Visibility', () => {
 		await editorContext.close();
 	} );
 
-	test( 'Contributor user: Elementor menu is visible with correct submenu items', async ( { browser, apiRequests }, testInfo ) => {
+	test( 'Contributor user: Refraction menu is visible with correct submenu items', async ( { browser, apiRequests }, testInfo ) => {
 		const contributorContext = await browser.newContext( { storageState: undefined } );
 		const contributorPage = await contributorContext.newPage();
 		const wpAdmin = new WpAdminPage( contributorPage, testInfo, apiRequests );
@@ -115,12 +115,12 @@ test.describe( 'Editor One Menu Visibility', () => {
 		await wpAdmin.customLogin( contributorUser.username, contributorUser.password );
 		await wpAdmin.openWordPressDashboard();
 
-		const elementorMenu = contributorPage.locator( '#toplevel_page_elementor-home' );
-		await expect( elementorMenu ).toBeVisible();
+		const refractionMenu = contributorPage.locator( '#toplevel_page_refraction-home' );
+		await expect( refractionMenu ).toBeVisible();
 
-		await elementorMenu.click();
+		await refractionMenu.click();
 
-		await contributorPage.waitForURL( /edit\.php\?post_type=elementor_library/ );
+		await contributorPage.waitForURL( /edit\.php\?post_type=refraction_library/ );
 
 		const sidebar = contributorPage.locator( '#editor-one-sidebar-navigation' );
 		await expect( sidebar ).toBeVisible();

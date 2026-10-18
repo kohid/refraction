@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\NestedAccordion;
+namespace Refraction\Modules\NestedAccordion;
 
-use Elementor\Plugin;
-use Elementor\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,19 +22,19 @@ class Module extends BaseModule {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/frontend/after_register_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_styles' ] );
 
-		add_action( 'elementor/editor/before_enqueue_scripts', function () {
+		add_action( 'refraction/editor/before_enqueue_scripts', function () {
 			wp_enqueue_script( $this->get_name(), $this->get_js_assets_url( $this->get_name() ), [
 				'nested-elements',
-			], ELEMENTOR_VERSION, true );
+			], REFRACTION_VERSION, true );
 		} );
 	}
 
 	/**
 	 * Register styles.
 	 *
-	 * At build time, Elementor compiles `/modules/nested-accordion/assets/scss/frontend.scss`
+	 * At build time, Refraction compiles `/modules/nested-accordion/assets/scss/frontend.scss`
 	 * to `/assets/css/widget-nested-accordion.min.css`.
 	 *
 	 * @return void
@@ -43,8 +43,8 @@ class Module extends BaseModule {
 		wp_register_style(
 			'widget-nested-accordion',
 			$this->get_css_assets_url( 'widget-nested-accordion', null, true, true ),
-			[ 'elementor-frontend' ],
-			ELEMENTOR_VERSION
+			[ 'refraction-frontend' ],
+			REFRACTION_VERSION
 		);
 	}
 }

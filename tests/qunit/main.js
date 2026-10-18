@@ -1,5 +1,5 @@
-import EditorBootstrap from 'elementor/tests/qunit/editor/bootstrap';
+import EditorBootstrap from 'refraction/tests/qunit/editor/bootstrap';
 
-if ( ! window.elementor ) {
+if ( ! window.refraction ) {
 	new EditorBootstrap();
 }

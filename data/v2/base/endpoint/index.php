@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Data\V2\Base\Endpoint;
+namespace Refraction\Data\V2\Base\Endpoint;
 
-use Elementor\Data\V2\Base\Endpoint;
+use Refraction\Data\V2\Base\Endpoint;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {

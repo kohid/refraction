@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
-use Elementor\Core\Utils\Exceptions;
+use Refraction\Core\Utils\Exceptions;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Llms_Manual_Content {
 
-	const OPTION = 'elementor_agent_ready_llms_txt_content';
+	const OPTION = 'refraction_agent_ready_llms_txt_content';
 
 	private Content_Generator $generator;
 
@@ -42,11 +42,11 @@ class Llms_Manual_Content {
 		$clean = $this->generator->prepare_override_text( $content );
 
 		if ( '' === trim( $clean ) ) {
-			throw new \InvalidArgumentException( esc_html__( 'The llms.txt content cannot be empty.', 'elementor' ), Exceptions::BAD_REQUEST ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new \InvalidArgumentException( esc_html__( 'The llms.txt content cannot be empty.', 'refraction' ), Exceptions::BAD_REQUEST ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		if ( strlen( $clean ) > Content_Generator::LLMS_FULL_HARD_CAP ) {
-			throw new \InvalidArgumentException( esc_html__( 'The llms.txt content is too large.', 'elementor' ), Exceptions::BAD_REQUEST ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new \InvalidArgumentException( esc_html__( 'The llms.txt content is too large.', 'refraction' ), Exceptions::BAD_REQUEST ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		update_option( self::OPTION, [

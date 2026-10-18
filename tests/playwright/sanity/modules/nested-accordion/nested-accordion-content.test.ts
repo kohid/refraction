@@ -11,7 +11,7 @@ test.describe( 'Nested Accordion Content Tests @nested-accordion', () => {
 			frame = editor.getPreviewFrame(),
 			nestedAccordionWidgetId = '48f02ad';
 
-		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-title-and-icons', '.elementor-widget-n-accordion' );
+		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-title-and-icons', '.refraction-widget-n-accordion' );
 
 		await editor.closeNavigatorIfOpen();
 
@@ -75,7 +75,7 @@ test.describe( 'Nested Accordion Content Tests @nested-accordion', () => {
 
 		await test.step( 'Check that an SVG title icon is displayed', async () => {
 			await frame.locator( '.e-n-accordion-item-title' ).first().click();
-			await page.locator( '.elementor-control-icons--inline__svg' ).first().click();
+			await page.locator( '.refraction-control-icons--inline__svg' ).first().click();
 			const editorTitleIcons = frame.locator( '.e-n-accordion-item-title-icon' );
 
 			await editor.uploadSVG();
@@ -112,7 +112,7 @@ test.describe( 'Nested Accordion Content Tests @nested-accordion', () => {
 
 		await test.step( 'Check that an SVG title icon is displayed', async () => {
 			await frame.locator( '.e-n-accordion-item-title' ).first().click();
-			await page.locator( '.elementor-control-icons--inline__svg' ).first().click();
+			await page.locator( '.refraction-control-icons--inline__svg' ).first().click();
 			await editor.uploadSVG();
 		} );
 
@@ -120,7 +120,7 @@ test.describe( 'Nested Accordion Content Tests @nested-accordion', () => {
 			frame = editor.getPreviewFrame();
 
 			await frame.locator( '.e-n-accordion-item-title' ).first().click();
-			await page.locator( '.elementor-control-inline-icon .elementor-control-icons--inline__none' ).first().click();
+			await page.locator( '.refraction-control-inline-icon .refraction-control-icons--inline__none' ).first().click();
 
 			const editorFirstItem = frame.locator( '.e-n-accordion-item' ).first();
 
@@ -154,7 +154,7 @@ test.describe( 'Nested Accordion Content Tests @nested-accordion', () => {
 			wpAdmin = new WpAdminPage( page, testInfo, apiRequests ),
 			editor = await wpAdmin.openNewPage();
 
-		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-title-and-icons', '.elementor-widget-n-accordion' );
+		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-title-and-icons', '.refraction-widget-n-accordion' );
 
 		await editor.closeNavigatorIfOpen();
 
@@ -321,7 +321,7 @@ test.describe( 'Nested Accordion Content Tests @nested-accordion', () => {
 
 			// Wait for the closing animation to complete
 			await expect.poll( async () => {
-				return await editor.getPreviewFrame().locator( '.e-n-accordion-item:first-child .elementor-add-section' ).isVisible();
+				return await editor.getPreviewFrame().locator( '.e-n-accordion-item:first-child .refraction-add-section' ).isVisible();
 			} ).toBe( false );
 		} );
 
@@ -350,7 +350,7 @@ test.describe( 'Nested Accordion Content Tests @nested-accordion', () => {
 			editor = await wpAdmin.openNewPage(),
 			nestedAccordionID = '14080fa';
 
-		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-three-child-headings', '.elementor-widget-n-accordion' );
+		await editor.loadJsonPageTemplate( __dirname, 'nested-accordion-three-child-headings', '.refraction-widget-n-accordion' );
 
 		await editor.closeNavigatorIfOpen();
 		await editor.selectElement( nestedAccordionID );

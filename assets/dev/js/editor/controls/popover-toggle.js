@@ -1,11 +1,11 @@
-const ControlChooseView = require( 'elementor-controls/choose' );
+const ControlChooseView = require( 'refraction-controls/choose' );
 
 export default class ControlPopoverStarterView extends ControlChooseView {
 	ui() {
 		const ui = ControlChooseView.prototype.ui.apply( this, arguments );
 
-		ui.popoverToggle = '.elementor-control-popover-toggle-toggle';
-		ui.resetInput = '.elementor-control-popover-toggle-reset';
+		ui.popoverToggle = '.refraction-control-popover-toggle-toggle';
+		ui.resetInput = '.refraction-control-popover-toggle-reset';
 
 		return ui;
 	}
@@ -18,11 +18,11 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 	}
 
 	onShow() {
-		const $popover = this.$el.next( '.elementor-controls-popover' );
+		const $popover = this.$el.next( '.refraction-controls-popover' );
 
 		// Attach the current control as a toggle of its popover.
 		if ( $popover.length ) {
-			$popover[ 0 ].dataset.popoverToggle = `elementor-control-default-${ this.model.cid }`;
+			$popover[ 0 ].dataset.popoverToggle = `refraction-control-default-${ this.model.cid }`;
 			$popover.on( 'hide', () => this.onPopoverHide() );
 			$popover.attr( 'data-on-hide', true );
 		}
@@ -58,7 +58,7 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 			this.triggerMethod( 'unlink:global:default' );
 		}
 
-		const $popover = this.$el.next( '.elementor-controls-popover' );
+		const $popover = this.$el.next( '.refraction-controls-popover' );
 
 		if ( ! $popover.attr( 'data-on-hide' ) ) {
 			$popover.attr( 'data-on-hide', true );
@@ -74,7 +74,7 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 	}
 
 	activate() {
-		this.$el.next( '.elementor-controls-popover' ).show();
+		this.$el.next( '.refraction-controls-popover' ).show();
 	}
 
 	getGlobalCommand() {
@@ -95,7 +95,7 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 			}
 
 			if ( 'font_family' === property ) {
-				elementor.helpers.enqueueFont( value, 'editor' );
+				refraction.helpers.enqueueFont( value, 'editor' );
 			}
 
 			if ( 'font_size' === property ) {
@@ -135,7 +135,7 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 		return {
 			commandName: this.getGlobalCommand(),
 			key: this.model.get( 'name' ),
-			title: __( 'New Typography Setting', 'elementor' ),
+			title: __( 'New Typography Setting', 'refraction' ),
 			controlType: 'typography',
 			route: 'panel/global/global-typography',
 		};
@@ -145,7 +145,7 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 		const globalData = this.getGlobalMeta(),
 			$message = jQuery( '<div>', { class: 'e-global__confirm-message' } ),
 			$messageText = jQuery( '<div>' )
-				.html( __( 'Are you sure you want to create a new Global Font setting?', 'elementor' ) ),
+				.html( __( 'Are you sure you want to create a new Global Font setting?', 'refraction' ) ),
 			$inputWrapper = jQuery( '<div>', { class: 'e-global__confirm-input-wrapper' } ),
 			$input = jQuery( '<input>', { type: 'text', name: 'global-name', placeholder: globalData.title } )
 				.val( globalData.title );
@@ -190,7 +190,7 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 
 		if ( v4Typographies.length ) {
 			$globalPreviewItemsContainer.append(
-				this.createHeaderItemMarkup( __( 'Atomic Classes', 'elementor' ) ),
+				this.createHeaderItemMarkup( __( 'Atomic Classes', 'refraction' ) ),
 			);
 
 			v4Typographies.forEach( ( typography ) => {
@@ -199,7 +199,7 @@ export default class ControlPopoverStarterView extends ControlChooseView {
 
 			if ( v3Typographies.length ) {
 				$globalPreviewItemsContainer.append( this.createDividerMarkup() );
-				$globalPreviewItemsContainer.append( this.createHeaderItemMarkup( __( 'Global Fonts', 'elementor' ) ) );
+				$globalPreviewItemsContainer.append( this.createHeaderItemMarkup( __( 'Global Fonts', 'refraction' ) ) );
 			}
 		}
 

@@ -1,10 +1,10 @@
 import { createMockStyleDefinition } from 'test-utils';
-import { getCurrentUser } from '@elementor/editor-current-user';
+import { getCurrentUser } from '@refraction/editor-current-user';
 import {
 	__createStore as createStore,
 	__dispatch as dispatch,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { apiClient } from '../api';
 import { UPDATE_CLASS_CAPABILITY_KEY } from '../capabilities';
@@ -12,7 +12,7 @@ import { saveGlobalClasses } from '../save-global-classes';
 import { slice } from '../store';
 
 jest.mock( '../api' );
-jest.mock( '@elementor/editor-current-user' );
+jest.mock( '@refraction/editor-current-user' );
 
 const classLabelsFor = ( order: string[], items: Record< string, ReturnType< typeof createMockStyleDefinition > > ) =>
 	Object.fromEntries( order.map( ( id ) => [ id, items[ id ]?.label ?? id ] ) );

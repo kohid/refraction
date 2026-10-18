@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react';
-import { getWidgetsCache } from '@elementor/editor-elements';
-import { classesPropTypeUtil, type ClassesPropValue, type PropValue } from '@elementor/editor-props';
-import { getBreakpointsTree } from '@elementor/editor-responsive';
-import { getStylesSchema } from '@elementor/editor-styles';
-import { stylesRepository } from '@elementor/editor-styles-repository';
+import { getWidgetsCache } from '@refraction/editor-elements';
+import { classesPropTypeUtil, type ClassesPropValue, type PropValue } from '@refraction/editor-props';
+import { getBreakpointsTree } from '@refraction/editor-responsive';
+import { getStylesSchema } from '@refraction/editor-styles';
+import { stylesRepository } from '@refraction/editor-styles-repository';
 
 import { useDefaultStyleTagFromPreview } from '../hooks/use-default-style-tag-from-preview';
 import { useStylesRerender } from '../hooks/use-styles-rerender';

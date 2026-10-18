@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { getElementTitle } from '@elementor/editor-elements';
-import { useFloatingPanelZIndex } from '@elementor/editor-floating-panels';
+import { getElementTitle } from '@refraction/editor-elements';
+import { useFloatingPanelZIndex } from '@refraction/editor-floating-panels';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { AUDIT_PANEL_ID } from '../../constants';
@@ -13,12 +13,12 @@ jest.mock( '../../hooks/focus-violation', () => ( {
 	focusViolation: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getElementIcon: jest.fn( () => null ),
 	getElementTitle: jest.fn( () => null ),
 } ) );
 
-jest.mock( '@elementor/editor-floating-panels', () => ( {
+jest.mock( '@refraction/editor-floating-panels', () => ( {
 	useFloatingPanelZIndex: jest.fn( () => 1000 ),
 } ) );
 

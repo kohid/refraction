@@ -55,7 +55,7 @@ test.describe( 'Container handles @container', () => {
 			// Arrange.
 			const parentId = await editor.addElement( { elType: 'container' }, 'document' );
 			await editor.addWidget( { widgetType: 'nested-tabs', container: parentId } );
-			const widgetChild = editor.getPreviewFrame().locator( '.elementor-widget-n-tabs .e-n-tabs-content > .e-con' ).first();
+			const widgetChild = editor.getPreviewFrame().locator( '.refraction-widget-n-tabs .e-n-tabs-content > .e-con' ).first();
 			const childId = await widgetChild.getAttribute( 'data-id' );
 
 			if ( ! childId ) {
@@ -107,7 +107,7 @@ test.describe( 'Container handles @container', () => {
 		const editor = await wpAdmin.openNewPage();
 		const containerId = await editor.addElement( { elType: 'container' }, 'document' );
 
-		await editor.getPreviewFrame().locator( '.elementor-edit-area-active' ).evaluate(
+		await editor.getPreviewFrame().locator( '.refraction-edit-area-active' ).evaluate(
 			( editArea, offset ) => {
 				editArea.style.transform = `translateY(${ offset }px)`;
 			},
@@ -127,7 +127,7 @@ test.describe( 'Container handles @container', () => {
 } );
 
 function getContainerSelector( containerId: string ) {
-	return `.elementor-edit-mode .elementor-element-${ containerId }`;
+	return `.refraction-edit-mode .refraction-element-${ containerId }`;
 }
 
 async function hoverContainer( editor: EditorPage, containerId: string ) {
@@ -136,26 +136,26 @@ async function hoverContainer( editor: EditorPage, containerId: string ) {
 
 async function expectInnerContainerHandle( frame: Frame, containerId: string ) {
 	const container = frame.locator( getContainerSelector( containerId ) );
-	const settings = container.locator( '> .elementor-element-overlay > .elementor-editor-element-settings' );
+	const settings = container.locator( '> .refraction-element-overlay > .refraction-editor-element-settings' );
 
 	await expect( container ).toHaveClass( /e-child/ );
-	await expect( settings.locator( '> .elementor-editor-element-edit' ) ).toHaveCSS( 'background-color', INNER_CONTAINER_HANDLE_BACKGROUND );
-	await expect( settings.locator( '> .elementor-editor-element-add' ) ).toBeHidden();
+	await expect( settings.locator( '> .refraction-editor-element-edit' ) ).toHaveCSS( 'background-color', INNER_CONTAINER_HANDLE_BACKGROUND );
+	await expect( settings.locator( '> .refraction-editor-element-add' ) ).toBeHidden();
 }
 
 async function expectParentContainerHandle( frame: Frame, containerId: string ) {
 	const container = frame.locator( getContainerSelector( containerId ) );
-	const settings = container.locator( '> .elementor-element-overlay > .elementor-editor-element-settings' );
+	const settings = container.locator( '> .refraction-element-overlay > .refraction-editor-element-settings' );
 
 	await expect( container ).toHaveClass( /e-parent/ );
 	await expect( settings ).toHaveCSS( 'background-color', PARENT_CONTAINER_HANDLE_BACKGROUND );
-	await expect( settings.locator( '> .elementor-editor-element-edit' ) ).not.toHaveCSS( 'background-color', INNER_CONTAINER_HANDLE_BACKGROUND );
-	await expect( settings.locator( '> .elementor-editor-element-add' ) ).toBeVisible();
+	await expect( settings.locator( '> .refraction-editor-element-edit' ) ).not.toHaveCSS( 'background-color', INNER_CONTAINER_HANDLE_BACKGROUND );
+	await expect( settings.locator( '> .refraction-editor-element-add' ) ).toBeVisible();
 }
 
 async function expectParentContainerOutline( frame: Frame, containerId: string ) {
 	const outline = await frame.locator( getContainerSelector( containerId ) ).evaluate( ( element ) => {
-		const overlay = element.querySelector( ':scope > .elementor-element-overlay' );
+		const overlay = element.querySelector( ':scope > .refraction-element-overlay' );
 
 		if ( ! overlay ) {
 			return null;
@@ -181,8 +181,8 @@ async function expectContainerHandleMetrics(
 	{ minViewportTop, maxEditAreaOffset }: { minViewportTop: number; maxEditAreaOffset: number },
 ) {
 	const metrics = await frame.evaluate( ( id ) => {
-		const container = document.querySelector( `.elementor-element-${ id }` );
-		const editArea = container?.closest( '.elementor-edit-area-active' );
+		const container = document.querySelector( `.refraction-element-${ id }` );
+		const editArea = container?.closest( '.refraction-edit-area-active' );
 
 		if ( ! container || ! editArea ) {
 			throw new Error( 'Container or active edit area was not found for handle metrics.' );
@@ -200,7 +200,7 @@ async function expectContainerHandleMetrics(
 
 async function expectContainerHandlesInside( frame: Frame, containerId: string ) {
 	const container = frame.locator( getContainerSelector( containerId ) );
-	const settings = container.locator( '> .elementor-element-overlay > .elementor-editor-element-settings' );
+	const settings = container.locator( '> .refraction-element-overlay > .refraction-editor-element-settings' );
 
 	await expect( container ).toHaveClass( /e-handles-inside/ );
 	await expect( settings ).toBeVisible();
@@ -214,25 +214,25 @@ async function expectContainerHandlesInside( frame: Frame, containerId: string )
 
 async function wrapContainerInPostContentDocument( editor: EditorPage, containerId: string ) {
 	await editor.getPreviewFrame().evaluate( ( id ) => {
-		const container = document.querySelector( `.elementor-element-${ id }` );
+		const container = document.querySelector( `.refraction-element-${ id }` );
 
 		if ( ! container?.parentElement ) {
 			throw new Error( 'Container was not found for nested document simulation.' );
 		}
 
 		const postContentWidget = document.createElement( 'div' );
-		postContentWidget.className = 'elementor-widget elementor-widget-theme-post-content';
+		postContentWidget.className = 'refraction-widget refraction-widget-theme-post-content';
 
 		const boxedContainer = document.createElement( 'div' );
-		boxedContainer.className = 'e-con e-con-boxed elementor-element';
+		boxedContainer.className = 'e-con e-con-boxed refraction-element';
 
 		const boxedInner = document.createElement( 'div' );
 		boxedInner.className = 'e-con-inner';
 
 		const nestedDocument = document.createElement( 'div' );
-		nestedDocument.className = 'elementor elementor-edit-mode elementor-edit-area elementor-edit-area-active';
-		nestedDocument.dataset.elementorId = '999';
-		nestedDocument.dataset.elementorType = 'wp-post';
+		nestedDocument.className = 'refraction refraction-edit-mode refraction-edit-area refraction-edit-area-active';
+		nestedDocument.dataset.refractionId = '999';
+		nestedDocument.dataset.refractionType = 'wp-post';
 
 		container.parentElement.insertBefore( postContentWidget, container );
 		postContentWidget.appendChild( boxedContainer );
@@ -244,43 +244,43 @@ async function wrapContainerInPostContentDocument( editor: EditorPage, container
 
 async function wrapContainerInEmbeddedDocumentWithTopHandle( editor: EditorPage, containerId: string ) {
 	await editor.getPreviewFrame().evaluate( ( id ) => {
-		const container = document.querySelector( `.elementor-element-${ id }` );
+		const container = document.querySelector( `.refraction-element-${ id }` );
 
 		if ( ! container?.parentElement ) {
 			throw new Error( 'Container was not found for embedded document simulation.' );
 		}
 
-		const hostDocument = container.closest( '.elementor-edit-area-active' );
+		const hostDocument = container.closest( '.refraction-edit-area-active' );
 
 		if ( ! hostDocument ) {
 			throw new Error( 'Active host document was not found for embedded document simulation.' );
 		}
 
-		hostDocument.classList.remove( 'elementor-edit-area-active' );
-		hostDocument.classList.add( 'elementor-embedded-editor' );
+		hostDocument.classList.remove( 'refraction-edit-area-active' );
+		hostDocument.classList.add( 'refraction-embedded-editor' );
 
 		const parentWidget = document.createElement( 'div' );
-		parentWidget.className = 'elementor-widget elementor-widget-theme-post-content';
+		parentWidget.className = 'refraction-widget refraction-widget-theme-post-content';
 		parentWidget.style.marginTop = '200px';
 
 		const parentOverlay = document.createElement( 'div' );
-		parentOverlay.className = 'elementor-element-overlay';
+		parentOverlay.className = 'refraction-element-overlay';
 
 		const parentSettings = document.createElement( 'ul' );
-		parentSettings.className = 'elementor-editor-element-settings elementor-editor-widget-settings elementor-editor-element-overlay-settings';
+		parentSettings.className = 'refraction-editor-element-settings refraction-editor-widget-settings refraction-editor-element-overlay-settings';
 		parentSettings.style.position = 'absolute';
 		parentSettings.style.top = '0';
 		parentSettings.style.zIndex = '9999';
 
 		const parentHandle = document.createElement( 'li' );
-		parentHandle.className = 'elementor-editor-element-setting elementor-editor-element-edit';
+		parentHandle.className = 'refraction-editor-element-setting refraction-editor-element-edit';
 		parentSettings.appendChild( parentHandle );
 		parentOverlay.appendChild( parentSettings );
 
 		const nestedDocument = document.createElement( 'div' );
-		nestedDocument.className = 'elementor elementor-edit-mode elementor-edit-area elementor-edit-area-active';
-		nestedDocument.dataset.elementorId = '999';
-		nestedDocument.dataset.elementorType = 'wp-post';
+		nestedDocument.className = 'refraction refraction-edit-mode refraction-edit-area refraction-edit-area-active';
+		nestedDocument.dataset.refractionId = '999';
+		nestedDocument.dataset.refractionType = 'wp-post';
 
 		container.parentElement.insertBefore( parentWidget, container );
 		parentWidget.appendChild( parentOverlay );

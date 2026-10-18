@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Settings\General;
+namespace Refraction\Core\Settings\General;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * This file is deprecated, use Plugin::$instance->kits_manager->get_active_kit_for_frontend() instead.
- * it changed to support call like this: Manager::get_settings_managers( 'general' )->get_model()->get_settings( 'elementor_default_generic_fonts' )
+ * it changed to support call like this: Manager::get_settings_managers( 'general' )->get_model()->get_settings( 'refraction_default_generic_fonts' )
  *
  * @deprecated 3.0.0 Use `Plugin::$instance->kits_manager->get_active_kit_for_frontend()` instead.
  */
@@ -56,7 +56,7 @@ class Model {
 	public function get_settings( $setting = null ) {
 
 		if ( $setting ) {
-			$setting = str_replace( 'elementor_', '', $setting );
+			$setting = str_replace( 'refraction_', '', $setting );
 		}
 
 		return Plugin::$instance->kits_manager->get_current_settings( $setting );

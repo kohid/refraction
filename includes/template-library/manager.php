@@ -1,22 +1,22 @@
 <?php
-namespace Elementor\TemplateLibrary;
+namespace Refraction\TemplateLibrary;
 
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Includes\TemplateLibrary\Data\Controller;
-use Elementor\TemplateLibrary\Classes\Import_Images;
-use Elementor\Plugin;
-use Elementor\User;
-use Elementor\Utils;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Includes\TemplateLibrary\Data\Controller;
+use Refraction\TemplateLibrary\Classes\Import_Images;
+use Refraction\Plugin;
+use Refraction\User;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor template library manager.
+ * Refraction template library manager.
  *
- * Elementor template library manager handler class is responsible for
+ * Refraction template library manager handler class is responsible for
  * initializing the template library.
  *
  * @since 1.0.0
@@ -71,8 +71,8 @@ class Manager {
 	 * @access public
 	 */
 	public function add_actions() {
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
-		add_action( 'wp_ajax_elementor_library_direct_actions', [ $this, 'handle_direct_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'wp_ajax_refraction_library_direct_actions', [ $this, 'handle_direct_actions' ] );
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Manager {
 		 * @since 3.32.2
 		 * @param-out $full_library_data - 'templates' and 'config' data ('config' holds the list of categories).
 		 */
-		return apply_filters( 'elementor/library/full-data', $full_library_data );
+		return apply_filters( 'refraction/library/full-data', $full_library_data );
 	}
 
 	/**
@@ -494,7 +494,7 @@ class Manager {
 		if ( method_exists( $source, 'is_allowed_to_read_template' ) && ! $source->is_allowed_to_read_template( $args ) ) {
 			return new \WP_Error(
 				'template_error',
-				esc_html__( 'You do not have permission to access this template.', 'elementor' )
+				esc_html__( 'You do not have permission to access this template.', 'refraction' )
 			);
 		}
 
@@ -502,11 +502,11 @@ class Manager {
 			Plugin::$instance->editor->set_edit_mode( $args['edit_mode'] );
 		}
 
-		do_action( 'elementor/template-library/before_get_source_data', $args, $source );
+		do_action( 'refraction/template-library/before_get_source_data', $args, $source );
 
 		$data = $source->get_data( $args );
 
-		do_action( 'elementor/template-library/after_get_source_data', $args, $source );
+		do_action( 'refraction/template-library/after_get_source_data', $args, $source );
 
 		return $data;
 	}
@@ -543,7 +543,7 @@ class Manager {
 	/**
 	 * Export template.
 	 *
-	 * Export template to a file after ensuring it is a valid Elementor template
+	 * Export template to a file after ensuring it is a valid Refraction template
 	 * and checking user permissions for private posts.
 	 *
 	 * @since 1.0.0
@@ -598,14 +598,14 @@ class Manager {
 		}
 
 		// If the template is a JSON file, allow uploading it.
-		add_filter( 'elementor/files/allow-file-type/json', [ $this, 'enable_json_template_upload' ] );
-		add_filter( 'elementor/files/allow_unfiltered_upload', [ $this, 'enable_json_template_upload' ] );
+		add_filter( 'refraction/files/allow-file-type/json', [ $this, 'enable_json_template_upload' ] );
+		add_filter( 'refraction/files/allow_unfiltered_upload', [ $this, 'enable_json_template_upload' ] );
 
 		// Imported templates can be either JSON files, or Zip files containing multiple JSON files
-		$upload_result = Plugin::$instance->uploads_manager->handle_elementor_upload( $data, [ 'zip', 'json' ] );
+		$upload_result = Plugin::$instance->uploads_manager->handle_refraction_upload( $data, [ 'zip', 'json' ] );
 
-		remove_filter( 'elementor/files/allow-file-type/json', [ $this, 'enable_json_template_upload' ] );
-		remove_filter( 'elementor/files/allow_unfiltered_upload', [ $this, 'enable_json_template_upload' ] );
+		remove_filter( 'refraction/files/allow-file-type/json', [ $this, 'enable_json_template_upload' ] );
+		remove_filter( 'refraction/files/allow_unfiltered_upload', [ $this, 'enable_json_template_upload' ] );
 
 		if ( is_wp_error( $upload_result ) ) {
 			return $upload_result;
@@ -624,7 +624,7 @@ class Manager {
 	/**
 	 * Enable JSON Template Upload
 	 *
-	 * Runs on the 'elementor/files/allow-file-type/json' Uploads Manager filter.
+	 * Runs on the 'refraction/files/allow-file-type/json' Uploads Manager filter.
 	 *
 	 * @since 3.5.0
 	 * @access public
@@ -978,7 +978,7 @@ class Manager {
 	 * @access private
 	 */
 	private function handle_direct_action_error( $message ) {
-		_default_wp_die_handler( $message, 'Elementor Library' );
+		_default_wp_die_handler( $message, 'Refraction Library' );
 	}
 
 	/**

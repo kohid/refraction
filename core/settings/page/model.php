@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Core\Settings\Page;
+namespace Refraction\Core\Settings\Page;
 
-use Elementor\Core\Settings\Base\CSS_Model;
-use Elementor\Plugin;
+use Refraction\Core\Settings\Base\CSS_Model;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor page settings model.
+ * Refraction page settings model.
  *
- * Elementor page settings model handler class is responsible for registering
- * and managing Elementor page settings models.
+ * Refraction page settings model handler class is responsible for registering
+ * and managing Refraction page settings models.
  *
  * @since 1.6.0
  */
@@ -38,7 +38,7 @@ class Model extends CSS_Model {
 	/**
 	 * Model constructor.
 	 *
-	 * Initializing Elementor page settings model.
+	 * Initializing Refraction page settings model.
 	 *
 	 * @since 1.6.0
 	 * @access public
@@ -124,7 +124,7 @@ class Model extends CSS_Model {
 		return [
 			'title' => sprintf(
 				/* translators: %s: Document title. */
-				esc_html__( '%s Settings', 'elementor' ),
+				esc_html__( '%s Settings', 'refraction' ),
 				$document::get_title()
 			),
 		];
@@ -134,7 +134,7 @@ class Model extends CSS_Model {
 	 * On export post meta.
 	 *
 	 * When exporting data, check if the post is not using page template and
-	 * exclude it from the exported Elementor data.
+	 * exclude it from the exported Refraction data.
 	 *
 	 * @since 1.6.0
 	 * @access public
@@ -146,12 +146,12 @@ class Model extends CSS_Model {
 	public function on_export( $element_data ) {
 		if ( ! empty( $element_data['settings']['template'] ) ) {
 			/**
-			 * @var \Elementor\Modules\PageTemplates\Module $page_templates_module
+			 * @var \Refraction\Modules\PageTemplates\Module $page_templates_module
 			 */
 			$page_templates_module = Plugin::$instance->modules_manager->get_modules( 'page-templates' );
-			$is_elementor_template = (bool) $page_templates_module->get_template_path( $element_data['settings']['template'] );
+			$is_refraction_template = (bool) $page_templates_module->get_template_path( $element_data['settings']['template'] );
 
-			if ( ! $is_elementor_template ) {
+			if ( ! $is_refraction_template ) {
 				unset( $element_data['settings']['template'] );
 			}
 		}

@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@elementor/query';
+import { useMutation, useQuery, useQueryClient } from '@refraction/query';
 
 import { apiClient } from '../api';
 
-export const UNFILTERED_FILES_UPLOAD_KEY = 'elementor_unfiltered_files_upload';
+export const UNFILTERED_FILES_UPLOAD_KEY = 'refraction_unfiltered_files_upload';
 
 const unfilteredFilesQueryKey = {
 	queryKey: [ UNFILTERED_FILES_UPLOAD_KEY ],
@@ -14,7 +14,7 @@ export const useUnfilteredFilesUpload = () =>
 	useQuery( {
 		...unfilteredFilesQueryKey,
 		queryFn: (): Promise< boolean > =>
-			apiClient.getElementorSetting< Value >( UNFILTERED_FILES_UPLOAD_KEY ).then( ( res ) => {
+			apiClient.getRefractionSetting< Value >( UNFILTERED_FILES_UPLOAD_KEY ).then( ( res ) => {
 				return formatResponse( res );
 			} ),
 		staleTime: Infinity,
@@ -25,7 +25,7 @@ export function useUpdateUnfilteredFilesUpload() {
 
 	const mutate = useMutation( {
 		mutationFn: ( { allowUnfilteredFilesUpload }: { allowUnfilteredFilesUpload: boolean } ) =>
-			apiClient.updateElementorSetting< Value >(
+			apiClient.updateRefractionSetting< Value >(
 				UNFILTERED_FILES_UPLOAD_KEY,
 				allowUnfilteredFilesUpload ? '1' : '0'
 			),

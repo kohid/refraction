@@ -6,7 +6,7 @@ export function extractNestedItemTitle( container, index ) {
 }
 
 export function isWidgetSupportNesting( widgetType ) {
-	const widgetConfig = elementor.widgetsCache[ widgetType ];
+	const widgetConfig = refraction.widgetsCache[ widgetType ];
 
 	if ( ! widgetConfig ) {
 		return false;
@@ -16,7 +16,7 @@ export function isWidgetSupportNesting( widgetType ) {
 }
 
 export function isWidgetSupportAtomicRepeaters( widgetType ) {
-	const widgetConfig = elementor.widgetsCache[ widgetType ];
+	const widgetConfig = refraction.widgetsCache[ widgetType ];
 
 	if ( ! widgetConfig ) {
 		return false;
@@ -26,7 +26,7 @@ export function isWidgetSupportAtomicRepeaters( widgetType ) {
 }
 
 export function widgetNodes( widgetType ) {
-	const widgetConfig = elementor.widgetsCache[ widgetType ];
+	const widgetConfig = refraction.widgetsCache[ widgetType ];
 
 	if ( ! widgetConfig ) {
 		return false;

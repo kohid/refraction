@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMemo, useRef } from 'react';
-import { keyValuePropTypeUtil, type KeyValuePropValue, type StringPropValue } from '@elementor/editor-props';
-import { PromotionAlert, PromotionChip } from '@elementor/editor-ui';
+import { keyValuePropTypeUtil, type KeyValuePropValue, type StringPropValue } from '@refraction/editor-props';
+import { PromotionAlert, PromotionChip } from '@refraction/editor-ui';
 import { ChevronDownIcon, VariationsIcon } from '@elementor/icons';
 import { bindPopover, bindTrigger, Box, Popover, UnstableTag, usePopupState } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -91,7 +91,7 @@ export const TransitionSelector = ( {
 		return [
 			first,
 			{
-				label: __( 'Recently Used', 'elementor' ),
+				label: __( 'Recently Used', 'refraction' ),
 				items: recentItems,
 			},
 			...rest,
@@ -147,7 +147,7 @@ export const TransitionSelector = ( {
 					onItemChange={ handleTransitionPropertyChange }
 					onClose={ popoverState.close }
 					sectionWidth={ 268 }
-					title={ __( 'Transition Property', 'elementor' ) }
+					title={ __( 'Transition Property', 'refraction' ) }
 					icon={ VariationsIcon as React.ElementType< { fontSize: string } > }
 					disabledItems={ includeCurrentValueInOptions( value, disabledItems ) }
 					categoryItemContentTemplate={ ( item ) => (
@@ -168,7 +168,7 @@ export const TransitionSelector = ( {
 							<PromotionAlert
 								message={ __(
 									'Upgrade to customize transition properties and control effects.',
-									'elementor'
+									'refraction'
 								) }
 								upgradeUrl={ PRO_UPGRADE_URL }
 								onCtaClick={ () =>

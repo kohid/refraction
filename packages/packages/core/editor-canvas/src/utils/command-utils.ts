@@ -1,5 +1,5 @@
-import { getElementLabel, getWidgetsCache, type V1Element, type V1ElementModelProps } from '@elementor/editor-elements';
-import { CLASSES_PROP_KEY, type PropsSchema } from '@elementor/editor-props';
+import { getElementLabel, getWidgetsCache, type V1Element, type V1ElementModelProps } from '@refraction/editor-elements';
+import { CLASSES_PROP_KEY, type PropsSchema } from '@refraction/editor-props';
 import { __ } from '@wordpress/i18n';
 
 export type ContainerArgs = {
@@ -49,7 +49,7 @@ type ClipboardElements = V1ElementModelProps[];
 
 export function getClipboardElements( storageKey: string = 'clipboard' ): ClipboardElements | undefined {
 	try {
-		const storedData = JSON.parse( localStorage.getItem( 'elementor' ) ?? '{}' );
+		const storedData = JSON.parse( localStorage.getItem( 'refraction' ) ?? '{}' );
 
 		return storedData[ storageKey ]?.elements as ClipboardElements;
 	} catch {
@@ -58,5 +58,5 @@ export function getClipboardElements( storageKey: string = 'clipboard' ): Clipbo
 }
 
 export function getTitleForContainers( containers: V1Element[] ): string {
-	return containers.length > 1 ? __( 'Elements', 'elementor' ) : getElementLabel( containers[ 0 ].id );
+	return containers.length > 1 ? __( 'Elements', 'refraction' ) : getElementLabel( containers[ 0 ].id );
 }

@@ -1,5 +1,5 @@
-import { generateElementId, type V1ElementData } from '@elementor/editor-elements';
-import { type PropValue } from '@elementor/editor-props';
+import { generateElementId, type V1ElementData } from '@refraction/editor-elements';
+import { type PropValue } from '@refraction/editor-props';
 
 import {
 	type ComponentInstanceOverrideProp,

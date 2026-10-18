@@ -1,10 +1,10 @@
-import { enqueueFont } from '@elementor/editor-v1-adapters';
+import { enqueueFont } from '@refraction/editor-v1-adapters';
 
 import { createStyleVariablesRepository } from '../create-style-variables-repository';
 import { colorVariablePropTypeUtil } from '../prop-types/color-variable-prop-type';
 import { fontVariablePropTypeUtil } from '../prop-types/font-variable-prop-type';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 describe( 'createStyleVariablesRepository', () => {
 	jest.mocked( enqueueFont ).mockImplementation( () => {} );

@@ -16,9 +16,9 @@ export const Paste = () => {
 				ElementsHelper.paste( eColumn );
 
 				// Check.
-				assert.equal( elementor.elements.at( 0 ).get( 'elements' ).at( 0 ).get( 'elements' ).length, 2,
+				assert.equal( refraction.elements.at( 0 ).get( 'elements' ).at( 0 ).get( 'elements' ).length, 2,
 					'Pasted element were created.' );
-				assert.equal( elementor.saver.isEditorChanged(), true,
+				assert.equal( refraction.saver.isEditorChanged(), true,
 					'Command applied the saver editor is changed.' );
 			} );
 		} );

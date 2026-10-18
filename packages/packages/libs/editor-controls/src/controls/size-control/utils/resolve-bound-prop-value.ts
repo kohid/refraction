@@ -1,4 +1,4 @@
-import { type PropValue, sizePropTypeUtil, type SizePropValue } from '@elementor/editor-props';
+import { type PropValue, sizePropTypeUtil, type SizePropValue } from '@refraction/editor-props';
 
 type SizeValue = SizePropValue[ 'value' ];
 

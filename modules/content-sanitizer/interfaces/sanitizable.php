@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Modules\ContentSanitizer\Interfaces;
+namespace Refraction\Modules\ContentSanitizer\Interfaces;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

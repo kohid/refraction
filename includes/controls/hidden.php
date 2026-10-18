@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor hidden control.
+ * Refraction hidden control.
  *
  * A base control for creating hidden control. Used to save additional data in
  * the database without a visual presentation in the panel.

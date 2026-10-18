@@ -15,8 +15,8 @@ class LazyIconList extends Component {
 	};
 
 	selectors = {
-		item: '.elementor-icons-manager__tab__item',
-		wrapper: 'elementor-icons-manager__tab__wrapper',
+		item: '.refraction-icons-manager__tab__item',
+		wrapper: 'refraction-icons-manager__tab__wrapper',
 	};
 
 	attachScrollListener = () => {
@@ -103,7 +103,7 @@ class LazyIconList extends Component {
 	}
 
 	renderFirstElementForMeasurement() {
-		return <div id={ 'elementor-icons-manager__tab__content' }>
+		return <div id={ 'refraction-icons-manager__tab__content' }>
 			{ this.props.items[ 0 ] }
 		</div>;
 	}
@@ -146,11 +146,11 @@ class LazyIconList extends Component {
 			};
 
 		return <Fragment>
-			<div className={ 'elementor-icons-manager__tab__content__offset' } style={ offsetStyle }></div>
-			<div id={ 'elementor-icons-manager__tab__content' }>
+			<div className={ 'refraction-icons-manager__tab__content__offset' } style={ offsetStyle }></div>
+			<div id={ 'refraction-icons-manager__tab__content' }>
 				{ itemsInView }
 			</div>
-			<div className={ 'elementor-icons-manager__tab__content__tail' } style={ tailStyle }></div>
+			<div className={ 'refraction-icons-manager__tab__content__tail' } style={ tailStyle }></div>
 		</Fragment>;
 	};
 }

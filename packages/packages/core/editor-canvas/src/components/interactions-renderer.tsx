@@ -3,7 +3,7 @@ import {
 	__privateUseListenTo as useListenTo,
 	commandEndEvent,
 	getCanvasIframeDocument,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { Portal } from '@elementor/ui';
 
 import { useInteractionsItems } from '../hooks/use-interactions-items';

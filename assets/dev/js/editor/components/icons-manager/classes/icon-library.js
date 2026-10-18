@@ -29,7 +29,7 @@ export default class {
 			icons[ name ] = {
 				prefix: library.prefix,
 				selector: library.prefix + name.trim( ':' ),
-				name: elementorCommon.helpers.upperCaseWords( name )
+				name: refractionCommon.helpers.upperCaseWords( name )
 					.trim( ':' )
 					.split( '-' )
 					.join( ' ' ),
@@ -41,7 +41,7 @@ export default class {
 		if ( Object.keys( icons ).length ) {
 			library.icons = icons;
 			this.loaded[ library.name ] = true;
-			elementor.iconManager.store.save( library );
+			refraction.iconManager.store.save( library );
 			this.runCallback( library );
 		}
 	}
@@ -55,7 +55,7 @@ export default class {
 
 	initIconType = ( libraryConfig, callback ) => {
 		this.notifyCallback = callback;
-		const store = elementor.iconManager.store;
+		const store = refraction.iconManager.store;
 
 		if ( this.loaded[ libraryConfig.name ] ) {
 			libraryConfig.icons = store.getIcons( libraryConfig );
@@ -66,13 +66,13 @@ export default class {
 		if ( libraryConfig.enqueue ) {
 			libraryConfig.enqueue.forEach( ( assetURL ) => {
 				const versionAddedURL = `${ assetURL }${ libraryConfig?.ver ? '?ver=' + libraryConfig.ver : '' }`;
-				elementor.helpers.enqueueEditorStylesheet( versionAddedURL );
+				refraction.helpers.enqueueEditorStylesheet( versionAddedURL );
 			} );
 		}
 
 		if ( libraryConfig.url ) {
 			const versionAddedURL = `${ libraryConfig.url }${ libraryConfig?.ver ? '?ver=' + libraryConfig.ver : '' }`;
-			elementor.helpers.enqueueEditorStylesheet( versionAddedURL );
+			refraction.helpers.enqueueEditorStylesheet( versionAddedURL );
 		}
 
 		// Already saved an stored

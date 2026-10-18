@@ -3,7 +3,7 @@ import { XIcon } from '@elementor/icons';
 import { Button, IconButton, Stack, styled, useTheme } from '@elementor/ui';
 
 import { t } from '../../utils/translations';
-import { ElementorLogo } from './elementor-logo';
+import { RefractionLogo } from './refraction-logo';
 
 const UpgradeButton = styled( Button )( ( { theme } ) => ( {
 	backgroundColor: theme.palette.promotion.main,
@@ -36,7 +36,7 @@ export function TopBarContent( { showUpgrade = true, showClose = true, onUpgrade
 
 	return (
 		<>
-			<ElementorLogo height={ 20 } />
+			<RefractionLogo height={ 20 } />
 
 			<Stack direction="row" alignItems="center" spacing={ 2 }>
 				{ showUpgrade && (

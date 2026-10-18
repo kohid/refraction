@@ -1,16 +1,16 @@
-import ResponsiveBar from 'elementor-regions/responsive-bar/responsive-bar';
+import ResponsiveBar from 'refraction-regions/responsive-bar/responsive-bar';
 
-elementor.on( 'preview:loaded', ( isFirstLoad ) => {
+refraction.on( 'preview:loaded', ( isFirstLoad ) => {
 	if ( ! isFirstLoad ) {
 		return;
 	}
 
-	elementor.addRegions( {
+	refraction.addRegions( {
 		responsiveBar: {
-			el: '#elementor-responsive-bar',
+			el: '#refraction-responsive-bar',
 			regionClass: ResponsiveBar,
 		},
 	} );
 
-	elementor.trigger( 'responsiveBar:init' );
+	refraction.trigger( 'responsiveBar:init' );
 } );

@@ -1,11 +1,11 @@
-import { type Document, getV1CurrentDocument } from '@elementor/editor-documents';
-import { ajax, getCanvasIframeDocument } from '@elementor/editor-v1-adapters';
-import { __dispatch as dispatch } from '@elementor/store';
+import { type Document, getV1CurrentDocument } from '@refraction/editor-documents';
+import { ajax, getCanvasIframeDocument } from '@refraction/editor-v1-adapters';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { slice } from './store';
 
-const TEMPLATE_ATTRIBUTE = 'data-elementor-post-type="elementor_library"';
-const DOCUMENT_WRAPPER_ATTR = 'data-elementor-id';
+const TEMPLATE_ATTRIBUTE = 'data-refraction-post-type="refraction_library"';
+const DOCUMENT_WRAPPER_ATTR = 'data-refraction-id';
 
 export async function loadTemplates() {
 	const iframeDocument = getCanvasIframeDocument();

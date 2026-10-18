@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Includes\TemplateLibrary\Data\Endpoints;
+namespace Refraction\Includes\TemplateLibrary\Data\Endpoints;
 
-use Elementor\Data\V2\Base\Endpoint;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Data\V2\Base\Endpoint;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -33,7 +33,7 @@ class Templates extends Endpoint {
 			],
 			'content' => [
 				'required' => false,
-				'description' => 'Elementor data object',
+				'description' => 'Refraction data object',
 				'type' => 'object',
 			],
 		] );

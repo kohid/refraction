@@ -22,7 +22,7 @@ export const PageTitle = ( { textAlign = 'center' } ) => {
 			color="transparent"
 			sx={ agentsWordSx }
 		>
-			{ __( 'Is your site ready for agents?', 'elementor' ) }
+			{ __( 'Is your site ready for agents?', 'refraction' ) }
 		</Typography>
 	);
 };

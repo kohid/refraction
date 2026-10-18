@@ -12,7 +12,7 @@ export const registerServerDocsResource = (
 	docs: string,
 	onRegistered: OnResourceRegistered
 ): void => {
-	const uri = `elementor://${ namespace }/server-docs`;
+	const uri = `refraction://${ namespace }/server-docs`;
 	const name = `${ namespace }-server-docs`;
 	const handler = createSimpleResourceHandler( docs );
 	server.registerResource(

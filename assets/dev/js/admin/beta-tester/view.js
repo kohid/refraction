@@ -1,15 +1,15 @@
 export default class BetaTesterView extends Marionette.ItemView {
 	constructor() {
 		super();
-		this.id = 'elementor-beta-tester-dialog-content';
-		this.template = '#tmpl-elementor-beta-tester';
+		this.id = 'refraction-beta-tester-dialog-content';
+		this.template = '#tmpl-refraction-beta-tester';
 	}
 
 	ui() {
 		return {
-			betaForm: '#elementor-beta-tester-form',
-			betaEmail: '#elementor-beta-tester-form__email',
-			betaButton: '#elementor-beta-tester-form__submit',
+			betaForm: '#refraction-beta-tester-form',
+			betaEmail: '#refraction-beta-tester-form__email',
+			betaButton: '#refraction-beta-tester-form__submit',
 		};
 	}
 
@@ -24,15 +24,15 @@ export default class BetaTesterView extends Marionette.ItemView {
 
 		const email = this.ui.betaEmail.val();
 
-		this.ui.betaButton.addClass( 'elementor-button-state' );
+		this.ui.betaButton.addClass( 'refraction-button-state' );
 
-		elementorCommon.ajax.addRequest( 'beta_tester_signup', {
+		refractionCommon.ajax.addRequest( 'beta_tester_signup', {
 			data: {
 				betaTesterEmail: email,
 			},
 			// Do not wait for response.
 		} );
-		elementorBetaTester.layout.hideModal();
+		refractionBetaTester.layout.hideModal();
 	}
 
 	onRender() {}

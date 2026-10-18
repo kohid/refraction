@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems;
+namespace Refraction\Includes\TemplateLibrary\Sources\AdminMenuItems;
 
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Third_Level_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,7 +16,7 @@ class Editor_One_Templates_Menu implements Menu_Item_Third_Level_Interface {
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -24,7 +24,7 @@ class Editor_One_Templates_Menu implements Menu_Item_Third_Level_Interface {
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Templates', 'elementor' );
+		return esc_html__( 'Templates', 'refraction' );
 	}
 
 	public function get_position(): int {
@@ -32,7 +32,7 @@ class Editor_One_Templates_Menu implements Menu_Item_Third_Level_Interface {
 	}
 
 	public function get_slug(): string {
-		return 'elementor-templates';
+		return 'refraction-templates';
 	}
 
 	public function get_icon(): string {

@@ -1,4 +1,4 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { getWidgetsCache } from '@refraction/editor-elements';
 
 import { type OriginPropFields, type OverridableProp } from '../types';
 

@@ -1,5 +1,5 @@
-import { type PropValue } from '@elementor/editor-props';
-import { useSessionStorage } from '@elementor/session';
+import { type PropValue } from '@refraction/editor-props';
+import { useSessionStorage } from '@refraction/session';
 
 import { useElement } from '../contexts/element-context';
 import { type DynamicPropValue } from '../dynamics/types';

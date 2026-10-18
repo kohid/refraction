@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'elementor_ob_event_queue';
+const STORAGE_KEY = 'refraction_ob_event_queue';
 
 interface QueuedEvent {
 	name: string;

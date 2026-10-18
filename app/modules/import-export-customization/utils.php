@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization;
+namespace Refraction\App\Modules\ImportExportCustomization;
 
-use Elementor\Core\Utils\Str;
-use Elementor\Modules\LandingPages\Module as Landing_Pages_Module;
-use Elementor\Modules\FloatingButtons\Module as Floating_Buttons_Module;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils as ElementorUtils;
+use Refraction\Core\Utils\Str;
+use Refraction\Modules\LandingPages\Module as Landing_Pages_Module;
+use Refraction\Modules\FloatingButtons\Module as Floating_Buttons_Module;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils as RefractionUtils;
 
 class Utils {
 
@@ -15,7 +15,7 @@ class Utils {
 			$path .= '.json';
 		}
 
-		$file_content = ElementorUtils::file_get_contents( $path, true );
+		$file_content = RefractionUtils::file_get_contents( $path, true );
 
 		return $file_content ? json_decode( $file_content, true ) : [];
 	}
@@ -58,12 +58,12 @@ class Utils {
 		return $result;
 	}
 
-	public static function get_elementor_post_types( $exclude = [] ) {
-		$elementor_post_types = get_post_types_by_support( 'elementor' );
+	public static function get_refraction_post_types( $exclude = [] ) {
+		$refraction_post_types = get_post_types_by_support( 'refraction' );
 
-		return array_filter( $elementor_post_types, function ( $value ) {
+		return array_filter( $refraction_post_types, function ( $value ) {
 			// Templates are handled in a separate process.
-			if ( 'elementor_library' === $value ) {
+			if ( 'refraction_library' === $value ) {
 				return false;
 			}
 
@@ -71,7 +71,7 @@ class Utils {
 				return false;
 			}
 
-			return 'elementor_library' !== $value;
+			return 'refraction_library' !== $value;
 		} );
 	}
 
@@ -119,7 +119,7 @@ class Utils {
 	}
 
 	public static function get_import_sessions( $should_run_cleanup = false ) {
-		$import_sessions = get_option( Module::OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS, [] );
+		$import_sessions = get_option( Module::OPTION_KEY_REFRACTION_IMPORT_SESSIONS, [] );
 
 		if ( $should_run_cleanup ) {
 			foreach ( $import_sessions as $session_id => $import_session ) {
@@ -130,7 +130,7 @@ class Utils {
 				}
 			}
 
-			update_option( Module::OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS, $import_sessions );
+			update_option( Module::OPTION_KEY_REFRACTION_IMPORT_SESSIONS, $import_sessions );
 		}
 
 		return $import_sessions;

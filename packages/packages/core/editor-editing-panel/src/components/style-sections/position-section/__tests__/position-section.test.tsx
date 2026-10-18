@@ -2,11 +2,11 @@ import '@testing-library/jest-dom';
 
 import * as React from 'react';
 import { createMockPropType, renderField } from 'test-utils';
-import { ControlActionsProvider } from '@elementor/editor-controls';
-import type { PropValue } from '@elementor/editor-props';
-import { type BreakpointId } from '@elementor/editor-responsive';
-import { type StylesProvider } from '@elementor/editor-styles-repository';
-import { useSessionStorage } from '@elementor/session';
+import { ControlActionsProvider } from '@refraction/editor-controls';
+import type { PropValue } from '@refraction/editor-props';
+import { type BreakpointId } from '@refraction/editor-responsive';
+import { type StylesProvider } from '@refraction/editor-styles-repository';
+import { useSessionStorage } from '@refraction/session';
 import { screen, within } from '@testing-library/react';
 
 import { useStyle } from '../../../../contexts/style-context';
@@ -27,9 +27,9 @@ type PositionDependentFieldKey = ( typeof POSITION_INSET_KEYS )[ number ] | 'z-i
 
 type PositionDependentValues = Record< PositionDependentFieldKey, PropValue | null >;
 
-jest.mock( '@elementor/session' );
-jest.mock( '@elementor/editor-styles', () => ( {
-	...jest.requireActual( '@elementor/editor-styles' ),
+jest.mock( '@refraction/session' );
+jest.mock( '@refraction/editor-styles', () => ( {
+	...jest.requireActual( '@refraction/editor-styles' ),
 	getStylesSchema: jest.fn(),
 } ) );
 

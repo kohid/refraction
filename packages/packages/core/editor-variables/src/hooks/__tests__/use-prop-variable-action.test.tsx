@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockPropType } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
-import type { PropTypeUtil } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import type { PropTypeUtil } from '@refraction/editor-props';
 import { ColorFilterIcon, TextIcon } from '@elementor/icons';
 import { render, renderHook, screen } from '@testing-library/react';
 
@@ -12,7 +12,7 @@ import { usePropVariableAction } from '../use-prop-variable-action';
 const MockStartIcon = () => ( { type: 'div' } ) as JSX.Element;
 
 // Mock dependencies
-jest.mock( '@elementor/editor-controls', () => ( {
+jest.mock( '@refraction/editor-controls', () => ( {
 	useBoundProp: jest.fn(),
 } ) );
 
@@ -39,7 +39,7 @@ jest.mock( '../../components/variable-selection-popover', () => ( {
 	) ),
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => ( {
+jest.mock( '@refraction/editor-ui', () => ( {
 	CollapseIcon: jest.fn().mockReturnValue( <div /> ),
 } ) );
 

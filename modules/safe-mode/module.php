@@ -1,22 +1,22 @@
 <?php
-namespace Elementor\Modules\SafeMode;
+namespace Refraction\Modules\SafeMode;
 
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Tools;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Utils;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\Tools;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-class Module extends \Elementor\Core\Base\Module {
+class Module extends \Refraction\Core\Base\Module {
 
-	const OPTION_ENABLED = 'elementor_safe_mode';
+	const OPTION_ENABLED = 'refraction_safe_mode';
 	const OPTION_TOKEN = self::OPTION_ENABLED . '_token';
-	const MU_PLUGIN_FILE_NAME = 'elementor-safe-mode.php';
+	const MU_PLUGIN_FILE_NAME = 'refraction-safe-mode.php';
 
 	const EDITOR_NOTICE_TIMEOUT = 30000; /* ms */
 
@@ -35,16 +35,16 @@ class Module extends \Elementor\Core\Base\Module {
 	public function add_admin_button( $tools_page ) {
 		$tools_page->add_fields( Settings::TAB_GENERAL, 'tools', [
 			'safe_mode' => [
-				'label' => esc_html__( 'Safe Mode', 'elementor' ),
+				'label' => esc_html__( 'Safe Mode', 'refraction' ),
 				'field_args' => [
 					'type' => 'select',
 					'std' => $this->is_enabled() ? 'global' : '',
 					'options' => [
-						'' => esc_html__( 'Disable', 'elementor' ),
-						'global' => esc_html__( 'Enable', 'elementor' ),
+						'' => esc_html__( 'Disable', 'refraction' ),
+						'global' => esc_html__( 'Enable', 'refraction' ),
 
 					],
-					'desc' => esc_html__( 'Safe Mode allows you to troubleshoot issues by only loading the editor, without loading the theme or any other plugin.', 'elementor' ),
+					'desc' => esc_html__( 'Safe Mode allows you to troubleshoot issues by only loading the editor, without loading the theme or any other plugin.', 'refraction' ),
 				],
 			],
 		] );
@@ -69,12 +69,12 @@ class Module extends \Elementor\Core\Base\Module {
 		}
 
 		// It will run `$this->>update_safe_mode`.
-		update_option( 'elementor_safe_mode', 'yes' );
+		update_option( 'refraction_safe_mode', 'yes' );
 
 		$document = Plugin::$instance->documents->get( $data['editor_post_id'] );
 
 		if ( $document ) {
-			return add_query_arg( 'elementor-mode', 'safe', $document->get_edit_url() );
+			return add_query_arg( 'refraction-mode', 'safe', $document->get_edit_url() );
 		}
 
 		return false;
@@ -91,11 +91,11 @@ class Module extends \Elementor\Core\Base\Module {
 
 		if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
 			wp_mkdir_p( WPMU_PLUGIN_DIR );
-			add_option( 'elementor_safe_mode_created_mu_dir', true );
+			add_option( 'refraction_safe_mode_created_mu_dir', true );
 		}
 
 		if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
-			wp_die( esc_html__( 'Cannot enable Safe Mode', 'elementor' ) );
+			wp_die( esc_html__( 'Cannot enable Safe Mode', 'refraction' ) );
 		}
 
 		$results = copy_dir( __DIR__ . '/mu-plugin/', WPMU_PLUGIN_DIR );
@@ -106,7 +106,7 @@ class Module extends \Elementor\Core\Base\Module {
 
 		$token = hash( 'sha256', wp_rand() );
 
-		// Only who own this key can use 'elementor-safe-mode'.
+		// Only who own this key can use 'refraction-safe-mode'.
 		update_option( self::OPTION_TOKEN, $token );
 
 		// Save for later use.
@@ -118,37 +118,37 @@ class Module extends \Elementor\Core\Base\Module {
 			return;
 		}
 
-		$file_path = WP_CONTENT_DIR . '/mu-plugins/elementor-safe-mode.php';
+		$file_path = WP_CONTENT_DIR . '/mu-plugins/refraction-safe-mode.php';
 		if ( file_exists( $file_path ) ) {
 			unlink( $file_path );
 		}
 
-		if ( get_option( 'elementor_safe_mode_created_mu_dir' ) ) {
+		if ( get_option( 'refraction_safe_mode_created_mu_dir' ) ) {
 			// It will be removed only if it's empty and don't have other mu-plugins.
 			@rmdir( WPMU_PLUGIN_DIR );
 		}
 
-		delete_option( 'elementor_safe_mode' );
-		delete_option( 'elementor_safe_mode_allowed_plugins' );
-		delete_option( 'theme_mods_elementor-safe' );
-		delete_option( 'elementor_safe_mode_created_mu_dir' );
+		delete_option( 'refraction_safe_mode' );
+		delete_option( 'refraction_safe_mode_allowed_plugins' );
+		delete_option( 'theme_mods_refraction-safe' );
+		delete_option( 'refraction_safe_mode_created_mu_dir' );
 
 		delete_option( self::OPTION_TOKEN );
 		setcookie( self::OPTION_TOKEN, '', 1, '', '', is_ssl(), true );
 	}
 
 	public function filter_preview_url( $url ) {
-		return add_query_arg( 'elementor-mode', 'safe', $url );
+		return add_query_arg( 'refraction-mode', 'safe', $url );
 	}
 
 	public function filter_template() {
-		return ELEMENTOR_PATH . 'modules/page-templates/templates/canvas.php';
+		return REFRACTION_PATH . 'modules/page-templates/templates/canvas.php';
 	}
 
 	public function print_safe_mode_css() {
 		?>
 		<style>
-			.elementor-safe-mode-toast {
+			.refraction-safe-mode-toast {
 				position: absolute;
 				z-index: 10000; /* Over the loading layer */
 				inset-block-end: 10px;
@@ -166,62 +166,62 @@ class Module extends \Elementor\Core\Base\Module {
 				font-family: var(--e-a-font-family);
 			}
 
-			#elementor-try-safe-mode {
+			#refraction-try-safe-mode {
 				display: none;
 			}
 
-			.elementor-safe-mode-toast .elementor-toast-content {
+			.refraction-safe-mode-toast .refraction-toast-content {
 				font-size: 13px;
 				line-height: 22px;
 			}
 
-			.elementor-safe-mode-toast .elementor-toast-content a {
+			.refraction-safe-mode-toast .refraction-toast-content a {
 				color: var(--e-a-color-info);
 			}
 
-			.elementor-safe-mode-toast .elementor-toast-content hr {
+			.refraction-safe-mode-toast .refraction-toast-content hr {
 				margin: 15px auto;
 				border: 0 none;
 				border-block-start: var(--e-a-border);
 			}
 
-			.elementor-safe-mode-toast header {
+			.refraction-safe-mode-toast header {
 				display: flex;
 				align-items: center;
 				gap: 10px;
 			}
 
-			.elementor-safe-mode-toast header i {
+			.refraction-safe-mode-toast header i {
 				font-size: 25px;
 				color: var(--e-a-color-warning);
 			}
 
-			.elementor-safe-mode-toast header h2 {
+			.refraction-safe-mode-toast header h2 {
 				flex-grow: 1;
 				font-size: 18px;
 			}
 
-			.elementor-safe-mode-list {
+			.refraction-safe-mode-list {
 				display: flex;
 				flex-direction: column;
 				gap: 10px;
 			}
 
-			.elementor-safe-mode-list-item {
+			.refraction-safe-mode-list-item {
 				margin-inline-start: 15px;
 				list-style: outside;
 			}
 
-			.elementor-safe-mode-list-item-content {
+			.refraction-safe-mode-list-item-content {
 				font-style: italic;
 				color: var(--e-a-color-txt);
 			}
 
-			.elementor-safe-mode-list-item-title {
+			.refraction-safe-mode-list-item-title {
 				font-weight: 500;
 			}
 
-			.elementor-safe-mode-mu-plugins {
+			.refraction-safe-mode-mu-plugins {
 				background-color: var(--e-a-bg-hover);
 				color: var(--e-a-color-txt-hover);
 				margin-block-start: 20px;
@@ -234,29 +234,29 @@ class Module extends \Elementor\Core\Base\Module {
 	public function print_safe_mode_notice() {
 		$this->print_safe_mode_css()
 		?>
-		<div class="elementor-safe-mode-toast" id="elementor-safe-mode-message">
+		<div class="refraction-safe-mode-toast" id="refraction-safe-mode-message">
 			<header>
 				<i class="eicon-warning" aria-hidden="true"></i>
-				<h2><?php echo esc_html__( 'Safe Mode ON', 'elementor' ); ?></h2>
-				<a class="elementor-button elementor-safe-mode-button elementor-disable-safe-mode" target="_blank" href="<?php echo esc_url( $this->get_admin_page_url() ); ?>">
-					<?php echo esc_html__( 'Disable Safe Mode', 'elementor' ); ?>
+				<h2><?php echo esc_html__( 'Safe Mode ON', 'refraction' ); ?></h2>
+				<a class="refraction-button refraction-safe-mode-button refraction-disable-safe-mode" target="_blank" href="<?php echo esc_url( $this->get_admin_page_url() ); ?>">
+					<?php echo esc_html__( 'Disable Safe Mode', 'refraction' ); ?>
 				</a>
 			</header>
 
-			<div class="elementor-toast-content">
-				<ul class="elementor-safe-mode-list">
-					<li class="elementor-safe-mode-list-item">
-						<div class="elementor-safe-mode-list-item-title"><?php echo esc_html__( 'Editor successfully loaded?', 'elementor' ); ?></div>
-						<div class="elementor-safe-mode-list-item-content">
+			<div class="refraction-toast-content">
+				<ul class="refraction-safe-mode-list">
+					<li class="refraction-safe-mode-list-item">
+						<div class="refraction-safe-mode-list-item-title"><?php echo esc_html__( 'Editor successfully loaded?', 'refraction' ); ?></div>
+						<div class="refraction-safe-mode-list-item-content">
 							<?php
-								echo esc_html__( 'The issue was probably caused by one of your plugins or theme.', 'elementor' );
+								echo esc_html__( 'The issue was probably caused by one of your plugins or theme.', 'refraction' );
 							?>
 						</div>
 					</li>
-					<li class="elementor-safe-mode-list-item">
-						<div class="elementor-safe-mode-list-item-title"><?php echo esc_html__( 'Still experiencing issues?', 'elementor' ); ?></div>
-						<div class="elementor-safe-mode-list-item-content">
-							<?php echo esc_html__( 'Try disabling plugins and your theme one by one to find the cause.', 'elementor' ); ?>
+					<li class="refraction-safe-mode-list-item">
+						<div class="refraction-safe-mode-list-item-title"><?php echo esc_html__( 'Still experiencing issues?', 'refraction' ); ?></div>
+						<div class="refraction-safe-mode-list-item-content">
+							<?php echo esc_html__( 'Try disabling plugins and your theme one by one to find the cause.', 'refraction' ); ?>
 						</div>
 					</li>
 				</ul>
@@ -264,9 +264,9 @@ class Module extends \Elementor\Core\Base\Module {
 				$mu_plugins = wp_get_mu_plugins();
 
 				if ( 1 < count( $mu_plugins ) ) : ?>
-					<div class="elementor-safe-mode-mu-plugins">
+					<div class="refraction-safe-mode-mu-plugins">
 						<?php
-						echo esc_html__( 'Please note! We couldn\'t deactivate all of your plugins on Safe Mode, because some of them are must-use plugins.', 'elementor' );
+						echo esc_html__( 'Please note! We couldn\'t deactivate all of your plugins on Safe Mode, because some of them are must-use plugins.', 'refraction' );
 						?>
 					</div>
 				<?php endif; ?>
@@ -274,23 +274,23 @@ class Module extends \Elementor\Core\Base\Module {
 		</div>
 
 		<script>
-			var ElementorSafeMode = function() {
+			var RefractionSafeMode = function() {
 				var attachEvents = function() {
-					jQuery( '.elementor-disable-safe-mode' ).on( 'click', function( e ) {
-						if ( ! elementorCommon || ! elementorCommon.ajax ) {
+					jQuery( '.refraction-disable-safe-mode' ).on( 'click', function( e ) {
+						if ( ! refractionCommon || ! refractionCommon.ajax ) {
 							return;
 						}
 
 						e.preventDefault();
 
-						elementorCommon.ajax.addRequest(
+						refractionCommon.ajax.addRequest(
 							'disable_safe_mode', {
 								success: function() {
-									if ( -1 === location.href.indexOf( 'elementor-mode=safe' ) ) {
+									if ( -1 === location.href.indexOf( 'refraction-mode=safe' ) ) {
 										location.reload();
 									} else {
 										// Need to remove the URL from browser history.
-										location.replace( location.href.replace( '&elementor-mode=safe', '' ) );
+										location.replace( location.href.replace( '&refraction-mode=safe', '' ) );
 									}
 								},
 								error: function() {
@@ -309,7 +309,7 @@ class Module extends \Elementor\Core\Base\Module {
 				init();
 			};
 
-			new ElementorSafeMode();
+			new RefractionSafeMode();
 		</script>
 		<?php
 	}
@@ -321,40 +321,40 @@ class Module extends \Elementor\Core\Base\Module {
 
 		$this->print_safe_mode_css();
 		?>
-		<div class="elementor-safe-mode-toast" id="elementor-try-safe-mode">
+		<div class="refraction-safe-mode-toast" id="refraction-try-safe-mode">
 		<?php if ( current_user_can( 'install_plugins' ) ) : ?>
 			<header>
 				<i class="eicon-warning" aria-hidden="true"></i>
-				<h2><?php echo esc_html__( 'Can\'t Edit?', 'elementor' ); ?></h2>
-				<a class="elementor-button e-primary elementor-safe-mode-button elementor-enable-safe-mode" target="_blank" href="<?php echo esc_url( $this->get_admin_page_url() ); ?>">
-					<?php echo esc_html__( 'Enable Safe Mode', 'elementor' ); ?>
+				<h2><?php echo esc_html__( 'Can\'t Edit?', 'refraction' ); ?></h2>
+				<a class="refraction-button e-primary refraction-safe-mode-button refraction-enable-safe-mode" target="_blank" href="<?php echo esc_url( $this->get_admin_page_url() ); ?>">
+					<?php echo esc_html__( 'Enable Safe Mode', 'refraction' ); ?>
 				</a>
 			</header>
-			<div class="elementor-toast-content">
-				<?php echo esc_html__( 'Having problems loading Elementor? Please enable Safe Mode to troubleshoot.', 'elementor' ); ?>
+			<div class="refraction-toast-content">
+				<?php echo esc_html__( 'Having problems loading Refraction? Please enable Safe Mode to troubleshoot.', 'refraction' ); ?>
 			</div>
 		<?php else : ?>
 			<header>
 				<i class="eicon-warning" aria-hidden="true"></i>
-				<h2><?php echo esc_html__( 'Can\'t Edit?', 'elementor' ); ?></h2>
+				<h2><?php echo esc_html__( 'Can\'t Edit?', 'refraction' ); ?></h2>
 			</header>
-			<div class="elementor-toast-content">
-				<?php echo esc_html__( 'If you are experiencing a loading issue, contact your site administrator to troubleshoot the problem using Safe Mode.', 'elementor' ); ?>
+			<div class="refraction-toast-content">
+				<?php echo esc_html__( 'If you are experiencing a loading issue, contact your site administrator to troubleshoot the problem using Safe Mode.', 'refraction' ); ?>
 			</div>
 		<?php endif; ?>
 		</div>
 
 		<script>
-			var ElementorTrySafeMode = function() {
+			var RefractionTrySafeMode = function() {
 				var attachEvents = function() {
-					jQuery( '.elementor-enable-safe-mode' ).on( 'click', function( e ) {
-						if ( ! elementorCommon || ! elementorCommon.ajax ) {
+					jQuery( '.refraction-enable-safe-mode' ).on( 'click', function( e ) {
+						if ( ! refractionCommon || ! refractionCommon.ajax ) {
 							return;
 						}
 
 						e.preventDefault();
 
-						elementorCommon.ajax.addRequest(
+						refractionCommon.ajax.addRequest(
 							'enable_safe_mode', {
 								data: {
 									editor_post_id: '<?php
@@ -374,16 +374,16 @@ class Module extends \Elementor\Core\Base\Module {
 					} );
 				};
 
-				var isElementorLoaded = function() {
-					if ( 'undefined' === typeof elementor ) {
+				var isRefractionLoaded = function() {
+					if ( 'undefined' === typeof refraction ) {
 						return false;
 					}
 
-					if ( ! elementor.loaded ) {
+					if ( ! refraction.loaded ) {
 						return false;
 					}
 
-					if ( jQuery( '#elementor-loading' ).is( ':visible' ) ) {
+					if ( jQuery( '#refraction-loading' ).is( ':visible' ) ) {
 						return false;
 					}
 
@@ -391,9 +391,9 @@ class Module extends \Elementor\Core\Base\Module {
 				};
 
 				var handleTrySafeModeNotice = function() {
-					var $notice = jQuery( '#elementor-try-safe-mode' );
+					var $notice = jQuery( '#refraction-try-safe-mode' );
 
-					if ( isElementorLoaded() ) {
+					if ( isRefractionLoaded() ) {
 						$notice.remove();
 						return;
 					}
@@ -415,26 +415,26 @@ class Module extends \Elementor\Core\Base\Module {
 				init();
 			};
 
-			new ElementorTrySafeMode();
+			new RefractionTrySafeMode();
 		</script>
 
 		<?php
 	}
 
 	public function run_safe_mode() {
-		remove_action( 'elementor/editor/footer', [ $this, 'print_try_safe_mode' ] );
+		remove_action( 'refraction/editor/footer', [ $this, 'print_try_safe_mode' ] );
 
 		// Avoid notices like for comment.php.
 		add_filter( 'deprecated_file_trigger_error', '__return_false' );
 
 		add_filter( 'template_include', [ $this, 'filter_template' ], 999 );
-		add_filter( 'elementor/document/urls/preview', [ $this, 'filter_preview_url' ] );
-		add_action( 'elementor/editor/footer', [ $this, 'print_safe_mode_notice' ] );
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'register_scripts' ], 11 /* After Common Scripts */ );
+		add_filter( 'refraction/document/urls/preview', [ $this, 'filter_preview_url' ] );
+		add_action( 'refraction/editor/footer', [ $this, 'print_safe_mode_notice' ] );
+		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'register_scripts' ], 11 /* After Common Scripts */ );
 	}
 
 	public function register_scripts() {
-		wp_add_inline_script( 'elementor-common', 'elementorCommon.ajax.addRequestConstant( "elementor-mode", "safe" );' );
+		wp_add_inline_script( 'refraction-common', 'refractionCommon.ajax.addRequestConstant( "refraction-mode", "safe" );' );
 	}
 
 	private function is_enabled() {
@@ -447,57 +447,57 @@ class Module extends \Elementor\Core\Base\Module {
 	}
 
 	public function plugin_action_links( $actions ) {
-		$actions['disable'] = '<a href="' . self::get_admin_page_url() . '">' . esc_html__( 'Disable Safe Mode', 'elementor' ) . '</a>';
+		$actions['disable'] = '<a href="' . self::get_admin_page_url() . '">' . esc_html__( 'Disable Safe Mode', 'refraction' ) . '</a>';
 
 		return $actions;
 	}
 
 	public function on_deactivated_plugin( $plugin ) {
-		if ( ELEMENTOR_PLUGIN_BASE === $plugin ) {
+		if ( REFRACTION_PLUGIN_BASE === $plugin ) {
 			$this->disable_safe_mode();
 			return;
 		}
 
-		$allowed_plugins = get_option( 'elementor_safe_mode_allowed_plugins', [] );
+		$allowed_plugins = get_option( 'refraction_safe_mode_allowed_plugins', [] );
 		$plugin_key = array_search( $plugin, $allowed_plugins, true );
 
 		if ( $plugin_key ) {
 			unset( $allowed_plugins[ $plugin_key ] );
-			update_option( 'elementor_safe_mode_allowed_plugins', $allowed_plugins );
+			update_option( 'refraction_safe_mode_allowed_plugins', $allowed_plugins );
 		}
 	}
 
 	public function update_allowed_plugins() {
 		$allowed_plugins = [
-			'elementor' => ELEMENTOR_PLUGIN_BASE,
+			'refraction' => REFRACTION_PLUGIN_BASE,
 		];
 
-		if ( defined( 'ELEMENTOR_PRO_PLUGIN_BASE' ) ) {
-			$allowed_plugins['elementor_pro'] = ELEMENTOR_PRO_PLUGIN_BASE;
+		if ( defined( 'REFRACTION_PRO_PLUGIN_BASE' ) ) {
+			$allowed_plugins['refraction_pro'] = REFRACTION_PRO_PLUGIN_BASE;
 		}
 
 		if ( defined( 'WC_PLUGIN_BASENAME' ) ) {
 			$allowed_plugins['woocommerce'] = WC_PLUGIN_BASENAME;
 		}
 
-		update_option( 'elementor_safe_mode_allowed_plugins', $allowed_plugins );
+		update_option( 'refraction_safe_mode_allowed_plugins', $allowed_plugins );
 	}
 
 	public function __construct() {
 		if ( current_user_can( 'install_plugins' ) ) {
-			add_action( 'elementor/admin/after_create_settings/elementor-tools', [ $this, 'add_admin_button' ] );
+			add_action( 'refraction/admin/after_create_settings/refraction-tools', [ $this, 'add_admin_button' ] );
 		}
 
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 
 		$plugin_file = self::MU_PLUGIN_FILE_NAME;
 		add_filter( "plugin_action_links_{$plugin_file}", [ $this, 'plugin_action_links' ] );
 
 		// Use pre_update, in order to catch cases that $value === $old_value and it not updated.
-		add_filter( 'pre_update_option_elementor_safe_mode', [ $this, 'on_update_safe_mode' ], 10, 2 );
+		add_filter( 'pre_update_option_refraction_safe_mode', [ $this, 'on_update_safe_mode' ], 10, 2 );
 
-		add_action( 'elementor/safe_mode/init', [ $this, 'run_safe_mode' ] );
-		add_action( 'elementor/editor/footer', [ $this, 'print_try_safe_mode' ] );
+		add_action( 'refraction/safe_mode/init', [ $this, 'run_safe_mode' ] );
+		add_action( 'refraction/editor/footer', [ $this, 'print_try_safe_mode' ] );
 
 		if ( $this->is_enabled() ) {
 			add_action( 'activated_plugin', [ $this, 'update_allowed_plugins' ] );

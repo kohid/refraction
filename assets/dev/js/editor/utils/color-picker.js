@@ -1,4 +1,4 @@
-export default class ColorPicker extends elementorModules.Module {
+export default class ColorPicker extends refractionModules.Module {
 	constructor( ...args ) {
 		super( ...args );
 
@@ -22,8 +22,8 @@ export default class ColorPicker extends elementorModules.Module {
 				},
 			},
 			classes: {
-				active: 'elementor-active',
-				pickerHeader: 'elementor-color-picker__header',
+				active: 'refraction-active',
+				pickerHeader: 'refraction-color-picker__header',
 				pickerToolsContainer: 'e-color-picker__tools',
 				pickerTool: 'e-control-tool',
 				clearButton: 'e-color-picker__clear',
@@ -57,7 +57,7 @@ export default class ColorPicker extends elementorModules.Module {
 
 	addTipsyToClearButton() {
 		this.$clearButton.tipsy( {
-			title: () => __( 'Clear', 'elementor' ),
+			title: () => __( 'Clear', 'refraction' ),
 			gravity: () => 's',
 		} );
 	}
@@ -83,7 +83,7 @@ export default class ColorPicker extends elementorModules.Module {
 	createPickerHeader() {
 		const { classes } = this.getSettings(),
 			$pickerHeader = jQuery( '<div>', { class: classes.pickerHeader } )
-				.text( __( 'Color Picker', 'elementor' ) ),
+				.text( __( 'Color Picker', 'refraction' ) ),
 			$pickerToolsContainer = jQuery( '<div>', { class: classes.pickerToolsContainer } ),
 			addButton = this.getSettings( 'addButton' );
 
@@ -110,7 +110,7 @@ export default class ColorPicker extends elementorModules.Module {
 		this.$addButton.on( 'click', () => this.onAddButtonClick() );
 
 		this.$addButton.tipsy( {
-			title: () => __( 'Create New Global Color', 'elementor' ),
+			title: () => __( 'Create New Global Color', 'refraction' ),
 			gravity: () => 's',
 		} );
 	}
@@ -139,7 +139,7 @@ export default class ColorPicker extends elementorModules.Module {
 	}
 
 	introductionViewed() {
-		return ColorPicker.droppingIntroductionViewed || elementor.config.user.introduction.colorPickerDropping;
+		return ColorPicker.droppingIntroductionViewed || refraction.config.user.introduction.colorPickerDropping;
 	}
 
 	toggleClearButtonState( active ) {

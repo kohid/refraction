@@ -5,14 +5,14 @@ import {
 	type RepeaterItem,
 	type SetRepeaterValuesMeta,
 	useBoundProp,
-} from '@elementor/editor-controls';
+} from '@refraction/editor-controls';
 import {
 	updateElementEditorSettings,
 	useElementChildren,
 	useElementEditorSettings,
 	type V1Element,
-} from '@elementor/editor-elements';
-import { type CreateOptions, numberPropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-elements';
+import { type CreateOptions, numberPropTypeUtil } from '@refraction/editor-props';
 import { InfoCircleFilledIcon } from '@elementor/icons';
 import { Alert, Chip, Infotip, type InfotipProps, Stack, Switch, TextField, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -26,7 +26,7 @@ const TAB_MENU_ELEMENT_TYPE = 'e-tabs-menu';
 const TAB_CONTENT_AREA_ELEMENT_TYPE = 'e-tabs-content-area';
 export const TabsControl = ( { label }: { label: string } ) => {
 	return (
-		<SettingsField bind="default-active-tab" propDisplayName={ __( 'Tabs', 'elementor' ) }>
+		<SettingsField bind="default-active-tab" propDisplayName={ __( 'Tabs', 'refraction' ) }>
 			<TabsControlContent label={ label } />
 		</SettingsField>
 	);
@@ -137,7 +137,7 @@ const ItemDefaultTab = ( { index }: { index: number } ) => {
 		return null;
 	}
 
-	return <Chip size="tiny" shape="rounded" label={ __( 'Default', 'elementor' ) } />;
+	return <Chip size="tiny" shape="rounded" label={ __( 'Default', 'refraction' ) } />;
 };
 
 const ItemContent = ( { value, index }: { value: TabItem; index: number } ) => {
@@ -148,7 +148,7 @@ const ItemContent = ( { value, index }: { value: TabItem; index: number } ) => {
 	return (
 		<Stack p={ 2 } gap={ 1.5 }>
 			<TabLabelControl elementId={ value.id } />
-			<SettingsField bind="default-active-tab" propDisplayName={ __( 'Tabs', 'elementor' ) }>
+			<SettingsField bind="default-active-tab" propDisplayName={ __( 'Tabs', 'refraction' ) }>
 				<DefaultTabControl tabIndex={ index } />
 			</SettingsField>
 		</Stack>
@@ -162,7 +162,7 @@ const DefaultTabControl = ( { tabIndex }: { tabIndex: number } ) => {
 
 	return (
 		<Stack direction="row" alignItems="center" justifyContent="space-between" gap={ 2 }>
-			<ControlFormLabel>{ __( 'Set as default tab', 'elementor' ) }</ControlFormLabel>
+			<ControlFormLabel>{ __( 'Set as default tab', 'refraction' ) }</ControlFormLabel>
 			<ConditionalTooltip showTooltip={ isDefault } placement="right">
 				<Switch
 					size="small"
@@ -187,7 +187,7 @@ const TabLabelControl = ( { elementId }: { elementId: string } ) => {
 
 	return (
 		<Stack gap={ 1 }>
-			<ControlFormLabel>{ __( 'Tab name', 'elementor' ) }</ControlFormLabel>
+			<ControlFormLabel>{ __( 'Tab name', 'refraction' ) }</ControlFormLabel>
 			<TextField
 				size="tiny"
 				value={ label }
@@ -221,7 +221,7 @@ export const ConditionalTooltip = ( {
 					sx={ { width: 288 } }
 				>
 					<Typography variant="body2">
-						{ __( 'To change the default tab, simply set another tab as default.', 'elementor' ) }
+						{ __( 'To change the default tab, simply set another tab as default.', 'refraction' ) }
 					</Typography>
 				</Alert>
 			}

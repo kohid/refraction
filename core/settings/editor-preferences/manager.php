@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Core\Settings\EditorPreferences;
+namespace Refraction\Core\Settings\EditorPreferences;
 
-use Elementor\Core\Settings\Base\Manager as BaseManager;
-use Elementor\Core\Settings\Base\Model as BaseModel;
+use Refraction\Core\Settings\Base\Manager as BaseManager;
+use Refraction\Core\Settings\Base\Model as BaseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Manager extends BaseManager {
 
-	const META_KEY = 'elementor_preferences';
+	const META_KEY = 'refraction_preferences';
 
 	/**
 	 * Get model for config.

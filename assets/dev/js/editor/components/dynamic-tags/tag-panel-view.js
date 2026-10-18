@@ -1,8 +1,8 @@
-var TagControlsStack = require( 'elementor-dynamic-tags/tag-controls-stack' );
+var TagControlsStack = require( 'refraction-dynamic-tags/tag-controls-stack' );
 
 module.exports = Marionette.ItemView.extend( {
 
-	className: 'elementor-dynamic-cover e-input-style',
+	className: 'refraction-dynamic-cover e-input-style',
 
 	tagControlsStack: null,
 
@@ -16,7 +16,7 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	ui: {
-		remove: '.elementor-dynamic-cover__remove',
+		remove: '.refraction-dynamic-cover__remove',
 	},
 
 	events() {
@@ -33,7 +33,7 @@ module.exports = Marionette.ItemView.extend( {
 
 	getTemplate() {
 		var config = this.getTagConfig(),
-			templateFunction = Marionette.TemplateCache.get( '#tmpl-elementor-control-dynamic-cover' ),
+			templateFunction = Marionette.TemplateCache.get( '#tmpl-refraction-control-dynamic-cover' ),
 			renderedTemplate = Marionette.Renderer.render( templateFunction, {
 				hasSettings: this.hasSettings(),
 				isRemovable: ! this.getOption( 'dynamicSettings' ).default,
@@ -45,12 +45,12 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	getTagConfig() {
-		return elementor.dynamicTags.getConfig( 'tags.' + this.getOption( 'name' ) );
+		return refraction.dynamicTags.getConfig( 'tags.' + this.getOption( 'name' ) );
 	},
 
 	initSettingsPopup() {
 		var settingsPopupOptions = {
-			className: 'elementor-tag-settings-popup',
+			className: 'refraction-tag-settings-popup',
 			position: {
 				my: 'left top+5',
 				at: 'left bottom',
@@ -62,7 +62,7 @@ module.exports = Marionette.ItemView.extend( {
 			},
 		};
 
-		var settingsPopup = elementorCommon.dialogsManager.createWidget( 'buttons', settingsPopupOptions );
+		var settingsPopup = refractionCommon.dialogsManager.createWidget( 'buttons', settingsPopupOptions );
 
 		this.getSettingsPopup = function() {
 			return settingsPopup;
@@ -101,7 +101,7 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	initModel() {
-		this.model = new elementorModules.editor.elements.models.BaseSettings( this.getOption( 'settings' ), {
+		this.model = new refractionModules.editor.elements.models.BaseSettings( this.getOption( 'settings' ), {
 			controls: this.getTagConfig().controls,
 		} );
 	},

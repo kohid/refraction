@@ -13,5 +13,5 @@ export function isRouteActive( route: string ) {
 export const isExperimentActive = ( experiment: keyof typeof EXPERIMENTAL_FEATURES | string ) => {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
-	return !! extendedWindow.elementorCommon?.config?.experimentalFeatures?.[ experiment ];
+	return !! extendedWindow.refractionCommon?.config?.experimentalFeatures?.[ experiment ];
 };

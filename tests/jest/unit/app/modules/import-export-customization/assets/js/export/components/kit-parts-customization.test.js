@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import ExportKitPartsSelection from 'elementor/app/modules/import-export-customization/assets/js/export/components/export-kit-parts-selection';
+import ExportKitPartsSelection from 'refraction/app/modules/import-export-customization/assets/js/export/components/export-kit-parts-selection';
 
 const createQueryWrapper = () => {
 	const queryClient = new QueryClient( {
@@ -26,7 +26,7 @@ const createQueryWrapper = () => {
 	return Wrapper;
 };
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/kit-content-data', () => {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/kit-content-data', () => {
 	/**
 	 * Generic dialog component factory
 	 * Creates a mock dialog component for any content type
@@ -64,7 +64,7 @@ jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/k
 				title: 'Content',
 				features: {
 					open: [
-						'Elementor Pages',
+						'Refraction Pages',
 						'Landing Pages',
 					],
 				},
@@ -112,19 +112,19 @@ jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/k
 	];
 } );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/export/context/export-context', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/export/context/export-context', () => ( {
 	useExportContext: jest.fn(),
 } ) );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
 
 global.__ = jest.fn( ( text ) => text );
 
-import { useExportContext } from 'elementor/app/modules/import-export-customization/assets/js/export/context/export-context';
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import { useExportContext } from 'refraction/app/modules/import-export-customization/assets/js/export/context/export-context';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
 
 const getCheckboxByType = ( container, type ) => {
 	const checkboxContainer = container.querySelector( `[data-type="${ type }"]` );
@@ -170,7 +170,7 @@ describe( 'ExportKitPartsSelection Component', () => {
 		} );
 
 		it( 'should have dialog configured for all items', () => {
-			const kitContentData = require( 'elementor/app/modules/import-export-customization/assets/js/shared/kit-content-data' );
+			const kitContentData = require( 'refraction/app/modules/import-export-customization/assets/js/shared/kit-content-data' );
 
 			kitContentData.forEach( ( item ) => {
 				expect( item.dialog ).toBeTruthy();
@@ -181,7 +181,7 @@ describe( 'ExportKitPartsSelection Component', () => {
 		it( 'should render item descriptions with features', () => {
 			render( <ExportKitPartsSelection />, { wrapper: createQueryWrapper() } );
 
-			expect( screen.getByText( 'Elementor Pages, Landing Pages' ) ).toBeTruthy();
+			expect( screen.getByText( 'Refraction Pages, Landing Pages' ) ).toBeTruthy();
 			expect( screen.getByText( 'Saved Templates, Headers' ) ).toBeTruthy();
 			expect( screen.getByText( 'Global Colors, Global Fonts' ) ).toBeTruthy();
 			expect( screen.getByText( 'All plugins are required for this website templates work' ) ).toBeTruthy();

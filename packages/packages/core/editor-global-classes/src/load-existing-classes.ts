@@ -1,5 +1,5 @@
-import { type StyleDefinitionID } from '@elementor/editor-styles';
-import { __dispatch as dispatch, __getState as getState } from '@elementor/store';
+import { type StyleDefinitionID } from '@refraction/editor-styles';
+import { __dispatch as dispatch, __getState as getState } from '@refraction/store';
 
 import { apiClient } from './api';
 import { styleDefinitionsMapWithoutNull } from './load-document-classes';

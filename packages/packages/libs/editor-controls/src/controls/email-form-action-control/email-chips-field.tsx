@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type KeyboardEvent, type SyntheticEvent, useMemo, useState } from 'react';
-import { stringArrayPropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+import { stringArrayPropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 import { Autocomplete, Grid, TextField } from '@elementor/ui';
 
 import { useBoundProp } from '../../bound-prop-context';

@@ -2,8 +2,8 @@ export default {
 	elements: {
 		window,
 		// Shortcut bind, in other words make shortcuts listen to iframe.
-		$window: jQuery( '#elementor-preview-iframe' ),
-		$body: jQuery( '#elementor-test' ),
+		$window: jQuery( '#refraction-preview-iframe' ),
+		$body: jQuery( '#refraction-test' ),
 	},
 	config: {
 		elements: { data: {}, editSettings: {} },
@@ -76,5 +76,5 @@ export default {
 	getCurrentDeviceMode: () => {
 		return 'desktop';
 	},
-	init: () => console.log( 'elementorFrontend::init' ), // eslint-disable-line no-console
+	init: () => console.log( 'refractionFrontend::init' ), // eslint-disable-line no-console
 };

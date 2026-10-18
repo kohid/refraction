@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
 import { CollapseContext } from './collapse-context';
 

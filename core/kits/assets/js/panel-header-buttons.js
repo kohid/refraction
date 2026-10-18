@@ -1,14 +1,14 @@
-const arrowIconClass = 'eicon-chevron-' + ( elementorCommon.config.isRTL ? 'right' : 'left' );
+const arrowIconClass = 'eicon-chevron-' + ( refractionCommon.config.isRTL ? 'right' : 'left' );
 
 const buttonBack = `
-<button id="elementor-panel-header-kit-back" class="elementor-header-button" aria-label="{{ Back }}">
-	<i class="elementor-icon ${ arrowIconClass } tooltip-target" aria-hidden="true" data-tooltip="{{ Back }}"></i>
+<button id="refraction-panel-header-kit-back" class="refraction-header-button" aria-label="{{ Back }}">
+	<i class="refraction-icon ${ arrowIconClass } tooltip-target" aria-hidden="true" data-tooltip="{{ Back }}"></i>
 </button>
 `;
 
 const buttonClose = `
-<button id="elementor-panel-header-kit-close" class="elementor-header-button" aria-label="{{ Close }}">
-	<i class="elementor-icon eicon-close tooltip-target" aria-hidden="true" data-tooltip="{{ Close }}"></i>
+<button id="refraction-panel-header-kit-close" class="refraction-header-button" aria-label="{{ Close }}">
+	<i class="refraction-icon eicon-close tooltip-target" aria-hidden="true" data-tooltip="{{ Close }}"></i>
 </button>
 `;
 

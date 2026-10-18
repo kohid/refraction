@@ -1,6 +1,6 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Card from 'elementor-app/ui/card/card';
+import Card from 'refraction-app/ui/card/card';
 
 export default function PanelHeadline( props ) {
 	return (

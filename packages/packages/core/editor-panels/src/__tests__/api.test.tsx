@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { type V1Element } from '@elementor/editor-elements';
+import { type V1Element } from '@refraction/editor-elements';
 import {
 	__privateRunCommand as runCommand,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
-import { __createStore, __deleteStore, __registerSlice, __StoreProvider as StoreProvider } from '@elementor/store';
+} from '@refraction/editor-v1-adapters';
+import { __createStore, __deleteStore, __registerSlice, __StoreProvider as StoreProvider } from '@refraction/store';
 import { act, fireEvent, renderHook, screen } from '@testing-library/react';
 
 import { createPanel, type PanelDeclaration, registerPanel } from '../api';
@@ -13,7 +13,7 @@ import { Panel, PanelBody, PanelHeader, PanelHeaderTitle } from '../components/e
 import Panels from '../components/internal/panels';
 import { slice } from '../store';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 const MOCK_ELEMENT_ID = 'element-123';
 const MOCK_CONTAINER = { id: MOCK_ELEMENT_ID };
@@ -26,7 +26,7 @@ const getElementsFnGetter =
 	};
 const mockedGetSelectedElements = jest.fn();
 const mockedGetContainer = jest.fn();
-global.window.elementor = {
+global.window.refraction = {
 	selection: {
 		getElements: mockedGetSelectedElements,
 	},
@@ -38,8 +38,8 @@ describe( 'panels api', () => {
 	beforeEach( () => {
 		// Setup for the environment.
 		document.body.innerHTML = `
-			<div id="elementor-editor-wrapper">
-				<div id="elementor-panel-inner"></div>
+			<div id="refraction-editor-wrapper">
+				<div id="refraction-panel-inner"></div>
 			</div>
 		`;
 

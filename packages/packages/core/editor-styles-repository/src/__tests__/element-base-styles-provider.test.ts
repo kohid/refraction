@@ -1,9 +1,9 @@
 import { createMockStyleDefinition } from 'test-utils';
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { getWidgetsCache } from '@refraction/editor-elements';
 
 import { elementBaseStylesProvider } from '../providers/element-base-styles-provider';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 describe( 'elementBaseStylesProvider', () => {
 	beforeEach( () => {

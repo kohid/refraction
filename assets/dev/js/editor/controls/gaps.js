@@ -1,5 +1,5 @@
 // eslint-disable-next-line prefer-const
-let ControlDimensionsView = require( 'elementor-controls/dimensions' ),
+let ControlDimensionsView = require( 'refraction-controls/dimensions' ),
 	ControlGapItemView;
 
 // eslint-disable-next-line prefer-const
@@ -9,8 +9,8 @@ ControlGapItemView = ControlDimensionsView.extend( {
 		// eslint-disable-next-line prefer-const
 		const ui = ControlDimensionsView.prototype.ui.apply( this, arguments );
 
-		ui.controls = '.elementor-control-gap > input:enabled';
-		ui.link = 'button.elementor-link-gaps';
+		ui.controls = '.refraction-control-gap > input:enabled';
+		ui.link = 'button.refraction-link-gaps';
 
 		return ui;
 	},

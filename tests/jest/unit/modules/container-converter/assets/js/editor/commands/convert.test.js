@@ -14,7 +14,7 @@ describe( `$e.run( 'container-converter/convert' )`, () => {
 
 		// Need to import dynamically since the command extends a global variable which isn't available in regular import.
 		Convert = await import(
-			'elementor/modules/container-converter/assets/js/editor/commands'
+			'refraction/modules/container-converter/assets/js/editor/commands'
 		).then( ( { Convert: convert } ) => convert );
 	} );
 
@@ -49,7 +49,7 @@ describe( `$e.run( 'container-converter/convert' )`, () => {
 			} ),
 		};
 
-		global.elementorFrontend = {
+		global.refractionFrontend = {
 			config: {
 				responsive: {
 					activeBreakpoints: {

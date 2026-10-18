@@ -1,4 +1,4 @@
-import { type StyleDefinitionState } from '@elementor/editor-styles';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
 
 import { useElement } from '../../contexts/element-context';
 import { type StyleDefinitionStateWithNormal } from '../../styles-inheritance/types';

@@ -1,6 +1,6 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Grid from 'elementor-app/ui/grid/grid';
+import Grid from 'refraction-app/ui/grid/grid';
 
 import './wizard-footer.scss';
 

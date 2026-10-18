@@ -15,7 +15,7 @@ test( 'Minimalist widget basic sanity test with content in bio tab', async ( { b
 
 	// Act.
 	await editor.addWidget( { widgetType: 'link-in-bio' } );
-	await page.locator( '.elementor-control-media__preview' ).click();
+	await page.locator( '.refraction-control-media__preview' ).click();
 	await page.locator( 'text=Media Library' ).click();
 	await page.waitForSelector( 'text=Insert Media' );
 	await page.locator( '[id="menu-item-upload"]' ).click();

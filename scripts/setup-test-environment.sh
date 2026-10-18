@@ -2,17 +2,17 @@
 
 set -e
 
-echo "Setting up Elementor test environment from current branch..."
+echo "Setting up Refraction test environment from current branch..."
 
 # Get current branch
 CURRENT_BRANCH=$(git branch --show-current)
 echo "Building from branch: $CURRENT_BRANCH"
 
-# Step 1: Stop and remove existing Elementor test containers
-echo "Step 1: Cleaning up existing Elementor test containers"
-ELEMENTOR_CONTAINERS=$(docker ps -q --filter "name=port888")
-if [ -n "$ELEMENTOR_CONTAINERS" ]; then
-  echo "Found running Elementor test containers:"
+# Step 1: Stop and remove existing Refraction test containers
+echo "Step 1: Cleaning up existing Refraction test containers"
+REFRACTION_CONTAINERS=$(docker ps -q --filter "name=port888")
+if [ -n "$REFRACTION_CONTAINERS" ]; then
+  echo "Found running Refraction test containers:"
   docker ps --filter "name=port888" --format "table {{.Names}}\t{{.Status}}"
   if [[ "${SKIP_CONFIRMATION:-}" != "true" ]]; then
     read -p "Stop and remove these containers? (y/N): " -n 1 -r
@@ -23,13 +23,13 @@ if [ -n "$ELEMENTOR_CONTAINERS" ]; then
       exit 1
     fi
   fi
-  echo "Stopping Elementor test containers..."
-  docker stop $ELEMENTOR_CONTAINERS
+  echo "Stopping Refraction test containers..."
+  docker stop $REFRACTION_CONTAINERS
 fi
-ELEMENTOR_CONTAINERS_ALL=$(docker ps -aq --filter "name=port888")
-if [ -n "$ELEMENTOR_CONTAINERS_ALL" ]; then
-  echo "Removing Elementor test containers..."
-  docker rm $ELEMENTOR_CONTAINERS_ALL
+REFRACTION_CONTAINERS_ALL=$(docker ps -aq --filter "name=port888")
+if [ -n "$REFRACTION_CONTAINERS_ALL" ]; then
+  echo "Removing Refraction test containers..."
+  docker rm $REFRACTION_CONTAINERS_ALL
 fi
 
 # Step 2: Prepare environment
@@ -42,7 +42,7 @@ npm run build:packages
 npm run composer:no-dev
 npm run scripts
 npm run styles
-echo "Built Elementor assets from $CURRENT_BRANCH (the plugin tree under build/ is not needed here)"
+echo "Built Refraction assets from $CURRENT_BRANCH (the plugin tree under build/ is not needed here)"
 
 # Step 4: Download hello-elementor theme
 echo "Step 4: Downloading hello-elementor theme"
@@ -74,6 +74,6 @@ echo "   - Login: admin / password"
 echo ""
 echo "Build info:"
 echo "   - Branch: $CURRENT_BRANCH"
-echo "   - Elementor version: Built from current branch"
+echo "   - Refraction version: Built from current branch"
 echo ""
 echo "Ready for testing and development!" 

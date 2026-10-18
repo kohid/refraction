@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Elementor Testing Environment Setup Script
+# Refraction Testing Environment Setup Script
 # Usage: npm run setup:testing [--restart]
 
 set -e  # Exit on any error
@@ -9,9 +9,9 @@ set -e  # Exit on any error
 RESTART_MODE=false
 if [[ "$1" == "--restart" ]]; then
     RESTART_MODE=true
-    echo "🔄 Restarting Elementor Testing Environment..."
+    echo "🔄 Restarting Refraction Testing Environment..."
 else
-    echo "🚀 Setting up Elementor Testing Environment..."
+    echo "🚀 Setting up Refraction Testing Environment..."
 fi
 
 # Colors for output
@@ -72,8 +72,8 @@ ELEMENTS_REGRESSION_BASE_URL=http://localhost:8889
 # Test Configuration
 TEST_PARALLEL_INDEX=0
 
-# Optional: Elementor Experiments (uncomment to enable)
-ELEMENTOR_SHOW_HIDDEN_EXPERIMENTS=true
+# Optional: Refraction Experiments (uncomment to enable)
+REFRACTION_SHOW_HIDDEN_EXPERIMENTS=true
 
 # Optional: Debug Settings (uncomment to enable)
 # SCRIPT_DEBUG=true
@@ -142,22 +142,22 @@ docker exec port8889-cli-1 wp comment delete $(docker exec port8889-cli-1 wp com
 
 print_status "WordPress content cleaned"
 
-# Install/Fix Elementor plugin
-echo "🔌 Setting up Elementor plugin..."
+# Install/Fix Refraction plugin
+echo "🔌 Setting up Refraction plugin..."
 
 # Always try to fix mount issues by downloading stable version
-print_warning "Ensuring Elementor is properly installed..."
-curl -L -o /tmp/elementor.zip https://downloads.wordpress.org/plugin/elementor.latest-stable.zip
-unzip -q /tmp/elementor.zip -d /tmp/
+print_warning "Ensuring Refraction is properly installed..."
+curl -L -o /tmp/refraction.zip https://downloads.wordpress.org/plugin/elementor.latest-stable.zip
+unzip -q /tmp/refraction.zip -d /tmp/
 rm -rf build/*
-cp -r /tmp/elementor/* build/
-rm -rf /tmp/elementor.zip /tmp/elementor
+cp -r /tmp/refraction/* build/
+rm -rf /tmp/refraction.zip /tmp/refraction
 
 # Activate the plugin
-docker exec port8888-cli-1 wp plugin activate elementor 2>/dev/null || docker exec port8888-cli-1 wp plugin install elementor --activate
-docker exec port8889-cli-1 wp plugin activate elementor 2>/dev/null || docker exec port8889-cli-1 wp plugin install elementor --activate
+docker exec port8888-cli-1 wp plugin activate refraction 2>/dev/null || docker exec port8888-cli-1 wp plugin install refraction --activate
+docker exec port8889-cli-1 wp plugin activate refraction 2>/dev/null || docker exec port8889-cli-1 wp plugin install refraction --activate
 
-print_status "Elementor plugin installed and activated"
+print_status "Refraction plugin installed and activated"
 
 # Verify setup
 echo "🔍 Verifying setup..."
@@ -173,26 +173,26 @@ if ! curl -f http://localhost:8889 > /dev/null 2>&1; then
     exit 1
 fi
 
-# Check Elementor plugin
-if ! docker exec port8888-cli-1 wp plugin list | grep -q "elementor.*active"; then
-    print_error "Elementor plugin is not active on port 8888"
+# Check Refraction plugin
+if ! docker exec port8888-cli-1 wp plugin list | grep -q "refraction.*active"; then
+    print_error "Refraction plugin is not active on port 8888"
     exit 1
 fi
 
-if ! docker exec port8889-cli-1 wp plugin list | grep -q "elementor.*active"; then
-    print_error "Elementor plugin is not active on port 8889"
+if ! docker exec port8889-cli-1 wp plugin list | grep -q "refraction.*active"; then
+    print_error "Refraction plugin is not active on port 8889"
     exit 1
 fi
 
 print_status "Setup verification completed successfully"
 
 echo ""
-echo "🎉 Elementor Testing Environment Setup Complete!"
+echo "🎉 Refraction Testing Environment Setup Complete!"
 echo ""
 echo "📋 What's been set up:"
 echo "   • WordPress running on http://localhost:8888 and http://localhost:8889"
 echo "   • Admin credentials: admin / password"
-echo "   • Elementor plugin installed and activated"
+echo "   • Refraction plugin installed and activated"
 echo "   • Environment configured for testing"
 echo ""
 echo "🚀 Next steps:"

@@ -14,7 +14,7 @@ export const RemoveItemAction = () => {
 		return null;
 	}
 
-	const removeLabel = __( 'Remove', 'elementor' );
+	const removeLabel = __( 'Remove', 'refraction' );
 
 	const onClick = () => removeItem( index );
 	return (

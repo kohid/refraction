@@ -1,4 +1,4 @@
-class GlobalHandler extends elementorModules.frontend.handlers.Base {
+class GlobalHandler extends refractionModules.frontend.handlers.Base {
 	getWidgetType() {
 		return 'global';
 	}
@@ -8,7 +8,7 @@ class GlobalHandler extends elementorModules.frontend.handlers.Base {
 			animation = this.getAnimation();
 
 		if ( 'none' === animation ) {
-			$element.removeClass( 'elementor-invisible' );
+			$element.removeClass( 'refraction-invisible' );
 			return;
 		}
 
@@ -24,7 +24,7 @@ class GlobalHandler extends elementorModules.frontend.handlers.Base {
 		this.currentAnimation = animation;
 
 		setTimeout( () => {
-			$element.removeClass( 'elementor-invisible' ).addClass( 'animated ' + animation );
+			$element.removeClass( 'refraction-invisible' ).addClass( 'animated ' + animation );
 		}, animationDelay );
 	}
 
@@ -35,7 +35,7 @@ class GlobalHandler extends elementorModules.frontend.handlers.Base {
 	onInit( ...args ) {
 		super.onInit( ...args );
 		if ( this.getAnimation() ) {
-			const observer = elementorModules.utils.Scroll.scrollObserver( {
+			const observer = refractionModules.utils.Scroll.scrollObserver( {
 				callback: ( event ) => {
 					if ( event.isInViewport ) {
 						this.animate();
@@ -57,5 +57,5 @@ class GlobalHandler extends elementorModules.frontend.handlers.Base {
 }
 
 export default ( $scope ) => {
-	elementorFrontend.elementsHandler.addHandler( GlobalHandler, { $element: $scope } );
+	refractionFrontend.elementsHandler.addHandler( GlobalHandler, { $element: $scope } );
 };

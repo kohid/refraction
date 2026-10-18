@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function useIntroduction( key ) {
-	const [ isViewed, setIsViewed ] = useState( !! window.elementorAppConfig?.user?.introduction?.[ key ] );
+	const [ isViewed, setIsViewed ] = useState( !! window.refractionAppConfig?.user?.introduction?.[ key ] );
 
 	function markAsViewed() {
 		if ( ! key ) {
@@ -13,14 +13,14 @@ export default function useIntroduction( key ) {
 				reject();
 			}
 
-			elementorCommon.ajax.addRequest( 'introduction_viewed', {
+			refractionCommon.ajax.addRequest( 'introduction_viewed', {
 				data: { introductionKey: key },
 				error: () => reject(),
 				success: () => {
 					setIsViewed( true );
 
-					if ( window.elementorAppConfig?.user?.introduction ) {
-						window.elementorAppConfig.user.introduction[ key ] = true;
+					if ( window.refractionAppConfig?.user?.introduction ) {
+						window.refractionAppConfig.user.introduction[ key ] = true;
 					}
 
 					resolve();

@@ -3,30 +3,30 @@ import { isWidgetNew as checkIsWidgetNew } from './utils/is-widget-new';
 var PanelElementsCategoriesCollection = require( './collections/categories' ),
 	PanelElementsElementsCollection = require( './collections/elements' ),
 	PanelElementsCategoriesView = require( './views/categories' ),
-	PanelElementsElementsView = elementor.modules.layouts.panel.pages.elements.views.Elements,
+	PanelElementsElementsView = refraction.modules.layouts.panel.pages.elements.views.Elements,
 	PanelElementsGlobalView = require( './views/global' ),
 	PanelElementsSearchView = require( './views/search' ),
 	PanelElementsWidgetCreationView = require( './views/widget-creation' ),
 	PanelElementsLayoutView;
 
-function elementorIsAngieIframeInDocument() {
+function refractionIsAngieIframeInDocument() {
 	return !! document.querySelector( 'iframe[src*="angie/"]' );
 }
 
 PanelElementsLayoutView = Marionette.LayoutView.extend( {
-	template: '#tmpl-elementor-panel-elements',
+	template: '#tmpl-refraction-panel-elements',
 
-	id: 'elementor-panel-page-elements',
+	id: 'refraction-panel-page-elements',
 
 	options: {
 		autoFocusSearch: true,
 	},
 
 	regions: {
-		elements: '#elementor-panel-elements-wrapper',
-		widgetCreation: '#elementor-panel-elements-widget-creation-area',
-		search: '#elementor-panel-elements-search-area',
-		notice: '#elementor-panel-elements-notice-area',
+		elements: '#refraction-panel-elements-wrapper',
+		widgetCreation: '#refraction-panel-elements-widget-creation-area',
+		search: '#refraction-panel-elements-search-area',
+		notice: '#refraction-panel-elements-notice-area',
 	},
 
 	regionViews: {},
@@ -36,7 +36,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	categoriesCollection: null,
 
 	initialize() {
-		this.listenTo( elementor.channels.panelElements, 'element:selected', this.destroy );
+		this.listenTo( refraction.channels.panelElements, 'element:selected', this.destroy );
 
 		this.initElementsCollection();
 
@@ -67,7 +67,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 			},
 		};
 
-		this.regionViews = elementor.hooks.applyFilters( 'panel/elements/regionViews', regionViews, {
+		this.regionViews = refraction.hooks.applyFilters( 'panel/elements/regionViews', regionViews, {
 			notice: this.notice,
 			elements: this.elements,
 			search: this.search,
@@ -78,18 +78,18 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 		const elementsCollection = new PanelElementsElementsCollection();
 
 		// Deprecated widget handling.
-		Object.entries( elementor.widgetsCache ).forEach( ( [ widgetName, widgetData ] ) => {
-			if ( widgetData.deprecation && elementor.widgetsCache[ widgetData.deprecation.replacement ] ) {
+		Object.entries( refraction.widgetsCache ).forEach( ( [ widgetName, widgetData ] ) => {
+			if ( widgetData.deprecation && refraction.widgetsCache[ widgetData.deprecation.replacement ] ) {
 				// Hide the old version from panel and search.
-				elementor.widgetsCache[ widgetName ].show_in_panel = false;
-				elementor.widgetsCache[ widgetName ].hide_on_search = true;
+				refraction.widgetsCache[ widgetName ].show_in_panel = false;
+				refraction.widgetsCache[ widgetName ].hide_on_search = true;
 			}
 		} );
 
 		// TODO: Change the array from server syntax, and no need each loop for initialize
-		_.each( elementor.widgetsCache, ( widget ) => {
-			if ( elementor.config.document.panel.widgets_settings[ widget.widget_type ] ) {
-				widget = _.extend( widget, elementor.config.document.panel.widgets_settings[ widget.widget_type ] );
+		_.each( refraction.widgetsCache, ( widget ) => {
+			if ( refraction.config.document.panel.widgets_settings[ widget.widget_type ] ) {
+				widget = _.extend( widget, refraction.config.document.panel.widgets_settings[ widget.widget_type ] );
 			}
 
 			if ( ! this.shouldAddWidget( widget ) ) {
@@ -99,7 +99,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 			elementsCollection.add( this.getCollectionItem( widget ) );
 		} );
 
-		jQuery.each( elementor.config.promotionWidgets, ( index, widget ) => {
+		jQuery.each( refraction.config.promotionWidgets, ( index, widget ) => {
 			elementsCollection.add( {
 				name: widget.name,
 				title: widget.title,
@@ -109,7 +109,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 			} );
 		} );
 
-		( elementor.config.atomicWidgetPromotions || [] ).forEach( ( { type, widgets } ) => {
+		( refraction.config.atomicWidgetPromotions || [] ).forEach( ( { type, widgets } ) => {
 			( widgets || [] ).forEach( ( widget ) => {
 				elementsCollection.add( {
 					name: widget.name,
@@ -123,10 +123,10 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 			} );
 		} );
 
-		if ( elementor.config.integrationWidgets ) {
+		if ( refraction.config.integrationWidgets ) {
 			const injectionPoint = elementsCollection.findIndex( { widgetType: 'image-carousel' } ) + 1;
 
-			jQuery.each( elementor.config.integrationWidgets, ( index, widget ) => {
+			jQuery.each( refraction.config.integrationWidgets, ( index, widget ) => {
 				elementsCollection.add( {
 					name: widget.name,
 					title: widget.title,
@@ -141,9 +141,9 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 			} );
 		}
 
-		if ( elementorCommon.config.experimentalFeatures.container ) {
-			jQuery.each( elementor.config.elementsPresets, ( index, widget ) => {
-				const originalWidget = elementor.widgetsCache[ widget.replacements.custom.originalWidget ];
+		if ( refractionCommon.config.experimentalFeatures.container ) {
+			jQuery.each( refraction.config.elementsPresets, ( index, widget ) => {
+				const originalWidget = refraction.widgetsCache[ widget.replacements.custom.originalWidget ];
 
 				if ( ! originalWidget ) {
 					return;
@@ -164,7 +164,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	isWidgetNew( item ) {
-		return checkIsWidgetNew( item, elementor.config.version );
+		return checkIsWidgetNew( item, refraction.config.version );
 	},
 
 	getCollectionItem( item ) {
@@ -204,7 +204,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 
 		var categoriesCollection = new PanelElementsCategoriesCollection();
 
-		_.each( elementor.config.document.panel.elements_categories, function( categoryConfig, categoryName ) {
+		_.each( refraction.config.document.panel.elements_categories, function( categoryConfig, categoryName ) {
 			// Set defaults.
 			if ( 'undefined' === typeof categoryConfig.active ) {
 				categoryConfig.active = true;
@@ -232,7 +232,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	shouldAddWidget( widget ) {
-		const isContainerActive = elementorCommon.config.experimentalFeatures.container;
+		const isContainerActive = refractionCommon.config.experimentalFeatures.container;
 
 		if ( 'inner-section' === widget.name && isContainerActive ) {
 			return false;
@@ -294,11 +294,11 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	appendStickyPromotion() {
-		if ( this.$( '#elementor-panel-get-pro-elements-sticky' ).length ) {
+		if ( this.$( '#refraction-panel-get-pro-elements-sticky' ).length ) {
 			return;
 		}
 
-		const html = Marionette.Renderer.render( '#tmpl-elementor-panel-element-sticky-promotion', {} ).trim();
+		const html = Marionette.Renderer.render( '#tmpl-refraction-panel-element-sticky-promotion', {} ).trim();
 
 		if ( html ) {
 			this.$el.append( html );
@@ -310,7 +310,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	changeFilter( filterValue ) {
-		elementor.channels.panelElements
+		refraction.channels.panelElements
 			.reply( 'filter:value', filterValue )
 			.trigger( 'filter:change' );
 	},
@@ -321,7 +321,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	focusSearch() {
-		if ( ! elementor.userCan( 'design' ) || ! this.search /* Default panel is not elements */ || ! this.search.currentView /* On global elements empty */ ) {
+		if ( ! refraction.userCan( 'design' ) || ! this.search /* Default panel is not elements */ || ! this.search.currentView /* On global elements empty */ ) {
 			return;
 		}
 
@@ -330,7 +330,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 
 	onChildviewChildrenRender() {
 		this.updateWidgetCreation();
-		elementor.getPanelView().updateScrollbar();
+		refraction.getPanelView().updateScrollbar();
 	},
 
 	onChildviewSearchChangeInput( child ) {
@@ -338,15 +338,15 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	updateWidgetCreation() {
-		const filterValue = elementor.channels.panelElements.request( 'filter:value' );
+		const filterValue = refraction.channels.panelElements.request( 'filter:value' );
 
 		if ( ! filterValue ) {
 			this.widgetCreation.empty();
 			return;
 		}
 
-		const isAngiePresent = elementorIsAngieIframeInDocument();
-		const isAdministrator = elementor.config.user.is_administrator;
+		const isAngiePresent = refractionIsAngieIframeInDocument();
+		const isAdministrator = refraction.config.user.is_administrator;
 
 		if ( ! isAngiePresent && ! isAdministrator ) {
 			this.widgetCreation.empty();
@@ -375,7 +375,7 @@ PanelElementsLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	onDestroy() {
-		elementor.channels.panelElements.reply( 'filter:value', null );
+		refraction.channels.panelElements.reply( 'filter:value', null );
 	},
 
 	onShow() {

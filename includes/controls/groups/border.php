@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor border control.
+ * Refraction border control.
  *
  * A base control for creating border control. Displays input fields to define
  * border type, border width and border color.
@@ -57,16 +57,16 @@ class Group_Control_Border extends Group_Control_Base {
 		$fields = [];
 
 		$fields['border'] = [
-			'label' => esc_html__( 'Border Type', 'elementor' ),
+			'label' => esc_html__( 'Border Type', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'none' => esc_html__( 'None', 'elementor' ),
-				'solid' => esc_html__( 'Solid', 'elementor' ),
-				'double' => esc_html__( 'Double', 'elementor' ),
-				'dotted' => esc_html__( 'Dotted', 'elementor' ),
-				'dashed' => esc_html__( 'Dashed', 'elementor' ),
-				'groove' => esc_html__( 'Groove', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'none' => esc_html__( 'None', 'refraction' ),
+				'solid' => esc_html__( 'Solid', 'refraction' ),
+				'double' => esc_html__( 'Double', 'refraction' ),
+				'dotted' => esc_html__( 'Dotted', 'refraction' ),
+				'dashed' => esc_html__( 'Dashed', 'refraction' ),
+				'groove' => esc_html__( 'Groove', 'refraction' ),
 			],
 			'selectors' => [
 				'{{SELECTOR}}' => 'border-style: {{VALUE}};',
@@ -74,7 +74,7 @@ class Group_Control_Border extends Group_Control_Base {
 		];
 
 		$fields['width'] = [
-			'label' => esc_html__( 'Border Width', 'elementor' ),
+			'label' => esc_html__( 'Border Width', 'refraction' ),
 			'type' => Controls_Manager::DIMENSIONS,
 			'size_units' => [ 'px', 'em', 'rem', 'vw', 'custom' ],
 			'selectors' => [
@@ -87,7 +87,7 @@ class Group_Control_Border extends Group_Control_Base {
 		];
 
 		$fields['color'] = [
-			'label' => esc_html__( 'Border Color', 'elementor' ),
+			'label' => esc_html__( 'Border Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'default' => '',
 			'selectors' => [

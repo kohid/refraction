@@ -6,7 +6,7 @@ import {
 	type createPropUtils,
 	hueRotateFilterPropTypeUtil,
 	intensityFilterPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { Grid } from '@elementor/ui';
 
 import { PropKeyProvider, PropProvider, useBoundProp } from '../../../bound-prop-context';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -106,6 +106,6 @@ class Prompt_Injection_Sanitizer {
 	 * so removal is visible instead of silent.
 	 */
 	private static function get_match_notice(): string {
-		return __( '[Note: potential AI instruction patterns were removed.]', 'elementor' );
+		return __( '[Note: potential AI instruction patterns were removed.]', 'refraction' );
 	}
 }

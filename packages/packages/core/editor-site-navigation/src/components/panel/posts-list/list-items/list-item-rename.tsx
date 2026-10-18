@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
 
 import { usePostListContext } from '../../../../contexts/post-list-context';
 import { usePostActions } from '../../../../hooks/use-posts-actions';

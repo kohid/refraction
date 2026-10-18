@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { stringPropTypeUtil, type StringPropValue } from '@elementor/editor-props';
-import { MenuListItem } from '@elementor/editor-ui';
+import { stringPropTypeUtil, type StringPropValue } from '@refraction/editor-props';
+import { MenuListItem } from '@refraction/editor-ui';
 import { MenuSubheader, Select, type SelectChangeEvent, type SelectProps, Typography } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

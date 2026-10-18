@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Settings\Base;
+namespace Refraction\Core\Settings\Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

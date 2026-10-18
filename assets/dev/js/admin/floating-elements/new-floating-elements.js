@@ -1,13 +1,13 @@
-import NewFloatingelementsLayout from 'elementor-admin/floating-elements/layout';
+import NewFloatingelementsLayout from 'refraction-admin/floating-elements/layout';
 
-const NewFloatingElementsModule = elementorModules.ViewModule.extend( {
+const NewFloatingElementsModule = refractionModules.ViewModule.extend( {
 
 	getDefaultSettings() {
 		return {
 			selectors: {
 				addButtonTopBar: 'a.page-title-action[href*="e-floating-buttons"]',
 				addButtonAdminBar: '#wp-admin-bar-new-e-floating-buttons a',
-				addButtonEmptyTemplate: '#elementor-template-library-add-new',
+				addButtonEmptyTemplate: '#refraction-template-library-add-new',
 			},
 		};
 	},
@@ -37,7 +37,7 @@ const NewFloatingElementsModule = elementorModules.ViewModule.extend( {
 	},
 
 	onInit() {
-		elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+		refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 
 		this.layout = new NewFloatingelementsLayout();
 	},
@@ -50,5 +50,5 @@ const NewFloatingElementsModule = elementorModules.ViewModule.extend( {
 } );
 
 document.addEventListener( 'DOMContentLoaded', function() {
-	window.elementorNewFloatingElements = new NewFloatingElementsModule();
+	window.refractionNewFloatingElements = new NewFloatingElementsModule();
 } );

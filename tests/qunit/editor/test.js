@@ -1,14 +1,14 @@
-import EditorBase from 'elementor-editor/editor-base';
+import EditorBase from 'refraction-editor/editor-base';
 import config from './config';
 import frontend from './frontend';
-import ContainerHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/container/helper';
+import ContainerHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/container/helper';
 
 export default class EditorTest extends EditorBase {
 	constructor( options ) {
 		super( options );
 
 		QUnit.testStart( ( { module, name } ) => {
-			const $element = elementor.documents.getCurrent().$element;
+			const $element = refraction.documents.getCurrent().$element;
 
 			if ( $element ) {
 				$element.empty();
@@ -27,7 +27,7 @@ export default class EditorTest extends EditorBase {
 			}
 
 			if ( QUnit.config.validateContainersAlive ) {
-				if ( ! ContainerHelper.isAllAliveRecursive( elementor.getPreviewContainer() ) ) {
+				if ( ! ContainerHelper.isAllAliveRecursive( refraction.getPreviewContainer() ) ) {
 					// eslint-disable-next-line no-console
 					console.error( `Not all the containers alive: ${ module } -> ${ name }` );
 				}
@@ -40,10 +40,10 @@ export default class EditorTest extends EditorBase {
 	}
 
 	onPreviewLoaded() {
-		this.$preview[ 0 ].contentWindow.elementorFrontend = frontend;
+		this.$preview[ 0 ].contentWindow.refractionFrontend = frontend;
 
 		this.$previewContents = this.$preview.contents();
-		this.$previewContents.find( 'body' ).append( '<div class="elementor elementor-1"></div>' );
+		this.$previewContents.find( 'body' ).append( '<div class="refraction refraction-1"></div>' );
 
 		super.onPreviewLoaded();
 	}

@@ -1,6 +1,6 @@
 import ElementsHelper from '../../elements/helper';
 import GlobalsHelper from '../helper';
-import * as eData from 'elementor/tests/qunit/mock/e-data';
+import * as eData from 'refraction/tests/qunit/mock/e-data';
 
 export const Settings = () => {
 	QUnit.module( 'Settings', ( hooks ) => {
@@ -15,8 +15,8 @@ export const Settings = () => {
 		QUnit.module( 'Single Selection', () => {
 			QUnit.test( 'Simple', async ( assert ) => {
 				const eButton = ElementsHelper.createWrappedButton(),
-					id = elementorCommon.helpers.getUniqueId(),
-					idSecond = elementorCommon.helpers.getUniqueId(),
+					id = refractionCommon.helpers.getUniqueId(),
+					idSecond = refractionCommon.helpers.getUniqueId(),
 					typography_typography = `globals/typography?id=${ id }`, // eslint-disable-line camelcase
 					typography_typography_second = `globals/typography?id=${ idSecond }`; // eslint-disable-line camelcase
 
@@ -46,8 +46,8 @@ export const Settings = () => {
 		QUnit.module( 'Multiple Selection', () => {
 			QUnit.test( 'Simple', async ( assert ) => {
 				const eButtons = ElementsHelper.multiCreateWrappedButton(),
-					id = elementorCommon.helpers.getUniqueId(),
-					idSecond = elementorCommon.helpers.getUniqueId(),
+					id = refractionCommon.helpers.getUniqueId(),
+					idSecond = refractionCommon.helpers.getUniqueId(),
 					typography_typography = `globals/typography?id=${ id }`, // eslint-disable-line camelcase
 					typography_typography_second = `globals/typography?id=${ idSecond }`; // eslint-disable-line camelcase
 

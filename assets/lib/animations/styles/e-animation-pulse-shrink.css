@@ -1,12 +1,12 @@
-@keyframes elementor-animation-pulse-shrink {
+@keyframes refraction-animation-pulse-shrink {
 	to {
 		transform: scale(0.9);
 	}
 }
-.elementor-animation-pulse-shrink:active,
-.elementor-animation-pulse-shrink:focus,
-.elementor-animation-pulse-shrink:hover {
-	animation-name: elementor-animation-pulse-shrink;
+.refraction-animation-pulse-shrink:active,
+.refraction-animation-pulse-shrink:focus,
+.refraction-animation-pulse-shrink:hover {
+	animation-name: refraction-animation-pulse-shrink;
 	animation-duration: 0.3s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;

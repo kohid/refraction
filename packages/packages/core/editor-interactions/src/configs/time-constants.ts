@@ -1,4 +1,4 @@
-import { type Unit } from '@elementor/editor-controls';
+import { type Unit } from '@refraction/editor-controls';
 
 export const TIME_UNITS: Unit[] = [ 's', 'ms' ];
 

@@ -5,9 +5,9 @@ import {
 	commandStartEvent,
 	type ListenerEvent,
 	v1ReadyEvent,
-} from '@elementor/editor-v1-adapters';
-import { __dispatch, __getState as getState } from '@elementor/store';
-import { debounce } from '@elementor/utils';
+} from '@refraction/editor-v1-adapters';
+import { __dispatch, __getState as getState } from '@refraction/store';
+import { debounce } from '@refraction/utils';
 
 import { slice } from '../store';
 import { selectActiveDocument } from '../store/selectors';

@@ -1,4 +1,4 @@
-import { isWidgetNew } from 'elementor-panel/pages/elements/utils/is-widget-new';
+import { isWidgetNew } from 'refraction-panel/pages/elements/utils/is-widget-new';
 
 describe( 'isWidgetNew', () => {
 	describe( 'when new_until_version is absent', () => {

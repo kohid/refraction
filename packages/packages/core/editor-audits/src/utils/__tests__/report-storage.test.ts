@@ -1,9 +1,9 @@
-import { getSessionStorageItem, setSessionStorageItem } from '@elementor/session';
+import { getSessionStorageItem, setSessionStorageItem } from '@refraction/session';
 
 import { type PageAuditReport } from '../../types';
 import { getPersistedReport, persistReport } from '../report-storage';
 
-jest.mock( '@elementor/session' );
+jest.mock( '@refraction/session' );
 
 const FAKE_REPORT: PageAuditReport = {
 	documentId: 42,
@@ -29,7 +29,7 @@ describe( 'report-storage', () => {
 		persistReport( 42, FAKE_REPORT );
 
 		// Assert.
-		expect( setSessionStorageItem ).toHaveBeenCalledWith( 'elementor/audits/report/42', FAKE_REPORT );
+		expect( setSessionStorageItem ).toHaveBeenCalledWith( 'refraction/audits/report/42', FAKE_REPORT );
 	} );
 
 	it( 'reads a persisted report for the given document', () => {
@@ -40,7 +40,7 @@ describe( 'report-storage', () => {
 		const report = getPersistedReport( 42 );
 
 		// Assert.
-		expect( getSessionStorageItem ).toHaveBeenCalledWith( 'elementor/audits/report/42' );
+		expect( getSessionStorageItem ).toHaveBeenCalledWith( 'refraction/audits/report/42' );
 		expect( report ).toEqual( FAKE_REPORT );
 	} );
 

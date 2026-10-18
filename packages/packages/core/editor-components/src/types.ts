@@ -1,6 +1,6 @@
-import { type RenderContext } from '@elementor/editor-canvas';
-import { type V1Element, type V1ElementData } from '@elementor/editor-elements';
-import { type PropValue, type TransformablePropValue } from '@elementor/editor-props';
+import { type RenderContext } from '@refraction/editor-canvas';
+import { type V1Element, type V1ElementData } from '@refraction/editor-elements';
+import { type PropValue, type TransformablePropValue } from '@refraction/editor-props';
 
 export type ComponentFormValues = {
 	componentName: string;
@@ -62,13 +62,13 @@ type BaseComponent = {
 export type DocumentStatus = 'publish' | 'draft';
 export type DocumentSaveStatus = DocumentStatus | 'autosave';
 
-export type ElementorStorage = {
+export type RefractionStorage = {
 	get: < T = unknown >( key: string ) => T | null;
 	set: < T >( key: string, data: T ) => void;
 };
 
 export type ExtendedWindow = Window & {
-	elementorCommon: Record< string, unknown > & {
+	refractionCommon: Record< string, unknown > & {
 		eventsManager: {
 			config: {
 				locations: Record< string, string | Record< string, string > >;
@@ -76,9 +76,9 @@ export type ExtendedWindow = Window & {
 				triggers: Record< string, string >;
 			};
 		};
-		storage: ElementorStorage;
+		storage: RefractionStorage;
 	};
-	elementor?: {
+	refraction?: {
 		getContainerByKeyValue?: ( args: {
 			key: string;
 			value: string;

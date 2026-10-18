@@ -1,5 +1,5 @@
-import { z } from '@elementor/schema';
-import { hasProInstalled, isVersionGreaterOrEqual } from '@elementor/utils';
+import { z } from '@refraction/schema';
+import { hasProInstalled, isVersionGreaterOrEqual } from '@refraction/utils';
 
 const MIN_PRO_VERSION_FOR_MENTIONS = '4.1.0';
 
@@ -20,7 +20,7 @@ export const shouldShowMentionsInfo = (): boolean => {
 		return true;
 	}
 
-	const proVersion = window.elementorPro?.config?.version;
+	const proVersion = window.refractionPro?.config?.version;
 
 	if ( ! proVersion ) {
 		return false;

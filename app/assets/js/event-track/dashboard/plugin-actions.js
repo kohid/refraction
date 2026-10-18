@@ -2,8 +2,8 @@ import WpDashboardTracking from '../wp-dashboard-tracking';
 import BaseTracking from './base-tracking';
 
 const PLUGIN_TYPE = {
-	ELEMENTOR: 'core',
-	ELEMENTOR_PRO: 'pro',
+	REFRACTION: 'core',
+	REFRACTION_PRO: 'pro',
 };
 
 class PluginActions extends BaseTracking {
@@ -16,7 +16,7 @@ class PluginActions extends BaseTracking {
 	}
 
 	static attachCoreDeactivationTracking() {
-		const dialogForm = document.querySelector( '#elementor-deactivate-feedback-dialog-form' );
+		const dialogForm = document.querySelector( '#refraction-deactivate-feedback-dialog-form' );
 
 		if ( ! dialogForm ) {
 			return;
@@ -28,7 +28,7 @@ class PluginActions extends BaseTracking {
 			( event ) => {
 				const target = event.target;
 
-				if ( target.classList.contains( 'elementor-deactivate-feedback-dialog-input' ) ) {
+				if ( target.classList.contains( 'refraction-deactivate-feedback-dialog-input' ) ) {
 					this.selectedReason = target.value;
 				}
 			},
@@ -50,7 +50,7 @@ class PluginActions extends BaseTracking {
 			( event ) => {
 				const link = event.target.closest( 'a' );
 
-				if ( link && 'deactivate-elementor-pro' === link.id ) {
+				if ( link && 'deactivate-refraction-pro' === link.id ) {
 					this.trackProDeactivation();
 				}
 			},
@@ -60,7 +60,7 @@ class PluginActions extends BaseTracking {
 
 	static observeModalButtons() {
 		const checkAndAttachDelegation = () => {
-			const modal = document.querySelector( '#elementor-deactivate-feedback-modal' );
+			const modal = document.querySelector( '#refraction-deactivate-feedback-modal' );
 
 			if ( ! modal ) {
 				return false;
@@ -122,7 +122,7 @@ class PluginActions extends BaseTracking {
 	static trackCoreDeactivation( action ) {
 		const properties = {
 			deactivate_form_submit: action,
-			deactivate_plugin_type: PLUGIN_TYPE.ELEMENTOR,
+			deactivate_plugin_type: PLUGIN_TYPE.REFRACTION,
 		};
 
 		if ( this.selectedReason ) {
@@ -147,7 +147,7 @@ class PluginActions extends BaseTracking {
 		}
 
 		jQuery( document ).on( 'wp-plugin-deleting', ( event, args ) => {
-			if ( 'elementor-pro' === args?.slug ) {
+			if ( 'refraction-pro' === args?.slug ) {
 				this.trackProAction( 'delete' );
 			}
 		} );
@@ -180,7 +180,7 @@ class PluginActions extends BaseTracking {
 		}
 
 		const properties = {
-			[ config.propertyKey ]: PLUGIN_TYPE.ELEMENTOR_PRO,
+			[ config.propertyKey ]: PLUGIN_TYPE.REFRACTION_PRO,
 		};
 
 		WpDashboardTracking.dispatchEvent( config.eventName, properties, { send_immediately: true } );

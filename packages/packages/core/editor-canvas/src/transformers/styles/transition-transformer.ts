@@ -1,4 +1,4 @@
-import { transitionProperties } from '@elementor/editor-controls';
+import { transitionProperties } from '@refraction/editor-controls';
 
 import { createTransformer } from '../create-transformer';
 

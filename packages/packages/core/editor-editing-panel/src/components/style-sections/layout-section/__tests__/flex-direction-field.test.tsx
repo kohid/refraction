@@ -6,7 +6,7 @@ import { useDirection } from '../../../../hooks/use-direction';
 import { useStylesFields } from '../../../../hooks/use-styles-fields';
 import { FlexDirectionField } from '../flex-direction-field';
 
-jest.mock( '@elementor/editor-styles' );
+jest.mock( '@refraction/editor-styles' );
 jest.mock( '../../../../hooks/use-styles-fields' );
 jest.mock( '../../../../hooks/use-direction' );
 jest.mock( '../../../../styles-inheritance/components/styles-inheritance-indicator' );

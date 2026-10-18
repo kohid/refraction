@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor accordion widget.
+ * Refraction accordion widget.
  *
- * Elementor widget that displays a collapsible display of content in an
+ * Refraction widget that displays a collapsible display of content in an
  * accordion style, showing only one item at a time.
  *
  * @since 1.0.0
@@ -43,7 +43,7 @@ class Widget_Accordion extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Accordion', 'elementor' );
+		return esc_html__( 'Accordion', 'refraction' );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'Accordion', 'elementor' ),
+				'label' => esc_html__( 'Accordion', 'refraction' ),
 			]
 		);
 
@@ -129,9 +129,9 @@ class Widget_Accordion extends Widget_Base {
 		$repeater->add_control(
 			'tab_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'Accordion Title', 'elementor' ),
+				'default' => esc_html__( 'Accordion Title', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -142,9 +142,9 @@ class Widget_Accordion extends Widget_Base {
 		$repeater->add_control(
 			'tab_content',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'type' => Controls_Manager::WYSIWYG,
-				'default' => esc_html__( 'Accordion Content', 'elementor' ),
+				'default' => esc_html__( 'Accordion Content', 'refraction' ),
 			]
 		);
 
@@ -153,7 +153,7 @@ class Widget_Accordion extends Widget_Base {
 				'3.15.0',
 				esc_html__(
 					'You are currently editing an Accordion Widget in its old version. Any new Accordion widget dragged into the canvas will be the new Accordion widget, with the improved Nested capabilities.',
-					'elementor'
+					'refraction'
 				),
 				'nested-accordion'
 			);
@@ -162,17 +162,17 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'tabs',
 			[
-				'label' => esc_html__( 'Accordion Items', 'elementor' ),
+				'label' => esc_html__( 'Accordion Items', 'refraction' ),
 				'type' => Controls_Manager::REPEATER,
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'tab_title' => esc_html__( 'Accordion #1', 'elementor' ),
-						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor' ),
+						'tab_title' => esc_html__( 'Accordion #1', 'refraction' ),
+						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ),
 					],
 					[
-						'tab_title' => esc_html__( 'Accordion #2', 'elementor' ),
-						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor' ),
+						'tab_title' => esc_html__( 'Accordion #2', 'refraction' ),
+						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ),
 					],
 				],
 				'title_field' => '{{{ tab_title }}}',
@@ -182,7 +182,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'selected_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'separator' => 'before',
 				'fa4compatibility' => 'icon',
@@ -210,7 +210,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'selected_active_icon',
 			[
-				'label' => esc_html__( 'Active Icon', 'elementor' ),
+				'label' => esc_html__( 'Active Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon_active',
 				'default' => [
@@ -240,7 +240,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'title_html_tag',
 			[
-				'label' => esc_html__( 'Title HTML Tag', 'elementor' ),
+				'label' => esc_html__( 'Title HTML Tag', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'h1' => 'H1',
@@ -259,7 +259,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'faq_schema',
 			[
-				'label' => esc_html__( 'FAQ Schema', 'elementor' ),
+				'label' => esc_html__( 'FAQ Schema', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'separator' => 'before',
 			]
@@ -270,7 +270,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->start_controls_section(
 			'section_title_style',
 			[
-				'label' => esc_html__( 'Accordion', 'elementor' ),
+				'label' => esc_html__( 'Accordion', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -278,7 +278,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'border_width',
 			[
-				'label' => esc_html__( 'Border Width', 'elementor' ),
+				'label' => esc_html__( 'Border Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -290,9 +290,9 @@ class Widget_Accordion extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-accordion-item' => 'border-width: {{SIZE}}{{UNIT}};',
-					'{{WRAPPER}} .elementor-accordion-item .elementor-tab-content' => 'border-width: {{SIZE}}{{UNIT}};',
-					'{{WRAPPER}} .elementor-accordion-item .elementor-tab-title.elementor-active' => 'border-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-accordion-item' => 'border-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-accordion-item .refraction-tab-content' => 'border-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-accordion-item .refraction-tab-title.refraction-active' => 'border-width: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -300,12 +300,12 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'border_color',
 			[
-				'label' => esc_html__( 'Border Color', 'elementor' ),
+				'label' => esc_html__( 'Border Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-accordion-item' => 'border-color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-accordion-item .elementor-tab-content' => 'border-block-start-color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-accordion-item .elementor-tab-title.elementor-active' => 'border-block-end-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-accordion-item' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-accordion-item .refraction-tab-content' => 'border-block-start-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-accordion-item .refraction-tab-title.refraction-active' => 'border-block-end-color: {{VALUE}};',
 				],
 			]
 		);
@@ -315,7 +315,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->start_controls_section(
 			'section_toggle_style_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -323,10 +323,10 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'title_background',
 			[
-				'label' => esc_html__( 'Background', 'elementor' ),
+				'label' => esc_html__( 'Background', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-title' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -334,11 +334,11 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-accordion-icon, {{WRAPPER}} .elementor-accordion-title' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-accordion-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-accordion-icon, {{WRAPPER}} .refraction-accordion-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-accordion-icon svg' => 'fill: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
@@ -349,11 +349,11 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'tab_active_color',
 			[
-				'label' => esc_html__( 'Active Color', 'elementor' ),
+				'label' => esc_html__( 'Active Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-active .elementor-accordion-icon, {{WRAPPER}} .elementor-active .elementor-accordion-title' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-active .elementor-accordion-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-active .refraction-accordion-icon, {{WRAPPER}} .refraction-active .refraction-accordion-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-active .refraction-accordion-icon svg' => 'fill: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_ACCENT,
@@ -365,7 +365,7 @@ class Widget_Accordion extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'title_typography',
-				'selector' => '{{WRAPPER}} .elementor-accordion-title',
+				'selector' => '{{WRAPPER}} .refraction-accordion-title',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
@@ -376,7 +376,7 @@ class Widget_Accordion extends Widget_Base {
 			Group_Control_Text_Stroke::get_type(),
 			[
 				'name' => 'text_stroke',
-				'selector' => '{{WRAPPER}} .elementor-accordion-title',
+				'selector' => '{{WRAPPER}} .refraction-accordion-title',
 			]
 		);
 
@@ -384,18 +384,18 @@ class Widget_Accordion extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'title_shadow',
-				'selector' => '{{WRAPPER}} .elementor-accordion-title',
+				'selector' => '{{WRAPPER}} .refraction-accordion-title',
 			]
 		);
 
 		$this->add_responsive_control(
 			'title_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-tab-title' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -405,7 +405,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->start_controls_section(
 			'section_toggle_style_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'selected_icon[value]!' => '',
@@ -416,15 +416,15 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'icon_align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'right' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -436,11 +436,11 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title .elementor-accordion-icon i:before' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-tab-title .elementor-accordion-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-title .refraction-accordion-icon i:before' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-title .refraction-accordion-icon svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -448,11 +448,11 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'icon_active_color',
 			[
-				'label' => esc_html__( 'Active Color', 'elementor' ),
+				'label' => esc_html__( 'Active Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title.elementor-active .elementor-accordion-icon i:before' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-tab-title.elementor-active .elementor-accordion-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-title.refraction-active .refraction-accordion-icon i:before' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-title.refraction-active .refraction-accordion-icon svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -460,7 +460,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_space',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -475,7 +475,7 @@ class Widget_Accordion extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-accordion-icon' => 'margin-inline-end: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-accordion-icon' => 'margin-inline-end: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -485,7 +485,7 @@ class Widget_Accordion extends Widget_Base {
 		$this->start_controls_section(
 			'section_toggle_style_content',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -493,10 +493,10 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'content_background_color',
 			[
-				'label' => esc_html__( 'Background', 'elementor' ),
+				'label' => esc_html__( 'Background', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-content' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-content' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -504,10 +504,10 @@ class Widget_Accordion extends Widget_Base {
 		$this->add_control(
 			'content_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-content' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-content' => 'color: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_TEXT,
@@ -519,7 +519,7 @@ class Widget_Accordion extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'content_typography',
-				'selector' => '{{WRAPPER}} .elementor-tab-content',
+				'selector' => '{{WRAPPER}} .refraction-tab-content',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_TEXT,
 				],
@@ -530,18 +530,18 @@ class Widget_Accordion extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'content_shadow',
-				'selector' => '{{WRAPPER}} .elementor-tab-content',
+				'selector' => '{{WRAPPER}} .refraction-tab-content',
 			]
 		);
 
 		$this->add_responsive_control(
 			'content_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-tab-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -574,7 +574,7 @@ class Widget_Accordion extends Widget_Base {
 		$has_icon = ( ! $is_new || ! empty( $settings['selected_icon']['value'] ) );
 		$id_int = substr( $this->get_id_int(), 0, 3 );
 		?>
-		<div class="elementor-accordion">
+		<div class="refraction-accordion">
 			<?php
 			foreach ( $settings['tabs'] as $index => $item ) :
 				$tab_count = $index + 1;
@@ -584,39 +584,39 @@ class Widget_Accordion extends Widget_Base {
 				$tab_content_setting_key = $this->get_repeater_setting_key( 'tab_content', 'tabs', $index );
 
 				$this->add_render_attribute( $tab_title_setting_key, [
-					'id' => 'elementor-tab-title-' . $id_int . $tab_count,
-					'class' => [ 'elementor-tab-title' ],
+					'id' => 'refraction-tab-title-' . $id_int . $tab_count,
+					'class' => [ 'refraction-tab-title' ],
 					'data-tab' => $tab_count,
 					'role' => 'button',
-					'aria-controls' => 'elementor-tab-content-' . $id_int . $tab_count,
+					'aria-controls' => 'refraction-tab-content-' . $id_int . $tab_count,
 					'aria-expanded' => 'false',
 				] );
 
 				$this->add_render_attribute( $tab_content_setting_key, [
-					'id' => 'elementor-tab-content-' . $id_int . $tab_count,
-					'class' => [ 'elementor-tab-content', 'elementor-clearfix' ],
+					'id' => 'refraction-tab-content-' . $id_int . $tab_count,
+					'class' => [ 'refraction-tab-content', 'refraction-clearfix' ],
 					'data-tab' => $tab_count,
 					'role' => 'region',
-					'aria-labelledby' => 'elementor-tab-title-' . $id_int . $tab_count,
+					'aria-labelledby' => 'refraction-tab-title-' . $id_int . $tab_count,
 				] );
 
 				$this->add_inline_editing_attributes( $tab_content_setting_key, 'advanced' );
 				?>
-				<div class="elementor-accordion-item">
+				<div class="refraction-accordion-item">
 					<<?php Utils::print_validated_html_tag( $settings['title_html_tag'] ); ?> <?php $this->print_render_attribute_string( $tab_title_setting_key ); ?>>
 						<?php if ( $has_icon ) : ?>
-							<span class="elementor-accordion-icon elementor-accordion-icon-<?php echo esc_attr( $settings['icon_align'] ); ?>" aria-hidden="true">
+							<span class="refraction-accordion-icon refraction-accordion-icon-<?php echo esc_attr( $settings['icon_align'] ); ?>" aria-hidden="true">
 							<?php
 							if ( $is_new || $migrated ) { ?>
-								<span class="elementor-accordion-icon-closed"><?php Icons_Manager::render_icon( $settings['selected_icon'] ); ?></span>
-								<span class="elementor-accordion-icon-opened"><?php Icons_Manager::render_icon( $settings['selected_active_icon'] ); ?></span>
+								<span class="refraction-accordion-icon-closed"><?php Icons_Manager::render_icon( $settings['selected_icon'] ); ?></span>
+								<span class="refraction-accordion-icon-opened"><?php Icons_Manager::render_icon( $settings['selected_active_icon'] ); ?></span>
 							<?php } else { ?>
-								<i class="elementor-accordion-icon-closed <?php echo esc_attr( $settings['icon'] ); ?>"></i>
-								<i class="elementor-accordion-icon-opened <?php echo esc_attr( $settings['icon_active'] ); ?>"></i>
+								<i class="refraction-accordion-icon-closed <?php echo esc_attr( $settings['icon'] ); ?>"></i>
+								<i class="refraction-accordion-icon-opened <?php echo esc_attr( $settings['icon_active'] ); ?>"></i>
 							<?php } ?>
 							</span>
 						<?php endif; ?>
-						<a class="elementor-accordion-title" tabindex="0"><?php
+						<a class="refraction-accordion-title" tabindex="0"><?php
 							$this->print_unescaped_setting( 'tab_title', 'tabs', $index );
 						?></a>
 					</<?php Utils::print_validated_html_tag( $settings['title_html_tag'] ); ?>>
@@ -669,7 +669,7 @@ class Widget_Accordion extends Widget_Base {
 
 		foreach ( $settings['tabs'] as $item ) {
 			$title = Utils::html_to_plain_text( $item['tab_title'] ?? '' );
-			$content = \Elementor\Modules\MarkdownRender\Html_To_Markdown::convert( $item['tab_content'] ?? '' );
+			$content = \Refraction\Modules\MarkdownRender\Html_To_Markdown::convert( $item['tab_content'] ?? '' );
 
 			if ( empty( $title ) && empty( $content ) ) {
 				continue;
@@ -689,13 +689,13 @@ class Widget_Accordion extends Widget_Base {
 
 	protected function content_template() {
 		?>
-		<div class="elementor-accordion">
+		<div class="refraction-accordion">
 			<#
 			if ( settings.tabs ) {
 				var tabindex = view.getIDInt().toString().substr( 0, 3 ),
-					iconHTML = elementor.helpers.renderIcon( view, settings.selected_icon, {}, 'i' , 'object' ),
-					iconActiveHTML = elementor.helpers.renderIcon( view, settings.selected_active_icon, {}, 'i' , 'object' ),
-					migrated = elementor.helpers.isIconMigrated( settings, 'selected_icon' );
+					iconHTML = refraction.helpers.renderIcon( view, settings.selected_icon, {}, 'i' , 'object' ),
+					iconActiveHTML = refraction.helpers.renderIcon( view, settings.selected_active_icon, {}, 'i' , 'object' ),
+					migrated = refraction.helpers.isIconMigrated( settings, 'selected_icon' );
 
 				_.each( settings.tabs, function( item, index ) {
 					var tabCount = index + 1,
@@ -703,41 +703,41 @@ class Widget_Accordion extends Widget_Base {
 						tabContentKey = view.getRepeaterSettingKey( 'tab_content', 'tabs', index );
 
 					view.addRenderAttribute( tabTitleKey, {
-						'id': 'elementor-tab-title-' + tabindex + tabCount,
-						'class': [ 'elementor-tab-title' ],
+						'id': 'refraction-tab-title-' + tabindex + tabCount,
+						'class': [ 'refraction-tab-title' ],
 						'tabindex': tabindex + tabCount,
 						'data-tab': tabCount,
 						'role': 'button',
-						'aria-controls': 'elementor-tab-content-' + tabindex + tabCount,
+						'aria-controls': 'refraction-tab-content-' + tabindex + tabCount,
 						'aria-expanded': 'false',
 					} );
 
 					view.addRenderAttribute( tabContentKey, {
-						'id': 'elementor-tab-content-' + tabindex + tabCount,
-						'class': [ 'elementor-tab-content', 'elementor-clearfix' ],
+						'id': 'refraction-tab-content-' + tabindex + tabCount,
+						'class': [ 'refraction-tab-content', 'refraction-clearfix' ],
 						'data-tab': tabCount,
 						'role': 'region',
-						'aria-labelledby': 'elementor-tab-title-' + tabindex + tabCount
+						'aria-labelledby': 'refraction-tab-title-' + tabindex + tabCount
 					} );
 
 					view.addInlineEditingAttributes( tabContentKey, 'advanced' );
 
-					var titleHTMLTag = elementor.helpers.validateHTMLTag( settings.title_html_tag );
+					var titleHTMLTag = refraction.helpers.validateHTMLTag( settings.title_html_tag );
 					#>
-					<div class="elementor-accordion-item">
+					<div class="refraction-accordion-item">
 						<{{{ titleHTMLTag }}} {{{ view.getRenderAttributeString( tabTitleKey ) }}}>
 							<# if ( settings.icon || settings.selected_icon ) { #>
-							<span class="elementor-accordion-icon elementor-accordion-icon-{{ settings.icon_align }}" aria-hidden="true">
+							<span class="refraction-accordion-icon refraction-accordion-icon-{{ settings.icon_align }}" aria-hidden="true">
 								<# if ( iconHTML && iconHTML.rendered && ( ! settings.icon || migrated ) ) { #>
-									<span class="elementor-accordion-icon-closed">{{{ iconHTML.value }}}</span>
-									<span class="elementor-accordion-icon-opened">{{{ iconActiveHTML.value }}}</span>
+									<span class="refraction-accordion-icon-closed">{{{ iconHTML.value }}}</span>
+									<span class="refraction-accordion-icon-opened">{{{ iconActiveHTML.value }}}</span>
 								<# } else { #>
-									<i class="elementor-accordion-icon-closed {{ settings.icon }}"></i>
-									<i class="elementor-accordion-icon-opened {{ settings.icon_active }}"></i>
+									<i class="refraction-accordion-icon-closed {{ settings.icon }}"></i>
+									<i class="refraction-accordion-icon-opened {{ settings.icon_active }}"></i>
 								<# } #>
 							</span>
 							<# } #>
-							<a class="elementor-accordion-title" tabindex="0">{{{ item.tab_title }}}</a>
+							<a class="refraction-accordion-title" tabindex="0">{{{ item.tab_title }}}</a>
 						</{{{ titleHTMLTag }}}>
 						<div {{{ view.getRenderAttributeString( tabContentKey ) }}}>{{{ item.tab_content }}}</div>
 					</div>

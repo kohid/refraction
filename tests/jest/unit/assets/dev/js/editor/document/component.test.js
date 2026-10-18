@@ -1,11 +1,11 @@
-import Component from 'elementor-document/component.js';
-import { cloneElementTree } from 'elementor/packages/packages/libs/editor-elements/src/sync/clone-element-tree';
+import Component from 'refraction-document/component.js';
+import { cloneElementTree } from 'refraction/packages/packages/libs/editor-elements/src/sync/clone-element-tree';
 
-jest.mock( 'elementor/packages/packages/libs/editor-elements/src/sync/clone-element-tree', () => ( {
+jest.mock( 'refraction/packages/packages/libs/editor-elements/src/sync/clone-element-tree', () => ( {
 	cloneElementTree: jest.fn(),
 } ) );
 
-jest.mock( 'elementor-api/modules/component-base', () => class ComponentBase {
+jest.mock( 'refraction-api/modules/component-base', () => class ComponentBase {
 	importHooks( hooks ) {
 		return hooks;
 	}
@@ -17,9 +17,9 @@ jest.mock( 'elementor-api/modules/component-base', () => class ComponentBase {
 	registerAPI() {}
 } );
 
-jest.mock( 'elementor-document/index.js', () => ( {} ) );
-jest.mock( 'elementor-document/hooks/index.js', () => ( {} ) );
-jest.mock( 'elementor-document/ui-states/index.js', () => ( {} ) );
+jest.mock( 'refraction-document/index.js', () => ( {} ) );
+jest.mock( 'refraction-document/hooks/index.js', () => ( {} ) );
+jest.mock( 'refraction-document/ui-states/index.js', () => ( {} ) );
 
 describe( 'document Component utils', () => {
 	let component;

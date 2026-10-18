@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/ui/after';
+import After from 'refraction-api/modules/hooks/ui/after';
 
 export class ExitTo extends After {
 	getCommand() {
@@ -18,7 +18,7 @@ export class ExitTo extends After {
 	}
 
 	apply() {
-		elementor.getPanelView().getPages( 'menu' ).view.addExitItem();
+		refraction.getPanelView().getPages( 'menu' ).view.addExitItem();
 	}
 }
 

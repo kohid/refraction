@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\LandingPages\AdminMenuItems;
+namespace Refraction\Modules\LandingPages\AdminMenuItems;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
-use Elementor\Modules\LandingPages\Module;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Modules\LandingPages\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -38,7 +38,7 @@ class Editor_One_Landing_Pages_Menu implements Menu_Item_Interface, Admin_Menu_I
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -46,7 +46,7 @@ class Editor_One_Landing_Pages_Menu implements Menu_Item_Interface, Admin_Menu_I
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Landing Pages', 'elementor' );
+		return esc_html__( 'Landing Pages', 'refraction' );
 	}
 
 	public function get_position(): int {

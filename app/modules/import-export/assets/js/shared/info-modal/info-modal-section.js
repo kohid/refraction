@@ -1,6 +1,6 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import ModalProvider from 'elementor-app/ui/modal/modal';
+import ModalProvider from 'refraction-app/ui/modal/modal';
 
 export default function InfoModalSection( props ) {
 	return (

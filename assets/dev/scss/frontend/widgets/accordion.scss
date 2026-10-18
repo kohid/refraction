@@ -2,24 +2,24 @@
 // Accordion
 //
 
-.elementor-tab-title {
+.refraction-tab-title {
 	a {
 		color: inherit;
 	}
 }
 
-.elementor-accordion {
+.refraction-accordion {
 	text-align: start;
 
-	.elementor-accordion-item {
+	.refraction-accordion-item {
 		border: 1px solid $gray-light;
 
-		+ .elementor-accordion-item {
+		+ .refraction-accordion-item {
 			border-block-start: none;
 		}
 	}
 
-	.elementor-tab-title {
+	.refraction-tab-title {
 		margin: 0;
 		padding: 15px 20px;
 		font-weight: bold;
@@ -27,7 +27,7 @@
 		cursor: pointer;
 		outline: none;
 
-		.elementor-accordion-icon {
+		.refraction-accordion-icon {
 			display: inline-block;
 			width: 1.5em;
 
@@ -36,7 +36,7 @@
 				height: 1em;
 			}
 
-			&.elementor-accordion-icon- {
+			&.refraction-accordion-icon- {
 
 				&right {
 					float: right;
@@ -49,26 +49,26 @@
 				}
 			}
 
-			.elementor-accordion-icon-closed {
+			.refraction-accordion-icon-closed {
 				display: block;
 			}
-			.elementor-accordion-icon-opened {
+			.refraction-accordion-icon-opened {
 				display: none;
 			}
 		}
 
-		&.elementor-active {
+		&.refraction-active {
 
-			.elementor-accordion-icon-closed {
+			.refraction-accordion-icon-closed {
 				display: none;
 			}
-			.elementor-accordion-icon-opened {
+			.refraction-accordion-icon-opened {
 				display: block;
 			}
 		}
 	}
 
-	.elementor-tab-content {
+	.refraction-tab-content {
 		display: none;
 		padding: 15px 20px;
 		border-block-start: 1px solid $gray-light;
@@ -79,17 +79,17 @@
 // Responsive mode
 @media (max-width: $screen-mobile-max) {
 
-	.elementor-accordion {
+	.refraction-accordion {
 
-		.elementor-tab-title {
+		.refraction-tab-title {
 			padding: 12px 15px;
 
-			.elementor-accordion-icon {
+			.refraction-accordion-icon {
 				width: 1.2em;
 			}
 		}
 
-		.elementor-tab-content {
+		.refraction-tab-content {
 			padding: 7px 15px;
 		}
 	}
@@ -98,7 +98,7 @@
 .e-con,
 .e-con-inner {
 
-	> .elementor-widget-accordion {
+	> .refraction-widget-accordion {
 		// Fix - Accordion widget disappears because the 'flex column' setting causes an undefined width inside the flex container (ED-7524).
 		width: var( --container-widget-width );
 		--flex-grow: var( --container-widget-flex-grow );

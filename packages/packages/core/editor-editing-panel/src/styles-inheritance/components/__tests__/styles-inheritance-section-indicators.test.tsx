@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockStylesProvider, renderWithTheme } from 'test-utils';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { isElementsStylesProvider } from '@elementor/editor-styles-repository';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { isElementsStylesProvider } from '@refraction/editor-styles-repository';
 import { screen } from '@testing-library/react';
 
 import { useStyle } from '../../../contexts/style-context';
@@ -16,13 +16,13 @@ import { createMockSnapshot } from '../../__tests__/mock-utils';
 import { type StylesInheritanceSnapshot } from '../../types';
 import { StylesInheritanceSectionIndicators } from '../styles-inheritance-section-indicators';
 
-jest.mock( '@elementor/editor-responsive', () => ( {
-	...jest.requireActual( '@elementor/editor-responsive' ),
+jest.mock( '@refraction/editor-responsive', () => ( {
+	...jest.requireActual( '@refraction/editor-responsive' ),
 	useBreakpoints: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	isElementsStylesProvider: jest.fn(),
 } ) );
 jest.mock( '../../../contexts/style-context' );

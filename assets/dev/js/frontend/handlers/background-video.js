@@ -1,10 +1,10 @@
-export default class BackgroundVideo extends elementorModules.frontend.handlers.Base {
+export default class BackgroundVideo extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				backgroundVideoContainer: '.elementor-background-video-container',
-				backgroundVideoEmbed: '.elementor-background-video-embed',
-				backgroundVideoHosted: '.elementor-background-video-hosted',
+				backgroundVideoContainer: '.refraction-background-video-container',
+				backgroundVideoEmbed: '.refraction-background-video-embed',
+				backgroundVideoHosted: '.refraction-background-video-hosted',
 			},
 		};
 	}
@@ -116,7 +116,7 @@ export default class BackgroundVideo extends elementorModules.frontend.handlers.
 		this.handleVimeoStartEndTimes( elementSettings );
 
 		this.player.ready().then( () => {
-			jQuery( this.player.element ).addClass( 'elementor-background-video-embed' );
+			jQuery( this.player.element ).addClass( 'refraction-background-video-embed' );
 			this.changeVideoSize();
 		} );
 	}
@@ -179,7 +179,7 @@ export default class BackgroundVideo extends elementorModules.frontend.handlers.
 				onStateChange: ( event ) => {
 					switch ( event.data ) {
 						case startStateCode:
-							$backgroundVideoContainer.removeClass( 'elementor-invisible elementor-loading' );
+							$backgroundVideoContainer.removeClass( 'refraction-invisible refraction-loading' );
 
 							break;
 						case YT.PlayerState.ENDED:
@@ -206,7 +206,7 @@ export default class BackgroundVideo extends elementorModules.frontend.handlers.
 			playerOptions.origin = window.location.hostname;
 		}
 
-		$backgroundVideoContainer.addClass( 'elementor-loading elementor-invisible' );
+		$backgroundVideoContainer.addClass( 'refraction-loading refraction-invisible' );
 
 		this.player = new YT.Player( this.elements.$backgroundVideoEmbed[ 0 ], playerOptions );
 	}
@@ -219,10 +219,10 @@ export default class BackgroundVideo extends elementorModules.frontend.handlers.
 
 		if ( -1 !== videoLink.indexOf( 'vimeo.com' ) ) {
 			this.videoType = 'vimeo';
-			this.apiProvider = elementorFrontend.utils.vimeo;
+			this.apiProvider = refractionFrontend.utils.vimeo;
 		} else if ( videoLink.match( /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com)/ ) ) {
 			this.videoType = 'youtube';
-			this.apiProvider = elementorFrontend.utils.youtube;
+			this.apiProvider = refractionFrontend.utils.youtube;
 		}
 
 		if ( this.apiProvider ) {
@@ -253,7 +253,7 @@ export default class BackgroundVideo extends elementorModules.frontend.handlers.
 			}
 		}
 
-		elementorFrontend.elements.$window.on( 'resize elementor/bg-video/recalc', this.changeVideoSize );
+		refractionFrontend.elements.$window.on( 'resize refraction/bg-video/recalc', this.changeVideoSize );
 	}
 
 	deactivate() {
@@ -263,13 +263,13 @@ export default class BackgroundVideo extends elementorModules.frontend.handlers.
 			this.elements.$backgroundVideoHosted.removeAttr( 'src' ).off( 'ended' );
 		}
 
-		elementorFrontend.elements.$window.off( 'resize', this.changeVideoSize );
+		refractionFrontend.elements.$window.off( 'resize', this.changeVideoSize );
 	}
 
 	run() {
 		const elementSettings = this.getElementSettings();
 
-		if ( ! elementSettings.background_play_on_mobile && 'mobile' === elementorFrontend.getCurrentDeviceMode() ) {
+		if ( ! elementSettings.background_play_on_mobile && 'mobile' === refractionFrontend.getCurrentDeviceMode() ) {
 			return;
 		}
 

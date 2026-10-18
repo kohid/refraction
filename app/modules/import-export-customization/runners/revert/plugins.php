@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Revert;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Revert;
 
 class Plugins extends Revert_Runner_Base {
 

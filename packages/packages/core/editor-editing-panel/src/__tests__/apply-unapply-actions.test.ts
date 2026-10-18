@@ -1,14 +1,14 @@
 import { createMockStyleDefinition, createMockStylesProvider } from 'test-utils';
-import { setDocumentModifiedStatus } from '@elementor/editor-documents';
-import { updateElementSettings } from '@elementor/editor-elements';
-import { stylesRepository } from '@elementor/editor-styles-repository';
+import { setDocumentModifiedStatus } from '@refraction/editor-documents';
+import { updateElementSettings } from '@refraction/editor-elements';
+import { stylesRepository } from '@refraction/editor-styles-repository';
 
 import { doApplyClasses } from '../apply-unapply-actions';
 
-jest.mock( '@elementor/editor-documents' );
-jest.mock( '@elementor/editor-elements' );
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-documents' );
+jest.mock( '@refraction/editor-elements' );
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	stylesRepository: {
 		getProviderByKey: jest.fn(),
 		getProviders: jest.fn(),

@@ -20,7 +20,7 @@ export type StyleSectionDefinition = {
 export const STYLE_SECTIONS: StyleSectionDefinition[] = [
 	{
 		name: 'Layout',
-		title: __( 'Layout', 'elementor' ),
+		title: __( 'Layout', 'refraction' ),
 		component: LayoutSection,
 		fields: [
 			'display',
@@ -40,13 +40,13 @@ export const STYLE_SECTIONS: StyleSectionDefinition[] = [
 	},
 	{
 		name: 'Spacing',
-		title: __( 'Spacing', 'elementor' ),
+		title: __( 'Spacing', 'refraction' ),
 		component: SpacingSection,
 		fields: [ 'margin', 'padding' ],
 	},
 	{
 		name: 'Size',
-		title: __( 'Size', 'elementor' ),
+		title: __( 'Size', 'refraction' ),
 		component: SizeSection,
 		fields: [
 			'width',
@@ -62,13 +62,13 @@ export const STYLE_SECTIONS: StyleSectionDefinition[] = [
 	},
 	{
 		name: 'Position',
-		title: __( 'Position', 'elementor' ),
+		title: __( 'Position', 'refraction' ),
 		component: PositionSection,
 		fields: [ 'position', 'z-index', 'scroll-margin-top' ],
 	},
 	{
 		name: 'Typography',
-		title: __( 'Typography', 'elementor' ),
+		title: __( 'Typography', 'refraction' ),
 		component: TypographySection,
 		fields: [
 			'font-family',
@@ -89,19 +89,19 @@ export const STYLE_SECTIONS: StyleSectionDefinition[] = [
 	},
 	{
 		name: 'Background',
-		title: __( 'Background', 'elementor' ),
+		title: __( 'Background', 'refraction' ),
 		component: BackgroundSection,
 		fields: [ 'background' ],
 	},
 	{
 		name: 'Border',
-		title: __( 'Border', 'elementor' ),
+		title: __( 'Border', 'refraction' ),
 		component: BorderSection,
 		fields: [ 'border-radius', 'border-width', 'border-color', 'border-style' ],
 	},
 	{
 		name: 'Effects',
-		title: __( 'Effects', 'elementor' ),
+		title: __( 'Effects', 'refraction' ),
 		component: EffectsSection,
 		fields: [
 			'mix-blend-mode',

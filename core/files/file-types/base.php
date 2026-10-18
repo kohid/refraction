@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Core\Files\File_Types;
+namespace Refraction\Core\Files\File_Types;
 
-use Elementor\Core\Base\Base_Object;
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Plugin;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor File Types Base.
+ * Refraction File Types Base.
  *
  * The File Types Base class provides base methods used by all file type handler classes.
  * These methods are used in file upl

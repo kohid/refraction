@@ -1,11 +1,11 @@
 import { act } from 'react';
-import { getElementStyles } from '@elementor/editor-elements';
+import { getElementStyles } from '@refraction/editor-elements';
 import { renderHook } from '@testing-library/react';
 
 import { useElement, usePanelElementSetting } from '../../contexts/element-context';
 import { useActiveStyleDefId } from '../use-active-style-def-id';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 jest.mock( '../../contexts/element-context' );
 
 describe( 'useActiveStyleDefId', () => {

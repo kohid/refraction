@@ -1,6 +1,6 @@
-import { CREATABLE, DELETABLE, EDITABLE, READABLE } from 'elementor-api/core/data';
-import ComponentBase from 'elementor-api/modules/component-base';
-import * as eData from 'elementor/tests/qunit/mock/e-data';
+import { CREATABLE, DELETABLE, EDITABLE, READABLE } from 'refraction-api/core/data';
+import ComponentBase from 'refraction-api/modules/component-base';
+import * as eData from 'refraction/tests/qunit/mock/e-data';
 
 // Test cache module.
 require( './data/cache.spec.js' );
@@ -150,7 +150,7 @@ jQuery( () => {
 				},
 				params = $e.data.prepareHeaders( requestData );
 
-			assert.equal( params.headers[ 'X-WP-Nonce' ], elementorWebCliConfig.nonce );
+			assert.equal( params.headers[ 'X-WP-Nonce' ], refractionWebCliConfig.nonce );
 		} );
 
 		QUnit.test( 'prepareHeaders(): with POST', ( assert ) => {

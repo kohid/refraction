@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Classes\Render;
+namespace Refraction\Modules\FloatingButtons\Classes\Render;
 
-use Elementor\Core\Base\Providers\Social_Network_Provider;
-use Elementor\Icons_Manager;
-use Elementor\Modules\FloatingButtons\Base\Widget_Contact_Button_Base;
-use Elementor\Utils;
+use Refraction\Core\Base\Providers\Social_Network_Provider;
+use Refraction\Icons_Manager;
+use Refraction\Modules\FloatingButtons\Base\Widget_Contact_Button_Base;
+use Refraction\Utils;
 
 /**
  * Class Contact_Buttons_Render_Base.
@@ -60,7 +60,7 @@ abstract class Contact_Buttons_Render_Base {
 		}
 
 		if ( ! empty( $hover_animation ) ) {
-			$button_classnames .= ' elementor-animation-' . $hover_animation;
+			$button_classnames .= ' refraction-animation-' . $hover_animation;
 		}
 
 		if ( ! empty( $entrance_animation ) && 'none' != $entrance_animation ) {
@@ -84,7 +84,7 @@ abstract class Contact_Buttons_Render_Base {
 			'aria-controls' => 'e-contact-buttons__content-wrapper',
 			'aria-label' => sprintf(
 				/* translators: %s: Accessible name. */
-				esc_html__( 'Toggle %s', 'elementor' ),
+				esc_html__( 'Toggle %s', 'refraction' ),
 				$accessible_name,
 			),
 			'type' => 'button',
@@ -109,7 +109,7 @@ abstract class Contact_Buttons_Render_Base {
 			'aria-controls' => 'e-contact-buttons__content-wrapper',
 			'aria-label' => sprintf(
 				/* translators: %s: Accessible name. */
-				esc_html__( 'Close %s', 'elementor' ),
+				esc_html__( 'Close %s', 'refraction' ),
 				$accessible_name,
 			),
 			'type' => 'button',
@@ -219,7 +219,7 @@ abstract class Contact_Buttons_Render_Base {
 		?>
 			<div class="e-contact-buttons__powered-container">
 				<p class="e-contact-buttons__powered-text">
-					<?php echo esc_attr__( 'Powered by Elementor', 'elementor' ); ?>
+					<?php echo esc_attr__( 'Powered by Refraction', 'refraction' ); ?>
 				</p>
 			</div>
 		<?php
@@ -267,7 +267,7 @@ abstract class Contact_Buttons_Render_Base {
 					$icon_text_mapping = Social_Network_Provider::get_text_mapping( $icon['contact_icon_platform'] );
 					$aria_label = sprintf(
 						/* translators: %s: Platform name. */
-						esc_html__( 'Open %s', 'elementor' ),
+						esc_html__( 'Open %s', 'refraction' ),
 						$icon_text_mapping,
 					);
 
@@ -288,7 +288,7 @@ abstract class Contact_Buttons_Render_Base {
 					$icon_classnames = 'e-contact-buttons__contact-icon-link has-size-' . $icons_size;
 
 					if ( ! empty( $hover_animation ) ) {
-						$icon_classnames .= ' elementor-animation-' . $hover_animation;
+						$icon_classnames .= ' refraction-animation-' . $hover_animation;
 					}
 
 					$this->widget->add_render_attribute( 'icon-link-' . $key, [
@@ -352,7 +352,7 @@ abstract class Contact_Buttons_Render_Base {
 		$formatted_link = $this->get_formatted_link( $link, 'chat_button' );
 
 		if ( ! empty( $hover_animation ) ) {
-			$cta_classnames .= ' elementor-animation-' . $hover_animation;
+			$cta_classnames .= ' refraction-animation-' . $hover_animation;
 		}
 
 		$this->widget->add_render_attribute( 'formatted-cta', [

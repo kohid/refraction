@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { throttle } from '@elementor/utils';
+import { throttle } from '@refraction/utils';
 
 export function useElementRect( element: HTMLElement | null ) {
 	const [ rect, setRect ] = useState< DOMRect >( new DOMRect( 0, 0, 0, 0 ) );

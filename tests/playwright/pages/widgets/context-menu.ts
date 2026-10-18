@@ -1,5 +1,5 @@
 import EditorSelectors from '../../selectors/editor-selectors';
-import Content from '../elementor-panel-tabs/content';
+import Content from '../refraction-panel-tabs/content';
 
 export default class ContextMenu extends Content {
 	/**
@@ -37,10 +37,10 @@ export default class ContextMenu extends Content {
 	 * @return {Promise<void>}
 	 */
 	async copyElement( elementId: string ): Promise<void> {
-		const element = this.editor.getPreviewFrame().locator( '.elementor-edit-mode .elementor-element-' + elementId );
+		const element = this.editor.getPreviewFrame().locator( '.refraction-edit-mode .refraction-element-' + elementId );
 		await element.click( { button: 'right' } );
 
-		const copyListItemSelector = '.elementor-context-menu-list__item-copy:visible';
+		const copyListItemSelector = '.refraction-context-menu-list__item-copy:visible';
 		await this.page.waitForSelector( copyListItemSelector );
 		await this.page.locator( copyListItemSelector ).click();
 	}
@@ -55,7 +55,7 @@ export default class ContextMenu extends Content {
 	async pasteElement( selector: string ): Promise<void> {
 		await this.editor.getPreviewFrame().locator( selector ).click( { button: 'right' } );
 
-		const pasteSelector = '.elementor-context-menu-list__group-paste .elementor-context-menu-list__item-paste';
+		const pasteSelector = '.refraction-context-menu-list__group-paste .refraction-context-menu-list__item-paste';
 		await this.page.locator( pasteSelector ).click();
 	}
 
@@ -67,10 +67,10 @@ export default class ContextMenu extends Content {
 	 * @return {Promise<void>}
 	 */
 	async pasteStyleElement( elementId: string ): Promise<void> {
-		const element = this.editor.getPreviewFrame().locator( '.elementor-edit-mode .elementor-element-' + elementId );
+		const element = this.editor.getPreviewFrame().locator( '.refraction-edit-mode .refraction-element-' + elementId );
 		await element.click( { button: 'right' } );
 
-		const pasteListItemSelector = '.elementor-context-menu-list__item-pasteStyle:visible';
+		const pasteListItemSelector = '.refraction-context-menu-list__item-pasteStyle:visible';
 		await this.page.waitForSelector( pasteListItemSelector );
 		await this.page.locator( pasteListItemSelector ).click();
 	}

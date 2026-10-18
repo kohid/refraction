@@ -37,12 +37,12 @@ export const TransformContent = () => {
 							},
 						} }
 						{ ...getTabsProps() }
-						aria-label={ __( 'Transform', 'elementor' ) }
+						aria-label={ __( 'Transform', 'refraction' ) }
 					>
-						<Tab label={ __( 'Move', 'elementor' ) } { ...getTabProps( TransformFunctionKeys.move ) } />
-						<Tab label={ __( 'Scale', 'elementor' ) } { ...getTabProps( TransformFunctionKeys.scale ) } />
-						<Tab label={ __( 'Rotate', 'elementor' ) } { ...getTabProps( TransformFunctionKeys.rotate ) } />
-						<Tab label={ __( 'Skew', 'elementor' ) } { ...getTabProps( TransformFunctionKeys.skew ) } />
+						<Tab label={ __( 'Move', 'refraction' ) } { ...getTabProps( TransformFunctionKeys.move ) } />
+						<Tab label={ __( 'Scale', 'refraction' ) } { ...getTabProps( TransformFunctionKeys.scale ) } />
+						<Tab label={ __( 'Rotate', 'refraction' ) } { ...getTabProps( TransformFunctionKeys.rotate ) } />
+						<Tab label={ __( 'Skew', 'refraction' ) } { ...getTabProps( TransformFunctionKeys.skew ) } />
 					</Tabs>
 				</Box>
 				<TabPanel sx={ { p: 1.5 } } { ...getTabPanelProps( TransformFunctionKeys.move ) }>

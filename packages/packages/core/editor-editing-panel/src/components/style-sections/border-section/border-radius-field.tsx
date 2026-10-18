@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { type EqualUnequalItems, EqualUnequalSizesControl } from '@elementor/editor-controls';
-import { borderRadiusPropTypeUtil } from '@elementor/editor-props';
+import { type EqualUnequalItems, EqualUnequalSizesControl } from '@refraction/editor-controls';
+import { borderRadiusPropTypeUtil } from '@refraction/editor-props';
 import {
 	BorderCornersIcon,
 	RadiusBottomLeftIcon,
@@ -15,7 +15,7 @@ import { StylesField } from '../../../controls-registry/styles-field';
 import { useDirection } from '../../../hooks/use-direction';
 import { UiProviders } from '../../../styles-inheritance/components/ui-providers';
 
-const BORDER_RADIUS_LABEL = __( 'Border radius', 'elementor' );
+const BORDER_RADIUS_LABEL = __( 'Border radius', 'refraction' );
 
 const StartStartIcon = withDirection( RadiusTopLeftIcon );
 const StartEndIcon = withDirection( RadiusTopRightIcon );
@@ -23,28 +23,28 @@ const EndStartIcon = withDirection( RadiusBottomLeftIcon );
 const EndEndIcon = withDirection( RadiusBottomRightIcon );
 
 const getStartStartLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Top right', 'elementor' ) : __( 'Top left', 'elementor' );
+	isSiteRtl ? __( 'Top right', 'refraction' ) : __( 'Top left', 'refraction' );
 
 const getStartStartAriaLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Border top right radius', 'elementor' ) : __( 'Border top left radius', 'elementor' );
+	isSiteRtl ? __( 'Border top right radius', 'refraction' ) : __( 'Border top left radius', 'refraction' );
 
 const getStartEndLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Top left', 'elementor' ) : __( 'Top right', 'elementor' );
+	isSiteRtl ? __( 'Top left', 'refraction' ) : __( 'Top right', 'refraction' );
 
 const getStartEndAriaLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Border top left radius', 'elementor' ) : __( 'Border top right radius', 'elementor' );
+	isSiteRtl ? __( 'Border top left radius', 'refraction' ) : __( 'Border top right radius', 'refraction' );
 
 const getEndStartLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Bottom right', 'elementor' ) : __( 'Bottom left', 'elementor' );
+	isSiteRtl ? __( 'Bottom right', 'refraction' ) : __( 'Bottom left', 'refraction' );
 
 const getEndStartAriaLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Border bottom right radius', 'elementor' ) : __( 'Border bottom left radius', 'elementor' );
+	isSiteRtl ? __( 'Border bottom right radius', 'refraction' ) : __( 'Border bottom left radius', 'refraction' );
 
 const getEndEndLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Bottom left', 'elementor' ) : __( 'Bottom right', 'elementor' );
+	isSiteRtl ? __( 'Bottom left', 'refraction' ) : __( 'Bottom right', 'refraction' );
 
 const getEndEndAriaLabel = ( isSiteRtl: boolean ) =>
-	isSiteRtl ? __( 'Border bottom left radius', 'elementor' ) : __( 'Border bottom right radius', 'elementor' );
+	isSiteRtl ? __( 'Border bottom left radius', 'refraction' ) : __( 'Border bottom right radius', 'refraction' );
 
 const getCorners = ( isSiteRtl: boolean ): EqualUnequalItems => [
 	{
@@ -83,7 +83,7 @@ export const BorderRadiusField = () => {
 					items={ getCorners( isSiteRtl ) }
 					label={ BORDER_RADIUS_LABEL }
 					icon={ <BorderCornersIcon fontSize={ 'tiny' } /> }
-					tooltipLabel={ __( 'Adjust corners', 'elementor' ) }
+					tooltipLabel={ __( 'Adjust corners', 'refraction' ) }
 					multiSizePropTypeUtil={ borderRadiusPropTypeUtil }
 				/>
 			</StylesField>

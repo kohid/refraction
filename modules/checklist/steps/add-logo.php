@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\Checklist\Steps;
+namespace Refraction\Modules\Checklist\Steps;
 
-use Elementor\Core\DocumentTypes\Page;
+use Refraction\Core\DocumentTypes\Page;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -22,15 +22,15 @@ class Add_Logo extends Step_Base {
 	}
 
 	public function get_title(): string {
-		return esc_html__( 'Add your logo', 'elementor' );
+		return esc_html__( 'Add your logo', 'refraction' );
 	}
 
 	public function get_description(): string {
-		return __( 'Let\'s start by adding your logo and filling in the site identity settings. This will establish your initial presence and also improve SEO.', 'elementor' );
+		return __( 'Let\'s start by adding your logo and filling in the site identity settings. This will establish your initial presence and also improve SEO.', 'refraction' );
 	}
 
 	public function get_cta_text(): string {
-		return esc_html__( 'Go to Site Identity', 'elementor' );
+		return esc_html__( 'Go to Site Identity', 'refraction' );
 	}
 
 	public function get_cta_url(): string {

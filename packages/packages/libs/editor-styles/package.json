@@ -1,10 +1,10 @@
 {
-  "name": "@elementor/editor-styles",
-  "description": "This package contains the styles model for the Elementor editor",
+  "name": "@refraction/editor-styles",
+  "description": "This package contains the styles model for the Refraction editor",
   "version": "4.4.0",
   "private": false,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,11 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elementor/elementor.git",
+    "url": "git+https://github.com/kohid/refraction.git",
     "directory": "packages/libs/editor-styles"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -40,8 +40,8 @@
     "dev": "tsup --config=../../tsup.dev.ts"
   },
   "dependencies": {
-    "@elementor/editor-props": "4.4.0",
-    "@elementor/editor-responsive": "4.4.0"
+    "@refraction/editor-props": "4.4.0",
+    "@refraction/editor-responsive": "4.4.0"
   },
   "devDependencies": {
     "tsup": "^8.3.5"

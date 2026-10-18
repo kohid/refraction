@@ -1,5 +1,5 @@
 import { createError } from '../create-error';
-import { ElementorError } from '../elementor-error';
+import { RefractionError } from '../refraction-error';
 import { ensureError } from '../ensure-error';
 
 describe( 'createError', () => {
@@ -20,7 +20,7 @@ describe( 'createError', () => {
 		} );
 
 		// Assert.
-		expect( error ).toBeInstanceOf( ElementorError );
+		expect( error ).toBeInstanceOf( RefractionError );
 
 		expect( error.code ).toBe( code );
 		expect( error.message ).toBe( message );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type ComponentProps, useCallback, useState } from 'react';
-import { escapedHtmlPropTypeUtil } from '@elementor/editor-props';
+import { escapedHtmlPropTypeUtil } from '@refraction/editor-props';
 import { Box, Stack, type SxProps, type Theme } from '@elementor/ui';
 import { type Editor } from '@tiptap/react';
 
@@ -77,7 +77,7 @@ export const InlineEditingControl = createControl(
 								'& a': {
 									color: 'inherit',
 								},
-								'& .elementor-inline-editor-reset': {
+								'& .refraction-inline-editor-reset': {
 									margin: 0,
 									padding: 0,
 								},

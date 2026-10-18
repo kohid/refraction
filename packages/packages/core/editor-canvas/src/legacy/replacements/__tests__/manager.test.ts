@@ -1,4 +1,4 @@
-import { mockLegacyElementor } from 'test-utils';
+import { mockLegacyRefraction } from 'test-utils';
 
 import { createTemplatedElementTypeWithReplacements } from '../manager';
 
@@ -18,7 +18,7 @@ const createMockElementConfig = () => ( {
 
 describe( 'createTemplatedElementTypeWithReplacements', () => {
 	beforeEach( () => {
-		mockLegacyElementor();
+		mockLegacyRefraction();
 	} );
 
 	it( 'should return the correct element type', () => {

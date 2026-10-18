@@ -1,7 +1,7 @@
-import { getAllDescendants, type V1Element } from '@elementor/editor-elements';
-import { type NotificationData, notify } from '@elementor/editor-notifications';
-import { blockCommand } from '@elementor/editor-v1-adapters';
-import { __getState as getState } from '@elementor/store';
+import { getAllDescendants, type V1Element } from '@refraction/editor-elements';
+import { type NotificationData, notify } from '@refraction/editor-notifications';
+import { blockCommand } from '@refraction/editor-v1-adapters';
+import { __getState as getState } from '@refraction/store';
 import { __ } from '@wordpress/i18n';
 
 import { type ComponentInstanceProp } from './prop-types/component-instance-prop-type';
@@ -49,7 +49,7 @@ type StorageContent = {
 
 const COMPONENT_CIRCULAR_NESTING_ALERT: NotificationData = {
 	type: 'default',
-	message: __( "Can't add this component - components that contain each other can't be nested.", 'elementor' ),
+	message: __( "Can't add this component - components that contain each other can't be nested.", 'refraction' ),
 	id: 'circular-component-nesting-blocked',
 };
 
@@ -196,8 +196,8 @@ function blockCircularPaste( args: PasteArgs ): boolean {
 	}
 
 	const data = (
-		window as unknown as ExtendedWindow & { elementorCommon?: { storage?: { get: () => StorageContent } } }
-	 )?.elementorCommon?.storage?.get();
+		window as unknown as ExtendedWindow & { refractionCommon?: { storage?: { get: () => StorageContent } } }
+	 )?.refractionCommon?.storage?.get();
 
 	if ( ! data?.clipboard?.elements ) {
 		return false;

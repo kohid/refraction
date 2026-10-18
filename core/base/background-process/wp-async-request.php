@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Base\BackgroundProcess;
+namespace Refraction\Core\Base\BackgroundProcess;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

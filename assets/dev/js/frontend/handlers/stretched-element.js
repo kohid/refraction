@@ -16,28 +16,28 @@ export default class StretchedElement extends Base {
 	bindEvents() {
 		const handlerID = this.getUniqueHandlerID();
 
-		elementorFrontend.addListenerOnce( handlerID, 'resize', this.stretch );
+		refractionFrontend.addListenerOnce( handlerID, 'resize', this.stretch );
 
-		elementorFrontend.addListenerOnce( handlerID, 'sticky:stick', this.stretch, this.$element );
+		refractionFrontend.addListenerOnce( handlerID, 'sticky:stick', this.stretch, this.$element );
 
-		elementorFrontend.addListenerOnce( handlerID, 'sticky:unstick', this.stretch, this.$element );
+		refractionFrontend.addListenerOnce( handlerID, 'sticky:unstick', this.stretch, this.$element );
 
-		if ( elementorFrontend.isEditMode() ) {
+		if ( refractionFrontend.isEditMode() ) {
 			this.onKitChangeStretchContainerChange = this.onKitChangeStretchContainerChange.bind( this );
-			elementor.channels.editor.on( 'kit:change:stretchContainer', this.onKitChangeStretchContainerChange );
+			refraction.channels.editor.on( 'kit:change:stretchContainer', this.onKitChangeStretchContainerChange );
 		}
 	}
 
 	unbindEvents() {
-		elementorFrontend.removeListeners( this.getUniqueHandlerID(), 'resize', this.stretch );
+		refractionFrontend.removeListeners( this.getUniqueHandlerID(), 'resize', this.stretch );
 
-		if ( elementorFrontend.isEditMode() ) {
-			elementor.channels.editor.off( 'kit:change:stretchContainer', this.onKitChangeStretchContainerChange );
+		if ( refractionFrontend.isEditMode() ) {
+			refraction.channels.editor.off( 'kit:change:stretchContainer', this.onKitChangeStretchContainerChange );
 		}
 	}
 
 	isActive( settings ) {
-		return elementorFrontend.isEditMode() || settings.$element.hasClass( this.getStretchedClass() );
+		return refractionFrontend.isEditMode() || settings.$element.hasClass( this.getStretchedClass() );
 	}
 
 	getStretchElementForConfig( childSelector = null ) {
@@ -54,18 +54,18 @@ export default class StretchedElement extends Base {
 			selectors: {
 				container: this.getStretchContainer(),
 			},
-			considerScrollbar: elementorFrontend.isEditMode() && elementorFrontend.config.is_rtl,
+			considerScrollbar: refractionFrontend.isEditMode() && refractionFrontend.config.is_rtl,
 		};
 	}
 
 	initStretch() {
 		this.stretch = this.stretch.bind( this );
 
-		this.stretchElement = new elementorModules.frontend.tools.StretchElement( this.getStretchElementConfig() );
+		this.stretchElement = new refractionModules.frontend.tools.StretchElement( this.getStretchElementConfig() );
 	}
 
 	getStretchContainer() {
-		return elementorFrontend.getKitSettings( 'stretched_section_container' ) || window;
+		return refractionFrontend.getKitSettings( 'stretched_section_container' ) || window;
 	}
 
 	isStretchSettingEnabled() {

@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Frontend\Widget_Content_Render_Mode;
-use Elementor\Utils;
+use Refraction\Core\Frontend\Widget_Content_Render_Mode;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor widget base.
+ * Refraction widget base.
  *
- * An abstract class to register new Elementor widgets. It extended the
+ * An abstract class to register new Refraction widgets. It extended the
  * `Element_Base` class to inherit its properties.
  *
  * This abstract class must be extended in order to register new widgets.
@@ -25,7 +25,7 @@ abstract class Widget_Base extends Element_Base {
 	 *
 	 * Used in cases where the widget has no content. When widgets uses only
 	 * skins to display dynamic content generated on the server. For example the
-	 * posts widget in Elementor Pro. Default is true, the widget has content
+	 * posts widget in Refraction Pro. Default is true, the widget has content
 	 * template.
 	 *
 	 * @access protected
@@ -143,7 +143,7 @@ abstract class Widget_Base extends Element_Base {
 			/**
 			 * Widget skin init.
 			 *
-			 * Fires when Elementor widget is being initialized.
+			 * Fires when Refraction widget is being initialized.
 			 *
 			 * The dynamic portion of the hook name, `$widget_name`, refers to the widget name.
 			 *
@@ -151,7 +151,7 @@ abstract class Widget_Base extends Element_Base {
 			 *
 			 * @param Widget_Base $this The current widget.
 			 */
-			do_action( "elementor/widget/{$widget_name}/skins_init", $this );
+			do_action( "refraction/widget/{$widget_name}/skins_init", $this );
 		}
 	}
 
@@ -280,7 +280,7 @@ abstract class Widget_Base extends Element_Base {
 			$skin_options = [];
 
 			if ( $this->_has_template_content ) {
-				$skin_options[''] = esc_html__( 'Default', 'elementor' );
+				$skin_options[''] = esc_html__( 'Default', 'refraction' );
 			}
 
 			foreach ( $skins as $skin_id => $skin ) {
@@ -295,7 +295,7 @@ abstract class Widget_Base extends Element_Base {
 				$this->add_control(
 					'_skin',
 					[
-						'label' => esc_html__( 'Skin', 'elementor' ),
+						'label' => esc_html__( 'Skin', 'refraction' ),
 						'type' => Controls_Manager::HIDDEN,
 						'default' => $default_value,
 					]
@@ -304,7 +304,7 @@ abstract class Widget_Base extends Element_Base {
 				$this->add_control(
 					'_skin',
 					[
-						'label' => esc_html__( 'Skin', 'elementor' ),
+						'label' => esc_html__( 'Skin', 'refraction' ),
 						'type' => Controls_Manager::SELECT,
 						'default' => $default_value,
 						'options' => $skin_options,
@@ -401,7 +401,7 @@ abstract class Widget_Base extends Element_Base {
 	 */
 	protected function print_template_content( $template_content ) {
 		if ( $this->has_widget_inner_wrapper() ) : ?>
-		<div class="elementor-widget-container">
+		<div class="refraction-widget-container">
 		<?php endif;
 			Utils::print_unescaped_internal_string( $template_content );
 		if ( $this->has_widget_inner_wrapper() ) : ?>
@@ -461,7 +461,7 @@ abstract class Widget_Base extends Element_Base {
 	 * @access protected
 	 */
 	protected function get_html_wrapper_class() {
-		return 'elementor-widget-' . $this->get_name();
+		return 'refraction-widget-' . $this->get_name();
 	}
 
 	/**
@@ -477,7 +477,7 @@ abstract class Widget_Base extends Element_Base {
 
 		$this->add_render_attribute(
 			'_wrapper', 'class', [
-				'elementor-widget',
+				'refraction-widget',
 				$this->get_html_wrapper_class(),
 			]
 		);
@@ -505,7 +505,7 @@ abstract class Widget_Base extends Element_Base {
 		$open_lightbox = isset( $settings['open_lightbox'] ) ? $settings['open_lightbox'] : null;
 
 		if ( Plugin::$instance->editor->is_edit_mode() ) {
-			$this->add_render_attribute( 'link', 'class', 'elementor-clickable', true );
+			$this->add_render_attribute( 'link', 'class', 'refraction-clickable', true );
 		}
 
 		$this->add_lightbox_data_attributes( 'link', $id, $open_lightbox, $this->get_id(), true );
@@ -535,7 +535,7 @@ abstract class Widget_Base extends Element_Base {
 
 		if ( 'no' === $lightbox_setting_key ) {
 			if ( $is_global_image_lightbox_enabled ) {
-				$this->add_render_attribute( $element, 'data-elementor-open-lightbox', 'no', $overwrite );
+				$this->add_render_attribute( $element, 'data-refraction-open-lightbox', 'no', $overwrite );
 			}
 
 			return $this;
@@ -545,7 +545,7 @@ abstract class Widget_Base extends Element_Base {
 			return $this;
 		}
 
-		$attributes['data-elementor-open-lightbox'] = 'yes';
+		$attributes['data-refraction-open-lightbox'] = 'yes';
 
 		$action_hash_params = [];
 
@@ -555,7 +555,7 @@ abstract class Widget_Base extends Element_Base {
 		}
 
 		if ( $group_id ) {
-			$attributes['data-elementor-lightbox-slideshow'] = $group_id;
+			$attributes['data-refraction-lightbox-slideshow'] = $group_id;
 
 			$action_hash_params['slideshow'] = $group_id;
 		}
@@ -564,11 +564,11 @@ abstract class Widget_Base extends Element_Base {
 			$lightbox_image_attributes = Plugin::$instance->images_manager->get_lightbox_image_attributes( $id );
 
 			if ( isset( $lightbox_image_attributes['title'] ) ) {
-				$attributes['data-elementor-lightbox-title'] = $lightbox_image_attributes['title'];
+				$attributes['data-refraction-lightbox-title'] = $lightbox_image_attributes['title'];
 			}
 
 			if ( isset( $lightbox_image_attributes['description'] ) ) {
-				$attributes['data-elementor-lightbox-description'] = $lightbox_image_attributes['description'];
+				$attributes['data-refraction-lightbox-description'] = $lightbox_image_attributes['description'];
 			}
 		}
 
@@ -594,13 +594,13 @@ abstract class Widget_Base extends Element_Base {
 		/**
 		 * Before widget render content.
 		 *
-		 * Fires before Elementor widget is being rendered.
+		 * Fires before Refraction widget is being rendered.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param Widget_Base $this The current widget.
 		 */
-		do_action( 'elementor/widget/before_render_content', $this, [ 'mode' => Widget_Content_Render_Mode::NORMAL ] );
+		do_action( 'refraction/widget/before_render_content', $this, [ 'mode' => Widget_Content_Render_Mode::NORMAL ] );
 
 		ob_start();
 
@@ -618,7 +618,7 @@ abstract class Widget_Base extends Element_Base {
 			return;
 		}
 		if ( $this->has_widget_inner_wrapper() ) : ?>
-		<div class="elementor-widget-container">
+		<div class="refraction-widget-container">
 		<?php endif; ?>
 			<?php
 			if ( $this->is_widget_first_render( $this->get_group_name() ) ) {
@@ -635,7 +635,7 @@ abstract class Widget_Base extends Element_Base {
 			 * @param string      $widget_content The content of the widget.
 			 * @param Widget_Base $this           The widget.
 			 */
-			$widget_content = apply_filters( 'elementor/widget/render_content', $widget_content, $this, [ 'mode' => Widget_Content_Render_Mode::NORMAL ] );
+			$widget_content = apply_filters( 'refraction/widget/render_content', $widget_content, $this, [ 'mode' => Widget_Content_Render_Mode::NORMAL ] );
 			Utils::print_unescaped_internal_string( $widget_content );
 			?>
 		<?php if ( $this->has_widget_inner_wrapper() ) : ?>
@@ -650,21 +650,21 @@ abstract class Widget_Base extends Element_Base {
 	/**
 	 * Render widget plain content.
 	 *
-	 * Elementor saves the page content in a unique way, but it's not the way
+	 * Refraction saves the page content in a unique way, but it's not the way
 	 * WordPress saves data. This method is used to save generated HTML to the
 	 * database as plain content the WordPress way.
 	 *
 	 * When rendering plain content, it allows other WordPress plugins to
 	 * interact with the content - to search, check SEO and other purposes. It
-	 * also allows the site to keep working even if Elementor is deactivated.
+	 * also allows the site to keep working even if Refraction is deactivated.
 	 *
 	 * Note that if the widget uses shortcodes to display the data, the best
 	 * practice is to return the shortcode itself.
 	 *
 	 * Also note that if the widget don't display any content it should return
-	 * an empty string. For example Elementor Pro Form Widget uses this method
+	 * an empty string. For example Refraction Pro Form Widget uses this method
 	 * to return an empty string because there is no content to return. This way
-	 * if Elementor Pro will be deactivated there won't be any form to display.
+	 * if Refraction Pro will be deactivated there won't be any form to display.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -680,13 +680,13 @@ abstract class Widget_Base extends Element_Base {
 			return '';
 		}
 
-		return \Elementor\Modules\MarkdownRender\Html_To_Markdown::convert( $content );
+		return \Refraction\Modules\MarkdownRender\Html_To_Markdown::convert( $content );
 	}
 
 	protected function get_render_content_for_markdown(): string {
 		$render_args = [ 'mode' => Widget_Content_Render_Mode::MARKDOWN ];
 
-		do_action( 'elementor/widget/before_render_content', $this, $render_args );
+		do_action( 'refraction/widget/before_render_content', $this, $render_args );
 
 		ob_start();
 
@@ -705,7 +705,7 @@ abstract class Widget_Base extends Element_Base {
 			return '';
 		}
 
-		return apply_filters( 'elementor/widget/render_content', $widget_content, $this, $render_args );
+		return apply_filters( 'refraction/widget/render_content', $widget_content, $this, $render_args );
 	}
 
 	/**
@@ -742,7 +742,7 @@ abstract class Widget_Base extends Element_Base {
 	 * Retrieve the raw element data, including the id, type, settings, child
 	 * elements and whether it is an inner element.
 	 *
-	 * The data with the HTML used always to display the data, but the Elementor
+	 * The data with the HTML used always to display the data, but the Refraction
 	 * editor uses the raw data without the HTML in order not to render the data
 	 * again.
 	 *
@@ -895,13 +895,13 @@ abstract class Widget_Base extends Element_Base {
 		}
 
 		$this->add_render_attribute( $key, [
-			'class' => 'elementor-inline-editing',
-			'data-elementor-setting-key' => $key,
+			'class' => 'refraction-inline-editing',
+			'data-refraction-setting-key' => $key,
 		] );
 
 		if ( 'basic' !== $toolbar ) {
 			$this->add_render_attribute( $key, [
-				'data-elementor-inline-editing-toolbar' => $toolbar,
+				'data-refraction-inline-editing-toolbar' => $toolbar,
 			] );
 		}
 	}
@@ -1031,7 +1031,7 @@ abstract class Widget_Base extends Element_Base {
 		$this->start_controls_section(
 			'Deprecated',
 			[
-				'label' => esc_html__( 'Deprecated', 'elementor' ),
+				'label' => esc_html__( 'Deprecated', 'refraction' ),
 			]
 		);
 
@@ -1073,7 +1073,7 @@ abstract class Widget_Base extends Element_Base {
 	 *
 	 * Use `get_deprecation_message()` method to print the message control at specific location in register_controls().
 	 *
-	 * @param string $version            The version of Elementor that deprecated the widget.
+	 * @param string $version            The version of Refraction that deprecated the widget.
 	 * @param string $message          A message regarding the deprecation.
 	 * @param string $replacement    The widget that should be used instead.
 	 */

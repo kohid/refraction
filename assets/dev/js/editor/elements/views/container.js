@@ -1,15 +1,15 @@
 // Most of the code has been copied from `section.js`.
-import AddSectionView from 'elementor-views/add-section/inline';
+import AddSectionView from 'refraction-views/add-section/inline';
 import WidgetResizable from './behaviors/widget-resizeable';
-import ContainerHelper from 'elementor-editor-utils/container-helper';
-import EmptyView from 'elementor-elements/views/container/empty-view';
-import { SetDirectionMode } from 'elementor-document/hooks';
-import { isWidgetSupportNesting } from 'elementor/modules/nested-elements/assets/js/editor/utils';
-import { getAllElementTypes } from 'elementor-editor/utils/element-types';
+import ContainerHelper from 'refraction-editor-utils/container-helper';
+import EmptyView from 'refraction-elements/views/container/empty-view';
+import { SetDirectionMode } from 'refraction-document/hooks';
+import { isWidgetSupportNesting } from 'refraction/modules/nested-elements/assets/js/editor/utils';
+import { getAllElementTypes } from 'refraction-editor/utils/element-types';
 
-const BaseElementView = require( 'elementor-elements/views/base' );
+const BaseElementView = require( 'refraction-elements/views/base' );
 const ContainerView = BaseElementView.extend( {
-	template: Marionette.TemplateCache.get( '#tmpl-elementor-container-content' ),
+	template: Marionette.TemplateCache.get( '#tmpl-refraction-container-content' ),
 
 	emptyView: EmptyView,
 
@@ -70,13 +70,13 @@ const ContainerView = BaseElementView.extend( {
 	ui() {
 		var ui = BaseElementView.prototype.ui.apply( this, arguments );
 
-		ui.percentsTooltip = '> .elementor-element-overlay .elementor-column-percents-tooltip';
+		ui.percentsTooltip = '> .refraction-element-overlay .refraction-column-percents-tooltip';
 
 		return ui;
 	},
 
 	getCurrentUiStates() {
-		const currentDeviceMode = elementor.channels.deviceMode.request( 'currentMode' ),
+		const currentDeviceMode = refraction.channels.deviceMode.request( 'currentMode' ),
 			deviceSuffix = 'desktop' === currentDeviceMode ? '' : '_' + currentDeviceMode,
 			directionSettingKey = this.getDirectionSettingKey() + deviceSuffix,
 			currentDirection = this.container.settings.get( directionSettingKey );
@@ -105,7 +105,7 @@ const ContainerView = BaseElementView.extend( {
 		_.extend( behaviors, {
 			// TODO: Remove. It's a temporary solution for the Navigator sortable.
 			Sortable: {
-				behaviorClass: require( 'elementor-behaviors/sortable' ),
+				behaviorClass: require( 'refraction-behaviors/sortable' ),
 				elChildType: 'widget',
 			},
 			Resizable: {
@@ -113,7 +113,7 @@ const ContainerView = BaseElementView.extend( {
 			},
 		} );
 
-		return elementor.hooks.applyFilters( 'elements/container/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'elements/container/behaviors', behaviors, this );
 	},
 
 	initialize() {
@@ -123,13 +123,13 @@ const ContainerView = BaseElementView.extend( {
 
 		this.onDeviceModeChange = this.onDeviceModeChange.bind( this );
 
-		elementor.listenTo( elementor.channels.deviceMode, 'change', this.onDeviceModeChange );
+		refraction.listenTo( refraction.channels.deviceMode, 'change', this.onDeviceModeChange );
 	},
 
 	onDestroy() {
 		BaseElementView.prototype.onDestroy.apply( this, arguments );
 
-		elementor.stopListening( elementor.channels.deviceMode, 'change', this.onDeviceModeChange );
+		refraction.stopListening( refraction.channels.deviceMode, 'change', this.onDeviceModeChange );
 	},
 
 	/**
@@ -189,31 +189,31 @@ const ContainerView = BaseElementView.extend( {
 
 	getDroppableOptions() {
 		const items = this.isBoxedWidth()
-			? '> .elementor-widget, > .e-con-full, > .e-con > .e-con-inner, > .elementor-empty-view > .elementor-first-add'
-			: '> .elementor-element, > .elementor-empty-view .elementor-first-add';
+			? '> .refraction-widget, > .e-con-full, > .e-con > .e-con-inner, > .refraction-empty-view > .refraction-first-add'
+			: '> .refraction-element, > .refraction-empty-view .refraction-first-add';
 
 		return {
 			axis: this.getDroppableAxis(),
 			items,
-			groups: [ 'elementor-element' ],
+			groups: [ 'refraction-element' ],
 			horizontalThreshold: 5, // TODO: Stop the magic.
 			isDroppingAllowed: this.isDroppingAllowed.bind( this ),
-			currentElementClass: 'elementor-html5dnd-current-element',
-			placeholderClass: 'elementor-sortable-placeholder elementor-widget-placeholder',
+			currentElementClass: 'refraction-html5dnd-current-element',
+			placeholderClass: 'refraction-sortable-placeholder refraction-widget-placeholder',
 			hasDraggingOnChildClass: 'e-dragging-over',
 			getDropContainer: () => this.getContainer(),
 			onDropping: ( side, event ) => {
 				event.stopPropagation();
 
 				// Triggering drag end manually, since it won't fired above iframe
-				elementor.getPreviewView().onPanelElementDragEnd();
+				refraction.getPreviewView().onPanelElementDragEnd();
 
-				const draggedView = elementor.channels.editor.request( 'element:dragged' ),
+				const draggedView = refraction.channels.editor.request( 'element:dragged' ),
 					draggingInSameParent = ( draggedView?.parent === this ),
 					hasInnerContainer = jQuery( event.currentTarget ).hasClass( 'e-con-inner' ),
 					containerSelector = hasInnerContainer ? event.currentTarget.parentElement.parentElement : event.currentTarget.parentElement;
 
-				let $elements = jQuery( containerSelector ).find( '> .elementor-element' );
+				let $elements = jQuery( containerSelector ).find( '> .refraction-element' );
 
 				// Exclude the dragged element from the indexing calculations.
 				if ( draggingInSameParent ) {
@@ -245,7 +245,7 @@ const ContainerView = BaseElementView.extend( {
 					}
 
 					// Reset the dragged element cache.
-					elementor.channels.editor.reply( 'element:dragged', null );
+					refraction.channels.editor.reply( 'element:dragged', null );
 
 					$e.run( 'document/elements/move', {
 						container: draggedView.getContainer(),
@@ -270,7 +270,7 @@ const ContainerView = BaseElementView.extend( {
 	 * @return {void}
 	 */
 	saveAsTemplate() {
-		elementor.templates.eventManager.sendNewSaveTemplateClickedEvent();
+		refraction.templates.eventManager.sendNewSaveTemplateClickedEvent();
 
 		$e.route( 'library/save-template', {
 			model: this.model,
@@ -315,8 +315,8 @@ const ContainerView = BaseElementView.extend( {
 			actions: [
 				{
 					name: 'save',
-					title: __( 'Save as a template', 'elementor' ),
-					shortcut: `<span class="elementor-context-menu-list__item__shortcut__new-badge">${ __( 'New', 'elementor' ) }</span>`,
+					title: __( 'Save as a template', 'refraction' ),
+					shortcut: `<span class="refraction-context-menu-list__item__shortcut__new-badge">${ __( 'New', 'refraction' ) }</span>`,
 					callback: this.saveAsTemplate.bind( this ),
 					isEnabled: () => ! this.getContainer().isLocked(),
 				},
@@ -329,7 +329,7 @@ const ContainerView = BaseElementView.extend( {
 				{
 					name: 'newContainer',
 					icon: 'eicon-plus',
-					title: __( 'Add New Container', 'elementor' ),
+					title: __( 'Add New Container', 'refraction' ),
 					callback: this.addNewContainer.bind( this ),
 				},
 			],
@@ -345,8 +345,8 @@ const ContainerView = BaseElementView.extend( {
 		}
 
 		const elementView =
-			elementor.channels.panelElements.request( 'element:selected' ) ||
-			elementor.channels.editor.request( 'element:dragged' );
+			refraction.channels.panelElements.request( 'element:selected' ) ||
+			refraction.channels.editor.request( 'element:dragged' );
 
 		if ( ! elementView ) {
 			return false;
@@ -365,35 +365,35 @@ const ContainerView = BaseElementView.extend( {
 	},
 
 	getEditButtons() {
-		const elementData = elementor.getElementData( this.model ),
+		const elementData = refraction.getElementData( this.model ),
 			editTools = {};
 
 		if ( $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ) {
 			editTools.add = {
 				/* Translators: %s: Element Name. */
-				title: sprintf( __( 'Add %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Add %s', 'refraction' ), elementData.title ),
 				icon: 'plus',
 			};
 
 			editTools.edit = {
 				/* Translators: %s: Element Name. */
-				title: sprintf( __( 'Edit %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Edit %s', 'refraction' ), elementData.title ),
 				icon: 'handle',
 			};
 		}
 
 		if ( ! this.getContainer().isLocked() ) {
-			if ( elementor.getPreferences( 'edit_buttons' ) && $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ) {
+			if ( refraction.getPreferences( 'edit_buttons' ) && $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ) {
 				editTools.duplicate = {
 					/* Translators: %s: Element Name. */
-					title: sprintf( __( 'Duplicate %s', 'elementor' ), elementData.title ),
+					title: sprintf( __( 'Duplicate %s', 'refraction' ), elementData.title ),
 					icon: 'clone',
 				};
 			}
 
 			editTools.remove = {
 				/* Translators: %s: Element Name. */
-				title: sprintf( __( 'Delete %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Delete %s', 'refraction' ), elementData.title ),
 				icon: 'close',
 			};
 		}
@@ -477,7 +477,7 @@ const ContainerView = BaseElementView.extend( {
 
 			// Make sure the Empty view is removed if we changed from grid to flex and there were widgets.
 			if ( this.isFlexContainer() && ! this.isEmpty() ) {
-				this.getCorrectContainerElement().find( '> .elementor-empty-view' ).remove();
+				this.getCorrectContainerElement().find( '> .refraction-empty-view' ).remove();
 			}
 
 			this.droppableDestroy();
@@ -500,15 +500,15 @@ const ContainerView = BaseElementView.extend( {
 		this.model.get( 'settings' ).set( 'presetIcon', icon );
 
 		/* Translators: %s: Element name. */
-		jQuery( '#elementor-panel-header-title' ).html( sprintf( __( 'Edit %s', 'elementor' ), title ) );
+		jQuery( '#refraction-panel-header-title' ).html( sprintf( __( 'Edit %s', 'refraction' ), title ) );
 
 		this.updateNeedHelpLink();
 	},
 
 	getPanelTitle() {
 		return this.isFlexContainer()
-			? __( 'Container', 'elementor' )
-			: __( 'Grid', 'elementor' );
+			? __( 'Container', 'refraction' )
+			: __( 'Grid', 'refraction' );
 	},
 
 	getPanelIcon() {
@@ -530,11 +530,11 @@ const ContainerView = BaseElementView.extend( {
 		BaseElementView.prototype.attachElContent.apply( this, arguments );
 
 		const $tooltip = jQuery( '<div>', {
-			class: 'elementor-column-percents-tooltip',
-			'data-side': elementorCommon.config.isRTL ? 'right' : 'left',
+			class: 'refraction-column-percents-tooltip',
+			'data-side': refractionCommon.config.isRTL ? 'right' : 'left',
 		} );
 
-		this.$el.children( '.elementor-element-overlay' ).append( $tooltip );
+		this.$el.children( '.refraction-element-overlay' ).append( $tooltip );
 	},
 
 	// TODO: Copied from `views/column.js`.
@@ -587,7 +587,7 @@ const ContainerView = BaseElementView.extend( {
 
 	handleGridEmptyView() {
 		const currentContainer = this.getCorrectContainerElement();
-		const emptyViewItem = currentContainer.find( '> .elementor-empty-view' );
+		const emptyViewItem = currentContainer.find( '> .refraction-empty-view' );
 
 		this.moveElementToLastChild(
 			currentContainer,
@@ -641,11 +641,11 @@ const ContainerView = BaseElementView.extend( {
 	},
 
 	emptyViewIsCurrentlyBeingDraggedOver() {
-		return this.getCorrectContainerElement().find( '> .elementor-empty-view > .elementor-first-add.elementor-html5dnd-current-element' ).length > 0;
+		return this.getCorrectContainerElement().find( '> .refraction-empty-view > .refraction-first-add.refraction-html5dnd-current-element' ).length > 0;
 	},
 
 	reInitEmptyView() {
-		if ( ! this.getCorrectContainerElement().find( '> .elementor-empty-view' ).length ) {
+		if ( ! this.getCorrectContainerElement().find( '> .refraction-empty-view' ).length ) {
 			delete this._showingEmptyView; // Marionette property that needs to be falsy for showEmptyView() to fully execute.
 			this.showEmptyView(); // Marionette function.
 			this.handleGridEmptyView();
@@ -653,7 +653,7 @@ const ContainerView = BaseElementView.extend( {
 	},
 
 	updateNeedHelpLink() {
-		const $linkElement = jQuery( '#elementor-panel__editor__help__link' );
+		const $linkElement = jQuery( '#refraction-panel__editor__help__link' );
 		const href = this.isGridContainer()
 			? 'https://go.elementor.com/widget-container-grid'
 			: 'https://go.elementor.com/widget-container';

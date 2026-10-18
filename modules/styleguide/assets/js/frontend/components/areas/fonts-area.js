@@ -7,13 +7,13 @@ export default function FontsArea() {
 	const { fontsAreaRef } = useActiveContext();
 
 	const areaConfig = {
-		title: __( 'Global Fonts', 'elementor' ),
+		title: __( 'Global Fonts', 'refraction' ),
 		type: 'fonts',
 		component: Font,
 		sections: [
 			{
 				type: 'system_typography',
-				title: __( 'System Fonts', 'elementor' ),
+				title: __( 'System Fonts', 'refraction' ),
 				flex: 'column',
 				columns: {
 					desktop: 1,
@@ -22,7 +22,7 @@ export default function FontsArea() {
 			},
 			{
 				type: 'custom_typography',
-				title: __( 'Custom Fonts', 'elementor' ),
+				title: __( 'Custom Fonts', 'refraction' ),
 				flex: 'column',
 				columns: {
 					desktop: 1,

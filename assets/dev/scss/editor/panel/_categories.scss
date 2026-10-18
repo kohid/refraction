@@ -1,14 +1,14 @@
 // Panel elements categories
-#elementor-panel-elements-categories {
+#refraction-panel-elements-categories {
 	padding-block-end: 10px;
 	position: relative;
 }
 
-.elementor-panel-category {
+.refraction-panel-category {
 	position: relative;
 	border-block-end: var(--e-a-border);
 
-	.elementor-panel-heading {
+	.refraction-panel-heading {
 		padding: 0 15px;
 		border: none;
 		background-color: transparent;
@@ -18,9 +18,9 @@
 		}
 	}
 
-	&.elementor-active {
+	&.refraction-active {
 
-		.elementor-panel-heading {
+		.refraction-panel-heading {
 			border: none;
 		}
 

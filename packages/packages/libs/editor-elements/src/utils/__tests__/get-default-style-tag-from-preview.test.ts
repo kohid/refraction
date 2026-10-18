@@ -21,7 +21,7 @@ describe( 'parseDefaultStyleTagFromClassList', () => {
 	it( 'should extract the tag from an e-default-* class', () => {
 		const classList = {
 			*[ Symbol.iterator ]() {
-				yield 'elementor-element';
+				yield 'refraction-element';
 				yield 'e-default-button';
 			},
 		} as DOMTokenList;
@@ -32,7 +32,7 @@ describe( 'parseDefaultStyleTagFromClassList', () => {
 	it( 'should return null when no default style class exists', () => {
 		const classList = {
 			*[ Symbol.iterator ]() {
-				yield 'elementor-element';
+				yield 'refraction-element';
 			},
 		} as DOMTokenList;
 
@@ -67,7 +67,7 @@ describe( 'getDefaultStyleTagFromPreviewElement', () => {
 	it( 'should read the default style tag from a preview element with data-id', () => {
 		const div = document.createElement( 'div' );
 		div.dataset.id = 'element-2';
-		div.className = 'elementor-element e-default-div';
+		div.className = 'refraction-element e-default-div';
 
 		mockGetContainer.mockReturnValue( null );
 		mockGetPreviewElementDOM.mockReturnValue( div );

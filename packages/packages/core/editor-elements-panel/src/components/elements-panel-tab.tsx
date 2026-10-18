@@ -3,7 +3,7 @@ import { Portal } from '@elementor/ui';
 
 import { useActiveTab } from '../hooks/use-active-tab';
 
-const PANEL_WRAPPER_ID = 'elementor-panel-elements-wrapper';
+const PANEL_WRAPPER_ID = 'refraction-panel-elements-wrapper';
 
 export function ElementsPanelTab() {
 	const tab = useActiveTab();

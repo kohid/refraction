@@ -1,6 +1,6 @@
 import { createMockBreakpointsTree } from 'test-utils';
-import { isTransformable, type PropValue } from '@elementor/editor-props';
-import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@elementor/editor-styles';
+import { isTransformable, type PropValue } from '@refraction/editor-props';
+import { getVariantByMeta, type StyleDefinition, type StyleDefinitionVariant } from '@refraction/editor-styles';
 
 import { createStylesInheritance } from '../create-styles-inheritance';
 import type { SnapshotPropValue, StylesInheritanceSnapshot } from '../types';

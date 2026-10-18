@@ -1,5 +1,5 @@
-import { type NotificationData, notify } from '@elementor/editor-notifications';
-import { type HookOptions, registerDataHook } from '@elementor/editor-v1-adapters';
+import { type NotificationData, notify } from '@refraction/editor-notifications';
+import { type HookOptions, registerDataHook } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { type CreateArgs, FORM_HIDDEN_FIELD_ELEMENT_TYPE, getArgsElementType } from './utils';
@@ -11,7 +11,7 @@ let notificationCounter = 0;
 function createHiddenFieldNotification(): NotificationData {
 	return {
 		type: 'default',
-		message: __( 'Hidden field added - invisible on your form. Manage it in the Structure panel.', 'elementor' ),
+		message: __( 'Hidden field added - invisible on your form. Manage it in the Structure panel.', 'refraction' ),
 		id: `hidden-field-added-${ ++notificationCounter }`,
 	};
 }

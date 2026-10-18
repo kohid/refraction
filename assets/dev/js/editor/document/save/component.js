@@ -25,12 +25,12 @@ export default class Component extends BackwardsCompatibility {
 		 *
 		 * @type {number}
 		 */
-		this.autoSaveInterval = elementor.config.autosave_interval * 1000;
+		this.autoSaveInterval = refraction.config.autosave_interval * 1000;
 
-		elementorCommon.elements.$window.on( 'beforeunload', () => {
+		refractionCommon.elements.$window.on( 'beforeunload', () => {
 			if ( this.isEditorChanged() ) {
 				// Returns a message to confirm dialog.
-				return __( 'Please note: All unsaved changes will be lost.', 'elementor' );
+				return __( 'Please note: All unsaved changes will be lost.', 'refraction' );
 			}
 		} );
 	}
@@ -80,6 +80,6 @@ export default class Component extends BackwardsCompatibility {
 	}
 
 	isEditorChanged() {
-		return ( true === elementor.channels.editor.request( 'status' ) );
+		return ( true === refraction.channels.editor.request( 'status' ) );
 	}
 }

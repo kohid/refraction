@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useUserStylesCapability } from '@elementor/editor-styles-repository';
+import { useUserStylesCapability } from '@refraction/editor-styles-repository';
 import { IconButton, Tooltip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -8,7 +8,7 @@ import { usePrefetchCssClassUsage } from '../../hooks/use-prefetch-css-class-usa
 import { trackGlobalClasses } from '../../utils/tracking';
 import { FlippedColorSwatchIcon } from './flipped-color-swatch-icon';
 
-const EVENT_TOGGLE_DESIGN_SYSTEM = 'elementor/toggle-design-system';
+const EVENT_TOGGLE_DESIGN_SYSTEM = 'refraction/toggle-design-system';
 
 export const ClassManagerButton = () => {
 	const { prefetchClassesUsage } = usePrefetchCssClassUsage();
@@ -36,7 +36,7 @@ export const ClassManagerButton = () => {
 	};
 
 	return (
-		<Tooltip title={ __( 'Class Manager', 'elementor' ) } placement="top">
+		<Tooltip title={ __( 'Class Manager', 'refraction' ) } placement="top">
 			<IconButton size="tiny" onClick={ handleOpenPanel } sx={ { marginInlineEnd: -0.75 } }>
 				<FlippedColorSwatchIcon fontSize="tiny" />
 			</IconButton>

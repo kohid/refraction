@@ -2,25 +2,25 @@ import ElementView from './element';
 
 export default class extends Marionette.LayoutView {
 	getTemplate() {
-		return '#tmpl-elementor-navigator';
+		return '#tmpl-refraction-navigator';
 	}
 
 	id() {
-		return 'elementor-navigator__inner';
+		return 'refraction-navigator__inner';
 	}
 
 	ui() {
 		return {
-			toggleButton: '#elementor-navigator__toggle-all',
-			toggleButtonIcon: '#elementor-navigator__toggle-all i',
-			toggleButtonA11yText: '#elementor-navigator__toggle-all span',
-			closeButton: '#elementor-navigator__close',
+			toggleButton: '#refraction-navigator__toggle-all',
+			toggleButtonIcon: '#refraction-navigator__toggle-all i',
+			toggleButtonA11yText: '#refraction-navigator__toggle-all span',
+			closeButton: '#refraction-navigator__close',
 		};
 	}
 
 	behaviors() {
 		const behaviors = {};
-		return elementor.hooks.applyFilters( 'navigator/layout/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'navigator/layout/behaviors', behaviors, this );
 	}
 
 	events() {
@@ -33,17 +33,17 @@ export default class extends Marionette.LayoutView {
 
 	regions() {
 		return {
-			elements: '#elementor-navigator__elements',
+			elements: '#refraction-navigator__elements',
 		};
 	}
 
 	toggleElements() {
-		const state = 'expand' === this.ui.toggleButton.data( 'elementor-action' ),
-			a11yText = state ? __( 'Collapse all elements', 'elementor' ) : __( 'Expand all elements', 'elementor' ),
+		const state = 'expand' === this.ui.toggleButton.data( 'refraction-action' ),
+			a11yText = state ? __( 'Collapse all elements', 'refraction' ) : __( 'Expand all elements', 'refraction' ),
 			classes = [ 'eicon-collapse', 'eicon-expand' ];
 
 		this.ui.toggleButton
-			.data( 'elementor-action', state ? 'collapse' : 'expand' );
+			.data( 'refraction-action', state ? 'collapse' : 'expand' );
 
 		this.ui.toggleButtonIcon
 			.removeClass( classes[ +state ] )
@@ -71,7 +71,7 @@ export default class extends Marionette.LayoutView {
 
 	onShow() {
 		this.elements.show( new ElementView( {
-			model: elementor.elementsModel,
+			model: refraction.elementsModel,
 		} ) );
 	}
 

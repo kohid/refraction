@@ -1,6 +1,6 @@
 @import "../helpers/mixins";
 
-#wp-admin-bar-elementor_edit_page {
+#wp-admin-bar-refraction_edit_page {
 
 	> .ab-item::before {
 		content: "\e813";
@@ -16,12 +16,12 @@
 		}
 	}
 
-	.elementor-edit-link-title {
+	.refraction-edit-link-title {
 		@include ellipsis;
 		width: 100%;
 	}
 
-	.elementor-edit-link-type {
+	.refraction-edit-link-type {
 		background: #3f444b;
 		font-size: 11px;
 		line-height: 9px;
@@ -31,7 +31,7 @@
 	}
 }
 
-#wp-admin-bar-elementor_inspector > .ab-item::before {
+#wp-admin-bar-refraction_inspector > .ab-item::before {
 	content: "\f348";
 	inset-block-start: 2px;
 }

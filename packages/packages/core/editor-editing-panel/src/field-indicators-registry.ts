@@ -1,4 +1,4 @@
-import { type AdornmentComponent } from '@elementor/editor-controls';
+import { type AdornmentComponent } from '@refraction/editor-controls';
 
 type FieldType = 'settings' | 'styles';
 

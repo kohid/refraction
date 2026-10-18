@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import * as React from 'react';
-import { trackUpgradePromotionClick, trackViewPromotion } from '@elementor/editor-controls';
+import { trackUpgradePromotionClick, trackViewPromotion } from '@refraction/editor-controls';
 import {
 	PopoverHeader,
 	PopoverMenuList,
 	SearchField,
 	SectionPopoverBody,
 	type VirtualizedItem,
-} from '@elementor/editor-ui';
-import { PromotionAlert } from '@elementor/editor-ui';
+} from '@refraction/editor-ui';
+import { PromotionAlert } from '@refraction/editor-ui';
 import { ColorFilterIcon, PlusIcon, SettingsIcon } from '@elementor/icons';
 import { Divider, IconButton, Tooltip } from '@elementor/ui';
 import { __, sprintf } from '@wordpress/i18n';
@@ -24,8 +24,8 @@ import { NoSearchResults } from './ui/no-search-results';
 import { VariablesStyledMenuList } from './ui/styled-menu-list';
 
 const SIZE = 'tiny';
-const CREATE_LABEL = __( 'Create variable', 'elementor' );
-const MANAGER_LABEL = __( 'Variables Manager', 'elementor' );
+const CREATE_LABEL = __( 'Create variable', 'refraction' );
+const MANAGER_LABEL = __( 'Variables Manager', 'refraction' );
 
 const getProUpgradeUrl = ( variableType: string ) =>
 	`https://go.elementor.com/renew-license-panel-${ variableType }-variable`;
@@ -147,7 +147,7 @@ export const VariablesSelection = ( { closePopover, onAdd, onEdit, onSettings, d
 	return (
 		<SectionPopoverBody>
 			<PopoverHeader
-				title={ __( 'Variables', 'elementor' ) }
+				title={ __( 'Variables', 'refraction' ) }
 				icon={ <ColorFilterIcon fontSize={ SIZE } /> }
 				onClose={ closePopover }
 				actions={ actions }
@@ -157,7 +157,7 @@ export const VariablesSelection = ( { closePopover, onAdd, onEdit, onSettings, d
 				<SearchField
 					value={ searchValue }
 					onSearch={ handleSearch }
-					placeholder={ __( 'Search', 'elementor' ) }
+					placeholder={ __( 'Search', 'refraction' ) }
 				/>
 			) }
 
@@ -180,7 +180,7 @@ export const VariablesSelection = ( { closePopover, onAdd, onEdit, onSettings, d
 						<PromotionAlert
 							message={ sprintf(
 								/* translators: %s: Variable Type. */
-								__( 'Upgrade to continue creating and editing %s variables.', 'elementor' ),
+								__( 'Upgrade to continue creating and editing %s variables.', 'refraction' ),
 								variableType
 							) }
 							upgradeUrl={ getProUpgradeUrl( variableType ) }
@@ -207,12 +207,12 @@ export const VariablesSelection = ( { closePopover, onAdd, onEdit, onSettings, d
 				<EmptyState
 					title={ sprintf(
 						/* translators: %s: Variable Type. */
-						__( 'No %s variables yet', 'elementor' ),
+						__( 'No %s variables yet', 'refraction' ),
 						variableType
 					) }
 					message={ sprintf(
 						/* translators: %s: Variable Type. */
-						__( 'Upgrade to create %s variables and maintain consistent element sizing.', 'elementor' ),
+						__( 'Upgrade to create %s variables and maintain consistent element sizing.', 'refraction' ),
 						variableType
 					) }
 					icon={ <VariableIcon fontSize="large" /> }
@@ -225,12 +225,12 @@ export const VariablesSelection = ( { closePopover, onAdd, onEdit, onSettings, d
 				<EmptyState
 					title={ sprintf(
 						/* translators: %s: Variable Type. */
-						__( 'Create your first %s variable', 'elementor' ),
+						__( 'Create your first %s variable', 'refraction' ),
 						variableType
 					) }
 					message={ __(
 						'Variables are saved attributes that you can apply anywhere on your site.',
-						'elementor'
+						'refraction'
 					) }
 					icon={ <VariableIcon fontSize="large" /> }
 					onAdd={ onAdd }
@@ -239,10 +239,10 @@ export const VariablesSelection = ( { closePopover, onAdd, onEdit, onSettings, d
 
 			{ hasNoCompatibleVariables && ! disabled && (
 				<EmptyState
-					title={ __( 'No compatible variables', 'elementor' ) }
+					title={ __( 'No compatible variables', 'refraction' ) }
 					message={ __(
 						'Looks like none of your variables work with this control. Create a new variable to use it here.',
-						'elementor'
+						'refraction'
 					) }
 					icon={ <VariableIcon fontSize="large" /> }
 					onAdd={ onAdd }

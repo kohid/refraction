@@ -1,4 +1,4 @@
-import { type SizePropValue } from '@elementor/editor-props';
+import { type SizePropValue } from '@refraction/editor-props';
 import { act, renderHook } from '@testing-library/react';
 
 import { isExtendedUnit } from '../../utils/is-extended-unit';

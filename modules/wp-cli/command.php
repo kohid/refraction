@@ -1,21 +1,21 @@
 <?php
-namespace Elementor\Modules\WpCli;
+namespace Refraction\Modules\WpCli;
 
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Page Builder cli tools.
+ * Refraction Page Builder cli tools.
  */
 class Command extends \WP_CLI_Command {
 
 	/**
-	 * Flush the Elementor Page Builder CSS Cache.
+	 * Flush the Refraction Page Builder CSS Cache.
 	 *
 	 * [--network]
 	 *      Flush CSS Cache for all the sites in the network.
@@ -25,14 +25,14 @@ class Command extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *  1. wp elementor flush-css
-	 *      - This will flush the CSS files for elementor page builder.
+	 *  1. wp refraction flush-css
+	 *      - This will flush the CSS files for refraction page builder.
 	 *
-	 *  2. wp elementor flush-css --network
-	 *      - This will flush the CSS files for elementor page builder for all the sites in the network.
+	 *  2. wp refraction flush-css --network
+	 *      - This will flush the CSS files for refraction page builder for all the sites in the network.
 	 *
-	 *  3. wp elementor flush-css --regenerate
-	 *      - This will flush the CSS files for elementor page builder and re-create the new CSS files.
+	 *  3. wp refraction flush-css --regenerate
+	 *      - This will flush the CSS files for refraction page builder and re-create the new CSS files.
 	 *
 	 * @since 2.1.0
 	 * @access public
@@ -51,12 +51,12 @@ class Command extends \WP_CLI_Command {
 			foreach ( $blog_ids as $blog_id ) {
 				switch_to_blog( $blog_id );
 
-				$this->handle_flush( $should_regenerate, 'Flushed the Elementor CSS Cache for site - ' . get_option( 'home' ) );
+				$this->handle_flush( $should_regenerate, 'Flushed the Refraction CSS Cache for site - ' . get_option( 'home' ) );
 
 				restore_current_blog();
 			}
 		} else {
-			$this->handle_flush( $should_regenerate, 'Flushed the Elementor CSS Cache' );
+			$this->handle_flush( $should_regenerate, 'Flushed the Refraction CSS Cache' );
 		}
 	}
 
@@ -71,17 +71,17 @@ class Command extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Replace old URLs with new URLs in all Elementor pages.
+	 * Replace old URLs with new URLs in all Refraction pages.
 	 *
 	 * [--force]
 	 *      Suppress error messages. instead, return "0 database rows affected.".
 	 *
 	 * ## EXAMPLES
 	 *
-	 *  1. wp elementor replace-urls <old> <new>
+	 *  1. wp refraction replace-urls <old> <new>
 	 *      - This will replace all <old> URLs with the <new> URL.
 	 *
-	 *  2. wp elementor replace-urls <old> <new> --force
+	 *  2. wp refraction replace-urls <old> <new> --force
 	 *      - This will replace all <old> URLs with the <new> URL without throw errors.
 	 *
 	 * @access public
@@ -113,7 +113,7 @@ class Command extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *  1. wp elementor import-library <file-path>
+	 *  1. wp refraction import-library <file-path>
 	 *      - This will import a file or a zip of multiple files to the library.
 	 *
 	 * @since 2.1.0
@@ -122,7 +122,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public function import_library( $args, $assoc_args ) {
 		// TODO:
-		// \WP_CLI::warning( 'command is deprecated since 2.8.0 Please use: wp elementor library import' );
+		// \WP_CLI::warning( 'command is deprecated since 2.8.0 Please use: wp refraction library import' );
 
 		if ( empty( $args[0] ) ) {
 			\WP_CLI::error( 'Please set file path.' );

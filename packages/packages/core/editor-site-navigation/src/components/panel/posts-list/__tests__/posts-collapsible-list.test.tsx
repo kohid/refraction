@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockDocument, renderWithQuery } from 'test-utils';
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { PostListContextProvider } from '../../../../contexts/post-list-context';
@@ -57,7 +57,7 @@ jest.mock( '../../../../hooks/use-homepage', () => ( {
 	} ) ),
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useNavigateToDocument: jest.fn(),
 } ) );
@@ -74,7 +74,7 @@ jest.mock( '../../../../hooks/use-user', () => ( {
 	__esModule: true,
 } ) );
 
-describe( '@elementor/editor-site-navigation - PostsCollapsibleList', () => {
+describe( '@refraction/editor-site-navigation - PostsCollapsibleList', () => {
 	beforeEach( () => {
 		jest.mocked( useActiveDocument ).mockReturnValue(
 			createMockDocument( {

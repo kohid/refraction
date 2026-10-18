@@ -8,13 +8,13 @@ import Layout from '../../../templates/layout';
 import PageHeader from '../../../ui/page-header/page-header';
 import Conflict from './components/conflict/conflict';
 import ActionsFooter from '../../../shared/actions-footer/actions-footer';
-import Panel from 'elementor-app/ui/panel/panel';
-import Notice from 'elementor-app/ui/molecules/notice';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
-import Button from 'elementor-app/ui/molecules/button';
-import Box from 'elementor-app/ui/atoms/box';
-import List from 'elementor-app/ui/molecules/list';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import Panel from 'refraction-app/ui/panel/panel';
+import Notice from 'refraction-app/ui/molecules/notice';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
+import Button from 'refraction-app/ui/molecules/button';
+import Box from 'refraction-app/ui/atoms/box';
+import List from 'refraction-app/ui/molecules/list';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
 import './import-resolver.scss';
 
@@ -40,7 +40,7 @@ export default function ImportResolver() {
 		getFooter = () => (
 			<ActionsFooter>
 				<Button
-					text={ __( 'Previous', 'elementor' ) }
+					text={ __( 'Previous', 'refraction' ) }
 					variant="contained"
 					onClick={ () => {
 						eventTracking( 'kit-library/go-back' );
@@ -49,7 +49,7 @@ export default function ImportResolver() {
 				/>
 
 				<Button
-					text={ __( 'Next', 'elementor' ) }
+					text={ __( 'Next', 'refraction' ) }
 					variant="contained"
 					color="primary"
 					onClick={ () => {
@@ -63,7 +63,7 @@ export default function ImportResolver() {
 		),
 		getLearnMoreLink = () => (
 			<InlineLink url="https://go.elementor.com/app-what-are-kits" italic onClick={ () => eventTracking( 'kit-library/seek-more-info' ) }>
-				{ __( 'Learn More', 'elementor' ) }
+				{ __( 'Learn More', 'refraction' ) }
 			</InlineLink>
 		),
 		isHomePageOverride = () => {
@@ -87,24 +87,24 @@ export default function ImportResolver() {
 		<Layout type="import" footer={ getFooter() }>
 			<section className="e-app-import-resolver">
 				<PageHeader
-					heading={ __( 'Import a Website Kit to your site', 'elementor' ) }
+					heading={ __( 'Import a Website Kit to your site', 'refraction' ) }
 					description={ [
 						<React.Fragment key="description-first-line">
-							{ __( 'Parts of this kit overlap with your site’s templates, design and settings. The items you leave checked on this list will replace your current design.', 'elementor' ) } { getLearnMoreLink() }
+							{ __( 'Parts of this kit overlap with your site’s templates, design and settings. The items you leave checked on this list will replace your current design.', 'refraction' ) } { getLearnMoreLink() }
 						</React.Fragment>,
 					] }
 				/>
 
 				{
 					isHomePageOverride() &&
-					<Notice className="e-app-import-resolver__notice" label={ __( 'Note:', 'elementor' ) } color="warning">
-						{ __( "Your site's homepage will be determined by the kit. You can change this later.", 'elementor' ) }
+					<Notice className="e-app-import-resolver__notice" label={ __( 'Note:', 'refraction' ) } color="warning">
+						{ __( "Your site's homepage will be determined by the kit. You can change this later.", 'refraction' ) }
 					</Notice>
 				}
 
 				<Panel isOpened={ true }>
 					<Panel.Header toggle={ false }>
-						<Panel.Headline>{ __( 'Select the items you want to keep and apply:', 'elementor' ) }</Panel.Headline>
+						<Panel.Headline>{ __( 'Select the items you want to keep and apply:', 'refraction' ) }</Panel.Headline>
 					</Panel.Header>
 
 					<Panel.Body padding="20">

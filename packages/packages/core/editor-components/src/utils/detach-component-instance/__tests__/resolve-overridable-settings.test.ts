@@ -1,4 +1,4 @@
-import { type V1ElementData } from '@elementor/editor-elements';
+import { type V1ElementData } from '@refraction/editor-elements';
 
 import { type ComponentInstanceOverrideProp } from '../../../prop-types/component-instance-override-prop-type';
 import { type ComponentInstanceOverride } from '../../../prop-types/component-instance-overrides-prop-type';

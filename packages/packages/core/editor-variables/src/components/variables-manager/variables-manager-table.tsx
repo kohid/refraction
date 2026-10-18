@@ -109,8 +109,8 @@ export const VariablesManagerTable = ( {
 				<TableHead>
 					<TableRow>
 						<VariableTableCell isHeader noPadding width={ 10 } maxWidth={ 10 } />
-						<VariableTableCell isHeader>{ __( 'Name', 'elementor' ) }</VariableTableCell>
-						<VariableTableCell isHeader>{ __( 'Value', 'elementor' ) }</VariableTableCell>
+						<VariableTableCell isHeader>{ __( 'Name', 'refraction' ) }</VariableTableCell>
+						<VariableTableCell isHeader>{ __( 'Value', 'refraction' ) }</VariableTableCell>
 						<VariableTableCell isHeader noPadding width={ 16 } maxWidth={ 16 } />
 					</TableRow>
 				</TableHead>

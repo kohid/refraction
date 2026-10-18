@@ -6,7 +6,7 @@ export class Open extends $e.modules.CommandBase {
 	}
 
 	apply() {
-		const kit = elementor.documents.get( elementor.config.kit_id );
+		const kit = refraction.documents.get( refraction.config.kit_id );
 
 		if ( kit && 'open' === kit.editor.status ) {
 			return jQuery.Deferred().resolve();
@@ -19,7 +19,7 @@ export class Open extends $e.modules.CommandBase {
 		$e.internal( 'panel/state-loading' );
 
 		return $e.run( 'editor/documents/switch', {
-			id: elementor.config.kit_id,
+			id: refraction.config.kit_id,
 			mode: 'autosave',
 		} ).finally( () => $e.internal( 'panel/state-ready' ) );
 	}

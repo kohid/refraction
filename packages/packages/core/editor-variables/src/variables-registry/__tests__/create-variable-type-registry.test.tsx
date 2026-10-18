@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType } from 'test-utils';
-import { colorPropTypeUtil, type PropTypeUtil } from '@elementor/editor-props';
+import { colorPropTypeUtil, type PropTypeUtil } from '@refraction/editor-props';
 import { BrushIcon, TextIcon } from '@elementor/icons';
 
 import { ColorField } from '../../components/fields/color-field';

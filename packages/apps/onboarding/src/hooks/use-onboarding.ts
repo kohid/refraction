@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { __useDispatch, __useSelector } from '@elementor/store';
+import { __useDispatch, __useSelector } from '@refraction/store';
 
 import {
 	clearResumeStepIdForTracking,

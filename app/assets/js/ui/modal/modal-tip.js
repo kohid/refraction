@@ -1,7 +1,7 @@
 import { arrayToClassName } from '../../utils/utils';
 
-import Heading from 'elementor-app/ui/atoms/heading';
-import Text from 'elementor-app/ui/atoms/text';
+import Heading from 'refraction-app/ui/atoms/heading';
+import Text from 'refraction-app/ui/atoms/text';
 
 export default function ModalTip( props ) {
 	return (
@@ -20,5 +20,5 @@ ModalTip.propTypes = {
 
 ModalTip.defaultProps = {
 	className: '',
-	title: __( 'Tip', 'elementor' ),
+	title: __( 'Tip', 'refraction' ),
 };

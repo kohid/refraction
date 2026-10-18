@@ -1,4 +1,4 @@
-import ArgsObject from 'elementor-assets-js/modules/imports/args-object';
+import ArgsObject from 'refraction-assets-js/modules/imports/args-object';
 import Commands from './commands.js';
 import Cache from './data/cache';
 
@@ -45,9 +45,9 @@ export default class Data extends Commands {
 		super( args );
 
 		this.args = Object.assign( args, {
-			namespace: 'elementor',
+			namespace: 'refraction',
 			version: '1',
-			baseEndpointURL: elementorWebCliConfig.urls.rest,
+			baseEndpointURL: refractionWebCliConfig.urls.rest,
 		} );
 
 		this.cache = new Cache( this );
@@ -293,7 +293,7 @@ export default class Data extends Commands {
 	 */
 	prepareHeaders( requestData ) {
 		const type = requestData.type,
-			nonce = elementorWebCliConfig.nonce,
+			nonce = refractionWebCliConfig.nonce,
 			params = {
 				signal: requestData.args?.options?.signal,
 				credentials: 'include', // Cookies is required for wp reset.

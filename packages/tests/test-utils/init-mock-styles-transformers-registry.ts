@@ -1,5 +1,5 @@
-import { createTransformer, styleTransformersRegistry } from '@elementor/editor-canvas';
-import { type DimensionsPropValue, type SizePropValue } from '@elementor/editor-props';
+import { createTransformer, styleTransformersRegistry } from '@refraction/editor-canvas';
+import { type DimensionsPropValue, type SizePropValue } from '@refraction/editor-props';
 
 type MockTransformers = {
 	[ key: string ]: ReturnType< typeof createTransformer >;

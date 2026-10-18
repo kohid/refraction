@@ -102,7 +102,7 @@ test.describe( 'Nested Accordion Style Tests @nested-accordion', () => {
 			await test.step( 'Open container settings', async () => {
 				// Act
 				await nestedAccordionItemContent.first().hover();
-				await nestedAccordionItemTitle.first().locator( '.elementor-editor-container-settings' ).click();
+				await nestedAccordionItemTitle.first().locator( '.refraction-editor-container-settings' ).click();
 			} );
 
 			await test.step( 'Override background and border', async () => {
@@ -241,7 +241,7 @@ test.describe( 'Nested Accordion Style Tests @nested-accordion', () => {
 			await editor.setTextStrokeControlValue( 'title_active_stroke', 'text', 1, colors.orange.hex );
 
 			// Assert
-			const nestedAccordion = frame.locator( '.elementor-widget-n-accordion' );
+			const nestedAccordion = frame.locator( '.refraction-widget-n-accordion' );
 			await editor.isUiStable( nestedAccordion );
 			await expectScreenshotToMatchLocator( 'nested-accordion-stroke-and-text-shadow.png', nestedAccordion );
 		} );

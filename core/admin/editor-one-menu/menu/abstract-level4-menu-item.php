@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Admin\EditorOneMenu\Menu;
+namespace Refraction\Core\Admin\EditorOneMenu\Menu;
 
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,7 +16,7 @@ abstract class Abstract_Level4_Menu_Item implements Menu_Item_Interface {
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {

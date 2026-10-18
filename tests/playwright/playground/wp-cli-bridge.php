@@ -12,17 +12,17 @@
  * mu-plugin.
  *
  * Reached over HTTP by tests/playwright/assets/wp-cli.ts through the repo
- * mount at /wordpress/wp-content/plugins/elementor, so edits apply without
+ * mount at /wordpress/wp-content/plugins/refraction, so edits apply without
  * restarting the playground.
  *
- * @package Elementor\Tests\Playground
+ * @package Refraction\Tests\Playground
  */
 
-const ELEMENTOR_BRIDGE_PHAR_PATH = '/tmp/wp-cli.phar';
-const ELEMENTOR_BRIDGE_STDERR_PATH = '/tmp/elementor-wp-cli-bridge-stderr';
-const ELEMENTOR_BRIDGE_DOCUMENT_ROOT = '/wordpress';
+const REFRACTION_BRIDGE_PHAR_PATH = '/tmp/wp-cli.phar';
+const REFRACTION_BRIDGE_STDERR_PATH = '/tmp/refraction-wp-cli-bridge-stderr';
+const REFRACTION_BRIDGE_DOCUMENT_ROOT = '/wordpress';
 
-function elementor_bridge_respond( array $payload, $status ) {
+function refraction_bridge_respond( array $payload, $status ) {
 	if ( ! headers_sent() ) {
 		http_response_code( $status );
 		header( 'Content-Type: application/json' );
@@ -31,7 +31,7 @@ function elementor_bridge_respond( array $payload, $status ) {
 	echo json_encode( $payload );
 }
 
-function elementor_bridge_split_command( $command ) {
+function refraction_bridge_split_command( $command ) {
 	$args = [];
 	$current = '';
 	$quote = '';
@@ -81,19 +81,19 @@ $request_body = json_decode( file_get_contents( 'php://input' ), true );
 $command = trim( $request_body['command'] ?? '' );
 
 if ( '' === $command ) {
-	elementor_bridge_respond( [ 'error' => 'Missing "command" in request body' ], 400 );
+	refraction_bridge_respond( [ 'error' => 'Missing "command" in request body' ], 400 );
 	exit;
 }
 
-if ( ! file_exists( ELEMENTOR_BRIDGE_PHAR_PATH ) ) {
-	elementor_bridge_respond(
-		[ 'error' => 'wp-cli.phar not found at ' . ELEMENTOR_BRIDGE_PHAR_PATH . '. Add "wp-cli" to the blueprint extraLibraries.' ],
+if ( ! file_exists( REFRACTION_BRIDGE_PHAR_PATH ) ) {
+	refraction_bridge_respond(
+		[ 'error' => 'wp-cli.phar not found at ' . REFRACTION_BRIDGE_PHAR_PATH . '. Add "wp-cli" to the blueprint extraLibraries.' ],
 		500
 	);
 	exit;
 }
 
-$args = elementor_bridge_split_command( $command );
+$args = refraction_bridge_split_command( $command );
 
 if ( 'wp' === ( $args[0] ?? '' ) ) {
 	array_shift( $args );
@@ -102,28 +102,28 @@ if ( 'wp' === ( $args[0] ?? '' ) ) {
 // WP-CLI renders ASCII tables instead of TSV when it believes it owns a TTY.
 putenv( 'SHELL_PIPE=0' );
 
-$GLOBALS['argv'] = array_merge( [ ELEMENTOR_BRIDGE_PHAR_PATH, '--path=' . ELEMENTOR_BRIDGE_DOCUMENT_ROOT ], $args );
+$GLOBALS['argv'] = array_merge( [ REFRACTION_BRIDGE_PHAR_PATH, '--path=' . REFRACTION_BRIDGE_DOCUMENT_ROOT ], $args );
 $GLOBALS['argc'] = count( $GLOBALS['argv'] );
 $_SERVER['argv'] = $GLOBALS['argv'];
 $_SERVER['argc'] = $GLOBALS['argc'];
 
-file_put_contents( ELEMENTOR_BRIDGE_STDERR_PATH, '' );
+file_put_contents( REFRACTION_BRIDGE_STDERR_PATH, '' );
 
 define( 'STDIN', fopen( 'php://memory', 'rb' ) );
 define( 'STDOUT', fopen( 'php://output', 'wb' ) );
-define( 'STDERR', fopen( ELEMENTOR_BRIDGE_STDERR_PATH, 'wb' ) );
+define( 'STDERR', fopen( REFRACTION_BRIDGE_STDERR_PATH, 'wb' ) );
 
 ob_start();
 
 register_shutdown_function( function () {
 	// PHP echoes the phar's `#!/usr/bin/env php` shebang as plain text on require.
 	$stdout = preg_replace( '/^#![^\n]*\n/', '', ob_get_clean() );
-	$stderr = file_get_contents( ELEMENTOR_BRIDGE_STDERR_PATH );
+	$stderr = file_get_contents( REFRACTION_BRIDGE_STDERR_PATH );
 	$fatal = error_get_last();
 	$is_fatal = $fatal && in_array( $fatal['type'], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ], true );
 	$failed = $is_fatal || false !== strpos( $stderr, 'Error:' );
 
-	elementor_bridge_respond(
+	refraction_bridge_respond(
 		[
 			'argv' => $GLOBALS['argv'],
 			'stdout' => $stdout,
@@ -134,4 +134,4 @@ register_shutdown_function( function () {
 	);
 } );
 
-require ELEMENTOR_BRIDGE_PHAR_PATH;
+require REFRACTION_BRIDGE_PHAR_PATH;

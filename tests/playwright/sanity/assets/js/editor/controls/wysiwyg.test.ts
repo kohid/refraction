@@ -12,21 +12,21 @@ test( 'WYSIWYG Control allows mixing HTML & entities', async ( { page, apiReques
 	await page.evaluate( ( containerId ) => {
 		// Must be set via a command, in order to demonstrate the loading from server, instead of use typing.
 		$e.run( 'document/elements/settings', {
-			container: elementor.getContainer( containerId ),
+			container: refraction.getContainer( containerId ),
 			settings: {
 				editor: '&lt;hr&gt;<hr />',
 			},
 		} );
 
 		// Refresh the text area editor.
-		const args = elementor.getContainer( containerId );
+		const args = refraction.getContainer( containerId );
 		$e.route( 'panel/editor/style', args );
 		$e.route( 'panel/editor/content', args );
 	}, elementId );
 
 	// Act.
 	await editor.page.click( '.wp-switch-editor.switch-html' );
-	const value = await editor.page.inputValue( '.elementor-wp-editor' );
+	const value = await editor.page.inputValue( '.refraction-wp-editor' );
 
 	// Assert.
 	expect( value ).toContain( '&lt;hr&gt;' );

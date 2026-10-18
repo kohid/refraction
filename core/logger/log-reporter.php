@@ -1,17 +1,17 @@
 <?php
-namespace Elementor\Core\Logger;
+namespace Refraction\Core\Logger;
 
-use Elementor\Modules\System_Info\Reporters\Base;
-use Elementor\Utils;
+use Refraction\Modules\System_Info\Reporters\Base;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Log reporter.
+ * Refraction Log reporter.
  *
- * Elementor log reporter handler class is responsible for generating the
+ * Refraction log reporter handler class is responsible for generating the
  * debug reports.
  *
  * @since 2.4.0
@@ -19,10 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Log_Reporter extends Base {
 
 	const MAX_ENTRIES = 20;
-	const CLEAR_LOG_ACTION = 'elementor-clear-log';
+	const CLEAR_LOG_ACTION = 'refraction-clear-log';
 
 	public function get_title() {
-		return esc_html__( 'Log', 'elementor' );
+		return esc_html__( 'Log', 'refraction' );
 	}
 
 	public function get_fields() {
@@ -41,18 +41,18 @@ class Log_Reporter extends Base {
 				'_wpnonce' => $nonce,
 			] );
 
-			$title .= '<a href="' . esc_url( $url ) . '#elementor-clear-log" class="box-title-tool">' . esc_html__( 'Clear Log', 'elementor' ) . '</a>';
-			$title .= '<span id="elementor-clear-log"></span>';
+			$title .= '<a href="' . esc_url( $url ) . '#refraction-clear-log" class="box-title-tool">' . esc_html__( 'Clear Log', 'refraction' ) . '</a>';
+			$title .= '<span id="refraction-clear-log"></span>';
 		}
 
 		parent::print_html_label( $title );
 	}
 
 	public function get_log_entries() {
-		/** @var \Elementor\Core\Logger\Manager $manager */
+		/** @var \Refraction\Core\Logger\Manager $manager */
 		$manager = Manager::instance();
 
-		/** @var \Elementor\Core\Logger\Loggers\Db $logger */
+		/** @var \Refraction\Core\Logger\Loggers\Db $logger */
 		$logger = $manager->get_logger( 'db' );
 
 		if ( ! empty( $_GET[ self::CLEAR_LOG_ACTION ] ) ) {
@@ -75,7 +75,7 @@ class Log_Reporter extends Base {
 			foreach ( $log_entries as $key => $log_entry ) {
 				if ( $log_entry['count'] ) {
 					$entries_string .= '<h3>' . sprintf( '%s: showing %s of %s', $key, $log_entry['count'], $log_entry['total_count'] ) . '</h3>';
-					$entries_string .= '<div class="elementor-log-entries">' . $log_entry['entries'] . '</div>';
+					$entries_string .= '<div class="refraction-log-entries">' . $log_entry['entries'] . '</div>';
 				}
 			}
 
@@ -92,7 +92,7 @@ class Log_Reporter extends Base {
 	public function get_raw_log_entries() {
 		$log_string = 'No entries to display';
 
-		/** @var \Elementor\Core\Logger\Manager $manager */
+		/** @var \Refraction\Core\Logger\Manager $manager */
 		$manager = Manager::instance();
 		$logger = $manager->get_logger();
 		$log_entries = $logger->get_formatted_log_entries( self::MAX_ENTRIES, false );

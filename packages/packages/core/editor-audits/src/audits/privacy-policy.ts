@@ -4,14 +4,14 @@ import { type Audit } from '../types';
 
 export const audit: Audit = {
 	id: 'audits/privacy-policy',
-	title: __( 'Privacy policy', 'elementor' ),
+	title: __( 'Privacy policy', 'refraction' ),
 	description: __(
 		'A privacy policy page is required by privacy regulations such as GDPR (EU) and CCPA (US).',
-		'elementor'
+		'refraction'
 	),
 	fixHint: __(
 		'Go to Settings > Privacy in the WordPress admin and assign a published privacy policy page.',
-		'elementor'
+		'refraction'
 	),
 	categories: [ 'compliance' ],
 	severity: 'info',
@@ -26,9 +26,9 @@ export const audit: Audit = {
 			violations: [
 				{
 					auditId: audit.id,
-					label: __( 'No privacy policy page is set.', 'elementor' ),
+					label: __( 'No privacy policy page is set.', 'refraction' ),
 					externalUrl: ctx.pageContext.privacy_settings_url,
-					ctaLabel: __( 'Create', 'elementor' ),
+					ctaLabel: __( 'Create', 'refraction' ),
 				},
 			],
 		};

@@ -58,13 +58,13 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await editor.closeNavigatorIfOpen();
 
 		// Act.
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs' ).hover();
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs .elementor-editor-element-edit' ).first().click();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs' ).hover();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs .refraction-editor-element-edit' ).first().click();
 		const activeTabSpanCount = await editor.getPreviewFrame().locator( '.e-n-tab-title[aria-selected="true"] span' ).count();
 
 		// Update active tab title.
-		await page.locator( '.elementor-repeater-fields:nth-child( 3 )' ).click();
-		await page.locator( '.elementor-repeater-fields:nth-child( 3 ) .elementor-control-tab_title input' ).fill( 'Title change' );
+		await page.locator( '.refraction-repeater-fields:nth-child( 3 )' ).click();
+		await page.locator( '.refraction-repeater-fields:nth-child( 3 ) .refraction-control-tab_title input' ).fill( 'Title change' );
 		const activeTabUpdatedSpanCount = await editor.getPreviewFrame().locator( '.e-n-tab-title[aria-selected="true"] span' ).count();
 
 		// Assert.
@@ -135,8 +135,8 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 		// Act.
 		// Set icon hover color.
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs' ).hover();
-		await editor.getPreviewFrame().locator( '.elementor-widget-n-tabs .elementor-editor-element-edit' ).first().click();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs' ).hover();
+		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs .refraction-editor-element-edit' ).first().click();
 		await setTabItemColor( editor, 'icon_section_style', 'icon_section_hover', 'icon_color_hover', '#ff0000' );
 
 		const redColor = 'rgb(255, 0, 0)',
@@ -156,8 +156,8 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 const testTitlesWithHTML = async ( page: Page, editor: EditorPage ) => {
 	// Act.
 	await clickTabByPosition( editor.getPreviewFrame(), 2 );
-	await page.locator( '.elementor-control-tabs .elementor-repeater-fields:last-child' ).click();
-	await page.locator( '.elementor-control-tabs .elementor-repeater-fields:last-child .elementor-control-tab_title input' ).fill( '<div style="display: flex; flex-direction: column;"><strong class="test-class">Tab 3</strong><div> has<br />html <br />elements</div></div>' );
+	await page.locator( '.refraction-control-tabs .refraction-repeater-fields:last-child' ).click();
+	await page.locator( '.refraction-control-tabs .refraction-repeater-fields:last-child .refraction-control-tab_title input' ).fill( '<div style="display: flex; flex-direction: column;"><strong class="test-class">Tab 3</strong><div> has<br />html <br />elements</div></div>' );
 
 	const activeTab = editor.getPreviewFrame().locator( '.e-n-tab-title[aria-selected="true"]' );
 
@@ -165,7 +165,7 @@ const testTitlesWithHTML = async ( page: Page, editor: EditorPage ) => {
 		type: 'png',
 	} ) ).toMatchSnapshot( 'tab-title-with-html.png' );
 
-	await page.locator( '.elementor-control-tabs .elementor-repeater-fields:last-child .elementor-control-tab_title input' ).fill( 'Tab #3' );
+	await page.locator( '.refraction-control-tabs .refraction-repeater-fields:last-child .refraction-control-tab_title input' ).fill( 'Tab #3' );
 };
 
 const testCarouselIsVisibleWhenUsingDirectionRightOrLeft = async ( editor: EditorPage ) => {

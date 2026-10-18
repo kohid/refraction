@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\Audits;
+namespace Refraction\Modules\Audits;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Modules\Audits\Data\Controller;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Modules\Audits\Data\Controller;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,7 +15,7 @@ class Module extends BaseModule {
 
 	const EXPERIMENT_NAME = 'e_page_audit';
 
-	const REST_NAMESPACE = 'elementor/v1';
+	const REST_NAMESPACE = 'refraction/v1';
 
 	const REQUIRED_CAPABILITY = 'manage_options';
 
@@ -36,8 +36,8 @@ class Module extends BaseModule {
 
 		$this->register_data_controller();
 
-		add_filter( 'elementor/editor/v2/packages', fn( $packages ) => $this->add_packages( $packages ) );
-		add_action( 'elementor/editor/v2/scripts/enqueue', fn() => $this->print_inline_config() );
+		add_filter( 'refraction/editor/v2/packages', fn( $packages ) => $this->add_packages( $packages ) );
+		add_action( 'refraction/editor/v2/scripts/enqueue', fn() => $this->print_inline_config() );
 	}
 
 	public function get_name(): string {
@@ -47,8 +47,8 @@ class Module extends BaseModule {
 	public static function get_experimental_data() {
 		return [
 			'name' => self::EXPERIMENT_NAME,
-			'title' => esc_html__( 'Page Audit', 'elementor' ),
-			'description' => esc_html__( 'Scan the current page for SEO, accessibility, performance, and best-practice issues directly from the editor.', 'elementor' ),
+			'title' => esc_html__( 'Page Audit', 'refraction' ),
+			'description' => esc_html__( 'Scan the current page for SEO, accessibility, performance, and best-practice issues directly from the editor.', 'refraction' ),
 			'release_status' => Experiments_Manager::RELEASE_STATUS_BETA,
 			'default' => Experiments_Manager::STATE_INACTIVE,
 			'hidden' => true,
@@ -81,8 +81,8 @@ class Module extends BaseModule {
 		}
 
 		wp_add_inline_script(
-			'elementor-v2-editor-audits',
-			'window.elementorAudits = ' . wp_json_encode( [
+			'refraction-v2-editor-audits',
+			'window.refractionAudits = ' . wp_json_encode( [
 				'restNamespace' => self::REST_NAMESPACE,
 				'nonce' => wp_create_nonce( 'wp_rest' ),
 			] ) . ';',

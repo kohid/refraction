@@ -1,5 +1,5 @@
-import { injectIntoTop } from '@elementor/editor';
-import { __registerSlice } from '@elementor/store';
+import { injectIntoTop } from '@refraction/editor';
+import { __registerSlice } from '@refraction/store';
 
 import FloatingPanelsHost from './components/internal/host';
 import { slice } from './store/slice';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CheckedCircleIcon } from '@elementor/icons';
 import { Box, Stack, styled, Typography, useTheme } from '@elementor/ui';
 
-import { ElementorLogoIcon, HelloLayoutIcon, PlusIcon } from '../../icons';
+import { RefractionLogoIcon, HelloLayoutIcon, PlusIcon } from '../../icons';
 import { t } from '../../utils/translations';
 import { InstalledChip } from './styled-components';
 
@@ -19,7 +19,7 @@ const PreviewRoot = styled( Box )( {
 	justifyContent: 'center',
 } );
 
-const ElementorPlaceholderCard = styled( Box )( ( { theme } ) => ( {
+const RefractionPlaceholderCard = styled( Box )( ( { theme } ) => ( {
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
@@ -84,9 +84,9 @@ export function HelloThemePreview( { isInstalled = false }: HelloThemePreviewPro
 	return (
 		<Stack alignItems="center" width="100%" data-testid="hello-theme-preview">
 			<PreviewRoot>
-				<ElementorPlaceholderCard>
-					<ElementorLogoIcon sx={ { fontSize: theme.spacing( 5.5 ) } } />
-				</ElementorPlaceholderCard>
+				<RefractionPlaceholderCard>
+					<RefractionLogoIcon sx={ { fontSize: theme.spacing( 5.5 ) } } />
+				</RefractionPlaceholderCard>
 
 				<HelloCard>
 					{ isInstalled ? (
@@ -113,7 +113,7 @@ export function HelloThemePreview( { isInstalled = false }: HelloThemePreviewPro
 					<HelloLayoutIcon sx={ { fontSize: theme.spacing( 6 ), color: 'text.primary' } } />
 
 					<Typography variant="caption" color="text.secondary">
-						{ t( 'steps.theme_selection.by_elementor' ) }
+						{ t( 'steps.theme_selection.by_refraction' ) }
 					</Typography>
 				</HelloCard>
 

@@ -1,10 +1,10 @@
 import { useCallback, useState } from '@wordpress/element';
 import { Collapse, List, ListItem, ListItemText } from '@elementor/ui';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 import PropTypes from 'prop-types';
 import { ChildListItem, ChildMenuItemButton, DEFAULT_ICON, ExpandIcon, ICON_MAP, MenuIcon, MenuItemButton } from '../shared';
 
-const STORAGE_KEY_PREFIX = 'elementor_sidebar_menu_expanded_v2_';
+const STORAGE_KEY_PREFIX = 'refraction_sidebar_menu_expanded_v2_';
 
 const SidebarMenuItem = ( { item, isActive, children, activeChildSlug } ) => {
 	const hasChildren = !! children?.length;

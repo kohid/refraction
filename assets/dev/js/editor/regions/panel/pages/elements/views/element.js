@@ -1,17 +1,17 @@
-import ContextMenu from 'elementor-behaviors/context-menu';
+import ContextMenu from 'refraction-behaviors/context-menu';
 
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-element-library-element',
+	template: '#tmpl-refraction-element-library-element',
 
 	className() {
-		let className = 'elementor-element-wrapper';
+		let className = 'refraction-element-wrapper';
 
 		if ( ! this.isEditable() && ! this.isAtomicWidgetPromotion() ) {
-			className += ' elementor-element--promotion';
+			className += ' refraction-element--promotion';
 		}
 
 		if ( this.isIntegration() ) {
-			className += ' elementor-element--integration';
+			className += ' refraction-element--integration';
 		}
 
 		return className;
@@ -28,11 +28,11 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	ui: {
-		element: '.elementor-element',
+		element: '.refraction-element',
 	},
 
 	behaviors() {
-		const groups = elementor.hooks.applyFilters( 'panel/element/contextMenuGroups', [], this ),
+		const groups = refraction.hooks.applyFilters( 'panel/element/contextMenuGroups', [], this ),
 			behaviors = {};
 
 		if ( groups.length ) {
@@ -43,7 +43,7 @@ module.exports = Marionette.ItemView.extend( {
 			};
 		}
 
-		return elementor.hooks.applyFilters( 'panel/element/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'panel/element/behaviors', behaviors, this );
 	},
 
 	isEditable() {
@@ -59,7 +59,7 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	onRender() {
-		if ( ! elementor.userCan( 'design' ) || ! this.isEditable() ) {
+		if ( ! refraction.userCan( 'design' ) || ! this.isEditable() ) {
 			return;
 		}
 
@@ -68,18 +68,18 @@ module.exports = Marionette.ItemView.extend( {
 		this.ui.element.html5Draggable( {
 			onDragStart: () => {
 				// Reset the sort cache.
-				elementor.channels.editor.reply( 'element:dragged', null );
+				refraction.channels.editor.reply( 'element:dragged', null );
 
-				elementor.channels.panelElements
+				refraction.channels.panelElements
 					.reply( 'element:selected', this )
 					.trigger( 'element:drag:start' );
 			},
 
 			onDragEnd: () => {
-				elementor.channels.panelElements.trigger( 'element:drag:end' );
+				refraction.channels.panelElements.trigger( 'element:drag:end' );
 			},
 
-			groups: [ 'elementor-element' ],
+			groups: [ 'refraction-element' ],
 		} );
 	},
 
@@ -97,7 +97,7 @@ module.exports = Marionette.ItemView.extend( {
 		const widgetTitle = this.model.get( 'title' ),
 			widgetType = this.model.get( 'name' ) || this.model.get( 'widgetType' ),
 			isIntegration = this.isIntegration(),
-			configPromotion = elementor.config.promotion;
+			configPromotion = refraction.config.promotion;
 
 		let ctaUrl, ctaText, title, content;
 
@@ -141,7 +141,7 @@ module.exports = Marionette.ItemView.extend( {
 			addToDocument: {
 				check: () => ! element,
 				getArgs: () => ( {
-					view: elementor.getPreviewView(),
+					view: refraction.getPreviewView(),
 					options: {},
 				} ),
 			},
@@ -197,12 +197,12 @@ module.exports = Marionette.ItemView.extend( {
 			model: modelData,
 		} );
 
-		if ( elementorCommon?.eventsManager?.dispatchEvent ) {
+		if ( refractionCommon?.eventsManager?.dispatchEvent ) {
 			const elType = modelData?.elType ?? '';
 			const widgetType = modelData?.widgetType ?? '';
 			const elementName = 'widget' === elType ? widgetType : elType;
 
-			elementorCommon.eventsManager.dispatchEvent( 'add_element', {
+			refractionCommon.eventsManager.dispatchEvent( 'add_element', {
 				location: 'editor_panel',
 				element_name: elementName,
 				element_type: elType,
@@ -212,12 +212,12 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	getSelectedElements() {
-		return elementor.selection
+		return refraction.selection
 			.getElements()
 			.filter( ( { view } ) => {
 				// Remove elements that don't exist in the current document's DOM, because of a bug in
 				// the selection manager that doesn't deselect elements properly.
-				return elementor.documents.getCurrent().$element?.[ 0 ].contains( view.$el[ 0 ] );
+				return refraction.documents.getCurrent().$element?.[ 0 ].contains( view.$el[ 0 ] );
 			} );
 	},
 } );

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { type KeyboardEvent, useEffect, useState } from 'react';
-import { PopoverContent, useBoundProp } from '@elementor/editor-controls';
-import { useSuppressedMessage } from '@elementor/editor-current-user';
-import { PopoverHeader, SectionPopoverBody } from '@elementor/editor-ui';
+import { PopoverContent, useBoundProp } from '@refraction/editor-controls';
+import { useSuppressedMessage } from '@refraction/editor-current-user';
+import { PopoverHeader, SectionPopoverBody } from '@refraction/editor-ui';
 import { ArrowLeftIcon, TrashIcon } from '@elementor/icons';
 import { Button, CardActions, Divider, FormHelperText, IconButton, Tooltip, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -19,7 +19,7 @@ import { EDIT_CONFIRMATION_DIALOG_ID, EditConfirmationDialog } from './ui/edit-c
 import { FormField } from './ui/form-field';
 
 const SIZE = 'tiny';
-const DELETE_LABEL = __( 'Delete variable', 'elementor' );
+const DELETE_LABEL = __( 'Delete variable', 'refraction' );
 
 type Props = {
 	editId: string;
@@ -170,14 +170,14 @@ export const VariableEdit = ( { onClose, onGoBack, onSubmit, editId }: Props ) =
 		<>
 			<SectionPopoverBody height="auto">
 				<PopoverHeader
-					title={ __( 'Edit variable', 'elementor' ) }
+					title={ __( 'Edit variable', 'refraction' ) }
 					onClose={ onClose }
 					icon={
 						<>
 							{ onGoBack && (
 								<IconButton
 									size={ SIZE }
-									aria-label={ __( 'Go Back', 'elementor' ) }
+									aria-label={ __( 'Go Back', 'refraction' ) }
 									onClick={ onGoBack }
 								>
 									<ArrowLeftIcon fontSize={ SIZE } />
@@ -194,7 +194,7 @@ export const VariableEdit = ( { onClose, onGoBack, onSubmit, editId }: Props ) =
 				<PopoverContent p={ 2 }>
 					<FormField
 						id="variable-label"
-						label={ __( 'Name', 'elementor' ) }
+						label={ __( 'Name', 'refraction' ) }
 						errorMsg={ labelFieldError?.message }
 						noticeMsg={ labelHint( label ) }
 					>
@@ -217,7 +217,7 @@ export const VariableEdit = ( { onClose, onGoBack, onSubmit, editId }: Props ) =
 						/>
 					</FormField>
 					{ ValueField && (
-						<FormField errorMsg={ valueFieldError } label={ __( 'Value', 'elementor' ) }>
+						<FormField errorMsg={ valueFieldError } label={ __( 'Value', 'refraction' ) }>
 							<Typography variant="h5">
 								<ValueField
 									propTypeKey={ variable.type }
@@ -241,7 +241,7 @@ export const VariableEdit = ( { onClose, onGoBack, onSubmit, editId }: Props ) =
 
 				<CardActions sx={ { pt: 0.5, pb: 1 } }>
 					<Button size="small" variant="contained" disabled={ isSubmitDisabled } onClick={ handleUpdate }>
-						{ __( 'Save', 'elementor' ) }
+						{ __( 'Save', 'refraction' ) }
 					</Button>
 				</CardActions>
 			</SectionPopoverBody>

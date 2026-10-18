@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderWithTheme } from 'test-utils';
-import { useActiveBreakpoint, useBreakpoints } from '@elementor/editor-responsive';
+import { useActiveBreakpoint, useBreakpoints } from '@refraction/editor-responsive';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { usePropContext } from '../../../bound-prop-context';
@@ -18,7 +18,7 @@ import { type ItemProps, type RepeatablePropValue } from '../types';
 
 jest.mock( '../../../bound-prop-context/use-bound-prop' );
 jest.mock( '../../../bound-prop-context' );
-jest.mock( '@elementor/editor-responsive', () => ( {
+jest.mock( '@refraction/editor-responsive', () => ( {
 	useActiveBreakpoint: jest.fn( () => 'desktop' ),
 	useBreakpoints: jest.fn( () => [ { id: 'desktop', label: 'Desktop', width: undefined, type: undefined } ] ),
 } ) );

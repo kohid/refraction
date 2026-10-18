@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Modules\Library\Traits;
+namespace Refraction\Modules\Library\Traits;
 
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\TemplateLibrary\Source_Local;
 
 /**
- * Elementor Library Trait
+ * Refraction Library Trait
  *
  * This trait is used by all Library Documents and Landing Pages.
  *
@@ -20,7 +20,7 @@ trait Library {
 	 * @access public
 	 */
 	public function print_admin_column_type() {
-		$admin_filter_url = admin_url( Source_Local::ADMIN_MENU_SLUG . '&elementor_library_type=' . $this->get_name() );
+		$admin_filter_url = admin_url( Source_Local::ADMIN_MENU_SLUG . '&refraction_library_type=' . $this->get_name() );
 		// PHPCS - Not a user input
 		printf( '<a href="%s">%s</a>', $admin_filter_url, $this->get_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}

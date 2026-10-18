@@ -1,6 +1,6 @@
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
-import { getMixpanel } from '@elementor/events';
-import { __getState as getState } from '@elementor/store';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
+import { getMixpanel } from '@refraction/events';
+import { __getState as getState } from '@refraction/store';
 
 import { fetchCssClassUsage } from '../../service/css-class-usage-service';
 import { GlobalClassTrackingError } from '../errors';

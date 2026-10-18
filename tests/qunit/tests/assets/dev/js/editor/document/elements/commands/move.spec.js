@@ -1,5 +1,5 @@
 import ElementsHelper from '../helper';
-import HistoryHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/history/helper';
+import HistoryHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/history/helper';
 
 export const Move = () => {
 	QUnit.module( 'Move', () => {
@@ -10,13 +10,13 @@ export const Move = () => {
 
 				const eSection = ElementsHelper.createSection( 3 );
 
-				ElementsHelper.move( eSection, elementor.getPreviewContainer(), { at: 0 } );
+				ElementsHelper.move( eSection, refraction.getPreviewContainer(), { at: 0 } );
 
 				const done = assert.async();
 
 				// Validate first section have 3 columns.
 				setTimeout( () => {
-					assert.equal( elementor.getPreviewContainer().children[ 0 ].children.length, 3,
+					assert.equal( refraction.getPreviewContainer().children[ 0 ].children.length, 3,
 						'Section were moved.' );
 
 					done();
@@ -59,7 +59,7 @@ export const Move = () => {
 						originalPosition = eSection.view._index,
 						targetPosition = 0;
 
-					ElementsHelper.move( eSection, elementor.getPreviewContainer(), { at: targetPosition } );
+					ElementsHelper.move( eSection, refraction.getPreviewContainer(), { at: targetPosition } );
 
 					const historyItem = HistoryHelper.getFirstItem().attributes;
 
@@ -194,15 +194,15 @@ export const Move = () => {
 					eSection1 = ElementsHelper.createSection( section1ColumnsCount ),
 					eSection2 = ElementsHelper.createSection( section2ColumnsCount );
 
-				ElementsHelper.multiMove( [ eSection1, eSection2 ], elementor.getPreviewContainer(), { at: 0 } );
+				ElementsHelper.multiMove( [ eSection1, eSection2 ], refraction.getPreviewContainer(), { at: 0 } );
 
 				// Validate first section have 3 columns.
-				assert.equal( elementor.getPreviewContainer().model.attributes.elements.first().attributes.elements.length,
+				assert.equal( refraction.getPreviewContainer().model.attributes.elements.first().attributes.elements.length,
 					section1ColumnsCount,
 					`Section #1, '${ section1ColumnsCount }' columns were created.` );
 
 				// Validate second section have 4 columns.
-				assert.equal( elementor.getPreviewContainer().model.attributes.elements.at( 1 ).attributes.elements.length,
+				assert.equal( refraction.getPreviewContainer().model.attributes.elements.at( 1 ).attributes.elements.length,
 					section2ColumnsCount,
 					`Section #2, '${ section2ColumnsCount }' columns were created.` );
 			} );

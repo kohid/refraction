@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Editor\Data\Globals\Endpoints;
+namespace Refraction\Core\Editor\Data\Globals\Endpoints;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 class Colors extends Base {
 	public function get_name() {
@@ -38,7 +38,7 @@ class Colors extends Base {
 			];
 		}
 
-		return apply_filters( 'elementor/globals/colors/items', $result );
+		return apply_filters( 'refraction/globals/colors/items', $result );
 	}
 
 	protected function convert_db_format( $item ) {

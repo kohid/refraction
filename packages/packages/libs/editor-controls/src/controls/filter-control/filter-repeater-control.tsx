@@ -4,7 +4,7 @@ import {
 	type FilterItemPropValue,
 	filterPropTypeUtil,
 	type PropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { __ } from '@wordpress/i18n';
 
 import { PropProvider, useBoundProp } from '../../bound-prop-context';
@@ -33,11 +33,11 @@ type Config = {
 const FILTER_CONFIG: Record< string, Config > = {
 	filter: {
 		propTypeUtil: filterPropTypeUtil,
-		label: __( 'Filters', 'elementor' ),
+		label: __( 'Filters', 'refraction' ),
 	},
 	'backdrop-filter': {
 		propTypeUtil: backdropFilterPropTypeUtil,
-		label: __( 'Backdrop filters', 'elementor' ),
+		label: __( 'Backdrop filters', 'refraction' ),
 	},
 } as const;
 

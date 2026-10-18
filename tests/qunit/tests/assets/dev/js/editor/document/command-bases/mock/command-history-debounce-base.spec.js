@@ -1,4 +1,4 @@
-import CommandHistoryDebounceBase from 'elementor-editor/document/command-bases/command-history-debounce-base';
+import CommandHistoryDebounceBase from 'refraction-editor/document/command-bases/command-history-debounce-base';
 
 export default class CommandHistoryDebounceBaseMock extends CommandHistoryDebounceBase {}
 export class CommandHistoryDebounceBaseExportedMock extends $e.modules.editor.document.CommandHistoryDebounceBase {}

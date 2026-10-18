@@ -49,7 +49,7 @@ jest.mock( '@wordpress/api-fetch', () => ( {
 	__esModule: true,
 } ) );
 
-describe( '@elementor/site-settings/use-posts', () => {
+describe( '@refraction/site-settings/use-posts', () => {
 	afterEach( () => {
 		jest.clearAllMocks();
 	} );

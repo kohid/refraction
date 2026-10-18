@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Utils\ImportExport;
+namespace Refraction\Core\Utils\ImportExport;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

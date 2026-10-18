@@ -1,5 +1,5 @@
 export function bindPreviewIframeEvents( callback ) {
-	const iframeDocument = elementor?.$preview?.[ 0 ]?.contentDocument;
+	const iframeDocument = refraction?.$preview?.[ 0 ]?.contentDocument;
 
 	if ( ! iframeDocument ) {
 		return () => {};

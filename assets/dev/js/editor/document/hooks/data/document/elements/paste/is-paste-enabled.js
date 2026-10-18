@@ -1,4 +1,4 @@
-import Dependency from 'elementor-api/modules/hooks/data/dependency';
+import Dependency from 'refraction-api/modules/hooks/data/dependency';
 
 export class IsPasteEnabled extends Dependency {
 	getCommand() {

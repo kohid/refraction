@@ -1,25 +1,25 @@
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 const SELECTORS = {
-	elementorMenuLink: '#toplevel_page_elementor-home > a.menu-top',
-	themeBuilderItem: '[data-slug="elementor-theme-builder"] a, .wp-submenu a[href*="page=elementor-theme-builder"]',
+	refractionMenuLink: '#toplevel_page_refraction-home > a.menu-top',
+	themeBuilderItem: '[data-slug="refraction-theme-builder"] a, .wp-submenu a[href*="page=refraction-theme-builder"]',
 };
 
 export class MenuEventsTracker {
 	static attach() {
-		this.attachElementorMenuClick();
+		this.attachRefractionMenuClick();
 		this.attachThemeBuilderClick();
 	}
 
-	static attachElementorMenuClick() {
-		const menuLink = document.querySelector( SELECTORS.elementorMenuLink );
+	static attachRefractionMenuClick() {
+		const menuLink = document.querySelector( SELECTORS.refractionMenuLink );
 
 		if ( ! menuLink ) {
 			return;
 		}
 
 		menuLink.addEventListener( 'click', () => {
-			EditorOneEventManager.sendWpDashElementorMenuClick();
+			EditorOneEventManager.sendWpDashRefractionMenuClick();
 		} );
 	}
 

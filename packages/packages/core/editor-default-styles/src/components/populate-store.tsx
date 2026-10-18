@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { __privateListenTo as listenTo, registerDataHook, routeCloseEvent } from '@elementor/editor-v1-adapters';
-import { __getState as getState } from '@elementor/store';
+import { __privateListenTo as listenTo, registerDataHook, routeCloseEvent } from '@refraction/editor-v1-adapters';
+import { __getState as getState } from '@refraction/store';
 
 import { loadDefaultStyles } from '../load-default-styles';
 import { selectIsDirty } from '../store';

@@ -4,7 +4,7 @@ import { Box, IconButton, Stack, Tooltip, Typography, UnstableTag as Tag, type U
 import { __ } from '@wordpress/i18n';
 
 export const SIZE = 'tiny';
-const UNLINK_LABEL = __( 'Unlink variable', 'elementor' );
+const UNLINK_LABEL = __( 'Unlink variable', 'refraction' );
 
 interface VariableTagProps extends UnstableTagProps {
 	onUnlink?: () => void;

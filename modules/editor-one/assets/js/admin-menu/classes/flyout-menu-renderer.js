@@ -10,21 +10,21 @@ export class FlyoutMenuRenderer {
 			return false;
 		}
 
-		const editorLi = this.findEditorInMenu( `#toplevel_page_elementor-home` );
+		const editorLi = this.findEditorInMenu( `#toplevel_page_refraction-home` );
 
 		if ( ! editorLi ) {
 			return false;
 		}
 
-		editorLi.classList.add( 'elementor-has-flyout' );
+		editorLi.classList.add( 'refraction-has-flyout' );
 
 		const editorFlyoutUl = document.createElement( 'ul' );
-		editorFlyoutUl.className = 'elementor-submenu-flyout elementor-level-3';
+		editorFlyoutUl.className = 'refraction-submenu-flyout refraction-level-3';
 
 		editorFlyout.items.forEach( ( item ) => {
 			if ( item.has_divider_before ) {
 				const dividerLi = document.createElement( 'li' );
-				dividerLi.className = 'elementor-flyout-divider';
+				dividerLi.className = 'refraction-flyout-divider';
 				dividerLi.setAttribute( 'role', 'separator' );
 				editorFlyoutUl.appendChild( dividerLi );
 			}
@@ -60,7 +60,7 @@ export class FlyoutMenuRenderer {
 			return null;
 		}
 
-		const editorItem = submenu.querySelector( 'a[href$="page=elementor"]' );
+		const editorItem = submenu.querySelector( 'a[href$="page=refraction"]' );
 
 		if ( ! editorItem ) {
 			return null;

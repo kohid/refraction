@@ -1,14 +1,14 @@
 <?php
 
-namespace Elementor\Modules\SiteNavigation;
+namespace Refraction\Modules\SiteNavigation;
 
-use Elementor\Core\Base\Module as Module_Base;
-use Elementor\Core\Experiments\Exceptions\Dependency_Exception;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Modules\SiteNavigation\Data\Controller;
-use Elementor\Modules\SiteNavigation\Rest_Fields\Page_User_Can;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as Module_Base;
+use Refraction\Core\Experiments\Exceptions\Dependency_Exception;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Modules\SiteNavigation\Data\Controller;
+use Refraction\Modules\SiteNavigation\Rest_Fields\Page_User_Can;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,10 +31,10 @@ class Module extends Module_Base {
 
 		$this->register_pages_panel_experiment();
 
-		add_filter( 'elementor/editor/v2/packages', fn( $packages ) => $this->add_packages( $packages ) );
+		add_filter( 'refraction/editor/v2/packages', fn( $packages ) => $this->add_packages( $packages ) );
 
-		add_filter( 'elementor/editor/v2/scripts/env', function( $env ) {
-			$env['@elementor/editor-site-navigation'] = [
+		add_filter( 'refraction/editor/v2/scripts/env', function( $env ) {
+			$env['@refraction/editor-site-navigation'] = [
 				'is_pages_panel_active' => Plugin::$instance->experiments->is_feature_active(
 					self::PAGES_PANEL_EXPERIMENT_NAME
 				),
@@ -67,7 +67,7 @@ class Module extends Module_Base {
 	private function register_pages_panel_experiment() {
 		Plugin::$instance->experiments->add_feature( [
 			'name' => self::PAGES_PANEL_EXPERIMENT_NAME,
-			'title' => esc_html__( 'Pages Panel', 'elementor' ),
+			'title' => esc_html__( 'Pages Panel', 'refraction' ),
 			'release_status' => Experiments_Manager::RELEASE_STATUS_ALPHA,
 			'default' => Experiments_Manager::STATE_INACTIVE,
 			'hidden' => true,

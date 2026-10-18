@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NumberControl } from '@elementor/editor-controls';
+import { NumberControl } from '@refraction/editor-controls';
 import { InfoCircleFilledIcon } from '@elementor/icons';
 import { Alert, AlertTitle, Box, Infotip } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const Z_INDEX_LABEL = __( 'Z-index', 'elementor' );
+const Z_INDEX_LABEL = __( 'Z-index', 'refraction' );
 
 export const ZIndexField = ( { disabled }: { disabled?: boolean } ) => {
 	const StyleField = (
@@ -20,11 +20,11 @@ export const ZIndexField = ( { disabled }: { disabled?: boolean } ) => {
 
 	const content = (
 		<Alert color="secondary" icon={ <InfoCircleFilledIcon /> } size="small">
-			<AlertTitle>{ __( 'Z-index', 'elementor' ) }</AlertTitle>
+			<AlertTitle>{ __( 'Z-index', 'refraction' ) }</AlertTitle>
 			<Box component="span">
 				{ __(
 					'z-index only works on positioned elements. Change position to relative, absolute, or fixed to enable layering.',
-					'elementor'
+					'refraction'
 				) }
 			</Box>
 		</Alert>

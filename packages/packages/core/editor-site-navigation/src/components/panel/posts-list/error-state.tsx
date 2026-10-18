@@ -26,14 +26,14 @@ export default function ErrorState() {
 				} }
 			>
 				<Typography variant="body1" color="text.primary">
-					{ __( 'We couldn’t display your pages.', 'elementor' ) }
+					{ __( 'We couldn’t display your pages.', 'refraction' ) }
 				</Typography>
 				<Box>
 					<Typography variant="body2" color="text.primary" sx={ { textAlign: 'center' } }>
-						{ __( 'It’s probably a temporary issue.', 'elementor' ) }
+						{ __( 'It’s probably a temporary issue.', 'refraction' ) }
 					</Typography>
 					<Typography variant="body2" color="text.primary" sx={ { textAlign: 'center' } }>
-						{ __( 'If the problem persists,', 'elementor' ) }{ ' ' }
+						{ __( 'If the problem persists,', 'refraction' ) }{ ' ' }
 						<Link target="_blank" href="https://go.elementor.com/wp-editor-support-open-ticket/">
 							Notify support
 						</Link>

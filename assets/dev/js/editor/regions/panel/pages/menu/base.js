@@ -1,12 +1,12 @@
-import PanelMenuGroupView from 'elementor-panel/pages/menu/views/group';
+import PanelMenuGroupView from 'refraction-panel/pages/menu/views/group';
 
 export default class MenuPageView extends Marionette.CompositeView {
 	id() {
-		return 'elementor-panel-page-menu';
+		return 'refraction-panel-page-menu';
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-panel-menu';
+		return '#tmpl-refraction-panel-menu';
 	}
 
 	getChildView() {
@@ -14,7 +14,7 @@ export default class MenuPageView extends Marionette.CompositeView {
 	}
 
 	childViewContainer() {
-		return '#elementor-panel-page-menu-content';
+		return '#refraction-panel-page-menu-content';
 	}
 
 	// Remove empty groups that exist for BC.

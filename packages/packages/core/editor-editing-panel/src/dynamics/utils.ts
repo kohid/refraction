@@ -4,9 +4,9 @@ import {
 	type PropType,
 	type PropValue,
 	type TransformablePropType,
-} from '@elementor/editor-props';
-import { getElementorConfig } from '@elementor/editor-v1-adapters';
-import { z } from '@elementor/schema';
+} from '@refraction/editor-props';
+import { getRefractionConfig } from '@refraction/editor-v1-adapters';
+import { z } from '@refraction/schema';
 
 import { type DynamicPropType, type DynamicPropValue } from './types';
 
@@ -22,7 +22,7 @@ export const dynamicPropTypeUtil = createPropUtils(
 );
 
 export const isDynamicTagSupported = ( tagName: string ) => {
-	return !! getElementorConfig()?.atomicDynamicTags?.tags?.[ tagName ];
+	return !! getRefractionConfig()?.atomicDynamicTags?.tags?.[ tagName ];
 };
 
 const isDynamicPropType = ( prop: TransformablePropType ): prop is DynamicPropType =>

@@ -1,4 +1,4 @@
-.elementor-context-menu {
+.refraction-context-menu {
 	position: absolute;
 	width: 250px;
 	padding: 5px 0px;
@@ -35,16 +35,16 @@
 				opacity: .5;
 				color: var(--e-a-color-disabled);
 
-				&.elementor-context-menu-list__item--has-shortcut-action {
+				&.refraction-context-menu-list__item--has-shortcut-action {
 					opacity: 1;
 
-					> :not(.elementor-context-menu-list__item__shortcut) {
+					> :not(.refraction-context-menu-list__item__shortcut) {
 						opacity: .5;
 					}
 				}
 			}
 
-			&:not(.elementor-context-menu-list__item--disabled) {
+			&:not(.refraction-context-menu-list__item--disabled) {
 
 				&:hover,
 				&:focus {
@@ -104,9 +104,9 @@
 				position: relative;
 			}
 
-			&.elementor-context-menu-list__item-delete {
+			&.refraction-context-menu-list__item-delete {
 
-				&:not(.elementor-context-menu-list__item--disabled) {
+				&:not(.refraction-context-menu-list__item--disabled) {
 
 					&:hover,
 					&:focus {
@@ -118,7 +118,7 @@
 				}
 			}
 
-			&.elementor-hidden {
+			&.refraction-hidden {
 				display: none;
 			}
 		}

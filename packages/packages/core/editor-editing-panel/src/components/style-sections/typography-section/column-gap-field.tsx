@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { SizeControl } from '@elementor/editor-controls';
+import { SizeControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const COLUMN_GAP_LABEL = __( 'Column gap', 'elementor' );
+const COLUMN_GAP_LABEL = __( 'Column gap', 'refraction' );
 
 export const ColumnGapField = () => {
 	const rowRef = useRef< HTMLDivElement >( null );

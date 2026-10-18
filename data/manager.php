@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Data;
+namespace Refraction\Data;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Data\Base\Processor;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Data\Base\Processor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Manager extends BaseModule {
 
-	const ROOT_NAMESPACE = 'elementor';
+	const ROOT_NAMESPACE = 'refraction';
 
 	const REST_BASE = '';
 
@@ -34,7 +34,7 @@ class Manager extends BaseModule {
 	/**
 	 * Loaded controllers.
 	 *
-	 * @var \Elementor\Data\Base\Controller[]
+	 * @var \Refraction\Data\Base\Controller[]
 	 */
 	public $controllers = [];
 
@@ -48,7 +48,7 @@ class Manager extends BaseModule {
 	/**
 	 * Fix issue with 'Potentially polymorphic call. The code may be inoperable depending on the actual class instance passed as the argument.'.
 	 *
-	 * @return \Elementor\Core\Base\Module|\Elementor\Data\Manager
+	 * @return \Refraction\Core\Base\Module|\Refraction\Data\Manager
 	 */
 	public static function instance() {
 		return ( parent::instance() );
@@ -63,7 +63,7 @@ class Manager extends BaseModule {
 	}
 
 	/**
-	 * @return \Elementor\Data\Base\Controller[]
+	 * @return \Refraction\Data\Base\Controller[]
 	 */
 	public function get_controllers() {
 		return $this->controllers;
@@ -82,7 +82,7 @@ class Manager extends BaseModule {
 	 *
 	 * @param string $controller_class_name
 	 *
-	 * @return \Elementor\Data\Base\Controller
+	 * @return \Refraction\Data\Base\Controller
 	 */
 	public function register_controller( $controller_class_name ) {
 		$controller_instance = new $controller_class_name();
@@ -93,9 +93,9 @@ class Manager extends BaseModule {
 	/**
 	 * Register controller instance.
 	 *
-	 * @param \Elementor\Data\Base\Controller $controller_instance
+	 * @param \Refraction\Data\Base\Controller $controller_instance
 	 *
-	 * @return \Elementor\Data\Base\Controller
+	 * @return \Refraction\Data\Base\Controller
 	 */
 	public function register_controller_instance( $controller_instance ) {
 		// TODO: Validate instance.
@@ -117,7 +117,7 @@ class Manager extends BaseModule {
 
 	public function register_rest_error_handler() {
 		if ( ! $this->is_internal() ) {
-			$logger_manager = \Elementor\Core\Logger\Manager::instance();
+			$logger_manager = \Refraction\Core\Logger\Manager::instance();
 			$logger_manager->register_error_handler();
 		}
 	}
@@ -129,7 +129,7 @@ class Manager extends BaseModule {
 	 *
 	 * @param string $command
 	 *
-	 * @return false|\Elementor\Data\Base\Controller
+	 * @return false|\Refraction\Data\Base\Controller
 	 */
 	public function find_controller_instance( $command ) {
 		$command_parts = explode( '/', $command );
@@ -235,7 +235,7 @@ class Manager extends BaseModule {
 			remove_all_actions( 'rest_api_init' );
 
 			// Call custom reset api loader.
-			do_action( 'elementor_rest_api_before_init' );
+			do_action( 'refraction_rest_api_before_init' );
 
 			$this->server = rest_get_server(); // Init API.
 		}

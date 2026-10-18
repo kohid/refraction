@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { numberPropTypeUtil, type QueryPropValue, stringPropTypeUtil } from '@elementor/editor-props';
-import { type HttpResponse, httpService } from '@elementor/http-client';
-import { debounce } from '@elementor/utils';
+import { numberPropTypeUtil, type QueryPropValue, stringPropTypeUtil } from '@refraction/editor-props';
+import { type HttpResponse, httpService } from '@refraction/http-client';
+import { debounce } from '@refraction/utils';
 
 import { type CategorizedOption, type FlatOption, isCategorizedOptionPool } from '../components/autocomplete';
 

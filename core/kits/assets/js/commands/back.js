@@ -1,4 +1,4 @@
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 export class Back extends $e.modules.CommandBase {
 	document = null;
@@ -19,8 +19,8 @@ export class Back extends $e.modules.CommandBase {
 		// If the user is on the global colors/typography page, and there are unsaved changes,
 		// prompt the user with a confirmation dialog asking if they would like to save the changes.
 		if ( this.isGlobalRoute() ) {
-			const kit = elementor.config.kit_id;
-			this.document = elementor.documents.get( kit );
+			const kit = refraction.config.kit_id;
+			this.document = refraction.documents.get( kit );
 
 			if ( this.isDocumentChanged() ) {
 				this.resolveChanges().then( () => {
@@ -47,7 +47,7 @@ export class Back extends $e.modules.CommandBase {
 		let activeSection = null;
 
 		try {
-			const panelView = elementor.getPanelView();
+			const panelView = refraction.getPanelView();
 			const currentPage = panelView?.getCurrentPageView?.();
 			const contentView = currentPage?.content?.currentView;
 			activeSection = contentView?.activeSection || null;
@@ -76,16 +76,16 @@ export class Back extends $e.modules.CommandBase {
 	getCloseConfirmDialog( event ) {
 		if ( ! this.confirmDialog ) {
 			const modalOptions = {
-				id: 'elementor-kit-warn-on-close',
-				headerMessage: __( 'Exit', 'elementor' ),
-				message: __( 'Would you like to exit?', 'elementor' ),
+				id: 'refraction-kit-warn-on-close',
+				headerMessage: __( 'Exit', 'refraction' ),
+				message: __( 'Would you like to exit?', 'refraction' ),
 				position: {
 					my: 'center center',
 					at: 'center center',
 				},
 				strings: {
-					confirm: __( 'Exit', 'elementor' ),
-					cancel: __( 'Cancel', 'elementor' ),
+					confirm: __( 'Exit', 'refraction' ),
+					cancel: __( 'Cancel', 'refraction' ),
 				},
 				onConfirm: () => {
 					this.trackSiteSettingsSession( 'back', 'discard' );
@@ -93,7 +93,7 @@ export class Back extends $e.modules.CommandBase {
 				},
 			};
 
-			this.confirmDialog = elementorCommon.dialogsManager.createWidget( 'confirm', modalOptions );
+			this.confirmDialog = refractionCommon.dialogsManager.createWidget( 'confirm', modalOptions );
 		}
 
 		this.confirmDialog.setSettings( 'hide', {
@@ -131,16 +131,16 @@ export class Back extends $e.modules.CommandBase {
 
 		if ( ! this.unsavedChangesDialog[ document ] ) {
 			const modalOptions = {
-				id: `elementor-${ document }-save-changes`,
-				headerMessage: __( 'Save Changes', 'elementor' ),
-				message: __( "Would you like to save the changes you've made?", 'elementor' ),
+				id: `refraction-${ document }-save-changes`,
+				headerMessage: __( 'Save Changes', 'refraction' ),
+				message: __( "Would you like to save the changes you've made?", 'refraction' ),
 				position: {
 					my: 'center center',
 					at: 'center center',
 				},
 				strings: {
-					confirm: __( 'Save', 'elementor' ),
-					cancel: __( 'Discard', 'elementor' ),
+					confirm: __( 'Save', 'refraction' ),
+					cancel: __( 'Discard', 'refraction' ),
 				},
 				onConfirm: () => {
 					this.markSessionSaved();
@@ -157,7 +157,7 @@ export class Back extends $e.modules.CommandBase {
 				},
 			};
 
-			this.unsavedChangesDialog[ document ] = elementorCommon.dialogsManager.createWidget(
+			this.unsavedChangesDialog[ document ] = refractionCommon.dialogsManager.createWidget(
 				'confirm',
 				modalOptions,
 			);

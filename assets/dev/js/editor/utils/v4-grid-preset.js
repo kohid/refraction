@@ -8,7 +8,7 @@ const gridTrackSizeProp = ( size ) => ( {
 } );
 
 function getGridPresetProps( structure ) {
-	const parsedStructure = elementor.presetsFactory.getParsedGridStructure( structure );
+	const parsedStructure = refraction.presetsFactory.getParsedGridStructure( structure );
 
 	return {
 		desktop: {
@@ -22,8 +22,8 @@ function getGridPresetProps( structure ) {
 	};
 }
 
-export function createV4GridFromPreset( structure, target = elementor.getPreviewContainer(), options = {} ) {
-	return runWithHistory( __( 'Grid', 'elementor' ), () => {
+export function createV4GridFromPreset( structure, target = refraction.getPreviewContainer(), options = {} ) {
+	return runWithHistory( __( 'Grid', 'refraction' ), () => {
 		const { desktop, mobile } = getGridPresetProps( structure );
 		const model = buildModel( V4_ELEMENT_TYPE, desktop, mobile );
 

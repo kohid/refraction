@@ -3,15 +3,15 @@ import { useEffect, useRef } from 'react';
 
 export default function AddSectionArea( props ) {
 	const addAreaElementRef = useRef(),
-		containerHelper = elementor.helpers.container;
+		containerHelper = refraction.helpers.container;
 
 	useEffect( () => {
 		const $addAreaElementRef = jQuery( addAreaElementRef.current ),
 			defaultDroppableOptions = props.container.view.getDroppableOptions();
 
 		defaultDroppableOptions.placeholder = false;
-		defaultDroppableOptions.items = '> .elementor-add-section-inner';
-		defaultDroppableOptions.hasDraggingOnChildClass = 'elementor-dragging-on-child';
+		defaultDroppableOptions.items = '> .refraction-add-section-inner';
+		defaultDroppableOptions.hasDraggingOnChildClass = 'refraction-dragging-on-child';
 
 		$addAreaElementRef.html5Droppable( defaultDroppableOptions );
 
@@ -26,24 +26,24 @@ export default function AddSectionArea( props ) {
 
 	return (
 		<div
-			className="elementor-add-section"
+			className="refraction-add-section"
 			onClick={ () => containerHelper.openEditMode( props.container ) }
 			ref={ addAreaElementRef }
 			role="button"
 			tabIndex="0"
 		>
-			<div className="elementor-add-section-inner">
-				<div className="e-view elementor-add-new-section">
+			<div className="refraction-add-section-inner">
+				<div className="e-view refraction-add-new-section">
 					<button
 						type="button"
-						className="elementor-add-section-area-button elementor-add-section-button"
-						aria-label={ __( 'Add new container', 'elementor' ) }
+						className="refraction-add-section-area-button refraction-add-section-button"
+						aria-label={ __( 'Add new container', 'refraction' ) }
 						onClick={ handleAddContainerClick }
 					>
 						<i className="eicon-plus" aria-hidden="true" />
 					</button>
-					<div className="elementor-add-section-drag-title">
-						{ __( 'Drag widget here', 'elementor' ) }
+					<div className="refraction-add-section-drag-title">
+						{ __( 'Drag widget here', 'refraction' ) }
 					</div>
 				</div>
 			</div>

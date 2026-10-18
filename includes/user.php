@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor user.
+ * Refraction user.
  *
- * Elementor user handler class is responsible for checking if the user can edit
- * with Elementor and displaying different admin notices.
+ * Refraction user handler class is responsible for checking if the user can edit
+ * with Refraction and displaying different admin notices.
  *
  * @since 1.0.0
  */
@@ -22,14 +22,14 @@ class User {
 	 *
 	 * @var string Admin notices key.
 	 */
-	const ADMIN_NOTICES_KEY = 'elementor_admin_notices';
+	const ADMIN_NOTICES_KEY = 'refraction_admin_notices';
 
 	/**
 	 * Holds the editor introduction screen key.
 	 *
 	 * @var string Introduction key.
 	 */
-	const INTRODUCTION_KEY = 'elementor_introduction';
+	const INTRODUCTION_KEY = 'refraction_introduction';
 
 	/**
 	 * Holds the dismissed editor notices key.
@@ -38,22 +38,22 @@ class User {
 	 *
 	 * @var string Editor notices key.
 	 */
-	const DISMISSED_EDITOR_NOTICES_KEY = 'elementor_dismissed_editor_notices';
+	const DISMISSED_EDITOR_NOTICES_KEY = 'refraction_dismissed_editor_notices';
 
 	/**
 	 * Init.
 	 *
-	 * Initialize Elementor user.
+	 * Initialize Refraction user.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 * @static
 	 */
 	public static function init() {
-		add_action( 'wp_ajax_elementor_set_admin_notice_viewed', [ __CLASS__, 'ajax_set_admin_notice_viewed' ] );
-		add_action( 'admin_post_elementor_set_admin_notice_viewed', [ __CLASS__, 'ajax_set_admin_notice_viewed' ] );
+		add_action( 'wp_ajax_refraction_set_admin_notice_viewed', [ __CLASS__, 'ajax_set_admin_notice_viewed' ] );
+		add_action( 'admin_post_refraction_set_admin_notice_viewed', [ __CLASS__, 'ajax_set_admin_notice_viewed' ] );
 
-		add_action( 'elementor/ajax/register_actions', [ __CLASS__, 'register_ajax_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ __CLASS__, 'register_ajax_actions' ] );
 	}
 
 	/**
@@ -118,9 +118,9 @@ class User {
 	}
 
 	/**
-	 * Is current user can access elementor.
+	 * Is current user can access refraction.
 	 *
-	 * Whether the current user role is not excluded by Elementor Settings.
+	 * Whether the current user role is not excluded by Refraction Settings.
 	 *
 	 * @since 2.1.7
 	 * @access public
@@ -130,7 +130,7 @@ class User {
 	 */
 	public static function is_current_user_in_editing_black_list() {
 		$user = wp_get_current_user();
-		$exclude_roles = get_option( 'elementor_exclude_user_roles', [] );
+		$exclude_roles = get_option( 'refraction_exclude_user_roles', [] );
 
 		$compare_roles = array_intersect( $user->roles, $exclude_roles );
 		if ( ! empty( $compare_roles ) ) {
@@ -236,7 +236,7 @@ class User {
 	 *
 	 * Flag the admin notice as viewed by the current user, using an authenticated ajax request.
 	 *
-	 * Fired by `wp_ajax_elementor_set_admin_notice_viewed` action.
+	 * Fired by `wp_ajax_refraction_set_admin_notice_viewed` action.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -250,7 +250,7 @@ class User {
 			wp_die();
 		}
 
-		check_admin_referer( 'elementor_set_admin_notice_viewed' );
+		check_admin_referer( 'refraction_set_admin_notice_viewed' );
 
 		self::set_user_notice( $notice_id );
 

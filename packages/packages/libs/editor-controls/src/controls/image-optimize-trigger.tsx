@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { ajax } from '@elementor/editor-v1-adapters';
+import { ajax } from '@refraction/editor-v1-adapters';
 import { BulbIcon } from '@elementor/icons';
 import { Box, Button, CloseButton, Infotip, Stack, Typography, useTheme } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -28,7 +28,7 @@ export type ImagePromotion = {
 };
 
 type PreviewWindow = Window & {
-	elementor?: {
+	refraction?: {
 		$preview?: ArrayLike< { contentDocument?: Document | null } >;
 	};
 };
@@ -75,7 +75,7 @@ export const ImageOptimizeTrigger = ( { promotion }: { promotion?: ImagePromotio
 			}
 		};
 
-		const iframeDocument = ( window as PreviewWindow ).elementor?.$preview?.[ 0 ]?.contentDocument;
+		const iframeDocument = ( window as PreviewWindow ).refraction?.$preview?.[ 0 ]?.contentDocument;
 
 		document.addEventListener( 'mousedown', closeOnPointerDown, true );
 		document.addEventListener( 'keydown', closeOnEscape, true );
@@ -135,7 +135,7 @@ export const ImageOptimizeTrigger = ( { promotion }: { promotion?: ImagePromotio
 					<Stack direction="row" alignItems="center" gap={ 1 } py={ 1 } px={ 2 }>
 						<BulbIcon fontSize="small" color="info" />
 						<Typography variant="subtitle2">
-							{ promotion.title || __( 'Optimize your images', 'elementor' ) }
+							{ promotion.title || __( 'Optimize your images', 'refraction' ) }
 						</Typography>
 						<CloseButton
 							edge="end"
@@ -151,7 +151,7 @@ export const ImageOptimizeTrigger = ( { promotion }: { promotion?: ImagePromotio
 					</Stack>
 					<Stack direction="row" alignItems="center" pt={ 1 } pb={ 1.5 } px={ 2 }>
 						<Button variant="text" size="small" color="secondary" onClick={ dismiss } sx={ { ml: -1 } }>
-							{ __( 'Dismiss', 'elementor' ) }
+							{ __( 'Dismiss', 'refraction' ) }
 						</Button>
 						{ promotion.buttonText && promotion.buttonUrl && (
 							<Button
@@ -208,7 +208,7 @@ export const ImageOptimizeTrigger = ( { promotion }: { promotion?: ImagePromotio
 					},
 				} }
 			>
-				{ promotion.label || __( 'Optimize', 'elementor' ) }
+				{ promotion.label || __( 'Optimize', 'refraction' ) }
 			</Button>
 		</OptimizeInfotip>
 	);

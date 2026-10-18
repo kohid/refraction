@@ -1,18 +1,18 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Modules\ContentSanitizer\Interfaces\Sanitizable;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Modules\ContentSanitizer\Interfaces\Sanitizable;
 
 /**
- * Elementor heading widget.
+ * Refraction heading widget.
  *
- * Elementor widget that displays an eye-catching headlines.
+ * Refraction widget that displays an eye-catching headlines.
  *
  * @since 1.0.0
  */
@@ -43,7 +43,7 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Heading', 'elementor' );
+		return esc_html__( 'Heading', 'refraction' );
 	}
 
 	/**
@@ -150,14 +150,14 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'Heading', 'elementor' ),
+				'label' => esc_html__( 'Heading', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'ai' => [
 					'type' => 'text',
@@ -165,15 +165,15 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Enter your title', 'elementor' ),
-				'default' => esc_html__( 'Add Your Heading Text Here', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your title', 'refraction' ),
+				'default' => esc_html__( 'Add Your Heading Text Here', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -187,15 +187,15 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->add_control(
 			'size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'small' => esc_html__( 'Small', 'elementor' ),
-					'medium' => esc_html__( 'Medium', 'elementor' ),
-					'large' => esc_html__( 'Large', 'elementor' ),
-					'xl' => esc_html__( 'XL', 'elementor' ),
-					'xxl' => esc_html__( 'XXL', 'elementor' ),
+					'default' => esc_html__( 'Default', 'refraction' ),
+					'small' => esc_html__( 'Small', 'refraction' ),
+					'medium' => esc_html__( 'Medium', 'refraction' ),
+					'large' => esc_html__( 'Large', 'refraction' ),
+					'xl' => esc_html__( 'XL', 'refraction' ),
+					'xxl' => esc_html__( 'XXL', 'refraction' ),
 				],
 				'default' => 'default',
 				'condition' => [
@@ -207,7 +207,7 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->add_control(
 			'header_size',
 			[
-				'label' => esc_html__( 'HTML Tag', 'elementor' ),
+				'label' => esc_html__( 'HTML Tag', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'h1' => 'H1',
@@ -229,7 +229,7 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->start_controls_section(
 			'section_title_style',
 			[
-				'label' => esc_html__( 'Heading', 'elementor' ),
+				'label' => esc_html__( 'Heading', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -237,27 +237,27 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => esc_html__( 'Justified', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
@@ -277,7 +277,7 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
-				'selector' => '{{WRAPPER}} .elementor-heading-title',
+				'selector' => '{{WRAPPER}} .refraction-heading-title',
 			]
 		);
 
@@ -285,7 +285,7 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			Group_Control_Text_Stroke::get_type(),
 			[
 				'name' => 'text_stroke',
-				'selector' => '{{WRAPPER}} .elementor-heading-title',
+				'selector' => '{{WRAPPER}} .refraction-heading-title',
 			]
 		);
 
@@ -293,32 +293,32 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'text_shadow',
-				'selector' => '{{WRAPPER}} .elementor-heading-title',
+				'selector' => '{{WRAPPER}} .refraction-heading-title',
 			]
 		);
 
 		$this->add_control(
 			'blend_mode',
 			[
-				'label' => esc_html__( 'Blend Mode', 'elementor' ),
+				'label' => esc_html__( 'Blend Mode', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Normal', 'elementor' ),
-					'multiply' => esc_html__( 'Multiply', 'elementor' ),
-					'screen' => esc_html__( 'Screen', 'elementor' ),
-					'overlay' => esc_html__( 'Overlay', 'elementor' ),
-					'darken' => esc_html__( 'Darken', 'elementor' ),
-					'lighten' => esc_html__( 'Lighten', 'elementor' ),
-					'color-dodge' => esc_html__( 'Color Dodge', 'elementor' ),
-					'saturation' => esc_html__( 'Saturation', 'elementor' ),
-					'color' => esc_html__( 'Color', 'elementor' ),
-					'difference' => esc_html__( 'Difference', 'elementor' ),
-					'exclusion' => esc_html__( 'Exclusion', 'elementor' ),
-					'hue' => esc_html__( 'Hue', 'elementor' ),
-					'luminosity' => esc_html__( 'Luminosity', 'elementor' ),
+					'' => esc_html__( 'Normal', 'refraction' ),
+					'multiply' => esc_html__( 'Multiply', 'refraction' ),
+					'screen' => esc_html__( 'Screen', 'refraction' ),
+					'overlay' => esc_html__( 'Overlay', 'refraction' ),
+					'darken' => esc_html__( 'Darken', 'refraction' ),
+					'lighten' => esc_html__( 'Lighten', 'refraction' ),
+					'color-dodge' => esc_html__( 'Color Dodge', 'refraction' ),
+					'saturation' => esc_html__( 'Saturation', 'refraction' ),
+					'color' => esc_html__( 'Color', 'refraction' ),
+					'difference' => esc_html__( 'Difference', 'refraction' ),
+					'exclusion' => esc_html__( 'Exclusion', 'refraction' ),
+					'hue' => esc_html__( 'Hue', 'refraction' ),
+					'luminosity' => esc_html__( 'Luminosity', 'refraction' ),
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-heading-title' => 'mix-blend-mode: {{VALUE}}',
+					'{{WRAPPER}} .refraction-heading-title' => 'mix-blend-mode: {{VALUE}}',
 				],
 			]
 		);
@@ -335,20 +335,20 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->start_controls_tab(
 			'title_colors_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-heading-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-heading-title' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -358,17 +358,17 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->start_controls_tab(
 			'title_colors_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title_hover_color',
 			[
-				'label' => esc_html__( 'Link Color', 'elementor' ),
+				'label' => esc_html__( 'Link Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-heading-title a:hover, {{WRAPPER}} .elementor-heading-title a:focus' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-heading-title a:hover, {{WRAPPER}} .refraction-heading-title a:focus' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -376,14 +376,14 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->add_control(
 			'title_hover_color_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
 					'unit' => 's',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-heading-title a' => 'transition-duration: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-heading-title a' => 'transition-duration: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -410,12 +410,12 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			return;
 		}
 
-		$this->add_render_attribute( 'title', 'class', 'elementor-heading-title' );
+		$this->add_render_attribute( 'title', 'class', 'refraction-heading-title' );
 
 		if ( ! empty( $settings['size'] ) ) {
-			$this->add_render_attribute( 'title', 'class', 'elementor-size-' . $settings['size'] );
+			$this->add_render_attribute( 'title', 'class', 'refraction-size-' . $settings['size'] );
 		} else {
-			$this->add_render_attribute( 'title', 'class', 'elementor-size-default' );
+			$this->add_render_attribute( 'title', 'class', 'refraction-size-default' );
 		}
 
 		$this->add_inline_editing_attributes( 'title' );
@@ -473,23 +473,23 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 	protected function content_template() {
 		?>
 		<#
-		let title = elementor.helpers.sanitize( settings.title, { ALLOW_DATA_ATTR: false } );
+		let title = refraction.helpers.sanitize( settings.title, { ALLOW_DATA_ATTR: false } );
 
 		if ( '' !== settings.link?.url ) {
-			title = '<a href="' + elementor.helpers.sanitizeUrl( settings.link?.url ) + '">' + title + '</a>';
+			title = '<a href="' + refraction.helpers.sanitizeUrl( settings.link?.url ) + '">' + title + '</a>';
 		}
 
-		view.addRenderAttribute( 'title', 'class', [ 'elementor-heading-title' ] );
+		view.addRenderAttribute( 'title', 'class', [ 'refraction-heading-title' ] );
 
 		if ( '' !== settings.size ) {
-			view.addRenderAttribute( 'title', 'class', [ 'elementor-size-' + settings.size ] );
+			view.addRenderAttribute( 'title', 'class', [ 'refraction-size-' + settings.size ] );
 		} else {
-			view.addRenderAttribute( 'title', 'class', [ 'elementor-size-default' ] );
+			view.addRenderAttribute( 'title', 'class', [ 'refraction-size-default' ] );
 		}
 
 		view.addInlineEditingAttributes( 'title' );
 
-		var headerSizeTag = elementor.helpers.validateHTMLTag( settings.header_size ),
+		var headerSizeTag = refraction.helpers.validateHTMLTag( settings.header_size ),
 			title_html = '<' + headerSizeTag  + ' ' + view.getRenderAttributeString( 'title' ) + '>' + title + '</' + headerSizeTag + '>';
 
 		print( title_html );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTransformer } from '@elementor/editor-canvas';
+import { createTransformer } from '@refraction/editor-canvas';
 import { Stack, styled, UnstableColorIndicator } from '@elementor/ui';
 
 export type Color = {

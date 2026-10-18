@@ -1,4 +1,4 @@
-import { type Props } from '@elementor/editor-props';
+import { type Props } from '@refraction/editor-props';
 import {
 	type CustomCss,
 	getNonEmptyVariants,
@@ -7,14 +7,14 @@ import {
 	type StyleDefinitionID,
 	type StyleDefinitionsMap,
 	type StyleDefinitionVariant,
-} from '@elementor/editor-styles';
-import { type UpdateActionPayload } from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles';
+import { type UpdateActionPayload } from '@refraction/editor-styles-repository';
 import {
 	__createSelector as createSelector,
 	__createSlice as createSlice,
 	type PayloadAction,
 	type SliceState,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import type { ApiContext } from './api';
 import { GlobalClassNotFoundError } from './errors';

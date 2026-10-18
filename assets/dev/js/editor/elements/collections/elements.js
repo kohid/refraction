@@ -1,4 +1,4 @@
-import ElementTypeNotFound from 'elementor-editor/errors/element-type-not-found';
+import ElementTypeNotFound from 'refraction-editor/errors/element-type-not-found';
 
 var ElementsCollection = Backbone.Collection.extend( {
 	add( models, options, isCorrectSet ) {
@@ -14,13 +14,13 @@ var ElementsCollection = Backbone.Collection.extend( {
 
 		if ( attrs.elType ) {
 			const elementType = attrs.widgetType || attrs.elType,
-				elementTypeClass = elementor.elementsManager.getElementTypeClass( elementType );
+				elementTypeClass = refraction.elementsManager.getElementTypeClass( elementType );
 
 			if ( ! elementTypeClass ) {
 				throw new ElementTypeNotFound( elementType );
 			}
 
-			ModelClass = elementor.hooks.applyFilters( 'element/model', elementTypeClass.getModel(), attrs );
+			ModelClass = refraction.hooks.applyFilters( 'element/model', elementTypeClass.getModel(), attrs );
 		}
 
 		return new ModelClass( attrs, options );

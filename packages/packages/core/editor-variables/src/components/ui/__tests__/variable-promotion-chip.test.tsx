@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { trackUpgradePromotionClick, trackViewPromotion } from '@elementor/editor-controls';
+import { trackUpgradePromotionClick, trackViewPromotion } from '@refraction/editor-controls';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { VariablePromotionChip } from '../variable-promotion-chip';
 
-jest.mock( '@elementor/editor-controls', () => ( {
-	...jest.requireActual( '@elementor/editor-controls' ),
+jest.mock( '@refraction/editor-controls', () => ( {
+	...jest.requireActual( '@refraction/editor-controls' ),
 	trackViewPromotion: jest.fn(),
 	trackUpgradePromotionClick: jest.fn(),
 } ) );
@@ -22,8 +22,8 @@ jest.mock( '@wordpress/i18n', () => ( {
 	},
 } ) );
 
-jest.mock( '@elementor/utils', () => ( {
-	...jest.requireActual( '@elementor/utils' ),
+jest.mock( '@refraction/utils', () => ( {
+	...jest.requireActual( '@refraction/utils' ),
 	capitalize: ( str: string ) => str.charAt( 0 ).toUpperCase() + str.slice( 1 ),
 } ) );
 

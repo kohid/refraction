@@ -7,7 +7,7 @@ export default class FloatingBarDomHelper {
 		const el = this.$element[ 0 ];
 		const widget = el.querySelector( '.e-floating-bars' );
 
-		if ( elementorFrontend.isEditMode() ) {
+		if ( refractionFrontend.isEditMode() ) {
 			widget.classList.add( 'is-sticky' );
 			return;
 		}
@@ -19,7 +19,7 @@ export default class FloatingBarDomHelper {
 		) {
 			const wpAdminBar = document.getElementById( 'wpadminbar' );
 
-			const elementToInsert = el.closest( '.elementor' );
+			const elementToInsert = el.closest( '.refraction' );
 
 			if ( wpAdminBar ) {
 				wpAdminBar.after( elementToInsert );

@@ -1,6 +1,6 @@
 import Component from './e-component';
 
-class Styleguide extends elementorModules.editor.utils.Module {
+class Styleguide extends refractionModules.editor.utils.Module {
 	onInit() {
 		$e.components.register( new Component() );
 
@@ -15,8 +15,8 @@ class Styleguide extends elementorModules.editor.utils.Module {
 	}
 
 	addHooks() {
-		elementor.hooks.addAction( 'panel/global/tab/before-show', this.show.bind( this ) );
-		elementor.hooks.addAction( 'panel/global/tab/before-destroy', this.hide.bind( this ) );
+		refraction.hooks.addAction( 'panel/global/tab/before-show', this.show.bind( this ) );
+		refraction.hooks.addAction( 'panel/global/tab/before-destroy', this.hide.bind( this ) );
 	}
 
 	/**

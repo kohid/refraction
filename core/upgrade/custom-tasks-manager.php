@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Core\Upgrade;
+namespace Refraction\Core\Upgrade;
 
-use Elementor\Core\Base\Background_Task_Manager;
-use Elementor\Plugin;
+use Refraction\Core\Base\Background_Task_Manager;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 class Custom_Tasks_Manager extends Background_Task_Manager {
-	const TASKS_OPTION_KEY = 'elementor_custom_tasks';
+	const TASKS_OPTION_KEY = 'refraction_custom_tasks';
 
 	const QUERY_LIMIT = 100;
 
@@ -22,11 +22,11 @@ class Custom_Tasks_Manager extends Background_Task_Manager {
 	}
 
 	public function get_plugin_name() {
-		return 'elementor';
+		return 'refraction';
 	}
 
 	public function get_plugin_label() {
-		return esc_html__( 'Elementor', 'elementor' );
+		return esc_html__( 'Refraction', 'refraction' );
 	}
 
 	public function get_task_runner_class() {
@@ -54,7 +54,7 @@ class Custom_Tasks_Manager extends Background_Task_Manager {
 
 		$this->clear_tasks_requested_to_run();
 
-		Plugin::$instance->logger->get_logger()->info( 'Elementor custom task(s) process has been queued.', [
+		Plugin::$instance->logger->get_logger()->info( 'Refraction custom task(s) process has been queued.', [
 			'meta' => [ $custom_tasks_callbacks ],
 		] );
 

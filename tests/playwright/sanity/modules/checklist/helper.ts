@@ -129,11 +129,11 @@ export class ChecklistHelper {
 	}
 
 	async getSteps( request: APIRequestContext ): Promise< Step[] > {
-		return ( await this.apiRequests.customGet( request, 'wp-json/elementor/v1/checklist/steps' ) ).data;
+		return ( await this.apiRequests.customGet( request, 'wp-json/refraction/v1/checklist/steps' ) ).data;
 	}
 
 	async resetEditorVisitCounter( request: APIRequestContext, count: number = 0 ) {
-		await this.apiRequests.customPut( request, 'wp-json/elementor/v1/checklist/user-progress', {
+		await this.apiRequests.customPut( request, 'wp-json/refraction/v1/checklist/user-progress', {
 			e_editor_counter: count,
 			last_opened_timestamp: false,
 		} );
@@ -141,13 +141,13 @@ export class ChecklistHelper {
 
 	async enableChecklistVisibilityPreference() {
 		await wpCli(
-			'wp eval update_user_meta(1,"elementor_preferences",array_merge((array)get_user_meta(1,"elementor_preferences",true),array("show_launchpad_checklist"=>"yes")));',
+			'wp eval update_user_meta(1,"refraction_preferences",array_merge((array)get_user_meta(1,"refraction_preferences",true),array("show_launchpad_checklist"=>"yes")));',
 		);
 	}
 
 	waitForUserProgressResponse( page: Page, shouldOpenInEditor: boolean ) {
 		return page.waitForResponse( async ( response ) => {
-			if ( ! response.url().includes( 'wp-json/elementor/v1/checklist/user-progress' ) || ! response.ok() ) {
+			if ( ! response.url().includes( 'wp-json/refraction/v1/checklist/user-progress' ) || ! response.ok() ) {
 				return false;
 			}
 
@@ -160,7 +160,7 @@ export class ChecklistHelper {
 	async resetStepsInDb( request: APIRequestContext, alternativeValues = {} ) {
 		const steps = await this.getSteps( request );
 
-		await this.apiRequests.customPut( request, `wp-json/elementor/v1/checklist/user-progress`, {
+		await this.apiRequests.customPut( request, `wp-json/refraction/v1/checklist/user-progress`, {
 			first_closed_checklist_in_editor: true,
 			last_opened_timestamp: false,
 			is_popup_minimized: false,
@@ -169,7 +169,7 @@ export class ChecklistHelper {
 		} );
 
 		for ( const step of steps ) {
-			await this.apiRequests.customPut( request, `wp-json/elementor/v1/checklist/steps/${ step.config.id }`, {
+			await this.apiRequests.customPut( request, `wp-json/refraction/v1/checklist/steps/${ step.config.id }`, {
 				id: step.config.id,
 				is_marked_completed: false,
 				is_absolute_completed: false,

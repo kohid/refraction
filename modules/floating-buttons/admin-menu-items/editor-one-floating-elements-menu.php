@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\AdminMenuItems;
+namespace Refraction\Modules\FloatingButtons\AdminMenuItems;
 
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
-use Elementor\Modules\FloatingButtons\Module;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Modules\FloatingButtons\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -17,7 +17,7 @@ class Editor_One_Floating_Elements_Menu implements Menu_Item_Interface {
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -25,7 +25,7 @@ class Editor_One_Floating_Elements_Menu implements Menu_Item_Interface {
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Floating Elements', 'elementor' );
+		return esc_html__( 'Floating Elements', 'refraction' );
 	}
 
 	public function get_position(): int {

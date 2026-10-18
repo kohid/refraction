@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Data\Base;
+namespace Refraction\Data\Base;
 
-use Elementor\Data\Manager;
-use Elementor\Plugin;
+use Refraction\Data\Manager;
+use Refraction\Plugin;
 use WP_REST_Controller;
 use WP_REST_Server;
 
@@ -10,14 +10,14 @@ abstract class Controller extends WP_REST_Controller {
 	/**
 	 * Loaded endpoint(s).
 	 *
-	 * @var \Elementor\Data\Base\Endpoint[]
+	 * @var \Refraction\Data\Base\Endpoint[]
 	 */
 	public $endpoints = [];
 
 	/**
 	 * Loaded processor(s).
 	 *
-	 * @var \Elementor\Data\Base\Processor[][]
+	 * @var \Refraction\Data\Base\Processor[][]
 	 */
 	public $processors = [];
 
@@ -43,7 +43,7 @@ abstract class Controller extends WP_REST_Controller {
 		 * Since all actions were removed for custom internal REST server.
 		 * Re-add the actions.
 		 */
-		add_action( 'elementor_rest_api_before_init', function () {
+		add_action( 'refraction_rest_api_before_init', function () {
 			add_action( 'rest_api_init', function() {
 				$this->register();
 			} );
@@ -122,7 +122,7 @@ abstract class Controller extends WP_REST_Controller {
 	 *
 	 * @param string $command
 	 *
-	 * @return \Elementor\Data\Base\Processor[]
+	 * @return \Refraction\Data\Base\Processor[]
 	 */
 	public function get_processors( $command ) {
 		$result = [];
@@ -203,7 +203,7 @@ abstract class Controller extends WP_REST_Controller {
 	 *
 	 * @param string $endpoint_class
 	 *
-	 * @return \Elementor\Data\Base\Endpoint
+	 * @return \Refraction\Data\Base\Endpoint
 	 */
 	protected function register_endpoint( $endpoint_class ) {
 		$endpoint_instance = new $endpoint_class( $this );
@@ -236,7 +236,7 @@ abstract class Controller extends WP_REST_Controller {
 	 *
 	 * @param string $processor_class
 	 *
-	 * @return \Elementor\Data\Base\Processor $processor_instance
+	 * @return \Refraction\Data\Base\Processor $processor_instance
 	 */
 	protected function register_processor( $processor_class ) {
 		$processor_instance = new $processor_class( $this );
@@ -328,15 +328,15 @@ abstract class Controller extends WP_REST_Controller {
 	private static $notify_deprecated = true;
 
 	private function deprecated() {
-		add_action( 'elementor/init', function () {
+		add_action( 'refraction/init', function () {
 			if ( ! self::$notify_deprecated ) {
 				return;
 			}
 
 			Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function(
-				'Elementor\Data\Manager',
+				'Refraction\Data\Manager',
 				'3.5.0',
-				'Elementor\Data\V2\Manager'
+				'Refraction\Data\V2\Manager'
 			);
 
 			self::$notify_deprecated = false;

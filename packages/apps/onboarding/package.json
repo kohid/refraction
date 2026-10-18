@@ -1,10 +1,10 @@
 {
-  "name": "@elementor/onboarding",
-  "description": "Onboarding wizard for Elementor",
+  "name": "@refraction/onboarding",
+  "description": "Onboarding wizard for Refraction",
   "version": "4.4.0",
   "private": true,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,11 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elementor/elementor.git",
+    "url": "git+https://github.com/kohid/refraction.git",
     "directory": "packages/apps/onboarding"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "files": [
     "README.md",
@@ -37,12 +37,12 @@
     "dev": "tsup --config=../../tsup.dev.ts"
   },
   "dependencies": {
-    "@elementor/events": "4.4.0",
+    "@refraction/events": "4.4.0",
     "@elementor/icons": "~1.78.1",
-    "@elementor/query": "4.4.0",
-    "@elementor/store": "4.4.0",
+    "@refraction/query": "4.4.0",
+    "@refraction/store": "4.4.0",
     "@elementor/ui": "1.41.3",
-    "@elementor/utils": "4.4.0"
+    "@refraction/utils": "4.4.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",

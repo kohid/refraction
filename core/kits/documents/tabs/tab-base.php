@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Kits\Documents\Kit;
-use Elementor\Core\Kits\Manager;
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Sub_Controls_Stack;
+use Refraction\Controls_Manager;
+use Refraction\Core\Kits\Documents\Kit;
+use Refraction\Core\Kits\Manager;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\Sub_Controls_Stack;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -77,7 +77,7 @@ abstract class Tab_Base extends Sub_Controls_Stack {
 					'alert_type' => 'warning',
 					'content' => sprintf(
 						/* translators: 1: Link open tag, 2: Link close tag. */
-						esc_html__( 'In order for Theme Style to affect all relevant Elementor elements, please disable Default Colors and Fonts from the %1$sSettings Page%2$s.', 'elementor' ),
+						esc_html__( 'In order for Theme Style to affect all relevant Refraction elements, please disable Default Colors and Fonts from the %1$sSettings Page%2$s.', 'refraction' ),
 						'<a href="' . Settings::get_settings_tab_url( 'general' ) . '" target="_blank">',
 						'</a>'
 					),

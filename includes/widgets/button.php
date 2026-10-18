@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Includes\Widgets\Traits\Button_Trait;
+use Refraction\Includes\Widgets\Traits\Button_Trait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor button widget.
+ * Refraction button widget.
  *
- * Elementor widget that displays a button with the ability to control every
+ * Refraction widget that displays a button with the ability to control every
  * aspect of the button design.
  *
  * @since 1.0.0
@@ -44,7 +44,7 @@ class Widget_Button extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Button', 'elementor' );
+		return esc_html__( 'Button', 'refraction' );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Widget_Button extends Widget_Base {
 		$this->start_controls_section(
 			'section_button',
 			[
-				'label' => esc_html__( 'Button', 'elementor' ),
+				'label' => esc_html__( 'Button', 'refraction' ),
 			]
 		);
 
@@ -100,7 +100,7 @@ class Widget_Button extends Widget_Base {
 		$this->start_controls_section(
 			'section_style',
 			[
-				'label' => esc_html__( 'Button', 'elementor' ),
+				'label' => esc_html__( 'Button', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);

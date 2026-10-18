@@ -1,7 +1,7 @@
 import {
 	__privateOpenRoute as openRoute,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { PlusIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -11,15 +11,15 @@ export default function useActionProps() {
 	const { isActive, isBlocked } = useRouteStatus( 'panel/elements' );
 
 	return {
-		title: __( 'Add Element', 'elementor' ),
+		title: __( 'Add Element', 'refraction' ),
 		icon: PlusIcon,
 		id: 'ele-add-element',
 		onClick: () => {
 			const extendedWindow = window as unknown as ExtendedWindow;
-			const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+			const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 			if ( config ) {
-				extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.widgetPanel, {
+				extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.widgetPanel, {
 					location: config.locations.topBar,
 					secondaryLocation: config.secondaryLocations[ 'widget-panel' ],
 					trigger: config.triggers.toggleClick,

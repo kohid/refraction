@@ -175,7 +175,7 @@
 		height: 100%;
 	}
 
-	:is( .elementor-section-wrap, [data-elementor-id] ) > & {
+	:is( .refraction-section-wrap, [data-refraction-id] ) > & {
 		// Default top-level containers to be centered.
 		--margin-left: auto;
 		--margin-right: auto;
@@ -188,15 +188,15 @@
 
 	// Selector explanation:
 	// [data-widget_type="e-component.default"] > .e-con - Component wrapper element, when out of component edit mode.
-	// [data-widget_type="e-component.default"] > .elementor-section-wrap > .e-con - Component wrapper element, when inside component edit mode.
-	:is( [data-widget_type="e-component.default"], [data-widget_type="e-component.default"] > .elementor-section-wrap ) > & {
+	// [data-widget_type="e-component.default"] > .refraction-section-wrap > .e-con - Component wrapper element, when inside component edit mode.
+	:is( [data-widget_type="e-component.default"], [data-widget_type="e-component.default"] > .refraction-section-wrap ) > & {
 		// Reset margin to default values for component wrapper element.
 		--margin-right: 0px;
 		--margin-left: 0px;
 	}
 
 	// Hack to increase specificity and avoid using `!important`.
-	.elementor-widget.elementor-widget {
+	.refraction-widget.refraction-widget {
 		// Override the default margin-block-end of widgets.
 		margin-block-end: 0;
 	}
@@ -217,9 +217,9 @@
 
 	// Background overlay.
 	&::before,
-	:is( &, & > .e-con-inner ) > .elementor-background-video-container::before,
-	> .elementor-motion-effects-container > .elementor-motion-effects-layer::before,
-	> .elementor-background-slideshow::before {
+	:is( &, & > .e-con-inner ) > .refraction-background-video-container::before,
+	> .refraction-motion-effects-container > .refraction-motion-effects-layer::before,
+	> .refraction-background-slideshow::before {
 		// Render the background overlay only if it's being used - Determined by passing a CSS var from the background
 		// control with an empty string (e.g. `--background-overlay: '';`).
 		content: var(--background-overlay);
@@ -235,26 +235,26 @@
 		transition: background var(--overlay-transition, 0.3s), border-radius var(--border-transition, 0.3s), opacity var(--overlay-transition, 0.3s);
 	}
 
-	> .elementor-background-slideshow,
-	:is( &, & > .e-con-inner ) > .elementor-background-video-container {
+	> .refraction-background-slideshow,
+	:is( &, & > .e-con-inner ) > .refraction-background-video-container {
 		@include border-radius-for-background-elements;
 	}
 
 	@media (max-width: $screen-mobile-max) {
-		:is( &, & > .e-con-inner ) > .elementor-background-video-container.elementor-hidden-mobile {
+		:is( &, & > .e-con-inner ) > .refraction-background-video-container.refraction-hidden-mobile {
 			display: none;
 		}
 	}
 
-	:is( &, & > .e-con-inner ) > .elementor-background-video-container::before {
+	:is( &, & > .e-con-inner ) > .refraction-background-video-container::before {
 		z-index: $first-layer;
 	}
 
-	:is( &, & > .e-con-inner ) > .elementor-background-slideshow::before {
+	:is( &, & > .e-con-inner ) > .refraction-background-slideshow::before {
 		z-index: $second-layer;
 	}
 
-	.elementor-widget {
+	.refraction-widget {
 		// Fix swiper-based widgets (ED-6716).
 		// Since the default is `min-width: auto` for flex items.
 		min-width: 0;
@@ -275,9 +275,9 @@
 	&,
 	& > .e-con-inner {
 
-		& > .elementor-widget {
+		& > .refraction-widget {
 
-			& > .elementor-widget-container {
+			& > .refraction-widget-container {
 				// Fix align-self:stretch (ED-7359)
 				height: 100%;
 			}
@@ -285,15 +285,15 @@
 	}
 
 	// Hack with repeated classnames to increase the specificity.
-	.elementor.elementor &,
+	.refraction.refraction &,
 	&.e-con > .e-con-inner {
 		// This was done to make sure that the widgets inside containers do not exceed the container's max width.
-		& > .elementor-widget {
+		& > .refraction-widget {
 			max-width: 100%;
 		}
 	}
 
-	.elementor-widget {
+	.refraction-widget {
 
 		&:not(:last-child) {
 			--kit-widget-spacing: 0px;
@@ -306,7 +306,7 @@
 		--width: 100%;
 		--flex-wrap: var(--flex-wrap-mobile);
 
-		.elementor-widget-archive-posts {
+		.refraction-widget-archive-posts {
 			width: 100%;
 		}
 	}

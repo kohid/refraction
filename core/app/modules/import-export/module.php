@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\App\Modules\ImportExport;
+namespace Refraction\App\Modules\ImportExport;
 
-use Elementor\App\Modules\ImportExport\Module as Import_Export_Module;
-use Elementor\Core\Base\Module as BaseModule;
+use Refraction\App\Modules\ImportExport\Module as Import_Export_Module;
+use Refraction\Core\Base\Module as BaseModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

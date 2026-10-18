@@ -1,4 +1,4 @@
-import Dialog from 'elementor-app/ui/dialog/dialog';
+import Dialog from 'refraction-app/ui/dialog/dialog';
 
 // In the current time there is no solution to use "getDerivedStateFromError" static method with functional component
 // That is why this component is a class component.
@@ -12,8 +12,8 @@ export default class ErrorBoundary extends React.Component {
 	};
 
 	static defaultProps = {
-		title: __( 'App could not be loaded', 'elementor' ),
-		text: __( 'We’re sorry, but something went wrong. Click on ‘Learn more’ and follow each of the steps to quickly solve it.', 'elementor' ),
+		title: __( 'App could not be loaded', 'refraction' ),
+		text: __( 'We’re sorry, but something went wrong. Click on ‘Learn more’ and follow each of the steps to quickly solve it.', 'refraction' ),
 		learnMoreUrl: 'https://go.elementor.com/app-general-load-issue/',
 	};
 
@@ -36,7 +36,7 @@ export default class ErrorBoundary extends React.Component {
 			window.top.$e.run( 'app/close' );
 		}
 
-		window.location = elementorAppConfig.return_url;
+		window.location = refractionAppConfig.return_url;
 	}
 
 	render() {
@@ -47,8 +47,8 @@ export default class ErrorBoundary extends React.Component {
 				approveButtonUrl={ this.props.learnMoreUrl }
 				approveButtonColor="link"
 				approveButtonTarget="_blank"
-				approveButtonText={ __( 'Learn More', 'elementor' ) }
-				dismissButtonText={ __( 'Go Back', 'elementor' ) }
+				approveButtonText={ __( 'Learn More', 'refraction' ) }
+				dismissButtonText={ __( 'Go Back', 'refraction' ) }
 				dismissButtonOnClick={ this.goBack }
 			/>;
 		}

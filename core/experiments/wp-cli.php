@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Core\Experiments;
+namespace Refraction\Core\Experiments;
 
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Plugin;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -15,7 +15,7 @@ class Wp_Cli extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * 1. wp elementor experiments activate container
+	 * 1. wp refraction experiments activate container
 	 *      - This will activate the Container experiment.
 	 *
 	 * @param array      $args
@@ -55,7 +55,7 @@ class Wp_Cli extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * 1. wp elementor experiments deactivate container
+	 * 1. wp refraction experiments deactivate container
 	 *      - This will deactivate the Container experiment.
 	 *
 	 * @param array      $args
@@ -90,7 +90,7 @@ class Wp_Cli extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * 1. wp elementor experiments status container
+	 * 1. wp refraction experiments status container
 	 *      - This will return the status of Container experiment. (active/inactive)
 	 *
 	 * @param array $args

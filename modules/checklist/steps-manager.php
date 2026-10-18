@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Modules\Checklist;
+namespace Refraction\Modules\Checklist;
 
-use Elementor\Modules\Checklist\Steps\Assign_Homepage;
-use Elementor\Modules\Checklist\Steps\Create_Pages;
-use Elementor\Modules\Checklist\Steps\Add_Logo;
-use Elementor\Modules\Checklist\Steps\Step_Base;
-use Elementor\Modules\Checklist\Steps\Set_Fonts_And_Colors;
+use Refraction\Modules\Checklist\Steps\Assign_Homepage;
+use Refraction\Modules\Checklist\Steps\Create_Pages;
+use Refraction\Modules\Checklist\Steps\Add_Logo;
+use Refraction\Modules\Checklist\Steps\Step_Base;
+use Refraction\Modules\Checklist\Steps\Set_Fonts_And_Colors;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -29,7 +29,7 @@ class Steps_Manager {
 		$this->module = $module;
 		$this->register_steps();
 
-		add_action( 'elementor/init', function() {
+		add_action( 'refraction/init', function() {
 			$this->filter_steps();
 		} );
 	}
@@ -165,19 +165,19 @@ class Steps_Manager {
 	 * @return Step_Base|null
 	 */
 	private function get_step_instance( string $step_id ): ?Step_Base {
-		$class_name = '\\Elementor\\Modules\\Checklist\\Steps\\' . $step_id;
+		$class_name = '\\Refraction\\Modules\\Checklist\\Steps\\' . $step_id;
 
 		if ( ! class_exists( $class_name ) ) {
 			return null;
 		}
 
 		/** @var Step_Base $step */
-		return new $class_name( $this->module, $this->module->get_wordpress_adapter(), $this->module->get_elementor_adapter() );
+		return new $class_name( $this->module, $this->module->get_wordpress_adapter(), $this->module->get_refraction_adapter() );
 	}
 
 	private function filter_steps() {
 		$step_ids  = [];
-		$filtered_steps = apply_filters( 'elementor/checklist/steps', $this->step_instances );
+		$filtered_steps = apply_filters( 'refraction/checklist/steps', $this->step_instances );
 
 		foreach ( $filtered_steps as $step_id => $step_instance ) {
 			if ( ! $step_instance instanceof Step_Base ) {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { PropValue, SizePropValue } from '@elementor/editor-props';
+import type { PropValue, SizePropValue } from '@refraction/editor-props';
 import { InputAdornment, type TextFieldProps } from '@elementor/ui';
 
 import { useSizeValue } from '../../hooks/use-size-value';

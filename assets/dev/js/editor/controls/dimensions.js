@@ -1,6 +1,6 @@
 import Scrubbing from './behaviors/scrubbing';
 
-var ControlBaseUnitsItemView = require( 'elementor-controls/base-units' ),
+var ControlBaseUnitsItemView = require( 'refraction-controls/base-units' ),
 	ControlDimensionsItemView;
 
 ControlDimensionsItemView = ControlBaseUnitsItemView.extend( {
@@ -30,8 +30,8 @@ ControlDimensionsItemView = ControlBaseUnitsItemView.extend( {
 	ui() {
 		var ui = ControlBaseUnitsItemView.prototype.ui.apply( this, arguments );
 
-		ui.controls = '.elementor-control-dimension > input:enabled';
-		ui.link = 'button.elementor-link-dimensions';
+		ui.controls = '.refraction-control-dimension > input:enabled';
+		ui.link = 'button.refraction-link-dimensions';
 
 		return ui;
 	},

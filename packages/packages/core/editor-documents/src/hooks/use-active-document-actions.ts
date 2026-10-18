@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
+import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
 
 import useActiveDocument from './use-active-document';
 

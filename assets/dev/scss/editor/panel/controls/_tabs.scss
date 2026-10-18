@@ -1,15 +1,15 @@
 
 // Inner Tabs
-.elementor-control-type-tabs {
+.refraction-control-type-tabs {
 	display: none;
 	font-size: var(--control-title-size);
 
-	&:has(> :not(.elementor-control-type-tab.elementor-hidden-control)) {
+	&:has(> :not(.refraction-control-type-tab.refraction-hidden-control)) {
 		display: flex;
 	}
 }
 
-.elementor-control-type-tab {
+.refraction-control-type-tab {
 	text-align: center;
 	width: 100%;
 	padding: 0;

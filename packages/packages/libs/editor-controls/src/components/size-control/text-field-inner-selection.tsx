@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { forwardRef, useId } from 'react';
-import { type PropValue, sizePropTypeUtil } from '@elementor/editor-props';
-import { MenuListItem } from '@elementor/editor-ui';
+import { type PropValue, sizePropTypeUtil } from '@refraction/editor-props';
+import { MenuListItem } from '@refraction/editor-ui';
 import {
 	bindMenu,
 	bindTrigger,

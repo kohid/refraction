@@ -1,3 +1,3 @@
-elementorCommon.elements.$window.on( 'elementor/nested-element-type-loaded', async () => {
+refractionCommon.elements.$window.on( 'refraction/nested-element-type-loaded', async () => {
 	new ( await import( '../editor/module' ) ).default();
 } );

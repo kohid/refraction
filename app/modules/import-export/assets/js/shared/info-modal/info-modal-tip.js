@@ -1,6 +1,6 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import ModalProvider from 'elementor-app/ui/modal/modal';
+import ModalProvider from 'refraction-app/ui/modal/modal';
 
 export default function InfoModalTip( props ) {
 	return <ModalProvider.Tip { ...props } className={ arrayToClassName( [ 'e-app-import-export-info-modal__tip', props.className ] ) } />;

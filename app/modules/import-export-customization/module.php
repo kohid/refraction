@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\App\Modules\ImportExportCustomization;
+namespace Refraction\App\Modules\ImportExportCustomization;
 
-use Elementor\App\Modules\ImportExportCustomization\Processes\Export;
-use Elementor\App\Modules\ImportExportCustomization\Processes\Import;
-use Elementor\App\Modules\ImportExportCustomization\Processes\Revert;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Files\Uploads_Manager;
-use Elementor\Modules\System_Info\Reporters\Server;
-use Elementor\Plugin;
-use Elementor\Tools;
-use Elementor\Utils as ElementorUtils;
-use Elementor\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
-use Elementor\App\Modules\ImportExportCustomization\Data\Controller;
-use Elementor\Core\Settings\Manager as SettingsManager;
+use Refraction\App\Modules\ImportExportCustomization\Processes\Export;
+use Refraction\App\Modules\ImportExportCustomization\Processes\Import;
+use Refraction\App\Modules\ImportExportCustomization\Processes\Revert;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Files\Uploads_Manager;
+use Refraction\Modules\System_Info\Reporters\Server;
+use Refraction\Plugin;
+use Refraction\Tools;
+use Refraction\Utils as RefractionUtils;
+use Refraction\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
+use Refraction\App\Modules\ImportExportCustomization\Data\Controller;
+use Refraction\Core\Settings\Manager as SettingsManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Import Export Module
  *
- * Responsible for initializing Elementor App functionality
+ * Responsible for initializing Refraction App functionality
  */
 class Module extends BaseModule {
 	const FORMAT_VERSION = '3.0';
@@ -36,13 +36,13 @@ class Module extends BaseModule {
 
 	const DOMDOCUMENT_MISSING = 'domdocument-missing';
 
-	const OPTION_KEY_ELEMENTOR_IMPORT_SESSIONS = 'elementor_import_sessions';
+	const OPTION_KEY_REFRACTION_IMPORT_SESSIONS = 'refraction_import_sessions';
 
-	const OPTION_KEY_ELEMENTOR_REVERT_SESSIONS = 'elementor_revert_sessions';
+	const OPTION_KEY_REFRACTION_REVERT_SESSIONS = 'refraction_revert_sessions';
 
-	const META_KEY_ELEMENTOR_IMPORT_SESSION_ID = '_elementor_import_session_id';
+	const META_KEY_REFRACTION_IMPORT_SESSION_ID = '_refraction_import_session_id';
 
-	const META_KEY_ELEMENTOR_EDIT_MODE = '_elementor_edit_mode';
+	const META_KEY_REFRACTION_EDIT_MODE = '_refraction_edit_mode';
 	const IMPORT_PLUGINS_ACTION = 'import-plugins';
 	const EXPORT_SOURCE_FILE = 'file';
 
@@ -83,8 +83,8 @@ class Module extends BaseModule {
 
 		Controller::register_hooks();
 
-		if ( ElementorUtils::is_wp_cli() ) {
-			\WP_CLI::add_command( 'elementor kit', WP_CLI::class );
+		if ( RefractionUtils::is_wp_cli() ) {
+			\WP_CLI::add_command( 'refraction kit', WP_CLI::class );
 		}
 
 
@@ -100,14 +100,14 @@ class Module extends BaseModule {
 	}
 
 	/**
-	 * Register the import/export tab in elementor tools.
+	 * Register the import/export tab in refraction tools.
 	 */
 	public function register_settings_tab( Tools $tools ) {
 		$tools->add_tab( 'import-export-kit', [
-			'label' => esc_html__( 'Website Templates', 'elementor' ),
+			'label' => esc_html__( 'Website Templates', 'refraction' ),
 			'sections' => [
 				'intro' => [
-					'label' => esc_html__( 'Website Templates', 'elementor' ),
+					'label' => esc_html__( 'Website Templates', 'refraction' ),
 					'callback' => function() {
 						$this->render_import_export_tab_content();
 					},
@@ -123,22 +123,22 @@ class Module extends BaseModule {
 	private function render_import_export_tab_content() {
 		$content_data = [
 			'export' => [
-				'title' => esc_html__( 'Export this website', 'elementor' ),
+				'title' => esc_html__( 'Export this website', 'refraction' ),
 				'button' => [
 					'url' => Plugin::$instance->app->get_base_url() . '#/export-customization',
-					'text' => esc_html__( 'Export', 'elementor' ),
-					'id' => 'elementor-import-export__export',
+					'text' => esc_html__( 'Export', 'refraction' ),
+					'id' => 'refraction-import-export__export',
 				],
-				'description' => esc_html__( 'You can download this website as a .zip file.', 'elementor' ),
+				'description' => esc_html__( 'You can download this website as a .zip file.', 'refraction' ),
 			],
 			'import' => [
-				'title' => esc_html__( 'Apply a Website Template', 'elementor' ),
+				'title' => esc_html__( 'Apply a Website Template', 'refraction' ),
 				'button' => [
 					'url' => Plugin::$instance->app->get_base_url() . '#/import-customization',
-					'text' => esc_html__( 'Import', 'elementor' ),
-					'id' => 'elementor-import-export__import',
+					'text' => esc_html__( 'Import', 'refraction' ),
+					'id' => 'refraction-import-export__import',
 				],
-				'description' => esc_html__( 'You can import design and settings from a .zip file.', 'elementor' ),
+				'description' => esc_html__( 'You can import design and settings from a .zip file.', 'refraction' ),
 			],
 		];
 
@@ -155,18 +155,18 @@ class Module extends BaseModule {
 			if ( ! empty( $penultimate_imported_kit ) ) {
 				$revert_text = sprintf(
 					/* translators: 1: kit title, 2: date, 3: line break, 4: kit title, 5: date. */
-					esc_html__( 'Remove all the content and site settings that came with "%1$s" on %2$s %3$s and revert to the site setting that came with "%4$s" on %5$s.', 'elementor' ),
-					! empty( $last_imported_kit['kit_title'] ) ? $last_imported_kit['kit_title'] : esc_html__( 'imported kit', 'elementor' ),
+					esc_html__( 'Remove all the content and site settings that came with "%1$s" on %2$s %3$s and revert to the site setting that came with "%4$s" on %5$s.', 'refraction' ),
+					! empty( $last_imported_kit['kit_title'] ) ? $last_imported_kit['kit_title'] : esc_html__( 'imported kit', 'refraction' ),
 					gmdate( $date_format, $last_imported_kit['start_timestamp'] ),
 					'<br>',
-					! empty( $penultimate_imported_kit['kit_title'] ) ? $penultimate_imported_kit['kit_title'] : esc_html__( 'imported kit', 'elementor' ),
+					! empty( $penultimate_imported_kit['kit_title'] ) ? $penultimate_imported_kit['kit_title'] : esc_html__( 'imported kit', 'refraction' ),
 					gmdate( $date_format, $penultimate_imported_kit['start_timestamp'] )
 				);
 			} else {
 				$revert_text = sprintf(
 					/* translators: 1: kit title, 2: date, 3: line break */
-					esc_html__( 'Remove all the content and site settings that came with "%1$s" on %2$s.%3$s Your original site settings will be restored.', 'elementor' ),
-					! empty( $last_imported_kit['kit_title'] ) ? $last_imported_kit['kit_title'] : esc_html__( 'imported kit', 'elementor' ),
+					esc_html__( 'Remove all the content and site settings that came with "%1$s" on %2$s.%3$s Your original site settings will be restored.', 'refraction' ),
+					! empty( $last_imported_kit['kit_title'] ) ? $last_imported_kit['kit_title'] : esc_html__( 'imported kit', 'refraction' ),
 					gmdate( $date_format, $last_imported_kit['start_timestamp'] ),
 					'<br>'
 				);
@@ -177,7 +177,7 @@ class Module extends BaseModule {
 		<div class="tab-import-export-kit__content">
 			<p class="tab-import-export-kit__info">
 				<?php
-				echo esc_html__( 'Here’s where you can export this website as a .zip file, or import a template .zip file into your site.', 'elementor' );
+				echo esc_html__( 'Here’s where you can export this website as a .zip file, or import a template .zip file into your site.', 'refraction' );
 				?>
 			</p>
 
@@ -192,20 +192,20 @@ class Module extends BaseModule {
 
 				$link_attributes = [
 					'href' => $this->get_revert_href(),
-					'id' => 'elementor-import-export__revert_kit',
+					'id' => 'refraction-import-export__revert_kit',
 					'class' => 'button',
 				];
 				?>
 				<div class="tab-import-export-kit__revert">
 					<h2>
-						<?php echo esc_html__( 'Remove the most recent Website Template', 'elementor' ); ?>
+						<?php echo esc_html__( 'Remove the most recent Website Template', 'refraction' ); ?>
 					</h2>
 					<p class="tab-import-export-kit__info">
-						<?php ElementorUtils::print_unescaped_internal_string( $revert_text ); ?>
+						<?php RefractionUtils::print_unescaped_internal_string( $revert_text ); ?>
 					</p>
 					<?php $this->render_last_kit_thumbnail( $last_imported_kit ); ?>
-					<a <?php ElementorUtils::print_html_attributes( $link_attributes ); ?> >
-						<?php echo esc_html__( 'Remove Website Template', 'elementor' ); ?>
+					<a <?php RefractionUtils::print_html_attributes( $link_attributes ); ?> >
+						<?php echo esc_html__( 'Remove Website Template', 'refraction' ); ?>
 					</a>
 				</div>
 			<?php } ?>
@@ -218,21 +218,21 @@ class Module extends BaseModule {
 		?>
 		<div class="<?php echo esc_attr( $container_classes ); ?>">
 			<div class="tab-import-export-kit__box">
-				<h2><?php ElementorUtils::print_unescaped_internal_string( $data['title'] ); ?></h2>
+				<h2><?php RefractionUtils::print_unescaped_internal_string( $data['title'] ); ?></h2>
 			</div>
-			<p class="description"><?php ElementorUtils::print_unescaped_internal_string( $data['description'] ); ?></p>
+			<p class="description"><?php RefractionUtils::print_unescaped_internal_string( $data['description'] ); ?></p>
 
 			<?php if ( ! empty( $data['link'] ) ) : ?>
-				<a href="<?php ElementorUtils::print_unescaped_internal_string( $data['link']['url'] ); ?>" target="_blank"><?php ElementorUtils::print_unescaped_internal_string( $data['link']['text'] ); ?></a>
+				<a href="<?php RefractionUtils::print_unescaped_internal_string( $data['link']['url'] ); ?>" target="_blank"><?php RefractionUtils::print_unescaped_internal_string( $data['link']['text'] ); ?></a>
 			<?php endif; ?>
 			<div class="tab-import-export-kit__box action-buttons">
 				<?php if ( ! empty( $data['button_secondary'] ) ) : ?>
-					<a id="<?php ElementorUtils::print_unescaped_internal_string( $data['button_secondary']['id'] ); ?>" href="<?php ElementorUtils::print_unescaped_internal_string( $data['button_secondary']['url'] ); ?>" class="elementor-button e-btn-txt e-btn-txt-border">
-						<?php ElementorUtils::print_unescaped_internal_string( $data['button_secondary']['text'] ); ?>
+					<a id="<?php RefractionUtils::print_unescaped_internal_string( $data['button_secondary']['id'] ); ?>" href="<?php RefractionUtils::print_unescaped_internal_string( $data['button_secondary']['url'] ); ?>" class="refraction-button e-btn-txt e-btn-txt-border">
+						<?php RefractionUtils::print_unescaped_internal_string( $data['button_secondary']['text'] ); ?>
 					</a>
 				<?php endif; ?>
-				<a <?php ElementorUtils::print_html_attributes( [ 'id' => $data['button']['id'] ] ); ?> href="<?php ElementorUtils::print_unescaped_internal_string( $data['button']['url'] ); ?>" class="elementor-button e-primary">
-					<?php ElementorUtils::print_unescaped_internal_string( $data['button']['text'] ); ?>
+				<a <?php RefractionUtils::print_html_attributes( [ 'id' => $data['button']['id'] ] ); ?> href="<?php RefractionUtils::print_unescaped_internal_string( $data['button']['url'] ); ?>" class="refraction-button e-primary">
+					<?php RefractionUtils::print_unescaped_internal_string( $data['button']['text'] ); ?>
 				</a>
 			</div>
 		</div>
@@ -354,8 +354,8 @@ class Module extends BaseModule {
 		$this->import = new Import( $path, $settings );
 		$this->import->register_default_runners();
 
-		remove_filter( 'elementor/document/save/data', [ Plugin::$instance->modules_manager->get_modules( 'content-sanitizer' ), 'sanitize_content' ] );
-		do_action( 'elementor/import-export-customization/import-kit', $this->import );
+		remove_filter( 'refraction/document/save/data', [ Plugin::$instance->modules_manager->get_modules( 'content-sanitizer' ), 'sanitize_content' ] );
+		do_action( 'refraction/import-export-customization/import-kit', $this->import );
 
 		if ( $split_to_chunks ) {
 			$this->import->init_import_session( true );
@@ -415,7 +415,7 @@ class Module extends BaseModule {
 		$this->export = new Export( $settings );
 		$this->export->register_default_runners();
 
-		do_action( 'elementor/import-export-customization/export-kit', $this->export );
+		do_action( 'refraction/import-export-customization/export-kit', $this->export );
 
 		return $this->export->run();
 	}
@@ -432,13 +432,13 @@ class Module extends BaseModule {
 		if ( empty( $import_sessions ) ) {
 			return [
 				'revert_completed' => false,
-				'message' => __( 'No import sessions available to revert.', 'elementor' ),
+				'message' => __( 'No import sessions available to revert.', 'refraction' ),
 				'referrer_kit_id' => $this->get_referrer_kit_id_from_request(),
 				'show_referrer_dialog' => false,
 			];
 		}
 
-		do_action( 'elementor/import-export-customization/revert-kit', $this->revert );
+		do_action( 'refraction/import-export-customization/revert-kit', $this->revert );
 
 		$this->revert->run();
 
@@ -459,10 +459,10 @@ class Module extends BaseModule {
 
 		$page_id = Tools::PAGE_ID;
 
-		add_action( "elementor/admin/after_create_settings/{$page_id}", [ $this, 'register_settings_tab' ] );
+		add_action( "refraction/admin/after_create_settings/{$page_id}", [ $this, 'register_settings_tab' ] );
 
 		// TODO 18/04/2023 : This needs to be moved to the runner itself after https://elementor.atlassian.net/browse/HTS-434 is done.
-		if ( self::IMPORT_PLUGINS_ACTION === ElementorUtils::get_super_global_value( $_SERVER, 'HTTP_X_ELEMENTOR_ACTION' ) ) {
+		if ( self::IMPORT_PLUGINS_ACTION === RefractionUtils::get_super_global_value( $_SERVER, 'HTTP_X_REFRACTION_ACTION' ) ) {
 			add_filter( 'woocommerce_create_pages', [ $this, 'empty_pages' ], 10, 0 );
 		}
 		// TODO ^^^
@@ -485,7 +485,7 @@ class Module extends BaseModule {
 		$paths_to_check = [
 			Server::KEY_PATH_WP_CONTENT_DIR => $server->get_system_path( Server::KEY_PATH_WP_CONTENT_DIR ),
 			Server::KEY_PATH_UPLOADS_DIR => $server->get_system_path( Server::KEY_PATH_UPLOADS_DIR ),
-			Server::KEY_PATH_ELEMENTOR_UPLOADS_DIR => $server->get_system_path( Server::KEY_PATH_ELEMENTOR_UPLOADS_DIR ),
+			Server::KEY_PATH_REFRACTION_UPLOADS_DIR => $server->get_system_path( Server::KEY_PATH_REFRACTION_UPLOADS_DIR ),
 		];
 
 		$permissions = $server->get_paths_permissions( $paths_to_check );
@@ -500,10 +500,10 @@ class Module extends BaseModule {
 			throw new \Error( self::NO_WRITE_PERMISSIONS_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
-		// Elementor uploads dir permissions is divided to 2 cases:
+		// Refraction uploads dir permissions is divided to 2 cases:
 		// 1. If the dir exists, it has to be writable.
 		// 2. If the dir doesn't exist, the parent dir has to be writable (wp uploads dir), so we can create it.
-		if ( $permissions[ Server::KEY_PATH_ELEMENTOR_UPLOADS_DIR ]['exists'] && ! $permissions[ Server::KEY_PATH_ELEMENTOR_UPLOADS_DIR ]['write'] ) {
+		if ( $permissions[ Server::KEY_PATH_REFRACTION_UPLOADS_DIR ]['exists'] && ! $permissions[ Server::KEY_PATH_REFRACTION_UPLOADS_DIR ]['write'] ) {
 			throw new \Error( self::NO_WRITE_PERMISSIONS_KEY ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 	}
@@ -519,16 +519,16 @@ class Module extends BaseModule {
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script(
-			'elementor-import-export-admin',
+			'refraction-import-export-admin',
 			$this->get_js_assets_url( 'import-export-admin' ),
-			[ 'elementor-common' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-common' ],
+			REFRACTION_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'elementor-import-export-admin',
-			'elementorImportExport',
+			'refraction-import-export-admin',
+			'refractionImportExport',
 			[
 				'lastImportedSession' => $this->revert->get_last_import_session(),
 				'appUrl' => Plugin::$instance->app->get_base_url(),
@@ -538,8 +538,8 @@ class Module extends BaseModule {
 		wp_enqueue_script(
 			'import-export-customization-admin',
 			$this->get_js_assets_url( 'import-export-customization-admin' ),
-			[ 'elementor-common', 'wp-api-fetch' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-common', 'wp-api-fetch' ],
+			REFRACTION_VERSION,
 			true
 		);
 	}
@@ -548,17 +548,17 @@ class Module extends BaseModule {
 	 * Get config data that will be exposed to the frontend.
 	 */
 	private function get_config_data() {
-		$export_nonce = wp_create_nonce( 'elementor_export' );
+		$export_nonce = wp_create_nonce( 'refraction_export' );
 		$export_url = add_query_arg( [ '_nonce' => $export_nonce ], Plugin::$instance->app->get_base_url() );
 
 		return [
 			'exportURL' => $export_url,
 			'summaryTitles' => $this->get_summary_titles(),
 			'builtinWpPostTypes' => ImportExportUtils::get_builtin_wp_post_types(),
-			'elementorPostTypes' => ImportExportUtils::get_elementor_post_types(),
+			'refractionPostTypes' => ImportExportUtils::get_refraction_post_types(),
 			'isUnfilteredFilesEnabled' => Uploads_Manager::are_unfiltered_uploads_enabled(),
-			'elementorHomePageUrl' => $this->get_elementor_home_page_url(),
-			'recentlyEditedElementorPageUrl' => $this->get_recently_edited_elementor_page_url(),
+			'refractionHomePageUrl' => $this->get_refraction_home_page_url(),
+			'recentlyEditedRefractionPageUrl' => $this->get_recently_edited_refraction_page_url(),
 			'tools_url' => Tools::get_url(),
 			'importSessions' => Revert::get_import_sessions(),
 			'lastImportedSession' => $this->revert->get_last_import_session(),
@@ -566,15 +566,15 @@ class Module extends BaseModule {
 			'restApiBaseUrl' => Controller::get_base_url(),
 			'restNonce' => wp_create_nonce( 'wp_rest' ),
 			'restUrl' => rest_url(),
-			'uiTheme' => $this->get_elementor_ui_theme_preference(),
+			'uiTheme' => $this->get_refraction_ui_theme_preference(),
 			'exportGroups' => $this->get_export_groups(),
 			'manifestVersion' => self::FORMAT_VERSION,
-			'elementorVersion' => ELEMENTOR_VERSION,
+			'refractionVersion' => REFRACTION_VERSION,
 			'upgradeVersionUrl' => admin_url( 'plugins.php' ),
 		];
 	}
 
-	private function get_elementor_ui_theme_preference() {
+	private function get_refraction_ui_theme_preference() {
 		$editor_preferences = SettingsManager::get_settings_managers( 'editorPreferences' );
 
 		return $editor_preferences->get_model()->get_settings( 'ui_theme' );
@@ -592,7 +592,7 @@ class Module extends BaseModule {
 	}
 
 	/**
-	 * Get labels of Elementor document types, Elementor Post types, WordPress Post types and Custom Post types.
+	 * Get labels of Refraction document types, Refraction Post types, WordPress Post types and Custom Post types.
 	 */
 	private function get_summary_titles() {
 		$summary_titles = [];
@@ -606,9 +606,9 @@ class Module extends BaseModule {
 			];
 		}
 
-		$elementor_post_types = ImportExportUtils::get_elementor_post_types();
+		$refraction_post_types = ImportExportUtils::get_refraction_post_types();
 		$wp_builtin_post_types = ImportExportUtils::get_builtin_wp_post_types();
-		$post_types = array_merge( $elementor_post_types, $wp_builtin_post_types );
+		$post_types = array_merge( $refraction_post_types, $wp_builtin_post_types );
 
 		foreach ( $post_types as $post_type ) {
 			$post_type_object = get_post_type_object( $post_type );
@@ -642,64 +642,64 @@ class Module extends BaseModule {
 		return $summary_titles;
 	}
 
-	private function get_elementor_editor_home_page_url() {
+	private function get_refraction_editor_home_page_url() {
 		if ( 'page' !== get_option( 'show_on_front' ) ) {
 			return '';
 		}
 
 		$frontpage_id = get_option( 'page_on_front' );
 
-		return $this->get_elementor_editor_page_url( $frontpage_id );
+		return $this->get_refraction_editor_page_url( $frontpage_id );
 	}
 
-	private function get_elementor_home_page_url() {
+	private function get_refraction_home_page_url() {
 		if ( 'page' !== get_option( 'show_on_front' ) ) {
 			return '';
 		}
 
 		$frontpage_id = get_option( 'page_on_front' );
 
-		return $this->get_elementor_page_url( $frontpage_id );
+		return $this->get_refraction_page_url( $frontpage_id );
 	}
 
-	private function get_recently_edited_elementor_page_url() {
-		$query = ElementorUtils::get_recently_edited_posts_query( [ 'posts_per_page' => 1 ] );
+	private function get_recently_edited_refraction_page_url() {
+		$query = RefractionUtils::get_recently_edited_posts_query( [ 'posts_per_page' => 1 ] );
 
 		if ( ! isset( $query->post ) ) {
 			return '';
 		}
 
-		return $this->get_elementor_page_url( $query->post->ID );
+		return $this->get_refraction_page_url( $query->post->ID );
 	}
 
-	private function get_recently_edited_elementor_editor_page_url() {
-		$query = ElementorUtils::get_recently_edited_posts_query( [ 'posts_per_page' => 1 ] );
+	private function get_recently_edited_refraction_editor_page_url() {
+		$query = RefractionUtils::get_recently_edited_posts_query( [ 'posts_per_page' => 1 ] );
 
 		if ( ! isset( $query->post ) ) {
 			return '';
 		}
 
-		return $this->get_elementor_editor_page_url( $query->post->ID );
+		return $this->get_refraction_editor_page_url( $query->post->ID );
 	}
 
-	private function get_elementor_document( $page_id ) {
+	private function get_refraction_document( $page_id ) {
 		$document = Plugin::$instance->documents->get( $page_id );
 
-		if ( ! $document || ! $document->is_built_with_elementor() ) {
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
 			return false;
 		}
 
 		return $document;
 	}
 
-	private function get_elementor_page_url( $page_id ) {
-		$document = $this->get_elementor_document( $page_id );
+	private function get_refraction_page_url( $page_id ) {
+		$document = $this->get_refraction_document( $page_id );
 
 		return $document ? $document->get_preview_url() : '';
 	}
 
-	private function get_elementor_editor_page_url( $page_id ) {
-		$document = $this->get_elementor_document( $page_id );
+	private function get_refraction_editor_page_url( $page_id ) {
+		$document = $this->get_refraction_document( $page_id );
 
 		return $document ? $document->get_edit_url() : '';
 	}
@@ -711,8 +711,8 @@ class Module extends BaseModule {
 	 */
 	public function is_third_party_class( $class_name ) {
 		$allowed_classes = [
-			'Elementor\\',
-			'ElementorPro\\',
+			'Refraction\\',
+			'RefractionPro\\',
 			'WP_',
 			'wp_',
 		];

@@ -1,4 +1,4 @@
-module.exports = elementorModules.Module.extend( {
+module.exports = refractionModules.Module.extend( {
 	errors: [],
 
 	__construct( settings ) {

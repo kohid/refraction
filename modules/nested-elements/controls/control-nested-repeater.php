@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Modules\NestedElements\Controls;
+namespace Refraction\Modules\NestedElements\Controls;
 
-use Elementor\Control_Repeater;
+use Refraction\Control_Repeater;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

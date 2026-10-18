@@ -4,7 +4,7 @@ import {
 	useActivateBreakpoint,
 	useActiveBreakpoint,
 	useBreakpoints,
-} from '@elementor/editor-responsive';
+} from '@refraction/editor-responsive';
 import {
 	DesktopIcon,
 	LaptopIcon,
@@ -30,10 +30,10 @@ export default function BreakpointsSwitcher() {
 
 	const onChange = ( _: unknown, value: BreakpointId ) => {
 		const extendedWindow = window as unknown as ExtendedWindow;
-		const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+		const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 		if ( config ) {
-			extendedWindow.elementorCommon.eventsManager.dispatchEvent( config.names.topBar.responsiveControls, {
+			extendedWindow.refractionCommon.eventsManager.dispatchEvent( config.names.topBar.responsiveControls, {
 				location: config.locations.topBar,
 				secondaryLocation: config.secondaryLocations.responsiveControls,
 				trigger: config.triggers.click,
@@ -51,7 +51,7 @@ export default function BreakpointsSwitcher() {
 			indicatorColor="secondary"
 			value={ activeBreakpoint }
 			onChange={ onChange }
-			aria-label={ __( 'Switch Device', 'elementor' ) }
+			aria-label={ __( 'Switch Device', 'refraction' ) }
 			sx={ {
 				'& .MuiTabs-indicator': {
 					backgroundColor: 'text.primary',
@@ -112,8 +112,8 @@ const iconsMap = {
 const labelsMap = {
 	default: '%s',
 	// translators: %s: Breakpoint label, %d: Breakpoint size.
-	'min-width': __( '%s (%dpx and up)', 'elementor' ),
+	'min-width': __( '%s (%dpx and up)', 'refraction' ),
 
 	// translators: %s: Breakpoint label, %d: Breakpoint size.
-	'max-width': __( '%s (up to %dpx)', 'elementor' ),
+	'max-width': __( '%s (up to %dpx)', 'refraction' ),
 } as const;

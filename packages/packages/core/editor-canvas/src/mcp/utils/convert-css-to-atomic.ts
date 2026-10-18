@@ -1,7 +1,7 @@
-import { type PropValue } from '@elementor/editor-props';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type PropValue } from '@refraction/editor-props';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
-const CSS_TO_ATOMIC_URL = 'elementor/v1/css-to-atomic';
+const CSS_TO_ATOMIC_URL = 'refraction/v1/css-to-atomic';
 const SINGLE_BLOCK_KEY = 'default';
 
 /**

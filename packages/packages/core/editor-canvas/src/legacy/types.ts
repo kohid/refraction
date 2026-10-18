@@ -1,19 +1,19 @@
 import { type Root } from 'react-dom/client';
-import { type V1Element, type V1ElementModelProps } from '@elementor/editor-elements';
-import { type Props, type PropValue } from '@elementor/editor-props';
+import { type V1Element, type V1ElementModelProps } from '@refraction/editor-elements';
+import { type Props, type PropValue } from '@refraction/editor-props';
 
 export type RenderContext< T = unknown > = Record< string, T >;
 
 export type NamespacedRenderContext< T = RenderContext > = Record< string, T | undefined >;
 
 export type LegacyWindow = Window & {
-	elementorCommon?: {
+	refractionCommon?: {
 		helpers?: {
 			getUniqueId?: () => string;
 		};
 	};
 	jQuery: JQueryStatic;
-	elementor: {
+	refraction: {
 		config: {
 			user: {
 				is_administrator?: boolean;

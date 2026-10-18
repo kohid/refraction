@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Admin\EditorOneMenu\Menu;
+namespace Refraction\Core\Admin\EditorOneMenu\Menu;
 
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,7 +19,7 @@ class Legacy_Submenu_Item_Not_Mapped implements Menu_Item_Interface {
 
 	public function __construct( array $submenu_data, ?string $parent_slug = null, ?int $position = 100 ) {
 		$this->submenu_data = $submenu_data;
-		$this->parent_slug = $parent_slug ?? Menu_Config::ELEMENTOR_MENU_SLUG;
+		$this->parent_slug = $parent_slug ?? Menu_Config::REFRACTION_MENU_SLUG;
 		$this->position = $position;
 	}
 

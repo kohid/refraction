@@ -1,6 +1,6 @@
 import View from './views/view';
 
-export class NestedAccordion extends elementor.modules.elements.types.NestedElementBase {
+export class NestedAccordion extends refraction.modules.elements.types.NestedElementBase {
 	getType() {
 		return 'nested-accordion';
 	}

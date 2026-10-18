@@ -1,14 +1,14 @@
-import { ensureUser } from '@elementor/editor-current-user';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { ensureUser } from '@refraction/editor-current-user';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
 import { ensureCurrentUser } from '../ensure-current-user';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	registerDataHook: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-current-user', () => ( {
+jest.mock( '@refraction/editor-current-user', () => ( {
 	ensureUser: jest.fn(),
 } ) );
 

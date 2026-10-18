@@ -11,16 +11,16 @@ import { GenerateWordPressAssetFileWebpackPlugin } from '../index';
 
 jest.mock( 'fs', () => jest.requireActual( 'memfs' ) );
 
-describe( '@elementor/generate-wordpress-asset-file-webpack-plugin', () => {
+describe( '@refraction/generate-wordpress-asset-file-webpack-plugin', () => {
 	beforeEach( () => {
 		const fileContent = `
-			import elementor from '@elementor/editor';
+			import refraction from '@refraction/editor';
 			import wp from '@wordpress/element';
 			import other from '@other/package';
 			import react from 'react';
 			import ReactDOM from 'react-dom';
 
-			elementor();
+			refraction();
 			wp();
 			other();
 		`;
@@ -49,7 +49,7 @@ describe( '@elementor/generate-wordpress-asset-file-webpack-plugin', () => {
 			},
 			externals: {
 				// Required so webpack won't try to resolve those packages, which don't exist.
-				'@elementor/editor': 'editor',
+				'@refraction/editor': 'editor',
 				'@wordpress/element': 'wp',
 				'@other/package': 'other',
 				react: 'react',
@@ -57,11 +57,11 @@ describe( '@elementor/generate-wordpress-asset-file-webpack-plugin', () => {
 			},
 			plugins: [
 				new GenerateWordPressAssetFileWebpackPlugin( {
-					handle: ( entryName ) => `elementor-v2-${ entryName }`,
+					handle: ( entryName ) => `refraction-v2-${ entryName }`,
 					map: [
 						{ request: 'react', handle: 'react' },
 						{ request: 'react-dom', handle: 'react-dom' },
-						{ request: /^@elementor\/(.+)$/, handle: 'elementor-v2-$1' },
+						{ request: /^@refraction\/(.+)$/, handle: 'refraction-v2-$1' },
 						{ request: /^@wordpress\/(.+)$/, handle: 'wp-$1' },
 					],
 				} ),

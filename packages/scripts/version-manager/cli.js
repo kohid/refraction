@@ -144,10 +144,10 @@ Examples:
   $ version-manager publish --yes
   $ version-manager publish --dry-run
   $ version-manager publish --packages "packages/libs/*"
-  $ version-manager get-version "@elementor/editor-controls"
+  $ version-manager get-version "@refraction/editor-controls"
   $ version-manager get-version "editor-.*"
-  $ version-manager get-version "@elementor/.*"
-  $ version-manager get-version "@elementor/editor-controls" --release-type patch
+  $ version-manager get-version "@refraction/.*"
+  $ version-manager get-version "@refraction/editor-controls" --release-type patch
   $ version-manager get-version "editor-.*" --release-type minor
 `);
 

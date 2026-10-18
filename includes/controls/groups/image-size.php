@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor image size control.
+ * Refraction image size control.
  *
  * A base control for creating image size control. Displays input fields to define
  * one of the default image sizes (thumbnail, medium, medium_large, large) or custom
@@ -83,7 +83,7 @@ class Group_Control_Image_Size extends Group_Control_Base {
 
 		$size = $settings[ $image_size_key . '_size' ];
 
-		$image_class = ! empty( $settings['hover_animation'] ) ? 'elementor-animation-' . $settings['hover_animation'] : '';
+		$image_class = ! empty( $settings['hover_animation'] ) ? 'refraction-animation-' . $settings['hover_animation'] : '';
 
 		$html = '';
 
@@ -140,7 +140,7 @@ class Group_Control_Image_Size extends Group_Control_Base {
 		 *                               is null. If not defined uses image size key
 		 *                               as the image key.
 		 */
-		return apply_filters( 'elementor/image_size/get_attachment_image_html', $html, $settings, $image_size_key, $image_key );
+		return apply_filters( 'refraction/image_size/get_attachment_image_html', $html, $settings, $image_size_key, $image_key );
 	}
 
 	/**
@@ -223,7 +223,7 @@ class Group_Control_Image_Size extends Group_Control_Base {
 		} else {
 			// Use BFI_Thumb script
 			// TODO: Please rewrite this code.
-			require_once ELEMENTOR_PATH . 'includes/libraries/bfi-thumb/bfi-thumb.php';
+			require_once REFRACTION_PATH . 'includes/libraries/bfi-thumb/bfi-thumb.php';
 
 			$custom_dimension = $settings[ $image_size_key . '_custom_dimension' ];
 
@@ -293,14 +293,14 @@ class Group_Control_Image_Size extends Group_Control_Base {
 		$fields = [];
 
 		$fields['size'] = [
-			'label' => esc_html__( 'Image Resolution', 'elementor' ),
+			'label' => esc_html__( 'Image Resolution', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 		];
 
 		$fields['custom_dimension'] = [
-			'label' => esc_html__( 'Image Dimension', 'elementor' ),
+			'label' => esc_html__( 'Image Dimension', 'refraction' ),
 			'type' => Controls_Manager::IMAGE_DIMENSIONS,
-			'description' => esc_html__( 'You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio.', 'elementor' ),
+			'description' => esc_html__( 'You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio.', 'refraction' ),
 			'condition' => [
 				'size' => 'custom',
 			],
@@ -377,10 +377,10 @@ class Group_Control_Image_Size extends Group_Control_Base {
 			$image_sizes[ $size_key ] = $control_title;
 		}
 
-		$image_sizes['full'] = esc_html__( 'Full', 'elementor' );
+		$image_sizes['full'] = esc_html__( 'Full', 'refraction' );
 
 		if ( ! empty( $args['include']['custom'] ) || ! in_array( 'custom', $args['exclude'] ) ) {
-			$image_sizes['custom'] = esc_html__( 'Custom', 'elementor' );
+			$image_sizes['custom'] = esc_html__( 'Custom', 'refraction' );
 		}
 
 		return $image_sizes;

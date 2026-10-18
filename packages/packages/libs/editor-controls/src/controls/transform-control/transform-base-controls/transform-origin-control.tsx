@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { transformOriginPropTypeUtil } from '@elementor/editor-props';
+import { transformOriginPropTypeUtil } from '@refraction/editor-props';
 import { Grid, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -15,17 +15,17 @@ const TRANSFORM_ORIGIN_UNITS_Z_AXIS = TRANSFORM_ORIGIN_UNITS.filter( ( unit ) =>
 
 const TRANSFORM_ORIGIN_FIELDS = [
 	{
-		label: __( 'Origin X', 'elementor' ),
+		label: __( 'Origin X', 'refraction' ),
 		bind: 'x',
 		units: TRANSFORM_ORIGIN_UNITS,
 	},
 	{
-		label: __( 'Origin Y', 'elementor' ),
+		label: __( 'Origin Y', 'refraction' ),
 		bind: 'y',
 		units: TRANSFORM_ORIGIN_UNITS,
 	},
 	{
-		label: __( 'Origin Z', 'elementor' ),
+		label: __( 'Origin Z', 'refraction' ),
 		bind: 'z',
 		units: TRANSFORM_ORIGIN_UNITS_Z_AXIS,
 	},
@@ -34,7 +34,7 @@ const TRANSFORM_ORIGIN_FIELDS = [
 export const TransformOriginControl = () => {
 	return (
 		<Stack direction="column" spacing={ 1.5 }>
-			<ControlFormLabel>{ __( 'Transform', 'elementor' ) }</ControlFormLabel>
+			<ControlFormLabel>{ __( 'Transform', 'refraction' ) }</ControlFormLabel>
 			{ TRANSFORM_ORIGIN_FIELDS.map( ( control ) => (
 				<ControlFields control={ control } key={ control.bind } />
 			) ) }

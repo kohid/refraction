@@ -36,13 +36,13 @@ export const BotAccessPanel = ( { settings } ) => {
 		<Stack spacing={ SECTIONS_SPACING } px={ 6 } py={ 3 }>
 			<Stack spacing={ 2 }>
 				<Typography variant="subtitle1">
-					{ __( 'Control how agents use your content', 'elementor' ) }
+					{ __( 'Control how agents use your content', 'refraction' ) }
 				</Typography>
 				{ hasPhysicalFile && (
 					<Stack direction="row">
 						<Chip
 							icon={ <AlertCircleIcon /> }
-							label={ __( 'A robots.txt file already exists and can’t be managed here.', 'elementor' ) }
+							label={ __( 'A robots.txt file already exists and can’t be managed here.', 'refraction' ) }
 							color="warning"
 							size="small"
 							shape="rounded"
@@ -72,7 +72,7 @@ export const BotAccessPanel = ( { settings } ) => {
 					py={ HEADER_PADDING_Y }
 				>
 					<Typography variant="subtitle1">
-						{ __( 'Manage bot access', 'elementor' ) }
+						{ __( 'Manage bot access', 'refraction' ) }
 					</Typography>
 					<AddBotControl options={ availableBots } isDisabled={ isDisabled } onAdd={ addBot } />
 				</Stack>

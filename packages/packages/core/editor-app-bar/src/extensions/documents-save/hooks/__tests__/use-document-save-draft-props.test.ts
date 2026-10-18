@@ -2,12 +2,12 @@ import { createMockDocument } from 'test-utils';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import { renderHook } from '@testing-library/react';
 
 import useDocumentSaveDraftProps from '../use-document-save-draft-props';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useActiveDocumentActions: jest.fn(),
 } ) );
@@ -19,7 +19,7 @@ const documentActions = {
 	copyAndShare: jest.fn(),
 };
 
-describe( '@elementor/editor-app-bar - useDocumentSaveDraftProps', () => {
+describe( '@refraction/editor-app-bar - useDocumentSaveDraftProps', () => {
 	it( 'should save a draft of the current document', () => {
 		// Arrange.
 		jest.mocked( useActiveDocumentActions ).mockReturnValue( documentActions );

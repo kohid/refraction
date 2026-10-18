@@ -1,4 +1,4 @@
-import { utilitiesMenu } from '@elementor/editor-app-bar';
+import { utilitiesMenu } from '@refraction/editor-app-bar';
 
 import { useAuditToggleProps } from './hooks/use-audit-toggle-props';
 

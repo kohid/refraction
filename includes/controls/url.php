@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor URL control.
+ * Refraction URL control.
  *
  * A base control for creating url control. Displays a URL input with the
  * ability to set the target of the link to `_blank` to open in a new tab.
@@ -65,14 +65,14 @@ class Control_URL extends Control_Base_Multiple {
 	protected function get_default_settings() {
 		return [
 			'label_block' => true,
-			'placeholder' => esc_html__( 'Type or paste your URL', 'elementor' ),
+			'placeholder' => esc_html__( 'Type or paste your URL', 'refraction' ),
 			'autocomplete' => true,
 			'options' => [ 'is_external', 'nofollow', 'custom_attributes' ],
 			'dynamic' => [
 				'categories' => [ TagsModule::URL_CATEGORY ],
 				'property' => 'url',
 			],
-			'custom_attributes_description' => esc_html__( 'Set custom attributes for the link element. Separate attribute keys from values using the | (pipe) character. Separate key-value pairs with a comma.', 'elementor' ),
+			'custom_attributes_description' => esc_html__( 'Set custom attributes for the link element. Separate attribute keys from values using the | (pipe) character. Separate key-value pairs with a comma.', 'refraction' ),
 		];
 	}
 
@@ -88,41 +88,41 @@ class Control_URL extends Control_Base_Multiple {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field elementor-control-url-external-{{{ ( data.options.length || data.show_external ) ? 'show' : 'hide' }}}">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper elementor-control-dynamic-switcher-wrapper">
-				<i class="elementor-control-url-autocomplete-spinner eicon-loading eicon-animation-spin" aria-hidden="true"></i>
-				<input id="<?php $this->print_control_uid(); ?>" class="elementor-control-tag-area elementor-input" data-setting="url" placeholder="{{ view.getControlPlaceholder() }}" />
+		<div class="refraction-control-field refraction-control-url-external-{{{ ( data.options.length || data.show_external ) ? 'show' : 'hide' }}}">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper refraction-control-dynamic-switcher-wrapper">
+				<i class="refraction-control-url-autocomplete-spinner eicon-loading eicon-animation-spin" aria-hidden="true"></i>
+				<input id="<?php $this->print_control_uid(); ?>" class="refraction-control-tag-area refraction-input" data-setting="url" placeholder="{{ view.getControlPlaceholder() }}" />
 				<?php // PHPCS - Nonces don't require escaping. ?>
 				<input id="_ajax_linking_nonce" type="hidden" value="<?php echo wp_create_nonce( 'internal-linking' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" />
 				<# if ( !! data.options ) { #>
-				<button class="elementor-control-url-more tooltip-target elementor-control-unit-1" data-tooltip="<?php echo esc_attr__( 'Link Options', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Link Options', 'elementor' ); ?>">
+				<button class="refraction-control-url-more tooltip-target refraction-control-unit-1" data-tooltip="<?php echo esc_attr__( 'Link Options', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Link Options', 'refraction' ); ?>">
 					<i class="eicon-cog" aria-hidden="true"></i>
 				</button>
 				<# } #>
 			</div>
 			<# if ( !! data.options ) { #>
-			<div class="elementor-control-url-more-options">
-				<div class="elementor-control-url-option">
-					<input id="<?php $this->print_control_uid( 'is_external' ); ?>" type="checkbox" class="elementor-control-url-option-input" data-setting="is_external">
-					<label for="<?php $this->print_control_uid( 'is_external' ); ?>"><?php echo esc_html__( 'Open in new window', 'elementor' ); ?></label>
+			<div class="refraction-control-url-more-options">
+				<div class="refraction-control-url-option">
+					<input id="<?php $this->print_control_uid( 'is_external' ); ?>" type="checkbox" class="refraction-control-url-option-input" data-setting="is_external">
+					<label for="<?php $this->print_control_uid( 'is_external' ); ?>"><?php echo esc_html__( 'Open in new window', 'refraction' ); ?></label>
 				</div>
-				<div class="elementor-control-url-option">
-					<input id="<?php $this->print_control_uid( 'nofollow' ); ?>" type="checkbox" class="elementor-control-url-option-input" data-setting="nofollow">
-					<label for="<?php $this->print_control_uid( 'nofollow' ); ?>"><?php echo esc_html__( 'Add nofollow', 'elementor' ); ?></label>
+				<div class="refraction-control-url-option">
+					<input id="<?php $this->print_control_uid( 'nofollow' ); ?>" type="checkbox" class="refraction-control-url-option-input" data-setting="nofollow">
+					<label for="<?php $this->print_control_uid( 'nofollow' ); ?>"><?php echo esc_html__( 'Add nofollow', 'refraction' ); ?></label>
 				</div>
-				<div class="elementor-control-url__custom-attributes elementor-control-direction-ltr">
-					<label for="<?php $this->print_control_uid( 'custom_attributes' ); ?>" class="elementor-control-url__custom-attributes-label"><?php echo esc_html__( 'Custom Attributes', 'elementor' ); ?></label>
-					<input type="text" id="<?php $this->print_control_uid( 'custom_attributes' ); ?>" class="elementor-control-unit-5" placeholder="key|value" data-setting="custom_attributes">
+				<div class="refraction-control-url__custom-attributes refraction-control-direction-ltr">
+					<label for="<?php $this->print_control_uid( 'custom_attributes' ); ?>" class="refraction-control-url__custom-attributes-label"><?php echo esc_html__( 'Custom Attributes', 'refraction' ); ?></label>
+					<input type="text" id="<?php $this->print_control_uid( 'custom_attributes' ); ?>" class="refraction-control-unit-5" placeholder="key|value" data-setting="custom_attributes">
 				</div>
 				<# if ( ( data.options && -1 !== data.options.indexOf( 'custom_attributes' ) ) && data.custom_attributes_description ) { #>
-				<div class="elementor-control-field-description">{{{ data.custom_attributes_description }}}</div>
+				<div class="refraction-control-field-description">{{{ data.custom_attributes_description }}}</div>
 				<# } #>
 			</div>
 			<# } #>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

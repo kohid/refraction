@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Frontend\RenderModes;
+namespace Refraction\Core\Frontend\RenderModes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

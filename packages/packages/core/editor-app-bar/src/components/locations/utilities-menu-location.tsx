@@ -22,7 +22,7 @@ export default function UtilitiesMenuLocation() {
 	return (
 		<ToolbarMenu>
 			{ popoverMenuItems.length > 0 && (
-				<ToolbarMenuMore id="elementor-editor-app-bar-utilities-more">
+				<ToolbarMenuMore id="refraction-editor-app-bar-utilities-more">
 					{ popoverMenuItems.map( ( { MenuItem, id } ) => (
 						<MenuItem key={ id } />
 					) ) }

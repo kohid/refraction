@@ -1,9 +1,9 @@
-.elementor-animation-grow {
+.refraction-animation-grow {
 	transition-duration: 0.3s;
 	transition-property: transform;
 }
-.elementor-animation-grow:active,
-.elementor-animation-grow:focus,
-.elementor-animation-grow:hover {
+.refraction-animation-grow:active,
+.refraction-animation-grow:focus,
+.refraction-animation-grow:hover {
 	transform: scale(1.1);
 }

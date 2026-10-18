@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { __privateListenTo as listenTo, commandStartEvent } from '@elementor/editor-v1-adapters';
+import { __privateListenTo as listenTo, commandStartEvent } from '@refraction/editor-v1-adapters';
 
 import { usePanelActions } from '../panel';
 import { isAtomicWidgetSelected } from '../sync/is-atomic-widget-selected';

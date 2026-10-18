@@ -1,9 +1,9 @@
-import CommandInfra from 'elementor-api/modules/command-infra';
-import CommandBase from 'elementor-api/modules/command-base';
-import CommandData from 'elementor-api/modules/command-data';
-import ComponentBase from 'elementor-api/modules/component-base';
+import CommandInfra from 'refraction-api/modules/command-infra';
+import CommandBase from 'refraction-api/modules/command-base';
+import CommandData from 'refraction-api/modules/command-data';
+import ComponentBase from 'refraction-api/modules/component-base';
 import CommandDataMock, { CommandDataExportedMock } from './mock/command-data.spec';
-import * as errors from 'elementor-api/core/data/errors/';
+import * as errors from 'refraction-api/core/data/errors/';
 
 jQuery( () => {
 	QUnit.module( 'File: modules/web-cli/assets/js/modules/command-data.js', () => {

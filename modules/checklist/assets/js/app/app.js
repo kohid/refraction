@@ -1,12 +1,12 @@
 import { ThemeProvider, DirectionProvider } from '@elementor/ui';
-import { useQuery } from '@elementor/query';
-import { __privateListenTo as listenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
+import { useQuery } from '@refraction/query';
+import { __privateListenTo as listenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
 import Checklist from './components/checklist';
 import { fetchSteps, fetchUserProgress } from '../utils/functions';
 import { useEffect } from 'react';
 
 const App = () => {
-	const isRTL = elementorCommon.config.isRTL,
+	const isRTL = refractionCommon.config.isRTL,
 		{ error: stepsError, data: steps, refetch: refetchSteps } = useQuery( {
 			queryKey: [ 'steps' ],
 			queryFn: fetchSteps,

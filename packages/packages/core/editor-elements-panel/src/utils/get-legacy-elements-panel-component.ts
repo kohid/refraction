@@ -1,11 +1,11 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 import { LEGACY_ELEMENTS_PANEL_COMPONENT_NAME } from '../consts';
 import { getWindow } from './get-window';
 
 const ComponentNotFoundError = createError< { componentId: string } >( {
 	code: 'e_component_not_found',
-	message: 'Elementor component not found',
+	message: 'Refraction component not found',
 } );
 
 export function getLegacyElementsPanelComponent() {

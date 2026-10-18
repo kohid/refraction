@@ -5,12 +5,12 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { getInitialDesignSystemTab, notifyDesignSystemTabChange, persistDesignSystemTab } from '../../initial-tab';
 import { DesignSystemPanelContent } from '../design-system-panel-content';
 
-const EVENT_SET_TAB = 'elementor/design-system/set-tab';
+const EVENT_SET_TAB = 'refraction/design-system/set-tab';
 
 const mockDefaultStylesTabEmbedded = jest.fn();
 const mockTrackDefaultStyles = jest.fn();
 
-jest.mock( '@elementor/editor-default-styles', () => ( {
+jest.mock( '@refraction/editor-default-styles', () => ( {
 	DefaultStylesTabEmbedded: ( props: unknown ) => mockDefaultStylesTabEmbedded( props ),
 	trackDefaultStyles: ( ...args: unknown[] ) => mockTrackDefaultStyles( ...args ),
 } ) );
@@ -25,14 +25,14 @@ const mockClassesCloseAttempt = jest.fn();
 
 let capturedTabsOnChange: ( ( e: React.SyntheticEvent, val: string ) => void ) | undefined;
 
-jest.mock( '@elementor/editor-panels', () => ( {
+jest.mock( '@refraction/editor-panels', () => ( {
 	Panel: ( { children }: { children: React.ReactNode } ) => <div role="dialog">{ children }</div>,
 	PanelBody: ( { children }: { children: React.ReactNode } ) => <div>{ children }</div>,
 	PanelHeader: ( { children }: { children: React.ReactNode } ) => <header>{ children }</header>,
 	PanelHeaderTitle: ( { children }: { children: React.ReactNode } ) => <h2>{ children }</h2>,
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => ( {
+jest.mock( '@refraction/editor-ui', () => ( {
 	ThemeProvider: ( { children }: { children: React.ReactNode } ) => <>{ children }</>,
 } ) );
 
@@ -55,22 +55,22 @@ jest.mock( '../../initial-tab', () => ( {
 
 const mockTrackGlobalClasses = jest.fn();
 
-jest.mock( '@elementor/editor-global-classes', () => ( {
+jest.mock( '@refraction/editor-global-classes', () => ( {
 	ClassManagerPanelEmbedded: jest.fn(),
 	trackGlobalClasses: ( ...args: unknown[] ) => mockTrackGlobalClasses( ...args ),
 } ) );
 
 const mockTrackVariablesManagerEvent = jest.fn();
 
-jest.mock( '@elementor/editor-variables', () => ( {
+jest.mock( '@refraction/editor-variables', () => ( {
 	VariablesManagerPanelEmbedded: jest.fn(),
 	trackVariablesManagerEvent: ( ...args: unknown[] ) => mockTrackVariablesManagerEvent( ...args ),
 } ) );
 
-const mockVariablesManagerPanelEmbedded = require( '@elementor/editor-variables' )
+const mockVariablesManagerPanelEmbedded = require( '@refraction/editor-variables' )
 	.VariablesManagerPanelEmbedded as jest.Mock;
 
-const mockClassManagerPanelEmbedded = require( '@elementor/editor-global-classes' )
+const mockClassManagerPanelEmbedded = require( '@refraction/editor-global-classes' )
 	.ClassManagerPanelEmbedded as jest.Mock;
 
 jest.mock( '@elementor/ui', () => ( {

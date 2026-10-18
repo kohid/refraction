@@ -18,8 +18,8 @@ export type Slug = keyof typeof postTypesMap;
 export const postTypesMap = {
 	page: {
 		labels: {
-			singular_name: __( 'Page', 'elementor' ),
-			plural_name: __( 'Pages', 'elementor' ),
+			singular_name: __( 'Page', 'refraction' ),
+			plural_name: __( 'Pages', 'refraction' ),
 		},
 		rest_base: 'pages',
 	},
@@ -101,7 +101,7 @@ export const deleteRequest = ( postTypeSlug: Slug, postId: number ) => {
 };
 
 export const duplicateRequest = ( originalPost: UpdatePost ) => {
-	const path = `/elementor/v1/site-navigation/duplicate-post`;
+	const path = `/refraction/v1/site-navigation/duplicate-post`;
 
 	return apiFetch< { post_id: number } >( {
 		path,

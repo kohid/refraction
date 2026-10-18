@@ -1,4 +1,4 @@
-import { undoable } from '@elementor/editor-v1-adapters';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { createElement } from './create-element';
@@ -34,7 +34,7 @@ export type { DuplicateElementsParams, DuplicatedElement, DuplicatedElementsResu
 export const duplicateElements = ( {
 	elementIds,
 	title,
-	subtitle = __( 'Item duplicated', 'elementor' ),
+	subtitle = __( 'Item duplicated', 'refraction' ),
 	onDuplicateElements,
 	onRestoreElements,
 }: DuplicateElementsParams ): DuplicatedElementsResult => {

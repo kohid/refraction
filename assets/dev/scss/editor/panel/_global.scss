@@ -2,16 +2,16 @@
 // Panel Global
 //
 
-.elementor-panel-box-content {
+.refraction-panel-box-content {
 	padding: 20px 20px 10px;
 }
 
-.elementor-button {
+.refraction-button {
 	display: inline-block;
 }
 
 // Alert
-.elementor-panel-alert {
+.refraction-panel-alert {
     background-color: var(--e-a-bg-primary);
 	padding: 15px;
 	border-inline-start: 3px solid var(--e-a-color-primary);
@@ -30,7 +30,7 @@
 		color: inherit;
 	}
 
-	&.elementor-panel-alert- {
+	&.refraction-panel-alert- {
 
 		&info {
 			border-color: var(--e-a-color-info);
@@ -54,14 +54,14 @@
 	}
 }
 
-.elementor-descriptor {
+.refraction-descriptor {
 	font-size: 11px;
 	font-style: italic;
 	line-height: 1.4;
 	color: var(--e-a-color-txt-muted);
 }
 
-.elementor-controls-popover {
+.refraction-controls-popover {
 	display: none;
 	position: absolute;
 	box-shadow: var(--e-a-popover-shadow);
@@ -84,7 +84,7 @@
 		border-block-end-color: var(--e-a-bg-default);
 	}
 
-	div.elementor-control { // Harder selector to override default settings
+	div.refraction-control { // Harder selector to override default settings
 		background-color: transparent; // Makes the popover's border-radius visible
 
 		&:before {
@@ -93,11 +93,11 @@
 	}
 }
 
-#elementor-panel-global {
+#refraction-panel-global {
 
-	.elementor-nerd-box {
+	.refraction-nerd-box {
 
-		.elementor-nerd-box-icon {
+		.refraction-nerd-box-icon {
 			margin-block-start: 20px;
 		}
 	}

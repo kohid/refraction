@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { __privateUseListenTo as useListenTo } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo } from '@refraction/editor-v1-adapters';
 import { render, screen } from '@testing-library/react';
 
 import { useDocumentsCssLinks } from '../../hooks/use-documents-css-links';
@@ -7,13 +7,13 @@ import { useStyleItems } from '../../hooks/use-style-items';
 import { StyleRenderer } from '../style-renderer';
 
 // Mock dependencies
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateUseListenTo: jest.fn(),
 	__privateGetCanvasIframeDocument: jest.fn(),
 	commandEndEvent: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	getCurrentDocument: jest.fn().mockReturnValue( { id: 1 } ),
 } ) );
 

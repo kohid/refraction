@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockElementType, createMockPropType, renderWithTheme } from 'test-utils';
-import { type ControlComponent, useBoundProp } from '@elementor/editor-controls';
+import { type ControlComponent, useBoundProp } from '@refraction/editor-controls';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { mockElement } from '../../../__tests__/utils';
@@ -13,7 +13,7 @@ import { type DynamicTag } from '../../types';
 import { isDynamicTagSupported } from '../../utils';
 import { DynamicSelectionControl } from '../dynamic-selection-control';
 
-jest.mock( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls' );
 jest.mock( '../../hooks/use-dynamic-tag' );
 jest.mock( '../../hooks/use-prop-dynamic-tags' );
 jest.mock( '../../../hooks/use-persist-dynamic-value' );

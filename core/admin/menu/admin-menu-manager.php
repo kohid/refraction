@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Core\Admin\Menu;
+namespace Refraction\Core\Admin\Menu;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item;
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_Has_Position;
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_Has_Position;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -48,7 +48,7 @@ class Admin_Menu_Manager {
 	}
 
 	private function register_wp_menus() {
-		do_action( 'elementor/admin/menu/register', $this );
+		do_action( 'refraction/admin/menu/register', $this );
 
 		$hooks = [];
 
@@ -62,7 +62,7 @@ class Admin_Menu_Manager {
 			}
 		}
 
-		do_action( 'elementor/admin/menu/after_register', $this, $hooks );
+		do_action( 'refraction/admin/menu/after_register', $this, $hooks );
 	}
 
 	private function register_top_level_menu( $item_slug, Admin_Menu_Item $item ) {

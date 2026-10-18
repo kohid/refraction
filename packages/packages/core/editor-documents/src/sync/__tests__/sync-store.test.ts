@@ -1,6 +1,6 @@
 import { createMockDocumentData, dispatchCommandAfter, dispatchCommandBefore, dispatchV1ReadyEvent } from 'test-utils';
-import { __privateSetReady } from '@elementor/editor-v1-adapters';
-import { __createStore, __registerSlice, type SliceState, type Store } from '@elementor/store';
+import { __privateSetReady } from '@refraction/editor-v1-adapters';
+import { __createStore, __registerSlice, type SliceState, type Store } from '@refraction/store';
 
 import { slice } from '../../store';
 import { selectActiveDocument } from '../../store/selectors';
@@ -9,11 +9,11 @@ import { syncStore } from '../index';
 import { getV1DocumentPermalink, getV1DocumentsExitTo, getV1DocumentWpPreview } from '../utils';
 import { makeDocumentsManager } from './test-utils';
 
-type WindowWithOptionalElementor = Omit< ExtendedWindow, 'elementor' > & {
-	elementor?: ExtendedWindow[ 'elementor' ];
+type WindowWithOptionalRefraction = Omit< ExtendedWindow, 'refraction' > & {
+	refraction?: ExtendedWindow[ 'refraction' ];
 };
 
-describe( '@elementor/editor-documents - Sync Store', () => {
+describe( '@refraction/editor-documents - Sync Store', () => {
 	let store: Store< SliceState< typeof slice > >;
 
 	beforeEach( () => {
@@ -484,7 +484,7 @@ function mockV1DocumentsManager(
 	current = 1,
 	initial = 1
 ) {
-	( window as unknown as WindowWithOptionalElementor ).elementor = {
+	( window as unknown as WindowWithOptionalRefraction ).refraction = {
 		getPreferences: () => exitTo,
 		documents: makeDocumentsManager( documentsArray, current, initial ) as V1DocumentsManager,
 	};

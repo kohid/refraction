@@ -16,7 +16,7 @@ test.describe( 'Rating accessibility & structured data @rating', () => {
 		} );
 
 		await test.step( '@axe-core/playwright', async () => {
-			await editor.axeCoreAccessibilityTest( page, '.elementor-widget-rating' );
+			await editor.axeCoreAccessibilityTest( page, '.refraction-widget-rating' );
 		} );
 
 		await test.step( 'Check aria & schema.org properties', async () => {

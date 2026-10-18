@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Compatibility;
+namespace Refraction\App\Modules\ImportExport\Compatibility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

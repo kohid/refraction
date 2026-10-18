@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Core\Base\Traits;
+namespace Refraction\Core\Base\Traits;
 
-use Elementor\Controls_Manager;
-use Elementor\Modules\FloatingButtons\Control\Hover_Animation_Floating_Buttons;
-use Elementor\Plugin;
-use Elementor\Shapes;
-use Elementor\Utils;
+use Refraction\Controls_Manager;
+use Refraction\Modules\FloatingButtons\Control\Hover_Animation_Floating_Buttons;
+use Refraction\Plugin;
+use Refraction\Shapes;
+use Refraction\Utils;
 
 trait Shared_Widget_Controls_Trait {
 
@@ -20,7 +20,7 @@ trait Shared_Widget_Controls_Trait {
 		$this->add_control(
 			$control_name,
 			[
-				'label' => esc_html__( 'HTML Tag', 'elementor' ),
+				'label' => esc_html__( 'HTML Tag', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'h1' => 'H1',
@@ -104,7 +104,7 @@ trait Shared_Widget_Controls_Trait {
 		$selector_custom_property = '--e-link-in-bio-icon-columns'
 	): void {
 		if ( ! $label ) {
-			$label = esc_html__( 'Icons Per Row', 'elementor' );
+			$label = esc_html__( 'Icons Per Row', 'refraction' );
 		}
 		$this->add_control(
 			$name,
@@ -153,10 +153,10 @@ trait Shared_Widget_Controls_Trait {
 		array $border_color_args = []
 	): void {
 		$show_border = [
-			'label' => esc_html__( 'Border', 'elementor' ),
+			'label' => esc_html__( 'Border', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
-			'label_on' => esc_html__( 'Yes', 'elementor' ),
-			'label_off' => esc_html__( 'No', 'elementor' ),
+			'label_on' => esc_html__( 'Yes', 'refraction' ),
+			'label_off' => esc_html__( 'No', 'refraction' ),
 			'return_value' => 'yes',
 			'default' => '',
 		];
@@ -176,7 +176,7 @@ trait Shared_Widget_Controls_Trait {
 		}
 
 		$border_width = [
-			'label' => esc_html__( 'Border Width', 'elementor' ) . ' (px)',
+			'label' => esc_html__( 'Border Width', 'refraction' ) . ' (px)',
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px' ],
 			'range' => [
@@ -204,7 +204,7 @@ trait Shared_Widget_Controls_Trait {
 		}
 
 		$border_color = [
-			'label' => esc_html__( 'Border Color', 'elementor' ),
+			'label' => esc_html__( 'Border Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'condition' => $condition,
 			'default' => '#000000',
@@ -246,7 +246,7 @@ trait Shared_Widget_Controls_Trait {
 		}
 		?>
 		<div
-			class="elementor-shape elementor-shape-<?php echo esc_attr( $side ); ?>"
+			class="refraction-shape refraction-shape-<?php echo esc_attr( $side ); ?>"
 			aria-hidden="true"
 			data-negative="<?php
 			echo esc_attr( $shape_divider['negative'] ? 'true' : 'false' );
@@ -267,7 +267,7 @@ trait Shared_Widget_Controls_Trait {
 		$devices_options = [];
 
 		foreach ( $active_devices as $device_key ) {
-			$device_label = 'desktop' === $device_key ? esc_html__( 'Desktop', 'elementor' ) : $active_breakpoint_instances[ $device_key ]->get_label();
+			$device_label = 'desktop' === $device_key ? esc_html__( 'Desktop', 'refraction' ) : $active_breakpoint_instances[ $device_key ]->get_label();
 			$devices_options[ $device_key ] = $device_label;
 		}
 
@@ -286,7 +286,7 @@ trait Shared_Widget_Controls_Trait {
 			$name,
 			array_merge(
 				[
-					'label' => esc_html__( 'Hover Animation', 'elementor' ),
+					'label' => esc_html__( 'Hover Animation', 'refraction' ),
 					'type' => Hover_Animation_Floating_Buttons::TYPE,
 					'frontend_available' => true,
 					'default' => 'grow',

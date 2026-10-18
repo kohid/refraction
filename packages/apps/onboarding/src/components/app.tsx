@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { createQueryClient, QueryClientProvider } from '@elementor/query';
-import { __createStore, __getStore, __StoreProvider as StoreProvider } from '@elementor/store';
+import { createQueryClient, QueryClientProvider } from '@refraction/query';
+import { __createStore, __getStore, __StoreProvider as StoreProvider } from '@refraction/store';
 import { DirectionProvider, ThemeProvider } from '@elementor/ui';
 
 import { TrackingProvider } from '../analytics/tracking-context';
@@ -48,9 +48,9 @@ export function App( props: AppProps ) {
 
 	const queryClient = useMemo( () => createQueryClient(), [] );
 
-	const uiTheme = window.elementorAppConfig?.onboarding?.uiTheme ?? 'auto';
+	const uiTheme = window.refractionAppConfig?.onboarding?.uiTheme ?? 'auto';
 	const colorScheme = useMemo( () => resolveColorScheme( uiTheme ), [ uiTheme ] );
-	const isRtl = ( window as unknown as ExtendedWindow ).elementorCommon?.config?.isRTL ?? false;
+	const isRtl = ( window as unknown as ExtendedWindow ).refractionCommon?.config?.isRTL ?? false;
 
 	return (
 		<StoreProvider store={ store }>

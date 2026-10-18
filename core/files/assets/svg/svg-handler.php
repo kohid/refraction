@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Core\Files\Assets\Svg;
+namespace Refraction\Core\Files\Assets\Svg;
 
-use Elementor\Core\Files\Assets\Files_Upload_Handler;
-use Elementor\Core\Files\File_Types\Svg;
-use Elementor\Core\Files\Uploads_Manager;
-use Elementor\Plugin;
+use Refraction\Core\Files\Assets\Files_Upload_Handler;
+use Refraction\Core\Files\File_Types\Svg;
+use Refraction\Core\Files\Uploads_Manager;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * SVG Handler
  *
- * @deprecated 3.5.0 Use `Elementor\Core\Files\File_Types\Svg` instead, accessed by calling: `Plugin::$instance->uploads_manager->get_file_type_handlers( 'svg' );`
+ * @deprecated 3.5.0 Use `Refraction\Core\Files\File_Types\Svg` instead, accessed by calling: `Plugin::$instance->uploads_manager->get_file_type_handlers( 'svg' );`
  */
 class Svg_Handler extends Files_Upload_Handler {
 
@@ -22,7 +22,7 @@ class Svg_Handler extends Files_Upload_Handler {
 	 *
 	 * @deprecated 3.5.0
 	 */
-	const META_KEY = '_elementor_inline_svg';
+	const META_KEY = '_refraction_inline_svg';
 
 	/**
 	 * @deprecated 3.5.0
@@ -119,14 +119,14 @@ class Svg_Handler extends Files_Upload_Handler {
 	/**
 	 * Get inline svg
 	 *
-	 * @deprecated 3.5.0 Use `Elementor\Core\Files\File_Types\Svg::get_inline_svg()` instead.
+	 * @deprecated 3.5.0 Use `Refraction\Core\Files\File_Types\Svg::get_inline_svg()` instead.
 	 *
 	 * @param $attachment_id
 	 *
 	 * @return bool|mixed|string
 	 */
 	public static function get_inline_svg( $attachment_id ) {
-		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.5.0', 'Elementor\Core\Files\File_Types\Svg::get_inline_svg()' );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.5.0', 'Refraction\Core\Files\File_Types\Svg::get_inline_svg()' );
 
 		return Svg::get_inline_svg( $attachment_id );
 	}
@@ -235,15 +235,15 @@ class Svg_Handler extends Files_Upload_Handler {
 	/**
 	 * Handle upload prefilter
 	 *
-	 * @deprecated 3.5.0 Use `Elementor\Plugin::$instance->uploads_manager->handle_elementor_wp_media_upload()` instead.
+	 * @deprecated 3.5.0 Use `Refraction\Plugin::$instance->uploads_manager->handle_refraction_wp_media_upload()` instead.
 	 *
 	 * @param $file
 	 *
 	 * @return mixed
 	 */
 	public function handle_upload_prefilter( $file ) {
-		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.5.0', 'Elementor\Plugin::$instance->uploads_manager->handle_elementor_wp_media_upload()' );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.5.0', 'Refraction\Plugin::$instance->uploads_manager->handle_refraction_wp_media_upload()' );
 
-		return Plugin::$instance->uploads_manager->handle_elementor_wp_media_upload( $file );
+		return Plugin::$instance->uploads_manager->handle_refraction_wp_media_upload( $file );
 	}
 }

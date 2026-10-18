@@ -9,16 +9,16 @@ test.describe( 'Global font introduction tests', () => {
 			editor = await wpAdmin.openNewPage();
 
 		await page.evaluate( () => {
-			elementor.config.user.introduction.globals_introduction = false;
+			refraction.config.user.introduction.globals_introduction = false;
 
 			// Register the tooltips again after we set the introduction to false.
-			elementor.introductionTooltips.registerTooltips();
+			refraction.introductionTooltips.registerTooltips();
 		} );
 
 		// Act.
 		await editor.addWidget( { widgetType: 'heading' } );
 		await editor.openPanelTab( 'style' );
-		await page.click( '.elementor-control-typography_typography .elementor-control-popover-toggle-toggle-label' );
+		await page.click( '.refraction-control-typography_typography .refraction-control-popover-toggle-toggle-label' );
 		const tooltipDialogCounter = await page.getByText( 'Check out Global Fonts' ).count();
 
 		// Assert.
@@ -31,16 +31,16 @@ test.describe( 'Global font introduction tests', () => {
 			editor = await wpAdmin.openNewPage();
 
 		await page.evaluate( () => {
-			elementor.config.user.introduction.globals_introduction = true;
+			refraction.config.user.introduction.globals_introduction = true;
 
 			// Register the tooltips again after we set the introduction to false.
-			elementor.introductionTooltips.registerTooltips();
+			refraction.introductionTooltips.registerTooltips();
 		} );
 
 		// Act.
 		await editor.addWidget( { widgetType: 'heading' } );
 		await editor.openPanelTab( 'style' );
-		await page.click( '.elementor-control-typography_typography .elementor-control-popover-toggle-toggle-label' );
+		await page.click( '.refraction-control-typography_typography .refraction-control-popover-toggle-toggle-label' );
 		const tooltipDialogCounter = await page.getByText( 'Check out Global Fonts' ).count();
 
 		// Assert.

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var array $reports
  */
 foreach ( $reports as $report_name => $report ) : ?>
-	<div class="elementor-system-info-section elementor-system-info-<?php echo esc_attr( $report_name ); ?>">
+	<div class="refraction-system-info-section refraction-system-info-<?php echo esc_attr( $report_name ); ?>">
 		<table class="widefat">
 			<thead>
 			<tr>

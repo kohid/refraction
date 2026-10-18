@@ -1,13 +1,13 @@
-export default class baseTabs extends elementorModules.frontend.handlers.Base {
+export default class baseTabs extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
 				tablist: '[role="tablist"]',
-				tabTitle: '.elementor-tab-title',
-				tabContent: '.elementor-tab-content',
+				tabTitle: '.refraction-tab-title',
+				tabContent: '.refraction-tab-content',
 			},
 			classes: {
-				active: 'elementor-active',
+				active: 'refraction-active',
 			},
 			showTabFn: 'show',
 			hideTabFn: 'hide',
@@ -15,9 +15,9 @@ export default class baseTabs extends elementorModules.frontend.handlers.Base {
 			hidePrevious: true,
 			autoExpand: true,
 			keyDirection: {
-				ArrowLeft: elementorFrontendConfig.is_rtl ? 1 : -1,
+				ArrowLeft: refractionFrontendConfig.is_rtl ? 1 : -1,
 				ArrowUp: -1,
-				ArrowRight: elementorFrontendConfig.is_rtl ? -1 : 1,
+				ArrowRight: refractionFrontendConfig.is_rtl ? -1 : 1,
 				ArrowDown: 1,
 			},
 		};
@@ -137,7 +137,7 @@ export default class baseTabs extends elementorModules.frontend.handlers.Base {
 
 		$requestedContent[ settings.showTabFn ](
 			animationDuration,
-			() => elementorFrontend.elements.$window.trigger( 'elementor-pro/motion-fx/recalc' ),
+			() => refractionFrontend.elements.$window.trigger( 'refraction-pro/motion-fx/recalc' ),
 		);
 
 		$requestedContent.removeAttr( 'hidden' );

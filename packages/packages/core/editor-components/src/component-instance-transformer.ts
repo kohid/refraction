@@ -1,5 +1,5 @@
-import { createTransformer } from '@elementor/editor-canvas';
-import { __getState as getState } from '@elementor/store';
+import { createTransformer } from '@refraction/editor-canvas';
+import { __getState as getState } from '@refraction/store';
 
 import { type ComponentInstanceOverrideProp } from './prop-types/component-instance-override-prop-type';
 import { selectUnpublishedComponents } from './store/store';

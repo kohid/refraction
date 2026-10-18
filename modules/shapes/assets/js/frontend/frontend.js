@@ -1,7 +1,7 @@
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	constructor() {
 		super();
 
-		elementorFrontend.elementsHandler.attachHandler( 'text-path', () => import( /* webpackChunkName: 'text-path' */ './handlers/text-path' ) );
+		refractionFrontend.elementsHandler.attachHandler( 'text-path', () => import( /* webpackChunkName: 'text-path' */ './handlers/text-path' ) );
 	}
 }

@@ -1,10 +1,10 @@
 import FloatingButtonsHandler from './floating-buttons';
 
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	constructor() {
 		super();
 
-		elementorCommon.elements.$window.on( 'elementor/admin/init', () => {
+		refractionCommon.elements.$window.on( 'refraction/admin/init', () => {
 			this.runHandler();
 		} );
 	}
@@ -13,7 +13,7 @@ export default class extends elementorModules.Module {
 		const pageNameContact = 'e-floating-buttons',
 			paths = {
 				contactPagesTablePage: 'edit.php?post_type=' + pageNameContact,
-				contactPagesAddNewPage: 'edit.php?post_type=elementor_library&page=' + pageNameContact,
+				contactPagesAddNewPage: 'edit.php?post_type=refraction_library&page=' + pageNameContact,
 				contactPagesTrashPage: 'edit.php?post_status=trash&post_type=' + pageNameContact,
 			},
 			args = {

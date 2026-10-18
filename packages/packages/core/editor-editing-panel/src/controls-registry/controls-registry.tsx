@@ -26,8 +26,8 @@ import {
 	ToggleControl,
 	UrlControl,
 	VideoMediaControl,
-} from '@elementor/editor-controls';
-import { type ControlLayout } from '@elementor/editor-elements';
+} from '@refraction/editor-controls';
+import { type ControlLayout } from '@refraction/editor-elements';
 import {
 	booleanPropTypeUtil,
 	createArrayPropUtils,
@@ -48,7 +48,7 @@ import {
 	svgSrcPropTypeUtil,
 	timeRangePropTypeUtil,
 	videoSrcPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 import { ControlTypeAlreadyRegisteredError, ControlTypeNotRegisteredError } from '../errors';
 

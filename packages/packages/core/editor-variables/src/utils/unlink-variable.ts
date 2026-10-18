@@ -1,4 +1,4 @@
-import { type PropValue } from '@elementor/editor-props';
+import { type PropValue } from '@refraction/editor-props';
 
 import { type Variable } from '../types';
 import { getVariableType } from '../variables-registry/variable-type-registry';

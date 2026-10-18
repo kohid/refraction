@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import * as commands from './commands/';
 import * as hooks from './hooks/';
 
@@ -29,8 +29,8 @@ export default class Component extends ComponentBase {
 	}
 
 	navigate( up ) {
-		if ( elementor.documents.getCurrent().revisions.getItems().length > 1 ) {
-			elementor.getPanelView().getCurrentPageView().currentTab.navigate( up );
+		if ( refraction.documents.getCurrent().revisions.getItems().length > 1 ) {
+			refraction.getPanelView().getCurrentPageView().currentTab.navigate( up );
 		}
 	}
 }

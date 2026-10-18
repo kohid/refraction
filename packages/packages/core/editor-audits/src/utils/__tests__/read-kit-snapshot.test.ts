@@ -15,7 +15,7 @@ type GlobalTypographyApiItem = {
 };
 
 type AuditWindow = Window & {
-	elementor?: {
+	refraction?: {
 		documents?: {
 			get: ( id: number ) => { config?: { settings?: { settings?: Record< string, unknown > } } } | undefined;
 		};
@@ -36,11 +36,11 @@ function setWindowMocks( overrides: Partial< AuditWindow > ): void {
 }
 
 describe( 'readKitSnapshot', () => {
-	const originalElementor = ( window as AuditWindow ).elementor;
+	const originalRefraction = ( window as AuditWindow ).refraction;
 	const original$e = ( window as AuditWindow ).$e;
 
 	afterEach( () => {
-		setWindowMocks( { elementor: originalElementor, $e: original$e } );
+		setWindowMocks( { refraction: originalRefraction, $e: original$e } );
 	} );
 
 	it( 'reads colors from the globals/colors API', async () => {
@@ -76,7 +76,7 @@ describe( 'readKitSnapshot', () => {
 					} ) ),
 				},
 			},
-			elementor: {
+			refraction: {
 				documents: {
 					get: () => ( {
 						config: {
@@ -100,7 +100,7 @@ describe( 'readKitSnapshot', () => {
 	it( 'returns empty globals when no API and no kit document exist', async () => {
 		setWindowMocks( {
 			$e: undefined,
-			elementor: undefined,
+			refraction: undefined,
 		} );
 
 		const snapshot = await readKitSnapshot( KIT_ID );

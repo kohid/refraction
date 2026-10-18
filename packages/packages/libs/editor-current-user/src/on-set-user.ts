@@ -1,5 +1,5 @@
-import { __privateListenTo as listenTo, v1ReadyEvent } from '@elementor/editor-v1-adapters';
-import { getQueryClient } from '@elementor/query';
+import { __privateListenTo as listenTo, v1ReadyEvent } from '@refraction/editor-v1-adapters';
+import { getQueryClient } from '@refraction/query';
 
 import { type UserModel } from './api';
 import { EDITOR_CURRENT_USER_QUERY_KEY } from './use-current-user';

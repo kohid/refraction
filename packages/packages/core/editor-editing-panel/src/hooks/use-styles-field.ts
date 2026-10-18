@@ -1,4 +1,4 @@
-import type { PropKey, PropValue } from '@elementor/editor-props';
+import type { PropKey, PropValue } from '@refraction/editor-props';
 
 import { useStylesFields } from './use-styles-fields';
 

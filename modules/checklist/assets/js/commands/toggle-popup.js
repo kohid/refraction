@@ -1,5 +1,5 @@
 import App from '../app/app';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 import ReactDOM from 'react-dom/client';
 import { updateUserProgress } from '../utils/functions';
 import { USER_PROGRESS } from '../utils/consts';

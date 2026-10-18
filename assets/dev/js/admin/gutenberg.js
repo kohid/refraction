@@ -1,19 +1,19 @@
-/* global ElementorGutenbergSettings */
+/* global RefractionGutenbergSettings */
 ( function( $ ) {
 	'use strict';
 
-	var ElementorGutenbergApp = {
+	var RefractionGutenbergApp = {
 
 		cacheElements() {
 			var self = this;
 
-			self.isElementorMode = ElementorGutenbergSettings.isElementorMode;
+			self.isRefractionMode = RefractionGutenbergSettings.isRefractionMode;
 
 			self.cache = {};
 
 			self.cache.$gutenberg = $( '#editor' );
-			self.cache.$switchMode = $( $( '#elementor-gutenberg-button-switch-mode' ).html() );
-			self.cache.$switchModeButton = self.cache.$switchMode.find( '#elementor-switch-mode-button' );
+			self.cache.$switchMode = $( $( '#refraction-gutenberg-button-switch-mode' ).html() );
+			self.cache.$switchModeButton = self.cache.$switchMode.find( '#refraction-switch-mode-button' );
 
 			self.bindEvents();
 			self.toggleStatus();
@@ -28,7 +28,7 @@
 		buildPanel() {
 			var self = this;
 
-			if ( ! self.cache.$gutenberg.find( '#elementor-switch-mode' ).length ) {
+			if ( ! self.cache.$gutenberg.find( '#refraction-switch-mode' ).length ) {
 				self.cache.$gutenberg.find( '.edit-post-header-toolbar' ).append( self.cache.$switchMode );
 			}
 
@@ -36,8 +36,8 @@
 				this.handleIframe();
 			}
 
-			if ( ! $( '#elementor-editor' ).length ) {
-				self.cache.$editorPanel = $( $( '#elementor-gutenberg-panel' ).html() );
+			if ( ! $( '#refraction-editor' ).length ) {
+				self.cache.$editorPanel = $( $( '#refraction-gutenberg-panel' ).html() );
 				let editorButtonParent = self.cache.$gutenberg.find( '.block-editor-writing-flow' );
 				if ( ! editorButtonParent.length ) {
 					editorButtonParent = self.cache.$gutenberg.find( '.is-desktop-preview' );
@@ -46,7 +46,7 @@
 				self.cache.$gurenbergBlockList = editorButtonParent;
 				self.cache.$gurenbergBlockList.append( self.cache.$editorPanel );
 
-				self.cache.$editorPanelButton = self.cache.$editorPanel.find( '#elementor-go-to-edit-page-link' );
+				self.cache.$editorPanelButton = self.cache.$editorPanel.find( '#refraction-go-to-edit-page-link' );
 
 				self.cache.$editorPanelButton.on( 'click', function( event ) {
 					event.preventDefault();
@@ -67,7 +67,7 @@
 		},
 
 		hideIframeContent() {
-			if ( ! this.isElementorMode ) {
+			if ( ! this.isRefractionMode ) {
 				return;
 			}
 
@@ -88,11 +88,11 @@
 		buildPanelTopBar() {
 			var self = this;
 
-			if ( ! $( '#elementor-edit-mode-button' ).length && this.isElementorMode ) {
-				self.cache.$editorBtnTop = $( $( '#elementor-gutenberg-button-tmpl' ).html() );
+			if ( ! $( '#refraction-edit-mode-button' ).length && this.isRefractionMode ) {
+				self.cache.$editorBtnTop = $( $( '#refraction-gutenberg-button-tmpl' ).html() );
 				self.cache.$gutenberg.find( '.edit-post-header-toolbar' ).append( self.cache.$editorBtnTop );
 
-				$( '#elementor-edit-mode-button' ).on( 'click', function( event ) {
+				$( '#refraction-edit-mode-button' ).on( 'click', function( event ) {
 					event.preventDefault();
 
 					self.handleEditButtonClick( false );
@@ -108,13 +108,13 @@
 			}
 
 			// A new post is initialized as an 'auto-draft'.
-			// if the post is not a new post it should not save it to avoid some saving conflict between elementor and gutenberg.
+			// if the post is not a new post it should not save it to avoid some saving conflict between refraction and gutenberg.
 			const isNewPost = 'auto-draft' === wp.data.select( 'core/editor' ).getCurrentPost().status;
 
 			if ( isNewPost ) {
 				var documentTitle = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'title' );
 				if ( ! documentTitle ) {
-					wp.data.dispatch( 'core/editor' ).editPost( { title: 'Elementor #' + $( '#post_ID' ).val() } );
+					wp.data.dispatch( 'core/editor' ).editPost( { title: 'Refraction #' + $( '#post_ID' ).val() } );
 				}
 
 				wp.data.dispatch( 'core/editor' ).savePost();
@@ -127,26 +127,26 @@
 			var self = this;
 
 			self.cache.$switchModeButton.on( 'click', function() {
-				if ( self.isElementorMode ) {
-					elementorCommon.dialogsManager.createWidget( 'confirm', {
-						message: __( 'You are about to switch this page from the Elementor editor to the WordPress editor. Your current layout, design, and content may break and need to be rebuilt. Are you sure you want to continue?', 'elementor' ),
-						headerMessage: __( 'Edit with WordPress?', 'elementor' ),
+				if ( self.isRefractionMode ) {
+					refractionCommon.dialogsManager.createWidget( 'confirm', {
+						message: __( 'You are about to switch this page from the Refraction editor to the WordPress editor. Your current layout, design, and content may break and need to be rebuilt. Are you sure you want to continue?', 'refraction' ),
+						headerMessage: __( 'Edit with WordPress?', 'refraction' ),
 						strings: {
-							confirm: __( 'Continue', 'elementor' ),
-							cancel: __( 'Cancel', 'elementor' ),
+							confirm: __( 'Continue', 'refraction' ),
+							cancel: __( 'Cancel', 'refraction' ),
 						},
 						defaultOption: 'cancel',
 						onConfirm() {
 							const wpEditor = wp.data.dispatch( 'core/editor' );
 
-							wpEditor.editPost( { gutenberg_elementor_mode: false } );
+							wpEditor.editPost( { gutenberg_refraction_mode: false } );
 							wpEditor.savePost();
-							self.isElementorMode = ! self.isElementorMode;
+							self.isRefractionMode = ! self.isRefractionMode;
 							self.toggleStatus();
 						},
 					} ).show();
 				} else {
-					self.isElementorMode = ! self.isElementorMode;
+					self.isRefractionMode = ! self.isRefractionMode;
 					self.toggleStatus();
 					self.cache.$editorPanelButton.trigger( 'click' );
 				}
@@ -160,19 +160,19 @@
 				if ( wp.data.select( 'core/editor' ).isSavingPost() ) {
 					self.redirectWhenSave();
 				} else {
-					location.href = ElementorGutenbergSettings.editLink;
+					location.href = RefractionGutenbergSettings.editLink;
 				}
 			}, 300 );
 		},
 
 		animateLoader() {
-			this.cache.$editorPanelButton.addClass( 'elementor-animate' );
+			this.cache.$editorPanelButton.addClass( 'refraction-animate' );
 		},
 
 		toggleStatus() {
 			jQuery( 'body' )
-				.toggleClass( 'elementor-editor-active', this.isElementorMode )
-				.toggleClass( 'elementor-editor-inactive', ! this.isElementorMode );
+				.toggleClass( 'refraction-editor-active', this.isRefractionMode )
+				.toggleClass( 'refraction-editor-inactive', ! this.isRefractionMode );
 		},
 
 		init() {
@@ -181,6 +181,6 @@
 	};
 
 	$( function() {
-		ElementorGutenbergApp.init();
+		RefractionGutenbergApp.init();
 	} );
 }( jQuery ) );

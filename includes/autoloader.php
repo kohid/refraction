@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor autoloader.
+ * Refraction autoloader.
  *
- * Elementor autoloader handler class is responsible for loading the different
+ * Refraction autoloader handler class is responsible for loading the different
  * classes needed to run the plugin.
  *
  * @since 1.6.0
@@ -18,20 +18,20 @@ class Autoloader {
 	/**
 	 * Classes map.
 	 *
-	 * Maps Elementor classes to file names.
+	 * Maps Refraction classes to file names.
 	 *
 	 * @since 1.6.0
 	 * @access private
 	 * @static
 	 *
-	 * @var array Classes used by elementor.
+	 * @var array Classes used by refraction.
 	 */
 	private static $classes_map;
 
 	/**
 	 * Classes aliases.
 	 *
-	 * Maps Elementor classes to aliases.
+	 * Maps Refraction classes to aliases.
 	 *
 	 * @since 1.6.0
 	 * @access private
@@ -69,7 +69,7 @@ class Autoloader {
 	 */
 	public static function run( $default_path = '', $default_namespace = '' ) {
 		if ( '' === $default_path ) {
-			$default_path = ELEMENTOR_PATH;
+			$default_path = REFRACTION_PATH;
 		}
 
 		if ( '' === $default_namespace ) {
@@ -196,7 +196,7 @@ class Autoloader {
 	/**
 	 * Init classes aliases.
 	 *
-	 * When Elementor classes renamed or moved to different folders, developers
+	 * When Refraction classes renamed or moved to different folders, developers
 	 * can still use the old names by setting an alias.
 	 *
 	 * While in deprecation period both classes will work. When the deprecation

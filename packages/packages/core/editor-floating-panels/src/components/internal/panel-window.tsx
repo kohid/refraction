@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type ReactNode } from 'react';
-import { ThemeProvider } from '@elementor/editor-ui';
-import { __useSelector as useSelector } from '@elementor/store';
+import { ThemeProvider } from '@refraction/editor-ui';
+import { __useSelector as useSelector } from '@refraction/store';
 import { Box, Fade, Paper } from '@elementor/ui';
 
 import { usePanelResizeInteraction } from '../../hooks/use-floating-panel-resize';

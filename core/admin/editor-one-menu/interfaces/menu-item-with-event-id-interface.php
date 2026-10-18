@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Admin\EditorOneMenu\Interfaces;
+namespace Refraction\Core\Admin\EditorOneMenu\Interfaces;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

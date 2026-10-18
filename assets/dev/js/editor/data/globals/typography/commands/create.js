@@ -1,4 +1,4 @@
-import CreateBase from 'elementor-editor/data/globals/base/create-base';
+import CreateBase from 'refraction-editor/data/globals/base/create-base';
 
 export class Create extends CreateBase {
 	apply( args = {} ) {
@@ -23,14 +23,14 @@ export class Create extends CreateBase {
 						defaultValue = container.controls[ key ].default;
 
 					if ( ! _.isEqual( value, defaultValue ) ) {
-						availableControls[ key.replace( groupPrefix, elementor.config.kit_config.typography_prefix ) ] = container.settings.get( key );
+						availableControls[ key.replace( groupPrefix, refraction.config.kit_config.typography_prefix ) ] = container.settings.get( key );
 					}
 				}
 			} );
 		}
 
 		if ( Object.values( availableControls ).length ) {
-			const id = elementorCommon.helpers.getUniqueId();
+			const id = refractionCommon.helpers.getUniqueId();
 
 			result = $e.data.create( `globals/typography?id=${ id }`, {
 				title,

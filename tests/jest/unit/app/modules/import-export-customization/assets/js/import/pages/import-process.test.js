@@ -1,21 +1,21 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import ImportProcess from 'elementor/app/modules/import-export-customization/assets/js/import/pages/import-process';
-import eventsConfig from 'elementor/core/common/modules/events-manager/assets/js/events-config';
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import ImportProcess from 'refraction/app/modules/import-export-customization/assets/js/import/pages/import-process';
+import eventsConfig from 'refraction/core/common/modules/events-manager/assets/js/events-config';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
 
 const mockUseImportContext = jest.fn();
 const mockUseImportKit = jest.fn();
 const mockNavigate = jest.fn();
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection' );
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection' );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
 	useImportContext: () => mockUseImportContext(),
 } ) );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/import/hooks/use-import-kit', () => ( {
-	...jest.requireActual( 'elementor/app/modules/import-export-customization/assets/js/import/hooks/use-import-kit' ),
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/import/hooks/use-import-kit', () => ( {
+	...jest.requireActual( 'refraction/app/modules/import-export-customization/assets/js/import/hooks/use-import-kit' ),
 	useImportKit: () => mockUseImportKit(),
 } ) );
 
@@ -23,12 +23,12 @@ jest.mock( '@reach/router', () => ( {
 	useNavigate: () => mockNavigate,
 } ) );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/import/components/plugin-activation', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/import/components/plugin-activation', () => ( {
 	PluginActivation: () => <div data-testid="plugin-activation" />,
 } ) );
 
 const mockSendKitImportStatus = jest.fn();
-jest.mock( 'elementor/app/assets/js/event-track/apps-event-tracking', () => ( {
+jest.mock( 'refraction/app/assets/js/event-track/apps-event-tracking', () => ( {
 	AppsEventTracking: {
 		sendKitImportStatus: ( ...args ) => mockSendKitImportStatus( ...args ),
 	},
@@ -41,11 +41,11 @@ describe( 'ImportProcess Page', () => {
 			isImport: true,
 			contextData: { data: { kitUploadParams: { source: 'cloud' } } },
 		} ) );
-		global.elementorAppConfig = {
+		global.refractionAppConfig = {
 			base_url: 'http://localhost',
 			pages_url: 'http://localhost',
 		};
-		global.elementorCommon = {
+		global.refractionCommon = {
 			eventsManager: {
 				config: eventsConfig,
 			},
@@ -53,8 +53,8 @@ describe( 'ImportProcess Page', () => {
 	} );
 
 	afterEach( () => {
-		delete global.elementorAppConfig;
-		delete global.elementorCommon;
+		delete global.refractionAppConfig;
+		delete global.refractionCommon;
 	} );
 
 	function setup( {

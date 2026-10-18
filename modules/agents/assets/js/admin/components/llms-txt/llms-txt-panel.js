@@ -12,11 +12,11 @@ import { LlmsPreviewPane } from './llms-preview-pane';
 
 const getWarningMessage = ( hasPhysicalFile, isManuallyEdited ) => {
 	if ( hasPhysicalFile ) {
-		return __( 'LLMs.txt file already exists and can’t be managed here.', 'elementor' );
+		return __( 'LLMs.txt file already exists and can’t be managed here.', 'refraction' );
 	}
 
 	if ( isManuallyEdited ) {
-		return __( 'This file was edited manually and no longer syncs automatically.', 'elementor' );
+		return __( 'This file was edited manually and no longer syncs automatically.', 'refraction' );
 	}
 
 	return '';
@@ -39,13 +39,13 @@ export const LlmsTxtPanel = ( { settings } ) => {
 		<Stack direction="row" width="100%" maxWidth="100%" minWidth={ 0 } overflow="auto">
 			<Stack spacing={ 3 } px={ 6 } py={ 3 } flexGrow={ 1 } flexShrink={ 1 } flexBasis={ 0 } minWidth={ 0 }>
 				<Stack spacing={ 1 }>
-					<Typography variant="subtitle1">{ __( 'Help agents find your content', 'elementor' ) }</Typography>
+					<Typography variant="subtitle1">{ __( 'Help agents find your content', 'refraction' ) }</Typography>
 					<Typography variant="body2" color="text.secondary">
-						{ __( 'llms.txt is a simple guide that tells AI agents what your site is about and where to find its public content. We keep it up to date automatically.', 'elementor' ) }
+						{ __( 'llms.txt is a simple guide that tells AI agents what your site is about and where to find its public content. We keep it up to date automatically.', 'refraction' ) }
 					</Typography>
 				</Stack>
 				<Stack spacing={ 1 }>
-					<Typography variant="subtitle1">{ __( 'Choose what to include', 'elementor' ) }</Typography>
+					<Typography variant="subtitle1">{ __( 'Choose what to include', 'refraction' ) }</Typography>
 					<PostTypeList
 						postTypes={ displayedPostTypes }
 						isDisabled={ ! isEnabled || isManuallyEdited || isSaving }

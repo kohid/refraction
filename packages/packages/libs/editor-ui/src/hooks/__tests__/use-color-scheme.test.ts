@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 
 import { type ColorScheme, type ExtendedWindow, useColorScheme } from '../use-color-scheme';
 
-describe( '@elementor/editor - useColorScheme', () => {
+describe( '@refraction/editor - useColorScheme', () => {
 	it( 'should use the "auto" color scheme by default', () => {
 		// Act.
 		const { result } = renderHook( () => useColorScheme() );
@@ -19,7 +19,7 @@ describe( '@elementor/editor - useColorScheme', () => {
 		const { result } = renderHook( () => useColorScheme() );
 
 		act( () => {
-			dispatchEvent( new CustomEvent( 'elementor/initialized' ) );
+			dispatchEvent( new CustomEvent( 'refraction/initialized' ) );
 		} );
 
 		// Assert.
@@ -40,7 +40,7 @@ describe( '@elementor/editor - useColorScheme', () => {
 			mockV1ColorScheme( 'dark' );
 
 			dispatchEvent(
-				new CustomEvent( 'elementor/commands/run/after', {
+				new CustomEvent( 'refraction/commands/run/after', {
 					detail: {
 						command: 'document/elements/settings',
 						args: {
@@ -66,7 +66,7 @@ describe( '@elementor/editor - useColorScheme', () => {
 
 		act( () => {
 			dispatchEvent(
-				new CustomEvent( 'elementor/commands/run/after', {
+				new CustomEvent( 'refraction/commands/run/after', {
 					detail: {
 						command: 'document/elements/settings',
 						args: {
@@ -85,7 +85,7 @@ describe( '@elementor/editor - useColorScheme', () => {
 } );
 
 function mockV1ColorScheme( colorScheme: ColorScheme ) {
-	( window as unknown as ExtendedWindow ).elementor = {
+	( window as unknown as ExtendedWindow ).refraction = {
 		getPreferences: () => colorScheme,
 	};
 }

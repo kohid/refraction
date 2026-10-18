@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Debug\Classes;
+namespace Refraction\Core\Debug\Classes;
 
-use Elementor\Modules\SafeMode\Module as Safe_Mode;
+use Refraction\Modules\SafeMode\Module as Safe_Mode;
 
 class Theme_Missing extends Inspection_Base {
 
@@ -19,7 +19,7 @@ class Theme_Missing extends Inspection_Base {
 	}
 
 	public function get_message() {
-		return esc_html__( 'Some of your theme files are missing.', 'elementor' );
+		return esc_html__( 'Some of your theme files are missing.', 'refraction' );
 	}
 
 	public function get_help_doc_url() {

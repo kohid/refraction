@@ -27,7 +27,7 @@ type V1Breakpoint = {
 export type V1Breakpoints = Record< Exclude< BreakpointId, 'desktop' >, V1Breakpoint >;
 
 export type ExtendedWindow = Window & {
-	elementor?: {
+	refraction?: {
 		config?: {
 			responsive?: {
 				breakpoints?: V1Breakpoints;

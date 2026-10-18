@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Core\Base\Elements_Iteration_Actions;
+namespace Refraction\Core\Base\Elements_Iteration_Actions;
 
-use Elementor\Conditions;
-use Elementor\Element_Base;
-use Elementor\Plugin;
+use Refraction\Conditions;
+use Refraction\Element_Base;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 class Assets extends Base {
-	const ASSETS_META_KEY = '_elementor_page_assets';
+	const ASSETS_META_KEY = '_refraction_page_assets';
 	/**
 	 * Default value must be empty.
 	 *

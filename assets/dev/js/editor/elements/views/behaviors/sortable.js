@@ -17,7 +17,7 @@ SortableBehavior = Marionette.Behavior.extend( {
 	},
 
 	initialize() {
-		this.listenTo( elementor.channels.dataEditMode, 'switch', this.onEditModeSwitched )
+		this.listenTo( refraction.channels.dataEditMode, 'switch', this.onEditModeSwitched )
 			.listenTo( this.view.options.model, 'request:sort:start', this.startSort )
 			.listenTo( this.view.options.model, 'request:sort:update', this.updateSort )
 			.listenTo( this.view.options.model, 'request:sort:receive', this.receiveSort );
@@ -28,7 +28,7 @@ SortableBehavior = Marionette.Behavior.extend( {
 	},
 
 	refresh() {
-		this.onEditModeSwitched( elementor.channels.dataEditMode.request( 'activeMode' ) );
+		this.onEditModeSwitched( refraction.channels.dataEditMode.request( 'activeMode' ) );
 	},
 
 	onRender() {
@@ -104,19 +104,19 @@ SortableBehavior = Marionette.Behavior.extend( {
 	},
 
 	applySortable() {
-		if ( ! elementor.userCan( 'design' ) ) {
+		if ( ! refraction.userCan( 'design' ) ) {
 			return;
 		}
 
 		const $childViewContainer = this.getChildViewContainer(),
 			defaultSortableOptions = {
-				placeholder: 'elementor-sortable-placeholder elementor-' + this.getOption( 'elChildType' ) + '-placeholder',
+				placeholder: 'refraction-sortable-placeholder refraction-' + this.getOption( 'elChildType' ) + '-placeholder',
 				cursorAt: {
 					top: 20,
 					left: 25,
 				},
 				helper: this._getSortableHelper.bind( this ),
-				cancel: 'input, textarea, button, select, option, .elementor-inline-editing, .elementor-tab-title',
+				cancel: 'input, textarea, button, select, option, .refraction-inline-editing, .refraction-tab-title',
 				// Fix: Sortable - Unable to drag and drop sections with huge height.
 				start: () => {
 					$childViewContainer.sortable( 'refreshPositions' );
@@ -160,7 +160,7 @@ SortableBehavior = Marionette.Behavior.extend( {
 			cid: $item.data( 'model-cid' ),
 		} );
 
-		return '<div style="height: 84px; width: 125px;" class="elementor-sortable-helper elementor-sortable-helper-' + model.get( 'elType' ) + '"><div class="icon"><i class="' + model.getIcon() + '"></i></div><div class="title-wrapper"><div class="title">' + model.getTitle() + '</div></div></div>';
+		return '<div style="height: 84px; width: 125px;" class="refraction-sortable-helper refraction-sortable-helper-' + model.get( 'elType' ) + '"><div class="icon"><i class="' + model.getIcon() + '"></i></div><div class="title-wrapper"><div class="title">' + model.getTitle() + '</div></div></div>';
 	},
 
 	getChildViewContainer() {
@@ -170,7 +170,7 @@ SortableBehavior = Marionette.Behavior.extend( {
 	// The natural widget index in the column is wrong, since there are other elements
 	// at the beginning of the column (background-overlay, element-overlay, resizeable-handle)
 	getSortedElementNewIndex( $element ) {
-		const widgets = Object.values( $element.parent().find( '> .elementor-element' ) );
+		const widgets = Object.values( $element.parent().find( '> .refraction-element' ) );
 
 		return widgets.indexOf( $element[ 0 ] );
 	},
@@ -199,9 +199,9 @@ SortableBehavior = Marionette.Behavior.extend( {
 	startSort( event, ui ) {
 		event.stopPropagation();
 
-		const container = elementor.getContainer( ui.item.attr( 'data-id' ) );
+		const container = refraction.getContainer( ui.item.attr( 'data-id' ) );
 
-		elementor.channels.data
+		refraction.channels.data
 			.reply( 'dragging:model', container.model )
 			.reply( 'dragging:view', container.view )
 			.reply( 'dragging:parent:view', this.view )
@@ -215,7 +215,7 @@ SortableBehavior = Marionette.Behavior.extend( {
 			newIndex = ui.item.index();
 		}
 
-		const child = elementor.channels.data.request( 'dragging:view' ).getContainer();
+		const child = refraction.channels.data.request( 'dragging:view' ).getContainer();
 		const result = this.moveChild( child, newIndex );
 
 		if ( ! result ) {
@@ -233,7 +233,7 @@ SortableBehavior = Marionette.Behavior.extend( {
 			return;
 		}
 
-		var model = elementor.channels.data.request( 'dragging:model' ),
+		var model = refraction.channels.data.request( 'dragging:model' ),
 			draggedElType = model.get( 'elType' ),
 			draggedIsInnerSection = 'section' === draggedElType && model.get( 'isInner' ),
 			targetIsInnerColumn = 'column' === this.view.getElementType() && this.view.isInner();
@@ -248,7 +248,7 @@ SortableBehavior = Marionette.Behavior.extend( {
 			newIndex = ui.item.index();
 		}
 
-		const child = elementor.channels.data.request( 'dragging:view' ).getContainer();
+		const child = refraction.channels.data.request( 'dragging:view' ).getContainer();
 		const result = this.moveChild( child, newIndex );
 
 		if ( ! result ) {
@@ -278,26 +278,26 @@ SortableBehavior = Marionette.Behavior.extend( {
 	onSortOver( event ) {
 		event.stopPropagation();
 
-		var model = elementor.channels.data.request( 'dragging:model' );
+		var model = refraction.channels.data.request( 'dragging:model' );
 
 		jQuery( event.target )
-			.addClass( 'elementor-draggable-over' )
+			.addClass( 'refraction-draggable-over' )
 			.attr( {
 				'data-dragged-element': model.get( 'elType' ),
 				'data-dragged-is-inner': model.get( 'isInner' ),
 			} );
 
-		this.$el.addClass( 'elementor-dragging-on-child' );
+		this.$el.addClass( 'refraction-dragging-on-child' );
 	},
 
 	onSortOut( event ) {
 		event.stopPropagation();
 
 		jQuery( event.target )
-			.removeClass( 'elementor-draggable-over' )
+			.removeClass( 'refraction-draggable-over' )
 			.removeAttr( 'data-dragged-element data-dragged-is-inner' );
 
-		this.$el.removeClass( 'elementor-dragging-on-child' );
+		this.$el.removeClass( 'refraction-dragging-on-child' );
 	},
 
 	onSortReceive( event, ui ) {

@@ -1,4 +1,4 @@
-const NumberValidator = require( 'elementor-validator/number' );
+const NumberValidator = require( 'refraction-validator/number' );
 
 export default class BreakpointValidator extends NumberValidator {
 	getDefaultSettings() {
@@ -14,18 +14,18 @@ export default class BreakpointValidator extends NumberValidator {
 	 * Get Panel Active Breakpoints
 	 *
 	 * Since the active kit used in the Site Settings panel could be a draft, we need to use the panel's active
-	 * breakpoints settings and not the elementorFrontend.config values (which come from the DB).
+	 * breakpoints settings and not the refractionFrontend.config values (which come from the DB).
 	 *
 	 * @return {*} Object
 	 */
 	getPanelActiveBreakpoints() {
-		const panelBreakpoints = elementor.documents.currentDocument.config.settings.settings.active_breakpoints.map( ( breakpointName ) => {
+		const panelBreakpoints = refraction.documents.currentDocument.config.settings.settings.active_breakpoints.map( ( breakpointName ) => {
 				return breakpointName.replace( 'viewport_', '' );
 			} ),
 			panelActiveBreakpoints = {};
 
 		panelBreakpoints.forEach( ( breakpointName ) => {
-			panelActiveBreakpoints[ breakpointName ] = elementorFrontend.config.responsive.breakpoints[ breakpointName ];
+			panelActiveBreakpoints[ breakpointName ] = refractionFrontend.config.responsive.breakpoints[ breakpointName ];
 		} );
 
 		return panelActiveBreakpoints;
@@ -56,7 +56,7 @@ export default class BreakpointValidator extends NumberValidator {
 	}
 
 	validateMinMaxForBreakpoint( newValue, validationTerms ) {
-		const breakpointDefaultValue = elementorFrontend.config.responsive.breakpoints[ validationTerms.breakpointName ].default_value;
+		const breakpointDefaultValue = refractionFrontend.config.responsive.breakpoints[ validationTerms.breakpointName ].default_value;
 
 		let isValid = true;
 

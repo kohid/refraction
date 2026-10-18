@@ -1,6 +1,6 @@
-import CommandInfra from 'elementor-api/modules/command-infra';
-import CommandBase from 'elementor-api/modules/command-base';
-import CommandInternalBase from 'elementor-api/modules/command-internal-base';
+import CommandInfra from 'refraction-api/modules/command-infra';
+import CommandBase from 'refraction-api/modules/command-base';
+import CommandInternalBase from 'refraction-api/modules/command-internal-base';
 import CommandInternalBaseMock, { CommandInternalBaseExportedMock } from './mock/command-internal-base.spec';
 
 jQuery( () => {

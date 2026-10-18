@@ -1,4 +1,4 @@
-import { getMCPByDomain } from '@elementor/editor-mcp';
+import { getMCPByDomain } from '@refraction/editor-mcp';
 
 import { initPasteInteractionsCommand } from './commands/paste-interactions';
 import { Direction } from './components/controls/direction';

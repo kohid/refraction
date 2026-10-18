@@ -1,11 +1,11 @@
-import { Create } from 'elementor-document/elements/commands';
+import { Create } from 'refraction-document/elements/commands';
 
 export default class Helper {
 	static createSectionColumns( containers, columns, options, structure = false ) {
 		containers.forEach( ( /** Container*/ container ) => {
 			for ( let loopIndex = 0; loopIndex < columns; loopIndex++ ) {
 				const model = {
-					id: elementorCommon.helpers.getUniqueId(),
+					id: refractionCommon.helpers.getUniqueId(),
 					elType: 'column',
 					settings: {},
 					elements: [],

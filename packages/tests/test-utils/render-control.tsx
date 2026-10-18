@@ -6,9 +6,9 @@ import {
 	PropKeyProvider,
 	PropProvider,
 	type PropProviderProps,
-} from '@elementor/editor-controls';
-import { type ObjectPropType, type PropKey, type PropType, type PropValue } from '@elementor/editor-props';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+} from '@refraction/editor-controls';
+import { type ObjectPropType, type PropKey, type PropType, type PropValue } from '@refraction/editor-props';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 
 import { renderWithTheme } from './render-with-theme';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridSpanControl } from '@elementor/editor-controls';
+import { GridSpanControl } from '@refraction/editor-controls';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -32,10 +32,10 @@ const GridSpanField = ( { cssProp, label }: GridSpanFieldProps ) => (
 export const GridSpanFields = () => (
 	<Grid container gap={ 2 } flexWrap="nowrap">
 		<Grid item xs={ 6 }>
-			<GridSpanField cssProp="grid-column" label={ __( 'Grid column', 'elementor' ) } />
+			<GridSpanField cssProp="grid-column" label={ __( 'Grid column', 'refraction' ) } />
 		</Grid>
 		<Grid item xs={ 6 }>
-			<GridSpanField cssProp="grid-row" label={ __( 'Grid row', 'elementor' ) } />
+			<GridSpanField cssProp="grid-row" label={ __( 'Grid row', 'refraction' ) } />
 		</Grid>
 	</Grid>
 );

@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Core\Common\Modules\Finder\Categories;
+namespace Refraction\Core\Common\Modules\Finder\Categories;
 
-use Elementor\Core\Common\Modules\Finder\Base_Category;
-use Elementor\Plugin;
+use Refraction\Core\Common\Modules\Finder\Base_Category;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -24,7 +24,7 @@ class Create extends Base_Category {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Create', 'elementor' );
+		return esc_html__( 'Create', 'refraction' );
 	}
 
 	public function get_id() {
@@ -49,7 +49,7 @@ class Create extends Base_Category {
 		// TODO: Remove - Support 'post' backwards compatibility - See `Documents_Manager::register_default_types()`.
 		unset( $registered_document_types['post'] );
 
-		$elementor_supported_post_types = array_flip( get_post_types_by_support( 'elementor' ) );
+		$refraction_supported_post_types = array_flip( get_post_types_by_support( 'refraction' ) );
 
 		foreach ( $registered_document_types as $document_name => $document_class ) {
 			$document_properties = $document_class::get_properties();
@@ -60,14 +60,14 @@ class Create extends Base_Category {
 
 			if ( ! empty( $document_properties['cpt'] ) ) {
 				foreach ( $document_properties['cpt'] as $cpt ) {
-					unset( $elementor_supported_post_types[ $cpt ] );
+					unset( $refraction_supported_post_types[ $cpt ] );
 				}
 			}
 
 			$result[ $document_name ] = $this->create_item_url_by_document_class( $document_class );
 		}
 
-		foreach ( $elementor_supported_post_types as $post_type => $val ) {
+		foreach ( $refraction_supported_post_types as $post_type => $val ) {
 			$result[ $post_type ] = $this->create_item_url_by_post_type( $post_type );
 		}
 
@@ -85,7 +85,7 @@ class Create extends Base_Category {
 		return $this->get_create_new_template(
 			sprintf(
 				/* translators: %s: Post type singular name. */
-				__( 'Add New %s', 'elementor' ),
+				__( 'Add New %s', 'refraction' ),
 				$post_type_object->labels->singular_name
 			),
 			Plugin::$instance->documents->get_create_new_post_url( $post_type )

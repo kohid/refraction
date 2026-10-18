@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor skin base.
+ * Refraction skin base.
  *
- * An abstract class to register new skins for Elementor widgets. Skins allows
+ * An abstract class to register new skins for Refraction widgets. Skins allows
  * you to add new templates, set custom controls and more.
  *
  * To register new skins for your widget use the `add_skin()` method inside the
@@ -87,7 +87,7 @@ abstract class Skin_Base extends Sub_Controls_Stack {
 	 * the skin in the widget.
 	 *
 	 * Example usage:
-	 * `add_action( 'elementor/element/{widget_id}/{section_id}/before_section_end', [ $this, 'register_controls' ] );`
+	 * `add_action( 'refraction/element/{widget_id}/{section_id}/before_section_end', [ $this, 'register_controls' ] );`
 	 *
 	 * @since 1.0.0
 	 * @access protected

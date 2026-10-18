@@ -14,7 +14,7 @@ export default function ErrorPage( { message, onRetry }: Props ) {
 				{ message }
 			</Typography>
 			<Button variant="contained" size="small" onClick={ onRetry }>
-				{ __( 'Try again', 'elementor' ) }
+				{ __( 'Try again', 'refraction' ) }
 			</Button>
 		</Box>
 	);

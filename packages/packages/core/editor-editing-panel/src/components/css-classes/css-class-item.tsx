@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { type ReactElement, useEffect, useMemo, useState } from 'react';
-import { isClassState } from '@elementor/editor-styles';
-import { stylesRepository, useUserStylesCapability, validateStyleLabel } from '@elementor/editor-styles-repository';
-import { EditableField, EllipsisWithTooltip, useEditable } from '@elementor/editor-ui';
+import { isClassState } from '@refraction/editor-styles';
+import { stylesRepository, useUserStylesCapability, validateStyleLabel } from '@refraction/editor-styles-repository';
+import { EditableField, EllipsisWithTooltip, useEditable } from '@refraction/editor-ui';
 import { DotsVerticalIcon } from '@elementor/icons';
-import { useSessionStorage } from '@elementor/session';
+import { useSessionStorage } from '@refraction/session';
 import {
 	type AutocompleteRenderGetTagProps,
 	bindTrigger,
@@ -158,7 +158,7 @@ export function CssClassItem( props: CssClassItemProps ) {
 						shape="rounded"
 						color={ color }
 						{ ...bindTrigger( popupState ) }
-						aria-label={ __( 'Open CSS Class Menu', 'elementor' ) }
+						aria-label={ __( 'Open CSS Class Menu', 'refraction' ) }
 						sx={ ( theme: Theme ) => ( {
 							borderRadius: `${ theme.shape.borderRadius * 0.75 }px`,
 							paddingRight: 0,

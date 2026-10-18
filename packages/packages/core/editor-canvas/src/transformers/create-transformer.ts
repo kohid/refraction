@@ -1,4 +1,4 @@
-import { type AnyTransformable } from '@elementor/editor-props';
+import { type AnyTransformable } from '@refraction/editor-props';
 
 import { type Transformer, type UnbrandedTransformer } from './types';
 

@@ -6,12 +6,12 @@ import { BaseLayout, CenteredContent, PageHeader, TopBar } from '../../shared/co
 import { useImportKit, IMPORT_PROCESSING_STATUS } from '../hooks/use-import-kit';
 import { IMPORT_STATUS, useImportContext } from '../context/import-context';
 import { PluginActivation } from '../components/plugin-activation';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 import { ProcessingErrorDialog } from '../../shared/components/error/processing-error-dialog';
 import useReturnToRedirect from '../../shared/hooks/use-return-to-redirect';
 
 const headerContent = (
-	<PageHeader title={ __( 'Import', 'elementor' ) } />
+	<PageHeader title={ __( 'Import', 'refraction' ) } />
 );
 
 export default function ImportProcess() {
@@ -68,14 +68,14 @@ export default function ImportProcess() {
 							<Stack spacing={ 3 } alignItems="center" >
 								<CircularProgress size={ 30 } />
 								<Typography variant="h5" >
-									{ __( 'Setting up your website template...', 'elementor' ) }
+									{ __( 'Setting up your website template...', 'refraction' ) }
 								</Typography>
 								<Stack>
 									<Typography variant="subtitle1" >
-										{ __( 'This usually takes a few moments.', 'elementor' ) }
+										{ __( 'This usually takes a few moments.', 'refraction' ) }
 									</Typography>
 									<Typography variant="subtitle1" >
-										{ __( 'Don\'t close this window until the process is finished.', 'elementor' ) }
+										{ __( 'Don\'t close this window until the process is finished.', 'refraction' ) }
 									</Typography>
 								</Stack>
 							</Stack>

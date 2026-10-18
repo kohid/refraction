@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from 'react';
 import * as React from 'react';
 import { closeSnackbar, useSnackbar, type VariantType } from 'notistack';
-import { __useDispatch as useDispatch } from '@elementor/store';
+import { __useDispatch as useDispatch } from '@refraction/store';
 import { Button, CloseButton } from '@elementor/ui';
 
 import { clearAction } from '../slice';

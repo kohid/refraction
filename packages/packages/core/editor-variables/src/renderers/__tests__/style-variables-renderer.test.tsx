@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { __privateUseListenTo as useListenTo } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo } from '@refraction/editor-v1-adapters';
 import { render, screen } from '@testing-library/react';
 
 import { styleVariablesRepository } from '../../style-variables-repository';
@@ -8,7 +8,7 @@ import { StyleVariablesRenderer } from '../style-variables-renderer';
 // Mock dependencies
 const unsubscribeMock = jest.fn();
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateUseListenTo: jest.fn(),
 	commandEndEvent: jest.fn(),
 	getCanvasIframeDocument: jest.fn(),

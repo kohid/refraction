@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Panel, PanelBody, PanelHeader, PanelHeaderTitle } from '@elementor/editor-panels';
+import { Panel, PanelBody, PanelHeader, PanelHeaderTitle } from '@refraction/editor-panels';
 import { __ } from '@wordpress/i18n';
 
 import { PostListContextProvider } from '../../contexts/post-list-context';
@@ -13,7 +13,7 @@ const Shell = () => {
 	return (
 		<Panel>
 			<PanelHeader>
-				<PanelHeaderTitle>{ __( 'Pages', 'elementor' ) }</PanelHeaderTitle>
+				<PanelHeaderTitle>{ __( 'Pages', 'refraction' ) }</PanelHeaderTitle>
 			</PanelHeader>
 			<PanelBody>
 				<PostListContextProvider type={ 'page' } setError={ () => setIsErrorSnackbarOpen( true ) }>

@@ -1,5 +1,5 @@
-import { getCurrentDocumentId, getElementInteractions, getElements } from '@elementor/editor-elements';
-import { __privateListenTo as listenTo, windowEvent } from '@elementor/editor-v1-adapters';
+import { getCurrentDocumentId, getElementInteractions, getElements } from '@refraction/editor-elements';
+import { __privateListenTo as listenTo, windowEvent } from '@refraction/editor-v1-adapters';
 
 import { createInteractionsProvider } from '../utils/create-interactions-provider';
 
@@ -19,7 +19,7 @@ export const documentElementsInteractionsProvider = createInteractionsProvider( 
 	},
 	priority: 50,
 	subscribe: ( cb ) => {
-		return listenTo( [ windowEvent( 'elementor/element/update_interactions' ) ], () => cb() );
+		return listenTo( [ windowEvent( 'refraction/element/update_interactions' ) ], () => cb() );
 	},
 	actions: {
 		all: () => {

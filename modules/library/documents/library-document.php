@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Modules\Library\Documents;
+namespace Refraction\Modules\Library\Documents;
 
-use Elementor\Core\Base\Document;
-use Elementor\Modules\Library\Traits\Library;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\Base\Document;
+use Refraction\Modules\Library\Traits\Library;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor library document.
+ * Refraction library document.
  *
- * Elementor library document handler class is responsible for handling
+ * Refraction library document handler class is responsible for handling
  * a document of the library type.
  *
  * @since 2.0.0
@@ -25,7 +25,7 @@ abstract class Library_Document extends Document {
 	/**
 	 * The taxonomy type slug for the library document.
 	 */
-	const TAXONOMY_TYPE_SLUG = 'elementor_library_type';
+	const TAXONOMY_TYPE_SLUG = 'refraction_library_type';
 
 	/**
 	 * The customization group for Kit Export.

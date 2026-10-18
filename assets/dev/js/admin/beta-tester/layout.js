@@ -1,10 +1,10 @@
 import BetaTesterView from './view';
 
-export default class BetaTesterLayout extends elementorModules.common.views.modal.Layout {
+export default class BetaTesterLayout extends refractionModules.common.views.modal.Layout {
 	ui() {
 		return {
-			closeModal: '.elementor-templates-modal__header__close',
-			dontShowAgain: '.elementor-beta-tester-do-not-show-again',
+			closeModal: '.refraction-templates-modal__header__close',
+			dontShowAgain: '.refraction-beta-tester-do-not-show-again',
 		};
 	}
 
@@ -17,7 +17,7 @@ export default class BetaTesterLayout extends elementorModules.common.views.moda
 
 	getModalOptions() {
 		return {
-			id: 'elementor-beta-tester-modal',
+			id: 'refraction-beta-tester-modal',
 			hide: {
 				onBackgroundClick: false,
 			},
@@ -26,20 +26,20 @@ export default class BetaTesterLayout extends elementorModules.common.views.moda
 
 	getLogoOptions() {
 		return {
-			title: __( 'Sign Up', 'elementor' ),
+			title: __( 'Sign Up', 'refraction' ),
 		};
 	}
 
 	initialize() {
-		elementorModules.common.views.modal.Layout.prototype.initialize.apply( this, arguments );
+		refractionModules.common.views.modal.Layout.prototype.initialize.apply( this, arguments );
 
 		this.showLogo();
 
 		this.showContentView();
 
-		const doNotShowAgain = __( 'Don\'t Show Again', 'elementor' );
+		const doNotShowAgain = __( 'Don\'t Show Again', 'refraction' );
 
-		this.modalHeader.currentView.ui.closeModal.after( jQuery( '<div>', { class: 'elementor-beta-tester-do-not-show-again' } ).text( doNotShowAgain ) );
+		this.modalHeader.currentView.ui.closeModal.after( jQuery( '<div>', { class: 'refraction-beta-tester-do-not-show-again' } ).text( doNotShowAgain ) );
 	}
 
 	showContentView() {
@@ -52,9 +52,9 @@ export default class BetaTesterLayout extends elementorModules.common.views.moda
 	}
 
 	onCloseModalClick() {
-		elementorCommon.ajax.addRequest( 'introduction_viewed', {
+		refractionCommon.ajax.addRequest( 'introduction_viewed', {
 			data: {
-				introductionKey: elementorAdmin.config.beta_tester.beta_tester_signup,
+				introductionKey: refractionAdmin.config.beta_tester.beta_tester_signup,
 			},
 		} );
 	}

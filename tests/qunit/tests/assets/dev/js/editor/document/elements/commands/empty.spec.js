@@ -1,4 +1,4 @@
-import { Empty as _Empty } from 'elementor-document/elements/commands';
+import { Empty as _Empty } from 'refraction-document/elements/commands';
 import ElementsHelper from '../helper';
 
 export const Empty = () => {
@@ -15,9 +15,9 @@ export const Empty = () => {
 			ElementsHelper.empty();
 
 			// Check.
-			assert.equal( elementor.getPreviewContainer().children.length, 0,
+			assert.equal( refraction.getPreviewContainer().children.length, 0,
 				'all elements were removed.' );
-			assert.equal( elementor.saver.isEditorChanged(), true, 'Command applied the saver editor is changed.' );
+			assert.equal( refraction.saver.isEditorChanged(), true, 'Command applied the saver editor is changed.' );
 		} );
 
 		QUnit.test( 'Restore()', ( assert ) => {
@@ -45,7 +45,7 @@ export const Empty = () => {
 
 			assert.equal( tempCommand, 'document/elements/empty' );
 
-			const addChildModelOrig = elementor.getPreviewView().addChildModel;
+			const addChildModelOrig = refraction.getPreviewView().addChildModel;
 
 			// Clear.
 			orig = $e.run;
@@ -53,7 +53,7 @@ export const Empty = () => {
 
 			let tempData = '';
 
-			elementor.getPreviewView().addChildModel = ( data ) => tempData = data;
+			refraction.getPreviewView().addChildModel = ( data ) => tempData = data;
 
 			// TODO: Do not override '$e.run', use 'on' method instead.
 			$e.run = ( command ) => {
@@ -65,7 +65,7 @@ export const Empty = () => {
 
 			$e.run = orig;
 
-			elementor.getPreviewView().addChildModel = addChildModelOrig;
+			refraction.getPreviewView().addChildModel = addChildModelOrig;
 
 			assert.equal( tempData, random );
 		} );

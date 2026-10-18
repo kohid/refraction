@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, useContext } from 'react';
-import { useSearchState, type UseSearchStateResult } from '@elementor/utils';
+import { useSearchState, type UseSearchStateResult } from '@refraction/utils';
 
 type SearchContextType = Pick< UseSearchStateResult, 'handleChange' | 'inputValue' > & {
 	searchValue: UseSearchStateResult[ 'debouncedValue' ];

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useRef } from 'react';
-import { skewTransformPropTypeUtil } from '@elementor/editor-props';
+import { skewTransformPropTypeUtil } from '@refraction/editor-props';
 import { ArrowLeftIcon, ArrowRightIcon } from '@elementor/icons';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -12,12 +12,12 @@ import { AxisRow } from './axis-row';
 
 const skewAxisControls: { label: string; bind: 'x' | 'y'; startIcon: React.ReactNode }[] = [
 	{
-		label: __( 'Skew X', 'elementor' ),
+		label: __( 'Skew X', 'refraction' ),
 		bind: 'x',
 		startIcon: <ArrowRightIcon fontSize={ 'tiny' } />,
 	},
 	{
-		label: __( 'Skew Y', 'elementor' ),
+		label: __( 'Skew Y', 'refraction' ),
 		bind: 'y',
 		startIcon: <ArrowLeftIcon fontSize="tiny" style={ { transform: 'scaleX(-1) rotate(-90deg)' } } />,
 	},

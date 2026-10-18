@@ -8,7 +8,7 @@ import {
 	__getStore,
 	__registerSlice,
 	__StoreProvider as StoreProvider,
-} from '@elementor/store';
+} from '@refraction/store';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import FloatingPanelHeader from '../components/external/floating-panel-header';

@@ -1,5 +1,5 @@
-import { createLocation } from '@elementor/locations';
-import { createMenu } from '@elementor/menus';
+import { createLocation } from '@refraction/locations';
+import { createMenu } from '@refraction/menus';
 
 import Action from './components/actions/action';
 import Link from './components/actions/link';

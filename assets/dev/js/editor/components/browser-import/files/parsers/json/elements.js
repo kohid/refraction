@@ -30,7 +30,7 @@ export class Elements extends FileParserBase {
 	 * @inheritDoc
 	 */
 	static async validate( reader ) {
-		if ( ! elementorCommon.config.filesUpload.unfilteredFiles ) {
+		if ( ! refractionCommon.config.filesUpload.unfilteredFiles ) {
 			return new Promise( ( resolve ) => {
 				const enableUnfilteredDialog = FilesUploadHandler.getUnfilteredFilesNotEnabledImportTemplateDialog( async () => {
 					const result = await this.validateData( reader );

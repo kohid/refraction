@@ -1,9 +1,9 @@
 import Component from './component';
-import LocalStorage from 'elementor-api/core/data/storages/local-storage';
+import LocalStorage from 'refraction-api/core/data/storages/local-storage';
 import { EventManager } from './event-manager';
 import { SAVE_CONTEXTS } from './constants';
 
-const TemplateLibraryCollection = require( 'elementor-templates/collections/templates' );
+const TemplateLibraryCollection = require( 'refraction-templates/collections/templates' );
 
 const TemplateLibraryManager = function() {
 	this.modalConfig = {};
@@ -21,18 +21,18 @@ const TemplateLibraryManager = function() {
 
 	const variantsConfig = {
 		control: {
-			saveBtnText: __( 'Save', 'elementor' ),
+			saveBtnText: __( 'Save', 'refraction' ),
 			saveDialogDescription: sprintf(
 				/* Translators: 1: Opening bold tag, 2: Closing bold tag.  2: Line break tag. 4: Opening bold tag, 5: Closing bold tag. */
-				__( "You can save it to %1$sCloud Templates%2$s to reuse across any of your Elementor sites at any time%3$sor to %4$sSite Templates%5$s so it's always ready when editing this website.", 'elementor' ),
+				__( "You can save it to %1$sCloud Templates%2$s to reuse across any of your Refraction sites at any time%3$sor to %4$sSite Templates%5$s so it's always ready when editing this website.", 'refraction' ),
 				'<b>', '</b>', '<br>', '<b>', '</b>',
 			),
 		},
 		B: {
-			saveBtnText: __( 'Save page', 'elementor' ),
+			saveBtnText: __( 'Save page', 'refraction' ),
 			saveDialogDescription: sprintf(
 				/* Translators: 1: Opening bold tag, 2: Closing bold tag. 3: Opening bold tag, 4: Closing bold tag. */
-				__( 'Store your design in %1$sCloud Templates%2$s for future Elementor projects. Or save it to %3$sSite Templates%4$s, to reuse anywhere on this site.', 'elementor' ),
+				__( 'Store your design in %1$sCloud Templates%2$s for future Refraction projects. Or save it to %3$sSite Templates%4$s, to reuse anywhere on this site.', 'refraction' ),
 				'<b>', '</b>', '<b>', '</b>',
 			),
 		},
@@ -50,7 +50,7 @@ const TemplateLibraryManager = function() {
 
 	const registerDefaultTemplateTypes = function() {
 		self.getDefaultTemplateTypeData().then( ( data ) => {
-			const elements = Object.entries( elementor.getConfig().elements ).reduce( ( acc, [ type, element ] ) => {
+			const elements = Object.entries( refraction.getConfig().elements ).reduce( ( acc, [ type, element ] ) => {
 				if ( ! element?.atomic_props_schema ) {
 					return acc;
 				}
@@ -61,12 +61,12 @@ const TemplateLibraryManager = function() {
 			}, {} );
 
 			const translationMap = {
-				page: __( 'Page', 'elementor' ),
-				section: __( 'Section', 'elementor' ),
-				container: __( 'Container', 'elementor' ),
+				page: __( 'Page', 'refraction' ),
+				section: __( 'Section', 'refraction' ),
+				container: __( 'Container', 'refraction' ),
 				...elements,
 
-				[ elementor.config.document.type ]: elementor.config.document.panel.title,
+				[ refraction.config.document.type ]: refraction.config.document.panel.title,
 			};
 
 			jQuery.each( translationMap, function( type, title ) {
@@ -116,8 +116,8 @@ const TemplateLibraryManager = function() {
 
 		this.component = $e.components.register( new Component( { manager: this } ) );
 
-		elementor.addBackgroundClickListener( 'libraryToggleMore', {
-			element: '.elementor-template-library-template-more',
+		refraction.addBackgroundClickListener( 'libraryToggleMore', {
+			element: '.refraction-template-library-template-more',
 		} );
 
 		window.addEventListener( 'message', ( message ) => {
@@ -161,36 +161,36 @@ const TemplateLibraryManager = function() {
 					saveBtnText: variantsConfig[ experimentVariant ]?.saveBtnText,
 				},
 				moveDialog: {
-					description: __( 'Alternatively, you can copy the template.', 'elementor' ),
+					description: __( 'Alternatively, you can copy the template.', 'refraction' ),
 					icon: '<i class="eicon-library-move" aria-hidden="true"></i>',
 					canSaveToCloud: true,
-					saveBtnText: __( 'Move', 'elementor' ),
+					saveBtnText: __( 'Move', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',
 				},
 				copyDialog: {
-					description: __( 'Alternatively, you can move the template.', 'elementor' ),
+					description: __( 'Alternatively, you can move the template.', 'refraction' ),
 					icon: '<i class="eicon-library-copy" aria-hidden="true"></i>',
 					canSaveToCloud: true,
-					saveBtnText: __( 'Copy', 'elementor' ),
+					saveBtnText: __( 'Copy', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',
 				},
 				bulkMoveDialog: {
-					description: __( 'Alternatively, you can copy the templates.', 'elementor' ),
-					title: __( 'Move templates to a different location', 'elementor' ),
+					description: __( 'Alternatively, you can copy the templates.', 'refraction' ),
+					title: __( 'Move templates to a different location', 'refraction' ),
 					icon: '<i class="eicon-library-move" aria-hidden="true"></i>',
 					canSaveToCloud: true,
-					saveBtnText: __( 'Move', 'elementor' ),
+					saveBtnText: __( 'Move', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',
 				},
 				bulkCopyDialog: {
-					description: __( 'Alternatively, you can move the templates.', 'elementor' ),
-					title: __( 'Copy templates to a different location', 'elementor' ),
+					description: __( 'Alternatively, you can move the templates.', 'refraction' ),
+					title: __( 'Copy templates to a different location', 'refraction' ),
 					icon: '<i class="eicon-library-copy" aria-hidden="true"></i>',
 					canSaveToCloud: true,
-					saveBtnText: __( 'Copy', 'elementor' ),
+					saveBtnText: __( 'Copy', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',
 				},
@@ -203,42 +203,42 @@ const TemplateLibraryManager = function() {
 			const isPageType = 'page' === type;
 
 			/* Translators: %s: Template type. */
-			const nameLabel = sprintf( __( '%s name', 'elementor' ), title );
+			const nameLabel = sprintf( __( '%s name', 'refraction' ), title );
 			const namePlaceholder = isPageType
-				? __( 'Type the page name here', 'elementor' )
-				: __( 'Give your template a name', 'elementor' );
+				? __( 'Type the page name here', 'refraction' )
+				: __( 'Give your template a name', 'refraction' );
 
 			return {
 				saveDialog: {
 					description: variantsConfig[ experimentVariant ]?.saveDialogDescription || '',
 					/* Translators: %s: Template type. */
-					title: sprintf( __( 'Save this %s to your library', 'elementor' ), title ),
+					title: sprintf( __( 'Save this %s to your library', 'refraction' ), title ),
 					nameLabel,
 					namePlaceholder,
 					/* Translators: %s: Template type. */
-					saveLocationLabel: sprintf( __( 'Where would you like to save this %s?', 'elementor' ), title ),
+					saveLocationLabel: sprintf( __( 'Where would you like to save this %s?', 'refraction' ), title ),
 				},
 				moveDialog: {
 					/* Translators: %s: Template type. */
-					title: sprintf( __( 'Move your %s to a different location', 'elementor' ), title ),
+					title: sprintf( __( 'Move your %s to a different location', 'refraction' ), title ),
 					/* Translators: %s: Template type. */
-					saveLocationLabel: sprintf( __( 'Where would you like to move this %s?', 'elementor' ), title ),
+					saveLocationLabel: sprintf( __( 'Where would you like to move this %s?', 'refraction' ), title ),
 					nameLabel,
 					namePlaceholder,
 				},
 				copyDialog: {
 					/* Translators: %s: Template type. */
-					title: sprintf( __( 'Copy your %s to a different location', 'elementor' ), title ),
+					title: sprintf( __( 'Copy your %s to a different location', 'refraction' ), title ),
 					/* Translators: %s: Template type. */
-					saveLocationLabel: sprintf( __( 'Where would you like to cppy this %s?', 'elementor' ), title ),
+					saveLocationLabel: sprintf( __( 'Where would you like to cppy this %s?', 'refraction' ), title ),
 					nameLabel,
 					namePlaceholder,
 				},
 				bulkMoveDialog: {
-					saveLocationLabel: __( 'Where would you like to move selected templates?', 'elementor' ),
+					saveLocationLabel: __( 'Where would you like to move selected templates?', 'refraction' ),
 				},
 				bulkCopyDialog: {
-					saveLocationLabel: __( 'Where would you like to copy selected templates?', 'elementor' ),
+					saveLocationLabel: __( 'Where would you like to copy selected templates?', 'refraction' ),
 				},
 			};
 		} );
@@ -261,7 +261,7 @@ const TemplateLibraryManager = function() {
 			return true; // When the rename dialog is closed it sets the target to the body.
 		}
 
-		const libraryElement = document.getElementById( 'elementor-template-library-modal' );
+		const libraryElement = document.getElementById( 'refraction-template-library-modal' );
 
 		return libraryElement && event.target === libraryElement;
 	};
@@ -279,7 +279,7 @@ const TemplateLibraryManager = function() {
 	};
 
 	this.selectAllTemplates = function() {
-		document.querySelectorAll( '.elementor-template-library-template[data-template_id]' ).forEach( ( element ) => {
+		document.querySelectorAll( '.refraction-template-library-template[data-template_id]' ).forEach( ( element ) => {
 			const templateId = element.getAttribute( 'data-template_id' );
 			const type = element.getAttribute( 'data-type' );
 
@@ -340,7 +340,7 @@ const TemplateLibraryManager = function() {
 			const source = templateModel.get( 'source' );
 			const itemType = templateModel.get( 'subType' );
 
-			elementorCommon.ajax.addRequest( 'delete_template', {
+			refractionCommon.ajax.addRequest( 'delete_template', {
 				data: {
 					source,
 					template_id: templateId,
@@ -361,14 +361,14 @@ const TemplateLibraryManager = function() {
 					const buttons = 'cloud' === source ? [
 						{
 							name: 'undo_bulk',
-							text: __( 'Undo', 'elementor' ),
+							text: __( 'Undo', 'refraction' ),
 							callback: () => {
 								self.onUndoDelete();
 							},
 						},
 					] : null;
 
-					elementor.notifications.showToast( {
+					refraction.notifications.showToast( {
 						message: `1 item deleted successfully`,
 						buttons,
 					} );
@@ -401,7 +401,7 @@ const TemplateLibraryManager = function() {
 
 				const source = templateModel.get( 'source' );
 
-				elementorCommon.ajax.addRequest( 'rename_template', {
+				refractionCommon.ajax.addRequest( 'rename_template', {
 					data: {
 						source,
 						id: templateModel.get( 'template_id' ),
@@ -426,35 +426,35 @@ const TemplateLibraryManager = function() {
 	this.getRenameDialog = function( templateModel ) {
 		const headerMessage = sprintf(
 			// Translators: %1$s: Folder name, %2$s: Number of templates.
-			__( 'Rename "%1$s"', 'elementor' ),
+			__( 'Rename "%1$s"', 'refraction' ),
 			templateModel.get( 'title' ),
 		);
 
 		const originalTitle = templateModel.get( 'title' );
 
 		const $inputArea = jQuery( '<input>', {
-			id: 'elementor-rename-template-dialog__input',
+			id: 'refraction-rename-template-dialog__input',
 			type: 'text',
 			value: templateModel.get( 'title' ),
 		} )
 			.attr( 'autocomplete', 'off' );
 
-		const dialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-			id: 'elementor-template-library-rename-dialog',
+		const dialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+			id: 'refraction-template-library-rename-dialog',
 			headerMessage,
 			message: $inputArea,
 			strings: {
-				confirm: __( 'Rename', 'elementor' ),
+				confirm: __( 'Rename', 'refraction' ),
 			},
 			hide: {
-				ignore: '#elementor-template-library-modal',
+				ignore: '#refraction-template-library-modal',
 			},
 			onCancel: () => {
 				templateModel.set( 'title', originalTitle );
 			},
 			onShow: () => {
-				elementor.templates.eventManager.sendPageViewEvent( {
-					location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.renameDialog,
+				refraction.templates.eventManager.sendPageViewEvent( {
+					location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.renameDialog,
 				} );
 				$inputArea.trigger( 'focus' );
 			},
@@ -500,7 +500,7 @@ const TemplateLibraryManager = function() {
 
 					templatesCollection = new TemplateLibraryCollection( data.templates );
 
-					elementor.templates.layout.hideLoadingView();
+					refraction.templates.layout.hideLoadingView();
 
 					self.layout.updateViewCollection( templatesCollection.models );
 					self.layout.modalContent.currentView.ui.addNewFolder.remove();
@@ -516,7 +516,7 @@ const TemplateLibraryManager = function() {
 				},
 			};
 
-			elementorCommon.ajax.addRequest( 'get_item_children', ajaxOptions );
+			refractionCommon.ajax.addRequest( 'get_item_children', ajaxOptions );
 		} );
 	};
 
@@ -524,7 +524,7 @@ const TemplateLibraryManager = function() {
 		this.clearLastRemovedItems();
 
 		if ( null !== this.getFilter( 'parent' ) ) {
-			this.showErrorDialog( __( 'You can not create a folder inside another folder.', 'elementor' ) );
+			this.showErrorDialog( __( 'You can not create a folder inside another folder.', 'refraction' ) );
 
 			return;
 		}
@@ -533,7 +533,7 @@ const TemplateLibraryManager = function() {
 
 		return new Promise( ( resolve ) => {
 			dialog.onConfirm = async () => {
-				await elementorCommon.ajax.addRequest( 'create_folder', {
+				await refractionCommon.ajax.addRequest( 'create_folder', {
 					data: {
 						source: folderData.source,
 						title: folderData.title,
@@ -559,35 +559,35 @@ const TemplateLibraryManager = function() {
 
 	this.getCreateFolderDialog = function( folderData ) {
 		const paragraph = document.createElement( 'p' );
-		paragraph.className = 'elementor-create-folder-template-dialog__p';
-		paragraph.textContent = __( 'Save assets to reuse on any site in your account.', 'elementor' );
+		paragraph.className = 'refraction-create-folder-template-dialog__p';
+		paragraph.textContent = __( 'Save assets to reuse on any site in your account.', 'refraction' );
 
 		const inputArea = document.createElement( 'input' );
-		inputArea.className = 'elementor-create-folder-template-dialog__input';
+		inputArea.className = 'refraction-create-folder-template-dialog__input';
 		inputArea.type = 'text';
 		inputArea.value = '';
-		inputArea.placeholder = __( 'Folder name', 'elementor' );
+		inputArea.placeholder = __( 'Folder name', 'refraction' );
 		inputArea.autocomplete = 'off';
 
 		const fragment = document.createDocumentFragment();
 		fragment.appendChild( paragraph );
 		fragment.appendChild( inputArea );
 
-		const dialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-			id: 'elementor-template-library-create-new-folder-dialog',
-			headerMessage: __( 'Create a new folder', 'elementor' ),
+		const dialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+			id: 'refraction-template-library-create-new-folder-dialog',
+			headerMessage: __( 'Create a new folder', 'refraction' ),
 			message: fragment,
 			strings: {
-				confirm: __( 'Create', 'elementor' ),
+				confirm: __( 'Create', 'refraction' ),
 			},
 			hide: {
-				ignore: '#elementor-template-library-modal',
+				ignore: '#refraction-template-library-modal',
 			},
 			onShow: () => {
 				inputArea.focus();
 
-				elementor.templates.eventManager.sendPageViewEvent( {
-					location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.newFolderModal,
+				refraction.templates.eventManager.sendPageViewEvent( {
+					location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.newFolderModal,
 				} );
 			},
 		} );
@@ -620,7 +620,7 @@ const TemplateLibraryManager = function() {
 			success: ( data ) => this.handleGetFolderDataSuccess( templateModel, options, data ),
 		};
 
-		elementorCommon.ajax.addRequest( 'get_item_children', ajaxOptions );
+		refractionCommon.ajax.addRequest( 'get_item_children', ajaxOptions );
 	};
 
 	this.handleGetFolderDataSuccess = function( templateModel, options, data ) {
@@ -636,21 +636,21 @@ const TemplateLibraryManager = function() {
 	};
 
 	this.getDeleteFolderDialog = function( templateModel, data ) {
-		const deleteFolderDialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-			id: 'elementor-template-library-delete-dialog',
-			headerMessage: __( 'Delete this folder?', 'elementor' ),
+		const deleteFolderDialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+			id: 'refraction-template-library-delete-dialog',
+			headerMessage: __( 'Delete this folder?', 'refraction' ),
 			message: sprintf(
 				// Translators: %1$s: Folder name, %2$s: Number of templates.
-				__( 'This will permanently delete "%1$s" that contains %2$d templates.', 'elementor' ),
+				__( 'This will permanently delete "%1$s" that contains %2$d templates.', 'refraction' ),
 				templateModel.get( 'title' ),
 				data.total,
 			),
 			strings: {
-				confirm: __( 'Delete', 'elementor' ),
+				confirm: __( 'Delete', 'refraction' ),
 			},
 			onShow: () => {
-				elementor.templates.eventManager.sendPageViewEvent( {
-					location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.deleteFolderDialog,
+				refraction.templates.eventManager.sendPageViewEvent( {
+					location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.deleteFolderDialog,
 				} );
 			},
 		} );
@@ -661,16 +661,16 @@ const TemplateLibraryManager = function() {
 	};
 
 	this.getBulkDeleteDialog = function() {
-		const bulkDeleteDialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-			id: 'elementor-template-library-bulk-delete-dialog',
-			headerMessage: __( 'Delete items?', 'elementor' ),
+		const bulkDeleteDialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+			id: 'refraction-template-library-bulk-delete-dialog',
+			headerMessage: __( 'Delete items?', 'refraction' ),
 			message: sprintf(
 				// Translators: %1$s: Number of selected items.
-				__( 'This will permanently remove %1$s selected items.', 'elementor' ),
+				__( 'This will permanently remove %1$s selected items.', 'refraction' ),
 				bulkSelectedItems.size,
 			),
 			strings: {
-				confirm: __( 'Delete', 'elementor' ),
+				confirm: __( 'Delete', 'refraction' ),
 			},
 		} );
 
@@ -683,7 +683,7 @@ const TemplateLibraryManager = function() {
 		const templateId = templateModel.get( 'template_id' );
 		const source = templateModel.get( 'source' );
 
-		elementorCommon.ajax.addRequest( 'delete_template', {
+		refractionCommon.ajax.addRequest( 'delete_template', {
 			data: {
 				source,
 				template_id: templateId,
@@ -693,11 +693,11 @@ const TemplateLibraryManager = function() {
 				templatesCollection.remove( templateModel, { silent: true } );
 				options.onSuccess?.( response );
 
-				elementor.templates.eventManager.sendPageViewEvent( {
-					location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.deleteFolderDialog,
+				refraction.templates.eventManager.sendPageViewEvent( {
+					location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.deleteFolderDialog,
 				} );
 
-				elementor.templates.eventManager.sendItemDeletedEvent( {
+				refraction.templates.eventManager.sendItemDeletedEvent( {
 					library_type: source,
 					item_type: 'folder',
 				} );
@@ -715,7 +715,7 @@ const TemplateLibraryManager = function() {
 	this.importTemplate = function( model, args = {} ) {
 		this.clearLastRemovedItems();
 
-		elementorDevTools.deprecation.deprecated( 'importTemplate', '2.8.0',
+		refractionDevTools.deprecation.deprecated( 'importTemplate', '2.8.0',
 			"$e.run( 'library/insert-template' )" );
 
 		args.model = model;
@@ -768,7 +768,7 @@ const TemplateLibraryManager = function() {
 
 		const ajaxParams = _.extend( defaultAjaxParams, templateType.ajaxParams );
 
-		elementorCommon.ajax.addRequest( this.getSaveAjaxAction( data.save_context ), ajaxParams );
+		refractionCommon.ajax.addRequest( this.getSaveAjaxAction( data.save_context ), ajaxParams );
 	};
 
 	this.sendOnSavedTemplateSuccessEvent = ( formData ) => {
@@ -838,7 +838,7 @@ const TemplateLibraryManager = function() {
 			jQuery.extend( true, options, ajaxOptions );
 		}
 
-		return elementorCommon.ajax.addRequest( 'get_template_data', options );
+		return refractionCommon.ajax.addRequest( 'get_template_data', options );
 	};
 
 	this.hasGlobalStyles = function( templateData ) {
@@ -851,7 +851,7 @@ const TemplateLibraryManager = function() {
 
 	this.syncGlobalStylesBeforeSave = function() {
 		const promises = [];
-		const event = new CustomEvent( 'elementor/global-styles/before-save', {
+		const event = new CustomEvent( 'refraction/global-styles/before-save', {
 			detail: { promises },
 		} );
 
@@ -871,25 +871,25 @@ const TemplateLibraryManager = function() {
 			},
 		};
 
-		return elementorCommon.ajax.addRequest( 'mark_template_as_favorite', options );
+		return refractionCommon.ajax.addRequest( 'mark_template_as_favorite', options );
 	};
 
 	this.getDeleteDialog = function( templateModel ) {
 		if ( ! deleteDialog ) {
-			deleteDialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-				id: 'elementor-template-library-delete-dialog',
-				headerMessage: __( 'Delete this template?', 'elementor' ),
+			deleteDialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+				id: 'refraction-template-library-delete-dialog',
+				headerMessage: __( 'Delete this template?', 'refraction' ),
 				message: sprintf(
 					// Translators: %1$s: Template name.
-					__( 'This will permanently remove "%1$s".', 'elementor' ),
+					__( 'This will permanently remove "%1$s".', 'refraction' ),
 					templateModel.get( 'title' ),
 				),
 				strings: {
-					confirm: __( 'Delete', 'elementor' ),
+					confirm: __( 'Delete', 'refraction' ),
 				},
 				onShow: () => {
-					elementor.templates.eventManager.sendPageViewEvent( {
-						location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.deleteDialog,
+					refraction.templates.eventManager.sendPageViewEvent( {
+						location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.deleteDialog,
 					} );
 				},
 			} );
@@ -902,9 +902,9 @@ const TemplateLibraryManager = function() {
 
 	this.getErrorDialog = function() {
 		if ( ! errorDialog ) {
-			errorDialog = elementorCommon.dialogsManager.createWidget( 'alert', {
-				id: 'elementor-template-library-error-dialog',
-				headerMessage: __( 'An error occurred.', 'elementor' ),
+			errorDialog = refractionCommon.dialogsManager.createWidget( 'alert', {
+				id: 'refraction-template-library-error-dialog',
+				headerMessage: __( 'An error occurred.', 'refraction' ),
 			} );
 		}
 
@@ -955,19 +955,19 @@ const TemplateLibraryManager = function() {
 			ajaxOptions.data.sync = true;
 		}
 
-		elementorCommon.ajax.addRequest( 'get_library_data', ajaxOptions );
+		refractionCommon.ajax.addRequest( 'get_library_data', ajaxOptions );
 	};
 
 	this.getFilter = function( name ) {
-		return elementor.channels.templates.request( 'filter:' + name );
+		return refraction.channels.templates.request( 'filter:' + name );
 	};
 
 	this.setFilter = function( name, value, silent ) {
 		this.clearLastRemovedItems();
-		elementor.channels.templates.reply( 'filter:' + name, value );
+		refraction.channels.templates.reply( 'filter:' + name, value );
 
 		if ( ! silent ) {
-			elementor.channels.templates.trigger( 'filter:change' );
+			refraction.channels.templates.trigger( 'filter:change' );
 		}
 	};
 
@@ -981,7 +981,7 @@ const TemplateLibraryManager = function() {
 
 	this.setScreen = function( args ) {
 		this.clearLastRemovedItems();
-		elementor.channels.templates.stopReplying();
+		refraction.channels.templates.stopReplying();
 
 		self.setFilter( 'source', args.source, true );
 		self.setFilter( 'type', args.type, true );
@@ -1035,7 +1035,7 @@ const TemplateLibraryManager = function() {
 		};
 
 		const handleCloudSource = () => {
-			if ( 'undefined' === typeof elementorAppConfig[ 'cloud-library' ]?.quota ) {
+			if ( 'undefined' === typeof refractionAppConfig[ 'cloud-library' ]?.quota ) {
 				return $e.components.get( 'cloud-library' ).utils.getQuotaConfig( true )
 					.then( () => {
 						if ( self.shouldShowCloudStateView() ) {
@@ -1098,7 +1098,7 @@ const TemplateLibraryManager = function() {
 				},
 			};
 
-			elementorCommon.ajax.addRequest( 'search_templates', ajaxOptions );
+			refractionCommon.ajax.addRequest( 'search_templates', ajaxOptions );
 		} );
 	};
 
@@ -1121,8 +1121,8 @@ const TemplateLibraryManager = function() {
 				offset: refresh ? 0 : templatesCollection.length,
 				search,
 				parentId,
-				orderby: elementor.templates.getFilter( 'orderby' ) || null,
-				order: elementor.templates.getFilter( 'order' ) || null,
+				orderby: refraction.templates.getFilter( 'orderby' ) || null,
+				order: refraction.templates.getFilter( 'order' ) || null,
 			},
 			success: ( result ) => {
 				const collection = new TemplateLibraryCollection( result.templates );
@@ -1146,7 +1146,7 @@ const TemplateLibraryManager = function() {
 			},
 		};
 
-		elementorCommon.ajax.addRequest( 'load_more_templates', ajaxOptions );
+		refractionCommon.ajax.addRequest( 'load_more_templates', ajaxOptions );
 	};
 
 	this.showTemplates = function() {
@@ -1167,7 +1167,7 @@ const TemplateLibraryManager = function() {
 			return;
 		}
 
-		elementor.notifications.showToast( toastConfig?.options );
+		refraction.notifications.showToast( toastConfig?.options );
 
 		this.clearToastConfig();
 	};
@@ -1215,10 +1215,10 @@ const TemplateLibraryManager = function() {
 		}
 
 		if ( errorMessage ) {
-			errorMessage = __( 'The following error(s) occurred while processing the request:', 'elementor' ) +
-				'<div id="elementor-template-library-error-info">' + errorMessage + '</div>';
+			errorMessage = __( 'The following error(s) occurred while processing the request:', 'refraction' ) +
+				'<div id="refraction-template-library-error-info">' + errorMessage + '</div>';
 		} else {
-			errorMessage = __( 'Please try again.', 'elementor' );
+			errorMessage = __( 'Please try again.', 'refraction' );
 		}
 
 		self.getErrorDialog()
@@ -1260,7 +1260,7 @@ const TemplateLibraryManager = function() {
 	};
 
 	this.shouldShowCloudStateView = function() {
-		if ( ! elementor.config.library_connect.is_connected ) {
+		if ( ! refraction.config.library_connect.is_connected ) {
 			return true;
 		}
 
@@ -1268,7 +1268,7 @@ const TemplateLibraryManager = function() {
 	};
 
 	this.cloudLibraryIsDeactivated = function() {
-		const quota = elementorAppConfig[ 'cloud-library' ]?.quota;
+		const quota = refractionAppConfig[ 'cloud-library' ]?.quota;
 
 		if ( ! quota ) {
 			return false;
@@ -1287,8 +1287,8 @@ const TemplateLibraryManager = function() {
 	};
 
 	this.hasCloudLibraryQuota = function() {
-		return 'undefined' !== typeof elementorAppConfig[ 'cloud-library' ]?.quota &&
-			0 < elementorAppConfig[ 'cloud-library' ].quota?.threshold;
+		return 'undefined' !== typeof refractionAppConfig[ 'cloud-library' ]?.quota &&
+			0 < refractionAppConfig[ 'cloud-library' ].quota?.threshold;
 	};
 
 	this.addBulkSelectionItem = function( templateId, type = 'template' ) {
@@ -1385,14 +1385,14 @@ const TemplateLibraryManager = function() {
 						const buttons = 'cloud' === source ? [
 							{
 								name: 'undo_bulk_delete',
-								text: __( 'Undo', 'elementor' ),
+								text: __( 'Undo', 'refraction' ),
 								callback: () => {
 									this.onUndoDelete( 1 < templateIds.length );
 								},
 							},
 						] : null;
 
-						elementor.notifications.showToast( {
+						refraction.notifications.showToast( {
 							message: `${ templateIds.length } items deleted successfully`,
 							buttons,
 						} );
@@ -1416,7 +1416,7 @@ const TemplateLibraryManager = function() {
 					},
 				};
 
-				elementorCommon.ajax.addRequest( 'bulk_delete_templates', ajaxOptions );
+				refractionCommon.ajax.addRequest( 'bulk_delete_templates', ajaxOptions );
 			};
 
 			dialog.onCancel = () => {
@@ -1468,7 +1468,7 @@ const TemplateLibraryManager = function() {
 				},
 			};
 
-			elementorCommon.ajax.addRequest( 'bulk_undo_delete_items', ajaxOptions );
+			refractionCommon.ajax.addRequest( 'bulk_undo_delete_items', ajaxOptions );
 
 			self.eventManager.sendDeletionUndoEvent( {
 				is_bulk: isBulk,
@@ -1478,7 +1478,7 @@ const TemplateLibraryManager = function() {
 	};
 
 	this.triggerQuotaUpdate = function( force = true ) {
-		elementor.channels.templates.trigger( 'quota:update', { force } );
+		refraction.channels.templates.trigger( 'quota:update', { force } );
 	};
 };
 

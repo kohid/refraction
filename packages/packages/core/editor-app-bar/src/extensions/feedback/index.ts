@@ -1,4 +1,4 @@
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { MessageLinesIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -17,7 +17,7 @@ export function init() {
 		useProps: () => {
 			return {
 				icon: MessageLinesIcon,
-				title: __( 'Send Feedback', 'elementor' ),
+				title: __( 'Send Feedback', 'refraction' ),
 				onClick: () => {
 					dispatchEvent( new CustomEvent( FEEDBACK_TOGGLE_EVENT ) );
 				},

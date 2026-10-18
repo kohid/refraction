@@ -9,5 +9,5 @@ export const getSaveErrorMessage = ( reason ) => {
 		return reason;
 	}
 
-	return __( 'Something went wrong. Please try again.', 'elementor' );
+	return __( 'Something went wrong. Please try again.', 'refraction' );
 };

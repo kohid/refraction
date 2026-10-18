@@ -1,10 +1,10 @@
-import { arrayToClassName, isOneOf } from 'elementor-app/utils/utils.js';
+import { arrayToClassName, isOneOf } from 'refraction-app/utils/utils.js';
 
-import UploadFile from 'elementor-app/molecules/upload-file';
-import DragDrop from 'elementor-app/ui/atoms/drag-drop';
-import Icon from 'elementor-app/ui/atoms/icon';
-import Heading from 'elementor-app/ui/atoms/heading';
-import Text from 'elementor-app/ui/atoms/text';
+import UploadFile from 'refraction-app/molecules/upload-file';
+import DragDrop from 'refraction-app/ui/atoms/drag-drop';
+import Icon from 'refraction-app/ui/atoms/icon';
+import Heading from 'refraction-app/ui/atoms/heading';
+import Text from 'refraction-app/ui/atoms/text';
 
 import './drop-zone.scss';
 
@@ -20,7 +20,7 @@ export default function DropZone( props ) {
 					} else {
 						props.onError( {
 							id: 'file_not_allowed',
-							message: __( 'This file type is not allowed', 'elementor' ),
+							message: __( 'This file type is not allowed', 'refraction' ),
 						} );
 					}
 				}

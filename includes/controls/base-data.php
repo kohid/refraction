@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor base data control.
+ * Refraction base data control.
  *
  * An abstract class for creating new data controls in the panel.
  *
@@ -129,7 +129,7 @@ abstract class Base_Data_Control extends Base_Control {
 	 * @return string Unique ID.
 	 */
 	protected function get_control_uid( $input_type = 'default' ) {
-		return 'elementor-control-' . $input_type . '-{{{ data._cid }}}';
+		return 'refraction-control-' . $input_type . '-{{{ data._cid }}}';
 	}
 
 	/**

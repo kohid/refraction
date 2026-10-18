@@ -1,55 +1,55 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 function echo_select_your_structure_title() {
-	echo esc_html__( 'Select your structure', 'elementor' );
+	echo esc_html__( 'Select your structure', 'refraction' );
 }
 ?>
-<script type="text/template" id="tmpl-elementor-empty-preview">
-	<div class="elementor-first-add">
-		<div class="elementor-icon eicon-plus"></div>
+<script type="text/template" id="tmpl-refraction-empty-preview">
+	<div class="refraction-first-add">
+		<div class="refraction-icon eicon-plus"></div>
 	</div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-add-section">
+<script type="text/template" id="tmpl-refraction-add-section">
 	<# if ( $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ) { #>
-	<div class="elementor-add-section-inner">
-		<button type="button" class="elementor-add-section-close" data-tooltip="<?php echo esc_attr__( 'Close', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Close', 'elementor' ); ?>">
+	<div class="refraction-add-section-inner">
+		<button type="button" class="refraction-add-section-close" data-tooltip="<?php echo esc_attr__( 'Close', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Close', 'refraction' ); ?>">
 			<i class="eicon-close" aria-hidden="true"></i>
 		</button>
 		<?php
 		$experiments_manager = Plugin::$instance->experiments;
 		if ( $experiments_manager->is_feature_active( 'container' ) ) { ?>
-			<button type="button" class="elementor-add-section-back" data-tooltip="<?php echo esc_attr__( 'Back', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Back', 'elementor' ); ?>">
+			<button type="button" class="refraction-add-section-back" data-tooltip="<?php echo esc_attr__( 'Back', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Back', 'refraction' ); ?>">
 				<i class="eicon-chevron-left" aria-hidden="true"></i>
 			</button>
 		<?php } ?>
-		<div class="e-view elementor-add-new-section">
+		<div class="e-view refraction-add-new-section">
 			<?php
-				$add_container_title = esc_html__( 'Add New Container', 'elementor' );
-				$add_section_title = esc_html__( 'Add New Section', 'elementor' );
+				$add_container_title = esc_html__( 'Add New Container', 'refraction' );
+				$add_section_title = esc_html__( 'Add New Section', 'refraction' );
 
 				$button_title = ( $experiments_manager->is_feature_active( 'container' ) ) ? $add_container_title : $add_section_title;
 			?>
-			<button type="button" class="elementor-add-section-area-button elementor-add-section-button" data-tooltip="<?php echo esc_attr( $button_title ); ?>" aria-label="<?php echo esc_attr( $button_title ); ?>">
+			<button type="button" class="refraction-add-section-area-button refraction-add-section-button" data-tooltip="<?php echo esc_attr( $button_title ); ?>" aria-label="<?php echo esc_attr( $button_title ); ?>">
 				<i class="eicon-plus" aria-hidden="true"></i>
 			</button>
-			<# if ( 'loop-item' !== elementor.documents.getCurrent()?.config?.type || elementorCommon.config.experimentalFeatures[ 'container' ] ) {
-				const additionalClass = 'loop-item' === elementor.documents.getCurrent()?.config?.type && elementor.documents.getCurrent()?.config?.settings?.settings?.source?.includes( 'taxonomy' )
-					? 'elementor-edit-hidden'
+			<# if ( 'loop-item' !== refraction.documents.getCurrent()?.config?.type || refractionCommon.config.experimentalFeatures[ 'container' ] ) {
+				const additionalClass = 'loop-item' === refraction.documents.getCurrent()?.config?.type && refraction.documents.getCurrent()?.config?.settings?.settings?.source?.includes( 'taxonomy' )
+					? 'refraction-edit-hidden'
 					: ''; #>
-				<button type="button" class="{{ additionalClass }} elementor-add-section-area-button elementor-add-template-button" data-tooltip="<?php echo esc_attr__( 'Add Template', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Add Template', 'elementor' ); ?>">
+				<button type="button" class="{{ additionalClass }} refraction-add-section-area-button refraction-add-template-button" data-tooltip="<?php echo esc_attr__( 'Add Template', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Add Template', 'refraction' ); ?>">
 					<i class="eicon-folder" aria-hidden="true"></i>
 				</button>
 			<# } #>
-			<div class="elementor-add-section-drag-title"><?php echo esc_html__( 'Drag widget here', 'elementor' ); ?></div>
+			<div class="refraction-add-section-drag-title"><?php echo esc_html__( 'Drag widget here', 'refraction' ); ?></div>
 		</div>
 		<div class="e-view e-con-shared-styles e-con-select-type">
-			<div class="e-con-select-type__title"><?php echo esc_html__( 'Which layout would you like to use?', 'elementor' ); ?></div>
+			<div class="e-con-select-type__title"><?php echo esc_html__( 'Which layout would you like to use?', 'refraction' ); ?></div>
 			<div class="e-con-select-type__icons">
 				<button type="button" class="e-con-select-type__icons__icon flex-preset-button">
 					<svg width="85" height="85" viewBox="0 0 85 85" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -57,7 +57,7 @@ function echo_select_your_structure_title() {
 						<rect x="43.3018" width="41.698" height="41.6498" fill="#D5DADE"/>
 						<rect x="43.3018" y="43.3506" width="41.698" height="41.6498" fill="#D5DADE"/>
 					</svg>
-					<div class="e-con-select-type__icons__icon__subtitle"><?php echo esc_html__( 'Flexbox', 'elementor' ); ?></div>
+					<div class="e-con-select-type__icons__icon__subtitle"><?php echo esc_html__( 'Flexbox', 'refraction' ); ?></div>
 				</button>
 				<button type="button" class="e-con-select-type__icons__icon grid-preset-button">
 					<svg width="85" height="85" viewBox="0 0 85 85" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,21 +65,21 @@ function echo_select_your_structure_title() {
 						<path d="M42.501 0.484375V84.6259" stroke="#9DA5AE" stroke-dasharray="1 1"/>
 						<path d="M84.623 42.501L-0.00038953 42.501" stroke="#9DA5AE" stroke-dasharray="1 1"/>
 					</svg>
-					<div class="e-con-select-type__icons__icon__subtitle"><?php echo esc_html__( 'Grid', 'elementor' ); ?></div>
+					<div class="e-con-select-type__icons__icon__subtitle"><?php echo esc_html__( 'Grid', 'refraction' ); ?></div>
 				</button>
 			</div>
 		</div>
-		<div class="e-view elementor-select-preset">
-			<div class="elementor-select-preset-title"><?php echo_select_your_structure_title(); ?></div>
-			<div class="elementor-select-preset-list">
+		<div class="e-view refraction-select-preset">
+			<div class="refraction-select-preset-title"><?php echo_select_your_structure_title(); ?></div>
+			<div class="refraction-select-preset-list">
 				<#
 					const structures = [ 10, 20, 30, 40, 21, 22, 31, 32, 33, 50, 34, 60 ];
 
 					structures.forEach( ( structure ) => {
-						const preset = elementor.presetsFactory.getPresetByStructure( structure ); #>
+						const preset = refraction.presetsFactory.getPresetByStructure( structure ); #>
 
-						<button type="button" class="elementor-preset" data-structure="{{ structure }}">
-							{{{ elementor.presetsFactory.getPresetSVG( preset.preset ).outerHTML }}}
+						<button type="button" class="refraction-preset" data-structure="{{ structure }}">
+							{{{ refraction.presetsFactory.getPresetSVG( preset.preset ).outerHTML }}}
 						</button>
 				<# } ); #>
 			</div>
@@ -88,10 +88,10 @@ function echo_select_your_structure_title() {
 			<div class="e-con-select-preset__title"><?php echo_select_your_structure_title(); ?></div>
 			<div class="e-con-select-preset__list">
 				<#
-					elementor.presetsFactory.getContainerPresets().forEach( ( preset ) => {
+					refraction.presetsFactory.getContainerPresets().forEach( ( preset ) => {
 					#>
 					<button type="button" class="e-con-preset" data-preset="{{ preset }}">
-						{{{ elementor.presetsFactory.generateContainerPreset( preset ) }}}
+						{{{ refraction.presetsFactory.generateContainerPreset( preset ) }}}
 					</button>
 					<#
 				} );
@@ -102,10 +102,10 @@ function echo_select_your_structure_title() {
 			<div class="e-con-select-preset__title"><?php echo_select_your_structure_title(); ?></div>
 			<div class="e-con-select-preset__list">
 				<#
-					elementor.presetsFactory.getContainerGridPresets().forEach( ( preset ) => {
+					refraction.presetsFactory.getContainerGridPresets().forEach( ( preset ) => {
 				#>
 					<button type="button" class="e-con-preset" data-structure="{{ preset }}">
-						{{{ elementor.presetsFactory.generateContainerGridPreset( preset ) }}}
+						{{{ refraction.presetsFactory.generateContainerGridPreset( preset ) }}}
 					</button>
 				<#
 					} );
@@ -116,6 +116,6 @@ function echo_select_your_structure_title() {
 	<# } #>
 </script>
 
-<script type="text/template" id="tmpl-elementor-tag-controls-stack-empty">
-	<?php echo esc_html__( 'This tag has no settings.', 'elementor' ); ?>
+<script type="text/template" id="tmpl-refraction-tag-controls-stack-empty">
+	<?php echo esc_html__( 'This tag has no settings.', 'refraction' ); ?>
 </script>

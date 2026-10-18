@@ -9,7 +9,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		// Arrange.
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-typography', true );
 
-		const input = page.locator( '.elementor-repeater-fields' ).nth( 2 );
+		const input = page.locator( '.refraction-repeater-fields' ).nth( 2 );
 
 		// Act - Click on font in preview.
 		await input.click();
@@ -24,7 +24,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		// Arrange.
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-colors', true );
 
-		const input = page.locator( '.elementor-repeater-fields' ).nth( 1 );
+		const input = page.locator( '.refraction-repeater-fields' ).nth( 1 );
 
 		// Act - Change title.
 		await input.click();
@@ -39,7 +39,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		// Arrange.
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-colors', true );
 
-		const picker = page.locator( '.elementor-repeater-fields' ).nth( 4 ).locator( '.pcr-button' );
+		const picker = page.locator( '.refraction-repeater-fields' ).nth( 4 ).locator( '.pcr-button' );
 		const addButton = page.getByRole( 'button', { name: 'Add Color' } );
 
 		// Act.
@@ -53,7 +53,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		expect( number1 ).toEqual( 1 );
 
 		// Arrange 2.
-		const listItem = page.locator( '.elementor-repeater-fields' ).nth( 4 ).locator( '.elementor-control-input-wrapper' ).nth( 1 );
+		const listItem = page.locator( '.refraction-repeater-fields' ).nth( 4 ).locator( '.refraction-control-input-wrapper' ).nth( 1 );
 		const remove = listItem.locator( '.eicon-trash-o' );
 
 		// Act 2 - Click on remove.
@@ -75,11 +75,11 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		await addButton.click();
 
 		// Assert
-		const customFontsCount = await page.locator( '.elementor-control-custom_typography .elementor-repeater-fields' ).count();
+		const customFontsCount = await page.locator( '.refraction-control-custom_typography .refraction-repeater-fields' ).count();
 		expect( await editor.getPreviewFrame().getByText( 'New Item #' + customFontsCount + fontsContentText ).count() ).toEqual( 1 );
 
 		// Arrange 2.
-		const listItem = page.locator( '.elementor-control-custom_typography .elementor-repeater-fields' ).last().locator( '.elementor-control-input-wrapper' ).nth( 1 );
+		const listItem = page.locator( '.refraction-control-custom_typography .refraction-repeater-fields' ).last().locator( '.refraction-control-input-wrapper' ).nth( 1 );
 		const remove = listItem.locator( '.eicon-trash-o' );
 
 		// Act 2 - Click on remove.
@@ -97,7 +97,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-colors', true );
 		const secondaryColor = editor.getPreviewFrame().getByText( /Secondary#[A-Fa-f0-9]{6}/i );
 
-		const picker = page.locator( '.elementor-repeater-fields' ).nth( 1 ).locator( '.pcr-button' );
+		const picker = page.locator( '.refraction-repeater-fields' ).nth( 1 ).locator( '.pcr-button' );
 		// Act.
 		await picker.click();
 		await page.locator( '.pcr-result' ).nth( 1 ).fill( '#594833' );
@@ -111,13 +111,13 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-typography', true );
 
 		const textFont = editor.getPreviewFrame().getByText( 'Text' + fontsContentText );
-		const picker = page.locator( '.elementor-repeater-fields' ).nth( 2 ).locator( '.eicon-edit' ).first();
+		const picker = page.locator( '.refraction-repeater-fields' ).nth( 2 ).locator( '.eicon-edit' ).first();
 
 		// Act.
 		await picker.click();
-		const select = page.locator( '.elementor-repeater-fields' ).nth( 2 ).getByRole( 'combobox', { name: 'Style' } );
+		const select = page.locator( '.refraction-repeater-fields' ).nth( 2 ).getByRole( 'combobox', { name: 'Style' } );
 		await select.selectOption( { label: 'Italic' } );
-		const select2 = page.locator( '.elementor-repeater-fields' ).nth( 2 ).getByRole( 'combobox', { name: 'Decoration' } );
+		const select2 = page.locator( '.refraction-repeater-fields' ).nth( 2 ).getByRole( 'combobox', { name: 'Decoration' } );
 		await select2.selectOption( { label: 'Underline' } );
 
 		// Assert
@@ -151,7 +151,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-typography', true );
 
 		const secondaryFont = editor.getPreviewFrame().getByText( 'Secondary' + fontsContentText );
-		const picker = page.locator( '.elementor-control-popover-toggle-toggle-label' ).nth( 1 );
+		const picker = page.locator( '.refraction-control-popover-toggle-toggle-label' ).nth( 1 );
 
 		// Act 1. Click on font in preview.
 		await secondaryFont.click();

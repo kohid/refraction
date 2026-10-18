@@ -7,7 +7,7 @@ describe( 'Column', () => {
 	beforeEach( async () => {
 		childModel = await setupMock();
 
-		column = new ( await import( 'elementor-elements/models/column' ) ).default;
+		column = new ( await import( 'refraction-elements/models/column' ) ).default;
 	} );
 
 	afterEach( freeMock );

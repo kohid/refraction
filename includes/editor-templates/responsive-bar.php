@@ -1,7 +1,7 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Breakpoints\Breakpoint;
+use Refraction\Core\Breakpoints\Breakpoint;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,22 +14,22 @@ $active_devices = Plugin::$instance->breakpoints->get_active_devices_list( [ 're
 $breakpoint_classes_map = array_intersect_key( Plugin::$instance->breakpoints->get_responsive_icons_classes_map(), array_flip( $active_devices ) );
 ?>
 
-<script type="text/template" id="tmpl-elementor-templates-responsive-bar">
+<script type="text/template" id="tmpl-refraction-templates-responsive-bar">
 	<div id="e-responsive-bar__center">
 		<div id="e-responsive-bar-switcher" class="e-responsive-bar--pipe">
 			<?php foreach ( $active_devices as $device_key ) {
 				if ( 'desktop' === $device_key ) {
-					$tooltip_label = esc_html__( 'Desktop <br> Settings added for the base device will apply to all breakpoints unless edited', 'elementor' );
+					$tooltip_label = esc_html__( 'Desktop <br> Settings added for the base device will apply to all breakpoints unless edited', 'refraction' );
 				} elseif ( 'widescreen' === $device_key ) {
 					$tooltip_label = sprintf(
 						/* translators: %d: Breakpoint screen size. */
-						esc_html__( 'Widescreen <br> Settings added for the Widescreen device will apply to screen sizes %dpx and up', 'elementor' ),
+						esc_html__( 'Widescreen <br> Settings added for the Widescreen device will apply to screen sizes %dpx and up', 'refraction' ),
 						$active_breakpoints[ $device_key ]->get_value()
 					);
 				} else {
 					$tooltip_label = sprintf(
 						/* translators: %1$s: Device name, %2$s: Breakpoint screen size. */
-						esc_html__( '%1$s <br> Settings added for the %1$s device will apply to %2$spx screens and down', 'elementor' ),
+						esc_html__( '%1$s <br> Settings added for the %1$s device will apply to %2$spx screens and down', 'refraction' ),
 						$active_breakpoints[ $device_key ]->get_label(), $active_breakpoints[ $device_key ]->get_value()
 					);
 				}
@@ -59,10 +59,10 @@ $breakpoint_classes_map = array_intersect_key( Plugin::$instance->breakpoints->g
 				<label for="e-responsive-bar__input-height">H</label>
 				<input type="number" id="e-responsive-bar__input-height" class="e-responsive-bar__input-size" autocomplete="off">
 			</div>
-			<button id="e-responsive-bar__settings-button" class="e-responsive-bar__button e-responsive-bar--pipe" data-tooltip="<?php echo esc_attr__( 'Manage Breakpoints', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Manage Breakpoints', 'elementor' ); ?>">
+			<button id="e-responsive-bar__settings-button" class="e-responsive-bar__button e-responsive-bar--pipe" data-tooltip="<?php echo esc_attr__( 'Manage Breakpoints', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Manage Breakpoints', 'refraction' ); ?>">
 				<i class="eicon-cog" aria-hidden="true"></i>
 			</button>
-			<button id="e-responsive-bar__close-button" class="e-responsive-bar__button" data-tooltip="<?php echo esc_attr__( 'Close', 'elementor' ); ?>" aria-label="<?php echo esc_attr__( 'Close', 'elementor' ); ?>">
+			<button id="e-responsive-bar__close-button" class="e-responsive-bar__button" data-tooltip="<?php echo esc_attr__( 'Close', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Close', 'refraction' ); ?>">
 				<i class="eicon-close" aria-hidden="true"></i>
 			</button>
 		</div>

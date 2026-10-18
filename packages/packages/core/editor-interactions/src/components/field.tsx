@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type PropsWithChildren } from 'react';
-import { ControlFormLabel, PopoverGridContainer } from '@elementor/editor-controls';
+import { ControlFormLabel, PopoverGridContainer } from '@refraction/editor-controls';
 import { Grid } from '@elementor/ui';
 
 export const Field = ( { label, children }: { label: string } & PropsWithChildren ) => {

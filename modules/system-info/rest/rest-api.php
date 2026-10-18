@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\System_Info\Rest;
+namespace Refraction\Modules\System_Info\Rest;
 
-use Elementor\Core\Utils\Api\Response_Builder;
-use Elementor\Plugin;
+use Refraction\Core\Utils\Api\Response_Builder;
+use Refraction\Plugin;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Rest_Api {
-	const API_NAMESPACE = 'elementor/v1';
+	const API_NAMESPACE = 'refraction/v1';
 	const API_BASE = 'system-info';
 
 	public function register_routes(): void {

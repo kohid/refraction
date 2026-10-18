@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { getHostDocumentId } from '@elementor/editor-elements';
-import { __useDispatch as useDispatch, __useSelector as useSelector } from '@elementor/store';
+import { getHostDocumentId } from '@refraction/editor-elements';
+import { __useDispatch as useDispatch, __useSelector as useSelector } from '@refraction/store';
 
 import { runPageAudit } from '../runner';
 import { type GlobalState, selectError, selectIsStale, selectReport, selectStatus, slice } from '../store';

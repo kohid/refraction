@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor conditions.
+ * Refraction conditions.
  *
- * Elementor conditions handler class introduce the compare conditions and the
+ * Refraction conditions handler class introduce the compare conditions and the
  * check conditions methods.
  *
  * @since 1.0.0

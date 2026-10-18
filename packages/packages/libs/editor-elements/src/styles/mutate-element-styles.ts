@@ -1,6 +1,6 @@
-import { classesPropTypeUtil, type ClassesPropValue } from '@elementor/editor-props';
-import { type StyleDefinition, type StyleDefinitionsMap } from '@elementor/editor-styles';
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
+import { classesPropTypeUtil, type ClassesPropValue } from '@refraction/editor-props';
+import { type StyleDefinition, type StyleDefinitionsMap } from '@refraction/editor-styles';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
 
 import { ElementNotFoundError } from '../errors';
 import { getContainer } from '../sync/get-container';

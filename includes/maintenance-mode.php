@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor maintenance mode.
+ * Refraction maintenance mode.
  *
- * Elementor maintenance mode handler class is responsible for the Elementor
+ * Refraction maintenance mode handler class is responsible for the Refraction
  * "Maintenance Mode" and the "Coming Soon" features.
  *
  * @since 1.4.0
@@ -20,7 +20,7 @@ class Maintenance_Mode {
 	/**
 	 * The options prefix.
 	 */
-	const OPTION_PREFIX = 'elementor_maintenance_mode_';
+	const OPTION_PREFIX = 'refraction_maintenance_mode_';
 
 	/**
 	 * The maintenance mode.
@@ -33,9 +33,9 @@ class Maintenance_Mode {
 	const MODE_COMING_SOON = 'coming_soon';
 
 	/**
-	 * Get elementor option.
+	 * Get refraction option.
 	 *
-	 * Retrieve elementor option from the database.
+	 * Retrieve refraction option from the database.
 	 *
 	 * @since 1.4.0
 	 * @access public
@@ -52,9 +52,9 @@ class Maintenance_Mode {
 	}
 
 	/**
-	 * Set elementor option.
+	 * Set refraction option.
 	 *
-	 * Update elementor option in the database.
+	 * Update refraction option in the database.
 	 *
 	 * @since 1.4.0
 	 * @access public
@@ -85,7 +85,7 @@ class Maintenance_Mode {
 	 * @return array An array of body classes.
 	 */
 	public function body_class( $classes ) {
-		$classes[] = 'elementor-maintenance-mode';
+		$classes[] = 'refraction-maintenance-mode';
 
 		return $classes;
 	}
@@ -120,7 +120,7 @@ class Maintenance_Mode {
 		 *
 		 * @param bool $is_login_page Whether its a login page.
 		 */
-		$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', $is_login_page );
+		$is_login_page = apply_filters( 'refraction/maintenance_mode/is_login_page', $is_login_page );
 
 		if ( $is_login_page ) {
 			return;
@@ -154,7 +154,7 @@ class Maintenance_Mode {
 			header( 'Retry-After: 600' );
 		}
 
-		// Setup global post for Elementor\frontend so `_has_elementor_in_page = true`.
+		// Setup global post for Refraction\frontend so `_has_refraction_in_page = true`.
 		$GLOBALS['post'] = get_post( self::get( 'template_id' ) ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		// Set the template as `$wp_query->current_object` for `wp_title` and etc.
@@ -167,12 +167,12 @@ class Maintenance_Mode {
 	/**
 	 * Register settings fields.
 	 *
-	 * Adds new "Maintenance Mode" settings fields to Elementor admin page.
+	 * Adds new "Maintenance Mode" settings fields to Refraction admin page.
 	 *
 	 * The method need to receive the an instance of the Tools settings page
 	 * to add the new maintenance mode functionality.
 	 *
-	 * Fired by `elementor/admin/after_create_settings/{$page_id}` action.
+	 * Fired by `refraction/admin/after_create_settings/{$page_id}` action.
 	 *
 	 * @since 1.4.0
 	 * @access public
@@ -198,59 +198,59 @@ class Maintenance_Mode {
 
 		$tools->add_tab(
 			'maintenance_mode', [
-				'label' => esc_html__( 'Maintenance Mode', 'elementor' ),
+				'label' => esc_html__( 'Maintenance Mode', 'refraction' ),
 				'sections' => [
 					'maintenance_mode' => [
 						'callback' => function() {
-							echo '<h2>' . esc_html__( 'Maintenance Mode', 'elementor' ) . '</h2>';
-							echo '<p>' . esc_html__( 'Set your entire website as MAINTENANCE MODE, meaning the site is offline temporarily for maintenance, or set it as COMING SOON mode, meaning the site is offline until it is ready to be launched.', 'elementor' ) . '</p>';
+							echo '<h2>' . esc_html__( 'Maintenance Mode', 'refraction' ) . '</h2>';
+							echo '<p>' . esc_html__( 'Set your entire website as MAINTENANCE MODE, meaning the site is offline temporarily for maintenance, or set it as COMING SOON mode, meaning the site is offline until it is ready to be launched.', 'refraction' ) . '</p>';
 						},
 						'fields' => [
 							'maintenance_mode_mode' => [
-								'label' => esc_html__( 'Choose Mode', 'elementor' ),
+								'label' => esc_html__( 'Choose Mode', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
 									'std' => '',
 									'options' => [
-										'' => esc_html__( 'Disabled', 'elementor' ),
-										self::MODE_COMING_SOON => esc_html__( 'Coming Soon', 'elementor' ),
-										self::MODE_MAINTENANCE => esc_html__( 'Maintenance', 'elementor' ),
+										'' => esc_html__( 'Disabled', 'refraction' ),
+										self::MODE_COMING_SOON => esc_html__( 'Coming Soon', 'refraction' ),
+										self::MODE_MAINTENANCE => esc_html__( 'Maintenance', 'refraction' ),
 									],
-									'desc' => '<div class="elementor-maintenance-mode-description" data-value="" style="display: none">' .
-												esc_html__( 'Choose between Coming Soon mode (returning HTTP 200 code) or Maintenance Mode (returning HTTP 503 code).', 'elementor' ) .
+									'desc' => '<div class="refraction-maintenance-mode-description" data-value="" style="display: none">' .
+												esc_html__( 'Choose between Coming Soon mode (returning HTTP 200 code) or Maintenance Mode (returning HTTP 503 code).', 'refraction' ) .
 												'</div>' .
-												'<div class="elementor-maintenance-mode-description" data-value="maintenance" style="display: none">' .
-												esc_html__( 'Maintenance Mode returns HTTP 503 code, so search engines know to come back a short time later. It is not recommended to use this mode for more than a couple of days.', 'elementor' ) .
+												'<div class="refraction-maintenance-mode-description" data-value="maintenance" style="display: none">' .
+												esc_html__( 'Maintenance Mode returns HTTP 503 code, so search engines know to come back a short time later. It is not recommended to use this mode for more than a couple of days.', 'refraction' ) .
 												'</div>' .
-												'<div class="elementor-maintenance-mode-description" data-value="coming_soon" style="display: none">' .
-												esc_html__( 'Coming Soon returns HTTP 200 code, meaning the site is ready to be indexed.', 'elementor' ) .
+												'<div class="refraction-maintenance-mode-description" data-value="coming_soon" style="display: none">' .
+												esc_html__( 'Coming Soon returns HTTP 200 code, meaning the site is ready to be indexed.', 'refraction' ) .
 												'</div>',
 								],
 							],
 							'maintenance_mode_exclude_mode' => [
-								'label' => esc_html__( 'Who Can Access', 'elementor' ),
+								'label' => esc_html__( 'Who Can Access', 'refraction' ),
 								'field_args' => [
-									'class' => 'elementor-default-hide',
+									'class' => 'refraction-default-hide',
 									'type' => 'select',
 									'std' => 'logged_in',
 									'options' => [
-										'logged_in' => esc_html__( 'Logged In', 'elementor' ),
-										'custom' => esc_html__( 'Custom', 'elementor' ),
+										'logged_in' => esc_html__( 'Logged In', 'refraction' ),
+										'custom' => esc_html__( 'Custom', 'refraction' ),
 									],
 								],
 							],
 							'maintenance_mode_exclude_roles' => [
-								'label' => esc_html__( 'Roles', 'elementor' ),
+								'label' => esc_html__( 'Roles', 'refraction' ),
 								'field_args' => [
-									'class' => 'elementor-default-hide',
+									'class' => 'refraction-default-hide',
 									'type' => 'checkbox_list_roles',
 								],
 								'setting_args' => [ __NAMESPACE__ . '\Settings_Validations', 'checkbox_list' ],
 							],
 							'maintenance_mode_template_id' => [
-								'label' => esc_html__( 'Choose Template', 'elementor' ),
+								'label' => esc_html__( 'Choose Template', 'refraction' ),
 								'field_args' => [
-									'class' => 'elementor-default-hide',
+									'class' => 'refraction-default-hide',
 									'type' => 'select',
 									'std' => '',
 									'show_select' => true,
@@ -279,17 +279,17 @@ class Maintenance_Mode {
 	 */
 	public function add_menu_in_admin_bar( \WP_Admin_Bar $wp_admin_bar ) {
 		$wp_admin_bar->add_node( [
-			'id' => 'elementor-maintenance-on',
-			'title' => esc_html__( 'Maintenance Mode ON', 'elementor' ),
+			'id' => 'refraction-maintenance-on',
+			'title' => esc_html__( 'Maintenance Mode ON', 'refraction' ),
 			'href' => Tools::get_url() . '#tab-maintenance_mode',
 		] );
 
 		$document = Plugin::$instance->documents->get( self::get( 'template_id' ) );
 
 		$wp_admin_bar->add_node( [
-			'id' => 'elementor-maintenance-edit',
-			'parent' => 'elementor-maintenance-on',
-			'title' => esc_html__( 'Edit Template', 'elementor' ),
+			'id' => 'refraction-maintenance-edit',
+			'parent' => 'refraction-maintenance-on',
+			'title' => esc_html__( 'Edit Template', 'refraction' ),
 			'href' => $document ? $document->get_edit_url() : '',
 		] );
 	}
@@ -307,33 +307,33 @@ class Maintenance_Mode {
 	 */
 	public function print_style() {
 		?>
-		<style>#wp-admin-bar-elementor-maintenance-on > a { background-color: #dc3232; }
-			#wp-admin-bar-elementor-maintenance-on > .ab-item:before { content: "\f160"; top: 2px; }</style>
+		<style>#wp-admin-bar-refraction-maintenance-on > a { background-color: #dc3232; }
+			#wp-admin-bar-refraction-maintenance-on > .ab-item:before { content: "\f160"; top: 2px; }</style>
 		<?php
 	}
 
 	public function on_update_mode( $old_value, $value ) {
 		if ( $old_value !== $value ) {
-			do_action( 'elementor/maintenance_mode/mode_changed', $old_value, $value );
+			do_action( 'refraction/maintenance_mode/mode_changed', $old_value, $value );
 		}
 	}
 
 	/**
 	 * Maintenance mode constructor.
 	 *
-	 * Initializing Elementor maintenance mode.
+	 * Initializing Refraction maintenance mode.
 	 *
 	 * @since 1.4.0
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'update_option_elementor_maintenance_mode_mode', [ $this, 'on_update_mode' ], 10, 2 );
+		add_action( 'update_option_refraction_maintenance_mode_mode', [ $this, 'on_update_mode' ], 10, 2 );
 
 		$is_enabled = (bool) self::get( 'mode' ) && (bool) self::get( 'template_id' );
 
 		if ( is_admin() ) {
 			$page_id = Tools::PAGE_ID;
-			add_action( "elementor/admin/after_create_settings/{$page_id}", [ $this, 'register_settings_fields' ] );
+			add_action( "refraction/admin/after_create_settings/{$page_id}", [ $this, 'register_settings_fields' ] );
 		}
 
 		if ( ! $is_enabled ) {
@@ -366,13 +366,13 @@ class Maintenance_Mode {
 		}
 
 		?>
-		<a target="_blank" class="elementor-edit-template" style="display: none" href="<?php echo esc_url( $edit_url ); ?>"><?php echo esc_html__( 'Edit Template', 'elementor' ); ?></a>
-		<div class="elementor-maintenance-mode-error"><?php echo esc_html__( 'To enable maintenance mode you have to set a template for the maintenance mode page.', 'elementor' ); ?></div>
-		<div class="elementor-maintenance-mode-error">
+		<a target="_blank" class="refraction-edit-template" style="display: none" href="<?php echo esc_url( $edit_url ); ?>"><?php echo esc_html__( 'Edit Template', 'refraction' ); ?></a>
+		<div class="refraction-maintenance-mode-error"><?php echo esc_html__( 'To enable maintenance mode you have to set a template for the maintenance mode page.', 'refraction' ); ?></div>
+		<div class="refraction-maintenance-mode-error">
 			<?php
 				printf(
 					/* translators: %1$s Link open tag, %2$s: Link close tag. */
-					esc_html__( 'Select one or go ahead and %1$screate one%2$s now.', 'elementor' ),
+					esc_html__( 'Select one or go ahead and %1$screate one%2$s now.', 'refraction' ),
 					'<a target="_blank" href="' . esc_url( admin_url( 'post-new.php?post_type=' . Source_Local::CPT ) ) . '">',
 					'</a>'
 				);

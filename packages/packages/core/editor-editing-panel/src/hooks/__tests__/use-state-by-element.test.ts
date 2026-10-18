@@ -1,14 +1,14 @@
 import { act } from 'react';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
-import { getSessionStorageItem, setSessionStorageItem } from '@elementor/session';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
+import { getSessionStorageItem, setSessionStorageItem } from '@refraction/session';
 import { renderHook } from '@testing-library/react';
 
 import { useElement } from '../../contexts/element-context';
 import { useStateByElement } from '../use-state-by-element';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mock( '../../contexts/element-context' );
-jest.mock( '@elementor/session' );
+jest.mock( '@refraction/session' );
 
 describe( 'useStateByElement', () => {
 	let store: Record< string, unknown > = {};
@@ -47,7 +47,7 @@ describe( 'useStateByElement', () => {
 		const key = 'testKey';
 		const initialValue = 'initial';
 		const storedValue = 'storedValue';
-		store[ `elementor/editor-state/test-element-id/${ key }` ] = storedValue;
+		store[ `refraction/editor-state/test-element-id/${ key }` ] = storedValue;
 
 		// Act
 		const { result } = renderHook( () => useStateByElement( key, initialValue ) );

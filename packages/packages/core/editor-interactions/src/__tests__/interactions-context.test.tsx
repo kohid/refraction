@@ -6,7 +6,7 @@ import {
 	getElementLabel,
 	playElementInteractions,
 	updateElementInteractions,
-} from '@elementor/editor-elements';
+} from '@refraction/editor-elements';
 import { act, renderHook } from '@testing-library/react';
 
 import { InteractionsProvider, useInteractionsContext } from '../contexts/interactions-context';
@@ -14,7 +14,7 @@ import { useElementInteractions } from '../hooks/use-element-interactions';
 import type { ElementInteractions, InteractionItemPropValue } from '../types';
 import { createInteractionItemValue } from './utils';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 jest.mock( '../hooks/use-element-interactions' );
 
 function createMockInteractionItem( id: string ): InteractionItemPropValue {

@@ -27,7 +27,7 @@ export function InstanceEditingPanel() {
 	const { componentId, component, overrides, overridableProps, groups, isEmpty, componentInstanceId } = data;
 
 	/* translators: %s: component name. */
-	const panelTitle = __( 'Edit %s', 'elementor' ).replace( '%s', component.name );
+	const panelTitle = __( 'Edit %s', 'refraction' ).replace( '%s', component.name );
 
 	const actions = (
 		<Stack direction="row" gap={ 0.5 }>
@@ -54,16 +54,16 @@ export function InstanceEditingPanel() {
 			{ ! isProComponentsSupported() &&
 				( isProOutdatedForComponents() ? (
 					<ComponentsUpdateAlert
-						title={ __( 'Edit Component', 'elementor' ) }
+						title={ __( 'Edit Component', 'refraction' ) }
 						description={ __(
-							'To edit components, update Elementor Pro to the latest version.',
-							'elementor'
+							'To edit components, update Refraction Pro to the latest version.',
+							'refraction'
 						) }
 					/>
 				) : (
 					<ComponentsUpgradeAlert
-						title={ __( 'Edit components', 'elementor' ) }
-						description={ __( 'Editing components requires an active Pro subscription.', 'elementor' ) }
+						title={ __( 'Edit components', 'refraction' ) }
+						description={ __( 'Editing components requires an active Pro subscription.', 'refraction' ) }
 						upgradeUrl={ EDIT_UPGRADE_URL }
 					/>
 				) ) }

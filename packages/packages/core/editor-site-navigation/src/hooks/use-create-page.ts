@@ -6,7 +6,7 @@ interface NewPost {
 	edit_url: string;
 }
 
-export const endpointPath = '/elementor/v1/site-navigation/add-new-post';
+export const endpointPath = '/refraction/v1/site-navigation/add-new-post';
 
 export default function useCreatePage() {
 	const [ isLoading, setIsLoading ] = useState( false );

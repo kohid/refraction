@@ -1,6 +1,6 @@
 export class StateLoading extends $e.modules.CommandInternalBase {
 	apply() {
-		elementorCommon.elements.$body.addClass( 'elementor-panel-loading' );
+		refractionCommon.elements.$body.addClass( 'refraction-panel-loading' );
 	}
 }
 

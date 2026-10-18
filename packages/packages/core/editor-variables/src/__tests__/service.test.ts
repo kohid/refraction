@@ -71,10 +71,10 @@ describe( 'service', () => {
 
 			expect( apiClient.list ).toHaveBeenCalled();
 
-			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'elementor-global-variables-watermark', '10' );
+			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'refraction-global-variables-watermark', '10' );
 
 			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith(
-				'elementor-global-variables',
+				'refraction-global-variables',
 				JSON.stringify( expectedVariables )
 			);
 		} );
@@ -99,11 +99,11 @@ describe( 'service', () => {
 			);
 
 			mockLocalStorage.getItem.mockImplementation( ( key ) => {
-				if ( key === 'elementor-global-variables-watermark' ) {
+				if ( key === 'refraction-global-variables-watermark' ) {
 					return '10';
 				}
 
-				if ( key === 'elementor-global-variables' ) {
+				if ( key === 'refraction-global-variables' ) {
 					return null;
 				}
 
@@ -130,7 +130,7 @@ describe( 'service', () => {
 			expect( apiClient.create ).toHaveBeenCalledWith( 'global-font-variable', 'primary-font', 'Arial' );
 
 			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith(
-				'elementor-global-variables',
+				'refraction-global-variables',
 				JSON.stringify( {
 					'variable-3': {
 						label: 'primary-font',
@@ -140,7 +140,7 @@ describe( 'service', () => {
 				} )
 			);
 
-			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'elementor-global-variables-watermark', '11' );
+			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'refraction-global-variables-watermark', '11' );
 		} );
 	} );
 
@@ -163,11 +163,11 @@ describe( 'service', () => {
 			);
 
 			mockLocalStorage.getItem.mockImplementation( ( key ) => {
-				if ( key === 'elementor-global-variables-watermark' ) {
+				if ( key === 'refraction-global-variables-watermark' ) {
 					return '10';
 				}
 
-				if ( key === 'elementor-global-variables' ) {
+				if ( key === 'refraction-global-variables' ) {
 					return JSON.stringify( {
 						'variable-3': {
 							type: 'global-font-variable',
@@ -207,7 +207,7 @@ describe( 'service', () => {
 			);
 
 			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith(
-				'elementor-global-variables',
+				'refraction-global-variables',
 				JSON.stringify( {
 					'variable-3': {
 						label: 'updated-primary-font',
@@ -217,7 +217,7 @@ describe( 'service', () => {
 				} )
 			);
 
-			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'elementor-global-variables-watermark', '11' );
+			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'refraction-global-variables-watermark', '11' );
 		} );
 
 		it( 'should pass type in payload when type is changed', async () => {
@@ -267,11 +267,11 @@ describe( 'service', () => {
 			);
 
 			mockLocalStorage.getItem.mockImplementation( ( key ) => {
-				if ( key === 'elementor-global-variables-watermark' ) {
+				if ( key === 'refraction-global-variables-watermark' ) {
 					return '19';
 				}
 
-				if ( key === 'elementor-global-variables' ) {
+				if ( key === 'refraction-global-variables' ) {
 					return JSON.stringify( {
 						'variable-3': {
 							type: 'global-font-variable',
@@ -291,7 +291,7 @@ describe( 'service', () => {
 			expect( apiClient.delete ).toHaveBeenCalledWith( 'variable-3' );
 
 			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith(
-				'elementor-global-variables',
+				'refraction-global-variables',
 				JSON.stringify( {
 					'variable-3': {
 						label: 'primary-font',
@@ -303,7 +303,7 @@ describe( 'service', () => {
 				} )
 			);
 
-			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'elementor-global-variables-watermark', '20' );
+			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'refraction-global-variables-watermark', '20' );
 
 			expect( result ).toEqual( {
 				id: 'variable-3',
@@ -343,11 +343,11 @@ describe( 'service', () => {
 			);
 
 			mockLocalStorage.getItem.mockImplementation( ( key ) => {
-				if ( key === 'elementor-global-variables-watermark' ) {
+				if ( key === 'refraction-global-variables-watermark' ) {
 					return '11';
 				}
 
-				if ( key === 'elementor-global-variables' ) {
+				if ( key === 'refraction-global-variables' ) {
 					return JSON.stringify( {
 						'var-1': {
 							label: 'Primary',
@@ -373,7 +373,7 @@ describe( 'service', () => {
 
 			// Assert
 			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith(
-				'elementor-global-variables',
+				'refraction-global-variables',
 				JSON.stringify( {
 					'var-1': {
 						label: 'Primary',
@@ -418,11 +418,11 @@ describe( 'service', () => {
 			);
 
 			mockLocalStorage.getItem.mockImplementation( ( key ) => {
-				if ( key === 'elementor-global-variables-watermark' ) {
+				if ( key === 'refraction-global-variables-watermark' ) {
 					return '12';
 				}
 
-				if ( key === 'elementor-global-variables' ) {
+				if ( key === 'refraction-global-variables' ) {
 					return JSON.stringify( {
 						'var-1': { label: 'Primary', value: '#ff0000', type: 'global-color-variable' },
 						'var-2': { label: 'Secondary', value: '#0000ff', type: 'global-color-variable' },
@@ -450,7 +450,7 @@ describe( 'service', () => {
 
 			const storedVars = JSON.parse(
 				mockLocalStorage.setItem.mock.calls
-					.filter( ( [ key ]: string[] ) => key === 'elementor-global-variables' )
+					.filter( ( [ key ]: string[] ) => key === 'refraction-global-variables' )
 					.pop()?.[ 1 ] || '{}'
 			);
 
@@ -494,11 +494,11 @@ describe( 'service', () => {
 			);
 
 			mockLocalStorage.getItem.mockImplementation( ( key ) => {
-				if ( key === 'elementor-global-variables-watermark' ) {
+				if ( key === 'refraction-global-variables-watermark' ) {
 					return '29';
 				}
 
-				if ( key === 'elementor-global-variables' ) {
+				if ( key === 'refraction-global-variables' ) {
 					return JSON.stringify( {
 						'variable-3': {
 							type: 'global-font-variable',
@@ -520,7 +520,7 @@ describe( 'service', () => {
 			expect( apiClient.restore ).toHaveBeenCalledWith( 'variable-3', undefined, undefined, undefined );
 
 			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith(
-				'elementor-global-variables',
+				'refraction-global-variables',
 				JSON.stringify( {
 					'variable-3': {
 						label: 'primary-font',
@@ -530,7 +530,7 @@ describe( 'service', () => {
 				} )
 			);
 
-			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'elementor-global-variables-watermark', '30' );
+			expect( mockLocalStorage.setItem ).toHaveBeenCalledWith( 'refraction-global-variables-watermark', '30' );
 
 			expect( result ).toEqual( {
 				id: 'variable-3',

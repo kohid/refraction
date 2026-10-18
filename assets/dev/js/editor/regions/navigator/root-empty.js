@@ -1,9 +1,9 @@
 export default class extends Marionette.ItemView {
 	getTemplate() {
-		return '#tmpl-elementor-navigator__root--empty';
+		return '#tmpl-refraction-navigator__root--empty';
 	}
 
 	className() {
-		return 'elementor-nerd-box';
+		return 'refraction-nerd-box';
 	}
 }

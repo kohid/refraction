@@ -1,4 +1,4 @@
-import { undoable } from '@elementor/editor-v1-adapters';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { createElement, type CreateElementParams } from './create-element';
@@ -30,7 +30,7 @@ export type { CreateElementsParams, CreatedElement, CreatedElementsResult };
 export const createElements = ( {
 	elements,
 	title,
-	subtitle = __( 'Item added', 'elementor' ),
+	subtitle = __( 'Item added', 'refraction' ),
 }: CreateElementsParams ): CreatedElementsResult => {
 	const undoableCreate = undoable(
 		{

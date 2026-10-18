@@ -1,7 +1,7 @@
 import CommandContainerBase from './command-bases/command-container-base';
 import CommandContainerInternalBase from './command-bases/command-container-internal-base';
-import CommandHistoryBase from 'elementor-document/command-bases/command-history-base';
-import CommandHistoryDebounceBase from 'elementor-document/command-bases/command-history-debounce-base';
+import CommandHistoryBase from 'refraction-document/command-bases/command-history-base';
+import CommandHistoryDebounceBase from 'refraction-document/command-bases/command-history-debounce-base';
 
 $e.modules.editor = {
 	CommandContainerBase,
@@ -19,7 +19,7 @@ $e.modules.document = {
 	 * @deprecated since 3.7.0, use `$e.modules.editor.document.CommandHistoryBase` instead.
 	 */
 	get CommandHistory() {
-		elementorDevTools.deprecation.deprecated(
+		refractionDevTools.deprecation.deprecated(
 			'$e.modules.document.CommandHistory',
 			'3.7.0',
 			'$e.modules.editor.document.CommandHistoryBase',
@@ -32,7 +32,7 @@ $e.modules.document = {
 	 * @deprecated since 3.7.0, use `$e.modules.editor.document.CommandHistoryDebounceBase` instead.
 	 */
 	get CommandHistoryDebounce() {
-		elementorDevTools.deprecation.deprecated(
+		refractionDevTools.deprecation.deprecated(
 			'$e.modules.CommandHistoryDebounce',
 			'3.7.0',
 			'$e.modules.editor.document.CommandHistoryDebounceBase',

@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\ElementManager\AdminMenuItems;
+namespace Refraction\Modules\ElementManager\AdminMenuItems;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
-use Elementor\Modules\ElementManager\Module;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Modules\ElementManager\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +18,7 @@ class Editor_One_Elements_Manager_Menu implements Menu_Item_Interface, Admin_Men
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -26,7 +26,7 @@ class Editor_One_Elements_Manager_Menu implements Menu_Item_Interface, Admin_Men
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Element Manager', 'elementor' );
+		return esc_html__( 'Element Manager', 'refraction' );
 	}
 
 	public function get_position(): int {
@@ -47,8 +47,8 @@ class Editor_One_Elements_Manager_Menu implements Menu_Item_Interface, Admin_Men
 
 	public function render() {
 		echo '<div class="wrap">';
-		echo '<h1 class="wp-heading-inline">' . esc_html__( 'Element Manager', 'elementor' ) . '</h1>';
-		echo '<div id="elementor-element-manager-wrap"></div>';
+		echo '<h1 class="wp-heading-inline">' . esc_html__( 'Element Manager', 'refraction' ) . '</h1>';
+		echo '<div id="refraction-element-manager-wrap"></div>';
 		echo '</div>';
 	}
 }

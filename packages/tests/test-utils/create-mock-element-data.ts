@@ -1,8 +1,8 @@
 import {
 	V1ElementData,
 	type V1ElementSettingsProps,
-} from '@elementor/editor-elements';
-import { StyleDefinition, StyleDefinitionID } from '@elementor/editor-styles';
+} from '@refraction/editor-elements';
+import { StyleDefinition, StyleDefinitionID } from '@refraction/editor-styles';
 
 type MockElementDataProps = {
 	elType?: string;

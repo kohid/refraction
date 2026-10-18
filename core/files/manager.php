@@ -1,23 +1,23 @@
 <?php
-namespace Elementor\Core\Files;
+namespace Refraction\Core\Files;
 
-use Elementor\Core\Base\Document as Document_Base;
-use Elementor\Core\Base\Elements_Iteration_Actions\Assets;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Core\Files\CSS\Post as Post_CSS;
-use Elementor\Core\Page_Assets\Data_Managers\Base as Page_Assets_Data_Manager;
-use Elementor\Core\Responsive\Files\Frontend;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Document as Document_Base;
+use Refraction\Core\Base\Elements_Iteration_Actions\Assets;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Core\Files\CSS\Post as Post_CSS;
+use Refraction\Core\Page_Assets\Data_Managers\Base as Page_Assets_Data_Manager;
+use Refraction\Core\Responsive\Files\Frontend;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor files manager.
+ * Refraction files manager.
  *
- * Elementor files manager handler class is responsible for creating files.
+ * Refraction files manager handler class is responsible for creating files.
  *
  * @since 1.2.0
  */
@@ -30,7 +30,7 @@ class Manager {
 	 *
 	 * Only consulted when the `e_optimized_css_files` experiment is active, to
 	 * collapse the multiple purges a single genuine update can trigger (e.g.
-	 * Elementor's own DB upgrade purges at both upgrade-start and
+	 * Refraction's own DB upgrade purges at both upgrade-start and
 	 * upgrade-complete, on top of the `upgrader_process_complete` hook).
 	 *
 	 * @var bool
@@ -40,7 +40,7 @@ class Manager {
 	/**
 	 * Files manager constructor.
 	 *
-	 * Initializing the Elementor files manager.
+	 * Initializing the Refraction files manager.
 	 *
 	 * @since 1.2.0
 	 * @access public
@@ -88,7 +88,7 @@ class Manager {
 	 * On export post meta.
 	 *
 	 * When exporting data using WXR, skip post CSS file meta key. This way the
-	 * export won't contain the post CSS file data used by Elementor.
+	 * export won't contain the post CSS file data used by Refraction.
 	 *
 	 * Fired by `wxr_export_skip_postmeta` filter.
 	 *
@@ -154,13 +154,13 @@ class Manager {
 		$this->reset_assets_data();
 
 		/**
-		 * Elementor clear files.
+		 * Refraction clear files.
 		 *
-		 * Fires after Elementor clears files
+		 * Fires after Refraction clears files
 		 *
 		 * @since 2.1.0
 		 */
-		do_action( 'elementor/core/files/clear_cache' );
+		do_action( 'refraction/core/files/clear_cache' );
 	}
 
 	public function clear_custom_image_sizes() {
@@ -245,7 +245,7 @@ class Manager {
 	/**
 	 * Register site-changed hooks.
 	 *
-	 * Purge the files cache whenever the site's plugins, theme or Elementor's
+	 * Purge the files cache whenever the site's plugins, theme or Refraction's
 	 * own element-cache TTL setting change. Relocated here (from the
 	 * `element-cache` module) because the module's Performance-tab setting
 	 * does not actually govern this purge - it is a files/assets concern.
@@ -262,7 +262,7 @@ class Manager {
 		add_action( 'switch_theme', [ $this, 'clear_cache' ] );
 		add_action( 'upgrader_process_complete', [ $this, 'on_upgrader_process_complete' ], 10, 2 );
 
-		add_action( 'update_option_elementor_element_cache_ttl', [ $this, 'clear_cache' ] );
+		add_action( 'update_option_refraction_element_cache_ttl', [ $this, 'clear_cache' ] );
 	}
 
 	/**
@@ -270,7 +270,7 @@ class Manager {
 	 *
 	 * Fired by the `upgrader_process_complete` action, which WordPress also fires on
 	 * mere update checks, translation updates, and bulk-update submissions with an
-	 * empty item queue - none of which changed anything Elementor needs to purge for.
+	 * empty item queue - none of which changed anything Refraction needs to purge for.
 	 *
 	 * When the `e_optimized_css_files` experiment is active, those false alarms are
 	 * skipped. When inactive, behaviour is unchanged: always purge.
@@ -343,13 +343,13 @@ class Manager {
 	/**
 	 * Generate CSS.
 	 *
-	 * Generates CSS for all posts built with Elementor.
+	 * Generates CSS for all posts built with Refraction.
 	 *
 	 * @since 3.25.0
 	 * @access public
 	 */
 	public function generate_css() {
-		$batch_size = apply_filters( 'elementor/core/files/generate_css/batch_size', 100 );
+		$batch_size = apply_filters( 'refraction/core/files/generate_css/batch_size', 100 );
 		$processed_posts = 0;
 
 		while ( true ) {
@@ -358,7 +358,7 @@ class Manager {
 				'posts_per_page' => $batch_size,
 				'meta_query' => [
 					[
-						'key' => Document_Base::BUILT_WITH_ELEMENTOR_META_KEY,
+						'key' => Document_Base::BUILT_WITH_REFRACTION_META_KEY,
 						'compare' => 'EXISTS',
 					],
 				],
@@ -385,18 +385,18 @@ class Manager {
 		}
 
 		/**
-		 * Elementor Generate CSS files.
+		 * Refraction Generate CSS files.
 		 *
-		 * Fires after Elementor generates new CSS files
+		 * Fires after Refraction generates new CSS files
 		 *
 		 * @since 3.25.0
 		 */
-		do_action( 'elementor/core/files/after_generate_css' );
+		do_action( 'refraction/core/files/after_generate_css' );
 	}
 
 	public function register_endpoints() {
 		register_rest_route(
-			'elementor/v1',
+			'refraction/v1',
 			'/cache',
 			[
 				'methods' => \WP_REST_Server::DELETABLE,

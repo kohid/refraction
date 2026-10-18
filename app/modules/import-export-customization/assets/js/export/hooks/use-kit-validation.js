@@ -9,13 +9,13 @@ export function useKitValidation() {
 
 	const validateKitName = ( value ) => {
 		if ( ! value || 0 === value.trim().length ) {
-			return __( 'Must add a website template name', 'elementor' );
+			return __( 'Must add a website template name', 'refraction' );
 		}
 
 		const problematicCharsRegex = /[^\w\s\-_.()]/g;
 
 		if ( problematicCharsRegex.test( value ) ) {
-			return __( 'Use characters only', 'elementor' );
+			return __( 'Use characters only', 'refraction' );
 		}
 
 		return null;
@@ -23,7 +23,7 @@ export function useKitValidation() {
 
 	const validateDescription = ( value ) => {
 		if ( value.length > DESCRIPTION_MAX_LENGTH ) {
-			return __( 'Description exceeds 300 characters', 'elementor' );
+			return __( 'Description exceeds 300 characters', 'refraction' );
 		}
 
 		return null;

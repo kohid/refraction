@@ -6,23 +6,23 @@ $icon-size: var(--icon-size, 25px);
 $icon-padding: var(--icon-padding, 0.5em);
 $icon-total-size: calc(#{$icon-size} + (2 * #{$icon-padding}));
 
-.elementor-widget-social-icons {
+.refraction-widget-social-icons {
 /*TODO: This Grid-0 needs to be removed after PRO is Updated */
-	&.elementor-grid-0, &.elementor-grid-tablet-0, &.elementor-grid-mobile-0 {
-		.elementor-widget-container,
-		&:not(:has(.elementor-widget-container)) {
+	&.refraction-grid-0, &.refraction-grid-tablet-0, &.refraction-grid-mobile-0 {
+		.refraction-widget-container,
+		&:not(:has(.refraction-widget-container)) {
 			line-height: 1;
 			font-size: 0;
 		}
 	}
 
-	&:not(.elementor-grid-0):not(.elementor-grid-tablet-0):not(.elementor-grid-mobile-0) {
-		.elementor-grid {
+	&:not(.refraction-grid-0):not(.refraction-grid-tablet-0):not(.refraction-grid-mobile-0) {
+		.refraction-grid {
 			display: inline-grid;
 		}
 	}
 
-	.elementor-grid {
+	.refraction-grid {
 		grid-column-gap: var(--grid-column-gap, 5px);
 		grid-row-gap: var(--grid-row-gap, 5px);
 		grid-template-columns: var(--grid-template-columns);
@@ -32,14 +32,14 @@ $icon-total-size: calc(#{$icon-size} + (2 * #{$icon-padding}));
 }
 
 // This is for specificity, to avoid being overridden by Theme Style Link Typography.
-.elementor-icon.elementor-social-icon {
+.refraction-icon.refraction-social-icon {
 	font-size: $icon-size;
 	line-height: $icon-size;
 	width: $icon-total-size;
 	height: $icon-total-size;
 }
 
-.elementor-social-icon {
+.refraction-social-icon {
 	--e-social-icon-icon-color: #fff;
 
 	display: inline-flex;
@@ -63,7 +63,7 @@ $icon-total-size: calc(#{$icon-size} + (2 * #{$icon-padding}));
 
 	&:hover {
 		opacity: .9;
-		color: white; //for override .elementor-icon class
+		color: white; //for override .refraction-icon class
 	}
 
 	&- {
@@ -76,7 +76,7 @@ $icon-total-size: calc(#{$icon-size} + (2 * #{$icon-padding}));
 		&deviantart		{ background-color: $deviantart; }
 		&digg			{ background-color: $digg; }
 		&dribbble		{ background-color: $dribbble; }
-		&elementor		{ background-color: $elementor; }
+		&refraction		{ background-color: $refraction; }
 		&envelope		{ background-color: $envelope; }
 		&facebook,
 		&facebook-f		{ background-color: $facebook; }

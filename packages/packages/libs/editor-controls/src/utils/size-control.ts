@@ -1,4 +1,4 @@
-import type { SizePropValue } from '@elementor/editor-props';
+import type { SizePropValue } from '@refraction/editor-props';
 
 export type SizeUnit = SizePropValue[ 'value' ][ 'unit' ];
 

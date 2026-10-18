@@ -10,7 +10,7 @@
 	"categories": [
 		"basic"
 	],
-	"html_wrapper_class": "elementor-widget-button",
+	"html_wrapper_class": "refraction-widget-button",
 	"show_in_panel": true,
 	"controls": {
 		"section_button": {
@@ -32,7 +32,7 @@
 				"warning": "Warning",
 				"danger": "Danger"
 			},
-			"prefix_class": "elementor-button-",
+			"prefix_class": "refraction-button-",
 			"name": "button_type"
 		},
 		"text": {
@@ -86,7 +86,7 @@
 					"icon": "eicon-text-align-justify"
 				}
 			},
-			"prefix_class": "elementor-align-",
+			"prefix_class": "refraction-align-",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -116,7 +116,7 @@
 					"icon": "eicon-text-align-justify"
 				}
 			},
-			"prefix_class": "elementor-tablet-align-",
+			"prefix_class": "refraction-tablet-align-",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -146,7 +146,7 @@
 					"icon": "eicon-text-align-justify"
 				}
 			},
-			"prefix_class": "elementor-mobile-align-",
+			"prefix_class": "refraction-mobile-align-",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -203,7 +203,7 @@
 				"right": "row-reverse"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-button-content-wrapper": "flex-direction: {{VALUE}};"
+				"{{WRAPPER}} .refraction-button-content-wrapper": "flex-direction: {{VALUE}};"
 			},
 			"condition": {
 				"text!": "",
@@ -222,7 +222,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-button .elementor-button-content-wrapper": "gap: {{SIZE}}{{UNIT}};"
+				"{{WRAPPER}} .refraction-button .refraction-button-content-wrapper": "gap: {{SIZE}}{{UNIT}};"
 			},
 			"name": "icon_indent",
 			"default": {
@@ -283,12 +283,12 @@
 			"default": "",
 			"selector_value": "font-family: \"{{VALUE}}\", Sans-serif;",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "font-family: \"{{VALUE}}\", Sans-serif;"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "font-family: \"{{VALUE}}\", Sans-serif;"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_family",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_family",
 			"scheme": {
 				"type": "typography",
 				"value": "4",
@@ -323,12 +323,12 @@
 			},
 			"selector_value": "font-size: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "font-size: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "font-size: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -363,12 +363,12 @@
 			},
 			"selector_value": "font-size: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "font-size: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "font-size: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -403,12 +403,12 @@
 			},
 			"selector_value": "font-size: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "font-size: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "font-size: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_size",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_size",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -440,12 +440,12 @@
 				"bold": "Bold"
 			},
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "font-weight: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "font-weight: {{VALUE}};"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_weight",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_weight",
 			"scheme": {
 				"type": "typography",
 				"value": "4",
@@ -467,12 +467,12 @@
 				"none": "Normal"
 			},
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "text-transform: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "text-transform: {{VALUE}};"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-text_transform",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-text_transform",
 			"name": "typography_text_transform"
 		},
 		"typography_font_style": {
@@ -488,12 +488,12 @@
 				"oblique": "Oblique"
 			},
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "font-style: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "font-style: {{VALUE}};"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-font_style",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-font_style",
 			"name": "typography_font_style"
 		},
 		"typography_text_decoration": {
@@ -510,12 +510,12 @@
 				"none": "None"
 			},
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "text-decoration: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "text-decoration: {{VALUE}};"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-text_decoration",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-text_decoration",
 			"name": "typography_text_decoration"
 		},
 		"typography_line_height": {
@@ -534,12 +534,12 @@
 			],
 			"selector_value": "line-height: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "line-height: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "line-height: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -566,12 +566,12 @@
 			],
 			"selector_value": "line-height: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "line-height: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "line-height: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -598,12 +598,12 @@
 			],
 			"selector_value": "line-height: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "line-height: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "line-height: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-line_height",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-line_height",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -628,12 +628,12 @@
 			},
 			"selector_value": "letter-spacing: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "letter-spacing: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "letter-spacing: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -658,12 +658,12 @@
 			},
 			"selector_value": "letter-spacing: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "letter-spacing: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "letter-spacing: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -688,12 +688,12 @@
 			},
 			"selector_value": "letter-spacing: {{SIZE}}{{UNIT}}",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "letter-spacing: {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "letter-spacing: {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"typography_typography!": ""
 			},
-			"classes": "elementor-group-control-typography elementor-group-control elementor-group-control-letter_spacing",
+			"classes": "refraction-group-control-typography refraction-group-control refraction-group-control-letter_spacing",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -723,12 +723,12 @@
 			"section": "section_style",
 			"label": "Text Shadow",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};"
 			},
 			"condition": {
 				"text_shadow_text_shadow_type!": ""
 			},
-			"classes": "elementor-group-control-text-shadow elementor-group-control elementor-group-control-text_shadow",
+			"classes": "refraction-group-control-text-shadow refraction-group-control refraction-group-control-text_shadow",
 			"popover": {
 				"start": true,
 				"end": true
@@ -764,7 +764,7 @@
 			"label": "Text Color",
 			"default": "",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "fill: {{VALUE}}; color: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "fill: {{VALUE}}; color: {{VALUE}};"
 			},
 			"name": "button_text_color"
 		},
@@ -780,7 +780,7 @@
 				"value": "4"
 			},
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "background-color: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "background-color: {{VALUE}};"
 			},
 			"name": "background_color",
 			"default": ""
@@ -801,8 +801,8 @@
 			"section": "section_style",
 			"label": "Text Color",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button:hover, {{WRAPPER}} .elementor-button:hover, {{WRAPPER}} a.elementor-button:focus, {{WRAPPER}} .elementor-button:focus": "color: {{VALUE}};",
-				"{{WRAPPER}} a.elementor-button:hover svg, {{WRAPPER}} .elementor-button:hover svg, {{WRAPPER}} a.elementor-button:focus svg, {{WRAPPER}} .elementor-button:focus svg": "fill: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button:hover, {{WRAPPER}} .refraction-button:hover, {{WRAPPER}} a.refraction-button:focus, {{WRAPPER}} .refraction-button:focus": "color: {{VALUE}};",
+				"{{WRAPPER}} a.refraction-button:hover svg, {{WRAPPER}} .refraction-button:hover svg, {{WRAPPER}} a.refraction-button:focus svg, {{WRAPPER}} .refraction-button:focus svg": "fill: {{VALUE}};"
 			},
 			"name": "hover_color",
 			"default": ""
@@ -815,7 +815,7 @@
 			"section": "section_style",
 			"label": "Background Color",
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button:hover, {{WRAPPER}} .elementor-button:hover, {{WRAPPER}} a.elementor-button:focus, {{WRAPPER}} .elementor-button:focus": "background-color: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button:hover, {{WRAPPER}} .refraction-button:hover, {{WRAPPER}} a.refraction-button:focus, {{WRAPPER}} .refraction-button:focus": "background-color: {{VALUE}};"
 			},
 			"name": "button_background_hover_color",
 			"default": ""
@@ -831,7 +831,7 @@
 				"border_border!": ""
 			},
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button:hover, {{WRAPPER}} .elementor-button:hover, {{WRAPPER}} a.elementor-button:focus, {{WRAPPER}} .elementor-button:focus": "border-color: {{VALUE}};"
+				"{{WRAPPER}} a.refraction-button:hover, {{WRAPPER}} .refraction-button:hover, {{WRAPPER}} a.refraction-button:focus, {{WRAPPER}} .refraction-button:focus": "border-color: {{VALUE}};"
 			},
 			"name": "button_hover_border_color",
 			"default": ""
@@ -860,10 +860,10 @@
 				"groove": "Groove"
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-button": "border-style: {{VALUE}};"
+				"{{WRAPPER}} .refraction-button": "border-style: {{VALUE}};"
 			},
 			"separator": "before",
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-border",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-border",
 			"name": "border_border",
 			"default": ""
 		},
@@ -873,12 +873,12 @@
 			"section": "section_style",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}} .elementor-button": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} .refraction-button": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -898,12 +898,12 @@
 			"section": "section_style",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}} .elementor-button": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} .refraction-button": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -923,12 +923,12 @@
 			"section": "section_style",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}} .elementor-button": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} .refraction-button": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -949,12 +949,12 @@
 			"label": "Color",
 			"default": "",
 			"selectors": {
-				"{{WRAPPER}} .elementor-button": "border-color: {{VALUE}};"
+				"{{WRAPPER}} .refraction-button": "border-color: {{VALUE}};"
 			},
 			"condition": {
 				"border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-color",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-color",
 			"name": "border_color"
 		},
 		"border_radius": {
@@ -967,7 +967,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"name": "border_radius",
 			"default": {
@@ -995,12 +995,12 @@
 			"section": "section_style",
 			"label": "Box Shadow",
 			"selectors": {
-				"{{WRAPPER}} .elementor-button": "box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}} {{button_box_shadow_box_shadow_position.VALUE}};"
+				"{{WRAPPER}} .refraction-button": "box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}} {{button_box_shadow_box_shadow_position.VALUE}};"
 			},
 			"condition": {
 				"button_box_shadow_box_shadow_type!": ""
 			},
-			"classes": "elementor-group-control-box-shadow elementor-group-control elementor-group-control-box_shadow",
+			"classes": "refraction-group-control-box-shadow refraction-group-control refraction-group-control-box_shadow",
 			"popover": {
 				"start": true
 			},
@@ -1027,7 +1027,7 @@
 			"condition": {
 				"button_box_shadow_box_shadow_type!": ""
 			},
-			"classes": "elementor-group-control-box-shadow elementor-group-control elementor-group-control-box_shadow_position",
+			"classes": "refraction-group-control-box-shadow refraction-group-control refraction-group-control-box_shadow_position",
 			"name": "button_box_shadow_box_shadow_position",
 			"popover": {
 				"end": true
@@ -1044,7 +1044,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"separator": "before",
 			"responsive": {
@@ -1071,7 +1071,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"separator": "before",
 			"responsive": {
@@ -1098,7 +1098,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} a.elementor-button, {{WRAPPER}} .elementor-button": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} a.refraction-button, {{WRAPPER}} .refraction-button": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"separator": "before",
 			"responsive": {
@@ -1139,7 +1139,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "desktop"
@@ -1164,7 +1164,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "tablet"
@@ -1189,7 +1189,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "mobile"
@@ -1215,7 +1215,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "desktop"
@@ -1241,7 +1241,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "tablet"
@@ -1267,7 +1267,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "mobile"
@@ -1308,7 +1308,7 @@
 			"title": "Add your custom id WITHOUT the Pound key. e.g: my-id",
 			"label_block": false,
 			"style_transfer": false,
-			"classes": "elementor-control-direction-ltr",
+			"classes": "refraction-control-direction-ltr",
 			"name": "_element_id"
 		},
 		"_css_classes": {
@@ -1321,7 +1321,7 @@
 			},
 			"prefix_class": "",
 			"title": "Add your custom class WITHOUT the dot. e.g: my-class",
-			"classes": "elementor-control-direction-ltr",
+			"classes": "refraction-control-direction-ltr",
 			"name": "_css_classes",
 			"default": ""
 		},
@@ -1340,7 +1340,7 @@
 			"label_on": "On",
 			"render_type": "ui",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-motion_fx_scrolling",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-motion_fx_scrolling",
 			"name": "motion_fx_motion_fx_scrolling",
 			"default": ""
 		},
@@ -1354,7 +1354,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateY_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateY_effect",
 			"name": "motion_fx_translateY_effect",
 			"default": ""
 		},
@@ -1376,7 +1376,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateY_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateY_direction",
 			"name": "motion_fx_translateY_direction",
 			"default": ""
 		},
@@ -1402,7 +1402,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateY_speed",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateY_speed",
 			"name": "motion_fx_translateY_speed"
 		},
 		"motion_fx_translateY_affectedRange": {
@@ -1433,7 +1433,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateY_affectedRange",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateY_affectedRange",
 			"name": "motion_fx_translateY_affectedRange"
 		},
 		"motion_fx_translateX_effect": {
@@ -1446,7 +1446,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateX_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateX_effect",
 			"name": "motion_fx_translateX_effect",
 			"default": ""
 		},
@@ -1468,7 +1468,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateX_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateX_direction",
 			"name": "motion_fx_translateX_direction",
 			"default": ""
 		},
@@ -1494,7 +1494,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateX_speed",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateX_speed",
 			"name": "motion_fx_translateX_speed"
 		},
 		"motion_fx_translateX_affectedRange": {
@@ -1525,7 +1525,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-translateX_affectedRange",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-translateX_affectedRange",
 			"name": "motion_fx_translateX_affectedRange"
 		},
 		"motion_fx_opacity_effect": {
@@ -1538,7 +1538,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-opacity_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-opacity_effect",
 			"name": "motion_fx_opacity_effect",
 			"default": ""
 		},
@@ -1563,7 +1563,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-opacity_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-opacity_direction",
 			"name": "motion_fx_opacity_direction"
 		},
 		"motion_fx_opacity_level": {
@@ -1589,7 +1589,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-opacity_level",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-opacity_level",
 			"name": "motion_fx_opacity_level"
 		},
 		"motion_fx_opacity_range": {
@@ -1620,7 +1620,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-opacity_range",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-opacity_range",
 			"name": "motion_fx_opacity_range"
 		},
 		"motion_fx_blur_effect": {
@@ -1633,7 +1633,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-blur_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-blur_effect",
 			"name": "motion_fx_blur_effect",
 			"default": ""
 		},
@@ -1658,7 +1658,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-blur_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-blur_direction",
 			"name": "motion_fx_blur_direction"
 		},
 		"motion_fx_blur_level": {
@@ -1683,7 +1683,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-blur_level",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-blur_level",
 			"name": "motion_fx_blur_level"
 		},
 		"motion_fx_blur_range": {
@@ -1714,7 +1714,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-blur_range",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-blur_range",
 			"name": "motion_fx_blur_range"
 		},
 		"motion_fx_rotateZ_effect": {
@@ -1727,7 +1727,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-rotateZ_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-rotateZ_effect",
 			"name": "motion_fx_rotateZ_effect",
 			"default": ""
 		},
@@ -1749,7 +1749,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-rotateZ_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-rotateZ_direction",
 			"name": "motion_fx_rotateZ_direction",
 			"default": ""
 		},
@@ -1775,7 +1775,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-rotateZ_speed",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-rotateZ_speed",
 			"name": "motion_fx_rotateZ_speed"
 		},
 		"motion_fx_rotateZ_affectedRange": {
@@ -1806,7 +1806,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-rotateZ_affectedRange",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-rotateZ_affectedRange",
 			"name": "motion_fx_rotateZ_affectedRange"
 		},
 		"motion_fx_scale_effect": {
@@ -1819,7 +1819,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-scale_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-scale_effect",
 			"name": "motion_fx_scale_effect",
 			"default": ""
 		},
@@ -1844,7 +1844,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-scale_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-scale_direction",
 			"name": "motion_fx_scale_direction"
 		},
 		"motion_fx_scale_speed": {
@@ -1869,7 +1869,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-scale_speed",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-scale_speed",
 			"name": "motion_fx_scale_speed"
 		},
 		"motion_fx_scale_range": {
@@ -1900,7 +1900,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-scale_range",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-scale_range",
 			"name": "motion_fx_scale_range"
 		},
 		"motion_fx_transform_origin_x": {
@@ -1947,7 +1947,7 @@
 			"label_block": false,
 			"toggle": false,
 			"render_type": "ui",
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-transform_origin_x",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-transform_origin_x",
 			"name": "motion_fx_transform_origin_x"
 		},
 		"motion_fx_transform_origin_y": {
@@ -1992,11 +1992,11 @@
 				]
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "transform-origin: {{motion_fx_transform_origin_x.VALUE}} {{VALUE}}"
+				"{{WRAPPER}} > .refraction-widget-container": "transform-origin: {{motion_fx_transform_origin_x.VALUE}} {{VALUE}}"
 			},
 			"label_block": false,
 			"toggle": false,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-transform_origin_y",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-transform_origin_y",
 			"name": "motion_fx_transform_origin_y"
 		},
 		"motion_fx_devices": {
@@ -2021,7 +2021,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-devices",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-devices",
 			"name": "motion_fx_devices"
 		},
 		"motion_fx_range": {
@@ -2039,7 +2039,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-range",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-range",
 			"name": "motion_fx_range",
 			"default": ""
 		},
@@ -2053,7 +2053,7 @@
 			"separator": "before",
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-motion_fx_mouse",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-motion_fx_mouse",
 			"name": "motion_fx_motion_fx_mouse",
 			"default": ""
 		},
@@ -2067,7 +2067,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-mouseTrack_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-mouseTrack_effect",
 			"name": "motion_fx_mouseTrack_effect",
 			"default": ""
 		},
@@ -2090,7 +2090,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-mouseTrack_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-mouseTrack_direction",
 			"name": "motion_fx_mouseTrack_direction"
 		},
 		"motion_fx_mouseTrack_speed": {
@@ -2118,7 +2118,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-mouseTrack_speed",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-mouseTrack_speed",
 			"name": "motion_fx_mouseTrack_speed"
 		},
 		"motion_fx_tilt_effect": {
@@ -2131,7 +2131,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-tilt_effect",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-tilt_effect",
 			"name": "motion_fx_tilt_effect",
 			"default": ""
 		},
@@ -2154,7 +2154,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-tilt_direction",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-tilt_direction",
 			"name": "motion_fx_tilt_direction"
 		},
 		"motion_fx_tilt_speed": {
@@ -2182,7 +2182,7 @@
 			},
 			"render_type": "none",
 			"frontend_available": true,
-			"classes": "elementor-group-control-motion_fx elementor-group-control elementor-group-control-tilt_speed",
+			"classes": "refraction-group-control-motion_fx refraction-group-control refraction-group-control-tilt_speed",
 			"name": "motion_fx_tilt_speed"
 		},
 		"sticky": {
@@ -2383,7 +2383,7 @@
 					"icon": "eicon-barcode"
 				}
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-background",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-background",
 			"name": "_background_background",
 			"default": ""
 		},
@@ -2397,7 +2397,7 @@
 			"default": "",
 			"title": "Background Color",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-color: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-color: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -2405,7 +2405,7 @@
 					"gradient"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color",
 			"name": "_background_color"
 		},
 		"_background_color_stop": {
@@ -2430,7 +2430,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_stop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_stop",
 			"name": "_background_color_stop"
 		},
 		"_background_color_b": {
@@ -2448,7 +2448,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_b",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_b",
 			"name": "_background_color_b"
 		},
 		"_background_color_b_stop": {
@@ -2473,7 +2473,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_b_stop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_b_stop",
 			"name": "_background_color_b_stop"
 		},
 		"_background_gradient_type": {
@@ -2495,7 +2495,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_type",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_type",
 			"name": "_background_gradient_type"
 		},
 		"_background_gradient_angle": {
@@ -2519,7 +2519,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-color: transparent; background-image: linear-gradient({{SIZE}}{{UNIT}}, {{_background_color.VALUE}} {{_background_color_stop.SIZE}}{{_background_color_stop.UNIT}}, {{_background_color_b.VALUE}} {{_background_color_b_stop.SIZE}}{{_background_color_b_stop.UNIT}})"
+				"{{WRAPPER}} > .refraction-widget-container": "background-color: transparent; background-image: linear-gradient({{SIZE}}{{UNIT}}, {{_background_color.VALUE}} {{_background_color_stop.SIZE}}{{_background_color_stop.UNIT}}, {{_background_color_b.VALUE}} {{_background_color_b_stop.SIZE}}{{_background_color_b_stop.UNIT}})"
 			},
 			"condition": {
 				"_background_background": [
@@ -2528,7 +2528,7 @@
 				"_background_gradient_type": "linear"
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_angle",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_angle",
 			"name": "_background_gradient_angle"
 		},
 		"_background_gradient_position": {
@@ -2551,7 +2551,7 @@
 			},
 			"default": "center center",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-color: transparent; background-image: radial-gradient(at {{VALUE}}, {{_background_color.VALUE}} {{_background_color_stop.SIZE}}{{_background_color_stop.UNIT}}, {{_background_color_b.VALUE}} {{_background_color_b_stop.SIZE}}{{_background_color_b_stop.UNIT}})"
+				"{{WRAPPER}} > .refraction-widget-container": "background-color: transparent; background-image: radial-gradient(at {{VALUE}}, {{_background_color.VALUE}} {{_background_color_stop.SIZE}}{{_background_color_stop.UNIT}}, {{_background_color_b.VALUE}} {{_background_color_b_stop.SIZE}}{{_background_color_b_stop.UNIT}})"
 			},
 			"condition": {
 				"_background_background": [
@@ -2560,7 +2560,7 @@
 				"_background_gradient_type": "radial"
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_position",
 			"name": "_background_gradient_position"
 		},
 		"_background_image": {
@@ -2575,7 +2575,7 @@
 			},
 			"title": "Background Image",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-image: url(\"{{URL}}\");"
+				"{{WRAPPER}} > .refraction-widget-container": "background-image: url(\"{{URL}}\");"
 			},
 			"render_type": "template",
 			"condition": {
@@ -2583,7 +2583,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2605,7 +2605,7 @@
 			},
 			"title": "Background Image",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-image: url(\"{{URL}}\");"
+				"{{WRAPPER}} > .refraction-widget-container": "background-image: url(\"{{URL}}\");"
 			},
 			"render_type": "template",
 			"condition": {
@@ -2613,7 +2613,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2635,7 +2635,7 @@
 			},
 			"title": "Background Image",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-image: url(\"{{URL}}\");"
+				"{{WRAPPER}} > .refraction-widget-container": "background-image: url(\"{{URL}}\");"
 			},
 			"render_type": "template",
 			"condition": {
@@ -2643,7 +2643,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2674,7 +2674,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -2682,7 +2682,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2710,7 +2710,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -2718,7 +2718,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2746,7 +2746,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -2754,7 +2754,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2793,7 +2793,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_ypos.SIZE}}{{_background_ypos.UNIT}}"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_ypos.SIZE}}{{_background_ypos.UNIT}}"
 			},
 			"condition": {
 				"_background_background": [
@@ -2805,7 +2805,7 @@
 				"_background_image[url]!": ""
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -2848,7 +2848,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_ypos_tablet.SIZE}}{{_background_ypos_tablet.UNIT}}"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_ypos_tablet.SIZE}}{{_background_ypos_tablet.UNIT}}"
 			},
 			"condition": {
 				"_background_background": [
@@ -2859,7 +2859,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -2902,7 +2902,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_ypos_mobile.SIZE}}{{_background_ypos_mobile.UNIT}}"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_ypos_mobile.SIZE}}{{_background_ypos_mobile.UNIT}}"
 			},
 			"condition": {
 				"_background_background": [
@@ -2913,7 +2913,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -2956,7 +2956,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{_background_xpos.SIZE}}{{_background_xpos.UNIT}} {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{_background_xpos.SIZE}}{{_background_xpos.UNIT}} {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"_background_background": [
@@ -2968,7 +2968,7 @@
 				"_background_image[url]!": ""
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -3011,7 +3011,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{_background_xpos_tablet.SIZE}}{{_background_xpos_tablet.UNIT}} {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{_background_xpos_tablet.SIZE}}{{_background_xpos_tablet.UNIT}} {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"_background_background": [
@@ -3022,7 +3022,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -3065,7 +3065,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-position: {{_background_xpos_mobile.SIZE}}{{_background_xpos_mobile.UNIT}} {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}} > .refraction-widget-container": "background-position: {{_background_xpos_mobile.SIZE}}{{_background_xpos_mobile.UNIT}} {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"_background_background": [
@@ -3076,7 +3076,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -3101,7 +3101,7 @@
 				"fixed": "Fixed"
 			},
 			"selectors": {
-				"(desktop+){{WRAPPER}} > .elementor-widget-container": "background-attachment: {{VALUE}};"
+				"(desktop+){{WRAPPER}} > .refraction-widget-container": "background-attachment: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -3109,7 +3109,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-attachment",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-attachment",
 			"name": "_background_attachment"
 		},
 		"_background_attachment_alert": {
@@ -3118,7 +3118,7 @@
 			"tabs_wrapper": "_tabs_background",
 			"inner_tab": "_tab_background_normal",
 			"section": "_section_background",
-			"content_classes": "elementor-control-field-description",
+			"content_classes": "refraction-control-field-description",
 			"raw": "Note: Attachment Fixed works only on desktop.",
 			"separator": "none",
 			"condition": {
@@ -3128,7 +3128,7 @@
 				"_background_image[url]!": "",
 				"_background_attachment": "fixed"
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-attachment_alert",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-attachment_alert",
 			"name": "_background_attachment_alert"
 		},
 		"_background_repeat": {
@@ -3146,7 +3146,7 @@
 				"repeat-y": "Repeat-y"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-repeat: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-repeat: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -3154,7 +3154,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -3176,7 +3176,7 @@
 				"repeat-y": "Repeat-y"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-repeat: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-repeat: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -3184,7 +3184,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -3206,7 +3206,7 @@
 				"repeat-y": "Repeat-y"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-repeat: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-repeat: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -3214,7 +3214,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -3236,7 +3236,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-size: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -3244,7 +3244,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -3266,7 +3266,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-size: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -3274,7 +3274,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -3296,7 +3296,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-size: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"_background_background": [
@@ -3304,7 +3304,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -3340,7 +3340,7 @@
 			},
 			"required": true,
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
+				"{{WRAPPER}} > .refraction-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
 			},
 			"condition": {
 				"_background_background": [
@@ -3351,7 +3351,7 @@
 				],
 				"_background_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -3391,7 +3391,7 @@
 			},
 			"required": true,
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
+				"{{WRAPPER}} > .refraction-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
 			},
 			"condition": {
 				"_background_background": [
@@ -3401,7 +3401,7 @@
 					"initial"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -3441,7 +3441,7 @@
 			},
 			"required": true,
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
+				"{{WRAPPER}} > .refraction-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
 			},
 			"condition": {
 				"_background_background": [
@@ -3451,7 +3451,7 @@
 					"initial"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -3480,7 +3480,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_link",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_link",
 			"name": "_background_video_link"
 		},
 		"_background_video_start": {
@@ -3499,7 +3499,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_start",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_start",
 			"name": "_background_video_start",
 			"default": ""
 		},
@@ -3519,7 +3519,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_end",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_end",
 			"name": "_background_video_end",
 			"default": ""
 		},
@@ -3537,7 +3537,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-play_once",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-play_once",
 			"name": "_background_play_once",
 			"default": ""
 		},
@@ -3555,7 +3555,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-play_on_mobile",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-play_on_mobile",
 			"name": "_background_play_on_mobile",
 			"default": ""
 		},
@@ -3574,10 +3574,10 @@
 				]
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "background: url(\"{{URL}}\") 50% 50%; background-size: cover;"
+				"{{WRAPPER}} > .refraction-widget-container": "background: url(\"{{URL}}\") 50% 50%; background-size: cover;"
 			},
 			"of_type": "video",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_fallback",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_fallback",
 			"name": "_background_video_fallback",
 			"default": {
 				"url": "",
@@ -3599,7 +3599,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_gallery",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_gallery",
 			"name": "_background_slideshow_gallery",
 			"default": []
 		},
@@ -3625,7 +3625,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_content_animation",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_content_animation",
 			"name": "_background_slideshow_content_animation"
 		},
 		"_background_slideshow_ken_burns": {
@@ -3642,7 +3642,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_ken_burns",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_ken_burns",
 			"name": "_background_slideshow_ken_burns",
 			"default": ""
 		},
@@ -3666,7 +3666,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_ken_burns_zoom_direction",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_ken_burns_zoom_direction",
 			"name": "_background_slideshow_ken_burns_zoom_direction"
 		},
 		"_background_slideshow_loop": {
@@ -3684,7 +3684,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_loop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_loop",
 			"name": "_background_slideshow_loop"
 		},
 		"_background_slideshow_autoplay_speed": {
@@ -3701,7 +3701,7 @@
 				]
 			},
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_autoplay_speed",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_autoplay_speed",
 			"name": "_background_slideshow_autoplay_speed"
 		},
 		"_background_slideshow_animation_speed": {
@@ -3718,7 +3718,7 @@
 				]
 			},
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_animation_speed",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_animation_speed",
 			"name": "_background_slideshow_animation_speed"
 		},
 		"_tab_background_hover": {
@@ -3748,7 +3748,7 @@
 					"icon": "eicon-barcode"
 				}
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-background",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-background",
 			"name": "_background_hover_background",
 			"default": ""
 		},
@@ -3762,7 +3762,7 @@
 			"default": "",
 			"title": "Background Color",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-color: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-color: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -3770,7 +3770,7 @@
 					"gradient"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color",
 			"name": "_background_hover_color"
 		},
 		"_background_hover_color_stop": {
@@ -3795,7 +3795,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_stop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_stop",
 			"name": "_background_hover_color_stop"
 		},
 		"_background_hover_color_b": {
@@ -3813,7 +3813,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_b",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_b",
 			"name": "_background_hover_color_b"
 		},
 		"_background_hover_color_b_stop": {
@@ -3838,7 +3838,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-color_b_stop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-color_b_stop",
 			"name": "_background_hover_color_b_stop"
 		},
 		"_background_hover_gradient_type": {
@@ -3860,7 +3860,7 @@
 				]
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_type",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_type",
 			"name": "_background_hover_gradient_type"
 		},
 		"_background_hover_gradient_angle": {
@@ -3884,7 +3884,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-color: transparent; background-image: linear-gradient({{SIZE}}{{UNIT}}, {{_background_hover_color.VALUE}} {{_background_hover_color_stop.SIZE}}{{_background_hover_color_stop.UNIT}}, {{_background_hover_color_b.VALUE}} {{_background_hover_color_b_stop.SIZE}}{{_background_hover_color_b_stop.UNIT}})"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-color: transparent; background-image: linear-gradient({{SIZE}}{{UNIT}}, {{_background_hover_color.VALUE}} {{_background_hover_color_stop.SIZE}}{{_background_hover_color_stop.UNIT}}, {{_background_hover_color_b.VALUE}} {{_background_hover_color_b_stop.SIZE}}{{_background_hover_color_b_stop.UNIT}})"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -3893,7 +3893,7 @@
 				"_background_hover_gradient_type": "linear"
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_angle",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_angle",
 			"name": "_background_hover_gradient_angle"
 		},
 		"_background_hover_gradient_position": {
@@ -3916,7 +3916,7 @@
 			},
 			"default": "center center",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-color: transparent; background-image: radial-gradient(at {{VALUE}}, {{_background_hover_color.VALUE}} {{_background_hover_color_stop.SIZE}}{{_background_hover_color_stop.UNIT}}, {{_background_hover_color_b.VALUE}} {{_background_hover_color_b_stop.SIZE}}{{_background_hover_color_b_stop.UNIT}})"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-color: transparent; background-image: radial-gradient(at {{VALUE}}, {{_background_hover_color.VALUE}} {{_background_hover_color_stop.SIZE}}{{_background_hover_color_stop.UNIT}}, {{_background_hover_color_b.VALUE}} {{_background_hover_color_b_stop.SIZE}}{{_background_hover_color_b_stop.UNIT}})"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -3925,7 +3925,7 @@
 				"_background_hover_gradient_type": "radial"
 			},
 			"of_type": "gradient",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-gradient_position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-gradient_position",
 			"name": "_background_hover_gradient_position"
 		},
 		"_background_hover_image": {
@@ -3940,7 +3940,7 @@
 			},
 			"title": "Background Image",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-image: url(\"{{URL}}\");"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-image: url(\"{{URL}}\");"
 			},
 			"render_type": "template",
 			"condition": {
@@ -3948,7 +3948,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -3970,7 +3970,7 @@
 			},
 			"title": "Background Image",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-image: url(\"{{URL}}\");"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-image: url(\"{{URL}}\");"
 			},
 			"render_type": "template",
 			"condition": {
@@ -3978,7 +3978,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -4000,7 +4000,7 @@
 			},
 			"title": "Background Image",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-image: url(\"{{URL}}\");"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-image: url(\"{{URL}}\");"
 			},
 			"render_type": "template",
 			"condition": {
@@ -4008,7 +4008,7 @@
 					"classic"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-image",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-image",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -4039,7 +4039,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4047,7 +4047,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -4075,7 +4075,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4083,7 +4083,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -4111,7 +4111,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4119,7 +4119,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-position",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-position",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -4158,7 +4158,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_hover_ypos.SIZE}}{{_background_hover_ypos.UNIT}}"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_hover_ypos.SIZE}}{{_background_hover_ypos.UNIT}}"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4170,7 +4170,7 @@
 				"_background_hover_image[url]!": ""
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -4213,7 +4213,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_hover_ypos_tablet.SIZE}}{{_background_hover_ypos_tablet.UNIT}}"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_hover_ypos_tablet.SIZE}}{{_background_hover_ypos_tablet.UNIT}}"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4224,7 +4224,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -4267,7 +4267,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_hover_ypos_mobile.SIZE}}{{_background_hover_ypos_mobile.UNIT}}"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{SIZE}}{{UNIT}} {{_background_hover_ypos_mobile.SIZE}}{{_background_hover_ypos_mobile.UNIT}}"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4278,7 +4278,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-xpos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-xpos",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -4321,7 +4321,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{_background_hover_xpos.SIZE}}{{_background_hover_xpos.UNIT}} {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{_background_hover_xpos.SIZE}}{{_background_hover_xpos.UNIT}} {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4333,7 +4333,7 @@
 				"_background_hover_image[url]!": ""
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -4376,7 +4376,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{_background_hover_xpos_tablet.SIZE}}{{_background_hover_xpos_tablet.UNIT}} {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{_background_hover_xpos_tablet.SIZE}}{{_background_hover_xpos_tablet.UNIT}} {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4387,7 +4387,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -4430,7 +4430,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-position: {{_background_hover_xpos_mobile.SIZE}}{{_background_hover_xpos_mobile.UNIT}} {{SIZE}}{{UNIT}}"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-position: {{_background_hover_xpos_mobile.SIZE}}{{_background_hover_xpos_mobile.UNIT}} {{SIZE}}{{UNIT}}"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4441,7 +4441,7 @@
 				]
 			},
 			"required": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-ypos",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-ypos",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -4466,7 +4466,7 @@
 				"fixed": "Fixed"
 			},
 			"selectors": {
-				"(desktop+){{WRAPPER}}:hover .elementor-widget-container": "background-attachment: {{VALUE}};"
+				"(desktop+){{WRAPPER}}:hover .refraction-widget-container": "background-attachment: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4474,7 +4474,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-attachment",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-attachment",
 			"name": "_background_hover_attachment"
 		},
 		"_background_hover_attachment_alert": {
@@ -4483,7 +4483,7 @@
 			"tabs_wrapper": "_tabs_background",
 			"inner_tab": "_tab_background_hover",
 			"section": "_section_background",
-			"content_classes": "elementor-control-field-description",
+			"content_classes": "refraction-control-field-description",
 			"raw": "Note: Attachment Fixed works only on desktop.",
 			"separator": "none",
 			"condition": {
@@ -4493,7 +4493,7 @@
 				"_background_hover_image[url]!": "",
 				"_background_hover_attachment": "fixed"
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-attachment_alert",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-attachment_alert",
 			"name": "_background_hover_attachment_alert"
 		},
 		"_background_hover_repeat": {
@@ -4511,7 +4511,7 @@
 				"repeat-y": "Repeat-y"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-repeat: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-repeat: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4519,7 +4519,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -4541,7 +4541,7 @@
 				"repeat-y": "Repeat-y"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-repeat: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-repeat: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4549,7 +4549,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -4571,7 +4571,7 @@
 				"repeat-y": "Repeat-y"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-repeat: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-repeat: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4579,7 +4579,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-repeat",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-repeat",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -4601,7 +4601,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-size: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4609,7 +4609,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -4631,7 +4631,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-size: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4639,7 +4639,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -4661,7 +4661,7 @@
 				"initial": "Custom"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-size: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-size: {{VALUE}};"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4669,7 +4669,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-size",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-size",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -4705,7 +4705,7 @@
 			},
 			"required": true,
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4716,7 +4716,7 @@
 				],
 				"_background_hover_image[url]!": ""
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -4756,7 +4756,7 @@
 			},
 			"required": true,
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4766,7 +4766,7 @@
 					"initial"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -4806,7 +4806,7 @@
 			},
 			"required": true,
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background-size: {{SIZE}}{{UNIT}} auto"
 			},
 			"condition": {
 				"_background_hover_background": [
@@ -4816,7 +4816,7 @@
 					"initial"
 				]
 			},
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-bg_width",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-bg_width",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -4845,7 +4845,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_link",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_link",
 			"name": "_background_hover_video_link"
 		},
 		"_background_hover_video_start": {
@@ -4864,7 +4864,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_start",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_start",
 			"name": "_background_hover_video_start",
 			"default": ""
 		},
@@ -4884,7 +4884,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_end",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_end",
 			"name": "_background_hover_video_end",
 			"default": ""
 		},
@@ -4902,7 +4902,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-play_once",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-play_once",
 			"name": "_background_hover_play_once",
 			"default": ""
 		},
@@ -4920,7 +4920,7 @@
 			},
 			"of_type": "video",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-play_on_mobile",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-play_on_mobile",
 			"name": "_background_hover_play_on_mobile",
 			"default": ""
 		},
@@ -4939,10 +4939,10 @@
 				]
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "background: url(\"{{URL}}\") 50% 50%; background-size: cover;"
+				"{{WRAPPER}}:hover .refraction-widget-container": "background: url(\"{{URL}}\") 50% 50%; background-size: cover;"
 			},
 			"of_type": "video",
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-video_fallback",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-video_fallback",
 			"name": "_background_hover_video_fallback",
 			"default": {
 				"url": "",
@@ -4964,7 +4964,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_gallery",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_gallery",
 			"name": "_background_hover_slideshow_gallery",
 			"default": []
 		},
@@ -4990,7 +4990,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_content_animation",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_content_animation",
 			"name": "_background_hover_slideshow_content_animation"
 		},
 		"_background_hover_slideshow_ken_burns": {
@@ -5007,7 +5007,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_ken_burns",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_ken_burns",
 			"name": "_background_hover_slideshow_ken_burns",
 			"default": ""
 		},
@@ -5031,7 +5031,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_ken_burns_zoom_direction",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_ken_burns_zoom_direction",
 			"name": "_background_hover_slideshow_ken_burns_zoom_direction"
 		},
 		"_background_hover_slideshow_loop": {
@@ -5049,7 +5049,7 @@
 			},
 			"of_type": "slideshow",
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_loop",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_loop",
 			"name": "_background_hover_slideshow_loop"
 		},
 		"_background_hover_slideshow_autoplay_speed": {
@@ -5066,7 +5066,7 @@
 				]
 			},
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_autoplay_speed",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_autoplay_speed",
 			"name": "_background_hover_slideshow_autoplay_speed"
 		},
 		"_background_hover_slideshow_animation_speed": {
@@ -5083,7 +5083,7 @@
 				]
 			},
 			"frontend_available": true,
-			"classes": "elementor-group-control-background elementor-group-control elementor-group-control-slideshow_animation_speed",
+			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-slideshow_animation_speed",
 			"name": "_background_hover_slideshow_animation_speed"
 		},
 		"_background_hover_transition": {
@@ -5144,9 +5144,9 @@
 				"groove": "Groove"
 			},
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-style: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-style: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-border",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-border",
 			"name": "_border_border",
 			"default": ""
 		},
@@ -5158,12 +5158,12 @@
 			"section": "_section_border",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"_border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -5185,12 +5185,12 @@
 			"section": "_section_border",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"_border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -5212,12 +5212,12 @@
 			"section": "_section_border",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"_border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -5240,12 +5240,12 @@
 			"label": "Color",
 			"default": "",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-color: {{VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-color: {{VALUE}};"
 			},
 			"condition": {
 				"_border_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-color",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-color",
 			"name": "_border_color"
 		},
 		"_border_radius": {
@@ -5260,7 +5260,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "desktop"
@@ -5287,7 +5287,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "tablet"
@@ -5314,7 +5314,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}} > .refraction-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "mobile"
@@ -5349,12 +5349,12 @@
 			"section": "_section_border",
 			"label": "Box Shadow",
 			"selectors": {
-				"{{WRAPPER}} > .elementor-widget-container": "box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}} {{_box_shadow_box_shadow_position.VALUE}};"
+				"{{WRAPPER}} > .refraction-widget-container": "box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}} {{_box_shadow_box_shadow_position.VALUE}};"
 			},
 			"condition": {
 				"_box_shadow_box_shadow_type!": ""
 			},
-			"classes": "elementor-group-control-box-shadow elementor-group-control elementor-group-control-box_shadow",
+			"classes": "refraction-group-control-box-shadow refraction-group-control refraction-group-control-box_shadow",
 			"popover": {
 				"start": true
 			},
@@ -5383,7 +5383,7 @@
 			"condition": {
 				"_box_shadow_box_shadow_type!": ""
 			},
-			"classes": "elementor-group-control-box-shadow elementor-group-control elementor-group-control-box_shadow_position",
+			"classes": "refraction-group-control-box-shadow refraction-group-control refraction-group-control-box_shadow_position",
 			"name": "_box_shadow_box_shadow_position",
 			"popover": {
 				"end": true
@@ -5413,9 +5413,9 @@
 				"groove": "Groove"
 			},
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "border-style: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "border-style: {{VALUE}};"
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-border",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-border",
 			"name": "_border_hover_border",
 			"default": ""
 		},
@@ -5427,12 +5427,12 @@
 			"section": "_section_border",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"_border_hover_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "desktop"
 			},
@@ -5454,12 +5454,12 @@
 			"section": "_section_border",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"_border_hover_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "tablet"
 			},
@@ -5481,12 +5481,12 @@
 			"section": "_section_border",
 			"label": "Width",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"condition": {
 				"_border_hover_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-width",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-width",
 			"responsive": {
 				"max": "mobile"
 			},
@@ -5509,12 +5509,12 @@
 			"label": "Color",
 			"default": "",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "border-color: {{VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "border-color: {{VALUE}};"
 			},
 			"condition": {
 				"_border_hover_border!": ""
 			},
-			"classes": "elementor-group-control-border elementor-group-control elementor-group-control-color",
+			"classes": "refraction-group-control-border refraction-group-control refraction-group-control-color",
 			"name": "_border_hover_color"
 		},
 		"_border_radius_hover": {
@@ -5529,7 +5529,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}}:hover > .elementor-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}}:hover > .refraction-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "desktop"
@@ -5556,7 +5556,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}}:hover > .elementor-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}}:hover > .refraction-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "tablet"
@@ -5583,7 +5583,7 @@
 				"%"
 			],
 			"selectors": {
-				"{{WRAPPER}}:hover > .elementor-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+				"{{WRAPPER}}:hover > .refraction-widget-container": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
 			},
 			"responsive": {
 				"max": "mobile"
@@ -5618,12 +5618,12 @@
 			"section": "_section_border",
 			"label": "Box Shadow",
 			"selectors": {
-				"{{WRAPPER}}:hover .elementor-widget-container": "box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}} {{_box_shadow_hover_box_shadow_position.VALUE}};"
+				"{{WRAPPER}}:hover .refraction-widget-container": "box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}} {{_box_shadow_hover_box_shadow_position.VALUE}};"
 			},
 			"condition": {
 				"_box_shadow_hover_box_shadow_type!": ""
 			},
-			"classes": "elementor-group-control-box-shadow elementor-group-control elementor-group-control-box_shadow",
+			"classes": "refraction-group-control-box-shadow refraction-group-control refraction-group-control-box_shadow",
 			"popover": {
 				"start": true
 			},
@@ -5652,7 +5652,7 @@
 			"condition": {
 				"_box_shadow_hover_box_shadow_type!": ""
 			},
-			"classes": "elementor-group-control-box-shadow elementor-group-control elementor-group-control-box_shadow_position",
+			"classes": "refraction-group-control-box-shadow refraction-group-control refraction-group-control-box_shadow_position",
 			"name": "_box_shadow_hover_box_shadow_position",
 			"popover": {
 				"end": true
@@ -5673,7 +5673,7 @@
 				}
 			},
 			"selectors": {
-				"{{WRAPPER}} .elementor-widget-container": "transition: background {{_background_hover_transition.SIZE}}s, border {{SIZE}}s, border-radius {{SIZE}}s, box-shadow {{SIZE}}s"
+				"{{WRAPPER}} .refraction-widget-container": "transition: background {{_background_hover_transition.SIZE}}s, border {{SIZE}}s, border-radius {{SIZE}}s, box-shadow {{SIZE}}s"
 			},
 			"name": "_border_hover_transition",
 			"default": {
@@ -5702,7 +5702,7 @@
 			"selectors_dictionary": {
 				"inherit": "100%"
 			},
-			"prefix_class": "elementor-widget__width-",
+			"prefix_class": "refraction-widget__width-",
 			"selectors": {
 				"{{WRAPPER}}": "width: {{VALUE}}; max-width: {{VALUE}}"
 			},
@@ -5726,7 +5726,7 @@
 			"selectors_dictionary": {
 				"inherit": "100%"
 			},
-			"prefix_class": "elementor-widget-tablet__width-",
+			"prefix_class": "refraction-widget-tablet__width-",
 			"selectors": {
 				"{{WRAPPER}}": "width: {{VALUE}}; max-width: {{VALUE}}"
 			},
@@ -5750,7 +5750,7 @@
 			"selectors_dictionary": {
 				"inherit": "100%"
 			},
-			"prefix_class": "elementor-widget-mobile__width-",
+			"prefix_class": "refraction-widget-mobile__width-",
 			"selectors": {
 				"{{WRAPPER}}": "width: {{VALUE}}; max-width: {{VALUE}}"
 			},
@@ -5976,7 +5976,7 @@
 			"tab": "advanced",
 			"section": "_section_position",
 			"raw": "<strong>Please note!</strong> Custom positioning is not considered best practice for responsive web design and should not be used too frequently.",
-			"content_classes": "elementor-panel-alert elementor-panel-alert-warning",
+			"content_classes": "refraction-panel-alert refraction-panel-alert-warning",
 			"render_type": "ui",
 			"condition": {
 				"_position!": ""
@@ -5994,7 +5994,7 @@
 				"absolute": "Absolute",
 				"fixed": "Fixed"
 			},
-			"prefix_class": "elementor-",
+			"prefix_class": "refraction-",
 			"frontend_available": true,
 			"name": "_position"
 		},
@@ -6016,7 +6016,7 @@
 					"icon": "eicon-h-align-right"
 				}
 			},
-			"classes": "elementor-control-start-end",
+			"classes": "refraction-control-start-end",
 			"render_type": "ui",
 			"condition": {
 				"_position!": ""
@@ -6627,8 +6627,8 @@
 			"type": "raw_html",
 			"tab": "advanced",
 			"section": "_section_responsive",
-			"raw": "Responsive visibility will take effect only on preview or live page, and not while editing in Elementor.",
-			"content_classes": "elementor-descriptor",
+			"raw": "Responsive visibility will take effect only on preview or live page, and not while editing in Refraction.",
+			"content_classes": "refraction-descriptor",
 			"name": "responsive_description"
 		},
 		"hide_desktop": {
@@ -6637,7 +6637,7 @@
 			"section": "_section_responsive",
 			"label": "Hide On Desktop",
 			"default": "",
-			"prefix_class": "elementor-",
+			"prefix_class": "refraction-",
 			"label_on": "Hide",
 			"label_off": "Show",
 			"return_value": "hidden-desktop",
@@ -6649,7 +6649,7 @@
 			"section": "_section_responsive",
 			"label": "Hide On Tablet",
 			"default": "",
-			"prefix_class": "elementor-",
+			"prefix_class": "refraction-",
 			"label_on": "Hide",
 			"label_off": "Show",
 			"return_value": "hidden-tablet",
@@ -6661,7 +6661,7 @@
 			"section": "_section_responsive",
 			"label": "Hide On Mobile",
 			"default": "",
-			"prefix_class": "elementor-",
+			"prefix_class": "refraction-",
 			"label_on": "Hide",
 			"label_off": "Show",
 			"return_value": "hidden-mobile",
@@ -6683,7 +6683,7 @@
 			},
 			"placeholder": "key|value",
 			"description": "Set custom attributes for the wrapper element. Each attribute in a separate line. Separate attribute key from the value using <code>|</code> character.",
-			"classes": "elementor-control-direction-ltr",
+			"classes": "refraction-control-direction-ltr",
 			"name": "_attributes",
 			"default": ""
 		},

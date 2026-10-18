@@ -2,7 +2,7 @@ import {
 	__privateListenTo as listenTo,
 	__privateOpenRoute as openRoute,
 	routeOpenEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 export default function redirectOldMenus() {
 	// Currently, in V1, when you click `esc` it opens the hamburger menu in the panel.

@@ -1,10 +1,10 @@
-import { getElementorConfig } from '@elementor/editor-v1-adapters';
+import { getRefractionConfig } from '@refraction/editor-v1-adapters';
 
 import { getLicenseConfig } from '../../hooks/use-license-config';
 import { type DynamicTags } from '../types';
 
 export const getAtomicDynamicTags = ( shouldFilterByLicense: boolean = true ) => {
-	const { atomicDynamicTags } = getElementorConfig();
+	const { atomicDynamicTags } = getRefractionConfig();
 
 	if ( ! atomicDynamicTags ) {
 		return null;
@@ -22,7 +22,7 @@ const filterByLicense = ( tags: DynamicTags ) => {
 	if ( expired ) {
 		return Object.fromEntries(
 			Object.entries( tags ).filter(
-				( [ , tag ] ) => ! ( tag?.meta?.origin === 'elementor' && tag?.meta?.required_license )
+				( [ , tag ] ) => ! ( tag?.meta?.origin === 'refraction' && tag?.meta?.required_license )
 			)
 		);
 	}

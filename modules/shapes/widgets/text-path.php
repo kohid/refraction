@@ -1,23 +1,23 @@
 <?php
 
-namespace Elementor\Modules\Shapes\Widgets;
+namespace Refraction\Modules\Shapes\Widgets;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Group_Control_Typography;
-use Elementor\Modules\Shapes\Module as Shapes_Module;
-use Elementor\Group_Control_Text_Stroke;
-use Elementor\Plugin;
-use Elementor\Widget_Base;
+use Refraction\Controls_Manager;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Group_Control_Typography;
+use Refraction\Modules\Shapes\Module as Shapes_Module;
+use Refraction\Group_Control_Text_Stroke;
+use Refraction\Plugin;
+use Refraction\Widget_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor WordArt widget.
+ * Refraction WordArt widget.
  *
- * Elementor widget that displays text along SVG path.
+ * Refraction widget that displays text along SVG path.
  */
 class TextPath extends Widget_Base {
 
@@ -48,7 +48,7 @@ class TextPath extends Widget_Base {
 	 * @access public
 	 */
 	public function get_title() {
-		return esc_html__( 'Text Path', 'elementor' );
+		return esc_html__( 'Text Path', 'refraction' );
 	}
 
 	/**
@@ -100,7 +100,7 @@ class TextPath extends Widget_Base {
 		$this->start_controls_section(
 			'section_content_text_path',
 			[
-				'label' => esc_html__( 'Text Path', 'elementor' ),
+				'label' => esc_html__( 'Text Path', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -108,10 +108,10 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'text',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'label_block' => true,
-				'default' => esc_html__( 'Add Your Curvy Text Here', 'elementor' ),
+				'default' => esc_html__( 'Add Your Curvy Text Here', 'refraction' ),
 				'frontend_available' => true,
 				'render_type' => 'none',
 				'dynamic' => [
@@ -123,7 +123,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'path',
 			[
-				'label' => esc_html__( 'Path Type', 'elementor' ),
+				'label' => esc_html__( 'Path Type', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => Shapes_Module::get_paths(),
 				'default' => 'wave',
@@ -133,7 +133,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'custom_path',
 			[
-				'label' => esc_html__( 'SVG', 'elementor' ),
+				'label' => esc_html__( 'SVG', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'media_types' => [
 					'svg',
@@ -144,20 +144,20 @@ class TextPath extends Widget_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'description' => esc_html__( 'Want to create custom text paths with SVG?', 'elementor' ),
+				'description' => esc_html__( 'Want to create custom text paths with SVG?', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'label_block' => true,
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Paste URL or type', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste URL or type', 'refraction' ),
 				'frontend_available' => true,
 			]
 		);
@@ -165,20 +165,20 @@ class TextPath extends Widget_Base {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => '',
 				'options' => [
 					'left' => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => esc_html__( 'Left', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => esc_html__( 'Right', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -192,13 +192,13 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'text_path_direction',
 			[
-				'label' => esc_html__( 'Text Direction', 'elementor' ),
+				'label' => esc_html__( 'Text Direction', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'rtl' => esc_html__( 'RTL', 'elementor' ),
-					'ltr' => esc_html__( 'LTR', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'rtl' => esc_html__( 'RTL', 'refraction' ),
+					'ltr' => esc_html__( 'LTR', 'refraction' ),
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--direction: {{VALUE}}',
@@ -210,10 +210,10 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'show_path',
 			[
-				'label' => esc_html__( 'Show Path', 'elementor' ),
+				'label' => esc_html__( 'Show Path', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'On', 'elementor' ),
-				'label_off' => esc_html__( 'Off', 'elementor' ),
+				'label_on' => esc_html__( 'On', 'refraction' ),
+				'label_off' => esc_html__( 'Off', 'refraction' ),
 				'return_value' => self::DEFAULT_PATH_FILL,
 				'separator' => 'before',
 				'default' => '',
@@ -236,7 +236,7 @@ class TextPath extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_text_path',
 			[
-				'label' => esc_html__( 'Text Path', 'elementor' ),
+				'label' => esc_html__( 'Text Path', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -244,7 +244,7 @@ class TextPath extends Widget_Base {
 		$this->add_responsive_control(
 			'size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -276,7 +276,7 @@ class TextPath extends Widget_Base {
 		$this->add_responsive_control(
 			'rotation',
 			[
-				'label' => esc_html__( 'Rotate', 'elementor' ),
+				'label' => esc_html__( 'Rotate', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'deg', 'grad', 'rad', 'turn', 'custom' ],
 				'default' => [
@@ -297,7 +297,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'text_heading',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -340,7 +340,7 @@ class TextPath extends Widget_Base {
 		$this->add_responsive_control(
 			'word_spacing',
 			[
-				'label' => esc_html__( 'Word Spacing', 'elementor' ),
+				'label' => esc_html__( 'Word Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -375,7 +375,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'start_point',
 			[
-				'label' => esc_html__( 'Starting Point', 'elementor' ) . ' (%)',
+				'label' => esc_html__( 'Starting Point', 'refraction' ) . ' (%)',
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ '%' ],
 				'range' => [
@@ -402,14 +402,14 @@ class TextPath extends Widget_Base {
 		$this->start_controls_tab(
 			'text_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'text_color_normal',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -426,14 +426,14 @@ class TextPath extends Widget_Base {
 		$this->start_controls_tab(
 			'text_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'text_color_hover',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -445,7 +445,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'hover_animation',
 			[
-				'label' => esc_html__( 'Hover Animation', 'elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
 				'type' => Controls_Manager::HOVER_ANIMATION,
 			]
 		);
@@ -453,7 +453,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
@@ -478,7 +478,7 @@ class TextPath extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_path',
 			[
-				'label' => esc_html__( 'Path', 'elementor' ),
+				'label' => esc_html__( 'Path', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'show_path!' => '',
@@ -494,14 +494,14 @@ class TextPath extends Widget_Base {
 		$this->start_controls_tab(
 			'path_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'path_fill_normal',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -513,7 +513,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'stroke_heading_normal',
 			[
-				'label' => esc_html__( 'Stroke', 'elementor' ),
+				'label' => esc_html__( 'Stroke', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -521,7 +521,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'stroke_color_normal',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => self::DEFAULT_PATH_FILL,
 				'selectors' => [
@@ -533,7 +533,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'stroke_width_normal',
 			[
-				'label' => esc_html__( 'Width', 'elementor' ),
+				'label' => esc_html__( 'Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -565,14 +565,14 @@ class TextPath extends Widget_Base {
 		$this->start_controls_tab(
 			'path_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'path_fill_hover',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -584,7 +584,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'stroke_heading_hover',
 			[
-				'label' => esc_html__( 'Stroke', 'elementor' ),
+				'label' => esc_html__( 'Stroke', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -592,7 +592,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'stroke_color_hover',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -604,7 +604,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'stroke_width_hover',
 			[
-				'label' => esc_html__( 'Width', 'elementor' ),
+				'label' => esc_html__( 'Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -631,7 +631,7 @@ class TextPath extends Widget_Base {
 		$this->add_control(
 			'stroke_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
@@ -691,7 +691,7 @@ class TextPath extends Widget_Base {
 
 		// Add hover animation.
 		if ( ! empty( $settings['hover_animation'] ) ) {
-			$this->add_render_attribute( 'text_path', 'class', 'elementor-animation-' . $settings['hover_animation'] );
+			$this->add_render_attribute( 'text_path', 'class', 'refraction-animation-' . $settings['hover_animation'] );
 		}
 
 		// Render.

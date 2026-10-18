@@ -1,6 +1,6 @@
-import { getContainer, getSelectedElements, getWidgetsCache, type V1Element } from '@elementor/editor-elements';
-import { type PropsSchema, stringPropTypeUtil } from '@elementor/editor-props';
-import { __privateUseListenTo as useListenTo, commandEndEvent, v1ReadyEvent } from '@elementor/editor-v1-adapters';
+import { getContainer, getSelectedElements, getWidgetsCache, type V1Element } from '@refraction/editor-elements';
+import { type PropsSchema, stringPropTypeUtil } from '@refraction/editor-props';
+import { __privateUseListenTo as useListenTo, commandEndEvent, v1ReadyEvent } from '@refraction/editor-v1-adapters';
 
 export type Suggestion = {
 	label: string;

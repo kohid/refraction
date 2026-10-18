@@ -4,7 +4,7 @@ import { windowEvent } from './listeners';
 export type EditMode = 'edit' | 'preview' | 'picker' | ( string & {} );
 
 export type ExtendedWindow = Window & {
-	elementor: {
+	refraction: {
 		changeEditMode: ( newMode: EditMode ) => void;
 		channels: {
 			dataEditMode: {
@@ -15,17 +15,17 @@ export type ExtendedWindow = Window & {
 };
 
 export function useEditMode() {
-	return useListenTo( windowEvent( 'elementor/edit-mode/change' ), getCurrentEditMode );
+	return useListenTo( windowEvent( 'refraction/edit-mode/change' ), getCurrentEditMode );
 }
 
 export function getCurrentEditMode() {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
-	return extendedWindow.elementor.channels.dataEditMode.request( 'activeMode' );
+	return extendedWindow.refraction.channels.dataEditMode.request( 'activeMode' );
 }
 
 export function changeEditMode( newMode: EditMode ) {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
-	return extendedWindow.elementor.changeEditMode( newMode );
+	return extendedWindow.refraction.changeEditMode( newMode );
 }

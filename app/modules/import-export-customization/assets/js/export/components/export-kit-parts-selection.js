@@ -1,7 +1,7 @@
 import { useExportContext } from '../context/export-context';
 import { KitPartsSelection } from '../../shared/components';
 import kitContentData from '../../shared/kit-content-data';
-import useCloudKitsEligibility from 'elementor-app/hooks/use-cloud-kits-eligibility';
+import useCloudKitsEligibility from 'refraction-app/hooks/use-cloud-kits-eligibility';
 
 export default function ExportKitPartsSelection() {
 	const { data, dispatch } = useExportContext();

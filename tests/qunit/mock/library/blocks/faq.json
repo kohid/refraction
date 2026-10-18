@@ -5,7 +5,7 @@
 		"source": "remote",
 		"type": "block",
 		"subtype": "faq",
-		"author": "Elementor",
+		"author": "Refraction",
 		"thumbnail": "https://library.elementor.com/wp-content/uploads/2018/03/faq_white_2.png",
 		"url": "https://library.elementor.com/blocks/faq-13/?utm_source=library&utm_medium=wp-dash&utm_campaign=preview",
 		"export_link": "",
@@ -270,7 +270,7 @@
 							},
 							"elements": [],
 							"widgetType": "heading",
-							"htmlCache": "\t\t<div class=\"elementor-widget-container\">\n\t\t\t<h4 class=\"elementor-heading-title elementor-size-default elementor-inline-editing\" data-elementor-setting-key=\"title\">FAQ</h4>\t\t</div>\n\t\t"
+							"htmlCache": "\t\t<div class=\"refraction-widget-container\">\n\t\t\t<h4 class=\"refraction-heading-title refraction-size-default refraction-inline-editing\" data-refraction-setting-key=\"title\">FAQ</h4>\t\t</div>\n\t\t"
 						},
 						{
 							"id": "3c89abc0",
@@ -331,7 +331,7 @@
 							},
 							"elements": [],
 							"widgetType": "heading",
-							"htmlCache": "\t\t<div class=\"elementor-widget-container\">\n\t\t\t<h5 class=\"elementor-heading-title elementor-size-default elementor-inline-editing\" data-elementor-setting-key=\"title\">Most frequent questions and answers</h5>\t\t</div>\n\t\t"
+							"htmlCache": "\t\t<div class=\"refraction-widget-container\">\n\t\t\t<h5 class=\"refraction-heading-title refraction-size-default refraction-inline-editing\" data-refraction-setting-key=\"title\">Most frequent questions and answers</h5>\t\t</div>\n\t\t"
 						}
 					],
 					"isInner": false

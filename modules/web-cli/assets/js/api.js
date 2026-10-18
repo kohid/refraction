@@ -24,7 +24,7 @@ export default class API {
 	/**
 	 * Function constructor().
 	 *
-	 * Create's 'elementor' api.
+	 * Create's 'refraction' api.
 	 */
 	constructor() {
 		this.components = new Components();

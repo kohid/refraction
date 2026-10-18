@@ -1,5 +1,5 @@
-import { __privateListenTo as listenTo, commandEndEvent, type CommandEvent } from '@elementor/editor-v1-adapters';
-import { __dispatch as dispatch } from '@elementor/store';
+import { __privateListenTo as listenTo, commandEndEvent, type CommandEvent } from '@refraction/editor-v1-adapters';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { slice } from './store/slice';
 

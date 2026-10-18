@@ -15,7 +15,7 @@ module.exports = {
 		'\\.js$': [ 'babel-jest', { configFile: paths.babelConfig } ],
 	},
 	moduleNameMapper: {
-		'^elementor/tests/jest/(.*)$': `${ paths.currentDir }/$1`,
+		'^refraction/tests/jest/(.*)$': `${ paths.currentDir }/$1`,
 		...transformWebpackAliasIntoJestAlias( require( paths.webpackAlias ).resolve.alias ),
 	},
 	testEnvironment: 'jsdom',

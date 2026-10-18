@@ -1,9 +1,9 @@
-import { __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
+import { __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import useActionProps from '../use-action-props';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 describe( 'useFinderActionProps', () => {
 	it( 'should toggle the finder state on click', () => {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\EditorOne\Classes;
+namespace Refraction\Modules\EditorOne\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

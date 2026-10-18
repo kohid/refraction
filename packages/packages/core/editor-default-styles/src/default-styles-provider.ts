@@ -1,10 +1,10 @@
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
-import { createStylesProvider } from '@elementor/editor-styles-repository';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
+import { createStylesProvider } from '@refraction/editor-styles-repository';
 import {
 	__dispatch as dispatch,
 	__getState as getState,
 	__subscribeWithSelector as subscribeWithSelector,
-} from '@elementor/store';
+} from '@refraction/store';
 import { __ } from '@wordpress/i18n';
 
 import { getAllowedDefaultStyleTags } from './allowed-tags';
@@ -32,8 +32,8 @@ export const defaultStylesStylesProvider = createStylesProvider( {
 	key: DEFAULT_STYLES_PROVIDER_KEY,
 	priority: 15,
 	labels: {
-		singular: __( 'tag', 'elementor' ),
-		plural: __( 'tags', 'elementor' ),
+		singular: __( 'tag', 'refraction' ),
+		plural: __( 'tags', 'refraction' ),
 	},
 	subscribe: ( cb ) => subscribeWithStates( cb ),
 	capabilities: getCapabilities(),

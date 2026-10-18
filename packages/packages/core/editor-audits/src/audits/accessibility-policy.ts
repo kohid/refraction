@@ -4,12 +4,12 @@ import { type Audit } from '../types';
 
 export const audit: Audit = {
 	id: 'audits/accessibility-policy',
-	title: __( 'Accessibility policy', 'elementor' ),
+	title: __( 'Accessibility policy', 'refraction' ),
 	description: __(
 		'An accessibility policy demonstrates your commitment to digital inclusion and may be legally required in some regions.',
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Install the Ally plugin to add an accessibility policy to your website.', 'elementor' ),
+	fixHint: __( 'Install the Ally plugin to add an accessibility policy to your website.', 'refraction' ),
 	categories: [ 'compliance' ],
 	severity: 'info',
 	weight: 1,
@@ -23,7 +23,7 @@ export const audit: Audit = {
 			violations: [
 				{
 					auditId: audit.id,
-					label: __( 'Ally plugin is not installed or active.', 'elementor' ),
+					label: __( 'Ally plugin is not installed or active.', 'refraction' ),
 					externalUrl: ctx.pageContext.ally_plugin_url,
 				},
 			],

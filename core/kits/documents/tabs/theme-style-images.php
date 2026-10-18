@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Css_Filter;
+use Refraction\Controls_Manager;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Css_Filter;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -18,7 +18,7 @@ class Theme_Style_Images extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Images', 'elementor' );
+		return esc_html__( 'Images', 'refraction' );
 	}
 
 	public function get_group() {
@@ -48,7 +48,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->start_controls_section(
 			'section_images',
 			[
-				'label' => esc_html__( 'Images', 'elementor' ),
+				'label' => esc_html__( 'Images', 'refraction' ),
 				'tab' => $this->get_id(),
 			]
 		);
@@ -60,7 +60,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->start_controls_tab(
 			'tab_image_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -80,7 +80,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->add_responsive_control(
 			'image_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -92,7 +92,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->add_control(
 			'image_opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -131,7 +131,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->start_controls_tab(
 			'tab_image_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
@@ -151,7 +151,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->add_responsive_control(
 			'image_hover_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -163,7 +163,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->add_control(
 			'image_hover_opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -200,7 +200,7 @@ class Theme_Style_Images extends Tab_Base {
 		$this->add_control(
 			'image_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [

@@ -1,4 +1,4 @@
-import { __useSelector } from '@elementor/store';
+import { __useSelector } from '@refraction/store';
 
 import { selectEmptyCssClass, selectGlobalClasses } from '../store';
 

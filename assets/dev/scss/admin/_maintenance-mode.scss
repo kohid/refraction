@@ -1,12 +1,12 @@
 
-.form-table:not(.elementor-maintenance-mode-is-enabled) {
+.form-table:not(.refraction-maintenance-mode-is-enabled) {
 
-	.elementor-default-hide {
+	.refraction-default-hide {
 		display: none;
 	}
 }
 
-.elementor-maintenance-mode-error{
+.refraction-maintenance-mode-error{
 	color: red;
 	line-height: 1.6;
 	display: none;

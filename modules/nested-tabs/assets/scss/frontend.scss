@@ -33,7 +33,7 @@
 	}
 
 	// Remove the hover animation from the active tabs.
-	&[class*="elementor-animation-"] {
+	&[class*="refraction-animation-"] {
 		&:focus,
 		&:active,
 		&:hover {
@@ -43,7 +43,7 @@
 	}
 }
 
-.elementor-widget-n-tabs {
+.refraction-widget-n-tabs {
 	--n-tabs-color-accent-fallback: #61CE70;
 	--n-tabs-color-secondary-fallback: #54595F;
 	--n-tabs-default-padding-block: 15px;
@@ -321,21 +321,21 @@
 	}
 }
 
-.elementor .elementor-element.elementor-widget-n-tabs > .elementor-widget-container > .e-n-tabs[data-touch-mode="false"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover, .elementor .elementor-element.elementor-widget-n-tabs:not(:has(> .elementor-widget-container)) > .e-n-tabs[data-touch-mode="false"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover {
+.refraction .refraction-element.refraction-widget-n-tabs > .refraction-widget-container > .e-n-tabs[data-touch-mode="false"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover, .refraction .refraction-element.refraction-widget-n-tabs:not(:has(> .refraction-widget-container)) > .e-n-tabs[data-touch-mode="false"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover {
 	background-color: var(--n-tabs-title-background-color-hover);
 	background-image: initial;
 }
 
 // TODO: Fix `Group_Control_Background` control. Currently the global default colours aren't generated inside CSS.
-.elementor .elementor-element.elementor-widget-n-tabs > .elementor-widget-container > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"],
-.elementor .elementor-element.elementor-widget-n-tabs > .elementor-widget-container > .e-n-tabs[data-touch-mode="true"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover, .elementor .elementor-element.elementor-widget-n-tabs:not(:has(> .elementor-widget-container)) > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"], .elementor .elementor-element.elementor-widget-n-tabs:not(:has(> .elementor-widget-container)) > .e-n-tabs[data-touch-mode="true"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover {
+.refraction .refraction-element.refraction-widget-n-tabs > .refraction-widget-container > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"],
+.refraction .refraction-element.refraction-widget-n-tabs > .refraction-widget-container > .e-n-tabs[data-touch-mode="true"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover, .refraction .refraction-element.refraction-widget-n-tabs:not(:has(> .refraction-widget-container)) > .e-n-tabs > .e-n-tabs-heading .e-n-tab-title[aria-selected="true"], .refraction .refraction-element.refraction-widget-n-tabs:not(:has(> .refraction-widget-container)) > .e-n-tabs[data-touch-mode="true"] > .e-n-tabs-heading .e-n-tab-title[aria-selected="false"]:hover {
 	background-color: var(--n-tabs-title-background-color-active);
 	background-image: initial;
 }
 
 // Responsive mode
 @mixin accordion-layout-($device) {
-	.elementor.elementor .elementor-widget-n-tabs.e-n-tabs-#{$device} {
+	.refraction.refraction .refraction-widget-n-tabs.e-n-tabs-#{$device} {
 		--n-tabs-direction: column;
 		--n-tabs-heading-display: contents;
 		--n-tabs-content-display: contents;

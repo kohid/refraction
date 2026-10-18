@@ -1,19 +1,19 @@
 <?php
-namespace Elementor\App;
+namespace Refraction\App;
 
-use Elementor\Core\Experiments\Manager as ExperimentsManager;
-use Elementor\Modules\WebCli\Module as WebCLIModule;
-use Elementor\Core\Base\App as BaseApp;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Plugin;
-use Elementor\User;
-use Elementor\Utils;
-use Elementor\Core\Utils\Assets_Config_Provider;
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Utils\Assets_Translation_Loader;
+use Refraction\Core\Experiments\Manager as ExperimentsManager;
+use Refraction\Modules\WebCli\Module as WebCLIModule;
+use Refraction\Core\Base\App as BaseApp;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Plugin;
+use Refraction\User;
+use Refraction\Utils;
+use Refraction\Core\Utils\Assets_Config_Provider;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Utils\Assets_Translation_Loader;
 
-use Elementor\App\Modules\ImportExport\Module as ImportExportModule;
-use Elementor\App\Modules\ImportExportCustomization\Module as ImportExportCustomizationModule;
+use Refraction\App\Modules\ImportExport\Module as ImportExportModule;
+use Refraction\App\Modules\ImportExportCustomization\Module as ImportExportCustomizationModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class App extends BaseApp {
 
-	const PAGE_ID = 'elementor-app';
+	const PAGE_ID = 'refraction-app';
 
 	/**
 	 * Get module name.
@@ -38,7 +38,7 @@ class App extends BaseApp {
 	}
 
 	public function get_base_url() {
-		return admin_url( 'admin.php?page=' . self::PAGE_ID . '&ver=' . ELEMENTOR_VERSION );
+		return admin_url( 'admin.php?page=' . self::PAGE_ID . '&ver=' . REFRACTION_VERSION );
 	}
 
 	public function is_current() {
@@ -46,7 +46,7 @@ class App extends BaseApp {
 	}
 
 	public function admin_init() {
-		do_action( 'elementor/app/init', $this );
+		do_action( 'refraction/app/init', $this );
 
 		// Add the introduction and user settings only when it is needed (when loading the app and not in the editor or admin pages)
 		$this->set_settings( 'user', [
@@ -74,7 +74,7 @@ class App extends BaseApp {
 		$referer = wp_get_referer();
 
 		return [
-			'assets_url' => ELEMENTOR_ASSETS_URL,
+			'assets_url' => REFRACTION_ASSETS_URL,
 			'pages_url' => admin_url( 'edit.php?post_type=page' ),
 			'return_url' => $referer ? $referer : admin_url(),
 			'hasPro' => Utils::has_pro(),
@@ -90,7 +90,7 @@ class App extends BaseApp {
 	}
 
 	/**
-	 * Get Elementor editor theme color preference.
+	 * Get Refraction editor theme color preference.
 	 *
 	 * Retrieve the user theme color preference as defined by editor preferences manager.
 	 *
@@ -99,7 +99,7 @@ class App extends BaseApp {
 	 *
 	 * @return string Preferred editor theme.
 	 */
-	private function get_elementor_ui_theme_preference() {
+	private function get_refraction_ui_theme_preference() {
 		$editor_preferences = SettingsManager::get_settings_managers( 'editorPreferences' );
 
 		return $editor_preferences->get_model()->get_settings( 'ui_theme' );
@@ -114,8 +114,8 @@ class App extends BaseApp {
 	 * @access private
 	 */
 	private function enqueue_dark_theme_detection_script() {
-		if ( 'auto' === $this->get_elementor_ui_theme_preference() ) {
-			wp_add_inline_script( 'elementor-app',
+		if ( 'auto' === $this->get_refraction_ui_theme_preference() ) {
+			wp_add_inline_script( 'refraction-app',
 				'if ( window.matchMedia && window.matchMedia( `(prefers-color-scheme: dark)` ).matches )
 							{ document.body.classList.add( `eps-theme-dark` ); }' );
 		}
@@ -124,7 +124,7 @@ class App extends BaseApp {
 	private function register_packages() {
 		$assets_config_provider = ( new Assets_Config_Provider() )
 			->set_path_resolver( function ( $name ) {
-				return ELEMENTOR_ASSETS_PATH . "js/packages/{$name}/{$name}.asset.php";
+				return REFRACTION_ASSETS_PATH . "js/packages/{$name}/{$name}.asset.php";
 			} );
 
 		Collection::make( [ 'ui', 'icons', 'store', 'query', 'utils', 'events', 'schema' ] )
@@ -138,9 +138,9 @@ class App extends BaseApp {
 
 				wp_register_script(
 					$config['handle'],
-					ELEMENTOR_ASSETS_URL . "js/packages/{$package}/{$package}{$suffix}.js",
+					REFRACTION_ASSETS_URL . "js/packages/{$package}/{$package}{$suffix}.js",
 					$config['deps'],
-					ELEMENTOR_VERSION,
+					REFRACTION_VERSION,
 					true
 				);
 			} );
@@ -168,31 +168,31 @@ class App extends BaseApp {
 
 		wp_register_style(
 			'select2',
-			ELEMENTOR_ASSETS_URL . 'lib/e-select2/css/e-select2.css',
+			REFRACTION_ASSETS_URL . 'lib/e-select2/css/e-select2.css',
 			[],
 			'4.0.6-rc.1'
 		);
 
 		wp_enqueue_style(
-			'elementor-app',
+			'refraction-app',
 			$this->get_css_assets_url( 'app', null, 'default', true ),
 			[
 				'select2',
-				'elementor-icons',
-				'elementor-common',
+				'refraction-icons',
+				'refraction-common',
 				'select2',
 			],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_enqueue_script(
-			'elementor-app-packages',
+			'refraction-app-packages',
 			$this->get_js_assets_url( 'app-packages' ),
 			[
 				'wp-i18n',
 				'react',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
@@ -207,47 +207,47 @@ class App extends BaseApp {
 		);
 
 		wp_enqueue_script(
-			'elementor-app',
+			'refraction-app',
 			$this->get_js_assets_url( 'app' ),
 			[
 				'wp-url',
 				'wp-i18n',
-				'elementor-v2-ui',
-				'elementor-v2-icons',
+				'refraction-v2-ui',
+				'refraction-v2-icons',
 				'react',
 				'react-dom',
 				'select2',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
 		$this->enqueue_dark_theme_detection_script();
 
-		Assets_Translation_Loader::for_handles( [ 'elementor-app-packages', 'elementor-app' ], 'elementor' );
+		Assets_Translation_Loader::for_handles( [ 'refraction-app-packages', 'refraction-app' ], 'refraction' );
 
 		$this->print_config();
 	}
 
 	public function enqueue_app_loader() {
 		wp_enqueue_script(
-			'elementor-app-loader',
+			'refraction-app-loader',
 			$this->get_js_assets_url( 'app-loader' ),
 			[
-				'elementor-common',
+				'refraction-common',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		$this->print_config( 'elementor-app-loader' );
+		$this->print_config( 'refraction-app-loader' );
 	}
 
 	private function register_import_export_customization_experiment() {
 		Plugin::$instance->experiments->add_feature( [
 			'name' => 'import-export-customization',
-			'title' => esc_html__( 'Import/Export Customization', 'elementor' ),
-			'description' => esc_html__( 'Enhanced import/export for website templates. Selectively include site content, templates, and settings with advanced granular control.', 'elementor' ),
+			'title' => esc_html__( 'Import/Export Customization', 'refraction' ),
+			'description' => esc_html__( 'Enhanced import/export for website templates. Selectively include site content, templates, and settings with advanced granular control.', 'refraction' ),
 			'release_status' => ExperimentsManager::RELEASE_STATUS_BETA,
 			'default' => ExperimentsManager::STATE_ACTIVE,
 			'hidden' => true,
@@ -269,7 +269,7 @@ class App extends BaseApp {
 		if ( $this->is_current() ) {
 			add_action( 'admin_init', [ $this, 'admin_init' ], 0 );
 		} else {
-			add_action( 'elementor/common/after_register_scripts', [ $this, 'enqueue_app_loader' ] );
+			add_action( 'refraction/common/after_register_scripts', [ $this, 'enqueue_app_loader' ] );
 		}
 	}
 }

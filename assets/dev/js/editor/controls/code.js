@@ -1,11 +1,11 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlCodeEditorItemView;
 
 ControlCodeEditorItemView = ControlBaseDataView.extend( {
 	ui() {
 		var ui = ControlBaseDataView.prototype.ui.apply( this, arguments );
 
-		ui.editor = '.elementor-code-editor';
+		ui.editor = '.refraction-code-editor';
 
 		return ui;
 	},
@@ -18,13 +18,13 @@ ControlCodeEditorItemView = ControlBaseDataView.extend( {
 		}
 
 		const langTools = ace.require( 'ace/ext/language_tools' ),
-			uiTheme = elementor.settings.editorPreferences.model.get( 'ui_theme' ),
+			uiTheme = refraction.settings.editorPreferences.model.get( 'ui_theme' ),
 			userPrefersDark = matchMedia( '(prefers-color-scheme: dark)' ).matches;
 
 		self.editor = ace.edit( this.ui.editor[ 0 ] );
 
-		// Since the code control is wrapped with a dynamic div, the class elementor-control-tag-area need to be had dynamically to handle the dynamic tag functionality.
-		jQuery( self.editor.container ).addClass( 'e-input-style elementor-code-editor elementor-control-tag-area' );
+		// Since the code control is wrapped with a dynamic div, the class refraction-control-tag-area need to be had dynamically to handle the dynamic tag functionality.
+		jQuery( self.editor.container ).addClass( 'e-input-style refraction-code-editor refraction-control-tag-area' );
 
 		self.editor.setOptions( {
 			mode: 'ace/mode/' + self.model.attributes.language,
@@ -42,7 +42,7 @@ ControlCodeEditorItemView = ControlBaseDataView.extend( {
 
 		self.editor.getSession().setUseWrapMode( true );
 
-		elementor.panel.$el.on( 'resize.aceEditor', self.onResize.bind( this ) );
+		refraction.panel.$el.on( 'resize.aceEditor', self.onResize.bind( this ) );
 
 		if ( 'css' === self.model.attributes.language ) {
 			var selectorCompleter = {
@@ -55,7 +55,7 @@ ControlCodeEditorItemView = ControlBaseDataView.extend( {
 							name: 'selector',
 							value: 'selector',
 							score: 1,
-							meta: 'Elementor',
+							meta: 'Refraction',
 						} ];
 					}
 
@@ -101,7 +101,7 @@ ControlCodeEditorItemView = ControlBaseDataView.extend( {
 	},
 
 	onDestroy() {
-		elementor.panel.$el.off( 'resize.aceEditor' );
+		refraction.panel.$el.off( 'resize.aceEditor' );
 	},
 
 	isEditable() {

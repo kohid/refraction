@@ -15,7 +15,7 @@ export const DisableItemAction = () => {
 
 	const propDisabled = items[ index ].item.disabled ?? false;
 
-	const toggleLabel = propDisabled ? __( 'Show', 'elementor' ) : __( 'Hide', 'elementor' );
+	const toggleLabel = propDisabled ? __( 'Show', 'refraction' ) : __( 'Hide', 'refraction' );
 
 	const onClick = () => {
 		const self = structuredClone( items[ index ].item );

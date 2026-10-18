@@ -6,7 +6,7 @@ export class Select extends $e.modules.editor.CommandContainerBase {
 	apply( args ) {
 		const { containers = [ args.container ], append = false } = args;
 
-		elementor.selection.add( containers, append );
+		refraction.selection.add( containers, append );
 	}
 }
 

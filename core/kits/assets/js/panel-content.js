@@ -1,26 +1,26 @@
-export default class extends elementorModules.editor.views.ControlsStack {
+export default class extends refractionModules.editor.views.ControlsStack {
 	id() {
-		return 'elementor-kit-panel-content';
+		return 'refraction-kit-panel-content';
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-kit-panel-content';
+		return '#tmpl-refraction-kit-panel-content';
 	}
 
 	childViewContainer() {
-		return '#elementor-kit-panel-content-controls';
+		return '#refraction-kit-panel-content-controls';
 	}
 
 	onBeforeShow() {
 		const tabConfig = $e.components.get( 'panel/global' ).getActiveTabConfig();
 
-		elementor.hooks.doAction( `panel/${ tabConfig.group }/tab/before-show`, { id: tabConfig.id } );
+		refraction.hooks.doAction( `panel/${ tabConfig.group }/tab/before-show`, { id: tabConfig.id } );
 	}
 
 	onBeforeDestroy() {
 		const tabConfig = $e.components.get( 'panel/global' ).getActiveTabConfig();
 
-		elementor.hooks.doAction( `panel/${ tabConfig.group }/tab/before-destroy`, { id: tabConfig.id } );
+		refraction.hooks.doAction( `panel/${ tabConfig.group }/tab/before-destroy`, { id: tabConfig.id } );
 	}
 
 	childViewOptions() {

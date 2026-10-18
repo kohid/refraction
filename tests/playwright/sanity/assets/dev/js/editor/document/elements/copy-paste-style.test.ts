@@ -22,7 +22,7 @@ test( 'A page can be saved successfully after copy-paste style', async ( { page,
 	await contextMenu.pasteStyleElement( heading2 );
 
 	// Assert.
-	const heading2Title = editor.getPreviewFrame().locator( '.elementor-element-' + heading2 + ' .elementor-heading-title' );
+	const heading2Title = editor.getPreviewFrame().locator( '.refraction-element-' + heading2 + ' .refraction-heading-title' );
 	await expect( heading2Title ).toHaveCSS( 'color', 'rgb(119, 165, 189)' );
 
 	const publishButton = page.locator( EditorSelectors.panels.topBar.wrapper + ' button', { hasText: 'Publish' } );

@@ -8,16 +8,16 @@ export default class FavoriteWidgetsHelper {
 
 	async add( widgetTitle: string ) {
 		await this.openPanelElementContextMenu( widgetTitle );
-		await this.page.click( `.elementor-context-menu >> :text("Add to Favorites")` );
+		await this.page.click( `.refraction-context-menu >> :text("Add to Favorites")` );
 	}
 
 	async remove( widgetTitle: string ) {
 		await this.openPanelElementContextMenu( widgetTitle );
-		await this.page.click( `.elementor-context-menu >> :text("Remove from Favorites")` );
+		await this.page.click( `.refraction-context-menu >> :text("Remove from Favorites")` );
 	}
 
 	async openPanelElementContextMenu( widgetTitle: string ) {
-		await this.page.click( `.elementor-element >> :text("${ widgetTitle }")`, { button: 'right' } );
-		await this.page.waitForSelector( '.elementor-context-menu' );
+		await this.page.click( `.refraction-element >> :text("${ widgetTitle }")`, { button: 'right' } );
+		await this.page.waitForSelector( '.refraction-context-menu' );
 	}
 }

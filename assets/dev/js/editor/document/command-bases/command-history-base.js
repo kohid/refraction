@@ -1,4 +1,4 @@
-import CommandContainerBase from 'elementor-editor/command-bases/command-container-base';
+import CommandContainerBase from 'refraction-editor/command-bases/command-container-base';
 
 /**
  * @name $e.modules.editor.document.CommandHistoryBase
@@ -38,18 +38,18 @@ export default class CommandHistoryBase extends CommandContainerBase {
 	 * @return {({}|boolean)} history object
 	 */
 	getHistory( args = {} ) { // eslint-disable-line no-unused-vars
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	/**
 	 * Function isHistoryActive().
 	 *
-	 * Return `elementor.documents.getCurrent().history.getActive()`.
+	 * Return `refraction.documents.getCurrent().history.getActive()`.
 	 *
 	 * @return {boolean} is history active
 	 */
 	isHistoryActive() {
-		return elementor.documents.getCurrent().history.getActive();
+		return refraction.documents.getCurrent().history.getActive();
 	}
 
 	onBeforeRun( args ) {

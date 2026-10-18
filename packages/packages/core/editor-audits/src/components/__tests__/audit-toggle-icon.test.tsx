@@ -5,7 +5,7 @@ import {
 	__getStore as getStore,
 	__registerSlice as registerSlice,
 	__StoreProvider as StoreProvider,
-} from '@elementor/store';
+} from '@refraction/store';
 import { ThemeProvider } from '@elementor/ui';
 import { render, screen } from '@testing-library/react';
 

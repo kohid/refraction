@@ -1,10 +1,10 @@
-import { updateElementEditorSettings } from '@elementor/editor-elements';
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
+import { updateElementEditorSettings } from '@refraction/editor-elements';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
 
 import { getContainer } from '../get-container';
 
 jest.mock( '../get-container' );
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 describe( 'updateElementEditorSettings', () => {
 	beforeEach( () => {

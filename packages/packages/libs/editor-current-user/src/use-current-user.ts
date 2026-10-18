@@ -1,4 +1,4 @@
-import { useQuery } from '@elementor/query';
+import { useQuery } from '@refraction/query';
 
 import { apiClient } from './api';
 

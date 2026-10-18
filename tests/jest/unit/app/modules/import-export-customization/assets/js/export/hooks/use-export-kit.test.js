@@ -1,12 +1,12 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useExportKit } from 'elementor/app/modules/import-export-customization/assets/js/export/hooks/use-export-kit';
-import { generateScreenshot } from 'elementor/app/modules/import-export-customization/assets/js/export/utils/screenshot';
-import { EXPORT_STATUS } from 'elementor/app/modules/import-export-customization/assets/js/export/context/export-context';
+import { useExportKit } from 'refraction/app/modules/import-export-customization/assets/js/export/hooks/use-export-kit';
+import { generateScreenshot } from 'refraction/app/modules/import-export-customization/assets/js/export/utils/screenshot';
+import { EXPORT_STATUS } from 'refraction/app/modules/import-export-customization/assets/js/export/context/export-context';
 
 const mockNavigate = jest.fn();
 
 // Mock the screenshot utility
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/export/utils/screenshot', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/export/utils/screenshot', () => ( {
 	generateScreenshot: jest.fn(),
 } ) );
 
@@ -19,13 +19,13 @@ global.fetch = mockFetch;
 
 describe( 'useExportKit Hook', () => {
 	let mockDispatch;
-	let mockElementorCommon;
-	let mockElementorAppConfig;
+	let mockRefractionCommon;
+	let mockRefractionAppConfig;
 
 	beforeEach( () => {
 		mockDispatch = jest.fn();
 
-		mockElementorCommon = {
+		mockRefractionCommon = {
 			config: {
 				experimentalFeatures: {
 					'cloud-library': true,
@@ -33,16 +33,16 @@ describe( 'useExportKit Hook', () => {
 			},
 		};
 
-		mockElementorAppConfig = {
+		mockRefractionAppConfig = {
 			'import-export-customization': {
-				restApiBaseUrl: 'https://example.com/wp-json/elementor/v1',
+				restApiBaseUrl: 'https://example.com/wp-json/refraction/v1',
 				kitPreviewNonce: 'mock-nonce',
 			},
 			base_url: 'https://example.com',
 		};
 
-		global.elementorCommon = mockElementorCommon;
-		global.elementorAppConfig = mockElementorAppConfig;
+		global.refractionCommon = mockRefractionCommon;
+		global.refractionAppConfig = mockRefractionAppConfig;
 		global.wpApiSettings = { nonce: 'wp-nonce' };
 
 		mockFetch.mockClear();
@@ -93,7 +93,7 @@ describe( 'useExportKit Hook', () => {
 			} );
 
 			expect( mockFetch ).toHaveBeenCalledWith(
-				'https://example.com/wp-json/elementor/v1/export',
+				'https://example.com/wp-json/refraction/v1/export',
 				{
 					method: 'POST',
 					headers: {
@@ -164,7 +164,7 @@ describe( 'useExportKit Hook', () => {
 				expect( generateScreenshot ).toHaveBeenCalled();
 			} );
 			expect( mockFetch ).toHaveBeenCalledWith(
-				'https://example.com/wp-json/elementor/v1/export',
+				'https://example.com/wp-json/refraction/v1/export',
 				expect.objectContaining( {
 					body: expect.stringContaining( '"screenShotBlob"' ),
 				} ),

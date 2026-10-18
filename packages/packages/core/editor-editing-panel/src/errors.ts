@@ -1,5 +1,5 @@
-import { type StyleDefinitionID } from '@elementor/editor-styles';
-import { createError } from '@elementor/utils';
+import { type StyleDefinitionID } from '@refraction/editor-styles';
+import { createError } from '@refraction/utils';
 
 export const ControlTypeNotFoundError = createError< { controlType: string } >( {
 	code: 'control_type_not_found',

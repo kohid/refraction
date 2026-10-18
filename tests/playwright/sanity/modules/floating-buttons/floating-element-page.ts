@@ -5,7 +5,7 @@ export default class FloatingElementPage extends WpAdminPage {
 	private FLOATING_BUTTON_POST_ID = 50;
 	async goToFloatingButtonsEmptyPage() {
 		await this.page.goto(
-			'/wp-admin/edit.php?post_type=elementor_library&page=e-floating-buttons',
+			'/wp-admin/edit.php?post_type=refraction_library&page=e-floating-buttons',
 		);
 	}
 
@@ -23,8 +23,8 @@ export default class FloatingElementPage extends WpAdminPage {
 		await this.page.waitForURL( '/wp-admin/edit.php?post_type=e-floating-buttons&paged=1' );
 	}
 
-	async goToFloatingButtonElementorEditor() {
-		await this.page.goto( `/wp-admin/post.php?post=${ this.FLOATING_BUTTON_POST_ID }&action=elementor` );
+	async goToFloatingButtonRefractionEditor() {
+		await this.page.goto( `/wp-admin/post.php?post=${ this.FLOATING_BUTTON_POST_ID }&action=refraction` );
 		await this.closeAnnouncementsIfVisible();
 
 		return new EditorPage( this.page, this.testInfo, this.FLOATING_BUTTON_POST_ID );

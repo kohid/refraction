@@ -1,13 +1,13 @@
-import { type Props } from '@elementor/editor-props';
-import { type Breakpoint, type BreakpointsMap } from '@elementor/editor-responsive';
+import { type Props } from '@refraction/editor-props';
+import { type Breakpoint, type BreakpointsMap } from '@refraction/editor-responsive';
 import {
 	type CustomCss,
 	getSelectorWithState,
 	type StyleDefinition,
 	type StyleDefinitionState,
 	type StyleDefinitionType,
-} from '@elementor/editor-styles';
-import { decodeString } from '@elementor/utils';
+} from '@refraction/editor-styles';
+import { decodeString } from '@refraction/utils';
 
 import { type PropsResolver } from './create-props-resolver';
 import { UnknownStyleTypeError } from './errors';

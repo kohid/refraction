@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockElementType, renderWithTheme } from 'test-utils';
-import { useHasContentOnlyAccess } from '@elementor/editor-current-user';
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { useHasContentOnlyAccess } from '@refraction/editor-current-user';
+import { getWidgetsCache } from '@refraction/editor-elements';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { ElementProvider } from '../../contexts/element-context';
@@ -10,9 +10,9 @@ import { useStateByElement } from '../../hooks/use-state-by-element';
 import { ContentOnlyInfotip } from '../content-only-infotip';
 import { EditingPanelTabs } from '../editing-panel-tabs';
 
-jest.mock( '@elementor/editor-current-user' );
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-current-user' );
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	getWidgetsCache: jest.fn(),
 } ) );
 jest.mock( '../../hooks/use-default-panel-settings' );

@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor CSS Filter control.
+ * Refraction CSS Filter control.
  *
  * A base control for applying css filters. Displays sliders to define the
  * values of different CSS filters including blur, brightens, contrast,
@@ -59,7 +59,7 @@ class Group_Control_Css_Filter extends Group_Control_Base {
 		$controls = [];
 
 		$controls['blur'] = [
-			'label' => esc_html_x( 'Blur', 'Filter Control', 'elementor' ),
+			'label' => esc_html_x( 'Blur', 'Filter Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'required' => 'true',
 			'range' => [
@@ -78,7 +78,7 @@ class Group_Control_Css_Filter extends Group_Control_Base {
 		];
 
 		$controls['brightness'] = [
-			'label' => esc_html_x( 'Brightness', 'Filter Control', 'elementor' ),
+			'label' => esc_html_x( 'Brightness', 'Filter Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'render_type' => 'ui',
 			'required' => 'true',
@@ -94,7 +94,7 @@ class Group_Control_Css_Filter extends Group_Control_Base {
 		];
 
 		$controls['contrast'] = [
-			'label' => esc_html_x( 'Contrast', 'Filter Control', 'elementor' ),
+			'label' => esc_html_x( 'Contrast', 'Filter Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'render_type' => 'ui',
 			'required' => 'true',
@@ -110,7 +110,7 @@ class Group_Control_Css_Filter extends Group_Control_Base {
 		];
 
 		$controls['saturate'] = [
-			'label' => esc_html_x( 'Saturation', 'Filter Control', 'elementor' ),
+			'label' => esc_html_x( 'Saturation', 'Filter Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'render_type' => 'ui',
 			'required' => 'true',
@@ -126,7 +126,7 @@ class Group_Control_Css_Filter extends Group_Control_Base {
 		];
 
 		$controls['hue'] = [
-			'label' => esc_html_x( 'Hue', 'Filter Control', 'elementor' ),
+			'label' => esc_html_x( 'Hue', 'Filter Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'render_type' => 'ui',
 			'required' => 'true',
@@ -159,7 +159,7 @@ class Group_Control_Css_Filter extends Group_Control_Base {
 		return [
 			'popover' => [
 				'starter_name' => 'css_filter',
-				'starter_title' => esc_html__( 'CSS Filters', 'elementor' ),
+				'starter_title' => esc_html__( 'CSS Filters', 'refraction' ),
 				'settings' => [
 					'render_type' => 'ui',
 				],

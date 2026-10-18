@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useLayoutEffect } from 'react';
-import { ThemeProvider } from '@elementor/editor-ui';
+import { ThemeProvider } from '@refraction/editor-ui';
 import { Stack } from '@elementor/ui';
 
 import { useComponents } from '../../hooks/use-components';
@@ -14,20 +14,20 @@ import { SearchProvider } from './search-provider';
 const FULL_HEIGHT_STYLE_ID = 'components-full-height-panel';
 
 const FULL_HEIGHT_CSS = `
-#elementor-panel-page-elements {
+#refraction-panel-page-elements {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
 }
 
-#elementor-panel-elements {
+#refraction-panel-elements {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
 	min-height: 0;
 }
 
-#elementor-panel-elements-wrapper {
+#refraction-panel-elements-wrapper {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
@@ -72,7 +72,7 @@ const ComponentsContent = () => {
 export const Components = () => {
 	return (
 		<ThemeProvider>
-			<SearchProvider localStorageKey="elementor-components-search">
+			<SearchProvider localStorageKey="refraction-components-search">
 				<ComponentsContent />
 			</SearchProvider>
 		</ThemeProvider>

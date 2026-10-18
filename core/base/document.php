@@ -1,31 +1,31 @@
 <?php
-namespace Elementor\Core\Base;
+namespace Refraction\Core\Base;
 
-use Elementor\Core\Base\Elements_Iteration_Actions\Assets as Assets_Iteration_Action;
-use Elementor\Core\Base\Elements_Iteration_Actions\Base as Elements_Iteration_Action;
-use Elementor\Core\Behaviors\Interfaces\Lock_Behavior;
-use Elementor\Core\Files\CSS\Post as Post_CSS;
-use Elementor\Core\Settings\Page\Model as Page_Model;
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Includes\Elements\Container;
-use Elementor\Plugin;
-use Elementor\Controls_Manager;
-use Elementor\Controls_Stack;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\User;
-use Elementor\Core\Settings\Manager as SettingsManager;
-use Elementor\Utils;
-use Elementor\Widget_Base;
-use Elementor\Core\Settings\Page\Manager as PageManager;
-use ElementorPro\Modules\Library\Widgets\Template;
+use Refraction\Core\Base\Elements_Iteration_Actions\Assets as Assets_Iteration_Action;
+use Refraction\Core\Base\Elements_Iteration_Actions\Base as Elements_Iteration_Action;
+use Refraction\Core\Behaviors\Interfaces\Lock_Behavior;
+use Refraction\Core\Files\CSS\Post as Post_CSS;
+use Refraction\Core\Settings\Page\Model as Page_Model;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Includes\Elements\Container;
+use Refraction\Plugin;
+use Refraction\Controls_Manager;
+use Refraction\Controls_Stack;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\User;
+use Refraction\Core\Settings\Manager as SettingsManager;
+use Refraction\Utils;
+use Refraction\Widget_Base;
+use Refraction\Core\Settings\Page\Manager as PageManager;
+use RefractionPro\Modules\Library\Widgets\Template;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor document.
+ * Refraction document.
  *
  * An abstract class that provides the needed properties and methods to
  * manage and handle documents in inheriting classes.
@@ -38,15 +38,15 @@ abstract class Document extends Controls_Stack {
 	/**
 	 * Document type meta key.
 	 */
-	const TYPE_META_KEY = '_elementor_template_type';
-	const PAGE_META_KEY = '_elementor_page_settings';
-	const ELEMENTOR_DATA_META_KEY = '_elementor_data';
+	const TYPE_META_KEY = '_refraction_template_type';
+	const PAGE_META_KEY = '_refraction_page_settings';
+	const REFRACTION_DATA_META_KEY = '_refraction_data';
 
-	const BUILT_WITH_ELEMENTOR_META_KEY = '_elementor_edit_mode';
+	const BUILT_WITH_REFRACTION_META_KEY = '_refraction_edit_mode';
 
-	const CACHE_META_KEY = '_elementor_element_cache';
+	const CACHE_META_KEY = '_refraction_element_cache';
 
-	const UNEDITABLE_WITH_ELEMENTOR_TYPES = [ 'kit' ];
+	const UNEDITABLE_WITH_REFRACTION_TYPES = [ 'kit' ];
 
 	/**
 	 * Document publish status.
@@ -170,8 +170,8 @@ abstract class Document extends Controls_Stack {
 			'allow_adding_widgets' => true,
 			'support_page_layout' => true,
 			'show_copy_and_share' => false,
-			'library_close_title' => esc_html__( 'Close', 'elementor' ),
-			'publish_button_title' => esc_html__( 'Publish', 'elementor' ),
+			'library_close_title' => esc_html__( 'Close', 'refraction' ),
+			'publish_button_title' => esc_html__( 'Publish', 'refraction' ),
 		];
 	}
 
@@ -197,7 +197,7 @@ abstract class Document extends Controls_Stack {
 			'messages' => [
 				'publish_notification' => sprintf(
 					/* translators: %s: Document title. */
-					esc_html__( 'Hurray! Your %s is live.', 'elementor' ),
+					esc_html__( 'Hurray! Your %s is live.', 'refraction' ),
 					static::get_title()
 				),
 			],
@@ -234,7 +234,7 @@ abstract class Document extends Controls_Stack {
 	 * @return string Element title.
 	 */
 	public static function get_title() {
-		return esc_html__( 'Document', 'elementor' );
+		return esc_html__( 'Document', 'refraction' );
 	}
 
 	public static function get_plural_title() {
@@ -244,7 +244,7 @@ abstract class Document extends Controls_Stack {
 	public static function get_add_new_title() {
 		return sprintf(
 			/* translators: %s: Document title. */
-			esc_html__( 'Add New %s', 'elementor' ),
+			esc_html__( 'Add New %s', 'refraction' ),
 			static::get_title()
 		);
 	}
@@ -383,28 +383,28 @@ abstract class Document extends Controls_Stack {
 		$id = $this->get_main_id();
 
 		$attributes = [
-			'data-elementor-type' => $this->get_name(),
-			'data-elementor-id' => $id,
-			'class' => 'elementor elementor-' . $id,
+			'data-refraction-type' => $this->get_name(),
+			'data-refraction-id' => $id,
+			'class' => 'refraction refraction-' . $id,
 		];
 
-		$version_meta = $this->get_main_meta( '_elementor_version' );
+		$version_meta = $this->get_main_meta( '_refraction_version' );
 
 		if ( version_compare( $version_meta, '2.5.0', '<' ) ) {
-			$attributes['class'] .= ' elementor-bc-flex-widget';
+			$attributes['class'] .= ' refraction-bc-flex-widget';
 		}
 
 		if ( Plugin::$instance->preview->is_preview() ) {
-			$attributes['data-elementor-title'] = static::get_title();
+			$attributes['data-refraction-title'] = static::get_title();
 		} else {
-			$elementor_settings = $this->get_frontend_settings();
-			if ( ! empty( $elementor_settings ) ) {
-				$attributes['data-elementor-settings'] = wp_json_encode( $elementor_settings );
+			$refraction_settings = $this->get_frontend_settings();
+			if ( ! empty( $refraction_settings ) ) {
+				$attributes['data-refraction-settings'] = wp_json_encode( $refraction_settings );
 			}
 		}
 
 		// apply this filter to allow the attributes to be modified by different sources
-		return apply_filters( 'elementor/document/wrapper_attributes', $attributes, $this );
+		return apply_filters( 'refraction/document/wrapper_attributes', $attributes, $this );
 	}
 
 	/**
@@ -440,7 +440,7 @@ abstract class Document extends Controls_Stack {
 		 * @param string   $url  WordPress preview URL.
 		 * @param Document $this The document instance.
 		 */
-		$url = apply_filters( 'elementor/document/urls/wp_preview', $url, $this );
+		$url = apply_filters( 'refraction/document/urls/wp_preview', $url, $this );
 
 		return $url;
 	}
@@ -462,7 +462,7 @@ abstract class Document extends Controls_Stack {
 		 * @param string   $url  The exit URL
 		 * @param Document $this The document instance.
 		 */
-		$url = apply_filters( 'elementor/document/urls/exit_to_dashboard', $url, $this );
+		$url = apply_filters( 'refraction/document/urls/exit_to_dashboard', $url, $this );
 
 		return $url;
 	}
@@ -493,7 +493,7 @@ abstract class Document extends Controls_Stack {
 		 * @param string $url The URL.
 		 * @param Document $this The document instance.
 		 */
-		$url = apply_filters( 'elementor/document/urls/all_post_type', $url, $this );
+		$url = apply_filters( 'refraction/document/urls/all_post_type', $url, $this );
 
 		return $url;
 	}
@@ -516,7 +516,7 @@ abstract class Document extends Controls_Stack {
 		 * @param string $url The URL.
 		 * @param Document $this The document instance.
 		 */
-		$url = apply_filters( 'elementor/document/urls/main_dashboard', $url, $this );
+		$url = apply_filters( 'refraction/document/urls/main_dashboard', $url, $this );
 
 		return $url;
 	}
@@ -597,11 +597,11 @@ abstract class Document extends Controls_Stack {
 				'post_title' => $this->post->post_title,
 				'post_excerpt' => $this->post->post_excerpt,
 				// Hack to cause $autosave_is_different=true in `wp_create_post_autosave`.
-				'post_content' => '<!-- Created With Elementor -->',
+				'post_content' => '<!-- Created With Refraction -->',
 				'post_modified' => current_time( 'mysql' ),
 			] );
 
-			Plugin::$instance->db->copy_elementor_meta( $this->post->ID, $autosave_id );
+			Plugin::$instance->db->copy_refraction_meta( $this->post->ID, $autosave_id );
 
 			$document = Plugin::$instance->documents->get( $autosave_id );
 			$document->save_template_type();
@@ -626,23 +626,23 @@ abstract class Document extends Controls_Stack {
 	 * @return array An updated array of row action links.
 	 */
 	public function filter_admin_row_actions( $actions ) {
-		if ( $this->is_editable_with_elementor() ) {
-			$actions['edit_with_elementor'] = sprintf(
+		if ( $this->is_editable_with_refraction() ) {
+			$actions['edit_with_refraction'] = sprintf(
 				'<a href="%1$s">%2$s</a>',
 				$this->get_edit_url(),
-				__( 'Edit with Elementor', 'elementor' )
+				__( 'Edit with Refraction', 'refraction' )
 			);
 		}
 
 		return $actions;
 	}
 
-	public function is_editable_with_elementor() {
-		if ( in_array( $this->get_type(), self::UNEDITABLE_WITH_ELEMENTOR_TYPES ) ) {
+	public function is_editable_with_refraction() {
+		if ( in_array( $this->get_type(), self::UNEDITABLE_WITH_REFRACTION_TYPES ) ) {
 			return false;
 		}
 
-		return $this->is_editable_by_current_user() && $this->is_built_with_elementor();
+		return $this->is_editable_by_current_user() && $this->is_built_with_refraction();
 	}
 
 	/**
@@ -680,7 +680,7 @@ abstract class Document extends Controls_Stack {
 		$config = [
 			'id' => $this->get_main_id(),
 			'type' => $this->get_name(),
-			'version' => $this->get_main_meta( '_elementor_version' ),
+			'version' => $this->get_main_meta( '_refraction_version' ),
 			'settings' => $settings['page'],
 			'last_edited' => $this->get_last_edited(),
 			'panel' => static::get_editor_panel_config(),
@@ -712,7 +712,7 @@ abstract class Document extends Controls_Stack {
 			];
 		}
 
-		do_action( 'elementor/document/before_get_config', $this );
+		do_action( 'refraction/document/before_get_config', $this );
 
 		if ( static::get_property( 'has_elements' ) ) {
 			$elements_config = Collection::make( Plugin::$instance->elements_manager->get_element_types() )
@@ -732,14 +732,14 @@ abstract class Document extends Controls_Stack {
 		 *
 		 * Filters the document configuration by adding additional configuration.
 		 * External developers can use this hook to add custom configuration in
-		 * addition to Elementor's initial configuration.
+		 * addition to Refraction's initial configuration.
 		 *
 		 * Use the $post_id to add custom configuration for different pages.
 		 *
 		 * @param array $additional_config The additional document configuration.
 		 * @param int   $post_id           The post ID of the document.
 		 */
-		$additional_config = apply_filters( 'elementor/document/config', $additional_config, $this->get_main_id() );
+		$additional_config = apply_filters( 'refraction/document/config', $additional_config, $this->get_main_id() );
 
 		if ( ! empty( $additional_config ) ) {
 			$config = array_replace_recursive( $config, $additional_config );
@@ -758,7 +758,7 @@ abstract class Document extends Controls_Stack {
 		/**
 		 * Register document controls.
 		 *
-		 * Fires after Elementor registers the document controls.
+		 * Fires after Refraction registers the document controls.
 		 *
 		 * External developers can use this hook to add new controls to the document.
 		 *
@@ -766,7 +766,7 @@ abstract class Document extends Controls_Stack {
 		 *
 		 * @param Document $this The document instance.
 		 */
-		do_action( 'elementor/documents/register_controls', $this );
+		do_action( 'refraction/documents/register_controls', $this );
 	}
 
 	/**
@@ -797,9 +797,9 @@ abstract class Document extends Controls_Stack {
 		 * @since 3.3.0
 		 *
 		 * @param array                         $data The document data.
-		 * @param \Elementor\Core\Base\Document $this The document instance.
+		 * @param \Refraction\Core\Base\Document $this The document instance.
 		 */
-		$data = apply_filters( 'elementor/document/save/data', $data, $this );
+		$data = apply_filters( 'refraction/document/save/data', $data, $this );
 
 		$this->add_handle_revisions_changed_filter();
 
@@ -812,14 +812,14 @@ abstract class Document extends Controls_Stack {
 		/**
 		 * Before document save.
 		 *
-		 * Fires when document save starts on Elementor.
+		 * Fires when document save starts on Refraction.
 		 *
 		 * @since 2.5.12
 		 *
-		 * @param \Elementor\Core\Base\Document $this The current document.
+		 * @param \Refraction\Core\Base\Document $this The current document.
 		 * @param $data.
 		 */
-		do_action( 'elementor/document/before_save', $this, $data );
+		do_action( 'refraction/document/before_save', $this, $data );
 
 		if ( ! current_user_can( 'unfiltered_html' ) ) {
 			$data = Utils::kses_post_deep( $data );
@@ -861,10 +861,10 @@ abstract class Document extends Controls_Stack {
 		 *
 		 * @since 2.5.12
 		 *
-		 * @param \Elementor\Core\Base\Document $this The current document.
+		 * @param \Refraction\Core\Base\Document $this The current document.
 		 * @param $data.
 		 */
-		do_action( 'elementor/document/after_save', $this, $data );
+		do_action( 'refraction/document/after_save', $this, $data );
 
 		$this->set_is_saving( false );
 
@@ -899,32 +899,32 @@ abstract class Document extends Controls_Stack {
 	}
 
 	/**
-	 * Is built with Elementor.
+	 * Is built with Refraction.
 	 *
-	 * Check whether the post was built with Elementor.
+	 * Check whether the post was built with Refraction.
 	 *
 	 * @since 2.0.0
 	 * @access public
 	 *
-	 * @return bool Whether the post was built with Elementor.
+	 * @return bool Whether the post was built with Refraction.
 	 */
-	public function is_built_with_elementor() {
-		return (bool) $this->get_meta( self::BUILT_WITH_ELEMENTOR_META_KEY );
+	public function is_built_with_refraction() {
+		return (bool) $this->get_meta( self::BUILT_WITH_REFRACTION_META_KEY );
 	}
 
 	/**
-	 * Mark the post as "built with elementor" or not.
+	 * Mark the post as "built with refraction" or not.
 	 *
-	 * @param bool $is_built_with_elementor
+	 * @param bool $is_built_with_refraction
 	 *
 	 * @return $this
 	 */
-	public function set_is_built_with_elementor( $is_built_with_elementor ) {
-		if ( $is_built_with_elementor ) {
+	public function set_is_built_with_refraction( $is_built_with_refraction ) {
+		if ( $is_built_with_refraction ) {
 			// Use the string `builder` and not a boolean for rollback compatibility
-			$this->update_meta( self::BUILT_WITH_ELEMENTOR_META_KEY, 'builder' );
+			$this->update_meta( self::BUILT_WITH_REFRACTION_META_KEY, 'builder' );
 		} else {
-			$this->delete_meta( self::BUILT_WITH_ELEMENTOR_META_KEY );
+			$this->delete_meta( self::BUILT_WITH_REFRACTION_META_KEY );
 		}
 
 		return $this;
@@ -941,7 +941,7 @@ abstract class Document extends Controls_Stack {
 		$url = add_query_arg(
 			[
 				'post' => $this->get_main_id(),
-				'action' => 'elementor',
+				'action' => 'refraction',
 			],
 			admin_url( 'post.php' )
 		);
@@ -956,7 +956,7 @@ abstract class Document extends Controls_Stack {
 		 * @param string   $url  The edit url.
 		 * @param Document $this The document instance.
 		 */
-		$url = apply_filters( 'elementor/document/urls/edit', $url, $this );
+		$url = apply_filters( 'refraction/document/urls/edit', $url, $this );
 
 		return $url;
 	}
@@ -976,7 +976,7 @@ abstract class Document extends Controls_Stack {
 			add_filter( 'pre_option_permalink_structure', '__return_empty_string' );
 
 			$url = set_url_scheme( add_query_arg( [
-				'elementor-preview' => $this->get_main_id(),
+				'refraction-preview' => $this->get_main_id(),
 				'ver' => time(),
 			], $this->get_permalink() ) );
 
@@ -992,7 +992,7 @@ abstract class Document extends Controls_Stack {
 			 * @param string   $url  The preview URL.
 			 * @param Document $this The document instance.
 			 */
-			$url = apply_filters( 'elementor/document/urls/preview', $url, $this );
+			$url = apply_filters( 'refraction/document/urls/preview', $url, $this );
 		}
 
 		return $url;
@@ -1057,10 +1057,10 @@ abstract class Document extends Controls_Stack {
 		 * @since 3.35.0
 		 *
 		 * @param array                         $data      The elements data array.
-		 * @param \Elementor\Core\Base\Document $document  The document instance.
+		 * @param \Refraction\Core\Base\Document $document  The document instance.
 		 */
 		if ( ! $this->is_saving ) {
-			$data = apply_filters( 'elementor/document/load/data', $data, $this );
+			$data = apply_filters( 'refraction/document/load/data', $data, $this );
 		}
 
 		// Change the current documents, so widgets can use `documents->get_current` and other post data
@@ -1105,7 +1105,7 @@ abstract class Document extends Controls_Stack {
 	 * @return array
 	 */
 	public function get_elements_data( $status = self::STATUS_PUBLISH ) {
-		$elements = $this->get_json_meta( self::ELEMENTOR_DATA_META_KEY );
+		$elements = $this->get_json_meta( self::REFRACTION_DATA_META_KEY );
 
 		if ( self::STATUS_DRAFT === $status ) {
 			$autosave = $this->get_newer_autosave();
@@ -1113,16 +1113,16 @@ abstract class Document extends Controls_Stack {
 			if ( is_object( $autosave ) ) {
 				$autosave_elements = Plugin::$instance->documents
 					->get( $autosave->get_post()->ID )
-					->get_json_meta( self::ELEMENTOR_DATA_META_KEY );
+					->get_json_meta( self::REFRACTION_DATA_META_KEY );
 			}
 		}
 
 		if ( Plugin::$instance->editor->is_edit_mode() ) {
 			if ( empty( $elements ) && empty( $autosave_elements ) ) {
-				// Convert to Elementor.
-				$elements = $this->convert_to_elementor();
+				// Convert to Refraction.
+				$elements = $this->convert_to_refraction();
 				if ( $this->is_autosave() ) {
-					Plugin::$instance->db->copy_elementor_meta( $this->post->post_parent, $this->post->ID );
+					Plugin::$instance->db->copy_refraction_meta( $this->post->post_parent, $this->post->ID );
 				}
 			}
 		}
@@ -1147,7 +1147,7 @@ abstract class Document extends Controls_Stack {
 	 * @since 2.3.0
 	 * @access public
 	 */
-	public function convert_to_elementor() {
+	public function convert_to_refraction() {
 		$this->save( [] );
 
 		if ( empty( $this->post->post_content ) ) {
@@ -1222,7 +1222,7 @@ abstract class Document extends Controls_Stack {
 		return [
 			'title' => sprintf(
 				/* translators: %s: Document title. */
-				esc_html__( '%s Settings', 'elementor' ),
+				esc_html__( '%s Settings', 'refraction' ),
 				static::get_title()
 			),
 		];
@@ -1352,19 +1352,19 @@ abstract class Document extends Controls_Stack {
 		$json_value = wp_slash( wp_json_encode( $editor_data ) );
 
 		// Don't use `update_post_meta` that can't handle `revision` post type
-		$is_meta_updated = update_metadata( 'post', $this->post->ID, self::ELEMENTOR_DATA_META_KEY, $json_value );
+		$is_meta_updated = update_metadata( 'post', $this->post->ID, self::REFRACTION_DATA_META_KEY, $json_value );
 
 		/**
 		 * Before saving data.
 		 *
-		 * Fires before Elementor saves data to the database.
+		 * Fires before Refraction saves data to the database.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param string   $status          Post status.
 		 * @param int|bool $is_meta_updated Meta ID if the key didn't exist, true on successful update, false on failure.
 		 */
-		do_action( 'elementor/db/before_save', $this->post->post_status, $is_meta_updated );
+		do_action( 'refraction/db/before_save', $this->post->post_status, $is_meta_updated );
 
 		Plugin::$instance->db->save_plain_text( $this->post->ID );
 
@@ -1377,14 +1377,14 @@ abstract class Document extends Controls_Stack {
 		/**
 		 * After saving data.
 		 *
-		 * Fires after Elementor saves data to the database.
+		 * Fires after Refraction saves data to the database.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param int   $post_id     The ID of the post.
 		 * @param array $editor_data Sanitize posted data.
 		 */
-		do_action( 'elementor/editor/after_save', $this->post->ID, $editor_data );
+		do_action( 'refraction/editor/after_save', $this->post->ID, $editor_data );
 	}
 
 	/**
@@ -1409,21 +1409,21 @@ abstract class Document extends Controls_Stack {
 	}
 
 	public function save_version() {
-		if ( ! defined( 'IS_ELEMENTOR_UPGRADE' ) ) {
+		if ( ! defined( 'IS_REFRACTION_UPGRADE' ) ) {
 			// Save per revision.
-			$this->update_meta( '_elementor_version', ELEMENTOR_VERSION );
+			$this->update_meta( '_refraction_version', REFRACTION_VERSION );
 
 			/**
 			 * Document version save.
 			 *
-			 * Fires when document version is saved on Elementor.
-			 * Will not fire during Elementor Upgrade.
+			 * Fires when document version is saved on Refraction.
+			 * Will not fire during Refraction Upgrade.
 			 *
 			 * @since 2.5.12
 			 *
-			 * @param \Elementor\Core\Base\Document $this The current document.
+			 * @param \Refraction\Core\Base\Document $this The current document.
 			 */
-			do_action( 'elementor/document/save_version', $this );
+			do_action( 'refraction/document/save_version', $this );
 		}
 	}
 
@@ -1533,20 +1533,20 @@ abstract class Document extends Controls_Stack {
 			$post = $autosave_post->get_post();
 		}
 
-		$date = date_i18n( _x( 'M j, H:i', 'revision date format', 'elementor' ), strtotime( $post->post_modified ) );
+		$date = date_i18n( _x( 'M j, H:i', 'revision date format', 'refraction' ), strtotime( $post->post_modified ) );
 		$display_name = get_the_author_meta( 'display_name', $post->post_author );
 
 		if ( $autosave_post || 'revision' === $post->post_type ) {
 			$last_edited = sprintf(
 				/* translators: 1: Saving date, 2: Author display name. */
-				esc_html__( 'Draft saved on %1$s by %2$s', 'elementor' ),
+				esc_html__( 'Draft saved on %1$s by %2$s', 'refraction' ),
 				'<time>' . $date . '</time>',
 				$display_name
 			);
 		} else {
 			$last_edited = sprintf(
 				/* translators: 1: Editing date, 2: Author display name. */
-				esc_html__( 'Last edited on %1$s by %2$s', 'elementor' ),
+				esc_html__( 'Last edited on %1$s by %2$s', 'refraction' ),
 				'<time>' . $date . '</time>',
 				$display_name
 			);
@@ -1601,7 +1601,7 @@ abstract class Document extends Controls_Stack {
 				$data['settings'] = [];
 			}
 
-			$saved_settings = get_post_meta( $this->post->ID, '_elementor_page_settings', true );
+			$saved_settings = get_post_meta( $this->post->ID, '_refraction_page_settings', true );
 			if ( ! empty( $saved_settings ) && is_array( $saved_settings ) ) {
 				$data['settings'] += $saved_settings;
 			}
@@ -1624,7 +1624,7 @@ abstract class Document extends Controls_Stack {
 		$content = Plugin::$instance->db->iterate_data( $this->get_elements_data(), function( $element_data ) {
 			$element_data['id'] = Utils::generate_random_string();
 
-			$element_data = apply_filters( 'elementor/document/element/replace_id', $element_data );
+			$element_data = apply_filters( 'refraction/document/element/replace_id', $element_data );
 
 			$element = Plugin::$instance->elements_manager->create_element_instance( $element_data );
 
@@ -1789,7 +1789,7 @@ abstract class Document extends Controls_Stack {
 	 * @access public
 	 */
 	public function print_elements( $elements_data ) {
-		$is_element_cache_active = 'disable' !== get_option( 'elementor_element_cache_ttl', '' );
+		$is_element_cache_active = 'disable' !== get_option( 'refraction_element_cache_ttl', '' );
 		if ( ! $is_element_cache_active ) {
 			ob_start();
 
@@ -1809,7 +1809,7 @@ abstract class Document extends Controls_Stack {
 		$cached_data = $this->get_document_cache();
 
 		if ( false === $cached_data ) {
-			add_filter( 'elementor/element/should_render_shortcode', '__return_true' );
+			add_filter( 'refraction/element/should_render_shortcode', '__return_true' );
 
 			$scripts_to_queue = [];
 			$styles_to_queue = [];
@@ -1845,7 +1845,7 @@ abstract class Document extends Controls_Stack {
 				$this->set_document_cache( $cached_data );
 			}
 
-			remove_filter( 'elementor/element/should_render_shortcode', '__return_true' );
+			remove_filter( 'refraction/element/should_render_shortcode', '__return_true' );
 		} else {
 			if ( ! empty( $cached_data['scripts'] ) ) {
 				foreach ( $cached_data['scripts'] as $script_handle ) {
@@ -1883,11 +1883,11 @@ abstract class Document extends Controls_Stack {
 	}
 
 	private function should_enqueue_cached_style( $style_handle ): bool {
-		if ( 0 !== strpos( $style_handle, 'elementor-post' ) ) {
+		if ( 0 !== strpos( $style_handle, 'refraction-post' ) ) {
 			return true;
 		}
 
-		return (bool) wp_styles()->query( 'elementor-frontend', 'registered' );
+		return (bool) wp_styles()->query( 'refraction-frontend', 'registered' );
 	}
 
 	protected function do_print_elements( $elements_data ) {
@@ -1918,7 +1918,7 @@ abstract class Document extends Controls_Stack {
 	}
 
 	public function set_document_cache( $value ) {
-		$expiration_hours = get_option( 'elementor_element_cache_ttl', '' );
+		$expiration_hours = get_option( 'refraction_element_cache_ttl', '' );
 
 		if ( empty( $expiration_hours ) || ! is_numeric( $expiration_hours ) ) {
 			$expiration_hours = '24';
@@ -1975,7 +1975,7 @@ abstract class Document extends Controls_Stack {
 		$this->start_controls_section(
 			'document_settings',
 			[
-				'label' => esc_html__( 'General Settings', 'elementor' ),
+				'label' => esc_html__( 'General Settings', 'refraction' ),
 				'tab' => Controls_Manager::TAB_SETTINGS,
 			]
 		);
@@ -1983,7 +1983,7 @@ abstract class Document extends Controls_Stack {
 		$this->add_control(
 			'post_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => $this->post->post_title,
 				'label_block' => true,
@@ -1999,13 +1999,13 @@ abstract class Document extends Controls_Stack {
 
 			$statuses = $this->get_post_statuses();
 			if ( 'future' === $this->get_main_post()->post_status ) {
-				$statuses['future'] = esc_html__( 'Future', 'elementor' );
+				$statuses['future'] = esc_html__( 'Future', 'refraction' );
 			}
 
 			$this->add_control(
 				'post_status',
 				[
-					'label' => esc_html__( 'Status', 'elementor' ),
+					'label' => esc_html__( 'Status', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => $this->get_main_post()->post_status,
 					'options' => $statuses,
@@ -2105,7 +2105,7 @@ abstract class Document extends Controls_Stack {
 		return $this->elements_iteration_actions;
 	}
 
-	public function get_elementor_version() {
-		return $this->get_main_meta( '_elementor_version' );
+	public function get_refraction_version() {
+		return $this->get_main_meta( '_refraction_version' );
 	}
 }

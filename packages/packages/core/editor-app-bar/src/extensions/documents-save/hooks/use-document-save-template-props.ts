@@ -1,5 +1,5 @@
-import { __useActiveDocumentActions as useActiveDocumentActions } from '@elementor/editor-documents';
-import { useMixpanel } from '@elementor/events';
+import { __useActiveDocumentActions as useActiveDocumentActions } from '@refraction/editor-documents';
+import { useMixpanel } from '@refraction/events';
 import { FolderIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -11,7 +11,7 @@ export default function useDocumentSaveTemplateProps(): ActionProps {
 
 	return {
 		icon: FolderIcon,
-		title: __( 'Save as Template', 'elementor' ),
+		title: __( 'Save as Template', 'refraction' ),
 		onClick: () => {
 			const eventName = config?.names?.editorOne?.topBarPublishDropdown;
 			if ( eventName ) {

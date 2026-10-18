@@ -7,7 +7,7 @@ import {
 	type PropKey,
 	type Props,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { FormHelperText, FormLabel, Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -46,8 +46,8 @@ export const KeyValueControl = createControl( ( props: KeyValueControlProps = {}
 		value: getInitialFieldValue( value?.value ),
 	} );
 
-	const keyLabel = props.keyName || __( 'Key', 'elementor' );
-	const valueLabel = props.valueName || __( 'Value', 'elementor' );
+	const keyLabel = props.keyName || __( 'Key', 'refraction' );
+	const valueLabel = props.valueName || __( 'Value', 'refraction' );
 	const { keyHelper, valueHelper } = props.getHelperText?.( sessionState.key, sessionState.value ) || {
 		keyHelper: undefined,
 		valueHelper: undefined,
@@ -57,7 +57,7 @@ export const KeyValueControl = createControl( ( props: KeyValueControlProps = {}
 		() => [
 			props.regexKey ? new RegExp( props.regexKey ) : undefined,
 			props.regexValue ? new RegExp( props.regexValue ) : undefined,
-			props.validationErrorMessage || __( 'Invalid Format', 'elementor' ),
+			props.validationErrorMessage || __( 'Invalid Format', 'refraction' ),
 		],
 		[ props.regexKey, props.regexValue, props.validationErrorMessage ]
 	);

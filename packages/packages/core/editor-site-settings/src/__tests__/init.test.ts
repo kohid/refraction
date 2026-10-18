@@ -1,6 +1,6 @@
-import { injectIntoTop } from '@elementor/editor';
+import { injectIntoTop } from '@refraction/editor';
 
-jest.mock( '@elementor/editor', () => ( {
+jest.mock( '@refraction/editor', () => ( {
 	injectIntoTop: jest.fn(),
 } ) );
 

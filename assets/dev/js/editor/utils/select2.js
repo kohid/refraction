@@ -1,4 +1,4 @@
-export default class Select2 extends elementorModules.ViewModule {
+export default class Select2 extends refractionModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {

@@ -1,8 +1,8 @@
-import type { V4PromotionData, V4PromotionKey } from '@elementor/editor-controls';
-import type { DynamicTag, DynamicTags, DynamicTagsManager, InteractionsConfig } from '@elementor/editor-editing-panel';
-import type { ControlItem, V1Element } from '@elementor/editor-elements';
-import type { PropsSchema, PropValue } from '@elementor/editor-props';
-import type { EnqueueFont } from '@elementor/editor-v1-adapters';
+import type { V4PromotionData, V4PromotionKey } from '@refraction/editor-controls';
+import type { DynamicTag, DynamicTags, DynamicTagsManager, InteractionsConfig } from '@refraction/editor-editing-panel';
+import type { ControlItem, V1Element } from '@refraction/editor-elements';
+import type { PropsSchema, PropValue } from '@refraction/editor-props';
+import type { EnqueueFont } from '@refraction/editor-v1-adapters';
 
 interface OnboardingConfig {
 	version: string;
@@ -53,7 +53,7 @@ declare global {
 				register?: ( component: string, route: string, callback: () => unknown ) => unknown;
 			};
 		};
-		elementorCommon?: {
+		refractionCommon?: {
 			eventsManager?: {
 				dispatchEvent?: ( name: string, data: unknown, options?: Record< string, unknown > ) => void;
 				canSendEvents?: () => boolean;
@@ -95,7 +95,7 @@ declare global {
 					subscription_id?: string | null;
 					site_url?: string;
 					wp_version?: string;
-					elementor_version?: string;
+					refraction_version?: string;
 					site_language?: string;
 					site_key?: string;
 					flags_enabled?: boolean;
@@ -110,7 +110,7 @@ declare global {
 				};
 			};
 		};
-		elementor?: {
+		refraction?: {
 			$preview?: [ HTMLIFrameElement ];
 			changeEditMode?: ( newMode: string ) => void;
 			channels?: {
@@ -186,23 +186,23 @@ declare global {
 				extend: ( options: Record< string, unknown > ) => unknown;
 			};
 		};
-		elementorFrontend?: {
+		refractionFrontend?: {
 			config?: {
 				is_rtl?: boolean;
 			};
 		};
-		elementorPro?: {
+		refractionPro?: {
 			config?: {
 				version?: string;
 				isActive?: boolean;
 			};
 		};
-		elementorAppConfig?: {
+		refractionAppConfig?: {
 			onboarding?: OnboardingConfig;
 		};
-		ElementorInteractionsConfig?: InteractionsConfig;
-		ElementorVariablesQuotaConfig?: Record< string, number >;
-		ElementorVariablesQuotaConfigExtended?: Record< string, number >;
+		RefractionInteractionsConfig?: InteractionsConfig;
+		RefractionVariablesQuotaConfig?: Record< string, number >;
+		RefractionVariablesQuotaConfigExtended?: Record< string, number >;
 		wpApiSettings?: {
 			root: string;
 			nonce: string;

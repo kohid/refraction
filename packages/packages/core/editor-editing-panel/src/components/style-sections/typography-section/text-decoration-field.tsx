@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ToggleControl, type ToggleControlProps } from '@elementor/editor-controls';
+import { ToggleControl, type ToggleControlProps } from '@refraction/editor-controls';
 import { MinusIcon, OverlineIcon, StrikethroughIcon, UnderlineIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -8,31 +8,31 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type Decoration = 'none' | 'underline' | 'line-through' | 'overline';
 
-const TEXT_DECORATION_LABEL = __( 'Line decoration', 'elementor' );
+const TEXT_DECORATION_LABEL = __( 'Line decoration', 'refraction' );
 
 const options: ToggleControlProps< Decoration >[ 'options' ] = [
 	{
 		value: 'none',
-		label: __( 'None', 'elementor' ),
+		label: __( 'None', 'refraction' ),
 		renderContent: ( { size } ) => <MinusIcon fontSize={ size } />,
 		showTooltip: true,
 		exclusive: true,
 	},
 	{
 		value: 'underline',
-		label: __( 'Underline', 'elementor' ),
+		label: __( 'Underline', 'refraction' ),
 		renderContent: ( { size } ) => <UnderlineIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'line-through',
-		label: __( 'Line-through', 'elementor' ),
+		label: __( 'Line-through', 'refraction' ),
 		renderContent: ( { size } ) => <StrikethroughIcon fontSize={ size } />,
 		showTooltip: true,
 	},
 	{
 		value: 'overline',
-		label: __( 'Overline', 'elementor' ),
+		label: __( 'Overline', 'refraction' ),
 		renderContent: ( { size } ) => <OverlineIcon fontSize={ size } />,
 		showTooltip: true,
 	},

@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@elementor/query';
+import { useInfiniteQuery } from '@refraction/query';
 
 import { getRequest, type PostsResponse, type Slug } from '../api/post';
 import { type Post } from '../types';

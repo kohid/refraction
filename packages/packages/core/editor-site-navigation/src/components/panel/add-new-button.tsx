@@ -22,7 +22,7 @@ export default function AddNewButton() {
 				px: 1.5,
 			} }
 		>
-			{ __( 'Add New', 'elementor' ) }
+			{ __( 'Add New', 'refraction' ) }
 		</Button>
 	);
 }

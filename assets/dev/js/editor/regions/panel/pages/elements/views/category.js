@@ -3,30 +3,30 @@ var CREATE_WIDGET_PROMPT = require( './widget-creation' ).CREATE_WIDGET_PROMPT,
 	PanelElementsCategoryView;
 
 PanelElementsCategoryView = Marionette.CompositeView.extend( {
-	template: '#tmpl-elementor-panel-elements-category',
+	template: '#tmpl-refraction-panel-elements-category',
 
-	className: 'elementor-panel-category',
+	className: 'refraction-panel-category',
 
 	ui: {
-		title: '.elementor-panel-category-title',
-		items: '.elementor-panel-category-items',
-		chip: '.elementor-panel-heading-category-chip',
+		title: '.refraction-panel-category-title',
+		items: '.refraction-panel-category-items',
+		chip: '.refraction-panel-heading-category-chip',
 	},
 
 	events: {
 		'click @ui.title': 'onTitleClick',
 		'click @ui.chip': 'onChipClick',
-		'click .elementor-panel-custom-widgets__cta': 'onCustomWidgetsCtaClick',
-		'click .elementor-panel-heading-promotion a': 'onPromotionLinkClick',
+		'click .refraction-panel-custom-widgets__cta': 'onCustomWidgetsCtaClick',
+		'click .refraction-panel-heading-promotion a': 'onPromotionLinkClick',
 	},
 
 	id() {
-		return 'elementor-panel-category-' + this.model.get( 'name' );
+		return 'refraction-panel-category-' + this.model.get( 'name' );
 	},
 
-	childView: require( 'elementor-panel/pages/elements/views/element' ),
+	childView: require( 'refraction-panel/pages/elements/views/element' ),
 
-	childViewContainer: '.elementor-panel-category-items',
+	childViewContainer: '.refraction-panel-category-items',
 
 	initialize() {
 		let items = this.model.get( 'items' ) || [];
@@ -41,11 +41,11 @@ PanelElementsCategoryView = Marionette.CompositeView.extend( {
 	},
 
 	behaviors() {
-		return elementor.hooks.applyFilters( 'panel/category/behaviors', {}, this );
+		return refraction.hooks.applyFilters( 'panel/category/behaviors', {}, this );
 	},
 
 	onRender() {
-		let isActive = elementor.channels.panelElements.request(
+		let isActive = refraction.channels.panelElements.request(
 			'category:' + this.model.get( 'name' ) + ':active',
 		);
 
@@ -58,7 +58,7 @@ PanelElementsCategoryView = Marionette.CompositeView.extend( {
 		}
 
 		if ( isActive ) {
-			this.$el.addClass( 'elementor-active' );
+			this.$el.addClass( 'refraction-active' );
 		} else {
 			this.ui.items.css( 'display', 'none' );
 		}
@@ -67,27 +67,27 @@ PanelElementsCategoryView = Marionette.CompositeView.extend( {
 	onTitleClick() {
 		this.toggle();
 
-		elementorCommon.eventsManager.dispatchEvent(
-			elementorCommon.eventsManager.config.names[ this.model.get( 'name' ) ]?.v1,
+		refractionCommon.eventsManager.dispatchEvent(
+			refractionCommon.eventsManager.config.names[ this.model.get( 'name' ) ]?.v1,
 			{
-				location: elementorCommon.eventsManager.config.locations.widgetPanel,
+				location: refractionCommon.eventsManager.config.locations.widgetPanel,
 				secondaryLocation:
-          elementorCommon.eventsManager.config.secondaryLocations[ this.model.get( 'name' ) ],
-				trigger: elementorCommon.eventsManager.config.triggers.accordionClick,
-				element: elementorCommon.eventsManager.config.elements.accordionSection,
+          refractionCommon.eventsManager.config.secondaryLocations[ this.model.get( 'name' ) ],
+				trigger: refractionCommon.eventsManager.config.triggers.accordionClick,
+				element: refractionCommon.eventsManager.config.elements.accordionSection,
 			},
 		);
 	},
 
 	toggle( state, animate = true ) {
 		var $items = this.ui.items,
-			activeClass = 'elementor-active',
+			activeClass = 'refraction-active',
 			isActive = undefined !== state ? ! state : this.$el.hasClass( activeClass ),
 			visibilityFn = isActive ? 'hide' : 'show',
 			slideFn = isActive ? 'slideUp' : 'slideDown',
-			updateScrollbar = () => elementor.getPanelView().updateScrollbar();
+			updateScrollbar = () => refraction.getPanelView().updateScrollbar();
 
-		elementor.channels.panelElements.reply(
+		refraction.channels.panelElements.reply(
 			'category:' + this.model.get( 'name' ) + ':active',
 			! isActive,
 		);
@@ -115,7 +115,7 @@ PanelElementsCategoryView = Marionette.CompositeView.extend( {
 		event.stopPropagation();
 
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/editor/create-widget', {
+			new CustomEvent( 'refraction/editor/create-widget', {
 				detail: {
 					prompt: CREATE_WIDGET_PROMPT,
 					entry_point: 'widgets_panel',

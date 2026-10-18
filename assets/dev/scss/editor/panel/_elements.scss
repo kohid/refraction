@@ -2,9 +2,9 @@
 // Panel Elements
 //
 
-#elementor-panel-elements-navigation {
+#refraction-panel-elements-navigation {
 
-	.elementor-panel-navigation-tab {
+	.refraction-panel-navigation-tab {
 		text-align: center;
 		padding: 10px 0;
 		font-size: $font-size-sm;
@@ -12,14 +12,14 @@
 	}
 }
 
-#elementor-panel-elements {
+#refraction-panel-elements {
 	overflow: hidden;
 }
 
-#elementor-panel-state-loading {
+#refraction-panel-state-loading {
 	display: none;
 
-	body.elementor-panel-loading & {
+	body.refraction-panel-loading & {
 		position: absolute;
 		inset: 0;
 		display: flex;
@@ -35,7 +35,7 @@
 	}
 }
 
-#elementor-panel-elements-search-area {
+#refraction-panel-elements-search-area {
 	background-color: var(--e-a-bg-default);
 	position: sticky;
 	inset-block-start: 0;
@@ -43,15 +43,15 @@
 	z-index: $first-layer;
 }
 
-#elementor-panel-elements-search-area:empty {
+#refraction-panel-elements-search-area:empty {
 	display: none;
 }
 
-#elementor-panel-elements-search-wrapper {
+#refraction-panel-elements-search-wrapper {
 	position: relative;
 }
 
-#elementor-panel-elements-search-input {
+#refraction-panel-elements-search-input {
 	font-size: 11px;
 	padding-block: 10px;
 	padding-inline: 29px 10px;
@@ -88,9 +88,9 @@
 	}
 }
 
-.elementor-panel {
+.refraction-panel {
 
-	.elementor-element {
+	.refraction-element {
 		font-family: var(--e-a-font-family);
 		color: var(--e-a-color-txt);
 		line-height: 1;
@@ -105,7 +105,7 @@
 
 		&--promotion {
 
-			.elementor-element {
+			.refraction-element {
 				cursor: pointer;
 				user-select: none;
 			}
@@ -178,7 +178,7 @@
 	}
 }
 
-#elementor-element--promotion__dialog {
+#refraction-element--promotion__dialog {
 	position: absolute;
 	width: 300px;
 	z-index: 1;
@@ -304,11 +304,11 @@
 	}
 }
 
-#elementor-panel-elements-widget-creation-area:empty {
+#refraction-panel-elements-widget-creation-area:empty {
 	display: none;
 }
 
-.elementor-panel-elements-widget-creation {
+.refraction-panel-elements-widget-creation {
 	text-align: center;
 	padding: 30px 20px;
 
@@ -354,7 +354,7 @@
 	}
 }
 
-.elementor-panel-category-custom-widgets-empty {
+.refraction-panel-category-custom-widgets-empty {
 	grid-column: 1 / -1;
 	width: 100%;
 	padding: 0 16px 16px;
@@ -367,7 +367,7 @@
 	}
 }
 
-.elementor-panel-heading.elementor-panel-category-title .elementor-panel-custom-widgets__cta--heading {
+.refraction-panel-heading.refraction-panel-category-title .refraction-panel-custom-widgets__cta--heading {
 	margin-inline-start: auto;
 	padding: 4px 10px;
 	border: none;

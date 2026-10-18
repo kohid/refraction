@@ -1,6 +1,6 @@
-import { getCurrentDocument } from '@elementor/editor-documents';
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
-import { __dispatch as dispatch } from '@elementor/store';
+import { getCurrentDocument } from '@refraction/editor-documents';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { apiClient, type StyleDefinitionsNullableMap } from './api';
 import { slice } from './store';

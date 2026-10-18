@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { SizeControl } from '@elementor/editor-controls';
+import { SizeControl } from '@refraction/editor-controls';
 import { Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -11,15 +11,15 @@ const DEFAULT_UNIT = 'fr' as const;
 
 type SizeControlProps = React.ComponentProps< typeof SizeControl >;
 
-const AUTO_ROWS_LABEL = __( 'Auto rows', 'elementor' );
-const AUTO_COLUMNS_LABEL = __( 'Auto columns', 'elementor' );
+const AUTO_ROWS_LABEL = __( 'Auto rows', 'refraction' );
+const AUTO_COLUMNS_LABEL = __( 'Auto columns', 'refraction' );
 const AUTO_ROWS_TOOLTIP = __(
 	'Set the size for new rows created automatically when content exceeds the defined grid.',
-	'elementor'
+	'refraction'
 );
 const AUTO_COLUMNS_TOOLTIP = __(
 	'Set the size for new columns created automatically when content exceeds the defined grid.',
-	'elementor'
+	'refraction'
 );
 
 type GridAutoTrackFieldProps = {

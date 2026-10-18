@@ -5,17 +5,17 @@ import {
 	getElements,
 	getElementStyles,
 	updateElementStyle,
-} from '@elementor/editor-elements';
-import type { StyleDefinition } from '@elementor/editor-styles';
-import { __privateListenTo as listenTo } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import type { StyleDefinition } from '@refraction/editor-styles';
+import { __privateListenTo as listenTo } from '@refraction/editor-v1-adapters';
 
 import { InvalidElementsStyleProviderMetaError } from '../errors';
 import { documentElementsStylesProvider } from '../providers/document-elements-styles-provider';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	__privateListenTo: jest.fn(),
 } ) );
 

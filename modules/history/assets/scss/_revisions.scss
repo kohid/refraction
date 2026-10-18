@@ -1,4 +1,4 @@
-.elementor-revision- {
+.refraction-revision- {
 
 	&item {
 		&__wrapper {
@@ -22,14 +22,14 @@
 
 		&-loading {
 
-			.elementor-revision-item__tools-current {
+			.refraction-revision-item__tools-current {
 				display: none;
 			}
 		}
 
-		&:not(.elementor-revision-item-loading) {
+		&:not(.refraction-revision-item-loading) {
 
-			.elementor-revision-item__tools-spinner {
+			.refraction-revision-item__tools-spinner {
 				display: none;
 			}
 		}
@@ -58,14 +58,14 @@
 
 	&current-preview {
 
-		.elementor-revision-item__wrapper {
+		.refraction-revision-item__wrapper {
 			border-color: var(--e-a-border-color-accent);
 			background-color: var(--e-a-bg-active);
 		}
 	}
 }
 
-#elementor-panel-revisions-loading {
+#refraction-panel-revisions-loading {
 	@include absolute-center;
 
 	.eicon-loading {

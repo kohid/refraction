@@ -2,7 +2,7 @@ export class Move extends $e.modules.editor.document.CommandHistoryBase {
 	validateArgs( args ) {
 		this.requireContainer( args );
 
-		this.requireArgumentInstance( 'target', elementorModules.editor.Container, args );
+		this.requireArgumentInstance( 'target', refractionModules.editor.Container, args );
 	}
 
 	getHistory( args ) {

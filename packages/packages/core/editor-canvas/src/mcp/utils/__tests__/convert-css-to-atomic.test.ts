@@ -1,8 +1,8 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { convertCssToAtomic, convertStyleBlocksToAtomic } from '../convert-css-to-atomic';
 
-jest.mock( '@elementor/http-client' );
+jest.mock( '@refraction/http-client' );
 
 const mockedHttpService = jest.mocked( httpService );
 
@@ -23,7 +23,7 @@ describe( 'convertCssToAtomic', () => {
 		const result = await convertCssToAtomic( { color: 'red', gap: '4px' } );
 
 		// Assert.
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/css-to-atomic', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/css-to-atomic', {
 			blocks: { default: { color: 'red', gap: '4px' } },
 		} );
 		expect( result ).toEqual( {
@@ -42,7 +42,7 @@ describe( 'convertCssToAtomic', () => {
 		const result = await convertCssToAtomic( { color: null } );
 
 		// Assert.
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/css-to-atomic', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/css-to-atomic', {
 			blocks: { default: { color: null } },
 		} );
 		expect( result ).toEqual( { props: { color: null }, customCss: '' } );
@@ -64,7 +64,7 @@ describe( 'convertStyleBlocksToAtomic', () => {
 		} );
 
 		// Assert.
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/css-to-atomic', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/css-to-atomic', {
 			blocks: { 'el-1': { color: 'red' }, 'el-2': { gap: '4px' } },
 		} );
 		expect( results ).toEqual( {
@@ -87,7 +87,7 @@ describe( 'convertStyleBlocksToAtomic', () => {
 		} );
 
 		// Assert.
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/css-to-atomic', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/css-to-atomic', {
 			blocks: { default: 'display: flex;', hover: 'opacity: 0.85;' },
 		} );
 		expect( results ).toEqual( {
@@ -104,6 +104,6 @@ describe( 'convertStyleBlocksToAtomic', () => {
 		await convertStyleBlocksToAtomic( {} );
 
 		// Assert.
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/css-to-atomic', { blocks: {} } );
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/css-to-atomic', { blocks: {} } );
 	} );
 } );

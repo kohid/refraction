@@ -13,7 +13,7 @@ test.describe( 'Device mode', () => {
 		await page.waitForSelector( '.e-con' );
 
 		const deviceMode = await page.evaluate( () => {
-			return elementorFrontend.getCurrentDeviceMode();
+			return refractionFrontend.getCurrentDeviceMode();
 		} );
 
 		const isInDesktopMode = 'desktop' === deviceMode;

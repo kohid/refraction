@@ -25,7 +25,7 @@ export function ReExportBanner() {
 				>
 					<Box component="i" className="eicon-info-circle" />
 					<Typography variant="body2">
-						{ __( 'This website template was exported from an older version of Elementor. If possible, re-export it with the latest version for better capabilities.', 'elementor' ) }
+						{ __( 'This website template was exported from an older version of Refraction. If possible, re-export it with the latest version for better capabilities.', 'refraction' ) }
 					</Typography>
 				</Stack>
 				<Link
@@ -36,7 +36,7 @@ export function ReExportBanner() {
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					{ __( 'Learn more', 'elementor' ) }
+					{ __( 'Learn more', 'refraction' ) }
 				</Link>
 			</Stack>
 		</Paper>

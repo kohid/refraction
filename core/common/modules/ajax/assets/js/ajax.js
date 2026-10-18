@@ -2,16 +2,16 @@ const MAX_RETRIES = 3;
 const RETRY_BASE_DELAY_MS = 1000;
 const RETRY_MAX_DELAY_MS = 30000;
 
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	getDefaultSettings() {
 		return {
 			ajaxParams: {
 				type: 'POST',
-				url: elementorCommon.config.ajax.url,
+				url: refractionCommon.config.ajax.url,
 				data: {},
 				dataType: 'json',
 			},
-			actionPrefix: 'elementor_',
+			actionPrefix: 'refraction_',
 		};
 	}
 
@@ -205,7 +205,7 @@ export default class extends elementorModules.Module {
 
 	prepareSend( action, options ) {
 		const settings = this.getSettings(),
-			ajaxParams = elementorCommon.helpers.cloneObject( settings.ajaxParams );
+			ajaxParams = refractionCommon.helpers.cloneObject( settings.ajaxParams );
 
 		options = options || {};
 
@@ -213,7 +213,7 @@ export default class extends elementorModules.Module {
 
 		jQuery.extend( ajaxParams, options );
 
-		const requestConstants = elementorCommon.helpers.cloneObject( this.requestConstants );
+		const requestConstants = refractionCommon.helpers.cloneObject( this.requestConstants );
 
 		requestConstants.action = action;
 

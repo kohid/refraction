@@ -5,7 +5,7 @@ export class Close extends $e.modules.CommandBase {
 
 	async apply( args ) {
 		const { id, mode, onClose } = args,
-			document = elementor.documents.get( id );
+			document = refraction.documents.get( id );
 
 		// Already closed.
 		if ( 'closed' === document.editor.status ) {
@@ -47,17 +47,17 @@ export class Close extends $e.modules.CommandBase {
 			return this.confirmDialog;
 		}
 
-		this.confirmDialog = elementorCommon.dialogsManager.createWidget( 'confirm', {
-			id: 'elementor-document-save-on-close',
-			headerMessage: __( 'You are leaving to a separate site part.', 'elementor' ),
-			message: __( 'Save your changes before moving on because the current document and the one you’re moving to are separate site parts.', 'elementor' ),
+		this.confirmDialog = refractionCommon.dialogsManager.createWidget( 'confirm', {
+			id: 'refraction-document-save-on-close',
+			headerMessage: __( 'You are leaving to a separate site part.', 'refraction' ),
+			message: __( 'Save your changes before moving on because the current document and the one you’re moving to are separate site parts.', 'refraction' ),
 			position: {
 				my: 'center center',
 				at: 'center center',
 			},
 			strings: {
-				confirm: __( 'Save & leave', 'elementor' ),
-				cancel: __( 'Don\'t leave', 'elementor' ),
+				confirm: __( 'Save & leave', 'refraction' ),
+				cancel: __( 'Don\'t leave', 'refraction' ),
 			},
 			onHide: () => {
 				// If still not action chosen. use `defer` because onHide is called before onConfirm/onCancel.

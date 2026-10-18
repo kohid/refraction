@@ -13,7 +13,7 @@ function filterChildren( elements ) {
 		if ( ! element ) {
 			return acc;
 		}
-		const isKnownType = elementor.elementsManager.getElementTypeClass( element.widgetType ?? element.elType );
+		const isKnownType = refraction.elementsManager.getElementTypeClass( element.widgetType ?? element.elType );
 		if ( ! isKnownType ) {
 			return acc;
 		}

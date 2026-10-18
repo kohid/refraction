@@ -1,4 +1,4 @@
-import { type PropsSchema } from '@elementor/editor-props';
+import { type PropsSchema } from '@refraction/editor-props';
 
 import { createMockSingleSizeFilterPropType } from './create-mock-filter-schema';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useEffect, useRef } from 'react';
-import { PopoverHeader } from '@elementor/editor-ui';
+import { PopoverHeader } from '@refraction/editor-ui';
 import { MathFunctionIcon } from '@elementor/icons';
 import { bindPopover, Popover, type PopupState, TextField } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -57,7 +57,7 @@ export const TextFieldPopover = ( { popupState, anchorRef, value, onChange, onCl
 			onClose={ handleClose }
 		>
 			<PopoverHeader
-				title={ __( 'CSS function', 'elementor' ) }
+				title={ __( 'CSS function', 'refraction' ) }
 				onClose={ handleClose }
 				icon={ <MathFunctionIcon fontSize={ SIZE } /> }
 			/>

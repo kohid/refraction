@@ -21,7 +21,7 @@ const RESOLVE_EXTENSIONS = [ '.js', '.ts', '.jsx', '.tsx' ];
  * `utils/chunk-loader.js`, which the frontend entry imports early so the assignment has run before
  * any handler tries to load.
  */
-const LOADER_CALL = '__elementorLoadChunk';
+const LOADER_CALL = '__refractionLoadChunk';
 
 /**
  * Derives a chunk name from an absolute resolved path so that two call sites with the same
@@ -95,7 +95,7 @@ function resolveSpecifier( specifier, importer, aliases ) {
 }
 
 /**
- * Rewrites dynamic `import()` calls in the frontend graph to `__elementorLoadChunk()` and records
+ * Rewrites dynamic `import()` calls in the frontend graph to `__refractionLoadChunk()` and records
  * each chunk's absolute source path for a later pass to build as its own bundle.
  *
  * The plugin populates the passed `chunks` map rather than returning it because Rolldown may
@@ -106,7 +106,7 @@ export function frontendChunksPlugin( { chunks } ) {
 	const aliases = loadAliases();
 
 	return {
-		name: 'elementor-frontend-chunks',
+		name: 'refraction-frontend-chunks',
 		enforce: 'pre',
 		transform( code, id ) {
 			if ( ! code.includes( 'import(' ) ) {

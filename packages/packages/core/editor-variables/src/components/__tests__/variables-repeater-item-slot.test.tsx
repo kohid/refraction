@@ -5,8 +5,8 @@ import {
 	dropShadowFilterPropTypeUtil,
 	sizePropTypeUtil,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
-import { type PropValue } from '@elementor/editor-props';
+} from '@refraction/editor-props';
+import { type PropValue } from '@refraction/editor-props';
 import { render, screen } from '@testing-library/react';
 
 import { colorVariablePropTypeUtil, customSizeVariablePropTypeUtil, sizeVariablePropTypeUtil } from '../../prop-types';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 function getStickyPromotion() {
-	return window.elementor?.config?.editingPanelStickyPromotion;
+	return window.refraction?.config?.editingPanelStickyPromotion;
 }
 
 export const EditingPanelStickyPromotion = () => {
@@ -12,8 +12,8 @@ export const EditingPanelStickyPromotion = () => {
 	}
 
 	return (
-		<div className="elementor-panel-editor-sticky-promotion">
-			<div className="elementor-get-pro-sticky-message">
+		<div className="refraction-panel-editor-sticky-promotion">
+			<div className="refraction-get-pro-sticky-message">
 				{ promotion.message }{ ' ' }
 				<a target="_blank" rel="noreferrer" href={ promotion.url }>
 					{ promotion.button_text }

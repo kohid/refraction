@@ -7,7 +7,7 @@ class Tab extends Component {
 	componentDidMount = () => {
 		if ( this.props.selected && this.props.selected.value ) {
 			setTimeout( () => {
-				const element = document.querySelector( '.elementor-selected' );
+				const element = document.querySelector( '.refraction-selected' );
 				if ( element ) {
 					element.scrollIntoView( false );
 				}
@@ -22,9 +22,9 @@ class Tab extends Component {
 				iconName = icon[ 0 ],
 				className = iconData.displayPrefix + ' ' + iconData.selector;
 
-			let containerClass = 'elementor-icons-manager__tab__item';
+			let containerClass = 'refraction-icons-manager__tab__item';
 			if ( selected.value === className ) {
-				containerClass += ' elementor-selected';
+				containerClass += ' refraction-selected';
 			}
 
 			const key = containerClass + type + '-' + iconName + filter;
@@ -54,7 +54,7 @@ class Tab extends Component {
 	};
 
 	getLibrary = ( libraryName ) => {
-		const icons = elementor.config.icons.libraries.filter( ( library ) => {
+		const icons = refraction.config.icons.libraries.filter( ( library ) => {
 			return libraryName === library.name;
 		} );
 		return icons;
@@ -103,7 +103,7 @@ class Tab extends Component {
 		const icons = this.getIconsComponentList();
 		let selectedIndex = -1;
 		for ( const [ index, icon ] of icons.entries() ) {
-			if ( icon.props.containerClass.includes( 'elementor-selected' ) ) {
+			if ( icon.props.containerClass.includes( 'refraction-selected' ) ) {
 				selectedIndex = index;
 				break;
 			}

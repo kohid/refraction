@@ -4,11 +4,11 @@ export default class extends Marionette.ItemView {
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-panel-history-item';
+		return '#tmpl-refraction-panel-history-item';
 	}
 
 	className() {
-		return 'elementor-history-item elementor-history-item-' + this.model.get( 'status' );
+		return 'refraction-history-item refraction-history-item-' + this.model.get( 'status' );
 	}
 
 	triggers() {

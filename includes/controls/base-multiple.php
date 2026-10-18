@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor control base multiple.
+ * Refraction control base multiple.
  *
  * An abstract class for creating new controls in the panel that return
  * more than a single value. Each value of the multi-value control will

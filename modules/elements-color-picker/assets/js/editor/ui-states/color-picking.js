@@ -1,4 +1,4 @@
-import UiStateBase from 'elementor-api/core/states/ui-state-base';
+import UiStateBase from 'refraction-api/core/states/ui-state-base';
 
 export const COLOR_PICKING_ON = 'on';
 
@@ -12,7 +12,7 @@ export class ColorPicking extends UiStateBase {
 
 	getScopes() {
 		return [
-			elementor.$previewContents[ 0 ].body,
+			refraction.$previewContents[ 0 ].body,
 		];
 	}
 
@@ -31,11 +31,11 @@ export class ColorPicking extends UiStateBase {
 	 * @return {void}
 	 */
 	onChange( oldValue, newValue ) {
-		const editAreaClass = 'elementor-edit-area-active',
+		const editAreaClass = 'refraction-edit-area-active',
 			isColorPickingOn = ( COLOR_PICKING_ON === newValue ),
 			editMode = isColorPickingOn ? 'picker' : 'edit';
 
-		elementor.changeEditMode( editMode );
+		refraction.changeEditMode( editMode );
 		this.toggleScopesClass( editAreaClass, isColorPickingOn );
 	}
 

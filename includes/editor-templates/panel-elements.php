@@ -1,48 +1,48 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 ?>
-<script type="text/template" id="tmpl-elementor-panel-elements">
+<script type="text/template" id="tmpl-refraction-panel-elements">
 	<# if ( $e.components.get( 'document/elements' ).utils.allowAddingWidgets()) { #>
-	<div id="elementor-panel-elements-navigation" class="elementor-panel-navigation">
-		<button class="elementor-component-tab elementor-panel-navigation-tab" data-tab="categories"><?php echo esc_html__( 'Elements', 'elementor' ); ?></button>
-		<button class="elementor-component-tab elementor-panel-navigation-tab" data-tab="global"><?php echo esc_html__( 'Globals', 'elementor' ); ?></button>
+	<div id="refraction-panel-elements-navigation" class="refraction-panel-navigation">
+		<button class="refraction-component-tab refraction-panel-navigation-tab" data-tab="categories"><?php echo esc_html__( 'Elements', 'refraction' ); ?></button>
+		<button class="refraction-component-tab refraction-panel-navigation-tab" data-tab="global"><?php echo esc_html__( 'Globals', 'refraction' ); ?></button>
 	</div>
 	<# } #>
-	<div id="elementor-panel-elements-search-area"></div>
-	<div id="elementor-panel-elements-notice-area"></div>
-	<div id="elementor-panel-elements-wrapper"></div>
+	<div id="refraction-panel-elements-search-area"></div>
+	<div id="refraction-panel-elements-notice-area"></div>
+	<div id="refraction-panel-elements-wrapper"></div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-panel-categories">
-	<div id="elementor-panel-categories"></div>
+<script type="text/template" id="tmpl-refraction-panel-categories">
+	<div id="refraction-panel-categories"></div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-panel-elements-category">
-	<button class="elementor-panel-heading elementor-panel-category-title">
-		<span class="elementor-panel-heading-toggle">
+<script type="text/template" id="tmpl-refraction-panel-elements-category">
+	<button class="refraction-panel-heading refraction-panel-category-title">
+		<span class="refraction-panel-heading-toggle">
 			<i class="eicon-caret-right" aria-hidden="true"></i>
 		</span>
-		<span class="elementor-panel-heading-title">{{{ title }}}</span>
-		<?php do_action( 'elementor/editor/templates/panel/category' ); ?>
+		<span class="refraction-panel-heading-title">{{{ title }}}</span>
+		<?php do_action( 'refraction/editor/templates/panel/category' ); ?>
 	</button>
-	<div class="elementor-panel-category-items elementor-responsive-panel">
-		<?php do_action( 'elementor/editor/templates/panel/category/content' ); ?>
+	<div class="refraction-panel-category-items refraction-responsive-panel">
+		<?php do_action( 'refraction/editor/templates/panel/category/content' ); ?>
 	</div>
 </script>
 
-<script type="text/template" id="tmpl-elementor-panel-element-search">
-	<label for="elementor-panel-elements-search-input" class="screen-reader-text"><?php echo esc_html__( 'Search Widget:', 'elementor' ); ?></label>
-	<input type="search" id="elementor-panel-elements-search-input" placeholder="<?php esc_attr_e( 'Search Widget...', 'elementor' ); ?>" autocomplete="off"/>
+<script type="text/template" id="tmpl-refraction-panel-element-search">
+	<label for="refraction-panel-elements-search-input" class="screen-reader-text"><?php echo esc_html__( 'Search Widget:', 'refraction' ); ?></label>
+	<input type="search" id="refraction-panel-elements-search-input" placeholder="<?php esc_attr_e( 'Search Widget...', 'refraction' ); ?>" autocomplete="off"/>
 	<i class="eicon-search-bold" aria-hidden="true"></i>
 </script>
 
-<script type="text/template" id="tmpl-elementor-element-library-element">
-	<button class="elementor-element" data-library-element-type="{{ elType === 'widget' ? widgetType : elType }}">
+<script type="text/template" id="tmpl-refraction-element-library-element">
+	<button class="refraction-element" data-library-element-type="{{ elType === 'widget' ? widgetType : elType }}">
 	<# if ( obj.integration ) { #>
 			<i class="eicon-plug"></i>
 		<# } else if ( false === obj.editable ) { #>
@@ -57,6 +57,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</button>
 </script>
 
-<script type="text/template" id="tmpl-elementor-panel-global">
-	<div class="elementor-nerd-box"></div>
+<script type="text/template" id="tmpl-refraction-panel-global">
+	<div class="refraction-nerd-box"></div>
 </script>

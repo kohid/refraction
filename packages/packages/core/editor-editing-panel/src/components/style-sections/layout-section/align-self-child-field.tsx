@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ToggleControl } from '@elementor/editor-controls';
+import { ToggleControl } from '@refraction/editor-controls';
 import {
 	LayoutAlignCenterIcon as CenterIcon,
 	LayoutAlignLeftIcon,
@@ -15,7 +15,7 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 import { type FlexDirection } from './flex-direction-field';
 import { RotatedIcon } from './utils/rotated-icon';
 
-const ALIGN_SELF_LABEL = __( 'Align self', 'elementor' );
+const ALIGN_SELF_LABEL = __( 'Align self', 'refraction' );
 
 const ALIGN_SELF_CHILD_OFFSET_MAP: Record< FlexDirection, number > = {
 	row: 90,
@@ -34,7 +34,7 @@ const iconProps = {
 const getOptions = ( parentStyleDirection: FlexDirection ) => [
 	{
 		value: 'start',
-		label: __( 'Start', 'elementor' ),
+		label: __( 'Start', 'refraction' ),
 		renderContent: ( { size }: { size: ToggleButtonProps[ 'size' ] } ) => (
 			<RotatedIcon
 				icon={ StartIcon }
@@ -47,7 +47,7 @@ const getOptions = ( parentStyleDirection: FlexDirection ) => [
 	},
 	{
 		value: 'center',
-		label: __( 'Center', 'elementor' ),
+		label: __( 'Center', 'refraction' ),
 		renderContent: ( { size }: { size: ToggleButtonProps[ 'size' ] } ) => (
 			<RotatedIcon
 				icon={ CenterIcon }
@@ -60,7 +60,7 @@ const getOptions = ( parentStyleDirection: FlexDirection ) => [
 	},
 	{
 		value: 'end',
-		label: __( 'End', 'elementor' ),
+		label: __( 'End', 'refraction' ),
 		renderContent: ( { size }: { size: ToggleButtonProps[ 'size' ] } ) => (
 			<RotatedIcon
 				icon={ EndIcon }
@@ -73,7 +73,7 @@ const getOptions = ( parentStyleDirection: FlexDirection ) => [
 	},
 	{
 		value: 'stretch',
-		label: __( 'Stretch', 'elementor' ),
+		label: __( 'Stretch', 'refraction' ),
 		renderContent: ( { size }: { size: ToggleButtonProps[ 'size' ] } ) => (
 			<RotatedIcon
 				icon={ JustifyIcon }

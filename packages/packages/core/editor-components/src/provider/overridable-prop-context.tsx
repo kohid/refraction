@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, type PropsWithChildren, useContext } from 'react';
-import { type useElement } from '@elementor/editor-editing-panel';
+import { type useElement } from '@refraction/editor-editing-panel';
 
 import { type ComponentOverridablePropValue } from '../prop-types/component-overridable-prop-type';
 

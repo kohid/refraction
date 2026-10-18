@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Modules\EditorOne\Classes;
+namespace Refraction\Modules\EditorOne\Classes;
 
-use Elementor\Core\Admin\EditorOneMenu\Menu\Legacy_Submenu_Item;
-use Elementor\Core\Admin\EditorOneMenu\Menu\Legacy_Submenu_Item_Not_Mapped;
-use Elementor\Core\Admin\EditorOneMenu\Menu\Third_Party_Pages_Menu;
+use Refraction\Core\Admin\EditorOneMenu\Menu\Legacy_Submenu_Item;
+use Refraction\Core\Admin\EditorOneMenu\Menu\Legacy_Submenu_Item_Not_Mapped;
+use Refraction\Core\Admin\EditorOneMenu\Menu\Third_Party_Pages_Menu;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,8 +26,8 @@ class Legacy_Submenu_Interceptor {
 	public function intercept_all( bool $is_pro_module_enabled ): void {
 		global $submenu;
 
-		$this->intercept_elementor_menu_items(
-			$submenu[ Menu_Config::ELEMENTOR_MENU_SLUG ] ?? [],
+		$this->intercept_refraction_menu_items(
+			$submenu[ Menu_Config::REFRACTION_MENU_SLUG ] ?? [],
 			$is_pro_module_enabled
 		);
 
@@ -40,7 +40,7 @@ class Legacy_Submenu_Interceptor {
 		);
 	}
 
-	public function intercept_elementor_menu_items( array $submenu_items, bool $is_pro_module_enabled ): array {
+	public function intercept_refraction_menu_items( array $submenu_items, bool $is_pro_module_enabled ): array {
 		if ( empty( $submenu_items ) ) {
 			return $submenu_items;
 		}
@@ -148,7 +148,7 @@ class Legacy_Submenu_Interceptor {
 		$group_id = $legacy_pro_mapping[ $mapping_key ]['group'];
 		$submenu_item[4] = $group_id;
 
-		$legacy_item = new Legacy_Submenu_Item( $submenu_item, Menu_Config::ELEMENTOR_MENU_SLUG, $position );
+		$legacy_item = new Legacy_Submenu_Item( $submenu_item, Menu_Config::REFRACTION_MENU_SLUG, $position );
 
 		$this->menu_data_provider->register_menu( $legacy_item );
 	}
@@ -159,7 +159,7 @@ class Legacy_Submenu_Interceptor {
 		$item_slug = $submenu_item[2];
 		$position = Menu_Config::get_attribute_mapping()[ $item_slug ]['position'] ?? 100;
 
-		$legacy_item = new Legacy_Submenu_Item_Not_Mapped( $submenu_item, Menu_Config::ELEMENTOR_MENU_SLUG, $position );
+		$legacy_item = new Legacy_Submenu_Item_Not_Mapped( $submenu_item, Menu_Config::REFRACTION_MENU_SLUG, $position );
 
 		$this->menu_data_provider->register_menu( $legacy_item );
 	}

@@ -1,4 +1,4 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import {
 	AVAILABLE_WIDGETS_URI,
@@ -6,7 +6,7 @@ import {
 	initAvailableWidgetsResource,
 } from '../available-widgets-resource';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
@@ -47,7 +47,7 @@ describe( 'available-widgets-resource', () => {
 		const result = await allHandler();
 
 		// Assert
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			tool: 'list-widget-schemas',
 			input: { summary: true },
 		} );
@@ -69,7 +69,7 @@ describe( 'available-widgets-resource', () => {
 		const result = await v4Handler();
 
 		// Assert
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			tool: 'list-widget-schemas',
 			input: { summary: true },
 		} );
@@ -79,7 +79,7 @@ describe( 'available-widgets-resource', () => {
 	} );
 
 	it( 'exposes the expected resource URIs', () => {
-		expect( AVAILABLE_WIDGETS_URI ).toBe( 'elementor://context/available-widgets' );
-		expect( AVAILABLE_WIDGETS_URI_V4 ).toBe( 'elementor://context/available-widgets/v4' );
+		expect( AVAILABLE_WIDGETS_URI ).toBe( 'refraction://context/available-widgets' );
+		expect( AVAILABLE_WIDGETS_URI_V4 ).toBe( 'refraction://context/available-widgets/v4' );
 	} );
 } );

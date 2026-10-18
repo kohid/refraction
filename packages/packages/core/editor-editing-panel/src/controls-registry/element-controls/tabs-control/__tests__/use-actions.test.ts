@@ -1,4 +1,4 @@
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 import {
 	createElements,
 	duplicateElements,
@@ -6,14 +6,14 @@ import {
 	moveElements,
 	removeElements,
 	type V1Element,
-} from '@elementor/editor-elements';
-import { type PropType } from '@elementor/editor-props';
+} from '@refraction/editor-elements';
+import { type PropType } from '@refraction/editor-props';
 import { renderHook } from '@testing-library/react';
 
 import { useActions } from '../use-actions';
 
-jest.mock( '@elementor/editor-controls' );
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-controls' );
+jest.mock( '@refraction/editor-elements' );
 
 describe( 'tabs-control actions', () => {
 	const mockSetValue = jest.fn();

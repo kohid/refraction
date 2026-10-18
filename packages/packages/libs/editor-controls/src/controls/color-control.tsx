@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { colorPropTypeUtil, type PropTypeUtil } from '@elementor/editor-props';
+import { colorPropTypeUtil, type PropTypeUtil } from '@refraction/editor-props';
 import { UnstableColorField, type UnstableColorFieldProps } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

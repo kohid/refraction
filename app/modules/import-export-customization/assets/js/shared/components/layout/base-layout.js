@@ -10,11 +10,11 @@ export default function BaseLayout( props ) {
 		...rest
 	} = props;
 
-	const uiTheme = elementorAppConfig[ 'import-export-customization' ]?.uiTheme || 'auto';
+	const uiTheme = refractionAppConfig[ 'import-export-customization' ]?.uiTheme || 'auto';
 	const isDarkMode = 'dark' === uiTheme || ( 'auto' === uiTheme && window.matchMedia && window.matchMedia( `(prefers-color-scheme: dark)` ).matches );
 
 	const colorScheme = isDarkMode ? 'dark' : 'light';
-	const isRTL = elementorCommon?.config?.isRTL || false;
+	const isRTL = refractionCommon?.config?.isRTL || false;
 
 	return (
 		<DirectionProvider rtl={ isRTL }>

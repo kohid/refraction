@@ -2,7 +2,7 @@ import { Button } from '@wordpress/components';
 import PropTypes from 'prop-types';
 
 export const UpgradeButton = ( props ) => {
-	const trackingClass = props.className || 'e-id-elementor-element-manager-button-upgrade';
+	const trackingClass = props.className || 'e-id-refraction-element-manager-button-upgrade';
 
 	return (
 		<Button

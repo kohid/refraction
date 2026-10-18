@@ -5,7 +5,7 @@
 		"source": "remote",
 		"type": "page",
 		"subtype": "page",
-		"author": "Elementor",
+		"author": "Refraction",
 		"thumbnail": "https://library.elementor.com/wp-content/uploads/2017/03/lp2-l.png",
 		"url": "https://library.elementor.com/landing-page-hotel/?utm_source=library&utm_medium=wp-dash&utm_campaign=preview",
 		"export_link": "",
@@ -105,7 +105,7 @@
 				"background_background": "classic",
 				"background_image": {
 					"id": "2874",
-					"url": "http:\/\/localhost\/elementor\/wp-content\/uploads\/2019\/12\/main1.jpg"
+					"url": "http:\/\/localhost\/refraction\/wp-content\/uploads\/2019\/12\/main1.jpg"
 				},
 				"background_position": "center center",
 				"background_size": "cover",
@@ -714,7 +714,7 @@
 								},
 								"image_overlay": {
 									"id": "2878",
-									"url": "http:\/\/localhost\/elementor\/wp-content\/uploads\/2019\/12\/placeholder-1-1.png"
+									"url": "http:\/\/localhost\/refraction\/wp-content\/uploads\/2019\/12\/placeholder-1-1.png"
 								},
 								"youtube_url": "https:\/\/www.youtube.com\/watch?v=OzAct1hK45Y",
 								"vimeo_url": "https:\/\/vimeo.com\/235215203",

@@ -219,7 +219,7 @@ export const IconLibraryGrid = ( {
 			) : (
 				<Box
 					role="grid"
-					aria-label={ __( 'Icons', 'elementor' ) }
+					aria-label={ __( 'Icons', 'refraction' ) }
 					aria-rowcount={ rowCount }
 					aria-colcount={ columnCount }
 					data-testid="icon-library-grid"

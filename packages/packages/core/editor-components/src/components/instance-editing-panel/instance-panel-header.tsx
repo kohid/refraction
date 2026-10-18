@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type ElementType } from 'react';
-import { PanelHeader, PanelHeaderTitle } from '@elementor/editor-panels';
-import { EllipsisWithTooltip } from '@elementor/editor-ui';
+import { PanelHeader, PanelHeaderTitle } from '@refraction/editor-panels';
+import { EllipsisWithTooltip } from '@refraction/editor-ui';
 import { ComponentsIcon } from '@elementor/icons';
 import { IconButton, Stack, Tooltip } from '@elementor/ui';
 

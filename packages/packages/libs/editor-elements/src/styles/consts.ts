@@ -1,6 +1,6 @@
-import { commandEndEvent, windowEvent } from '@elementor/editor-v1-adapters';
+import { commandEndEvent, windowEvent } from '@refraction/editor-v1-adapters';
 
-export const ELEMENT_STYLE_CHANGE_EVENT = 'elementor/editor-v2/editor-elements/style';
+export const ELEMENT_STYLE_CHANGE_EVENT = 'refraction/editor-v2/editor-elements/style';
 
 export const styleRerenderEvents = [
 	commandEndEvent( 'document/elements/create' ),

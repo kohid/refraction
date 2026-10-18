@@ -2,7 +2,7 @@ var ResizableBehavior;
 
 ResizableBehavior = Marionette.Behavior.extend( {
 	defaults: {
-		handles: elementorCommon.config.isRTL ? 'w' : 'e',
+		handles: refractionCommon.config.isRTL ? 'w' : 'e',
 	},
 
 	events: {
@@ -14,11 +14,11 @@ ResizableBehavior = Marionette.Behavior.extend( {
 	initialize() {
 		Marionette.Behavior.prototype.initialize.apply( this, arguments );
 
-		this.listenTo( elementor.channels.dataEditMode, 'switch', this.onEditModeSwitched );
+		this.listenTo( refraction.channels.dataEditMode, 'switch', this.onEditModeSwitched );
 	},
 
 	active() {
-		if ( ! elementor.userCan( 'design' ) ) {
+		if ( ! refraction.userCan( 'design' ) ) {
 			return;
 		}
 		this.deactivate();
@@ -52,7 +52,7 @@ ResizableBehavior = Marionette.Behavior.extend( {
 		var self = this;
 
 		_.defer( function() {
-			self.onEditModeSwitched( elementor.channels.dataEditMode.request( 'activeMode' ) );
+			self.onEditModeSwitched( refraction.channels.dataEditMode.request( 'activeMode' ) );
 		} );
 	},
 

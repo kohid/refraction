@@ -12,25 +12,25 @@
  */
 /* 2D TRANSITIONS */
 /* Grow */
-.elementor-animation-grow {
+.refraction-animation-grow {
   transition-duration: 0.3s;
   transition-property: transform;
 }
-.elementor-animation-grow:hover {
+.refraction-animation-grow:hover {
   transform: scale(1.1);
 }
 
 /* Shrink */
-.elementor-animation-shrink {
+.refraction-animation-shrink {
   transition-duration: 0.3s;
   transition-property: transform;
 }
-.elementor-animation-shrink:hover {
+.refraction-animation-shrink:hover {
   transform: scale(0.9);
 }
 
 /* Pulse */
-@keyframes elementor-animation-pulse {
+@keyframes refraction-animation-pulse {
   25% {
     transform: scale(1.1);
   }
@@ -38,21 +38,21 @@
     transform: scale(0.9);
   }
 }
-.elementor-animation-pulse:hover {
-  animation-name: elementor-animation-pulse;
+.refraction-animation-pulse:hover {
+  animation-name: refraction-animation-pulse;
   animation-duration: 1s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
 /* Pulse Grow */
-@keyframes elementor-animation-pulse-grow {
+@keyframes refraction-animation-pulse-grow {
   to {
     transform: scale(1.1);
   }
 }
-.elementor-animation-pulse-grow:hover {
-  animation-name: elementor-animation-pulse-grow;
+.refraction-animation-pulse-grow:hover {
+  animation-name: refraction-animation-pulse-grow;
   animation-duration: 0.3s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -60,13 +60,13 @@
 }
 
 /* Pulse Shrink */
-@keyframes elementor-animation-pulse-shrink {
+@keyframes refraction-animation-pulse-shrink {
   to {
     transform: scale(0.9);
   }
 }
-.elementor-animation-pulse-shrink:hover {
-  animation-name: elementor-animation-pulse-shrink;
+.refraction-animation-pulse-shrink:hover {
+  animation-name: refraction-animation-pulse-shrink;
   animation-duration: 0.3s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -74,7 +74,7 @@
 }
 
 /* Push */
-@keyframes elementor-animation-push {
+@keyframes refraction-animation-push {
   50% {
     transform: scale(0.8);
   }
@@ -82,84 +82,84 @@
     transform: scale(1);
   }
 }
-.elementor-animation-push:hover {
-  animation-name: elementor-animation-push;
+.refraction-animation-push:hover {
+  animation-name: refraction-animation-push;
   animation-duration: 0.3s;
   animation-timing-function: linear;
   animation-iteration-count: 1;
 }
 
 /* Pop */
-@keyframes elementor-animation-pop {
+@keyframes refraction-animation-pop {
   50% {
     transform: scale(1.2);
   }
 }
-.elementor-animation-pop:hover {
-  animation-name: elementor-animation-pop;
+.refraction-animation-pop:hover {
+  animation-name: refraction-animation-pop;
   animation-duration: 0.3s;
   animation-timing-function: linear;
   animation-iteration-count: 1;
 }
 
 /* Bounce In */
-.elementor-animation-bounce-in {
+.refraction-animation-bounce-in {
   transition-duration: 0.5s;
 }
-.elementor-animation-bounce-in:hover {
+.refraction-animation-bounce-in:hover {
   transform: scale(1.2);
   transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
 }
 
 /* Bounce Out */
-.elementor-animation-bounce-out {
+.refraction-animation-bounce-out {
   transition-duration: 0.5s;
 }
-.elementor-animation-bounce-out:hover {
+.refraction-animation-bounce-out:hover {
   transform: scale(0.8);
   transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
 }
 
 /* Rotate */
-.elementor-animation-rotate {
+.refraction-animation-rotate {
   transition-duration: 0.3s;
   transition-property: transform;
 }
-.elementor-animation-rotate:hover {
+.refraction-animation-rotate:hover {
   transform: rotate(4deg);
 }
 
 /* Grow Rotate */
-.elementor-animation-grow-rotate {
+.refraction-animation-grow-rotate {
   transition-duration: 0.3s;
   transition-property: transform;
 }
-.elementor-animation-grow-rotate:hover {
+.refraction-animation-grow-rotate:hover {
   transform: scale(1.1) rotate(4deg);
 }
 
 /* Float */
-.elementor-animation-float {
+.refraction-animation-float {
   transition-duration: 0.3s;
   transition-property: transform;
   transition-timing-function: ease-out;
 }
-.elementor-animation-float:hover {
+.refraction-animation-float:hover {
   transform: translateY(-8px);
 }
 
 /* Sink */
-.elementor-animation-sink {
+.refraction-animation-sink {
   transition-duration: 0.3s;
   transition-property: transform;
   transition-timing-function: ease-out;
 }
-.elementor-animation-sink:hover {
+.refraction-animation-sink:hover {
   transform: translateY(8px);
 }
 
 /* Bob */
-@keyframes elementor-animation-bob {
+@keyframes refraction-animation-bob {
   0% {
     transform: translateY(-8px);
   }
@@ -170,13 +170,13 @@
     transform: translateY(-8px);
   }
 }
-@keyframes elementor-animation-bob-float {
+@keyframes refraction-animation-bob-float {
   100% {
     transform: translateY(-8px);
   }
 }
-.elementor-animation-bob:hover {
-  animation-name: elementor-animation-bob-float, elementor-animation-bob;
+.refraction-animation-bob:hover {
+  animation-name: refraction-animation-bob-float, refraction-animation-bob;
   animation-duration: .3s, 1.5s;
   animation-delay: 0s, .3s;
   animation-timing-function: ease-out, ease-in-out;
@@ -186,7 +186,7 @@
 }
 
 /* Hang */
-@keyframes elementor-animation-hang {
+@keyframes refraction-animation-hang {
   0% {
     transform: translateY(8px);
   }
@@ -197,13 +197,13 @@
     transform: translateY(8px);
   }
 }
-@keyframes elementor-animation-hang-sink {
+@keyframes refraction-animation-hang-sink {
   100% {
     transform: translateY(8px);
   }
 }
-.elementor-animation-hang:hover {
-  animation-name: elementor-animation-hang-sink, elementor-animation-hang;
+.refraction-animation-hang:hover {
+  animation-name: refraction-animation-hang-sink, refraction-animation-hang;
   animation-duration: .3s, 1.5s;
   animation-delay: 0s, .3s;
   animation-timing-function: ease-out, ease-in-out;
@@ -213,36 +213,36 @@
 }
 
 /* Skew */
-.elementor-animation-skew {
+.refraction-animation-skew {
   transition-duration: 0.3s;
   transition-property: transform;
 }
-.elementor-animation-skew:hover {
+.refraction-animation-skew:hover {
   transform: skew(-10deg);
 }
 
 /* Skew Forward */
-.elementor-animation-skew-forward {
+.refraction-animation-skew-forward {
   transition-duration: 0.3s;
   transition-property: transform;
   transform-origin: 0 100%;
 }
-.elementor-animation-skew-forward:hover {
+.refraction-animation-skew-forward:hover {
   transform: skew(-10deg);
 }
 
 /* Skew Backward */
-.elementor-animation-skew-backward {
+.refraction-animation-skew-backward {
   transition-duration: 0.3s;
   transition-property: transform;
   transform-origin: 0 100%;
 }
-.elementor-animation-skew-backward:hover {
+.refraction-animation-skew-backward:hover {
   transform: skew(10deg);
 }
 
 /* Wobble Vertical */
-@keyframes elementor-animation-wobble-vertical {
+@keyframes refraction-animation-wobble-vertical {
   16.65% {
     transform: translateY(8px);
   }
@@ -262,15 +262,15 @@
     transform: translateY(0);
   }
 }
-.elementor-animation-wobble-vertical:hover {
-  animation-name: elementor-animation-wobble-vertical;
+.refraction-animation-wobble-vertical:hover {
+  animation-name: refraction-animation-wobble-vertical;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }
 
 /* Wobble Horizontal */
-@keyframes elementor-animation-wobble-horizontal {
+@keyframes refraction-animation-wobble-horizontal {
   16.65% {
     transform: translateX(8px);
   }
@@ -290,15 +290,15 @@
     transform: translateX(0);
   }
 }
-.elementor-animation-wobble-horizontal:hover {
-  animation-name: elementor-animation-wobble-horizontal;
+.refraction-animation-wobble-horizontal:hover {
+  animation-name: refraction-animation-wobble-horizontal;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }
 
 /* Wobble To Bottom Right */
-@keyframes elementor-animation-wobble-to-bottom-right {
+@keyframes refraction-animation-wobble-to-bottom-right {
   16.65% {
     transform: translate(8px, 8px);
   }
@@ -318,15 +318,15 @@
     transform: translate(0, 0);
   }
 }
-.elementor-animation-wobble-to-bottom-right:hover {
-  animation-name: elementor-animation-wobble-to-bottom-right;
+.refraction-animation-wobble-to-bottom-right:hover {
+  animation-name: refraction-animation-wobble-to-bottom-right;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }
 
 /* Wobble To Top Right */
-@keyframes elementor-animation-wobble-to-top-right {
+@keyframes refraction-animation-wobble-to-top-right {
   16.65% {
     transform: translate(8px, -8px);
   }
@@ -346,15 +346,15 @@
     transform: translate(0, 0);
   }
 }
-.elementor-animation-wobble-to-top-right:hover {
-  animation-name: elementor-animation-wobble-to-top-right;
+.refraction-animation-wobble-to-top-right:hover {
+  animation-name: refraction-animation-wobble-to-top-right;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }
 
 /* Wobble Top */
-@keyframes elementor-animation-wobble-top {
+@keyframes refraction-animation-wobble-top {
   16.65% {
     transform: skew(-12deg);
   }
@@ -374,18 +374,18 @@
     transform: skew(0);
   }
 }
-.elementor-animation-wobble-top {
+.refraction-animation-wobble-top {
   transform-origin: 0 100%;
 }
-.elementor-animation-wobble-top:hover {
-  animation-name: elementor-animation-wobble-top;
+.refraction-animation-wobble-top:hover {
+  animation-name: refraction-animation-wobble-top;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }
 
 /* Wobble Bottom */
-@keyframes elementor-animation-wobble-bottom {
+@keyframes refraction-animation-wobble-bottom {
   16.65% {
     transform: skew(-12deg);
   }
@@ -405,18 +405,18 @@
     transform: skew(0);
   }
 }
-.elementor-animation-wobble-bottom {
+.refraction-animation-wobble-bottom {
   transform-origin: 100% 0;
 }
-.elementor-animation-wobble-bottom:hover {
-  animation-name: elementor-animation-wobble-bottom;
+.refraction-animation-wobble-bottom:hover {
+  animation-name: refraction-animation-wobble-bottom;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }
 
 /* Wobble Skew */
-@keyframes elementor-animation-wobble-skew {
+@keyframes refraction-animation-wobble-skew {
   16.65% {
     transform: skew(-12deg);
   }
@@ -436,15 +436,15 @@
     transform: skew(0);
   }
 }
-.elementor-animation-wobble-skew:hover {
-  animation-name: elementor-animation-wobble-skew;
+.refraction-animation-wobble-skew:hover {
+  animation-name: refraction-animation-wobble-skew;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }
 
 /* Buzz */
-@keyframes elementor-animation-buzz {
+@keyframes refraction-animation-buzz {
   50% {
     transform: translateX(3px) rotate(2deg);
   }
@@ -452,15 +452,15 @@
     transform: translateX(-3px) rotate(-2deg);
   }
 }
-.elementor-animation-buzz:hover {
-  animation-name: elementor-animation-buzz;
+.refraction-animation-buzz:hover {
+  animation-name: refraction-animation-buzz;
   animation-duration: 0.15s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
 /* Buzz Out */
-@keyframes elementor-animation-buzz-out {
+@keyframes refraction-animation-buzz-out {
   10% {
     transform: translateX(3px) rotate(2deg);
   }
@@ -492,8 +492,8 @@
     transform: translateX(-1px) rotate(0);
   }
 }
-.elementor-animation-buzz-out:hover {
-  animation-name: elementor-animation-buzz-out;
+.refraction-animation-buzz-out:hover {
+  animation-name: refraction-animation-buzz-out;
   animation-duration: 0.75s;
   animation-timing-function: linear;
   animation-iteration-count: 1;

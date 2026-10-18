@@ -1,5 +1,5 @@
 export const setupMock = async () => {
-	jest.mock( 'elementor-assets-js/modules/imports/module', () => class {
+	jest.mock( 'refraction-assets-js/modules/imports/module', () => class {
 		constructor( args ) {
 			this.__construct( args );
 		}
@@ -9,7 +9,7 @@ export const setupMock = async () => {
 		trigger() {}
 	} );
 
-	jest.mock( 'elementor-api/utils/deprecation', () => ( {
+	jest.mock( 'refraction-api/utils/deprecation', () => ( {
 		deprecated: jest.fn(),
 	} ) );
 
@@ -21,7 +21,7 @@ export const setupMock = async () => {
 		};
 	};
 
-	global.elementorWebCliConfig = {
+	global.refractionWebCliConfig = {
 		urls: {
 			rest: 'http://localhost.test:8080/wp-json/',
 		},
@@ -30,7 +30,7 @@ export const setupMock = async () => {
 	if ( ! global.location ) {
 		global.location = {};
 	}
-	global.location.href = 'http://localhost.test:8080/wp-admin/admin.php?page=elementor-web-preview';
+	global.location.href = 'http://localhost.test:8080/wp-admin/admin.php?page=refraction-web-preview';
 	global.location.hash = 'test-hash';
 
 	if ( ! global.window ) {
@@ -41,16 +41,16 @@ export const setupMock = async () => {
 		isEqual: ( a, b ) => a === b,
 	};
 
-	global.$e = new ( await import( 'elementor-api/api' ) ).default;
+	global.$e = new ( await import( 'refraction-api/api' ) ).default;
 	return $e;
 };
 
 export const freeMock = () => {
-	jest.unmock( 'elementor-assets-js/modules/imports/module' );
+	jest.unmock( 'refraction-assets-js/modules/imports/module' );
 
 	delete global.navigator;
 	delete global.jQuery;
-	delete global.elementorWebCliConfig;
+	delete global.refractionWebCliConfig;
 	delete global.location;
 	delete global.window;
 	delete global._;

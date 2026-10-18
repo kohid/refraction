@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { forwardRef, type ReactNode, useCallback, useImperativeHandle, useState } from 'react';
-import { PromotionChip, PromotionInfotip } from '@elementor/editor-ui';
+import { PromotionChip, PromotionInfotip } from '@refraction/editor-ui';
 import { Box } from '@elementor/ui';
 
 import { type PromotionTrackingData, trackUpgradePromotionClick, trackViewPromotion } from '../../utils/tracking';
 import type { V4PromotionData, V4PromotionKey } from './types';
 
 function getV4Promotion( key: V4PromotionKey ): V4PromotionData | undefined {
-	return window.elementor?.config?.v4Promotions?.[ key ];
+	return window.refraction?.config?.v4Promotions?.[ key ];
 }
 
 type PromotionTriggerProps = {

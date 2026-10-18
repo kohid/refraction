@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Modules\WcProductEditor;
+namespace Refraction\Modules\WcProductEditor;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -25,16 +25,16 @@ class Module extends BaseModule {
 
 		wp_enqueue_script(
 			'e-wc-product-editor',
-			ELEMENTOR_ASSETS_URL . 'js/e-wc-product-editor' . $suffix . '.js',
+			REFRACTION_ASSETS_URL . 'js/e-wc-product-editor' . $suffix . '.js',
 			[ 'wp-components', 'wp-core-data', 'wc-admin-layout', 'wp-plugins' ],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		$elementor_settings = [
+		$refraction_settings = [
 			'editLink' => admin_url( 'post.php' ),
 		];
-		Utils::print_js_config( 'e-wc-product-editor', 'ElementorWCProductEditorSettings', $elementor_settings );
+		Utils::print_js_config( 'e-wc-product-editor', 'RefractionWCProductEditorSettings', $refraction_settings );
 	}
 
 	public function get_name() {

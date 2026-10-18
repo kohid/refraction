@@ -1,7 +1,7 @@
-class LinkInBioLibraryModule extends elementorModules.editor.utils.Module {
-	onElementorInit() {
-		elementor.hooks.addFilter(
-			'elementor/editor/template-library/template/promotion-link-search-params',
+class LinkInBioLibraryModule extends refractionModules.editor.utils.Module {
+	onRefractionInit() {
+		refraction.hooks.addFilter(
+			'refraction/editor/template-library/template/promotion-link-search-params',
 			( queryString, templateData ) => {
 				const { subtype } = templateData;
 				if ( 'Link in Bio' === subtype ) {

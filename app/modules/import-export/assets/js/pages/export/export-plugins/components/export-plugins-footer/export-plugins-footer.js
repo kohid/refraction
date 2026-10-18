@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { ExportContext } from '../../../../../context/export-context/export-context-provider';
 import { KIT_SOURCE_MAP } from '../../../../../hooks/use-kit';
-import useCloudKitsEligibility from 'elementor-app/hooks/use-cloud-kits-eligibility';
+import useCloudKitsEligibility from 'refraction-app/hooks/use-cloud-kits-eligibility';
 import useConnectState from '../../../../../hooks/use-connect-state';
 import ActionsFooter from '../../../../../shared/actions-footer/actions-footer';
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
 import './export-plugins-footer.scss';
 
@@ -26,7 +26,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 			return;
 		}
 
-		jQuery( connectButtonRef.current ).elementorConnect( {
+		jQuery( connectButtonRef.current ).refractionConnect( {
 			popup: {
 				width: 600,
 				height: 700,
@@ -48,10 +48,10 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 		}
 
 		if ( ! isCloudKitsEligible ) {
-			window.location.href = elementorAppConfig.base_url + '#/kit-library/cloud';
+			window.location.href = refractionAppConfig.base_url + '#/kit-library/cloud';
 		} else {
 			exportContext.dispatch( { type: 'SET_KIT_SAVE_SOURCE', payload: KIT_SOURCE_MAP.CLOUD } );
-			window.location.href = elementorAppConfig.base_url + '#/export/process';
+			window.location.href = refractionAppConfig.base_url + '#/export/process';
 		}
 	}, [ isConnecting, isCheckingEligibility, isCloudKitsEligible, exportContext ] );
 
@@ -62,7 +62,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 	}, [ isConnecting, isCheckingEligibility, setConnecting ] );
 
 	const handleUpgradeClick = () => {
-		window.location.href = elementorAppConfig.base_url + '#/kit-library/cloud';
+		window.location.href = refractionAppConfig.base_url + '#/kit-library/cloud';
 	};
 
 	const handleUploadClick = () => {
@@ -74,10 +74,10 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 			return (
 				<Button
 					elRef={ connectButtonRef }
-					text={ __( 'Save to library', 'elementor' ) }
+					text={ __( 'Save to library', 'refraction' ) }
 					variant="outlined"
 					color="secondary"
-					url={ elementorAppConfig?.[ 'cloud-library' ]?.library_connect_url?.replace( /&#038;/g, '&' ) || '#' }
+					url={ refractionAppConfig?.[ 'cloud-library' ]?.library_connect_url?.replace( /&#038;/g, '&' ) || '#' }
 				/>
 			);
 		}
@@ -95,7 +95,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 		if ( ! isCloudKitsEligible ) {
 			return (
 				<Button
-					text={ __( 'Save to library', 'elementor' ) }
+					text={ __( 'Save to library', 'refraction' ) }
 					variant="outlined"
 					color="secondary"
 					onClick={ handleUpgradeClick }
@@ -105,7 +105,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 
 		return (
 			<Button
-				text={ __( 'Save to library', 'elementor' ) }
+				text={ __( 'Save to library', 'refraction' ) }
 				variant="outlined"
 				color="secondary"
 				url="/export/process"
@@ -117,7 +117,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 	return (
 		<ActionsFooter className="e-app-export-actions-container" >
 			<Button
-				text={ __( 'Back', 'elementor' ) }
+				text={ __( 'Back', 'refraction' ) }
 				variant="contained"
 				url="/export"
 			/>
@@ -125,7 +125,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 			{ renderCloudButton() }
 
 			<Button
-				text={ __( 'Export as .zip', 'elementor' ) }
+				text={ __( 'Export as .zip', 'refraction' ) }
 				variant="contained"
 				color={ isKitReady && ! isCheckingEligibility ? 'primary' : 'disabled' }
 				url={ isKitReady && ! isCheckingEligibility ? '/export/process' : '' }

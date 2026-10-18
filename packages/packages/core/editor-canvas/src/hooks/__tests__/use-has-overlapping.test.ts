@@ -35,14 +35,14 @@ describe( 'useHasOverlapping', () => {
 			writable: true,
 		} );
 
-		// Setup window.elementor.$preview
-		( window as unknown as CanvasExtendedWindow ).elementor = {
+		// Setup window.refraction.$preview
+		( window as unknown as CanvasExtendedWindow ).refraction = {
 			$preview: [ mockPreviewFrame ],
 		};
 	};
 
 	const cleanupPreviewFrame = () => {
-		delete ( window as unknown as CanvasExtendedWindow ).elementor;
+		delete ( window as unknown as CanvasExtendedWindow ).refraction;
 	};
 
 	afterEach( () => {
@@ -136,7 +136,7 @@ describe( 'useHasOverlapping', () => {
 			writable: true,
 		} );
 
-		( window as unknown as CanvasExtendedWindow ).elementor = {
+		( window as unknown as CanvasExtendedWindow ).refraction = {
 			$preview: [ mockPreviewFrame ],
 		};
 
@@ -174,7 +174,7 @@ describe( 'useHasOverlapping', () => {
 			writable: true,
 		} );
 
-		( window as unknown as CanvasExtendedWindow ).elementor = {
+		( window as unknown as CanvasExtendedWindow ).refraction = {
 			$preview: [ mockPreviewFrame ],
 		};
 

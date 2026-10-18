@@ -1,14 +1,14 @@
 import { useState, useCallback } from 'react';
 
 export default function useConnectState() {
-	const [ isConnected, setIsConnected ] = useState( elementorCommon.config.library_connect.is_connected );
+	const [ isConnected, setIsConnected ] = useState( refractionCommon.config.library_connect.is_connected );
 	const [ isConnecting, setIsConnecting ] = useState( false );
 
 	const handleConnectSuccess = useCallback( ( callback ) => {
 		setIsConnecting( true );
 		setIsConnected( true );
 
-		elementorCommon.config.library_connect.is_connected = true;
+		refractionCommon.config.library_connect.is_connected = true;
 
 		if ( callback ) {
 			callback();
@@ -19,7 +19,7 @@ export default function useConnectState() {
 		setIsConnected( false );
 		setIsConnecting( false );
 
-		elementorCommon.config.library_connect.is_connected = false;
+		refractionCommon.config.library_connect.is_connected = false;
 
 		if ( callback ) {
 			callback();

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockContainer, createMockPropType, renderWithStore } from 'test-utils';
-import { ControlActionsProvider, TextControl, useBoundProp } from '@elementor/editor-controls';
-import { controlsRegistry, ElementProvider } from '@elementor/editor-editing-panel';
+import { ControlActionsProvider, TextControl, useBoundProp } from '@refraction/editor-controls';
+import { controlsRegistry, ElementProvider } from '@refraction/editor-editing-panel';
 import {
 	getContainer,
 	getElementLabel,
@@ -9,15 +9,15 @@ import {
 	getElementType,
 	getWidgetsCache,
 	type V1Element,
-} from '@elementor/editor-elements';
-import { linkPropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-elements';
+import { linkPropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 import {
 	__createStore,
 	__dispatch as dispatch,
 	__registerSlice as registerSlice,
 	type SliceState,
 	type Store,
-} from '@elementor/store';
+} from '@refraction/store';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { componentInstanceOverridePropTypeUtil } from '../../../prop-types/component-instance-override-prop-type';
@@ -29,12 +29,12 @@ import { type OverridableProp } from '../../../types';
 import { getContainerByOriginId } from '../../../utils/get-container-by-origin-id';
 import { OverridePropControl } from '../override-prop-control';
 
-jest.mock( '@elementor/editor-controls', () => ( {
-	...jest.requireActual( '@elementor/editor-controls' ),
+jest.mock( '@refraction/editor-controls', () => ( {
+	...jest.requireActual( '@refraction/editor-controls' ),
 	useBoundProp: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 jest.mock( '../../../utils/get-container-by-origin-id', () => ( {
 	getContainerByOriginId: jest.fn(),

@@ -12,7 +12,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 		// Keep the options for cloning
 		self.options = options;
 
-		self.controls = elementor.mergeControlsSettings( options.controls );
+		self.controls = refraction.mergeControlsSettings( options.controls );
 
 		self.validators = {};
 
@@ -55,7 +55,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 			var isMultipleControl = jQuery.isPlainObject( control.default );
 
 			if ( undefined !== attrs[ controlName ] && isMultipleControl && ! _.isObject( attrs[ controlName ] ) && ! hasDynamicSettings ) {
-				elementorCommon.debug.addCustomError(
+				refractionCommon.debug.addCustomError(
 					new TypeError( 'An invalid argument supplied as multiple control value' ),
 					'InvalidElementData',
 					'Element `' + ( self.get( 'widgetType' ) || self.get( 'elType' ) ) + '` got <' + attrs[ controlName ] + '> as `' + controlName + '` value. Expected array or object.',
@@ -89,7 +89,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 
 				// TODO: Cannot be deleted, since it handle repeater items after repeater widget creation.
 				if ( ! attributes._id ) {
-					attributes._id = elementorCommon.helpers.getUniqueId();
+					attributes._id = refractionCommon.helpers.getUniqueId();
 				}
 
 				return new BaseSettingsModel( attributes, options );
@@ -133,7 +133,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 
 		jQuery.each( controls, function() {
 			var control = this,
-				controlDefaultSettings = elementor.config.controls[ control.type ];
+				controlDefaultSettings = refraction.config.controls[ control.type ];
 
 			control = jQuery.extend( {}, controlDefaultSettings, control );
 
@@ -223,7 +223,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 		attributes = this.parseGlobalSettings( attributes, controls );
 
 		jQuery.each( controls, ( controlKey, control ) => {
-			if ( elementor.helpers.isActiveControl( control, attributes, controls ) ) {
+			if ( refraction.helpers.isActiveControl( control, attributes, controls ) ) {
 				activeControls[ controlKey ] = control;
 			}
 		} );
@@ -232,7 +232,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 	},
 
 	clone() {
-		return new BaseSettingsModel( elementorCommon.helpers.cloneObject( this.attributes ), elementorCommon.helpers.cloneObject( this.options ) );
+		return new BaseSettingsModel( refractionCommon.helpers.cloneObject( this.attributes ), refractionCommon.helpers.cloneObject( this.options ) );
 	},
 
 	setExternalChange( key, value ) {
@@ -257,7 +257,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 	parseDynamicSettings( settings, options, controls ) {
 		var self = this;
 
-		settings = elementorCommon.helpers.cloneObject( settings || self.attributes );
+		settings = refractionCommon.helpers.cloneObject( settings || self.attributes );
 
 		options = options || {};
 
@@ -285,7 +285,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 			var dynamicSettings = control.dynamic;
 
 			if ( undefined === dynamicSettings ) {
-				dynamicSettings = elementor.config.controls[ control.type ].dynamic;
+				dynamicSettings = refraction.config.controls[ control.type ].dynamic;
 			}
 
 			if ( ! dynamicSettings || ! dynamicSettings.active ) {
@@ -295,9 +295,9 @@ BaseSettingsModel = Backbone.Model.extend( {
 			var dynamicValue;
 
 			try {
-				dynamicValue = elementor.dynamicTags.parseTagsText( valueToParse, dynamicSettings, elementor.dynamicTags.getTagDataContent );
+				dynamicValue = refraction.dynamicTags.parseTagsText( valueToParse, dynamicSettings, refraction.dynamicTags.getTagDataContent );
 			} catch ( error ) {
-				if ( elementor.dynamicTags.CACHE_KEY_NOT_FOUND_ERROR !== error.message ) {
+				if ( refraction.dynamicTags.CACHE_KEY_NOT_FOUND_ERROR !== error.message ) {
 					throw error;
 				}
 
@@ -307,7 +307,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 					options.onServerRequestStart();
 				}
 
-				elementor.dynamicTags.refreshCacheFromServer( function() {
+				refraction.dynamicTags.refreshCacheFromServer( function() {
 					if ( options.onServerRequestEnd ) {
 						options.onServerRequestEnd();
 					}
@@ -325,7 +325,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 	},
 
 	parseGlobalSettings( settings, controls ) {
-		settings = elementorCommon.helpers.cloneObject( settings );
+		settings = refractionCommon.helpers.cloneObject( settings );
 
 		controls = controls || this.controls;
 
@@ -351,7 +351,7 @@ BaseSettingsModel = Backbone.Model.extend( {
 			let globalSettings = control.global;
 
 			if ( undefined === globalSettings ) {
-				globalSettings = elementor.config.controls[ control.type ].global;
+				globalSettings = refraction.config.controls[ control.type ].global;
 			}
 
 			if ( ! globalSettings?.active ) {

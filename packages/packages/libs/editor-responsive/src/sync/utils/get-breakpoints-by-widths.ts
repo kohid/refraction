@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { type Breakpoint, type BreakpointId, type ExtendedWindow } from '../../types';
 
 export function getBreakpointsByWidths(): { minWidth: Breakpoint[]; defaults: Breakpoint[]; maxWidth: Breakpoint[] } {
-	const { breakpoints } = ( window as unknown as ExtendedWindow ).elementor?.config?.responsive || {};
+	const { breakpoints } = ( window as unknown as ExtendedWindow ).refraction?.config?.responsive || {};
 
 	if ( ! breakpoints || Object.entries( breakpoints ).length === 0 ) {
 		return {
@@ -18,7 +18,7 @@ export function getBreakpointsByWidths(): { minWidth: Breakpoint[]; defaults: Br
 
 	const defaults: Breakpoint[] = [
 		// Desktop breakpoint is not included in V1 config.
-		{ id: 'desktop', label: __( 'Desktop', 'elementor' ) },
+		{ id: 'desktop', label: __( 'Desktop', 'refraction' ) },
 	];
 
 	Object.entries( breakpoints ).forEach( ( [ id, v1Breakpoint ] ) => {

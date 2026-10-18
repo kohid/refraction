@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { emailsPropTypeUtil } from '@elementor/editor-props';
-import { CollapsibleContent } from '@elementor/editor-ui';
+import { emailsPropTypeUtil } from '@refraction/editor-props';
+import { CollapsibleContent } from '@refraction/editor-ui';
 import { Box, Divider, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -28,7 +28,7 @@ export const EmailFormActionControl = createControl(
 			<PropProvider { ...propContext } value={ value } setValue={ setValue }>
 				<Stack gap={ 2 }>
 					<ControlLabel>
-						{ label ? label + ' ' + __( 'settings', 'elementor' ) : __( 'Email settings', 'elementor' ) }
+						{ label ? label + ' ' + __( 'settings', 'refraction' ) : __( 'Email settings', 'refraction' ) }
 					</ControlLabel>
 					<SendToField placeholder={ toPlaceholder } />
 					<SubjectField />

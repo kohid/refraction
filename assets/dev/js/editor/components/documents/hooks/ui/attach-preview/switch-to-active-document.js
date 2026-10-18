@@ -1,4 +1,4 @@
-import { getQueryParam, removeQueryParam } from 'elementor-editor-utils/query-params';
+import { getQueryParam, removeQueryParam } from 'refraction-editor-utils/query-params';
 
 /**
  * Switch to the document in the `active-document` query param on initial Editor load.
@@ -20,14 +20,14 @@ export class SwitchToActiveDocument extends $e.modules.hookUI.After {
 			return false;
 		}
 
-		return elementor.documents.getCurrentId() === elementor.config.initial_document.id;
+		return refraction.documents.getCurrentId() === refraction.config.initial_document.id;
 	}
 
 	async apply() {
 		this.constructor.calledOnce = true;
 
 		const activeDocumentId = parseInt( getQueryParam( 'active-document' ) ),
-			isLoadedAlready = activeDocumentId === elementor.documents.getCurrentId();
+			isLoadedAlready = activeDocumentId === refraction.documents.getCurrentId();
 
 		if ( isNaN( activeDocumentId ) || isLoadedAlready ) {
 			return;
@@ -41,7 +41,7 @@ export class SwitchToActiveDocument extends $e.modules.hookUI.After {
 			} );
 		} catch ( e ) {
 			$e.run( 'editor/documents/switch', {
-				id: elementor.config.initial_document.id,
+				id: refraction.config.initial_document.id,
 				mode: 'autosave',
 			} );
 

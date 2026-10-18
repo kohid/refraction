@@ -1,4 +1,4 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export const GlobalClassNotFoundError = createError< { styleId: string } >( {
 	code: 'global_class_not_found',

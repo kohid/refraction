@@ -1,4 +1,4 @@
-export default class WpAudio extends elementorModules.frontend.handlers.Base {
+export default class WpAudio extends refractionModules.frontend.handlers.Base {
 	onInit() {
 		super.onInit();
 

@@ -2,7 +2,7 @@ import {
 	createTransformer,
 	stylesInheritanceTransformersRegistry,
 	styleTransformersRegistry,
-} from '@elementor/editor-canvas';
+} from '@refraction/editor-canvas';
 
 import { excludePropTypeTransformers } from './consts';
 import { arrayTransformer } from './transformers/array-transformer';

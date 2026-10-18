@@ -1,6 +1,6 @@
 export class Toggle extends $e.modules.CommandBase {
 	apply() {
-		elementor.getPanelView().modeSwitcher.currentView.toggleMode();
+		refraction.getPanelView().modeSwitcher.currentView.toggleMode();
 	}
 }
 

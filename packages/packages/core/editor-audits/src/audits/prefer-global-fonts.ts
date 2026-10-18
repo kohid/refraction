@@ -7,19 +7,19 @@ import { walkElements } from '../utils/walk';
 
 export const audit: Audit = {
 	id: 'audits/prefer-global-fonts',
-	title: __( 'Prefer global fonts', 'elementor' ),
-	description: __( 'Global fonts make the design consistent and easy to update site-wide.', 'elementor' ),
-	fixHint: __( 'Replace the hard-coded value with the matching global font.', 'elementor' ),
+	title: __( 'Prefer global fonts', 'refraction' ),
+	description: __( 'Global fonts make the design consistent and easy to update site-wide.', 'refraction' ),
+	fixHint: __( 'Replace the hard-coded value with the matching global font.', 'refraction' ),
 	categories: [ 'best-practices', 'performance' ],
 	severity: 'info',
 	weight: 3,
 	evaluate: ( ctx ) => {
 		if ( ctx.elements.tree.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No elements', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No elements', 'refraction' ) };
 		}
 
 		if ( ctx.kit.globals.fonts.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No global fonts', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No global fonts', 'refraction' ) };
 		}
 
 		const violations: AuditViolation[] = [];
@@ -38,7 +38,7 @@ export const audit: Audit = {
 					targetHint: 'element-settings',
 					label: sprintf(
 						/* translators: %s: global font title. */
-						__( 'replace hardcoded typography with "%s" global font', 'elementor' ),
+						__( 'replace hardcoded typography with "%s" global font', 'refraction' ),
 						global.title
 					),
 				} );

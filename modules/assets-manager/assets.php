@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\AssetsManager;
+namespace Refraction\Modules\AssetsManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

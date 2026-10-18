@@ -6,8 +6,8 @@ import {
 	getElementLabel,
 	playElementInteractions,
 	updateElementInteractions,
-} from '@elementor/editor-elements';
-import { undoable } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { useElementInteractions } from '../hooks/use-element-interactions';
@@ -35,7 +35,7 @@ export const InteractionsProvider = ( { children, elementId }: { children: React
 	const rawInteractions = useElementInteractions( elementId );
 
 	useEffect( () => {
-		window.dispatchEvent( new CustomEvent( 'elementor/element/update_interactions' ) );
+		window.dispatchEvent( new CustomEvent( 'refraction/element/update_interactions' ) );
 	}, [] );
 
 	const interactions: ElementInteractions =
@@ -63,8 +63,8 @@ export const InteractionsProvider = ( { children, elementId }: { children: React
 					title: getElementLabel( elementId ),
 					subtitle: ( { operationType }: UndoablePayload ) =>
 						operationType === 'apply'
-							? __( 'Interaction Applied', 'elementor' )
-							: __( 'Interaction Deleted', 'elementor' ),
+							? __( 'Interaction Applied', 'refraction' )
+							: __( 'Interaction Deleted', 'refraction' ),
 				}
 			),
 		[ elementId ]

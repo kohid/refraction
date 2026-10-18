@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\Agents\Classes;
+namespace Refraction\Modules\Agents\Classes;
 
-use Elementor\Core\Utils\Exceptions;
-use Elementor\Modules\Agents\Agent_Ready_Settings;
+use Refraction\Core\Utils\Exceptions;
+use Refraction\Modules\Agents\Agent_Ready_Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +29,7 @@ class Markdown_Search_Ajax {
 	 */
 	public function handle( array $data ): array {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			throw new \Exception( esc_html__( 'Permission denied.', 'elementor' ), Exceptions::FORBIDDEN ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new \Exception( esc_html__( 'Permission denied.', 'refraction' ), Exceptions::FORBIDDEN ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		if ( ! $this->settings->is_markdown_enabled() ) {

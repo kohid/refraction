@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { PositionControl } from '../position-control';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 const propType = createMockPropType( {
 	kind: 'union',

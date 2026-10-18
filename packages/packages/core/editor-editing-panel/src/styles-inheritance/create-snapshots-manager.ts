@@ -1,7 +1,7 @@
-import { filterEmptyValues, type TransformablePropValue } from '@elementor/editor-props';
-import { type BreakpointId, type BreakpointNode } from '@elementor/editor-responsive';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
-import { hasVariable } from '@elementor/editor-variables';
+import { filterEmptyValues, type TransformablePropValue } from '@refraction/editor-props';
+import { type BreakpointId, type BreakpointNode } from '@refraction/editor-responsive';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
+import { hasVariable } from '@refraction/editor-variables';
 
 import {
 	type BreakpointsInheritancePath,

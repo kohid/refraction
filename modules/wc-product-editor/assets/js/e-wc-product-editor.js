@@ -6,7 +6,7 @@ import { Button } from '@wordpress/components';
 import { registerPlugin } from '@wordpress/plugins';
 import { WooHeaderItem } from '@woocommerce/admin-layout';
 
-function EditWithElementorButton() {
+function EditWithRefractionButton() {
 	const [ isRedirecting, setIsRedirecting ] = useState( false );
 	const productId = useEntityId( 'postType', 'product' );
 	const { saveEntityRecord } = useDispatch( 'core' );
@@ -19,7 +19,7 @@ function EditWithElementorButton() {
 
 	useEffect( () => {
 		if ( isRedirecting && ! isSaving ) {
-			redirectToElementor();
+			redirectToRefraction();
 		}
 	}, [ isRedirecting, isSaving ] );
 
@@ -27,7 +27,7 @@ function EditWithElementorButton() {
 		if ( 'auto-draft' === postStatus ) {
 			saveEntityRecord( 'postType', 'product', {
 				id: productId,
-				name: `Elementor #${ productId }`,
+				name: `Refraction #${ productId }`,
 				status: 'draft',
 			} ).then( () => {
 				setIsRedirecting( true );
@@ -37,15 +37,15 @@ function EditWithElementorButton() {
 		}
 	};
 
-	const redirectToElementor = () => {
+	const redirectToRefraction = () => {
 		window.location.href = getEditUrl();
 	};
 
 	const getEditUrl = () => {
-		const url = new URL( ElementorWCProductEditorSettings.editLink );
+		const url = new URL( RefractionWCProductEditorSettings.editLink );
 
 		url.searchParams.set( 'post', productId );
-		url.searchParams.set( 'action', 'elementor' );
+		url.searchParams.set( 'action', 'refraction' );
 
 		return url.toString();
 	};
@@ -53,14 +53,14 @@ function EditWithElementorButton() {
 	return (
 		<WooHeaderItem name="product">
 			<Button variant="primary" onClick={ handleClick } style={ { display: 'flex', alignItems: 'center' } }>
-				<i className="eicon-elementor-square" aria-hidden="true" style={ { paddingInlineEnd: '8px' } }></i>
-				{ __( 'Edit with Elementor', 'elementor' ) }
+				<i className="eicon-refraction-square" aria-hidden="true" style={ { paddingInlineEnd: '8px' } }></i>
+				{ __( 'Edit with Refraction', 'refraction' ) }
 			</Button>
 		</WooHeaderItem>
 	);
 }
 
-registerPlugin( 'elementor-header-item', {
-	render: EditWithElementorButton,
+registerPlugin( 'refraction-header-item', {
+	render: EditWithRefractionButton,
 	scope: 'woocommerce-product-block-editor',
 } );

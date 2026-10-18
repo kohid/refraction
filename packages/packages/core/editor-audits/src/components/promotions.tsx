@@ -46,7 +46,7 @@ export default function Promotions( { report }: Props ) {
 		<>
 			<Divider />
 			<Typography variant="subtitle1" fontWeight="bold">
-				{ __( 'Quick actions', 'elementor' ) }
+				{ __( 'Quick actions', 'refraction' ) }
 			</Typography>
 			<Box sx={ { display: 'flex', flexDirection: 'column', gap: 1 } }>
 				{ cards.map( ( { config, ctaUrl, key, run, subtitle } ) => (

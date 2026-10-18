@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor text stroke control.
+ * Refraction text stroke control.
  *
  * A group control for creating a stroke effect on text. Displays input fields to define
  * the text stroke and color stroke.
@@ -57,7 +57,7 @@ class Group_Control_Text_Stroke extends Group_Control_Base {
 		$controls = [];
 
 		$controls['text_stroke'] = [
-			'label' => esc_html__( 'Text Stroke', 'elementor' ),
+			'label' => esc_html__( 'Text Stroke', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 			'range' => [
@@ -82,7 +82,7 @@ class Group_Control_Text_Stroke extends Group_Control_Base {
 		];
 
 		$controls['stroke_color'] = [
-			'label' => esc_html__( 'Stroke Color', 'elementor' ),
+			'label' => esc_html__( 'Stroke Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'default' => '#000',
 			'selector' => '{{WRAPPER}}',
@@ -108,7 +108,7 @@ class Group_Control_Text_Stroke extends Group_Control_Base {
 	protected function get_default_options() {
 		return [
 			'popover' => [
-				'starter_title' => esc_html__( 'Text Stroke', 'elementor' ),
+				'starter_title' => esc_html__( 'Text Stroke', 'refraction' ),
 				'starter_name' => 'text_stroke_type',
 				'starter_value' => 'yes',
 				'settings' => [

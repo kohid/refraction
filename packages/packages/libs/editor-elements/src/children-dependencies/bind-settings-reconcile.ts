@@ -1,4 +1,4 @@
-import { type PropValue } from '@elementor/editor-props';
+import { type PropValue } from '@refraction/editor-props';
 
 import { getContainer } from '../sync/get-container';
 import { addModelToParent, removeModelFromParent } from '../sync/resolve-element';
@@ -174,7 +174,7 @@ function placeAnchoredChild( parentId: string, rule: ChildDependencyRule ): void
 // Backbone `add`/`remove` on the parent elements collection is silent (see
 // assets/dev/js/editor/document/component.js addModelToParent / removeModelFromParent),
 // so the Marionette Navigator CompositeView never observes our mutation. The
-// legacy navigator exposes an `elementor/navigator/refresh-children` custom
+// legacy navigator exposes an `refraction/navigator/refresh-children` custom
 // window event (assets/dev/js/editor/regions/navigator/element.js) that
 // re-renders the subtree for a given element id — dispatch it here so the
 // Structure panel stays in sync with the model.
@@ -184,7 +184,7 @@ function requestNavigatorRefresh( parentId: string ): void {
 	}
 
 	window.dispatchEvent(
-		new CustomEvent( 'elementor/navigator/refresh-children', {
+		new CustomEvent( 'refraction/navigator/refresh-children', {
 			detail: { elementId: parentId },
 		} )
 	);

@@ -1,4 +1,4 @@
-import { stringPropTypeUtil } from '@elementor/editor-props';
+import { stringPropTypeUtil } from '@refraction/editor-props';
 
 import { isKeyVisible } from '../query-filter-repeater-control';
 

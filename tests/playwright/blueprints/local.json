@@ -15,7 +15,7 @@
                 "WP_DEBUG": true,
                 "WP_DEBUG_DISPLAY": true,
                 "SCRIPT_DEBUG": true,
-                "ELEMENTOR_SHOW_HIDDEN_EXPERIMENTS": true
+                "REFRACTION_SHOW_HIDDEN_EXPERIMENTS": true
             }
         },
 		{
@@ -25,14 +25,14 @@
 				"slug": "hello-elementor"
 			}
 		},
-		{ "step": "activatePlugin", "pluginPath": "/wordpress/wp-content/plugins/elementor" },
+		{ "step": "activatePlugin", "pluginPath": "/wordpress/wp-content/plugins/refraction" },
         { "step": "activateTheme", "themeFolderName": "hello-elementor" },
-        { "step": "wp-cli", "command": "wp option add 'elementor_onboarded' 1" },
-        { "step": "wp-cli", "command": "wp elementor experiments activate container" },
-        { "step": "updateUserMeta", "meta": { "announcements_user_counter": 999, "elementor_enable_ai": 0, "_e_welcome_popover_displayed": 1 }, "userId": 1 },
+        { "step": "wp-cli", "command": "wp option add 'refraction_onboarded' 1" },
+        { "step": "wp-cli", "command": "wp refraction experiments activate container" },
+        { "step": "updateUserMeta", "meta": { "announcements_user_counter": 999, "refraction_enable_ai": 0, "_e_welcome_popover_displayed": 1 }, "userId": 1 },
         {
             "step": "wp-cli",
-            "command": "wp --user=admin elementor library import-dir /wordpress/wp-content/plugins/elementor/tests/playwright/templates || echo 'Template import failed or already imported'"
+            "command": "wp --user=admin refraction library import-dir /wordpress/wp-content/plugins/refraction/tests/playwright/templates || echo 'Template import failed or already imported'"
         }
 	]
 }

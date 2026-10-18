@@ -34,7 +34,7 @@ export const TooltipAddItemAction = ( {
 					disabled={ disabled }
 					onClick={ onClick }
 					/* Translators: %s: Aria label. */
-					aria-label={ sprintf( __( 'Add %s item', 'elementor' ), ariaLabel?.toLowerCase() ) }
+					aria-label={ sprintf( __( 'Add %s item', 'refraction' ), ariaLabel?.toLowerCase() ) }
 				>
 					<PlusIcon fontSize={ SIZE } />
 				</IconButton>

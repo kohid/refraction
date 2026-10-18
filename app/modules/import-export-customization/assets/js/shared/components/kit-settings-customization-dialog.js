@@ -6,14 +6,14 @@ import { SettingSection } from './customization-setting-section';
 import { ClassesVariablesSection } from './classes-variables-section';
 import { KitCustomizationDialog } from './kit-customization-dialog';
 import { OverrideConfirmationDialog } from './override-confirmation-dialog';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 import useContextDetection from '../hooks/use-context-detection';
 import { useClassesVariablesLimits } from '../hooks/use-classes-variables-limits';
 import { UpgradeVersionBanner } from './upgrade-version-banner';
 import { transformValueForAnalytics } from '../utils/analytics-transformer';
 
 function isExperimentActive( experimentName ) {
-	return !! elementorCommon?.config?.experimentalFeatures?.[ experimentName ];
+	return !! refractionCommon?.config?.experimentalFeatures?.[ experimentName ];
 }
 
 function isClassesFeatureActive() {
@@ -43,7 +43,7 @@ async function fetchManagerUrl( panelId ) {
 	const nonce = window.wpApiSettings?.nonce || '';
 
 	const response = await fetch(
-		`${ baseUrl }elementor/v1/import-export-customization/manager-url?panel=${ panelId }`,
+		`${ baseUrl }refraction/v1/import-export-customization/manager-url?panel=${ panelId }`,
 		{
 			headers: {
 				'X-WP-Nonce': nonce,
@@ -170,7 +170,7 @@ export function KitSettingsCustomizationDialog( { open, handleClose, handleSaveC
 
 	useEffect( () => {
 		if ( open ) {
-			AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomizationEdit );
+			AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomizationEdit );
 		}
 	}, [ open ] );
 
@@ -266,17 +266,17 @@ export function KitSettingsCustomizationDialog( { open, handleClose, handleSaveC
 		<>
 			<KitCustomizationDialog
 				open={ open }
-				title={ __( 'Edit settings & configurations', 'elementor' ) }
+				title={ __( 'Edit settings & configurations', 'refraction' ) }
 				handleClose={ handleClose }
 				handleSaveChanges={ handleSaveClick }
 			>
 				<Stack gap={ 2 }>
-					{ contextData?.isOldElementorVersion && (
+					{ contextData?.isOldRefractionVersion && (
 						<UpgradeVersionBanner />
 					) }
 					{ isImport && ! isExported( contextData ) ? (
 						<SettingSection
-							title={ __( 'Theme', 'elementor' ) }
+							title={ __( 'Theme', 'refraction' ) }
 							settingKey="theme"
 							notExported
 						/>
@@ -284,8 +284,8 @@ export function KitSettingsCustomizationDialog( { open, handleClose, handleSaveC
 						<SettingSection
 							key="theme"
 							checked={ settings.theme }
-							title={ __( 'Theme', 'elementor' ) }
-							description={ __( 'Only public WordPress themes are supported', 'elementor' ) }
+							title={ __( 'Theme', 'refraction' ) }
+							description={ __( 'Only public WordPress themes are supported', 'refraction' ) }
 							settingKey="theme"
 							onSettingChange={ handleToggleChange }
 							disabled={ isImport && ! contextData?.data?.uploadedData?.manifest?.[ 'site-settings' ]?.theme }

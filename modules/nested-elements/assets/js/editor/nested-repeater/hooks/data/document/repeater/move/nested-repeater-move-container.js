@@ -2,7 +2,7 @@ import Base from '../../../base';
 import {
 	findChildContainerOrFail,
 	shouldUseAtomicRepeaters, sortViewsByModels,
-} from 'elementor/modules/nested-elements/assets/js/editor/utils';
+} from 'refraction/modules/nested-elements/assets/js/editor/utils';
 
 export class NestedRepeaterMoveContainer extends Base {
 	getId() {
@@ -28,8 +28,8 @@ export class NestedRepeaterMoveContainer extends Base {
 		if ( shouldUseAtomicRepeaters( widgetType ) ) {
 			container.view.children._views = sortViewsByModels( container );
 
-			elementor.$preview[ 0 ].contentWindow.dispatchEvent(
-				new CustomEvent( 'elementor/nested-container/atomic-repeater', {
+			refraction.$preview[ 0 ].contentWindow.dispatchEvent(
+				new CustomEvent( 'refraction/nested-container/atomic-repeater', {
 					detail: {
 						container,
 						targetContainer: result,

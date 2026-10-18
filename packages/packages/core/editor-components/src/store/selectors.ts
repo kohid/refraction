@@ -1,4 +1,4 @@
-import { __getState as getState, __getStore as getStore } from '@elementor/store';
+import { __getState as getState, __getStore as getStore } from '@refraction/store';
 
 import { type ComponentId } from '../types';
 import {

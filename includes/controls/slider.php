@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor slider control.
+ * Refraction slider control.
  *
  * A base control for creating slider control. Displays a draggable range slider.
  * The slider control can optionally have a number of unit types (`size_units`)
@@ -91,37 +91,37 @@ class Control_Slider extends Control_Base_Units {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
 			<?php $this->print_units_template(); ?>
-			<div class="elementor-control-input-wrapper elementor-control-dynamic-switcher-wrapper elementor-clearfix elementor-control-tag-area">
+			<div class="refraction-control-input-wrapper refraction-control-dynamic-switcher-wrapper refraction-clearfix refraction-control-tag-area">
 				<# if ( isMultiple && ( data.labels.length || data.scales ) ) { #>
-					<div class="elementor-slider__extra">
+					<div class="refraction-slider__extra">
 						<# if ( data.labels.length ) { #>
-						<div class="elementor-slider__labels">
+						<div class="refraction-slider__labels">
 							<# jQuery.each( data.labels, ( index, label ) => { #>
-								<div class="elementor-slider__label">{{{ label }}}</div>
+								<div class="refraction-slider__label">{{{ label }}}</div>
 							<# } ); #>
 						</div>
 						<# } if ( data.scales ) { #>
-						<div class="elementor-slider__scales">
+						<div class="refraction-slider__scales">
 							<# for ( var i = 0; i < data.scales; i++ ) { #>
-								<div class="elementor-slider__scale"></div>
+								<div class="refraction-slider__scale"></div>
 							<# } #>
 						</div>
 						<# } #>
 					</div>
 				<# } #>
-				<div class="elementor-slider"></div>
+				<div class="refraction-slider"></div>
 				<# if ( ! isMultiple ) { #>
-					<div class="elementor-slider-input">
+					<div class="refraction-slider-input">
 						<input id="<?php $this->print_control_uid(); ?>" type="text" min="{{ data.min }}" max="{{ data.max }}" step="{{ data.step }}" placeholder="{{ view.getControlPlaceholder()?.size }}" data-setting="size" />
 					</div>
 				<# } #>
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

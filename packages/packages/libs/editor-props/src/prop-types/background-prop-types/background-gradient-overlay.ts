@@ -1,4 +1,4 @@
-import type { z } from '@elementor/schema';
+import type { z } from '@refraction/schema';
 
 import { createPropUtils } from '../../utils/create-prop-utils';
 import { unknownChildrenSchema } from '../utils';

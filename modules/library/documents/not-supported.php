@@ -1,17 +1,17 @@
 <?php
-namespace Elementor\Modules\Library\Documents;
+namespace Refraction\Modules\Library\Documents;
 
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor section library document.
+ * Refraction section library document.
  *
- * Elementor section library document handler class is responsible for
+ * Refraction section library document handler class is responsible for
  * handling a document of a section type.
  */
 class Not_Supported extends Library_Document {
@@ -53,7 +53,7 @@ class Not_Supported extends Library_Document {
 	 * @return string Document title.
 	 */
 	public static function get_title() {
-		return esc_html__( 'Not Supported', 'elementor' );
+		return esc_html__( 'Not Supported', 'refraction' );
 	}
 
 	public function save_template_type() {

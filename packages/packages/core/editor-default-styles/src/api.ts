@@ -1,10 +1,10 @@
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
 import { type AllowedHtmlTag } from './allowed-tags';
 
 const RESOURCE_URL = '/default-styles';
-const BASE_URL = 'elementor/v1';
+const BASE_URL = 'refraction/v1';
 
 export type DefaultStylesMap = Record< StyleDefinitionID, StyleDefinition >;
 

@@ -33,7 +33,7 @@ test.describe( 'Image carousel tests', () => {
 		await editor.setSwitcherControlValue( 'autoplay', false );
 
 		await test.step( 'Verify image population', async () => {
-			expect( await editor.getPreviewFrame().locator( 'div.elementor-image-carousel-wrapper.swiper.swiper-initialized' ).screenshot( {
+			expect( await editor.getPreviewFrame().locator( 'div.refraction-image-carousel-wrapper.swiper.swiper-initialized' ).screenshot( {
 				type: 'jpeg',
 				quality: 90,
 			} ) ).toMatchSnapshot( 'carousel.jpeg' );
@@ -56,7 +56,7 @@ test.describe( 'Image carousel tests', () => {
 			await editor.setSelectControlValue( 'arrows_position', 'outside' );
 
 			// Assert
-			expect( await editor.getPreviewFrame().locator( '.elementor-widget-image-carousel' ).screenshot( {
+			expect( await editor.getPreviewFrame().locator( '.refraction-widget-image-carousel' ).screenshot( {
 				type: 'jpeg',
 				quality: 100,
 			} ) ).toMatchSnapshot( 'carousel-arrows-position.jpeg' );
@@ -65,7 +65,7 @@ test.describe( 'Image carousel tests', () => {
 		await test.step( 'Verify custom select control width', async () => {
 			await editor.selectElement( widgetId );
 			await editor.openPanelTab( 'content' );
-			await expect( page.locator( '.elementor-control-slides_to_show .elementor-control-input-wrapper' ) ).toHaveCSS( 'max-width', '80px' );
+			await expect( page.locator( '.refraction-control-slides_to_show .refraction-control-input-wrapper' ) ).toHaveCSS( 'max-width', '80px' );
 		} );
 
 		// Reset the Default template.

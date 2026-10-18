@@ -1,15 +1,15 @@
 import { createMockPropType } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { useBoundProp } from '@refraction/editor-controls';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import { useIsStyle } from '../contexts/style-context';
 import { useResetStyleValueProps } from '../reset-style-props';
 
-jest.mock( '@elementor/editor-v1-adapters' );
-jest.mock( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-v1-adapters' );
+jest.mock( '@refraction/editor-controls' );
 jest.mock( '../contexts/style-context' );
-jest.mock( '@elementor/editor-styles-repository' );
+jest.mock( '@refraction/editor-styles-repository' );
 
 describe( 'Reset Style Props Tests', () => {
 	beforeEach( () => {

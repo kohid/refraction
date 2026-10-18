@@ -28,17 +28,17 @@ type LocalModalProps = {
 	handleEnable: () => void;
 };
 
-const ADMIN_TITLE_TEXT = __( 'Enable Unfiltered Uploads', 'elementor' );
+const ADMIN_TITLE_TEXT = __( 'Enable Unfiltered Uploads', 'refraction' );
 const ADMIN_CONTENT_TEXT = __(
-	'Before you enable unfiltered files upload, note that such files include a security risk. Elementor does run a process to remove possible malicious code, but there is still risk involved when using such files.',
-	'elementor'
+	'Before you enable unfiltered files upload, note that such files include a security risk. Refraction does run a process to remove possible malicious code, but there is still risk involved when using such files.',
+	'refraction'
 );
 
-const ADMIN_FAILED_CONTENT_TEXT_PT1 = __( 'Failed to enable unfiltered files upload.', 'elementor' );
+const ADMIN_FAILED_CONTENT_TEXT_PT1 = __( 'Failed to enable unfiltered files upload.', 'refraction' );
 
 const ADMIN_FAILED_CONTENT_TEXT_PT2 = __(
 	'You can try again, if the problem persists, please contact support.',
-	'elementor'
+	'refraction'
 );
 
 const WAIT_FOR_CLOSE_TIMEOUT_MS = 300;
@@ -89,7 +89,7 @@ const AdminDialog = ( { open, onClose, handleEnable, isPending, isError }: Local
 		</DialogContent>
 		<DialogActions>
 			<Button size={ 'medium' } color="secondary" onClick={ () => onClose( false ) }>
-				{ __( 'Cancel', 'elementor' ) }
+				{ __( 'Cancel', 'refraction' ) }
 			</Button>
 			<Button
 				size={ 'medium' }
@@ -98,7 +98,7 @@ const AdminDialog = ( { open, onClose, handleEnable, isPending, isError }: Local
 				color="primary"
 				disabled={ isPending }
 			>
-				{ isPending ? <CircularProgress size={ 24 } /> : __( 'Enable', 'elementor' ) }
+				{ isPending ? <CircularProgress size={ 24 } /> : __( 'Enable', 'refraction' ) }
 			</Button>
 		</DialogActions>
 	</Dialog>

@@ -1,4 +1,4 @@
-import { getMixpanel } from '@elementor/events';
+import { getMixpanel } from '@refraction/events';
 
 import { type AllowedHtmlTag } from '../allowed-tags';
 

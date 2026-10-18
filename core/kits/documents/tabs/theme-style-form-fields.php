@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Typography;
+use Refraction\Controls_Manager;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Typography;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -18,7 +18,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Form Fields', 'elementor' );
+		return esc_html__( 'Form Fields', 'refraction' );
 	}
 
 	public function get_group() {
@@ -41,13 +41,13 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$input_selectors = [
 			'{{WRAPPER}} input:not([type="button"]):not([type="submit"])',
 			'{{WRAPPER}} textarea',
-			'{{WRAPPER}} .elementor-field-textual',
+			'{{WRAPPER}} .refraction-field-textual',
 		];
 
 		$input_focus_selectors = [
 			'{{WRAPPER}} input:focus:not([type="button"]):not([type="submit"])',
 			'{{WRAPPER}} textarea:focus',
-			'{{WRAPPER}} .elementor-field-textual:focus',
+			'{{WRAPPER}} .refraction-field-textual:focus',
 		];
 
 		$label_selector = implode( ',', $label_selectors );
@@ -57,7 +57,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->start_controls_section(
 			'section_form_fields',
 			[
-				'label' => esc_html__( 'Form Fields', 'elementor' ),
+				'label' => esc_html__( 'Form Fields', 'refraction' ),
 				'tab' => $this->get_id(),
 			]
 		);
@@ -68,14 +68,14 @@ class Theme_Style_Form_Fields extends Tab_Base {
 			'form_label_heading',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Label', 'elementor' ),
+				'label' => esc_html__( 'Label', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'form_label_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'dynamic' => [],
 				'selectors' => [
@@ -96,7 +96,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 			'form_field_heading',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Field', 'elementor' ),
+				'label' => esc_html__( 'Field', 'refraction' ),
 				'separator' => 'before',
 			]
 		);
@@ -114,7 +114,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->start_controls_tab(
 			'tab_form_field_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
@@ -125,7 +125,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->start_controls_tab(
 			'tab_form_field_focus',
 			[
-				'label' => esc_html__( 'Focus', 'elementor' ),
+				'label' => esc_html__( 'Focus', 'refraction' ),
 			]
 		);
 
@@ -134,7 +134,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->add_control(
 			'form_field_focus_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (ms)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (ms)',
 				'type' => Controls_Manager::SLIDER,
 				'selectors' => [
 					$input_selector => 'transition: {{SIZE}}ms',
@@ -156,7 +156,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->add_responsive_control(
 			'form_field_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -173,7 +173,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->add_control(
 			$prefix . '_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'dynamic' => [],
 				'selectors' => [
@@ -185,7 +185,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->add_control(
 			$prefix . '_accent_color',
 			[
-				'label' => esc_html__( 'Accent Color', 'elementor' ),
+				'label' => esc_html__( 'Accent Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'dynamic' => [],
 				'selectors' => [
@@ -197,7 +197,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->add_control(
 			$prefix . '_background_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'dynamic' => [],
 				'selectors' => [
@@ -230,7 +230,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 		$this->add_control(
 			$prefix . '_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [

@@ -26,7 +26,7 @@ test( 'add widgets from the panel by click', async ( { page, apiRequests }, test
 	const orderedWidgets = await editor.getPreviewFrame().evaluate( () => {
 		// Build a string that represents the widgets order in the page, since
 		// evaluate() must return a primitive value.
-		return [ ...document.querySelectorAll( '.elementor-widget' ) ]
+		return [ ...document.querySelectorAll( '.refraction-widget' ) ]
 			.map( ( el: dataset ) => {
 				return el.dataset.widget_type.replace( '.default', '' );
 			} )
@@ -53,7 +53,7 @@ async function addWidgetByClick( editor: EditorPage, widgetType: string ) {
 	const title = widgetType.charAt( 0 ).toUpperCase() + widgetType.slice( 1 );
 
 	await editor.openElementsPanel();
-	await editor.page.locator( '.elementor-panel-category-items' ).getByRole( 'button', { name: title, exact: true } ).click();
+	await editor.page.locator( '.refraction-panel-category-items' ).getByRole( 'button', { name: title, exact: true } ).click();
 
-	return editor.getPreviewFrame().locator( `.elementor-widget-${ widgetType }` ).getAttribute( 'data-id' );
+	return editor.getPreviewFrame().locator( `.refraction-widget-${ widgetType }` ).getAttribute( 'data-id' );
 }

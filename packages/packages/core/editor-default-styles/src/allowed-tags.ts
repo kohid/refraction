@@ -1,5 +1,5 @@
 type ExtendedWindow = Window & {
-	elementor: {
+	refraction: {
 		config: {
 			atomic?: {
 				default_styles?: {
@@ -10,10 +10,10 @@ type ExtendedWindow = Window & {
 	};
 };
 
-const getElementorConfig = () => ( window as unknown as ExtendedWindow ).elementor?.config ?? {};
+const getRefractionConfig = () => ( window as unknown as ExtendedWindow ).refraction?.config ?? {};
 
 export const getAllowedDefaultStyleTags = (): string[] => {
-	const tags = getElementorConfig().atomic?.default_styles?.allowed_tags;
+	const tags = getRefractionConfig().atomic?.default_styles?.allowed_tags;
 
 	if ( ! tags?.length ) {
 		return [];

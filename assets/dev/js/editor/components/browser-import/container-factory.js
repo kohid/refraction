@@ -1,4 +1,4 @@
-import { default as ElementModel } from 'elementor-elements/models/element';
+import { default as ElementModel } from 'refraction-elements/models/element';
 
 /**
  * @typedef {import('../../container/container')} Container
@@ -17,7 +17,7 @@ export default class ContainerFactory {
 			}, element ) ] )[ 0 ],
 		);
 
-		return new elementorModules.editor.Container( {
+		return new refractionModules.editor.Container( {
 			id: model.get( 'id' ),
 			type: model.get( 'elType' ),
 			settings: model.get( 'settings' ),
@@ -28,7 +28,7 @@ export default class ContainerFactory {
 
 	static regenerateIds( elements ) {
 		for ( const element of elements ) {
-			element.id = elementorCommon.helpers.getUniqueId().toString();
+			element.id = refractionCommon.helpers.getUniqueId().toString();
 
 			if ( element.elements ) {
 				this.regenerateIds( element.elements );

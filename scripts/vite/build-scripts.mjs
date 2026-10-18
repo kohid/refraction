@@ -11,9 +11,9 @@ import { generateEiconsFile } from './shared/eicons.mjs';
 import { BASE_ENTRIES, FRONTEND_ENTRIES, QUNIT_ENTRIES } from './shared/entries.mjs';
 import { ASSETS_JS } from './shared/paths.mjs';
 import {
-	copyElementorOneLocales,
-	verifyElementorOneLocaleAssets,
-} from './shared/elementor-one-locales.mjs';
+	copyRefractionOneLocales,
+	verifyRefractionOneLocaleAssets,
+} from './shared/refraction-one-locales.mjs';
 import {
 	verifyEditorOneTopBarLocaleLoading,
 	verifyNoUnresolvedImports,
@@ -22,11 +22,11 @@ import {
 
 /**
  * The Webpack runtime chunk has no equivalent once every entry is self-contained, but the
- * `elementor-webpack-runtime` script handle is still registered in PHP and depended on by
- * `elementor-frontend-modules`, so a no-op file keeps the enqueue graph resolvable.
+ * `refraction-webpack-runtime` script handle is still registered in PHP and depended on by
+ * `refraction-frontend-modules`, so a no-op file keeps the enqueue graph resolvable.
  */
 const RUNTIME_PLACEHOLDER_NAMES = [ 'webpack.runtime.js', 'webpack.runtime.min.js' ];
-const RUNTIME_PLACEHOLDER_SOURCE = '/* Elementor bundles are self-contained; this file exists for the elementor-webpack-runtime handle. */\n';
+const RUNTIME_PLACEHOLDER_SOURCE = '/* Refraction bundles are self-contained; this file exists for the refraction-webpack-runtime handle. */\n';
 
 const TARGETS = {
 	base: { entries: BASE_ENTRIES, emitStrings: true },
@@ -181,7 +181,7 @@ export async function buildScripts( { targets, watch, devOnly, prodOnly, clean }
 
 	// The frontend entries import the generated icon module, so it has to exist before bundling.
 	generateEiconsFile();
-	copyElementorOneLocales();
+	copyRefractionOneLocales();
 
 	const watchers = [];
 	const modes = resolveModes( { devOnly, prodOnly } );
@@ -195,7 +195,7 @@ export async function buildScripts( { targets, watch, devOnly, prodOnly, clean }
 	writeRuntimePlaceholders();
 
 	if ( ! watch ) {
-		verifyElementorOneLocaleAssets();
+		verifyRefractionOneLocaleAssets();
 		verifyNoUnresolvedImports();
 		verifyEditorOneTopBarLocaleLoading();
 		verifySelfPublishedGlobals();

@@ -1,5 +1,5 @@
-if ( ! window.elementorV2?.env ) {
-	throw new Error( 'The "@elementor/env" package was not loaded.' );
+if ( ! window.refractionV2?.env ) {
+	throw new Error( 'The "@refraction/env" package was not loaded.' );
 }
 
-window.elementorV2.env.initEnv( window.elementorEditorEnv );
+window.refractionV2.env.initEnv( window.refractionEditorEnv );

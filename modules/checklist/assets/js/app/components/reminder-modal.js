@@ -11,11 +11,11 @@ const ReminderModal = ( { setOpen } ) => {
 	return (
 		<Card elevation={ 0 } sx={ { maxWidth: 336 } } className="e-checklist-infotip-first-time-closed">
 			<CardContent>
-				<Typography variant="subtitle2" sx={ { mb: 2 } }>{ __( 'Looking for your Launchpad Checklist?', 'elementor' ) }</Typography>
-				<Typography variant="body2">{ __( 'Click the launch icon to continue setting up your site.', 'elementor' ) }</Typography>
+				<Typography variant="subtitle2" sx={ { mb: 2 } }>{ __( 'Looking for your Launchpad Checklist?', 'refraction' ) }</Typography>
+				<Typography variant="body2">{ __( 'Click the launch icon to continue setting up your site.', 'refraction' ) }</Typography>
 			</CardContent>
 			<CardActions>
-				<Button size="small" variant="contained" className="infotip-first-time-closed-button" onClick={ closeChecklist }>{ __( 'Got it', 'elementor' ) }</Button>
+				<Button size="small" variant="contained" className="infotip-first-time-closed-button" onClick={ closeChecklist }>{ __( 'Got it', 'refraction' ) }</Button>
 			</CardActions>
 		</Card>
 	);

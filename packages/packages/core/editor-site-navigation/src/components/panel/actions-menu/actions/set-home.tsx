@@ -32,7 +32,7 @@ export default function SetHome( { post, closeMenu }: { post: Post; closeMenu: (
 
 	return (
 		<ActionMenuItem
-			title={ __( 'Set as homepage', 'elementor' ) }
+			title={ __( 'Set as homepage', 'refraction' ) }
 			icon={ ! updateSettingsMutation.isPending ? HomeIcon : CircularProgress }
 			MenuItemProps={ {
 				disabled: isDisabled,

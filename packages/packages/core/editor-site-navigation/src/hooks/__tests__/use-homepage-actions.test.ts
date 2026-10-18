@@ -6,7 +6,7 @@ import { useHomepageActions } from '../use-homepage-actions';
 
 jest.mock( '@wordpress/api-fetch' );
 
-describe( '@elementor/site-settings/use-homepage-actions', () => {
+describe( '@refraction/site-settings/use-homepage-actions', () => {
 	beforeEach( () => {
 		jest.mocked( apiFetch ).mockImplementation( () => Promise.resolve( {} ) );
 	} );

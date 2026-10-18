@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Includes\TemplateLibrary\Sources\AdminMenuItems;
+namespace Refraction\Includes\TemplateLibrary\Sources\AdminMenuItems;
 
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Custom_Url_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_With_Custom_Url_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +18,7 @@ class Editor_One_Saved_Templates_Menu implements Menu_Item_Interface, Menu_Item_
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -26,7 +26,7 @@ class Editor_One_Saved_Templates_Menu implements Menu_Item_Interface, Menu_Item_
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'Saved Templates', 'elementor' );
+		return esc_html__( 'Saved Templates', 'refraction' );
 	}
 
 	public function get_position(): int {

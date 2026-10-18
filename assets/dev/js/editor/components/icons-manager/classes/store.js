@@ -1,11 +1,11 @@
 const Store = class {
 	static getKey( library ) {
 		const name = ( library.name ) ? library.name : library;
-		return `elementor_${ name }_icons`;
+		return `refraction_${ name }_icons`;
 	}
 
 	save( library ) {
-		elementorCommon.storage.set( Store.getKey( library ), library );
+		refractionCommon.storage.set( Store.getKey( library ), library );
 	}
 
 	getIcons( library ) {
@@ -17,7 +17,7 @@ const Store = class {
 	}
 
 	get( key ) {
-		return elementorCommon.storage.get( key );
+		return refractionCommon.storage.get( key );
 	}
 
 	isValid( library ) {

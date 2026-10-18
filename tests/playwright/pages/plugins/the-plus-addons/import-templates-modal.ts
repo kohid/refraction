@@ -8,7 +8,7 @@ export default class ImportTemplatesModal {
 
 	constructor( page: Page ) {
 		this.page = page;
-		this.modal = '#tp-onbording-elementorp';
+		this.modal = '#tp-onbording-refractionp';
 		this.skipButton = '.tp-skip-button';
 		this.importTemplatesButton = '.tp-button tp-do-it-button';
 	}

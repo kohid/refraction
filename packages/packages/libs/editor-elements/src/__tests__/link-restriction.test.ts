@@ -26,7 +26,7 @@ describe( 'link-restriction', () => {
 	beforeEach( () => {
 		document.body.innerHTML = '';
 		containersWithoutView.clear();
-		delete ( window as unknown as { elementor?: unknown } ).elementor;
+		delete ( window as unknown as { refraction?: unknown } ).refraction;
 	} );
 
 	describe( 'doesElementHaveAnchorTag', () => {
@@ -452,7 +452,7 @@ describe( 'link-restriction', () => {
 			`;
 			containersWithoutView.add( 'inner-heading' );
 
-			( window as unknown as { elementor: unknown } ).elementor = {
+			( window as unknown as { refraction: unknown } ).refraction = {
 				getPreviewContainer: () => ( { view: { el: document.body } } ),
 			};
 
@@ -472,7 +472,7 @@ describe( 'link-restriction', () => {
 			`;
 			containersWithoutView.add( 'inner-wrapper' );
 
-			( window as unknown as { elementor: unknown } ).elementor = {
+			( window as unknown as { refraction: unknown } ).refraction = {
 				getPreviewContainer: () => ( { view: { el: document.body } } ),
 			};
 

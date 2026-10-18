@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Modules\WpCli;
+namespace Refraction\Modules\WpCli;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Page Builder cli tools.
+ * Refraction Page Builder cli tools.
  */
 class Update extends \WP_CLI_Command {
 
@@ -24,13 +24,13 @@ class Update extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *  1. wp elementor update db
+	 *  1. wp refraction update db
 	 *      - This will Upgrade the DB if needed.
 	 *
-	 *  2. wp elementor update db --force
+	 *  2. wp refraction update db --force
 	 *      - This will Upgrade the DB even if another process is running.
 	 *
-	 *  3. wp elementor update db --network
+	 *  3. wp refraction update db --network
 	 *      - This will Upgrade the DB for each site in the network if needed.
 	 *
 	 * @since  2.4.0
@@ -65,13 +65,13 @@ class Update extends \WP_CLI_Command {
 	}
 
 	protected function get_update_db_manager_class() {
-		return '\Elementor\Core\Upgrade\Manager';
+		return '\Refraction\Core\Upgrade\Manager';
 	}
 
 	protected function do_db_upgrade( $assoc_args ) {
 		$manager_class = $this->get_update_db_manager_class();
 
-		/** @var \Elementor\Core\Upgrade\Manager $manager */
+		/** @var \Refraction\Core\Upgrade\Manager $manager */
 		$manager = new $manager_class();
 
 		$updater = $manager->get_task_runner();

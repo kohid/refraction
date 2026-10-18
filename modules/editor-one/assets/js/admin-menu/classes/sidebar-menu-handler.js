@@ -1,21 +1,21 @@
 export class SidebarMenuHandler {
 	constructor() {
-		this.elementorHomeMenu = this.findElementorHomeMenu();
+		this.refractionHomeMenu = this.findRefractionHomeMenu();
 
-		if ( this.elementorHomeMenu ) {
+		if ( this.refractionHomeMenu ) {
 			this.deactivateOtherMenus();
-			this.activateElementorMenu();
+			this.activateRefractionMenu();
 			this.highlightSubmenu();
 		}
 	}
 
-	findElementorHomeMenu() {
-		return document.querySelector( '#toplevel_page_elementor-home' );
+	findRefractionHomeMenu() {
+		return document.querySelector( '#toplevel_page_refraction-home' );
 	}
 
 	deactivateOtherMenus() {
 		document.querySelectorAll( '#adminmenu li.wp-has-current-submenu' ).forEach( ( item ) => {
-			if ( item !== this.elementorHomeMenu ) {
+			if ( item !== this.refractionHomeMenu ) {
 				item.classList.remove( 'wp-has-current-submenu', 'wp-menu-open', 'selected' );
 				item.classList.add( 'wp-not-current-submenu' );
 
@@ -27,13 +27,13 @@ export class SidebarMenuHandler {
 		} );
 	}
 
-	activateElementorMenu() {
-		this.elementorHomeMenu.classList.remove( 'wp-not-current-submenu' );
-		this.elementorHomeMenu.classList.add( 'wp-has-current-submenu', 'wp-menu-open', 'selected' );
+	activateRefractionMenu() {
+		this.refractionHomeMenu.classList.remove( 'wp-not-current-submenu' );
+		this.refractionHomeMenu.classList.add( 'wp-has-current-submenu', 'wp-menu-open', 'selected' );
 
-		const elementorLink = this.elementorHomeMenu.querySelector( ':scope > a.menu-top' );
-		if ( elementorLink ) {
-			elementorLink.classList.add( 'wp-has-current-submenu', 'wp-menu-open' );
+		const refractionLink = this.refractionHomeMenu.querySelector( ':scope > a.menu-top' );
+		if ( refractionLink ) {
+			refractionLink.classList.add( 'wp-has-current-submenu', 'wp-menu-open' );
 		}
 	}
 
@@ -42,21 +42,21 @@ export class SidebarMenuHandler {
 		const searchParams = currentUrl.searchParams;
 		const page = searchParams.get( 'page' );
 
-		let targetSlug = 'elementor';
+		let targetSlug = 'refraction';
 
-		if ( 'elementor' === page || 'elementor-home' === page ) {
-			targetSlug = 'elementor';
+		if ( 'refraction' === page || 'refraction-home' === page ) {
+			targetSlug = 'refraction';
 		} else if ( 'e-form-submissions' === page ) {
 			targetSlug = 'e-form-submissions';
-		} else if ( 'elementor-mcp' === page ) {
-			targetSlug = 'elementor-mcp';
-		} else if ( 'elementor-agents-ready' === page ) {
-			targetSlug = 'elementor-agents-ready';
-		} else if ( 'elementor-theme-builder' === page ) {
-			targetSlug = 'elementor-theme-builder';
+		} else if ( 'refraction-mcp' === page ) {
+			targetSlug = 'refraction-mcp';
+		} else if ( 'refraction-agents-ready' === page ) {
+			targetSlug = 'refraction-agents-ready';
+		} else if ( 'refraction-theme-builder' === page ) {
+			targetSlug = 'refraction-theme-builder';
 		}
 
-		const submenuItems = this.elementorHomeMenu.querySelectorAll( '.wp-submenu li' );
+		const submenuItems = this.refractionHomeMenu.querySelectorAll( '.wp-submenu li' );
 
 		submenuItems.forEach( ( item ) => {
 			const link = item.querySelector( 'a' );

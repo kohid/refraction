@@ -1,5 +1,5 @@
-import { type NotificationData, notify } from '@elementor/editor-notifications';
-import { type HookOptions, registerDataHook } from '@elementor/editor-v1-adapters';
+import { type NotificationData, notify } from '@refraction/editor-notifications';
+import { type HookOptions, registerDataHook } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { type CreateArgs, FORM_HONEYPOT_ELEMENT_TYPE, getArgsElementType } from './utils';
@@ -11,7 +11,7 @@ let notificationCounter = 0;
 function createHoneypotNotification(): NotificationData {
 	return {
 		type: 'default',
-		message: __( 'Honeypot added - invisible on your form. Reorder it in the Structure panel.', 'elementor' ),
+		message: __( 'Honeypot added - invisible on your form. Reorder it in the Structure panel.', 'refraction' ),
 		id: `honeypot-added-${ ++notificationCounter }`,
 	};
 }

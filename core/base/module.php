@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Core\Base;
+namespace Refraction\Core\Base;
 
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor module.
+ * Refraction module.
  *
  * An abstract class that provides the needed properties and methods to
  * manage and handle modules in inheriting classes.
@@ -224,7 +224,7 @@ abstract class Module extends Base_Object {
 		static $is_test_mode = null;
 
 		if ( null === $is_test_mode ) {
-			$is_test_mode = Utils::is_script_debug() || Utils::is_elementor_tests();
+			$is_test_mode = Utils::is_script_debug() || Utils::is_refraction_tests();
 		}
 
 		if ( ! $relative_url ) {
@@ -315,7 +315,7 @@ abstract class Module extends Base_Object {
 	 * @return string
 	 */
 	protected function get_assets_base_url() {
-		return ELEMENTOR_URL;
+		return REFRACTION_URL;
 	}
 
 	/**
@@ -353,6 +353,6 @@ abstract class Module extends Base_Object {
 	}
 
 	public function __construct() {
-		add_action( 'elementor/widgets/register', [ $this, 'init_widgets' ] );
+		add_action( 'refraction/widgets/register', [ $this, 'init_widgets' ] );
 	}
 }

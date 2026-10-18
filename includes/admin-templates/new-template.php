@@ -1,8 +1,8 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Base\Document;
-use Elementor\TemplateLibrary\Forms\New_Template_Form;
+use Refraction\Core\Base\Document;
+use Refraction\TemplateLibrary\Forms\New_Template_Form;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -13,7 +13,7 @@ $document_types = Plugin::$instance->documents->get_document_types();
 $types = [];
 $lock_configs = [];
 
-$selected = get_query_var( 'elementor_library_type' );
+$selected = get_query_var( 'refraction_library_type' );
 
 foreach ( $document_types as $document_type ) {
 	if ( $document_type::get_property( 'show_in_library' ) ) {
@@ -40,39 +40,39 @@ foreach ( $document_types as $document_type ) {
  * @param array    $types          Types data.
  * @param Document $document_types Document types.
  */
-$types = apply_filters( 'elementor/template-library/create_new_dialog_types', $types, $document_types );
+$types = apply_filters( 'refraction/template-library/create_new_dialog_types', $types, $document_types );
 ksort( $types );
 
 ?>
-<script type="text/template" id="tmpl-elementor-new-template">
-	<div id="elementor-new-template__description">
-		<div id="elementor-new-template__description__title"><?php
+<script type="text/template" id="tmpl-refraction-new-template">
+	<div id="refraction-new-template__description">
+		<div id="refraction-new-template__description__title"><?php
 			printf(
 				/* translators: %1$s Span open tag, %2$s: Span close tag. */
-				esc_html__( 'Templates Help You %1$sWork Efficiently%2$s', 'elementor' ),
+				esc_html__( 'Templates Help You %1$sWork Efficiently%2$s', 'refraction' ),
 				'<span>',
 				'</span>'
 			);
 			?></div>
-		<div id="elementor-new-template__description__content"><?php echo esc_html__( 'Use templates to create the different pieces of your site, and reuse them with one click whenever needed.', 'elementor' ); ?></div>
+		<div id="refraction-new-template__description__content"><?php echo esc_html__( 'Use templates to create the different pieces of your site, and reuse them with one click whenever needed.', 'refraction' ); ?></div>
 	</div>
-	<form id="elementor-new-template__form" action="<?php esc_url( admin_url( '/edit.php' ) ); ?>">
-		<input type="hidden" name="post_type" value="elementor_library">
-		<input type="hidden" name="action" value="elementor_new_post">
+	<form id="refraction-new-template__form" action="<?php esc_url( admin_url( '/edit.php' ) ); ?>">
+		<input type="hidden" name="post_type" value="refraction_library">
+		<input type="hidden" name="action" value="refraction_new_post">
 		<?php // PHPCS - a nonce doesn't have to be escaped. ?>
-		<input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'elementor_action_new_post' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">
-		<div id="elementor-new-template__form__title"><?php echo esc_html__( 'Choose Template Type', 'elementor' ); ?></div>
-		<div id="elementor-new-template__form__template-type__wrapper" class="elementor-form-field">
-			<label for="elementor-new-template__form__template-type" class="elementor-form-field__label"><?php echo esc_html__( 'Select the type of template you want to work on', 'elementor' ); ?></label>
-			<div class="elementor-form-field__select__wrapper">
+		<input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'refraction_action_new_post' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">
+		<div id="refraction-new-template__form__title"><?php echo esc_html__( 'Choose Template Type', 'refraction' ); ?></div>
+		<div id="refraction-new-template__form__template-type__wrapper" class="refraction-form-field">
+			<label for="refraction-new-template__form__template-type" class="refraction-form-field__label"><?php echo esc_html__( 'Select the type of template you want to work on', 'refraction' ); ?></label>
+			<div class="refraction-form-field__select__wrapper">
 				<?php // Badge will be filled from js. ?>
-				<span id="elementor-new-template__form__template-type-badge" class="e-hidden">
-					<i id="elementor-new-template__form__template-type-badge__icon"></i>
-					<span id="elementor-new-template__form__template-type-badge__text"></span>
+				<span id="refraction-new-template__form__template-type-badge" class="e-hidden">
+					<i id="refraction-new-template__form__template-type-badge__icon"></i>
+					<span id="refraction-new-template__form__template-type-badge__text"></span>
 				</span>
 
-				<select id="elementor-new-template__form__template-type" class="elementor-form-field__select" name="template_type" required>
-					<option value=""><?php echo esc_html__( 'Select', 'elementor' ); ?>...</option>
+				<select id="refraction-new-template__form__template-type" class="refraction-form-field__select" name="template_type" required>
+					<option value=""><?php echo esc_html__( 'Select', 'refraction' ); ?>...</option>
 					<?php
 					foreach ( $types as $value => $type_title ) {
 						printf(
@@ -91,28 +91,28 @@ ksort( $types );
 		/**
 		 * Template library dialog fields.
 		 *
-		 * Fires after Elementor template library dialog fields are displayed.
+		 * Fires after Refraction template library dialog fields are displayed.
 		 *
 		 * @since 2.0.0
 		 */
-		do_action( 'elementor/template-library/create_new_dialog_fields', $new_template_control_form );
+		do_action( 'refraction/template-library/create_new_dialog_fields', $new_template_control_form );
 
 		$additional_controls = $new_template_control_form->get_controls();
 		if ( $additional_controls ) {
-			wp_add_inline_script( 'elementor-admin', 'const elementor_new_template_form_controls = ' . wp_json_encode( $additional_controls ) . ';' );
+			wp_add_inline_script( 'refraction-admin', 'const refraction_new_template_form_controls = ' . wp_json_encode( $additional_controls ) . ';' );
 			$new_template_control_form->render();
 		}
 		?>
 
-		<div id="elementor-new-template__form__post-title__wrapper" class="elementor-form-field">
-			<label for="elementor-new-template__form__post-title" class="elementor-form-field__label">
-				<?php echo esc_html__( 'Name your template', 'elementor' ); ?>
+		<div id="refraction-new-template__form__post-title__wrapper" class="refraction-form-field">
+			<label for="refraction-new-template__form__post-title" class="refraction-form-field__label">
+				<?php echo esc_html__( 'Name your template', 'refraction' ); ?>
 			</label>
-			<div class="elementor-form-field__text__wrapper">
-				<input type="text" placeholder="<?php echo esc_attr__( 'Enter template name (optional)', 'elementor' ); ?>" id="elementor-new-template__form__post-title" class="elementor-form-field__text" name="post_data[post_title]">
+			<div class="refraction-form-field__text__wrapper">
+				<input type="text" placeholder="<?php echo esc_attr__( 'Enter template name (optional)', 'refraction' ); ?>" id="refraction-new-template__form__post-title" class="refraction-form-field__text" name="post_data[post_title]">
 			</div>
 		</div>
-		<button id="elementor-new-template__form__submit" class="elementor-button e-primary"><?php echo esc_html__( 'Create Template', 'elementor' ); ?></button>
-		<a id="elementor-new-template__form__lock_button" class="elementor-button e-accent e-hidden" target="_blank"><?php // Will be filled from js. ?></a>
+		<button id="refraction-new-template__form__submit" class="refraction-button e-primary"><?php echo esc_html__( 'Create Template', 'refraction' ); ?></button>
+		<a id="refraction-new-template__form__lock_button" class="refraction-button e-accent e-hidden" target="_blank"><?php // Will be filled from js. ?></a>
 	</form>
 </script>

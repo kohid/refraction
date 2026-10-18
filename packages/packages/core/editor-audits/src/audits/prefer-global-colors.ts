@@ -7,19 +7,19 @@ import { walkElements } from '../utils/walk';
 
 export const audit: Audit = {
 	id: 'audits/prefer-global-colors',
-	title: __( 'Prefer global colors', 'elementor' ),
-	description: __( 'Global colors make the design consistent and easy to update site-wide.', 'elementor' ),
-	fixHint: __( 'Replace the hard-coded value with the matching global color.', 'elementor' ),
+	title: __( 'Prefer global colors', 'refraction' ),
+	description: __( 'Global colors make the design consistent and easy to update site-wide.', 'refraction' ),
+	fixHint: __( 'Replace the hard-coded value with the matching global color.', 'refraction' ),
 	categories: [ 'best-practices' ],
 	severity: 'info',
 	weight: 3,
 	evaluate: ( ctx ) => {
 		if ( ctx.elements.tree.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No elements', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No elements', 'refraction' ) };
 		}
 
 		if ( ctx.kit.globals.colors.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No global colors', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No global colors', 'refraction' ) };
 		}
 
 		const violations: AuditViolation[] = [];
@@ -39,7 +39,7 @@ export const audit: Audit = {
 					angieFix: true,
 					label: sprintf(
 						/* translators: 1: hard-coded color value, 2: global color title. */
-						__( 'replace "%1$s" with "%2$s" global color', 'elementor' ),
+						__( 'replace "%1$s" with "%2$s" global color', 'refraction' ),
 						value,
 						global.title
 					),

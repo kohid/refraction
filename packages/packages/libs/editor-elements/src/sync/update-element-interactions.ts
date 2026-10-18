@@ -1,4 +1,4 @@
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
 
 import { type V1ElementModelProps } from '..';
 import { getContainer } from './get-container';
@@ -18,7 +18,7 @@ export const updateElementInteractions = ( {
 
 	element.model.set( 'interactions', interactions );
 
-	window.dispatchEvent( new CustomEvent( 'elementor/element/update_interactions' ) );
+	window.dispatchEvent( new CustomEvent( 'refraction/element/update_interactions' ) );
 
 	runCommandSync( 'document/save/set-is-modified', { status: true }, { internal: true } );
 };

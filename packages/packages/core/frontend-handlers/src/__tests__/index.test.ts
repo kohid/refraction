@@ -49,7 +49,7 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -89,7 +89,7 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -119,7 +119,7 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -150,7 +150,7 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -187,7 +187,7 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -195,7 +195,7 @@ describe( 'Frontend Handlers', () => {
 			element.setAttribute( 'data-e-settings', JSON.stringify( UPDATED_SETTINGS ) );
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -225,13 +225,13 @@ describe( 'Frontend Handlers', () => {
 			document.body.appendChild( element );
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/destroy', {
+				new CustomEvent( 'refraction/element/destroy', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -256,14 +256,14 @@ describe( 'Frontend Handlers', () => {
 			document.body.appendChild( element );
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/destroy', {
+				new CustomEvent( 'refraction/element/destroy', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -289,16 +289,16 @@ describe( 'Frontend Handlers', () => {
 			document.body.appendChild( element );
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
 
-			element.addEventListener( 'elementor/element/destroyed', destroyedEventCallback );
+			element.addEventListener( 'refraction/element/destroyed', destroyedEventCallback );
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/destroy', {
+				new CustomEvent( 'refraction/element/destroy', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -339,13 +339,13 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -383,7 +383,7 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -415,14 +415,14 @@ describe( 'Frontend Handlers', () => {
 			document.body.appendChild( element );
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/destroy', {
+				new CustomEvent( 'refraction/element/destroy', {
 					detail: { id: ELEMENT_ID, type: WIDGET_ELEMENT_TYPE, element },
 				} )
 			);
@@ -460,14 +460,14 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: PARENT_ID, type: PARENT_ELEMENT_TYPE, element: parent },
 				} )
 			);
 
 			// Render child - this should bubble up to parent
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: CHILD_ID, type: CHILD_ELEMENT_TYPE, element: child },
 				} )
 			);
@@ -508,13 +508,13 @@ describe( 'Frontend Handlers', () => {
 			parent.appendChild( child );
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: PARENT_ID, type: PARENT_ELEMENT_TYPE, element: parent },
 				} )
 			);
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: CHILD_ID, type: CHILD_ELEMENT_TYPE, element: child },
 				} )
 			);
@@ -523,7 +523,7 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/destroy', {
+				new CustomEvent( 'refraction/element/destroy', {
 					detail: { id: CHILD_ID, type: CHILD_ELEMENT_TYPE, element: child },
 				} )
 			);
@@ -559,13 +559,13 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: PARENT_ID, type: PARENT_ELEMENT_TYPE, element: parent },
 				} )
 			);
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: SIBLING_ID, type: CHILD_ELEMENT_TYPE, element: sibling },
 				} )
 			);
@@ -601,21 +601,21 @@ describe( 'Frontend Handlers', () => {
 
 			// Render Parent
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: PARENT_ID, type: PARENT_ELEMENT_TYPE, element: parent },
 				} )
 			);
 
 			// Destroy Parent (should remove listener)
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/destroy', {
+				new CustomEvent( 'refraction/element/destroy', {
 					detail: { id: PARENT_ID, type: PARENT_ELEMENT_TYPE, element: parent },
 				} )
 			);
 
 			// Render Child
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: CHILD_ID, type: CHILD_ELEMENT_TYPE, element: child },
 				} )
 			);
@@ -651,13 +651,13 @@ describe( 'Frontend Handlers', () => {
 
 			// Act
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: PARENT_ID, type: PARENT_ELEMENT_TYPE, element: parent },
 				} )
 			);
 
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: CHILD_ID, type: CHILD_ELEMENT_TYPE, element: child },
 				} )
 			);
@@ -666,7 +666,7 @@ describe( 'Frontend Handlers', () => {
 			expect( childRenderCallback ).toHaveBeenCalledTimes( 1 );
 			expect( childRenderCallback ).toHaveBeenCalledWith(
 				expect.objectContaining( {
-					type: 'elementor/element/rendered',
+					type: 'refraction/element/rendered',
 					detail: expect.objectContaining( {
 						element: child,
 						elementType: CHILD_ELEMENT_TYPE,
@@ -724,7 +724,7 @@ describe( 'Frontend Handlers', () => {
 			// Act
 			[ parent1, child1, parent2, child2 ].forEach( ( element ) => {
 				window.dispatchEvent(
-					new CustomEvent( 'elementor/element/render', {
+					new CustomEvent( 'refraction/element/render', {
 						detail: {
 							id: element.getAttribute( 'data-id' ),
 							type: element.getAttribute( 'data-e-type' ),
@@ -770,12 +770,12 @@ describe( 'Frontend Handlers', () => {
 
 			// Act - Render elements
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: SHARED_ID, type: WIDGET_ELEMENT_TYPE, element: element1 },
 				} )
 			);
 			window.dispatchEvent(
-				new CustomEvent( 'elementor/element/render', {
+				new CustomEvent( 'refraction/element/render', {
 					detail: { id: SHARED_ID, type: WIDGET_ELEMENT_TYPE, element: element2 },
 				} )
 			);
@@ -804,9 +804,9 @@ describe( 'Frontend Handlers', () => {
 			element.setAttribute( 'data-e-type', WIDGET_ELEMENT_TYPE );
 			document.body.appendChild( element );
 
-			const editorWindow = window as Window & { elementor?: unknown };
+			const editorWindow = window as Window & { refraction?: unknown };
 
-			editorWindow.elementor = {};
+			editorWindow.refraction = {};
 
 			document.dispatchEvent( new Event( 'DOMContentLoaded' ) );
 

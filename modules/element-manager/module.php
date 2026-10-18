@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\ElementManager;
+namespace Refraction\Modules\ElementManager;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Modules\ElementManager\AdminMenuItems\Editor_One_Elements_Manager_Menu;
-use Elementor\Widget_Base;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Admin\Menu\Admin_Menu_Manager;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\ElementManager\AdminMenuItems\Editor_One_Elements_Manager_Menu;
+use Refraction\Widget_Base;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Module extends BaseModule {
 
-	const PAGE_ID = 'elementor-element-manager';
+	const PAGE_ID = 'refraction-element-manager';
 
 	public function get_name() {
 		return 'element-manager';
@@ -26,19 +26,19 @@ class Module extends BaseModule {
 		$ajax = new Ajax();
 		$ajax->register_endpoints();
 
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_menu( $menu_data_provider );
 		} );
 
-		add_action( 'elementor/editor-one/menu/after_register_hidden_submenus', function ( array $hooks ) {
+		add_action( 'refraction/editor-one/menu/after_register_hidden_submenus', function ( array $hooks ) {
 			$this->enqueue_assets_for_editor_one_menu( $hooks );
 		} );
 
-		add_filter( 'elementor/widgets/is_widget_enabled', function( $should_register, Widget_Base $widget_instance ) {
+		add_filter( 'refraction/widgets/is_widget_enabled', function( $should_register, Widget_Base $widget_instance ) {
 			return ! Options::is_element_disabled( $widget_instance->get_name() );
 		}, 10, 2 );
 
-		add_filter( 'elementor/system-info/usage/settings', function( $usage ) {
+		add_filter( 'refraction/system-info/usage/settings', function( $usage ) {
 			$disabled_elements = Options::get_disabled_elements();
 
 			if ( ! empty( $disabled_elements ) ) {
@@ -69,10 +69,10 @@ class Module extends BaseModule {
 				'wp-components',
 				'wp-dom-ready',
 				'wp-i18n',
-				'elementor-v2-ui',
-				'elementor-v2-icons',
+				'refraction-v2-ui',
+				'refraction-v2-icons',
 			],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
 		wp_localize_script( 'e-element-manager-app', 'eElementManagerConfig', [
@@ -80,7 +80,7 @@ class Module extends BaseModule {
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 		] );
 
-		wp_set_script_translations( 'e-element-manager-app', 'elementor' );
+		wp_set_script_translations( 'e-element-manager-app', 'refraction' );
 
 		wp_enqueue_style( 'wp-components' );
 		wp_enqueue_style( 'wp-format-library' );

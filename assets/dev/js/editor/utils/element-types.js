@@ -4,7 +4,7 @@
  * @return {string[]} Array of element type strings.
  */
 const getAllElementTypes = () => {
-	return Object.keys( elementor.getConfig().elements );
+	return Object.keys( refraction.getConfig().elements );
 };
 
 /**
@@ -18,7 +18,7 @@ const getAllElementTypes = () => {
  * @return {boolean}
  */
 const isCompoundAtomicType = ( elType ) => {
-	return !! elementor.getConfig().elements[ elType ]?.meta?.is_compound;
+	return !! refraction.getConfig().elements[ elType ]?.meta?.is_compound;
 };
 
 module.exports = {

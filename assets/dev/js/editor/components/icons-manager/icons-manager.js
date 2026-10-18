@@ -3,14 +3,14 @@ import { renderIconManager } from './components/icon-manager';
 import IconLibrary from './classes/icon-library';
 import Store from './classes/store';
 
-export default class extends elementorModules.Module {
+export default class extends refractionModules.Module {
 	onInit() {
 		// Init icon library helper
 		this.library = new IconLibrary();
 		// Init Icon library Storage helper
 		this.store = new Store();
 		// Fetch fa4 to fa5 migration data
-		elementor.helpers.fetchFa4ToFa5Mapping();
+		refraction.helpers.fetchFa4ToFa5Mapping();
 		this.cache = {};
 	}
 
@@ -22,8 +22,8 @@ export default class extends elementorModules.Module {
 
 			layoutModal.addButton( {
 				name: 'insert_icon',
-				text: __( 'Insert', 'elementor' ),
-				classes: 'elementor-button e-primary',
+				text: __( 'Insert', 'refraction' ),
+				classes: 'refraction-button e-primary',
 				callback: () => {
 					this.updateControlValue();
 					this.unMountIconManager();
@@ -49,11 +49,11 @@ export default class extends elementorModules.Module {
 
 	loadIconLibraries() {
 		if ( ! this.cache.loaded ) {
-			elementor.config.icons.libraries.forEach( ( library ) => {
+			refraction.config.icons.libraries.forEach( ( library ) => {
 				if ( 'all' === library.name ) {
 					return;
 				}
-				elementor.iconManager.library.initIconType( library );
+				refraction.iconManager.library.initIconType( library );
 			} );
 			this.cache.loaded = true;
 		}
@@ -69,7 +69,7 @@ export default class extends elementorModules.Module {
 			};
 
 		let selected = controlView.getControlValue(),
-			icons = elementor.config.icons.libraries;
+			icons = refraction.config.icons.libraries;
 
 		if ( ! selected.library || ! selected.value ) {
 			selected = {
@@ -107,7 +107,7 @@ export default class extends elementorModules.Module {
 
 		icons.forEach( ( tab, index ) => {
 			if ( -1 === [ 'all', 'recommended' ].indexOf( tab.name ) ) {
-				elementor.iconManager.library.initIconType( tab, ( lib ) => {
+				refraction.iconManager.library.initIconType( tab, ( lib ) => {
 					icons[ index ] = lib;
 				} );
 			}
@@ -136,7 +136,7 @@ export default class extends elementorModules.Module {
 			}
 		}
 
-		iconManagerConfig.customIconsURL = elementor.config.customIconsURL;
+		iconManagerConfig.customIconsURL = refraction.config.customIconsURL;
 
 		iconManagerConfig.activeTab = activeTab;
 		const { unmount } = renderIconManager( iconManagerConfig );

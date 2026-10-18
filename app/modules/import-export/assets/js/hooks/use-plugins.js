@@ -13,7 +13,7 @@ export const PLUGIN_STATUS_MAP = Object.freeze( {
 	NOT_INSTALLED: 'Not Installed',
 } );
 
-const baseEndpoint = elementorCommon.config.urls.rest + 'wp/v2/plugins/',
+const baseEndpoint = refractionCommon.config.urls.rest + 'wp/v2/plugins/',
 	getInitialState = () => ( {
 		status: PLUGINS_RESPONSE_MAP.INITIAL,
 		data: null,
@@ -29,7 +29,7 @@ export default function usePlugins() {
 					'Content-Type': 'application/json; charset=utf-8',
 					'X-WP-Nonce': wpApiSettings.nonce,
 					// TODO 18/04/2023 : This needs to be removed after https://elementor.atlassian.net/browse/HTS-434 is done.
-					'X-Elementor-Action': 'import-plugins',
+					'X-Refraction-Action': 'import-plugins',
 				},
 			};
 

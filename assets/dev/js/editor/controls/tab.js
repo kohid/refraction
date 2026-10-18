@@ -1,4 +1,4 @@
-var ControlBaseView = require( 'elementor-controls/base' ),
+var ControlBaseView = require( 'refraction-controls/base' ),
 	ControlTabItemView;
 
 ControlTabItemView = ControlBaseView.extend( {

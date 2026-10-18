@@ -1,5 +1,5 @@
 import EditorSelectors from '../../selectors/editor-selectors';
-import Content from '../elementor-panel-tabs/content';
+import Content from '../refraction-panel-tabs/content';
 import { expect } from '@playwright/test';
 
 export default class ImageCarousel extends Content {

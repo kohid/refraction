@@ -10,7 +10,7 @@ const templateFilePath = _path.resolve( __dirname, `../../templates/container-di
 
 test.describe( 'Container tests #4 @container', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	test( 'Container no horizontal scroll', async ( { page, apiRequests }, testInfo ) => {
@@ -23,7 +23,7 @@ test.describe( 'Container tests #4 @container', () => {
 		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
 
 		// Assert - Evaluate scroll widths in the browser context and check it has no horizontal scroll.
-		const container = await editor.getPreviewFrame().evaluate( () => document.querySelector( '.elementor-element-edit-mode' ) );
+		const container = await editor.getPreviewFrame().evaluate( () => document.querySelector( '.refraction-element-edit-mode' ) );
 		expect.soft( container.scrollWidth ).toBe( container.clientWidth );
 	} );
 
@@ -41,7 +41,7 @@ test.describe( 'Container tests #4 @container', () => {
 		await editor.openPageSettingsPanel();
 
 		// Assert.
-		const containersCount = await page.locator( '.elementor-control-convert_to_container' ).count();
+		const containersCount = await page.locator( '.refraction-control-convert_to_container' ).count();
 		expect.soft( containersCount ).toBe( 0 );
 	} );
 
@@ -56,7 +56,7 @@ test.describe( 'Container tests #4 @container', () => {
 			await editor.addWidget( { widgetType: widgets.spacer, container } );
 			await editor.addWidget( { widgetType: widgets.image, container } );
 
-			const spacerElementHeight = await editor.getPreviewFrame().locator( '.elementor-widget-spacer' ).evaluate( ( node ) => String( node.clientHeight ) );
+			const spacerElementHeight = await editor.getPreviewFrame().locator( '.refraction-widget-spacer' ).evaluate( ( node ) => String( node.clientHeight ) );
 			expect.soft( spacerElementHeight ).toBe( defaultSpacerSize );
 			await editor.removeElement( container );
 		} );
@@ -67,7 +67,7 @@ test.describe( 'Container tests #4 @container', () => {
 			await editor.addWidget( { widgetType: widgets.spacer, container } );
 			await editor.addWidget( { widgetType: widgets.image, container } );
 
-			const spacerElementWidth = await editor.getPreviewFrame().locator( '.elementor-widget-spacer' ).evaluate( ( node ) => String( node.clientWidth ) );
+			const spacerElementWidth = await editor.getPreviewFrame().locator( '.refraction-widget-spacer' ).evaluate( ( node ) => String( node.clientWidth ) );
 			expect.soft( spacerElementWidth ).toBe( defaultSpacerSize );
 			await editor.removeElement( container );
 		} );
@@ -79,7 +79,7 @@ test.describe( 'Container tests #4 @container', () => {
 			await page.waitForTimeout( 500 );
 			await editor.addWidget( { widgetType: widgets.image, container } );
 
-			const spacerElementHeight = await editor.getPreviewFrame().locator( '.elementor-widget-spacer' ).evaluate( ( node ) => String( node.clientHeight ) );
+			const spacerElementHeight = await editor.getPreviewFrame().locator( '.refraction-widget-spacer' ).evaluate( ( node ) => String( node.clientHeight ) );
 			expect.soft( spacerElementHeight ).toBe( spacerSize );
 			await editor.removeElement( container );
 		} );
@@ -92,7 +92,7 @@ test.describe( 'Container tests #4 @container', () => {
 			await page.waitForTimeout( 500 );
 			await editor.addWidget( { widgetType: widgets.image, container } );
 
-			const spacerElementHeight = await editor.getPreviewFrame().locator( '.elementor-widget-spacer' ).evaluate( ( node ) => String( node.clientHeight ) );
+			const spacerElementHeight = await editor.getPreviewFrame().locator( '.refraction-widget-spacer' ).evaluate( ( node ) => String( node.clientHeight ) );
 			expect.soft( spacerElementHeight ).toBe( spacerSize );
 			await editor.removeElement( container );
 		} );
@@ -105,7 +105,7 @@ test.describe( 'Container tests #4 @container', () => {
 			await page.waitForTimeout( 500 );
 			await editor.addWidget( { widgetType: widgets.image, container } );
 
-			const spacerElementWidth = await editor.getPreviewFrame().locator( '.elementor-widget-spacer' ).evaluate( ( node ) => String( node.clientWidth ) );
+			const spacerElementWidth = await editor.getPreviewFrame().locator( '.refraction-widget-spacer' ).evaluate( ( node ) => String( node.clientWidth ) );
 			expect.soft( spacerElementWidth ).toBe( spacerSize );
 			await editor.removeElement( container );
 		} );
@@ -118,7 +118,7 @@ test.describe( 'Container tests #4 @container', () => {
 			await page.waitForTimeout( 500 );
 			await editor.addWidget( { widgetType: widgets.image, container } );
 
-			const spacerElementHeight = await editor.getPreviewFrame().locator( '.elementor-widget-spacer' ).evaluate( ( node ) => String( node.clientWidth ) );
+			const spacerElementHeight = await editor.getPreviewFrame().locator( '.refraction-widget-spacer' ).evaluate( ( node ) => String( node.clientWidth ) );
 			expect.soft( spacerElementHeight ).toBe( spacerSize );
 			await editor.removeElement( container );
 		} );
@@ -132,9 +132,9 @@ test.describe( 'Container tests #4 @container', () => {
 		// Act.
 		await editor.addElement( { elType: 'container' }, 'document' );
 
-		const desktopGapControlColumnInput = page.locator( '.elementor-control-flex_gap input[data-setting="column"]' ),
-			tabletGapControlColumnInput = page.locator( '.elementor-control-flex_gap_tablet input[data-setting="column"]' ),
-			mobileGapControlColumnInput = page.locator( '.elementor-control-flex_gap_mobile input[data-setting="column"]' );
+		const desktopGapControlColumnInput = page.locator( '.refraction-control-flex_gap input[data-setting="column"]' ),
+			tabletGapControlColumnInput = page.locator( '.refraction-control-flex_gap_tablet input[data-setting="column"]' ),
+			mobileGapControlColumnInput = page.locator( '.refraction-control-flex_gap_mobile input[data-setting="column"]' );
 
 		// Assert.
 		await test.step( 'Check the control initial placeholder', async () => {
@@ -249,10 +249,10 @@ test.describe( 'Container tests #4 @container', () => {
 			const nestedChildContainer2 = await editor.addElement( { elType: 'container' }, nestedChildContainer1 );
 
 			// Assert.
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ parentContainer }` ) ).toHaveClass( /e-con-boxed/ );
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ childContainer }` ) ).toHaveClass( /e-con-full/ );
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ nestedChildContainer1 }` ) ).toHaveClass( /e-con-full/ );
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ nestedChildContainer2 }` ) ).toHaveClass( /e-con-full/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ parentContainer }` ) ).toHaveClass( /e-con-boxed/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ childContainer }` ) ).toHaveClass( /e-con-full/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ nestedChildContainer1 }` ) ).toHaveClass( /e-con-full/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ nestedChildContainer2 }` ) ).toHaveClass( /e-con-full/ );
 		} );
 
 		await test.step( '"Full Width" Parent container to default to "Boxed" content width on child container', async () => {
@@ -264,10 +264,10 @@ test.describe( 'Container tests #4 @container', () => {
 			const nestedChildContainer2 = await editor.addElement( { elType: 'container' }, nestedChildContainer1 );
 
 			// Assert.
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ parentContainer }` ) ).toHaveClass( /e-con-full/ );
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ childContainer }` ) ).toHaveClass( /e-con-boxed/ );
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ nestedChildContainer1 }` ) ).toHaveClass( /e-con-full/ );
-			await expect.soft( editor.getPreviewFrame().locator( `.elementor-element-${ nestedChildContainer2 }` ) ).toHaveClass( /e-con-full/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ parentContainer }` ) ).toHaveClass( /e-con-full/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ childContainer }` ) ).toHaveClass( /e-con-boxed/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ nestedChildContainer1 }` ) ).toHaveClass( /e-con-full/ );
+			await expect.soft( editor.getPreviewFrame().locator( `.refraction-element-${ nestedChildContainer2 }` ) ).toHaveClass( /e-con-full/ );
 		} );
 	} );
 

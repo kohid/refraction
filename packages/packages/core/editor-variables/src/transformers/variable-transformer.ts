@@ -1,4 +1,4 @@
-import { createTransformer, formatGridTrackRepeat, isGridTrackProperty } from '@elementor/editor-canvas';
+import { createTransformer, formatGridTrackRepeat, isGridTrackProperty } from '@refraction/editor-canvas';
 
 import { service } from '../service';
 import { type TVariable } from '../storage';

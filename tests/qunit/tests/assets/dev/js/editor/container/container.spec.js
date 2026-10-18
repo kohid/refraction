@@ -1,6 +1,6 @@
-import ElementsHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
-import GlobalsHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/globals/helper';
-import DynamicHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/dynamic/helper';
+import ElementsHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
+import GlobalsHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/globals/helper';
+import DynamicHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/dynamic/helper';
 
 require( './model/children-array.spec' );
 
@@ -15,7 +15,7 @@ jQuery( () => {
 					label: 'Fake Label',
 					parent: false,
 				},
-				container = new elementorModules.editor.Container( fakeArgs );
+				container = new refractionModules.editor.Container( fakeArgs );
 
 			assert.equal( !! container, true );
 		} );
@@ -23,7 +23,7 @@ jQuery( () => {
 		QUnit.test( 'constructor(): without args', ( assert ) => {
 			assert.throws(
 				() => {
-					new elementorModules.editor.Container( {} );
+					new refractionModules.editor.Container( {} );
 				},
 				new Error( 'type is required.' ),
 			);
@@ -55,7 +55,7 @@ jQuery( () => {
 		QUnit.test( 'getAffectingControls(): Ensure global control', ( assert ) => {
 			// Arrange.
 			const eButton = ElementsHelper.createWrappedButton(),
-				id = elementorCommon.helpers.getUniqueId(),
+				id = refractionCommon.helpers.getUniqueId(),
 				background_color = `globals/colors?id=${ id }`; // eslint-disable-line camelcase
 
 			eButton.controls.background_color.global = {};
@@ -81,14 +81,14 @@ jQuery( () => {
 		QUnit.test( 'getAffectingControls(): Ensure dynamic control', ( assert ) => {
 			// Arrange.
 			const eButton = ElementsHelper.createWrappedButton(),
-				dynamicTag = '[elementor-tag id="33e3c57" name="post-custom-field" settings="%7B%7D"]',
+				dynamicTag = '[refraction-tag id="33e3c57" name="post-custom-field" settings="%7B%7D"]',
 				dynamicValue = '{ dynamic text }',
-				{ id, name, settings } = elementor.dynamicTags.tagTextToTagData( dynamicTag ),
-				tag = elementor.dynamicTags.createTag( id, name, settings ),
-				key = elementor.dynamicTags.createCacheKey( tag );
+				{ id, name, settings } = refraction.dynamicTags.tagTextToTagData( dynamicTag ),
+				tag = refraction.dynamicTags.createTag( id, name, settings ),
+				key = refraction.dynamicTags.createCacheKey( tag );
 
 			// Set fake data.
-			elementor.dynamicTags.cache[ key ] = dynamicValue;
+			refraction.dynamicTags.cache[ key ] = dynamicValue;
 
 			DynamicHelper.enable( eButton, {
 				text: dynamicTag,

@@ -5,9 +5,9 @@ import {
 	type PropType,
 	type PropValue,
 	type UnionPropType,
-} from '@elementor/editor-props';
-import { type BreakpointNode } from '@elementor/editor-responsive';
-import { type StyleDefinition } from '@elementor/editor-styles';
+} from '@refraction/editor-props';
+import { type BreakpointNode } from '@refraction/editor-responsive';
+import { type StyleDefinition } from '@refraction/editor-styles';
 
 import { getProviderByStyleId } from '../contexts/style-context';
 import { createSnapshotsManager } from './create-snapshots-manager';

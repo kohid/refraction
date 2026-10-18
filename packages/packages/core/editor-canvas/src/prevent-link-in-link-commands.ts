@@ -3,9 +3,9 @@ import {
 	getAnchoredDescendantId,
 	isElementAnchored,
 	type V1Element,
-} from '@elementor/editor-elements';
-import { type NotificationData, notify } from '@elementor/editor-notifications';
-import { blockCommand } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import { type NotificationData, notify } from '@refraction/editor-notifications';
+import { blockCommand } from '@refraction/editor-v1-adapters';
 import { type ButtonProps } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -60,7 +60,7 @@ function blockLinkInLinkPaste( args: PasteArgs ): boolean {
 		return false;
 	}
 
-	const data = ( window as CanvasExtendedWindow )?.elementorCommon?.storage?.get();
+	const data = ( window as CanvasExtendedWindow )?.refractionCommon?.storage?.get();
 
 	if ( ! data?.clipboard?.elements ) {
 		return false;
@@ -72,7 +72,7 @@ function blockLinkInLinkPaste( args: PasteArgs ): boolean {
 		type: 'default',
 		message: __(
 			"To paste a link to this element, first remove the link from it's parent container.",
-			'elementor'
+			'refraction'
 		),
 		id: 'paste-in-link-blocked',
 		additionalActionProps: [ learnMoreActionProps ],
@@ -94,7 +94,7 @@ function blockLinkInLinkMove( args: MoveArgs ): boolean {
 
 	const notification: NotificationData = {
 		type: 'default',
-		message: __( "To drag a link to this element, first remove the link from it's parent container.", 'elementor' ),
+		message: __( "To drag a link to this element, first remove the link from it's parent container.", 'refraction' ),
 		id: 'move-in-link-blocked',
 		additionalActionProps: [ learnMoreActionProps ],
 	};

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type ReactElement, useCallback, useRef, useState } from 'react';
-import { type ClassesPropValue } from '@elementor/editor-props';
+import { type ClassesPropValue } from '@refraction/editor-props';
 import {
 	isElementsStylesProvider,
 	type StylesProvider,
@@ -9,10 +9,10 @@ import {
 	useProviders,
 	useUserStylesCapability,
 	validateStyleLabel,
-} from '@elementor/editor-styles-repository';
-import { InfoAlert, WarningInfotip } from '@elementor/editor-ui';
+} from '@refraction/editor-styles-repository';
+import { InfoAlert, WarningInfotip } from '@refraction/editor-ui';
 import { ColorSwatchIcon, MapPinIcon } from '@elementor/icons';
-import { createLocation } from '@elementor/locations';
+import { createLocation } from '@refraction/locations';
 import {
 	type AutocompleteChangeReason,
 	Box,
@@ -48,12 +48,12 @@ import {
 } from './use-apply-and-unapply-class';
 import { useMissingClassesIds } from './use-missing-classes';
 
-const ID = 'elementor-css-class-selector';
+const ID = 'refraction-css-class-selector';
 const TAGS_LIMIT = 50;
 
 function openClassManagerPanel() {
 	window.dispatchEvent(
-		new CustomEvent( 'elementor/toggle-design-system', {
+		new CustomEvent( 'refraction/toggle-design-system', {
 			detail: { tab: 'classes' as const },
 		} )
 	);
@@ -66,7 +66,7 @@ type StyleDefOption = Option & {
 };
 
 const EMPTY_OPTION = {
-	label: __( 'local', 'elementor' ),
+	label: __( 'local', 'refraction' ),
 	value: null,
 	fixed: true,
 	color: getTempStylesProviderColorName( 'accent' ),
@@ -114,7 +114,7 @@ export function CssClassSelector() {
 		<Stack p={ 2 }>
 			<Stack direction="row" gap={ 1 } alignItems="center" justifyContent="space-between">
 				<FormLabel htmlFor={ ID } size="small">
-					{ __( 'Classes', 'elementor' ) }
+					{ __( 'Classes', 'refraction' ) }
 				</FormLabel>
 				<Stack direction="row" gap={ 1 }>
 					<ClassSelectorActionsSlot />
@@ -131,7 +131,7 @@ export function CssClassSelector() {
 					id={ ID }
 					ref={ autocompleteRef }
 					size="tiny"
-					placeholder={ showPlaceholder ? __( 'Type class name', 'elementor' ) : undefined }
+					placeholder={ showPlaceholder ? __( 'Type class name', 'refraction' ) : undefined }
 					options={ options }
 					selected={ appliedOptions }
 					entityName={ entityName }
@@ -191,7 +191,7 @@ export function CssClassSelector() {
 			{ hasMissingClasses && <MissingClassesAlert onDismiss={ clearMissingClasses } /> }
 			{ ! canEdit && (
 				<InfoAlert sx={ { mt: 1 } }>
-					{ __( 'With your current role, you can use existing classes but can’t modify them.', 'elementor' ) }
+					{ __( 'With your current role, you can use existing classes but can’t modify them.', 'refraction' ) }
 				</InfoAlert>
 			) }
 		</Stack>
@@ -211,13 +211,13 @@ const EmptyStateLayout = ( { searchValue, onClear, children }: EmptyStateProps &
 		>
 			<ColorSwatchIcon sx={ { transform: 'rotate(90deg)' } } fontSize="large" />
 			<Typography align="center" variant="subtitle2">
-				{ __( 'Sorry, nothing matched', 'elementor' ) }
+				{ __( 'Sorry, nothing matched', 'refraction' ) }
 				<br />
 				&ldquo;{ searchValue }&rdquo;.
 			</Typography>
 			{ children }
 			<Link color="text.secondary" variant="caption" component="button" onClick={ onClear }>
-				{ __( 'Clear & try again', 'elementor' ) }
+				{ __( 'Clear & try again', 'refraction' ) }
 			</Link>
 		</Stack>
 	</Box>
@@ -226,9 +226,9 @@ const EmptyStateLayout = ( { searchValue, onClear, children }: EmptyStateProps &
 const EmptyState = ( props: EmptyStateProps ) => (
 	<EmptyStateLayout { ...props }>
 		<Typography align="center" variant="caption" sx={ { mb: 2 } }>
-			{ __( 'With your current role,', 'elementor' ) }
+			{ __( 'With your current role,', 'refraction' ) }
 			<br />
-			{ __( 'you can only use existing classes.', 'elementor' ) }
+			{ __( 'you can only use existing classes.', 'refraction' ) }
 		</Typography>
 	</EmptyStateLayout>
 );
@@ -249,11 +249,11 @@ const LimitReachedEmptyState = ( {
 			<Typography align="center" variant="subtitle2">
 				{
 					/* translators: %s is the maximum number of classes */
-					__( 'Limit of %s classes reached', 'elementor' ).replace( '%s', String( limitCount ) )
+					__( 'Limit of %s classes reached', 'refraction' ).replace( '%s', String( limitCount ) )
 				}
 			</Typography>
 			<Typography align="center" variant="caption" component="div">
-				{ __( 'Remove a class to create a new one.', 'elementor' ) }{ ' ' }
+				{ __( 'Remove a class to create a new one.', 'refraction' ) }{ ' ' }
 				<Link
 					color="inherit"
 					variant="caption"
@@ -261,7 +261,7 @@ const LimitReachedEmptyState = ( {
 					onClick={ onClear }
 					sx={ { verticalAlign: 'baseline' } }
 				>
-					{ __( 'Clear', 'elementor' ) }
+					{ __( 'Clear', 'refraction' ) }
 				</Link>
 			</Typography>
 			<Button
@@ -273,7 +273,7 @@ const LimitReachedEmptyState = ( {
 					onClear();
 				} }
 			>
-				{ __( 'Class Manager', 'elementor' ) }
+				{ __( 'Class Manager', 'refraction' ) }
 			</Button>
 		</Stack>
 	</Box>

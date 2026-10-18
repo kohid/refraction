@@ -1,7 +1,7 @@
 import Component from './loader/component';
 
 class AppLoader {
-	selector = 'a.elementor-app-link, .elementor-app-link .ab-item';
+	selector = 'a.refraction-app-link, .refraction-app-link .ab-item';
 
 	constructor() {
 		$e.components.register( new Component() );
@@ -33,4 +33,4 @@ class AppLoader {
 	}
 }
 
-window.elementorAppLoader = new AppLoader();
+window.refractionAppLoader = new AppLoader();

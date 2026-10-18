@@ -1,12 +1,12 @@
 <?php
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-\Elementor\Plugin::$instance->frontend->add_body_class( 'elementor-template-canvas' );
+\Refraction\Plugin::$instance->frontend->add_body_class( 'refraction-template-canvas' );
 
 ?>
 <!DOCTYPE html>
@@ -30,24 +30,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	/**
 	 * Before canvas page template content.
 	 *
-	 * Fires before the content of Elementor canvas page template.
+	 * Fires before the content of Refraction canvas page template.
 	 *
 	 * @since 1.0.0
 	 */
-	do_action( 'elementor/page_templates/canvas/before_content' );
+	do_action( 'refraction/page_templates/canvas/before_content' );
 
-	$module = apply_filters( 'elementor/render_mode/module', 'page-templates' );
+	$module = apply_filters( 'refraction/render_mode/module', 'page-templates' );
 
-	\Elementor\Plugin::$instance->modules_manager->get_modules( $module )->print_content();
+	\Refraction\Plugin::$instance->modules_manager->get_modules( $module )->print_content();
 
 	/**
 	 * After canvas page template content.
 	 *
-	 * Fires after the content of Elementor canvas page template.
+	 * Fires after the content of Refraction canvas page template.
 	 *
 	 * @since 1.0.0
 	 */
-	do_action( 'elementor/page_templates/canvas/after_content' );
+	do_action( 'refraction/page_templates/canvas/after_content' );
 
 	wp_footer();
 	?>

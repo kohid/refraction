@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { getElementIcon, getElementTitle } from '@elementor/editor-elements';
-import { useFloatingPanelZIndex } from '@elementor/editor-floating-panels';
+import { getElementIcon, getElementTitle } from '@refraction/editor-elements';
+import { useFloatingPanelZIndex } from '@refraction/editor-floating-panels';
 import { CheckIcon, ChevronDownIcon, HelpIcon, InfoCircleIcon } from '@elementor/icons';
 import { Alert, Box, Collapse, IconButton, Tooltip, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -141,7 +141,7 @@ export default function ViolationRow( { audit, expanded, onToggleExpand, skipRea
 				{ skipReason && <SkipReasonTooltip reason={ skipReason } /> }
 				<IconButton
 					size="small"
-					aria-label={ expanded ? __( 'Collapse', 'elementor' ) : __( 'Expand', 'elementor' ) }
+					aria-label={ expanded ? __( 'Collapse', 'refraction' ) : __( 'Expand', 'refraction' ) }
 					onClick={ onToggleExpand }
 				>
 					<ChevronDownIcon

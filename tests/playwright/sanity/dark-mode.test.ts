@@ -10,8 +10,8 @@ test( 'navigator empty placeholder should be in dark mode', async ( { page, apiR
 	// Act.
 	await editor.addElement( { elType: 'container' }, 'document' );
 	await editor.setDisplayMode( 'dark' );
-	const navigator = editor.page.locator( '#elementor-navigator' );
-	await navigator.locator( '.elementor-navigator__element__list-toggle' ).click();
+	const navigator = editor.page.locator( '#refraction-navigator' );
+	await navigator.locator( '.refraction-navigator__element__list-toggle' ).click();
 
 	// Assert
 	expect( await navigator.screenshot( {

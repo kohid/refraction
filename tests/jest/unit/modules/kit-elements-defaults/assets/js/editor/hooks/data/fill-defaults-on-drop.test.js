@@ -1,6 +1,6 @@
-import { getElementDefaults } from 'elementor/modules/kit-elements-defaults/assets/js/editor/api';
+import { getElementDefaults } from 'refraction/modules/kit-elements-defaults/assets/js/editor/api';
 
-jest.mock( 'elementor/modules/kit-elements-defaults/assets/js/editor/api', () => ( {
+jest.mock( 'refraction/modules/kit-elements-defaults/assets/js/editor/api', () => ( {
 	__esModule: true,
 	getElementDefaults: jest.fn(),
 } ) );
@@ -18,7 +18,7 @@ describe( `$e.run('preview/drop') - Hook: FillDefaultsOnDrop`, () => {
 		};
 
 		// Need to import dynamically since the hook extends a global variable which isn't available in regular import.
-		CommandHook = ( await import( 'elementor/modules/kit-elements-defaults/assets/js/editor/hooks' ) ).FillDefaultsOnDrop;
+		CommandHook = ( await import( 'refraction/modules/kit-elements-defaults/assets/js/editor/hooks' ) ).FillDefaultsOnDrop;
 	} );
 
 	afterEach( () => {
@@ -58,7 +58,7 @@ describe( `$e.run('preview/drop') - Hook: FillDefaultsOnDrop`, () => {
 				should_not_be_changed: 'invalid_value',
 			},
 			__dynamic__: {
-				link: "[elementor-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
+				link: "[refraction-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
 			},
 		} );
 
@@ -85,7 +85,7 @@ describe( `$e.run('preview/drop') - Hook: FillDefaultsOnDrop`, () => {
 						should_not_be_changed: 'test',
 					},
 					__dynamic__: {
-						link: "[elementor-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
+						link: "[refraction-tag id=\"4f74e2e\" name=\"post-url'\" settings=\"%7B%7D\"]",
 					},
 				},
 			},

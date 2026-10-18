@@ -39,10 +39,10 @@ export const FileUploadRow = ( { file, onRemove, statusLabel }: Props ) => {
 						{ file.name }
 					</Typography>
 					<Typography variant="caption" color="text.secondary" noWrap>
-						{ formatFileSize( file.size ) } · { statusLabel ?? __( 'Complete', 'elementor' ) }
+						{ formatFileSize( file.size ) } · { statusLabel ?? __( 'Complete', 'refraction' ) }
 					</Typography>
 				</Stack>
-				<IconButton size="small" onClick={ onRemove } aria-label={ __( 'Remove file', 'elementor' ) }>
+				<IconButton size="small" onClick={ onRemove } aria-label={ __( 'Remove file', 'refraction' ) }>
 					<XIcon fontSize="inherit" />
 				</IconButton>
 			</Stack>

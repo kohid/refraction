@@ -1,10 +1,10 @@
 {
-  "name": "@elementor/editor-components",
-  "description": "Elementor editor components",
+  "name": "@refraction/editor-components",
+  "description": "Refraction editor components",
   "version": "4.4.0",
   "private": false,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,11 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elementor/elementor.git",
+    "url": "git+https://github.com/kohid/refraction.git",
     "directory": "packages/core/editor-components"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -40,31 +40,31 @@
     "dev": "tsup --config=../../tsup.dev.ts"
   },
   "dependencies": {
-    "@elementor/editor": "4.4.0",
-    "@elementor/editor-canvas": "4.4.0",
-    "@elementor/editor-controls": "4.4.0",
-    "@elementor/editor-documents": "4.4.0",
-    "@elementor/editor-editing-panel": "4.4.0",
-    "@elementor/editor-elements": "4.4.0",
-    "@elementor/editor-elements-panel": "4.4.0",
-    "@elementor/editor-mcp": "4.4.0",
-    "@elementor/editor-templates": "4.4.0",
-    "@elementor/editor-panels": "4.4.0",
-    "@elementor/editor-props": "4.4.0",
-    "@elementor/editor-ui": "4.4.0",
-    "@elementor/editor-v1-adapters": "4.4.0",
-    "@elementor/http-client": "4.4.0",
+    "@refraction/editor": "4.4.0",
+    "@refraction/editor-canvas": "4.4.0",
+    "@refraction/editor-controls": "4.4.0",
+    "@refraction/editor-documents": "4.4.0",
+    "@refraction/editor-editing-panel": "4.4.0",
+    "@refraction/editor-elements": "4.4.0",
+    "@refraction/editor-elements-panel": "4.4.0",
+    "@refraction/editor-mcp": "4.4.0",
+    "@refraction/editor-templates": "4.4.0",
+    "@refraction/editor-panels": "4.4.0",
+    "@refraction/editor-props": "4.4.0",
+    "@refraction/editor-ui": "4.4.0",
+    "@refraction/editor-v1-adapters": "4.4.0",
+    "@refraction/http-client": "4.4.0",
     "@elementor/icons": "~1.78.1",
-    "@elementor/events": "4.4.0",
-    "@elementor/query": "4.4.0",
-    "@elementor/schema": "4.4.0",
-    "@elementor/store": "4.4.0",
+    "@refraction/events": "4.4.0",
+    "@refraction/query": "4.4.0",
+    "@refraction/schema": "4.4.0",
+    "@refraction/store": "4.4.0",
     "@elementor/ui": "1.41.3",
-    "@elementor/utils": "4.4.0",
+    "@refraction/utils": "4.4.0",
     "@wordpress/i18n": "^5.13.0",
-    "@elementor/editor-notifications": "4.4.0",
-    "@elementor/editor-current-user": "4.4.0",
-    "@elementor/editor-embedded-documents-manager": "4.4.0"
+    "@refraction/editor-notifications": "4.4.0",
+    "@refraction/editor-current-user": "4.4.0",
+    "@refraction/editor-embedded-documents-manager": "4.4.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",

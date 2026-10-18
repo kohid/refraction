@@ -1,6 +1,6 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
-import { type PropsSchema, type PropValue, Schema } from '@elementor/editor-props';
-import { getStylesSchema } from '@elementor/editor-styles';
+import { getWidgetsCache } from '@refraction/editor-elements';
+import { type PropsSchema, type PropValue, Schema } from '@refraction/editor-props';
+import { getStylesSchema } from '@refraction/editor-styles';
 
 import { STYLE_SCHEMA_URI } from '../resources/widgets-schema-resource';
 

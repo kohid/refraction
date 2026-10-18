@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { closeDialog, openDialog } from '@elementor/editor-ui';
+import { closeDialog, openDialog } from '@refraction/editor-ui';
 import { InfoCircleFilledIcon } from '@elementor/icons';
 import { Box, Button, DialogActions, DialogContent, DialogHeader, Icon, Stack, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -12,7 +12,7 @@ export const openEditModeDialog = ( lockedBy: string ) => {
 
 const EditModeDialog = ( { lockedBy }: { lockedBy: string } ) => {
 	/* translators: %s is the name of the user who is currently editing the document */
-	const content = __( '%s is currently editing this document', 'elementor' ).replace( '%s', lockedBy );
+	const content = __( '%s is currently editing this document', 'refraction' ).replace( '%s', lockedBy );
 	return (
 		<>
 			<DialogHeader logo={ false }>
@@ -28,12 +28,12 @@ const EditModeDialog = ( { lockedBy }: { lockedBy: string } ) => {
 					<Typography variant="body2">
 						{ __(
 							'You can wait for them to finish or reach out to coordinate your changes together.',
-							'elementor'
+							'refraction'
 						) }
 					</Typography>
 					<DialogActions>
 						<Button color="secondary" variant="contained" onClick={ closeDialog }>
-							{ __( 'Close', 'elementor' ) }
+							{ __( 'Close', 'refraction' ) }
 						</Button>
 					</DialogActions>
 				</Stack>

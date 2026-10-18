@@ -22,11 +22,11 @@ export default function Portal( props: Props ) {
 			}
 		};
 
-		window.addEventListener( 'elementor/panel/init', resolveContainer );
+		window.addEventListener( 'refraction/panel/init', resolveContainer );
 		resolveContainer();
 
 		return () => {
-			window.removeEventListener( 'elementor/panel/init', resolveContainer );
+			window.removeEventListener( 'refraction/panel/init', resolveContainer );
 		};
 	}, [ container ] );
 

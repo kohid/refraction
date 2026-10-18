@@ -4,7 +4,7 @@ import {
 	imageSrcPropTypeUtil,
 	stringPropTypeUtil,
 	urlPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 import { type ElementSnapshotNode } from '../types';
 import { type ImageLikeMedia } from './image-like-sources';

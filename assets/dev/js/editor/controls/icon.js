@@ -1,4 +1,4 @@
-var ControlSelect2View = require( 'elementor-controls/select2' ),
+var ControlSelect2View = require( 'refraction-controls/select2' ),
 	ControlIconView;
 
 ControlIconView = ControlSelect2View.extend( {

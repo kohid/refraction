@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\DocumentTypes;
+namespace Refraction\Core\DocumentTypes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -48,7 +48,7 @@ class Post extends PageBase {
 	 * @return string
 	 */
 	public static function get_title() {
-		return esc_html__( 'Post', 'elementor' );
+		return esc_html__( 'Post', 'refraction' );
 	}
 
 	/**
@@ -62,6 +62,6 @@ class Post extends PageBase {
 	 * @return string
 	 */
 	public static function get_plural_title() {
-		return esc_html__( 'Posts', 'elementor' );
+		return esc_html__( 'Posts', 'refraction' );
 	}
 }

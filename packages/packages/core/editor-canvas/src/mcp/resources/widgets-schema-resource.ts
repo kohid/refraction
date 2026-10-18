@@ -1,15 +1,15 @@
-import { type MCPRegistryEntry, ResourceTemplate } from '@elementor/editor-mcp';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type MCPRegistryEntry, ResourceTemplate } from '@refraction/editor-mcp';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
 export const CANVAS_SERVER_NAME = 'editor-canvas';
 
-export const WIDGET_SCHEMA_URI = 'elementor://widgets/schema/{widgetType}';
+export const WIDGET_SCHEMA_URI = 'refraction://widgets/schema/{widgetType}';
 export const WIDGET_SCHEMA_FULL_URI = `${ CANVAS_SERVER_NAME }_${ WIDGET_SCHEMA_URI }`;
-export const STYLE_SCHEMA_URI = 'elementor://styles/schema/{category}';
-export const BEST_PRACTICES_URI = 'elementor://style/best-practices';
+export const STYLE_SCHEMA_URI = 'refraction://styles/schema/{category}';
+export const BEST_PRACTICES_URI = 'refraction://style/best-practices';
 export const BEST_PRACTICES_FULL_URI = `${ CANVAS_SERVER_NAME }_${ BEST_PRACTICES_URI }`;
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 
 type WidgetSummary = {
 	type: string;
@@ -60,7 +60,7 @@ export const initWidgetsSchemaResource = ( reg: MCPRegistryEntry ) => {
 
 				return {
 					resources: widgetTypes.map( ( widgetType ) => ( {
-						uri: `elementor://widgets/schema/${ widgetType }`,
+						uri: `refraction://widgets/schema/${ widgetType }`,
 						name: 'Widget schema for ' + widgetType,
 					} ) ),
 				};

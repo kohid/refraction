@@ -1,4 +1,4 @@
-import { getQueryClient } from '@elementor/query';
+import { getQueryClient } from '@refraction/query';
 
 import media from './media';
 import normalize from './normalize';

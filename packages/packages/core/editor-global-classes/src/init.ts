@@ -1,13 +1,13 @@
-import { injectIntoLogic } from '@elementor/editor';
+import { injectIntoLogic } from '@refraction/editor';
 import {
 	injectIntoClassSelectorActions,
 	injectIntoCssClassConvert,
 	registerStyleProviderToColors,
-} from '@elementor/editor-editing-panel';
-import { embeddedDocumentsManager } from '@elementor/editor-embedded-documents-manager';
-import { getMCPByDomain } from '@elementor/editor-mcp';
-import { stylesRepository } from '@elementor/editor-styles-repository';
-import { __registerSlice as registerSlice } from '@elementor/store';
+} from '@refraction/editor-editing-panel';
+import { embeddedDocumentsManager } from '@refraction/editor-embedded-documents-manager';
+import { getMCPByDomain } from '@refraction/editor-mcp';
+import { stylesRepository } from '@refraction/editor-styles-repository';
+import { __registerSlice as registerSlice } from '@refraction/store';
 
 import { ClassManagerButton } from './components/class-manager/class-manager-button';
 import { ConvertLocalClassToGlobalClass } from './components/convert-local-class-to-global-class';
@@ -66,7 +66,7 @@ export function init() {
 
 	initMcpIntegration(
 		getMCPByDomain( 'classes', {
-			instructions: 'MCP server for management of Elementor global classes',
+			instructions: 'MCP server for management of Refraction global classes',
 			docs: `Everything related to V4 ( Atomic ) global classes.
 # Global classes
 - Create/update/delete global classes

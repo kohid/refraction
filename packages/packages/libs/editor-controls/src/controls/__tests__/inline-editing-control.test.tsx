@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { ControlActionsProvider, PropKeyProvider, PropProvider } from '@elementor/editor-controls';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+import { ControlActionsProvider, PropKeyProvider, PropProvider } from '@refraction/editor-controls';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 import { ThemeProvider } from '@elementor/ui';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { type Editor } from '@tiptap/react';
@@ -176,7 +176,7 @@ describe( '<InlineEditingControl />', () => {
 
 	it( 'should show Improve beside the label when a promotion is set', () => {
 		// Arrange.
-		( window as unknown as { elementor: unknown } ).elementor = {
+		( window as unknown as { refraction: unknown } ).refraction = {
 			config: { user: { dismissed_editor_notices: [] } },
 		};
 

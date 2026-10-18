@@ -1,4 +1,4 @@
-@keyframes elementor-animation-pulse {
+@keyframes refraction-animation-pulse {
 	25% {
 		transform: scale(1.1);
 	}
@@ -6,10 +6,10 @@
 		transform: scale(0.9);
 	}
 }
-.elementor-animation-pulse:active,
-.elementor-animation-pulse:focus,
-.elementor-animation-pulse:hover {
-	animation-name: elementor-animation-pulse;
+.refraction-animation-pulse:active,
+.refraction-animation-pulse:focus,
+.refraction-animation-pulse:hover {
+	animation-name: refraction-animation-pulse;
 	animation-duration: 1s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;

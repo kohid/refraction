@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { SizeControl } from '@elementor/editor-controls';
+import { SizeControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const OPACITY_LABEL = __( 'Opacity', 'elementor' );
+const OPACITY_LABEL = __( 'Opacity', 'refraction' );
 
 export const OpacityControlField = () => {
 	const rowRef = useRef< HTMLDivElement | null >( null );

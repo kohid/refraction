@@ -1,13 +1,13 @@
 module.exports = Marionette.ItemView.extend( {
 	tagName: 'main',
 
-	template: '#tmpl-elementor-template-library-connect',
+	template: '#tmpl-refraction-template-library-connect',
 
-	id: 'elementor-template-library-connect',
+	id: 'refraction-template-library-connect',
 
 	ui: {
-		connect: '#elementor-template-library-connect__button',
-		thumbnails: '#elementor-template-library-connect-thumbnails',
+		connect: '#refraction-template-library-connect__button',
+		thumbnails: '#refraction-template-library-connect-thumbnails',
 	},
 
 	templateHelpers() {
@@ -15,14 +15,14 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	onRender() {
-		elementor.templates.eventManager.sendPageViewEvent( {
-			location: elementorCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTabConnect,
+		refraction.templates.eventManager.sendPageViewEvent( {
+			location: refractionCommon.eventsManager.config.secondaryLocations.templateLibrary.cloudTabConnect,
 		} );
 
-		this.ui.connect.elementorConnect( {
+		this.ui.connect.refractionConnect( {
 			parseUrl: ( url ) => url.replace( '%%template_type%%', this.model.get( 'type' ) ),
 			success: () => {
-				elementor.config.library_connect.is_connected = true;
+				refraction.config.library_connect.is_connected = true;
 
 				// If is connecting during insert template.
 				if ( this.getOption( 'model' ) ) {
@@ -31,13 +31,13 @@ module.exports = Marionette.ItemView.extend( {
 					} );
 				} else {
 					$e.run( 'library/close' );
-					elementor.notifications.showToast( {
-						message: __( 'Connected successfully.', 'elementor' ),
+					refraction.notifications.showToast( {
+						message: __( 'Connected successfully.', 'refraction' ),
 					} );
 				}
 			},
 			error: () => {
-				elementor.config.library_connect.is_connected = false;
+				refraction.config.library_connect.is_connected = false;
 			},
 		} );
 	},

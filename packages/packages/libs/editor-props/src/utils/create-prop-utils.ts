@@ -1,4 +1,4 @@
-import { z, type ZodType } from '@elementor/schema';
+import { z, type ZodType } from '@refraction/schema';
 
 import { type PropValue, type TransformablePropValue } from '../types';
 

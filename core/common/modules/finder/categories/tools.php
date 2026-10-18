@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Common\Modules\Finder\Categories;
+namespace Refraction\Core\Common\Modules\Finder\Categories;
 
-use Elementor\Core\Common\Modules\Finder\Base_Category;
-use Elementor\Tools as ElementorTools;
+use Refraction\Core\Common\Modules\Finder\Base_Category;
+use Refraction\Tools as RefractionTools;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Tools Category
  *
- * Provides items related to Elementor's tools.
+ * Provides items related to Refraction's tools.
  */
 class Tools extends Base_Category {
 
@@ -25,7 +25,7 @@ class Tools extends Base_Category {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Tools', 'elementor' );
+		return esc_html__( 'Tools', 'refraction' );
 	}
 
 	public function get_id() {
@@ -43,29 +43,29 @@ class Tools extends Base_Category {
 	 * @return array
 	 */
 	public function get_category_items( array $options = [] ) {
-		$tools_url = ElementorTools::get_url();
+		$tools_url = RefractionTools::get_url();
 
 		$items = [
 			'tools' => [
-				'title' => esc_html__( 'Tools', 'elementor' ),
+				'title' => esc_html__( 'Tools', 'refraction' ),
 				'icon' => 'tools',
 				'url' => $tools_url,
-				'keywords' => [ 'tools', 'regenerate css', 'safe mode', 'debug bar', 'sync library', 'elementor' ],
+				'keywords' => [ 'tools', 'regenerate css', 'safe mode', 'debug bar', 'sync library', 'refraction' ],
 			],
 			'replace-url' => [
-				'title' => esc_html__( 'Replace URL', 'elementor' ),
+				'title' => esc_html__( 'Replace URL', 'refraction' ),
 				'icon' => 'tools',
 				'url' => $tools_url . '#tab-replace_url',
-				'keywords' => [ 'tools', 'replace url', 'domain', 'elementor' ],
+				'keywords' => [ 'tools', 'replace url', 'domain', 'refraction' ],
 			],
 			'maintenance-mode' => [
-				'title' => esc_html__( 'Maintenance Mode', 'elementor' ),
+				'title' => esc_html__( 'Maintenance Mode', 'refraction' ),
 				'icon' => 'tools',
 				'url' => $tools_url . '#tab-maintenance_mode',
-				'keywords' => [ 'tools', 'maintenance', 'coming soon', 'elementor' ],
+				'keywords' => [ 'tools', 'maintenance', 'coming soon', 'refraction' ],
 			],
 			'import-export' => [
-				'title' => esc_html__( 'Import Export', 'elementor' ),
+				'title' => esc_html__( 'Import Export', 'refraction' ),
 				'icon' => 'import-export',
 				'url' => $tools_url . '#tab-import-export-kit',
 				'keywords' => [ 'tools', 'import export', 'import', 'export', 'kit' ],

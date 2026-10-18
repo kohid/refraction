@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
-import { arrayToClassName, isOneOf } from 'elementor-app/utils/utils.js';
+import { arrayToClassName, isOneOf } from 'refraction-app/utils/utils.js';
 
 import './upload-file.scss';
 
@@ -31,7 +31,7 @@ export default function UploadFile( props ) {
 
 						props.onError( {
 							id: 'file_not_allowed',
-							message: __( 'This file type is not allowed', 'elementor' ),
+							message: __( 'This file type is not allowed', 'refraction' ),
 						} );
 					}
 				} }
@@ -103,7 +103,7 @@ UploadFile.propTypes = {
 UploadFile.defaultProps = {
 	className: '',
 	type: 'file-explorer',
-	text: __( 'Select File', 'elementor' ),
+	text: __( 'Select File', 'refraction' ),
 	onError: () => {},
 	variant: 'contained',
 	color: 'primary',

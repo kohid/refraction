@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor testimonial widget.
+ * Refraction testimonial widget.
  *
- * Elementor widget that displays customer testimonials that show social proof.
+ * Refraction widget that displays customer testimonials that show social proof.
  *
  * @since 1.0.0
  */
@@ -42,7 +42,7 @@ class Widget_Testimonial extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Testimonial', 'elementor' );
+		return esc_html__( 'Testimonial', 'refraction' );
 	}
 
 	/**
@@ -107,27 +107,27 @@ class Widget_Testimonial extends Widget_Base {
 		$this->start_controls_section(
 			'section_testimonial',
 			[
-				'label' => esc_html__( 'Testimonial', 'elementor' ),
+				'label' => esc_html__( 'Testimonial', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'testimonial_content',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
 				],
 				'rows' => '10',
-				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor' ),
+				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'testimonial_image',
 			[
-				'label' => esc_html__( 'Choose Image', 'elementor' ),
+				'label' => esc_html__( 'Choose Image', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'dynamic' => [
 					'active' => true,
@@ -149,7 +149,7 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_control(
 			'testimonial_name',
 			[
-				'label' => esc_html__( 'Name', 'elementor' ),
+				'label' => esc_html__( 'Name', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -157,14 +157,14 @@ class Widget_Testimonial extends Widget_Base {
 				'ai' => [
 					'active' => false,
 				],
-				'default' => esc_html__( 'John Doe', 'elementor' ),
+				'default' => esc_html__( 'John Doe', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'testimonial_job',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -172,14 +172,14 @@ class Widget_Testimonial extends Widget_Base {
 				'ai' => [
 					'active' => false,
 				],
-				'default' => esc_html__( 'Designer', 'elementor' ),
+				'default' => esc_html__( 'Designer', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -190,16 +190,16 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_control(
 			'testimonial_image_position',
 			[
-				'label' => esc_html__( 'Image Position', 'elementor' ),
+				'label' => esc_html__( 'Image Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => 'aside',
 				'options' => [
 					'aside' => [
-						'title' => esc_html__( 'Aside', 'elementor' ),
+						'title' => esc_html__( 'Aside', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'top' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 				],
@@ -208,7 +208,7 @@ class Widget_Testimonial extends Widget_Base {
 					'testimonial_image[url]!' => '',
 				],
 				'separator' => 'before',
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'style_transfer' => true,
 			]
 		);
@@ -216,30 +216,30 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_responsive_control(
 			'testimonial_alignment',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => 'center',
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial-wrapper' => 'text-align: {{VALUE}}',
+					'{{WRAPPER}} .refraction-testimonial-wrapper' => 'text-align: {{VALUE}}',
 				],
 				'style_transfer' => true,
 			]
@@ -251,7 +251,7 @@ class Widget_Testimonial extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_testimonial_content',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -259,14 +259,14 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_control(
 			'content_content_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_TEXT,
 				],
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial-content' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-testimonial-content' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -278,7 +278,7 @@ class Widget_Testimonial extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_TEXT,
 				],
-				'selector' => '{{WRAPPER}} .elementor-testimonial-content',
+				'selector' => '{{WRAPPER}} .refraction-testimonial-content',
 			]
 		);
 
@@ -286,7 +286,7 @@ class Widget_Testimonial extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'content_shadow',
-				'selector' => '{{WRAPPER}} .elementor-testimonial-content',
+				'selector' => '{{WRAPPER}} .refraction-testimonial-content',
 			]
 		);
 
@@ -296,7 +296,7 @@ class Widget_Testimonial extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_testimonial_image',
 			[
-				'label' => esc_html__( 'Image', 'elementor' ),
+				'label' => esc_html__( 'Image', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'testimonial_image[url]!' => '',
@@ -307,7 +307,7 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_responsive_control(
 			'image_size',
 			[
-				'label' => esc_html__( 'Image Resolution', 'elementor' ),
+				'label' => esc_html__( 'Image Resolution', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -317,7 +317,7 @@ class Widget_Testimonial extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial-wrapper .elementor-testimonial-image img' => 'width: {{SIZE}}{{UNIT}};height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-testimonial-wrapper .refraction-testimonial-image img' => 'width: {{SIZE}}{{UNIT}};height: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -326,7 +326,7 @@ class Widget_Testimonial extends Widget_Base {
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'image_border',
-				'selector' => '{{WRAPPER}} .elementor-testimonial-wrapper .elementor-testimonial-image img',
+				'selector' => '{{WRAPPER}} .refraction-testimonial-wrapper .refraction-testimonial-image img',
 				'separator' => 'before',
 			]
 		);
@@ -334,11 +334,11 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_responsive_control(
 			'image_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial-wrapper .elementor-testimonial-image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-testimonial-wrapper .refraction-testimonial-image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -349,7 +349,7 @@ class Widget_Testimonial extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_testimonial_name',
 			[
-				'label' => esc_html__( 'Name', 'elementor' ),
+				'label' => esc_html__( 'Name', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -357,14 +357,14 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_control(
 			'name_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
 				],
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial-name' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-testimonial-name' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -376,7 +376,7 @@ class Widget_Testimonial extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
-				'selector' => '{{WRAPPER}} .elementor-testimonial-name',
+				'selector' => '{{WRAPPER}} .refraction-testimonial-name',
 			]
 		);
 
@@ -384,7 +384,7 @@ class Widget_Testimonial extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'name_shadow',
-				'selector' => '{{WRAPPER}} .elementor-testimonial-name',
+				'selector' => '{{WRAPPER}} .refraction-testimonial-name',
 			]
 		);
 
@@ -394,7 +394,7 @@ class Widget_Testimonial extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_testimonial_job',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -402,14 +402,14 @@ class Widget_Testimonial extends Widget_Base {
 		$this->add_control(
 			'job_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_SECONDARY,
 				],
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial-job' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-testimonial-job' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -421,7 +421,7 @@ class Widget_Testimonial extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_SECONDARY,
 				],
-				'selector' => '{{WRAPPER}} .elementor-testimonial-job',
+				'selector' => '{{WRAPPER}} .refraction-testimonial-job',
 			]
 		);
 
@@ -429,7 +429,7 @@ class Widget_Testimonial extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'job_shadow',
-				'selector' => '{{WRAPPER}} .elementor-testimonial-job',
+				'selector' => '{{WRAPPER}} .refraction-testimonial-job',
 			]
 		);
 
@@ -456,16 +456,16 @@ class Widget_Testimonial extends Widget_Base {
 			return;
 		}
 
-		$this->add_render_attribute( 'wrapper', 'class', 'elementor-testimonial-wrapper' );
+		$this->add_render_attribute( 'wrapper', 'class', 'refraction-testimonial-wrapper' );
 
-		$this->add_render_attribute( 'meta', 'class', 'elementor-testimonial-meta' );
+		$this->add_render_attribute( 'meta', 'class', 'refraction-testimonial-meta' );
 
 		if ( $settings['testimonial_image']['url'] ) {
-			$this->add_render_attribute( 'meta', 'class', 'elementor-has-image' );
+			$this->add_render_attribute( 'meta', 'class', 'refraction-has-image' );
 		}
 
 		if ( $settings['testimonial_image_position'] ) {
-			$this->add_render_attribute( 'meta', 'class', 'elementor-testimonial-image-position-' . $settings['testimonial_image_position'] );
+			$this->add_render_attribute( 'meta', 'class', 'refraction-testimonial-image-position-' . $settings['testimonial_image_position'] );
 		}
 
 		if ( ! empty( $settings['link']['url'] ) ) {
@@ -475,7 +475,7 @@ class Widget_Testimonial extends Widget_Base {
 		<div <?php $this->print_render_attribute_string( 'wrapper' ); ?>>
 			<?php
 			if ( $has_content ) :
-				$this->add_render_attribute( 'testimonial_content', 'class', 'elementor-testimonial-content' );
+				$this->add_render_attribute( 'testimonial_content', 'class', 'refraction-testimonial-content' );
 				$this->add_inline_editing_attributes( 'testimonial_content' );
 				?>
 				<div <?php $this->print_render_attribute_string( 'testimonial_content' ); ?>><?php echo wp_kses_post( $settings['testimonial_content'] ); ?></div>
@@ -483,9 +483,9 @@ class Widget_Testimonial extends Widget_Base {
 
 			<?php if ( $has_image || $has_name || $has_job ) : ?>
 			<div <?php $this->print_render_attribute_string( 'meta' ); ?>>
-				<div class="elementor-testimonial-meta-inner">
+				<div class="refraction-testimonial-meta-inner">
 					<?php if ( $has_image ) : ?>
-						<div class="elementor-testimonial-image">
+						<div class="refraction-testimonial-image">
 							<?php
 							$image_html = Group_Control_Image_Size::get_attachment_image_html( $settings, 'testimonial_image' );
 							if ( ! empty( $settings['link']['url'] ) ) :
@@ -497,10 +497,10 @@ class Widget_Testimonial extends Widget_Base {
 					<?php endif; ?>
 
 					<?php if ( $has_name || $has_job ) : ?>
-					<div class="elementor-testimonial-details">
+					<div class="refraction-testimonial-details">
 						<?php
 						if ( $has_name ) :
-							$this->add_render_attribute( 'testimonial_name', 'class', 'elementor-testimonial-name' );
+							$this->add_render_attribute( 'testimonial_name', 'class', 'refraction-testimonial-name' );
 							$this->add_inline_editing_attributes( 'testimonial_name', 'none' );
 
 							if ( ! empty( $settings['link']['url'] ) ) :
@@ -515,7 +515,7 @@ class Widget_Testimonial extends Widget_Base {
 						endif; ?>
 						<?php
 						if ( $has_job ) :
-							$this->add_render_attribute( 'testimonial_job', 'class', 'elementor-testimonial-job' );
+							$this->add_render_attribute( 'testimonial_job', 'class', 'refraction-testimonial-job' );
 
 							$this->add_inline_editing_attributes( 'testimonial_job', 'none' );
 
@@ -589,18 +589,18 @@ class Widget_Testimonial extends Widget_Base {
 		var imageUrl = false, hasImage = '';
 
 		if ( '' !== settings.testimonial_image.url ) {
-			imageUrl = elementor.imagesManager.getImageUrl( image );
-			hasImage = ' elementor-has-image';
+			imageUrl = refraction.imagesManager.getImageUrl( image );
+			hasImage = ' refraction-has-image';
 
 			var imageHtml = '<img src="' + _.escape( imageUrl ) + '" alt="testimonial" />';
 			if ( settings.link?.url ) {
-				imageHtml = '<a href="' + elementor.helpers.sanitizeUrl( settings.link?.url ) + '">' + imageHtml + '</a>';
+				imageHtml = '<a href="' + refraction.helpers.sanitizeUrl( settings.link?.url ) + '">' + imageHtml + '</a>';
 			}
 		}
 
-		var testimonial_image_position = settings.testimonial_image_position ? ' elementor-testimonial-image-position-' + settings.testimonial_image_position : '';
+		var testimonial_image_position = settings.testimonial_image_position ? ' refraction-testimonial-image-position-' + settings.testimonial_image_position : '';
 		#>
-		<div class="elementor-testimonial-wrapper">
+		<div class="refraction-testimonial-wrapper">
 			<# if ( '' !== settings.testimonial_content ) {
 				view.addRenderAttribute( 'testimonial_content', {
 					'data-binding-type': 'content',
@@ -611,18 +611,18 @@ class Widget_Testimonial extends Widget_Base {
 						}
 					})
 				} );
-				view.addRenderAttribute( 'testimonial_content', 'class', 'elementor-testimonial-content' );
+				view.addRenderAttribute( 'testimonial_content', 'class', 'refraction-testimonial-content' );
 
 				view.addInlineEditingAttributes( 'testimonial_content' );
 				#>
 				<div {{{ view.getRenderAttributeString( 'testimonial_content' ) }}}>{{ settings.testimonial_content }}</div>
 			<# } #>
-			<div class="elementor-testimonial-meta{{ hasImage }}{{ testimonial_image_position }}">
-				<div class="elementor-testimonial-meta-inner">
+			<div class="refraction-testimonial-meta{{ hasImage }}{{ testimonial_image_position }}">
+				<div class="refraction-testimonial-meta-inner">
 					<# if ( imageUrl ) { #>
-						<div class="elementor-testimonial-image">{{{ imageHtml }}}</div>
+						<div class="refraction-testimonial-image">{{{ imageHtml }}}</div>
 					<# } #>
-					<div class="elementor-testimonial-details">
+					<div class="refraction-testimonial-details">
 						<?php $this->render_testimonial_description(); ?>
 					</div>
 				</div>
@@ -635,13 +635,13 @@ class Widget_Testimonial extends Widget_Base {
 		?>
 		<#
 		if ( '' !== settings.testimonial_name ) {
-			view.addRenderAttribute( 'testimonial_name', 'class', 'elementor-testimonial-name' );
+			view.addRenderAttribute( 'testimonial_name', 'class', 'refraction-testimonial-name' );
 
 			view.addInlineEditingAttributes( 'testimonial_name', 'none' );
 
 			if ( settings.link?.url ) {
 				#>
-				<a href="{{  elementor.helpers.sanitizeUrl( settings.link?.url ) }}" {{{ view.getRenderAttributeString( 'testimonial_name' ) }}}>{{ settings.testimonial_name }}</a>
+				<a href="{{  refraction.helpers.sanitizeUrl( settings.link?.url ) }}" {{{ view.getRenderAttributeString( 'testimonial_name' ) }}}>{{ settings.testimonial_name }}</a>
 				<#
 			} else {
 				#>
@@ -651,13 +651,13 @@ class Widget_Testimonial extends Widget_Base {
 		}
 
 		if ( '' !== settings.testimonial_job ) {
-			view.addRenderAttribute( 'testimonial_job', 'class', 'elementor-testimonial-job' );
+			view.addRenderAttribute( 'testimonial_job', 'class', 'refraction-testimonial-job' );
 
 			view.addInlineEditingAttributes( 'testimonial_job', 'none' );
 
 			if ( settings.link?.url ) {
 				#>
-				<a href="{{  elementor.helpers.sanitizeUrl( settings.link?.url ) }}" {{{ view.getRenderAttributeString( 'testimonial_job' ) }}}>{{ settings.testimonial_job }}</a>
+				<a href="{{  refraction.helpers.sanitizeUrl( settings.link?.url ) }}" {{{ view.getRenderAttributeString( 'testimonial_job' ) }}}>{{ settings.testimonial_job }}</a>
 				<#
 			} else {
 				#>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTransformer } from '@elementor/editor-canvas';
+import { createTransformer } from '@refraction/editor-canvas';
 import { Stack, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -13,7 +13,7 @@ export const inheritanceTransformer = createTransformer( ( id: string ) => {
 	const variable = variables[ id ];
 
 	if ( ! variable ) {
-		return <span>{ __( 'Missing variable', 'elementor' ) }</span>;
+		return <span>{ __( 'Missing variable', 'refraction' ) }</span>;
 	}
 
 	const showColorIndicator = variable.type === colorVariablePropTypeUtil.key;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Import;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Import;
 
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Utils\Plugins_Manager;
-use Elementor\Core\Utils\Str;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Utils\Plugins_Manager;
+use Refraction\Core\Utils\Str;
 
 class Plugins extends Import_Runner_Base {
 

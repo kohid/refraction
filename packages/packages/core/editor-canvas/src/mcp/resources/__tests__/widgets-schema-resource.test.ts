@@ -1,10 +1,10 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-mcp', () => {
+jest.mock( '@refraction/editor-mcp', () => {
 	class MockResourceTemplate {
 		callbacks: { list?: () => Promise< { resources: unknown[] } > };
 		constructor( _uriTemplate: string, callbacks: { list?: () => Promise< { resources: unknown[] } > } ) {
@@ -59,13 +59,13 @@ describe( 'widgets-schema-resource', () => {
 		const result = await list();
 
 		// Assert
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			tool: 'list-widget-schemas',
 			input: { summary: true },
 		} );
 		expect( result.resources ).toEqual( [
-			{ uri: 'elementor://widgets/schema/e-heading', name: 'Widget schema for e-heading' },
-			{ uri: 'elementor://widgets/schema/e-button', name: 'Widget schema for e-button' },
+			{ uri: 'refraction://widgets/schema/e-heading', name: 'Widget schema for e-heading' },
+			{ uri: 'refraction://widgets/schema/e-button', name: 'Widget schema for e-button' },
 		] );
 	} );
 
@@ -81,13 +81,13 @@ describe( 'widgets-schema-resource', () => {
 		} );
 		mockedHttpService.mockReturnValue( { post } as never );
 		const { readHandler } = captureHandlers();
-		const uri = new URL( 'elementor://widgets/schema/e-heading' );
+		const uri = new URL( 'refraction://widgets/schema/e-heading' );
 
 		// Act
 		const result = await readHandler( uri, { widgetType: 'e-heading' } );
 
 		// Assert
-		expect( post ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( post ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			tool: 'get-widget-schemas',
 			input: { widget_type: [ 'e-heading' ] },
 		} );
@@ -104,14 +104,14 @@ describe( 'widgets-schema-resource', () => {
 				data: {
 					schemas: {},
 					errors: {
-						'e-missing': { code: 'elementor_not_found', message: 'Unknown widget type: e-missing.' },
+						'e-missing': { code: 'refraction_not_found', message: 'Unknown widget type: e-missing.' },
 					},
 				},
 			},
 		} );
 		mockedHttpService.mockReturnValue( { post } as never );
 		const { readHandler } = captureHandlers();
-		const uri = new URL( 'elementor://widgets/schema/e-missing' );
+		const uri = new URL( 'refraction://widgets/schema/e-missing' );
 
 		// Act & Assert
 		await expect( readHandler( uri, { widgetType: 'e-missing' } ) ).rejects.toThrow(

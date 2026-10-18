@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Export;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Export;
 
-use Elementor\Core\Utils\Collection;
+use Refraction\Core\Utils\Collection;
 
 class Plugins extends Export_Runner_Base {
 

@@ -1,5 +1,5 @@
-import Dependency from 'elementor-api/modules/hooks/data/dependency';
-import { DEFAULT_INNER_SECTION_COLUMNS } from 'elementor-elements/views/section';
+import Dependency from 'refraction-api/modules/hooks/data/dependency';
+import { DEFAULT_INNER_SECTION_COLUMNS } from 'refraction-elements/views/section';
 
 export class ResizeColumnLimit extends Dependency {
 	getCommand() {

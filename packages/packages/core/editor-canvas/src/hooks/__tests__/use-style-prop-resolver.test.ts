@@ -1,17 +1,17 @@
 import { createMockPropType } from 'test-utils';
-import { fontFamilyPropTypeUtil } from '@elementor/editor-props';
-import { type BreakpointsMap } from '@elementor/editor-responsive';
-import { getStylesSchema } from '@elementor/editor-styles';
-import { enqueueFont } from '@elementor/editor-v1-adapters';
+import { fontFamilyPropTypeUtil } from '@refraction/editor-props';
+import { type BreakpointsMap } from '@refraction/editor-responsive';
+import { getStylesSchema } from '@refraction/editor-styles';
+import { enqueueFont } from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import { initStyleTransformers } from '../../init-style-transformers';
 import { createStylesRenderer } from '../../renderers/create-styles-renderer';
 import { useStylePropResolver } from '../use-style-prop-resolver';
 
-jest.mock( '@elementor/editor-v1-adapters' );
-jest.mock( '@elementor/editor-styles', () => ( {
-	...jest.requireActual( '@elementor/editor-styles' ),
+jest.mock( '@refraction/editor-v1-adapters' );
+jest.mock( '@refraction/editor-styles', () => ( {
+	...jest.requireActual( '@refraction/editor-styles' ),
 	getStylesSchema: jest.fn(),
 } ) );
 

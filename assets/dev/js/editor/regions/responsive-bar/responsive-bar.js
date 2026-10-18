@@ -4,7 +4,7 @@ export default class extends Marionette.Region {
 	initialize() {
 		this.show( new View() );
 
-		elementor.panel.$el.on( {
+		refraction.panel.$el.on( {
 			resizestart: () => this.onPanelResizeStart(),
 			resizestop: () => this.onPanelResizeStop(),
 		} );

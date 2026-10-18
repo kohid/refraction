@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 class User_Data {
-	const API_NAMESPACE = 'elementor/v1';
+	const API_NAMESPACE = 'refraction/v1';
 	const API_BASE = '/user-data/current-user';
 
 	public static function init() {

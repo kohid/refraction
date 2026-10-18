@@ -29,7 +29,7 @@ export type RecentPost = {
 };
 
 export type ExtendedWindow = Window & {
-	elementorCommon: {
+	refractionCommon: {
 		eventsManager: {
 			dispatchEvent: ( name: string, data: Record< string, string > ) => void;
 			config: {

@@ -1,4 +1,4 @@
-import ElementsSettings from 'elementor-document/elements/commands/settings';
+import ElementsSettings from 'refraction-document/elements/commands/settings';
 
 /**
  * The difference between 'document/elements/settings` and `document/dynamic/settings` is:

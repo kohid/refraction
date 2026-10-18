@@ -5,7 +5,7 @@ import { type ExtendedWindow } from './types';
 export function getSelectedElements(): Element[] {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
-	const selectedElements = extendedWindow.elementor?.selection?.getElements?.() ?? [];
+	const selectedElements = extendedWindow.refraction?.selection?.getElements?.() ?? [];
 
 	return selectedElements.reduce< Element[] >( ( acc, el ) => {
 		const type = el.model.get( 'widgetType' ) || el.model.get( 'elType' );

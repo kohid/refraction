@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useEffect, useMemo, useState } from 'react';
-import { type InteractionItemPropValue, interactionsRepository } from '@elementor/editor-interactions';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { type InteractionItemPropValue, interactionsRepository } from '@refraction/editor-interactions';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
 import { useOnMount } from './use-on-mount';
 

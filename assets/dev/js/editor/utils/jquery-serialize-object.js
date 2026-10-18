@@ -3,7 +3,7 @@
  * jQuery Serialize Object v1.0.1
  */
 ( function( $ ) {
-	$.fn.elementorSerializeObject = function() {
+	$.fn.refractionSerializeObject = function() {
 		var serializedArray = this.serializeArray(),
 			data = {};
 

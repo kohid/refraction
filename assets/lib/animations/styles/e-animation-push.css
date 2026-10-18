@@ -1,4 +1,4 @@
-@keyframes elementor-animation-push {
+@keyframes refraction-animation-push {
 	50% {
 		transform: scale(0.8);
 	}
@@ -6,10 +6,10 @@
 		transform: scale(1);
 	}
 }
-.elementor-animation-push:active,
-.elementor-animation-push:focus,
-.elementor-animation-push:hover {
-	animation-name: elementor-animation-push;
+.refraction-animation-push:active,
+.refraction-animation-push:focus,
+.refraction-animation-push:hover {
+	animation-name: refraction-animation-push;
 	animation-duration: 0.3s;
 	animation-timing-function: linear;
 	animation-iteration-count: 1;

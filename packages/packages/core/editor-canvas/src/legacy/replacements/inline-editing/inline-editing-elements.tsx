@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { getContainer, getElementLabel, getElementType } from '@elementor/editor-elements';
+import { getContainer, getElementLabel, getElementType } from '@refraction/editor-elements';
 import {
 	escapedHtmlPropTypeUtil,
 	htmlV3PropTypeUtil,
 	type PropType,
 	type PropValue,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
-import { __privateRunCommandSync as runCommandSync, getCurrentEditMode, undoable } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-props';
+import { __privateRunCommandSync as runCommandSync, getCurrentEditMode, undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { ReplacementBase, TRIGGER_TIMING } from '../base';
@@ -170,7 +170,7 @@ export default class InlineEditingReplacement extends ReplacementBase {
 			{
 				title: getElementLabel( this.id ),
 				// translators: %s is the name of the property that was edited.
-				subtitle: __( '%s edited', 'elementor' ).replace(
+				subtitle: __( '%s edited', 'refraction' ).replace(
 					'%s',
 					this.getInlineEditablePropTypeKey() ?? 'Inline editing'
 				),

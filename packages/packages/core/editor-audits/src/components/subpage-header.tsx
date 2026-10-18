@@ -15,7 +15,7 @@ export default function SubpageHeader( { title, onBack, backLabel, icon }: Props
 
 	return (
 		<Box sx={ { display: 'flex', alignItems: 'center', gap: 0.5, p: 1 } }>
-			<IconButton size="small" onClick={ onBack } aria-label={ backLabel ?? __( 'Back', 'elementor' ) }>
+			<IconButton size="small" onClick={ onBack } aria-label={ backLabel ?? __( 'Back', 'refraction' ) }>
 				<Rotate in={ isRtl }>
 					<ArrowLeftIcon fontSize="small" />
 				</Rotate>

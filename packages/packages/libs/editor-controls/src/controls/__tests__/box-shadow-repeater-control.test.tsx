@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { type BoxShadowPropValue } from '@elementor/editor-props';
+import { type BoxShadowPropValue } from '@refraction/editor-props';
 import { screen } from '@testing-library/react';
 
 import { BoxShadowRepeaterControl } from '../box-shadow-repeater-control';

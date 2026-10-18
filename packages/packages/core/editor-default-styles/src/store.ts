@@ -1,4 +1,4 @@
-import { mergeProps, type Props } from '@elementor/editor-props';
+import { mergeProps, type Props } from '@refraction/editor-props';
 import {
 	type CustomCss,
 	getNonEmptyVariants,
@@ -6,14 +6,14 @@ import {
 	type StyleDefinition,
 	type StyleDefinitionID,
 	type StyleDefinitionVariant,
-} from '@elementor/editor-styles';
-import { type UpdateActionPayload } from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles';
+import { type UpdateActionPayload } from '@refraction/editor-styles-repository';
 import {
 	__createSelector as createSelector,
 	__createSlice as createSlice,
 	type PayloadAction,
 	type SliceState,
-} from '@elementor/store';
+} from '@refraction/store';
 
 type DefaultStylesState = {
 	data: Record< StyleDefinitionID, StyleDefinition >;

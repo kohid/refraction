@@ -1,8 +1,8 @@
 import {
 	__useActiveDocument as useActiveDocument,
 	__useActiveDocumentActions as useActiveDocumentActions,
-} from '@elementor/editor-documents';
-import { useMixpanel } from '@elementor/events';
+} from '@refraction/editor-documents';
+import { useMixpanel } from '@refraction/events';
 import { LinkIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -15,7 +15,7 @@ export default function useDocumentCopyAndShareProps(): ActionProps {
 
 	return {
 		icon: LinkIcon,
-		title: __( 'Copy and Share', 'elementor' ),
+		title: __( 'Copy and Share', 'refraction' ),
 		onClick: () => {
 			const eventName = config?.names?.editorOne?.topBarPublishDropdown;
 			if ( eventName ) {

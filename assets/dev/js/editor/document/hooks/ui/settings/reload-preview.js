@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/ui/after';
+import After from 'refraction-api/modules/hooks/ui/after';
 
 export class ReloadPreview extends After {
 	getCommand() {
@@ -20,10 +20,10 @@ export class ReloadPreview extends After {
 	apply() {
 		return $e.run( 'document/save/auto', { force: true } )
 			.then( () => {
-				elementor.reloadPreview();
+				refraction.reloadPreview();
 
 				// TODO: Fix the route change.
-				elementor.once( 'preview:loaded', () => {
+				refraction.once( 'preview:loaded', () => {
 					$e.route( 'panel/page-settings/settings' );
 				} );
 			} );

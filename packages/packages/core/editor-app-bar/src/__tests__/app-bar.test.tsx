@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { createMockDocument, renderWithTheme } from 'test-utils';
-import { __useActiveDocument as useActiveDocument } from '@elementor/editor-documents';
+import { __useActiveDocument as useActiveDocument } from '@refraction/editor-documents';
 import { act, screen } from '@testing-library/react';
 
 import AppBar from '../components/app-bar';
 import { MIN_APP_BAR_WIDTH } from '../constants';
 import { toolsMenu, utilitiesMenu } from '../locations';
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-current-user', () => ( {
+jest.mock( '@refraction/editor-current-user', () => ( {
 	useCurrentUserCapabilities: () => ( { isAdmin: true, canUser: jest.fn(), capabilities: [] } ),
 } ) );
 
@@ -47,7 +47,7 @@ function registerMenuActions( menu: typeof toolsMenu | typeof utilitiesMenu, cou
 	}
 }
 
-describe( '@elementor/editor-app-bar - AppBar', () => {
+describe( '@refraction/editor-app-bar - AppBar', () => {
 	const originalResizeObserver = globalThis.ResizeObserver;
 
 	beforeEach( () => {

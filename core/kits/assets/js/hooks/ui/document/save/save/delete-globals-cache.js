@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/data/after';
+import After from 'refraction-api/modules/hooks/data/after';
 
 export class KitDeleteGlobalsCache extends After {
 	getCommand() {
@@ -6,7 +6,7 @@ export class KitDeleteGlobalsCache extends After {
 	}
 
 	getConditions( args ) {
-		const { status, document = elementor.documents.getCurrent() } = args;
+		const { status, document = refraction.documents.getCurrent() } = args;
 		return 'publish' === status && 'kit' === document.config.type;
 	}
 

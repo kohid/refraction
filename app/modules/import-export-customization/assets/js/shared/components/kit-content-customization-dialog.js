@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { KitCustomizationDialog } from './kit-customization-dialog';
 import { ListSettingSection } from './customization-list-setting-section';
 import { SettingSection } from './customization-setting-section';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 import { useKitCustomizationCustomPostTypes } from '../hooks/use-kit-customization-custom-post-types';
 import useContextDetection from '../hooks/use-context-detection';
 import { UpgradeVersionBanner } from './upgrade-version-banner';
@@ -33,13 +33,13 @@ const MEDIA_FORMAT_OPTIONS = {
 const MEDIA_FORMAT_CONFIG = [
 	{
 		value: MEDIA_FORMAT_OPTIONS.LINK,
-		title: __( 'Link to media', 'elementor' ),
-		description: __( 'Stores only the URLs. The export stays light, but files load only while the original site is online.', 'elementor' ),
+		title: __( 'Link to media', 'refraction' ),
+		description: __( 'Stores only the URLs. The export stays light, but files load only while the original site is online.', 'refraction' ),
 	},
 	{
 		value: MEDIA_FORMAT_OPTIONS.CLOUD,
-		title: __( 'Save media to the cloud', 'elementor' ),
-		description: __( 'All images and files are stored with the template. Keeps everything intact, but the file is larger.', 'elementor' ),
+		title: __( 'Save media to the cloud', 'refraction' ),
+		description: __( 'All images and files are stored with the template. Keeps everything intact, but the file is larger.', 'refraction' ),
 	},
 ];
 
@@ -51,7 +51,7 @@ export function KitContentCustomizationDialog( {
 	showMediaFormatValidation = false,
 } ) {
 	const { isImport = false, contextData = {} } = useContextDetection() ?? {};
-	const { data = null, isOldElementorVersion = false } = contextData;
+	const { data = null, isOldRefractionVersion = false } = contextData;
 
 	const { customPostTypes } = useKitCustomizationCustomPostTypes( { data } );
 
@@ -95,7 +95,7 @@ export function KitContentCustomizationDialog( {
 
 	useEffect( () => {
 		if ( open ) {
-			AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomizationEdit );
+			AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomizationEdit );
 		}
 	}, [ open ] );
 
@@ -121,7 +121,7 @@ export function KitContentCustomizationDialog( {
 		if ( isImport ) {
 			return (
 				<SettingSection
-					title={ __( 'Media format', 'elementor' ) }
+					title={ __( 'Media format', 'refraction' ) }
 					settingKey="mediaFormat"
 					hasToggle={ false }
 				>
@@ -139,7 +139,7 @@ export function KitContentCustomizationDialog( {
 						} }
 					>
 						<Typography variant="body2" color="text.primary">
-							<strong>{ __( 'Note:', 'elementor' ) }</strong> { __( 'The media will be uploaded automatically, just as it was saved during export', 'elementor' ) }
+							<strong>{ __( 'Note:', 'refraction' ) }</strong> { __( 'The media will be uploaded automatically, just as it was saved during export', 'refraction' ) }
 						</Typography>
 					</Alert>
 				</SettingSection>
@@ -153,8 +153,8 @@ export function KitContentCustomizationDialog( {
 		return (
 			<SettingSection
 				ref={ mediaFormatSectionRef }
-				description={ __( 'Select how do you want to save & export the media files.', 'elementor' ) }
-				title={ __( 'Media format', 'elementor' ) }
+				description={ __( 'Select how do you want to save & export the media files.', 'refraction' ) }
+				title={ __( 'Media format', 'refraction' ) }
 				settingKey="mediaFormat"
 				hasToggle={ false }
 			>
@@ -218,7 +218,7 @@ export function KitContentCustomizationDialog( {
 							} }
 						>
 							<Typography variant="body2" color="text.primary">
-								<strong>{ __( 'Note:', 'elementor' ) }</strong> { __( 'To export a ZIP, go to Edit Content, choose \'Link to Media\', then Export as ZIP.', 'elementor' ) }<br></br>{ __( 'Or, save this template to the cloud instead.', 'elementor' ) }
+								<strong>{ __( 'Note:', 'refraction' ) }</strong> { __( 'To export a ZIP, go to Edit Content, choose \'Link to Media\', then Export as ZIP.', 'refraction' ) }<br></br>{ __( 'Or, save this template to the cloud instead.', 'refraction' ) }
 							</Typography>
 						</Alert>
 					) }
@@ -230,7 +230,7 @@ export function KitContentCustomizationDialog( {
 	return (
 		<KitCustomizationDialog
 			open={ open }
-			title={ __( 'Edit content', 'elementor' ) }
+			title={ __( 'Edit content', 'refraction' ) }
 			handleClose={ handleClose }
 			handleSaveChanges={ () => {
 				const transformedAnalytics = transformAnalyticsData( settings, customPostTypes );
@@ -239,19 +239,19 @@ export function KitContentCustomizationDialog( {
 			} }
 		>
 			<Stack gap={ 2 }>
-				{ isOldElementorVersion && (
+				{ isOldRefractionVersion && (
 					<UpgradeVersionBanner />
 				) }
 				{ isImport && ! customPostTypes?.length ? (
 					<SettingSection
-						title={ __( 'Custom post types', 'elementor' ) }
+						title={ __( 'Custom post types', 'refraction' ) }
 						settingKey="customPostTypes"
 						notExported
 					/>
 				) : (
 					<ListSettingSection
 						settingKey="customPostTypes"
-						title={ __( 'Custom post types', 'elementor' ) }
+						title={ __( 'Custom post types', 'refraction' ) }
 						onSettingChange={ ( selectedCustomPostTypes ) => {
 							handleSettingsChange( 'customPostTypes', selectedCustomPostTypes );
 						} }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * rather than an empty stub.
  *
  * When the WebMCP module activates:
- *   add_filter( 'elementor/agents/webmcp/is_applicable', '__return_true' );
- *   add_filter( 'elementor/agents/webmcp_manifest', function( $manifest ) {
+ *   add_filter( 'refraction/agents/webmcp/is_applicable', '__return_true' );
+ *   add_filter( 'refraction/agents/webmcp_manifest', function( $manifest ) {
  *       $manifest['tools'][] = [ 'id' => 'my-tool', ... ];
  *       return $manifest;
  *   } );
@@ -42,7 +42,7 @@ class Webmcp_Manifest extends Abstract_Well_Known_Endpoint {
 		/**
 		 * @param bool $applicable Default false (Phase 1.1 feature).
 		 */
-		return (bool) apply_filters( 'elementor/agents/webmcp/is_applicable', false );
+		return (bool) apply_filters( 'refraction/agents/webmcp/is_applicable', false );
 	}
 
 	protected function generate_content(): array {
@@ -62,6 +62,6 @@ class Webmcp_Manifest extends Abstract_Well_Known_Endpoint {
 		 * @param array  $manifest The manifest document.
 		 * @param string $home     The site home URL.
 		 */
-		return (array) apply_filters( 'elementor/agents/webmcp_manifest', $manifest, $home );
+		return (array) apply_filters( 'refraction/agents/webmcp_manifest', $manifest, $home );
 	}
 }

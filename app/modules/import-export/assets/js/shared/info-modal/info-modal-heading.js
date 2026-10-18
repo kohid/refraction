@@ -1,6 +1,6 @@
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Heading from 'elementor-app/ui/atoms/heading';
+import Heading from 'refraction-app/ui/atoms/heading';
 
 export default function InfoModalHeading( props ) {
 	return (

@@ -1,14 +1,14 @@
 describe( 'WpDashboardTracking', () => {
 	afterEach( () => {
-		delete window.elementorCommon;
+		delete window.refractionCommon;
 		jest.resetModules();
 	} );
 
-	test( 'does not throw and returns safe defaults when elementorCommon is missing', () => {
-		delete window.elementorCommon;
+	test( 'does not throw and returns safe defaults when refractionCommon is missing', () => {
+		delete window.refractionCommon;
 
 		jest.isolateModules( () => {
-			const WpDashboardTracking = require( 'elementor-app/event-track/wp-dashboard-tracking' ).default;
+			const WpDashboardTracking = require( 'refraction-app/event-track/wp-dashboard-tracking' ).default;
 
 			expect( () => WpDashboardTracking.isEditorOneActive() ).not.toThrow();
 			expect( WpDashboardTracking.isEditorOneActive() ).toBe( false );
@@ -18,10 +18,10 @@ describe( 'WpDashboardTracking', () => {
 		} );
 	} );
 
-	test( 'dispatchEvent calls elementorCommon.eventsManager.dispatchEvent when available', () => {
+	test( 'dispatchEvent calls refractionCommon.eventsManager.dispatchEvent when available', () => {
 		const dispatchEvent = jest.fn();
 
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				editor_events: {
 					can_send_events: true,
@@ -34,7 +34,7 @@ describe( 'WpDashboardTracking', () => {
 		};
 
 		jest.isolateModules( () => {
-			const WpDashboardTracking = require( 'elementor-app/event-track/wp-dashboard-tracking' ).default;
+			const WpDashboardTracking = require( 'refraction-app/event-track/wp-dashboard-tracking' ).default;
 
 			WpDashboardTracking.dispatchEvent( 'my_event', { a: 1 }, { send_immediately: true } );
 
@@ -42,48 +42,48 @@ describe( 'WpDashboardTracking', () => {
 		} );
 	} );
 
-	describe( 'isElementorPage', () => {
-		test( 'should return true for any pages that have "elementor" in the URL', () => {
+	describe( 'isRefractionPage', () => {
+		test( 'should return true for any pages that have "refraction" in the URL', () => {
 			jest.isolateModules( () => {
-				const WpDashboardTracking = require( 'elementor-app/event-track/wp-dashboard-tracking' ).default;
+				const WpDashboardTracking = require( 'refraction-app/event-track/wp-dashboard-tracking' ).default;
 
 				const validUrls = [
-					'https://example.com/wp-admin/admin.php?page=elementor',
-					'https://example.com/wp-admin/admin.php?page=elementor-home',
-					'https://example.com/wp-admin/admin.php?page=elementor_something',
-					'https://example.com/wp-admin/admin.php?page=elementor-else',
+					'https://example.com/wp-admin/admin.php?page=refraction',
+					'https://example.com/wp-admin/admin.php?page=refraction-home',
+					'https://example.com/wp-admin/admin.php?page=refraction_something',
+					'https://example.com/wp-admin/admin.php?page=refraction-else',
 				];
 
 				validUrls.forEach( ( url ) => {
-					expect( WpDashboardTracking.isElementorPage( url ) ).toBe( true );
+					expect( WpDashboardTracking.isRefractionPage( url ) ).toBe( true );
 				} );
 			} );
 		} );
 
 		test( 'should return true for other valid urls', () => {
 			jest.isolateModules( () => {
-				const WpDashboardTracking = require( 'elementor-app/event-track/wp-dashboard-tracking' ).default;
+				const WpDashboardTracking = require( 'refraction-app/event-track/wp-dashboard-tracking' ).default;
 
 				const validUrls = [
-					'https://example.com/wp-admin/post.php?post=8&action=elementor',
+					'https://example.com/wp-admin/post.php?post=8&action=refraction',
 					'https://example.com/wp-admin/admin.php?page=e-form-submissions',
-					'https://example.com/wp-admin/post-new.php?post_type=elementor_library',
+					'https://example.com/wp-admin/post-new.php?post_type=refraction_library',
 					'https://example.com/wp-admin/post-new.php?post_type=e-floating-buttons',
 					'https://example.com/wp-admin/admin.php?page=popup_templates',
-					'https://example.com/wp-admin/edit.php?post_type=elementor_snippet',
-					'https://example.com/wp-admin/edit.php?post_type=elementor_font',
-					'https://example.com/wp-admin/edit.php?post_type=elementor_icons',
+					'https://example.com/wp-admin/edit.php?post_type=refraction_snippet',
+					'https://example.com/wp-admin/edit.php?post_type=refraction_font',
+					'https://example.com/wp-admin/edit.php?post_type=refraction_icons',
 				];
 
 				validUrls.forEach( ( url ) => {
-					expect( WpDashboardTracking.isElementorPage( url ) ).toBe( true );
+					expect( WpDashboardTracking.isRefractionPage( url ) ).toBe( true );
 				} );
 			} );
 		} );
 
 		test( 'should return false for invalid pages', () => {
 			jest.isolateModules( () => {
-				const WpDashboardTracking = require( 'elementor-app/event-track/wp-dashboard-tracking' ).default;
+				const WpDashboardTracking = require( 'refraction-app/event-track/wp-dashboard-tracking' ).default;
 
 				const invalidUrls = [
 					'https://example.com/wp-admin/admin.php?page=something',
@@ -92,7 +92,7 @@ describe( 'WpDashboardTracking', () => {
 				];
 
 				invalidUrls.forEach( ( url ) => {
-					expect( WpDashboardTracking.isElementorPage( url ) ).not.toBe( true );
+					expect( WpDashboardTracking.isRefractionPage( url ) ).not.toBe( true );
 				} );
 			} );
 		} );

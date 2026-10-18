@@ -1,28 +1,28 @@
-import ReactUtils from 'elementor-utils/react';
-import { ElementorOneHeader, ElementorOneAssetsProvider } from '@elementor/elementor-one-assets';
+import ReactUtils from 'refraction-utils/react';
+import { RefractionOneHeader, RefractionOneAssetsProvider } from '@elementor/elementor-one-assets';
 import { useAdminMenuOffset } from '../sidebar-navigation/components/hooks/use-admin-menu-offset';
 import isRTL from '../shared/is-rtl';
-import mapWordPressLocaleToElementorOneLanguage from '../shared/map-wordpress-locale-to-elementor-one-language';
+import mapWordPressLocaleToRefractionOneLanguage from '../shared/map-wordpress-locale-to-refraction-one-language';
 
 const App = () => {
-	const { elementorOneTopBarConfig: { version, title, environment, locale } } = window;
+	const { refractionOneTopBarConfig: { version, title, environment, locale } } = window;
 
 	const isRtlLanguage = isRTL();
 
 	useAdminMenuOffset();
 
 	return (
-		<ElementorOneAssetsProvider
+		<RefractionOneAssetsProvider
 			env={ environment }
 			isRTL={ isRtlLanguage }
-			language={ mapWordPressLocaleToElementorOneLanguage( locale ) }
+			language={ mapWordPressLocaleToRefractionOneLanguage( locale ) }
 		>
-			<ElementorOneHeader
-				appSettings={ { slug: 'elementor', version } }
+			<RefractionOneHeader
+				appSettings={ { slug: 'refraction', version } }
 				isWithinWpAdmin
 				title={ title }
 			/>
-		</ElementorOneAssetsProvider>
+		</RefractionOneAssetsProvider>
 	);
 };
 

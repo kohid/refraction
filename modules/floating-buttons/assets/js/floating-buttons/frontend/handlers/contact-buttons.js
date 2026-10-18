@@ -1,4 +1,4 @@
-import Base from 'elementor-frontend/handlers/base';
+import Base from 'refraction-frontend/handlers/base';
 import ClickTrackingHandler from '../../../shared/frontend/handlers/click-tracking';
 
 export default class ContactButtonsHandler extends Base {
@@ -41,8 +41,8 @@ export default class ContactButtonsHandler extends Base {
 	}
 
 	getResponsiveSetting( controlName ) {
-		const currentDevice = elementorFrontend.getCurrentDeviceMode();
-		return elementorFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), controlName, '', currentDevice );
+		const currentDevice = refractionFrontend.getCurrentDeviceMode();
+		return refractionFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), controlName, '', currentDevice );
 	}
 
 	bindEvents() {
@@ -186,7 +186,7 @@ export default class ContactButtonsHandler extends Base {
 		if ( this.elements.contentWrapper ) {
 			this.contentWrapperIsHidden( false );
 
-			if ( ! elementorFrontend.isEditMode() ) {
+			if ( ! refractionFrontend.isEditMode() ) {
 				this.elements.contentWrapper.setAttribute( 'tabindex', '0' );
 				this.elements.contentWrapper.focus( { focusVisible: true } );
 			}
@@ -285,8 +285,8 @@ export default class ContactButtonsHandler extends Base {
 		}
 
 		if (
-			elementorFrontend.isEditMode() &&
-			'floating-buttons' === elementor?.config?.document?.type
+			refractionFrontend.isEditMode() &&
+			'floating-buttons' === refraction?.config?.document?.type
 		) {
 			this.openChatBox();
 		}

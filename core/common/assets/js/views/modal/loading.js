@@ -1,9 +1,9 @@
 export default class extends Marionette.ItemView {
 	id() {
-		return 'elementor-template-library-loading';
+		return 'refraction-template-library-loading';
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-template-library-loading';
+		return '#tmpl-refraction-template-library-loading';
 	}
 }

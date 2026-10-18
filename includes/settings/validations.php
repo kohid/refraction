@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor settings validations.
+ * Refraction settings validations.
  *
- * Elementor settings validations handler class is responsible for validating settings
+ * Refraction settings validations handler class is responsible for validating settings
  * fields.
  *
  * @since 1.0.0

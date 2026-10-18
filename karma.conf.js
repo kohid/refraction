@@ -35,8 +35,8 @@ module.exports = function( config ) {
 			'tests/qunit/setup/dev-tools.js',
 			'assets/js/dev-tools.js',
 
-			// Elementor Common.
-			'tests/qunit/setup/elementor-common.js',
+			// Refraction Common.
+			'tests/qunit/setup/refraction-common.js',
 			'tests/qunit/setup/web-cli.js',
 			'assets/lib/dialog/dialog.js',
 			'assets/js/common-modules.js',
@@ -116,7 +116,7 @@ module.exports = function( config ) {
 			clearContext: true,
 			captureConsole: ! process.env.CI,
 			qunit: {
-				elementorVersion: packageJson.version,
+				refractionVersion: packageJson.version,
 				isDebug,
 				showUI: false,
 				validateContainersAlive: true, // Validate all containers are alive recursively after each test done.
@@ -128,10 +128,10 @@ module.exports = function( config ) {
 	if ( isDebug ) {
 		const fs = require( 'fs' );
 
-		if ( fs.existsSync( '../elementor-dev-tools' ) ) {
+		if ( fs.existsSync( '../refraction-dev-tools' ) ) {
 			const last = karmaConfig.files.pop();
 
-			karmaConfig.files.push( { pattern: '../elementor-dev-tools/assets/js/editor.js', type: 'module' } );
+			karmaConfig.files.push( { pattern: '../refraction-dev-tools/assets/js/editor.js', type: 'module' } );
 
 			karmaConfig.files.push( last );
 		}

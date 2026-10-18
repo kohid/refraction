@@ -11,7 +11,7 @@ export const Auto = () => {
 
 		QUnit.test( 'rejected: "Document is not editable"', ( assert ) => {
 			// Create fake document.
-			const document = elementor.documents.getCurrent(),
+			const document = refraction.documents.getCurrent(),
 				defaultStatus = document.editor.status;
 
 			// Editor is not edit able!
@@ -29,7 +29,7 @@ export const Auto = () => {
 		} );
 
 		QUnit.test( 'Resolved: "Document is not changed"', async ( assert ) => {
-			const document = elementor.documents.getCurrent(),
+			const document = refraction.documents.getCurrent(),
 				defaultIsChanged = document.editor.isChanged;
 
 			// Editor is edit able!

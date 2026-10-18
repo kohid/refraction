@@ -16,9 +16,9 @@ export function MissingClassesAlert( { onDismiss }: MissingClassesAlertProps ) {
 			icon={ <AlertTriangleFilledIcon fontSize="tiny" /> }
 			sx={ { mt: 1 } }
 		>
-			<AlertTitle>{ __( 'Some classes are missing', 'elementor' ) }</AlertTitle>
+			<AlertTitle>{ __( 'Some classes are missing', 'refraction' ) }</AlertTitle>
 			<Typography variant="caption" color="primary">
-				{ __( 'A class was removed from your site and is no longer active on this element', 'elementor' ) }
+				{ __( 'A class was removed from your site and is no longer active on this element', 'refraction' ) }
 			</Typography>
 		</Alert>
 	);

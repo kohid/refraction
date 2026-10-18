@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Core\Admin;
+namespace Refraction\Core\Admin;
 
-use Elementor\Core\Base\App;
-use Elementor\Core\Utils\Assets_Config_Provider;
-use Elementor\Core\Utils\Collection;
-use Elementor\Modules\FloatingButtons\Module as Floating_Buttons_Module;
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\User;
-use Elementor\Utils;
-use Elementor\Core\DocumentTypes\Page;
+use Refraction\Core\Base\App;
+use Refraction\Core\Utils\Assets_Config_Provider;
+use Refraction\Core\Utils\Collection;
+use Refraction\Modules\FloatingButtons\Module as Floating_Buttons_Module;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\User;
+use Refraction\Utils;
+use Refraction\Core\DocumentTypes\Page;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -34,13 +34,13 @@ class Admin extends App {
 	}
 
 	/**
-	 * Check if current page is an Elementor admin page.
+	 * Check if current page is a Refraction admin page.
 	 *
 	 * @param \WP_Screen|null $current_screen Optional. Screen object to check. Defaults to current screen.
 	 *
-	 * @return bool Whether current page is an Elementor admin page.
+	 * @return bool Whether current page is a Refraction admin page.
 	 */
-	public static function is_elementor_admin_page( $current_screen = null ) {
+	public static function is_refraction_admin_page( $current_screen = null ) {
 		if ( ! $current_screen ) {
 			$current_screen = get_current_screen();
 		}
@@ -52,19 +52,19 @@ class Admin extends App {
 		$screen_id = $current_screen->id ?? '';
 		$post_type = $current_screen->post_type ?? '';
 
-		$is_elementor_screen = strpos( $screen_id, 'elementor' ) !== false
+		$is_refraction_screen = strpos( $screen_id, 'refraction' ) !== false
 			|| strpos( $screen_id, Floating_Buttons_Module::CPT_FLOATING_BUTTONS ) !== false;
 
-		$is_elementor_post_type = strpos( $post_type, 'elementor' ) !== false
+		$is_refraction_post_type = strpos( $post_type, 'refraction' ) !== false
 			|| strpos( $post_type, Floating_Buttons_Module::CPT_FLOATING_BUTTONS ) !== false;
 
-		return $is_elementor_screen || $is_elementor_post_type;
+		return $is_refraction_screen || $is_refraction_post_type;
 	}
 
 	private function register_packages() {
 		$assets_config_provider = ( new Assets_Config_Provider() )
 			->set_path_resolver( function ( $name ) {
-				return ELEMENTOR_ASSETS_PATH . "js/packages/{$name}/{$name}.asset.php";
+				return REFRACTION_ASSETS_PATH . "js/packages/{$name}/{$name}.asset.php";
 			} );
 
 		Collection::make( [ 'ui', 'icons', 'query' ] )
@@ -78,9 +78,9 @@ class Admin extends App {
 
 				wp_register_script(
 					$config['handle'],
-					ELEMENTOR_ASSETS_URL . "js/packages/{$package}/{$package}{$suffix}.js",
+					REFRACTION_ASSETS_URL . "js/packages/{$package}/{$package}{$suffix}.js",
 					$config['deps'],
-					ELEMENTOR_VERSION,
+					REFRACTION_VERSION,
 					true
 				);
 			} );
@@ -98,29 +98,29 @@ class Admin extends App {
 	 */
 	public function enqueue_scripts() {
 		wp_register_script(
-			'elementor-admin-modules',
+			'refraction-admin-modules',
 			$this->get_js_assets_url( 'admin-modules' ),
 			[],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
 		$this->register_packages();
 
 		wp_register_script(
-			'elementor-admin',
+			'refraction-admin',
 			$this->get_js_assets_url( 'admin' ),
 			[
-				'elementor-common',
-				'elementor-admin-modules',
+				'refraction-common',
+				'refraction-admin-modules',
 			],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		wp_enqueue_script( 'elementor-admin' );
+		wp_enqueue_script( 'refraction-admin' );
 
-		wp_set_script_translations( 'elementor-admin', 'elementor' );
+		wp_set_script_translations( 'refraction-admin', 'refraction' );
 
 		$this->print_config();
 	}
@@ -137,15 +137,15 @@ class Admin extends App {
 	 */
 	public function enqueue_styles() {
 		wp_register_style(
-			'elementor-admin',
+			'refraction-admin',
 			$this->get_css_assets_url( 'admin' ),
 			[
-				'elementor-common',
+				'refraction-common',
 			],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 
-		wp_enqueue_style( 'elementor-admin' );
+		wp_enqueue_style( 'refraction-admin' );
 
 		// It's for upgrade notice.
 		// TODO: enqueue this just if needed.
@@ -156,7 +156,7 @@ class Admin extends App {
 	 * Print switch mode button.
 	 *
 	 * Adds a switch button in post edit screen (which has cpt support). To allow
-	 * the user to switch from the native WordPress editor to Elementor builder.
+	 * the user to switch from the native WordPress editor to Refraction builder.
 	 *
 	 * Fired by `edit_form_after_title` action.
 	 *
@@ -177,37 +177,37 @@ class Admin extends App {
 			return;
 		}
 
-		wp_nonce_field( basename( __FILE__ ), '_elementor_edit_mode_nonce' );
+		wp_nonce_field( basename( __FILE__ ), '_refraction_edit_mode_nonce' );
 		?>
-		<div id="elementor-switch-mode">
-			<input id="elementor-switch-mode-input" type="hidden" name="_elementor_post_mode" value="<?php echo esc_attr( $document->is_built_with_elementor() ); ?>" />
-			<button id="elementor-switch-mode-button" type="button" class="button button-primary button-hero">
-				<span class="elementor-switch-mode-on">
+		<div id="refraction-switch-mode">
+			<input id="refraction-switch-mode-input" type="hidden" name="_refraction_post_mode" value="<?php echo esc_attr( $document->is_built_with_refraction() ); ?>" />
+			<button id="refraction-switch-mode-button" type="button" class="button button-primary button-hero">
+				<span class="refraction-switch-mode-on">
 					<i class="eicon-wordpress" aria-hidden="true"></i>
-					<?php echo esc_html__( 'Edit with WordPress', 'elementor' ); ?>
+					<?php echo esc_html__( 'Edit with WordPress', 'refraction' ); ?>
 				</span>
-				<span class="elementor-switch-mode-off">
-					<i class="eicon-elementor-square" aria-hidden="true"></i>
-					<?php echo esc_html__( 'Edit with Elementor', 'elementor' ); ?>
+				<span class="refraction-switch-mode-off">
+					<i class="eicon-refraction-square" aria-hidden="true"></i>
+					<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 				</span>
 			</button>
 		</div>
-		<div id="elementor-editor">
-			<a id="elementor-go-to-edit-page-link" href="<?php echo esc_url( $document->get_edit_url() ); ?>">
-				<div id="elementor-editor-button" class="button button-primary button-hero">
-					<i class="eicon-elementor-square" aria-hidden="true"></i>
-					<?php echo esc_html__( 'Edit with Elementor', 'elementor' ); ?>
+		<div id="refraction-editor">
+			<a id="refraction-go-to-edit-page-link" href="<?php echo esc_url( $document->get_edit_url() ); ?>">
+				<div id="refraction-editor-button" class="button button-primary button-hero">
+					<i class="eicon-refraction-square" aria-hidden="true"></i>
+					<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 				</div>
-				<div class="elementor-loader-wrapper">
-					<div class="elementor-loader">
-						<div class="elementor-loader-boxes">
-							<div class="elementor-loader-box"></div>
-							<div class="elementor-loader-box"></div>
-							<div class="elementor-loader-box"></div>
-							<div class="elementor-loader-box"></div>
+				<div class="refraction-loader-wrapper">
+					<div class="refraction-loader">
+						<div class="refraction-loader-boxes">
+							<div class="refraction-loader-box"></div>
+							<div class="refraction-loader-box"></div>
+							<div class="refraction-loader-box"></div>
+							<div class="refraction-loader-box"></div>
 						</div>
 					</div>
-					<div class="elementor-loading-title"><?php echo esc_html__( 'Loading', 'elementor' ); ?></div>
+					<div class="refraction-loading-title"><?php echo esc_html__( 'Loading', 'refraction' ); ?></div>
 				</div>
 			</a>
 		</div>
@@ -227,7 +227,7 @@ class Admin extends App {
 	 * @param int $post_id Post ID.
 	 */
 	public function save_post( $post_id ) {
-		if ( ! wp_verify_nonce( Utils::get_super_global_value( $_POST, '_elementor_edit_mode_nonce' ), basename( __FILE__ ) ) ) {
+		if ( ! wp_verify_nonce( Utils::get_super_global_value( $_POST, '_refraction_edit_mode_nonce' ), basename( __FILE__ ) ) ) {
 			return;
 		}
 
@@ -235,13 +235,13 @@ class Admin extends App {
 			return;
 		}
 
-		Plugin::$instance->documents->get( $post_id )->set_is_built_with_elementor( ! empty( $_POST['_elementor_post_mode'] ) );
+		Plugin::$instance->documents->get( $post_id )->set_is_built_with_refraction( ! empty( $_POST['_refraction_post_mode'] ) );
 	}
 
 	/**
-	 * Add Elementor post state.
+	 * Add Refraction post state.
 	 *
-	 * Adds a new "Elementor" post state to the post table.
+	 * Adds a new "Refraction" post state to the post table.
 	 *
 	 * Fired by `display_post_states` filter.
 	 *
@@ -253,11 +253,11 @@ class Admin extends App {
 	 *
 	 * @return array A filtered array of post display states.
 	 */
-	public function add_elementor_post_state( $post_states, $post ) {
+	public function add_refraction_post_state( $post_states, $post ) {
 		$document = Plugin::$instance->documents->get( $post->ID );
 
-		if ( $document && $document->is_built_with_elementor() && $document->is_editable_by_current_user() ) {
-			$post_states['elementor'] = esc_html__( 'Elementor', 'elementor' );
+		if ( $document && $document->is_built_with_refraction() && $document->is_editable_by_current_user() ) {
+			$post_states['refraction'] = esc_html__( 'Refraction', 'refraction' );
 		}
 
 		return $post_states;
@@ -285,7 +285,7 @@ class Admin extends App {
 
 			$document = Plugin::$instance->documents->get( $post->ID );
 
-			$mode_class = $document && $document->is_built_with_elementor() ? 'elementor-editor-active' : 'elementor-editor-inactive';
+			$mode_class = $document && $document->is_built_with_refraction() ? 'refraction-editor-active' : 'refraction-editor-inactive';
 
 			$classes .= ' ' . $mode_class;
 		}
@@ -308,7 +308,7 @@ class Admin extends App {
 	 * @return array An array of plugin action links.
 	 */
 	public function plugin_action_links( $links ) {
-		$settings_link = sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . Settings::PAGE_ID ), esc_html__( 'Settings', 'elementor' ) );
+		$settings_link = sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . Settings::PAGE_ID ), esc_html__( 'Settings', 'refraction' ) );
 
 		array_unshift( $links, $settings_link );
 
@@ -318,7 +318,7 @@ class Admin extends App {
 	/**
 	 * Register dashboard widgets.
 	 *
-	 * Adds a new Elementor widgets to WordPress dashboard.
+	 * Adds a new Refraction widgets to WordPress dashboard.
 	 *
 	 * Fired by `wp_dashboard_setup` action.
 	 *
@@ -326,7 +326,7 @@ class Admin extends App {
 	 * @access public
 	 */
 	public function register_dashboard_widgets() {
-		wp_add_dashboard_widget( 'e-dashboard-overview', esc_html__( 'Elementor Overview', 'elementor' ), [ $this, 'elementor_dashboard_overview_widget' ] );
+		wp_add_dashboard_widget( 'e-dashboard-overview', esc_html__( 'Refraction Overview', 'refraction' ), [ $this, 'refraction_dashboard_overview_widget' ] );
 
 		// Move our widget to top.
 		global $wp_meta_boxes;
@@ -340,27 +340,27 @@ class Admin extends App {
 	}
 
 	/**
-	 * Displays the Elementor dashboard widget.
+	 * Displays the Refraction dashboard widget.
 	 *
 	 * Fired by `wp_add_dashboard_widget` function.
 	 *
 	 * @since 1.9.0
 	 * @access public
 	 */
-	public function elementor_dashboard_overview_widget() {
+	public function refraction_dashboard_overview_widget() {
 		?>
 		<div class="e-dashboard-overview e-dashboard-widget">
 			<?php
-			self::elementor_dashboard_overview_header();
-			self::elementor_dashboard_overview_recently_edited();
+			self::refraction_dashboard_overview_header();
+			self::refraction_dashboard_overview_recently_edited();
 			?>
 		</div>
 		<?php
 	}
 
 	/**
-	 * Displays the Elementor dashboard widget - header section.
-	 * Fired by `elementor_dashboard_overview_widget` function.
+	 * Displays the Refraction dashboard widget - header section.
+	 * Fired by `refraction_dashboard_overview_widget` function.
 	 *
 	 * @param bool $show_versions
 	 * @param bool $is_create_post_enabled
@@ -368,30 +368,30 @@ class Admin extends App {
 	 * @return void
 	 * @since 3.12.0
 	 */
-	public static function elementor_dashboard_overview_header( bool $show_versions = true, bool $is_create_post_enabled = true ) {
+	public static function refraction_dashboard_overview_header( bool $show_versions = true, bool $is_create_post_enabled = true ) {
 		if ( User::is_current_user_can_edit_post_type( 'page' ) ) {
-			$create_new_label = esc_html__( 'Create New Page', 'elementor' );
+			$create_new_label = esc_html__( 'Create New Page', 'refraction' );
 			$create_new_post_type = 'page';
 		} elseif ( User::is_current_user_can_edit_post_type( 'post' ) ) {
-			$create_new_label = esc_html__( 'Create New Post', 'elementor' );
+			$create_new_label = esc_html__( 'Create New Post', 'refraction' );
 			$create_new_post_type = 'post';
 		}
 		?>
 		<div class="e-overview__header">
 			<?php if ( $show_versions ) { ?>
 				<div class="e-overview__logo">
-					<div class="e-logo-wrapper"><i class="eicon-elementor-circle"></i></div>
+					<div class="e-logo-wrapper"><i class="eicon-refraction-circle"></i></div>
 				</div>
 				<div class="e-overview__versions">
-					<span class="e-overview__version"><?php echo esc_html__( 'Elementor', 'elementor' ); ?> v<?php echo ELEMENTOR_VERSION; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+					<span class="e-overview__version"><?php echo esc_html__( 'Refraction', 'refraction' ); ?> v<?php echo REFRACTION_VERSION; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 					<?php
 					/**
-					 * Elementor dashboard widget after the version.
-					 * Fires after Elementor version display in the dashboard widget.
+					 * Refraction dashboard widget after the version.
+					 * Fires after Refraction version display in the dashboard widget.
 					 *
 					 * @since 1.9.0
 					 */
-					do_action( 'elementor/admin/dashboard_overview_widget/after_version' );
+					do_action( 'refraction/admin/dashboard_overview_widget/after_version' );
 					?>
 				</div>
 			<?php } ?>
@@ -405,8 +405,8 @@ class Admin extends App {
 	}
 
 	/**
-	 * Displays the Elementor dashboard widget - recently edited section.
-	 * Fired by `elementor_dashboard_overview_widget` function.
+	 * Displays the Refraction dashboard widget - recently edited section.
+	 * Fired by `refraction_dashboard_overview_widget` function.
 	 *
 	 * @param array $args
 	 * @param bool  $show_heading
@@ -414,13 +414,13 @@ class Admin extends App {
 	 * @return void
 	 * @since 3.12.0
 	 */
-	public static function elementor_dashboard_overview_recently_edited( array $args = [], bool $show_heading = true ) {
+	public static function refraction_dashboard_overview_recently_edited( array $args = [], bool $show_heading = true ) {
 		$recently_edited_query = Utils::get_recently_edited_posts_query( $args );
 
 		if ( $recently_edited_query->have_posts() ) { ?>
 			<div class="e-overview__recently-edited">
 				<?php if ( $show_heading ) { ?>
-					<h3 class="e-heading e-divider_bottom"><?php echo esc_html__( 'Recently Edited', 'elementor' ); ?></h3>
+					<h3 class="e-heading e-divider_bottom"><?php echo esc_html__( 'Recently Edited', 'refraction' ); ?></h3>
 				<?php } ?>
 				<ul class="e-overview__posts">
 					<?php
@@ -428,7 +428,7 @@ class Admin extends App {
 						$recently_edited_query->the_post();
 						$document = Plugin::$instance->documents->get( get_the_ID() );
 
-						$date = date_i18n( _x( 'M jS', 'Dashboard Overview Widget Recently Date', 'elementor' ), get_the_modified_time( 'U' ) );
+						$date = date_i18n( _x( 'M jS', 'Dashboard Overview Widget Recently Date', 'refraction' ), get_the_modified_time( 'U' ) );
 						?>
 						<li class="e-overview__post">
 							<a href="<?php echo esc_url( $document->get_edit_url() ); ?>" class="e-overview__post-link"><?php echo esc_html( get_the_title() ); ?>
@@ -444,15 +444,15 @@ class Admin extends App {
 	/**
 	 * Admin action new post.
 	 *
-	 * When a new post action is fired the title is set to 'Elementor' and the post ID.
+	 * When a new post action is fired the title is set to 'Refraction' and the post ID.
 	 *
-	 * Fired by `admin_action_elementor_new_post` action.
+	 * Fired by `admin_action_refraction_new_post` action.
 	 *
 	 * @since 1.9.0
 	 * @access public
 	 */
 	public function admin_action_new_post() {
-		check_admin_referer( 'elementor_action_new_post' );
+		check_admin_referer( 'refraction_action_new_post' );
 
 		$post_type = Utils::get_super_global_value( $_GET, 'post_type' ) ?? 'post';
 
@@ -485,7 +485,7 @@ class Admin extends App {
 			$meta = array_map( 'sanitize_text_field', wp_unslash( $_GET['meta'] ) );
 		}
 
-		$meta = apply_filters( 'elementor/admin/create_new_post/meta', $meta );
+		$meta = apply_filters( 'refraction/admin/create_new_post/meta', $meta );
 
 		$post_data['post_type'] = $post_type;
 
@@ -501,10 +501,10 @@ class Admin extends App {
 	}
 
 	public function admin_action_site_settings_redirect() {
-		check_admin_referer( 'elementor_action_site_settings_redirect' );
+		check_admin_referer( 'refraction_action_site_settings_redirect' );
 
 		if ( ! current_user_can( 'edit_theme_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'elementor' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'refraction' ) );
 		}
 
 		$active_tab = filter_input( INPUT_GET, 'active-tab', FILTER_SANITIZE_ENCODED );
@@ -512,7 +512,7 @@ class Admin extends App {
 		$site_settings_url_config = Page::get_site_settings_url_config( $active_tab );
 
 		if ( empty( $site_settings_url_config['url'] ) ) {
-			wp_die( esc_html__( 'Unable to create or access Site Settings page.', 'elementor' ) );
+			wp_die( esc_html__( 'Unable to create or access Site Settings page.', 'refraction' ) );
 		}
 
 		wp_safe_redirect( $site_settings_url_config['url'] );
@@ -523,19 +523,19 @@ class Admin extends App {
 	/**
 	 * Admin action edit website.
 	 *
-	 * Redirects to the homepage edit URL if it exists and is built with Elementor,
+	 * Redirects to the homepage edit URL if it exists and is built with Refraction,
 	 * otherwise redirects to create a new page.
 	 *
-	 * Fired by `admin_action_elementor_edit_website` action.
+	 * Fired by `admin_action_refraction_edit_website` action.
 	 *
 	 * @since 3.x.x
 	 * @access public
 	 */
 	public function admin_action_edit_website_redirect() {
-		check_admin_referer( 'elementor_action_edit_website' );
+		check_admin_referer( 'refraction_action_edit_website' );
 
 		if ( ! User::is_current_user_can_edit_post_type( 'page' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'elementor' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'refraction' ) );
 		}
 
 		$homepage_id = $this->get_homepage_id();
@@ -563,7 +563,7 @@ class Admin extends App {
 
 		$document = Plugin::$instance->documents->get( $homepage_id );
 
-		if ( ! $document || ! $document->is_built_with_elementor() ) {
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
 			return Plugin::$instance->documents->get_create_new_post_url( 'page' );
 		}
 
@@ -606,25 +606,25 @@ class Admin extends App {
 	 * @access public
 	 */
 	public function add_new_template_template() {
-		Plugin::$instance->common->add_template( ELEMENTOR_PATH . 'includes/admin-templates/new-template.php' );
+		Plugin::$instance->common->add_template( REFRACTION_PATH . 'includes/admin-templates/new-template.php' );
 	}
 
 	public function add_new_floating_elements_template() {
-		Plugin::$instance->common->add_template( ELEMENTOR_PATH . 'includes/admin-templates/new-floating-elements.php' );
+		Plugin::$instance->common->add_template( REFRACTION_PATH . 'includes/admin-templates/new-floating-elements.php' );
 	}
 
 	public function enqueue_new_floating_elements_scripts() {
 		$suffix = Utils::is_script_debug() ? '' : '.min';
 
 		wp_enqueue_script(
-			'elementor-floating-elements-modal',
-			ELEMENTOR_ASSETS_URL . 'js/floating-elements-modal' . $suffix . '.js',
+			'refraction-floating-elements-modal',
+			REFRACTION_ASSETS_URL . 'js/floating-elements-modal' . $suffix . '.js',
 			[],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		wp_set_script_translations( 'elementor-floating-elements-modal', 'elementor' );
+		wp_set_script_translations( 'refraction-floating-elements-modal', 'refraction' );
 	}
 
 	/**
@@ -634,19 +634,19 @@ class Admin extends App {
 		$suffix = Utils::is_script_debug() ? '' : '.min';
 
 		wp_enqueue_script(
-			'elementor-new-template',
-			ELEMENTOR_ASSETS_URL . 'js/new-template' . $suffix . '.js',
+			'refraction-new-template',
+			REFRACTION_ASSETS_URL . 'js/new-template' . $suffix . '.js',
 			[],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 
-		wp_set_script_translations( 'elementor-new-template', 'elementor' );
+		wp_set_script_translations( 'refraction-new-template', 'refraction' );
 	}
 
 	public function init_floating_elements() {
 		$screens = [
-			'elementor_library_page_e-floating-buttons' => true,
+			'refraction_library_page_e-floating-buttons' => true,
 			'edit-e-floating-buttons' => true,
 		];
 
@@ -662,7 +662,7 @@ class Admin extends App {
 	 * @access public
 	 */
 	public function init_new_template() {
-		if ( 'edit-elementor_library' !== get_current_screen()->id ) {
+		if ( 'edit-refraction_library' !== get_current_screen()->id ) {
 			return;
 		}
 
@@ -674,7 +674,7 @@ class Admin extends App {
 	/**
 	 * Admin constructor.
 	 *
-	 * Initializing Elementor in WordPress admin.
+	 * Initializing Refraction in WordPress admin.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -690,9 +690,9 @@ class Admin extends App {
 		add_action( 'edit_form_after_title', [ $this, 'print_switch_mode_button' ] );
 		add_action( 'save_post', [ $this, 'save_post' ] );
 
-		add_filter( 'display_post_states', [ $this, 'add_elementor_post_state' ], 10, 2 );
+		add_filter( 'display_post_states', [ $this, 'add_refraction_post_state' ], 10, 2 );
 
-		add_filter( 'plugin_action_links_' . ELEMENTOR_PLUGIN_BASE, [ $this, 'plugin_action_links' ] );
+		add_filter( 'plugin_action_links_' . REFRACTION_PLUGIN_BASE, [ $this, 'plugin_action_links' ] );
 
 		add_filter( 'admin_body_class', [ $this, 'body_status_classes' ] );
 
@@ -700,9 +700,9 @@ class Admin extends App {
 		add_action( 'wp_dashboard_setup', [ $this, 'register_dashboard_widgets' ] );
 
 		// Admin Actions
-		add_action( 'admin_action_elementor_new_post', [ $this, 'admin_action_new_post' ] );
-		add_action( 'admin_action_elementor_site_settings_redirect', [ $this, 'admin_action_site_settings_redirect' ] );
-		add_action( 'admin_action_elementor_edit_website_redirect', [ $this, 'admin_action_edit_website_redirect' ] );
+		add_action( 'admin_action_refraction_new_post', [ $this, 'admin_action_new_post' ] );
+		add_action( 'admin_action_refraction_site_settings_redirect', [ $this, 'admin_action_site_settings_redirect' ] );
+		add_action( 'admin_action_refraction_edit_website_redirect', [ $this, 'admin_action_edit_website_redirect' ] );
 
 		add_action( 'current_screen', [ $this, 'init_new_template' ] );
 		add_action( 'current_screen', [ $this, 'init_floating_elements' ] );
@@ -732,15 +732,15 @@ class Admin extends App {
 		 * Filters the initial localize settings in the admin.
 		 *
 		 * WordPress has it's own way to pass localized data from PHP (backend) to
-		 * JS (frontend). Elementor uses this method to pass localize data in the
+		 * JS (frontend). Refraction uses this method to pass localize data in the
 		 * admin. This hook can be used to add more localized settings in addition
-		 * to the initial Elementor settings.
+		 * to the initial Refraction settings.
 		 *
 		 * @since 2.3.0
 		 *
 		 * @param array $settings Initial localize settings.
 		 */
-		$settings = apply_filters( 'elementor/admin/localize_settings', $settings );
+		$settings = apply_filters( 'refraction/admin/localize_settings', $settings );
 
 		return $settings;
 	}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockTrackingModule, mockTracking } from 'test-utils';
-import { __useOpenDocumentInNewTab as useOpenDocumentInNewTab } from '@elementor/editor-documents';
-import { PopoverMenuList } from '@elementor/editor-ui';
+import { __useOpenDocumentInNewTab as useOpenDocumentInNewTab } from '@refraction/editor-documents';
+import { PopoverMenuList } from '@refraction/editor-ui';
 import { MenuList } from '@elementor/ui';
 import { fireEvent, render, screen } from '@testing-library/react';
 
@@ -11,12 +11,12 @@ import { type EnhancedCssClassUsageContent } from '../types';
 
 jest.mock( '../../../hooks/use-css-class-usage-by-id' );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useOpenDocumentInNewTab: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => ( {
-	...jest.requireActual( '@elementor/editor-ui' ),
+jest.mock( '@refraction/editor-ui', () => ( {
+	...jest.requireActual( '@refraction/editor-ui' ),
 	PopoverMenuList: jest.fn(),
 } ) );
 

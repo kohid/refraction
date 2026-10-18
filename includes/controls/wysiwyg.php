@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor WYSIWYG control.
+ * Refraction WYSIWYG control.
  *
  * A base control for creating WYSIWYG control. Displays a WordPress WYSIWYG
  * (TinyMCE) editor.
@@ -43,12 +43,12 @@ class Control_Wysiwyg extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<div class="elementor-control-title">{{{ data.label }}}</div>
-			<div class="elementor-control-input-wrapper elementor-control-tag-area"></div>
+		<div class="refraction-control-field">
+			<div class="refraction-control-title">{{{ data.label }}}</div>
+			<div class="refraction-control-input-wrapper refraction-control-tag-area"></div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

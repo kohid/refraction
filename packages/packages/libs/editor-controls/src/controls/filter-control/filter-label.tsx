@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { FilterItemPropValue } from '@elementor/editor-props';
+import type { FilterItemPropValue } from '@refraction/editor-props';
 
 import { DropShadowItemLabel } from './drop-shadow/drop-shadow-item-label';
 import { SingleSizeItemLabel } from './single-size/single-size-item-label';

@@ -1,4 +1,4 @@
-import { useQueryClient } from '@elementor/query';
+import { useQueryClient } from '@refraction/query';
 
 import { fetchCssClassUsage } from '../../service/css-class-usage-service';
 import { QUERY_KEY } from '../components/css-class-usage/types';

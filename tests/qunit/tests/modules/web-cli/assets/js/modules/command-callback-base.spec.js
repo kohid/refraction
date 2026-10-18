@@ -1,6 +1,6 @@
-import CommandInfra from 'elementor-api/modules/command-infra';
-import CommandBase from 'elementor-api/modules/command-base';
-import CommandCallbackBase from 'elementor-api/modules/command-callback-base';
+import CommandInfra from 'refraction-api/modules/command-infra';
+import CommandBase from 'refraction-api/modules/command-base';
+import CommandCallbackBase from 'refraction-api/modules/command-callback-base';
 import CommandCallbackBaseMock from './mock/command-callback-base.spec';
 
 jQuery( () => {

@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 import useIsRouteActive from '../use-is-route-active';
 import { mockIsRouteActive } from './test-utils';
 
-describe( '@elementor/editor-v1-adapters - useIsRouteActive', () => {
+describe( '@refraction/editor-v1-adapters - useIsRouteActive', () => {
 	it( 'should return false when a route is inactive by default', () => {
 		// Arrange.
 		const route = 'panel/menu';

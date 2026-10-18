@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Import;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Import;
 
-use Elementor\Modules\FloatingButtons\Documents\Floating_Buttons;
-use Elementor\Modules\FloatingButtons\Module as FloatingButtonsModule;
-use Elementor\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
+use Refraction\Modules\FloatingButtons\Documents\Floating_Buttons;
+use Refraction\Modules\FloatingButtons\Module as FloatingButtonsModule;
+use Refraction\App\Modules\ImportExportCustomization\Utils as ImportExportUtils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Floating_Elements extends Import_Runner_Base {
 
-	const CONDITIONS_CACHE_META_KEY = 'elementor_pro_theme_builder_conditions';
+	const CONDITIONS_CACHE_META_KEY = 'refraction_pro_theme_builder_conditions';
 
 	private $posts_cache = [];
 
@@ -73,7 +73,7 @@ class Floating_Elements extends Import_Runner_Base {
 			throw new \Exception(
 				sprintf(
 					/* translators: %s: Floating element ID */
-					esc_html__( 'Imported post ID not found for floating element: %s', 'elementor' ),
+					esc_html__( 'Imported post ID not found for floating element: %s', 'refraction' ),
 					esc_html( $id )
 				)
 			);
@@ -106,12 +106,12 @@ class Floating_Elements extends Import_Runner_Base {
 		$posts = $this->posts_cache[ $floating_element_type ];
 
 		foreach ( $posts as $post_id ) {
-			delete_post_meta( $post_id, '_elementor_conditions' );
+			delete_post_meta( $post_id, '_refraction_conditions' );
 		}
 
 		update_post_meta(
 			$imported_post_id,
-			'_elementor_conditions',
+			'_refraction_conditions',
 			[ 'include/general' ]
 		);
 

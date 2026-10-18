@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/ui/after';
+import After from 'refraction-api/modules/hooks/ui/after';
 
 /**
  * Move jQuery UI Resizeable handle to the end each time an element is created inside

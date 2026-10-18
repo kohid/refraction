@@ -1,14 +1,14 @@
 /**
  * Back-compat stub for the removed Editor v1 panel footer (ED-24856).
  *
- * Elementor Pro < 4.3 still hooks Theme Builder / Popup UI through
- * `elementor.getPanelView().footer.currentView`. Without this stub, opening
+ * Refraction Pro < 4.3 still hooks Theme Builder / Popup UI through
+ * `refraction.getPanelView().footer.currentView`. Without this stub, opening
  * those documents throws and leaves the editor stuck loading (ED-25418).
  */
 const StubFooterSaverBehavior = Marionette.Behavior.extend( {
 	ui() {
 		return {
-			buttonPreview: '.elementor-panel-footer-back-compat-preview',
+			buttonPreview: '.refraction-panel-footer-back-compat-preview',
 		};
 	},
 
@@ -20,9 +20,9 @@ const StubFooterSaverBehavior = Marionette.Behavior.extend( {
 } );
 
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-panel-footer-back-compat',
+	template: '#tmpl-refraction-panel-footer-back-compat',
 
-	className: 'elementor-panel-footer-back-compat',
+	className: 'refraction-panel-footer-back-compat',
 
 	attributes: {
 		'aria-hidden': 'true',
@@ -54,8 +54,8 @@ module.exports = Marionette.ItemView.extend( {
 
 	addSubMenuItem( subMenuName, itemData ) {
 		const $newItem = jQuery( '<div>', {
-			id: 'elementor-panel-footer-sub-menu-item-' + itemData.name,
-			class: 'elementor-panel-footer-sub-menu-item',
+			id: 'refraction-panel-footer-sub-menu-item-' + itemData.name,
+			class: 'refraction-panel-footer-sub-menu-item',
 		} );
 
 		if ( itemData.callback ) {
@@ -66,6 +66,6 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	removeSubMenuItem( subMenuName, itemData ) {
-		return jQuery( '#elementor-panel-footer-sub-menu-item-' + itemData.name ).remove();
+		return jQuery( '#refraction-panel-footer-sub-menu-item-' + itemData.name ).remove();
 	},
 } );

@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
-import Button from 'elementor-app/ui/molecules/button';
-import Grid from 'elementor-app/ui/grid/grid';
-import Icon from 'elementor-app/ui/atoms/icon';
-import Text from 'elementor-app/ui/atoms/text';
+import Button from 'refraction-app/ui/molecules/button';
+import Grid from 'refraction-app/ui/grid/grid';
+import Icon from 'refraction-app/ui/atoms/icon';
+import Text from 'refraction-app/ui/atoms/text';
 
 import ModalSection from './modal-section';
 import ModalTip from './modal-tip';
@@ -118,7 +118,7 @@ export const Modal = ( props ) => {
 					</Grid>
 					<Grid item>
 						<div className="eps-modal__close-wrapper" ref={ closeRef }>
-							<Button text={ __( 'Close', 'elementor' ) } hideText icon="eicon-close" onClick={ props.closeModal } />
+							<Button text={ __( 'Close', 'refraction' ) } hideText icon="eicon-close" onClick={ props.closeModal } />
 						</div>
 					</Grid>
 				</Grid>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { transitionProperties, TransitionRepeaterControl } from '@elementor/editor-controls';
-import { sizePropTypeUtil } from '@elementor/editor-props';
+import { transitionProperties, TransitionRepeaterControl } from '@refraction/editor-controls';
+import { sizePropTypeUtil } from '@refraction/editor-props';
 import { screen, waitFor } from '@testing-library/react';
 
 import { customSizeVariablePropTypeUtil, sizeVariablePropTypeUtil } from '../../prop-types';

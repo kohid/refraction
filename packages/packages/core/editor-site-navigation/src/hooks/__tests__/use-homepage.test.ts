@@ -6,7 +6,7 @@ import { useHomepage } from '../use-homepage';
 
 jest.mock( '@wordpress/api-fetch' );
 
-describe( '@elementor/site-settings/use-homepage', () => {
+describe( '@refraction/site-settings/use-homepage', () => {
 	beforeEach( () => {
 		jest.mocked( apiFetch ).mockImplementation( () => Promise.resolve( [] ) );
 	} );
@@ -27,7 +27,7 @@ describe( '@elementor/site-settings/use-homepage', () => {
 		const { component } = renderHookWithQuery( () => useHomepage() );
 
 		// Assert.
-		const expectedPath = '/elementor/v1/site-navigation/homepage';
+		const expectedPath = '/refraction/v1/site-navigation/homepage';
 
 		expect( apiFetch ).toHaveBeenCalledWith( {
 			path: expectedPath,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { Context } from './table-context';
-import { arrayToClassName } from 'elementor-app/utils/utils.js';
+import { arrayToClassName } from 'refraction-app/utils/utils.js';
 
 import TableHead from './table.head';
 import TableBody from './table-body';

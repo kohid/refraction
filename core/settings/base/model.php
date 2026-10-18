@@ -1,17 +1,17 @@
 <?php
-namespace Elementor\Core\Settings\Base;
+namespace Refraction\Core\Settings\Base;
 
-use Elementor\Controls_Stack;
+use Refraction\Controls_Stack;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor settings base model.
+ * Refraction settings base model.
  *
- * Elementor settings base model handler class is responsible for registering
- * and managing Elementor settings base models.
+ * Refraction settings base model handler class is responsible for registering
+ * and managing Refraction settings base models.
  *
  * @since 1.6.0
  * @abstract

@@ -1,4 +1,4 @@
-import { enqueueFont } from '@elementor/editor-v1-adapters';
+import { enqueueFont } from '@refraction/editor-v1-adapters';
 
 import { fontVariablePropTypeUtil } from './prop-types/font-variable-prop-type';
 import { type StyleVariables, type Variable } from './types';

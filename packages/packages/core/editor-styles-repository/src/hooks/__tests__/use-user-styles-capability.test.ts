@@ -1,4 +1,4 @@
-import { useCurrentUserCapabilities, useHasContentOnlyAccess } from '@elementor/editor-current-user';
+import { useCurrentUserCapabilities, useHasContentOnlyAccess } from '@refraction/editor-current-user';
 import { renderHook } from '@testing-library/react';
 
 import { documentElementsStylesProvider } from '../../providers/document-elements-styles-provider';
@@ -6,7 +6,7 @@ import { stylesRepository } from '../../styles-repository';
 import { type StylesProvider } from '../../types';
 import { useUserStylesCapability } from '../use-user-styles-capability';
 
-jest.mock( '@elementor/editor-current-user' );
+jest.mock( '@refraction/editor-current-user' );
 jest.mock( '../../styles-repository' );
 
 const UPDATE_CAPABILITY = 'update_style';

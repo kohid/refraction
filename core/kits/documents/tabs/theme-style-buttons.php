@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Text_Shadow;
-use Elementor\Group_Control_Typography;
+use Refraction\Controls_Manager;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Text_Shadow;
+use Refraction\Group_Control_Typography;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,7 +20,7 @@ class Theme_Style_Buttons extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Buttons', 'elementor' );
+		return esc_html__( 'Buttons', 'refraction' );
 	}
 
 	public function get_group() {
@@ -40,7 +40,7 @@ class Theme_Style_Buttons extends Tab_Base {
 			'{{WRAPPER}} button',
 			'{{WRAPPER}} input[type="button"]',
 			'{{WRAPPER}} input[type="submit"]',
-			'{{WRAPPER}} .elementor-button',
+			'{{WRAPPER}} .refraction-button',
 		];
 
 		$button_hover_selectors = [
@@ -50,8 +50,8 @@ class Theme_Style_Buttons extends Tab_Base {
 			'{{WRAPPER}} input[type="button"]:focus',
 			'{{WRAPPER}} input[type="submit"]:hover',
 			'{{WRAPPER}} input[type="submit"]:focus',
-			'{{WRAPPER}} .elementor-button:hover',
-			'{{WRAPPER}} .elementor-button:focus',
+			'{{WRAPPER}} .refraction-button:hover',
+			'{{WRAPPER}} .refraction-button:focus',
 		];
 
 		$button_selector = implode( ',', $button_selectors );
@@ -60,7 +60,7 @@ class Theme_Style_Buttons extends Tab_Base {
 		$this->start_controls_section(
 			'section_buttons',
 			[
-				'label' => esc_html__( 'Buttons', 'elementor' ),
+				'label' => esc_html__( 'Buttons', 'refraction' ),
 				'tab' => $this->get_id(),
 			]
 		);
@@ -88,14 +88,14 @@ class Theme_Style_Buttons extends Tab_Base {
 		$this->start_controls_tab(
 			'tab_button_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'button_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'dynamic' => [],
 				'selectors' => [
@@ -149,7 +149,7 @@ class Theme_Style_Buttons extends Tab_Base {
 		$this->add_control(
 			'button_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -163,14 +163,14 @@ class Theme_Style_Buttons extends Tab_Base {
 		$this->start_controls_tab(
 			'tab_button_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'button_hover_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'dynamic' => [],
 				'selectors' => [
@@ -224,7 +224,7 @@ class Theme_Style_Buttons extends Tab_Base {
 		$this->add_control(
 			'button_hover_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -240,7 +240,7 @@ class Theme_Style_Buttons extends Tab_Base {
 		$this->add_responsive_control(
 			'button_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [

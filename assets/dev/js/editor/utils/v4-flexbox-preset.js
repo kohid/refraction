@@ -99,8 +99,8 @@ function buildNode( definition, target, options, isRoot ) {
 	return node;
 }
 
-export function createV4FlexboxFromPreset( preset, target = elementor.getPreviewContainer(), options = {} ) {
-	return runWithHistory( __( 'Container', 'elementor' ), () => {
+export function createV4FlexboxFromPreset( preset, target = refraction.getPreviewContainer(), options = {} ) {
+	return runWithHistory( __( 'Container', 'refraction' ), () => {
 		const definition = getPresetDefinition( preset );
 
 		return buildNode( definition, target, options, true );

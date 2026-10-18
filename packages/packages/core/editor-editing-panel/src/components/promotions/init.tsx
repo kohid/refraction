@@ -1,4 +1,4 @@
-import { AttributesControl, DisplayConditionsControl } from '@elementor/editor-controls';
+import { AttributesControl, DisplayConditionsControl } from '@refraction/editor-controls';
 
 import { controlsRegistry } from '../../controls-registry/controls-registry';
 import { injectIntoStyleTab } from '../style-tab';
@@ -11,7 +11,7 @@ export const init = () => {
 		options: { overwrite: true },
 	} );
 
-	if ( ! window.elementorPro ) {
+	if ( ! window.refractionPro ) {
 		controlsRegistry.register( 'attributes', AttributesControl, 'two-columns' );
 
 		controlsRegistry.register( 'display-conditions', DisplayConditionsControl, 'two-columns' );

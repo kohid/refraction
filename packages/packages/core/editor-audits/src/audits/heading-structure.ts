@@ -236,15 +236,15 @@ function extractPageHeadings( tree: Parameters< typeof walkElements >[ 0 ] ): Pa
 
 export const audit: Audit = {
 	id: 'audits/heading-structure',
-	title: __( 'Heading structure', 'elementor' ),
-	description: __( 'Pages should have exactly one H1 and a non-skipping heading order.', 'elementor' ),
-	fixHint: __( 'Ensure your page has one H1 and that heading levels do not skip (no H2 → H4).', 'elementor' ),
+	title: __( 'Heading structure', 'refraction' ),
+	description: __( 'Pages should have exactly one H1 and a non-skipping heading order.', 'refraction' ),
+	fixHint: __( 'Ensure your page has one H1 and that heading levels do not skip (no H2 → H4).', 'refraction' ),
 	categories: [ 'seo', 'accessibility' ],
 	severity: 'error',
 	weight: 10,
 	evaluate: ( ctx ) => {
 		if ( ctx.elements.tree.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No elements', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No elements', 'refraction' ) };
 		}
 
 		const headings = extractPageHeadings( ctx.elements.tree );
@@ -254,13 +254,13 @@ export const audit: Audit = {
 		if ( headings.length === 0 ) {
 			violations.push( {
 				auditId: audit.id,
-				label: __( 'No headings found on the page.', 'elementor' ),
+				label: __( 'No headings found on the page.', 'refraction' ),
 			} );
 		} else {
 			const h1Count = headings.filter( ( h ) => h.level === 1 ).length;
 
 			if ( h1Count === 0 ) {
-				violations.push( { auditId: audit.id, label: __( 'No H1 on the page.', 'elementor' ) } );
+				violations.push( { auditId: audit.id, label: __( 'No H1 on the page.', 'refraction' ) } );
 			}
 
 			if ( h1Count > 1 ) {
@@ -272,7 +272,7 @@ export const audit: Audit = {
 							auditId: audit.id,
 							elementId: h.elementId,
 							targetHint: 'element-settings',
-							label: __( 'More than one H1 on the page.', 'elementor' ),
+							label: __( 'More than one H1 on the page.', 'refraction' ),
 						} )
 					);
 			}
@@ -283,7 +283,7 @@ export const audit: Audit = {
 						auditId: audit.id,
 						elementId: headings[ i ].elementId,
 						targetHint: 'element-settings',
-						label: __( 'Heading level skipped.', 'elementor' ),
+						label: __( 'Heading level skipped.', 'refraction' ),
 					} );
 				}
 			}

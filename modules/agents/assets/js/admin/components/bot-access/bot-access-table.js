@@ -25,7 +25,7 @@ export const BotAccessTable = ( { bots, catalog, isDisabled, onTogglePermission,
 				borderColor="divider"
 			>
 				<Typography variant="body2" color="text.secondary" flexGrow={ 1 }>
-					{ __( 'Agent', 'elementor' ) }
+					{ __( 'Agent', 'refraction' ) }
 				</Typography>
 				{ getBotPermissions().map( ( { permission, title } ) => (
 					<Typography

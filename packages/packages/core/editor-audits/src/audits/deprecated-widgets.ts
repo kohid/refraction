@@ -1,4 +1,4 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { getWidgetsCache } from '@refraction/editor-elements';
 import { __ } from '@wordpress/i18n';
 
 import { type Audit, type AuditViolation } from '../types';
@@ -8,12 +8,12 @@ const DEPRECATION_CONTROL_NAME = 'deprecation_message';
 
 export const audit: Audit = {
 	id: 'audits/deprecated-widgets',
-	title: __( 'Deprecated widgets', 'elementor' ),
+	title: __( 'Deprecated widgets', 'refraction' ),
 	description: __(
 		'Deprecated widgets should not be used. For better capabilities use the recommended replacement.',
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Replace each deprecated widget with the recommended new widget shown in its panel.', 'elementor' ),
+	fixHint: __( 'Replace each deprecated widget with the recommended new widget shown in its panel.', 'refraction' ),
 	categories: [ 'best-practices', 'performance' ],
 	severity: 'warning',
 	weight: 7,
@@ -48,7 +48,7 @@ export const audit: Audit = {
 				auditId: audit.id,
 				elementId: node.id,
 				targetHint: 'element-settings',
-				label: __( 'Using deprecated widget.', 'elementor' ),
+				label: __( 'Using deprecated widget.', 'refraction' ),
 			} );
 		} );
 

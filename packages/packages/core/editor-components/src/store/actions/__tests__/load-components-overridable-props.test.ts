@@ -1,11 +1,11 @@
-import { __dispatch as dispatch, __getState as getState } from '@elementor/store';
+import { __dispatch as dispatch, __getState as getState } from '@refraction/store';
 
 import { apiClient } from '../../../api';
 import { slice } from '../../store';
 import { loadComponentsOverridableProps } from '../load-components-overridable-props';
 
-jest.mock( '@elementor/store', () => ( {
-	...jest.requireActual( '@elementor/store' ),
+jest.mock( '@refraction/store', () => ( {
+	...jest.requireActual( '@refraction/store' ),
 	__getState: jest.fn(),
 	__dispatch: jest.fn(),
 } ) );

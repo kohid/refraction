@@ -1,16 +1,16 @@
 <?php
-namespace Elementor\Modules\System_Info\Reporters;
+namespace Refraction\Modules\System_Info\Reporters;
 
-use Elementor\Utils;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor server environment report.
+ * Refraction server environment report.
  *
- * Elementor system report handler class responsible for generating a report for
+ * Refraction system report handler class responsible for generating a report for
  * the server environment.
  *
  * @since 1.0.0
@@ -19,7 +19,7 @@ class Server extends Base {
 
 	const KEY_PATH_WP_CONTENT_DIR = 'wp_content';
 	const KEY_PATH_UPLOADS_DIR = 'uploads';
-	const KEY_PATH_ELEMENTOR_UPLOADS_DIR = 'elementor_uploads';
+	const KEY_PATH_REFRACTION_UPLOADS_DIR = 'refraction_uploads';
 	const KEY_PATH_HTACCESS_FILE = '.htaccess';
 
 	/**
@@ -126,7 +126,7 @@ class Server extends Base {
 		if ( version_compare( $result['value'], $recommended_php_version, '<' ) ) {
 			$result['recommendation'] = sprintf(
 				/* translators: %s: Recommended PHP version. */
-				esc_html__( 'We recommend using PHP version %s or higher.', 'elementor' ),
+				esc_html__( 'We recommend using PHP version %s or higher.', 'refraction' ),
 				$recommended_php_version
 			);
 
@@ -165,7 +165,7 @@ class Server extends Base {
 		if ( $memory_limit_bytes < $min_recommended_bytes ) {
 			$result['recommendation'] = sprintf(
 				/* translators: 1: Minimum recommended_memory, 2: Preferred memory. */
-				__( 'We recommend setting memory to at least %1$s. (%2$s or higher is preferred)', 'elementor' ),
+				__( 'We recommend setting memory to at least %1$s. (%2$s or higher is preferred)', 'refraction' ),
 				$min_recommended_memory,
 				$preferred_memory
 			);
@@ -316,7 +316,7 @@ class Server extends Base {
 		$paths_to_check = [
 			static::KEY_PATH_HTACCESS_FILE => $this->get_system_path( static::KEY_PATH_HTACCESS_FILE ),
 			static::KEY_PATH_UPLOADS_DIR => $this->get_system_path( static::KEY_PATH_UPLOADS_DIR ),
-			static::KEY_PATH_ELEMENTOR_UPLOADS_DIR => $this->get_system_path( static::KEY_PATH_ELEMENTOR_UPLOADS_DIR ),
+			static::KEY_PATH_REFRACTION_UPLOADS_DIR => $this->get_system_path( static::KEY_PATH_REFRACTION_UPLOADS_DIR ),
 		];
 
 		$paths_permissions = $this->get_paths_permissions( $paths_to_check );
@@ -327,8 +327,8 @@ class Server extends Base {
 			$write_problems[] = 'WordPress uploads directory';
 		}
 
-		if ( $paths_permissions[ self::KEY_PATH_ELEMENTOR_UPLOADS_DIR ]['exists'] && ! $paths_permissions[ self::KEY_PATH_ELEMENTOR_UPLOADS_DIR ]['write'] ) {
-			$write_problems[] = 'Elementor uploads directory';
+		if ( $paths_permissions[ self::KEY_PATH_REFRACTION_UPLOADS_DIR ]['exists'] && ! $paths_permissions[ self::KEY_PATH_REFRACTION_UPLOADS_DIR ]['write'] ) {
+			$write_problems[] = 'Refraction uploads directory';
 		}
 
 		if ( $paths_permissions[ self::KEY_PATH_HTACCESS_FILE ]['exists'] && ! $paths_permissions[ self::KEY_PATH_HTACCESS_FILE ]['write'] ) {
@@ -380,14 +380,14 @@ class Server extends Base {
 			case static::KEY_PATH_UPLOADS_DIR:
 				return wp_upload_dir()['basedir'] ?? '';
 
-			case static::KEY_PATH_ELEMENTOR_UPLOADS_DIR:
+			case static::KEY_PATH_REFRACTION_UPLOADS_DIR:
 				if ( empty( wp_upload_dir()['basedir'] ) ) {
 					return '';
 				}
 
-				$elementor_uploads_dir = wp_upload_dir()['basedir'] . '/elementor';
+				$refraction_uploads_dir = wp_upload_dir()['basedir'] . '/refraction';
 
-				return is_dir( $elementor_uploads_dir ) ? $elementor_uploads_dir : '';
+				return is_dir( $refraction_uploads_dir ) ? $refraction_uploads_dir : '';
 
 			default:
 				return '';

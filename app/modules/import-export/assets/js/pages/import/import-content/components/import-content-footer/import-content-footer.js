@@ -1,7 +1,7 @@
 import { useNavigate } from '@reach/router';
 
 import ActionsFooter from '../../../../../shared/actions-footer/actions-footer';
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
 export default function ImportContentFooter( { hasPlugins, hasConflicts, isImportAllowed, onResetProcess, onPreviousClick, onImportClick } ) {
 	const navigate = useNavigate(),
@@ -18,7 +18,7 @@ export default function ImportContentFooter( { hasPlugins, hasConflicts, isImpor
 	return (
 		<ActionsFooter>
 			<Button
-				text={ __( 'Previous', 'elementor' ) }
+				text={ __( 'Previous', 'refraction' ) }
 				variant="contained"
 				onClick={ () => {
 					onPreviousClick?.();
@@ -32,7 +32,7 @@ export default function ImportContentFooter( { hasPlugins, hasConflicts, isImpor
 
 			<Button
 				variant="contained"
-				text={ __( 'Import', 'elementor' ) }
+				text={ __( 'Import', 'refraction' ) }
 				color={ isImportAllowed ? 'primary' : 'disabled' }
 				onClick={ () => {
 					onImportClick?.();

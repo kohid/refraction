@@ -1,11 +1,11 @@
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 export class Close extends $e.modules.CommandBase {
 	apply( args ) {
 		const { mode } = args;
 
 		// The kit is opened directly — no document switch needed, safe to track immediately.
-		if ( elementor.config.initial_document.id === parseInt( elementor.config.kit_id ) ) {
+		if ( refraction.config.initial_document.id === parseInt( refraction.config.kit_id ) ) {
 			const hasSaved = this.component.siteSettingsSession?.hasSaved || false;
 			const sessionData = this.component.getSiteSettingsSessionData?.() || {};
 
@@ -27,18 +27,18 @@ export class Close extends $e.modules.CommandBase {
 
 		return $e.run( 'editor/documents/switch', {
 			mode,
-			id: elementor.config.initial_document.id,
+			id: refraction.config.initial_document.id,
 			onClose: ( document ) => {
 				if ( document.isDraft() ) {
-					elementor.toggleDocumentCssFiles( document, true );
-					elementor.settings.page.destroyControlsCSS();
+					refraction.toggleDocumentCssFiles( document, true );
+					refraction.settings.page.destroyControlsCSS();
 				}
 
 				$e.components.get( 'panel/global' ).close();
 				$e.routes.clearHistory( this.component.getServiceName() );
 
 				// The kit shouldn't be cached for next open. (it may be changed via create colors/typography).
-				elementor.documents.invalidateCache( elementor.config.kit_id );
+				refraction.documents.invalidateCache( refraction.config.kit_id );
 			},
 		} ).then( () => {
 			// Skip if session was already tracked and reset (e.g. by back.js dialog).

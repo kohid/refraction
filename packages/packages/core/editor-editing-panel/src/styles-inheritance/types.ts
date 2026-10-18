@@ -1,6 +1,6 @@
-import { type PropKey, type PropType, type PropValue } from '@elementor/editor-props';
-import { type BreakpointId } from '@elementor/editor-responsive';
-import { type StyleDefinition, type StyleDefinitionState, type StyleDefinitionVariant } from '@elementor/editor-styles';
+import { type PropKey, type PropType, type PropValue } from '@refraction/editor-props';
+import { type BreakpointId } from '@refraction/editor-responsive';
+import { type StyleDefinition, type StyleDefinitionState, type StyleDefinitionVariant } from '@refraction/editor-styles';
 
 export type StyleDefinitionStateWithNormal = NonNullable< StyleDefinitionState > | 'normal';
 

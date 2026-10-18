@@ -7,9 +7,9 @@ import { trackGlobalClasses } from '../../../../utils/tracking';
 import { useSearchAndFilters } from '../../context';
 
 export const filterConfig: Record< FilterKey, string > = {
-	unused: __( 'Unused', 'elementor' ),
-	empty: __( 'Empty', 'elementor' ),
-	onThisPage: __( 'On this page', 'elementor' ),
+	unused: __( 'Unused', 'refraction' ),
+	empty: __( 'Empty', 'refraction' ),
+	onThisPage: __( 'On this page', 'refraction' ),
 };
 
 export const FilterList = () => {

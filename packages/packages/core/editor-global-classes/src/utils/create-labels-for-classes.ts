@@ -1,4 +1,4 @@
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
 
 import { type GlobalClassIndexEntry } from '../api';
 

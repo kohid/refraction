@@ -32,7 +32,7 @@
  */
 export function buildModel( elType, cssProps, mobileProps ) {
 	const model = {
-		id: elementorCommon.helpers.getUniqueId(),
+		id: refractionCommon.helpers.getUniqueId(),
 		elType,
 		elements: [],
 	};
@@ -44,7 +44,7 @@ export function buildModel( elType, cssProps, mobileProps ) {
 		return model;
 	}
 
-	const styleId = `e-${ elementorCommon.helpers.getUniqueId() }`;
+	const styleId = `e-${ refractionCommon.helpers.getUniqueId() }`;
 	const variants = [
 		{
 			meta: { breakpoint: 'desktop', state: null },
@@ -89,7 +89,7 @@ export function buildModel( elType, cssProps, mobileProps ) {
  * @return {Container|Object} Created container, or a lookup stub when Container is unavailable.
  */
 export function insertElementFromModel( target, model, options ) {
-	const containerClass = elementorModules?.editor?.Container;
+	const containerClass = refractionModules?.editor?.Container;
 	const getDocumentUtils = () => $e?.components?.get?.( 'document' )?.utils;
 	const getContainerById = ( id ) => getDocumentUtils()?.findContainerById?.( id ) ?? null;
 	const isContainerInstance = ( candidate ) => {

@@ -1,22 +1,22 @@
-import { getContainer, selectElement } from '@elementor/editor-elements';
-import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
+import { getContainer, selectElement } from '@refraction/editor-elements';
+import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
 
 import { focusViolation } from '../focus-violation';
 
-type ElementorWindowWithScroll = Window & {
-	elementor?: {
+type RefractionWindowWithScroll = Window & {
+	refraction?: {
 		helpers?: {
 			scrollToView?: ( element: unknown, timeout?: number ) => void;
 		};
 	};
 };
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateOpenRoute: jest.fn(),
 	__privateRunCommand: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getContainer: jest.fn(),
 	selectElement: jest.fn(),
 } ) );
@@ -77,10 +77,10 @@ describe( 'focusViolation', () => {
 			},
 		};
 		const scrollToView = jest.fn();
-		const extendedWindow = window as unknown as ElementorWindowWithScroll;
-		const originalElementor = extendedWindow.elementor;
+		const extendedWindow = window as unknown as RefractionWindowWithScroll;
+		const originalRefraction = extendedWindow.refraction;
 
-		extendedWindow.elementor = {
+		extendedWindow.refraction = {
 			helpers: { scrollToView },
 		};
 
@@ -102,7 +102,7 @@ describe( 'focusViolation', () => {
 		expect( runCommand ).toHaveBeenCalledWith( 'panel/editor/open' );
 		expect( window.open ).not.toHaveBeenCalled();
 
-		extendedWindow.elementor = originalElementor;
+		extendedWindow.refraction = originalRefraction;
 	} );
 
 	it( 'should open the external url in a new tab when externalUrl is set', () => {

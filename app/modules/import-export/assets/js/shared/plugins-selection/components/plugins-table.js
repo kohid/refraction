@@ -1,10 +1,10 @@
 import { memo } from 'react';
 
-import DataTable from 'elementor-app/molecules/data-table';
+import DataTable from 'refraction-app/molecules/data-table';
 
-import Text from 'elementor-app/ui/atoms/text';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
-import Icon from 'elementor-app/ui/atoms/icon';
+import Text from 'refraction-app/ui/atoms/text';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
+import Icon from 'refraction-app/ui/atoms/icon';
 
 import './plugins-table.scss';
 

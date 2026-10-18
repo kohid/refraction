@@ -6,8 +6,8 @@ import { type Category, ItemSelector } from '../../components/item-selector';
 // Mock PopoverMenuList to trigger onChange and capture items
 const mockOnChange = jest.fn();
 let capturedItems: unknown[] = [];
-jest.mock( '@elementor/editor-ui', () => ( {
-	...jest.requireActual( '@elementor/editor-ui' ),
+jest.mock( '@refraction/editor-ui', () => ( {
+	...jest.requireActual( '@refraction/editor-ui' ),
 	PopoverMenuList: ( props: { onChange: typeof mockOnChange; items: unknown[] } ) => {
 		mockOnChange.mockImplementation( props.onChange );
 		capturedItems = props.items;

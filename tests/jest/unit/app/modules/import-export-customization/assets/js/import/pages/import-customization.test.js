@@ -1,18 +1,18 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ImportCustomization from 'elementor/app/modules/import-export-customization/assets/js/import/pages/import-customization';
-import eventsConfig from 'elementor/core/common/modules/events-manager/assets/js/events-config';
+import ImportCustomization from 'refraction/app/modules/import-export-customization/assets/js/import/pages/import-customization';
+import eventsConfig from 'refraction/core/common/modules/events-manager/assets/js/events-config';
 
 const mockDispatch = jest.fn();
 const mockNavigate = jest.fn();
 const mockUseImportContext = jest.fn();
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
-	...jest.requireActual( 'elementor/app/modules/import-export-customization/assets/js/import/context/import-context' ),
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/import/context/import-context', () => ( {
+	...jest.requireActual( 'refraction/app/modules/import-export-customization/assets/js/import/context/import-context' ),
 	useImportContext: () => mockUseImportContext(),
 } ) );
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
@@ -22,67 +22,67 @@ jest.mock( '@reach/router', () => ( {
 } ) );
 
 const mockSendPageViewsWebsiteTemplates = jest.fn();
-jest.mock( 'elementor/app/assets/js/event-track/apps-event-tracking', () => ( {
+jest.mock( 'refraction/app/assets/js/event-track/apps-event-tracking', () => ( {
 	AppsEventTracking: {
 		sendPageViewsWebsiteTemplates: ( ...args ) => mockSendPageViewsWebsiteTemplates( ...args ),
 	},
 } ) );
 
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
 
 describe( 'ImportCustomization Page', () => {
 	beforeEach( () => {
 		jest.clearAllMocks();
 		jest.resetAllMocks();
-		global.elementorAppConfig = { base_url: 'http://localhost' };
-		global.elementorCommon = {
+		global.refractionAppConfig = { base_url: 'http://localhost' };
+		global.refractionCommon = {
 			eventsManager: {
 				config: eventsConfig,
 			},
 		};
 
-		global.elementorModules = {
+		global.refractionModules = {
 			importExport: {
 				siteSettingsRegistry: {
 					getAll: jest.fn( () => [
 						{
 							key: 'theme',
-							title: __( 'Theme', 'elementor' ),
-							description: __( 'Only public WordPress themes are supported', 'elementor' ),
+							title: __( 'Theme', 'refraction' ),
+							description: __( 'Only public WordPress themes are supported', 'refraction' ),
 							order: 0,
 						},
 						{
 							key: 'siteSettings',
-							title: __( 'Site settings', 'elementor' ),
+							title: __( 'Site settings', 'refraction' ),
 							order: 1,
 							children: [
 								{
 									key: 'globalColors',
-									title: __( 'Global colors', 'elementor' ),
+									title: __( 'Global colors', 'refraction' ),
 									order: 0,
 								},
 								{
 									key: 'globalFonts',
-									title: __( 'Global fonts', 'elementor' ),
+									title: __( 'Global fonts', 'refraction' ),
 									order: 1,
 								},
 								{
 									key: 'themeStyleSettings',
-									title: __( 'Theme style settings', 'elementor' ),
+									title: __( 'Theme style settings', 'refraction' ),
 									order: 2,
 								},
 							],
 						},
 						{
 							key: 'generalSettings',
-							title: __( 'Settings', 'elementor' ),
-							description: __( 'Include site identity, background, layout, Lightbox, page transitions, and custom CSS', 'elementor' ),
+							title: __( 'Settings', 'refraction' ),
+							description: __( 'Include site identity, background, layout, Lightbox, page transitions, and custom CSS', 'refraction' ),
 							order: 2,
 						},
 						{
 							key: 'experiments',
-							title: __( 'Experiments', 'elementor' ),
-							description: __( 'This will apply all experiments that are still active during import', 'elementor' ),
+							title: __( 'Experiments', 'refraction' ),
+							description: __( 'This will apply all experiments that are still active during import', 'refraction' ),
 							order: 3,
 						},
 					] ),
@@ -112,7 +112,7 @@ describe( 'ImportCustomization Page', () => {
 							return state;
 						}
 						const state = {};
-						const sections = global.elementorModules.importExport.siteSettingsRegistry.getAll();
+						const sections = global.refractionModules.importExport.siteSettingsRegistry.getAll();
 
 						sections.forEach( ( section ) => {
 							if ( section.children ) {
@@ -135,8 +135,8 @@ describe( 'ImportCustomization Page', () => {
 	} );
 
 	afterEach( () => {
-		delete global.elementorAppConfig;
-		delete global.elementorCommon;
+		delete global.refractionAppConfig;
+		delete global.refractionCommon;
 	} );
 
 	function setup( { isCustomizing = true, isProcessing = false } = {} ) {

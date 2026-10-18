@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useSuppressedMessage } from '@elementor/editor-current-user';
-import { IntroductionModal } from '@elementor/editor-ui';
+import { useSuppressedMessage } from '@refraction/editor-current-user';
+import { IntroductionModal } from '@refraction/editor-ui';
 import { Box, Image, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -14,7 +14,7 @@ export const ClassManagerIntroduction = () => {
 	return (
 		<IntroductionModal
 			open={ shouldShowIntroduction }
-			title={ __( 'Class Manager', 'elementor' ) }
+			title={ __( 'Class Manager', 'refraction' ) }
 			handleClose={ ( shouldShowAgain ) => {
 				if ( ! shouldShowAgain ) {
 					suppressMessage();
@@ -39,14 +39,14 @@ const IntroductionContent = () => {
 			<Typography variant={ 'body2' }>
 				{ __(
 					"The Class Manager lets you see all the classes you've created, plus adjust their priority, rename them, and delete unused classes to keep your CSS structured.",
-					'elementor'
+					'refraction'
 				) }
 			</Typography>
 			<br />
 			<Typography variant={ 'body2' }>
 				{ __(
 					'Remember, when editing an item within a specific class, any changes you make will apply across all elements in that class.',
-					'elementor'
+					'refraction'
 				) }
 			</Typography>
 		</Box>

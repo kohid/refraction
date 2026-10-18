@@ -3,29 +3,29 @@ export class AttachPreview extends $e.modules.CommandInternalBase {
 		if ( args.selector ) {
 			this.requireArgumentType( 'selector', 'string' );
 
-			if ( 0 === elementor.$previewContents.find( args.selector ).length ) {
+			if ( 0 === refraction.$previewContents.find( args.selector ).length ) {
 				throw new Error( 'Invalid argument. The `selector` argument must be existed selector.' );
 			}
 		}
 	}
 
 	apply( { shouldNavigateToDefaultRoute = true, ...args } = {} ) {
-		const document = elementor.documents.getCurrent();
+		const document = refraction.documents.getCurrent();
 
 		return $e.data.get( 'globals/index' )
 			.then( () => {
-				elementor.trigger( 'globals:loaded' );
+				refraction.trigger( 'globals:loaded' );
 
 				return this.attachDocumentToPreview( document, args );
 			} )
 			.then( () => {
-				elementor.toggleDocumentCssFiles( document, false );
+				refraction.toggleDocumentCssFiles( document, false );
 
-				elementor.onEditModeSwitched();
+				refraction.onEditModeSwitched();
 
-				elementor.checkPageStatus();
+				refraction.checkPageStatus();
 
-				elementor.trigger( 'document:loaded', document );
+				refraction.trigger( 'document:loaded', document );
 
 				if ( shouldNavigateToDefaultRoute ) {
 					return $e.internal( 'panel/open-default', {
@@ -36,7 +36,7 @@ export class AttachPreview extends $e.modules.CommandInternalBase {
 	}
 
 	attachDocumentToPreview( document, args ) {
-		const { selector = '.elementor-' + document.id, shouldScroll = true } = args;
+		const { selector = '.refraction-' + document.id, shouldScroll = true } = args;
 
 		return new Promise( ( resolve, reject ) => {
 			// Not yet loaded.
@@ -48,37 +48,37 @@ export class AttachPreview extends $e.modules.CommandInternalBase {
 				return resolve();
 			}
 
-			document.$element = elementor.$previewContents.find( selector );
-			const isInitialDocument = document.id === elementor.config.initial_document.id;
+			document.$element = refraction.$previewContents.find( selector );
+			const isInitialDocument = document.id === refraction.config.initial_document.id;
 
 			if ( ! document.$element.length ) {
 				if ( isInitialDocument ) {
-					elementor.onPreviewElNotFound();
+					refraction.onPreviewElNotFound();
 				}
 
 				return reject( `Can't attach preview to document '${ document.id }', element '${ selector }' was not found.` );
 			}
 
-			document.$element.addClass( 'elementor-edit-area elementor-edit-mode' );
+			document.$element.addClass( 'refraction-edit-area refraction-edit-mode' );
 
 			if ( ! isInitialDocument ) {
-				elementor.documents.getCurrent().$element.addClass( 'elementor-embedded-editor' );
+				refraction.documents.getCurrent().$element.addClass( 'refraction-embedded-editor' );
 			}
 
-			elementor.initElements();
+			refraction.initElements();
 
-			elementor.initPreviewView( document );
+			refraction.initPreviewView( document );
 
-			document.container.view = elementor.getPreviewView();
-			document.container.model.attributes.elements = elementor.elements;
+			document.container.view = refraction.getPreviewView();
+			document.container.model.attributes.elements = refraction.elements;
 
 			if ( shouldScroll ) {
-				elementor.helpers.scrollToView( document.$element );
+				refraction.helpers.scrollToView( document.$element );
 			}
 
 			document.$element
-				.addClass( 'elementor-edit-area-active' )
-				.removeClass( 'elementor-editor-preview' );
+				.addClass( 'refraction-edit-area-active' )
+				.removeClass( 'refraction-editor-preview' );
 
 			resolve();
 		} );

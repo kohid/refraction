@@ -37,7 +37,7 @@ export const register = ( { elementType, id, callback }: { elementType: string; 
 	}
 };
 
-Object.defineProperty( window, 'registerElementorElement', {
+Object.defineProperty( window, 'registerRefractionElement', {
 	value: register,
 	enumerable: true,
 } );

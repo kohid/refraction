@@ -1,12 +1,12 @@
-const BaseMultiple = require( 'elementor-controls/base-multiple' );
+const BaseMultiple = require( 'refraction-controls/base-multiple' );
 
 class URL extends BaseMultiple {
 	ui() {
 		const ui = super.ui();
 
-		ui.mainInput = '.elementor-input';
-		ui.moreOptionsToggle = '.elementor-control-url-more';
-		ui.moreOptions = '.elementor-control-url-more-options';
+		ui.mainInput = '.refraction-input';
+		ui.moreOptionsToggle = '.refraction-control-url-more';
+		ui.moreOptions = '.refraction-control-url-more-options';
 
 		return ui;
 	}
@@ -21,7 +21,7 @@ class URL extends BaseMultiple {
 
 	autoComplete() {
 		const $mainInput = this.ui.mainInput,
-			positionBase = elementorCommon.config.isRTL ? 'right' : 'left';
+			positionBase = refractionCommon.config.isRTL ? 'right' : 'left';
 
 		let last, cache;
 
@@ -45,7 +45,7 @@ class URL extends BaseMultiple {
 				$mainInput.prev().show();
 
 				jQuery.post( window.ajaxurl, {
-					editor: 'elementor',
+					editor: 'refraction',
 					action: 'wp-link-ajax',
 					page: 1,
 					search: request.term,
@@ -73,7 +73,7 @@ class URL extends BaseMultiple {
 				return false;
 			},
 			open: ( event ) => {
-				jQuery( event.target ).data( 'uiAutocomplete' ).menu.activeMenu.addClass( 'elementor-autocomplete-menu' );
+				jQuery( event.target ).data( 'uiAutocomplete' ).menu.activeMenu.addClass( 'refraction-autocomplete-menu' );
 			},
 			minLength: 2,
 			position: {
@@ -88,7 +88,7 @@ class URL extends BaseMultiple {
 				title = item.title ? item.title : fallbackTitle;
 
 			return jQuery( '<li role="option" id="mce-wp-autocomplete-' + item.ID + '">' )
-				.append( '<span>' + title + '</span>&nbsp;<span class="elementor-autocomplete-item-info">' + item.info + '</span>' )
+				.append( '<span>' + title + '</span>&nbsp;<span class="refraction-autocomplete-item-info">' + item.info + '</span>' )
 				.appendTo( ul );
 		};
 	}

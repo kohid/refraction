@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { __flushAllInjections } from '@elementor/locations';
+import { __flushAllInjections } from '@refraction/locations';
 import { renderHook } from '@testing-library/react';
 
 import { injectIntoPanels, usePanelsInjections } from '../location';

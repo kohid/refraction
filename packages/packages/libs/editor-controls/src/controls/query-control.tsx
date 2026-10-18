@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { numberPropTypeUtil, queryPropTypeUtil, stringPropTypeUtil, urlPropTypeUtil } from '@elementor/editor-props';
+import { numberPropTypeUtil, queryPropTypeUtil, stringPropTypeUtil, urlPropTypeUtil } from '@refraction/editor-props';
 import { SearchIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -29,7 +29,7 @@ export const QueryControl = createControl( ( props: Props ) => {
 	const {
 		allowCustomValues = true,
 		queryOptions: { url, params = {} },
-		placeholder = __( 'Search', 'elementor' ),
+		placeholder = __( 'Search', 'refraction' ),
 		minInputLength = 2,
 		onSetValue,
 		ariaLabel,

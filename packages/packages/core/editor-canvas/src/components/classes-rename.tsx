@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { getV1DocumentsManager, type V1Document } from '@elementor/editor-documents';
-import { type V1Element } from '@elementor/editor-elements';
-import { stylesRepository } from '@elementor/editor-styles-repository';
-import { hash } from '@elementor/utils';
+import { getV1DocumentsManager, type V1Document } from '@refraction/editor-documents';
+import { type V1Element } from '@refraction/editor-elements';
+import { stylesRepository } from '@refraction/editor-styles-repository';
+import { hash } from '@refraction/utils';
 
 export const ClassesRename = () => {
 	useEffect( () => {
@@ -44,7 +44,7 @@ const renameClass = ( oldClassName: string, newClassName: string ) => {
 	Object.values< V1Document >( getV1DocumentsManager().documents ).forEach( ( document ) => {
 		const container = document.container as V1Element;
 
-		container.view?.el?.querySelectorAll( `.elementor .${ oldClassName }` ).forEach( ( element ) => {
+		container.view?.el?.querySelectorAll( `.refraction .${ oldClassName }` ).forEach( ( element ) => {
 			element.classList.replace( oldClassName, newClassName );
 		} );
 	} );

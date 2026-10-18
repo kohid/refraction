@@ -1,4 +1,4 @@
-import { type StyleDefinitionID } from '@elementor/editor-styles';
+import { type StyleDefinitionID } from '@refraction/editor-styles';
 
 import { type ElementID } from '../types';
 import { mutateElementStyles } from './mutate-element-styles';

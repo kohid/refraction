@@ -1,5 +1,5 @@
-import { type PropsSchema, type PropValue, type SizePropValue } from '@elementor/editor-props';
-import { type ClassState, type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
+import { type PropsSchema, type PropValue, type SizePropValue } from '@refraction/editor-props';
+import { type ClassState, type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
 
 import { type ChildDependencyRule } from '../children-dependencies/types';
 import { type ControlItem, type PseudoState } from '../types';
@@ -20,7 +20,7 @@ export type ExtendedWindow = Window & {
 			};
 		};
 	};
-	elementor?: {
+	refraction?: {
 		selection?: {
 			getElements: () => V1Element[];
 		};
@@ -45,7 +45,7 @@ export type ExtendedWindow = Window & {
 			isAtomicWidget?: ( model: unknown ) => boolean;
 		};
 	};
-	elementorCommon?: {
+	refractionCommon?: {
 		helpers?: {
 			getUniqueId?: () => string;
 		};

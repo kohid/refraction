@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { createMockElementType, renderWithTheme } from 'test-utils';
-import { useHasContentOnlyAccess } from '@elementor/editor-current-user';
-import { type Element, type ElementType, useSelectedElementSettings } from '@elementor/editor-elements';
+import { useHasContentOnlyAccess } from '@refraction/editor-current-user';
+import { type Element, type ElementType, useSelectedElementSettings } from '@refraction/editor-elements';
 import { screen } from '@testing-library/react';
 
 import { EditingPanel } from '../editing-panel';
 
-jest.mock( '@elementor/editor-current-user' );
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-current-user' );
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	useSelectedElementSettings: jest.fn(),
 } ) );
 

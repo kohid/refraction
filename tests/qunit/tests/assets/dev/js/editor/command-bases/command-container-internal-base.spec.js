@@ -1,7 +1,7 @@
-import CommandInfra from 'elementor-api/modules/command-infra';
-import CommandBase from 'elementor-api/modules/command-base';
-import CommandContainerBase from 'elementor-editor/command-bases/command-container-base';
-import CommandContainerInternalBase from 'elementor-editor/command-bases/command-container-internal-base';
+import CommandInfra from 'refraction-api/modules/command-infra';
+import CommandBase from 'refraction-api/modules/command-base';
+import CommandContainerBase from 'refraction-editor/command-bases/command-container-base';
+import CommandContainerInternalBase from 'refraction-editor/command-bases/command-container-internal-base';
 import CommandContainerInternalMock, { CommandContainerInternalBaseExportedMock } from './mock/command-container-internal-base.spec';
 
 jQuery( () => {

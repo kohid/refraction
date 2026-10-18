@@ -311,9 +311,9 @@
 
 			return {
 				$currentElement,
-				placeholderTarget: hasLogicalWrapper ? currentElement.querySelector( ':scope > :not(.elementor-widget-placeholder)' ) : currentElement,
+				placeholderTarget: hasLogicalWrapper ? currentElement.querySelector( ':scope > :not(.refraction-widget-placeholder)' ) : currentElement,
 				$parentContainer: $currentElement.closest( '.e-con' ).parent().closest( '.e-con' ),
-				isFirstInsert: $currentElement.hasClass( 'elementor-first-add' ),
+				isFirstInsert: $currentElement.hasClass( 'refraction-first-add' ),
 				isInnerContainer: $currentElement.hasClass( 'e-con-inner' ),
 				isGridRowContainer: 0 !== $currentElement.parents( '.e-grid.e-con--row' ).length,
 				isAtomicGridContainer: 0 !== $currentElement.closest( '.e-grid-base' ).length,
@@ -381,7 +381,7 @@
 			clearOverlayPlaceholderState();
 
 			if ( placeholderContext.$parentContainer ) {
-				placeholderContext.$parentContainer.find( '.elementor-widget-placeholder' ).remove();
+				placeholderContext.$parentContainer.find( '.refraction-widget-placeholder' ).remove();
 			}
 
 			elementsCache.$placeholder.removeClass( 'e-dragging-left e-dragging-right e-dragging-top e-dragging-bottom is-logical' );
@@ -695,7 +695,7 @@
 					return;
 				}
 
-				if ( currentElement?.classList?.contains( 'elementor-first-add' ) && currentElement.closest?.( '.e-grid-base' ) ) {
+				if ( currentElement?.classList?.contains( 'refraction-first-add' ) && currentElement.closest?.( '.e-grid-base' ) ) {
 					originalCurrentElementOpacity = currentElement.style.opacity || '';
 					currentElement.style.opacity = '1';
 					$( document ).on( 'dragend', onDocumentDragEnd );

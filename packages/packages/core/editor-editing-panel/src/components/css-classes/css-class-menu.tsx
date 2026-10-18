@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { isEmpty } from '@elementor/editor-props';
-import { type StyleDefinitionState } from '@elementor/editor-styles';
+import { isEmpty } from '@refraction/editor-props';
+import { type StyleDefinitionState } from '@refraction/editor-styles';
 import {
 	isElementsStylesProvider,
 	stylesRepository,
 	useUserStylesCapability,
-} from '@elementor/editor-styles-repository';
-import { MenuItemInfotip, MenuListItem } from '@elementor/editor-ui';
+} from '@refraction/editor-styles-repository';
+import { MenuItemInfotip, MenuListItem } from '@refraction/editor-ui';
 import { bindMenu, Divider, Menu, MenuSubheader, type PopupState, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -69,7 +69,7 @@ export function CssClassMenu( { popupState, anchorEl, fixed }: CssClassMenuProps
 					pt: 1,
 				} }
 			>
-				{ __( 'States', 'elementor' ) }
+				{ __( 'States', 'refraction' ) }
 			</MenuSubheader>
 			{ pseudoStates.map( ( state ) => {
 				return (
@@ -94,7 +94,7 @@ function ClassStatesMenu( { closeMenu }: { closeMenu: () => void } ) {
 	}
 
 	/* translators: %s: Element type title. */
-	const customTitle = __( '%s States', 'elementor' ).replace( '%s', elementTitle );
+	const customTitle = __( '%s States', 'refraction' ).replace( '%s', elementTitle );
 
 	return (
 		<>
@@ -125,10 +125,10 @@ function ClassStatesMenu( { closeMenu }: { closeMenu: () => void } ) {
 
 const CLASS_STATES_MAP: Record< string, { label: string } > = {
 	selected: {
-		label: __( 'selected', 'elementor' ),
+		label: __( 'selected', 'refraction' ),
 	},
 	disabled: {
-		label: __( 'disabled', 'elementor' ),
+		label: __( 'disabled', 'refraction' ),
 	},
 };
 
@@ -253,12 +253,12 @@ function StateMenuItem( { state, label, closeMenu, ...props }: StateMenuItemProp
 		>
 			<MenuItemInfotip
 				showInfoTip={ disabled }
-				content={ __( 'With your current role, you can only use existing states.', 'elementor' ) }
+				content={ __( 'With your current role, you can only use existing states.', 'refraction' ) }
 			>
 				<Stack gap={ 0.75 } direction="row" alignItems="center">
 					{ isStyled && (
 						<StyleIndicator
-							aria-label={ __( 'Has style', 'elementor' ) }
+							aria-label={ __( 'Has style', 'refraction' ) }
 							getColor={ getTempStylesProviderThemeColor( provider ?? '' ) }
 						/>
 					) }
@@ -286,7 +286,7 @@ function UnapplyClassMenuItem( { closeMenu, ...props }: { closeMenu: () => void 
 				closeMenu();
 			} }
 		>
-			{ __( 'Remove', 'elementor' ) }
+			{ __( 'Remove', 'refraction' ) }
 		</MenuListItem>
 	) : null;
 }
@@ -313,10 +313,10 @@ function RenameClassMenuItem( { closeMenu }: { closeMenu: () => void } ) {
 				showInfoTip={ ! isAllowed }
 				content={ __(
 					"With your current role, you can use existing classes but can't modify them.",
-					'elementor'
+					'refraction'
 				) }
 			>
-				{ __( 'Rename', 'elementor' ) }
+				{ __( 'Rename', 'refraction' ) }
 			</MenuItemInfotip>
 		</MenuListItem>
 	);

@@ -2,9 +2,9 @@
 // Add New
 //
 
-.elementor-editor-active {
+.refraction-editor-active {
 
-	.elementor-add-section {
+	.refraction-add-section {
 		// Avoid theme conflicts.
 		all: initial;
 		display: flex;
@@ -14,31 +14,31 @@
 		position: relative;
 		margin-inline: auto;
 
-		&:not(.elementor-dragging-on-child) {
+		&:not(.refraction-dragging-on-child) {
 
-			.elementor-add-section-inner {
+			.refraction-add-section-inner {
 				border: 2px dashed var(--e-a-border-color-bold);
 				background-color: rgba(255, 255, 255, .5);
 			}
 		}
 
-		&.elementor-dragging-on-child {
+		&.refraction-dragging-on-child {
 
-			.elementor-add-section-inner {
+			.refraction-add-section-inner {
 				border: 2px dashed var(--e-a-color-primary);
 			}
 		}
 
 		&[data-view="choose-action"] {
 
-			.e-view:not( .elementor-add-new-section ) {
+			.e-view:not( .refraction-add-new-section ) {
 				display: none;
 			}
 		}
 
 		&[data-view="select-preset"] {
 
-			.e-view:not( .elementor-select-preset ) {
+			.e-view:not( .refraction-select-preset ) {
 				display: none;
 			}
 		}
@@ -65,7 +65,7 @@
 		}
 	}
 
-	.elementor-add-section-inner {
+	.refraction-add-section-inner {
 		text-align: center;
 		margin: 20px;
 		padding: 40px 0;
@@ -74,14 +74,14 @@
 		flex-grow: 1;
 	}
 
-	.elementor-add-new-section {
+	.refraction-add-new-section {
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
 		gap: 5px;
 	}
 
-	.elementor-add-section-area-button {
+	.refraction-add-section-area-button {
 		padding: 12px;
 		height: 40px;
 		width: 40px;
@@ -123,28 +123,28 @@
 		}
 	}
 
-	.elementor-add-section-drag-title,
-	.elementor-select-preset-title {
+	.refraction-add-section-drag-title,
+	.refraction-select-preset-title {
 		font-family: var(--e-a-font-family);
 		font-size: 13px;
 		line-height: 1;
 		color: var(--e-a-color-txt);
 	}
 
-	.elementor-add-section-drag-title {
+	.refraction-add-section-drag-title {
 		font-style: italic;
 		font-weight: normal;
 		margin-block-start: 10px;
 		width: 100%;
 	}
 
-	.elementor-select-preset-title {
+	.refraction-select-preset-title {
 		font-weight: 500;
 		text-transform: uppercase;
 	}
 
-	.elementor-add-section-close,
-	.elementor-add-section-back,
+	.refraction-add-section-close,
+	.refraction-add-section-back,
 	.flex-preset-button,
 	.grid-preset-button {
 		padding: unset;
@@ -158,17 +158,17 @@
 		background-color: transparent;
 	}
 
-	.elementor-add-section-close {
+	.refraction-add-section-close {
 		inset-inline-end: 40px;
 	}
 
-	.elementor-add-section-back {
+	.refraction-add-section-back {
 		inset-inline-start: 40px;
 		scale: calc(1 * var(--direction-multiplier)) 1; // Flip in RTL
 	}
 
-	.elementor-add-section-close,
-	.elementor-add-section-back {
+	.refraction-add-section-close,
+	.refraction-add-section-back {
 		position: absolute;
 		inset-block-start: 40px;
 		font-size: 20px;
@@ -200,7 +200,7 @@
 		}
 	}
 
-	.elementor-select-preset-list {
+	.refraction-select-preset-list {
 		display: flex;
 		gap: 20px;
 		align-items: center;
@@ -209,7 +209,7 @@
 		margin: 20px auto 0;
 		max-width: 700px;
 
-		.elementor-preset {
+		.refraction-preset {
 			cursor: pointer;
 			flex-basis: 90px;
 			padding: unset;
@@ -259,42 +259,42 @@
 		}
 	}
 
-	.elementor-add-section {
+	.refraction-add-section {
 
 		&[data-view="choose-action"] {
 
-			.elementor-add-section-back {
+			.refraction-add-section-back {
 				display: none;
 			}
 		}
 
 		&[data-view="select-preset"] {
 
-			.elementor-add-section-back {
+			.refraction-add-section-back {
 				display: none;
 			}
 		}
 
 		&[data-view="select-type"] {
 
-			.elementor-add-section-back {
+			.refraction-add-section-back {
 				display: none;
 			}
 		}
 	}
 
-	#elementor-add-new-section {
+	#refraction-add-new-section {
 		margin: 60px auto;
 
 		&[data-view="choose-action"] {
 
-			.elementor-add-section-close {
+			.refraction-add-section-close {
 				display: none;
 			}
 		}
 	}
 
-	.elementor-add-section-inline {
+	.refraction-add-section-inline {
 		margin: 10px auto;
 		width: 100%;
 	}

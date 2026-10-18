@@ -1,25 +1,25 @@
 <?php
-namespace Elementor\Modules\Usage;
+namespace Refraction\Modules\Usage;
 
-use Elementor\Modules\System_Info\Reporters\Base;
-use Elementor\Utils;
+use Refraction\Modules\System_Info\Reporters\Base;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor usage report.
+ * Refraction usage report.
  *
- * Elementor system report handler class responsible for generating a report for
+ * Refraction system report handler class responsible for generating a report for
  * the user.
  */
 class Usage_Reporter extends Base {
 
-	const RECALC_ACTION = 'elementor_usage_recalc';
+	const RECALC_ACTION = 'refraction_usage_recalc';
 
 	public function get_title() {
-		return esc_html__( 'Elements Usage', 'elementor' );
+		return esc_html__( 'Elements Usage', 'refraction' );
 	}
 
 	public function get_fields() {
@@ -38,7 +38,7 @@ class Usage_Reporter extends Base {
 				'_wpnonce' => $nonce,
 			] );
 
-			$title .= '<a id="elementor-usage-recalc" href="' . esc_url( $url ) . '#elementor-usage-recalc" class="box-title-tool">' . esc_html__( 'Recalculate', 'elementor' ) . '</a>';
+			$title .= '<a id="refraction-usage-recalc" href="' . esc_url( $url ) . '#refraction-usage-recalc" class="box-title-tool">' . esc_html__( 'Recalculate', 'refraction' ) . '</a>';
 		} else {
 			$title .= $this->get_remove_recalc_query_string_script();
 		}
@@ -99,7 +99,7 @@ class Usage_Reporter extends Base {
 	}
 
 	/**
-	 * Removes the "elementor_usage_recalc" param from the query string to avoid recalc every refresh.
+	 * Removes the "refraction_usage_recalc" param from the query string to avoid recalc every refresh.
 	 * When using a redirect header in place of this approach it throws an error because some components have already output some content.
 	 *
 	 * @return string
@@ -113,7 +113,7 @@ class Usage_Reporter extends Base {
 				const url = new URL( window.location );
 
 				url.hash = '';
-				url.searchParams.delete( 'elementor_usage_recalc' );
+				url.searchParams.delete( 'refraction_usage_recalc' );
 				url.searchParams.delete( '_wpnonce' );
 
 				history.replaceState( '', window.title, url.toString() );

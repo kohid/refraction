@@ -23,7 +23,7 @@ const REQUIRE_CALL_PATTERN = /(^|[^.\w$])require\(\s*(["'])([^"']+)\2\s*\)/g;
  */
 export function cjsExternalsPlugin( { resolve = resolveGlobal, onExternal } = {} ) {
 	return {
-		name: 'elementor-cjs-externals',
+		name: 'refraction-cjs-externals',
 		renderChunk( code ) {
 			let didReplace = false;
 

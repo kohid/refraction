@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Editor\Data\Globals\Endpoints;
+namespace Refraction\Core\Editor\Data\Globals\Endpoints;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 class Typography extends Base {
 	public function get_name() {
@@ -57,7 +57,7 @@ class Typography extends Base {
 			$result[ $id ]['value'] = $item;
 		}
 
-		return apply_filters( 'elementor/globals/typography/items', $result );
+		return apply_filters( 'refraction/globals/typography/items', $result );
 	}
 
 	protected function convert_db_format( $item ) {

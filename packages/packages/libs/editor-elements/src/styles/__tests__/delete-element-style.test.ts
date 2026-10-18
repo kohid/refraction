@@ -1,12 +1,12 @@
 import { createMockElement, createMockStyleDefinition } from 'test-utils';
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
 
 import { getContainer } from '../../sync/get-container';
 import { updateElementSettings } from '../../sync/update-element-settings';
 import { ELEMENT_STYLE_CHANGE_EVENT } from '../consts';
 import { deleteElementStyle } from '../delete-element-style';
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mock( '../../sync/get-container' );
 jest.mock( '../../sync/update-element-settings' );
 

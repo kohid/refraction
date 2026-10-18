@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Data\Base\Processor;
+namespace Refraction\Data\Base\Processor;
 
-use Elementor\Data\Base\Processor;
+use Refraction\Data\Base\Processor;
 
 abstract class After extends Processor {
 

@@ -6,7 +6,7 @@ import {
 	queryPropTypeUtil,
 	type QueryPropValue,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { Autocomplete, TextField } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -92,7 +92,7 @@ export const QueryChipsControl = createControl( ( props: QueryChipsControlProps 
 					/>
 				) }
 				renderInput={ ( params ) => (
-					<TextField { ...params } placeholder={ placeholder ?? __( 'Search', 'elementor' ) } />
+					<TextField { ...params } placeholder={ placeholder ?? __( 'Search', 'refraction' ) } />
 				) }
 			/>
 		</ControlActions>

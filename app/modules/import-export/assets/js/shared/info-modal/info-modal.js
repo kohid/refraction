@@ -1,4 +1,4 @@
-import ModalProvider from 'elementor-app/ui/modal/modal';
+import ModalProvider from 'refraction-app/ui/modal/modal';
 import InfoModalSection from './info-modal-section';
 import InfoModalHeading from './info-modal-heading';
 import InfoModalText from './info-modal-text';
@@ -10,7 +10,7 @@ export const infoButtonProps = {
 	id: 'info-modal',
 	className: 'e-app-export-kit-information__info-icon',
 	icon: 'eicon-info-circle',
-	text: __( 'Kit Info', 'elementor' ),
+	text: __( 'Kit Info', 'refraction' ),
 	color: 'secondary',
 	hideText: true,
 };

@@ -56,18 +56,18 @@ const promotionControls: PromotionControlTestCase[] = [
 	},
 ];
 
-const setupWindowElementor = ( promotionConfigKey: string ) => {
-	global.window.elementor = {
+const setupWindowRefraction = ( promotionConfigKey: string ) => {
+	global.window.refraction = {
 		config: {
 			v4Promotions: {
 				[ promotionConfigKey ]: mockPromotion,
 			},
 		},
-	} as typeof window.elementor;
+	} as typeof window.refraction;
 };
 
-const cleanupWindowElementor = () => {
-	delete global.window.elementor;
+const cleanupWindowRefraction = () => {
+	delete global.window.refraction;
 };
 
 describe.each( promotionControls )(
@@ -87,11 +87,11 @@ describe.each( promotionControls )(
 		};
 
 		beforeEach( () => {
-			setupWindowElementor( promotionConfigKey );
+			setupWindowRefraction( promotionConfigKey );
 		} );
 
 		afterEach( () => {
-			cleanupWindowElementor();
+			cleanupWindowRefraction();
 			jest.clearAllMocks();
 		} );
 

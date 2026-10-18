@@ -25,7 +25,7 @@ export default class ElementsManager {
 		let typeClass = this.elementTypes[ type ];
 
 		// When exact widget is not registered, return widget base instead.
-		if ( ! typeClass && elementor.widgetsCache[ type ] ) {
+		if ( ! typeClass && refraction.widgetsCache[ type ] ) {
 			typeClass = this.elementTypes.widget;
 		}
 
@@ -65,7 +65,7 @@ export default class ElementsManager {
 		} );
 
 		// TODO: Find better place, since container is not module.
-		if ( elementorCommon.config.experimentalFeatures.container ) {
+		if ( refractionCommon.config.experimentalFeatures.container ) {
 			const ContainerClass = require( './types/container' ).default;
 
 			this.registerElementType( new ContainerClass() );

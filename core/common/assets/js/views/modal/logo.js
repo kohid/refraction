@@ -1,10 +1,10 @@
 export default class extends Marionette.ItemView {
 	getTemplate() {
-		return '#tmpl-elementor-templates-modal__header__logo';
+		return '#tmpl-refraction-templates-modal__header__logo';
 	}
 
 	className() {
-		return 'elementor-templates-modal__header__logo';
+		return 'refraction-templates-modal__header__logo';
 	}
 
 	events() {

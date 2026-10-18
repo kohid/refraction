@@ -23,7 +23,7 @@ describe( 'viewport-bounds', () => {
 	it( 'returns the side panel width from the DOM', () => {
 		// Arrange.
 		const sidePanel = document.createElement( 'div' );
-		sidePanel.id = 'elementor-panel';
+		sidePanel.id = 'refraction-panel';
 		jest.spyOn( sidePanel, 'getBoundingClientRect' ).mockReturnValue( {
 			width: SIDE_PANEL_WIDTH_PX,
 		} as DOMRect );

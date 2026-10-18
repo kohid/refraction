@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Modules\ElementsColorPicker;
+namespace Refraction\Modules\ElementsColorPicker;
 
-use Elementor\Core\Experiments\Manager;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Core\Experiments\Manager;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -29,8 +29,8 @@ class Module extends BaseModule {
 		wp_enqueue_script(
 			'color-thief',
 			$this->get_js_assets_url( 'color-thief', 'assets/lib/color-thief/', true ),
-			[ 'elementor-editor' ],
-			ELEMENTOR_VERSION,
+			[ 'refraction-editor' ],
+			REFRACTION_VERSION,
 			true
 		);
 	}
@@ -41,6 +41,6 @@ class Module extends BaseModule {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'refraction/editor/after_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 }

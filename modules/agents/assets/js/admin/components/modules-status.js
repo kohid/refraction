@@ -29,7 +29,7 @@ const getScoreIcon = ( score ) => {
 	return <AlertCircleIcon color="warning" fontSize="small" />;
 };
 
-export const ModulesStatus = ( { score, label = __( 'Active', 'elementor' ), showInfoIcon = true, infoIcon } ) => {
+export const ModulesStatus = ( { score, label = __( 'Active', 'refraction' ), showInfoIcon = true, infoIcon } ) => {
 	return (
 		<Stack alignItems="flex-start" spacing={ 1 } width={ 216 }>
 			<Stack direction="row" spacing={ 1 } width="100%">

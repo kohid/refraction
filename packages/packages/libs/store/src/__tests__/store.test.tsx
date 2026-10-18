@@ -55,7 +55,7 @@ const createStoreEntities = ( { initialValue = 1 }: Config = {} ) => {
 	};
 };
 
-describe( '@elementor/store', () => {
+describe( '@refraction/store', () => {
 	it( 'should set an initial state of a slice', () => {
 		// Arrange.
 		const { wrapper } = createStoreEntities();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Agent_Skills extends Abstract_Well_Known_Endpoint {
 
 	/** Abilities API category registered by the MCP component. */
-	const ABILITY_CATEGORY = 'elementor-agents';
+	const ABILITY_CATEGORY = 'refraction-agents';
 
 	public function get_id(): string {
 		return 'agent_skills';
@@ -45,7 +45,7 @@ class Agent_Skills extends Abstract_Well_Known_Endpoint {
 		 *
 		 * @param bool $active Default false until MCP component activates.
 		 */
-		return (bool) apply_filters( 'elementor/agents/mcp_server/is_active', false );
+		return (bool) apply_filters( 'refraction/agents/mcp_server/is_active', false );
 	}
 
 	protected function generate_content(): array {
@@ -58,7 +58,7 @@ class Agent_Skills extends Abstract_Well_Known_Endpoint {
 				'name' => $this->sanitize( get_bloginfo( 'name' ) ),
 				'url'  => $home,
 			],
-			'mcp_endpoint'   => rest_url( 'elementor/agents-mcp' ),
+			'mcp_endpoint'   => rest_url( 'refraction/agents-mcp' ),
 			'auth'           => [
 				'documentation' => $home . '.well-known/auth.md',
 			],
@@ -75,7 +75,7 @@ class Agent_Skills extends Abstract_Well_Known_Endpoint {
 		 * @param array  $document The skills document.
 		 * @param string $home     The site home URL.
 		 */
-		return (array) apply_filters( 'elementor/agents/agent_skills', $document, $home );
+		return (array) apply_filters( 'refraction/agents/agent_skills', $document, $home );
 	}
 
 	private function collect_skills(): array {
@@ -105,7 +105,7 @@ class Agent_Skills extends Abstract_Well_Known_Endpoint {
 		 * @param array[] $skills   Collected skill entries.
 		 * @param string  $category Ability category queried.
 		 */
-		return (array) apply_filters( 'elementor/agents/agent_skills/entries', $skills, self::ABILITY_CATEGORY );
+		return (array) apply_filters( 'refraction/agents/agent_skills/entries', $skills, self::ABILITY_CATEGORY );
 	}
 
 	private function get_scopes(): array {
@@ -115,6 +115,6 @@ class Agent_Skills extends Abstract_Well_Known_Endpoint {
 		 *
 		 * @see Oauth_Protected_Resource::get_scopes() — same filter.
 		 */
-		return (array) apply_filters( 'elementor/agents/oauth/scopes', [] );
+		return (array) apply_filters( 'refraction/agents/oauth/scopes', [] );
 	}
 }

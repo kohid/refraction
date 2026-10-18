@@ -1,5 +1,5 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Group control interface.
  *
- * An interface for Elementor group control.
+ * An interface for Refraction group control.
  *
  * @since 1.0.0
  */

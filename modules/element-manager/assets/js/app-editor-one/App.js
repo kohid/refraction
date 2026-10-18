@@ -76,7 +76,7 @@ export const App = () => {
 				color="text.secondary"
 				sx={ { marginBlockEnd: 2.5, maxWidth: 800 } }
 			>
-				{ __( 'Here\'s where you can fine-tune Elementor to your workflow. Disable elements you don\'t use for a cleaner interface, more focused creative experience, and improved performance.', 'elementor' ) }
+				{ __( 'Here\'s where you can fine-tune Refraction to your workflow. Disable elements you don\'t use for a cleaner interface, more focused creative experience, and improved performance.', 'refraction' ) }
 				{ ' ' }
 				<Link
 					href="https://go.elementor.com/wp-dash-element-manager/"
@@ -84,7 +84,7 @@ export const App = () => {
 					target="_blank"
 					color="info.light"
 				>
-					{ __( 'Learn More', 'elementor' ) }
+					{ __( 'Learn More', 'refraction' ) }
 				</Link>
 			</Typography>
 
@@ -146,7 +146,7 @@ export const App = () => {
 				open={ isSnackbarOpen }
 				autoHideDuration={ 6000 }
 				onClose={ () => setIsSnackbarOpen( false ) }
-				message={ __( 'We saved your changes.', 'elementor' ) }
+				message={ __( 'We saved your changes.', 'refraction' ) }
 				anchorOrigin={ {
 					vertical: 'bottom',
 					horizontal: 'center',

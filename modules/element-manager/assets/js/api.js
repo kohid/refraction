@@ -1,7 +1,7 @@
 export const saveDisabledWidgets = async ( widgetsDisabled, elementsRestriction = {} ) => {
 	try {
 		const bodyData = {
-			action: 'elementor_element_manager_save_disabled_elements',
+			action: 'refraction_element_manager_save_disabled_elements',
 			nonce: eElementManagerConfig.nonce,
 			widgets: JSON.stringify( widgetsDisabled ),
 		};
@@ -30,7 +30,7 @@ export const getAdminAppData = async () => {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: new URLSearchParams( {
-				action: 'elementor_element_manager_get_admin_app_data',
+				action: 'refraction_element_manager_get_admin_app_data',
 				nonce: eElementManagerConfig.nonce,
 			} ),
 		} );
@@ -52,7 +52,7 @@ export const getUsageWidgets = async () => {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: new URLSearchParams( {
-				action: 'elementor_element_manager_get_widgets_usage',
+				action: 'refraction_element_manager_get_widgets_usage',
 				nonce: eElementManagerConfig.nonce,
 			} ),
 		} );
@@ -74,7 +74,7 @@ export const markNoticeViewed = async ( noticeId, nonce ) => {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: new URLSearchParams( {
-				action: 'elementor_set_admin_notice_viewed',
+				action: 'refraction_set_admin_notice_viewed',
 				notice_id: noticeId,
 				_wpnonce: nonce,
 			} ),

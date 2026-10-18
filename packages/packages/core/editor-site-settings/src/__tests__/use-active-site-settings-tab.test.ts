@@ -1,10 +1,10 @@
-import { __privateUseListenTo as useListenTo } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo } from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import { useActiveSiteSettingsTab } from '../hooks/use-active-site-settings-tab';
 import { registerSiteSettingsTab } from '../tabs';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateUseListenTo: jest.fn( ( _events, callback: () => unknown ) => callback() ),
 	routeCloseEvent: jest.fn( ( route: string ) => `route:close:${ route }` ),
 	routeOpenEvent: jest.fn( ( route: string ) => `route:open:${ route }` ),

@@ -1,6 +1,6 @@
 export type DesignSystemTab = 'defaults' | 'variables' | 'classes';
 
-const STORAGE_KEY = 'elementor_editor_design_system_active_tab';
+const STORAGE_KEY = 'refraction_editor_design_system_active_tab';
 
 function readStoredTab(): DesignSystemTab {
 	if ( typeof window === 'undefined' ) {

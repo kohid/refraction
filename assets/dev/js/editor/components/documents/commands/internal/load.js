@@ -1,5 +1,5 @@
 import Document from '../../document';
-import Heartbeat from 'elementor-editor-utils/heartbeat';
+import Heartbeat from 'refraction-editor-utils/heartbeat';
 
 export class Load extends $e.modules.CommandInternalBase {
 	validateArgs( args = {} ) {
@@ -9,55 +9,55 @@ export class Load extends $e.modules.CommandInternalBase {
 	apply( args ) {
 		const { config, setAsInitial = false, shouldScroll = true, shouldNavigateToDefaultRoute = true } = args;
 
-		if ( elementorCommon.config.experimentalFeatures.additional_custom_breakpoints ) {
+		if ( refractionCommon.config.experimentalFeatures.additional_custom_breakpoints ) {
 			// When the Responsive Optimization experiment is active, the responsive controls are generated on the
 			// JS side instead of the PHP.
-			config.settings.controls = elementor.generateResponsiveControls( config.settings.controls );
+			config.settings.controls = refraction.generateResponsiveControls( config.settings.controls );
 		}
 
-		elementor.config.document = config;
+		refraction.config.document = config;
 
-		elementor.setAjax();
+		refraction.setAjax();
 
-		elementor.addWidgetsCache( config.widgets );
+		refraction.addWidgetsCache( config.widgets );
 
-		elementor.templates.init();
+		refraction.templates.init();
 
 		const document = new Document( config );
 
-		elementor.documents.add( document );
+		refraction.documents.add( document );
 
 		// Must set current before create a container.
-		elementor.documents.setCurrent( document );
+		refraction.documents.setCurrent( document );
 
 		if ( setAsInitial ) {
-			elementor.documents.setInitialById( document.id );
+			refraction.documents.setInitialById( document.id );
 		}
 
-		elementor.settings.page = new elementor.settings.modules.page( config.settings );
+		refraction.settings.page = new refraction.settings.modules.page( config.settings );
 
-		document.container = elementor.settings.page.getEditedView().getContainer();
+		document.container = refraction.settings.page.getEditedView().getContainer();
 
 		// Reference container back to document.
 		document.container.document = document;
 
-		elementor.heartbeat = new Heartbeat( document );
+		refraction.heartbeat = new Heartbeat( document );
 
-		const isOldPageVersion = elementor.config.document.version &&
-			elementor.helpers.compareVersions( elementor.config.document.version, '2.5.0', '<' );
+		const isOldPageVersion = refraction.config.document.version &&
+			refraction.helpers.compareVersions( refraction.config.document.version, '2.5.0', '<' );
 
-		if ( ! elementor.config.user.introduction.flexbox && isOldPageVersion ) {
-			elementor.showFlexBoxAttentionDialog();
+		if ( ! refraction.config.user.introduction.flexbox && isOldPageVersion ) {
+			refraction.showFlexBoxAttentionDialog();
 		}
 
-		if ( elementor.loaded ) {
+		if ( refraction.loaded ) {
 			// TODO: Find better solution - Fix issue when globals does not render after saving from kit.
 			// The issue is that the css-parser is depends upon cache and cache is not available during this time.
 			return $e.data.get( 'globals/index' ).then( () => {
 				if ( setAsInitial ) {
 					// There is no need to attach preview when the iframe is reloaded. It will be triggered
 					// automatically after the iframe finishes loading (see `EditorBase.onPreviewLoaded()`).
-					elementor.reloadPreview();
+					refraction.reloadPreview();
 
 					return Promise.resolve();
 				}

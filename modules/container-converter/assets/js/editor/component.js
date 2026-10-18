@@ -13,8 +13,8 @@ export default class extends $e.modules.ComponentBase {
 	 * @return {void}
 	 */
 	bindEvents() {
-		elementor.channels.editor.on( 'elementorContainerConverter:convert', ( { container, el } ) => {
-			const button = el.querySelector( '.elementor-button' );
+		refraction.channels.editor.on( 'refractionContainerConverter:convert', ( { container, el } ) => {
+			const button = el.querySelector( '.refraction-button' );
 			const loadingClass = 'e-loading';
 
 			button.classList.add( loadingClass );
@@ -31,8 +31,8 @@ export default class extends $e.modules.ComponentBase {
 				button.classList.remove( loadingClass );
 				button.setAttribute( 'disabled', true );
 
-				elementor.notifications.showToast( {
-					message: __( 'Your changes have been updated.', 'elementor' ),
+				refraction.notifications.showToast( {
+					message: __( 'Your changes have been updated.', 'refraction' ),
 				} );
 			} );
 		} );

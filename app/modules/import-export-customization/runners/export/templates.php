@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Export;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Export;
 
-use Elementor\Core\Base\Document;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils;
-use Elementor\Modules\Library\Documents\Library_Document;
+use Refraction\Core\Base\Document;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils;
+use Refraction\Modules\Library\Documents\Library_Document;
 
 class Templates extends Export_Runner_Base {
 
@@ -33,7 +33,7 @@ class Templates extends Export_Runner_Base {
 	}
 
 	private function export_with_customization( array $data, array $customization ) {
-		$result = apply_filters( 'elementor/import-export-customization/export/templates/customization', null, $data, $customization, $this );
+		$result = apply_filters( 'refraction/import-export-customization/export/templates/customization', null, $data, $customization, $this );
 
 		if ( is_array( $result ) ) {
 			return $result;
@@ -98,7 +98,7 @@ class Templates extends Export_Runner_Base {
 		 * @param array|null $customization The customization settings for templates.
 		 */
 		$customization = $data['customization']['templates'] ?? null;
-		$export_data = apply_filters( 'elementor/import-export-customization/export/templates_data', $export_data, $data, $customization );
+		$export_data = apply_filters( 'refraction/import-export-customization/export/templates_data', $export_data, $data, $customization );
 
 		return $export_data;
 	}

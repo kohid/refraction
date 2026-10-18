@@ -1,5 +1,5 @@
-import ComponentBase from 'elementor-api/modules/component-base';
-import { cloneElementTree } from 'elementor/packages/packages/libs/editor-elements/src/sync/clone-element-tree';
+import ComponentBase from 'refraction-api/modules/component-base';
+import { cloneElementTree } from 'refraction/packages/packages/libs/editor-elements/src/sync/clone-element-tree';
 
 import * as components from './';
 import * as hooks from './hooks/';
@@ -61,7 +61,7 @@ export default class Component extends ComponentBase {
 			},
 			findViewById: ( id ) => {
 				const elements = this.utils.findViewRecursive(
-					elementor.getPreviewView().children,
+					refraction.getPreviewView().children,
 					'id',
 					id,
 					false,
@@ -78,7 +78,7 @@ export default class Component extends ComponentBase {
 
 				return result;
 			},
-			findModelById: ( id, collection = elementor.elementsModel.get( 'elements' ) ) => {
+			findModelById: ( id, collection = refraction.elementsModel.get( 'elements' ) ) => {
 				for ( const model of collection?.models ?? [] ) {
 					const found = model.get( 'id' ) === id
 						? model

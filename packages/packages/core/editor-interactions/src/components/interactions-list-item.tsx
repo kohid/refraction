@@ -43,11 +43,11 @@ export const InteractionsListItem = ( {
 			<Tabs
 				size="small"
 				variant="fullWidth"
-				aria-label={ __( 'Interaction', 'elementor' ) }
+				aria-label={ __( 'Interaction', 'refraction' ) }
 				{ ...getTabsProps() }
 			>
-				<Tab label={ __( 'Details', 'elementor' ) } { ...getTabProps( 'details' ) } />
-				<Tab label={ __( 'Settings', 'elementor' ) } { ...getTabProps( 'settings' ) } />
+				<Tab label={ __( 'Details', 'refraction' ) } { ...getTabProps( 'details' ) } />
+				<Tab label={ __( 'Settings', 'refraction' ) } { ...getTabProps( 'settings' ) } />
 			</Tabs>
 
 			<Divider />

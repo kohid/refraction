@@ -1,5 +1,5 @@
-import Console from 'elementor-api/utils/console';
-import Module from 'elementor-assets-js/modules/imports/module.js';
+import Console from 'refraction-api/utils/console';
+import Module from 'refraction-assets-js/modules/imports/module.js';
 import forceMethodImplementation from '../../utils/force-method-implementation';
 
 /**
@@ -191,7 +191,7 @@ export default class HooksBase extends Module {
 	 */
 	checkInstance( instance ) {
 		if ( instance.getType() !== this.getType() ) {
-			throw new Error( `invalid instance, please use: 'elementor-api/modules/hook-base.js'. ` );
+			throw new Error( `invalid instance, please use: 'refraction-api/modules/hook-base.js'. ` );
 		}
 	}
 

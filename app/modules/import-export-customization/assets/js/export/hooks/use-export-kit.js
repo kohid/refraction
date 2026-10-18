@@ -17,7 +17,7 @@ export const useExportKit = ( { includes, kitInfo, customization, isExporting, d
 	const processMedia = useCallback( async ( exportData, mediaUrls, kit ) => {
 		setStatus( STATUS_PROCESSING_MEDIA );
 
-		const baseUrl = elementorAppConfig[ 'import-export-customization' ].restApiBaseUrl;
+		const baseUrl = refractionAppConfig[ 'import-export-customization' ].restApiBaseUrl;
 		const mediaResponse = await fetch( `${ baseUrl }/process-media`, {
 			method: 'POST',
 			headers: {
@@ -99,7 +99,7 @@ export const useExportKit = ( { includes, kitInfo, customization, isExporting, d
 				exportData.screenShotBlob = screenshot;
 			}
 
-			const baseUrl = elementorAppConfig[ 'import-export-customization' ].restApiBaseUrl;
+			const baseUrl = refractionAppConfig[ 'import-export-customization' ].restApiBaseUrl;
 			const exportUrl = `${ baseUrl }/export`;
 
 			const response = await fetch( exportUrl, {

@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Modules\WpCli;
+namespace Refraction\Modules\WpCli;
 
-use Elementor\Core\Logger\Loggers\Db;
-use Elementor\Core\Logger\Items\Log_Item_Interface;
+use Refraction\Core\Logger\Loggers\Db;
+use Refraction\Core\Logger\Items\Log_Item_Interface;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

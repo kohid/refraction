@@ -1,5 +1,5 @@
 import { mockStylesSchema } from 'test-utils';
-import { styleTransformersRegistry } from '@elementor/editor-canvas';
+import { styleTransformersRegistry } from '@refraction/editor-canvas';
 import {
 	backdropFilterPropTypeUtil,
 	backgroundColorOverlayPropTypeUtil,
@@ -32,17 +32,17 @@ import {
 	sizePropTypeUtil,
 	stringPropTypeUtil,
 	strokePropTypeUtil,
-} from '@elementor/editor-props';
-import { getMediaAttachment } from '@elementor/wp-media';
+} from '@refraction/editor-props';
+import { getMediaAttachment } from '@refraction/wp-media';
 
 import { initStyleTransformers } from '../init-style-transformers';
 import { createPropsResolver } from '../renderers/create-props-resolver';
 import { mockAttachmentData } from './mock-attachment-data';
 
-jest.mock( '@elementor/wp-media' );
+jest.mock( '@refraction/wp-media' );
 jest.mock( '../style-commands/init-style-commands' );
 jest.mock( '../prevent-link-in-link-commands' );
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 
 type Payload = {
 	name: string;

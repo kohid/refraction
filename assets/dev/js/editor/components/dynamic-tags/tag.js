@@ -5,7 +5,7 @@ module.exports = Marionette.ItemView.extend( {
 	tagName: 'span',
 
 	className() {
-		return 'elementor-tag';
+		return 'refraction-tag';
 	},
 
 	getTemplate() {
@@ -13,7 +13,7 @@ module.exports = Marionette.ItemView.extend( {
 			return false;
 		}
 
-		return Marionette.TemplateCache.get( '#tmpl-elementor-tag-' + this.getOption( 'name' ) + '-content' );
+		return Marionette.TemplateCache.get( '#tmpl-refraction-tag-' + this.getOption( 'name' ) + '-content' );
 	},
 
 	initialize() {
@@ -25,7 +25,7 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	getConfig( key ) {
-		var config = elementor.dynamicTags.getConfig( 'tags.' + this.getOption( 'name' ) );
+		var config = refraction.dynamicTags.getConfig( 'tags.' + this.getOption( 'name' ) );
 
 		if ( key ) {
 			return config[ key ];
@@ -39,10 +39,10 @@ module.exports = Marionette.ItemView.extend( {
 			data;
 
 		if ( ! this.hasTemplate ) {
-			data = elementor.dynamicTags.loadTagDataFromCache( this );
+			data = refraction.dynamicTags.loadTagDataFromCache( this );
 
 			if ( undefined === data ) {
-				throw new Error( elementor.dynamicTags.CACHE_KEY_NOT_FOUND_ERROR );
+				throw new Error( refraction.dynamicTags.CACHE_KEY_NOT_FOUND_ERROR );
 			}
 		}
 
@@ -64,6 +64,6 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	onRender() {
-		this.el.id = 'elementor-tag-' + this.getOption( 'id' );
+		this.el.id = 'refraction-tag-' + this.getOption( 'id' );
 	},
 } );

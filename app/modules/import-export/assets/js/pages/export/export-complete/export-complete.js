@@ -8,9 +8,9 @@ import Layout from '../../../templates/layout';
 import ActionsFooter from '../../../shared/actions-footer/actions-footer';
 import WizardStep from '../../../ui/wizard-step/wizard-step';
 import KitData from '../../../shared/kit-data/kit-data';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
-import Button from 'elementor-app/ui/molecules/button';
-import DashboardButton from 'elementor-app/molecules/dashboard-button';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
+import Button from 'refraction-app/ui/molecules/button';
+import DashboardButton from 'refraction-app/molecules/dashboard-button';
 
 import './export-complete.scss';
 
@@ -26,13 +26,13 @@ export default function ExportComplete() {
 				{ isSavedToCloud
 					? (
 						<Button
-							text={ __( 'Open library', 'elementor' ) }
+							text={ __( 'Open library', 'refraction' ) }
 							variant="contained"
 							color="primary"
 							url="/kit-library/cloud"
 						/>
 					)
-					: <DashboardButton text={ __( 'Done', 'elementor' ) } />
+					: <DashboardButton text={ __( 'Done', 'refraction' ) } />
 				}
 			</ActionsFooter>
 		),
@@ -40,7 +40,7 @@ export default function ExportComplete() {
 			if ( ! downloadLink.current ) {
 				const link = document.createElement( 'a' );
 
-				const defaultKitName = 'elementor-kit';
+				const defaultKitName = 'refraction-kit';
 				const kitName = exportContext.data.kitInfo?.title || defaultKitName;
 				const sanitizedKitName = kitName
 					.replace( INVALID_FILENAME_CHARS, '' )
@@ -58,17 +58,17 @@ export default function ExportComplete() {
 		};
 	const getDownloadLink = () => (
 		<InlineLink onClick={ downloadFile } italic>
-			{ __( 'Download manually', 'elementor' ) }
+			{ __( 'Download manually', 'refraction' ) }
 		</InlineLink>
 	);
 	const getShowMeHowLink = () => (
 		<InlineLink url="https://go.elementor.com/app-what-are-kits" italic>
-			{ __( 'Show me how', 'elementor' ) }
+			{ __( 'Show me how', 'refraction' ) }
 		</InlineLink>
 	);
 	const getTakeMeThereLink = () => (
 		<InlineLink url="/kit-library/cloud" italic>
-			{ __( 'Take me there', 'elementor' ) }
+			{ __( 'Take me there', 'refraction' ) }
 		</InlineLink>
 	);
 
@@ -85,32 +85,32 @@ export default function ExportComplete() {
 
 	const heading = useMemo( () => {
 		return isSavedToCloud
-			? __( 'Your website template is now saved to the library!', 'elementor' )
-			: __( 'Your .zip file is ready', 'elementor' );
+			? __( 'Your website template is now saved to the library!', 'refraction' )
+			: __( 'Your .zip file is ready', 'refraction' );
 	}, [ isSavedToCloud ] );
 
 	const description = useMemo( () => {
 		return isSavedToCloud
 			? (
 				<>
-					{ __( 'You can find it in the My Website Templates tab.', 'elementor' ) } { getTakeMeThereLink() }
+					{ __( 'You can find it in the My Website Templates tab.', 'refraction' ) } { getTakeMeThereLink() }
 				</>
 
 			)
-			: __( 'Once the download is complete, you can upload it to be used for other sites.', 'elementor' );
+			: __( 'Once the download is complete, you can upload it to be used for other sites.', 'refraction' );
 	}, [ isSavedToCloud ] );
 
 	const getNotice = () => (
 		isSavedToCloud
 			? (
 				<>
-					{ __( 'Build sites faster with Website Templates.', 'elementor' ) } { getShowMeHowLink() }
+					{ __( 'Build sites faster with Website Templates.', 'refraction' ) } { getShowMeHowLink() }
 				</>
 
 			)
 			: (
 				<>
-					{ __( 'Is the automatic download not starting?', 'elementor' ) } { getDownloadLink() }
+					{ __( 'Is the automatic download not starting?', 'refraction' ) } { getDownloadLink() }
 				</>
 			)
 
@@ -119,7 +119,7 @@ export default function ExportComplete() {
 	return (
 		<Layout type="export" footer={ getFooter() }>
 			<WizardStep
-				image={ elementorAppConfig.assets_url + 'images/go-pro.svg' }
+				image={ refractionAppConfig.assets_url + 'images/go-pro.svg' }
 				heading={ heading }
 				description={ description }
 				notice={ getNotice() }

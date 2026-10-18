@@ -29,7 +29,7 @@ jest.mock( '../../../../../hooks/use-user', () => ( {
 	__esModule: true,
 } ) );
 
-describe( '@elementor/editor-site-navigation - SetHome', () => {
+describe( '@refraction/editor-site-navigation - SetHome', () => {
 	afterAll( () => {
 		jest.clearAllMocks();
 	} );

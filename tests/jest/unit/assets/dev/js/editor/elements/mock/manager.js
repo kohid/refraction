@@ -1,5 +1,5 @@
 /**
- * @typedef {import('elementor/assets/dev/js/editor/elements/manager')} ElementsManager
+ * @typedef {import('refraction/assets/dev/js/editor/elements/manager')} ElementsManager
  */
 
 /**
@@ -18,7 +18,7 @@ export async function setupMock() {
 		Model: MockBackbone.Model,
 	};
 
-	global.elementorModules = {
+	global.refractionModules = {
 		editor: {
 			elements: {
 				models: {
@@ -44,7 +44,7 @@ export async function setupMock() {
 		},
 	};
 
-	jest.mock( 'elementor-elements/models/base-element-model', () => {
+	jest.mock( 'refraction-elements/models/base-element-model', () => {
 		return class {
 			static extend() {
 				return MockBackbone.Model;
@@ -72,7 +72,7 @@ export async function setupMock() {
 		Behavior: class {},
 	};
 
-	global.elementorCommon = {
+	global.refractionCommon = {
 		config: {
 			experimentalFeatures: {
 				container: false,
@@ -86,13 +86,13 @@ export async function setupMock() {
 
 	global.jQuery = {};
 
-	jest.mock( 'elementor-views/base-container', () => {
+	jest.mock( 'refraction-views/base-container', () => {
 		return {
 			extend: () => class {},
 		};
 	} );
 
-	jest.mock( 'elementor-elements/views/base', () => {
+	jest.mock( 'refraction-elements/views/base', () => {
 		return class {
 			static extend() {
 				return class {};
@@ -100,17 +100,17 @@ export async function setupMock() {
 		};
 	} );
 
-	jest.mock( 'elementor-elements/views/container/empty-component', () => {} );
+	jest.mock( 'refraction-elements/views/container/empty-component', () => {} );
 
-	return new ( await import( 'elementor-elements/manager' ) ).default;
+	return new ( await import( 'refraction-elements/manager' ) ).default;
 }
 
 export function freeMock() {
 	delete global.Backbone;
-	delete global.elementorModules;
+	delete global.refractionModules;
 	delete global._;
 	delete global.Marionette;
-	delete global.elementorCommon;
+	delete global.refractionCommon;
 	delete global.navigator;
 	delete global.window;
 	delete global.jQuery;

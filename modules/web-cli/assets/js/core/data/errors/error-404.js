@@ -1,5 +1,5 @@
 import BaseError from './base-error';
-import Console from 'elementor-api/utils/console';
+import Console from 'refraction-api/utils/console';
 
 export class Error404 extends BaseError {
 	static getHTTPErrorCode() {

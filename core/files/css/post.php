@@ -1,21 +1,21 @@
 <?php
-namespace Elementor\Core\Files\CSS;
+namespace Refraction\Core\Files\CSS;
 
-use Elementor\Controls_Stack;
-use Elementor\Core\DynamicTags\Dynamic_CSS;
-use Elementor\Core\Kits\Manager;
-use Elementor\Core\Frontend\Widget_Content_Render_Mode;
-use Elementor\Element_Base;
-use Elementor\Plugin;
+use Refraction\Controls_Stack;
+use Refraction\Core\DynamicTags\Dynamic_CSS;
+use Refraction\Core\Kits\Manager;
+use Refraction\Core\Frontend\Widget_Content_Render_Mode;
+use Refraction\Element_Base;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor post CSS file.
+ * Refraction post CSS file.
  *
- * Elementor CSS file handler class is responsible for generating the single
+ * Refraction CSS file handler class is responsible for generating the single
  * post CSS file.
  *
  * @since 1.2.0
@@ -23,11 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Post extends Base {
 
 	/**
-	 * Elementor post CSS file prefix.
+	 * Refraction post CSS file prefix.
 	 */
 	const FILE_PREFIX = 'post-';
 
-	const META_KEY = '_elementor_css';
+	const META_KEY = '_refraction_css';
 
 	/**
 	 * Post ID.
@@ -99,7 +99,7 @@ class Post extends Base {
 	 * @return string Unique element selector.
 	 */
 	public function get_element_unique_selector( Element_Base $element ) {
-		return '.elementor-' . $this->post_id . ' .elementor-element' . $element->get_unique_selector();
+		return '.refraction-' . $this->post_id . ' .refraction-element' . $element->get_unique_selector();
 	}
 
 	/**
@@ -189,9 +189,9 @@ class Post extends Base {
 	/**
 	 * Enqueue CSS.
 	 *
-	 * Enqueue the post CSS file in Elementor.
+	 * Enqueue the post CSS file in Refraction.
 	 *
-	 * This method ensures that the post was actually built with elementor before
+	 * This method ensures that the post was actually built with refraction before
 	 * enqueueing the post CSS file.
 	 *
 	 * @since 1.2.2
@@ -200,7 +200,7 @@ class Post extends Base {
 	public function enqueue() {
 		$document = Plugin::$instance->documents->get( $this->post_id );
 
-		if ( ! $document || ! $document->is_built_with_elementor() ) {
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
 			return;
 		}
 
@@ -245,7 +245,7 @@ class Post extends Base {
 	 * @return array Name of the stylesheet.
 	 */
 	protected function get_enqueue_dependencies() {
-		return [ 'elementor-frontend' ];
+		return [ 'refraction-frontend' ];
 	}
 
 	/**
@@ -259,7 +259,7 @@ class Post extends Base {
 	 * @return string Name of the stylesheet.
 	 */
 	protected function get_inline_dependency() {
-		return 'elementor-frontend';
+		return 'refraction-frontend';
 	}
 
 	/**
@@ -273,7 +273,7 @@ class Post extends Base {
 	 * @return string CSS file handle ID.
 	 */
 	protected function get_file_handle_id() {
-		return 'elementor-post-' . $this->post_id;
+		return 'refraction-post-' . $this->post_id;
 	}
 
 	/**
@@ -301,7 +301,7 @@ class Post extends Base {
 		 * @param Post         $this    The post CSS file.
 		 * @param Element_Base $element The element.
 		 */
-		do_action( 'elementor/element/before_parse_css', $this, $element );
+		do_action( 'refraction/element/before_parse_css', $this, $element );
 
 		$this->render_element_global_styles( $element );
 		$this->render_element_styles( $element );
@@ -316,7 +316,7 @@ class Post extends Base {
 		 * @param Post         $this    The post CSS file.
 		 * @param Element_Base $element The element.
 		 */
-		do_action( 'elementor/element/parse_css', $this, $element );
+		do_action( 'refraction/element/parse_css', $this, $element );
 	}
 
 	private function render_element_styles( Element_Base $element ) {
@@ -360,7 +360,7 @@ class Post extends Base {
 				$controls,
 				function( $control ) {},
 				[ '{{WRAPPER}}' ],
-				[ '.elementor-widget-' . $element->get_name() ],
+				[ '.refraction-widget-' . $element->get_name() ],
 				$global_values
 			);
 		}

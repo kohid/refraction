@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type DropShadowFilterPropValue, type FilterItemPropValue } from '@elementor/editor-props';
+import { type DropShadowFilterPropValue, type FilterItemPropValue } from '@refraction/editor-props';
 import { Box } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -17,7 +17,7 @@ export const DropShadowItemLabel = ( { value }: { value: FilterItemPropValue } )
 	return (
 		<Box component="span">
 			<Box component="span" style={ { textTransform: 'capitalize' } }>
-				{ __( 'Drop shadow:', 'elementor' ) }
+				{ __( 'Drop shadow:', 'refraction' ) }
 			</Box>
 			{ ` ${ labels.join( ' ' ) }` }
 		</Box>

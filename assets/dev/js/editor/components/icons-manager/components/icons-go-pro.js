@@ -3,16 +3,16 @@ import { Component } from 'react';
 class IconsGoPro extends Component {
 	render = () => {
 		return (
-			<div id="elementor-icons-manager__promotion">
-				<i id="elementor-icons-manager__promotion__icon" className="eicon-nerd"></i>
-				<div id="elementor-icons-manager__promotion__text">{ __( 'Become a Pro user to upload unlimited font icon folders to your website.', 'elementor' ) }</div>
+			<div id="refraction-icons-manager__promotion">
+				<i id="refraction-icons-manager__promotion__icon" className="eicon-nerd"></i>
+				<div id="refraction-icons-manager__promotion__text">{ __( 'Become a Pro user to upload unlimited font icon folders to your website.', 'refraction' ) }</div>
 				<a
-					href={ elementor.config.icons.goProURL }
-					id="elementor-icons-manager__promotion__link"
-					className="elementor-button go-pro"
+					href={ refraction.config.icons.goProURL }
+					id="refraction-icons-manager__promotion__link"
+					className="refraction-button go-pro"
 					target="_blank"
 					rel="noopener noreferrer"
-				>{ __( 'Upgrade Now', 'elementor' ) }</a>
+				>{ __( 'Upgrade Now', 'refraction' ) }</a>
 			</div>
 		);
 	};

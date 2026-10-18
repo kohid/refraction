@@ -22,7 +22,7 @@ Marionette.Region.prototype.attachHtml = () => {
 Marionette.CompositeView.prototype.getChildViewContainer = ( containerView ) => {
 	containerView.$childViewContainer = jQuery( containerView.el );
 	containerView.$childViewContainer.appendTo(
-		jQuery( '#elementor-preview-iframe' ).contents().find( '.elementor.elementor-1' ),
+		jQuery( '#refraction-preview-iframe' ).contents().find( '.refraction.refraction-1' ),
 	);
 	return containerView.$childViewContainer;
 };

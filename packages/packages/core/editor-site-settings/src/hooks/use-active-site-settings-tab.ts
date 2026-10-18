@@ -3,7 +3,7 @@ import {
 	routeCloseEvent,
 	routeOpenEvent,
 	v1ReadyEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 import { SITE_SETTINGS_ROUTE_PREFIX } from '../consts';
 import { getSiteSettingsTab } from '../tabs';

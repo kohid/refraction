@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Readability;
+namespace Refraction\Modules\Agents\Components\Readability;
 
-use Elementor\Modules\Agents\Agent_Ready_Settings;
-use Elementor\Modules\Agents\Classes\Feature_Component;
-use Elementor\Modules\Agents\Classes\Post_Noindex;
+use Refraction\Modules\Agents\Agent_Ready_Settings;
+use Refraction\Modules\Agents\Classes\Feature_Component;
+use Refraction\Modules\Agents\Classes\Post_Noindex;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * composed of YAML front matter followed by extracted body content.
  *
  * Also serves as a fallback for `?format=markdown` / `Accept: text/markdown`
- * requests that the markdown-render module bailed on (non-Elementor pages),
+ * requests that the markdown-render module bailed on (non-Refraction pages),
  * and adds missing response headers to pages served by markdown-render.
  */
 class Markdown_Endpoint extends Feature_Component {
@@ -63,8 +63,8 @@ class Markdown_Endpoint extends Feature_Component {
 		add_action( 'parse_request', [ $this, 'on_parse_request' ], 1 );
 		add_action( 'template_redirect', [ $this, 'on_md_path_redirect' ], 1 );
 		add_action( 'template_redirect', [ $this, 'on_markdown_request_fallback' ], 2 );
-		add_action( 'elementor/markdown/headers', [ $this, 'on_markdown_headers' ] );
-		add_filter( 'elementor/markdown/should_serve', [ $this, 'filter_should_serve' ], 10, 2 );
+		add_action( 'refraction/markdown/headers', [ $this, 'on_markdown_headers' ] );
+		add_filter( 'refraction/markdown/should_serve', [ $this, 'filter_should_serve' ], 10, 2 );
 	}
 
 	// -------------------------------------------------------------------------
@@ -152,10 +152,10 @@ class Markdown_Endpoint extends Feature_Component {
 
 	/**
 	 * Fallback handler for `?format=markdown` or `Accept: text/markdown`
-	 * requests on non-Elementor pages.
+	 * requests on non-Refraction pages.
 	 *
 	 * The markdown-render module fires at `template_redirect` priority 1 and
-	 * bails (returns without exiting) when the page is not built with Elementor.
+	 * bails (returns without exiting) when the page is not built with Refraction.
 	 * This handler runs at priority 2 to catch those cases.
 	 *
 	 * Fires at `template_redirect` priority 2.
@@ -185,12 +185,12 @@ class Markdown_Endpoint extends Feature_Component {
 			return;
 		}
 
-		// Only handle pages not built with Elementor — those are already
+		// Only handle pages not built with Refraction — those are already
 		// handled (or intentionally skipped) by markdown-render.
-		if ( class_exists( '\Elementor\Plugin' ) ) {
-			$document = \Elementor\Plugin::$instance->documents->get( $post_id );
+		if ( class_exists( '\Refraction\Plugin' ) ) {
+			$document = \Refraction\Plugin::$instance->documents->get( $post_id );
 
-			if ( $document && $document->is_built_with_elementor() ) {
+			if ( $document && $document->is_built_with_refraction() ) {
 				return;
 			}
 		}
@@ -207,7 +207,7 @@ class Markdown_Endpoint extends Feature_Component {
 	 * already does those, and applying them here would block editor previews
 	 * of drafts.
 	 *
-	 * Fires on the `elementor/markdown/should_serve` filter.
+	 * Fires on the `refraction/markdown/should_serve` filter.
 	 *
 	 * @param bool     $should_serve Whether markdown-render should attempt to serve.
 	 * @param \WP_Post $post         The current post.
@@ -224,7 +224,7 @@ class Markdown_Endpoint extends Feature_Component {
 	 * Add the three response headers that markdown-render does not emit but
 	 * that agents and crawlers expect on `.md` / markdown responses.
 	 *
-	 * Fires on the `elementor/markdown/headers` action, which is triggered by
+	 * Fires on the `refraction/markdown/headers` action, which is triggered by
 	 * markdown-render just before it sends its own headers.
 	 *
 	 * @param int $post_id The post being served.

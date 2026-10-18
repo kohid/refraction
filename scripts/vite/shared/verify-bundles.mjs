@@ -11,15 +11,15 @@ import { ASSETS_JS } from './paths.mjs';
  */
 const STATIC_DYNAMIC_IMPORT = /\bimport\(\s*(["'`])([^"'`$]+)\1\s*\)/g;
 
-const RUNTIME_ELEMENTOR_ONE_LOCALE_IMPORT = new RegExp( 'import\\s*\\(\\s*`\\.\\/locales\\/\\$\\{' );
+const RUNTIME_REFRACTION_ONE_LOCALE_IMPORT = new RegExp( 'import\\s*\\(\\s*`\\.\\/locales\\/\\$\\{' );
 
 const EDITOR_ONE_TOP_BAR_BUNDLE = 'editor-one-top-bar.min.js';
 
-const INLINED_ELEMENTOR_ONE_LOCALE_MAP = /"he-IL\/common":\{/;
+const INLINED_REFRACTION_ONE_LOCALE_MAP = /"he-IL\/common":\{/;
 
 /**
  * Only the minified bundles are scanned. The unminified ones keep JSDoc comments, and
- * `@typedef {import('elementor/...')}` annotations are indistinguishable from a real call without a
+ * `@typedef {import('refraction/...')}` annotations are indistinguishable from a real call without a
  * parser. An unresolved import appears in both variants, since they are built from the same graph.
  */
 const MINIFIED_BUNDLE = '.min.js';
@@ -52,7 +52,7 @@ export function verifyNoUnresolvedImports( directory = ASSETS_JS ) {
 			offences.push( `${ fileName }: import( '${ specifier }' )` );
 		}
 
-		if ( RUNTIME_ELEMENTOR_ONE_LOCALE_IMPORT.test( code ) ) {
+		if ( RUNTIME_REFRACTION_ONE_LOCALE_IMPORT.test( code ) ) {
 			offences.push( `${ fileName }: runtime import of @elementor/elementor-one-assets locale JSON` );
 		}
 	}
@@ -62,7 +62,7 @@ export function verifyNoUnresolvedImports( directory = ASSETS_JS ) {
 			[
 				'Unresolved dynamic imports left in the output, so the target modules are missing:',
 				...offences.map( ( offence ) => `  ${ offence }` ),
-				'Frontend entries route dynamic imports through __elementorLoadChunk; base entries still inline them.',
+				'Frontend entries route dynamic imports through __refractionLoadChunk; base entries still inline them.',
 				'Externals must be rewritten to a global, and first-party specifiers must be plain string literals.',
 			].join( '\n' ),
 		);
@@ -78,15 +78,15 @@ export function verifyEditorOneTopBarLocaleLoading( directory = ASSETS_JS ) {
 
 	const code = readFileSync( bundlePath, 'utf8' );
 
-	if ( INLINED_ELEMENTOR_ONE_LOCALE_MAP.test( code ) ) {
+	if ( INLINED_REFRACTION_ONE_LOCALE_MAP.test( code ) ) {
 		throw new Error(
 			`${ EDITOR_ONE_TOP_BAR_BUNDLE } inlines @elementor/elementor-one-assets locale JSON; use fetch against localesBaseUrl instead.`,
 		);
 	}
 
-	if ( ! code.includes( 'elementorOneTopBarConfig.localeLanguageBaseUrls' ) ) {
+	if ( ! code.includes( 'refractionOneTopBarConfig.localeLanguageBaseUrls' ) ) {
 		throw new Error(
-			`${ EDITOR_ONE_TOP_BAR_BUNDLE } must load locales via elementorOneTopBarConfig.localeLanguageBaseUrls.`,
+			`${ EDITOR_ONE_TOP_BAR_BUNDLE } must load locales via refractionOneTopBarConfig.localeLanguageBaseUrls.`,
 		);
 	}
 }

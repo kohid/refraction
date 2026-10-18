@@ -1,4 +1,4 @@
-import Module from 'elementor-assets-js/modules/imports/module.js';
+import Module from 'refraction-assets-js/modules/imports/module.js';
 
 /**
  * @typedef {{}} Component

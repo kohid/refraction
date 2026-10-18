@@ -1,10 +1,10 @@
 import { createMockDocument, renderHookWithStore } from 'test-utils';
-import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@elementor/store';
+import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@refraction/store';
 
 import { slice } from '../../store';
 import useHostDocument from '../use-host-document';
 
-describe( '@elementor/editor-documents - useHostDocument', () => {
+describe( '@refraction/editor-documents - useHostDocument', () => {
 	const mockDocument = createMockDocument();
 
 	let store: Store< SliceState< typeof slice > >;

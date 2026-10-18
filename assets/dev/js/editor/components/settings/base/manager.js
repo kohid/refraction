@@ -1,6 +1,6 @@
-var ControlsCSSParser = require( 'elementor-editor-utils/controls-css-parser' );
+var ControlsCSSParser = require( 'refraction-editor-utils/controls-css-parser' );
 
-module.exports = elementorModules.ViewModule.extend( {
+module.exports = refractionModules.ViewModule.extend( {
 	model: null,
 
 	hasChange: false,
@@ -12,20 +12,20 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	bindEvents() {
-		elementor.on( 'document:loaded', this.onElementorDocumentLoaded );
+		refraction.on( 'document:loaded', this.onRefractionDocumentLoaded );
 
 		this.model.on( 'change', this.onModelChange );
 	},
 
 	unbindEvents() {
-		elementor.off( 'document:loaded', this.onElementorDocumentLoaded );
+		refraction.off( 'document:loaded', this.onRefractionDocumentLoaded );
 	},
 
 	addPanelPage() {
 		var name = this.getSettings( 'name' );
 
-		elementor.getPanelView().addPage( name + '_settings', {
-			view: elementor.settings.panelPages[ name ] || elementor.settings.panelPages.base,
+		refraction.getPanelView().addPage( name + '_settings', {
+			view: refraction.settings.panelPages[ name ] || refraction.settings.panelPages.base,
 			title: this.getSettings( 'panelPage.title' ),
 			options: {
 				editedView: this.getEditedView(),
@@ -44,14 +44,14 @@ module.exports = elementorModules.ViewModule.extend( {
 	 * @deprecated since 3.7.0, use `getContainerType()` instead.
 	 */
 	getContainerId() {
-		elementorDevTools.deprecation.deprecated( 'getContainerId()', '3.7.0', 'getContainerType()' );
+		refractionDevTools.deprecation.deprecated( 'getContainerId()', '3.7.0', 'getContainerType()' );
 
 		return this.getContainerType();
 	},
 
 	// Emulate an element view/model structure with the parts needed for a container.
 	getEditedView() {
-		const documentElementType = elementor.elementsManager.getElementTypeClass( 'document' ),
+		const documentElementType = refraction.elementsManager.getElementTypeClass( 'document' ),
 			ModelClass = documentElementType.getModel(),
 			type = this.getContainerType(),
 			editModel = new ModelClass( {
@@ -60,7 +60,7 @@ module.exports = elementorModules.ViewModule.extend( {
 				settings: this.model,
 			} );
 
-		const container = new elementorModules.editor.Container( {
+		const container = new refractionModules.editor.Container( {
 			type,
 			id: type,
 			model: editModel,
@@ -99,12 +99,12 @@ module.exports = elementorModules.ViewModule.extend( {
 		controlsCSS.addStyleToDocument( {
 			// Ensures we don't override default global style
 			at: 'before',
-			of: '#elementor-style-e-global-style',
+			of: '#refraction-style-e-global-style',
 		} );
 	},
 
 	initModel() {
-		this.model = new elementorModules.editor.elements.models.BaseSettings( this.getSettings( 'settings' ), {
+		this.model = new refractionModules.editor.elements.models.BaseSettings( this.getSettings( 'settings' ), {
 			controls: this.getSettings( 'controls' ),
 		} );
 	},
@@ -151,7 +151,7 @@ module.exports = elementorModules.ViewModule.extend( {
 
 		NProgress.start();
 
-		return elementorCommon.ajax.addRequest( 'save_' + this.getSettings( 'name' ) + '_settings', {
+		return refractionCommon.ajax.addRequest( 'save_' + this.getSettings( 'name' ) + '_settings', {
 			data,
 			success() {
 				NProgress.done();
@@ -180,7 +180,7 @@ module.exports = elementorModules.ViewModule.extend( {
 
 		this.debounceSave = _.debounce( this.save, 3000 );
 
-		elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+		refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 	},
 
 	/**
@@ -204,7 +204,7 @@ module.exports = elementorModules.ViewModule.extend( {
 
 		$e.bc.ensureTab( namespace, 'settings', menuItemOptions.pageName );
 
-		elementor.modules.layouts.panel.pages.menu.Menu.addItem( menuItemOptions, 'settings', menuSettings.beforeItem );
+		refraction.modules.layouts.panel.pages.menu.Menu.addItem( menuItemOptions, 'settings', menuSettings.beforeItem );
 	},
 
 	onModelChange( model ) {
@@ -225,7 +225,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		self.debounceSave();
 	},
 
-	onElementorDocumentLoaded() {
+	onRefractionDocumentLoaded() {
 		this.updateStylesheet();
 
 		this.addPanelPage();

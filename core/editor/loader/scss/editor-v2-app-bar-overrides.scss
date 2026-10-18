@@ -6,21 +6,21 @@ body {
 	--editor-v2-top-bar-height: 48px;
 }
 
-#elementor-editor-wrapper {
+#refraction-editor-wrapper {
 	height: calc(100vh - var(--editor-v2-top-bar-height));
 }
 
-body.elementor-navigator-docked #elementor-navigator {
+body.refraction-navigator-docked #refraction-navigator {
 	height: calc(100% - var(--editor-v2-top-bar-height));
 	top: var(--editor-v2-top-bar-height);
 }
 
-.elementor-panel #elementor-panel-header-menu-button,
-.elementor-panel #elementor-panel-header-add-button {
+.refraction-panel #refraction-panel-header-menu-button,
+.refraction-panel #refraction-panel-header-add-button {
 	display: none;
 }
 
-.elementor-panel #elementor-panel-header {
+.refraction-panel #refraction-panel-header {
 	font-weight: 700;
 	background-color: var( --e-a-bg-default );
 	color: var( --e-a-color-txt-accent );
@@ -29,7 +29,7 @@ body.elementor-navigator-docked #elementor-navigator {
 }
 
 // Make the MCE full-screen work properly with the top bar.
-.elementor-control-type-wysiwyg .mce-fullscreen {
+.refraction-control-type-wysiwyg .mce-fullscreen {
 	inset: var(--editor-v2-top-bar-height) 0 0 0;
 
 	& > .mce-container-body {

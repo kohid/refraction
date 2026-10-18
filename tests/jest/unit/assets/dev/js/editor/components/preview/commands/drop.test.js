@@ -1,4 +1,4 @@
-import { freeMock, setupMock } from 'elementor/tests/jest/unit/modules/web-cli/assets/js/core/mock/api';
+import { freeMock, setupMock } from 'refraction/tests/jest/unit/modules/web-cli/assets/js/core/mock/api';
 
 let MockContainerClass;
 
@@ -6,16 +6,16 @@ describe( `$e.run( 'preview/drop' )`, () => {
 	beforeAll( async () => {
 		await setupMock();
 
-		MockContainerClass = ( ( await import( 'elementor/assets/dev/js/editor/container/container' ) ).default );
+		MockContainerClass = ( ( await import( 'refraction/assets/dev/js/editor/container/container' ) ).default );
 
-		global.elementorModules = {
+		global.refractionModules = {
 			editor: {
 				Container: MockContainerClass,
 			},
 		};
 
 		global.$e.modules.editor = {
-			CommandContainerBase: ( await import( 'elementor-editor/command-bases/command-container-base' ) ).default,
+			CommandContainerBase: ( await import( 'refraction-editor/command-bases/command-container-base' ) ).default,
 		};
 
 		const MockBackbone = {
@@ -34,7 +34,7 @@ describe( `$e.run( 'preview/drop' )`, () => {
 			Model: MockBackbone.Model,
 		};
 
-		global.elementor = {
+		global.refraction = {
 			documents: {
 				getCurrent: () => new class Document {},
 			},
@@ -44,15 +44,15 @@ describe( `$e.run( 'preview/drop' )`, () => {
 	afterAll( async () => {
 		await freeMock();
 
-		delete global.elementorCommon;
-		delete global.elementorModules;
+		delete global.refractionCommon;
+		delete global.refractionModules;
 		delete global.Backbone;
-		delete global.elementor;
+		delete global.refraction;
 	} );
 
 	test( 'apply() -- Sanity', async () => {
 		// Arrange -- Import 'preview' component.
-		const Component = ( await import( 'elementor/assets/dev/js/editor/components/preview/component' ) ).default,
+		const Component = ( await import( 'refraction/assets/dev/js/editor/components/preview/component' ) ).default,
 			container = new MockContainerClass( {
 				id: 'document',
 				type: 'document',

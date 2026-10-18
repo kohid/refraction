@@ -1,5 +1,5 @@
-import { type V1Element } from '@elementor/editor-elements';
-import { type AnyTransformable } from '@elementor/editor-props';
+import { type V1Element } from '@refraction/editor-elements';
+import { type AnyTransformable } from '@refraction/editor-props';
 
 import { type OverridesMapping } from '../components/instance-editing-panel/utils/resolve-element-settings';
 import {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\Agents;
+namespace Refraction\Modules\Agents;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -174,10 +174,10 @@ class Bot_Catalog {
 	public function get_logo_url( string $logo ): string {
 		$relative_path = self::LOGOS_DIR . $logo . self::LOGO_EXTENSION;
 
-		if ( ! file_exists( ELEMENTOR_ASSETS_PATH . $relative_path ) ) {
+		if ( ! file_exists( REFRACTION_ASSETS_PATH . $relative_path ) ) {
 			return '';
 		}
 
-		return ELEMENTOR_ASSETS_URL . $relative_path;
+		return REFRACTION_ASSETS_URL . $relative_path;
 	}
 }

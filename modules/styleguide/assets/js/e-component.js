@@ -5,11 +5,11 @@ export default class extends $e.modules.ComponentBase {
 	constructor( args ) {
 		super( args );
 
-		elementor.addControlView( 'global-style-switcher', Switcher );
+		refraction.addControlView( 'global-style-switcher', Switcher );
 
 		this.registerStyleguideDialogType();
 
-		elementor.once( 'preview:loaded', () => {
+		refraction.once( 'preview:loaded', () => {
 			this.initModal();
 		} );
 	}
@@ -45,7 +45,7 @@ export default class extends $e.modules.ComponentBase {
 				return modal;
 			}
 
-			modal = elementorCommon.dialogsManager.createWidget( 'styleguide', {
+			modal = refractionCommon.dialogsManager.createWidget( 'styleguide', {
 				id: 'e-styleguide-preview-dialog',
 				message: `<div class="e-styleguide-preview-root"></div>`,
 				position: {
@@ -58,7 +58,7 @@ export default class extends $e.modules.ComponentBase {
 					onClick: false,
 					onBackgroundClick: false,
 				},
-				container: elementor.$previewContents.find( 'body' ),
+				container: refraction.$previewContents.find( 'body' ),
 			} );
 
 			return modal;
@@ -72,12 +72,12 @@ export default class extends $e.modules.ComponentBase {
 	 * @param {boolean} skipPreferencesCheck
 	 */
 	showStyleguidePreview( skipPreferencesCheck = false ) {
-		if ( this.getModal().isVisible() || ( ! skipPreferencesCheck && ! elementor.getPreferences( 'enable_styleguide_preview' ) ) ) {
+		if ( this.getModal().isVisible() || ( ! skipPreferencesCheck && ! refraction.getPreferences( 'enable_styleguide_preview' ) ) ) {
 			return;
 		}
 
 		this.getPreviewFrame().postMessage(
-			{ name: 'elementor/styleguide/preview/show' },
+			{ name: 'refraction/styleguide/preview/show' },
 			'*',
 		);
 
@@ -89,7 +89,7 @@ export default class extends $e.modules.ComponentBase {
 	 */
 	hideStyleguidePreview() {
 		this.getPreviewFrame().postMessage(
-			{ name: 'elementor/styleguide/preview/hide' },
+			{ name: 'refraction/styleguide/preview/hide' },
 			'*',
 		);
 
@@ -110,7 +110,7 @@ export default class extends $e.modules.ComponentBase {
 		}
 
 		$e.run( 'document/elements/settings', {
-			container: elementor.settings.editorPreferences.getEditedView().getContainer(),
+			container: refraction.settings.editorPreferences.getEditedView().getContainer(),
 			settings: {
 				enable_styleguide_preview: options.value,
 			},
@@ -126,7 +126,7 @@ export default class extends $e.modules.ComponentBase {
 	 * @return {boolean}
 	 */
 	isInEditor() {
-		return !! window.elementor;
+		return !! window.refraction;
 	}
 
 	/**
@@ -136,7 +136,7 @@ export default class extends $e.modules.ComponentBase {
 	 */
 	getPreviewFrame() {
 		return this.isInEditor()
-			? elementor.$preview[ 0 ].contentWindow
+			? refraction.$preview[ 0 ].contentWindow
 			: window;
 	}
 }

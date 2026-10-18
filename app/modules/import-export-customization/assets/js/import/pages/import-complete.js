@@ -4,7 +4,7 @@ import { Button, Stack, Box, Typography, Link } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 import { BaseLayout, TopBar, Footer, PageHeader, CenteredContent, CompleteIcon, CompleteHeading, CompleteSummary } from '../../shared/components';
 import { useImportContext } from '../context/import-context';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 import { buildKitSettingsSummary } from '../../shared/utils/utils';
 import useReturnToRedirect from '../../shared/hooks/use-return-to-redirect';
 
@@ -19,7 +19,7 @@ export default function ImportComplete() {
 			return;
 		}
 
-		window.top.location = elementorAppConfig.admin_url;
+		window.top.location = refractionAppConfig.admin_url;
 	};
 
 	const title = data?.uploadedData?.manifest?.title || '';
@@ -29,10 +29,10 @@ export default function ImportComplete() {
 		const templatesSummary = runnersState?.templates?.succeed_summary;
 
 		if ( ! templatesSummary ) {
-			return __( 'No templates imported', 'elementor' );
+			return __( 'No templates imported', 'refraction' );
 		}
 
-		const summaryTitles = elementorAppConfig[ 'import-export-customization' ]?.summaryTitles?.templates || {};
+		const summaryTitles = refractionAppConfig[ 'import-export-customization' ]?.summaryTitles?.templates || {};
 
 		const summaryParts = Object.entries( templatesSummary )
 			.map( ( [ docType, count ] ) => {
@@ -45,17 +45,17 @@ export default function ImportComplete() {
 				return `${ count } ${ itemTitle }`;
 			} ).filter( ( part ) => part !== null );
 
-		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No templates imported', 'elementor' );
+		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No templates imported', 'refraction' );
 	}, [ runnersState?.templates?.succeed_summary ] );
 
 	const getContentSummary = useCallback( () => {
-		const elementorContent = runnersState?.[ 'elementor-content' ];
+		const refractionContent = runnersState?.[ 'refraction-content' ];
 		const wpContent = runnersState?.[ 'wp-content' ];
 		const content = runnersState?.content;
 		const taxonomies = runnersState?.taxonomies;
 
 		const contentCounts = {};
-		const summaryTitles = elementorAppConfig[ 'import-export-customization' ]?.summaryTitles?.content || {};
+		const summaryTitles = refractionAppConfig[ 'import-export-customization' ]?.summaryTitles?.content || {};
 
 		const countSucceedItems = ( contentSection ) => {
 			if ( ! contentSection ) {
@@ -73,9 +73,9 @@ export default function ImportComplete() {
 
 		const wpContentCounts = countSucceedItems( wpContent );
 		const contentCountsFromContent = countSucceedItems( content );
-		const elementorContentCounts = countSucceedItems( elementorContent );
+		const refractionContentCounts = countSucceedItems( refractionContent );
 
-		[ wpContentCounts, contentCountsFromContent, elementorContentCounts ].forEach( ( counts ) => {
+		[ wpContentCounts, contentCountsFromContent, refractionContentCounts ].forEach( ( counts ) => {
 			Object.entries( counts ).forEach( ( [ docType, count ] ) => {
 				contentCounts[ docType ] = ( contentCounts[ docType ] || 0 ) + count;
 			} );
@@ -91,7 +91,7 @@ export default function ImportComplete() {
 		}
 
 		let totalNavMenuItems = 0;
-		[ wpContent, content, elementorContent ].forEach( ( contentSection ) => {
+		[ wpContent, content, refractionContent ].forEach( ( contentSection ) => {
 			if ( contentSection?.nav_menu_item?.succeed ) {
 				totalNavMenuItems += Object.keys( contentSection.nav_menu_item.succeed ).length;
 			}
@@ -100,7 +100,7 @@ export default function ImportComplete() {
 		const hasContent = Object.keys( contentCounts ).length > 0 || totalTaxonomies > 0 || totalNavMenuItems > 0;
 
 		if ( ! hasContent ) {
-			return __( 'No content imported', 'elementor' );
+			return __( 'No content imported', 'refraction' );
 		}
 
 		const summaryParts = [];
@@ -114,21 +114,21 @@ export default function ImportComplete() {
 		} );
 
 		if ( totalTaxonomies > 0 ) {
-			const taxonomyLabel = totalTaxonomies > 1 ? __( 'Taxonomies', 'elementor' ) : __( 'Taxonomy', 'elementor' );
+			const taxonomyLabel = totalTaxonomies > 1 ? __( 'Taxonomies', 'refraction' ) : __( 'Taxonomy', 'refraction' );
 			summaryParts.push( `${ totalTaxonomies } ${ taxonomyLabel }` );
 		}
 
 		if ( totalNavMenuItems > 0 ) {
-			const menuLabel = totalNavMenuItems > 1 ? __( 'Menus', 'elementor' ) : __( 'Menu', 'elementor' );
+			const menuLabel = totalNavMenuItems > 1 ? __( 'Menus', 'refraction' ) : __( 'Menu', 'refraction' );
 			summaryParts.push( `${ totalNavMenuItems } ${ menuLabel }` );
 		}
 
-		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No content imported', 'elementor' );
+		return summaryParts.length > 0 ? summaryParts.join( ' | ' ) : __( 'No content imported', 'refraction' );
 	}, [ runnersState ] );
 
 	const getPluginsSummary = useCallback( () => {
 		const plugins = Array.isArray( runnersState?.plugins ) ? runnersState?.plugins : Object.values( runnersState?.plugins || {} );
-		return runnersState?.plugins ? plugins.join( ' | ' ) : __( 'No plugins imported', 'elementor' );
+		return runnersState?.plugins ? plugins.join( ' | ' ) : __( 'No plugins imported', 'refraction' );
 	}, [ runnersState?.plugins ] );
 
 	const getSettingsSummary = useCallback( () => {
@@ -137,29 +137,29 @@ export default function ImportComplete() {
 			: {};
 
 		if ( ! Object.keys( siteSettings ).length || ! Object.keys( runnersState[ 'site-settings' ] || {} ).length ) {
-			return __( 'No settings imported', 'elementor' );
+			return __( 'No settings imported', 'refraction' );
 		}
 
 		const summary = buildKitSettingsSummary( siteSettings );
 
-		return summary.length > 0 ? summary : __( 'No settings imported', 'elementor' );
+		return summary.length > 0 ? summary : __( 'No settings imported', 'refraction' );
 	}, [ data, runnersState ] );
 
 	const summaryData = useMemo( () => ( {
 		content: {
-			title: __( 'Content', 'elementor' ),
+			title: __( 'Content', 'refraction' ),
 			subTitle: getContentSummary(),
 		},
 		templates: {
-			title: __( 'Templates', 'elementor' ),
+			title: __( 'Templates', 'refraction' ),
 			subTitle: getTemplatesSummary(),
 		},
 		settings: {
-			title: __( 'Site settings', 'elementor' ),
+			title: __( 'Site settings', 'refraction' ),
 			subTitle: getSettingsSummary(),
 		},
 		plugins: {
-			title: __( 'Plugins', 'elementor' ),
+			title: __( 'Plugins', 'refraction' ),
 			subTitle: getPluginsSummary(),
 		},
 	} ), [ getPluginsSummary, getTemplatesSummary, getSettingsSummary, getContentSummary ] );
@@ -177,10 +177,10 @@ export default function ImportComplete() {
 				color="secondary"
 				size="small"
 				data-testid="see-it-live-button"
-				href={ elementorAppConfig?.home_url }
+				href={ refractionAppConfig?.home_url }
 				target="_blank"
 			>
-				{ __( 'See it Live', 'elementor' ) }
+				{ __( 'See it Live', 'refraction' ) }
 			</Button>
 			<Button
 				variant="contained"
@@ -189,17 +189,17 @@ export default function ImportComplete() {
 				onClick={ handleDone }
 				data-testid="close-button"
 			>
-				{ __( 'Close', 'elementor' ) }
+				{ __( 'Close', 'refraction' ) }
 			</Button>
 		</Stack>
 	);
 
 	const headerContent = (
-		<PageHeader title={ __( 'Import', 'elementor' ) } />
+		<PageHeader title={ __( 'Import', 'refraction' ) } />
 	);
 
 	useEffect( () => {
-		AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitImportSummary );
+		AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitImportSummary );
 	}, [] );
 
 	const kitSource = data?.kitUploadParams?.source || 'file';
@@ -228,14 +228,14 @@ export default function ImportComplete() {
 			<CenteredContent hasFooter={ true } maxWidth="800px">
 				<Stack spacing={ 3 } alignItems="center" data-testid="import-complete-content">
 					<CompleteIcon
-						imageSrc={ elementorAppConfig.assets_url + 'images/kit-is-live.svg' }
-						altText={ __( 'Kit is live illustration', 'elementor' ) }
+						imageSrc={ refractionAppConfig.assets_url + 'images/kit-is-live.svg' }
+						altText={ __( 'Kit is live illustration', 'refraction' ) }
 						testId="import-complete-icon"
 					/>
 
 					<CompleteHeading
-						title={ __( 'Your website template is now live on your site!', 'elementor' ) }
-						subtitle={ __( 'You\'ve imported and applied the following to your site:', 'elementor' ) }
+						title={ __( 'Your website template is now live on your site!', 'refraction' ) }
+						subtitle={ __( 'You\'ve imported and applied the following to your site:', 'refraction' ) }
 						testId="import-complete-heading"
 					/>
 
@@ -247,9 +247,9 @@ export default function ImportComplete() {
 					<Box mt={ 2 }>
 						<Stack direction="row" justifyContent="center" alignItems="center" spacing={ 3 }>
 							<Typography variant="body2" color="text.secondary">
-								{ __( 'Build sites faster with Website Templates.', 'elementor' ) }
+								{ __( 'Build sites faster with Website Templates.', 'refraction' ) }
 								<Link href="https://go.elementor.com/app-what-are-kits" color="info.light" target="_blank" sx={ { ml: 1, textDecoration: 'none' } }>
-									{ __( 'Show me how', 'elementor' ) }
+									{ __( 'Show me how', 'refraction' ) }
 								</Link>
 							</Typography>
 						</Stack>

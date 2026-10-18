@@ -1,6 +1,6 @@
-import { generateElementId, type V1ElementData, type V1ElementSettingsProps } from '@elementor/editor-elements';
-import { classesPropTypeUtil, type ClassesPropValue, type PropValue } from '@elementor/editor-props';
-import { type StyleDefinition, type StyleDefinitionID } from '@elementor/editor-styles';
+import { generateElementId, type V1ElementData, type V1ElementSettingsProps } from '@refraction/editor-elements';
+import { classesPropTypeUtil, type ClassesPropValue, type PropValue } from '@refraction/editor-props';
+import { type StyleDefinition, type StyleDefinitionID } from '@refraction/editor-styles';
 
 // Ts version for atomic-widgets/assets/js/editor/utils/regenerate-local-style-ids.js
 export function regenerateLocalStyleIds( element: V1ElementData ): {

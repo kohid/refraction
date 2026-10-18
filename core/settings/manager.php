@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Core\Settings;
+namespace Refraction\Core\Settings;
 
-use Elementor\Core\Settings\Base\CSS_Model;
-use Elementor\Plugin;
+use Refraction\Core\Settings\Base\CSS_Model;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor settings manager.
+ * Refraction settings manager.
  *
- * Elementor settings manager handler class is responsible for registering and
- * managing Elementor settings managers.
+ * Refraction settings manager handler class is responsible for registering and
+ * managing Refraction settings managers.
  *
  * @since 1.6.0
  */
@@ -33,7 +33,7 @@ class Manager {
 	/**
 	 * Builtin settings managers names.
 	 *
-	 * Holds the names for builtin Elementor settings managers.
+	 * Holds the names for builtin Refraction settings managers.
 	 *
 	 * @since 1.6.0
 	 * @access private
@@ -102,7 +102,7 @@ class Manager {
 	/**
 	 * Register default settings managers.
 	 *
-	 * Register builtin Elementor settings managers.
+	 * Register builtin Refraction settings managers.
 	 *
 	 * @since 1.6.0
 	 * @access private
@@ -196,7 +196,7 @@ class Manager {
 	/**
 	 * Run settings managers.
 	 *
-	 * Register builtin Elementor settings managers.
+	 * Register builtin Refraction settings managers.
 	 *
 	 * @since 1.6.0
 	 * @access public

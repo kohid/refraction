@@ -9,8 +9,8 @@ const SESSION_TIMEOUT_MINUTES = 30;
 const MINUTE_MS = 60 * 1000;
 const SESSION_TIMEOUT = SESSION_TIMEOUT_MINUTES * MINUTE_MS;
 const ACTIVITY_CHECK_INTERVAL = 1 * MINUTE_MS;
-const SESSION_STORAGE_KEY = 'elementor_wpdash_session';
-const PENDING_NAV_CLICK_KEY = 'elementor_wpdash_pending_nav';
+const SESSION_STORAGE_KEY = 'refraction_wpdash_session';
+const PENDING_NAV_CLICK_KEY = 'refraction_wpdash_pending_nav';
 
 export const CONTROL_TYPES = {
 	BUTTON: 'button',
@@ -37,20 +37,20 @@ export const SCREEN_TYPES = {
 };
 
 export default class WpDashboardTracking {
-	static anyPageWithElementorString = 'elementor';
+	static anyPageWithRefractionString = 'refraction';
 
-	static elementorPages = [
-		this.anyPageWithElementorString,
+	static refractionPages = [
+		this.anyPageWithRefractionString,
 		'e-form-submissions',
 		'popup_templates',
 	];
 
-	static elementorPostTypes = [
-		'elementor_library',
+	static refractionPostTypes = [
+		'refraction_library',
 		'e-floating-buttons',
-		'elementor_snippet',
-		'elementor_font',
-		'elementor_icons',
+		'refraction_snippet',
+		'refraction_font',
+		'refraction_icons',
 	];
 
 	static sessionStartTime = Date.now();
@@ -60,10 +60,10 @@ export default class WpDashboardTracking {
 	static activityCheckInterval = null;
 	static initialized = false;
 	static navigationListeners = [];
-	static isNavigatingToElementor = false;
+	static isNavigatingToRefraction = false;
 
-	static getElementorCommon() {
-		return window.elementorCommon;
+	static getRefractionCommon() {
+		return window.refractionCommon;
 	}
 
 	static init() {
@@ -101,8 +101,8 @@ export default class WpDashboardTracking {
 	}
 
 	static isEditorOneActive() {
-		const elementorCommon = this.getElementorCommon();
-		return elementorCommon?.config?.editor_events?.isEditorOneActive ?? false;
+		const refractionCommon = this.getRefractionCommon();
+		return refractionCommon?.config?.editor_events?.isEditorOneActive ?? false;
 	}
 
 	static processPendingNavClick() {
@@ -152,15 +152,15 @@ export default class WpDashboardTracking {
 	}
 
 	static isEventsManagerAvailable() {
-		const elementorCommon = this.getElementorCommon();
+		const refractionCommon = this.getRefractionCommon();
 
-		return elementorCommon?.eventsManager &&
-			'function' === typeof elementorCommon.eventsManager.dispatchEvent;
+		return refractionCommon?.eventsManager &&
+			'function' === typeof refractionCommon.eventsManager.dispatchEvent;
 	}
 
 	static canSendEvents() {
-		const elementorCommon = this.getElementorCommon();
-		return elementorCommon?.config?.editor_events?.can_send_events ?? false;
+		const refractionCommon = this.getRefractionCommon();
+		return refractionCommon?.config?.editor_events?.can_send_events ?? false;
 	}
 
 	static dispatchEvent( eventName, properties = {}, options = {} ) {
@@ -168,8 +168,8 @@ export default class WpDashboardTracking {
 			return;
 		}
 
-		const elementorCommon = this.getElementorCommon();
-		elementorCommon?.eventsManager?.dispatchEvent( eventName, properties, options );
+		const refractionCommon = this.getRefractionCommon();
+		refractionCommon?.eventsManager?.dispatchEvent( eventName, properties, options );
 	}
 
 	static updateActivity() {
@@ -182,7 +182,7 @@ export default class WpDashboardTracking {
 		}, ACTIVITY_CHECK_INTERVAL );
 
 		window.addEventListener( 'beforeunload', () => {
-			if ( ! this.sessionEnded && ! this.isNavigatingToElementor ) {
+			if ( ! this.sessionEnded && ! this.isNavigatingToRefraction ) {
 				this.trackSessionEnd( 'tab_closed' );
 			}
 		} );
@@ -197,7 +197,7 @@ export default class WpDashboardTracking {
 		} );
 	}
 
-	static isElementorPage( url ) {
+	static isRefractionPage( url ) {
 		try {
 			const urlObj = new URL( url, window.location.origin );
 			const params = urlObj.searchParams;
@@ -206,9 +206,9 @@ export default class WpDashboardTracking {
 			const postType = params.get( 'post_type' );
 			const action = params.get( 'action' );
 
-			return !! ( ( page && this.elementorPages.some( ( p ) => page.includes( p ) ) ) ||
-				( postType && this.elementorPostTypes.includes( postType ) ) ||
-				( action && action.includes( this.anyPageWithElementorString ) ) );
+			return !! ( ( page && this.refractionPages.some( ( p ) => page.includes( p ) ) ) ||
+				( postType && this.refractionPostTypes.includes( postType ) ) ||
+				( action && action.includes( this.anyPageWithRefractionString ) ) );
 		} catch ( error ) {
 			return false;
 		}
@@ -223,7 +223,7 @@ export default class WpDashboardTracking {
 		}
 	}
 
-	static isNavigatingAwayFromElementor( targetUrl ) {
+	static isNavigatingAwayFromRefraction( targetUrl ) {
 		if ( ! targetUrl ) {
 			return false;
 		}
@@ -232,7 +232,7 @@ export default class WpDashboardTracking {
 			return false;
 		}
 
-		return ! this.isElementorPage( targetUrl );
+		return ! this.isRefractionPage( targetUrl );
 	}
 
 	static isLinkOpeningInNewTab( link ) {
@@ -248,26 +248,26 @@ export default class WpDashboardTracking {
 					return;
 				}
 
-				if ( ! this.sessionEnded && this.isNavigatingAwayFromElementor( link.href ) ) {
+				if ( ! this.sessionEnded && this.isNavigatingAwayFromRefraction( link.href ) ) {
 					this.trackSessionEnd( 'navigate_away' );
-				} else if ( this.isElementorPage( link.href ) ) {
-					this.isNavigatingToElementor = true;
+				} else if ( this.isRefractionPage( link.href ) ) {
+					this.isNavigatingToRefraction = true;
 				}
 			}
 
 			const isSidebar = event.target.closest( '#editor-one-sidebar-navigation' );
 			if ( isSidebar ) {
-				this.isNavigatingToElementor = true;
+				this.isNavigatingToRefraction = true;
 			}
 		};
 
 		const handleFormSubmit = ( event ) => {
 			const form = event.target;
 			if ( form.action ) {
-				if ( ! this.sessionEnded && this.isNavigatingAwayFromElementor( form.action ) ) {
+				if ( ! this.sessionEnded && this.isNavigatingAwayFromRefraction( form.action ) ) {
 					this.trackSessionEnd( 'navigate_away' );
-				} else if ( this.isElementorPage( form.action ) ) {
-					this.isNavigatingToElementor = true;
+				} else if ( this.isRefractionPage( form.action ) ) {
+					this.isNavigatingToRefraction = true;
 				}
 			}
 		};
@@ -407,10 +407,10 @@ export default class WpDashboardTracking {
 	}
 }
 
-window.addEventListener( 'elementor/admin/init', () => {
+window.addEventListener( 'refraction/admin/init', () => {
 	const currentUrl = window.location.href;
 	const isPluginsPage = WpDashboardTracking.isPluginsPage( currentUrl );
-	const isElementorPage = WpDashboardTracking.isElementorPage( currentUrl );
+	const isRefractionPage = WpDashboardTracking.isRefractionPage( currentUrl );
 
 	if ( isPluginsPage ) {
 		PluginActions.init();
@@ -418,7 +418,7 @@ window.addEventListener( 'elementor/admin/init', () => {
 
 	NavigationTracking.init();
 
-	if ( isElementorPage ) {
+	if ( isRefractionPage ) {
 		WpDashboardTracking.init();
 		ScreenViewTracking.init();
 		PromotionTracking.init();

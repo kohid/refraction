@@ -1,4 +1,4 @@
-import { type Dependency } from '@elementor/editor-props';
+import { type Dependency } from '@refraction/editor-props';
 
 import { type ElementPosition, type V1ElementData } from '../sync/types';
 

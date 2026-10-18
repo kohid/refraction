@@ -1,4 +1,4 @@
-import { debounce } from '@elementor/utils';
+import { debounce } from '@refraction/utils';
 
 import { getHistoryManager, type HistoryItem } from './get-history-manager';
 

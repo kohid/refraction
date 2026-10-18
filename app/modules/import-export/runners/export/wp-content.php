@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Runners\Export;
+namespace Refraction\App\Modules\ImportExport\Runners\Export;
 
-use Elementor\App\Modules\ImportExport\Utils as ImportExportUtils;
-use Elementor\Core\Utils\ImportExport\WP_Exporter;
+use Refraction\App\Modules\ImportExport\Utils as ImportExportUtils;
+use Refraction\Core\Utils\ImportExport\WP_Exporter;
 
 class Wp_Content extends Export_Runner_Base {
 
@@ -59,7 +59,7 @@ class Wp_Content extends Export_Runner_Base {
 			'limit' => 20,
 			'meta_query' => [
 				[
-					'key' => static::META_KEY_ELEMENTOR_EDIT_MODE,
+					'key' => static::META_KEY_REFRACTION_EDIT_MODE,
 					'compare' => 'NOT EXISTS',
 				],
 			],

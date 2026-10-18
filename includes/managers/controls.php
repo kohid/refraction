@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Frontend\Performance;
+use Refraction\Core\Frontend\Performance;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor controls manager.
+ * Refraction controls manager.
  *
- * Elementor controls manager handler class is responsible for registering and
+ * Refraction controls manager handler class is responsible for registering and
  * initializing all the supported controls, both regular controls and the group
  * controls.
  *
@@ -331,12 +331,12 @@ class Controls_Manager {
 	 */
 	private static function init_tabs() {
 		self::$tabs = [
-			self::TAB_CONTENT => esc_html__( 'Content', 'elementor' ),
-			self::TAB_STYLE => esc_html__( 'Style', 'elementor' ),
-			self::TAB_ADVANCED => esc_html__( 'Advanced', 'elementor' ),
-			self::TAB_RESPONSIVE => esc_html__( 'Responsive', 'elementor' ),
-			self::TAB_LAYOUT => esc_html__( 'Layout', 'elementor' ),
-			self::TAB_SETTINGS => esc_html__( 'Settings', 'elementor' ),
+			self::TAB_CONTENT => esc_html__( 'Content', 'refraction' ),
+			self::TAB_STYLE => esc_html__( 'Style', 'refraction' ),
+			self::TAB_ADVANCED => esc_html__( 'Advanced', 'refraction' ),
+			self::TAB_RESPONSIVE => esc_html__( 'Responsive', 'refraction' ),
+			self::TAB_LAYOUT => esc_html__( 'Layout', 'refraction' ),
+			self::TAB_SETTINGS => esc_html__( 'Settings', 'refraction' ),
 		];
 	}
 
@@ -461,7 +461,7 @@ class Controls_Manager {
 	 * controls.
 	 *
 	 * External developers can register new controls by hooking to the
-	 * `elementor/controls/controls_registered` action.
+	 * `refraction/controls/controls_registered` action.
 	 *
 	 * @since 3.1.0
 	 * @access private
@@ -487,33 +487,33 @@ class Controls_Manager {
 		/**
 		 * After controls registered.
 		 *
-		 * Fires after Elementor controls are registered.
+		 * Fires after Refraction controls are registered.
 		 *
 		 * @since 1.0.0
-		 * @deprecated 3.5.0 Use `elementor/controls/register` hook instead.
+		 * @deprecated 3.5.0 Use `refraction/controls/register` hook instead.
 		 *
 		 * @param Controls_Manager $this The controls manager.
 		 */
 		// TODO: Uncomment when Pro uses the new hook.
 		// Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->do_deprecated_action(
-		// 'elementor/controls/controls_registered',
+		// 'refraction/controls/controls_registered',
 		// [ $this ],
 		// '3.5.0',
-		// 'elementor/controls/register'
+		// 'refraction/controls/register'
 		// );
 
-		do_action( 'elementor/controls/controls_registered', $this );
+		do_action( 'refraction/controls/controls_registered', $this );
 
 		/**
 		 * After controls registered.
 		 *
-		 * Fires after Elementor controls are registered.
+		 * Fires after Refraction controls are registered.
 		 *
 		 * @since 3.5.0
 		 *
 		 * @param Controls_Manager $this The controls manager.
 		 */
-		do_action( 'elementor/controls/register', $this );
+		do_action( 'refraction/controls/register', $this );
 	}
 
 	/**

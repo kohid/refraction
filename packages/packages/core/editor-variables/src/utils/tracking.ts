@@ -1,4 +1,4 @@
-import { getMixpanel } from '@elementor/events';
+import { getMixpanel } from '@refraction/events';
 
 export type VariableEventData = {
 	varType: string;

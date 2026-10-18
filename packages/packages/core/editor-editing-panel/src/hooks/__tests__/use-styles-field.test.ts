@@ -21,7 +21,7 @@ describe( 'useStylesField', () => {
 
 		// Act.
 		const { result } = renderHook( () =>
-			useStylesField( 'color', { history: { propDisplayName: __( 'Color', 'elementor' ) } } )
+			useStylesField( 'color', { history: { propDisplayName: __( 'Color', 'refraction' ) } } )
 		);
 
 		// Assert.
@@ -40,7 +40,7 @@ describe( 'useStylesField', () => {
 
 		// Act.
 		const { result } = renderHook( () =>
-			useStylesField( 'color', { history: { propDisplayName: __( 'Color', 'elementor' ) } } )
+			useStylesField( 'color', { history: { propDisplayName: __( 'Color', 'refraction' ) } } )
 		);
 
 		// Assert.
@@ -55,7 +55,7 @@ describe( 'useStylesField', () => {
 		} );
 
 		const { result } = renderHook( () =>
-			useStylesField( 'color', { history: { propDisplayName: __( 'Color', 'elementor' ) } } )
+			useStylesField( 'color', { history: { propDisplayName: __( 'Color', 'refraction' ) } } )
 		);
 		const { setValue } = result.current;
 

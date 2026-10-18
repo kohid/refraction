@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ToggleButtonGroupItem, ToggleControl } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { useStylesInheritanceChain } from '../../../contexts/styles-inheritance-context';
@@ -8,43 +8,43 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type Displays = 'block' | 'flex' | 'grid' | 'inline-block' | 'inline-flex' | 'none';
 
-const DISPLAY_LABEL = __( 'Display', 'elementor' );
+const DISPLAY_LABEL = __( 'Display', 'refraction' );
 
 const displayFieldItems: ToggleButtonGroupItem< Displays >[] = [
 	{
 		value: 'block',
-		renderContent: () => __( 'Block', 'elementor' ),
-		label: __( 'Block', 'elementor' ),
+		renderContent: () => __( 'Block', 'refraction' ),
+		label: __( 'Block', 'refraction' ),
 		showTooltip: true,
 	},
 	{
 		value: 'flex',
-		renderContent: () => __( 'Flex', 'elementor' ),
-		label: __( 'Flex', 'elementor' ),
+		renderContent: () => __( 'Flex', 'refraction' ),
+		label: __( 'Flex', 'refraction' ),
 		showTooltip: true,
 	},
 	{
 		value: 'grid',
-		renderContent: () => __( 'Grid', 'elementor' ),
-		label: __( 'Grid', 'elementor' ),
+		renderContent: () => __( 'Grid', 'refraction' ),
+		label: __( 'Grid', 'refraction' ),
 		showTooltip: true,
 	},
 	{
 		value: 'none',
-		renderContent: () => __( 'None', 'elementor' ),
-		label: __( 'None', 'elementor' ),
+		renderContent: () => __( 'None', 'refraction' ),
+		label: __( 'None', 'refraction' ),
 		showTooltip: true,
 	},
 	{
 		value: 'inline-block',
-		renderContent: () => __( 'In-blk', 'elementor' ),
-		label: __( 'Inline-block', 'elementor' ),
+		renderContent: () => __( 'In-blk', 'refraction' ),
+		label: __( 'Inline-block', 'refraction' ),
 		showTooltip: true,
 	},
 	{
 		value: 'inline-flex',
-		renderContent: () => __( 'In-flx', 'elementor' ),
-		label: __( 'Inline-flex', 'elementor' ),
+		renderContent: () => __( 'In-flx', 'refraction' ),
+		label: __( 'Inline-flex', 'refraction' ),
 		showTooltip: true,
 	},
 ];

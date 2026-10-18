@@ -20,7 +20,7 @@ const initialState = {
 		content: null,
 		plugins: null,
 	},
-	includes: [ 'content', ...( elementorAppConfig.hasPro ? [ 'templates' ] : [] ), 'settings', 'plugins' ],
+	includes: [ 'content', ...( refractionAppConfig.hasPro ? [ 'templates' ] : [] ), 'settings', 'plugins' ],
 	kitInfo: {
 		title: null,
 		description: null,

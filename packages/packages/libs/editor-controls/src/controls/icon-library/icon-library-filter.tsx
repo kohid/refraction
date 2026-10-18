@@ -70,8 +70,8 @@ export const IconLibraryFilter = ( { value, onChange }: IconLibraryFilterProps )
 	const selectableValues = entries.flatMap( ( entry ) => ( entry.type === FILTER_TYPE_ITEM ? [ entry.value ] : [] ) );
 	const isFiltered = value.length > 0;
 	const filterButtonLabel = isFiltered
-		? __( 'Filter by library, active', 'elementor' )
-		: __( 'Filter by library', 'elementor' );
+		? __( 'Filter by library, active', 'refraction' )
+		: __( 'Filter by library', 'refraction' );
 
 	const handleLibraryClick = ( library: string ) => {
 		const nextValue = value.includes( library )
@@ -84,7 +84,7 @@ export const IconLibraryFilter = ( { value, onChange }: IconLibraryFilterProps )
 	return (
 		<>
 			<Tooltip
-				title={ __( 'Filter by library', 'elementor' ) }
+				title={ __( 'Filter by library', 'refraction' ) }
 				placement="top"
 				enterDelay={ ICON_LIBRARY_ACTION_TOOLTIP_ENTER_DELAY }
 				enterNextDelay={ ICON_LIBRARY_ACTION_TOOLTIP_ENTER_DELAY }
@@ -122,7 +122,7 @@ export const IconLibraryFilter = ( { value, onChange }: IconLibraryFilterProps )
 				MenuListProps={ {
 					dense: true,
 					autoFocusItem: true,
-					'aria-label': __( 'Filter by library', 'elementor' ),
+					'aria-label': __( 'Filter by library', 'refraction' ),
 				} }
 				sx={ { '& .MuiPaper-root': { minWidth: FILTER_MENU_WIDTH } } }
 			>
@@ -193,7 +193,7 @@ const renderFilterMenuItemContent = ( label: string, Icon: typeof MenuIcon, sele
 );
 
 function getFilterEntries(): FilterEntry[] {
-	const filter = window.elementorCommon?.config?.fontAwesome?.v7?.filter;
+	const filter = window.refractionCommon?.config?.fontAwesome?.v7?.filter;
 
 	if ( ! Array.isArray( filter ) ) {
 		return [ ...DEFAULT_FILTER ];

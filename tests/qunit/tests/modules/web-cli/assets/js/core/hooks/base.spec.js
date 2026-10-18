@@ -1,5 +1,5 @@
-import HooksBase from 'elementor-api/core/hooks/base';
-import HookBase from 'elementor-api/modules/hook-base';
+import HooksBase from 'refraction-api/core/hooks/base';
+import HookBase from 'refraction-api/modules/hook-base';
 
 jQuery( () => {
 	QUnit.module( 'File: modules/web-cli/assets/js/core/hooks/base.js', () => {

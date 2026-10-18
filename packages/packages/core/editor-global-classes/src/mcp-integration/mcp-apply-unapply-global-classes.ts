@@ -1,6 +1,6 @@
-import { doApplyClasses, doGetAppliedClasses, doUnapplyClass } from '@elementor/editor-editing-panel';
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { z } from '@elementor/schema';
+import { doApplyClasses, doGetAppliedClasses, doUnapplyClass } from '@refraction/editor-editing-panel';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { z } from '@refraction/schema';
 
 import { globalClassesStylesProvider } from '../global-classes-styles-provider';
 import { APPLY_GLOBAL_CLASS_GUIDE_URI, generateApplyGlobalClassGuidePrompt } from './apply-global-class-guide-prompt';

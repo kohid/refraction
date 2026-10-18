@@ -1,4 +1,4 @@
-import { useBoundProp } from '@elementor/editor-controls';
+import { useBoundProp } from '@refraction/editor-controls';
 
 import { hasVariableType } from '../variables-registry/variable-type-registry';
 import { useVariable } from './use-prop-variables';

@@ -15,4 +15,4 @@ export class Editor extends EditorBase {
 	}
 }
 
-window.elementor = new Editor();
+window.refraction = new Editor();

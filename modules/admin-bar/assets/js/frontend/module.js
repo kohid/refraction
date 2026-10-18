@@ -1,5 +1,5 @@
-/* global elementorAdminBarConfig */
-class AdminBar extends elementorModules.ViewModule {
+/* global refractionAdminBarConfig */
+class AdminBar extends refractionModules.ViewModule {
 	/**
 	 * @return {{}} settings
 	 */
@@ -10,8 +10,8 @@ class AdminBar extends elementorModules.ViewModule {
 			},
 			classes: {
 				adminBarItem: 'ab-item',
-				adminBarItemTitle: 'elementor-edit-link-title',
-				adminBarItemSubTitle: 'elementor-edit-link-type',
+				adminBarItemTitle: 'refraction-edit-link-title',
+				adminBarItemSubTitle: 'refraction-edit-link-type',
 				adminBarNonLinkItem: 'ab-empty-item',
 				adminBarSubItemsWrapper: 'ab-sub-wrapper',
 				adminBarSubItems: 'ab-submenu',
@@ -43,7 +43,7 @@ class AdminBar extends elementorModules.ViewModule {
 	onInit() {
 		super.onInit();
 
-		this.createMenu( elementorAdminBarConfig );
+		this.createMenu( refractionAdminBarConfig );
 	}
 
 	/**
@@ -111,7 +111,7 @@ class AdminBar extends elementorModules.ViewModule {
 
 		return jQuery( '<li>', {
 			id,
-			class: children.length ? 'menupop' : '' + ( item.parent_class || 'elementor-general-section' ),
+			class: children.length ? 'menupop' : '' + ( item.parent_class || 'refraction-general-section' ),
 		} ).append( [ $item, children.length ? this.createSubMenuItems( id, children ) : null ] );
 	}
 

@@ -1,11 +1,11 @@
-.elementor-panel-revisions-buttons {
+.refraction-panel-revisions-buttons {
 	display: flex;
 	justify-content: space-between;
 	padding: 15px 20px;
 	border-block-end: var(--e-a-border);
 }
 
-.elementor-history- {
+.refraction-history- {
 
 	&item {
 		display: flex;
@@ -22,12 +22,12 @@
 		cursor: pointer;
 		transition: var(--e-a-transition-hover);
 
-		&:hover:not(.elementor-history-item-current),
-		&:focus:not(.elementor-history-item-current) {
+		&:hover:not(.refraction-history-item-current),
+		&:focus:not(.refraction-history-item-current) {
 			background-color: var(--e-a-bg-hover);
 			color: var(--e-a-txt-color-hover);
 
-			.elementor-history-item__icon{
+			.refraction-history-item__icon{
 				.eicon:before {
 					content:'\e924';
 				}
@@ -39,9 +39,9 @@
 			background-color: var(--e-a-bg-active);
 			color: var(--e-a-txt-color-active);
 
-			.elementor-history-item__icon,
-			&:hover .elementor-history-item__icon,
-			&:focus .elementor-history-item__icon {
+			.refraction-history-item__icon,
+			&:hover .refraction-history-item__icon,
+			&:focus .refraction-history-item__icon {
 
 				.eicon:before {
 					content:'\e90e';
@@ -74,27 +74,27 @@
 	}
 }
 
-#elementor-panel-history {
+#refraction-panel-history {
 	padding: 20px;
 	padding-block-end: 15px;
 
-	&.elementor-empty {
+	&.refraction-empty {
 
-		.elementor-history-revisions-message {
+		.refraction-history-revisions-message {
 			padding-block-start: 20px;
 		}
 	}
 
-	&:not(.elementor-empty) {
+	&:not(.refraction-empty) {
 		margin-block-start: 10px;
 	}
 }
 
-#elementor-panel-history-no-items,
-#elementor-panel-revisions-no-revisions {
+#refraction-panel-history-no-items,
+#refraction-panel-revisions-no-revisions {
 	text-align: center;
 
-	.elementor-nerd-box-icon {
+	.refraction-nerd-box-icon {
 		margin-block-start: 20px;
 	}
 }

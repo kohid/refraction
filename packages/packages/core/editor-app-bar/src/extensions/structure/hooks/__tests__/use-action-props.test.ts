@@ -1,17 +1,17 @@
 import {
 	__privateRunCommand as runCommand,
 	__privateUseRouteStatus as useRouteStatus,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 import { renderHook } from '@testing-library/react';
 
 import useActionProps from '../use-action-props';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateRunCommand: jest.fn(),
 	__privateUseRouteStatus: jest.fn( () => ( { isActive: true, isBlocked: true } ) ),
 } ) );
 
-describe( '@elementor/editor-app-bar - useStructureActionProps', () => {
+describe( '@refraction/editor-app-bar - useStructureActionProps', () => {
 	it( 'should toggle the navigator state when clicked', () => {
 		// Arrange.
 		const { result } = renderHook( () => useActionProps() );

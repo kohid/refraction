@@ -1,53 +1,53 @@
-const EditorModule = elementorModules.Module.extend( {
+const EditorModule = refractionModules.Module.extend( {
 
 	onInit() {
 		const $window = jQuery( window );
 
-		$window.on( 'elementor:init-components',
-			this.onElementorInitComponents.bind( this ) );
+		$window.on( 'refraction:init-components',
+			this.onRefractionInitComponents.bind( this ) );
 
-		$window.on( 'elementor:loaded', () => {
-			this.onElementorLoaded();
+		$window.on( 'refraction:loaded', () => {
+			this.onRefractionLoaded();
 
-			elementor.on( 'document:loaded', this.onDocumentLoaded.bind( this ) );
+			refraction.on( 'document:loaded', this.onDocumentLoaded.bind( this ) );
 		} );
 
-		$window.on( 'elementor:init', this.onElementorReady );
+		$window.on( 'refraction:init', this.onRefractionReady );
 	},
 
 	// TODO: Delete as soon as possible.
 	getEditorControlView( name ) {
-		const editor = elementor.getPanelView().getCurrentPageView();
+		const editor = refraction.getPanelView().getCurrentPageView();
 
 		return editor.children.findByModelCid( this.getEditorControlModel( name )?.cid );
 	},
 
 	// TODO: Delete as soon as possible.
 	getEditorControlModel( name ) {
-		const editor = elementor.getPanelView().getCurrentPageView();
+		const editor = refraction.getPanelView().getCurrentPageView();
 
 		return editor.collection.findWhere( { name } );
 	},
 
-	onElementorReady() {
-		this.onElementorInit();
+	onRefractionReady() {
+		this.onRefractionInit();
 
-		elementor
-			.on( 'frontend:init', this.onElementorFrontendInit.bind( this ) )
-			.on( 'preview:loaded', this.onElementorPreviewLoaded.bind( this ) );
+		refraction
+			.on( 'frontend:init', this.onRefractionFrontendInit.bind( this ) )
+			.on( 'preview:loaded', this.onRefractionPreviewLoaded.bind( this ) );
 	},
 } );
 
-EditorModule.prototype.onElementorLoaded = function() {};
+EditorModule.prototype.onRefractionLoaded = function() {};
 
-EditorModule.prototype.onElementorInit = function() {};
+EditorModule.prototype.onRefractionInit = function() {};
 
-EditorModule.prototype.onElementorPreviewLoaded = function() {};
+EditorModule.prototype.onRefractionPreviewLoaded = function() {};
 
 EditorModule.prototype.onDocumentLoaded = function() {};
 
-EditorModule.prototype.onElementorFrontendInit = function() {};
+EditorModule.prototype.onRefractionFrontendInit = function() {};
 
-EditorModule.prototype.onElementorInitComponents = function() {};
+EditorModule.prototype.onRefractionInitComponents = function() {};
 
 module.exports = EditorModule;

@@ -2,16 +2,16 @@ type TransitionCategory = { label: string };
 
 const mockHasProInstalled = jest.fn( () => false );
 
-jest.mock( '@elementor/utils', () => ( {
-	...jest.requireActual( '@elementor/utils' ),
+jest.mock( '@refraction/utils', () => ( {
+	...jest.requireActual( '@refraction/utils' ),
 	hasProInstalled: () => mockHasProInstalled(),
 } ) );
 
 describe( 'transition properties conditional loading', () => {
-	const originalElementorPro = window.elementorPro;
+	const originalRefractionPro = window.refractionPro;
 
 	afterEach( () => {
-		window.elementorPro = originalElementorPro;
+		window.refractionPro = originalRefractionPro;
 		mockHasProInstalled.mockReturnValue( false );
 		jest.resetModules();
 	} );
@@ -34,7 +34,7 @@ describe( 'transition properties conditional loading', () => {
 	] )(
 		'should load correct properties when $scenario',
 		( { proConfig, hasPro, expectedLength, expectedHasMargin } ) => {
-			window.elementorPro = proConfig;
+			window.refractionPro = proConfig;
 			mockHasProInstalled.mockReturnValue( hasPro );
 
 			const { transitionProperties: props } = require( '../data' );

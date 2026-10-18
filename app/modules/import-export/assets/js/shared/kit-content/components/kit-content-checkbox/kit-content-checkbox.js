@@ -2,7 +2,7 @@ import { useContext, useMemo, useEffect } from 'react';
 
 import { SharedContext } from '../../../../context/shared-context/shared-context-provider';
 
-import Checkbox from 'elementor-app/ui/atoms/checkbox';
+import Checkbox from 'refraction-app/ui/atoms/checkbox';
 
 export default function KitContentCheckbox( props ) {
 	const sharedContext = useContext( SharedContext ),

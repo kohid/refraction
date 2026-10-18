@@ -8,25 +8,25 @@ test( `$e.run( 'editor/documents/attach-preview' ) - Ensure loaded in custom sel
 		editor = await wpAdmin.openNewPage();
 
 	await editor.addWidget( { widgetType: 'tabs' } );
-	await editor.getPreviewFrame().waitForSelector( '.elementor-tab-title.elementor-active' );
+	await editor.getPreviewFrame().waitForSelector( '.refraction-tab-title.refraction-active' );
 
 	// Attach-preview inside the tab as a custom selector.
 	await editor.page.evaluate( () => {
 		// `Attach-preview` is a `tab_content` of the widget tabs.
 		$e.internal( 'editor/documents/attach-preview', {
-			selector: '.elementor-tab-content',
+			selector: '.refraction-tab-content',
 		} );
 	} );
 	await editor.page.evaluate( () => {
 		// `Attach-preview` is a `tab_content` of the widget tabs.
 		$e.internal( 'editor/documents/attach-preview', {
-			selector: '.elementor-tab-content',
+			selector: '.refraction-tab-content',
 		} );
 	} );
 
 	// Assert - Ensure the tabs are duplicated.
-	await expect( editor.getPreviewFrame().locator( '.elementor-tab-content .elementor-tabs-wrapper .elementor-tab-title.elementor-active' ) ).toBeVisible();
-	const tabCount = await editor.getPreviewFrame().locator( '.elementor-tab-title' ).count();
+	await expect( editor.getPreviewFrame().locator( '.refraction-tab-content .refraction-tabs-wrapper .refraction-tab-title.refraction-active' ) ).toBeVisible();
+	const tabCount = await editor.getPreviewFrame().locator( '.refraction-tab-title' ).count();
 
 	// It will be duplicated since, the same widget tabs gonna be inside the first tab content.
 	expect( tabCount ).toBe( 8 ); // 8 Since there is hidden titles for the mobile version.

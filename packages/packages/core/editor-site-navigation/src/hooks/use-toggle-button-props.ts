@@ -1,4 +1,4 @@
-import { type ToggleActionProps } from '@elementor/editor-app-bar';
+import { type ToggleActionProps } from '@refraction/editor-app-bar';
 import { PagesIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -10,16 +10,16 @@ export function useToggleButtonProps(): ToggleActionProps {
 	const { open, close } = usePanelActions();
 
 	return {
-		title: __( 'Pages', 'elementor' ),
+		title: __( 'Pages', 'refraction' ),
 		icon: PagesIcon,
 		onClick: () => {
 			const extendedWindow = window as unknown as ExtendedWindow;
-			const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+			const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 			if ( config ) {
-				extendedWindow.elementorCommon.eventsManager.dispatchEvent( 'top_bar_pages', {
+				extendedWindow.refractionCommon.eventsManager.dispatchEvent( 'top_bar_pages', {
 					location: config.locations.topBar,
-					secondaryLocation: config.secondaryLocations.elementorLogo,
+					secondaryLocation: config.secondaryLocations.refractionLogo,
 					trigger: config.triggers.click,
 					element: config.elements.buttonIcon,
 				} );

@@ -36,66 +36,66 @@ const V4_ATOM_SELECTORS = {
 
 const EditorSelectors = {
 	getWidgetByName: ( title: string ) => `[data-widget_type="${ title }.default"]`,
-	canvas: '#elementor-preview-iframe',
+	canvas: '#refraction-preview-iframe',
 	widget: '[data-element_type="widget"]',
 	container: '[data-element_type="container"]',
-	item: '.elementor-repeater-row-item-title',
+	item: '.refraction-repeater-row-item-title',
 	plusIcon: '.eicon-plus-circle',
 	siteTitle: '.site-title >> nth=0',
 	pageTitle: '.entry-title >> nth=0',
 	pageContent: '.page-content',
 	pageHeader: '.page-header',
-	toast: '#elementor-toast',
-	addNewSection: '#elementor-add-new-section',
-	addSectionInner: '.elementor-add-section-inner',
-	removeContainer: '.elementor-editor-element-setting.elementor-editor-element-remove',
+	toast: '#refraction-toast',
+	addNewSection: '#refraction-add-new-section',
+	addSectionInner: '.refraction-add-section-inner',
+	removeContainer: '.refraction-editor-element-setting.refraction-editor-element-remove',
 	v4: {
 		atoms: V4_ATOM_SLUGS,
 		atomSelectors: V4_ATOM_SELECTORS,
 	},
 	panels: {
 		topBar: {
-			wrapper: '#elementor-editor-wrapper-v2',
+			wrapper: '#refraction-editor-wrapper-v2',
 		},
 		elements: {
-			wrapper: '#elementor-panel-page-elements',
-			v4elements: '#elementor-panel-category-v4-elements',
-			footerButton: '#elementor-panel-header-add-button i',
-			elementorPanel: '#elementor-panel',
+			wrapper: '#refraction-panel-page-elements',
+			v4elements: '#refraction-panel-category-v4-elements',
+			footerButton: '#refraction-panel-header-add-button i',
+			refractionPanel: '#refraction-panel',
 		},
 		pageSettings: {
-			wrapper: '#elementor-panel-page-settings',
-			footerButton: '#elementor-editor-wrapper-v2 button[aria-label="Page Settings"]',
+			wrapper: '#refraction-panel-page-settings',
+			footerButton: '#refraction-editor-wrapper-v2 button[aria-label="Page Settings"]',
 		},
 		siteSettings: {
-			wrapper: '#elementor-panel-page-menu',
+			wrapper: '#refraction-panel-page-menu',
 			saveButton: '//button[text()="Save Changes"]',
 			layout: {
 				breakpoints: {
-					removeBreakpointButton: '#elementor-kit-panel-content .select2-selection__choice__remove',
+					removeBreakpointButton: '#refraction-kit-panel-content .select2-selection__choice__remove',
 				},
 			},
 		},
 		userPreferences: {
-			wrapper: '#elementor-panel-editorPreferences-settings-controls',
+			wrapper: '#refraction-panel-editorPreferences-settings-controls',
 		},
 		navigator: {
-			wrapper: '#elementor-navigator',
-			footer: '#elementor-navigator__footer',
-			closeButton: '#elementor-navigator__close',
-			footerButton: '#elementor-editor-wrapper-v2 button[value="Structure"]',
-			getElement: ( elementId: string ) => `#elementor-navigator .elementor-navigator__element[data-id="${ elementId }"]`,
-			getElementItem: ( elementId: string ) => `${ EditorSelectors.panels.navigator.getElement( elementId ) } .elementor-navigator__item`,
+			wrapper: '#refraction-navigator',
+			footer: '#refraction-navigator__footer',
+			closeButton: '#refraction-navigator__close',
+			footerButton: '#refraction-editor-wrapper-v2 button[value="Structure"]',
+			getElement: ( elementId: string ) => `#refraction-navigator .refraction-navigator__element[data-id="${ elementId }"]`,
+			getElementItem: ( elementId: string ) => `${ EditorSelectors.panels.navigator.getElement( elementId ) } .refraction-navigator__item`,
 		},
 		promotionCard: '[data-testid="e-promotion-card"]',
 		popoverCard: '[data-testid="e-popover-card"]',
 	},
 	refreshPopup: {
-		reloadButton: '#elementor-save-kit-refresh-page .dialog-button.dialog-ok.dialog-alert-ok',
+		reloadButton: '#refraction-save-kit-refresh-page .dialog-button.dialog-ok.dialog-alert-ok',
 	},
 
 	media: {
-		preview: '.elementor-control-media__preview',
+		preview: '.refraction-control-media__preview',
 		imageByTitle: ( imageTitle: string ) => `[aria-label="${ imageTitle }"]`,
 		selectBtn: '.button.media-button',
 		imageInp: 'input[type="file"]',
@@ -105,7 +105,7 @@ const EditorSelectors = {
 		imgDescription: '#attachment-details-description',
 	},
 	button: {
-		getByName: ( name: string ) => `.elementor-button:has-text("${ name }")`,
+		getByName: ( name: string ) => `.refraction-button:has-text("${ name }")`,
 		id: '[data-setting="button_css_id"]',
 		url: 'input[data-setting="url"]',
 		linkOptions: 'button[data-tooltip="Link Options"]',
@@ -114,7 +114,7 @@ const EditorSelectors = {
 		customAttributesInp: 'input[data-setting="custom_attributes"]',
 	},
 	heading: {
-		h2: 'h2.elementor-heading-title',
+		h2: 'h2.refraction-heading-title',
 		get link() {
 			return `${ this.h2 } a`;
 		},
@@ -150,22 +150,22 @@ const EditorSelectors = {
 		},
 	},
 	galleryControl: {
-		addGalleryBtn: 'button.elementor-control-gallery-add',
+		addGalleryBtn: 'button.refraction-control-gallery-add',
 	},
 	imageCarousel: {
 		widget: '[data-widget_type="image-carousel.default"]',
 		get link() {
 			return `${ this.widget } a`;
 		},
-		navigationSelect: '.elementor-control-navigation select',
+		navigationSelect: '.refraction-control-navigation select',
 		autoplaySelect: 'input[data-setting="autoplay"]',
 		autoplaySpeedLabel: 'Autoplay Speed',
 		autoplaySpeedInp: '[data-setting="autoplay_speed"]',
-		autoplayToggle: '.elementor-switch-handle',
+		autoplayToggle: '.refraction-switch-handle',
 		captionSelect: 'select[data-setting="caption_type"]',
-		imgCaption: 'figcaption.elementor-image-carousel-caption',
-		prevSliderBtn: '.elementor-swiper-button-prev',
-		nextSliderBtn: '.elementor-swiper-button-next',
+		imgCaption: 'figcaption.refraction-image-carousel-caption',
+		prevSliderBtn: '.refraction-swiper-button-prev',
+		nextSliderBtn: '.refraction-swiper-button-next',
 		activeSlide: ( id: string ) => `.swiper-pagination-bullet-active[aria-label="Go to slide ${ id }"]`,
 		activeSlideImg: ( name: string ) => `.swiper-slide-active img[alt="${ name }"]`,
 	},
@@ -181,14 +181,14 @@ const EditorSelectors = {
 	video: {
 		widget: '[data-widget_type="video.default"]',
 		get image() {
-			return `${ this.widget } .elementor-custom-embed-image-overlay`;
+			return `${ this.widget } .refraction-custom-embed-image-overlay`;
 		},
 		lightBoxControlInp: '[data-setting="lightbox"]',
-		lightBoxSetting: 'div[data-elementor-open-lightbox="yes"]',
-		lightBoxDialog: '.elementor-lightbox',
-		iframe: 'iframe[class*="elementor-video"]',
+		lightBoxSetting: 'div[data-refraction-open-lightbox="yes"]',
+		lightBoxDialog: '.refraction-lightbox',
+		iframe: 'iframe[class*="refraction-video"]',
 		playIcon: '[aria-label="Play"]',
-		videoWrapper: '.elementor-video-wrapper',
+		videoWrapper: '.refraction-video-wrapper',
 	},
 	socialIcons: {
 		widget: '[data-widget_type="social-icons.default"]',
@@ -200,7 +200,7 @@ const EditorSelectors = {
 		},
 	},
 	tabs: {
-		textEditorIframe: 'iframe[id*="elementorwpeditorview"]',
+		textEditorIframe: 'iframe[id*="refractionwpeditorview"]',
 		body: '#tinymce',
 	},
 	googleMaps: {
@@ -244,11 +244,11 @@ const EditorSelectors = {
 			controls: {
 				advanced: {
 					sections: [
-						'.elementor-control-advanced_layout_section',
-						'.elementor-control-advanced_responsive_section',
-						'.elementor-control-advanced_custom_controls_section',
-						'.elementor-control-section_custom_css_pro',
-						'.elementor-control-section_custom_attributes_pro',
+						'.refraction-control-advanced_layout_section',
+						'.refraction-control-advanced_responsive_section',
+						'.refraction-control-advanced_custom_controls_section',
+						'.refraction-control-section_custom_css_pro',
+						'.refraction-control-section_custom_attributes_pro',
 					],
 				},
 			},
@@ -258,16 +258,16 @@ const EditorSelectors = {
 		},
 	},
 	contextMenu: {
-		menu: '.elementor-context-menu',
-		saveAsGlobal: '.elementor-context-menu-list__item.elementor-context-menu-list__item-save.elementor-context-menu-list__item--disabled',
-		notes: '.elementor-context-menu-list__item.elementor-context-menu-list__item-open_notes.elementor-context-menu-list__item--disabled',
+		menu: '.refraction-context-menu',
+		saveAsGlobal: '.refraction-context-menu-list__item.refraction-context-menu-list__item-save.refraction-context-menu-list__item--disabled',
+		notes: '.refraction-context-menu-list__item.refraction-context-menu-list__item-open_notes.refraction-context-menu-list__item--disabled',
 	},
 	components: {
 		createComponentForm: '[data-testid="create-component-form"]',
 		overridablePropForm: '[data-testid="overridable-prop-form"]',
 		nameInput: '#component-name',
 		componentsTab: '[data-tab="components"]',
-		componentsList: '#elementor-panel-elements-wrapper',
+		componentsList: '#refraction-panel-elements-wrapper',
 		instanceWidget: '[data-widget_type="e-component.default"]',
 		editModeHeader: '[data-testid="component-panel-header"]',
 		exitEditModeButton: '[data-testid="component-panel-header"] [aria-label="Back"]',
@@ -276,7 +276,7 @@ const EditorSelectors = {
 		instanceEditingPanel: '[data-testid="instance-editing-panel"]',
 	},
 	dialog: {
-		lightBox: '.elementor-lightbox',
+		lightBox: '.refraction-lightbox',
 	},
 	variables: {
 		manager: {

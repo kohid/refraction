@@ -8,11 +8,11 @@ export class Switch extends $e.modules.CommandBase {
 
 		if ( setAsInitial ) {
 			// Will be removed by the attach-preview after the iframe has loaded.
-			jQuery( '#elementor-preview-loading' ).show();
+			jQuery( '#refraction-preview-loading' ).show();
 		}
 
 		return $e.run( 'editor/documents/close', {
-			id: elementor.documents.getCurrentId(),
+			id: refraction.documents.getCurrentId(),
 			mode,
 			onClose,
 			selector: args.selector,
@@ -21,7 +21,7 @@ export class Switch extends $e.modules.CommandBase {
 				return $e.run( 'editor/documents/open', { id, shouldScroll, shouldNavigateToDefaultRoute, selector: args.selector, setAsInitial } );
 			} )
 			.then( () => {
-				elementor.getPanelView().getPages( 'menu' ).view.addExitItem();
+				refraction.getPanelView().getPages( 'menu' ).view.addExitItem();
 			} );
 	}
 }

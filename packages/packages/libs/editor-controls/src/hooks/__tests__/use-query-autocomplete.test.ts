@@ -1,9 +1,9 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { useQueryAutocomplete } from '../use-query-autocomplete';
 
-jest.mock( '@elementor/http-client' );
+jest.mock( '@refraction/http-client' );
 
 const flatResponse = {
 	value: [

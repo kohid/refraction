@@ -1,7 +1,7 @@
 import {
 	widgetNodes,
 	shouldUseAtomicRepeaters,
-} from 'elementor/modules/nested-elements/assets/js/editor/utils.js';
+} from 'refraction/modules/nested-elements/assets/js/editor/utils.js';
 
 export class Remove extends $e.modules.editor.document.CommandHistoryBase {
 	static restore( historyItem, isRedo ) {
@@ -39,7 +39,7 @@ export class Remove extends $e.modules.editor.document.CommandHistoryBase {
 		return {
 			containers,
 			type: 'remove',
-			subTitle: __( 'Item', 'elementor' ),
+			subTitle: __( 'Item', 'refraction' ),
 		};
 	}
 

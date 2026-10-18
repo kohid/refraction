@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Core\Base;
+namespace Refraction\Core\Base;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

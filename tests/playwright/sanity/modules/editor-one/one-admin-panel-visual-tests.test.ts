@@ -27,7 +27,7 @@ test.describe( 'Editor One Menu Visual Tests', () => {
 			await page.waitForLoadState( 'networkidle' );
 		}
 
-		await page.goto( '/wp-admin/admin.php?page=elementor', {
+		await page.goto( '/wp-admin/admin.php?page=refraction', {
 			timeout: timeouts.singleTest,
 			waitUntil: 'domcontentloaded',
 		} );

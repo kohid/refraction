@@ -24,7 +24,7 @@ export async function setupMock() {
 		Model: MockBackbone.Model,
 	};
 
-	global.elementorModules = {
+	global.refractionModules = {
 		editor: {
 			elements: {
 				models: {
@@ -42,7 +42,7 @@ export async function setupMock() {
 		},
 	};
 
-	jest.mock( 'elementor-elements/models/base-element-model', () => {
+	jest.mock( 'refraction-elements/models/base-element-model', () => {
 		return class {
 			static extend() {
 				return MockBackbone.Model;
@@ -54,7 +54,7 @@ export async function setupMock() {
 		noop: () => {},
 	};
 
-	global.elementor = {
+	global.refraction = {
 		getConfig: jest.fn( () => ( {
 			elements: {
 				section: {},
@@ -68,9 +68,9 @@ export async function setupMock() {
 
 export function freeMock() {
 	delete global.Backbone;
-	delete global.elementorModules;
+	delete global.refractionModules;
 	delete global._;
-	delete global.elementor;
+	delete global.refraction;
 
 	jest.restoreAllMocks();
 }

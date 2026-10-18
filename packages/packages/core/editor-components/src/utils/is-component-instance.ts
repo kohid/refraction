@@ -1,4 +1,4 @@
-import { type V1ElementModelProps } from '@elementor/editor-elements';
+import { type V1ElementModelProps } from '@refraction/editor-elements';
 
 import { COMPONENT_WIDGET_TYPE } from '../consts';
 

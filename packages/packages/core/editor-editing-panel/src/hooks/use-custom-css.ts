@@ -4,17 +4,17 @@ import {
 	deleteElementStyle,
 	type ElementID,
 	shouldCreateNewLocalStyle,
-} from '@elementor/editor-elements';
-import { stringPropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-elements';
+import { stringPropTypeUtil } from '@refraction/editor-props';
 import {
 	type CustomCss,
 	getVariantByMeta,
 	type StyleDefinition,
 	type StyleDefinitionVariant,
-} from '@elementor/editor-styles';
-import { ELEMENTS_STYLES_RESERVED_LABEL, type StylesProvider } from '@elementor/editor-styles-repository';
-import { undoable } from '@elementor/editor-v1-adapters';
-import { decodeString, encodeString } from '@elementor/utils';
+} from '@refraction/editor-styles';
+import { ELEMENTS_STYLES_RESERVED_LABEL, type StylesProvider } from '@refraction/editor-styles-repository';
+import { undoable } from '@refraction/editor-v1-adapters';
+import { decodeString, encodeString } from '@refraction/utils';
 
 import { useClassesProp } from '../contexts/classes-prop-context';
 import { useElement } from '../contexts/element-context';

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from '@wordpress/element';
 
-const STORAGE_KEY = 'elementor_sidebar_collapsed';
+const STORAGE_KEY = 'refraction_sidebar_collapsed';
 const AUTO_COLLAPSE_BREAKPOINT = 960;
 const TRANSITION_DURATION = 300;
 

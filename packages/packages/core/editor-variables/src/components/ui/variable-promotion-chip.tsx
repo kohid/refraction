@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { forwardRef, type MouseEvent, useCallback, useImperativeHandle, useState } from 'react';
-import { type PromotionTrackingData, trackUpgradePromotionClick, trackViewPromotion } from '@elementor/editor-controls';
-import { PromotionChip, PromotionPopover, useCanvasClickHandler } from '@elementor/editor-ui';
+import { type PromotionTrackingData, trackUpgradePromotionClick, trackViewPromotion } from '@refraction/editor-controls';
+import { PromotionChip, PromotionPopover, useCanvasClickHandler } from '@refraction/editor-ui';
 import { Box } from '@elementor/ui';
-import { capitalize } from '@elementor/utils';
+import { capitalize } from '@refraction/utils';
 import { __, sprintf } from '@wordpress/i18n';
 
 type VariablePromotionChipProps = {
@@ -35,13 +35,13 @@ export const VariablePromotionChip = forwardRef< VariablePromotionChipRef, Varia
 
 		const title = sprintf(
 			/* translators: %s: Variable Type. */
-			__( '%s variables', 'elementor' ),
+			__( '%s variables', 'refraction' ),
 			capitalize( variableType )
 		);
 
 		const content = sprintf(
 			/* translators: %s: Variable Type. */
-			__( 'Upgrade to continue creating and editing %s variables.', 'elementor' ),
+			__( 'Upgrade to continue creating and editing %s variables.', 'refraction' ),
 			variableType
 		);
 
@@ -50,7 +50,7 @@ export const VariablePromotionChip = forwardRef< VariablePromotionChipRef, Varia
 				open={ isOpen }
 				title={ title }
 				content={ content }
-				ctaText={ __( 'Upgrade now', 'elementor' ) }
+				ctaText={ __( 'Upgrade now', 'refraction' ) }
 				ctaUrl={ upgradeUrl }
 				onClose={ ( e: MouseEvent ) => {
 					e.stopPropagation();

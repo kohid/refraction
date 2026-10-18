@@ -8,8 +8,8 @@ import FixViolationWithAngie from '../fix-violation-with-angie';
 const mockIsAngieAvailable = jest.fn();
 const mockSendPromptToAngie = jest.fn();
 
-jest.mock( '@elementor/editor-mcp', () => {
-	const { toolPrompts } = jest.requireActual( '@elementor/editor-mcp' ) as { toolPrompts: unknown };
+jest.mock( '@refraction/editor-mcp', () => {
+	const { toolPrompts } = jest.requireActual( '@refraction/editor-mcp' ) as { toolPrompts: unknown };
 
 	return {
 		toolPrompts,

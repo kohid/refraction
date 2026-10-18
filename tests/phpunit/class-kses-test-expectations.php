@@ -1,6 +1,6 @@
 <?php
 
-namespace ElementorEditorTesting;
+namespace RefractionEditorTesting;
 
 use DOMDocument;
 use DOMElement;

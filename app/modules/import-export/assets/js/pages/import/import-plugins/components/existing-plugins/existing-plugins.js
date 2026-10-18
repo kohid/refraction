@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import PluginsSelection from '../../../../../shared/plugins-selection/plugins-selection';
-import Heading from 'elementor-app/ui/atoms/heading';
+import Heading from 'refraction-app/ui/atoms/heading';
 
 const layout = [ 4, 1 ];
 
@@ -18,7 +18,7 @@ export default function ExistingPlugins( { plugins } ) {
 	return (
 		<div className="e-app-import-plugins__section">
 			<Heading variant="h5" tag="h3" className="e-app-import-plugins__section-heading">
-				{ __( 'Plugins you already have:', 'elementor' ) }
+				{ __( 'Plugins you already have:', 'refraction' ) }
 			</Heading>
 
 			<PluginsSelection

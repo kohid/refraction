@@ -1,9 +1,9 @@
-import ControlsStack from 'elementor-views/controls-stack';
+import ControlsStack from 'refraction-views/controls-stack';
 
 module.exports = Marionette.CompositeView.extend( {
-	template: Marionette.TemplateCache.get( '#tmpl-elementor-repeater-row' ),
+	template: Marionette.TemplateCache.get( '#tmpl-refraction-repeater-row' ),
 
-	className: 'elementor-repeater-fields',
+	className: 'refraction-repeater-fields',
 
 	attributes: {
 		role: 'listitem',
@@ -11,16 +11,16 @@ module.exports = Marionette.CompositeView.extend( {
 
 	ui() {
 		return {
-			duplicateButton: '.elementor-repeater-tool-duplicate',
-			editButton: '.elementor-repeater-tool-edit',
-			removeButton: '.elementor-repeater-tool-remove',
-			itemTitle: '.elementor-repeater-row-item-title',
+			duplicateButton: '.refraction-repeater-tool-duplicate',
+			editButton: '.refraction-repeater-tool-edit',
+			removeButton: '.refraction-repeater-tool-remove',
+			itemTitle: '.refraction-repeater-row-item-title',
 		};
 	},
 
 	behaviors: {
 		HandleInnerTabs: {
-			behaviorClass: require( 'elementor-behaviors/inner-tabs' ),
+			behaviorClass: require( 'refraction-behaviors/inner-tabs' ),
 		},
 	},
 
@@ -41,12 +41,12 @@ module.exports = Marionette.CompositeView.extend( {
 		};
 	},
 
-	childViewContainer: '.elementor-repeater-row-controls',
+	childViewContainer: '.refraction-repeater-row-controls',
 
 	getChildView( item ) {
 		var controlType = item.get( 'type' );
 
-		return elementor.getControlView( controlType );
+		return refraction.getControlView( controlType );
 	},
 
 	getChildControlView( name ) {
@@ -82,21 +82,21 @@ module.exports = Marionette.CompositeView.extend( {
 
 		if ( ! title ) {
 			/* Translators: %s: Item Index (number). */
-			title = sprintf( __( 'Item #%s', 'elementor' ), this.getOption( 'itemIndex' ) );
+			title = sprintf( __( 'Item #%s', 'refraction' ), this.getOption( 'itemIndex' ) );
 		}
 
 		this.ui.itemTitle.html( title );
 	},
 
 	toggleSort( enable ) {
-		this.$el.toggleClass( 'elementor-repeater-row--disable-sort', ! enable );
+		this.$el.toggleClass( 'refraction-repeater-row--disable-sort', ! enable );
 	},
 
 	initialize( options ) {
 		this.itemIndex = 0;
 
 		// Collection for Controls list
-		this.collection = new Backbone.Collection( _.values( elementor.mergeControlsSettings( options.controlFields ) ) );
+		this.collection = new Backbone.Collection( _.values( refraction.mergeControlsSettings( options.controlFields ) ) );
 	},
 
 	onRender() {
@@ -113,7 +113,7 @@ module.exports = Marionette.CompositeView.extend( {
 
 	onChildviewResponsiveSwitcherClick( childView, device ) {
 		if ( 'desktop' === device ) {
-			elementor.getPanelView().getCurrentPageView().$el.toggleClass( 'elementor-responsive-switchers-open' );
+			refraction.getPanelView().getCurrentPageView().$el.toggleClass( 'refraction-responsive-switchers-open' );
 		}
 	},
 } );

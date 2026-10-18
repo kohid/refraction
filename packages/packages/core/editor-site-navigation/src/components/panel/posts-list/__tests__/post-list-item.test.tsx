@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderWithQuery } from 'test-utils';
-import { __useNavigateToDocument as useNavigateToDocument } from '@elementor/editor-documents';
+import { __useNavigateToDocument as useNavigateToDocument } from '@refraction/editor-documents';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { PostListContextProvider } from '../../../../contexts/post-list-context';
@@ -17,12 +17,12 @@ jest.mock( '../../../../hooks/use-posts-actions', () => ( {
 	} ),
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: jest.fn(),
 	__useNavigateToDocument: jest.fn(),
 } ) );
 
-describe( '@elementor/editor-site-navigation - PostListItem', () => {
+describe( '@refraction/editor-site-navigation - PostListItem', () => {
 	afterAll( () => {
 		jest.clearAllMocks();
 	} );

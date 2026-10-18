@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Core\Common\Modules\Finder;
+namespace Refraction\Core\Common\Modules\Finder;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Common\Modules\Ajax\Module as Ajax;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Finder Module
  *
- * Responsible for initializing Elementor Finder functionality
+ * Responsible for initializing Refraction Finder functionality
  */
 class Module extends BaseModule {
 
@@ -37,7 +37,7 @@ class Module extends BaseModule {
 
 		$this->add_template();
 
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'refraction/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class Module extends BaseModule {
 		 *
 		 * @param array $categories_data A list of finder categories.
 		 */
-		$categories_data = apply_filters( 'elementor/finder/categories', $categories_data );
+		$categories_data = apply_filters( 'refraction/finder/categories', $categories_data );
 
 		return [
 			'data' => $categories_data,

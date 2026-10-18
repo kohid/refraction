@@ -7,7 +7,7 @@ module.exports = class FooterSaver {
 		}
 
 		try {
-			this.previewWindow.location.href = elementor.config.document.urls.wp_preview;
+			this.previewWindow.location.href = refraction.config.document.urls.wp_preview;
 		} catch ( e ) {
 			// If the previewWindow is closed or its domain was changed.
 		}

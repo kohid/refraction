@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor tab control.
+ * Refraction tab control.
  *
  * A base control for creating tab control. Displays a tab header for a set of
  * controls.
@@ -44,7 +44,7 @@ class Control_Tab extends Base_UI_Control {
 	 */
 	public function content_template() {
 		?>
-			<div class="elementor-panel-tab-heading">
+			<div class="refraction-panel-tab-heading">
 				{{{ data.label }}}
 			</div>
 		<?php

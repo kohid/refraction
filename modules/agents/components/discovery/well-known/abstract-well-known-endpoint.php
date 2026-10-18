@@ -1,10 +1,10 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Discovery\Well_Known;
+namespace Refraction\Modules\Agents\Components\Discovery\Well_Known;
 
-use Elementor\Modules\Agents\Classes\Feature_Component;
-use Elementor\Modules\Agents\Prompt_Injection_Sanitizer;
-use Elementor\Utils;
+use Refraction\Modules\Agents\Classes\Feature_Component;
+use Refraction\Modules\Agents\Prompt_Injection_Sanitizer;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -28,7 +28,7 @@ abstract class Abstract_Well_Known_Endpoint extends Feature_Component {
 	const CACHE_TTL = 900;
 
 	/** Transient key prefix. */
-	const TRANSIENT_PREFIX = 'elementor_agents_wk_';
+	const TRANSIENT_PREFIX = 'refraction_agents_wk_';
 
 	// ------------------------------------------------------------------
 	// Subclass interface
@@ -216,7 +216,7 @@ abstract class Abstract_Well_Known_Endpoint extends Feature_Component {
 	private function send_response( string $body, string $etag, string $last_modified ): void {
 		$this->maybe_send_304( $etag, $last_modified );
 
-		$max_age = (int) apply_filters( 'elementor/agents/well_known/cache_max_age', self::CACHE_TTL );
+		$max_age = (int) apply_filters( 'refraction/agents/well_known/cache_max_age', self::CACHE_TTL );
 
 		status_header( 200 );
 		header( 'Content-Type: ' . $this->get_content_type() . '; charset=utf-8' );

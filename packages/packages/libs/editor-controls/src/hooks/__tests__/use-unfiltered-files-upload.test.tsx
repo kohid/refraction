@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react';
 import * as React from 'react';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { apiClient } from '../../api';
@@ -20,7 +20,7 @@ const wrapper = ( { children }: PropsWithChildren ) => (
 describe( 'useUnfilteredFilesUpload', () => {
 	it( `should return data as true when "${ UNFILTERED_FILES_UPLOAD_KEY }" value is "1"`, async () => {
 		// Arrange.
-		jest.mocked( apiClient ).getElementorSetting.mockReturnValue( Promise.resolve( '1' ) );
+		jest.mocked( apiClient ).getRefractionSetting.mockReturnValue( Promise.resolve( '1' ) );
 
 		// Act.
 		const { result } = renderHook( () => useUnfilteredFilesUpload(), { wrapper } );
@@ -32,9 +32,9 @@ describe( 'useUnfilteredFilesUpload', () => {
 } );
 
 describe( 'useUpdateUnfilteredFilesUpload', () => {
-	it( 'should call updateElementorSetting with "1" when useUpdateUnfilteredFilesUpload().mutate is called', async () => {
+	it( 'should call updateRefractionSetting with "1" when useUpdateUnfilteredFilesUpload().mutate is called', async () => {
 		// Arrange.
-		const mockUpdate = jest.mocked( apiClient ).updateElementorSetting;
+		const mockUpdate = jest.mocked( apiClient ).updateRefractionSetting;
 
 		// Act.
 		const { result } = renderHook( () => useUpdateUnfilteredFilesUpload(), { wrapper } );

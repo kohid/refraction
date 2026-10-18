@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Data\Base;
+namespace Refraction\Data\Base;
 
-use Elementor\Data\Manager;
+use Refraction\Data\Manager;
 use WP_REST_Server;
 
 abstract class Endpoint {
@@ -18,14 +18,14 @@ abstract class Endpoint {
 	/**
 	 * Controller of current endpoint.
 	 *
-	 * @var \Elementor\Data\Base\Controller
+	 * @var \Refraction\Data\Base\Controller
 	 */
 	protected $controller;
 
 	/**
 	 * Loaded sub endpoint(s).
 	 *
-	 * @var \Elementor\Data\Base\SubEndpoint[]
+	 * @var \Refraction\Data\Base\SubEndpoint[]
 	 */
 	private $sub_endpoints = [];
 
@@ -46,7 +46,7 @@ abstract class Endpoint {
 	/**
 	 * Endpoint constructor.
 	 *
-	 * @param \Elementor\Data\Base\Controller $controller
+	 * @param \Refraction\Data\Base\Controller $controller
 	 *
 	 * @throws \Exception If invalid controller.
 	 */
@@ -102,7 +102,7 @@ abstract class Endpoint {
 	 * @param string $route
 	 * @param string $endpoint_class
 	 *
-	 * @return \Elementor\Data\Base\SubEndpoint
+	 * @return \Refraction\Data\Base\SubEndpoint
 	 * @throws \Exception If invalid sub endpoint registered.
 	 */
 	protected function register_sub_endpoint( $route, $endpoint_class ) {

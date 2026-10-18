@@ -5,10 +5,10 @@ import { __ } from '@wordpress/i18n';
 import { BaseLayout, PageHeader, TopBar, Footer } from '../../shared/components';
 import ImportKitContent from '../components/import-kit-parts-selection';
 import { IMPORT_STATUS, useImportContext } from '../context/import-context';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 
 const headerContent = (
-	<PageHeader title={ __( 'Import', 'elementor' ) } />
+	<PageHeader title={ __( 'Import', 'refraction' ) } />
 );
 
 export default function ImportCustomization() {
@@ -21,7 +21,7 @@ export default function ImportCustomization() {
 	const navigate = useNavigate();
 
 	useEffect( () => {
-		AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitImportCustomization );
+		AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitImportCustomization );
 	}, [] );
 
 	const footerContent = (
@@ -47,7 +47,7 @@ export default function ImportCustomization() {
 				} }
 				data-testid="import-back-button"
 			>
-				{ __( 'Back', 'elementor' ) }
+				{ __( 'Back', 'refraction' ) }
 			</Button>
 			<Button
 				variant="contained"
@@ -59,7 +59,7 @@ export default function ImportCustomization() {
 				} }
 				data-testid="import-apply-button"
 			>
-				{ __( 'Import and apply', 'elementor' ) }
+				{ __( 'Import and apply', 'refraction' ) }
 			</Button>
 		</Stack>
 	);
@@ -80,14 +80,14 @@ export default function ImportCustomization() {
 			<Stack spacing={ 4 } sx={ { mt: 4, mx: 'auto' } } >
 				<Stack spacing={ 2 }>
 					<Typography variant="h4" component="h2" gutterBottom color="text.primary">
-						{ __( 'Select which parts you want to apply', 'elementor' ) }
+						{ __( 'Select which parts you want to apply', 'refraction' ) }
 					</Typography>
 					<Stack>
 						<Typography variant="subtitle2" >
-							{ __( 'These are the templates, content and site settings that come with your website templates.', 'elementor' ) }
+							{ __( 'These are the templates, content and site settings that come with your website templates.', 'refraction' ) }
 						</Typography>
 						<Typography variant="subtitle2" >
-							{ __( 'All items are already selected by default. Uncheck the ones you don\'t want.', 'elementor' ) }
+							{ __( 'All items are already selected by default. Uncheck the ones you don\'t want.', 'refraction' ) }
 						</Typography>
 					</Stack>
 				</Stack>

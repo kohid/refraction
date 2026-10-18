@@ -1,23 +1,23 @@
 <?php
 
-namespace Elementor\Modules\Shapes;
+namespace Refraction\Modules\Shapes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-class Module extends \Elementor\Core\Base\Module {
+class Module extends \Refraction\Core\Base\Module {
 
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/frontend/after_register_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_styles' ] );
 	}
 
 	/**
 	 * Register styles.
 	 *
-	 * At build time, Elementor compiles `/modules/shapes/assets/scss/frontend.scss`
+	 * At build time, Refraction compiles `/modules/shapes/assets/scss/frontend.scss`
 	 * to `/assets/css/widget-shapes.min.css`.
 	 *
 	 * @return void
@@ -26,8 +26,8 @@ class Module extends \Elementor\Core\Base\Module {
 		wp_register_style(
 			'widget-text-path',
 			$this->get_css_assets_url( 'widget-text-path', null, true, true ),
-			[ 'elementor-frontend' ],
-			ELEMENTOR_VERSION
+			[ 'refraction-frontend' ],
+			REFRACTION_VERSION
 		);
 	}
 
@@ -40,16 +40,16 @@ class Module extends \Elementor\Core\Base\Module {
 	 */
 	public static function get_paths( $add_custom = true ) {
 		$paths = [
-			'wave' => esc_html__( 'Wave', 'elementor' ),
-			'arc' => esc_html__( 'Arc', 'elementor' ),
-			'circle' => esc_html__( 'Circle', 'elementor' ),
-			'line' => esc_html__( 'Line', 'elementor' ),
-			'oval' => esc_html__( 'Oval', 'elementor' ),
-			'spiral' => esc_html__( 'Spiral', 'elementor' ),
+			'wave' => esc_html__( 'Wave', 'refraction' ),
+			'arc' => esc_html__( 'Arc', 'refraction' ),
+			'circle' => esc_html__( 'Circle', 'refraction' ),
+			'line' => esc_html__( 'Line', 'refraction' ),
+			'oval' => esc_html__( 'Oval', 'refraction' ),
+			'spiral' => esc_html__( 'Spiral', 'refraction' ),
 		];
 
 		if ( $add_custom ) {
-			$paths['custom'] = esc_html__( 'Custom', 'elementor' );
+			$paths['custom'] = esc_html__( 'Custom', 'refraction' );
 		}
 
 		return $paths;
@@ -63,7 +63,7 @@ class Module extends \Elementor\Core\Base\Module {
 	 * @return string
 	 */
 	public static function get_path_url( $path ) {
-		return ELEMENTOR_ASSETS_URL . 'svg-paths/' . $path . '.svg';
+		return REFRACTION_ASSETS_URL . 'svg-paths/' . $path . '.svg';
 	}
 
 	/**

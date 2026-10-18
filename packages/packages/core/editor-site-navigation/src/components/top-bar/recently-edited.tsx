@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
 	__useActiveDocument as useActiveDocument,
 	__useHostDocument as useHostDocument,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import { ChevronDownIcon } from '@elementor/icons';
 import {
 	bindMenu,
@@ -43,7 +43,7 @@ export default function RecentlyEdited() {
 
 	const popupState = usePopupState( {
 		variant: 'popover',
-		popupId: 'elementor-v2-top-bar-recently-edited',
+		popupId: 'refraction-v2-top-bar-recently-edited',
 	} );
 
 	const documentTitle = useReverseHtmlEntities( document?.title );
@@ -63,10 +63,10 @@ export default function RecentlyEdited() {
 				{ ...buttonProps }
 				onClick={ ( e: React.MouseEvent ) => {
 					const extendedWindow = window as unknown as ExtendedWindow;
-					const config = extendedWindow?.elementorCommon?.eventsManager?.config;
+					const config = extendedWindow?.refractionCommon?.eventsManager?.config;
 
 					if ( config ) {
-						extendedWindow.elementorCommon.eventsManager.dispatchEvent(
+						extendedWindow.refractionCommon.eventsManager.dispatchEvent(
 							config.names.topBar.documentNameDropdown,
 							{
 								location: config.locations.topBar,
@@ -86,7 +86,7 @@ export default function RecentlyEdited() {
 				MenuListProps={ {
 					subheader: (
 						<ListSubheader color="primary" sx={ { fontStyle: 'italic', fontWeight: '300' } }>
-							{ __( 'Recent', 'elementor' ) }
+							{ __( 'Recent', 'refraction' ) }
 						</ListSubheader>
 					),
 				} }
@@ -104,7 +104,7 @@ export default function RecentlyEdited() {
 								variant: 'caption',
 								fontStyle: 'italic',
 							} }
-							primary={ __( 'There are no other pages or templates on this site yet.', 'elementor' ) }
+							primary={ __( 'There are no other pages or templates on this site yet.', 'refraction' ) }
 						/>
 					</MenuItem>
 				) }

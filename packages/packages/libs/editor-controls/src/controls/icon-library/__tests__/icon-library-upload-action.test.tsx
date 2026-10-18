@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { __flushAllInjections } from '@elementor/locations';
+import { __flushAllInjections } from '@refraction/locations';
 import { ThemeProvider } from '@elementor/ui';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
@@ -31,7 +31,7 @@ const renderSlot = () =>
 	);
 
 const setPromotions = ( value?: unknown ) => {
-	( window as { elementor?: unknown } ).elementor = { config: { v4Promotions: value } };
+	( window as { refraction?: unknown } ).refraction = { config: { v4Promotions: value } };
 };
 
 describe( 'IconLibraryUploadAction', () => {
@@ -41,8 +41,8 @@ describe( 'IconLibraryUploadAction', () => {
 
 	afterEach( () => {
 		__flushAllInjections();
-		delete ( window as { elementorPro?: unknown } ).elementorPro;
-		delete ( window as { elementor?: unknown } ).elementor;
+		delete ( window as { refractionPro?: unknown } ).refractionPro;
+		delete ( window as { refraction?: unknown } ).refraction;
 		jest.clearAllMocks();
 	} );
 
@@ -212,7 +212,7 @@ describe( 'IconLibraryUploadAction', () => {
 
 	it( 'should render nothing by default when Pro is active so Pro can provide the action', () => {
 		// Arrange.
-		( window as { elementorPro?: unknown } ).elementorPro = {};
+		( window as { refractionPro?: unknown } ).refractionPro = {};
 
 		// Act.
 		renderSlot();
@@ -223,7 +223,7 @@ describe( 'IconLibraryUploadAction', () => {
 
 	it( 'should render the injected component instead of the default when its condition passes', () => {
 		// Arrange.
-		( window as { elementorPro?: unknown } ).elementorPro = {};
+		( window as { refractionPro?: unknown } ).refractionPro = {};
 		injectIntoIconLibraryUploadAction( {
 			id: 'test-pro-upload-action',
 			component: () => <button>Manage libraries</button>,
@@ -239,7 +239,7 @@ describe( 'IconLibraryUploadAction', () => {
 
 	it( 'should show an injected component that is registered after the slot mounted', () => {
 		// Arrange.
-		( window as { elementorPro?: unknown } ).elementorPro = {};
+		( window as { refractionPro?: unknown } ).refractionPro = {};
 		renderSlot();
 
 		// Act.

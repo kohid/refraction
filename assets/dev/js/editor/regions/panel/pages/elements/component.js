@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 
 export default class Component extends ComponentBase {
 	getNamespace() {
@@ -7,13 +7,13 @@ export default class Component extends ComponentBase {
 
 	defaultTabs() {
 		return {
-			categories: { title: __( 'Elements', 'elementor' ) },
-			global: { title: __( 'Global', 'elementor' ) },
+			categories: { title: __( 'Elements', 'refraction' ) },
+			global: { title: __( 'Global', 'refraction' ) },
 		};
 	}
 
 	getTabsWrapperSelector() {
-		return '#elementor-panel-elements-navigation';
+		return '#refraction-panel-elements-navigation';
 	}
 
 	renderTab( tab, args = {} ) {
@@ -23,13 +23,13 @@ export default class Component extends ComponentBase {
 	activateTab( tab ) {
 		super.activateTab( tab );
 
-		elementorCommon.eventsManager.dispatchEvent(
-			elementorCommon.eventsManager.config.names.v1[ tab ],
+		refractionCommon.eventsManager.dispatchEvent(
+			refractionCommon.eventsManager.config.names.v1[ tab ],
 			{
-				location: elementorCommon.eventsManager.config.locations.widgetPanel,
-				secondaryLocation: elementorCommon.eventsManager.config.secondaryLocations[ tab ],
-				trigger: elementorCommon.eventsManager.config.triggers.click,
-				element: elementorCommon.eventsManager.config.elements.accordionSection,
+				location: refractionCommon.eventsManager.config.locations.widgetPanel,
+				secondaryLocation: refractionCommon.eventsManager.config.secondaryLocations[ tab ],
+				trigger: refractionCommon.eventsManager.config.triggers.click,
+				element: refractionCommon.eventsManager.config.elements.accordionSection,
 			},
 		);
 	}

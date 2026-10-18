@@ -12,7 +12,7 @@ const STUB_PREFIX = '\0app-scss:';
  */
 export function appScssPlugin() {
 	return {
-		name: 'elementor-app-scss',
+		name: 'refraction-app-scss',
 		enforce: 'pre',
 		async resolveId( source, importer ) {
 			if ( ! importer || ! /\.s?css$/i.test( source ) ) {

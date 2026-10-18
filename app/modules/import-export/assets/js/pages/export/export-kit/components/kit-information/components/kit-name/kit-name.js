@@ -2,9 +2,9 @@ import { useContext, useState } from 'react';
 
 import { ExportContext } from '../../../../../../../context/export-context/export-context-provider';
 
-import TextField from 'elementor-app/ui/atoms/text-field';
-import Grid from 'elementor-app/ui/grid/grid';
-import Text from 'elementor-app/ui/atoms/text';
+import TextField from 'refraction-app/ui/atoms/text-field';
+import Grid from 'refraction-app/ui/grid/grid';
+import Text from 'refraction-app/ui/atoms/text';
 
 export default function KitName() {
 	const exportContext = useContext( ExportContext );
@@ -12,7 +12,7 @@ export default function KitName() {
 
 	const validateKitName = ( value ) => {
 		if ( ! value || 0 === value.trim().length ) {
-			return __( 'Must add a name', 'elementor' );
+			return __( 'Must add a name', 'refraction' );
 		}
 
 		return null;
@@ -32,9 +32,9 @@ export default function KitName() {
 
 	return (
 		<Grid container direction="column">
-			<Text tag="span" variant="xs">{ __( 'Name', 'elementor' ) }</Text>
+			<Text tag="span" variant="xs">{ __( 'Name', 'refraction' ) }</Text>
 			<TextField
-				placeholder={ __( 'Type name here...', 'elementor' ) }
+				placeholder={ __( 'Type name here...', 'refraction' ) }
 				onChange={ handleChange }
 				onBlur={ handleChange }
 				className={ error ? 'e-app-export-kit-information__field--error' : '' }

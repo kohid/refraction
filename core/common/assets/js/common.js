@@ -1,16 +1,16 @@
 import Helpers from './utils/helpers';
 import Storage from './utils/storage';
 import Debug from './utils/debug';
-import Ajax from 'elementor-common-modules/ajax/assets/js/ajax';
-import Finder from 'elementor-common-modules/finder/assets/js/finder';
-import Connect from 'elementor-common-modules/connect/assets/js/connect';
+import Ajax from 'refraction-common-modules/ajax/assets/js/ajax';
+import Finder from 'refraction-common-modules/finder/assets/js/finder';
+import Connect from 'refraction-common-modules/connect/assets/js/connect';
 import WordpressComponent from './components/wordpress/component';
-import EventsDispatcherComponent from 'elementor-common-modules/event-tracker/assets/js/data/component';
-import Events from 'elementor-common-modules/event-tracker/assets/js/events';
-import EventsManager from 'elementor-common-modules/events-manager/assets/js/module';
-import Notifications from 'elementor-utils/notifications';
+import EventsDispatcherComponent from 'refraction-common-modules/event-tracker/assets/js/data/component';
+import Events from 'refraction-common-modules/event-tracker/assets/js/events';
+import EventsManager from 'refraction-common-modules/events-manager/assets/js/module';
+import Notifications from 'refraction-utils/notifications';
 
-class ElementorCommonApp extends elementorModules.ViewModule {
+class RefractionCommonApp extends refractionModules.ViewModule {
 	setMarionetteTemplateCompiler() {
 		Marionette.TemplateCache.prototype.loadTemplate = ( templateId ) => {
 			const $template = '#' === templateId.charAt( 0 )
@@ -65,7 +65,7 @@ class ElementorCommonApp extends elementorModules.ViewModule {
 
 		$e.components.register( new EventsDispatcherComponent() );
 
-		elementorCommon.elements.$window.on( 'elementor:init-components', () => {
+		refractionCommon.elements.$window.on( 'refraction:init-components', () => {
 			$e.components.register( new WordpressComponent() );
 		} );
 
@@ -134,12 +134,12 @@ class ElementorCommonApp extends elementorModules.ViewModule {
 	onInit() {
 		super.onInit();
 
-		this.config = elementorCommonConfig;
+		this.config = refractionCommonConfig;
 
 		this.setMarionetteTemplateCompiler();
 	}
 }
 
-window.elementorCommon = new ElementorCommonApp();
+window.refractionCommon = new RefractionCommonApp();
 
-elementorCommon.initComponents();
+refractionCommon.initComponents();

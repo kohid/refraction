@@ -18,16 +18,16 @@ const noJqueryRules = fixupConfigRules(
 	compat.extends( 'plugin:no-jquery/deprecated' ),
 ).reduce( ( rules, config ) => ( { ...rules, ...config.rules } ), {} );
 
-const elementorGlobals = {
+const refractionGlobals = {
 	wp: 'writable',
 	window: 'writable',
 	document: 'writable',
 	_: 'readonly',
 	jQuery: 'readonly',
 	JSON: 'readonly',
-	elementorFrontend: 'writable',
+	refractionFrontend: 'writable',
 	require: 'writable',
-	elementor: 'writable',
+	refraction: 'writable',
 	DialogsManager: 'writable',
 	module: 'writable',
 	React: 'writable',
@@ -109,7 +109,7 @@ export default [
 		languageOptions: {
 			ecmaVersion: 2023,
 			sourceType: 'module',
-			globals: elementorGlobals,
+			globals: refractionGlobals,
 			parserOptions: {
 				requireConfigFile: false,
 				babelOptions: {
@@ -199,7 +199,7 @@ export default [
 				2,
 				{
 					ignore: [
-						'elementor',
+						'refraction',
 						'modules',
 						'@wordpress/i18n',
 						'e-utils',
@@ -232,7 +232,7 @@ export default [
 			sourceType: 'module',
 			ecmaVersion: 'latest',
 			globals: {
-				...elementorGlobals,
+				...refractionGlobals,
 				...require( 'globals' ).node,
 			},
 		},

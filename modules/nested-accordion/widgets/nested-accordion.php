@@ -1,27 +1,27 @@
 <?php
-namespace Elementor\Modules\NestedAccordion\Widgets;
+namespace Refraction\Modules\NestedAccordion\Widgets;
 
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Text_Shadow;
-use Elementor\Group_Control_Typography;
-use Elementor\Icons_Manager;
-use Elementor\Modules\NestedElements\Base\Widget_Nested_Base;
-use Elementor\Modules\NestedElements\Controls\Control_Nested_Repeater;
-use Elementor\Plugin;
-use Elementor\Repeater;
-use Elementor\Utils;
-use Elementor\Group_Control_Text_Stroke;
+use Refraction\Controls_Manager;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Text_Shadow;
+use Refraction\Group_Control_Typography;
+use Refraction\Icons_Manager;
+use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
+use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
+use Refraction\Plugin;
+use Refraction\Repeater;
+use Refraction\Utils;
+use Refraction\Group_Control_Text_Stroke;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Nested Accordion widget.
+ * Refraction Nested Accordion widget.
  *
- * Elementor widget that displays a collapsible display of content in an
+ * Refraction widget that displays a collapsible display of content in an
  * accordion style.
  *
  * @since 3.15.0
@@ -40,7 +40,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Accordion', 'elementor' );
+		return esc_html__( 'Accordion', 'refraction' );
 	}
 
 	public function get_icon() {
@@ -69,7 +69,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 			'settings' => [
 				'_title' => sprintf(
 					/* translators: %d: Item index. */
-					__( 'item #%d', 'elementor' ),
+					__( 'item #%d', 'refraction' ),
 					$index
 				),
 				'content_width' => 'full',
@@ -91,7 +91,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 
 	protected function get_default_children_title() {
 		/* translators: %d: Item index. */
-		return esc_html__( 'Item #%d', 'elementor' );
+		return esc_html__( 'Item #%d', 'refraction' );
 	}
 
 	protected function get_default_children_placeholder_selector() {
@@ -103,17 +103,17 @@ class Nested_Accordion extends Widget_Nested_Base {
 	}
 
 	protected function get_html_wrapper_class() {
-		return 'elementor-widget-n-accordion';
+		return 'refraction-widget-n-accordion';
 	}
 
 	protected function register_controls() {
 		if ( null === $this->optimized_markup ) {
 			$this->optimized_markup = Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' ) && ! $this->has_widget_inner_wrapper();
-			$this->widget_container_selector = $this->optimized_markup ? '' : ' > .elementor-widget-container';
+			$this->widget_container_selector = $this->optimized_markup ? '' : ' > .refraction-widget-container';
 		}
 
 		$this->start_controls_section( 'section_items', [
-			'label' => esc_html__( 'Layout', 'elementor' ),
+			'label' => esc_html__( 'Layout', 'refraction' ),
 		] );
 
 		$repeater = new Repeater();
@@ -121,10 +121,10 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$repeater->add_control(
 			'item_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'Item Title', 'elementor' ),
-				'placeholder' => esc_html__( 'Item Title', 'elementor' ),
+				'default' => esc_html__( 'Item Title', 'refraction' ),
+				'placeholder' => esc_html__( 'Item Title', 'refraction' ),
 				'label_block' => true,
 				'dynamic' => [
 					'active' => true,
@@ -135,7 +135,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$repeater->add_control(
 			'element_css_id',
 			[
-				'label' => esc_html__( 'CSS ID', 'elementor' ),
+				'label' => esc_html__( 'CSS ID', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'dynamic' => [
@@ -144,7 +144,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 				'ai' => [
 					'active' => false,
 				],
-				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
+				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'refraction' ),
 				'style_transfer' => false,
 			]
 		);
@@ -152,46 +152,46 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			'items',
 			[
-				'label' => esc_html__( 'Items', 'elementor' ),
+				'label' => esc_html__( 'Items', 'refraction' ),
 				'type' => Control_Nested_Repeater::CONTROL_TYPE,
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'item_title' => esc_html__( 'Item #1', 'elementor' ),
+						'item_title' => esc_html__( 'Item #1', 'refraction' ),
 					],
 					[
-						'item_title' => esc_html__( 'Item #2', 'elementor' ),
+						'item_title' => esc_html__( 'Item #2', 'refraction' ),
 					],
 					[
-						'item_title' => esc_html__( 'Item #3', 'elementor' ),
+						'item_title' => esc_html__( 'Item #3', 'refraction' ),
 					],
 				],
 				'title_field' => '{{{ item_title }}}',
-				'button_text' => esc_html__( 'Add Item', 'elementor' ),
+				'button_text' => esc_html__( 'Add Item', 'refraction' ),
 			]
 		);
 
 		$this->add_responsive_control(
 			'accordion_item_title_position_horizontal',
 			[
-				'label' => esc_html__( 'Item Position', 'elementor' ),
+				'label' => esc_html__( 'Item Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'separator' => 'before',
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-flex eicon-align-start-h',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-h-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-flex eicon-align-end-h',
 					],
 					'stretch' => [
-						'title' => esc_html__( 'Stretch', 'elementor' ),
+						'title' => esc_html__( 'Stretch', 'refraction' ),
 						'icon' => 'eicon-h-align-stretch',
 					],
 				],
@@ -211,7 +211,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 			'heading_accordion_item_title_icon',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'separator' => 'before',
 			]
 		);
@@ -219,15 +219,15 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'accordion_item_title_icon_position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -244,7 +244,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			'accordion_item_title_icon',
 			[
-				'label' => esc_html__( 'Expand', 'elementor' ),
+				'label' => esc_html__( 'Expand', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'default' => [
 					'value' => 'fas fa-plus',
@@ -258,7 +258,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			'accordion_item_title_icon_active',
 			[
-				'label' => esc_html__( 'Collapse', 'elementor' ),
+				'label' => esc_html__( 'Collapse', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon_active',
 				'default' => [
@@ -276,7 +276,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			'title_tag',
 			[
-				'label' => esc_html__( 'Title HTML Tag', 'elementor' ),
+				'label' => esc_html__( 'Title HTML Tag', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'h1' => 'H1',
@@ -313,10 +313,10 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			'faq_schema',
 			[
-				'label' => esc_html__( 'FAQ Schema', 'elementor' ),
+				'label' => esc_html__( 'FAQ Schema', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'default' => 'no',
 			]
 		);
@@ -326,7 +326,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 			[
 				'type' => Controls_Manager::ALERT,
 				'alert_type' => 'info',
-				'content' => esc_html__( 'Google no longer supports the FAQ schema; however, it may still hold secondary value for AI and LLMs.', 'elementor' ),
+				'content' => esc_html__( 'Google no longer supports the FAQ schema; however, it may still hold secondary value for AI and LLMs.', 'refraction' ),
 				'condition' => [
 					'faq_schema[value]' => 'yes',
 				],
@@ -338,18 +338,18 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->start_controls_section(
 			'section_interactions',
 			[
-				'label' => esc_html__( 'Interactions', 'elementor' ),
+				'label' => esc_html__( 'Interactions', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'default_state',
 			[
-				'label' => esc_html__( 'Default State', 'elementor' ),
+				'label' => esc_html__( 'Default State', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'expanded' => esc_html__( 'First expanded', 'elementor' ),
-					'all_collapsed' => esc_html__( 'All collapsed', 'elementor' ),
+					'expanded' => esc_html__( 'First expanded', 'refraction' ),
+					'all_collapsed' => esc_html__( 'All collapsed', 'refraction' ),
 				],
 				'default' => 'expanded',
 				'frontend_available' => true,
@@ -359,11 +359,11 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			'max_items_expended',
 			[
-				'label' => esc_html__( 'Max Items Expanded', 'elementor' ),
+				'label' => esc_html__( 'Max Items Expanded', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'one' => esc_html__( 'One', 'elementor' ),
-					'multiple' => esc_html__( 'Multiple', 'elementor' ),
+					'one' => esc_html__( 'One', 'refraction' ),
+					'multiple' => esc_html__( 'Multiple', 'refraction' ),
 				],
 				'default' => 'one',
 				'frontend_available' => true,
@@ -373,7 +373,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			'n_accordion_animation_duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ),
+				'label' => esc_html__( 'Animation Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms' ],
 				'default' => [
@@ -399,7 +399,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->start_controls_section(
 			'section_accordion_style',
 			[
-				'label' => esc_html__( 'Accordion', 'elementor' ),
+				'label' => esc_html__( 'Accordion', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -407,7 +407,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'accordion_item_title_space_between',
 			[
-				'label' => esc_html__( 'Space between Items', 'elementor' ),
+				'label' => esc_html__( 'Space between Items', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -433,7 +433,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'accordion_item_title_distance_from_content',
 			[
-				'label' => esc_html__( 'Distance from content', 'elementor' ),
+				'label' => esc_html__( 'Distance from content', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -467,7 +467,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'accordion_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -480,7 +480,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'accordion_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -498,7 +498,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->start_controls_section(
 			'section_content_style',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -520,10 +520,10 @@ class Nested_Accordion extends Widget_Nested_Base {
 				'selector' => $low_specificity_accordion_item_selector,
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Border Color', 'elementor' ),
+						'label' => esc_html__( 'Border Color', 'refraction' ),
 					],
 					'width' => [
-						'label' => esc_html__( 'Border Width', 'elementor' ),
+						'label' => esc_html__( 'Border Width', 'refraction' ),
 					],
 				],
 			]
@@ -532,7 +532,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'content_border_radius',
 			[
-				'label' => esc_html__( 'Border Radius', 'elementor' ),
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -544,7 +544,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'content_padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -560,7 +560,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->start_controls_section(
 			'section_header_style',
 			[
-				'label' => esc_html__( 'Header', 'elementor' ),
+				'label' => esc_html__( 'Header', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -569,7 +569,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 			'heading_header_style_title',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 
 			]
 		);
@@ -601,7 +601,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 			'heading_icon_style_title',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'separator' => 'before',
 			]
 		);
@@ -609,7 +609,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'em' => [
@@ -633,7 +633,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_responsive_control(
 			'icon_spacing',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -669,15 +669,15 @@ class Nested_Accordion extends Widget_Nested_Base {
 
 		switch ( $state ) {
 			case 'hover':
-				$translated_tab_text = esc_html__( 'Hover', 'elementor' );
+				$translated_tab_text = esc_html__( 'Hover', 'refraction' );
 				$translated_tab_css_selector = ":where( {{WRAPPER}}{$this->widget_container_selector} > .e-n-accordion > .e-n-accordion-item:not([open]) > .e-n-accordion-item-title:hover > .e-n-accordion-item-title-header ) > .e-n-accordion-item-title-text";
 				break;
 			case 'active':
-				$translated_tab_text = esc_html__( 'Active', 'elementor' );
+				$translated_tab_text = esc_html__( 'Active', 'refraction' );
 				$translated_tab_css_selector = ":where( {{WRAPPER}}{$this->widget_container_selector} > .e-n-accordion > .e-n-accordion-item[open] > .e-n-accordion-item-title > .e-n-accordion-item-title-header ) > .e-n-accordion-item-title-text";
 				break;
 			default:
-				$translated_tab_text = esc_html__( 'Normal', 'elementor' );
+				$translated_tab_text = esc_html__( 'Normal', 'refraction' );
 				$translated_tab_css_selector = ":where( {{WRAPPER}}{$this->widget_container_selector} > .e-n-accordion > .e-n-accordion-item:not([open]) > .e-n-accordion-item-title:not(hover) > .e-n-accordion-item-title-header ) > .e-n-accordion-item-title-text";
 				break;
 		}
@@ -692,7 +692,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$this->add_control(
 			$state . '_' . $context . '_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}}' => $variable . ': {{VALUE}};',
@@ -727,16 +727,16 @@ class Nested_Accordion extends Widget_Nested_Base {
 	private function add_border_and_radius_style( $state ) {
 		$selector = "{{WRAPPER}}{$this->widget_container_selector} > .e-n-accordion > .e-n-accordion-item > .e-n-accordion-item-title";
 
-		$translated_tab_text = esc_html__( 'Normal', 'elementor' );
+		$translated_tab_text = esc_html__( 'Normal', 'refraction' );
 
 		switch ( $state ) {
 			case 'hover':
 				$selector .= ':hover';
-				$translated_tab_text = esc_html__( 'Hover', 'elementor' );
+				$translated_tab_text = esc_html__( 'Hover', 'refraction' );
 				break;
 			case 'active':
 				$selector = "{{WRAPPER}}{$this->widget_container_selector} > .e-n-accordion > .e-n-accordion-item[open] > .e-n-accordion-item-title";
-				$translated_tab_text = esc_html__( 'Active', 'elementor' );
+				$translated_tab_text = esc_html__( 'Active', 'refraction' );
 				break;
 		}
 
@@ -755,7 +755,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 				'exclude' => [ 'image' ],
 				'fields_options' => [
 					'color' => [
-						'label' => esc_html__( 'Color', 'elementor' ),
+						'label' => esc_html__( 'Color', 'refraction' ),
 					],
 				],
 				'selector' => $selector,
@@ -800,8 +800,8 @@ class Nested_Accordion extends Widget_Nested_Base {
 		$id_int = substr( $this->get_id_int(), 0, 3 );
 		$items_title_html = '';
 		$icons_content = $this->render_accordion_icons( $settings );
-		$this->add_render_attribute( 'elementor-accordion', 'class', 'e-n-accordion' );
-		$this->add_render_attribute( 'elementor-accordion', 'aria-label', 'Accordion. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys' );
+		$this->add_render_attribute( 'refraction-accordion', 'class', 'e-n-accordion' );
+		$this->add_render_attribute( 'refraction-accordion', 'aria-label', 'Accordion. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys' );
 		$default_state = $settings['default_state'];
 		$title_html_tag = Utils::validate_html_tag( $settings['title_tag'] );
 
@@ -858,7 +858,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 		}
 
 		?>
-		<div <?php $this->print_render_attribute_string( 'elementor-accordion' ); ?>>
+		<div <?php $this->print_render_attribute_string( 'refraction-accordion' ); ?>>
 			<?php echo $items_title_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 		<?php
@@ -896,9 +896,9 @@ class Nested_Accordion extends Widget_Nested_Base {
 				return $should_render;
 			};
 
-			add_filter( 'elementor/frontend/container/should_render', $add_attribute_to_container, 10, 3 );
+			add_filter( 'refraction/frontend/container/should_render', $add_attribute_to_container, 10, 3 );
 			$children[ $index ]->print_element();
-			remove_filter( 'elementor/frontend/container/should_render', $add_attribute_to_container );
+			remove_filter( 'refraction/frontend/container/should_render', $add_attribute_to_container );
 		}
 	}
 
@@ -978,12 +978,12 @@ class Nested_Accordion extends Widget_Nested_Base {
 		<div class="e-n-accordion" aria-label="Accordion. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys">
 			<# if ( settings['items'] ) {
 			const elementUid = view.getIDInt().toString().substring( 0, 3 ),
-				titleHTMLTag = elementor.helpers.validateHTMLTag( settings.title_tag ),
+				titleHTMLTag = refraction.helpers.validateHTMLTag( settings.title_tag ),
 				defaultState = settings.default_state,
-				itemTitleIcon = elementor.helpers.renderIcon( view, settings['accordion_item_title_icon'], { 'aria-hidden': true }, 'i', 'object' ) ?? '',
+				itemTitleIcon = refraction.helpers.renderIcon( view, settings['accordion_item_title_icon'], { 'aria-hidden': true }, 'i', 'object' ) ?? '',
 				itemTitleIconActive = '' === settings.accordion_item_title_icon_active.value
 					? itemTitleIcon
-					: elementor.helpers.renderIcon( view, settings['accordion_item_title_icon_active'], { 'aria-hidden': true }, 'i', 'object' );
+					: refraction.helpers.renderIcon( view, settings['accordion_item_title_icon_active'], { 'aria-hidden': true }, 'i', 'object' );
 			#>
 
 				<# _.each( settings['items'], function( item, index ) {

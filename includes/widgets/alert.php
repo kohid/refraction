@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Icons_Manager;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Icons_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor alert widget.
+ * Refraction alert widget.
  *
- * Elementor widget that displays a collapsible display of content in an toggle
+ * Refraction widget that displays a collapsible display of content in an toggle
  * style, allowing the user to open multiple items.
  *
  * @since 1.0.0
@@ -43,7 +43,7 @@ class Widget_Alert extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Alert', 'elementor' );
+		return esc_html__( 'Alert', 'refraction' );
 	}
 
 	/**
@@ -108,33 +108,33 @@ class Widget_Alert extends Widget_Base {
 		$this->start_controls_section(
 			'section_alert',
 			[
-				'label' => esc_html__( 'Alert', 'elementor' ),
+				'label' => esc_html__( 'Alert', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'alert_type',
 			[
-				'label' => esc_html__( 'Type', 'elementor' ),
+				'label' => esc_html__( 'Type', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'info',
 				'options' => [
-					'info' => esc_html__( 'Info', 'elementor' ),
-					'success' => esc_html__( 'Success', 'elementor' ),
-					'warning' => esc_html__( 'Warning', 'elementor' ),
-					'danger' => esc_html__( 'Danger', 'elementor' ),
+					'info' => esc_html__( 'Info', 'refraction' ),
+					'success' => esc_html__( 'Success', 'refraction' ),
+					'warning' => esc_html__( 'Warning', 'refraction' ),
+					'danger' => esc_html__( 'Danger', 'refraction' ),
 				],
-				'prefix_class' => 'elementor-alert-',
+				'prefix_class' => 'refraction-alert-',
 			]
 		);
 
 		$this->add_control(
 			'alert_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'placeholder' => esc_html__( 'Enter your title', 'elementor' ),
-				'default' => esc_html__( 'This is an Alert', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your title', 'refraction' ),
+				'default' => esc_html__( 'This is an Alert', 'refraction' ),
 				'label_block' => true,
 				'dynamic' => [
 					'active' => true,
@@ -145,10 +145,10 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'alert_description',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'placeholder' => esc_html__( 'Enter your description', 'elementor' ),
-				'default' => esc_html__( 'I am a description. Click the edit button to change this text.', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your description', 'refraction' ),
+				'default' => esc_html__( 'I am a description. Click the edit button to change this text.', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -158,10 +158,10 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'show_dismiss',
 			[
-				'label' => esc_html__( 'Dismiss Icon', 'elementor' ),
+				'label' => esc_html__( 'Dismiss Icon', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Show', 'elementor' ),
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
 				'return_value' => 'show',
 				'default' => 'show',
 			]
@@ -170,7 +170,7 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'dismiss_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -207,7 +207,7 @@ class Widget_Alert extends Widget_Base {
 		$this->start_controls_section(
 			'section_type',
 			[
-				'label' => esc_html__( 'Alert', 'elementor' ),
+				'label' => esc_html__( 'Alert', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -215,10 +215,10 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'background',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-alert' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-alert' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -226,10 +226,10 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'border_color',
 			[
-				'label' => esc_html__( 'Side Border Color', 'elementor' ),
+				'label' => esc_html__( 'Side Border Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-alert' => 'border-inline-start-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-alert' => 'border-inline-start-color: {{VALUE}};',
 				],
 			]
 		);
@@ -237,7 +237,7 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'border_left-width',
 			[
-				'label' => esc_html__( 'Side Border Width', 'elementor' ),
+				'label' => esc_html__( 'Side Border Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -249,7 +249,7 @@ class Widget_Alert extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-alert' => 'border-inline-start-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-alert' => 'border-inline-start-width: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -259,7 +259,7 @@ class Widget_Alert extends Widget_Base {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -267,10 +267,10 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-alert-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-alert-title' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -279,7 +279,7 @@ class Widget_Alert extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'alert_title',
-				'selector' => '{{WRAPPER}} .elementor-alert-title',
+				'selector' => '{{WRAPPER}} .refraction-alert-title',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
@@ -290,7 +290,7 @@ class Widget_Alert extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'title_shadow',
-				'selector' => '{{WRAPPER}} .elementor-alert-title',
+				'selector' => '{{WRAPPER}} .refraction-alert-title',
 			]
 		);
 
@@ -299,7 +299,7 @@ class Widget_Alert extends Widget_Base {
 		$this->start_controls_section(
 			'section_description',
 			[
-				'label' => esc_html__( 'Description', 'elementor' ),
+				'label' => esc_html__( 'Description', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -307,10 +307,10 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'description_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-alert-description' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-alert-description' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -319,7 +319,7 @@ class Widget_Alert extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'alert_description',
-				'selector' => '{{WRAPPER}} .elementor-alert-description',
+				'selector' => '{{WRAPPER}} .refraction-alert-description',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_TEXT,
 				],
@@ -330,7 +330,7 @@ class Widget_Alert extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'description_shadow',
-				'selector' => '{{WRAPPER}} .elementor-alert-description',
+				'selector' => '{{WRAPPER}} .refraction-alert-description',
 			]
 		);
 
@@ -339,7 +339,7 @@ class Widget_Alert extends Widget_Base {
 		$this->start_controls_section(
 			'section_dismiss_icon',
 			[
-				'label' => esc_html__( 'Dismiss Icon', 'elementor' ),
+				'label' => esc_html__( 'Dismiss Icon', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'show_dismiss' => 'show',
@@ -350,7 +350,7 @@ class Widget_Alert extends Widget_Base {
 		$this->add_responsive_control(
 			'dismiss_icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -373,7 +373,7 @@ class Widget_Alert extends Widget_Base {
 		$this->add_responsive_control(
 			'dismiss_icon_vertical_position',
 			[
-				'label' => esc_html__( 'Vertical Position', 'elementor' ),
+				'label' => esc_html__( 'Vertical Position', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -391,7 +391,7 @@ class Widget_Alert extends Widget_Base {
 		$this->add_responsive_control(
 			'dismiss_icon_horizontal_position',
 			[
-				'label' => esc_html__( 'Horizontal Position', 'elementor' ),
+				'label' => esc_html__( 'Horizontal Position', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -409,13 +409,13 @@ class Widget_Alert extends Widget_Base {
 		$this->start_controls_tabs( 'dismiss_icon_colors' );
 
 		$this->start_controls_tab( 'dismiss_icon_normal_colors', [
-			'label' => esc_html__( 'Normal', 'elementor' ),
+			'label' => esc_html__( 'Normal', 'refraction' ),
 		] );
 
 		$this->add_control(
 			'dismiss_icon_normal_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}}' => '--dismiss-icon-normal-color: {{VALUE}};',
@@ -426,13 +426,13 @@ class Widget_Alert extends Widget_Base {
 		$this->end_controls_tab();
 
 		$this->start_controls_tab( 'dismiss_icon_hover_colors', [
-			'label' => esc_html__( 'Hover', 'elementor' ),
+			'label' => esc_html__( 'Hover', 'refraction' ),
 		] );
 
 		$this->add_control(
 			'dismiss_icon_hover_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}}' => '--dismiss-icon-hover-color: {{VALUE}};',
@@ -443,7 +443,7 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'dismiss_icon_hover_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
+				'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
@@ -480,13 +480,13 @@ class Widget_Alert extends Widget_Base {
 			return;
 		}
 
-		$this->add_render_attribute( 'alert_wrapper', 'class', 'elementor-alert' );
+		$this->add_render_attribute( 'alert_wrapper', 'class', 'refraction-alert' );
 
 		$this->add_render_attribute( 'alert_wrapper', 'role', 'alert' );
 
-		$this->add_render_attribute( 'alert_title', 'class', 'elementor-alert-title' );
+		$this->add_render_attribute( 'alert_title', 'class', 'refraction-alert-title' );
 
-		$this->add_render_attribute( 'alert_description', 'class', 'elementor-alert-description' );
+		$this->add_render_attribute( 'alert_description', 'class', 'refraction-alert-description' );
 
 		$this->add_inline_editing_attributes( 'alert_title', 'none' );
 
@@ -503,7 +503,7 @@ class Widget_Alert extends Widget_Base {
 			<?php endif; ?>
 
 			<?php if ( 'show' === $settings['show_dismiss'] ) : ?>
-			<button type="button" class="elementor-alert-dismiss" aria-label="<?php echo esc_attr__( 'Dismiss this alert.', 'elementor' ); ?>">
+			<button type="button" class="refraction-alert-dismiss" aria-label="<?php echo esc_attr__( 'Dismiss this alert.', 'refraction' ); ?>">
 				<?php
 				if ( ! empty( $settings['dismiss_icon']['value'] ) ) {
 					Icons_Manager::render_icon( $settings['dismiss_icon'], [ 'aria-hidden' => 'true' ] );
@@ -553,20 +553,20 @@ class Widget_Alert extends Widget_Base {
 			return;
 		}
 
-		view.addRenderAttribute( 'alert_wrapper', 'class', 'elementor-alert' );
+		view.addRenderAttribute( 'alert_wrapper', 'class', 'refraction-alert' );
 
 		view.addRenderAttribute( 'alert_wrapper', 'role', 'alert' );
 
-		view.addRenderAttribute( 'alert_title', 'class', 'elementor-alert-title' );
+		view.addRenderAttribute( 'alert_title', 'class', 'refraction-alert-title' );
 
-		view.addRenderAttribute( 'alert_description', 'class', 'elementor-alert-description' );
+		view.addRenderAttribute( 'alert_description', 'class', 'refraction-alert-description' );
 
 		view.addInlineEditingAttributes( 'alert_title', 'none' );
 
 		view.addInlineEditingAttributes( 'alert_description' );
 
-		var iconHTML = elementor.helpers.renderIcon( view, settings.dismiss_icon, { 'aria-hidden': true }, 'i' , 'object' ),
-			migrated = elementor.helpers.isIconMigrated( settings, 'dismiss_icon' );
+		var iconHTML = refraction.helpers.renderIcon( view, settings.dismiss_icon, { 'aria-hidden': true }, 'i' , 'object' ),
+			migrated = refraction.helpers.isIconMigrated( settings, 'dismiss_icon' );
 		#>
 		<div {{{ view.getRenderAttributeString( 'alert_wrapper' ) }}}>
 
@@ -579,7 +579,7 @@ class Widget_Alert extends Widget_Base {
 			<# } #>
 
 			<# if ( 'show' === settings.show_dismiss ) { #>
-			<button type="button" class="elementor-alert-dismiss" aria-label="<?php echo esc_attr__( 'Dismiss this alert.', 'elementor' ); ?>">
+			<button type="button" class="refraction-alert-dismiss" aria-label="<?php echo esc_attr__( 'Dismiss this alert.', 'refraction' ); ?>">
 				<# if ( iconHTML && iconHTML.rendered && ( ! settings.icon || migrated ) ) { #>
 				{{{ iconHTML.value }}}
 				<# } else { #>

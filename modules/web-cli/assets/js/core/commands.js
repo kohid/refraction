@@ -1,7 +1,7 @@
 import CommandsBackwardsCompatibility from './backwards-compatibility/commands';
 import CommandBase from '../modules/command-base';
-import Console from 'elementor-api/utils/console';
-import Deprecation from 'elementor-api/utils/deprecation';
+import Console from 'refraction-api/utils/console';
+import Deprecation from 'refraction-api/utils/deprecation';
 
 /**
  * @typedef {import('../modules/component-base')} ComponentBase
@@ -294,7 +294,7 @@ export default class Commands extends CommandsBackwardsCompatibility {
 
 		this.trigger( 'run:before', component, command, args );
 
-		window.dispatchEvent( new CustomEvent( 'elementor/commands/run/before', {
+		window.dispatchEvent( new CustomEvent( 'refraction/commands/run/before', {
 			detail: {
 				command,
 				args,
@@ -515,7 +515,7 @@ export default class Commands extends CommandsBackwardsCompatibility {
 
 		this.trigger( 'run:after', component, command, args, results );
 
-		window.dispatchEvent( new CustomEvent( 'elementor/commands/run/after', {
+		window.dispatchEvent( new CustomEvent( 'refraction/commands/run/after', {
 			detail: {
 				command,
 				args,

@@ -1,14 +1,14 @@
 // TODO: Copied from `section/shapes.js`.
-export default class Shapes extends elementorModules.frontend.handlers.Base {
+export default class Shapes extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		const contentWidth = this.getElementSettings( 'content_width' ),
-			container = 'boxed' === contentWidth ? '> .e-con-inner > .elementor-shape-%s' : '> .elementor-shape-%s';
+			container = 'boxed' === contentWidth ? '> .e-con-inner > .refraction-shape-%s' : '> .refraction-shape-%s';
 
 		return {
 			selectors: {
 				container,
 			},
-			svgURL: elementorFrontend.config.urls.assets + 'shapes/',
+			svgURL: refractionFrontend.config.urls.assets + 'shapes/',
 		};
 	}
 
@@ -24,13 +24,13 @@ export default class Shapes extends elementorModules.frontend.handlers.Base {
 	}
 
 	isActive() {
-		return elementorFrontend.isEditMode();
+		return refractionFrontend.isEditMode();
 	}
 
 	getSvgURL( shapeType, fileName ) {
 		let svgURL = this.getSettings( 'svgURL' ) + fileName + '.svg';
-		if ( elementor.config.additional_shapes && shapeType in elementor.config.additional_shapes ) {
-			svgURL = elementor.config.additional_shapes[ shapeType ];
+		if ( refraction.config.additional_shapes && shapeType in refraction.config.additional_shapes ) {
+			svgURL = refraction.config.additional_shapes[ shapeType ];
 			if ( -1 < fileName.indexOf( '-negative' ) ) {
 				svgURL = svgURL.replace( '.svg', '-negative.svg' );
 			}

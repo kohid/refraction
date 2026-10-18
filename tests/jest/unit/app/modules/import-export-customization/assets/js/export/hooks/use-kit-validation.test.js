@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import PropTypes from 'prop-types';
-import { ExportContextProvider } from 'elementor/app/modules/import-export-customization/assets/js/export/context/export-context';
-import { useKitValidation } from 'elementor/app/modules/import-export-customization/assets/js/export/hooks/use-kit-validation';
+import { ExportContextProvider } from 'refraction/app/modules/import-export-customization/assets/js/export/context/export-context';
+import { useKitValidation } from 'refraction/app/modules/import-export-customization/assets/js/export/hooks/use-kit-validation';
 
 const createWrapper = () => {
 	const Wrapper = ( { children } ) => (

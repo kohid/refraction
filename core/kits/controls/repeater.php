@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Kits\Controls;
+namespace Refraction\Core\Kits\Controls;
 
-use Elementor\Control_Repeater;
+use Refraction\Control_Repeater;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -56,12 +56,12 @@ class Repeater extends Control_Repeater {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-repeater-fields-wrapper" role="list"></div>
+		<div class="refraction-repeater-fields-wrapper" role="list"></div>
 		<# if ( itemActions.add ) { #>
-			<div class="elementor-button-wrapper">
-				<button class="elementor-button elementor-repeater-add" type="button">
+			<div class="refraction-button-wrapper">
+				<button class="refraction-button refraction-repeater-add" type="button">
 					<i class="eicon-plus" aria-hidden="true"></i>
-					<span class="elementor-repeater__add-button__text">{{{ addButtonText }}}</span>
+					<span class="refraction-repeater__add-button__text">{{{ addButtonText }}}</span>
 				</button>
 			</div>
 		<# } #>

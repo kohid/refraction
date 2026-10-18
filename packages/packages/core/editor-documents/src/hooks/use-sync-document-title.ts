@@ -17,7 +17,7 @@ export default function useSyncDocumentTitle() {
 		}
 
 		// translators: %s: Document title.
-		const title = __( 'Edit "%s" with Elementor', 'elementor' ).replace( '%s', document.title );
+		const title = __( 'Edit "%s" with Refraction', 'refraction' ).replace( '%s', document.title );
 
 		window.document.title = title;
 	}, [ document?.title ] );

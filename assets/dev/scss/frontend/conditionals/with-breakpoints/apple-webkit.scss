@@ -6,24 +6,24 @@
 	&.rtl { --flex-right: flex-start; }
 
 	@mixin social-icons-align-right-safari($device: '') {
-		.elementor-widget-social-icons.e-grid-align#{$device}-right,
-		.elementor-share-buttons#{$device}--align-right {
+		.refraction-widget-social-icons.e-grid-align#{$device}-right,
+		.refraction-share-buttons#{$device}--align-right {
 			--justify-content: var(--flex-right, flex-end);
 		}
 
-		.elementor-widget-social-icons.e-grid-align#{$device}-center,
-		.elementor-share-buttons#{$device}--align-center {
+		.refraction-widget-social-icons.e-grid-align#{$device}-center,
+		.refraction-share-buttons#{$device}--align-center {
 			--justify-content: center;
 		}
 
-		.elementor-grid-0 {
-			&.elementor-widget-social-icons.e-grid-align#{$device}-right,
-			&.elementor-widget-social-icons.e-grid-align#{$device}-center,
-			&.elementor-share-buttons--align#{$device}-right,
-			&.elementor-share-buttons--align#{$device}-center,
-			&.elementor-share-buttons--align#{$device}-justify {
+		.refraction-grid-0 {
+			&.refraction-widget-social-icons.e-grid-align#{$device}-right,
+			&.refraction-widget-social-icons.e-grid-align#{$device}-center,
+			&.refraction-share-buttons--align#{$device}-right,
+			&.refraction-share-buttons--align#{$device}-center,
+			&.refraction-share-buttons--align#{$device}-justify {
 
-				.elementor-grid {
+				.refraction-grid {
 					width: auto;
 					display: flex;
 					flex-wrap: wrap;
@@ -37,10 +37,10 @@
 			}
 		}
 
-		.elementor-grid-0 {
-			&.elementor-widget-social-icons.e-grid-align#{$device}-left,
-			&.elementor-share-buttons#{$device}--align-left {
-				.elementor-grid {
+		.refraction-grid-0 {
+			&.refraction-widget-social-icons.e-grid-align#{$device}-left,
+			&.refraction-share-buttons#{$device}--align-left {
+				.refraction-grid {
 					display: inline-block;
 
 					&,

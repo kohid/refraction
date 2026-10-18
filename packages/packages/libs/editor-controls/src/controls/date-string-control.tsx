@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Dayjs } from 'dayjs';
-import { dateStringPropTypeUtil } from '@elementor/editor-props';
+import { dateStringPropTypeUtil } from '@refraction/editor-props';
 import { DatePicker, LocalizationProvider } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

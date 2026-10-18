@@ -1,14 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
 
-import Page from 'elementor-app/layout/page';
+import Page from 'refraction-app/layout/page';
 import ContentLayout from '../shared/content-layout/content-layout';
 import { infoButtonProps } from '../shared/info-modal/info-modal';
 import ImportInfoModal from '../shared/info-modal/import-info-modal';
 import ExportInfoModal from '../shared/info-modal/export-info-modal';
 import { SharedContext } from '../context/shared-context/shared-context-provider';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
-import useQueryParams from 'elementor-app/hooks/use-query-params';
+import useQueryParams from 'refraction-app/hooks/use-query-params';
 import safeRedirect from '../shared/utils/redirect';
 
 export default function Layout( props ) {
@@ -71,13 +71,13 @@ export default function Layout( props ) {
 			if ( returnTo && safeRedirect( returnTo ) ) {
 				// Do nothing as the redirect is handled by the safeRedirect function.
 			} else if ( 'kit-library' === sharedContext.data.referrer || 'kit-library' === referrer ) {
-				window.top.location = elementorAppConfig.admin_url + 'admin.php?page=elementor-app&source=kit_import#/kit-library';
+				window.top.location = refractionAppConfig.admin_url + 'admin.php?page=refraction-app&source=kit_import#/kit-library';
 			} else {
-				window.top.location = elementorAppConfig.admin_url + 'admin.php?page=elementor-tools#tab-import-export-kit';
+				window.top.location = refractionAppConfig.admin_url + 'admin.php?page=refraction-tools#tab-import-export-kit';
 			}
 		},
 		config = {
-			title: 'import' === props.type ? __( 'Import', 'elementor' ) : __( 'Export', 'elementor' ),
+			title: 'import' === props.type ? __( 'Import', 'refraction' ) : __( 'Export', 'refraction' ),
 			headerButtons: [ getInfoButtonProps(), ...props.headerButtons ],
 			content: getContent(),
 			footer: props.footer,
@@ -86,8 +86,8 @@ export default function Layout( props ) {
 		moduleAdminTab = '#tab-import-export-kit';
 
 	// Targeting the return_url value to the import-export dedicated admin tab (only when there is no specific referrer).
-	if ( ! referrer && -1 === elementorAppConfig.return_url.indexOf( moduleAdminTab ) && elementorAppConfig.return_url.includes( 'page=elementor-tools' ) ) {
-		elementorAppConfig.return_url += moduleAdminTab;
+	if ( ! referrer && -1 === refractionAppConfig.return_url.indexOf( moduleAdminTab ) && refractionAppConfig.return_url.includes( 'page=refraction-tools' ) ) {
+		refractionAppConfig.return_url += moduleAdminTab;
 	}
 
 	useEffect( () => {

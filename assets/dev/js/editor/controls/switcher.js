@@ -1,4 +1,4 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' );
+var ControlBaseDataView = require( 'refraction-controls/base-data' );
 
 module.exports = ControlBaseDataView.extend( {
 

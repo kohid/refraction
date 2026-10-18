@@ -1,23 +1,23 @@
 import { hasProInstalled, isProActive, isProAtLeast } from '../is-pro';
 
 describe( 'is-pro-user utilities', () => {
-	let originalElementor: Window[ 'elementor' ];
-	let originalElementorPro: Window[ 'elementorPro' ];
+	let originalRefraction: Window[ 'refraction' ];
+	let originalRefractionPro: Window[ 'refractionPro' ];
 
 	beforeEach( () => {
-		originalElementor = window.elementor;
-		originalElementorPro = window.elementorPro;
+		originalRefraction = window.refraction;
+		originalRefractionPro = window.refractionPro;
 	} );
 
 	afterEach( () => {
-		window.elementor = originalElementor;
-		window.elementorPro = originalElementorPro;
+		window.refraction = originalRefraction;
+		window.refractionPro = originalRefractionPro;
 	} );
 
 	describe( 'hasProInstalled', () => {
-		it( 'should return false when elementor.helpers.hasPro is not defined', () => {
+		it( 'should return false when refraction.helpers.hasPro is not defined', () => {
 			// Arrange
-			window.elementor = {};
+			window.refraction = {};
 
 			// Act & Assert
 			expect( hasProInstalled() ).toBe( false );
@@ -25,7 +25,7 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return false when hasPro returns false', () => {
 			// Arrange
-			window.elementor = { helpers: { hasPro: () => false } };
+			window.refraction = { helpers: { hasPro: () => false } };
 
 			// Act & Assert
 			expect( hasProInstalled() ).toBe( false );
@@ -33,7 +33,7 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return true when hasPro returns true', () => {
 			// Arrange
-			window.elementor = { helpers: { hasPro: () => true } };
+			window.refraction = { helpers: { hasPro: () => true } };
 
 			// Act & Assert
 			expect( hasProInstalled() ).toBe( true );
@@ -43,8 +43,8 @@ describe( 'is-pro-user utilities', () => {
 	describe( 'isProActive', () => {
 		it( 'should return false when Pro is not installed', () => {
 			// Arrange
-			window.elementor = { helpers: { hasPro: () => false } };
-			window.elementorPro = { config: { isActive: true } };
+			window.refraction = { helpers: { hasPro: () => false } };
+			window.refractionPro = { config: { isActive: true } };
 
 			// Act & Assert
 			expect( isProActive() ).toBe( false );
@@ -52,8 +52,8 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return false when Pro is installed but license is expired', () => {
 			// Arrange
-			window.elementor = { helpers: { hasPro: () => true } };
-			window.elementorPro = { config: { isActive: false } };
+			window.refraction = { helpers: { hasPro: () => true } };
+			window.refractionPro = { config: { isActive: false } };
 
 			// Act & Assert
 			expect( isProActive() ).toBe( false );
@@ -61,17 +61,17 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return true when Pro is installed and license is active', () => {
 			// Arrange
-			window.elementor = { helpers: { hasPro: () => true } };
-			window.elementorPro = { config: { isActive: true } };
+			window.refraction = { helpers: { hasPro: () => true } };
+			window.refractionPro = { config: { isActive: true } };
 
 			// Act & Assert
 			expect( isProActive() ).toBe( true );
 		} );
 
-		it( 'should return false when elementorPro config is not defined', () => {
+		it( 'should return false when refractionPro config is not defined', () => {
 			// Arrange
-			window.elementor = { helpers: { hasPro: () => true } };
-			window.elementorPro = undefined;
+			window.refraction = { helpers: { hasPro: () => true } };
+			window.refractionPro = undefined;
 
 			// Act & Assert
 			expect( isProActive() ).toBe( false );
@@ -81,7 +81,7 @@ describe( 'is-pro-user utilities', () => {
 	describe( 'isProAtLeast', () => {
 		it( 'should return true when version equals targetVersion', () => {
 			// Arrange
-			window.elementorPro = { config: { version: '3.9' } };
+			window.refractionPro = { config: { version: '3.9' } };
 
 			// Act & Assert
 			expect( isProAtLeast( '3.9' ) ).toBe( true );
@@ -89,7 +89,7 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return true when major is greater than targetVersion major', () => {
 			// Arrange
-			window.elementorPro = { config: { version: '4.2' } };
+			window.refractionPro = { config: { version: '4.2' } };
 
 			// Act & Assert
 			expect( isProAtLeast( '3.9' ) ).toBe( true );
@@ -97,7 +97,7 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return true when major matches and minor is greater', () => {
 			// Arrange
-			window.elementorPro = { config: { version: '3.21' } };
+			window.refractionPro = { config: { version: '3.21' } };
 
 			// Act & Assert
 			expect( isProAtLeast( '3.9' ) ).toBe( true );
@@ -105,7 +105,7 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return false when major is less than targetVersion major', () => {
 			// Arrange
-			window.elementorPro = { config: { version: '2.9' } };
+			window.refractionPro = { config: { version: '2.9' } };
 
 			// Act & Assert
 			expect( isProAtLeast( '3.0' ) ).toBe( false );
@@ -113,15 +113,15 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return false when major matches and minor is less', () => {
 			// Arrange
-			window.elementorPro = { config: { version: '3.9.0' } };
+			window.refractionPro = { config: { version: '3.9.0' } };
 
 			// Act & Assert
 			expect( isProAtLeast( '3.21' ) ).toBe( false );
 		} );
 
-		it( 'should return false when elementorPro is not defined', () => {
+		it( 'should return false when refractionPro is not defined', () => {
 			// Arrange
-			window.elementorPro = undefined;
+			window.refractionPro = undefined;
 
 			// Act & Assert
 			expect( isProAtLeast( '3.9' ) ).toBe( false );
@@ -129,7 +129,7 @@ describe( 'is-pro-user utilities', () => {
 
 		it( 'should return false when version is not defined', () => {
 			// Arrange
-			window.elementorPro = { config: {} };
+			window.refractionPro = { config: {} };
 
 			// Act & Assert
 			expect( isProAtLeast( '3.9' ) ).toBe( false );

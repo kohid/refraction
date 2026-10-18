@@ -1,25 +1,25 @@
 <?php
-namespace Elementor\Modules\System_Info;
+namespace Refraction\Modules\System_Info;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Modules\System_Info\AdminMenuItems\Editor_One_System_Info_Menu;
-use Elementor\Modules\System_Info\AdminMenuItems\Editor_One_System_Menu;
-use Elementor\Modules\System_Info\Helpers\Model_Helper;
-use Elementor\Modules\System_Info\Reporters\Base;
-use Elementor\Modules\System_Info\Rest\Rest_Api;
-use Elementor\Plugin;
-use Elementor\Settings;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\System_Info\AdminMenuItems\Editor_One_System_Info_Menu;
+use Refraction\Modules\System_Info\AdminMenuItems\Editor_One_System_Menu;
+use Refraction\Modules\System_Info\Helpers\Model_Helper;
+use Refraction\Modules\System_Info\Reporters\Base;
+use Refraction\Modules\System_Info\Rest\Rest_Api;
+use Refraction\Plugin;
+use Refraction\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor system info module.
+ * Refraction system info module.
  *
- * Elementor system info module handler class is responsible for registering and
- * managing Elementor system info reports.
+ * Refraction system info module handler class is responsible for registering and
+ * managing Refraction system info reports.
  *
  * @since 2.9.0
  */
@@ -42,7 +42,7 @@ class Module extends BaseModule {
 	/**
 	 * Required user capabilities.
 	 *
-	 * Holds the user capabilities required to manage Elementor menus.
+	 * Holds the user capabilities required to manage Refraction menus.
 	 *
 	 * @since 2.9.0
 	 * @access private
@@ -52,9 +52,9 @@ class Module extends BaseModule {
 	private $capability = 'manage_options';
 
 	/**
-	 * Elementor system info reports.
+	 * Refraction system info reports.
 	 *
-	 * Holds an array of available reports in Elementor system info page.
+	 * Holds an array of available reports in Refraction system info page.
 	 *
 	 * @since 2.9.0
 	 * @access private
@@ -78,7 +78,7 @@ class Module extends BaseModule {
 	/**
 	 * Main system info page constructor.
 	 *
-	 * Initializing Elementor system info page.
+	 * Initializing Refraction system info page.
 	 *
 	 * @since 2.9.0
 	 * @access public
@@ -121,11 +121,11 @@ class Module extends BaseModule {
 	 * @access private
 	 */
 	private function add_actions() {
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_menu( $menu_data_provider );
 		} );
 
-		add_action( 'wp_ajax_elementor_system_info_download_file', [ $this, 'download_file' ] );
+		add_action( 'wp_ajax_refraction_system_info_download_file', [ $this, 'download_file' ] );
 		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
 	}
 
@@ -182,25 +182,25 @@ class Module extends BaseModule {
 
 		$reports = $this->load_reports( $reports_info );
 		?>
-		<div id="elementor-system-info">
-			<div class="elementor-system-info-header">
-				<h1 class="wp-heading-inline"><?php echo esc_html__( 'System Info', 'elementor' ); ?></h1>
+		<div id="refraction-system-info">
+			<div class="refraction-system-info-header">
+				<h1 class="wp-heading-inline"><?php echo esc_html__( 'System Info', 'refraction' ); ?></h1>
 				<form action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post">
-					<input type="hidden" name="action" value="elementor_system_info_download_file">
-					<input type="submit" data-id="elementor-system-info-download-file" class="button button-primary" value="<?php echo esc_attr__( 'Download System Info', 'elementor' ); ?>">
+					<input type="hidden" name="action" value="refraction_system_info_download_file">
+					<input type="submit" data-id="refraction-system-info-download-file" class="button button-primary" value="<?php echo esc_attr__( 'Download System Info', 'refraction' ); ?>">
 				</form>
 			</div>
 			<div><?php $this->print_report( $reports, 'html' ); ?></div>
-			<h2><?php echo esc_html__( 'Copy & Paste Info', 'elementor' ); ?></h2>
-			<div id="elementor-system-info-raw">
-				<label id="elementor-system-info-raw-code-label" for="elementor-system-info-raw-code"><?php echo esc_html__( 'You can copy the below info as simple text with Ctrl+C / Ctrl+V:', 'elementor' ); ?></label>
-				<textarea id="elementor-system-info-raw-code" readonly>
+			<h2><?php echo esc_html__( 'Copy & Paste Info', 'refraction' ); ?></h2>
+			<div id="refraction-system-info-raw">
+				<label id="refraction-system-info-raw-code-label" for="refraction-system-info-raw-code"><?php echo esc_html__( 'You can copy the below info as simple text with Ctrl+C / Ctrl+V:', 'refraction' ); ?></label>
+				<textarea id="refraction-system-info-raw-code" readonly>
 					<?php
 						$this->print_report( $reports, 'raw' );
 					?>
 				</textarea>
 				<script>
-					var textarea = document.getElementById( 'elementor-system-info-raw-code' );
+					var textarea = document.getElementById( 'refraction-system-info-raw-code' );
 					var selectRange = function() {
 						textarea.setSelectionRange( 0, textarea.value.length );
 					};
@@ -210,8 +210,8 @@ class Module extends BaseModule {
 			</div>
 			<hr>
 			<form action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post">
-				<input type="hidden" name="action" value="elementor_system_info_download_file">
-				<input type="submit" data-id="elementor-system-info-download-file" class="button button-primary" value="<?php echo esc_attr__( 'Download System Info', 'elementor' ); ?>">
+				<input type="hidden" name="action" value="refraction_system_info_download_file">
+				<input type="submit" data-id="refraction-system-info-download-file" class="button button-primary" value="<?php echo esc_attr__( 'Download System Info', 'refraction' ); ?>">
 			</form>
 		</div>
 		<?php
@@ -222,14 +222,14 @@ class Module extends BaseModule {
 	 *
 	 * Download the reports files.
 	 *
-	 * Fired by `wp_ajax_elementor_system_info_download_file` action.
+	 * Fired by `wp_ajax_refraction_system_info_download_file` action.
 	 *
 	 * @since 2.9.0
 	 * @access public
 	 */
 	public function download_file() {
 		if ( ! current_user_can( $this->capability ) ) {
-			wp_die( esc_html__( 'You do not have permission to download this file.', 'elementor' ) );
+			wp_die( esc_html__( 'You do not have permission to download this file.', 'refraction' ) );
 		}
 
 		$reports_info = self::get_allowed_reports();
@@ -305,7 +305,7 @@ class Module extends BaseModule {
 	/**
 	 * Create a report.
 	 *
-	 * Register a new report that will be displayed in Elementor system info page.
+	 * Register a new report that will be displayed in Refraction system info page.
 	 *
 	 * @param array $properties Report properties.
 	 *
@@ -355,16 +355,16 @@ class Module extends BaseModule {
 	/**
 	 * Get allowed reports.
 	 *
-	 * Retrieve the available reports in Elementor system info page.
+	 * Retrieve the available reports in Refraction system info page.
 	 *
 	 * @since 2.9.0
 	 * @access public
 	 * @static
 	 *
-	 * @return array Available reports in Elementor system info page.
+	 * @return array Available reports in Refraction system info page.
 	 */
 	public static function get_allowed_reports() {
-		do_action( 'elementor/system_info/get_allowed_reports' );
+		do_action( 'refraction/system_info/get_allowed_reports' );
 
 		return self::$reports;
 	}
@@ -372,7 +372,7 @@ class Module extends BaseModule {
 	/**
 	 * Add report.
 	 *
-	 * Register a new report to Elementor system info page.
+	 * Register a new report to Refraction system info page.
 	 *
 	 * @since 2.9.0
 	 * @access public

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type PropValue, stringPropTypeUtil, type StringPropValue } from '@elementor/editor-props';
+import { type PropValue, stringPropTypeUtil, type StringPropValue } from '@refraction/editor-props';
 import { type ToggleButtonProps } from '@elementor/ui';
 
 import { useBoundProp } from '../bound-prop-context';

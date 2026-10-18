@@ -1,14 +1,14 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { __privateListenTo as listenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { __privateListenTo as listenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
 
-const CURRENTLY_VIEWED_SCREEN = 'The user is currently viewing the Elementor editor';
+const CURRENTLY_VIEWED_SCREEN = 'The user is currently viewing the Refraction editor';
 const PAGE_CONTENT_CHARACTER_LIMIT = 500;
 const PREVIEW_TEXT_NODE_MIN_LENGTH = 2;
 
-export const EDITOR_STATE_URI = 'elementor://context/editor-state';
+export const EDITOR_STATE_URI = 'refraction://context/editor-state';
 
-type ElementorWindow = Window & {
-	elementor?: {
+type RefractionWindow = Window & {
+	refraction?: {
 		$previewContents?: Element[];
 		documents?: {
 			getCurrent?: () => {
@@ -70,17 +70,17 @@ export const initEditorStateResource = ( reg: MCPRegistryEntry ) => {
 
 function getPageContentFromPreview(): string | null {
 	try {
-		const root = ( window as ElementorWindow ).elementor?.$previewContents?.[ 0 ];
+		const root = ( window as RefractionWindow ).refraction?.$previewContents?.[ 0 ];
 		if ( ! root ) {
 			return null;
 		}
 		const content: string[] = [];
 		const clone = root.cloneNode( true ) as HTMLElement;
-		clone.querySelectorAll( '.elementor-editor-element-settings, #elementor-add-new-section' ).forEach( ( el ) => {
+		clone.querySelectorAll( '.refraction-editor-element-settings, #refraction-add-new-section' ).forEach( ( el ) => {
 			el.remove();
 		} );
-		const walk = ( node: Node, insideElementorElement = false ) => {
-			const isInside = ( node as Element ).classList?.contains( 'elementor-element' ) || insideElementorElement;
+		const walk = ( node: Node, insideRefractionElement = false ) => {
+			const isInside = ( node as Element ).classList?.contains( 'refraction-element' ) || insideRefractionElement;
 			if ( node.nodeType === Node.TEXT_NODE && isInside ) {
 				const text = node.textContent?.trim().replace( /\s+/g, ' ' );
 				if ( text && text.length > PREVIEW_TEXT_NODE_MIN_LENGTH ) {
@@ -105,8 +105,8 @@ function getPageContentFromPreview(): string | null {
 
 function getPageTitle(): string {
 	try {
-		const extendedWindow = window as ElementorWindow;
-		const currentDocument = extendedWindow.elementor?.documents?.getCurrent?.();
+		const extendedWindow = window as RefractionWindow;
+		const currentDocument = extendedWindow.refraction?.documents?.getCurrent?.();
 		const postTitle = currentDocument?.config?.settings?.post_title;
 		if ( postTitle ) {
 			return postTitle;

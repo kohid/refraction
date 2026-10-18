@@ -4,7 +4,7 @@ import { CREATE_WIDGET_EVENT } from '../angie-consts';
 
 export function useAutoShow() {
 	useEffect( () => {
-		if ( ! window.elementor?.config?.angie?.autoShow ) {
+		if ( ! window.refraction?.config?.angie?.autoShow ) {
 			return;
 		}
 

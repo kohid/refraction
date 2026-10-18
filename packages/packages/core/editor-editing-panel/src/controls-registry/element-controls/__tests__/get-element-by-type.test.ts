@@ -1,9 +1,9 @@
 import { createMockChild, createMockContainer, createMockElement } from 'test-utils';
-import { getContainer, type V1Element } from '@elementor/editor-elements';
+import { getContainer, type V1Element } from '@refraction/editor-elements';
 
 import { getElementByType } from '../get-element-by-type';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getContainer: jest.fn(),
 } ) );
 

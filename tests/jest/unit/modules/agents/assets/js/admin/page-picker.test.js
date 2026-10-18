@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
-import { searchMarkdownItems } from 'elementor/modules/agents/assets/js/admin/api';
-import { getIncludedTypesKey } from 'elementor/modules/agents/assets/js/admin/components/markdown-content/markdown-items';
-import { PagePicker } from 'elementor/modules/agents/assets/js/admin/components/markdown-content/page-picker';
-import { SEARCH_DEBOUNCE_MS } from 'elementor/modules/agents/assets/js/admin/hooks/use-markdown-items';
+import { searchMarkdownItems } from 'refraction/modules/agents/assets/js/admin/api';
+import { getIncludedTypesKey } from 'refraction/modules/agents/assets/js/admin/components/markdown-content/markdown-items';
+import { PagePicker } from 'refraction/modules/agents/assets/js/admin/components/markdown-content/page-picker';
+import { SEARCH_DEBOUNCE_MS } from 'refraction/modules/agents/assets/js/admin/hooks/use-markdown-items';
 
-jest.mock( 'elementor/modules/agents/assets/js/admin/api', () => ( {
+jest.mock( 'refraction/modules/agents/assets/js/admin/api', () => ( {
 	searchMarkdownItems: jest.fn(),
 } ) );
 

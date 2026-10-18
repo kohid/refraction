@@ -1,5 +1,5 @@
-import { injectIntoPageIndication, toolsMenu } from '@elementor/editor-app-bar';
-import { registerPanel } from '@elementor/editor-panels';
+import { injectIntoPageIndication, toolsMenu } from '@refraction/editor-app-bar';
+import { registerPanel } from '@refraction/editor-panels';
 
 import { panel } from './components/panel/panel';
 import RecentlyEdited from './components/top-bar/recently-edited';

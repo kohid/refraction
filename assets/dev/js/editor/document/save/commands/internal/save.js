@@ -1,6 +1,6 @@
 export class Save extends $e.modules.CommandInternalBase {
 	async apply( args ) {
-		const { status = 'draft', force = false, onSuccess = null, document = elementor.documents.getCurrent() } = args;
+		const { status = 'draft', force = false, onSuccess = null, document = refraction.documents.getCurrent() } = args;
 
 		if ( ! force && document.editor.isSaving ) {
 			return jQuery.Deferred().reject( 'Document already in save progress' );
@@ -8,7 +8,7 @@ export class Save extends $e.modules.CommandInternalBase {
 
 		const container = document.container;
 
-		await elementorCommon.__beforeSave?.( { container, status } );
+		await refractionCommon.__beforeSave?.( { container, status } );
 
 		const settings = container.settings.toJSON( { remove: [ 'default' ] } );
 		const oldStatus = container.settings.get( 'post_status' );
@@ -16,7 +16,7 @@ export class Save extends $e.modules.CommandInternalBase {
 		this.addPersistentSettingsToPayload( settings, container );
 
 		// TODO: Remove - Backwards compatibility.
-		elementor.saver.trigger( 'before:save', args )
+		refraction.saver.trigger( 'before:save', args )
 			.trigger( 'before:save:' + status, args );
 
 		document.editor.isSaving = true;
@@ -26,7 +26,7 @@ export class Save extends $e.modules.CommandInternalBase {
 
 		let elements = [];
 
-		if ( elementor.config.document.panel.has_elements ) {
+		if ( refraction.config.document.panel.has_elements ) {
 			elements = container.model.get( 'elements' ).toJSON( { remove: [ 'default', 'editSettings', 'defaultEditSettings' ] } );
 		}
 
@@ -38,7 +38,7 @@ export class Save extends $e.modules.CommandInternalBase {
 			currentHistoryId: document.history.currentItem.get( 'id' ),
 		};
 
-		const deferred = elementorCommon.ajax.addRequest(
+		const deferred = refractionCommon.ajax.addRequest(
 			'save_builder',
 			{
 				data: {
@@ -51,7 +51,7 @@ export class Save extends $e.modules.CommandInternalBase {
 			.then( ( data ) => this.onSaveSuccess( data, successArgs, onSuccess ) );
 
 		// TODO: Remove - Backwards compatibility
-		elementor.saver.trigger( 'save', args );
+		refraction.saver.trigger( 'save', args );
 
 		return deferred;
 	}
@@ -64,7 +64,7 @@ export class Save extends $e.modules.CommandInternalBase {
 		document.editor.lastSaveHistoryId = currentHistoryId;
 
 		// Remove document cache.
-		elementor.documents.invalidateCache( document.id );
+		refraction.documents.invalidateCache( document.id );
 
 		const statusChanged = status !== oldStatus,
 			result = {
@@ -73,7 +73,7 @@ export class Save extends $e.modules.CommandInternalBase {
 			};
 
 		// Document is switched during the save, do nothing.
-		if ( document !== elementor.documents.getCurrent() ) {
+		if ( document !== refraction.documents.getCurrent() ) {
 			return result;
 		}
 
@@ -85,7 +85,7 @@ export class Save extends $e.modules.CommandInternalBase {
 		if ( 'autosave' !== status ) {
 			if ( statusChanged ) {
 				$e.run( 'document/elements/settings', {
-					container: elementor.settings.page.getEditedView().getContainer(),
+					container: refraction.settings.page.getEditedView().getContainer(),
 					settings: {
 						post_status: status,
 					},
@@ -111,15 +111,15 @@ export class Save extends $e.modules.CommandInternalBase {
 		}
 
 		// TODO: Remove - Backwards compatibility
-		elementor.channels.editor.trigger( 'saved', data );
+		refraction.channels.editor.trigger( 'saved', data );
 
 		// TODO: Remove - Backwards compatibility
-		elementor.saver.trigger( 'after:save', data )
+		refraction.saver.trigger( 'after:save', data )
 			.trigger( 'after:save:' + status, data );
 
 		// TODO: Remove - Backwards compatibility
 		if ( statusChanged ) {
-			elementor.saver.trigger( 'page:status:change', status, oldStatus );
+			refraction.saver.trigger( 'page:status:change', status, oldStatus );
 		}
 
 		if ( _.isFunction( callback ) ) {
@@ -133,7 +133,7 @@ export class Save extends $e.modules.CommandInternalBase {
 		this.onAfterAjax( document );
 
 		// TODO: Remove - Backwards compatibility
-		elementor.saver.trigger( 'after:saveError', data )
+		refraction.saver.trigger( 'after:saveError', data )
 			.trigger( 'after:saveError:' + status, data );
 
 		let message;
@@ -141,16 +141,16 @@ export class Save extends $e.modules.CommandInternalBase {
 		if ( _.isString( data ) ) {
 			message = data;
 		} else if ( data.statusText ) {
-			message = elementor.createAjaxErrorMessage( data );
+			message = refraction.createAjaxErrorMessage( data );
 
 			if ( 0 === data.readyState ) {
-				message += ' ' + __( 'Saving has been disabled until you’re reconnected.', 'elementor' );
+				message += ' ' + __( 'Saving has been disabled until you’re reconnected.', 'refraction' );
 			}
 		} else if ( data[ 0 ] && data[ 0 ].code ) {
-			message = __( 'Server Error', 'elementor' ) + ' ' + data[ 0 ].code;
+			message = __( 'Server Error', 'refraction' ) + ' ' + data[ 0 ].code;
 		}
 
-		elementor.notifications.showToast( {
+		refraction.notifications.showToast( {
 			message,
 		} );
 	}
@@ -160,7 +160,7 @@ export class Save extends $e.modules.CommandInternalBase {
 	}
 
 	addPersistentSettingsToPayload( settings, container ) {
-		elementor?.config?.persistent_keys?.forEach( ( setting ) => {
+		refraction?.config?.persistent_keys?.forEach( ( setting ) => {
 			if ( container.settings.defaults.hasOwnProperty( setting ) && ! settings.hasOwnProperty( setting ) ) {
 				settings[ setting ] = container.settings.defaults[ setting ];
 			}

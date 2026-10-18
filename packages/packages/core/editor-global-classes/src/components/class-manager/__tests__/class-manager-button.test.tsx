@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { createMockTrackingModule, mockTracking, renderWithQuery } from 'test-utils';
-import { useUserStylesCapability } from '@elementor/editor-styles-repository';
+import { useUserStylesCapability } from '@refraction/editor-styles-repository';
 import { fireEvent, screen } from '@testing-library/react';
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	useUserStylesCapability: jest.fn( () => ( {
 		userCan: jest.fn().mockReturnValue( { update: true } ),
 	} ) ),
@@ -33,7 +33,7 @@ describe( 'ClassManagerButton', () => {
 		// Assert.
 		expect( dispatchEventSpy ).toHaveBeenCalledWith(
 			expect.objectContaining( {
-				type: 'elementor/toggle-design-system',
+				type: 'refraction/toggle-design-system',
 				detail: { tab: 'classes' },
 			} )
 		);

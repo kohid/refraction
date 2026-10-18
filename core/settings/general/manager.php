@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Core\Settings\General;
+namespace Refraction\Core\Settings\General;
 
-use Elementor\Core\Files\CSS\Base;
-use Elementor\Core\Settings\Base\CSS_Manager;
-use Elementor\Core\Settings\Base\Model as BaseModel;
+use Refraction\Core\Files\CSS\Base;
+use Refraction\Core\Settings\Base\CSS_Manager;
+use Refraction\Core\Settings\Base\Model as BaseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * This class is deprecated, use Plugin::$instance->kits_manager->get_active_kit_for_frontend() instead.
- * it changed to support call like this: Manager::get_settings_managers( 'general' )->get_model()->get_settings( 'elementor_default_generic_fonts' )
+ * it changed to support call like this: Manager::get_settings_managers( 'general' )->get_model()->get_settings( 'refraction_default_generic_fonts' )
  *
  * @deprecated 3.0.0 Use `Plugin::$instance->kits_manager->get_active_kit_for_frontend()` instead.
  */
@@ -22,12 +22,12 @@ class Manager extends CSS_Manager {
 	 *
 	 * @deprecated 3.0.0
 	 */
-	const META_KEY = '_elementor_general_settings';
+	const META_KEY = '_refraction_general_settings';
 
 	/**
 	 * General settings manager constructor.
 	 *
-	 * Initializing Elementor general settings manager.
+	 * Initializing Refraction general settings manager.
 	 *
 	 * @since 1.6.0
 	 * @deprecated 3.0.0
@@ -40,7 +40,7 @@ class Manager extends CSS_Manager {
 
 		$name = $this->get_css_file_name();
 
-		remove_action( "elementor/css-file/{$name}/parse", [ $this, 'add_settings_css_rules' ] );
+		remove_action( "refraction/css-file/{$name}/parse", [ $this, 'add_settings_css_rules' ] );
 	}
 
 	/**

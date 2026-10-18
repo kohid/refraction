@@ -1,7 +1,7 @@
-import { freeMock, setupMock } from 'elementor/tests/jest/unit/modules/web-cli/assets/js/core/mock/api';
+import { freeMock, setupMock } from 'refraction/tests/jest/unit/modules/web-cli/assets/js/core/mock/api';
 
 /**
- * @typedef {import('elementor/assets/dev/js/editor/container/container')} Container
+ * @typedef {import('refraction/assets/dev/js/editor/container/container')} Container
  */
 
 describe( 'set-direction-mode--document/elements/settings', () => {
@@ -15,12 +15,12 @@ describe( 'set-direction-mode--document/elements/settings', () => {
 
 		document.body.dispatchEvent = () => {};
 
-		global.elementor = {
+		global.refraction = {
 			$previewContents: [ document ],
 		};
 
-		const { SetDirectionMode } = await import( 'elementor-document/hooks/ui/settings/set-direction-mode' );
-		const { DirectionMode } = await import( 'elementor-document/ui-states/direction-mode' );
+		const { SetDirectionMode } = await import( 'refraction-document/hooks/ui/settings/set-direction-mode' );
+		const { DirectionMode } = await import( 'refraction-document/ui-states/direction-mode' );
 
 		$e.components.register( new class extends $e.modules.ComponentBase {
 			getNamespace() {

@@ -1,6 +1,6 @@
-class FloatingBarsLibraryModule extends elementorModules.editor.utils.Module {
-	onElementorLoaded() {
-		elementor.channels.editor.on( 'section:activated', this.hideAdvancedTab.bind( this ) );
+class FloatingBarsLibraryModule extends refractionModules.editor.utils.Module {
+	onRefractionLoaded() {
+		refraction.channels.editor.on( 'section:activated', this.hideAdvancedTab.bind( this ) );
 	}
 
 	hideAdvancedTab( sectionName, editor ) {
@@ -10,19 +10,19 @@ class FloatingBarsLibraryModule extends elementorModules.editor.utils.Module {
 			return;
 		}
 
-		const advancedTab = editor?.el.querySelector( '.elementor-tab-control-advanced' ) || false;
+		const advancedTab = editor?.el.querySelector( '.refraction-tab-control-advanced' ) || false;
 
 		if ( advancedTab ) {
 			advancedTab.style.display = 'none';
 		}
 	}
 
-	onElementorInit() {
+	onRefractionInit() {
 		const urlParams = new URLSearchParams( window.location.search );
 
 		if ( 'floating-bars' === urlParams.get( 'floating_element' ) ) {
-			elementor.hooks.addFilter( 'elementor/editor/template-library/template/classes', ( classes ) => {
-				return classes.replace( 'elementor-template-library-template-floating_button', 'elementor-template-library-template-floating_bar' );
+			refraction.hooks.addFilter( 'refraction/editor/template-library/template/classes', ( classes ) => {
+				return classes.replace( 'refraction-template-library-template-floating_button', 'refraction-template-library-template-floating_bar' );
 			}, 10, 1 );
 		}
 	}

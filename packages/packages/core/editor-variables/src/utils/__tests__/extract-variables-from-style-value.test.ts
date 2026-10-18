@@ -1,8 +1,8 @@
-import { getPropSchemaFromCache, isTransformable } from '@elementor/editor-props';
+import { getPropSchemaFromCache, isTransformable } from '@refraction/editor-props';
 
 import { extractVariablesFromStyleValue } from '../extract-variables-from-style-value';
 
-jest.mock( '@elementor/editor-props', () => ( {
+jest.mock( '@refraction/editor-props', () => ( {
 	getPropSchemaFromCache: jest.fn(),
 	isTransformable: jest.fn(),
 } ) );

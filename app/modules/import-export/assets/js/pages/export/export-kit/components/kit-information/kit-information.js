@@ -1,10 +1,10 @@
 import KitName from './components/kit-name/kit-name';
 import KitDescription from './components/kit-description/kit-description';
 
-import Grid from 'elementor-app/ui/grid/grid';
+import Grid from 'refraction-app/ui/grid/grid';
 
-import Box from 'elementor-app/ui/atoms/box';
-import List from 'elementor-app/ui/molecules/list';
+import Box from 'refraction-app/ui/atoms/box';
+import List from 'refraction-app/ui/molecules/list';
 
 export default function KitInformation() {
 	return (

@@ -16,10 +16,10 @@ export class FlyoutInteractionHandler {
 	}
 
 	setupFlyoutMenus() {
-		const menuItems = document.querySelectorAll( '#adminmenu li.elementor-has-flyout' );
+		const menuItems = document.querySelectorAll( '#adminmenu li.refraction-has-flyout' );
 
 		menuItems.forEach( ( parentLi ) => {
-			const flyoutMenu = parentLi.querySelector( '.elementor-submenu-flyout' );
+			const flyoutMenu = parentLi.querySelector( '.refraction-submenu-flyout' );
 
 			if ( ! flyoutMenu ) {
 				return;
@@ -85,7 +85,7 @@ export class FlyoutInteractionHandler {
 	}
 
 	showFlyout( parentLi, flyoutMenu ) {
-		const wasAlreadyVisible = flyoutMenu.classList.contains( 'elementor-submenu-flyout-visible' );
+		const wasAlreadyVisible = flyoutMenu.classList.contains( 'refraction-submenu-flyout-visible' );
 
 		if ( this.activeMenu && this.activeMenu !== flyoutMenu ) {
 			this.hideFlyout( this.activeMenu );
@@ -93,7 +93,7 @@ export class FlyoutInteractionHandler {
 
 		this.exitPoint = null;
 		this.positionFlyout( parentLi, flyoutMenu );
-		flyoutMenu.classList.add( 'elementor-submenu-flyout-visible' );
+		flyoutMenu.classList.add( 'refraction-submenu-flyout-visible' );
 		this.activeMenu = flyoutMenu;
 		this.activeParent = parentLi;
 
@@ -103,7 +103,7 @@ export class FlyoutInteractionHandler {
 	}
 
 	hideFlyout( flyoutMenu ) {
-		flyoutMenu.classList.remove( 'elementor-submenu-flyout-visible' );
+		flyoutMenu.classList.remove( 'refraction-submenu-flyout-visible' );
 
 		if ( this.activeMenu === flyoutMenu ) {
 			this.activeMenu = null;
@@ -261,7 +261,7 @@ export class FlyoutInteractionHandler {
 		const allLinks = flyoutMenu.querySelectorAll( 'a' );
 		const focusedLink = flyoutMenu.querySelector( 'a:focus' );
 		const currentIndex = Array.from( allLinks ).indexOf( focusedLink );
-		const isVisible = flyoutMenu.classList.contains( 'elementor-submenu-flyout-visible' );
+		const isVisible = flyoutMenu.classList.contains( 'refraction-submenu-flyout-visible' );
 
 		switch ( event.key ) {
 			case 'ArrowRight':
@@ -311,7 +311,7 @@ export class FlyoutInteractionHandler {
 			return;
 		}
 
-		const menuLinks = document.querySelectorAll( '#adminmenu li.elementor-has-flyout > a' );
+		const menuLinks = document.querySelectorAll( '#adminmenu li.refraction-has-flyout > a' );
 
 		menuLinks.forEach( ( link ) => {
 			link.addEventListener( 'click', ( event ) => {
@@ -326,29 +326,29 @@ export class FlyoutInteractionHandler {
 
 	handleMobileClick( event, link ) {
 		const parentLi = link.parentElement;
-		const flyoutMenu = parentLi.querySelector( '.elementor-submenu-flyout' );
+		const flyoutMenu = parentLi.querySelector( '.refraction-submenu-flyout' );
 
 		if ( ! flyoutMenu ) {
 			return;
 		}
 
-		if ( parentLi.classList.contains( 'elementor-flyout-open' ) ) {
+		if ( parentLi.classList.contains( 'refraction-flyout-open' ) ) {
 			return;
 		}
 
 		event.preventDefault();
 
-		document.querySelectorAll( '#adminmenu li.elementor-has-flyout' ).forEach( ( item ) => {
-			item.classList.remove( 'elementor-flyout-open' );
+		document.querySelectorAll( '#adminmenu li.refraction-has-flyout' ).forEach( ( item ) => {
+			item.classList.remove( 'refraction-flyout-open' );
 		} );
 
-		parentLi.classList.add( 'elementor-flyout-open' );
+		parentLi.classList.add( 'refraction-flyout-open' );
 	}
 
 	handleDocumentClick( event ) {
-		if ( ! event.target.closest( '#adminmenu li.elementor-has-flyout' ) ) {
-			document.querySelectorAll( '#adminmenu li.elementor-has-flyout' ).forEach( ( item ) => {
-				item.classList.remove( 'elementor-flyout-open' );
+		if ( ! event.target.closest( '#adminmenu li.refraction-has-flyout' ) ) {
+			document.querySelectorAll( '#adminmenu li.refraction-has-flyout' ).forEach( ( item ) => {
+				item.classList.remove( 'refraction-flyout-open' );
 			} );
 		}
 	}

@@ -12,7 +12,7 @@ export const UsageTimesColumn = ( {
 	if ( null !== usageData ) {
 		return (
 			<>
-				{ getWidgetUsage( widgetName ) } { __( 'times', 'elementor' ) }
+				{ getWidgetUsage( widgetName ) } { __( 'times', 'refraction' ) }
 			</>
 		);
 	}
@@ -27,13 +27,13 @@ export const UsageTimesColumn = ( {
 			size="small"
 			variant="outlined"
 			color="secondary"
-			className="e-id-elementor-element-manager-button-show-usage"
+			className="e-id-refraction-element-manager-button-show-usage"
 			sx={ {
 				minWidth: ( theme ) => theme.spacing( 6 ),
 				height: 26,
 			} }
 		>
-			{ __( 'Show', 'elementor' ) }
+			{ __( 'Show', 'refraction' ) }
 		</Button>
 	);
 };

@@ -1,11 +1,11 @@
-import { getElementorConfig } from '@elementor/editor-v1-adapters';
+import { getRefractionConfig } from '@refraction/editor-v1-adapters';
 
 import { getLicenseConfig } from '../../../hooks/use-license-config';
 import { type DynamicTags } from '../../types';
 import { getAtomicDynamicTags } from '../get-atomic-dynamic-tags';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	getElementorConfig: jest.fn(),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	getRefractionConfig: jest.fn(),
 } ) );
 jest.mock( '../../../hooks/use-license-config' );
 
@@ -28,7 +28,7 @@ describe( 'getAtomicDynamicTags', () => {
 			props_schema: {},
 		},
 		'pro-paid-tag': {
-			meta: { origin: 'elementor', required_license: 'dynamic-tags' },
+			meta: { origin: 'refraction', required_license: 'dynamic-tags' },
 			name: 'pro-paid-tag',
 			label: 'Pro Paid Tag',
 			group: 'pro',
@@ -44,7 +44,7 @@ describe( 'getAtomicDynamicTags', () => {
 	};
 
 	beforeEach( () => {
-		jest.mocked( getElementorConfig ).mockReturnValue( {
+		jest.mocked( getRefractionConfig ).mockReturnValue( {
 			atomicDynamicTags: {
 				tags: mockTags,
 				groups: mockGroups,
@@ -58,7 +58,7 @@ describe( 'getAtomicDynamicTags', () => {
 
 	it( 'should return null if atomicDynamicTags is not available', () => {
 		// Arrange.
-		jest.mocked( getElementorConfig ).mockReturnValue( {} as never );
+		jest.mocked( getRefractionConfig ).mockReturnValue( {} as never );
 
 		// Act.
 		const result = getAtomicDynamicTags();
@@ -100,7 +100,7 @@ describe( 'getAtomicDynamicTags', () => {
 		expect( result?.tags[ 'pro-paid-tag' ] ).toBeUndefined();
 	} );
 
-	it( 'should keep tags with origin !== elementor when expired', () => {
+	it( 'should keep tags with origin !== refraction when expired', () => {
 		// Arrange.
 		jest.mocked( getLicenseConfig ).mockReturnValue( { expired: true } );
 
@@ -135,7 +135,7 @@ describe( 'getAtomicDynamicTags', () => {
 			},
 		};
 
-		jest.mocked( getElementorConfig ).mockReturnValue( {
+		jest.mocked( getRefractionConfig ).mockReturnValue( {
 			atomicDynamicTags: {
 				tags: tagsWithMissingMeta,
 				groups: mockGroups,

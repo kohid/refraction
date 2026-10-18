@@ -1,8 +1,8 @@
-import { type EditMode } from '@elementor/editor-v1-adapters';
+import { type EditMode } from '@refraction/editor-v1-adapters';
 
 export function mockEditMode( editMode: EditMode ) {
-	window.elementor = {
-		...window.elementor,
+	window.refraction = {
+		...window.refraction,
 		changeEditMode: () => {},
 		channels: {
 			dataEditMode: {

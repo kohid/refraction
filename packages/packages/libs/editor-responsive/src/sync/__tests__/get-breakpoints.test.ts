@@ -1,4 +1,4 @@
-import { getBreakpointsTree } from '@elementor/editor-responsive';
+import { getBreakpointsTree } from '@refraction/editor-responsive';
 
 import { type ExtendedWindow, type V1Breakpoints } from '../../types';
 import { getBreakpoints } from '../get-breakpoints';
@@ -137,7 +137,7 @@ describe( 'getBreakpoints', () => {
 			// Arrange.
 			const extendedWindow = window as unknown as ExtendedWindow;
 
-			extendedWindow.elementor = {
+			extendedWindow.refraction = {
 				config: {
 					responsive: {
 						breakpoints,

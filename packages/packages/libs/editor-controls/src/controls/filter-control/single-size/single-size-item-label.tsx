@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { FilterItemPropValue, SizePropValue } from '@elementor/editor-props';
+import type { FilterItemPropValue, SizePropValue } from '@refraction/editor-props';
 import { Box } from '@elementor/ui';
 
 import { lengthUnits } from '../../../utils/size-control';

@@ -1,4 +1,4 @@
-import { type V1Element, type V1ElementModelProps, type V1ElementSettingsProps } from '@elementor/editor-elements';
+import { type V1Element, type V1ElementModelProps, type V1ElementSettingsProps } from '@refraction/editor-elements';
 
 type V1Model = V1Element[ 'model' ];
 type V1Settings = V1Element[ 'settings' ];

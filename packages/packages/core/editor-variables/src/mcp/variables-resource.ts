@@ -1,11 +1,11 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { __privateListenTo as listenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { __privateListenTo as listenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
 import { STORAGE_UPDATED_EVENT } from '../storage';
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
-export const GLOBAL_VARIABLES_URI = 'elementor://global-variables';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
+export const GLOBAL_VARIABLES_URI = 'refraction://global-variables';
 
 export const initVariablesResource = ( variablesMcpEntry: MCPRegistryEntry, canvasMcpEntry: MCPRegistryEntry ) => {
 	[ canvasMcpEntry, variablesMcpEntry ].forEach( ( entry ) => {

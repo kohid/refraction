@@ -1,4 +1,4 @@
-import ElementsHelper from 'elementor/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
+import ElementsHelper from 'refraction/tests/qunit/tests/assets/dev/js/editor/document/elements/helper';
 
 export const Drop = () => {
 	QUnit.module( 'Drop', ( hooks ) => {
@@ -13,11 +13,11 @@ export const Drop = () => {
 					elType: 'widget',
 					widgetType: 'heading',
 				},
-				container: elementor.getPreviewContainer(),
+				container: refraction.getPreviewContainer(),
 			} );
 
 			// Assert.
-			const eWidget = elementor.getPreviewContainer().children[ 0 ].children[ 0 ];
+			const eWidget = refraction.getPreviewContainer().children[ 0 ].children[ 0 ];
 
 			assert.equal( eWidget.model.get( 'widgetType' ), 'heading' );
 		} );
@@ -36,7 +36,7 @@ export const Drop = () => {
 			} );
 
 			// Assert.
-			const eWidget = elementor.getPreviewContainer().children[ 0 ].children[ 0 ];
+			const eWidget = refraction.getPreviewContainer().children[ 0 ].children[ 0 ];
 
 			assert.equal( eWidget.parent.id, eContainer.id );
 			assert.equal( eWidget.model.get( 'widgetType' ), 'heading' );

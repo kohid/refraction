@@ -1,18 +1,18 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Files\File_Types\Svg;
-use Elementor\Core\Page_Assets\Data_Managers\Font_Icon_Svg\Manager as Font_Icon_Svg_Data_Manager;
-use Elementor\Utils;
+use Refraction\Core\Files\File_Types\Svg;
+use Refraction\Core\Page_Assets\Data_Managers\Font_Icon_Svg\Manager as Font_Icon_Svg_Data_Manager;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor icons manager.
+ * Refraction icons manager.
  *
- * Elementor icons manager handler class
+ * Refraction icons manager handler class
  *
  * @since 2.4.0
  */
@@ -22,9 +22,9 @@ class Icons_Manager {
 
 	const FONT_ICON_SVG_CLASS_NAME = 'e-font-icon-svg';
 
-	const LOAD_FA4_SHIM_OPTION_KEY = 'elementor_load_fa4_shim';
+	const LOAD_FA4_SHIM_OPTION_KEY = 'refraction_load_fa4_shim';
 
-	const ELEMENTOR_ICONS_VERSION = '5.56.0';
+	const REFRACTION_ICONS_VERSION = '5.56.0';
 
 	/**
 	 * Tabs.
@@ -41,7 +41,7 @@ class Icons_Manager {
 	private static $data_manager;
 
 	private static function get_needs_upgrade_option() {
-		return get_option( 'elementor_' . self::NEEDS_UPDATE_OPTION, null );
+		return get_option( 'refraction_' . self::NEEDS_UPDATE_OPTION, null );
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Icons_Manager {
 			if ( ! empty( $icon_type['enqueue'] ) ) {
 				foreach ( (array) $icon_type['enqueue'] as $font_css_url ) {
 					if ( ! in_array( $font_css_url, array_keys( $shared_styles ), true ) ) {
-						$style_handle = 'elementor-icons-shared-' . count( $shared_styles );
+						$style_handle = 'refraction-icons-shared-' . count( $shared_styles );
 						wp_register_style(
 							$style_handle,
 							$font_css_url,
@@ -108,7 +108,7 @@ class Icons_Manager {
 				}
 			}
 			wp_register_style(
-				'elementor-icons-' . $icon_type['name'],
+				'refraction-icons-' . $icon_type['name'],
 				$icon_type['url'],
 				$dependencies,
 				$icon_type['ver']
@@ -129,7 +129,7 @@ class Icons_Manager {
 		$initial_tabs = [
 			'fa-regular' => [
 				'name' => 'fa-regular',
-				'label' => esc_html__( 'Font Awesome - Regular', 'elementor' ),
+				'label' => esc_html__( 'Font Awesome - Regular', 'refraction' ),
 				'url' => self::get_fa_asset_url( 'regular' ),
 				'enqueue' => [ self::get_fa_asset_url( 'fontawesome' ) ],
 				'prefix' => 'fa-',
@@ -141,7 +141,7 @@ class Icons_Manager {
 			],
 			'fa-solid' => [
 				'name' => 'fa-solid',
-				'label' => esc_html__( 'Font Awesome - Solid', 'elementor' ),
+				'label' => esc_html__( 'Font Awesome - Solid', 'refraction' ),
 				'url' => self::get_fa_asset_url( 'solid' ),
 				'enqueue' => [ self::get_fa_asset_url( 'fontawesome' ) ],
 				'prefix' => 'fa-',
@@ -153,7 +153,7 @@ class Icons_Manager {
 			],
 			'fa-brands' => [
 				'name' => 'fa-brands',
-				'label' => esc_html__( 'Font Awesome - Brands', 'elementor' ),
+				'label' => esc_html__( 'Font Awesome - Brands', 'refraction' ),
 				'url' => self::get_fa_asset_url( 'brands' ),
 				'enqueue' => [ self::get_fa_asset_url( 'fontawesome' ) ],
 				'prefix' => 'fa-',
@@ -172,7 +172,7 @@ class Icons_Manager {
 		 *
 		 * @param array $icon_manager_tabs Initial icon manager tabs.
 		 */
-		$initial_tabs = apply_filters( 'elementor/icons_manager/native', $initial_tabs );
+		$initial_tabs = apply_filters( 'refraction/icons_manager/native', $initial_tabs );
 
 		self::$tabs = $initial_tabs;
 	}
@@ -198,7 +198,7 @@ class Icons_Manager {
 		 *
 		 * @param array $additional_tabs Additional icon manager tabs. Default is an empty array.
 		 */
-		$additional_tabs = apply_filters( 'elementor/icons_manager/additional_tabs', $additional_tabs );
+		$additional_tabs = apply_filters( 'refraction/icons_manager/additional_tabs', $additional_tabs );
 
 		return array_replace( self::$tabs, $additional_tabs );
 	}
@@ -209,7 +209,7 @@ class Icons_Manager {
 			'font-awesome-4-shim',
 			self::get_fa_asset_url( 'v4-shims', 'js' ),
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 		// Make sure that the CSS in the 'all' file does not override FA Pro's CSS
 		if ( ! wp_script_is( 'font-awesome-pro' ) ) {
@@ -217,23 +217,23 @@ class Icons_Manager {
 				'font-awesome-5-all',
 				self::get_fa_asset_url( 'all' ),
 				[],
-				ELEMENTOR_VERSION
+				REFRACTION_VERSION
 			);
 		}
 		wp_enqueue_style(
 			'font-awesome-4-shim',
 			self::get_fa_asset_url( 'v4-shims' ),
 			[],
-			ELEMENTOR_VERSION
+			REFRACTION_VERSION
 		);
 	}
 
 	private static function get_fa_asset_url( $filename, $ext_type = 'css', $add_suffix = true ) {
 		static $is_test_mode = null;
 		if ( null === $is_test_mode ) {
-			$is_test_mode = Utils::is_script_debug() || Utils::is_elementor_tests();
+			$is_test_mode = Utils::is_script_debug() || Utils::is_refraction_tests();
 		}
-		$url = ELEMENTOR_ASSETS_URL . 'lib/font-awesome/' . $ext_type . '/' . $filename;
+		$url = REFRACTION_ASSETS_URL . 'lib/font-awesome/' . $ext_type . '/' . $filename;
 		if ( ! $is_test_mode && $add_suffix ) {
 			$url .= '.min';
 		}
@@ -245,7 +245,7 @@ class Icons_Manager {
 		$tabs = [
 			'all' => [
 				'name' => 'all',
-				'label' => esc_html__( 'All Icons', 'elementor' ),
+				'label' => esc_html__( 'All Icons', 'refraction' ),
 				'labelIcon' => 'eicon-filter',
 				'native' => true,
 			],
@@ -343,7 +343,7 @@ class Icons_Manager {
 	/**
 	 * Render Icon
 	 *
-	 * Used to render Icon for \Elementor\Controls_Manager::ICONS
+	 * Used to render Icon for \Refraction\Controls_Manager::ICONS
 	 *
 	 * @param array  $icon             Icon Type, Icon value.
 	 * @param array  $attributes       Icon HTML Attributes.
@@ -382,7 +382,7 @@ class Icons_Manager {
 			];
 		}
 		if ( false === $migration_dictionary ) {
-			$migration_dictionary = json_decode( Utils::file_get_contents( ELEMENTOR_ASSETS_PATH . 'lib/font-awesome/migration/mapping.js' ), true );
+			$migration_dictionary = json_decode( Utils::file_get_contents( REFRACTION_ASSETS_PATH . 'lib/font-awesome/migration/mapping.js' ), true );
 		}
 		if ( isset( $migration_dictionary[ $value ] ) ) {
 			return $migration_dictionary[ $value ];
@@ -443,7 +443,7 @@ class Icons_Manager {
 			 *
 			 * @param bool $migration_allowed Is icon migration is allowed.
 			 */
-			$migration_allowed = apply_filters( 'elementor/icons_manager/migration_allowed', $migration_allowed );
+			$migration_allowed = apply_filters( 'refraction/icons_manager/migration_allowed', $migration_allowed );
 		}
 		return $migration_allowed;
 	}
@@ -461,48 +461,48 @@ class Icons_Manager {
 			Settings::TAB_ADVANCED,
 			'load_fa4_shim',
 			[
-				'label' => esc_html__( 'Load Font Awesome 4 Support', 'elementor' ),
+				'label' => esc_html__( 'Load Font Awesome 4 Support', 'refraction' ),
 				'field_args' => [
 					'type' => 'select',
 					'std' => '',
 					'options' => [
-						'' => esc_html__( 'No', 'elementor' ),
-						'yes' => esc_html__( 'Yes', 'elementor' ),
+						'' => esc_html__( 'No', 'refraction' ),
+						'yes' => esc_html__( 'Yes', 'refraction' ),
 					],
-					'desc' => esc_html__( 'Font Awesome 4 support script (shim.js) is a script that makes sure all previously selected Font Awesome 4 icons are displayed correctly while using Font Awesome 5 library.', 'elementor' ),
+					'desc' => esc_html__( 'Font Awesome 4 support script (shim.js) is a script that makes sure all previously selected Font Awesome 4 icons are displayed correctly while using Font Awesome 5 library.', 'refraction' ),
 				],
 			]
 		);
 	}
 
 	public function register_admin_tools_settings( Tools $settings ) {
-		$settings->add_tab( 'fontawesome4_migration', [ 'label' => esc_html__( 'Font Awesome Upgrade', 'elementor' ) ] );
+		$settings->add_tab( 'fontawesome4_migration', [ 'label' => esc_html__( 'Font Awesome Upgrade', 'refraction' ) ] );
 
 		$settings->add_section( 'fontawesome4_migration', 'fontawesome4_migration', [
 			'callback' => function() {
-				echo '<h2>' . esc_html__( 'Font Awesome Upgrade', 'elementor' ) . '</h2>';
+				echo '<h2>' . esc_html__( 'Font Awesome Upgrade', 'refraction' ) . '</h2>';
 				echo '<p>' . // PHPCS - Plain Text
-				esc_html__( 'Access 1,500+ amazing Font Awesome 5 icons and enjoy faster performance and design flexibility.', 'elementor' ) . '<br>' . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				esc_html__( 'By upgrading, whenever you edit a page containing a Font Awesome 4 icon, Elementor will convert it to the new Font Awesome 5 icon.', 'elementor' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_html__( 'Access 1,500+ amazing Font Awesome 5 icons and enjoy faster performance and design flexibility.', 'refraction' ) . '<br>' . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_html__( 'By upgrading, whenever you edit a page containing a Font Awesome 4 icon, Refraction will convert it to the new Font Awesome 5 icon.', 'refraction' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				'</p><p><strong>' .
-				esc_html__( 'Please note that the upgrade process may cause some of the previously used Font Awesome 4 icons to look a bit different due to minor design changes made by Font Awesome.', 'elementor' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_html__( 'Please note that the upgrade process may cause some of the previously used Font Awesome 4 icons to look a bit different due to minor design changes made by Font Awesome.', 'refraction' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				'</strong></p><p>' .
-				esc_html__( 'The upgrade process includes a database update', 'elementor' ) . ' - ' . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				esc_html__( 'We highly recommend backing up your database before performing this upgrade.', 'elementor' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_html__( 'The upgrade process includes a database update', 'refraction' ) . ' - ' . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_html__( 'We highly recommend backing up your database before performing this upgrade.', 'refraction' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				'</p>' .
-				esc_html__( 'This action is not reversible and cannot be undone by rolling back to previous versions.', 'elementor' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_html__( 'This action is not reversible and cannot be undone by rolling back to previous versions.', 'refraction' ) . // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				'</p>';
 			},
 			'fields' => [
 				[
-					'label' => esc_html__( 'Font Awesome Upgrade', 'elementor' ),
+					'label' => esc_html__( 'Font Awesome Upgrade', 'refraction' ),
 					'field_args' => [
 						'type' => 'raw_html',
-						'html' => sprintf( '<span data-action="%s" data-_nonce="%s" data-redirect-url="%s" class="button" id="elementor_upgrade_fa_button">%s</span>',
+						'html' => sprintf( '<span data-action="%s" data-_nonce="%s" data-redirect-url="%s" class="button" id="refraction_upgrade_fa_button">%s</span>',
 							self::NEEDS_UPDATE_OPTION . '_upgrade',
 							wp_create_nonce( self::NEEDS_UPDATE_OPTION ),
 							esc_url( $this->get_upgrade_redirect_url() ),
-							esc_html__( 'Upgrade To Font Awesome 5', 'elementor' )
+							esc_html__( 'Upgrade To Font Awesome 5', 'refraction' )
 						),
 					],
 				],
@@ -546,9 +546,9 @@ class Icons_Manager {
 			wp_send_json_error( 'Permission denied' );
 		}
 
-		delete_option( 'elementor_' . self::NEEDS_UPDATE_OPTION );
+		delete_option( 'refraction_' . self::NEEDS_UPDATE_OPTION );
 
-		wp_send_json_success( [ 'message' => esc_html__( 'Hurray! The upgrade process to Font Awesome 5 was completed successfully.', 'elementor' ) ] );
+		wp_send_json_success( [ 'message' => esc_html__( 'Hurray! The upgrade process to Font Awesome 5 was completed successfully.', 'refraction' ) ] );
 	}
 
 	/**
@@ -569,7 +569,7 @@ class Icons_Manager {
 		} else {
 			$current_filter = current_filter();
 			$load_shim = get_option( self::LOAD_FA4_SHIM_OPTION_KEY, false );
-			if ( 'elementor/editor/after_enqueue_styles' === $current_filter ) {
+			if ( 'refraction/editor/after_enqueue_styles' === $current_filter ) {
 				self::enqueue_shim();
 			} elseif ( 'yes' === $load_shim ) {
 				self::enqueue_shim();
@@ -592,19 +592,19 @@ class Icons_Manager {
 	public function __construct() {
 		if ( is_admin() ) {
 			// @todo: remove once we deprecate fa4
-			add_action( 'elementor/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_admin_settings' ], 100 );
+			add_action( 'refraction/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_admin_settings' ], 100 );
 		}
 
 		if ( self::is_font_icon_inline_svg() ) {
 			self::$data_manager = new Font_Icon_Svg_Data_Manager();
 		}
 
-		add_action( 'elementor/frontend/after_enqueue_styles', [ $this, 'enqueue_fontawesome_css' ] );
-		add_action( 'elementor/frontend/after_register_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/frontend/after_enqueue_styles', [ $this, 'enqueue_fontawesome_css' ] );
+		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_styles' ] );
 
 		if ( ! self::is_migration_allowed() ) {
-			add_filter( 'elementor/editor/localize_settings', [ $this, 'add_update_needed_flag' ] );
-			add_action( 'elementor/admin/after_create_settings/' . Tools::PAGE_ID, [ $this, 'register_admin_tools_settings' ], 100 );
+			add_filter( 'refraction/editor/localize_settings', [ $this, 'add_update_needed_flag' ] );
+			add_action( 'refraction/admin/after_create_settings/' . Tools::PAGE_ID, [ $this, 'register_admin_tools_settings' ], 100 );
 
 			if ( ! empty( $_POST ) ) { // phpcs:ignore -- nonce validation done in callback
 				add_action( 'wp_ajax_' . self::NEEDS_UPDATE_OPTION . '_upgrade', [ $this, 'ajax_upgrade_to_fa5' ] );

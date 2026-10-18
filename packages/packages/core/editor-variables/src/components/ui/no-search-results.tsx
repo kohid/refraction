@@ -20,14 +20,14 @@ export const NoSearchResults = ( { searchValue, onClear, icon }: Props ) => {
 		>
 			{ icon }
 			<Typography align="center" variant="subtitle2">
-				{ __( 'Sorry, nothing matched', 'elementor' ) }
+				{ __( 'Sorry, nothing matched', 'refraction' ) }
 				<br />
 				&ldquo;{ searchValue }&rdquo;.
 			</Typography>
 			<Typography align="center" variant="caption" sx={ { display: 'flex', flexDirection: 'column' } }>
-				{ __( 'Try something else.', 'elementor' ) }
+				{ __( 'Try something else.', 'refraction' ) }
 				<Link color="text.secondary" variant="caption" component="button" onClick={ onClear }>
-					{ __( 'Clear & try again', 'elementor' ) }
+					{ __( 'Clear & try again', 'refraction' ) }
 				</Link>
 			</Typography>
 		</Stack>

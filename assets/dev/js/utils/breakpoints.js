@@ -1,15 +1,15 @@
 /**
  * Breakpoints
  *
- * This utility class contains helper functions relating to Elementor's breakpoints system.
+ * This utility class contains helper functions relating to Refraction's breakpoints system.
  *
  * @since 3.4.0
  */
-export default class Breakpoints extends elementorModules.Module {
+export default class Breakpoints extends refractionModules.Module {
 	constructor( responsiveConfig ) {
 		super();
 
-		// The passed config is either `elementor.config.responsive` or `elementorFrontend.config.responsive`
+		// The passed config is either `refraction.config.responsive` or `refractionFrontend.config.responsive`
 		this.responsiveConfig = responsiveConfig;
 	}
 

@@ -1,16 +1,16 @@
-import NewFloatingElementsView from 'elementor-admin/floating-elements/view';
-import ModalLayout from 'elementor-common/views/modal/layout';
+import NewFloatingElementsView from 'refraction-admin/floating-elements/view';
+import ModalLayout from 'refraction-common/views/modal/layout';
 
 export default class extends ModalLayout {
 	getModalOptions() {
 		return {
-			id: 'elementor-new-floating-elements-modal',
+			id: 'refraction-new-floating-elements-modal',
 		};
 	}
 
 	getLogoOptions() {
 		return {
-			title: __( 'New Floating Elements', 'elementor' ),
+			title: __( 'New Floating Elements', 'refraction' ),
 		};
 	}
 

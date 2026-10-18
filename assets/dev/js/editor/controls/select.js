@@ -1,4 +1,4 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlSelectItemView;
 
 ControlSelectItemView = ControlBaseDataView.extend( {

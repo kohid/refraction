@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type KeyboardEvent, useState } from 'react';
-import { PopoverContent, useBoundProp } from '@elementor/editor-controls';
-import { PopoverHeader, SectionPopoverBody } from '@elementor/editor-ui';
+import { PopoverContent, useBoundProp } from '@refraction/editor-controls';
+import { PopoverHeader, SectionPopoverBody } from '@refraction/editor-ui';
 import { ArrowLeftIcon } from '@elementor/icons';
 import { Button, CardActions, Divider, FormHelperText, IconButton, Typography } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -108,14 +108,14 @@ export const VariableCreation = ( { onGoBack, onClose }: Props ) => {
 				icon={
 					<>
 						{ onGoBack && (
-							<IconButton size={ SIZE } aria-label={ __( 'Go Back', 'elementor' ) } onClick={ onGoBack }>
+							<IconButton size={ SIZE } aria-label={ __( 'Go Back', 'refraction' ) } onClick={ onGoBack }>
 								<ArrowLeftIcon fontSize={ SIZE } />
 							</IconButton>
 						) }
 						<VariableIcon fontSize={ SIZE } />
 					</>
 				}
-				title={ __( 'Create variable', 'elementor' ) }
+				title={ __( 'Create variable', 'refraction' ) }
 				onClose={ closePopover }
 			/>
 
@@ -124,7 +124,7 @@ export const VariableCreation = ( { onGoBack, onClose }: Props ) => {
 			<PopoverContent p={ 2 }>
 				<FormField
 					id="variable-label"
-					label={ __( 'Name', 'elementor' ) }
+					label={ __( 'Name', 'refraction' ) }
 					errorMsg={ labelFieldError?.message }
 					noticeMsg={ labelHint( label ) }
 				>
@@ -147,7 +147,7 @@ export const VariableCreation = ( { onGoBack, onClose }: Props ) => {
 					/>
 				</FormField>
 				{ ValueField && (
-					<FormField errorMsg={ valueFieldError } label={ __( 'Value', 'elementor' ) }>
+					<FormField errorMsg={ valueFieldError } label={ __( 'Value', 'refraction' ) }>
 						<Typography variant="h5" id="variable-value-wrapper">
 							<ValueField
 								value={ value }
@@ -176,7 +176,7 @@ export const VariableCreation = ( { onGoBack, onClose }: Props ) => {
 					disabled={ isSubmitDisabled }
 					onClick={ handleCreateAndTrack }
 				>
-					{ __( 'Create', 'elementor' ) }
+					{ __( 'Create', 'refraction' ) }
 				</Button>
 			</CardActions>
 		</SectionPopoverBody>

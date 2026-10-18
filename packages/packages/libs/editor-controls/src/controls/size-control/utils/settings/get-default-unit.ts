@@ -1,4 +1,4 @@
-import type { PropType } from '@elementor/editor-props';
+import type { PropType } from '@refraction/editor-props';
 
 import { getPropTypeSettings } from './get-prop-type-settings';
 

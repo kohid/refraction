@@ -2,8 +2,8 @@ import { DirectionProvider, ThemeProvider } from '@elementor/ui';
 import { App } from './App';
 
 export const AppModern = () => {
-	const isRTL = typeof elementorCommon !== 'undefined' && elementorCommon.config?.isRTL
-		? elementorCommon.config.isRTL
+	const isRTL = typeof refractionCommon !== 'undefined' && refractionCommon.config?.isRTL
+		? refractionCommon.config.isRTL
 		: 'rtl' === document.documentElement.dir || document.body.classList.contains( 'rtl' );
 
 	return (

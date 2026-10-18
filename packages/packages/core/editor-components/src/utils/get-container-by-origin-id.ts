@@ -1,4 +1,4 @@
-import { getContainer, type V1Element } from '@elementor/editor-elements';
+import { getContainer, type V1Element } from '@refraction/editor-elements';
 
 import { type ExtendedWindow } from '../types';
 
@@ -37,7 +37,7 @@ export function getContainerByOriginId( originElementId: string, instanceElement
 	const legacyWindow = window as unknown as ExtendedWindow;
 
 	return (
-		legacyWindow.elementor?.getContainerByKeyValue?.( {
+		legacyWindow.refraction?.getContainerByKeyValue?.( {
 			key: 'originId',
 			value: originElementId,
 			parent: instanceContainer.view,

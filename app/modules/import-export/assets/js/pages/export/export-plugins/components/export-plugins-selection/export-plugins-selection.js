@@ -7,18 +7,18 @@ import usePlugins, { PLUGIN_STATUS_MAP } from '../../../../../hooks/use-plugins'
 import usePluginsData, { PLUGINS_KEYS } from '../../../../../hooks/use-plugins-data';
 
 const layout = [ 3, 1 ],
-	initialDisabled = [ 0 ]; // Elementor Core will always be first and should always be disabled.
+	initialDisabled = [ 0 ]; // Refraction Core will always be first and should always be disabled.
 
 function ExportPluginsSelection( { onSelect } ) {
 	const { response } = usePlugins(),
 		{ pluginsData } = usePluginsData( response.data ),
 		activePlugins = pluginsData.filter( ( { status } ) => PLUGIN_STATUS_MAP.ACTIVE === status || PLUGIN_STATUS_MAP.MULTISITE_ACTIVE === status ),
 		getInitialSelected = () => {
-			// Elementor Core will always be the first plugin on the list.
+			// Refraction Core will always be the first plugin on the list.
 			const initialSelected = [ 0 ];
 
-			// In case that Elementor Pro appears in the list it will always be second and should always be selected by default.
-			if ( activePlugins.length > 1 && PLUGINS_KEYS.ELEMENTOR_PRO === activePlugins[ 1 ].name ) {
+			// In case that Refraction Pro appears in the list it will always be second and should always be selected by default.
+			if ( activePlugins.length > 1 && PLUGINS_KEYS.REFRACTION_PRO === activePlugins[ 1 ].name ) {
 				initialSelected.push( 1 );
 			}
 

@@ -1,5 +1,5 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { Schema } from '@elementor/editor-props';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { Schema } from '@refraction/editor-props';
 
 import { isIconLibraryActive } from './icon-library-experiment';
 import { initAvailableWidgetsResource } from './resources/available-widgets-resource';

@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\LinkInBio;
+namespace Refraction\Modules\LinkInBio;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager;
-use Elementor\Plugin;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager;
+use Refraction\Plugin;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -28,13 +28,13 @@ class Module extends BaseModule {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/frontend/after_register_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_styles' ] );
 	}
 
 	/**
 	 * Register styles.
 	 *
-	 * At build time, Elementor compiles `/modules/link-in-bio/assets/scss/widgets/*.scss`
+	 * At build time, Refraction compiles `/modules/link-in-bio/assets/scss/widgets/*.scss`
 	 * to `/assets/css/widget-*.min.css`.
 	 *
 	 * @return void
@@ -50,8 +50,8 @@ class Module extends BaseModule {
 			wp_register_style(
 				$widget_style_name,
 				$this->get_frontend_file_url( "{$widget_style_name}{$direction_suffix}.min.css", $should_load_responsive_css ),
-				[ 'elementor-frontend' ],
-				$should_load_responsive_css ? null : ELEMENTOR_VERSION
+				[ 'refraction-frontend' ],
+				$should_load_responsive_css ? null : REFRACTION_VERSION
 			);
 		}
 	}

@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor tabs widget.
+ * Refraction tabs widget.
  *
- * Elementor widget that displays vertical or horizontal tabs with different
+ * Refraction widget that displays vertical or horizontal tabs with different
  * pieces of content.
  *
  * @since 1.0.0
@@ -43,7 +43,7 @@ class Widget_Tabs extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Tabs', 'elementor' );
+		return esc_html__( 'Tabs', 'refraction' );
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Widget_Tabs extends Widget_Base {
 		$this->start_controls_section(
 			'section_tabs',
 			[
-				'label' => esc_html__( 'Tabs', 'elementor' ),
+				'label' => esc_html__( 'Tabs', 'refraction' ),
 			]
 		);
 
@@ -124,10 +124,10 @@ class Widget_Tabs extends Widget_Base {
 		$repeater->add_control(
 			'tab_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'Tab Title', 'elementor' ),
-				'placeholder' => esc_html__( 'Tab Title', 'elementor' ),
+				'default' => esc_html__( 'Tab Title', 'refraction' ),
+				'placeholder' => esc_html__( 'Tab Title', 'refraction' ),
 				'label_block' => true,
 				'dynamic' => [
 					'active' => true,
@@ -138,9 +138,9 @@ class Widget_Tabs extends Widget_Base {
 		$repeater->add_control(
 			'tab_content',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
-				'default' => esc_html__( 'Tab Content', 'elementor' ),
-				'placeholder' => esc_html__( 'Tab Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
+				'default' => esc_html__( 'Tab Content', 'refraction' ),
+				'placeholder' => esc_html__( 'Tab Content', 'refraction' ),
 				'type' => Controls_Manager::WYSIWYG,
 			]
 		);
@@ -152,7 +152,7 @@ class Widget_Tabs extends Widget_Base {
 				'3.8.0',
 				esc_html__(
 					'You are currently editing a Tabs Widget in its old version. Any new tabs widget dragged into the canvas will be the new Tab widget, with the improved Nested capabilities.',
-					'elementor'
+					'refraction'
 				),
 				'nested-tabs'
 			);
@@ -161,17 +161,17 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'tabs',
 			[
-				'label' => esc_html__( 'Tabs Items', 'elementor' ),
+				'label' => esc_html__( 'Tabs Items', 'refraction' ),
 				'type' => Controls_Manager::REPEATER,
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'tab_title' => esc_html__( 'Tab #1', 'elementor' ),
-						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor' ),
+						'tab_title' => esc_html__( 'Tab #1', 'refraction' ),
+						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ),
 					],
 					[
-						'tab_title' => esc_html__( 'Tab #2', 'elementor' ),
-						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor' ),
+						'tab_title' => esc_html__( 'Tab #2', 'refraction' ),
+						'tab_content' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ),
 					],
 				],
 				'title_field' => '{{{ tab_title }}}',
@@ -181,21 +181,21 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'type',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => 'horizontal',
 				'options' => [
 					'vertical' => [
-						'title' => esc_html__( 'Vertical', 'elementor' ),
+						'title' => esc_html__( 'Vertical', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'horizontal' => [
-						'title' => esc_html__( 'Horizontal', 'elementor' ),
+						'title' => esc_html__( 'Horizontal', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
-				'prefix_class' => 'elementor-tabs-view-',
+				'classes' => 'refraction-control-start-end',
+				'prefix_class' => 'refraction-tabs-view-',
 				'separator' => 'before',
 			]
 		);
@@ -203,27 +203,27 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'tabs_align_horizontal',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => "eicon-align-$start-h",
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-align-center-h',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => "eicon-align-$end-h",
 					],
 					'stretch' => [
-						'title' => esc_html__( 'Stretch', 'elementor' ),
+						'title' => esc_html__( 'Stretch', 'refraction' ),
 						'icon' => 'eicon-align-stretch-h',
 					],
 				],
-				'prefix_class' => 'elementor-tabs-alignment-',
+				'prefix_class' => 'refraction-tabs-alignment-',
 				'condition' => [
 					'type' => 'horizontal',
 				],
@@ -233,27 +233,27 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'tabs_align_vertical',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-align-start-v',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-align-center-v',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-align-end-v',
 					],
 					'stretch' => [
-						'title' => esc_html__( 'Stretch', 'elementor' ),
+						'title' => esc_html__( 'Stretch', 'refraction' ),
 						'icon' => 'eicon-align-stretch-v',
 					],
 				],
-				'prefix_class' => 'elementor-tabs-alignment-',
+				'prefix_class' => 'refraction-tabs-alignment-',
 				'condition' => [
 					'type' => 'vertical',
 				],
@@ -265,7 +265,7 @@ class Widget_Tabs extends Widget_Base {
 		$this->start_controls_section(
 			'section_tabs_style',
 			[
-				'label' => esc_html__( 'Tabs', 'elementor' ),
+				'label' => esc_html__( 'Tabs', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -273,7 +273,7 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'navigation_width',
 			[
-				'label' => esc_html__( 'Navigation Width', 'elementor' ),
+				'label' => esc_html__( 'Navigation Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -298,7 +298,7 @@ class Widget_Tabs extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tabs-wrapper' => 'width: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-tabs-wrapper' => 'width: {{SIZE}}{{UNIT}}',
 				],
 				'condition' => [
 					'type' => 'vertical',
@@ -309,7 +309,7 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'border_width',
 			[
-				'label' => esc_html__( 'Border Width', 'elementor' ),
+				'label' => esc_html__( 'Border Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
@@ -324,7 +324,7 @@ class Widget_Tabs extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title, {{WRAPPER}} .elementor-tab-title:before, {{WRAPPER}} .elementor-tab-title:after, {{WRAPPER}} .elementor-tab-content, {{WRAPPER}} .elementor-tabs-content-wrapper' => 'border-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-tab-title, {{WRAPPER}} .refraction-tab-title:before, {{WRAPPER}} .refraction-tab-title:after, {{WRAPPER}} .refraction-tab-content, {{WRAPPER}} .refraction-tabs-content-wrapper' => 'border-width: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -332,10 +332,10 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'border_color',
 			[
-				'label' => esc_html__( 'Border Color', 'elementor' ),
+				'label' => esc_html__( 'Border Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-mobile-title, {{WRAPPER}} .elementor-tab-desktop-title.elementor-active, {{WRAPPER}} .elementor-tab-title:before, {{WRAPPER}} .elementor-tab-title:after, {{WRAPPER}} .elementor-tab-content, {{WRAPPER}} .elementor-tabs-content-wrapper' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-mobile-title, {{WRAPPER}} .refraction-tab-desktop-title.refraction-active, {{WRAPPER}} .refraction-tab-title:before, {{WRAPPER}} .refraction-tab-title:after, {{WRAPPER}} .refraction-tab-content, {{WRAPPER}} .refraction-tabs-content-wrapper' => 'border-color: {{VALUE}};',
 				],
 			]
 		);
@@ -343,11 +343,11 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'background_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-desktop-title.elementor-active' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-tabs-content-wrapper' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-desktop-title.refraction-active' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tabs-content-wrapper' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -355,7 +355,7 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'heading_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -364,10 +364,10 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'tab_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title, {{WRAPPER}} .elementor-tab-title a' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .refraction-tab-title, {{WRAPPER}} .refraction-tab-title a' => 'color: {{VALUE}}',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
@@ -378,11 +378,11 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'tab_active_color',
 			[
-				'label' => esc_html__( 'Active Color', 'elementor' ),
+				'label' => esc_html__( 'Active Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title.elementor-active,
-					 {{WRAPPER}} .elementor-tab-title.elementor-active a' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .refraction-tab-title.refraction-active,
+					 {{WRAPPER}} .refraction-tab-title.refraction-active a' => 'color: {{VALUE}}',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_ACCENT,
@@ -394,7 +394,7 @@ class Widget_Tabs extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'tab_typography',
-				'selector' => '{{WRAPPER}} .elementor-tab-title',
+				'selector' => '{{WRAPPER}} .refraction-tab-title',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
@@ -405,7 +405,7 @@ class Widget_Tabs extends Widget_Base {
 			Group_Control_Text_Stroke::get_type(),
 			[
 				'name' => 'text_stroke',
-				'selector' => '{{WRAPPER}} .elementor-tab-title',
+				'selector' => '{{WRAPPER}} .refraction-tab-title',
 			]
 		);
 
@@ -413,36 +413,36 @@ class Widget_Tabs extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'title_shadow',
-				'selector' => '{{WRAPPER}} .elementor-tab-title',
+				'selector' => '{{WRAPPER}} .refraction-tab-title',
 			]
 		);
 
 		$this->add_control(
 			'title_align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title' => 'text-align: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-title' => 'text-align: {{VALUE}};',
 				],
 				'condition' => [
 					'tabs_align' => 'stretch',
@@ -453,7 +453,7 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'heading_content',
 			[
-				'label' => esc_html__( 'Content', 'elementor' ),
+				'label' => esc_html__( 'Content', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -462,10 +462,10 @@ class Widget_Tabs extends Widget_Base {
 		$this->add_control(
 			'content_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-content' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-tab-content' => 'color: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_TEXT,
@@ -477,7 +477,7 @@ class Widget_Tabs extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'content_typography',
-				'selector' => '{{WRAPPER}} .elementor-tab-content',
+				'selector' => '{{WRAPPER}} .refraction-tab-content',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_TEXT,
 				],
@@ -488,7 +488,7 @@ class Widget_Tabs extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'content_shadow',
-				'selector' => '{{WRAPPER}} .elementor-tab-content',
+				'selector' => '{{WRAPPER}} .refraction-tab-content',
 			]
 		);
 
@@ -508,24 +508,24 @@ class Widget_Tabs extends Widget_Base {
 
 		$id_int = substr( $this->get_id_int(), 0, 3 );
 
-		$this->add_render_attribute( 'elementor-tabs', 'class', 'elementor-tabs' );
+		$this->add_render_attribute( 'refraction-tabs', 'class', 'refraction-tabs' );
 
 		?>
-		<div <?php $this->print_render_attribute_string( 'elementor-tabs' ); ?>>
-			<div class="elementor-tabs-wrapper" role="tablist" >
+		<div <?php $this->print_render_attribute_string( 'refraction-tabs' ); ?>>
+			<div class="refraction-tabs-wrapper" role="tablist" >
 				<?php
 				foreach ( $tabs as $index => $item ) :
 					$tab_count = $index + 1;
 					$tab_title_setting_key = $this->get_repeater_setting_key( 'tab_title', 'tabs', $index );
 
 					$this->add_render_attribute( $tab_title_setting_key, [
-						'id' => 'elementor-tab-title-' . $id_int . $tab_count,
-						'class' => [ 'elementor-tab-title', 'elementor-tab-desktop-title' ],
+						'id' => 'refraction-tab-title-' . $id_int . $tab_count,
+						'class' => [ 'refraction-tab-title', 'refraction-tab-desktop-title' ],
 						'aria-selected' => 1 === $tab_count ? 'true' : 'false',
 						'data-tab' => $tab_count,
 						'role' => 'tab',
 						'tabindex' => 1 === $tab_count ? '0' : '-1',
-						'aria-controls' => 'elementor-tab-content-' . $id_int . $tab_count,
+						'aria-controls' => 'refraction-tab-content-' . $id_int . $tab_count,
 						'aria-expanded' => 'false',
 					] );
 					?>
@@ -535,7 +535,7 @@ class Widget_Tabs extends Widget_Base {
 					?></div>
 				<?php endforeach; ?>
 			</div>
-			<div class="elementor-tabs-content-wrapper" role="tablist" aria-orientation="vertical">
+			<div class="refraction-tabs-content-wrapper" role="tablist" aria-orientation="vertical">
 				<?php
 				foreach ( $tabs as $index => $item ) :
 					$tab_count = $index + 1;
@@ -545,22 +545,22 @@ class Widget_Tabs extends Widget_Base {
 					$tab_title_mobile_setting_key = $this->get_repeater_setting_key( 'tab_title_mobile', 'tabs', $tab_count );
 
 					$this->add_render_attribute( $tab_content_setting_key, [
-						'id' => 'elementor-tab-content-' . $id_int . $tab_count,
-						'class' => [ 'elementor-tab-content', 'elementor-clearfix' ],
+						'id' => 'refraction-tab-content-' . $id_int . $tab_count,
+						'class' => [ 'refraction-tab-content', 'refraction-clearfix' ],
 						'data-tab' => $tab_count,
 						'role' => 'tabpanel',
-						'aria-labelledby' => 'elementor-tab-title-' . $id_int . $tab_count,
+						'aria-labelledby' => 'refraction-tab-title-' . $id_int . $tab_count,
 						'tabindex' => '0',
 						'hidden' => $hidden,
 					] );
 
 					$this->add_render_attribute( $tab_title_mobile_setting_key, [
-						'class' => [ 'elementor-tab-title', 'elementor-tab-mobile-title' ],
+						'class' => [ 'refraction-tab-title', 'refraction-tab-mobile-title' ],
 						'aria-selected' => 1 === $tab_count ? 'true' : 'false',
 						'data-tab' => $tab_count,
 						'role' => 'tab',
 						'tabindex' => 1 === $tab_count ? '0' : '-1',
-						'aria-controls' => 'elementor-tab-content-' . $id_int . $tab_count,
+						'aria-controls' => 'refraction-tab-content-' . $id_int . $tab_count,
 						'aria-expanded' => 'false',
 					] );
 
@@ -597,7 +597,7 @@ class Widget_Tabs extends Widget_Base {
 
 		foreach ( $tabs as $item ) {
 			$title = Utils::html_to_plain_text( $item['tab_title'] ?? '' );
-			$content = \Elementor\Modules\MarkdownRender\Html_To_Markdown::convert( $item['tab_content'] ?? '' );
+			$content = \Refraction\Modules\MarkdownRender\Html_To_Markdown::convert( $item['tab_content'] ?? '' );
 
 			if ( empty( $title ) && empty( $content ) ) {
 				continue;
@@ -617,43 +617,43 @@ class Widget_Tabs extends Widget_Base {
 
 	protected function content_template() {
 		?>
-		<div class="elementor-tabs" role="tablist" aria-orientation="vertical">
+		<div class="refraction-tabs" role="tablist" aria-orientation="vertical">
 			<# if ( settings.tabs ) {
 				var elementUid = view.getIDInt().toString().substr( 0, 3 ); #>
-				<div class="elementor-tabs-wrapper" role="tablist">
+				<div class="refraction-tabs-wrapper" role="tablist">
 					<# _.each( settings.tabs, function( item, index ) {
 						var tabCount = index + 1,
 							tabUid = elementUid + tabCount,
 							tabTitleKey = 'tab-title-' + tabUid;
 
 					view.addRenderAttribute( tabTitleKey, {
-						'id': 'elementor-tab-title-' + tabUid,
-						'class': [ 'elementor-tab-title','elementor-tab-desktop-title' ],
+						'id': 'refraction-tab-title-' + tabUid,
+						'class': [ 'refraction-tab-title','refraction-tab-desktop-title' ],
 						'data-tab': tabCount,
 						'role': 'tab',
 						'tabindex': 1 === tabCount ? '0' : '-1',
-						'aria-controls': 'elementor-tab-content-' + tabUid,
+						'aria-controls': 'refraction-tab-content-' + tabUid,
 						'aria-expanded': 'false',
 						} );
 					#>
 						<div {{{ view.getRenderAttributeString( tabTitleKey ) }}}>{{{ item.tab_title }}}</div>
 					<# } ); #>
 				</div>
-				<div class="elementor-tabs-content-wrapper">
+				<div class="refraction-tabs-content-wrapper">
 					<# _.each( settings.tabs, function( item, index ) {
 						var tabCount = index + 1,
 							tabContentKey = view.getRepeaterSettingKey( 'tab_content', 'tabs',index );
 
 						view.addRenderAttribute( tabContentKey, {
-							'id': 'elementor-tab-content-' + elementUid + tabCount,
-							'class': [ 'elementor-tab-content', 'elementor-clearfix', 'elementor-repeater-item-' + item._id ],
+							'id': 'refraction-tab-content-' + elementUid + tabCount,
+							'class': [ 'refraction-tab-content', 'refraction-clearfix', 'refraction-repeater-item-' + item._id ],
 							'data-tab': tabCount,
 							'role' : 'tabpanel',
-							'aria-labelledby' : 'elementor-tab-title-' + elementUid + tabCount
+							'aria-labelledby' : 'refraction-tab-title-' + elementUid + tabCount
 						} );
 
 						view.addInlineEditingAttributes( tabContentKey, 'advanced' ); #>
-						<div class="elementor-tab-title elementor-tab-mobile-title" data-tab="{{ tabCount }}" role="tab">{{{ item.tab_title }}}</div>
+						<div class="refraction-tab-title refraction-tab-mobile-title" data-tab="{{ tabCount }}" role="tab">{{{ item.tab_title }}}</div>
 						<div {{{ view.getRenderAttributeString( tabContentKey ) }}}>{{{ item.tab_content }}}</div>
 					<# } ); #>
 				</div>

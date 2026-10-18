@@ -2,7 +2,7 @@ import WidgetDraggable from './behaviors/widget-draggable';
 import WidgetResizable from './behaviors/widget-resizeable';
 import BaseWidget from './base-widget';
 
-const BaseElementView = require( 'elementor-elements/views/base' );
+const BaseElementView = require( 'refraction-elements/views/base' );
 
 const WidgetView = BaseWidget.extend( {
 	_templateType: null,
@@ -22,8 +22,8 @@ const WidgetView = BaseWidget.extend( {
 
 		_.extend( behaviors, {
 			InlineEditing: {
-				behaviorClass: require( 'elementor-behaviors/inline-editing' ),
-				inlineEditingClass: 'elementor-inline-editing',
+				behaviorClass: require( 'refraction-behaviors/inline-editing' ),
+				inlineEditingClass: 'refraction-inline-editing',
 			},
 			Draggable: {
 				behaviorClass: WidgetDraggable,
@@ -33,7 +33,7 @@ const WidgetView = BaseWidget.extend( {
 			},
 		} );
 
-		return elementor.hooks.applyFilters( 'elements/widget/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'elements/widget/behaviors', behaviors, this );
 	},
 
 	getContextMenuGroups() {
@@ -45,11 +45,11 @@ const WidgetView = BaseWidget.extend( {
 			actions: [
 				{
 					name: 'save',
-					title: __( 'Save as a global', 'elementor' ),
+					title: __( 'Save as a global', 'refraction' ),
 					shortcut: jQuery( '<i>', { class: 'eicon-pro-icon' } ),
 					promotionURL: 'https://go.elementor.com/go-pro-global-widget-context-menu/',
 					isEnabled: () => 'global' !== this.options.model.get( 'widgetType' ) &&
-						! elementor.selection.isMultiple(),
+						! refraction.selection.isMultiple(),
 				},
 			],
 		} );
@@ -61,7 +61,7 @@ const WidgetView = BaseWidget.extend( {
 		if ( this.model.isRemoteRequestActive() ) {
 			this.handleEmptyWidget();
 
-			this.$el.addClass( 'elementor-element' );
+			this.$el.addClass( 'refraction-element' );
 
 			return;
 		}
@@ -75,14 +75,14 @@ const WidgetView = BaseWidget.extend( {
 
 	handleEmptyWidget() {
 		this.$el
-			.addClass( 'elementor-widget-empty' )
-			.append( '<i class="elementor-widget-empty-icon ' + this.getEditModel().getIcon() + '"></i>' );
+			.addClass( 'refraction-widget-empty' )
+			.append( '<i class="refraction-widget-empty-icon ' + this.getEditModel().getIcon() + '"></i>' );
 	},
 
 	getTemplateType() {
 		if ( null === this._templateType ) {
 			var editModel = this.getEditModel(),
-				$template = jQuery( '#tmpl-elementor-' + editModel.get( 'widgetType' ) + '-content' );
+				$template = jQuery( '#tmpl-refraction-' + editModel.get( 'widgetType' ) + '-content' );
 
 			this._templateType = $template.length ? 'js' : 'remote';
 		}
@@ -98,7 +98,7 @@ const WidgetView = BaseWidget.extend( {
 
 	attachElContent( html ) {
 		_.defer( () => {
-			elementorFrontend.elements.window.jQuery( this.el ).empty().append( this.getHandlesOverlay(), this.getHTMLContent( html ) );
+			refractionFrontend.elements.window.jQuery( this.el ).empty().append( this.getHandlesOverlay(), this.getHTMLContent( html ) );
 
 			this.bindUIElements(); // Build again the UI elements since the content attached just now
 		} );
@@ -108,13 +108,13 @@ const WidgetView = BaseWidget.extend( {
 
 	addInlineEditingAttributes( key, toolbar ) {
 		this.addRenderAttribute( key, {
-			class: 'elementor-inline-editing',
-			'data-elementor-setting-key': key,
+			class: 'refraction-inline-editing',
+			'data-refraction-setting-key': key,
 		} );
 
 		if ( toolbar ) {
 			this.addRenderAttribute( key, {
-				'data-elementor-inline-editing-toolbar': toolbar,
+				'data-refraction-inline-editing-toolbar': toolbar,
 			} );
 		}
 	},
@@ -130,7 +130,7 @@ const WidgetView = BaseWidget.extend( {
 		self.$el.imagesLoaded().always( function() {
 			setTimeout( function() {
 				// Since 'outerHeight' will not handle hidden elements, and mark them as empty (e.g. nested tabs).
-				const $widgetContainer = self.$el.children( '.elementor-widget-container' ).length ? self.$el.children( '.elementor-widget-container' ) : self.$el;
+				const $widgetContainer = self.$el.children( '.refraction-widget-container' ).length ? self.$el.children( '.refraction-widget-container' ) : self.$el;
 
 				if ( self.shouldGetEmptyView( $widgetContainer ) ) {
 					self.handleEmptyWidget();

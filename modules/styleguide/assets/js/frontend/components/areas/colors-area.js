@@ -7,13 +7,13 @@ export default function ColorsArea() {
 	const { colorsAreaRef } = useActiveContext();
 
 	const areaConfig = {
-		title: __( 'Global Colors', 'elementor' ),
+		title: __( 'Global Colors', 'refraction' ),
 		type: 'colors',
 		component: Color,
 		sections: [
 			{
 				type: 'system_colors',
-				title: __( 'System Colors', 'elementor' ),
+				title: __( 'System Colors', 'refraction' ),
 				columns: {
 					desktop: 4,
 					mobile: 2,
@@ -21,7 +21,7 @@ export default function ColorsArea() {
 			},
 			{
 				type: 'custom_colors',
-				title: __( 'Custom Colors', 'elementor' ),
+				title: __( 'Custom Colors', 'refraction' ),
 				columns: {
 					desktop: 6,
 					mobile: 2,

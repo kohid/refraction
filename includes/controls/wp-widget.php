@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor WordPress widget control.
+ * Refraction WordPress widget control.
  *
  * A base control for creating WordPress widget control. Displays native
  * WordPress widgets. This a private control for internal use.

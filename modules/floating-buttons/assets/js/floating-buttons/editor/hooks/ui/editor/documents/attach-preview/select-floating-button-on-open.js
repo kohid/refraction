@@ -4,15 +4,15 @@ export class SelectLoadingButtonOnOpen extends $e.modules.hookUI.After {
 	}
 
 	getId() {
-		return 'elementor-floating-buttons-select-on-open';
+		return 'refraction-floating-buttons-select-on-open';
 	}
 
 	getConditions() {
-		return 'floating-buttons' === elementor?.config?.document?.type;
+		return 'floating-buttons' === refraction?.config?.document?.type;
 	}
 
 	apply() {
-		const children = elementor?.documents?.currentDocument?.container?.children;
+		const children = refraction?.documents?.currentDocument?.container?.children;
 
 		if ( Array.isArray( children ) && children.length ) {
 			$e.run(

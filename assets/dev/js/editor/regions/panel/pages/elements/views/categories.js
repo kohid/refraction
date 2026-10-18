@@ -2,21 +2,21 @@ var PanelElementsCategoryView = require( './category' ),
 	PanelElementsCategoriesView;
 
 PanelElementsCategoriesView = Marionette.CompositeView.extend( {
-	template: '#tmpl-elementor-panel-categories',
+	template: '#tmpl-refraction-panel-categories',
 
 	childView: PanelElementsCategoryView,
 
-	childViewContainer: '#elementor-panel-categories',
+	childViewContainer: '#refraction-panel-categories',
 
-	id: 'elementor-panel-elements-categories',
+	id: 'refraction-panel-elements-categories',
 
 	initialize() {
-		this.listenTo( elementor.channels.panelElements, 'filter:change', this.onPanelElementsFilterChange );
+		this.listenTo( refraction.channels.panelElements, 'filter:change', this.onPanelElementsFilterChange );
 	},
 
 	onPanelElementsFilterChange() {
-		if ( elementor.channels.panelElements.request( 'filter:value' ) ) {
-			elementor.getPanelView().getCurrentPageView().showView( 'elements' );
+		if ( refraction.channels.panelElements.request( 'filter:value' ) ) {
+			refraction.getPanelView().getCurrentPageView().showView( 'elements' );
 		}
 	},
 } );

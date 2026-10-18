@@ -1,4 +1,4 @@
-import { __privateUseListenTo as useListenTo, commandEndEvent, v1ReadyEvent } from '@elementor/editor-v1-adapters';
+import { __privateUseListenTo as useListenTo, commandEndEvent, v1ReadyEvent } from '@refraction/editor-v1-adapters';
 
 import { getContainer } from '../sync/get-container';
 import { findChildRecursive, getElementChildren, type ModelResult } from '../sync/model-utils';

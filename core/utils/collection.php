@@ -3,10 +3,10 @@
  * Inspired by Laravel Collection.
  *
  * @link https://github.com/illuminate/collections
- * @package Elementor\Core\Utils
+ * @package Refraction\Core\Utils
  */
 
-namespace Elementor\Core\Utils;
+namespace Refraction\Core\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

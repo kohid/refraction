@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor switcher control.
+ * Refraction switcher control.
  *
  * A base control for creating switcher control. Displays an on/off switcher,
  * basically a fancy UI representation of a checkbox.
@@ -41,18 +41,18 @@ class Control_Switcher extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
-				<label class="elementor-switch elementor-control-unit-2">
-					<input id="<?php $this->print_control_uid(); ?>" type="checkbox" data-setting="{{ data.name }}" class="elementor-switch-input" value="{{ data.return_value }}">
-					<span class="elementor-switch-label" data-on="{{ data.label_on }}" data-off="{{ data.label_off }}"></span>
-					<span class="elementor-switch-handle"></span>
+		<div class="refraction-control-field">
+			<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
+				<label class="refraction-switch refraction-control-unit-2">
+					<input id="<?php $this->print_control_uid(); ?>" type="checkbox" data-setting="{{ data.name }}" class="refraction-switch-input" value="{{ data.return_value }}">
+					<span class="refraction-switch-label" data-on="{{ data.label_on }}" data-off="{{ data.label_off }}"></span>
+					<span class="refraction-switch-handle"></span>
 				</label>
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}
@@ -70,8 +70,8 @@ class Control_Switcher extends Base_Data_Control {
 	 */
 	protected function get_default_settings() {
 		return [
-			'label_off' => esc_html__( 'No', 'elementor' ),
-			'label_on' => esc_html__( 'Yes', 'elementor' ),
+			'label_off' => esc_html__( 'No', 'refraction' ),
+			'label_on' => esc_html__( 'Yes', 'refraction' ),
 			'return_value' => 'yes',
 		];
 	}

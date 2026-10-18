@@ -1,4 +1,4 @@
-import { setQueryParam } from 'elementor-editor-utils/query-params';
+import { setQueryParam } from 'refraction-editor-utils/query-params';
 
 export class SetActiveDocumentQueryParam extends $e.modules.hookUI.After {
 	getCommand() {
@@ -11,7 +11,7 @@ export class SetActiveDocumentQueryParam extends $e.modules.hookUI.After {
 
 	getConditions( args ) {
 		// Don't run for the initial/default document because it's redundant.
-		return parseInt( args.id ) !== parseInt( elementor.config.initial_document.id );
+		return parseInt( args.id ) !== parseInt( refraction.config.initial_document.id );
 	}
 
 	apply( args ) {

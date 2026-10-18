@@ -1,5 +1,5 @@
 
-#elementor-role-manager {
+#refraction-role-manager {
 	max-width: 500px;
 	margin-block-start: 50px;
 
@@ -9,11 +9,11 @@
 		font-size: 22px;
 	}
 
-	.elementor-settings-form-page {
+	.refraction-settings-form-page {
 		padding: 0;
 	}
 
-	.elementor-role-row {
+	.refraction-role-row {
 		background: #ffffff;
 		color: $editor-dark;
 		margin-block-end: 2px;
@@ -22,33 +22,33 @@
 			border: 1px solid rgba(0, 0, 0, 0.12);
 			margin-block-end: 20px;
 			border-radius: 8px;
-			.elementor-role-controls {
+			.refraction-role-controls {
 				border-end-start-radius: 8px;
 				border-end-end-radius: 8px;
 			}
 		}
 
-		.elementor-role-label {
+		.refraction-role-label {
 			display: flex;
 			padding: 15px 20px;
 			font-weight: 500;
 			cursor: pointer;
 
-			span.elementor-role-name {
+			span.refraction-role-name {
 				padding-inline-end: 20px;
 			}
 
-			span.elementor-role-toggle {
+			span.refraction-role-toggle {
 				text-align: end;
 				flex-grow: 1;
 			}
 
-			span.elementor-role-excluded-indicator {
+			span.refraction-role-excluded-indicator {
 				color: $editor-light;
 			}
 		}
 
-		.elementor-role-controls {
+		.refraction-role-controls {
 			background-color: $gray-lightest;
 			padding: 20px 20px 5px;
 			transition: all 0.3s ease-in-out;
@@ -57,30 +57,30 @@
 				margin-block-end: 15px;
 			}
 
-			.elementor-role-go-pro {
+			.refraction-role-go-pro {
 				display: flex;
 				align-items: center;
 
-				.elementor-role-go-pro__desc {
+				.refraction-role-go-pro__desc {
 					font-weight: 500;
 					font-style: italic;
 					flex-grow: 1;
 				}
 
-				.elementor-role-go-pro__link {
+				.refraction-role-go-pro__link {
 					display: flex;
 				}
 			}
 		}
 
-		.elementor-role-controls-advanced {
+		.refraction-role-controls-advanced {
 			> div + div {
 				margin-block-start: 15px;
 			}
 		}
 	}
 
-	.elementor-role-control-warning {
+	.refraction-role-control-warning {
 		color: var(--e-a-color-danger);
 	}
 }

@@ -1,6 +1,6 @@
 export class Close extends $e.modules.CommandBase {
 	apply() {
-		elementor.changeEditMode( 'preview' );
+		refraction.changeEditMode( 'preview' );
 	}
 }
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Elementor\Modules\System_Info\AdminMenuItems;
+namespace Refraction\Modules\System_Info\AdminMenuItems;
 
-use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
-use Elementor\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
-use Elementor\Plugin;
+use Refraction\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +18,7 @@ class Editor_One_System_Info_Menu implements Menu_Item_Interface, Admin_Menu_Ite
 	}
 
 	public function get_parent_slug(): string {
-		return Menu_Config::ELEMENTOR_MENU_SLUG;
+		return Menu_Config::REFRACTION_MENU_SLUG;
 	}
 
 	public function is_visible(): bool {
@@ -26,7 +26,7 @@ class Editor_One_System_Info_Menu implements Menu_Item_Interface, Admin_Menu_Ite
 	}
 
 	public function get_label(): string {
-		return esc_html__( 'System Info', 'elementor' );
+		return esc_html__( 'System Info', 'refraction' );
 	}
 
 	public function get_position(): int {
@@ -34,7 +34,7 @@ class Editor_One_System_Info_Menu implements Menu_Item_Interface, Admin_Menu_Ite
 	}
 
 	public function get_slug(): string {
-		return 'elementor-system-info';
+		return 'refraction-system-info';
 	}
 
 	public function get_group_id(): string {

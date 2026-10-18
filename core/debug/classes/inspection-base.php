@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Debug\Classes;
+namespace Refraction\Core\Debug\Classes;
 
 abstract class Inspection_Base {
 
@@ -22,7 +22,7 @@ abstract class Inspection_Base {
 	 * @return string
 	 */
 	public function get_header_message() {
-		return esc_html__( 'The preview could not be loaded', 'elementor' );
+		return esc_html__( 'The preview could not be loaded', 'refraction' );
 	}
 
 	/**

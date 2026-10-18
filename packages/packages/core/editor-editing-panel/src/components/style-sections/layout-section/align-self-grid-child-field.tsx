@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ToggleButtonGroupItem, ToggleControl } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleControl } from '@refraction/editor-controls';
 import {
 	JustifyBottomIcon,
 	JustifyCenterIcon,
@@ -15,7 +15,7 @@ import { StylesFieldLayout } from '../../styles-field-layout';
 
 type AlignSelf = 'start' | 'center' | 'end' | 'stretch';
 
-const ALIGN_SELF_LABEL = __( 'Align self', 'elementor' );
+const ALIGN_SELF_LABEL = __( 'Align self', 'refraction' );
 
 const ALIGN_SELF_CHILD_OFFSET_MAP: Record< string, number > = {
 	row: 0,
@@ -48,25 +48,25 @@ const getOptions = ( parentStyleDirection: string ): ToggleButtonGroupItem< Alig
 	return [
 		{
 			value: 'start',
-			label: __( 'Start', 'elementor' ),
+			label: __( 'Start', 'refraction' ),
 			renderContent: ( { size } ) => <RotatedIcon icon={ JustifyTopIcon } size={ size } offset={ offset } />,
 			showTooltip: true,
 		},
 		{
 			value: 'center',
-			label: __( 'Center', 'elementor' ),
+			label: __( 'Center', 'refraction' ),
 			renderContent: ( { size } ) => <RotatedIcon icon={ JustifyCenterIcon } size={ size } offset={ offset } />,
 			showTooltip: true,
 		},
 		{
 			value: 'end',
-			label: __( 'End', 'elementor' ),
+			label: __( 'End', 'refraction' ),
 			renderContent: ( { size } ) => <RotatedIcon icon={ JustifyBottomIcon } size={ size } offset={ offset } />,
 			showTooltip: true,
 		},
 		{
 			value: 'stretch',
-			label: __( 'Stretch', 'elementor' ),
+			label: __( 'Stretch', 'refraction' ),
 			renderContent: ( { size } ) => <RotatedIcon icon={ JustifyIcon } size={ size } offset={ offset } />,
 			showTooltip: true,
 		},

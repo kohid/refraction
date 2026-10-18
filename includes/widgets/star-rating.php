@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor star rating widget.
+ * Refraction star rating widget.
  *
- * Elementor widget that displays star rating.
+ * Refraction widget that displays star rating.
  *
  * @since 2.3.0
  */
@@ -42,7 +42,7 @@ class Widget_Star_Rating extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Star Rating', 'elementor' );
+		return esc_html__( 'Star Rating', 'refraction' );
 	}
 
 	/**
@@ -119,7 +119,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->start_controls_section(
 			'section_rating',
 			[
-				'label' => esc_html__( 'Star Rating', 'elementor' ),
+				'label' => esc_html__( 'Star Rating', 'refraction' ),
 			]
 		);
 
@@ -128,7 +128,7 @@ class Widget_Star_Rating extends Widget_Base {
 				'3.17.0',
 				esc_html__(
 					'You are currently editing a Star Rating widget in its old version. Drag a new Rating widget onto your page to use a newer version, providing better capabilities.',
-					'elementor'
+					'refraction'
 				),
 				'rating'
 			);
@@ -137,7 +137,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'rating_scale',
 			[
-				'label' => esc_html__( 'Rating Scale', 'elementor' ),
+				'label' => esc_html__( 'Rating Scale', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'5' => '0-5',
@@ -150,7 +150,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'rating',
 			[
-				'label' => esc_html__( 'Rating', 'elementor' ),
+				'label' => esc_html__( 'Rating', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'min' => 0,
 				'max' => 10,
@@ -165,7 +165,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'star_style',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'star_fontawesome' => 'Font Awesome',
@@ -173,7 +173,7 @@ class Widget_Star_Rating extends Widget_Base {
 				],
 				'default' => 'star_fontawesome',
 				'render_type' => 'template',
-				'prefix_class' => 'elementor--star-style-',
+				'prefix_class' => 'refraction--star-style-',
 				'separator' => 'before',
 			]
 		);
@@ -181,15 +181,15 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'unmarked_star_style',
 			[
-				'label' => esc_html__( 'Unmarked Style', 'elementor' ),
+				'label' => esc_html__( 'Unmarked Style', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'solid' => [
-						'title' => esc_html__( 'Solid', 'elementor' ),
+						'title' => esc_html__( 'Solid', 'refraction' ),
 						'icon' => 'eicon-star',
 					],
 					'outline' => [
-						'title' => esc_html__( 'Outline', 'elementor' ),
+						'title' => esc_html__( 'Outline', 'refraction' ),
 						'icon' => 'eicon-star-o',
 					],
 				],
@@ -200,7 +200,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'separator' => 'before',
 				'dynamic' => [
@@ -212,27 +212,27 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => esc_html__( 'Justified', 'refraction' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'classes_dictionary' => [
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
@@ -241,7 +241,7 @@ class Widget_Star_Rating extends Widget_Base {
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
 				],
-				'prefix_class' => 'elementor-star-rating%s--align-',
+				'prefix_class' => 'refraction-star-rating%s--align-',
 				'selectors' => [
 					'{{WRAPPER}}' => 'text-align: {{VALUE}}',
 				],
@@ -253,7 +253,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->start_controls_section(
 			'section_title_style',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'title!' => '',
@@ -264,13 +264,13 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_TEXT,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-star-rating__title' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .refraction-star-rating__title' => 'color: {{VALUE}}',
 				],
 			]
 		);
@@ -279,7 +279,7 @@ class Widget_Star_Rating extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'title_typography',
-				'selector' => '{{WRAPPER}} .elementor-star-rating__title',
+				'selector' => '{{WRAPPER}} .refraction-star-rating__title',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_TEXT,
 				],
@@ -290,14 +290,14 @@ class Widget_Star_Rating extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'title_shadow',
-				'selector' => '{{WRAPPER}} .elementor-star-rating__title',
+				'selector' => '{{WRAPPER}} .refraction-star-rating__title',
 			]
 		);
 
 		$this->add_responsive_control(
 			'title_gap',
 			[
-				'label' => esc_html__( 'Gap', 'elementor' ),
+				'label' => esc_html__( 'Gap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -314,7 +314,7 @@ class Widget_Star_Rating extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}}:not(.elementor-star-rating--align-justify) .elementor-star-rating__title' => 'margin-inline-end: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}}:not(.refraction-star-rating--align-justify) .refraction-star-rating__title' => 'margin-inline-end: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -324,7 +324,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->start_controls_section(
 			'section_stars_style',
 			[
-				'label' => esc_html__( 'Stars', 'elementor' ),
+				'label' => esc_html__( 'Stars', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -332,7 +332,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -349,7 +349,7 @@ class Widget_Star_Rating extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-star-rating' => 'font-size: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-star-rating' => 'font-size: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -357,7 +357,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_space',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor' ),
+				'label' => esc_html__( 'Spacing', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -374,7 +374,7 @@ class Widget_Star_Rating extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-star-rating i:not(:last-of-type)' => 'margin-inline-end: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-star-rating i:not(:last-of-type)' => 'margin-inline-end: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -382,10 +382,10 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'stars_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-star-rating i:before' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .refraction-star-rating i:before' => 'color: {{VALUE}}',
 				],
 				'separator' => 'before',
 			]
@@ -394,10 +394,10 @@ class Widget_Star_Rating extends Widget_Base {
 		$this->add_control(
 			'stars_unmarked_color',
 			[
-				'label' => esc_html__( 'Unmarked Color', 'elementor' ),
+				'label' => esc_html__( 'Unmarked Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-star-rating i' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .refraction-star-rating i' => 'color: {{VALUE}}',
 				],
 			]
 		);
@@ -435,11 +435,11 @@ class Widget_Star_Rating extends Widget_Base {
 
 		for ( $stars = 1.0; $stars <= $rating_data[1]; $stars++ ) {
 			if ( $stars <= $floored_rating ) {
-				$stars_html .= '<i class="elementor-star-full" aria-hidden="true">' . $icon . '</i>';
+				$stars_html .= '<i class="refraction-star-full" aria-hidden="true">' . $icon . '</i>';
 			} elseif ( $floored_rating + 1 === $stars && $rating !== $floored_rating ) {
-				$stars_html .= '<i class="elementor-star-' . ( $rating - $floored_rating ) * 10 . '" aria-hidden="true">' . $icon . '</i>';
+				$stars_html .= '<i class="refraction-star-' . ( $rating - $floored_rating ) * 10 . '" aria-hidden="true">' . $icon . '</i>';
 			} else {
-				$stars_html .= '<i class="elementor-star-empty" aria-hidden="true">' . $icon . '</i>';
+				$stars_html .= '<i class="refraction-star-empty" aria-hidden="true">' . $icon . '</i>';
 			}
 		}
 
@@ -455,7 +455,7 @@ class Widget_Star_Rating extends Widget_Base {
 		$rating_data = $this->get_rating();
 		$textual_rating = sprintf(
 			/* translators: 1: Rating value. 2: Rating scale. */
-			esc_html__( 'Rated %1$s out of %2$s', 'elementor' ),
+			esc_html__( 'Rated %1$s out of %2$s', 'refraction' ),
 			$rating_data[0],
 			$rating_data[1]
 		);
@@ -474,19 +474,19 @@ class Widget_Star_Rating extends Widget_Base {
 		}
 
 		$this->add_render_attribute( 'icon_wrapper', [
-			'class' => 'elementor-star-rating',
+			'class' => 'refraction-star-rating',
 			'itemtype' => 'http://schema.org/Rating',
 			'itemscope' => '',
 			'itemprop' => 'reviewRating',
 		] );
 		?>
-		<div class="elementor-star-rating__wrapper">
+		<div class="refraction-star-rating__wrapper">
 			<?php if ( ! Utils::is_empty( $settings['title'] ) ) : ?>
-				<div class="elementor-star-rating__title"><?php echo esc_html( $settings['title'] ); ?></div>
+				<div class="refraction-star-rating__title"><?php echo esc_html( $settings['title'] ); ?></div>
 			<?php endif; ?>
 			<div <?php $this->print_render_attribute_string( 'icon_wrapper' ); ?>>
 				<?php $this->render_stars( $icon ); ?>
-				<span itemprop="ratingValue" class="elementor-screen-only"><?php echo esc_html( $textual_rating ); ?></span>
+				<span itemprop="ratingValue" class="refraction-screen-only"><?php echo esc_html( $textual_rating ); ?></span>
 			</div>
 		</div>
 		<?php
@@ -537,11 +537,11 @@ class Widget_Star_Rating extends Widget_Base {
 
 				for ( var stars = 1; stars <= ratingData[1]; stars++ ) {
 					if ( stars <= flooredRating  ) {
-						starsHtml += '<i class="elementor-star-full" aria-hidden="true">' + icon + '</i>';
+						starsHtml += '<i class="refraction-star-full" aria-hidden="true">' + icon + '</i>';
 					} else if ( flooredRating + 1 === stars && rating !== flooredRating ) {
-						starsHtml += '<i class="elementor-star-' + ( rating - flooredRating ).toFixed( 1 ) * 10 + '" aria-hidden="true">' + icon + '</i>';
+						starsHtml += '<i class="refraction-star-' + ( rating - flooredRating ).toFixed( 1 ) * 10 + '" aria-hidden="true">' + icon + '</i>';
 					} else {
-						starsHtml += '<i class="elementor-star-empty" aria-hidden="true">' + icon + '</i>';
+						starsHtml += '<i class="refraction-star-empty" aria-hidden="true">' + icon + '</i>';
 					}
 				}
 
@@ -561,20 +561,20 @@ class Widget_Star_Rating extends Widget_Base {
 				}
 			}
 
-			view.addRenderAttribute( 'iconWrapper', 'class', 'elementor-star-rating' );
+			view.addRenderAttribute( 'iconWrapper', 'class', 'refraction-star-rating' );
 			view.addRenderAttribute( 'iconWrapper', 'itemtype', 'http://schema.org/Rating' );
 			view.addRenderAttribute( 'iconWrapper', 'itemscope', '' );
 			view.addRenderAttribute( 'iconWrapper', 'itemprop', 'reviewRating' );
 
 			var stars = renderStars( icon );
 		#>
-		<div class="elementor-star-rating__wrapper">
+		<div class="refraction-star-rating__wrapper">
 			<# if ( ! _.isEmpty( settings.title ) ) { #>
-				<div class="elementor-star-rating__title">{{ settings.title }}</div>
+				<div class="refraction-star-rating__title">{{ settings.title }}</div>
 			<# } #>
 			<div {{{ view.getRenderAttributeString( 'iconWrapper' ) }}} >
 				{{{ stars }}}
-				<span itemprop="ratingValue" class="elementor-screen-only">{{ textualRating }}</span>
+				<span itemprop="ratingValue" class="refraction-screen-only">{{ textualRating }}</span>
 			</div>
 		</div>
 		<?php

@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Core\Logger\Loggers;
+namespace Refraction\Core\Logger\Loggers;
 
-use Elementor\Core\Logger\Items\Base as Log_Item;
-use Elementor\Core\Logger\Items\Log_Item_Interface;
+use Refraction\Core\Logger\Items\Base as Log_Item;
+use Refraction\Core\Logger\Items\Log_Item_Interface;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

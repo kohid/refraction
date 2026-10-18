@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Core\Common\Modules\Finder;
+namespace Refraction\Core\Common\Modules\Finder;
 
-use Elementor\Plugin;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -133,28 +133,28 @@ class Categories_Manager {
 		}
 
 		/**
-		 * Elementor Finder categories init.
+		 * Refraction Finder categories init.
 		 *
-		 * Fires after Elementor Finder initialize it's native categories.
+		 * Fires after Refraction Finder initialize it's native categories.
 		 *
 		 * This hook should be used to add your own Finder categories.
 		 *
 		 * @since 2.3.0
-		 * @deprecated 3.5.0 Use `elementor/finder/register` hook instead.
+		 * @deprecated 3.5.0 Use `refraction/finder/register` hook instead.
 		 *
 		 * @param Categories_Manager $this.
 		 */
 		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->do_deprecated_action(
-			'elementor/finder/categories/init',
+			'refraction/finder/categories/init',
 			[ $this ],
 			'3.5.0',
-			'elementor/finder/register'
+			'refraction/finder/register'
 		);
 
 		/**
-		 * Elementor Finder categories registration.
+		 * Refraction Finder categories registration.
 		 *
-		 * Fires after Elementor Finder initialize it's native categories.
+		 * Fires after Refraction Finder initialize it's native categories.
 		 *
 		 * This hook should be used to register your own Finder categories.
 		 *
@@ -162,6 +162,6 @@ class Categories_Manager {
 		 *
 		 * @param Categories_Manager $this Finder Categories manager.
 		 */
-		do_action( 'elementor/finder/register', $this );
+		do_action( 'refraction/finder/register', $this );
 	}
 }

@@ -1,6 +1,6 @@
-import { type V1ElementData } from '@elementor/editor-elements';
-import { ajax } from '@elementor/editor-v1-adapters';
-import { type HttpResponse, httpService } from '@elementor/http-client';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { ajax } from '@refraction/editor-v1-adapters';
+import { type HttpResponse, httpService } from '@refraction/http-client';
 
 import {
 	type DocumentSaveStatus,
@@ -9,7 +9,7 @@ import {
 	type UpdatedComponentName,
 } from './types';
 
-const BASE_URL = 'elementor/v1/components';
+const BASE_URL = 'refraction/v1/components';
 
 export type ComponentItems = Array< {
 	uid: string;

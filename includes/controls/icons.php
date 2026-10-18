@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Icons control.
+ * Refraction Icons control.
  *
  * A base control for creating a Icons chooser control.
  * Used to select an Icon.
@@ -70,29 +70,29 @@ class Control_Icons extends Control_Base_Multiple {
 
 	public function render_media_skin() {
 		?>
-		<div class="elementor-control-field elementor-control-media">
-			<label class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
-				<div class="elementor-control-media__content elementor-control-tag-area elementor-control-preview-area">
-					<div class="elementor-control-media-upload-button elementor-control-media__content__upload-button">
+		<div class="refraction-control-field refraction-control-media">
+			<label class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
+				<div class="refraction-control-media__content refraction-control-tag-area refraction-control-preview-area">
+					<div class="refraction-control-media-upload-button refraction-control-media__content__upload-button">
 						<i class="eicon-plus-circle" aria-hidden="true"></i>
-						<span class="elementor-screen-only"><?php echo esc_html__( 'Add', 'elementor' ); ?></span>
+						<span class="refraction-screen-only"><?php echo esc_html__( 'Add', 'refraction' ); ?></span>
 					</div>
-					<div class="elementor-control-media-area">
-						<div class="elementor-control-media__remove elementor-control-media__content__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'elementor' ); ?>">
+					<div class="refraction-control-media-area">
+						<div class="refraction-control-media__remove refraction-control-media__content__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">
 							<i class="eicon-trash-o" aria-hidden="true"></i>
-							<span class="elementor-screen-only"><?php echo esc_html__( 'Remove', 'elementor' ); ?></span>
+							<span class="refraction-screen-only"><?php echo esc_html__( 'Remove', 'refraction' ); ?></span>
 						</div>
-						<div class="elementor-control-media__preview"></div>
+						<div class="refraction-control-media__preview"></div>
 					</div>
-					<div class="elementor-control-media__tools elementor-control-dynamic-switcher-wrapper">
-						<div class="elementor-control-icon-picker elementor-control-media__tool"><?php echo esc_html__( 'Icon Library', 'elementor' ); ?></div>
-						<div class="elementor-control-svg-uploader elementor-control-media__tool"><?php echo esc_html__( 'Upload SVG', 'elementor' ); ?></div>
+					<div class="refraction-control-media__tools refraction-control-dynamic-switcher-wrapper">
+						<div class="refraction-control-icon-picker refraction-control-media__tool"><?php echo esc_html__( 'Icon Library', 'refraction' ); ?></div>
+						<div class="refraction-control-svg-uploader refraction-control-media__tool"><?php echo esc_html__( 'Upload SVG', 'refraction' ); ?></div>
 					</div>
 				</div>
 			</div>
 			<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 			<# } #>
 			<input type="hidden" data-setting="{{ data.name }}"/>
 		</div>
@@ -104,15 +104,15 @@ class Control_Icons extends Control_Base_Multiple {
 		<#
 			const defaultSkinSettings = {
 				none: {
-					label: '<?php echo esc_html__( 'None', 'elementor' ); ?>',
+					label: '<?php echo esc_html__( 'None', 'refraction' ); ?>',
 					icon: 'eicon-ban',
 				},
 				svg: {
-					label: '<?php echo esc_html__( 'Upload SVG', 'elementor' ); ?>',
+					label: '<?php echo esc_html__( 'Upload SVG', 'refraction' ); ?>',
 					icon: 'eicon-upload',
 				},
 				icon: {
-					label: '<?php echo esc_html__( 'Icon Library', 'elementor' ); ?>',
+					label: '<?php echo esc_html__( 'Icon Library', 'refraction' ); ?>',
 					icon: 'eicon-circle',
 				}
 			};
@@ -127,31 +127,31 @@ class Control_Icons extends Control_Base_Multiple {
 				return defaultSkinSettings[ type ][ key ];
 			}
 		#>
-		<div class="elementor-control-field elementor-control-inline-icon">
-			<label class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
-				<div class="elementor-choices">
+		<div class="refraction-control-field refraction-control-inline-icon">
+			<label class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
+				<div class="refraction-choices">
 					<# if ( ! data.exclude_inline_options.includes( 'none' ) ) { #>
 						<input id="<?php $this->print_control_uid(); ?>-none" type="radio" value="none">
-						<label class="elementor-choices-label elementor-control-unit-1 tooltip-target elementor-control-icons--inline__none" for="<?php $this->print_control_uid(); ?>-none" data-tooltip="{{ get( 'none', 'label' ) }}">
+						<label class="refraction-choices-label refraction-control-unit-1 tooltip-target refraction-control-icons--inline__none" for="<?php $this->print_control_uid(); ?>-none" data-tooltip="{{ get( 'none', 'label' ) }}">
 							<i class="{{ get( 'none', 'icon' ) }}" aria-hidden="true"></i>
-							<span class="elementor-screen-only">{{ get( 'none', 'label' ) }}</span>
+							<span class="refraction-screen-only">{{ get( 'none', 'label' ) }}</span>
 						</label>
 					<# }
 					if ( ! data.exclude_inline_options.includes( 'svg' ) ) { #>
 						<input id="<?php $this->print_control_uid(); ?>-svg" type="radio" value="svg">
-						<label class="elementor-choices-label elementor-control-unit-1 tooltip-target elementor-control-icons--inline__svg" for="<?php $this->print_control_uid(); ?>-svg" data-tooltip="{{ get( 'svg', 'label' ) }}">
+						<label class="refraction-choices-label refraction-control-unit-1 tooltip-target refraction-control-icons--inline__svg" for="<?php $this->print_control_uid(); ?>-svg" data-tooltip="{{ get( 'svg', 'label' ) }}">
 							<i class="{{ get( 'svg', 'icon' ) }}" aria-hidden="true"></i>
-							<span class="elementor-screen-only">{{ get( 'svg', 'label' ) }}</span>
+							<span class="refraction-screen-only">{{ get( 'svg', 'label' ) }}</span>
 						</label>
 					<# }
 					if ( ! data.exclude_inline_options.includes( 'icon' ) ) { #>
 						<input id="<?php $this->print_control_uid(); ?>-icon" type="radio" value="icon">
-						<label class="elementor-choices-label elementor-control-unit-1 tooltip-target elementor-control-icons--inline__icon" for="<?php $this->print_control_uid(); ?>-icon" data-tooltip="{{ get( 'icon', 'label' ) }}">
-							<span class="elementor-control-icons--inline__displayed-icon">
+						<label class="refraction-choices-label refraction-control-unit-1 tooltip-target refraction-control-icons--inline__icon" for="<?php $this->print_control_uid(); ?>-icon" data-tooltip="{{ get( 'icon', 'label' ) }}">
+							<span class="refraction-control-icons--inline__displayed-icon">
 								<i class="{{ get( 'icon', 'icon' ) }}" aria-hidden="true"></i>
 							</span>
-							<span class="elementor-screen-only">{{ get( 'icon', 'label' ) }}</span>
+							<span class="refraction-screen-only">{{ get( 'icon', 'label' ) }}</span>
 						</label>
 					<# } #>
 				</div>
@@ -159,7 +159,7 @@ class Control_Icons extends Control_Base_Multiple {
 		</div>
 
 		<# if ( data.description ) { #>
-		<div class="elementor-control-field-description">{{{ data.description }}}</div>
+		<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}
@@ -190,15 +190,15 @@ class Control_Icons extends Control_Base_Multiple {
 			'skin_settings' => [
 				'inline' => [
 					'none' => [
-						'label' => esc_html__( 'None', 'elementor' ),
+						'label' => esc_html__( 'None', 'refraction' ),
 						'icon' => 'eicon-ban',
 					],
 					'svg' => [
-						'label' => esc_html__( 'Upload SVG', 'elementor' ),
+						'label' => esc_html__( 'Upload SVG', 'refraction' ),
 						'icon' => 'eicon-upload',
 					],
 					'icon' => [
-						'label' => esc_html__( 'Icon Library', 'elementor' ),
+						'label' => esc_html__( 'Icon Library', 'refraction' ),
 						'icon' => 'eicon-circle',
 					],
 				],

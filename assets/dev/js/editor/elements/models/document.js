@@ -1,5 +1,5 @@
 import BaseElementModel from './base-element-model';
-import { getAllElementTypes } from 'elementor-editor/utils/element-types';
+import { getAllElementTypes } from 'refraction-editor/utils/element-types';
 
 export default class Document extends BaseElementModel {
 	isValidChild( childModel ) {

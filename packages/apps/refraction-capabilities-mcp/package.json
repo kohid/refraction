@@ -1,0 +1,47 @@
+{
+  "name": "@refraction/refraction-capabilities-mcp",
+  "description": "Refraction Capabilities MCP module",
+  "version": "4.4.0",
+  "private": true,
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
+  "license": "GPL-3.0-or-later",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kohid/refraction.git",
+    "directory": "packages/apps/refraction-capabilities-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/kohid/refraction/issues"
+  },
+  "dependencies": {
+    "@refraction/editor-mcp": "4.4.0",
+    "@refraction/refraction-mcp-common": "4.4.0",
+    "@refraction/schema": "4.4.0"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "/dist",
+    "/src",
+    "!**/__tests__"
+  ],
+  "scripts": {
+    "build": "tsup --config=../../tsup.build.ts",
+    "dev": "tsup --config=../../tsup.dev.ts"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5"
+  }
+}

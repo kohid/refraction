@@ -15,7 +15,7 @@ export class KitUpdateStretchContainer extends $e.modules.hookUI.After {
 	}
 
 	getConditions() {
-		return 'kit' === elementor.documents.getCurrent().config.type;
+		return 'kit' === refraction.documents.getCurrent().config.type;
 	}
 
 	apply( args ) {
@@ -23,8 +23,8 @@ export class KitUpdateStretchContainer extends $e.modules.hookUI.After {
 
 		Object.entries( settings ).forEach( ( [ key, value ] ) => {
 			if ( 'stretched_section_container' === key ) {
-				elementorFrontend.config.kit[ key ] = value;
-				elementor.channels.editor.trigger( 'kit:change:stretchContainer' );
+				refractionFrontend.config.kit[ key ] = value;
+				refraction.channels.editor.trigger( 'kit:change:stretchContainer' );
 			}
 		} );
 	}

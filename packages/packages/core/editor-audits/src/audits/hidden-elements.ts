@@ -9,18 +9,18 @@ function isHiddenOnAllDevices( settings: Record< string, unknown > ): boolean {
 
 export const audit: Audit = {
 	id: 'audits/hidden-elements',
-	title: __( 'Hidden elements', 'elementor' ),
+	title: __( 'Hidden elements', 'refraction' ),
 	description: __(
 		'Elements hidden on all devices simultaneously are effectively dead code in the page tree.',
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Remove the element or make it visible on at least one device breakpoint.', 'elementor' ),
+	fixHint: __( 'Remove the element or make it visible on at least one device breakpoint.', 'refraction' ),
 	categories: [ 'best-practices', 'performance' ],
 	severity: 'info',
 	weight: 3,
 	evaluate: ( ctx ) => {
 		if ( ctx.elements.tree.length === 0 ) {
-			return { status: 'skipped', reason: __( 'No elements', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No elements', 'refraction' ) };
 		}
 
 		const violations: AuditViolation[] = [];
@@ -31,7 +31,7 @@ export const audit: Audit = {
 					auditId: audit.id,
 					elementId: node.id,
 					targetHint: 'element-settings',
-					label: __( 'Element is hidden on all devices.', 'elementor' ),
+					label: __( 'Element is hidden on all devices.', 'refraction' ),
 				} );
 			}
 		} );

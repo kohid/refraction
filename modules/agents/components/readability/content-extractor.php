@@ -1,12 +1,12 @@
 <?php
 
-namespace Elementor\Modules\Agents\Components\Readability;
+namespace Refraction\Modules\Agents\Components\Readability;
 
-use Elementor\Modules\Agents\Components\Readability\Extractors\Block_Extractor;
-use Elementor\Modules\Agents\Components\Readability\Extractors\Classic_Extractor;
-use Elementor\Modules\Agents\Components\Readability\Extractors\Elementor_Extractor;
-use Elementor\Modules\Agents\Components\Readability\Extractors\Extractor_Interface;
-use Elementor\Modules\Agents\Components\Readability\Extractors\Rendered_Extractor;
+use Refraction\Modules\Agents\Components\Readability\Extractors\Block_Extractor;
+use Refraction\Modules\Agents\Components\Readability\Extractors\Classic_Extractor;
+use Refraction\Modules\Agents\Components\Readability\Extractors\Refraction_Extractor;
+use Refraction\Modules\Agents\Components\Readability\Extractors\Extractor_Interface;
+use Refraction\Modules\Agents\Components\Readability\Extractors\Rendered_Extractor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,10 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * below-threshold result.
  *
  * Third-party extractors may be injected via the
- * `elementor/agents/markdown/extractors` filter.
+ * `refraction/agents/markdown/extractors` filter.
  *
- * Scope can be narrowed to Elementor-built content only via the
- * `elementor/agents/markdown/coverage` filter (values: `all`, `elementor_only`).
+ * Scope can be narrowed to Refraction-built content only via the
+ * `refraction/agents/markdown/coverage` filter (values: `all`, `refraction_only`).
  */
 class Content_Extractor {
 
@@ -46,7 +46,7 @@ class Content_Extractor {
 	 */
 	public function __construct() {
 		$defaults = [
-			new Elementor_Extractor(),
+			new Refraction_Extractor(),
 			new Block_Extractor(),
 			new Classic_Extractor(),
 			new Rendered_Extractor(),
@@ -60,7 +60,7 @@ class Content_Extractor {
 		 *
 		 * @param Extractor_Interface[] $extractors
 		 */
-		$extractors = apply_filters( 'elementor/agents/markdown/extractors', $defaults );
+		$extractors = apply_filters( 'refraction/agents/markdown/extractors', $defaults );
 
 		$extractors = array_values( array_filter(
 			$extractors,
@@ -132,8 +132,8 @@ class Content_Extractor {
 	/**
 	 * Return the list of extractors filtered by the coverage setting.
 	 *
-	 * When the `elementor/agents/markdown/coverage` filter returns
-	 * `elementor_only`, only the Elementor_Extractor is included.
+	 * When the `refraction/agents/markdown/coverage` filter returns
+	 * `refraction_only`, only the Refraction_Extractor is included.
 	 *
 	 * @param \WP_Post $post
 	 * @return Extractor_Interface[]
@@ -144,17 +144,17 @@ class Content_Extractor {
 		 *
 		 * Accepted values:
 		 *   'all'            – use the full extractor chain (default).
-		 *   'elementor_only' – skip non-Elementor extractors.
+		 *   'refraction_only' – skip non-Refraction extractors.
 		 *
 		 * @param string   $coverage
 		 * @param \WP_Post $post
 		 */
-		$coverage = (string) apply_filters( 'elementor/agents/markdown/coverage', 'all', $post );
+		$coverage = (string) apply_filters( 'refraction/agents/markdown/coverage', 'all', $post );
 
-		if ( 'elementor_only' === $coverage ) {
+		if ( 'refraction_only' === $coverage ) {
 			return array_filter(
 				$this->extractors,
-				static fn( Extractor_Interface $e ) => 'elementor' === $e->get_id()
+				static fn( Extractor_Interface $e ) => 'refraction' === $e->get_id()
 			);
 		}
 

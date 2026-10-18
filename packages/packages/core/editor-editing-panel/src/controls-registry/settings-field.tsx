@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { PropKeyProvider, PropProvider, type SetValueMeta, useBoundProp } from '@elementor/editor-controls';
-import { setDocumentModifiedStatus } from '@elementor/editor-documents';
-import { type ElementID, getElementLabel, getElementSettings, updateElementSettings } from '@elementor/editor-elements';
+import { PropKeyProvider, PropProvider, type SetValueMeta, useBoundProp } from '@refraction/editor-controls';
+import { setDocumentModifiedStatus } from '@refraction/editor-documents';
+import { type ElementID, getElementLabel, getElementSettings, updateElementSettings } from '@refraction/editor-elements';
 import {
 	type CreateOptions,
 	type PropKey,
 	type Props,
 	responsiveFallbackChain,
 	responsivePropTypeUtil,
-} from '@elementor/editor-props';
-import { type BreakpointId, useActiveBreakpoint, useBreakpoints } from '@elementor/editor-responsive';
-import { undoable } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-props';
+import { type BreakpointId, useActiveBreakpoint, useBreakpoints } from '@refraction/editor-responsive';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { useElement } from '../contexts/element-context';
@@ -131,7 +131,7 @@ function useUndoableUpdateElementProp( {
 			{
 				title: getElementLabel( elementId ),
 				// translators: %s is the name of the property that was edited.
-				subtitle: __( '%s edited', 'elementor' ).replace( '%s', propDisplayName ),
+				subtitle: __( '%s edited', 'refraction' ).replace( '%s', propDisplayName ),
 				debounce: { wait: HISTORY_DEBOUNCE_WAIT },
 			}
 		);

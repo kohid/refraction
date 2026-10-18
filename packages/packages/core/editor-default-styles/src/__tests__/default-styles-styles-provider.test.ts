@@ -1,5 +1,5 @@
-import { stylesRepository } from '@elementor/editor-styles-repository';
-import { __createStore as createStore, __registerSlice as registerSlice } from '@elementor/store';
+import { stylesRepository } from '@refraction/editor-styles-repository';
+import { __createStore as createStore, __registerSlice as registerSlice } from '@refraction/store';
 
 import { DEFAULT_STYLES_PROVIDER_KEY, defaultStylesStylesProvider } from '../default-styles-provider';
 import { slice } from '../store';
@@ -8,13 +8,13 @@ describe( 'defaultStylesStylesProvider', () => {
 	beforeEach( () => {
 		(
 			window as unknown as {
-				elementor: {
+				refraction: {
 					config: {
 						atomic: { default_styles: { allowed_tags: string[] } };
 					};
 				};
 			}
-		 ).elementor = {
+		 ).refraction = {
 			config: {
 				atomic: {
 					default_styles: {

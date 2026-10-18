@@ -1,21 +1,21 @@
-var EditModeItemView = require( 'elementor-regions/panel/edit-mode' ),
+var EditModeItemView = require( 'refraction-regions/panel/edit-mode' ),
 	PanelLayoutView;
 
 import PanelComponent from './component';
 import ElementsComponent from './pages/elements/component';
 import EditorComponent from './pages/editor/component';
-import { escapeFromPanelField } from 'elementor-editor-utils/keyboard-nav';
+import { escapeFromPanelField } from 'refraction-editor-utils/keyboard-nav';
 
 PanelLayoutView = Marionette.LayoutView.extend( {
-	template: '#tmpl-elementor-panel',
+	template: '#tmpl-refraction-panel',
 
-	id: 'elementor-panel-inner',
+	id: 'refraction-panel-inner',
 
 	regions: {
-		content: '#elementor-panel-content-wrapper',
-		header: '#elementor-panel-header-wrapper',
-		footer: '#elementor-panel-footer',
-		modeSwitcher: '#elementor-mode-switcher',
+		content: '#refraction-panel-content-wrapper',
+		header: '#refraction-panel-header-wrapper',
+		footer: '#refraction-panel-footer',
+		modeSwitcher: '#refraction-mode-switcher',
 	},
 
 	pages: {},
@@ -56,15 +56,15 @@ PanelLayoutView = Marionette.LayoutView.extend( {
 	buildPages() {
 		var pages = {
 			elements: {
-				view: require( 'elementor-panel/pages/elements/elements' ),
-				title: '<img src="' + elementorCommon.config.urls.assets + 'images/logo-panel.svg">',
+				view: require( 'refraction-panel/pages/elements/elements' ),
+				title: '<img src="' + refractionCommon.config.urls.assets + 'images/logo-panel.svg">',
 			},
 			editor: {
-				view: require( 'elementor-panel/pages/editor' ),
+				view: require( 'refraction-panel/pages/editor' ),
 			},
 			menu: {
-				view: elementor.modules.layouts.panel.pages.menu.Menu,
-				title: '<img src="' + elementorCommon.config.urls.assets + 'images/logo-panel.svg">',
+				view: refraction.modules.layouts.panel.pages.menu.Menu,
+				title: '<img src="' + refractionCommon.config.urls.assets + 'images/logo-panel.svg">',
 			},
 		};
 
@@ -106,7 +106,7 @@ PanelLayoutView = Marionette.LayoutView.extend( {
 	setPage( page, title, viewOptions ) {
 		const pages = this.getPages();
 
-		if ( 'elements' === page && ! elementor.userCan( 'design' ) ) {
+		if ( 'elements' === page && ! refraction.userCan( 'design' ) ) {
 			if ( pages.page_settings ) {
 				page = 'page_settings';
 			}
@@ -115,7 +115,7 @@ PanelLayoutView = Marionette.LayoutView.extend( {
 		const pageData = pages[ page ];
 
 		if ( ! pageData ) {
-			throw new ReferenceError( 'Elementor panel doesn\'t have page named \'' + page + '\'' );
+			throw new ReferenceError( 'Refraction panel doesn\'t have page named \'' + page + '\'' );
 		}
 
 		if ( pageData.options ) {
@@ -140,8 +140,8 @@ PanelLayoutView = Marionette.LayoutView.extend( {
 			.trigger( 'set:page', this.currentPageView )
 			.trigger( 'set:page:' + page, this.currentPageView );
 
-		if ( elementor.promotion.dialog ) {
-			elementor.promotion.dialog.hide();
+		if ( refraction.promotion.dialog ) {
+			refraction.promotion.dialog.hide();
 		}
 
 		return this.currentPageView;
@@ -152,8 +152,8 @@ PanelLayoutView = Marionette.LayoutView.extend( {
 	},
 
 	onBeforeShow() {
-		var PanelHeaderItemView = require( 'elementor-regions/panel/header' ),
-			PanelFooterBackCompatView = require( 'elementor-regions/panel/footer-back-compat' );
+		var PanelHeaderItemView = require( 'refraction-regions/panel/header' ),
+			PanelFooterBackCompatView = require( 'refraction-regions/panel/footer-back-compat' );
 
 		// Edit Mode
 		this.showChildView( 'modeSwitcher', new EditModeItemView() );
@@ -161,7 +161,7 @@ PanelLayoutView = Marionette.LayoutView.extend( {
 		// Header
 		this.showChildView( 'header', new PanelHeaderItemView() );
 
-		// Back-compat for Elementor Pro < 4.3 (ED-25418).
+		// Back-compat for Refraction Pro < 4.3 (ED-25418).
 		this.showChildView( 'footer', new PanelFooterBackCompatView() );
 
 		// Added Editor events

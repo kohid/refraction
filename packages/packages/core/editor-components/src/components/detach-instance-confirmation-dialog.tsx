@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { closeDialog, ConfirmationDialog, openDialog } from '@elementor/editor-ui';
+import { closeDialog, ConfirmationDialog, openDialog } from '@refraction/editor-ui';
 import { AlertTriangleFilledIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -17,20 +17,20 @@ export function DetachInstanceConfirmationDialog( {
 	return (
 		<ConfirmationDialog open={ open } onClose={ onClose }>
 			<ConfirmationDialog.Title icon={ AlertTriangleFilledIcon } iconColor="secondary">
-				{ __( 'Detach from Component?', 'elementor' ) }
+				{ __( 'Detach from Component?', 'refraction' ) }
 			</ConfirmationDialog.Title>
 			<ConfirmationDialog.Content>
 				<ConfirmationDialog.ContentText>
 					{ __(
 						'Detaching this instance will break its link to the Component. Changes to the Component will no longer apply. Continue?',
-						'elementor'
+						'refraction'
 					) }
 				</ConfirmationDialog.ContentText>
 			</ConfirmationDialog.Content>
 			<ConfirmationDialog.Actions
 				onClose={ onClose }
 				onConfirm={ onConfirm }
-				confirmLabel={ __( 'Detach', 'elementor' ) }
+				confirmLabel={ __( 'Detach', 'refraction' ) }
 				color="primary"
 			/>
 		</ConfirmationDialog>

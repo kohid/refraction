@@ -16,7 +16,7 @@ test.describe( 'Import Export Customization - Import Customization @import_expor
 		await ImportExportHelpers.verifyContentSection( page, '13 Pages | 3 Posts | 2 Floating Elements | 4 Taxonomies' );
 		await ImportExportHelpers.verifyTemplatesSection( page, 'No templates imported' );
 		await ImportExportHelpers.verifySettingsSection( page, 'No settings imported' );
-		await ImportExportHelpers.verifyPluginsSection( page, 'Elementor | Hello Dolly | WordPress Importer' );
+		await ImportExportHelpers.verifyPluginsSection( page, 'Refraction | Hello Dolly | WordPress Importer' );
 	} );
 
 	test( 'should import kit with Posts unchecked in Content dialog', async ( { page } ) => {
@@ -34,7 +34,7 @@ test.describe( 'Import Export Customization - Import Customization @import_expor
 		await ImportExportHelpers.verifyNotInContentSection( page, '3 Posts' );
 		await ImportExportHelpers.verifyTemplatesSection( page, 'No templates imported' );
 		await ImportExportHelpers.verifySettingsSection( page, 'Theme | Global Colors | Global Fonts | Theme Style Settings | General Settings | Experiments' );
-		await ImportExportHelpers.verifyPluginsSection( page, 'Elementor | Hello Dolly | WordPress Importer' );
+		await ImportExportHelpers.verifyPluginsSection( page, 'Refraction | Hello Dolly | WordPress Importer' );
 	} );
 
 	test( 'should import only selected plugins', async ( { page } ) => {
@@ -51,6 +51,6 @@ test.describe( 'Import Export Customization - Import Customization @import_expor
 		await ImportExportHelpers.verifyContentSection( page, '13 Pages | 3 Posts | 2 Floating Elements | 4 Taxonomies' );
 		await ImportExportHelpers.verifyTemplatesSection( page, 'No templates imported' );
 		await ImportExportHelpers.verifySettingsSection( page, 'Theme | Global Colors | Global Fonts | Theme Style Settings | General Settings | Experiments' );
-		await ImportExportHelpers.verifyPluginsSection( page, 'Elementor' );
+		await ImportExportHelpers.verifyPluginsSection( page, 'Refraction' );
 	} );
 } );

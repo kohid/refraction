@@ -5,28 +5,28 @@ import { usePanelActions, usePanelStatus } from '../../design-system-panel';
 import { getActiveDesignSystemTab, setPendingDesignSystemTab } from '../../initial-tab';
 import { DesignSystemEntrypoints } from '../design-system-entrypoints';
 
-const EVENT_OPEN_DEFAULTS = 'elementor/open-default-styles';
-const EVENT_OPEN_VARIABLES = 'elementor/open-variables-manager';
-const EVENT_OPEN_CLASSES = 'elementor/open-global-classes-manager';
-const EVENT_TOGGLE = 'elementor/toggle-design-system';
-const EVENT_SET_TAB = 'elementor/design-system/set-tab';
+const EVENT_OPEN_DEFAULTS = 'refraction/open-default-styles';
+const EVENT_OPEN_VARIABLES = 'refraction/open-variables-manager';
+const EVENT_OPEN_CLASSES = 'refraction/open-global-classes-manager';
+const EVENT_TOGGLE = 'refraction/toggle-design-system';
+const EVENT_SET_TAB = 'refraction/design-system/set-tab';
 const V1_ELEMENTS_PANEL_ROUTE = 'panel/elements/categories';
 
 const mockSaveDocument = jest.fn().mockResolvedValue( undefined );
 const mockUseActiveDocument = jest.fn().mockReturnValue( null );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	__useActiveDocument: ( ...args: unknown[] ) => mockUseActiveDocument( ...args ),
 	__useActiveDocumentActions: () => ( { save: mockSaveDocument } ),
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => ( {
-	...jest.requireActual( '@elementor/editor-ui' ),
+jest.mock( '@refraction/editor-ui', () => ( {
+	...jest.requireActual( '@refraction/editor-ui' ),
 	ThemeProvider: ( { children }: { children: React.ReactNode } ) => <>{ children }</>,
 	useDialog: jest.fn(),
 } ) );
 
-import { useDialog } from '@elementor/editor-ui';
+import { useDialog } from '@refraction/editor-ui';
 
 jest.mock( '../../design-system-panel', () => ( {
 	usePanelActions: jest.fn(),
@@ -41,7 +41,7 @@ jest.mock( '../../initial-tab', () => ( {
 	notifyDesignSystemTabChange: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	__privateListenTo: jest.fn( () => jest.fn() ),
 	__privateOpenRoute: jest.fn(),
 	routeOpenEvent: jest.fn( ( route: string ) => `route:open:${ route }` ),
@@ -51,7 +51,7 @@ jest.mock( '@wordpress/i18n', () => ( {
 	__: ( str: string ) => str,
 } ) );
 
-import { __privateListenTo as listenTo, __privateOpenRoute as openRoute } from '@elementor/editor-v1-adapters';
+import { __privateListenTo as listenTo, __privateOpenRoute as openRoute } from '@refraction/editor-v1-adapters';
 
 function dispatchWindowEvent( type: string, detail?: Record< string, unknown > ) {
 	window.dispatchEvent( new CustomEvent( type, detail ? { detail } : undefined ) );

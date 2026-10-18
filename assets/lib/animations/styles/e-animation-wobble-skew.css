@@ -1,4 +1,4 @@
-@keyframes elementor-animation-wobble-skew {
+@keyframes refraction-animation-wobble-skew {
 	16.65% {
 		transform: skew(-12deg);
 	}
@@ -18,10 +18,10 @@
 		transform: skew(0);
 	}
 }
-.elementor-animation-wobble-skew:active,
-.elementor-animation-wobble-skew:focus,
-.elementor-animation-wobble-skew:hover {
-	animation-name: elementor-animation-wobble-skew;
+.refraction-animation-wobble-skew:active,
+.refraction-animation-wobble-skew:focus,
+.refraction-animation-wobble-skew:hover {
+	animation-name: refraction-animation-wobble-skew;
 	animation-duration: 1s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: 1;

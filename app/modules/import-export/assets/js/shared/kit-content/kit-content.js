@@ -3,13 +3,13 @@ import { useState, useContext } from 'react';
 import TemplatesFeatures from './components/templates-features/templates-features';
 import KitContentCheckbox from './components/kit-content-checkbox/kit-content-checkbox';
 import CptOptionsSelectBox from '../cpt-select-box/cpt-select-box';
-import GoProButton from 'elementor-app/molecules/go-pro-button';
-import Box from 'elementor-app/ui/atoms/box';
-import List from 'elementor-app/ui/molecules/list';
-import Heading from 'elementor-app/ui/atoms/heading';
-import Text from 'elementor-app/ui/atoms/text';
-import Grid from 'elementor-app/ui/grid/grid';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import GoProButton from 'refraction-app/molecules/go-pro-button';
+import Box from 'refraction-app/ui/atoms/box';
+import List from 'refraction-app/ui/molecules/list';
+import Heading from 'refraction-app/ui/atoms/heading';
+import Text from 'refraction-app/ui/atoms/text';
+import Grid from 'refraction-app/ui/grid/grid';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 import { SharedContext } from './../../context/shared-context/shared-context-provider.js';
 
 import './kit-content.scss';
@@ -19,7 +19,7 @@ export default function KitContent( { contentData, hasPro } ) {
 		sharedContext = useContext( SharedContext ),
 		{ referrer, currentPage } = sharedContext.data,
 		// Need to read the hasPro value first from the props because the plugin might be installed during the process.
-		isProExist = hasPro || elementorAppConfig.hasPro,
+		isProExist = hasPro || refractionAppConfig.hasPro,
 		getTemplateFeatures = ( features, index ) => {
 			if ( ! features ) {
 				return;

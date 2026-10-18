@@ -1,18 +1,18 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Widgets;
+namespace Refraction\Modules\FloatingButtons\Widgets;
 
-use Elementor\Modules\FloatingButtons\Base\Widget_Contact_Button_Base;
-use Elementor\Plugin;
+use Refraction\Modules\FloatingButtons\Base\Widget_Contact_Button_Base;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Contact Buttons widget.
+ * Refraction Contact Buttons widget.
  *
- * Elementor widget that displays contact buttons and a chat-like prompt message.
+ * Refraction widget that displays contact buttons and a chat-like prompt message.
  *
  * @since 3.23.0
  */
@@ -23,6 +23,6 @@ class Contact_Buttons extends Widget_Contact_Button_Base {
 	}
 
 	public function get_title(): string {
-		return esc_html__( 'Single Chat', 'elementor' );
+		return esc_html__( 'Single Chat', 'refraction' );
 	}
 }

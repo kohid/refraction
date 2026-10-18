@@ -1,4 +1,4 @@
-import { useCurrentUserCapabilities } from '@elementor/editor-current-user';
+import { useCurrentUserCapabilities } from '@refraction/editor-current-user';
 
 export const usePermissions = () => {
 	const { canUser, isAdmin } = useCurrentUserCapabilities();

@@ -1,9 +1,9 @@
 import BaseAddSectionView from './base';
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 export default class AddSectionView extends BaseAddSectionView {
 	get id() {
-		return 'elementor-add-new-section';
+		return 'refraction-add-new-section';
 	}
 
 	onCloseButtonClick() {

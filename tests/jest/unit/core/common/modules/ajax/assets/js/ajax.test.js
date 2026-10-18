@@ -41,10 +41,10 @@ describe( 'Ajax batch requests', () => {
 				};
 			},
 		};
-		global.elementorModules = {
-			Module: require( 'elementor-assets-js/modules/imports/module' ),
+		global.refractionModules = {
+			Module: require( 'refraction-assets-js/modules/imports/module' ),
 		};
-		global.elementorCommon = {
+		global.refractionCommon = {
 			config: {
 				ajax: {
 					url: 'https://example.com/wp-admin/admin-ajax.php',
@@ -61,7 +61,7 @@ describe( 'Ajax batch requests', () => {
 			return { abort: jest.fn() };
 		} );
 
-		const Ajax = require( 'elementor-common-modules/ajax/assets/js/ajax' ).default;
+		const Ajax = require( 'refraction-common-modules/ajax/assets/js/ajax' ).default;
 
 		ajax = new Ajax( { nonce: 'nonce' } );
 	} );
@@ -71,7 +71,7 @@ describe( 'Ajax batch requests', () => {
 
 		delete global.jQuery;
 		delete global._;
-		delete global.elementorCommon;
+		delete global.refractionCommon;
 	} );
 
 	it( 'should settle both callers when identical requests share a batch entry', () => {
@@ -205,10 +205,10 @@ describe( 'Ajax HTTP 429 retry', () => {
 				};
 			},
 		};
-		global.elementorModules = {
-			Module: require( 'elementor-assets-js/modules/imports/module' ),
+		global.refractionModules = {
+			Module: require( 'refraction-assets-js/modules/imports/module' ),
 		};
-		global.elementorCommon = {
+		global.refractionCommon = {
 			config: {
 				ajax: {
 					url: 'https://example.com/wp-admin/admin-ajax.php',
@@ -229,7 +229,7 @@ describe( 'Ajax HTTP 429 retry', () => {
 			return xhr;
 		} );
 
-		const Ajax = require( 'elementor-common-modules/ajax/assets/js/ajax' ).default;
+		const Ajax = require( 'refraction-common-modules/ajax/assets/js/ajax' ).default;
 
 		ajax = new Ajax( { nonce: 'nonce' } );
 	} );
@@ -239,7 +239,7 @@ describe( 'Ajax HTTP 429 retry', () => {
 
 		delete global.jQuery;
 		delete global._;
-		delete global.elementorCommon;
+		delete global.refractionCommon;
 	} );
 
 	const triggerBatchedLoad = () => {

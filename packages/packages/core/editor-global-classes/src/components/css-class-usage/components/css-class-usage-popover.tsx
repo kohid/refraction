@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { __useOpenDocumentInNewTab as useOpenDocumentInNewTab } from '@elementor/editor-documents';
+import { __useOpenDocumentInNewTab as useOpenDocumentInNewTab } from '@refraction/editor-documents';
 import {
 	EllipsisWithTooltip,
 	PopoverBody,
 	PopoverHeader,
 	PopoverMenuList,
 	type VirtualizedItem,
-} from '@elementor/editor-ui';
+} from '@refraction/editor-ui';
 import {
 	CurrentLocationIcon,
 	ExternalLinkIcon,
@@ -27,23 +27,23 @@ type CssClassUsageRecord = VirtualizedItem< 'item', string > & { docType: Conten
 
 const iconMapper: Record< ContentType, { label: string; icon: React.ReactElement } > = {
 	'wp-post': {
-		label: __( 'Post', 'elementor' ),
+		label: __( 'Post', 'refraction' ),
 		icon: <PostTypeIcon fontSize={ 'inherit' } />,
 	},
 	'wp-page': {
-		label: __( 'Page', 'elementor' ),
+		label: __( 'Page', 'refraction' ),
 		icon: <PagesIcon fontSize={ 'inherit' } />,
 	},
 	popup: {
-		label: __( 'Popup', 'elementor' ),
+		label: __( 'Popup', 'refraction' ),
 		icon: <PopupTemplateIcon fontSize={ 'inherit' } />,
 	},
 	header: {
-		label: __( 'Header', 'elementor' ),
+		label: __( 'Header', 'refraction' ),
 		icon: <HeaderTemplateIcon fontSize={ 'inherit' } />,
 	},
 	footer: {
-		label: __( 'Footer', 'elementor' ),
+		label: __( 'Footer', 'refraction' ),
 		icon: <FooterTemplateIcon fontSize={ 'inherit' } />,
 	},
 };
@@ -84,7 +84,7 @@ export const CssClassUsagePopover = ( {
 				icon={ <CurrentLocationIcon fontSize={ 'tiny' } /> }
 				title={
 					<Stack flexDirection={ 'row' } gap={ 1 } alignItems={ 'center' }>
-						<Box aria-label={ 'header-title' }>{ __( 'Locator', 'elementor' ) }</Box>
+						<Box aria-label={ 'header-title' }>{ __( 'Locator', 'refraction' ) }</Box>
 						<Box>
 							<Chip sx={ { lineHeight: 1 } } size={ 'tiny' } label={ classUsage.total } />
 						</Box>

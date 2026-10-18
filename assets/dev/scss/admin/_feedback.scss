@@ -1,7 +1,7 @@
 @import "../global/dialog-confirm";
-//Elementor Feedback
+//Refraction Feedback
 
-@keyframes elementor-rotation {
+@keyframes refraction-rotation {
 	0% {
 		transform: rotate(0deg);
 	}
@@ -10,11 +10,11 @@
 	}
 }
 
-#elementor-deactivate-feedback-dialog-wrapper {
+#refraction-deactivate-feedback-dialog-wrapper {
 	display: none;
 }
 
-#elementor-deactivate-feedback-modal {
+#refraction-deactivate-feedback-modal {
 	color: var(--e-a-color-txt);
 
 	.dialog-widget-content {
@@ -33,25 +33,25 @@
 		text-align: start;
 	}
 
-	.elementor-deactivate-feedback-dialog-input {
+	.refraction-deactivate-feedback-dialog-input {
 		margin-block: 0;
 		margin-inline: 0 15px;
 		box-shadow: none;
 
 		&:not(:checked) {
 
-			~ .elementor-feedback-text {
+			~ .refraction-feedback-text {
 				display: none;
 			}
 		}
 	}
 
-	.elementor-deactivate-feedback-dialog-label {
+	.refraction-deactivate-feedback-dialog-label {
 		display: block;
 		font-size: 13px;
 	}
 
-	.elementor-feedback-text {
+	.refraction-feedback-text {
 		background-color: transparent;
 		color: var(--e-a-color-txt);
 		margin-block: 10px 0;
@@ -72,13 +72,13 @@
 		@extend .e-btn;
 		@extend .e-primary;
 
-		&.elementor-loading {
+		&.refraction-loading {
 
 			&:before {
 				display: inline-block;
 				content: '\f463';
 				font: 18px dashicons;
-				animation: elementor-rotation 2s infinite linear;
+				animation: refraction-rotation 2s infinite linear;
 			}
 		}
 	}
@@ -88,9 +88,9 @@
 		@extend .e-btn-txt;
 	}
 
-	&[data-feedback-selected="elementor_pro"] {
+	&[data-feedback-selected="refraction_pro"] {
 
-		.elementor-feedback-text {
+		.refraction-feedback-text {
 			color: $editor-warning;
 			padding: 0;
 		}
@@ -101,7 +101,7 @@
 	}
 }
 
-#elementor-deactivate-feedback-dialog {
+#refraction-deactivate-feedback-dialog {
 
 	&-header {
 
@@ -129,7 +129,7 @@
 	}
 }
 
-.elementor-deactivate-feedback-dialog-input-wrapper {
+.refraction-deactivate-feedback-dialog-input-wrapper {
 	display: flex;
 	align-items: center;
 	line-height: 2;

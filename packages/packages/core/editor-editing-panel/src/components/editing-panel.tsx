@@ -3,14 +3,14 @@ import {
 	ControlActionsProvider,
 	ControlReplacementsProvider,
 	getControlReplacements,
-} from '@elementor/editor-controls';
-import { useSelectedElementSettings } from '@elementor/editor-elements';
-import { Panel, PanelBody, PanelHeader, PanelHeaderTitle } from '@elementor/editor-panels';
-import { ThemeProvider } from '@elementor/editor-ui';
+} from '@refraction/editor-controls';
+import { useSelectedElementSettings } from '@refraction/editor-elements';
+import { Panel, PanelBody, PanelHeader, PanelHeaderTitle } from '@refraction/editor-panels';
+import { ThemeProvider } from '@refraction/editor-ui';
 import { AtomIcon } from '@elementor/icons';
-import { createLocation } from '@elementor/locations';
-import { controlActionsMenu } from '@elementor/menus';
-import { SessionStorageProvider } from '@elementor/session';
+import { createLocation } from '@refraction/locations';
+import { controlActionsMenu } from '@refraction/menus';
+import { SessionStorageProvider } from '@refraction/session';
 import { ErrorBoundary } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -34,7 +34,7 @@ export const EditingPanel = () => {
 	}
 
 	/* translators: %s: Element type title. */
-	const panelTitle = __( 'Edit %s', 'elementor' ).replace( '%s', elementType.title );
+	const panelTitle = __( 'Edit %s', 'refraction' ).replace( '%s', elementType.title );
 
 	const { component: ReplacementComponent } = getEditingPanelReplacement( element, elementType ) ?? {};
 
@@ -57,7 +57,7 @@ export const EditingPanel = () => {
 
 	return (
 		<ErrorBoundary fallback={ <EditorPanelErrorFallback /> }>
-			<SessionStorageProvider prefix={ 'elementor' }>
+			<SessionStorageProvider prefix={ 'refraction' }>
 				<ThemeProvider>
 					<ControlActionsProvider items={ menuItems }>
 						<ControlReplacementsProvider replacements={ controlReplacements }>

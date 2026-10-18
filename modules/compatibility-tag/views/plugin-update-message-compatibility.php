@@ -1,8 +1,8 @@
 <?php
-use Elementor\Core\Utils\Version;
-use Elementor\Core\Utils\Collection;
-use Elementor\Modules\CompatibilityTag\Base_Module;
-use Elementor\Modules\CompatibilityTag\Compatibility_Tag;
+use Refraction\Core\Utils\Version;
+use Refraction\Core\Utils\Collection;
+use Refraction\Modules\CompatibilityTag\Base_Module;
+use Refraction\Modules\CompatibilityTag\Compatibility_Tag;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -25,12 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div>
 		<div class="e-major-update-warning__message">
 			<strong>
-				<?php echo esc_html__( 'Compatibility Alert', 'elementor' ); ?>
+				<?php echo esc_html__( 'Compatibility Alert', 'refraction' ); ?>
 			</strong> -
 			<?php
 			printf(
 				/* translators: 1: Plugin name, 2: Plugin version. */
-				esc_html__( 'Some of the plugins you’re using have not been tested with the latest version of %1$s (%2$s). To avoid issues, make sure they are all up to date and compatible before updating %1$s.', 'elementor' ),
+				esc_html__( 'Some of the plugins you’re using have not been tested with the latest version of %1$s (%2$s). To avoid issues, make sure they are all up to date and compatible before updating %1$s.', 'refraction' ),
 				esc_html( $this->get_plugin_label() ),
 				$new_version->__toString() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			);
@@ -39,10 +39,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<br />
 		<table class="e-compatibility-update-table">
 			<tr>
-				<th><?php echo esc_html__( 'Plugin', 'elementor' ); ?></th>
+				<th><?php echo esc_html__( 'Plugin', 'refraction' ); ?></th>
 				<th><?php
-					/* translators: %s: Elementor plugin name. */
-					printf( esc_html__( 'Tested up to %s version', 'elementor' ), esc_html( $this->get_plugin_label() ) );
+					/* translators: %s: Refraction plugin name. */
+					printf( esc_html__( 'Tested up to %s version', 'refraction' ), esc_html( $this->get_plugin_label() ) );
 				?></th>
 			</tr>
 			<?php foreach ( $plugins as $plugin_name => $plugin_data ) : ?>
@@ -54,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					Compatibility_Tag::INVALID_VERSION,
 				], true )
 				) {
-					$plugin_data[ $this->get_plugin_header() ] = esc_html__( 'Unknown', 'elementor' );
+					$plugin_data[ $this->get_plugin_header() ] = esc_html__( 'Unknown', 'refraction' );
 				}
 				?>
 

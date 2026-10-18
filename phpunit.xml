@@ -8,12 +8,12 @@
 		failOnIncomplete="true"
 >
 	<php>
-		<env name="PLUGIN_FILE" value="elementor.php"/>
+		<env name="PLUGIN_FILE" value="refraction.php"/>
 		<env name="WP_TESTS_DIR" value="./tmp/wordpress-tests-lib"/>
 	</php>
 
 	<testsuites>
-		<testsuite name="elementor">
+		<testsuite name="refraction">
 			<directory prefix="test-" suffix=".php">./tests/phpunit/</directory>
 		</testsuite>
 	</testsuites>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { useCurrentUserCapabilities } from '@elementor/editor-current-user';
+import { useCurrentUserCapabilities } from '@refraction/editor-current-user';
 import { act } from '@testing-library/react';
 
 import { ANGIE_GUIDE_TOGGLE_EVENT } from '../../angie-consts';
@@ -19,11 +19,11 @@ jest.mock( '../../hooks/use-auto-show', () => ( {
 	useAutoShow: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/events', () => ( {
+jest.mock( '@refraction/events', () => ( {
 	useMixpanel: () => ( { dispatchEvent: jest.fn() } ),
 } ) );
 
-jest.mock( '@elementor/editor-current-user' );
+jest.mock( '@refraction/editor-current-user' );
 
 const mockIsAdmin = ( isAdmin: boolean ) => {
 	jest.mocked( useCurrentUserCapabilities ).mockReturnValue( {

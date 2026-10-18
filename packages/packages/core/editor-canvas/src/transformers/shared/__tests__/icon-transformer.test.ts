@@ -2,8 +2,8 @@ import {
 	registerIconLibraryProvider,
 	resetFontAwesome7IconsCache,
 	unregisterIconLibraryProvider,
-} from '@elementor/editor-controls';
-import { iconPropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+} from '@refraction/editor-controls';
+import { iconPropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 
 import { iconPropType } from '../../../__tests__/prop-types';
 import { initSettingsTransformers } from '../../../init-settings-transformers';
@@ -44,14 +44,14 @@ async function resolveSavedIcon( iconClass: string, library: string ) {
 }
 
 describe( 'iconTransformer', () => {
-	const originalElementorCommon = window.elementorCommon;
-	const originalElementor = window.elementor;
+	const originalRefractionCommon = window.refractionCommon;
+	const originalRefraction = window.refraction;
 
 	beforeEach( () => {
 		jest.clearAllMocks();
 		resetFontAwesome7IconsCache();
 		initSettingsTransformers();
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				urls: {
 					assets: 'https://example.com/assets/',
@@ -67,8 +67,8 @@ describe( 'iconTransformer', () => {
 	} );
 
 	afterEach( () => {
-		window.elementorCommon = originalElementorCommon;
-		window.elementor = originalElementor;
+		window.refractionCommon = originalRefractionCommon;
+		window.refraction = originalRefraction;
 		jest.restoreAllMocks();
 	} );
 
@@ -147,7 +147,7 @@ describe( 'iconTransformer', () => {
 	it( 'fetches json from the localized font awesome 7 base url', async () => {
 		// Arrange.
 		const jsonBaseUrl = 'https://cdn.example.com/fa7/json/';
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				fontAwesome: {
 					v7: {

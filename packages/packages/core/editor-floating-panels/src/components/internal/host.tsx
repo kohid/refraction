@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type ReactNode, useMemo } from 'react';
-import { useEditMode } from '@elementor/editor-v1-adapters';
-import { __useDispatch as useDispatch, __useSelector as useSelector } from '@elementor/store';
+import { useEditMode } from '@refraction/editor-v1-adapters';
+import { __useDispatch as useDispatch, __useSelector as useSelector } from '@refraction/store';
 
 import { useFloatingPanelsInjections } from '../../location';
 import {

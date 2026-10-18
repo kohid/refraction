@@ -4,7 +4,7 @@ class Admin {
 	 *
 	 * @type {string}
 	 */
-	KIT_DATA_KEY = 'elementor-kit-data';
+	KIT_DATA_KEY = 'refraction-kit-data';
 
 	/**
 	 * Contains the ID of the referrer Kit and the name of the Kit to remove. Stored in session storage.
@@ -29,7 +29,7 @@ class Admin {
 
 	constructor() {
 		this.activeKitName = this.getActiveKitName();
-		this.revertButton = document.getElementById( 'elementor-import-export__revert_kit' );
+		this.revertButton = document.getElementById( 'refraction-import-export__revert_kit' );
 
 		if ( this.revertButton ) {
 			this.revertButton.addEventListener( 'click', this.onRevertButtonClick.bind( this ) );
@@ -99,13 +99,13 @@ class Admin {
 	onRevertButtonClick( event ) {
 		event.preventDefault();
 
-		elementorCommon.dialogsManager.createWidget( 'confirm', {
-			headerMessage: __( 'Are you sure?', 'elementor' ),
+		refractionCommon.dialogsManager.createWidget( 'confirm', {
+			headerMessage: __( 'Are you sure?', 'refraction' ),
 			// Translators: %s is the name of the active Kit
-			message: __( 'Removing %s will permanently delete changes made to the Websites Template\'s content and site settings', 'elementor' ).replace( '%s', this.activeKitName ),
+			message: __( 'Removing %s will permanently delete changes made to the Websites Template\'s content and site settings', 'refraction' ).replace( '%s', this.activeKitName ),
 			strings: {
-				confirm: __( 'Delete', 'elementor' ),
-				cancel: __( 'Cancel', 'elementor' ),
+				confirm: __( 'Delete', 'refraction' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			onConfirm: () => this.onRevertConfirm(),
 		} ).show();
@@ -127,13 +127,13 @@ class Admin {
 
 		if ( 0 === referrerKitId.length ) {
 			this.createKitDeletedWidget( {
-				message: __( 'Try a different Website Template or build your site from scratch.', 'elementor' ),
+				message: __( 'Try a different Website Template or build your site from scratch.', 'refraction' ),
 				strings: {
-					confirm: __( 'OK', 'elementor' ),
-					cancel: __( 'Library', 'elementor' ),
+					confirm: __( 'OK', 'refraction' ),
+					cancel: __( 'Library', 'refraction' ),
 				},
 				onCancel: () => {
-					location.href = elementorImportExport.appUrl;
+					location.href = refractionImportExport.appUrl;
 				},
 			} );
 			this.clearCache();
@@ -142,13 +142,13 @@ class Admin {
 		}
 
 		this.createKitDeletedWidget( {
-			message: __( 'You\'re ready to apply a new Kit!', 'elementor' ),
+			message: __( 'You\'re ready to apply a new Kit!', 'refraction' ),
 			strings: {
-				confirm: __( 'Continue to new Kit', 'elementor' ),
-				cancel: __( 'Close', 'elementor' ),
+				confirm: __( 'Continue to new Kit', 'refraction' ),
+				cancel: __( 'Close', 'refraction' ),
 			},
 			onConfirm: () => {
-				location.href = elementorImportExport.appUrl + '/preview/' + referrerKitId;
+				location.href = refractionImportExport.appUrl + '/preview/' + referrerKitId;
 			},
 		} );
 		this.clearCache();
@@ -162,10 +162,10 @@ class Admin {
 	createKitDeletedWidget( options ) {
 		const { activeKitName } = this.getDataFromCache();
 
-		elementorCommon.dialogsManager.createWidget( 'confirm', {
+		refractionCommon.dialogsManager.createWidget( 'confirm', {
 			id: 'e-revert-kit-deleted-dialog',
 			// Translators: %s is the name of the active Kit
-			headerMessage: __( '%s was successfully deleted', 'elementor' ).replace( '%s', activeKitName ),
+			headerMessage: __( '%s was successfully deleted', 'refraction' ).replace( '%s', activeKitName ),
 			message: options.message,
 			strings: {
 				confirm: options.strings.confirm,
@@ -177,12 +177,12 @@ class Admin {
 	}
 
 	/**
-	 * Retrieving the last imported kit from the elementorAppConfig global
+	 * Retrieving the last imported kit from the refractionAppConfig global
 	 *
 	 * @return {string}
 	 */
 	getActiveKitName() {
-		const lastKit = elementorImportExport.lastImportedSession;
+		const lastKit = refractionImportExport.lastImportedSession;
 
 		if ( lastKit.kit_title ) {
 			return lastKit.kit_title;
@@ -192,7 +192,7 @@ class Admin {
 			return this.convertNameToTitle( lastKit.kit_name );
 		}
 
-		return __( 'Your Kit', 'elementor' );
+		return __( 'Your Kit', 'refraction' );
 	}
 
 	/**

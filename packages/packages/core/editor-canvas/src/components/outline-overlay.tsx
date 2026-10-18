@@ -8,7 +8,7 @@ import { useHasOverlapping } from '../hooks/use-has-overlapping';
 import type { ElementOverlayProps } from '../types/element-overlay';
 import { shouldUseSmallerOutlineOffset } from '../utils/outline-offset-utils';
 
-export const CANVAS_WRAPPER_ID = 'elementor-preview-responsive-wrapper';
+export const CANVAS_WRAPPER_ID = 'refraction-preview-responsive-wrapper';
 
 type Props = ElementOverlayProps & {
 	isSmallerOffset?: boolean;

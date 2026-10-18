@@ -3,7 +3,7 @@
 //
 
 // Widget - Overlay Settings
-.elementor-editor-widget-settings {
+.refraction-editor-widget-settings {
 	z-index: $second-layer;
 	inset-block-start: -1px;
 	inset-inline-end: -1px;
@@ -14,7 +14,7 @@
 	border-end-end-radius: 0;
 	overflow: hidden;
 
-	.elementor-editor-element-setting {
+	.refraction-editor-element-setting {
 		background-color: var(--e-p-border-widget);
 
 		&:hover {

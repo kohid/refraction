@@ -4,7 +4,7 @@ export type ExtendedWindow = Window & {
 			isPartOf: ( route: string ) => boolean;
 		};
 	};
-	elementorCommon?: {
+	refractionCommon?: {
 		config?: {
 			experimentalFeatures?: Record< string, boolean >;
 		};

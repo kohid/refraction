@@ -1,8 +1,8 @@
 <?php
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Background;
+use Refraction\Controls_Manager;
+use Refraction\Group_Control_Background;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -15,7 +15,7 @@ class Settings_Background extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Background', 'elementor' );
+		return esc_html__( 'Background', 'refraction' );
 	}
 
 	public function get_group() {
@@ -62,9 +62,9 @@ class Settings_Background extends Tab_Base {
 		$this->add_control(
 			'mobile_browser_background',
 			[
-				'label' => esc_html__( 'Mobile Browser Background', 'elementor' ),
+				'label' => esc_html__( 'Mobile Browser Background', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
-				'description' => esc_html__( 'The `theme-color` meta tag will only be available in supported browsers and devices.', 'elementor' ),
+				'description' => esc_html__( 'The `theme-color` meta tag will only be available in supported browsers and devices.', 'refraction' ),
 				'separator' => 'before',
 			]
 		);
@@ -72,13 +72,13 @@ class Settings_Background extends Tab_Base {
 		$this->add_control(
 			'body_overscroll_behavior',
 			[
-				'label' => esc_html__( 'Overscroll Behavior', 'elementor' ),
+				'label' => esc_html__( 'Overscroll Behavior', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Default', 'elementor' ),
-					'none' => esc_html__( 'None', 'elementor' ),
-					'auto' => esc_html__( 'Auto', 'elementor' ),
-					'contain' => esc_html__( 'Contain', 'elementor' ),
+					'' => esc_html__( 'Default', 'refraction' ),
+					'none' => esc_html__( 'None', 'refraction' ),
+					'auto' => esc_html__( 'Auto', 'refraction' ),
+					'contain' => esc_html__( 'Contain', 'refraction' ),
 				],
 				'separator' => 'before',
 				'selectors' => [

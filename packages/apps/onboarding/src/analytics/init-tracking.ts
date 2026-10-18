@@ -1,11 +1,11 @@
-import { canSendEvents, initializeAndEnableTracking, setCanSendEvents } from '@elementor/events';
+import { canSendEvents, initializeAndEnableTracking, setCanSendEvents } from '@refraction/events';
 
 import type { ExtendedWindow } from '../types';
 import type { ConnectSuccessData } from './events';
 
 export function updateLibraryConnectConfig( data: ConnectSuccessData ): void {
 	const extendedWindow = window as unknown as ExtendedWindow;
-	const config = extendedWindow.elementorCommon?.config;
+	const config = extendedWindow.refractionCommon?.config;
 
 	if ( ! config?.library_connect ) {
 		return;

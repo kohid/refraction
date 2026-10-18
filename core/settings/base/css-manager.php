@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Settings\Base;
+namespace Refraction\Core\Settings\Base;
 
-use Elementor\Core\Files\CSS\Base as CSS_File;
+use Refraction\Core\Files\CSS\Base as CSS_File;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -55,7 +55,7 @@ abstract class CSS_Manager extends Manager {
 	/**
 	 * Settings base manager constructor.
 	 *
-	 * Initializing Elementor settings base css manager.
+	 * Initializing Refraction settings base css manager.
 	 *
 	 * @since 2.8.0
 	 * @access public
@@ -65,7 +65,7 @@ abstract class CSS_Manager extends Manager {
 
 		$name = $this->get_css_file_name();
 
-		add_action( "elementor/css-file/{$name}/parse", [ $this, 'add_settings_css_rules' ] );
+		add_action( "refraction/css-file/{$name}/parse", [ $this, 'add_settings_css_rules' ] );
 	}
 
 	/**
@@ -94,7 +94,7 @@ abstract class CSS_Manager extends Manager {
 	 *
 	 * Add new CSS rules to the settings manager.
 	 *
-	 * Fired by `elementor/css-file/{$name}/parse` action.
+	 * Fired by `refraction/css-file/{$name}/parse` action.
 	 *
 	 * @since 2.8.0
 	 * @access public

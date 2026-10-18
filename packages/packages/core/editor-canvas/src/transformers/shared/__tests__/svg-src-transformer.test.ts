@@ -1,8 +1,8 @@
-import { getMediaAttachment } from '@elementor/wp-media';
+import { getMediaAttachment } from '@refraction/wp-media';
 
 import { svgSrcTransformer } from '../svg-src-transformer';
 
-jest.mock( '@elementor/wp-media' );
+jest.mock( '@refraction/wp-media' );
 
 const mockedGetMediaAttachment = jest.mocked( getMediaAttachment );
 

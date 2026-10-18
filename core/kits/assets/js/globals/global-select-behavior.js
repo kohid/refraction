@@ -60,7 +60,7 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 
 				this.onValueTypeChange();
 
-				elementor.kitManager.renderGlobalVariables();
+				refraction.kitManager.renderGlobalVariables();
 
 				this.view.applySavedValue();
 
@@ -77,7 +77,7 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 
 	setCurrentActivePreviewItem() {
 		const selectedClass = this.getClassNames().selectedPreviewItem,
-			defaultGlobalsAreEnabled = elementor.config.globals.defaults_enabled[ this.view.getGlobalMeta().controlType ];
+			defaultGlobalsAreEnabled = refraction.config.globals.defaults_enabled[ this.view.getGlobalMeta().controlType ];
 
 		if ( this.activePreviewItem ) {
 			this.resetActivePreviewItem();
@@ -147,7 +147,7 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 
 			let globalValue = this.view.getGlobalKey();
 
-			if ( ! globalValue && ! value && elementor.config.globals.defaults_enabled[ this.view.getGlobalMeta().controlType ] ) {
+			if ( ! globalValue && ! value && refraction.config.globals.defaults_enabled[ this.view.getGlobalMeta().controlType ] ) {
 				globalValue = this.view.model.get( 'global' )?.default;
 			}
 
@@ -160,7 +160,7 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 						if ( result.data.title ) {
 							text = result.data.title;
 						} else {
-							text = __( 'Default', 'elementor' );
+							text = __( 'Default', 'refraction' );
 						}
 
 						this.updateCurrentGlobalName( text );
@@ -171,10 +171,10 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 				return;
 			} else if ( value ) {
 				// If there is a value and it is not a global, set the text to custom.
-				globalTooltipText = __( 'Custom', 'elementor' );
+				globalTooltipText = __( 'Custom', 'refraction' );
 			} else {
 				// If there is no value, set the text as default.
-				globalTooltipText = __( 'Default', 'elementor' );
+				globalTooltipText = __( 'Default', 'refraction' );
 			}
 
 			// If there is no value, remove the 'active' class from the Global Toggle button.
@@ -254,14 +254,14 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 	}
 
 	printGlobalToggleButton() {
-		const $globalToggleButton = jQuery( '<div>', { class: this.getClassNames().popoverToggle + ' elementor-control-unit-1' } ),
+		const $globalToggleButton = jQuery( '<div>', { class: this.getClassNames().popoverToggle + ' refraction-control-unit-1' } ),
 			$globalPopoverToggleIcon = jQuery( '<i>', { class: 'eicon-globe' } ),
-			$globalsLoadingSpinner = jQuery( '<span>', { class: 'elementor-control-spinner' } )
+			$globalsLoadingSpinner = jQuery( '<span>', { class: 'refraction-control-spinner' } )
 				.html( '<i class="eicon-spinner eicon-animation-spin"></i></span>' );
 
 		$globalToggleButton.append( $globalPopoverToggleIcon );
 
-		this.$el.find( '.elementor-control-input-wrapper' ).prepend( $globalToggleButton );
+		this.$el.find( '.refraction-control-input-wrapper' ).prepend( $globalToggleButton );
 
 		this.ui.globalPopoverToggle = $globalToggleButton;
 		this.ui.globalPopoverToggleIcon = $globalPopoverToggleIcon;
@@ -282,7 +282,7 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 	}
 
 	initGlobalPopover() {
-		this.popover = elementorCommon.dialogsManager.createWidget( 'simple', {
+		this.popover = refractionCommon.dialogsManager.createWidget( 'simple', {
 			className: this.getClassNames().popover,
 			message: this.buildGlobalPopover(),
 			effects: {
@@ -331,13 +331,13 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 	onAddGlobalToList( $confirmMessage ) {
 		const classes = this.getClassNames();
 
-		this.confirmNewGlobalModal = elementorCommon.dialogsManager.createWidget( 'confirm', {
+		this.confirmNewGlobalModal = refractionCommon.dialogsManager.createWidget( 'confirm', {
 			className: classes.confirmAddNewGlobal,
 			headerMessage: this.getOption( 'newGlobalConfirmTitle' ),
 			message: $confirmMessage,
 			strings: {
-				confirm: __( 'Create', 'elementor' ),
-				cancel: __( 'Cancel', 'elementor' ),
+				confirm: __( 'Create', 'refraction' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			hide: {
 				onBackgroundClick: false,
@@ -448,7 +448,7 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 		const classes = this.getClassNames(),
 			$infoIcon = this.popover.getElements( 'widget' ).find( `.${ classes.globalPopoverInfo }` );
 
-		this.globalInfoTooltip = elementorCommon.dialogsManager.createWidget( 'simple', {
+		this.globalInfoTooltip = refractionCommon.dialogsManager.createWidget( 'simple', {
 			className: classes.globalPopoverInfoTooltip,
 			message: this.getOption( 'tooltipText' ),
 			effects: {

@@ -5,15 +5,15 @@ type WindowConfig = {
 
 declare global {
 	interface Window {
-		elementorAudits?: WindowConfig;
+		refractionAudits?: WindowConfig;
 	}
 }
 
 export function getWindowConfig(): WindowConfig {
-	const config = window.elementorAudits;
+	const config = window.refractionAudits;
 
 	if ( ! config ) {
-		return { restNamespace: 'elementor/v1', nonce: '' };
+		return { restNamespace: 'refraction/v1', nonce: '' };
 	}
 
 	return config;

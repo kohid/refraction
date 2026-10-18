@@ -1,4 +1,4 @@
-import { createV4FlexboxFromPreset } from 'elementor-editor-utils/v4-flexbox-preset';
+import { createV4FlexboxFromPreset } from 'refraction-editor-utils/v4-flexbox-preset';
 
 const sizeProp = ( size, unit ) => ( { $$type: 'size', value: { size, unit } } );
 const stringProp = ( value ) => ( { $$type: 'string', value } );
@@ -26,16 +26,16 @@ describe( 'createV4FlexboxFromPreset', () => {
 		uniqueCounter = 0;
 
 		originalEnv = {
-			elementor: global.elementor,
-			elementorCommon: global.elementorCommon,
+			refraction: global.refraction,
+			refractionCommon: global.refractionCommon,
 			$e: global.$e,
 		};
 
-		global.elementor = {
+		global.refraction = {
 			getPreviewContainer: () => makeFakeContainer( 'document' ),
 		};
 
-		global.elementorCommon = {
+		global.refractionCommon = {
 			helpers: {
 				getUniqueId: () => `u${ ++uniqueCounter }`,
 			},
@@ -69,8 +69,8 @@ describe( 'createV4FlexboxFromPreset', () => {
 	} );
 
 	afterEach( () => {
-		global.elementor = originalEnv.elementor;
-		global.elementorCommon = originalEnv.elementorCommon;
+		global.refraction = originalEnv.refraction;
+		global.refractionCommon = originalEnv.refractionCommon;
 		global.$e = originalEnv.$e;
 	} );
 

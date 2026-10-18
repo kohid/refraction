@@ -1,4 +1,4 @@
-import { useCurrentUserCapabilities } from '@elementor/editor-current-user';
+import { useCurrentUserCapabilities } from '@refraction/editor-current-user';
 
 export const mockCurrentUserCapabilities = ( isAdmin: boolean ) => {
 	jest.mocked( useCurrentUserCapabilities ).mockReturnValue( {

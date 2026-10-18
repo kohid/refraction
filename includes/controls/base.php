@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Base\Base_Object;
+use Refraction\Core\Base\Base_Object;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor base control.
+ * Refraction base control.
  *
  * An abstract class for creating new controls in the panel.
  *
@@ -37,7 +37,7 @@ abstract class Base_Control extends Base_Object {
 	/**
 	 * Get features.
 	 *
-	 * Retrieve the list of all the available features. Currently Elementor uses only
+	 * Retrieve the list of all the available features. Currently Refraction uses only
 	 * the `UI` feature.
 	 *
 	 * @since 1.5.0
@@ -112,8 +112,8 @@ abstract class Base_Control extends Base_Object {
 	 */
 	final public function print_template() {
 		?>
-		<script type="text/html" id="tmpl-elementor-control-<?php echo esc_attr( $this->get_type() ); ?>-content">
-			<div class="elementor-control-content">
+		<script type="text/html" id="tmpl-refraction-control-<?php echo esc_attr( $this->get_type() ); ?>-content">
+			<div class="refraction-control-content">
 				<?php
 				$this->content_template();
 				?>

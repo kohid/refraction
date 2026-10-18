@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\Modules\WpRest\Classes;
+namespace Refraction\Modules\WpRest\Classes;
 
-use Elementor\Core\Utils\Collection;
-use Elementor\Modules\WpRest\Base\Query as Base;
+use Refraction\Core\Utils\Collection;
+use Refraction\Modules\WpRest\Base\Query as Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

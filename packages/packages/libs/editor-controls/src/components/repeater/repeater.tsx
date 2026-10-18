@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { type CreateOptions, type PropKey } from '@elementor/editor-props';
+import { type CreateOptions, type PropKey } from '@refraction/editor-props';
 import { CopyIcon, EyeIcon, EyeOffIcon, PlusIcon, XIcon } from '@elementor/icons';
 import {
 	bindPopover,
@@ -220,7 +220,7 @@ export const Repeater = < T, >( {
 			} }
 			disabled={ isButtonDisabled }
 			onClick={ addRepeaterItem }
-			aria-label={ __( 'Add item', 'elementor' ) }
+			aria-label={ __( 'Add item', 'refraction' ) }
 		>
 			<PlusIcon fontSize={ SIZE } />
 		</IconButton>
@@ -350,9 +350,9 @@ const RepeaterItem = < T, >( {
 
 	usePopoverDismiss( { isOpen: popoverState.isOpen, onClose: popoverProps.onClose } );
 
-	const duplicateLabel = __( 'Duplicate', 'elementor' );
-	const toggleLabel = propDisabled ? __( 'Show', 'elementor' ) : __( 'Hide', 'elementor' );
-	const removeLabel = __( 'Remove', 'elementor' );
+	const duplicateLabel = __( 'Duplicate', 'refraction' );
+	const toggleLabel = propDisabled ? __( 'Show', 'refraction' ) : __( 'Hide', 'refraction' );
+	const removeLabel = __( 'Remove', 'refraction' );
 
 	return (
 		<Box sx={ { display: 'contents' } }>
@@ -360,7 +360,7 @@ const RepeaterItem = < T, >( {
 				disabled={ disabled }
 				label={ label }
 				ref={ setRef }
-				aria-label={ __( 'Open item', 'elementor' ) }
+				aria-label={ __( 'Open item', 'refraction' ) }
 				{ ...triggerProps }
 				onClick={ ( e: React.MouseEvent< HTMLElement > ) => {
 					triggerProps.onClick( e );

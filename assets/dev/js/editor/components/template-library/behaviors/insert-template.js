@@ -2,7 +2,7 @@ var InsertTemplateHandler;
 
 InsertTemplateHandler = Marionette.Behavior.extend( {
 	ui: {
-		insertButton: '.elementor-template-library-template-insert',
+		insertButton: '.refraction-template-library-template-insert',
 	},
 
 	events: {
@@ -24,7 +24,7 @@ InsertTemplateHandler = Marionette.Behavior.extend( {
 			model: this.view.model,
 		};
 
-		this.ui.insertButton.addClass( 'elementor-disabled' );
+		this.ui.insertButton.addClass( 'refraction-disabled' );
 		const activeSource = args.model.get( 'source' );
 
 		/**
@@ -33,9 +33,9 @@ InsertTemplateHandler = Marionette.Behavior.extend( {
 		 * @param bool   isRemote     - If `true` the source is a remote source.
 		 * @param string activeSource - The current template source.
 		 */
-		const isRemote = elementor.hooks.applyFilters( 'templates/source/is-remote', 'remote' === activeSource, activeSource );
+		const isRemote = refraction.hooks.applyFilters( 'templates/source/is-remote', 'remote' === activeSource, activeSource );
 
-		if ( isRemote && ! elementor.config.library_connect.is_connected ) {
+		if ( isRemote && ! refraction.config.library_connect.is_connected ) {
 			$e.route( 'library/connect', args );
 			return;
 		}

@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor icon list widget.
+ * Refraction icon list widget.
  *
- * Elementor widget that displays a bullet list with any chosen icons and texts.
+ * Refraction widget that displays a bullet list with any chosen icons and texts.
  *
  * @since 1.0.0
  */
@@ -42,7 +42,7 @@ class Widget_Icon_List extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Icon List', 'elementor' );
+		return esc_html__( 'Icon List', 'refraction' );
 	}
 
 	/**
@@ -107,30 +107,30 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_section(
 			'section_icon',
 			[
-				'label' => esc_html__( 'Icon List', 'elementor' ),
+				'label' => esc_html__( 'Icon List', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'view',
 			[
-				'label' => esc_html__( 'Layout', 'elementor' ),
+				'label' => esc_html__( 'Layout', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => 'traditional',
 				'options' => [
 					'traditional' => [
-						'title' => esc_html__( 'Default', 'elementor' ),
+						'title' => esc_html__( 'Default', 'refraction' ),
 						'icon' => 'eicon-editor-list-ul',
 					],
 					'inline' => [
-						'title' => esc_html__( 'Inline', 'elementor' ),
+						'title' => esc_html__( 'Inline', 'refraction' ),
 						'icon' => 'eicon-ellipsis-h',
 					],
 				],
 				'render_type' => 'template',
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'style_transfer' => true,
-				'prefix_class' => 'elementor-icon-list--layout-',
+				'prefix_class' => 'refraction-icon-list--layout-',
 			]
 		);
 
@@ -139,11 +139,11 @@ class Widget_Icon_List extends Widget_Base {
 		$repeater->add_control(
 			'text',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'label_block' => true,
-				'placeholder' => esc_html__( 'List Item', 'elementor' ),
-				'default' => esc_html__( 'List Item', 'elementor' ),
+				'placeholder' => esc_html__( 'List Item', 'refraction' ),
+				'default' => esc_html__( 'List Item', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -153,7 +153,7 @@ class Widget_Icon_List extends Widget_Base {
 		$repeater->add_control(
 			'selected_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'default' => [
 					'value' => 'fas fa-check',
@@ -166,7 +166,7 @@ class Widget_Icon_List extends Widget_Base {
 		$repeater->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -177,48 +177,48 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'icon_list',
 			[
-				'label' => esc_html__( 'Items', 'elementor' ),
+				'label' => esc_html__( 'Items', 'refraction' ),
 				'type' => Controls_Manager::REPEATER,
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'text' => esc_html__( 'List Item #1', 'elementor' ),
+						'text' => esc_html__( 'List Item #1', 'refraction' ),
 						'selected_icon' => [
 							'value' => 'fas fa-check',
 							'library' => 'fa-solid',
 						],
 					],
 					[
-						'text' => esc_html__( 'List Item #2', 'elementor' ),
+						'text' => esc_html__( 'List Item #2', 'refraction' ),
 						'selected_icon' => [
 							'value' => 'fas fa-times',
 							'library' => 'fa-solid',
 						],
 					],
 					[
-						'text' => esc_html__( 'List Item #3', 'elementor' ),
+						'text' => esc_html__( 'List Item #3', 'refraction' ),
 						'selected_icon' => [
 							'value' => 'fas fa-dot-circle',
 							'library' => 'fa-solid',
 						],
 					],
 				],
-				'title_field' => '{{{ elementor.helpers.renderIcon( this, selected_icon, {}, "i", "panel" ) || \'<i class="{{ icon }}" aria-hidden="true"></i>\' }}} {{{ text }}}',
+				'title_field' => '{{{ refraction.helpers.renderIcon( this, selected_icon, {}, "i", "panel" ) || \'<i class="{{ icon }}" aria-hidden="true"></i>\' }}} {{{ text }}}',
 			]
 		);
 
 		$this->add_control(
 			'link_click',
 			[
-				'label' => esc_html__( 'Apply Link On', 'elementor' ),
+				'label' => esc_html__( 'Apply Link On', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'full_width' => esc_html__( 'Full Width', 'elementor' ),
-					'inline' => esc_html__( 'Inline', 'elementor' ),
+					'full_width' => esc_html__( 'Full Width', 'refraction' ),
+					'inline' => esc_html__( 'Inline', 'refraction' ),
 				],
 				'default' => 'full_width',
 				'separator' => 'before',
-				'prefix_class' => 'elementor-list-item-link-',
+				'prefix_class' => 'refraction-list-item-link-',
 			]
 		);
 
@@ -227,7 +227,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_section(
 			'section_icon_list',
 			[
-				'label' => esc_html__( 'List', 'elementor' ),
+				'label' => esc_html__( 'List', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -235,7 +235,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_responsive_control(
 			'space_between',
 			[
-				'label' => esc_html__( 'Space Between', 'elementor' ),
+				'label' => esc_html__( 'Space Between', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -244,11 +244,11 @@ class Widget_Icon_List extends Widget_Base {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-items:not(.elementor-inline-items) .elementor-icon-list-item:not(:last-child)' => 'padding-block-end: calc({{SIZE}}{{UNIT}}/2)',
-					'{{WRAPPER}} .elementor-icon-list-items:not(.elementor-inline-items) .elementor-icon-list-item:not(:first-child)' => 'margin-block-start: calc({{SIZE}}{{UNIT}}/2)',
-					'{{WRAPPER}} .elementor-icon-list-items.elementor-inline-items .elementor-icon-list-item' => 'margin-inline: calc({{SIZE}}{{UNIT}}/2)',
-					'{{WRAPPER}} .elementor-icon-list-items.elementor-inline-items' => 'margin-inline: calc(-{{SIZE}}{{UNIT}}/2)',
-					'{{WRAPPER}} .elementor-icon-list-items.elementor-inline-items .elementor-icon-list-item:after' => 'inset-inline-end: calc(-{{SIZE}}{{UNIT}}/2)',
+					'{{WRAPPER}} .refraction-icon-list-items:not(.refraction-inline-items) .refraction-icon-list-item:not(:last-child)' => 'padding-block-end: calc({{SIZE}}{{UNIT}}/2)',
+					'{{WRAPPER}} .refraction-icon-list-items:not(.refraction-inline-items) .refraction-icon-list-item:not(:first-child)' => 'margin-block-start: calc({{SIZE}}{{UNIT}}/2)',
+					'{{WRAPPER}} .refraction-icon-list-items.refraction-inline-items .refraction-icon-list-item' => 'margin-inline: calc({{SIZE}}{{UNIT}}/2)',
+					'{{WRAPPER}} .refraction-icon-list-items.refraction-inline-items' => 'margin-inline: calc(-{{SIZE}}{{UNIT}}/2)',
+					'{{WRAPPER}} .refraction-icon-list-items.refraction-inline-items .refraction-icon-list-item:after' => 'inset-inline-end: calc(-{{SIZE}}{{UNIT}}/2)',
 				],
 			]
 		);
@@ -256,19 +256,19 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => esc_html__( 'Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-h-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -276,20 +276,20 @@ class Widget_Icon_List extends Widget_Base {
 					'left' => is_rtl() ? 'end' : 'start',
 					'right' => is_rtl() ? 'start' : 'end',
 				],
-				'prefix_class' => 'elementor%s-align-',
-				'classes' => 'elementor-control-start-end',
+				'prefix_class' => 'refraction%s-align-',
+				'classes' => 'refraction-control-start-end',
 			]
 		);
 
 		$this->add_control(
 			'divider',
 			[
-				'label' => esc_html__( 'Divider', 'elementor' ),
+				'label' => esc_html__( 'Divider', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Off', 'elementor' ),
-				'label_on' => esc_html__( 'On', 'elementor' ),
+				'label_off' => esc_html__( 'Off', 'refraction' ),
+				'label_on' => esc_html__( 'On', 'refraction' ),
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-item:not(:last-child):after' => 'content: ""',
+					'{{WRAPPER}} .refraction-icon-list-item:not(:last-child):after' => 'content: ""',
 				],
 				'separator' => 'before',
 			]
@@ -298,21 +298,21 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'divider_style',
 			[
-				'label' => esc_html__( 'Style', 'elementor' ),
+				'label' => esc_html__( 'Style', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'solid' => esc_html__( 'Solid', 'elementor' ),
-					'double' => esc_html__( 'Double', 'elementor' ),
-					'dotted' => esc_html__( 'Dotted', 'elementor' ),
-					'dashed' => esc_html__( 'Dashed', 'elementor' ),
+					'solid' => esc_html__( 'Solid', 'refraction' ),
+					'double' => esc_html__( 'Double', 'refraction' ),
+					'dotted' => esc_html__( 'Dotted', 'refraction' ),
+					'dashed' => esc_html__( 'Dashed', 'refraction' ),
 				],
 				'default' => 'solid',
 				'condition' => [
 					'divider' => 'yes',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-items:not(.elementor-inline-items) .elementor-icon-list-item:not(:last-child):after' => 'border-block-start-style: {{VALUE}}',
-					'{{WRAPPER}} .elementor-icon-list-items.elementor-inline-items .elementor-icon-list-item:not(:last-child):after' => 'border-inline-start-style: {{VALUE}}',
+					'{{WRAPPER}} .refraction-icon-list-items:not(.refraction-inline-items) .refraction-icon-list-item:not(:last-child):after' => 'border-block-start-style: {{VALUE}}',
+					'{{WRAPPER}} .refraction-icon-list-items.refraction-inline-items .refraction-icon-list-item:not(:last-child):after' => 'border-inline-start-style: {{VALUE}}',
 				],
 			]
 		);
@@ -320,7 +320,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'divider_weight',
 			[
-				'label' => esc_html__( 'Weight', 'elementor' ),
+				'label' => esc_html__( 'Weight', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -336,8 +336,8 @@ class Widget_Icon_List extends Widget_Base {
 					'divider' => 'yes',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-items:not(.elementor-inline-items) .elementor-icon-list-item:not(:last-child):after' => 'border-block-start-width: {{SIZE}}{{UNIT}}',
-					'{{WRAPPER}} .elementor-inline-items .elementor-icon-list-item:not(:last-child):after' => 'border-inline-start-width: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-icon-list-items:not(.refraction-inline-items) .refraction-icon-list-item:not(:last-child):after' => 'border-block-start-width: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-inline-items .refraction-icon-list-item:not(:last-child):after' => 'border-inline-start-width: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -345,7 +345,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'divider_width',
 			[
-				'label' => esc_html__( 'Width', 'elementor' ),
+				'label' => esc_html__( 'Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
@@ -356,7 +356,7 @@ class Widget_Icon_List extends Widget_Base {
 					'view!' => 'inline',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-item:not(:last-child):after' => 'width: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-icon-list-item:not(:last-child):after' => 'width: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -364,7 +364,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'divider_height',
 			[
-				'label' => esc_html__( 'Height', 'elementor' ),
+				'label' => esc_html__( 'Height', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'custom' ],
 				'default' => [
@@ -389,7 +389,7 @@ class Widget_Icon_List extends Widget_Base {
 					'view' => 'inline',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-item:not(:last-child):after' => 'height: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-icon-list-item:not(:last-child):after' => 'height: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -397,7 +397,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'divider_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '#ddd',
 				'global' => [
@@ -407,7 +407,7 @@ class Widget_Icon_List extends Widget_Base {
 					'divider' => 'yes',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-item:not(:last-child):after' => 'border-color: {{VALUE}}',
+					'{{WRAPPER}} .refraction-icon-list-item:not(:last-child):after' => 'border-color: {{VALUE}}',
 				],
 			]
 		);
@@ -417,7 +417,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_section(
 			'section_icon_style',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -427,19 +427,19 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_tab(
 			'icon_colors_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-icon-list-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-list-icon i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-list-icon svg' => 'fill: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
@@ -452,19 +452,19 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_tab(
 			'icon_colors_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'icon_color_hover',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-list-item:hover .refraction-icon-list-icon i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-list-item:hover .refraction-icon-list-icon svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -472,7 +472,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'icon_color_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
@@ -480,8 +480,8 @@ class Widget_Icon_List extends Widget_Base {
 					'size' => 0.3,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-icon i' => 'transition: color {{SIZE}}{{UNIT}}',
-					'{{WRAPPER}} .elementor-icon-list-icon svg' => 'transition: fill {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-icon-list-icon i' => 'transition: color {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-icon-list-icon svg' => 'transition: fill {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -493,7 +493,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
@@ -520,7 +520,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'text_indent',
 			[
-				'label' => esc_html__( 'Gap', 'elementor' ),
+				'label' => esc_html__( 'Gap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -530,7 +530,7 @@ class Widget_Icon_List extends Widget_Base {
 				],
 				'separator' => 'after',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-icon' => 'padding-inline-end: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-icon-list-icon' => 'padding-inline-end: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -543,19 +543,19 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_self_align',
 			[
-				'label' => esc_html__( 'Horizontal Alignment', 'elementor' ),
+				'label' => esc_html__( 'Horizontal Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => esc_html__( 'Left', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-h-align-center',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => esc_html__( 'Right', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -574,19 +574,19 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_self_vertical_align',
 			[
-				'label' => esc_html__( 'Vertical Alignment', 'elementor' ),
+				'label' => esc_html__( 'Vertical Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'flex-start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-v-align-middle',
 					],
 					'flex-end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
@@ -600,7 +600,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_responsive_control(
 			'icon_vertical_offset',
 			[
-				'label' => esc_html__( 'Adjust Vertical Position', 'elementor' ),
+				'label' => esc_html__( 'Adjust Vertical Position', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
@@ -627,7 +627,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_section(
 			'section_text_style',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -636,7 +636,7 @@ class Widget_Icon_List extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'icon_typography',
-				'selector' => '{{WRAPPER}} .elementor-icon-list-item > .elementor-icon-list-text, {{WRAPPER}} .elementor-icon-list-item > a',
+				'selector' => '{{WRAPPER}} .refraction-icon-list-item > .refraction-icon-list-text, {{WRAPPER}} .refraction-icon-list-item > a',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_TEXT,
 				],
@@ -647,7 +647,7 @@ class Widget_Icon_List extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'text_shadow',
-				'selector' => '{{WRAPPER}} .elementor-icon-list-text',
+				'selector' => '{{WRAPPER}} .refraction-icon-list-text',
 			]
 		);
 
@@ -656,18 +656,18 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_tab(
 			'text_colors_normal',
 			[
-				'label' => esc_html__( 'Normal', 'elementor' ),
+				'label' => esc_html__( 'Normal', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'text_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-text' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-list-text' => 'color: {{VALUE}};',
 				],
 				'global' => [
 					'default' => Global_Colors::COLOR_SECONDARY,
@@ -680,18 +680,18 @@ class Widget_Icon_List extends Widget_Base {
 		$this->start_controls_tab(
 			'text_colors_hover',
 			[
-				'label' => esc_html__( 'Hover', 'elementor' ),
+				'label' => esc_html__( 'Hover', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'text_color_hover',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-text' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-icon-list-item:hover .refraction-icon-list-text' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -699,7 +699,7 @@ class Widget_Icon_List extends Widget_Base {
 		$this->add_control(
 			'text_color_hover_transition',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
@@ -707,7 +707,7 @@ class Widget_Icon_List extends Widget_Base {
 					'size' => 0.3,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-icon-list-text' => 'transition: color {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-icon-list-text' => 'transition: color {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -735,12 +735,12 @@ class Widget_Icon_List extends Widget_Base {
 			'fa fa-dot-circle-o',
 		];
 
-		$this->add_render_attribute( 'icon_list', 'class', 'elementor-icon-list-items' );
-		$this->add_render_attribute( 'list_item', 'class', 'elementor-icon-list-item' );
+		$this->add_render_attribute( 'icon_list', 'class', 'refraction-icon-list-items' );
+		$this->add_render_attribute( 'list_item', 'class', 'refraction-icon-list-item' );
 
 		if ( 'inline' === $settings['view'] ) {
-			$this->add_render_attribute( 'icon_list', 'class', 'elementor-inline-items' );
-			$this->add_render_attribute( 'list_item', 'class', 'elementor-inline-item' );
+			$this->add_render_attribute( 'icon_list', 'class', 'refraction-inline-items' );
+			$this->add_render_attribute( 'list_item', 'class', 'refraction-inline-item' );
 		}
 		?>
 		<ul <?php $this->print_render_attribute_string( 'icon_list' ); ?>>
@@ -748,7 +748,7 @@ class Widget_Icon_List extends Widget_Base {
 			foreach ( $settings['icon_list'] as $index => $item ) :
 				$repeater_setting_key = $this->get_repeater_setting_key( 'text', 'icon_list', $index );
 
-				$this->add_render_attribute( $repeater_setting_key, 'class', 'elementor-icon-list-text' );
+				$this->add_render_attribute( $repeater_setting_key, 'class', 'refraction-icon-list-text' );
 
 				$this->add_inline_editing_attributes( $repeater_setting_key );
 				$migration_allowed = Icons_Manager::is_migration_allowed();
@@ -774,7 +774,7 @@ class Widget_Icon_List extends Widget_Base {
 					$is_new = ! isset( $item['icon'] ) && $migration_allowed;
 					if ( ! empty( $item['icon'] ) || ( ! empty( $item['selected_icon']['value'] ) && $is_new ) ) :
 						?>
-						<span class="elementor-icon-list-icon">
+						<span class="refraction-icon-list-icon">
 							<?php
 							if ( $is_new || $migrated ) {
 								Icons_Manager::render_icon( $item['selected_icon'], [ 'aria-hidden' => 'true' ] );
@@ -832,12 +832,12 @@ class Widget_Icon_List extends Widget_Base {
 	protected function content_template() {
 		?>
 		<#
-			view.addRenderAttribute( 'icon_list', 'class', 'elementor-icon-list-items' );
-			view.addRenderAttribute( 'list_item', 'class', 'elementor-icon-list-item' );
+			view.addRenderAttribute( 'icon_list', 'class', 'refraction-icon-list-items' );
+			view.addRenderAttribute( 'list_item', 'class', 'refraction-icon-list-item' );
 
 			if ( 'inline' == settings.view ) {
-				view.addRenderAttribute( 'icon_list', 'class', 'elementor-inline-items' );
-				view.addRenderAttribute( 'list_item', 'class', 'elementor-inline-item' );
+				view.addRenderAttribute( 'icon_list', 'class', 'refraction-inline-items' );
+				view.addRenderAttribute( 'list_item', 'class', 'refraction-inline-item' );
 			}
 			var iconsHTML = {},
 				migrated = {};
@@ -848,19 +848,19 @@ class Widget_Icon_List extends Widget_Base {
 
 					var iconTextKey = view.getRepeaterSettingKey( 'text', 'icon_list', index );
 
-					view.addRenderAttribute( iconTextKey, 'class', 'elementor-icon-list-text' );
+					view.addRenderAttribute( iconTextKey, 'class', 'refraction-icon-list-text' );
 
 					view.addInlineEditingAttributes( iconTextKey ); #>
 
 					<li {{{ view.getRenderAttributeString( 'list_item' ) }}}>
 						<# if ( item.link && item.link?.url ) { #>
-							<a href="{{ elementor.helpers.sanitizeUrl( item.link?.url ) }}">
+							<a href="{{ refraction.helpers.sanitizeUrl( item.link?.url ) }}">
 						<# } #>
 						<# if ( item.icon || item.selected_icon.value ) { #>
-						<span class="elementor-icon-list-icon">
+						<span class="refraction-icon-list-icon">
 							<#
-								iconsHTML[ index ] = elementor.helpers.renderIcon( view, item.selected_icon, { 'aria-hidden': true }, 'i', 'object' );
-								migrated[ index ] = elementor.helpers.isIconMigrated( item, 'selected_icon' );
+								iconsHTML[ index ] = refraction.helpers.renderIcon( view, item.selected_icon, { 'aria-hidden': true }, 'i', 'object' );
+								migrated[ index ] = refraction.helpers.isIconMigrated( item, 'selected_icon' );
 								if ( iconsHTML[ index ] && iconsHTML[ index ].rendered && ( ! item.icon || migrated[ index ] ) ) { #>
 									{{{ iconsHTML[ index ].value }}}
 								<# } else { #>

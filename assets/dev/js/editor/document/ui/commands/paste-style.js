@@ -1,6 +1,6 @@
 export class PasteStyle extends $e.modules.CommandBase {
 	apply() {
-		const selectedElement = elementor.getCurrentElement();
+		const selectedElement = refraction.getCurrentElement();
 
 		if ( selectedElement ) {
 			return $e.run( 'document/elements/paste-style', {

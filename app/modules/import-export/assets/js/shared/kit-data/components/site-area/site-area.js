@@ -1,7 +1,7 @@
-import Text from 'elementor-app/ui/atoms/text';
-import Icon from 'elementor-app/ui/atoms/icon';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import Text from 'refraction-app/ui/atoms/text';
+import Icon from 'refraction-app/ui/atoms/icon';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
 export default function SiteArea( { text, link } ) {
 	const eventTracking = ( command, eventType = 'click' ) => {

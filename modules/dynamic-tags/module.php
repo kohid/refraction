@@ -1,20 +1,20 @@
 <?php
-namespace Elementor\Modules\DynamicTags;
+namespace Refraction\Modules\DynamicTags;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\DynamicTags\Base_Tag;
-use Elementor\Core\DynamicTags\Manager;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\DynamicTags\Base_Tag;
+use Refraction\Core\DynamicTags\Manager;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor dynamic tags module.
+ * Refraction dynamic tags module.
  *
- * Elementor dynamic tags module handler class is responsible for registering
- * and managing Elementor dynamic tags modules.
+ * Refraction dynamic tags module handler class is responsible for registering
+ * and managing Refraction dynamic tags modules.
  *
  * @since 2.0.0
  */
@@ -78,7 +78,7 @@ class Module extends BaseModule {
 	/**
 	 * Dynamic tags module constructor.
 	 *
-	 * Initializing Elementor dynamic tags module.
+	 * Initializing Refraction dynamic tags module.
 	 *
 	 * @since 2.0.0
 	 * @access public
@@ -86,7 +86,7 @@ class Module extends BaseModule {
 	public function __construct() {
 		$this->register_groups();
 
-		add_action( 'elementor/dynamic_tags/register', [ $this, 'register_tags' ] );
+		add_action( 'refraction/dynamic_tags/register', [ $this, 'register_tags' ] );
 	}
 
 	/**

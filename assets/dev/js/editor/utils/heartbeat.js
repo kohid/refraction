@@ -30,15 +30,15 @@ export default class Heartbeat {
 	};
 
 	initModal() {
-		const modal = elementorCommon.dialogsManager.createWidget( 'confirm', {
-			headerMessage: __( 'Take Over', 'elementor' ),
+		const modal = refractionCommon.dialogsManager.createWidget( 'confirm', {
+			headerMessage: __( 'Take Over', 'refraction' ),
 			strings: {
-				confirm: __( 'Take Over', 'elementor' ),
-				cancel: __( 'Go Back', 'elementor' ),
+				confirm: __( 'Take Over', 'refraction' ),
+				cancel: __( 'Go Back', 'refraction' ),
 			},
 			defaultOption: 'confirm',
 			onConfirm() {
-				wp.heartbeat.enqueue( 'elementor_force_post_lock', true );
+				wp.heartbeat.enqueue( 'refraction_force_post_lock', true );
 				wp.heartbeat.connectNow();
 			},
 			onCancel() {
@@ -53,21 +53,21 @@ export default class Heartbeat {
 		const modal = this.getModal();
 
 		// Translators: %s is locked username.
-		modal.setMessage( sprintf( __( '%s has taken over and is currently editing. Do you want to take over this page editing?', 'elementor' ), lockedUser ) )
+		modal.setMessage( sprintf( __( '%s has taken over and is currently editing. Do you want to take over this page editing?', 'refraction' ), lockedUser ) )
 			.show();
 	}
 
 	onSend( event, data ) {
-		data.elementor_post_lock = {
+		data.refraction_post_lock = {
 			post_ID: this.document.id,
 		};
 
-		data.elementor_has_unsaved = this.document.editor.isChanged ? this.document.id : null;
+		data.refraction_has_unsaved = this.document.editor.isChanged ? this.document.id : null;
 	}
 
 	onTick( event, response ) {
-		if ( this.pendingSyncTime && response.elementor_server_time ) {
-			this.lastSyncedAt = response.elementor_server_time;
+		if ( this.pendingSyncTime && response.refraction_server_time ) {
+			this.lastSyncedAt = response.refraction_server_time;
 			this.pendingSyncTime = false;
 		}
 
@@ -83,21 +83,21 @@ export default class Heartbeat {
 			this.getModal().hide();
 		}
 
-		const mutatedAt = response.elementor_mcp_mutation?.mutated_at;
+		const mutatedAt = response.refraction_mcp_mutation?.mutated_at;
 
 		if ( mutatedAt && mutatedAt > this.lastSyncedAt ) {
 			this.showExternalChangeModal();
 		}
 
-		elementorCommon.ajax.addRequestConstant( '_nonce', response.elementorNonce );
+		refractionCommon.ajax.addRequestConstant( '_nonce', response.refractionNonce );
 	}
 
 	onRefreshNonce( event, response ) {
-		const nonces = response[ 'elementor-refresh-nonces' ];
+		const nonces = response[ 'refraction-refresh-nonces' ];
 
 		if ( nonces ) {
 			if ( nonces.heartbeatNonce ) {
-				elementorCommon.ajax.addRequestConstant( '_nonce', nonces.elementorNonce );
+				refractionCommon.ajax.addRequestConstant( '_nonce', nonces.refractionNonce );
 			}
 
 			if ( nonces.heartbeatNonce ) {
@@ -132,7 +132,7 @@ export default class Heartbeat {
 		const isDirty = this.document.editor.isChanged;
 
 		const baseConfig = {
-			headerMessage: __( 'Page Updated by AI', 'elementor' ),
+			headerMessage: __( 'Page Updated by AI', 'refraction' ),
 			defaultOption: 'confirm',
 			onConfirm: () => this.reloadDocument(),
 		};
@@ -140,23 +140,23 @@ export default class Heartbeat {
 		const config = isDirty
 			? {
 				...baseConfig,
-				message: __( 'This page was changed externally. Save your changes or reload to get the latest version.', 'elementor' ),
+				message: __( 'This page was changed externally. Save your changes or reload to get the latest version.', 'refraction' ),
 				strings: {
-					confirm: __( 'Force Save', 'elementor' ),
-					cancel: __( 'Reload', 'elementor' ),
+					confirm: __( 'Force Save', 'refraction' ),
+					cancel: __( 'Reload', 'refraction' ),
 				},
 				onConfirm: () => this.forceSave(),
 				onCancel: () => this.reloadDocument(),
 			}
 			: {
 				...baseConfig,
-				message: __( 'This page was changed externally. Reload to get the latest version.', 'elementor' ),
+				message: __( 'This page was changed externally. Reload to get the latest version.', 'refraction' ),
 				strings: {
-					confirm: __( 'Reload', 'elementor' ),
+					confirm: __( 'Reload', 'refraction' ),
 				},
 			};
 
-		this.externalChangeModal = elementorCommon.dialogsManager.createWidget( isDirty ? 'confirm' : 'alert', {
+		this.externalChangeModal = refractionCommon.dialogsManager.createWidget( isDirty ? 'confirm' : 'alert', {
 			...config,
 			closeButton: false,
 			hide: {
@@ -187,8 +187,8 @@ export default class Heartbeat {
 			'heartbeat-tick.wp-refresh-nonces': this.onRefreshNonce,
 		} );
 
-		elementor.channels.editor.on( 'status:change', this.onDocumentChanged );
-		elementor.on( 'document:loaded', this.onDocumentLoaded );
+		refraction.channels.editor.on( 'status:change', this.onDocumentChanged );
+		refraction.on( 'document:loaded', this.onDocumentLoaded );
 	}
 
 	destroy() {
@@ -198,7 +198,7 @@ export default class Heartbeat {
 			'heartbeat-tick.wp-refresh-nonces': this.onRefreshNonce,
 		} );
 
-		elementor.channels.editor.off( 'status:change', this.onDocumentChanged );
-		elementor.off( 'document:loaded', this.onDocumentLoaded );
+		refraction.channels.editor.off( 'status:change', this.onDocumentChanged );
+		refraction.off( 'document:loaded', this.onDocumentLoaded );
 	}
 }

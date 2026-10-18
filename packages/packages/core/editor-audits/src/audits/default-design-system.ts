@@ -4,12 +4,12 @@ import { type Audit } from '../types';
 
 export const audit: Audit = {
 	id: 'audits/default-design-system',
-	title: __( 'Default website kit', 'elementor' ),
+	title: __( 'Default website kit', 'refraction' ),
 	description: __(
 		'Your website is using the default design system colors and fonts. Custom branding makes the website feel uniquely yours.',
-		'elementor'
+		'refraction'
 	),
-	fixHint: __( 'Open Site Settings and customize your kit (colors, fonts, layout).', 'elementor' ),
+	fixHint: __( 'Open Site Settings and customize your kit (colors, fonts, layout).', 'refraction' ),
 	categories: [ 'best-practices' ],
 	severity: 'info',
 	weight: 1,
@@ -23,7 +23,7 @@ export const audit: Audit = {
 			violations: [
 				{
 					auditId: audit.id,
-					label: __( 'Kit appears unchanged from default.', 'elementor' ),
+					label: __( 'Kit appears unchanged from default.', 'refraction' ),
 					targetHint: 'site-settings',
 				},
 			],

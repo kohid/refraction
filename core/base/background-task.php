@@ -3,13 +3,13 @@
  * Based on https://github.com/woocommerce/woocommerce/blob/master/includes/abstracts/class-wc-background-process.php
  * & https://github.com/woocommerce/woocommerce/blob/master/includes/class-wc-background-updater.php
  *
- * @package Elementor\Core\Base
+ * @package Refraction\Core\Base
  */
 
-namespace Elementor\Core\Base;
+namespace Refraction\Core\Base;
 
-use Elementor\Plugin;
-use Elementor\Core\Base\BackgroundProcess\WP_Background_Process;
+use Refraction\Plugin;
+use Refraction\Core\Base\BackgroundProcess\WP_Background_Process;
 
 
 defined( 'ABSPATH' ) || exit;
@@ -313,7 +313,7 @@ abstract class Background_Task extends WP_Background_Process {
 			'interval' => MINUTE_IN_SECONDS * $interval,
 			'display' => sprintf(
 				/* translators: %d: Interval in minutes. */
-				esc_html__( 'Every %d minutes', 'elementor' ),
+				esc_html__( 'Every %d minutes', 'refraction' ),
 				$interval
 			),
 		];
@@ -374,14 +374,14 @@ abstract class Background_Task extends WP_Background_Process {
 	}
 
 	/**
-	 * @var \Elementor\Core\Base\Background_Task_Manager
+	 * @var \Refraction\Core\Base\Background_Task_Manager
 	 */
 	protected $manager;
 
 	public function __construct( $manager ) {
 		$this->manager = $manager;
 		// Uses unique prefix per blog so each blog has separate queue.
-		$this->prefix = 'elementor_' . get_current_blog_id();
+		$this->prefix = 'refraction_' . get_current_blog_id();
 		$this->action = $this->manager->get_action();
 
 		parent::__construct();

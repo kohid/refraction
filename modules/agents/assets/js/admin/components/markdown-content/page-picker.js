@@ -40,11 +40,11 @@ const EmptyState = ( { query } ) => (
 	<Stack alignItems="center" spacing={ 1 } py={ 4 } px={ 2 }>
 		<FileIcon color="action" fontSize="large" />
 		<Typography variant="subtitle2" color="text.secondary" align="center" width={ EMPTY_STATE_WIDTH }>
-			{ __( 'Sorry, nothing matched', 'elementor' ) }
+			{ __( 'Sorry, nothing matched', 'refraction' ) }
 			<br />
 			{ sprintf(
 				/* Translators: %s: the search text. */
-				__( '“%s”.', 'elementor' ),
+				__( '“%s”.', 'refraction' ),
 				query,
 			) }
 		</Typography>
@@ -93,7 +93,7 @@ export const PagePicker = ( { items, selectedItem, onSelect, disabled = false } 
 			loading={ isSearching }
 			loadingText={
 				<Stack alignItems="center" py={ 4 }>
-					<CircularProgress size={ SEARCH_PROGRESS_SIZE } aria-label={ __( 'Searching pages', 'elementor' ) } />
+					<CircularProgress size={ SEARCH_PROGRESS_SIZE } aria-label={ __( 'Searching pages', 'refraction' ) } />
 				</Stack>
 			}
 			noOptionsText={ <EmptyState query={ query } /> }
@@ -111,10 +111,10 @@ export const PagePicker = ( { items, selectedItem, onSelect, disabled = false } 
 			renderInput={ ( params ) => (
 				<TextField
 					{ ...params }
-					placeholder={ __( 'Select a page', 'elementor' ) }
+					placeholder={ __( 'Select a page', 'refraction' ) }
 					sx={ wpAdminInputResetSx }
 					InputProps={ { ...params.InputProps, sx: { borderRadius: PAGE_FIELD_RADIUS } } }
-					inputProps={ { ...params.inputProps, 'aria-label': __( 'Select a page', 'elementor' ) } }
+					inputProps={ { ...params.inputProps, 'aria-label': __( 'Select a page', 'refraction' ) } }
 				/>
 			) }
 		/>

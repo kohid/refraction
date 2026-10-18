@@ -4,11 +4,11 @@ export class FloatingButtonsAddLibraryTab extends $e.modules.hookUI.After {
 	}
 
 	getId() {
-		return 'elementor-floating-buttons-add-library-tab';
+		return 'refraction-floating-buttons-add-library-tab';
 	}
 
 	getConditions( args ) {
-		const document = elementor.documents.get( args.id );
+		const document = refraction.documents.get( args.id );
 		return 'floating-buttons' === document.config.type;
 	}
 
@@ -28,11 +28,11 @@ export class FloatingButtonsAddLibraryTab extends $e.modules.hookUI.After {
 		const urlParams = new URLSearchParams( window.location.search );
 		switch ( urlParams.get( 'floating_element' ) ) {
 			case 'floating-bars':
-				return __( 'Floating Bars', 'elementor' );
+				return __( 'Floating Bars', 'refraction' );
 			case 'floating-buttons':
-				return __( 'Floating Buttons', 'elementor' );
+				return __( 'Floating Buttons', 'refraction' );
 			default:
-				return __( 'Floating Buttons', 'elementor' );
+				return __( 'Floating Buttons', 'refraction' );
 		}
 	}
 

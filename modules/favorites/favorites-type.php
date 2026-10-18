@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\Favorites;
+namespace Refraction\Modules\Favorites;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Utils\Collection;
-use Elementor\Core\Utils\Static_Collection;
+use Refraction\Core\Utils\Collection;
+use Refraction\Core\Utils\Static_Collection;
 
 abstract class Favorites_Type extends Static_Collection {
 

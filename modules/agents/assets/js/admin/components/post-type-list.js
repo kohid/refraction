@@ -28,7 +28,7 @@ const PostTypeRow = ( { name, label, count, isIncluded, isDisabled, onToggle } )
 			</Stack>
 			<Typography variant="body2" color="text.secondary" width={ 120 } flexGrow={ 1 }>
 				{ /* Translators: %d: Number of published items. */ }
-				{ sprintf( __( '%d published', 'elementor' ), count ) }
+				{ sprintf( __( '%d published', 'refraction' ), count ) }
 			</Typography>
 			<Switch
 				size="small"
@@ -92,7 +92,7 @@ export const PostTypeList = ( { postTypes, isDisabled, onToggle } ) => {
 					endIcon={ isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon /> }
 					onClick={ () => setIsExpanded( ( previous ) => ! previous ) }
 				>
-					{ isExpanded ? __( 'Show less', 'elementor' ) : __( 'Show more', 'elementor' ) }
+					{ isExpanded ? __( 'Show less', 'refraction' ) : __( 'Show more', 'refraction' ) }
 				</Button>
 			) }
 		</Stack>

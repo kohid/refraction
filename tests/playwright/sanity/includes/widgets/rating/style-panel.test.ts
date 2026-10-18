@@ -28,7 +28,7 @@ iconExperimentStates.forEach( ( iconExperimentState ) => {
 				editor = await wpAdmin.openNewPage(),
 				container = await editor.addElement( { elType: 'container' }, 'document' ),
 				ratingId = await editor.addWidget( { widgetType: 'rating', container } ),
-				ratingElement = editor.getPreviewFrame().locator( `.elementor-element-${ ratingId } .e-rating` );
+				ratingElement = editor.getPreviewFrame().locator( `.refraction-element-${ ratingId } .e-rating` );
 
 			await test.step( 'Set widget', async () => {
 				await editor.setSliderControlValue( 'rating_scale', '5' );
@@ -82,8 +82,8 @@ iconExperimentStates.forEach( ( iconExperimentState ) => {
 
 			await test.step( 'Assert styling of asymmetric Font Awesome icon has same size with font experiment on and off', async () => {
 				await editor.openPanelTab( 'content' );
-				await page.locator( '.elementor-control-icons--inline__icon >> nth=0' ).click();
-				await page.locator( `.elementor-icons-manager__tab__item__content .fa-address-card` ).first().click();
+				await page.locator( '.refraction-control-icons--inline__icon >> nth=0' ).click();
+				await page.locator( `.refraction-icons-manager__tab__item__content .fa-address-card` ).first().click();
 
 				if ( 'active' === iconExperimentState ) {
 					await expect.soft( ratingElement.locator( '.e-icon >> nth=0' ).locator( 'svg >> nth=1' ) ).toHaveCSS( 'height', '50px' );

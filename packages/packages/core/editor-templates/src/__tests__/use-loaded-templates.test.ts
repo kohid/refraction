@@ -1,5 +1,5 @@
 import { createMockDocument, createMockElementData, renderHookWithStore } from 'test-utils';
-import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@elementor/store';
+import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@refraction/store';
 
 import { slice } from '../store';
 import { useLoadedTemplates } from '../use-loaded-templates';

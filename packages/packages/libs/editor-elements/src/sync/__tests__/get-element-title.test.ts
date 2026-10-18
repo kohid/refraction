@@ -1,5 +1,5 @@
 import { createMockElement } from 'test-utils';
-import { getElementTitle } from '@elementor/editor-elements';
+import { getElementTitle } from '@refraction/editor-elements';
 
 import { getContainer } from '../get-container';
 import { type ExtendedWindow } from '../types';
@@ -10,7 +10,7 @@ describe( 'getElementTitle', () => {
 	const eWindow = window as unknown as ExtendedWindow;
 
 	beforeEach( () => {
-		eWindow.elementor = {
+		eWindow.refraction = {
 			widgetsCache: {
 				'test-widget': { title: 'Widget Type Title' } as never,
 			},

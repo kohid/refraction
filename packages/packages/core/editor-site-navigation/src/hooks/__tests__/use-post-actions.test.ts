@@ -6,7 +6,7 @@ import { usePostActions } from '../use-posts-actions';
 
 jest.mock( '@wordpress/api-fetch' );
 
-describe( '@elementor/site-settings/use-post-actions', () => {
+describe( '@refraction/site-settings/use-post-actions', () => {
 	beforeEach( () => {
 		jest.mocked( apiFetch ).mockImplementation( () => Promise.resolve( {} ) );
 	} );

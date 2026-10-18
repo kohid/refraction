@@ -9,7 +9,7 @@ const PACKAGE_GROUPS = [ 'packages/core', 'packages/libs', 'apps' ];
 
 /**
  * `ui` and `icons` ship prebuilt in node_modules rather than living in the monorepo, but they are
- * still published as `elementorV2` libraries, so they are appended to the scanned set.
+ * still published as `refractionV2` libraries, so they are appended to the scanned set.
  */
 const PREBUILT_PACKAGES = [
 	{ name: 'ui', path: resolveFromRoot( 'node_modules/@elementor/ui/index.js' ) },

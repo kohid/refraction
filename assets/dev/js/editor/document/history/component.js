@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 import * as commands from './commands/';
 import * as commandsInternal from './commands/internal/';
 
@@ -33,7 +33,7 @@ export default class Component extends ComponentBase {
 			if ( 1 === containers.length ) {
 				args.title = containers[ 0 ].label;
 			} else {
-				args.title = __( 'Elements', 'elementor' );
+				args.title = __( 'Elements', 'refraction' );
 			}
 		}
 

@@ -7,7 +7,7 @@ import { type ElementType, type ElementView, type LegacyWindow } from './types';
 export function createElementType( type: string ): typeof ElementType {
 	const legacyWindow = window as unknown as LegacyWindow;
 
-	return class extends legacyWindow.elementor.modules.elements.types.Widget {
+	return class extends legacyWindow.refraction.modules.elements.types.Widget {
 		getType() {
 			return type;
 		}
@@ -21,21 +21,21 @@ export function createElementType( type: string ): typeof ElementType {
 export function createElementViewClassDeclaration(): typeof ElementView {
 	const legacyWindow = window as unknown as LegacyWindow;
 
-	return class extends legacyWindow.elementor.modules.elements.views.Widget {
+	return class extends legacyWindow.refraction.modules.elements.views.Widget {
 		// Dispatch `render` event so the overlay layer will be updated
 		onRender( ...args: unknown[] ) {
 			super.onRender( ...args );
 
-			this.#dispatchEvent( 'elementor/preview/atomic-widget/render' );
-			this.#dispatchPreviewEvent( 'elementor/element/render' );
+			this.#dispatchEvent( 'refraction/preview/atomic-widget/render' );
+			this.#dispatchPreviewEvent( 'refraction/element/render' );
 		}
 
 		// Dispatch `destroy` event so the overlay layer will be updated
 		onDestroy( ...args: unknown[] ) {
 			super.onDestroy( ...args );
 
-			this.#dispatchEvent( 'elementor/preview/atomic-widget/destroy' );
-			this.#dispatchPreviewEvent( 'elementor/element/destroy' );
+			this.#dispatchEvent( 'refraction/preview/atomic-widget/destroy' );
+			this.#dispatchPreviewEvent( 'refraction/element/destroy' );
 		}
 
 		attributes() {
@@ -86,7 +86,7 @@ export function createElementViewClassDeclaration(): typeof ElementView {
 				return;
 			}
 
-			legacyWindow.elementor?.$preview?.[ 0 ]?.contentWindow.dispatchEvent(
+			legacyWindow.refraction?.$preview?.[ 0 ]?.contentWindow.dispatchEvent(
 				new CustomEvent( eventType, {
 					detail: {
 						id: this.model.get( 'id' ),

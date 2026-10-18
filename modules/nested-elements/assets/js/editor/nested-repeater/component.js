@@ -14,7 +14,7 @@ export default class Component extends $e.modules.ComponentBase {
 	registerAPI() {
 		super.registerAPI();
 
-		elementor.addControlView( 'nested-elements-repeater', RepeaterControl );
+		refraction.addControlView( 'nested-elements-repeater', RepeaterControl );
 	}
 
 	getNamespace() {

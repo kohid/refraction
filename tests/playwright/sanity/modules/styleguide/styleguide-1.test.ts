@@ -12,7 +12,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		page.setDefaultTimeout( 20000 );
 
 		await page.evaluate( () => $e.run( 'document/elements/settings', {
-			container: elementor.settings.editorPreferences.getEditedView().getContainer(),
+			container: refraction.settings.editorPreferences.getEditedView().getContainer(),
 			settings: {
 				enable_styleguide_preview: '',
 			},
@@ -30,7 +30,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		await Promise.all( [
 			page.waitForResponse( '/wp-admin/admin-ajax.php' ),
-			page.click( '.elementor-control-title:has-text("Show global settings")' ),
+			page.click( '.refraction-control-title:has-text("Show global settings")' ),
 			page.waitForTimeout( 3000 ),
 		] );
 
@@ -47,7 +47,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		// Global Colors.
 		// Act.
-		await page.click( '.elementor-panel-menu-item-title:has-text("Global Colors")' );
+		await page.click( '.refraction-panel-menu-item-title:has-text("Global Colors")' );
 
 		const siteSettingsColorsStyleguideSwitcherIsChecked = await page.isChecked( 'input[type=checkbox][data-setting="colors_enable_styleguide_preview"]' );
 		const styleguidePreviewDialog = editor.getPreviewFrame().locator( '#e-styleguide-preview-dialog' );
@@ -58,14 +58,14 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		// Global Typography.
 		// Act 1.
-		await page.locator( '#elementor-panel-header-kit-back' ).click();
+		await page.locator( '#refraction-panel-header-kit-back' ).click();
 		await styleguideSaveChanges( page );
 
 		// Assert 1.
 		await expect( styleguidePreviewDialog ).toBeHidden( { timeout: timeouts.heavyAction } );
 
 		// Act 2.
-		await page.click( '.elementor-panel-menu-item-title:has-text("Global Fonts")' );
+		await page.click( '.refraction-panel-menu-item-title:has-text("Global Fonts")' );
 		await editor.openSection( 'section_text_style' );
 
 		const siteSettingsTypographyStyleguideSwitcherIsChecked = await page.isChecked( 'input[type=checkbox][data-setting="typography_enable_styleguide_preview"]' );
@@ -83,7 +83,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		page.setDefaultTimeout( 20000 );
 
 		await page.evaluate( () => $e.run( 'document/elements/settings', {
-			container: elementor.settings.editorPreferences.getEditedView().getContainer(),
+			container: refraction.settings.editorPreferences.getEditedView().getContainer(),
 			settings: {
 				enable_styleguide_preview: '',
 			},
@@ -108,7 +108,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		// Global Colors.
 		// Act.
-		await page.click( '.elementor-panel-menu-item-title:has-text("Global Colors")' );
+		await page.click( '.refraction-panel-menu-item-title:has-text("Global Colors")' );
 
 		const siteSettingsColorsStyleguideSwitcherIsChecked = await page.isChecked( 'input[type=checkbox][data-setting="colors_enable_styleguide_preview"]' );
 		const styleguidePreviewDialog = editor.getPreviewFrame().locator( '#e-styleguide-preview-dialog' );
@@ -119,14 +119,14 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		// Global Typography.
 		// Act 1.
-		await page.locator( '#elementor-panel-header-kit-back' ).click();
+		await page.locator( '#refraction-panel-header-kit-back' ).click();
 		await styleguideSaveChanges( page );
 
 		// Assert 1.
 		await expect( styleguidePreviewDialog ).toBeHidden();
 
 		// Act 2.
-		await page.click( '.elementor-panel-menu-item-title:has-text("Global Fonts")' );
+		await page.click( '.refraction-panel-menu-item-title:has-text("Global Fonts")' );
 
 		const siteSettingsTypographyStyleguideSwitcherIsChecked = await page.isChecked( 'input[type=checkbox][data-setting="typography_enable_styleguide_preview"]' );
 
@@ -139,22 +139,22 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		// Arrange.
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-colors', true );
 
-		await page.locator( '#elementor-panel-header-kit-back' ).click();
+		await page.locator( '#refraction-panel-header-kit-back' ).click();
 		await styleguideSaveChanges( page );
 		await page.waitForTimeout( 2000 );
 
 		// Act.
-		await page.click( '.elementor-panel-menu-item-title:has-text("Global Fonts")' );
+		await page.click( '.refraction-panel-menu-item-title:has-text("Global Fonts")' );
 
 		// Assert
 		await expect( editor.getPreviewFrame().getByText( 'Global Fonts' ) ).toBeVisible( { timeout: timeouts.heavyAction } );
 
 		// Act 2.
-		await page.locator( '#elementor-panel-header-kit-back' ).click();
+		await page.locator( '#refraction-panel-header-kit-back' ).click();
 		await styleguideSaveChanges( page );
 		await page.waitForTimeout( 2000 );
 
-		await page.click( '.elementor-panel-menu-item-title:has-text("Global Colors")' );
+		await page.click( '.refraction-panel-menu-item-title:has-text("Global Colors")' );
 
 		// Assert 2
 		await expect( editor.getPreviewFrame().getByText( 'Global Colors' ) ).toBeVisible( { timeout: timeouts.heavyAction } );
@@ -174,7 +174,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		await Promise.all( [
 			page.waitForResponse( '/wp-admin/admin-ajax.php' ),
-			page.locator( '.elementor-control-title:has-text("Show global settings")' ).click(),
+			page.locator( '.refraction-control-title:has-text("Show global settings")' ).click(),
 		] );
 
 		const siteSettingsStyleguideSwitcherAfterClick = await page.isChecked( 'input[type=checkbox][data-setting="colors_enable_styleguide_preview"]' );
@@ -199,7 +199,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		await Promise.all( [
 			page.waitForResponse( '/wp-admin/admin-ajax.php' ),
-			page.locator( '.elementor-control-title:has-text("Show global settings")' ).click(),
+			page.locator( '.refraction-control-title:has-text("Show global settings")' ).click(),
 		] );
 
 		const siteSettingsStyleguideSwitcherAfterClick = await page.isChecked( 'input[type=checkbox][data-setting="typography_enable_styleguide_preview"]' );
@@ -224,7 +224,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		await Promise.all( [
 			page.waitForResponse( '/wp-admin/admin-ajax.php' ),
-			page.locator( '.elementor-control-title:has-text("Show global settings")' ).click(),
+			page.locator( '.refraction-control-title:has-text("Show global settings")' ).click(),
 		] );
 
 		const siteSettingsStyleguideSwitcherAfterClick = await page.isChecked( 'input[type=checkbox][data-setting="colors_enable_styleguide_preview"]' );
@@ -249,7 +249,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		await Promise.all( [
 			page.waitForResponse( '/wp-admin/admin-ajax.php' ),
-			page.locator( '.elementor-control-title:has-text("Show global settings")' ).click(),
+			page.locator( '.refraction-control-title:has-text("Show global settings")' ).click(),
 		] );
 
 		const siteSettingsStyleguideSwitcherAfterClick = await page.isChecked( 'input[type=checkbox][data-setting="typography_enable_styleguide_preview"]' );
@@ -290,7 +290,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 } );
 
 async function isStyleguidePreviewUserPreferencesEnabled( page: Page ) {
-	return await page.evaluate( () => elementor.getPreferences( 'enable_styleguide_preview' ) );
+	return await page.evaluate( () => refraction.getPreferences( 'enable_styleguide_preview' ) );
 }
 
 async function styleguideSaveChanges( page: Page ) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Core\Utils\Api;
+namespace Refraction\Core\Utils\Api;
 
 class Response_Builder {
 	private $data;

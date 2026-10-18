@@ -1,18 +1,18 @@
 <?php
-namespace Elementor\Modules\History;
+namespace Refraction\Modules\History;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor history module.
+ * Refraction history module.
  *
- * Elementor history module handler class is responsible for registering and
- * managing Elementor history modules.
+ * Refraction history module handler class is responsible for registering and
+ * managing Refraction history modules.
  *
  * @since 1.7.0
  */
@@ -44,12 +44,12 @@ class Module extends BaseModule {
 	/**
 	 * History module constructor.
 	 *
-	 * Initializing Elementor history module.
+	 * Initializing Refraction history module.
 	 *
 	 * @since 1.7.0
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'elementor/editor/init', [ $this, 'add_templates' ] );
+		add_action( 'refraction/editor/init', [ $this, 'add_templates' ] );
 	}
 }

@@ -6,10 +6,10 @@ import { ImportContext } from '../../../context/import-context/import-context-pr
 
 import Layout from '../../../templates/layout';
 import FileProcess from '../../../shared/file-process/file-process';
-import UnfilteredFilesDialog from 'elementor-app/organisms/unfiltered-files-dialog';
-import { appsEventTrackingDispatch } from 'elementor-app/event-track/apps-event-tracking';
+import UnfilteredFilesDialog from 'refraction-app/organisms/unfiltered-files-dialog';
+import { appsEventTrackingDispatch } from 'refraction-app/event-track/apps-event-tracking';
 
-import useQueryParams from 'elementor-app/hooks/use-query-params';
+import useQueryParams from 'refraction-app/hooks/use-query-params';
 import useKit, { KIT_SOURCE_MAP } from '../../../hooks/use-kit';
 import useImportActions from '../hooks/use-import-actions';
 import { useImportKitLibraryApplyAllPlugins } from '../import-kit/hooks/use-import-kit-library-apply-all-plugins';
@@ -39,7 +39,7 @@ export default function ImportProcess() {
 			kitActions.upload( { kitId: id, file: decodedFileURL, kitLibraryNonce: nonce } );
 		},
 		importKit = () => {
-			if ( elementorAppConfig[ 'import-export' ].isUnfilteredFilesEnabled || ! isKitHasSvgAssets ) {
+			if ( refractionAppConfig[ 'import-export' ].isUnfilteredFilesEnabled || ! isKitHasSvgAssets ) {
 				setStartImport( true );
 			} else {
 				setShowUnfilteredFilesDialog( true );
@@ -188,7 +188,7 @@ export default function ImportProcess() {
 			<section>
 
 				<FileProcess
-					info={ uploadedData && __( 'Importing your content, templates and site settings', 'elementor' ) }
+					info={ uploadedData && __( 'Importing your content, templates and site settings', 'refraction' ) }
 					errorType={ errorType }
 					onDialogApprove={ onCancelProcess }
 					onDialogDismiss={ onCancelProcess }
@@ -197,8 +197,8 @@ export default function ImportProcess() {
 				<UnfilteredFilesDialog
 					show={ showUnfilteredFilesDialog }
 					setShow={ setShowUnfilteredFilesDialog }
-					confirmModalText={ __( 'This allows Elementor to scan your SVGs for malicious content. Otherwise, you can skip any SVGs in this import.', 'elementor' ) }
-					errorModalText={ __( 'Nothing to worry about, just continue without importing SVGs or go back and start the import again.', 'elementor' ) }
+					confirmModalText={ __( 'This allows Refraction to scan your SVGs for malicious content. Otherwise, you can skip any SVGs in this import.', 'refraction' ) }
+					errorModalText={ __( 'Nothing to worry about, just continue without importing SVGs or go back and start the import again.', 'refraction' ) }
 					onReady={ () => onReady() }
 					onCancel={ () => {
 						setShowUnfilteredFilesDialog( false );

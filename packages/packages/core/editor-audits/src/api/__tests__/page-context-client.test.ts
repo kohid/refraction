@@ -1,9 +1,9 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { SessionExpiredError } from '../../utils/session-expiration';
 import { fetchPageContext } from '../page-context-client';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
@@ -15,9 +15,9 @@ describe( 'fetchPageContext', () => {
 	const originalFetch = global.fetch;
 
 	beforeEach( () => {
-		( window as unknown as { elementorAudits: unknown } ).elementorAudits = {
+		( window as unknown as { refractionAudits: unknown } ).refractionAudits = {
 			audits: [],
-			restNamespace: 'elementor/v1',
+			restNamespace: 'refraction/v1',
 			nonce: 'fake-nonce',
 		};
 	} );
@@ -37,7 +37,7 @@ describe( 'fetchPageContext', () => {
 
 		// Assert.
 		expect( get ).toHaveBeenCalledWith(
-			expect.stringContaining( 'elementor/v1/audits/page-context' ),
+			expect.stringContaining( 'refraction/v1/audits/page-context' ),
 			expect.objectContaining( {
 				params: expect.objectContaining( { document_id: 42, image_size_requests: [ '1:full', '2:full' ] } ),
 			} )

@@ -1,15 +1,15 @@
 import ModalContent from './modal-content';
 
-export default class extends elementorModules.common.views.modal.Layout {
+export default class extends refractionModules.common.views.modal.Layout {
 	getModalOptions() {
 		return {
-			id: 'elementor-hotkeys__modal',
+			id: 'refraction-hotkeys__modal',
 		};
 	}
 
 	getLogoOptions() {
 		return {
-			title: __( 'Keyboard Shortcuts', 'elementor' ),
+			title: __( 'Keyboard Shortcuts', 'refraction' ),
 		};
 	}
 

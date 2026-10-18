@@ -1,4 +1,4 @@
-var ControlMultipleBaseItemView = require( 'elementor-controls/base-multiple' ),
+var ControlMultipleBaseItemView = require( 'refraction-controls/base-multiple' ),
 	ControlBoxShadowItemView;
 
 import ColorPicker from '../utils/color-picker';
@@ -7,8 +7,8 @@ ControlBoxShadowItemView = ControlMultipleBaseItemView.extend( {
 	ui() {
 		var ui = ControlMultipleBaseItemView.prototype.ui.apply( this, arguments );
 
-		ui.sliders = '.elementor-slider';
-		ui.colorPickerPlaceholder = '.elementor-color-picker-placeholder';
+		ui.sliders = '.refraction-slider';
+		ui.colorPickerPlaceholder = '.refraction-color-picker-placeholder';
 
 		return ui;
 	},
@@ -17,7 +17,7 @@ ControlBoxShadowItemView = ControlMultipleBaseItemView.extend( {
 		const value = this.getControlValue();
 
 		this.ui.sliders.each( ( index, slider ) => {
-			const $input = jQuery( slider ).next( '.elementor-slider-input' ).find( 'input' );
+			const $input = jQuery( slider ).next( '.refraction-slider-input' ).find( 'input' );
 
 			const sliderInstance = noUiSlider.create( slider, {
 				start: [ value[ slider.dataset.input ] ],

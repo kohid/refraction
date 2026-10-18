@@ -1,4 +1,4 @@
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
 export default function DialogWrapper( props ) {
 	let WrapperTag = 'div';
@@ -14,7 +14,7 @@ export default function DialogWrapper( props ) {
 					props.onClose &&
 					<Button
 						onClick={ props.onClose }
-						text={ __( 'Close', 'elementor' ) }
+						text={ __( 'Close', 'refraction' ) }
 						hideText={ true }
 						icon="eicon-close"
 						className="eps-dialog__close-button"

@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Control;
+namespace Refraction\Modules\FloatingButtons\Control;
 
-use Elementor\Control_Hover_Animation;
+use Refraction\Control_Hover_Animation;
 
 class Hover_Animation_Floating_Buttons extends Control_Hover_Animation {
 

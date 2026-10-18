@@ -7,7 +7,7 @@ import {
 	__getStore,
 	__registerSlice,
 	__StoreProvider as StoreProvider,
-} from '@elementor/store';
+} from '@refraction/store';
 import { screen } from '@testing-library/react';
 
 import FloatingPanelsHost from '../components/internal/host';

@@ -11,12 +11,12 @@ import {
 	type NamespacedRenderContext,
 	type RenderContext,
 	type TemplatedElementView,
-} from '@elementor/editor-canvas';
-import { getCurrentDocument } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { notify } from '@elementor/editor-notifications';
-import { __getState as getState } from '@elementor/store';
-import { hasProInstalled } from '@elementor/utils';
+} from '@refraction/editor-canvas';
+import { getCurrentDocument } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { notify } from '@refraction/editor-notifications';
+import { __getState as getState } from '@refraction/store';
+import { hasProInstalled } from '@refraction/utils';
 import { __ } from '@wordpress/i18n';
 
 import { apiClient } from './api';
@@ -71,7 +71,7 @@ function notifyComponentEditUpgrade() {
 	notify( {
 		type: 'promotion',
 		id: COMPONENT_EDIT_UPGRADE_NOTIFICATION_ID,
-		message: __( 'Editing components requires an active Pro subscription.', 'elementor' ),
+		message: __( 'Editing components requires an active Pro subscription.', 'refraction' ),
 		autoHideDuration: COMPONENT_EDIT_UPGRADE_AUTO_HIDE_DURATION,
 		additionalActionProps: [
 			{
@@ -80,7 +80,7 @@ function notifyComponentEditUpgrade() {
 				color: 'promotion',
 				href: EDIT_COMPONENT_DB_CLICK_UPGRADE_URL,
 				target: '_blank',
-				children: __( 'Upgrade Now', 'elementor' ),
+				children: __( 'Upgrade Now', 'refraction' ),
 			},
 		],
 	} );
@@ -90,7 +90,7 @@ function notifyComponentEditUpdate() {
 	notify( {
 		type: 'info',
 		id: COMPONENT_EDIT_UPDATE_NOTIFICATION_ID,
-		message: __( 'To edit components, update Elementor Pro to the latest version.', 'elementor' ),
+		message: __( 'To edit components, update Refraction Pro to the latest version.', 'refraction' ),
 		additionalActionProps: [
 			{
 				size: 'small',
@@ -98,7 +98,7 @@ function notifyComponentEditUpdate() {
 				color: 'info',
 				href: UPDATE_PLUGINS_URL,
 				target: '_blank',
-				children: __( 'Update Now', 'elementor' ),
+				children: __( 'Update Now', 'refraction' ),
 			},
 		],
 	} );
@@ -133,7 +133,7 @@ type ComponentTypeOptions = CreateTemplatedElementTypeOptions & {
 
 export function createComponentType( options: ComponentTypeOptions ): typeof ElementType {
 	const legacyWindow = window as unknown as LegacyWindow;
-	const WidgetType = legacyWindow.elementor.modules.elements.types.Widget;
+	const WidgetType = legacyWindow.refraction.modules.elements.types.Widget;
 
 	const view = createComponentView( { ...options } );
 
@@ -156,7 +156,7 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 	const legacyWindow = window as unknown as LegacyWindow & ExtendedWindow;
 
 	return class extends createTemplatedElementView( options ) {
-		eventsManagerConfig = legacyWindow.elementorCommon.eventsManager.config;
+		eventsManagerConfig = legacyWindow.refractionCommon.eventsManager.config;
 		#componentRenderContext: ComponentRenderContext | undefined;
 
 		isComponentCurrentlyEdited() {
@@ -226,7 +226,7 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 				);
 				const formattedElements = formatComponentElementsId( reconciledElements, [ instanceId ] );
 
-				this.collection = legacyWindow.elementor.createBackboneElementsCollection( formattedElements );
+				this.collection = legacyWindow.refraction.createBackboneElementsCollection( formattedElements );
 
 				this.collection.models.forEach( setInactiveRecursively );
 
@@ -281,13 +281,13 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 			const isOutdated = isProOutdatedForComponents();
 			const showPromoBadge = ! hasPro && ! isOutdated;
 
-			const badgeClass = 'elementor-context-menu-list__item__shortcut__promotion-badge';
+			const badgeClass = 'refraction-context-menu-list__item__shortcut__promotion-badge';
 			const proBadge = `<a href="${ EDIT_COMPONENT_CONTEXT_MENU_UPGRADE_URL }" target="_blank" onclick="event.stopPropagation()" class="${ badgeClass }"><i class="eicon-upgrade-crown"></i></a>`;
 
 			const editComponentAction: ContextMenuAction = {
 				name: 'edit component',
 				icon: 'eicon-edit',
-				title: () => __( 'Edit Component', 'elementor' ),
+				title: () => __( 'Edit Component', 'refraction' ),
 				...( showPromoBadge && { shortcut: proBadge, hasShortcutAction: true } ),
 				isEnabled: () => isProComponentsSupported() || isOutdated,
 				callback: ( _: unknown, eventData: ContextMenuEventData ) => this.editComponent( eventData ),
@@ -296,7 +296,7 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 			const detachInstanceAction: ContextMenuAction = {
 				name: 'detach instance',
 				icon: 'eicon-chain-broken',
-				title: () => __( 'Detach from Component', 'elementor' ),
+				title: () => __( 'Detach from Component', 'refraction' ),
 				isEnabled: () => true,
 				callback: ( _: unknown, eventData: ContextMenuEventData ) => this.detachInstance( eventData ),
 			};
@@ -373,7 +373,7 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 				} catch {
 					notify( {
 						type: 'error',
-						message: __( 'Failed to detach component instance.', 'elementor' ),
+						message: __( 'Failed to detach component instance.', 'refraction' ),
 						id: 'detach-component-instance-failed',
 					} );
 				}
@@ -418,7 +418,7 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 		attributes() {
 			return {
 				...super.attributes(),
-				'data-elementor-id': this.getComponentId(),
+				'data-refraction-id': this.getComponentId(),
 			};
 		}
 	};
@@ -443,12 +443,12 @@ function setInactiveRecursively( model: BackboneModel< ElementModel > ) {
 function isUserAdministrator() {
 	const legacyWindow = window as unknown as LegacyWindow;
 
-	return legacyWindow.elementor.config?.user?.is_administrator ?? false;
+	return legacyWindow.refraction.config?.user?.is_administrator ?? false;
 }
 
 function createComponentModel(): BackboneModelConstructor< ComponentModel > {
 	const legacyWindow = window as unknown as LegacyWindow;
-	const WidgetType = legacyWindow.elementor.modules.elements.types.Widget;
+	const WidgetType = legacyWindow.refraction.modules.elements.types.Widget;
 	const widgetTypeInstance = new WidgetType() as unknown as BackboneModelConstructor< ElementModel >;
 	const BaseWidgetModel = widgetTypeInstance.getModel();
 
@@ -490,7 +490,7 @@ function createComponentModel(): BackboneModelConstructor< ComponentModel > {
 				}
 			}
 
-			return ( window as unknown as LegacyWindow ).elementor.getElementData( this ).title;
+			return ( window as unknown as LegacyWindow ).refraction.getElementData( this ).title;
 		},
 
 		getComponentId( this: ComponentModelInstance ): number | null {

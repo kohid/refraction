@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderWithTheme } from 'test-utils';
-import { ElementProvider } from '@elementor/editor-editing-panel';
+import { ElementProvider } from '@refraction/editor-editing-panel';
 import { screen } from '@testing-library/react';
 
 import { type OverridablePropsGroup } from '../../../types';

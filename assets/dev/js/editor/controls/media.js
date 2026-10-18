@@ -1,24 +1,24 @@
 import FilesUploadHandler from '../utils/files-upload-handler';
-import { showJsonUploadWarningMessageIfNeeded } from 'elementor-utils/json-upload-warning-message';
+import { showJsonUploadWarningMessageIfNeeded } from 'refraction-utils/json-upload-warning-message';
 
-var ControlMultipleBaseItemView = require( 'elementor-controls/base-multiple' ),
+var ControlMultipleBaseItemView = require( 'refraction-controls/base-multiple' ),
 	ControlMediaItemView;
 
 ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 	ui() {
 		var ui = ControlMultipleBaseItemView.prototype.ui.apply( this, arguments );
 
-		ui.controlMedia = '.elementor-control-media';
-		ui.mediaImage = '.elementor-control-media__preview';
-		ui.mediaVideo = '.elementor-control-media-video';
-		ui.frameOpeners = '.elementor-control-preview-area';
-		ui.removeButton = '.elementor-control-media__remove';
+		ui.controlMedia = '.refraction-control-media';
+		ui.mediaImage = '.refraction-control-media__preview';
+		ui.mediaVideo = '.refraction-control-media-video';
+		ui.frameOpeners = '.refraction-control-preview-area';
+		ui.removeButton = '.refraction-control-media__remove';
 		// eslint-disable-next-line capitalized-comments
-		// ui.warnings = '.elementor-control-media__warnings';
-		ui.promotions = '.elementor-control-media__promotions';
-		ui.promotions_dismiss = '.elementor-control-media__promotions .elementor-control-notice-dismiss';
-		ui.promotions_action = '.elementor-control-media__promotions .elementor-control-notice-main-actions button';
-		ui.fileName = '.elementor-control-media__file__content__info__name';
+		// ui.warnings = '.refraction-control-media__warnings';
+		ui.promotions = '.refraction-control-media__promotions';
+		ui.promotions_dismiss = '.refraction-control-media__promotions .refraction-control-notice-dismiss';
+		ui.promotions_action = '.refraction-control-media__promotions .refraction-control-notice-main-actions button';
+		ui.fileName = '.refraction-control-media__file__content__info__name';
 		ui.mediaInputImageSize = '.e-image-size-select';
 
 		return ui;
@@ -98,8 +98,8 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 				const handleHints = ( attachment ) => {
 					// eslint-disable-next-line capitalized-comments
 					// this.ui.warnings.toggle( ! this.imageHasAlt( attachment ) );
-					if ( this.ui.promotions.length && ! elementor.config.user.dismissed_editor_notices.includes( dismissPromotionEventName ) ) {
-						const alwaysOn = this.ui.promotions.find( '.elementor-control-notice' ).data( 'display' ) || false;
+					if ( this.ui.promotions.length && ! refraction.config.user.dismissed_editor_notices.includes( dismissPromotionEventName ) ) {
+						const alwaysOn = this.ui.promotions.find( '.refraction-control-notice' ).data( 'display' ) || false;
 						const showHint = alwaysOn || this.imageNotOptimized( attachment );
 						this.ui.promotions.toggle( showHint );
 					}
@@ -125,8 +125,8 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 
 		if ( source !== 'filter-popup' && [ 'application/json', 'json' ].includes( mediaType ) ) {
 			await showJsonUploadWarningMessageIfNeeded( {
-				introductionMap: window.elementor.config.user.introduction,
-				IntroductionClass: window.elementorModules.editor.utils.Introduction,
+				introductionMap: window.refraction.config.user.introduction,
+				IntroductionClass: window.refractionModules.editor.utils.Introduction,
 			} );
 		}
 
@@ -181,7 +181,7 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 
 	getDismissPromotionEventName() {
 		const $promotions = this.ui.promotions;
-		const $dismissButton = $promotions.find( '.elementor-control-notice-dismiss' );
+		const $dismissButton = $promotions.find( '.refraction-control-notice-dismiss' );
 		// Remove listener
 		$dismissButton.off( 'click' );
 		return $dismissButton[ 0 ]?.dataset?.event || false;
@@ -214,7 +214,7 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 	dismissPromotion( eventName ) {
 		this.hidePromotion( eventName );
 		if ( eventName ) {
-			elementorCommon.ajax.addRequest( 'dismissed_editor_notices', {
+			refractionCommon.ajax.addRequest( 'dismissed_editor_notices', {
 				data: {
 					dismissId: eventName,
 				},
@@ -229,14 +229,14 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 			eventName = this.getDismissPromotionEventName();
 		}
 
-		elementorCommon.ajax.addRequest( 'elementor_image_optimization_campaign', {
+		refractionCommon.ajax.addRequest( 'refraction_image_optimization_campaign', {
 			data: {
 				source,
 			},
 		} );
 
 		// Prevent opening the same promotion again in current editor session.
-		elementor.config.user.dismissed_editor_notices.push( eventName );
+		refraction.config.user.dismissed_editor_notices.push( eventName );
 	},
 
 	onMediaInputImageSizeChange() {
@@ -277,7 +277,7 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 
 		let imageURL;
 
-		elementor.channels.editor.once( 'imagesManager:detailsReceived', ( data ) => {
+		refraction.channels.editor.once( 'imagesManager:detailsReceived', ( data ) => {
 			imageURL = data[ currentControlValue.id ]?.[ currentControlValue.size ];
 
 			if ( imageURL ) {
@@ -286,7 +286,7 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 			}
 		} );
 
-		imageURL = elementor.imagesManager.getImageUrl( {
+		imageURL = refraction.imagesManager.getImageUrl( {
 			id: currentControlValue.id,
 			url: currentControlValue.url,
 			size: currentControlValue.size,
@@ -306,14 +306,14 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 		this.currentLibraryType = this.getLibraryType( mediaType );
 
 		// Set current doc id to attach uploaded images.
-		wp.media.view.settings.post.id = elementor.config.document.id;
+		wp.media.view.settings.post.id = refraction.config.document.id;
 		this.frame = wp.media( {
 			frame: 'post',
 			type: 'image',
 			multiple: false,
 			states: [
 				new wp.media.controller.Library( {
-					title: __( 'Insert Media', 'elementor' ),
+					title: __( 'Insert Media', 'refraction' ),
 					library: wp.media.query( { type: this.currentLibraryType } ),
 					multiple: false,
 					date: false,
@@ -327,7 +327,7 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 		// When a file is selected, run a callback.
 		this.frame.on( 'insert select', this.select.bind( this ) );
 
-		if ( elementorCommon.config.filesUpload.unfilteredFiles ) {
+		if ( refractionCommon.config.filesUpload.unfilteredFiles ) {
 			this.setUploadMimeType( this.frame, mediaType );
 		}
 	},
@@ -349,7 +349,7 @@ ControlMediaItemView = ControlMultipleBaseItemView.extend( {
 		$frame.find( elementsToRemove.join( ',' ) ).remove();
 
 		// Change the default button text using CSS by passing the text as a variable.
-		$frame.css( '--button-text', `'${ __( 'Insert Media', 'elementor' ) }'` );
+		$frame.css( '--button-text', `'${ __( 'Insert Media', 'refraction' ) }'` );
 
 		// Remove elements from the URL upload tab.
 		$frame.addClass( 'e-wp-media-elements-removed' );

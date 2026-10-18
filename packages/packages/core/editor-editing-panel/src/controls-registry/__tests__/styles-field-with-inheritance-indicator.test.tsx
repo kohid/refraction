@@ -6,12 +6,12 @@ import {
 	mockStylesSchema,
 	renderWithTheme,
 } from 'test-utils';
-import { getBreakpointsTree } from '@elementor/editor-responsive';
-import { getStylesSchema, type StyleDefinitionVariant } from '@elementor/editor-styles';
+import { getBreakpointsTree } from '@refraction/editor-responsive';
+import { getStylesSchema, type StyleDefinitionVariant } from '@refraction/editor-styles';
 import {
 	ELEMENTS_BASE_STYLES_PROVIDER_KEY,
 	ELEMENTS_STYLES_PROVIDER_KEY_PREFIX,
-} from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles-repository';
 import { screen } from '@testing-library/react';
 
 import { ControlLabel } from '../../components/control-label';
@@ -23,10 +23,10 @@ import { useStylesFields } from '../../hooks/use-styles-fields';
 import { StylesInheritanceIndicator } from '../../styles-inheritance/components/styles-inheritance-indicator';
 import { StylesField } from '../styles-field';
 
-jest.mock( '@elementor/editor-responsive' );
-jest.mock( '@elementor/editor-styles' );
-jest.mock( '@elementor/editor-styles-repository', () => ( {
-	...jest.requireActual( '@elementor/editor-styles-repository' ),
+jest.mock( '@refraction/editor-responsive' );
+jest.mock( '@refraction/editor-styles' );
+jest.mock( '@refraction/editor-styles-repository', () => ( {
+	...jest.requireActual( '@refraction/editor-styles-repository' ),
 	stylesRepository: {
 		all: jest.fn(),
 		subscribe: jest.fn(),

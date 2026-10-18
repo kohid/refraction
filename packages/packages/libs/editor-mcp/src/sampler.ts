@@ -1,4 +1,4 @@
-import { type z } from '@elementor/schema';
+import { type z } from '@refraction/schema';
 import { type RequestHandlerExtra } from '@modelcontextprotocol/sdk/shared/protocol.js';
 import { SamplingMessageSchema, type ServerNotification, type ServerRequest } from '@modelcontextprotocol/sdk/types.js';
 

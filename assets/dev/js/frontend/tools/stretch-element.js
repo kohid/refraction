@@ -1,8 +1,8 @@
-module.exports = elementorModules.ViewModule.extend( {
+module.exports = refractionModules.ViewModule.extend( {
 	getDefaultSettings() {
 		return {
 			element: null,
-			direction: elementorFrontend.config.is_rtl ? 'right' : 'left',
+			direction: refractionFrontend.config.is_rtl ? 'right' : 'left',
 			selectors: {
 				container: window,
 			},
@@ -57,7 +57,7 @@ module.exports = elementorModules.ViewModule.extend( {
 		}
 
 		if ( ! isFixed ) {
-			if ( elementorFrontend.config.is_rtl ) {
+			if ( refractionFrontend.config.is_rtl ) {
 				correctOffset = containerWidth - ( $element.outerWidth() + correctOffset );
 			}
 

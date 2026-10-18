@@ -1,12 +1,12 @@
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
 
 export default class extends Marionette.ItemView {
 	className() {
-		return 'elementor-finder__results__item';
+		return 'refraction-finder__results__item';
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-finder__results__item';
+		return '#tmpl-refraction-finder__results__item';
 	}
 
 	events() {
@@ -24,9 +24,9 @@ export default class extends Marionette.ItemView {
 		if ( ! lockOptions?.is_locked ) {
 			this.trackResultSelect();
 
-			// Open elementor-app URLs in the app overlay instead of navigating away.
+			// Open refraction-app URLs in the app overlay instead of navigating away.
 			const url = this.model.get( 'url' ) || '';
-			if ( url.includes( 'page=elementor-app' ) && window.$e ) {
+			if ( url.includes( 'page=refraction-app' ) && window.$e ) {
 				e.preventDefault();
 				e.stopImmediatePropagation();
 				$e.run( 'finder/close' );
@@ -38,8 +38,8 @@ export default class extends Marionette.ItemView {
 		e.preventDefault();
 		e.stopImmediatePropagation();
 
-		elementorCommon.dialogsManager.createWidget( 'confirm', {
-			id: 'elementor-finder__lock-dialog',
+		refractionCommon.dialogsManager.createWidget( 'confirm', {
+			id: 'refraction-finder__lock-dialog',
 			headerMessage: lockOptions.content.heading,
 			message: lockOptions.content.description,
 			position: {
@@ -48,7 +48,7 @@ export default class extends Marionette.ItemView {
 			},
 			strings: {
 				confirm: lockOptions.button.text,
-				cancel: __( 'Cancel', 'elementor' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			onConfirm: () => {
 				this.trackResultSelect();

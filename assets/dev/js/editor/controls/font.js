@@ -1,11 +1,11 @@
-const ControlSelect2View = require( 'elementor-controls/select2' );
+const ControlSelect2View = require( 'refraction-controls/select2' );
 
 module.exports = ControlSelect2View.extend( {
 	$previewContainer: null,
 
 	getSelect2Options() {
 		return {
-			dir: elementorCommon.config.isRTL ? 'rtl' : 'ltr',
+			dir: refractionCommon.config.isRTL ? 'rtl' : 'ltr',
 			templateSelection: this.fontPreviewTemplate,
 			templateResult: this.fontPreviewTemplate,
 		};
@@ -75,7 +75,7 @@ module.exports = ControlSelect2View.extend( {
 
 		fontsInView.forEach( function( font ) {
 			const fontFamily = jQuery( font ).find( 'span' ).html();
-			elementor.helpers.enqueueFont( fontFamily, 'editor' );
+			refraction.helpers.enqueueFont( fontFamily, 'editor' );
 		} );
 	},
 

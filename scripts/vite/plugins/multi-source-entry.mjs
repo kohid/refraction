@@ -1,4 +1,4 @@
-export const MULTI_SOURCE_ENTRY_ID = 'virtual:elementor-entry';
+export const MULTI_SOURCE_ENTRY_ID = 'virtual:refraction-entry';
 
 const RESOLVED_ID = '\0' + MULTI_SOURCE_ENTRY_ID;
 
@@ -8,7 +8,7 @@ const RESOLVED_ID = '\0' + MULTI_SOURCE_ENTRY_ID;
  */
 export function multiSourceEntryPlugin( { sources } ) {
 	return {
-		name: 'elementor-multi-source-entry',
+		name: 'refraction-multi-source-entry',
 		resolveId( id ) {
 			return MULTI_SOURCE_ENTRY_ID === id ? RESOLVED_ID : null;
 		},

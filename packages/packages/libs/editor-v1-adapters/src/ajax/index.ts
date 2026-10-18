@@ -7,7 +7,7 @@ export const ajax = {
 		const extendedWindow = window as unknown as ExtendedWindow;
 
 		return new Promise( ( success, error ) => {
-			extendedWindow.elementorCommon?.ajax?.load< TRequestData, TResponseData >( {
+			extendedWindow.refractionCommon?.ajax?.load< TRequestData, TResponseData >( {
 				...data,
 				success,
 				error,
@@ -17,6 +17,6 @@ export const ajax = {
 	invalidateCache< TData = object >( data: RequestParams< TData > ) {
 		const extendedWindow = window as unknown as ExtendedWindow;
 
-		extendedWindow.elementorCommon?.ajax?.invalidateCache< TData >( data );
+		extendedWindow.refractionCommon?.ajax?.invalidateCache< TData >( data );
 	},
 };

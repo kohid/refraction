@@ -1,9 +1,9 @@
 <?php
-namespace Elementor\Modules\CompatibilityTag;
+namespace Refraction\Modules\CompatibilityTag;
 
-use Elementor\Plugin;
-use Elementor\Core\Utils\Version;
-use Elementor\Core\Utils\Collection;
+use Refraction\Plugin;
+use Refraction\Core\Utils\Version;
+use Refraction\Core\Utils\Collection;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,7 +20,7 @@ class Module extends Base_Module {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_TESTED_HEADER = 'Elementor tested up to';
+	const PLUGIN_VERSION_TESTED_HEADER = 'Refraction tested up to';
 
 	/**
 	 * @return string
@@ -33,21 +33,21 @@ class Module extends Base_Module {
 	 * @return string
 	 */
 	protected function get_plugin_label() {
-		return esc_html__( 'Elementor', 'elementor' );
+		return esc_html__( 'Refraction', 'refraction' );
 	}
 
 	/**
 	 * @return string
 	 */
 	protected function get_plugin_name() {
-		return ELEMENTOR_PLUGIN_BASE;
+		return REFRACTION_PLUGIN_BASE;
 	}
 
 	/**
 	 * @return string
 	 */
 	protected function get_plugin_version() {
-		return ELEMENTOR_VERSION;
+		return REFRACTION_VERSION;
 	}
 
 	/**
@@ -67,12 +67,12 @@ class Module extends Base_Module {
 		return Plugin::$instance->wp
 			->get_plugins()
 			->except( [
-				'elementor/elementor.php',
-				'elementor-beta/elementor-beta.php',
+				'refraction/refraction.php',
+				'refraction-beta/refraction-beta.php',
 				'block-builder/block-builder.php',
 			] )
 			->filter( function ( array $data ) {
-				return false !== strpos( strtolower( $data['Name'] ), 'elementor' );
+				return false !== strpos( strtolower( $data['Name'] ), 'refraction' );
 			} );
 	}
 }

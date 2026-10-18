@@ -1,4 +1,4 @@
-import CommandHistoryBase from 'elementor-editor/document/command-bases/command-history-base';
+import CommandHistoryBase from 'refraction-editor/document/command-bases/command-history-base';
 
 export default class CommandHistoryBaseMock extends CommandHistoryBase {}
 export class CommandHistoryBaseExportedMock extends $e.modules.editor.document.CommandHistoryBase {}

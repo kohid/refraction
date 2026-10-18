@@ -1,17 +1,17 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Core\Kits\Documents\Tabs\Global_Colors;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
 
 /**
- * Elementor counter widget.
+ * Refraction counter widget.
  *
- * Elementor widget that displays stats and numbers in an escalating manner.
+ * Refraction widget that displays stats and numbers in an escalating manner.
  *
  * @since 1.0.0
  */
@@ -42,7 +42,7 @@ class Widget_Counter extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Counter', 'elementor' );
+		return esc_html__( 'Counter', 'refraction' );
 	}
 
 	/**
@@ -121,14 +121,14 @@ class Widget_Counter extends Widget_Base {
 		$this->start_controls_section(
 			'section_counter',
 			[
-				'label' => esc_html__( 'Counter', 'elementor' ),
+				'label' => esc_html__( 'Counter', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'starting_number',
 			[
-				'label' => esc_html__( 'Starting Number', 'elementor' ),
+				'label' => esc_html__( 'Starting Number', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 0,
 				'dynamic' => [
@@ -140,7 +140,7 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'ending_number',
 			[
-				'label' => esc_html__( 'Ending Number', 'elementor' ),
+				'label' => esc_html__( 'Ending Number', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 100,
 				'dynamic' => [
@@ -152,7 +152,7 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'prefix',
 			[
-				'label' => esc_html__( 'Number Prefix', 'elementor' ),
+				'label' => esc_html__( 'Number Prefix', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -167,7 +167,7 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'suffix',
 			[
-				'label' => esc_html__( 'Number Suffix', 'elementor' ),
+				'label' => esc_html__( 'Number Suffix', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -182,7 +182,7 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ) . ' (ms)',
+				'label' => esc_html__( 'Animation Duration', 'refraction' ) . ' (ms)',
 				'type' => Controls_Manager::NUMBER,
 				'default' => 2000,
 				'min' => 100,
@@ -193,18 +193,18 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'thousand_separator',
 			[
-				'label' => esc_html__( 'Thousand Separator', 'elementor' ),
+				'label' => esc_html__( 'Thousand Separator', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'default' => 'yes',
-				'label_on' => esc_html__( 'Show', 'elementor' ),
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'thousand_separator_char',
 			[
-				'label' => esc_html__( 'Separator', 'elementor' ),
+				'label' => esc_html__( 'Separator', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'condition' => [
 					'thousand_separator' => 'yes',
@@ -222,21 +222,21 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'label_block' => true,
 				'separator' => 'before',
 				'dynamic' => [
 					'active' => true,
 				],
-				'default' => esc_html__( 'Cool Number', 'elementor' ),
+				'default' => esc_html__( 'Cool Number', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'title_tag',
 			[
-				'label' => esc_html__( 'Title HTML Tag', 'elementor' ),
+				'label' => esc_html__( 'Title HTML Tag', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'h1' => 'H1',
@@ -261,7 +261,7 @@ class Widget_Counter extends Widget_Base {
 		$this->start_controls_section(
 			'section_counter_style',
 			[
-				'label' => esc_html__( 'Counter', 'elementor' ),
+				'label' => esc_html__( 'Counter', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -269,23 +269,23 @@ class Widget_Counter extends Widget_Base {
 		$this->add_responsive_control(
 			'title_position',
 			[
-				'label' => esc_html__( 'Title Position', 'elementor' ),
+				'label' => esc_html__( 'Title Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'before' => [
-						'title' => esc_html__( 'Before', 'elementor' ),
+						'title' => esc_html__( 'Before', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'after' => [
-						'title' => esc_html__( 'After', 'elementor' ),
+						'title' => esc_html__( 'After', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
@@ -296,9 +296,9 @@ class Widget_Counter extends Widget_Base {
 					'end' => 'flex-direction: row-reverse;',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter' => '{{VALUE}}',
+					'{{WRAPPER}} .refraction-counter' => '{{VALUE}}',
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'condition' => [
 					'title!' => '',
 				],
@@ -308,26 +308,26 @@ class Widget_Counter extends Widget_Base {
 		$this->add_responsive_control(
 			'title_horizontal_alignment',
 			[
-				'label' => esc_html__( 'Title Horizontal Alignment', 'elementor' ),
+				'label' => esc_html__( 'Title Horizontal Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-h-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 				],
 				'separator' => 'before',
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter-title' => 'justify-content: {{VALUE}};',
+					'{{WRAPPER}} .refraction-counter-title' => 'justify-content: {{VALUE}};',
 				],
 				'condition' => [
 					'title!' => '',
@@ -338,24 +338,24 @@ class Widget_Counter extends Widget_Base {
 		$this->add_responsive_control(
 			'title_vertical_alignment',
 			[
-				'label' => esc_html__( 'Title Vertical Alignment', 'elementor' ),
+				'label' => esc_html__( 'Title Vertical Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Top', 'elementor' ),
+						'title' => esc_html__( 'Top', 'refraction' ),
 						'icon' => 'eicon-v-align-top',
 					],
 					'center' => [
-						'title' => esc_html__( 'Middle', 'elementor' ),
+						'title' => esc_html__( 'Middle', 'refraction' ),
 						'icon' => 'eicon-v-align-middle',
 					],
 					'end' => [
-						'title' => esc_html__( 'Bottom', 'elementor' ),
+						'title' => esc_html__( 'Bottom', 'refraction' ),
 						'icon' => 'eicon-v-align-bottom',
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter-title' => 'align-items: {{VALUE}};',
+					'{{WRAPPER}} .refraction-counter-title' => 'align-items: {{VALUE}};',
 				],
 				'condition' => [
 					'title!' => '',
@@ -367,11 +367,11 @@ class Widget_Counter extends Widget_Base {
 		$this->add_responsive_control(
 			'title_gap',
 			[
-				'label' => esc_html__( 'Title Gap', 'elementor' ),
+				'label' => esc_html__( 'Title Gap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter' => 'gap: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-counter' => 'gap: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'title!' => '',
@@ -383,27 +383,27 @@ class Widget_Counter extends Widget_Base {
 		$this->add_responsive_control(
 			'number_position',
 			[
-				'label' => esc_html__( 'Number Position', 'elementor' ),
+				'label' => esc_html__( 'Number Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-h-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-h-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-h-align-right',
 					],
 					'stretch' => [
-						'title' => esc_html__( 'Stretch', 'elementor' ),
+						'title' => esc_html__( 'Stretch', 'refraction' ),
 						'icon' => 'eicon-grow',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors_dictionary' => [
 					'start' => 'text-align: {{VALUE}}; --counter-prefix-grow: 0; --counter-suffix-grow: 1; --counter-number-grow: 0;',
 					'center' => 'text-align: {{VALUE}}; --counter-prefix-grow: 1; --counter-suffix-grow: 1; --counter-number-grow: 0;',
@@ -411,7 +411,7 @@ class Widget_Counter extends Widget_Base {
 					'stretch' => '--counter-prefix-grow: 0; --counter-suffix-grow: 0; --counter-number-grow: 1;',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter-number-wrapper' => '{{VALUE}}',
+					'{{WRAPPER}} .refraction-counter-number-wrapper' => '{{VALUE}}',
 				],
 				'separator' => 'before',
 			]
@@ -420,25 +420,25 @@ class Widget_Counter extends Widget_Base {
 		$this->add_responsive_control(
 			'number_alignment',
 			[
-				'label' => esc_html__( 'Number Alignment', 'elementor' ),
+				'label' => esc_html__( 'Number Alignment', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'start' => [
-						'title' => esc_html__( 'Start', 'elementor' ),
+						'title' => esc_html__( 'Start', 'refraction' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => esc_html__( 'Center', 'refraction' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'end' => [
-						'title' => esc_html__( 'End', 'elementor' ),
+						'title' => esc_html__( 'End', 'refraction' ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
-				'classes' => 'elementor-control-start-end',
+				'classes' => 'refraction-control-start-end',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter-number' => 'text-align: {{VALUE}};',
+					'{{WRAPPER}} .refraction-counter-number' => 'text-align: {{VALUE}};',
 				],
 				'condition' => [
 					'number_position' => 'stretch',
@@ -449,11 +449,11 @@ class Widget_Counter extends Widget_Base {
 		$this->add_responsive_control(
 			'number_gap',
 			[
-				'label' => esc_html__( 'Number Gap', 'elementor' ),
+				'label' => esc_html__( 'Number Gap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter-number-wrapper' => 'gap: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-counter-number-wrapper' => 'gap: {{SIZE}}{{UNIT}};',
 				],
 				'conditions' => [
 					'relation' => 'and',
@@ -488,7 +488,7 @@ class Widget_Counter extends Widget_Base {
 		$this->start_controls_section(
 			'section_number',
 			[
-				'label' => esc_html__( 'Number', 'elementor' ),
+				'label' => esc_html__( 'Number', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -496,13 +496,13 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'number_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter-number-wrapper' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-counter-number-wrapper' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -514,7 +514,7 @@ class Widget_Counter extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
-				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
+				'selector' => '{{WRAPPER}} .refraction-counter-number-wrapper',
 			]
 		);
 
@@ -522,7 +522,7 @@ class Widget_Counter extends Widget_Base {
 			Group_Control_Text_Stroke::get_type(),
 			[
 				'name' => 'number_stroke',
-				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
+				'selector' => '{{WRAPPER}} .refraction-counter-number-wrapper',
 			]
 		);
 
@@ -530,7 +530,7 @@ class Widget_Counter extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'number_shadow',
-				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
+				'selector' => '{{WRAPPER}} .refraction-counter-number-wrapper',
 			]
 		);
 
@@ -539,7 +539,7 @@ class Widget_Counter extends Widget_Base {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => esc_html__( 'Title', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'title!' => '',
@@ -550,13 +550,13 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_SECONDARY,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-counter-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .refraction-counter-title' => 'color: {{VALUE}};',
 				],
 				'condition' => [
 					'title!' => '',
@@ -571,7 +571,7 @@ class Widget_Counter extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_SECONDARY,
 				],
-				'selector' => '{{WRAPPER}} .elementor-counter-title',
+				'selector' => '{{WRAPPER}} .refraction-counter-title',
 				'condition' => [
 					'title!' => '',
 				],
@@ -582,7 +582,7 @@ class Widget_Counter extends Widget_Base {
 			Group_Control_Text_Stroke::get_type(),
 			[
 				'name' => 'title_stroke',
-				'selector' => '{{WRAPPER}} .elementor-counter-title',
+				'selector' => '{{WRAPPER}} .refraction-counter-title',
 				'condition' => [
 					'title!' => '',
 				],
@@ -593,7 +593,7 @@ class Widget_Counter extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'title_shadow',
-				'selector' => '{{WRAPPER}} .elementor-counter-title',
+				'selector' => '{{WRAPPER}} .refraction-counter-title',
 				'condition' => [
 					'title!' => '',
 				],
@@ -614,14 +614,14 @@ class Widget_Counter extends Widget_Base {
 	protected function content_template() {
 		?>
 		<#
-		view.addRenderAttribute( 'elementor-counter', 'class', 'elementor-counter' );
+		view.addRenderAttribute( 'refraction-counter', 'class', 'refraction-counter' );
 
-		view.addRenderAttribute( 'counter-number', 'class', 'elementor-counter-number-wrapper' );
+		view.addRenderAttribute( 'counter-number', 'class', 'refraction-counter-number-wrapper' );
 
 		view.addRenderAttribute(
 			'counter',
 			{
-				'class': 'elementor-counter-number',
+				'class': 'refraction-counter-number',
 				'data-duration': settings.duration,
 				'data-to-value': settings.ending_number,
 				'data-from-value': settings.starting_number,
@@ -633,19 +633,19 @@ class Widget_Counter extends Widget_Base {
 			view.addRenderAttribute( 'counter', 'data-delimiter', delimiter );
 		}
 
-		view.addRenderAttribute( 'prefix', 'class', 'elementor-counter-number-prefix' );
+		view.addRenderAttribute( 'prefix', 'class', 'refraction-counter-number-prefix' );
 
-		view.addRenderAttribute( 'suffix', 'class', 'elementor-counter-number-suffix' );
+		view.addRenderAttribute( 'suffix', 'class', 'refraction-counter-number-suffix' );
 
-		view.addRenderAttribute( 'counter-title', 'class', 'elementor-counter-title' );
+		view.addRenderAttribute( 'counter-title', 'class', 'refraction-counter-title' );
 
 		view.addInlineEditingAttributes( 'counter-title' );
 
-		const titleTag = elementor.helpers.validateHTMLTag( settings.title_tag );
+		const titleTag = refraction.helpers.validateHTMLTag( settings.title_tag );
 		#>
-		<div {{{ view.getRenderAttributeString( 'elementor-counter' ) }}}>
+		<div {{{ view.getRenderAttributeString( 'refraction-counter' ) }}}>
 			<# if ( settings.title ) {
-				#><{{ titleTag }} {{{ view.getRenderAttributeString( 'counter-title' ) }}}>{{{ elementor.helpers.sanitize( settings.title, { ALLOW_DATA_ATTR: false } ) }}}</{{ titleTag }}><#
+				#><{{ titleTag }} {{{ view.getRenderAttributeString( 'counter-title' ) }}}>{{{ refraction.helpers.sanitize( settings.title, { ALLOW_DATA_ATTR: false } ) }}}</{{ titleTag }}><#
 			} #>
 			<div {{{ view.getRenderAttributeString( 'counter-number' ) }}}>
 				<span {{{ view.getRenderAttributeString( 'prefix' ) }}}>{{ settings.prefix }}</span>
@@ -667,14 +667,14 @@ class Widget_Counter extends Widget_Base {
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 
-		$this->add_render_attribute( 'elementor-counter', 'class', 'elementor-counter' );
+		$this->add_render_attribute( 'refraction-counter', 'class', 'refraction-counter' );
 
-		$this->add_render_attribute( 'counter-number', 'class', 'elementor-counter-number-wrapper' );
+		$this->add_render_attribute( 'counter-number', 'class', 'refraction-counter-number-wrapper' );
 
 		$this->add_render_attribute(
 			'counter',
 			[
-				'class' => 'elementor-counter-number',
+				'class' => 'refraction-counter-number',
 				'data-duration' => $settings['duration'],
 				'data-to-value' => $settings['ending_number'],
 				'data-from-value' => $settings['starting_number'],
@@ -686,17 +686,17 @@ class Widget_Counter extends Widget_Base {
 			$this->add_render_attribute( 'counter', 'data-delimiter', $delimiter );
 		}
 
-		$this->add_render_attribute( 'prefix', 'class', 'elementor-counter-number-prefix' );
+		$this->add_render_attribute( 'prefix', 'class', 'refraction-counter-number-prefix' );
 
-		$this->add_render_attribute( 'suffix', 'class', 'elementor-counter-number-suffix' );
+		$this->add_render_attribute( 'suffix', 'class', 'refraction-counter-number-suffix' );
 
-		$this->add_render_attribute( 'counter-title', 'class', 'elementor-counter-title' );
+		$this->add_render_attribute( 'counter-title', 'class', 'refraction-counter-title' );
 
 		$this->add_inline_editing_attributes( 'counter-title' );
 
 		$title_tag = Utils::validate_html_tag( $settings['title_tag'] );
 		?>
-		<div <?php $this->print_render_attribute_string( 'elementor-counter' ); ?>>
+		<div <?php $this->print_render_attribute_string( 'refraction-counter' ); ?>>
 			<?php
 			if ( $settings['title'] ) :
 				?><<?php Utils::print_validated_html_tag( $title_tag ); ?> <?php $this->print_render_attribute_string( 'counter-title' ); ?>><?php echo wp_kses_post( $this->get_settings_for_display( 'title' ) ); ?></<?php Utils::print_validated_html_tag( $title_tag ); ?>><?php

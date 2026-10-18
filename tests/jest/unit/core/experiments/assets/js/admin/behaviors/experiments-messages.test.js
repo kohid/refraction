@@ -1,4 +1,4 @@
-import ExperimentsMessages from 'elementor/core/experiments/assets/js/admin/behaviors/experiments-messages';
+import ExperimentsMessages from 'refraction/core/experiments/assets/js/admin/behaviors/experiments-messages';
 import {
 	mockExperimentsConfig,
 	mockExperimentsForm,

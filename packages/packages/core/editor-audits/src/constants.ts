@@ -4,9 +4,9 @@ import { type AuditCategory } from './types';
 
 export const AUDIT_PANEL_ID = 'audit-panel';
 
-export const REPORT_STORAGE_KEY_PREFIX = 'elementor/audits/report';
+export const REPORT_STORAGE_KEY_PREFIX = 'refraction/audits/report';
 
-export const CREATE_WIDGET_EVENT = 'elementor/editor/create-widget';
+export const CREATE_WIDGET_EVENT = 'refraction/editor/create-widget';
 
 export const ANGIE_FIX_ENTRY_POINT = 'audit_violation';
 
@@ -27,9 +27,9 @@ export const ALL_CATEGORIES: AuditCategory[] = [
 ];
 
 export const CATEGORY_LABELS: Record< AuditCategory, string > = {
-	'best-practices': __( 'Best Practices', 'elementor' ),
-	seo: __( 'SEO', 'elementor' ),
-	accessibility: __( 'Accessibility', 'elementor' ),
-	performance: __( 'Performance', 'elementor' ),
-	compliance: __( 'Site compliance', 'elementor' ),
+	'best-practices': __( 'Best Practices', 'refraction' ),
+	seo: __( 'SEO', 'refraction' ),
+	accessibility: __( 'Accessibility', 'refraction' ),
+	performance: __( 'Performance', 'refraction' ),
+	compliance: __( 'Site compliance', 'refraction' ),
 };

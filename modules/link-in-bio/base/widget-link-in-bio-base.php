@@ -1,17 +1,17 @@
 <?php
 
-namespace Elementor\Modules\LinkInBio\Base;
+namespace Refraction\Modules\LinkInBio\Base;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Providers\Social_Network_Provider;
-use Elementor\Core\Base\Traits\Shared_Widget_Controls_Trait;
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Typography;
-use Elementor\Modules\LinkInBio\Classes\Render\Core_Render;
-use Elementor\Plugin;
-use Elementor\Repeater;
-use Elementor\Utils;
-use Elementor\Widget_Base;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Providers\Social_Network_Provider;
+use Refraction\Core\Base\Traits\Shared_Widget_Controls_Trait;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Typography;
+use Refraction\Modules\LinkInBio\Classes\Render\Core_Render;
+use Refraction\Plugin;
+use Refraction\Repeater;
+use Refraction\Utils;
+use Refraction\Widget_Base;
 
 abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 
@@ -26,7 +26,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 
 		$style_depends = Plugin::$instance->experiments->is_feature_active( 'e_font_icon_svg' )
 			? parent::get_style_depends()
-			: [ 'elementor-icons-fa-solid', 'elementor-icons-fa-brands', 'elementor-icons-fa-regular' ];
+			: [ 'refraction-icons-fa-solid', 'refraction-icons-fa-brands', 'refraction-icons-fa-regular' ];
 
 		$style_depends[] = 'widget-link-in-bio-base';
 
@@ -49,10 +49,10 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 				],
 				'bio_section' => [
 					'title' => [
-						'default' => esc_html__( 'Kitchen Chronicles', 'elementor' ),
+						'default' => esc_html__( 'Kitchen Chronicles', 'refraction' ),
 					],
 					'description' => [
-						'default' => esc_html__( 'Join me on my journey to a healthier lifestyle', 'elementor' ),
+						'default' => esc_html__( 'Join me on my journey to a healthier lifestyle', 'refraction' ),
 					],
 					'has_about_field' => false,
 				],
@@ -85,16 +85,16 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 					'cta_has_image' => false,
 					'cta_repeater_defaults' => [
 						[
-							'cta_link_text' => esc_html__( 'Get Healthy', 'elementor' ),
+							'cta_link_text' => esc_html__( 'Get Healthy', 'refraction' ),
 						],
 						[
-							'cta_link_text' => esc_html__( 'Top 10 Recipes', 'elementor' ),
+							'cta_link_text' => esc_html__( 'Top 10 Recipes', 'refraction' ),
 						],
 						[
-							'cta_link_text' => esc_html__( 'Meal Prep', 'elementor' ),
+							'cta_link_text' => esc_html__( 'Meal Prep', 'refraction' ),
 						],
 						[
-							'cta_link_text' => esc_html__( 'Healthy Living Resources', 'elementor' ),
+							'cta_link_text' => esc_html__( 'Healthy Living Resources', 'refraction' ),
 						],
 					],
 				],
@@ -115,9 +115,9 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 					'has_corners' => [
 						'default' => 'rounded',
 						'options' => [
-							'round' => esc_html__( 'Round', 'elementor' ),
-							'rounded' => esc_html__( 'Rounded', 'elementor' ),
-							'sharp' => esc_html__( 'Sharp', 'elementor' ),
+							'round' => esc_html__( 'Round', 'refraction' ),
+							'rounded' => esc_html__( 'Rounded', 'refraction' ),
+							'sharp' => esc_html__( 'Sharp', 'refraction' ),
 						],
 					],
 					'has_padding' => true,
@@ -176,16 +176,16 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 
 	public function get_image_position_options(): array {
 		return [
-			'' => esc_html__( 'Default', 'elementor' ),
-			'center center' => esc_html__( 'Center Center', 'elementor' ),
-			'center left' => esc_html__( 'Center Left', 'elementor' ),
-			'center right' => esc_html__( 'Center Right', 'elementor' ),
-			'top center' => esc_html__( 'Top Center', 'elementor' ),
-			'top left' => esc_html__( 'Top Left', 'elementor' ),
-			'top right' => esc_html__( 'Top Right', 'elementor' ),
-			'bottom center' => esc_html__( 'Bottom Center', 'elementor' ),
-			'bottom left' => esc_html__( 'Bottom Left', 'elementor' ),
-			'bottom right' => esc_html__( 'Bottom Right', 'elementor' ),
+			'' => esc_html__( 'Default', 'refraction' ),
+			'center center' => esc_html__( 'Center Center', 'refraction' ),
+			'center left' => esc_html__( 'Center Left', 'refraction' ),
+			'center right' => esc_html__( 'Center Right', 'refraction' ),
+			'top center' => esc_html__( 'Top Center', 'refraction' ),
+			'top left' => esc_html__( 'Top Left', 'refraction' ),
+			'top right' => esc_html__( 'Top Right', 'refraction' ),
+			'bottom center' => esc_html__( 'Bottom Center', 'refraction' ),
+			'bottom left' => esc_html__( 'Bottom Left', 'refraction' ),
+			'bottom right' => esc_html__( 'Bottom Right', 'refraction' ),
 		];
 	}
 
@@ -212,7 +212,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$this->start_controls_section(
 			'image_links_section',
 			[
-				'label' => esc_html__( 'Image Links', 'elementor' ),
+				'label' => esc_html__( 'Image Links', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -225,7 +225,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 					'alert_type' => 'info',
 					'content' => sprintf(
 						/* translators: %s: Maximum number of images allowed. */
-						esc_html__( 'Add up to %s Images', 'elementor' ),
+						esc_html__( 'Add up to %s Images', 'refraction' ),
 						'<b>' . $config['content']['image_links_section']['images_max'] . '</b>'
 					),
 				]
@@ -240,7 +240,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 				'3' => '3',
 			],
 			'2',
-			esc_html__( 'Images Per Row', 'elementor' ),
+			esc_html__( 'Images Per Row', 'refraction' ),
 			'--e-link-in-bio-image-links-columns',
 		);
 
@@ -249,7 +249,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'image_links_image',
 			[
-				'label' => esc_html__( 'Choose Image', 'elementor' ),
+				'label' => esc_html__( 'Choose Image', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'label_block' => true,
 				'default' => [
@@ -261,14 +261,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'image_links_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
 				],
 				'autocomplete' => true,
 				'label_block' => true,
-				'placeholder' => esc_html__( 'Paste URL or type', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste URL or type', 'refraction' ),
 				'default' => [
 					'is_external' => true,
 				],
@@ -282,7 +282,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 				'max_items' => $config['content']['image_links_section']['images_max'] ?? 0,
 				'fields' => $repeater->get_controls(),
 				'prevent_empty' => true,
-				'button_text' => esc_html__( 'Add item', 'elementor' ),
+				'button_text' => esc_html__( 'Add item', 'refraction' ),
 				'default' => $config['content']['image_links_section']['images_repeater_defaults'] ?? [],
 			]
 		);
@@ -300,7 +300,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$this->start_controls_section(
 			'cta_section',
 			[
-				'label' => esc_html__( 'CTA Link Buttons', 'elementor' ),
+				'label' => esc_html__( 'CTA Link Buttons', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -313,7 +313,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 					'alert_type' => 'info',
 					'content' => sprintf(
 						/* translators: %s: Maximum number of CTA links allowed. */
-						esc_html__( 'Add up to %s CTA links', 'elementor' ),
+						esc_html__( 'Add up to %s CTA links', 'refraction' ),
 						'<b>' . $config['content']['cta_section']['cta_max'] . '</b>'
 					),
 				]
@@ -325,14 +325,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'cta_link_text',
 			[
-				'label' => esc_html__( 'Text', 'elementor' ),
+				'label' => esc_html__( 'Text', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
 				],
 				'label_block' => true,
-				'default' => esc_html__( 'CTA link', 'elementor' ),
-				'placeholder' => esc_html__( 'Enter link text', 'elementor' ),
+				'default' => esc_html__( 'CTA link', 'refraction' ),
+				'placeholder' => esc_html__( 'Enter link text', 'refraction' ),
 			],
 		);
 
@@ -340,7 +340,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 			$repeater->add_control(
 				'cta_link_image',
 				[
-					'label' => esc_html__( 'Choose Image', 'elementor' ),
+					'label' => esc_html__( 'Choose Image', 'refraction' ),
 					'type' => Controls_Manager::MEDIA,
 					'label_block' => true,
 					'default' => [
@@ -353,7 +353,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'cta_link_type',
 			[
-				'label' => esc_html__( 'Link Type', 'elementor' ),
+				'label' => esc_html__( 'Link Type', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'groups' => [
 
@@ -386,7 +386,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'cta_link_file',
 			[
-				'label' => esc_html__( 'Choose File', 'elementor' ),
+				'label' => esc_html__( 'Choose File', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'label_block' => true,
 				'media_type' => [ 'application/pdf' ],
@@ -404,7 +404,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'cta_link_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -416,7 +416,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 						Social_Network_Provider::URL,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your link', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your link', 'refraction' ),
 				'default' => [
 					'is_external' => true,
 				],
@@ -426,7 +426,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'cta_link_mail',
 			[
-				'label' => esc_html__( 'Mail', 'elementor' ),
+				'label' => esc_html__( 'Mail', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -437,14 +437,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 						Social_Network_Provider::EMAIL,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your email', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your email', 'refraction' ),
 			],
 		);
 
 		$repeater->add_control(
 			'cta_link_mail_subject',
 			[
-				'label' => esc_html__( 'Subject', 'elementor' ),
+				'label' => esc_html__( 'Subject', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -455,14 +455,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 						Social_Network_Provider::EMAIL,
 					],
 				],
-				'placeholder' => esc_html__( 'Subject', 'elementor' ),
+				'placeholder' => esc_html__( 'Subject', 'refraction' ),
 			],
 		);
 
 		$repeater->add_control(
 			'cta_link_mail_body',
 			[
-				'label' => esc_html__( 'Message', 'elementor' ),
+				'label' => esc_html__( 'Message', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
@@ -473,14 +473,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 						Social_Network_Provider::EMAIL,
 					],
 				],
-				'placeholder' => esc_html__( 'Message', 'elementor' ),
+				'placeholder' => esc_html__( 'Message', 'refraction' ),
 			],
 		);
 
 		$repeater->add_control(
 			'cta_link_number',
 			[
-				'label' => esc_html__( 'Number', 'elementor' ),
+				'label' => esc_html__( 'Number', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -492,14 +492,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 						Social_Network_Provider::WHATSAPP,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your number', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your number', 'refraction' ),
 			],
 		);
 
 		$repeater->add_control(
 			'cta_link_location',
 			[
-				'label' => esc_html__( 'Location', 'elementor' ),
+				'label' => esc_html__( 'Location', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -513,14 +513,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 						Social_Network_Provider::WAZE,
 					],
 				],
-				'placeholder' => esc_html__( 'Paste Waze link', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste Waze link', 'refraction' ),
 			],
 		);
 
 		$repeater->add_control(
 			'cta_link_username',
 			[
-				'label' => esc_html__( 'Username', 'elementor' ),
+				'label' => esc_html__( 'Username', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -531,7 +531,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 						Social_Network_Provider::MESSENGER,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your username', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your username', 'refraction' ),
 			],
 		);
 
@@ -542,7 +542,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 				'max_items' => $config['content']['cta_section']['cta_max'] ?? 0,
 				'fields' => $repeater->get_controls(),
 				'title_field' => '{{{ cta_link_text }}}',
-				'button_text' => esc_html__( 'Add CTA Link', 'elementor' ),
+				'button_text' => esc_html__( 'Add CTA Link', 'refraction' ),
 				'default' => $config['content']['cta_section']['cta_repeater_defaults'],
 			]
 		);
@@ -556,7 +556,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$this->start_controls_section(
 			'icons_section',
 			[
-				'label' => esc_html__( 'Icons', 'elementor' ),
+				'label' => esc_html__( 'Icons', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -569,7 +569,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 					'alert_type' => 'info',
 					'content' => sprintf(
 						/* translators: %s: Maximum number of icons allowed. */
-						esc_html__( 'Add up to %s icons', 'elementor' ),
+						esc_html__( 'Add up to %s icons', 'refraction' ),
 						'<b>' . $config['content']['icon_section']['platform']['limit'] . '</b>'
 					),
 				]
@@ -582,12 +582,12 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 			$repeater->add_control(
 				'icon_text',
 				[
-					'label' => esc_html__( 'Text', 'elementor' ),
+					'label' => esc_html__( 'Text', 'refraction' ),
 					'type' => Controls_Manager::TEXT,
 					'dynamic' => [
 						'active' => true,
 					],
-					'placeholder' => esc_html__( 'Enter icon text', 'elementor' ),
+					'placeholder' => esc_html__( 'Enter icon text', 'refraction' ),
 				],
 			);
 		}
@@ -595,7 +595,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_platform',
 			[
-				'label' => esc_html__( 'Platform', 'elementor' ),
+				'label' => esc_html__( 'Platform', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'groups' => [
 
@@ -640,14 +640,14 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
 				],
 				'autocomplete' => true,
 				'label_block' => true,
-				'placeholder' => esc_html__( 'Enter your link', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your link', 'refraction' ),
 				'default' => [
 					'is_external' => true,
 				],
@@ -677,9 +677,9 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_mail',
 			[
-				'label' => esc_html__( 'Email', 'elementor' ),
+				'label' => esc_html__( 'Email', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'placeholder' => esc_html__( 'Enter your email', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your email', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -698,9 +698,9 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_mail_subject',
 			[
-				'label' => esc_html__( 'Subject', 'elementor' ),
+				'label' => esc_html__( 'Subject', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
-				'placeholder' => esc_html__( 'Subject', 'elementor' ),
+				'placeholder' => esc_html__( 'Subject', 'refraction' ),
 				'label_block' => true,
 				'condition' => [
 					'icon_platform' => [
@@ -713,9 +713,9 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_mail_body',
 			[
-				'label' => esc_html__( 'Message', 'elementor' ),
+				'label' => esc_html__( 'Message', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'placeholder' => esc_html__( 'Message', 'elementor' ),
+				'placeholder' => esc_html__( 'Message', 'refraction' ),
 				'label_block' => true,
 				'condition' => [
 					'icon_platform' => [
@@ -728,13 +728,13 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_number',
 			[
-				'label' => esc_html__( 'Number', 'elementor' ),
+				'label' => esc_html__( 'Number', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( '+', 'elementor' ),
+				'placeholder' => esc_html__( '+', 'refraction' ),
 				'condition' => [
 					'icon_platform' => [
 						Social_Network_Provider::TELEPHONE,
@@ -750,7 +750,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_location',
 			[
-				'label' => esc_html__( 'Location', 'elementor' ),
+				'label' => esc_html__( 'Location', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -759,7 +759,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 					'is_external' => true,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( 'Paste Waze link', 'elementor' ),
+				'placeholder' => esc_html__( 'Paste Waze link', 'refraction' ),
 				'condition' => [
 					'icon_platform' => [
 						Social_Network_Provider::WAZE,
@@ -774,13 +774,13 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 		$repeater->add_control(
 			'icon_username',
 			[
-				'label' => esc_html__( 'Username', 'elementor' ),
+				'label' => esc_html__( 'Username', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
 				],
 				'label_block' => true,
-				'placeholder' => esc_html__( 'Enter your username', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your username', 'refraction' ),
 				'condition' => [
 					'icon_platform' => [
 						Social_Network_Provider::MESSENGER,
@@ -797,7 +797,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 				'fields' => $repeater->get_controls(),
 				'title_field' => $this->get_icon_title_field(),
 				'prevent_empty' => true,
-				'button_text' => esc_html__( 'Add Icon', 'elementor' ),
+				'button_text' => esc_html__( 'Add Icon', 'refraction' ),
 				'default' => $config['content']['icon_section']['default'],
 			]
 		);
@@ -810,8 +810,8 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 
 		return <<<JS
 	<#
-	elementor.helpers.enqueueIconFonts( 'fa-solid' );
-	elementor.helpers.enqueueIconFonts( 'fa-brands' );
+	refraction.helpers.enqueueIconFonts( 'fa-solid' );
+	refraction.helpers.enqueueIconFonts( 'fa-brands' );
 	const mapping = {$platform_icons_js};
 	#>
 	<i class='{{{ mapping[icon_platform] }}}' ></i> {{{ icon_platform }}}
@@ -838,7 +838,7 @@ JS;
 		$this->start_controls_section(
 			'bio_section',
 			[
-				'label' => esc_html__( 'Bio', 'elementor' ),
+				'label' => esc_html__( 'Bio', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -846,13 +846,13 @@ JS;
 		$this->add_control(
 			'bio_heading',
 			[
-				'label' => esc_html__( 'Heading', 'elementor' ),
+				'label' => esc_html__( 'Heading', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Heading', 'elementor' ),
-				'default' => esc_html__( 'Sara Parker', 'elementor' ),
+				'placeholder' => esc_html__( 'Heading', 'refraction' ),
+				'default' => esc_html__( 'Sara Parker', 'refraction' ),
 			]
 		);
 
@@ -861,12 +861,12 @@ JS;
 		$this->add_control(
 			'bio_title',
 			[
-				'label' => esc_html__( 'Title or Tagline', 'elementor' ),
+				'label' => esc_html__( 'Title or Tagline', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Title', 'elementor' ),
+				'placeholder' => esc_html__( 'Title', 'refraction' ),
 				'default' => $config['content']['bio_section']['title']['default'],
 			]
 		);
@@ -877,13 +877,13 @@ JS;
 			$this->add_control(
 				'bio_about',
 				[
-					'label' => esc_html__( 'About Heading', 'elementor' ),
+					'label' => esc_html__( 'About Heading', 'refraction' ),
 					'type' => Controls_Manager::TEXTAREA,
 					'dynamic' => [
 						'active' => true,
 					],
-					'placeholder' => esc_html__( 'About', 'elementor' ),
-					'default' => esc_html__( 'About Me', 'elementor' ),
+					'placeholder' => esc_html__( 'About', 'refraction' ),
+					'default' => esc_html__( 'About Me', 'refraction' ),
 				]
 			);
 			$this->add_html_tag_control( 'bio_about_tag', 'h3' );
@@ -892,12 +892,12 @@ JS;
 		$this->add_control(
 			'bio_description',
 			[
-				'label' => esc_html__( 'Description', 'elementor' ),
+				'label' => esc_html__( 'Description', 'refraction' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Description', 'elementor' ),
+				'placeholder' => esc_html__( 'Description', 'refraction' ),
 				'default' => $config['content']['bio_section']['description']['default'],
 			]
 		);
@@ -911,7 +911,7 @@ JS;
 		$this->start_controls_section(
 			'identity_section',
 			[
-				'label' => esc_html__( 'Identity', 'elementor' ),
+				'label' => esc_html__( 'Identity', 'refraction' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -920,7 +920,7 @@ JS;
 			$this->add_control(
 				'identity_heading_cover',
 				[
-					'label' => esc_html__( 'Cover', 'elementor' ),
+					'label' => esc_html__( 'Cover', 'refraction' ),
 					'type' => Controls_Manager::HEADING,
 					'separator' => 'before',
 				]
@@ -929,7 +929,7 @@ JS;
 			$this->add_control(
 				'identity_image_cover',
 				[
-					'label' => esc_html__( 'Choose Image', 'elementor' ),
+					'label' => esc_html__( 'Choose Image', 'refraction' ),
 					'type' => Controls_Manager::MEDIA,
 					'default' => [
 						'url' => Utils::get_placeholder_image_src(),
@@ -940,7 +940,7 @@ JS;
 			$this->add_responsive_control(
 				'identity_image_cover_position',
 				[
-					'label' => esc_html__( 'Position', 'elementor' ),
+					'label' => esc_html__( 'Position', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'desktop_default' => 'center center',
 					'tablet_default' => 'center center',
@@ -970,12 +970,12 @@ JS;
 			$this->add_control(
 				'identity_image_style',
 				[
-					'label' => esc_html__( 'Image style', 'elementor' ),
+					'label' => esc_html__( 'Image style', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => $config['content']['identity_section']['identity_image_style']['default'],
 					'options' => [
-						'profile' => esc_html__( 'Profile', 'elementor' ),
-						'cover' => esc_html__( 'Cover', 'elementor' ),
+						'profile' => esc_html__( 'Profile', 'refraction' ),
+						'cover' => esc_html__( 'Cover', 'refraction' ),
 					],
 				]
 			);
@@ -984,7 +984,7 @@ JS;
 		$this->add_control(
 			'identity_image',
 			[
-				'label' => esc_html__( 'Choose Image', 'elementor' ),
+				'label' => esc_html__( 'Choose Image', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'default' => [
 					'url' => Utils::get_placeholder_image_src(),
@@ -995,7 +995,7 @@ JS;
 		$this->add_responsive_control(
 			'identity_image_position',
 			[
-				'label' => esc_html__( 'Position', 'elementor' ),
+				'label' => esc_html__( 'Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'desktop_default' => 'center center',
 				'tablet_default' => 'center center',
@@ -1023,7 +1023,7 @@ JS;
 		$this->start_controls_section(
 			'image_links_section_style',
 			[
-				'label' => esc_html__( 'Image Links', 'elementor' ),
+				'label' => esc_html__( 'Image Links', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1031,7 +1031,7 @@ JS;
 		$this->add_responsive_control(
 			'image_links_height',
 			[
-				'label' => esc_html__( 'Image Height', 'elementor' ) . ' (px)',
+				'label' => esc_html__( 'Image Height', 'refraction' ) . ' (px)',
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px' ],
 				'range' => [
@@ -1072,7 +1072,7 @@ JS;
 		$this->start_controls_section(
 			'cta_links_section_style',
 			[
-				'label' => esc_html__( 'CTA Link Buttons', 'elementor' ),
+				'label' => esc_html__( 'CTA Link Buttons', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1091,12 +1091,12 @@ JS;
 			$this->add_control(
 				'cta_links_type',
 				[
-					'label' => esc_html__( 'Type', 'elementor' ),
+					'label' => esc_html__( 'Type', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => $config['style']['cta_section']['has_link_type']['default'],
 					'options' => [
-						'button' => esc_html__( 'Button', 'elementor' ),
-						'link' => esc_html__( 'Link', 'elementor' ),
+						'button' => esc_html__( 'Button', 'refraction' ),
+						'link' => esc_html__( 'Link', 'refraction' ),
 					],
 				]
 			);
@@ -1105,7 +1105,7 @@ JS;
 		$this->add_control(
 			'cta_links_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-link-in-bio' => '--e-link-in-bio-ctas-text-color: {{VALUE}}',
@@ -1125,7 +1125,7 @@ JS;
 			$this->add_control(
 				'cta_links_background_color',
 				[
-					'label' => esc_html__( 'Background Color', 'elementor' ),
+					'label' => esc_html__( 'Background Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'condition' => $condition_if_has_links,
 					'selectors' => [
@@ -1156,7 +1156,7 @@ JS;
 			$this->add_control(
 				'cta_links_corners',
 				[
-					'label' => esc_html__( 'Corners', 'elementor' ),
+					'label' => esc_html__( 'Corners', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => $config['style']['cta_section']['has_corners']['default'],
 					'options' => $config['style']['cta_section']['has_corners']['options'],
@@ -1176,7 +1176,7 @@ JS;
 			$this->add_responsive_control(
 				'cta_links_padding',
 				[
-					'label' => esc_html__( 'Padding', 'elementor' ),
+					'label' => esc_html__( 'Padding', 'refraction' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%', 'em', 'rem' ],
 					'default' => [
@@ -1196,7 +1196,7 @@ JS;
 				'cta_links_hr',
 				[
 					'type' => Controls_Manager::HEADING,
-					'label' => esc_html__( 'Dividers', 'elementor' ),
+					'label' => esc_html__( 'Dividers', 'refraction' ),
 					'separator' => 'before',
 				]
 			);
@@ -1204,7 +1204,7 @@ JS;
 			$this->add_control(
 				'cta_links_divider_color',
 				[
-					'label' => esc_html__( 'Color', 'elementor' ),
+					'label' => esc_html__( 'Color', 'refraction' ),
 					'type' => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{WRAPPER}} .e-link-in-bio__cta' => 'border-bottom-color: {{VALUE}}',
@@ -1215,7 +1215,7 @@ JS;
 			$this->add_control(
 				'cta_links_divider_width',
 				[
-					'label' => esc_html__( 'Weight', 'elementor' ) . ' (px)',
+					'label' => esc_html__( 'Weight', 'refraction' ) . ' (px)',
 					'type' => Controls_Manager::SLIDER,
 					'size_units' => [ 'px' ],
 					'range' => [
@@ -1244,7 +1244,7 @@ JS;
 		$this->start_controls_section(
 			'identity_section_style',
 			[
-				'label' => esc_html__( 'Identity', 'elementor' ),
+				'label' => esc_html__( 'Identity', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1284,7 +1284,7 @@ JS;
 		$this->start_controls_section(
 			'bio_section_style',
 			[
-				'label' => esc_html__( 'Bio', 'elementor' ),
+				'label' => esc_html__( 'Bio', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1292,7 +1292,7 @@ JS;
 		$this->add_control(
 			'bio_heading_heading',
 			[
-				'label' => esc_html__( 'Heading', 'elementor' ),
+				'label' => esc_html__( 'Heading', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1301,7 +1301,7 @@ JS;
 		$this->add_control(
 			'bio_heading_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-link-in-bio' => '--e-link-in-bio-heading-color: {{VALUE}}',
@@ -1320,7 +1320,7 @@ JS;
 		$this->add_control(
 			'bio_title_heading',
 			[
-				'label' => esc_html__( 'Title or Tagline', 'elementor' ),
+				'label' => esc_html__( 'Title or Tagline', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1329,7 +1329,7 @@ JS;
 		$this->add_control(
 			'bio_title_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-link-in-bio' => '--e-link-in-bio-title-color: {{VALUE}}',
@@ -1348,7 +1348,7 @@ JS;
 		$this->add_control(
 			'bio_description_heading',
 			[
-				'label' => esc_html__( 'Description', 'elementor' ),
+				'label' => esc_html__( 'Description', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1357,7 +1357,7 @@ JS;
 		$this->add_control(
 			'bio_description_text_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-link-in-bio' => '--e-link-in-bio-description-color: {{VALUE}}',
@@ -1381,7 +1381,7 @@ JS;
 		$this->start_controls_section(
 			'icons_section_style',
 			[
-				'label' => esc_html__( 'Icons', 'elementor' ),
+				'label' => esc_html__( 'Icons', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1389,7 +1389,7 @@ JS;
 		$this->add_control(
 			'icons_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .e-link-in-bio' => '--e-link-in-bio-icon-color: {{VALUE}}',
@@ -1400,13 +1400,13 @@ JS;
 		$this->add_control(
 			'icons_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'small',
 				'options' => [
-					'small' => esc_html__( 'Small', 'elementor' ),
-					'medium' => esc_html__( 'Medium', 'elementor' ),
-					'large' => esc_html__( 'Large', 'elementor' ),
+					'small' => esc_html__( 'Small', 'refraction' ),
+					'medium' => esc_html__( 'Medium', 'refraction' ),
+					'large' => esc_html__( 'Large', 'refraction' ),
 				],
 			]
 		);
@@ -1453,7 +1453,7 @@ JS;
 		$this->start_controls_section(
 			'background_border_section_style',
 			[
-				'label' => esc_html__( 'Box', 'elementor' ),
+				'label' => esc_html__( 'Box', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1461,7 +1461,7 @@ JS;
 		$this->add_control(
 			'background_border_background',
 			[
-				'label' => esc_html__( 'Background', 'elementor' ),
+				'label' => esc_html__( 'Background', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1480,7 +1480,7 @@ JS;
 		$this->add_control(
 			'background_border_background_overlay',
 			[
-				'label' => esc_html__( 'Background Overlay', 'elementor' ),
+				'label' => esc_html__( 'Background Overlay', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1499,7 +1499,7 @@ JS;
 		$this->add_responsive_control(
 			'background_overlay_opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'elementor' ),
+				'label' => esc_html__( 'Opacity', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [
 					'%' => [
@@ -1542,7 +1542,7 @@ JS;
 		$this->add_control(
 			'background_dimensions',
 			[
-				'label' => esc_html__( 'Dimensions', 'elementor' ),
+				'label' => esc_html__( 'Dimensions', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -1551,10 +1551,10 @@ JS;
 		$this->add_control(
 			'advanced_layout_full_width_custom',
 			[
-				'label' => esc_html__( 'Full Width', 'elementor' ),
+				'label' => esc_html__( 'Full Width', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'default' => '',
 			]
 		);
@@ -1562,7 +1562,7 @@ JS;
 		$this->add_responsive_control(
 			'advanced_layout_width',
 			[
-				'label' => esc_html__( 'Layout Width', 'elementor' ) . ' (px)',
+				'label' => esc_html__( 'Layout Width', 'refraction' ) . ' (px)',
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px' ],
 				'range' => [
@@ -1587,7 +1587,7 @@ JS;
 		$this->add_responsive_control(
 			'advanced_layout_content_width',
 			[
-				'label' => esc_html__( 'Content Width', 'elementor' ) . ' (px)',
+				'label' => esc_html__( 'Content Width', 'refraction' ) . ' (px)',
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px' ],
 				'range' => [
@@ -1609,10 +1609,10 @@ JS;
 		$this->add_control(
 			'advanced_layout_full_screen_height',
 			[
-				'label' => esc_html__( 'Full Screen Height', 'elementor' ),
+				'label' => esc_html__( 'Full Screen Height', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor' ),
-				'label_off' => esc_html__( 'No', 'elementor' ),
+				'label_on' => esc_html__( 'Yes', 'refraction' ),
+				'label_off' => esc_html__( 'No', 'refraction' ),
 				'return_value' => 'yes',
 				'default' => '',
 				'condition' => [
@@ -1626,7 +1626,7 @@ JS;
 		$this->add_control(
 			'advanced_layout_full_screen_height_controls',
 			[
-				'label' => esc_html__( 'Apply Full Screen Height on', 'elementor' ),
+				'label' => esc_html__( 'Apply Full Screen Height on', 'refraction' ),
 				'type' => Controls_Manager::SELECT2,
 				'label_block' => true,
 				'multiple' => true,
@@ -1648,7 +1648,7 @@ JS;
 		$this->add_responsive_control(
 			'identity_image_size',
 			[
-				'label' => esc_html__( 'Image Size', 'elementor' ),
+				'label' => esc_html__( 'Image Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
@@ -1671,12 +1671,12 @@ JS;
 			$this->add_control(
 				'identity_image_shape',
 				[
-					'label' => esc_html__( 'Image Shape', 'elementor' ),
+					'label' => esc_html__( 'Image Shape', 'refraction' ),
 					'type' => Controls_Manager::SELECT,
 					'default' => 'circle',
 					'options' => [
-						'circle' => esc_html__( 'Circle', 'elementor' ),
-						'square' => esc_html__( 'Square', 'elementor' ),
+						'circle' => esc_html__( 'Circle', 'refraction' ),
+						'square' => esc_html__( 'Square', 'refraction' ),
 					],
 					'condition' => $condition,
 				]
@@ -1707,7 +1707,7 @@ JS;
 		$this->add_responsive_control(
 			'identity_image_height',
 			[
-				'label' => esc_html__( 'Image Height', 'elementor' ),
+				'label' => esc_html__( 'Image Height', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -1735,7 +1735,7 @@ JS;
 			'identity_image_bottom',
 			[
 				'condition' => $condition,
-				'label' => esc_html__( 'Bottom Border', 'elementor' ),
+				'label' => esc_html__( 'Bottom Border', 'refraction' ),
 			],
 			[
 				'condition' => $condition,

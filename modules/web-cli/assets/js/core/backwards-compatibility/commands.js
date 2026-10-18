@@ -1,5 +1,5 @@
-import Module from 'elementor-assets-js/modules/imports/module.js';
-import Deprecation from 'elementor-api/utils/deprecation';
+import Module from 'refraction-assets-js/modules/imports/module.js';
+import Deprecation from 'refraction-api/utils/deprecation';
 
 export default class CommandsBackwardsCompatibility extends Module {
 	__construct() {

@@ -1,10 +1,10 @@
-import type { StyleDefinition } from '@elementor/editor-styles';
+import type { StyleDefinition } from '@refraction/editor-styles';
 import {
 	createStylesProvider,
 	type CreateStylesProviderOptions,
 	type StylesCollection,
 	type UpdateActionPayload,
-} from '@elementor/editor-styles-repository';
+} from '@refraction/editor-styles-repository';
 
 type CreateMockProviderArgs = Omit< Partial< CreateStylesProviderOptions >, 'subscribe' | 'actions' > & {
 	actions?: Partial< CreateStylesProviderOptions[ 'actions' ] >;

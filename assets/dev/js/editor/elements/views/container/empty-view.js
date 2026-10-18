@@ -1,5 +1,5 @@
-import ReactUtils from 'elementor-utils/react';
-import EmptyComponent from 'elementor-elements/views/container/empty-component';
+import ReactUtils from 'refraction-utils/react';
+import EmptyComponent from 'refraction-elements/views/container/empty-component';
 
 /**
  * This empty view used when the container is empty, then it writes React component into the view.
@@ -9,7 +9,7 @@ import EmptyComponent from 'elementor-elements/views/container/empty-component';
 export default class EmptyView extends Marionette.ItemView {
 	template = '<div></div>';
 
-	className = 'elementor-empty-view';
+	className = 'refraction-empty-view';
 
 	initialize( options ) {
 		super.initialize( options );
@@ -22,10 +22,10 @@ export default class EmptyView extends Marionette.ItemView {
 
 		let defaultElement;
 
-		// If the emptyView is parent of widget. then the emptyView can be searched for in `elementor.elementsManager`,
+		// If the emptyView is parent of widget. then the emptyView can be searched for in `refraction.elementsManager`,
 		// according to the `widgetType`.
 		if ( 'widget' === parent.model.get( 'elType' ) ) {
-			const elementType = elementor.elementsManager.getElementTypeClass( parent.model.get( 'widgetType' ) );
+			const elementType = refraction.elementsManager.getElementTypeClass( parent.model.get( 'widgetType' ) );
 
 			if ( elementType ) {
 				const Type = elementType.getEmptyView();

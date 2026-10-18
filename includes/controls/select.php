@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor select control.
+ * Refraction select control.
  *
  * A base control for creating select control. Displays a simple select box.
  * It accepts an array in which the `key` is the option value and the `value` is
@@ -59,11 +59,11 @@ class Control_Select extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field {{ data.content_classes }}">
+		<div class="refraction-control-field {{ data.content_classes }}">
 			<# if ( data.label ) {#>
-				<label for="<?php $this->print_control_uid(); ?>" class="elementor-control-title">{{{ data.label }}}</label>
+				<label for="<?php $this->print_control_uid(); ?>" class="refraction-control-title">{{{ data.label }}}</label>
 			<# } #>
-			<div class="elementor-control-input-wrapper elementor-control-unit-5">
+			<div class="refraction-control-input-wrapper refraction-control-unit-5">
 				<select id="<?php $this->print_control_uid(); ?>" data-setting="{{ data.name }}">
 				<#
 					var printOptions = function( options ) {
@@ -92,7 +92,7 @@ class Control_Select extends Base_Data_Control {
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

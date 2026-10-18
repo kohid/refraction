@@ -1,4 +1,4 @@
-import { toolPrompts } from '@elementor/editor-mcp';
+import { toolPrompts } from '@refraction/editor-mcp';
 
 export const findIconsToolPrompt = toolPrompts( 'find-icons' );
 

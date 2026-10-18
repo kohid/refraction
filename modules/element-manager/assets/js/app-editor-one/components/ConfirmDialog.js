@@ -15,13 +15,13 @@ export const ConfirmDialog = ( { isOpen, onClose, onConfirm } ) => {
 	return (
 		<Dialog open={ isOpen } onClose={ onClose } maxWidth="sm">
 			<DialogTitle>
-				{ __( 'Sure you want to save these changes?', 'elementor' ) }
+				{ __( 'Sure you want to save these changes?', 'refraction' ) }
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
-					{ __( 'Turning widgets off will hide them from the editor panel, and can potentially affect your layout or front-end.', 'elementor' ) }
+					{ __( 'Turning widgets off will hide them from the editor panel, and can potentially affect your layout or front-end.', 'refraction' ) }
 					<Box component="span" sx={ { display: 'block', mt: 2.5 } }>
-						{ __( 'If you\'re adding widgets back in, enjoy them!', 'elementor' ) }
+						{ __( 'If you\'re adding widgets back in, enjoy them!', 'refraction' ) }
 					</Box>
 				</DialogContentText>
 			</DialogContent>
@@ -31,16 +31,16 @@ export const ConfirmDialog = ( { isOpen, onClose, onConfirm } ) => {
 						variant="outlined"
 						color="secondary"
 						onClick={ onClose }
-						className="e-id-elementor-element-manager-modal-button-cancel"
+						className="e-id-refraction-element-manager-modal-button-cancel"
 					>
-						{ __( 'Cancel', 'elementor' ) }
+						{ __( 'Cancel', 'refraction' ) }
 					</Button>
 					<Button
 						variant="contained"
 						onClick={ onConfirm }
-						className="e-id-elementor-element-manager-modal-button-save"
+						className="e-id-refraction-element-manager-modal-button-save"
 					>
-						{ __( 'Save', 'elementor' ) }
+						{ __( 'Save', 'refraction' ) }
 					</Button>
 				</Stack>
 			</DialogActions>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { forwardRef } from 'react';
-import type { PropValue } from '@elementor/editor-props';
+import type { PropValue } from '@refraction/editor-props';
 import type { TextFieldProps } from '@elementor/ui';
 
 import { NumberInput } from '../../../components/number-input';

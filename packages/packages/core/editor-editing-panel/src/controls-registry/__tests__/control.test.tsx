@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { createMockPropType, renderWithTheme } from 'test-utils';
-import { type ControlComponent, useBoundProp } from '@elementor/editor-controls';
+import { type ControlComponent, useBoundProp } from '@refraction/editor-controls';
 import { screen } from '@testing-library/react';
 
 import { ElementProvider } from '../../contexts/element-context';
 import { Control } from '../control';
 import { controlsRegistry, type ControlType } from '../controls-registry';
 
-jest.mock( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls' );
 
 jest.mocked( useBoundProp ).mockReturnValue( {
 	value: 'value',

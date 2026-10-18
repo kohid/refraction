@@ -54,7 +54,7 @@ export const Settings = () => {
 				} );
 
 				QUnit.test( 'Post Settings', ( assert ) => {
-					const eDocument = elementor.getPreviewContainer(),
+					const eDocument = refraction.getPreviewContainer(),
 						settings = {
 							padding: {
 								top: '50',

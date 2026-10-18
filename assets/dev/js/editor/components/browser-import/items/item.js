@@ -62,7 +62,7 @@ export default class Item {
 	 */
 	static createFileName( blob ) {
 		return [
-			elementorCommon.helpers.getUniqueId(),
+			refractionCommon.helpers.getUniqueId(),
 			Mime.getExtension( blob.type ),
 		].join( '.' );
 	}

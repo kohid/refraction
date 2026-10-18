@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Modules\MarkdownRender;
+namespace Refraction\Modules\MarkdownRender;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Core\Frontend\Widget_Content_Render_Mode;
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Utils;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Core\Frontend\Widget_Content_Render_Mode;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Module extends BaseModule {
 
 	const EXPERIMENT_NAME = 'markdown_rendering';
-	const CACHE_META_KEY = '_elementor_markdown_cache';
+	const CACHE_META_KEY = '_refraction_markdown_cache';
 
 	public static function is_rendering_markdown(): bool {
 		return Widget_Content_Render_Mode::is( Widget_Content_Render_Mode::MARKDOWN );
@@ -40,8 +40,8 @@ class Module extends BaseModule {
 	public static function get_experimental_data() {
 		return [
 			'name' => self::EXPERIMENT_NAME,
-			'title' => esc_html__( 'Generate website markdown', 'elementor' ),
-			'description' => esc_html__( 'Serve your pages as Markdown files so AI agents can ingest and understand your content more efficiently.', 'elementor' ),
+			'title' => esc_html__( 'Generate website markdown', 'refraction' ),
+			'description' => esc_html__( 'Serve your pages as Markdown files so AI agents can ingest and understand your content more efficiently.', 'refraction' ),
 			'default' => Experiments_Manager::STATE_INACTIVE,
 			'release_status' => Experiments_Manager::RELEASE_STATUS_ALPHA,
 		];
@@ -52,7 +52,7 @@ class Module extends BaseModule {
 
 		add_action( 'template_redirect', [ $this, 'maybe_serve_markdown' ], 1 );
 
-		add_action( 'elementor/core/files/clear_cache', [ $this, 'clear_all_markdown_cache' ] );
+		add_action( 'refraction/core/files/clear_cache', [ $this, 'clear_all_markdown_cache' ] );
 		add_action( 'save_post', [ $this, 'clear_post_markdown_cache' ] );
 		add_action( 'activated_plugin', [ $this, 'clear_all_markdown_cache' ] );
 		add_action( 'deactivated_plugin', [ $this, 'clear_all_markdown_cache' ] );
@@ -60,7 +60,7 @@ class Module extends BaseModule {
 
 		if ( is_admin() ) {
 			add_action(
-				'elementor/admin/after_create_settings/' . Settings::PAGE_ID,
+				'refraction/admin/after_create_settings/' . Settings::PAGE_ID,
 				[ $this, 'register_admin_fields' ],
 				100
 			);
@@ -106,11 +106,11 @@ class Module extends BaseModule {
 		 * @param bool     $should_serve Whether markdown-render should attempt to serve.
 		 * @param \WP_Post $post         The current post.
 		 */
-		if ( false === apply_filters( 'elementor/markdown/should_serve', true, $post ) ) {
+		if ( false === apply_filters( 'refraction/markdown/should_serve', true, $post ) ) {
 			return;
 		}
 
-		if ( ! $document || ! $document->is_built_with_elementor() ) {
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
 			return;
 		}
 
@@ -133,7 +133,7 @@ class Module extends BaseModule {
 			 *
 			 * @param int $post_id The post being served.
 			 */
-			do_action( 'elementor/markdown/headers', $post_id );
+			do_action( 'refraction/markdown/headers', $post_id );
 			status_header( 200 );
 			header( 'Content-Type: text/markdown; charset=utf-8' );
 			header( 'X-Content-Type-Options: nosniff' );
@@ -182,7 +182,7 @@ class Module extends BaseModule {
 	}
 
 	private function set_cached_markdown( int $post_id, string $markdown ): void {
-		$ttl_hours = (int) get_option( 'elementor_markdown_cache_ttl', 24 );
+		$ttl_hours = (int) get_option( 'refraction_markdown_cache_ttl', 24 );
 
 		if ( $ttl_hours <= 0 ) {
 			return;
@@ -211,22 +211,22 @@ class Module extends BaseModule {
 			Settings::TAB_PERFORMANCE,
 			'markdown_cache_ttl',
 			[
-				'label' => esc_html__( 'Markdown Cache', 'elementor' ),
+				'label' => esc_html__( 'Markdown Cache', 'refraction' ),
 				'field_args' => [
-					'class' => 'elementor-markdown-cache-ttl',
+					'class' => 'refraction-markdown-cache-ttl',
 					'type' => 'select',
 					'std' => '24',
 					'options' => [
-						'0' => esc_html__( 'Disable', 'elementor' ),
-						'1' => esc_html__( '1 Hour', 'elementor' ),
-						'6' => esc_html__( '6 Hours', 'elementor' ),
-						'12' => esc_html__( '12 Hours', 'elementor' ),
-						'24' => esc_html__( '1 Day', 'elementor' ),
-						'72' => esc_html__( '3 Days', 'elementor' ),
-						'168' => esc_html__( '1 Week', 'elementor' ),
-						'720' => esc_html__( '1 Month', 'elementor' ),
+						'0' => esc_html__( 'Disable', 'refraction' ),
+						'1' => esc_html__( '1 Hour', 'refraction' ),
+						'6' => esc_html__( '6 Hours', 'refraction' ),
+						'12' => esc_html__( '12 Hours', 'refraction' ),
+						'24' => esc_html__( '1 Day', 'refraction' ),
+						'72' => esc_html__( '3 Days', 'refraction' ),
+						'168' => esc_html__( '1 Week', 'refraction' ),
+						'720' => esc_html__( '1 Month', 'refraction' ),
 					],
-					'desc' => esc_html__( 'Specify the duration for which Markdown output is cached. This cache is served to AI crawlers requesting text/markdown content.', 'elementor' ),
+					'desc' => esc_html__( 'Specify the duration for which Markdown output is cached. This cache is served to AI crawlers requesting text/markdown content.', 'refraction' ),
 				],
 			]
 		);

@@ -1,4 +1,4 @@
-import { type ControlComponent } from '@elementor/editor-controls';
+import { type ControlComponent } from '@refraction/editor-controls';
 
 import { type ControlRegistry, controlsRegistry } from '../controls-registry';
 import { AccordionItemsControl } from './accordion-items-control/accordion-items-control';

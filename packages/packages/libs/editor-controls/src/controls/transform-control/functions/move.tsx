@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type RefObject, useRef } from 'react';
-import { moveTransformPropTypeUtil } from '@elementor/editor-props';
+import { moveTransformPropTypeUtil } from '@refraction/editor-props';
 import { ArrowDownLeftIcon, ArrowDownSmallIcon, ArrowRightIcon } from '@elementor/icons';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
@@ -14,19 +14,19 @@ type Control = { label: string; bind: 'x' | 'y' | 'z'; startIcon: React.ReactNod
 
 const moveAxisControls: Control[] = [
 	{
-		label: __( 'Move X', 'elementor' ),
+		label: __( 'Move X', 'refraction' ),
 		bind: 'x',
 		startIcon: <ArrowRightIcon fontSize={ 'tiny' } />,
 		units: [ 'px', '%', 'em', 'rem', 'vw' ],
 	},
 	{
-		label: __( 'Move Y', 'elementor' ),
+		label: __( 'Move Y', 'refraction' ),
 		bind: 'y',
 		startIcon: <ArrowDownSmallIcon fontSize={ 'tiny' } />,
 		units: [ 'px', '%', 'em', 'rem', 'vh' ],
 	},
 	{
-		label: __( 'Move Z', 'elementor' ),
+		label: __( 'Move Z', 'refraction' ),
 		bind: 'z',
 		startIcon: <ArrowDownLeftIcon fontSize={ 'tiny' } />,
 		units: [ 'px', '%', 'em', 'rem', 'vw', 'vh' ],

@@ -1,4 +1,4 @@
-import { __dispatch as dispatch } from '@elementor/store';
+import { __dispatch as dispatch } from '@refraction/store';
 
 import { slice } from '../../store';
 import { trackGlobalClasses } from '../../utils/tracking';

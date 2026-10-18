@@ -49,7 +49,7 @@ export const MediaActionGroup = ( { label, onSelect, uploadSlot, groupRef, testI
 			onClick={ onSelect }
 			sx={ { ...actionButtonSx, minWidth: SELECT_AREA_WIDTH } }
 		>
-			{ __( 'Select', 'elementor' ) }
+			{ __( 'Select', 'refraction' ) }
 		</Button>
 		<Box
 			sx={ {
@@ -78,7 +78,7 @@ export const MediaUploadButton = ( { disabled = false, onClick }: MediaUploadBut
 		variant="text"
 		disabled={ disabled }
 		onClick={ onClick }
-		aria-label={ __( 'Upload', 'elementor' ) }
+		aria-label={ __( 'Upload', 'refraction' ) }
 	>
 		<UploadIcon fontSize="small" />
 	</Button>
@@ -99,7 +99,7 @@ export const MediaSelectActions = ( { label, onSelect, onUpload, onInsertUrl }: 
 			uploadSlot={ <MediaUploadButton onClick={ onUpload } /> }
 		/>
 		<Button size="tiny" variant="text" color="inherit" onClick={ onInsertUrl }>
-			{ __( 'Insert URL', 'elementor' ) }
+			{ __( 'Insert URL', 'refraction' ) }
 		</Button>
 	</Stack>
 );

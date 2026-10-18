@@ -1,6 +1,6 @@
 import { arrayToClassName } from '../utils/utils';
 
-import Table from 'elementor-app/ui/table/table';
+import Table from 'refraction-app/ui/table/table';
 
 export default function DataTable( {
 	className,

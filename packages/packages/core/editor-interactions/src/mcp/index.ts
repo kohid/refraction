@@ -1,4 +1,4 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
 
 import { initInteractionsSchemaResource } from './resources/interactions-schema-resource';
 import { initManageElementInteractionTool } from './tools/manage-element-interaction-tool';

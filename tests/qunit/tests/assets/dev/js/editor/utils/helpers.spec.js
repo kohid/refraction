@@ -13,7 +13,7 @@ QUnit.module( 'File: assets/dev/js/editor/utils/helpers.js', () => {
 			};
 
 			// Act.
-			const actual = elementor.helpers.isActiveControl( model, values );
+			const actual = refraction.helpers.isActiveControl( model, values );
 
 			// Assert.
 			assert.false( actual );
@@ -32,7 +32,7 @@ QUnit.module( 'File: assets/dev/js/editor/utils/helpers.js', () => {
 			};
 
 			// Act.
-			const actual = elementor.helpers.isActiveControl( model, values );
+			const actual = refraction.helpers.isActiveControl( model, values );
 
 			// Assert.
 			assert.true( actual );
@@ -51,7 +51,7 @@ QUnit.module( 'File: assets/dev/js/editor/utils/helpers.js', () => {
 			};
 
 			// Act.
-			const actual = elementor.helpers.isActiveControl( model, values );
+			const actual = refraction.helpers.isActiveControl( model, values );
 
 			// Assert.
 			assert.false( actual );
@@ -70,7 +70,7 @@ QUnit.module( 'File: assets/dev/js/editor/utils/helpers.js', () => {
 			};
 
 			// Act.
-			const actual = elementor.helpers.isActiveControl( model, values );
+			const actual = refraction.helpers.isActiveControl( model, values );
 
 			// Assert.
 			assert.true( actual );

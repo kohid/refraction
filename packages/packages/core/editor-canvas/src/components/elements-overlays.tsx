@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { getElements, useSelectedElement } from '@elementor/editor-elements';
+import { getElements, useSelectedElement } from '@refraction/editor-elements';
 import {
 	__privateUseIsRouteActive as useIsRouteActive,
 	__privateUseListenTo as useListenTo,
 	useEditMode,
 	windowEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
 import type { ElementOverlayConfig } from '../types/element-overlay';
 import { GridEmptyCellPositioner, GridOutlineOverlay } from './grid-outline';
@@ -73,7 +73,7 @@ type ElementData = {
 
 function useElementsDom(): ElementData[] {
 	return useListenTo(
-		[ windowEvent( 'elementor/editor/element-rendered' ), windowEvent( 'elementor/editor/element-destroyed' ) ],
+		[ windowEvent( 'refraction/editor/element-rendered' ), windowEvent( 'refraction/editor/element-destroyed' ) ],
 		(): ElementData[] => {
 			return getElements()
 				.filter( ( el ) => isV4Element( el.view?.el?.dataset ) )

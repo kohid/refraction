@@ -1,6 +1,6 @@
-import { createElementStyle, deleteElementStyle, getElementStyles, type V1Element } from '@elementor/editor-elements';
-import { ELEMENTS_STYLES_RESERVED_LABEL } from '@elementor/editor-styles-repository';
-import { undoable } from '@elementor/editor-v1-adapters';
+import { createElementStyle, deleteElementStyle, getElementStyles, type V1Element } from '@refraction/editor-elements';
+import { ELEMENTS_STYLES_RESERVED_LABEL } from '@refraction/editor-styles-repository';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { getClassesProp, getTitleForContainers } from '../../utils/command-utils';
@@ -55,6 +55,6 @@ export const undoableResetElementStyle = () =>
 		},
 		{
 			title: ( { containers } ) => getTitleForContainers( containers ),
-			subtitle: __( 'Style Reset', 'elementor' ),
+			subtitle: __( 'Style Reset', 'refraction' ),
 		}
 	);

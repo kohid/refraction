@@ -1,4 +1,4 @@
-import { injectIntoRepeaterItemIcon, injectIntoRepeaterItemLabel } from '@elementor/editor-controls';
+import { injectIntoRepeaterItemIcon, injectIntoRepeaterItemLabel } from '@refraction/editor-controls';
 import {
 	backgroundColorOverlayPropTypeUtil,
 	cssFilterFunctionPropUtil,
@@ -7,7 +7,7 @@ import {
 	type PropValue,
 	selectionSizePropTypeUtil,
 	shadowPropTypeUtil,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 
 import {
 	BackgroundRepeaterColorIndicator,

@@ -1,8 +1,8 @@
 var PanelElementsWidgetCreationView;
 
 const TEMPLATES = {
-	EMPTY_STATE: '#tmpl-elementor-panel-elements-widget-creation-empty-state',
-	SEARCH_FOOTER: '#tmpl-elementor-panel-elements-widget-creation-search-footer',
+	EMPTY_STATE: '#tmpl-refraction-panel-elements-widget-creation-empty-state',
+	SEARCH_FOOTER: '#tmpl-refraction-panel-elements-widget-creation-search-footer',
 };
 
 const CREATE_WIDGET_PROMPT = `Create a widget for me.
@@ -16,7 +16,7 @@ PanelElementsWidgetCreationView = Marionette.ItemView.extend( {
 	},
 
 	className() {
-		const baseClass = 'elementor-panel-elements-widget-creation';
+		const baseClass = 'refraction-panel-elements-widget-creation';
 		const modifierClass = this.options.emptyResults
 			? `${ baseClass }--empty-state`
 			: `${ baseClass }--search-footer`;
@@ -35,12 +35,12 @@ PanelElementsWidgetCreationView = Marionette.ItemView.extend( {
 	},
 
 	events: {
-		'click .elementor-panel-elements-widget-creation__cta': 'onCtaClick',
+		'click .refraction-panel-elements-widget-creation__cta': 'onCtaClick',
 	},
 
 	onCtaClick() {
 		window.dispatchEvent(
-			new CustomEvent( 'elementor/editor/create-widget', {
+			new CustomEvent( 'refraction/editor/create-widget', {
 				detail: {
 					prompt: CREATE_WIDGET_PROMPT,
 					entry_point: 'search_widget',

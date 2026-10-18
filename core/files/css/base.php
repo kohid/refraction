@@ -1,29 +1,29 @@
 <?php
-namespace Elementor\Core\Files\CSS;
+namespace Refraction\Core\Files\CSS;
 
-use Elementor\Base_Data_Control;
-use Elementor\Control_Repeater;
-use Elementor\Controls_Manager;
-use Elementor\Controls_Stack;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Core\Files\Base as Base_File;
-use Elementor\Core\DynamicTags\Manager;
-use Elementor\Core\DynamicTags\Tag;
-use Elementor\Core\Frontend\Performance;
-use Elementor\Core\Frontend\Widget_Content_Render_Mode;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Plugin;
-use Elementor\Stylesheet;
-use Elementor\Icons_Manager;
+use Refraction\Base_Data_Control;
+use Refraction\Control_Repeater;
+use Refraction\Controls_Manager;
+use Refraction\Controls_Stack;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Core\Files\Base as Base_File;
+use Refraction\Core\DynamicTags\Manager;
+use Refraction\Core\DynamicTags\Tag;
+use Refraction\Core\Frontend\Performance;
+use Refraction\Core\Frontend\Widget_Content_Render_Mode;
+use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
+use Refraction\Plugin;
+use Refraction\Stylesheet;
+use Refraction\Icons_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor CSS file.
+ * Refraction CSS file.
  *
- * Elementor CSS file handler class is responsible for generating CSS files.
+ * Refraction CSS file handler class is responsible for generating CSS files.
  *
  * @since 1.2.0
  * @abstract
@@ -31,21 +31,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class Base extends Base_File {
 
 	/**
-	 * Elementor CSS file generated status.
+	 * Refraction CSS file generated status.
 	 *
 	 * The parsing result after generating CSS file.
 	 */
 	const CSS_STATUS_FILE = 'file';
 
 	/**
-	 * Elementor inline CSS status.
+	 * Refraction inline CSS status.
 	 *
 	 * The parsing result after generating inline CSS.
 	 */
 	const CSS_STATUS_INLINE = 'inline';
 
 	/**
-	 * Elementor CSS empty status.
+	 * Refraction CSS empty status.
 	 *
 	 * The parsing result when an empty CSS returned.
 	 */
@@ -117,7 +117,7 @@ abstract class Base extends Base_File {
 	 * @return bool True if the CSS requires an update, False otherwise.
 	 */
 	protected function use_external_file() {
-		return 'internal' !== get_option( 'elementor_css_print_method' );
+		return 'internal' !== get_option( 'refraction_css_print_method' );
 	}
 
 	/**
@@ -194,7 +194,7 @@ abstract class Base extends Base_File {
 	/**
 	 * Enqueue CSS.
 	 *
-	 * Either enqueue the CSS file in Elementor or add inline style.
+	 * Either enqueue the CSS file in Refraction or add inline style.
 	 *
 	 * This method is also responsible for loading the fonts.
 	 *
@@ -227,7 +227,7 @@ abstract class Base extends Base_File {
 		 *
 		 * @param Base $this The current CSS file.
 		 */
-		do_action( 'elementor/css-file/before_enqueue', $this );
+		do_action( 'refraction/css-file/before_enqueue', $this );
 
 		// First time after clear cache and etc.
 		if ( '' === $meta['status'] || $this->is_update_required() ) {
@@ -273,7 +273,7 @@ abstract class Base extends Base_File {
 		/**
 		 * Enqueue CSS file.
 		 *
-		 * Fires when CSS file is enqueued on Elementor.
+		 * Fires when CSS file is enqueued on Refraction.
 		 *
 		 * The dynamic portion of the hook name, `$name`, refers to the CSS file name.
 		 *
@@ -281,7 +281,7 @@ abstract class Base extends Base_File {
 		 *
 		 * @param Base $this The current CSS file.
 		 */
-		do_action( "elementor/css-file/{$name}/enqueue", $this );
+		do_action( "refraction/css-file/{$name}/enqueue", $this );
 
 		/**
 		 * Enqueue CSS file.
@@ -290,7 +290,7 @@ abstract class Base extends Base_File {
 		 *
 		 * @param Base $this The current CSS file.
 		 */
-		do_action( 'elementor/css-file/after_enqueue', $this );
+		do_action( 'refraction/css-file/after_enqueue', $this );
 	}
 
 	/**
@@ -356,7 +356,7 @@ abstract class Base extends Base_File {
 
 		$stylesheet = $this->get_stylesheet();
 
-		$control = apply_filters( 'elementor/files/css/selectors', $control, $value ?? [], $this );
+		$control = apply_filters( 'refraction/files/css/selectors', $control, $value ?? [], $this );
 
 		foreach ( $control['selectors'] as $selector => $css_property ) {
 			$output_css_property = '';
@@ -378,7 +378,7 @@ abstract class Base extends Base_File {
 
 						$parsed_value = '';
 
-						$value = apply_filters( 'elementor/files/css/property', $value, $css_property, $matches, $control );
+						$value = apply_filters( 'refraction/files/css/property', $value, $css_property, $matches, $control );
 
 						if ( ! $external_control_missing ) {
 							$parsed_value = $this->parse_property_placeholder( $control, $value, $controls_stack, $value_callback, $matches[2], $matches[1] );
@@ -579,7 +579,7 @@ abstract class Base extends Base_File {
 
 			if ( ! empty( $parsed_dynamic_settings[ Manager::DYNAMIC_SETTING_KEY ][ $control['name'] ] ) ) {
 				// Dynamic CSS should not be added to the CSS files.
-				// Instead it's handled by \Elementor\Core\DynamicTags\Dynamic_CSS
+				// Instead it's handled by \Refraction\Core\DynamicTags\Dynamic_CSS
 				// and printed in a style tag.
 				$should_preserve_value = isset( $control['control_type'] ) && 'content' === $control['control_type'];
 				if ( $should_preserve_value ) {
@@ -734,7 +734,7 @@ abstract class Base extends Base_File {
 		/**
 		 * Parse CSS file.
 		 *
-		 * Fires when CSS file is parsed on Elementor.
+		 * Fires when CSS file is parsed on Refraction.
 		 *
 		 * The dynamic portion of the hook name, `$name`, refers to the CSS file name.
 		 *
@@ -742,7 +742,7 @@ abstract class Base extends Base_File {
 		 *
 		 * @param Base $this The current CSS file.
 		 */
-		do_action( "elementor/css-file/{$name}/parse", $this );
+		do_action( "refraction/css-file/{$name}/parse", $this );
 
 		Plugin::$instance->breakpoints->set_responsive_control_duplication_mode( $initial_responsive_controls_duplication_mode );
 
@@ -893,7 +893,7 @@ abstract class Base extends Base_File {
 				$item,
 				$repeater_values[ $index ],
 				$placeholders,
-				array_merge( $replacements, [ '.elementor-repeater-item-' . $repeater_values[ $index ]['_id'] ] ),
+				array_merge( $replacements, [ '.refraction-repeater-item-' . $repeater_values[ $index ]['_id'] ] ),
 				$repeater_control['fields']
 			);
 		}
@@ -918,7 +918,7 @@ abstract class Base extends Base_File {
 				return;
 			}
 
-			$this->add_controls_stack_style_rules( $tag, $this->get_style_controls( $tag ), $tag->get_active_settings(), [ '{{WRAPPER}}' ], [ '#elementor-tag-' . $id ] );
+			$this->add_controls_stack_style_rules( $tag, $this->get_style_controls( $tag ), $tag->get_active_settings(), [ '{{WRAPPER}}' ], [ '#refraction-tag-' . $id ] );
 		} );
 	}
 

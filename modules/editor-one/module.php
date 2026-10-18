@@ -1,13 +1,13 @@
 <?php
 
-namespace Elementor\Modules\EditorOne;
+namespace Refraction\Modules\EditorOne;
 
-use Elementor\Core\Admin\EditorOneMenu\Elementor_One_Menu_Manager;
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Modules\EditorOne\Classes\Menu_Config;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Modules\EditorOne\Components\Sidebar_Navigation_Handler;
-use Elementor\Modules\EditorOne\Components\Top_Bar_Handler;
+use Refraction\Core\Admin\EditorOneMenu\Refraction_One_Menu_Manager;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\EditorOne\Components\Sidebar_Navigation_Handler;
+use Refraction\Modules\EditorOne\Components\Top_Bar_Handler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Module extends BaseModule {
 
 	const CUSTOM_REACT_APP_PAGES = [
-		'elementor-element-manager',
+		'refraction-element-manager',
 	];
 
 	public function get_name(): string {
@@ -26,7 +26,7 @@ class Module extends BaseModule {
 		parent::__construct();
 
 		if ( is_admin() ) {
-			$this->add_component( 'editor-one-menu-manager', new Elementor_One_Menu_Manager() );
+			$this->add_component( 'editor-one-menu-manager', new Refraction_One_Menu_Manager() );
 			$this->add_component( 'sidebar-navigation-handler', new Sidebar_Navigation_Handler() );
 			$this->add_component( 'top-bar-handler', new Top_Bar_Handler() );
 		}
@@ -43,7 +43,7 @@ class Module extends BaseModule {
 			} );
 		} );
 
-		add_filter( 'elementor/admin-top-bar/is-active', function ( $_is_active ) {
+		add_filter( 'refraction/admin-top-bar/is-active', function ( $_is_active ) {
 			return false;
 		} );
 	}
@@ -74,28 +74,28 @@ class Module extends BaseModule {
 	 */
 	private function enqueue_styles() {
 
-		wp_enqueue_style( 'elementor-admin' );
+		wp_enqueue_style( 'refraction-admin' );
 
 		wp_enqueue_style(
-			'elementor-editor-one-common',
+			'refraction-editor-one-common',
 			$this->get_css_assets_url( 'editor-one-common' ),
-			[ 'elementor-admin' ],
-			ELEMENTOR_VERSION
+			[ 'refraction-admin' ],
+			REFRACTION_VERSION
 		);
 
 		if ( ! $this->is_custom_react_app_page() ) {
 			wp_enqueue_style(
-				'elementor-editor-one-elements',
+				'refraction-editor-one-elements',
 				$this->get_css_assets_url( 'editor-one-elements' ),
-				[ 'elementor-editor-one-common' ],
-				ELEMENTOR_VERSION
+				[ 'refraction-editor-one-common' ],
+				REFRACTION_VERSION
 			);
 
 			wp_enqueue_style(
-				'elementor-editor-one-tables',
+				'refraction-editor-one-tables',
 				$this->get_css_assets_url( 'editor-one-tables' ),
-				[ 'elementor-editor-one-common' ],
-				ELEMENTOR_VERSION
+				[ 'refraction-editor-one-common' ],
+				REFRACTION_VERSION
 			);
 		}
 
@@ -103,7 +103,7 @@ class Module extends BaseModule {
 			'editor-one-admin',
 			$this->get_js_assets_url( 'editor-one-admin' ),
 			[ 'jquery' ],
-			ELEMENTOR_VERSION,
+			REFRACTION_VERSION,
 			true
 		);
 	}

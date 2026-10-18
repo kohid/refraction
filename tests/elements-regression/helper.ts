@@ -46,7 +46,7 @@ export default class ElementRegressionHelper {
 			await this.waitForPublishedContentReady();
 		} else {
 			await this.page.evaluate( async () => {
-				const iframe = document.getElementById( 'elementor-preview-iframe' );
+				const iframe = document.getElementById( 'refraction-preview-iframe' );
 				iframe.style.height = '3000px';
 			} );
 		}
@@ -63,7 +63,7 @@ export default class ElementRegressionHelper {
 			const widgetCount = await widget.count();
 
 			for ( let i = 0; i < widgetCount; i++ ) {
-				await expect( widget.nth( i ) ).not.toHaveClass( /elementor-widget-empty/ );
+				await expect( widget.nth( i ) ).not.toHaveClass( /refraction-widget-empty/ );
 				await widget.locator( args.hoverSelector[ args.widgetType ] ).nth( i ).hover();
 				await expect.soft( widget.nth( i ) )
 					.toHaveScreenshot( `${ args.widgetType }_${ i }_${ label }.png`, { maxDiffPixels: 200, timeout: 10000, animations: 'disabled' } );
@@ -107,7 +107,7 @@ export default class ElementRegressionHelper {
 			page = this.editor.getPreviewFrame();
 			await this.setResponsiveMode( args.device );
 			await this.page.evaluate( () => {
-				const wrapper = document.getElementById( 'elementor-preview-responsive-wrapper' );
+				const wrapper = document.getElementById( 'refraction-preview-responsive-wrapper' );
 				wrapper.style.overflow = 'visible';
 				wrapper.style.maxHeight = 'none';
 			} );

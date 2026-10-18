@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { createDOMElement } from 'test-utils';
-import { getCanvasIframeDocument } from '@elementor/editor-v1-adapters';
+import { getCanvasIframeDocument } from '@refraction/editor-v1-adapters';
 import { render, renderHook } from '@testing-library/react';
 
 import { useDocumentsCssLinks } from '../use-documents-css-links';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	getCanvasIframeDocument: jest.fn(),
 } ) );
 
@@ -17,19 +17,19 @@ describe( 'useDocumentsCssLinks', () => {
 		children: [
 			createDOMElement( {
 				tag: 'link',
-				attrs: { href: '2.css', rel: 'stylesheet', id: 'elementor-post-2-css' },
+				attrs: { href: '2.css', rel: 'stylesheet', id: 'refraction-post-2-css' },
 			} ),
 			createDOMElement( {
 				tag: 'link',
-				attrs: { href: '10.css', rel: 'stylesheet', id: 'elementor-post-10-css' },
+				attrs: { href: '10.css', rel: 'stylesheet', id: 'refraction-post-10-css' },
 			} ),
 			createDOMElement( {
 				tag: 'link',
-				attrs: { href: '5.css', rel: 'stylesheet', id: 'elementor-post-5-css' },
+				attrs: { href: '5.css', rel: 'stylesheet', id: 'refraction-post-5-css' },
 			} ),
 			createDOMElement( {
 				tag: 'link',
-				attrs: { href: 'not-elementor.css', rel: 'stylesheet', id: 'not-elementor-css' },
+				attrs: { href: 'not-refraction.css', rel: 'stylesheet', id: 'not-refraction-css' },
 			} ),
 		],
 	} );
@@ -37,11 +37,11 @@ describe( 'useDocumentsCssLinks', () => {
 	const body = createDOMElement( {
 		tag: 'body',
 		children: [
-			createDOMElement( { tag: 'div', attrs: { 'data-elementor-id': '2' } } ),
-			createDOMElement( { tag: 'div', attrs: { 'data-elementor-id': '4' } } ),
+			createDOMElement( { tag: 'div', attrs: { 'data-refraction-id': '2' } } ),
+			createDOMElement( { tag: 'div', attrs: { 'data-refraction-id': '4' } } ),
 			createDOMElement( {
 				tag: 'div',
-				children: [ createDOMElement( { tag: 'div', attrs: { 'data-elementor-id': '5' } } ) ],
+				children: [ createDOMElement( { tag: 'div', attrs: { 'data-refraction-id': '5' } } ) ],
 			} ),
 		],
 	} );

@@ -48,7 +48,7 @@ const IconPreview = ( { icon }: { icon: FontAwesome7Icon } ) => (
 			icon={ icon }
 			size={ ICON_PREVIEW_SIZE }
 			color={ ICON_PREVIEW_COLOR }
-			label={ __( 'Preview icon', 'elementor' ) }
+			label={ __( 'Preview icon', 'refraction' ) }
 		/>
 	</Box>
 );
@@ -68,7 +68,7 @@ const SvgPreview = ( { src }: { src: string | null } ) => (
 	<CardMedia
 		component="img"
 		image={ src }
-		alt={ __( 'Preview SVG', 'elementor' ) }
+		alt={ __( 'Preview SVG', 'refraction' ) }
 		sx={ { maxHeight: '140px', width: `${ ICON_PREVIEW_SIZE }px`, color: ICON_PREVIEW_COLOR } }
 	/>
 );

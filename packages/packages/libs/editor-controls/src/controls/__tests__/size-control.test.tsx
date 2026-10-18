@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { type RefObject } from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { ControlActionsProvider } from '@elementor/editor-controls';
-import { type SizePropValue } from '@elementor/editor-props';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { ControlActionsProvider } from '@refraction/editor-controls';
+import { type SizePropValue } from '@refraction/editor-props';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { type AngleUnit, type LengthUnit } from '../../utils/size-control';
@@ -17,7 +17,7 @@ const mockSizeProp = ( value?: SizePropValue[ 'value' ] ) => ( {
 const mockLengthUnits = (): LengthUnit[] => [ 'px', 'rem', '%', 'em' ];
 const mockAngleUnits = (): AngleUnit[] => [ 'deg', 'rad', 'grad', 'turn' ];
 
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mocked( isExperimentActive ).mockReturnValue( true );
 
 const propType = createMockPropType( {

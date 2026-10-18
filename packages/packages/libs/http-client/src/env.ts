@@ -1,6 +1,6 @@
-import { parseEnv } from '@elementor/env';
+import { parseEnv } from '@refraction/env';
 
 export const { env } = parseEnv< {
 	base_url: string;
 	headers: Record< string, string >;
-} >( '@elementor/http-client' );
+} >( '@refraction/http-client' );

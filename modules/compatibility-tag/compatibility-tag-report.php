@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Modules\CompatibilityTag;
+namespace Refraction\Modules\CompatibilityTag;
 
-use Elementor\Plugin;
-use Elementor\Core\Utils\Version;
-use Elementor\Core\Utils\Collection;
-use Elementor\Modules\System_Info\Reporters\Base;
+use Refraction\Plugin;
+use Refraction\Core\Utils\Version;
+use Refraction\Core\Utils\Collection;
+use Refraction\Modules\System_Info\Reporters\Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -119,7 +119,7 @@ class Compatibility_Tag_Report extends Base {
 
 		$compatibility_status = ( new Collection( $compatibility_status ) )
 			->map( function ( $value ) use ( $labels ) {
-				$status = isset( $labels[ $value ] ) ? $labels[ $value ] : esc_html__( 'Unknown', 'elementor' );
+				$status = isset( $labels[ $value ] ) ? $labels[ $value ] : esc_html__( 'Unknown', 'refraction' );
 
 				return [ 'compatibility_status' => $status ];
 			} );
@@ -165,11 +165,11 @@ class Compatibility_Tag_Report extends Base {
 	 */
 	private function get_report_labels() {
 		return [
-			Compatibility_Tag::COMPATIBLE   => esc_html__( 'Compatible', 'elementor' ),
-			Compatibility_Tag::INCOMPATIBLE => esc_html__( 'Incompatible', 'elementor' ),
-			Compatibility_Tag::HEADER_NOT_EXISTS => esc_html__( 'Compatibility not specified', 'elementor' ),
-			Compatibility_Tag::INVALID_VERSION => esc_html__( 'Compatibility unknown', 'elementor' ),
-			Compatibility_Tag::PLUGIN_NOT_EXISTS => esc_html__( 'Error', 'elementor' ),
+			Compatibility_Tag::COMPATIBLE   => esc_html__( 'Compatible', 'refraction' ),
+			Compatibility_Tag::INCOMPATIBLE => esc_html__( 'Incompatible', 'refraction' ),
+			Compatibility_Tag::HEADER_NOT_EXISTS => esc_html__( 'Compatibility not specified', 'refraction' ),
+			Compatibility_Tag::INVALID_VERSION => esc_html__( 'Compatibility unknown', 'refraction' ),
+			Compatibility_Tag::PLUGIN_NOT_EXISTS => esc_html__( 'Error', 'refraction' ),
 		];
 	}
 }

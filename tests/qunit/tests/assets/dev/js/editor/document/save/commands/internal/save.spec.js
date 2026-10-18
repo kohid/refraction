@@ -15,11 +15,11 @@ export const Save = () => {
 
 			// Add fake documents.
 			documentConfigs.forEach( ( config ) => {
-				documents.push( elementor.documents.addDocumentByConfig( config ) );
+				documents.push( refraction.documents.addDocumentByConfig( config ) );
 			} );
 
 			for ( const document of documents ) {
-				document.container = elementor.getPreviewContainer();
+				document.container = refraction.getPreviewContainer();
 
 				const response = await $e.internal( 'document/save/save', { document } );
 

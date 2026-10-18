@@ -6,7 +6,7 @@ const ruleTester = new RuleTester();
 
 ruleTester.run( 'no-path-imports', noPathImports, {
 	valid: [
-		"import { something } from '@elementor/locations';",
+		"import { something } from '@refraction/locations';",
 		"import { something } from '@wordpress/components';",
 		"import { something } from '@wordpress/i18n';",
 		"import { something } from 'some-other-package/src/index';",
@@ -14,20 +14,20 @@ ruleTester.run( 'no-path-imports', noPathImports, {
 
 	invalid: [
 		{
-			code: "import { something } from '@elementor/locations/src/index.ts';",
+			code: "import { something } from '@refraction/locations/src/index.ts';",
 			errors: [
 				{
-					messageId: 'noElementorPathImport',
-					data: { value: '@elementor/locations/src/index.ts' },
+					messageId: 'noRefractionPathImport',
+					data: { value: '@refraction/locations/src/index.ts' },
 				},
 			],
 		},
 		{
-			code: "import { something } from '@elementor/editor/src/components/button';",
+			code: "import { something } from '@refraction/editor/src/components/button';",
 			errors: [
 				{
-					messageId: 'noElementorPathImport',
-					data: { value: '@elementor/editor/src/components/button' },
+					messageId: 'noRefractionPathImport',
+					data: { value: '@refraction/editor/src/components/button' },
 				},
 			],
 		},

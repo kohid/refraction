@@ -1,46 +1,46 @@
 <?php
 
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
-use Elementor\Core\Wp_Api;
-use Elementor\Core\Admin\Admin;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Core\Common\App as CommonApp;
-use Elementor\Core\Debug\Inspector;
-use Elementor\Core\Documents_Manager;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Core\Kits\Manager as Kits_Manager;
-use Elementor\Core\Editor\Editor;
-use Elementor\Core\Files\Manager as Files_Manager;
-use Elementor\Core\Files\Assets\Manager as Assets_Manager;
-use Elementor\Core\Modules_Manager;
-use Elementor\Core\Settings\Manager as Settings_Manager;
-use Elementor\Core\Settings\Page\Manager as Page_Settings_Manager;
-use Elementor\Modules\History\Revisions_Manager;
-use Elementor\Core\DynamicTags\Manager as Dynamic_Tags_Manager;
-use Elementor\Core\Logger\Manager as Log_Manager;
-use Elementor\Core\Page_Assets\Loader as Assets_Loader;
-use Elementor\Modules\System_Info\Module as System_Info_Module;
-use Elementor\Data\Manager as Data_Manager;
-use Elementor\Data\V2\Manager as Data_Manager_V2;
-use Elementor\Core\Files\Uploads_Manager;
+use Refraction\Core\Admin\Menu\Admin_Menu_Manager;
+use Refraction\Core\Wp_Api;
+use Refraction\Core\Admin\Admin;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Core\Common\App as CommonApp;
+use Refraction\Core\Debug\Inspector;
+use Refraction\Core\Documents_Manager;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Core\Kits\Manager as Kits_Manager;
+use Refraction\Core\Editor\Editor;
+use Refraction\Core\Files\Manager as Files_Manager;
+use Refraction\Core\Files\Assets\Manager as Assets_Manager;
+use Refraction\Core\Modules_Manager;
+use Refraction\Core\Settings\Manager as Settings_Manager;
+use Refraction\Core\Settings\Page\Manager as Page_Settings_Manager;
+use Refraction\Modules\History\Revisions_Manager;
+use Refraction\Core\DynamicTags\Manager as Dynamic_Tags_Manager;
+use Refraction\Core\Logger\Manager as Log_Manager;
+use Refraction\Core\Page_Assets\Loader as Assets_Loader;
+use Refraction\Modules\System_Info\Module as System_Info_Module;
+use Refraction\Data\Manager as Data_Manager;
+use Refraction\Data\V2\Manager as Data_Manager_V2;
+use Refraction\Core\Files\Uploads_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Elementor plugin.
+ * Refraction plugin.
  *
- * The main plugin handler class is responsible for initializing Elementor. The
+ * The main plugin handler class is responsible for initializing Refraction. The
  * class registers and all the components required to run the plugin.
  *
  * @since 1.0.0
  */
 class Plugin {
 
-	const ELEMENTOR_DEFAULT_POST_TYPES = [ 'page', 'post' ];
+	const REFRACTION_DEFAULT_POST_TYPES = [ 'page', 'post' ];
 
 	/**
 	 * Instance.
@@ -444,7 +444,7 @@ class Plugin {
 	public $kits_manager;
 
 	/**
-	 * @var \Elementor\Data\V2\Manager
+	 * @var \Refraction\Data\V2\Manager
 	 */
 	public $data_manager_v2;
 
@@ -584,13 +584,13 @@ class Plugin {
 			self::$instance = new self();
 
 			/**
-			 * Elementor loaded.
+			 * Refraction loaded.
 			 *
-			 * Fires when Elementor was fully loaded and instantiated.
+			 * Fires when Refraction was fully loaded and instantiated.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'elementor/loaded' );
+			do_action( 'refraction/loaded' );
 		}
 
 		return self::$instance;
@@ -599,8 +599,8 @@ class Plugin {
 	/**
 	 * Init.
 	 *
-	 * Initialize Elementor Plugin. Register Elementor support for all the
-	 * supported post types and initialize Elementor components.
+	 * Initialize Refraction Plugin. Register Refraction support for all the
+	 * supported post types and initialize Refraction components.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -611,35 +611,35 @@ class Plugin {
 		$this->init_components();
 
 		/**
-		 * Elementor init.
+		 * Refraction init.
 		 *
-		 * Fires when Elementor components are initialized.
+		 * Fires when Refraction components are initialized.
 		 *
-		 * After Elementor finished loading but before any headers are sent.
+		 * After Refraction finished loading but before any headers are sent.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/init' );
+		do_action( 'refraction/init' );
 	}
 
 	/**
 	 * Get install time.
 	 *
-	 * Retrieve the time when Elementor was installed.
+	 * Retrieve the time when Refraction was installed.
 	 *
 	 * @since 2.6.0
 	 * @access public
 	 * @static
 	 *
-	 * @return int Unix timestamp when Elementor was installed.
+	 * @return int Unix timestamp when Refraction was installed.
 	 */
 	public function get_install_time() {
-		$installed_time = get_option( '_elementor_installed_time' );
+		$installed_time = get_option( '_refraction_installed_time' );
 
 		if ( ! $installed_time ) {
 			$installed_time = time();
 
-			update_option( '_elementor_installed_time', $installed_time );
+			update_option( '_refraction_installed_time', $installed_time );
 		}
 
 		return $installed_time;
@@ -659,8 +659,8 @@ class Plugin {
 	/**
 	 * Init components.
 	 *
-	 * Initialize Elementor components. Register actions, run setting manager,
-	 * initialize all the components that run elementor, and if in admin page
+	 * Initialize Refraction components. Register actions, run setting manager,
+	 * initialize all the components that run refraction, and if in admin page
 	 * initialize admin components.
 	 *
 	 * @since 1.0.0
@@ -731,8 +731,8 @@ class Plugin {
 	/**
 	 * Add custom post type support.
 	 *
-	 * Register Elementor support for all the supported post types defined by
-	 * the user in the admin screen and saved as `elementor_cpt_support` option
+	 * Register Refraction support for all the supported post types defined by
+	 * the user in the admin screen and saved as `refraction_cpt_support` option
 	 * in WordPress `$wpdb->options` table.
 	 *
 	 * If no custom post type selected, usually in new installs, this method
@@ -742,23 +742,23 @@ class Plugin {
 	 * @access private
 	 */
 	private function add_cpt_support() {
-		$cpt_support = get_option( 'elementor_cpt_support', self::ELEMENTOR_DEFAULT_POST_TYPES );
+		$cpt_support = get_option( 'refraction_cpt_support', self::REFRACTION_DEFAULT_POST_TYPES );
 
 		foreach ( $cpt_support as $cpt_slug ) {
-			add_post_type_support( $cpt_slug, 'elementor' );
+			add_post_type_support( $cpt_slug, 'refraction' );
 		}
 	}
 
 	/**
 	 * Register autoloader.
 	 *
-	 * Elementor autoloader loads all the classes needed to run the plugin.
+	 * Refraction autoloader loads all the classes needed to run the plugin.
 	 *
 	 * @since 1.6.0
 	 * @access private
 	 */
 	private function register_autoloader() {
-		require_once ELEMENTOR_PATH . '/includes/autoloader.php';
+		require_once REFRACTION_PATH . '/includes/autoloader.php';
 
 		Autoloader::run();
 	}
@@ -794,7 +794,7 @@ class Plugin {
 	/**
 	 * Plugin constructor.
 	 *
-	 * Initializing Elementor plugin.
+	 * Initializing Refraction plugin.
 	 *
 	 * @since 1.0.0
 	 * @access private
@@ -813,11 +813,11 @@ class Plugin {
 	}
 
 	final public static function get_title() {
-		return esc_html__( 'Elementor', 'elementor' );
+		return esc_html__( 'Refraction', 'refraction' );
 	}
 }
 
-if ( ! defined( 'ELEMENTOR_TESTS' ) ) {
+if ( ! defined( 'REFRACTION_TESTS' ) ) {
 	// In tests we run the instance manually.
 	Plugin::instance();
 }

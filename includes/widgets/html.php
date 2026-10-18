@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor HTML widget.
+ * Refraction HTML widget.
  *
- * Elementor widget that insert a custom HTML code into the page.
+ * Refraction widget that insert a custom HTML code into the page.
  *
  * @since 1.0.0
  */
@@ -39,7 +39,7 @@ class Widget_Html extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'HTML', 'elementor' );
+		return esc_html__( 'HTML', 'refraction' );
 	}
 
 	/**
@@ -94,17 +94,17 @@ class Widget_Html extends Widget_Base {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'HTML Code', 'elementor' ),
+				'label' => esc_html__( 'HTML Code', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'html',
 			[
-				'label' => esc_html__( 'HTML Code', 'elementor' ),
+				'label' => esc_html__( 'HTML Code', 'refraction' ),
 				'type' => Controls_Manager::CODE,
 				'default' => '',
-				'placeholder' => esc_html__( 'Enter your code', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your code', 'refraction' ),
 				'dynamic' => [
 					'active' => true,
 				],
@@ -147,6 +147,6 @@ class Widget_Html extends Widget_Base {
 		if ( empty( $html ) ) {
 			return '';
 		}
-		return \Elementor\Modules\MarkdownRender\Html_To_Markdown::convert( $html );
+		return \Refraction\Modules\MarkdownRender\Html_To_Markdown::convert( $html );
 	}
 }

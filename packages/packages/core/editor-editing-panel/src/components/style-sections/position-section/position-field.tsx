@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { SelectControl } from '@elementor/editor-controls';
+import { SelectControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const POSITION_LABEL = __( 'Position', 'elementor' );
+const POSITION_LABEL = __( 'Position', 'refraction' );
 
 const positionOptions = [
-	{ label: __( 'Static', 'elementor' ), value: 'static' },
-	{ label: __( 'Relative', 'elementor' ), value: 'relative' },
-	{ label: __( 'Absolute', 'elementor' ), value: 'absolute' },
-	{ label: __( 'Fixed', 'elementor' ), value: 'fixed' },
-	{ label: __( 'Sticky', 'elementor' ), value: 'sticky' },
+	{ label: __( 'Static', 'refraction' ), value: 'static' },
+	{ label: __( 'Relative', 'refraction' ), value: 'relative' },
+	{ label: __( 'Absolute', 'refraction' ), value: 'absolute' },
+	{ label: __( 'Fixed', 'refraction' ), value: 'fixed' },
+	{ label: __( 'Sticky', 'refraction' ), value: 'sticky' },
 ];
 
 export const PositionField = () => {

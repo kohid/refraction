@@ -1,4 +1,4 @@
-var TagPanelView = require( 'elementor-dynamic-tags/tag-panel-view' );
+var TagPanelView = require( 'refraction-dynamic-tags/tag-panel-view' );
 
 module.exports = Marionette.Behavior.extend( {
 
@@ -20,7 +20,7 @@ module.exports = Marionette.Behavior.extend( {
 			return false;
 		}
 
-		const isFeatureAvailableToUser = elementor.helpers.hasPro() && ! elementor.helpers.hasProAndNotConnected(),
+		const isFeatureAvailableToUser = refraction.helpers.hasPro() && ! refraction.helpers.hasProAndNotConnected(),
 			hasTags = this.getOption( 'tags' ).length > 0;
 
 		return ! isFeatureAvailableToUser || hasTags;
@@ -31,11 +31,11 @@ module.exports = Marionette.Behavior.extend( {
 			return;
 		}
 
-		const $dynamicSwitcher = jQuery( Marionette.Renderer.render( '#tmpl-elementor-control-dynamic-switcher' ) );
+		const $dynamicSwitcher = jQuery( Marionette.Renderer.render( '#tmpl-refraction-control-dynamic-switcher' ) );
 
 		$dynamicSwitcher.on( 'click', ( event ) => this.onDynamicSwitcherClick( event ) );
 
-		this.$el.find( '.elementor-control-dynamic-switcher-wrapper' ).append( $dynamicSwitcher );
+		this.$el.find( '.refraction-control-dynamic-switcher-wrapper' ).append( $dynamicSwitcher );
 
 		this.ui.dynamicSwitcher = $dynamicSwitcher;
 
@@ -59,9 +59,9 @@ module.exports = Marionette.Behavior.extend( {
 	moveDynamicSwitcherToColorPicker() {
 		const $colorPickerToolsContainer = this.view.colorPicker.$pickerToolsContainer;
 
-		this.ui.dynamicSwitcher.removeClass( 'elementor-control-unit-1' ).addClass( 'e-control-tool' );
+		this.ui.dynamicSwitcher.removeClass( 'refraction-control-unit-1' ).addClass( 'e-control-tool' );
 
-		const $eyedropper = $colorPickerToolsContainer.find( '.elementor-control-element-color-picker' );
+		const $eyedropper = $colorPickerToolsContainer.find( '.refraction-control-element-color-picker' );
 
 		if ( $eyedropper.length ) {
 			this.ui.dynamicSwitcher.insertBefore( $eyedropper );
@@ -71,7 +71,7 @@ module.exports = Marionette.Behavior.extend( {
 	},
 
 	toggleDynamicClass() {
-		this.$el.toggleClass( 'elementor-control-dynamic-value', this.isDynamicMode() );
+		this.$el.toggleClass( 'refraction-control-dynamic-value', this.isDynamicMode() );
 	},
 
 	isDynamicMode() {
@@ -82,9 +82,9 @@ module.exports = Marionette.Behavior.extend( {
 
 	createTagsList() {
 		var tags = _.groupBy( this.getOption( 'tags' ), 'group' ),
-			groups = elementor.dynamicTags.getConfig( 'groups' ),
-			$tagsList = this.ui.tagsList = jQuery( '<div>', { class: 'elementor-tags-list' } ),
-			$tagsListInner = jQuery( '<div>', { class: 'elementor-tags-list__inner' } );
+			groups = refraction.dynamicTags.getConfig( 'groups' ),
+			$tagsList = this.ui.tagsList = jQuery( '<div>', { class: 'refraction-tags-list' } ),
+			$tagsListInner = jQuery( '<div>', { class: 'refraction-tags-list__inner' } );
 
 		$tagsList.append( $tagsListInner );
 
@@ -96,12 +96,12 @@ module.exports = Marionette.Behavior.extend( {
 			}
 
 			var group = this,
-				$groupTitle = jQuery( '<div>', { class: 'elementor-tags-list__group-title' } ).text( group.title );
+				$groupTitle = jQuery( '<div>', { class: 'refraction-tags-list__group-title' } ).text( group.title );
 
 			$tagsListInner.append( $groupTitle );
 
 			groupTags.forEach( function( tag ) {
-				var $tag = jQuery( '<div>', { class: 'elementor-tags-list__item' } );
+				var $tag = jQuery( '<div>', { class: 'refraction-tags-list__item' } );
 
 				$tag.text( tag.title ).attr( 'data-tag-name', tag.name );
 
@@ -110,17 +110,17 @@ module.exports = Marionette.Behavior.extend( {
 		} );
 
 		// Create and inject pro dynamic teaser template if Pro is not installed
-		if ( ! elementor.helpers.hasPro() && Object.keys( tags ).length ) {
-			const proTeaser = Marionette.Renderer.render( '#tmpl-elementor-dynamic-tags-promo', {
-				promotionUrl: elementor.config.dynamicPromotionURL.replace( '%s', this.view.model.get( 'name' ) ),
+		if ( ! refraction.helpers.hasPro() && Object.keys( tags ).length ) {
+			const proTeaser = Marionette.Renderer.render( '#tmpl-refraction-dynamic-tags-promo', {
+				promotionUrl: refraction.config.dynamicPromotionURL.replace( '%s', this.view.model.get( 'name' ) ),
 			} );
 
 			$tagsListInner.append( proTeaser );
 		}
 
-		$tagsListInner.on( 'click', '.elementor-tags-list__item', this.onTagsListItemClick.bind( this ) );
+		$tagsListInner.on( 'click', '.refraction-tags-list__item', this.onTagsListItemClick.bind( this ) );
 
-		elementorCommon.elements.$body.append( $tagsList );
+		refractionCommon.elements.$body.append( $tagsList );
 	},
 
 	getTagsList() {
@@ -140,7 +140,7 @@ module.exports = Marionette.Behavior.extend( {
 			return;
 		}
 
-		const direction = elementorCommon.config.isRTL ? 'left' : 'right';
+		const direction = refractionCommon.config.isRTL ? 'left' : 'right';
 
 		$tagsList.show().position( {
 			my: `${ direction } top`,
@@ -164,7 +164,7 @@ module.exports = Marionette.Behavior.extend( {
 			elementContainer = this.view.options.container,
 			tagViewLabel = elementContainer.controls[ tagView.options.controlName ].label;
 
-		tagView.options.container = new elementorModules.editor.Container( {
+		tagView.options.container = new refractionModules.editor.Container( {
 			type: 'dynamic',
 			id,
 			model: tagView.model,
@@ -178,13 +178,13 @@ module.exports = Marionette.Behavior.extend( {
 
 		tagView.render();
 
-		this.$el.find( '.elementor-control-tag-area' ).after( tagView.el );
+		this.$el.find( '.refraction-control-tag-area' ).after( tagView.el );
 
 		this.listenTo( tagView, 'remove', this.onTagViewRemove.bind( this ) );
 	},
 
 	setDefaultTagView() {
-		var tagData = elementor.dynamicTags.tagTextToTagData( this.getDynamicValue() );
+		var tagData = refraction.dynamicTags.tagTextToTagData( this.getDynamicValue() );
 
 		this.setTagView( tagData.id, tagData.name, tagData.settings );
 	},
@@ -192,7 +192,7 @@ module.exports = Marionette.Behavior.extend( {
 	tagViewToTagText() {
 		var tagView = this.tagView;
 
-		return elementor.dynamicTags.tagDataToTagText( tagView.getOption( 'id' ), tagView.getOption( 'name' ), tagView.model );
+		return refraction.dynamicTags.tagDataToTagText( tagView.getOption( 'id' ), tagView.getOption( 'name' ), tagView.model );
 	},
 
 	getDynamicValue() {
@@ -208,12 +208,12 @@ module.exports = Marionette.Behavior.extend( {
 	},
 
 	showPromotion() {
-		const hasProAndNotConnected = elementor.helpers.hasProAndNotConnected(),
+		const hasProAndNotConnected = refraction.helpers.hasProAndNotConnected(),
 			dialogOptions = {
-				title: __( 'Dynamic Content', 'elementor' ),
+				title: __( 'Dynamic Content', 'refraction' ),
 				content: __(
 					'Create more personalized and dynamic sites by populating data from various sources with dozens of dynamic tags to choose from.',
-					'elementor',
+					'refraction',
 				),
 				targetElement: this.ui.dynamicSwitcher,
 				position: {
@@ -221,19 +221,19 @@ module.exports = Marionette.Behavior.extend( {
 				},
 				actionButton: {
 					url: hasProAndNotConnected
-						? elementorProEditorConfig.urls.connect
-						: elementor.config.dynamicPromotionURL.replace( '%s', this.view.model.get( 'name' ) ),
+						? refractionProEditorConfig.urls.connect
+						: refraction.config.dynamicPromotionURL.replace( '%s', this.view.model.get( 'name' ) ),
 					text: hasProAndNotConnected
-						? __( 'Connect & Activate', 'elementor' )
-						: __( 'Upgrade', 'elementor' ),
+						? __( 'Connect & Activate', 'refraction' )
+						: __( 'Upgrade', 'refraction' ),
 				},
 			};
 
-		elementor.promotion.showDialog( dialogOptions );
+		refraction.promotion.showDialog( dialogOptions );
 	},
 
 	onRender() {
-		this.$el.addClass( 'elementor-control-dynamic' );
+		this.$el.addClass( 'refraction-control-dynamic' );
 
 		this.renderTools();
 
@@ -257,7 +257,7 @@ module.exports = Marionette.Behavior.extend( {
 	onTagsListItemClick( event ) {
 		const $tag = jQuery( event.currentTarget );
 
-		this.setTagView( elementorCommon.helpers.getUniqueId(), $tag.data( 'tagName' ), {} );
+		this.setTagView( refractionCommon.helpers.getUniqueId(), $tag.data( 'tagName' ), {} );
 
 		// If an element has an active global value, disable it before applying the dynamic value.
 		if ( this.view.getGlobalKey() ) {

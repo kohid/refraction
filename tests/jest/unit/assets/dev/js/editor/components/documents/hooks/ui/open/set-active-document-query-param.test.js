@@ -14,7 +14,7 @@ describe( `$e.run( 'editor/documents/open' ) -- SetActiveDocumentQueryParam`, ()
 			},
 		};
 
-		global.elementor = {
+		global.refraction = {
 			config: {
 				initial_document: {
 					id: 1,
@@ -22,7 +22,7 @@ describe( `$e.run( 'editor/documents/open' ) -- SetActiveDocumentQueryParam`, ()
 			},
 		};
 
-		const HookClass = ( await import( 'elementor-editor/components/documents/hooks/ui/open/set-active-document-query-param' ) ).SetActiveDocumentQueryParam;
+		const HookClass = ( await import( 'refraction-editor/components/documents/hooks/ui/open/set-active-document-query-param' ) ).SetActiveDocumentQueryParam;
 
 		SetActiveDocumentQueryParam = new HookClass();
 	} );

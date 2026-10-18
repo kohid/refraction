@@ -1,4 +1,4 @@
-import { getV1CurrentDocument, setDocumentModifiedStatus } from '@elementor/editor-documents';
+import { getV1CurrentDocument, setDocumentModifiedStatus } from '@refraction/editor-documents';
 
 export const AGENTS_SETTINGS_KEY = 'agents';
 export const LLMS_SETTINGS_KEY = 'llms';

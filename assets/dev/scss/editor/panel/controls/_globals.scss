@@ -1,4 +1,4 @@
-// Elementor Global Controls
+// Refraction Global Controls
 .e-global {
 
 	&__popover {
@@ -229,24 +229,24 @@
 
 .e-control-global {
 
-	.elementor-control-input-wrapper {
+	.refraction-control-input-wrapper {
 		display: flex;
 		justify-content: flex-end;
 		max-width: $control-unit * 5;
 		width: 100%;
 	}
 
-	&.elementor-control {
+	&.refraction-control {
 
 		// A hardened selector to override popover-toggle's inverse direction CSS (in _popover-toggle.scss)
-		.elementor-control-input-wrapper {
+		.refraction-control-input-wrapper {
 			display: flex;
 			flex-direction: row;
 			align-items: stretch;
 		}
 	}
 
-	.elementor-control-spinner {
+	.refraction-control-spinner {
 		margin-inline-end: 4px;
 	}
 }

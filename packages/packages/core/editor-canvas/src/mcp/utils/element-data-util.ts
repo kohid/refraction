@@ -1,4 +1,4 @@
-import { getWidgetsCache, type V1ElementConfig } from '@elementor/editor-elements';
+import { getWidgetsCache, type V1ElementConfig } from '@refraction/editor-elements';
 
 export type AvailableWidget = {
 	type: string;

@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor section control.
+ * Refraction section control.
  *
  * A base control for creating section control. Displays a header that
  * functions as a toggle to show or hide a set of controls.
@@ -44,11 +44,11 @@ class Control_Section extends Base_UI_Control {
 	 */
 	public function content_template() {
 		?>
-		<button class="elementor-panel-heading">
-			<div class="elementor-panel-heading-toggle elementor-section-toggle" data-collapse_id="{{ data.name }}">
+		<button class="refraction-panel-heading">
+			<div class="refraction-panel-heading-toggle refraction-section-toggle" data-collapse_id="{{ data.name }}">
 				<i class="eicon-caret-right" aria-hidden="true"></i>
 			</div>
-			<div class="elementor-panel-heading-title elementor-section-title">{{{ data.label }}}</div>
+			<div class="refraction-panel-heading-title refraction-section-title">{{{ data.label }}}</div>
 		</button>
 		<?php
 	}

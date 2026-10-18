@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Core\Experiments;
+namespace Refraction\Core\Experiments;
 
-use Elementor\Core\Base\Base_Object;
-use Elementor\Core\Experiments\Exceptions\Dependency_Exception;
-use Elementor\Core\Upgrade\Manager as Upgrade_Manager;
-use Elementor\Core\Utils\Collection;
-use Elementor\Modules\System_Info\Module as System_Info;
-use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Utils;
+use Refraction\Core\Base\Base_Object;
+use Refraction\Core\Experiments\Exceptions\Dependency_Exception;
+use Refraction\Core\Upgrade\Manager as Upgrade_Manager;
+use Refraction\Core\Utils\Collection;
+use Refraction\Modules\System_Info\Module as System_Info;
+use Refraction\Plugin;
+use Refraction\Settings;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -32,7 +32,7 @@ class Manager extends Base_Object {
 
 	const TYPE_HIDDEN = 'hidden';
 
-	const OPTION_PREFIX = 'elementor_experiment-';
+	const OPTION_PREFIX = 'refraction_experiment-';
 
 	private $states;
 
@@ -102,7 +102,7 @@ class Manager extends Base_Object {
 						'<p>%s</p><p><a href="#" onclick="location.href=\'%s\'">%s</a></p>',
 						esc_html( $e->getMessage() ),
 						Settings::get_settings_tab_url( 'experiments' ),
-						esc_html__( 'Back', 'elementor' )
+						esc_html__( 'Back', 'refraction' )
 					);
 
 					wp_die( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -113,7 +113,7 @@ class Manager extends Base_Object {
 			add_action( 'update_option_' . $feature_option_key, $on_state_change_callback, 10, 2 );
 		}
 
-		do_action( 'elementor/experiments/feature-registered', $this, $experimental_data );
+		do_action( 'refraction/experiments/feature-registered', $this, $experimental_data );
 
 		return $experimental_data;
 	}
@@ -124,7 +124,7 @@ class Manager extends Base_Object {
 		if ( empty( $installs_history ) ) {
 			// Fresh installation: upgrade manager hasn't written history yet on this first request.
 			// Use the current plugin version as the effective first-install version.
-			return version_compare( ELEMENTOR_VERSION, $version, '>=' );
+			return version_compare( REFRACTION_VERSION, $version, '>=' );
 		}
 
 		$cleaned_version = preg_replace( '/-(beta|cloud|dev)\d*$/', '', key( $installs_history ) );
@@ -339,9 +339,9 @@ class Manager extends Base_Object {
 	private function add_default_features() {
 		$this->add_feature( [
 			'name' => 'e_font_icon_svg',
-			'title' => esc_html__( 'Inline Font Icons', 'elementor' ),
-			'tag' => esc_html__( 'Performance', 'elementor' ),
-			'description' => esc_html__( 'The “Inline Font Icons” will render the icons as inline SVG without loading the Font-Awesome and the eicons libraries and its related CSS files and fonts.', 'elementor' ),
+			'title' => esc_html__( 'Inline Font Icons', 'refraction' ),
+			'tag' => esc_html__( 'Performance', 'refraction' ),
+			'description' => esc_html__( 'The “Inline Font Icons” will render the icons as inline SVG without loading the Font-Awesome and the eicons libraries and its related CSS files and fonts.', 'refraction' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'new_site' => [
 				'default_active' => true,
@@ -352,8 +352,8 @@ class Manager extends Base_Object {
 
 		$this->add_feature( [
 			'name' => 'additional_custom_breakpoints',
-			'title' => esc_html__( 'Additional Custom Breakpoints', 'elementor' ),
-			'description' => esc_html__( 'Get pixel-perfect design for every screen size. You can now add up to 6 customizable breakpoints beyond the default desktop setting: mobile, mobile extra, tablet, tablet extra, laptop, and widescreen.', 'elementor' ),
+			'title' => esc_html__( 'Additional Custom Breakpoints', 'refraction' ),
+			'description' => esc_html__( 'Get pixel-perfect design for every screen size. You can now add up to 6 customizable breakpoints beyond the default desktop setting: mobile, mobile extra, tablet, tablet extra, laptop, and widescreen.', 'refraction' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'default' => self::STATE_ACTIVE,
 			'generator_tag' => true,
@@ -361,8 +361,8 @@ class Manager extends Base_Object {
 
 		$this->add_feature( [
 			'name' => 'container',
-			'title' => esc_html__( 'Container', 'elementor' ),
-			'description' => esc_html__( 'Create advanced layouts and responsive designs with Flexbox and Grid container elements.', 'elementor' ),
+			'title' => esc_html__( 'Container', 'refraction' ),
+			'description' => esc_html__( 'Create advanced layouts and responsive designs with Flexbox and Grid container elements.', 'refraction' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'default' => self::STATE_INACTIVE,
 			'new_site' => [
@@ -370,15 +370,15 @@ class Manager extends Base_Object {
 				'minimum_installation_version' => '3.16.0',
 			],
 			'messages' => [
-				'on_deactivate' => esc_html__( 'Container-based content will be hidden from your site and may not be recoverable in all cases.', 'elementor' ),
+				'on_deactivate' => esc_html__( 'Container-based content will be hidden from your site and may not be recoverable in all cases.', 'refraction' ),
 			],
 		] );
 
 		$this->add_feature( [
 			'name' => 'e_optimized_markup',
-			'title' => esc_html__( 'Optimized Markup', 'elementor' ),
-			'tag' => esc_html__( 'Performance', 'elementor' ),
-			'description' => esc_html__( 'Reduce the DOM size by eliminating HTML tags in various elements and widgets. This experiment includes markup changes so it might require updating custom CSS/JS code and cause compatibility issues with third party plugins.', 'elementor' ),
+			'title' => esc_html__( 'Optimized Markup', 'refraction' ),
+			'tag' => esc_html__( 'Performance', 'refraction' ),
+			'description' => esc_html__( 'Reduce the DOM size by eliminating HTML tags in various elements and widgets. This experiment includes markup changes so it might require updating custom CSS/JS code and cause compatibility issues with third party plugins.', 'refraction' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'default' => self::STATE_INACTIVE,
 			'new_site' => [
@@ -389,9 +389,9 @@ class Manager extends Base_Object {
 
 		$this->add_feature( [
 			'name' => 'e_optimized_css_files',
-			'title' => esc_html__( 'Optimized CSS Files', 'elementor' ),
-			'tag' => esc_html__( 'Performance', 'elementor' ),
-			'description' => esc_html__( 'Keeps external CSS files available and consistent for sites behind page caching or a CDN.', 'elementor' ),
+			'title' => esc_html__( 'Optimized CSS Files', 'refraction' ),
+			'tag' => esc_html__( 'Performance', 'refraction' ),
+			'description' => esc_html__( 'Keeps external CSS files available and consistent for sites behind page caching or a CDN.', 'refraction' ),
 			'release_status' => self::RELEASE_STATUS_ALPHA,
 			'default' => self::STATE_INACTIVE,
 			'generator_tag' => true,
@@ -406,9 +406,9 @@ class Manager extends Base_Object {
 	 */
 	private function init_states() {
 		$this->states = [
-			self::STATE_DEFAULT => esc_html__( 'Default', 'elementor' ),
-			self::STATE_ACTIVE => esc_html__( 'Active', 'elementor' ),
-			self::STATE_INACTIVE => esc_html__( 'Inactive', 'elementor' ),
+			self::STATE_DEFAULT => esc_html__( 'Default', 'refraction' ),
+			self::STATE_ACTIVE => esc_html__( 'Active', 'refraction' ),
+			self::STATE_INACTIVE => esc_html__( 'Inactive', 'refraction' ),
 		];
 	}
 
@@ -420,10 +420,10 @@ class Manager extends Base_Object {
 	 */
 	private function init_release_statuses() {
 		$this->release_statuses = [
-			self::RELEASE_STATUS_DEV => esc_html__( 'Development', 'elementor' ),
-			self::RELEASE_STATUS_ALPHA => esc_html__( 'Alpha', 'elementor' ),
-			self::RELEASE_STATUS_BETA => esc_html__( 'Beta', 'elementor' ),
-			self::RELEASE_STATUS_STABLE => esc_html__( 'Stable', 'elementor' ),
+			self::RELEASE_STATUS_DEV => esc_html__( 'Development', 'refraction' ),
+			self::RELEASE_STATUS_ALPHA => esc_html__( 'Alpha', 'refraction' ),
+			self::RELEASE_STATUS_BETA => esc_html__( 'Beta', 'refraction' ),
+			self::RELEASE_STATUS_STABLE => esc_html__( 'Stable', 'refraction' ),
 		];
 	}
 
@@ -438,7 +438,7 @@ class Manager extends Base_Object {
 
 		$this->add_default_features();
 
-		do_action( 'elementor/experiments/default-features-registered', $this );
+		do_action( 'refraction/experiments/default-features-registered', $this );
 	}
 
 	/**
@@ -481,10 +481,10 @@ class Manager extends Base_Object {
 		foreach ( [ 'stable', 'ongoing' ] as $section ) {
 			if ( ! isset( $fields[ $section ] ) ) {
 				$fields[ $section ]['no_features'] = [
-					'label' => esc_html__( 'No available experiments', 'elementor' ),
+					'label' => esc_html__( 'No available experiments', 'refraction' ),
 					'field_args' => [
 						'type' => 'raw_html',
-						'html' => esc_html__( 'The current version of Elementor doesn\'t have any experimental features . if you\'re feeling curious make sure to come back in future versions.', 'elementor' ),
+						'html' => esc_html__( 'The current version of Refraction doesn\'t have any experimental features . if you\'re feeling curious make sure to come back in future versions.', 'refraction' ),
 					],
 				];
 			}
@@ -492,7 +492,7 @@ class Manager extends Base_Object {
 
 		$settings->add_tab(
 			'experiments', [
-				'label' => esc_html__( 'Features', 'elementor' ),
+				'label' => esc_html__( 'Features', 'refraction' ),
 				'sections' => [
 					'ongoing_experiments' => [
 						'callback' => function() {
@@ -515,7 +515,7 @@ class Manager extends Base_Object {
 		?>
 		<hr>
 		<h2>
-			<?php echo esc_html__( 'Stable Features', 'elementor' ); ?>
+			<?php echo esc_html__( 'Stable Features', 'refraction' ); ?>
 		</h2>
 		<?php
 	}
@@ -529,27 +529,27 @@ class Manager extends Base_Object {
 	private function render_settings_intro() {
 		?>
 		<h2>
-			<?php echo esc_html__( 'Experiments and Features', 'elementor' ); ?>
+			<?php echo esc_html__( 'Experiments and Features', 'refraction' ); ?>
 		</h2>
 		<p class="e-experiment__description">
 			<?php
-			echo esc_html__( 'Personalize your Elementor experience by controlling which features and experiments are active on your site.', 'elementor' );
+			echo esc_html__( 'Personalize your Refraction experience by controlling which features and experiments are active on your site.', 'refraction' );
 			?>
 		</p>
 		<p class="e-experiment__description">
 			<?php
-			echo esc_html__( 'To use an experiment or feature on your site, simply click on the dropdown next to it and switch to Active. You can always deactivate them at any time.', 'elementor' );
+			echo esc_html__( 'To use an experiment or feature on your site, simply click on the dropdown next to it and switch to Active. You can always deactivate them at any time.', 'refraction' );
 			?>
 		</p>
 
 		<?php if ( $this->get_features() ) { ?>
-			<button type="button" class="button e-experiment__button" value="active"><?php echo esc_html__( 'Activate All', 'elementor' ); ?></button>
-			<button type="button" class="button e-experiment__button" value="inactive"><?php echo esc_html__( 'Deactivate All', 'elementor' ); ?></button>
-			<button type="button" class="button e-experiment__button" value="default"><?php echo esc_html__( 'Back to default', 'elementor' ); ?></button>
+			<button type="button" class="button e-experiment__button" value="active"><?php echo esc_html__( 'Activate All', 'refraction' ); ?></button>
+			<button type="button" class="button e-experiment__button" value="inactive"><?php echo esc_html__( 'Deactivate All', 'refraction' ); ?></button>
+			<button type="button" class="button e-experiment__button" value="default"><?php echo esc_html__( 'Back to default', 'refraction' ); ?></button>
 		<?php } ?>
 		<hr>
 		<h2 class="e-experiment__table-title">
-			<?php echo esc_html__( 'Ongoing Experiments', 'elementor' ); ?>
+			<?php echo esc_html__( 'Ongoing Experiments', 'refraction' ); ?>
 		</h2>
 		<?php
 	}
@@ -568,7 +568,7 @@ class Manager extends Base_Object {
 
 		$status = sprintf(
 			/* translators: %s Release status. */
-			esc_html__( 'Status: %s', 'elementor' ),
+			esc_html__( 'Status: %s', 'refraction' ),
 			$this->release_statuses[ $feature['release_status'] ]
 		);
 
@@ -616,7 +616,7 @@ class Manager extends Base_Object {
 
 		?>
 			<div class="e-experiment__dependency">
-				<strong class="e-experiment__dependency__title"><?php echo esc_html__( 'Requires', 'elementor' ); ?>:</strong>
+				<strong class="e-experiment__dependency__title"><?php echo esc_html__( 'Requires', 'refraction' ); ?>:</strong>
 				<span><?php echo esc_html( $dependencies ); ?></span>
 			</div>
 		<?php
@@ -665,7 +665,7 @@ class Manager extends Base_Object {
 				<span class="<?php echo esc_attr( $tag_classes ); ?>"><?php echo $tag['label']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 			<?php } ?>
 			<?php if ( $feature['deprecated'] ) { ?>
-				<span class="e-experiment__title__tag e-experiment__title__tag__deprecated"><?php echo esc_html__( 'Deprecated', 'elementor' ); ?></span>
+				<span class="e-experiment__title__tag e-experiment__title__tag__deprecated"><?php echo esc_html__( 'Deprecated', 'refraction' ); ?></span>
 			<?php } ?>
 		</div>
 		<?php
@@ -684,11 +684,11 @@ class Manager extends Base_Object {
 		$is_feature_active = $this->is_feature_active( $feature['name'] );
 
 		if ( self::STATE_DEFAULT === $feature['state'] ) {
-			$label = $is_feature_active ? esc_html__( 'Active by default', 'elementor' ) :
-				esc_html__( 'Inactive by default', 'elementor' );
+			$label = $is_feature_active ? esc_html__( 'Active by default', 'refraction' ) :
+				esc_html__( 'Inactive by default', 'refraction' );
 		} else {
-			$label = self::STATE_ACTIVE === $feature['state'] ? esc_html__( 'Active', 'elementor' ) :
-				esc_html__( 'Inactive', 'elementor' );
+			$label = self::STATE_ACTIVE === $feature['state'] ? esc_html__( 'Active', 'refraction' ) :
+				esc_html__( 'Inactive', 'refraction' );
 		}
 
 		return $label;
@@ -749,7 +749,7 @@ class Manager extends Base_Object {
 			$new_feature_data['on_state_change']( $old_state, $new_state );
 		}
 
-		do_action( 'elementor/experiments/feature-state-change/' . $old_feature_data['name'], $old_state, $new_state );
+		do_action( 'refraction/experiments/feature-state-change/' . $old_feature_data['name'], $old_state, $new_state );
 	}
 
 	/**
@@ -845,7 +845,7 @@ class Manager extends Base_Object {
 	}
 
 	private function should_show_hidden() {
-		return defined( 'ELEMENTOR_SHOW_HIDDEN_EXPERIMENTS' ) && ELEMENTOR_SHOW_HIDDEN_EXPERIMENTS;
+		return defined( 'REFRACTION_SHOW_HIDDEN_EXPERIMENTS' ) && REFRACTION_SHOW_HIDDEN_EXPERIMENTS;
 	}
 
 	private function create_dependency_class( $dependency_name, $dependency_args ) {
@@ -871,7 +871,7 @@ class Manager extends Base_Object {
 	 * @param array $allowed_options
 	 */
 	private function sort_allowed_options_by_dependencies( $allowed_options ) {
-		if ( ! isset( $allowed_options['elementor'] ) ) {
+		if ( ! isset( $allowed_options['refraction'] ) ) {
 			return $allowed_options;
 		}
 
@@ -900,7 +900,7 @@ class Manager extends Base_Object {
 			$sorted->push( $item );
 		};
 
-		foreach ( $allowed_options['elementor'] as $option ) {
+		foreach ( $allowed_options['refraction'] as $option ) {
 			$is_experiment_option = strpos( $option, static::OPTION_PREFIX ) === 0;
 
 			if ( ! $is_experiment_option ) {
@@ -912,7 +912,7 @@ class Manager extends Base_Object {
 			);
 		}
 
-		$allowed_options['elementor'] = Collection::make( $allowed_options['elementor'] )
+		$allowed_options['refraction'] = Collection::make( $allowed_options['refraction'] )
 			->filter( function ( $option ) {
 				return 0 !== strpos( $option, static::OPTION_PREFIX );
 			} )
@@ -945,7 +945,7 @@ class Manager extends Base_Object {
 		if ( is_admin() ) {
 			$page_id = Settings::PAGE_ID;
 
-			add_action( "elementor/admin/after_create_settings/{$page_id}", function( Settings $settings ) {
+			add_action( "refraction/admin/after_create_settings/{$page_id}", function( Settings $settings ) {
 				$this->register_settings_fields( $settings );
 			}, 11 );
 
@@ -956,7 +956,7 @@ class Manager extends Base_Object {
 
 		// Register CLI commands.
 		if ( Utils::is_wp_cli() ) {
-			\WP_CLI::add_command( 'elementor experiments', WP_CLI::class );
+			\WP_CLI::add_command( 'refraction experiments', WP_CLI::class );
 		}
 	}
 
@@ -1035,7 +1035,7 @@ class Manager extends Base_Object {
 		}
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Developer notice; message is escaped.
-		_doing_it_wrong( __METHOD__, esc_html( $message ), ELEMENTOR_VERSION );
+		_doing_it_wrong( __METHOD__, esc_html( $message ), REFRACTION_VERSION );
 	}
 
 	/**

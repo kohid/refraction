@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Modules\Favorites;
+namespace Refraction\Modules\Favorites;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Experiments\Manager;
-use Elementor\Modules\Favorites\Types\Widgets;
-use Elementor\Plugin;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Experiments\Manager;
+use Refraction\Modules\Favorites\Types\Widgets;
+use Refraction\Plugin;
 use http\Exception\InvalidArgumentException;
 use WP_Error;
 
@@ -21,7 +21,7 @@ class Module extends BaseModule {
 	 */
 	protected $types = [];
 
-	const OPTION_NAME = 'elementor_editor_user_favorites';
+	const OPTION_NAME = 'refraction_editor_user_favorites';
 
 	/**
 	 * The name of the merge action.

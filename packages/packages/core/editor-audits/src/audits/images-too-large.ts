@@ -10,9 +10,9 @@ const BYTES_PER_KB = 1024;
 
 export const audit: Audit = {
 	id: 'audits/images-too-large',
-	title: __( 'Oversized images', 'elementor' ),
-	description: __( 'Large image files slow down the page.', 'elementor' ),
-	fixHint: __( 'Replace the image with a smaller version or enable image optimization.', 'elementor' ),
+	title: __( 'Oversized images', 'refraction' ),
+	description: __( 'Large image files slow down the page.', 'refraction' ),
+	fixHint: __( 'Replace the image with a smaller version or enable image optimization.', 'refraction' ),
 	categories: [ 'performance' ],
 	severity: 'warning',
 	weight: 7,
@@ -49,7 +49,7 @@ export const audit: Audit = {
 		walkAllImageSources( ctx.elements.tree, ( { node, media } ) => evaluateSource( node, media ) );
 
 		if ( ! hasAnyImage ) {
-			return { status: 'skipped', reason: __( 'No images', 'elementor' ) };
+			return { status: 'skipped', reason: __( 'No images', 'refraction' ) };
 		}
 
 		const violations: AuditViolation[] = Array.from( widgetMaxKb.entries() ).map( ( [ elementId, kb ] ) => ( {
@@ -58,13 +58,13 @@ export const audit: Audit = {
 			targetHint: 'element-settings' as const,
 			label: sprintf(
 				/* translators: %d is the image file size in kilobytes. */
-				__( 'Image is %d KB (over 500 KB).', 'elementor' ),
+				__( 'Image is %d KB (over 500 KB).', 'refraction' ),
 				kb
 			),
 			externalUrl: isReady
 				? ctx.pageContext.image_optimization_settings_url
 				: ctx.pageContext.image_optimization_plugin_url,
-			ctaLabel: __( 'Optimize all', 'elementor' ),
+			ctaLabel: __( 'Optimize all', 'refraction' ),
 		} ) );
 
 		return violations.length === 0

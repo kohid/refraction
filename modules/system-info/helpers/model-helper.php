@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Modules\System_Info\Helpers;
+namespace Refraction\Modules\System_Info\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor model helper.
+ * Refraction model helper.
  *
- * Elementor model helper handler class is responsible for filtering properties.
+ * Refraction model helper handler class is responsible for filtering properties.
  *
  * @since 1.0.0
  */

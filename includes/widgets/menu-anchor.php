@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor menu anchor widget.
+ * Refraction menu anchor widget.
  *
- * Elementor widget that allows to link and menu to a specific position on the
+ * Refraction widget that allows to link and menu to a specific position on the
  * page.
  *
  * @since 1.0.0
@@ -40,7 +40,7 @@ class Widget_Menu_Anchor extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Menu Anchor', 'elementor' );
+		return esc_html__( 'Menu Anchor', 'refraction' );
 	}
 
 	/**
@@ -105,20 +105,20 @@ class Widget_Menu_Anchor extends Widget_Base {
 		$this->start_controls_section(
 			'section_anchor',
 			[
-				'label' => esc_html__( 'Menu Anchor', 'elementor' ),
+				'label' => esc_html__( 'Menu Anchor', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'anchor',
 			[
-				'label' => esc_html__( 'The ID of Menu Anchor.', 'elementor' ),
+				'label' => esc_html__( 'The ID of Menu Anchor.', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'ai' => [
 					'active' => false,
 				],
-				'placeholder' => esc_html__( 'For Example: About', 'elementor' ),
-				'description' => esc_html__( 'This ID will be the CSS ID you will have to use in your own page, Without #.', 'elementor' ),
+				'placeholder' => esc_html__( 'For Example: About', 'refraction' ),
+				'description' => esc_html__( 'This ID will be the CSS ID you will have to use in your own page, Without #.', 'refraction' ),
 				'label_block' => true,
 				'dynamic' => [
 					'active' => true,
@@ -133,7 +133,7 @@ class Widget_Menu_Anchor extends Widget_Base {
 				'alert_type' => 'warning',
 				'content' => sprintf(
 					/* translators: %s: Accepted chars. */
-					esc_html__( 'Note: The ID link ONLY accepts these chars: %s', 'elementor' ),
+					esc_html__( 'Note: The ID link ONLY accepts these chars: %s', 'refraction' ),
 					'`A-Z, a-z, 0-9, _ , -`'
 				),
 			]
@@ -160,7 +160,7 @@ class Widget_Menu_Anchor extends Widget_Base {
 		$this->add_render_attribute(
 			'inner',
 			[
-				'class' => 'elementor-menu-anchor',
+				'class' => 'refraction-menu-anchor',
 				'id' => sanitize_html_class( $anchor ),
 			]
 		);
@@ -187,7 +187,7 @@ class Widget_Menu_Anchor extends Widget_Base {
 		view.addRenderAttribute(
 			'inner',
 			{
-				'class': 'elementor-menu-anchor',
+				'class': 'refraction-menu-anchor',
 				'id': settings.anchor,
 			}
 		);

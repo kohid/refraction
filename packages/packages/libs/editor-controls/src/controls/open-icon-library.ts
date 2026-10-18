@@ -1,4 +1,4 @@
-import { stringPropTypeUtil } from '@elementor/editor-props';
+import { stringPropTypeUtil } from '@refraction/editor-props';
 
 export const SVG_ICON_LIBRARY = 'svg';
 
@@ -26,7 +26,7 @@ type IconManager = {
 	show: ( options: { view: IconManagerControlView } ) => void;
 };
 
-type ElementorWithIconManager = {
+type RefractionWithIconManager = {
 	iconManager?: IconManager;
 };
 
@@ -42,7 +42,7 @@ export function isSvgLibrarySelection(
 }
 
 export function openIconLibrary( { selected, onSelect }: OpenIconLibraryOptions = {} ) {
-	const iconManager = ( window.elementor as ElementorWithIconManager | undefined )?.iconManager;
+	const iconManager = ( window.refraction as RefractionWithIconManager | undefined )?.iconManager;
 
 	if ( ! iconManager ) {
 		return;
@@ -55,7 +55,7 @@ export function openIconLibrary( { selected, onSelect }: OpenIconLibraryOptions 
 }
 
 export function enqueueIconFonts( library: string ) {
-	window.elementor?.helpers?.enqueueIconFonts?.( library );
+	window.refraction?.helpers?.enqueueIconFonts?.( library );
 }
 
 function createIconManagerControlView(

@@ -1,4 +1,4 @@
-import { __useDispatch as useDispatch, __useSelector as useSelector } from '@elementor/store';
+import { __useDispatch as useDispatch, __useSelector as useSelector } from '@refraction/store';
 
 import { type GlobalState, selectIsOpen } from '../store/selectors';
 import { slice } from '../store/slice';

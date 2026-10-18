@@ -3,7 +3,7 @@
 //
 
 // Section & Container - Overlay Settings
-.elementor-editor-element-overlay-settings {
+.refraction-editor-element-overlay-settings {
 	height: 24px;
 	top: 1px;
 	left: 50%;
@@ -21,7 +21,7 @@
 		font-size: 16px;
 	}
 
-	.elementor-editor-element-setting {
+	.refraction-editor-element-setting {
 
 		&:hover {
 			background-color: var(--e-p-border-section-hover);
@@ -84,14 +84,14 @@
 // Top Section / Container / Div-block / Flexbox (Handles inside)
 .e-handles-inside {
 
-	> .elementor-element-overlay > .elementor-editor-element-settings {
+	> .refraction-element-overlay > .refraction-editor-element-settings {
 		transform: translateX(-50%);
 		border-start-start-radius: 0;
 		border-start-end-radius: 0;
 		border-end-start-radius: 5px;
 		border-end-end-radius: 5px;
 
-		.elementor-editor-element-setting {
+		.refraction-editor-element-setting {
 			&:first-child {
 				border-start-start-radius: 0;
 				border-start-end-radius: 0;

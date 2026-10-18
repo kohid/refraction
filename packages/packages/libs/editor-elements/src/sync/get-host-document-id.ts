@@ -4,7 +4,7 @@ export function getHostDocumentId() {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
 	try {
-		return extendedWindow.elementor?.documents?.getInitialId?.() ?? null;
+		return extendedWindow.refraction?.documents?.getInitialId?.() ?? null;
 	} catch {
 		return null;
 	}

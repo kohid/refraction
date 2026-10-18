@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor sub controls stack.
+ * Refraction sub controls stack.
  *
  * An abstract class that can be used to divide a large ControlsStack into small parts.
  *

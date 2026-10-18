@@ -1,14 +1,14 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Classes\Action;
+namespace Refraction\Modules\FloatingButtons\Classes\Action;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Modules\FloatingButtons\Classes\Conditions\Conditions_Cache;
-use Elementor\Modules\FloatingButtons\Documents\Floating_Buttons;
-use Elementor\Modules\FloatingButtons\Module;
+use Refraction\Modules\FloatingButtons\Classes\Conditions\Conditions_Cache;
+use Refraction\Modules\FloatingButtons\Documents\Floating_Buttons;
+use Refraction\Modules\FloatingButtons\Module;
 
 class Action_Handler {
 
@@ -42,7 +42,7 @@ class Action_Handler {
 	private function handle_remove_from_entire_site(): void {
 		$post_id = filter_input( INPUT_GET, 'post', FILTER_VALIDATE_INT );
 		check_admin_referer( 'remove_from_entire_site_' . $post_id );
-		delete_post_meta( $post_id, '_elementor_conditions' );
+		delete_post_meta( $post_id, '_refraction_conditions' );
 		$this->conditions_cache->remove_from_cache( $post_id );
 
 		wp_redirect( $this->menu_args['menu_slug'] );
@@ -56,11 +56,11 @@ class Action_Handler {
 		$posts = $this->get_published_floating_elements( $post_id );
 
 		foreach ( $posts as $post_id_to_delete ) {
-			delete_post_meta( $post_id_to_delete, '_elementor_conditions' );
+			delete_post_meta( $post_id_to_delete, '_refraction_conditions' );
 			$this->conditions_cache->remove_from_cache( $post_id_to_delete );
 		}
 
-		update_post_meta( $post_id, '_elementor_conditions', [ 'include/general' ] );
+		update_post_meta( $post_id, '_refraction_conditions', [ 'include/general' ] );
 		$this->conditions_cache->add_to_cache( $post_id );
 
 		wp_redirect( $this->menu_args['menu_slug'] );

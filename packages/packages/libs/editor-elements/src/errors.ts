@@ -1,4 +1,4 @@
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export const ElementNotFoundError = createError< { elementId: string } >( {
 	code: 'element_not_found',

@@ -1,11 +1,11 @@
-var ControlBaseDataView = require( 'elementor-controls/base-data' ),
+var ControlBaseDataView = require( 'refraction-controls/base-data' ),
 	ControlStructureItemView;
 
 ControlStructureItemView = ControlBaseDataView.extend( {
 	ui() {
 		var ui = ControlBaseDataView.prototype.ui.apply( this, arguments );
 
-		ui.resetStructure = '.elementor-control-structure-reset';
+		ui.resetStructure = '.refraction-control-structure-reset';
 
 		return ui;
 	},
@@ -25,15 +25,15 @@ ControlStructureItemView = ControlBaseDataView.extend( {
 	},
 
 	getCurrentEditedSection() {
-		var editor = elementor.getPanelView().getCurrentPageView();
+		var editor = refraction.getPanelView().getCurrentPageView();
 
 		return editor.getOption( 'editedElementView' );
 	},
 
 	getMorePresets() {
-		var parsedStructure = elementor.presetsFactory.getParsedStructure( this.getControlValue() );
+		var parsedStructure = refraction.presetsFactory.getParsedStructure( this.getControlValue() );
 
-		return elementor.presetsFactory.getPresets( parsedStructure.columnsCount );
+		return refraction.presetsFactory.getPresets( parsedStructure.columnsCount );
 	},
 
 	onResetStructureClick() {

@@ -1,6 +1,6 @@
-import { getAllDescendants, type V1Element } from '@elementor/editor-elements';
-import { type NotificationData, notify } from '@elementor/editor-notifications';
-import { blockCommand, type HookOptions, registerDataHook } from '@elementor/editor-v1-adapters';
+import { getAllDescendants, type V1Element } from '@refraction/editor-elements';
+import { type NotificationData, notify } from '@refraction/editor-notifications';
+import { blockCommand, type HookOptions, registerDataHook } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import {
@@ -17,7 +17,7 @@ const MOVE_COMMAND = 'document/elements/move';
 
 const DUPLICATE_HONEYPOT_ALERT: NotificationData = {
 	type: 'default',
-	message: __( 'Only one Honeypot can be added per form.', 'elementor' ),
+	message: __( 'Only one Honeypot can be added per form.', 'refraction' ),
 	id: 'duplicate-honeypot-blocked',
 };
 

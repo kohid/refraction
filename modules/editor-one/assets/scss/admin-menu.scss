@@ -33,9 +33,9 @@
 	--editor-one-flyout-menu-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 	--editor-one-flyout-menu-folded-left: 36px;
 
-	.elementor-has-flyout {
+	.refraction-has-flyout {
 
-        & .elementor-submenu-flyout {
+        & .refraction-submenu-flyout {
             display: none;
         }
 	}
@@ -43,10 +43,10 @@
 
 @media screen and (min-width: 783px) {
 	#adminmenu {
-        .elementor-has-flyout {
+        .refraction-has-flyout {
             position: relative;
 
-            &.elementor-flyout-open > .elementor-submenu-flyout {
+            &.refraction-flyout-open > .refraction-submenu-flyout {
                 display: block;
             }
 
@@ -68,7 +68,7 @@
             }
         }
 
-        .elementor-submenu-flyout {
+        .refraction-submenu-flyout {
             position: absolute;
             inset-inline-start: 100%;
             top: calc(var(--editor-one-flyout-menu-padding-y) * -1 - var(--editor-one-flyout-menu-parent-padding));
@@ -86,13 +86,13 @@
                 border-radius: var(--editor-one-flyout-menu-border-radius) 0 0 var(--editor-one-flyout-menu-border-radius);
             }
 
-            &.elementor-level-3 {
+            &.refraction-level-3 {
                 min-width: var(--editor-one-flyout-menu-min-width);
                 max-height: var(--editor-one-flyout-menu-max-height);
                 overflow: visible;
             }
 
-            &.elementor-submenu-flyout-visible {
+            &.refraction-submenu-flyout-visible {
                 display: block;
             }
 
@@ -119,15 +119,15 @@
                     }
                 }
 
-                &.elementor-flyout-divider, 
-                &.elementor-menu-separator {
+                &.refraction-flyout-divider, 
+                &.refraction-menu-separator {
                     border-top: var(--editor-one-flyout-menu-border-width) solid var(--editor-one-flyout-menu-border);
                     margin: var(--editor-one-flyout-menu-spacing-xs) 0;
                     padding: 0;
                 }
             }
 
-            .elementor-has-flyout > a {
+            .refraction-has-flyout > a {
                 padding-inline-end: var(--editor-one-flyout-menu-padding-x-large);
 
                 &::after {
@@ -139,7 +139,7 @@
                 }
             }
 
-            .elementor-submenu-flyout {
+            .refraction-submenu-flyout {
                 inset-inline-start: 100%;
                 top: calc(var(--editor-one-flyout-menu-padding-y) * -1);
             }
@@ -165,7 +165,7 @@
     }
 }
 
-#menu-posts-elementor_library {
+#menu-posts-refraction_library {
 	display: none !important;
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { render, screen } from '@testing-library/react';
 
-import { AgentDiscoveryPanel } from 'elementor/modules/agents/assets/js/admin/components/agent-discovery/agent-discovery-panel';
+import { AgentDiscoveryPanel } from 'refraction/modules/agents/assets/js/admin/components/agent-discovery/agent-discovery-panel';
 
 jest.mock( '@wordpress/i18n', () => ( {
 	__: ( text ) => text,

@@ -124,9 +124,9 @@
 		color: var(--e-a-btn-color-disabled);
 	}
 
-	&:not(.elementor-button-state) {
+	&:not(.refraction-button-state) {
 
-		.elementor-state-icon {
+		.refraction-state-icon {
 			display: none;
 		}
 	}
@@ -151,7 +151,7 @@
 		border: 1px solid var(--e-a-color-txt-muted);
 	}
 
-	&.elementor-button-success,
+	&.refraction-button-success,
 	&.e-success {
 		background-color: var(--e-a-btn-bg-success);
 
@@ -196,7 +196,7 @@
 		}
 	}
 
-	&.elementor-button-info,
+	&.refraction-button-info,
 	&.e-info {
 		background-color: var(--e-a-btn-bg-info);
 
@@ -206,7 +206,7 @@
 		}
 	}
 
-	&.elementor-button-warning,
+	&.refraction-button-warning,
 	&.e-warning {
 		background-color: var(--e-a-btn-bg-warning);
 
@@ -216,7 +216,7 @@
 		}
 	}
 
-	&.elementor-button-danger,
+	&.refraction-button-danger,
 	&.e-danger {
 		background-color: var(--e-a-btn-bg-danger);
 

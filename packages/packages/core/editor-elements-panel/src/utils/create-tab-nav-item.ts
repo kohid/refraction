@@ -14,7 +14,7 @@ export function createTabNavItem( { id, label, route, isActive, position }: Args
 
 	const btn = document.createElement( 'button' );
 
-	btn.className = [ 'elementor-component-tab', 'elementor-panel-navigation-tab', isActive ? 'elementor-active' : '' ]
+	btn.className = [ 'refraction-component-tab', 'refraction-panel-navigation-tab', isActive ? 'refraction-active' : '' ]
 		.filter( Boolean )
 		.join( ' ' );
 

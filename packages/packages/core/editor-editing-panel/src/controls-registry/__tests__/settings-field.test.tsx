@@ -7,8 +7,8 @@ import {
 	renderControl,
 	renderWithTheme,
 } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
-import { getElementLabel, getElementSettings, updateElementSettings } from '@elementor/editor-elements';
+import { useBoundProp } from '@refraction/editor-controls';
+import { getElementLabel, getElementSettings, updateElementSettings } from '@refraction/editor-elements';
 import {
 	type AnyTransformable,
 	type Dependency,
@@ -17,8 +17,8 @@ import {
 	type PropType,
 	type PropValue,
 	stringPropTypeUtil,
-} from '@elementor/editor-props';
-import { useActiveBreakpoint, useBreakpoints } from '@elementor/editor-responsive';
+} from '@refraction/editor-props';
+import { useActiveBreakpoint, useBreakpoints } from '@refraction/editor-responsive';
 import { fireEvent, screen } from '@testing-library/react';
 import { __ } from '@wordpress/i18n';
 
@@ -26,16 +26,16 @@ import { mockElement } from '../../__tests__/utils';
 import { ElementProvider } from '../../contexts/element-context';
 import { SettingsField } from '../settings-field';
 
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	updateElementSettings: jest.fn(),
 	getElementLabel: jest.fn(),
 	getElementSettings: jest.fn(),
 } ) );
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	setDocumentModifiedStatus: jest.fn(),
 } ) );
-jest.mock( '@elementor/editor-responsive', () => ( {
+jest.mock( '@refraction/editor-responsive', () => ( {
 	useActiveBreakpoint: jest.fn( () => 'desktop' ),
 	useBreakpoints: jest.fn( () => [ { id: 'desktop' }, { id: 'tablet' }, { id: 'mobile' } ] ),
 } ) );
@@ -269,7 +269,7 @@ describe( '<SettingsField />', () => {
 		// Act.
 		renderWithTheme(
 			<ElementProvider element={ element } elementType={ elementType } settings={ defaultSettings }>
-				<SettingsField bind={ bind } propDisplayName={ __( 'Test Prop', 'elementor' ) }>
+				<SettingsField bind={ bind } propDisplayName={ __( 'Test Prop', 'refraction' ) }>
 					<MockControl />
 				</SettingsField>
 			</ElementProvider>
@@ -294,7 +294,7 @@ describe( '<SettingsField />', () => {
 		// Act.
 		renderWithTheme(
 			<ElementProvider element={ element } elementType={ elementType } settings={ {} }>
-				<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'elementor' ) }>
+				<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'refraction' ) }>
 					<MockControl />
 				</SettingsField>
 			</ElementProvider>
@@ -316,7 +316,7 @@ describe( '<SettingsField />', () => {
 		// Act.
 		renderWithTheme(
 			<ElementProvider element={ element } elementType={ elementType } settings={ {} }>
-				<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'elementor' ) }>
+				<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'refraction' ) }>
 					<MockControl />
 				</SettingsField>
 			</ElementProvider>
@@ -354,7 +354,7 @@ describe( '<SettingsField />', () => {
 					elementType={ elementType }
 					settings={ { [ bind ]: initialValue } }
 				>
-					<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'elementor' ) }>
+					<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'refraction' ) }>
 						<MockControl />
 					</SettingsField>
 				</ElementProvider>
@@ -453,7 +453,7 @@ describe( '<SettingsField /> responsive binding', () => {
 
 		renderWithTheme(
 			<ElementProvider element={ element } elementType={ elementType } settings={ settings }>
-				<SettingsField bind={ slidesBind } propDisplayName={ __( 'Slides Per View', 'elementor' ) }>
+				<SettingsField bind={ slidesBind } propDisplayName={ __( 'Slides Per View', 'refraction' ) }>
 					<MockNumberControl />
 				</SettingsField>
 			</ElementProvider>
@@ -495,7 +495,7 @@ describe( '<SettingsField /> responsive binding', () => {
 
 		renderWithTheme(
 			<ElementProvider element={ element } elementType={ elementType } settings={ settings }>
-				<SettingsField bind={ slidesBind } propDisplayName={ __( 'Slides Per View', 'elementor' ) }>
+				<SettingsField bind={ slidesBind } propDisplayName={ __( 'Slides Per View', 'refraction' ) }>
 					<MockNumberControl />
 				</SettingsField>
 			</ElementProvider>
@@ -538,7 +538,7 @@ describe( '<SettingsField /> responsive binding', () => {
 
 		renderWithTheme(
 			<ElementProvider element={ element } elementType={ elementType } settings={ settings }>
-				<SettingsField bind={ slidesBind } propDisplayName={ __( 'Slides Per View', 'elementor' ) }>
+				<SettingsField bind={ slidesBind } propDisplayName={ __( 'Slides Per View', 'refraction' ) }>
 					<MockNumberControl />
 				</SettingsField>
 			</ElementProvider>
@@ -561,7 +561,7 @@ describe( '<SettingsField /> responsive binding', () => {
 				elementType={ elementType }
 				settings={ { [ bind ]: { $$type: 'string', value: 'Hello, World!' } } }
 			>
-				<SettingsField bind={ bind } propDisplayName={ __( 'Test Prop', 'elementor' ) }>
+				<SettingsField bind={ bind } propDisplayName={ __( 'Test Prop', 'refraction' ) }>
 					<MockControl />
 				</SettingsField>
 			</ElementProvider>
@@ -638,7 +638,7 @@ describe( 'ConditionalContent with shouldHide effect', () => {
 					},
 				} }
 			>
-				<SettingsField bind="email" propDisplayName={ __( 'Email', 'elementor' ) }>
+				<SettingsField bind="email" propDisplayName={ __( 'Email', 'refraction' ) }>
 					<div>Email Control Content</div>
 				</SettingsField>
 			</ElementProvider>
@@ -691,7 +691,7 @@ describe( 'ConditionalContent with shouldHide effect', () => {
 					},
 				} }
 			>
-				<SettingsField bind="email" propDisplayName={ __( 'Email', 'elementor' ) }>
+				<SettingsField bind="email" propDisplayName={ __( 'Email', 'refraction' ) }>
 					<div>Email Control Content</div>
 				</SettingsField>
 			</ElementProvider>
@@ -742,7 +742,7 @@ describe( 'ConditionalContent with shouldHide effect', () => {
 					},
 				} }
 			>
-				<SettingsField bind="email" propDisplayName={ __( 'Email', 'elementor' ) }>
+				<SettingsField bind="email" propDisplayName={ __( 'Email', 'refraction' ) }>
 					<div>Email Control Content</div>
 				</SettingsField>
 			</ElementProvider>
@@ -792,7 +792,7 @@ describe( 'ConditionalContent with shouldHide effect', () => {
 
 		const { rerender } = renderWithTheme(
 			<ElementProvider element={ element } elementType={ elementType } settings={ initialSettings }>
-				<SettingsField bind="email" propDisplayName={ __( 'Email', 'elementor' ) }>
+				<SettingsField bind="email" propDisplayName={ __( 'Email', 'refraction' ) }>
 					<div>Email Control Content</div>
 				</SettingsField>
 			</ElementProvider>
@@ -810,7 +810,7 @@ describe( 'ConditionalContent with shouldHide effect', () => {
 
 		rerender(
 			<ElementProvider element={ element } elementType={ elementType } settings={ updatedSettings }>
-				<SettingsField bind="email" propDisplayName={ __( 'Email', 'elementor' ) }>
+				<SettingsField bind="email" propDisplayName={ __( 'Email', 'refraction' ) }>
 					<div>Email Control Content</div>
 				</SettingsField>
 			</ElementProvider>
@@ -865,7 +865,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="control-a" propDisplayName={ __( 'Control A', 'elementor' ) }>
+					<SettingsField bind="control-a" propDisplayName={ __( 'Control A', 'refraction' ) }>
 						<MockControl bind="control-a" />
 					</SettingsField>
 				</ElementProvider>
@@ -922,7 +922,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="parent-control" propDisplayName={ __( 'Parent Control', 'elementor' ) }>
+					<SettingsField bind="parent-control" propDisplayName={ __( 'Parent Control', 'refraction' ) }>
 						<MockControl bind="parent-control" />
 					</SettingsField>
 				</ElementProvider>
@@ -978,7 +978,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'elementor' ) }>
+					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'refraction' ) }>
 						<MockControl bind="source-control" />
 					</SettingsField>
 				</ElementProvider>
@@ -1028,7 +1028,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'elementor' ) }>
+					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'refraction' ) }>
 						<MockControl bind="source-control" />
 					</SettingsField>
 				</ElementProvider>
@@ -1090,7 +1090,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'elementor' ) }>
+					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'refraction' ) }>
 						<MockControl bind="source-control" />
 					</SettingsField>
 				</ElementProvider>
@@ -1198,7 +1198,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'elementor' ) }>
+					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'refraction' ) }>
 						<MockControl bind="source-control" />
 					</SettingsField>
 				</ElementProvider>
@@ -1264,7 +1264,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'elementor' ) }>
+					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'refraction' ) }>
 						<MockControl bind="source-control" />
 					</SettingsField>
 				</ElementProvider>
@@ -1327,7 +1327,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="control-a" propDisplayName={ __( 'Control A', 'elementor' ) }>
+					<SettingsField bind="control-a" propDisplayName={ __( 'Control A', 'refraction' ) }>
 						<MockControl bind="control-a" />
 					</SettingsField>
 				</ElementProvider>
@@ -1377,7 +1377,7 @@ describe( 'SettingsField dependency logic', () => {
 			// Act.
 			renderWithTheme(
 				<ElementProvider element={ element } elementType={ elementType } settings={ elementSettings }>
-					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'elementor' ) }>
+					<SettingsField bind="source-control" propDisplayName={ __( 'Source Control', 'refraction' ) }>
 						<MockControl bind="source-control" />
 					</SettingsField>
 				</ElementProvider>
@@ -1520,7 +1520,7 @@ function setup( {
 			elementType={ elementType }
 			settings={ values as Record< string, AnyTransformable | null > }
 		>
-			<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'elementor' ) }>
+			<SettingsField bind={ bind } propDisplayName={ __( 'Text', 'refraction' ) }>
 				<MockControl />
 			</SettingsField>
 		</ElementProvider>,

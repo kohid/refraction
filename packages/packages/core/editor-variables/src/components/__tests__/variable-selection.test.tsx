@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { type PropsWithChildren } from 'react';
 import { renderWithTheme } from 'test-utils';
-import { trackViewPromotion } from '@elementor/editor-controls';
-import { PopoverMenuList } from '@elementor/editor-ui';
+import { trackViewPromotion } from '@refraction/editor-controls';
+import { PopoverMenuList } from '@refraction/editor-ui';
 import { fireEvent, screen } from '@testing-library/react';
 import { __ } from '@wordpress/i18n';
 
@@ -16,8 +16,8 @@ jest.mock( '../../hooks/use-prop-variables' );
 jest.mock( '../../variables-registry/variable-type-registry' );
 jest.mock( '../../utils/tracking' );
 jest.mock( '../../hooks/use-permissions' );
-jest.mock( '@elementor/editor-controls', () => ( {
-	...jest.requireActual( '@elementor/editor-controls' ),
+jest.mock( '@refraction/editor-controls', () => ( {
+	...jest.requireActual( '@refraction/editor-controls' ),
 	useBoundProp: jest.fn(),
 	trackViewPromotion: jest.fn(),
 } ) );
@@ -25,8 +25,8 @@ jest.mock( '../ui/no-search-results', () => ( {
 	NoSearchResults: () => <span>No results found</span>,
 } ) );
 
-jest.mock( '@elementor/editor-ui', () => ( {
-	...jest.requireActual( '@elementor/editor-ui' ),
+jest.mock( '@refraction/editor-ui', () => ( {
+	...jest.requireActual( '@refraction/editor-ui' ),
 	PopoverMenuList: jest.fn(),
 	PopoverBody: ( { children }: PropsWithChildren ) => children,
 } ) );
@@ -82,7 +82,7 @@ describe( 'VariablesSelection', () => {
 	beforeEach( () => {
 		jest.clearAllMocks();
 		( variablesRegistry.getVariableType as jest.Mock ).mockReturnValue( mockVariableType );
-		( require( '@elementor/editor-controls' ).useBoundProp as jest.Mock ).mockReturnValue( mockBoundProp );
+		( require( '@refraction/editor-controls' ).useBoundProp as jest.Mock ).mockReturnValue( mockBoundProp );
 		( tracking.trackVariableEvent as jest.Mock ).mockImplementation( () => {} );
 		( require( '../../hooks/use-permissions' ).usePermissions as jest.Mock ).mockReturnValue( {
 			canAdd: () => true,
@@ -110,7 +110,7 @@ describe( 'VariablesSelection', () => {
 				</TestWrapper>
 			);
 
-			const searchInput = screen.getByPlaceholderText( __( 'Search', 'elementor' ) );
+			const searchInput = screen.getByPlaceholderText( __( 'Search', 'refraction' ) );
 			fireEvent.change( searchInput, { target: { value: 'primary' } } );
 
 			// Assert.
@@ -177,7 +177,7 @@ describe( 'VariablesSelection', () => {
 			);
 
 			// Assert.
-			expect( screen.queryByPlaceholderText( __( 'Search', 'elementor' ) ) ).not.toBeInTheDocument();
+			expect( screen.queryByPlaceholderText( __( 'Search', 'refraction' ) ) ).not.toBeInTheDocument();
 		} );
 
 		it( 'should call onAdd when create button is clicked', () => {
@@ -196,7 +196,7 @@ describe( 'VariablesSelection', () => {
 				</TestWrapper>
 			);
 
-			const createButton = screen.getByText( __( 'Create a variable', 'elementor' ) );
+			const createButton = screen.getByText( __( 'Create a variable', 'refraction' ) );
 			fireEvent.click( createButton );
 
 			// Assert.
@@ -222,7 +222,7 @@ describe( 'VariablesSelection', () => {
 			);
 
 			// Assert.
-			expect( screen.getByText( __( 'No compatible variables', 'elementor' ) ) ).toBeInTheDocument();
+			expect( screen.getByText( __( 'No compatible variables', 'refraction' ) ) ).toBeInTheDocument();
 			expect( screen.getByText( /none of your variables work with this control/ ) ).toBeInTheDocument();
 		} );
 
@@ -243,7 +243,7 @@ describe( 'VariablesSelection', () => {
 			);
 
 			// Assert.
-			expect( screen.getByText( __( 'No compatible variables', 'elementor' ) ) ).toBeInTheDocument();
+			expect( screen.getByText( __( 'No compatible variables', 'refraction' ) ) ).toBeInTheDocument();
 			expect( screen.queryByText( /Create your first .* variable/i ) ).not.toBeInTheDocument();
 		} );
 	} );
@@ -317,7 +317,7 @@ describe( 'VariablesSelection', () => {
 				hasNoCompatibleVariables: false,
 			} );
 
-			( require( '@elementor/editor-controls' ).useBoundProp as jest.Mock ).mockReturnValue( {
+			( require( '@refraction/editor-controls' ).useBoundProp as jest.Mock ).mockReturnValue( {
 				...mockBoundProp,
 				value: 'var1',
 			} );
@@ -365,7 +365,7 @@ describe( 'VariablesSelection', () => {
 
 			expect( screen.getByText( 'Upgrade Now' ) ).toBeInTheDocument();
 
-			const addButton = screen.getByRole( 'button', { name: __( 'Create variable', 'elementor' ) } );
+			const addButton = screen.getByRole( 'button', { name: __( 'Create variable', 'refraction' ) } );
 			expect( addButton ).toBeDisabled();
 		} );
 

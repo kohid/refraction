@@ -1,11 +1,11 @@
-var ControlBaseView = require( 'elementor-controls/base' ),
+var ControlBaseView = require( 'refraction-controls/base' ),
 	ControlSectionItemView;
 
 ControlSectionItemView = ControlBaseView.extend( {
 	ui() {
 		var ui = ControlBaseView.prototype.ui.apply( this, arguments );
 
-		ui.heading = '.elementor-panel-heading';
+		ui.heading = '.refraction-panel-heading';
 
 		return ui;
 	},

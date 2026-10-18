@@ -96,13 +96,13 @@
 	}
 
 	.e-element-color-picker:not( .e-picker-hidden ):hover,
-	.elementor-element:hover > .e-element-color-picker:not( .e-picker-hidden ),
-	.elementor-widget-container:hover + .e-element-color-picker:not( .e-picker-hidden ) {
+	.refraction-element:hover > .e-element-color-picker:not( .e-picker-hidden ),
+	.refraction-widget-container:hover + .e-element-color-picker:not( .e-picker-hidden ) {
 		opacity: 1;
 		pointer-events: all;
 	}
 
-	.elementor-section:hover {
+	.refraction-section:hover {
 		outline: 1px solid $editor-info;
 	}
 }

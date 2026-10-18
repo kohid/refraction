@@ -1,4 +1,4 @@
-import ContainerHelper from 'elementor-editor-utils/container-helper';
+import ContainerHelper from 'refraction-editor-utils/container-helper';
 
 export class Paste extends $e.modules.editor.document.CommandHistoryBase {
 	validateArgs( args ) {
@@ -8,7 +8,7 @@ export class Paste extends $e.modules.editor.document.CommandHistoryBase {
 	getHistory() {
 		return {
 			type: 'paste',
-			title: __( 'Elements', 'elementor' ),
+			title: __( 'Elements', 'refraction' ),
 		};
 	}
 
@@ -16,7 +16,7 @@ export class Paste extends $e.modules.editor.document.CommandHistoryBase {
 		const { storageType = 'localstorage', storageKey = 'clipboard', data = '' } = args;
 
 		if ( 'localstorage' === storageType ) {
-			return elementorCommon.storage.get( storageKey ) || {};
+			return refractionCommon.storage.get( storageKey ) || {};
 		}
 
 		try {
@@ -30,15 +30,15 @@ export class Paste extends $e.modules.editor.document.CommandHistoryBase {
 		const { at, rebuild = false, containers = [ args.container ], options = {} } = args,
 			storageData = this.getStorageData( args );
 
-		if ( ! storageData || ! storageData?.elements?.length || 'elementor' !== storageData?.type ) {
+		if ( ! storageData || ! storageData?.elements?.length || 'refraction' !== storageData?.type ) {
 			return false;
 		}
 
 		let storageDataElements = storageData.elements;
 
-		if ( storageData.siteurl !== elementorCommon.config.urls.rest ) {
+		if ( storageData.siteurl !== refractionCommon.config.urls.rest ) {
 			try {
-				storageDataElements = await new Promise( ( resolve, reject ) => elementorCommon.ajax.addRequest(
+				storageDataElements = await new Promise( ( resolve, reject ) => refractionCommon.ajax.addRequest(
 					'import_from_json',
 					{
 						data: {
@@ -151,7 +151,7 @@ export class Paste extends $e.modules.editor.document.CommandHistoryBase {
 					default: {
 						// The 'default' case is widget.
 						let target;
-						const isAtomic = elementor.helpers.isAtomicWidget( model );
+						const isAtomic = refraction.helpers.isAtomicWidget( model );
 
 						if ( 'section' === targetContainer.model.get( 'elType' ) ) {
 							// On trying to paste widget on section, the paste should be at the first column.
@@ -167,7 +167,7 @@ export class Paste extends $e.modules.editor.document.CommandHistoryBase {
 							);
 
 							target = [ target ];
-						} else if ( elementorCommon.config.experimentalFeatures.container ) {
+						} else if ( refractionCommon.config.experimentalFeatures.container ) {
 							// If the container experiment is active, create a new wrapper container.
 							target = $e.run( 'document/elements/create', {
 								container: targetContainer,

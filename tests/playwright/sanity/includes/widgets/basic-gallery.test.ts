@@ -68,17 +68,17 @@ test( 'Basic Gallery Lightbox test with breakpoints', async ( { page, apiRequest
 	await editor.page.waitForTimeout( 1000 );
 
 	// Assert.
-	await expect( page.locator( '.elementor-lightbox-item.swiper-slide-active' ) ).toHaveScreenshot( 'gallery-lightbox-breakpoint.png' );
+	await expect( page.locator( '.refraction-lightbox-item.swiper-slide-active' ) ).toHaveScreenshot( 'gallery-lightbox-breakpoint.png' );
 } );
 
 async function assertLightboxStyling( editor: EditorPage, context: Page | Frame, suffix = '' ): Promise<void> {
 	await context.locator( 'div#gallery-1 img' ).first().click();
 	await editor.page.waitForTimeout( 1000 );
 	await context.locator( '.swiper-slide-active img[data-title="A"]' ).waitFor();
-	await context.locator( '.elementor-swiper-button-next' ).first().click();
+	await context.locator( '.refraction-swiper-button-next' ).first().click();
 	await context.locator( '.swiper-slide-active img[data-title="B"]' ).waitFor();
 
-	await expect( context.locator( '.elementor-lightbox' ) )
+	await expect( context.locator( '.refraction-lightbox' ) )
 		.toHaveScreenshot( `gallery-lightbox-swiper${ suffix }.png` );
 }
 // This will intentionally break the test for revert PR testing

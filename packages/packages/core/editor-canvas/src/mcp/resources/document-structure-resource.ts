@@ -2,15 +2,15 @@ import {
 	type ExtendedWindow as BaseExtendedWindow,
 	type V1Document,
 	type V1DocumentsManager,
-} from '@elementor/editor-documents';
+} from '@refraction/editor-documents';
 import {
 	getWidgetsCache,
 	type V1Element,
 	type V1ElementEditorSettingsProps,
 	type V1ElementModelProps,
-} from '@elementor/editor-elements';
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { __privateListenTo as listenTo, commandEndEvent } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { __privateListenTo as listenTo, commandEndEvent } from '@refraction/editor-v1-adapters';
 
 type UnknownVersionElementInstanceData = V1Element & {
 	model: V1Element[ 'model' ] & {
@@ -31,14 +31,14 @@ type ContainerWithStructure = V1Document & {
 };
 
 interface ExtendedWindow extends BaseExtendedWindow {
-	elementor: Omit< BaseExtendedWindow[ 'elementor' ], 'documents' > & {
+	refraction: Omit< BaseExtendedWindow[ 'refraction' ], 'documents' > & {
 		documents: Omit< V1DocumentsManager, 'getCurrent' > & {
 			getCurrent: () => ContainerWithStructure;
 		};
 	};
 }
 
-export const DOCUMENT_STRUCTURE_URI = 'elementor://document/structure';
+export const DOCUMENT_STRUCTURE_URI = 'refraction://document/structure';
 
 export const initDocumentStructureResource = ( reg: MCPRegistryEntry ) => {
 	const { resource, sendResourceUpdated } = reg;
@@ -93,7 +93,7 @@ export const initDocumentStructureResource = ( reg: MCPRegistryEntry ) => {
 
 function getDocumentStructure() {
 	const extendedWindow = window as unknown as ExtendedWindow;
-	const document = extendedWindow.elementor?.documents?.getCurrent?.();
+	const document = extendedWindow.refraction?.documents?.getCurrent?.();
 
 	if ( ! document ) {
 		return { error: 'No active document found' };

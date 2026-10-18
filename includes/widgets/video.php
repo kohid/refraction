@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor video widget.
+ * Refraction video widget.
  *
- * Elementor widget that displays a video player.
+ * Refraction widget that displays a video player.
  *
  * @since 1.0.0
  */
@@ -41,7 +41,7 @@ class Widget_Video extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Video', 'elementor' );
+		return esc_html__( 'Video', 'refraction' );
 	}
 
 	/**
@@ -122,22 +122,22 @@ class Widget_Video extends Widget_Base {
 		$this->start_controls_section(
 			'section_video',
 			[
-				'label' => esc_html__( 'Video', 'elementor' ),
+				'label' => esc_html__( 'Video', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'video_type',
 			[
-				'label' => esc_html__( 'Source', 'elementor' ),
+				'label' => esc_html__( 'Source', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'youtube',
 				'options' => [
-					'youtube' => esc_html__( 'YouTube', 'elementor' ),
-					'vimeo' => esc_html__( 'Vimeo', 'elementor' ),
-					'dailymotion' => esc_html__( 'Dailymotion', 'elementor' ),
-					'videopress' => esc_html__( 'VideoPress', 'elementor' ),
-					'hosted' => esc_html__( 'Self Hosted', 'elementor' ),
+					'youtube' => esc_html__( 'YouTube', 'refraction' ),
+					'vimeo' => esc_html__( 'Vimeo', 'refraction' ),
+					'dailymotion' => esc_html__( 'Dailymotion', 'refraction' ),
+					'videopress' => esc_html__( 'VideoPress', 'refraction' ),
+					'hosted' => esc_html__( 'Self Hosted', 'refraction' ),
 				],
 				'frontend_available' => true,
 			]
@@ -146,7 +146,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'youtube_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -155,7 +155,7 @@ class Widget_Video extends Widget_Base {
 						TagsModule::URL_CATEGORY,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your URL', 'elementor' ) . ' (YouTube)',
+				'placeholder' => esc_html__( 'Enter your URL', 'refraction' ) . ' (YouTube)',
 				'default' => 'https://www.youtube.com/watch?v=XHOmBV4js_E',
 				'label_block' => true,
 				'condition' => [
@@ -171,7 +171,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'vimeo_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -180,7 +180,7 @@ class Widget_Video extends Widget_Base {
 						TagsModule::URL_CATEGORY,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your URL', 'elementor' ) . ' (Vimeo)',
+				'placeholder' => esc_html__( 'Enter your URL', 'refraction' ) . ' (Vimeo)',
 				'default' => 'https://vimeo.com/235215203',
 				'label_block' => true,
 				'condition' => [
@@ -195,7 +195,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'dailymotion_url',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -204,7 +204,7 @@ class Widget_Video extends Widget_Base {
 						TagsModule::URL_CATEGORY,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your URL', 'elementor' ) . ' (Dailymotion)',
+				'placeholder' => esc_html__( 'Enter your URL', 'refraction' ) . ' (Dailymotion)',
 				'default' => 'https://www.dailymotion.com/video/x6tqhqb',
 				'label_block' => true,
 				'condition' => [
@@ -219,7 +219,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'insert_url',
 			[
-				'label' => esc_html__( 'External URL', 'elementor' ),
+				'label' => esc_html__( 'External URL', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'condition' => [
 					'video_type' => [ 'hosted', 'videopress' ],
@@ -230,7 +230,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'hosted_url',
 			[
-				'label' => esc_html__( 'Choose Video File', 'elementor' ),
+				'label' => esc_html__( 'Choose Video File', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'dynamic' => [
 					'active' => true,
@@ -251,7 +251,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'external_url',
 			[
-				'label' => esc_html__( 'URL', 'elementor' ),
+				'label' => esc_html__( 'URL', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'autocomplete' => false,
 				'options' => false,
@@ -264,7 +264,7 @@ class Widget_Video extends Widget_Base {
 						TagsModule::URL_CATEGORY,
 					],
 				],
-				'placeholder' => esc_html__( 'Enter your URL', 'elementor' ),
+				'placeholder' => esc_html__( 'Enter your URL', 'refraction' ),
 				'condition' => [
 					'video_type' => 'hosted',
 					'insert_url' => 'yes',
@@ -275,7 +275,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'videopress_url',
 			[
-				'label' => esc_html__( 'URL', 'elementor' ),
+				'label' => esc_html__( 'URL', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'label_block' => true,
 				'show_label' => false,
@@ -287,7 +287,7 @@ class Widget_Video extends Widget_Base {
 						TagsModule::URL_CATEGORY,
 					],
 				],
-				'placeholder' => esc_html__( 'VideoPress URL', 'elementor' ),
+				'placeholder' => esc_html__( 'VideoPress URL', 'refraction' ),
 				'ai' => [
 					'active' => false,
 				],
@@ -302,9 +302,9 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'start',
 			[
-				'label' => esc_html__( 'Start Time', 'elementor' ),
+				'label' => esc_html__( 'Start Time', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
-				'description' => esc_html__( 'Specify a start time (in seconds)', 'elementor' ),
+				'description' => esc_html__( 'Specify a start time (in seconds)', 'refraction' ),
 				'frontend_available' => true,
 				'separator' => 'before',
 			]
@@ -313,9 +313,9 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'end',
 			[
-				'label' => esc_html__( 'End Time', 'elementor' ),
+				'label' => esc_html__( 'End Time', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
-				'description' => esc_html__( 'Specify an end time (in seconds)', 'elementor' ),
+				'description' => esc_html__( 'Specify an end time (in seconds)', 'refraction' ),
 				'condition' => [
 					'video_type' => [ 'youtube', 'hosted' ],
 				],
@@ -326,7 +326,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'video_options',
 			[
-				'label' => esc_html__( 'Video Options', 'elementor' ),
+				'label' => esc_html__( 'Video Options', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -335,10 +335,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'autoplay',
 			[
-				'label' => esc_html__( 'Autoplay', 'elementor' ),
+				'label' => esc_html__( 'Autoplay', 'refraction' ),
 				'description' => sprintf(
 					/* translators: 1: `<a>` opening tag, 2: `</a>` closing tag. */
-					esc_html__( 'Note: Autoplay is affected by %1$s Google’s Autoplay policy %2$s on Chrome browsers.', 'elementor' ),
+					esc_html__( 'Note: Autoplay is affected by %1$s Google’s Autoplay policy %2$s on Chrome browsers.', 'refraction' ),
 					'<a href="https://developers.google.com/web/updates/2017/09/autoplay-policy-changes" target="_blank">',
 					'</a>'
 				),
@@ -350,7 +350,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'play_on_mobile',
 			[
-				'label' => esc_html__( 'Play On Mobile', 'elementor' ),
+				'label' => esc_html__( 'Play On Mobile', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'condition' => [
 					'autoplay' => 'yes',
@@ -362,7 +362,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'mute',
 			[
-				'label' => esc_html__( 'Mute', 'elementor' ),
+				'label' => esc_html__( 'Mute', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'frontend_available' => true,
 			]
@@ -371,7 +371,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'loop',
 			[
-				'label' => esc_html__( 'Loop', 'elementor' ),
+				'label' => esc_html__( 'Loop', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'condition' => [
 					'video_type!' => 'dailymotion',
@@ -383,10 +383,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'controls',
 			[
-				'label' => esc_html__( 'Player Controls', 'elementor' ),
+				'label' => esc_html__( 'Player Controls', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 				'condition' => [
 					'video_type!' => 'vimeo',
@@ -398,10 +398,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'showinfo',
 			[
-				'label' => esc_html__( 'Video Info', 'elementor' ),
+				'label' => esc_html__( 'Video Info', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 				'condition' => [
 					'video_type' => [ 'dailymotion' ],
@@ -412,7 +412,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'cc_load_policy',
 			[
-				'label' => esc_html__( 'Captions', 'elementor' ),
+				'label' => esc_html__( 'Captions', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'condition' => [
 					'video_type' => [ 'youtube' ],
@@ -425,10 +425,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'logo',
 			[
-				'label' => esc_html__( 'Logo', 'elementor' ),
+				'label' => esc_html__( 'Logo', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 				'condition' => [
 					'video_type' => [ 'dailymotion' ],
@@ -440,9 +440,9 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'yt_privacy',
 			[
-				'label' => esc_html__( 'Privacy Mode', 'elementor' ),
+				'label' => esc_html__( 'Privacy Mode', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'description' => esc_html__( 'When you turn on privacy mode, YouTube/Vimeo won\'t store information about visitors on your website unless they play the video.', 'elementor' ),
+				'description' => esc_html__( 'When you turn on privacy mode, YouTube/Vimeo won\'t store information about visitors on your website unless they play the video.', 'refraction' ),
 				'condition' => [
 					'video_type' => [ 'youtube', 'vimeo' ],
 				],
@@ -453,7 +453,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'lazy_load',
 			[
-				'label' => esc_html__( 'Lazy Load', 'elementor' ),
+				'label' => esc_html__( 'Lazy Load', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'conditions' => [
 					'relation' => 'or',
@@ -487,11 +487,11 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'rel',
 			[
-				'label' => esc_html__( 'Suggested Videos', 'elementor' ),
+				'label' => esc_html__( 'Suggested Videos', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Current Video Channel', 'elementor' ),
-					'yes' => esc_html__( 'Any Video', 'elementor' ),
+					'' => esc_html__( 'Current Video Channel', 'refraction' ),
+					'yes' => esc_html__( 'Any Video', 'refraction' ),
 				],
 				'condition' => [
 					'video_type' => 'youtube',
@@ -503,10 +503,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'vimeo_title',
 			[
-				'label' => esc_html__( 'Intro Title', 'elementor' ),
+				'label' => esc_html__( 'Intro Title', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 				'condition' => [
 					'video_type' => 'vimeo',
@@ -517,10 +517,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'vimeo_portrait',
 			[
-				'label' => esc_html__( 'Intro Portrait', 'elementor' ),
+				'label' => esc_html__( 'Intro Portrait', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 				'condition' => [
 					'video_type' => 'vimeo',
@@ -531,10 +531,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'vimeo_byline',
 			[
-				'label' => esc_html__( 'Intro Byline', 'elementor' ),
+				'label' => esc_html__( 'Intro Byline', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 				'condition' => [
 					'video_type' => 'vimeo',
@@ -545,7 +545,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'color',
 			[
-				'label' => esc_html__( 'Controls Color', 'elementor' ),
+				'label' => esc_html__( 'Controls Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'condition' => [
@@ -557,10 +557,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'download_button',
 			[
-				'label' => esc_html__( 'Download Button', 'elementor' ),
+				'label' => esc_html__( 'Download Button', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'condition' => [
 					'video_type' => 'hosted',
 				],
@@ -570,14 +570,14 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'preload',
 			[
-				'label' => esc_html__( 'Preload', 'elementor' ),
+				'label' => esc_html__( 'Preload', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'metadata' => esc_html__( 'Metadata', 'elementor' ),
-					'auto' => esc_html__( 'Auto', 'elementor' ),
-					'none' => esc_html__( 'None', 'elementor' ),
+					'metadata' => esc_html__( 'Metadata', 'refraction' ),
+					'auto' => esc_html__( 'Auto', 'refraction' ),
+					'none' => esc_html__( 'None', 'refraction' ),
 				],
-				'description' => esc_html__( 'Preload attribute lets you specify how the video should be loaded when the page loads.', 'elementor' ),
+				'description' => esc_html__( 'Preload attribute lets you specify how the video should be loaded when the page loads.', 'refraction' ),
 				'default' => 'metadata',
 				'condition' => [
 					'video_type' => 'hosted',
@@ -589,7 +589,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'poster',
 			[
-				'label' => esc_html__( 'Poster', 'elementor' ),
+				'label' => esc_html__( 'Poster', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'dynamic' => [
 					'active' => true,
@@ -605,17 +605,17 @@ class Widget_Video extends Widget_Base {
 		$this->start_controls_section(
 			'section_image_overlay',
 			[
-				'label' => esc_html__( 'Image Overlay', 'elementor' ),
+				'label' => esc_html__( 'Image Overlay', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'show_image_overlay',
 			[
-				'label' => esc_html__( 'Image Overlay', 'elementor' ),
+				'label' => esc_html__( 'Image Overlay', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'frontend_available' => true,
 			]
 		);
@@ -623,7 +623,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'image_overlay',
 			[
-				'label' => esc_html__( 'Choose Image', 'elementor' ),
+				'label' => esc_html__( 'Choose Image', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'default' => [
 					'url' => Utils::get_placeholder_image_src(),
@@ -652,11 +652,11 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'show_play_icon',
 			[
-				'label' => esc_html__( 'Play Icon', 'elementor' ),
+				'label' => esc_html__( 'Play Icon', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'default' => 'yes',
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'separator' => 'before',
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -668,7 +668,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'play_icon',
 			[
-				'label' => esc_html__( 'Icon', 'elementor' ),
+				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'fa4compatibility' => 'icon',
 				'skin' => 'inline',
@@ -703,11 +703,11 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'lightbox',
 			[
-				'label' => esc_html__( 'Lightbox', 'elementor' ),
+				'label' => esc_html__( 'Lightbox', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'frontend_available' => true,
-				'label_off' => esc_html__( 'Off', 'elementor' ),
-				'label_on' => esc_html__( 'On', 'elementor' ),
+				'label_off' => esc_html__( 'Off', 'refraction' ),
+				'label_on' => esc_html__( 'On', 'refraction' ),
 				'condition' => [
 					'show_image_overlay' => 'yes',
 					'image_overlay[url]!' => '',
@@ -721,7 +721,7 @@ class Widget_Video extends Widget_Base {
 		$this->start_controls_section(
 			'section_video_style',
 			[
-				'label' => esc_html__( 'Video', 'elementor' ),
+				'label' => esc_html__( 'Video', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -729,7 +729,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'aspect_ratio',
 			[
-				'label' => esc_html__( 'Aspect Ratio', 'elementor' ),
+				'label' => esc_html__( 'Aspect Ratio', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'169' => '16:9',
@@ -749,7 +749,7 @@ class Widget_Video extends Widget_Base {
 				],
 				'default' => '169',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-wrapper' => '--video-aspect-ratio: {{VALUE}}',
+					'{{WRAPPER}} .refraction-wrapper' => '--video-aspect-ratio: {{VALUE}}',
 				],
 			]
 		);
@@ -758,7 +758,7 @@ class Widget_Video extends Widget_Base {
 			Group_Control_Css_Filter::get_type(),
 			[
 				'name' => 'css_filters',
-				'selector' => '{{WRAPPER}} .elementor-wrapper',
+				'selector' => '{{WRAPPER}} .refraction-wrapper',
 			]
 		);
 
@@ -767,7 +767,7 @@ class Widget_Video extends Widget_Base {
 		$this->start_controls_section(
 			'section_image_overlay_style',
 			[
-				'label' => esc_html__( 'Image Overlay', 'elementor' ),
+				'label' => esc_html__( 'Image Overlay', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -779,7 +779,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'play_icon_title',
 			[
-				'label' => esc_html__( 'Play Icon', 'elementor' ),
+				'label' => esc_html__( 'Play Icon', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -791,11 +791,11 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'play_icon_color',
 			[
-				'label' => esc_html__( 'Color', 'elementor' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-custom-embed-play i' => 'color: {{VALUE}}',
-					'{{WRAPPER}} .elementor-custom-embed-play svg' => 'fill: {{VALUE}}',
+					'{{WRAPPER}} .refraction-custom-embed-play i' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .refraction-custom-embed-play svg' => 'fill: {{VALUE}}',
 				],
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -807,7 +807,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_responsive_control(
 			'play_icon_size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => esc_html__( 'Size', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -818,8 +818,8 @@ class Widget_Video extends Widget_Base {
 				],
 				'selectors' => [
 					// Not using a CSS vars because the default size value is coming from a global scss file.
-					'{{WRAPPER}} .elementor-custom-embed-play i' => 'font-size: {{SIZE}}{{UNIT}}',
-					'{{WRAPPER}} .elementor-custom-embed-play svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .refraction-custom-embed-play i' => 'font-size: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .refraction-custom-embed-play svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -832,10 +832,10 @@ class Widget_Video extends Widget_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'play_icon_text_shadow',
-				'selector' => '{{WRAPPER}} .elementor-custom-embed-play i',
+				'selector' => '{{WRAPPER}} .refraction-custom-embed-play i',
 				'fields_options' => [
 					'text_shadow_type' => [
-						'label' => esc_html__( 'Shadow', 'elementor' ),
+						'label' => esc_html__( 'Shadow', 'refraction' ),
 					],
 				],
 				'condition' => [
@@ -851,7 +851,7 @@ class Widget_Video extends Widget_Base {
 		$this->start_controls_section(
 			'section_lightbox_style',
 			[
-				'label' => esc_html__( 'Lightbox', 'elementor' ),
+				'label' => esc_html__( 'Lightbox', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -864,10 +864,10 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'lightbox_color',
 			[
-				'label' => esc_html__( 'Background Color', 'elementor' ),
+				'label' => esc_html__( 'Background Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'#elementor-lightbox-{{ID}}' => 'background-color: {{VALUE}};',
+					'#refraction-lightbox-{{ID}}' => 'background-color: {{VALUE}};',
 				],
 			]
 		);
@@ -875,11 +875,11 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'lightbox_ui_color',
 			[
-				'label' => esc_html__( 'UI Color', 'elementor' ),
+				'label' => esc_html__( 'UI Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button' => 'color: {{VALUE}}',
-					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button svg' => 'fill: {{VALUE}}',
+					'#refraction-lightbox-{{ID}} .dialog-lightbox-close-button' => 'color: {{VALUE}}',
+					'#refraction-lightbox-{{ID}} .dialog-lightbox-close-button svg' => 'fill: {{VALUE}}',
 				],
 			]
 		);
@@ -887,11 +887,11 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'lightbox_ui_color_hover',
 			[
-				'label' => esc_html__( 'UI Hover Color', 'elementor' ),
+				'label' => esc_html__( 'UI Hover Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button:hover' => 'color: {{VALUE}}',
-					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button:hover svg' => 'fill: {{VALUE}}',
+					'#refraction-lightbox-{{ID}} .dialog-lightbox-close-button:hover' => 'color: {{VALUE}}',
+					'#refraction-lightbox-{{ID}} .dialog-lightbox-close-button:hover svg' => 'fill: {{VALUE}}',
 				],
 			]
 		);
@@ -899,7 +899,7 @@ class Widget_Video extends Widget_Base {
 		$this->add_responsive_control(
 			'lightbox_content_animation',
 			[
-				'label' => esc_html__( 'Entrance Animation', 'elementor' ),
+				'label' => esc_html__( 'Entrance Animation', 'refraction' ),
 				'type' => Controls_Manager::ANIMATION,
 				'frontend_available' => true,
 				'separator' => 'before',
@@ -911,7 +911,7 @@ class Widget_Video extends Widget_Base {
 			[
 				'type' => Controls_Manager::ALERT,
 				'alert_type' => 'danger',
-				'content' => esc_html__( 'Note: These controls have been deprecated and are only visible if they were previously in use. The video’s width and position are now set based on its aspect ratio.', 'elementor' ),
+				'content' => esc_html__( 'Note: These controls have been deprecated and are only visible if they were previously in use. The video’s width and position are now set based on its aspect ratio.', 'refraction' ),
 				'separator' => 'before',
 				'condition' => [
 					'lightbox_video_width!' => '',
@@ -924,14 +924,14 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'lightbox_video_width',
 			[
-				'label' => esc_html__( 'Content Width', 'elementor' ),
+				'label' => esc_html__( 'Content Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
 					'unit' => '%',
 				],
 				// 'selectors' => [
-				// '(desktop+)#elementor-lightbox-{{ID}} .elementor-video-container' => 'width: {{SIZE}}{{UNIT}};',
+				// '(desktop+)#refraction-lightbox-{{ID}} .refraction-video-container' => 'width: {{SIZE}}{{UNIT}};',
 				// ],
 				'condition' => [
 					'lightbox_video_width!' => '',
@@ -944,15 +944,15 @@ class Widget_Video extends Widget_Base {
 		$this->add_control(
 			'lightbox_content_position',
 			[
-				'label' => esc_html__( 'Content Position', 'elementor' ),
+				'label' => esc_html__( 'Content Position', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'frontend_available' => true,
 				'options' => [
-					'' => esc_html__( 'Center', 'elementor' ),
-					'top' => esc_html__( 'Top', 'elementor' ),
+					'' => esc_html__( 'Center', 'refraction' ),
+					'top' => esc_html__( 'Top', 'refraction' ),
 				],
 				// 'selectors' => [
-				// '#elementor-lightbox-{{ID}} .elementor-video-container' => '{{VALUE}}; transform: translateX(-50%);',
+				// '#refraction-lightbox-{{ID}} .refraction-video-container' => '{{VALUE}}; transform: translateX(-50%);',
 				// ],
 				'selectors_dictionary' => [
 					'top' => 'top: 60px',
@@ -969,9 +969,9 @@ class Widget_Video extends Widget_Base {
 
 	public function print_a11y_text( $image_overlay ) {
 		if ( empty( $image_overlay['alt'] ) ) {
-			echo esc_html__( 'Play Video', 'elementor' );
+			echo esc_html__( 'Play Video', 'refraction' );
 		} else {
-			echo esc_html__( 'Play Video about', 'elementor' ) . ' ' . esc_attr( $image_overlay['alt'] );
+			echo esc_html__( 'Play Video about', 'refraction' ) . ' ' . esc_attr( $image_overlay['alt'] );
 		}
 	}
 
@@ -1004,7 +1004,7 @@ class Widget_Video extends Widget_Base {
 		}
 
 		if ( 'youtube' === $settings['video_type'] ) {
-			$video_html = '<div class="elementor-video"></div>';
+			$video_html = '<div class="refraction-video"></div>';
 		}
 
 		if ( 'hosted' === $settings['video_type'] ) {
@@ -1033,9 +1033,9 @@ class Widget_Video extends Widget_Base {
 			return;
 		}
 
-		$this->add_render_attribute( 'video-wrapper', 'class', 'elementor-wrapper' );
+		$this->add_render_attribute( 'video-wrapper', 'class', 'refraction-wrapper' );
 
-		$this->add_render_attribute( 'video-wrapper', 'class', 'elementor-open-' . ( $settings['lightbox'] ? 'lightbox' : 'inline' ) );
+		$this->add_render_attribute( 'video-wrapper', 'class', 'refraction-open-' . ( $settings['lightbox'] ? 'lightbox' : 'inline' ) );
 		?>
 		<div <?php $this->print_render_attribute_string( 'video-wrapper' ); ?>>
 			<?php
@@ -1044,7 +1044,7 @@ class Widget_Video extends Widget_Base {
 			}
 
 			if ( $this->has_image_overlay() ) {
-				$this->add_render_attribute( 'image-overlay', 'class', 'elementor-custom-embed-image-overlay' );
+				$this->add_render_attribute( 'image-overlay', 'class', 'refraction-custom-embed-image-overlay' );
 
 				if ( $settings['lightbox'] ) {
 					if ( 'hosted' === $settings['video_type'] ) {
@@ -1059,7 +1059,7 @@ class Widget_Video extends Widget_Base {
 						'url' => $lightbox_url,
 						'autoplay' => $settings['autoplay'],
 						'modalOptions' => [
-							'id' => 'elementor-lightbox-' . $this->get_id(),
+							'id' => 'refraction-lightbox-' . $this->get_id(),
 							'entranceAnimation' => $settings['lightbox_content_animation'],
 							'entranceAnimation_tablet' => $settings['lightbox_content_animation_tablet'],
 							'entranceAnimation_mobile' => $settings['lightbox_content_animation_mobile'],
@@ -1072,14 +1072,14 @@ class Widget_Video extends Widget_Base {
 					}
 
 					$this->add_render_attribute( 'image-overlay', [
-						'data-elementor-open-lightbox' => 'yes',
-						'data-elementor-lightbox' => wp_json_encode( $lightbox_options ),
+						'data-refraction-open-lightbox' => 'yes',
+						'data-refraction-lightbox' => wp_json_encode( $lightbox_options ),
 						'data-e-action-hash' => Plugin::instance()->frontend->create_action_hash( 'lightbox', $lightbox_options ),
 					] );
 
 					if ( Plugin::$instance->editor->is_edit_mode() ) {
 						$this->add_render_attribute( 'image-overlay', [
-							'class' => 'elementor-clickable',
+							'class' => 'refraction-clickable',
 						] );
 					}
 				} else {
@@ -1098,7 +1098,7 @@ class Widget_Video extends Widget_Base {
 						<?php Group_Control_Image_Size::print_attachment_image_html( $settings, 'image_overlay' ); ?>
 					<?php endif; ?>
 					<?php if ( 'yes' === $settings['show_play_icon'] ) : ?>
-						<div class="elementor-custom-embed-play" role="button" aria-label="<?php $this->print_a11y_text( $settings['image_overlay'] ); ?>" tabindex="0">
+						<div class="refraction-custom-embed-play" role="button" aria-label="<?php $this->print_a11y_text( $settings['image_overlay'] ); ?>" tabindex="0">
 							<?php
 							if ( empty( $settings['play_icon']['value'] ) ) {
 								$settings['play_icon'] = [
@@ -1383,7 +1383,7 @@ class Widget_Video extends Widget_Base {
 		$video_params = $this->get_hosted_params();
 		/* Sometimes the video url is base64, therefore we use `esc_attr` in `src`. */
 		?>
-		<video class="elementor-video" src="<?php echo esc_attr( $video_url ); ?>" <?php Utils::print_html_attributes( $video_params ); ?>></video>
+		<video class="refraction-video" src="<?php echo esc_attr( $video_url ); ?>" <?php Utils::print_html_attributes( $video_params ); ?>></video>
 		<?php
 	}
 

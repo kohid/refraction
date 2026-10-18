@@ -2,7 +2,7 @@
 
 set -e
 
-CONTAINER_NAME="elementor-wp-tests-mysql"
+CONTAINER_NAME="refraction-wp-tests-mysql"
 DB_NAME="wordpress_test"
 DB_USER="root"
 DB_PASSWORD="root"

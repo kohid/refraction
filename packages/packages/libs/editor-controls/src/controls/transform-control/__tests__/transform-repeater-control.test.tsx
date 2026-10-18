@@ -6,7 +6,7 @@ import {
 	type TransformFunctionsPropValue,
 	type TransformOriginPropValue,
 	type TransformPropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { TransformRepeaterControl } from '../transform-repeater-control';

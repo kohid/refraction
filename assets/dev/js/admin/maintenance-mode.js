@@ -1,18 +1,18 @@
-module.exports = elementorModules.ViewModule.extend( {
+module.exports = refractionModules.ViewModule.extend( {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				modeSelect: '.elementor_maintenance_mode_mode select',
+				modeSelect: '.refraction_maintenance_mode_mode select',
 				maintenanceModeTable: '#tab-maintenance_mode table',
-				maintenanceModeDescriptions: '.elementor-maintenance-mode-description',
-				excludeModeSelect: '.elementor_maintenance_mode_exclude_mode select',
-				excludeRolesArea: '.elementor_maintenance_mode_exclude_roles',
-				templateSelect: '.elementor_maintenance_mode_template_id select',
-				editTemplateButton: '.elementor-edit-template',
-				maintenanceModeError: '.elementor-maintenance-mode-error',
+				maintenanceModeDescriptions: '.refraction-maintenance-mode-description',
+				excludeModeSelect: '.refraction_maintenance_mode_exclude_mode select',
+				excludeRolesArea: '.refraction_maintenance_mode_exclude_roles',
+				templateSelect: '.refraction_maintenance_mode_template_id select',
+				editTemplateButton: '.refraction-edit-template',
+				maintenanceModeError: '.refraction-maintenance-mode-error',
 			},
 			classes: {
-				isEnabled: 'elementor-maintenance-mode-is-enabled',
+				isEnabled: 'refraction-maintenance-mode-is-enabled',
 			},
 		};
 	},
@@ -59,7 +59,7 @@ module.exports = elementorModules.ViewModule.extend( {
 			return;
 		}
 
-		var editUrl = elementorAdmin.config.home_url + '?p=' + templateID + '&elementor';
+		var editUrl = refractionAdmin.config.home_url + '?p=' + templateID + '&refraction';
 
 		elements.$editTemplateButton
 			.prop( 'href', editUrl )
@@ -84,8 +84,8 @@ module.exports = elementorModules.ViewModule.extend( {
 	},
 
 	onInit() {
-		elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+		refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 
-		elementorCommon.elements.$window.on( 'elementor/admin/init', this.onAdminInit );
+		refractionCommon.elements.$window.on( 'refraction/admin/init', this.onAdminInit );
 	},
 } );

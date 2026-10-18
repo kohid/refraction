@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Core\Debug;
+namespace Refraction\Core\Debug;
 
-use Elementor\Core\Debug\Classes\Inspection_Base;
-use Elementor\Core\Debug\Classes\Shop_Page_Edit;
-use Elementor\Core\Debug\Classes\Theme_Missing;
-use Elementor\Core\Debug\Classes\Htaccess;
-use Elementor\Utils;
+use Refraction\Core\Debug\Classes\Inspection_Base;
+use Refraction\Core\Debug\Classes\Shop_Page_Edit;
+use Refraction\Core\Debug\Classes\Theme_Missing;
+use Refraction\Core\Debug\Classes\Htaccess;
+use Refraction\Utils;
 
 class Loading_Inspection_Manager {
 
@@ -40,8 +40,8 @@ class Loading_Inspection_Manager {
 
 	public function run_inspections() {
 		$debug_data = [
-			'message' => esc_html__( "We’re sorry, but something went wrong. Click on 'Learn more' and follow each of the steps to quickly solve it.", 'elementor' ),
-			'header' => esc_html__( 'The preview could not be loaded', 'elementor' ),
+			'message' => esc_html__( "We’re sorry, but something went wrong. Click on 'Learn more' and follow each of the steps to quickly solve it.", 'refraction' ),
+			'header' => esc_html__( 'The preview could not be loaded', 'refraction' ),
 			'doc_url' => '',
 		];
 		foreach ( $this->inspections as $inspection ) {

@@ -1,4 +1,4 @@
-import { getElementDefaults, deleteElementDefaults, updateElementDefaults, loadElementsDefaults } from 'elementor/modules/kit-elements-defaults/assets/js/editor/api';
+import { getElementDefaults, deleteElementDefaults, updateElementDefaults, loadElementsDefaults } from 'refraction/modules/kit-elements-defaults/assets/js/editor/api';
 
 describe( 'modules/kit-elements-defaults/assets/js/editor/api.js', () => {
 	beforeEach( () => {

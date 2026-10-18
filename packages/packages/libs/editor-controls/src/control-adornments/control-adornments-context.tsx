@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type ComponentType, createContext, type PropsWithChildren, useContext } from 'react';
-import { type PropType } from '@elementor/editor-props';
+import { type PropType } from '@refraction/editor-props';
 
 export type AdornmentComponent = ComponentType< { customContext?: { path: string[]; propType: PropType } } >;
 type ControlAdornmentsItem = {

@@ -7,7 +7,7 @@ describe( 'Section', () => {
 	beforeEach( async () => {
 		childModel = await setupMock();
 
-		section = new ( await import( 'elementor-elements/models/section' ) ).default;
+		section = new ( await import( 'refraction-elements/models/section' ) ).default;
 	} );
 
 	afterEach( freeMock );

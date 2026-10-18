@@ -1,17 +1,17 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Widgets;
+namespace Refraction\Modules\FloatingButtons\Widgets;
 
-use Elementor\Modules\FloatingButtons\Base\Widget_Floating_Bars_Base;
+use Refraction\Modules\FloatingButtons\Base\Widget_Floating_Bars_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor Floating Bars Var 1 widget.
+ * Refraction Floating Bars Var 1 widget.
  *
- * Elementor widget that displays a banner with icon and link
+ * Refraction widget that displays a banner with icon and link
  *
  * @since 3.23.0
  */
@@ -22,7 +22,7 @@ class Floating_Bars_Var_1 extends Widget_Floating_Bars_Base {
 	}
 
 	public function get_title(): string {
-		return esc_html__( 'Floating Bar CTA', 'elementor' );
+		return esc_html__( 'Floating Bar CTA', 'refraction' );
 	}
 
 	public function get_group_name(): string {

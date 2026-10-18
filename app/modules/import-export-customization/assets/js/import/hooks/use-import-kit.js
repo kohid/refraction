@@ -7,7 +7,7 @@ async function request( {
 	path,
 	method = 'POST',
 } ) {
-	const baseUrl = elementorAppConfig[ 'import-export-customization' ].restApiBaseUrl;
+	const baseUrl = refractionAppConfig[ 'import-export-customization' ].restApiBaseUrl;
 	const requestUrl = `${ baseUrl }/${ path }`;
 	const response = await fetch( requestUrl, {
 		method,
@@ -58,7 +58,7 @@ export function useImportKit( { data, includes, customization, isProcessing, dis
 					path: 'import-runner',
 				} );
 
-				const runnerKey = 'elementor-content' === runner ? 'content' : runner;
+				const runnerKey = 'refraction-content' === runner ? 'content' : runner;
 
 				dispatch( { type: 'SET_RUNNERS_STATE', payload: { [ runnerKey ]: result.data.imported_data?.[ runnerKey ] || result.data[ runnerKey ] } } );
 			} catch ( e ) {

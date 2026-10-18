@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { numberPropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+import { numberPropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { RepeatableControl } from '../repeatable-control';

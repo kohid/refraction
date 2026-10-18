@@ -1,8 +1,8 @@
-import { setDocumentModifiedStatus } from '@elementor/editor-documents';
-import { getElementSetting, updateElementSettings } from '@elementor/editor-elements';
-import { classesPropTypeUtil, type ClassesPropValue } from '@elementor/editor-props';
-import { type StyleDefinitionID } from '@elementor/editor-styles';
-import { stylesRepository } from '@elementor/editor-styles-repository';
+import { setDocumentModifiedStatus } from '@refraction/editor-documents';
+import { getElementSetting, updateElementSettings } from '@refraction/editor-elements';
+import { classesPropTypeUtil, type ClassesPropValue } from '@refraction/editor-props';
+import { type StyleDefinitionID } from '@refraction/editor-styles';
+import { stylesRepository } from '@refraction/editor-styles-repository';
 
 // Externalized for use outside of Hooks
 

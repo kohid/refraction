@@ -1,8 +1,8 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Runners\Export;
+namespace Refraction\App\Modules\ImportExportCustomization\Runners\Export;
 
-use Elementor\App\Modules\ImportExportCustomization\Runners\Runner_Interface;
+use Refraction\App\Modules\ImportExportCustomization\Runners\Runner_Interface;
 
 abstract class Export_Runner_Base implements Runner_Interface {
 

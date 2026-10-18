@@ -74,7 +74,7 @@ export class Delete extends $e.modules.editor.document.CommandHistoryBase {
 	}
 
 	dispatchDeleteEvent( container, callerName ) {
-		if ( ! elementorCommon?.eventsManager?.dispatchEvent ) {
+		if ( ! refractionCommon?.eventsManager?.dispatchEvent ) {
 			return;
 		}
 
@@ -100,13 +100,13 @@ export class Delete extends $e.modules.editor.document.CommandHistoryBase {
 			eventData.trigger = callerName;
 		}
 
-		elementorCommon.eventsManager.dispatchEvent( 'delete_element', eventData );
+		refractionCommon.eventsManager.dispatchEvent( 'delete_element', eventData );
 	}
 
 	deselectRecursive( id ) {
-		const container = elementor.getContainer( id );
+		const container = refraction.getContainer( id );
 
-		if ( elementor.selection.has( container ) ) {
+		if ( refraction.selection.has( container ) ) {
 			$e.run( 'document/elements/deselect', { container } );
 		}
 

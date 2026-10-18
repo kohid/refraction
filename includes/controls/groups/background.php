@@ -1,15 +1,15 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor background control.
+ * Refraction background control.
  *
  * A base control for creating background control. Displays input fields to define
  * the background color, background image, background gradient or background video.
@@ -92,19 +92,19 @@ class Group_Control_Background extends Group_Control_Base {
 	private static function get_default_background_types() {
 		return [
 			'classic' => [
-				'title' => esc_html__( 'Classic', 'elementor' ),
+				'title' => esc_html__( 'Classic', 'refraction' ),
 				'icon' => 'eicon-paint-brush',
 			],
 			'gradient' => [
-				'title' => esc_html__( 'Gradient', 'elementor' ),
+				'title' => esc_html__( 'Gradient', 'refraction' ),
 				'icon' => 'eicon-barcode',
 			],
 			'video' => [
-				'title' => esc_html__( 'Video', 'elementor' ),
+				'title' => esc_html__( 'Video', 'refraction' ),
 				'icon' => 'eicon-video-camera',
 			],
 			'slideshow' => [
-				'title' => esc_html__( 'Slideshow', 'elementor' ),
+				'title' => esc_html__( 'Slideshow', 'refraction' ),
 				'icon' => 'eicon-slideshow',
 			],
 		];
@@ -151,7 +151,7 @@ class Group_Control_Background extends Group_Control_Base {
 		$fields = [];
 
 		$fields['background'] = [
-			'label' => esc_html__( 'Background Type', 'elementor' ),
+			'label' => esc_html__( 'Background Type', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'render_type' => 'ui',
 		];
@@ -159,7 +159,7 @@ class Group_Control_Background extends Group_Control_Base {
 		$fields['gradient_notice'] = [
 			'type' => Controls_Manager::ALERT,
 			'alert_type' => 'warning',
-			'content' => esc_html__( 'Set locations and angle for each breakpoint to ensure the gradient adapts to different screen sizes.', 'elementor' ),
+			'content' => esc_html__( 'Set locations and angle for each breakpoint to ensure the gradient adapts to different screen sizes.', 'refraction' ),
 			'render_type' => 'ui',
 			'condition' => [
 				'background' => [ 'gradient' ],
@@ -167,11 +167,11 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['color'] = [
-			'label' => esc_html__( 'Color', 'elementor' ),
+			'label' => esc_html__( 'Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'default' => '',
 			'control_type' => 'content',
-			'title' => esc_html__( 'Background Color', 'elementor' ),
+			'title' => esc_html__( 'Background Color', 'refraction' ),
 			'selectors' => [
 				'{{SELECTOR}}' => 'background-color: {{VALUE}};',
 			],
@@ -181,7 +181,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['color_stop'] = [
-			'label' => esc_html_x( 'Location', 'Background Control', 'elementor' ),
+			'label' => esc_html_x( 'Location', 'Background Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ '%', 'custom' ],
 			'default' => [
@@ -198,7 +198,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['color_b'] = [
-			'label' => esc_html__( 'Second Color', 'elementor' ),
+			'label' => esc_html__( 'Second Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'default' => '#f2295b',
 			'render_type' => 'ui',
@@ -210,7 +210,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['color_b_stop'] = [
-			'label' => esc_html_x( 'Location', 'Background Control', 'elementor' ),
+			'label' => esc_html_x( 'Location', 'Background Control', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ '%', 'custom' ],
 			'default' => [
@@ -227,11 +227,11 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['gradient_type'] = [
-			'label' => esc_html_x( 'Type', 'Background Control', 'elementor' ),
+			'label' => esc_html_x( 'Type', 'Background Control', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'options' => [
-				'linear' => esc_html__( 'Linear', 'elementor' ),
-				'radial' => esc_html__( 'Radial', 'elementor' ),
+				'linear' => esc_html__( 'Linear', 'refraction' ),
+				'radial' => esc_html__( 'Radial', 'refraction' ),
 			],
 			'default' => 'linear',
 			'render_type' => 'ui',
@@ -242,7 +242,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['gradient_angle'] = [
-			'label' => esc_html__( 'Angle', 'elementor' ),
+			'label' => esc_html__( 'Angle', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'deg', 'grad', 'rad', 'turn', 'custom' ],
 			'default' => [
@@ -262,18 +262,18 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['gradient_position'] = [
-			'label' => esc_html__( 'Position', 'elementor' ),
+			'label' => esc_html__( 'Position', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'options' => [
-				'center center' => esc_html__( 'Center Center', 'elementor' ),
-				'center left' => esc_html__( 'Center Left', 'elementor' ),
-				'center right' => esc_html__( 'Center Right', 'elementor' ),
-				'top center' => esc_html__( 'Top Center', 'elementor' ),
-				'top left' => esc_html__( 'Top Left', 'elementor' ),
-				'top right' => esc_html__( 'Top Right', 'elementor' ),
-				'bottom center' => esc_html__( 'Bottom Center', 'elementor' ),
-				'bottom left' => esc_html__( 'Bottom Left', 'elementor' ),
-				'bottom right' => esc_html__( 'Bottom Right', 'elementor' ),
+				'center center' => esc_html__( 'Center Center', 'refraction' ),
+				'center left' => esc_html__( 'Center Left', 'refraction' ),
+				'center right' => esc_html__( 'Center Right', 'refraction' ),
+				'top center' => esc_html__( 'Top Center', 'refraction' ),
+				'top left' => esc_html__( 'Top Left', 'refraction' ),
+				'top right' => esc_html__( 'Top Right', 'refraction' ),
+				'bottom center' => esc_html__( 'Bottom Center', 'refraction' ),
+				'bottom left' => esc_html__( 'Bottom Left', 'refraction' ),
+				'bottom right' => esc_html__( 'Bottom Right', 'refraction' ),
 			],
 			'default' => 'center center',
 			'device_args' => $position_device_args,
@@ -289,7 +289,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['image'] = [
-			'label' => esc_html__( 'Image', 'elementor' ),
+			'label' => esc_html__( 'Image', 'refraction' ),
 			'type' => Controls_Manager::MEDIA,
 			'ai' => [
 				'category' => 'background',
@@ -298,7 +298,7 @@ class Group_Control_Background extends Group_Control_Base {
 				'active' => true,
 			],
 			'responsive' => true,
-			'title' => esc_html__( 'Background Image', 'elementor' ),
+			'title' => esc_html__( 'Background Image', 'refraction' ),
 			'selectors' => [
 				'{{SELECTOR}}' => 'background-image: url("{{URL}}");',
 			],
@@ -310,23 +310,23 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['position'] = [
-			'label' => esc_html__( 'Position', 'elementor' ),
+			'label' => esc_html__( 'Position', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'separator' => 'before',
 			'responsive' => true,
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'center center' => esc_html__( 'Center Center', 'elementor' ),
-				'center left' => esc_html__( 'Center Left', 'elementor' ),
-				'center right' => esc_html__( 'Center Right', 'elementor' ),
-				'top center' => esc_html__( 'Top Center', 'elementor' ),
-				'top left' => esc_html__( 'Top Left', 'elementor' ),
-				'top right' => esc_html__( 'Top Right', 'elementor' ),
-				'bottom center' => esc_html__( 'Bottom Center', 'elementor' ),
-				'bottom left' => esc_html__( 'Bottom Left', 'elementor' ),
-				'bottom right' => esc_html__( 'Bottom Right', 'elementor' ),
-				'initial' => esc_html__( 'Custom', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'center center' => esc_html__( 'Center Center', 'refraction' ),
+				'center left' => esc_html__( 'Center Left', 'refraction' ),
+				'center right' => esc_html__( 'Center Right', 'refraction' ),
+				'top center' => esc_html__( 'Top Center', 'refraction' ),
+				'top left' => esc_html__( 'Top Left', 'refraction' ),
+				'top right' => esc_html__( 'Top Right', 'refraction' ),
+				'bottom center' => esc_html__( 'Bottom Center', 'refraction' ),
+				'bottom left' => esc_html__( 'Bottom Left', 'refraction' ),
+				'bottom right' => esc_html__( 'Bottom Right', 'refraction' ),
+				'initial' => esc_html__( 'Custom', 'refraction' ),
 
 			],
 			'selectors' => [
@@ -339,7 +339,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['xpos'] = [
-			'label' => esc_html__( 'X Position', 'elementor' ),
+			'label' => esc_html__( 'X Position', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'responsive' => true,
 			'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
@@ -382,7 +382,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['ypos'] = [
-			'label' => esc_html__( 'Y Position', 'elementor' ),
+			'label' => esc_html__( 'Y Position', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'responsive' => true,
 			'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'custom' ],
@@ -425,13 +425,13 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['attachment'] = [
-			'label' => esc_html_x( 'Attachment', 'Background Control', 'elementor' ),
+			'label' => esc_html_x( 'Attachment', 'Background Control', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'scroll' => esc_html_x( 'Scroll', 'Background Control', 'elementor' ),
-				'fixed' => esc_html_x( 'Fixed', 'Background Control', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'scroll' => esc_html_x( 'Scroll', 'Background Control', 'refraction' ),
+				'fixed' => esc_html_x( 'Fixed', 'Background Control', 'refraction' ),
 			],
 			'selectors' => [
 				'(desktop+){{SELECTOR}}' => 'background-attachment: {{VALUE}};',
@@ -444,8 +444,8 @@ class Group_Control_Background extends Group_Control_Base {
 
 		$fields['attachment_alert'] = [
 			'type' => Controls_Manager::RAW_HTML,
-			'content_classes' => 'elementor-control-field-description',
-			'raw' => esc_html__( 'Note: Attachment Fixed works only on desktop.', 'elementor' ),
+			'content_classes' => 'refraction-control-field-description',
+			'raw' => esc_html__( 'Note: Attachment Fixed works only on desktop.', 'refraction' ),
 			'condition' => [
 				'background' => [ 'classic' ],
 				'image[url]!' => '',
@@ -454,16 +454,16 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['repeat'] = [
-			'label' => esc_html_x( 'Repeat', 'Background Control', 'elementor' ),
+			'label' => esc_html_x( 'Repeat', 'Background Control', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'responsive' => true,
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'no-repeat' => esc_html__( 'No-repeat', 'elementor' ),
-				'repeat' => esc_html__( 'Repeat', 'elementor' ),
-				'repeat-x' => esc_html__( 'Repeat-x', 'elementor' ),
-				'repeat-y' => esc_html__( 'Repeat-y', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'no-repeat' => esc_html__( 'No-repeat', 'refraction' ),
+				'repeat' => esc_html__( 'Repeat', 'refraction' ),
+				'repeat-x' => esc_html__( 'Repeat-x', 'refraction' ),
+				'repeat-y' => esc_html__( 'Repeat-y', 'refraction' ),
 			],
 			'selectors' => [
 				'{{SELECTOR}}' => 'background-repeat: {{VALUE}};',
@@ -475,16 +475,16 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['size'] = [
-			'label' => esc_html__( 'Display Size', 'elementor' ),
+			'label' => esc_html__( 'Display Size', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'responsive' => true,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'auto' => esc_html__( 'Auto', 'elementor' ),
-				'cover' => esc_html__( 'Cover', 'elementor' ),
-				'contain' => esc_html__( 'Contain', 'elementor' ),
-				'initial' => esc_html__( 'Custom', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'auto' => esc_html__( 'Auto', 'refraction' ),
+				'cover' => esc_html__( 'Cover', 'refraction' ),
+				'contain' => esc_html__( 'Contain', 'refraction' ),
+				'initial' => esc_html__( 'Custom', 'refraction' ),
 			],
 			'selectors' => [
 				'{{SELECTOR}}' => 'background-size: {{VALUE}};',
@@ -496,7 +496,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['bg_width'] = [
-			'label' => esc_html__( 'Width', 'elementor' ),
+			'label' => esc_html__( 'Width', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'responsive' => true,
 			'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
@@ -522,10 +522,10 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['video_link'] = [
-			'label' => esc_html__( 'Video Link', 'elementor' ),
+			'label' => esc_html__( 'Video Link', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
 			'placeholder' => 'https://www.youtube.com/watch?v=XHOmBV4js_E',
-			'description' => esc_html__( 'YouTube/Vimeo link, or link to video file (mp4 is recommended).', 'elementor' ),
+			'description' => esc_html__( 'YouTube/Vimeo link, or link to video file (mp4 is recommended).', 'refraction' ),
 			'label_block' => true,
 			'default' => '',
 			'dynamic' => [
@@ -546,9 +546,9 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['video_start'] = [
-			'label' => esc_html__( 'Start Time', 'elementor' ),
+			'label' => esc_html__( 'Start Time', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,
-			'description' => esc_html__( 'Specify a start time (in seconds)', 'elementor' ),
+			'description' => esc_html__( 'Specify a start time (in seconds)', 'refraction' ),
 			'placeholder' => 10,
 			'condition' => [
 				'background' => [ 'video' ],
@@ -558,9 +558,9 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['video_end'] = [
-			'label' => esc_html__( 'End Time', 'elementor' ),
+			'label' => esc_html__( 'End Time', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,
-			'description' => esc_html__( 'Specify an end time (in seconds)', 'elementor' ),
+			'description' => esc_html__( 'Specify an end time (in seconds)', 'refraction' ),
 			'placeholder' => 70,
 			'condition' => [
 				'background' => [ 'video' ],
@@ -570,7 +570,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['play_once'] = [
-			'label' => esc_html__( 'Play Once', 'elementor' ),
+			'label' => esc_html__( 'Play Once', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'condition' => [
 				'background' => [ 'video' ],
@@ -580,7 +580,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['play_on_mobile'] = [
-			'label' => esc_html__( 'Play On Mobile', 'elementor' ),
+			'label' => esc_html__( 'Play On Mobile', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'condition' => [
 				'background' => [ 'video' ],
@@ -594,7 +594,7 @@ class Group_Control_Background extends Group_Control_Base {
 		// will not run properly. This added control allows users to align all their videos to one host (either
 		// youtube.com or youtube-nocookie.com, depending on whether the user wants privacy mode on or not).
 		$fields['privacy_mode'] = [
-			'label' => esc_html__( 'Privacy Mode', 'elementor' ),
+			'label' => esc_html__( 'Privacy Mode', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'condition' => [
 				'background' => [ 'video' ],
@@ -604,8 +604,8 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['video_fallback'] = [
-			'label' => esc_html__( 'Background Fallback', 'elementor' ),
-			'description' => esc_html__( 'This cover image will replace the background video in case that the video could not be loaded.', 'elementor' ),
+			'label' => esc_html__( 'Background Fallback', 'refraction' ),
+			'description' => esc_html__( 'This cover image will replace the background video in case that the video could not be loaded.', 'refraction' ),
 			'type' => Controls_Manager::MEDIA,
 			'dynamic' => [
 				'active' => true,
@@ -620,7 +620,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_gallery'] = [
-			'label' => esc_html__( 'Images', 'elementor' ),
+			'label' => esc_html__( 'Images', 'refraction' ),
 			'type' => Controls_Manager::GALLERY,
 			'condition' => [
 				'background' => [ 'slideshow' ],
@@ -631,7 +631,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_loop'] = [
-			'label' => esc_html__( 'Infinite Loop', 'elementor' ),
+			'label' => esc_html__( 'Infinite Loop', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
 			'condition' => [
@@ -642,7 +642,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_slide_duration'] = [
-			'label' => esc_html__( 'Duration', 'elementor' ) . ' (ms)',
+			'label' => esc_html__( 'Duration', 'refraction' ) . ' (ms)',
 			'type' => Controls_Manager::NUMBER,
 			'default' => 5000,
 			'condition' => [
@@ -652,7 +652,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_slide_transition'] = [
-			'label' => esc_html__( 'Transition', 'elementor' ),
+			'label' => esc_html__( 'Transition', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'fade',
 			'options' => [
@@ -670,7 +670,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_transition_duration'] = [
-			'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (ms)',
+			'label' => esc_html__( 'Transition Duration', 'refraction' ) . ' (ms)',
 			'type' => Controls_Manager::NUMBER,
 			'default' => 500,
 			'condition' => [
@@ -680,18 +680,18 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_background_size'] = [
-			'label' => esc_html__( 'Background Size', 'elementor' ),
+			'label' => esc_html__( 'Background Size', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'responsive' => true,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'auto' => esc_html__( 'Auto', 'elementor' ),
-				'cover' => esc_html__( 'Cover', 'elementor' ),
-				'contain' => esc_html__( 'Contain', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'auto' => esc_html__( 'Auto', 'refraction' ),
+				'cover' => esc_html__( 'Cover', 'refraction' ),
+				'contain' => esc_html__( 'Contain', 'refraction' ),
 			],
 			'selectors' => [
-				'{{WRAPPER}} .elementor-background-slideshow__slide__image' => 'background-size: {{VALUE}};',
+				'{{WRAPPER}} .refraction-background-slideshow__slide__image' => 'background-size: {{VALUE}};',
 			],
 			'condition' => [
 				'background' => [ 'slideshow' ],
@@ -699,24 +699,24 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_background_position'] = [
-			'label' => esc_html__( 'Background Position', 'elementor' ),
+			'label' => esc_html__( 'Background Position', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'responsive' => true,
 			'options' => [
-				'' => esc_html__( 'Default', 'elementor' ),
-				'center center' => esc_html__( 'Center Center', 'elementor' ),
-				'center left' => esc_html__( 'Center Left', 'elementor' ),
-				'center right' => esc_html__( 'Center Right', 'elementor' ),
-				'top center' => esc_html__( 'Top Center', 'elementor' ),
-				'top left' => esc_html__( 'Top Left', 'elementor' ),
-				'top right' => esc_html__( 'Top Right', 'elementor' ),
-				'bottom center' => esc_html__( 'Bottom Center', 'elementor' ),
-				'bottom left' => esc_html__( 'Bottom Left', 'elementor' ),
-				'bottom right' => esc_html__( 'Bottom Right', 'elementor' ),
+				'' => esc_html__( 'Default', 'refraction' ),
+				'center center' => esc_html__( 'Center Center', 'refraction' ),
+				'center left' => esc_html__( 'Center Left', 'refraction' ),
+				'center right' => esc_html__( 'Center Right', 'refraction' ),
+				'top center' => esc_html__( 'Top Center', 'refraction' ),
+				'top left' => esc_html__( 'Top Left', 'refraction' ),
+				'top right' => esc_html__( 'Top Right', 'refraction' ),
+				'bottom center' => esc_html__( 'Bottom Center', 'refraction' ),
+				'bottom left' => esc_html__( 'Bottom Left', 'refraction' ),
+				'bottom right' => esc_html__( 'Bottom Right', 'refraction' ),
 			],
 			'selectors' => [
-				'{{WRAPPER}} .elementor-background-slideshow__slide__image' => 'background-position: {{VALUE}};',
+				'{{WRAPPER}} .refraction-background-slideshow__slide__image' => 'background-position: {{VALUE}};',
 			],
 			'condition' => [
 				'background' => [ 'slideshow' ],
@@ -724,7 +724,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_lazyload'] = [
-			'label' => esc_html__( 'Lazyload', 'elementor' ),
+			'label' => esc_html__( 'Lazyload', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'separator' => 'before',
 			'condition' => [
@@ -735,7 +735,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_ken_burns'] = [
-			'label' => esc_html__( 'Ken Burns Effect', 'elementor' ),
+			'label' => esc_html__( 'Ken Burns Effect', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'separator' => 'before',
 			'condition' => [
@@ -746,12 +746,12 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['slideshow_ken_burns_zoom_direction'] = [
-			'label' => esc_html__( 'Direction', 'elementor' ),
+			'label' => esc_html__( 'Direction', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'in',
 			'options' => [
-				'in' => esc_html__( 'In', 'elementor' ),
-				'out' => esc_html__( 'Out', 'elementor' ),
+				'in' => esc_html__( 'In', 'refraction' ),
+				'out' => esc_html__( 'Out', 'refraction' ),
 			],
 			'condition' => [
 				'background' => [ 'slideshow' ],
@@ -778,7 +778,7 @@ class Group_Control_Background extends Group_Control_Base {
 	protected function get_child_default_args() {
 		return [
 			'types' => [ 'classic', 'gradient' ],
-			'selector' => '{{WRAPPER}}:not(.elementor-motion-effects-element-type-background), {{WRAPPER}} > .elementor-motion-effects-container > .elementor-motion-effects-layer',
+			'selector' => '{{WRAPPER}}:not(.refraction-motion-effects-element-type-background), {{WRAPPER}} > .refraction-motion-effects-container > .refraction-motion-effects-layer',
 		];
 	}
 

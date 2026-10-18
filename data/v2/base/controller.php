@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Data\V2\Base;
+namespace Refraction\Data\V2\Base;
 
-use Elementor\Data\V2\Manager;
+use Refraction\Data\V2\Manager;
 use WP_REST_Controller;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,31 +16,31 @@ abstract class Controller extends WP_REST_Controller {
 	/**
 	 * Loaded endpoint(s).
 	 *
-	 * @var \Elementor\Data\V2\Base\Endpoint[]
+	 * @var \Refraction\Data\V2\Base\Endpoint[]
 	 */
 	public $endpoints = [];
 
 	/**
 	 * Index endpoint.
 	 *
-	 * @var \Elementor\Data\V2\Base\Endpoint\Index
+	 * @var \Refraction\Data\V2\Base\Endpoint\Index
 	 */
 	public $index_endpoint = null;
 
 	/**
 	 * Loaded processor(s).
 	 *
-	 * @var \Elementor\Data\V2\Base\Processor[][]
+	 * @var \Refraction\Data\V2\Base\Processor[][]
 	 */
 	public $processors = [];
 
 	/**
-	 * @var \Elementor\Data\V2\Base\Controller|null
+	 * @var \Refraction\Data\V2\Base\Controller|null
 	 */
 	private $parent = null;
 
 	/**
-	 * @var \Elementor\Data\V2\Base\Controller[]
+	 * @var \Refraction\Data\V2\Base\Controller[]
 	 */
 	private $sub_controllers = [];
 
@@ -66,7 +66,7 @@ abstract class Controller extends WP_REST_Controller {
 	}
 
 	public function register_routes() {
-		_doing_it_wrong( 'Elementor\Data\V2\Controller::register_routes', sprintf( "Method '%s' deprecated. use `register_endpoints()`.", __METHOD__ ), '3.5.0' );
+		_doing_it_wrong( 'Refraction\Data\V2\Controller::register_routes', sprintf( "Method '%s' deprecated. use `register_endpoints()`.", __METHOD__ ), '3.5.0' );
 	}
 
 	/**
@@ -298,7 +298,7 @@ abstract class Controller extends WP_REST_Controller {
 	/**
 	 * Get the parent controller.
 	 *
-	 * @return \Elementor\Data\V2\Base\Controller|null
+	 * @return \Refraction\Data\V2\Base\Controller|null
 	 */
 	public function get_parent() {
 		return $this->parent;
@@ -307,7 +307,7 @@ abstract class Controller extends WP_REST_Controller {
 	/**
 	 * Get sub controller(s).
 	 *
-	 * @return \Elementor\Data\V2\Base\Controller[]
+	 * @return \Refraction\Data\V2\Base\Controller[]
 	 */
 	public function get_sub_controllers() {
 		return $this->sub_controllers;
@@ -318,7 +318,7 @@ abstract class Controller extends WP_REST_Controller {
 	 *
 	 * @param string $command
 	 *
-	 * @return \Elementor\Data\V2\Base\Processor[]
+	 * @return \Refraction\Data\V2\Base\Processor[]
 	 */
 	public function get_processors( $command ) {
 		$result = [];
@@ -352,9 +352,9 @@ abstract class Controller extends WP_REST_Controller {
 	/**
 	 * Register endpoint.
 	 *
-	 * @param \Elementor\Data\V2\Base\Endpoint $endpoint
+	 * @param \Refraction\Data\V2\Base\Endpoint $endpoint
 	 *
-	 * @return \Elementor\Data\V2\Base\Endpoint
+	 * @return \Refraction\Data\V2\Base\Endpoint
 	 */
 	protected function register_endpoint( Endpoint $endpoint ) {
 		$command = $endpoint->get_full_command();
@@ -380,7 +380,7 @@ abstract class Controller extends WP_REST_Controller {
 	 *
 	 * @param Processor $processor
 	 *
-	 * @return \Elementor\Data\V2\Base\Processor $processor_instance
+	 * @return \Refraction\Data\V2\Base\Processor $processor_instance
 	 */
 	protected function register_processor( Processor $processor ) {
 		$command = $processor->get_command();
@@ -460,7 +460,7 @@ abstract class Controller extends WP_REST_Controller {
 		 * Since all actions were removed for custom internal REST server.
 		 * Re-add the actions.
 		 */
-		add_action( 'elementor_rest_api_before_init', function () {
+		add_action( 'refraction_rest_api_before_init', function () {
 			add_action( 'rest_api_init', function () {
 				$this->register();
 			} );

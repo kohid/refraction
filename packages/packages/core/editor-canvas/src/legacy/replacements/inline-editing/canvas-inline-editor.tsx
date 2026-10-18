@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { InlineEditor, InlineEditorToolbar } from '@elementor/editor-controls';
+import { InlineEditor, InlineEditorToolbar } from '@refraction/editor-controls';
 import { Box, ThemeProvider } from '@elementor/ui';
 import { autoUpdate, flip, FloatingPortal, useFloating } from '@floating-ui/react';
 

@@ -1,5 +1,5 @@
 import { type ComponentType } from 'react';
-import { type Location } from '@elementor/locations';
+import { type Location } from '@refraction/locations';
 
 export type LocationsMap< TGroups extends string > = Record< TGroups, Location >;
 

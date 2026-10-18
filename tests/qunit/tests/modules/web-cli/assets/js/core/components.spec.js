@@ -1,4 +1,4 @@
-import ComponentBase from 'elementor-api/modules/component-base';
+import ComponentBase from 'refraction-api/modules/component-base';
 
 jQuery( () => {
 	QUnit.module( 'File: modules/web-cli/assets/js/core/components.js', ( hooks ) => {

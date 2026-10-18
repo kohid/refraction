@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createMockPropType, renderWithTheme } from 'test-utils';
-import { useBoundProp } from '@elementor/editor-controls';
-import { type ElementType } from '@elementor/editor-elements';
-import { type PropType } from '@elementor/editor-props';
+import { useBoundProp } from '@refraction/editor-controls';
+import { type ElementType } from '@refraction/editor-elements';
+import { type PropType } from '@refraction/editor-props';
 import { fireEvent, renderHook, screen } from '@testing-library/react';
 
 import { useElement } from '../../../contexts/element-context';
@@ -11,7 +11,7 @@ import { usePropDynamicAction } from '../use-prop-dynamic-action';
 import { usePropDynamicTags } from '../use-prop-dynamic-tags';
 
 jest.mock( '../../../contexts/element-context' );
-jest.mock( '@elementor/editor-controls' );
+jest.mock( '@refraction/editor-controls' );
 jest.mock( '../../sync/get-atomic-dynamic-tags' );
 jest.mock( '../use-prop-dynamic-tags' );
 

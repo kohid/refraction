@@ -1,9 +1,9 @@
-/* global elementorFrontendConfig */
+/* global refractionFrontendConfig */
 import '../public-path';
 import './utils/chunk-loader';
 import DocumentsManager from './documents-manager';
-import Storage from 'elementor-common/utils/storage';
-import environment from 'elementor-common/utils/environment';
+import Storage from 'refraction-common/utils/storage';
+import environment from 'refraction-common/utils/environment';
 import YouTubeApiLoader from './utils/video-api/youtube-loader';
 import VimeoApiLoader from './utils/video-api/vimeo-loader';
 import BaseVideoLoader from './utils/video-api/base-loader';
@@ -11,30 +11,30 @@ import URLActions from './utils/url-actions';
 import SwiperHandler from './utils/swiper';
 import LightboxManager from './utils/lightbox/lightbox-manager';
 import AssetsLoader from './utils/assets-loader';
-import Breakpoints from 'elementor-utils/breakpoints';
-import Events from 'elementor-utils/events';
-import Shapes from 'elementor/modules/shapes/assets/js/frontend/frontend';
+import Breakpoints from 'refraction-utils/breakpoints';
+import Events from 'refraction-utils/events';
+import Shapes from 'refraction/modules/shapes/assets/js/frontend/frontend';
 import Controls from './utils/controls';
 import AnchorScrollMargin from './utils/anchor-scroll-margin';
 
-import { escapeHTML } from 'elementor-frontend/utils/utils';
+import { escapeHTML } from 'refraction-frontend/utils/utils';
 
-const EventManager = require( 'elementor-utils/hooks' ),
-	ElementsHandler = require( 'elementor-frontend/elements-handlers-manager' );
+const EventManager = require( 'refraction-utils/hooks' ),
+	ElementsHandler = require( 'refraction-frontend/elements-handlers-manager' );
 
-export default class Frontend extends elementorModules.ViewModule {
+export default class Frontend extends refractionModules.ViewModule {
 	constructor( ...args ) {
 		super( ...args );
 
-		this.config = elementorFrontendConfig;
+		this.config = refractionFrontendConfig;
 
 		this.config.legacyMode = {
 			/**
 			 * @deprecated since 3.1.0
 			 */
 			get elementWrappers() {
-				if ( elementorFrontend.isEditMode() ) {
-					window.top.elementorDevTools.deprecation.deprecated( 'elementorFrontend.config.legacyMode.elementWrappers', '3.1.0' );
+				if ( refractionFrontend.isEditMode() ) {
+					window.top.refractionDevTools.deprecation.deprecated( 'refractionFrontend.config.legacyMode.elementWrappers', '3.1.0' );
 				}
 
 				return false;
@@ -45,20 +45,20 @@ export default class Frontend extends elementorModules.ViewModule {
 	}
 
 	/**
-	 * @deprecated since 2.5.0, use `elementorModules.frontend.handlers.Base` instead.
+	 * @deprecated since 2.5.0, use `refractionModules.frontend.handlers.Base` instead.
 	 */
 	get Module() {
 		if ( this.isEditMode() ) {
-			parent.elementorDevTools.deprecation.deprecated( 'elementorFrontend.Module', '2.5.0', 'elementorModules.frontend.handlers.Base' );
+			parent.refractionDevTools.deprecation.deprecated( 'refractionFrontend.Module', '2.5.0', 'refractionModules.frontend.handlers.Base' );
 		}
 
-		return elementorModules.frontend.handlers.Base;
+		return refractionModules.frontend.handlers.Base;
 	}
 
 	getDefaultSettings() {
 		return {
 			selectors: {
-				elementor: '.elementor',
+				refraction: '.refraction',
 				adminBar: '#wpadminbar',
 			},
 		};
@@ -71,7 +71,7 @@ export default class Frontend extends elementorModules.ViewModule {
 			$document: jQuery( document ),
 			$head: jQuery( document.head ),
 			$body: jQuery( document.body ),
-			$deviceMode: jQuery( '<span>', { id: 'elementor-device-mode', class: 'elementor-screen-only' } ),
+			$deviceMode: jQuery( '<span>', { id: 'refraction-device-mode', class: 'refraction-screen-only' } ),
 		};
 		defaultElements.$body.append( defaultElements.$deviceMode );
 
@@ -95,21 +95,21 @@ export default class Frontend extends elementorModules.ViewModule {
 	 * @deprecated since 2.4.0, this method was never in use.
 	 */
 	getPageSettings( settingName ) {
-		const settingsObject = this.isEditMode() ? elementor.settings.page.model.attributes : this.config.settings.page;
+		const settingsObject = this.isEditMode() ? refraction.settings.page.model.attributes : this.config.settings.page;
 
 		return this.getItems( settingsObject, settingName );
 	}
 
 	/**
 	 * @param {string} settingName
-	 * @deprecated since 3.0.0, use `getKitSettings()` instead and remove the `elementor_` prefix.
+	 * @deprecated since 3.0.0, use `getKitSettings()` instead and remove the `refraction_` prefix.
 	 */
 	getGeneralSettings( settingName ) {
 		if ( this.isEditMode() ) {
-			parent.elementorDevTools.deprecation.deprecated( 'getGeneralSettings()', '3.0.0', 'getKitSettings() and remove the `elementor_` prefix' );
+			parent.refractionDevTools.deprecation.deprecated( 'getGeneralSettings()', '3.0.0', 'getKitSettings() and remove the `refraction_` prefix' );
 		}
 
-		return this.getKitSettings( `elementor_${ settingName }` );
+		return this.getKitSettings( `refraction_${ settingName }` );
 	}
 
 	getKitSettings( settingName ) {
@@ -127,7 +127,7 @@ export default class Frontend extends elementorModules.ViewModule {
 			return this.getWidescreenSetting( settings, settingKey );
 		}
 
-		const devices = elementorFrontend.breakpoints.getActiveBreakpointsList( { largeToSmall: true, withDesktop: true } );
+		const devices = refractionFrontend.breakpoints.getActiveBreakpointsList( { largeToSmall: true, withDesktop: true } );
 
 		let deviceIndex = devices.indexOf( deviceMode );
 
@@ -165,7 +165,7 @@ export default class Frontend extends elementorModules.ViewModule {
 	}
 
 	getCurrentDeviceSetting( settings, settingKey ) {
-		return this.getDeviceSetting( elementorFrontend.getCurrentDeviceMode(), settings, settingKey );
+		return this.getDeviceSetting( refractionFrontend.getCurrentDeviceMode(), settings, settingKey );
 	}
 
 	isEditMode() {
@@ -208,14 +208,14 @@ export default class Frontend extends elementorModules.ViewModule {
 
 		// TODO: BC since 2.4.0
 		this.modules = {
-			StretchElement: elementorModules.frontend.tools.StretchElement,
-			Masonry: elementorModules.utils.Masonry,
+			StretchElement: refractionModules.frontend.tools.StretchElement,
+			Masonry: refractionModules.utils.Masonry,
 		};
 
 		this.elementsHandler.init();
 
 		if ( this.isEditMode() ) {
-			elementor.once( 'document:loaded', () => this.onDocumentLoaded() );
+			refraction.once( 'document:loaded', () => this.onDocumentLoaded() );
 		} else {
 			this.onDocumentLoaded();
 		}
@@ -234,7 +234,7 @@ export default class Frontend extends elementorModules.ViewModule {
 	}
 
 	setDeviceModeData() {
-		this.elements.$body.attr( 'data-elementor-device-mode', this.getCurrentDeviceMode() );
+		this.elements.$body.attr( 'data-refraction-device-mode', this.getCurrentDeviceMode() );
 	}
 
 	addListenerOnce( listenerID, event, callback, to ) {
@@ -314,10 +314,10 @@ export default class Frontend extends elementorModules.ViewModule {
 		};
 
 		// TODO: BC - Deprecated since 3.5.0
-		elementorFrontend.trigger( 'elementor/modules/init:before' );
+		refractionFrontend.trigger( 'refraction/modules/init:before' );
 
 		// TODO: Use this instead.
-		elementorFrontend.trigger( 'elementor/modules/init/before' );
+		refractionFrontend.trigger( 'refraction/modules/init/before' );
 
 		Object.entries( handlers ).forEach( ( [ moduleName, ModuleClass ] ) => {
 			this.modulesHandlers[ moduleName ] = new ModuleClass();
@@ -356,7 +356,7 @@ export default class Frontend extends elementorModules.ViewModule {
 		}
 
 		// Keep this line before `initOnReadyComponents` call
-		Events.dispatch( this.elements.$window, 'elementor/frontend/init' );
+		Events.dispatch( this.elements.$window, 'refraction/frontend/init' );
 
 		this.initModules();
 
@@ -374,8 +374,8 @@ export default class Frontend extends elementorModules.ViewModule {
 	}
 }
 
-window.elementorFrontend = new Frontend();
+window.refractionFrontend = new Frontend();
 
-if ( ! elementorFrontend.isEditMode() ) {
-	jQuery( () => elementorFrontend.init() );
+if ( ! refractionFrontend.isEditMode() ) {
+	jQuery( () => refractionFrontend.init() );
 }

@@ -11,7 +11,7 @@ export default class ControlConditions extends Conditions {
 	/**
 	 * Convert Condition to Conditions
 	 *
-	 * "Condition" is the simple form of Elementor's control conditioning system, which allows to create one or more
+	 * "Condition" is the simple form of Refraction's control conditioning system, which allows to create one or more
 	 * conditions with an "AND" relationship between them.
 	 *
 	 * "Conditions" is the advanced system for conditioning controls, which allows combining AND and/or OR conditions,

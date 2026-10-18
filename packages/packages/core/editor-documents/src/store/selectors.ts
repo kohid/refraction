@@ -1,4 +1,4 @@
-import { __createSelector, type SliceState } from '@elementor/store';
+import { __createSelector, type SliceState } from '@refraction/store';
 
 import { type slice } from './index';
 

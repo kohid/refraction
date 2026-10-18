@@ -51,7 +51,7 @@ export async function setTitleIconPosition( direction: string, editor: EditorPag
 		right: '.eicon-h-align-right',
 		left: '.eicon-h-align-left',
 	} );
-	await editor.page.locator( `.elementor-control-accordion_item_title_icon_position${ controlBreakpoint } ${ icon[ direction ] }` ).click();
+	await editor.page.locator( `.refraction-control-accordion_item_title_icon_position${ controlBreakpoint } ${ icon[ direction ] }` ).click();
 }
 
 /**
@@ -72,7 +72,7 @@ export async function setTitleHorizontalAlignment( direction: string, editor: Ed
 		stretch: '.eicon-h-align-stretch',
 		justify: '.eicon-h-align-stretch',
 	} );
-	await editor.page.locator( `.elementor-control-accordion_item_title_position_horizontal${ controlBreakpoint } ${ icon[ direction ] }` ).click();
+	await editor.page.locator( `.refraction-control-accordion_item_title_position_horizontal${ controlBreakpoint } ${ icon[ direction ] }` ).click();
 }
 
 export async function setBorderAndBackground( editor: EditorPage, state: string, color: string, borderType: string, borderColor: string ): Promise<void> {
@@ -100,7 +100,7 @@ export async function setBorderAndBackground( editor: EditorPage, state: string,
 	}
 
 	async function setState() {
-		await editor.page.click( '.elementor-control-accordion_' + state + '_border_and_background' );
+		await editor.page.click( '.refraction-control-accordion_' + state + '_border_and_background' );
 	}
 }
 
@@ -113,15 +113,15 @@ export async function setIconColor( editor: EditorPage, state: string, color: st
 	}
 
 	async function setState() {
-		await editor.page.click( '.elementor-control-header_' + state + '_' + context );
+		await editor.page.click( '.refraction-control-header_' + state + '_' + context );
 	}
 }
 
 export async function addIcon( editor: EditorPage, page: Page, iconName: string ): Promise<void> {
 	await editor.openPanelTab( 'content' );
-	await page.locator( '.elementor-control-icons--inline__displayed-icon' ).first().click();
-	await page.locator( '#elementor-icons-manager__search input' ).fill( iconName );
-	await page.locator( '.elementor-icons-manager__tab__item' ).first().click();
+	await page.locator( '.refraction-control-icons--inline__displayed-icon' ).first().click();
+	await page.locator( '#refraction-icons-manager__search input' ).fill( iconName );
+	await page.locator( '.refraction-icons-manager__tab__item' ).first().click();
 	await page.locator( '.dialog-insert_icon' ).click();
 }
 
@@ -133,15 +133,15 @@ export async function setIconSize( editor: EditorPage, sizeInPx: string = '10' )
 
 export async function deleteItemFromRepeater( editor: EditorPage, accordionID: string ): Promise<void> {
 	// Arrange
-	const deleteItemButton = editor.page.locator( '.elementor-repeater-row-tool.elementor-repeater-tool-remove .eicon-close' ),
-		nestedAccordionItemTitle = editor.getPreviewFrame().locator( `.elementor-element-${ accordionID } .e-n-accordion-item` ),
-		nestedAccordionItemContent = editor.getPreviewFrame().locator( `.elementor-element-${ accordionID } .e-n-accordion-item .e-con` ),
+	const deleteItemButton = editor.page.locator( '.refraction-repeater-row-tool.refraction-repeater-tool-remove .eicon-close' ),
+		nestedAccordionItemTitle = editor.getPreviewFrame().locator( `.refraction-element-${ accordionID } .e-n-accordion-item` ),
+		nestedAccordionItemContent = editor.getPreviewFrame().locator( `.refraction-element-${ accordionID } .e-n-accordion-item .e-con` ),
 		numberOfTitles = await nestedAccordionItemTitle.count(),
 		numberOfContents = await nestedAccordionItemContent.count();
 
 	await deleteItemButton.nth( numberOfTitles - 1 ).click();
 
-	await editor.getPreviewFrame().waitForSelector( `.elementor-element-${ accordionID }` );
+	await editor.getPreviewFrame().waitForSelector( `.refraction-element-${ accordionID }` );
 
 	// Assert
 	await expect.soft( nestedAccordionItemTitle ).toHaveCount( numberOfTitles - 1 );
@@ -150,16 +150,16 @@ export async function deleteItemFromRepeater( editor: EditorPage, accordionID: s
 
 export async function addItemFromRepeater( editor: EditorPage, accordionID: string ): Promise<void> {
 	// Arrange
-	const addItemButton = editor.page.locator( '.elementor-repeater-add' ),
-		nestedAccordionItemTitle = editor.getPreviewFrame().locator( `.elementor-element-${ accordionID } .e-n-accordion-item` ),
-		nestedAccordionItemContent = editor.getPreviewFrame().locator( `.elementor-element-${ accordionID } .e-n-accordion-item .e-con` ),
+	const addItemButton = editor.page.locator( '.refraction-repeater-add' ),
+		nestedAccordionItemTitle = editor.getPreviewFrame().locator( `.refraction-element-${ accordionID } .e-n-accordion-item` ),
+		nestedAccordionItemContent = editor.getPreviewFrame().locator( `.refraction-element-${ accordionID } .e-n-accordion-item .e-con` ),
 		numberOfTitles = await nestedAccordionItemTitle.count(),
 		numberOfContents = await nestedAccordionItemContent.count();
 
 	// Act
 	await addItemButton.click();
 
-	await editor.getPreviewFrame().waitForSelector( `.elementor-element-${ accordionID }` );
+	await editor.getPreviewFrame().waitForSelector( `.refraction-element-${ accordionID }` );
 
 	// Assert
 	await expect.soft( nestedAccordionItemTitle ).toHaveCount( numberOfTitles + 1 );

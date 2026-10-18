@@ -1,4 +1,4 @@
-import After from 'elementor-api/modules/hooks/ui/after';
+import After from 'refraction-api/modules/hooks/ui/after';
 
 export class ChangePostTitle extends After {
 	getCommand() {
@@ -18,7 +18,7 @@ export class ChangePostTitle extends After {
 	}
 
 	apply( args ) {
-		const $title = elementorFrontend.elements.$document.find( elementor.config.page_title_selector );
+		const $title = refractionFrontend.elements.$document.find( refraction.config.page_title_selector );
 
 		$title.text( args.settings.post_title );
 	}

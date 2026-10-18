@@ -1,4 +1,4 @@
-// Moved from elementor pro: 'assets/dev/js/frontend/utils'
+// Moved from refraction pro: 'assets/dev/js/frontend/utils'
 export default class Scroll {
 	/**
 	 * @param {Object}      obj

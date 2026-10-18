@@ -1,7 +1,7 @@
-import { getV1CurrentDocument } from '@elementor/editor-documents';
-import { registerDataHook } from '@elementor/editor-v1-adapters';
+import { getV1CurrentDocument } from '@refraction/editor-documents';
+import { registerDataHook } from '@refraction/editor-v1-adapters';
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
+jest.mock( '@refraction/editor-styles-repository', () => ( {
 	createStylesProvider: jest.fn( () => ( {
 		getKey: () => 'embedded-documents-styles',
 		subscribe: jest.fn(),
@@ -15,11 +15,11 @@ jest.mock( '@elementor/editor-styles-repository', () => ( {
 	},
 } ) );
 
-jest.mock( '@elementor/editor-documents', () => ( {
+jest.mock( '@refraction/editor-documents', () => ( {
 	getV1CurrentDocument: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
 	registerDataHook: jest.fn(),
 } ) );
 
@@ -33,7 +33,7 @@ jest.mock( '../manager', () => ( {
 import { init } from '../init';
 import { embeddedDocumentsManager, setCurrentDocumentId } from '../manager';
 
-const { stylesRepository } = require( '@elementor/editor-styles-repository' );
+const { stylesRepository } = require( '@refraction/editor-styles-repository' );
 
 const mockGetV1CurrentDocument = jest.mocked( getV1CurrentDocument );
 const mockRegisterDataHook = jest.mocked( registerDataHook );

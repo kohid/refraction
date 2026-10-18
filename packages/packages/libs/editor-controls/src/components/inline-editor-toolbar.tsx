@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { type ElementID, getContainer, getElementSetting } from '@elementor/editor-elements';
-import { type LinkPropValue } from '@elementor/editor-props';
+import { type ElementID, getContainer, getElementSetting } from '@refraction/editor-elements';
+import { type LinkPropValue } from '@refraction/editor-props';
 import {
 	BoldIcon,
 	ItalicIcon,
@@ -97,7 +97,7 @@ export const InlineEditorToolbar = ( {
 
 		if ( elementId ) {
 			window.dispatchEvent(
-				new CustomEvent( 'elementor:inline-link-changed', {
+				new CustomEvent( 'refraction:inline-link-changed', {
 					detail: { elementId },
 				} )
 			);
@@ -224,7 +224,7 @@ const checkIfElementIsClickable = ( elementId: ElementID ): boolean => {
 
 const toolbarButtons = {
 	clear: {
-		label: __( 'Clear', 'elementor' ),
+		label: __( 'Clear', 'refraction' ),
 		icon: <MinusIcon fontSize="tiny" />,
 		action: 'clear',
 		method: ( editor: Editor ) => {
@@ -232,7 +232,7 @@ const toolbarButtons = {
 		},
 	},
 	bold: {
-		label: __( 'Bold', 'elementor' ),
+		label: __( 'Bold', 'refraction' ),
 		icon: <BoldIcon fontSize="tiny" />,
 		action: 'bold',
 		method: ( editor: Editor ) => {
@@ -240,7 +240,7 @@ const toolbarButtons = {
 		},
 	},
 	italic: {
-		label: __( 'Italic', 'elementor' ),
+		label: __( 'Italic', 'refraction' ),
 		icon: <ItalicIcon fontSize="tiny" />,
 		action: 'italic',
 		method: ( editor: Editor ) => {
@@ -248,7 +248,7 @@ const toolbarButtons = {
 		},
 	},
 	underline: {
-		label: __( 'Underline', 'elementor' ),
+		label: __( 'Underline', 'refraction' ),
 		icon: <UnderlineIcon fontSize="tiny" />,
 		action: 'underline',
 		method: ( editor: Editor ) => {
@@ -256,7 +256,7 @@ const toolbarButtons = {
 		},
 	},
 	strike: {
-		label: __( 'Strikethrough', 'elementor' ),
+		label: __( 'Strikethrough', 'refraction' ),
 		icon: <StrikethroughIcon fontSize="tiny" />,
 		action: 'strike',
 		method: ( editor: Editor ) => {
@@ -264,7 +264,7 @@ const toolbarButtons = {
 		},
 	},
 	superscript: {
-		label: __( 'Superscript', 'elementor' ),
+		label: __( 'Superscript', 'refraction' ),
 		icon: <SuperscriptIcon fontSize="tiny" />,
 		action: 'superscript',
 		method: ( editor: Editor ) => {
@@ -272,7 +272,7 @@ const toolbarButtons = {
 		},
 	},
 	subscript: {
-		label: __( 'Subscript', 'elementor' ),
+		label: __( 'Subscript', 'refraction' ),
 		icon: <SubscriptIcon fontSize="tiny" />,
 		action: 'subscript',
 		method: ( editor: Editor ) => {
@@ -280,7 +280,7 @@ const toolbarButtons = {
 		},
 	},
 	link: {
-		label: __( 'Link', 'elementor' ),
+		label: __( 'Link', 'refraction' ),
 		icon: <LinkIcon fontSize="tiny" />,
 		action: 'link',
 		method: null,

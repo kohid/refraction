@@ -1,8 +1,8 @@
-export default class Alert extends elementorModules.frontend.handlers.Base {
+export default class Alert extends refractionModules.frontend.handlers.Base {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				dismissButton: '.elementor-alert-dismiss',
+				dismissButton: '.refraction-alert-dismiss',
 			},
 		};
 	}

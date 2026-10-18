@@ -1,13 +1,13 @@
-import { getContainer, getSelectedElements, getWidgetsCache, type V1Element } from '@elementor/editor-elements';
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
+import { getContainer, getSelectedElements, getWidgetsCache, type V1Element } from '@refraction/editor-elements';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
 import {
 	__privateListenTo as listenTo,
 	commandEndEvent,
 	type CommandEvent,
 	type ListenerEvent,
-} from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-v1-adapters';
 
-export const SELECTED_ELEMENT_URI = 'elementor://context/selected-element';
+export const SELECTED_ELEMENT_URI = 'refraction://context/selected-element';
 
 type WidgetVersion = 'v3' | 'v4';
 
@@ -90,7 +90,7 @@ export const initSelectedElementResource = ( reg: MCPRegistryEntry ) => {
 		'selected-element',
 		SELECTED_ELEMENT_URI,
 		{
-			description: 'Currently selected Elementor element context.',
+			description: 'Currently selected Refraction element context.',
 		},
 		async () => {
 			return {

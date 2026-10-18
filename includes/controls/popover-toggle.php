@@ -1,12 +1,12 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor popover toggle control.
+ * Refraction popover toggle control.
  *
  * A base control for creating a popover toggle control. By default displays a toggle
  * button to open and close a popover.
@@ -59,23 +59,23 @@ class Control_Popover_Toggle extends Base_Data_Control {
 	 */
 	public function content_template() {
 		?>
-		<div class="elementor-control-field">
-			<label class="elementor-control-title">{{{ data.label }}}</label>
-			<div class="elementor-control-input-wrapper">
-				<input id="<?php $this->print_control_uid(); ?>-custom" class="elementor-control-popover-toggle-toggle" type="radio" name="elementor-choose-{{ data.name }}-{{ data._cid }}" value="{{ data.return_value }}">
-				<label class="elementor-control-popover-toggle-toggle-label elementor-control-unit-1" for="<?php $this->print_control_uid(); ?>-custom">
+		<div class="refraction-control-field">
+			<label class="refraction-control-title">{{{ data.label }}}</label>
+			<div class="refraction-control-input-wrapper">
+				<input id="<?php $this->print_control_uid(); ?>-custom" class="refraction-control-popover-toggle-toggle" type="radio" name="refraction-choose-{{ data.name }}-{{ data._cid }}" value="{{ data.return_value }}">
+				<label class="refraction-control-popover-toggle-toggle-label refraction-control-unit-1" for="<?php $this->print_control_uid(); ?>-custom">
 					<i class="eicon-edit" aria-hidden="true"></i>
-					<span class="elementor-screen-only"><?php echo esc_html__( 'Edit', 'elementor' ); ?></span>
+					<span class="refraction-screen-only"><?php echo esc_html__( 'Edit', 'refraction' ); ?></span>
 				</label>
-				<input id="<?php $this->print_control_uid(); ?>-default" class="elementor-control-popover-toggle-reset" type="radio" name="elementor-choose-{{ data.name }}-{{ data._cid }}" value="">
-				<label class="elementor-control-popover-toggle-reset-label tooltip-target" for="<?php $this->print_control_uid(); ?>-default" data-tooltip="<?php echo esc_attr__( 'Back to default', 'elementor' ); ?>" data-tooltip-pos="s">
+				<input id="<?php $this->print_control_uid(); ?>-default" class="refraction-control-popover-toggle-reset" type="radio" name="refraction-choose-{{ data.name }}-{{ data._cid }}" value="">
+				<label class="refraction-control-popover-toggle-reset-label tooltip-target" for="<?php $this->print_control_uid(); ?>-default" data-tooltip="<?php echo esc_attr__( 'Back to default', 'refraction' ); ?>" data-tooltip-pos="s">
 					<i class="eicon-undo" aria-hidden="true"></i>
-					<span class="elementor-screen-only"><?php echo esc_html__( 'Back to default', 'elementor' ); ?></span>
+					<span class="refraction-screen-only"><?php echo esc_html__( 'Back to default', 'refraction' ); ?></span>
 				</label>
 			</div>
 		</div>
 		<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+			<div class="refraction-control-field-description">{{{ data.description }}}</div>
 		<# } #>
 		<?php
 	}

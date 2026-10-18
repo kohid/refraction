@@ -1,13 +1,13 @@
 export default class Helpers {
 	/**
 	 * @param {*} args
-	 * @deprecated since 3.7.0, use `elementorDevTools.consoleWarn()` instead.
+	 * @deprecated since 3.7.0, use `refractionDevTools.consoleWarn()` instead.
 	 */
 	consoleWarn( ...args ) {
-		elementorDevTools.consoleWarn( ...args );
+		refractionDevTools.consoleWarn( ...args );
 
 		// This is is self is deprecated.
-		elementorDevTools.deprecation.deprecated( 'elementorCommon.helpers.consoleWarn()', '3.7.0', 'elementorDevTools.consoleWarn()' );
+		refractionDevTools.deprecation.deprecated( 'refractionCommon.helpers.consoleWarn()', '3.7.0', 'refractionDevTools.consoleWarn()' );
 	}
 
 	/**
@@ -19,7 +19,7 @@ export default class Helpers {
 		console.error( message );
 
 		// This is is self is deprecated.
-		elementorDevTools.deprecation.deprecated( 'elementorCommon.helpers.consoleError()', '3.7.0', 'console.error()' );
+		refractionDevTools.deprecation.deprecated( 'refractionCommon.helpers.consoleError()', '3.7.0', 'console.error()' );
 	}
 
 	cloneObject( object ) {

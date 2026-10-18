@@ -9,7 +9,7 @@ test( 'Image widget sanity test', async ( { page, apiRequests }, testInfo ) => {
 
 	await editor.addWidget( { widgetType: 'image' } );
 
-	await page.click( '.elementor-control-media__preview' );
+	await page.click( '.refraction-control-media__preview' );
 	await page.click( 'text=Media Library' );
 	await page.waitForSelector( 'text=Insert Media' );
 	await page.locator( '#menu-item-upload' ).click();

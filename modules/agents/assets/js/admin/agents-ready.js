@@ -1,4 +1,4 @@
-import ReactUtils from 'elementor-utils/react';
+import ReactUtils from 'refraction-utils/react';
 
 import { App } from './app';
 
@@ -11,11 +11,11 @@ const init = () => {
 		return;
 	}
 
-	const config = window.elementorAgentsReadyConfig || {};
+	const config = window.refractionAgentsReadyConfig || {};
 
 	ReactUtils.render( (
 		<App
-			isRTL={ !! elementorCommon.config.isRTL }
+			isRTL={ !! refractionCommon.config.isRTL }
 			isExperimentActive={ !! config.isExperimentActive }
 			agentDiscoveryConfig={ config.agentDiscovery }
 			botAccessConfig={ config.botAccess }

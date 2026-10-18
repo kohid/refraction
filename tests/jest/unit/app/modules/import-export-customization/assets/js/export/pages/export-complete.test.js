@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ExportComplete from 'elementor/app/modules/import-export-customization/assets/js/export/pages/export-complete';
-import eventsConfig from 'elementor/core/common/modules/events-manager/assets/js/events-config';
-import useContextDetection from 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
+import ExportComplete from 'refraction/app/modules/import-export-customization/assets/js/export/pages/export-complete';
+import eventsConfig from 'refraction/core/common/modules/events-manager/assets/js/events-config';
+import useContextDetection from 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection';
 
 const mockNavigate = jest.fn();
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection' );
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/shared/hooks/use-context-detection' );
 
 jest.mock( '@reach/router', () => ( {
 	useNavigate: () => mockNavigate,
@@ -14,7 +14,7 @@ jest.mock( '@reach/router', () => ( {
 
 const mockSendExportKitCustomization = jest.fn();
 const mockSendPageViewsWebsiteTemplates = jest.fn();
-jest.mock( 'elementor/app/assets/js/event-track/apps-event-tracking', () => ( {
+jest.mock( 'refraction/app/assets/js/event-track/apps-event-tracking', () => ( {
 	AppsEventTracking: {
 		sendExportKitCustomization: ( ...args ) => mockSendExportKitCustomization( ...args ),
 		sendPageViewsWebsiteTemplates: ( ...args ) => mockSendPageViewsWebsiteTemplates( ...args ),
@@ -36,13 +36,13 @@ let mockExportContext = {
 	isCompleted: true,
 };
 
-jest.mock( 'elementor/app/modules/import-export-customization/assets/js/export/context/export-context', () => ( {
+jest.mock( 'refraction/app/modules/import-export-customization/assets/js/export/context/export-context', () => ( {
 	useExportContext: () => mockExportContext,
 	ExportContextProvider: ( { children } ) => children,
 } ) );
 
 describe( 'ExportComplete Component', () => {
-	let mockElementorAppConfig;
+	let mockRefractionAppConfig;
 	let mockDocument;
 	let mockLink;
 
@@ -62,9 +62,9 @@ describe( 'ExportComplete Component', () => {
 			isCompleted: true,
 		};
 
-		mockElementorAppConfig = {
+		mockRefractionAppConfig = {
 			admin_url: 'https://example.com/wp-admin/',
-			base_url: 'https://example.com/elementor',
+			base_url: 'https://example.com/refraction',
 		};
 
 		useContextDetection.mockImplementation( () => ( {
@@ -72,9 +72,9 @@ describe( 'ExportComplete Component', () => {
 			contextData: mockExportContext,
 		} ) );
 
-		global.elementorAppConfig = mockElementorAppConfig;
+		global.refractionAppConfig = mockRefractionAppConfig;
 
-		global.elementorCommon = {
+		global.refractionCommon = {
 			config: {
 				isRTL: false,
 			},

@@ -2,7 +2,7 @@ import type * as InitialTabModule from '../initial-tab';
 
 type InitialTab = typeof InitialTabModule;
 
-const STORAGE_KEY = 'elementor_editor_design_system_active_tab';
+const STORAGE_KEY = 'refraction_editor_design_system_active_tab';
 
 function loadModule(): InitialTab {
 	jest.resetModules();

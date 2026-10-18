@@ -7,7 +7,7 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 				carousel: '.swiper',
 				swiperWrapper: '.swiper-wrapper',
 				slideContent: '.swiper-slide',
-				swiperArrow: '.elementor-swiper-button',
+				swiperArrow: '.refraction-swiper-button',
 				paginationWrapper: '.swiper-pagination',
 				paginationBullet: '.swiper-pagination-bullet',
 				paginationBulletWrapper: '.swiper-pagination-bullets',
@@ -35,7 +35,7 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 		const elementSettings = this.getElementSettings(),
 			slidesToShow = +elementSettings.slides_to_show || 3,
 			isSingleSlide = 1 === slidesToShow,
-			elementorBreakpoints = elementorFrontend.config.responsive.activeBreakpoints,
+			refractionBreakpoints = refractionFrontend.config.responsive.activeBreakpoints,
 			defaultSlidesToShowMap = {
 				mobile: 1,
 				tablet: isSingleSlide ? 1 : 2,
@@ -45,24 +45,24 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 			slidesPerView: slidesToShow,
 			loop: 'yes' === elementSettings.infinite,
 			speed: elementSettings.speed,
-			handleElementorBreakpoints: true,
+			handleRefractionBreakpoints: true,
 		};
 
 		swiperOptions.breakpoints = {};
 
 		let lastBreakpointSlidesToShowValue = slidesToShow;
 
-		Object.keys( elementorBreakpoints ).reverse().forEach( ( breakpointName ) => {
+		Object.keys( refractionBreakpoints ).reverse().forEach( ( breakpointName ) => {
 			// Tablet has a specific default `slides_to_show`.
 			const defaultSlidesToShow = defaultSlidesToShowMap[ breakpointName ] ? defaultSlidesToShowMap[ breakpointName ] : lastBreakpointSlidesToShowValue;
 
-			swiperOptions.breakpoints[ elementorBreakpoints[ breakpointName ].value ] = {
+			swiperOptions.breakpoints[ refractionBreakpoints[ breakpointName ].value ] = {
 				slidesPerView: +elementSettings[ 'slides_to_show_' + breakpointName ] || defaultSlidesToShow,
 				slidesPerGroup: +elementSettings[ 'slides_to_scroll_' + breakpointName ] || 1,
 			};
 
 			if ( elementSettings.image_spacing_custom ) {
-				swiperOptions.breakpoints[ elementorBreakpoints[ breakpointName ].value ].spaceBetween = this.getSpaceBetween( breakpointName );
+				swiperOptions.breakpoints[ refractionBreakpoints[ breakpointName ].value ].spaceBetween = this.getSpaceBetween( breakpointName );
 			}
 
 			lastBreakpointSlidesToShowValue = +elementSettings[ 'slides_to_show_' + breakpointName ] || defaultSlidesToShow;
@@ -94,18 +94,18 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 
 		if ( showArrows ) {
 			swiperOptions.navigation = {
-				prevEl: '.elementor-swiper-button-prev',
-				nextEl: '.elementor-swiper-button-next',
+				prevEl: '.refraction-swiper-button-prev',
+				nextEl: '.refraction-swiper-button-next',
 			};
 		}
 
 		if ( showPagination ) {
 			swiperOptions.pagination = {
-				el: `.elementor-element-${ this.getID() } .swiper-pagination`,
+				el: `.refraction-element-${ this.getID() } .swiper-pagination`,
 				type: !! elementSettings.pagination ? elementSettings.pagination : 'bullets',
 				clickable: true,
 				renderBullet: ( index, classname ) => {
-					return `<span class="${ classname }" role="button" tabindex="0" data-bullet-index="${ index }" aria-label="${ elementorFrontend.config.i18n.a11yCarouselPaginationBulletMessage } ${ index + 1 }"></span>`;
+					return `<span class="${ classname }" role="button" tabindex="0" data-bullet-index="${ index }" aria-label="${ refractionFrontend.config.i18n.a11yCarouselPaginationBulletMessage } ${ index + 1 }"></span>`;
 				},
 			};
 		}
@@ -119,10 +119,10 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 
 		swiperOptions.a11y = {
 			enabled: true,
-			prevSlideMessage: elementorFrontend.config.i18n.a11yCarouselPrevSlideMessage,
-			nextSlideMessage: elementorFrontend.config.i18n.a11yCarouselNextSlideMessage,
-			firstSlideMessage: elementorFrontend.config.i18n.a11yCarouselFirstSlideMessage,
-			lastSlideMessage: elementorFrontend.config.i18n.a11yCarouselLastSlideMessage,
+			prevSlideMessage: refractionFrontend.config.i18n.a11yCarouselPrevSlideMessage,
+			nextSlideMessage: refractionFrontend.config.i18n.a11yCarouselNextSlideMessage,
+			firstSlideMessage: refractionFrontend.config.i18n.a11yCarouselFirstSlideMessage,
+			lastSlideMessage: refractionFrontend.config.i18n.a11yCarouselLastSlideMessage,
 		};
 
 		swiperOptions.on = {
@@ -143,13 +143,13 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 	}
 
 	getOffsetWidth() {
-		const currentDevice = elementorFrontend.getCurrentDeviceMode();
-		return elementorFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'offset_width', 'size', currentDevice ) || 0;
+		const currentDevice = refractionFrontend.getCurrentDeviceMode();
+		return refractionFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'offset_width', 'size', currentDevice ) || 0;
 	}
 
 	applyOffsetSettings( elementSettings, swiperOptions, slidesToShow ) {
 		const offsetSide = elementSettings.offset_sides,
-			isNestedCarouselInEditMode = elementorFrontend.isEditMode() && 'NestedCarousel' === this.constructor.name;
+			isNestedCarouselInEditMode = refractionFrontend.isEditMode() && 'NestedCarousel' === this.constructor.name;
 
 		if ( isNestedCarouselInEditMode || ! offsetSide || 'none' === offsetSide ) {
 			return;
@@ -194,7 +194,7 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 	}
 
 	async initSwiper() {
-		const Swiper = elementorFrontend.utils.swiper;
+		const Swiper = refractionFrontend.utils.swiper;
 		this.swiper = await new Swiper( this.elements.$swiperContainer, this.getSwiperSettings() );
 
 		// Expose the swiper instance in the frontend
@@ -206,7 +206,7 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 		this.elements.$paginationWrapper.on( 'keydown', '.swiper-pagination-bullet', this.onDirectionArrowKeydown.bind( this ) );
 		this.elements.$swiperContainer.on( 'keydown', '.swiper-slide', this.onDirectionArrowKeydown.bind( this ) );
 		this.$element.find( ':focusable' ).on( 'focus', this.onFocusDisableAutoplay.bind( this ) );
-		elementorFrontend.elements.$window.on( 'resize', this.getSwiperSettings.bind( this ) );
+		refractionFrontend.elements.$window.on( 'resize', this.getSwiperSettings.bind( this ) );
 	}
 
 	unbindEvents() {
@@ -214,11 +214,11 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 		this.elements.$paginationWrapper.off();
 		this.elements.$swiperContainer.off();
 		this.$element.find( ':focusable' ).off();
-		elementorFrontend.elements.$window.off( 'resize' );
+		refractionFrontend.elements.$window.off( 'resize' );
 	}
 
 	onDirectionArrowKeydown( event ) {
-		const isRTL = elementorFrontend.config.is_rtl,
+		const isRTL = refractionFrontend.config.is_rtl,
 			inlineDirectionArrows = [ 'ArrowLeft', 'ArrowRight' ],
 			currentKeydown = event.originalEvent.code,
 			isDirectionInlineKeydown = -1 !== inlineDirectionArrows.indexOf( currentKeydown ),
@@ -294,7 +294,7 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 	}
 
 	getSpaceBetween( device = null ) {
-		const responsiveControlValue = elementorFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'image_spacing_custom', 'size', device );
+		const responsiveControlValue = refractionFrontend.utils.controls.getResponsiveControlValue( this.getElementSettings(), 'image_spacing_custom', 'size', device );
 		return Number( responsiveControlValue ) || 0;
 	}
 
@@ -304,7 +304,7 @@ export default class CarouselHandlerBase extends SwiperHandlerBase {
 			newSpaceBetween = this.getSpaceBetween( device );
 
 		if ( 'desktop' !== device ) {
-			this.swiper.params.breakpoints[ elementorFrontend.config.responsive.activeBreakpoints[ device ].value ].spaceBetween = newSpaceBetween;
+			this.swiper.params.breakpoints[ refractionFrontend.config.responsive.activeBreakpoints[ device ].value ].spaceBetween = newSpaceBetween;
 		}
 
 		this.swiper.params.spaceBetween = newSpaceBetween;

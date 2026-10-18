@@ -1,19 +1,19 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\DynamicTags\Manager;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\Base\Document;
+use Refraction\Core\DynamicTags\Manager;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor database.
+ * Refraction database.
  *
- * Elementor database handler class is responsible for communicating with the
- * DB, save and retrieve Elementor data and meta data.
+ * Refraction database handler class is responsible for communicating with the
+ * DB, save and retrieve Refraction data and meta data.
  *
  * @since 1.0.0
  */
@@ -152,26 +152,26 @@ class DB {
 	}
 
 	/**
-	 * Is using Elementor.
+	 * Is using Refraction.
 	 *
-	 * Set whether the page is using Elementor or not.
+	 * Set whether the page is using Refraction or not.
 	 *
 	 * @since 1.5.0
-	 * @deprecated 3.1.0 Use `Plugin::$instance->documents->get( $post_id )->set_is_build_with_elementor( $is_elementor )` instead.
+	 * @deprecated 3.1.0 Use `Plugin::$instance->documents->get( $post_id )->set_is_build_with_refraction( $is_refraction )` instead.
 	 * @access public
 	 *
 	 * @param int  $post_id      Post ID.
-	 * @param bool $is_elementor Optional. Whether the page is elementor page.
+	 * @param bool $is_refraction Optional. Whether the page is refraction page.
 	 *                           Default is true.
 	 */
-	public function set_is_elementor_page( $post_id, $is_elementor = true ) {
+	public function set_is_refraction_page( $post_id, $is_refraction = true ) {
 		Plugin::$instance->modules_manager
 			->get_modules( 'dev-tools' )
 			->deprecation
 			->deprecated_function(
 				__METHOD__,
 				'3.1.0',
-				'Plugin::$instance->documents->get( $post_id )->set_is_build_with_elementor( $is_elementor )'
+				'Plugin::$instance->documents->get( $post_id )->set_is_build_with_refraction( $is_refraction )'
 			);
 
 		$document = Plugin::$instance->documents->get( $post_id );
@@ -180,7 +180,7 @@ class DB {
 			return;
 		}
 
-		$document->set_is_built_with_elementor( $is_elementor );
+		$document->set_is_built_with_refraction( $is_refraction );
 	}
 
 	/**
@@ -244,13 +244,13 @@ class DB {
 	/**
 	 * Iterate data.
 	 *
-	 * Accept any type of Elementor data and a callback function. The callback
+	 * Accept any type of Refraction data and a callback function. The callback
 	 * function runs recursively for each element and his child elements.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param array    $data_container Any type of elementor data.
+	 * @param array    $data_container Any type of refraction data.
 	 * @param callable $callback       A function to iterate data by.
 	 * @param array    $args           Array of args pointers for passing parameters in & out of the callback.
 	 *
@@ -278,7 +278,7 @@ class DB {
 		return $data_container;
 	}
 
-	public static function iterate_elementor_documents( $callback, $batch_size = 100, $additional_post_types = [] ) {
+	public static function iterate_refraction_documents( $callback, $batch_size = 100, $additional_post_types = [] ) {
 		$processed_posts = 0;
 
 		while ( true ) {
@@ -286,7 +286,7 @@ class DB {
 				'post_type' => array_merge( [ Source_Local::CPT, 'post', 'page' ], $additional_post_types ),
 				'post_status' => [ 'publish' ],
 				'posts_per_page' => $batch_size,
-				'meta_key' => Document::BUILT_WITH_ELEMENTOR_META_KEY,
+				'meta_key' => Document::BUILT_WITH_REFRACTION_META_KEY,
 				'meta_value' => 'builder',
 				'offset' => $processed_posts,
 				'fields' => 'ids',
@@ -300,7 +300,7 @@ class DB {
 
 			foreach ( $query->posts as $post_id ) {
 				$document = Plugin::$instance->documents->get( $post_id );
-				$elements_data = $document->get_json_meta( Document::ELEMENTOR_DATA_META_KEY );
+				$elements_data = $document->get_json_meta( Document::REFRACTION_DATA_META_KEY );
 
 				$callback( $document, $elements_data );
 
@@ -310,11 +310,11 @@ class DB {
 	}
 
 	/**
-	 * Safely copy Elementor meta.
+	 * Safely copy Refraction meta.
 	 *
-	 * Make sure the original page was built with Elementor and the post is not
-	 * auto-save. Only then copy elementor meta from one post to another using
-	 * `copy_elementor_meta()`.
+	 * Make sure the original page was built with Refraction and the post is not
+	 * auto-save. Only then copy refraction meta from one post to another using
+	 * `copy_refraction_meta()`.
 	 *
 	 * @since 1.9.2
 	 * @access public
@@ -322,39 +322,39 @@ class DB {
 	 * @param int $from_post_id Original post ID.
 	 * @param int $to_post_id   Target post ID.
 	 */
-	public function safe_copy_elementor_meta( $from_post_id, $to_post_id ) {
-		// It's from  WP-Admin & not from Elementor.
-		if ( ! did_action( 'elementor/db/before_save' ) ) {
+	public function safe_copy_refraction_meta( $from_post_id, $to_post_id ) {
+		// It's from  WP-Admin & not from Refraction.
+		if ( ! did_action( 'refraction/db/before_save' ) ) {
 			$from_document = Plugin::$instance->documents->get( $from_post_id );
 
-			if ( ! $from_document || ! $from_document->is_built_with_elementor() ) {
+			if ( ! $from_document || ! $from_document->is_built_with_refraction() ) {
 				return;
 			}
 
-			// It's an exited Elementor auto-save.
-			if ( get_post_meta( $to_post_id, '_elementor_data', true ) ) {
+			// It's an exited Refraction auto-save.
+			if ( get_post_meta( $to_post_id, '_refraction_data', true ) ) {
 				return;
 			}
 		}
 
-		$this->copy_elementor_meta( $from_post_id, $to_post_id );
+		$this->copy_refraction_meta( $from_post_id, $to_post_id );
 	}
 
 	/**
-	 * Copy Elementor meta.
+	 * Copy Refraction meta.
 	 *
 	 * Duplicate the data from one post to another.
 	 *
-	 * Consider using `safe_copy_elementor_meta()` method instead.
+	 * Consider using `safe_copy_refraction_meta()` method instead.
 	 *
 	 * @since 1.1.0
 	 * @access public
 	 *
 	 * @param int    $from_post_id Original post ID.
 	 * @param int    $to_post_id   Target post ID.
-	 * @param ?array $specific_meta_keys Optional. Specific meta keys to copy. Default is null, which copies all elementor meta keys.
+	 * @param ?array $specific_meta_keys Optional. Specific meta keys to copy. Default is null, which copies all refraction meta keys.
 	 */
-	public function copy_elementor_meta( $from_post_id, $to_post_id, $specific_meta_keys = null ) {
+	public function copy_refraction_meta( $from_post_id, $to_post_id, $specific_meta_keys = null ) {
 		$from_post_meta = get_post_meta( $from_post_id );
 		$core_meta = [
 			'_wp_page_template',
@@ -366,12 +366,12 @@ class DB {
 				continue;
 			}
 
-			// Copy only meta with the `_elementor` prefix.
-			if ( 0 === strpos( $meta_key, '_elementor' ) || in_array( $meta_key, $core_meta, true ) ) {
+			// Copy only meta with the `_refraction` prefix.
+			if ( 0 === strpos( $meta_key, '_refraction' ) || in_array( $meta_key, $core_meta, true ) ) {
 				$value = $values[0];
 
-				// The elementor JSON needs slashes before saving.
-				if ( '_elementor_data' === $meta_key ) {
+				// The refraction JSON needs slashes before saving.
+				if ( '_refraction_data' === $meta_key ) {
 					$value = wp_slash( $value );
 				} else {
 					$value = maybe_unserialize( $value );
@@ -384,26 +384,26 @@ class DB {
 	}
 
 	/**
-	 * Is built with Elementor.
+	 * Is built with Refraction.
 	 *
-	 * Check whether the post was built with Elementor.
+	 * Check whether the post was built with Refraction.
 	 *
 	 * @since 1.0.10
-	 * @deprecated 3.2.0 Use `Plugin::$instance->documents->get( $post_id )->is_built_with_elementor()` instead.
+	 * @deprecated 3.2.0 Use `Plugin::$instance->documents->get( $post_id )->is_built_with_refraction()` instead.
 	 * @access public
 	 *
 	 * @param int $post_id Post ID.
 	 *
-	 * @return bool Whether the post was built with Elementor.
+	 * @return bool Whether the post was built with Refraction.
 	 */
-	public function is_built_with_elementor( $post_id ) {
+	public function is_built_with_refraction( $post_id ) {
 		Plugin::$instance->modules_manager
 			->get_modules( 'dev-tools' )
 			->deprecation
 			->deprecated_function(
 				__METHOD__,
 				'3.2.0',
-				'Plugin::$instance->documents->get( $post_id )->is_built_with_elementor()'
+				'Plugin::$instance->documents->get( $post_id )->is_built_with_refraction()'
 			);
 
 		$document = Plugin::$instance->documents->get( $post_id );
@@ -412,7 +412,7 @@ class DB {
 			return false;
 		}
 
-		return $document->is_built_with_elementor();
+		return $document->is_built_with_refraction();
 	}
 
 	/**
@@ -579,7 +579,7 @@ class DB {
 	/**
 	 * Get plain text from data.
 	 *
-	 * Retrieve the post plain text from any given Elementor data.
+	 * Retrieve the post plain text from any given Refraction data.
 	 *
 	 * @since 1.9.2
 	 * @access public

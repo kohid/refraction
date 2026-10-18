@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ELEMENT_STYLE_CHANGE_EVENT } from '@elementor/editor-elements';
-import { __privateUseListenTo as useListenTo, windowEvent } from '@elementor/editor-v1-adapters';
+import { ELEMENT_STYLE_CHANGE_EVENT } from '@refraction/editor-elements';
+import { __privateUseListenTo as useListenTo, windowEvent } from '@refraction/editor-v1-adapters';
 
 import { toGridTracks } from '../utils/grid-outline-utils';
 import { useGridChildren } from './use-grid-children';
@@ -23,7 +23,7 @@ const EMPTY: GridTracks = {
 	borderColor: '',
 };
 
-const DEVICE_MODE_CHANGE_EVENT = 'elementor/device-mode/change';
+const DEVICE_MODE_CHANGE_EVENT = 'refraction/device-mode/change';
 
 export function useGridTracks( element: HTMLElement | null, rect: DOMRect ): GridTracks {
 	const [ tracks, setTracks ] = useState< GridTracks >( EMPTY );

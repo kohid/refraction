@@ -1,4 +1,4 @@
-import { type PropType, type UnionPropType } from '@elementor/editor-props';
+import { type PropType, type UnionPropType } from '@refraction/editor-props';
 
 export function isResponsivePropType( propType: PropType | undefined ): boolean {
 	if ( ! propType ) {

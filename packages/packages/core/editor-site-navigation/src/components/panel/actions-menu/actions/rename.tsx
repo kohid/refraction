@@ -11,7 +11,7 @@ export default function Rename( { post }: { post: Post } ) {
 
 	return (
 		<ActionMenuItem
-			title={ __( 'Rename', 'elementor' ) }
+			title={ __( 'Rename', 'refraction' ) }
 			icon={ EraseIcon }
 			MenuItemProps={ {
 				disabled: ! post.user_can.edit,

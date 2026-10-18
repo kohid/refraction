@@ -1,9 +1,9 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { isProActive } from '@elementor/utils';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { isProActive } from '@refraction/utils';
 
 import { baseSchema, proSchema } from '../tools/schema';
 
-export const INTERACTIONS_SCHEMA_URI = 'elementor://interactions/schema';
+export const INTERACTIONS_SCHEMA_URI = 'refraction://interactions/schema';
 
 export const initInteractionsSchemaResource = ( reg: MCPRegistryEntry ) => {
 	const { resource } = reg;

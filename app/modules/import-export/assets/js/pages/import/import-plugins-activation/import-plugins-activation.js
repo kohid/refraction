@@ -8,8 +8,8 @@ import Layout from '../../../templates/layout';
 import FileProcess from '../../../shared/file-process/file-process';
 import PluginStatusItem from './components/plugin-status-item/plugin-status-item';
 
-import Grid from 'elementor-app/ui/grid/grid';
-import List from 'elementor-app/ui/molecules/list';
+import Grid from 'refraction-app/ui/grid/grid';
+import List from 'refraction-app/ui/molecules/list';
 
 import './import-plugins-activation.scss';
 
@@ -47,7 +47,7 @@ export default function ImportPluginsActivation() {
 	return (
 		<Layout type="import">
 			<section className="e-app-import-plugins-activation">
-				<FileProcess info={ __( 'Activating plugins:', 'elementor' ) } />
+				<FileProcess info={ __( 'Activating plugins:', 'refraction' ) } />
 
 				<Grid container justify="center">
 					<Grid item className="e-app-import-plugins-activation__installing-plugins">

@@ -18,7 +18,7 @@ export const ResetStyle = () => {
 				// Check pasted style exist.
 				assert.equal( eButtonStyled.settings.attributes.background_color, '',
 					'Button with custom style were (style) restored.' );
-				assert.equal( elementor.saver.isEditorChanged(), true,
+				assert.equal( refraction.saver.isEditorChanged(), true,
 					'Command applied the saver editor is changed.' );
 			} );
 

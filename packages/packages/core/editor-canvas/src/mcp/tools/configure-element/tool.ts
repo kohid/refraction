@@ -1,7 +1,7 @@
-import { getContainer, getWidgetsCache } from '@elementor/editor-elements';
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { dispatchMcpStylesAppliedEvent } from '@elementor/editor-mcp';
-import { type PropValue, Schema } from '@elementor/editor-props';
+import { getContainer, getWidgetsCache } from '@refraction/editor-elements';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { dispatchMcpStylesAppliedEvent } from '@refraction/editor-mcp';
+import { type PropValue, Schema } from '@refraction/editor-props';
 
 import { DYNAMIC_TAGS_URI } from '../../resources/dynamic-tags-resource';
 import { WIDGET_SCHEMA_URI } from '../../resources/widgets-schema-resource';
@@ -56,7 +56,7 @@ export const initConfigureElementTool = ( reg: MCPRegistryEntry ) => {
 			}
 			if ( ! widgetData.atomic_props_schema ) {
 				throw new Error(
-					`This tool does not support V3 elements. Please use the elementor-v3-mcp tools instead for element type: ${ elementType }`
+					`This tool does not support V3 elements. Please use the refraction-v3-mcp tools instead for element type: ${ elementType }`
 				);
 			}
 			const propertiesToUpdate = resolveCanonicalPropKeys( elementType, propertiesToChange );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMemo, useRef } from 'react';
-import { selectionSizePropTypeUtil } from '@elementor/editor-props';
+import { selectionSizePropTypeUtil } from '@refraction/editor-props';
 import { Grid } from '@elementor/ui';
 
 import { PropKeyProvider, PropProvider, useBoundProp } from '../bound-prop-context';

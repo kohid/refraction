@@ -49,7 +49,7 @@ export default function EditModeTemplate( { postTitle, isLoading, callback }: Pr
 		}
 		const value = e.target.value;
 		if ( ! validateInput( value ) ) {
-			setInputError( __( 'Name is required', 'elementor' ) );
+			setInputError( __( 'Name is required', 'refraction' ) );
 		} else {
 			setInputError( null );
 		}

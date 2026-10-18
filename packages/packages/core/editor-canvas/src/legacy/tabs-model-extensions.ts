@@ -1,4 +1,4 @@
-import { escapedHtmlPropTypeUtil } from '@elementor/editor-props';
+import { escapedHtmlPropTypeUtil } from '@refraction/editor-props';
 
 import { type ModelExtensions } from './create-nested-templated-element-type';
 import { registerModelExtensions } from './init-legacy-views';

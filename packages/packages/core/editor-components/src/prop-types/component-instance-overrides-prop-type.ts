@@ -1,5 +1,5 @@
-import { createPropUtils } from '@elementor/editor-props';
-import { z } from '@elementor/schema';
+import { createPropUtils } from '@refraction/editor-props';
+import { z } from '@refraction/schema';
 
 import { componentInstanceOverridePropTypeUtil } from './component-instance-override-prop-type';
 import { componentOverridablePropTypeUtil } from './component-overridable-prop-type';

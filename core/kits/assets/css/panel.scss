@@ -1,54 +1,54 @@
-.elementor-panel {
+.refraction-panel {
 
-	#elementor-panel-header {
+	#refraction-panel-header {
 
-		#elementor-panel-header-kit-close,
-		#elementor-panel-header-kit-back {
+		#refraction-panel-header-kit-close,
+		#refraction-panel-header-kit-back {
 			display: none;
 		}
 	}
 }
 
-.elementor-editor-kit {
+.refraction-editor-kit {
 
-	.elementor-panel {
+	.refraction-panel {
 
-		#elementor-panel-header {
+		#refraction-panel-header {
 
-			#elementor-panel-header-kit-close,
-			#elementor-panel-header-kit-back {
+			#refraction-panel-header-kit-close,
+			#refraction-panel-header-kit-back {
 				display: flex;
 			}
 
-			@at-root body:not(.e-routes-has-history) #elementor-panel-header-kit-back {
+			@at-root body:not(.e-routes-has-history) #refraction-panel-header-kit-back {
 				pointer-events: none;
 				visibility: hidden;
 			}
 		}
 
-		#elementor-panel-page-settings {
+		#refraction-panel-page-settings {
 
-			.elementor-panel-navigation {
+			.refraction-panel-navigation {
 				display: none;
 			}
 		}
 
-		#elementor-panel-page-menu {
+		#refraction-panel-page-menu {
 			padding: 25px 15px 0;
 		}
 	}
 
-	#elementor-panel-header-add-button,
-	#elementor-panel-header-menu-button {
+	#refraction-panel-header-add-button,
+	#refraction-panel-header-menu-button {
 		display: none;
 	}
 }
 
-.elementor-control {
+.refraction-control {
 
 	&-type-global-style-repeater {
 
-		.elementor-repeater {
+		.refraction-repeater {
 
 			&-fields {
 				margin-block-end: 15px;
@@ -78,7 +78,7 @@
 			}
 		}
 
-		.elementor-control {
+		.refraction-control {
 			padding: 0;
 
 			&-title {
@@ -109,7 +109,7 @@
 
 				&:not(:hover) {
 
-				  	.elementor-repeater-tool {
+				  	.refraction-repeater-tool {
 
 						&-remove,
 						&-remove--disabled,
@@ -122,15 +122,15 @@
 		}
 
 		// Hard selector to override default margin
-		.elementor-repeater-row-controls {
+		.refraction-repeater-row-controls {
 
-			> .elementor-control {
+			> .refraction-control {
 
-				> .elementor-control-content {
+				> .refraction-control-content {
 
-					> .elementor-control-field {
+					> .refraction-control-field {
 
-						> .elementor-control-input-wrapper {
+						> .refraction-control-input-wrapper {
 							margin-block-start: 0;
 						}
 					}
@@ -139,7 +139,7 @@
 		}
 
 
-		.elementor-controls-popover {
+		.refraction-controls-popover {
 			align-self: end;
 			margin-block-start: 35px;
 			inset-block-start: 0;
@@ -149,7 +149,7 @@
 				inset-inline-end: 5px;
 			}
 
-			.elementor-control {
+			.refraction-control {
 				padding: 0 20px 15px;
 
 				&-title {
@@ -158,14 +158,14 @@
 			}
 		}
 
-		.elementor-button-wrapper {
+		.refraction-button-wrapper {
 			text-align: center;
 			border-block-start: var(--e-a-border);
 			padding-block-start: 15px;
 		}
 
 		.pickr,
-		.elementor-control-popover-toggle-toggle-label {
+		.refraction-control-popover-toggle-toggle-label {
 			margin-inline-start: 5px;
 		}
 

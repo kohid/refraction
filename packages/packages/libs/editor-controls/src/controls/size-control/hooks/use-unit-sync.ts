@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { type SizePropValue } from '@elementor/editor-props';
+import { type SizePropValue } from '@refraction/editor-props';
 
 import { isExtendedUnit } from '../utils/is-extended-unit';
 

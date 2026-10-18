@@ -1,4 +1,4 @@
-import { __privateRunCommandSync as runCommandSync } from '@elementor/editor-v1-adapters';
+import { __privateRunCommandSync as runCommandSync } from '@refraction/editor-v1-adapters';
 
 import { getContainer } from './get-container';
 import { type V1Element, type V1ElementModelProps, type V1ElementSettingsProps } from './types';

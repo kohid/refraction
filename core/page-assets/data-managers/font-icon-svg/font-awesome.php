@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Page_Assets\Data_Managers\Font_Icon_Svg;
+namespace Refraction\Core\Page_Assets\Data_Managers\Font_Icon_Svg;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -25,7 +25,7 @@ class Font_Awesome extends Base {
 		return [
 			'key' => $icon_key,
 			'version' => self::LIBRARY_CURRENT_VERSION,
-			'file_path' => ELEMENTOR_ASSETS_PATH . 'lib/font-awesome/json/' . $icon_file_name . '.json',
+			'file_path' => REFRACTION_ASSETS_PATH . 'lib/font-awesome/json/' . $icon_file_name . '.json',
 			'data' => [
 				'icon_data' => [
 					'name' => $icon_name,

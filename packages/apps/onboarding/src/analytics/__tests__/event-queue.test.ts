@@ -1,6 +1,6 @@
 import { clearEventQueue, enqueueEvent, getEventQueue } from '../event-queue';
 
-const STORAGE_KEY = 'elementor_ob_event_queue';
+const STORAGE_KEY = 'refraction_ob_event_queue';
 
 beforeEach( () => {
 	sessionStorage.clear();

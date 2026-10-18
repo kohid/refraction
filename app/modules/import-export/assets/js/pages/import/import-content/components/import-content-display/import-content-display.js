@@ -2,8 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import KitContent from '../../../../../shared/kit-content/kit-content';
 import { SharedContext } from '../../../../../context/shared-context/shared-context-provider';
 import kitContentData from '../../../../../shared/kit-content-data/kit-content-data';
-import Notice from 'elementor-app/ui/molecules/notice';
-import InlineLink from 'elementor-app/ui/molecules/inline-link';
+import Notice from 'refraction-app/ui/molecules/notice';
+import InlineLink from 'refraction-app/ui/molecules/inline-link';
 import { cptObjectToOptionsArray } from '../../../../../shared/cpt-select-box/cpt-object-to-options-array';
 
 export default function ImportContentDisplay( {
@@ -28,8 +28,8 @@ export default function ImportContentDisplay( {
 
 	if ( ! kitData.length && hasPlugins ) {
 		return (
-			<Notice color="info" label={ __( 'Note:', 'elementor' ) }>
-				{ __( 'The Website Kit you’re using contains plugins for functionality, but no content or pages, etc.', 'elementor' ) }
+			<Notice color="info" label={ __( 'Note:', 'refraction' ) }>
+				{ __( 'The Website Kit you’re using contains plugins for functionality, but no content or pages, etc.', 'refraction' ) }
 			</Notice>
 		);
 	}
@@ -37,7 +37,7 @@ export default function ImportContentDisplay( {
 	if ( ! kitData.length ) {
 		return (
 			<Notice color="danger">
-				{ __( 'You can’t use this Website Kit because it doesn’t contain any content, pages, etc. Try again with a different file.', 'elementor' ) } <InlineLink onClick={ onResetProcess }>{ __( 'Go Back', 'elementor' ) }</InlineLink>
+				{ __( 'You can’t use this Website Kit because it doesn’t contain any content, pages, etc. Try again with a different file.', 'refraction' ) } <InlineLink onClick={ onResetProcess }>{ __( 'Go Back', 'refraction' ) }</InlineLink>
 			</Notice>
 		);
 	}
@@ -46,8 +46,8 @@ export default function ImportContentDisplay( {
 		<>
 			{
 				! isAllRequiredPluginsSelected &&
-				<Notice color="warning" label={ __( 'Required plugins are still missing.', 'elementor' ) } className="e-app-import-content__plugins-notice">
-					{ __( "If you don't include them, this kit may not work properly.", 'elementor' ) } <InlineLink url="/import/plugins">{ __( 'Go Back', 'elementor' ) }</InlineLink>
+				<Notice color="warning" label={ __( 'Required plugins are still missing.', 'refraction' ) } className="e-app-import-content__plugins-notice">
+					{ __( "If you don't include them, this kit may not work properly.", 'refraction' ) } <InlineLink url="/import/plugins">{ __( 'Go Back', 'refraction' ) }</InlineLink>
 				</Notice>
 			}
 

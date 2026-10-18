@@ -18,7 +18,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import useKitPlugins from '../hooks/use-kit-plugins';
 import useContextDetection from '../hooks/use-context-detection';
-import { AppsEventTracking } from 'elementor-app/event-track/apps-event-tracking';
+import { AppsEventTracking } from 'refraction-app/event-track/apps-event-tracking';
 import { UpgradeVersionBanner } from './upgrade-version-banner';
 import { transformValueForAnalytics } from '../utils/analytics-transformer';
 
@@ -33,12 +33,12 @@ const transformAnalyticsData = ( payload ) => {
 };
 
 const REQUIRED_PLUGINS = [
-	'elementor/elementor',
+	'refraction/refraction',
 ];
 
 export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveChanges } ) {
 	const { isImport = false, contextData = {} } = useContextDetection() ?? {};
-	const { data = null, isOldElementorVersion = false } = contextData;
+	const { data = null, isOldRefractionVersion = false } = contextData;
 
 	const { pluginsList: fetchedPluginsList, isLoading: fetchIsLoading } = useKitPlugins( { open: open && ! isImport } );
 
@@ -137,7 +137,7 @@ export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveCh
 
 	useEffect( () => {
 		if ( open ) {
-			AppsEventTracking.sendPageViewsWebsiteTemplates( elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomizationEdit );
+			AppsEventTracking.sendPageViewsWebsiteTemplates( refractionCommon.eventsManager.config.secondaryLocations.kitLibrary.kitExportCustomizationEdit );
 		}
 	}, [ open ] );
 
@@ -207,11 +207,11 @@ export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveCh
 									gap: 0.5,
 								} }
 							>
-								{ __( 'Version', 'elementor' ) } { version }
+								{ __( 'Version', 'refraction' ) } { version }
 								<ExternalLinkIcon />
 							</Link>
 						) : (
-							<>{ __( 'Version', 'elementor' ) } { version }</>
+							<>{ __( 'Version', 'refraction' ) } { version }</>
 						) }
 					</Typography>
 				) }
@@ -240,13 +240,13 @@ export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveCh
 		>
 			<DialogHeader onClose={ handleClose }>
 				<DialogTitle>
-					{ __( 'Edit plugins', 'elementor' ) }
+					{ __( 'Edit plugins', 'refraction' ) }
 				</DialogTitle>
 			</DialogHeader>
 
 			<DialogContent dividers sx={ { p: 3 } }>
 				<Stack gap={ 2 }>
-					{ isOldElementorVersion && (
+					{ isOldRefractionVersion && (
 						<UpgradeVersionBanner />
 					) }
 					{ isLoading ? (
@@ -255,7 +255,7 @@ export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveCh
 						</Stack>
 					) : (
 						<SettingSection
-							title={ __( 'Plugin name and version', 'elementor' ) }
+							title={ __( 'Plugin name and version', 'refraction' ) }
 						>
 							<Stack>
 								<Box sx={ { py: 1.5 } }>
@@ -270,7 +270,7 @@ export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveCh
 												sx={ { py: 0 } }
 											/>
 										}
-										label={ <Typography variant="body1" sx={ { fontWeight: 500 } }>{ __( 'All plugins', 'elementor' ) }</Typography> }
+										label={ <Typography variant="body1" sx={ { fontWeight: 500 } }>{ __( 'All plugins', 'refraction' ) }</Typography> }
 									/>
 								</Box>
 								{ Object.entries( pluginsList ).map( ( [ pluginKey, pluginData ] ) => (
@@ -293,7 +293,7 @@ export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveCh
 					onClick={ handleClose }
 					color="secondary"
 				>
-					{ __( 'Cancel', 'elementor' ) }
+					{ __( 'Cancel', 'refraction' ) }
 				</Button>
 				<Button
 					onClick={ () => {
@@ -307,7 +307,7 @@ export function KitPluginsCustomizationDialog( { open, handleClose, handleSaveCh
 					color="primary"
 					disabled={ isLoading }
 				>
-					{ __( 'Save changes', 'elementor' ) }
+					{ __( 'Save changes', 'refraction' ) }
 				</Button>
 			</DialogActions>
 		</Dialog>

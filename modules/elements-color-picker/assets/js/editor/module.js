@@ -1,6 +1,6 @@
 import Component from './component';
 
-export default class ElementsColorPicker extends elementorModules.ViewModule {
+export default class ElementsColorPicker extends refractionModules.ViewModule {
 	/**
 	 * Initialize the Eye-Dropper module.
 	 *

@@ -4,8 +4,8 @@ import { screen, waitFor } from '@testing-library/react';
 
 import { TransitionRepeaterControl } from '../transition-repeater-control';
 
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	getSelectedElements: jest.fn( () => [
 		{
 			id: 'test-element-id',

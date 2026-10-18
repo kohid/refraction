@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { reloadCurrentDocument } from '@elementor/editor-documents';
-import { createPanel } from '@elementor/editor-panels';
-import { changeEditMode } from '@elementor/editor-v1-adapters';
+import { reloadCurrentDocument } from '@refraction/editor-documents';
+import { createPanel } from '@refraction/editor-panels';
+import { changeEditMode } from '@refraction/editor-v1-adapters';
 
 import { DesignSystemPanelContent } from './components/design-system-panel-content';
 

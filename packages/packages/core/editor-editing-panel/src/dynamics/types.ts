@@ -1,5 +1,5 @@
-import { type ControlItem } from '@elementor/editor-elements';
-import { type PropsSchema, type TransformablePropType, type TransformablePropValue } from '@elementor/editor-props';
+import { type ControlItem } from '@refraction/editor-elements';
+import { type PropsSchema, type TransformablePropType, type TransformablePropValue } from '@refraction/editor-props';
 
 export type DynamicTags = Record< DynamicTag[ 'name' ], DynamicTag >;
 

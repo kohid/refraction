@@ -1,4 +1,4 @@
-import { type V1ElementData } from '@elementor/editor-elements';
+import { type V1ElementData } from '@refraction/editor-elements';
 
 export type ExitTo = 'dashboard' | 'all_posts' | 'this_post';
 
@@ -45,7 +45,7 @@ export type V1DocumentsManager = {
 };
 
 export type ExtendedWindow = Window & {
-	elementor: {
+	refraction: {
 		documents: V1DocumentsManager;
 		getPreferences: ( key: 'exit_to' ) => ExitTo;
 	};

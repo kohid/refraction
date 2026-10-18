@@ -1,18 +1,18 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Core\Files\Fonts\Google_Font;
-use Elementor\Core\Utils\Collection;
+use Refraction\Core\Files\Fonts\Google_Font;
+use Refraction\Core\Utils\Collection;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor utils.
+ * Refraction utils.
  *
- * Elementor utils handler class is responsible for different utility methods
- * used by Elementor.
+ * Refraction utils handler class is responsible for different utility methods
+ * used by Refraction.
  *
  * @since 1.0.0
  */
@@ -20,7 +20,7 @@ class Utils {
 
 	const DEPRECATION_RANGE = 0.4;
 
-	const EDITOR_BREAK_LINES_OPTION_KEY = 'elementor_editor_break_lines';
+	const EDITOR_BREAK_LINES_OPTION_KEY = 'refraction_editor_break_lines';
 
 	/**
 	 * A list of safe tags for `validate_html_tag` method.
@@ -49,7 +49,7 @@ class Utils {
 
 	/**
 	 * Tags that must never be usable as an HTML wrapper tag, regardless of what
-	 * `elementor/allowed_html_wrapper_tags` filters return. These are the classic
+	 * `refraction/allowed_html_wrapper_tags` filters return. These are the classic
 	 * script-execution / markup-injection vectors (XSS), so they're enforced as a
 	 * hard denylist rather than left to filter authors to avoid re-adding them.
 	 */
@@ -139,33 +139,33 @@ class Utils {
 	}
 
 	/**
-	 * Whether Elementor debug is enabled or not.
+	 * Whether Refraction debug is enabled or not.
 	 *
 	 * @access public
 	 * @static
 	 *
 	 * @return bool
 	 */
-	public static function is_elementor_debug() {
-		return defined( 'ELEMENTOR_DEBUG' ) && ELEMENTOR_DEBUG;
+	public static function is_refraction_debug() {
+		return defined( 'REFRACTION_DEBUG' ) && REFRACTION_DEBUG;
 	}
 
 	/**
-	 * Whether Elementor test mode is enabled or not.
+	 * Whether Refraction test mode is enabled or not.
 	 *
 	 * @access public
 	 * @static
 	 *
 	 * @return bool
 	 */
-	public static function is_elementor_tests() {
-		return defined( 'ELEMENTOR_TESTS' ) && ELEMENTOR_TESTS;
+	public static function is_refraction_tests() {
+		return defined( 'REFRACTION_TESTS' ) && REFRACTION_TESTS;
 	}
 
 	/**
 	 * Replace URLs.
 	 *
-	 * Replace old URLs to new URLs. This method also updates all the Elementor data.
+	 * Replace old URLs to new URLs. This method also updates all the Refraction data.
 	 *
 	 * @since 2.1.0
 	 * @static
@@ -208,7 +208,7 @@ class Utils {
 			$wpdb->prepare(
 				"UPDATE {$wpdb->postmeta} " .
 				'SET `meta_value` = REPLACE(`meta_value`, %s, %s) ' .
-				"WHERE `meta_key` = '_elementor_data' AND `meta_value` LIKE %s;",
+				"WHERE `meta_key` = '_refraction_data' AND `meta_value` LIKE %s;",
 				$escaped_from,
 				$escaped_to,
 				$meta_value_like
@@ -220,22 +220,22 @@ class Utils {
 		}
 
 		// Allow externals to replace-urls, when they have to.
-		$rows_affected += (int) apply_filters( 'elementor/tools/replace-urls', 0, $from, $to );
+		$rows_affected += (int) apply_filters( 'refraction/tools/replace-urls', 0, $from, $to );
 
 		Plugin::$instance->files_manager->clear_cache();
 		Google_Font::clear_cache();
 
 		return sprintf(
 			/* translators: %d: Number of rows. */
-			_n( '%d database row affected.', '%d database rows affected.', $rows_affected, 'elementor' ),
+			_n( '%d database row affected.', '%d database rows affected.', $rows_affected, 'refraction' ),
 			$rows_affected
 		);
 	}
 
 	/**
-	 * Is post supports Elementor.
+	 * Is post supports Refraction.
 	 *
-	 * Whether the post supports editing with Elementor.
+	 * Whether the post supports editing with Refraction.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -243,7 +243,7 @@ class Utils {
 	 *
 	 * @param int $post_id Optional. Post ID. Default is `0`.
 	 *
-	 * @return string True if post supports editing with Elementor, false otherwise.
+	 * @return string True if post supports editing with Refraction, false otherwise.
 	 */
 	public static function is_post_support( $post_id = 0 ) {
 		$post_type = get_post_type( $post_id );
@@ -253,38 +253,38 @@ class Utils {
 		/**
 		 * Is post type support.
 		 *
-		 * Filters whether the post type supports editing with Elementor.
+		 * Filters whether the post type supports editing with Refraction.
 		 *
 		 * @since 1.0.0
-		 * @deprecated 2.2.0 Use `elementor/utils/is_post_support` hook Instead.
+		 * @deprecated 2.2.0 Use `refraction/utils/is_post_support` hook Instead.
 		 *
-		 * @param bool $is_supported Whether the post type supports editing with Elementor.
+		 * @param bool $is_supported Whether the post type supports editing with Refraction.
 		 * @param int $post_id Post ID.
 		 * @param string $post_type Post type.
 		 */
-		$is_supported = apply_filters( 'elementor/utils/is_post_type_support', $is_supported, $post_id, $post_type );
+		$is_supported = apply_filters( 'refraction/utils/is_post_type_support', $is_supported, $post_id, $post_type );
 
 		/**
 		 * Is post support.
 		 *
-		 * Filters whether the post supports editing with Elementor.
+		 * Filters whether the post supports editing with Refraction.
 		 *
 		 * @since 2.2.0
 		 *
-		 * @param bool $is_supported Whether the post type supports editing with Elementor.
+		 * @param bool $is_supported Whether the post type supports editing with Refraction.
 		 * @param int $post_id Post ID.
 		 * @param string $post_type Post type.
 		 */
-		$is_supported = apply_filters( 'elementor/utils/is_post_support', $is_supported, $post_id, $post_type );
+		$is_supported = apply_filters( 'refraction/utils/is_post_support', $is_supported, $post_id, $post_type );
 
 		return $is_supported;
 	}
 
 
 	/**
-	 * Is post type supports Elementor.
+	 * Is post type supports Refraction.
 	 *
-	 * Whether the post type supports editing with Elementor.
+	 * Whether the post type supports editing with Refraction.
 	 *
 	 * @since 2.2.0
 	 * @access public
@@ -292,14 +292,14 @@ class Utils {
 	 *
 	 * @param string $post_type Post Type.
 	 *
-	 * @return string True if post type supports editing with Elementor, false otherwise.
+	 * @return string True if post type supports editing with Refraction, false otherwise.
 	 */
 	public static function is_post_type_support( $post_type ) {
 		if ( ! post_type_exists( $post_type ) ) {
 			return false;
 		}
 
-		if ( ! post_type_supports( $post_type, 'elementor' ) ) {
+		if ( ! post_type_supports( $post_type, 'refraction' ) ) {
 			return false;
 		}
 
@@ -315,21 +315,21 @@ class Utils {
 	 * @access public
 	 * @static
 	 *
-	 * @return string The source of the default placeholder image used by Elementor.
+	 * @return string The source of the default placeholder image used by Refraction.
 	 */
 	public static function get_placeholder_image_src() {
-		$placeholder_image = ELEMENTOR_ASSETS_URL . 'images/placeholder.png';
+		$placeholder_image = REFRACTION_ASSETS_URL . 'images/placeholder.png';
 
 		/**
 		 * Get placeholder image source.
 		 *
-		 * Filters the source of the default placeholder image used by Elementor.
+		 * Filters the source of the default placeholder image used by Refraction.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param string $placeholder_image The source of the default placeholder image.
 		 */
-		$placeholder_image = apply_filters( 'elementor/utils/get_placeholder_image_src', $placeholder_image );
+		$placeholder_image = apply_filters( 'refraction/utils/get_placeholder_image_src', $placeholder_image );
 
 		return $placeholder_image;
 	}
@@ -413,7 +413,7 @@ class Utils {
 	/**
 	 * Get create new post URL.
 	 *
-	 * Retrieve a custom URL for creating a new post/page using Elementor.
+	 * Retrieve a custom URL for creating a new post/page using Refraction.
 	 *
 	 * @since 1.9.0
 	 * @access public
@@ -423,7 +423,7 @@ class Utils {
 	 * @param string      $post_type Optional. Post type slug. Default is 'page'.
 	 * @param string|null $template_type Optional. Query arg 'template_type'. Default is null.
 	 *
-	 * @return string A URL for creating new post using Elementor.
+	 * @return string A URL for creating new post using Refraction.
 	 */
 	public static function get_create_new_post_url( $post_type = 'page', $template_type = null ) {
 		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __FUNCTION__, '3.3.0', 'Plugin::$instance->documents->get_create_new_post_url()' );
@@ -540,7 +540,7 @@ class Utils {
 		 *
 		 * Filters the meta tag containing the viewport information.
 		 *
-		 * This hook can be used to change the initial viewport meta tag set by Elementor
+		 * This hook can be used to change the initial viewport meta tag set by Refraction
 		 * and replace it with a different viewport tag.
 		 *
 		 * @since 2.5.0
@@ -548,13 +548,13 @@ class Utils {
 		 * @param string $meta_tag Viewport meta tag.
 		 * @param string $context  Page context.
 		 */
-		$meta_tag = apply_filters( 'elementor/template/viewport_tag', $meta_tag, $context );
+		$meta_tag = apply_filters( 'refraction/template/viewport_tag', $meta_tag, $context );
 
 		return $meta_tag;
 	}
 
 	/**
-	 * Add Elementor Config js vars to the relevant script handle,
+	 * Add Refraction Config js vars to the relevant script handle,
 	 * WP will wrap it with <script> tag.
 	 * To make sure this script runs thru the `script_loader_tag` hook, use a known handle value.
 	 *
@@ -576,7 +576,7 @@ class Utils {
 	}
 
 	public static function handle_deprecation( $item, $version, $replacement = null ) {
-		preg_match( '/^[0-9]+\.[0-9]+/', ELEMENTOR_VERSION, $current_version );
+		preg_match( '/^[0-9]+\.[0-9]+/', REFRACTION_VERSION, $current_version );
 
 		$current_version_as_float = (float) $current_version[0];
 
@@ -610,11 +610,11 @@ class Utils {
 	}
 
 	public static function has_pro() {
-		return defined( 'ELEMENTOR_PRO_VERSION' );
+		return defined( 'REFRACTION_PRO_VERSION' );
 	}
 
 	public static function is_license_active(): bool {
-		return class_exists( '\ElementorPro\License\API' ) && \ElementorPro\License\API::is_license_active();
+		return class_exists( '\RefractionPro\License\API' ) && \RefractionPro\License\API::is_license_active();
 	}
 
 	public static function is_pro_installed_and_not_active(): bool {
@@ -622,14 +622,14 @@ class Utils {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$file_path = self::get_elementor_pro_file_path();
+		$file_path = self::get_refraction_pro_file_path();
 		$installed_plugins = get_plugins();
 
 		return isset( $installed_plugins[ $file_path ] );
 	}
 
-	private static function get_elementor_pro_file_path(): string {
-		return 'elementor-pro/elementor-pro.php';
+	private static function get_refraction_pro_file_path(): string {
+		return 'refraction-pro/refraction-pro.php';
 	}
 
 	/**
@@ -710,7 +710,7 @@ class Utils {
 			}
 
 			$inner_elements = apply_filters(
-				'elementor/utils/find_element_recursive/inner_elements',
+				'refraction/utils/find_element_recursive/inner_elements',
 				$element['elements'] ?? [],
 				$element
 			);
@@ -780,7 +780,7 @@ class Utils {
 		 *
 		 * @param string[] $tags A list of lowercase HTML tag name strings.
 		 */
-		$tags = apply_filters( 'elementor/allowed_html_wrapper_tags', self::ALLOWED_HTML_WRAPPER_TAGS );
+		$tags = apply_filters( 'refraction/allowed_html_wrapper_tags', self::ALLOWED_HTML_WRAPPER_TAGS );
 
 		self::$resolved_allowed_html_wrapper_tags = self::normalize_allowed_html_wrapper_tags( $tags );
 
@@ -856,7 +856,7 @@ class Utils {
 			'post_type' => 'any',
 			'post_status' => [ 'publish', 'draft' ],
 			'posts_per_page' => '3',
-			'meta_key' => '_elementor_edit_mode',
+			'meta_key' => '_refraction_edit_mode',
 			'meta_value' => 'builder',
 			'orderby' => 'modified',
 		] );
@@ -869,7 +869,7 @@ class Utils {
 
 		foreach ( $tags as $tag ) {
 			if ( isset( self::EXTENDED_ALLOWED_HTML_TAGS[ $tag ] ) ) {
-				$extended_tags = apply_filters( "elementor/extended_allowed_html_tags/{$tag}", self::EXTENDED_ALLOWED_HTML_TAGS[ $tag ] );
+				$extended_tags = apply_filters( "refraction/extended_allowed_html_tags/{$tag}", self::EXTENDED_ALLOWED_HTML_TAGS[ $tag ] );
 				$allowed_html = array_replace_recursive( $allowed_html, $extended_tags );
 			}
 		}
@@ -883,21 +883,21 @@ class Utils {
 		} );
 	}
 
-	public static function is_elementor_path( $path ) {
+	public static function is_refraction_path( $path ) {
 		$path = wp_normalize_path( $path );
 
 		/**
-		 * Elementor related paths.
+		 * Refraction related paths.
 		 *
-		 * Filters Elementor related paths.
+		 * Filters Refraction related paths.
 		 *
 		 * @param string[] $available_paths
 		 */
-		$available_paths = apply_filters( 'elementor/utils/elementor_related_paths', [ ELEMENTOR_PATH ] );
+		$available_paths = apply_filters( 'refraction/utils/refraction_related_paths', [ REFRACTION_PATH ] );
 
 		return (bool) ( new Collection( $available_paths ) )
 			->map( function ( $p ) {
-				// `untrailingslashit` in order to include other plugins prefixed with elementor.
+				// `untrailingslashit` in order to include other plugins prefixed with refraction.
 				return untrailingslashit( wp_normalize_path( $p ) );
 			} )
 			->find(function ( $p ) use ( $path ) {
@@ -985,7 +985,7 @@ class Utils {
 	}
 
 	public static function safe_throw( string $message ) {
-		if ( ! static::is_elementor_debug() ) {
+		if ( ! static::is_refraction_debug() ) {
 			return;
 		}
 

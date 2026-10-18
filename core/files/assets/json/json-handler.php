@@ -1,7 +1,7 @@
 <?php
-namespace Elementor\Core\Files\Assets\Json;
+namespace Refraction\Core\Files\Assets\Json;
 
-use Elementor\Core\Files\Assets\Files_Upload_Handler;
+use Refraction\Core\Files\Assets\Files_Upload_Handler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Json Handler
  *
- * @deprecated 3.5.0 Use `Elementor\Core\Files\File_Types\Svg` instead, accessed by calling `Plugin::$instance->uploads_manager->get_file_type_handlers( 'svg' );`
+ * @deprecated 3.5.0 Use `Refraction\Core\Files\File_Types\Svg` instead, accessed by calling `Plugin::$instance->uploads_manager->get_file_type_handlers( 'svg' );`
  */
 class Json_Handler extends Files_Upload_Handler {
 

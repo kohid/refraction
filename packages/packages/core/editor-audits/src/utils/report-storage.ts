@@ -1,4 +1,4 @@
-import { getSessionStorageItem, setSessionStorageItem } from '@elementor/session';
+import { getSessionStorageItem, setSessionStorageItem } from '@refraction/session';
 
 import { REPORT_STORAGE_KEY_PREFIX } from '../constants';
 import { type PageAuditReport } from '../types';

@@ -3,11 +3,11 @@ import PanelView from './panel';
 import PanelMenuView from './panel-menu';
 import PanelHeaderBehavior from './panel-header-behavior';
 import GlobalControlSelect from './globals/global-select-behavior';
-import ControlsCSSParser from 'elementor-assets-js/editor/utils/controls-css-parser';
+import ControlsCSSParser from 'refraction-assets-js/editor/utils/controls-css-parser';
 
 const V4_GROUP = 'v4';
 
-export default class Manager extends elementorModules.editor.utils.Module {
+export default class Manager extends refractionModules.editor.utils.Module {
 	loadingTriggers = {
 		preview: false,
 		globals: false,
@@ -19,25 +19,25 @@ export default class Manager extends elementorModules.editor.utils.Module {
 	variablesCSS = null;
 
 	initialize() {
-		elementor.on( 'preview:loaded', () => {
+		refraction.on( 'preview:loaded', () => {
 			this.loadingTriggers.preview = true;
 
 			this.renderGlobalsDefaultCSS();
 		} );
 
-		elementor.on( 'document:loaded', () => {
+		refraction.on( 'document:loaded', () => {
 			this.renderGlobalVariables();
 		} );
 
-		elementor.once( 'globals:loaded', () => {
+		refraction.once( 'globals:loaded', () => {
 			this.loadingTriggers.globals = true;
 
 			this.renderGlobalsDefaultCSS();
 		} );
 
-		elementor.hooks.addFilter( 'controls/base/behaviors', this.addGlobalsBehavior );
+		refraction.hooks.addFilter( 'controls/base/behaviors', this.addGlobalsBehavior );
 
-		if ( ! elementor.config.user.can_edit_kit ) {
+		if ( ! refraction.config.user.can_edit_kit ) {
 			return;
 		}
 
@@ -45,24 +45,24 @@ export default class Manager extends elementorModules.editor.utils.Module {
 	}
 
 	addPanelPages() {
-		elementor.getPanelView().addPage( 'kit_settings', {
+		refraction.getPanelView().addPage( 'kit_settings', {
 			view: PanelView,
-			title: __( 'Site Settings', 'elementor' ),
+			title: __( 'Site Settings', 'refraction' ),
 		} );
 
-		elementor.getPanelView().addPage( 'kit_menu', {
+		refraction.getPanelView().addPage( 'kit_menu', {
 			view: PanelMenuView,
-			title: __( 'Site Settings', 'elementor' ),
+			title: __( 'Site Settings', 'refraction' ),
 		} );
 	}
 
 	addPanelMenuItem() {
-		const menu = elementor.modules.layouts.panel.pages.menu.Menu;
+		const menu = refraction.modules.layouts.panel.pages.menu.Menu;
 
 		menu.addItem( {
 			name: 'global-settings',
 			icon: 'eicon-global-settings',
-			title: __( 'Site Settings', 'elementor' ),
+			title: __( 'Site Settings', 'refraction' ),
 			type: 'page',
 			callback: () => {
 				$e.run( 'panel/global/open', {
@@ -74,7 +74,7 @@ export default class Manager extends elementorModules.editor.utils.Module {
 		menu.addItem( {
 			name: 'site-editor',
 			icon: 'eicon-theme-builder',
-			title: __( 'Theme Builder', 'elementor' ),
+			title: __( 'Theme Builder', 'refraction' ),
 			type: 'page',
 			callback: () => $e.run( 'app/open' ),
 		}, 'style', 'editor-preferences' );
@@ -99,20 +99,20 @@ export default class Manager extends elementorModules.editor.utils.Module {
 		if ( 'color' === view.options.model.get( 'type' ) && isGlobalActive ) {
 			behaviors.globals = {
 				behaviorClass: GlobalControlSelect,
-				popoverTitle: __( 'Global Colors', 'elementor' ),
-				manageButtonText: __( 'Manage Global Colors', 'elementor' ),
-				tooltipText: __( 'Global Colors help you work smarter. Save a color, and use it anywhere throughout your site. Access and edit your global colors by clicking the Manage button.', 'elementor' ),
-				newGlobalConfirmTitle: __( 'Create New Global Color', 'elementor' ),
+				popoverTitle: __( 'Global Colors', 'refraction' ),
+				manageButtonText: __( 'Manage Global Colors', 'refraction' ),
+				tooltipText: __( 'Global Colors help you work smarter. Save a color, and use it anywhere throughout your site. Access and edit your global colors by clicking the Manage button.', 'refraction' ),
+				newGlobalConfirmTitle: __( 'Create New Global Color', 'refraction' ),
 			};
 		}
 
 		if ( 'popover_toggle' === view.options.model.get( 'type' ) && 'typography' === view.options.model.get( 'groupType' ) && isGlobalActive ) {
 			behaviors.globals = {
 				behaviorClass: GlobalControlSelect,
-				popoverTitle: __( 'Global Fonts', 'elementor' ),
-				manageButtonText: __( 'Manage Global Fonts', 'elementor' ),
-				tooltipText: __( 'Global Fonts help you work smarter. Save a Typography, and use it anywhere throughout your site. Access and edit your Global Fonts by clicking the Manage button.', 'elementor' ),
-				newGlobalConfirmTitle: __( 'Create New Global Font', 'elementor' ),
+				popoverTitle: __( 'Global Fonts', 'refraction' ),
+				manageButtonText: __( 'Manage Global Fonts', 'refraction' ),
+				tooltipText: __( 'Global Fonts help you work smarter. Save a Typography, and use it anywhere throughout your site. Access and edit your Global Fonts by clicking the Manage button.', 'refraction' ),
+				newGlobalConfirmTitle: __( 'Create New Global Font', 'refraction' ),
 			};
 		}
 
@@ -126,12 +126,12 @@ export default class Manager extends elementorModules.editor.utils.Module {
 		if ( ! this.variablesCSS ) {
 			this.variablesCSS = new ControlsCSSParser( {
 				id: 'e-kit-variables',
-				settingsModel: new elementorModules.editor.elements.models.BaseSettings( {}, {} ),
+				settingsModel: new refractionModules.editor.elements.models.BaseSettings( {}, {} ),
 			} );
 		}
 
 		// The kit document has its own CSS.
-		if ( 'kit' === elementor.documents.getCurrent().config.type ) {
+		if ( 'kit' === refraction.documents.getCurrent().config.type ) {
 			this.variablesCSS.removeStyleFromDocument();
 			return;
 		}
@@ -143,7 +143,7 @@ export default class Manager extends elementorModules.editor.utils.Module {
 						return;
 					}
 
-					const controls = elementor.config.kit_config.design_system_controls.colors,
+					const controls = refraction.config.kit_config.design_system_controls.colors,
 						values = {
 							_id: item.id,
 							color: item.value,
@@ -159,7 +159,7 @@ export default class Manager extends elementorModules.editor.utils.Module {
 						return;
 					}
 
-					const controls = elementor.config.kit_config.design_system_controls.typography,
+					const controls = refraction.config.kit_config.design_system_controls.typography,
 						values = {
 							_id: item.id,
 							...item.value,
@@ -167,7 +167,7 @@ export default class Manager extends elementorModules.editor.utils.Module {
 
 					// Enqueue fonts.
 					if ( item.value.typography_font_family ) {
-						elementor.helpers.enqueueFont( item.value.typography_font_family );
+						refraction.helpers.enqueueFont( item.value.typography_font_family );
 					}
 
 					this.variablesCSS.addStyleRules( controls, values, controls, [ '{{WRAPPER}}' ], [ 'body' ] );
@@ -187,15 +187,15 @@ export default class Manager extends elementorModules.editor.utils.Module {
 		const cssParser = new ControlsCSSParser( {
 				id: 'e-global-style',
 			} ),
-			defaultColorsEnabled = elementor.config.globals.defaults_enabled.colors,
-			defaultTypographyEnabled = elementor.config.globals.defaults_enabled.typography;
+			defaultColorsEnabled = refraction.config.globals.defaults_enabled.colors,
+			defaultTypographyEnabled = refraction.config.globals.defaults_enabled.typography;
 
 		// If both default colors and typography are disabled, there is no need to render schemes and default global css.
 		if ( ! defaultColorsEnabled && ! defaultTypographyEnabled ) {
 			return;
 		}
 
-		Object.values( elementor.widgetsCache ).forEach( ( widget ) => {
+		Object.values( refraction.widgetsCache ).forEach( ( widget ) => {
 			if ( ! widget.controls ) {
 				return;
 			}
@@ -232,7 +232,7 @@ export default class Manager extends elementorModules.editor.utils.Module {
 					widget.controls, // Values
 					widget.controls, // Controls
 					[ '{{WRAPPER}}' ],
-					[ '.elementor-widget-' + widget.widget_type ],
+					[ '.refraction-widget-' + widget.widget_type ],
 					globalValues,
 				);
 			} );
@@ -244,8 +244,8 @@ export default class Manager extends elementorModules.editor.utils.Module {
 	onInit() {
 		super.onInit();
 
-		elementorCommon.elements.$window.on( 'elementor:loaded', () => {
-			if ( elementor.config.initial_document.panel.support_kit ) {
+		refractionCommon.elements.$window.on( 'refraction:loaded', () => {
+			if ( refraction.config.initial_document.panel.support_kit ) {
 				this.initialize();
 			}
 		} );

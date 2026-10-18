@@ -1,5 +1,5 @@
-import { EditorOneEventManager } from 'elementor-editor-utils/editor-one-events';
-import eventsConfig from 'elementor/core/common/modules/events-manager/assets/js/events-config';
+import { EditorOneEventManager } from 'refraction-editor-utils/editor-one-events';
+import eventsConfig from 'refraction/core/common/modules/events-manager/assets/js/events-config';
 
 describe( 'EditorOneEventManager sidebar menu events', () => {
 	let dispatchEvent;
@@ -8,7 +8,7 @@ describe( 'EditorOneEventManager sidebar menu events', () => {
 		// Arrange
 		dispatchEvent = jest.fn();
 
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				editor_events: {
 					can_send_events: true,
@@ -22,7 +22,7 @@ describe( 'EditorOneEventManager sidebar menu events', () => {
 	} );
 
 	afterEach( () => {
-		delete window.elementorCommon;
+		delete window.refractionCommon;
 		jest.clearAllMocks();
 	} );
 
@@ -99,7 +99,7 @@ describe( 'EditorOneEventManager sidebar menu events', () => {
 
 	test( 'does not dispatch when events cannot be sent', () => {
 		// Arrange
-		window.elementorCommon.config.editor_events.can_send_events = false;
+		window.refractionCommon.config.editor_events.can_send_events = false;
 
 		// Act
 		EditorOneEventManager.sendSidebarMenuItemClicked( { eventId: 'settings' } );

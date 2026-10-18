@@ -4,10 +4,10 @@ import {
 	getElementStyles,
 	updateElementStyle,
 	type V1Element,
-} from '@elementor/editor-elements';
-import { type StyleDefinition } from '@elementor/editor-styles';
-import { ELEMENTS_STYLES_RESERVED_LABEL } from '@elementor/editor-styles-repository';
-import { undoable } from '@elementor/editor-v1-adapters';
+} from '@refraction/editor-elements';
+import { type StyleDefinition } from '@refraction/editor-styles';
+import { ELEMENTS_STYLES_RESERVED_LABEL } from '@refraction/editor-styles-repository';
+import { undoable } from '@refraction/editor-v1-adapters';
 import { __ } from '@wordpress/i18n';
 
 import { getClassesProp, getTitleForContainers } from '../../utils/command-utils';
@@ -103,6 +103,6 @@ export const undoablePasteElementStyle = () =>
 		},
 		{
 			title: ( { containers } ) => getTitleForContainers( containers ),
-			subtitle: __( 'Style Pasted', 'elementor' ),
+			subtitle: __( 'Style Pasted', 'refraction' ),
 		}
 	);

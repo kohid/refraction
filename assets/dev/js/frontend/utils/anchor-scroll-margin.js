@@ -1,9 +1,9 @@
-export default class extends elementorModules.ViewModule {
+export default class extends refractionModules.ViewModule {
 	getDefaultSettings() {
 		return {
 			selectors: {
-				links: '.elementor-element a[href*="#"]',
-				stickyElements: '.elementor-element.elementor-sticky',
+				links: '.refraction-element a[href*="#"]',
+				stickyElements: '.refraction-element.refraction-sticky',
 			},
 		};
 	}
@@ -17,7 +17,7 @@ export default class extends elementorModules.ViewModule {
 	observeStickyElements( callback ) {
 		const observer = new MutationObserver( ( mutationsList ) => {
 			for ( const mutation of mutationsList ) {
-				if ( 'childList' === mutation.type || ( 'attributes' === mutation.type && mutation.target.classList.contains( 'elementor-sticky' ) ) ) {
+				if ( 'childList' === mutation.type || ( 'attributes' === mutation.type && mutation.target.classList.contains( 'refraction-sticky' ) ) ) {
 					callback();
 				}
 			}

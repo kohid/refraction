@@ -37,17 +37,17 @@ export const PromotionWidgetsTable = ( { widgets, promotionData } ) => {
 				>
 					<Box>
 						<Typography variant="h6" component="h2">
-							{ __( 'Elementor Pro Elements', 'elementor' ) }
+							{ __( 'Refraction Pro Elements', 'refraction' ) }
 						</Typography>
 						<Typography variant="body2" component="p">
-							{ __( 'Unleash the full power of Elementor\'s features and web creation tools.', 'elementor' ) }
+							{ __( 'Unleash the full power of Refraction\'s features and web creation tools.', 'refraction' ) }
 						</Typography>
 					</Box>
 					<Box>
 						<UpgradeButton
 							href={ elementManager.url }
 							text={ elementManager.text }
-							className="e-id-elementor-element-manager-button-upgrade-pro-elements"
+							className="e-id-refraction-element-manager-button-upgrade-pro-elements"
 						/>
 					</Box>
 				</Stack>
@@ -57,16 +57,16 @@ export const PromotionWidgetsTable = ( { widgets, promotionData } ) => {
 					<TableHead>
 						<TableRow>
 							<TableCell sx={ ( theme ) => ( { width: theme.spacing( 25 ) } ) }>
-								{ __( 'Element', 'elementor' ) }
+								{ __( 'Element', 'refraction' ) }
 							</TableCell>
 							<TableCell sx={ ( theme ) => ( { width: theme.spacing( 10 ) } ) }>
-								{ __( 'Status', 'elementor' ) }
+								{ __( 'Status', 'refraction' ) }
 							</TableCell>
 							<TableCell>
-								{ __( 'Usage', 'elementor' ) }
+								{ __( 'Usage', 'refraction' ) }
 							</TableCell>
 							<TableCell>
-								{ __( 'Plugin', 'elementor' ) }
+								{ __( 'Plugin', 'refraction' ) }
 							</TableCell>
 							<TableCell>
 								<Stack
@@ -75,11 +75,11 @@ export const PromotionWidgetsTable = ( { widgets, promotionData } ) => {
 									alignItems="center"
 									gap={ 1 }
 								>
-									<Box>{ __( 'Permission', 'elementor' ) }</Box>
+									<Box>{ __( 'Permission', 'refraction' ) }</Box>
 									<Box>
 										<Tooltip
 											placement="top"
-											title={ __( 'Choose which role will have access to a specific widget.', 'elementor' ) }
+											title={ __( 'Choose which role will have access to a specific widget.', 'refraction' ) }
 										>
 											<IconButton size="small">
 												<HelpIcon fontSize="small" />
@@ -107,11 +107,11 @@ export const PromotionWidgetsTable = ( { widgets, promotionData } ) => {
 										checked={ false }
 										disabled={ true }
 										size="small"
-										data-id={ `e-id-elementor-element-manager-toggle-${ widget.name }` }
+										data-id={ `e-id-refraction-element-manager-toggle-${ widget.name }` }
 									/>
 								</TableCell>
 								<TableCell></TableCell>
-								<TableCell>{ __( 'Elementor Pro', 'elementor' ) }</TableCell>
+								<TableCell>{ __( 'Refraction Pro', 'refraction' ) }</TableCell>
 								<TableCell>
 									<EditButtonDisabled widgetName={ widget.name } />
 								</TableCell>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { type ToggleButtonGroupItem, ToggleButtonGroupUi } from '@elementor/editor-controls';
+import { type ToggleButtonGroupItem, ToggleButtonGroupUi } from '@refraction/editor-controls';
 import { CheckIcon, MinusIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -11,8 +11,8 @@ import { PromotionOverlayLayout } from '../../ui/promotion-overlay-layout';
 const TRACKING_DATA = { target_name: 'interactions_replay', location_l2: 'interactions' } as const;
 
 export const REPLAY_OPTIONS = {
-	no: __( 'No', 'elementor' ),
-	yes: __( 'Yes', 'elementor' ),
+	no: __( 'No', 'refraction' ),
+	yes: __( 'Yes', 'refraction' ),
 };
 
 export const BASE_REPLAY: string[] = [ 'no' ];
@@ -41,7 +41,7 @@ export function Replay( { onChange }: ReplayFieldProps ) {
 			ref={ replayContainerRef }
 			promotionChip={
 				<InteractionsPromotionChip
-					content={ __( 'Upgrade to run the animation every time its trigger occurs.', 'elementor' ) }
+					content={ __( 'Upgrade to run the animation every time its trigger occurs.', 'refraction' ) }
 					upgradeUrl={ 'https://go.elementor.com/go-pro-interactions-replay-modal/' }
 					anchorRef={ replayContainerRef }
 					trackingData={ TRACKING_DATA }

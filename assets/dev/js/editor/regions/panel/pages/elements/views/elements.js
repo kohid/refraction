@@ -1,21 +1,21 @@
 var PanelElementsElementsView;
 
 PanelElementsElementsView = Marionette.CollectionView.extend( {
-	childView: require( 'elementor-panel/pages/elements/views/element' ),
+	childView: require( 'refraction-panel/pages/elements/views/element' ),
 
-	id: 'elementor-panel-elements',
+	id: 'refraction-panel-elements',
 
-	className: 'elementor-responsive-panel',
+	className: 'refraction-responsive-panel',
 
 	initialize() {
-		this.listenTo( elementor.channels.panelElements, 'filter:change', this.onFilterChanged );
+		this.listenTo( refraction.channels.panelElements, 'filter:change', this.onFilterChanged );
 		// Apply comparator immediately — the view may be created mid-search (filter:change already fired).
 		this._syncAtomicComparator();
 	},
 
 	_syncAtomicComparator() {
-		const filterValue = elementor.channels.panelElements.request( 'filter:value' );
-		if ( filterValue && elementorCommon.config.experimentalFeatures?.e_atomic_elements ) {
+		const filterValue = refraction.channels.panelElements.request( 'filter:value' );
+		if ( filterValue && refractionCommon.config.experimentalFeatures?.e_atomic_elements ) {
 			this.viewComparator = ( a, b ) => {
 				if ( a.get( 'atomic' ) && ! b.get( 'atomic' ) ) {
 					return -1;
@@ -31,7 +31,7 @@ PanelElementsElementsView = Marionette.CollectionView.extend( {
 	},
 
 	filter( childModel ) {
-		const filterValue = elementor.channels.panelElements.request( 'filter:value' );
+		const filterValue = refraction.channels.panelElements.request( 'filter:value' );
 
 		if ( ! filterValue ) {
 			return true;
@@ -46,7 +46,7 @@ PanelElementsElementsView = Marionette.CollectionView.extend( {
 		}
 
 		// Get the filter input localized value.
-		const localized = elementor.channels.panelElements.request( 'filter:localized' ) || '';
+		const localized = refraction.channels.panelElements.request( 'filter:localized' ) || '';
 
 		return _.any( childModel.get( 'keywords' ), function( keyword ) {
 			keyword = keyword.toLowerCase();
@@ -59,7 +59,7 @@ PanelElementsElementsView = Marionette.CollectionView.extend( {
 	},
 
 	onFilterChanged() {
-		const filterValue = elementor.channels.panelElements.request( 'filter:value' );
+		const filterValue = refraction.channels.panelElements.request( 'filter:value' );
 
 		this._syncAtomicComparator();
 

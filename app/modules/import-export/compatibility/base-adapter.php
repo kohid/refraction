@@ -1,9 +1,9 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExport\Compatibility;
+namespace Refraction\App\Modules\ImportExport\Compatibility;
 
-use Elementor\App\Modules\ImportExport\Import;
-use Elementor\Core\Base\Base_Object;
+use Refraction\App\Modules\ImportExport\Import;
+use Refraction\Core\Base\Base_Object;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

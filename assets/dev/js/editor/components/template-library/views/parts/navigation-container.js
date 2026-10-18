@@ -1,11 +1,11 @@
 module.exports = Marionette.ItemView.extend( {
-	template: '#tmpl-elementor-template-library-navigation-container',
+	template: '#tmpl-refraction-template-library-navigation-container',
 
-	className: 'elementor-template-library-navigation-container',
+	className: 'refraction-template-library-navigation-container',
 
 	ui: {
-		title: '.elementor-template-library-current-folder-title',
-		backButton: '.elementor-template-library-navigation-back-button',
+		title: '.refraction-template-library-current-folder-title',
+		backButton: '.refraction-template-library-navigation-back-button',
 	},
 
 	events: {
@@ -13,7 +13,7 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	render() {
-		if ( null === elementor.templates.getFilter( 'parent' ) ) {
+		if ( null === refraction.templates.getFilter( 'parent' ) ) {
 			return this;
 		}
 
@@ -21,11 +21,11 @@ module.exports = Marionette.ItemView.extend( {
 	},
 
 	onRender() {
-		this.ui.title.text( elementor.templates.getFilter( 'parent' )?.title );
+		this.ui.title.text( refraction.templates.getFilter( 'parent' )?.title );
 	},
 
 	onBackButtonClick() {
-		elementor.templates.setFilter( 'parent', null );
+		refraction.templates.setFilter( 'parent', null );
 
 		$e.route( 'library/templates/my-templates' );
 	},

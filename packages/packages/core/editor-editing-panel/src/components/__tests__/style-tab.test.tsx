@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isExperimentActive } from '@elementor/editor-v1-adapters';
+import { isExperimentActive } from '@refraction/editor-v1-adapters';
 import { render, screen } from '@testing-library/react';
 
 import { useElement } from '../../contexts/element-context';
@@ -12,7 +12,7 @@ import { StyleTabSection } from '../style-tab-section';
 jest.mock( '../../contexts/element-context' );
 jest.mock( '../../contexts/style-context' );
 jest.mock( '../../hooks/use-custom-css' );
-jest.mock( '@elementor/editor-v1-adapters' );
+jest.mock( '@refraction/editor-v1-adapters' );
 jest.mock( '../../hooks/use-default-panel-settings' );
 
 describe( 'style-tab', () => {

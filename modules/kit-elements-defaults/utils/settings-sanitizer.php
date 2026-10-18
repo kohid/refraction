@@ -1,11 +1,11 @@
 <?php
-namespace Elementor\Modules\KitElementsDefaults\Utils;
+namespace Refraction\Modules\KitElementsDefaults\Utils;
 
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Element_Base;
-use Elementor\Elements_Manager;
-use Elementor\Core\Base\Document;
-use Elementor\Utils;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Element_Base;
+use Refraction\Elements_Manager;
+use Refraction\Core\Base\Document;
+use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

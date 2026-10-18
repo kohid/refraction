@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { FontFamilyControl, useFontFamilies } from '@elementor/editor-controls';
-import { useSectionWidth } from '@elementor/editor-ui';
+import { FontFamilyControl, useFontFamilies } from '@refraction/editor-controls';
+import { useSectionWidth } from '@refraction/editor-ui';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
 import { StylesFieldLayout } from '../../styles-field-layout';
 
-const FONT_FAMILY_LABEL = __( 'Font family', 'elementor' );
+const FONT_FAMILY_LABEL = __( 'Font family', 'refraction' );
 
 export const FontFamilyField = () => {
 	const fontFamilies = useFontFamilies();

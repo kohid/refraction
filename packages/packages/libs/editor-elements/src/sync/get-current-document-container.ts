@@ -3,5 +3,5 @@ import { type ExtendedWindow } from './types';
 export function getCurrentDocumentContainer() {
 	const extendedWindow = window as unknown as ExtendedWindow;
 
-	return extendedWindow.elementor?.documents?.getCurrent?.()?.container ?? null;
+	return extendedWindow.refraction?.documents?.getCurrent?.()?.container ?? null;
 }

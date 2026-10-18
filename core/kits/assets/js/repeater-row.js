@@ -1,16 +1,16 @@
-import { default as RepeaterRow } from 'elementor-controls/repeater-row';
+import { default as RepeaterRow } from 'refraction-controls/repeater-row';
 
 export default class extends RepeaterRow {
 	ui() {
 		const ui = super.ui();
 
-		ui.sortButton = '.elementor-repeater-tool-sort';
+		ui.sortButton = '.refraction-repeater-tool-sort';
 
 		return ui;
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-global-style-repeater-row';
+		return '#tmpl-refraction-global-style-repeater-row';
 	}
 
 	events() {
@@ -26,7 +26,7 @@ export default class extends RepeaterRow {
 
 	getDisabledRemoveButtons() {
 		if ( ! this.ui.disabledRemoveButtons ) {
-			this.ui.disabledRemoveButtons = this.$el.find( '.elementor-repeater-tool-remove--disabled' );
+			this.ui.disabledRemoveButtons = this.$el.find( '.refraction-repeater-tool-remove--disabled' );
 		}
 
 		return this.ui.disabledRemoveButtons;
@@ -43,20 +43,20 @@ export default class extends RepeaterRow {
 	onChildviewRender( childView ) {
 		const isColor = 'color' === childView.model.get( 'type' ),
 			isPopoverToggle = 'popover_toggle' === childView.model.get( 'type' ),
-			$controlInputWrapper = childView.$el.find( '.elementor-control-input-wrapper' );
+			$controlInputWrapper = childView.$el.find( '.refraction-control-input-wrapper' );
 
 		let globalType = '',
 			globalTypeTranslated = '';
 
 		if ( isColor ) {
-			this.$colorValue = jQuery( '<div>', { class: 'e-global-colors__color-value elementor-control-unit-3' } );
+			this.$colorValue = jQuery( '<div>', { class: 'e-global-colors__color-value refraction-control-unit-3' } );
 
 			$controlInputWrapper
 				.prepend( this.getRemoveButton(), this.$colorValue )
 				.prepend( this.ui.sortButton );
 
 			globalType = 'color';
-			globalTypeTranslated = __( 'Color', 'elementor' );
+			globalTypeTranslated = __( 'Color', 'refraction' );
 
 			this.updateColorValue();
 		}
@@ -67,7 +67,7 @@ export default class extends RepeaterRow {
 				.append( this.ui.sortButton );
 
 			globalType = 'font';
-			globalTypeTranslated = __( 'Font', 'elementor' );
+			globalTypeTranslated = __( 'Font', 'refraction' );
 		}
 
 		if ( isColor || isPopoverToggle ) {
@@ -77,13 +77,13 @@ export default class extends RepeaterRow {
 
 			this.ui.removeButton.tipsy( {
 				/* Translators: %s: Font/Color. */
-				title: () => sprintf( __( 'Delete Global %s', 'elementor' ), globalTypeTranslated ),
+				title: () => sprintf( __( 'Delete Global %s', 'refraction' ), globalTypeTranslated ),
 				gravity: () => 's',
 			} );
 
 			removeButtons.tipsy( {
 				/* Translators: %s: Font/Color. */
-				title: () => sprintf( __( 'System %s can\'t be deleted', 'elementor' ), globalTypeTranslated ),
+				title: () => sprintf( __( 'System %s can\'t be deleted', 'refraction' ), globalTypeTranslated ),
 				gravity: () => 's',
 			} );
 		}
@@ -97,19 +97,19 @@ export default class extends RepeaterRow {
 
 	onRemoveButtonClick() {
 		const globalType = this.ui.removeButton.data( 'e-global-type' ),
-			globalTypeTranslatedCapitalized = 'font' === globalType ? __( 'Font', 'elementor' ) : __( 'Color', 'elementor' ),
-			globalTypeTranslatedLowercase = 'font' === globalType ? __( 'font', 'elementor' ) : __( 'color', 'elementor' ),
+			globalTypeTranslatedCapitalized = 'font' === globalType ? __( 'Font', 'refraction' ) : __( 'Color', 'refraction' ),
+			globalTypeTranslatedLowercase = 'font' === globalType ? __( 'font', 'refraction' ) : __( 'color', 'refraction' ),
 			/* Translators: 1: Font/Color, 2: typography/color. */
-			translatedMessage = sprintf( __( 'You\'re about to delete a Global %1$s. Note that if it\'s being used anywhere on your site, it will inherit a default %1$s.', 'elementor' ), globalTypeTranslatedCapitalized, globalTypeTranslatedLowercase );
+			translatedMessage = sprintf( __( 'You\'re about to delete a Global %1$s. Note that if it\'s being used anywhere on your site, it will inherit a default %1$s.', 'refraction' ), globalTypeTranslatedCapitalized, globalTypeTranslatedLowercase );
 
-		this.confirmDeleteModal = elementorCommon.dialogsManager.createWidget( 'confirm', {
+		this.confirmDeleteModal = refractionCommon.dialogsManager.createWidget( 'confirm', {
 			className: 'e-global__confirm-delete',
 			/* Translators: %s: Font/Color. */
-			headerMessage: sprintf( __( 'Delete Global %s', 'elementor' ), globalTypeTranslatedCapitalized ),
+			headerMessage: sprintf( __( 'Delete Global %s', 'refraction' ), globalTypeTranslatedCapitalized ),
 			message: '<i class="eicon-info-circle"></i> ' + translatedMessage,
 			strings: {
-				confirm: __( 'Delete', 'elementor' ),
-				cancel: __( 'Cancel', 'elementor' ),
+				confirm: __( 'Delete', 'refraction' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			hide: {
 				onBackgroundClick: false,

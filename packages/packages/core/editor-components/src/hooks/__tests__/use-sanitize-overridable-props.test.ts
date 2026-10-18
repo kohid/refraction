@@ -5,7 +5,7 @@ import {
 	__registerSlice as registerSlice,
 	type SliceState,
 	type Store,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { slice } from '../../store/store';
 import { type OverridableProps, type PublishedComponent } from '../../types';

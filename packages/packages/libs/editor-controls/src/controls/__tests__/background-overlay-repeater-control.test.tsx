@@ -7,16 +7,16 @@ import {
 	type BackgroundOverlayItemPropValue,
 	type BackgroundOverlayPropValue,
 	colorPropTypeUtil,
-} from '@elementor/editor-props';
-import { initEnv } from '@elementor/env';
-import { type Attachment, useWpMediaAttachment } from '@elementor/wp-media';
+} from '@refraction/editor-props';
+import { initEnv } from '@refraction/env';
+import { type Attachment, useWpMediaAttachment } from '@refraction/wp-media';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { BackgroundOverlayRepeaterControl } from '../background-control/background-overlay/background-overlay-repeater-control';
 import { gradientPropType } from './background-gradient-color-control.test';
 
 jest.mock( '../image-media-control' );
-jest.mock( '@elementor/wp-media' );
+jest.mock( '@refraction/wp-media' );
 
 const stubBackgroundColorOverlay = ( color: string ): BackgroundOverlayItemPropValue => {
 	return backgroundColorOverlayPropTypeUtil.create( {
@@ -178,7 +178,7 @@ const createMockData = (
 describe( 'BackgroundControl', () => {
 	beforeEach( () => {
 		initEnv( {
-			'@elementor/editor-controls': {
+			'@refraction/editor-controls': {
 				background_placeholder_image: 'https://test-site/wp-content/uploads/bg-test.jpg',
 			},
 		} );
@@ -253,7 +253,7 @@ describe( 'BackgroundControl', () => {
 			bind: 'background-overlay',
 			propType,
 		};
-		const imageTitle = 'Elementor Logo';
+		const imageTitle = 'Refraction Logo';
 
 		jest.mocked( useWpMediaAttachment ).mockReturnValue( {
 			data: {

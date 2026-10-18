@@ -27,7 +27,7 @@ test.describe( 'URL Actions', () => {
 		}, null );
 
 		// Upload Image
-		const imageMediaControl = page.locator( '.elementor-control-preview-area' );
+		const imageMediaControl = page.locator( '.refraction-control-preview-area' );
 		await imageMediaControl.click( { delay: 500, clickCount: 2 } );
 		await page.click( 'text=Media Library' );
 		await page.waitForSelector( 'text=Insert Media' );
@@ -49,7 +49,7 @@ test.describe( 'URL Actions', () => {
 		await page.click( wpMediaAddButtonSelector );
 
 		// Get the image's source.
-		const mountainImg = editor.getPreviewFrame().locator( '.elementor-widget-image img[src*="mountain-image"]' );
+		const mountainImg = editor.getPreviewFrame().locator( '.refraction-widget-image img[src*="mountain-image"]' );
 		const src = await mountainImg.getAttribute( 'src' );
 
 		// Test that the image has been successfully inserted into the page.
@@ -58,7 +58,7 @@ test.describe( 'URL Actions', () => {
 		// Click on the image to open the lightbox.
 		await mountainImg.click();
 
-		const singlelightboxImage = editor.getPreviewFrame().locator( '.elementor-lightbox-image' );
+		const singlelightboxImage = editor.getPreviewFrame().locator( '.refraction-lightbox-image' );
 
 		// Test that the lightbox appeared.
 		await expect( singlelightboxImage ).toBeVisible();
@@ -88,7 +88,7 @@ test.describe( 'URL Actions', () => {
 			},
 		} );
 
-		await page.click( '.elementor-control-gallery-add' );
+		await page.click( '.refraction-control-gallery-add' );
 		await page.click( 'text=Media Library' );
 		await page.waitForTimeout( 1000 );
 
@@ -118,7 +118,7 @@ test.describe( 'URL Actions', () => {
 		// Insert the gallery.
 		await page.click( 'text=Insert gallery', { delay: 500, clickCount: 2 } );
 
-		const galleryItems = editor.getPreviewFrame().locator( '.elementor-image-gallery figure.gallery-item' );
+		const galleryItems = editor.getPreviewFrame().locator( '.refraction-image-gallery figure.gallery-item' );
 
 		// Check that a gallery with two images has been added to the page.
 		await expect( galleryItems ).toHaveCount( 2 );
@@ -126,7 +126,7 @@ test.describe( 'URL Actions', () => {
 		// Open the gallery's slideshow in a lightbox.
 		await galleryItems.first().click();
 
-		const slideshowLightboxImage = editor.getPreviewFrame().locator( 'img[alt="mountain-image"].elementor-lightbox-image, img[alt="field-image"].elementor-lightbox-image' );
+		const slideshowLightboxImage = editor.getPreviewFrame().locator( 'img[alt="mountain-image"].refraction-lightbox-image, img[alt="field-image"].refraction-lightbox-image' );
 
 		// Test that the lightbox appeared.
 		await expect( slideshowLightboxImage.first() ).toBeVisible();
@@ -136,7 +136,7 @@ test.describe( 'URL Actions', () => {
 		/**
 		 * Get the action hash from the image, go to the page URL with the hash and check that the lightbox is triggered.
 		 */
-		const frontendMountainImageElement = page.locator( '.elementor-widget-image a' ).nth( 0 );
+		const frontendMountainImageElement = page.locator( '.refraction-widget-image a' ).nth( 0 );
 
 		await frontendMountainImageElement.waitFor( { state: 'visible' } );
 
@@ -150,9 +150,9 @@ test.describe( 'URL Actions', () => {
 		// Reload so the hash will be parsed.
 		await page.reload();
 
-		await page.waitForSelector( '.elementor-lightbox-image' );
+		await page.waitForSelector( '.refraction-lightbox-image' );
 
-		const frontendSinglelightboxImage = page.locator( '.elementor-lightbox-image' );
+		const frontendSinglelightboxImage = page.locator( '.refraction-lightbox-image' );
 
 		// Test that the lightbox was successfully loaded.
 		await expect( frontendSinglelightboxImage ).toBeVisible();
@@ -165,7 +165,7 @@ test.describe( 'URL Actions', () => {
 		 */
 		const settingsJson = '{"id":1,"url":"https://elementor.com/", "onClick": "alert()"}';
 
-		const testActionHash = '#' + encodeURIComponent( 'elementor-action:action=lightbox&settings=' + Buffer.from( settingsJson ).toString( 'base64' ) );
+		const testActionHash = '#' + encodeURIComponent( 'refraction-action:action=lightbox&settings=' + Buffer.from( settingsJson ).toString( 'base64' ) );
 
 		// Go to the front end of the test page with the action hash.
 		await page.goto( pageURL + testActionHash );

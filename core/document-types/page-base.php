@@ -1,10 +1,10 @@
 <?php
-namespace Elementor\Core\DocumentTypes;
+namespace Refraction\Core\DocumentTypes;
 
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Document;
-use Elementor\Group_Control_Background;
-use Elementor\Plugin;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Document;
+use Refraction\Group_Control_Background;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -37,7 +37,7 @@ abstract class PageBase extends Document {
 	 * @access public
 	 */
 	public function get_css_wrapper_selector() {
-		return 'body.elementor-page-' . $this->get_main_id();
+		return 'body.refraction-page-' . $this->get_main_id();
 	}
 
 	/**
@@ -71,11 +71,11 @@ abstract class PageBase extends Document {
 		$document->add_control(
 			'hide_title',
 			[
-				'label' => esc_html__( 'Hide Title', 'elementor' ),
+				'label' => esc_html__( 'Hide Title', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'description' => sprintf(
 					/* translators: 1: Link open tag, 2: Link close tag. */
-					esc_html__( 'Set a different selector for the title in the %1$sLayout panel%2$s.', 'elementor' ),
+					esc_html__( 'Set a different selector for the title in the %1$sLayout panel%2$s.', 'refraction' ),
 					'<a href="javascript: $e.run( \'panel/global/open\' ).then( () => $e.route( \'panel/global/settings-layout\' ) )">',
 					'</a>'
 				),
@@ -99,7 +99,7 @@ abstract class PageBase extends Document {
 		$document->start_controls_section(
 			'section_page_style',
 			[
-				'label' => esc_html__( 'Body Style', 'elementor' ),
+				'label' => esc_html__( 'Body Style', 'refraction' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -107,7 +107,7 @@ abstract class PageBase extends Document {
 		$document->add_responsive_control(
 			'margin',
 			[
-				'label' => esc_html__( 'Margin', 'elementor' ),
+				'label' => esc_html__( 'Margin', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -119,7 +119,7 @@ abstract class PageBase extends Document {
 		$document->add_responsive_control(
 			'padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
@@ -157,43 +157,43 @@ abstract class PageBase extends Document {
 			'singular_name' => $singular_label, // Already translated.
 			'all_items' => sprintf(
 				/* translators: 1: Plural label. */
-				__( 'All %s', 'elementor' ),
+				__( 'All %s', 'refraction' ),
 				$plural_label
 			),
-			'add_new' => esc_html__( 'Add New', 'elementor' ),
+			'add_new' => esc_html__( 'Add New', 'refraction' ),
 			'add_new_item' => sprintf(
 				/* translators: %s: Singular label. */
-				__( 'Add New %s', 'elementor' ),
+				__( 'Add New %s', 'refraction' ),
 				$singular_label
 			),
 			'edit_item' => sprintf(
 				/* translators: %s: Singular label. */
-				__( 'Edit %s', 'elementor' ),
+				__( 'Edit %s', 'refraction' ),
 				$singular_label
 			),
 			'new_item' => sprintf(
 				/* translators: %s: Singular label. */
-				__( 'New %s', 'elementor' ),
+				__( 'New %s', 'refraction' ),
 				$singular_label
 			),
 			'view_item' => sprintf(
 				/* translators: %s: Singular label. */
-				__( 'View %s', 'elementor' ),
+				__( 'View %s', 'refraction' ),
 				$singular_label
 			),
 			'search_items' => sprintf(
 				/* translators: %s: Plural label. */
-				__( 'Search %s', 'elementor' ),
+				__( 'Search %s', 'refraction' ),
 				$plural_label
 			),
 			'not_found' => sprintf(
 				/* translators: %s: Plural label. */
-				__( 'No %s found.', 'elementor' ),
+				__( 'No %s found.', 'refraction' ),
 				strtolower( $plural_label )
 			),
 			'not_found_in_trash' => sprintf(
 				/* translators: %s: Plural label. */
-				__( 'No %s found in Trash.', 'elementor' ),
+				__( 'No %s found in Trash.', 'refraction' ),
 				strtolower( $plural_label )
 			),
 			'parent_item_colon' => '',
@@ -221,7 +221,7 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'post_excerpt',
 				[
-					'label' => esc_html__( 'Excerpt', 'elementor' ),
+					'label' => esc_html__( 'Excerpt', 'refraction' ),
 					'type' => Controls_Manager::TEXTAREA,
 					'default' => $document->post->post_excerpt,
 					'separator' => 'before',
@@ -236,7 +236,7 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'post_featured_image',
 				[
-					'label' => esc_html__( 'Featured Image', 'elementor' ),
+					'label' => esc_html__( 'Featured Image', 'refraction' ),
 					'type' => Controls_Manager::MEDIA,
 					'default' => [
 						'id' => get_post_thumbnail_id(),
@@ -251,7 +251,7 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'menu_order',
 				[
-					'label' => esc_html__( 'Order', 'elementor' ),
+					'label' => esc_html__( 'Order', 'refraction' ),
 					'type' => Controls_Manager::NUMBER,
 					'default' => $document->post->menu_order,
 					'separator' => 'before',
@@ -263,7 +263,7 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'comment_status',
 				[
-					'label' => esc_html__( 'Allow Comments', 'elementor' ),
+					'label' => esc_html__( 'Allow Comments', 'refraction' ),
 					'type' => Controls_Manager::SWITCHER,
 					'return_value' => 'open',
 					'default' => $document->post->comment_status,

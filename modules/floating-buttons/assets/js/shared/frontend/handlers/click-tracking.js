@@ -1,4 +1,4 @@
-import Base from 'elementor-frontend/handlers/base';
+import Base from 'refraction-frontend/handlers/base';
 
 export default class ClickTrackingHandler extends Base {
 	clicks = [];
@@ -10,7 +10,7 @@ export default class ClickTrackingHandler extends Base {
 				contactButtonCore: '.e-contact-buttons__send-button',
 				contentWrapperFloatingBars: '.e-floating-bars',
 				floatingBarCTAButton: '.e-floating-bars__cta-button',
-				elementorWrapper: '[data-elementor-type="floating-buttons"]',
+				refractionWrapper: '[data-refraction-type="floating-buttons"]',
 			},
 		};
 	}
@@ -54,7 +54,7 @@ export default class ClickTrackingHandler extends Base {
 	}
 
 	getDocumentIdAndTrack( targetElement, selectors ) {
-		const documentId = targetElement.closest( selectors.elementorWrapper ).dataset.elementorId;
+		const documentId = targetElement.closest( selectors.refractionWrapper ).dataset.refractionId;
 
 		this.trackClick( documentId );
 	}
@@ -73,11 +73,11 @@ export default class ClickTrackingHandler extends Base {
 
 	sendClicks() {
 		const formData = new FormData();
-		formData.append( 'action', 'elementor_send_clicks' );
-		formData.append( '_nonce', elementorFrontendConfig?.nonces?.floatingButtonsClickTracking );
+		formData.append( 'action', 'refraction_send_clicks' );
+		formData.append( '_nonce', refractionFrontendConfig?.nonces?.floatingButtonsClickTracking );
 		this.clicks.forEach( ( documentId ) => formData.append( 'clicks[]', documentId ) );
 
-		fetch( elementorFrontendConfig?.urls?.ajaxurl, {
+		fetch( refractionFrontendConfig?.urls?.ajaxurl, {
 			method: 'POST',
 			body: formData,
 		} )

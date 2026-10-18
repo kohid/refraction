@@ -1,5 +1,5 @@
 <?php
-namespace Elementor\Core\Isolation;
+namespace Refraction\Core\Isolation;
 
 interface Plugin_Status_Adapter_Interface {
 

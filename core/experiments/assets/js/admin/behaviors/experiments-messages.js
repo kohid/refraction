@@ -50,7 +50,7 @@ export default class ExperimentsMessages {
 	}
 
 	getExperimentData( experimentId ) {
-		return elementorAdminConfig.experiments[ experimentId ];
+		return refractionAdminConfig.experiments[ experimentId ];
 	}
 
 	getExperimentDependencies( experimentId ) {
@@ -101,7 +101,7 @@ export default class ExperimentsMessages {
 
 	deactivateDependantExperiments( experimentId ) {
 		Object
-			.entries( elementorAdminConfig.experiments )
+			.entries( refractionAdminConfig.experiments )
 			.forEach( ( [ id, experimentData ] ) => {
 				const isDependant = experimentData.dependencies.includes( experimentId ),
 					isActive = this.getExperimentActualState( id ) === STATE_ACTIVE;
@@ -127,7 +127,7 @@ export default class ExperimentsMessages {
 	}
 
 	showDialog( dialog ) {
-		return elementorCommon.dialogsManager.createWidget( 'confirm', {
+		return refractionCommon.dialogsManager.createWidget( 'confirm', {
 			id: 'e-experiments-messages-dialog',
 			headerMessage: dialog.headerMessage,
 			message: dialog.message,
@@ -168,16 +168,16 @@ export default class ExperimentsMessages {
 			dependenciesList = this.formatDependenciesList( this.getExperimentDependencies( experimentId ) );
 
 		// Translators: %1$s: Experiment title, %2$s: Comma-separated dependencies list
-		const message = __( 'In order to use %1$s, first you need to activate %2$s.', 'elementor' )
+		const message = __( 'In order to use %1$s, first you need to activate %2$s.', 'refraction' )
 			.replace( '%1$s', `<strong>${ experimentName }</strong>` )
 			.replace( '%2$s', dependenciesList );
 
 		this.showDialog( {
 			message,
-			headerMessage: __( 'First, activate another experiment.', 'elementor' ),
+			headerMessage: __( 'First, activate another experiment.', 'refraction' ),
 			strings: {
-				confirm: __( 'Activate', 'elementor' ),
-				cancel: __( 'Cancel', 'elementor' ),
+				confirm: __( 'Activate', 'refraction' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			onConfirm: () => {
 				this.getExperimentDependencies( experimentId ).forEach( ( dependency ) => {
@@ -194,10 +194,10 @@ export default class ExperimentsMessages {
 	showDeactivationDialog( experimentId ) {
 		this.showDialog( {
 			message: this.getMessage( experimentId, 'on_deactivate' ),
-			headerMessage: __( 'Are you sure?', 'elementor' ),
+			headerMessage: __( 'Are you sure?', 'refraction' ),
 			strings: {
-				confirm: __( 'Deactivate', 'elementor' ),
-				cancel: __( 'Cancel', 'elementor' ),
+				confirm: __( 'Deactivate', 'refraction' ),
+				cancel: __( 'Cancel', 'refraction' ),
 			},
 			onConfirm: () => {
 				this.setExperimentState( experimentId, STATE_INACTIVE );

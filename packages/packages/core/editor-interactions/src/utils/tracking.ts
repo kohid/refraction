@@ -1,5 +1,5 @@
-import { getElementLabel } from '@elementor/editor-elements';
-import { getMixpanel } from '@elementor/events';
+import { getElementLabel } from '@refraction/editor-elements';
+import { getMixpanel } from '@refraction/events';
 
 import type { InteractionItemPropValue } from '../types';
 import { extractString } from './prop-value-utils';

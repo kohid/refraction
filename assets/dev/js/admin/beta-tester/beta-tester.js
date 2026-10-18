@@ -1,13 +1,13 @@
 import BetaTesterLayout from './layout';
 
-class BetaTesterModule extends elementorModules.ViewModule {
+class BetaTesterModule extends refractionModules.ViewModule {
 	onInit() {
-		elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+		refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 		this.showLayout( false );
 	}
 
 	showLayout( always = true ) {
-		if ( ! always && ( ! elementorAdmin.config.beta_tester.option_enabled || elementorAdmin.config.beta_tester.signup_dismissed || '#tab-fontawesome4_migration' === location.hash ) ) {
+		if ( ! always && ( ! refractionAdmin.config.beta_tester.option_enabled || refractionAdmin.config.beta_tester.signup_dismissed || '#tab-fontawesome4_migration' === location.hash ) ) {
 			return;
 		}
 		this.layout = new BetaTesterLayout();
@@ -39,5 +39,5 @@ class BetaTesterModule extends elementorModules.ViewModule {
 }
 
 jQuery( function() {
-	window.elementorBetaTester = new BetaTesterModule();
+	window.refractionBetaTester = new BetaTesterModule();
 } );

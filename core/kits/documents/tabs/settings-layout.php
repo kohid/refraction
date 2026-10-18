@@ -1,12 +1,12 @@
 <?php
-namespace Elementor\Core\Kits\Documents\Tabs;
+namespace Refraction\Core\Kits\Documents\Tabs;
 
-use Elementor\Core\Breakpoints\Breakpoint;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use Elementor\Plugin;
-use Elementor\Controls_Manager;
-use Elementor\Core\Base\Document;
-use Elementor\Modules\PageTemplates\Module as PageTemplatesModule;
+use Refraction\Core\Breakpoints\Breakpoint;
+use Refraction\Core\Breakpoints\Manager as Breakpoints_Manager;
+use Refraction\Plugin;
+use Refraction\Controls_Manager;
+use Refraction\Core\Base\Document;
+use Refraction\Modules\PageTemplates\Module as PageTemplatesModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,7 +21,7 @@ class Settings_Layout extends Tab_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Layout', 'elementor' );
+		return esc_html__( 'Layout', 'refraction' );
 	}
 
 	public function get_group() {
@@ -44,7 +44,7 @@ class Settings_Layout extends Tab_Base {
 		$this->start_controls_section(
 			'section_' . $this->get_id(),
 			[
-				'label' => esc_html__( 'Layout Settings', 'elementor' ),
+				'label' => esc_html__( 'Layout Settings', 'refraction' ),
 				'tab' => $this->get_id(),
 			]
 		);
@@ -52,7 +52,7 @@ class Settings_Layout extends Tab_Base {
 		$this->add_responsive_control(
 			'container_width',
 			[
-				'label' => esc_html__( 'Content Width', 'elementor' ),
+				'label' => esc_html__( 'Content Width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
@@ -71,9 +71,9 @@ class Settings_Layout extends Tab_Base {
 						'step' => 10,
 					],
 				],
-				'description' => esc_html__( 'Sets the default width of the content area (Default: 1140px)', 'elementor' ),
+				'description' => esc_html__( 'Sets the default width of the content area (Default: 1140px)', 'refraction' ),
 				'selectors' => [
-					'.elementor-section.elementor-section-boxed > .elementor-container' => 'max-width: {{SIZE}}{{UNIT}}',
+					'.refraction-section.refraction-section-boxed > .refraction-container' => 'max-width: {{SIZE}}{{UNIT}}',
 					'.e-con' => '--container-max-width: {{SIZE}}{{UNIT}}',
 				],
 			]
@@ -85,10 +85,10 @@ class Settings_Layout extends Tab_Base {
 			$this->add_responsive_control(
 				'container_padding',
 				[
-					'label' => esc_html__( 'Container Padding', 'elementor' ),
+					'label' => esc_html__( 'Container Padding', 'refraction' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
-					'description' => esc_html__( 'Sets the default space inside the container (Default is 10px)', 'elementor' ),
+					'description' => esc_html__( 'Sets the default space inside the container (Default is 10px)', 'refraction' ),
 					'selectors' => [
 						'.e-con' => '--container-default-padding-top: {{TOP}}{{UNIT}}; --container-default-padding-right: {{RIGHT}}{{UNIT}}; --container-default-padding-bottom: {{BOTTOM}}{{UNIT}}; --container-default-padding-left: {{LEFT}}{{UNIT}};',
 					],
@@ -97,8 +97,8 @@ class Settings_Layout extends Tab_Base {
 		}
 
 		$widgets_space_label = $is_container_active
-			? esc_html__( 'Gaps', 'elementor' )
-			: esc_html__( 'Widgets Space', 'elementor' );
+			? esc_html__( 'Gaps', 'refraction' )
+			: esc_html__( 'Widgets Space', 'refraction' );
 
 		$this->add_control(
 			'space_between_widgets',
@@ -115,7 +115,7 @@ class Settings_Layout extends Tab_Base {
 					'row' => '20',
 					'column' => '20',
 				],
-				'description' => esc_html__( 'Sets the default space between widgets (Default: 20px)', 'elementor' ),
+				'description' => esc_html__( 'Sets the default space between widgets (Default: 20px)', 'refraction' ),
 				'selectors' => $this->get_spacing_selectors(),
 				'conversion_map' => [
 					'old_key' => 'size',
@@ -136,11 +136,11 @@ class Settings_Layout extends Tab_Base {
 		$this->add_control(
 			'page_title_selector',
 			[
-				'label' => esc_html__( 'Page Title Selector', 'elementor' ),
+				'label' => esc_html__( 'Page Title Selector', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'h1.entry-title',
 				'placeholder' => 'h1.entry-title',
-				'description' => esc_html__( 'Elementor lets you hide the page title. This works for themes that have "h1.entry-title" selector. If your theme\'s selector is different, please enter it above.', 'elementor' ),
+				'description' => esc_html__( 'Refraction lets you hide the page title. This works for themes that have "h1.entry-title" selector. If your theme\'s selector is different, please enter it above.', 'refraction' ),
 				'label_block' => true,
 				'ai' => [
 					'active' => false,
@@ -155,10 +155,10 @@ class Settings_Layout extends Tab_Base {
 		$this->add_control(
 			'stretched_section_container',
 			[
-				'label' => esc_html__( 'Stretched Section Fit To', 'elementor' ),
+				'label' => esc_html__( 'Stretched Section Fit To', 'refraction' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => 'body',
-				'description' => esc_html__( 'Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width.', 'elementor' ),
+				'description' => esc_html__( 'Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width.', 'refraction' ),
 				'label_block' => true,
 				'frontend_available' => true,
 				'ai' => [
@@ -177,10 +177,10 @@ class Settings_Layout extends Tab_Base {
 		unset( $page_templates[ PageTemplatesModule::TEMPLATE_THEME ] );
 
 		$page_template_control_options = [
-			'label' => esc_html__( 'Default Page Layout', 'elementor' ),
+			'label' => esc_html__( 'Default Page Layout', 'refraction' ),
 			'options' => [
 				// This is here because the "Theme" string is different than the default option's string.
-				'default' => esc_html__( 'Theme', 'elementor' ),
+				'default' => esc_html__( 'Theme', 'refraction' ),
 			] + $page_templates,
 		];
 
@@ -191,7 +191,7 @@ class Settings_Layout extends Tab_Base {
 		$this->start_controls_section(
 			'section_breakpoints',
 			[
-				'label' => esc_html__( 'Breakpoints', 'elementor' ),
+				'label' => esc_html__( 'Breakpoints', 'refraction' ),
 				'tab' => $this->get_id(),
 			]
 		);
@@ -212,9 +212,9 @@ class Settings_Layout extends Tab_Base {
 		$this->add_control(
 			self::ACTIVE_BREAKPOINTS_CONTROL_ID,
 			[
-				'label' => esc_html__( 'Active Breakpoints', 'elementor' ),
+				'label' => esc_html__( 'Active Breakpoints', 'refraction' ),
 				'type' => $active_breakpoints_control_type,
-				'description' => esc_html__( 'Mobile and Tablet options cannot be deleted.', 'elementor' ),
+				'description' => esc_html__( 'Mobile and Tablet options cannot be deleted.', 'refraction' ),
 				'options' => $options,
 				'default' => [
 					$prefix . $breakpoint_key_mobile,
@@ -250,8 +250,8 @@ class Settings_Layout extends Tab_Base {
 			: 'margin-block-end: {{ROW}}{{UNIT}}';
 
 		return [
-			'.elementor-widget:not(:last-child)' => $sections_widget_spacing,
-			'.elementor-element' => '--widgets-spacing: {{ROW}}{{UNIT}} {{COLUMN}}{{UNIT}};--widgets-spacing-row: {{ROW}}{{UNIT}};--widgets-spacing-column: {{COLUMN}}{{UNIT}};',
+			'.refraction-widget:not(:last-child)' => $sections_widget_spacing,
+			'.refraction-element' => '--widgets-spacing: {{ROW}}{{UNIT}} {{COLUMN}}{{UNIT}};--widgets-spacing-row: {{ROW}}{{UNIT}};--widgets-spacing-column: {{COLUMN}}{{UNIT}};',
 		];
 	}
 
@@ -263,7 +263,7 @@ class Settings_Layout extends Tab_Base {
 	 * For backwards compatibility, when the mobile and tablet breakpoints are updated, we also update the
 	 * old breakpoint settings ('viewport_md', 'viewport_lg' ) with the saved values + 1px. The reason 1px
 	 * is added is because the old breakpoints system was min-width based, and the new system introduced in
-	 * Elementor v3.2.0 is max-width based.
+	 * Refraction v3.2.0 is max-width based.
 	 *
 	 * @since 3.2.0
 	 *
@@ -347,7 +347,7 @@ class Settings_Layout extends Tab_Base {
 			);
 
 			$control_config = [
-				'label' => esc_html__( 'Breakpoint', 'elementor' ) . ' (px)',
+				'label' => esc_html__( 'Breakpoint', 'refraction' ) . ' (px)',
 				'type' => Controls_Manager::NUMBER,
 				'placeholder' => $default_breakpoint_config['default_value'],
 				'frontend_available' => true,
@@ -370,7 +370,7 @@ class Settings_Layout extends Tab_Base {
 			if ( Breakpoints_Manager::BREAKPOINT_KEY_WIDESCREEN === $breakpoint_key ) {
 				$control_config['description'] = esc_html__(
 					'Widescreen breakpoint settings will apply from the selected value and up.',
-					'elementor'
+					'refraction'
 				);
 			}
 

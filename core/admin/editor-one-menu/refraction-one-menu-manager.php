@@ -1,0 +1,284 @@
+<?php
+
+namespace Refraction\Core\Admin\EditorOneMenu;
+
+use Refraction\Core\Admin\EditorOneMenu\Menu\Editor_One_Custom_Elements_Menu;
+use Refraction\Core\Admin\EditorOneMenu\Interfaces\Menu_Item_Interface;
+use Refraction\Modules\EditorOne\Classes\Legacy_Submenu_Interceptor;
+use Refraction\Modules\EditorOne\Classes\Menu_Config;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\EditorOne\Classes\Slug_Normalizer;
+use Refraction\Plugin;
+use Refraction\Utils;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Refraction_One_Menu_Manager {
+
+	private Menu_Data_Provider $menu_data_provider;
+
+	private bool $is_pro_module_enabled = false;
+
+	private Legacy_Submenu_Interceptor $legacy_submenu_interceptor;
+
+	public function __construct() {
+		$this->menu_data_provider = Menu_Data_Provider::instance();
+		$this->legacy_submenu_interceptor = new Legacy_Submenu_Interceptor(
+			$this->menu_data_provider,
+			new Slug_Normalizer()
+		);
+		$this->register_actions();
+	}
+
+	private function register_actions(): void {
+		add_action( 'init', [ $this, 'check_if_pro_module_is_enabled' ] );
+		add_action( 'admin_menu', [ $this, 'register_refraction_home_submenus' ], 9 );
+
+		add_action( 'admin_menu', function () {
+			do_action( 'refraction/editor-one/menu/register', $this->menu_data_provider );
+		} );
+
+		add_action( 'admin_menu', [ $this, 'intercept_legacy_submenus' ], 10003 );
+		add_action( 'admin_menu', [ $this, 'register_flyout_items_as_hidden_submenus' ], 10004 );
+		add_action( 'admin_menu', [ $this, 'remove_all_submenus_for_edit_posts_users' ], 10005 );
+		add_action( 'admin_menu', [ $this, 'override_refraction_page_for_edit_posts_users' ], 1006 );
+		add_action( 'admin_head', [ $this, 'hide_flyout_items_from_wp_menu' ] );
+		add_action( 'admin_head', [ $this, 'hide_legacy_templates_menu' ] );
+		add_action( 'admin_head', [ $this, 'hide_old_refraction_menu' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_menu_assets' ] );
+	}
+
+	public function check_if_pro_module_is_enabled(): void {
+		$this->is_pro_module_enabled = apply_filters( 'refraction/modules/editor-one/is_pro_module_enabled', false );
+
+		if ( ! $this->is_pro_module_enabled && Utils::has_pro() ) {
+			$this->menu_data_provider->register_menu( new Editor_One_Custom_Elements_Menu() );
+		}
+	}
+
+	public function register_refraction_home_submenus(): void {
+		add_submenu_page(
+			Menu_Config::REFRACTION_HOME_MENU_SLUG,
+			esc_html__( 'Editor', 'refraction' ),
+			esc_html__( 'Editor', 'refraction' ),
+			Menu_Config::CAPABILITY_EDIT_POSTS,
+			Menu_Config::REFRACTION_MENU_SLUG,
+			[ $this, 'render_editor_page' ],
+			20
+		);
+
+		do_action( 'refraction/editor-one/menu/register_submenus' );
+	}
+
+	public function remove_all_submenus_for_edit_posts_users(): void {
+		$user_capabilities = Menu_Data_Provider::get_current_user_capabilities();
+
+		if ( ! $user_capabilities['is_edit_posts_user'] ) {
+			return;
+		}
+
+		global $submenu;
+
+		if ( empty( $submenu[ Menu_Config::REFRACTION_MENU_SLUG ] ) ) {
+			return;
+		}
+
+		$submenu_items = $submenu[ Menu_Config::REFRACTION_MENU_SLUG ];
+
+		foreach ( $submenu_items as $index => $submenu_item ) {
+			if ( 0 === $index ) {
+				continue;
+			}
+
+			$submenu_slug = $submenu_item[2] ?? '';
+			if ( ! empty( $submenu_slug ) ) {
+				remove_submenu_page( Menu_Config::REFRACTION_MENU_SLUG, $submenu_slug );
+			}
+		}
+	}
+
+	public function render_editor_page(): void {
+		Plugin::instance()->settings->display_home_screen();
+	}
+
+	public function override_refraction_page_for_edit_posts_users(): void {
+		$user_capabilities = Menu_Data_Provider::get_current_user_capabilities();
+
+		if ( ! $user_capabilities['is_edit_posts_user'] ) {
+			return;
+		}
+
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
+		if ( Menu_Config::REFRACTION_MENU_SLUG !== $page ) {
+			return;
+		}
+
+		$templates_url = admin_url( 'edit.php?post_type=refraction_library&tabs_group=library' );
+		wp_safe_redirect( $templates_url );
+		exit;
+	}
+
+	public function hide_legacy_templates_menu(): void {
+		?>
+		<style type="text/css">
+			#menu-posts-refraction_library {
+				display: none !important;
+			}
+		</style>
+		<?php
+	}
+
+	public function hide_old_refraction_menu(): void {
+		$this->remove_refraction_separator();
+		?>
+		<style type="text/css">
+			#toplevel_page_refraction {
+				display: none !important;
+			}
+		</style>
+		<?php
+	}
+
+	private function remove_refraction_separator(): void {
+		global $menu;
+
+		foreach ( $menu as $key => $item ) {
+			if ( isset( $item[2] ) && 'separator-refraction' === $item[2] ) {
+				unset( $menu[ $key ] );
+				break;
+			}
+		}
+	}
+
+	public function register_flyout_items_as_hidden_submenus(): void {
+		$hooks = [];
+
+		$this->iterate_all_flyout_items( function( string $item_slug, Menu_Item_Interface $item ) use ( &$hooks ) {
+			$hook = $this->register_hidden_submenu( $item_slug, $item );
+
+			if ( $hook ) {
+				$hooks[ $item_slug ] = $hook;
+			}
+		} );
+
+		do_action( 'refraction/editor-one/menu/after_register_hidden_submenus', $hooks );
+	}
+
+	private function register_hidden_submenu( string $item_slug, Menu_Item_Interface $item ) {
+		$original_parent = $this->get_original_parent_slug( $item );
+		$parent_slug = $this->resolve_hidden_submenu_parent( $original_parent );
+		$has_page = method_exists( $item, 'render' );
+		$page_title = $has_page ? $item->get_page_title() : '';
+		$callback = $has_page ? [ $item, 'render' ] : '';
+		$capability = $item->get_capability();
+		$position = $item->get_position();
+
+		return add_submenu_page(
+			$parent_slug,
+			$page_title,
+			$item->get_label(),
+			$capability,
+			$item_slug,
+			$callback,
+			$position
+		);
+	}
+
+	private function resolve_hidden_submenu_parent( ?string $parent_slug ): string {
+		$default_parent_slug = Menu_Config::REFRACTION_HOME_MENU_SLUG;
+		if ( empty( $parent_slug ) ) {
+			return $default_parent_slug;
+		}
+
+		$refraction_parent_slugs = [
+			Menu_Config::EDITOR_GROUP_ID => true,
+			Menu_Config::EDITOR_MENU_SLUG => true,
+			Menu_Config::TEMPLATES_GROUP_ID => true,
+			Menu_Config::LEGACY_TEMPLATES_SLUG => true,
+			Menu_Config::SETTINGS_GROUP_ID => true,
+			Menu_Config::CUSTOM_ELEMENTS_GROUP_ID => true,
+			Menu_Config::SYSTEM_GROUP_ID => true,
+		];
+
+		if ( isset( $refraction_parent_slugs[ $parent_slug ] ) ) {
+			return $default_parent_slug;
+		}
+
+		return $parent_slug;
+	}
+
+	private function iterate_all_flyout_items( callable $callback ): void {
+		$level3_items = $this->menu_data_provider->get_level3_items();
+		$level4_items = $this->menu_data_provider->get_level4_items();
+
+		$all_items = array_merge_recursive( $level3_items, $level4_items );
+
+		foreach ( $all_items as $group_items ) {
+			foreach ( $group_items as $item_slug => $item ) {
+				$callback( $item_slug, $item );
+			}
+		}
+	}
+
+	private function get_original_parent_slug( $item ): ?string {
+		return $item->get_parent_slug();
+	}
+
+	public function hide_flyout_items_from_wp_menu(): void {
+		$protected_wp_menu_slugs = [
+			Menu_Config::EDITOR_MENU_SLUG,
+			'e-form-submissions',
+			'refraction-agents-ready',
+			'refraction-license',
+		];
+
+		$this->iterate_all_flyout_items( function( string $item_slug, Menu_Item_Interface $item ) use ( $protected_wp_menu_slugs ) {
+			if ( in_array( $item_slug, $protected_wp_menu_slugs, true ) ) {
+				return;
+			}
+
+			$original_parent = $this->get_original_parent_slug( $item );
+			$parent_slug = $this->resolve_hidden_submenu_parent( $original_parent );
+			remove_submenu_page( $parent_slug, $item_slug );
+		} );
+	}
+
+	public function intercept_legacy_submenus(): void {
+		$this->legacy_submenu_interceptor->intercept_all( $this->is_pro_module_enabled );
+	}
+
+	public function enqueue_admin_menu_assets(): void {
+
+		$min_suffix = Utils::is_script_debug() ? '' : '.min';
+
+		wp_enqueue_style(
+			'refraction-admin-menu',
+			REFRACTION_ASSETS_URL . 'css/modules/editor-one/admin-menu' . $min_suffix . '.css',
+			[],
+			REFRACTION_VERSION
+		);
+
+		$config = [
+			'editorFlyout' => $this->menu_data_provider->get_third_level_data(
+				Menu_Data_Provider::THIRD_LEVEL_FLYOUT_MENU
+			),
+		];
+
+		wp_enqueue_script(
+			'editor-one-menu',
+			REFRACTION_ASSETS_URL . 'js/editor-one-menu' . $min_suffix . '.js',
+			[],
+			REFRACTION_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'editor-one-menu',
+			'editorOneMenuConfig',
+			$config
+		);
+	}
+}
+

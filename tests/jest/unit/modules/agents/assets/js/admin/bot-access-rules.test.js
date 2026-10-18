@@ -6,7 +6,7 @@ import {
 	setRow,
 	toSettingsBots,
 	togglePermission,
-} from 'elementor/modules/agents/assets/js/admin/components/bot-access/bot-access-rules';
+} from 'refraction/modules/agents/assets/js/admin/components/bot-access/bot-access-rules';
 
 const createBot = ( token, search, aiInput, aiTrain ) => ( { token, search, aiInput, aiTrain } );
 

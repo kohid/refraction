@@ -2,7 +2,7 @@
  * Select2 4.0.6-rc.1
  * https://select2.github.io
  *
- * With a fix by Elementor team at lines 4329, 5449.
+ * With a fix by Refraction team at lines 4329, 5449.
  * Also deprecated jQuery features fixed at lines: 1477, 1479, 1617, 2111, 2113, 3244, 3548, 3573, 3632, 3708, 3801,
  * 4047, 4050, 4058, 4063, 4873, 4936, 5395, 5693, 5772, 5785, 5826, 5852, 5883, 5909, 5956, 6103, 6346, 6350.
  *

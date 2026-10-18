@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type ComponentType, useMemo } from 'react';
-import { PopoverContent } from '@elementor/editor-controls';
-import { type PropValue } from '@elementor/editor-props';
+import { PopoverContent } from '@refraction/editor-controls';
+import { type PropValue } from '@refraction/editor-props';
 import { Divider, Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -250,13 +250,13 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 		<PopoverContent p={ 1.5 }>
 			<Grid container spacing={ 1.5 }>
 				{ TriggerControl && (
-					<Field label={ __( 'Trigger', 'elementor' ) }>
+					<Field label={ __( 'Trigger', 'refraction' ) }>
 						<TriggerControl value={ trigger } onChange={ ( v ) => updateInteraction( { trigger: v } ) } />
 					</Field>
 				) }
 
 				{ ReplayControl && (
-					<Field label={ __( 'Replay', 'elementor' ) }>
+					<Field label={ __( 'Replay', 'refraction' ) }>
 						<ReplayControl
 							value={ replay }
 							onChange={ ( v ) => updateInteraction( { replay: v } ) }
@@ -270,13 +270,13 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 
 			<Grid container spacing={ 1.5 }>
 				{ EffectControl && (
-					<Field label={ __( 'Effect', 'elementor' ) }>
+					<Field label={ __( 'Effect', 'refraction' ) }>
 						<EffectControl value={ effect } onChange={ ( v ) => updateInteraction( { effect: v } ) } />
 					</Field>
 				) }
 
 				{ CustomEffectControl && (
-					<Field label={ __( 'Custom Effect', 'elementor' ) }>
+					<Field label={ __( 'Custom Effect', 'refraction' ) }>
 						<CustomEffectControl
 							value={ customEffects }
 							onChange={ ( v: PropValue ) => updateInteraction( { customEffects: v } ) }
@@ -285,13 +285,13 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 				) }
 
 				{ EffectTypeControl && (
-					<Field label={ __( 'Type', 'elementor' ) }>
+					<Field label={ __( 'Type', 'refraction' ) }>
 						<EffectTypeControl value={ type } onChange={ ( v ) => updateInteraction( { type: v } ) } />
 					</Field>
 				) }
 
 				{ DirectionControl && (
-					<Field label={ __( 'Direction', 'elementor' ) }>
+					<Field label={ __( 'Direction', 'refraction' ) }>
 						<DirectionControl
 							value={ direction }
 							onChange={ ( v ) => updateInteraction( { direction: v } ) }
@@ -301,13 +301,13 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 				) }
 
 				{ RepeatControl && (
-					<Field label={ __( 'Repeat', 'elementor' ) }>
+					<Field label={ __( 'Repeat', 'refraction' ) }>
 						<RepeatControl value={ repeat } onChange={ ( v ) => updateInteraction( { repeat: v } ) } />
 					</Field>
 				) }
 
 				{ TimesControl && (
-					<Field label={ __( 'Times', 'elementor' ) }>
+					<Field label={ __( 'Times', 'refraction' ) }>
 						<TimesControl
 							value={ times }
 							onChange={ ( v ) =>
@@ -320,7 +320,7 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 				) }
 
 				{ controlVisibilityConfig.duration( interactionValues ) && (
-					<Field label={ __( 'Duration', 'elementor' ) }>
+					<Field label={ __( 'Duration', 'refraction' ) }>
 						<TimeFrameIndicator
 							value={ String( duration ) }
 							onChange={ ( v ) => updateInteraction( { duration: v as SizeStringValue } ) }
@@ -330,7 +330,7 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 				) }
 
 				{ controlVisibilityConfig.delay( interactionValues ) && (
-					<Field label={ __( 'Delay', 'elementor' ) }>
+					<Field label={ __( 'Delay', 'refraction' ) }>
 						<TimeFrameIndicator
 							value={ String( delay ) }
 							onChange={ ( v ) => updateInteraction( { delay: v as SizeStringValue } ) }
@@ -345,7 +345,7 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 					<Divider />
 					<Grid container spacing={ 1.5 }>
 						{ StartControl && (
-							<Field label={ __( 'Start', 'elementor' ) }>
+							<Field label={ __( 'Start', 'refraction' ) }>
 								<StartControl
 									value={ parseSizeValue( start, [ '%' ] ).size?.toString() ?? '' }
 									onChange={ ( v: string ) => updateInteraction( { start: v as SizeStringValue } ) }
@@ -353,14 +353,14 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 							</Field>
 						) }
 						{ EndControl && (
-							<Field label={ __( 'End', 'elementor' ) }>
+							<Field label={ __( 'End', 'refraction' ) }>
 								<EndControl
 									value={ parseSizeValue( end, [ '%' ] ).size?.toString() ?? '' }
 									onChange={ ( v: string ) => updateInteraction( { end: v as SizeStringValue } ) }
 								/>
 							</Field>
 						) }
-						<Field label={ __( 'Relative To', 'elementor' ) }>
+						<Field label={ __( 'Relative To', 'refraction' ) }>
 							<RelativeToControl
 								value={ relativeTo }
 								onChange={ ( v ) => updateInteraction( { relativeTo: v } ) }
@@ -373,7 +373,7 @@ export const InteractionDetails = ( { interaction, onChange, onPlayInteraction }
 
 			{ EasingControl && (
 				<Grid container spacing={ 1.5 }>
-					<Field label={ __( 'Easing', 'elementor' ) }>
+					<Field label={ __( 'Easing', 'refraction' ) }>
 						<EasingControl
 							value={ easing }
 							onChange={ ( v ) => {

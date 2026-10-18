@@ -9,7 +9,7 @@ import { cjsExternalsPlugin } from './plugins/cjs-externals.mjs';
 import { dynamicExternalsPlugin } from './plugins/dynamic-externals.mjs';
 import { frontendChunksPlugin } from './plugins/frontend-chunks.mjs';
 import { i18nStringsPlugin } from './plugins/i18n-strings.mjs';
-import { elementorOneLocaleImportsPlugin } from './plugins/elementor-one-locale-imports.mjs';
+import { refractionOneLocaleImportsPlugin } from './plugins/refraction-one-locale-imports.mjs';
 import { MULTI_SOURCE_ENTRY_ID, multiSourceEntryPlugin } from './plugins/multi-source-entry.mjs';
 import { webpackShimsPlugin } from './plugins/webpack-shims.mjs';
 import { loadAliases } from './shared/aliases.mjs';
@@ -66,7 +66,7 @@ function sharedDefines( isProduction ) {
 		'process.env.NODE_ENV': JSON.stringify( isProduction ? 'production' : 'development' ),
 		// Read at runtime by `assets/dev/js/frontend/utils/chunk-loader.js` to pick the file suffix
 		// that matches its own build flavor: a dev entry loads dev chunks, prod loads minified ones.
-		__ELEMENTOR_CHUNK_SUFFIX__: JSON.stringify( isProduction ? '.min' : '' ),
+		__REFRACTION_CHUNK_SUFFIX__: JSON.stringify( isProduction ? '.min' : '' ),
 	};
 }
 
@@ -89,7 +89,7 @@ export function createEntryConfig( {
 	const plugins = [
 		multiSourceEntryPlugin( { sources } ),
 		webpackShimsPlugin(),
-		elementorOneLocaleImportsPlugin(),
+		refractionOneLocaleImportsPlugin(),
 	];
 
 	// The `frontend` entry runs the loader instead of inlining, so the plugin only attaches when a
@@ -117,7 +117,7 @@ export function createEntryConfig( {
 	}
 
 	return defineConfig( {
-		logLevel: process.env.ELEMENTOR_BUILD_VERBOSE ? 'info' : 'error',
+		logLevel: process.env.REFRACTION_BUILD_VERBOSE ? 'info' : 'error',
 		// Mirrors Webpack's `mode`. Without it the bundler would resolve production `exports`
 		// conditions in the development build too, pulling in the production React runtime and
 		// dropping the development warnings the unminified bundles exist to provide.
@@ -153,7 +153,7 @@ export function createEntryConfig( {
 
 /**
  * Builds a single chunk as its own IIFE bundle. The chunk shares the frontend externals so it does
- * not re-bundle React or jQuery, and its exports are assigned to `window.__elementorChunks[name]`
+ * not re-bundle React or jQuery, and its exports are assigned to `window.__refractionChunks[name]`
  * via the virtual entry that `chunkEntryPlugin` provides.
  */
 export function createChunkConfig( { chunkName, entryPath, isProduction, watch = false } ) {
@@ -161,7 +161,7 @@ export function createChunkConfig( { chunkName, entryPath, isProduction, watch =
 	const resolveBundleGlobal = ( request ) => resolveGlobal( request, 'frontend' );
 
 	return defineConfig( {
-		logLevel: process.env.ELEMENTOR_BUILD_VERBOSE ? 'info' : 'error',
+		logLevel: process.env.REFRACTION_BUILD_VERBOSE ? 'info' : 'error',
 		mode: isProduction ? 'production' : 'development',
 		define: sharedDefines( isProduction ),
 		plugins: [

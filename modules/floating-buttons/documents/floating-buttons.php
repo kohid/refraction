@@ -1,16 +1,16 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Documents;
+namespace Refraction\Modules\FloatingButtons\Documents;
 
-use Elementor\Core\Base\Document;
-use Elementor\Core\DocumentTypes\PageBase;
-use Elementor\Modules\FloatingButtons\Module;
-use Elementor\Modules\Library\Traits\Library as Library_Trait;
-use Elementor\Modules\FloatingButtons\Module as Floating_Buttons_Module;
-use Elementor\Modules\PageTemplates\Module as Page_Templates_Module;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
-use Elementor\Utils as ElementorUtils;
+use Refraction\Core\Base\Document;
+use Refraction\Core\DocumentTypes\PageBase;
+use Refraction\Modules\FloatingButtons\Module;
+use Refraction\Modules\Library\Traits\Library as Library_Trait;
+use Refraction\Modules\FloatingButtons\Module as Floating_Buttons_Module;
+use Refraction\Modules\PageTemplates\Module as Page_Templates_Module;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
+use Refraction\Utils as RefractionUtils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -28,8 +28,8 @@ class Floating_Buttons extends PageBase {
 		$properties['show_navigator'] = false;
 		$properties['allow_adding_widgets'] = false;
 		$properties['support_page_layout'] = false;
-		$properties['library_close_title'] = esc_html__( 'Go To Dashboard', 'elementor' );
-		$properties['publish_button_title'] = esc_html__( 'After publishing this widget, you will be able to set it as visible on the entire site in the Admin Table.', 'elementor' );
+		$properties['library_close_title'] = esc_html__( 'Go To Dashboard', 'refraction' );
+		$properties['publish_button_title'] = esc_html__( 'After publishing this widget, you will be able to set it as visible on the entire site in the Admin Table.', 'refraction' );
 
 		return $properties;
 	}
@@ -40,17 +40,17 @@ class Floating_Buttons extends PageBase {
 	}
 
 	public static function is_editing_existing_floating_buttons_page() {
-		$action = ElementorUtils::get_super_global_value( $_GET, 'action' );
-		$post_id = ElementorUtils::get_super_global_value( $_GET, 'post' );
+		$action = RefractionUtils::get_super_global_value( $_GET, 'action' );
+		$post_id = RefractionUtils::get_super_global_value( $_GET, 'post' );
 
-		return 'elementor' === $action && static::is_floating_buttons_type_meta_key( $post_id );
+		return 'refraction' === $action && static::is_floating_buttons_type_meta_key( $post_id );
 	}
 
 	public static function is_creating_floating_buttons_page() {
-		$action = ElementorUtils::get_super_global_value( $_POST, 'action' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$post_id = ElementorUtils::get_super_global_value( $_POST, 'editor_post_id' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$action = RefractionUtils::get_super_global_value( $_POST, 'action' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$post_id = RefractionUtils::get_super_global_value( $_POST, 'editor_post_id' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-		return 'elementor_ajax' === $action && static::is_floating_buttons_type_meta_key( $post_id );
+		return 'refraction_ajax' === $action && static::is_floating_buttons_type_meta_key( $post_id );
 	}
 
 	public static function is_floating_buttons_type_meta_key( $post_id ) {
@@ -58,7 +58,7 @@ class Floating_Buttons extends PageBase {
 	}
 
 	public function print_content() {
-		$plugin = \Elementor\Plugin::$instance;
+		$plugin = \Refraction\Plugin::$instance;
 
 		if ( $plugin->preview->is_preview_mode( $this->get_main_id() ) ) {
 			// PHPCS - the method builder_wrapper is safe.
@@ -88,7 +88,7 @@ class Floating_Buttons extends PageBase {
 	public function filter_admin_row_actions( $actions ) {
 		unset( $actions['edit'] );
 		unset( $actions['inline hide-if-no-js'] );
-		$built_with_elementor = parent::filter_admin_row_actions( [] );
+		$built_with_refraction = parent::filter_admin_row_actions( [] );
 
 		if ( isset( $actions['trash'] ) ) {
 			$delete = $actions['trash'];
@@ -100,14 +100,14 @@ class Floating_Buttons extends PageBase {
 			$actions = $this->set_as_entire_site( $actions );
 		}
 
-		return $built_with_elementor + $actions;
+		return $built_with_refraction + $actions;
 	}
 
 	public static function get_meta_query_for_floating_buttons( string $floating_element_type ): array {
 		$meta_query = [
 			'relation' => 'AND',
 			[
-				'key' => '_elementor_conditions',
+				'key' => '_refraction_conditions',
 				'compare' => 'EXISTS',
 			],
 		];
@@ -160,7 +160,7 @@ class Floating_Buttons extends PageBase {
 		] );
 
 		foreach ( $query->get_posts() as $post_id ) {
-			$conditions = get_post_meta( $post_id, '_elementor_conditions', true );
+			$conditions = get_post_meta( $post_id, '_refraction_conditions', true );
 
 			if ( ! $conditions ) {
 				continue;
@@ -184,14 +184,14 @@ class Floating_Buttons extends PageBase {
 				'<a style="color:red;" href="?post=%s&action=remove_from_entire_site&_wpnonce=%s">%s</a>',
 				$this->get_post()->ID,
 				wp_create_nonce( 'remove_from_entire_site_' . $this->get_post()->ID ),
-				esc_html__( 'Remove From Entire Site', 'elementor' )
+				esc_html__( 'Remove From Entire Site', 'refraction' )
 			);
 		} else {
 			$actions['set_as_entire_site'] = sprintf(
 				'<a href="?post=%s&action=set_as_entire_site&_wpnonce=%s">%s</a>',
 				$this->get_post()->ID,
 				wp_create_nonce( 'set_as_entire_site_' . $this->get_post()->ID ),
-				esc_html__( 'Set as Entire Site', 'elementor' )
+				esc_html__( 'Set as Entire Site', 'refraction' )
 			);
 		}
 
@@ -199,11 +199,11 @@ class Floating_Buttons extends PageBase {
 	}
 
 	public static function get_title() {
-		return esc_html__( 'Floating Element', 'elementor' );
+		return esc_html__( 'Floating Element', 'refraction' );
 	}
 
 	public static function get_plural_title() {
-		return esc_html__( 'Floating Elements', 'elementor' );
+		return esc_html__( 'Floating Elements', 'refraction' );
 	}
 
 	public static function get_create_url() {
@@ -219,8 +219,8 @@ class Floating_Buttons extends PageBase {
 	}
 
 	public function admin_columns_content( $column_name ) {
-		if ( 'elementor_library_type' === $column_name ) {
-			$admin_filter_url = admin_url( Source_Local::ADMIN_MENU_SLUG . '&elementor_library_type=' . $this->get_name() );
+		if ( 'refraction_library_type' === $column_name ) {
+			$admin_filter_url = admin_url( Source_Local::ADMIN_MENU_SLUG . '&refraction_library_type=' . $this->get_name() );
 			$meta = static::get_floating_element_type( $this->get_main_id() );
 			printf( '<a href="%s">%s</a>', $admin_filter_url, Module::get_floating_elements_types()[ $meta ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
@@ -230,7 +230,7 @@ class Floating_Buttons extends PageBase {
 		return add_query_arg(
 			[
 				'post' => $this->get_main_id(),
-				'action' => 'elementor',
+				'action' => 'refraction',
 				'floating_element' => get_post_meta(
 					$this->get_main_id(),
 					Module::FLOATING_ELEMENTS_TYPE_META_KEY,

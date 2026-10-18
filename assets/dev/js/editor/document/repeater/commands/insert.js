@@ -1,7 +1,7 @@
 import {
 	shouldUseAtomicRepeaters,
 	widgetNodes,
-} from 'elementor/modules/nested-elements/assets/js/editor/utils';
+} from 'refraction/modules/nested-elements/assets/js/editor/utils';
 
 export class Insert extends $e.modules.editor.document.CommandHistoryBase {
 	static restore( historyItem, isRedo ) {
@@ -30,7 +30,7 @@ export class Insert extends $e.modules.editor.document.CommandHistoryBase {
 		super.initialize( args );
 
 		if ( ! args.model._id ) {
-			args.model._id = elementorCommon.helpers.getUniqueId();
+			args.model._id = refractionCommon.helpers.getUniqueId();
 		}
 	}
 
@@ -48,7 +48,7 @@ export class Insert extends $e.modules.editor.document.CommandHistoryBase {
 		return {
 			containers,
 			type: 'add',
-			subTitle: __( 'Item', 'elementor' ),
+			subTitle: __( 'Item', 'refraction' ),
 			data: {
 				model,
 				name,
@@ -82,7 +82,7 @@ export class Insert extends $e.modules.editor.document.CommandHistoryBase {
 					const domConfig = widgetNodes( widgetType ),
 						containerNode = container.view.$el[ 0 ],
 						targetContainer = containerNode.querySelector( domConfig.targetContainer ),
-						html = Marionette.Renderer.render( `#tmpl-elementor-${ widgetType }-content-single`, { data: model, view: repeaterContainer.view } ),
+						html = Marionette.Renderer.render( `#tmpl-refraction-${ widgetType }-content-single`, { data: model, view: repeaterContainer.view } ),
 						node = document.createElement( 'div' );
 
 					node.innerHTML = html;

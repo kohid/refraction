@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { httpService } from '@elementor/http-client';
-import { isProActive } from '@elementor/utils';
+import { httpService } from '@refraction/http-client';
+import { isProActive } from '@refraction/utils';
 
 import { applyLocalMutation } from '../../service';
 import { initManageVariableTool } from '../manage-variable-tool';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/utils', () => ( {
-	...jest.requireActual( '@elementor/utils' ),
+jest.mock( '@refraction/utils', () => ( {
+	...jest.requireActual( '@refraction/utils' ),
 	isProActive: jest.fn( () => true ),
 } ) );
 
@@ -18,7 +18,7 @@ jest.mock( '../../service', () => ( {
 	applyLocalMutation: jest.fn(),
 } ) );
 
-const MCP_PROXY_URL = 'elementor/v1/mcp-proxy';
+const MCP_PROXY_URL = 'refraction/v1/mcp-proxy';
 
 function createMockRegistry() {
 	let registeredTool: any = null;
@@ -161,7 +161,7 @@ describe( 'manage-variable-tool (thin proxy wrapper)', () => {
 		const { registeredResources } = createMockRegistry();
 		const guide = registeredResources.find( ( r ) => r.name === 'manage-global-variable-guide' );
 
-		const uri = new URL( 'elementor://variables/tools/manage-global-variable-guide' );
+		const uri = new URL( 'refraction://variables/tools/manage-global-variable-guide' );
 		const result = await guide?.handler( uri );
 
 		expect( httpMock.get ).toHaveBeenCalledWith( MCP_PROXY_URL, {

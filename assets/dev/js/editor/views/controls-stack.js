@@ -4,7 +4,7 @@ var ControlsStack;
 
 ControlsStack = Marionette.CompositeView.extend( {
 	classes: {
-		popover: 'elementor-controls-popover',
+		popover: 'refraction-controls-popover',
 	},
 
 	activeTab: null,
@@ -12,12 +12,12 @@ ControlsStack = Marionette.CompositeView.extend( {
 	activeSection: null,
 
 	className() {
-		return 'elementor-controls-stack';
+		return 'refraction-controls-stack';
 	},
 
 	templateHelpers() {
 		return {
-			elementData: elementor.getElementData( this.model ),
+			elementData: refraction.getElementData( this.model ),
 		};
 	},
 
@@ -30,8 +30,8 @@ ControlsStack = Marionette.CompositeView.extend( {
 
 	ui() {
 		return {
-			tabs: '.elementor-panel-navigation-tab',
-			reloadButton: '.elementor-update-preview-button',
+			tabs: '.refraction-panel-navigation-tab',
+			reloadButton: '.refraction-update-preview-button',
 		};
 	},
 
@@ -47,7 +47,7 @@ ControlsStack = Marionette.CompositeView.extend( {
 
 	behaviors: {
 		HandleInnerTabs: {
-			behaviorClass: require( 'elementor-behaviors/inner-tabs' ),
+			behaviorClass: require( 'refraction-behaviors/inner-tabs' ),
 		},
 	},
 
@@ -59,15 +59,15 @@ ControlsStack = Marionette.CompositeView.extend( {
 			this.activateFirstSection();
 		}
 
-		this.listenTo( elementor.channels.deviceMode, 'change', this.onDeviceModeChange );
+		this.listenTo( refraction.channels.deviceMode, 'change', this.onDeviceModeChange );
 	},
 
 	onDestroy() {
-		this.stopListening( elementor.channels.deviceMode, 'change', this.onDeviceModeChange );
+		this.stopListening( refraction.channels.deviceMode, 'change', this.onDeviceModeChange );
 	},
 
 	initCollection() {
-		this.collection = new Backbone.Collection( _.values( elementor.mergeControlsSettings( this.getOption( 'controls' ) ) ) );
+		this.collection = new Backbone.Collection( _.values( refraction.mergeControlsSettings( this.getOption( 'controls' ) ) ) );
 	},
 
 	filter( controlModel ) {
@@ -149,11 +149,11 @@ ControlsStack = Marionette.CompositeView.extend( {
 	getChildView( item ) {
 		var controlType = item.get( 'type' );
 
-		return elementor.getControlView( controlType );
+		return refraction.getControlView( controlType );
 	},
 
 	getNamespaceArray() {
-		return [ elementor.getPanelView().getCurrentPageName() ];
+		return [ refraction.getPanelView().getCurrentPageName() ];
 	},
 
 	openActiveSection() {
@@ -169,7 +169,7 @@ ControlsStack = Marionette.CompositeView.extend( {
 
 			eventNamespace.push( activeSection, 'activated' );
 
-			elementor.channels.editor.trigger( eventNamespace.join( ':' ), this );
+			refraction.channels.editor.trigger( eventNamespace.join( ':' ), this );
 		}
 	},
 
@@ -184,12 +184,12 @@ ControlsStack = Marionette.CompositeView.extend( {
 	},
 
 	onReloadButtonClick() {
-		elementor.reloadPreview();
+		refraction.reloadPreview();
 	},
 
 	onDeviceModeChange() {
-		if ( 'desktop' === elementor.channels.deviceMode.request( 'currentMode' ) ) {
-			this.$el.removeClass( 'elementor-responsive-switchers-open' );
+		if ( 'desktop' === refraction.channels.deviceMode.request( 'currentMode' ) ) {
+			this.$el.removeClass( 'refraction-responsive-switchers-open' );
 		}
 	},
 
@@ -203,7 +203,7 @@ ControlsStack = Marionette.CompositeView.extend( {
 
 	onChildviewResponsiveSwitcherClick( childView, device ) {
 		if ( 'desktop' === device ) {
-			this.$el.toggleClass( 'elementor-responsive-switchers-open' );
+			this.$el.toggleClass( 'refraction-responsive-switchers-open' );
 		}
 	},
 }, {

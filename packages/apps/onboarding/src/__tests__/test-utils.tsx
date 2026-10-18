@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { __deleteStore } from '@elementor/store';
+import { __deleteStore } from '@refraction/store';
 import { QueryClient } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 
 import { App } from '../components/app';
 import { DEFAULT_STRINGS } from '../utils/default-strings';
 
-jest.mock( '@elementor/query', () => {
-	const actual = jest.requireActual( '@elementor/query' );
+jest.mock( '@refraction/query', () => {
+	const actual = jest.requireActual( '@refraction/query' );
 	return {
 		...actual,
 		createQueryClient: () =>
@@ -68,7 +68,7 @@ export const DEFAULT_TEST_URLS = {
 
 const defaultConfig: OnboardingConfig = {
 	version: '2.0.0',
-	restUrl: 'https://test.local/wp-json/elementor/v1/onboarding/',
+	restUrl: 'https://test.local/wp-json/refraction/v1/onboarding/',
 	nonce: 'test-nonce',
 	steps: DEFAULT_STEPS,
 	translations: DEFAULT_STRINGS,
@@ -114,12 +114,12 @@ export function setupOnboardingTests() {
 	} );
 
 	afterEach( () => {
-		window.elementorAppConfig = undefined;
+		window.refractionAppConfig = undefined;
 		__deleteStore();
 	} );
 }
 
 export function renderApp( overrides: ConfigOverrides = {} ) {
-	window.elementorAppConfig = createMockConfig( overrides );
+	window.refractionAppConfig = createMockConfig( overrides );
 	return render( <App /> );
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { createArrayPropUtils, type SizePropValue } from '@elementor/editor-props';
+import { createArrayPropUtils, type SizePropValue } from '@refraction/editor-props';
 import { Box } from '@elementor/ui';
 
 import { PropProvider, useBoundProp } from '../bound-prop-context';

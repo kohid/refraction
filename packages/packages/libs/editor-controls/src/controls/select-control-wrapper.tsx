@@ -5,14 +5,14 @@ import { createControl } from '../create-control';
 import { SelectControl, type SelectOption } from './select-control';
 
 type ExtendedWindow = Window & {
-	elementor: { $previewContents: [ HTMLIFrameElement ]; config: { document: { id: string } } };
+	refraction: { $previewContents: [ HTMLIFrameElement ]; config: { document: { id: string } } };
 };
 
 const getOffCanvasElements = () => {
 	const extendedWindow = window as unknown as ExtendedWindow;
-	const documentId = extendedWindow.elementor.config.document.id;
-	const offCanvasElements = extendedWindow.elementor.$previewContents[ 0 ].querySelectorAll(
-		`[data-elementor-id="${ documentId }"] .elementor-widget-off-canvas.elementor-element-edit-mode`
+	const documentId = extendedWindow.refraction.config.document.id;
+	const offCanvasElements = extendedWindow.refraction.$previewContents[ 0 ].querySelectorAll(
+		`[data-refraction-id="${ documentId }"] .refraction-widget-off-canvas.refraction-element-edit-mode`
 	);
 
 	return Array.from( offCanvasElements as unknown as HTMLElement[] ).map( ( offCanvasElement ) => {
@@ -25,13 +25,13 @@ const getOffCanvasElements = () => {
 
 const getFormElements = () => {
 	const extendedWindow = window as unknown as ExtendedWindow;
-	const documentId = extendedWindow.elementor.config.document.id;
+	const documentId = extendedWindow.refraction.config.document.id;
 	const selectors = [
-		`[data-elementor-id="${ documentId }"] input[id]:not([type="hidden"]):not([type="reset"]):not([type="button"])`,
-		`[data-elementor-id="${ documentId }"] select[id]`,
-		`[data-elementor-id="${ documentId }"] textarea[id]`,
+		`[data-refraction-id="${ documentId }"] input[id]:not([type="hidden"]):not([type="reset"]):not([type="button"])`,
+		`[data-refraction-id="${ documentId }"] select[id]`,
+		`[data-refraction-id="${ documentId }"] textarea[id]`,
 	];
-	const formElements = extendedWindow.elementor.$previewContents[ 0 ].querySelectorAll<
+	const formElements = extendedWindow.refraction.$previewContents[ 0 ].querySelectorAll<
 		HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
 	>( selectors.join( ', ' ) );
 

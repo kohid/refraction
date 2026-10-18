@@ -2,21 +2,21 @@ import { Page } from '@playwright/test';
 
 export class NavigationHelpers {
 	static async visitExportCustomizationPage( page: Page ): Promise<void> {
-		await page.goto( '/wp-admin/admin.php?page=elementor-app&ver=3.33.0#/export-customization' );
+		await page.goto( '/wp-admin/admin.php?page=refraction-app&ver=3.33.0#/export-customization' );
 		await page.waitForLoadState( 'networkidle' );
 	}
 
 	static async navigateToExportCustomizationPage( page: Page ): Promise<void> {
-		await page.goto( '/wp-admin/admin.php?page=elementor-tools' );
+		await page.goto( '/wp-admin/admin.php?page=refraction-tools' );
 
 		await page.waitForLoadState( 'networkidle' );
 
-		await page.locator( '#elementor-settings-tab-import-export-kit' ).scrollIntoViewIfNeeded();
-		await page.click( '#elementor-settings-tab-import-export-kit' );
+		await page.locator( '#refraction-settings-tab-import-export-kit' ).scrollIntoViewIfNeeded();
+		await page.click( '#refraction-settings-tab-import-export-kit' );
 
 		await page.waitForSelector( '#tab-import-export-kit', { timeout: 10000 } );
 
-		await page.click( '#elementor-import-export__export' );
+		await page.click( '#refraction-import-export__export' );
 
 		await page.waitForLoadState( 'networkidle' );
 	}

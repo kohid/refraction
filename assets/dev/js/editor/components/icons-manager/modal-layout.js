@@ -1,15 +1,15 @@
-import BaseModalLayout from 'elementor-common/views/modal/layout';
+import BaseModalLayout from 'refraction-common/views/modal/layout';
 
 export default class extends BaseModalLayout {
 	getModalOptions() {
 		return {
-			id: 'elementor-icons-manager-modal',
+			id: 'refraction-icons-manager-modal',
 		};
 	}
 
 	getLogoOptions() {
 		return {
-			title: __( 'Icon Library', 'elementor' ),
+			title: __( 'Icon Library', 'refraction' ),
 		};
 	}
 

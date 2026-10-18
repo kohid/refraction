@@ -6,7 +6,7 @@ WORKING_DIR=$(pwd)
 rm -rf "$WORKING_DIR/tmp"
 
 # Ask for some parameters to install the test env.
-echo "Choose a database Name for tests [elementor-tests]:"
+echo "Choose a database Name for tests [refraction-tests]:"
 read -r DB_NAME
 echo "What is your database username [admin]?"
 read -r DB_USER
@@ -17,7 +17,7 @@ read -r DB_HOST
 echo "Choose WordPress version for testing [latest]:"
 read -r WP_VERSION
 
-DB_NAME=${DB_NAME:-"elementor-tests"}
+DB_NAME=${DB_NAME:-"refraction-tests"}
 DB_USER=${DB_USER:-"admin"}
 DB_PASS=${DB_PASS:-"admin"}
 DB_HOST=${DB_HOST:-"127.0.0.1"}

@@ -7,12 +7,12 @@ export default class Restore extends $e.modules.CommandBase {
 		try {
 			await updateElementDefaults( type, settings );
 
-			elementor.notifications.showToast( {
-				message: __( 'Previous settings restored.', 'elementor' ),
+			refraction.notifications.showToast( {
+				message: __( 'Previous settings restored.', 'refraction' ),
 			} );
 		} catch ( e ) {
-			elementor.notifications.showToast( {
-				message: __( 'An error occurred.', 'elementor' ),
+			refraction.notifications.showToast( {
+				message: __( 'An error occurred.', 'refraction' ),
 			} );
 
 			throw e;

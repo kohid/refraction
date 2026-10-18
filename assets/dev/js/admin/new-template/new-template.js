@@ -1,11 +1,11 @@
-var NewTemplateLayout = require( 'elementor-admin/new-template/layout' );
+var NewTemplateLayout = require( 'refraction-admin/new-template/layout' );
 
-var NewTemplateModule = elementorModules.ViewModule.extend( {
+var NewTemplateModule = refractionModules.ViewModule.extend( {
 
 	getDefaultSettings() {
 		return {
 			selectors: {
-				addButton: 'a.page-title-action[href*="post-new.php?post_type=elementor_library"], #elementor-template-library-add-new',
+				addButton: 'a.page-title-action[href*="post-new.php?post_type=refraction_library"], #refraction-template-library-add-new',
 			},
 		};
 	},
@@ -21,7 +21,7 @@ var NewTemplateModule = elementorModules.ViewModule.extend( {
 	bindEvents() {
 		this.elements.$addButton.on( 'click', this.onAddButtonClick );
 
-		elementorCommon.elements.$window.on( 'hashchange', this.showModalByHash.bind( this ) );
+		refractionCommon.elements.$window.on( 'hashchange', this.showModalByHash.bind( this ) );
 	},
 
 	showModalByHash() {
@@ -33,7 +33,7 @@ var NewTemplateModule = elementorModules.ViewModule.extend( {
 	},
 
 	onInit() {
-		elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+		refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 
 		this.layout = new NewTemplateLayout();
 
@@ -48,5 +48,5 @@ var NewTemplateModule = elementorModules.ViewModule.extend( {
 } );
 
 jQuery( function() {
-	window.elementorNewTemplate = new NewTemplateModule();
+	window.refractionNewTemplate = new NewTemplateModule();
 } );

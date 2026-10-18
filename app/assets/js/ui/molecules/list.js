@@ -1,4 +1,4 @@
-import { pxToRem, arrayToClassName } from 'elementor-app/utils/utils.js';
+import { pxToRem, arrayToClassName } from 'refraction-app/utils/utils.js';
 import ListItem from './list-item';
 
 import './list.scss';

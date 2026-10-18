@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { imageSrcPropTypeUtil, stringPropTypeUtil, urlPropTypeUtil } from '@elementor/editor-props';
+import { imageSrcPropTypeUtil, stringPropTypeUtil, urlPropTypeUtil } from '@refraction/editor-props';
 import { Card, CardMedia, CardOverlay, CircularProgress, Stack } from '@elementor/ui';
-import { type MediaType, useWpMediaAttachment, useWpMediaFrame } from '@elementor/wp-media';
+import { type MediaType, useWpMediaAttachment, useWpMediaFrame } from '@refraction/wp-media';
 import { __ } from '@wordpress/i18n';
 
 import { useBoundProp } from '../bound-prop-context';
@@ -16,7 +16,7 @@ type ImageMediaControlProps = {
 
 export const ImageMediaControl = createControl( ( { mediaTypes, label }: ImageMediaControlProps ) => {
 	const resolvedMediaTypes = mediaTypes ?? [ 'image' ];
-	const groupLabel = label ?? __( 'Image', 'elementor' );
+	const groupLabel = label ?? __( 'Image', 'refraction' );
 	const { value, setValue, propType, placeholder } = useBoundProp( imageSrcPropTypeUtil );
 	const { id, url } = value ?? {};
 

@@ -1,13 +1,13 @@
 import { createClassesTransformer } from '../classes-transformer';
 
-jest.mock( '@elementor/editor-styles-repository', () => ( {
+jest.mock( '@refraction/editor-styles-repository', () => ( {
 	stylesRepository: {
 		getProviders: jest.fn(),
 		getProviderByKey: jest.fn(),
 	},
 } ) );
 
-const mockStylesRepository = require( '@elementor/editor-styles-repository' ).stylesRepository;
+const mockStylesRepository = require( '@refraction/editor-styles-repository' ).stylesRepository;
 
 describe( 'createClassesTransformer', () => {
 	const createMockProvider = ( key: string, styles: Array< { id: string } > = [] ) => ( {

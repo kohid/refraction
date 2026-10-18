@@ -1,4 +1,4 @@
-import { isWidgetSupportNesting } from 'elementor/modules/nested-elements/assets/js/editor/utils';
+import { isWidgetSupportNesting } from 'refraction/modules/nested-elements/assets/js/editor/utils';
 
 /**
  * Since the nested tabs can have different depths, it should focus the current edited container,

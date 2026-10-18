@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createMockStyleDefinition, renderWithStore } from 'test-utils';
-import { type Document } from '@elementor/editor-documents';
-import { type V1ElementData } from '@elementor/editor-elements';
-import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@elementor/store';
+import { type Document } from '@refraction/editor-documents';
+import { type V1ElementData } from '@refraction/editor-elements';
+import { __createStore, __dispatch, __registerSlice, type SliceState, type Store } from '@refraction/store';
 
 import { RenderTemplateStyles } from '../render-template-styles';
 import { slice } from '../store';

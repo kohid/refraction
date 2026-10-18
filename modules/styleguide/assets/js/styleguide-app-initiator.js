@@ -1,4 +1,4 @@
-import ReactUtils from 'elementor-utils/react';
+import ReactUtils from 'refraction-utils/react';
 
 ( () => {
 	let unmountCallback;
@@ -38,16 +38,16 @@ import ReactUtils from 'elementor-utils/react';
 	 * Listen to an event from the Styleguide e-component to mount or unmount the app.
 	 */
 	window.addEventListener( 'message', ( event ) => {
-		if ( ! event.data?.name?.startsWith( 'elementor/styleguide/preview' ) || ! getStyleguideWidget() ) {
+		if ( ! event.data?.name?.startsWith( 'refraction/styleguide/preview' ) || ! getStyleguideWidget() ) {
 			return;
 		}
 
 		switch ( event.data.name ) {
-			case 'elementor/styleguide/preview/show':
+			case 'refraction/styleguide/preview/show':
 				mount();
 				break;
 
-			case 'elementor/styleguide/preview/hide':
+			case 'refraction/styleguide/preview/hide':
 				unmount();
 				break;
 		}

@@ -1,4 +1,4 @@
-import HookUIAfter from 'elementor-api/modules/hooks/ui/after';
+import HookUIAfter from 'refraction-api/modules/hooks/ui/after';
 
 export class FooterSaverAfterSave extends HookUIAfter {
 	getCommand() {
@@ -17,7 +17,7 @@ export class FooterSaverAfterSave extends HookUIAfter {
 
 		footerSaver.refreshWpPreview();
 
-		if ( result.statusChanged && 'publish' === status && elementor.config.document.urls.have_a_look ) {
+		if ( result.statusChanged && 'publish' === status && refraction.config.document.urls.have_a_look ) {
 			this.onPageStatusChange();
 		}
 	}
@@ -27,14 +27,14 @@ export class FooterSaverAfterSave extends HookUIAfter {
 
 		buttons.push( {
 			name: 'view_page',
-			text: __( 'Have a look', 'elementor' ),
+			text: __( 'Have a look', 'refraction' ),
 			callback() {
-				open( elementor.config.document.urls.have_a_look );
+				open( refraction.config.document.urls.have_a_look );
 			},
 		} );
 
-		elementor.notifications.showToast( {
-			message: elementor.config.document.panel.messages.publish_notification,
+		refraction.notifications.showToast( {
+			message: refraction.config.document.panel.messages.publish_notification,
 			buttons,
 		} );
 	}

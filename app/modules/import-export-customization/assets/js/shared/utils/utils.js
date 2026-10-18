@@ -8,7 +8,7 @@ export function buildKitSettingsSummary( siteSettings ) {
 
 	const formattedSettings = exportedSettings.map( ( setting ) => {
 		if ( 'defaultStyles' === setting ) {
-			return __( 'Default Styles', 'elementor' );
+			return __( 'Default Styles', 'refraction' );
 		}
 
 		return formatToTitleCase( setting );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { ControlActions, createControl, SizeComponent, useBoundProp } from '@elementor/editor-controls';
-import { type PropValue } from '@elementor/editor-props';
+import { ControlActions, createControl, SizeComponent, useBoundProp } from '@refraction/editor-controls';
+import { type PropValue } from '@refraction/editor-props';
 import { Grid } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -105,10 +105,10 @@ const GridTrackField = ( { cssProp, label }: GridTrackFieldProps ) => (
 export const GridSizeFields = () => (
 	<Grid container gap={ 2 } flexWrap="nowrap">
 		<Grid item xs={ 6 }>
-			<GridTrackField cssProp="grid-template-columns" label={ __( 'Columns', 'elementor' ) } />
+			<GridTrackField cssProp="grid-template-columns" label={ __( 'Columns', 'refraction' ) } />
 		</Grid>
 		<Grid item xs={ 6 }>
-			<GridTrackField cssProp="grid-template-rows" label={ __( 'Rows', 'elementor' ) } />
+			<GridTrackField cssProp="grid-template-rows" label={ __( 'Rows', 'refraction' ) } />
 		</Grid>
 	</Grid>
 );

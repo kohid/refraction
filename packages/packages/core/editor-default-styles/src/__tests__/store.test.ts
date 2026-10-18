@@ -3,7 +3,7 @@ import {
 	__dispatch as dispatch,
 	__getState as getState,
 	__registerSlice as registerSlice,
-} from '@elementor/store';
+} from '@refraction/store';
 
 import { selectData, selectInitialData, selectIsDirty, slice } from '../store';
 

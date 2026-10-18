@@ -1,4 +1,4 @@
-import { dismissNotification, notify } from '@elementor/editor-notifications';
+import { dismissNotification, notify } from '@refraction/editor-notifications';
 import { __ } from '@wordpress/i18n';
 
 const EXPORT_STARTED_NOTIFICATION_ID = 'design-system-export-started';
@@ -9,7 +9,7 @@ export const notifyExportInProgress = () => {
 	notify( {
 		id: EXPORT_STARTED_NOTIFICATION_ID,
 		type: 'info',
-		message: __( 'Export in progress. Your file will download when it’s ready.', 'elementor' ),
+		message: __( 'Export in progress. Your file will download when it’s ready.', 'refraction' ),
 	} );
 };
 
@@ -19,7 +19,7 @@ export const notifyExportSuccess = () => {
 	notify( {
 		id: SUCCESS_NOTIFICATION_ID,
 		type: 'success',
-		message: __( 'Design system exported', 'elementor' ),
+		message: __( 'Design system exported', 'refraction' ),
 	} );
 };
 
@@ -29,13 +29,13 @@ export const notifyExportFailure = ( onRetry: () => void ) => {
 	notify( {
 		id: FAILURE_NOTIFICATION_ID,
 		type: 'error',
-		message: __( 'Your design system export failed', 'elementor' ),
+		message: __( 'Your design system export failed', 'refraction' ),
 		additionalActionProps: [
 			{
 				size: 'small',
 				variant: 'outlined',
 				color: 'error',
-				children: __( 'Try again', 'elementor' ),
+				children: __( 'Try again', 'refraction' ),
 				onClick: () => {
 					dismissNotification( FAILURE_NOTIFICATION_ID );
 					onRetry();

@@ -1,13 +1,13 @@
 ( function( $ ) {
 	'use strict';
 
-	var ElementorAdminDialogApp = {
+	var RefractionAdminDialogApp = {
 
 		cacheElements() {
 			this.cache = {
-				$deactivateLink: $( '#the-list' ).find( '[data-slug="elementor"] span.deactivate a' ),
-				$dialogHeader: $( '#elementor-deactivate-feedback-dialog-header' ),
-				$dialogForm: $( '#elementor-deactivate-feedback-dialog-form' ),
+				$deactivateLink: $( '#the-list' ).find( '[data-slug="refraction"] span.deactivate a' ),
+				$dialogHeader: $( '#refraction-deactivate-feedback-dialog-header' ),
+				$dialogForm: $( '#refraction-deactivate-feedback-dialog-form' ),
 			};
 		},
 
@@ -31,8 +31,8 @@
 
 			self.getModal = function() {
 				if ( ! modal ) {
-					modal = elementorCommon.dialogsManager.createWidget( 'lightbox', {
-						id: 'elementor-deactivate-feedback-modal',
+					modal = refractionCommon.dialogsManager.createWidget( 'lightbox', {
+						id: 'refraction-deactivate-feedback-modal',
 						headerMessage: self.cache.$dialogHeader,
 						message: self.cache.$dialogForm,
 						hide: {
@@ -47,13 +47,13 @@
 
 							this.addButton( {
 								name: 'submit',
-								text: __( 'Submit & Deactivate', 'elementor' ),
+								text: __( 'Submit & Deactivate', 'refraction' ),
 								callback: self.sendFeedback.bind( self ),
 							} );
 
 							this.addButton( {
 								name: 'skip',
-								text: __( 'Skip & Deactivate', 'elementor' ),
+								text: __( 'Skip & Deactivate', 'refraction' ),
 								callback() {
 									self.deactivate();
 								},
@@ -61,8 +61,8 @@
 						},
 
 						onShow() {
-							var $dialogModal = $( '#elementor-deactivate-feedback-modal' ),
-								radioSelector = '.elementor-deactivate-feedback-dialog-input';
+							var $dialogModal = $( '#refraction-deactivate-feedback-modal' ),
+								radioSelector = '.refraction-deactivate-feedback-dialog-input';
 
 							$dialogModal.find( radioSelector ).on( 'change', function() {
 								$dialogModal.attr( 'data-feedback-selected', $( this ).val() );
@@ -81,7 +81,7 @@
 			var self = this,
 				formData = self.cache.$dialogForm.serialize();
 
-			self.getModal().getElements( 'submit' ).text( '' ).addClass( 'elementor-loading' );
+			self.getModal().getElements( 'submit' ).text( '' ).addClass( 'refraction-loading' );
 
 			$.post( ajaxurl, formData, this.deactivate.bind( this ) );
 		},
@@ -94,6 +94,6 @@
 	};
 
 	$( function() {
-		ElementorAdminDialogApp.init();
+		RefractionAdminDialogApp.init();
 	} );
 }( jQuery ) );

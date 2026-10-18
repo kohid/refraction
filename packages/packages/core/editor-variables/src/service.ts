@@ -77,7 +77,7 @@ export const service = {
 				const { success, data: payload } = response.data;
 
 				if ( ! success ) {
-					const errorMessage = payload?.message || __( 'Unexpected response from server', 'elementor' );
+					const errorMessage = payload?.message || __( 'Unexpected response from server', 'refraction' );
 					throw new Error( errorMessage );
 				}
 
@@ -120,7 +120,7 @@ export const service = {
 				const { success, data: payload } = response.data;
 
 				if ( ! success ) {
-					const errorMessage = payload?.message || __( 'Unexpected response from server', 'elementor' );
+					const errorMessage = payload?.message || __( 'Unexpected response from server', 'refraction' );
 					throw new Error( errorMessage );
 				}
 

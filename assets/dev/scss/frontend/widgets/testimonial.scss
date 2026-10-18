@@ -1,26 +1,26 @@
 //
 // testimonial
 //
-.elementor-testimonial-wrapper {
+.refraction-testimonial-wrapper {
 	overflow: hidden;
 	text-align: center;
 
-	.elementor-testimonial-content {
+	.refraction-testimonial-content {
 		font-size: 1.3em;
 		margin-block-end: 20px;
 	}
 
-	.elementor-testimonial-name {
+	.refraction-testimonial-name {
 		line-height: 1.5;
 		display: block;
 	}
 
-	.elementor-testimonial-job {
+	.refraction-testimonial-job {
 		font-size: 0.85em;
 		display: block;
 	}
 
-	.elementor-testimonial-meta {
+	.refraction-testimonial-meta {
 		width: 100%;
 		line-height: 1;
 
@@ -28,13 +28,13 @@
 			display: inline-block;
 		}
 
-		.elementor-testimonial-details,
-		.elementor-testimonial-image {
+		.refraction-testimonial-details,
+		.refraction-testimonial-image {
 			display: table-cell;
 			vertical-align: middle;
 		}
 
-		.elementor-testimonial-image {
+		.refraction-testimonial-image {
 
 			img {
 				width: 60px;
@@ -45,25 +45,25 @@
 			}
 		}
 
-		&.elementor-testimonial-image-position-aside {
+		&.refraction-testimonial-image-position-aside {
 
-			.elementor-testimonial-image {
+			.refraction-testimonial-image {
 				padding-inline-end: 15px;
 			}
 
-			.elementor-testimonial-details {
+			.refraction-testimonial-details {
 				text-align: start;
 			}
 		}
 
-		&.elementor-testimonial-image-position-top {
+		&.refraction-testimonial-image-position-top {
 
-			.elementor-testimonial-details,
-			.elementor-testimonial-image {
+			.refraction-testimonial-details,
+			.refraction-testimonial-image {
 				display: block;
 			}
 
-			.elementor-testimonial-image {
+			.refraction-testimonial-image {
 				margin-block-end: 20px;
 			}
 		}

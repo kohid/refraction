@@ -1,5 +1,5 @@
-import { getContainer, selectElement } from '@elementor/editor-elements';
-import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@elementor/editor-v1-adapters';
+import { getContainer, selectElement } from '@refraction/editor-elements';
+import { __privateOpenRoute as openRoute, __privateRunCommand as runCommand } from '@refraction/editor-v1-adapters';
 
 import { type AuditViolation } from '../types';
 
@@ -17,9 +17,9 @@ export function focusViolation( violation: AuditViolation ): void {
 			if ( domElement ) {
 				(
 					window as unknown as {
-						elementor?: { helpers?: { scrollToView?: ( element: unknown, timeout?: number ) => void } };
+						refraction?: { helpers?: { scrollToView?: ( element: unknown, timeout?: number ) => void } };
 					}
-				 ).elementor?.helpers?.scrollToView?.( domElement, SCROLL_TO_VIEW_DELAY_MS );
+				 ).refraction?.helpers?.scrollToView?.( domElement, SCROLL_TO_VIEW_DELAY_MS );
 			}
 		}
 

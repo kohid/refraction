@@ -1,5 +1,5 @@
-import ArgsObject from 'elementor-assets-js/modules/imports/args-object';
-import Deprecation from 'elementor-api/utils/deprecation';
+import ArgsObject from 'refraction-assets-js/modules/imports/args-object';
+import Deprecation from 'refraction-api/utils/deprecation';
 
 /**
  * @typedef {import('../modules/component-base')} ComponentBase
@@ -110,7 +110,7 @@ export default class CommandInfra extends ArgsObject {
 	 * @return {*} Command results.
 	 */
 	apply( args = {} ) { // eslint-disable-line no-unused-vars
-		elementorModules.ForceMethodImplementation();
+		refractionModules.ForceMethodImplementation();
 	}
 
 	/**

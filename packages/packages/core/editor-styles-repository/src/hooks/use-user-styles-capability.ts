@@ -1,4 +1,4 @@
-import { useCurrentUserCapabilities, useHasContentOnlyAccess } from '@elementor/editor-current-user';
+import { useCurrentUserCapabilities, useHasContentOnlyAccess } from '@refraction/editor-current-user';
 
 import { stylesRepository } from '../styles-repository';
 import { type UserCapabilities } from '../types';

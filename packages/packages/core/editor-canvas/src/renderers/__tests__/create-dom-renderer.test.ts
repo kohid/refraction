@@ -5,7 +5,7 @@ const TEST_ALLOWED_HTML_WRAPPER_TAGS = [ 'a', 'div', 'form', 'span' ];
 
 describe( 'createDomRenderer', () => {
 	beforeEach( () => {
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				allowedHTMLWrapperTags: TEST_ALLOWED_HTML_WRAPPER_TAGS,
 			},
@@ -13,7 +13,7 @@ describe( 'createDomRenderer', () => {
 	} );
 
 	afterEach( () => {
-		delete window.elementorCommon;
+		delete window.refractionCommon;
 	} );
 
 	it.each( [
@@ -92,7 +92,7 @@ describe( 'createDomRenderer', () => {
 
 	it( 'should validate a tag added via localized config', async () => {
 		// Arrange.
-		window.elementorCommon = {
+		window.refractionCommon = {
 			config: {
 				allowedHTMLWrapperTags: [ ...TEST_ALLOWED_HTML_WRAPPER_TAGS, 'custom-tag' ],
 			},
@@ -111,7 +111,7 @@ describe( 'createDomRenderer', () => {
 
 	it( 'should fail closed to div when the localized config is missing, even for an otherwise-safe tag', async () => {
 		// Arrange.
-		delete window.elementorCommon;
+		delete window.refractionCommon;
 		const domRenderer = createDomRenderer();
 		const template = `<{{ tag | e( 'html_tag' ) }}></{{ tag | e( 'html_tag' ) }}>`;
 

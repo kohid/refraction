@@ -1,13 +1,13 @@
 const handlesInsideClass = 'e-handles-inside';
 const handlesHeight = 100;
 
-export default class HandlesPosition extends elementorModules.frontend.handlers.Base {
+export default class HandlesPosition extends refractionModules.frontend.handlers.Base {
 	onInit() {
 		this.$element.on( 'mouseenter', this.setHandlesPosition.bind( this ) );
 	}
 
 	isSectionScrollSnapEnabled() {
-		return elementor.settings.page.model.attributes.scroll_snap;
+		return refraction.settings.page.model.attributes.scroll_snap;
 	}
 
 	isOverflowHidden() {
@@ -21,24 +21,24 @@ export default class HandlesPosition extends elementorModules.frontend.handlers.
 			return false;
 		}
 
-		return null !== editAreaElement.closest( '.elementor-embedded-editor' );
+		return null !== editAreaElement.closest( '.refraction-embedded-editor' );
 	}
 
 	getEditAreaElement() {
-		const $closestEditArea = this.$element.closest( '.elementor-edit-area-active' );
+		const $closestEditArea = this.$element.closest( '.refraction-edit-area-active' );
 
 		if ( $closestEditArea.length ) {
 			return $closestEditArea[ 0 ];
 		}
 
-		const document = elementor.documents.getCurrent();
+		const document = refraction.documents.getCurrent();
 		const $editArea = document?.$element;
 
 		if ( $editArea?.length ) {
 			return $editArea[ 0 ];
 		}
 
-		return this.$element.closest( '.elementor-edit-area' )[ 0 ];
+		return this.$element.closest( '.refraction-edit-area' )[ 0 ];
 	}
 
 	getEditAreaOffset() {
@@ -52,7 +52,7 @@ export default class HandlesPosition extends elementorModules.frontend.handlers.
 	}
 
 	setHandlesPosition() {
-		const document = elementor.documents.getCurrent();
+		const document = refraction.documents.getCurrent();
 
 		if ( ! document?.container.isEditable() ) {
 			return;

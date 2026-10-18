@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { ControlActionsProvider } from '@elementor/editor-controls';
+import { ControlActionsProvider } from '@refraction/editor-controls';
 import { fireEvent, screen, within } from '@testing-library/react';
 
 import { ControlToggleButtonGroup, type ToggleButtonGroupItem } from '../components/control-toggle-button-group';

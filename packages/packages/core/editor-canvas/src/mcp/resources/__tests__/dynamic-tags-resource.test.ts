@@ -1,8 +1,8 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { DYNAMIC_TAGS_URI, initDynamicTagsResource } from '../dynamic-tags-resource';
 
-jest.mock( '@elementor/http-client', () => ( {
+jest.mock( '@refraction/http-client', () => ( {
 	httpService: jest.fn(),
 } ) );
 
@@ -47,7 +47,7 @@ describe( 'dynamic-tags-resource', () => {
 		const text = await readCatalog();
 
 		// Assert
-		expect( get ).toHaveBeenCalledWith( 'elementor/v1/mcp-proxy', {
+		expect( get ).toHaveBeenCalledWith( 'refraction/v1/mcp-proxy', {
 			params: { uri: DYNAMIC_TAGS_URI },
 		} );
 		expect( text ).toBe( serverJson );

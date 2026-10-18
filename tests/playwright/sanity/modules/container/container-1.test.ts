@@ -7,7 +7,7 @@ import { wpCli } from '../../../assets/wp-cli';
 
 test.describe( 'Container tests #1 @container', () => {
 	test.beforeAll( async () => {
-		await wpCli( 'wp elementor experiments activate container' );
+		await wpCli( 'wp refraction experiments activate container' );
 	} );
 
 	test( 'Background slideshow', async ( { page, apiRequests }, testInfo ) => {
@@ -92,7 +92,7 @@ test.describe( 'Container tests #1 @container', () => {
 
 		await editor.addWidget( { widgetType: widgets.toggle, container: containerId } );
 		await editor.addWidget( { widgetType: widgets.video, container: containerId } );
-		const container = editor.getPreviewFrame().locator( '.elementor-element-' + containerId );
+		const container = editor.getPreviewFrame().locator( '.refraction-element-' + containerId );
 		await editor.hideVideoControls();
 		await editor.togglePreviewMode();
 
@@ -153,7 +153,7 @@ test.describe( 'Container tests #1 @container', () => {
 		await editor.togglePreviewMode();
 
 		// Assert.
-		const pageView = editor.page.locator( '#elementor-preview-responsive-wrapper' );
+		const pageView = editor.page.locator( '#refraction-preview-responsive-wrapper' );
 		await expect.soft( pageView ).toHaveScreenshot( 'heading-boxed-absolute.png' );
 
 		// Act.
@@ -191,7 +191,7 @@ test.describe( 'Container tests #1 @container', () => {
 		await editor.togglePreviewMode();
 
 		// Assert.
-		const pageView = editor.page.locator( '#elementor-preview-responsive-wrapper' );
+		const pageView = editor.page.locator( '#refraction-preview-responsive-wrapper' );
 		await expect.soft( pageView ).toHaveScreenshot( 'heading-boxed-fixed.png' );
 
 		// Reset the Default template.
@@ -221,7 +221,7 @@ test.describe( 'Container tests #1 @container', () => {
 		await editor.togglePreviewMode();
 
 		// Assert.
-		const pageView = editor.page.locator( '#elementor-preview-responsive-wrapper' );
+		const pageView = editor.page.locator( '#refraction-preview-responsive-wrapper' );
 		await expect.soft( pageView ).toHaveScreenshot( 'heading-full-fixed.png' );
 	} );
 
@@ -232,11 +232,11 @@ test.describe( 'Container tests #1 @container', () => {
 
 		// Act.
 		await editor.addElement( { elType: 'container' }, 'document' );
-		await editor.getPreviewFrame().locator( '.elementor-editor-element-edit' ).click( { button: 'right' } );
+		await editor.getPreviewFrame().locator( '.refraction-editor-element-edit' ).click( { button: 'right' } );
 
 		// Assert.
-		await expect.soft( page.locator( '.elementor-context-menu-list__item-newContainer' ) ).toBeVisible();
-		await page.locator( '.elementor-context-menu-list__item-newContainer' ).click();
+		await expect.soft( page.locator( '.refraction-context-menu-list__item-newContainer' ) ).toBeVisible();
+		await page.locator( '.refraction-context-menu-list__item-newContainer' ).click();
 		await expect.soft( editor.getPreviewFrame().locator( '.e-con-full' ) ).toHaveCount( 1 );
 	} );
 } );

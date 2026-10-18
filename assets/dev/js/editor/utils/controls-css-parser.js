@@ -1,7 +1,7 @@
-var Stylesheet = require( 'elementor-editor-utils/stylesheet' ),
+var Stylesheet = require( 'refraction-editor-utils/stylesheet' ),
 	ControlsCSSParser;
 
-ControlsCSSParser = elementorModules.ViewModule.extend( {
+ControlsCSSParser = refractionModules.ViewModule.extend( {
 	stylesheet: null,
 
 	getDefaultSettings() {
@@ -14,9 +14,9 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 	},
 
 	getDefaultElements() {
-		const id = `elementor-style-${ this.getSettings( 'id' ) }`;
+		const id = `refraction-style-${ this.getSettings( 'id' ) }`;
 
-		let $stylesheet = elementor.$previewContents.find( `#${ id }` );
+		let $stylesheet = refraction.$previewContents.find( `#${ id }` );
 
 		if ( ! $stylesheet.length ) {
 			$stylesheet = jQuery( '<style>', { id } );
@@ -28,7 +28,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 	},
 
 	initStylesheet() {
-		const breakpoints = elementorFrontend.config.responsive.activeBreakpoints;
+		const breakpoints = refractionFrontend.config.responsive.activeBreakpoints;
 
 		this.stylesheet = new Stylesheet();
 
@@ -98,7 +98,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 				if ( selectorGlobalValue ) {
 					if ( 'font' === control.type ) {
 						$e.data.get( globalKey ).then( ( response ) => {
-							elementor.helpers.enqueueFont( response.data.value.typography_font_family );
+							refraction.helpers.enqueueFont( response.data.value.typography_font_family );
 						} );
 					}
 
@@ -154,7 +154,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 						}
 
 						if ( 'font' === control.type ) {
-							elementor.helpers.enqueueFont( parsedValue );
+							refraction.helpers.enqueueFont( parsedValue );
 						}
 
 						if ( '__EMPTY__' === parsedValue ) {
@@ -212,7 +212,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 			} );
 
 			if ( ! Object.keys( query ).length && control.responsive ) {
-				query = _.pick( elementorCommon.helpers.cloneObject( control.responsive ), [ 'min', 'max' ] );
+				query = _.pick( refractionCommon.helpers.cloneObject( control.responsive ), [ 'min', 'max' ] );
 
 				if ( 'desktop' === query.max ) {
 					delete query.max;
@@ -237,7 +237,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 	parsePropertyPlaceholder( control, value, controls, values, placeholder, parserControlName ) {
 		if ( parserControlName ) {
 			if ( control.responsive && controls[ parserControlName ] ) {
-				const deviceSuffix = elementor.conditions.getResponsiveControlDeviceSuffix( control.responsive );
+				const deviceSuffix = refraction.conditions.getResponsiveControlDeviceSuffix( control.responsive );
 
 				control = _.findWhere( controls, { name: parserControlName + deviceSuffix } ) ??
 					_.findWhere( controls, { name: parserControlName } );
@@ -248,7 +248,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 			value = this.getStyleControlValue( control, values );
 		}
 
-		return elementor.getControlView( control.type ).getStyleValue( placeholder, value, control );
+		return refraction.getControlView( control.type ).getStyleValue( placeholder, value, control );
 	},
 
 	getStyleControlValue( control, values ) {
@@ -290,11 +290,11 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 		// It's a global settings with additional controls in group.
 		if ( control.groupType ) {
 			// A regex containing all of the active breakpoints' prefixes ('_mobile', '_tablet' etc.).
-			const responsivePrefixRegex = elementor.breakpoints.getActiveMatchRegex();
+			const responsivePrefixRegex = refraction.breakpoints.getActiveMatchRegex();
 
 			let propertyName = control.name.replace( control.groupPrefix, '' ).replace( responsivePrefixRegex, '' );
 
-			if ( ! data.value[ elementor.config.kit_config.typography_prefix + propertyName ] ) {
+			if ( ! data.value[ refraction.config.kit_config.typography_prefix + propertyName ] ) {
 				return;
 			}
 
@@ -302,8 +302,8 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 
 			value = `var( --e-global-${ control.groupType }-${ id }-${ propertyName } )`;
 
-			if ( elementor.config.ui.defaultGenericFonts && control.groupPrefix + 'font_family' === control.name ) {
-				value += `, ${ elementor.config.ui.defaultGenericFonts }`;
+			if ( refraction.config.ui.defaultGenericFonts && control.groupPrefix + 'font_family' === control.name ) {
+				value += `, ${ refraction.config.ui.defaultGenericFonts }`;
 			}
 		} else {
 			value = `var( --e-global-${ control.type }-${ id } )`;
@@ -321,7 +321,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 				itemModel.attributes,
 				controls,
 				placeholders.concat( [ '{{CURRENT_ITEM}}' ] ),
-				replacements.concat( [ '.elementor-repeater-item-' + itemModel.get( '_id' ) ] ),
+				replacements.concat( [ '.refraction-repeater-item-' + itemModel.get( '_id' ) ] ),
 			);
 		} );
 	},
@@ -329,8 +329,8 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 	addDynamicControlStyleRules( value, control ) {
 		var self = this;
 
-		elementor.dynamicTags.parseTagsText( value, control.dynamic, function( id, name, settings ) {
-			var tag = elementor.dynamicTags.createTag( id, name, settings );
+		refraction.dynamicTags.parseTagsText( value, control.dynamic, function( id, name, settings ) {
+			var tag = refraction.dynamicTags.createTag( id, name, settings );
 
 			if ( ! tag ) {
 				return;
@@ -343,12 +343,12 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 				return;
 			}
 
-			self.addStyleRules( tagSettingsModel.getStyleControls(), tagSettingsModel.attributes, tagSettingsModel.controls, [ '{{WRAPPER}}' ], [ '#elementor-tag-' + id ] );
+			self.addStyleRules( tagSettingsModel.getStyleControls(), tagSettingsModel.attributes, tagSettingsModel.controls, [ '{{WRAPPER}}' ], [ '#refraction-tag-' + id ] );
 		} );
 	},
 
 	addStyleToDocument( position ) {
-		const $head = elementor.$previewContents.find( 'head' );
+		const $head = refraction.$previewContents.find( 'head' );
 
 		let insertMethod = 'append',
 			$insertBy = $head;
@@ -365,7 +365,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 
 		$insertBy[ insertMethod ]( this.elements.$stylesheetElement );
 
-		const extraCSS = elementor.hooks.applyFilters( 'editor/style/styleText', '', this.getSettings( 'context' ) );
+		const extraCSS = refraction.hooks.applyFilters( 'editor/style/styleText', '', this.getSettings( 'context' ) );
 
 		this.elements.$stylesheetElement.text( this.stylesheet + extraCSS );
 	},
@@ -375,7 +375,7 @@ ControlsCSSParser = elementorModules.ViewModule.extend( {
 	},
 
 	onInit() {
-		elementorModules.ViewModule.prototype.onInit.apply( this, arguments );
+		refractionModules.ViewModule.prototype.onInit.apply( this, arguments );
 
 		this.initStylesheet();
 	},

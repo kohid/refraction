@@ -30,7 +30,7 @@ export const PromotionAlert = ( { message, upgradeUrl, onCtaClick }: PromotionAl
 			startIcon={ <CrownFilledIcon fontSize="tiny" /> }
 			onClick={ onCtaClick }
 		>
-			{ __( 'Upgrade now', 'elementor' ) }
+			{ __( 'Upgrade now', 'refraction' ) }
 		</Button>
 	</Alert>
 );

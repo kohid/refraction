@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { videoSrcPropTypeUtil } from '@elementor/editor-props';
-import { useWpMediaAttachment, useWpMediaFrame } from '@elementor/wp-media';
+import { videoSrcPropTypeUtil } from '@refraction/editor-props';
+import { useWpMediaAttachment, useWpMediaFrame } from '@refraction/wp-media';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { VideoMediaControl } from '../video-media-control';
 
-jest.mock( '@elementor/wp-media', () => ( {
+jest.mock( '@refraction/wp-media', () => ( {
 	useWpMediaAttachment: jest.fn(),
 	useWpMediaFrame: jest.fn(),
 } ) );

@@ -1,8 +1,8 @@
-import environment from 'elementor-common/utils/environment';
+import environment from 'refraction-common/utils/environment';
 
 export default class extends Marionette.LayoutView {
 	id() {
-		return 'elementor-hotkeys';
+		return 'refraction-hotkeys';
 	}
 
 	templateHelpers() {
@@ -12,6 +12,6 @@ export default class extends Marionette.LayoutView {
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-hotkeys';
+		return '#tmpl-refraction-hotkeys';
 	}
 }

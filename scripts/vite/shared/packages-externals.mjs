@@ -3,33 +3,33 @@
  * `@elementor/ui/styles` is excluded: it is a self-reference inside `@elementor/ui` and must stay
  * bundled into `ui.js`.
  */
-const ELEMENTOR_PATH_IMPORTS = /^@elementor\/(ui|icons)\/(?!styles$)(.+)$/;
+const REFRACTION_PATH_IMPORTS = /^@elementor\/(ui|icons)\/(?!styles$)(.+)$/;
 
 /**
  * `design-tokens` is bundled inside UI, and `ui/styles` is the self-reference above.
  */
-const ELEMENTOR_PACKAGES = /^@elementor\/(?!design-tokens|ui\/styles)(.+)$/;
+const REFRACTION_PACKAGES = /^@(?:refraction|elementor)\/(?!design-tokens|ui\/styles)(.+)$/;
 
 const WORDPRESS_PACKAGES = /^@wordpress\/(.+)$/;
 
 const REQUEST_TO_GLOBAL = [
-	{ request: ELEMENTOR_PATH_IMPORTS, global: [ 'elementorV2', '$1', '$2' ] },
-	{ request: ELEMENTOR_PACKAGES, global: [ 'elementorV2', '$1' ] },
+	{ request: REFRACTION_PATH_IMPORTS, global: [ 'refractionV2', '$1', '$2' ] },
+	{ request: REFRACTION_PACKAGES, global: [ 'refractionV2', '$1' ] },
 	{ request: WORDPRESS_PACKAGES, global: [ 'wp', '$1' ] },
 	{ request: 'react', global: 'React' },
 	{ request: 'react-dom', global: 'ReactDOM' },
-	{ request: '@reduxjs/toolkit', global: [ 'elementorVendors', 'reduxToolkit' ] },
-	{ request: 'react-redux', global: [ 'elementorVendors', 'reactRedux' ] },
+	{ request: '@reduxjs/toolkit', global: [ 'refractionVendors', 'reduxToolkit' ] },
+	{ request: 'react-redux', global: [ 'refractionVendors', 'reactRedux' ] },
 ];
 
 const REQUEST_TO_HANDLE = [
-	{ request: ELEMENTOR_PATH_IMPORTS, handle: 'elementor-v2-$1' },
-	{ request: ELEMENTOR_PACKAGES, handle: 'elementor-v2-$1' },
+	{ request: REFRACTION_PATH_IMPORTS, handle: 'refraction-v2-$1' },
+	{ request: REFRACTION_PACKAGES, handle: 'refraction-v2-$1' },
 	{ request: WORDPRESS_PACKAGES, handle: 'wp-$1' },
 	{ request: 'react', handle: 'react' },
 	{ request: 'react-dom', handle: 'react-dom' },
-	{ request: '@reduxjs/toolkit', handle: 'elementor-vendors-redux' },
-	{ request: 'react-redux', handle: 'elementor-vendors-redux' },
+	{ request: '@reduxjs/toolkit', handle: 'refraction-vendors-redux' },
+	{ request: 'react-redux', handle: 'refraction-vendors-redux' },
 ];
 
 export function kebabToCamelCase( value ) {

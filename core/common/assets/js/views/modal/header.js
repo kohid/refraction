@@ -4,24 +4,24 @@ export default class extends Marionette.LayoutView {
 	}
 
 	className() {
-		return 'elementor-templates-modal__header';
+		return 'refraction-templates-modal__header';
 	}
 
 	getTemplate() {
-		return '#tmpl-elementor-templates-modal__header';
+		return '#tmpl-refraction-templates-modal__header';
 	}
 
 	regions() {
 		return {
-			logoArea: '.elementor-templates-modal__header__logo-area',
-			tools: '#elementor-template-library-header-tools',
-			menuArea: '.elementor-templates-modal__header__menu-area',
+			logoArea: '.refraction-templates-modal__header__logo-area',
+			tools: '#refraction-template-library-header-tools',
+			menuArea: '.refraction-templates-modal__header__menu-area',
 		};
 	}
 
 	ui() {
 		return {
-			closeModal: '.elementor-templates-modal__header__close',
+			closeModal: '.refraction-templates-modal__header__close',
 		};
 	}
 
@@ -68,33 +68,33 @@ export default class extends Marionette.LayoutView {
 
 		if ( this.isFloatingButtonLibraryClose() ) {
 			$e.internal( 'document/save/set-is-modified', { status: false } );
-			window.location.href = elementor.config.admin_floating_button_admin_url;
+			window.location.href = refraction.config.admin_floating_button_admin_url;
 		}
 	}
 
 	getDocumentType() {
 		const DEFAULT_TYPE = 'default';
 
-		if ( 'undefined' === typeof window.elementor ) {
+		if ( 'undefined' === typeof window.refraction ) {
 			return DEFAULT_TYPE;
 		}
 
-		return elementor?.config?.document?.type ?? DEFAULT_TYPE;
+		return refraction?.config?.document?.type ?? DEFAULT_TYPE;
 	}
 
 	isFloatingButtonLibraryClose() {
-		return window.elementor && elementor.config?.admin_floating_button_admin_url &&
-			'floating-buttons' === elementor.config?.document?.type &&
+		return window.refraction && refraction.config?.admin_floating_button_admin_url &&
+			'floating-buttons' === refraction.config?.document?.type &&
 			(
 				this.$el
 					.closest( '.dialog-lightbox-widget-content' )
-					.find( '.elementor-template-library-template-floating_button' ).length ||
+					.find( '.refraction-template-library-template-floating_button' ).length ||
 				this.$el
 					.closest( '.dialog-lightbox-widget-content' )
-					.find( '#elementor-template-library-preview' ).length ||
+					.find( '#refraction-template-library-preview' ).length ||
 				this.$el
 					.closest( '.dialog-lightbox-widget-content' )
-					.find( '#elementor-template-library-templates-empty' ).length
+					.find( '#refraction-template-library-templates-empty' ).length
 			);
 	}
 }

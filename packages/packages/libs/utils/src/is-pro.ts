@@ -1,5 +1,5 @@
 export function hasProInstalled(): boolean {
-	return window.elementor?.helpers?.hasPro?.() ?? false;
+	return window.refraction?.helpers?.hasPro?.() ?? false;
 }
 
 export function isProActive(): boolean {
@@ -7,11 +7,11 @@ export function isProActive(): boolean {
 		return false;
 	}
 
-	return window.elementorPro?.config?.isActive ?? false;
+	return window.refractionPro?.config?.isActive ?? false;
 }
 
 function getProVersion(): string {
-	return window.elementorPro?.config?.version ?? '0.0';
+	return window.refractionPro?.config?.version ?? '0.0';
 }
 
 export function isProAtLeast( targetVersion: string ): boolean {

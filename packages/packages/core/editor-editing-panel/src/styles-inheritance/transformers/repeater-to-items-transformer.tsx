@@ -1,4 +1,4 @@
-import { type AnyTransformer, createTransformer } from '@elementor/editor-canvas';
+import { type AnyTransformer, createTransformer } from '@refraction/editor-canvas';
 
 export const createRepeaterToItemsTransformer = ( originalTransformer: AnyTransformer ) => {
 	return createTransformer( ( value: string, options: { key: string; signal?: AbortSignal } ) => {

@@ -1,14 +1,14 @@
 <?php
-namespace Elementor\Core\DynamicTags;
+namespace Refraction\Core\DynamicTags;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor base data tag.
+ * Refraction base data tag.
  *
- * An abstract class to register new Elementor data tags.
+ * An abstract class to register new Refraction data tags.
  *
  * @since 2.0.0
  * @abstract

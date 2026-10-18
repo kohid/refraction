@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\SiteNavigation\Rest_Fields;
+namespace Refraction\Modules\SiteNavigation\Rest_Fields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -25,7 +25,7 @@ class Page_User_Can {
 			[
 				'get_callback' => [ $this, 'get_callback' ],
 				'schema' => [
-					'description' => __( 'Whether the current user can edit or delete this post', 'elementor' ),
+					'description' => __( 'Whether the current user can edit or delete this post', 'refraction' ),
 					'type' => 'array',
 				],
 			]

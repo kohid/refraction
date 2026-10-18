@@ -1,4 +1,4 @@
-import Console from 'elementor-api/utils/console';
+import Console from 'refraction-api/utils/console';
 
 // Copied from `modules/dev-tools/assets/js/deprecation.js`
 /**
@@ -10,7 +10,7 @@ import Console from 'elementor-api/utils/console';
  */
 
 const softDeprecated = ( name, version, replacement ) => {
-	if ( elementorWebCliConfig.isDebug ) {
+	if ( refractionWebCliConfig.isDebug ) {
 		deprecatedMessage( 'soft', name, version, replacement );
 	}
 };
@@ -100,7 +100,7 @@ export default class Deprecation {
 	 * @return {boolean}
 	 */
 	static isSoftDeprecated( version ) {
-		const total = this.compareVersion( version, elementorWebCliConfig.version );
+		const total = this.compareVersion( version, refractionWebCliConfig.version );
 
 		return total <= 4;
 	}
@@ -110,7 +110,7 @@ export default class Deprecation {
 	 * @return {boolean}
 	 */
 	static isHardDeprecated( version ) {
-		const total = this.compareVersion( version, elementorWebCliConfig.version );
+		const total = this.compareVersion( version, refractionWebCliConfig.version );
 
 		return total < 0 || total >= 8;
 	}

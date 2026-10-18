@@ -10,7 +10,7 @@ export default class extends Marionette.Behavior {
 	initialize() {
 		super.initialize();
 
-		this.listenTo( elementor.channels.dataEditMode, 'switch', this.toggle );
+		this.listenTo( refraction.channels.dataEditMode, 'switch', this.toggle );
 
 		// Save this instance for external use eg: ( hooks ).
 		this.view.options.resizeable = this;
@@ -28,7 +28,7 @@ export default class extends Marionette.Behavior {
 		// If it's a container item, add resize handles only at the end of the element in order to prevent UI
 		// glitches when resizing from start.
 		if ( this.isContainerItem() ) {
-			handles = elementorCommon.config.isRTL ? 'w' : 'e';
+			handles = refractionCommon.config.isRTL ? 'w' : 'e';
 		}
 
 		return {
@@ -80,7 +80,7 @@ export default class extends Marionette.Behavior {
 	 * @return {boolean} is container active
 	 */
 	isContainerActive() {
-		return !! elementorCommon.config.experimentalFeatures.container;
+		return !! refractionCommon.config.experimentalFeatures.container;
 	}
 
 	/**
@@ -100,7 +100,7 @@ export default class extends Marionette.Behavior {
 	 * @return {string} device setting
 	 */
 	getDeviceSetting( setting ) {
-		const currentDeviceMode = elementorFrontend.getCurrentDeviceMode(),
+		const currentDeviceMode = refractionFrontend.getCurrentDeviceMode(),
 			deviceSuffix = ( 'desktop' === currentDeviceMode ) ? '' : '_' + currentDeviceMode;
 
 		return setting + deviceSuffix;
@@ -151,7 +151,7 @@ export default class extends Marionette.Behavior {
 			widthSettingKey = this.getDeviceSetting( this.getWidthKey() );
 
 		const { unit } = this.getSetting( widthSettingKey ),
-			width = elementor.helpers.elementSizeToUnit( this.$el, ui.size.width, unit );
+			width = refraction.helpers.elementSizeToUnit( this.$el, ui.size.width, unit );
 
 		const settingToChange = {
 			...( this.isContainerActive() ? { _flex_size: 'none' } : {} ),

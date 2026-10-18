@@ -4,7 +4,7 @@ import {
 	backgroundGradientOverlayPropTypeUtil,
 	backgroundImageOverlayPropTypeUtil,
 	type BackgroundOverlayItemPropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { useTabs } from '@elementor/ui';
 
 import { useBoundProp } from '../../../bound-prop-context';

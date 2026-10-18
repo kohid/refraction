@@ -1,5 +1,5 @@
 import { createMockDocumentData, createMockElementData } from 'test-utils';
-import { type V1ElementData } from '@elementor/editor-elements';
+import { type V1ElementData } from '@refraction/editor-elements';
 
 import { getComponentDocumentData } from '../component-document-data';
 import { getComponentDocuments } from '../get-component-documents';

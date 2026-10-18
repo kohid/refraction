@@ -1,4 +1,4 @@
-#elementor-icons-manager {
+#refraction-icons-manager {
 
 	&-modal {
 
@@ -136,7 +136,7 @@
 	}
 }
 
-.elementor-icons-manager {
+.refraction-icons-manager {
 
 	&__tab-link {
 		padding-block: 15px;
@@ -162,7 +162,7 @@
 			background-color: var(--e-a-bg-hover);
 		}
 
-		&.elementor-active {
+		&.refraction-active {
 			background-color: var(--e-a-bg-active);
 			color: var(--e-a-color-txt-accent);
 
@@ -192,7 +192,7 @@
 			background-color: var(--e-a-bg-hover);
 		}
 
-		&.elementor-selected {
+		&.refraction-selected {
 			background-color: var(--e-a-bg-active);
 			border-color: var(--e-a-border-color-accent);
 			color: var(--e-a-color-txt-accent);

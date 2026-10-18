@@ -1,16 +1,16 @@
 import PanelContent from './panel-content';
 
 export default Marionette.LayoutView.extend( {
-	id: 'elementor-kit-panel',
+	id: 'refraction-kit-panel',
 
-	template: '#tmpl-elementor-kit-panel',
+	template: '#tmpl-refraction-kit-panel',
 
 	regions: {
-		content: '#elementor-kit__panel-content__wrapper',
+		content: '#refraction-kit__panel-content__wrapper',
 	},
 
 	onBeforeShow() {
-		const container = elementor.documents.getCurrent().container,
+		const container = refraction.documents.getCurrent().container,
 			options = {
 				container,
 				model: container.model,

@@ -7,9 +7,9 @@ import {
 	redirectToInstallation,
 	saveAngieConsent,
 	sendPromptToAngie,
-} from '@elementor/editor-mcp';
-import { ThemeProvider } from '@elementor/editor-ui';
-import { trackEvent } from '@elementor/events';
+} from '@refraction/editor-mcp';
+import { ThemeProvider } from '@refraction/editor-ui';
+import { trackEvent } from '@refraction/events';
 import { XIcon } from '@elementor/icons';
 import {
 	Button,
@@ -40,7 +40,7 @@ type CreateWidgetModalProps = {
 	onClose: () => void;
 };
 
-const CREATE_WIDGET_EVENT = 'elementor/editor/create-widget';
+const CREATE_WIDGET_EVENT = 'refraction/editor/create-widget';
 const ANGIE_MODAL_PROMOTION_IMAGE_URL =
 	'https://assets.elementor.com/packages/v1/images/angie-top-bar-promotion-modal-0926.png';
 const ANGIE_CTA_CLICKED_EVENT = 'ai_widget_cta_clicked' as const;
@@ -98,7 +98,7 @@ function CreateWidgetModal( { prompt, entryPoint, onClose }: CreateWidgetModalPr
 		<ThemeProvider>
 			<Dialog fullWidth maxWidth="md" open onClose={ handleClose }>
 				<IconButton
-					aria-label={ __( 'Close', 'elementor' ) }
+					aria-label={ __( 'Close', 'refraction' ) }
 					onClick={ handleClose }
 					sx={ {
 						position: 'absolute',
@@ -124,12 +124,12 @@ function CreateWidgetModal( { prompt, entryPoint, onClose }: CreateWidgetModalPr
 							<Stack gap={ 2.5 } justifyContent="center" sx={ { flex: 1, paddingInlineEnd: 2.5 } }>
 								<Typography variant="h4" fontWeight={ 600 } color="text.secondary">
 									{ installState === 'error' ? (
-										__( 'Installation failed', 'elementor' )
+										__( 'Installation failed', 'refraction' )
 									) : (
 										<>
-											{ __( 'Pages, layouts,', 'elementor' ) }
+											{ __( 'Pages, layouts,', 'refraction' ) }
 											<br />
-											{ __( 'widgets and more', 'elementor' ) }
+											{ __( 'widgets and more', 'refraction' ) }
 										</>
 									) }
 								</Typography>
@@ -137,11 +137,11 @@ function CreateWidgetModal( { prompt, entryPoint, onClose }: CreateWidgetModalPr
 									{ installState === 'error'
 										? __(
 												"We couldn't install Angie automatically. Click below to install it manually.",
-												'elementor'
+												'refraction'
 										  )
 										: __(
-												'Ask Angie to build you full pages, custom widgets, snippets, and code directly in Elementor. Install and activate Angie once on this site to start building.',
-												'elementor'
+												'Ask Angie to build you full pages, custom widgets, snippets, and code directly in Refraction. Install and activate Angie once on this site to start building.',
+												'refraction'
 										  ) }
 								</Typography>
 								{ installState !== 'error' && (
@@ -163,18 +163,18 @@ function CreateWidgetModal( { prompt, entryPoint, onClose }: CreateWidgetModalPr
 														// translators: %1$s is the Terms link, %2$s is the Privacy Policy link.
 														__(
 															'By installing, you agree to our %1$s & %2$s.',
-															'elementor'
+															'refraction'
 														),
 														'{{terms}}',
 														'{{privacy}}'
 													),
 													{
 														terms: {
-															label: __( 'Terms', 'elementor' ),
+															label: __( 'Terms', 'refraction' ),
 															href: 'https://elementor.com/terms/angie-terms-conditions/',
 														},
 														privacy: {
-															label: __( 'Privacy Policy', 'elementor' ),
+															label: __( 'Privacy Policy', 'refraction' ),
 															href: 'https://elementor.com/about/privacy/',
 														},
 													}
@@ -187,7 +187,7 @@ function CreateWidgetModal( { prompt, entryPoint, onClose }: CreateWidgetModalPr
 							<Stack direction="row" justifyContent="flex-end">
 								{ installState === 'error' ? (
 									<Button variant="contained" color="accent" onClick={ handleFallbackInstall }>
-										{ __( 'Install Manually', 'elementor' ) }
+										{ __( 'Install Manually', 'refraction' ) }
 									</Button>
 								) : (
 									<Button
@@ -202,8 +202,8 @@ function CreateWidgetModal( { prompt, entryPoint, onClose }: CreateWidgetModalPr
 										}
 									>
 										{ installState === 'installing'
-											? __( 'Installing…', 'elementor' )
-											: __( 'Install and activate', 'elementor' ) }
+											? __( 'Installing…', 'refraction' )
+											: __( 'Install and activate', 'refraction' ) }
 									</Button>
 								) }
 							</Stack>

@@ -11,7 +11,7 @@ import {
 	type NumberPropValue,
 	stringPropTypeUtil,
 	type TransformablePropValue,
-} from '@elementor/editor-props';
+} from '@refraction/editor-props';
 import { UnstableGradientBox } from '@elementor/ui';
 
 import { useBoundProp } from '../../bound-prop-context';

@@ -34,7 +34,7 @@ export function findFirstEmptyCell(
 	const autoPlaced: Array< { colSpan: number; rowSpan: number } > = [];
 
 	for ( const child of Array.from( element.children ) ) {
-		if ( ! child.classList.contains( 'elementor-element' ) ) {
+		if ( ! child.classList.contains( 'refraction-element' ) ) {
 			continue;
 		}
 

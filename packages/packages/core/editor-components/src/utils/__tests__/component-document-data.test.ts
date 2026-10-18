@@ -1,10 +1,10 @@
 import { createMockDocument } from 'test-utils';
-import { ajax } from '@elementor/editor-v1-adapters';
+import { ajax } from '@refraction/editor-v1-adapters';
 
 import { getComponentDocumentData } from '../component-document-data';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	ajax: {
 		load: jest.fn(),
 	},

@@ -1,5 +1,5 @@
-import { type MCPRegistryEntry } from '@elementor/editor-mcp';
-import { z } from '@elementor/schema';
+import { type MCPRegistryEntry } from '@refraction/editor-mcp';
+import { z } from '@refraction/schema';
 
 import { fetchCssClassUsage } from '../../service/css-class-usage-service';
 import { type CssClassUsageContent, type EnhancedCssClassUsageContent } from '../components/css-class-usage/types';
@@ -29,7 +29,7 @@ export default function initMcpApplyGetGlobalClassUsages( reg: MCPRegistryEntry 
 
 	addTool( {
 		name: 'get-global-class-usages',
-		description: `Retrieve usages of global classes across all Elementor pages. Heavy operation — scans every page in the site.
+		description: `Retrieve usages of global classes across all Refraction pages. Heavy operation — scans every page in the site.
 
 ## When to use:
 - Before deleting or radically changing a class — to understand cross-page side effects and decide whether to consult the user.

@@ -1,4 +1,4 @@
-import { createTranslate } from '@elementor/utils';
+import { createTranslate } from '@refraction/utils';
 
 import { DEFAULT_STRINGS } from './default-strings';
 

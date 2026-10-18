@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type MouseEvent, type PropsWithChildren } from 'react';
-import { InfoAlert } from '@elementor/editor-ui';
+import { InfoAlert } from '@refraction/editor-ui';
 import { CurrentLocationIcon } from '@elementor/icons';
 import {
 	bindPopover,
@@ -108,11 +108,11 @@ const TooltipWrapper = ( { children, total }: PropsWithChildren< { total: number
 	<Tooltip
 		disableInteractive
 		placement={ 'top' }
-		title={ `${ __( 'Show {{number}} {{locations}}', 'elementor' )
+		title={ `${ __( 'Show {{number}} {{locations}}', 'refraction' )
 			.replace( '{{number}}', total.toString() )
 			.replace(
 				'{{locations}}',
-				total === 1 ? __( 'location', 'elementor' ) : __( 'locations', 'elementor' )
+				total === 1 ? __( 'location', 'refraction' ) : __( 'locations', 'refraction' )
 			) }` }
 	>
 		<span>{ children }</span>
@@ -124,7 +124,7 @@ const InfoAlertMessage = ( { children }: PropsWithChildren ) => (
 		disableInteractive
 		placement={ 'top' }
 		color={ 'secondary' }
-		content={ <InfoAlert sx={ { mt: 1 } }>{ __( 'This class isn’t being used yet.', 'elementor' ) }</InfoAlert> }
+		content={ <InfoAlert sx={ { mt: 1 } }>{ __( 'This class isn’t being used yet.', 'refraction' ) }</InfoAlert> }
 	>
 		<span>{ children }</span>
 	</Infotip>

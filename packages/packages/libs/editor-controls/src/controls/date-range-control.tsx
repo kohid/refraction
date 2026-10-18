@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { dateRangePropTypeUtil, dateStringPropTypeUtil, type PropKey } from '@elementor/editor-props';
+import { dateRangePropTypeUtil, dateStringPropTypeUtil, type PropKey } from '@refraction/editor-props';
 import { FormHelperText, Grid, Stack } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
@@ -9,8 +9,8 @@ import { createControl } from '../create-control';
 import { DateStringControl } from './date-string-control';
 
 const RANGE_LABELS = {
-	min: __( 'Min date', 'elementor' ),
-	max: __( 'Max date', 'elementor' ),
+	min: __( 'Min date', 'refraction' ),
+	max: __( 'Max date', 'refraction' ),
 };
 
 const isMaxBeforeMin = ( minIso?: string | null, maxIso?: string | null ): boolean => {
@@ -21,7 +21,7 @@ const isMaxBeforeMin = ( minIso?: string | null, maxIso?: string | null ): boole
 	return maxIso < minIso;
 };
 
-const RANGE_ERROR_MESSAGE = __( 'Max date must be on or after Min date', 'elementor' );
+const RANGE_ERROR_MESSAGE = __( 'Max date must be on or after Min date', 'refraction' );
 
 export const DateRangeControl = createControl( () => {
 	const { value, setValue, ...propContext } = useBoundProp( dateRangePropTypeUtil );

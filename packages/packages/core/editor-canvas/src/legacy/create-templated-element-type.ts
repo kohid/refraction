@@ -1,4 +1,4 @@
-import { type V1ElementConfig } from '@elementor/editor-elements';
+import { type V1ElementConfig } from '@refraction/editor-elements';
 
 import { computeHtmlTag } from '../renderers/compute-html-tag';
 import { type DomRenderer } from '../renderers/create-dom-renderer';
@@ -44,7 +44,7 @@ export function createTemplatedElementType( {
 		element,
 	} );
 
-	return class extends legacyWindow.elementor.modules.elements.types.Widget {
+	return class extends legacyWindow.refraction.modules.elements.types.Widget {
 		getType() {
 			return type;
 		}

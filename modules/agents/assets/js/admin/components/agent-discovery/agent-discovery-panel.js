@@ -25,13 +25,13 @@ export const AgentDiscoveryPanel = ( { settings } ) => {
 		<Stack direction="row" width="100%" maxWidth="100%" minWidth={ 0 } overflow="auto">
 			<Stack spacing={ 5 } pl={ 7 } pr={ 6 } py={ 4 } flexGrow={ 1 } flexShrink={ 1 } flexBasis={ 0 } minWidth={ 0 }>
 				<Stack spacing={ 1 }>
-					<Typography variant="subtitle1">{ __( 'Tell agents what this site offers them', 'elementor' ) }</Typography>
+					<Typography variant="subtitle1">{ __( 'Tell agents what this site offers them', 'refraction' ) }</Typography>
 					<Typography variant="body2" color="text.secondary">
-						{ __( 'Publishes a catalog of what agents can use on this site and how they can sign in if needed.', 'elementor' ) }
+						{ __( 'Publishes a catalog of what agents can use on this site and how they can sign in if needed.', 'refraction' ) }
 					</Typography>
 				</Stack>
 				<Stack spacing={ 2 }>
-					<Typography variant="subtitle1">{ __( 'What’s included', 'elementor' ) }</Typography>
+					<Typography variant="subtitle1">{ __( 'What’s included', 'refraction' ) }</Typography>
 					{ getIncludedFeatures( files ).map( ( { id, title, description } ) => (
 						<Stack key={ id } spacing={ 1 }>
 							<Stack direction="row" alignItems="center" spacing={ 1 }>

@@ -4,13 +4,13 @@ import {
 	dispatchCommandBefore,
 	mockHistoryManager,
 } from 'test-utils';
-import { createElementStyle, deleteElementStyle, getElementStyles } from '@elementor/editor-elements';
-import { ELEMENTS_STYLES_RESERVED_LABEL } from '@elementor/editor-styles-repository';
+import { createElementStyle, deleteElementStyle, getElementStyles } from '@refraction/editor-elements';
+import { ELEMENTS_STYLES_RESERVED_LABEL } from '@refraction/editor-styles-repository';
 
 import { getClassesProp, hasAtomicWidgets, isAtomicWidget } from '../../utils/command-utils';
 import { initResetStyleCommand } from '../reset-style';
 
-jest.mock( '@elementor/editor-elements' );
+jest.mock( '@refraction/editor-elements' );
 
 jest.mock( '../../utils/command-utils', () => ( {
 	...jest.requireActual( '../../utils/command-utils' ),
@@ -19,8 +19,8 @@ jest.mock( '../../utils/command-utils', () => ( {
 	isAtomicWidget: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	blockCommand: jest.fn(),
 } ) );
 

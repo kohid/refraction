@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\Modules\FloatingButtons\Classes\Conditions;
+namespace Refraction\Modules\FloatingButtons\Classes\Conditions;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Conditions_Cache {
 
-	const CONDITIONS_CACHE_META_KEY = 'elementor_pro_theme_builder_conditions';
+	const CONDITIONS_CACHE_META_KEY = 'refraction_pro_theme_builder_conditions';
 
 	const CONDITION_TYPE = 'floating_buttons';
 

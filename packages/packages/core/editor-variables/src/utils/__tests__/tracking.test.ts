@@ -1,8 +1,8 @@
-import { getMixpanel } from '@elementor/events';
+import { getMixpanel } from '@refraction/events';
 
 import { trackVariableSyncToV3 } from '../tracking';
 
-jest.mock( '@elementor/events', () => ( {
+jest.mock( '@refraction/events', () => ( {
 	getMixpanel: jest.fn(),
 } ) );
 

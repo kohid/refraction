@@ -1,4 +1,4 @@
-import { __getState as getState } from '@elementor/store';
+import { __getState as getState } from '@refraction/store';
 
 import { selectActiveDocument } from '../store/selectors';
 

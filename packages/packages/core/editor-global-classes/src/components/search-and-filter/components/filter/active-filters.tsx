@@ -43,7 +43,7 @@ export const ActiveFilters = () => {
 			{ showClearIcon && (
 				<ClearIconButton
 					trigger="header"
-					tooltipText={ __( 'Clear Filters', 'elementor' ) }
+					tooltipText={ __( 'Clear Filters', 'refraction' ) }
 					sx={ { margin: '0 0 auto auto' } }
 				/>
 			) }

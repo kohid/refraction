@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StrokeControl } from '@elementor/editor-controls';
+import { StrokeControl } from '@refraction/editor-controls';
 import { __ } from '@wordpress/i18n';
 
 import { StylesField } from '../../../controls-registry/styles-field';
@@ -24,7 +24,7 @@ const initTextStroke = {
 	},
 };
 
-const TEXT_STROKE_LABEL = __( 'Text stroke', 'elementor' );
+const TEXT_STROKE_LABEL = __( 'Text stroke', 'refraction' );
 
 export const TextStrokeField = () => {
 	const { value, setValue, canEdit } = useStylesField( 'stroke', {

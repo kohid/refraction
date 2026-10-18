@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { ImportContext } from '../../../../../context/import-context/import-context-provider';
 
 import ActionsFooter from '../../../../../shared/actions-footer/actions-footer';
-import Button from 'elementor-app/ui/molecules/button';
+import Button from 'refraction-app/ui/molecules/button';
 
 import useImportActions from '../../../hooks/use-import-actions';
 
@@ -14,7 +14,7 @@ export default function ImportPluginsFooter( props ) {
 	return (
 		<ActionsFooter>
 			<Button
-				text={ __( 'Previous', 'elementor' ) }
+				text={ __( 'Previous', 'refraction' ) }
 				variant="contained"
 				onClick={ () => {
 					importContext.dispatch( { type: 'SET_FILE', payload: null } );
@@ -26,7 +26,7 @@ export default function ImportPluginsFooter( props ) {
 
 			<Button
 				variant="contained"
-				text={ __( 'Next', 'elementor' ) }
+				text={ __( 'Next', 'refraction' ) }
 				color="primary"
 				url="/import/content"
 				onClick={ () => {

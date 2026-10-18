@@ -1,11 +1,11 @@
 /* eslint-disable testing-library/render-result-naming-convention */
-import type { BreakpointsMap } from '@elementor/editor-responsive';
-import { encodeString } from '@elementor/utils';
+import type { BreakpointsMap } from '@refraction/editor-responsive';
+import { encodeString } from '@refraction/utils';
 
 import { createStylesRenderer, type RendererStyleDefinition } from '../create-styles-renderer';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	isExperimentActive: jest.fn().mockReturnValue( true ),
 } ) );
 
@@ -129,7 +129,7 @@ describe( 'renderStyles', () => {
 
 		const renderStyles = createStylesRenderer( {
 			breakpoints: {} as BreakpointsMap,
-			selectorPrefix: '.elementor-prefix',
+			selectorPrefix: '.refraction-prefix',
 			resolve,
 		} );
 
@@ -141,7 +141,7 @@ describe( 'renderStyles', () => {
 			{
 				breakpoint: 'desktop',
 				id: 'test',
-				value: '.elementor-prefix .test{font-size:24px;}',
+				value: '.refraction-prefix .test{font-size:24px;}',
 				state: null,
 			},
 		] );

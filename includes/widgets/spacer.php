@@ -1,14 +1,14 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor spacer widget.
+ * Refraction spacer widget.
  *
- * Elementor widget that inserts a space that divides various elements.
+ * Refraction widget that inserts a space that divides various elements.
  *
  * @since 1.0.0
  */
@@ -39,7 +39,7 @@ class Widget_Spacer extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Spacer', 'elementor' );
+		return esc_html__( 'Spacer', 'refraction' );
 	}
 
 	/**
@@ -120,14 +120,14 @@ class Widget_Spacer extends Widget_Base {
 		$this->start_controls_section(
 			'section_spacer',
 			[
-				'label' => esc_html__( 'Spacer', 'elementor' ),
+				'label' => esc_html__( 'Spacer', 'refraction' ),
 			]
 		);
 
 		$this->add_responsive_control(
 			'space',
 			[
-				'label' => esc_html__( 'Space', 'elementor' ),
+				'label' => esc_html__( 'Space', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 50,
@@ -166,8 +166,8 @@ class Widget_Spacer extends Widget_Base {
 			return;
 		}
 		?>
-		<div class="elementor-spacer">
-			<div class="elementor-spacer-inner"></div>
+		<div class="refraction-spacer">
+			<div class="refraction-spacer-inner"></div>
 		</div>
 		<?php
 	}
@@ -187,8 +187,8 @@ class Widget_Spacer extends Widget_Base {
 			return;
 		}
 		#>
-		<div class="elementor-spacer">
-			<div class="elementor-spacer-inner"></div>
+		<div class="refraction-spacer">
+			<div class="refraction-spacer-inner"></div>
 		</div>
 		<?php
 	}

@@ -50,14 +50,14 @@ QUnit.module( 'Component: document/history', ( hooks ) => {
 	// QUnit.test( 'Dynamic in repeater', ( assert ) => {
 	// 	const eForm = DocumentHelper.createAutoForm(),
 	// 		eFormItem = eForm.children[ 0 ],
-	// 		dynamicTag = '[elementor-tag id="d96ebd2" name="post-date" settings="%7B%22format%22%3A%22d%2Fm%2FY%22%7D"]', // post-date with non default format.
+	// 		dynamicTag = '[refraction-tag id="d96ebd2" name="post-date" settings="%7B%22format%22%3A%22d%2Fm%2FY%22%7D"]', // post-date with non default format.
 	// 		dynamicValue = '{ dynamic text }',
-	// 		{ id, name, settings } = elementor.dynamicTags.tagTextToTagData( dynamicTag ),
-	// 		tag = elementor.dynamicTags.createTag( id, name, settings ),
-	// 		key = elementor.dynamicTags.createCacheKey( tag );
+	// 		{ id, name, settings } = refraction.dynamicTags.tagTextToTagData( dynamicTag ),
+	// 		tag = refraction.dynamicTags.createTag( id, name, settings ),
+	// 		key = refraction.dynamicTags.createCacheKey( tag );
 	//
 	// 	// Set fake data.
-	// 	elementor.dynamicTags.cache[ key ] = dynamicValue;
+	// 	refraction.dynamicTags.cache[ key ] = dynamicValue;
 	//
 	// 	const doneAttach = assert.async();
 	//
@@ -92,28 +92,28 @@ QUnit.module( 'Component: document/history', ( hooks ) => {
 		const historyItem = HistoryHelper.getFirstItem().attributes;
 
 		// Saver editor flag is `true`.
-		assert.equal( elementor.saver.isEditorChanged(), true,
+		assert.equal( refraction.saver.isEditorChanged(), true,
 			'After create, saver editor flag is "true".' );
 
 		// Undo.
 		HistoryHelper.undoValidate( assert, historyItem );
 
 		// Saver editor flag is `true`.
-		assert.equal( elementor.saver.isEditorChanged(), false,
+		assert.equal( refraction.saver.isEditorChanged(), false,
 			'After create, saver editor flag is "false".' );
 
 		// Redo.
 		HistoryHelper.redoValidate( assert, historyItem );
 
 		// Saver editor flag is `true`.
-		assert.equal( elementor.saver.isEditorChanged(), true,
+		assert.equal( refraction.saver.isEditorChanged(), true,
 			'After create, saver editor flag is "true".' );
 	} );
 
 	QUnit.test( 'History Rollback', ( assert ) => {
 		try {
 			$e.run( 'document/elements/create', {
-				container: ( new elementorModules.editor.Container( {} ) ),
+				container: ( new refractionModules.editor.Container( {} ) ),
 				settings: {},
 			} );
 		} catch ( e ) {

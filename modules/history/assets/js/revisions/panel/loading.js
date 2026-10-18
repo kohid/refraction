@@ -1,10 +1,10 @@
 export default class extends Marionette.ItemView {
 	getTemplate() {
-		return '#tmpl-elementor-panel-revisions-loading';
+		return '#tmpl-refraction-panel-revisions-loading';
 	}
 
 	id() {
-		return 'elementor-panel-revisions-loading';
+		return 'refraction-panel-revisions-loading';
 	}
 
 	onRender() {

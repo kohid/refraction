@@ -19,7 +19,7 @@ export class Create extends $e.modules.editor.document.CommandHistoryBase {
 			return;
 		}
 
-		if ( ! elementor.helpers.isAtomicWidget( data.modelToRestore ) ) {
+		if ( ! refraction.helpers.isAtomicWidget( data.modelToRestore ) ) {
 			$e.run( 'document/elements/delete', { container: data.containerToRestore } );
 
 			return;
@@ -27,7 +27,7 @@ export class Create extends $e.modules.editor.document.CommandHistoryBase {
 
 		const containerToRestore = data.containerToRestore?.lookup?.() ?? data.containerToRestore;
 
-		if ( containerToRestore instanceof elementorModules.editor.Container ) {
+		if ( containerToRestore instanceof refractionModules.editor.Container ) {
 			$e.run( 'document/elements/delete', { container: containerToRestore } );
 
 			return;
@@ -55,7 +55,7 @@ export class Create extends $e.modules.editor.document.CommandHistoryBase {
 			containers,
 			model,
 			type: 'add',
-			title: elementor.helpers.getModelLabel( model ),
+			title: refraction.helpers.getModelLabel( model ),
 		};
 	}
 

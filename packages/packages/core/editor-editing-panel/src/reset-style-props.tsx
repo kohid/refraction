@@ -1,8 +1,8 @@
-import { useBoundProp } from '@elementor/editor-controls';
-import { type TransformablePropValue } from '@elementor/editor-props';
-import { hasVariable } from '@elementor/editor-variables';
+import { useBoundProp } from '@refraction/editor-controls';
+import { type TransformablePropValue } from '@refraction/editor-props';
+import { hasVariable } from '@refraction/editor-variables';
 import { BrushBigIcon } from '@elementor/icons';
-import { controlActionsMenu } from '@elementor/menus';
+import { controlActionsMenu } from '@refraction/menus';
 import { __ } from '@wordpress/i18n';
 
 import { useIsStyle } from './contexts/style-context';
@@ -45,7 +45,7 @@ export function useResetStyleValueProps() {
 
 	return {
 		visible,
-		title: __( 'Clear', 'elementor' ),
+		title: __( 'Clear', 'refraction' ),
 		icon: BrushBigIcon,
 		onClick: () => resetValue(),
 	};

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { createMockPropType, renderControl } from 'test-utils';
-import { ajax } from '@elementor/editor-v1-adapters';
+import { ajax } from '@refraction/editor-v1-adapters';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { NoticeControl } from '../notice-control';
 
-jest.mock( '@elementor/editor-v1-adapters', () => ( {
-	...jest.requireActual( '@elementor/editor-v1-adapters' ),
+jest.mock( '@refraction/editor-v1-adapters', () => ( {
+	...jest.requireActual( '@refraction/editor-v1-adapters' ),
 	ajax: {
 		load: jest.fn(),
 	},
@@ -17,7 +17,7 @@ const propType = createMockPropType( { kind: 'plain' } );
 describe( 'NoticeControl', () => {
 	beforeEach( () => {
 		jest.mocked( ajax.load ).mockResolvedValue( {} );
-		( window as unknown as { elementor: unknown } ).elementor = {
+		( window as unknown as { refraction: unknown } ).refraction = {
 			config: { user: { dismissed_editor_notices: [] } },
 		};
 	} );
@@ -77,14 +77,14 @@ describe( 'NoticeControl', () => {
 		} );
 
 		const extendedWindow = window as unknown as {
-			elementor: { config: { user: { dismissed_editor_notices: string[] } } };
+			refraction: { config: { user: { dismissed_editor_notices: string[] } } };
 		};
-		expect( extendedWindow.elementor.config.user.dismissed_editor_notices ).toContain( 'ally-atomic-notice' );
+		expect( extendedWindow.refraction.config.user.dismissed_editor_notices ).toContain( 'ally-atomic-notice' );
 	} );
 
 	it( 'should not render when the notice was already dismissed', () => {
 		// Arrange.
-		( window as unknown as { elementor: unknown } ).elementor = {
+		( window as unknown as { refraction: unknown } ).refraction = {
 			config: { user: { dismissed_editor_notices: [ 'ally-atomic-notice' ] } },
 		};
 
@@ -121,8 +121,8 @@ describe( 'NoticeControl', () => {
 		expect( ajax.load ).not.toHaveBeenCalled();
 
 		const extendedWindow = window as unknown as {
-			elementor: { config: { user: { dismissed_editor_notices: string[] } } };
+			refraction: { config: { user: { dismissed_editor_notices: string[] } } };
 		};
-		expect( extendedWindow.elementor.config.user.dismissed_editor_notices ).toContain( 'ally-atomic-notice' );
+		expect( extendedWindow.refraction.config.user.dismissed_editor_notices ).toContain( 'ally-atomic-notice' );
 	} );
 } );

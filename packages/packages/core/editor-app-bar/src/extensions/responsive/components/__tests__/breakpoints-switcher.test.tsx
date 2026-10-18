@@ -5,12 +5,12 @@ import {
 	useActivateBreakpoint,
 	useActiveBreakpoint,
 	useBreakpoints,
-} from '@elementor/editor-responsive';
+} from '@refraction/editor-responsive';
 import { fireEvent, screen } from '@testing-library/react';
 
 import BreakpointsSwitcher from '../breakpoints-switcher';
 
-jest.mock( '@elementor/editor-responsive' );
+jest.mock( '@refraction/editor-responsive' );
 
 describe( '<BreakpointsSwitcher />', () => {
 	beforeEach( () => {

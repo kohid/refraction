@@ -1,4 +1,4 @@
-import { httpService } from '@elementor/http-client';
+import { httpService } from '@refraction/http-client';
 
 import { type PageContextResponse } from '../types';
 import { isNonceInvalidError, refreshAuditsNonce } from '../utils/session-expiration';

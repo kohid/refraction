@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AxiosHeaders } from 'axios';
-import { QueryClient, QueryClientProvider } from '@elementor/query';
+import { QueryClient, QueryClientProvider } from '@refraction/query';
 import { act, renderHook } from '@testing-library/react';
 
 import { fetchCssClassUsage } from '../../../../service/css-class-usage-service';

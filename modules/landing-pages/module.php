@@ -1,15 +1,15 @@
 <?php
-namespace Elementor\Modules\LandingPages;
+namespace Refraction\Modules\LandingPages;
 
-use Elementor\Core\Base\Module as BaseModule;
-use Elementor\Core\Documents_Manager;
-use Elementor\Core\Experiments\Manager as Experiments_Manager;
-use Elementor\Modules\LandingPages\Documents\Landing_Page;
-use Elementor\Modules\LandingPages\AdminMenuItems\Editor_One_Landing_Pages_Menu;
-use Elementor\Modules\LandingPages\Module as Landing_Pages_Module;
-use Elementor\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Elementor\Plugin;
-use Elementor\TemplateLibrary\Source_Local;
+use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Core\Documents_Manager;
+use Refraction\Core\Experiments\Manager as Experiments_Manager;
+use Refraction\Modules\LandingPages\Documents\Landing_Page;
+use Refraction\Modules\LandingPages\AdminMenuItems\Editor_One_Landing_Pages_Menu;
+use Refraction\Modules\LandingPages\Module as Landing_Pages_Module;
+use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,7 +20,7 @@ class Module extends BaseModule {
 	const DOCUMENT_TYPE = 'landing-page';
 	const CPT = 'e-landing-page';
 	const ADMIN_PAGE_SLUG = 'edit.php?post_type=' . self::CPT;
-	const ACTIVATION_KEY = 'elementor_landing_pages_activation';
+	const ACTIVATION_KEY = 'refraction_landing_pages_activation';
 
 	private $has_pages = null;
 	private $trashed_posts;
@@ -41,8 +41,8 @@ class Module extends BaseModule {
 	private function register_experiment() {
 		Plugin::$instance->experiments->add_feature( [
 			'name' => 'landing-pages',
-			'title' => esc_html__( 'Landing Pages', 'elementor' ),
-			'description' => esc_html__( 'Adds a new Elementor content type that allows creating beautiful landing pages instantly in a streamlined workflow.', 'elementor' ),
+			'title' => esc_html__( 'Landing Pages', 'refraction' ),
+			'description' => esc_html__( 'Adds a new Refraction content type that allows creating beautiful landing pages instantly in a streamlined workflow.', 'refraction' ),
 			'release_status' => Experiments_Manager::RELEASE_STATUS_BETA,
 			'default' => Experiments_Manager::STATE_ACTIVE,
 			'new_site' => [
@@ -60,7 +60,7 @@ class Module extends BaseModule {
 	 *
 	 * If the activation key set to `1` in wp_options, the Landing Pages feature should be active. Otherwise not.
 	 * This is a backwards compatibility for websites that had Landing Pages, therefore couldn't be deactivated.
-	 * When deleting posts in Landing Pages CPT, Elementor checks again whether this feature should be activated.
+	 * When deleting posts in Landing Pages CPT, Refraction checks again whether this feature should be activated.
 	 *
 	 * @since 3.31.0
 	 */
@@ -98,7 +98,7 @@ class Module extends BaseModule {
 			'post_type' => self::CPT,
 			'post_status' => 'trash',
 			'posts_per_page' => 1,
-			'meta_key' => '_elementor_template_type',
+			'meta_key' => '_refraction_template_type',
 			'meta_value' => self::DOCUMENT_TYPE,
 		] );
 
@@ -117,7 +117,7 @@ class Module extends BaseModule {
 			'post_type' => self::CPT,
 			'post_status' => 'any',
 			'posts_per_page' => 1,
-			'meta_key' => '_elementor_template_type',
+			'meta_key' => '_refraction_template_type',
 			'meta_value' => self::DOCUMENT_TYPE,
 		] );
 
@@ -127,18 +127,18 @@ class Module extends BaseModule {
 	}
 
 	/**
-	 * Is Elementor Landing Page.
+	 * Is Refraction Landing Page.
 	 *
-	 * Check whether the post is an Elementor Landing Page.
+	 * Check whether the post is a Refraction Landing Page.
 	 *
 	 * @since 3.1.0
 	 * @access public
 	 *
 	 * @param \WP_Post $post Post Object.
 	 *
-	 * @return bool Whether the post was built with Elementor.
+	 * @return bool Whether the post was built with Refraction.
 	 */
-	public function is_elementor_landing_page( $post ) {
+	public function is_refraction_landing_page( $post ) {
 		return self::CPT === $post->post_type;
 	}
 
@@ -165,7 +165,7 @@ class Module extends BaseModule {
 	 * Get 'Add New' Landing Page URL
 	 *
 	 * Retrieves the custom URL for the admin dashboard's 'Add New' button in the Landing Pages admin screen. This URL
-	 * creates a new Landing Pages and directly opens the Elementor Editor with the Template Library modal open on the
+	 * creates a new Landing Pages and directly opens the Refraction Editor with the Template Library modal open on the
 	 * Landing Pages tab.
 	 *
 	 * @since 3.1.0
@@ -196,14 +196,14 @@ class Module extends BaseModule {
 		<div class="e-landing-pages-empty">
 		<?php
 		/** @var Source_Local $source_local */
-		$source_local->print_blank_state_template( esc_html__( 'Landing Page', 'elementor' ), $this->get_add_new_landing_page_url(), esc_html__( 'Build Effective Landing Pages for your business\' marketing campaigns.', 'elementor' ) );
+		$source_local->print_blank_state_template( esc_html__( 'Landing Page', 'refraction' ), $this->get_add_new_landing_page_url(), esc_html__( 'Build Effective Landing Pages for your business\' marketing campaigns.', 'refraction' ) );
 
 		if ( ! empty( $trashed_posts ) ) : ?>
 			<div class="e-trashed-items">
 				<?php
 					printf(
 						/* translators: %1$s Link open tag, %2$s: Link close tag. */
-						esc_html__( 'Or view %1$sTrashed Items%2$s', 'elementor' ),
+						esc_html__( 'Or view %1$sTrashed Items%2$s', 'refraction' ),
 						'<a href="' . esc_url( admin_url( 'edit.php?post_status=trash&post_type=' . self::CPT ) ) . '">',
 						'</a>'
 					);
@@ -223,7 +223,7 @@ class Module extends BaseModule {
 		$screen = get_current_screen();
 
 		if ( 'post' === $screen->base ) {
-			return $this->is_elementor_landing_page( get_post() );
+			return $this->is_refraction_landing_page( get_post() );
 		}
 
 		return false;
@@ -232,8 +232,8 @@ class Module extends BaseModule {
 	/**
 	 * Admin Localize Settings
 	 *
-	 * Enables adding properties to the globally available elementorAdmin.config JS object in the Admin Dashboard.
-	 * Runs on the 'elementor/admin/localize_settings' filter.
+	 * Enables adding properties to the globally available refractionAdmin.config JS object in the Admin Dashboard.
+	 * Runs on the 'refraction/admin/localize_settings' filter.
 	 *
 	 * @since 3.1.0
 	 *
@@ -261,28 +261,28 @@ class Module extends BaseModule {
 	 */
 	private function register_landing_page_cpt() {
 		$labels = [
-			'name' => esc_html__( 'Landing Pages', 'elementor' ),
-			'singular_name' => esc_html__( 'Landing Page', 'elementor' ),
-			'add_new' => esc_html__( 'Add New', 'elementor' ),
-			'add_new_item' => esc_html__( 'Add New Landing Page', 'elementor' ),
-			'edit_item' => esc_html__( 'Edit Landing Page', 'elementor' ),
-			'new_item' => esc_html__( 'New Landing Page', 'elementor' ),
-			'all_items' => esc_html__( 'All Landing Pages', 'elementor' ),
-			'view_item' => esc_html__( 'View Landing Page', 'elementor' ),
-			'search_items' => esc_html__( 'Search Landing Pages', 'elementor' ),
-			'not_found' => esc_html__( 'No landing pages found', 'elementor' ),
-			'not_found_in_trash' => esc_html__( 'No landing pages found in trash', 'elementor' ),
+			'name' => esc_html__( 'Landing Pages', 'refraction' ),
+			'singular_name' => esc_html__( 'Landing Page', 'refraction' ),
+			'add_new' => esc_html__( 'Add New', 'refraction' ),
+			'add_new_item' => esc_html__( 'Add New Landing Page', 'refraction' ),
+			'edit_item' => esc_html__( 'Edit Landing Page', 'refraction' ),
+			'new_item' => esc_html__( 'New Landing Page', 'refraction' ),
+			'all_items' => esc_html__( 'All Landing Pages', 'refraction' ),
+			'view_item' => esc_html__( 'View Landing Page', 'refraction' ),
+			'search_items' => esc_html__( 'Search Landing Pages', 'refraction' ),
+			'not_found' => esc_html__( 'No landing pages found', 'refraction' ),
+			'not_found_in_trash' => esc_html__( 'No landing pages found in trash', 'refraction' ),
 			'parent_item_colon' => '',
-			'menu_name' => esc_html__( 'Landing Pages', 'elementor' ),
+			'menu_name' => esc_html__( 'Landing Pages', 'refraction' ),
 		];
 
 		$args = [
 			'labels' => $labels,
 			'public' => true,
-			'show_in_menu' => 'edit.php?post_type=elementor_library&tabs_group=library',
+			'show_in_menu' => 'edit.php?post_type=refraction_library&tabs_group=library',
 			'capability_type' => 'page',
 			'taxonomies' => [ Source_Local::TAXONOMY_TYPE_SLUG ],
-			'supports' => [ 'title', 'editor', 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'page-attributes', 'thumbnail', 'custom-fields', 'post-formats', 'elementor' ],
+			'supports' => [ 'title', 'editor', 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'page-attributes', 'thumbnail', 'custom-fields', 'post-formats', 'refraction' ],
 		];
 
 		register_post_type( self::CPT, $args );
@@ -458,34 +458,34 @@ class Module extends BaseModule {
 			}
 		}
 
-		add_action( 'elementor/documents/register', function( Documents_Manager $documents_manager ) {
+		add_action( 'refraction/documents/register', function( Documents_Manager $documents_manager ) {
 			$documents_manager->register_document_type( self::DOCUMENT_TYPE, Landing_Page::get_class_full_name() );
 		} );
 
-		add_action( 'elementor/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
+		add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 			$this->register_editor_one_menu( $menu_data_provider );
 		} );
 
-		add_filter( 'elementor/editor-one/menu/elementor_post_types', function ( array $elementor_post_types ): array {
-			$elementor_post_types[ static::CPT ] = [
-				'menu_slug' => 'elementor-editor-templates',
+		add_filter( 'refraction/editor-one/menu/refraction_post_types', function ( array $refraction_post_types ): array {
+			$refraction_post_types[ static::CPT ] = [
+				'menu_slug' => 'refraction-editor-templates',
 				'child_slug' => 'edit.php?post_type=' . static::CPT,
 			];
-			return $elementor_post_types;
+			return $refraction_post_types;
 		} );
 
-		// Add the custom 'Add New' link for Landing Pages into Elementor's admin config.
-		add_action( 'elementor/admin/localize_settings', function( array $settings ) {
+		// Add the custom 'Add New' link for Landing Pages into Refraction's admin config.
+		add_action( 'refraction/admin/localize_settings', function( array $settings ) {
 			return $this->admin_localize_settings( $settings );
 		} );
 
-		add_filter( 'elementor/template_library/sources/local/register_taxonomy_cpts', function( array $cpts ) {
+		add_filter( 'refraction/template_library/sources/local/register_taxonomy_cpts', function( array $cpts ) {
 			$cpts[] = self::CPT;
 
 			return $cpts;
 		} );
 
-		// When deleting posts in Landing Page CPT, force Elementor to check again whether this feature should be activated.
+		// When deleting posts in Landing Page CPT, force Refraction to check again whether this feature should be activated.
 		add_action( 'deleted_post_' . self::CPT, function () {
 			delete_option( self::ACTIVATION_KEY );
 		} );
@@ -506,7 +506,7 @@ class Module extends BaseModule {
 			$document->admin_columns_content( $column_name );
 		}, 10, 2 );
 
-		// Overwrite the Admin Bar's 'New +' Landing Page URL with the link that creates the new LP in Elementor
+		// Overwrite the Admin Bar's 'New +' Landing Page URL with the link that creates the new LP in Refraction
 		// with the Template Library modal open.
 		add_action( 'admin_bar_menu', function( $admin_bar ) {
 			// Get the Landing Page menu node.

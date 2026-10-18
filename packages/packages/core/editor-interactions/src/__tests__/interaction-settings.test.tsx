@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useBreakpoints } from '@elementor/editor-responsive';
+import { useBreakpoints } from '@refraction/editor-responsive';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { InteractionSettings } from '../components/interaction-settings';
 import { extractExcludedBreakpoints } from '../utils/prop-value-utils';
 import { createInteractionItemValue } from './utils';
 
-jest.mock( '@elementor/editor-responsive', () => ( {
+jest.mock( '@refraction/editor-responsive', () => ( {
 	useBreakpoints: jest.fn(),
 } ) );
 

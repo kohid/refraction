@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMockPropType, createMockPropUtil, createMockSchema } from 'test-utils';
-import { type PropType, sizePropTypeUtil, stringPropTypeUtil } from '@elementor/editor-props';
+import { type PropType, sizePropTypeUtil, stringPropTypeUtil } from '@refraction/editor-props';
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
 
 import { PropKeyProvider, PropProvider, useBoundProp } from '../bound-prop-context';

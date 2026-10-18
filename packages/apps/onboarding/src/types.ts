@@ -1,5 +1,5 @@
 export type ExtendedWindow = Window & {
-	elementorCommon?: {
+	refractionCommon?: {
 		config?: {
 			isRTL?: boolean;
 			library_connect?: Record< string, unknown >;

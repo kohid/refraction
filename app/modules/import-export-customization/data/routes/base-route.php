@@ -1,6 +1,6 @@
 <?php
 
-namespace Elementor\App\Modules\ImportExportCustomization\Data\Routes;
+namespace Refraction\App\Modules\ImportExportCustomization\Data\Routes;
 
 abstract class Base_Route {
 	public function __construct() {}

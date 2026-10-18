@@ -1,16 +1,16 @@
-import { getSelectedElements } from '@elementor/editor-elements';
-import { trackEvent } from '@elementor/events';
+import { getSelectedElements } from '@refraction/editor-elements';
+import { trackEvent } from '@refraction/events';
 
 import { eventBus } from '../../../services/event-bus';
 import { subscribeToTransitionEvent } from '../trainsition-events';
 
-jest.mock( '@elementor/editor-elements', () => ( {
-	...jest.requireActual( '@elementor/editor-elements' ),
+jest.mock( '@refraction/editor-elements', () => ( {
+	...jest.requireActual( '@refraction/editor-elements' ),
 	getSelectedElements: jest.fn(),
 } ) );
 
-jest.mock( '@elementor/events', () => ( {
-	...jest.requireActual( '@elementor/events' ),
+jest.mock( '@refraction/events', () => ( {
+	...jest.requireActual( '@refraction/events' ),
 	trackEvent: jest.fn(),
 } ) );
 

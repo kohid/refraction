@@ -11,7 +11,7 @@ import {
 	Stack,
 } from '@elementor/ui';
 import * as PropTypes from 'prop-types';
-import { htmlDecodeTextContent } from 'elementor-app/utils/utils';
+import { htmlDecodeTextContent } from 'refraction-app/utils/utils';
 const DEFAULT_VISIBLE_ITEMS_COUNT = 16;
 
 export function ListSettingSection( {
@@ -63,7 +63,7 @@ export function ListSettingSection( {
 											},
 										},
 									} }
-									label={ `${ __( 'All', 'elementor-pro' ) } ${ title.toLowerCase() }` }
+									label={ `${ __( 'All', 'refraction-pro' ) } ${ title.toLowerCase() }` }
 								/>
 							</Grid>
 							{ ( showMore ? items : items.slice( 0, DEFAULT_VISIBLE_ITEMS_COUNT ) ).map( ( item ) => {
@@ -112,7 +112,7 @@ export function ListSettingSection( {
 					color="info"
 					onClick={ () => setShowMore( ! showMore ) }
 				>
-					{ showMore ? __( 'Show less', 'elementor' ) : __( 'Show more', 'elementor' ) }
+					{ showMore ? __( 'Show less', 'refraction' ) : __( 'Show more', 'refraction' ) }
 				</Button>
 			) }
 		</Box>

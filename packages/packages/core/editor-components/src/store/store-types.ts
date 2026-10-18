@@ -1,4 +1,4 @@
-import { type V1Document } from '@elementor/editor-documents';
+import { type V1Document } from '@refraction/editor-documents';
 
 import { type Component, type ComponentId, type PublishedComponent, type UnpublishedComponent } from '../types';
 

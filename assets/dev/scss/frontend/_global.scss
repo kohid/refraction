@@ -1,8 +1,8 @@
 //
-// Global selectors for Elementor Front-End
+// Global selectors for Refraction Front-End
 //
 
-.elementor {
+.refraction {
 
 	* {
 		&, &:before, &:after {
@@ -28,10 +28,10 @@
 		box-shadow: none;
 	}
 
-	.elementor-widget {
+	.refraction-widget {
 
 		// Classic Editor & Gutenberg Compatibility
-		&:not(.elementor-widget-text-editor):not(.elementor-widget-theme-post-content) {
+		&:not(.refraction-widget-text-editor):not(.refraction-widget-theme-post-content) {
 
 			figure {
 				margin: 0;
@@ -52,9 +52,9 @@
 	}
 
 	// Background Video
-	.elementor-background-video-container,
-	.elementor-background-holder,
-	.elementor-background {
+	.refraction-background-video-container,
+	.refraction-background-holder,
+	.refraction-background {
 		inset: 0;
 		position: absolute;
 		overflow: hidden;
@@ -62,40 +62,40 @@
 		direction: ltr;
 	}
 
-	.elementor-background-video-container {
+	.refraction-background-video-container {
 		transition: opacity 1s;
 		pointer-events: none; // This prevents the player from showing video info on hover
 
-		&.elementor-loading {
+		&.refraction-loading {
 			opacity: 0;
 		}
 	}
 
-	.elementor-background-video,
-	.elementor-background-video-embed {
+	.refraction-background-video,
+	.refraction-background-video-embed {
 		max-width: none; //Stretch the background video on all section
 	}
 
-	.elementor-background-video,
-	.elementor-background-video-embed,
-	.elementor-background-video-hosted {
+	.refraction-background-video,
+	.refraction-background-video-embed,
+	.refraction-background-video-hosted {
 		position: absolute;
 		inset-block-start: 50%;
 		inset-inline-start: 50%;
 		transform: translate(-50%, -50%);
 	}
 
-	.elementor-background-video-hosted {
+	.refraction-background-video-hosted {
 		object-fit: cover; // For HTML5 portrait video
 	}
 	// End Background Video
 
-	.elementor-background-overlay {
+	.refraction-background-overlay {
 		inset: 0;
 		position: absolute;
 	}
 
-	.elementor-background-slideshow {
+	.refraction-background-slideshow {
 		position: absolute;
 		inset: 0;
 		z-index: $ground-layer;
@@ -109,22 +109,22 @@
 	}
 }
 
-.elementor-widget-wrap,
+.refraction-widget-wrap,
 .e-con,
 .e-con-inner {
 
-	> .elementor-element.elementor-absolute {
+	> .refraction-element.refraction-absolute {
 		position: absolute;
 	}
 
-	> .elementor-element.elementor-fixed {
+	> .refraction-element.refraction-fixed {
 		position: fixed;
 	}
 }
 
-.elementor-widget-wrap {
+.refraction-widget-wrap {
 
-	.elementor-element.elementor-widget {
+	.refraction-element.refraction-widget {
 
 		@mixin inline-width($device) {
 
@@ -149,10 +149,10 @@
 	}
 }
 
-.elementor-element {
+.refraction-element {
 
-	&.elementor-absolute,
-	&.elementor-fixed {
+	&.refraction-absolute,
+	&.refraction-fixed {
 		z-index: $first-layer;
 	}
 
@@ -176,7 +176,7 @@
 	order: var(--order);
 	align-self: var(--align-self);
 
-	&:where( .e-con-full, .elementor-widget ) {
+	&:where( .e-con-full, .refraction-widget ) {
 		// Flex container.
 		flex-direction: var( --flex-direction );
 		flex-wrap: var( --flex-wrap );
@@ -187,27 +187,27 @@
 	}
 }
 
-.elementor-invisible {
+.refraction-invisible {
 	visibility: hidden;
 }
 
-.elementor-custom-embed-play {
+.refraction-custom-embed-play {
 	@include absolute-center;
-	$elementor-custom-embed-play-icon-size: 100px;
-	$elementor-custom-embed-play-icon-color: #fff;
-	$elementor-custom-embed-play-icon-shadow: 1px 0 6px rgba(0, 0, 0, 0.3);
+	$refraction-custom-embed-play-icon-size: 100px;
+	$refraction-custom-embed-play-icon-color: #fff;
+	$refraction-custom-embed-play-icon-shadow: 1px 0 6px rgba(0, 0, 0, 0.3);
 
 	i {
-		font-size: $elementor-custom-embed-play-icon-size;
-		color: $elementor-custom-embed-play-icon-color;
-		text-shadow: $elementor-custom-embed-play-icon-shadow;
+		font-size: $refraction-custom-embed-play-icon-size;
+		color: $refraction-custom-embed-play-icon-color;
+		text-shadow: $refraction-custom-embed-play-icon-shadow;
 	}
 
 	svg {
-		height: $elementor-custom-embed-play-icon-size;
-		width: $elementor-custom-embed-play-icon-size;
-		fill: $elementor-custom-embed-play-icon-color;
-		filter: drop-shadow($elementor-custom-embed-play-icon-shadow);
+		height: $refraction-custom-embed-play-icon-size;
+		width: $refraction-custom-embed-play-icon-size;
+		fill: $refraction-custom-embed-play-icon-color;
+		filter: drop-shadow($refraction-custom-embed-play-icon-shadow);
 	}
 
 	i,
@@ -216,7 +216,7 @@
 		transition: all .5s;
 	}
 
-	&.elementor-playing {
+	&.refraction-playing {
 
 		i {
 			font-family: eicons;
@@ -234,11 +234,11 @@
 	}
 }
 
-.elementor-tag {
+.refraction-tag {
 	display: inline-flex;
 }
 
-.elementor-ken-burns {
+.refraction-ken-burns {
 	transition-property: transform;
 	transition-duration: 10s;
 	transition-timing-function: linear;
@@ -250,18 +250,18 @@
 	&--active {
 		transition-duration: 20s;
 
-		&.elementor-ken-burns--out {
+		&.refraction-ken-burns--out {
 			transform: scale(1);
 		}
 
-		&.elementor-ken-burns--in {
+		&.refraction-ken-burns--in {
 			transform: scale(1.3);
 		}
 	}
 }
 
 @mixin button-alignment($device) {
-	.elementor#{$device}-align- {
+	.refraction#{$device}-align- {
 
 		&center {
 			text-align: center;
@@ -279,14 +279,14 @@
 		&right,
 		&left {
 
-			.elementor-button {
+			.refraction-button {
 				width: auto;
 			}
 		}
 
 		&justify {
 
-			.elementor-button {
+			.refraction-button {
 				width: 100%;
 			}
 		}
@@ -319,16 +319,16 @@
 	@include button-alignment(-mobile);
 }
 
-// Elementor Page Title
+// Refraction Page Title
 :root {
 	--page-title-display: block;
 }
 
-.elementor-page-title, h1.entry-title {
+.refraction-page-title, h1.entry-title {
 	display: var(--page-title-display);
 }
 
-// Global animation that should be available even when the elementor-icons library is not loaded.
+// Global animation that should be available even when the refraction-icons library is not loaded.
 @keyframes eicon-spin {
 	0% {
 		transform: rotate(0deg);
@@ -338,7 +338,7 @@
 	}
 }
 
-// Global animation class that should be available even when the elementor-icons library is not loaded.
+// Global animation class that should be available even when the refraction-icons library is not loaded.
 .eicon-animation-spin {
 	animation: eicon-spin 2s infinite linear;
 }

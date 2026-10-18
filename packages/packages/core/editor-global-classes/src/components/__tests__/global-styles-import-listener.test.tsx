@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { renderWithStore } from 'test-utils';
-import { GLOBAL_STYLES_IMPORTED_EVENT } from '@elementor/editor-canvas';
-import { __createStore as createStore, __registerSlice as registerSlice } from '@elementor/store';
+import { GLOBAL_STYLES_IMPORTED_EVENT } from '@refraction/editor-canvas';
+import { __createStore as createStore, __registerSlice as registerSlice } from '@refraction/store';
 import { act } from '@testing-library/react';
 
 import { loadCurrentDocumentClasses } from '../../load-document-classes';

@@ -1,10 +1,10 @@
 {
-  "name": "@elementor/editor-current-user",
-  "description": "Elementor Editor Current User",
+  "name": "@refraction/editor-current-user",
+  "description": "Refraction Editor Current User",
   "version": "4.4.0",
   "private": false,
-  "author": "Elementor Team",
-  "homepage": "https://elementor.com/",
+  "author": "Refraction Team",
+  "homepage": "https://github.com/kohid/refraction",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,11 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/elementor/elementor.git",
+    "url": "https://github.com/kohid/refraction.git",
     "directory": "packages/libs/editor-current-user"
   },
   "bugs": {
-    "url": "https://github.com/elementor/elementor/issues"
+    "url": "https://github.com/kohid/refraction/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -36,9 +36,9 @@
     "react": "^18.3.1"
   },
   "dependencies": {
-    "@elementor/editor-v1-adapters": "4.4.0",
-    "@elementor/http-client": "4.4.0",
-    "@elementor/query": "4.4.0"
+    "@refraction/editor-v1-adapters": "4.4.0",
+    "@refraction/http-client": "4.4.0",
+    "@refraction/query": "4.4.0"
   },
   "devDependencies": {
     "tsup": "^8.3.5"

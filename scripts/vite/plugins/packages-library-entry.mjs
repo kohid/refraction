@@ -1,9 +1,9 @@
-export const LIBRARY_ENTRY_ID = '\0elementor-package-library-entry';
+export const LIBRARY_ENTRY_ID = '\0refraction-package-library-entry';
 
 /**
- * Publishes the package on `window.elementorV2` the way `ExternalizeWordPressAssetsWebpackPlugin`
+ * Publishes the package on `window.refractionV2` the way `ExternalizeWordPressAssetsWebpackPlugin`
  * did through Webpack's `window` library type, which emitted
- * `(window.elementorV2 = window.elementorV2 || {}).editorPanels = __webpack_exports__;`.
+ * `(window.refractionV2 = window.refractionV2 || {}).editorPanels = __webpack_exports__;`.
  *
  * Rolldown's IIFE format cannot express this on its own: given a dotted `output.name` it emits the
  * namespace guard but never assigns the entry's exports to the leaf, leaving the library
@@ -12,7 +12,7 @@ export const LIBRARY_ENTRY_ID = '\0elementor-package-library-entry';
  */
 export function packagesLibraryEntryPlugin( { entryPath, globalName } ) {
 	return {
-		name: 'elementor-packages-library-entry',
+		name: 'refraction-packages-library-entry',
 		resolveId( source ) {
 			return source === LIBRARY_ENTRY_ID ? LIBRARY_ENTRY_ID : null;
 		},
@@ -24,7 +24,7 @@ export function packagesLibraryEntryPlugin( { entryPath, globalName } ) {
 			return [
 				`import * as library from ${ JSON.stringify( entryPath ) };`,
 				'',
-				`(window.elementorV2 = window.elementorV2 || {}).${ globalName } = library;`,
+				`(window.refractionV2 = window.refractionV2 || {}).${ globalName } = library;`,
 			].join( '\n' );
 		},
 	};

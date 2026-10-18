@@ -4,12 +4,12 @@ export default function ExportIntro() {
 	return (
 		<Box sx={ { mb: 4 } }>
 			<Typography variant="h4" component="h2" gutterBottom color="text.primary">
-				{ __( 'Export a Website template?', 'elementor' ) }
+				{ __( 'Export a Website template?', 'refraction' ) }
 			</Typography>
 			<Typography variant="subtitle1" color="text.secondary">
-				{ __( 'Choose which Elementor components - templates, content and site settings - to include in your website templates file. By default, all of your components will be exported.', 'elementor' ) }{ ' ' }
+				{ __( 'Choose which Refraction components - templates, content and site settings - to include in your website templates file. By default, all of your components will be exported.', 'refraction' ) }{ ' ' }
 				<Link href="https://go.elementor.com/app-what-are-kits" color="info.light" target="_blank" rel="noopener noreferrer">
-					{ __( 'Learn more', 'elementor' ) }
+					{ __( 'Learn more', 'refraction' ) }
 				</Link>
 			</Typography>
 		</Box>

@@ -1,15 +1,15 @@
-import { DEFAULT_MAX_COLUMNS } from 'elementor-elements/views/section';
+import { DEFAULT_MAX_COLUMNS } from 'refraction-elements/views/section';
 
-var BaseElementView = require( 'elementor-elements/views/base' ),
-	ColumnEmptyView = require( 'elementor-elements/views/column-empty' ),
+var BaseElementView = require( 'refraction-elements/views/base' ),
+	ColumnEmptyView = require( 'refraction-elements/views/column-empty' ),
 	ColumnView;
 
 ColumnView = BaseElementView.extend( {
-	template: Marionette.TemplateCache.get( '#tmpl-elementor-column-content' ),
+	template: Marionette.TemplateCache.get( '#tmpl-refraction-column-content' ),
 
 	emptyView: ColumnEmptyView,
 
-	childViewContainer: '> .elementor-widget-wrap',
+	childViewContainer: '> .refraction-widget-wrap',
 
 	toggleEditTools: true,
 
@@ -18,22 +18,22 @@ ColumnView = BaseElementView.extend( {
 
 		_.extend( behaviors, {
 			Sortable: {
-				behaviorClass: require( 'elementor-behaviors/sortable' ),
+				behaviorClass: require( 'refraction-behaviors/sortable' ),
 				elChildType: 'widget',
 			},
 			Resizable: {
-				behaviorClass: require( 'elementor-behaviors/column-resizable' ),
+				behaviorClass: require( 'refraction-behaviors/column-resizable' ),
 			},
 		} );
 
-		return elementor.hooks.applyFilters( 'elements/column/behaviors', behaviors, this );
+		return refraction.hooks.applyFilters( 'elements/column/behaviors', behaviors, this );
 	},
 
 	className() {
 		var classes = BaseElementView.prototype.className.apply( this, arguments ),
 			type = this.isInner() ? 'inner' : 'top';
 
-		return classes + ' elementor-column elementor-' + type + '-column';
+		return classes + ' refraction-column refraction-' + type + '-column';
 	},
 
 	tagName() {
@@ -43,33 +43,33 @@ ColumnView = BaseElementView.extend( {
 	ui() {
 		var ui = BaseElementView.prototype.ui.apply( this, arguments );
 
-		ui.columnInner = '> .elementor-widget-wrap';
+		ui.columnInner = '> .refraction-widget-wrap';
 
-		ui.percentsTooltip = '> .elementor-element-overlay .elementor-column-percents-tooltip';
+		ui.percentsTooltip = '> .refraction-element-overlay .refraction-column-percents-tooltip';
 
 		return ui;
 	},
 
 	getEditButtons() {
-		const elementData = elementor.getElementData( this.model ),
+		const elementData = refraction.getElementData( this.model ),
 			editTools = {};
 
 		editTools.edit = {
 			/* Translators: %s: Element name. */
-			title: sprintf( __( 'Edit %s', 'elementor' ), elementData.title ),
+			title: sprintf( __( 'Edit %s', 'refraction' ), elementData.title ),
 			icon: 'column',
 		};
 
-		if ( elementor.getPreferences( 'edit_buttons' ) ) {
+		if ( refraction.getPreferences( 'edit_buttons' ) ) {
 			editTools.duplicate = {
 				/* Translators: %s: Element name. */
-				title: sprintf( __( 'Duplicate %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Duplicate %s', 'refraction' ), elementData.title ),
 				icon: 'clone',
 			};
 
 			editTools.add = {
 				/* Translators: %s: Element name. */
-				title: sprintf( __( 'Add %s', 'elementor' ), elementData.title ),
+				title: sprintf( __( 'Add %s', 'refraction' ), elementData.title ),
 				icon: 'plus',
 			};
 		}
@@ -86,9 +86,9 @@ ColumnView = BaseElementView.extend( {
 	attachElContent() {
 		BaseElementView.prototype.attachElContent.apply( this, arguments );
 
-		const $tooltip = jQuery( '<div>', { class: 'elementor-column-percents-tooltip' } );
+		const $tooltip = jQuery( '<div>', { class: 'refraction-column-percents-tooltip' } );
 
-		this.$el.children( '.elementor-element-overlay' ).append( $tooltip );
+		this.$el.children( '.refraction-element-overlay' ).append( $tooltip );
 	},
 
 	getContextMenuGroups() {
@@ -102,9 +102,9 @@ ColumnView = BaseElementView.extend( {
 				{
 					name: 'addNew',
 					icon: 'eicon-plus',
-					title: __( 'Add New Column', 'elementor' ),
+					title: __( 'Add New Column', 'refraction' ),
 					callback: this.addNewColumn.bind( this ),
-					isEnabled: () => self.model.collection.length < DEFAULT_MAX_COLUMNS && ! elementor.selection.isMultiple(),
+					isEnabled: () => self.model.collection.length < DEFAULT_MAX_COLUMNS && ! refraction.selection.isMultiple(),
 				},
 			],
 		} );
@@ -118,7 +118,7 @@ ColumnView = BaseElementView.extend( {
 			return false;
 		}
 
-		var elementView = elementor.channels.panelElements.request( 'element:selected' );
+		var elementView = refraction.channels.panelElements.request( 'element:selected' );
 
 		if ( ! elementView ) {
 			return false;
@@ -166,14 +166,14 @@ ColumnView = BaseElementView.extend( {
 
 	getSortableOptions() {
 		return {
-			connectWith: '.elementor-widget-wrap',
-			items: '> .elementor-element',
+			connectWith: '.refraction-widget-wrap',
+			items: '> .refraction-element',
 		};
 	},
 
 	changeChildContainerClasses() {
-		const emptyClass = 'elementor-element-empty',
-			populatedClass = 'elementor-element-populated';
+		const emptyClass = 'refraction-element-empty',
+			populatedClass = 'refraction-element-populated';
 
 		if ( this.ui.columnInner ) {
 			if ( this.collection.isEmpty() ) {
@@ -214,16 +214,16 @@ ColumnView = BaseElementView.extend( {
 		this.changeSizeUI();
 
 		this.$el.html5Droppable( {
-			items: ' > .elementor-widget-wrap > .elementor-element, >.elementor-widget-wrap > .elementor-empty-view > .elementor-first-add',
+			items: ' > .refraction-widget-wrap > .refraction-element, >.refraction-widget-wrap > .refraction-empty-view > .refraction-first-add',
 			axis: [ 'vertical' ],
-			groups: [ 'elementor-element' ],
+			groups: [ 'refraction-element' ],
 			isDroppingAllowed: this.isDroppingAllowed.bind( this ),
-			currentElementClass: 'elementor-html5dnd-current-element',
-			placeholderClass: 'elementor-sortable-placeholder elementor-widget-placeholder',
-			hasDraggingOnChildClass: 'elementor-dragging-on-child',
+			currentElementClass: 'refraction-html5dnd-current-element',
+			placeholderClass: 'refraction-sortable-placeholder refraction-widget-placeholder',
+			hasDraggingOnChildClass: 'refraction-dragging-on-child',
 			onDropping: ( side, event ) => {
 				// Triggering drag end manually, since it won't fired above iframe
-				elementor.getPreviewView().onPanelElementDragEnd();
+				refraction.getPreviewView().onPanelElementDragEnd();
 
 				this.onDrop(
 					event,

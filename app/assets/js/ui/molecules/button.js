@@ -1,7 +1,7 @@
 import { Link, LocationProvider } from '@reach/router';
-import router from '@elementor/router';
+import router from '@refraction/router';
 import PopoverDialog from '../popover-dialog/popover-dialog';
-import Icon from 'elementor-app/ui/atoms/icon';
+import Icon from 'refraction-app/ui/atoms/icon';
 
 export default class Button extends React.Component {
 	static propTypes = {

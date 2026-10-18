@@ -1,10 +1,10 @@
-import { getWidgetsCache } from '@elementor/editor-elements';
+import { getWidgetsCache } from '@refraction/editor-elements';
 
 import { type ElementSnapshotNode } from '../../types';
 import { audit } from '../deep-nesting';
 import { makeContainer, makeContext, makeWidget } from './fixtures';
 
-jest.mock( '@elementor/editor-elements', () => ( {
+jest.mock( '@refraction/editor-elements', () => ( {
 	getWidgetsCache: jest.fn(),
 } ) );
 

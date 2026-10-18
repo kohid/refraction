@@ -1,31 +1,31 @@
 describe( 'AppsEventTracking', () => {
 	afterEach( () => {
-		delete window.elementorCommon;
+		delete window.refractionCommon;
 		jest.resetModules();
 	} );
 
-	test( 'dispatchEvent does not throw when elementorCommon is missing', () => {
-		delete window.elementorCommon;
+	test( 'dispatchEvent does not throw when refractionCommon is missing', () => {
+		delete window.refractionCommon;
 
 		jest.isolateModules( () => {
-			const { AppsEventTracking } = require( 'elementor-app/event-track/apps-event-tracking' );
+			const { AppsEventTracking } = require( 'refraction-app/event-track/apps-event-tracking' );
 
 			expect( () => AppsEventTracking.dispatchEvent( 'test_event', { a: 1 } ) ).not.toThrow();
 			expect( AppsEventTracking.dispatchEvent( 'test_event', { a: 1 } ) ).toBeUndefined();
 		} );
 	} );
 
-	test( 'dispatchEvent calls elementorCommon.eventsManager.dispatchEvent when available', () => {
+	test( 'dispatchEvent calls refractionCommon.eventsManager.dispatchEvent when available', () => {
 		const dispatchEvent = jest.fn();
 
-		window.elementorCommon = {
+		window.refractionCommon = {
 			eventsManager: {
 				dispatchEvent,
 			},
 		};
 
 		jest.isolateModules( () => {
-			const { AppsEventTracking } = require( 'elementor-app/event-track/apps-event-tracking' );
+			const { AppsEventTracking } = require( 'refraction-app/event-track/apps-event-tracking' );
 
 			AppsEventTracking.dispatchEvent( 'my_event', { a: 1 } );
 

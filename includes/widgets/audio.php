@@ -1,16 +1,16 @@
 <?php
-namespace Elementor;
+namespace Refraction;
 
-use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Refraction\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Elementor audio widget.
+ * Refraction audio widget.
  *
- * Elementor widget that displays an audio player.
+ * Refraction widget that displays an audio player.
  *
  * @since 1.0.0
  */
@@ -50,7 +50,7 @@ class Widget_Audio extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'SoundCloud', 'elementor' );
+		return esc_html__( 'SoundCloud', 'refraction' );
 	}
 
 	/**
@@ -101,14 +101,14 @@ class Widget_Audio extends Widget_Base {
 		$this->start_controls_section(
 			'section_audio',
 			[
-				'label' => esc_html__( 'SoundCloud', 'elementor' ),
+				'label' => esc_html__( 'SoundCloud', 'refraction' ),
 			]
 		);
 
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => esc_html__( 'Link', 'refraction' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -127,12 +127,12 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'visual',
 			[
-				'label' => esc_html__( 'Visual Player', 'elementor' ),
+				'label' => esc_html__( 'Visual Player', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'no',
 				'options' => [
-					'yes' => esc_html__( 'Yes', 'elementor' ),
-					'no' => esc_html__( 'No', 'elementor' ),
+					'yes' => esc_html__( 'Yes', 'refraction' ),
+					'no' => esc_html__( 'No', 'refraction' ),
 				],
 			]
 		);
@@ -140,7 +140,7 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_options',
 			[
-				'label' => esc_html__( 'Additional Options', 'elementor' ),
+				'label' => esc_html__( 'Additional Options', 'refraction' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -149,7 +149,7 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_auto_play',
 			[
-				'label' => esc_html__( 'Autoplay', 'elementor' ),
+				'label' => esc_html__( 'Autoplay', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 			]
 		);
@@ -157,10 +157,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_buying',
 			[
-				'label' => esc_html__( 'Buy Button', 'elementor' ),
+				'label' => esc_html__( 'Buy Button', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 			]
 		);
@@ -168,10 +168,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_liking',
 			[
-				'label' => esc_html__( 'Like Button', 'elementor' ),
+				'label' => esc_html__( 'Like Button', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 			]
 		);
@@ -179,10 +179,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_download',
 			[
-				'label' => esc_html__( 'Download Button', 'elementor' ),
+				'label' => esc_html__( 'Download Button', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 			]
 		);
@@ -190,10 +190,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_show_artwork',
 			[
-				'label' => esc_html__( 'Artwork', 'elementor' ),
+				'label' => esc_html__( 'Artwork', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 				'condition' => [
 					'visual' => 'no',
@@ -204,10 +204,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_sharing',
 			[
-				'label' => esc_html__( 'Share Button', 'elementor' ),
+				'label' => esc_html__( 'Share Button', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 			]
 		);
@@ -215,10 +215,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_show_comments',
 			[
-				'label' => esc_html__( 'Comments', 'elementor' ),
+				'label' => esc_html__( 'Comments', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 			]
 		);
@@ -226,10 +226,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_show_playcount',
 			[
-				'label' => esc_html__( 'Play Counts', 'elementor' ),
+				'label' => esc_html__( 'Play Counts', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 			]
 		);
@@ -237,10 +237,10 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_show_user',
 			[
-				'label' => esc_html__( 'Username', 'elementor' ),
+				'label' => esc_html__( 'Username', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
-				'label_on' => esc_html__( 'Show', 'elementor' ),
+				'label_off' => esc_html__( 'Hide', 'refraction' ),
+				'label_on' => esc_html__( 'Show', 'refraction' ),
 				'default' => 'yes',
 			]
 		);
@@ -248,7 +248,7 @@ class Widget_Audio extends Widget_Base {
 		$this->add_control(
 			'sc_color',
 			[
-				'label' => esc_html__( 'Controls Color', 'elementor' ),
+				'label' => esc_html__( 'Controls Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 			]
 		);
@@ -278,7 +278,7 @@ class Widget_Audio extends Widget_Base {
 		remove_filter( 'oembed_result', [ $this, 'filter_oembed_result' ], 50 );
 
 		if ( $video_html ) : ?>
-			<div class="elementor-soundcloud-wrapper">
+			<div class="refraction-soundcloud-wrapper">
 				<?php Utils::print_wp_kses_extended( $video_html, [ 'iframe' ] ); ?>
 			</div>
 			<?php
