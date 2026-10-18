@@ -7,7 +7,7 @@ submenus existed.
 Now `Refraction_One_Menu_Manager` registers `refraction-home` (edit_posts, position 58.5, inline SVG icon). The submenu is
 built from the registered Editor One menu items (`Menu_Data_Provider::get_visible_submenu_items()`), capability aware:
 administrators get Home, Settings, Tools, Saved Templates, Floating Elements, Role Manager, System Info; editors get Home
-and Saved Templates. The duplicate "Templates" top-level CPT menu is still hidden with CSS.
+and Saved Templates. The duplicate "Templates" top-level CPT menu (and its submenu) is removed server-side so Refraction is the highlighted parent on library screens.
 
 Check it with `scripts/setup-menu-test-site.sh` then `node scripts/check-admin-menu.mjs`.
 
