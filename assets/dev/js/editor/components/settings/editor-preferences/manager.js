@@ -12,6 +12,7 @@ export default class extends BaseManager {
 
 		this.changeCallbacks = {
 			ui_theme: this.onUIThemeChanged,
+			refraction_theme: this.onRefractionThemeChanged,
 			panel_width: this.onPanelWidthChanged,
 			edit_buttons: this.onEditButtonsChanged,
 			show_hidden_elements: this.onShowHiddenElementsChange,
@@ -44,6 +45,18 @@ export default class extends BaseManager {
 		} else {
 			$lightUi.attr( 'media', 'none' );
 			$darkUi.attr( 'media', 'all' );
+		}
+	}
+
+	// Paint the chosen Refraction theme at once. Automatic removes the attribute, so the editor looks as it always did.
+	// The preview iframe is another document and is never touched.
+	onRefractionThemeChanged( newValue ) {
+		const root = document.documentElement;
+
+		if ( ! newValue || 'auto' === newValue ) {
+			root.removeAttribute( 'data-refraction-theme' );
+		} else {
+			root.setAttribute( 'data-refraction-theme', newValue );
 		}
 	}
 

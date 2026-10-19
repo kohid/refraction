@@ -390,6 +390,11 @@ class Plugin {
 	public $admin_menu_manager;
 
 	/**
+	 * @var Core\Ui_Theme\Manager
+	 */
+	public $ui_theme;
+
+	/**
 	 * Common functionality.
 	 *
 	 * Holds the plugin common functionality.
@@ -684,6 +689,7 @@ class Plugin {
 		$this->assets_manager = new Assets_Manager();
 		$this->icons_manager = new Icons_Manager();
 		$this->settings = new Settings();
+		$this->ui_theme = new Core\Ui_Theme\Manager();
 		$this->tools = new Tools();
 		$this->editor = new Editor();
 		$this->preview = new Preview();

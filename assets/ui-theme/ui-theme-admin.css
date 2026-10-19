@@ -1,0 +1,847 @@
+/**
+ * Refraction UI themes: admin skin.
+ *
+ * Design adapted from Framify (kohid/Framify).
+ *
+ * Every rule is scoped to html[data-refraction-theme], an attribute that is only printed on Refraction's
+ * own admin screens when the user picked a theme. "Automatic" prints no attribute, so none of this applies
+ * and the screens look exactly as before. The WordPress admin menu and toolbar are left alone.
+ * Tokens: ui-themes.css (loaded first).
+ */
+
+/* ---------- page ---------- */
+html[data-refraction-theme] body.wp-admin,
+html[data-refraction-theme] #wpcontent,
+html[data-refraction-theme] #wpbody,
+html[data-refraction-theme] #wpfooter {
+	background: var(--rf-bg);
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] #wpcontent {
+	font-family: var(--rf-sans);
+}
+
+html[data-refraction-theme] #wpfooter,
+html[data-refraction-theme] #wpfooter a,
+html[data-refraction-theme] #wpfooter p {
+	color: var(--rf-text-dim);
+}
+
+html[data-refraction-theme] #wpbody-content h1,
+html[data-refraction-theme] #wpbody-content h2,
+html[data-refraction-theme] #wpbody-content h3,
+html[data-refraction-theme] #wpbody-content h4,
+html[data-refraction-theme] #wpbody-content .wp-heading-inline,
+html[data-refraction-theme] #wpbody-content label,
+html[data-refraction-theme] #wpbody-content legend,
+html[data-refraction-theme] #wpbody-content th,
+html[data-refraction-theme] #wpbody-content td,
+html[data-refraction-theme] #wpbody-content p {
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] #wpbody-content h1,
+html[data-refraction-theme] #wpbody-content .wp-heading-inline {
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+html[data-refraction-theme] #wpbody-content .description,
+html[data-refraction-theme] #wpbody-content p.description,
+html[data-refraction-theme] #wpbody-content .form-table td p.description,
+html[data-refraction-theme] #wpbody-content .subsubsub,
+html[data-refraction-theme] #wpbody-content .displaying-num,
+html[data-refraction-theme] #wpbody-content .refraction-home__lead,
+html[data-refraction-theme] #wpbody-content .e-experiment__description {
+	color: var(--rf-text-dim);
+}
+
+html[data-refraction-theme] #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action) {
+	color: var(--rf-accent);
+}
+
+html[data-refraction-theme] #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):hover {
+	color: var(--rf-accent-hover);
+}
+
+html[data-refraction-theme] #wpbody-content hr {
+	border: 0;
+	border-top: 1px solid var(--rf-line);
+	background: none;
+}
+
+html[data-refraction-theme] #wpbody-content code,
+html[data-refraction-theme] #wpbody-content kbd {
+	background: var(--rf-surface-2);
+	color: var(--rf-text);
+	border-radius: var(--rf-radius-xs);
+}
+
+/* ---------- focus ---------- */
+html[data-refraction-theme] #wpbody-content a:focus-visible,
+html[data-refraction-theme] #wpbody-content button:focus-visible,
+html[data-refraction-theme] #wpbody-content input:focus-visible,
+html[data-refraction-theme] #wpbody-content select:focus-visible,
+html[data-refraction-theme] #wpbody-content textarea:focus-visible,
+html[data-refraction-theme] #wpbody-content [tabindex]:focus-visible {
+	outline: 2px solid var(--rf-accent);
+	outline-offset: 2px;
+	box-shadow: none;
+}
+
+/* ---------- settings tabs ---------- */
+html[data-refraction-theme] .nav-tab-wrapper {
+	border-bottom: 1px solid var(--rf-line);
+	padding-top: 0;
+}
+
+html[data-refraction-theme] .nav-tab-wrapper .nav-tab {
+	background: transparent;
+	border: 0;
+	border-bottom: 3px solid transparent;
+	color: var(--rf-text-dim);
+	margin: 0 4px -1px 0;
+	padding: 8px 14px 7px;
+	font-weight: 500;
+	border-radius: var(--rf-radius-xs) var(--rf-radius-xs) 0 0;
+}
+
+html[data-refraction-theme] .nav-tab-wrapper .nav-tab:hover {
+	background: var(--rf-surface);
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .nav-tab-wrapper .nav-tab.nav-tab-active,
+html[data-refraction-theme] .nav-tab-wrapper .nav-tab.nav-tab-active:hover {
+	background: var(--rf-accent-soft);
+	color: var(--rf-accent);
+	border-bottom-color: var(--rf-accent);
+	font-weight: 600;
+}
+
+/* ---------- cards / panels ---------- */
+html[data-refraction-theme] .postbox,
+html[data-refraction-theme] .card,
+html[data-refraction-theme] .notice,
+html[data-refraction-theme] div.error,
+html[data-refraction-theme] div.updated,
+html[data-refraction-theme] .refraction-home__links a,
+html[data-refraction-theme] .refraction-tools-card,
+html[data-refraction-theme] .wrap .stuffbox {
+	background: var(--rf-surface);
+	border-color: var(--rf-line);
+	color: var(--rf-text);
+	box-shadow: none;
+}
+
+html[data-refraction-theme] .postbox .postbox-header,
+html[data-refraction-theme] .postbox .hndle {
+	border-color: var(--rf-line);
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .refraction-home__links a {
+	border-radius: var(--rf-radius-sm);
+	border-inline-start: 3px solid var(--rf-accent);
+	transition: border-color 0.15s, background-color 0.15s;
+}
+
+html[data-refraction-theme] .refraction-home__links a:hover,
+html[data-refraction-theme] .refraction-home__links a:focus {
+	background: var(--rf-surface-2);
+	border-color: var(--rf-accent);
+	box-shadow: none;
+}
+
+html[data-refraction-theme] .refraction-home__links strong {
+	color: var(--rf-accent);
+}
+
+html[data-refraction-theme] .refraction-home__links span {
+	color: var(--rf-text-dim);
+}
+
+/* ---------- notices ---------- */
+html[data-refraction-theme] .notice-success,
+html[data-refraction-theme] div.updated {
+	border-inline-start-color: var(--rf-pass);
+	background: color-mix(in srgb, var(--rf-pass) 12%, var(--rf-surface));
+}
+
+html[data-refraction-theme] .notice-warning {
+	border-inline-start-color: var(--rf-warn);
+	background: color-mix(in srgb, var(--rf-warn) 12%, var(--rf-surface));
+}
+
+html[data-refraction-theme] .notice-error,
+html[data-refraction-theme] div.error {
+	border-inline-start-color: var(--rf-fail);
+	background: color-mix(in srgb, var(--rf-fail) 12%, var(--rf-surface));
+}
+
+html[data-refraction-theme] .notice-info {
+	border-inline-start-color: var(--rf-accent);
+	background: var(--rf-accent-soft);
+}
+
+html[data-refraction-theme] .notice p,
+html[data-refraction-theme] .notice li {
+	color: var(--rf-text);
+}
+
+/* ---------- buttons ---------- */
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button,
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button-secondary,
+html[data-refraction-theme] #wpbody-content .page-title-action {
+	background: var(--rf-surface-2);
+	border-color: var(--rf-field-line);
+	color: var(--rf-text);
+	border-radius: var(--rf-radius-xs);
+	box-shadow: none;
+	text-shadow: none;
+}
+
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button:hover,
+html[data-refraction-theme] #wpbody-content .page-title-action:hover {
+	background: var(--rf-line);
+	border-color: var(--rf-field-line);
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button-primary {
+	background: var(--rf-accent);
+	border-color: var(--rf-accent);
+	color: var(--rf-accent-ink);
+	font-weight: 600;
+}
+
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button-primary:hover,
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button-primary:focus {
+	background: var(--rf-accent-hover);
+	border-color: var(--rf-accent-hover);
+	color: var(--rf-accent-ink);
+}
+
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button-link-delete,
+html[data-refraction-theme] .wp-core-ui #wpbody-content .submitdelete,
+html[data-refraction-theme] #wpbody-content a.submitdelete {
+	color: var(--rf-danger);
+}
+
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button.disabled,
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button:disabled,
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button-primary.disabled,
+html[data-refraction-theme] .wp-core-ui #wpbody-content .button-primary:disabled {
+	background: var(--rf-surface);
+	border-color: var(--rf-line);
+	color: var(--rf-text-dim);
+	opacity: 0.8;
+}
+
+/* ---------- form fields ---------- */
+html[data-refraction-theme] #wpbody-content input[type="text"],
+html[data-refraction-theme] #wpbody-content input[type="search"],
+html[data-refraction-theme] #wpbody-content input[type="url"],
+html[data-refraction-theme] #wpbody-content input[type="email"],
+html[data-refraction-theme] #wpbody-content input[type="number"],
+html[data-refraction-theme] #wpbody-content input[type="password"],
+html[data-refraction-theme] #wpbody-content input[type="date"],
+html[data-refraction-theme] #wpbody-content select,
+html[data-refraction-theme] #wpbody-content textarea {
+	background: var(--rf-bg);
+	color: var(--rf-text);
+	border: 1px solid var(--rf-field-line);
+	border-radius: var(--rf-radius-xs);
+	box-shadow: none;
+}
+
+html[data-refraction-theme] #wpbody-content input[type="text"]:focus,
+html[data-refraction-theme] #wpbody-content input[type="search"]:focus,
+html[data-refraction-theme] #wpbody-content input[type="url"]:focus,
+html[data-refraction-theme] #wpbody-content input[type="email"]:focus,
+html[data-refraction-theme] #wpbody-content input[type="number"]:focus,
+html[data-refraction-theme] #wpbody-content input[type="password"]:focus,
+html[data-refraction-theme] #wpbody-content select:focus,
+html[data-refraction-theme] #wpbody-content textarea:focus {
+	border-color: var(--rf-accent);
+	box-shadow: 0 0 0 1px var(--rf-accent);
+}
+
+html[data-refraction-theme] #wpbody-content input::placeholder,
+html[data-refraction-theme] #wpbody-content textarea::placeholder {
+	color: var(--rf-text-dim);
+}
+
+html[data-refraction-theme] #wpbody-content input[type="checkbox"],
+html[data-refraction-theme] #wpbody-content input[type="radio"] {
+	background: var(--rf-bg);
+	border-color: var(--rf-field-line);
+	accent-color: var(--rf-accent);
+}
+
+html[data-refraction-theme] #wpbody-content input[type="checkbox"]:checked::before {
+	filter: none;
+}
+
+html[data-refraction-theme] #wpbody-content input[type="checkbox"]:checked {
+	background: var(--rf-accent);
+	border-color: var(--rf-accent);
+}
+
+html[data-refraction-theme] #wpbody-content input[type="checkbox"]:checked::before {
+	/* WordPress paints its tick in the admin colour; draw it in the button ink. */
+	content: "";
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--rf-accent-ink);
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M8.2 14.6 3.8 10.2l1.4-1.4 3 3 6.6-6.6 1.4 1.4z'/%3E%3C/svg%3E") center / 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M8.2 14.6 3.8 10.2l1.4-1.4 3 3 6.6-6.6 1.4 1.4z'/%3E%3C/svg%3E") center / 100% no-repeat;
+}
+
+html[data-refraction-theme] #wpbody-content .form-table th {
+	color: var(--rf-text);
+	font-weight: 600;
+}
+
+html[data-refraction-theme] #wpbody-content .form-table td,
+html[data-refraction-theme] #wpbody-content .form-table tr {
+	border-color: var(--rf-line);
+}
+
+/* ---------- tables ---------- */
+html[data-refraction-theme] .wp-list-table,
+html[data-refraction-theme] table.widefat {
+	background: var(--rf-surface);
+	border-color: var(--rf-line);
+	color: var(--rf-text);
+	box-shadow: none;
+}
+
+html[data-refraction-theme] .wp-list-table thead th,
+html[data-refraction-theme] .wp-list-table tfoot th,
+html[data-refraction-theme] .wp-list-table thead td,
+html[data-refraction-theme] .wp-list-table tfoot td,
+html[data-refraction-theme] table.widefat thead th,
+html[data-refraction-theme] table.widefat tfoot th {
+	background: var(--rf-surface-2);
+	border-color: var(--rf-line);
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .wp-list-table thead th a,
+html[data-refraction-theme] .wp-list-table thead th a span,
+html[data-refraction-theme] .wp-list-table tfoot th a {
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .wp-list-table td,
+html[data-refraction-theme] .wp-list-table th,
+html[data-refraction-theme] table.widefat td,
+html[data-refraction-theme] table.widefat th {
+	border-color: var(--rf-line);
+}
+
+html[data-refraction-theme] .striped > tbody > :nth-child(odd),
+html[data-refraction-theme] ul.striped > :nth-child(odd),
+html[data-refraction-theme] .alternate {
+	background: var(--rf-bg);
+}
+
+html[data-refraction-theme] .wp-list-table tbody tr:hover {
+	background: var(--rf-accent-soft);
+}
+
+html[data-refraction-theme] .row-actions,
+html[data-refraction-theme] .row-actions span,
+html[data-refraction-theme] .row-actions a {
+	color: var(--rf-text-dim);
+}
+
+html[data-refraction-theme] .tablenav,
+html[data-refraction-theme] .tablenav-pages,
+html[data-refraction-theme] .tablenav .tablenav-pages a {
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .tablenav-pages .current-page {
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .subsubsub a {
+	color: var(--rf-accent);
+}
+
+html[data-refraction-theme] .subsubsub a.current {
+	color: var(--rf-text);
+	font-weight: 650;
+}
+
+/* ---------- chips and status badges ---------- */
+html[data-refraction-theme] .refraction-badge,
+html[data-refraction-theme] .refraction-chip,
+html[data-refraction-theme] .refraction-status,
+html[data-refraction-theme] .e-experiment__title .e-badge,
+html[data-refraction-theme] .column-refraction_type a,
+html[data-refraction-theme] .column-instances a {
+	border-radius: 999px;
+}
+
+html[data-refraction-theme] .refraction-status--active,
+html[data-refraction-theme] .refraction-badge--pass {
+	background: var(--rf-pass-soft);
+	color: var(--rf-pass);
+}
+
+html[data-refraction-theme] .refraction-status--inactive,
+html[data-refraction-theme] .refraction-badge--warn {
+	background: var(--rf-warn-soft);
+	color: var(--rf-warn);
+}
+
+html[data-refraction-theme] .refraction-status--error,
+html[data-refraction-theme] .refraction-badge--fail {
+	background: var(--rf-fail-soft);
+	color: var(--rf-fail);
+}
+
+/* ---------- Refraction settings page ---------- */
+html[data-refraction-theme] .refraction-settings-form-page h2,
+html[data-refraction-theme] #refraction-settings-form h2 {
+	font-weight: 650;
+}
+
+/* ---------- theme picker (Settings > Theme) ---------- */
+.refraction-ui-theme__intro {
+	max-width: 62ch;
+	line-height: 1.55;
+	margin: 0 0 18px;
+}
+
+.refraction-ui-theme__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 16px;
+	max-width: 880px;
+}
+
+@media (max-width: 900px) {
+	.refraction-ui-theme__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 560px) {
+	.refraction-ui-theme__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.refraction-ui-theme__card {
+	display: block;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: start;
+	font: inherit;
+	background: #fff;
+	color: #1d2327;
+	border: 1px solid #c3c4c7;
+	border-radius: 10px;
+	overflow: hidden;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.refraction-ui-theme__card:hover {
+	transform: translateY(-2px);
+	border-color: #787c82;
+}
+
+.refraction-ui-theme__card:focus-visible {
+	outline: 3px solid #2271b1;
+	outline-offset: 3px;
+}
+
+.refraction-ui-theme__card[aria-checked="true"] {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 2px #2271b1;
+}
+
+.refraction-ui-theme__meta {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 11px 12px;
+	background: #f6f7f7;
+	border-top: 1px solid #dcdcde;
+}
+
+.refraction-ui-theme__icon {
+	display: inline-flex;
+	flex: none;
+	color: #50575e;
+}
+
+.refraction-ui-theme__text {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.refraction-ui-theme__name {
+	display: block;
+	font-size: 14px;
+	font-weight: 650;
+	color: #1d2327;
+}
+
+.refraction-ui-theme__blurb {
+	display: block;
+	font-size: 12px;
+	color: #50575e;
+	margin-top: 1px;
+}
+
+.refraction-ui-theme__check {
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	border: 1px solid #8c8f94;
+	color: transparent;
+}
+
+.refraction-ui-theme__card[aria-checked="true"] .refraction-ui-theme__check {
+	background: #2271b1;
+	border-color: #2271b1;
+	color: #fff;
+}
+
+.refraction-ui-theme__status {
+	min-height: 1.5em;
+	margin: 14px 0 0;
+	font-size: 13px;
+}
+
+.refraction-ui-theme__status.is-error {
+	font-weight: 600;
+}
+
+/* Picker cards follow the active theme (the card chrome uses the tokens) */
+html[data-refraction-theme] .refraction-ui-theme__card {
+	background: var(--rf-surface);
+	color: var(--rf-text);
+	border-color: var(--rf-field-line);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__card:hover {
+	border-color: var(--rf-text-dim);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__card:focus-visible {
+	outline-color: var(--rf-accent);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__card[aria-checked="true"] {
+	border-color: var(--rf-accent);
+	box-shadow: 0 0 0 2px var(--rf-accent);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__meta {
+	background: var(--rf-surface);
+	border-color: var(--rf-line);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__icon,
+html[data-refraction-theme] .refraction-ui-theme__blurb {
+	color: var(--rf-text-dim);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__name {
+	color: var(--rf-text);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__check {
+	border-color: var(--rf-field-line);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__card[aria-checked="true"] .refraction-ui-theme__check {
+	background: var(--rf-accent);
+	border-color: var(--rf-accent);
+	color: var(--rf-accent-ink);
+}
+
+html[data-refraction-theme] .refraction-ui-theme__status.is-error {
+	color: var(--rf-danger);
+}
+
+/* ---------- the miniature: a tiny editor drawn in each theme ---------- */
+.refraction-mini {
+	position: relative;
+	display: block;
+	height: 132px;
+	overflow: hidden;
+	background: var(--rf-bg);
+	border-bottom: 1px solid var(--rf-line);
+	pointer-events: none;
+}
+
+.refraction-mini__bar {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	height: 18px;
+	padding: 0 8px;
+	background: var(--rf-chrome);
+	border-bottom: 1px solid var(--rf-chrome-line);
+	position: relative;
+}
+
+.refraction-mini__bar i {
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: var(--rf-chrome-ink);
+	opacity: 0.4;
+}
+
+.refraction-mini__bar b {
+	margin-inline-start: auto;
+	width: 30px;
+	height: 8px;
+	border-radius: 4px;
+	background: var(--rf-accent);
+}
+
+.refraction-mini__body {
+	display: flex;
+	height: calc(100% - 18px);
+	position: relative;
+}
+
+.refraction-mini__panel {
+	flex: 0 0 38%;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 9px 8px;
+	background: var(--rf-surface);
+	border-inline-end: 1px solid var(--rf-line);
+}
+
+.refraction-mini__panel b {
+	display: block;
+	height: 7px;
+	border-radius: 3px;
+	background: var(--rf-surface-2);
+	border: 1px solid var(--rf-line);
+}
+
+.refraction-mini__panel b.is-on {
+	background: var(--rf-accent-soft);
+	border-color: var(--rf-accent);
+	width: 70%;
+}
+
+.refraction-mini__panel em {
+	display: block;
+	margin-top: auto;
+	height: 12px;
+	border-radius: 3px;
+	background: var(--rf-bg);
+	border: 1px solid var(--rf-field-line);
+}
+
+.refraction-mini__canvas {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 10px;
+	background: var(--rf-bg);
+}
+
+.refraction-mini__page {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	padding: 7px;
+	border: 1px dashed var(--rf-accent);
+	border-radius: 3px;
+}
+
+.refraction-mini__page b {
+	display: block;
+	height: 5px;
+	border-radius: 2px;
+	background: var(--rf-text-dim);
+	opacity: 0.55;
+}
+
+.refraction-mini__page b:first-child {
+	width: 55%;
+	height: 7px;
+	background: var(--rf-text);
+	opacity: 1;
+}
+
+.refraction-mini__page b:nth-child(3) {
+	width: 80%;
+}
+
+.refraction-mini__page u {
+	display: block;
+	width: 34px;
+	height: 11px;
+	margin-top: 3px;
+	border-radius: 3px;
+	background: var(--rf-accent);
+}
+
+.refraction-mini__dots {
+	display: flex;
+	gap: 5px;
+}
+
+.refraction-mini__dots s {
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	text-decoration: none;
+}
+
+.refraction-mini__dots .p { background: var(--rf-pass); }
+.refraction-mini__dots .w { background: var(--rf-warn); }
+.refraction-mini__dots .f { background: var(--rf-fail); }
+
+/* Automatic: half today's light look, half dark, split on a diagonal */
+.refraction-mini[data-auto] {
+	background: #f0f0f1;
+}
+
+.refraction-mini__half {
+	position: absolute;
+	inset: 0;
+}
+
+.refraction-mini__half--light {
+	background: #f0f0f1;
+}
+
+.refraction-mini__half--dark {
+	background: #1f2124;
+	clip-path: polygon(62% 0, 100% 0, 100% 100%, 38% 100%);
+}
+
+.refraction-mini[data-auto] .refraction-mini__bar {
+	background: #1d2327;
+	border-color: #3c434a;
+}
+
+.refraction-mini[data-auto] .refraction-mini__bar i {
+	background: #fff;
+}
+
+.refraction-mini[data-auto] .refraction-mini__bar b {
+	background: #2271b1;
+}
+
+.refraction-mini[data-auto] .refraction-mini__panel {
+	background: transparent;
+	border-color: #c3c4c7;
+}
+
+.refraction-mini[data-auto] .refraction-mini__panel b {
+	background: #fff;
+	border-color: #c3c4c7;
+}
+
+.refraction-mini[data-auto] .refraction-mini__panel b.is-on {
+	background: #dbe7f3;
+	border-color: #2271b1;
+}
+
+.refraction-mini[data-auto] .refraction-mini__panel em {
+	background: #fff;
+	border-color: #8c8f94;
+}
+
+.refraction-mini[data-auto] .refraction-mini__canvas {
+	background: transparent;
+}
+
+.refraction-mini[data-auto] .refraction-mini__page {
+	border-color: #2271b1;
+}
+
+.refraction-mini[data-auto] .refraction-mini__page b {
+	background: #50575e;
+}
+
+.refraction-mini[data-auto] .refraction-mini__page b:first-child {
+	background: #1d2327;
+}
+
+.refraction-mini[data-auto] .refraction-mini__page u {
+	background: #2271b1;
+}
+
+.refraction-mini[data-auto] .refraction-mini__dots .p { background: #00a32a; }
+.refraction-mini[data-auto] .refraction-mini__dots .w { background: #dba617; }
+.refraction-mini[data-auto] .refraction-mini__dots .f { background: #d63638; }
+
+/* A theme change is the one animated moment; applied only while it is in flight */
+html.refraction-theming #wpcontent,
+html.refraction-theming #wpcontent * {
+	transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html.refraction-theming #wpcontent,
+	html.refraction-theming #wpcontent *,
+	.refraction-ui-theme__card {
+		transition: none !important;
+	}
+
+	.refraction-ui-theme__card:hover {
+		transform: none;
+	}
+}
+
+/* Windows High Contrast / forced colors: the system palette wins, keep borders and selection visible */
+@media (forced-colors: active) {
+	.refraction-ui-theme__card {
+		border: 2px solid CanvasText;
+		background: Canvas;
+		color: CanvasText;
+	}
+
+	.refraction-ui-theme__card[aria-checked="true"] {
+		outline: 4px solid Highlight;
+		outline-offset: 0;
+		box-shadow: none;
+	}
+
+	.refraction-ui-theme__card:focus-visible {
+		outline: 3px solid Highlight;
+		outline-offset: 3px;
+	}
+
+	.refraction-ui-theme__check {
+		forced-color-adjust: none;
+		border-color: CanvasText;
+	}
+
+	.refraction-ui-theme__card[aria-checked="true"] .refraction-ui-theme__check {
+		background: Highlight;
+		color: HighlightText;
+	}
+
+	.refraction-mini {
+		forced-color-adjust: none;
+	}
+}

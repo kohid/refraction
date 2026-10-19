@@ -56,6 +56,9 @@ class Manager extends BaseManager {
 			$settings = [];
 		}
 
+		// The Refraction UI theme lives in its own user meta (shared with Settings > Theme).
+		$settings['refraction_theme'] = \Refraction\Core\Ui_Theme\Manager::current();
+
 		return $settings;
 	}
 
@@ -70,6 +73,17 @@ class Manager extends BaseManager {
 	 * @access protected
 	 */
 	protected function save_settings_to_db( array $settings, $id ) {
+		if ( isset( $settings['refraction_theme'] ) ) {
+			$theme = \Refraction\Core\Ui_Theme\Registry::sanitize( $settings['refraction_theme'] );
+
+			// Only an actual change becomes the user's own choice; saving other preferences must not pin the site default.
+			if ( '' !== $theme && \Refraction\Core\Ui_Theme\Manager::current() !== $theme ) {
+				\Refraction\Core\Ui_Theme\Manager::save_user_choice( get_current_user_id(), $theme );
+			}
+
+			unset( $settings['refraction_theme'] );
+		}
+
 		update_user_meta( get_current_user_id(), self::META_KEY, $settings );
 	}
 }

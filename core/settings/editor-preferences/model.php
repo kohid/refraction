@@ -85,6 +85,17 @@ class Model extends BaseModel {
 		);
 
 		$this->add_control(
+			'refraction_theme',
+			[
+				'label' => esc_html__( 'Refraction theme', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'options' => \Refraction\Core\Ui_Theme\Registry::choices(),
+				'default' => \Refraction\Core\Ui_Theme\Registry::AUTO,
+				'description' => esc_html__( 'Colors for the editor and the Refraction admin screens, saved to your account. Automatic keeps the display mode above. A theme overrides it.', 'refraction' ),
+			]
+		);
+
+		$this->add_control(
 			'panel_width',
 			[
 				'label' => esc_html__( 'Width', 'refraction' ) . ' (px)',
