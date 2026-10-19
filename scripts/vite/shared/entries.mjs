@@ -54,6 +54,7 @@ export const BASE_ENTRIES = {
 	'e-wc-product-editor': 'modules/wc-product-editor/assets/js/e-wc-product-editor.js',
 	'floating-elements-modal': 'assets/dev/js/admin/floating-elements/new-floating-elements.js',
 	'assets-manager': 'modules/assets-manager/assets/js/assets-manager.js',
+	'theme-builder-editor': 'modules/theme-builder/assets/js/editor.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 
