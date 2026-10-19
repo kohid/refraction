@@ -28,7 +28,7 @@ class Theme_Style_Buttons extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-button';
+		return 'rficon-button';
 	}
 
 	public function get_help_url() {

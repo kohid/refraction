@@ -10,8 +10,8 @@ import { ComponentItem } from './components-item';
 import { LoadingComponents } from './loading-components';
 import { useSearch } from './search-provider';
 
-const LEARN_MORE_URL = 'http://go.elementor.com/components-guide-article';
-const UPGRADE_URL = 'https://go.elementor.com/go-pro-components/';
+const LEARN_MORE_URL = 'https://github.com/kohid/refraction#readme';
+const UPGRADE_URL = 'https://github.com/kohid/refraction#readme';
 const UPDATE_PLUGINS_URL = '/wp-admin/plugins.php';
 
 // Override legacy panel CSS reset that sets h1-h6 to font-size:100% and font-weight:normal.

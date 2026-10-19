@@ -64,12 +64,12 @@ class Control_Popover_Toggle extends Base_Data_Control {
 			<div class="refraction-control-input-wrapper">
 				<input id="<?php $this->print_control_uid(); ?>-custom" class="refraction-control-popover-toggle-toggle" type="radio" name="refraction-choose-{{ data.name }}-{{ data._cid }}" value="{{ data.return_value }}">
 				<label class="refraction-control-popover-toggle-toggle-label refraction-control-unit-1" for="<?php $this->print_control_uid(); ?>-custom">
-					<i class="eicon-edit" aria-hidden="true"></i>
+					<i class="rficon-edit" aria-hidden="true"></i>
 					<span class="refraction-screen-only"><?php echo esc_html__( 'Edit', 'refraction' ); ?></span>
 				</label>
 				<input id="<?php $this->print_control_uid(); ?>-default" class="refraction-control-popover-toggle-reset" type="radio" name="refraction-choose-{{ data.name }}-{{ data._cid }}" value="">
 				<label class="refraction-control-popover-toggle-reset-label tooltip-target" for="<?php $this->print_control_uid(); ?>-default" data-tooltip="<?php echo esc_attr__( 'Back to default', 'refraction' ); ?>" data-tooltip-pos="s">
-					<i class="eicon-undo" aria-hidden="true"></i>
+					<i class="rficon-undo" aria-hidden="true"></i>
 					<span class="refraction-screen-only"><?php echo esc_html__( 'Back to default', 'refraction' ); ?></span>
 				</label>
 			</div>

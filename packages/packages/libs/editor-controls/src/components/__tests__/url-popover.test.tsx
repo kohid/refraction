@@ -78,7 +78,7 @@ describe( 'UrlPopover', () => {
 
 		it( 'should display the provided value in TextField', () => {
 			// Arrange.
-			const testUrl = 'https://elementor.com';
+			const testUrl = 'https://github.com/kohid/refraction#readme';
 			const props = {
 				...defaultProps,
 				popupState: createMockPopupState( true, anchorElement ),

@@ -232,9 +232,9 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 		const classes = this.getClassNames(),
 			$popover = jQuery( '<div>', { class: classes.globalPopoverContainer } ),
 			$popoverTitle = jQuery( '<div>', { class: classes.globalPopoverTitle } )
-				.html( '<div class="' + classes.globalPopoverInfo + '"><i class="eicon-info-circle"></i></div><span class="' + classes.globalPopoverTitleText + '">' + this.getOption( 'popoverTitle' ) + '</span>' ),
+				.html( '<div class="' + classes.globalPopoverInfo + '"><i class="rficon-info-circle"></i></div><span class="' + classes.globalPopoverTitleText + '">' + this.getOption( 'popoverTitle' ) + '</span>' ),
 			$manageGlobalsLink = jQuery( '<div>', { class: classes.manageButton } )
-				.html( '<i class="eicon-cog"></i>' );
+				.html( '<i class="rficon-cog"></i>' );
 
 		$popoverTitle.append( $manageGlobalsLink );
 
@@ -255,9 +255,9 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 
 	printGlobalToggleButton() {
 		const $globalToggleButton = jQuery( '<div>', { class: this.getClassNames().popoverToggle + ' refraction-control-unit-1' } ),
-			$globalPopoverToggleIcon = jQuery( '<i>', { class: 'eicon-globe' } ),
+			$globalPopoverToggleIcon = jQuery( '<i>', { class: 'rficon-globe' } ),
 			$globalsLoadingSpinner = jQuery( '<span>', { class: 'refraction-control-spinner' } )
-				.html( '<i class="eicon-spinner eicon-animation-spin"></i></span>' );
+				.html( '<i class="rficon-spinner rficon-animation-spin"></i></span>' );
 
 		$globalToggleButton.append( $globalPopoverToggleIcon );
 

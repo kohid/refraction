@@ -133,19 +133,19 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-align-' . $icon_start . '-h',
+					'icon' => 'rficon-align-' . $icon_start . '-h',
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-align-center-h',
+					'icon' => 'rficon-align-center-h',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-align-' . $icon_end . '-h',
+					'icon' => 'rficon-align-' . $icon_end . '-h',
 				],
 				'stretch' => [
 					'title' => esc_html__( 'Stretch', 'refraction' ),
-					'icon' => 'eicon-align-stretch-h',
+					'icon' => 'rficon-align-stretch-h',
 				],
 			],
 			'default' => '',
@@ -161,19 +161,19 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-align-start-v',
+					'icon' => 'rficon-align-start-v',
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-align-center-v',
+					'icon' => 'rficon-align-center-v',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-align-end-v',
+					'icon' => 'rficon-align-end-v',
 				],
 				'stretch' => [
 					'title' => esc_html__( 'Stretch', 'refraction' ),
-					'icon' => 'eicon-align-stretch-v',
+					'icon' => 'rficon-align-stretch-v',
 				],
 			],
 			'selectors' => [
@@ -190,27 +190,27 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-justify-start-h',
+					'icon' => 'rficon-justify-start-h',
 				],
 				'center' => [
 					'title' => esc_html__( 'Middle', 'refraction' ),
-					'icon' => 'eicon-justify-center-h',
+					'icon' => 'rficon-justify-center-h',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-justify-end-h',
+					'icon' => 'rficon-justify-end-h',
 				],
 				'space-between' => [
 					'title' => esc_html__( 'Space Between', 'refraction' ),
-					'icon' => 'eicon-justify-space-between-h',
+					'icon' => 'rficon-justify-space-between-h',
 				],
 				'space-around' => [
 					'title' => esc_html__( 'Space Around', 'refraction' ),
-					'icon' => 'eicon-justify-space-around-h',
+					'icon' => 'rficon-justify-space-around-h',
 				],
 				'space-evenly' => [
 					'title' => esc_html__( 'Space Evenly', 'refraction' ),
-					'icon' => 'eicon-justify-space-evenly-h',
+					'icon' => 'rficon-justify-space-evenly-h',
 				],
 			],
 			'selectors' => [
@@ -230,27 +230,27 @@ class Group_Control_Grid_Container extends Group_Control_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-justify-start-v',
+					'icon' => 'rficon-justify-start-v',
 				],
 				'center' => [
 					'title' => esc_html__( 'Middle', 'refraction' ),
-					'icon' => 'eicon-justify-center-v',
+					'icon' => 'rficon-justify-center-v',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-justify-end-v',
+					'icon' => 'rficon-justify-end-v',
 				],
 				'space-between' => [
 					'title' => esc_html__( 'Space Between', 'refraction' ),
-					'icon' => 'eicon-justify-space-between-v',
+					'icon' => 'rficon-justify-space-between-v',
 				],
 				'space-around' => [
 					'title' => esc_html__( 'Space Around', 'refraction' ),
-					'icon' => 'eicon-justify-space-around-v',
+					'icon' => 'rficon-justify-space-around-v',
 				],
 				'space-evenly' => [
 					'title' => esc_html__( 'Space Evenly', 'refraction' ),
-					'icon' => 'eicon-justify-space-evenly-v',
+					'icon' => 'rficon-justify-space-evenly-v',
 				],
 			],
 			'selectors' => [

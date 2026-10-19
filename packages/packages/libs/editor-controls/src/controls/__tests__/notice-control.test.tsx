@@ -41,7 +41,7 @@ describe( 'NoticeControl', () => {
 				heading="Accessible structure matters"
 				content="Ally helps detect and fix common issues across your site."
 				buttonText="Install now"
-				buttonUrl="https://go.elementor.com/install-ally"
+				buttonUrl="https://github.com/kohid/refraction#readme"
 			/>,
 			{ bind: 'notice', propType }
 		);
@@ -51,7 +51,7 @@ describe( 'NoticeControl', () => {
 		expect( screen.getByText( 'Ally helps detect and fix common issues across your site.' ) ).toBeInTheDocument();
 		expect( screen.getByRole( 'link', { name: 'Install now' } ) ).toHaveAttribute(
 			'href',
-			'https://go.elementor.com/install-ally'
+			'https://github.com/kohid/refraction#readme'
 		);
 	} );
 
@@ -107,7 +107,7 @@ describe( 'NoticeControl', () => {
 			<NoticeControl
 				content="Ally helps detect and fix common issues across your site."
 				buttonText="Install now"
-				buttonUrl="https://go.elementor.com/install-ally"
+				buttonUrl="https://github.com/kohid/refraction#readme"
 				dismissible="ally-atomic-notice"
 			/>,
 			{ bind: 'notice', propType }

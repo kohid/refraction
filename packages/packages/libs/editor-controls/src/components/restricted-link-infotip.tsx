@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
 
 const learnMoreButton = {
 	label: __( 'Learn More', 'refraction' ),
-	href: 'https://go.elementor.com/element-link-inside-link-infotip',
+	href: 'https://github.com/kohid/refraction#readme',
 };
 
 const INFOTIP_CONTENT = {

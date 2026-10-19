@@ -87,7 +87,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 				<Button
 					variant="outlined"
 					color="secondary"
-					icon="eicon-loading eicon-animation-spin"
+					icon="rficon-loading rficon-animation-spin"
 				/>
 			);
 		}
@@ -130,7 +130,7 @@ export default function ExportPluginsFooter( { isKitReady } ) {
 				color={ isKitReady && ! isCheckingEligibility ? 'primary' : 'disabled' }
 				url={ isKitReady && ! isCheckingEligibility ? '/export/process' : '' }
 				hideText={ isCheckingEligibility }
-				icon={ isCheckingEligibility ? 'eicon-loading eicon-animation-spin' : '' }
+				icon={ isCheckingEligibility ? 'rficon-loading rficon-animation-spin' : '' }
 				onClick={ () => {
 					exportContext.dispatch( { type: 'SET_KIT_SAVE_SOURCE', payload: KIT_SOURCE_MAP.FILE } );
 				} }

@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div id="refraction-responsive-bar"></div>
 		<div id="refraction-preview-responsive-wrapper" class="refraction-device-desktop refraction-device-rotate-portrait">
 			<div id="refraction-preview-loading">
-				<i class="eicon-loading eicon-animation-spin" aria-hidden="true"></i>
+				<i class="rficon-loading rficon-animation-spin" aria-hidden="true"></i>
 			</div>
 			<?php // IFrame will be created here by the Javascript later. ?>
 		</div>

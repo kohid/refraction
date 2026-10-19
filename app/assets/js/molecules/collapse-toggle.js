@@ -21,7 +21,7 @@ export default function CollapseToggle( props ) {
 		<div { ...attrs }>
 			{ props.children }
 
-			{ props.active && props.showIcon && <i className="eicon-caret-down e-app-collapse-toggle__icon" /> }
+			{ props.active && props.showIcon && <i className="rficon-caret-down e-app-collapse-toggle__icon" /> }
 		</div>
 	);
 }

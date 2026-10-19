@@ -74,7 +74,7 @@ export default class ControlsPopover {
 	}
 
 	createAddButton() {
-		this.$addButton = jQuery( '<button>', { class: 'e-control-tool' } ).html( jQuery( '<i>', { class: 'eicon-plus' } ) );
+		this.$addButton = jQuery( '<button>', { class: 'e-control-tool' } ).html( jQuery( '<i>', { class: 'rficon-plus' } ) );
 
 		this.$headerControlsWrapper.append( this.$addButton );
 

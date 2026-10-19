@@ -44,7 +44,7 @@ export default function UploadFile( props ) {
 				color={ props.color }
 				size="lg"
 				hideText={ props.isLoading }
-				icon={ props.isLoading ? 'eicon-loading eicon-animation-spin' : '' }
+				icon={ props.isLoading ? 'rficon-loading rficon-animation-spin' : '' }
 				onClick={ () => {
 					if ( props.onFileChoose ) {
 						props.onFileChoose();

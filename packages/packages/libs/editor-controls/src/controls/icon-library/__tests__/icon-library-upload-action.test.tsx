@@ -68,7 +68,7 @@ describe( 'IconLibraryUploadAction', () => {
 			'href',
 			ICON_LIBRARY_UPLOAD_UPGRADE_URL
 		);
-		expect( ICON_LIBRARY_UPLOAD_UPGRADE_URL ).toBe( 'https://go.elementor.com/go-pro-svg-library-upload-upgrade/' );
+		expect( ICON_LIBRARY_UPLOAD_UPGRADE_URL ).toBe( 'https://github.com/kohid/refraction#readme' );
 	} );
 
 	it( 'should point the promotion at its anchor with an arrow', () => {

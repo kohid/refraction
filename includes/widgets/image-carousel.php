@@ -56,7 +56,7 @@ class Widget_Image_Carousel extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-slider-push';
+		return 'rficon-slider-push';
 	}
 
 	/**
@@ -232,10 +232,10 @@ class Widget_Image_Carousel extends Widget_Base {
 					'inline' => [
 						'none' => [
 							'label' => 'Default',
-							'icon' => 'eicon-chevron-left',
+							'icon' => 'rficon-chevron-left',
 						],
 						'icon' => [
-							'icon' => 'eicon-star',
+							'icon' => 'rficon-star',
 						],
 					],
 				],
@@ -287,10 +287,10 @@ class Widget_Image_Carousel extends Widget_Base {
 					'inline' => [
 						'none' => [
 							'label' => 'Default',
-							'icon' => 'eicon-chevron-right',
+							'icon' => 'rficon-chevron-right',
 						],
 						'icon' => [
-							'icon' => 'eicon-star',
+							'icon' => 'rficon-star',
 						],
 					],
 				],
@@ -723,15 +723,15 @@ class Widget_Image_Carousel extends Widget_Base {
 				'options' => [
 					'flex-start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-v-align-middle',
+						'icon' => 'rficon-v-align-middle',
 					],
 					'flex-end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'condition' => [
@@ -824,19 +824,19 @@ class Widget_Image_Carousel extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 					'justify' => [
 						'title' => esc_html__( 'Justified', 'refraction' ),
-						'icon' => 'eicon-text-align-justify',
+						'icon' => 'rficon-text-align-justify',
 					],
 				],
 				'classes' => 'refraction-control-start-end',
@@ -1118,8 +1118,8 @@ class Widget_Image_Carousel extends Widget_Base {
 
 		if ( empty( $icon_settings['value'] ) ) {
 			$icon_settings = [
-				'library' => 'eicons',
-				'value' => 'eicon-chevron-' . $direction,
+				'library' => 'rficons',
+				'value' => 'rficon-chevron-' . $direction,
 			];
 		}
 

@@ -17,32 +17,32 @@ const CONTENT_DELAY_MS = 2500;
 
 const BACKGROUND_COLOR = '#FFDFF9';
 
-const LEARN_MORE_URL = 'https://go.elementor.com/wp-dash-opt-in-v4-help-center/';
+const LEARN_MORE_URL = 'https://github.com/kohid/refraction#readme';
 
 const FEATURE_ITEMS = [
 	{
 		id: 'combineWidgets',
 		title: __( 'Use Atomic Elements alongside your existing widgets', 'refraction' ),
 		subtitle: __( 'No need to rebuild pages. Combine legacy & new workflows.', 'refraction' ),
-		image: 'https://assets.elementor.com/v4-promotion/v1/images/pop_up_combine_widgets.webp',
+		image: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E',
 	},
 	{
 		id: 'designSystems',
 		title: __( 'Build reusable design systems', 'refraction' ),
 		subtitle: __( 'Classes, Variables & Components give a clear path for scale.', 'refraction' ),
-		image: 'https://assets.elementor.com/v4-promotion/v1/images/pop_up_design_systems.webp',
+		image: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E',
 	},
 	{
 		id: 'consistentStyling',
 		title: __( 'Keep styles consistent across your site', 'refraction' ),
 		subtitle: __( 'A unified Style tab with full control over responsive design.', 'refraction' ),
-		image: 'https://assets.elementor.com/v4-promotion/v1/images/pop_up_consistent_styling.webp',
+		image: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E',
 	},
 	{
 		id: 'performance',
 		title: __( 'Get unparalleled performance', 'refraction' ),
 		subtitle: __( 'Clean code and a light CSS footprint with single-div wrappers.', 'refraction' ),
-		image: 'https://assets.elementor.com/v4-promotion/v1/images/pop_up_performance.webp',
+		image: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E',
 	},
 ];
 

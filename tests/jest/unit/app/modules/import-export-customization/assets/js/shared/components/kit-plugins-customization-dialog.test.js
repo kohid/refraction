@@ -32,7 +32,7 @@ describe( 'KitPluginsCustomizationDialog Component', () => {
 			name: 'Refraction',
 			plugin: 'refraction/refraction',
 			version: '3.18.0',
-			pluginUri: 'https://elementor.com',
+			pluginUri: 'https://github.com/kohid/refraction#readme',
 		},
 		'advanced-custom-fields/acf': {
 			name: 'Advanced Custom Fields',

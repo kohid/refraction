@@ -60,7 +60,7 @@ class TextPath extends Widget_Base {
 	 * @access public
 	 */
 	public function get_icon() {
-		return 'eicon-wordart';
+		return 'rficon-wordart';
 	}
 
 	/**
@@ -171,15 +171,15 @@ class TextPath extends Widget_Base {
 				'options' => [
 					'left' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 				],
 				'selectors' => [

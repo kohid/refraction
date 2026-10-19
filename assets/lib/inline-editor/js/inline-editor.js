@@ -105,7 +105,7 @@
 			mode: 'basic',
 			ignoreLineBreak: false,
 			toolbarIconsPrefix: 'fa fa-',
-			toolbarIconsDictionary: {externalLink: 'eicon-editor-external-link'},
+			toolbarIconsDictionary: {externalLink: 'rficon-editor-external-link'},
 			stay: config.stay || !config.debug,
 			stayMsg: 'Are you going to leave here?',
 			textarea: '<textarea name="content"></textarea>',

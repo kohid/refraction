@@ -35,7 +35,7 @@ class NestedTabs extends Widget_Nested_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-tabs';
+		return 'rficon-tabs';
 	}
 
 	public function get_keywords() {
@@ -198,19 +198,19 @@ class NestedTabs extends Widget_Nested_Base {
 			'options' => [
 				'block-start' => [
 					'title' => esc_html__( 'Above', 'refraction' ),
-					'icon' => 'eicon-v-align-top',
+					'icon' => 'rficon-v-align-top',
 				],
 				'block-end' => [
 					'title' => esc_html__( 'Below', 'refraction' ),
-					'icon' => 'eicon-v-align-bottom',
+					'icon' => 'rficon-v-align-bottom',
 				],
 				'inline-end' => [
 					'title' => esc_html__( 'After', 'refraction' ),
-					'icon' => 'eicon-h-align-' . $end,
+					'icon' => 'rficon-h-align-' . $end,
 				],
 				'inline-start' => [
 					'title' => esc_html__( 'Before', 'refraction' ),
-					'icon' => 'eicon-h-align-' . $start,
+					'icon' => 'rficon-h-align-' . $start,
 				],
 			],
 			'separator' => 'before',
@@ -237,19 +237,19 @@ class NestedTabs extends Widget_Nested_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => "eicon-align-$start_logical-h",
+					'icon' => "rficon-align-$start_logical-h",
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-align-center-h',
+					'icon' => 'rficon-align-center-h',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => "eicon-align-$end_logical-h",
+					'icon' => "rficon-align-$end_logical-h",
 				],
 				'stretch' => [
 					'title' => esc_html__( 'Stretch', 'refraction' ),
-					'icon' => 'eicon-align-stretch-h',
+					'icon' => 'rficon-align-stretch-h',
 				],
 			],
 			'selectors_dictionary' => [
@@ -279,19 +279,19 @@ class NestedTabs extends Widget_Nested_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-align-start-v',
+					'icon' => 'rficon-align-start-v',
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-align-center-v',
+					'icon' => 'rficon-align-center-v',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-align-end-v',
+					'icon' => 'rficon-align-end-v',
 				],
 				'stretch' => [
 					'title' => esc_html__( 'Stretch', 'refraction' ),
-					'icon' => 'eicon-align-stretch-v',
+					'icon' => 'rficon-align-stretch-v',
 				],
 			],
 			'selectors_dictionary' => [
@@ -349,15 +349,15 @@ class NestedTabs extends Widget_Nested_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-text-align-left',
+					'icon' => 'rficon-text-align-left',
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-text-align-center',
+					'icon' => 'rficon-text-align-center',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-text-align-right',
+					'icon' => 'rficon-text-align-right',
 				],
 			],
 			'selectors_dictionary' => [
@@ -864,19 +864,19 @@ class NestedTabs extends Widget_Nested_Base {
 			'options' => [
 				'block-start' => [
 					'title' => esc_html__( 'Above', 'refraction' ),
-					'icon' => 'eicon-v-align-top',
+					'icon' => 'rficon-v-align-top',
 				],
 				'inline-end' => [
 					'title' => esc_html__( 'After', 'refraction' ),
-					'icon' => 'eicon-h-align-' . $end,
+					'icon' => 'rficon-h-align-' . $end,
 				],
 				'block-end' => [
 					'title' => esc_html__( 'Below', 'refraction' ),
-					'icon' => 'eicon-v-align-bottom',
+					'icon' => 'rficon-v-align-bottom',
 				],
 				'inline-start' => [
 					'title' => esc_html__( 'Before', 'refraction' ),
-					'icon' => 'eicon-h-align-' . $start,
+					'icon' => 'rficon-h-align-' . $start,
 				],
 			],
 			'selectors_dictionary' => [

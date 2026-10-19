@@ -14,7 +14,7 @@ const EMPTY_ICON_RESULT = { html: null, url: null };
 const ICON_SVG_SIZE = '100%';
 const ICON_SVG_OVERFLOW = 'visible';
 const FONT_AWESOME_LIBRARY_PREFIX = 'fa-';
-const EICONS_LIBRARY = 'eicons';
+const EICONS_LIBRARY = 'rficons';
 const DEFAULT_SVG_RELATIVE_PATH = 'images/default-svg.svg';
 
 type IconValue = {

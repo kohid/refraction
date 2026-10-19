@@ -47,7 +47,7 @@ export function createMockMenuLink( { title = 'Test' }: MenuOptions = {} ) {
 		props: {
 			title,
 			icon: () => <span>a</span>,
-			href: 'https://elementor.com',
+			href: 'https://github.com/kohid/refraction#readme',
 			target: '_blank',
 		},
 	};

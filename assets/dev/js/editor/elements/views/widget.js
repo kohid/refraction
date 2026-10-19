@@ -46,8 +46,8 @@ const WidgetView = BaseWidget.extend( {
 				{
 					name: 'save',
 					title: __( 'Save as a global', 'refraction' ),
-					shortcut: jQuery( '<i>', { class: 'eicon-pro-icon' } ),
-					promotionURL: 'https://go.elementor.com/go-pro-global-widget-context-menu/',
+					shortcut: jQuery( '<i>', { class: 'rficon-pro-icon' } ),
+					promotionURL: 'https://github.com/kohid/refraction#readme',
 					isEnabled: () => 'global' !== this.options.model.get( 'widgetType' ) &&
 						! refraction.selection.isMultiple(),
 				},

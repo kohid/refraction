@@ -723,7 +723,7 @@ export default class EditorPage extends BasePage {
 	 * @return {Promise<void>}
 	 */
 	async setTypographyControlValue( controlId: string, fontsize: string ): Promise<void> {
-		const controlSelector = `.refraction-control-${ controlId }_typography .eicon-edit`;
+		const controlSelector = `.refraction-control-${ controlId }_typography .rficon-edit`;
 
 		await this.page.locator( controlSelector ).click();
 		await this.setSliderControlValue( controlId + '_font_size', fontsize );
@@ -731,12 +731,12 @@ export default class EditorPage extends BasePage {
 	}
 
 	async setShadowControlValue( controlId: string, shadowType: string ): Promise<void> {
-		await this.page.locator( `.refraction-control-${ controlId }_${ shadowType }_shadow_type i.eicon-edit` ).click();
+		await this.page.locator( `.refraction-control-${ controlId }_${ shadowType }_shadow_type i.rficon-edit` ).click();
 		await this.page.locator( `.refraction-control-${ controlId }_${ shadowType }_shadow_type label` ).first().click();
 	}
 
 	async setTextStrokeControlValue( controlId: string, strokeType: string, value: number, color: string ): Promise<void> {
-		await this.page.locator( `.refraction-control-${ controlId }_${ strokeType }_stroke_type i.eicon-edit` ).click();
+		await this.page.locator( `.refraction-control-${ controlId }_${ strokeType }_stroke_type i.rficon-edit` ).click();
 		await this.page.locator( `.refraction-control-${ controlId }_${ strokeType }_stroke input[type="number"]` ).first().fill( value.toString() );
 		await this.page.locator( `.refraction-control-${ controlId }_stroke_color .pcr-button` ).first().click();
 		await this.page.locator( '.pcr-app.visible .pcr-result' ).first().fill( color );
@@ -983,9 +983,9 @@ export default class EditorPage extends BasePage {
 	 */
 	async setDisplayMode( uiMode: string ):	Promise<void> {
 		const uiThemeOptions = {
-			light: 'eicon-light-mode',
-			dark: 'eicon-dark-mode',
-			auto: 'eicon-header',
+			light: 'rficon-light-mode',
+			dark: 'rficon-dark-mode',
+			auto: 'rficon-header',
 		};
 
 		await this.openUserPreferencesPanel();

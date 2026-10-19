@@ -75,7 +75,7 @@ export default function ImportComplete() {
 				notice={ (
 					<>
 						<InlineLink
-							url="https://go.elementor.com/app-what-are-kits"
+							url="https://github.com/kohid/refraction#readme"
 							italic
 							onClick={ () => eventTracking( 'kit-library/seek-more-info', 'kit is live', 'click', 'app_header' ) }
 						>

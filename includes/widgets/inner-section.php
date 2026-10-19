@@ -39,7 +39,7 @@ class Widget_Inner_Section extends Widget_Base {
 	 * @inheritDoc
 	 */
 	public function get_icon() {
-		return 'eicon-columns';
+		return 'rficon-columns';
 	}
 
 	/**

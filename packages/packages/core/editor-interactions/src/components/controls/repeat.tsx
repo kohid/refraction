@@ -45,7 +45,7 @@ export function Repeat() {
 			promotionChip={
 				<InteractionsPromotionChip
 					content={ __( 'Upgrade to control how many times the animation repeats.', 'refraction' ) }
-					upgradeUrl={ 'https://go.elementor.com/go-pro-interactions-repeat-modal/' }
+					upgradeUrl={ 'https://github.com/kohid/refraction#readme' }
 					anchorRef={ repeatContainerRef }
 					trackingData={ TRACKING_DATA }
 				/>

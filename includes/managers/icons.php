@@ -246,7 +246,7 @@ class Icons_Manager {
 			'all' => [
 				'name' => 'all',
 				'label' => esc_html__( 'All Icons', 'refraction' ),
-				'labelIcon' => 'eicon-filter',
+				'labelIcon' => 'rficon-filter',
 				'native' => true,
 			],
 		];

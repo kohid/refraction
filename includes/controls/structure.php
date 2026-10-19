@@ -61,7 +61,7 @@ class Control_Structure extends Base_Data_Control {
 				<# } #>
 			</div>
 			<div class="refraction-control-structure-reset">
-				<i class="eicon-undo" aria-hidden="true"></i>
+				<i class="rficon-undo" aria-hidden="true"></i>
 				<?php echo esc_html__( 'Reset', 'refraction' ); ?>
 			</div>
 		</div>

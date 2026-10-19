@@ -46,7 +46,7 @@ class Control_Section extends Base_UI_Control {
 		?>
 		<button class="refraction-panel-heading">
 			<div class="refraction-panel-heading-toggle refraction-section-toggle" data-collapse_id="{{ data.name }}">
-				<i class="eicon-caret-right" aria-hidden="true"></i>
+				<i class="rficon-caret-right" aria-hidden="true"></i>
 			</div>
 			<div class="refraction-panel-heading-title refraction-section-title">{{{ data.label }}}</div>
 		</button>

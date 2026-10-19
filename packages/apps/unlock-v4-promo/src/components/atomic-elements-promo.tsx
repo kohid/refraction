@@ -9,8 +9,8 @@ import { __ } from '@wordpress/i18n';
 
 import { usePromoSuppressedMessage } from '../hooks/use-promo-suppressed-message';
 
-const PROMO_IMAGE = 'https://assets.elementor.com/v4-promotion/v1/images/atomic_elements_section_260.png';
-const LEARN_MORE_URL = 'https://go.elementor.com/wp-dash-opt-in-v4-help-center/';
+const PROMO_IMAGE = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E';
+const LEARN_MORE_URL = 'https://github.com/kohid/refraction#readme';
 
 export function AtomicElementsPromo() {
 	const [ suppressed, toggleSuppressMessage ] = usePromoSuppressedMessage();

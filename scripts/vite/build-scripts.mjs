@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { build as viteBuild } from 'vite-plus';
 
 import { createChunkConfig, createEntryConfig, CHUNKS_OUTPUT_DIR } from './create-config.mjs';
-import { generateEiconsFile } from './shared/eicons.mjs';
+import { generateEiconsFile } from './shared/rficons.mjs';
 import { BASE_ENTRIES, FRONTEND_ENTRIES, QUNIT_ENTRIES } from './shared/entries.mjs';
 import { ASSETS_JS } from './shared/paths.mjs';
 import {

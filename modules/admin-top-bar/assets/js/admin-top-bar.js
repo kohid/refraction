@@ -37,9 +37,9 @@ export default function AdminTopBar() {
 
 			<div className="e-admin-top-bar__secondary-area">
 				<div className="e-admin-top-bar__secondary-area-buttons">
-					{ ! refractionAppConfig.hasPro && <BarButton additionalClasses="accent" href={ promotion.url } target="__blank" icon="eicon-upgrade-crown" iconAdditionalClasses="crown-icon">{ promotion.text }</BarButton> }
-					<BarButton href={ window.refractionAdminTopBarConfig.apps_url } icon="eicon-integration">{ __( 'Add-ons', 'refraction' ) }</BarButton>
-					{ window.refractionAdminTopBarConfig.is_administrator ? <BarButton onClick={ finderAction } dataInfo={ finderTooltipText } icon="eicon-search-bold">{ __( 'Finder', 'refraction' ) }</BarButton> : '' }
+					{ ! refractionAppConfig.hasPro && <BarButton additionalClasses="accent" href={ promotion.url } target="__blank" icon="rficon-upgrade-crown" iconAdditionalClasses="crown-icon">{ promotion.text }</BarButton> }
+					<BarButton href={ window.refractionAdminTopBarConfig.apps_url } icon="rficon-integration">{ __( 'Add-ons', 'refraction' ) }</BarButton>
+					{ window.refractionAdminTopBarConfig.is_administrator ? <BarButton onClick={ finderAction } dataInfo={ finderTooltipText } icon="rficon-search-bold">{ __( 'Finder', 'refraction' ) }</BarButton> : '' }
 					{ window.refractionCloudAdmin ? window.refractionCloudAdmin() : '' }
 					{ BarButtonNotification
 						? <BarButtonNotification>{ __( 'What\'s New', 'refraction' ) }</BarButtonNotification>

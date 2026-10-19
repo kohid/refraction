@@ -20,13 +20,13 @@ export default function ConnectionButton() {
 
 	if ( isUserConnected ) {
 		tooltipText = '';
-		connectUrl = 'https://go.elementor.com/wp-dash-admin-bar-account/';
+		connectUrl = 'https://github.com/kohid/refraction#readme';
 		buttonText = __( 'My Refraction', 'refraction' );
 		targetUrl = '_blank';
 	}
 
 	return (
-		<BarButton icon="eicon-user-circle-o" buttonRef={ buttonRef } dataInfo={ tooltipText } href={ connectUrl } target={ targetUrl }>{ buttonText }</BarButton>
+		<BarButton icon="rficon-user-circle-o" buttonRef={ buttonRef } dataInfo={ tooltipText } href={ connectUrl } target={ targetUrl }>{ buttonText }</BarButton>
 	);
 }
 

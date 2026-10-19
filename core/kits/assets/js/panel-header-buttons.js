@@ -1,4 +1,4 @@
-const arrowIconClass = 'eicon-chevron-' + ( refractionCommon.config.isRTL ? 'right' : 'left' );
+const arrowIconClass = 'rficon-chevron-' + ( refractionCommon.config.isRTL ? 'right' : 'left' );
 
 const buttonBack = `
 <button id="refraction-panel-header-kit-back" class="refraction-header-button" aria-label="{{ Back }}">
@@ -8,7 +8,7 @@ const buttonBack = `
 
 const buttonClose = `
 <button id="refraction-panel-header-kit-close" class="refraction-header-button" aria-label="{{ Close }}">
-	<i class="refraction-icon eicon-close tooltip-target" aria-hidden="true" data-tooltip="{{ Close }}"></i>
+	<i class="refraction-icon rficon-close tooltip-target" aria-hidden="true" data-tooltip="{{ Close }}"></i>
 </button>
 `;
 

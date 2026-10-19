@@ -24,7 +24,7 @@
 		}
 	}
 
-	.eicon-plus-circle {
+	.rficon-plus-circle {
 		@include absolute-center;
 		color: var(--e-a-color-white);
 		font-size: 20px;
@@ -52,7 +52,7 @@
 			}
 		}
 
-		.eicon-video-camera {
+		.rficon-video-camera {
 			@include absolute-center;
 			color: rgba(255, 255, 255, 0.7);
 			font-size: 21px;

@@ -53,7 +53,7 @@ class Widget_Social_Icons extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-social-icons';
+		return 'rficon-social-icons';
 	}
 
 	/**
@@ -323,15 +323,15 @@ class Widget_Social_Icons extends Widget_Base {
 				'options' => [
 					'left'    => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 				],
 				'prefix_class' => 'e-grid-align%s-',

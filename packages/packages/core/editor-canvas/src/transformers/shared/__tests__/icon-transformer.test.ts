@@ -234,12 +234,12 @@ describe( 'iconTransformer', () => {
 		} );
 	} );
 
-	it( 'does not replace PHP-managed eicons with the default svg', async () => {
+	it( 'does not replace PHP-managed rficons with the default svg', async () => {
 		// Arrange.
 		global.fetch = jest.fn();
 
 		// Act.
-		const result = await resolveSavedIcon( 'eicon-edit', 'eicons' );
+		const result = await resolveSavedIcon( 'rficon-edit', 'rficons' );
 
 		// Assert.
 		expect( result ).toEqual( { html: null, url: null } );

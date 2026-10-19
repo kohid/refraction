@@ -538,10 +538,10 @@ class Test_Upgrades extends Refraction_Test_Base {
 
 		// Grid container Changes
 		self::assertEquals( 'Grid', $top_level_container['settings']['presetTitle'] );
-		self::assertEquals( 'eicon-container-grid', $top_level_container['settings']['presetIcon'] );
+		self::assertEquals( 'rficon-container-grid', $top_level_container['settings']['presetIcon'] );
 
 		self::assertEquals( 'Container', $inner_container['settings']['presetTitle'] );
-		self::assertEquals( 'eicon-container', $inner_container['settings']['presetIcon'] );
+		self::assertEquals( 'rficon-container', $inner_container['settings']['presetIcon'] );
 	}
 
 	/**

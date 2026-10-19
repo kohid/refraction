@@ -36,7 +36,7 @@ export default function SelectPreset( props ) {
 				aria-label={ __( 'Close', 'refraction' ) }
 				onClick={ handleClose }
 			>
-				<i className="eicon-close" aria-hidden="true" />
+				<i className="rficon-close" aria-hidden="true" />
 			</button>
 			<div className="e-view e-con-select-preset">
 				<div className="e-con-select-preset__title">{ __( 'Select your Structure', 'refraction' ) }</div>

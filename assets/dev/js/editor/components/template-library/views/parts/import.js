@@ -141,7 +141,7 @@ TemplateLibraryImportView = Marionette.ItemView.extend( {
 	resolveIcon() {
 		const activeSource = refraction.templates.getFilter( 'source' ) || 'local';
 
-		const className = 'local' === activeSource ? 'eicon-library-upload' : 'eicon-library-import';
+		const className = 'local' === activeSource ? 'rficon-library-upload' : 'rficon-library-import';
 
 		this.ui.icon.removeClass().addClass( className );
 	},

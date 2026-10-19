@@ -51,7 +51,7 @@ class Widget_Read_More extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-post-excerpt';
+		return 'rficon-post-excerpt';
 	}
 
 	/**

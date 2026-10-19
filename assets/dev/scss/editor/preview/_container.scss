@@ -280,9 +280,9 @@
 				border-end-end-radius: 3px;
 				height: auto;
 
-				// Replace the edit eicon with Container eicon.
-				i.eicon-handle::before {
-					content: '\e9b4'; // eicon-inner-container.
+				// Replace the edit rficon with Container rficon.
+				i.rficon-handle::before {
+					content: '\e9b4'; // rficon-inner-container.
 					font-size: 20px;
 					display: block;
 					padding: 2px;

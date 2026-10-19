@@ -78,7 +78,7 @@ export const App = () => {
 				{ __( 'Here\'s where you can fine-tune Refraction to your workflow. Disable elements you don\'t use for a cleaner interface, more focused creative experience, and improved performance.', 'refraction' ) }
 				{ ' ' }
 				<Link
-					href="https://go.elementor.com/wp-dash-element-manager/"
+					href="https://github.com/kohid/refraction#readme"
 					rel="noreferrer"
 					target="_blank"
 					color="info.light"

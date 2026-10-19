@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <script type="text/template" id="tmpl-refraction-panel">
 	<div id="refraction-panel-state-loading">
-		<i class="eicon-loading eicon-animation-spin"></i>
+		<i class="rficon-loading rficon-animation-spin"></i>
 	</div>
 	<header id="refraction-panel-header-wrapper"></header>
 	<main id="refraction-panel-content-wrapper"></main>
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div id="refraction-panel__editor__help">
 		<a id="refraction-panel__editor__help__link" href="{{{ refraction.config.document.panel.needHelpUrl }}}" target="_blank">
 			<?php echo esc_html__( 'Need Help', 'refraction' ); ?>
-			<i class="eicon-help-o" aria-hidden="true"></i>
+			<i class="rficon-help-o" aria-hidden="true"></i>
 		</a>
 	</div>
 	<# } #>
@@ -65,18 +65,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <script type="text/template" id="tmpl-refraction-panel-header">
 	<button id="refraction-panel-header-menu-button" class="refraction-header-button" aria-label="<?php echo esc_attr__( 'Menu', 'refraction' ); ?>">
-		<i class="refraction-icon eicon-menu-bar tooltip-target" aria-hidden="true" data-tooltip="<?php echo esc_attr__( 'Menu', 'refraction' ); ?>"></i>
+		<i class="refraction-icon rficon-menu-bar tooltip-target" aria-hidden="true" data-tooltip="<?php echo esc_attr__( 'Menu', 'refraction' ); ?>"></i>
 	</button>
 	<h2 id="refraction-panel-header-title"></h2>
 	<# const extraClass = $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ? '' : 'refraction-visibility-hidden'; #>
 	<button id="refraction-panel-header-add-button" class="refraction-header-button {{{ extraClass }}}" aria-label="<?php echo esc_attr__( 'Widgets Panel', 'refraction' ); ?>">
-		<i class="refraction-icon eicon-apps tooltip-target" aria-hidden="true" data-tooltip="<?php echo esc_attr__( 'Widgets Panel', 'refraction' ); ?>"></i>
+		<i class="refraction-icon rficon-apps tooltip-target" aria-hidden="true" data-tooltip="<?php echo esc_attr__( 'Widgets Panel', 'refraction' ); ?>"></i>
 	</button>
 </script>
 
 <script type="text/template" id="tmpl-refraction-mode-switcher-content">
 	<label for="refraction-mode-switcher-preview-input" id="refraction-mode-switcher-preview" title="<?php echo esc_attr__( 'Hide Panel', 'refraction' ); ?>">
-		<i class="eicon eicon-angle-left" aria-hidden="true" tabindex="0"></i>
+		<i class="rficon rficon-angle-left" aria-hidden="true" tabindex="0"></i>
 		<span class="refraction-screen-only"><?php echo esc_html__( 'Hide Panel', 'refraction' ); ?></span>
 	</label>
 	<input id="refraction-mode-switcher-preview-input" type="checkbox">
@@ -108,7 +108,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div id="refraction-panel__editor__help">
 			<a id="refraction-panel__editor__help__link" href="{{ elementData.help_url }}" target="_blank">
 				<?php echo esc_html__( 'Need Help', 'refraction' ); ?>
-				<i class="eicon-help-o" aria-hidden="true"></i>
+				<i class="rficon-help-o" aria-hidden="true"></i>
 			</a>
 		</div>
 	<# } #>
@@ -136,7 +136,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <script type="text/template" id="tmpl-refraction-panel-scheme-typography-item">
 	<div class="refraction-panel-heading">
 		<div class="refraction-panel-heading-toggle">
-			<i class="eicon-caret-right" aria-hidden="true"></i>
+			<i class="rficon-caret-right" aria-hidden="true"></i>
 		</div>
 		<div class="refraction-panel-heading-title">{{{ title }}}</div>
 	</div>
@@ -205,24 +205,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <script type="text/template" id="tmpl-refraction-control-dynamic-switcher">
 	<button class="refraction-control-dynamic-switcher refraction-control-unit-1" data-tooltip="<?php echo esc_attr__( 'Dynamic Tags', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Dynamic Tags', 'refraction' ); ?>">
-		<i class="eicon-database" aria-hidden="true"></i>
+		<i class="rficon-database" aria-hidden="true"></i>
 	</button>
 </script>
 
 <script type="text/template" id="tmpl-refraction-control-element-color-picker">
 	<button class="refraction-control-element-color-picker e-control-tool" data-tooltip="<?php echo esc_attr__( 'Color Sampler', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Color Sampler', 'refraction' ); ?>">
-		<i class="eicon-eyedropper" aria-hidden="true"></i>
+		<i class="rficon-eyedropper" aria-hidden="true"></i>
 	</button>
 </script>
 
 <script type="text/template" id="tmpl-refraction-control-dynamic-cover">
 	<div class="refraction-dynamic-cover__settings">
-		<i class="eicon-{{ hasSettings ? 'wrench' : 'database' }}"></i>
+		<i class="rficon-{{ hasSettings ? 'wrench' : 'database' }}"></i>
 	</div>
 	<div class="refraction-dynamic-cover__title" title="{{{ title + ' ' + content }}}">{{{ title + ' ' + content }}}</div>
 	<# if ( isRemovable ) { #>
 		<div class="refraction-dynamic-cover__remove">
-			<i class="eicon-close-circle"></i>
+			<i class="rficon-close-circle"></i>
 		</div>
 	<# } #>
 </script>

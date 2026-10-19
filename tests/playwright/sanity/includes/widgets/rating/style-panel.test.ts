@@ -117,7 +117,7 @@ iconExperimentStates.forEach( ( iconExperimentState ) => {
 
 			await test.step( 'Assert flex-wrap with center alignment screenshot inside the editor', async () => {
 				await editor.getPreviewFrame().locator( '.e-rating' ).click();
-				await editor.setChooseControlValue( 'icon_alignment', 'eicon-align-end-h' );
+				await editor.setChooseControlValue( 'icon_alignment', 'rficon-align-end-h' );
 
 				await editor.togglePreviewMode();
 
@@ -128,7 +128,7 @@ iconExperimentStates.forEach( ( iconExperimentState ) => {
 				await editor.togglePreviewMode();
 
 				await editor.getPreviewFrame().locator( '.e-rating' ).click();
-				await editor.setChooseControlValue( 'icon_alignment', 'eicon-align-start-h' );
+				await editor.setChooseControlValue( 'icon_alignment', 'rficon-align-start-h' );
 			} );
 
 			await test.step( 'Assert flex-wrap screenshot on the front end', async () => {

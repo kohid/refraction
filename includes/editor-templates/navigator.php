@@ -9,17 +9,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 <script type="text/template" id="tmpl-refraction-navigator">
 	<div id="refraction-navigator__header">
 		<button id="refraction-navigator__toggle-all" data-refraction-action="expand" aria-label="<?php echo esc_attr__( 'Expand all elements', 'refraction' ); ?>">
-			<i class="eicon-expand" aria-hidden="true"></i>
+			<i class="rficon-expand" aria-hidden="true"></i>
 		</button>
 		<h2 id="refraction-navigator__header__title"><?php echo esc_html__( 'Structure', 'refraction' ); ?></h2>
 		<button id="refraction-navigator__close" aria-label="<?php echo esc_attr__( 'Close structure', 'refraction' ); ?>">
-			<i class="eicon-close" aria-hidden="true"></i>
+			<i class="rficon-close" aria-hidden="true"></i>
 		</button>
 	</div>
 	<div id="refraction-navigator__elements"></div>
 	<div id="refraction-navigator__footer">
 		<div id="refraction-navigator__footer__resize-bar">
-			<i class="eicon-ellipsis-h" aria-hidden="true"></i>
+			<i class="rficon-ellipsis-h" aria-hidden="true"></i>
 			<span class="refraction-screen-only"><?php echo esc_html__( 'Resize structure', 'refraction' ); ?></span>
 		</div>
 	</div>
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<# if ( obj.elType ) { #>
 		<div class="refraction-navigator__item" data-locked="{{ obj.isLocked ? 'true' : 'false' }}" tabindex="0">
 			<div class="refraction-navigator__element__list-toggle">
-				<i class="eicon-sort-down" aria-hidden="true"></i>
+				<i class="rficon-sort-down" aria-hidden="true"></i>
 				<span class="refraction-screen-only"><?php echo esc_html__( 'Show/hide inner elements', 'refraction' ); ?></span>
 			</div>
 			<#
@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<span class="refraction-navigator__element__title__text">{{{ title }}}</span>
 			</div>
 			<div class="refraction-navigator__element__toggle">
-				<i class="eicon-preview-medium" aria-hidden="true"></i>
+				<i class="rficon-preview-medium" aria-hidden="true"></i>
 				<span class="refraction-screen-only"><?php echo esc_html__( 'Show/hide Element', 'refraction' ); ?></span>
 			</div>
 			<div class="refraction-navigator__element__indicators"></div>

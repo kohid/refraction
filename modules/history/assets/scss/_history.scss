@@ -28,7 +28,7 @@
 			color: var(--e-a-txt-color-hover);
 
 			.refraction-history-item__icon{
-				.eicon:before {
+				.rficon:before {
 					content:'\e924';
 				}
 			}
@@ -43,7 +43,7 @@
 			&:hover .refraction-history-item__icon,
 			&:focus .refraction-history-item__icon {
 
-				.eicon:before {
+				.rficon:before {
 					content:'\e90e';
 				}
 			}

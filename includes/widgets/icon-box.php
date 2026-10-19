@@ -56,7 +56,7 @@ class Widget_Icon_Box extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-icon-box';
+		return 'rficon-icon-box';
 	}
 
 	/**
@@ -241,19 +241,19 @@ class Widget_Icon_Box extends Widget_Base {
 				'options' => [
 					'inline-start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'inline-end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 					'block-start' => [
 						'title' => esc_html__( 'Top', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'block-end' => [
 						'title' => esc_html__( 'Bottom', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'classes' => 'refraction-control-start-end',
@@ -278,15 +278,15 @@ class Widget_Icon_Box extends Widget_Base {
 				'options' => [
 					'top' => [
 						'title' => esc_html__( 'Top', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'middle' => [
 						'title' => esc_html__( 'Middle', 'refraction' ),
-						'icon' => 'eicon-v-align-middle',
+						'icon' => 'rficon-v-align-middle',
 					],
 					'bottom' => [
 						'title' => esc_html__( 'Bottom', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'default' => 'top',
@@ -313,19 +313,19 @@ class Widget_Icon_Box extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 					'justify' => [
 						'title' => esc_html__( 'Justified', 'refraction' ),
-						'icon' => 'eicon-text-align-justify',
+						'icon' => 'rficon-text-align-justify',
 					],
 				],
 				'classes' => 'refraction-control-start-end',

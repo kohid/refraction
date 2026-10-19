@@ -11,7 +11,7 @@ export default function ExportInfoModal( props ) {
 						{ __( 'A Website Kit is a .zip file that contains all the parts of a complete site. It’s an easy way to get a site up and running quickly.', 'refraction' ) }
 						<br /><br />
 						{ /* eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace */ }
-						<InlineLink url="https://go.elementor.com/app-what-are-kits">{ __( 'Learn more about Website Kits', 'refraction' ) }</InlineLink>
+						<InlineLink url="https://github.com/kohid/refraction#readme">{ __( 'Learn more about Website Kits', 'refraction' ) }</InlineLink>
 					</>
 				</InfoModal.Text>
 			</InfoModal.Section>
@@ -22,7 +22,7 @@ export default function ExportInfoModal( props ) {
 					<>
 						{ __( 'To turn your site into a Website Kit, select the templates, content, settings and plugins you want to include. Once it’s ready, you’ll get a .zip file that you can import to other sites.', 'refraction' ) }
 						<br /><br />
-						<InlineLink url="https://go.elementor.com/app-export-kit">{ __( 'Learn More', 'refraction' ) }</InlineLink>
+						<InlineLink url="https://github.com/kohid/refraction#readme">{ __( 'Learn More', 'refraction' ) }</InlineLink>
 					</>
 				</InfoModal.Text>
 			</InfoModal.Section>

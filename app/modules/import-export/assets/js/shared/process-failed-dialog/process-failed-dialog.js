@@ -16,7 +16,7 @@ const messagesContent = {
 		text: <>
 			{ /* eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace */ }
 			{ __( 'We couldn’t download the Website Template due to technical difficulties on our part. Try again and if the problem persists contact ', 'refraction' ) }
-			<InlineLink url="https://my.elementor.com/support-center/">
+			<InlineLink url="https://github.com/kohid/refraction/issues">
 				{ __( 'Support', 'refraction' ) }
 			</InlineLink>
 		</>,
@@ -30,7 +30,7 @@ const messagesContent = {
 		text: <>
 			{ /* eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace */ }
 			{ __( 'Seems like there is a problem with the zip’s files. Try installing again and if the problem persists contact ', 'refraction' ) }
-			<InlineLink url="https://my.elementor.com/support-center/">
+			<InlineLink url="https://github.com/kohid/refraction/issues">
 				{ __( 'Support', 'refraction' ) }
 			</InlineLink>
 		</>,
@@ -45,7 +45,7 @@ const messagesContent = {
 			</InlineLink>
 			{ /* eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace */ }
 			{ __( ', try again and if the problem persists contact ', 'refraction' ) }
-			<InlineLink url="https://my.elementor.com/support-center/">
+			<InlineLink url="https://github.com/kohid/refraction/issues">
 				{ __( 'Support', 'refraction' ) }
 			</InlineLink>
 		</>,
@@ -54,7 +54,7 @@ const messagesContent = {
 		title: __( 'Unable to download the Website Template', 'refraction' ),
 		text: <>
 			{ __( 'We couldn’t download the Website Template due to technical difficulty on our part. Try again in a few minutes and if the problem persists contact', 'refraction' ) }
-			<InlineLink url="https://my.elementor.com/support-center/">
+			<InlineLink url="https://github.com/kohid/refraction/issues">
 				{ __( 'Support', 'refraction' ) }
 			</InlineLink>
 		</>,
@@ -107,7 +107,7 @@ export default function ProcessFailedDialog( { errorType, onApprove, onDismiss, 
 			if ( isTryAgainAction ) {
 				onApprove();
 			} else {
-				window.open( 'https://go.elementor.com/app-import-download-failed', '_blank' );
+				window.open( 'https://github.com/kohid/refraction/issues', '_blank' );
 			}
 			onLearnMore?.();
 		},

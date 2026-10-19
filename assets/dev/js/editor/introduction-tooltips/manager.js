@@ -15,7 +15,7 @@ export default class IntroductionTooltipsManager {
 				const elements = this.getElements();
 				elements.$title = jQuery( '<div>', { class: 'dialog-tooltip-widget__title' } );
 
-				elements.$closeButton = jQuery( '<i>', { class: 'eicon-close' } );
+				elements.$closeButton = jQuery( '<i>', { class: 'rficon-close' } );
 				elements.$closeButton.on( 'click', () => this.hide() );
 
 				elements.header.append(

@@ -27,7 +27,7 @@ PanelMenu.initGroups = () => {
 		settingsItems = PanelMenu.createGroupItems( 'settings' ),
 		additionalSettingsProps = {
 			name: 'settings-additional-settings',
-			icon: 'eicon-tools',
+			icon: 'rficon-tools',
 			title: __( 'Additional Settings', 'refraction' ),
 			type: 'link',
 			link: refraction.config.admin_settings_url,

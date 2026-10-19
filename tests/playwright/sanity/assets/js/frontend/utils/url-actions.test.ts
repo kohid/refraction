@@ -163,7 +163,7 @@ test.describe( 'URL Actions', () => {
 		 * In this test, I replace the 'settings' array of the mountainImageHash with a settings array that triggers an
 		 * `alert()`. We check that the lightbox IS NOT visible.
 		 */
-		const settingsJson = '{"id":1,"url":"https://elementor.com/", "onClick": "alert()"}';
+		const settingsJson = '{"id":1,"url":"https://github.com/kohid/refraction#readme", "onClick": "alert()"}';
 
 		const testActionHash = '#' + encodeURIComponent( 'refraction-action:action=lightbox&settings=' + Buffer.from( settingsJson ).toString( 'base64' ) );
 

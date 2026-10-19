@@ -62,7 +62,7 @@ export default function ImportResolver() {
 			</ActionsFooter>
 		),
 		getLearnMoreLink = () => (
-			<InlineLink url="https://go.elementor.com/app-what-are-kits" italic onClick={ () => eventTracking( 'kit-library/seek-more-info' ) }>
+			<InlineLink url="https://github.com/kohid/refraction#readme" italic onClick={ () => eventTracking( 'kit-library/seek-more-info' ) }>
 				{ __( 'Learn More', 'refraction' ) }
 			</InlineLink>
 		),

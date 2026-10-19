@@ -14,7 +14,7 @@ export default class ErrorBoundary extends React.Component {
 	static defaultProps = {
 		title: __( 'App could not be loaded', 'refraction' ),
 		text: __( 'We’re sorry, but something went wrong. Click on ‘Learn more’ and follow each of the steps to quickly solve it.', 'refraction' ),
-		learnMoreUrl: 'https://go.elementor.com/app-general-load-issue/',
+		learnMoreUrl: 'https://github.com/kohid/refraction/issues',
 	};
 
 	constructor( props ) {

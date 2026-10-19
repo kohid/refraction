@@ -23,6 +23,6 @@ export default class AddNewButton extends Button {
 		...Button.defaultProps,
 		className: 'eps-add-new-button',
 		text: __( 'Add New', 'refraction' ),
-		icon: 'eicon-plus',
+		icon: 'rficon-plus',
 	};
 }

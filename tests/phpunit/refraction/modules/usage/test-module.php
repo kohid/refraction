@@ -59,7 +59,7 @@ class Test_Module extends Refraction_Test_Base {
 				'settings' => [
 					'container_type' => 'grid',
 					'presetTitle' => 'Container',
-					'presetIcon' => 'eicon-container',
+					'presetIcon' => 'rficon-container',
 				],
 				'elements' => [
 					[
@@ -68,7 +68,7 @@ class Test_Module extends Refraction_Test_Base {
 						'isInner' => false,
 						'settings' => [
 							'presetTitle' => 'Container',
-							'presetIcon' => 'eicon-container',
+							'presetIcon' => 'rficon-container',
 						],
 						'elements' => [
 							[
@@ -76,7 +76,7 @@ class Test_Module extends Refraction_Test_Base {
 								'elType' => 'container',
 								'settings' => [
 									'presetTitle' => 'Container',
-									'presetIcon' => 'eicon-container',
+									'presetIcon' => 'rficon-container',
 								],
 								'isInner' => false,
 								'elements' => [],
@@ -86,7 +86,7 @@ class Test_Module extends Refraction_Test_Base {
 								'elType' => 'container',
 								'settings' => [
 									'presetTitle' => 'Container',
-									'presetIcon' => 'eicon-container',
+									'presetIcon' => 'rficon-container',
 								],
 								'isInner' => false,
 								'elements' => [

@@ -236,7 +236,7 @@ class Module extends \Refraction\Core\Base\Module {
 		?>
 		<div class="refraction-safe-mode-toast" id="refraction-safe-mode-message">
 			<header>
-				<i class="eicon-warning" aria-hidden="true"></i>
+				<i class="rficon-warning" aria-hidden="true"></i>
 				<h2><?php echo esc_html__( 'Safe Mode ON', 'refraction' ); ?></h2>
 				<a class="refraction-button refraction-safe-mode-button refraction-disable-safe-mode" target="_blank" href="<?php echo esc_url( $this->get_admin_page_url() ); ?>">
 					<?php echo esc_html__( 'Disable Safe Mode', 'refraction' ); ?>
@@ -324,7 +324,7 @@ class Module extends \Refraction\Core\Base\Module {
 		<div class="refraction-safe-mode-toast" id="refraction-try-safe-mode">
 		<?php if ( current_user_can( 'install_plugins' ) ) : ?>
 			<header>
-				<i class="eicon-warning" aria-hidden="true"></i>
+				<i class="rficon-warning" aria-hidden="true"></i>
 				<h2><?php echo esc_html__( 'Can\'t Edit?', 'refraction' ); ?></h2>
 				<a class="refraction-button e-primary refraction-safe-mode-button refraction-enable-safe-mode" target="_blank" href="<?php echo esc_url( $this->get_admin_page_url() ); ?>">
 					<?php echo esc_html__( 'Enable Safe Mode', 'refraction' ); ?>
@@ -335,7 +335,7 @@ class Module extends \Refraction\Core\Base\Module {
 			</div>
 		<?php else : ?>
 			<header>
-				<i class="eicon-warning" aria-hidden="true"></i>
+				<i class="rficon-warning" aria-hidden="true"></i>
 				<h2><?php echo esc_html__( 'Can\'t Edit?', 'refraction' ); ?></h2>
 			</header>
 			<div class="refraction-toast-content">

@@ -182,7 +182,7 @@ const testCarouselIsVisibleWhenUsingDirectionRightOrLeft = async ( editor: Edito
 
 	// Set direction right.
 	await clickTabByPosition( editor.getPreviewFrame(), 0 );
-	await editor.setChooseControlValue( 'tabs_direction', 'eicon-h-align-right' );
+	await editor.setChooseControlValue( 'tabs_direction', 'rficon-h-align-right' );
 	await editor.togglePreviewMode();
 
 	// Assert
@@ -195,7 +195,7 @@ const testCarouselIsVisibleWhenUsingDirectionRightOrLeft = async ( editor: Edito
 	await editor.togglePreviewMode();
 	await editor.removeElement( carouselId );
 	await clickTabByPosition( editor.getPreviewFrame(), 0 );
-	await editor.setChooseControlValue( 'tabs_direction', 'eicon-h-align-right' );
+	await editor.setChooseControlValue( 'tabs_direction', 'rficon-h-align-right' );
 };
 
 const testTabIsVisibleInAccordionView = async ( page: Page, editor: EditorPage ) => {

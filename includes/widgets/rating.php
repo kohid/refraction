@@ -23,7 +23,7 @@ class Widget_Rating extends Widget_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-rating';
+		return 'rficon-rating';
 	}
 
 	public function get_keywords() {
@@ -182,13 +182,13 @@ class Widget_Rating extends Widget_Base {
 				'skin_settings' => [
 					'inline' => [
 						'icon' => [
-							'icon' => 'eicon-star',
+							'icon' => 'rficon-star',
 						],
 					],
 				],
 				'default' => [
-					'value' => 'eicon-star',
-					'library' => 'eicons',
+					'value' => 'rficon-star',
+					'library' => 'rficons',
 				],
 				'separator' => 'before',
 				'exclude_inline_options' => [ 'none' ],
@@ -201,15 +201,15 @@ class Widget_Rating extends Widget_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => "eicon-align-$start_logical-h",
+					'icon' => "rficon-align-$start_logical-h",
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-align-center-h',
+					'icon' => 'rficon-align-center-h',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => "eicon-align-$end_logical-h",
+					'icon' => "rficon-align-$end_logical-h",
 				],
 			],
 			'selectors_dictionary' => [

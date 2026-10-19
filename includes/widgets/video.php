@@ -55,7 +55,7 @@ class Widget_Video extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-youtube';
+		return 'rficon-youtube';
 	}
 
 	/**
@@ -677,10 +677,10 @@ class Widget_Video extends Widget_Base {
 					'inline' => [
 						'none' => [
 							'label' => 'Default',
-							'icon' => 'eicon-play',
+							'icon' => 'rficon-play',
 						],
 						'icon' => [
-							'icon' => 'eicon-star',
+							'icon' => 'rficon-star',
 						],
 					],
 				],
@@ -1102,8 +1102,8 @@ class Widget_Video extends Widget_Base {
 							<?php
 							if ( empty( $settings['play_icon']['value'] ) ) {
 								$settings['play_icon'] = [
-									'library' => 'eicons',
-									'value' => 'eicon-play',
+									'library' => 'rficons',
+									'value' => 'rficon-play',
 								];
 							}
 							Icons_Manager::render_icon( $settings['play_icon'], [ 'aria-hidden' => 'true' ] );

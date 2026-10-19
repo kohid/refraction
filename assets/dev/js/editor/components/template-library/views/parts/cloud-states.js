@@ -32,20 +32,20 @@ module.exports = Marionette.ItemView.extend( {
 			connectedNoQuota: {
 				title: __( 'It’s time to level up', 'refraction' ),
 				message: __( 'Refraction Pro plans come with Cloud Templates.', 'refraction' ) + '<br>' + __( 'Upgrade now to re-use your templates on all the websites you’re working on.', 'refraction' ),
-				icon: `<i class="eicon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Upgrade now', 'elememntor' ) }"></i>`,
-				button: `<a class="refraction-button e-accent" href="https://go.elementor.com/go-pro-cloud-templates-cloud-tab" target="_blank">${ __( 'Upgrade now', 'refraction' ) }</a>`,
+				icon: `<i class="rficon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Upgrade now', 'elememntor' ) }"></i>`,
+				button: `<a class="refraction-button e-accent" href="https://github.com/kohid/refraction#readme" target="_blank">${ __( 'Upgrade now', 'refraction' ) }</a>`,
 			},
 			deactivated: {
 				title: __( 'Your library has been deactivated', 'refraction' ),
 				message: __( 'This is because you don’t have an active subscription.', 'refraction' ) + '<br>' + __( 'Your templates are saved for 90 days from the day your subscription expires,', 'refraction' ) + '<br>' + __( 'then they’ll be gone forever.', 'refraction' ),
-				icon: `<i class="eicon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Renew my subscription', 'elememntor' ) }"></i>`,
-				button: `<a class="refraction-button e-accent" href="https://go.elementor.com/renew-license-cloud-templates-cloud-tab" target="_blank">${ __( 'Renew my subscription', 'refraction' ) }</a>`,
+				icon: `<i class="rficon-library-subscription-upgrade" aria-hidden="true" title="${ __( 'Renew my subscription', 'elememntor' ) }"></i>`,
+				button: `<a class="refraction-button e-accent" href="https://github.com/kohid/refraction#readme" target="_blank">${ __( 'Renew my subscription', 'refraction' ) }</a>`,
 			},
 		};
 	},
 
 	getDefaultIcon() {
-		return `<i class="eicon-library-cloud-connect" aria-hidden="true" title="${ __( 'Empty folder', 'elememntor' ) }"></i>`;
+		return `<i class="rficon-library-cloud-connect" aria-hidden="true" title="${ __( 'Empty folder', 'elememntor' ) }"></i>`;
 	},
 
 	getCurrentMode() {

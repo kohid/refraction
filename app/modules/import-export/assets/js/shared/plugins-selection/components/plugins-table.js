@@ -25,7 +25,7 @@ function PluginsTable( {
 
 	const CellLink = ( cellLinkProps ) => (
 		<InlineLink url={ cellLinkProps.url } underline="none">
-			{ `${ __( 'Version' ) } ${ cellLinkProps.text }` } <Icon className="eicon-editor-external-link" />
+			{ `${ __( 'Version' ) } ${ cellLinkProps.text }` } <Icon className="rficon-editor-external-link" />
 		</InlineLink>
 	);
 

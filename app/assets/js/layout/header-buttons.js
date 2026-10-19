@@ -31,7 +31,7 @@ export default function HeaderButtons( props ) {
 		<div className="eps-app__header-buttons">
 			<Button
 				text={ __( 'Close', 'refraction' ) }
-				icon="eicon-close"
+				icon="rficon-close"
 				className="eps-app__close-button"
 				onClick={ actionOnClose }
 			/>

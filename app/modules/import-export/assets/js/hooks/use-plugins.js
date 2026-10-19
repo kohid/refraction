@@ -28,7 +28,7 @@ export default function usePlugins() {
 				headers: {
 					'Content-Type': 'application/json; charset=utf-8',
 					'X-WP-Nonce': wpApiSettings.nonce,
-					// TODO 18/04/2023 : This needs to be removed after https://elementor.atlassian.net/browse/HTS-434 is done.
+					// TODO 18/04/2023 : This needs to be removed after upstream tracker issue HTS-434 is done.
 					'X-Refraction-Action': 'import-plugins',
 				},
 			};

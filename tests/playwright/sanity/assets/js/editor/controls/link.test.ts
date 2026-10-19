@@ -17,7 +17,7 @@ test.describe( 'Testing link control for widgets: @styleguide_image_link', () =>
 
 	for ( const widget in data ) {
 		test.skip( `Verify ${ data[ widget ].title } link control`, async ( { page, apiRequests }, testInfo ) => {
-			const link = 'https://elementor.com/';
+			const link = 'https://github.com/kohid/refraction#readme';
 			const customAttributes = { key: 'mykey', value: 'myValue' };
 			const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 			const editor = await wpAdmin.openNewPage();

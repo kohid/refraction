@@ -28,7 +28,7 @@ test.describe( 'Column tests @column', () => {
 		await editor.closeNavigatorIfOpen();
 		await editor.openPanelTab( 'style' );
 		await editor.openSection( 'section_background' );
-		await editor.setChooseControlValue( 'background_background', 'eicon-slideshow' );
+		await editor.setChooseControlValue( 'background_background', 'rficon-slideshow' );
 		await editor.addImagesToGalleryControl();
 
 		await test.step( 'Verify background slideshow', async () => {

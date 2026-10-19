@@ -34,7 +34,7 @@ export function Trigger( { value, onChange }: FieldProps ) {
 			disabledOptions={ disabledOptions }
 			promotionLabel={ __( 'PRO triggers', 'refraction' ) }
 			promotionContent={ __( 'Upgrade to unlock more interactions triggers.', 'refraction' ) }
-			upgradeUrl="https://go.elementor.com/go-pro-interactions-triggers-modal/"
+			upgradeUrl="https://github.com/kohid/refraction#readme"
 			trackingData={ TRACKING_DATA }
 		/>
 	);

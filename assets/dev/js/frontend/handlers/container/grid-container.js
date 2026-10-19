@@ -234,8 +234,8 @@ export default class GridContainer extends refractionModules.frontend.handlers.B
 			containerType = settingsModel.get( 'container_type' ),
 			$linkElement = panel.$el.find( '#refraction-panel__editor__help__link' ),
 			href = 'grid' === containerType
-				? 'https://go.elementor.com/widget-container-grid'
-				: 'https://go.elementor.com/widget-container';
+				? 'https://github.com/kohid/refraction#readme'
+				: 'https://github.com/kohid/refraction#readme';
 
 		if ( $linkElement ) {
 			$linkElement.attr( 'href', href );

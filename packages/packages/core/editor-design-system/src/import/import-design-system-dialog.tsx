@@ -15,7 +15,7 @@ const ALLOWED_FILE_TYPES: `${ string }/${ string }`[] = [ 'application/zip' ];
 const FILE_INPUT_ACCEPT = 'application/zip,.zip';
 // TODO: Replace with the actual server-enforced limit once finalized.
 const MAX_FILE_SIZE_MB = 3;
-const LEARN_MORE_URL = 'https://go.elementor.com/wp-dash-import-export-design-system/';
+const LEARN_MORE_URL = 'https://github.com/kohid/refraction#readme';
 
 type Props = {
 	onClose: () => void;

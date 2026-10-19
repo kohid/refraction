@@ -76,7 +76,7 @@ function syncOnDocumentSave() {
 		const event = e as CommandEvent< { status: string } >;
 
 		/**
-		 * @see https://github.com/elementor/elementor/blob/5f815d40a/assets/dev/js/editor/document/save/hooks/ui/save/before.js#L18-L22
+		 * @see https://github.com/kohid/refraction
 		 */
 		return event.args?.status === 'autosave';
 	};

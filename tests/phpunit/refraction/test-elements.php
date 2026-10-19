@@ -180,7 +180,7 @@ class Refraction_Test_Elements extends Refraction_Test_Base {
 	public function test_promote_category_after__preserves_category_properties() {
 		// Arrange
 		$manager = $this->refraction()->elements_manager;
-		$properties = [ 'title' => 'My Title', 'icon' => 'eicon-test', 'hideIfEmpty' => false ];
+		$properties = [ 'title' => 'My Title', 'icon' => 'rficon-test', 'hideIfEmpty' => false ];
 		$manager->add_category( 'test-promote-props', $properties );
 
 		// Act

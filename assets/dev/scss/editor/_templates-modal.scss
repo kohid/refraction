@@ -338,7 +338,7 @@ $remote-templates-items-space: 30px;
 				padding-inline-end: 8px;
 
 				&:after {
-					font-family: eicons;
+					font-family: rficons;
 					content: '\e8ae';
 					margin-inline-start: 3px;
 				}
@@ -577,7 +577,7 @@ $remote-templates-items-space: 30px;
 			font-size: 18px;
 		}
 
-		.eicon-editor-close {
+		.rficon-editor-close {
 			font-size: 20px;
 		}
 	}
@@ -851,7 +851,7 @@ label.refraction-template-library-order-label {
 		inset-inline-end: 0;
 		transform: translateY(-50%);
 
-		&.eicon-loading.eicon-animation-spin {
+		&.rficon-loading.rficon-animation-spin {
 			inset-block-start: 25%;
 		}
 	}
@@ -1310,7 +1310,7 @@ label.refraction-template-library-order-label {
 	i {
 		font-size: 85px;
 
-		&.eicon-library-upload {
+		&.rficon-library-upload {
 			font-size: 65px;
 		}
 	}
@@ -1509,11 +1509,11 @@ label.refraction-template-library-order-label {
 				}
 			}
 
-			.eicon-ellipsis-h {
+			.rficon-ellipsis-h {
 				vertical-align: bottom;
 			}
 
-			.eicon-info {
+			.rficon-info {
 				margin-inline: 5px;
 				color: var(--e-a-color-txt-muted);
 				cursor: pointer;
@@ -1537,7 +1537,7 @@ label.refraction-template-library-order-label {
 				}
 			}
 
-			.eicon-editor-close {
+			.rficon-editor-close {
 				cursor: pointer;
 				flex-shrink: 0;
 			}
@@ -1568,11 +1568,11 @@ label.refraction-template-library-order-label {
 				@include ellipsis;
 			}
 
-			.eicon-loading {
+			.rficon-loading {
 				margin: 15px;
 			}
 
-			.eicon-folder-o {
+			.rficon-folder-o {
 				margin-inline-end: 10px;
 			}
 
@@ -1585,11 +1585,11 @@ label.refraction-template-library-order-label {
 				cursor: pointer;
 				list-style: none;
 
-				&[data-id="0"] .eicon-folder-o {
+				&[data-id="0"] .rficon-folder-o {
 					display: none;
 				}
 
-				.eicon-loading {
+				.rficon-loading {
 					margin: 0px;
 				}
 
@@ -1856,7 +1856,7 @@ label.refraction-template-library-order-label {
 						}
 					}
 
-					.eicon-editor-close {
+					.rficon-editor-close {
 						cursor: pointer;
 						font-size: 14px;
 					}

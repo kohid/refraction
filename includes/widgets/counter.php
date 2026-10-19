@@ -56,7 +56,7 @@ class Widget_Counter extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-counter';
+		return 'rficon-counter';
 	}
 
 	/**
@@ -274,19 +274,19 @@ class Widget_Counter extends Widget_Base {
 				'options' => [
 					'before' => [
 						'title' => esc_html__( 'Before', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'after' => [
 						'title' => esc_html__( 'After', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'selectors_dictionary' => [
@@ -313,15 +313,15 @@ class Widget_Counter extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'separator' => 'before',
@@ -343,15 +343,15 @@ class Widget_Counter extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Top', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'center' => [
 						'title' => esc_html__( 'Middle', 'refraction' ),
-						'icon' => 'eicon-v-align-middle',
+						'icon' => 'rficon-v-align-middle',
 					],
 					'end' => [
 						'title' => esc_html__( 'Bottom', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'selectors' => [
@@ -388,19 +388,19 @@ class Widget_Counter extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 					'stretch' => [
 						'title' => esc_html__( 'Stretch', 'refraction' ),
-						'icon' => 'eicon-grow',
+						'icon' => 'rficon-grow',
 					],
 				],
 				'classes' => 'refraction-control-start-end',
@@ -425,15 +425,15 @@ class Widget_Counter extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 				],
 				'classes' => 'refraction-control-start-end',

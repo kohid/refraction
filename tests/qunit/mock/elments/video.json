@@ -2,9 +2,9 @@
 	"name": "video",
 	"elType": "widget",
 	"title": "Video",
-	"icon": "eicon-youtube",
+	"icon": "rficon-youtube",
 	"reload_preview": false,
-	"help_url": "https://go.elementor.com/widget-video",
+	"help_url": "https://github.com/kohid/refraction#readme",
 	"widget_type": "video",
 	"keywords": [
 		"video",
@@ -2043,15 +2043,15 @@
 			"options": {
 				"left": {
 					"title": "Left",
-					"icon": "eicon-h-align-left"
+					"icon": "rficon-h-align-left"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-h-align-center"
+					"icon": "rficon-h-align-center"
 				},
 				"right": {
 					"title": "Right",
-					"icon": "eicon-h-align-right"
+					"icon": "rficon-h-align-right"
 				}
 			},
 			"conditions": {
@@ -2089,15 +2089,15 @@
 			"options": {
 				"top": {
 					"title": "Top",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"bottom": {
 					"title": "Bottom",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"conditions": {
@@ -2539,11 +2539,11 @@
 			"options": {
 				"classic": {
 					"title": "Classic",
-					"icon": "eicon-paint-brush"
+					"icon": "rficon-paint-brush"
 				},
 				"gradient": {
 					"title": "Gradient",
-					"icon": "eicon-barcode"
+					"icon": "rficon-barcode"
 				}
 			},
 			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-background",
@@ -4521,11 +4521,11 @@
 			"options": {
 				"classic": {
 					"title": "Classic",
-					"icon": "eicon-paint-brush"
+					"icon": "rficon-paint-brush"
 				},
 				"gradient": {
 					"title": "Gradient",
-					"icon": "eicon-barcode"
+					"icon": "rficon-barcode"
 				}
 			},
 			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-background",
@@ -8475,15 +8475,15 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"condition": {
@@ -8508,15 +8508,15 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"condition": {
@@ -8542,15 +8542,15 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"condition": {
@@ -8576,15 +8576,15 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"condition": {
@@ -8638,11 +8638,11 @@
 			"options": {
 				"start": {
 					"title": "Left",
-					"icon": "eicon-h-align-left"
+					"icon": "rficon-h-align-left"
 				},
 				"end": {
 					"title": "Right",
-					"icon": "eicon-h-align-right"
+					"icon": "rficon-h-align-right"
 				}
 			},
 			"classes": "refraction-control-start-end",
@@ -9058,11 +9058,11 @@
 			"options": {
 				"start": {
 					"title": "Top",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"end": {
 					"title": "Bottom",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"render_type": "ui",

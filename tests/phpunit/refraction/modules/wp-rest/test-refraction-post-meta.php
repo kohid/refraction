@@ -144,7 +144,7 @@ class Test_Refraction_Post_Meta extends Refraction_Test_Base {
 	}
 
 	/**
-	 * @see https://github.com/elementor/elementor/issues/30160
+	 * @see upstream issue #30160
 	 * Issue caused by WP_REST_Meta_Fields::is_meta_value_same_as_stored_value() function that attempted to
 	 * sanitize the meta value as a string by using a default type of 'string' in the schema.
 	 */

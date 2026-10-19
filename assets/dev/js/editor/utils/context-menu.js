@@ -112,7 +112,7 @@ module.exports = refractionModules.Module.extend( {
 	shouldAddPromotionLink( action ) {
 		return !! ( action.promotionURL &&
 			! action.$item.find( 'a.refraction-context-menu-list__item__shortcut--link-fullwidth' )[ 0 ] &&
-			action.$item.find( 'i.eicon-pro-icon' )[ 0 ] );
+			action.$item.find( 'i.rficon-pro-icon' )[ 0 ] );
 	},
 
 	/**

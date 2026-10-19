@@ -95,7 +95,7 @@ class Widget_WordPress extends Widget_Base {
 	 * @return string Widget icon. Returns either a WordPress icon.
 	 */
 	public function get_icon() {
-		return 'eicon-wordpress';
+		return 'rficon-wordpress';
 	}
 
 	/**

@@ -250,8 +250,8 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Add widget.
 		await editor.addWidget( { widgetType: 'nested-tabs', container } );
 		// Act
-		await editor.setChooseControlValue( 'tabs_direction', 'eicon-h-align-left' );
-		await editor.setChooseControlValue( 'tabs_justify_vertical', 'eicon-align-stretch-v' );
+		await editor.setChooseControlValue( 'tabs_direction', 'rficon-h-align-left' );
+		await editor.setChooseControlValue( 'tabs_justify_vertical', 'rficon-align-stretch-v' );
 
 		const tabsHeading = frame.locator( '.e-n-tabs-heading' );
 		const tabTitle = frame.locator( '.e-n-tab-title' ).first();
@@ -271,8 +271,8 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Add widget.
 		await editor.addWidget( { widgetType: 'nested-tabs', container } );
 		// Act
-		await editor.setChooseControlValue( 'tabs_direction', 'eicon-v-align-top' );
-		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'eicon-align-stretch-h' );
+		await editor.setChooseControlValue( 'tabs_direction', 'rficon-v-align-top' );
+		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'rficon-align-stretch-h' );
 
 		const tabsHeading = frame.locator( '.e-n-tabs-heading' );
 		const tabTitle = frame.locator( '.e-n-tab-title' ).first();

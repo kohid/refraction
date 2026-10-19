@@ -40,7 +40,7 @@ const EditorSelectors = {
 	widget: '[data-element_type="widget"]',
 	container: '[data-element_type="container"]',
 	item: '.refraction-repeater-row-item-title',
-	plusIcon: '.eicon-plus-circle',
+	plusIcon: '.rficon-plus-circle',
 	siteTitle: '.site-title >> nth=0',
 	pageTitle: '.entry-title >> nth=0',
 	pageContent: '.page-content',

@@ -81,7 +81,7 @@ class Control_Notice extends Base_UI_Control {
 			</div>
 			<# if ( data.dismissible ) { #>
 			<button class="refraction-control-notice-dismiss tooltip-target" data-tooltip="<?php echo esc_attr__( 'Don’t show again.', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Don’t show again.', 'refraction' ); ?>">
-				<i class="eicon eicon-close" aria-hidden="true"></i>
+				<i class="rficon rficon-close" aria-hidden="true"></i>
 			</button>
 			<# } #>
 		</div>

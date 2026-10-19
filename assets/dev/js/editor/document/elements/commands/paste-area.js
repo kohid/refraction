@@ -63,7 +63,7 @@ export class PasteArea extends $e.modules.editor.document.CommandHistoryBase {
 			.html( __( 'Make sure that both sites are updated to last version of Refraction and have enabled the features relevant to the copied element before trying again.', 'refraction' ) );
 
 		const $loadingArea = jQuery( '<i>', {
-			class: 'eicon-loading eicon-animation-spin',
+			class: 'rficon-loading rficon-animation-spin',
 		} );
 
 		$messageContainer
@@ -83,7 +83,7 @@ export class PasteArea extends $e.modules.editor.document.CommandHistoryBase {
 			},
 			closeButton: true,
 			closeButtonOptions: {
-				iconClass: 'eicon-close',
+				iconClass: 'rficon-close',
 			},
 			onShow: () => {
 				$inputArea.trigger( 'focus' );

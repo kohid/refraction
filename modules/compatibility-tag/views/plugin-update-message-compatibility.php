@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <hr class="e-major-update-warning__separator" />
 <div class="e-major-update-warning">
 	<div class="e-major-update-warning__icon">
-		<i class="eicon-info-circle"></i>
+		<i class="rficon-info-circle"></i>
 	</div>
 	<div>
 		<div class="e-major-update-warning__message">

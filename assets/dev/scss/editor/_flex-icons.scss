@@ -1,7 +1,7 @@
-[class^="eicon-flex"], [class*=" eicon-flex"] {
+[class^="rficon-flex"], [class*=" rficon-flex"] {
 	transition: .3s all;
 
-	&.eicon-inline {
+	&.rficon-inline {
 		max-height: 1em;
 		max-width: 1em;
 	}
@@ -15,39 +15,39 @@
 	}
 
 	// Rotation direction - Will be `1` for LTR, `-1` for RTL.
-	&:is(.eicon-justify-start-h,.eicon-justify-end-h) {
+	&:is(.rficon-justify-start-h,.rficon-justify-end-h) {
 		--rotation-direction: calc(var(--is-ltr) + var(--is-rtl));
   	}
   	--rotation-direction: calc(var(--is-ltr) - var(--is-rtl));
 
 	// Rotate flex icons based on RTL/LTR & flex direction.
-	&:not( .eicon-wrap ):not( .eicon-nowrap ):not( .eicon-grow ) {
+	&:not( .rficon-wrap ):not( .rficon-nowrap ):not( .rficon-grow ) {
 		// Container direction column / reversed column.
 		:is( .e-ui-state--document-direction-mode__column, .e-ui-state--document-direction-mode__column-reverse ) & {
 			transform: rotate( calc( var( --rotation-direction ) * 90deg ) );
 
-			&:is( .eicon-align-start-v, .eicon-align-end-v ) {
+			&:is( .rficon-align-start-v, .rficon-align-end-v ) {
 				transform: rotate( calc( var( --rotation-direction ) * -90deg ) );
 			}
 		}
 
 		// Container direction reversed column.
 		.e-ui-state--document-direction-mode__column-reverse & {
-			&:is( .eicon-justify-start-h, .eicon-justify-end-h, .eicon-order-start, .eicon-order-end ) {
+			&:is( .rficon-justify-start-h, .rficon-justify-end-h, .rficon-order-start, .rficon-order-end ) {
 				transform: rotate( calc( var( --rotation-direction ) * -90deg ) );
 			}
 		}
 
 		// Container direction row
 		.e-ui-state--document-direction-mode__row & {
-			&:is( .eicon-justify-start-h, .eicon-justify-end-h, .eicon-order-start, .eicon-order-end ) {
+			&:is( .rficon-justify-start-h, .rficon-justify-end-h, .rficon-order-start, .rficon-order-end ) {
 				transform: rotate( calc( var( --is-rtl ) * 180deg ) );
 			}
 		}
 
 		// Container direction reversed row
 		.e-ui-state--document-direction-mode__row-reverse & {
-			&:is( .eicon-justify-start-h, .eicon-justify-end-h, .eicon-order-start, .eicon-order-end ) {
+			&:is( .rficon-justify-start-h, .rficon-justify-end-h, .rficon-order-start, .rficon-order-end ) {
 				transform: rotate( calc( var( --is-ltr ) * 180deg ) );
 			}
 		}

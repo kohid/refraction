@@ -102,17 +102,17 @@ class Control_Gallery extends Base_Data_Control {
 					<div class="refraction-control-gallery-status refraction-control-dynamic-switcher-wrapper">
 						<span class="refraction-control-gallery-status-title"></span>
 						<button class="refraction-control-gallery-clear refraction-control-unit-1 tooltip-target" data-tooltip="<?php echo esc_attr__( 'Clear gallery', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Clear gallery', 'refraction' ); ?>">
-							<i class="eicon-trash-o" aria-hidden="true"></i>
+							<i class="rficon-trash-o" aria-hidden="true"></i>
 						</button>
 					</div>
 					<div class="refraction-control-gallery-content">
 						<div class="refraction-control-gallery-thumbnails" tabindex="0"></div>
 						<div class="refraction-control-gallery-edit">
-							<span><i class="eicon-pencil" aria-hidden="true"></i></span>
+							<span><i class="rficon-pencil" aria-hidden="true"></i></span>
 							<span class="refraction-screen-only"><?php echo esc_html__( 'Edit gallery', 'refraction' ); ?></span>
 						</div>
 						<button class="refraction-button refraction-control-gallery-add tooltip-target" data-tooltip="<?php echo esc_attr__( 'Add Images', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Add Images', 'refraction' ); ?>">
-							<i class="eicon-plus-circle" aria-hidden="true"></i>
+							<i class="rficon-plus-circle" aria-hidden="true"></i>
 						</button>
 					</div>
 				</div>

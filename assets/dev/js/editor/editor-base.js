@@ -322,7 +322,7 @@ export default class EditorBase extends Marionette.Application {
 					}
 					elementCacheDescription += '</strong><br />';
 					elementCacheDescription += __( 'Activating cache improves loading times by storing a static version of this element.', 'refraction' );
-					elementCacheDescription += ' <a href="https://go.elementor.com/element-caching-help/" target="_blank">' + __( 'Learn more', 'refraction' ) + '</a>.';
+					elementCacheDescription += ' <a href="https://github.com/kohid/refraction#readme" target="_blank">' + __( 'Learn more', 'refraction' ) + '</a>.';
 
 					this.widgetsCache[ widgetType ].controls._element_cache.description = elementCacheDescription;
 				}

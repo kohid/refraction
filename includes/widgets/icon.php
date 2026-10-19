@@ -55,7 +55,7 @@ class Widget_Icon extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-favorite';
+		return 'rficon-favorite';
 	}
 
 	/**
@@ -187,15 +187,15 @@ class Widget_Icon extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 				],
 				'classes' => 'refraction-control-start-end',

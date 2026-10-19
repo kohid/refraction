@@ -23,7 +23,7 @@ export default function ExportPlugins() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		handleOnSelect = useCallback( ( selectedPlugins ) => exportContext.dispatch( { type: 'SET_PLUGINS', payload: selectedPlugins } ), [] ),
 		getLearnMoreLink = () => (
-			<InlineLink url="https://go.elementor.com/app-what-are-kits" italic>
+			<InlineLink url="https://github.com/kohid/refraction#readme" italic>
 				{ __( 'Learn More', 'refraction' ) }
 			</InlineLink>
 		);

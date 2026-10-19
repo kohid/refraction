@@ -21,7 +21,7 @@ class Settings_Agents extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-ai';
+		return 'rficon-ai';
 	}
 
 	public function before_save( array $data ) {

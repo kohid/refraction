@@ -40,7 +40,7 @@ export default function AddSectionArea( props ) {
 						aria-label={ __( 'Add new container', 'refraction' ) }
 						onClick={ handleAddContainerClick }
 					>
-						<i className="eicon-plus" aria-hidden="true" />
+						<i className="rficon-plus" aria-hidden="true" />
 					</button>
 					<div className="refraction-add-section-drag-title">
 						{ __( 'Drag widget here', 'refraction' ) }

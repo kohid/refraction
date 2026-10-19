@@ -53,19 +53,19 @@ class Group_Control_Flex_Item extends Group_Control_Base {
 			'options' => [
 				'flex-start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-start-v',
+					'icon' => 'rficon-flex rficon-align-start-v',
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-center-v',
+					'icon' => 'rficon-flex rficon-align-center-v',
 				],
 				'flex-end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-end-v',
+					'icon' => 'rficon-flex rficon-align-end-v',
 				],
 				'stretch' => [
 					'title' => esc_html__( 'Stretch', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-stretch-v',
+					'icon' => 'rficon-flex rficon-align-stretch-v',
 				],
 			],
 			'default' => '',
@@ -83,15 +83,15 @@ class Group_Control_Flex_Item extends Group_Control_Base {
 			'options' => [
 				'start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-flex eicon-order-start',
+					'icon' => 'rficon-flex rficon-order-start',
 				],
 				'end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-flex eicon-order-end',
+					'icon' => 'rficon-flex rficon-order-end',
 				],
 				'custom' => [
 					'title' => esc_html__( 'Custom', 'refraction' ),
-					'icon' => 'eicon-ellipsis-v',
+					'icon' => 'rficon-ellipsis-v',
 				],
 			],
 			'selectors_dictionary' => [
@@ -128,19 +128,19 @@ class Group_Control_Flex_Item extends Group_Control_Base {
 			'options' => [
 				'none' => [
 					'title' => esc_html__( 'None', 'refraction' ),
-					'icon' => 'eicon-ban',
+					'icon' => 'rficon-ban',
 				],
 				'grow' => [
 					'title' => esc_html__( 'Grow', 'refraction' ),
-					'icon' => 'eicon-grow',
+					'icon' => 'rficon-grow',
 				],
 				'shrink' => [
 					'title' => esc_html__( 'Shrink', 'refraction' ),
-					'icon' => 'eicon-shrink',
+					'icon' => 'rficon-shrink',
 				],
 				'custom' => [
 					'title' => esc_html__( 'Custom', 'refraction' ),
-					'icon' => 'eicon-ellipsis-v',
+					'icon' => 'rficon-ellipsis-v',
 				],
 			],
 			'selectors_dictionary' => [

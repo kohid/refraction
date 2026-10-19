@@ -36,7 +36,7 @@ async function testStretchedSection( page: Page, editor: EditorPage, direction: 
 	await editor.selectElement( sectionID );
 	await editor.openPanelTab( 'style' );
 	await editor.openSection( 'section_background' );
-	await editor.setChooseControlValue( 'background_background', 'eicon-paint-brush' );
+	await editor.setChooseControlValue( 'background_background', 'rficon-paint-brush' );
 	await editor.setColorControlValue( 'background_color', '#ef9595' );
 	await editor.openPanelTab( 'layout' );
 	await editor.setSelectControlValue( 'layout', 'boxed' );
@@ -46,7 +46,7 @@ async function testStretchedSection( page: Page, editor: EditorPage, direction: 
 	await editor.setSliderControlValue( 'space', '200' );
 	await editor.openPanelTab( 'advanced' );
 	await editor.openSection( '_section_background' );
-	await editor.setChooseControlValue( '_background_background', 'eicon-paint-brush' );
+	await editor.setChooseControlValue( '_background_background', 'rficon-paint-brush' );
 	await editor.setColorControlValue( '_background_color', '#cae0bc' );
 
 	const directionSuffix = 'ltr' === direction ? '' : '-rtl';

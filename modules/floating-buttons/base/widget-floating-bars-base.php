@@ -35,7 +35,7 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 	}
 
 	public function get_icon(): string {
-		return 'eicon-banner';
+		return 'rficon-banner';
 	}
 
 	public function show_in_panel() {
@@ -450,11 +450,11 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'end' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'selectors' => [
@@ -580,11 +580,11 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'options' => [
 					'row' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'row-reverse' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'selectors_dictionary' => [
@@ -1051,11 +1051,11 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 					'options' => [
 						'start' => [
 							'title' => esc_html__( 'Left', 'refraction' ),
-							'icon' => 'eicon-h-align-left',
+							'icon' => 'rficon-h-align-left',
 						],
 						'end' => [
 							'title' => esc_html__( 'Right', 'refraction' ),
-							'icon' => 'eicon-h-align-right',
+							'icon' => 'rficon-h-align-right',
 						],
 					],
 					'default' => 'end',
@@ -1187,19 +1187,19 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-align-start-h',
+						'icon' => 'rficon-align-start-h',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-align-center-h',
+						'icon' => 'rficon-align-center-h',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-align-end-h',
+						'icon' => 'rficon-align-end-h',
 					],
 					'space-between' => [
 						'title' => esc_html__( 'Stretch', 'refraction' ),
-						'icon' => 'eicon-align-stretch-h',
+						'icon' => 'rficon-align-stretch-h',
 					],
 				],
 				'selectors' => $config['style']['floating_bar_section']['align_elements_selector'],
@@ -1290,11 +1290,11 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'options' => [
 					'row' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'row-reverse' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'selectors_dictionary' => [
@@ -1435,11 +1435,11 @@ abstract class Widget_Floating_Bars_Base extends Widget_Base {
 				'options' => [
 					'top' => [
 						'title' => esc_html__( 'Top', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'bottom' => [
 						'title' => esc_html__( 'Bottom', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'default' => 'top',

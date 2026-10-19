@@ -56,7 +56,7 @@ class Widget_Icon_List extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-bullet-list';
+		return 'rficon-bullet-list';
 	}
 
 	/**
@@ -120,11 +120,11 @@ class Widget_Icon_List extends Widget_Base {
 				'options' => [
 					'traditional' => [
 						'title' => esc_html__( 'Default', 'refraction' ),
-						'icon' => 'eicon-editor-list-ul',
+						'icon' => 'rficon-editor-list-ul',
 					],
 					'inline' => [
 						'title' => esc_html__( 'Inline', 'refraction' ),
-						'icon' => 'eicon-ellipsis-h',
+						'icon' => 'rficon-ellipsis-h',
 					],
 				],
 				'render_type' => 'template',
@@ -261,15 +261,15 @@ class Widget_Icon_List extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'classes_dictionary' => [
@@ -548,15 +548,15 @@ class Widget_Icon_List extends Widget_Base {
 				'options' => [
 					'left' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'default' => '',
@@ -579,15 +579,15 @@ class Widget_Icon_List extends Widget_Base {
 				'options' => [
 					'flex-start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-v-align-middle',
+						'icon' => 'rficon-v-align-middle',
 					],
 					'flex-end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'default' => '',

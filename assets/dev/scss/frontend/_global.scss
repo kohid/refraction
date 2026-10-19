@@ -219,17 +219,17 @@
 	&.refraction-playing {
 
 		i {
-			font-family: eicons;
+			font-family: rficons;
 
 			&:before {
 				content: '\e8fb';
 			}
 		}
 
-		// Using the eicon-spin animation for not being dependent in any external library.
+		// Using the rficon-spin animation for not being dependent in any external library.
 		i,
 		svg {
-			animation: eicon-spin 2s infinite linear;
+			animation: rficon-spin 2s infinite linear;
 		}
 	}
 }
@@ -329,7 +329,7 @@
 }
 
 // Global animation that should be available even when the refraction-icons library is not loaded.
-@keyframes eicon-spin {
+@keyframes rficon-spin {
 	0% {
 		transform: rotate(0deg);
 	}
@@ -339,6 +339,6 @@
 }
 
 // Global animation class that should be available even when the refraction-icons library is not loaded.
-.eicon-animation-spin {
-	animation: eicon-spin 2s infinite linear;
+.rficon-animation-spin {
+	animation: rficon-spin 2s infinite linear;
 }

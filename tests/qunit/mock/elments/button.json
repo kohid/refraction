@@ -2,9 +2,9 @@
 	"name": "button",
 	"elType": "widget",
 	"title": "Button",
-	"icon": "eicon-button",
+	"icon": "rficon-button",
 	"reload_preview": false,
-	"help_url": "https://go.elementor.com/widget-button",
+	"help_url": "https://github.com/kohid/refraction#readme",
 	"widget_type": "button",
 	"keywords": [],
 	"categories": [
@@ -71,19 +71,19 @@
 			"options": {
 				"left": {
 					"title": "Left",
-					"icon": "eicon-text-align-left"
+					"icon": "rficon-text-align-left"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-text-align-center"
+					"icon": "rficon-text-align-center"
 				},
 				"right": {
 					"title": "Right",
-					"icon": "eicon-text-align-right"
+					"icon": "rficon-text-align-right"
 				},
 				"justify": {
 					"title": "Justified",
-					"icon": "eicon-text-align-justify"
+					"icon": "rficon-text-align-justify"
 				}
 			},
 			"prefix_class": "refraction-align-",
@@ -101,19 +101,19 @@
 			"options": {
 				"left": {
 					"title": "Left",
-					"icon": "eicon-text-align-left"
+					"icon": "rficon-text-align-left"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-text-align-center"
+					"icon": "rficon-text-align-center"
 				},
 				"right": {
 					"title": "Right",
-					"icon": "eicon-text-align-right"
+					"icon": "rficon-text-align-right"
 				},
 				"justify": {
 					"title": "Justified",
-					"icon": "eicon-text-align-justify"
+					"icon": "rficon-text-align-justify"
 				}
 			},
 			"prefix_class": "refraction-tablet-align-",
@@ -131,19 +131,19 @@
 			"options": {
 				"left": {
 					"title": "Left",
-					"icon": "eicon-text-align-left"
+					"icon": "rficon-text-align-left"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-text-align-center"
+					"icon": "rficon-text-align-center"
 				},
 				"right": {
 					"title": "Right",
-					"icon": "eicon-text-align-right"
+					"icon": "rficon-text-align-right"
 				},
 				"justify": {
 					"title": "Justified",
-					"icon": "eicon-text-align-justify"
+					"icon": "rficon-text-align-justify"
 				}
 			},
 			"prefix_class": "refraction-mobile-align-",
@@ -191,11 +191,11 @@
 			"options": {
 				"row": {
 					"title": "Start",
-					"icon": "eicon-h-align-left"
+					"icon": "rficon-h-align-left"
 				},
 				"row-reverse": {
 					"title": "End",
-					"icon": "eicon-h-align-center"
+					"icon": "rficon-h-align-center"
 				}
 			},
 			"selectors_dictionary": {
@@ -1912,15 +1912,15 @@
 			"options": {
 				"left": {
 					"title": "Left",
-					"icon": "eicon-h-align-left"
+					"icon": "rficon-h-align-left"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-h-align-center"
+					"icon": "rficon-h-align-center"
 				},
 				"right": {
 					"title": "Right",
-					"icon": "eicon-h-align-right"
+					"icon": "rficon-h-align-right"
 				}
 			},
 			"conditions": {
@@ -1959,15 +1959,15 @@
 			"options": {
 				"top": {
 					"title": "Top",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"bottom": {
 					"title": "Bottom",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"conditions": {
@@ -2376,11 +2376,11 @@
 			"options": {
 				"classic": {
 					"title": "Classic",
-					"icon": "eicon-paint-brush"
+					"icon": "rficon-paint-brush"
 				},
 				"gradient": {
 					"title": "Gradient",
-					"icon": "eicon-barcode"
+					"icon": "rficon-barcode"
 				}
 			},
 			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-background",
@@ -3741,11 +3741,11 @@
 			"options": {
 				"classic": {
 					"title": "Classic",
-					"icon": "eicon-paint-brush"
+					"icon": "rficon-paint-brush"
 				},
 				"gradient": {
 					"title": "Gradient",
-					"icon": "eicon-barcode"
+					"icon": "rficon-barcode"
 				}
 			},
 			"classes": "refraction-group-control-background refraction-group-control refraction-group-control-background",
@@ -5881,15 +5881,15 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"condition": {
@@ -5914,15 +5914,15 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"condition": {
@@ -5947,15 +5947,15 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"center": {
 					"title": "Center",
-					"icon": "eicon-v-align-middle"
+					"icon": "rficon-v-align-middle"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"condition": {
@@ -6009,11 +6009,11 @@
 			"options": {
 				"start": {
 					"title": "Left",
-					"icon": "eicon-h-align-left"
+					"icon": "rficon-h-align-left"
 				},
 				"end": {
 					"title": "Right",
-					"icon": "eicon-h-align-right"
+					"icon": "rficon-h-align-right"
 				}
 			},
 			"classes": "refraction-control-start-end",
@@ -6322,11 +6322,11 @@
 			"options": {
 				"start": {
 					"title": "Top",
-					"icon": "eicon-v-align-top"
+					"icon": "rficon-v-align-top"
 				},
 				"end": {
 					"title": "Bottom",
-					"icon": "eicon-v-align-bottom"
+					"icon": "rficon-v-align-bottom"
 				}
 			},
 			"render_type": "ui",

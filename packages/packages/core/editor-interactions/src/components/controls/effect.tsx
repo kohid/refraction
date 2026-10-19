@@ -36,7 +36,7 @@ export function Effect( { value, onChange }: FieldProps ) {
 				'Upgrade to further customize your animation with opacity, scale, move, rotate and more.',
 				'refraction'
 			) }
-			upgradeUrl="https://go.elementor.com/go-pro-interactions-custom-effect-modal/"
+			upgradeUrl="https://github.com/kohid/refraction#readme"
 			trackingData={ TRACKING_DATA }
 		/>
 	);

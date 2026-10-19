@@ -93,19 +93,19 @@ class Group_Control_Background extends Group_Control_Base {
 		return [
 			'classic' => [
 				'title' => esc_html__( 'Classic', 'refraction' ),
-				'icon' => 'eicon-paint-brush',
+				'icon' => 'rficon-paint-brush',
 			],
 			'gradient' => [
 				'title' => esc_html__( 'Gradient', 'refraction' ),
-				'icon' => 'eicon-barcode',
+				'icon' => 'rficon-barcode',
 			],
 			'video' => [
 				'title' => esc_html__( 'Video', 'refraction' ),
-				'icon' => 'eicon-video-camera',
+				'icon' => 'rficon-video-camera',
 			],
 			'slideshow' => [
 				'title' => esc_html__( 'Slideshow', 'refraction' ),
-				'icon' => 'eicon-slideshow',
+				'icon' => 'rficon-slideshow',
 			],
 		];
 	}

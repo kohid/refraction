@@ -54,7 +54,7 @@ class Widget_Menu_Anchor extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-anchor';
+		return 'rficon-anchor';
 	}
 
 	/**

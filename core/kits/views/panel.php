@@ -10,7 +10,7 @@
 	<div id="refraction-panel__editor__help">
 		<a id="refraction-panel__editor__help__link" href="{{ tabConfig.helpUrl }}" target="_blank">
 			<?php echo esc_html__( 'Need Help', 'refraction' ); ?>
-			<i class="eicon-help-o"></i>
+			<i class="rficon-help-o"></i>
 		</a>
 	</div>
 	<#
@@ -24,17 +24,17 @@
 
 <script type="text/template" id="tmpl-refraction-global-style-repeater-row">
 	<# let removeClass = 'remove',
-			removeIcon = 'eicon-trash-o';
+			removeIcon = 'rficon-trash-o';
 
 	if ( ! itemActions.remove ) {
 		removeClass += '--disabled';
 
-		removeIcon = 'eicon-disable-trash-o'
+		removeIcon = 'rficon-disable-trash-o'
 	}
 	#>
 	<# if ( itemActions.sort ) { #>
 	<button class="refraction-repeater-row-tool refraction-repeater-row-tools refraction-repeater-tool-sort" aria-label="<?php echo esc_attr__( 'Reorder', 'refraction' ); ?>">
-		<i class="eicon-cursor-move" aria-hidden="true"></i>
+		<i class="rficon-cursor-move" aria-hidden="true"></i>
 	</button>
 	<# } #>
 	<button class="refraction-repeater-row-tool refraction-repeater-tool-{{{ removeClass }}}" aria-label="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">

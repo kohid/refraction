@@ -16,6 +16,13 @@
  *  4. Renames files and directories whose path contains "elementor" the same way (the PHP
  *     autoloader derives file names from class names, so classes and files must stay in sync).
  *
+ *  5. Brand pass (stage 2), applied before the protections above:
+ *       - upstream service URLs (go.elementor.com, elementor.com, my.elementor.com, ...) become links to the Refraction
+ *         repository (issues for support-type links, the README for everything else); upstream issue-tracker links
+ *         become plain text; remote images on assets.elementor.com become a local inline placeholder;
+ *       - the `eicon` icon font prefix and family become `rficon` / `rficons` (class names, CSS, JS, PHP, file names).
+ *         The font files themselves are rebuilt by scripts/build-icon-font.py.
+ *
  * Running it a second time is a no-op (the replaced text no longer contains the old word).
  */
 import { execFileSync } from 'node:child_process';
@@ -28,7 +35,9 @@ const DRY = process.argv.includes( '--dry-run' );
 const VERBOSE = process.argv.includes( '--verbose' );
 
 // ---------------------------------------------------------------- exclusions
-const SKIP_DIR_PREFIXES = [ '.git/', 'vendor/', 'vendor_prefixed/', 'build/', 'dist/', 'docs/', 'coverage/', 'coverage-report/' ];
+// docs/refraction/ holds the rename/branding records and the upstream changelog (they name the old product on purpose);
+// the rest of docs/ is developer documentation of the code and follows the code's new names.
+const SKIP_DIR_PREFIXES = [ '.git/', 'vendor/', 'vendor_prefixed/', 'build/', 'dist/', 'docs/refraction/', 'coverage/', 'coverage-report/' ];
 const SKIP_FILES = new Set( [
 	'license.txt',
 	'NOTICE',
@@ -36,8 +45,14 @@ const SKIP_FILES = new Set( [
 	'readme.txt',
 	'composer.lock',
 	'scripts/rename-to-refraction.mjs',
+	'scripts/check-brand-static.mjs',
+	'scripts/build-icon-font.py',
 ] );
-const SKIP_EXT = new Set( [ '.md', '.mdx' ] );
+// Root-level Markdown (README, AGENTS, CLAUDE, CONTRIBUTING) is hand written, and the per-package CHANGELOG.md files are
+// upstream release history kept for attribution.
+// Recorded fixtures (exported templates, WXR mocks, lighthouse snapshots) keep the data they were captured with.
+const SKIP_FIXTURE = /^tests\/.*\.(json|xml)$/;
+const SKIP_MD = /^[^/]+\.md$|(^|\/)CHANGELOG\.md$/;
 const MAX_BYTES = 8 * 1024 * 1024;
 
 function isSkipped( rel ) {
@@ -50,7 +65,7 @@ function isSkipped( rel ) {
 	if ( rel.split( '/' ).includes( 'node_modules' ) ) {
 		return true;
 	}
-	return SKIP_EXT.has( path.extname( rel ).toLowerCase() );
+	return SKIP_MD.test( rel ) || SKIP_FIXTURE.test( rel );
 }
 
 // Published externals that live under the same scope as the workspace packages. Every other
@@ -66,6 +81,41 @@ const EXTERNAL_ELEMENTOR_PKGS = new Set( [
 	'elementor-one-assets',
 	'editor-testing',
 ] );
+
+// ---------------------------------------------------------------- brand pass (stage 2)
+const REPO_URL = 'https://github.com/kohid/refraction';
+const DOCS_URL = `${ REPO_URL }#readme`;
+const ISSUES_URL = `${ REPO_URL }/issues`;
+// Small original placeholder (a prism) used wherever the upstream project loaded a remote illustration.
+const PLACEHOLDER_IMG = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E';
+const SUPPORT_WORDS = /support|ticket|contact|bug|report|common-errors|load-issue|failed|errors|connect/i;
+
+const BRAND_RULES = [
+	// URL built with a template placeholder: replace the whole template literal by a plain string
+	{ re: /`https?:\/\/(?:go|my)\.elementor\.com\/[^`]*`/g, to: () => `'${ DOCS_URL }'` },
+	// atlassian / github issue references in comments -> plain text
+	{ re: /https?:\/\/elementor\.atlassian\.net\/browse\/([A-Z]+-\d+)/g, to: ( _, key ) => `upstream tracker issue ${ key }` },
+	{ re: /https?:\/\/github\.com\/elementor\/elementor\/(?:issues|pull)\/(\d+)/g, to: ( _, n ) => `upstream issue #${ n }` },
+	{ re: /https?:\/\/(?:www\.)?github\.com\/elementor\/[^\s"'`)<>\]\\]*/g, to: () => REPO_URL },
+	// remote media
+	{ re: /https?:\/\/assets\.elementor\.com\/[^\s"'`)<>\]\\]*\/videos\/(?=['"`])/g, to: () => '' },
+	{ re: /https?:\/\/assets\.elementor\.com\/[^\s"'`)<>\]\\]*/g, to: () => PLACEHOLDER_IMG },
+	// every other upstream service URL (docs, marketing, account, support)
+	{ re: /(?:https?:)?\/\/(?:(?!cdn\.)[\w-]+\.)*elementor\.com(?:\/[^\s"'`)<>\]\\]*)?/gi, to: ( m ) => ( SUPPORT_WORDS.test( m ) ? ISSUES_URL : DOCS_URL ) },
+	// icon font prefix and family
+	{ re: /(?<![A-Za-z])eicon(s?)(?![A-Za-z])/g, to: ( _, s ) => `rficon${ s }` },
+];
+
+function brandPass( text ) {
+	let out = text;
+	for ( const r of BRAND_RULES ) {
+		out = out.replace( r.re, ( ...a ) => {
+			stats.brand = ( stats.brand || 0 ) + 1;
+			return r.to( ...a );
+		} );
+	}
+	return out;
+}
 
 // ---------------------------------------------------------------- protection
 const URL_TAIL = '[^\\s"\'`)<>\\]\\\\]*';
@@ -107,7 +157,7 @@ const stats = {
 
 function transform( text ) {
 	const saved = [];
-	let out = text;
+	let out = brandPass( text );
 
 	for ( const p of PROTECT ) {
 		out = out.replace( p.re, ( m ) => {
@@ -148,7 +198,10 @@ function transform( text ) {
 
 function renamePath( rel ) {
 	// Apply protections to the path too (e.g. nothing today, but keeps behaviour consistent).
-	const parts = rel.split( '/' ).map( ( seg ) => ( /hello[-_ ]?elementor/i.test( seg ) ? seg : seg.replace( /ELEMENTOR/g, 'REFRACTION' ).replace( /Elementor/g, 'Refraction' ).replace( /elementor/g, 'refraction' ) ) );
+	const parts = rel
+		.split( '/' )
+		.map( ( seg ) => ( /hello[-_ ]?elementor/i.test( seg ) ? seg : seg.replace( /ELEMENTOR/g, 'REFRACTION' ).replace( /Elementor/g, 'Refraction' ).replace( /elementor/g, 'refraction' ) ) )
+		.map( ( seg ) => seg.replace( /(?<![A-Za-z])eicon(s?)(?![A-Za-z])/g, 'rficon$1' ) );
 	return parts.join( '/' );
 }
 
@@ -187,7 +240,7 @@ for ( const rel of listing ) {
 	}
 	stats.filesScanned++;
 	const text = buf.toString( 'utf8' );
-	if ( ! /elementor/i.test( text ) ) {
+	if ( ! /elementor|eicon/i.test( text ) ) {
 		continue;
 	}
 	const next = transform( text );
@@ -204,7 +257,7 @@ for ( const rel of listing ) {
 
 // Pass 2: paths.
 for ( const rel of listing ) {
-	if ( isSkipped( rel ) || ! /elementor/i.test( rel ) ) {
+	if ( isSkipped( rel ) || ! /elementor|eicon/i.test( rel ) ) {
 		continue;
 	}
 	const to = renamePath( rel );

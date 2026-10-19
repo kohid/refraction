@@ -248,7 +248,7 @@ export default function ImportComplete() {
 						<Stack direction="row" justifyContent="center" alignItems="center" spacing={ 3 }>
 							<Typography variant="body2" color="text.secondary">
 								{ __( 'Build sites faster with Website Templates.', 'refraction' ) }
-								<Link href="https://go.elementor.com/app-what-are-kits" color="info.light" target="_blank" sx={ { ml: 1, textDecoration: 'none' } }>
+								<Link href="https://github.com/kohid/refraction#readme" color="info.light" target="_blank" sx={ { ml: 1, textDecoration: 'none' } }>
 									{ __( 'Show me how', 'refraction' ) }
 								</Link>
 							</Typography>

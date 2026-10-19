@@ -170,9 +170,9 @@ export default function KitPartsSelection( { onCheckboxChange, testId, handleSav
 					color="promotion"
 					onClick={ () => {
 						AppsEventTracking.sendKitsCloudUpgradeClicked( item.type );
-						window.open( 'https://go.elementor.com/go-pro-import-export', '_blank' );
+						window.open( 'https://github.com/kohid/refraction#readme', '_blank' );
 					} }
-					startIcon={ <span className="eicon-upgrade-crown"></span> }
+					startIcon={ <span className="rficon-upgrade-crown"></span> }
 					sx={ { alignSelf: 'center' } }
 					data-type={ item.type }
 					disabled={ isEditDisabled( item ) }

@@ -21,7 +21,7 @@ export function FirstEmptyCell( { rect, color }: Props ) {
 
 	return (
 		<i
-			className="eicon-plus"
+			className="rficon-plus"
 			aria-hidden="true"
 			style={ {
 				position: 'absolute',

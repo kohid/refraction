@@ -57,7 +57,7 @@ class Widget_Divider extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-divider';
+		return 'rficon-divider';
 	}
 
 	/**
@@ -472,15 +472,15 @@ class Widget_Divider extends Widget_Base {
 				'options' => [
 					'left' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 				],
 				'selectors' => [
@@ -499,15 +499,15 @@ class Widget_Divider extends Widget_Base {
 				'options' => [
 					'line' => [
 						'title' => esc_html__( 'None', 'refraction' ),
-						'icon' => 'eicon-ban',
+						'icon' => 'rficon-ban',
 					],
 					'line_text' => [
 						'title' => esc_html__( 'Text', 'refraction' ),
-						'icon' => 'eicon-t-letter-bold',
+						'icon' => 'rficon-t-letter-bold',
 					],
 					'line_icon' => [
 						'title' => esc_html__( 'Icon', 'refraction' ),
-						'icon' => 'eicon-star',
+						'icon' => 'rficon-star',
 					],
 				],
 				'separator' => 'before',
@@ -768,15 +768,15 @@ class Widget_Divider extends Widget_Base {
 				'options' => [
 					'left' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'default' => 'center',
@@ -934,15 +934,15 @@ class Widget_Divider extends Widget_Base {
 				'options' => [
 					'left' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'default' => 'center',

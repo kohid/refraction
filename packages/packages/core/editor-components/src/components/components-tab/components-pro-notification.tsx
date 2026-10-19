@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 
 import { ComponentsUpgradeAlert } from '../components-upgrade-alert';
 
-export const UPGRADE_URL = 'https://go.elementor.com/go-pro-components-exist-footer/';
+export const UPGRADE_URL = 'https://github.com/kohid/refraction#readme';
 
 export function ComponentsProNotification() {
 	return (

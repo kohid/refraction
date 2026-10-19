@@ -27,7 +27,7 @@ export default class ColorPicker extends refractionModules.Module {
 				pickerToolsContainer: 'e-color-picker__tools',
 				pickerTool: 'e-control-tool',
 				clearButton: 'e-color-picker__clear',
-				plusIcon: 'eicon-plus',
+				plusIcon: 'rficon-plus',
 			},
 		};
 	}
@@ -120,7 +120,7 @@ export default class ColorPicker extends refractionModules.Module {
 		const { classes } = this.getSettings();
 
 		this.$clearButton = jQuery( '<button>', { class: classes.clearButton + ' ' + classes.pickerTool } )
-			.html( '<i class="eicon-undo"></i>' );
+			.html( '<i class="rficon-undo"></i>' );
 
 		this.$clearButton.on( 'click', () => this.picker._clearColor() );
 

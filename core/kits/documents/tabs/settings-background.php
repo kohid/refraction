@@ -23,7 +23,7 @@ class Settings_Background extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-background';
+		return 'rficon-background';
 	}
 
 	public function get_help_url() {

@@ -265,7 +265,7 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 
 		refraction.templates.deleteTemplate( this.model, {
 			onConfirm() {
-				toggleMoreIcon.removeClass( 'eicon-ellipsis-h' ).addClass( 'eicon-loading eicon-animation-spin' );
+				toggleMoreIcon.removeClass( 'rficon-ellipsis-h' ).addClass( 'rficon-loading rficon-animation-spin' );
 			},
 		} );
 	},
@@ -356,11 +356,11 @@ const TemplateLibraryTemplateLocalView = TemplateLibraryTemplateView.extend( {
 	},
 
 	showToggleMoreLoader() {
-		this.ui.toggleMoreIcon.removeClass( 'eicon-ellipsis-h' ).addClass( 'eicon-loading eicon-animation-spin' );
+		this.ui.toggleMoreIcon.removeClass( 'rficon-ellipsis-h' ).addClass( 'rficon-loading rficon-animation-spin' );
 	},
 
 	hideToggleMoreLoader() {
-		this.ui.toggleMoreIcon.addClass( 'eicon-ellipsis-h' ).removeClass( 'eicon-loading eicon-animation-spin' );
+		this.ui.toggleMoreIcon.addClass( 'rficon-ellipsis-h' ).removeClass( 'rficon-loading rficon-animation-spin' );
 	},
 
 	onSelectBulkSelectionItemCheckbox( event ) {

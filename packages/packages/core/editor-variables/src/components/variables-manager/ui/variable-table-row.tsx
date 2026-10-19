@@ -200,7 +200,7 @@ export const VariableRow = (
 					{ isDisabled && (
 						<VariablePromotionChip
 							variableType={ row.variableType }
-							upgradeUrl={ `https://go.elementor.com/renew-license-manager-${ row.variableType }-variable` }
+							upgradeUrl={ 'https://github.com/kohid/refraction#readme' }
 							ref={ promotionRef }
 							trackingData={ TRACKING_DATA }
 						/>

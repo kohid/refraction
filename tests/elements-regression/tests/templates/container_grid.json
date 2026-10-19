@@ -5,7 +5,7 @@
             "settings": {
                 "container_type": "grid",
                 "presetTitle": "Grid",
-                "presetIcon": "eicon-container-grid",
+                "presetIcon": "rficon-container-grid",
                 "boxed_width": {
                     "unit": "px",
                     "size": 912,

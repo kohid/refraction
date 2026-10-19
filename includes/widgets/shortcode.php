@@ -53,7 +53,7 @@ class Widget_Shortcode extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-shortcode';
+		return 'rficon-shortcode';
 	}
 
 	/**

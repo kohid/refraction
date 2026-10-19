@@ -31,11 +31,11 @@ module.exports = Marionette.ItemView.extend( {
 	onSyncClick() {
 		var self = this;
 
-		self.ui.syncIcon.addClass( 'eicon-animation-spin' );
+		self.ui.syncIcon.addClass( 'rficon-animation-spin' );
 
 		refraction.templates.requestLibraryData( {
 			onUpdate() {
-				self.ui.syncIcon.removeClass( 'eicon-animation-spin' );
+				self.ui.syncIcon.removeClass( 'rficon-animation-spin' );
 
 				$e.routes.refreshContainer( 'library' );
 			},

@@ -33,7 +33,7 @@ class Global_Typography extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-t-letter';
+		return 'rficon-t-letter';
 	}
 
 	public function get_help_url() {

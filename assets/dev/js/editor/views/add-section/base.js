@@ -132,7 +132,7 @@ class AddSectionBase extends Marionette.ItemView {
 						} ),
 					}, {
 						name: 'paste_area',
-						icon: 'eicon-import-export',
+						icon: 'rficon-import-export',
 						title: __( 'Paste from other site', 'refraction' ),
 						callback: () => $e.run( 'document/elements/paste-area', {
 							container: refraction.getPreviewContainer(),

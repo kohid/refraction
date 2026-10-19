@@ -300,7 +300,7 @@ describe( '<DynamicSelection />', () => {
 		expect( screen.getByText( 'Upgrade now to display your content dynamically.' ) ).toBeInTheDocument();
 
 		const ctaLink = screen.getByRole( 'link' );
-		expect( ctaLink ).toHaveAttribute( 'href', 'https://go.elementor.com/go-pro-dynamic-tags-modal/' );
+		expect( ctaLink ).toHaveAttribute( 'href', 'https://github.com/kohid/refraction#readme' );
 	} );
 
 	describe( 'Tracking', () => {

@@ -181,7 +181,7 @@ test.describe( 'Verify floating buttons editor, admin page and front page behavi
 				await expect( footer.first() ).toBeVisible();
 
 				const closeIcon = page.locator( '.refraction-templates-modal__header__close i' );
-				await expect( closeIcon ).toHaveAttribute( 'class', 'eicon-close' );
+				await expect( closeIcon ).toHaveAttribute( 'class', 'rficon-close' );
 				await closeIcon.click();
 				await page.waitForURL( '/wp-admin/edit.php?post_type=e-floating-buttons' );
 			} );

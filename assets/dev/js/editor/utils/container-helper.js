@@ -187,7 +187,7 @@ export class ContainerHelper {
 				custom: {
 					isPreset: true,
 					preset_settings: {
-						presetIcon: 'eicon-container-grid',
+						presetIcon: 'rficon-container-grid',
 					},
 				},
 				...modelAttributes,

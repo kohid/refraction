@@ -180,11 +180,11 @@ test.describe( 'Container Grid tests @container', () => {
 			await expect( page
 				.locator( '.refraction-control-grid_justify_items .refraction-choices label >> nth=0' )
 				.locator( 'i' ) )
-				.toHaveClass( /eicon-align-start-h/ );
+				.toHaveClass( /rficon-align-start-h/ );
 			await expect( page
 				.locator( '.refraction-control-grid_align_items .refraction-choices label >> nth=0' )
 				.locator( 'i' ) )
-				.toHaveClass( /eicon-align-start-v/ );
+				.toHaveClass( /rficon-align-start-v/ );
 
 			await editor.setSelectControlValue( 'grid_auto_flow', 'column' );
 			await expect( page
@@ -639,7 +639,7 @@ test.describe( 'Container Grid tests @container', () => {
 
 			// Assert
 			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
-			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container' );
+			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://github.com/kohid/refraction#readme' );
 		} );
 
 		await test.step( 'Changing layout to grid', async () => {
@@ -648,7 +648,7 @@ test.describe( 'Container Grid tests @container', () => {
 
 			// Assert
 			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
-			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container-grid' );
+			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://github.com/kohid/refraction#readme' );
 		} );
 
 		await test.step( 'Add a grid container', async () => {
@@ -659,7 +659,7 @@ test.describe( 'Container Grid tests @container', () => {
 
 			// Assert
 			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
-			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container-grid' );
+			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://github.com/kohid/refraction#readme' );
 		} );
 
 		await test.step( 'Select existing grid container', async () => {
@@ -668,7 +668,7 @@ test.describe( 'Container Grid tests @container', () => {
 
 			// Assert
 			const linkElement = page.locator( '#refraction-panel__editor__help__link' );
-			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://go.elementor.com/widget-container-grid' );
+			await expect.soft( linkElement ).toHaveAttribute( 'href', 'https://github.com/kohid/refraction#readme' );
 		} );
 
 		await page.waitForSelector( '#refraction-panel__editor__help__link' );

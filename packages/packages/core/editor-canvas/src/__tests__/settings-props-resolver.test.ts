@@ -69,11 +69,11 @@ describe( 'settings props resolver', () => {
 			name: 'link',
 			props: {
 				link1: linkPropTypeUtil.create( {
-					destination: 'https://elementor.com/blank',
+					destination: 'https://github.com/kohid/refraction#readme',
 					isTargetBlank: true,
 				} ),
 				link2: linkPropTypeUtil.create( {
-					destination: 'https://elementor.com/self',
+					destination: 'https://github.com/kohid/refraction#readme',
 					isTargetBlank: false,
 				} ),
 			},
@@ -82,8 +82,8 @@ describe( 'settings props resolver', () => {
 				link2: linkPropType(),
 			},
 			expected: {
-				link1: { href: 'https://elementor.com/blank', target: '_blank', tag: 'a' },
-				link2: { href: 'https://elementor.com/self', target: '_self', tag: 'a' },
+				link1: { href: 'https://github.com/kohid/refraction#readme', target: '_blank', tag: 'a' },
+				link2: { href: 'https://github.com/kohid/refraction#readme', target: '_self', tag: 'a' },
 			},
 		},
 		{

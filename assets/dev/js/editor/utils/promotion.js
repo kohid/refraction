@@ -51,8 +51,8 @@ export default class extends refractionModules.Module {
 		this.elements.$header = this.dialog.getElements( 'header' );
 
 		this.elements.$title = jQuery( '<div>', { id: 'refraction-element--promotion__dialog__title' } );
-		this.elements.$titleBadge = jQuery( '<i>', { class: 'eicon-pro-icon' } );
-		this.elements.$closeButton = jQuery( '<i>', { class: 'eicon-close' } );
+		this.elements.$titleBadge = jQuery( '<i>', { class: 'rficon-pro-icon' } );
+		this.elements.$closeButton = jQuery( '<i>', { class: 'rficon-close' } );
 
 		this.elements.$closeButton.on( 'click', () => this.dialog.hide() );
 

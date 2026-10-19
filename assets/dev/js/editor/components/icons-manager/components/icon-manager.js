@@ -223,7 +223,7 @@ class IconsManager extends Component {
 		return (
 			<div id="refraction-icons-manager__search">
 				<input placeholder={ 'Filter by name...' } onInput={ this.handleSearch } />
-				<i className={ 'eicon-search' }></i>
+				<i className={ 'rficon-search' }></i>
 			</div>
 		);
 	}

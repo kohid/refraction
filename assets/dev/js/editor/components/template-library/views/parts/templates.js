@@ -616,11 +616,11 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	showLoadingSpinner() {
-		this.ui.searchInputIcon.removeClass( 'eicon-search' ).addClass( 'eicon-loading eicon-animation-spin' );
+		this.ui.searchInputIcon.removeClass( 'rficon-search' ).addClass( 'rficon-loading rficon-animation-spin' );
 	},
 
 	showSearchIcon() {
-		this.ui.searchInputIcon.removeClass( 'eicon-loading eicon-animation-spin' ).addClass( 'eicon-search' );
+		this.ui.searchInputIcon.removeClass( 'rficon-loading rficon-animation-spin' ).addClass( 'rficon-search' );
 	},
 
 	onSelectFilterChange( event ) {

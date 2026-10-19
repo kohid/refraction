@@ -21,7 +21,7 @@ test.describe( 'Container tests #1 @container', () => {
 		const containerId = await editor.addElement( { elType: 'container' }, 'document' );
 		await editor.openPanelTab( 'style' );
 		await editor.openSection( 'section_background' );
-		await editor.setChooseControlValue( 'background_background', 'eicon-slideshow' );
+		await editor.setChooseControlValue( 'background_background', 'rficon-slideshow' );
 		await editor.addImagesToGalleryControl();
 		await editor.addWidget( { widgetType: widgets.heading, container: containerId } );
 
@@ -45,7 +45,7 @@ test.describe( 'Container tests #1 @container', () => {
 
 		// Act.
 		const containerId = await editor.addElement( { elType: 'container' }, 'document' );
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 		const button = await editor.addWidget( { widgetType: widgets.button, container: containerId } );
 		const heading = await editor.addWidget( { widgetType: widgets.heading, container: containerId } );
 		const image = await editor.addWidget( { widgetType: widgets.image, container: containerId } );
@@ -80,14 +80,14 @@ test.describe( 'Container tests #1 @container', () => {
 
 		// Act.
 		const containerId = await editor.addElement( { elType: 'container' }, 'document' );
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 
 		await editor.addWidget( { widgetType: widgets.accordion, container: containerId } );
 		await editor.addWidget( { widgetType: widgets.divider, container: containerId } );
 		await editor.addWidget( { widgetType: widgets.spacer, container: containerId } );
 		await editor.openPanelTab( 'advanced' );
 		await editor.openSection( '_section_background' );
-		await editor.setChooseControlValue( '_background_background', 'eicon-paint-brush' );
+		await editor.setChooseControlValue( '_background_background', 'rficon-paint-brush' );
 		await editor.setColorControlValue( '_background_color', '#A81830' );
 
 		await editor.addWidget( { widgetType: widgets.toggle, container: containerId } );
@@ -112,8 +112,8 @@ test.describe( 'Container tests #1 @container', () => {
 		// Act.
 		await editor.togglePreviewMode();
 		await editor.selectElement( containerId );
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-down' );
-		await editor.setChooseControlValue( 'flex_align_items', 'eicon-align-start-v' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-down' );
+		await editor.setChooseControlValue( 'flex_align_items', 'rficon-align-start-v' );
 		await editor.setSliderControlValue( 'min_height', '1500' );
 		await editor.hideVideoControls();
 		await editor.togglePreviewMode();

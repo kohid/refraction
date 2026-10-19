@@ -368,7 +368,7 @@ export default class extends Marionette.CompositeView {
 
 			const $indicator = jQuery( '<div>', { class: 'refraction-navigator__element__indicator', title: indicatorSettings.title } )
 				.attr( 'data-section', indicatorSettings.section )
-				.html( `<i class="eicon-${ indicatorSettings.icon }"></i>` );
+				.html( `<i class="rficon-${ indicatorSettings.icon }"></i>` );
 
 			this.ui.indicators.append( $indicator );
 

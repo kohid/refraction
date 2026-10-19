@@ -25,7 +25,7 @@ $root: e-app-import-export-wizard-step;
 		color: var(--e-app-import-export-wizard-step-icon-color);
 		font-size: 50px;
 
-		&.eicon-loading {
+		&.rficon-loading {
 			font-size: get-type( size, '30' );
 		}
 	}

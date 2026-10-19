@@ -25,7 +25,7 @@ class Settings_Site_Identity extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-site-identity';
+		return 'rficon-site-identity';
 	}
 
 	public function get_help_url() {

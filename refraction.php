@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'REFRACTION_VERSION', '0.1.2' );
 define( 'REFRACTION_MINIMUM_WP_VERSION', '6.8' );
 
-// The Elementor release this code base was forked from. Feature gates inherited from upstream
+// The Refraction release this code base was forked from. Feature gates inherited from upstream
 // ("sites installed on or after 3.16.0 get containers by default", legacy data migrations, ...)
 // are written against upstream version numbers, so every Refraction install counts as at least this.
 define( 'REFRACTION_UPSTREAM_VERSION', '4.4.0' );

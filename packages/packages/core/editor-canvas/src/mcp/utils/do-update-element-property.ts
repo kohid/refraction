@@ -15,7 +15,7 @@ import { mergeCustomCssText, readStoredCustomCssText } from './merge-custom-css'
 import { resolveCanonicalPropName } from './resolve-canonical-prop-name';
 import { DYNAMIC_PROP_TYPE_KEY, dynamicTagLLMResolver } from './resolve-dynamic-tag';
 
-// TODO: see https://elementor.atlassian.net/browse/ED-22513 for better cross-module access
+// TODO: see upstream tracker issue ED-22513 for better cross-module access
 type XRefraction = z.infer< z.ZodAny >;
 const LOCAL_STYLE_META = {
 	breakpoint: 'desktop',
@@ -48,7 +48,7 @@ type OwnParams = {
 };
 
 export function resolvePropValue( value: unknown, forceKey?: string ): PropValue {
-	// TODO: see https://elementor.atlassian.net/browse/ED-22513 for better cross-module access
+	// TODO: see upstream tracker issue ED-22513 for better cross-module access
 	const Utils = ( ( ( window as XRefraction ).refractionV2 as XRefraction ).editorVariables as XRefraction )
 		.Utils as typeof IUtils;
 	return Schema.adjustLlmPropValueSchema( value as PropValue, {

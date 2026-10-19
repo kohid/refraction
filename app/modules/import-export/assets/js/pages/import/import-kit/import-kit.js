@@ -65,7 +65,7 @@ export default function ImportKit() {
 			}
 		},
 		getLearnMoreLink = () => (
-			<InlineLink url="https://go.elementor.com/app-what-are-kits" key="learn-more-link" italic onClick={ () => eventTracking( 'kit-library/seek-more-info', null, 'click' ) } >
+			<InlineLink url="https://github.com/kohid/refraction#readme" key="learn-more-link" italic onClick={ () => eventTracking( 'kit-library/seek-more-info', null, 'click' ) } >
 				{ __( 'Learn More', 'refraction' ) }
 			</InlineLink>
 		),
@@ -139,7 +139,7 @@ export default function ImportKit() {
 							'kit-library' === referrer &&
 							<Button
 								className="e-app-import__back-to-library"
-								icon="eicon-chevron-left"
+								icon="rficon-chevron-left"
 								text={ __( 'Back to Website Templates', 'refraction' ) }
 								url={ isLoading ? '' : `/kit-library${ isLoadingKitFromCloud ? '/cloud' : '' }` }
 							/>

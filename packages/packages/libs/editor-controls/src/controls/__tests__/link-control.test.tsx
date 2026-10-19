@@ -193,7 +193,7 @@ describe( '<LinkControl />', () => {
 
 	it( 'should be open when value not null, and update new value to input', () => {
 		// Arrange.
-		const testHref = 'https://elementor.com/';
+		const testHref = 'https://github.com/kohid/refraction#readme';
 
 		const props = {
 			...baseProps,

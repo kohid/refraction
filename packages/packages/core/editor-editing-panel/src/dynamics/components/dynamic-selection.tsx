@@ -21,8 +21,8 @@ type OptionEntry = [ string, Option[] ];
 
 const SIZE = 'tiny';
 const PROMO_TEXT_WIDTH = 170;
-const PRO_DYNAMIC_TAGS_URL = 'https://go.elementor.com/go-pro-dynamic-tags-modal/';
-const RENEW_DYNAMIC_TAGS_URL = 'https://go.elementor.com/go-pro-dynamic-tags-renew-modal/';
+const PRO_DYNAMIC_TAGS_URL = 'https://github.com/kohid/refraction#readme';
+const RENEW_DYNAMIC_TAGS_URL = 'https://github.com/kohid/refraction#readme';
 
 type DynamicSelectionProps = {
 	close: () => void;

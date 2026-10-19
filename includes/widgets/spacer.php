@@ -53,7 +53,7 @@ class Widget_Spacer extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-spacer';
+		return 'rficon-spacer';
 	}
 
 	/**

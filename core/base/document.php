@@ -804,7 +804,7 @@ abstract class Document extends Controls_Stack {
 		/**
 		 * Set locale to "C" to avoid issues with comma as decimal separator.
 		 *
-		 * @see https://github.com/elementor/elementor/issues/10992
+		 * @see upstream issue #10992
 		 */
 		$original_lc = setlocale( LC_NUMERIC, 0 );
 		setlocale( LC_NUMERIC, 'C' );

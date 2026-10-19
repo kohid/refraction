@@ -22,8 +22,8 @@ class Manager extends Base_Object {
 					'regex' => '/^fa-/',
 					'manager' => new Font_Awesome(),
 				],
-				'eicons' => [
-					'regex' => '/^eicons$/',
+				'rficons' => [
+					'regex' => '/^rficons$/',
 					'manager' => new E_Icons(),
 				],
 			];

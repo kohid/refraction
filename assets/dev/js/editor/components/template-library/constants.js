@@ -9,10 +9,10 @@ export const SAVE_CONTEXTS = Object.freeze( {
 export const QUOTA_WARNINGS = Object.freeze( {
 	/* Translators: 1: Quota usage percentage */
 	// eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace, @wordpress/i18n-translator-comments
-	warning: __( 'You\'ve saved %1$d%% of the templates in your plan. To get more space ', 'refraction' ) + '<a href="https://go.elementor.com/go-pro-cloud-templates-usage-bar-80" target="_blank">' + __( 'Upgrade now', 'refraction' ) + '</a>',
+	warning: __( 'You\'ve saved %1$d%% of the templates in your plan. To get more space ', 'refraction' ) + '<a href="https://github.com/kohid/refraction#readme" target="_blank">' + __( 'Upgrade now', 'refraction' ) + '</a>',
 	/* Translators: 1: Quota usage percentage */
 	// eslint-disable-next-line @wordpress/i18n-no-flanking-whitespace, @wordpress/i18n-translator-comments
-	alert: __( 'You\'ve saved %1$d%% of the templates in your plan. To get more space ', 'refraction' ) + '<a href="https://go.elementor.com/go-pro-cloud-templates-usage-bar-100" target="_blank">' + __( 'Upgrade now', 'refraction' ) + '</a>',
+	alert: __( 'You\'ve saved %1$d%% of the templates in your plan. To get more space ', 'refraction' ) + '<a href="https://github.com/kohid/refraction#readme" target="_blank">' + __( 'Upgrade now', 'refraction' ) + '</a>',
 } );
 
 export const QUOTA_BAR_STATES = Object.freeze( {

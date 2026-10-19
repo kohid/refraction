@@ -115,9 +115,9 @@
 		&.e-global__preview-item--selected {
 
 			&:before {
-				font-family: 'eicons';
+				font-family: 'rficons';
 				font-size: 13px;
-				content: '\e90e'; // eicon-check
+				content: '\e90e'; // rficon-check
 				position: absolute;
 				transform: translateY(-50%);
 				inset-block-start: 50%;
@@ -180,9 +180,9 @@
 				color: var(--e-a-color-white);
 
 				&:before {
-					font-family: 'eicons';
+					font-family: 'rficons';
 					font-size: 13px;
-					content: '\e90e'; // eicon-check
+					content: '\e90e'; // rficon-check
 					text-shadow: 0 0 1px #000;
 					z-index: 1;
 				 }

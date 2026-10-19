@@ -56,9 +56,9 @@ type ComponentModelInstance = BackboneModel< ComponentModel > & {
 export const COMPONENT_WIDGET_TYPE = 'e-component';
 
 const EDIT_COMPONENT_DB_CLICK_UPGRADE_URL =
-	'https://go.elementor.com/go-pro-components-Instance-edit-canvas-double-click/';
+	'https://github.com/kohid/refraction#readme';
 const EDIT_COMPONENT_CONTEXT_MENU_UPGRADE_URL =
-	'https://go.elementor.com/go-pro-components-Instance-edit-context-menu/';
+	'https://github.com/kohid/refraction#readme';
 
 const UPDATE_PLUGINS_URL = '/wp-admin/plugins.php';
 
@@ -282,11 +282,11 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 			const showPromoBadge = ! hasPro && ! isOutdated;
 
 			const badgeClass = 'refraction-context-menu-list__item__shortcut__promotion-badge';
-			const proBadge = `<a href="${ EDIT_COMPONENT_CONTEXT_MENU_UPGRADE_URL }" target="_blank" onclick="event.stopPropagation()" class="${ badgeClass }"><i class="eicon-upgrade-crown"></i></a>`;
+			const proBadge = `<a href="${ EDIT_COMPONENT_CONTEXT_MENU_UPGRADE_URL }" target="_blank" onclick="event.stopPropagation()" class="${ badgeClass }"><i class="rficon-upgrade-crown"></i></a>`;
 
 			const editComponentAction: ContextMenuAction = {
 				name: 'edit component',
-				icon: 'eicon-edit',
+				icon: 'rficon-edit',
 				title: () => __( 'Edit Component', 'refraction' ),
 				...( showPromoBadge && { shortcut: proBadge, hasShortcutAction: true } ),
 				isEnabled: () => isProComponentsSupported() || isOutdated,
@@ -295,7 +295,7 @@ function createComponentView( options: ComponentTypeOptions ): typeof TemplatedE
 
 			const detachInstanceAction: ContextMenuAction = {
 				name: 'detach instance',
-				icon: 'eicon-chain-broken',
+				icon: 'rficon-chain-broken',
 				title: () => __( 'Detach from Component', 'refraction' ),
 				isEnabled: () => true,
 				callback: ( _: unknown, eventData: ContextMenuEventData ) => this.detachInstance( eventData ),

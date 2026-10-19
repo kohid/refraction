@@ -3,7 +3,7 @@ import { Box, Typography, Stack, Button } from '@elementor/ui';
 import PropTypes from 'prop-types';
 import { useImportContext } from '../context/import-context';
 
-const HELP_URL = 'https://go.elementor.com/app-import-download-failed';
+const HELP_URL = 'https://github.com/kohid/refraction/issues';
 
 export default function ImportError( { statusText } ) {
 	const { dispatch } = useImportContext();

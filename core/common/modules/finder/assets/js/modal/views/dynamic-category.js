@@ -44,7 +44,7 @@ export default class extends Category {
 	onRender() {
 		super.onRender();
 
-		this.ui.loadingIcon = jQuery( '<i>', { class: 'eicon-loading eicon-animation-spin' } );
+		this.ui.loadingIcon = jQuery( '<i>', { class: 'rficon-loading rficon-animation-spin' } );
 
 		this.ui.title.after( this.ui.loadingIcon );
 

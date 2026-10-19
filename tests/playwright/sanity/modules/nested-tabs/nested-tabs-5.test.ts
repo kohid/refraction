@@ -23,11 +23,11 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Act.
 		// Tabs styling scenario 1: Direction: Top, Align Title: Left, Icon Position: Right.
 		// Set align title to 'start'.
-		await editor.setChooseControlValue( 'title_alignment', 'eicon-text-align-left' );
+		await editor.setChooseControlValue( 'title_alignment', 'rficon-text-align-left' );
 		// Set icon position to 'right'.
 		await editor.openPanelTab( 'style' );
 		await editor.openSection( 'icon_section_style' );
-		await editor.setChooseControlValue( 'icon_position', 'eicon-h-align-right' );
+		await editor.setChooseControlValue( 'icon_position', 'rficon-h-align-right' );
 
 		await editor.togglePreviewMode();
 
@@ -44,22 +44,22 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		await editor.getPreviewFrame().locator( '.refraction-widget-n-tabs .refraction-editor-element-edit' ).first().click();
 		// Set Direction: Left.
 		await editor.openPanelTab( 'content' );
-		await editor.setChooseControlValue( 'tabs_direction', 'eicon-h-align-left' );
+		await editor.setChooseControlValue( 'tabs_direction', 'rficon-h-align-left' );
 		// Set align title to 'right'.
-		await editor.setChooseControlValue( 'title_alignment', 'eicon-text-align-right' );
+		await editor.setChooseControlValue( 'title_alignment', 'rficon-text-align-right' );
 		// Set icon position to 'top'.
 		await editor.openPanelTab( 'style' );
 		await editor.openSection( 'icon_section_style' );
-		await editor.setChooseControlValue( 'icon_position', 'eicon-v-align-top' );
+		await editor.setChooseControlValue( 'icon_position', 'rficon-v-align-top' );
 
 		// Tabs styling scenario 3: Direction: Top, Align Title: Default, Icon Position: Top, Justify: Stretch.
 		// Unset Direction: Left.
 		await editor.openPanelTab( 'content' );
-		await editor.setChooseControlValue( 'tabs_direction', 'eicon-h-align-left' );
+		await editor.setChooseControlValue( 'tabs_direction', 'rficon-h-align-left' );
 		// Justify: Stretch.
-		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'eicon-align-stretch-h' );
+		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'rficon-align-stretch-h' );
 		// Unset align title to 'right'.
-		await editor.setChooseControlValue( 'title_alignment', 'eicon-text-align-right' );
+		await editor.setChooseControlValue( 'title_alignment', 'rficon-text-align-right' );
 
 		await editor.togglePreviewMode();
 

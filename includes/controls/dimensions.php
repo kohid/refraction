@@ -140,11 +140,11 @@ class Control_Dimensions extends Control_Base_Units {
 					<li>
 						<button class="refraction-link-<?php echo esc_attr( $class_name ); ?>s tooltip-target" data-tooltip="<?php echo esc_attr__( 'Link values together', 'refraction' ); ?>">
 							<span class="refraction-linked">
-								<i class="eicon-link" aria-hidden="true"></i>
+								<i class="rficon-link" aria-hidden="true"></i>
 								<span class="refraction-screen-only"><?php echo esc_html__( 'Link values together', 'refraction' ); ?></span>
 							</span>
 							<span class="refraction-unlinked">
-								<i class="eicon-chain-broken" aria-hidden="true"></i>
+								<i class="rficon-chain-broken" aria-hidden="true"></i>
 								<span class="refraction-screen-only"><?php echo esc_html__( 'Unlinked values', 'refraction' ); ?></span>
 							</span>
 						</button>

@@ -100,7 +100,7 @@ class Manager {
 	 *
 	 * A temp solution in order to avoid init kit group control from within another group control.
 	 *
-	 * After moving the `default_font` to the kit, the Typography group control cause initialize the kit controls at: https://github.com/elementor/elementor/blob/e6e1db9eddef7e3c1a5b2ba0c2338e2af2a3bfe3/includes/controls/groups/typography.php#L91
+	 * After moving the `default_font` to the kit, the Typography group control cause initialize the kit controls at: https://github.com/kohid/refraction
 	 * and because the group control is a singleton, its args are changed to the last kit group control.
 	 */
 	public function init_kit_controls() {

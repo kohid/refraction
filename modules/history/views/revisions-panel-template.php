@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 </script>
 
 <script type="text/template" id="tmpl-refraction-panel-revisions-loading">
-	<i class="eicon-loading eicon-animation-spin" aria-hidden="true"></i>
+	<i class="rficon-loading rficon-animation-spin" aria-hidden="true"></i>
 </script>
 
 <script type="text/template" id="tmpl-refraction-panel-revisions-revision-item">
@@ -52,15 +52,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 		<div class="refraction-revision-item__tools">
-			<i class="refraction-revision-item__tools-spinner eicon-loading eicon-animation-spin" aria-hidden="true"></i>
+			<i class="refraction-revision-item__tools-spinner rficon-loading rficon-animation-spin" aria-hidden="true"></i>
 
 			<# if ( 'current' === type ) { #>
-				<i class="refraction-revision-item__tools-current eicon-check" aria-hidden="true"></i>
+				<i class="refraction-revision-item__tools-current rficon-check" aria-hidden="true"></i>
 				<span class="refraction-screen-only"><?php echo esc_html__( 'Published', 'refraction' ); ?></span>
 			<# } #>
 
 <!--			<# if ( 'revision' === type ) { #>-->
-<!--				<i class="eicon-undo" aria-hidden="true"></i>-->
+<!--				<i class="rficon-undo" aria-hidden="true"></i>-->
 <!--				<span class="refraction-screen-only">--><?php // echo esc_html__( 'Restore', 'refraction' ); ?><!--</span>-->
 <!--			<# } #>-->
 

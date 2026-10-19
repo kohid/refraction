@@ -57,7 +57,7 @@ class Widget_Tabs extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-tabs';
+		return 'rficon-tabs';
 	}
 
 	/**
@@ -187,11 +187,11 @@ class Widget_Tabs extends Widget_Base {
 				'options' => [
 					'vertical' => [
 						'title' => esc_html__( 'Vertical', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'horizontal' => [
 						'title' => esc_html__( 'Horizontal', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 				],
 				'classes' => 'refraction-control-start-end',
@@ -208,19 +208,19 @@ class Widget_Tabs extends Widget_Base {
 				'options' => [
 					'' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => "eicon-align-$start-h",
+						'icon' => "rficon-align-$start-h",
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-align-center-h',
+						'icon' => 'rficon-align-center-h',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => "eicon-align-$end-h",
+						'icon' => "rficon-align-$end-h",
 					],
 					'stretch' => [
 						'title' => esc_html__( 'Stretch', 'refraction' ),
-						'icon' => 'eicon-align-stretch-h',
+						'icon' => 'rficon-align-stretch-h',
 					],
 				],
 				'prefix_class' => 'refraction-tabs-alignment-',
@@ -238,19 +238,19 @@ class Widget_Tabs extends Widget_Base {
 				'options' => [
 					'' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-align-start-v',
+						'icon' => 'rficon-align-start-v',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-align-center-v',
+						'icon' => 'rficon-align-center-v',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-align-end-v',
+						'icon' => 'rficon-align-end-v',
 					],
 					'stretch' => [
 						'title' => esc_html__( 'Stretch', 'refraction' ),
-						'icon' => 'eicon-align-stretch-v',
+						'icon' => 'rficon-align-stretch-v',
 					],
 				],
 				'prefix_class' => 'refraction-tabs-alignment-',
@@ -425,15 +425,15 @@ class Widget_Tabs extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 				],
 				'classes' => 'refraction-control-start-end',

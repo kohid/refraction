@@ -51,7 +51,7 @@ module.exports = Marionette.Behavior.extend( {
 				actions: [
 					{
 						name: 'navigator',
-						icon: 'eicon-navigator',
+						icon: 'rficon-navigator',
 						title: __( 'Structure', 'refraction' ),
 						shortcut: controlSign + '+I',
 						callback: () => $e.route( 'navigator', {

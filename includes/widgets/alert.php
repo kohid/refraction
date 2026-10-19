@@ -57,7 +57,7 @@ class Widget_Alert extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-alert';
+		return 'rficon-alert';
 	}
 
 	/**
@@ -180,10 +180,10 @@ class Widget_Alert extends Widget_Base {
 					'inline' => [
 						'none' => [
 							'label' => 'Default',
-							'icon' => 'eicon-close',
+							'icon' => 'rficon-close',
 						],
 						'icon' => [
-							'icon' => 'eicon-star',
+							'icon' => 'rficon-star',
 						],
 					],
 				],

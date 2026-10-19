@@ -85,7 +85,7 @@ DropZone.propTypes = {
 DropZone.defaultProps = {
 	className: '',
 	type: 'file-explorer',
-	icon: 'eicon-library-upload',
+	icon: 'rficon-library-upload',
 	showButton: true,
 	showIcon: true,
 	onError: () => {},

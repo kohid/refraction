@@ -31,7 +31,7 @@ export const audit: Audit = {
 						: ctx.pageContext.ally_plugin_url,
 					ctaLabel: __( 'Create', 'refraction' ),
 					secondaryCtaLabel: __( 'Learn more', 'refraction' ),
-					secondaryCtaUrl: 'https://elementor.com/help/start-using-ally/#statement',
+					secondaryCtaUrl: 'https://github.com/kohid/refraction#readme',
 				},
 			],
 		};

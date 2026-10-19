@@ -75,7 +75,7 @@ describe( 'AuditFeedback', () => {
 
 	it( 'still renders the trigger button when the user is not connected but a connect URL is available', () => {
 		mockConnected( false );
-		window.refraction = { config: { user: { top_bar: { connect_url: 'https://my.elementor.com/connect' } } } };
+		window.refraction = { config: { user: { top_bar: { connect_url: 'https://github.com/kohid/refraction/issues' } } } };
 
 		renderWithTheme( <AuditFeedback /> );
 
@@ -106,13 +106,13 @@ describe( 'AuditFeedback', () => {
 
 	it( 'opens the connect URL in a new tab and does not open the dialog when the user is not connected', () => {
 		mockConnected( false );
-		window.refraction = { config: { user: { top_bar: { connect_url: 'https://my.elementor.com/connect' } } } };
+		window.refraction = { config: { user: { top_bar: { connect_url: 'https://github.com/kohid/refraction/issues' } } } };
 		const windowOpenSpy = jest.spyOn( window, 'open' ).mockImplementation( () => null );
 
 		renderWithTheme( <AuditFeedback /> );
 		openModal();
 
-		expect( windowOpenSpy ).toHaveBeenCalledWith( 'https://my.elementor.com/connect', '_blank', 'noopener' );
+		expect( windowOpenSpy ).toHaveBeenCalledWith( 'https://github.com/kohid/refraction/issues', '_blank', 'noopener' );
 		expect( screen.queryByText( 'Let us know what you think' ) ).not.toBeInTheDocument();
 		expect( mockTrackEvent ).toHaveBeenCalledWith( 'audit_feedback_clicked', {
 			entry_point: FEEDBACK_ENTRY_POINT,

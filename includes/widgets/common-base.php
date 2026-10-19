@@ -530,15 +530,15 @@ class Widget_Common_Base extends Widget_Base {
 				'options' => [
 					'flex-start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-v-align-middle',
+						'icon' => 'rficon-v-align-middle',
 					],
 					'flex-end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'condition' => $vertical_align_conditions,
@@ -592,11 +592,11 @@ class Widget_Common_Base extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => $start,
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'end' => [
 						'title' => $end,
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'classes' => 'refraction-control-start-end',
@@ -693,11 +693,11 @@ class Widget_Common_Base extends Widget_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Top', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'end' => [
 						'title' => esc_html__( 'Bottom', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'render_type' => 'ui',

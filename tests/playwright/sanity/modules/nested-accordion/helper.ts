@@ -48,8 +48,8 @@ export async function expectScreenshotToMatchLocator( fileName: string, locator:
 export async function setTitleIconPosition( direction: string, editor: EditorPage, breakpoint: string = 'desktop' ): Promise<void> {
 	const controlBreakpoint = ( breakpoint.toLowerCase() !== 'desktop' ) ? `_${ breakpoint }` : '';
 	const icon = Object.freeze( {
-		right: '.eicon-h-align-right',
-		left: '.eicon-h-align-left',
+		right: '.rficon-h-align-right',
+		left: '.rficon-h-align-left',
 	} );
 	await editor.page.locator( `.refraction-control-accordion_item_title_icon_position${ controlBreakpoint } ${ icon[ direction ] }` ).click();
 }
@@ -66,11 +66,11 @@ export async function setTitleIconPosition( direction: string, editor: EditorPag
 export async function setTitleHorizontalAlignment( direction: string, editor: EditorPage, breakpoint: string = 'desktop' ): Promise<void> {
 	const controlBreakpoint = ( breakpoint.toLowerCase() !== 'desktop' ) ? `_${ breakpoint }` : '';
 	const icon = Object.freeze( {
-		start: '.eicon-align-start-h',
-		end: '.eicon-align-end-h',
-		center: '.eicon-h-align-center',
-		stretch: '.eicon-h-align-stretch',
-		justify: '.eicon-h-align-stretch',
+		start: '.rficon-align-start-h',
+		end: '.rficon-align-end-h',
+		center: '.rficon-h-align-center',
+		stretch: '.rficon-h-align-stretch',
+		justify: '.rficon-h-align-stretch',
 	} );
 	await editor.page.locator( `.refraction-control-accordion_item_title_position_horizontal${ controlBreakpoint } ${ icon[ direction ] }` ).click();
 }
@@ -83,7 +83,7 @@ export async function setBorderAndBackground( editor: EditorPage, state: string,
 	await setBorderColor();
 
 	async function setBackgroundColor() {
-		await editor.setChooseControlValue( `accordion_background_${ state }_background`, 'eicon-paint-brush' );
+		await editor.setChooseControlValue( `accordion_background_${ state }_background`, 'rficon-paint-brush' );
 		await editor.setColorControlValue( `accordion_background_${ state }_color`, color );
 	}
 
@@ -133,7 +133,7 @@ export async function setIconSize( editor: EditorPage, sizeInPx: string = '10' )
 
 export async function deleteItemFromRepeater( editor: EditorPage, accordionID: string ): Promise<void> {
 	// Arrange
-	const deleteItemButton = editor.page.locator( '.refraction-repeater-row-tool.refraction-repeater-tool-remove .eicon-close' ),
+	const deleteItemButton = editor.page.locator( '.refraction-repeater-row-tool.refraction-repeater-tool-remove .rficon-close' ),
 		nestedAccordionItemTitle = editor.getPreviewFrame().locator( `.refraction-element-${ accordionID } .e-n-accordion-item` ),
 		nestedAccordionItemContent = editor.getPreviewFrame().locator( `.refraction-element-${ accordionID } .e-n-accordion-item .e-con` ),
 		numberOfTitles = await nestedAccordionItemTitle.count(),

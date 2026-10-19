@@ -48,7 +48,7 @@ describe( 'createComponentType', () => {
 						actions: [
 							{
 								name: 'copy',
-								icon: 'eicon-copy',
+								icon: 'rficon-copy',
 								title: 'Copy',
 								isEnabled: () => true,
 								callback: jest.fn(),
@@ -60,14 +60,14 @@ describe( 'createComponentType', () => {
 						actions: [
 							{
 								name: 'pasteStyle',
-								icon: 'eicon-paste',
+								icon: 'rficon-paste',
 								title: 'Paste Style',
 								isEnabled: () => true,
 								callback: jest.fn(),
 							},
 							{
 								name: 'resetStyle',
-								icon: 'eicon-reset',
+								icon: 'rficon-reset',
 								title: 'Reset Style',
 								isEnabled: () => true,
 								callback: jest.fn(),
@@ -79,7 +79,7 @@ describe( 'createComponentType', () => {
 						actions: [
 							{
 								name: 'save',
-								icon: 'eicon-save',
+								icon: 'rficon-save',
 								title: 'Save',
 								isEnabled: () => true,
 								callback: jest.fn(),
@@ -457,7 +457,7 @@ describe( 'createComponentType', () => {
 		// Assert
 		expect( editAction ).toBeDefined();
 		expect( editAction?.isEnabled() ).toBe( false );
-		expect( editAction?.shortcut ).toContain( 'eicon-upgrade-crown' );
+		expect( editAction?.shortcut ).toContain( 'rficon-upgrade-crown' );
 		expect( editAction?.shortcut ).toContain( 'go-pro-components-Instance-edit-context-menu' );
 	} );
 

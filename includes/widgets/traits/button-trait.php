@@ -142,11 +142,11 @@ trait Button_Trait {
 				'options' => [
 					'row' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'row-reverse' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'classes' => 'refraction-control-start-end',
@@ -252,19 +252,19 @@ trait Button_Trait {
 				'options' => [
 					'left'    => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 					'justify' => [
 						'title' => esc_html__( 'Stretch', 'refraction' ),
-						'icon' => 'eicon-h-align-stretch',
+						'icon' => 'rficon-h-align-stretch',
 					],
 				],
 				'prefix_class' => $args['alignment_control_prefix_class'],
@@ -281,19 +281,19 @@ trait Button_Trait {
 				'options' => [
 					'start'    => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-text-align-left',
+						'icon' => 'rficon-text-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-text-align-center',
+						'icon' => 'rficon-text-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-text-align-right',
+						'icon' => 'rficon-text-align-right',
 					],
 					'space-between' => [
 						'title' => esc_html__( 'Space between', 'refraction' ),
-						'icon' => 'eicon-text-align-justify',
+						'icon' => 'rficon-text-align-justify',
 					],
 				],
 				'default' => $args['content_alignment_default'],

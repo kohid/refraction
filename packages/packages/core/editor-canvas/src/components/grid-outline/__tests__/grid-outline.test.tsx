@@ -112,7 +112,7 @@ describe( '<GridOutline />', () => {
 				/>
 			);
 
-			expect( container.querySelector( '.eicon-plus' ) ).not.toBeNull();
+			expect( container.querySelector( '.rficon-plus' ) ).not.toBeNull();
 		} );
 
 		it( 'does not render the + glyph when the grid is fully occupied', () => {
@@ -135,7 +135,7 @@ describe( '<GridOutline />', () => {
 				/>
 			);
 
-			expect( container.querySelector( '.eicon-plus' ) ).toBeNull();
+			expect( container.querySelector( '.rficon-plus' ) ).toBeNull();
 		} );
 
 		it( 'does not render the + glyph when no element is provided', () => {
@@ -148,7 +148,7 @@ describe( '<GridOutline />', () => {
 				/>
 			);
 
-			expect( container.querySelector( '.eicon-plus' ) ).toBeNull();
+			expect( container.querySelector( '.rficon-plus' ) ).toBeNull();
 		} );
 	} );
 

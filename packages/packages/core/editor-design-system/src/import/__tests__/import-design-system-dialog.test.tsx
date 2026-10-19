@@ -114,7 +114,7 @@ describe( '<ImportDesignSystemDialog />', () => {
 		).toBeInTheDocument();
 
 		const link = screen.getByRole( 'link', { name: 'Learn how design system imports work' } );
-		expect( link ).toHaveAttribute( 'href', 'https://go.elementor.com/wp-dash-import-export-design-system/' );
+		expect( link ).toHaveAttribute( 'href', 'https://github.com/kohid/refraction#readme' );
 		expect( link ).toHaveAttribute( 'target', '_blank' );
 	} );
 

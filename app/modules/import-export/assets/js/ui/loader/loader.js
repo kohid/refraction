@@ -6,7 +6,7 @@ import './loader.scss';
 
 export default function Loader( { absoluteCenter } ) {
 	const baseClassName = 'e-app-import-export-loader',
-		classes = [ baseClassName, 'eicon-loading eicon-animation-spin' ];
+		classes = [ baseClassName, 'rficon-loading rficon-animation-spin' ];
 
 	if ( absoluteCenter ) {
 		classes.push( baseClassName + '--absolute-center' );

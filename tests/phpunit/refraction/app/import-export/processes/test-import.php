@@ -180,7 +180,7 @@ class Test_Import extends Refraction_Test_Base {
 				[
 					'name' => 'Refraction',
 					'plugin' => 'refraction/refraction',
-					'pluginUri' => 'https://elementor.com/?utm_source=wp-plugins&#038;utm_campaign=plugin-uri&#038;utm_medium=wp-dash',
+					'pluginUri' => 'https://github.com/kohid/refraction#readme',
 					'version' => '3.6.5',
 				],
 			],

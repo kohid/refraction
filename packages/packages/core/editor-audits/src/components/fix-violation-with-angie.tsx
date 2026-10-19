@@ -5,7 +5,7 @@ type Props = {
 };
 
 /**
- * Upstream rendered a "Fix with Angie" action here that sent the prompt to Elementor's AI assistant.
+ * Upstream rendered a "Fix with Angie" action here that sent the prompt to Refraction's AI assistant.
  * Refraction has no AI integration, so the action is not rendered.
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -96,11 +96,11 @@ class Module extends BaseModule {
 			<div id="refraction-switch-mode">
 				<button id="refraction-switch-mode-button" type="button" class="button button-primary button-large">
 					<span class="refraction-switch-mode-on">
-						<i class="eicon-wordpress" aria-hidden="true"></i>
+						<i class="rficon-wordpress" aria-hidden="true"></i>
 						<?php echo esc_html__( 'Edit with WordPress', 'refraction' ); ?>
 					</span>
 					<span class="refraction-switch-mode-off">
-						<i class="eicon-refraction-square" aria-hidden="true"></i>
+						<i class="rficon-refraction-square" aria-hidden="true"></i>
 						<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 					</span>
 				</button>
@@ -111,7 +111,7 @@ class Module extends BaseModule {
 			<div id="refraction-editor">
 				<div id="refraction-go-to-edit-page-link">
 					<button id="refraction-editor-button" class="button button-primary button-hero">
-						<i class="eicon-refraction-square" aria-hidden="true"></i>
+						<i class="rficon-refraction-square" aria-hidden="true"></i>
 						<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 					</button>
 					<div class="refraction-loader-wrapper">
@@ -133,7 +133,7 @@ class Module extends BaseModule {
 			<div id="refraction-edit-button-gutenberg">
 				<button id="refraction-edit-mode-button" type="button" class="button button-primary button-large">
 					<span class="refraction-edit-mode-gutenberg">
-						<i class="eicon-refraction-square" aria-hidden="true"></i>
+						<i class="rficon-refraction-square" aria-hidden="true"></i>
 						<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 					</span>
 				</button>

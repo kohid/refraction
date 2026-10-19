@@ -366,7 +366,7 @@ test.describe( 'Launchpad checklist tests', () => {
 		await checklistHelper.clickStepCta( 'add_logo', 'editor' );
 
 		await page.locator( '.refraction-control-site_logo' ).waitFor();
-		await page.locator( '.refraction-control-site_logo .eicon-plus-circle' ).click();
+		await page.locator( '.refraction-control-site_logo .rficon-plus-circle' ).click();
 		await page.getByRole( 'tab', { name: 'Media Library' } ).click();
 		await page.locator( '.thumbnail' ).first().waitFor();
 		await page.locator( '.thumbnail' ).first().click();

@@ -150,13 +150,13 @@ const TemplateLibraryManager = function() {
 		return this.eventManager.getSaveTemplateExperimentVariant().then( ( experimentVariant ) => {
 			return {
 				saveDialog: {
-					icon: '<i class="eicon-library-upload" aria-hidden="true"></i>',
+					icon: '<i class="rficon-library-upload" aria-hidden="true"></i>',
 					canSaveToCloud: false,
 					saveBtnText: variantsConfig[ experimentVariant ]?.saveBtnText,
 				},
 				moveDialog: {
 					description: __( 'Alternatively, you can copy the template.', 'refraction' ),
-					icon: '<i class="eicon-library-move" aria-hidden="true"></i>',
+					icon: '<i class="rficon-library-move" aria-hidden="true"></i>',
 					canSaveToCloud: false,
 					saveBtnText: __( 'Move', 'refraction' ),
 					nameLabel: '',
@@ -164,7 +164,7 @@ const TemplateLibraryManager = function() {
 				},
 				copyDialog: {
 					description: __( 'Alternatively, you can move the template.', 'refraction' ),
-					icon: '<i class="eicon-library-copy" aria-hidden="true"></i>',
+					icon: '<i class="rficon-library-copy" aria-hidden="true"></i>',
 					canSaveToCloud: false,
 					saveBtnText: __( 'Copy', 'refraction' ),
 					nameLabel: '',
@@ -173,7 +173,7 @@ const TemplateLibraryManager = function() {
 				bulkMoveDialog: {
 					description: __( 'Alternatively, you can copy the templates.', 'refraction' ),
 					title: __( 'Move templates to a different location', 'refraction' ),
-					icon: '<i class="eicon-library-move" aria-hidden="true"></i>',
+					icon: '<i class="rficon-library-move" aria-hidden="true"></i>',
 					canSaveToCloud: false,
 					saveBtnText: __( 'Move', 'refraction' ),
 					nameLabel: '',
@@ -182,7 +182,7 @@ const TemplateLibraryManager = function() {
 				bulkCopyDialog: {
 					description: __( 'Alternatively, you can move the templates.', 'refraction' ),
 					title: __( 'Copy templates to a different location', 'refraction' ),
-					icon: '<i class="eicon-library-copy" aria-hidden="true"></i>',
+					icon: '<i class="rficon-library-copy" aria-hidden="true"></i>',
 					canSaveToCloud: false,
 					saveBtnText: __( 'Copy', 'refraction' ),
 					nameLabel: '',

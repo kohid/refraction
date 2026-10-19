@@ -34,7 +34,7 @@ export function Easing( {}: FieldProps ) {
 			baseOptions={ baseOptions }
 			disabledOptions={ disabledOptions }
 			promotionContent={ __( 'Upgrade to control the smoothness of the interaction.', 'refraction' ) }
-			upgradeUrl="https://go.elementor.com/go-pro-interactions-easing-modal/"
+			upgradeUrl="https://github.com/kohid/refraction#readme"
 			trackingData={ TRACKING_DATA }
 		/>
 	);

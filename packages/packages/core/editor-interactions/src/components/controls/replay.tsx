@@ -42,7 +42,7 @@ export function Replay( { onChange }: ReplayFieldProps ) {
 			promotionChip={
 				<InteractionsPromotionChip
 					content={ __( 'Upgrade to run the animation every time its trigger occurs.', 'refraction' ) }
-					upgradeUrl={ 'https://go.elementor.com/go-pro-interactions-replay-modal/' }
+					upgradeUrl={ 'https://github.com/kohid/refraction#readme' }
 					anchorRef={ replayContainerRef }
 					trackingData={ TRACKING_DATA }
 				/>

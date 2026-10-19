@@ -26,7 +26,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-form-horizontal';
+		return 'rficon-form-horizontal';
 	}
 
 	public function get_help_url() {

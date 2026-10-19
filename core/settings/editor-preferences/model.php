@@ -68,15 +68,15 @@ class Model extends BaseModel {
 				'options' => [
 					'light' => [
 						'title' => esc_html__( 'Light mode', 'refraction' ),
-						'icon' => 'eicon-light-mode',
+						'icon' => 'rficon-light-mode',
 					],
 					'dark' => [
 						'title' => esc_html__( 'Dark mode', 'refraction' ),
-						'icon' => 'eicon-dark-mode',
+						'icon' => 'rficon-dark-mode',
 					],
 					'auto' => [
 						'title' => esc_html__( 'Auto detect', 'refraction' ),
-						'icon' => 'eicon-header',
+						'icon' => 'rficon-header',
 					],
 				],
 				'default' => 'auto',

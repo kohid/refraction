@@ -162,7 +162,7 @@ TemplateLibraryTemplateCloudView = TemplateLibraryTemplateLocalView.extend( {
 
 		refraction.templates.deleteFolder( this.model, {
 			onConfirm() {
-				toggleMoreIcon.removeClass( 'eicon-ellipsis-h' ).addClass( 'eicon-loading eicon-animation-spin' );
+				toggleMoreIcon.removeClass( 'rficon-ellipsis-h' ).addClass( 'rficon-loading rficon-animation-spin' );
 			},
 			onSuccess() {
 				$e.routes.refreshContainer( 'library' );

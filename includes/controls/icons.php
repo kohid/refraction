@@ -75,12 +75,12 @@ class Control_Icons extends Control_Base_Multiple {
 			<div class="refraction-control-input-wrapper">
 				<div class="refraction-control-media__content refraction-control-tag-area refraction-control-preview-area">
 					<div class="refraction-control-media-upload-button refraction-control-media__content__upload-button">
-						<i class="eicon-plus-circle" aria-hidden="true"></i>
+						<i class="rficon-plus-circle" aria-hidden="true"></i>
 						<span class="refraction-screen-only"><?php echo esc_html__( 'Add', 'refraction' ); ?></span>
 					</div>
 					<div class="refraction-control-media-area">
 						<div class="refraction-control-media__remove refraction-control-media__content__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">
-							<i class="eicon-trash-o" aria-hidden="true"></i>
+							<i class="rficon-trash-o" aria-hidden="true"></i>
 							<span class="refraction-screen-only"><?php echo esc_html__( 'Remove', 'refraction' ); ?></span>
 						</div>
 						<div class="refraction-control-media__preview"></div>
@@ -105,15 +105,15 @@ class Control_Icons extends Control_Base_Multiple {
 			const defaultSkinSettings = {
 				none: {
 					label: '<?php echo esc_html__( 'None', 'refraction' ); ?>',
-					icon: 'eicon-ban',
+					icon: 'rficon-ban',
 				},
 				svg: {
 					label: '<?php echo esc_html__( 'Upload SVG', 'refraction' ); ?>',
-					icon: 'eicon-upload',
+					icon: 'rficon-upload',
 				},
 				icon: {
 					label: '<?php echo esc_html__( 'Icon Library', 'refraction' ); ?>',
-					icon: 'eicon-circle',
+					icon: 'rficon-circle',
 				}
 			};
 
@@ -191,15 +191,15 @@ class Control_Icons extends Control_Base_Multiple {
 				'inline' => [
 					'none' => [
 						'label' => esc_html__( 'None', 'refraction' ),
-						'icon' => 'eicon-ban',
+						'icon' => 'rficon-ban',
 					],
 					'svg' => [
 						'label' => esc_html__( 'Upload SVG', 'refraction' ),
-						'icon' => 'eicon-upload',
+						'icon' => 'rficon-upload',
 					],
 					'icon' => [
 						'label' => esc_html__( 'Icon Library', 'refraction' ),
-						'icon' => 'eicon-circle',
+						'icon' => 'rficon-circle',
 					],
 				],
 			],

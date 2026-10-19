@@ -20,7 +20,7 @@ test.describe( 'Container tests #4 @container', () => {
 
 		// Act.
 		await editor.addElement( { elType: 'container' }, 'document' );
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 
 		// Assert - Evaluate scroll widths in the browser context and check it has no horizontal scroll.
 		const container = await editor.getPreviewFrame().evaluate( () => document.querySelector( '.refraction-element-edit-mode' ) );
@@ -63,7 +63,7 @@ test.describe( 'Container tests #4 @container', () => {
 
 		await test.step( 'Row container, spacer default size', async () => {
 			const container = await editor.addElement( { elType: 'container' }, 'document' );
-			await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+			await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 			await editor.addWidget( { widgetType: widgets.spacer, container } );
 			await editor.addWidget( { widgetType: widgets.image, container } );
 
@@ -86,7 +86,7 @@ test.describe( 'Container tests #4 @container', () => {
 
 		await test.step( 'Container set to column and then Spacer added', async () => {
 			const container = await editor.addElement( { elType: 'container' }, 'document' );
-			await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-down' );
+			await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-down' );
 			await editor.addWidget( { widgetType: widgets.spacer, container } );
 			await editor.setSliderControlValue( 'space', spacerSize );
 			await page.waitForTimeout( 500 );
@@ -99,7 +99,7 @@ test.describe( 'Container tests #4 @container', () => {
 
 		await test.step( 'Spacer added and container set to row', async () => {
 			const container = await editor.addElement( { elType: 'container' }, 'document' );
-			await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+			await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 			await editor.addWidget( { widgetType: widgets.spacer, container } );
 			await editor.setSliderControlValue( 'space', spacerSize );
 			await page.waitForTimeout( 500 );
@@ -112,7 +112,7 @@ test.describe( 'Container tests #4 @container', () => {
 
 		await test.step( 'Container set to row and then Spacer added', async () => {
 			const container = await editor.addElement( { elType: 'container' }, 'document' );
-			await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+			await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 			await editor.addWidget( { widgetType: widgets.spacer, container } );
 			await editor.setSliderControlValue( 'space', spacerSize );
 			await page.waitForTimeout( 500 );

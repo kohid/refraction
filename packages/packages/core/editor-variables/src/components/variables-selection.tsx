@@ -28,7 +28,7 @@ const CREATE_LABEL = __( 'Create variable', 'refraction' );
 const MANAGER_LABEL = __( 'Variables Manager', 'refraction' );
 
 const getProUpgradeUrl = ( variableType: string ) =>
-	`https://go.elementor.com/renew-license-panel-${ variableType }-variable`;
+	'https://github.com/kohid/refraction#readme';
 
 type Props = {
 	closePopover: () => void;

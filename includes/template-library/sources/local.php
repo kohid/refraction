@@ -1478,7 +1478,7 @@ class Source_Local extends Source_Base {
 	public function print_blank_state_template( $current_type_label, $href, $description ) {
 		?>
 			<div class="refraction-blank_state">
-				<i class="eicon-folder"></i>
+				<i class="rficon-folder"></i>
 				<h3>
 					<?php
 					/* translators: %s: Template type label. */

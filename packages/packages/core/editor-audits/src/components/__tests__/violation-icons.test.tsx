@@ -18,11 +18,11 @@ function renderIcon( violation: AuditViolation, widgetIcon: string | null = null
 describe( 'ViolationIcon', () => {
 	it( 'renders the widget icon when provided', () => {
 		// Arrange & Act.
-		const { container } = renderIcon( { auditId: 'audits/x', elementId: 'el-1', label: 'Issue' }, 'eicon-image' );
+		const { container } = renderIcon( { auditId: 'audits/x', elementId: 'el-1', label: 'Issue' }, 'rficon-image' );
 
 		// Assert.
 		// eslint-disable-next-line testing-library/no-container, testing-library/no-node-access -- the widget icon is a decorative, aria-hidden <i> with no accessible role.
-		expect( container.querySelector( '.eicon-image' ) ).toBeInTheDocument();
+		expect( container.querySelector( '.rficon-image' ) ).toBeInTheDocument();
 	} );
 
 	it( 'falls back to a generic settings icon when there is no widget icon or targetHint', () => {

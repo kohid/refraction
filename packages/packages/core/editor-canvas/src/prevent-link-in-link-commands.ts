@@ -42,7 +42,7 @@ export type StorageContent = {
 };
 
 const learnMoreActionProps: Partial< ButtonProps > = {
-	href: 'https://go.elementor.com/element-link-inside-link-infotip',
+	href: 'https://github.com/kohid/refraction#readme',
 	target: '_blank',
 	color: 'inherit',
 	variant: 'text',

@@ -100,7 +100,7 @@
 			</wp:postmeta>
 			<wp:postmeta>
 				<wp:meta_key><![CDATA[_menu_item_url]]></wp:meta_key>
-				<wp:meta_value><![CDATA[http://elementor.com]]></wp:meta_value>
+				<wp:meta_value><![CDATA[https://github.com/kohid/refraction#readme]]></wp:meta_value>
 			</wp:postmeta>
 		</item>
 		<item>

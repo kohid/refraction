@@ -61,7 +61,7 @@ export default class Manager extends refractionModules.editor.utils.Module {
 
 		menu.addItem( {
 			name: 'global-settings',
-			icon: 'eicon-global-settings',
+			icon: 'rficon-global-settings',
 			title: __( 'Site Settings', 'refraction' ),
 			type: 'page',
 			callback: () => {
@@ -73,7 +73,7 @@ export default class Manager extends refractionModules.editor.utils.Module {
 
 		menu.addItem( {
 			name: 'site-editor',
-			icon: 'eicon-theme-builder',
+			icon: 'rficon-theme-builder',
 			title: __( 'Theme Builder', 'refraction' ),
 			type: 'page',
 			callback: () => $e.run( 'app/open' ),

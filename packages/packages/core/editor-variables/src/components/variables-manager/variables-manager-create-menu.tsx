@@ -144,7 +144,7 @@ const MenuOption = ( {
 			{ isDisabled && (
 				<VariablePromotionChip
 					variableType={ config.variableType }
-					upgradeUrl={ `https://go.elementor.com/go-pro-manager-${ config.variableType }-variable/` }
+					upgradeUrl={ 'https://github.com/kohid/refraction#readme' }
 					ref={ promotionRef }
 					trackingData={ TRACKING_DATA }
 				/>

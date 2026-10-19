@@ -278,7 +278,7 @@ class Manager extends Module {
 	 * element). If no parameter is passed, it returns an array of devices containing each device's icon class list.
 	 *
 	 * This method was created because 'mobile_extra' and 'tablet_extra' breakpoint icons need to be tilted by 90
-	 * degrees, and this tilt is achieved in CSS via the class `eicon-tilted`.
+	 * degrees, and this tilt is achieved in CSS via the class `rficon-tilted`.
 	 *
 	 * @since 3.4.0
 	 *
@@ -287,13 +287,13 @@ class Manager extends Module {
 	public function get_responsive_icons_classes_map( $device = null ) {
 		if ( ! $this->icons_map ) {
 			$this->icons_map = [
-				'mobile' => 'eicon-device-mobile',
-				'mobile_extra' => 'eicon-device-mobile eicon-tilted',
-				'tablet' => 'eicon-device-tablet',
-				'tablet_extra' => 'eicon-device-tablet eicon-tilted',
-				'laptop' => 'eicon-device-laptop',
-				'desktop' => 'eicon-device-desktop',
-				'widescreen' => 'eicon-device-wide',
+				'mobile' => 'rficon-device-mobile',
+				'mobile_extra' => 'rficon-device-mobile rficon-tilted',
+				'tablet' => 'rficon-device-tablet',
+				'tablet_extra' => 'rficon-device-tablet rficon-tilted',
+				'laptop' => 'rficon-device-laptop',
+				'desktop' => 'rficon-device-desktop',
+				'widescreen' => 'rficon-device-wide',
 			];
 		}
 

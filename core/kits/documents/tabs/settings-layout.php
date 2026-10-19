@@ -29,7 +29,7 @@ class Settings_Layout extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-layout-settings';
+		return 'rficon-layout-settings';
 	}
 
 	public function get_help_url() {

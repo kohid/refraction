@@ -44,7 +44,7 @@ class Nested_Accordion extends Widget_Nested_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-accordion';
+		return 'rficon-accordion';
 	}
 
 	public function get_keywords() {
@@ -180,19 +180,19 @@ class Nested_Accordion extends Widget_Nested_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-flex eicon-align-start-h',
+						'icon' => 'rficon-flex rficon-align-start-h',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-flex eicon-align-end-h',
+						'icon' => 'rficon-flex rficon-align-end-h',
 					],
 					'stretch' => [
 						'title' => esc_html__( 'Stretch', 'refraction' ),
-						'icon' => 'eicon-h-align-stretch',
+						'icon' => 'rficon-h-align-stretch',
 					],
 				],
 				'selectors_dictionary' => [
@@ -224,11 +224,11 @@ class Nested_Accordion extends Widget_Nested_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'selectors_dictionary' => [

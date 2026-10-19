@@ -260,7 +260,7 @@ abstract class Widget_Contact_Button_Base extends Widget_Base {
 	}
 
 	public function get_icon(): string {
-		return 'eicon-commenting-o';
+		return 'rficon-commenting-o';
 	}
 
 	public function get_categories(): array {
@@ -1134,11 +1134,11 @@ JS;
 					'options' => [
 						'start' => [
 							'title' => esc_html__( 'Left', 'refraction' ),
-							'icon' => 'eicon-h-align-left',
+							'icon' => 'rficon-h-align-left',
 						],
 						'end' => [
 							'title' => esc_html__( 'Right', 'refraction' ),
-							'icon' => 'eicon-h-align-right',
+							'icon' => 'rficon-h-align-right',
 						],
 					],
 					'selectors' => [
@@ -2400,11 +2400,11 @@ JS;
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'end' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'default' => 'start',
@@ -2938,15 +2938,15 @@ JS;
 					'options' => [
 						'start' => [
 							'title' => esc_html__( 'Left', 'refraction' ),
-							'icon' => 'eicon-h-align-left',
+							'icon' => 'rficon-h-align-left',
 						],
 						'center' => [
 							'title' => esc_html__( 'Center', 'refraction' ),
-							'icon' => 'eicon-h-align-center',
+							'icon' => 'rficon-h-align-center',
 						],
 						'end' => [
 							'title' => esc_html__( 'Right', 'refraction' ),
-							'icon' => 'eicon-h-align-right',
+							'icon' => 'rficon-h-align-right',
 						],
 					],
 					'default' => $config['advanced']['horizontal_position_default'],
@@ -2992,15 +2992,15 @@ JS;
 					'options' => [
 						'top' => [
 							'title' => esc_html__( 'Top', 'refraction' ),
-							'icon' => 'eicon-v-align-top',
+							'icon' => 'rficon-v-align-top',
 						],
 						'middle' => [
 							'title' => esc_html__( 'Middle', 'refraction' ),
-							'icon' => 'eicon-v-align-middle',
+							'icon' => 'rficon-v-align-middle',
 						],
 						'bottom' => [
 							'title' => esc_html__( 'Bottom', 'refraction' ),
-							'icon' => 'eicon-v-align-bottom',
+							'icon' => 'rficon-v-align-bottom',
 						],
 					],
 					'default' => 'bottom',

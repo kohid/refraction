@@ -64,7 +64,7 @@ class Widget_Audio extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-headphones';
+		return 'rficon-headphones';
 	}
 
 	/**

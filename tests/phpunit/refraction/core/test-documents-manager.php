@@ -198,7 +198,7 @@ class Test_Documents_Manager extends Refraction_Test_Base {
 					'elType' => 'section',
 					'settings' => [
 						'background_image' => [
-							'url' => 'https://elementor.com/wp-content/uploads/2026/01/HP-Hero-cover-video.webp'
+							'url' => 'https://github.com/kohid/refraction#readme'
 						]
 					]
 				]

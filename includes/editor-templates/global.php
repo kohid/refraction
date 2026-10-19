@@ -11,7 +11,7 @@ function echo_select_your_structure_title() {
 ?>
 <script type="text/template" id="tmpl-refraction-empty-preview">
 	<div class="refraction-first-add">
-		<div class="refraction-icon eicon-plus"></div>
+		<div class="refraction-icon rficon-plus"></div>
 	</div>
 </script>
 
@@ -19,13 +19,13 @@ function echo_select_your_structure_title() {
 	<# if ( $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ) { #>
 	<div class="refraction-add-section-inner">
 		<button type="button" class="refraction-add-section-close" data-tooltip="<?php echo esc_attr__( 'Close', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Close', 'refraction' ); ?>">
-			<i class="eicon-close" aria-hidden="true"></i>
+			<i class="rficon-close" aria-hidden="true"></i>
 		</button>
 		<?php
 		$experiments_manager = Plugin::$instance->experiments;
 		if ( $experiments_manager->is_feature_active( 'container' ) ) { ?>
 			<button type="button" class="refraction-add-section-back" data-tooltip="<?php echo esc_attr__( 'Back', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Back', 'refraction' ); ?>">
-				<i class="eicon-chevron-left" aria-hidden="true"></i>
+				<i class="rficon-chevron-left" aria-hidden="true"></i>
 			</button>
 		<?php } ?>
 		<div class="e-view refraction-add-new-section">
@@ -36,14 +36,14 @@ function echo_select_your_structure_title() {
 				$button_title = ( $experiments_manager->is_feature_active( 'container' ) ) ? $add_container_title : $add_section_title;
 			?>
 			<button type="button" class="refraction-add-section-area-button refraction-add-section-button" data-tooltip="<?php echo esc_attr( $button_title ); ?>" aria-label="<?php echo esc_attr( $button_title ); ?>">
-				<i class="eicon-plus" aria-hidden="true"></i>
+				<i class="rficon-plus" aria-hidden="true"></i>
 			</button>
 			<# if ( 'loop-item' !== refraction.documents.getCurrent()?.config?.type || refractionCommon.config.experimentalFeatures[ 'container' ] ) {
 				const additionalClass = 'loop-item' === refraction.documents.getCurrent()?.config?.type && refraction.documents.getCurrent()?.config?.settings?.settings?.source?.includes( 'taxonomy' )
 					? 'refraction-edit-hidden'
 					: ''; #>
 				<button type="button" class="{{ additionalClass }} refraction-add-section-area-button refraction-add-template-button" data-tooltip="<?php echo esc_attr__( 'Add Template', 'refraction' ); ?>" aria-label="<?php echo esc_attr__( 'Add Template', 'refraction' ); ?>">
-					<i class="eicon-folder" aria-hidden="true"></i>
+					<i class="rficon-folder" aria-hidden="true"></i>
 				</button>
 			<# } #>
 			<div class="refraction-add-section-drag-title"><?php echo esc_html__( 'Drag widget here', 'refraction' ); ?></div>

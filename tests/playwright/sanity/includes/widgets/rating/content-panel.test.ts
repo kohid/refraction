@@ -36,7 +36,7 @@ iconExperimentStates.forEach( ( iconExperimentState ) => {
 			} );
 
 			await test.step( 'Icon Alignment Center', async () => {
-				await editor.setChooseControlValue( 'icon_alignment', 'eicon-align-center-h' );
+				await editor.setChooseControlValue( 'icon_alignment', 'rficon-align-center-h' );
 				await editor.togglePreviewMode();
 
 				expect.soft( await editor.getPreviewFrame().locator( '.e-rating' ).screenshot( {
@@ -47,7 +47,7 @@ iconExperimentStates.forEach( ( iconExperimentState ) => {
 			} );
 
 			await test.step( 'Icon Alignment End', async () => {
-				await editor.setChooseControlValue( 'icon_alignment', 'eicon-align-end-h' );
+				await editor.setChooseControlValue( 'icon_alignment', 'rficon-align-end-h' );
 				await editor.togglePreviewMode();
 
 				expect.soft( await editor.getPreviewFrame().locator( '.e-rating' ).screenshot( {

@@ -7,9 +7,9 @@ import Grid from 'refraction-app/ui/grid/grid';
 import './notice.scss';
 
 const iconsClassesMap = {
-	danger: 'eicon-warning',
-	info: 'eicon-info-circle-o',
-	warning: 'eicon-warning',
+	danger: 'rficon-warning',
+	info: 'rficon-info-circle-o',
+	warning: 'rficon-warning',
 };
 
 export default function Notice( props ) {

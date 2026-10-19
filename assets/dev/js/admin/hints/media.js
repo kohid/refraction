@@ -26,7 +26,7 @@
 				</div>
 			</div>
 			<button class="refraction-control-notice-dismiss" data-event="<%= dismissible %>" aria-label="<%= dismiss %>">
-				<i class="eicon eicon-close" aria-hidden="true"></i>
+				<i class="rficon rficon-close" aria-hidden="true"></i>
 			</button>
 		</div>
 	</div>`,

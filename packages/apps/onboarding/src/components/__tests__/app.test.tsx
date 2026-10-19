@@ -83,10 +83,10 @@ const defaultConfig: OnboardingConfig = {
 		editor: 'https://test.local/editor',
 		connect: 'https://test.local/connect',
 		signUp: 'https://test.local/sign-up',
-		comparePlans: 'https://elementor.com/pricing/?utm_source=onboarding&utm_medium=wp-dash',
+		comparePlans: 'https://github.com/kohid/refraction#readme',
 		createNewPage: 'https://test.local/wp-admin/edit.php?action=refraction_new_post&post_type=page',
 		upgradeUrl:
-			'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar&utm_term=2.0.0',
+			'https://github.com/kohid/refraction#readme',
 	},
 };
 
@@ -481,7 +481,7 @@ describe( 'App', () => {
 
 			// Assert
 			expect( mockOpen ).toHaveBeenCalledWith(
-				'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar&utm_term=2.0.0',
+				'https://github.com/kohid/refraction#readme',
 				'_blank'
 			);
 		} );
@@ -498,7 +498,7 @@ describe( 'App', () => {
 			fireEvent.click( screen.getByText( 'Upgrade' ) );
 
 			expect( mockOpen ).toHaveBeenCalledWith(
-				'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar&utm_term=2.0.0',
+				'https://github.com/kohid/refraction#readme',
 				'_blank'
 			);
 		} );

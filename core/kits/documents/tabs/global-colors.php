@@ -29,7 +29,7 @@ class Global_Colors extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-global-colors';
+		return 'rficon-global-colors';
 	}
 
 	public function get_help_url() {

@@ -48,7 +48,7 @@ test.describe( 'Container tests #2 @container', () => {
 
 		// Act.
 		const containerId = await editor.addElement( { elType: 'container' }, 'document' );
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 
 		await editor.addWidget( { widgetType: widgets.button, container: containerId } );
 		await editor.addWidget( { widgetType: widgets.heading, container: containerId } );
@@ -79,8 +79,8 @@ test.describe( 'Container tests #2 @container', () => {
 		for ( const [ index, container ] of Object.entries( containers ) ) {
 			containers[ index ].id = await editor.addElement( { elType: 'container' }, 'document' );
 			await editor.setSelectControlValue( 'container_type', 'grid' );
-			await editor.setChooseControlValue( 'grid_justify_items', `eicon-align-${ container.setting }-h` );
-			await editor.setChooseControlValue( 'grid_align_items', `eicon-align-${ container.setting }-v` );
+			await editor.setChooseControlValue( 'grid_justify_items', `rficon-align-${ container.setting }-h` );
+			await editor.setChooseControlValue( 'grid_align_items', `rficon-align-${ container.setting }-v` );
 		}
 
 		// Assert - Check container settings are set as expected in the editor.
@@ -198,11 +198,11 @@ test.describe( 'Container tests #2 @container', () => {
 } );
 
 async function toggleResponsiveControl( page: Page, justifyControlsClass: string, breakpoints: string[], i: number ) {
-	await page.click( `${ justifyControlsClass } .eicon-device-${ breakpoints[ i ] }` );
+	await page.click( `${ justifyControlsClass } .rficon-device-${ breakpoints[ i ] }` );
 	if ( i < breakpoints.length - 1 ) {
-		await page.click( `${ justifyControlsClass } .eicon-device-${ breakpoints[ i + 1 ] }` );
+		await page.click( `${ justifyControlsClass } .rficon-device-${ breakpoints[ i + 1 ] }` );
 	} else {
-		await page.click( `${ justifyControlsClass } .eicon-device-${ breakpoints[ 0 ] }` );
+		await page.click( `${ justifyControlsClass } .rficon-device-${ breakpoints[ 0 ] }` );
 	}
 }
 
@@ -213,7 +213,7 @@ async function captureJustifySnapShot(
 	direction: string,
 	page: Page,
 	snapshotPrefix: string ) {
-	await editor.page.click( `.refraction-control-responsive-${ breakpoints[ i ] } .eicon-arrow-${ direction }` );
+	await editor.page.click( `.refraction-control-responsive-${ breakpoints[ i ] } .rficon-arrow-${ direction }` );
 
 	const justifyControlsClass = `.refraction-group-control-justify_content.refraction-control-responsive-${ breakpoints[ i ] }`;
 	const justifyControlsContent = await page.$( `${ justifyControlsClass } .refraction-control-content ` );

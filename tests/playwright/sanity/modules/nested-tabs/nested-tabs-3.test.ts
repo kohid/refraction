@@ -18,7 +18,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Act.
 		// Set Direction: Left.
 		await editor.openPanelTab( 'content' );
-		await editor.setChooseControlValue( 'tabs_direction', 'eicon-h-align-left' );
+		await editor.setChooseControlValue( 'tabs_direction', 'rficon-h-align-left' );
 		// Get the initial first tab width.
 		await editor.getPreviewFrame().locator( '.e-n-tab-title:first-child' ).click();
 		await editor.getPreviewFrame().waitForSelector( '.e-n-tab-title[aria-selected="true"]' );
@@ -224,7 +224,7 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 		// Set container direction to `row`.
 		await editor.selectElement( container );
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-left' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-left' );
 
 		// Assert
 		// Get content container widths.

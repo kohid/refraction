@@ -95,7 +95,7 @@ export default class extends refractionModules.Module {
 					name: 'recommended',
 					label: 'Recommended',
 					icons: iconManagerConfig.recommended,
-					labelIcon: 'eicon-star-o',
+					labelIcon: 'rficon-star-o',
 					native: true,
 				} );
 			}

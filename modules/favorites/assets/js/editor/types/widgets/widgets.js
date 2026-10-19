@@ -129,8 +129,8 @@ export default class Widgets extends FavoriteType {
 					{
 						name: 'toggle',
 						icon: this.isFavorite( widget )
-							? 'eicon-heart-o'
-							: 'eicon-heart',
+							? 'rficon-heart-o'
+							: 'rficon-heart',
 						title: this.isFavorite( widget )
 							? __( 'Remove from Favorites', 'refraction' )
 							: __( 'Add to Favorites', 'refraction' ),

@@ -12,8 +12,8 @@ describe( 'getElementIcon', () => {
 	beforeEach( () => {
 		eWindow.refraction = {
 			widgetsCache: {
-				'test-widget': { title: 'Widget Type Title', icon: 'eicon-t-letter' } as never,
-				'test-container': { title: 'Container', icon: 'eicon-container' } as never,
+				'test-widget': { title: 'Widget Type Title', icon: 'rficon-t-letter' } as never,
+				'test-container': { title: 'Container', icon: 'rficon-container' } as never,
 				'no-icon-widget': { title: 'No Icon Widget' } as never,
 			},
 		};
@@ -31,7 +31,7 @@ describe( 'getElementIcon', () => {
 		const icon = getElementIcon( 'test-id' );
 
 		// Assert.
-		expect( icon ).toBe( 'eicon-t-letter' );
+		expect( icon ).toBe( 'rficon-t-letter' );
 	} );
 
 	it( 'should return icon from widgetsCache when element has elType (non-widget)', () => {
@@ -46,7 +46,7 @@ describe( 'getElementIcon', () => {
 		const icon = getElementIcon( 'test-id' );
 
 		// Assert.
-		expect( icon ).toBe( 'eicon-container' );
+		expect( icon ).toBe( 'rficon-container' );
 	} );
 
 	it( 'should return null when element does not exist', () => {

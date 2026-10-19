@@ -42,7 +42,7 @@ type CreateWidgetModalProps = {
 
 const CREATE_WIDGET_EVENT = 'refraction/editor/create-widget';
 const ANGIE_MODAL_PROMOTION_IMAGE_URL =
-	'https://assets.elementor.com/packages/v1/images/angie-top-bar-promotion-modal-0926.png';
+	'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E';
 const ANGIE_CTA_CLICKED_EVENT = 'ai_widget_cta_clicked' as const;
 const ANGIE_INSTALL_STARTED_EVENT = 'angie_install_started' as const;
 const ANGIE_INSTALL_COMPLETED_EVENT = 'angie_install_completed' as const;
@@ -171,11 +171,11 @@ function CreateWidgetModal( { prompt, entryPoint, onClose }: CreateWidgetModalPr
 													{
 														terms: {
 															label: __( 'Terms', 'refraction' ),
-															href: 'https://elementor.com/terms/angie-terms-conditions/',
+															href: 'https://github.com/kohid/refraction#readme',
 														},
 														privacy: {
 															label: __( 'Privacy Policy', 'refraction' ),
-															href: 'https://elementor.com/about/privacy/',
+															href: 'https://github.com/kohid/refraction#readme',
 														},
 													}
 												) }

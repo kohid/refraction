@@ -54,7 +54,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		// Arrange 2.
 		const listItem = page.locator( '.refraction-repeater-fields' ).nth( 4 ).locator( '.refraction-control-input-wrapper' ).nth( 1 );
-		const remove = listItem.locator( '.eicon-trash-o' );
+		const remove = listItem.locator( '.rficon-trash-o' );
 
 		// Act 2 - Click on remove.
 		await listItem.hover();
@@ -80,7 +80,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 
 		// Arrange 2.
 		const listItem = page.locator( '.refraction-control-custom_typography .refraction-repeater-fields' ).last().locator( '.refraction-control-input-wrapper' ).nth( 1 );
-		const remove = listItem.locator( '.eicon-trash-o' );
+		const remove = listItem.locator( '.rficon-trash-o' );
 
 		// Act 2 - Click on remove.
 		await listItem.hover();
@@ -111,7 +111,7 @@ test.describe( 'Styleguide Preview tests @styleguide_image_link', () => {
 		const { editor } = await getInSettingsTab( page, testInfo, apiRequests, 'global-typography', true );
 
 		const textFont = editor.getPreviewFrame().getByText( 'Text' + fontsContentText );
-		const picker = page.locator( '.refraction-repeater-fields' ).nth( 2 ).locator( '.eicon-edit' ).first();
+		const picker = page.locator( '.refraction-repeater-fields' ).nth( 2 ).locator( '.rficon-edit' ).first();
 
 		// Act.
 		await picker.click();

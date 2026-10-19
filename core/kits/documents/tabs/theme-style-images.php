@@ -26,7 +26,7 @@ class Theme_Style_Images extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-image';
+		return 'rficon-image';
 	}
 
 	public function get_help_url() {

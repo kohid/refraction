@@ -31,19 +31,19 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 			'options' => [
 				'row' => [
 					'title' => esc_html__( 'Row - horizontal', 'refraction' ),
-					'icon' => 'eicon-arrow-' . $end,
+					'icon' => 'rficon-arrow-' . $end,
 				],
 				'column' => [
 					'title' => esc_html__( 'Column - vertical', 'refraction' ),
-					'icon' => 'eicon-arrow-down',
+					'icon' => 'rficon-arrow-down',
 				],
 				'row-reverse' => [
 					'title' => esc_html__( 'Row - reversed', 'refraction' ),
-					'icon' => 'eicon-arrow-' . $start,
+					'icon' => 'rficon-arrow-' . $start,
 				],
 				'column-reverse' => [
 					'title' => esc_html__( 'Column - reversed', 'refraction' ),
-					'icon' => 'eicon-arrow-up',
+					'icon' => 'rficon-arrow-up',
 				],
 			],
 			'default' => '',
@@ -95,27 +95,27 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 			'options' => [
 				'flex-start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-flex eicon-justify-start-h',
+					'icon' => 'rficon-flex rficon-justify-start-h',
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-flex eicon-justify-center-h',
+					'icon' => 'rficon-flex rficon-justify-center-h',
 				],
 				'flex-end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-flex eicon-justify-end-h',
+					'icon' => 'rficon-flex rficon-justify-end-h',
 				],
 				'space-between' => [
 					'title' => esc_html__( 'Space Between', 'refraction' ),
-					'icon' => 'eicon-flex eicon-justify-space-between-h',
+					'icon' => 'rficon-flex rficon-justify-space-between-h',
 				],
 				'space-around' => [
 					'title' => esc_html__( 'Space Around', 'refraction' ),
-					'icon' => 'eicon-flex eicon-justify-space-around-h',
+					'icon' => 'rficon-flex rficon-justify-space-around-h',
 				],
 				'space-evenly' => [
 					'title' => esc_html__( 'Space Evenly', 'refraction' ),
-					'icon' => 'eicon-flex eicon-justify-space-evenly-h',
+					'icon' => 'rficon-flex rficon-justify-space-evenly-h',
 				],
 			],
 			'selectors' => [
@@ -131,19 +131,19 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 			'options' => [
 				'flex-start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-start-v',
+					'icon' => 'rficon-flex rficon-align-start-v',
 				],
 				'center' => [
 					'title' => esc_html__( 'Center', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-center-v',
+					'icon' => 'rficon-flex rficon-align-center-v',
 				],
 				'flex-end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-end-v',
+					'icon' => 'rficon-flex rficon-align-end-v',
 				],
 				'stretch' => [
 					'title' => esc_html__( 'Stretch', 'refraction' ),
-					'icon' => 'eicon-flex eicon-align-stretch-v',
+					'icon' => 'rficon-flex rficon-align-stretch-v',
 				],
 			],
 			'selectors' => [
@@ -185,11 +185,11 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 			'options' => [
 				'nowrap' => [
 					'title' => esc_html__( 'No Wrap', 'refraction' ),
-					'icon' => 'eicon-flex eicon-nowrap',
+					'icon' => 'rficon-flex rficon-nowrap',
 				],
 				'wrap' => [
 					'title' => esc_html__( 'Wrap', 'refraction' ),
-					'icon' => 'eicon-flex eicon-wrap',
+					'icon' => 'rficon-flex rficon-wrap',
 				],
 			],
 			'description' => esc_html__( 'Items within the container can stay in a single line (No wrap), or break into multiple lines (Wrap).', 'refraction' ),
@@ -208,27 +208,27 @@ class Group_Control_Flex_Container extends Group_Control_Base {
 			'options' => [
 				'flex-start' => [
 					'title' => esc_html__( 'Start', 'refraction' ),
-					'icon' => 'eicon-justify-start-v',
+					'icon' => 'rficon-justify-start-v',
 				],
 				'center' => [
 					'title' => esc_html__( 'Middle', 'refraction' ),
-					'icon' => 'eicon-justify-center-v',
+					'icon' => 'rficon-justify-center-v',
 				],
 				'flex-end' => [
 					'title' => esc_html__( 'End', 'refraction' ),
-					'icon' => 'eicon-justify-end-v',
+					'icon' => 'rficon-justify-end-v',
 				],
 				'space-between' => [
 					'title' => esc_html__( 'Space Between', 'refraction' ),
-					'icon' => 'eicon-justify-space-between-v',
+					'icon' => 'rficon-justify-space-between-v',
 				],
 				'space-around' => [
 					'title' => esc_html__( 'Space Around', 'refraction' ),
-					'icon' => 'eicon-justify-space-around-v',
+					'icon' => 'rficon-justify-space-around-v',
 				],
 				'space-evenly' => [
 					'title' => esc_html__( 'Space Evenly', 'refraction' ),
-					'icon' => 'eicon-justify-space-evenly-v',
+					'icon' => 'rficon-justify-space-evenly-v',
 				],
 			],
 			'selectors' => [

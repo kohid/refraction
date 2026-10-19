@@ -43,19 +43,19 @@ module.exports = refractionModules.ViewModule.extend( {
 					slidesWrapper: 'swiper-wrapper',
 					prevButton: 'refraction-swiper-button refraction-swiper-button-prev',
 					nextButton: 'refraction-swiper-button refraction-swiper-button-next',
-					prevButtonIcon: 'eicon-chevron-left',
-					nextButtonIcon: 'eicon-chevron-right',
+					prevButtonIcon: 'rficon-chevron-left',
+					nextButtonIcon: 'rficon-chevron-right',
 					slide: 'swiper-slide',
 					header: 'refraction-slideshow__header',
 					footer: 'refraction-slideshow__footer',
 					title: 'refraction-slideshow__title',
 					description: 'refraction-slideshow__description',
 					counter: 'refraction-slideshow__counter',
-					iconExpand: 'eicon-frame-expand',
-					iconShrink: 'eicon-frame-minimize',
-					iconZoomIn: 'eicon-zoom-in-bold',
-					iconZoomOut: 'eicon-zoom-out-bold',
-					iconShare: 'eicon-share-arrow',
+					iconExpand: 'rficon-frame-expand',
+					iconShrink: 'rficon-frame-minimize',
+					iconZoomIn: 'rficon-zoom-in-bold',
+					iconZoomOut: 'rficon-zoom-out-bold',
+					iconShare: 'rficon-share-arrow',
 					shareMenu: 'refraction-slideshow__share-menu',
 					shareLinks: 'refraction-slideshow__share-links',
 					hideUiVisibility: 'refraction-slideshow--ui-hidden',
@@ -95,11 +95,11 @@ module.exports = refractionModules.ViewModule.extend( {
 	initModal() {
 		const closeIcon = {};
 
-		// If the experiment is active the closeIcon should be an entire SVG element otherwise it should pass the eicon class name.
+		// If the experiment is active the closeIcon should be an entire SVG element otherwise it should pass the rficon class name.
 		if ( this.isFontIconSvgExperiment ) {
 			closeIcon.iconElement = close.element;
 		} else {
-			closeIcon.iconClass = 'eicon-close';
+			closeIcon.iconClass = 'rficon-close';
 		}
 
 		const modal = module.exports.modal = refractionFrontend.getDialogsManager().createWidget( 'lightbox', {
@@ -367,14 +367,14 @@ module.exports = refractionModules.ViewModule.extend( {
 		$.each( socialNetworks, ( key, data ) => {
 			const networkLabel = data.label,
 				$link = $( '<a>', { href: this.createShareLink( key, itemUrl, $activeSlide.attr( 'data-e-action-hash' ) ), target: '_blank' } ).text( networkLabel ),
-				$socialNetworkIconElement = this.isFontIconSvgExperiment ? $( data.iconElement.element ) : $( '<i>', { class: 'eicon-' + key, 'aria-hidden': 'true' } );
+				$socialNetworkIconElement = this.isFontIconSvgExperiment ? $( data.iconElement.element ) : $( '<i>', { class: 'rficon-' + key, 'aria-hidden': 'true' } );
 
 			$link.prepend( $socialNetworkIconElement );
 			$linkList.append( $link );
 		} );
 
 		if ( ! videoUrl ) {
-			const $downloadIcon = this.isFontIconSvgExperiment ? $( downloadBold.element ) : $( '<i>', { class: 'eicon-download-bold' } );
+			const $downloadIcon = this.isFontIconSvgExperiment ? $( downloadBold.element ) : $( '<i>', { class: 'rficon-download-bold' } );
 
 			$downloadIcon.attr( 'aria-label', i18n.download );
 

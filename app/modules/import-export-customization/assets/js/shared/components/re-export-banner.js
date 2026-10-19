@@ -23,13 +23,13 @@ export function ReExportBanner() {
 						gap: '5px',
 					} }
 				>
-					<Box component="i" className="eicon-info-circle" />
+					<Box component="i" className="rficon-info-circle" />
 					<Typography variant="body2">
 						{ __( 'This website template was exported from an older version of Refraction. If possible, re-export it with the latest version for better capabilities.', 'refraction' ) }
 					</Typography>
 				</Stack>
 				<Link
-					href="http://go.elementor.com/app-import-export-errors-old-kits"
+					href="https://github.com/kohid/refraction/issues"
 					variant="body2"
 					color="info.light"
 					underline="hover"

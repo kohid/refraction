@@ -42,7 +42,7 @@ export default class GlobalColorIntroduction {
 				message: sprintf(
 					// eslint-disable-next-line @wordpress/i18n-translator-comments
 					__( 'Save time by applying Global Colors to change the style of multiple elements at once. Click %s to see what Global Colors you already have.', 'refraction' ),
-					"<i class='eicon-globe'></i>",
+					"<i class='rficon-globe'></i>",
 				),
 				position: {
 					my: ( refractionCommon.config.isRTL ? 'left' : 'right' ) + '0 top0',

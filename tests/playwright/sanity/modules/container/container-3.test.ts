@@ -22,8 +22,8 @@ test.describe( 'Container tests #3 @container', () => {
 
 		// Act.
 		const container = await editor.addElement( { elType: 'container' }, 'document' );
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
-		await editor.setChooseControlValue( 'flex_wrap', 'eicon-wrap' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
+		await editor.setChooseControlValue( 'flex_wrap', 'rficon-wrap' );
 
 		await editor.addWidget( { widgetType: 'divider', container } );
 		await editor.setWidgetCustomWidth( '80' );
@@ -32,7 +32,7 @@ test.describe( 'Container tests #3 @container', () => {
 		await editor.getPreviewFrame().waitForSelector( '.refraction-widget-google_maps iframe' );
 		await editor.hideMapControls();
 		await editor.setWidgetCustomWidth( '40' );
-		await editor.setChooseControlValue( '_flex_size', 'eicon-grow' );
+		await editor.setChooseControlValue( '_flex_size', 'rficon-grow' );
 		await editor.setWidgetMask();
 
 		await editor.addWidget( { widgetType: 'video', container } );
@@ -53,7 +53,7 @@ test.describe( 'Container tests #3 @container', () => {
 		// Duplicate carousel widget.
 		await contextMenu.selectWidgetContextMenuItem( 'image-carousel', 'Duplicate' );
 		await editor.openPanelTab( 'advanced' );
-		await editor.setChooseControlValue( '_flex_size', 'eicon-grow' );
+		await editor.setChooseControlValue( '_flex_size', 'rficon-grow' );
 
 		// Hide editor and map controls.
 		await editor.togglePreviewMode();
@@ -96,15 +96,15 @@ test.describe( 'Container tests #3 @container', () => {
 		const containerId = await editor.addElement( { elType: 'container' }, 'document' );
 		await editor.setSliderControlValue( 'min_height', '200' );
 		await editor.openPanelTab( 'style' );
-		await editor.setChooseControlValue( 'background_background', 'eicon-video-camera' );
+		await editor.setChooseControlValue( 'background_background', 'rficon-video-camera' );
 		await editor.setTextControlValue( 'background_video_link', videoURL );
-		await page.locator( '.refraction-control-background_video_fallback .eicon-plus-circle' ).click();
+		await page.locator( '.refraction-control-background_video_fallback .rficon-plus-circle' ).click();
 		await page.locator( '#menu-item-browse' ).click();
 		await page.setInputFiles( 'input[type="file"]', './tests/playwright/resources/mountain-image.jpeg' );
 		await page.waitForLoadState( 'networkidle' );
 		await page.click( '.button.media-button' );
 		await editor.openSection( 'section_background_overlay' );
-		await editor.setChooseControlValue( 'background_overlay_background', 'eicon-paint-brush' );
+		await editor.setChooseControlValue( 'background_overlay_background', 'rficon-paint-brush' );
 		await editor.setColorControlValue( 'background_overlay_color', '#61CE70' );
 		await editor.togglePreviewMode();
 
@@ -147,13 +147,13 @@ test.describe( 'Container tests #3 @container', () => {
 
 		// Assert.
 		const containerId = await editor.addElement( { elType: 'container' }, 'document' );
-		await editor.setChooseControlValue( 'flex_align_items', 'eicon-align-center-v' );
+		await editor.setChooseControlValue( 'flex_align_items', 'rficon-align-center-v' );
 		await editor.hideEditorElements();
 		await editor.addWidget( { widgetType: 'spacer', container: containerId } );
 		await editor.openPanelTab( 'advanced' );
 		await editor.setWidgetCustomWidth( '20' );
 		await editor.openSection( '_section_background' );
-		await editor.setChooseControlValue( '_background_background', 'eicon-paint-brush' );
+		await editor.setChooseControlValue( '_background_background', 'rficon-paint-brush' );
 		await editor.setColorControlValue( '_background_color', '#A81830' );
 
 		// Assert.

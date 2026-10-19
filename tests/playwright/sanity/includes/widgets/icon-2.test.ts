@@ -37,7 +37,7 @@ test.describe( 'Icon widget tests', () => {
 
 	test( 'Icon widget wrapping HTML tag', async ( { page, apiRequests }, testInfo ) => {
 		// Arrange.
-		const testUrl = 'https://elementor.com/';
+		const testUrl = 'https://github.com/kohid/refraction#readme';
 		const wpAdmin = new WpAdminPage( page, testInfo, apiRequests );
 		const editor = new EditorPage( page, testInfo );
 

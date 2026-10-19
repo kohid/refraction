@@ -61,9 +61,9 @@ const DEFAULT_STEPS = [ { id: 'site_features', label: 'Site features', type: 'mu
 export const PRO_ONBOARDING_STEPS = [ { id: 'theme_selection', label: 'Theme selection', type: 'single' as const } ];
 
 export const DEFAULT_TEST_URLS = {
-	comparePlans: 'https://elementor.com/pricing/?utm_source=onboarding&utm_medium=wp-dash',
+	comparePlans: 'https://github.com/kohid/refraction#readme',
 	upgradeUrl:
-		'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar&utm_term=2.0.0',
+		'https://github.com/kohid/refraction#readme',
 } as const;
 
 const defaultConfig: OnboardingConfig = {

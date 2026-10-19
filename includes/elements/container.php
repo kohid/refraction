@@ -78,7 +78,7 @@ class Container extends Element_Base {
 	 * @return string
 	 */
 	public function get_icon() {
-		return 'eicon-container';
+		return 'rficon-container';
 	}
 
 	public function get_keywords() {
@@ -94,7 +94,7 @@ class Container extends Element_Base {
 						'container_type' => [ 'default' => 'grid' ],
 					],
 					'title' => esc_html__( 'Grid', 'refraction' ),
-					'icon' => 'eicon-container-grid',
+					'icon' => 'rficon-container-grid',
 					'custom' => [
 						'isPreset' => true,
 						'originalWidget' => $this->get_name(),
@@ -102,7 +102,7 @@ class Container extends Element_Base {
 						'preset_settings' => [
 							'container_type' => 'grid',
 							'presetTitle' => esc_html__( 'Grid', 'refraction' ),
-							'presetIcon' => 'eicon-container-grid',
+							'presetIcon' => 'rficon-container-grid',
 						],
 					],
 				],
@@ -1563,11 +1563,11 @@ class Container extends Element_Base {
 				'options' => [
 					'start' => [
 						'title' => $start,
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'end' => [
 						'title' => $end,
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'classes' => 'refraction-control-start-end',
@@ -1664,11 +1664,11 @@ class Container extends Element_Base {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Top', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'end' => [
 						'title' => esc_html__( 'Bottom', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'render_type' => 'ui',

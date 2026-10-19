@@ -75,7 +75,7 @@ abstract class Widget_Base extends Element_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-apps';
+		return 'rficon-apps';
 	}
 
 	/**

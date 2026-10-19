@@ -106,7 +106,7 @@ export default class extends RepeaterRow {
 			className: 'e-global__confirm-delete',
 			/* Translators: %s: Font/Color. */
 			headerMessage: sprintf( __( 'Delete Global %s', 'refraction' ), globalTypeTranslatedCapitalized ),
-			message: '<i class="eicon-info-circle"></i> ' + translatedMessage,
+			message: '<i class="rficon-info-circle"></i> ' + translatedMessage,
 			strings: {
 				confirm: __( 'Delete', 'refraction' ),
 				cancel: __( 'Cancel', 'refraction' ),

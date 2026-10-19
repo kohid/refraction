@@ -149,7 +149,7 @@ describe( 'InlineEditorToolbar', () => {
 			fireEvent.click( linkButton );
 
 			const urlInput = screen.getByPlaceholderText( 'Type a URL' );
-			fireEvent.change( urlInput, { target: { value: 'https://elementor.com' } } );
+			fireEvent.change( urlInput, { target: { value: 'https://github.com/kohid/refraction#readme' } } );
 
 			const newTabButton = screen.getByLabelText( 'Open in a new tab' );
 			fireEvent.click( newTabButton );
@@ -158,7 +158,7 @@ describe( 'InlineEditorToolbar', () => {
 
 			// Assert.
 			expect( mockChain.setLink ).toHaveBeenCalledWith( {
-				href: 'https://elementor.com',
+				href: 'https://github.com/kohid/refraction#readme',
 				target: '_blank',
 			} );
 		} );
@@ -186,7 +186,7 @@ describe( 'InlineEditorToolbar', () => {
 		it( 'should initialize openInNewTab state from existing link attributes', () => {
 			// Arrange.
 			const mockEditor = createMockEditor( {
-				linkAttributes: { href: 'https://elementor.com', target: '_blank' },
+				linkAttributes: { href: 'https://github.com/kohid/refraction#readme', target: '_blank' },
 			} );
 
 			// Act.

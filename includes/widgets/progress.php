@@ -56,7 +56,7 @@ class Widget_Progress extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-skill-bar';
+		return 'rficon-skill-bar';
 	}
 
 	/**

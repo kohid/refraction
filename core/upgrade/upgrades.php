@@ -993,7 +993,7 @@ class Upgrades {
 		}
 
 		$element['settings']['presetTitle'] = 'Grid';
-		$element['settings']['presetIcon'] = 'eicon-container-grid';
+		$element['settings']['presetIcon'] = 'rficon-container-grid';
 
 		return $element;
 	}

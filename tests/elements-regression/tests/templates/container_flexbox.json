@@ -4,7 +4,7 @@
             "id": "261e98fa",
             "settings": {
                 "presetTitle": "Container",
-                "presetIcon": "eicon-container",
+                "presetIcon": "rficon-container",
                 "boxed_width": {
                     "unit": "px",
                     "size": 716,

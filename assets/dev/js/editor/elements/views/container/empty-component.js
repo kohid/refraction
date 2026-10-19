@@ -18,7 +18,7 @@ export default function EmptyComponent( { container } = {} ) {
 
 	return (
 		<div className="refraction-first-add">
-			<div className="refraction-icon eicon-plus" onClick={ handleClick } />
+			<div className="refraction-icon rficon-plus" onClick={ handleClick } />
 		</div>
 	);
 }

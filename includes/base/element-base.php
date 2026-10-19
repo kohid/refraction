@@ -262,7 +262,7 @@ abstract class Element_Base extends Controls_Stack {
 	 * @return string Element icon.
 	 */
 	public function get_icon() {
-		return 'eicon-columns';
+		return 'rficon-columns';
 	}
 
 	public function get_help_url() {
@@ -1258,7 +1258,7 @@ abstract class Element_Base extends Controls_Stack {
 					'options' => [
 						'transform' => [
 							'title' => esc_html__( 'Flip Horizontal', 'refraction' ),
-							'icon' => 'eicon-flip eicon-tilted',
+							'icon' => 'rficon-flip rficon-tilted',
 						],
 					],
 					'prefix_class' => $transform_prefix_class,
@@ -1277,7 +1277,7 @@ abstract class Element_Base extends Controls_Stack {
 					'options' => [
 						'transform' => [
 							'title' => esc_html__( 'Flip Vertical', 'refraction' ),
-							'icon' => 'eicon-flip',
+							'icon' => 'rficon-flip',
 						],
 					],
 					'prefix_class' => $transform_prefix_class,
@@ -1351,15 +1351,15 @@ abstract class Element_Base extends Controls_Stack {
 				'options' => [
 					'left' => [
 						'title' => esc_html__( 'Left', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'rficon-h-align-center',
 					],
 					'right' => [
 						'title' => esc_html__( 'Right', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'conditions' => $transform_origin_conditions,
@@ -1379,15 +1379,15 @@ abstract class Element_Base extends Controls_Stack {
 				'options' => [
 					'top' => [
 						'title' => esc_html__( 'Top', 'refraction' ),
-						'icon' => 'eicon-v-align-top',
+						'icon' => 'rficon-v-align-top',
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'refraction' ),
-						'icon' => 'eicon-v-align-middle',
+						'icon' => 'rficon-v-align-middle',
 					],
 					'bottom' => [
 						'title' => esc_html__( 'Bottom', 'refraction' ),
-						'icon' => 'eicon-v-align-bottom',
+						'icon' => 'rficon-v-align-bottom',
 					],
 				],
 				'conditions' => $transform_origin_conditions,

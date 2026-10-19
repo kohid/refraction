@@ -48,7 +48,7 @@ const includeCurrentValueInOptions = ( value: KeyValuePropValue[ 'value' ], disa
 	} );
 };
 
-const PRO_UPGRADE_URL = 'https://go.elementor.com/go-pro-transitions-modal/';
+const PRO_UPGRADE_URL = 'https://github.com/kohid/refraction#readme';
 
 export const TransitionSelector = ( {
 	recentlyUsedList = [],

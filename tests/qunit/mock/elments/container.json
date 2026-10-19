@@ -2,9 +2,9 @@
 	"name": "container",
 	"elType": "container",
 	"title": "Container",
-	"icon": "eicon-gallery-justified",
+	"icon": "rficon-gallery-justified",
 	"reload_preview": false,
-	"help_url": "https://go.elementor.com/widget-container",
+	"help_url": "https://github.com/kohid/refraction#readme",
 	"controls": {
 		"section_content_container": {
 			"type": "section",
@@ -363,27 +363,27 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-justify-start-v"
+					"icon": "rficon-justify-start-v"
 				},
 				"center": {
 					"title": "Middle",
-					"icon": "eicon-justify-center-v"
+					"icon": "rficon-justify-center-v"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-justify-end-v"
+					"icon": "rficon-justify-end-v"
 				},
 				"space-between": {
 					"title": "Space Between",
-					"icon": "eicon-justify-space-between-v"
+					"icon": "rficon-justify-space-between-v"
 				},
 				"space-around": {
 					"title": "Space Around",
-					"icon": "eicon-justify-space-around-v"
+					"icon": "rficon-justify-space-around-v"
 				},
 				"space-evenly": {
 					"title": "Space Evenly",
-					"icon": "eicon-justify-space-evenly-v"
+					"icon": "rficon-justify-space-evenly-v"
 				}
 			},
 			"selectors": {
@@ -408,27 +408,27 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-justify-start-v"
+					"icon": "rficon-justify-start-v"
 				},
 				"center": {
 					"title": "Middle",
-					"icon": "eicon-justify-center-v"
+					"icon": "rficon-justify-center-v"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-justify-end-v"
+					"icon": "rficon-justify-end-v"
 				},
 				"space-between": {
 					"title": "Space Between",
-					"icon": "eicon-justify-space-between-v"
+					"icon": "rficon-justify-space-between-v"
 				},
 				"space-around": {
 					"title": "Space Around",
-					"icon": "eicon-justify-space-around-v"
+					"icon": "rficon-justify-space-around-v"
 				},
 				"space-evenly": {
 					"title": "Space Evenly",
-					"icon": "eicon-justify-space-evenly-v"
+					"icon": "rficon-justify-space-evenly-v"
 				}
 			},
 			"selectors": {
@@ -453,27 +453,27 @@
 			"options": {
 				"flex-start": {
 					"title": "Start",
-					"icon": "eicon-justify-start-v"
+					"icon": "rficon-justify-start-v"
 				},
 				"center": {
 					"title": "Middle",
-					"icon": "eicon-justify-center-v"
+					"icon": "rficon-justify-center-v"
 				},
 				"flex-end": {
 					"title": "End",
-					"icon": "eicon-justify-end-v"
+					"icon": "rficon-justify-end-v"
 				},
 				"space-between": {
 					"title": "Space Between",
-					"icon": "eicon-justify-space-between-v"
+					"icon": "rficon-justify-space-between-v"
 				},
 				"space-around": {
 					"title": "Space Around",
-					"icon": "eicon-justify-space-around-v"
+					"icon": "rficon-justify-space-around-v"
 				},
 				"space-evenly": {
 					"title": "Space Evenly",
-					"icon": "eicon-justify-space-evenly-v"
+					"icon": "rficon-justify-space-evenly-v"
 				}
 			},
 			"selectors": {
@@ -924,15 +924,15 @@
 			"options": {
 				"classic": {
 					"title": "Classic",
-					"icon": "eicon-paint-brush"
+					"icon": "rficon-paint-brush"
 				},
 				"gradient": {
 					"title": "Gradient",
-					"icon": "eicon-barcode"
+					"icon": "rficon-barcode"
 				},
 				"slideshow": {
 					"title": "Slideshow",
-					"icon": "eicon-slideshow"
+					"icon": "rficon-slideshow"
 				}
 			},
 			"frontend_available": true,

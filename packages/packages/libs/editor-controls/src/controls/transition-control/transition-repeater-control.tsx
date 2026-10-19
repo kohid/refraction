@@ -59,7 +59,7 @@ const areAllPropertiesUsed = ( value: SelectionSizePropValue[] = [] ) => {
 };
 
 // this config needs to be loaded at runtime/render since it's the transitionProperties object will be mutated by the pro plugin.
-// See: https://elementor.atlassian.net/browse/ED-20285
+// See: upstream tracker issue ED-20285
 const getSelectionSizeProps = ( recentlyUsedList: string[], disabledItems?: string[], showPromotion?: boolean ) => {
 	return {
 		selectionLabel: __( 'Type', 'refraction' ),

@@ -49,7 +49,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			container = await editor.addElement( { elType: 'container' }, 'document' ),
 			frame = editor.getPreviewFrame(),
 			accordionWrapper = frame.locator( '.refraction-accordion' ).first(),
-			toggleWidgetInPanel = page.locator( 'i.eicon-toggle' ).first(),
+			toggleWidgetInPanel = page.locator( 'i.rficon-toggle' ).first(),
 			widgetSearchBar = '#refraction-panel-elements-search-wrapper input#refraction-panel-elements-search-input',
 			nestedAccordionItemTitle = frame.locator( '.e-n-accordion-item' ),
 			nestedAccordionItemContent = nestedAccordionItemTitle.locator( '.e-con' );
@@ -98,7 +98,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 
 		await test.step( 'Duplicate an item to the repeater', async () => {
 			// Arrange
-			const duplicateButton = page.locator( '.refraction-repeater-tool-duplicate .eicon-copy' ).first(),
+			const duplicateButton = page.locator( '.refraction-repeater-tool-duplicate .rficon-copy' ).first(),
 				numberOfTitles = await nestedAccordionItemTitle.count(),
 				numberOfContents = await nestedAccordionItemContent.count();
 
@@ -181,7 +181,7 @@ test.describe( 'Nested Accordion tests @nested-accordion', () => {
 			editor = await wpAdmin.openNewPage(),
 			containerId = await editor.addElement( { elType: 'container' }, 'document' );
 
-		await editor.setChooseControlValue( 'flex_direction', 'eicon-arrow-right' );
+		await editor.setChooseControlValue( 'flex_direction', 'rficon-arrow-right' );
 
 		const frame = editor.getPreviewFrame(),
 			nestedAccordionId = await editor.addWidget( { widgetType: 'nested-accordion', container: containerId } ),

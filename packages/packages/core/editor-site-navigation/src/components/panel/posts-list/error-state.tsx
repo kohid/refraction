@@ -34,7 +34,7 @@ export default function ErrorState() {
 					</Typography>
 					<Typography variant="body2" color="text.primary" sx={ { textAlign: 'center' } }>
 						{ __( 'If the problem persists,', 'refraction' ) }{ ' ' }
-						<Link target="_blank" href="https://go.elementor.com/wp-editor-support-open-ticket/">
+						<Link target="_blank" href="https://github.com/kohid/refraction/issues">
 							Notify support
 						</Link>
 					</Typography>

@@ -64,11 +64,11 @@ const TemplateLibraryTemplatesEmptyView = Marionette.ItemView.extend( {
 	},
 
 	getCloudIcon() {
-		return `<i class="eicon-library-cloud-empty" aria-hidden="true" title="Empty Cloud Library"></i>`;
+		return `<i class="rficon-library-cloud-empty" aria-hidden="true" title="Empty Cloud Library"></i>`;
 	},
 
 	getEmptyFolderIcon() {
-		return `<i class="eicon-library-folder-empty" aria-hidden="true" title="Empty folder"></i>`;
+		return `<i class="rficon-library-folder-empty" aria-hidden="true" title="Empty folder"></i>`;
 	},
 
 	getCurrentMode() {

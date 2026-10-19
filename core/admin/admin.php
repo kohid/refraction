@@ -183,11 +183,11 @@ class Admin extends App {
 			<input id="refraction-switch-mode-input" type="hidden" name="_refraction_post_mode" value="<?php echo esc_attr( $document->is_built_with_refraction() ); ?>" />
 			<button id="refraction-switch-mode-button" type="button" class="button button-primary button-hero">
 				<span class="refraction-switch-mode-on">
-					<i class="eicon-wordpress" aria-hidden="true"></i>
+					<i class="rficon-wordpress" aria-hidden="true"></i>
 					<?php echo esc_html__( 'Edit with WordPress', 'refraction' ); ?>
 				</span>
 				<span class="refraction-switch-mode-off">
-					<i class="eicon-refraction-square" aria-hidden="true"></i>
+					<i class="rficon-refraction-square" aria-hidden="true"></i>
 					<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 				</span>
 			</button>
@@ -195,7 +195,7 @@ class Admin extends App {
 		<div id="refraction-editor">
 			<a id="refraction-go-to-edit-page-link" href="<?php echo esc_url( $document->get_edit_url() ); ?>">
 				<div id="refraction-editor-button" class="button button-primary button-hero">
-					<i class="eicon-refraction-square" aria-hidden="true"></i>
+					<i class="rficon-refraction-square" aria-hidden="true"></i>
 					<?php echo esc_html__( 'Edit with Refraction', 'refraction' ); ?>
 				</div>
 				<div class="refraction-loader-wrapper">
@@ -380,7 +380,7 @@ class Admin extends App {
 		<div class="e-overview__header">
 			<?php if ( $show_versions ) { ?>
 				<div class="e-overview__logo">
-					<div class="e-logo-wrapper"><i class="eicon-refraction-circle"></i></div>
+					<div class="e-logo-wrapper"><i class="rficon-refraction-circle"></i></div>
 				</div>
 				<div class="e-overview__versions">
 					<span class="e-overview__version"><?php echo esc_html__( 'Refraction', 'refraction' ); ?> v<?php echo REFRACTION_VERSION; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>

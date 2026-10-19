@@ -17,7 +17,7 @@ class E_Icons extends Base {
 		return [
 			'key' => $icon['value'],
 			'version' => self::LIBRARY_CURRENT_VERSION,
-			'file_path' => REFRACTION_ASSETS_PATH . 'lib/eicons/eicons.json',
+			'file_path' => REFRACTION_ASSETS_PATH . 'lib/rficons/rficons.json',
 			'data' => [
 				'icon_data' => [
 					'name' => $icon['value'],
@@ -32,7 +32,7 @@ class E_Icons extends Base {
 
 		$file_data = json_decode( $this->get_file_data( 'content', $icon_data['library'] ), true );
 
-		$icon_name = str_replace( 'eicon-', '', $icon_data['name'] );
+		$icon_name = str_replace( 'rficon-', '', $icon_data['name'] );
 
 		$svg_data = $file_data[ $icon_name ];
 

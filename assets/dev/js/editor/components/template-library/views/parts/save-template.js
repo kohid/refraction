@@ -30,7 +30,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			localInput: '.source-selections-input.local',
 			cloudInput: '.source-selections-input.cloud',
 			sourceSelectionCheckboxes: '.source-selections-input input[type="checkbox"]',
-			infoIcon: '.source-selections-input.cloud .eicon-info',
+			infoIcon: '.source-selections-input.cloud .rficon-info',
 			connect: '#refraction-template-library-connect__badge',
 			connectBadge: '.source-selections-input.cloud .connect-badge',
 			cloudFormInputs: '.cloud-library-form-inputs',
@@ -538,7 +538,7 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 	addSpinner() {
 		const spinner = new TemplateLibraryTemplateModel( {
 			template_id: LOAD_MORE_ID,
-			title: '<i class="eicon-loading eicon-animation-spin" aria-hidden="true"></i>',
+			title: '<i class="rficon-loading rficon-animation-spin" aria-hidden="true"></i>',
 		} );
 
 		this.folderCollectionView.collection.add( spinner );
@@ -715,8 +715,8 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			: __( 'Upgrade your subscription to access Cloud Templates and reuse saved assets across all your sites.', 'refraction' );
 
 		const goLink = refraction.templates.hasCloudLibraryQuota()
-			? 'https://go.elementor.com/go-pro-cloud-templates-save-to-100-usage-notice'
-			: 'https://go.elementor.com/go-pro-cloud-templates-save-to-free-tooltip/';
+			? 'https://github.com/kohid/refraction#readme'
+			: 'https://github.com/kohid/refraction#readme';
 
 		this.infoTipDialog = refraction.dialogsManager.createWidget( 'buttons', {
 			id: 'refraction-library--infotip__dialog',

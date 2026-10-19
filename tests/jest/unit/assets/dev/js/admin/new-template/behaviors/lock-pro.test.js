@@ -13,7 +13,7 @@ describe( 'New Template - Lock Pro Behavior', () => {
 			},
 			badge: {
 				text: 'pro',
-				icon: 'eicon-lock',
+				icon: 'rficon-lock',
 			},
 		};
 
@@ -59,7 +59,7 @@ describe( 'New Template - Lock Pro Behavior', () => {
 		expect( elements.lockButton.innerText ).toBe( 'Locked' );
 		expect( elements.lockBadge.classList.contains( 'e-hidden' ) ).toBe( false );
 		expect( elements.lockBadgeText.innerText ).toBe( 'pro' );
-		expect( elements.lockBadgeIcon.classList.contains( 'eicon-lock' ) ).toBe( true );
+		expect( elements.lockBadgeIcon.classList.contains( 'rficon-lock' ) ).toBe( true );
 	} );
 
 	it( 'Should lock the UI for locked template type when set to default', () => {

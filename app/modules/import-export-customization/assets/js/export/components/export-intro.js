@@ -8,7 +8,7 @@ export default function ExportIntro() {
 			</Typography>
 			<Typography variant="subtitle1" color="text.secondary">
 				{ __( 'Choose which Refraction components - templates, content and site settings - to include in your website templates file. By default, all of your components will be exported.', 'refraction' ) }{ ' ' }
-				<Link href="https://go.elementor.com/app-what-are-kits" color="info.light" target="_blank" rel="noopener noreferrer">
+				<Link href="https://github.com/kohid/refraction#readme" color="info.light" target="_blank" rel="noopener noreferrer">
 					{ __( 'Learn more', 'refraction' ) }
 				</Link>
 			</Typography>

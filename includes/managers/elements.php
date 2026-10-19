@@ -296,11 +296,11 @@ class Elements_Manager {
 			],
 			'basic' => [
 				'title' => esc_html__( 'Basic', 'refraction' ),
-				'icon' => 'eicon-font',
+				'icon' => 'rficon-font',
 			],
 			'general' => [
 				'title' => esc_html__( 'General', 'refraction' ),
-				'icon' => 'eicon-font',
+				'icon' => 'rficon-font',
 			],
 			'link-in-bio' => [
 				'title' => esc_html__( 'Link In Bio', 'refraction' ),
@@ -312,7 +312,7 @@ class Elements_Manager {
 		$this->categories = array_merge_recursive( [
 			self::CATEGORY_FAVORITES => [
 				'title' => esc_html__( 'Favorites', 'refraction' ),
-				'icon' => 'eicon-heart',
+				'icon' => 'rficon-heart',
 				'sort' => 'a-z',
 				'hideIfEmpty' => false,
 			],

@@ -45,7 +45,7 @@ const SuccessMessage = () => {
 	return (
 		<Card elevation={ 0 } square={ true } className="e-checklist-done">
 			<CardMedia
-				image="https://assets.elementor.com/checklist/v1/images/checklist-step-7.jpg"
+				image="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 160 100%27%3E%3Crect width=%27160%27 height=%27100%27 fill=%27%23f1f3f5%27/%3E%3Cpath d=%27M80 22l22 40H58z%27 fill=%27none%27 stroke=%27%23495057%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E"
 				sx={ { height: 180 } }
 			/>
 			<CardContent sx={ { textAlign: 'center' } }>

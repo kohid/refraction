@@ -138,7 +138,7 @@ export default class extends ControlBaseDataView {
 	}
 
 	getNameAlreadyExistsMessage() {
-		return '<i class="eicon-info-circle"></i> ' + __( 'Please note that the same exact color already exists in your Global Colors list. Are you sure you want to create it?', 'refraction' );
+		return '<i class="rficon-info-circle"></i> ' + __( 'Please note that the same exact color already exists in your Global Colors list. Are you sure you want to create it?', 'refraction' );
 	}
 
 	getConfirmTextMessage() {

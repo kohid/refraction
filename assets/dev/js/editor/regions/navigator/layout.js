@@ -40,7 +40,7 @@ export default class extends Marionette.LayoutView {
 	toggleElements() {
 		const state = 'expand' === this.ui.toggleButton.data( 'refraction-action' ),
 			a11yText = state ? __( 'Collapse all elements', 'refraction' ) : __( 'Expand all elements', 'refraction' ),
-			classes = [ 'eicon-collapse', 'eicon-expand' ];
+			classes = [ 'rficon-collapse', 'rficon-expand' ];
 
 		this.ui.toggleButton
 			.data( 'refraction-action', state ? 'collapse' : 'expand' );

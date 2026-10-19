@@ -458,7 +458,7 @@ class Module extends BaseModule {
 			add_action( "refraction/admin/after_create_settings/{$page_id}", [ $this, 'register_settings_tab' ] );
 		}
 
-		// TODO 18/04/2023 : This needs to be moved to the runner itself after https://elementor.atlassian.net/browse/HTS-434 is done.
+		// TODO 18/04/2023 : This needs to be moved to the runner itself after upstream tracker issue HTS-434 is done.
 		if ( self::IMPORT_PLUGINS_ACTION === RefractionUtils::get_super_global_value( $_SERVER, 'HTTP_X_REFRACTION_ACTION' ) ) {
 			add_filter( 'woocommerce_create_pages', [ $this, 'empty_pages' ], 10, 0 );
 		}
@@ -468,7 +468,7 @@ class Module extends BaseModule {
 	/**
 	 * Prevent the creation of the default WooCommerce pages (Cart, Checkout, etc.)
 	 *
-	 * TODO 18/04/2023 : This needs to be moved to the runner itself after https://elementor.atlassian.net/browse/HTS-434 is done.
+	 * TODO 18/04/2023 : This needs to be moved to the runner itself after upstream tracker issue HTS-434 is done.
 	 *
 	 * @return array
 	 */

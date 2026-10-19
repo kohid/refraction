@@ -101,7 +101,7 @@ ColumnView = BaseElementView.extend( {
 			actions: [
 				{
 					name: 'addNew',
-					icon: 'eicon-plus',
+					icon: 'rficon-plus',
 					title: __( 'Add New Column', 'refraction' ),
 					callback: this.addNewColumn.bind( this ),
 					isEnabled: () => self.model.collection.length < DEFAULT_MAX_COLUMNS && ! refraction.selection.isMultiple(),

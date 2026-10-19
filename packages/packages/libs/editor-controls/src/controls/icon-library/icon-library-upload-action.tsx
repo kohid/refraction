@@ -8,7 +8,7 @@ import { __ } from '@wordpress/i18n';
 
 import { trackUpgradePromotionClick, trackViewPromotion } from '../../utils/tracking';
 
-export const ICON_LIBRARY_UPLOAD_UPGRADE_URL = 'https://go.elementor.com/go-pro-svg-library-upload-upgrade/';
+export const ICON_LIBRARY_UPLOAD_UPGRADE_URL = 'https://github.com/kohid/refraction#readme';
 
 const TRACKING_DATA = { target_name: 'icon_library_upload', location_l2: 'general' } as const;
 

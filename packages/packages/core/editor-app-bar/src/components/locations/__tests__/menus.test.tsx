@@ -52,7 +52,7 @@ describe( 'Menus components', () => {
 			expect( menuItems ).toHaveLength( 3 );
 
 			// Ensure the last one is the link, so the order is correct (`default`, then `exits`).
-			expect( menuItems[ 2 ] ).toHaveAttribute( 'href', 'https://elementor.com' );
+			expect( menuItems[ 2 ] ).toHaveAttribute( 'href', 'https://github.com/kohid/refraction#readme' );
 		} );
 
 		it( 'should render the integrations menu inside the tools menu if there are registered integrations', () => {

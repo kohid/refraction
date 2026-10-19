@@ -90,7 +90,7 @@ export default function KitContent( { contentData, hasPro } ) {
 													isLockedFeaturesNoPro &&
 													<GoProButton
 														className="e-app-export-kit-content__go-pro-button"
-														url="https://go.elementor.com/go-pro-import-export"
+														url="https://github.com/kohid/refraction#readme"
 													/>
 												}
 											</Grid>

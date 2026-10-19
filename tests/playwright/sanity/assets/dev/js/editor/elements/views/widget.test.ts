@@ -51,7 +51,7 @@ test.describe( `$e.run( 'editor/elements/views/widget' )`, () => {
 		await page.waitForTimeout( 500 );
 		await editor.getPreviewFrame().waitForSelector( '.refraction-widget .refraction-widget-empty-icon' );
 
-		const emptyViewPlaceholderCount = await editor.getPreviewFrame().locator( '.refraction-widget-image-box > .refraction-widget-empty-icon.eicon-image-box' ).count();
+		const emptyViewPlaceholderCount = await editor.getPreviewFrame().locator( '.refraction-widget-image-box > .refraction-widget-empty-icon.rficon-image-box' ).count();
 
 		// Assert.
 		expect( emptyViewPlaceholderCount ).toBe( 1 );

@@ -16,7 +16,7 @@ export default function DialogWrapper( props ) {
 						onClick={ props.onClose }
 						text={ __( 'Close', 'refraction' ) }
 						hideText={ true }
-						icon="eicon-close"
+						icon="rficon-close"
 						className="eps-dialog__close-button"
 					/>
 				}

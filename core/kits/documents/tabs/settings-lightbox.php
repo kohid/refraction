@@ -23,7 +23,7 @@ class Settings_Lightbox extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-lightbox-expand';
+		return 'rficon-lightbox-expand';
 	}
 
 	public function get_help_url() {

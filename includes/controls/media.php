@@ -231,7 +231,7 @@ class Control_Media extends Control_Base_Multiple {
 					<div class="refraction-control-media__content refraction-control-tag-area refraction-control-preview-area">
 						<div class="refraction-control-media-area">
 							<div class="refraction-control-media__remove refraction-control-media__content__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">
-								<i class="eicon-trash-o" aria-hidden="true"></i>
+								<i class="rficon-trash-o" aria-hidden="true"></i>
 								<span class="refraction-screen-only"><?php echo esc_html__( 'Remove', 'refraction' ); ?></span>
 							</div>
 							<#
@@ -245,14 +245,14 @@ class Control_Media extends Control_Base_Multiple {
 									case 'video':
 										#>
 										<video class="refraction-control-media-video" preload="metadata"></video>
-										<i class="eicon-video-camera" aria-hidden="true"></i>
+										<i class="rficon-video-camera" aria-hidden="true"></i>
 										<#
 										break;
 								}
 							#>
 						</div>
 						<div class="refraction-control-media-upload-button refraction-control-media__content__upload-button">
-							<i class="eicon-plus-circle" aria-hidden="true"></i>
+							<i class="rficon-plus-circle" aria-hidden="true"></i>
 							<span class="refraction-screen-only"><?php echo esc_html__( 'Add', 'refraction' ); ?></span>
 						</div>
 						<div class="refraction-control-media__tools refraction-control-dynamic-switcher-wrapper">
@@ -273,18 +273,18 @@ class Control_Media extends Control_Base_Multiple {
 						<div class="refraction-control-media__file__content__label"><?php echo esc_html__( 'Click the media icon to upload file', 'refraction' ); ?></div>
 						<div class="refraction-control-media__file__content__info">
 							<div class="refraction-control-media__file__content__info__icon">
-								<i class="eicon-document-file"></i>
+								<i class="rficon-document-file"></i>
 							</div>
 							<div class="refraction-control-media__file__content__info__name"></div>
 						</div>
 					</div>
 					<div class="refraction-control-media__file__controls">
 						<div class="refraction-control-media__remove refraction-control-media__file__controls__remove" data-tooltip="<?php echo esc_attr__( 'Remove', 'refraction' ); ?>">
-							<i class="eicon-trash-o" aria-hidden="true"></i>
+							<i class="rficon-trash-o" aria-hidden="true"></i>
 							<span class="refraction-screen-only"><?php echo esc_html__( 'Remove', 'refraction' ); ?></span>
 						</div>
 						<div class="refraction-control-media__file__controls__upload-button refraction-control-media-upload-button" data-tooltip="<?php echo esc_attr__( 'Upload', 'refraction' ); ?>">
-							<i class="eicon-upload" aria-hidden="true"></i>
+							<i class="rficon-upload" aria-hidden="true"></i>
 							<span class="refraction-screen-only"><?php echo esc_html__( 'Upload', 'refraction' ); ?></span>
 						</div>
 					</div>

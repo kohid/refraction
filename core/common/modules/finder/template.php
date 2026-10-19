@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <script type="text/template" id="tmpl-refraction-finder">
 	<div id="refraction-finder__search">
-		<i class="eicon-search" aria-hidden="true"></i>
+		<i class="rficon-search" aria-hidden="true"></i>
 		<input id="refraction-finder__search__input" placeholder="<?php echo esc_attr__( 'Type to find anything in Refraction', 'refraction' ); ?>" autocomplete="off">
 	</div>
 	<div id="refraction-finder__content"></div>
@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <script type="text/template" id="tmpl-refraction-finder__results__item">
 	<a href="{{ url }}" class="refraction-finder__results__item__link">
 		<div class="refraction-finder__results__item__icon">
-			<i class="eicon-{{{ icon }}}" aria-hidden="true"></i>
+			<i class="rficon-{{{ icon }}}" aria-hidden="true"></i>
 		</div>
 		<div class="refraction-finder__results__item__title">{{{ title }}}</div>
 		<# if ( description ) { #>
@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="refraction-finder__results__item__actions">
 		<# jQuery.each( actions, function() { #>
 			<a class="refraction-finder__results__item__action refraction-finder__results__item__action--{{ this.name }}" href="{{ this.url }}" target="_blank">
-				<i class="eicon-{{{ this.icon }}}"></i>
+				<i class="rficon-{{{ this.icon }}}"></i>
 			</a>
 		<# } ); #>
 		</div>

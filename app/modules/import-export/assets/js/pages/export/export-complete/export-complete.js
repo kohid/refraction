@@ -62,7 +62,7 @@ export default function ExportComplete() {
 		</InlineLink>
 	);
 	const getShowMeHowLink = () => (
-		<InlineLink url="https://go.elementor.com/app-what-are-kits" italic>
+		<InlineLink url="https://github.com/kohid/refraction#readme" italic>
 			{ __( 'Show me how', 'refraction' ) }
 		</InlineLink>
 	);

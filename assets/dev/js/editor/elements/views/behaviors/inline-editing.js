@@ -90,34 +90,34 @@ InlineEditingBehavior = Marionette.Behavior.extend( {
 			list: 'none' === elementDataToolbar ? [] : inlineEditingConfig.toolbar[ elementDataToolbar || 'basic' ],
 			cleanAttrs: [ 'id', 'class', 'name' ],
 			placeholder: __( 'Type Here', 'refraction' ) + '...',
-			toolbarIconsPrefix: 'eicon-editor-',
+			toolbarIconsPrefix: 'rficon-editor-',
 			toolbarIconsDictionary: {
 				externalLink: {
-					className: 'eicon-editor-external-link',
+					className: 'rficon-editor-external-link',
 				},
 				list: {
-					className: 'eicon-editor-list-ul',
+					className: 'rficon-editor-list-ul',
 				},
 				insertOrderedList: {
-					className: 'eicon-editor-list-ol',
+					className: 'rficon-editor-list-ol',
 				},
 				insertUnorderedList: {
-					className: 'eicon-editor-list-ul',
+					className: 'rficon-editor-list-ul',
 				},
 				createlink: {
-					className: 'eicon-editor-link',
+					className: 'rficon-editor-link',
 				},
 				unlink: {
-					className: 'eicon-editor-unlink',
+					className: 'rficon-editor-unlink',
 				},
 				blockquote: {
-					className: 'eicon-editor-quote',
+					className: 'rficon-editor-quote',
 				},
 				p: {
-					className: 'eicon-editor-paragraph',
+					className: 'rficon-editor-paragraph',
 				},
 				pre: {
-					className: 'eicon-editor-code',
+					className: 'rficon-editor-code',
 				},
 			},
 		} );

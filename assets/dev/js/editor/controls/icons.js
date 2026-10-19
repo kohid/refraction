@@ -145,7 +145,7 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 				const enableMigrationDialog = refraction.helpers.getSimpleDialog(
 					'refraction-enable-fa5-dialog',
 					__( 'Refraction\'s New Icon Library', 'refraction' ),
-					__( 'Refraction v2.6 includes an upgrade from Font Awesome 4 to 5. In order to continue using icons, be sure to click "Update".', 'refraction' ) + ' <a href="https://go.elementor.com/fontawesome-migration/" target="_blank">' + __( 'Learn More', 'refraction' ) + '</a>',
+					__( 'Refraction v2.6 includes an upgrade from Font Awesome 4 to 5. In order to continue using icons, be sure to click "Update".', 'refraction' ) + ' <a href="https://github.com/kohid/refraction#readme" target="_blank">' + __( 'Learn More', 'refraction' ) + '</a>',
 					__( 'Update', 'refraction' ),
 					onConfirm,
 				);

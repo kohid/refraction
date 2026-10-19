@@ -28,15 +28,15 @@
 				"options": {
 					"light": {
 						"title": "Light mode",
-						"icon": "eicon-light-mode"
+						"icon": "rficon-light-mode"
 					},
 					"dark": {
 						"title": "Dark mode",
-						"icon": "eicon-dark-mode"
+						"icon": "rficon-dark-mode"
 					},
 					"auto": {
 						"title": "Auto Detect",
-						"icon": "eicon-header"
+						"icon": "rficon-header"
 					}
 				},	
 				"name": "ui_theme"

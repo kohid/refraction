@@ -23,7 +23,7 @@ class Theme_Style_Typography extends Tab_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-typography-1';
+		return 'rficon-typography-1';
 	}
 
 	public function get_help_url() {

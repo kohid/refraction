@@ -32,13 +32,13 @@
 	.dialog-widget-content {
 		width: 400px;
 
-		.eicon-loading {
+		.rficon-loading {
 			display: none;
 		}
 
 		&.e-state-loading {
 
-			.eicon-loading {
+			.rficon-loading {
 				display: block;
 				margin-block-start: 15px;
 			}

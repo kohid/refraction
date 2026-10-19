@@ -32,6 +32,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<span class="refraction-history-item__action">{{{ action }}}</span>
 	</div>
 	<div class="refraction-history-item__icon">
-		<span class="eicon" aria-hidden="true"></span>
+		<span class="rficon" aria-hidden="true"></span>
 	</div>
 </script>

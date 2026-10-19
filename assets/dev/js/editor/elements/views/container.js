@@ -328,7 +328,7 @@ const ContainerView = BaseElementView.extend( {
 			actions: [
 				{
 					name: 'newContainer',
-					icon: 'eicon-plus',
+					icon: 'rficon-plus',
 					title: __( 'Add New Container', 'refraction' ),
 					callback: this.addNewContainer.bind( this ),
 				},
@@ -513,8 +513,8 @@ const ContainerView = BaseElementView.extend( {
 
 	getPanelIcon() {
 		return this.isFlexContainer()
-			? 'eicon-container'
-			: 'eicon-container-grid';
+			? 'rficon-container'
+			: 'rficon-container-grid';
 	},
 
 	onDragStart() {
@@ -655,8 +655,8 @@ const ContainerView = BaseElementView.extend( {
 	updateNeedHelpLink() {
 		const $linkElement = jQuery( '#refraction-panel__editor__help__link' );
 		const href = this.isGridContainer()
-			? 'https://go.elementor.com/widget-container-grid'
-			: 'https://go.elementor.com/widget-container';
+			? 'https://github.com/kohid/refraction#readme'
+			: 'https://github.com/kohid/refraction#readme';
 
 		if ( $linkElement ) {
 			$linkElement.attr( 'href', href );

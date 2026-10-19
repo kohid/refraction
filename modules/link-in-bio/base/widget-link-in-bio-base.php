@@ -163,7 +163,7 @@ abstract class Widget_Link_In_Bio_Base extends Widget_Base {
 	}
 
 	public function get_icon(): string {
-		return 'eicon-site-identity';
+		return 'rficon-site-identity';
 	}
 
 	public function get_categories(): array {

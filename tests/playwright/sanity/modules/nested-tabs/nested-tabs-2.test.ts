@@ -132,9 +132,9 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 
 		// Act.
 		// Set tabs direction to 'stretch'.
-		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'eicon-align-stretch-h' );
+		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'rficon-align-stretch-h' );
 		// Set align title to 'start'.
-		await editor.setChooseControlValue( 'title_alignment', 'eicon-text-align-left' );
+		await editor.setChooseControlValue( 'title_alignment', 'rficon-text-align-left' );
 
 		// Assert.
 		// Check if title's are aligned on the left.
@@ -158,11 +158,11 @@ test.describe( 'Nested Tabs tests @nested-tabs', () => {
 		// Act.
 		// Set tabs direction to 'stretch' for parent widget.
 		await editor.selectElement( parentWidgetId );
-		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'eicon-align-stretch-h' );
+		await editor.setChooseControlValue( 'tabs_justify_horizontal', 'rficon-align-stretch-h' );
 		// Set align title to 'start'.
-		await editor.setChooseControlValue( 'title_alignment', 'eicon-text-align-left' );
+		await editor.setChooseControlValue( 'title_alignment', 'rficon-text-align-left' );
 		await editor.openPanelTab( 'style' );
-		await editor.setChooseControlValue( 'tabs_title_background_color_background', 'eicon-paint-brush' );
+		await editor.setChooseControlValue( 'tabs_title_background_color_background', 'rficon-paint-brush' );
 		await editor.setColorControlValue( 'tabs_title_background_color_color', '#ff0000' );
 
 		// Assert.

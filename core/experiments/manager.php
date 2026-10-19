@@ -341,7 +341,7 @@ class Manager extends Base_Object {
 			'name' => 'e_font_icon_svg',
 			'title' => esc_html__( 'Inline Font Icons', 'refraction' ),
 			'tag' => esc_html__( 'Performance', 'refraction' ),
-			'description' => esc_html__( 'The “Inline Font Icons” will render the icons as inline SVG without loading the Font-Awesome and the eicons libraries and its related CSS files and fonts.', 'refraction' ),
+			'description' => esc_html__( 'The “Inline Font Icons” will render the icons as inline SVG without loading the Font-Awesome and the rficons libraries and its related CSS files and fonts.', 'refraction' ),
 			'release_status' => self::RELEASE_STATUS_STABLE,
 			'new_site' => [
 				'default_active' => true,

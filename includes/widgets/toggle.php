@@ -57,7 +57,7 @@ class Widget_Toggle extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'eicon-toggle';
+		return 'rficon-toggle';
 	}
 
 	/**
@@ -445,11 +445,11 @@ class Widget_Toggle extends Widget_Base {
 				'options' => [
 					'left' => [
 						'title' => esc_html__( 'Start', 'refraction' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => 'rficon-h-align-left',
 					],
 					'right' => [
 						'title' => esc_html__( 'End', 'refraction' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => 'rficon-h-align-right',
 					],
 				],
 				'default' => is_rtl() ? 'right' : 'left',

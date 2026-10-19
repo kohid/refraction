@@ -10,7 +10,7 @@ describe( 'UrlControl', () => {
 		// Arrange.
 		const setValue = jest.fn();
 
-		const props = { setValue, value: { $$type: 'url', value: 'https://elementor.com' }, bind: 'text', propType };
+		const props = { setValue, value: { $$type: 'url', value: 'https://github.com/kohid/refraction#readme' }, bind: 'text', propType };
 
 		// Act.
 		renderControl( <UrlControl placeholder="Type or paste your URL" />, props );
@@ -18,15 +18,15 @@ describe( 'UrlControl', () => {
 		const input = screen.getByRole( 'textbox' );
 
 		// Assert.
-		expect( input ).toHaveValue( 'https://elementor.com' );
+		expect( input ).toHaveValue( 'https://github.com/kohid/refraction#readme' );
 
 		// Act.
-		fireEvent.input( input, { target: { value: 'https://my.elementor.com' } } );
+		fireEvent.input( input, { target: { value: 'https://github.com/kohid/refraction#readme' } } );
 
 		// Assert.
 		expect( setValue ).toHaveBeenCalledWith( {
 			$$type: 'url',
-			value: 'https://my.elementor.com',
+			value: 'https://github.com/kohid/refraction#readme',
 		} );
 	} );
 } );

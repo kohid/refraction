@@ -53,7 +53,7 @@ function EditWithRefractionButton() {
 	return (
 		<WooHeaderItem name="product">
 			<Button variant="primary" onClick={ handleClick } style={ { display: 'flex', alignItems: 'center' } }>
-				<i className="eicon-refraction-square" aria-hidden="true" style={ { paddingInlineEnd: '8px' } }></i>
+				<i className="rficon-refraction-square" aria-hidden="true" style={ { paddingInlineEnd: '8px' } }></i>
 				{ __( 'Edit with Refraction', 'refraction' ) }
 			</Button>
 		</WooHeaderItem>

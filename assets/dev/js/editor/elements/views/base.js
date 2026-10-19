@@ -147,14 +147,14 @@ BaseElementView = BaseContainer.extend( {
 				actions: [
 					{
 						name: 'edit',
-						icon: 'eicon-edit',
+						icon: 'rficon-edit',
 						/* Translators: %s: Element Name. */
 						title: () => sprintf( __( 'Edit %s', 'refraction' ), refraction.selection.isMultiple() ? '' : this.options.model.getTitle() ),
 						isEnabled: () => ! refraction.selection.isMultiple(),
 						callback: () => $e.run( 'document/elements/select', { container: this.getContainer() } ),
 					}, {
 						name: 'duplicate',
-						icon: 'eicon-clone',
+						icon: 'rficon-clone',
 						title: __( 'Duplicate', 'refraction' ),
 						shortcut: controlSign + '+D',
 						isEnabled: () => refraction.selection.isSameType() && ! this.getContainer().isLocked(),
@@ -205,7 +205,7 @@ BaseElementView = BaseContainer.extend( {
 						},
 					}, {
 						name: 'pasteArea',
-						icon: 'eicon-import-export',
+						icon: 'rficon-import-export',
 						title: __( 'Paste from other site', 'refraction' ),
 						callback: () => $e.run( 'document/elements/paste-area', {
 							container: this.getContainer(),
@@ -242,7 +242,7 @@ BaseElementView = BaseContainer.extend( {
 			actions: [
 				{
 					name: 'delete',
-					icon: 'eicon-trash',
+					icon: 'rficon-trash',
 					title: () => {
 						if ( refraction.selection.isMultiple() ) {
 							// Translators: %d: Elements count.
@@ -356,7 +356,7 @@ BaseElementView = BaseContainer.extend( {
 				title: tool.title,
 				'aria-label': tool.title,
 			} );
-			const $icon = jQuery( '<i>', { class: `eicon-${ tool.icon }`, 'aria-hidden': true } );
+			const $icon = jQuery( '<i>', { class: `rficon-${ tool.icon }`, 'aria-hidden': true } );
 
 			$item.append( $icon );
 

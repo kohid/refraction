@@ -6,15 +6,15 @@ export default class PanelMenu extends MenuPageView {
 	}
 
 	getArrowClass() {
-		return 'eicon-chevron-' + ( refractionCommon.config.isRTL ? 'right' : 'left' );
+		return 'rficon-chevron-' + ( refractionCommon.config.isRTL ? 'right' : 'left' );
 	}
 
 	onRender() {
-		refraction.getPanelView().getHeaderView().ui.menuIcon.removeClass( 'eicon-menu-bar' ).addClass( this.getArrowClass() );
+		refraction.getPanelView().getHeaderView().ui.menuIcon.removeClass( 'rficon-menu-bar' ).addClass( this.getArrowClass() );
 	}
 
 	onDestroy() {
-		refraction.getPanelView().getHeaderView().ui.menuIcon.removeClass( this.getArrowClass() ).addClass( 'eicon-menu-bar' );
+		refraction.getPanelView().getHeaderView().ui.menuIcon.removeClass( this.getArrowClass() ).addClass( 'rficon-menu-bar' );
 	}
 }
 
@@ -37,7 +37,7 @@ PanelMenu.initGroups = () => {
 			// Todo: internal command.
 			{
 				name: 'view-page',
-				icon: 'eicon-preview-thin',
+				icon: 'rficon-preview-thin',
 				title: __( 'View Page', 'refraction' ),
 				type: 'link',
 				link: refraction.config.document.urls.permalink,
@@ -59,7 +59,7 @@ PanelMenu.addAdminMenu = () => {
 		items: [
 			{
 				name: 'editor-preferences',
-				icon: 'eicon-user-preferences',
+				icon: 'rficon-user-preferences',
 				title: __( 'User Preferences', 'refraction' ),
 				type: 'page',
 				callback: () => $e.route( 'panel/editor-preferences' ),
@@ -69,14 +69,14 @@ PanelMenu.addAdminMenu = () => {
 
 	PanelMenu.addItem( {
 		name: 'finder',
-		icon: 'eicon-search',
+		icon: 'rficon-search',
 		title: __( 'Finder', 'refraction' ),
 		callback: () => $e.route( 'finder' ),
 	}, 'navigate_from_page', 'view-page' );
 
 	PanelMenu.addItem( {
 		name: 'apps',
-		icon: 'eicon-apps',
+		icon: 'rficon-apps',
 		title: __( 'Add-ons', 'refraction' ),
 		type: 'link',
 		link: refraction.config.admin_apps_url,
@@ -102,7 +102,7 @@ PanelMenu.addExitItem = () => {
 
 	PanelMenu.addItem( {
 		name: 'exit',
-		icon: 'eicon-exit',
+		icon: 'rficon-exit',
 		title: __( 'Exit', 'refraction' ),
 		...itemArgs,
 	}, 'navigate_from_page' );

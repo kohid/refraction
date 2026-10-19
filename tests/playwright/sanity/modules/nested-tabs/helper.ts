@@ -7,7 +7,7 @@ export const locators = {
 	selectedTabTitle: '.e-n-tabs-heading .e-n-tab-title[aria-selected="true"]',
 	activeTab: '.e-n-tabs-content .e-con.e-active.refraction-element-edit-mode',
 	repeaterAddButton: '.refraction-repeater-add',
-	repeaterDeleteButton: '.refraction-repeater-row-tool.refraction-repeater-tool-remove .eicon-close',
+	repeaterDeleteButton: '.refraction-repeater-row-tool.refraction-repeater-tool-remove .rficon-close',
 	repeaterCloneButton: '.refraction-repeater-tool-duplicate',
 };
 
@@ -76,7 +76,7 @@ export async function selectDropdownContainer( editor: EditorPage, widgetId = ''
 export async function setBackgroundVideoUrl( editor:EditorPage, elementId: string, videoUrl: string ) {
 	await editor.selectElement( elementId );
 	await editor.openPanelTab( 'style' );
-	await editor.setChooseControlValue( 'background_background', 'eicon-video-camera' );
+	await editor.setChooseControlValue( 'background_background', 'rficon-video-camera' );
 	await editor.setTextControlValue( 'background_video_link', videoUrl );
 }
 

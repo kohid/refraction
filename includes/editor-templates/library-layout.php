@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<# if ( 'skip' === closeType ) { #>
 				<span><?php echo esc_html__( 'Skip', 'refraction' ); ?></span>
 				<# } #>
-				<i class="eicon-close" aria-hidden="true"></i>
+				<i class="rficon-close" aria-hidden="true"></i>
 				<span class="refraction-screen-only">{{{ $e.components?.get( 'document/elements' )?.utils?.getTitleForLibraryClose() }}}</span>
 			</button>
 		<# } #>
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <script type="text/template" id="tmpl-refraction-templates-modal__header__logo">
 	<span class="refraction-templates-modal__header__logo__icon-wrapper e-logo-wrapper">
-		<i class="eicon-refraction-circle"></i>
+		<i class="rficon-refraction-circle"></i>
 	</span>
 	<span class="refraction-templates-modal__header__logo__title">{{{ title }}}</span>
 </script>

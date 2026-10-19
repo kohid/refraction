@@ -500,7 +500,7 @@ class Frontend extends App {
 
 		wp_register_style(
 			'refraction-icons',
-			$this->get_css_assets_url( 'refraction-icons', 'assets/lib/eicons/css/' ),
+			$this->get_css_assets_url( 'refraction-icons', 'assets/lib/rficons/css/' ),
 			[],
 			Icons_Manager::REFRACTION_ICONS_VERSION
 		);

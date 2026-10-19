@@ -1,7 +1,7 @@
 export default function Loader() {
 	return (
 		<div className="e-styleguide-loader">
-			<i className="eicon-loading eicon-animation-spin"></i>
+			<i className="rficon-loading rficon-animation-spin"></i>
 		</div>
 	);
 }

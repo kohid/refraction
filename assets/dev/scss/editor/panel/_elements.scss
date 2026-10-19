@@ -29,7 +29,7 @@
 		z-index: $second-layer;
 	}
 
-	.eicon-loading {
+	.rficon-loading {
 		font-size: 25px;
 		color: var(--e-a-color-txt-accent);
 	}
@@ -111,14 +111,14 @@
 			}
 		}
 
-		.eicon-atomic,
+		.rficon-atomic,
 		.e-widget-new-badge {
 			position: absolute;
 			inset-block-start: 4px;
 			inset-inline-end: 6px;
 		}
 
-		.eicon-atomic {
+		.rficon-atomic {
 			color: var(--e-a-color-txt);
 		}
 
@@ -138,11 +138,11 @@
 			background-color: var(--e-a-bg-hover);
 			border-color: var(--e-a-border-color-bold);
 
-			> .eicon-lock {
+			> .rficon-lock {
 				color: var(--e-a-color-accent);
 			}
 
-			> .eicon-plug {
+			> .rficon-plug {
 				color: var(--e-a-color-info);
 			}
 		}
@@ -163,7 +163,7 @@
 			font-size: 12px;
 		}
 
-		> .eicon-lock, .eicon-plug {
+		> .rficon-lock, .rficon-plug {
 			position: absolute;
 			inset-block-start: 5px;
 			inset-inline-end: 5px;
@@ -208,14 +208,14 @@
 			border-block-end: var(--e-a-border);
 			font-weight: 500;
 
-			.eicon-pro-icon {
+			.rficon-pro-icon {
 				flex-grow: 1;
 				margin-inline-start: 10px;
 				font-size: 14px;
 				color: var(--e-a-color-accent);
 			}
 
-			.eicon-close {
+			.rficon-close {
 				cursor: pointer;
 				color: var(--e-a-color-txt-disabled);
 
@@ -270,14 +270,14 @@
 			border-block-end: 1px solid var(--e-a-bg-default);
 			font-weight: 500;
 
-			.eicon-pro-icon {
+			.rficon-pro-icon {
 				flex-grow: 1;
 				margin-inline-start: 10px;
 				font-size: 14px;
 				color: $editor-accent;
 			}
 
-			.eicon-close {
+			.rficon-close {
 				cursor: pointer;
 				margin-inline-start: auto;
 				color: var(--e-a-color-txt);

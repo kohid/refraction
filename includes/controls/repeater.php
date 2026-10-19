@@ -171,7 +171,7 @@ class Control_Repeater extends Base_Data_Control implements Has_Validation {
 		<# if ( itemActions.add ) { #>
 			<div class="refraction-button-wrapper">
 				<button class="refraction-button refraction-repeater-add" type="button">
-					<i class="eicon-plus" aria-hidden="true"></i>
+					<i class="rficon-plus" aria-hidden="true"></i>
 					<# if ( data.button_text ) { #>
 						{{{ data.button_text }}}
 					<# } else { #>

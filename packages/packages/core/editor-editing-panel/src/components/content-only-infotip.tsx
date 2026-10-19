@@ -4,7 +4,7 @@ import { InfoCircleFilledIcon } from '@elementor/icons';
 import { Alert, AlertTitle, Box, Infotip, Link } from '@elementor/ui';
 import { __ } from '@wordpress/i18n';
 
-const LEARN_MORE_URL = 'https://go.elementor.com/content-only-access-infotip';
+const LEARN_MORE_URL = 'https://github.com/kohid/refraction#readme';
 
 const INFOTIP_WIDTH = 300;
 

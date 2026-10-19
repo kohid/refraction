@@ -26,7 +26,7 @@ export default function Conflict( props ) {
 				className="e-app-import-resolver-conflicts__edit-template"
 				url={ editUrl }
 				target="_blank"
-				icon="eicon-editor-external-link"
+				icon="rficon-editor-external-link"
 				text={ __( 'Edit Template', 'refraction' ) }
 				hideText
 				onClick={ () => {

@@ -118,7 +118,7 @@ export const Modal = ( props ) => {
 					</Grid>
 					<Grid item>
 						<div className="eps-modal__close-wrapper" ref={ closeRef }>
-							<Button text={ __( 'Close', 'refraction' ) } hideText icon="eicon-close" onClick={ props.closeModal } />
+							<Button text={ __( 'Close', 'refraction' ) } hideText icon="rficon-close" onClick={ props.closeModal } />
 						</div>
 					</Grid>
 				</Grid>

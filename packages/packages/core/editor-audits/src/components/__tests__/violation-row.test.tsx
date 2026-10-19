@@ -155,7 +155,7 @@ describe( 'ViolationRow', () => {
 					'https://example.com/wp-admin/admin.php?page=accessibility-settings#accessibilityStatement',
 				ctaLabel: 'Create',
 				secondaryCtaLabel: 'Learn more',
-				secondaryCtaUrl: 'https://go.elementor.com/acc-plg-learn-more',
+				secondaryCtaUrl: 'https://github.com/kohid/refraction#readme',
 			},
 		] );
 
