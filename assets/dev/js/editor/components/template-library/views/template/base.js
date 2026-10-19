@@ -12,7 +12,10 @@ const TemplateLibraryTemplateView = Marionette.ItemView.extend( {
 			classes += ' refraction-template-library-template-' + this.model.get( 'type' );
 		}
 
-		if ( refraction.config.library_connect.base_access_tier !== this.model.get( 'accessTier' ) ) {
+		const accessTier = this.model.get( 'accessTier' );
+
+		// Local templates carry no access tier; only tiered (remote) templates can be marked as locked.
+		if ( accessTier && refraction.config.library_connect.base_access_tier !== accessTier ) {
 			classes += ' refraction-template-library-pro-template';
 		}
 
@@ -22,6 +25,11 @@ const TemplateLibraryTemplateView = Marionette.ItemView.extend( {
 	attributes() {
 		const userAccessTier = refraction.config.library_connect.current_access_tier;
 		const templateAccessTier = this.model.get( 'accessTier' );
+
+		if ( ! templateAccessTier ) {
+			return {};
+		}
+
 		const canDownloadTemplate = isTierAtLeast( userAccessTier, templateAccessTier );
 
 		// User with access to the template shouldn't see the badge.

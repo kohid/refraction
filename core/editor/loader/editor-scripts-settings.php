@@ -31,6 +31,14 @@ class Editor_Scripts_Settings {
 		$client_env = [
 			'initial_document' => $document->get_config(),
 			'version' => REFRACTION_VERSION,
+			// The template library is local only (no account, no tiers); the editor's library views still read these keys.
+			'library_connect' => [
+				'is_connected' => true,
+				'user_email' => '',
+				'base_access_tier' => 'free',
+				'current_access_tier' => 'free',
+				'subscription_plans' => [],
+			],
 			'home_url' => home_url(),
 			'admin_settings_url' => admin_url( 'admin.php?page=' . 'refraction-settings' ),
 			'admin_tools_url' => admin_url( 'admin.php?page=' . Tools::PAGE_ID ),

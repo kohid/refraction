@@ -101,16 +101,19 @@ const TemplateLibrarySaveTemplateView = Marionette.ItemView.extend( {
 			this.handleBulkActionContextUiState();
 		}
 
-		if ( ! refraction.templates.hasCloudLibraryQuota() ) {
-			this.handleCloudLibraryPromo();
-		}
+		// Cloud saving was removed: the cloud promo/connect states only apply when a dialog can save to the cloud.
+		if ( this.templateHelpers()?.canSaveToCloud ) {
+			if ( ! refraction.templates.hasCloudLibraryQuota() ) {
+				this.handleCloudLibraryPromo();
+			}
 
-		if ( this.cloudMaxCapacityReached() ) {
-			this.handleCloudLibraryPromo( 'max-capacity' );
-		}
+			if ( this.cloudMaxCapacityReached() ) {
+				this.handleCloudLibraryPromo( 'max-capacity' );
+			}
 
-		if ( ! refraction.config.library_connect.is_connected ) {
-			this.handleRefractionConnect();
+			if ( ! refraction.config.library_connect.is_connected ) {
+				this.handleRefractionConnect();
+			}
 		}
 
 		this.bindDocumentClickHandler();

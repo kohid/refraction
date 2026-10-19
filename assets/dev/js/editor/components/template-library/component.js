@@ -16,10 +16,6 @@ export default class Component extends ComponentModalBase {
 
 		// Remove whole component cache data.
 		$e.data.deleteCache( this, 'library' );
-
-		refraction.channels.templates.on( 'quota:update', ( { force } = {} ) => {
-			$e.components.get( 'cloud-library' ).utils.setQuotaConfig( force );
-		} );
 	}
 
 	getNamespace() {
@@ -33,7 +29,7 @@ export default class Component extends ComponentModalBase {
 				getFilter: () => ( {
 					source: 'remote',
 					type: 'block',
-					subtype: refraction.config.document.remoteLibrary.category,
+					subtype: refraction.config.document.remoteLibrary?.category,
 				} ),
 			},
 			'templates/pages': {
@@ -104,7 +100,7 @@ export default class Component extends ComponentModalBase {
 
 	onDocumentLoaded( document ) {
 		// The remote library was removed; only the local library route remains.
-		this.setDefaultRoute( document.config.remoteLibrary?.default_route ?? 'library/templates/my-templates' );
+		this.setDefaultRoute( document.config.remoteLibrary?.default_route ?? 'templates/my-templates' );
 
 		this.maybeOpenLibrary();
 	}
@@ -216,7 +212,7 @@ export default class Component extends ComponentModalBase {
 	}
 
 	downloadTemplate( args, callback ) {
-		const autoImportSettings = refraction.config.document.remoteLibrary.autoImportSettings,
+		const autoImportSettings = refraction.config.document.remoteLibrary?.autoImportSettings,
 			model = args.model;
 
 		let { withPageSettings = null } = args;

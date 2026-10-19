@@ -292,7 +292,7 @@ const TemplateLibraryCollectionView = Marionette.CompositeView.extend( {
 		const activeSource = refraction.templates.getFilter( 'source' ) ?? 'local';
 
 		if ( 'cloud' === activeSource ) {
-			$e.components.get( 'cloud-library' ).utils.getQuotaConfig()
+			$e.components.get( 'cloud-library' )?.utils.getQuotaConfig()
 				.then( () => {
 					this.handleQuotaBar();
 				} );
