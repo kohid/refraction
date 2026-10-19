@@ -32,6 +32,7 @@ class Module extends BaseModule {
 			'Countdown',
 			'Share_Buttons',
 			'Blockquote',
+			'Progress_Tracker',
 		];
 	}
 

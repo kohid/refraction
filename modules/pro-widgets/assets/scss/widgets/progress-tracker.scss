@@ -1,0 +1,121 @@
+//
+// Progress Tracker
+//
+
+.refraction-progress-tracker {
+	--refraction-pt-track: #e5e7eb;
+	--refraction-pt-fill: #0f766e;
+	--refraction-pt-progress: 0;
+	position: relative;
+}
+
+.refraction-progress-tracker--horizontal {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.refraction-progress-tracker__track {
+	flex: 1 1 auto;
+	height: 8px;
+	overflow: hidden;
+	background: var(--refraction-pt-track);
+}
+
+.refraction-progress-tracker__fill {
+	width: 100%;
+	height: 100%;
+	background: var(--refraction-pt-fill);
+	transform: scaleX(var(--refraction-pt-progress));
+	transform-origin: left center;
+	will-change: transform;
+}
+
+[dir="rtl"] .refraction-progress-tracker__fill {
+	transform-origin: right center;
+}
+
+.refraction-progress-tracker--from-end .refraction-progress-tracker__fill {
+	transform-origin: right center;
+}
+
+[dir="rtl"] .refraction-progress-tracker--from-end .refraction-progress-tracker__fill {
+	transform-origin: left center;
+}
+
+.refraction-progress-tracker__percent {
+	min-width: 3.2em;
+	font-size: 0.9rem;
+	font-variant-numeric: tabular-nums;
+	text-align: end;
+}
+
+// Fixed bars sit under the WordPress admin bar when it is there.
+.refraction-progress-tracker--fixed-top,
+.refraction-progress-tracker--fixed-bottom {
+	position: fixed;
+	right: 0;
+	left: 0;
+	z-index: 9999;
+	padding: 0;
+}
+
+.refraction-progress-tracker--fixed-top {
+	top: var(--wp-admin--admin-bar--height, 0px);
+}
+
+.refraction-progress-tracker--fixed-bottom {
+	bottom: 0;
+}
+
+// Circular.
+.refraction-progress-tracker--circular {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.refraction-progress-tracker__ring {
+	display: block;
+	width: 96px;
+	height: 96px;
+	transform: rotate(-90deg);
+
+	circle {
+		fill: none;
+		stroke-width: 8;
+	}
+}
+
+.refraction-progress-tracker__ring-track {
+	stroke: var(--refraction-pt-track);
+}
+
+.refraction-progress-tracker__ring-fill {
+	stroke: var(--refraction-pt-fill);
+	stroke-linecap: round;
+	stroke-dasharray: 100;
+	stroke-dashoffset: calc(100 - var(--refraction-pt-progress) * 100);
+}
+
+.refraction-progress-tracker--circular .refraction-progress-tracker__percent {
+	position: absolute;
+	min-width: 0;
+	font-weight: 600;
+	text-align: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.refraction-progress-tracker__fill,
+	.refraction-progress-tracker__ring-fill {
+		transition: transform 0.12s linear, stroke-dashoffset 0.12s linear;
+	}
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-progress-tracker__percent {
+		font-size: 0.8rem;
+	}
+}

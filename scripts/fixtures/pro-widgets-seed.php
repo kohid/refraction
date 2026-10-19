@@ -219,6 +219,15 @@ $pages['blockquote'] = rfw_page( 'RFW Blockquote', [
 	rfw_widget( 'refraction-blockquote', [ 'quote' => '', 'author' => 'Nobody' ], 'bq000004' ),
 ] );
 
+// -------------------------------------------------------- progress tracker
+$pages['progress-tracker'] = rfw_page( 'RFW Progress Tracker', [
+	rfw_widget( 'refraction-progress-tracker', [ 'tracker_type' => 'horizontal', 'relative_to' => 'page', 'show_percentage' => 'yes', 'tracker_label' => 'Page progress' ], 'pg000001' ),
+	rfw_widget( 'refraction-progress-tracker', [ 'tracker_type' => 'circular', 'relative_to' => 'selector', 'target_selector' => '#rf-target', 'show_percentage' => 'yes' ], 'pg000002' ),
+	rfw_widget( 'refraction-progress-tracker', [ 'tracker_type' => 'horizontal', 'relative_to' => 'selector', 'target_selector' => '###bad((', 'show_percentage' => '' ], 'pg000003' ),
+	rfw_widget( 'refraction-progress-tracker', [ 'tracker_type' => 'horizontal', 'relative_to' => 'page', 'position' => 'fixed-top', 'tracker_label' => 'Top bar' ], 'pg000004' ),
+	rfw_widget( 'html', [ 'html' => '<div style="height:1000px;background:#f6f6f6">spacer</div><div id="rf-target" style="height:2000px;background:#e8eef5">target</div><div style="height:600px;background:#f6f6f6">after</div>' ], 'pg000005' ),
+] );
+
 // @@MORE_PAGES@@ (each widget task appends its page above this line)
 
 echo wp_json_encode( $pages );

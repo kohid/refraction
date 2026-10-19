@@ -643,6 +643,59 @@ SECTIONS.blockquote = async ( { browser, admin, pages } ) => {
 	await v.ctx.close();
 };
 
+/* ---------------------------------------------------------- progress-tracker */
+SECTIONS[ 'progress-tracker' ] = async ( { browser, admin, pages } ) => {
+	const k = 'progress-tracker';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-progress-tracker', 'Progress Tracker' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'pg000001' ), settings: { tracker_label: 'Changed label' } } ); } );
+	await sleep( 2500 );
+	const lab = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="pg000001"] [role="progressbar"]' )?.getAttribute( 'aria-label' ) );
+	check( k, 'editing the label updates the preview', lab === 'Changed label', lab );
+
+	const v = await visitor( browser, rel( pages[ k ].url ), 1280, 800 );
+	const p = v.page;
+	const bar = p.locator( '[data-id="pg000001"] [role="progressbar"]' );
+	const val = ( loc ) => loc.evaluate( ( e ) => Number( e.getAttribute( 'aria-valuenow' ) ) );
+	check( k, 'progressbar semantics: name, min, max, start at 0', ( await bar.getAttribute( 'aria-label' ) ) === 'Page progress' && ( await bar.getAttribute( 'aria-valuemin' ) ) === '0' && ( await bar.getAttribute( 'aria-valuemax' ) ) === '100' && ( await val( bar ) ) === 0 );
+	const scrollMax = await p.evaluate( () => document.documentElement.scrollHeight - innerHeight );
+	await p.evaluate( ( y ) => window.scrollTo( 0, y ), Math.round( scrollMax / 2 ) );
+	await sleep( 400 );
+	const mid = await val( bar );
+	check( k, 'half way down the page reads about 50%', mid >= 45 && mid <= 55, mid );
+	check( k, 'the visible percentage matches and the fill follows', ( await p.locator( '[data-id="pg000001"] .refraction-progress-tracker__percent' ).innerText() ) === `${ mid }%` && await p.locator( '[data-id="pg000001"] .refraction-progress-tracker__fill' ).evaluate( ( e ) => { const r = e.getBoundingClientRect(), t = e.parentElement.getBoundingClientRect(); return Math.abs( r.width / t.width - 0.5 ) < 0.07; } ) );
+	await p.evaluate( () => window.scrollTo( 0, document.documentElement.scrollHeight ) );
+	await sleep( 400 );
+	check( k, 'the end of the page reads 100%', ( await val( bar ) ) === 100 );
+	await p.evaluate( () => window.scrollTo( 0, 0 ) );
+	await sleep( 400 );
+	check( k, 'back at the top reads 0%', ( await val( bar ) ) === 0 );
+
+	const circ = p.locator( '[data-id="pg000002"] [role="progressbar"]' );
+	const targetTop = await p.evaluate( () => document.querySelector( '#rf-target' ).getBoundingClientRect().top + scrollY );
+	await p.evaluate( ( y ) => window.scrollTo( 0, y ), targetTop );
+	await sleep( 400 );
+	const t0 = await val( circ );
+	await p.evaluate( ( y ) => window.scrollTo( 0, y ), targetTop + 2000 - 800 );
+	await sleep( 400 );
+	const t1 = await val( circ );
+	await p.evaluate( ( y ) => window.scrollTo( 0, y ), targetTop + 600 );
+	await sleep( 400 );
+	const tm = await val( circ );
+	check( k, 'selector mode: 0% at the start of the target, 100% at its end, in between inside', t0 === 0 && t1 === 100 && tm > 30 && tm < 70, `${ t0 } ${ tm } ${ t1 }` );
+	check( k, 'circular type draws an svg ring', ( await circ.locator( 'svg circle' ).count() ) >= 2 );
+
+	const bad = p.locator( '[data-id="pg000003"] [role="progressbar"]' );
+	await p.evaluate( () => window.scrollTo( 0, document.documentElement.scrollHeight ) );
+	await sleep( 400 );
+	check( k, 'an invalid selector falls back to the whole page (no error)', ( await val( bad ) ) === 100 );
+	const fixed = p.locator( '[data-id="pg000004"] .refraction-progress-tracker' );
+	const top = await fixed.evaluate( ( e ) => Math.round( e.getBoundingClientRect().top ) );
+	check( k, 'fixed-top bar stays at the top of the viewport while scrolling', top === 0 && await fixed.evaluate( ( e ) => getComputedStyle( e ).position === 'fixed' ), top );
+	await p.screenshot( { path: join( SHOTS, 'progress-tracker.png' ) } );
+	await v.ctx.close();
+};
+
 /* ------------------------------------------------------------------- driver */
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }
