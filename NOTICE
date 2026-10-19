@@ -18,3 +18,10 @@ Third-party libraries bundled in this plugin keep their own licenses.
 Lottie player: lottie-web 5.13.0 (light SVG build), (c) 2015 Bodymovin, MIT
 license (compatible with the GPL), bundled unmodified in assets/lib/lottie/ with its
 license text. It is loaded only on pages that contain a Lottie widget.
+
+Icons
+-----
+The UI icons in assets/icons/material are from Google's Material Symbols (Light set),
+licensed under the Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
+They are downloaded from https://github.com/kohid/icons by scripts/fetch-icons.mjs and
+bundled with the plugin; no icon is loaded from the web at runtime.
