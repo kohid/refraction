@@ -3,7 +3,7 @@
  * End-to-end check of the Refraction updater against a fake GitHub (no internet needed).
  *
  * Usage: node scripts/check-updater.mjs [--site /tmp/refraction-site] [--port 8766] [--fake-port 8767]
- *                                       [--zip dist/refraction.zip] [--new-version 9.9.9] [--no-setup]
+ *                                       [--zip dist/refraction.zip] [--new-version 9.9.9] [--no-setup] [--work /tmp/refraction-updater-test]
  *
  * 1. Reinstalls the plugin from --zip into the SQLite test site (scripts/setup-menu-test-site.sh).
  * 2. Builds a "release" zip: a copy of --zip with the version bumped to --new-version.
@@ -37,7 +37,7 @@ const SETUP = ! process.argv.includes( '--no-setup' );
 const SHOTS = arg( 'shots', '/tmp/refraction-shots' );
 const WP_DIR = join( SITE, 'wordpress' );
 const DL = process.env.DL_DIR || '/tmp/rsite-dl';
-const GH = '/tmp/refraction-updater-test';
+const GH = arg( 'work', '/tmp/refraction-updater-test' ); // scratch dir for the fake GitHub; pass --work when several checkouts run at once
 const BASE = `http://127.0.0.1:${ PORT }`;
 const PLUGIN = 'refraction/refraction.php';
 
