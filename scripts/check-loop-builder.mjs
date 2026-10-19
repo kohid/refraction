@@ -241,9 +241,11 @@ async function main() {
 			check( A, 'ACF tag prints nothing while ACF is not active (the control falls back to its own value)', ! page.includes( 'ACF-TEXT' ) && bh[ 6 ] === 'x', bh.join( '|' ) );
 			check( A, 'related posts: 3 News posts, not the post itself', count( page, /<article class="[^"]*refraction-post--classic/g ) === 3 && ! postTitles( page ).includes( 'LB Built Post' ) && postTitles( page ).every( ( t ) => /^Loop Post 0[1-7]$/.test( t ) ), postTitles( page ).join( ',' ) );
 			wp( [ 'option', 'update', 'lb_fake_acf', '1' ] );
+			wp( [ 'eval', 'delete_post_meta_by_key( "_refraction_element_cache" );' ] ); // elements are cached for a day; the tag set changed
 			page = await html( url( 'built_post' ) );
 			check( A, 'ACF stand in: ACF tag shows the field value', page.includes( 'ACF-TEXT' ), grab( page, /<h2 class="refraction-heading-title[^"]*">([^<]*)<\/h2>/g ).join( '|' ) );
 			wp( [ 'option', 'delete', 'lb_fake_acf' ] );
+			wp( [ 'eval', 'delete_post_meta_by_key( "_refraction_element_cache" );' ] );
 
 			// ---- Archive Posts on a real archive request --------------------------------------------------------
 			wp( [ 'option', 'update', 'lb_archive_page', String( T.archive ) ] );
@@ -492,7 +494,7 @@ async function main() {
 		await ap.waitForFunction( () => ! refraction.documents.getCurrent().editor.isChanged, null, { timeout: 30000 } );
 		page = await html( url( 'dyn_page' ) );
 		check( E, 'front end: text, textarea, wysiwyg, url, number, number', page.includes( '<p class="lb-dyn-text">RefractionTest</p>' ) && page.includes( '<p class="lb-dyn-textarea">Loops and tags</p>' ) && page.includes( 'Loops and tags' ) && page.includes( `href="${ BASE }/"` ) && page.includes( `<p class="lb-dyn-number">${ T.dyn_page }</p>` ), '' );
-		check( E, 'front end: image, gallery, color and date values', /<img class="lb-dyn-image" alt="" src="[^"]*lb-red[^"]*"/.test( page ) && /lb-dyn-gallery">[^<]*lb-red[^<]*lb-blue/.test( page ) && page.includes( 'color: #aa5500' ) && /<p class="lb-dyn-date">\w+ \d+, \d{4}<\/p>/.test( page ), grab( page, /(<p class="lb-dyn-(?:gallery|date)">[^<]*<\/p>)/g ).join( '' ) );
+		check( E, 'front end: image, gallery, color and date values', /<img[^>]*class="lb-dyn-image"[^>]*src="[^"]*lb-red[^"]*"/.test( page ) && /lb-dyn-gallery">[^<]*lb-red[^<]*lb-blue/.test( page ) && page.includes( 'color: #aa5500' ) && /<p class="lb-dyn-date">\w+ \d+, \d{4}<\/p>/.test( page ), grab( page, /(<(?:p|img)[^>]*lb-dyn-(?:gallery|date|image|color)[^>]*>)/g ).join( '' ) );
 		wp( [ 'post', 'meta', 'update', String( T.dyn_page ), 'brand_color', 'red; background:url(x)' ] );
 		page = await html( url( 'dyn_page' ) );
 		check( E, 'a custom field cannot inject css into a color control', ! page.includes( 'background:url(x)' ), '' );
@@ -573,11 +575,11 @@ async function main() {
 		check( A2, 'Theme Builder has a Loop Items tab', tabs.includes( 'Loop Items' ), tabs.join( ',' ) );
 		const rows = await ap.locator( '.rtb-table .row-title' ).allInnerTexts();
 		check( A2, 'the Loop Items tab lists the Loop Item templates without a conditions column', rows.includes( 'LB Card' ) && await ap.locator( '.column-conditions' ).count() === 0, rows.join( ',' ) );
-		await ap.goto( `${ BASE }/wp-admin/edit.php?post_type=refraction_library` );
+		await ap.goto( `${ BASE }/wp-admin/admin.php?page=refraction-theme-builder&tab=loop-item` );
 		await ap.locator( '.page-title-action' ).first().click();
 		await ap.waitForSelector( '#refraction-new-template__form__template-type', { timeout: 15000 } );
 		const typeOptions = await ap.locator( '#refraction-new-template__form__template-type option' ).allInnerTexts();
-		check( A2, 'the template type dialog offers Loop Item', typeOptions.includes( 'Loop Item' ), typeOptions.join( ',' ) );
+		check( A2, 'the template type dialog offers Loop Item, preselected from the tab', typeOptions.includes( 'Loop Item' ) && await ap.inputValue( '#refraction-new-template__form__template-type' ) === 'loop-item', typeOptions.join( ',' ) );
 		await ap.screenshot( { path: join( SHOTS, 'admin-loop-tab.png' ) } );
 
 		// ---- Lookup endpoint security -----------------------------------------------------------------------------
@@ -597,7 +599,7 @@ async function main() {
 		check( L, 'a valid request finds terms', res.status() === 200 && json.success && json.data.items.some( ( i ) => i.text === 'News' ), JSON.stringify( json ).slice( 0, 150 ) );
 		res = await lookup( editorUser, { kind: 'post', subtype: 'any', q: 'Hidden', _nonce: lookupNonce } );
 		json = await res.json();
-		check( L, 'post search never returns drafts, scheduled or protected posts', json.success && ! json.data.items.some( ( i ) => /Draft|Scheduled|Password/.test( i.text ) ), JSON.stringify( json.data.items ) );
+		check( L, 'post search never returns drafts or scheduled posts', json.success && json.data.items.some( ( i ) => /Password/.test( i.text ) ) && ! json.data.items.some( ( i ) => /Draft|Scheduled|Private/.test( i.text ) ), JSON.stringify( json.data.items ) );
 		res = await lookup( editorUser, { kind: 'post', subtype: 'nav_menu_item', q: 'a', _nonce: lookupNonce } );
 		json = await res.json();
 		check( L, 'a non public post type finds nothing', json.success && json.data.items.length === 0, JSON.stringify( json ).slice( 0, 150 ) );

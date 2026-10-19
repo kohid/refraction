@@ -29,8 +29,9 @@ abstract class Template_Loop_Widget extends Base_Loop_Widget {
 			[
 				'label' => esc_html__( 'Loop Item template', 'refraction' ),
 				'type' => Controls_Manager::SELECT,
-				'default' => '',
-				'options' => [ '' => esc_html__( 'Choose a template', 'refraction' ) ] + Loop_Renderer::get_template_options(),
+				// "0" and not "": a browser lists object keys that look like numbers first, so only "0" stays on top.
+				'default' => '0',
+				'options' => [ '0' => esc_html__( 'Choose a template', 'refraction' ) ] + Loop_Renderer::get_template_options(),
 				'label_block' => true,
 			]
 		);
@@ -41,7 +42,7 @@ abstract class Template_Loop_Widget extends Base_Loop_Widget {
 				'type' => Controls_Manager::BUTTON,
 				'text' => esc_html__( 'Edit the template', 'refraction' ),
 				'event' => 'refraction:loop:edit-template',
-				'condition' => [ 'template_id!' => '' ],
+				'condition' => [ 'template_id!' => [ '', '0' ] ],
 			]
 		);
 

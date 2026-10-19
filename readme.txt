@@ -39,6 +39,10 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.3.0 =
+* New: dynamic content. The database icon on text, link, image, gallery, number, color and date controls now offers tags: post (title, excerpt, content, dates, featured image, URL, ID, terms, comments, custom fields), author (name, bio, avatar, meta, URL), site (title, tagline, URL, logo, date, request parameter, shortcode, page title, visitor), archive, contact links (email, phone, SMS, WhatsApp, Skype), internal URL, lightbox and a popup link placeholder. With Advanced Custom Fields active, ACF text, number, URL, image, gallery, color and date tags appear too. Every tag has Before, After and Fallback.
+* New: Loop Builder. Loop Item template type (Refraction > Theme Builder > Loop Items) and the widgets Posts, Archive Posts, Portfolio, Loop Grid, Loop Carousel and Taxonomy Filter, with a reusable Query control (post type, manual selection, related posts, terms, authors, exclude, order, offset, avoid duplicates), numbered / previous-next / load more / infinite pagination and ajax filtering. Only published posts without a password are ever listed.
+
 = 0.2.0 =
 * New: complete rebrand. The editor, loading screens, toolbar and onboarding logos and the icon font are Refraction's own artwork (icon classes now use the `rficon-` prefix); documentation links point to this project; the kit export no longer lists removed features; the old changelog moved to docs/refraction/upstream-changelog.txt.
 * New: Theme Builder. Build your site's Header and Footer with Refraction and choose where each one appears. Refraction > Theme Builder lists them with their conditions; "Add New" opens the template type dialog with Header or Footer preselected.

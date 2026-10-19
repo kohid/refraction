@@ -83,14 +83,23 @@ class Loop_Item extends Library_Document {
 			}
 		}
 
-		$latest = get_posts( [
-			'post_type' => Query_Lookup::post_types(),
-			'post_status' => 'publish',
-			'posts_per_page' => 1,
-			'fields' => 'ids',
-			'no_found_rows' => true,
-			'has_password' => false,
-		] );
+		// The newest regular post first, then the newest of any other public type.
+		$latest = [];
+
+		foreach ( [ [ 'post' ], Query_Lookup::post_types() ] as $types ) {
+			$latest = get_posts( [
+				'post_type' => $types,
+				'post_status' => 'publish',
+				'posts_per_page' => 1,
+				'fields' => 'ids',
+				'no_found_rows' => true,
+				'has_password' => false,
+			] );
+
+			if ( $latest ) {
+				break;
+			}
+		}
 
 		return $latest ? (int) $latest[0] : 0;
 	}
