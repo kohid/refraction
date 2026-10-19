@@ -122,6 +122,7 @@ class Modules_Manager {
 			'markdown-render',
 			'agents',
 			'assets-manager',
+			'theme-builder',
 		];
 	}
 

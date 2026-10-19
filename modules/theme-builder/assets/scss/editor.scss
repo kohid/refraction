@@ -1,0 +1,231 @@
+// Display Conditions control (editor panel).
+.rtb-cond {
+	--rtb-include: #1f8a5b;
+	--rtb-exclude: #c0392b;
+	--rtb-warn-bg: rgba(212, 142, 0, 0.12);
+	--rtb-warn-line: #c98a00;
+	--rtb-line: var(--e-a-border-color, rgba(128, 128, 128, 0.3));
+	--rtb-muted: var(--e-a-color-txt-muted, #6d7882);
+
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	font-size: 12px;
+	line-height: 1.4;
+
+	select,
+	input[type="search"] {
+		width: 100%;
+		min-height: 30px;
+		padding: 4px 8px;
+		border: 1px solid var(--rtb-line);
+		border-radius: 3px;
+		background: var(--e-a-bg-default, transparent);
+		color: var(--e-a-color-txt, inherit);
+		font-size: 12px;
+		box-sizing: border-box;
+	}
+
+	select:focus,
+	input[type="search"]:focus {
+		outline: none;
+		border-color: var(--e-a-border-color-focus, #3b82f6);
+	}
+
+	&__notice {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
+		padding: 10px 12px;
+		border-inline-start: 3px solid var(--rtb-warn-line);
+		background: var(--rtb-warn-bg);
+		border-radius: 0 3px 3px 0;
+
+		strong {
+			font-weight: 600;
+		}
+	}
+
+	&__quick,
+	&__add {
+		cursor: pointer;
+		border: 1px solid var(--rtb-line);
+		border-radius: 3px;
+		background: transparent;
+		color: var(--e-a-color-txt, inherit);
+		font-size: 12px;
+		padding: 5px 10px;
+
+		&:hover {
+			background: var(--e-a-bg-hover, rgba(128, 128, 128, 0.12));
+		}
+	}
+
+	&__quick {
+		margin-top: 4px;
+		border-color: var(--rtb-warn-line);
+	}
+
+	&__add {
+		align-self: flex-start;
+		font-weight: 600;
+	}
+
+	&__row {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 8px 8px 8px 10px;
+		border: 1px solid var(--rtb-line);
+		border-inline-start-width: 3px;
+		border-radius: 3px;
+
+		&.is-include {
+			border-inline-start-color: var(--rtb-include);
+		}
+
+		&.is-exclude {
+			border-inline-start-color: var(--rtb-exclude);
+		}
+
+		&.is-incomplete {
+			background: var(--rtb-warn-bg);
+		}
+	}
+
+	&__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__verb {
+		display: inline-flex;
+		border: 1px solid var(--rtb-line);
+		border-radius: 3px;
+		overflow: hidden;
+
+		button {
+			cursor: pointer;
+			border: 0;
+			background: transparent;
+			color: var(--rtb-muted);
+			padding: 3px 10px;
+			font-size: 11px;
+			font-weight: 600;
+
+			&.is-on.is-include {
+				background: var(--rtb-include);
+				color: #fff;
+			}
+
+			&.is-on.is-exclude {
+				background: var(--rtb-exclude);
+				color: #fff;
+			}
+		}
+	}
+
+	&__remove {
+		cursor: pointer;
+		border: 0;
+		background: transparent;
+		color: var(--rtb-muted);
+		font-size: 18px;
+		line-height: 1;
+		padding: 0 4px;
+
+		&:hover {
+			color: var(--rtb-exclude);
+		}
+	}
+
+	&__target {
+		position: relative;
+	}
+
+	&__picked {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 6px;
+		padding: 5px 8px;
+		border-radius: 3px;
+		background: var(--e-a-bg-hover, rgba(128, 128, 128, 0.14));
+
+		button {
+			cursor: pointer;
+			border: 0;
+			background: transparent;
+			color: var(--rtb-muted);
+			font-size: 16px;
+			line-height: 1;
+		}
+	}
+
+	&__picked-text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__results {
+		position: absolute;
+		z-index: 5;
+		inset-inline: 0;
+		top: calc(100% + 2px);
+		max-height: 190px;
+		margin: 0;
+		padding: 2px 0;
+		overflow-y: auto;
+		list-style: none;
+		border: 1px solid var(--rtb-line);
+		border-radius: 3px;
+		background: var(--e-a-bg-default, #fff);
+		box-shadow: var(--e-a-popover-shadow, 0 4px 14px rgba(0, 0, 0, 0.2));
+
+		button {
+			display: flex;
+			justify-content: space-between;
+			gap: 8px;
+			width: 100%;
+			padding: 6px 10px;
+			border: 0;
+			background: transparent;
+			color: inherit;
+			text-align: start;
+			cursor: pointer;
+
+			&:hover {
+				background: var(--e-a-bg-hover, rgba(128, 128, 128, 0.14));
+			}
+
+			small {
+				color: var(--rtb-muted);
+			}
+		}
+
+		.is-empty {
+			padding: 6px 10px;
+			color: var(--rtb-muted);
+		}
+	}
+
+	&__required {
+		display: block;
+		margin-top: 3px;
+		color: var(--rtb-warn-line);
+	}
+
+	&__help {
+		margin: 0;
+		color: var(--rtb-muted);
+		font-size: 11px;
+	}
+
+	&.is-readonly select,
+	&.is-readonly input {
+		opacity: 0.7;
+	}
+}

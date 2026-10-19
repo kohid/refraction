@@ -39,6 +39,13 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.2.0 =
+* New: Theme Builder. Build your site's Header and Footer with Refraction and choose where each one appears. Refraction > Theme Builder lists them with their conditions; "Add New" opens the template type dialog with Header or Footer preselected.
+* New: Display Conditions in the template settings of the editor. Include or exclude the entire site, the front page, all singular pages, a post type, one page or post (with search), posts by an author or in a category/tag/custom term, child pages, archives (post type, category, tag, custom taxonomy, author, date, search results), the 404 page, and visitor rules (logged in, logged out, user role). Excludes always win, the most specific template wins, and ties go to the most recently modified template.
+* New: works with classic themes (header.php and footer.php are replaced when a template matches) and block themes (the header and footer template parts are replaced). When nothing matches, your theme renders normally. Themes can opt in explicitly with `add_theme_support( 'refraction-theme-builder' )` and `refraction_theme_builder_header()` / `refraction_theme_builder_footer()`.
+* Tweak: Floating Elements are now shown or hidden by the same conditions engine (rules are stored in the same place as before).
+* Tweak: the editor previews a header or footer template on a blank canvas, not on a copy of your site.
+
 = 0.1.2 =
 * Fix: "Create new page" on the Refraction home screen opened the WordPress block editor; it now opens the Refraction editor.
 * Fix: the editor's local template library did not open, its REST endpoint hit a PHP fatal, and inserting or saving a template crashed. Saved templates now list, insert and save locally.
