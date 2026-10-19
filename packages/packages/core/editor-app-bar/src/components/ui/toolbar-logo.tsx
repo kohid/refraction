@@ -45,23 +45,29 @@ const StyledRefractionLogo = styled( RefractionLogo, {
 	'& path': {
 		fill: theme.palette.background.default,
 		transition: 'all 0.2s linear',
-		transformOrigin: 'bottom left',
+		transformBox: 'fill-box',
+		transformOrigin: 'left center',
 		'&:first-of-type': {
+			// the prism: collapses into the baseline when the menu icon shows
+			transformOrigin: 'left bottom',
 			transitionDelay: ! showMenuIcon && '0.2s',
 			transform: showMenuIcon && 'translateY(-9px) scaleY(0)',
 		},
+		// the rays: short and fanned out next to the prism, full-width bars when the menu icon shows.
+		// Emotion automatically flips the x direction in RTL mode.
 		'&:not(:first-of-type)': {
-			// Emotion automatically change 4 to -4 in RTL mode.
-			transform: ! showMenuIcon && `translateX(${ theme.direction === 'rtl' ? '4' : '9' }px) scaleX(0.6)`,
+			transform: ! showMenuIcon && `translateX(${ theme.direction === 'rtl' ? '-6' : '6' }px) scaleX(0.55)`,
 		},
 		'&:nth-of-type(2)': {
 			transitionDelay: showMenuIcon ? '0' : '0.2s',
+			transform: ! showMenuIcon && `translateX(${ theme.direction === 'rtl' ? '-6' : '6' }px) rotate(-16deg) scaleX(0.55)`,
 		},
 		'&:nth-of-type(3)': {
 			transitionDelay: '0.1s',
 		},
 		'&:nth-of-type(4)': {
 			transitionDelay: showMenuIcon ? '0.2s' : '0',
+			transform: ! showMenuIcon && `translateX(${ theme.direction === 'rtl' ? '-6' : '6' }px) rotate(16deg) scaleX(0.55)`,
 		},
 	},
 } ) );

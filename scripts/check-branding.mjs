@@ -13,7 +13,7 @@
  *   - the attributes aria-label, title, alt, placeholder, value, href, src, data-tooltip,
  *   - every network request the page makes (no request may leave for the upstream vendor),
  *   - string values inside the editor's config objects (inline data).
- * The match is case-insensitive "refraction". ALLOW lists the attribution that has to stay.
+ * The match is case-insensitive "element[o]r" (the old product name). ALLOW lists the attribution that has to stay.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
@@ -36,7 +36,7 @@ mkdirSync( SHOTS, { recursive: true } );
 
 // Attribution that is required by the licence and stays on purpose (plugin author line on the Plugins screen).
 const ALLOW = [ /based on Elementor by Elementor\.com/i, /Elementor Ltd/i ];
-const RE = /refraction/i;
+const RE = /element[o]r/i; // written element[o]r so scripts/rename-to-refraction.mjs can never rewrite it
 
 const wp = ( ...a ) => execFileSync( 'php', [ '-d', 'memory_limit=512M', WPCLI, `--path=${ WPDIR }`, '--allow-root', ...a ], { encoding: 'utf8', stdio: [ 'ignore', 'pipe', 'pipe' ] } ).trim();
 
@@ -59,7 +59,7 @@ async function scan( page, label ) {
 	pagesScanned++;
 	const hits = await page.evaluate( () => {
 		const out = [];
-		const add = ( kind, text ) => { if ( /refraction/i.test( text ) ) { out.push( [ kind, text.replace( /\s+/g, ' ' ).trim().slice( 0, 400000 ) ] ); } };
+		const add = ( kind, text ) => { if ( /element[o]r/i.test( text ) ) { out.push( [ kind, text.replace( /\s+/g, ' ' ).trim().slice( 0, 400000 ) ] ); } };
 		add( 'title', document.title );
 		if ( document.body ) { add( 'innerText', document.body.innerText ); }
 		const walker = document.createTreeWalker( document.documentElement, NodeFilter.SHOW_ELEMENT );
@@ -78,7 +78,7 @@ async function scan( page, label ) {
 	for ( const [ kind, text ] of hits ) {
 		// innerText is the whole page text, so report only the matching sentence-sized windows.
 		if ( kind === 'innerText' || kind === 'template' || kind === 'text' ) {
-			const all = text.match( /.{0,70}refraction.{0,70}/gi ) || [ text.slice( 0, 200 ) ];
+			const all = text.match( /.{0,70}element[o]r.{0,70}/gi ) || [ text.slice( 0, 200 ) ];
 			for ( const w of all ) { findings.push( { label, kind, text: w } ); }
 		} else {
 			findings.push( { label, kind, text } );
@@ -92,7 +92,7 @@ async function scanConfig( page, label ) {
 		const seen = new WeakSet();
 		const walk = ( v, path, depth ) => {
 			if ( depth > 7 || v === null ) { return; }
-			if ( typeof v === 'string' ) { if ( /refraction/i.test( v ) ) { out.push( `${ path } = ${ v.slice( 0, 160 ) }` ); } return; }
+			if ( typeof v === 'string' ) { if ( /element[o]r/i.test( v ) ) { out.push( `${ path } = ${ v.slice( 0, 160 ) }` ); } return; }
 			if ( typeof v !== 'object' || seen.has( v ) ) { return; }
 			seen.add( v );
 			let keys = [];
@@ -176,7 +176,7 @@ async function main() {
 		return true;
 	};
 	// hamburger / main menu, then close
-	await tryClick( '#refraction-panel-header-menu-button', 'editor-main-menu' );
+	await tryClick( 'button[value="selected"], #refraction-panel-header-menu-button', 'editor-main-menu' );
 	await loading.screenshot( { path: join( SHOTS, 'editor-main-menu.png' ) } );
 	await loading.keyboard.press( 'Escape' );
 	await tryClick( '#refraction-panel-header-menu-button', 'editor-main-menu-close', 300 );
@@ -217,7 +217,7 @@ async function main() {
 	for ( const f of hard ) { ( byKind[ f.kind ] ||= [] ).push( f ); }
 	const net = [ ...requests ];
 	writeFileSync( OUT, JSON.stringify( { pagesScanned, hits: hard, allowed: findings.filter( allowed ), requests: net, external: [ ...external ] }, null, 2 ) );
-	console.log( `scanned ${ pagesScanned } views; ${ hard.length } non-allowlisted hit(s); ${ findings.filter( allowed ).length } allowlisted; ${ net.length } request(s) to *refraction*; external origins: ${ [ ...external ].join( ', ' ) || 'none' }` );
+	console.log( `scanned ${ pagesScanned } views; ${ hard.length } non-allowlisted hit(s); ${ findings.filter( allowed ).length } allowlisted; ${ net.length } request(s) to *element[o]r* hosts; external origins: ${ [ ...external ].join( ', ' ) || 'none' }` );
 	for ( const [ k, list ] of Object.entries( byKind ) ) {
 		console.log( `\n== ${ k } (${ list.length })` );
 		const uniq = new Map();

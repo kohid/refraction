@@ -46,6 +46,7 @@ const SKIP_FILES = new Set( [
 	'composer.lock',
 	'scripts/rename-to-refraction.mjs',
 	'scripts/check-brand-static.mjs',
+	'scripts/check-branding.mjs',
 	'scripts/build-icon-font.py',
 ] );
 // Root-level Markdown (README, AGENTS, CLAUDE, CONTRIBUTING) is hand written, and the per-package CHANGELOG.md files are
