@@ -165,6 +165,13 @@ async function main() {
 
 		const url = ( key ) => `/?p=${ T[ key ] }`;
 
+		// The editor saves a plain text copy of every widget into post_content (WordPress search reads it). A list of
+		// posts must not leave a snapshot there: it goes stale and makes search find pages by the titles they list.
+		for ( const key of [ 'grid', 'posts_cards', 'portfolio', 'carousel', 'archive', 'grid_filter' ] ) {
+			const stored = wp( [ 'post', 'get', String( T[ key ] ), '--field=post_content' ] );
+			check( 'plain text', `${ key }: loop widgets store nothing in post_content`, ! /Loop Post|refraction-loop|\?p=\d+|rpage-/.test( stored ), stored.slice( 0, 120 ) );
+		}
+
 		for ( const theme of themes ) {
 			console.log( `\n== theme ${ theme } ==` );
 			wp( [ 'theme', 'activate', theme ] );
