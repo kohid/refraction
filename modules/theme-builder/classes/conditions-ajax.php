@@ -11,7 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Request: admin-ajax.php?action=refraction_theme_builder_lookup, POST fields `_nonce`, `kind`
  * (`post`, `term`, `user`), `subtype` (post type or taxonomy, `any` for every public post type),
  * and either `q` (search text) or `ids` (comma separated IDs to turn into labels).
- * Needs a user who can manage options.
+ * Searching needs a user who can manage options (the people who may edit display conditions). Turning
+ * saved IDs into labels, which the read-only view for other editors needs, only needs `edit_posts`, and
+ * only returns what that user may read.
  */
 class Conditions_Ajax {
 
@@ -28,14 +30,16 @@ class Conditions_Ajax {
 			wp_send_json_error( [ 'message' => esc_html__( 'Your session expired. Reload the editor and try again.', 'refraction' ) ], 403 );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'You are not allowed to edit display conditions.', 'refraction' ) ], 403 );
-		}
-
 		$kind = isset( $_POST['kind'] ) ? sanitize_key( wp_unslash( $_POST['kind'] ) ) : '';
 		$subtype = isset( $_POST['subtype'] ) ? sanitize_key( wp_unslash( $_POST['subtype'] ) ) : '';
 		$query = isset( $_POST['q'] ) ? sanitize_text_field( wp_unslash( $_POST['q'] ) ) : '';
-		$ids = isset( $_POST['ids'] ) ? array_filter( array_map( 'absint', explode( ',', sanitize_text_field( wp_unslash( $_POST['ids'] ) ) ) ) ) : [];
+		$ids = isset( $_POST['ids'] ) ? array_slice( array_filter( array_map( 'absint', explode( ',', sanitize_text_field( wp_unslash( $_POST['ids'] ) ) ) ) ), 0, 100 ) : [];
+
+		$allowed = $ids ? current_user_can( 'edit_posts' ) : current_user_can( 'manage_options' );
+
+		if ( ! $allowed ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'You are not allowed to edit display conditions.', 'refraction' ) ], 403 );
+		}
 
 		switch ( $kind ) {
 			case 'post':
@@ -90,6 +94,10 @@ class Conditions_Ajax {
 		$items = [];
 
 		foreach ( get_posts( $args ) as $post ) {
+			if ( $ids && ! current_user_can( 'read_post', $post->ID ) ) {
+				continue;
+			}
+
 			$items[] = [
 				'id' => $post->ID,
 				'text' => ( '' !== $post->post_title ? $post->post_title : '#' . $post->ID ),
@@ -136,6 +144,10 @@ class Conditions_Ajax {
 	}
 
 	private function lookup_users( string $query, array $ids ): array {
+		if ( $ids && ! current_user_can( 'list_users' ) ) {
+			return [];
+		}
+
 		$args = [
 			'number' => $ids ? count( $ids ) : self::LIMIT,
 			'fields' => [ 'ID', 'display_name' ],

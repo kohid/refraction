@@ -2,6 +2,7 @@
 namespace Refraction\Modules\ThemeBuilder\Classes;
 
 use Refraction\Core\Base\Document;
+use Refraction\Modules\ThemeBuilder\Documents\Theme_Document;
 use Refraction\Plugin;
 use Refraction\TemplateLibrary\Source_Local;
 
@@ -234,7 +235,9 @@ class Admin_Page {
 
 		$post = get_post( $post_id );
 
-		if ( ! $post || Source_Local::CPT !== $post->post_type || ! current_user_can( 'delete_post', $post_id ) ) {
+		$is_template = $post && Source_Local::CPT === $post->post_type && Plugin::$instance->documents->get( $post_id ) instanceof Theme_Document;
+
+		if ( ! $is_template || ! current_user_can( 'delete_post', $post_id ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete this template.', 'refraction' ), 403 );
 		}
 

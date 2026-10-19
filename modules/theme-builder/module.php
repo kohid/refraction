@@ -20,7 +20,9 @@ use Refraction\Modules\ThemeBuilder\Control\Control_Conditions;
 use Refraction\Modules\ThemeBuilder\Documents\Footer;
 use Refraction\Modules\ThemeBuilder\Documents\Header;
 use Refraction\Modules\ThemeBuilder\Documents\Theme_Document;
+use Refraction\Modules\PageTemplates\Module as PageTemplatesModule;
 use Refraction\Plugin;
+use Refraction\TemplateLibrary\Source_Local;
 use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -73,6 +75,7 @@ class Module extends BaseModule {
 		add_action( 'refraction/controls/register', [ $this, 'register_controls' ] );
 		add_filter( 'refraction/document/save/data', [ $this, 'sanitize_saved_conditions' ], 10, 2 );
 		add_action( 'refraction/document/after_save', [ $this, 'store_saved_conditions' ], 10, 2 );
+		add_filter( 'template_include', [ $this, 'use_canvas_for_template_preview' ], 20 );
 		add_action( 'before_delete_post', [ $this, 'forget_deleted_template' ] );
 		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'enqueue_editor_assets' ] );
 		add_action( 'refraction/editor-one/menu/register', [ $this, 'register_menu' ] );
@@ -137,6 +140,21 @@ class Module extends BaseModule {
 		}
 
 		$this->get_store()->save_rules( $post_id, $document->get_location(), (array) $data['settings'][ $key ] );
+	}
+
+	/**
+	 * A header or footer template opened on its own (editor preview, direct link) shows only itself,
+	 * on the blank Refraction canvas, never inside the theme's header and footer.
+	 */
+	public function use_canvas_for_template_preview( $template ) {
+		if ( ! is_singular( Source_Local::CPT ) || ! Plugin::$instance->documents->get( get_queried_object_id() ) instanceof Theme_Document ) {
+			return $template;
+		}
+
+		$page_templates = Plugin::$instance->modules_manager->get_modules( 'page-templates' );
+		$canvas = $page_templates ? $page_templates->get_template_path( PageTemplatesModule::TEMPLATE_CANVAS ) : '';
+
+		return $canvas ? $canvas : $template;
 	}
 
 	public function forget_deleted_template( $post_id ): void {

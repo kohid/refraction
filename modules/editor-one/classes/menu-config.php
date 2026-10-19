@@ -30,9 +30,8 @@ class Menu_Config {
 	}
 
 	public static function get_excluded_level3_slugs(): array {
-		// refraction pro slugs
+		// refraction pro slugs (the Theme Builder page is built in, so its slug is not excluded)
 		$default_slugs = [
-			'refraction-theme-builder',
 			'refraction-pro-notes-proxy',
 			self::EDITOR_MENU_SLUG,
 		];

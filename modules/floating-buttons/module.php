@@ -16,6 +16,8 @@ use Refraction\TemplateLibrary\Source_Local;
 use Refraction\Utils as RefractionUtils;
 use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
 use Refraction\Modules\FloatingButtons\AdminMenuItems\Editor_One_Floating_Elements_Menu;
+use Refraction\Modules\ThemeBuilder\Classes\Resolver;
+use Refraction\Modules\ThemeBuilder\Module as ThemeBuilderModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -272,10 +274,10 @@ class Module extends BaseModule {
 				if ( RefractionUtils::has_pro() ) {
 					break;
 				}
-				$instances = get_post_meta( $post_id, '_refraction_conditions', true );
-				if ( $instances ) {
-					echo esc_html__( 'Entire Site', 'refraction' );
-				}
+				$lines = ThemeBuilderModule::instance()->get_conditions_manager()->describe(
+					ThemeBuilderModule::instance()->get_store()->get_rules( $post_id )
+				);
+				echo esc_html( implode( ', ', $lines ) );
 				break;
 			default:
 				break;
@@ -506,18 +508,31 @@ class Module extends BaseModule {
 			return;
 		}
 
-		foreach ( $query->posts as $post_id ) {
-			$conditions = get_post_meta( $post_id, '_refraction_conditions', true );
+		// The Theme Builder engine decides which element of each type shows on this page.
+		$theme_builder = ThemeBuilderModule::instance();
+		$candidates_by_type = [];
 
-			if ( ! $conditions ) {
+		foreach ( $query->posts as $post_id ) {
+			$rules = $theme_builder->get_store()->get_rules( $post_id );
+
+			if ( ! $rules ) {
 				continue;
 			}
 
-			if (
-				in_array( 'include/general', $conditions ) &&
-				! $this->is_preview_for_document( $post_id ) &&
-				get_the_ID() !== $post_id
-			) {
+			$type = Floating_Buttons::get_floating_element_type( $post_id );
+
+			$candidates_by_type[ $type ][ $post_id ] = [
+				'rules' => $rules,
+				'modified' => (int) strtotime( get_post_field( 'post_modified_gmt', $post_id ) . ' UTC' ),
+			];
+		}
+
+		$resolver = new Resolver( $theme_builder->get_conditions_manager() );
+
+		foreach ( $candidates_by_type as $candidates ) {
+			$post_id = $resolver->pick( $candidates );
+
+			if ( $post_id && ! $this->is_preview_for_document( $post_id ) && get_the_ID() !== $post_id ) {
 				$document = Plugin::$instance->documents->get( $post_id );
 				$document->print_content();
 			}
