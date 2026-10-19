@@ -42,7 +42,7 @@ class Rest_Controller {
 				'args' => [
 					'token' => [ 'type' => 'string', 'required' => true ],
 					'page' => [ 'type' => 'integer', 'default' => 1 ],
-					'filter' => [ 'type' => 'object', 'default' => null ],
+					'filter' => [ 'type' => [ 'object', 'null' ], 'default' => null ],
 				],
 			]
 		);

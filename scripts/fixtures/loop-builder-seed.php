@@ -15,7 +15,9 @@ $docs = \Refraction\Plugin::$instance->documents;
 $tags = \Refraction\Plugin::$instance->dynamic_tags;
 
 function lb_tag( $name, $settings = [] ) {
-	return \Refraction\Plugin::$instance->dynamic_tags->tag_data_to_tag_text( substr( md5( $name . wp_json_encode( $settings ) ), 0, 7 ), $name, $settings );
+	// Built by hand (same format as the dynamic tags manager) so a tag of an optional plugin such as ACF can be
+	// saved while that plugin is not active.
+	return sprintf( '[refraction-tag id="%1$s" name="%2$s" settings="%3$s"]', substr( md5( $name . wp_json_encode( $settings ) ), 0, 7 ), $name, urlencode( wp_json_encode( (object) $settings ) ) );
 }
 
 function lb_id( $seed ) {
@@ -138,6 +140,14 @@ if ( 'cleanup' === $action ) {
 
 	echo wp_json_encode( $out );
 } elseif ( 'templates' === $action ) {
+	// Advanced Custom Fields may be missing on the test site: its tags are only known while get_field() exists, and
+	// a dynamic setting of an unknown tag is dropped when a document is saved. A stand in lets the fixture store one.
+	if ( ! function_exists( 'get_field' ) ) {
+		function get_field() {
+			return null;
+		}
+	}
+
 	$content = json_decode( getenv( 'LB_CONTENT' ), true );
 	$out = [];
 
@@ -223,6 +233,8 @@ if ( 'cleanup' === $action ) {
 		lb_widget( 'button', [ 'text' => 'Lightbox', 'link' => [ 'url' => '' ] ], [ 'link' => lb_tag( 'lightbox', [ 'type' => 'video', 'video_url' => 'https://www.youtube.com/watch?v=XHOmBV4js_E' ] ) ] ),
 	];
 	$out['tags_page'] = lb_page( $docs, 'lb-tags', 'LB Tags Page', [ lb_container( $page_tags ) ] );
+
+	$out['dyn_page'] = lb_page( $docs, 'lb-dyn', 'LB Dyn Page', [ lb_container( [ lb_widget( 'lb-dynamic-test', [] ) ] ) ] );
 
 	// A post built with the editor: single view, post context, related posts, ACF stand in.
 	$post = $docs->create( 'wp-post', [ 'post_title' => 'LB Built Post', 'post_name' => 'lb-built-post', 'post_status' => 'publish', 'post_category' => [ $content['news'] ], 'post_author' => $content['author'], 'post_date' => gmdate( 'Y-m-d H:i:s', time() - 30 * 86400 ) ] );

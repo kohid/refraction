@@ -306,27 +306,15 @@ abstract class Base_Loop_Widget extends Widget_Base {
 	}
 
 	protected function get_requested_page(): int {
-		if ( $this->uses_archive_query() ) {
-			return max( 1, (int) get_query_var( 'paged' ) );
-		}
-
 		return isset( $_GET[ $this->get_page_param() ] ) ? max( 1, absint( wp_unslash( $_GET[ $this->get_page_param() ] ) ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
+	/**
+	 * Link to a page of this widget. Every widget has its own parameter, so several lists (and the theme's own
+	 * `paged` pagination of an archive) never fight over one page number.
+	 */
 	protected function get_page_url( int $page, array $opts ): string {
-		$base = $opts['url'] ?? '';
-
-		if ( $this->uses_archive_query() && '' === $base ) {
-			return get_pagenum_link( $page );
-		}
-
-		if ( '' === $base ) {
-			$base = $this->get_current_url();
-		}
-
-		if ( $this->uses_archive_query() ) {
-			return 1 === $page ? remove_query_arg( 'paged', $base ) : add_query_arg( 'paged', $page, $base );
-		}
+		$base = '' !== ( $opts['url'] ?? '' ) ? $opts['url'] : $this->get_current_url();
 
 		return 1 === $page ? remove_query_arg( $this->get_page_param(), $base ) : add_query_arg( $this->get_page_param(), $page, $base );
 	}
@@ -335,11 +323,11 @@ abstract class Base_Loop_Widget extends Widget_Base {
 		global $wp;
 
 		$path = isset( $wp->request ) ? $wp->request : '';
-		$url = home_url( user_trailingslashit( $path ) );
+		$url = '' === $path ? home_url( '/' ) : home_url( user_trailingslashit( $path ) );
 		$args = [];
 
 		foreach ( (array) $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( is_scalar( $value ) && 0 !== strpos( (string) $key, 'rpage-' ) && 'paged' !== $key ) {
+			if ( is_scalar( $value ) && 0 !== strpos( (string) $key, 'rpage-' ) ) {
 				$args[ sanitize_key( (string) $key ) ] = sanitize_text_field( wp_unslash( (string) $value ) );
 			}
 		}
@@ -355,16 +343,25 @@ abstract class Base_Loop_Widget extends Widget_Base {
 	public function render_page( int $page, ?array $filter = null, array $opts = [] ): array {
 		$settings = $this->get_settings_for_display();
 		$page = max( 1, $page );
+		$requested = $page;
 		$query = Query_Runner::query( $this->get_query_args( $page, $filter, $opts ) );
-		$per_page = max( 1, (int) $query->get( 'posts_per_page' ) );
-		$total = Pagination::total_pages( (int) $query->found_posts, $per_page, $this->uses_archive_query() ? 0 : $this->get_base_offset() );
-		$limit = absint( $settings['pagination_page_limit'] ?? 0 );
 
-		if ( $limit && $total > $limit ) {
-			$total = $limit;
+		// WordPress reports no found rows when the requested page is past the end, so ask for the first page
+		// to learn how many pages there are, then fall back to the last one.
+		if ( $page > 1 && ! $query->have_posts() ) {
+			$page = 1;
+			$query = Query_Runner::query( $this->get_query_args( 1, $filter, $opts ) );
+			$total = $this->count_pages( $query, $settings );
+
+			if ( $total > 1 ) {
+				$page = min( $total, $requested );
+				$query = Query_Runner::query( $this->get_query_args( $page, $filter, $opts ) );
+			}
+		} else {
+			$total = $this->count_pages( $query, $settings );
 		}
 
-		if ( $total > 0 && $page > $total ) {
+		if ( $page > 1 && $total > 0 && $page > $total ) {
 			$page = $total;
 			$query = Query_Runner::query( $this->get_query_args( $page, $filter, $opts ) );
 		}
@@ -401,6 +398,15 @@ abstract class Base_Loop_Widget extends Widget_Base {
 			'has_more' => $page < $total,
 			'count' => $index,
 		];
+	}
+
+	/** Pages of a query after the editor's offset and page limit. */
+	private function count_pages( \WP_Query $query, array $settings ): int {
+		$per_page = max( 1, (int) $query->get( 'posts_per_page' ) );
+		$total = Pagination::total_pages( (int) $query->found_posts, $per_page, $this->uses_archive_query() ? 0 : $this->get_base_offset() );
+		$limit = absint( $settings['pagination_page_limit'] ?? 0 );
+
+		return $limit && $total > $limit ? $limit : $total;
 	}
 
 	protected function render_pagination( int $page, int $total, array $settings, array $opts ): string {
@@ -481,7 +487,7 @@ abstract class Base_Loop_Widget extends Widget_Base {
 		$settings = $this->get_settings_for_display();
 		$page = $this->get_requested_page();
 		$is_edit = Plugin::$instance->editor->is_edit_mode();
-		$result = $this->render_page( $page, null, $is_edit ? [] : [ 'url' => $this->uses_archive_query() ? '' : $this->get_current_url() ] );
+		$result = $this->render_page( $page, null, $is_edit ? [] : [ 'url' => $this->get_current_url() ] );
 		$type = (string) ( $settings['pagination_type'] ?? 'none' );
 
 		$this->add_render_attribute( 'loop', [

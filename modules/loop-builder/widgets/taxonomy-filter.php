@@ -3,6 +3,7 @@ namespace Refraction\Modules\LoopBuilder\Widgets;
 
 use Refraction\Controls_Manager;
 use Refraction\Group_Control_Typography;
+use Refraction\Modules\LoopBuilder\Classes\Query_Lookup;
 use Refraction\Widget_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -213,6 +214,24 @@ class Taxonomy_Filter extends Widget_Base {
 		$this->end_controls_section();
 	}
 
+	/**
+	 * Published posts of the term that a list can show. The stored term count also counts password protected
+	 * posts, which the loop widgets never list, so it is counted again.
+	 */
+	private function count_visible_posts( \WP_Term $term ): int {
+		$query = new \WP_Query( [
+			'post_type' => Query_Lookup::post_types(),
+			'post_status' => 'publish',
+			'has_password' => false,
+			'posts_per_page' => 1,
+			'fields' => 'ids',
+			'ignore_sticky_posts' => true,
+			'tax_query' => [ [ 'taxonomy' => $term->taxonomy, 'field' => 'term_id', 'terms' => [ $term->term_id ] ] ], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		] );
+
+		return (int) $query->found_posts;
+	}
+
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$taxonomy = sanitize_key( (string) $settings['taxonomy'] );
@@ -246,7 +265,7 @@ class Taxonomy_Filter extends Widget_Base {
 				<button type="button" class="refraction-taxonomy-filter__item" data-term-id="<?php echo esc_attr( (string) $term->term_id ); ?>" aria-pressed="false">
 					<?php echo esc_html( $term->name ); ?>
 					<?php if ( 'yes' === $settings['show_count'] ) : ?>
-						<span class="refraction-taxonomy-filter__count"><?php echo esc_html( (string) $term->count ); ?></span>
+						<span class="refraction-taxonomy-filter__count"><?php echo esc_html( (string) $this->count_visible_posts( $term ) ); ?></span>
 					<?php endif; ?>
 				</button>
 			<?php endforeach; ?>

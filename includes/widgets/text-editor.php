@@ -351,6 +351,9 @@ class Widget_Text_Editor extends Widget_Base {
 				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
+				'dynamic' => [
+					'active' => true,
+				],
 				'selectors' => [
 					'{{WRAPPER}}' => 'color: {{VALUE}};',
 				],
