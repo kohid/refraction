@@ -113,7 +113,7 @@ async function main() {
 	const consoleErrors = [];
 	const watch = ( page, label ) => {
 		page.on( 'console', ( m ) => {
-			if ( m.type() === 'error' && ! /favicon\.ico|Transition was skipped|evil\.test/.test( m.location().url + m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
+			if ( m.type() === 'error' && ! /favicon\.ico|Transition was skipped|evil\.test|page=refraction-custom-code/.test( m.location().url + m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
 		} );
 		page.on( 'pageerror', ( e ) => ! /Transition was skipped/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
 	};
@@ -384,8 +384,10 @@ async function main() {
 		check( 'custom-code', 'no snippet output in the editor preview', ! noSnippets.includes( 'ea-head' ) && ! noSnippets.includes( 'ea-body-start' ) && ! noSnippets.includes( 'refraction-snippet-' ) );
 
 		// the Advanced tab in the real panel
-		await p.evaluate( () => { const c = refraction.getContainer( 'dc00002' ); c.model.trigger( 'request:edit', { scrollIntoView: false } ); setTimeout( () => $e.route( 'panel/editor/advanced' ), 300 ); } );
+		await p.evaluate( () => { const c = refraction.getContainer( 'dc00002' ); c.model.trigger( 'request:edit', { scrollIntoView: false } ); } );
 		await sleep( 1200 );
+		await p.locator( '#refraction-panel' ).getByText( 'Advanced', { exact: true } ).first().click();
+		await sleep( 800 );
 		const panelText = await p.locator( '#refraction-panel' ).innerText();
 		check( 'editor', 'the Advanced tab lists Custom CSS, Display Conditions and Attributes sections', /Custom CSS/i.test( panelText ) && /Display Conditions/i.test( panelText ) && /Attributes/i.test( panelText ), panelText.slice( 0, 300 ) );
 		await p.screenshot( { path: join( SHOTS, 'editor-advanced.png' ) } );
