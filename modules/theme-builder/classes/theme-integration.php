@@ -32,6 +32,7 @@ class Theme_Integration {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_template_styles' ], 20 );
 		add_action( 'get_header', [ $this, 'takeover_header' ], 0, 2 );
 		add_action( 'get_footer', [ $this, 'takeover_footer' ], 0, 2 );
+		add_filter( 'template_include', [ $this, 'use_body_template' ], 15 );
 		add_filter( 'pre_render_block', [ $this, 'replace_template_part' ], 10, 2 );
 		add_action( 'refraction/theme_builder/render_header', [ $this, 'render_header_action' ] );
 		add_action( 'refraction/theme_builder/render_footer', [ $this, 'render_footer_action' ] );
@@ -46,6 +47,20 @@ class Theme_Integration {
 				Post_CSS::create( $id )->enqueue();
 			}
 		}
+	}
+
+	/**
+	 * A Single, Archive, Search Results or Error 404 template that matches replaces the theme's page template
+	 * with the Refraction Theme Builder page (header + template + footer).
+	 */
+	public function use_body_template( $template ) {
+		if ( '' === $this->locations->get_body_location() ) {
+			return $template;
+		}
+
+		$path = dirname( __DIR__ ) . '/templates/body.php';
+
+		return is_readable( $path ) ? $path : $template;
 	}
 
 	private function is_classic_takeover_allowed(): bool {

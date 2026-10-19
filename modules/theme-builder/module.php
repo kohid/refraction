@@ -17,8 +17,12 @@ use Refraction\Modules\ThemeBuilder\Classes\Rule;
 use Refraction\Modules\ThemeBuilder\Classes\Theme_Integration;
 use Refraction\Modules\ThemeBuilder\Classes\Wp_Environment;
 use Refraction\Modules\ThemeBuilder\Control\Control_Conditions;
+use Refraction\Modules\ThemeBuilder\Documents\Archive;
+use Refraction\Modules\ThemeBuilder\Documents\Error_404;
 use Refraction\Modules\ThemeBuilder\Documents\Footer;
 use Refraction\Modules\ThemeBuilder\Documents\Header;
+use Refraction\Modules\ThemeBuilder\Documents\Search_Results;
+use Refraction\Modules\ThemeBuilder\Documents\Single;
 use Refraction\Modules\ThemeBuilder\Documents\Theme_Document;
 use Refraction\Modules\PageTemplates\Module as PageTemplatesModule;
 use Refraction\Plugin;
@@ -95,7 +99,11 @@ class Module extends BaseModule {
 	public function register_documents( Documents_Manager $documents_manager ): void {
 		$documents_manager
 			->register_document_type( Header::get_type(), Header::get_class_full_name() )
-			->register_document_type( Footer::get_type(), Footer::get_class_full_name() );
+			->register_document_type( Footer::get_type(), Footer::get_class_full_name() )
+			->register_document_type( Single::get_type(), Single::get_class_full_name() )
+			->register_document_type( Archive::get_type(), Archive::get_class_full_name() )
+			->register_document_type( Search_Results::get_type(), Search_Results::get_class_full_name() )
+			->register_document_type( Error_404::get_type(), Error_404::get_class_full_name() );
 	}
 
 	public function register_controls( Controls_Manager $controls_manager ): void {

@@ -14,8 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Locations_Manager {
 
-	const HEADER = 'header';
-	const FOOTER = 'footer';
+	const HEADER = Location_Scope::HEADER;
+	const FOOTER = Location_Scope::FOOTER;
+	const SINGLE = Location_Scope::SINGLE;
+	const ARCHIVE = Location_Scope::ARCHIVE;
+	const SEARCH = Location_Scope::SEARCH;
+	const NOT_FOUND = Location_Scope::NOT_FOUND;
 
 	private Conditions_Store $store;
 	private Resolver $resolver;
@@ -43,6 +47,22 @@ class Locations_Manager {
 			self::FOOTER => [
 				'label' => esc_html__( 'Footer', 'refraction' ),
 				'tag' => 'footer',
+			],
+			self::SINGLE => [
+				'label' => esc_html__( 'Single', 'refraction' ),
+				'tag' => 'main',
+			],
+			self::ARCHIVE => [
+				'label' => esc_html__( 'Archive', 'refraction' ),
+				'tag' => 'main',
+			],
+			self::SEARCH => [
+				'label' => esc_html__( 'Search Results', 'refraction' ),
+				'tag' => 'main',
+			],
+			self::NOT_FOUND => [
+				'label' => esc_html__( 'Error 404', 'refraction' ),
+				'tag' => 'main',
 			],
 		];
 	}
@@ -96,7 +116,7 @@ class Locations_Manager {
 		}
 
 		if ( ! isset( $this->resolved[ $location ] ) ) {
-			$id = $this->resolver->pick( $this->store->get_candidates( $location, Source_Local::CPT ) );
+			$id = $this->resolver->pick( $this->store->get_candidates( $location, Source_Local::CPT ), $location );
 
 			/**
 			 * Filters the template chosen for a location.
@@ -108,6 +128,32 @@ class Locations_Manager {
 		}
 
 		return $this->resolved[ $location ];
+	}
+
+	/**
+	 * The body location (single, archive, search results, 404) that has a template for this request,
+	 * or an empty string when the theme should render the page.
+	 */
+	public function get_body_location(): string {
+		// Library templates (sections, pages, headers...) opened on their own are not site pages.
+		if ( is_singular( Source_Local::CPT ) || ( is_singular() && $this->uses_own_page_template() ) ) {
+			return '';
+		}
+
+		foreach ( Location_Scope::body_locations() as $location ) {
+			if ( $this->get_template_id( $location ) ) {
+				return $location;
+			}
+		}
+
+		return '';
+	}
+
+	/** A page that picked the Refraction Canvas or Header-Footer page template keeps it. */
+	private function uses_own_page_template(): bool {
+		$template = (string) get_post_meta( (int) get_queried_object_id(), '_wp_page_template', true );
+
+		return in_array( $template, [ 'refraction_canvas', 'refraction_header_footer' ], true );
 	}
 
 	/** Markup of the winning template wrapped for its location; empty when nothing matches. */
