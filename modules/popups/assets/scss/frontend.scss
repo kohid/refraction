@@ -53,13 +53,10 @@
 	box-shadow: 0 24px 60px rgba(15, 18, 30, 0.28);
 	pointer-events: auto;
 
-	&:focus {
-		outline: none;
-	}
-
+	// The dialog itself takes focus when it opens; a ring around the whole box is noise (its controls keep theirs).
+	&:focus,
 	&:focus-visible {
-		outline: 2px solid currentColor;
-		outline-offset: -4px;
+		outline: none;
 	}
 }
 
@@ -72,15 +69,18 @@
 }
 
 // The close button belongs to the box, not to the scrolling content, so it stays in its corner and may sit outside (negative offsets).
-.refraction-popup__close {
+.refraction-popup .refraction-popup__close {
 	position: absolute;
 	top: 12px;
 	right: var(--rp-close-x, 12px);
+	left: auto;
 	z-index: 3;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	box-sizing: border-box;
+	width: auto;
+	height: auto;
 	min-width: 32px;
 	min-height: 32px;
 	margin: 0;
@@ -88,8 +88,13 @@
 	border: 0;
 	border-radius: 999px;
 	background: transparent;
+	box-shadow: none;
 	color: #1d2230;
+	font: inherit;
 	line-height: 0;
+	text-transform: none;
+	letter-spacing: normal;
+	appearance: none;
 	cursor: pointer;
 	transition: background-color 0.15s ease, color 0.15s ease;
 

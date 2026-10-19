@@ -724,10 +724,18 @@
 		}
 
 		// Links made with the Popup dynamic tag: #refraction-popup:open:12 / :close / :toggle:12 (also :close:12).
-		const link = target.closest( 'a[href*="#refraction-popup:"]' );
+		const link = target.closest( 'a[href*="#refraction-popup"]' );
 
 		if ( link ) {
-			const match = /#refraction-popup:(open|close|toggle)(?::(\d+))?$/.exec( link.getAttribute( 'href' ) || '' );
+			let href = link.getAttribute( 'href' ) || '';
+
+			try {
+				href = decodeURIComponent( href );
+			} catch ( e ) {
+				// Keep the raw value.
+			}
+
+			const match = /#refraction-popup:(open|close|toggle)(?::(\d+))?$/.exec( href );
 
 			if ( match ) {
 				event.preventDefault();

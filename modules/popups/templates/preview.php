@@ -4,6 +4,7 @@
  * overlay, always open, so the designer sees the real thing. Visitors never get this page.
  */
 
+use Refraction\Modules\Popups\Classes\Popup_Manager;
 use Refraction\Modules\Popups\Classes\Popup_Renderer;
 use Refraction\Plugin;
 use Refraction\Utils;
@@ -16,6 +17,7 @@ $refraction_popup = Plugin::$instance->documents->get( get_queried_object_id() )
 $refraction_popup_id = (int) get_queried_object_id();
 
 Plugin::$instance->frontend->add_body_class( 'refraction-popup-preview' );
+wp_enqueue_style( Popup_Manager::STYLE );
 
 ?>
 <!DOCTYPE html>

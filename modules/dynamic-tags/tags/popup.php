@@ -60,16 +60,17 @@ class Popup extends Data_Tag {
 
 	/**
 	 * The link the popup runtime reacts to: `#refraction-popup:open:12`, `#refraction-popup:toggle:12` or
-	 * `#refraction-popup:close` (closes the popup the link is in).
+	 * `#refraction-popup:close` (closes the popup the link is in). The colons are percent-encoded because
+	 * esc_url() strips an unknown "protocol" such as `#refraction-popup:`; the runtime decodes the link.
 	 */
 	public function get_value( array $options = [] ) {
 		$id = absint( $this->get_settings( 'popup_id' ) );
 		$action = in_array( $this->get_settings( 'popup_action' ), [ 'open', 'close', 'toggle' ], true ) ? $this->get_settings( 'popup_action' ) : 'open';
 
 		if ( 'close' === $action ) {
-			return '#refraction-popup:close';
+			return '#refraction-popup%3Aclose';
 		}
 
-		return $id ? '#refraction-popup:' . $action . ':' . $id : '';
+		return $id ? '#refraction-popup%3A' . $action . '%3A' . $id : '';
 	}
 }

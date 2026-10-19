@@ -44,7 +44,7 @@ class Popup_Manager {
 
 	/** Whether popups may be printed on this request at all. */
 	public function is_active_request(): bool {
-		if ( is_customize_preview() || is_singular( Source_Local::CPT ) ) {
+		if ( is_customize_preview() || is_preview() || is_singular( Source_Local::CPT ) || Plugin::$instance->preview->is_preview_mode() ) {
 			return false;
 		}
 
@@ -90,7 +90,14 @@ class Popup_Manager {
 
 		$this->collected = true;
 
-		foreach ( $this->find_matching() as $id ) {
+		$ids = $this->find_matching();
+
+		if ( $ids ) {
+			// Before the popups' own CSS files, so a designer's settings win over the base styles.
+			wp_enqueue_style( self::STYLE );
+		}
+
+		foreach ( $ids as $id ) {
 			$document = Plugin::$instance->documents->get( $id );
 
 			if ( ! $document instanceof Popup ) {
