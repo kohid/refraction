@@ -64,7 +64,6 @@ class Loop_Item extends Library_Document {
 				'query' => [ 'kind' => 'post', 'subtype' => 'any' ],
 				'multiple' => false,
 				'description' => esc_html__( 'Dynamic tags show the content of this post while you design the item. Leave empty for the latest post.', 'refraction' ),
-				'default' => '',
 			]
 		);
 

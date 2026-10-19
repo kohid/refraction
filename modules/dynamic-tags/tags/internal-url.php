@@ -82,26 +82,31 @@ class Internal_Url extends Data_Tag {
 		$type = (string) $this->get_settings( 'type' );
 
 		if ( 'post' === $type ) {
-			$id = (int) $this->get_settings( 'post_id' );
+			$id = $this->first_id( $this->get_settings( 'post_id' ) );
 			$post = $id ? get_post( $id ) : null;
 
 			return $post && Context::can_read( $post ) ? (string) get_permalink( $post ) : '';
 		}
 
 		if ( 'taxonomy' === $type ) {
-			$term = get_term( (int) $this->get_settings( 'term_id' ) );
+			$term = get_term( $this->first_id( $this->get_settings( 'term_id' ) ) );
 			$link = $term instanceof \WP_Term ? get_term_link( $term ) : '';
 
 			return is_string( $link ) ? $link : '';
 		}
 
 		if ( 'author' === $type ) {
-			$id = (int) $this->get_settings( 'user_id' );
+			$id = $this->first_id( $this->get_settings( 'user_id' ) );
 
 			return $id ? get_author_posts_url( $id ) : '';
 		}
 
 		return '';
+	}
+
+	/** The autocomplete control gives an ID, or a list holding one. */
+	private function first_id( $value ): int {
+		return (int) ( is_array( $value ) ? reset( $value ) : $value );
 	}
 
 	public function is_settings_required() {

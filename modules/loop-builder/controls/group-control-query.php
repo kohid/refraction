@@ -25,6 +25,12 @@ class Group_Control_Query extends Group_Control_Base {
 		return 'refraction-query';
 	}
 
+	protected function get_default_options() {
+		return [
+			'popover' => false,
+		];
+	}
+
 	protected function init_fields() {
 		$sources = [];
 
