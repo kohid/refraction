@@ -1,0 +1,191 @@
+// Popups: the same markup is used on the site (hidden until opened) and in the editor preview.
+// Everything the designer controls is written by the document settings under .refraction-popup-{ID}.
+
+.refraction-popup {
+	--rp-dur: 300ms;
+	--rp-close-x: 12px;
+	position: fixed;
+	inset: 0;
+	z-index: 99990;
+	display: block;
+	margin: 0;
+	padding: 0;
+	pointer-events: none;
+
+	&[hidden] {
+		display: none !important;
+	}
+
+	&.is-open,
+	&.is-closing {
+		pointer-events: auto;
+	}
+}
+
+.refraction-popup__overlay {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(15, 18, 30, 0.62);
+}
+
+.refraction-popup__layer {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	padding: 16px;
+	pointer-events: none;
+}
+
+.refraction-popup__box {
+	position: relative;
+	box-sizing: border-box;
+	width: 640px;
+	max-width: 100%;
+	max-height: 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 24px;
+	background-color: #fff;
+	border-radius: 12px;
+	box-shadow: 0 24px 60px rgba(15, 18, 30, 0.28);
+	pointer-events: auto;
+
+	&:focus {
+		outline: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: -4px;
+	}
+}
+
+.refraction-popup__content {
+	position: relative;
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: auto;
+	overscroll-behavior: contain;
+}
+
+// The close button belongs to the box, not to the scrolling content, so it stays in its corner and may sit outside (negative offsets).
+.refraction-popup__close {
+	position: absolute;
+	top: 12px;
+	right: var(--rp-close-x, 12px);
+	z-index: 3;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	min-width: 32px;
+	min-height: 32px;
+	margin: 0;
+	padding: 4px;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: #1d2230;
+	line-height: 0;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease;
+
+	svg {
+		width: 22px;
+		height: 22px;
+		fill: currentColor;
+		pointer-events: none;
+	}
+
+	&:hover,
+	&:focus-visible {
+		background-color: rgba(15, 18, 30, 0.08);
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+}
+
+// ---- Editor preview: the popup is always open and the overlay never blocks the editor's own controls. ----
+.refraction-popup.is-preview {
+	pointer-events: none;
+
+	.refraction-popup__overlay {
+		pointer-events: none;
+	}
+
+	.refraction-popup__box {
+		min-height: 160px;
+	}
+}
+
+body.refraction-popup-preview {
+	margin: 0;
+	min-height: 100vh;
+	background: repeating-linear-gradient(135deg, #f3f4f8 0 14px, #eceef4 14px 28px);
+}
+
+// ---- Animations (entrance .rp-in-NAME, exit .rp-out-NAME) ----
+@keyframes rp-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rp-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes rp-zoom-in { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes rp-zoom-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.92); } }
+@keyframes rp-up-in { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: none; } }
+@keyframes rp-up-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(36px); } }
+@keyframes rp-down-in { from { opacity: 0; transform: translateY(-36px); } to { opacity: 1; transform: none; } }
+@keyframes rp-down-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-36px); } }
+@keyframes rp-left-in { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+@keyframes rp-left-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(48px); } }
+@keyframes rp-right-in { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+@keyframes rp-right-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(-48px); } }
+
+.refraction-popup {
+	&.rp-in-fade .refraction-popup__overlay,
+	&.rp-in-zoom .refraction-popup__overlay,
+	&.rp-in-slide-up .refraction-popup__overlay,
+	&.rp-in-slide-down .refraction-popup__overlay,
+	&.rp-in-slide-left .refraction-popup__overlay,
+	&.rp-in-slide-right .refraction-popup__overlay {
+		animation: rp-fade-in var(--rp-dur) ease both;
+	}
+
+	&.rp-out-fade .refraction-popup__overlay,
+	&.rp-out-zoom .refraction-popup__overlay,
+	&.rp-out-slide-up .refraction-popup__overlay,
+	&.rp-out-slide-down .refraction-popup__overlay,
+	&.rp-out-slide-left .refraction-popup__overlay,
+	&.rp-out-slide-right .refraction-popup__overlay {
+		animation: rp-fade-out var(--rp-dur) ease both;
+	}
+
+	&.rp-in-fade .refraction-popup__box { animation: rp-fade-in var(--rp-dur) ease both; }
+	&.rp-in-zoom .refraction-popup__box { animation: rp-zoom-in var(--rp-dur) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+	&.rp-in-slide-up .refraction-popup__box { animation: rp-up-in var(--rp-dur) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+	&.rp-in-slide-down .refraction-popup__box { animation: rp-down-in var(--rp-dur) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+	&.rp-in-slide-left .refraction-popup__box { animation: rp-left-in var(--rp-dur) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+	&.rp-in-slide-right .refraction-popup__box { animation: rp-right-in var(--rp-dur) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+	&.rp-out-fade .refraction-popup__box { animation: rp-fade-out var(--rp-dur) ease both; }
+	&.rp-out-zoom .refraction-popup__box { animation: rp-zoom-out var(--rp-dur) ease both; }
+	&.rp-out-slide-up .refraction-popup__box { animation: rp-up-out var(--rp-dur) ease both; }
+	&.rp-out-slide-down .refraction-popup__box { animation: rp-down-out var(--rp-dur) ease both; }
+	&.rp-out-slide-left .refraction-popup__box { animation: rp-left-out var(--rp-dur) ease both; }
+	&.rp-out-slide-right .refraction-popup__box { animation: rp-right-out var(--rp-dur) ease both; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.refraction-popup .refraction-popup__overlay,
+	.refraction-popup .refraction-popup__box {
+		animation: none !important;
+	}
+}
+
+// The page scroll lock: the scrollbar width is added as padding so the page does not move.
+html.refraction-popup-lock {
+	overflow: hidden !important;
+}
