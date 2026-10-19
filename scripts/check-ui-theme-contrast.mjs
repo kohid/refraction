@@ -67,6 +67,7 @@ export function pairsFor( t ) {
 			add( `${ sev } on ${ bgName }`, c( sev ), c( bgName ), TEXT );
 			add( `${ sev } on ${ sev }-soft over ${ bgName }`, c( sev ), over( c( sev + '-soft' ), c( bgName ) ), TEXT );
 		}
+		add( `accent-hover (link hover) on ${ bgName }`, c( 'accent-hover' ), c( bgName ), TEXT );
 		add( `accent on accent-soft over ${ bgName }`, c( 'accent' ), over( c( 'accent-soft' ), c( bgName ) ), TEXT );
 		add( `field border (field-line) vs ${ bgName }`, c( 'field-line' ), c( bgName ), UI );
 		add( `focus ring / accent vs ${ bgName }`, c( 'accent' ), c( bgName ), UI );

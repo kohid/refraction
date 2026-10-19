@@ -46,6 +46,9 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.4.0 =
+* New: Theme tab in Settings (Automatic, Daylight, Graphite, Ember, Blueprint, Contrast). The choice applies to your account and re-skins Refraction's admin screens and the editor panel, top bar, navigator, library and finder; your site and the page preview are never changed. Automatic keeps today's look. Admins can set a default theme for people who have not chosen.
+
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.
 * New: Preview Settings in the template settings: design a Single, Archive, Search Results, 404, Header or Footer template against a real post, page, custom post type item, term, author, month, search word or the 404 page.
