@@ -24,8 +24,6 @@ class Menu_Config {
 		// add new which is automatically added to templates and categories
 		$default_slugs = [
 			'edit-tags.php?taxonomy=refraction_library_category&amp;post_type=refraction_library',
-			// The Element Manager React app still expects removed promotion data and crashes (see docs/refraction/admin-menu.md).
-			'refraction-element-manager',
 		];
 
 		return apply_filters( 'refraction/editor-one/menu/excluded_level4_slugs', $default_slugs );

@@ -664,7 +664,7 @@ class Source_Local extends Source_Base {
 			'date' => $date,
 			'human_date' => date_i18n( get_option( 'date_format' ), $date ),
 			'human_modified_date' => date_i18n( get_option( 'date_format' ), strtotime( $post->post_modified ) ),
-			'author' => $user->display_name,
+			'author' => $user ? $user->display_name : '',
 			'status' => $post->post_status,
 			'hasPageSettings' => ! empty( $page_settings ),
 			'tags' => [],
@@ -1057,6 +1057,24 @@ class Source_Local extends Source_Base {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * The raw "Add New" post screen (admin bar + New > Template, old bookmarks) has no template type, so send it to the
+	 * Saved Templates screen where the "Choose Template Type" dialog opens through the #add_new hash.
+	 *
+	 * Fired by `load-post-new.php` action.
+	 *
+	 * @access public
+	 */
+	public function redirect_post_new_to_add_new_dialog() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! isset( $_GET['post_type'] ) || self::CPT !== sanitize_key( wp_unslash( $_GET['post_type'] ) ) ) {
+			return;
+		}
+
+		wp_safe_redirect( admin_url( 'edit.php?post_type=' . self::CPT ) . '#add_new' );
+		exit;
 	}
 
 	/**
@@ -1735,6 +1753,7 @@ class Source_Local extends Source_Base {
 	private function add_actions() {
 		if ( is_admin() ) {
 			add_action( 'admin_init', [ $this, 'redirect_categories_page_to_saved_templates_page' ] );
+			add_action( 'load-post-new.php', [ $this, 'redirect_post_new_to_add_new_dialog' ] );
 
 			add_action( 'refraction/editor-one/menu/register', function ( Menu_Data_Provider $menu_data_provider ) {
 				$this->register_editor_one_menu( $menu_data_provider );

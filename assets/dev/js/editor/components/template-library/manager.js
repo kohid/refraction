@@ -19,22 +19,16 @@ const TemplateLibraryManager = function() {
 		bulkSelectedItems = new Set(),
 		lastDeletedItems = new Set();
 
+	// Templates are saved on this site only (no cloud library), so both variants share the local description.
+	const localSaveDescription = __( 'Saved templates stay on this site, so they are always ready to insert from the Library when you edit.', 'refraction' );
 	const variantsConfig = {
 		control: {
 			saveBtnText: __( 'Save', 'refraction' ),
-			saveDialogDescription: sprintf(
-				/* Translators: 1: Opening bold tag, 2: Closing bold tag.  2: Line break tag. 4: Opening bold tag, 5: Closing bold tag. */
-				__( "You can save it to %1$sCloud Templates%2$s to reuse across any of your Refraction sites at any time%3$sor to %4$sSite Templates%5$s so it's always ready when editing this website.", 'refraction' ),
-				'<b>', '</b>', '<br>', '<b>', '</b>',
-			),
+			saveDialogDescription: localSaveDescription,
 		},
 		B: {
 			saveBtnText: __( 'Save page', 'refraction' ),
-			saveDialogDescription: sprintf(
-				/* Translators: 1: Opening bold tag, 2: Closing bold tag. 3: Opening bold tag, 4: Closing bold tag. */
-				__( 'Store your design in %1$sCloud Templates%2$s for future Refraction projects. Or save it to %3$sSite Templates%4$s, to reuse anywhere on this site.', 'refraction' ),
-				'<b>', '</b>', '<b>', '</b>',
-			),
+			saveDialogDescription: localSaveDescription,
 		},
 	};
 
@@ -157,13 +151,13 @@ const TemplateLibraryManager = function() {
 			return {
 				saveDialog: {
 					icon: '<i class="eicon-library-upload" aria-hidden="true"></i>',
-					canSaveToCloud: true,
+					canSaveToCloud: false,
 					saveBtnText: variantsConfig[ experimentVariant ]?.saveBtnText,
 				},
 				moveDialog: {
 					description: __( 'Alternatively, you can copy the template.', 'refraction' ),
 					icon: '<i class="eicon-library-move" aria-hidden="true"></i>',
-					canSaveToCloud: true,
+					canSaveToCloud: false,
 					saveBtnText: __( 'Move', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',
@@ -171,7 +165,7 @@ const TemplateLibraryManager = function() {
 				copyDialog: {
 					description: __( 'Alternatively, you can move the template.', 'refraction' ),
 					icon: '<i class="eicon-library-copy" aria-hidden="true"></i>',
-					canSaveToCloud: true,
+					canSaveToCloud: false,
 					saveBtnText: __( 'Copy', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',
@@ -180,7 +174,7 @@ const TemplateLibraryManager = function() {
 					description: __( 'Alternatively, you can copy the templates.', 'refraction' ),
 					title: __( 'Move templates to a different location', 'refraction' ),
 					icon: '<i class="eicon-library-move" aria-hidden="true"></i>',
-					canSaveToCloud: true,
+					canSaveToCloud: false,
 					saveBtnText: __( 'Move', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',
@@ -189,7 +183,7 @@ const TemplateLibraryManager = function() {
 					description: __( 'Alternatively, you can move the templates.', 'refraction' ),
 					title: __( 'Copy templates to a different location', 'refraction' ),
 					icon: '<i class="eicon-library-copy" aria-hidden="true"></i>',
-					canSaveToCloud: true,
+					canSaveToCloud: false,
 					saveBtnText: __( 'Copy', 'refraction' ),
 					nameLabel: '',
 					namePlaceholder: '',

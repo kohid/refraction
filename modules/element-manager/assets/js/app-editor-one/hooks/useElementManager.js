@@ -84,8 +84,8 @@ export const useElementManager = () => {
 			setNoticeData( appData.notice_data );
 			setWidgetsDisabled( appData.disabled_elements );
 			setWidgets( appData.widgets );
-			setPromotionWidgets( appData.promotion_widgets );
-			setPromotionData( appData.promotion_data );
+			setPromotionWidgets( appData.promotion_widgets ?? [] );
+			setPromotionData( appData.promotion_data ?? {} );
 
 			if ( appData.additional_data?.roles ) {
 				setRoles( appData.additional_data.roles );

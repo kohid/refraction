@@ -21,47 +21,17 @@ export function useClassesVariablesLimits( { open, isImport } ) {
 
 	const limits = useMemo( () => getLimitsFromConfig(), [] );
 
+	// Global classes and variables belonged to the removed Atomic editor and their REST routes no longer exist,
+	// so there is nothing to count: the existing counts stay at zero and no request is made.
 	const fetchCounts = useCallback( async () => {
 		if ( ! open || ! isImport ) {
 			return;
 		}
 
-		setIsLoading( true );
 		setError( null );
-
-		try {
-			const baseUrl = window.wpApiSettings?.root || '/wp-json/';
-			const nonce = window.wpApiSettings?.nonce || '';
-
-			const [ classesResponse, variablesResponse ] = await Promise.all( [
-				fetch( `${ baseUrl }refraction/v1/global-classes`, {
-					headers: {
-						'X-WP-Nonce': nonce,
-					},
-				} ),
-				fetch( `${ baseUrl }refraction/v1/variables/list`, {
-					headers: {
-						'X-WP-Nonce': nonce,
-					},
-				} ),
-			] );
-
-			if ( classesResponse.ok ) {
-				const classesData = await classesResponse.json();
-				const classesCount = Object.keys( classesData?.data || {} ).length;
-				setExistingClassesCount( classesCount );
-			}
-
-			if ( variablesResponse.ok ) {
-				const variablesData = await variablesResponse.json();
-				const variablesCount = variablesData?.data?.total || 0;
-				setExistingVariablesCount( variablesCount );
-			}
-		} catch ( err ) {
-			setError( err );
-		} finally {
-			setIsLoading( false );
-		}
+		setIsLoading( false );
+		setExistingClassesCount( 0 );
+		setExistingVariablesCount( 0 );
 	}, [ open, isImport ] );
 
 	useEffect( () => {

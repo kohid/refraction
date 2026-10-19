@@ -6,7 +6,6 @@ import FilesUploadHandler from '../editor/utils/files-upload-handler';
 import TemplateControls from './new-template/template-controls.js';
 import { showJsonUploadWarningMessageIfNeeded } from 'refraction-utils/json-upload-warning-message';
 import FloatingButtonsHandler from 'refraction/modules/floating-buttons/assets/js/floating-buttons/admin/module';
-import 'refraction-app/event-track/wp-dashboard-tracking';
 
 ( function( $ ) {
 	var RefractionAdmin = refractionModules.ViewModule.extend( {

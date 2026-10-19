@@ -100,7 +100,7 @@ module.exports = refractionModules.common.views.modal.Layout.extend( {
 		const subscriptionPlans = refraction.config.library_connect.subscription_plans,
 			baseAccessTier = refraction.config.library_connect.base_access_tier,
 			templateAccessTier = templateData.accessTier,
-			shouldUpgrade = baseAccessTier !== templateAccessTier;
+			shouldUpgrade = !! templateAccessTier && baseAccessTier !== templateAccessTier;
 
 		let viewId = '#tmpl-refraction-template-library-' + ( shouldUpgrade ? 'upgrade-plan-button' : 'insert-button' );
 

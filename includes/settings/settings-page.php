@@ -313,6 +313,7 @@ abstract class Settings_Page {
 		?>
 		<div class="wrap">
 			<h1 class="wp-heading-inline"><?php echo esc_html( $this->get_page_title() ); ?></h1>
+			<?php settings_errors(); // The "Settings saved." notice after options.php redirects back here. ?>
 			<div id="refraction-settings-tabs-wrapper" class="nav-tab-wrapper">
 				<?php
 				foreach ( $tabs as $tab_id => $tab ) {

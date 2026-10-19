@@ -29,18 +29,6 @@ const kitContentData = [
 				open: [
 					__( 'Saved Templates', 'refraction' ),
 				],
-				locked: [
-					__( 'Headers', 'refraction' ),
-					__( 'Footers', 'refraction' ),
-					__( 'Archives', 'refraction' ),
-					__( 'Single Posts', 'refraction' ),
-					__( 'Single Pages', 'refraction' ),
-					__( 'Search Results', 'refraction' ),
-					__( '404 Error Page', 'refraction' ),
-					__( 'Popups', 'refraction' ),
-					__( 'Global widgets', 'refraction' ),
-				],
-				tooltip: __( 'To import or export these components, you’ll need Refraction Pro.', 'refraction' ),
 			},
 		},
 		dialog: null,

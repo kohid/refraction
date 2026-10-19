@@ -43,12 +43,8 @@ export class Load extends $e.modules.CommandInternalBase {
 
 		refraction.heartbeat = new Heartbeat( document );
 
-		const isOldPageVersion = refraction.config.document.version &&
-			refraction.helpers.compareVersions( refraction.config.document.version, '2.5.0', '<' );
-
-		if ( ! refraction.config.user.introduction.flexbox && isOldPageVersion ) {
-			refraction.showFlexBoxAttentionDialog();
-		}
+		// The upstream "Flexbox changes" notice targeted pages saved before 2.5.0. Refraction's own version starts at 0.x, so the
+		// comparison would flag every page; Refraction has no such legacy pages, so the notice is gone.
 
 		if ( refraction.loaded ) {
 			// TODO: Find better solution - Fix issue when globals does not render after saving from kit.

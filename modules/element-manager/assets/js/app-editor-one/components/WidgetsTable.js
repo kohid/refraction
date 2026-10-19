@@ -1,9 +1,6 @@
 import {
-	Stack,
 	Box,
-	Tooltip,
 	Switch,
-	IconButton,
 	Typography,
 	Table,
 	TableHead,
@@ -15,12 +12,9 @@ import {
 	Paper,
 	styled,
 } from '@elementor/ui';
-import { HelpIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
-import { UpgradeButton } from '../../upgrade-button';
-import { RolePermissions, EditButtonDisabled } from './RolePermissions';
 import { UsageTimesColumn } from './UsageTimesColumn';
 
 const StyledSwitch = styled( Switch )( {
@@ -53,8 +47,6 @@ export const WidgetsTable = ( {
 	getSortingIndicatorClasses,
 	onSortingClicked,
 } ) => {
-	const { manager_permissions: managerPermissions } = promotionData;
-
 	const sortingClasses = getSortingIndicatorClasses( 'widget' );
 	const isWidgetSorted = sortingClasses.includes( 'sorted' );
 	const widgetSortDirection = sortingClasses.includes( 'asc' ) ? 'asc' : 'desc';
@@ -102,47 +94,6 @@ export const WidgetsTable = ( {
 						<TableCell>
 							{ __( 'Plugin', 'refraction' ) }
 						</TableCell>
-						<TableCell>
-							<Stack
-								direction="row"
-								justifyContent="flex-start"
-								alignItems="center"
-								gap={ 1 }
-							>
-								<Box>
-									{ __( 'Permission', 'refraction' ) }
-								</Box>
-								<Box>
-									<Tooltip
-										placement="top"
-										title={ __( 'Choose which users will have access to each widget.', 'refraction' ) }
-									>
-										<IconButton size="small">
-											<HelpIcon fontSize="small" />
-										</IconButton>
-									</Tooltip>
-								</Box>
-								{ null === widgetsRoleRestrictions && (
-									<Box sx={ { marginInlineStart: 1 } }>
-										<UpgradeButton
-											href={
-												promotionWidgets.length
-													? managerPermissions.pro.url
-													: managerPermissions.advanced.url
-											}
-											size="small"
-											text={
-												promotionWidgets.length
-													? managerPermissions.pro.text
-													: managerPermissions.advanced.text
-											}
-											className="go-pro"
-											data-id="e-id-refraction-element-manager-button-upgrade-permissions"
-										/>
-									</Box>
-								) }
-							</Stack>
-						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -180,18 +131,6 @@ export const WidgetsTable = ( {
 								/>
 							</TableCell>
 							<TableCell>{ widget.plugin }</TableCell>
-							<TableCell>
-								{ null !== widgetsRoleRestrictions && ! widgetsDisabled.includes( widget.name ) ? (
-									<RolePermissions
-										widgetName={ widget.name }
-										roles={ roles }
-										widgetsRoleRestrictions={ widgetsRoleRestrictions }
-										setWidgetsRoleRestrictions={ setWidgetsRoleRestrictions }
-									/>
-								) : (
-									<EditButtonDisabled />
-								) }
-							</TableCell>
 						</TableRow>
 					) ) }
 				</TableBody>

@@ -940,37 +940,6 @@ export default class EditorBase extends Marionette.Application {
 		refractionCommon.dialogsManager.createWidget( 'confirm', options ).show();
 	}
 
-	showFlexBoxAttentionDialog() {
-		const introduction = new refractionModules.editor.utils.Introduction( {
-			introductionKey: 'flexbox',
-			dialogType: 'confirm',
-			dialogOptions: {
-				id: 'refraction-flexbox-attention-dialog',
-				headerMessage: __( 'Note: Flexbox Changes', 'refraction' ),
-				message: __( 'Refraction 2.5 introduces key changes to the layout using CSS Flexbox. Your existing pages might have been affected, please review your page before publishing.', 'refraction' ),
-				position: {
-					my: 'center center',
-					at: 'center center',
-				},
-				strings: {
-					confirm: __( 'Learn More', 'refraction' ),
-					cancel: __( 'Got It', 'refraction' ),
-				},
-				hide: {
-					onButtonClick: false,
-				},
-				onCancel: () => {
-					introduction.setViewed();
-
-					introduction.getDialog().hide();
-				},
-				onConfirm: () => open( this.config.help_flexbox_bc_url, '_blank' ),
-			},
-		} );
-
-		introduction.show();
-	}
-
 	checkPageStatus() {
 		if ( refraction.documents.getCurrent().isDraft() ) {
 			this.notifications.showToast( {

@@ -630,7 +630,9 @@ abstract class Document extends Controls_Stack {
 	 * @return array An updated array of row action links.
 	 */
 	public function filter_admin_row_actions( $actions ) {
-		if ( $this->is_editable_with_refraction() ) {
+		// Upstream lists the link only for pages already built with the editor, which leaves no way into the editor from the
+		// Pages screen for a new page. Refraction lists it for every post the current user can edit with the editor.
+		if ( $this->is_editable_with_refraction() || $this->is_start_editable_with_refraction() ) {
 			$actions['edit_with_refraction'] = sprintf(
 				'<a href="%1$s">%2$s</a>',
 				$this->get_edit_url(),
@@ -639,6 +641,23 @@ abstract class Document extends Controls_Stack {
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Whether the post can be opened in the editor for the first time (it is not built with Refraction yet).
+	 */
+	public function is_start_editable_with_refraction() {
+		if ( in_array( $this->get_type(), self::UNEDITABLE_WITH_REFRACTION_TYPES, true ) ) {
+			return false;
+		}
+
+		$post = $this->get_post();
+
+		if ( ! $post || in_array( $post->post_status, [ 'trash', 'auto-draft' ], true ) ) {
+			return false;
+		}
+
+		return $this->is_editable_by_current_user();
 	}
 
 	public function is_editable_with_refraction() {
