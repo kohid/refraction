@@ -27,6 +27,7 @@ class Module extends BaseModule {
 			'Price_List',
 			'Price_Table',
 			'Flip_Box',
+			'Call_To_Action',
 		];
 	}
 

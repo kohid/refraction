@@ -49,6 +49,26 @@ function rfw_widget( $type, $settings = [], $id = null ) {
 	];
 }
 
+function rfw_image() {
+	static $img = null;
+	if ( $img ) {
+		return $img;
+	}
+	$upload = wp_upload_dir();
+	wp_mkdir_p( $upload['path'] );
+	$file = $upload['path'] . '/rfw-test.png';
+	// A 8x8 solid teal PNG.
+	$im = imagecreatetruecolor( 8, 8 );
+	imagefill( $im, 0, 0, imagecolorallocate( $im, 20, 140, 140 ) );
+	imagepng( $im, $file );
+	$existing = get_posts( [ 'post_type' => 'attachment', 'title' => 'rfw-test', 'numberposts' => 1, 'fields' => 'ids' ] );
+	$id = $existing ? $existing[0] : wp_insert_attachment( [ 'post_title' => 'rfw-test', 'post_mime_type' => 'image/png', 'post_status' => 'inherit' ], $file );
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+	$img = [ 'id' => $id, 'url' => wp_get_attachment_url( $id ) ];
+	return $img;
+}
+
 function rfw_page( $title, array $widgets ) {
 	$docs = \Refraction\Plugin::$instance->documents;
 
@@ -137,6 +157,20 @@ $pages['flip-box'] = rfw_page( 'RFW Flip Box', [
 	], 'flip0001' ),
 	rfw_widget( 'refraction-flip-box', [ 'front_title' => 'Click front', 'back_title' => 'Click back', 'trigger' => 'click', 'effect' => 'fade', 'duration' => [ 'size' => 200, 'unit' => 'px' ], 'box_label' => 'Details card' ], 'flip0002' ),
 	rfw_widget( 'refraction-flip-box', [ 'front_title' => 'Slide front', 'back_title' => 'Slide back', 'effect' => 'slide', 'direction' => 'left', 'duration' => [ 'size' => 200, 'unit' => 'px' ] ], 'flip0003' ),
+] );
+
+// ---------------------------------------------------------- call to action
+$img = rfw_image();
+$pages['call-to-action'] = rfw_page( 'RFW Call To Action', [
+	rfw_widget( 'refraction-call-to-action', [
+		'title' => 'Join <b>us</b>', 'description' => 'Short pitch', 'btn_text' => 'Sign up', 'btn_link' => [ 'url' => 'https://example.com/signup' ],
+		'skin' => 'classic', 'image' => $img, 'image_position' => 'left', 'link_click' => 'box', 'show_ribbon' => 'yes', 'ribbon_title' => 'New',
+	], 'cta00001' ),
+	rfw_widget( 'refraction-call-to-action', [
+		'title' => 'Cover title', 'description' => 'Over a background', 'btn_text' => 'Go', 'btn_link' => [ 'url' => 'https://example.com/go' ],
+		'skin' => 'cover', 'bg_image' => $img, 'link_click' => 'button', 'min_height' => [ 'size' => 320, 'unit' => 'px' ],
+	], 'cta00002' ),
+	rfw_widget( 'refraction-call-to-action', [ 'title' => 'No button', 'description' => '', 'btn_text' => '', 'title_tag' => 'h4' ], 'cta00003' ),
 ] );
 
 // @@MORE_PAGES@@ (each widget task appends its page above this line)

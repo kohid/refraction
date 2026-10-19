@@ -67,11 +67,18 @@ const up = async () => { try { await fetch( `${ BASE }/wp-login.php` ); return t
 async function login( browser, user, pass ) {
 	const ctx = await browser.newContext( { viewport: { width: 1400, height: 1000 } } );
 	const page = await ctx.newPage();
-	await page.goto( `${ BASE }/wp-login.php` );
-	await page.fill( '#user_login', user );
-	await page.fill( '#user_pass', pass );
-	await Promise.all( [ page.waitForURL( /wp-admin/ ), page.click( '#wp-submit' ) ] );
-	return { ctx, page };
+	for ( let attempt = 1; ; attempt++ ) {
+		try {
+			await page.goto( `${ BASE }/wp-login.php` );
+			await page.fill( '#user_login', user );
+			await page.fill( '#user_pass', pass );
+			await Promise.all( [ page.waitForURL( /wp-admin/, { timeout: 60000 } ), page.click( '#wp-submit' ) ] );
+			return { ctx, page };
+		} catch ( e ) {
+			if ( attempt >= 3 ) { throw e; }
+			await sleep( 2000 );
+		}
+	}
 }
 
 const consoleErrors = [];
@@ -388,6 +395,38 @@ SECTIONS[ 'flip-box' ] = async ( { browser, admin, pages } ) => {
 	const ru = await r.page.locator( '[data-id="flip0001"] .refraction-flip-box__front' ).evaluate( ( e ) => getComputedStyle( e ).transitionDuration );
 	check( k, 'reduced motion: transitions are effectively off', parseFloat( ru ) < 0.05, ru );
 	await r.ctx.close();
+};
+
+/* ------------------------------------------------------------- call-to-action */
+SECTIONS[ 'call-to-action' ] = async ( { browser, admin, pages } ) => {
+	const k = 'call-to-action';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-call-to-action', 'Call to Action' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'cta00001' ), settings: { image_position: 'right' } } ); } );
+	await sleep( 2500 );
+	const cls = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="cta00001"] .refraction-cta' )?.className );
+	check( k, 'changing the image position updates the preview', /image-right/.test( cls || '' ), cls );
+
+	const v = await visitor( browser, rel( pages[ k ].url ) );
+	const p = v.page;
+	const a = p.locator( '[data-id="cta00001"]' );
+	check( k, 'title escaped in the chosen tag, description printed', ( await a.locator( 'h2.refraction-cta__title' ).innerHTML() ) === 'Join &lt;b&gt;us&lt;/b&gt;' && ( await a.locator( '.refraction-cta__description' ).innerText() ) === 'Short pitch' );
+	check( k, 'classic skin: image beside the text', await a.evaluate( ( el ) => { const i = el.querySelector( '.refraction-cta__image' ).getBoundingClientRect(), c = el.querySelector( '.refraction-cta__content' ).getBoundingClientRect(); return i.right <= c.left + 2 && Math.abs( i.top - c.top ) < c.height; } ) );
+	check( k, 'the image is decorative (empty alt)', ( await a.locator( '.refraction-cta__image img' ).getAttribute( 'alt' ) ) === '' );
+	check( k, 'whole-box link: the button covers the box', await a.locator( 'a.refraction-pro-button' ).evaluate( ( e ) => { const r = e.closest( '.refraction-cta' ).getBoundingClientRect(), x = r.left + 10, y = r.top + 10; return document.elementFromPoint( x, y ) === e || e.contains( document.elementFromPoint( x, y ) ); } ) );
+	check( k, 'ribbon shows its title', ( await a.locator( '.refraction-cta__ribbon-inner' ).innerText() ) === 'New' );
+	const b = p.locator( '[data-id="cta00002"] .refraction-cta' );
+	check( k, 'cover skin: has a background image and keeps its minimum height', await b.evaluate( ( e ) => getComputedStyle( e.querySelector( '.refraction-cta__bg' ) ).backgroundImage.includes( 'url(' ) && e.getBoundingClientRect().height >= 319 ) );
+	check( k, 'button-only link: the button is the only link', ( await p.locator( '[data-id="cta00002"] a' ).count() ) === 1 );
+	const c = p.locator( '[data-id="cta00003"]' );
+	check( k, 'no button text and empty description print nothing extra', ( await c.locator( '.refraction-pro-button, .refraction-cta__description' ).count() ) === 0 && ( await c.locator( 'h4.refraction-cta__title' ).count() ) === 1 );
+	await p.screenshot( { path: join( SHOTS, 'call-to-action.png' ), fullPage: true } );
+	const box = await a.locator( '.refraction-cta' ).boundingBox();
+	await p.route( /example\.com/, ( r ) => r.fulfill( { status: 200, contentType: 'text/html', body: 'ok' } ) );
+	await p.mouse.click( box.x + box.width / 2, box.y + 10 );
+	await p.waitForURL( /example\.com\/signup/, { timeout: 5000 } ).catch( () => {} );
+	check( k, 'clicking anywhere on the box follows the button link', /example\.com\/signup/.test( p.url() ), p.url() );
+	await v.ctx.close();
 };
 
 /* ------------------------------------------------------------------- driver */

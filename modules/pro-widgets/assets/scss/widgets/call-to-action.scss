@@ -1,0 +1,174 @@
+@import "../button";
+
+//
+// Call to Action
+//
+
+.refraction-cta {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	overflow: hidden;
+	box-sizing: border-box;
+	background: #f3f4f6;
+	color: #111;
+}
+
+.refraction-cta--image-right {
+	flex-direction: row-reverse;
+}
+
+.refraction-cta--image-above {
+	flex-direction: column;
+}
+
+.refraction-cta__image {
+	flex: 0 0 40%;
+	overflow: hidden;
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.5s ease;
+	}
+}
+
+.refraction-cta--image-above .refraction-cta__image {
+	flex-basis: auto;
+}
+
+.refraction-cta__content {
+	// A flex item, so z-index works without `position`; that keeps the button's stretched link
+	// anchored to the whole box.
+	z-index: 1;
+	display: flex;
+	flex: 1 1 0;
+	flex-direction: column;
+	justify-content: center;
+	box-sizing: border-box;
+	padding: 32px;
+	text-align: center;
+
+	.refraction-pro-button {
+		align-self: center;
+	}
+}
+
+.refraction-cta__title {
+	margin: 0 0 0.4em;
+	color: inherit;
+}
+
+.refraction-cta__description {
+	margin-bottom: 1.2em;
+}
+
+// Cover skin.
+.refraction-cta--skin-cover .refraction-cta {
+	min-height: 280px;
+	color: #fff;
+}
+
+.refraction-cta__bg,
+.refraction-cta__overlay {
+	position: absolute;
+	inset: 0;
+}
+
+.refraction-cta__bg {
+	background-color: #334155;
+	background-position: center;
+	background-size: cover;
+	transition: transform 0.6s ease;
+}
+
+.refraction-cta--hover-zoom-in:hover .refraction-cta__bg,
+.refraction-cta--hover-zoom-in:hover .refraction-cta__image img {
+	transform: scale(1.06);
+}
+
+.refraction-cta--hover-zoom-out .refraction-cta__bg,
+.refraction-cta--hover-zoom-out .refraction-cta__image img {
+	transform: scale(1.08);
+}
+
+.refraction-cta--hover-zoom-out:hover .refraction-cta__bg,
+.refraction-cta--hover-zoom-out:hover .refraction-cta__image img {
+	transform: none;
+}
+
+// Whole box is clickable through the button's stretched hit area.
+.refraction-cta--box-link .refraction-pro-button::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+}
+
+.refraction-cta--box-link .refraction-pro-button:focus-visible {
+	outline: none;
+}
+
+.refraction-cta--box-link .refraction-pro-button:focus-visible::after {
+	outline: 3px solid currentColor;
+	outline-offset: -6px;
+}
+
+// Ribbon.
+.refraction-cta__ribbon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 3;
+	width: 110px;
+	height: 110px;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.refraction-cta__ribbon-inner {
+	position: absolute;
+	top: 26px;
+	right: -36px;
+	width: 150px;
+	padding: 5px 0;
+	background: #c2410c;
+	color: #fff;
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-align: center;
+	transform: rotate(45deg);
+}
+
+.refraction-cta--ribbon-left .refraction-cta__ribbon {
+	right: auto;
+	left: 0;
+}
+
+.refraction-cta--ribbon-left .refraction-cta__ribbon-inner {
+	right: auto;
+	left: -36px;
+	transform: rotate(-45deg);
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-cta--image-left,
+	.refraction-cta--image-right {
+		flex-direction: column;
+	}
+
+	.refraction-cta__image {
+		flex-basis: auto;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-cta__bg,
+	.refraction-cta__image img {
+		transition: none;
+	}
+}
