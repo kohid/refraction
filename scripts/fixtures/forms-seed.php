@@ -43,7 +43,7 @@ function fm_container( $widget ) {
 }
 
 function fm_page( $slug, $title, $widget ) {
-	global $docs;
+	$docs = \Refraction\Plugin::$instance->documents;
 
 	$existing = get_page_by_path( $slug );
 
@@ -99,7 +99,7 @@ if ( 'site' === $action ) {
 		fm_field( 'name', 'text', 'Name', [ 'required' => 'true' ] ),
 		fm_field( 'email', 'email', 'Email', [ 'required' => 'true' ] ),
 		fm_field( 's2', 'step', 'What do you need' ),
-		fm_field( 'topic', 'select', 'Topic', [ 'required' => 'true', 'field_options' => "Sales\nSupport" ] ),
+		fm_field( 'topic', 'select', 'Topic', [ 'required' => 'true', 'placeholder' => 'Choose a topic', 'field_options' => "Sales\nSupport" ] ),
 		fm_field( 's3', 'step', 'Details' ),
 		fm_field( 'msg', 'textarea', 'Message', [ 'required' => 'true' ] ),
 	];

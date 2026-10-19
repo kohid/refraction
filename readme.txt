@@ -35,6 +35,8 @@ To turn the update check off completely, add this to wp-config.php:
 
 To read releases from a different repository (for example your own fork), define `REFRACTION_UPDATE_REPOSITORY` as `owner/repo` or use the `refraction/updater/repository` filter.
 
+Forms contact a service only when you set it up yourself: a Webhook action sends the submission from your server to the URL you enter, and the optional reCAPTCHA, hCaptcha or Cloudflare Turnstile setting (Refraction > Submissions > Settings) loads the provider's script in visitors' browsers and sends the visitor's response token to the provider to verify it. Both are off until you configure them.
+
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==

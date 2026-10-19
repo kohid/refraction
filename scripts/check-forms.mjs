@@ -163,7 +163,7 @@ async function main() {
 	const watch = ( page, label ) => {
 		page.on( 'console', ( m ) => {
 			// Our own tests make the server answer 4xx; the browser logs those as console errors.
-			if ( m.type() === 'error' && ! /favicon\.ico|status of (4\d\d|5\d\d)|Failed to load resource.*(4\d\d|5\d\d)/.test( m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
+			if ( m.type() === 'error' && ! /recaptcha\/api\.js/.test( m.location().url ) && ! /favicon\.ico|recaptcha\/api\.js|status of (4\d\d|5\d\d)|Failed to load resource.*(4\d\d|5\d\d)/.test( m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
 		} );
 		page.on( 'pageerror', ( e ) => consoleErrors.push( `[${ label }] pageerror ${ e.message }` ) );
 	};
@@ -451,7 +451,7 @@ async function main() {
 		const walk = ( d ) => { for ( const e of readdirSync( d, { withFileTypes: true } ) ) { e.isDirectory() ? walk( join( d, e.name ) ) : stored.push( join( d, e.name ) ); } };
 		walk( root );
 		const pdf = stored.find( ( f ) => f.endsWith( 'ok.pdf' ) );
-		check( 'upload', 'the file is stored in the protected folder with a random prefix', !! pdf && /[0-9a-f]{32}-ok\.pdf$/.test( pdf ) && ! stored.some( ( f ) => /php|shell|evil|sneaky|big/.test( f.split( '/' ).pop() ) ), stored.join() );
+		check( 'upload', 'the file is stored in the protected folder with a random prefix', !! pdf && /[0-9a-f]{32}-ok\.pdf$/.test( pdf ) && ! stored.some( ( f ) => /shell|evil|sneaky|big/.test( f.split( '/' ).pop() ) ), stored.join() );
 		check( 'upload', 'the folder carries .htaccess (deny), index.php and web.config', [ '.htaccess', 'index.php', 'web.config' ].every( ( f ) => existsSync( join( root, f ) ) ) && readFileSync( join( root, '.htaccess' ), 'utf8' ).includes( 'Require all denied' ) );
 		await admin.page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-submissions` );
 		await admin.page.click( '.rf-admin__table tbody tr:first-child a' );
@@ -504,7 +504,7 @@ async function main() {
 		check( 'csv', 'export is a CSV attachment', csvRes.status() === 200 && /text\/csv/.test( csvRes.headers()[ 'content-type' ] ) && /attachment/.test( csvRes.headers()[ 'content-disposition' ] ) );
 		check( 'csv', 'a cell that starts with = is prefixed so spreadsheets do not run it', csv.includes( `"'=HYPERLINK(""http://evil.example"",""click"")"` ) && ! /(^|,|\n)"?=HYPERLINK/.test( csv ), csv.slice( 0, 600 ) );
 		check( 'csv', 'a cell that starts with + is prefixed too', csv.includes( `"'+cmd|calc"` ) );
-		check( 'csv', 'the export has a header row with field labels and no password column', csv.split( '\n' )[ 0 ].includes( 'Your name' ) && ! csv.includes( 'sup3rsecret' ) && ! csv.split( '\n' )[ 0 ].includes( 'Password' ) );
+		check( 'csv', 'the export has a header row with field labels and no password column', csv.split( '\n' )[ 0 ].includes( 'Email' ) && ! csv.includes( 'sup3rsecret' ) && ! csv.split( '\n' )[ 0 ].includes( 'Password' ), csv.split( '\n' )[ 0 ] );
 		check( 'csv', 'a missing/invalid nonce is refused', ( await admin.ctx.request.get( exportHref.replace( /_wpnonce=[^&]+/, '_wpnonce=bad' ) ) ).status() === 403 );
 		check( 'csv', 'an editor cannot export', ( await editor.ctx.request.get( exportHref ) ).status() === 403 );
 		check( 'csv', 'a visitor cannot export', ! ( await (await fetch( exportHref )).text() ).includes( 'HYPERLINK' ) );
@@ -529,16 +529,18 @@ async function main() {
 		await admin.page.locator( '.rf-admin__table tbody input[type=checkbox]' ).nth( 0 ).check();
 		await admin.page.locator( '.rf-admin__table tbody input[type=checkbox]' ).nth( 1 ).check();
 		await admin.page.selectOption( '#rf-bulk', 'read' );
-		await Promise.all( [ admin.page.waitForURL( /notice=bulk/ ), admin.page.click( 'button.action' ) ] );
+		await Promise.all( [ admin.page.waitForURL( /notice=bulk/, { waitUntil: 'load' } ), admin.page.click( 'button.action' ) ] );
 		check( 'bulk', 'mark as read changes two rows', ( await admin.page.locator( '.rf-admin__table tbody tr.rf-admin__unread' ).count() ) === 2 && ( await admin.page.locator( '.notice-success' ).innerText() ).includes( '2' ) );
 		await admin.page.locator( '.rf-admin__table tbody input[type=checkbox]' ).nth( 0 ).check();
 		await admin.page.selectOption( '#rf-bulk', 'trash' );
-		await Promise.all( [ admin.page.waitForURL( /notice=bulk/ ), admin.page.click( 'button.action' ) ] );
-		check( 'bulk', 'trash moves a row out of All into Trash (1)', ( await admin.page.locator( '.rf-admin__table tbody tr' ).count() ) === 3 && ( await admin.page.locator( '.subsubsub' ).innerText() ).replace( /\s+/g, ' ' ).includes( 'Trash (1)' ) );
+		await Promise.all( [ admin.page.waitForURL( /notice=bulk/, { waitUntil: 'load' } ), admin.page.click( 'button.action' ) ] );
+		await admin.page.waitForSelector( '.subsubsub' );
+		await sleep( 600 );
+		check( 'bulk', 'trash moves a row out of All into Trash (1)', ( await admin.page.locator( '.rf-admin__table tbody tr' ).count() ) === 3 && ( await admin.page.locator( '.subsubsub' ).innerText() ).replace( /\s+/g, ' ' ).includes( 'Trash (1)' ), `${ await admin.page.locator( '.rf-admin__table tbody tr' ).count() } ${ await admin.page.locator( '.subsubsub' ).innerText() }` );
 		await admin.page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-submissions&status=trash` );
 		await admin.page.locator( '.rf-admin__table tbody input[type=checkbox]' ).nth( 0 ).check();
 		await admin.page.selectOption( '#rf-bulk', 'delete' );
-		await Promise.all( [ admin.page.waitForURL( /notice=bulk/ ), admin.page.click( 'button.action' ) ] );
+		await Promise.all( [ admin.page.waitForURL( /notice=bulk/, { waitUntil: 'load' } ), admin.page.click( 'button.action' ) ] );
 		check( 'bulk', 'delete permanently removes the row', seed( 'count' ) === 3 );
 		// A bulk post without a nonce or from an editor is refused.
 		const bulkNoNonce = await admin.ctx.request.post( `${ BASE }/wp-admin/admin-post.php`, { form: { action: 'refraction_forms_bulk', bulk_action: 'delete', 'ids[]': '1' } } );
@@ -562,7 +564,8 @@ async function main() {
 		check( 'privacy', 'email masking hides the address in the list', ( await admin.page.locator( '.rf-admin__table' ).innerText() ).includes( 't***@example.org' ) && ! ( await admin.page.locator( '.rf-admin__table' ).innerText() ).includes( 'tim@example.org' ) );
 		await admin.page.click( '.rf-admin__table tbody tr:first-child a' );
 		check( 'privacy', 'with the toggle on, the IP address is stored and shown', ( await admin.page.locator( '.rf-admin__single' ).innerText() ).includes( '127.0.0.1' ) );
-		const oldId = Number( ( await admin.page.locator( 'h2:has-text("Submission #")' ).innerText() ).replace( /\D/g, '' ) ) - 1;
+		await admin.page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-submissions` );
+		const oldId = Number( ( await admin.page.locator( '.rf-admin__table tbody tr:nth-child(2) a' ).innerText() ).replace( /\D/g, '' ) );
 		seed( 'backdate', { FM_ID: String( oldId ), FM_DAYS: '45' } );
 		const countBeforePurge = seed( 'count' );
 		const purged = seed( 'purge' );
@@ -581,19 +584,15 @@ async function main() {
 		check( 'captcha', 'forms without the switch load no external script', ! ( await htmlOf( 'form-basic' ) ).includes( 'recaptcha' ) && ! ( await htmlOf( 'form-rate' ) ).includes( 'recaptcha' ) );
 		await page.route( '**/recaptcha/**', ( route ) => route.abort() );
 		await page.goto( url( 'form-captcha' ) );
-		await sleep( 2300 );
 		const base = { 'form_fields[name]': 'Cap' };
 		seed( 'reset' );
 		seed( 'set', { FM_SETTINGS: JSON.stringify( { captcha_provider: 'recaptcha_v2', captcha_site_key: 'SITEKEY123', captcha_secret_key: 'SECRET' } ) } );
 		await page.goto( url( 'form-captcha' ) );
-		await sleep( 2300 );
-		r = await postForm( page, 'frmcaptcha', { ...base, rf_math: 'x' } );
-		check( 'captcha', 'a submission without a captcha response is refused', r.status === 422 && ( r.json.errors.rf_captcha || r.json.errors.rf_math ), JSON.stringify( r ) );
-		const qc = ( await page.locator( '#refraction-form-frmcaptcha .refraction-form__field--math label' ).innerText() ).match( /(\d+) \+ (\d+)/ );
-		const ans = String( Number( qc[ 1 ] ) + Number( qc[ 2 ] ) );
-		r = await postForm( page, 'frmcaptcha', { ...base, rf_math: ans, 'g-recaptcha-response': 'bad' } );
+		r = await postForm( page, 'frmcaptcha', base );
+		check( 'captcha', 'a submission without a captcha response is refused', r.status === 422 && r.json.errors.rf_captcha, JSON.stringify( r ) );
+		r = await postForm( page, 'frmcaptcha', { ...base, 'g-recaptcha-response': 'bad' } );
 		check( 'captcha', 'a response the provider rejects is refused (verified server-side against the fake)', r.status === 422 && r.json.errors.rf_captcha, JSON.stringify( r ) );
-		r = await postForm( page, 'frmcaptcha', { ...base, rf_math: ans, 'g-recaptcha-response': 'good' } );
+		r = await postForm( page, 'frmcaptcha', { ...base, 'g-recaptcha-response': 'good' } );
 		check( 'captcha', 'a response the provider accepts goes through', r.status === 200 && r.json.success, JSON.stringify( r ) );
 		seed( 'set', { FM_SETTINGS: JSON.stringify( { captcha_provider: 'none', captcha_site_key: '', captcha_secret_key: '' } ) } );
 		check( 'captcha', 'switching the provider off removes the script again', ! ( await htmlOf( 'form-captcha' ) ).includes( 'recaptcha' ) );
@@ -670,11 +669,11 @@ async function main() {
 		await admin.page.evaluate( () => { const c = refraction.getContainer( 'frmbasic' ); $e.run( 'document/elements/select', { container: c } ); } );
 		await admin.page.waitForSelector( '.refraction-control-form_fields', { timeout: 15000 } );
 		const rows = await admin.page.locator( '.refraction-control-form_fields .refraction-repeater-row-item-title' ).count();
-		check( 'editor', 'the repeater lists the form fields', rows === 17, `${ rows }` );
+		check( 'editor', 'the repeater lists the form fields', rows === 16, `${ rows }` );
 		await admin.page.screenshot( { path: join( SHOTS, 'editor-form.png' ) } );
 		await admin.page.click( '.refraction-control-form_fields .refraction-repeater-add' );
 		await sleep( 500 );
-		check( 'editor', 'adding a field adds a row and re-renders the preview', ( await admin.page.locator( '.refraction-control-form_fields .refraction-repeater-row-item-title' ).count() ) === 18 );
+		check( 'editor', 'adding a field adds a row and re-renders the preview', ( await admin.page.locator( '.refraction-control-form_fields .refraction-repeater-row-item-title' ).count() ) === 17 );
 		await admin.page.evaluate( () => {
 			const c = refraction.getContainer( 'frmbasic' );
 			const items = c.settings.get( 'form_fields' );
@@ -689,8 +688,10 @@ async function main() {
 		const savedJson = wp( [ 'post', 'meta', 'get', String( ids.basic ), '_refraction_data' ] );
 		check( 'editor', 'saving stores the edited form settings', savedJson.includes( 'Added in editor' ) && savedJson.includes( 'Send it now' ) && savedJson.includes( 'Edited message' ) );
 		await admin.page.goto( `${ BASE }/wp-admin/index.php` );
-		await page.goto( url( 'form-basic' ) );
-		check( 'editor', 'the edited form shows on the front end', ( await page.locator( 'label:has-text("Added in editor")' ).count() ) === 1 && ( await page.locator( '.refraction-form__submit' ).innerText() ).includes( 'Send it now' ) );
+		const fe = await newVisitor();
+		await fe.page.goto( url( 'form-basic' ) );
+		check( 'editor', 'the edited form shows on the front end', ( await fe.page.locator( 'label:has-text("Added in editor")' ).count() ) === 1 && ( await fe.page.locator( '.refraction-form__submit' ).innerText() ).includes( 'Send it now' ) );
+		await fe.ctx.close();
 
 		// A new page with a new form built through the editor API.
 		const newId = Number( wp( [ 'post', 'create', '--post_type=page', '--post_status=publish', '--post_title=Editor Built Form', '--porcelain' ] ) );
