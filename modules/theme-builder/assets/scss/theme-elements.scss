@@ -1,0 +1,301 @@
+// Theme Elements widgets (front end and editor preview).
+.refraction-theme-text {
+	margin: 0;
+}
+
+.refraction-theme-logo {
+	line-height: 0;
+
+	a {
+		display: inline-block;
+	}
+
+	img {
+		display: inline-block;
+		max-width: 100%;
+		height: auto;
+		transition: opacity 0.2s;
+	}
+
+	&--text {
+		font-weight: 700;
+		line-height: 1.2;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
+	}
+}
+
+.refraction-theme-image {
+	img {
+		display: inline-block;
+		max-width: 100%;
+		height: auto;
+	}
+}
+
+.refraction-theme-excerpt p:last-child {
+	margin-bottom: 0;
+}
+
+.refraction-theme-elements__hint {
+	padding: 10px 14px;
+	border: 1px dashed currentColor;
+	border-radius: 4px;
+	font-size: 13px;
+	opacity: 0.6;
+}
+
+// Post Info
+.refraction-theme-info {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 20px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	&__item {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin: 0;
+	}
+
+	&__avatar {
+		margin-inline-end: 6px;
+		border-radius: 50%;
+		vertical-align: middle;
+	}
+
+	&__icon {
+		display: inline-flex;
+		align-items: center;
+		line-height: 1;
+	}
+
+	&__icon svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.refraction-theme-info--list .refraction-theme-info {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.refraction-theme-info--divider-yes .refraction-theme-info__item + .refraction-theme-info__item::before {
+	content: "";
+	align-self: stretch;
+	margin-inline-end: 14px;
+	border-inline-start: 1px solid currentColor;
+	opacity: 0.4;
+}
+
+.refraction-theme-info--list.refraction-theme-info--divider-yes .refraction-theme-info__item + .refraction-theme-info__item::before {
+	display: none;
+}
+
+// Author Box
+.refraction-theme-author {
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+
+	&__avatar img {
+		display: block;
+		width: 96px;
+		height: 96px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__name {
+		margin: 0 0 6px;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
+	}
+
+	&__bio p {
+		margin: 0 0 10px;
+	}
+
+	&__link {
+		font-weight: 600;
+	}
+}
+
+.refraction-theme-author--end .refraction-theme-author {
+	flex-direction: row-reverse;
+}
+
+.refraction-theme-author--top .refraction-theme-author {
+	flex-direction: column;
+}
+
+// Post Navigation
+.refraction-theme-nav {
+	display: flex;
+	justify-content: space-between;
+	gap: 24px;
+
+	&__item {
+		flex: 1 1 0;
+		min-width: 0;
+
+		&--next {
+			text-align: end;
+		}
+
+		a {
+			display: inline-flex;
+			align-items: center;
+			gap: 12px;
+			text-decoration: none;
+		}
+
+		&--next a {
+			flex-direction: row;
+		}
+	}
+
+	&__text {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
+
+	&__label {
+		font-size: 0.8em;
+		opacity: 0.7;
+	}
+
+	&__arrow {
+		font-size: 1.4em;
+		line-height: 1;
+	}
+}
+
+// Breadcrumbs
+.refraction-theme-breadcrumbs {
+	ol {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		display: inline-flex;
+		align-items: center;
+		margin: 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+
+	&__sep {
+		margin-inline: 0.6em;
+		opacity: 0.6;
+	}
+}
+
+// Sitemap
+.refraction-theme-sitemap {
+	&__sections {
+		column-gap: 32px;
+	}
+
+	&__section {
+		break-inside: avoid;
+		margin-bottom: 1.5em;
+	}
+
+	&__title {
+		margin: 0 0 0.5em;
+	}
+
+	ul {
+		margin: 0;
+		padding-inline-start: 1.2em;
+	}
+
+	&__list {
+		padding-inline-start: 1.2em;
+	}
+}
+
+// Search Form
+.refraction-theme-search {
+	display: flex;
+	align-items: stretch;
+	gap: 8px;
+	margin: 0;
+
+	&__label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	&__input {
+		flex: 1 1 auto;
+		min-width: 0;
+		padding: 8px 12px;
+		border: 1px solid rgba(128, 128, 128, 0.5);
+		border-radius: 4px;
+		font: inherit;
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 18px;
+		border: 0;
+		border-radius: 4px;
+		background: #1d2327;
+		color: #fff;
+		font: inherit;
+		cursor: pointer;
+	}
+}
+
+.refraction-theme-search--minimal .refraction-theme-search {
+	position: relative;
+	gap: 0;
+
+	.refraction-theme-search__input {
+		padding-inline-end: 44px;
+	}
+
+	.refraction-theme-search__button {
+		position: absolute;
+		inset-block: 0;
+		inset-inline-end: 0;
+		padding: 0 12px;
+		border-radius: 0 4px 4px 0;
+		background: transparent;
+		color: inherit;
+	}
+}

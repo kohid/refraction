@@ -27,6 +27,7 @@ use Refraction\Modules\ThemeBuilder\Documents\Header;
 use Refraction\Modules\ThemeBuilder\Documents\Search_Results;
 use Refraction\Modules\ThemeBuilder\Documents\Single;
 use Refraction\Modules\ThemeBuilder\Documents\Theme_Document;
+use Refraction\Modules\ThemeBuilder\Widgets\Theme_Widget_Base;
 use Refraction\Modules\PageTemplates\Module as PageTemplatesModule;
 use Refraction\Plugin;
 use Refraction\TemplateLibrary\Source_Local;
@@ -75,8 +76,32 @@ class Module extends BaseModule {
 		return $this->admin_page ??= new Admin_Page( $this->get_store(), $this->get_conditions_manager() );
 	}
 
+	public function get_widgets() {
+		return [
+			'Site_Logo',
+			'Site_Title',
+			'Site_Tagline',
+			'Page_Title',
+			'Post_Title',
+			'Post_Content',
+			'Post_Excerpt',
+			'Featured_Image',
+			'Post_Info',
+			'Author_Box',
+			'Post_Comments',
+			'Post_Navigation',
+			'Breadcrumbs',
+			'Archive_Title',
+			'Sitemap',
+			'Search_Form',
+		];
+	}
+
 	public function __construct() {
 		parent::__construct();
+
+		add_action( 'refraction/elements/categories_registered', [ $this, 'register_widget_category' ] );
+		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_widget_styles' ] );
 
 		add_action( 'refraction/documents/register', [ $this, 'register_documents' ] );
 		add_action( 'refraction/controls/register', [ $this, 'register_controls' ] );
@@ -99,6 +124,27 @@ class Module extends BaseModule {
 
 		// Block themes and classic themes need the integration only on the front end; the editor
 		// preview frame is a front end request, so Locations_Manager decides per request.
+	}
+
+	public function register_widget_category( $elements_manager ): void {
+		$elements_manager->add_category(
+			Theme_Widget_Base::CATEGORY,
+			[
+				'title' => esc_html__( 'Theme Elements', 'refraction' ),
+				'icon' => 'rficon-library-list',
+			]
+		);
+	}
+
+	public function register_widget_styles(): void {
+		$suffix = Utils::is_script_debug() ? '' : '.min';
+
+		wp_register_style(
+			Theme_Widget_Base::STYLE_HANDLE,
+			REFRACTION_ASSETS_URL . 'css/modules/theme-builder/theme-elements' . $suffix . '.css',
+			[ 'refraction-frontend' ],
+			REFRACTION_VERSION
+		);
 	}
 
 	public function register_documents( Documents_Manager $documents_manager ): void {

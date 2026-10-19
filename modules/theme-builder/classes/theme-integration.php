@@ -47,6 +47,15 @@ class Theme_Integration {
 				Post_CSS::create( $id )->enqueue();
 			}
 		}
+
+		// The Post Content widget prints a post that may itself be built with Refraction: it needs its CSS in <head>.
+		if ( is_singular() && $this->locations->get_body_location() ) {
+			$post_id = (int) get_queried_object_id();
+
+			if ( $post_id && \Refraction\Plugin::$instance->documents->get( $post_id ) && \Refraction\Plugin::$instance->documents->get( $post_id )->is_built_with_refraction() ) {
+				Post_CSS::create( $post_id )->enqueue();
+			}
+		}
 	}
 
 	/**
