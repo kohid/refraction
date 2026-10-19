@@ -1,28 +1,10 @@
-# Elementor Core — local & agent development
+# Refraction — local & agent development
 
 Works for **laptop local development** and **Cursor Cloud / non-interactive agents**. Commands are the same; Cloud-only notes are at the bottom.
 
 **Source of truth:** root [package.json](package.json) scripts (and [composer.json](composer.json) for PHPUnit). Prefer named scripts over raw `npm ci` / `composer` chains.
 
 Longer human onboarding: [CONTRIBUTING.md](.github/CONTRIBUTING.md), Playwright Docker: [tests/test-environment-setup.md](tests/test-environment-setup.md).
-
-## Atomic builder extension skills
-
-`.cursor/skills/` holds Cursor skills for Elementor v4 / atomic-builder extension work (widgets, prop types, dynamic tags, editor packages, variables, CSS converter, interactions). Source of truth remains [docs/atomic-builder/](docs/atomic-builder/README.md) — skills are checklists that link there.
-
-For v4 or atomic extension tasks: load [atomic-builder-extend](.cursor/skills/atomic-builder-extend/SKILL.md) first, then the matching domain skill it routes to.
-
-## Layout (Core + Pro)
-
-Clone as siblings so Pro can see Core at `../elementor`:
-
-```text
-parent/
-├── elementor/          # this repo
-└── elementor-pro/      # Pro mounts ../elementor in wp-playground
-```
-
-Cloud paths: `/agent/repos/elementor` and `/agent/repos/elementor-pro`.
 
 ## How to do everything (local recipe)
 
@@ -62,7 +44,6 @@ Note: `start` / `watch` run `composer:no-dev` and strip PHPUnit. Before PHPUnit,
 | Goal | Command | URL |
 |------|---------|-----|
 | Quick editor (no Docker) | `npm run wp-playground` | http://127.0.0.1:9400 |
-| Core **and** Pro together | from `../elementor-pro`: `npm run wp-playground` | same — mounts Pro + `../elementor` |
 | Watch + playground + Playwright UI | `npm run full-e2e-local` | http://127.0.0.1:9400 |
 | Playwright CI parity (Docker) | `SKIP_CONFIRMATION=true npm run env:setup` | http://localhost:8888 and :8889 |
 
@@ -83,7 +64,7 @@ npm run test:qunit    # QUnit via karma
 Fast, no WordPress/MySQL (only for pure PHP subjects):
 
 ```bash
-tests/phpunit/run-unit.sh tests/phpunit/elementor/.../test-something.php
+tests/phpunit/run-unit.sh tests/phpunit/refraction/.../test-something.php
 ```
 
 Full suite (CI-like: MySQL + WordPress test lib):
@@ -94,19 +75,6 @@ composer run test
 # or filtered:
 vendor/bin/phpunit --filter '<Test_Class_Name>'
 ```
-
-### 7. Working with Pro day-to-day
-
-From **elementor-pro** (after both repos `npm run install` + at least one `npm run start`):
-
-```bash
-npm run watch:with-core   # watch Core + Pro together
-npm run wp-playground     # WordPress with both plugins
-# or all-in-one:
-npm run full-e2e-local    # watch:with-core + playground + Playwright UI
-```
-
-Details live in Pro [AGENTS.md](../elementor-pro/AGENTS.md).
 
 ## Script cheat sheet
 
@@ -138,16 +106,16 @@ Details live in Pro [AGENTS.md](../elementor-pro/AGENTS.md).
 
 Playground uses [tests/playwright/blueprints/local.json](tests/playwright/blueprints/local.json), so PHP/WordPress versions may differ from [tests/playwright/.playwright-wp-lite-env.json](tests/playwright/.playwright-wp-lite-env.json). For CI-style mounted build output use `npm run wp-playground:ci` (expects `./build`).
 
-`SKIP_CONFIRMATION=true npm run env:setup` installs deps, builds, downloads Hello Elementor, runs `start-local-server` (8888 **and** 8889), then `test:setup:playwright`. Do not start only 8888 and then run `test:setup:playwright` alone — [package.json](package.json) expects both ports. Admin: http://localhost:8888/wp-admin/ (`admin` / `password`).
+`SKIP_CONFIRMATION=true npm run env:setup` installs deps, builds, runs `start-local-server` (8888 **and** 8889), then `test:setup:playwright`. Do not start only 8888 and then run `test:setup:playwright` alone — [package.json](package.json) expects both ports. Admin: http://localhost:8888/wp-admin/ (`admin` / `password`).
 
 If playground SQLite corrupts (`database disk image is malformed`): kill the playground PIDs, `rm -rf /tmp/node-playground-cli-site-*`, restart. Long-lived instances on the default 6 workers corrupt their SQLite file; appending `--workers=1` to the CLI command (the CLI warns about deadlocks, but it survives editor sessions) avoids it. Never leave two instances running against the same repo — the second one silently picks a random port.
 
 ## Fast DB-less PHPUnit
 
-`tests/phpunit/run-unit.sh` runs a small set of PHPUnit files **without WordPress or MySQL** for a quick inner loop. It uses `tests/phpunit/unit-bootstrap.php`, which only defines `ABSPATH` and registers an `Elementor\` autoloader (same name->path transform as `includes/autoloader.php`), and ignores the project `phpunit.xml`. Pass any number of `test-*.php` files plus optional pass-through args like `--filter`.
+`tests/phpunit/run-unit.sh` runs a small set of PHPUnit files **without WordPress or MySQL** for a quick inner loop. It uses `tests/phpunit/unit-bootstrap.php`, which only defines `ABSPATH` and registers a `Refraction\` autoloader (same name->path transform as `includes/autoloader.php`), and ignores the project `phpunit.xml`. Pass any number of `test-*.php` files plus optional pass-through args like `--filter`.
 
 ```bash
-tests/phpunit/run-unit.sh tests/phpunit/elementor/modules/atomic-widgets/css-converter/test-css-converter.php
+tests/phpunit/run-unit.sh tests/phpunit/refraction/.../test-something.php
 tests/phpunit/run-unit.sh tests/phpunit/.../test-css-converter.php --filter test_convert
 ```
 
@@ -184,12 +152,10 @@ Internal: Sentence case description [ED-XXXXX]
 
 Allowed types: `Feature`, `CI`, `New`, `Tweak`, `Fix`, `Experiment`, `Deprecate`, `Deprecated`, `Revert`, `Internal` (sentence case, header <= 100 chars). Conventional-commit style like `docs(agents): …` fails. Both checks only re-run on push, and GitHub skips them entirely while the PR has merge conflicts — merge `main` to get them running again.
 
-Local agents do not write `## Visual proof` on `elementor/elementor` pull requests (`gh`, the GitHub UI, or any other PR body). CI `visual-proof-author.yml` adds that section when the PR is opened or marked ready for review and it is still missing. Leave it out unless a person already wrote it, and do not ask the user to fill it in. Screenshot capture follows those Steps; it does not author them.
-
 ## Gotchas
 
 - Prefer package.json script names; do not invent ad-hoc install/build chains.
-- `npm run lint` runs ESLint at the repo root and in the `elementor-packages` workspace (`npm run lint -w elementor-packages`); both must pass.
+- `npm run lint` runs ESLint at the repo root and in the `refraction-packages` workspace (`npm run lint -w refraction-packages`); both must pass.
 - PHPCS may report warnings without errors; treat policy from maintainers, not only the exit summary.
 - `composer install` post-install can run php-scoper (Twig prefixing); dev dependency `humbug/php-scoper` must be present for a full dev install.
 - For a production-like plugin tree under `./build`, many flows use `composer install --no-scripts --no-dev` first, then `npm run build`. Restore dev dependencies afterward with `composer install`.
@@ -203,7 +169,7 @@ Same commands as local. Extra context for this VM only:
 | Layer | What |
 |-------|------|
 | **Snapshot** | Node (`.nvmrc` via nvm), PHP 8.3 + mysqli, Composer, svn, Docker; both repos already ran `npm run install` + `npm run start`; MySQL `wp-mysql` + Core `tmp/` from `bin/install-wp-tests.sh` |
-| **Update script (every session)** | `npm run install` in Core and Pro only. No builds, no service starts |
+| **Update script (every session)** | `npm run install` only. No builds, no service starts |
 
 - `/exec-daemon/node` may shadow nvm — confirm `which node` matches `.nvmrc`.
 - Prefer shell cwd `/agent` (wp-playground chroots under `/tmp/node-playground-cli-site-*` break `/bin/bash`).

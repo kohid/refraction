@@ -11,7 +11,7 @@ This class is responsible for registering the controls under the `Advanced` tab 
 We've added a mask option to any type of widget in Refraction, using the CSS `mask` property.
 
 #### Knowledge Base:
-- [Mask Option on Elementor.com](https://github.com/kohid/refraction#readme)
+- [Mask option documentation](https://github.com/kohid/refraction#readme)
   
 
 - [How to Use Refraction's Mask Option](https://www.youtube.com/watch?v=tujmkmuqM0M)

@@ -6,7 +6,7 @@ In-repo reference for Refraction v4: [docs/atomic-builder/](atomic-builder/READM
 
 ## v3 addon development
 
-Published tutorials and API reference: [developers.elementor.com](https://github.com/kohid/refraction#readme)
+Published tutorials and API reference: [the Refraction repository](https://github.com/kohid/refraction#readme)
 
 ### Quick links
 

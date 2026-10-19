@@ -2,7 +2,7 @@
 
 ## Product Knowledge Base:
 
-- [Text Path on Elementor.com](https://github.com/kohid/refraction#readme)
+- [Text Path documentation](https://github.com/kohid/refraction#readme)
 
 
 - [How to Use the Text Path Widget](https://www.youtube.com/watch?v=aeqpeYkE_yE)

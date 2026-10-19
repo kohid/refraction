@@ -145,13 +145,7 @@ print_status "WordPress content cleaned"
 # Install/Fix Refraction plugin
 echo "🔌 Setting up Refraction plugin..."
 
-# Always try to fix mount issues by downloading stable version
-print_warning "Ensuring Refraction is properly installed..."
-curl -L -o /tmp/refraction.zip https://downloads.wordpress.org/plugin/elementor.latest-stable.zip
-unzip -q /tmp/refraction.zip -d /tmp/
-rm -rf build/*
-cp -r /tmp/refraction/* build/
-rm -rf /tmp/refraction.zip /tmp/refraction
+# The plugin comes from the local build/ directory (npm run build); nothing is downloaded.
 
 # Activate the plugin
 docker exec port8888-cli-1 wp plugin activate refraction 2>/dev/null || docker exec port8888-cli-1 wp plugin install refraction --activate

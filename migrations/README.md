@@ -11,7 +11,7 @@ See [Migration Scope](#migration-scope) for details.
 
 ## Appendix
 - [Structure](#structure)
-- [Language Design](https://elementor.atlassian.net/wiki/spaces/UE/pages/1999110146/Prop+Types+Migration+Schema+Design+Investigation)
+- [Language Design](https://github.com/kohid/refraction#readme)
 - [Paths](#paths)
 - [Conditions](#conditions)
 - [Functions](#functions)
@@ -74,7 +74,7 @@ Path parameter works with wildcard, starting from the **root of the prop object*
 
 ## Conditions
 Conditions check whether to run the migration or not, with many helper functions such as `exists`, conditions can be compounded by `AND` and `OR`.  
-Full list can be found [here](https://elementor.atlassian.net/wiki/spaces/UE/pages/1999110146/Prop+Types+Migration+Schema+Design+Investigation#Available-Conditions)
+Full list can be found [here](https://github.com/kohid/refraction#readme)
 
 ## Important Notes
 
@@ -130,7 +130,7 @@ Handle transformations in transformer code
 
 ## Functions
 ### Set
-`set` creates or updates data, it can update key / value or both. Full Documentation [here](https://elementor.atlassian.net/wiki/spaces/UE/pages/1999110146/Prop+Types+Migration+Schema+Design+Investigation#set)  
+`set` creates or updates data, it can update key / value or both. Full Documentation [here](https://github.com/kohid/refraction#readme)  
 Params:  
 - key (optional)
 - value (optional)
@@ -151,7 +151,7 @@ Creates empty object at path
 ```
 
 ### Delete
-`delete` removes keys/values at specified path. Full Documentation [here](https://elementor.atlassian.net/wiki/spaces/UE/pages/1999110146/Prop+Types+Migration+Schema+Design+Investigation#delete)  
+`delete` removes keys/values at specified path. Full Documentation [here](https://github.com/kohid/refraction#readme)  
 Params:  
 - clean **default** true - deletes empty parent paths until reaching an object that has siblings
 
@@ -170,7 +170,7 @@ Delete without cleaning empty parents
 ```
 
 ### Move
-`move` relocates values from one path to another. Full Documentation [here](https://elementor.atlassian.net/wiki/spaces/UE/pages/1999110146/Prop+Types+Migration+Schema+Design+Investigation#move)  
+`move` relocates values from one path to another. Full Documentation [here](https://github.com/kohid/refraction#readme)  
 Params:  
 - src - Source path
 - dest - Destination path

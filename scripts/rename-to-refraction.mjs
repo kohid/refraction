@@ -93,7 +93,8 @@ const SUPPORT_WORDS = /support|ticket|contact|bug|report|common-errors|load-issu
 const BRAND_RULES = [
 	// URL built with a template placeholder: replace the whole template literal by a plain string
 	{ re: /`https?:\/\/(?:go|my)\.elementor\.com\/[^`]*`/g, to: () => `'${ DOCS_URL }'` },
-	// atlassian / github issue references in comments -> plain text
+	// atlassian / github issue references in comments -> plain text; the private wiki -> the repository README
+	{ re: /https?:\/\/elementor\.atlassian\.net\/wiki\/[^\s)"'`<>\]\\]*/g, to: () => DOCS_URL },
 	{ re: /https?:\/\/elementor\.atlassian\.net\/browse\/([A-Z]+-\d+)/g, to: ( _, key ) => `upstream tracker issue ${ key }` },
 	{ re: /https?:\/\/github\.com\/elementor\/elementor\/(?:issues|pull)\/(\d+)/g, to: ( _, n ) => `upstream issue #${ n }` },
 	{ re: /https?:\/\/(?:www\.)?github\.com\/elementor\/[^\s"'`)<>\]\\]*/g, to: () => REPO_URL },
