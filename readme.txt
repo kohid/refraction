@@ -36,6 +36,12 @@ Other things you may notice that are not Refraction's own services: the editor l
 == Changelog ==
 
 = 0.1.2 =
+* Fix: "Create new page" on the Refraction home screen opened the WordPress block editor; it now opens the Refraction editor.
+* Fix: the editor's local template library did not open, its REST endpoint hit a PHP fatal, and inserting or saving a template crashed. Saved templates now list, insert and save locally.
+* Fix: Element Manager and Tools > Website Templates (export and import a site kit as a zip) returned "not allowed" or crashed; both work again.
+* Fix: a leftover "flexbox changes" dialog appeared on every editor open.
+* Fix: JavaScript errors on the Settings and Tools pages (removed telemetry code) and a PHP warning for templates without an author.
+* New: an "Edit with Refraction" row action in the Pages and Posts lists for every editable post, and a "Settings saved." notice.
 * Fix: the release workflow failed on `npm ci` (package-lock.json was out of sync for npm 11.12.1), so no downloadable zip was published. The lock file is regenerated, npm is pinned in the workflow, and the workflow can be re-run for an existing tag and updates a release created by hand.
 * New: "Check for updates" link on the Refraction row of the Plugins screen. It bypasses the cache and says plainly whether Refraction is up to date, an update is available, or why the check failed (no release, no zip asset, GitHub rate limit, GitHub unreachable).
 * New: "View details" window with the GitHub release notes, and the standard "Enable auto-updates" toggle now works for Refraction.
