@@ -172,7 +172,7 @@ async function main() {
 			} );
 			const cs = ( sel, prop ) => vp.evaluate( ( [ s, p ] ) => { const e = document.querySelector( s ); return e ? getComputedStyle( e )[ p ] : null; }, [ sel, prop ] );
 			check( 'custom-css', `${ theme }: container CSS with "selector" applies`, '6px' === await cs( '[data-id="cssbox1"]', 'borderTopWidth' ) && 'rgb(1, 2, 3)' === await cs( '[data-id="cssbox1"]', 'borderTopColor' ) );
-			check( 'custom-css', `${ theme }: widget CSS wins over the container rule for its own heading`, 'rgb(11, 22, 33)' === await cs( '[data-id="cssh001"] .refraction-heading-title', 'color' ), await cs( '[data-id="cssh001"] .refraction-heading-title', 'color' ) );
+			check( 'custom-css', `${ theme }: container rule reaches its child and the widget's own rule applies too`, 'uppercase' === await cs( '[data-id="cssh001"] .refraction-heading-title', 'textTransform' ) && 'rgb(11, 22, 33)' === await cs( '[data-id="cssh001"] .refraction-heading-title', 'color' ), await cs( '[data-id="cssh001"] .refraction-heading-title', 'color' ) );
 			check( 'custom-css', `${ theme }: widget outline from "selector"`, '4px' === await cs( '[data-id="cssh001"]', 'outlineWidth' ) );
 			check( 'custom-css', `${ theme }: page CSS applies to the page body`, 'rgb(250, 250, 200)' === await cs( 'body', 'backgroundColor' ), await cs( 'body', 'backgroundColor' ) );
 			check( 'custom-css', `${ theme }: site CSS applies to every heading`, '7px' === await cs( '[data-id="cssh001"] .refraction-heading-title', 'letterSpacing' ) && '7px' === await cs( '[data-id="cssh002"] .refraction-heading-title', 'letterSpacing' ) );
@@ -187,7 +187,7 @@ async function main() {
 			check( 'attributes', `${ theme }: unsafe attributes are dropped`, attrs && ! ( 'onclick' in attrs ) && ! ( 'onmouseover' in attrs ) && ! ( 'href' in attrs ) && ! ( 'srcdoc' in attrs ) && ! Object.keys( attrs ).some( ( k ) => /key|^bad/.test( k ) ), JSON.stringify( attrs ) );
 			check( 'attributes', `${ theme }: style is sanitised and tags stripped from values`, attrs && /border-top/.test( attrs.style || '' ) && ! /expression/.test( attrs.style || '' ) && 'Hi there' === attrs.title, JSON.stringify( attrs ) );
 			const dyn = await vp.evaluate( () => document.querySelector( '[data-id="at00002"]' )?.getAttribute( 'data-page' ) );
-			check( 'attributes', `${ theme }: a dynamic tag works in the value`, String( ids.attr ) === dyn, dyn );
+			check( 'attributes', `${ theme }: a dynamic tag (with Before text) works in the value`, String( ids.attr ) === dyn, dyn );
 
 			// ------------------------------------------------------------ Custom Code
 			const cssPage = await vget( new URL( c.css.url ).pathname );

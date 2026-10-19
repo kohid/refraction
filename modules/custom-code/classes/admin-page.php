@@ -66,7 +66,7 @@ class Admin_Page {
 		wp_enqueue_style( 'refraction-custom-code-admin', REFRACTION_ASSETS_URL . 'css/modules/custom-code/admin' . $min . '.css', [], REFRACTION_VERSION );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( empty( $_GET['edit'] ) ) {
+		if ( ! isset( $_GET['edit'] ) ) {
 			return;
 		}
 

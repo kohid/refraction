@@ -45,6 +45,6 @@ browser check: `node scripts/check-extras-a.mjs --site DIR --port N`.
   them in the preview.
 
 ## Custom Attributes
-Advanced > Attributes: lines `key|value` or `key`. Dynamic tags work (the text is resolved first). Dropped: `on*`, `srcdoc`, `formaction`, `action`,
+Advanced > Attributes: lines `key|value` or `key`. Dynamic tags work (the text is resolved first); a tag replaces the whole text, so use its Before field for `key|`. Dropped: `on*`, `srcdoc`, `formaction`, `action`,
 Refraction's own `data-id`, `data-element_type`, `data-e-type`, `data-settings`, odd keys, `javascript:`/`vbscript:`/`data:text/html` in URL
 attributes. `style` goes through the CSS sanitiser, tags are stripped, values are cut at 500 characters, 20 attributes at most.

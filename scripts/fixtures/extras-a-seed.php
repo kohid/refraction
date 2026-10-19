@@ -51,7 +51,7 @@ $out = [];
 $out['css'] = ea_page(
 	'EA CSS',
 	[
-		[ 'id' => 'cssbox1', 'elType' => 'container', 'isInner' => true, 'settings' => [ 'custom_css' => 'selector{border:6px solid rgb(1, 2, 3)} selector .refraction-heading-title{color:rgb(10, 20, 30)}' ], 'elements' => [
+		[ 'id' => 'cssbox1', 'elType' => 'container', 'isInner' => true, 'settings' => [ 'custom_css' => 'selector{border:6px solid rgb(1, 2, 3)} selector .refraction-heading-title{text-transform:uppercase}' ], 'elements' => [
 			ea_heading( 'cssh001', 'CSS HEADING', [ 'custom_css' => 'selector .refraction-heading-title{color:rgb(11, 22, 33)} selector{outline:4px solid rgb(5, 6, 7)}' . $risky ] ),
 		] ],
 		ea_heading( 'cssh002', 'PLAIN HEADING' ),
@@ -89,7 +89,7 @@ $out['attr'] = ea_page(
 	'EA Attr',
 	[
 		ea_heading( 'at00001', 'ATTR HEADING', [ '_attributes' => "data-track|hero\naria-label|Hero banner\nhidden\nonclick|alert(1)\nonmouseover|x\nhref|javascript:alert(1)\nstyle|border-top:3px solid rgb(4, 5, 6);width:expression(alert(1))\ntitle|Hi <b>there</b>\nsrcdoc|x\nbad key|y" ] ),
-		ea_heading( 'at00002', 'ATTR DYNAMIC', [ '_attributes' => 'data-page|post-id', '__dynamic__' => [ '_attributes' => '[refraction-tag id="ea1" name="post-id" settings="%7B%7D"]' ] ] ),
+		ea_heading( 'at00002', 'ATTR DYNAMIC', [ '_attributes' => 'data-page|post-id', '__dynamic__' => [ '_attributes' => '[refraction-tag id="ea1" name="post-id" settings="' . rawurlencode( wp_json_encode( [ 'before' => 'data-page|' ] ) ) . '"]' ] ] ),
 	]
 );
 
