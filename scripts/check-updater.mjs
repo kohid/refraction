@@ -119,7 +119,9 @@ async function clickCheck( page, label ) {
 	if ( ! ( await link.count() ) ) { fail( `${ label }: no "Check for updates" link on the Refraction row` ); return null; }
 	ok( `${ label }: "Check for updates" link is on the Refraction row` );
 	await Promise.all( [ page.waitForURL( /plugins\.php/ ), link.click() ] );
+	await page.waitForLoadState( 'load' );
 	const notice = page.locator( '#refraction-update-notice' );
+	await notice.first().waitFor( { timeout: 10000 } ).catch( () => {} ); // the redirect lands before the page has rendered; a slow machine made this check flaky
 	if ( ! ( await notice.count() ) ) { fail( `${ label }: no #refraction-update-notice after the check` ); return null; }
 	const text = ( await notice.first().innerText() ).replace( /\s+/g, ' ' ).trim();
 	console.log( `      notice: ${ text }` );
