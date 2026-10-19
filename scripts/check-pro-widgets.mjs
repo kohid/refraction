@@ -155,7 +155,8 @@ async function editorBasics( ctx, admin, key, widgetType, title ) {
 	await admin.page.mouse.move( tb.x + 32, tb.y + tb.height - 3, { steps: 3 } );
 	await sleep( 300 );
 	await admin.page.mouse.up();
-	await sleep( 3000 );
+	await admin.page.waitForFunction( ( n ) => refraction.documents.getCurrent().container.children[ 0 ].children.length > n, idsBefore.length, { timeout: 15000 } ).catch( () => {} );
+	await sleep( 1500 );
 	const created = await admin.page.evaluate( ( [ before, wt ] ) => {
 		const kids = refraction.documents.getCurrent().container.children[ 0 ].children;
 		const added = kids.find( ( c ) => ! before.includes( c.id ) );
