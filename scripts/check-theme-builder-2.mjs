@@ -382,7 +382,9 @@ async function main() {
 				check( area, label, predicate( got ), got );
 			};
 			const openPreviewSettings = async () => {
-				await editorPage.evaluate( () => $e.route( 'panel/page-settings/settings' ) );
+				for ( let i = 0; i < 20; i++ ) {
+					try { await editorPage.evaluate( () => $e.route( 'panel/page-settings/settings' ) ); break; } catch { await sleep( 750 ); }
+				}
 				await editorPage.waitForSelector( '.refraction-control-type-section:has-text("Preview Settings")', { timeout: 15000 } );
 				const mount = editorPage.locator( '.rtb-prev' );
 				if ( ! ( await mount.count() ) ) { await editorPage.click( '.refraction-control-type-section:has-text("Preview Settings")' ); }
