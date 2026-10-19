@@ -696,6 +696,75 @@ SECTIONS[ 'progress-tracker' ] = async ( { browser, admin, pages } ) => {
 	await v.ctx.close();
 };
 
+/* ------------------------------------------------------- table-of-contents */
+SECTIONS[ 'table-of-contents' ] = async ( { browser, admin, pages } ) => {
+	const k = 'table-of-contents';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-table-of-contents', 'Table of Contents' );
+	await sleep( 800 );
+	const edItems = await frameOf( admin ).evaluate( () => document.querySelectorAll( '[data-id="toc00001"] .refraction-toc__link' ).length );
+	check( k, 'the editor preview builds the list from the headings on the page', edItems === 5, edItems );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'toc00001' ), settings: { marker: 'bullets' } } ); } );
+	await sleep( 2500 );
+	const mk = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="toc00001"]' )?.className );
+	check( k, 'changing the marker updates the preview', /marker-bullets/.test( mk || '' ), mk );
+
+	const v = await visitor( browser, rel( pages[ k ].url ), 1280, 800 );
+	const p = v.page;
+	const a = p.locator( '[data-id="toc00001"]' );
+	await p.waitForSelector( '[data-id="toc00001"] .refraction-toc__link' );
+	const texts = await a.locator( '.refraction-toc__link' ).allInnerTexts();
+	check( k, 'lists h2-h4 in order, hierarchical numbers, excludes h1 and ignored headings', JSON.stringify( texts.map( ( x ) => x.replace( /\s+/g, ' ' ).trim() ) ) === JSON.stringify( [ '1. Intro', '1.1 Details', '1.2 More info', '2. Intro', '2.1 Deep' ] ), texts.join( '|' ) );
+	const ids = await p.evaluate( () => [ ...document.querySelectorAll( 'h2, h3, h4' ) ].map( ( h ) => h.id ).filter( Boolean ) );
+	check( k, 'headings got unique ids (duplicate text gets a suffix)', ids.includes( 'intro' ) && ids.includes( 'intro-2' ) && ids.includes( 'deep' ) && new Set( ids ).size === ids.length, ids.join( ',' ) );
+	check( k, 'links point at those ids', JSON.stringify( await a.locator( '.refraction-toc__link' ).evaluateAll( ( els ) => els.map( ( e ) => e.getAttribute( 'href' ) ) ) ) === JSON.stringify( [ '#intro', '#details', '#more-info', '#intro-2', '#deep' ] ) );
+	check( k, 'nested lists keep the hierarchy (ol inside li)', ( await a.locator( 'ol ol' ).count() ) >= 1 && ( await a.locator( 'nav[aria-label]' ).count() ) === 1 );
+
+	// smooth scroll + offset + focus + hash
+	await a.locator( '.refraction-toc__link', { hasText: 'Deep' } ).click();
+	await sleep( 1400 );
+	const deepTop = await p.evaluate( () => Math.round( document.getElementById( 'deep' ).getBoundingClientRect().top ) );
+	check( k, 'clicking a link scrolls the heading to the offset (80px)', Math.abs( deepTop - 80 ) <= 6, deepTop );
+	check( k, 'the address gets the hash and the heading receives focus', ( await p.evaluate( () => location.hash ) ) === '#deep' && ( await p.evaluate( () => document.activeElement && document.activeElement.id ) ) === 'deep' );
+	const cur = await a.locator( '.refraction-toc__link[aria-current="location"]' ).allInnerTexts();
+	check( k, 'the current section is marked in the list', cur.length === 1 && cur[ 0 ].includes( 'Deep' ), cur.join( '|' ) );
+	const stuck = await a.evaluate( ( e ) => Math.round( e.getBoundingClientRect().top ) );
+	check( k, 'sticky: the list stays in view (20px from the top) while scrolling', Math.abs( stuck - 20 ) <= 4, stuck );
+	await p.screenshot( { path: join( SHOTS, 'table-of-contents.png' ) } );
+
+	// collapse
+	const btn = a.locator( 'button.refraction-toc__toggle' );
+	check( k, 'collapse button is expanded and controls the list', ( await btn.getAttribute( 'aria-expanded' ) ) === 'true' && !! ( await btn.getAttribute( 'aria-controls' ) ) );
+	await btn.click();
+	check( k, 'collapsing hides the list and updates aria-expanded', ( await btn.getAttribute( 'aria-expanded' ) ) === 'false' && ! ( await a.locator( '.refraction-toc__link' ).first().isVisible() ) );
+	await btn.press( 'Enter' );
+	check( k, 'it re-opens from the keyboard', ( await btn.getAttribute( 'aria-expanded' ) ) === 'true' && await a.locator( '.refraction-toc__link' ).first().isVisible() );
+
+	// keyboard on a link
+	await p.evaluate( () => window.scrollTo( 0, 0 ) );
+	await sleep( 300 );
+	await a.locator( '.refraction-toc__link', { hasText: 'Details' } ).focus();
+	await p.keyboard.press( 'Enter' );
+	await sleep( 1400 );
+	const dTop = await p.evaluate( () => Math.round( document.getElementById( 'details' ).getBoundingClientRect().top ) );
+	check( k, 'Enter on a link scrolls to its heading', Math.abs( dTop - 80 ) <= 6, dTop );
+
+	const b = p.locator( '[data-id="toc00002"]' );
+	check( k, 'a selector limits the list to that area (bullets, no numbers, no collapse button)', JSON.stringify( ( await b.locator( '.refraction-toc__link' ).allInnerTexts() ).map( ( x ) => x.trim() ) ) === JSON.stringify( [ 'Scoped one', 'Scoped two' ] ) && ( await b.locator( 'button.refraction-toc__toggle' ).count() ) === 0 );
+	check( k, 'hide-when-empty hides the widget', ! ( await p.locator( '[data-id="toc00003"] .refraction-toc' ).isVisible() ) );
+	const m = p.locator( '[data-id="toc00004"]' );
+	check( k, 'empty list shows the message', await m.locator( '.refraction-toc__empty' ).isVisible() && ( await m.locator( '.refraction-toc__empty' ).innerText() ) === 'Nothing to list here' );
+	await v.ctx.close();
+
+	const r = await visitor( browser, rel( pages[ k ].url ), 1280, 800, { reducedMotion: 'reduce' } );
+	await r.page.waitForSelector( '[data-id="toc00001"] .refraction-toc__link' );
+	await r.page.locator( '[data-id="toc00001"] .refraction-toc__link', { hasText: 'Deep' } ).click();
+	await sleep( 150 );
+	const rTop = await r.page.evaluate( () => Math.round( document.getElementById( 'deep' ).getBoundingClientRect().top ) );
+	check( k, 'reduced motion: the jump is immediate (no smooth scrolling)', Math.abs( rTop - 80 ) <= 6, rTop );
+	await r.ctx.close();
+};
+
 /* ------------------------------------------------------------------- driver */
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }

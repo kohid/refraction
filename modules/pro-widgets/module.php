@@ -33,6 +33,7 @@ class Module extends BaseModule {
 			'Share_Buttons',
 			'Blockquote',
 			'Progress_Tracker',
+			'Table_Of_Contents',
 		];
 	}
 

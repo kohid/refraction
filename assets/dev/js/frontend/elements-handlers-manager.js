@@ -42,6 +42,7 @@ module.exports = function( $ ) {
 	this.elementsHandlers[ 'refraction-countdown.default' ] = () => import( /* webpackChunkName: 'pro-countdown' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/countdown' );
 	this.elementsHandlers[ 'refraction-share-buttons.default' ] = () => import( /* webpackChunkName: 'pro-share-buttons' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/share-buttons' );
 	this.elementsHandlers[ 'refraction-progress-tracker.default' ] = () => import( /* webpackChunkName: 'pro-progress-tracker' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/progress-tracker' );
+	this.elementsHandlers[ 'refraction-table-of-contents.default' ] = () => import( /* webpackChunkName: 'pro-table-of-contents' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/table-of-contents' );
 
 	const addGlobalHandlers = () => refractionFrontend.hooks.addAction( 'frontend/element_ready/global', globalHandler );
 

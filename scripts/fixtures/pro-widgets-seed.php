@@ -228,6 +228,32 @@ $pages['progress-tracker'] = rfw_page( 'RFW Progress Tracker', [
 	rfw_widget( 'html', [ 'html' => '<div style="height:1000px;background:#f6f6f6">spacer</div><div id="rf-target" style="height:2000px;background:#e8eef5">target</div><div style="height:600px;background:#f6f6f6">after</div>' ], 'pg000005' ),
 ] );
 
+// ------------------------------------------------------ table of contents
+$hd_count = 0;
+$hd = function ( $text, $size, $extra = [] ) use ( &$hd_count ) {
+	return rfw_widget( 'heading', [ 'title' => $text, 'header_size' => $size ] + $extra, 'hd' . str_pad( (string) ++$hd_count, 5, '0', STR_PAD_LEFT ) );
+};
+$filler = function ( $n ) {
+	return rfw_widget( 'html', [ 'html' => '<p style="height:700px;margin:0">Filler paragraph ' . $n . '</p>' ], 'fl' . str_pad( (string) $n, 5, '0', STR_PAD_LEFT ) );
+};
+$pages['table-of-contents'] = rfw_page( 'RFW Table Of Contents', [
+	rfw_widget( 'refraction-table-of-contents', [
+		'toc_title' => 'On this page', 'exclude_selector' => '#only-here h2', 'headings' => [ 'h2', 'h3', 'h4' ], 'marker' => 'numbers', 'collapsible' => 'yes', 'sticky' => 'yes',
+		'sticky_offset' => [ 'size' => 20, 'unit' => 'px' ], 'scroll_offset' => [ 'size' => 80, 'unit' => 'px' ], 'smooth_scroll' => 'yes',
+	], 'toc00001' ),
+	$hd( 'Page title', 'h1' ),
+	$hd( 'Intro', 'h2' ), $filler( 1 ),
+	$hd( 'Details', 'h3' ), $filler( 2 ),
+	$hd( 'More <i>info</i>', 'h3' ), $filler( 3 ),
+	$hd( 'Intro', 'h2' ), $filler( 4 ),
+	$hd( 'Deep', 'h4' ), $filler( 5 ),
+	$hd( 'Skip me', 'h2', [ '_css_classes' => 'refraction-toc-ignore' ] ), $filler( 6 ),
+	rfw_widget( 'html', [ 'html' => '<div id="only-here"><h2>Scoped one</h2><p>x</p><h2>Scoped two</h2></div>' ], 'sc000001' ),
+	rfw_widget( 'refraction-table-of-contents', [ 'toc_title' => 'Scoped', 'container_selector' => '#only-here', 'headings' => [ 'h2' ], 'marker' => 'bullets', 'collapsible' => '', 'sticky' => '' ], 'toc00002' ),
+	rfw_widget( 'refraction-table-of-contents', [ 'toc_title' => 'Hidden when empty', 'container_selector' => '#nothing-here', 'hide_when_empty' => 'yes' ], 'toc00003' ),
+	rfw_widget( 'refraction-table-of-contents', [ 'toc_title' => 'Shows a message', 'container_selector' => '#nothing-here', 'hide_when_empty' => '', 'empty_message' => 'Nothing to list here' ], 'toc00004' ),
+] );
+
 // @@MORE_PAGES@@ (each widget task appends its page above this line)
 
 echo wp_json_encode( $pages );
