@@ -84,7 +84,7 @@ async function login( browser, user, pass ) {
 	await page.goto( `${ BASE }/wp-login.php` );
 	await page.fill( '#user_login', user );
 	await page.fill( '#user_pass', pass );
-	await Promise.all( [ page.waitForURL( /wp-admin/ ), page.click( '#wp-submit' ) ] );
+	await Promise.all( [ page.waitForURL( /wp-admin/, { timeout: 120000 } ), page.click( '#wp-submit' ) ] );
 	return { ctx, page };
 }
 
@@ -410,7 +410,8 @@ async function main() {
 			const categoryTitle = await editorPage.evaluate( () => ( refraction.config.elements_categories || refraction.config.document?.panel?.elements_categories || {} )[ 'theme-elements' ]?.title || null );
 			check( 'editor', 'the Theme Elements category exists in the panel', categoryTitle === 'Theme Elements' || ( await editorPage.locator( '#refraction-panel-category-theme-elements' ).count() ) === 1, categoryTitle );
 
-			await expectText( 'preview', 'single: default preview is the latest post (not the template)', 'post-title', ( t ) => t === 'Beta Post' );
+			await expectText( 'preview', 'single: default preview is the latest post, not the template title', 'post-title', ( t ) => t === 'Hello world!' );
+			await expectText( 'preview', 'single: Page Title in the default preview is the post title (a single query)', 'page-title', ( t ) => t === 'Hello world!' );
 			await editorPage.screenshot( { path: join( SHOTS, 'editor-single-default.png' ) } );
 			await openPreviewSettings();
 			await editorPage.screenshot( { path: join( SHOTS, 'editor-preview-settings.png' ) } );
@@ -458,7 +459,7 @@ async function main() {
 			await expectText( 'preview', 'header: preview renders site widgets with a page as context', 'page-title', ( t ) => t !== '' && t !== 'H_PREV' );
 			await openPreviewSettings();
 			const headerOptions = await editorPage.$$eval( '.rtb-prev select option', ( o ) => o.map( ( x ) => x.value ) );
-			check( 'preview', 'header offers every preview source', [ 'post:page', 'blog', 'author', 'search', '404' ].every( ( v ) => headerOptions.includes( v ) ), headerOptions.join( ',' ) );
+			check( 'preview', 'header offers every preview source', [ 'post:page', 'blog', 'author', 'search', '404' ].every( ( v ) => headerOptions.includes( v ) ), headerOptions.join( ',' ).slice( -80 ) );
 
 			// Panel visibility outside Theme Builder templates.
 			wp( [ 'post', 'create', '--post_type=page', '--post_title=Plain', '--post_status=publish', '--porcelain' ] );

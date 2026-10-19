@@ -3,7 +3,9 @@ namespace Refraction\Modules\ThemeBuilder\Documents;
 
 use Refraction\Controls_Manager;
 use Refraction\Modules\Library\Documents\Library_Document;
+use Refraction\Modules\ThemeBuilder\Classes\Preview_Context;
 use Refraction\Modules\ThemeBuilder\Classes\Preview_Target;
+use Refraction\Plugin;
 use Refraction\TemplateLibrary\Source_Local;
 use Refraction\Modules\ThemeBuilder\Module;
 
@@ -83,6 +85,18 @@ abstract class Theme_Document extends Library_Document {
 	}
 
 	/**
+	 * The editor page renders every widget once on the server so the preview starts filled in: do it against the
+	 * Preview Settings target, like the render requests that follow.
+	 */
+	public function get_elements_raw_data( $data = null, $with_html_content = false ) {
+		if ( ! $with_html_content || ! Plugin::$instance->editor->is_edit_mode() ) {
+			return parent::get_elements_raw_data( $data, $with_html_content );
+		}
+
+		return Preview_Context::run_with( $this, fn() => parent::get_elements_raw_data( $data, $with_html_content ) );
+	}
+
+	/**
 	 * What this template can be previewed as: the options of the Preview Settings dropdown.
 	 *
 	 * @return array<int, array{value: string, label: string}>
@@ -93,7 +107,7 @@ abstract class Theme_Document extends Library_Document {
 
 		if ( in_array( 'post', $kinds, true ) ) {
 			foreach ( get_post_types( [ 'public' => true ], 'objects' ) as $type ) {
-				if ( 'attachment' !== $type->name && ! in_array( $type->name, [ Source_Local::CPT ], true ) ) {
+				if ( ! in_array( $type->name, [ 'attachment', Source_Local::CPT, 'e-floating-buttons' ], true ) ) {
 					$sources[] = [ 'value' => 'post:' . $type->name, 'label' => $type->labels->singular_name ];
 				}
 			}
@@ -122,13 +136,13 @@ abstract class Theme_Document extends Library_Document {
 		}
 
 		$fixed = [
-			'author' => esc_html__( 'Author archive', 'refraction' ),
-			'date' => esc_html__( 'Date archive', 'refraction' ),
-			'search' => esc_html__( 'Search results', 'refraction' ),
-			'404' => esc_html__( 'Error 404 page', 'refraction' ),
+			[ 'author', esc_html__( 'Author archive', 'refraction' ) ],
+			[ 'date', esc_html__( 'Date archive', 'refraction' ) ],
+			[ 'search', esc_html__( 'Search results', 'refraction' ) ],
+			[ '404', esc_html__( 'Error 404 page', 'refraction' ) ],
 		];
 
-		foreach ( $fixed as $kind => $label ) {
+		foreach ( $fixed as [ $kind, $label ] ) {
 			if ( in_array( $kind, $kinds, true ) ) {
 				$sources[] = [ 'value' => $kind, 'label' => $label ];
 			}

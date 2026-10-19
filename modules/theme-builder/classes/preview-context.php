@@ -31,6 +31,33 @@ class Preview_Context {
 		return Preview_Target::sanitize( $document->get_location(), $document->get_settings( Preview_Target::SETTING ) );
 	}
 
+	/** Run a callback with the preview target as the global query, then put the real query back. */
+	public static function run_with( Theme_Document $document, callable $callback ) {
+		$saved = [
+			'wp_query' => $GLOBALS['wp_query'] ?? null,
+			'post' => $GLOBALS['post'] ?? null,
+			'authordata' => $GLOBALS['authordata'] ?? null,
+		];
+
+		self::enter( $document );
+
+		try {
+			return $callback();
+		} finally {
+			foreach ( $saved as $name => $value ) {
+				if ( null === $value ) {
+					unset( $GLOBALS[ $name ] );
+				} else {
+					$GLOBALS[ $name ] = $value; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+				}
+			}
+
+			if ( ! empty( $GLOBALS['post'] ) ) {
+				setup_postdata( $GLOBALS['post'] );
+			}
+		}
+	}
+
 	/** Replace the global query. Returns false (and changes nothing) when the target has no content to show. */
 	public static function enter( Theme_Document $document ): bool {
 		$location = $document->get_location();
@@ -41,16 +68,32 @@ class Preview_Context {
 			$target['id'] = 0;
 		}
 
+		// "The latest" needs a real post so the query is a single post query (is_singular(), page title, breadcrumbs...).
+		if ( $parsed && 'post' === $parsed['kind'] && ! $target['id'] ) {
+			$latest = get_posts( [ 'post_type' => $parsed['sub'], 'post_status' => 'publish', 'numberposts' => 1, 'fields' => 'ids', 'suppress_filters' => true ] );
+			$target['id'] = $latest ? (int) $latest[0] : 0;
+		}
+
 		$vars = Preview_Target::query_vars( $location, $target );
 
 		if ( ! empty( $vars['__404'] ) ) {
 			$query = new \WP_Query();
 			$query->set_404();
 		} else {
-			$query = new \WP_Query( $vars );
+			// An empty variable list would not run a query at all; this one asks for the blog home.
+			$query = new \WP_Query( $vars ? $vars : [ 'posts_per_page' => (int) get_option( 'posts_per_page', 10 ) ] );
 
 			if ( $parsed && 'post' === $parsed['kind'] && ! $query->have_posts() ) {
 				return false;
+			}
+		}
+
+		// In wp-admin and admin-ajax WP_Query marks itself as an admin query, which keeps it from being the blog home.
+		if ( $query->is_admin ) {
+			$query->is_admin = false;
+
+			if ( ! ( $query->is_singular || $query->is_archive || $query->is_search || $query->is_404 ) ) {
+				$query->is_home = true;
 			}
 		}
 
@@ -58,7 +101,8 @@ class Preview_Context {
 
 		unset( $GLOBALS['post'], $GLOBALS['authordata'] );
 
-		if ( $query->is_singular() && $query->have_posts() ) {
+		// As on the front end, the global post is the first post of the query (the date and other archive titles read it).
+		if ( $query->have_posts() ) {
 			$GLOBALS['post'] = $query->posts[0]; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			setup_postdata( $GLOBALS['post'] );
 		}
