@@ -255,7 +255,7 @@ async function main() {
 					T( 'H_ALL', 'header', [ 'include/general' ] ),
 					T( 'F_ALL', 'footer', [ 'include/general' ] ),
 					T( 'A_ALL', 'archive', [ 'include/archive', 'exclude/archive/tax/category/' + c.other ], { widgets: [ { type: 'theme-archive-title' }, { type: 'theme-archive-title', settings: { hide_prefix: 'yes' } }, { type: 'theme-page-title' }, { type: 'theme-breadcrumbs' } ] } ),
-					T( 'A_CAT', 'archive', [ 'include/archive/tax/category' ], { widgets: [ { type: 'theme-archive-title' } ] } ),
+					T( 'A_CAT', 'archive', [ 'include/archive/tax/category', 'exclude/archive/tax/category/' + c.other ], { widgets: [ { type: 'theme-archive-title' } ] } ),
 					T( 'A_BLOG', 'archive', [ 'include/archive/type/post' ], { widgets: [ { type: 'theme-archive-title' } ] } ),
 					T( 'S_ALL', 'single', [ 'include/singular' ] ),
 				] );
@@ -282,7 +282,7 @@ async function main() {
 				await vp.screenshot( { path: join( SHOTS, `archive-${ theme }.png` ), fullPage: true } );
 				await vget( U.tag );
 				const tagTitles = await vp.locator( `${ w( 'archive-title' ) } .refraction-theme-text` ).allInnerTexts();
-				check( 'widgets', `${ theme }: Archive Title for a tag, with and without prefix`, tagTitles[ 0 ] === 'Tag: demo' && tagTitles[ 1 ] === 'demo', tagTitles.join( '|' ) );
+				check( 'widgets', `${ theme }: Archive Title for a tag, with and without prefix`, tagTitles[ 0 ] === 'Tag: Demo' && tagTitles[ 1 ] === 'Demo', tagTitles.join( '|' ) );
 				await vget( U.author );
 				check( 'widgets', `${ theme }: Archive Title for an author`, /Ada Author/.test( ( await text( `${ w( 'archive-title' ) } .refraction-theme-text` ) ) ) );
 				await vget( U.date );
@@ -320,7 +320,7 @@ async function main() {
 
 				// ---- Phase 5: trashed and draft templates, header only, no header/footer templates.
 				ids = mk( [ T( 'S_TRASH', 'single', [ 'include/singular' ] ), T( 'S_DRAFT', 'single', [ 'include/singular' ], { status: 'draft' } ) ] );
-				wp( [ 'post', 'delete', String( ids.S_TRASH ) ] );
+				wp( [ 'post', 'update', String( ids.S_TRASH ), '--post_status=trash' ] );
 				await expectLoc( 'status', 'a trashed template and a draft are ignored', U.alpha, 'single', null );
 				ids = mk( [ T( 'S_ONLY', 'single', [ 'include/singular' ], { widgets: [ { type: 'theme-post-title' } ] } ) ] );
 				const bare = await expectLoc( 'layout', 'a single template alone (no header/footer templates)', U.alpha, 'single', 'S_ONLY' );

@@ -158,5 +158,5 @@ if ( 'content' === $action ) {
 		$ids[ $spec['key'] ] = $id;
 	}
 
-	echo wp_json_encode( $ids );
+	echo wp_json_encode( (object) $ids );
 }

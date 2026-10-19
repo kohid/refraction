@@ -1,12 +1,12 @@
 # Theme Builder
 
-Header and Footer templates with display conditions, built in and always on (module `modules/theme-builder`, namespace
-`Refraction\Modules\ThemeBuilder`). Original code; nothing is copied from any external Pro plugin. Plan:
-[theme-builder-plan.md](theme-builder-plan.md).
+Header, Footer, Single, Archive, Search Results and Error 404 templates with display conditions, built in and always on (module `modules/theme-builder`, namespace
+`Refraction\Modules\ThemeBuilder`). Original code; nothing is copied from any external Pro plugin. Plans:
+[theme-builder-plan.md](theme-builder-plan.md) (header and footer), [theme-builder-2-plan.md](theme-builder-2-plan.md) (the rest).
 
 ## Using it
 
-1. Refraction > Theme Builder, tab Headers or Footers, **Add New**. The template type dialog opens with the type
+1. Refraction > Theme Builder, tab Headers, Footers, Single, Archive, Search Results or Error 404, **Add New**. The template type dialog opens with the type
    preselected. (Saved Templates > Add New also lists Header and Footer.)
 2. Build the template in the normal editor.
 3. Open the document settings (gear icon) > **Display Conditions**, add rules, **Publish**.
@@ -49,6 +49,53 @@ Code: `Rule`, `Conditions\*` (one class per rule family, `Conditions_Manager::re
 (matching, readable text), `Resolver` (picks the winner), `Environment` / `Wp_Environment` (the request).
 Results per request are cached by `Locations_Manager`.
 
+## Single, Archive, Search Results and Error 404
+
+These templates replace the main content of a page; the site header and footer stay around them.
+
+| Type | Serves | Typical rule |
+|---|---|---|
+| Single | any single post, page or custom post type item (also a static front page) | `include/singular`, `include/singular/post`, `include/singular/book` |
+| Archive | category, tag, custom taxonomy, author, date, post type archives, the posts page, posts as front page | `include/archive`, `include/archive/tax/category`, `include/archive/type/post` |
+| Search Results | the search results page, with or without results | `include/archive/search` |
+| Error 404 | the not found page (the 404 status is kept) | `include/404` |
+
+**Location guard.** The rules decide *which* template of a type wins, but a type only ever serves its own kind of request
+(`Location_Scope`). A Single template with "entire site" never takes over an archive, a search or a 404; an Archive
+template never takes over search results (they have their own type). So the same rule names work for every type.
+
+**Rendering.** When a body template matches, `template_include` (priority 15) swaps the theme's page template for
+`modules/theme-builder/templates/body.php`: header, `<main class="refraction-location-{type}">` with the template, footer.
+Classic themes call `get_header()` / `get_footer()` (so a matching header/footer template replaces them through the
+existing takeover and the theme's own header/footer print otherwise). Block themes print the `header` and `footer`
+template parts inside `wp-site-blocks`, which the existing `pre_render_block` logic swaps for matching Refraction
+templates. A page that picked the Refraction Canvas or Header-Footer page template, and Refraction library templates
+opened on their own, are left alone.
+
+**Preview Settings** (document settings > Preview Settings, every Theme Builder template). Choose what the template is
+designed against: a post, page or custom post type item (search by title; empty = the latest), a category / tag /
+custom term archive, an author, a month (`2025-03`), a post type archive, the blog, a search word, or the 404 page.
+Header and footer templates can preview as any of these too (default: a page). **Apply & Preview** stores the choice in
+the template's page settings (`refraction_preview_target`) and re-renders the preview. Behind it, the editor's widget
+render request replaces the global query with a `WP_Query` for that target (`Preview_Context`, hooked on the new action
+`refraction/widgets/ajax_render/query`), so every Theme Elements widget and template tag behaves as on the site. The
+choice only affects the editor.
+
+## Theme Elements widgets
+
+Category **Theme Elements**. Widgets marked (T) are offered in the panel only while editing a Theme Builder template;
+the others work in any page.
+
+Site Logo (the Customizer logo or a chosen image), Site Title, Site Tagline, Page Title (post, archive, search or 404
+heading), Post Title, Post Content (T), Post Excerpt (T), Featured Image, Post Info (T: author, date, time,
+comments, terms, custom text; each with link, prefix and icon), Author Box (T), Post Comments (T, the theme's comments
+template), Post Navigation (T, previous / next, optionally in the same term), Breadcrumbs (home, parents, current),
+Archive Title (T, optional prefix removal), Sitemap (pages, posts, custom post types and term lists, columns, depth),
+Search Form (classic or minimal, optional post type restriction).
+
+All are dynamic: never cached, never written into the saved post content, text escaped. In the editor they are
+rendered by the server, like every other server widget.
+
 ## Where it is shown
 
 `Locations_Manager` knows `header` and `footer`. It resolves the winner on first use after the `wp` action and only on
@@ -72,8 +119,15 @@ Filters: `refraction/theme_builder/is_active_request`, `refraction/theme_builder
 
 ## Limits and known issues
 
-* v1 preview: the editor shows the template on a blank canvas. It does not preview it inside the site's latest page or
-  as a chosen "preview as" page/post.
+* The editor preview shows the template only, not the surrounding site header and footer (Preview Settings changes the
+  content the widgets show, not the frame around it).
+* Body templates: one template per request (the best match). There are no template parts or conditions per widget.
+* A page that selected the Refraction Canvas / Header-Footer page template keeps it instead of a matching Single template.
+* Block themes: the body page prints the theme's template parts named `header` and `footer`; a block theme without those
+  names prints no header/footer there (a matching Refraction header/footer template still prints).
+* Breadcrumbs are built from WordPress data only (no SEO plugin integration). Post Comments needs the theme's comments
+  template (a core fallback is used when it has none). Sitemap lists at most 500 items per non-hierarchical type.
+* Archive Posts (the loop of an archive) is not part of this module (the Loop Builder work).
 * The automatic classic theme takeover replaces the whole `header.php` / `footer.php`. Wrapper elements those files
   open or close (for example `<div id="content">`) are not reproduced; themes that rely on them for layout should use the
   opt-in functions. If only a header template matches, the theme's `footer.php` still closes wrappers its `header.php`
@@ -95,6 +149,9 @@ Filters: `refraction/theme_builder/is_active_request`, `refraction/theme_builder
   WordPress needed.
 * `tests/phpunit/refraction/modules/theme-builder/test-conditions.php` the same engine against real queries (needs the
   WordPress PHPUnit suite).
+* `php scripts/test-theme-builder-templates.php` the location guard and Preview Settings logic; no WordPress needed.
+* `node scripts/check-theme-builder-2.mjs --site <dir> --port <port>` Single / Archive / Search / 404 templates, widgets and
+  Preview Settings on two classic themes and a block theme, admin tabs, editor.
 * `node scripts/check-theme-builder.mjs --site <dir> --port <port>` real WordPress, classic and block themes, admin, the
   editor UI, endpoint security, preview, opt-in and Floating Elements. Needs a test site from
   `scripts/setup-menu-test-site.sh`.

@@ -74,7 +74,31 @@ class Post_Comments extends Theme_Widget_Base {
 		}
 
 		echo '<div class="refraction-theme-comments">';
-		comments_template();
+
+		if ( file_exists( get_stylesheet_directory() . '/comments.php' ) || file_exists( get_template_directory() . '/comments.php' ) ) {
+			comments_template();
+		} else {
+			// Block themes have no comments.php: print the comments blocks, as their own templates do.
+			$this->render_comment_blocks( $post );
+		}
+
 		echo '</div>';
+	}
+
+	private function render_comment_blocks( \WP_Post $post ): void {
+		$markup = '<!-- wp:comments --><div class="wp-block-comments">'
+			. '<!-- wp:comments-title /-->'
+			. '<!-- wp:comment-template --><!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"top"}} --><div class="wp-block-group"><!-- wp:avatar {"size":40} /-->'
+			. '<!-- wp:group {"layout":{"type":"constrained"}} --><div class="wp-block-group"><!-- wp:comment-author-name /--><!-- wp:comment-date /--><!-- wp:comment-content /--><!-- wp:comment-reply-link /--></div><!-- /wp:group --></div><!-- /wp:group --><!-- /wp:comment-template -->'
+			. '<!-- wp:comments-pagination --><!-- wp:comments-pagination-previous /--><!-- wp:comments-pagination-numbers /--><!-- wp:comments-pagination-next /--><!-- /wp:comments-pagination -->'
+			. '<!-- wp:post-comments-form /-->'
+			. '</div><!-- /wp:comments -->';
+		$context = [ 'postId' => $post->ID, 'postType' => $post->post_type ];
+
+		foreach ( parse_blocks( $markup ) as $parsed ) {
+			if ( ! empty( $parsed['blockName'] ) ) {
+				echo ( new \WP_Block( $parsed, $context ) )->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core block output.
+			}
+		}
 	}
 }
