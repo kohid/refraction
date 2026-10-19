@@ -45,6 +45,7 @@ t( 'oc: bad position falls back', OC::sanitize( [ 'position' => 'diagonal' ] )['
 t( 'oc: positions accepted', array_map( fn( $p ) => OC::sanitize( [ 'position' => $p ] )['position'], [ 'left', 'right', 'top', 'bottom', 'center' ] ), [ 'left', 'right', 'top', 'bottom', 'center' ] );
 t( 'oc: push mode kept for a side panel', OC::sanitize( [ 'position' => 'right', 'mode' => 'push' ] )['mode'], 'push' );
 t( 'oc: push is impossible for the centered overlay', OC::sanitize( [ 'position' => 'center', 'mode' => 'push' ] )['mode'], 'overlay' );
+t( 'oc: push is impossible for a bottom panel', OC::sanitize( [ 'position' => 'bottom', 'mode' => 'push' ] )['mode'], 'overlay' );
 t( 'oc: unknown mode', OC::sanitize( [ 'mode' => 'x' ] )['mode'], 'overlay' );
 t( 'oc: duration clamped high', OC::sanitize( [ 'duration' => 99999 ] )['duration'], 2000 );
 t( 'oc: duration clamped low', OC::sanitize( [ 'duration' => -5 ] )['duration'], 0 );

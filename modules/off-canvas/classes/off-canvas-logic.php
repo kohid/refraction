@@ -18,7 +18,7 @@ class Off_Canvas_Logic {
 		$position = isset( $settings['position'] ) && in_array( $settings['position'], self::POSITIONS, true ) ? $settings['position'] : 'left';
 		$mode = isset( $settings['mode'] ) && in_array( $settings['mode'], self::MODES, true ) ? $settings['mode'] : 'overlay';
 
-		if ( 'center' === $position ) {
+		if ( in_array( $position, [ 'center', 'bottom' ], true ) ) {
 			$mode = 'overlay';
 		}
 
