@@ -113,6 +113,8 @@ class Gallery extends Pro_Widget {
 					'justified' => esc_html__( 'Justified rows', 'refraction' ),
 				],
 				'prefix_class' => 'refraction-gallery-layout-',
+				// The inner markup carries a layout class too, so the editor must re-render, not only toggle the wrapper class.
+				'render_type' => 'template',
 			]
 		);
 

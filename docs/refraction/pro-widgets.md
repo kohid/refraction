@@ -39,8 +39,8 @@ re-renders from the same PHP as the front end. Front-end behaviour sits in lazy 
 * Share Buttons: Pinterest needs an image (the featured image by default); Print and Copy depend on the browser.
 * The page still contacts Google Fonts when the kit's default typography uses a Google font (documented in `readme.txt`);
   none of these widgets adds a request.
-* Not in this batch (still on the roadmap): Media Carousel, Testimonial Carousel, Reviews, Hotspot, Code Highlight, Lottie,
-  Video Playlist, Gallery, Social Icons extras, Facebook embeds.
+* Batch 2 (Media Carousel, Testimonial Carousel, Reviews, Hotspot, Code Highlight, Lottie, Video Playlist, Gallery,
+  Facebook embeds) is documented in `pro-widgets-2.md`.
 
 ## Fixes made along the way
 

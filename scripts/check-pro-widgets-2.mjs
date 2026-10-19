@@ -242,9 +242,11 @@ SECTIONS[ 'media-carousel' ] = async ( { browser, admin, pages } ) => {
 	check( k, 'Escape closes the lightbox', await closeLightbox( p ) );
 
 	// lightbox for the video
-	const vid = a.locator( '.refraction-pc__slide:not(.swiper-slide-duplicate) a.refraction-mc__media--video' ).first();
-	check( k, 'the video slide is a link with a play icon and an accessible name', ( await vid.getAttribute( 'aria-label' ) ) === 'Play video: A video' && await vid.locator( '.refraction-mc__play' ).count() === 1 );
+	const vid = a.locator( '.refraction-pc__slide:not(.swiper-slide-duplicate) .refraction-mc__media--video' ).first();
+	check( k, 'the video slide is a button with a play icon and an accessible name', ( await vid.getAttribute( 'aria-label' ) ) === 'Play video: A video' && await vid.locator( '.refraction-mc__play' ).count() === 1 );
 	await vid.evaluate( ( e ) => e.scrollIntoView( { block: 'center' } ) );
+	await a.evaluate( ( el ) => el.querySelector( '.refraction-pc' ).swiper.slideToLoop( 3, 0 ) );
+	await sleep( 400 );
 	await vid.click();
 	await p.waitForSelector( '.refraction-lightbox iframe', { timeout: 10000 } ).catch( () => {} );
 	const src = await p.locator( '.refraction-lightbox iframe' ).first().getAttribute( 'src' ).catch( () => null );

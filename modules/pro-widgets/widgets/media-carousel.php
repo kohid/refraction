@@ -384,17 +384,18 @@ class Media_Carousel extends Pro_Widget {
 							$media_close = '</div>';
 
 							if ( $video && $lightbox ) {
+								// A button, not a link: the lightbox ignores links that do not point at an image.
 								$link_key = 'link_' . $index;
 								$this->add_render_attribute( $link_key, [
+									'type' => 'button',
 									'class' => array_filter( [ 'refraction-mc__media', 'refraction-mc__media--video', $is_edit ? 'refraction-clickable' : '' ] ),
-									'href' => 'hosted' === $video['provider'] ? $video['url'] : $slide['video_link'],
 									'data-refraction-open-lightbox' => 'yes',
 									'data-refraction-lightbox' => $this->video_lightbox_json( $video, $video['url'] ?? '' ),
 									/* translators: %s: video caption */
 									'aria-label' => sprintf( __( 'Play video: %s', 'refraction' ), $alt_label ),
 								] );
-								$media_open = '<a ' . $this->get_render_attribute_string( $link_key ) . '>';
-								$media_close = '</a>';
+								$media_open = '<button ' . $this->get_render_attribute_string( $link_key ) . '>';
+								$media_close = '</button>';
 							} elseif ( $video ) {
 								$link_key = 'link_' . $index;
 								$this->add_render_attribute( $link_key, [

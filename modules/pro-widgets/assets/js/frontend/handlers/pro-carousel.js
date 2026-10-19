@@ -108,6 +108,7 @@ export default class ProCarousel extends refractionModules.frontend.handlers.Car
 			slideChange: () => {
 				this.a11ySetPaginationTabindex();
 				this.a11ySetSlideAriaHidden();
+				this.syncThumbs();
 			},
 			init: () => {
 				this.a11ySetPaginationTabindex();
@@ -131,12 +132,32 @@ export default class ProCarousel extends refractionModules.frontend.handlers.Car
 				freeMode: true,
 				watchSlidesProgress: true,
 				watchOverflow: true,
+				// The thumbnails are plain buttons labelled by the widget; Swiper's "1 / 4" group labels would replace those.
+				a11y: { enabled: false },
 			} );
 		} else {
 			this.thumbsElement = null;
 		}
 
 		await super.onInit( ...args );
+
+		// Swiper's thumbs module follows touch/mouse "tap" events only; real clicks also come from the keyboard.
+		if ( this.thumbsElement && this.swiper ) {
+			this.thumbsElement.querySelectorAll( '.refraction-pc-thumb' ).forEach( ( thumb, index ) => {
+				thumb.addEventListener( 'click', () => this.swiper.slideTo( index ) );
+			} );
+			this.syncThumbs();
+		}
+	}
+
+	syncThumbs() {
+		if ( ! this.thumbsElement || ! this.swiper ) {
+			return;
+		}
+
+		this.thumbsElement.querySelectorAll( '.refraction-pc-thumb' ).forEach( ( thumb, index ) => {
+			thumb.setAttribute( 'aria-current', index === this.swiper.activeIndex ? 'true' : 'false' );
+		} );
 	}
 
 	// The carousel base reads image-carousel specific settings on resize; this one does not need that.
