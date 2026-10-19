@@ -125,6 +125,7 @@ class Modules_Manager {
 			'theme-builder',
 			'off-canvas',
 			'mega-menu',
+			'nested-carousel',
 			'loop-builder',
 			'forms',
 			'pro-widgets',

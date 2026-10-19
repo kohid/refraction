@@ -1,0 +1,231 @@
+//
+// Nested Carousel
+//
+
+.refraction-widget-nested-carousel {
+	--refraction-nc-dot: rgba(120, 120, 140, 0.45);
+	--refraction-nc-dot-active: currentcolor;
+	--refraction-nc-dot-size: 10px;
+	--swiper-theme-color: currentcolor;
+}
+
+.refraction-nc {
+	position: relative;
+	width: 100%;
+}
+
+.refraction-nc__viewport {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+
+.refraction-nc__track {
+	display: flex;
+	box-sizing: content-box;
+}
+
+.refraction-nc.is-vertical .refraction-nc__track {
+	flex-direction: column;
+}
+
+.refraction-nc__slide {
+	flex-shrink: 0;
+	box-sizing: border-box;
+	height: auto;
+	margin: 0;
+}
+
+// The browser skips layout and paint of slides that are far from the view.
+.refraction-nc.is-lazy:not(.is-vertical) .refraction-nc__slide:not(.swiper-slide-visible):not(.swiper-slide-active) {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 320px;
+}
+
+.refraction-nc__arrow {
+	position: absolute;
+	inset-block-start: 50%;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background-color: rgba(10, 12, 18, 0.6);
+	color: #fff;
+	cursor: pointer;
+	transform: translateY(-50%);
+	transition: background-color 0.2s ease, opacity 0.2s ease;
+
+	svg {
+		display: block;
+		width: 55%;
+		height: 55%;
+		fill: currentcolor;
+	}
+
+	&:hover,
+	&:focus-visible {
+		background-color: rgba(10, 12, 18, 0.85);
+	}
+
+	&:focus-visible {
+		outline: 3px solid #fff;
+		outline-offset: 2px;
+		box-shadow: 0 0 0 5px rgba(10, 12, 18, 0.7);
+	}
+
+	&.swiper-button-disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+}
+
+.refraction-nc__prev {
+	inset-inline-start: 12px;
+}
+
+.refraction-nc__next {
+	inset-inline-end: 12px;
+}
+
+[dir="rtl"] .refraction-nc__arrow svg {
+	transform: scaleX(-1);
+}
+
+.refraction-nc-arrows-outside .refraction-nc {
+	padding-inline: 56px;
+
+	.refraction-nc__prev {
+		inset-inline-start: 4px;
+	}
+
+	.refraction-nc__next {
+		inset-inline-end: 4px;
+	}
+}
+
+.refraction-nc.is-vertical .refraction-nc__prev,
+.refraction-nc.is-vertical .refraction-nc__next {
+	inset-inline: 50% auto;
+	translate: -50% 0;
+}
+
+.refraction-nc.is-vertical .refraction-nc__prev {
+	inset-block-start: 12px;
+	transform: rotate(90deg);
+}
+
+.refraction-nc.is-vertical .refraction-nc__next {
+	inset-block-start: auto;
+	inset-block-end: 12px;
+	transform: rotate(90deg);
+}
+
+.refraction-nc__pagination {
+	position: static;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: 100%;
+	margin-block-start: 14px;
+	line-height: 1;
+
+	.swiper-pagination-bullet {
+		width: var(--refraction-nc-dot-size);
+		height: var(--refraction-nc-dot-size);
+		margin: 0;
+		border-radius: 50%;
+		background: var(--refraction-nc-dot);
+		opacity: 1;
+		cursor: pointer;
+
+		&:focus-visible {
+			outline: 2px solid currentcolor;
+			outline-offset: 2px;
+		}
+	}
+
+	.swiper-pagination-bullet-active {
+		background: var(--refraction-nc-dot-active);
+	}
+
+	&.swiper-pagination-fraction {
+		font-variant-numeric: tabular-nums;
+	}
+
+	&.swiper-pagination-progressbar {
+		position: relative;
+		height: 4px;
+		border-radius: 2px;
+		background: var(--refraction-nc-dot);
+
+		.swiper-pagination-progressbar-fill {
+			position: absolute;
+			inset: 0;
+			border-radius: inherit;
+			background: var(--refraction-nc-dot-active);
+			transform: scale(0);
+			transform-origin: left top;
+		}
+	}
+}
+
+.refraction-nc__autoplay {
+	position: absolute;
+	inset-block-start: 10px;
+	inset-inline-end: 10px;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(10, 12, 18, 0.6);
+	color: #fff;
+	cursor: pointer;
+
+	svg {
+		display: block;
+		fill: currentcolor;
+	}
+
+	&:focus-visible {
+		outline: 3px solid #fff;
+		outline-offset: 2px;
+		box-shadow: 0 0 0 5px rgba(10, 12, 18, 0.7);
+	}
+
+	.refraction-nc__autoplay-play,
+	&[aria-pressed="true"] .refraction-nc__autoplay-pause {
+		display: none;
+	}
+
+	&[aria-pressed="true"] .refraction-nc__autoplay-play {
+		display: inline-flex;
+	}
+}
+
+// Editor: the preview scrolls normally and shows every slide's container.
+.refraction-editor-active .refraction-nc__slide {
+	min-height: 60px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-nc__track {
+		transition-duration: 0s !important;
+	}
+
+	.refraction-nc__slide {
+		transition-duration: 0s !important;
+	}
+}

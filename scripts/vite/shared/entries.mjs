@@ -37,6 +37,7 @@ export const BASE_ENTRIES = {
 	'nested-accordion': 'modules/nested-accordion/assets/js/editor/index.js',
 	'off-canvas': 'modules/off-canvas/assets/js/editor/index.js',
 	'mega-menu': 'modules/mega-menu/assets/js/editor/index.js',
+	'nested-carousel': 'modules/nested-carousel/assets/js/editor/index.js',
 	'container-converter': 'modules/container-converter/assets/js/editor/module.js',
 	'web-cli': 'modules/web-cli/assets/js/index.js',
 	'import-export-admin': 'app/modules/import-export/assets/js/admin.js',
