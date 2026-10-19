@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Builds a throw-away WordPress test site (SQLite, no MySQL needed) and installs dist/refraction.zip.
 # Usage: scripts/setup-menu-test-site.sh [SITE_DIR=/tmp/refraction-site] [ZIP=dist/refraction.zip]
+# Env: PORT (default 8766), DL_DIR, WP_ZIP (path of a WordPress zip, e.g. to test an older core), WP_URL (download URL when WP_ZIP is missing).
 # Needs: php (sqlite3/pdo_sqlite), curl, unzip. Downloads WordPress, the SQLite Database Integration
 # plugin and wp-cli once into $DL_DIR (default /tmp/rsite-dl). Admin: admin / admin, editor: editor / editor.
 set -euo pipefail
@@ -10,14 +11,15 @@ ZIP="${2:-$ROOT/dist/refraction.zip}"
 DL="${DL_DIR:-/tmp/rsite-dl}"
 PORT="${PORT:-8766}"
 mkdir -p "$DL"
-[ -f "$DL/wp.zip" ] || curl -fsSL https://wordpress.org/latest.zip -o "$DL/wp.zip"
+WPZIP="${WP_ZIP:-$DL/wp.zip}"
+[ -f "$WPZIP" ] || curl -fsSL "${WP_URL:-https://wordpress.org/latest.zip}" -o "$WPZIP"
 [ -f "$DL/sqlite.zip" ] || curl -fsSL https://downloads.wordpress.org/plugin/sqlite-database-integration.zip -o "$DL/sqlite.zip"
 [ -f "$DL/wpcli.phar" ] || curl -fsSL https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar -o "$DL/wpcli.phar"
 WP() { php -d memory_limit=512M "$DL/wpcli.phar" --path="$SITE/wordpress" --allow-root "$@"; }
 
 if [ ! -f "$SITE/wordpress/wp-config.php" ]; then
 	rm -rf "$SITE"; mkdir -p "$SITE"
-	unzip -q "$DL/wp.zip" -d "$SITE"
+	unzip -q "$WPZIP" -d "$SITE"
 	unzip -q "$DL/sqlite.zip" -d "$SITE/wordpress/wp-content/plugins"
 	P="$SITE/wordpress/wp-content/plugins/sqlite-database-integration"
 	sed "s#{SQLITE_IMPLEMENTATION_FOLDER_PATH}#$P#; s#{SQLITE_PLUGIN}#sqlite-database-integration/load.php#" "$P/db.copy" > "$SITE/wordpress/wp-content/db.php"
