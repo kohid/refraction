@@ -46,6 +46,12 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.4.0 =
+* New: Custom CSS for every element (Advanced tab, with a `selector` keyword and live preview), every page (Page Settings) and the whole site (Site Settings). Risky constructs (`</style>`, `@import`, `expression()`, `javascript:` URLs, `behavior`, `-moz-binding`) are removed.
+* New: Refraction > Custom Code: HTML, JavaScript and CSS snippets in the head, after the opening body tag or in the footer, with Theme Builder display conditions, priority, an Active switch and a code editor with syntax hints. Administrators only; `REFRACTION_DISABLE_CUSTOM_CODE` and `?refraction-disable-code=1` switch snippets off.
+* New: Display Conditions on every element (logged in, role, user, post type, page, term, author, date range, time of day, day of week, URL parameter, cookie, referrer, device, browser language) with AND/OR. Hidden elements are not in the HTML. The editor shows a badge and a "Show elements with conditions" switch.
+* New: Custom Attributes on every element (`key|value` lines, event handlers and `javascript:` links removed).
+
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.
 * New: Preview Settings in the template settings: design a Single, Archive, Search Results, 404, Header or Footer template against a real post, page, custom post type item, term, author, month, search word or the 404 page.
