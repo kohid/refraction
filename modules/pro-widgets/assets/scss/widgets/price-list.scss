@@ -1,0 +1,83 @@
+//
+// Price List
+//
+
+.refraction-price-list {
+	display: flex;
+	flex-direction: column;
+	row-gap: 20px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.refraction-price-list__item {
+	display: flex;
+	align-items: flex-start;
+	column-gap: 16px;
+	margin: 0;
+}
+
+.refraction-price-list--image-right .refraction-price-list__item {
+	flex-direction: row-reverse;
+}
+
+.refraction-price-list__image {
+	flex: 0 0 25%;
+	max-width: 100%;
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+}
+
+.refraction-price-list__text {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.refraction-price-list__header {
+	display: flex;
+	align-items: baseline;
+}
+
+.refraction-price-list__link {
+	color: inherit;
+	text-decoration: none;
+
+	&:hover,
+	&:focus-visible {
+		text-decoration: underline;
+	}
+}
+
+.refraction-price-list__title {
+	font-weight: 600;
+}
+
+.refraction-price-list__separator {
+	flex: 1 1 auto;
+	min-width: 12px;
+	margin-inline: 10px;
+	border-bottom: 2px dotted currentColor;
+	opacity: 0.5;
+	transform: translateY(-0.25em);
+}
+
+.refraction-price-list__price {
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.refraction-price-list__description {
+	margin: 4px 0 0;
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-price-list__image {
+		flex-basis: 30%;
+	}
+}

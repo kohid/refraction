@@ -19,18 +19,21 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		};
 	}
 
+	// Handlers are bound here (not as class fields): the base class calls bindEvents() from its constructor,
+	// before class fields exist.
 	bindEvents() {
 		const selectors = this.getSettings( 'selectors' );
 
-		this.elements.$toggle.on( 'click', this.onToggleClick );
-		this.elements.$nav.on( 'click', selectors.subToggle, this.onSubToggleClick );
-		this.elements.$nav.on( 'keydown', this.onKeyDown );
-		jQuery( document ).on( 'click', this.onDocumentClick );
+		this.boundDocumentClick = this.onDocumentClick.bind( this );
+		this.elements.$toggle.on( 'click', this.onToggleClick.bind( this ) );
+		this.elements.$nav.on( 'click', selectors.subToggle, this.onSubToggleClick.bind( this ) );
+		this.elements.$nav.on( 'keydown', this.onKeyDown.bind( this ) );
+		jQuery( document ).on( 'click', this.boundDocumentClick );
 	}
 
 	onDestroy() {
 		super.onDestroy();
-		jQuery( document ).off( 'click', this.onDocumentClick );
+		jQuery( document ).off( 'click', this.boundDocumentClick );
 	}
 
 	setMenuOpen( open ) {
@@ -48,7 +51,7 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		}
 	}
 
-	onToggleClick = () => {
+	onToggleClick() {
 		const open = ! this.elements.$nav.hasClass( 'is-open' );
 
 		this.setMenuOpen( open );
@@ -56,21 +59,21 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		if ( ! open ) {
 			this.closeAllSubs();
 		}
-	};
+	}
 
-	onSubToggleClick = ( event ) => {
+	onSubToggleClick( event ) {
 		const $item = jQuery( event.currentTarget ).closest( this.getSettings( 'selectors' ).item );
 
 		// Close siblings so only one branch is open per level.
 		$item.siblings( '.is-open' ).each( ( i, el ) => this.setSubOpen( jQuery( el ), false ) );
 		this.setSubOpen( $item, ! $item.hasClass( 'is-open' ) );
-	};
+	}
 
 	closeAllSubs() {
 		this.elements.$nav.find( this.getSettings( 'selectors' ).item + '.is-open' ).each( ( i, el ) => this.setSubOpen( jQuery( el ), false ) );
 	}
 
-	onKeyDown = ( event ) => {
+	onKeyDown( event ) {
 		if ( 'Escape' !== event.key ) {
 			return;
 		}
@@ -85,9 +88,9 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		} else if ( hadSub ) {
 			this.elements.$nav.find( ':focus' ).blur();
 		}
-	};
+	}
 
-	onDocumentClick = ( event ) => {
+	onDocumentClick( event ) {
 		if ( ! this.elements.$nav.hasClass( 'is-open' ) && ! this.elements.$nav.find( '.is-open' ).length ) {
 			return;
 		}
@@ -96,5 +99,5 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 			this.closeAllSubs();
 			this.setMenuOpen( false );
 		}
-	};
+	}
 }

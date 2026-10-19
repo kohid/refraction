@@ -1,0 +1,273 @@
+@import "../button";
+
+//
+// Flip Box
+//
+
+.refraction-flip-box {
+	--refraction-flip-duration: 600ms;
+	position: relative;
+	height: 280px;
+	perspective: 1000px;
+	outline-offset: 4px;
+}
+
+.refraction-flip-box__layer {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	box-sizing: border-box;
+	padding: 24px;
+	overflow: hidden;
+	text-align: center;
+	backface-visibility: hidden;
+	transition: transform var(--refraction-flip-duration) ease, opacity var(--refraction-flip-duration) ease;
+}
+
+.refraction-flip-box__front {
+	background: #0f4c5c;
+	color: #fff;
+}
+
+.refraction-flip-box__back {
+	background: #9a3412;
+	color: #fff;
+}
+
+.refraction-flip-box__title {
+	margin: 0 0 0.4em;
+	color: inherit;
+}
+
+.refraction-flip-box__graphic {
+	margin-bottom: 0.4em;
+	font-size: 56px;
+	line-height: 1;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+		object-fit: contain;
+	}
+}
+
+.refraction-flip-box__description {
+	margin-bottom: 1em;
+}
+
+.refraction-flip-box__inner {
+	width: 100%;
+}
+
+// ---- Flip (3D) -----------------------------------------------------------
+.refraction-flip-box--effect-flip {
+
+	.refraction-flip-box {
+		transform-style: preserve-3d;
+	}
+
+	.refraction-flip-box__layer {
+		transform-style: preserve-3d;
+	}
+
+	.refraction-flip-box__back {
+		transform: rotateX(180deg);
+	}
+
+	&.refraction-flip-box--direction-down .refraction-flip-box__back {
+		transform: rotateX(-180deg);
+	}
+
+	&.refraction-flip-box--direction-left .refraction-flip-box__back {
+		transform: rotateY(-180deg);
+	}
+
+	&.refraction-flip-box--direction-right .refraction-flip-box__back {
+		transform: rotateY(180deg);
+	}
+}
+
+.refraction-flip-box--effect-flip.refraction-flip-box--trigger-hover {
+
+	.refraction-flip-box:hover .refraction-flip-box__front,
+	.refraction-flip-box:focus-within .refraction-flip-box__front {
+		transform: rotateX(-180deg);
+	}
+
+	&.refraction-flip-box--direction-down .refraction-flip-box:hover .refraction-flip-box__front,
+	&.refraction-flip-box--direction-down .refraction-flip-box:focus-within .refraction-flip-box__front {
+		transform: rotateX(180deg);
+	}
+
+	&.refraction-flip-box--direction-left .refraction-flip-box:hover .refraction-flip-box__front,
+	&.refraction-flip-box--direction-left .refraction-flip-box:focus-within .refraction-flip-box__front {
+		transform: rotateY(180deg);
+	}
+
+	&.refraction-flip-box--direction-right .refraction-flip-box:hover .refraction-flip-box__front,
+	&.refraction-flip-box--direction-right .refraction-flip-box:focus-within .refraction-flip-box__front {
+		transform: rotateY(-180deg);
+	}
+
+	.refraction-flip-box:hover .refraction-flip-box__back,
+	.refraction-flip-box:focus-within .refraction-flip-box__back {
+		transform: rotate(0);
+	}
+}
+
+.refraction-flip-box--effect-flip .refraction-flip-box.is-flipped {
+
+	.refraction-flip-box__front {
+		transform: rotateX(-180deg);
+	}
+
+	.refraction-flip-box__back {
+		transform: rotate(0);
+	}
+}
+
+.refraction-flip-box--effect-flip.refraction-flip-box--direction-down .refraction-flip-box.is-flipped .refraction-flip-box__front {
+	transform: rotateX(180deg);
+}
+
+.refraction-flip-box--effect-flip.refraction-flip-box--direction-left .refraction-flip-box.is-flipped .refraction-flip-box__front {
+	transform: rotateY(180deg);
+}
+
+.refraction-flip-box--effect-flip.refraction-flip-box--direction-right .refraction-flip-box.is-flipped .refraction-flip-box__front {
+	transform: rotateY(-180deg);
+}
+
+// ---- Fade / zoom / slide / push: back starts hidden or off-box ----------
+.refraction-flip-box--effect-fade .refraction-flip-box__back,
+.refraction-flip-box--effect-zoom-in .refraction-flip-box__back,
+.refraction-flip-box--effect-zoom-out .refraction-flip-box__back {
+	opacity: 0;
+}
+
+.refraction-flip-box--effect-zoom-in .refraction-flip-box__back {
+	transform: scale(0.6);
+}
+
+.refraction-flip-box--effect-zoom-out .refraction-flip-box__back {
+	transform: scale(1.4);
+}
+
+.refraction-flip-box--effect-slide,
+.refraction-flip-box--effect-push {
+
+	.refraction-flip-box {
+		overflow: hidden;
+	}
+
+	.refraction-flip-box__back {
+		transform: translateY(100%);
+	}
+
+	&.refraction-flip-box--direction-down .refraction-flip-box__back {
+		transform: translateY(-100%);
+	}
+
+	&.refraction-flip-box--direction-left .refraction-flip-box__back {
+		transform: translateX(100%);
+	}
+
+	&.refraction-flip-box--direction-right .refraction-flip-box__back {
+		transform: translateX(-100%);
+	}
+}
+
+@mixin refraction-flip-active-simple() {
+
+	.refraction-flip-box__back {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.refraction-flip-box--trigger-hover:not(.refraction-flip-box--effect-flip) {
+
+	.refraction-flip-box:hover,
+	.refraction-flip-box:focus-within {
+		@include refraction-flip-active-simple();
+	}
+
+	&.refraction-flip-box--effect-push {
+
+		.refraction-flip-box:hover .refraction-flip-box__front,
+		.refraction-flip-box:focus-within .refraction-flip-box__front {
+			transform: translateY(-100%);
+		}
+
+		&.refraction-flip-box--direction-down .refraction-flip-box:hover .refraction-flip-box__front,
+		&.refraction-flip-box--direction-down .refraction-flip-box:focus-within .refraction-flip-box__front {
+			transform: translateY(100%);
+		}
+
+		&.refraction-flip-box--direction-left .refraction-flip-box:hover .refraction-flip-box__front,
+		&.refraction-flip-box--direction-left .refraction-flip-box:focus-within .refraction-flip-box__front {
+			transform: translateX(-100%);
+		}
+
+		&.refraction-flip-box--direction-right .refraction-flip-box:hover .refraction-flip-box__front,
+		&.refraction-flip-box--direction-right .refraction-flip-box:focus-within .refraction-flip-box__front {
+			transform: translateX(100%);
+		}
+	}
+}
+
+.refraction-flip-box:not(.is-flipped) {
+	// default state helper so click mode can override cleanly
+	--refraction-flip-state: 0;
+}
+
+.refraction-flip-box--effect-fade .refraction-flip-box.is-flipped,
+.refraction-flip-box--effect-zoom-in .refraction-flip-box.is-flipped,
+.refraction-flip-box--effect-zoom-out .refraction-flip-box.is-flipped,
+.refraction-flip-box--effect-slide .refraction-flip-box.is-flipped,
+.refraction-flip-box--effect-push .refraction-flip-box.is-flipped {
+	@include refraction-flip-active-simple();
+}
+
+.refraction-flip-box--effect-push .refraction-flip-box.is-flipped .refraction-flip-box__front {
+	transform: translateY(-100%);
+}
+
+.refraction-flip-box--effect-push.refraction-flip-box--direction-down .refraction-flip-box.is-flipped .refraction-flip-box__front {
+	transform: translateY(100%);
+}
+
+.refraction-flip-box--effect-push.refraction-flip-box--direction-left .refraction-flip-box.is-flipped .refraction-flip-box__front {
+	transform: translateX(-100%);
+}
+
+.refraction-flip-box--effect-push.refraction-flip-box--direction-right .refraction-flip-box.is-flipped .refraction-flip-box__front {
+	transform: translateX(100%);
+}
+
+.refraction-flip-box:focus-visible {
+	outline: 3px solid currentColor;
+}
+
+// Reduced motion: no animation, the sides switch at once.
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-flip-box__layer {
+		transition-duration: 0.01ms;
+	}
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-flip-box__layer {
+		padding: 16px;
+	}
+}

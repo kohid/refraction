@@ -23,6 +23,10 @@ class Module extends BaseModule {
 	protected function get_widgets() {
 		return [
 			'Nav_Menu',
+			'Slides',
+			'Price_List',
+			'Price_Table',
+			'Flip_Box',
 		];
 	}
 

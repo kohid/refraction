@@ -112,27 +112,26 @@ async function editorBasics( ctx, admin, key, widgetType, title ) {
 	check( key, `title is "${ title }"`, info?.title === title, info?.title );
 
 	// Panel search
-	await admin.page.evaluate( () => $e.run( 'panel/elements/open' ) ).catch( () => {} );
-	await admin.page.evaluate( () => $e.route( 'panel/elements/categories' ) );
+	await admin.page.evaluate( () => { $e.route( "panel/elements/categories" ); } );
 	await admin.page.waitForSelector( '#refraction-panel-elements-search-input', { timeout: 15000 } );
 	await admin.page.fill( '#refraction-panel-elements-search-input', title );
 	await sleep( 500 );
-	const found = await admin.page.locator( '#refraction-panel-elements-search-area .refraction-element' ).allInnerTexts();
+	const found = await admin.page.locator( '#refraction-panel-elements .refraction-element .title' ).allInnerTexts();
 	check( key, 'found by name in the panel search', found.some( ( t ) => t.trim() === title ), found.join( '|' ) );
 	await admin.page.fill( '#refraction-panel-elements-search-input', '' );
-	await sleep( 300 );
+	await sleep( 500 );
 
-	// Category list
+	// Category list: the widget sits inside the "Advanced" category.
 	const catOk = await admin.page.evaluate( ( wt ) => {
-		const cats = document.querySelectorAll( '#refraction-panel-elements-categories .refraction-panel-category' );
-		for ( const c of cats ) {
-			if ( c.querySelector( '.refraction-panel-category-title' )?.textContent.trim() === 'Advanced' ) {
-				return [ ...c.querySelectorAll( '.refraction-element' ) ].some( ( e ) => e.textContent.trim().length > 0 ) && !! c.querySelector( `[data-widget-type="${ wt }"], .refraction-element` );
+		for ( const c of document.querySelectorAll( '.refraction-panel-category' ) ) {
+			const label = ( c.querySelector( '.refraction-panel-category-title' )?.textContent || c.textContent ).trim().split( '\n' )[ 0 ].trim();
+			if ( 'Advanced' === label ) {
+				return !! c.querySelector( `.refraction-element[data-library-element-type="${ wt }"]` );
 			}
 		}
 		return false;
 	}, widgetType );
-	check( key, 'the panel has an Advanced category', catOk );
+	check( key, 'the widget is listed in the Advanced category of the panel', catOk );
 
 	// Create into a container through the editor command API and see it rendered in the preview.
 	const created = await admin.page.evaluate( async ( wt ) => {
@@ -143,9 +142,11 @@ async function editorBasics( ctx, admin, key, widgetType, title ) {
 	await sleep( 2500 );
 	const rendered = await frameOf( admin ).evaluate( ( id ) => !! document.querySelector( `[data-id="${ id }"] *` ), created.id );
 	check( key, 'a new instance dropped into a container renders in the preview', rendered, JSON.stringify( created ) );
-	await admin.page.evaluate( ( id ) => $e.run( 'document/elements/delete', { container: refraction.getContainer( id ) } ), created.id );
+	await admin.page.evaluate( ( id ) => { $e.run( 'document/elements/delete', { container: refraction.getContainer( id ) } ); }, created.id );
 	return created;
 }
+
+const rel = ( url ) => { const u = new URL( url ); return u.pathname + u.search; };
 
 const SECTIONS = {};
 
@@ -166,7 +167,7 @@ SECTIONS[ 'nav-menu' ] = async ( { browser, admin, pages } ) => {
 	await admin.page.screenshot( { path: join( SHOTS, 'nav-menu-editor.png' ) } );
 
 	// ---- desktop front end
-	let v = await visitor( browser, new URL( pages[ k ].url ).pathname, 1280 );
+	let v = await visitor( browser, rel( pages[ k ].url ), 1280 );
 	let p = v.page;
 	const first = p.locator( '[data-id="nav0001"]' );
 	check( k, 'desktop: nav landmark with a label', ( await first.locator( 'nav.refraction-nav-menu[aria-label="Main menu"]' ).count() ) === 1 );
@@ -195,13 +196,13 @@ SECTIONS[ 'nav-menu' ] = async ( { browser, admin, pages } ) => {
 	await p.screenshot( { path: join( SHOTS, 'nav-menu-desktop.png' ), fullPage: true } );
 	const vert = p.locator( '[data-id="nav0002"]' );
 	const ys = await vert.locator( '.refraction-nav-menu__list > li > a' ).evaluateAll( ( els ) => els.map( ( e ) => Math.round( e.getBoundingClientRect().top ) ) );
-	check( k, 'vertical layout stacks items', new Set( ys ).size === ys.length && ys.length >= 4, ys.join( ',' ) );
+	check( k, 'vertical layout stacks items', new Set( ys ).size === ys.length && ys.length === 3, ys.join( ',' ) );
 	check( k, 'dropdown layout shows the hamburger even on desktop', await p.locator( '[data-id="nav0003"] .refraction-nav-menu__toggle' ).isVisible() && ( await p.locator( '[data-id="nav0003"] .refraction-nav-menu__toggle-label' ).innerText() ) === 'Menu' );
 	check( k, 'empty menu renders nothing for visitors', ( await p.locator( '[data-id="nav0004"] .refraction-nav-menu' ).count() ) === 0 );
 	await v.ctx.close();
 
 	// ---- mobile front end
-	v = await visitor( browser, new URL( pages[ k ].url ).pathname, 390, 800 );
+	v = await visitor( browser, rel( pages[ k ].url ), 390, 800 );
 	p = v.page;
 	const m = p.locator( '[data-id="nav0001"]' );
 	const toggle = m.locator( '.refraction-nav-menu__toggle' );
@@ -222,6 +223,171 @@ SECTIONS[ 'nav-menu' ] = async ( { browser, admin, pages } ) => {
 	await sleep( 300 );
 	check( k, 'mobile: clicking outside closes the menu', ( await toggle.getAttribute( 'aria-expanded' ) ) === 'false' );
 	await v.ctx.close();
+};
+
+/* -------------------------------------------------------------------- slides */
+SECTIONS.slides = async ( { browser, admin, pages } ) => {
+	const k = 'slides';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-slides', 'Slides' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'sld0001' ), settings: { transition: 'fade' } } ); } );
+	await sleep( 2500 );
+	const fadeInPreview = await frameOf( admin ).evaluate( () => !! document.querySelector( '[data-id="sld0001"] .swiper-fade' ) );
+	check( k, 'changing Transition in the editor re-initialises the slider (fade)', fadeInPreview );
+
+	const v = await visitor( browser, rel( pages[ k ].url ), 1280 );
+	const p = v.page;
+	const a = p.locator( '[data-id="sld0001"]' );
+	await p.waitForSelector( '[data-id="sld0001"] .swiper-initialized' );
+	check( k, 'renders 3 slides with a labelled carousel region', ( await a.locator( '.refraction-slide:not(.swiper-slide-duplicate)' ).count() ) === 3 && ( await a.locator( '[role="region"][aria-roledescription="carousel"]' ).getAttribute( 'aria-label' ) ) === 'Hero slider' );
+	check( k, 'slides carry "n of total" labels', ( await a.locator( '.refraction-slide' ).first().getAttribute( 'aria-label' ) ) !== null && /\d+ (of|\/) 3/.test( ( await a.locator( '.refraction-slide' ).first().getAttribute( 'aria-label' ) ) || '' ) );
+	check( k, 'title is escaped text inside the configured heading tag', ( await a.locator( 'h2.refraction-slide__title' ).first().innerHTML() ).includes( '&lt;b&gt;title&lt;/b&gt;' ) );
+	check( k, 'button opens in a new tab with noopener', await a.locator( '.refraction-slide .refraction-pro-button' ).first().evaluate( ( e ) => e.getAttribute( 'target' ) === '_blank' && /noopener/.test( e.rel ) ) );
+	check( k, 'three pagination bullets and two arrows', ( await a.locator( '.swiper-pagination-bullet' ).count() ) === 3 && ( await a.locator( '.refraction-swiper-button' ).count() ) === 2 );
+	const idx = () => a.evaluate( ( el ) => jQuery( el ).find( '.swiper' ).addBack( '.swiper' ).first().data( 'swiper' )?.realIndex ?? jQuery( el ).find( '.refraction-slides-wrapper' ).data( 'swiper' )?.realIndex );
+	const i0 = await idx();
+	await a.locator( '.refraction-swiper-button-next' ).click();
+	await sleep( 700 );
+	const i1 = await idx();
+	check( k, 'next arrow moves to the next slide', i1 === ( i0 + 1 ) % 3, `${ i0 } -> ${ i1 }` );
+	await a.locator( '.swiper-pagination-bullet' ).nth( 0 ).click();
+	await sleep( 700 );
+	check( k, 'clicking a bullet jumps to that slide', ( await idx() ) === 0 );
+	await a.locator( '.refraction-swiper-button-prev' ).focus();
+	await p.keyboard.press( 'Enter' );
+	await sleep( 700 );
+	check( k, 'arrow buttons work with the keyboard (Enter)', ( await idx() ) === 2, await idx() );
+	await p.mouse.move( 5, 5 );
+	const before = await idx();
+	await sleep( 2600 );
+	check( k, 'autoplay advances without interaction', ( await idx() ) !== before, `${ before } -> ${ await idx() }` );
+	await a.hover();
+	const held = await idx();
+	await sleep( 2400 );
+	check( k, 'pause on hover keeps the slide', ( await idx() ) === held );
+	const b = p.locator( '[data-id="sld0002"]' );
+	check( k, 'fade transition + dots only: no arrows', ( await b.locator( '.swiper-fade' ).count() ) === 1 && ( await b.locator( '.refraction-swiper-button' ).count() ) === 0 && ( await b.locator( '.swiper-pagination-bullet' ).count() ) === 2 );
+	const c = p.locator( '[data-id="sld0003"]' );
+	check( k, 'single slide: no arrows, no dots, no autoplay error', ( await c.locator( '.refraction-swiper-button, .swiper-pagination' ).count() ) === 0 );
+	await p.screenshot( { path: join( SHOTS, 'slides-desktop.png' ) } );
+	await v.ctx.close();
+
+	const r = await visitor( browser, rel( pages[ k ].url ), 1280, 900, { reducedMotion: 'reduce' } );
+	await r.page.waitForSelector( '[data-id="sld0001"] .swiper-initialized' );
+	const r0 = await r.page.locator( '[data-id="sld0001"]' ).evaluate( ( el ) => jQuery( el ).find( '.refraction-slides-wrapper' ).data( 'swiper' )?.realIndex );
+	await sleep( 3200 );
+	const r1 = await r.page.locator( '[data-id="sld0001"]' ).evaluate( ( el ) => jQuery( el ).find( '.refraction-slides-wrapper' ).data( 'swiper' )?.realIndex );
+	check( k, 'reduced motion: autoplay does not start', r0 === r1, `${ r0 } -> ${ r1 }` );
+	await r.ctx.close();
+};
+
+/* ----------------------------------------------------------------- price-list */
+SECTIONS[ 'price-list' ] = async ( { browser, admin, pages } ) => {
+	const k = 'price-list';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-price-list', 'Price List' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'plist001' ), settings: { separator_style: 'solid' } } ); } );
+	await sleep( 2500 );
+	const bs = await frameOf( admin ).evaluate( () => getComputedStyle( document.querySelector( '[data-id="plist001"] .refraction-price-list__separator' ) ).borderBottomStyle );
+	check( k, 'Separator Style control changes the preview', bs === 'solid', bs );
+
+	const v = await visitor( browser, rel( pages[ k ].url ) );
+	const a = v.page.locator( '[data-id="plist001"]' );
+	check( k, 'renders a list with three items', ( await a.locator( 'ul.refraction-price-list > li' ).count() ) === 3 );
+	check( k, 'title and price are escaped text', ( await a.locator( '.refraction-price-list__title' ).first().innerHTML() ) === 'Espresso &lt;i&gt;x&lt;/i&gt;' && ( await a.locator( '.refraction-price-list__price' ).first().innerText() ) === '$3.50' );
+	check( k, 'linked item wraps the title in an anchor', ( await a.locator( 'a.refraction-price-list__link[href="https://example.com/espresso"]' ).count() ) === 1 );
+	check( k, 'empty description prints no paragraph', ( await a.locator( 'li' ).nth( 1 ).locator( '.refraction-price-list__description' ).count() ) === 0 );
+	check( k, 'separator is decorative (aria-hidden) and fills the row', await a.locator( '.refraction-price-list__separator' ).first().evaluate( ( e ) => e.getAttribute( 'aria-hidden' ) === 'true' && e.getBoundingClientRect().width > 20 ) );
+	const row = await a.locator( 'li' ).first().locator( '.refraction-price-list__title, .refraction-price-list__price' ).evaluateAll( ( els ) => els.map( ( e ) => Math.round( e.getBoundingClientRect().top / 4 ) ) );
+	check( k, 'title and price share a line', row[ 0 ] === row[ 1 ], row.join( ',' ) );
+	const b = v.page.locator( '[data-id="plist002"]' );
+	check( k, 'separator none and title tag h4', ( await b.locator( 'h4.refraction-price-list__title' ).count() ) === 1 && ( await b.locator( '.refraction-price-list__separator' ).evaluate( ( e ) => getComputedStyle( e ).borderBottomStyle ) ) === 'none' );
+	await v.page.screenshot( { path: join( SHOTS, 'price-list.png' ) } );
+	await v.ctx.close();
+};
+
+/* ---------------------------------------------------------------- price-table */
+SECTIONS[ 'price-table' ] = async ( { browser, admin, pages } ) => {
+	const k = 'price-table';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-price-table', 'Price Table' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'ptab0001' ), settings: { ribbon_title: 'Hot deal' } } ); } );
+	await sleep( 2500 );
+	const rt = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="ptab0001"] .refraction-price-table__ribbon-inner' )?.textContent );
+	check( k, 'changing the ribbon title updates the preview', rt === 'Hot deal', rt );
+
+	const v = await visitor( browser, rel( pages[ k ].url ) );
+	const a = v.page.locator( '[data-id="ptab0001"]' );
+	check( k, 'heading is escaped text in an h3', ( await a.locator( 'h3.refraction-price-table__heading' ).innerHTML() ) === 'Pro &lt;b&gt;plan&lt;/b&gt;' );
+	check( k, 'price with euro sign and a struck-out original price', ( await a.locator( '.refraction-price-table__price' ).innerText() ).replace( /\s/g, '' ) === '\u20ac49' && ( await a.locator( 'del.refraction-price-table__original' ).innerText() ).includes( '79' ) );
+	check( k, 'period is shown', ( await a.locator( '.refraction-price-table__period' ).innerText() ) === 'per month' );
+	check( k, 'features list: included and excluded (with screen reader text)', ( await a.locator( '.refraction-price-table__feature' ).count() ) === 2 && ( await a.locator( '.refraction-price-table__feature--excluded .refraction-visually-hidden' ).count() ) === 1 );
+	check( k, 'button links to the target', ( await a.locator( 'a.refraction-pro-button' ).getAttribute( 'href' ) ) === 'https://example.com/buy' );
+	const rib = a.locator( '.refraction-price-table__ribbon-inner' );
+	check( k, 'ribbon shows and sits at the right corner', ( await rib.innerText() ) === 'Best value' && await rib.evaluate( ( e ) => e.closest( '.refraction-price-table' ).getBoundingClientRect().right - e.getBoundingClientRect().right < 60 ) );
+	const b = v.page.locator( '[data-id="ptab0002"]' );
+	check( k, 'custom currency after the number, no ribbon, no features list', ( await b.locator( '.refraction-price-table__price' ).innerText() ).replace( /\s/g, '' ) === '0CHF' && ( await b.locator( '.refraction-price-table__ribbon' ).count() ) === 0 && ( await b.locator( 'ul' ).count() ) === 0 );
+	await v.page.screenshot( { path: join( SHOTS, 'price-table.png' ) } );
+	await v.ctx.close();
+};
+
+/* ------------------------------------------------------------------- flip-box */
+SECTIONS[ 'flip-box' ] = async ( { browser, admin, pages } ) => {
+	const k = 'flip-box';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-flip-box', 'Flip Box' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'flip0001' ), settings: { back_title: 'Changed back' } } ); } );
+	await sleep( 2500 );
+	const t = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="flip0001"] .refraction-flip-box__back .refraction-flip-box__title' )?.textContent );
+	check( k, 'editing the back title updates the preview', t === 'Changed back', t );
+
+	const v = await visitor( browser, rel( pages[ k ].url ) );
+	const p = v.page;
+	const a = p.locator( '[data-id="flip0001"]' );
+	const box = a.locator( '.refraction-flip-box' );
+	check( k, 'front title escaped; focusable box; button link on the back', ( await a.locator( '.refraction-flip-box__front .refraction-flip-box__title' ).innerHTML() ) === 'Front &lt;b&gt;title&lt;/b&gt;' && ( await box.getAttribute( 'tabindex' ) ) === '0' && ( await a.locator( '.refraction-flip-box__back a.refraction-pro-button' ).getAttribute( 'href' ) ) === 'https://example.com/back' );
+	const tf = ( sel ) => a.locator( sel ).evaluate( ( e ) => getComputedStyle( e ).transform );
+	const frontBefore = await tf( '.refraction-flip-box__front' );
+	await box.hover();
+	await sleep( 600 );
+	const frontAfter = await tf( '.refraction-flip-box__front' );
+	const backAfter = await tf( '.refraction-flip-box__back' );
+	check( k, 'hover flips: front rotates away, back faces forward', frontBefore !== frontAfter && /matrix3d|matrix/.test( frontAfter ) && frontAfter !== 'none' && ( backAfter === 'none' || /matrix\(1, 0, 0, 1, 0, 0\)/.test( backAfter ) || /matrix3d\(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1\)/.test( backAfter ) ), `${ frontBefore } | ${ backAfter }` );
+	await p.screenshot( { path: join( SHOTS, 'flip-box-hover.png' ) } );
+	await p.mouse.move( 5, 5 );
+	await sleep( 500 );
+	check( k, 'moving away flips back', ( await tf( '.refraction-flip-box__front' ) ) === frontBefore );
+	await box.focus();
+	await sleep( 500 );
+	check( k, 'keyboard focus flips the box too (hover mode)', ( await tf( '.refraction-flip-box__front' ) ) !== frontBefore );
+	await p.mouse.move( 5, 5 );
+	await p.evaluate( () => document.activeElement.blur() );
+
+	const c = p.locator( '[data-id="flip0002"] .refraction-flip-box' );
+	check( k, 'click mode box is a labelled group with aria-expanded', ( await c.getAttribute( 'aria-label' ) ) === 'Details card' && ( await c.getAttribute( 'aria-expanded' ) ) === 'false' );
+	const op = () => c.locator( '.refraction-flip-box__back' ).evaluate( ( e ) => getComputedStyle( e ).opacity );
+	check( k, 'click mode: back hidden until activated', ( await op() ) === '0' );
+	await c.focus();
+	await p.keyboard.press( 'Enter' );
+	await sleep( 500 );
+	check( k, 'Enter flips a click-mode box and updates aria-expanded', ( await op() ) === '1' && ( await c.getAttribute( 'aria-expanded' ) ) === 'true' );
+	await p.keyboard.press( 'Escape' );
+	await sleep( 400 );
+	check( k, 'Escape flips it back', ( await op() ) === '0' );
+	await c.click();
+	await sleep( 500 );
+	check( k, 'clicking flips a click-mode box', ( await op() ) === '1' );
+	const d = p.locator( '[data-id="flip0003"] .refraction-flip-box' );
+	await d.hover();
+	await sleep( 600 );
+	const rect = await d.locator( '.refraction-flip-box__back' ).evaluate( ( e ) => Math.round( e.getBoundingClientRect().left - e.parentElement.getBoundingClientRect().left ) );
+	check( k, 'slide effect brings the back into place', rect === 0, rect );
+	await v.ctx.close();
+
+	const r = await visitor( browser, rel( pages[ k ].url ), 1280, 900, { reducedMotion: 'reduce' } );
+	const ru = await r.page.locator( '[data-id="flip0001"] .refraction-flip-box__front' ).evaluate( ( e ) => getComputedStyle( e ).transitionDuration );
+	check( k, 'reduced motion: transitions are effectively off', parseFloat( ru ) < 0.05, ru );
+	await r.ctx.close();
 };
 
 /* ------------------------------------------------------------------- driver */

@@ -310,20 +310,23 @@ abstract class Pro_Widget extends Widget_Base {
 	/**
 	 * Print a button (an `a`, or a `span` when there is no link). Text is escaped.
 	 */
-	protected function render_button( array $settings, string $prefix, string $extra_class = '' ): void {
+	protected function render_button( array $settings, string $prefix, string $extra_class = '', string $key_suffix = '' ): void {
 		$text = $settings[ $prefix . '_text' ] ?? '';
 
 		if ( Utils::is_empty( $text ) ) {
 			return;
 		}
 
-		$key = $prefix . '_button';
+		$key = $prefix . '_button' . $key_suffix;
 		$link = $settings[ $prefix . '_link' ] ?? [];
 
-		$this->add_render_attribute( $key, 'class', [ 'refraction-pro-button', $extra_class ] );
+		$this->add_render_attribute( $key, 'class', array_filter( [ 'refraction-pro-button', $extra_class ] ) );
 
 		if ( ! empty( $link['url'] ) ) {
 			$this->add_link_attributes( $key, $link );
+			if ( ! empty( $link['is_external'] ) ) {
+				$this->add_render_attribute( $key, 'rel', 'noopener' );
+			}
 			$tag = 'a';
 		} else {
 			$tag = 'span';

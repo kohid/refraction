@@ -50,7 +50,7 @@ function rfw_widget( $type, $settings = [], $id = null ) {
 }
 
 function rfw_page( $title, array $widgets ) {
-	global $docs;
+	$docs = \Refraction\Plugin::$instance->documents;
 
 	$existing = get_page_by_path( sanitize_title( $title ) );
 	if ( $existing ) {
@@ -84,6 +84,59 @@ $pages['nav-menu'] = rfw_page( 'RFW Nav Menu', [
 	rfw_widget( 'refraction-nav-menu', [ 'menu' => (string) $menu_id, 'layout' => 'vertical' ], 'nav0002' ),
 	rfw_widget( 'refraction-nav-menu', [ 'menu' => (string) $menu_id, 'layout' => 'dropdown', 'toggle_show_label' => 'yes' ], 'nav0003' ),
 	rfw_widget( 'refraction-nav-menu', [ 'menu' => (string) $empty_id ], 'nav0004' ),
+] );
+
+// ---------------------------------------------------------------- slides
+$slide = function ( $n, $extra = [] ) {
+	return array_merge( [
+		'_id' => 'sl' . $n . 'aaaa',
+		'heading' => 'Slide ' . $n . ' <b>title</b>',
+		'description' => 'Description ' . $n,
+		'button_text' => 'Button ' . $n,
+		'button_link' => [ 'url' => 'https://example.com/' . $n, 'is_external' => 'on', 'nofollow' => '' ],
+		'background_color' => [ '#123456', '#654321', '#225522' ][ ( $n - 1 ) % 3 ],
+	], $extra );
+};
+$pages['slides'] = rfw_page( 'RFW Slides', [
+	rfw_widget( 'refraction-slides', [ 'slides' => [ $slide( 1 ), $slide( 2 ), $slide( 3 ) ], 'autoplay' => 'yes', 'autoplay_speed' => 1500, 'transition_speed' => 300, 'pause_on_hover' => 'yes', 'infinite' => 'yes', 'slider_label' => 'Hero slider' ], 'sld0001' ),
+	rfw_widget( 'refraction-slides', [ 'slides' => [ $slide( 1 ), $slide( 2 ) ], 'autoplay' => '', 'transition' => 'fade', 'navigation' => 'dots', 'infinite' => '' ], 'sld0002' ),
+	rfw_widget( 'refraction-slides', [ 'slides' => [ $slide( 1 ) ], 'autoplay' => 'yes' ], 'sld0003' ),
+] );
+
+// ------------------------------------------------------------ price list
+$pages['price-list'] = rfw_page( 'RFW Price List', [
+	rfw_widget( 'refraction-price-list', [
+		'items' => [
+			[ '_id' => 'pl1aaaaa', 'title' => 'Espresso <i>x</i>', 'price' => '$3.50', 'description' => 'Strong & small', 'link' => [ 'url' => 'https://example.com/espresso' ] ],
+			[ '_id' => 'pl2aaaaa', 'title' => 'Flat white', 'price' => '$4.20', 'description' => '' ],
+			[ '_id' => 'pl3aaaaa', 'title' => 'Cake', 'price' => '$5', 'description' => 'Daily' ],
+		],
+	], 'plist001' ),
+	rfw_widget( 'refraction-price-list', [ 'items' => [ [ '_id' => 'pl4aaaaa', 'title' => 'Only', 'price' => '1' ] ], 'separator_style' => 'none', 'image_position' => 'right', 'title_tag' => 'h4' ], 'plist002' ),
+] );
+
+// ----------------------------------------------------------- price table
+$pages['price-table'] = rfw_page( 'RFW Price Table', [
+	rfw_widget( 'refraction-price-table', [
+		'heading' => 'Pro <b>plan</b>', 'sub_heading' => 'For teams', 'currency_symbol' => 'euro', 'price' => '49', 'sale' => 'yes', 'original_price' => '79',
+		'period' => 'per month', 'btn_text' => 'Choose plan', 'btn_link' => [ 'url' => 'https://example.com/buy' ],
+		'features_list' => [
+			[ '_id' => 'pt1aaaaa', 'item_text' => 'Unlimited pages', 'item_included' => 'yes' ],
+			[ '_id' => 'pt2aaaaa', 'item_text' => 'Phone support', 'item_included' => '' ],
+		],
+		'show_ribbon' => 'yes', 'ribbon_title' => 'Best value', 'ribbon_horizontal_position' => 'right',
+	], 'ptab0001' ),
+	rfw_widget( 'refraction-price-table', [ 'heading' => 'Free', 'price' => '0', 'currency_symbol' => 'custom', 'currency_symbol_custom' => 'CHF', 'currency_position' => 'after', 'show_ribbon' => '', 'features_list' => [] ], 'ptab0002' ),
+] );
+
+// -------------------------------------------------------------- flip box
+$pages['flip-box'] = rfw_page( 'RFW Flip Box', [
+	rfw_widget( 'refraction-flip-box', [
+		'front_title' => 'Front <b>title</b>', 'front_description' => 'Front text', 'back_title' => 'Back title', 'back_description' => 'Back text',
+		'btn_text' => 'Go there', 'btn_link' => [ 'url' => 'https://example.com/back' ], 'effect' => 'flip', 'direction' => 'up', 'trigger' => 'hover', 'duration' => [ 'size' => 200, 'unit' => 'px' ],
+	], 'flip0001' ),
+	rfw_widget( 'refraction-flip-box', [ 'front_title' => 'Click front', 'back_title' => 'Click back', 'trigger' => 'click', 'effect' => 'fade', 'duration' => [ 'size' => 200, 'unit' => 'px' ], 'box_label' => 'Details card' ], 'flip0002' ),
+	rfw_widget( 'refraction-flip-box', [ 'front_title' => 'Slide front', 'back_title' => 'Slide back', 'effect' => 'slide', 'direction' => 'left', 'duration' => [ 'size' => 200, 'unit' => 'px' ] ], 'flip0003' ),
 ] );
 
 // @@MORE_PAGES@@ (each widget task appends its page above this line)

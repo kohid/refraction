@@ -36,6 +36,8 @@ module.exports = function( $ ) {
 
 	// Pro widgets (Advanced category).
 	this.elementsHandlers[ 'refraction-nav-menu.default' ] = () => import( /* webpackChunkName: 'pro-nav-menu' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/nav-menu' );
+	this.elementsHandlers[ 'refraction-slides.default' ] = () => import( /* webpackChunkName: 'pro-slides' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/slides' );
+	this.elementsHandlers[ 'refraction-flip-box.default' ] = () => import( /* webpackChunkName: 'pro-flip-box' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/flip-box' );
 
 	const addGlobalHandlers = () => refractionFrontend.hooks.addAction( 'frontend/element_ready/global', globalHandler );
 

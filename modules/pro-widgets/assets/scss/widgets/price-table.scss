@@ -1,0 +1,155 @@
+@import "../button";
+
+//
+// Price Table
+//
+
+.refraction-visually-hidden {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.refraction-price-table {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid rgba(127, 127, 127, 0.25);
+	text-align: center;
+}
+
+.refraction-price-table__header {
+	padding: 24px 20px 8px;
+}
+
+.refraction-price-table__heading {
+	margin: 0;
+	font-size: 1.4rem;
+	line-height: 1.2;
+}
+
+.refraction-price-table__subheading {
+	margin: 6px 0 0;
+	opacity: 0.8;
+}
+
+.refraction-price-table__price-wrap {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: center;
+	gap: 0 0.5em;
+	padding: 16px 20px;
+}
+
+.refraction-price-table__price {
+	display: inline-flex;
+	align-items: flex-start;
+	font-size: 3.2rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.refraction-price-table__currency {
+	margin-top: 0.15em;
+	font-size: 0.5em;
+	font-weight: 500;
+}
+
+.refraction-price-table__original {
+	width: auto;
+	font-size: 1.3rem;
+	opacity: 0.6;
+}
+
+.refraction-price-table__period {
+	flex: 1 0 100%;
+	margin-top: 6px;
+	font-size: 0.9rem;
+	opacity: 0.75;
+}
+
+.refraction-price-table--period-beside .refraction-price-table__period {
+	flex: 0 0 auto;
+	margin-top: 0;
+}
+
+.refraction-price-table__features {
+	margin: 0;
+	padding: 8px 20px;
+	list-style: none;
+}
+
+.refraction-price-table__feature {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6em;
+	margin: 0;
+	padding: 10px 0;
+
+	+ .refraction-price-table__feature {
+		border-top: 1px solid rgba(127, 127, 127, 0.2);
+	}
+}
+
+.refraction-price-table__feature--excluded {
+	text-decoration: line-through;
+	opacity: 0.7;
+}
+
+.refraction-price-table__mark {
+	font-weight: 700;
+}
+
+.refraction-price-table__footer {
+	padding: 16px 20px 24px;
+}
+
+.refraction-price-table__additional {
+	margin: 12px 0 0;
+	font-size: 0.85rem;
+	opacity: 0.75;
+}
+
+// Ribbon: a corner band.
+.refraction-price-table__ribbon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 120px;
+	height: 120px;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.refraction-price-table__ribbon-inner {
+	position: absolute;
+	top: 30px;
+	right: -38px;
+	width: 160px;
+	padding: 6px 0;
+	margin: 0;
+	background: #c2410c;
+	color: #fff;
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-align: center;
+	transform: rotate(45deg);
+}
+
+.refraction-price-table--ribbon-left .refraction-price-table__ribbon {
+	right: auto;
+	left: 0;
+}
+
+.refraction-price-table--ribbon-left .refraction-price-table__ribbon-inner {
+	right: auto;
+	left: -38px;
+	transform: rotate(-45deg);
+}
