@@ -31,6 +31,7 @@ class Module extends BaseModule {
 			'Animated_Headline',
 			'Countdown',
 			'Share_Buttons',
+			'Blockquote',
 		];
 	}
 

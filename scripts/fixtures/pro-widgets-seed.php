@@ -211,6 +211,14 @@ $pages['share-buttons'] = rfw_page( 'RFW Share Buttons', [
 	rfw_widget( 'refraction-share-buttons', [ 'networks' => [] ], 'sh000004' ),
 ] );
 
+// ------------------------------------------------------------- blockquote
+$pages['blockquote'] = rfw_page( 'RFW Blockquote', [
+	rfw_widget( 'refraction-blockquote', [ 'quote' => 'Be <b>bold</b> & kind', 'author' => 'Ann Smith', 'author_title' => 'Poet', 'tweet_button' => 'yes', 'tweet_label' => 'Tweet this', 'skin' => 'border' ], 'bq000001' ),
+	rfw_widget( 'refraction-blockquote', [ 'quote' => 'Plain quote with no extras', 'author' => '', 'skin' => 'quotation', 'tweet_button' => '' ], 'bq000002' ),
+	rfw_widget( 'refraction-blockquote', [ 'quote' => str_repeat( 'Long words keep going. ', 40 ), 'author' => 'Ann', 'tweet_button' => 'yes', 'tweet_target' => 'custom', 'tweet_url' => [ 'url' => 'https://example.com/q' ], 'skin' => 'boxed' ], 'bq000003' ),
+	rfw_widget( 'refraction-blockquote', [ 'quote' => '', 'author' => 'Nobody' ], 'bq000004' ),
+] );
+
 // @@MORE_PAGES@@ (each widget task appends its page above this line)
 
 echo wp_json_encode( $pages );

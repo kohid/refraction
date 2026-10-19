@@ -611,6 +611,38 @@ SECTIONS[ 'share-buttons' ] = async ( { browser, admin, pages } ) => {
 	await ctx.close();
 };
 
+/* ------------------------------------------------------------------ blockquote */
+SECTIONS.blockquote = async ( { browser, admin, pages } ) => {
+	const k = 'blockquote';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-blockquote', 'Blockquote' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'bq000002' ), settings: { skin: 'boxed' } } ); } );
+	await sleep( 2500 );
+	const cls = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="bq000002"]' )?.className );
+	check( k, 'changing the skin updates the preview', /skin-boxed/.test( cls || '' ), cls );
+
+	const v = await visitor( browser, rel( pages[ k ].url ) );
+	const p = v.page;
+	const a = p.locator( '[data-id="bq000001"]' );
+	check( k, 'semantic markup: figure > blockquote > p, figcaption with cite', ( await a.locator( 'figure.refraction-blockquote > blockquote p' ).count() ) === 1 && ( await a.locator( 'figcaption cite' ).innerText() ) === 'Ann Smith' );
+	check( k, 'quote text is escaped', ( await a.locator( 'blockquote p' ).innerHTML() ) === 'Be &lt;b&gt;bold&lt;/b&gt; &amp; kind' );
+	check( k, 'author title is printed', ( await a.locator( '.refraction-blockquote__author-title' ).innerText() ) === 'Poet' );
+	const tweet = a.locator( 'a.refraction-blockquote__tweet' );
+	const href = await tweet.getAttribute( 'href' );
+	const q = new URL( href );
+	check( k, 'tweet is a plain x.com intent link with the quote and the page URL', q.origin + q.pathname === 'https://x.com/intent/post' && q.searchParams.get( 'text' ) === '\u201cBe <b>bold</b> & kind\u201d - Ann Smith' && q.searchParams.get( 'url' ) === pages[ k ].url, href );
+	check( k, 'tweet link opens safely in a new tab with a label', ( await tweet.getAttribute( 'target' ) ) === '_blank' && /noopener/.test( await tweet.getAttribute( 'rel' ) ) && ( await tweet.innerText() ).includes( 'Tweet this' ) );
+	check( k, 'quote mark skin: no tweet link when switched off', ( await p.locator( '[data-id="bq000002"] .refraction-blockquote__tweet' ).count() ) === 0 && ( await p.locator( '[data-id="bq000002"] figcaption' ).count() ) === 0 );
+	const l = new URL( await p.locator( '[data-id="bq000003"] a.refraction-blockquote__tweet' ).getAttribute( 'href' ) );
+	const lt = l.searchParams.get( 'text' );
+	check( k, 'a long quote is shortened to fit a tweet and still ends with the author', lt.length <= 240 && lt.endsWith( '\u201d - Ann' ) && lt.includes( '\u2026' ) && l.searchParams.get( 'url' ) === 'https://example.com/q', `${ lt.length } ${ lt.slice( -20 ) }` );
+	check( k, 'an empty quote prints nothing for visitors', ( await p.locator( '[data-id="bq000004"] .refraction-blockquote' ).count() ) === 0 );
+	const boxed = await p.locator( '[data-id="bq000003"] .refraction-blockquote' ).evaluate( ( e ) => getComputedStyle( e ).borderTopWidth + getComputedStyle( e ).paddingTop );
+	check( k, 'boxed skin has a visible box', parseFloat( boxed ) > 0, boxed );
+	await p.screenshot( { path: join( SHOTS, 'blockquote.png' ), fullPage: true } );
+	await v.ctx.close();
+};
+
 /* ------------------------------------------------------------------- driver */
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }
