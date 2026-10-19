@@ -562,15 +562,20 @@ SECTIONS.lottie = async ( { browser, admin, pages } ) => {
 	await s.evaluate( ( el ) => el.scrollIntoView( { block: 'start' } ) );
 	await s.locator( 'svg' ).waitFor( { timeout: 15000 } );
 	check( k, 'it loads when scrolled near', ( await s.getAttribute( 'data-state' ) ) === 'ready' );
-	await p.evaluate( () => window.scrollBy( 0, -250 ) );
-	await sleep( 250 );
-	const sa = await snap( s );
-	await p.evaluate( () => window.scrollBy( 0, 300 ) );
-	await sleep( 250 );
-	const sb = await snap( s );
-	await p.evaluate( () => window.scrollBy( 0, -300 ) );
-	await sleep( 250 );
-	check( k, 'scroll mode: the frame follows the scroll position, both ways', sa !== sb && ( await snap( s ) ) === sa );
+	const y0 = await s.evaluate( ( el ) => Math.round( window.scrollY + el.getBoundingClientRect().top ) );
+	// Rotation of the test animation is linear: 0 to 360 degrees over 60 frames, so the angle shows the frame.
+	const reading = () => s.evaluate( ( el ) => {
+		const r = el.getBoundingClientRect(), progress = Math.min( 1, Math.max( 0, ( innerHeight - r.top ) / ( innerHeight + r.height ) ) );
+		const m = ( el.querySelector( 'svg' ).innerHTML.match( /matrix\(([-\d.e]+),([-\d.e]+),([-\d.e]+),([-\d.e]+),50,50\)/ ) || [] ).slice( 1 ).map( Number );
+		const angle = ( ( Math.atan2( m[ 1 ], m[ 0 ] ) * 180 / Math.PI ) + 360 ) % 360;
+		return { angle, expected: ( progress * 59 / 60 * 360 ) % 360, top: Math.round( r.top ), h: Math.round( r.height ), y: Math.round( scrollY ), ih: innerHeight };
+	} );
+	const goto = async ( y ) => { await p.evaluate( ( top ) => window.scrollTo( { top, behavior: 'instant' } ), y ); await sleep( 500 ); return reading(); };
+	const pa = await goto( y0 - 300 );
+	const pb = await goto( y0 + 100 );
+	const pc = await goto( y0 - 300 );
+	const near = ( r ) => Math.abs( r.angle - r.expected ) < 3 || Math.abs( Math.abs( r.angle - r.expected ) - 360 ) < 3;
+	check( k, 'scroll mode: the frame follows the scroll position, both ways', near( pa ) && near( pb ) && near( pc ) && Math.abs( pa.angle - pb.angle ) > 10, JSON.stringify( [ pa, pb, pc ] ) );
 	await v.ctx.close();
 
 	const r = await visitor( browser, rel( pages[ k ].url ), 1280, 900, { reducedMotion: 'reduce' } );
