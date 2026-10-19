@@ -403,3 +403,5 @@ const ConditionsControl = BaseData.extend( {
 if ( window.refraction && window.refraction.addControlView ) {
 	window.refraction.addControlView( 'refraction_conditions', ConditionsControl );
 }
+
+export { h, config, SEARCH_DELAY };

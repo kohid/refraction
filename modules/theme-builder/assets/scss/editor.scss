@@ -229,3 +229,56 @@
 		opacity: 0.7;
 	}
 }
+
+// Preview Settings control (shares the picker styles of the conditions control).
+.rtb-prev {
+	input[type="text"] {
+		width: 100%;
+		min-height: 30px;
+		padding: 4px 8px;
+		border: 1px solid var(--rtb-line);
+		border-radius: 3px;
+		background: var(--e-a-bg-default, transparent);
+		color: var(--e-a-color-txt, inherit);
+		font-size: 12px;
+		box-sizing: border-box;
+	}
+
+	&__label {
+		margin-bottom: -6px;
+		color: var(--rtb-muted);
+		font-weight: 600;
+	}
+
+	&__picker {
+		position: relative;
+	}
+
+	&__apply {
+		align-self: flex-start;
+		min-height: 30px;
+		padding: 5px 14px;
+		border: 0;
+		border-radius: 3px;
+		background: var(--e-a-btn-bg-accent, #93003f);
+		color: var(--e-a-btn-color, #fff);
+		font-size: 12px;
+		font-weight: 600;
+		cursor: pointer;
+
+		&:hover {
+			filter: brightness(1.1);
+		}
+
+		&:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 2px;
+		}
+	}
+
+	&__status {
+		min-height: 1.4em;
+		margin: 0;
+		color: var(--rtb-muted);
+	}
+}

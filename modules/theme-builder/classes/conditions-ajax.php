@@ -18,12 +18,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Conditions_Ajax {
 
 	const ACTION = 'refraction_theme_builder_lookup';
+	const PREVIEW_ACTION = 'refraction_theme_builder_preview_lookup';
 	const NONCE = 'refraction_theme_builder_lookup';
 	const LIMIT = 20;
 
 	public function __construct() {
 		add_action( 'wp_ajax_' . self::ACTION, [ $this, 'handle' ] );
+		add_action( 'wp_ajax_' . self::PREVIEW_ACTION, [ $this, 'handle_preview' ] );
 	}
+
+	/** Preview Settings picker: anyone who can edit templates may search, and sees only what they may read. */
+	public function handle_preview(): void {
+		$this->preview = true;
+		$this->handle();
+	}
+
+	private bool $preview = false;
 
 	public function handle(): void {
 		if ( ! check_ajax_referer( self::NONCE, '_nonce', false ) ) {
@@ -35,7 +45,7 @@ class Conditions_Ajax {
 		$query = isset( $_POST['q'] ) ? sanitize_text_field( wp_unslash( $_POST['q'] ) ) : '';
 		$ids = isset( $_POST['ids'] ) ? array_slice( array_filter( array_map( 'absint', explode( ',', sanitize_text_field( wp_unslash( $_POST['ids'] ) ) ) ) ), 0, 100 ) : [];
 
-		$allowed = $ids ? current_user_can( 'edit_posts' ) : current_user_can( 'manage_options' );
+		$allowed = ( $ids || $this->preview ) ? current_user_can( 'edit_posts' ) : current_user_can( 'manage_options' );
 
 		if ( ! $allowed ) {
 			wp_send_json_error( [ 'message' => esc_html__( 'You are not allowed to edit display conditions.', 'refraction' ) ], 403 );
@@ -94,7 +104,7 @@ class Conditions_Ajax {
 		$items = [];
 
 		foreach ( get_posts( $args ) as $post ) {
-			if ( $ids && ! current_user_can( 'read_post', $post->ID ) ) {
+			if ( ( $ids || $this->preview ) && ! current_user_can( 'read_post', $post->ID ) ) {
 				continue;
 			}
 
@@ -144,7 +154,7 @@ class Conditions_Ajax {
 	}
 
 	private function lookup_users( string $query, array $ids ): array {
-		if ( $ids && ! current_user_can( 'list_users' ) ) {
+		if ( $ids && ! $this->preview && ! current_user_can( 'list_users' ) ) {
 			return [];
 		}
 

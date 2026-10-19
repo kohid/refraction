@@ -20,9 +20,14 @@ class Resolver {
 	 * Highest score wins; equal scores go to the most recently modified template, then the highest ID.
 	 *
 	 * @param array<int, array{rules: string[], modified: int}> $candidates Keyed by template ID.
+	 * @param string $location Theme Builder location; a body location only serves its own kind of request.
 	 * @return int The winning template ID, 0 when nothing matches.
 	 */
-	public function pick( array $candidates ): int {
+	public function pick( array $candidates, string $location = '' ): int {
+		if ( '' !== $location && ! Location_Scope::applies( $location, $this->conditions->get_environment() ) ) {
+			return 0;
+		}
+
 		$winner = 0;
 		$best = null;
 

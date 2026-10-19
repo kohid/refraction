@@ -478,6 +478,15 @@ class Widgets_Manager {
 			]
 		);
 
+		/**
+		 * After the editor render query is set up.
+		 *
+		 * Lets a document (for example a Theme Builder template) replace the query it is rendered against.
+		 *
+		 * @param \Refraction\Core\Base\Document $document The document being edited.
+		 */
+		do_action( 'refraction/widgets/ajax_render/query', $document );
+
 		$editor = Plugin::$instance->editor;
 		$is_edit_mode = $editor->is_edit_mode();
 		$editor->set_edit_mode( true );

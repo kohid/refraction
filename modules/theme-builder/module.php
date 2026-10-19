@@ -12,14 +12,22 @@ use Refraction\Modules\ThemeBuilder\Classes\Conditions_Manager;
 use Refraction\Modules\ThemeBuilder\Classes\Conditions_Store;
 use Refraction\Modules\ThemeBuilder\Classes\Environment;
 use Refraction\Modules\ThemeBuilder\Classes\Locations_Manager;
+use Refraction\Modules\ThemeBuilder\Classes\Preview_Ajax;
+use Refraction\Modules\ThemeBuilder\Classes\Preview_Context;
 use Refraction\Modules\ThemeBuilder\Classes\Resolver;
 use Refraction\Modules\ThemeBuilder\Classes\Rule;
 use Refraction\Modules\ThemeBuilder\Classes\Theme_Integration;
 use Refraction\Modules\ThemeBuilder\Classes\Wp_Environment;
 use Refraction\Modules\ThemeBuilder\Control\Control_Conditions;
+use Refraction\Modules\ThemeBuilder\Control\Control_Preview_Target;
+use Refraction\Modules\ThemeBuilder\Documents\Archive;
+use Refraction\Modules\ThemeBuilder\Documents\Error_404;
 use Refraction\Modules\ThemeBuilder\Documents\Footer;
 use Refraction\Modules\ThemeBuilder\Documents\Header;
+use Refraction\Modules\ThemeBuilder\Documents\Search_Results;
+use Refraction\Modules\ThemeBuilder\Documents\Single;
 use Refraction\Modules\ThemeBuilder\Documents\Theme_Document;
+use Refraction\Modules\ThemeBuilder\Widgets\Theme_Widget_Base;
 use Refraction\Modules\PageTemplates\Module as PageTemplatesModule;
 use Refraction\Plugin;
 use Refraction\TemplateLibrary\Source_Local;
@@ -68,8 +76,32 @@ class Module extends BaseModule {
 		return $this->admin_page ??= new Admin_Page( $this->get_store(), $this->get_conditions_manager() );
 	}
 
+	public function get_widgets() {
+		return [
+			'Site_Logo',
+			'Site_Title',
+			'Site_Tagline',
+			'Page_Title',
+			'Post_Title',
+			'Post_Content',
+			'Post_Excerpt',
+			'Featured_Image',
+			'Post_Info',
+			'Author_Box',
+			'Post_Comments',
+			'Post_Navigation',
+			'Breadcrumbs',
+			'Archive_Title',
+			'Sitemap',
+			'Search_Form',
+		];
+	}
+
 	public function __construct() {
 		parent::__construct();
+
+		add_action( 'refraction/elements/categories_registered', [ $this, 'register_widget_category' ] );
+		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_widget_styles' ] );
 
 		add_action( 'refraction/documents/register', [ $this, 'register_documents' ] );
 		add_action( 'refraction/controls/register', [ $this, 'register_controls' ] );
@@ -83,6 +115,8 @@ class Module extends BaseModule {
 		// Built on first use below; the admin page registers its own hooks.
 		$this->get_admin_page();
 		new Conditions_Ajax();
+		new Preview_Ajax();
+		new Preview_Context();
 
 		if ( ! is_admin() ) {
 			new Theme_Integration( $this->get_locations_manager() );
@@ -92,14 +126,40 @@ class Module extends BaseModule {
 		// preview frame is a front end request, so Locations_Manager decides per request.
 	}
 
+	public function register_widget_category( $elements_manager ): void {
+		$elements_manager->add_category(
+			Theme_Widget_Base::CATEGORY,
+			[
+				'title' => esc_html__( 'Theme Elements', 'refraction' ),
+				'icon' => 'rficon-library-list',
+			]
+		);
+	}
+
+	public function register_widget_styles(): void {
+		$suffix = Utils::is_script_debug() ? '' : '.min';
+
+		wp_register_style(
+			Theme_Widget_Base::STYLE_HANDLE,
+			REFRACTION_ASSETS_URL . 'css/modules/theme-builder/theme-elements' . $suffix . '.css',
+			[ 'refraction-frontend' ],
+			REFRACTION_VERSION
+		);
+	}
+
 	public function register_documents( Documents_Manager $documents_manager ): void {
 		$documents_manager
 			->register_document_type( Header::get_type(), Header::get_class_full_name() )
-			->register_document_type( Footer::get_type(), Footer::get_class_full_name() );
+			->register_document_type( Footer::get_type(), Footer::get_class_full_name() )
+			->register_document_type( Single::get_type(), Single::get_class_full_name() )
+			->register_document_type( Archive::get_type(), Archive::get_class_full_name() )
+			->register_document_type( Search_Results::get_type(), Search_Results::get_class_full_name() )
+			->register_document_type( Error_404::get_type(), Error_404::get_class_full_name() );
 	}
 
 	public function register_controls( Controls_Manager $controls_manager ): void {
 		$controls_manager->register( new Control_Conditions() );
+		$controls_manager->register( new Control_Preview_Target() );
 	}
 
 	public function register_menu( Menu_Data_Provider $menu_data_provider ): void {
@@ -195,6 +255,9 @@ class Module extends BaseModule {
 		return [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'action' => Conditions_Ajax::ACTION,
+			'previewLookupAction' => Conditions_Ajax::PREVIEW_ACTION,
+			'previewApplyAction' => Preview_Ajax::ACTION,
+			'postId' => (int) Plugin::$instance->editor->get_post_id(),
 			'nonce' => wp_create_nonce( Conditions_Ajax::NONCE ),
 			'canEdit' => current_user_can( 'manage_options' ),
 			'conditions' => $groups,

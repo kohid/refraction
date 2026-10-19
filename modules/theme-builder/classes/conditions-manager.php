@@ -36,6 +36,10 @@ class Conditions_Manager {
 		$this->environment = $environment;
 	}
 
+	public function get_environment(): Environment {
+		return $this->environment;
+	}
+
 	/**
 	 * Register a condition class (name => class). Third parties can add their own before rules are parsed.
 	 *

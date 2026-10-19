@@ -192,6 +192,10 @@ namespace Refraction\Tests\ThemeBuilder {
 		return ( new Conditions_Manager( new Fake_Environment( $facts ) ) )->match( $rules );
 	}
 
+	if ( getenv( 'TB_TEST_LIB' ) ) {
+		return; // Loaded by test-theme-builder-templates.php for Fake_Environment and check().
+	}
+
 	$page_about = [ 'singular' => true, 'post_type' => 'page', 'post_id' => 7 ];
 	$post_news = [ 'singular' => true, 'post_type' => 'post', 'post_id' => 40, 'author' => 2, 'terms' => [ 'category:5' ] ];
 

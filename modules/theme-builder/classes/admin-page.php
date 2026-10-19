@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Refraction > Theme Builder: the Headers and Footers lists with their display conditions.
+ * Refraction > Theme Builder: the template lists (headers, footers, single, archive, search results, 404) with their display conditions.
  */
 class Admin_Page {
 
@@ -47,6 +47,26 @@ class Admin_Page {
 				'singular' => esc_html__( 'Footer', 'refraction' ),
 				'empty' => esc_html__( 'No footer yet. Build one and choose where it appears.', 'refraction' ),
 			],
+			Locations_Manager::SINGLE => [
+				'label' => esc_html__( 'Single', 'refraction' ),
+				'singular' => esc_html__( 'Single', 'refraction' ),
+				'empty' => esc_html__( 'No single template yet. Design how posts, pages or a custom post type look, then choose which ones use it.', 'refraction' ),
+			],
+			Locations_Manager::ARCHIVE => [
+				'label' => esc_html__( 'Archive', 'refraction' ),
+				'singular' => esc_html__( 'Archive', 'refraction' ),
+				'empty' => esc_html__( 'No archive template yet. Design category, tag, author, date and blog pages.', 'refraction' ),
+			],
+			Locations_Manager::SEARCH => [
+				'label' => esc_html__( 'Search Results', 'refraction' ),
+				'singular' => esc_html__( 'Search Results', 'refraction' ),
+				'empty' => esc_html__( 'No search results template yet. Design the page visitors see after they search.', 'refraction' ),
+			],
+			Locations_Manager::NOT_FOUND => [
+				'label' => esc_html__( 'Error 404', 'refraction' ),
+				'singular' => esc_html__( 'Error 404', 'refraction' ),
+				'empty' => esc_html__( 'No 404 template yet. Design the page visitors see when a link is broken.', 'refraction' ),
+			],
 		];
 	}
 
@@ -74,11 +94,16 @@ class Admin_Page {
 	}
 
 	private function glyph( string $location ): string {
-		$band = Locations_Manager::HEADER === $location
-			? '<rect class="band" x="2" y="2" width="26" height="6" rx="1.5"/>'
-			: '<rect class="band" x="2" y="22" width="26" height="6" rx="1.5"/>';
+		$shapes = [
+			Locations_Manager::HEADER => '<rect class="band" x="2" y="2" width="26" height="6" rx="1.5"/><path class="lines" d="M6 14h18M6 18h12"/>',
+			Locations_Manager::FOOTER => '<rect class="band" x="2" y="22" width="26" height="6" rx="1.5"/><path class="lines" d="M6 14h18M6 18h12"/>',
+			Locations_Manager::SINGLE => '<rect class="band" x="6" y="6" width="18" height="8" rx="1.5"/><path class="lines" d="M6 19h18M6 23h12"/>',
+			Locations_Manager::ARCHIVE => '<rect class="band" x="5" y="5" width="9" height="9" rx="1.5"/><rect class="band" x="16" y="5" width="9" height="9" rx="1.5"/><path class="lines" d="M5 19h9M16 19h9M5 23h9M16 23h9"/>',
+			Locations_Manager::SEARCH => '<circle class="band" cx="13" cy="13" r="6"/><path class="lines" d="M18 18l6 6"/>',
+			Locations_Manager::NOT_FOUND => '<path class="lines" d="M7 8v7h6M10 11v8M16 8h6v11h-6zM6 23h18"/>',
+		];
 
-		return '<svg class="rtb-glyph" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true" focusable="false"><rect class="page" x="1" y="1" width="28" height="28" rx="3"/>' . $band . '<path class="lines" d="M6 14h18M6 18h12"/></svg>';
+		return '<svg class="rtb-glyph" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true" focusable="false"><rect class="page" x="1" y="1" width="28" height="28" rx="3"/>' . ( $shapes[ $location ] ?? '' ) . '</svg>';
 	}
 
 	public function render(): void {
@@ -109,7 +134,7 @@ class Admin_Page {
 			<h1 class="wp-heading-inline"><?php echo esc_html__( 'Theme Builder', 'refraction' ); ?></h1>
 			<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action">
 				<?php
-				/* translators: %s: template type, "Header" or "Footer". */
+				/* translators: %s: template type, for example "Header" or "Single". */
 				echo esc_html( sprintf( __( 'Add New %s', 'refraction' ), $tabs[ $tab ]['singular'] ) );
 				?>
 			</a>
@@ -120,7 +145,7 @@ class Admin_Page {
 			<?php endif; ?>
 
 			<p class="rtb-intro">
-				<?php echo esc_html__( 'Build the header and footer of your site with Refraction, then choose where each one appears. When no template matches a page, your theme shows its own.', 'refraction' ); ?>
+				<?php echo esc_html__( 'Build the header, footer, posts, archives, search results and 404 page of your site with Refraction, then choose where each one appears. When no template matches a page, your theme shows its own.', 'refraction' ); ?>
 			</p>
 
 			<nav class="rtb-tabs" aria-label="<?php echo esc_attr__( 'Template type', 'refraction' ); ?>">
@@ -139,7 +164,7 @@ class Admin_Page {
 					<p><?php echo esc_html( $tabs[ $tab ]['empty'] ); ?></p>
 					<a href="<?php echo esc_url( $add_url ); ?>" class="button button-primary">
 						<?php
-						/* translators: %s: template type, "Header" or "Footer". */
+						/* translators: %s: template type, for example "Header" or "Single". */
 						echo esc_html( sprintf( __( 'Add New %s', 'refraction' ), $tabs[ $tab ]['singular'] ) );
 						?>
 					</a>
