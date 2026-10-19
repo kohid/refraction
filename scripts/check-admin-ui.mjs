@@ -2,7 +2,7 @@
 /**
  * Admin/editor entry-point parity check (browser). Complements check-admin-menu.mjs.
  *
- * Usage: node scripts/check-admin-ui.mjs [--site /tmp/refraction-site] [--port 8766] [--shots /tmp/refraction-shots]
+ * Usage: node scripts/check-admin-ui.mjs [--site /tmp/refraction-site] [--port 8766] [--shots /tmp/refraction-shots] [--role admin|editor|all]
  *                                        [--wpcli /tmp/rsite-dl/wpcli.phar] [--out results.json]
  * Prepare the site with scripts/setup-menu-test-site.sh (installs dist/refraction.zip). The site must already be served on --port
  * (e.g. `cd <site>/wordpress && php -S 127.0.0.1:<port>` with PHP_CLI_SERVER_WORKERS=4).
@@ -27,6 +27,7 @@ const SITE = arg( 'site', '/tmp/refraction-site' );
 const PORT = arg( 'port', '8766' );
 const SHOTS = arg( 'shots', '/tmp/refraction-shots' );
 const WPCLI = arg( 'wpcli', '/tmp/rsite-dl/wpcli.phar' );
+const ROLES = arg( 'role', 'all' );
 const OUT = arg( 'out', join( SHOTS, 'ui-results.json' ) );
 const BASE = `http://127.0.0.1:${ PORT }`;
 const WPDIR = join( SITE, 'wordpress' );
@@ -61,7 +62,7 @@ async function login( browser, user ) {
 	const page = await ctx.newPage();
 	const errors = [];
 	page.on( 'console', ( m ) => { if ( m.type() === 'error' && ! /favicon\.ico/.test( m.location().url ) ) { errors.push( `${ m.text() } @ ${ m.location().url }` ); } } );
-	page.on( 'pageerror', ( e ) => errors.push( `pageerror ${ e.message }` ) );
+	page.on( 'pageerror', ( e ) => { if ( ! /Transition was skipped/.test( e.message ) ) { errors.push( `pageerror ${ e.message }` ); } } ); // the latter is a WordPress core view-transition notice, not ours
 	page.on( 'response', ( r ) => { if ( r.status() >= 400 && ! /favicon\.ico/.test( r.url() ) ) { errors.push( `HTTP ${ r.status() } ${ r.url() }` ); } } );
 	await page.goto( `${ BASE }/wp-login.php` );
 	await page.fill( '#user_login', user );
@@ -71,7 +72,8 @@ async function login( browser, user ) {
 }
 
 async function closeGutenbergModals( page ) {
-	// The block editor may open its welcome guide / pattern chooser over the toolbar; a user closes it first.
+	// The block editor may open its welcome guide / pattern chooser over the toolbar (a moment after load); a user closes it first.
+	await page.waitForTimeout( 2500 );
 	for ( let i = 0; i < 3 && await page.locator( '.components-modal__frame' ).count(); i++ ) {
 		await page.keyboard.press( 'Escape' );
 		await page.waitForTimeout( 400 );
@@ -226,6 +228,85 @@ async function admin( browser ) {
 	check( role, 'System Info', 'reports render', await page.locator( '#refraction-system-info, .refraction-system-info, .refraction-system-info-report' ).count() > 0 || ( await page.content() ).includes( 'Server Environment' ), await page.title() );
 	check( role, 'Admin pages', 'no JS errors on Floating/Role/System pages', ! errors.length, errs() );
 
+	// --- Floating Elements: Add New dialog creates one and opens the editor
+	await page.goto( `${ BASE }/wp-admin/edit.php?post_type=e-floating-buttons` );
+	await page.locator( 'a.page-title-action' ).first().click();
+	await page.waitForTimeout( 800 );
+	const feBtn = page.getByRole( 'button', { name: 'Create Floating Element' } );
+	check( role, 'Floating Elements', 'Add New opens the Floating Element dialog', await feBtn.isVisible().catch( () => false ), '' );
+	await feBtn.click().catch( () => {} );
+	let okFe = true; try { await page.waitForURL( /action=refraction/, { timeout: 30000 } ); await waitEditor( page ); } catch { okFe = false; }
+	check( role, 'Floating Elements', 'creating one opens the editor', okFe, page.url() );
+	errs();
+
+	// --- Tools: Maintenance Mode saves and applies to visitors; Replace URL runs
+	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-tools` );
+	await page.click( '#refraction-settings-tab-maintenance_mode' );
+	await page.selectOption( 'select[name="refraction_maintenance_mode_mode"]', 'coming_soon' );
+	await page.selectOption( 'select[name="refraction_maintenance_mode_template_id"]', tplId ).catch( () => {} );
+	await Promise.all( [ page.waitForLoadState( 'load' ), page.click( '#refraction-settings-form input[type=submit]' ) ] );
+	const mmStored = wpTry( 'option', 'get', 'refraction_maintenance_mode_mode' );
+	check( role, 'Maintenance Mode', 'mode saves', mmStored === 'coming_soon', mmStored );
+	const visitor = await fetch( `${ BASE }/?p=1` , { redirect: 'manual' } );
+	const visitorBody = await visitor.text();
+	check( role, 'Maintenance Mode', 'visitors get the coming soon response (HTTP 200 + noindex, or 503)', ( visitor.status === 503 || /coming soon|maintenance|will be back/i.test( visitorBody ) || /noindex/i.test( visitorBody + ( visitor.headers.get( 'x-robots-tag' ) || '' ) ) ), `${ visitor.status } ${ visitorBody.replace( /<[^>]+>/g, ' ' ).replace( /\s+/g, ' ' ).slice( 0, 80 ) }` );
+	wpTry( 'option', 'update', 'refraction_maintenance_mode_mode', '' );
+	check( role, 'Maintenance Mode', 'no JS errors', ! errors.length, errs() );
+	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-tools` );
+	await page.click( '#refraction-settings-tab-replace_url' );
+	await page.fill( 'input[name="from"]', 'http://old.parity.invalid' );
+	await page.fill( 'input[name="to"]', 'http://new.parity.invalid' );
+	const [ ruResp ] = await Promise.all( [ page.waitForResponse( ( r ) => /admin-ajax\.php/.test( r.url() ), { timeout: 20000 } ).catch( () => null ), page.click( '#refraction-replace-url-button' ) ] );
+	check( role, 'Tools', 'Replace URL ajax', ruResp && ( await ruResp.text() ).includes( '"success":true' ), ruResp ? ( await ruResp.text() ).slice( 0, 120 ) : 'no request' );
+	errs();
+
+	// --- Role Manager saves
+	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-role-manager` );
+	await page.locator( 'form' ).getByText( 'Editor', { exact: true } ).first().click(); // expand the accordion
+	const rmBox = page.locator( 'input[name="refraction_role-manager[editor][]"]' ).first();
+	const rmWas = await rmBox.isChecked();
+	if ( rmWas ) { await rmBox.uncheck(); } else { await rmBox.check(); }
+	await Promise.all( [ page.waitForLoadState( 'load' ), page.click( 'form input[type=submit]' ) ] );
+	const rmNow = await page.locator( 'input[name="refraction_role-manager[editor][]"]' ).first().evaluate( ( e ) => e.checked );
+	check( role, 'Role Manager', 'change saves and persists', rmNow !== rmWas, `was ${ rmWas } now ${ rmNow }` );
+	await page.locator( 'input[name="refraction_role-manager[editor][]"]' ).first().evaluate( ( e, v ) => { e.checked = v; }, rmWas );
+	await Promise.all( [ page.waitForLoadState( 'load' ), page.click( 'form input[type=submit]' ) ] );
+	check( role, 'Role Manager', 'no JS errors', ! errors.length, errs() );
+
+	// --- Element Manager
+	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-element-manager` );
+	await page.waitForSelector( '#refraction-element-manager-wrap tbody tr', { timeout: 20000 } ).catch( () => {} );
+	check( role, 'Element Manager', 'lists the elements', await page.locator( '#refraction-element-manager-wrap tbody tr' ).count() > 10, await page.title() );
+	check( role, 'Element Manager', 'no upgrade prompts', ! /upgrade|go pro/i.test( await page.locator( '#refraction-element-manager-wrap' ).innerText().catch( () => '' ) ), '' );
+	check( role, 'Element Manager', 'no JS errors', ! errors.length, errs() );
+
+	// --- Website templates (kit) export and import app, opened from Tools > Website Templates
+	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-tools#tab-import-export-kit` );
+	await page.reload();
+	const kitLinks = await page.evaluate( () => [ ...document.querySelectorAll( '#tab-import-export-kit a' ) ].map( ( a ) => a.href ).filter( ( h ) => /refraction-app/.test( h ) ) );
+	check( role, 'Website Templates', 'Tools tab links to the export and import app', kitLinks.length >= 2, kitLinks.join( ' ' ) );
+	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-app#/export-customization` );
+	await page.reload();
+	await page.waitForSelector( '[data-testid="export-kit-footer-export-zip-button"]', { timeout: 20000 } ).catch( () => {} );
+	check( role, 'Website Templates', 'export screen renders without upgrade prompts', await page.locator( '[data-testid="export-kit-footer-export-zip-button"]' ).count() === 1 && ! /Upgrade/.test( await page.locator( 'body' ).innerText() ), '' );
+	await page.fill( 'input[placeholder="Type name here..."]', 'Parity Kit' ).catch( () => {} );
+	const [ download ] = await Promise.all( [ page.waitForEvent( 'download', { timeout: 60000 } ).catch( () => null ), page.click( '[data-testid="export-kit-footer-export-zip-button"]' ).catch( () => {} ) ] );
+	const kitPath = join( SHOTS, 'parity-kit.zip' );
+	if ( download ) { await download.saveAs( kitPath ); }
+	check( role, 'Website Templates', 'export downloads a .zip', !! download && existsSync( kitPath ) && statSync( kitPath ).size > 1000, download ? `${ download.suggestedFilename() } ${ existsSync( kitPath ) ? statSync( kitPath ).size : 0 } bytes` : 'no download' );
+	check( role, 'Website Templates', 'no JS errors during export', ! errors.length, errs() );
+	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-app#/import-customization` );
+	await page.reload();
+	await page.waitForSelector( 'input[type=file]', { state: 'attached', timeout: 20000 } ).catch( () => {} );
+	let importOk = false;
+	if ( download ) {
+		await page.setInputFiles( 'input[type=file]', kitPath ).catch( () => {} );
+		importOk = await page.waitForFunction( () => /What.s included|Import (content|plugins)|Select which|Apply|Import now/i.test( document.body.innerText ) && ! /Click to upload/.test( document.body.innerText ), null, { timeout: 30000 } ).then( () => true ).catch( () => false );
+	}
+	check( role, 'Website Templates', 'importing the exported .zip reaches the selection step', importOk, ( await page.locator( 'body' ).innerText().catch( () => '' ) ).replace( /\s+/g, ' ' ).slice( 0, 120 ) );
+	await page.screenshot( { path: join( SHOTS, 'kit-import.png' ) } );
+	check( role, 'Website Templates', 'no JS errors during import', ! errors.length, errs() );
+
 	// --- Pages list + post state (page built through the editor)
 	const builtId = wp( 'post', 'create', '--post_type=page', '--post_status=publish', '--post_title=UI Check Page', '--porcelain' );
 	await page.goto( `${ BASE }/wp-admin/post.php?post=${ builtId }&action=refraction` );
@@ -249,6 +330,19 @@ async function admin( browser ) {
 	check( role, 'Pages list', 'row action "Edit with Refraction" on a Refraction page', row?.actions.includes( 'Edit with Refraction' ), JSON.stringify( row ) );
 	check( role, 'Pages list', 'post state "Refraction" on a Refraction page', row?.states.includes( 'Refraction' ), JSON.stringify( row ) );
 	await page.screenshot( { path: join( SHOTS, 'pages-list.png' ) } );
+	// A plain (never built) page also gets the row action, so the editor is reachable from the Pages screen.
+	const plainRowId = wp( 'post', 'create', '--post_type=page', '--post_status=publish', '--post_title=UI Plain Row', '--porcelain' );
+	await page.goto( `${ BASE }/wp-admin/edit.php?post_type=page&s=UI+Plain+Row` );
+	const plainActions = await page.evaluate( ( id ) => [ ...document.querySelectorAll( `#post-${ id } .row-actions a` ) ].map( ( a ) => ( { t: a.textContent.trim(), h: a.href } ) ), plainRowId );
+	const plainLink = plainActions.find( ( a ) => a.t === 'Edit with Refraction' );
+	check( role, 'Pages list', 'row action "Edit with Refraction" on a plain page', !! plainLink, JSON.stringify( plainActions.map( ( a ) => a.t ) ) );
+	if ( plainLink ) {
+		await page.goto( plainLink.h );
+		let okPlain = true; try { await waitEditor( page ); } catch { okPlain = false; }
+		check( role, 'Pages list', 'plain page row action opens the editor', okPlain && /action=refraction/.test( page.url() ), page.url() );
+		errs();
+		await page.goto( `${ BASE }/wp-admin/edit.php?post_type=page&s=UI+Check+Page` );
+	}
 	const hrefRow = await page.evaluate( ( id ) => [ ...document.querySelectorAll( `#post-${ id } .row-actions a` ) ].find( ( a ) => /Edit with Refraction/.test( a.textContent ) )?.href, builtId );
 	if ( hrefRow ) {
 		await page.goto( hrefRow );
@@ -305,6 +399,7 @@ async function editorRole( browser ) {
 	await closeGutenbergModals( page );
 	await page.locator( '#refraction-switch-mode-button' ).click().catch( () => {} );
 	let ok = true; try { await page.waitForURL( /action=refraction/, { timeout: 45000 } ); await waitEditor( page ); } catch { ok = false; }
+	if ( ! ok ) { await page.screenshot( { path: join( SHOTS, 'editor-role-block-fail.png' ) } ); }
 	check( role, 'Block editor', 'button opens the editor', ok, page.url() );
 	await page.goto( `${ BASE }/wp-admin/edit.php?post_type=page` );
 	check( role, 'Pages list', 'list loads', await page.locator( '#the-list' ).count() === 1 );
@@ -327,8 +422,8 @@ async function main() {
 	const before = logSize();
 	const browser = await chromium.launch( { executablePath: chromePath(), args: [ '--no-sandbox' ] } );
 	try {
-		await admin( browser );
-		await editorRole( browser );
+		if ( 'all' === ROLES || 'admin' === ROLES ) { await admin( browser ); }
+		if ( 'all' === ROLES || 'editor' === ROLES ) { await editorRole( browser ); }
 	} finally { await browser.close(); }
 	const log = logSince( before );
 	check( 'all', 'PHP', 'no new debug.log entries', ! log, log.split( '\n' )[ 0 ] );
