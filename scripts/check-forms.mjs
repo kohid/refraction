@@ -147,6 +147,7 @@ const VALID_BASIC = {
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }
 	mkdirSync( SHOTS, { recursive: true } );
+	mkdirSync( join( WPDIR, 'wp-content/mu-plugins' ), { recursive: true } );
 	writeFileSync( join( WPDIR, 'wp-content/mu-plugins/rf-forms-test.php' ), MU, { flag: 'w' } );
 
 	await new Promise( ( r ) => receiver.listen( Number( HOOK_PORT ), '127.0.0.1', r ) );

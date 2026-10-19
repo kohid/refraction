@@ -345,7 +345,7 @@ async function main() {
 			// Admin tabs.
 			await admin.page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-theme-builder` );
 			const tabs = await admin.page.$$eval( '.rtb-tab-label', ( els ) => els.map( ( e ) => e.textContent.trim() ) );
-			check( 'admin-screen', 'tabs: Headers, Footers, Single, Archive, Search Results, Error 404', JSON.stringify( tabs ) === JSON.stringify( [ 'Headers', 'Footers', 'Single', 'Archive', 'Search Results', 'Error 404' ] ), tabs.join( ',' ) );
+			check( 'admin-screen', 'tabs: Headers, Footers, Single, Archive, Search Results, Error 404 (the Loop Builder adds Loop Items after them)', JSON.stringify( tabs.slice( 0, 6 ) ) === JSON.stringify( [ 'Headers', 'Footers', 'Single', 'Archive', 'Search Results', 'Error 404' ] ), tabs.join( ',' ) );
 			for ( const [ tab, label, key, cond ] of [ [ 'single', 'Single', 'S_PREV', 'All singular' ], [ 'archive', 'Archive', 'A_PREV', 'All archives' ], [ 'search-results', 'Search Results', 'SR_PREV', 'Search results' ], [ 'error-404', 'Error 404', 'E_PREV', '404 page' ] ] ) {
 				await admin.page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-theme-builder&tab=${ tab }` );
 				const body = await admin.page.locator( '.rtb-wrap' ).innerText();
