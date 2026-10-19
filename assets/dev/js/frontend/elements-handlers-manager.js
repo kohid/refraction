@@ -34,6 +34,9 @@ module.exports = function( $ ) {
 		this.elementsHandlers[ 'floating-bars-var-1.default' ] = () => import( /* webpackChunkName: 'floating-bars' */ 'refraction/modules/floating-buttons/assets/js/floating-bars/frontend/handlers/floating-bars' );
 	}
 
+	// Pro widgets (Advanced category).
+	this.elementsHandlers[ 'refraction-nav-menu.default' ] = () => import( /* webpackChunkName: 'pro-nav-menu' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/nav-menu' );
+
 	const addGlobalHandlers = () => refractionFrontend.hooks.addAction( 'frontend/element_ready/global', globalHandler );
 
 	const addElementsHandlers = () => {
