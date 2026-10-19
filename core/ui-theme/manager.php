@@ -131,14 +131,16 @@ class Manager {
 			array_unshift( $admin->deps, 'refraction-ui-themes' );
 		}
 
-		wp_enqueue_style( 'refraction-ui-theme-admin', $this->url( 'ui-theme-admin.css' ), [ 'refraction-ui-themes', 'refraction-admin' ], REFRACTION_VERSION );
+		wp_register_style( 'refraction-ui-theme-bridge', $this->url( 'ui-theme-bridge.css' ), [ 'refraction-ui-themes' ], REFRACTION_VERSION );
+		wp_enqueue_style( 'refraction-ui-theme-admin', $this->url( 'ui-theme-admin.css' ), [ 'refraction-ui-themes', 'refraction-ui-theme-bridge', 'refraction-admin' ], REFRACTION_VERSION );
 		wp_enqueue_script( 'refraction-ui-theme', $this->url( 'ui-theme.js' ), [], REFRACTION_VERSION, true );
 		wp_localize_script( 'refraction-ui-theme', 'refractionUiTheme', $this->script_data() );
 	}
 
 	public function enqueue_editor_styles() {
 		wp_enqueue_style( 'refraction-ui-themes', $this->url( 'ui-themes.css' ), [], REFRACTION_VERSION );
-		wp_enqueue_style( 'refraction-ui-theme-editor', $this->url( 'ui-theme-editor.css' ), [ 'refraction-ui-themes', 'refraction-editor', 'e-theme-ui-light', 'e-theme-ui-dark' ], REFRACTION_VERSION );
+		wp_enqueue_style( 'refraction-ui-theme-bridge', $this->url( 'ui-theme-bridge.css' ), [ 'refraction-ui-themes' ], REFRACTION_VERSION );
+		wp_enqueue_style( 'refraction-ui-theme-editor', $this->url( 'ui-theme-editor.css' ), [ 'refraction-ui-theme-bridge', 'refraction-editor', 'e-theme-ui-light', 'e-theme-ui-dark' ], REFRACTION_VERSION );
 	}
 
 	/* ---------- saving ---------- */

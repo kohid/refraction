@@ -1,0 +1,138 @@
+/**
+ * Refraction UI themes: palette bridge (shared by the admin screens and the editor).
+ *
+ * Design adapted from Framify (kohid/Framify).
+ *
+ * Re-points the plugin's own custom properties (--e-one-palette-* for the admin layer, --e-a-* for the
+ * editor and shared widgets) at the --rf-* tokens. Scoped to html[data-refraction-theme], so "Automatic"
+ * (no attribute) leaves every original value untouched.
+ */
+
+/* ---------- palette bridge ----------
+   Refraction's own admin layer (modules/editor-one) paints from --e-one-palette-* custom properties
+   defined on :root. Pointing them at the theme tokens re-skins that layer, the top bar and the
+   tables in one place. */
+html[data-refraction-theme] {
+	--e-one-palette-text-primary: var(--rf-text);
+	--e-one-palette-text-secondary: var(--rf-text-dim);
+	--e-one-palette-text-tertiary: var(--rf-text-dim);
+	--e-one-palette-text-disabled: var(--rf-text-dim);
+	--e-one-palette-text-tab: var(--rf-text-dim);
+	--e-one-palette-primary-light: var(--rf-accent-hover);
+	--e-one-palette-primary-main: var(--rf-accent);
+	--e-one-palette-primary-dark: var(--rf-accent-hover);
+	--e-one-palette-primary-contrast-text: var(--rf-accent-ink);
+	--e-one-palette-primary-contrastText: var(--rf-accent-ink);
+	--e-one-palette-secondary-light: var(--rf-text-dim);
+	--e-one-palette-secondary-main: var(--rf-text-dim);
+	--e-one-palette-secondary-dark: var(--rf-text);
+	--e-one-palette-secondary-contrast-text: var(--rf-bg);
+	--e-one-palette-secondary-contrastText: var(--rf-bg);
+	--e-one-palette-error-light: var(--rf-danger-hover);
+	--e-one-palette-error-main: var(--rf-danger);
+	--e-one-palette-error-dark: var(--rf-danger-hover);
+	--e-one-palette-error-contrast-text: var(--rf-danger-ink);
+	--e-one-palette-error-contrastText: var(--rf-danger-ink);
+	--e-one-palette-warning-main: var(--rf-warn);
+	--e-one-palette-warning-light: var(--rf-warn);
+	--e-one-palette-warning-dark: var(--rf-warn);
+	--e-one-palette-warning-contrast-text: var(--rf-bg);
+	--e-one-palette-warning-contrastText: var(--rf-bg);
+	--e-one-palette-info-main: var(--rf-accent);
+	--e-one-palette-info-light: var(--rf-accent-hover);
+	--e-one-palette-info-dark: var(--rf-accent-hover);
+	--e-one-palette-info-contrast-text: var(--rf-accent-ink);
+	--e-one-palette-info-contrastText: var(--rf-accent-ink);
+	--e-one-palette-success-main: var(--rf-pass);
+	--e-one-palette-success-light: var(--rf-pass);
+	--e-one-palette-success-dark: var(--rf-pass);
+	--e-one-palette-success-contrast-text: var(--rf-bg);
+	--e-one-palette-success-contrastText: var(--rf-bg);
+	--e-one-palette-promotion-main: var(--rf-accent);
+	--e-one-palette-promotion-light: var(--rf-accent-hover);
+	--e-one-palette-promotion-dark: var(--rf-accent-hover);
+	--e-one-palette-promotion-contrast-text: var(--rf-accent-ink);
+	--e-one-palette-promotion-contrastText: var(--rf-accent-ink);
+	--e-one-palette-action-active: var(--rf-text-dim);
+	--e-one-palette-action-hover: color-mix(in srgb, var(--rf-text) 6%, transparent);
+	--e-one-palette-action-selected: color-mix(in srgb, var(--rf-text) 10%, transparent);
+	--e-one-palette-action-focus: color-mix(in srgb, var(--rf-text) 14%, transparent);
+	--e-one-palette-action-disabled: var(--rf-text-dim);
+	--e-one-palette-action-disabled-background: color-mix(in srgb, var(--rf-text) 12%, transparent);
+	--e-one-palette-action-disabledBackground: color-mix(in srgb, var(--rf-text) 12%, transparent);
+	--e-one-palette-divider: var(--rf-line);
+	--e-one-palette-background-default: var(--rf-bg);
+	--e-one-palette-background-paper: var(--rf-surface);
+	--e-one-palette-checkbox-primary: var(--rf-accent);
+	--e-one-palette-border: var(--rf-field-line);
+}
+
+/* ---------- editor / app palette bridge ----------
+   The editor panel, navigator, library, dialogs, finder and the shared admin widgets paint from the
+   --e-a-* custom properties (theme-light.css / theme-dark.css). Pointing them at the tokens re-skins all
+   of them at once. */
+html[data-refraction-theme] {
+	--e-a-color-primary: var(--rf-accent);
+	--e-a-color-primary-bold: var(--rf-accent);
+	--e-a-color-primary-bold-dark: var(--rf-accent-hover);
+	--e-a-color-secondary: var(--rf-text-dim);
+	--e-a-color-success: var(--rf-pass);
+	--e-a-color-danger: var(--rf-danger);
+	--e-a-color-info: var(--rf-accent);
+	--e-a-color-warning: var(--rf-warn);
+	--e-a-color-accent: var(--rf-accent);
+	--e-a-bg-default: var(--rf-bg);
+	--e-a-bg-invert: var(--rf-text);
+	--e-a-bg-hover: var(--rf-surface);
+	--e-a-bg-active: var(--rf-surface-2);
+	--e-a-bg-active-bold: var(--rf-line);
+	--e-a-bg-primary: color-mix(in srgb, var(--rf-accent) 16%, var(--rf-bg));
+	--e-a-bg-secondary: var(--rf-surface-2);
+	--e-a-bg-success: color-mix(in srgb, var(--rf-pass) 14%, var(--rf-bg));
+	--e-a-bg-info: color-mix(in srgb, var(--rf-accent) 14%, var(--rf-bg));
+	--e-a-bg-danger: color-mix(in srgb, var(--rf-danger) 14%, var(--rf-bg));
+	--e-a-bg-warning: color-mix(in srgb, var(--rf-warn) 14%, var(--rf-bg));
+	--e-a-bg-chip: var(--rf-surface-2);
+	--e-a-color-txt: var(--rf-text);
+	--e-a-color-txt-muted: var(--rf-text-dim);
+	--e-a-color-txt-disabled: var(--rf-text-dim);
+	--e-a-color-txt-invert: var(--rf-bg);
+	--e-a-color-txt-accent: var(--rf-text);
+	--e-a-color-txt-hover: var(--rf-text);
+	--e-a-color-txt-active: var(--rf-text);
+	--e-a-border-color: var(--rf-line);
+	--e-a-border-color-bold: var(--rf-line-strong);
+	--e-a-border-color-focus: var(--rf-accent);
+	--e-a-border-color-accent: var(--rf-accent);
+	--e-a-btn-color: var(--rf-text);
+	--e-a-btn-color-invert: var(--rf-text);
+	--e-a-btn-color-disabled: var(--rf-text-dim);
+	--e-a-btn-bg: var(--rf-surface-2);
+	--e-a-btn-bg-hover: var(--rf-line);
+	--e-a-btn-bg-active: var(--rf-line-strong);
+	--e-a-btn-bg-disabled: var(--rf-surface);
+	--e-a-btn-bg-primary: var(--rf-accent);
+	--e-a-btn-bg-primary-hover: var(--rf-accent-hover);
+	--e-a-btn-bg-primary-active: var(--rf-accent-hover);
+	--e-a-btn-bg-accent: var(--rf-accent);
+	--e-a-btn-bg-accent-hover: var(--rf-accent-hover);
+	--e-a-btn-bg-accent-active: var(--rf-accent-hover);
+	--e-a-btn-bg-info: var(--rf-accent);
+	--e-a-btn-bg-info-hover: var(--rf-accent-hover);
+	--e-a-btn-bg-info-active: var(--rf-accent-hover);
+	--e-a-btn-bg-success: var(--rf-pass);
+	--e-a-btn-bg-success-hover: var(--rf-pass);
+	--e-a-btn-bg-success-active: var(--rf-pass);
+	--e-a-btn-bg-warning: var(--rf-warn);
+	--e-a-btn-bg-warning-hover: var(--rf-warn);
+	--e-a-btn-bg-warning-active: var(--rf-warn);
+	--e-a-btn-bg-danger: var(--rf-danger);
+	--e-a-btn-bg-danger-hover: var(--rf-danger-hover);
+	--e-a-btn-bg-danger-active: var(--rf-danger-hover);
+	--e-a-dark-bg: var(--rf-chrome);
+	--e-a-dark-color-txt: color-mix(in srgb, var(--rf-chrome-ink) 72%, var(--rf-chrome));
+	--e-a-dark-color-txt-hover: var(--rf-chrome-ink);
+	--e-a-popover-shadow: var(--rf-shadow);
+	--e-a-dropdown-shadow: var(--rf-shadow);
+}
+
