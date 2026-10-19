@@ -164,8 +164,8 @@ async function editorBasics( ctx, admin, key, widgetType, title ) {
 	await admin.page.mouse.move( sb.x + sb.width / 2, sb.y + sb.height / 2 );
 	await admin.page.mouse.down();
 	await admin.page.mouse.move( sb.x + sb.width / 2 + 20, sb.y + 20, { steps: 5 } );
-	await admin.page.mouse.move( tb.x + 30, tb.y + tb.height - 4, { steps: 15 } );
-	await admin.page.mouse.move( tb.x + 32, tb.y + tb.height - 3, { steps: 3 } );
+	await admin.page.mouse.move( tb.x + 30, tb.y + Math.min( tb.height - 4, 140 ), { steps: 15 } );
+	await admin.page.mouse.move( tb.x + 32, tb.y + Math.min( tb.height - 4, 140 ) + 1, { steps: 3 } );
 	await sleep( 300 );
 	await admin.page.mouse.up();
 	await admin.page.waitForFunction( ( n ) => refraction.documents.getCurrent().container.children[ 0 ].children.length > n, idsBefore.length, { timeout: 15000 } ).catch( () => {} );
