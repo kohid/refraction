@@ -59,6 +59,7 @@ export const BASE_ENTRIES = {
 	'loop-builder-frontend': 'modules/loop-builder/assets/js/frontend.js',
 	'forms-frontend': 'modules/forms/assets/js/frontend.js',
 	'custom-code-admin': 'modules/custom-code/assets/js/admin.js',
+	'display-conditions-editor': 'modules/display-conditions/assets/js/editor.js',
 	'custom-css-editor': 'modules/custom-css/assets/js/editor.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };

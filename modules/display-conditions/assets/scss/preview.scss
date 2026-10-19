@@ -1,0 +1,38 @@
+// Editor preview only: badge on elements with display conditions, and the "hide them" view.
+.refraction-element-edit-mode.refraction-has-conditions {
+	&::after {
+		content: "";
+		position: absolute;
+		z-index: 9;
+		top: 4px;
+		right: 4px;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		background-color: #6d2ea8;
+		box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+		pointer-events: none;
+	}
+
+	// The icon sits on top of the round badge.
+	&::before {
+		content: "";
+		position: absolute;
+		z-index: 10;
+		top: 8px;
+		right: 8px;
+		width: 14px;
+		height: 14px;
+		background-color: #fff;
+		mask: var(--refraction-dc-icon) center / contain no-repeat;
+		pointer-events: none;
+	}
+
+	&:not(.refraction-element--toggle-edit-tools) {
+		position: relative;
+	}
+}
+
+body.refraction-dc-hide .refraction-has-conditions {
+	display: none !important;
+}
