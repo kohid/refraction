@@ -78,6 +78,9 @@ class Video_Url {
 			if ( $mute ) {
 				$query[] = 'mute=1';
 			}
+			if ( ! empty( $options['api'] ) ) {
+				$query[] = 'enablejsapi=1';
+			}
 
 			return 'https://www.youtube-nocookie.com/embed/' . $video['id'] . '?' . implode( '&', $query );
 		}

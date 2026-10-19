@@ -93,6 +93,16 @@ $start = microtime( true );
 Code_Tokenizer::highlight( str_repeat( '"', 50000 ) . str_repeat( '/*', 20000 ), 'js' );
 t( 'highlight: pathological quotes and comments stay linear', ( microtime( true ) - $start ) < 2.0, true );
 
+
+// lines(): one balanced HTML string per source line
+t( 'lines: a multi-line comment is closed and reopened on every line', Code_Tokenizer::lines( "/* a\nb */ x", 'js' ), [ '<span class="rf-tok rf-tok--comment">/* a</span>', '<span class="rf-tok rf-tok--comment">b */</span> x' ] );
+t( 'lines: plain text and blank lines', Code_Tokenizer::lines( "a\n\nb", 'plain' ), [ 'a', '', 'b' ] );
+t( 'lines: a trailing newline does not add an empty line', count( Code_Tokenizer::lines( "let a\n", 'js' ) ), 1 );
+t( 'lines: CRLF is normalised', Code_Tokenizer::lines( "a\r\nb", 'js' ), [ 'a', 'b' ] );
+t( 'lines: ranges parse', Code_Tokenizer::parse_line_ranges( '2, 4-6,x,9-8,0' ), [ 2, 4, 5, 6 ] );
+t( 'lines: ranges are capped', count( Code_Tokenizer::parse_line_ranges( '1-100000' ) ), 2000 );
+t( 'video: youtube embed with api for the playlist', Video_Url::embed_src( [ 'provider' => 'youtube', 'id' => 'dQw4w9WgXcQ' ], [ 'autoplay' => true, 'api' => true ] ), 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&playsinline=1&enablejsapi=1' );
+
 // -------------------------------------------------------------------- Video_Url
 t( 'video: youtube watch', Video_Url::parse( 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=10s' ), [ 'provider' => 'youtube', 'id' => 'dQw4w9WgXcQ' ] );
 t( 'video: youtu.be', Video_Url::parse( 'https://youtu.be/dQw4w9WgXcQ?si=abc' ), [ 'provider' => 'youtube', 'id' => 'dQw4w9WgXcQ' ] );

@@ -216,4 +216,62 @@ class Code_Tokenizer {
 
 		return $html;
 	}
+
+	/**
+	 * One balanced HTML string per source line (a token that spans lines is closed and reopened).
+	 *
+	 * @return string[]
+	 */
+	public static function lines( string $code, string $language ): array {
+		$code = str_replace( [ "\r\n", "\r" ], "\n", $code );
+		$code = preg_replace( '/\n\z/', '', $code );
+		$lines = [ '' ];
+
+		foreach ( self::tokenize( $code, $language ) as $token ) {
+			foreach ( explode( "\n", $token[1] ) as $i => $piece ) {
+				if ( $i > 0 ) {
+					$lines[] = '';
+				}
+				if ( '' === $piece ) {
+					continue;
+				}
+				$text = htmlspecialchars( $piece, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' );
+				$lines[ count( $lines ) - 1 ] .= 'plain' === $token[0] ? $text : '<span class="rf-tok rf-tok--' . $token[0] . '">' . $text . '</span>';
+			}
+		}
+
+		return $lines;
+	}
+
+	/**
+	 * "2, 4-6" => [2, 4, 5, 6]. Junk and backwards ranges are ignored; at most 2000 lines.
+	 *
+	 * @return int[]
+	 */
+	public static function parse_line_ranges( string $spec ): array {
+		$lines = [];
+
+		foreach ( explode( ',', $spec ) as $part ) {
+			$part = trim( $part );
+
+			if ( preg_match( '/^(\d{1,6})$/', $part, $m ) ) {
+				$from = $to = (int) $m[1];
+			} elseif ( preg_match( '/^(\d{1,6})\s*-\s*(\d{1,6})$/', $part, $m ) ) {
+				$from = (int) $m[1];
+				$to = (int) $m[2];
+			} else {
+				continue;
+			}
+
+			if ( $from < 1 || $to < $from ) {
+				continue;
+			}
+
+			for ( $i = $from; $i <= $to && count( $lines ) < 2000; $i++ ) {
+				$lines[] = $i;
+			}
+		}
+
+		return array_values( array_unique( $lines ) );
+	}
 }
