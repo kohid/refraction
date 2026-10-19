@@ -12,7 +12,7 @@ and Saved Templates. The duplicate "Templates" top-level CPT menu (and its subme
 Check it with `scripts/setup-menu-test-site.sh` then `node scripts/check-admin-menu.mjs`.
 
 Known leftovers
-* Element Manager (`page=refraction-element-manager`) is not listed: its React app reads removed promotion data
-  (`promotion_data.manager_permissions`) and throws; it also shows an upgrade button for role restrictions.
+* Element Manager (`page=refraction-element-manager`) is listed again: the upsell columns were removed from its React app.
+* `page=refraction-app` (Tools > Website Templates export/import) is registered as a hidden page and works; it is not in the menu.
 * The in-page React sidebar (`Sidebar_Navigation_Handler`, `editor-one-sidebar-navigation`) is no longer loaded.
-* `page=refraction-app` (Kit import/export) returns 403 and is not in the menu.
+* See `parity-audit.md` for the upstream comparison of every entry point.
