@@ -68,7 +68,6 @@ export default [
 			'*.log',
 			'*.map',
 			'/templates/',
-			'/hello-elementor/',
 			'.turbo/',
 			'yarn.lock',
 			'.project/',

@@ -44,17 +44,7 @@ npm run scripts
 npm run styles
 echo "Built Refraction assets from $CURRENT_BRANCH (the plugin tree under build/ is not needed here)"
 
-# Step 4: Download hello-elementor theme
-echo "Step 4: Downloading hello-elementor theme"
-if [ -f "hello-elementor.zip" ]; then
-  rm hello-elementor.zip
-fi
-if [ -d "hello-elementor" ]; then
-  rm -rf hello-elementor
-fi
-curl -L --output hello-elementor.zip "https://downloads.wordpress.org/theme/hello-elementor.zip"
-unzip -o hello-elementor.zip
-rm hello-elementor.zip
+# Step 4: no theme is downloaded; the test site uses the default WordPress theme
 
 # Step 5: Start local servers
 echo "Step 5: Starting WordPress environments"

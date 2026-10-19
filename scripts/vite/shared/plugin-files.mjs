@@ -59,7 +59,6 @@ export const PLUGIN_FILE_PATTERNS = [
 	'!8888/**',
 	'!8889/**',
 	'!*.log',
-	'!hello-elementor/**',
 	'!.env',
 	'!Dockerfile',
 	'!.dockerignore',

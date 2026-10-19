@@ -29,7 +29,6 @@ assets/lib/swiper/css/swiper*.css
 *.log
 *.map
 /templates/
-/hello-elementor/
 .turbo/
 
 # build tools lock

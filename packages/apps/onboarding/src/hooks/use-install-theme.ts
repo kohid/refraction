@@ -1,36 +1,15 @@
 import { useMutation } from '@refraction/query';
 
-import { getConfig } from '../utils/get-config';
-import { withRetry } from '../utils/retry';
-
-async function installThemeRequest( themeSlug: string ): Promise< { success: boolean; message: string } > {
-	const config = getConfig();
-
-	if ( ! config ) {
-		throw new Error( 'Onboarding config not found' );
-	}
-
-	const response = await fetch( `${ config.restUrl }install-theme`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			'X-WP-Nonce': config.nonce,
-		},
-		body: JSON.stringify( { theme_slug: themeSlug } ),
-	} );
-
-	if ( ! response.ok ) {
-		const error = await response.json().catch( () => null );
-		throw new Error( error?.message || 'Failed to install theme' );
-	}
-
-	const json = await response.json();
-
-	return json.data;
+/**
+ * Refraction never downloads or installs a theme from this app. The step keeps its shape (a mutation the caller can
+ * await) but resolves locally, without a network request.
+ */
+async function installThemeRequest( _themeSlug: string ): Promise< { success: boolean; message: string } > {
+	return { success: true, message: 'No theme is installed by Refraction.' };
 }
 
 export function useInstallTheme() {
 	return useMutation( {
-		mutationFn: ( themeSlug: string ) => withRetry( () => installThemeRequest( themeSlug ) ),
+		mutationFn: ( themeSlug: string ) => installThemeRequest( themeSlug ),
 	} );
 }

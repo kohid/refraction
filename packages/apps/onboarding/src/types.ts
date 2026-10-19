@@ -47,7 +47,8 @@ export interface OnboardingChoices {
 	site_features: string[];
 }
 
-export type ThemeSlug = 'hello-elementor';
+// Refraction never downloads or installs a theme; the step only records the visitor's choice.
+export type ThemeSlug = 'default';
 
 export interface OnboardingConfig {
 	version: string;

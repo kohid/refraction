@@ -4,9 +4,6 @@
 	"plugins": [
 		"./build"
 	],
-	"themes": [
-		"https://downloads.wordpress.org/theme/hello-elementor.zip"
-	],
 	"mappings": {
 		"refraction-templates": "./tests/playwright/templates",
 		"refraction-config": "./tests/wp-env/config",

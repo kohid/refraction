@@ -11,7 +11,6 @@ fi
 set -eox pipefail
 
 wp plugin activate refraction
-wp theme activate hello-elementor
 
 # Remove Akismet as it is pre-installed in the Docker image (ignore errors if not found)
 wp plugin uninstall akismet --deactivate || echo "Akismet plugin not found or already removed"

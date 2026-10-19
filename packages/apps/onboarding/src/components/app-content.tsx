@@ -311,7 +311,7 @@ export function AppContent( { onClose }: AppContentProps ) {
 			let effectiveDirectChoice = directChoice;
 
 			if ( stepId === StepId.THEME_SELECTION && ! effectiveDirectChoice ) {
-				effectiveDirectChoice = { theme_selection: 'hello-elementor' };
+				effectiveDirectChoice = { theme_selection: 'default' };
 			}
 
 			const storedChoice = choices[ stepId as keyof typeof choices ];
@@ -325,7 +325,7 @@ export function AppContent( { onClose }: AppContentProps ) {
 			if ( stepId === StepId.THEME_SELECTION ) {
 				const themeSlug = ( choiceData?.theme_selection ??
 					choices.theme_selection ??
-					'hello-elementor' ) as string;
+					'default' ) as string;
 
 				if ( themeSlug && isLast ) {
 					trackThemeSelected( themeSlug, 'theme_selection' );

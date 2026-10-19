@@ -10,7 +10,7 @@ export interface ThemeDefinition {
 }
 
 export const HELLO_THEME: ThemeDefinition = {
-	slug: 'hello-elementor',
+	slug: 'default',
 	labelKey: 'steps.theme_selection.theme_hello_label',
 	descriptionKey: 'steps.theme_selection.theme_hello_description',
 	previewBgColor: '#f6f6f6',

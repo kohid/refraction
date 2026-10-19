@@ -66,7 +66,7 @@ describe( 'ThemeSelection', () => {
 	} );
 
 	describe( 'Continue behavior', () => {
-		it( 'sends hello-elementor on Continue regardless of stored choice', async () => {
+		it( 'sends the default theme choice on Continue regardless of stored choice', async () => {
 			// Arrange
 			navigateToThemeSelection();
 
@@ -79,34 +79,29 @@ describe( 'ThemeSelection', () => {
 					expect.stringContaining( 'user-choices' ),
 					expect.objectContaining( {
 						method: 'POST',
-						body: expect.stringContaining( 'hello-elementor' ),
+						body: expect.stringContaining( 'default' ),
 					} )
 				);
 			} );
 		} );
 
-		it( 'calls install-theme endpoint with hello-elementor on Continue', async () => {
+		it( 'never calls an install-theme endpoint on Continue', async () => {
 			// Arrange
 			navigateToThemeSelection();
 
 			// Act
 			fireEvent.click( screen.getByText( 'Continue with Hello' ) );
 
-			// Assert
+			// Assert: the choice is saved, but no theme is downloaded or installed
 			await waitFor( () => {
-				expect( mockFetch ).toHaveBeenCalledWith(
-					expect.stringContaining( 'install-theme' ),
-					expect.objectContaining( {
-						method: 'POST',
-						body: expect.stringContaining( 'hello-elementor' ),
-					} )
-				);
+				expect( mockFetch ).toHaveBeenCalledWith( expect.stringContaining( 'user-choices' ), expect.anything() );
 			} );
+			expect( mockFetch ).not.toHaveBeenCalledWith( expect.stringContaining( 'install-theme' ), expect.anything() );
 		} );
 	} );
 
 	describe( 'Installed state', () => {
-		it( 'shows Installed chip when step is completed and theme is hello-elementor', () => {
+		it( 'shows Installed chip when step is completed and theme is the default', () => {
 			renderApp( {
 				steps: PRO_ONBOARDING_STEPS,
 				isConnected: true,
@@ -115,7 +110,7 @@ describe( 'ThemeSelection', () => {
 					current_step_index: 0,
 					completed_steps: [ 'theme_selection' ],
 				},
-				choices: { theme_selection: 'hello-elementor' },
+				choices: { theme_selection: 'default' },
 			} );
 
 			// Assert

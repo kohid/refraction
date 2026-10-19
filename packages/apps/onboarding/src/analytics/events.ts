@@ -42,7 +42,7 @@ export const EXPERIENCE_VALUE_MAP: Record< string, string > = {
 };
 
 export const THEME_VALUE_MAP: Record< string, string > = {
-	'hello-elementor': 'hello',
+	default: 'hello',
 };
 
 export const STEP_SPEC_NAMES: Record< string, string > = {
