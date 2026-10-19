@@ -39,6 +39,13 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.3.0 =
+* New: Forms. A Form widget with text, email, textarea, URL, tel, number, select, radio, checkbox, acceptance, date, time, file upload, password, hidden, HTML, step and honeypot fields, multi-step forms with a progress indicator, per-field width and required marks, and ajax submit that falls back to a normal post without JavaScript.
+* New: form actions after submit: Collect Submissions, Email and Email 2 (auto-responder) with `[field id="..."]` and `[all-fields]` tags, Redirect, and Webhook with Discord and Slack presets. A webhook is the only data a form sends out, and only to the address you enter.
+* New: spam protection with a honeypot, a minimum fill time, a per-IP rate limit and a local math question; optional reCAPTCHA, hCaptcha or Turnstile that load only after you choose a provider and enter your keys.
+* New: Refraction > Submissions with search and filters, read/unread/trash, bulk actions, a per-submission action log, CSV export, retention (auto delete), IP and browser storage off by default, and WordPress privacy export and erase support.
+* New: Login widget (remember me, lost password link, redirect, logged-in state, register link when registration is open).
+
 = 0.2.0 =
 * New: complete rebrand. The editor, loading screens, toolbar and onboarding logos and the icon font are Refraction's own artwork (icon classes now use the `rficon-` prefix); documentation links point to this project; the kit export no longer lists removed features; the old changelog moved to docs/refraction/upstream-changelog.txt.
 * New: Theme Builder. Build your site's Header and Footer with Refraction and choose where each one appears. Refraction > Theme Builder lists them with their conditions; "Add New" opens the template type dialog with Header or Footer preselected.
