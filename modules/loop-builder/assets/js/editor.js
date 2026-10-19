@@ -77,7 +77,13 @@ const AutocompleteControl = BaseData.extend( {
 
 	readValue() {
 		const value = this.getControlValue();
-		const list = Array.isArray( value ) ? value : ( value ? [ value ] : [] );
+		let list = [];
+
+		if ( Array.isArray( value ) ) {
+			list = value;
+		} else if ( value ) {
+			list = [ value ];
+		}
 
 		return list.map( ( id ) => parseInt( id, 10 ) ).filter( ( id ) => id > 0 );
 	},
@@ -106,7 +112,9 @@ const AutocompleteControl = BaseData.extend( {
 		const ids = this.items.map( ( item ) => item.id );
 
 		this.ownChange = true;
-		this.setValue( this.multiple ? ids : ( ids.length ? String( ids[ 0 ] ) : '' ) );
+		const single = ids.length ? String( ids[ 0 ] ) : '';
+
+		this.setValue( this.multiple ? ids : single );
 		this.ownChange = false;
 	},
 
@@ -214,7 +222,7 @@ if ( window.refraction && window.refraction.addControlView ) {
 
 // --- Loop Grid and Loop Carousel template buttons -------------------------------------------------------
 
-function templateControl( view ) {
+function templateControl() {
 	try {
 		const page = window.refraction.getPanelView().getCurrentPageView();
 
@@ -225,7 +233,7 @@ function templateControl( view ) {
 }
 
 function selectTemplate( view, id ) {
-	const control = templateControl( view );
+	const control = templateControl();
 
 	if ( control ) {
 		const options = { ...( control.model.get( 'options' ) ) };

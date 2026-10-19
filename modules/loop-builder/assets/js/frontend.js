@@ -3,8 +3,10 @@
  * the Portfolio filter and masonry layout, and the Loop Carousel. Server work goes through the REST endpoint
  * whose URL and nonce the page prints in `window.refractionLoop`; the context token on each `.refraction-loop`
  * tells the server which widget to rebuild. Without JavaScript the pagination links still work as links.
+ *
+ * @param {Function} $ jQuery.
  */
-( function ( $ ) {
+( function( $ ) {
 	const config = window.refractionLoop || {};
 	const i18n = config.i18n || {};
 	const state = new WeakMap();
@@ -271,7 +273,11 @@
 		if ( id ) {
 			const wrapper = document.getElementById( id );
 
-			return wrapper ? ( wrapper.matches( '.refraction-loop' ) ? wrapper : wrapper.querySelector( '.refraction-loop' ) ) : null;
+			if ( ! wrapper ) {
+				return null;
+			}
+
+			return wrapper.matches( '.refraction-loop' ) ? wrapper : wrapper.querySelector( '.refraction-loop' );
 		}
 
 		return document.querySelector( '.refraction-loop[data-filterable="1"]' );
