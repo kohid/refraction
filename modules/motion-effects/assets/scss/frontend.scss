@@ -1,0 +1,20 @@
+// Sticky elements: smooth change into the scrolled state, fixed layer above content, invisible placeholder.
+.rf-sticky {
+	transition: padding 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rf-sticky--fixed {
+	z-index: 99;
+	margin: 0 !important;
+	box-sizing: border-box;
+}
+
+.rf-sticky-placeholder {
+	display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.rf-sticky {
+		transition: none;
+	}
+}
