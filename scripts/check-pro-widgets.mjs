@@ -556,6 +556,61 @@ SECTIONS.countdown = async ( { browser, admin, pages } ) => {
 	await nc.close();
 };
 
+/* ------------------------------------------------------------- share-buttons */
+SECTIONS[ 'share-buttons' ] = async ( { browser, admin, pages } ) => {
+	const k = 'share-buttons';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-share-buttons', 'Share Buttons' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'sh000002' ), settings: { shape: 'rounded' } } ); } );
+	await sleep( 2500 );
+	const cls = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="sh000002"]' )?.className );
+	check( k, 'changing the shape updates the preview', /shape-rounded/.test( cls || '' ), cls );
+
+	const ctx = await browser.newContext( { viewport: { width: 1280, height: 900 }, permissions: [ 'clipboard-read', 'clipboard-write' ] } );
+	await ctx.addInitScript( () => { window.__printed = 0; window.print = () => { window.__printed++; }; } );
+	const p = await ctx.newPage();
+	watch( p, 'front:share' );
+	const requested = [];
+	p.on( 'request', ( r ) => requested.push( r.url() ) );
+	await p.goto( BASE + rel( pages[ k ].url ) );
+	const pageUrl = pages[ k ].url;
+	const e = encodeURIComponent;
+	const a = p.locator( '[data-id="sh000001"]' );
+	const hrefOf = ( loc, net ) => loc.locator( `.refraction-share__button--${ net }` ).getAttribute( 'href' );
+	const title = 'RFW Share Buttons';
+	check( k, 'facebook link', ( await hrefOf( a, 'facebook' ) ) === `https://www.facebook.com/sharer/sharer.php?u=${ e( pageUrl ) }` );
+	check( k, 'x link carries the page title and URL', ( await hrefOf( a, 'x' ) ) === `https://x.com/intent/post?text=${ e( title ) }&url=${ e( pageUrl ) }`, await hrefOf( a, 'x' ) );
+	check( k, 'linkedin link', ( await hrefOf( a, 'linkedin' ) ) === `https://www.linkedin.com/sharing/share-offsite/?url=${ e( pageUrl ) }` );
+	check( k, 'whatsapp, telegram and email links', ( await hrefOf( a, 'whatsapp' ) ).startsWith( 'https://wa.me/?text=' ) && ( await hrefOf( a, 'telegram' ) ).startsWith( 'https://t.me/share/url?url=' ) && ( await hrefOf( a, 'email' ) ).startsWith( 'mailto:?subject=' ) );
+	check( k, 'pinterest link has url and description', /^https:\/\/pinterest\.com\/pin\/create\/button\/\?url=/.test( await hrefOf( a, 'pinterest' ) ) );
+	check( k, 'network links open in a new tab safely', await a.locator( 'a.refraction-share__button' ).evaluateAll( ( els ) => els.every( ( x ) => x.target === '_blank' && /noopener/.test( x.rel ) && /noreferrer/.test( x.rel ) ) ) );
+	check( k, 'copy and print are buttons, not links', ( await a.locator( 'button.refraction-share__button--copy' ).count() ) === 1 && ( await a.locator( 'button.refraction-share__button--print' ).count() ) === 1 );
+	check( k, 'every control has an accessible name', await a.locator( '.refraction-share__button' ).evaluateAll( ( els ) => els.every( ( x ) => ( x.getAttribute( 'aria-label' ) || x.textContent ).trim().length > 2 ) ) );
+	check( k, 'icon-text view shows the icon font and the name', await a.locator( '.refraction-share__button--facebook' ).evaluate( ( x ) => /Font Awesome/.test( getComputedStyle( x.querySelector( 'i, svg' ) || x ).fontFamily ) || !! x.querySelector( 'svg' ) ) && ( await a.locator( '.refraction-share__button--facebook .refraction-share__text' ).innerText() ) === 'Facebook' );
+	await a.locator( '.refraction-share__button--copy' ).click();
+	await sleep( 300 );
+	check( k, 'copy puts the page link on the clipboard and announces it', ( await p.evaluate( () => navigator.clipboard.readText() ) ) === pageUrl && /copied/i.test( await a.locator( '.refraction-share__status' ).innerText() ), await a.locator( '.refraction-share__status' ).innerText() );
+	await a.locator( '.refraction-share__button--print' ).focus();
+	await p.keyboard.press( 'Enter' );
+	check( k, 'print button (keyboard) calls window.print', ( await p.evaluate( () => window.__printed ) ) === 1 );
+
+	const b = p.locator( '[data-id="sh000002"]' );
+	check( k, 'icon-only view hides the text visually but keeps the name', ( await b.locator( '.refraction-share__text' ).count() ) === 0 && ( await b.locator( '.refraction-share__button--x' ).getAttribute( 'aria-label' ) ) === 'Share on Post' );
+	const c = p.locator( '[data-id="sh000003"]' );
+	const cu = 'https://example.com/a b?x=1&y=2';
+	check( k, 'custom URL and title are percent-encoded', ( await hrefOf( c, 'x' ) ) === `https://x.com/intent/post?text=${ e( 'Hi there & welcome' ) }&url=${ e( cu ) }` && ( await hrefOf( c, 'telegram' ) ) === `https://t.me/share/url?url=${ e( cu ) }&text=${ e( 'Hi there & welcome' ) }` && ( await hrefOf( c, 'email' ) ) === `mailto:?subject=${ e( 'Hi there & welcome' ) }&body=${ e( cu ) }`, await hrefOf( c, 'x' ) );
+	check( k, 'pinterest gets the chosen image', decodeURIComponent( await hrefOf( c, 'pinterest' ) ).includes( '/wp-content/uploads/' ), await hrefOf( c, 'pinterest' ) );
+	check( k, 'text view shows names only', ( await c.locator( '.refraction-share__icon' ).count() ) === 0 );
+	check( k, 'no networks: nothing is printed for visitors', ( await p.locator( '[data-id="sh000004"] .refraction-share' ).count() ) === 0 );
+	// Google Fonts for the kit's default typography is a documented, pre-existing request (readme.txt); not part of this widget.
+	const foreign = requested.filter( ( u ) => ! u.startsWith( BASE ) && ! /^(data|blob):/.test( u ) && ! /^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test( u ) );
+	check( k, 'the widget makes no third-party requests (no share-network scripts, pixels or SDKs)', foreign.length === 0, foreign.join( ',' ) );
+	const scripts = await p.evaluate( () => [ ...document.scripts ].map( ( s ) => s.src ).filter( Boolean ) );
+	check( k, 'no third-party scripts in the page', scripts.every( ( s ) => s.startsWith( BASE ) ), scripts.filter( ( s ) => ! s.startsWith( BASE ) ).join( ',' ) );
+	await p.screenshot( { path: join( SHOTS, 'share-buttons.png' ), fullPage: true } );
+	await ctx.close();
+};
+
 /* ------------------------------------------------------------------- driver */
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }

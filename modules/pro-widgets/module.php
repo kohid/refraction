@@ -30,6 +30,7 @@ class Module extends BaseModule {
 			'Call_To_Action',
 			'Animated_Headline',
 			'Countdown',
+			'Share_Buttons',
 		];
 	}
 

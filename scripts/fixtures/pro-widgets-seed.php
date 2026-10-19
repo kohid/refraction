@@ -197,6 +197,20 @@ $pages['countdown'] = rfw_page( 'RFW Countdown', [
 	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'due_date', 'due_date' => 'garbage', 'expire_action' => 'none' ], 'cd000007' ),
 ] );
 
+// -------------------------------------------------------- share buttons
+$net = function ( $n, $label = '' ) {
+	return [ '_id' => 'sn' . substr( md5( $n . $label ), 0, 6 ), 'network' => $n, 'custom_label' => $label ];
+};
+$pages['share-buttons'] = rfw_page( 'RFW Share Buttons', [
+	rfw_widget( 'refraction-share-buttons', [ 'networks' => array_map( $net, [ 'facebook', 'x', 'linkedin', 'pinterest', 'whatsapp', 'telegram', 'email', 'copy', 'print' ] ), 'view' => 'icon-text' ], 'sh000001' ),
+	rfw_widget( 'refraction-share-buttons', [ 'networks' => [ $net( 'facebook' ), $net( 'x', 'Post' ) ], 'view' => 'icon', 'skin' => 'minimal', 'shape' => 'circle' ], 'sh000002' ),
+	rfw_widget( 'refraction-share-buttons', [
+		'networks' => array_map( $net, [ 'x', 'whatsapp', 'telegram', 'email', 'pinterest' ] ), 'share_target' => 'custom',
+		'custom_url' => [ 'url' => 'https://example.com/a b?x=1&y=2' ], 'share_title' => 'Hi there & welcome', 'view' => 'text', 'pinterest_image' => $img,
+	], 'sh000003' ),
+	rfw_widget( 'refraction-share-buttons', [ 'networks' => [] ], 'sh000004' ),
+] );
+
 // @@MORE_PAGES@@ (each widget task appends its page above this line)
 
 echo wp_json_encode( $pages );
