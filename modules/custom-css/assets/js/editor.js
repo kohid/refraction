@@ -17,79 +17,88 @@ const clean = ( css ) => String( css || '' )
 
 const scope = ( css, selector ) => clean( css ).replace( SELECTOR, selector );
 
-refraction.hooks.addFilter( 'editor/style/styleText', ( css, context ) => {
-	const model = context && context.model;
+function boot() {
+	refraction.hooks.addFilter( 'editor/style/styleText', ( css, context ) => {
+		const model = context && context.model;
 
-	if ( ! model || ! model.get || ! model.get( 'elType' ) ) {
-		return css;
+		if ( ! model || ! model.get || ! model.get( 'elType' ) ) {
+			return css;
+		}
+
+		const custom = model.get( 'settings' ).get( 'custom_css' );
+
+		if ( ! custom ) {
+			return css;
+		}
+
+		return css + scope( custom, '.refraction-element.refraction-element-' + model.get( 'id' ) );
+	} );
+
+	function paintDocument( container ) {
+		const document = container && container.document;
+		const type = document && document.config && document.config.type;
+
+		if ( ! type || ! container.settings || ! container.settings.get ) {
+			return;
+		}
+
+		const isKit = 'kit' === type;
+		const id = STYLE_IDS[ isKit ? 'kit' : 'page' ];
+		const head = refraction.$previewContents && refraction.$previewContents.find( 'head' );
+
+		if ( ! head || ! head.length ) {
+			return;
+		}
+
+		let tag = head.find( '#' + id );
+
+		if ( ! tag.length ) {
+			tag = jQuery( '<style>' ).attr( 'id', id ).appendTo( head );
+		}
+
+		const selector = 'body.refraction-' + ( isKit ? 'kit' : 'page' ) + '-' + document.id;
+
+		tag.text( scope( container.settings.get( 'custom_css' ), selector ) );
 	}
 
-	const custom = model.get( 'settings' ).get( 'custom_css' );
+	class CustomCssDocumentPreview extends $e.modules.hookUI.After {
+		getCommand() {
+			return 'document/elements/settings';
+		}
 
-	if ( ! custom ) {
-		return css;
+		getId() {
+			return 'refraction-custom-css-document-preview';
+		}
+
+		getContainerType() {
+			return 'document';
+		}
+
+		getConditions( args ) {
+			return args.settings && Object.prototype.hasOwnProperty.call( args.settings, 'custom_css' );
+		}
+
+		apply( args ) {
+			const containers = args.containers || [ args.container ];
+
+			containers.forEach( paintDocument );
+		}
 	}
 
-	return css + scope( custom, '.refraction-element.refraction-element-' + model.get( 'id' ) );
-} );
+	refraction.on( 'preview:loaded', () => {
+		const current = refraction.documents.getCurrent();
 
-function paintDocument( container ) {
-	const document = container && container.document;
-	const type = document && document.config && document.config.type;
+		if ( current && current.container ) {
+			paintDocument( current.container );
+		}
+	} );
 
-	if ( ! type || ! container.settings || ! container.settings.get ) {
-		return;
-	}
+	$e.hooks.registerUIAfter( new CustomCssDocumentPreview() );
 
-	const isKit = 'kit' === type;
-	const id = STYLE_IDS[ isKit ? 'kit' : 'page' ];
-	const head = refraction.$previewContents && refraction.$previewContents.find( 'head' );
-
-	if ( ! head || ! head.length ) {
-		return;
-	}
-
-	let tag = head.find( '#' + id );
-
-	if ( ! tag.length ) {
-		tag = jQuery( '<style>' ).attr( 'id', id ).appendTo( head );
-	}
-
-	const selector = 'body.refraction-' + ( isKit ? 'kit' : 'page' ) + '-' + document.id;
-
-	tag.text( scope( container.settings.get( 'custom_css' ), selector ) );
 }
 
-class CustomCssDocumentPreview extends $e.modules.hookUI.After {
-	getCommand() {
-		return 'document/elements/settings';
-	}
-
-	getId() {
-		return 'refraction-custom-css-document-preview';
-	}
-
-	getContainerType() {
-		return 'document';
-	}
-
-	getConditions( args ) {
-		return args.settings && Object.prototype.hasOwnProperty.call( args.settings, 'custom_css' );
-	}
-
-	apply( args ) {
-		const containers = args.containers || [ args.container ];
-
-		containers.forEach( paintDocument );
-	}
+if ( window.refraction && window.refraction.hooks ) {
+	boot();
+} else {
+	jQuery( window ).one( 'refraction/init', boot );
 }
-
-refraction.on( 'preview:loaded', () => {
-	const current = refraction.documents.getCurrent();
-
-	if ( current && current.container ) {
-		paintDocument( current.container );
-	}
-} );
-
-$e.hooks.registerUIAfter( new CustomCssDocumentPreview() );

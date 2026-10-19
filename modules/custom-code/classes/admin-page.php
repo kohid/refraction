@@ -72,7 +72,7 @@ class Admin_Page {
 
 		$editors = [];
 
-		foreach ( [ 'html' => 'text/html', 'js' => 'application/javascript', 'css' => 'text/css' ] as $type => $mime ) {
+		foreach ( [ 'html' => 'text/html', 'js' => 'text/javascript', 'css' => 'text/css' ] as $type => $mime ) {
 			$editors[ $type ] = wp_enqueue_code_editor( [ 'type' => $mime ] );
 		}
 

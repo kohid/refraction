@@ -7,7 +7,6 @@ import { __ } from '@wordpress/i18n';
  */
 const config = window.refractionCustomCode || { editors: {}, rules: { conditions: [], canEdit: false } };
 const rulesConfig = config.rules;
-const MODES = { html: 'text/html', js: 'application/javascript', css: 'text/css' };
 
 const h = ( tag, attrs = {}, children = [] ) => {
 	const node = document.createElement( tag );
@@ -56,7 +55,7 @@ function initCodeEditor() {
 
 		instance = window.wp.codeEditor.initialize( textarea, {
 			...settings,
-			codemirror: { ...settings.codemirror, mode: MODES[ typeSelect.value ], lineNumbers: true, lineWrapping: true },
+			codemirror: { ...settings.codemirror, lineNumbers: true, lineWrapping: true },
 		} );
 	};
 

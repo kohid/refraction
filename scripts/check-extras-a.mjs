@@ -384,7 +384,7 @@ async function main() {
 		check( 'custom-code', 'no snippet output in the editor preview', ! noSnippets.includes( 'ea-head' ) && ! noSnippets.includes( 'ea-body-start' ) && ! noSnippets.includes( 'refraction-snippet-' ) );
 
 		// the Advanced tab in the real panel
-		await p.evaluate( () => { const c = refraction.getContainer( 'dc00002' ); $e.run( 'document/elements/select', { container: c } ); $e.route( 'panel/editor/advanced' ); } );
+		await p.evaluate( () => { const c = refraction.getContainer( 'dc00002' ); c.model.trigger( 'request:edit', { scrollIntoView: false } ); setTimeout( () => $e.route( 'panel/editor/advanced' ), 300 ); } );
 		await sleep( 1200 );
 		const panelText = await p.locator( '#refraction-panel' ).innerText();
 		check( 'editor', 'the Advanced tab lists Custom CSS, Display Conditions and Attributes sections', /Custom CSS/i.test( panelText ) && /Display Conditions/i.test( panelText ) && /Attributes/i.test( panelText ), panelText.slice( 0, 300 ) );
