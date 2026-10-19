@@ -103,7 +103,7 @@ class Settings extends Settings_Page {
 			<p class="refraction-home__lead"><?php echo esc_html__( 'Build and edit pages visually. Everything runs on your own site.', 'refraction' ); ?></p>
 			<?php if ( current_user_can( 'edit_pages' ) ) : ?>
 				<p>
-					<a class="button button-primary button-hero" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=page' ) ); ?>"><?php echo esc_html__( 'Create new page', 'refraction' ); ?></a>
+					<a class="button button-primary button-hero" href="<?php echo esc_url( Plugin::$instance->documents->get_create_new_post_url( 'page' ) ); ?>"><?php echo esc_html__( 'Create new page', 'refraction' ); ?></a>
 				</p>
 			<?php endif; ?>
 			<ul class="refraction-home__links">
