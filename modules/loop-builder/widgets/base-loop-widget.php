@@ -48,6 +48,12 @@ abstract class Base_Loop_Widget extends Widget_Base {
 		return true;
 	}
 
+	/**
+	 * The editor saves a plain text copy of each widget into `post_content` (WordPress search reads it). A list of
+	 * posts is live data: a copy goes stale and makes search find the page by the titles and IDs it listed.
+	 */
+	public function render_plain_content() {}
+
 	/** Whether a Taxonomy Filter widget may filter this widget. */
 	public function is_filterable(): bool {
 		return false;

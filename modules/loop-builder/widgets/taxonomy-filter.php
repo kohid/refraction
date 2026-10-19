@@ -48,6 +48,9 @@ class Taxonomy_Filter extends Widget_Base {
 		return true;
 	}
 
+	/** The term list is live data; a copy in post_content would go stale and be found by search. */
+	public function render_plain_content() {}
+
 	protected function register_controls() {
 		$this->start_controls_section(
 			'section_filter',
