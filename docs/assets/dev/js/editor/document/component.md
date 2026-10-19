@@ -8,7 +8,7 @@
 
 Every element in the document has a unique ID which is used to identify it in the editor, and is resolved to a unique [Container](#) object that can be accessed using the following method:
 ```javascript
-elementor.getContainer( ID );
+refraction.getContainer( ID );
 ```
 Every command under document uses `container` or `containers` as parameters to define the target.
 
@@ -64,7 +64,7 @@ The commands can accept `container` or `containers` but not both.
 
 ## _Util_ -- `$e.components.get('document').utils.findContainerById()`
 *  **Name**: findContainerById.
-*  **Description**: Find container by id, the method will run recursively until it finds the `{elementorModules.editor.Container}` with given id.
+*  **Description**: Find container by id, the method will run recursively until it finds the `{refractionModules.editor.Container}` with given id.
 *  **Returns**: `{ Container | Container[] }`
 
    | Property     | Type                  | Requirement   | Description |

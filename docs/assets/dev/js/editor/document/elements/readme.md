@@ -66,7 +66,7 @@
     ```javascript
     // Create section.
     const eSection = $e.run( 'document/elements/create', {
-      container: elementor.getPreviewContainer(),
+      container: refraction.getPreviewContainer(),
       columns: 1,
       model: { elType: 'section' },
     } );  
@@ -81,7 +81,7 @@
     ```
     In other cases, where a the column's container-id is provided, we can retrieve the corresponding container instance:
     ```javascript
-    const eColumn = elementor.getContainer('cb70e3c');
+    const eColumn = refraction.getContainer('cb70e3c');
     ```
     Finally, the heading widget can be created at the selected column:
     ```javascript
@@ -113,7 +113,7 @@
     ![widget-heading](./_images/widget-heading.png)
     ```javascript
     // Get section container.
-    const eSection = elementor.getContainer( '886643f' );
+    const eSection = refraction.getContainer( '886643f' );
     
     $e.run( 'document/elements/delete', { 
         container: eSection,
@@ -137,7 +137,7 @@
     ![widget-heading](./_images/widget-heading.png)
     ```javascript
     // Get section container.
-    const eSection = elementor.getContainer( '886643f' );
+    const eSection = refraction.getContainer( '886643f' );
     
     $e.run( 'document/elements/duplicate', { 
         container: eSection,
@@ -204,8 +204,8 @@
     Copy widget and paste it into column.
 
     ```javascript
-    const eColumn = elementor.getContainer( 'cb70e3c' ),
-        eWidget = elementor.getContainer( '2e4b783' );
+    const eColumn = refraction.getContainer( 'cb70e3c' ),
+        eWidget = refraction.getContainer( '2e4b783' );
     
     $e.run( 'document/elements/copy', { 
         container: eWidget
@@ -239,8 +239,8 @@
     ![widget-heading-another-heading-with-special-style](./_images/widget-heading-another-heading-with-special-style.png)
 
     ```javascript
-    const eSpecialWidget = elementor.getContainer('2e4b783'),
-        eDefaultWidget = elementor.getContainer('192125b');
+    const eSpecialWidget = refraction.getContainer('2e4b783'),
+        eDefaultWidget = refraction.getContainer('192125b');
     
     $e.run('document/elements/copy', { 
         container: eDefaultWidget
@@ -272,7 +272,7 @@
     ![widget-heading-another-heading-with-special-style](./_images/widget-heading-another-heading-with-special-style.png)
 
     ```javascript
-    const eWidget = elementor.getContainer('2e4b783');
+    const eWidget = refraction.getContainer('2e4b783');
     
     $e.run('document/elements/reset-style', { 
       container: eWidget
@@ -308,7 +308,7 @@
         ![widget-heading](./_images/widget-heading.png)
     
         ```javascript
-        const eWidget = elementor.getContainer('2e4b783');
+        const eWidget = refraction.getContainer('2e4b783');
         
         $e.run('document/elements/settings', { 
           container: eWidget,

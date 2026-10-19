@@ -11,7 +11,7 @@ For more information about `@tanstack/react-query` please refer to the [official
 ## Usage
 
 ```tsx
-import { createQueryClient, QueryClientProvider, useQuery } from '@elementor/query';
+import { createQueryClient, QueryClientProvider, useQuery } from '@refraction/query';
 
 const queryClient = createQueryClient();
 

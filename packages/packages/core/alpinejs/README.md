@@ -1,6 +1,6 @@
-# @elementor/alpinejs
+# @refraction/alpinejs
 
-A lightweight wrapper around [Alpine.js](https://alpinejs.dev/) with Content Security Policy (CSP) support for Elementor widgets.
+A lightweight wrapper around [Alpine.js](https://alpinejs.dev/) with Content Security Policy (CSP) support for Refraction widgets.
 
 
 ## Credits

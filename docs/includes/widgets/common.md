@@ -2,19 +2,19 @@
 
 ## Technical Description:
 
-This class is responsible for registering the controls under the `Advanced` tab of each widget in Elementor.
+This class is responsible for registering the controls under the `Advanced` tab of each widget in Refraction.
 
 
 ## Features:
 
 ### Mask:
-We've added a mask option to any type of widget in Elementor, using the CSS `mask` property.
+We've added a mask option to any type of widget in Refraction, using the CSS `mask` property.
 
 #### Knowledge Base:
-- [Mask Option on Elementor.com](https://elementor.com/help/mask-option/)
+- [Mask Option on Elementor.com](https://github.com/kohid/refraction#readme)
   
 
-- [How to Use Elementor's Mask Option](https://www.youtube.com/watch?v=tujmkmuqM0M)
+- [How to Use Refraction's Mask Option](https://www.youtube.com/watch?v=tujmkmuqM0M)
   
 
 - [Mask property reference on MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/mask)

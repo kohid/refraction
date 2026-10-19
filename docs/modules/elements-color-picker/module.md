@@ -9,7 +9,7 @@
 
 ## Technical Description:
 
-This is Elementor's Eye-Dropper module, which gives our users the ability to pick colors from any Widget of Elementor.
+This is Refraction's Eye-Dropper module, which gives our users the ability to pick colors from any Widget of Refraction.
 
 (Including images and background images, using a JS library called `Color-Thief` by [Lokesh Dhakar](https://github.com/lokesh))
 

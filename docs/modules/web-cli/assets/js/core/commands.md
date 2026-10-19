@@ -7,7 +7,7 @@ The full list of commands, including custom & 3rd commands, is available via: `$
 
 *  **Location**: */core/common/assets/js/components/commands.js*
 
-*  **Parent**: `elementorModules.Module`
+*  **Parent**: `refractionModules.Module`
 
 
 *  **Methods**:

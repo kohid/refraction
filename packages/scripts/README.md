@@ -1,6 +1,6 @@
 # Version Manager Script
 
-A comprehensive tool for managing versions and publishing packages in the Elementor monorepo.
+A comprehensive tool for managing versions and publishing packages in the Refraction monorepo.
 
 ## Architecture
 
@@ -107,20 +107,20 @@ Options:
 Examples:
 ```bash
 # Get version of a specific package
-node scripts/version-manager/index.js get-version "@elementor/editor-controls"
+node scripts/version-manager/index.js get-version "@refraction/editor-controls"
 
 # Get version of first package matching pattern
 node scripts/version-manager/index.js get-version "editor-.*"
 
 # Get next patch version of a package
-node scripts/version-manager/index.js get-version "@elementor/editor-controls" --release-type patch
+node scripts/version-manager/index.js get-version "@refraction/editor-controls" --release-type patch
 
 # Get next minor version of first matching package
 node scripts/version-manager/index.js get-version "editor-.*" --release-type minor
 
 # Use in scripts
-VERSION=$(node scripts/version-manager/index.js get-version "@elementor/.*")
-NEXT_VERSION=$(node scripts/version-manager/index.js get-version "@elementor/.*" --release-type patch)
+VERSION=$(node scripts/version-manager/index.js get-version "@refraction/.*")
+NEXT_VERSION=$(node scripts/version-manager/index.js get-version "@refraction/.*" --release-type patch)
 ```
 
 The command outputs only the version number without any formatting, making it ideal for use in scripts. It returns:
@@ -212,7 +212,7 @@ To make a package publishable, ensure its `package.json` has:
 
 ```json
 {
-  "name": "@elementor/your-package",
+  "name": "@refraction/your-package",
   "version": "1.0.0",
   "private": false,
   "publishConfig": {

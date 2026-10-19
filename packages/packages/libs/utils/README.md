@@ -1,12 +1,12 @@
 # Utils
-This package contains utility functions that are being used across the Elementor packages.
+This package contains utility functions that are being used across the Refraction packages.
 
 ## Errors 
-This module contains a standard API for creating custom error classes in Elementor packages.
+This module contains a standard API for creating custom error classes in Refraction packages.
 
 ### `createError`
-To ensure consistency across the Elementor packages, we recommend creating a new error class that extends the
-`ElementorError` class using the `createError` function that does it for you.
+To ensure consistency across the Refraction packages, we recommend creating a new error class that extends the
+`RefractionError` class using the `createError` function that does it for you.
 
 #### Creating a new error type
 For convenience, we've exposed a `createError` utility function that will create a custom error type for you.
@@ -14,7 +14,7 @@ This function will force your error code and message to be static (per our guide
 
 ```ts
 // errors.ts
-import { createError } from '@elementor/utils';
+import { createError } from '@refraction/utils';
 
 export const CannotRender = createError<{ id: string; }>( 'cannot-render', 'Cannot render element' );
 export const CannotSave = createError<{ id: number; status: string; }>( 'cannot-save', 'Cannot save document' );
@@ -22,7 +22,7 @@ export const ElementNotFound = createError<{ id: string; }>( 'element-not-found'
 ```
 
 #### Creating a new error type manually
-If you prefer to create a new error type manually, you can extend the `ElementorError` class.
+If you prefer to create a new error type manually, you can extend the `RefractionError` class.
 
 Inside your class, you'll need to define a unique error code and message that should be passed to the parent constructor.
 
@@ -31,7 +31,7 @@ error-tracking tools (e.g. `message = 'cannot render element';` rather than `mes
 If you need to pass more information about the error, attach it to the context.
 
 ```ts
-import { ElementorError, type ElementorErrorOptions } from '@elementor/utils';
+import { RefractionError, type RefractionErrorOptions } from '@refraction/utils';
 
 type CannotRenderContext = {
 	id: string;
@@ -39,10 +39,10 @@ type CannotRenderContext = {
 
 type CannotRenderOptions = {
 	context: CannotRenderContext;
-	cause?: ElementorErrorOptions['cause'];
+	cause?: RefractionErrorOptions['cause'];
 };
 
-class CannotRender extends ElementorError {
+class CannotRender extends RefractionError {
 	constructor( { context, cause }: CannotRenderOptions ) {
 		const code = 'cannot-render';
 		const message = 'Cannot render element';
@@ -87,7 +87,7 @@ If the value is already an error, it will be returned as is.
 If the value is not an error, it will be wrapped with an `Error` that includes the thrown value.
 
 ```ts
-import { ensureError } from '@elementor/utils';
+import { ensureError } from '@refraction/utils';
 
 const CannotUpdate = createError<{ id: number; }>( 'cannot-update', 'Cannot update document' );
 

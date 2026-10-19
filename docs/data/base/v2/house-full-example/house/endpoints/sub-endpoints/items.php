@@ -1,7 +1,7 @@
 <?php
 namespace House\Endpoints\SubEndpoints;
 
-class Items extends \Elementor\Data\V2\Base\Endpoint {
+class Items extends \Refraction\Data\V2\Base\Endpoint {
 
 	public function get_name() {
 		return 'items';

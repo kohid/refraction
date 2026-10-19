@@ -1,7 +1,7 @@
 ## Component -- `$e.components.get('document/dynamic')`
 
 *  **Name**: Dynamic.
-*  **Description**: Provide a way to _enable_, _change_ or _disable_ dynamic settings, associated with [Dynamic Tags](https://developers.elementor.com/dynamic-tags/),
+*  **Description**: Provide a way to _enable_, _change_ or _disable_ dynamic settings, associated with [Dynamic Tags](https://github.com/kohid/refraction#readme),
 
 ## Component `document/dynamic/` -- Commands
 | Command                                                         | Access                                  | Description
@@ -32,7 +32,7 @@
 
     ```javascript
       // Get the view by id, then get the container.
-      const eWidget = elementor.getContainer( '0b9da89' );
+      const eWidget = refraction.getContainer( '0b9da89' );
   
       // Disable dynamic tag 'date'.
       $e.run( 'document/dynamic/disable', {
@@ -62,8 +62,8 @@
   ![widget-heading](../_images/widget-heading.png)
     ```javascript
     // Get heading container.
-    const eWidget = elementor.getContainer( '0b9da89' ),
-      postDateTag = elementor.dynamicTags.tagDataToTagText( elementorCommon.helpers.getUniqueId(), 'post-date', new Backbone.Model( {} ));
+    const eWidget = refraction.getContainer( '0b9da89' ),
+      postDateTag = refraction.dynamicTags.tagDataToTagText( refractionCommon.helpers.getUniqueId(), 'post-date', new Backbone.Model( {} ));
   
     // Enable dynamic tag `post-date` for title.
     $e.run( 'document/dynamic/enable', {
@@ -100,8 +100,8 @@
 
     ```javascript
     // Get heading container.
-    const eWidget = elementor.getContainer( '0b9da89' ),
-      postDateTag = elementor.dynamicTags.tagDataToTagText( elementorCommon.helpers.getUniqueId(), 'post-date', new Backbone.Model( { format: 'human'} ));
+    const eWidget = refraction.getContainer( '0b9da89' ),
+      postDateTag = refraction.dynamicTags.tagDataToTagText( refractionCommon.helpers.getUniqueId(), 'post-date', new Backbone.Model( { format: 'human'} ));
     
     // Change dynamic settings.
     $e.run( 'document/dynamic/settings', {

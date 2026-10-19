@@ -3,7 +3,7 @@ namespace House\Endpoints;
 
 require 'sub-endpoints/items.php';
 
-class Garage extends \Elementor\Data\V2\Base\Endpoint {
+class Garage extends \Refraction\Data\V2\Base\Endpoint {
 
 	public function get_name() {
 		return 'garage';

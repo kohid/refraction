@@ -21,4 +21,4 @@ Or the manual installation:
 
 3. Run: `composer -v` and make sure it returns the expected version, if not restart your shell client.
 
-4. `cd` into Elementor root directory and run `composer install`
+4. `cd` into Refraction root directory and run `composer install`

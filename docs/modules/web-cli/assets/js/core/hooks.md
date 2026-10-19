@@ -104,7 +104,7 @@ the hooks attached to $e.commands and each hook fired _after/before_ running a c
     `navigator-toggle-state`.  
     ```javascript class:"lineNo"
     1 // {FILE_PATH}/{FILE_NAME} - This is line should be deleted - just for the example.
-    2 import HookUIAfter from 'elementor-api/modules/hooks/{TYPE}/after';
+    2 import HookUIAfter from 'refraction-api/modules/hooks/{TYPE}/after';
     3  
     4 export class {FILE_NAME_CAMEL_CASE} extends HookUIAfter {
     5  	getCommand() {
@@ -148,7 +148,7 @@ the hooks attached to $e.commands and each hook fired _after/before_ running a c
     > Example
     ```javascript class:"lineNo"
     1 // ui/document/elements/settings/footer-saver-refresh-menu.js - This line should be deleted - just for the example.
-    2 import HookUIAfter from 'elementor-api/modules/hooks/ui/after';
+    2 import HookUIAfter from 'refraction-api/modules/hooks/ui/after';
     3  
     4 export class FooterSaverRefreshMenu extends HookUIAfter {
     5  	getCommand() {

@@ -1,6 +1,6 @@
 # Container Element
 
-Elementor's new replacement for Sections & Columns.
+Refraction's new replacement for Sections & Columns.
 
 Container uses Flex (in the future also Grid) and gives you the option to drag & drop Anything. Anywhere. Even nested!
 
@@ -18,7 +18,7 @@ Container uses Flex (in the future also Grid) and gives you the option to drag &
 - [Flex Cheatsheet](https://yoksel.github.io/flex-cheatsheet/)
 
 
-- [Elementor Container Playground](https://playground.elementor.com/demo/flexbox/)
+- [Refraction Container Playground](https://github.com/kohid/refraction#readme)
 
 
 ## Attention Needed / Known Issues:
@@ -65,7 +65,7 @@ Another aspect is the new elements hierarchy. We needed to decide which elements
 - There is a temporary `sortable.js` behavior applied to the Containers, only because there is a bug when sorting
   Containers in the Navigator due to the removal of jQuery UI Sortable.
   Should be removed when the Navigator will be migrated to React.
-- The whole DnD is based on an internal library by Elementor:
+- The whole DnD is based on an internal library by Refraction:
     - It's the only library that could handle nested Containers for some reason. We've tried others such as
       [SortableJS](https://github.com/SortableJS/Sortable) but with no luck.
     - There is a "magic number" (5) in the `horizontalThreshold` property, not sure why it works. Everything lower didn't work. 🤷‍♂️
@@ -89,13 +89,13 @@ In the `container.php` file, add a new control as any other widget:
 $this->add_control(
 	'overflow',
 	[
-		'label' => esc_html__( 'Overflow', 'elementor' ),
+		'label' => esc_html__( 'Overflow', 'refraction' ),
 		'type' => Controls_Manager::SELECT,
 		'default' => '',
 		'options' => [
-			'' => esc_html__( 'Default', 'elementor' ),
-			'hidden' => esc_html__( 'Hidden', 'elementor' ),
-			'auto' => esc_html__( 'Auto', 'elementor' ),
+			'' => esc_html__( 'Default', 'refraction' ),
+			'hidden' => esc_html__( 'Hidden', 'refraction' ),
+			'auto' => esc_html__( 'Auto', 'refraction' ),
 		],
 		'selectors' => [
 			'{{WRAPPER}}' => '--overflow: {{VALUE}}',
@@ -136,8 +136,8 @@ In order to extend the Container element, you'll need to extend it in PHP & JS:
 
 1. PHP - Create a new module with a class that extends the Container.
 2. PHP - Set the default child types (`_get_default_child_type()`).
-3. PHP - Register it under elements manager using `elementor/elements/elements_registered` hook.
-4. PHP - Add its config using `elementor/document/config` filter.
+3. PHP - Register it under elements manager using `refraction/elements/elements_registered` hook.
+4. PHP - Add its config using `refraction/document/config` filter.
 5. JS - Create a Marionette view that extends the Container view.
 6. JS - Register the element under `views/base.js::getChildView()`.
 7. JS - Update the `elementsHierarchy` object under `/js/editor/utils/helpers.js`.
@@ -146,7 +146,7 @@ In order to extend the Container element, you'll need to extend it in PHP & JS:
 
 #### PHP:
 
-Create a new class under the `/includes/elements` directory that extends `Elementor\Includes\Elements\Container`.
+Create a new class under the `/includes/elements` directory that extends `Refraction\Includes\Elements\Container`.
 
 Relevant (or interesting) methods to override might be:
 - `_get_default_child_type()`
@@ -197,7 +197,7 @@ switch ( elType ) {
 	// ...
 
 	case 'my-awesome-container':
-		ChildView = require( 'elementor-elements/views/my-awesome-container' );
+		ChildView = require( 'refraction-elements/views/my-awesome-container' );
 		break;
 }
 ```

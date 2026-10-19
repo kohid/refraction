@@ -2,7 +2,7 @@
 
 ScreenShotter automates visual regression testing of your responsive web UI by comparing DOM screenshots over time.
 
-This is an internal tool that's being used in Elementor's CI process, in order to make sure that the PR changes don't
+This is an internal tool that's being used in Refraction's CI process, in order to make sure that the PR changes don't
 break the original behavior of the product.
 
 ## Features:
@@ -14,7 +14,7 @@ break the original behavior of the product.
 ## Usage:
 
 ### How to Create a Template:
-1. Go to Elementor's "Templates" category in the wp-admin Dashboard.
+1. Go to Refraction's "Templates" category in the wp-admin Dashboard.
 2. Click on "Add New".
 3. In the opened popup, select "Page" as type, and the name of the widget you're testing as a name.
 4. After the Editor is loaded, drag the widget you are testing, and add as many variations/combinations of controls as possible.

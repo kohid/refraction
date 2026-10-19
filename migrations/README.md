@@ -126,7 +126,7 @@ Handle transformations in transformer code
 
 ### Performance Considerations
 - Migration state is cached per document with version + manifest hash
-- Cache clears on Elementor version change, manifest change, or feature flag toggle
+- Cache clears on Refraction version change, manifest change, or feature flag toggle
 
 ## Functions
 ### Set

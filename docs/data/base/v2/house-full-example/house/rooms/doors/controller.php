@@ -2,7 +2,7 @@
 
 namespace House\Rooms\Doors;
 
-class Controller extends \Elementor\Data\V2\Base\Controller {
+class Controller extends \Refraction\Data\V2\Base\Controller {
 	public function get_name() {
 		return 'doors';
 	}

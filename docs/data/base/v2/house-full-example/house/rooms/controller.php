@@ -2,7 +2,7 @@
 
 namespace House\Rooms;
 
-class Controller extends \Elementor\Data\V2\Base\Controller {
+class Controller extends \Refraction\Data\V2\Base\Controller {
 	const DATA = [
 		[
 			'id' => 0,

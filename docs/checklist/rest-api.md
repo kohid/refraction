@@ -2,10 +2,10 @@
 
 This is the endpoints and their request and response respective examples. This is part of the launchpad checklist module and it will be available only for the corresponding experiment's active state.
 
-## Get steps [readable] (`/wp-json/elementor/v1/checklist/steps`)
+## Get steps [readable] (`/wp-json/refraction/v1/checklist/steps`)
 
 Use this endpoint to get the checklist global config, as well as users progress.
-**Request**: `fetch( `${ elementorCommon.config.urls.rest }elementor/v1/checklist/steps` )`
+**Request**: `fetch( `${ refractionCommon.config.urls.rest }refraction/v1/checklist/steps` )`
 **Response**: <pre>{
 "data": [ {
 "should_allow_undo": false,
@@ -15,9 +15,9 @@ Use this endpoint to get the checklist global config, as well as users progress.
 "title": "Create your first 3 pages",
 "description": "Jumpstart your creation with professional designs from the Template Library or start from scratch.",
 "learn_more_text": "Learn more",
-"learn_more_url": "https://go.elementor.com/getting-started-with-elementor/",
+"learn_more_url": "https://github.com/kohid/refraction#readme",
 "cta_text": "Create a new page",
-"cta_url": "http://wordpress-dev.local/wp-admin/edit.php?action=elementor_new_post&post_type=page&_wpnonce=b68e0a348f",
+"cta_url": "http://wordpress-dev.local/wp-admin/edit.php?action=refraction_new_post&post_type=page&_wpnonce=b68e0a348f",
 "is_completion_immutable": true } } ]
 }</pre>		
 

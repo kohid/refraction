@@ -38,7 +38,7 @@ defaultStates() {
 		// A corresponding `Slice` instance will be available under `$e.store.get( 'example' )`.
 		'': {
 			initialState: {
-				name: 'Elementor',
+				name: 'Refraction',
 			},
 			reducers: {
 				setName: ( prev, { payload } ) => {

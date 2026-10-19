@@ -54,10 +54,10 @@ requirements we have - _Dynamic Extensibility_.
 
 ### Dynamic Extensibility
 
-One main powerful feature of Elementor's Editor is its extensibility. Instead of just having a single application
-with the baked-in features that Elementor provides, we allow people from the community to add more features by writing 
+One main powerful feature of Refraction's Editor is its extensibility. Instead of just having a single application
+with the baked-in features that Refraction provides, we allow people from the community to add more features by writing 
 their own scripts (i.e. a 3rd party extension can add a button or a panel that introduces a new feature).
-In addition, we handle Elementor Pro internally as a 3rd party extension, so even without taking the community 
+In addition, we handle Refraction Pro internally as a 3rd party extension, so even without taking the community 
 developers into account, dynamically loading extensions is an essential capability for us.
 
 ### Choosing The Right Tool
@@ -141,8 +141,8 @@ remove some of them completely when needed (i.e. based on feature flags, user pe
 Since we're building a new Editor that's going to replace the existing one, we need to make sure that we can communicate
 between them in order to support the transition period. To do that, we've created a set of adapters that are being used
 to talk with the legacy APIs. These adapters allow us to run legacy 
-[commands](https://developers.elementor.com/js-api/js-api-commands/) and open legacy
-[routes](https://developers.elementor.com/js-api/js-api-routes/). It also helps us subscribe to states in the legacy 
+[commands](https://github.com/kohid/refraction#readme) and open legacy
+[routes](https://github.com/kohid/refraction#readme). It also helps us subscribe to states in the legacy 
 Editor in order to keep the new one in sync with it, while making the states reactive for new React-based
 extensions.
 
@@ -193,7 +193,7 @@ The application lifecycle consists of 5 phases:
 
 We've decided to use a monorepo structure, so all the packages are located in the same repository. This way, we can
 easily share code between packages, and have a single CI/CD pipeline for all of them. The future plan is to expand this 
-monorepo to contain all the public Elementor packages that are being published to NPM, so we have a single place to
+monorepo to contain all the public Refraction packages that are being published to NPM, so we have a single place to
 share code across the company and publicly.
 
 Read more about workspaces & monorepo:
@@ -213,10 +213,10 @@ the way it's being published to NPM. This means that every package can (theoreti
 breaking anything.
 
 In addition, an extension package might have a prefix that indicates the application it extends (e.g. 
-`@elementor/editor-app-bar`), because we might publish multiple packages under the same name to NPM (e.g. 
-`@elementor/editor-app-bar` and `@elementor/dashboard-app-bar`), so we need to make sure that the package name is
+`@refraction/editor-app-bar`), because we might publish multiple packages under the same name to NPM (e.g. 
+`@refraction/editor-app-bar` and `@refraction/dashboard-app-bar`), so we need to make sure that the package name is
 unique. Accordingly, generic packages that are not specific to an application don't have a prefix (e.g.
-`@elementor/locations`).
+`@refraction/locations`).
 
 ### Publish
 

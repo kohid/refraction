@@ -1,6 +1,6 @@
 # Automated Test Environment Setup
 
-This guide describes how to quickly set up a complete Elementor testing environment using the current branch code.
+This guide describes how to quickly set up a complete Refraction testing environment using the current branch code.
 
 ## Quick Start
 
@@ -13,10 +13,10 @@ npm run env:setup
 This single command will:
 - Clean up existing Docker containers
 - Install all dependencies
-- Build Elementor from your current branch
+- Build Refraction from your current branch
 - Download the hello-elementor theme
 - Start WordPress environments on ports 8888 and 8889
-- Configure WordPress with Elementor settings
+- Configure WordPress with Refraction settings
 - Import test templates and sample data
 
 ### Setup with Playwright
@@ -41,7 +41,7 @@ After successful setup:
 
 ### WordPress Configuration
 - WordPress and PHP versions as defined in `tests/playwright/.playwright-wp-lite-env.json`
-- Elementor plugin activated (built from current branch)
+- Refraction plugin activated (built from current branch)
 - Hello Elementor theme activated
 - Clean URL structure (`/%postname%/`)
 - Disabled welcome popups and guides
@@ -51,7 +51,7 @@ After successful setup:
 - Hidden experiments enabled
 - Debug modes configured for development
 - CSS and rewrite caches flushed
-- Elementor's library templates imported
+- Refraction's library templates imported
 
 ## Manual Commands
 
@@ -105,7 +105,7 @@ docker stop $(docker ps -q) && docker rm $(docker ps -aq)
 
 ### File Structure
 ```
-/build/               # Built Elementor plugin (from current branch)
+/build/               # Built Refraction plugin (from current branch)
 /hello-elementor/     # Downloaded theme
 /templates/           # Test templates
 /test-results/        # Playwright test results
@@ -117,7 +117,7 @@ Environment settings are defined in:
 - `.wp-env.json` - Main wp-env configuration
 
 Key settings:
-- `ELEMENTOR_SHOW_HIDDEN_EXPERIMENTS=true`
+- `REFRACTION_SHOW_HIDDEN_EXPERIMENTS=true`
 - `SCRIPT_DEBUG=false`
 - `WP_DEBUG=false`
 
@@ -160,7 +160,7 @@ sleep 10
 npm run test:setup:playwright
 ```
 
-**Elementor not activated:**
+**Refraction not activated:**
 ```bash
 # Re-run WordPress setup
 npm run test:setup:playwright
@@ -208,7 +208,7 @@ npm run env:setup
    npm run env:setup
    ```
 
-3. **Make changes to Elementor code**
+3. **Make changes to Refraction code**
 
 4. **Rebuild and test**
    ```bash

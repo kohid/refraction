@@ -1,6 +1,6 @@
 ## API - `$e.hooks.data`
 *  **Description**: `$e.hooks.data` API is a manager of _DATA_ hooks that allows you to create custom **data manipulation** 
-of *elementor* data model, and create dependencies. The _hooks_ are attached
+of *refraction* data model, and create dependencies. The _hooks_ are attached
 to  `$e.commands`, and each **hook** is being fired _before/after/catch_ a command, that's being executed by `$e.run()`
 *  **Location**: *core/common/assets/js/api/core/hooks/data.js*
 *  **Parent**: [`{HooksBase}`](#HooksBase)

@@ -1,8 +1,8 @@
-# Elementor NestedTabs Module
+# Refraction NestedTabs Module
 
 * **Experiment:** `true`
 * **Module Description** - Module that allows you to create nested tabs widget.
-* **Depends** - on `\Elementor\Modules\NestedElements\Module`
+* **Depends** - on `\Refraction\Modules\NestedElements\Module`
 ---
 * ## Technical description:
 - 📂 __tabs\-v2__
@@ -28,7 +28,7 @@
 
 - --------------------------------------------------------------------------------------------------------------------------------
 ## Product knowledge base
-* [Elementor Tabs](https://developers.elementor.com/docs/editor/elementor-tabs/)
+* [Refraction Tabs](https://github.com/kohid/refraction#readme)
 
 ## Attention needed / Known issues
 * The widget works only with [containers](../../core/container-element.md)
@@ -39,7 +39,7 @@
     ```javascript
     onInit( ...args ) {
         // TODO: Find better solution, Manually adding 'e-collapse' for each container.
-        if ( elementorFrontend.isEditMode() ) {
+        if ( refractionFrontend.isEditMode() ) {
             const $widget = this.$element,
                 $removed = this.findElement( '.e-collapse' ).remove();
 
@@ -57,7 +57,7 @@
 
             // On refresh since indexes are rearranged, do not call `activateDefaultTab` let editor control handle it.
             if ( $removed.length ) {
-                return elementorModules.ViewModule.prototype.onInit.apply( this, args );
+                return refractionModules.ViewModule.prototype.onInit.apply( this, args );
             }
         }
 
@@ -111,7 +111,7 @@ The flow:
     -  `modules/nested-tabs/module.php` -> Tells the editor to enqueue the scripts and styles.
 * Editor
     -  `assets/js/editor/index.js` -> Load editor module -> `assets/js/editor/module.js`.
-    -  `assets/js/editor/module.js` -> Load widget and register it into `elementor.elementsManager.registerElementType`.
+    -  `assets/js/editor/module.js` -> Load widget and register it into `refraction.elementsManager.registerElementType`.
     -  `assets/js/editor/module.js` -> Register the widget `assets/js/editor/widgets/nested-tabs.js`
     -  `assets/js/editor/widgets/nested-tabs.js` -> Register the widget with custom views: `assets/js/editor/views/view.js`, `assets/js/editor/views/empty.js`, `assets/js/editor/views/select-preset.js`, `assets/js/editor/views/add-section-area.js`
 * Frontend:
@@ -125,19 +125,19 @@ Start by registering the module:
 ## `- Module.php` - How to register a module.
 * **Link to the actual file** - [module.php](../../../modules/nested-tabs/module.php)
 * **Description** - Registers the experiment on/off, register editor scripts
-* **Extends** - `\Elementor\Core\Base\Module`
+* **Extends** - `\Refraction\Core\Base\Module`
 
 How to register a module?
 * Since __NestedTabs__ (nested tabs) depends on `NestedElements` module,
 	- use `get_experimental_data` method used to notify the module dependency upon `NestedElementsModule`. Please see `'dependencies'` key.
     ```php
-    use Elementor\Modules\NestedElements\Module as NestedElementsModule;
+    use Refraction\Modules\NestedElements\Module as NestedElementsModule;
   
     public static function get_experimental_data() {
         return [
             'name' => 'nested-tabs',
-            'title' => esc_html__( 'Nested Tab', 'elementor' ),
-            'description' => esc_html__( 'Nested Tabs', 'elementor' ),
+            'title' => esc_html__( 'Nested Tab', 'refraction' ),
+            'description' => esc_html__( 'Nested Tabs', 'refraction' ),
             'release_status' => Experiments_Manager::RELEASE_STATUS_ALPHA,
             'default' => Experiments_Manager::STATE_INACTIVE,
             'dependencies' => [ NestedElementsModule::class ],
@@ -147,11 +147,11 @@ How to register a module?
 * Loading the editor scripts.
   ```php
   public function __construct() {
-        add_action( 'elementor/editor/before_enqueue_scripts', function () {
+        add_action( 'refraction/editor/before_enqueue_scripts', function () {
             // The script you load for the editor goes here.
             wp_enqueue_script( 'nested-tabs', $this->get_js_assets_url( 'nested-tabs' ), [
-                'elementor-common',
-            ], ELEMENTOR_VERSION, true );
+                'refraction-common',
+            ], REFRACTION_VERSION, true );
         } );
   }
     ```
@@ -167,18 +167,18 @@ How to register a module?
 * The complete module
   ```php
   <?php
-  namespace Elementor\Modules\NestedTabs;
+  namespace Refraction\Modules\NestedTabs;
 	
-  use Elementor\Core\Experiments\Manager as Experiments_Manager;
-  use Elementor\Modules\NestedElements\Module as NestedElementsModule;
+  use Refraction\Core\Experiments\Manager as Experiments_Manager;
+  use Refraction\Modules\NestedElements\Module as NestedElementsModule;
 	
-  class Module extends \Elementor\Core\Base\Module {
+  class Module extends \Refraction\Core\Base\Module {
 	
       public static function get_experimental_data() {
           return [
               'name' => 'nested-tabs',
-              'title' => esc_html__( 'Nested Tab', 'elementor' ),
-              'description' => esc_html__( 'Nested Tabs', 'elementor' ),
+              'title' => esc_html__( 'Nested Tab', 'refraction' ),
+              'description' => esc_html__( 'Nested Tabs', 'refraction' ),
               'release_status' => Experiments_Manager::RELEASE_STATUS_ALPHA,
               'default' => Experiments_Manager::STATE_INACTIVE,
               'dependencies' => [ NestedElementsModule::class ],
@@ -196,10 +196,10 @@ How to register a module?
       public function __construct() {
           parent::__construct();
 	
-          add_action( 'elementor/editor/before_enqueue_scripts', function () {
+          add_action( 'refraction/editor/before_enqueue_scripts', function () {
               wp_enqueue_script( $this->get_name(), $this->get_js_assets_url( $this->get_name() ), [
                   'nested-elements',
-              ], ELEMENTOR_VERSION, true );
+              ], REFRACTION_VERSION, true );
           } );
       }
   }
@@ -208,7 +208,7 @@ How to register a module?
 * **Link to the actual file** - [nested-tabs.js](../../../modules/nested-tabs/assets/js/frontend/handlers/nested-tabs.js)
 * Since NestedElements, and TabV2, are modules, it will be required to create such custom handler.
 ```javascript
-export default class YourCustomHandler extends elementorModules.frontend.handlers.BaseNestedTabs {
+export default class YourCustomHandler extends refractionModules.frontend.handlers.BaseNestedTabs {
 	// Create your custom handler.
 }
 ```
@@ -216,10 +216,10 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
 ## `widgets/nested-tabs.php` - How to register a widget.
 * **Link to the actual file** - [nested-tabs.php](../../../modules/nested-tabs/widgets/nested-tabs.php)
 * **Description** - The `widgets/nested-tabs.php` is the main backend configuration file for widget with nested capabilities.
-* **Extends** - [`\Elementor\Modules\NestedElements\Base\Widget_Nested_Base`](#)
+* **Extends** - [`\Refraction\Modules\NestedElements\Base\Widget_Nested_Base`](#)
 
 * Requirements:
-	* Before creating a __Widget__ you have to be familiar with the [simple widget creation process](https://developers.elementor.com/docs/widgets/).
+	* Before creating a __Widget__ you have to be familiar with the [simple widget creation process](https://github.com/kohid/refraction#readme).
 * Is it requirement?
 	* Yes, in other words it's simply the widget registration, including few abstract methods that will be explained in the next section.
 * The class should extend `Widget_Nested_Base` class, there are few important methods to note:
@@ -230,10 +230,10 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
 
   ```php
   <?php
-  namespace Elementor\Modules\NestedTabs\Widgets;
+  namespace Refraction\Modules\NestedTabs\Widgets;
 	
-  use Elementor\Modules\NestedElements\Base\Widget_Nested_Base;
-  use Elementor\Plugin;
+  use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
+  use Refraction\Plugin;
 	
   class NestedTabs extends Widget_Nested_Base {
       protected function get_default_children_elements() {
@@ -241,13 +241,13 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
               [
                   'elType' => 'container',
                   'settings' => [
-                      '_title' => __( 'Tab #1', 'elementor' ),
+                      '_title' => __( 'Tab #1', 'refraction' ),
                   ],
               ],
               [
                   'elType' => 'container',
                   'settings' => [
-                      '_title' => __( 'Tab #2', 'elementor' ),
+                      '_title' => __( 'Tab #2', 'refraction' ),
                   ],
               ],
           ];
@@ -258,7 +258,7 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
       }
 	
       protected function get_defaults_children_title() {
-          return esc_html__( 'Tab #%d', 'elementor' );
+          return esc_html__( 'Tab #%d', 'refraction' );
       }
 	
       protected function get_default_children_placeholder_selector() {
@@ -266,7 +266,7 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
       }
 	
       protected function get_html_wrapper_class() {
-          return 'elementor-widget-n-tabs';
+          return 'refraction-widget-n-tabs';
       }
   }
   ```
@@ -279,9 +279,9 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
   * Load the __NestedTabs__ module.
       ```javascript
       // On editor init components.
-      elementorCommon.elements.$window.on( 'elementor/init-components', async () => {
+      refractionCommon.elements.$window.on( 'refraction/init-components', async () => {
           // The module should be loaded only when `nestedElements` is available.
-          await elementor.modules.nestedElements;
+          await refraction.modules.nestedElements;
 	
           // Create the NestedTabs module.
           new ( await import( '../editor/module' ) ).default();
@@ -300,7 +300,7 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
     export default class Module {
         constructor() {
             // Register new NestedTabs widget.
-            elementor.elementsManager.registerElementType( new NestedTabs() );
+            refraction.elementsManager.registerElementType( new NestedTabs() );
         }
     }
     ```
@@ -309,7 +309,7 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
 * **Link to the actual file** - [nested-tabs.js](../../../modules/nested-tabs/assets/js/editor/nested-tabs.js)
 * The minimum requirement for nested capabilities is having a model support nested elements(elements inside elements), and can be done by registering this class:
   ```javascript
-  export class YourWidgetName extends elementor.modules.elements.Widget {
+  export class YourWidgetName extends refraction.modules.elements.Widget {
       getModel() {
           // Includes the nested model with support of nested elements.
           return $e.components.get( 'nested-elements/nested-repeater' ).exports.NestedModelBase;
@@ -322,7 +322,7 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
     import View from './views/view';            // Custom view for handling the clicks.
     import EmptyView from './views/empty';      // Custom empty view for handling empty in the widget.
 	
-    export class NestedTabs extends elementor.modules.elements.types.Base {
+    export class NestedTabs extends refraction.modules.elements.types.Base {
         getType() {
               return 'nested-tabs'; // Widget type from the backend registration.
         }
@@ -359,7 +359,7 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
 			const events = super.events();
 	
 			events.click = ( e ) => {
-				const closest = e.target.closest( '.elementor-element' );
+				const closest = e.target.closest( '.refraction-element' );
 	
 				let model = this.options.model,
 					view = this;
@@ -367,7 +367,7 @@ export default class YourCustomHandler extends elementorModules.frontend.handler
 				// For clicks on container.
 				if ( 'container' === closest?.dataset.element_type ) { // eslint-disable-line camelcase
 					// In case the container empty, click should be handled by the EmptyView.
-					const container = elementor.getContainer( closest.dataset.id );
+					const container = refraction.getContainer( closest.dataset.id );
 	
 					if ( container.view.isEmpty() ) {
 						return true;
@@ -401,7 +401,7 @@ import { useEffect, useRef } from 'react';
 
 export default function AddSectionArea( props ) {
 	const addAreaElementRef = useRef(),
-		containerHelper = elementor.helpers.container,
+		containerHelper = refraction.helpers.container,
 		args = {
 			importOptions: {
 				target: props.container,
@@ -419,8 +419,8 @@ export default function AddSectionArea( props ) {
 
 		// Make some adjustments to behave like 'AddSectionArea', use default droppable options from container element.
 		defaultDroppableOptions.placeholder = false;
-		defaultDroppableOptions.items = '> .elementor-add-section-inner';
-		defaultDroppableOptions.hasDraggingOnChildClass = 'elementor-dragging-on-child';
+		defaultDroppableOptions.items = '> .refraction-add-section-inner';
+		defaultDroppableOptions.hasDraggingOnChildClass = 'refraction-dragging-on-child';
 
 		// Make element drop-able.
 		$addAreaElementRef.html5Droppable( defaultDroppableOptions );
@@ -433,22 +433,22 @@ export default function AddSectionArea( props ) {
 
 	return (
 		<div
-			className="elementor-add-section"
+			className="refraction-add-section"
 			onClick={() => containerHelper.openEditMode( props.container )}
 			ref={addAreaElementRef}
 		>
-			<div className="elementor-add-section-inner">
-				<div className="e-view elementor-add-new-section">
+			<div className="refraction-add-section-inner">
+				<div className="e-view refraction-add-new-section">
 					<button
 						type="button"
-						className="elementor-add-section-area-button elementor-add-section-button"
-						aria-label={__( 'Add new container', 'elementor' )}
+						className="refraction-add-section-area-button refraction-add-section-button"
+						aria-label={__( 'Add new container', 'refraction' )}
 						onClick={() => props.setIsRenderPresets( true )}
 					>
-						<i className="eicon-plus" aria-hidden="true" />
+						<i className="rficon-plus" aria-hidden="true" />
 					</button>
-					<div className="elementor-add-section-drag-title">
-						{__( 'Drag widgets here.', 'elementor' )}
+					<div className="refraction-add-section-drag-title">
+						{__( 'Drag widgets here.', 'refraction' )}
 					</div>
 				</div>
 			</div>
@@ -495,7 +495,7 @@ AddSectionArea.propTypes = {
 ![img](./_images/2.jpg)
 ```javascript
 export default function SelectPreset( props ) {
-	const containerHelper = elementor.helpers.container,
+	const containerHelper = refraction.helpers.container,
 		onPresetSelected = ( preset, container ) => {
 			const options = {
 				createWrapper: false,
@@ -509,24 +509,24 @@ export default function SelectPreset( props ) {
 		<>
 			<button
 				type="button"
-				className="elementor-add-section-close"
-				aria-label={ __( 'Close', 'elementor' ) }
+				className="refraction-add-section-close"
+				aria-label={ __( 'Close', 'refraction' ) }
 				onClick={() => props.setIsRenderPresets( false )}
 			>
-				<i className="eicon-close" aria-hidden="true"/>
+				<i className="rficon-close" aria-hidden="true"/>
 			</button>
 			<div className="e-view e-con-select-preset">
-				<div className="e-con-select-preset__title">{__( 'Select your Structure', 'elementor' )}</div>
+				<div className="e-con-select-preset__title">{__( 'Select your Structure', 'refraction' )}</div>
 				<div className="e-con-select-preset__list">
 					{
-						elementor.presetsFactory.getContainerPresets().map( ( preset ) => (
+						refraction.presetsFactory.getContainerPresets().map( ( preset ) => (
 							<button
 								type="button"
 								className="e-con-preset"
 								data-preset={preset}
 								key={preset}
 								onClick={() => onPresetSelected( preset, props.container )}
-								dangerouslySetInnerHTML={{ __html: elementor.presetsFactory.generateContainerPreset( preset ) }}
+								dangerouslySetInnerHTML={{ __html: refraction.presetsFactory.generateContainerPreset( preset ) }}
 							/>
 						) )
 					}

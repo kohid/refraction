@@ -13,7 +13,7 @@
 ### Demonstration of the requests and the results:
 
     
-* `GET {BASE_URL}/wp-json/elementor/v1/house/`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/`
 ```json
 {
 	"keys": [
@@ -60,7 +60,7 @@
 }
 ```
 		  
-* `GET {BASE_URL}/wp-json/elementor/v1/house/keys`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/keys`
 ```json
 [
  {
@@ -74,7 +74,7 @@
 ]
 ```
   
-* `GET {BASE_URL}/wp-json/elementor/v1/house/keys/1`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/keys/1`
 ```json
 {
 	"id": 1,
@@ -82,7 +82,7 @@
 }
 ```
 
-* `GET {BASE_URL}/wp-json/elementor/v1/house/rooms`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/rooms`
 ```json
 [
 	{
@@ -114,7 +114,7 @@
 ]
 ```
 
-* `GET {BASE_URL}/wp-json/elementor/v1/house/rooms/1`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/rooms/1`
 ```json
 {
 	"id": 1,
@@ -132,7 +132,7 @@
 }
 ```
 
-* `GET {BASE_URL}/wp-json/elementor/v1/house/rooms/1/doors`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/rooms/1/doors`
 ```json
 [
 	{
@@ -146,7 +146,7 @@
 ]
 ```
 
-* `GET {BASE_URL}/wp-json/elementor/v1/house/rooms/1/doors/1`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/rooms/1/doors/1`
 ```json
 {
 	"id": 1,
@@ -154,7 +154,7 @@
 }
 ```
     
-* `GET {BASE_URL}/wp-json/elementor/v1/house/garage`
+* `GET {BASE_URL}/wp-json/refraction/v1/house/garage`
 ```json
 {
 	"status": "garage available"
@@ -162,7 +162,7 @@
 ```
 
 *
-`GET {BASE_URL}/wp-json/elementor/v1/house/garage/items`
+`GET {BASE_URL}/wp-json/refraction/v1/house/garage/items`
 ```json
 [
 	"item0",

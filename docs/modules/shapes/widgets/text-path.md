@@ -2,7 +2,7 @@
 
 ## Product Knowledge Base:
 
-- [Text Path on Elementor.com](https://elementor.com/help/text-path-widget/)
+- [Text Path on Elementor.com](https://github.com/kohid/refraction#readme)
 
 
 - [\<textPath\> element reference on MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/textPath)

@@ -8,7 +8,7 @@ The components are extensible, so a 3rd party plugin can add some routes, comman
 
 *  **Description**: `$e.components` API is a manager for whole **api** components.
 *  **Location**: *core/common/assets/js/api/core/components.js*
-*  **Parent**: `elementorModules.Module`
+*  **Parent**: `refractionModules.Module`
 *  **Methods**:
 
 	| Method                       | Parameters                     | Returns                                       | Description

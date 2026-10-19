@@ -10,7 +10,7 @@
 
 There are 5 types of menus:
 
-- `mainMenu` - Provides access to the main features and functionality of the application. Represented by an Elementor logo that changes to a hamburger.
+- `mainMenu` - Provides access to the main features and functionality of the application. Represented by a Refraction logo that changes to a hamburger.
 - `toolsMenu` - A menu where the user can access various editing tools (e.g. "add widget", "structure", etc.) for manipulating the data or interface in some way. This
   section may contain a limited number of buttons for common tools, as well as a dropdown menu for accessing additional
   ones.
@@ -32,14 +32,14 @@ Let's extend the `integrationsMenu` with multiple examples that will cover all t
 #### Action
 
 ```tsx
-import { integrationsMenu } from '@elementor/editor-app-bar';
+import { integrationsMenu } from '@refraction/editor-app-bar';
 import { PlusIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
 integrationsMenu.registerAction( {
 	id: 'example-action-id',
 	props: {
-		title: __( 'My Custom Action', 'elementor' ),
+		title: __( 'My Custom Action', 'refraction' ),
 		icon: PlusIcon, // A react component that renders an SVG icon
 		disabled: false, // Optional
 		onClick: () => alert( 'Custom action triggered!' ), // Optional
@@ -50,7 +50,7 @@ integrationsMenu.registerAction( {
 #### ToggleAction
 
 ```tsx
-import { integrationsMenu } from '@elementor/editor-app-bar';
+import { integrationsMenu } from '@refraction/editor-app-bar';
 import { EyeIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
@@ -60,7 +60,7 @@ integrationsMenu.registerToggleAction( {
 		const [ isSelected, setIsSelected ] = useState( false );
 
 		return {
-			title: __( 'My Custom Toggle', 'elementor' ),
+			title: __( 'My Custom Toggle', 'refraction' ),
 			icon: EyeIcon,
 			selected: isSelected, // Optional
 			onClick: () => setIsSelected( ( prev ) => ! prev ), // Optional
@@ -73,16 +73,16 @@ integrationsMenu.registerToggleAction( {
 #### Link
 
 ```tsx
-import { integrationsMenu } from '@elementor/editor-app-bar';
+import { integrationsMenu } from '@refraction/editor-app-bar';
 import { LinkIcon } from '@elementor/icons';
 import { __ } from '@wordpress/i18n';
 
 integrationsMenu.registerLink( {
 	id: 'my-custom-link',
 	props: {
-		title: __( 'My Custom Link', 'elementor' ),
+		title: __( 'My Custom Link', 'refraction' ),
 		icon: LinkIcon,
-		href: 'https://elementor.com', // Optional
+		href: 'https://github.com/kohid/refraction#readme', // Optional
 		target: '_blank', // Optional
 	},
 } );
@@ -107,7 +107,7 @@ In addition to the menus above, a few locations accept full custom React compone
 - `injectIntoPrimaryAction` - Injects a component next to the primary action (e.g. "Publish"/"Save"), on the right side of the app bar.
 
 ```tsx
-import { injectIntoPageIndication } from '@elementor/editor-app-bar';
+import { injectIntoPageIndication } from '@refraction/editor-app-bar';
 
 injectIntoPageIndication( {
 	id: 'my-custom-indication',
@@ -126,16 +126,16 @@ injectIntoPageIndication( {
 
 ### Registering from outside this repository
 
-Third-party plugins (e.g. Elementor Pro, or any WordPress plugin) can register items into the app bar without being
-part of this monorepo's build, by depending on the `elementor-v2-editor-app-bar` script handle and using the
-`elementorV2.editorAppBar` global (which is the same object exported from `@elementor/editor-app-bar`):
+Third-party plugins (e.g. Refraction Pro, or any WordPress plugin) can register items into the app bar without being
+part of this monorepo's build, by depending on the `refraction-v2-editor-app-bar` script handle and using the
+`refractionV2.editorAppBar` global (which is the same object exported from `@refraction/editor-app-bar`):
 
 ```php
-add_action( 'elementor/editor/v2/scripts/enqueue', function () {
+add_action( 'refraction/editor/v2/scripts/enqueue', function () {
 	wp_enqueue_script(
 		'my-plugin-editor-app-bar',
 		plugins_url( 'assets/editor-app-bar.js', __FILE__ ),
-		[ 'elementor-v2-editor-app-bar', 'elementor-v2-ui', 'elementor-v2-icons' ],
+		[ 'refraction-v2-editor-app-bar', 'refraction-v2-ui', 'refraction-v2-icons' ],
 		'1.0.0',
 		true
 	);
@@ -144,8 +144,8 @@ add_action( 'elementor/editor/v2/scripts/enqueue', function () {
 
 ```js
 // my-plugin-editor-app-bar.js
-if ( window.elementorV2?.editorAppBar ) {
-	const { utilitiesMenu } = window.elementorV2.editorAppBar;
+if ( window.refractionV2?.editorAppBar ) {
+	const { utilitiesMenu } = window.refractionV2.editorAppBar;
 
 	utilitiesMenu.registerLink( {
 		id: 'my-plugin-link',
@@ -159,4 +159,4 @@ if ( window.elementorV2?.editorAppBar ) {
 ```
 
 Make sure to always use `id` (not `name`) when registering menu items, and to guard the call with a check for
-`window.elementorV2.editorAppBar`, since script load order across plugins is not guaranteed.
+`window.refractionV2.editorAppBar`, since script load order across plugins is not guaranteed.

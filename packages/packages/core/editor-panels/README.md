@@ -11,7 +11,7 @@ Creating panel contains 3 steps:
 
 ```tsx
 // components/my-panel.tsx
-import { Panel, PanelHeader, PanelHeaderTitle, PanelBody } from '@elementor/editor-panels';
+import { Panel, PanelHeader, PanelHeaderTitle, PanelBody } from '@refraction/editor-panels';
 
 export default function MyPanel() {
 	return (
@@ -31,7 +31,7 @@ export default function MyPanel() {
 
 ```ts
 // panel.ts
-import { createPanel } from '@elementor/editor-panels';
+import { createPanel } from '@refraction/editor-panels';
 import MyPanel from './components/my-panel';
 
 export const {
@@ -48,7 +48,7 @@ export const {
 
 ```ts
 // init.ts
-import { registerPanel } from '@elementor/editor-panels';
+import { registerPanel } from '@refraction/editor-panels';
 import { panel } from './panel';
 
 function init() {

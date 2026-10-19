@@ -1,4 +1,4 @@
-# Elementor Nested-Elements Module
+# Refraction Nested-Elements Module
 
 * **Experiment:** `true`
 * **Module Description** - is a module that allows you to created nested widgets, widgets inside widgets.
@@ -44,7 +44,7 @@
 - --------------------------------------------------------------------------------------------------------------------------------
     
 ## Product knowledge base
-* [Elementor Widgets](https://developers.elementor.com/docs/widgets/)
+* [Refraction Widgets](https://github.com/kohid/refraction#readme)
 
 - --------------------------------------------------------------------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ Simple explanation about the files and their purpose:
 * **Link to the actual file** - [index.js](../../../modules/nested-elements/assets/js/editor/index.js)
 * **Description** - Loads the editor module, and tells when its loaded, since the dependant modules are that depends on __Nested Elements__ module, need to know when its loaded and available.
     - Import the editor(`editor.js`) module.
-    - Save the import promise in the global variable(`elementor.modules.nestedElements`).
+    - Save the import promise in the global variable(`refraction.modules.nestedElements`).
     - After loading replace the promise with the actual loaded file.
 
 

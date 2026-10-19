@@ -1,6 +1,6 @@
 # Editor Floating Panels
 
-A generic floating panel framework for the Elementor Editor that provides the primitives for rendering panels on the canvas. The panels can be dragged and resized freely within the viewport, independent of any specific feature concern.
+A generic floating panel framework for the Refraction Editor that provides the primitives for rendering panels on the canvas. The panels can be dragged and resized freely within the viewport, independent of any specific feature concern.
 
 The panes are persisted and survive reloads. The state stores open/closed, position, size, and z-index in `localStorage`.
 
@@ -15,7 +15,7 @@ import {
 	FloatingPanelBody,
 	FloatingPanelFooter,
 	FloatingPanelHeader,
-} from '@elementor/editor-floating-panels';
+} from '@refraction/editor-floating-panels';
 
 init();
 
@@ -85,7 +85,7 @@ Programmatic sizing via `setSize` from `useFloatingPanelActions` works regardles
 | `corner` (optional) | Viewport corner anchor. One of `block-start-inline-start`, `block-start-inline-end`, `block-end-inline-start`, `block-end-inline-end`. Default: `block-start-inline-start`. |
 | `initialPosition` (optional) | Offsets on the two insets that match `corner`. Used only when no persisted position exists. Other keys are ignored. |
 
-Sizes use physical names (`width`/`height`) because Elementor renders in horizontal writing mode only. Position uses logical inset names because it is direction-sensitive (e.g. RTL).
+Sizes use physical names (`width`/`height`) because Refraction renders in horizontal writing mode only. Position uses logical inset names because it is direction-sensitive (e.g. RTL).
 
 `LogicalPosition` stores all four insets (`insetInlineStart`, `insetInlineEnd`, `insetBlockStart`, `insetBlockEnd`). Only the pair matching `corner` is used for rendering and interaction; inactive insets are `0`.
 

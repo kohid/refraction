@@ -67,9 +67,9 @@ The full list of data commands, ( including custom & 3rd party commands ) are av
     
     | Calling to | Will reach |
     |------------|------------|
-    | `$e.data.get( 'documents/index' )` | `wp-json/elementor/{current_version/documents` | 
-    | `$e.data.get( 'documents/index', { id: 1 } )` | `wp-json/elementor/{current_version/documents/1` | 
-    | `$e.data.update( 'documents/save', { id: 1 } )` | `wp-json/elementor/{current_version/documents/1/save` | 
+    | `$e.data.get( 'documents/index' )` | `wp-json/refraction/{current_version/documents` | 
+    | `$e.data.get( 'documents/index', { id: 1 } )` | `wp-json/refraction/{current_version/documents/1` | 
+    | `$e.data.update( 'documents/save', { id: 1 } )` | `wp-json/refraction/{current_version/documents/1/save` | 
 
 * What is refresh options and how to use cache?
   * `$e.data.get( 'documents/index', { id: 1 }, { refresh: true } );`

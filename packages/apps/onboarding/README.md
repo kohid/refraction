@@ -1,17 +1,17 @@
-# @elementor/onboarding
+# @refraction/onboarding
 
-Onboarding wizard for Elementor.
+Onboarding wizard for Refraction.
 
 ## Installation
 
 ```bash
-npm install @elementor/onboarding
+npm install @refraction/onboarding
 ```
 
 ## Usage
 
 ```typescript
-import { App, registerOnboardingSlice } from '@elementor/onboarding';
+import { App, registerOnboardingSlice } from '@refraction/onboarding';
 
 // Register the store slice
 registerOnboardingSlice();
@@ -27,7 +27,7 @@ The onboarding wizard has 7 steps:
 1. **account** - Let's get to work (connect/login)
 2. **building_for** - Who are you building for?
 3. **site_about** - What is your site about?
-4. **experience** - Have you worked with Elementor before?
+4. **experience** - Have you worked with Refraction before?
 5. **theme_select** - Choose a theme that fits your needs
 6. **theme_confirm** - Continue with Hello theme
 7. **site_features** - What do you want to include in your site?
@@ -37,7 +37,7 @@ The onboarding wizard has 7 steps:
 ### useOnboarding
 
 ```typescript
-import { useOnboarding } from '@elementor/onboarding';
+import { useOnboarding } from '@refraction/onboarding';
 
 function MyComponent() {
   const { stepId, stepIndex, isFirst, isLast, actions } = useOnboarding();
@@ -51,7 +51,7 @@ function MyComponent() {
 ### useUpdateProgress
 
 ```typescript
-import { useUpdateProgress } from '@elementor/onboarding';
+import { useUpdateProgress } from '@refraction/onboarding';
 
 function MyComponent() {
   const updateProgress = useUpdateProgress();

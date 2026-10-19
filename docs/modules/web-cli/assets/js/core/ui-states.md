@@ -57,7 +57,7 @@
 		```
 * UI State conventions:
 	```javascript
-	import UiStateBase from 'elementor-api/core/states/ui-state-base';
+	import UiStateBase from 'refraction-api/core/states/ui-state-base';
 	
 	export class {FILE_NAME_CAMEL_CASE} extends UiStateBase {
 		getId() {
@@ -111,7 +111,7 @@
 	Let's assume there is the following UI state: 
   
 	```javascript
-	import UiStateBase from 'elementor-api/core/states/ui-state-base';
+	import UiStateBase from 'refraction-api/core/states/ui-state-base';
 	
 	// A good practice is to export the state options as constants so they 
 	// can be used when setting the state from another place.
@@ -130,7 +130,7 @@
 		getScopes() {
 			return [
 				window.document.body,
-				elementor.$previewContents[ 0 ],
+				refraction.$previewContents[ 0 ],
 			];
 		}
 		
@@ -155,7 +155,7 @@
   	event using a simple `addEventListener()`:
 
 	```javascript
-	import { DIRECTION_ROW } from 'elementor-document/ui-states/direction-mode';
+	import { DIRECTION_ROW } from 'refraction-document/ui-states/direction-mode';
  
 	// Change the `direction-mode` state:
 	$e.uiStates.set( 'document/direction-mode', DIRECTION_ROW );
@@ -170,7 +170,7 @@
 
 	// OR
 
-	elementor.$previewContents[ 0 ].addEventListener( 'e-ui-state:document/direction-mode', ( e ) => {
+	refraction.$previewContents[ 0 ].addEventListener( 'e-ui-state:document/direction-mode', ( e ) => {
 		const { oldValue, newValue } = e.detail;
 		
 		console.log( 'Direction mode changed', { oldValue, newValue } );

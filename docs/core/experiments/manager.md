@@ -1,25 +1,25 @@
 # Experiments Manager
 
-Since some of Elementor's features are still being worked on, and to avoid any potential issues,
-Elementor has given the users an option of switching them on and off and testing how they impact the site.
+Since some of Refraction's features are still being worked on, and to avoid any potential issues,
+Refraction has given the users an option of switching them on and off and testing how they impact the site.
 The users will be able to try out these features in a safe environment and influence future releases.
 
 ## Product Knowledge Base:
 
-- [Elementor Experiments - Developers Center](https://developers.elementor.com/elementor-experiments/)
+- [Refraction Experiments - Developers Center](https://github.com/kohid/refraction#readme)
 
 
-- [Elementor Experiments - Help Center](https://elementor.com/help/features/experiments/)
+- [Refraction Experiments - Help Center](https://github.com/kohid/refraction#readme)
 
 
-- [Introducing experiments in Elementor 3.1](https://elementor.com/blog/introducing-elementor-3-1/)
+- [Introducing experiments in Refraction 3.1](https://github.com/kohid/refraction#readme)
 
 
 ## Technical Description:
 
-This is the Experiments Manager of Elementor. It registers and manages all the experimental features in Elementor.
+This is the Experiments Manager of Refraction. It registers and manages all the experimental features in Refraction.
 
-Each module (`Elementor\Core\Base\Module`) can register its own experiments using the static `get_experimental_data()` method:
+Each module (`Refraction\Core\Base\Module`) can register its own experiments using the static `get_experimental_data()` method:
 
 ```PHP
 // modules/admin-top-bar/module.php
@@ -27,9 +27,9 @@ Each module (`Elementor\Core\Base\Module`) can register its own experiments usin
 public static function get_experimental_data() {
 	return [
 		'name' => 'admin-top-bar',
-		'title' => esc_html__( 'Admin Top Bar', 'elementor' ),
-		'description' => esc_html__( 'Adds a top bar to elementor pages in admin area.', 'elementor' ),
-		'release_status' => Elementor\Core\Experiments\Manager::RELEASE_STATUS_BETA,
+		'title' => esc_html__( 'Admin Top Bar', 'refraction' ),
+		'description' => esc_html__( 'Adds a top bar to refraction pages in admin area.', 'refraction' ),
+		'release_status' => Refraction\Core\Experiments\Manager::RELEASE_STATUS_BETA,
 		'new_site' => [
 			'default_active' => true,
 		],
@@ -37,16 +37,16 @@ public static function get_experimental_data() {
 }
 ```
 
-In addition, it's possible work directly with the manager in order to register an experiment using `\Elementor\Plugin::instance()->experiments->add_feature()`:
+In addition, it's possible work directly with the manager in order to register an experiment using `\Refraction\Plugin::instance()->experiments->add_feature()`:
 
 ```PHP
 // core/experiments/manager.php
 
-\Elementor\Plugin::instance()->experiments->add_feature( [
+\Refraction\Plugin::instance()->experiments->add_feature( [
 	'name' => 'a11y_improvements',
-	'title' => esc_html__( 'Accessibility Improvements', 'elementor' ),
-	'description' => esc_html__( 'Accessibility Improvements Description', 'elementor' ),
-	'release_status' => Elementor\Core\Experiments\Manager::RELEASE_STATUS_BETA,
+	'title' => esc_html__( 'Accessibility Improvements', 'refraction' ),
+	'description' => esc_html__( 'Accessibility Improvements Description', 'refraction' ),
+	'release_status' => Refraction\Core\Experiments\Manager::RELEASE_STATUS_BETA,
 	'new_site' => [
 		'default_active' => true,
 		'minimum_installation_version' => '3.1.0-beta',
@@ -79,16 +79,16 @@ Plugin::instance()->experiments->is_feature_active( 'feature-name' );
 
 // OR in the Pro version:
 
-Plugin::elementor()->experiments->is_feature_active( 'feature-name' );
+Plugin::refraction()->experiments->is_feature_active( 'feature-name' );
 ```
 
 ### JS:
 ```js
-elementorCommon.config.experimentalFeatures[ 'feature-name' ];
+refractionCommon.config.experimentalFeatures[ 'feature-name' ];
 
 // OR in frontend pages:
 
-elementorFrontend.config.experimentalFeatures[ 'feature-name' ];
+refractionFrontend.config.experimentalFeatures[ 'feature-name' ];
 ```
 
 

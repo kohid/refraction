@@ -126,7 +126,7 @@
 
    | Property     | Type                  | Requirement    | Description |
    |---           |---                    |---             |---|
-   | _id_         | `{Number}`            | **optional**   | Id of history item, to be sub item of. default: `{elementor.documents.currentDocument.history.getCurrentId()}`.
+   | _id_         | `{Number}`            | **optional**   | Id of history item, to be sub item of. default: `{refraction.documents.currentDocument.history.getCurrentId()}`.
    | _container_  | `{Container}`         | **optional**   | Container log.
    | _containers_ | `{Container[]}`       | **optional**   | Containers log.
    | _type_       | `{String}`            | **optional**   | Type

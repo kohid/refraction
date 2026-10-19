@@ -3,7 +3,7 @@ namespace House;
 
 require 'endpoints/garage.php';
 
-class Controller extends \Elementor\Data\V2\Base\Controller {
+class Controller extends \Refraction\Data\V2\Base\Controller {
 
 	public function get_name() {
 		return 'house';
@@ -19,6 +19,6 @@ class Controller extends \Elementor\Data\V2\Base\Controller {
 	}
 
 	protected function register_index_endpoint() {
-		$this->register_endpoint( new \Elementor\Data\V2\Base\Endpoint\Index\AllChildren( $this ) );
+		$this->register_endpoint( new \Refraction\Data\V2\Base\Endpoint\Index\AllChildren( $this ) );
 	}
 }

@@ -2,11 +2,11 @@
 
 ## Product Knowledge Base:
 
-- [Convert Existing Sections To Containers](https://elementor.com/help/convert-existing-sections-to-containers/)
+- [Convert Existing Sections To Containers](https://github.com/kohid/refraction#readme)
 
 ## Technical Description:
 
-This is a migration tool for Elementor that helps users migrating from the older Sections/Columns layouts to the new and
+This is a migration tool for Refraction that helps users migrating from the older Sections/Columns layouts to the new and
 updated Container layouts.
 
 It's a standalone module that injects conversion buttons to each Section & Page, and will (or at least should) be

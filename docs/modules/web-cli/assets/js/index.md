@@ -1,7 +1,7 @@
-# Elementor JS `$e`  API
+# Refraction JS `$e`  API
 ## Introduction
 
-**Elementor JS API** - is set of *API(s)*, *modules*, *components*, and *utils*, used to communicating with *elementor*.
+**Refraction JS API** - is set of *API(s)*, *modules*, *components*, and *utils*, used to communicating with *refraction*.
  represented as `$e` - Global Variable.
 
 # Overview

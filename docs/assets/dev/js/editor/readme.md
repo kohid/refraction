@@ -3,7 +3,7 @@
 
 | Component Name                                                                                    |  Access component                             | Loading owner      | Description
 |---------------------------------------------------------------------------------------------------|-----------------------------------------------|--------------------|-----------------------
-| [App](#)                                                                                          | `$e.components.get('app')`                    | Core app           | Elementor main app.
+| [App](#)                                                                                          | `$e.components.get('app')`                    | Core app           | Refraction main app.
 | [Document](document/component.md)                                                                 | `$e.components.get('document')`               | Editor             | Document manipulations, available only in editor.
 | [Editor Documents](#)                                                                             | `$e.components.get('editor/documents')`       | Editor             | Documents manager, available only in editor.
 | [Elements Color Picker](../../../../modules/elements-color-picker/assets/js/editor/component.md)  | `$e.components.get('elements-color-picker')`  | Module             | Elements color picker, available only in editor.
