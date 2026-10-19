@@ -256,6 +256,20 @@ async function main() {
 		check( 'Editor', `${ t }: preview iframe is never themed`, fbg === frameBg0 && fattr === null && fsheets === 0, `bg=${ fbg } (was ${ frameBg0 }) attr=${ fattr } sheets=${ fsheets }` );
 		await ep.screenshot( { path: join( SHOTS, `editor-${ t }.png` ) } );
 	}
+	// The editor's User Preferences select applies live and saves to the same user meta
+	wp( 'user', 'meta', 'delete', '1', 'refraction_ui_theme' );
+	await openEditor();
+	const live = await ep.evaluate( async () => {
+		const container = window.refraction.settings.editorPreferences.getEditedView().getContainer();
+		const has = !! container.controls.refraction_theme;
+		window.$e.run( 'document/elements/settings', { container, settings: { refraction_theme: 'blueprint' }, options: { external: true } } );
+		await new Promise( ( r ) => setTimeout( r, 300 ) );
+		const attrNow = document.documentElement.getAttribute( 'data-refraction-theme' );
+		await window.refraction.settings.editorPreferences.save();
+		return { has, attrNow };
+	} );
+	check( 'Editor', 'Preferences "Refraction theme" select exists and applies live', live.has && live.attrNow === 'blueprint', JSON.stringify( live ) );
+	check( 'Editor', 'Preferences change is saved to the user meta', wpTry( 'user', 'meta', 'get', '1', 'refraction_ui_theme' ) === 'blueprint' );
 	// Navigator, library and finder follow
 	wp( 'user', 'meta', 'update', '1', 'refraction_ui_theme', 'ember' );
 	await openEditor();
