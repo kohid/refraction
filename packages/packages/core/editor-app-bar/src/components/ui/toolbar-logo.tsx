@@ -9,12 +9,16 @@ interface StyledRefractionLogoProps extends SvgIconProps {
 
 type ToolbarLogoProps = Omit< ToggleButtonProps, 'value' >;
 
+/**
+ * Refraction mark. The first path is the prism, the other three are the rays. On hover the prism collapses and the
+ * rays grow into the three bars of a menu icon (see the transforms in StyledRefractionLogo).
+ */
 const RefractionLogo = ( props: SvgIconProps ) => {
 	return (
 		<SvgIcon viewBox="0 0 32 32" { ...props }>
 			<g>
 				<circle cx="16" cy="16" r="16" />
-				<path d="M11.7 9H9V22.3H11.7V9Z" />
+				<path fillRule="evenodd" d="M10.2 8.2 L15.4 22.4 L5.0 22.4 Z M10.2 14.0 L7.9 20.4 L12.5 20.4 Z" />
 				<path d="M22.4 9H9V11.7H22.4V9Z" />
 				<path d="M22.4 14.4004H9V17.1004H22.4V14.4004Z" />
 				<path d="M22.4 19.6992H9V22.3992H22.4V19.6992Z" />

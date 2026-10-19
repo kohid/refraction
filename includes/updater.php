@@ -225,7 +225,7 @@ class Updater {
 			'last_updated' => $release['published'],
 			'download_link' => $release['package'],
 			'sections' => [
-				'description' => '<p>' . esc_html__( 'Refraction is a drag-and-drop page builder for WordPress, a community fork of Elementor. This update is delivered from its GitHub releases page.', 'refraction' ) . '</p>',
+				'description' => '<p>' . esc_html__( 'Refraction is a drag-and-drop page builder for WordPress. This update is delivered from its GitHub releases page.', 'refraction' ) . '</p>',
 				'changelog' => $release['changelog'],
 			],
 		];

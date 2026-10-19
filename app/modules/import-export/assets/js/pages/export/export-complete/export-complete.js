@@ -119,7 +119,7 @@ export default function ExportComplete() {
 	return (
 		<Layout type="export" footer={ getFooter() }>
 			<WizardStep
-				image={ refractionAppConfig.assets_url + 'images/go-pro.svg' }
+				image={ refractionAppConfig.assets_url + 'images/export-complete.svg' }
 				heading={ heading }
 				description={ description }
 				notice={ getNotice() }

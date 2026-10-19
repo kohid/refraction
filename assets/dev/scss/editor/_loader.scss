@@ -17,44 +17,64 @@
 	box-shadow: 2px 2px 20px 4px rgba(0, 0, 0, .02);
 }
 
+// The loader draws the Refraction mark: a beam (box 1) enters a prism and leaves it as three rays (boxes 2-4).
 .refraction-loader-boxes {
 	height: 100%;
 	width: 100%;
 	position: relative;
+
+	// the prism, an outlined triangle cut out with an even-odd clip path
+	&::before {
+		content: '';
+		position: absolute;
+		top: 6%;
+		left: 22%;
+		width: 52%;
+		height: 78%;
+		background-color: var(--e-a-color-txt-hover);
+		clip-path: polygon(evenodd, 50% 0, 100% 100%, 0 100%, 50% 0, 50% 27%, 21% 86%, 79% 86%, 50% 27%);
+	}
 }
 
 .refraction-loader-box {
 	$animation-time: 1.8s;
 
 	position: absolute;
+	height: 9%;
+	border-radius: 9px;
 	background-color: var(--e-a-color-txt-hover);
 	animation: load $animation-time linear infinite;
 
+	// beam in
 	&:nth-of-type(1) {
-		width: 20%;
-		height: 100%;
 		left: 0;
-		top: 0;
+		top: 52%;
+		width: 34%;
+		transform: rotate(-17deg);
+		transform-origin: left center;
 	}
 
+	// rays out
 	&:not(:nth-of-type(1)) {
-		right: 0;
-		height: 20%;
-		width: 60%;
+		left: 56%;
+		width: 44%;
+		transform-origin: left center;
 	}
 
 	&:nth-of-type(2) {
-		top: 0;
+		top: 30%;
+		transform: rotate(-24deg);
 		animation-delay: calc( #{$animation-time} / 4 * -1 );
 	}
 
 	&:nth-of-type(3) {
-		top: 40%;
+		top: 48%;
 		animation-delay: calc( #{$animation-time} / 4 * -2 );
 	}
 
 	&:nth-of-type(4) {
-		bottom: 0;
+		top: 66%;
+		transform: rotate(24deg);
 		animation-delay: calc( #{$animation-time} / 4 * -3 );
 	}
 }

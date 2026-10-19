@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 
 import { build as viteBuild, defineConfig } from 'vite-plus';
 
+import { brandUiPlugin } from './plugins/brand-ui.mjs';
 import { cjsExternalsPlugin } from './plugins/cjs-externals.mjs';
 import { i18nStringsPlugin } from './plugins/i18n-strings.mjs';
 import { LIBRARY_ENTRY_ID, packagesLibraryEntryPlugin } from './plugins/packages-library-entry.mjs';
@@ -37,6 +38,7 @@ function createPackageConfig( { name, path: entryPath }, isProduction, watch ) {
 	const cjsRequests = new Set();
 
 	const plugins = [
+		brandUiPlugin(),
 		packagesLibraryEntryPlugin( { entryPath, globalName } ),
 		typescriptPlugin(),
 		cjsExternalsPlugin( {

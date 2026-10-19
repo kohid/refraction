@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200" role="img" aria-label="Export complete">
+<rect width="320" height="200" rx="16" fill="#f4f1fb"/>
+<polygon points="130,40 178,124 82,124" fill="none" stroke="#2b2d42" stroke-width="7" stroke-linejoin="round"/>
+<line x1="38" y1="106" x2="102" y2="86" stroke="#2b2d42" stroke-width="5" stroke-linecap="round"/>
+<line x1="152" y1="88" x2="236" y2="56" stroke="#ff4d6d" stroke-width="5" stroke-linecap="round"/>
+<line x1="156" y1="96" x2="240" y2="96" stroke="#ffd166" stroke-width="5" stroke-linecap="round"/>
+<line x1="160" y1="104" x2="236" y2="136" stroke="#4cc9f0" stroke-width="5" stroke-linecap="round"/>
+<circle cx="256" cy="150" r="22" fill="#2b2d42"/>
+<path d="M246 150l7 7 13-14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

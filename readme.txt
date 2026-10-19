@@ -12,9 +12,13 @@ Refraction is a drag-and-drop page builder for WordPress that runs on your own s
 
 == Description ==
 
-Refraction is a drag-and-drop page builder for WordPress, forked from the open-source Elementor plugin and developed independently. It has no accounts, cloud libraries, telemetry or upsell services. The one thing it contacts on its own is GitHub, to look for new Refraction releases (see External services below).
+Refraction is a drag-and-drop page builder for WordPress, developed independently. It has no accounts, cloud libraries, telemetry or upsell services. The one thing it contacts on its own is GitHub, to look for new Refraction releases (see External services below).
 
-Refraction is not affiliated with or endorsed by Elementor Ltd.
+== Credits ==
+
+Refraction is based on Elementor by Elementor.com (GPL-3.0-or-later). See NOTICE and license.txt for the upstream notices.
+
+Refraction is not affiliated with or endorsed by the authors of that code base.
 
 == External services ==
 
@@ -55,7 +59,7 @@ Other things you may notice that are not Refraction's own services: the editor l
 * Tweak: removed the duplicate in-page navigation sidebar, which also carried an upgrade prompt.
 
 = 0.1.0 =
-* Initial fork from Elementor 4.4.0 (GPL-3.0-or-later).
+* Initial fork of the GPL-3.0-or-later code base credited in NOTICE (upstream version 4.4.0).
 * Removed the Atomic Editor.
-* Removed all calls to Elementor's servers and upsell prompts.
+* Removed all calls to the upstream project's servers and its upsell prompts.
 * Added a self-hosted update check against GitHub releases (can be disabled with REFRACTION_DISABLE_UPDATE_CHECK).

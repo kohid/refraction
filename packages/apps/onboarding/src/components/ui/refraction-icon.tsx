@@ -2,17 +2,20 @@ import * as React from 'react';
 import { SvgIcon, type SvgIconProps } from '@elementor/ui';
 
 /**
- * Refraction "E" logo icon.
- * Uses currentColor by default, so it inherits color from parent or theme.
+ * Refraction prism mark: a beam enters a prism on the left and leaves as three rays on the right.
+ * Uses currentColor, so it inherits color from the parent or theme.
  * @param props
  */
 export function RefractionIcon( props: SvgIconProps ) {
 	return (
-		<SvgIcon viewBox="0 0 32 32" { ...props }>
-			<path
-				d="M15.93 0C7.13 0 0 7.16 0 16s7.13 16 15.93 16c8.8 0 15.93-7.16 15.93-16S24.73 0 15.93 0zM11.15 24H7.97V8h3.18v16zm12.74 0h-9.56v-3.2h9.56V24zm0-6.4h-9.56v-3.2h9.56v3.2zm0-6.4h-9.56V8h9.56v3.2z"
-				fill="currentColor"
-			/>
+		<SvgIcon viewBox="0 0 100 100" { ...props }>
+			<g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+				<polygon points="40,12 66,57 14,57" strokeWidth="8" />
+				<line x1="4" y1="50" x2="24.6" y2="39.4" strokeWidth="6" />
+				<line x1="52.1" y1="33" x2="94" y2="14" strokeWidth="6" />
+				<line x1="57.6" y1="42.5" x2="96" y2="42.5" strokeWidth="6" />
+				<line x1="63.1" y1="52" x2="94" y2="72" strokeWidth="6" />
+			</g>
 		</SvgIcon>
 	);
 }

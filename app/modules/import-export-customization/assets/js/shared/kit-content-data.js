@@ -40,9 +40,6 @@ const kitContentData = [
 			title: __( 'Settings & configurations', 'refraction' ),
 			features: {
 				open: [
-					__( 'Classes', 'refraction' ),
-					__( 'Default Styles', 'refraction' ),
-					__( 'Variables', 'refraction' ),
 					__( 'Global Colors', 'refraction' ),
 					__( 'Global Fonts', 'refraction' ),
 					__( 'Theme Style Settings', 'refraction' ),

@@ -1,6 +1,6 @@
 {
     "name": "refraction/refraction",
-    "description": "Refraction - a local-first visual page builder for WordPress, based on Elementor (GPL-3.0-or-later).",
+    "description": "Refraction - a local-first visual page builder for WordPress (GPL-3.0-or-later; credits in NOTICE).",
     "type": "project",
     "license": "GPL-3.0-or-later",
     "minimum-stability": "stable",
