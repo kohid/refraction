@@ -46,6 +46,11 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.4.0 =
+* New: Popups. A Popup template type (Refraction > Theme Builder > Popups) designed in the normal editor on a popup canvas with overlay, box and close button. Settings for width, height, position, overlay colour, opacity and blur, border, shadow, padding, close button, entrance and exit animation, Escape, overlay click, scroll lock and auto close.
+* New: popup triggers: page load with delay, scroll (percentage or element), scroll back up, click on any element, exit intent (mouse, and back button or fast scroll up on touch screens), inactivity, after N page views, links made with the Popup dynamic tag, the refraction:popup:open event and window.refractionPopup.
+* New: popup rules: only once, every N visits, once per session or per day, do not show again after a form or a marked button, logged in, logged out and roles, devices, referrer, URL parameter, schedule and priority queue, plus the Theme Builder display conditions.
+* New: Forms actions Open popup and Close popup. Popup content loads on first open; popups are accessible dialogs with a focus trap and focus return, and skip animations for reduced motion.
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.
 * New: Preview Settings in the template settings: design a Single, Archive, Search Results, 404, Header or Footer template against a real post, page, custom post type item, term, author, month, search word or the 404 page.
