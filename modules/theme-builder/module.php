@@ -12,11 +12,14 @@ use Refraction\Modules\ThemeBuilder\Classes\Conditions_Manager;
 use Refraction\Modules\ThemeBuilder\Classes\Conditions_Store;
 use Refraction\Modules\ThemeBuilder\Classes\Environment;
 use Refraction\Modules\ThemeBuilder\Classes\Locations_Manager;
+use Refraction\Modules\ThemeBuilder\Classes\Preview_Ajax;
+use Refraction\Modules\ThemeBuilder\Classes\Preview_Context;
 use Refraction\Modules\ThemeBuilder\Classes\Resolver;
 use Refraction\Modules\ThemeBuilder\Classes\Rule;
 use Refraction\Modules\ThemeBuilder\Classes\Theme_Integration;
 use Refraction\Modules\ThemeBuilder\Classes\Wp_Environment;
 use Refraction\Modules\ThemeBuilder\Control\Control_Conditions;
+use Refraction\Modules\ThemeBuilder\Control\Control_Preview_Target;
 use Refraction\Modules\ThemeBuilder\Documents\Archive;
 use Refraction\Modules\ThemeBuilder\Documents\Error_404;
 use Refraction\Modules\ThemeBuilder\Documents\Footer;
@@ -87,6 +90,8 @@ class Module extends BaseModule {
 		// Built on first use below; the admin page registers its own hooks.
 		$this->get_admin_page();
 		new Conditions_Ajax();
+		new Preview_Ajax();
+		new Preview_Context();
 
 		if ( ! is_admin() ) {
 			new Theme_Integration( $this->get_locations_manager() );
@@ -108,6 +113,7 @@ class Module extends BaseModule {
 
 	public function register_controls( Controls_Manager $controls_manager ): void {
 		$controls_manager->register( new Control_Conditions() );
+		$controls_manager->register( new Control_Preview_Target() );
 	}
 
 	public function register_menu( Menu_Data_Provider $menu_data_provider ): void {
@@ -203,6 +209,9 @@ class Module extends BaseModule {
 		return [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'action' => Conditions_Ajax::ACTION,
+			'previewLookupAction' => Conditions_Ajax::PREVIEW_ACTION,
+			'previewApplyAction' => Preview_Ajax::ACTION,
+			'postId' => (int) Plugin::$instance->editor->get_post_id(),
 			'nonce' => wp_create_nonce( Conditions_Ajax::NONCE ),
 			'canEdit' => current_user_can( 'manage_options' ),
 			'conditions' => $groups,

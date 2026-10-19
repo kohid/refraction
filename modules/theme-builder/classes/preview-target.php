@@ -14,11 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Preview_Target {
 
-	/** Setting names stored in the document and the meta. */
-	const SOURCE = 'refraction_preview_source';
-	const ID = 'refraction_preview_id';
-	const SEARCH = 'refraction_preview_search';
-	const DATE = 'refraction_preview_date';
+	/** The document setting that holds `source`, `id`, `search` and `date`. */
+	const SETTING = 'refraction_preview_target';
 
 	/** @return array{kind: string, sub: string}|null */
 	public static function parse_source( $source ): ?array {
@@ -38,7 +35,7 @@ final class Preview_Target {
 	}
 
 	/** Source kinds a location may preview. */
-	private static function allowed_kinds( string $location ): array {
+	public static function allowed_kinds( string $location ): array {
 		switch ( $location ) {
 			case Location_Scope::SINGLE:
 				return [ 'post' ];
@@ -72,6 +69,24 @@ final class Preview_Target {
 		$parsed = self::parse_source( $source );
 
 		return $parsed && in_array( $parsed['kind'], self::allowed_kinds( $location ), true );
+	}
+
+	/**
+	 * Clean a target coming from the browser: a valid source for the location and plain values.
+	 *
+	 * @param mixed $raw
+	 * @return array{source: string, id: int, search: string, date: string}
+	 */
+	public static function sanitize( string $location, $raw ): array {
+		$raw = is_array( $raw ) ? $raw : [];
+		$source = isset( $raw['source'] ) && is_string( $raw['source'] ) ? strtolower( trim( $raw['source'] ) ) : '';
+
+		return [
+			'source' => self::is_valid_source( $location, $source ) ? $source : self::default_source( $location ),
+			'id' => max( 0, (int) ( $raw['id'] ?? 0 ) ),
+			'search' => substr( preg_replace( '/[\x00-\x1f<>]/', '', (string) ( $raw['search'] ?? '' ) ), 0, 100 ),
+			'date' => preg_match( '/^\d{4}(-\d{1,2})?$/', (string) ( $raw['date'] ?? '' ) ) ? (string) $raw['date'] : '',
+		];
 	}
 
 	/**
