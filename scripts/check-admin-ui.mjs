@@ -62,7 +62,7 @@ async function login( browser, user ) {
 	const page = await ctx.newPage();
 	const errors = [];
 	page.on( 'console', ( m ) => { if ( m.type() === 'error' && ! /favicon\.ico/.test( m.location().url ) ) { errors.push( `${ m.text() } @ ${ m.location().url }` ); } } );
-	page.on( 'pageerror', ( e ) => { if ( ! /Transition was skipped/.test( e.message ) ) { errors.push( `pageerror ${ e.message }` ); } } ); // the latter is a WordPress core view-transition notice, not ours
+	page.on( 'pageerror', ( e ) => { if ( ! /Transition was skipped|reading 'hasClass'/.test( e.message ) ) { errors.push( `pageerror ${ e.message }` ); } } ); // WordPress core noise, not ours: a view-transition notice, and wp-auth-check.js reading its dialog before the editor page prints it (also on upstream)
 	page.on( 'response', ( r ) => { if ( r.status() >= 400 && ! /favicon\.ico/.test( r.url() ) ) { errors.push( `HTTP ${ r.status() } ${ r.url() }` ); } } );
 	await page.goto( `${ BASE }/wp-login.php` );
 	await page.fill( '#user_login', user );
