@@ -659,7 +659,8 @@ async function main() {
 		if ( server ) { server.kill(); }
 	}
 
-	const log = logTail( logStart );
+	// wp-cli's own phar prints PHP deprecations of its bundled libraries into the same log: not ours.
+	const log = logTail( logStart ).split( '\n' ).filter( ( l ) => ! /phar:\/\//.test( l ) ).join( '\n' );
 	check( 'log', 'no PHP errors in the debug log', ! /PHP (Fatal|Warning|Notice|Deprecated|Parse)|Uncaught/.test( log ), log.slice( 0, 600 ) );
 	check( 'log', 'no JS console errors', consoleErrors.length === 0, consoleErrors.slice( 0, 5 ).join( ' || ' ) );
 
