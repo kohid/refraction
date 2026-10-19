@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Form_Definition {
 
 	const FIELD_TYPES = [ 'text', 'email', 'textarea', 'url', 'tel', 'number', 'select', 'radio', 'checkbox', 'acceptance', 'date', 'time', 'file', 'hidden', 'password', 'html', 'step', 'honeypot' ];
-	const ACTION_TYPES = [ 'collect', 'email', 'email2', 'redirect', 'webhook', 'discord', 'slack' ];
+	const ACTION_TYPES = [ 'collect', 'email', 'email2', 'redirect', 'webhook', 'discord', 'slack', 'popup_open', 'popup_close' ];
 	const NON_INPUT_TYPES = [ 'html', 'step' ];
 
 	private string $name;

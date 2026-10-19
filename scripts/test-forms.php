@@ -100,6 +100,8 @@ namespace Refraction\Tests\Forms {
 		[ 'action_type' => 'webhook', 'webhook_url' => 'https://example.com/h' ],
 	] ] )->get_actions();
 	t( 'definition: unknown actions dropped', 2 === count( $a ) && 'email' === $a[0]['type'] && 'webhook' === $a[1]['type'], $a );
+	$a = Form_Definition::from_settings( [ 'form_fields' => [], 'submit_actions' => [ [ 'action_type' => 'popup_open', 'popup_id' => '7' ], [ 'action_type' => 'popup_close' ] ] ] )->get_actions();
+	t( 'definition: popup actions are kept', 2 === count( $a ) && 'popup_open' === $a[0]['type'] && 'popup_close' === $a[1]['type'], $a );
 	t( 'definition: form key combines post and element id', 'f_12_abc' === Form_Definition::form_key( 12, 'abc' ) );
 
 	// ---------------------------------------------------------------- Validator
