@@ -8,7 +8,6 @@ import {
 	ConfirmDialog,
 	SearchFilters,
 	WidgetsTable,
-	PromotionWidgetsTable,
 } from './components';
 
 export const App = () => {
@@ -129,11 +128,6 @@ export const App = () => {
 						onSortingClicked={ onSortingClicked }
 					/>
 				</Box>
-
-				<PromotionWidgetsTable
-					widgets={ promotionWidgets }
-					promotionData={ promotionData }
-				/>
 			</Box>
 
 			<ConfirmDialog
