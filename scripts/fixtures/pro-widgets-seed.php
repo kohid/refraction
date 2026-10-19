@@ -182,6 +182,21 @@ $pages['animated-headline'] = rfw_page( 'RFW Animated Headline', [
 	rfw_widget( 'refraction-animated-headline', [ 'animation_type' => 'circle', 'highlighted_text' => 'round', 'loop' => 'yes', 'animation_delay' => 900 ], 'hl000005' ),
 ] );
 
+// -------------------------------------------------------------- countdown
+$future = gmdate( 'Y-m-d H:i', time() + 2 * 86400 + 3 * 3600 + 10 * 60 );
+$past = gmdate( 'Y-m-d H:i', time() - 3600 );
+$pages['countdown-redirect'] = rfw_page( 'RFW Countdown Redirect', [
+	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'evergreen', 'evergreen_days' => 0, 'evergreen_hours' => 0, 'evergreen_minutes' => 0, 'evergreen_seconds' => 3, 'evergreen_id' => 'redir', 'expire_action' => 'redirect', 'redirect_url' => [ 'url' => home_url( '/?cd=redirected' ) ] ], 'cd000003' ),
+] );
+$pages['countdown'] = rfw_page( 'RFW Countdown', [
+	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'due_date', 'due_date' => $future, 'expire_action' => 'none' ], 'cd000001' ),
+	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'evergreen', 'evergreen_days' => 0, 'evergreen_hours' => 0, 'evergreen_minutes' => 0, 'evergreen_seconds' => 5, 'evergreen_id' => 'e2e', 'expire_action' => 'message', 'expire_message' => 'Offer <b>over</b>' ], 'cd000002' ),
+	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'evergreen', 'evergreen_days' => 0, 'evergreen_hours' => 0, 'evergreen_minutes' => 0, 'evergreen_seconds' => 2, 'evergreen_id' => 'hide', 'expire_action' => 'hide' ], 'cd000004' ),
+	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'due_date', 'due_date' => $past, 'expire_action' => 'message', 'expire_message' => 'Already over' ], 'cd000005' ),
+	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'due_date', 'due_date' => $future, 'show_days' => '', 'show_seconds' => '', 'label_hours' => 'Hrs', 'expire_action' => 'none' ], 'cd000006' ),
+	rfw_widget( 'refraction-countdown', [ 'countdown_type' => 'due_date', 'due_date' => 'garbage', 'expire_action' => 'none' ], 'cd000007' ),
+] );
+
 // @@MORE_PAGES@@ (each widget task appends its page above this line)
 
 echo wp_json_encode( $pages );

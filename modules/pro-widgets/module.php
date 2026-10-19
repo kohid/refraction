@@ -29,6 +29,7 @@ class Module extends BaseModule {
 			'Flip_Box',
 			'Call_To_Action',
 			'Animated_Headline',
+			'Countdown',
 		];
 	}
 

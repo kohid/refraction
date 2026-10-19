@@ -487,6 +487,75 @@ SECTIONS[ 'animated-headline' ] = async ( { browser, admin, pages } ) => {
 	await r.ctx.close();
 };
 
+/* ------------------------------------------------------------------- countdown */
+SECTIONS.countdown = async ( { browser, admin, pages } ) => {
+	const k = 'countdown';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-countdown', 'Countdown' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'cd000006' ), settings: { label_hours: 'Stunden' } } ); } );
+	await sleep( 2500 );
+	const lab = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="cd000006"] .refraction-countdown__unit--hours .refraction-countdown__label' )?.textContent );
+	check( k, 'editing a label updates the preview', lab === 'Stunden', lab );
+	// Timers with a redirect or hide action must not act while editing.
+	check( k, 'hide action does not hide the timer inside the editor', await (async () => { await sleep( 3500 ); return frameOf( admin ).evaluate( () => getComputedStyle( document.querySelector( '[data-id="cd000004"] .refraction-countdown' ) ).display !== 'none' ); })() );
+	await openEditor( admin, pages[ 'countdown-redirect' ].id );
+	const frameUrl = frameOf( admin ).url();
+	await sleep( 5000 );
+	check( k, 'redirect action does not redirect inside the editor', frameOf( admin ).url() === frameUrl && ! /cd=redirected/.test( frameOf( admin ).url() ), frameOf( admin ).url() );
+
+	const v = await visitor( browser, rel( pages[ k ].url ) );
+	const p = v.page;
+	const a = p.locator( '[data-id="cd000001"]' );
+	const num = ( loc, unit ) => loc.locator( `.refraction-countdown__unit--${ unit } .refraction-countdown__digits` ).innerText();
+	check( k, 'due date: shows days and hours left (2 days, 3 hours)', ( await num( a, 'days' ) ) === '02' && ( await num( a, 'hours' ) ) === '03', `${ await num( a, 'days' ) }:${ await num( a, 'hours' ) }` );
+	check( k, 'is a timer with a label, four labelled units', ( await a.locator( '[role="timer"]' ).count() ) === 1 && ( await a.locator( '.refraction-countdown__label' ).allInnerTexts() ).join( ',' ) === 'Days,Hours,Minutes,Seconds' );
+	const s0 = parseInt( await num( a, 'seconds' ), 10 );
+	await sleep( 2300 );
+	const s1 = parseInt( await num( a, 'seconds' ), 10 );
+	check( k, 'it ticks every second', ( ( s0 - s1 + 60 ) % 60 ) >= 1 && ( ( s0 - s1 + 60 ) % 60 ) <= 3, `${ s0 } -> ${ s1 }` );
+
+	const b = p.locator( '[data-id="cd000002"]' );
+	const b0 = parseInt( await num( b, 'seconds' ), 10 );
+	check( k, 'evergreen starts at its configured time and stores a cookie', b0 <= 5 && b0 >= 3 && ( await v.ctx.cookies() ).some( ( c ) => c.name === 'rf_cd_e2e' ), `${ b0 }` );
+	await p.reload();
+	await sleep( 300 );
+	const b1 = parseInt( await num( p.locator( '[data-id="cd000002"]' ), 'seconds' ), 10 );
+	check( k, 'evergreen keeps counting after a reload (cookie), it does not restart', b1 < b0 || b1 <= 4, `${ b0 } -> ${ b1 }` );
+	await p.waitForFunction( () => document.querySelector( '[data-id="cd000002"] .refraction-countdown' )?.classList.contains( 'is-expired' ), null, { timeout: 9000 } ).catch( () => {} );
+	const m = p.locator( '[data-id="cd000002"] .refraction-countdown__message' );
+	check( k, 'expiry message shows (as text) and the digits go away', await m.isVisible() && ( await m.innerHTML() ) === 'Offer &lt;b&gt;over&lt;/b&gt;' && ! ( await p.locator( '[data-id="cd000002"] .refraction-countdown__units' ).isVisible() ) );
+	check( k, 'expired timers stay expired after a reload', await ( async () => { await p.reload(); await sleep( 600 ); return p.locator( '[data-id="cd000002"] .refraction-countdown__message' ).isVisible(); } )() );
+
+	check( k, 'hide action: the timer disappears when it ends', await ( async () => { await p.waitForFunction( () => getComputedStyle( document.querySelector( '[data-id="cd000004"] .refraction-countdown' ) ).display === 'none', null, { timeout: 8000 } ).catch( () => {} ); return ! ( await p.locator( '[data-id="cd000004"] .refraction-countdown' ).isVisible() ); } )() );
+
+	const past = p.locator( '[data-id="cd000005"]' );
+	check( k, 'a date in the past is already expired: message shown, zeros not shown', await past.locator( '.refraction-countdown__message' ).isVisible() && ( await past.locator( '.refraction-countdown__message' ).innerText() ) === 'Already over' );
+	const few = p.locator( '[data-id="cd000006"]' );
+	check( k, 'units can be switched off and relabelled (only hours and minutes, "Hrs")', ( await few.locator( '.refraction-countdown__unit' ).count() ) === 2 && ( await few.locator( '.refraction-countdown__label' ).first().innerText() ) === 'Hrs' );
+	const bad = p.locator( '[data-id="cd000007"]' );
+	check( k, 'an invalid date is handled: expired state and no script error', ( await bad.locator( '.refraction-countdown' ).count() ) === 1 );
+	await p.screenshot( { path: join( SHOTS, 'countdown.png' ), fullPage: true } );
+	await v.ctx.close();
+
+	// redirect action on its own page load
+	const r = await visitor( browser, rel( pages[ 'countdown-redirect' ].url ) );
+	await r.page.waitForURL( /cd=redirected/, { timeout: 12000 } ).catch( () => {} );
+	check( k, 'redirect action sends the visitor to the target when the timer ends', /cd=redirected/.test( r.page.url() ), r.page.url() );
+	await r.ctx.close();
+
+	// cookies blocked: the page must still work (timer from memory)
+	const nc = await browser.newContext( { viewport: { width: 1000, height: 800 } } );
+	await nc.addInitScript( () => { Object.defineProperty( document, 'cookie', { get: () => '', set: () => {} } ); Object.defineProperty( window, 'localStorage', { get: () => { throw new Error( 'blocked' ); } } ); } );
+	const np = await nc.newPage();
+	const errs = [];
+	np.on( 'pageerror', ( e ) => errs.push( e.message ) );
+	await np.goto( BASE + rel( pages[ k ].url ) );
+	await sleep( 1500 );
+	const nb = parseInt( await np.locator( '[data-id="cd000002"] .refraction-countdown__unit--seconds .refraction-countdown__digits' ).innerText(), 10 );
+	check( k, 'blocked cookies and storage: the evergreen timer still runs, no errors', errs.length === 0 && nb <= 5, errs.join( ';' ) + nb );
+	await nc.close();
+};
+
 /* ------------------------------------------------------------------- driver */
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }

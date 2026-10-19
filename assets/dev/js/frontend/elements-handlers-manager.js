@@ -39,6 +39,7 @@ module.exports = function( $ ) {
 	this.elementsHandlers[ 'refraction-slides.default' ] = () => import( /* webpackChunkName: 'pro-slides' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/slides' );
 	this.elementsHandlers[ 'refraction-flip-box.default' ] = () => import( /* webpackChunkName: 'pro-flip-box' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/flip-box' );
 	this.elementsHandlers[ 'refraction-animated-headline.default' ] = () => import( /* webpackChunkName: 'pro-animated-headline' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/animated-headline' );
+	this.elementsHandlers[ 'refraction-countdown.default' ] = () => import( /* webpackChunkName: 'pro-countdown' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/countdown' );
 
 	const addGlobalHandlers = () => refractionFrontend.hooks.addAction( 'frontend/element_ready/global', globalHandler );
 
