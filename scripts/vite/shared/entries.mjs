@@ -55,6 +55,7 @@ export const BASE_ENTRIES = {
 	'floating-elements-modal': 'assets/dev/js/admin/floating-elements/new-floating-elements.js',
 	'assets-manager': 'modules/assets-manager/assets/js/assets-manager.js',
 	'theme-builder-editor': 'modules/theme-builder/assets/js/editor.js',
+	'forms-frontend': 'modules/forms/assets/js/frontend.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 

@@ -1,0 +1,48 @@
+// Refraction > Submissions.
+.rf-admin {
+	max-width: 1200px;
+
+	.rf-admin__tabs {
+		margin: 12px 0 16px;
+	}
+
+	.rf-admin__filters {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		margin: 12px 0;
+	}
+
+	.rf-admin__unread td,
+	.rf-admin__unread th {
+		font-weight: 600;
+		background: #f0f6fc;
+	}
+
+	.rf-admin__single th {
+		width: 180px;
+	}
+
+	.rf-admin__values th {
+		width: 220px;
+		vertical-align: top;
+	}
+
+	.rf-admin__log-failed {
+		color: #b32d2e;
+		font-weight: 600;
+	}
+
+	.rf-admin__log-success {
+		color: #1d6b3f;
+	}
+
+	.rf-admin__single-actions {
+		margin-top: 18px;
+	}
+
+	.displaying-num {
+		margin-left: 12px;
+	}
+}
