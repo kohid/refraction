@@ -139,6 +139,9 @@ class Widget_Text_Editor extends Widget_Base {
 			[
 				'label' => '',
 				'type' => Controls_Manager::WYSIWYG,
+				'dynamic' => [
+					'active' => true,
+				],
 				'default' => '<p>' . esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'refraction' ) . '</p>',
 			]
 		);
@@ -348,6 +351,9 @@ class Widget_Text_Editor extends Widget_Base {
 				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
+				'dynamic' => [
+					'active' => true,
+				],
 				'selectors' => [
 					'{{WRAPPER}}' => 'color: {{VALUE}};',
 				],

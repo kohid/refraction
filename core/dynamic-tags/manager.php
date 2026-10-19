@@ -457,7 +457,7 @@ class Manager {
 		 *
 		 * @since 2.0.0
 		 */
-		do_action( 'refraction/dynamic_tags/before_render' );
+		do_action( 'refraction/dynamic_tags/before_render', (int) $data['post_id'] );
 
 		$tags_data = [];
 
@@ -468,9 +468,9 @@ class Manager {
 
 			$tag_settings = json_decode( urldecode( base64_decode( $tag_key_parts[1] ) ), true );
 
-			$tag = $this->create_tag( null, $tag_name, $tag_settings );
+			$tag = $this->create_tag( null, $tag_name, is_array( $tag_settings ) ? $tag_settings : [] );
 
-			$tags_data[ $tag_key ] = $tag->get_content();
+			$tags_data[ $tag_key ] = $tag ? $tag->get_content() : '';
 		}
 
 		/**
@@ -480,7 +480,7 @@ class Manager {
 		 *
 		 * @since 2.0.0
 		 */
-		do_action( 'refraction/dynamic_tags/after_render' );
+		do_action( 'refraction/dynamic_tags/after_render', (int) $data['post_id'] );
 
 		return $tags_data;
 	}

@@ -344,6 +344,9 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			[
 				'label' => esc_html__( 'Text Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
+				'dynamic' => [
+					'active' => true,
+				],
 				'global' => [
 					'default' => Global_Colors::COLOR_PRIMARY,
 				],
