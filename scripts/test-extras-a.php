@@ -38,5 +38,21 @@ t( 'selector keyword replaced several times', '.x{a:b}.x:hover{a:c}' === S::scop
 t( 'selector inside other words is kept', '.x .my-selector{a:b}' === S::scope( 'selector .my-selector{a:b}', '.x' ) );
 t( 'no selector keyword scopes nothing', 'a{color:red}' === S::scope( 'a{color:red}', '.x' ) );
 
+// ---------------------------------------------------------------- Custom Code snippet format
+require $root . '/modules/custom-code/classes/snippet-format.php';
+use Refraction\Modules\CustomCode\Classes\Snippet_Format as F;
+
+t( 'location whitelist', 'head' === F::location( 'head' ) && 'body_start' === F::location( 'body_start' ) && 'body_end' === F::location( 'body_end' ) && 'head' === F::location( 'evil' ) );
+t( 'type whitelist', 'js' === F::type( 'js' ) && 'css' === F::type( 'css' ) && 'html' === F::type( 'x' ) );
+t( 'priority is clamped', 10 === F::priority( 'abc' ) && 1 === F::priority( -5 ) && 999 === F::priority( 5000 ) && 20 === F::priority( '20' ) );
+t( 'html is printed as written', '<meta name="x">' === F::render( 'html', '<meta name="x">', 3 ) );
+t( 'css is wrapped in a style tag', '<style id="refraction-snippet-3">a{color:red}</style>' === F::render( 'css', 'a{color:red}', 3 ) );
+t( 'css can not close its style tag', 1 === substr_count( F::render( 'css', 'a{} </style><script>x()</script>', 4 ), '</style>' ) );
+t( 'js is wrapped in a script tag', '<script id="refraction-snippet-5">alert(1)</script>' === F::render( 'js', 'alert(1)', 5 ) );
+t( 'js can not close its script tag', 1 === substr_count( F::render( 'js', 'var a="</script><b>";', 6 ), '</script>' ) );
+t( 'empty code prints nothing', '' === F::render( 'js', "  \n", 7 ) );
+$list = [ [ 'id' => 9, 'priority' => 10 ], [ 'id' => 2, 'priority' => 20 ], [ 'id' => 5, 'priority' => 10 ], [ 'id' => 1, 'priority' => 5 ] ];
+t( 'snippets sort by priority then id', [ 1, 5, 9, 2 ] === array_column( F::sort( $list ), 'id' ) );
+
 echo "$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

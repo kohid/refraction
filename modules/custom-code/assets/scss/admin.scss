@@ -1,0 +1,304 @@
+// Refraction > Custom Code.
+.rcc-wrap {
+	--rcc-accent: var(--wp-admin-theme-color, #2271b1);
+	--rcc-line: #dcdcde;
+	--rcc-muted: #646970;
+	--rcc-include-bg: #eef6f1;
+	--rcc-include-ink: #1d5c3f;
+	--rcc-exclude-bg: #fbeeec;
+	--rcc-exclude-ink: #8a2a20;
+	--rcc-warn-bg: #fdf3dc;
+	--rcc-warn-ink: #6b4a00;
+
+	max-width: 1100px;
+
+	.rcc-intro {
+		max-width: 62ch;
+		margin: 12px 0 18px;
+		color: var(--rcc-muted);
+		font-size: 14px;
+		line-height: 1.55;
+	}
+
+	.rcc-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+		padding: 28px;
+		border: 1px dashed var(--rcc-line);
+		border-radius: 6px;
+		background: #fff;
+		color: var(--rcc-muted);
+
+		svg {
+			color: var(--rcc-accent);
+		}
+
+		p {
+			max-width: 52ch;
+			margin: 0;
+			font-size: 14px;
+		}
+	}
+
+	.rcc-type {
+		display: inline-block;
+		margin-left: 8px;
+		padding: 1px 7px;
+		border: 1px solid var(--rcc-line);
+		border-radius: 3px;
+		color: var(--rcc-muted);
+		font-size: 11px;
+		font-weight: 600;
+	}
+
+	.rcc-chip {
+		display: inline-block;
+		margin: 0 4px 4px 0;
+		padding: 2px 8px;
+		border-radius: 3px;
+		background: var(--rcc-include-bg);
+		color: var(--rcc-include-ink);
+		font-size: 12px;
+		line-height: 1.5;
+
+		&.is-exclude {
+			background: var(--rcc-exclude-bg);
+			color: var(--rcc-exclude-ink);
+		}
+
+		&.is-none {
+			background: var(--rcc-warn-bg);
+			color: var(--rcc-warn-ink);
+		}
+	}
+
+	.rcc-switch {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: var(--rcc-muted);
+		font-size: 13px;
+		text-decoration: none;
+
+		&:focus-visible {
+			outline: 2px solid var(--rcc-accent);
+			outline-offset: 2px;
+		}
+
+		.rcc-switch-knob {
+			position: relative;
+			width: 34px;
+			height: 18px;
+			border-radius: 9px;
+			background: #a7aaad;
+			transition: background 0.15s;
+
+			&::after {
+				content: "";
+				position: absolute;
+				top: 2px;
+				left: 2px;
+				width: 14px;
+				height: 14px;
+				border-radius: 50%;
+				background: #fff;
+				transition: transform 0.15s;
+			}
+		}
+
+		&.is-on {
+			color: var(--rcc-include-ink);
+
+			.rcc-switch-knob {
+				background: var(--rcc-accent);
+
+				&::after {
+					transform: translateX(16px);
+				}
+			}
+		}
+	}
+
+	.rcc-form {
+		display: grid;
+		gap: 18px;
+		max-width: 860px;
+		margin-top: 16px;
+	}
+
+	.rcc-field {
+		display: grid;
+		gap: 6px;
+		font-size: 13px;
+
+		> span {
+			font-weight: 600;
+		}
+
+		small {
+			color: var(--rcc-muted);
+		}
+
+		input[type="text"] {
+			width: 100%;
+		}
+	}
+
+	.rcc-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 18px;
+	}
+
+	.rcc-priority input {
+		width: 90px;
+	}
+
+	.rcc-check {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 14px;
+	}
+
+	.CodeMirror {
+		height: 340px;
+		border: 1px solid var(--rcc-line);
+		border-radius: 4px;
+	}
+
+	.rcc-cond {
+		display: grid;
+		gap: 10px;
+	}
+
+	.rcc-cond__none {
+		margin: 0;
+		padding: 8px 12px;
+		border-radius: 4px;
+		background: var(--rcc-warn-bg);
+		color: var(--rcc-warn-ink);
+	}
+
+	.rcc-cond__row {
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		align-items: center;
+		padding: 10px 40px 10px 12px;
+		border: 1px solid var(--rcc-line);
+		border-left: 4px solid var(--rcc-include-ink);
+		border-radius: 4px;
+		background: #fff;
+
+		&.is-exclude {
+			border-left-color: var(--rcc-exclude-ink);
+		}
+	}
+
+	.rcc-cond__verb {
+		display: inline-flex;
+
+		button {
+			padding: 3px 10px;
+			border: 1px solid var(--rcc-line);
+			background: #f6f7f7;
+			color: #3c434a;
+			cursor: pointer;
+
+			&:first-child {
+				border-radius: 3px 0 0 3px;
+			}
+
+			&:last-child {
+				border-radius: 0 3px 3px 0;
+				border-left: 0;
+			}
+
+			&.is-on.is-include {
+				background: var(--rcc-include-bg);
+				color: var(--rcc-include-ink);
+				font-weight: 600;
+			}
+
+			&.is-on.is-exclude {
+				background: var(--rcc-exclude-bg);
+				color: var(--rcc-exclude-ink);
+				font-weight: 600;
+			}
+		}
+	}
+
+	.rcc-cond__remove {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 26px;
+		height: 26px;
+		border: 0;
+		background: none;
+		color: var(--rcc-muted);
+		font-size: 18px;
+		cursor: pointer;
+	}
+
+	.rcc-cond__target {
+		position: relative;
+		min-width: 220px;
+	}
+
+	.rcc-cond__picked {
+		display: inline-flex;
+		gap: 6px;
+		padding: 3px 8px;
+		border-radius: 3px;
+		background: #f0f0f1;
+
+		button {
+			border: 0;
+			background: none;
+			cursor: pointer;
+		}
+	}
+
+	.rcc-cond__results {
+		position: absolute;
+		z-index: 5;
+		top: 100%;
+		left: 0;
+		right: 0;
+		max-height: 220px;
+		margin: 2px 0 0;
+		overflow: auto;
+		border: 1px solid var(--rcc-line);
+		background: #fff;
+		box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
+
+		li {
+			margin: 0;
+		}
+
+		li button {
+			display: flex;
+			justify-content: space-between;
+			width: 100%;
+			padding: 6px 10px;
+			border: 0;
+			background: none;
+			text-align: left;
+			cursor: pointer;
+
+			&:hover {
+				background: #f0f6fc;
+			}
+		}
+
+		.is-empty {
+			padding: 6px 10px;
+			color: var(--rcc-muted);
+		}
+	}
+}

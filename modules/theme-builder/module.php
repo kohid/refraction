@@ -237,7 +237,8 @@ class Module extends BaseModule {
 		wp_localize_script( 'refraction-theme-builder-editor', 'refractionThemeBuilder', $this->get_editor_config() );
 	}
 
-	private function get_editor_config(): array {
+	/** The rule groups and lookup endpoint, for any screen that edits display rules (editor control, Custom Code). */
+	public function get_conditions_config(): array {
 		$groups = [];
 		$manager = $this->get_conditions_manager();
 
@@ -255,12 +256,17 @@ class Module extends BaseModule {
 		return [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'action' => Conditions_Ajax::ACTION,
-			'previewLookupAction' => Conditions_Ajax::PREVIEW_ACTION,
-			'previewApplyAction' => Preview_Ajax::ACTION,
-			'postId' => (int) Plugin::$instance->editor->get_post_id(),
 			'nonce' => wp_create_nonce( Conditions_Ajax::NONCE ),
 			'canEdit' => current_user_can( 'manage_options' ),
 			'conditions' => $groups,
 		];
+	}
+
+	private function get_editor_config(): array {
+		return array_merge( $this->get_conditions_config(), [
+			'previewLookupAction' => Conditions_Ajax::PREVIEW_ACTION,
+			'previewApplyAction' => Preview_Ajax::ACTION,
+			'postId' => (int) Plugin::$instance->editor->get_post_id(),
+		] );
 	}
 }
