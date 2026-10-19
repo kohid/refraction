@@ -20,10 +20,7 @@ module.exports = Marionette.Behavior.extend( {
 			return false;
 		}
 
-		const isFeatureAvailableToUser = refraction.helpers.hasPro() && ! refraction.helpers.hasProAndNotConnected(),
-			hasTags = this.getOption( 'tags' ).length > 0;
-
-		return ! isFeatureAvailableToUser || hasTags;
+		return this.getOption( 'tags' ).length > 0;
 	},
 
 	renderTools() {
@@ -108,15 +105,6 @@ module.exports = Marionette.Behavior.extend( {
 				$tagsListInner.append( $tag );
 			} );
 		} );
-
-		// Create and inject pro dynamic teaser template if Pro is not installed
-		if ( ! refraction.helpers.hasPro() && Object.keys( tags ).length ) {
-			const proTeaser = Marionette.Renderer.render( '#tmpl-refraction-dynamic-tags-promo', {
-				promotionUrl: refraction.config.dynamicPromotionURL.replace( '%s', this.view.model.get( 'name' ) ),
-			} );
-
-			$tagsListInner.append( proTeaser );
-		}
 
 		$tagsListInner.on( 'click', '.refraction-tags-list__item', this.onTagsListItemClick.bind( this ) );
 
@@ -207,31 +195,6 @@ module.exports = Marionette.Behavior.extend( {
 		}
 	},
 
-	showPromotion() {
-		const hasProAndNotConnected = refraction.helpers.hasProAndNotConnected(),
-			dialogOptions = {
-				title: __( 'Dynamic Content', 'refraction' ),
-				content: __(
-					'Create more personalized and dynamic sites by populating data from various sources with dozens of dynamic tags to choose from.',
-					'refraction',
-				),
-				targetElement: this.ui.dynamicSwitcher,
-				position: {
-					blockStart: '-10',
-				},
-				actionButton: {
-					url: hasProAndNotConnected
-						? refractionProEditorConfig.urls.connect
-						: refraction.config.dynamicPromotionURL.replace( '%s', this.view.model.get( 'name' ) ),
-					text: hasProAndNotConnected
-						? __( 'Connect & Activate', 'refraction' )
-						: __( 'Upgrade', 'refraction' ),
-				},
-			};
-
-		refraction.promotion.showDialog( dialogOptions );
-	},
-
 	onRender() {
 		this.$el.addClass( 'refraction-control-dynamic' );
 
@@ -247,11 +210,7 @@ module.exports = Marionette.Behavior.extend( {
 	onDynamicSwitcherClick( event ) {
 		event.stopPropagation();
 
-		if ( this.getOption( 'tags' ).length ) {
-			this.toggleTagsList();
-		} else {
-			this.showPromotion();
-		}
+		this.toggleTagsList();
 	},
 
 	onTagsListItemClick( event ) {

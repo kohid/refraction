@@ -75,6 +75,13 @@ class Module extends BaseModule {
 	 */
 	const SVG_CATEGORY = 'svg';
 
+	const POST_GROUP = 'post';
+	const SITE_GROUP = 'site';
+	const ARCHIVE_GROUP = 'archive';
+	const AUTHOR_GROUP = 'author';
+	const ACTION_GROUP = 'action';
+	const ACF_GROUP = 'acf';
+
 	/**
 	 * Dynamic tags module constructor.
 	 *
@@ -114,7 +121,58 @@ class Module extends BaseModule {
 	 * @return array Tag dynamic tag classes names.
 	 */
 	public function get_tag_classes_names() {
-		return [];
+		$tags = [
+			// Post.
+			'Post_Title',
+			'Post_Excerpt',
+			'Post_Content',
+			'Post_Date',
+			'Post_Modified_Date',
+			'Post_Time',
+			'Post_Featured_Image',
+			'Post_Url',
+			'Post_Id',
+			'Post_Terms',
+			'Post_Comments',
+			'Post_Custom_Field',
+			'Post_Custom_Field_Url',
+			'Post_Custom_Field_Color',
+			'Post_Custom_Field_Image',
+			'Post_Custom_Field_Gallery',
+			// Author.
+			'Author_Name',
+			'Author_Bio',
+			'Author_Avatar',
+			'Author_Meta',
+			'Author_Url',
+			// Site.
+			'Site_Title',
+			'Site_Tagline',
+			'Site_Url',
+			'Site_Logo',
+			'Current_Date_Time',
+			'Request_Parameter',
+			'Shortcode',
+			'Page_Title',
+			'User_Info',
+			// Archive.
+			'Archive_Title',
+			'Archive_Description',
+			'Archive_Url',
+			'Archive_Meta',
+			// Actions and URLs.
+			'Contact_Url',
+			'Internal_Url',
+			'Lightbox',
+			'Popup',
+		];
+
+		// Advanced Custom Fields is optional: its tags exist only while the plugin is active.
+		if ( function_exists( 'get_field' ) ) {
+			$tags = array_merge( $tags, [ 'Acf_Text', 'Acf_Number', 'Acf_Url', 'Acf_Image', 'Acf_Gallery', 'Acf_Color', 'Acf_Date' ] );
+		}
+
+		return $tags;
 	}
 
 	/**
@@ -130,7 +188,25 @@ class Module extends BaseModule {
 	public function get_groups() {
 		return [
 			self::BASE_GROUP => [
-				'title' => 'Base Tags',
+				'title' => esc_html__( 'Base Tags', 'refraction' ),
+			],
+			self::POST_GROUP => [
+				'title' => esc_html__( 'Post', 'refraction' ),
+			],
+			self::AUTHOR_GROUP => [
+				'title' => esc_html__( 'Author', 'refraction' ),
+			],
+			self::ARCHIVE_GROUP => [
+				'title' => esc_html__( 'Archive', 'refraction' ),
+			],
+			self::SITE_GROUP => [
+				'title' => esc_html__( 'Site', 'refraction' ),
+			],
+			self::ACTION_GROUP => [
+				'title' => esc_html__( 'Actions and URLs', 'refraction' ),
+			],
+			self::ACF_GROUP => [
+				'title' => esc_html__( 'Advanced Custom Fields', 'refraction' ),
 			],
 		];
 	}

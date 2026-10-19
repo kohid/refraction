@@ -2558,7 +2558,7 @@ abstract class Controls_Stack extends Base_Object {
 
 			$tag_text_data = Plugin::$instance->dynamic_tags->tag_text_to_tag_data( $value_to_check );
 
-			if ( ! Plugin::$instance->dynamic_tags->get_tag_info( $tag_text_data['name'] ) ) {
+			if ( ! $tag_text_data || ! Plugin::$instance->dynamic_tags->get_tag_info( $tag_text_data['name'] ) ) {
 				unset( $settings[ Manager::DYNAMIC_SETTING_KEY ][ $control['name'] ] );
 			}
 		}
