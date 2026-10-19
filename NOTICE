@@ -14,3 +14,7 @@ Refraction is not affiliated with, endorsed by, or sponsored by Elementor Ltd.
 state where the code comes from, and in code that has not been renamed yet.
 
 Third-party libraries bundled in this plugin keep their own licenses.
+
+Lottie player: lottie-web 5.13.0 (light SVG build), (c) 2015 Bodymovin, MIT
+license (compatible with the GPL), bundled unmodified in assets/lib/lottie/ with its
+license text. It is loaded only on pages that contain a Lottie widget.

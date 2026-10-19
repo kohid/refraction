@@ -1,0 +1,24 @@
+//
+// Facebook widgets (Button, Comments, Embed, Page)
+//
+
+.refraction-facebook {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+.refraction-facebook__frame {
+	display: block;
+	max-width: 100%;
+	border: 0;
+	overflow: hidden;
+}
+
+.refraction-facebook__frame--fluid {
+	width: 100%;
+}
+
+.refraction-facebook__frame--button {
+	display: inline-block;
+	vertical-align: top;
+}

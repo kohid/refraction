@@ -1,0 +1,120 @@
+//
+// Reviews
+//
+
+.refraction-reviews--grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 20px;
+}
+
+.refraction-review {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 20px;
+	border: 1px solid #e4e7ec;
+	border-radius: 10px;
+	background: #fff;
+	color: #1d2939;
+}
+
+.refraction-pc .refraction-review {
+	height: auto;
+}
+
+.refraction-review__top {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.refraction-review__avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.refraction-review__who {
+	display: flex;
+	flex-direction: column;
+}
+
+.refraction-review__name {
+	font-weight: 700;
+}
+
+.refraction-review__meta {
+	font-size: 0.85rem;
+	opacity: 0.7;
+}
+
+.refraction-review__rating {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.refraction-review__number {
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.refraction-review__content {
+	margin: 0;
+	line-height: 1.55;
+}
+
+.refraction-stars {
+	--refraction-star-color: #f5a623;
+	--refraction-star-empty: #d0d5dd;
+	display: inline-flex;
+	gap: 2px;
+	font-size: 18px;
+	line-height: 1;
+}
+
+.refraction-star {
+	position: relative;
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+}
+
+.refraction-star__base,
+.refraction-star__fill {
+	position: absolute;
+	inset: 0;
+	display: block;
+}
+
+.refraction-star__base {
+	color: var(--refraction-star-empty);
+}
+
+.refraction-star__fill {
+	overflow: hidden;
+	color: var(--refraction-star-color);
+}
+
+.refraction-star--half .refraction-star__fill {
+	width: 50%;
+}
+
+[dir="rtl"] .refraction-star--half .refraction-star__fill {
+	inset-inline-start: auto;
+	inset-inline-end: 0;
+}
+
+.refraction-star__fill svg,
+.refraction-star__base svg {
+	display: block;
+	width: 1em;
+	height: 1em;
+}
+
+.refraction-pc .refraction-review {
+	margin: 0;
+}

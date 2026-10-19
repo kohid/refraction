@@ -15,7 +15,7 @@ if ( ! function_exists( 'esc_url_raw' ) ) {
 }
 
 $root = dirname( __DIR__ ) . '/modules/pro-widgets/classes/';
-foreach ( [ 'review-logic', 'code-tokenizer', 'video-url', 'facebook-url' ] as $file ) {
+foreach ( [ 'review-logic', 'code-tokenizer', 'video-url', 'facebook-url', 'lottie-json' ] as $file ) {
 	if ( ! file_exists( $root . $file . '.php' ) ) {
 		echo "MISSING class file: $file.php\n";
 		exit( 1 );
@@ -27,6 +27,7 @@ use Refraction\Modules\ProWidgets\Classes\Review_Logic;
 use Refraction\Modules\ProWidgets\Classes\Code_Tokenizer;
 use Refraction\Modules\ProWidgets\Classes\Video_Url;
 use Refraction\Modules\ProWidgets\Classes\Facebook_Url;
+use Refraction\Modules\ProWidgets\Classes\Lottie_Json;
 
 $failures = 0;
 $total = 0;
@@ -102,6 +103,19 @@ t( 'lines: CRLF is normalised', Code_Tokenizer::lines( "a\r\nb", 'js' ), [ 'a', 
 t( 'lines: ranges parse', Code_Tokenizer::parse_line_ranges( '2, 4-6,x,9-8,0' ), [ 2, 4, 5, 6 ] );
 t( 'lines: ranges are capped', count( Code_Tokenizer::parse_line_ranges( '1-100000' ) ), 2000 );
 t( 'video: youtube embed with api for the playlist', Video_Url::embed_src( [ 'provider' => 'youtube', 'id' => 'dQw4w9WgXcQ' ], [ 'autoplay' => true, 'api' => true ] ), 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&playsinline=1&enablejsapi=1' );
+
+
+// ------------------------------------------------------------------- Lottie_Json
+$anim = '{"v":"5.7.0","fr":30,"ip":0,"op":60,"w":100,"h":100,"nm":"x","layers":[]}';
+t( 'lottie: a real animation header is valid', Lottie_Json::is_valid( $anim ), true );
+t( 'lottie: plain JSON that is not an animation is rejected', Lottie_Json::is_valid( '{"a":1}' ), false );
+t( 'lottie: broken JSON is rejected', Lottie_Json::is_valid( '{"v":' ), false );
+t( 'lottie: a JSON array is rejected', Lottie_Json::is_valid( '[1,2]' ), false );
+t( 'lottie: empty string is rejected', Lottie_Json::is_valid( '' ), false );
+t( 'lottie: layers must be a list', Lottie_Json::is_valid( '{"v":"5","fr":30,"w":1,"h":1,"layers":"x"}' ), false );
+t( 'lottie: an oversized file is rejected', Lottie_Json::is_valid( $anim, 10 ), false );
+t( 'lottie: frame rate must be a positive number', Lottie_Json::is_valid( '{"v":"5","fr":0,"w":1,"h":1,"layers":[]}' ), false );
+t( 'lottie: url scheme check accepts http(s) only', array_map( [ Lottie_Json::class, 'is_safe_url' ], [ 'https://a.test/x.json', 'http://a.test/x.json', '/wp-content/x.json', 'javascript:alert(1)', 'data:text/json,{}', '' ] ), [ true, true, true, false, false, false ] );
 
 // -------------------------------------------------------------------- Video_Url
 t( 'video: youtube watch', Video_Url::parse( 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=10s' ), [ 'provider' => 'youtube', 'id' => 'dQw4w9WgXcQ' ] );

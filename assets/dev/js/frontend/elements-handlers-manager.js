@@ -43,6 +43,14 @@ module.exports = function( $ ) {
 	this.elementsHandlers[ 'refraction-share-buttons.default' ] = () => import( /* webpackChunkName: 'pro-share-buttons' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/share-buttons' );
 	this.elementsHandlers[ 'refraction-progress-tracker.default' ] = () => import( /* webpackChunkName: 'pro-progress-tracker' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/progress-tracker' );
 	this.elementsHandlers[ 'refraction-table-of-contents.default' ] = () => import( /* webpackChunkName: 'pro-table-of-contents' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/table-of-contents' );
+	this.elementsHandlers[ 'refraction-media-carousel.default' ] = () => import( /* webpackChunkName: 'pro-carousel' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/pro-carousel' );
+	this.elementsHandlers[ 'refraction-testimonial-carousel.default' ] = () => import( /* webpackChunkName: 'pro-carousel' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/pro-carousel' );
+	this.elementsHandlers[ 'refraction-reviews.default' ] = () => import( /* webpackChunkName: 'pro-carousel' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/pro-carousel' );
+	this.elementsHandlers[ 'refraction-hotspot.default' ] = () => import( /* webpackChunkName: 'pro-hotspot' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/hotspot' );
+	this.elementsHandlers[ 'refraction-code-highlight.default' ] = () => import( /* webpackChunkName: 'pro-code-highlight' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/code-highlight' );
+	this.elementsHandlers[ 'refraction-lottie.default' ] = () => import( /* webpackChunkName: 'pro-lottie' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/lottie' );
+	this.elementsHandlers[ 'refraction-video-playlist.default' ] = () => import( /* webpackChunkName: 'pro-video-playlist' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/video-playlist' );
+	this.elementsHandlers[ 'refraction-gallery.default' ] = () => import( /* webpackChunkName: 'pro-gallery' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/gallery' );
 
 	const addGlobalHandlers = () => refractionFrontend.hooks.addAction( 'frontend/element_ready/global', globalHandler );
 
