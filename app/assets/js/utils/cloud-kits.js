@@ -1,21 +1,16 @@
 /**
- * Fetch cloud kits availability from WordPress backend
+ * Cloud kits were removed together with Refraction's remote services, so there is nothing to ask the backend:
+ * the cloud kit library is never available and has no quota. The functions keep their shape for the callers that remain.
  *
- * @return {Promise<boolean>} Whether cloud kits should be available
+ * @return {Promise<{is_eligible: boolean}>} Cloud kits are never eligible.
  */
 export async function fetchCloudKitsEligibility() {
-	const response = await $e.data.get( 'cloud-kits/eligibility', {}, { refresh: true } );
-
-	return response?.data;
+	return { is_eligible: false };
 }
 
 /**
- * Fetch cloud kits quota from WordPress backend
- *
- * @return {Promise<Object>} Quota data including storage information
+ * @return {Promise<Object>} Empty quota data.
  */
 export async function fetchCloudKitsQuota() {
-	const response = await $e.data.get( 'cloud-kits/quota', {}, { refresh: true } );
-
-	return response?.data;
+	return {};
 }

@@ -258,6 +258,10 @@ class App extends BaseApp {
 
 		$config = [
 			'version' => REFRACTION_VERSION,
+			// There is no account/cloud connection; the import/export app still reads this key.
+			'library_connect' => [
+				'is_connected' => false,
+			],
 			'isRTL' => is_rtl(),
 			'isDebug' => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
 			'isRefractionDebug' => Utils::is_refraction_debug(),

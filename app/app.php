@@ -255,6 +255,22 @@ class App extends BaseApp {
 		] );
 	}
 
+	public function register_hidden_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// 'options.php' has no sidebar entry, so the page is reachable but not listed.
+		add_submenu_page(
+			'options.php',
+			esc_html__( 'Website Templates', 'refraction' ),
+			'',
+			'manage_options',
+			self::PAGE_ID,
+			'__return_null'
+		);
+	}
+
 	public function __construct() {
 		$this->register_import_export_customization_experiment();
 
@@ -265,6 +281,10 @@ class App extends BaseApp {
 				$this->add_component( 'import-export-customization', new ImportExportCustomizationModule() );
 			}
 		}
+
+		// The app page has no menu entry (Tools > Website Templates links to it), but WordPress only lets users open
+		// admin.php?page=... for registered pages. The upstream registered it through the removed Theme Builder menu item.
+		add_action( 'admin_menu', [ $this, 'register_hidden_page' ] );
 
 		if ( $this->is_current() ) {
 			add_action( 'admin_init', [ $this, 'admin_init' ], 0 );
