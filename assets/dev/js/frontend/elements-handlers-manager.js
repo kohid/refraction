@@ -36,6 +36,7 @@ module.exports = function( $ ) {
 
 	// Nested widgets (Off-Canvas, Mega Menu, Nested Carousel).
 	this.elementsHandlers[ 'refraction-off-canvas.default' ] = () => import( /* webpackChunkName: 'off-canvas' */ 'refraction/modules/off-canvas/assets/js/frontend/handlers/off-canvas' );
+	this.elementsHandlers[ 'refraction-mega-menu.default' ] = () => import( /* webpackChunkName: 'mega-menu' */ 'refraction/modules/mega-menu/assets/js/frontend/handlers/mega-menu' );
 
 	// Pro widgets (Advanced category).
 	this.elementsHandlers[ 'refraction-nav-menu.default' ] = () => import( /* webpackChunkName: 'pro-nav-menu' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/nav-menu' );

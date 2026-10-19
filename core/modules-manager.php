@@ -124,6 +124,7 @@ class Modules_Manager {
 			'assets-manager',
 			'theme-builder',
 			'off-canvas',
+			'mega-menu',
 			'loop-builder',
 			'forms',
 			'pro-widgets',
