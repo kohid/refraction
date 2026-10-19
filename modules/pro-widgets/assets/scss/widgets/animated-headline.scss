@@ -1,0 +1,404 @@
+//
+// Animated Headline
+//
+
+.refraction-headline {
+	--refraction-hl-dur: 500ms;
+	--refraction-hl-shape: #e11d48;
+	--refraction-hl-width: 3px;
+	margin: 0;
+}
+
+.refraction-headline__dynamic {
+	position: relative;
+	display: inline-block;
+	text-align: start;
+	vertical-align: baseline;
+}
+
+.refraction-headline__word {
+	display: none;
+	white-space: nowrap;
+
+	&.is-active {
+		display: inline-block;
+	}
+}
+
+.refraction-headline__sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.refraction-headline__letter {
+	display: inline-block;
+	white-space: pre;
+}
+
+// ---- Word-level in/out animations ---------------------------------------
+.refraction-headline--type-flip .refraction-headline__dynamic {
+	perspective: 600px;
+}
+
+@keyframes refraction-hl-flip-in {
+
+	from {
+		opacity: 0;
+		transform: rotateX(-90deg);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes refraction-hl-flip-out {
+
+	from {
+		opacity: 1;
+		transform: none;
+	}
+
+	to {
+		opacity: 0;
+		transform: rotateX(90deg);
+	}
+}
+
+@keyframes refraction-hl-slide-in {
+
+	from {
+		opacity: 0;
+		transform: translateY(60%);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes refraction-hl-slide-out {
+
+	from {
+		opacity: 1;
+		transform: none;
+	}
+
+	to {
+		opacity: 0;
+		transform: translateY(-60%);
+	}
+}
+
+@keyframes refraction-hl-slide-down-in {
+
+	from {
+		opacity: 0;
+		transform: translateY(-60%);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes refraction-hl-slide-down-out {
+
+	from {
+		opacity: 1;
+		transform: none;
+	}
+
+	to {
+		opacity: 0;
+		transform: translateY(60%);
+	}
+}
+
+@keyframes refraction-hl-fade-in {
+
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes refraction-hl-fade-out {
+
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes refraction-hl-clip-in {
+
+	from {
+		clip-path: inset(0 100% 0 0);
+	}
+
+	to {
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+@keyframes refraction-hl-clip-out {
+
+	from {
+		clip-path: inset(0 0 0 0);
+	}
+
+	to {
+		clip-path: inset(0 0 0 100%);
+	}
+}
+
+// ---- Letter-level animations ---------------------------------------------
+@keyframes refraction-hl-swirl-in {
+
+	from {
+		opacity: 0;
+		transform: rotate(-180deg) scale(0);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes refraction-hl-swirl-out {
+
+	from {
+		opacity: 1;
+		transform: none;
+	}
+
+	to {
+		opacity: 0;
+		transform: rotate(180deg) scale(0);
+	}
+}
+
+@keyframes refraction-hl-blinds-in {
+
+	from {
+		opacity: 0;
+		transform: rotateY(90deg);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes refraction-hl-blinds-out {
+
+	from {
+		opacity: 1;
+		transform: none;
+	}
+
+	to {
+		opacity: 0;
+		transform: rotateY(-90deg);
+	}
+}
+
+@keyframes refraction-hl-drop-in-in {
+
+	from {
+		opacity: 0;
+		transform: translateY(-1.2em);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes refraction-hl-drop-in-out {
+
+	from {
+		opacity: 1;
+		transform: none;
+	}
+
+	to {
+		opacity: 0;
+		transform: translateY(1.2em);
+	}
+}
+
+@keyframes refraction-hl-wave-in {
+
+	0% {
+		opacity: 0;
+		transform: translateY(0.5em);
+	}
+
+	60% {
+		opacity: 1;
+		transform: translateY(-0.25em);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+@keyframes refraction-hl-wave-out {
+
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+		transform: translateY(0.4em);
+	}
+}
+
+@mixin refraction-hl-word-animation($name) {
+
+	.refraction-headline--type-#{$name} .refraction-headline__word.is-active {
+		animation: refraction-hl-#{$name}-in var(--refraction-hl-dur) ease both;
+	}
+
+	.refraction-headline--type-#{$name} .refraction-headline__word.is-leaving {
+		animation: refraction-hl-#{$name}-out var(--refraction-hl-dur) ease both;
+	}
+}
+
+@mixin refraction-hl-letter-animation($name) {
+
+	.refraction-headline--type-#{$name} .refraction-headline__word.is-active .refraction-headline__letter {
+		animation: refraction-hl-#{$name}-in var(--refraction-hl-dur) ease both;
+		animation-delay: calc(var(--i, 0) * 45ms);
+	}
+
+	.refraction-headline--type-#{$name} .refraction-headline__word.is-leaving .refraction-headline__letter {
+		animation: refraction-hl-#{$name}-out var(--refraction-hl-dur) ease both;
+		animation-delay: calc(var(--i, 0) * 25ms);
+	}
+}
+
+@include refraction-hl-word-animation(flip);
+@include refraction-hl-word-animation(slide);
+@include refraction-hl-word-animation(slide-down);
+@include refraction-hl-word-animation(fade);
+@include refraction-hl-word-animation(clip);
+@include refraction-hl-letter-animation(swirl);
+@include refraction-hl-letter-animation(blinds);
+@include refraction-hl-letter-animation(drop-in);
+@include refraction-hl-letter-animation(wave);
+
+// The first phrase is already there when the page loads, so it must not play the in-animation.
+.refraction-headline:not(.is-running) .refraction-headline__word,
+.refraction-headline:not(.is-running) .refraction-headline__letter {
+	animation: none !important;
+}
+
+// ---- Typing ----------------------------------------------------------------
+.refraction-headline--type-typing .refraction-headline__word.is-active::after {
+	content: "";
+	display: inline-block;
+	width: 0.08em;
+	height: 1em;
+	margin-inline-start: 0.08em;
+	background: var(--refraction-hl-shape);
+	vertical-align: text-bottom;
+	animation: refraction-hl-blink 0.9s steps(1) infinite;
+}
+
+@keyframes refraction-hl-blink {
+
+	50% {
+		opacity: 0;
+	}
+}
+
+// ---- Highlight shapes -------------------------------------------------------
+.refraction-headline--type-highlight .refraction-headline__dynamic {
+	padding: 0 0.15em;
+	background: linear-gradient(var(--refraction-hl-shape), var(--refraction-hl-shape)) no-repeat left center / 0 100%;
+	color: inherit;
+	transition: background-size var(--refraction-hl-dur) ease;
+}
+
+.refraction-headline--type-highlight.is-drawn .refraction-headline__dynamic {
+	background-size: 100% 100%;
+}
+
+.refraction-headline--type-underline .refraction-headline__dynamic::after,
+.refraction-headline--type-strikethrough .refraction-headline__dynamic::after {
+	content: "";
+	position: absolute;
+	right: 0;
+	left: 0;
+	height: var(--refraction-hl-width);
+	background: var(--refraction-hl-shape);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform var(--refraction-hl-dur) ease;
+}
+
+.refraction-headline--type-underline .refraction-headline__dynamic::after {
+	bottom: -0.1em;
+}
+
+.refraction-headline--type-strikethrough .refraction-headline__dynamic::after {
+	top: 52%;
+}
+
+.refraction-headline--type-underline.is-drawn .refraction-headline__dynamic::after,
+.refraction-headline--type-strikethrough.is-drawn .refraction-headline__dynamic::after {
+	transform: none;
+}
+
+.refraction-headline--type-circle .refraction-headline__dynamic {
+	padding: 0.1em 0.45em;
+}
+
+.refraction-headline--type-circle .refraction-headline__dynamic::after {
+	content: "";
+	position: absolute;
+	inset: -0.05em -0.1em;
+	border: var(--refraction-hl-width) solid var(--refraction-hl-shape);
+	border-radius: 50%;
+	clip-path: inset(0 100% 0 0);
+	transition: clip-path var(--refraction-hl-dur) ease;
+	pointer-events: none;
+}
+
+.refraction-headline--type-circle.is-drawn .refraction-headline__dynamic::after {
+	clip-path: inset(-10% -10% -10% -10%);
+}
+
+// Reduced motion: nothing moves; shapes are drawn at once.
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-headline *,
+	.refraction-headline *::after {
+		animation: none !important;
+		transition: none !important;
+	}
+}

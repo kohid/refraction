@@ -173,6 +173,15 @@ $pages['call-to-action'] = rfw_page( 'RFW Call To Action', [
 	rfw_widget( 'refraction-call-to-action', [ 'title' => 'No button', 'description' => '', 'btn_text' => '', 'title_tag' => 'h4' ], 'cta00003' ),
 ] );
 
+// -------------------------------------------------------- animated headline
+$pages['animated-headline'] = rfw_page( 'RFW Animated Headline', [
+	rfw_widget( 'refraction-animated-headline', [ 'animation_type' => 'flip', 'before_text' => 'We build <b>x</b>', 'rotating_text' => "fast\nsimple\nreliable", 'after_text' => 'websites', 'animation_delay' => 700, 'header_tag' => 'h2' ], 'hl000001' ),
+	rfw_widget( 'refraction-animated-headline', [ 'animation_type' => 'typing', 'before_text' => 'Type', 'rotating_text' => "alpha\nbeta", 'typing_speed' => 40, 'animation_delay' => 400 ], 'hl000002' ),
+	rfw_widget( 'refraction-animated-headline', [ 'animation_type' => 'highlight', 'before_text' => 'This is', 'highlighted_text' => 'amazing', 'after_text' => 'stuff', 'loop' => '' ], 'hl000003' ),
+	rfw_widget( 'refraction-animated-headline', [ 'animation_type' => 'swirl', 'rotating_text' => "one\ntwo", 'animation_delay' => 700 ], 'hl000004' ),
+	rfw_widget( 'refraction-animated-headline', [ 'animation_type' => 'circle', 'highlighted_text' => 'round', 'loop' => 'yes', 'animation_delay' => 900 ], 'hl000005' ),
+] );
+
 // @@MORE_PAGES@@ (each widget task appends its page above this line)
 
 echo wp_json_encode( $pages );

@@ -429,6 +429,64 @@ SECTIONS[ 'call-to-action' ] = async ( { browser, admin, pages } ) => {
 	await v.ctx.close();
 };
 
+/* ---------------------------------------------------------- animated-headline */
+SECTIONS[ 'animated-headline' ] = async ( { browser, admin, pages } ) => {
+	const k = 'animated-headline';
+	await openEditor( admin, pages[ k ].id );
+	await editorBasics( null, admin, k, 'refraction-animated-headline', 'Animated Headline' );
+	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'hl000001' ), settings: { animation_type: 'slide' } } ); } );
+	await sleep( 2500 );
+	const cls = await frameOf( admin ).evaluate( () => document.querySelector( '[data-id="hl000001"] .refraction-headline' )?.className );
+	check( k, 'changing the animation type updates the preview', /type-slide/.test( cls || '' ), cls );
+	const edWords = await frameOf( admin ).evaluate( () => document.querySelectorAll( '[data-id="hl000001"] .refraction-headline__word' ).length );
+	check( k, 'the preview contains every rotating phrase', edWords === 3, edWords );
+
+	const v = await visitor( browser, rel( pages[ k ].url ) );
+	const p = v.page;
+	const h1 = p.locator( '[data-id="hl000001"]' );
+	check( k, 'renders an h2 with escaped static text', ( await h1.locator( 'h2.refraction-headline' ).count() ) === 1 && ( await h1.locator( '.refraction-headline__before' ).innerHTML() ) === 'We build &lt;b&gt;x&lt;/b&gt;' );
+	const seen = new Set();
+	for ( let i = 0; i < 14; i++ ) {
+		seen.add( await h1.locator( '.refraction-headline__word.is-active' ).first().innerText().catch( () => '' ) );
+		await sleep( 300 );
+	}
+	check( k, 'flip: the visible phrase rotates through the list', seen.has( 'fast' ) && seen.size >= 3, [ ...seen ].join( '|' ) );
+	check( k, 'only one phrase is exposed at a time (others are not displayed)', await h1.locator( '.refraction-headline__word' ).evaluateAll( ( els ) => els.filter( ( e ) => getComputedStyle( e ).display !== 'none' && getComputedStyle( e ).visibility !== 'hidden' ).length <= 2 ) );
+
+	const t = p.locator( '[data-id="hl000002"]' );
+	const states = new Set();
+	for ( let i = 0; i < 60; i++ ) {
+		states.add( ( await t.locator( '.refraction-headline__word.is-active' ).first().innerText().catch( () => '' ) ).trim() );
+		await sleep( 60 );
+	}
+	check( k, 'typing: shows partial text while typing and reaches both words', [ ...states ].some( ( x ) => x.length > 0 && x.length < 5 && 'alpha'.startsWith( x ) ) && states.has( 'alpha' ) && states.has( 'beta' ), [ ...states ].join( '|' ) );
+
+	const hi = p.locator( '[data-id="hl000003"] .refraction-headline' );
+	await p.waitForFunction( () => document.querySelector( '[data-id="hl000003"] .refraction-headline' )?.classList.contains( 'is-drawn' ), null, { timeout: 5000 } ).catch( () => {} );
+	check( k, 'highlight: the shape is drawn once the headline is visible', ( await hi.evaluate( ( e ) => e.classList.contains( 'is-drawn' ) ) ) && ( await hi.locator( '.refraction-headline__dynamic' ).innerText() ) === 'amazing' );
+
+	const sw = p.locator( '[data-id="hl000004"]' );
+	await sleep( 300 );
+	check( k, 'swirl: letters are split into animatable spans with the phrase kept for screen readers', ( await sw.locator( '.refraction-headline__letter' ).count() ) >= 3 && ( await sw.locator( '.refraction-headline__sr' ).first().innerText() ) !== '' );
+
+	const ci = p.locator( '[data-id="hl000005"] .refraction-headline' );
+	const drawn = new Set();
+	for ( let i = 0; i < 24; i++ ) { drawn.add( await ci.evaluate( ( e ) => e.classList.contains( 'is-drawn' ) ) ); await sleep( 150 ); }
+	check( k, 'circle with loop: the shape draws and resets repeatedly', drawn.has( true ) && drawn.has( false ), [ ...drawn ].join() );
+	await p.screenshot( { path: join( SHOTS, 'animated-headline.png' ) } );
+	await v.ctx.close();
+
+	const r = await visitor( browser, rel( pages[ k ].url ), 1280, 900, { reducedMotion: 'reduce' } );
+	const rw = r.page.locator( '[data-id="hl000001"] .refraction-headline__word.is-active' );
+	const first = await rw.first().innerText();
+	await sleep( 2600 );
+	check( k, 'reduced motion: the rotating phrase stays on the first item', first === 'fast' && ( await rw.first().innerText() ) === 'fast', first );
+	check( k, 'reduced motion: the highlight is shown drawn without animating', await r.page.locator( '[data-id="hl000003"] .refraction-headline' ).evaluate( ( e ) => e.classList.contains( 'is-drawn' ) ) );
+	const typed = await r.page.locator( '[data-id="hl000002"] .refraction-headline__word.is-active' ).innerText();
+	check( k, 'reduced motion: typing shows the whole first word', typed.trim() === 'alpha', typed );
+	await r.ctx.close();
+};
+
 /* ------------------------------------------------------------------- driver */
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }

@@ -28,6 +28,7 @@ class Module extends BaseModule {
 			'Price_Table',
 			'Flip_Box',
 			'Call_To_Action',
+			'Animated_Headline',
 		];
 	}
 

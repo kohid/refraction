@@ -46,6 +46,7 @@ class Call_To_Action extends Pro_Widget {
 					'cover' => esc_html__( 'Cover (text over image)', 'refraction' ),
 				],
 				'prefix_class' => 'refraction-cta--skin-',
+				'render_type' => 'template',
 			]
 		);
 

@@ -173,6 +173,7 @@ class Flip_Box extends Pro_Widget {
 					'click' => esc_html__( 'Click or Enter', 'refraction' ),
 				],
 				'frontend_available' => true,
+				'render_type' => 'template',
 				'prefix_class' => 'refraction-flip-box--trigger-',
 				'description' => esc_html__( 'Touch screens always flip on tap.', 'refraction' ),
 			]
