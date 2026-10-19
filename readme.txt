@@ -35,6 +35,8 @@ To turn the update check off completely, add this to wp-config.php:
 
 To read releases from a different repository (for example your own fork), define `REFRACTION_UPDATE_REPOSITORY` as `owner/repo` or use the `refraction/updater/repository` filter.
 
+Forms contact a service only when you set it up yourself: a Webhook action sends the submission from your server to the URL you enter, and the optional reCAPTCHA, hCaptcha or Cloudflare Turnstile setting (Refraction > Submissions > Settings) loads the provider's script in visitors' browsers and sends the visitor's response token to the provider to verify it. Both are off until you configure them.
+
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
@@ -47,6 +49,11 @@ Other things you may notice that are not Refraction's own services: the editor l
 * Tweak: header and footer templates are previewed against a real page in the editor instead of a blank canvas.
 * New: dynamic content. The database icon on text, link, image, gallery, number, color and date controls now offers tags: post (title, excerpt, content, dates, featured image, URL, ID, terms, comments, custom fields), author (name, bio, avatar, meta, URL), site (title, tagline, URL, logo, date, request parameter, shortcode, page title, visitor), archive, contact links (email, phone, SMS, WhatsApp, Skype), internal URL, lightbox and a popup link placeholder. With Advanced Custom Fields active, ACF text, number, URL, image, gallery, color and date tags appear too. Every tag has Before, After and Fallback.
 * New: Loop Builder. Loop Item template type (Refraction > Theme Builder > Loop Items) and the widgets Posts, Archive Posts, Portfolio, Loop Grid, Loop Carousel and Taxonomy Filter, with a reusable Query control (post type, manual selection, related posts, terms, authors, exclude, order, offset, avoid duplicates), numbered / previous-next / load more / infinite pagination and ajax filtering. Only published posts without a password are ever listed.
+* New: Forms. A Form widget with text, email, textarea, URL, tel, number, select, radio, checkbox, acceptance, date, time, file upload, password, hidden, HTML, step and honeypot fields, multi-step forms with a progress indicator, per-field width and required marks, and ajax submit that falls back to a normal post without JavaScript.
+* New: form actions after submit: Collect Submissions, Email and Email 2 (auto-responder) with `[field id="..."]` and `[all-fields]` tags, Redirect, and Webhook with Discord and Slack presets. A webhook is the only data a form sends out, and only to the address you enter.
+* New: spam protection with a honeypot, a minimum fill time, a per-IP rate limit and a local math question; optional reCAPTCHA, hCaptcha or Turnstile that load only after you choose a provider and enter your keys.
+* New: Refraction > Submissions with search and filters, read/unread/trash, bulk actions, a per-submission action log, CSV export, retention (auto delete), IP and browser storage off by default, and WordPress privacy export and erase support.
+* New: Login widget (remember me, lost password link, redirect, logged-in state, register link when registration is open).
 
 = 0.2.0 =
 * New: complete rebrand. The editor, loading screens, toolbar and onboarding logos and the icon font are Refraction's own artwork (icon classes now use the `rficon-` prefix); documentation links point to this project; the kit export no longer lists removed features; the old changelog moved to docs/refraction/upstream-changelog.txt.

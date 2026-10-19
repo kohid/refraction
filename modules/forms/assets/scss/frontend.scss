@@ -1,0 +1,458 @@
+// Refraction Forms (Form and Login widgets).
+.refraction-form-wrap {
+	--rf-accent: #1f2937;
+	--rf-accent-ink: #fff;
+	--rf-line: #c3c8cf;
+	--rf-error: #b3261e;
+	--rf-ok: #1d6b3f;
+
+	position: relative;
+	width: 100%;
+}
+
+.refraction-form {
+	--rf-col-gap: 10px;
+	--rf-row-gap: 16px;
+	--rf-label-gap: 6px;
+	--rf-step-color: #8a919b;
+	--rf-step-active: var(--rf-accent);
+	--rf-bar-height: 8px;
+
+	margin: 0;
+	font: inherit;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	// Honeypot: out of sight for people, still in the DOM for bots.
+	.refraction-form__hp {
+		position: absolute !important;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
+	.screen-reader-text {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
+}
+
+.refraction-form__fields {
+	display: flex;
+	flex-wrap: wrap;
+	margin-inline: calc(var(--rf-col-gap) / -2);
+}
+
+.refraction-form__field {
+	width: 100%;
+	padding-inline: calc(var(--rf-col-gap) / 2);
+	margin-bottom: var(--rf-row-gap);
+	min-width: 0;
+}
+
+.refraction-form__label {
+	display: block;
+	margin-bottom: var(--rf-label-gap);
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.refraction-form__group {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	min-width: 0;
+}
+
+.refraction-form--label-inline .refraction-form__field:not(.refraction-form__field--html):not(.refraction-form__field--acceptance):not(.refraction-form__field--radio):not(.refraction-form__field--checkbox) {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0 12px;
+
+	> .refraction-form__label {
+		flex: 0 0 30%;
+		margin-bottom: 0;
+	}
+
+	> .refraction-form__input,
+	> .refraction-form__hint {
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	> .refraction-form__error {
+		flex: 0 0 100%;
+		padding-left: calc(30% + 12px);
+	}
+}
+
+.refraction-form__input {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 0.6em 0.8em;
+	font: inherit;
+	line-height: 1.4;
+	color: inherit;
+	background: #fff;
+	border: 1px solid var(--rf-line);
+	border-radius: 4px;
+	transition: border-color 0.15s, box-shadow 0.15s;
+
+	&:focus {
+		outline: 2px solid var(--rf-accent);
+		outline-offset: 1px;
+		border-color: var(--rf-accent);
+	}
+
+	&[type="file"] {
+		padding: 0.45em 0.6em;
+	}
+
+	&[type="color"] {
+		padding: 0.2em;
+	}
+}
+
+textarea.refraction-form__input {
+	resize: vertical;
+}
+
+.refraction-form--size-xs .refraction-form__input { font-size: 0.8em; padding: 0.35em 0.6em; }
+.refraction-form--size-sm .refraction-form__input { font-size: 0.9em; padding: 0.45em 0.7em; }
+.refraction-form--size-lg .refraction-form__input { font-size: 1.1em; padding: 0.75em 1em; }
+.refraction-form--size-xl .refraction-form__input { font-size: 1.25em; padding: 0.9em 1.1em; }
+
+.refraction-form__option {
+	display: inline-flex;
+	align-items: flex-start;
+	gap: 0.5em;
+	margin: 0 1.2em 0.4em 0;
+	line-height: 1.4;
+	cursor: pointer;
+
+	&:not(.is-inline) {
+		display: flex;
+		margin-right: 0;
+	}
+
+	input {
+		margin: 0.25em 0 0;
+		accent-color: var(--rf-accent);
+	}
+}
+
+.refraction-form__hint {
+	display: block;
+	margin-top: 4px;
+	font-size: 0.85em;
+	opacity: 0.75;
+}
+
+.refraction-form__error {
+	margin-top: 4px;
+	font-size: 0.875em;
+	line-height: 1.35;
+	color: var(--rf-error);
+
+	&:empty {
+		display: none;
+	}
+}
+
+.has-error > .refraction-form__input,
+.has-error .refraction-form__input {
+	border-color: var(--rf-error);
+}
+
+.refraction-form__required {
+	color: var(--rf-error);
+}
+
+.refraction-form__messages {
+	&:focus {
+		outline: none;
+	}
+
+	&:empty {
+		display: none;
+	}
+}
+
+.refraction-form__message {
+	margin: 0 0 var(--rf-row-gap, 16px);
+	padding: 0.7em 1em;
+	border: 1px solid currentcolor;
+	border-inline-start-width: 4px;
+	border-radius: 4px;
+	line-height: 1.4;
+
+	&--success {
+		color: var(--rf-ok);
+		background: rgba(29, 107, 63, 0.08);
+	}
+
+	&--error {
+		color: var(--rf-error);
+		background: rgba(179, 38, 30, 0.07);
+	}
+}
+
+.refraction-form__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin-top: 4px;
+}
+
+.refraction-form__submit,
+.refraction-form__nav {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0.7em 1.4em;
+	font: inherit;
+	font-weight: 600;
+	line-height: 1.2;
+	color: var(--rf-accent-ink);
+	background: var(--rf-accent);
+	border: 1px solid transparent;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.15s, color 0.15s, opacity 0.15s;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 0.88;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--rf-accent);
+		outline-offset: 2px;
+	}
+
+	&[disabled] {
+		cursor: progress;
+		opacity: 0.6;
+	}
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+.refraction-form__nav {
+	color: var(--rf-accent);
+	background: transparent;
+	border-color: var(--rf-accent);
+}
+
+.refraction-form__submit-content {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.refraction-form__submit--icon-right .refraction-form__submit-content {
+	flex-direction: row-reverse;
+}
+
+.refraction-button-size-xs .refraction-form__submit { font-size: 0.8em; padding: 0.45em 1em; }
+.refraction-button-size-sm .refraction-form__submit { font-size: 0.9em; padding: 0.55em 1.2em; }
+.refraction-button-size-lg .refraction-form__submit { font-size: 1.1em; padding: 0.85em 1.8em; }
+.refraction-button-size-xl .refraction-form__submit { font-size: 1.25em; padding: 1em 2.2em; }
+
+// Width presets (percent). The widget's Column Width control can override these per breakpoint.
+@each $w in (80, 75, 66, 60, 50, 40, 33, 25, 20) {
+	.refraction-form__field--w#{$w} {
+		width: #{$w}#{"%"};
+	}
+}
+
+.refraction-form__field--w100 {
+	width: 100%;
+}
+
+@media (max-width: 767px) {
+	.refraction-form__field {
+		min-width: 100%;
+	}
+}
+
+// Steps.
+.refraction-form__step {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	min-width: 0;
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+.refraction-form__step-title {
+	padding: 0;
+	margin-bottom: var(--rf-row-gap);
+	font-weight: 600;
+}
+
+// Without JavaScript all steps show, so the titles help; with JavaScript the progress indicator does.
+.refraction-form--js .refraction-form__step-title {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+}
+
+.refraction-form__progress {
+	margin-bottom: calc(var(--rf-row-gap) + 4px);
+
+	&:not(:where(.refraction-form--js *)) {
+		display: none;
+	}
+}
+
+.refraction-form__progress-list {
+	display: flex;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: none;
+}
+
+.refraction-form__progress-item {
+	position: relative;
+	display: flex;
+	flex: 1 1 0;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	font-size: 0.875em;
+	text-align: center;
+	color: var(--rf-step-color);
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: 14px;
+		right: calc(50% + 18px);
+		left: calc(-50% + 18px);
+		height: 2px;
+		background: currentcolor;
+		opacity: 0.35;
+	}
+
+	&:first-child::before {
+		display: none;
+	}
+
+	&.is-current,
+	&.is-done {
+		color: var(--rf-step-active);
+	}
+
+	&.is-done::before,
+	&.is-current::before {
+		opacity: 1;
+	}
+
+	.refraction-form__progress-num {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		font-weight: 700;
+		line-height: 1;
+		color: currentcolor;
+		background: #fff;
+		border: 2px solid currentcolor;
+		border-radius: 50%;
+	}
+
+	&.is-current .refraction-form__progress-num,
+	&.is-done .refraction-form__progress-num {
+		color: var(--rf-accent-ink);
+		background: var(--rf-step-active);
+		border-color: var(--rf-step-active);
+	}
+}
+
+.refraction-form__progress--text .refraction-form__progress-item::before {
+	top: auto;
+	bottom: -6px;
+	right: 0;
+	left: 0;
+	height: 3px;
+}
+
+.refraction-form__progress--text .refraction-form__progress-item:first-child::before {
+	display: block;
+}
+
+.refraction-form__bar {
+	height: var(--rf-bar-height);
+	overflow: hidden;
+	background: rgba(0, 0, 0, 0.12);
+	border-radius: 999px;
+}
+
+.refraction-form__bar-fill {
+	display: block;
+	height: 100%;
+	background: var(--rf-step-active);
+	border-radius: inherit;
+	transition: width 0.25s ease;
+}
+
+.refraction-form__bar-text {
+	margin: 6px 0 0;
+	font-size: 0.875em;
+	color: var(--rf-step-color);
+}
+
+.refraction-form__captcha {
+	flex: 0 0 100%;
+}
+
+// Login widget.
+.refraction-login__links {
+	margin: 12px 0 0;
+	font-size: 0.9em;
+}
+
+.refraction-login__status {
+	margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.refraction-form__bar-fill,
+	.refraction-form__input,
+	.refraction-form__submit,
+	.refraction-form__nav {
+		transition: none;
+	}
+}

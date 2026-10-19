@@ -124,6 +124,7 @@ class Modules_Manager {
 			'assets-manager',
 			'theme-builder',
 			'loop-builder',
+			'forms',
 		];
 	}
 

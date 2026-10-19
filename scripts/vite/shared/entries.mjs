@@ -57,6 +57,7 @@ export const BASE_ENTRIES = {
 	'theme-builder-editor': 'modules/theme-builder/assets/js/index.js',
 	'loop-builder-editor': 'modules/loop-builder/assets/js/editor.js',
 	'loop-builder-frontend': 'modules/loop-builder/assets/js/frontend.js',
+	'forms-frontend': 'modules/forms/assets/js/frontend.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 
