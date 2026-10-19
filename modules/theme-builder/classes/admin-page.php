@@ -112,6 +112,9 @@ class Admin_Page {
 			Locations_Manager::NOT_FOUND => '<path class="lines" d="M7 8v7h6M10 11v8M16 8h6v11h-6zM6 23h18"/>',
 		];
 
+		/** Other modules add the inner shapes of their tab glyphs (static SVG, 30 x 30). */
+		$shapes = apply_filters( 'refraction/theme_builder/glyph_shapes', $shapes );
+
 		return '<svg class="rtb-glyph" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true" focusable="false"><rect class="page" x="1" y="1" width="28" height="28" rx="3"/>' . ( $shapes[ $location ] ?? '' ) . '</svg>';
 	}
 

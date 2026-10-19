@@ -17,7 +17,7 @@ const lookup = ( params ) => {
 		.catch( () => [] );
 };
 
-const KIND_LOOKUP = { post: 'post', term: 'term', postype: '', author: 'user' };
+const KIND_LOOKUP = { post: 'post', term: 'term', postype: '', author: 'user', order: 'order' };
 
 const parseSource = ( source ) => {
 	const [ kind, sub = '' ] = String( source ).split( ':' );
@@ -180,6 +180,7 @@ const PreviewControl = BaseData.extend( {
 			post: __( 'Search by title, or leave empty for the latest', 'refraction' ),
 			term: __( 'Search terms, or leave empty for the blog', 'refraction' ),
 			user: __( 'Search authors', 'refraction' ),
+			order: __( 'Search by order number, or leave empty for the latest', 'refraction' ),
 		};
 
 		if ( this.state.id ) {

@@ -76,6 +76,15 @@ class Preview_Context {
 
 		$vars = Preview_Target::query_vars( $location, $target );
 
+		/**
+		 * Lets another module turn its own preview source (for example an order) into query variables.
+		 *
+		 * @param array  $vars     WP_Query variables.
+		 * @param string $location Template location.
+		 * @param array  $target   Sanitised Preview Settings.
+		 */
+		$vars = (array) apply_filters( 'refraction/theme_builder/preview_query_vars', $vars, $location, $target );
+
 		if ( ! empty( $vars['__404'] ) ) {
 			$query = new \WP_Query();
 			$query->set_404();
@@ -110,6 +119,14 @@ class Preview_Context {
 		if ( $query->is_author() ) {
 			$GLOBALS['authordata'] = get_userdata( (int) $query->get( 'author' ) ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
+
+		/**
+		 * The preview query is in place.
+		 *
+		 * @param Theme_Document $document The template being edited.
+		 * @param array          $target   Sanitised Preview Settings.
+		 */
+		do_action( 'refraction/theme_builder/preview_entered', $document, $target );
 
 		return true;
 	}

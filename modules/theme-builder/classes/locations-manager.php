@@ -39,7 +39,7 @@ class Locations_Manager {
 	 * @return array<string, array{label: string, tag: string}>
 	 */
 	public function get_locations(): array {
-		return [
+		$locations = [
 			self::HEADER => [
 				'label' => esc_html__( 'Header', 'refraction' ),
 				'tag' => 'header',
@@ -65,6 +65,13 @@ class Locations_Manager {
 				'tag' => 'main',
 			],
 		];
+
+		/**
+		 * Other modules add their template locations (WooCommerce adds product, cart, checkout...).
+		 *
+		 * @param array<string, array{label: string, tag: string}> $locations
+		 */
+		return (array) apply_filters( 'refraction/theme_builder/locations', $locations );
 	}
 
 	public function is_location( string $location ): bool {

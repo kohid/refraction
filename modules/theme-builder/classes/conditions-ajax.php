@@ -62,8 +62,22 @@ class Conditions_Ajax {
 				$items = $this->lookup_users( $query, $ids );
 				break;
 			default:
-				wp_send_json_error( [ 'message' => esc_html__( 'Unknown lookup.', 'refraction' ) ], 400 );
-				return;
+				/**
+				 * Lookups other modules answer (WooCommerce orders). Return null for an unknown kind. The filter must
+				 * check its own capability.
+				 *
+				 * @param array|null $items   Items `[ id, text, hint ]`.
+				 * @param string     $kind    Lookup kind.
+				 * @param string     $subtype Sub type.
+				 * @param string     $query   Search text.
+				 * @param int[]      $ids     Ids to label.
+				 */
+				$items = apply_filters( 'refraction/theme_builder/lookup_items', null, $kind, $subtype, $query, $ids );
+
+				if ( ! is_array( $items ) ) {
+					wp_send_json_error( [ 'message' => esc_html__( 'Unknown lookup.', 'refraction' ) ], 400 );
+					return;
+				}
 		}
 
 		wp_send_json_success( [ 'items' => $items ] );
