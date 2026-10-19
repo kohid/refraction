@@ -1,0 +1,126 @@
+// Autocomplete control of the Loop Builder (editor panel).
+.refraction-ac {
+	--rac-line: var(--e-a-border-color, rgba(128, 128, 128, 0.35));
+	--rac-muted: var(--e-a-color-txt-muted, #6d7882);
+	--rac-focus: var(--e-a-border-color-focus, #3b82f6);
+
+	font-size: 12px;
+	line-height: 1.4;
+
+	&__box {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	&__chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		max-width: 100%;
+		margin: 0;
+		padding: 2px 4px 2px 8px;
+		border: 1px solid var(--rac-line);
+		border-radius: 3px;
+		background: var(--e-a-bg-hover, rgba(128, 128, 128, 0.12));
+
+		span {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		button {
+			cursor: pointer;
+			border: 0;
+			background: transparent;
+			color: var(--rac-muted);
+			padding: 0 4px;
+			font-size: 14px;
+			line-height: 1;
+
+			&:hover,
+			&:focus-visible {
+				color: var(--e-a-color-danger, #d63638);
+			}
+		}
+	}
+
+	&__search {
+		position: relative;
+	}
+
+	input[type="search"] {
+		width: 100%;
+		min-height: 30px;
+		padding: 4px 8px;
+		border: 1px solid var(--rac-line);
+		border-radius: 3px;
+		background: var(--e-a-bg-default, transparent);
+		color: var(--e-a-color-txt, inherit);
+		font-size: 12px;
+		box-sizing: border-box;
+
+		&:focus {
+			outline: none;
+			border-color: var(--rac-focus);
+		}
+	}
+
+	&__results {
+		position: absolute;
+		z-index: 10;
+		inset-inline: 0;
+		margin: 2px 0 0;
+		padding: 2px;
+		max-height: 220px;
+		overflow: auto;
+		list-style: none;
+		border: 1px solid var(--rac-line);
+		border-radius: 3px;
+		background: var(--e-a-bg-default, #fff);
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+
+		li {
+			margin: 0;
+		}
+
+		.is-empty {
+			padding: 6px 8px;
+			color: var(--rac-muted);
+		}
+
+		button {
+			display: flex;
+			justify-content: space-between;
+			gap: 8px;
+			width: 100%;
+			padding: 5px 8px;
+			border: 0;
+			border-radius: 2px;
+			background: transparent;
+			color: var(--e-a-color-txt, inherit);
+			text-align: start;
+			cursor: pointer;
+
+			&:hover,
+			&:focus-visible {
+				background: var(--e-a-bg-hover, rgba(128, 128, 128, 0.15));
+			}
+
+			small {
+				color: var(--rac-muted);
+				white-space: nowrap;
+			}
+		}
+	}
+}

@@ -33,6 +33,7 @@ const SASS_TARGETS = [
 	{ cwd: 'modules/styleguide/assets/scss', src: 'editor.scss', dest: 'assets/css/modules/styleguide' },
 	{ cwd: 'modules/editor-one/assets/scss', src: '*.scss', dest: 'assets/css/modules/editor-one' },
 	{ cwd: 'modules/theme-builder/assets/scss', src: '*.scss', dest: 'assets/css/modules/theme-builder' },
+	{ cwd: 'modules/loop-builder/assets/scss', src: '*.scss', dest: 'assets/css/modules/loop-builder' },
 	{ cwd: 'assets/dev/scss/frontend', src: 'admin-bar.scss', dest: 'assets/css' },
 	{ cwd: 'assets/dev/scss/frontend/conditionals', src: '*.scss', dest: 'assets/css/conditionals' },
 	{ cwd: 'assets/dev/scss/frontend/conditionals/with-breakpoints', src: '*.scss', dest: 'assets/css/conditionals' },

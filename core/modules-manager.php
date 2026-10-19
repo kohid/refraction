@@ -123,6 +123,7 @@ class Modules_Manager {
 			'agents',
 			'assets-manager',
 			'theme-builder',
+			'loop-builder',
 		];
 	}
 

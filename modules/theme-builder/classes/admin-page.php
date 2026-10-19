@@ -36,6 +36,15 @@ class Admin_Page {
 	}
 
 	private function get_tabs(): array {
+		/**
+		 * Other modules add their template types as tabs (for example the Loop Builder adds Loop Items).
+		 * A tab is `[ label, singular, empty, conditions ]`; `conditions` => false hides the display
+		 * conditions column for types that are not placed by rules.
+		 */
+		return apply_filters( 'refraction/theme_builder/admin_tabs', $this->get_core_tabs() );
+	}
+
+	private function get_core_tabs(): array {
 		return [
 			Locations_Manager::HEADER => [
 				'label' => esc_html__( 'Headers', 'refraction' ),
@@ -74,6 +83,10 @@ class Admin_Page {
 	}
 
 	private function glyph( string $location ): string {
+		if ( ! in_array( $location, [ Locations_Manager::HEADER, Locations_Manager::FOOTER ], true ) ) {
+			return '<svg class="rtb-glyph" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true" focusable="false"><rect class="page" x="1" y="1" width="28" height="28" rx="3"/><rect class="band" x="5" y="6" width="9" height="8" rx="1.5"/><rect class="band" x="16" y="6" width="9" height="8" rx="1.5"/><path class="lines" d="M5 20h20M5 24h12"/></svg>';
+		}
+
 		$band = Locations_Manager::HEADER === $location
 			? '<rect class="band" x="2" y="2" width="26" height="6" rx="1.5"/>'
 			: '<rect class="band" x="2" y="22" width="26" height="6" rx="1.5"/>';
@@ -99,6 +112,7 @@ class Admin_Page {
 			admin_url( 'edit.php' )
 		) . '#add_new';
 
+		$has_conditions = $tabs[ $tab ]['conditions'] ?? true;
 		$counts = [];
 		foreach ( array_keys( $tabs ) as $key ) {
 			$counts[ $key ] = $key === $tab ? count( $posts ) : count( $this->query_templates( $key ) );
@@ -120,7 +134,7 @@ class Admin_Page {
 			<?php endif; ?>
 
 			<p class="rtb-intro">
-				<?php echo esc_html__( 'Build the header and footer of your site with Refraction, then choose where each one appears. When no template matches a page, your theme shows its own.', 'refraction' ); ?>
+				<?php echo esc_html( $tabs[ $tab ]['intro'] ?? __( 'Build the header and footer of your site with Refraction, then choose where each one appears. When no template matches a page, your theme shows its own.', 'refraction' ) ); ?>
 			</p>
 
 			<nav class="rtb-tabs" aria-label="<?php echo esc_attr__( 'Template type', 'refraction' ); ?>">
@@ -149,14 +163,16 @@ class Admin_Page {
 					<thead>
 						<tr>
 							<th scope="col" class="column-title"><?php echo esc_html__( 'Title', 'refraction' ); ?></th>
-							<th scope="col" class="column-conditions"><?php echo esc_html__( 'Appears on', 'refraction' ); ?></th>
+							<?php if ( $has_conditions ) : ?>
+								<th scope="col" class="column-conditions"><?php echo esc_html__( 'Appears on', 'refraction' ); ?></th>
+							<?php endif; ?>
 							<th scope="col" class="column-status"><?php echo esc_html__( 'Status', 'refraction' ); ?></th>
 							<th scope="col" class="column-modified"><?php echo esc_html__( 'Last modified', 'refraction' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php foreach ( $posts as $post ) : ?>
-							<?php $this->render_row( $post, $tab, $can_manage ); ?>
+							<?php $this->render_row( $post, $tab, $can_manage, $has_conditions ); ?>
 						<?php endforeach; ?>
 					</tbody>
 				</table>
@@ -165,7 +181,7 @@ class Admin_Page {
 		<?php
 	}
 
-	private function render_row( \WP_Post $post, string $tab, bool $can_manage ): void {
+	private function render_row( \WP_Post $post, string $tab, bool $can_manage, bool $has_conditions = true ): void {
 		$document = Plugin::$instance->documents->get( $post->ID );
 		$edit_url = $document ? $document->get_edit_url() : '';
 		$rules = $this->store->get_rules( $post->ID );
@@ -208,6 +224,7 @@ class Admin_Page {
 					<?php endif; ?>
 				</div>
 			</td>
+			<?php if ( $has_conditions ) : ?>
 			<td class="column-conditions">
 				<?php if ( ! $has_include ) : ?>
 					<span class="rtb-chip is-none"><?php echo esc_html__( 'Not displayed anywhere', 'refraction' ); ?></span>
@@ -217,6 +234,7 @@ class Admin_Page {
 					<span class="rtb-chip<?php echo $is_exclude ? ' is-exclude' : ''; ?>"><?php echo esc_html( $line ); ?></span>
 				<?php endforeach; ?>
 			</td>
+			<?php endif; ?>
 			<td class="column-status">
 				<span class="rtb-status<?php echo $is_live ? ' is-live' : ''; ?>"><?php echo esc_html( $status ? $status->label : $post->post_status ); ?></span>
 				<?php if ( ! $is_live ) : ?>
@@ -236,6 +254,7 @@ class Admin_Page {
 		$post = get_post( $post_id );
 
 		$is_template = $post && Source_Local::CPT === $post->post_type && Plugin::$instance->documents->get( $post_id ) instanceof Theme_Document;
+		$is_template = (bool) apply_filters( 'refraction/theme_builder/is_managed_document', $is_template, $post_id );
 
 		if ( ! $is_template || ! current_user_can( 'delete_post', $post_id ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete this template.', 'refraction' ), 403 );

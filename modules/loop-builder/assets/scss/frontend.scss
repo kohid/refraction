@@ -1,0 +1,314 @@
+// Front end of the Loop Builder widgets. Colors come from the theme (currentColor); everything else is
+// driven by custom properties that the widget controls set.
+.refraction-loop {
+	--refraction-loop-columns: 3;
+	--refraction-loop-column-gap: 24px;
+	--refraction-loop-row-gap: 24px;
+	--refraction-loop-line: color-mix(in srgb, currentColor 18%, transparent);
+	--refraction-loop-soft: color-mix(in srgb, currentColor 6%, transparent);
+
+	position: relative;
+
+	&.is-loading .refraction-loop-items {
+		opacity: 0.55;
+		transition: opacity 0.15s ease;
+	}
+
+	&.has-error::after {
+		content: "";
+	}
+}
+
+.refraction-loop-items:not(.swiper-wrapper) {
+	display: grid;
+	grid-template-columns: repeat(var(--refraction-loop-columns), minmax(0, 1fr));
+	column-gap: var(--refraction-loop-column-gap);
+	row-gap: var(--refraction-loop-row-gap);
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+.refraction-loop-item {
+	min-width: 0;
+}
+
+.refraction-loop-empty {
+	margin: 0;
+	padding: 24px 0;
+	text-align: center;
+	opacity: 0.7;
+}
+
+.refraction-loop-notice {
+	padding: 14px 16px;
+	border: 1px dashed var(--refraction-loop-line);
+	border-radius: 4px;
+	text-align: center;
+	opacity: 0.8;
+}
+
+// ---- Posts ------------------------------------------------------------------------------------------------
+.refraction-post {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+
+	&__image {
+		display: block;
+		line-height: 0;
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	&__title {
+		margin: 0 0 8px;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 8px;
+		margin-bottom: 10px;
+		font-size: 0.85em;
+		opacity: 0.75;
+	}
+
+	&__excerpt {
+		margin-bottom: 12px;
+	}
+
+	&__read-more {
+		margin-top: auto;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	&--classic .refraction-post__body {
+		padding-top: 14px;
+	}
+
+	&--cards {
+		border: 1px solid var(--refraction-loop-line);
+		border-radius: 8px;
+		overflow: hidden;
+		background: var(--refraction-loop-soft);
+
+		.refraction-post__body {
+			padding: 18px;
+		}
+	}
+
+	&--full_content .refraction-post__body {
+		padding: 0;
+	}
+}
+
+// ---- Pagination -------------------------------------------------------------------------------------------
+.refraction-pagination,
+.refraction-loop-more-wrap {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 6px;
+	margin-top: 28px;
+}
+
+.refraction-pagination .page-numbers {
+	min-width: 2.4em;
+	padding: 0.45em 0.8em;
+	border: 1px solid var(--refraction-loop-line);
+	border-radius: 4px;
+	line-height: 1.2;
+	text-align: center;
+	text-decoration: none;
+	color: inherit;
+
+	&.current {
+		border-color: currentColor;
+		font-weight: 700;
+	}
+
+	&.dots,
+	&.disabled {
+		border-color: transparent;
+		opacity: 0.5;
+	}
+
+}
+
+.refraction-pagination a.page-numbers:hover {
+	background: var(--refraction-loop-soft);
+}
+
+.refraction-loop-more {
+	display: inline-block;
+	padding: 0.7em 1.6em;
+	border: 1px solid currentColor;
+	border-radius: 4px;
+	color: inherit;
+	text-decoration: none;
+	cursor: pointer;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--refraction-loop-soft);
+	}
+}
+
+// ---- Portfolio --------------------------------------------------------------------------------------------
+.refraction-portfolio-item {
+	position: relative;
+	line-height: 0;
+
+	&[hidden] {
+		display: none;
+	}
+
+	&__link {
+		position: relative;
+		display: block;
+		color: #fff;
+		text-decoration: none;
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: flex-end;
+		padding: 16px;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent 60%);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
+
+	&__link:hover &__overlay,
+	&__link:focus-visible &__overlay {
+		opacity: 1;
+	}
+
+	&__title {
+		font-size: 1.1rem;
+		font-weight: 600;
+		line-height: 1.3;
+		color: #fff;
+	}
+}
+
+.refraction-portfolio--masonry .refraction-loop-items {
+	align-items: start;
+}
+
+.refraction-portfolio-filter,
+.refraction-taxonomy-filter {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.refraction-portfolio-filter {
+	justify-content: center;
+	margin-bottom: 24px;
+}
+
+.refraction-portfolio-filter__item,
+.refraction-taxonomy-filter__item {
+	padding: 0.4em 1em;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+
+	&:hover {
+		background: var(--refraction-loop-soft, rgba(128, 128, 128, 0.12));
+	}
+
+	&.is-active {
+		border-color: currentColor;
+		font-weight: 600;
+	}
+}
+
+.refraction-taxonomy-filter__count {
+	margin-inline-start: 0.35em;
+	opacity: 0.6;
+	font-size: 0.85em;
+}
+
+// ---- Carousel ---------------------------------------------------------------------------------------------
+.refraction-loop-carousel-wrapper {
+	position: relative;
+	overflow: hidden;
+
+	.swiper-slide {
+		height: auto;
+	}
+
+	.refraction-swiper-button {
+		position: absolute;
+		top: 50%;
+		z-index: 2;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.45);
+		color: #fff;
+		cursor: pointer;
+
+		&-prev {
+			inset-inline-start: 8px;
+		}
+
+		&-next {
+			inset-inline-end: 8px;
+		}
+
+		&.swiper-button-disabled {
+			opacity: 0.35;
+		}
+	}
+
+	.swiper-pagination {
+		position: static;
+		margin-top: 14px;
+	}
+}
+
+@media (max-width: 767px) {
+	.refraction-loop-items:not(.swiper-wrapper) {
+		grid-template-columns: repeat(var(--refraction-loop-columns), minmax(0, 1fr));
+	}
+}
