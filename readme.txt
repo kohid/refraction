@@ -39,6 +39,10 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.3.0 =
+* New: an "Advanced" widget category with 12 built-in widgets: Nav Menu (horizontal, vertical or dropdown, accessible hamburger, hover effects), Slides, Price List, Price Table, Flip Box, Call to Action, Animated Headline, Countdown (due date or per-visitor timer; hide, message or redirect when it ends), Share Buttons (plain links, copy link, print), Blockquote (with a tweet link), Progress Tracker and Table of Contents (automatic, numbered, collapsible, sticky).
+* Fix: typing in the editor's widget search no longer raises JavaScript errors.
+
 = 0.2.0 =
 * New: complete rebrand. The editor, loading screens, toolbar and onboarding logos and the icon font are Refraction's own artwork (icon classes now use the `rficon-` prefix); documentation links point to this project; the kit export no longer lists removed features; the old changelog moved to docs/refraction/upstream-changelog.txt.
 * New: Theme Builder. Build your site's Header and Footer with Refraction and choose where each one appears. Refraction > Theme Builder lists them with their conditions; "Add New" opens the template type dialog with Header or Footer preselected.

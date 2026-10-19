@@ -53,7 +53,12 @@ export default class ShareButtons extends refractionModules.frontend.handlers.Ba
 		}
 	}
 
-	/** Fallback for old browsers or non-secure pages: a hidden textarea and execCommand. */
+	/**
+	 * Fallback for old browsers or non-secure pages: a hidden textarea and execCommand.
+	 *
+	 * @param {string} text Text to copy.
+	 * @return {boolean} Whether the browser reported success.
+	 */
 	legacyCopy( text ) {
 		const area = document.createElement( 'textarea' );
 

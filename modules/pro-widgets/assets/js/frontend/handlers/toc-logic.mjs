@@ -2,7 +2,12 @@
  * Pure helpers for the Table of Contents (no DOM): heading ids and hierarchical numbering.
  */
 
-/** URL-safe id from heading text. Keeps letters and digits of any script; accents are folded. */
+/**
+ * URL-safe id from heading text. Keeps letters and digits of any script; accents are folded.
+ *
+ * @param {string} text Heading text.
+ * @return {string} The slug, or "section" when nothing usable is left.
+ */
 export function slugify( text ) {
 	const slug = String( text )
 		.normalize( 'NFD' )
@@ -14,7 +19,13 @@ export function slugify( text ) {
 	return slug || 'section';
 }
 
-/** `base`, or `base-2`, `base-3`... when the id is already taken. */
+/**
+ * `base`, or `base-2`, `base-3`... when the id is already taken.
+ *
+ * @param {string}      base The wanted id.
+ * @param {Set<string>} used Ids already on the page.
+ * @return {string} A free id.
+ */
 export function uniqueId( base, used ) {
 	if ( ! used.has( base ) ) {
 		return base;

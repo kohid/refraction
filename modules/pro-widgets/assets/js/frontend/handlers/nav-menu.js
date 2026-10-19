@@ -86,7 +86,7 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 			this.setMenuOpen( false );
 			this.elements.$toggle.trigger( 'focus' );
 		} else if ( hadSub ) {
-			this.elements.$nav.find( ':focus' ).blur();
+			this.elements.$nav.find( ':focus' ).trigger( 'blur' );
 		}
 	}
 

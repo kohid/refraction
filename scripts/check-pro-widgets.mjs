@@ -140,16 +140,34 @@ async function editorBasics( ctx, admin, key, widgetType, title ) {
 	}, widgetType );
 	check( key, 'the widget is listed in the Advanced category of the panel', catOk );
 
-	// Create into a container through the editor command API and see it rendered in the preview.
-	const created = await admin.page.evaluate( async ( wt ) => {
-		const container = refraction.documents.getCurrent().container.children[ 0 ];
-		const el = $e.run( 'document/elements/create', { container, model: { elType: 'widget', widgetType: wt } } );
-		return { id: el.id, count: container.children.length };
-	}, widgetType );
-	await sleep( 2500 );
-	const rendered = await frameOf( admin ).evaluate( ( id ) => !! document.querySelector( `[data-id="${ id }"] *` ), created.id );
-	check( key, 'a new instance dropped into a container renders in the preview', rendered, JSON.stringify( created ) );
-	await admin.page.evaluate( ( id ) => { $e.run( 'document/elements/delete', { container: refraction.getContainer( id ) } ); }, created.id );
+	// Drag the widget from the panel into the container shown in the preview (a real mouse drag).
+	await admin.page.fill( '#refraction-panel-elements-search-input', title );
+	await sleep( 600 );
+	const idsBefore = await admin.page.evaluate( () => refraction.documents.getCurrent().container.children[ 0 ].children.map( ( c ) => c.id ) );
+	const src = admin.page.locator( `#refraction-panel-elements .refraction-element[data-library-element-type="${ widgetType }"]` );
+	const tgt = frameOf( admin ).locator( '.refraction-widget' ).first();
+	const sb = await src.boundingBox();
+	const tb = await tgt.boundingBox();
+	await admin.page.mouse.move( sb.x + sb.width / 2, sb.y + sb.height / 2 );
+	await admin.page.mouse.down();
+	await admin.page.mouse.move( sb.x + sb.width / 2 + 20, sb.y + 20, { steps: 5 } );
+	await admin.page.mouse.move( tb.x + 30, tb.y + tb.height - 4, { steps: 15 } );
+	await admin.page.mouse.move( tb.x + 32, tb.y + tb.height - 3, { steps: 3 } );
+	await sleep( 300 );
+	await admin.page.mouse.up();
+	await sleep( 3000 );
+	const created = await admin.page.evaluate( ( [ before, wt ] ) => {
+		const kids = refraction.documents.getCurrent().container.children[ 0 ].children;
+		const added = kids.find( ( c ) => ! before.includes( c.id ) );
+		return added ? { id: added.id, type: added.model.get( 'widgetType' ), count: kids.length } : null;
+	}, [ idsBefore, widgetType ] );
+	check( key, 'can be dragged from the panel into a container', created && created.type === widgetType, JSON.stringify( created ) );
+	if ( created ) {
+		const rendered = await frameOf( admin ).evaluate( ( id ) => !! document.querySelector( `[data-id="${ id }"] *` ), created.id );
+		check( key, 'the dropped widget renders in the preview', rendered, JSON.stringify( created ) );
+		await admin.page.evaluate( ( id ) => { $e.run( 'document/elements/delete', { container: refraction.getContainer( id ) } ); }, created.id );
+	}
+	await admin.page.fill( '#refraction-panel-elements-search-input', '' );
 	return created;
 }
 
@@ -215,8 +233,11 @@ SECTIONS[ 'nav-menu' ] = async ( { browser, admin, pages } ) => {
 	const toggle = m.locator( '.refraction-nav-menu__toggle' );
 	check( k, 'mobile: hamburger visible, menu collapsed', await toggle.isVisible() && ! ( await m.locator( '.refraction-nav-menu__panel' ).isVisible() ) );
 	check( k, 'mobile: hamburger has an accessible name and controls the panel', ( await toggle.getAttribute( 'aria-label' ) ) === 'Main menu' && ( await toggle.getAttribute( 'aria-controls' ) ) === await m.locator( '.refraction-nav-menu__panel' ).getAttribute( 'id' ) );
+	const belowTop = () => p.locator( '[data-id="nav0002"]' ).evaluate( ( e ) => Math.round( e.getBoundingClientRect().top ) );
+	const topBefore = await belowTop();
 	await toggle.click();
 	await sleep( 300 );
+	check( k, 'mobile: the opened menu floats over the content below instead of pushing it (sticky-header friendly)', ( await belowTop() ) === topBefore && await m.locator( '.refraction-nav-menu__panel' ).evaluate( ( e ) => { const r = e.getBoundingClientRect(), hit = document.elementFromPoint( r.left + 20, r.top + 20 ); return getComputedStyle( e ).position === 'absolute' && e.contains( hit ); } ), `${ topBefore } ${ await belowTop() }` );
 	check( k, 'mobile: clicking the hamburger opens the menu', ( await toggle.getAttribute( 'aria-expanded' ) ) === 'true' && await m.locator( '.refraction-nav-menu__link', { hasText: 'Contact' } ).isVisible() );
 	await m.locator( '.refraction-nav-menu__subtoggle' ).first().click();
 	await sleep( 300 );

@@ -113,7 +113,6 @@ export default class TableOfContents extends refractionModules.frontend.handlers
 	}
 
 	build() {
-
 		const nodes = this.collectHeadings();
 		const used = new Set( Array.from( this.doc.querySelectorAll( '[id]' ) ).map( ( el ) => el.id ) );
 

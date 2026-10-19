@@ -100,7 +100,7 @@ export default class Countdown extends refractionModules.frontend.handlers.Base 
 			return stored;
 		}
 
-		const end = Date.now() + total * 1000;
+		const end = Date.now() + ( total * 1000 );
 
 		writeCookie( key, String( end ) );
 		writeStorage( key, String( end ) );
@@ -123,7 +123,7 @@ export default class Countdown extends refractionModules.frontend.handlers.Base 
 		}
 
 		// Aim at the next full second so the digits flip on time.
-		this.timer = window.setTimeout( () => this.tick(), 1000 - ( Date.now() % 1000 ) + 20 );
+		this.timer = window.setTimeout( () => this.tick(), ( 1000 - ( Date.now() % 1000 ) ) + 20 );
 	}
 
 	render( seconds ) {
