@@ -146,5 +146,32 @@ t( 'accept-language is ordered by quality', [ 'fr-ch', 'en' ] === V::languages( 
 t( 'accept-language drops junk', [ 'de' ] === V::languages( 'de, *;q=0.1, <script>' ) );
 t( 'accept-language empty', [] === V::languages( '' ) );
 
+// ---------------------------------------------------------------- Custom attributes parser
+require $root . '/modules/custom-attributes/classes/attribute-parser.php';
+use Refraction\Modules\CustomAttributes\Classes\Attribute_Parser as A;
+
+t( 'key|value lines', [ 'data-track' => 'hero', 'title' => 'Hello' ] === A::parse( "data-track|hero\ntitle|Hello" ) );
+t( 'key alone is a boolean attribute', [ 'hidden' => '' ] === A::parse( 'hidden' ) );
+t( 'value may contain a pipe', [ 'data-x' => 'a|b' ] === A::parse( 'data-x|a|b' ) );
+t( 'keys are lowercased and trimmed', [ 'data-a' => 'b' ] === A::parse( "  Data-A | b  " ) );
+t( 'blank lines and CRLF are fine', [ 'data-a' => '1', 'data-b' => '2' ] === A::parse( "data-a|1\r\n\r\ndata-b|2\r\n" ) );
+t( 'on* handlers are dropped', [] === A::parse( "onclick|alert(1)\nonmouseover|x\nONLOAD|x" ) );
+t( 'invalid key characters are dropped', [] === A::parse( "bad key|x\n\"quoted|x\n<b>|x\n=x|y\n1abc|x" ) );
+t( 'key may not break out', [ 'data-ok' => 'x' ] === A::parse( "data-ok|x\nfoo\"onfocus=\"alert(1)|y" ) );
+t( 'srcdoc and formaction are dropped', [] === A::parse( "srcdoc|<script>\nformaction|javascript:x" ) );
+t( 'reserved refraction attributes are dropped', [] === A::parse( "data-id|1\ndata-element_type|x\ndata-settings|{}" ) );
+t( 'javascript href is dropped', [] === A::parse( 'href|javascript:alert(1)' ) );
+t( 'obfuscated javascript src is dropped', [] === A::parse( "src|  jAva\tscript:alert(1)" ) && [] === A::parse( 'href|&#106;avascript:alert(1)' ) );
+t( 'data html url is dropped', [] === A::parse( 'src|data:text/html;base64,AAAA' ) );
+t( 'normal links are kept', [ 'href' => 'https://example.com/a?b=1' ] === A::parse( 'href|https://example.com/a?b=1' ) );
+t( 'relative and anchor links are kept', [ 'href' => '#top' ] === A::parse( 'href|#top' ) );
+t( 'style is sanitised', [ 'style' => 'color:red' ] === A::parse( 'style|color:red;width:expression(alert(1))' ) );
+t( 'tags are stripped from values', [ 'title' => 'ab' ] === A::parse( 'title|a<script>x</script>b' ) || [ 'title' => 'axb' ] === A::parse( 'title|a<script>x</script>b' ) );
+t( 'values are length limited', 500 === strlen( A::parse( 'title|' . str_repeat( 'a', 900 ) )['title'] ) );
+t( 'attribute count is limited', 20 === count( A::parse( implode( "\n", array_map( fn( $i ) => "data-k$i|v", range( 1, 40 ) ) ) ) ) );
+t( 'last duplicate wins', [ 'data-a' => '2' ] === A::parse( "data-a|1\ndata-a|2" ) );
+t( 'aria and role attributes are fine', [ 'aria-label' => 'Menu', 'role' => 'navigation' ] === A::parse( "aria-label|Menu\nrole|navigation" ) );
+t( 'non-string input yields nothing', [] === A::parse( null ) );
+
 echo "$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );
