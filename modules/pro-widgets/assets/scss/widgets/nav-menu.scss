@@ -1,0 +1,443 @@
+//
+// Nav Menu
+//
+
+@mixin refraction-nav-collapsed() {
+
+	.refraction-nav-menu__toggle-wrap {
+		display: flex;
+	}
+
+	.refraction-nav-menu__panel {
+		display: none;
+		width: 100%;
+	}
+
+	.refraction-nav-menu.is-open .refraction-nav-menu__panel {
+		display: block;
+	}
+
+	&.refraction-nav-menu--overlay-yes .refraction-nav-menu__panel {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		z-index: 999;
+		background: #fff;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+	}
+
+	.refraction-nav-menu__list {
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: flex-start;
+	}
+
+	.refraction-nav-menu__item {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.refraction-nav-menu__item > .refraction-nav-menu__link {
+		flex: 1 1 0;
+	}
+
+	.refraction-nav-menu__sub {
+		position: static;
+		display: none;
+		flex: 1 0 100%;
+		min-width: 0;
+		box-shadow: none;
+		border: 0;
+		padding-inline-start: 1em;
+		opacity: 1;
+		visibility: visible;
+		transform: none;
+		background: transparent;
+	}
+
+	.refraction-nav-menu__item.is-open > .refraction-nav-menu__sub {
+		display: block;
+	}
+
+	// Hover/focus must not open submenus in collapsed mode; only the toggle button does.
+	.refraction-nav-menu__item:hover > .refraction-nav-menu__sub,
+	.refraction-nav-menu__item:focus-within > .refraction-nav-menu__sub {
+		display: none;
+	}
+
+	.refraction-nav-menu__item.is-open:hover > .refraction-nav-menu__sub,
+	.refraction-nav-menu__item.is-open:focus-within > .refraction-nav-menu__sub {
+		display: block;
+	}
+}
+
+.refraction-widget-refraction-nav-menu,
+[class*="refraction-nav-menu--layout-"] {
+	--refraction-nav-pointer: currentColor;
+	--refraction-nav-pointer-size: 2px;
+	--refraction-nav-sub-width: 200px;
+	--refraction-nav-burger: 24px;
+}
+
+.refraction-nav-menu {
+	position: relative;
+}
+
+.refraction-nav-menu__toggle-wrap {
+	display: none;
+}
+
+.refraction-nav-menu__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+	margin: 0;
+	padding: 0.4em 0.6em;
+	border: 0 solid currentColor;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	line-height: 1;
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+}
+
+.refraction-nav-menu__burger {
+	position: relative;
+	display: inline-block;
+	width: var(--refraction-nav-burger);
+	height: var(--refraction-nav-burger);
+
+	span {
+		position: absolute;
+		inset-inline: 12%;
+		height: 2px;
+		border-radius: 2px;
+		background: currentColor;
+		transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+
+		&:nth-child(1) {
+			top: 28%;
+		}
+
+		&:nth-child(2) {
+			top: calc(50% - 1px);
+		}
+
+		&:nth-child(3) {
+			top: calc(72% - 2px);
+		}
+	}
+}
+
+.refraction-nav-menu.is-open .refraction-nav-menu__burger span {
+
+	&:nth-child(1) {
+		top: calc(50% - 1px);
+		transform: rotate(45deg);
+	}
+
+	&:nth-child(2) {
+		opacity: 0;
+	}
+
+	&:nth-child(3) {
+		top: calc(50% - 1px);
+		transform: rotate(-45deg);
+	}
+}
+
+.refraction-nav-menu__list,
+.refraction-nav-menu__sub {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.refraction-nav-menu__list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.refraction-nav-menu__item {
+	position: relative;
+	margin: 0;
+	list-style: none;
+}
+
+.refraction-nav-menu__link {
+	position: relative;
+	display: block;
+	padding: 0.6em 1em;
+	color: inherit;
+	text-decoration: none;
+	transition: color 0.2s ease, background-color 0.2s ease;
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: -2px;
+	}
+}
+
+// Submenu toggle button + indicator.
+.refraction-nav-menu__subtoggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0.5em;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: -2px;
+	}
+}
+
+.refraction-nav-menu__indicator {
+	display: inline-block;
+	width: 0.55em;
+	height: 0.55em;
+	transition: transform 0.2s ease;
+}
+
+.refraction-nav-menu--indicator-none .refraction-nav-menu__subtoggle {
+	// Keep the button for keyboard/touch users; just hide the glyph.
+	.refraction-nav-menu__indicator {
+		opacity: 0;
+	}
+}
+
+.refraction-nav-menu--indicator-chevron .refraction-nav-menu__indicator {
+	border-inline-end: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: rotate(45deg) translate(-15%, -15%);
+}
+
+.refraction-nav-menu--indicator-caret .refraction-nav-menu__indicator {
+	width: 0;
+	height: 0;
+	border-inline: 0.35em solid transparent;
+	border-top: 0.4em solid currentColor;
+}
+
+.refraction-nav-menu--indicator-plus .refraction-nav-menu__indicator {
+	background:
+		linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+		linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+}
+
+.refraction-nav-menu__item.is-open > .refraction-nav-menu__subtoggle .refraction-nav-menu__indicator {
+	transform: rotate(225deg) translate(-15%, -15%);
+}
+
+.refraction-nav-menu--indicator-caret .is-open > .refraction-nav-menu__subtoggle .refraction-nav-menu__indicator {
+	transform: rotate(180deg);
+}
+
+.refraction-nav-menu--indicator-plus .is-open > .refraction-nav-menu__subtoggle .refraction-nav-menu__indicator {
+	background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat;
+	transform: none;
+}
+
+// Submenus: flyout under the item (horizontal layout).
+.refraction-nav-menu__sub {
+	position: absolute;
+	top: 100%;
+	inset-inline-start: 0;
+	z-index: 20;
+	min-width: var(--refraction-nav-sub-width);
+	background: #fff;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(6px);
+	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.refraction-nav-menu__sub .refraction-nav-menu__sub {
+	top: 0;
+	inset-inline-start: 100%;
+}
+
+.refraction-nav-menu__item--parent {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
+	> .refraction-nav-menu__link {
+		flex: 1 1 auto;
+	}
+}
+
+.refraction-nav-menu__item:hover > .refraction-nav-menu__sub,
+.refraction-nav-menu__item:focus-within > .refraction-nav-menu__sub,
+.refraction-nav-menu__item.is-open > .refraction-nav-menu__sub {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	transition-delay: 0s;
+}
+
+.refraction-nav-menu__sub .refraction-nav-menu__item {
+	display: flex;
+}
+
+.refraction-nav-menu__sub .refraction-nav-menu__link {
+	flex: 1 1 auto;
+	white-space: nowrap;
+}
+
+// Vertical layout: stacked, submenus expand inline.
+.refraction-nav-menu--layout-vertical {
+
+	.refraction-nav-menu__list {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.refraction-nav-menu__sub {
+		position: static;
+		display: none;
+		flex: 1 0 100%;
+		min-width: 0;
+		box-shadow: none;
+		opacity: 1;
+		visibility: visible;
+		transform: none;
+		padding-inline-start: 1em;
+		background: transparent;
+	}
+
+	.refraction-nav-menu__item:hover > .refraction-nav-menu__sub,
+	.refraction-nav-menu__item:focus-within > .refraction-nav-menu__sub {
+		display: none;
+	}
+
+	.refraction-nav-menu__item.is-open > .refraction-nav-menu__sub,
+	.refraction-nav-menu__item.is-open:hover > .refraction-nav-menu__sub,
+	.refraction-nav-menu__item.is-open:focus-within > .refraction-nav-menu__sub {
+		display: block;
+	}
+}
+
+// Hover effects (pointer lines drawn on the link).
+.refraction-nav-menu--fx-underline,
+.refraction-nav-menu--fx-overline,
+.refraction-nav-menu--fx-double {
+
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
+		content: "";
+		position: absolute;
+		inset-inline: 1em;
+		height: var(--refraction-nav-pointer-size);
+		background: var(--refraction-nav-pointer);
+		opacity: 0;
+		transition: opacity 0.25s ease, transform 0.25s ease;
+	}
+}
+
+.refraction-nav-menu--fx-underline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after,
+.refraction-nav-menu--fx-double > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
+	bottom: 0.25em;
+}
+
+.refraction-nav-menu--fx-overline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
+.refraction-nav-menu--fx-double > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before {
+	top: 0.25em;
+}
+
+.refraction-nav-menu--fx-underline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
+.refraction-nav-menu--fx-overline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
+	display: none;
+}
+
+.refraction-nav-menu--anim-slide.refraction-nav-menu--fx-underline,
+.refraction-nav-menu--anim-slide.refraction-nav-menu--fx-overline,
+.refraction-nav-menu--anim-slide.refraction-nav-menu--fx-double {
+
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
+		transform: translateX(-12px);
+	}
+}
+
+.refraction-nav-menu--anim-grow.refraction-nav-menu--fx-underline,
+.refraction-nav-menu--anim-grow.refraction-nav-menu--fx-overline,
+.refraction-nav-menu--anim-grow.refraction-nav-menu--fx-double {
+
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
+		transform: scaleX(0);
+		opacity: 1;
+	}
+}
+
+.refraction-nav-menu--fx-underline,
+.refraction-nav-menu--fx-overline,
+.refraction-nav-menu--fx-double {
+
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:hover::before,
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:hover::after,
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:focus-visible::before,
+	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:focus-visible::after,
+	> .refraction-nav-menu .current-menu-item > .refraction-nav-menu__link::before,
+	> .refraction-nav-menu .current-menu-item > .refraction-nav-menu__link::after {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.refraction-nav-menu--fx-framed > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link {
+	border: var(--refraction-nav-pointer-size) solid transparent;
+
+	&:hover,
+	&:focus-visible {
+		border-color: var(--refraction-nav-pointer);
+	}
+}
+
+.refraction-nav-menu--fx-background > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:hover,
+.refraction-nav-menu--fx-background > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:focus-visible {
+	background-color: var(--refraction-nav-pointer);
+	color: #fff;
+}
+
+// Collapsed (hamburger) modes.
+.refraction-nav-menu--layout-dropdown {
+	@include refraction-nav-collapsed();
+}
+
+@media (max-width: $screen-tablet-max) {
+
+	.refraction-nav-menu--bp-tablet {
+		@include refraction-nav-collapsed();
+	}
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-nav-menu--bp-mobile {
+		@include refraction-nav-collapsed();
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-nav-menu *,
+	.refraction-nav-menu *::before,
+	.refraction-nav-menu *::after {
+		transition-duration: 0.01ms !important;
+	}
+}

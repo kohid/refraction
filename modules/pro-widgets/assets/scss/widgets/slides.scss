@@ -1,0 +1,161 @@
+@import "../button";
+
+//
+// Slides
+//
+
+.refraction-slides-wrapper {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	--swiper-theme-color: #fff;
+	--swiper-pagination-bullet-inactive-color: #fff;
+	--swiper-pagination-bullet-inactive-opacity: 0.55;
+}
+
+.refraction-slides {
+	display: flex;
+}
+
+.refraction-slide {
+	position: relative;
+	display: flex;
+	flex-shrink: 0;
+	width: 100%;
+	height: 400px;
+	overflow: hidden;
+	color: #fff;
+}
+
+.refraction-slide__bg,
+.refraction-slide__overlay {
+	position: absolute;
+	inset: 0;
+}
+
+.refraction-slide__bg {
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.refraction-slide__inner {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 40px 64px;
+}
+
+.refraction-slide__content {
+	width: 100%;
+	max-width: 640px;
+	text-align: center;
+}
+
+.refraction-slide__title {
+	margin: 0 0 0.4em;
+	color: inherit;
+	font-size: 2.4rem;
+	line-height: 1.15;
+}
+
+.refraction-slide__description {
+	margin-bottom: 1.2em;
+	font-size: 1.1rem;
+	line-height: 1.5;
+}
+
+.refraction-slides-wrapper .refraction-swiper-button {
+	position: absolute;
+	top: 50%;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-top: -22px;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.35);
+	color: #fff;
+	font-size: 22px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+
+	&:focus-visible {
+		outline: 3px solid #fff;
+		outline-offset: 2px;
+	}
+
+	&.swiper-button-disabled {
+		opacity: 0.4;
+		cursor: default;
+	}
+}
+
+.refraction-swiper-button-prev {
+	inset-inline-start: 16px;
+}
+
+.refraction-swiper-button-next {
+	inset-inline-end: 16px;
+}
+
+[dir="rtl"] .refraction-slides-wrapper .refraction-swiper-button svg {
+	transform: scaleX(-1);
+}
+
+.refraction-slides-wrapper .swiper-pagination {
+	position: absolute;
+	right: 0;
+	bottom: 12px;
+	left: 0;
+	z-index: 2;
+	text-align: center;
+}
+
+.refraction-slides-wrapper .swiper-pagination-bullet {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin: 0 5px;
+	border-radius: 50%;
+	background: #fff;
+	opacity: 0.55;
+	cursor: pointer;
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
+}
+
+.refraction-slides-wrapper .swiper-pagination-bullet-active {
+	opacity: 1;
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-slide__inner {
+		padding: 32px 48px;
+	}
+
+	.refraction-slide__title {
+		font-size: 1.7rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-slides-wrapper * {
+		transition-duration: 0.01ms !important;
+	}
+}

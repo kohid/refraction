@@ -1,0 +1,102 @@
+//
+// Testimonial Carousel
+//
+
+.refraction-tc {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 24px 56px;
+	text-align: center;
+}
+
+.refraction-tc__body {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.refraction-tc__mark {
+	display: block;
+	height: 0.5em;
+	color: #0f766e;
+	font-family: Georgia, serif;
+	font-size: 4rem;
+	line-height: 1;
+}
+
+.refraction-tc__content {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 1.15rem;
+	line-height: 1.6;
+}
+
+.refraction-tc__image {
+	width: 64px;
+	height: 64px;
+	margin: 0 auto;
+	overflow: hidden;
+	border-radius: 50%;
+	flex-shrink: 0;
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.refraction-tc__meta {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.refraction-tc__name {
+	font-style: normal;
+	font-weight: 700;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+
+		&:hover,
+		&:focus-visible {
+			text-decoration: underline;
+		}
+	}
+}
+
+.refraction-tc__job {
+	font-size: 0.9rem;
+	opacity: 0.75;
+}
+
+.refraction-tc-layout-below .refraction-tc {
+	flex-direction: column-reverse;
+}
+
+.refraction-tc-layout-below .refraction-tc__image {
+	margin-top: 4px;
+}
+
+.refraction-tc-layout-aside .refraction-tc {
+	flex-direction: row;
+	align-items: center;
+	text-align: start;
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-tc {
+		padding: 20px 44px;
+	}
+
+	.refraction-tc-layout-aside .refraction-tc {
+		flex-direction: column;
+		text-align: center;
+	}
+}

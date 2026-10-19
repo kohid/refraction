@@ -125,6 +125,7 @@ class Modules_Manager {
 			'theme-builder',
 			'loop-builder',
 			'forms',
+			'pro-widgets',
 		];
 	}
 

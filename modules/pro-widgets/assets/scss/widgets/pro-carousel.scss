@@ -1,0 +1,105 @@
+//
+// Shared by Media Carousel, Testimonial Carousel and Reviews (carousel layout).
+//
+
+.refraction-pc {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+	--swiper-theme-color: currentColor;
+}
+
+.refraction-pc .swiper-wrapper {
+	display: flex;
+}
+
+.refraction-pc__slide {
+	box-sizing: border-box;
+	flex-shrink: 0;
+	width: 100%;
+	height: auto;
+	margin: 0;
+}
+
+.refraction-pc .refraction-swiper-button {
+	position: absolute;
+	top: 50%;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin: -22px 0 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.45);
+	color: #fff;
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		background-color: rgba(0, 0, 0, 0.75);
+	}
+
+	&:focus-visible {
+		outline: 3px solid #fff;
+		outline-offset: 2px;
+		box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.6);
+	}
+
+	&.swiper-button-disabled {
+		opacity: 0.4;
+		cursor: default;
+	}
+}
+
+.refraction-pc .refraction-swiper-button-prev {
+	inset-inline-start: 10px;
+}
+
+.refraction-pc .refraction-swiper-button-next {
+	inset-inline-end: 10px;
+}
+
+[dir="rtl"] .refraction-pc .refraction-swiper-button svg {
+	transform: scaleX(-1);
+}
+
+.refraction-pc .swiper-pagination {
+	position: relative;
+	z-index: 2;
+	padding: 12px 0 2px;
+	text-align: center;
+}
+
+.refraction-pc .swiper-pagination-bullet {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin: 0 5px;
+	border-radius: 50%;
+	background: currentColor;
+	opacity: 0.3;
+	cursor: pointer;
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+}
+
+.refraction-pc .swiper-pagination-bullet-active {
+	opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-pc * {
+		transition-duration: 0.01ms !important;
+	}
+}

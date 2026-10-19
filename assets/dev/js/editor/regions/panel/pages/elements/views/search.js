@@ -37,7 +37,8 @@ const PanelElementsSearchView = Marionette.ItemView.extend( {
 	},
 
 	trackWidgetSearch() {
-		const userInput = this.ui.input.val();
+		// `this.ui.input` is a plain selector string once the view re-rendered on the same event.
+		const userInput = this.$( 'input' ).val();
 		if ( ! userInput ) {
 			return;
 		}

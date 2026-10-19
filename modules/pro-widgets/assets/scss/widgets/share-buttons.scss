@@ -1,0 +1,186 @@
+//
+// Share Buttons
+//
+
+.refraction-share__list {
+	--refraction-share-grow: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.refraction-share__item {
+	display: flex;
+	margin: 0;
+}
+
+.refraction-share__button {
+	--refraction-share-color: #374151;
+	--refraction-share-contrast: #ffffff;
+	flex: var(--refraction-share-grow, 0) 1 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6em;
+	box-sizing: border-box;
+	min-height: 40px;
+	margin: 0;
+	padding: 0.5em 1em;
+	border: 2px solid var(--refraction-share-color);
+	border-radius: 4px;
+	background: var(--refraction-share-color);
+	color: var(--refraction-share-contrast);
+	font: inherit;
+	font-size: 0.95rem;
+	line-height: 1.2;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+	&:hover {
+		opacity: 0.88;
+		color: var(--refraction-share-contrast);
+	}
+
+	&:focus-visible {
+		outline: 3px solid currentColor;
+		outline-offset: 2px;
+	}
+
+	&.is-copied {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+}
+
+.refraction-share__icon {
+	display: inline-flex;
+	font-size: 1.1em;
+	line-height: 1;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+// Official colors (darkened where the brand color fails contrast with white text).
+.refraction-share--color-official {
+
+	.refraction-share__button--facebook {
+		--refraction-share-color: #1877f2;
+	}
+
+	.refraction-share__button--x {
+		--refraction-share-color: #111111;
+	}
+
+	.refraction-share__button--linkedin {
+		--refraction-share-color: #0a66c2;
+	}
+
+	.refraction-share__button--pinterest {
+		--refraction-share-color: #e60023;
+	}
+
+	.refraction-share__button--whatsapp {
+		--refraction-share-color: #0b8a4b;
+	}
+
+	.refraction-share__button--telegram {
+		--refraction-share-color: #1b7fb0;
+	}
+
+	.refraction-share__button--email {
+		--refraction-share-color: #5b5f66;
+	}
+
+	.refraction-share__button--copy,
+	.refraction-share__button--print {
+		--refraction-share-color: #374151;
+	}
+}
+
+// Skins.
+.refraction-share--skin-minimal .refraction-share__button {
+	border-color: transparent;
+	background: transparent;
+	color: var(--refraction-share-color);
+
+	&:hover {
+		color: var(--refraction-share-color);
+		background: rgba(127, 127, 127, 0.12);
+		opacity: 1;
+	}
+}
+
+.refraction-share--skin-framed .refraction-share__button {
+	background: transparent;
+	color: var(--refraction-share-color);
+
+	&:hover {
+		background: var(--refraction-share-color);
+		color: var(--refraction-share-contrast);
+		opacity: 1;
+	}
+}
+
+.refraction-share--skin-boxed .refraction-share__button {
+	border-color: rgba(127, 127, 127, 0.35);
+	background: transparent;
+	color: inherit;
+
+	.refraction-share__icon {
+		color: var(--refraction-share-color);
+	}
+
+	&:hover {
+		border-color: var(--refraction-share-color);
+		opacity: 1;
+		color: inherit;
+	}
+}
+
+// Shapes.
+.refraction-share--shape-rounded .refraction-share__button {
+	border-radius: 999px;
+}
+
+.refraction-share--shape-circle .refraction-share__button {
+	width: 2.9em;
+	height: 2.9em;
+	padding: 0;
+	border-radius: 50%;
+}
+
+.refraction-share--view-icon .refraction-share__button {
+	min-width: 40px;
+}
+
+.refraction-share--shape-circle.refraction-share--view-text .refraction-share__button {
+	width: auto;
+	height: auto;
+	padding: 0.5em 1em;
+	border-radius: 999px;
+}
+
+.refraction-share__status {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-share__button {
+		font-size: 0.9rem;
+	}
+}

@@ -1,0 +1,135 @@
+//
+// Hotspot
+//
+
+.refraction-hotspot {
+	--refraction-hs-bg: #0f766e;
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
+.refraction-hotspot__image img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.refraction-hotspot__point {
+	position: absolute;
+	z-index: 1;
+	width: 0;
+	height: 0;
+
+	&.is-open {
+		z-index: 3;
+	}
+}
+
+.refraction-hotspot__marker {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 32px;
+	height: 32px;
+	margin: 0;
+	padding: 0;
+	transform: translate(-50%, -50%);
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background-color: var(--refraction-hs-bg);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1;
+	cursor: pointer;
+
+	&:focus-visible {
+		outline: 3px solid #111;
+		outline-offset: 3px;
+		box-shadow: 0 0 0 6px #fff;
+	}
+}
+
+.refraction-hotspot--pulse .refraction-hotspot__marker::after {
+	position: absolute;
+	inset: -2px;
+	border-radius: 50%;
+	box-shadow: 0 0 0 0 var(--refraction-hs-bg);
+	content: "";
+	animation: refraction-hotspot-pulse 2s ease-out infinite;
+	pointer-events: none;
+}
+
+@keyframes refraction-hotspot-pulse {
+
+	0% {
+		opacity: 0.8;
+		box-shadow: 0 0 0 0 var(--refraction-hs-bg);
+	}
+
+	100% {
+		opacity: 0;
+		box-shadow: 0 0 0 14px var(--refraction-hs-bg);
+	}
+}
+
+.refraction-hotspot__tip {
+	position: absolute;
+	box-sizing: border-box;
+	width: 220px;
+	max-width: 80vw;
+	padding: 12px 14px;
+	border-radius: 6px;
+	background: #111827;
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+	color: #fff;
+	font-size: 0.9rem;
+	line-height: 1.45;
+	text-align: start;
+	transform: translateX(var(--refraction-hs-shift, 0px));
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+.refraction-hotspot__tip-link {
+	display: inline-block;
+	margin-top: 8px;
+	color: inherit;
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+.refraction-hotspot__point--top .refraction-hotspot__tip {
+	bottom: 26px;
+	left: -110px;
+}
+
+.refraction-hotspot__point--bottom .refraction-hotspot__tip {
+	top: 26px;
+	left: -110px;
+}
+
+.refraction-hotspot__point--left .refraction-hotspot__tip {
+	top: -20px;
+	right: 26px;
+}
+
+.refraction-hotspot__point--right .refraction-hotspot__tip {
+	top: -20px;
+	left: 26px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-hotspot--pulse .refraction-hotspot__marker::after {
+		animation: none;
+	}
+}

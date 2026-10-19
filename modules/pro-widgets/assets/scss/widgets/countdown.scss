@@ -1,0 +1,92 @@
+//
+// Countdown
+//
+
+.refraction-countdown__units {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	justify-content: center;
+	gap: 12px;
+}
+
+.refraction-countdown__unit {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-sizing: border-box;
+	min-width: 72px;
+	padding: 12px 14px;
+	text-align: center;
+}
+
+.refraction-countdown__digits {
+	font-size: 2.6rem;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.refraction-countdown__label {
+	margin-top: 4px;
+	font-size: 0.85rem;
+	opacity: 0.8;
+}
+
+.refraction-countdown__message {
+	padding: 12px;
+	font-size: 1.1rem;
+	text-align: center;
+}
+
+.refraction-countdown__units[hidden],
+.refraction-countdown__message[hidden] {
+	display: none;
+}
+
+// Inline: digits and label side by side.
+.refraction-countdown--view-inline .refraction-countdown__unit {
+	flex-direction: row;
+	align-items: baseline;
+	gap: 6px;
+	min-width: 0;
+}
+
+.refraction-countdown--view-inline .refraction-countdown__digits {
+	font-size: 1.8rem;
+}
+
+.refraction-countdown--view-inline .refraction-countdown__label {
+	margin-top: 0;
+}
+
+// Separator colon between block units.
+.refraction-countdown--separator-yes .refraction-countdown__unit + .refraction-countdown__unit {
+	position: relative;
+}
+
+.refraction-countdown--separator-yes .refraction-countdown__unit + .refraction-countdown__unit::before {
+	content: ":";
+	position: absolute;
+	top: 12px;
+	inset-inline-start: calc(-0.5 * var(--refraction-countdown-gap, 12px) - 0.2em);
+	font-size: 2rem;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.refraction-countdown--hide.is-expired:not(.is-editor) {
+	display: none;
+}
+
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-countdown__digits {
+		font-size: 2rem;
+	}
+
+	.refraction-countdown__unit {
+		min-width: 60px;
+		padding: 10px;
+	}
+}

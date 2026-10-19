@@ -1,0 +1,115 @@
+//
+// Media Carousel
+//
+
+.refraction-mc__media {
+	position: relative;
+	display: block;
+	width: 100%;
+	overflow: hidden;
+	background: #e9ecef;
+	color: inherit;
+	text-decoration: none;
+
+	&:is(button) {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		cursor: pointer;
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	&:focus-visible {
+		outline: 3px solid currentColor;
+		outline-offset: -3px;
+	}
+}
+
+.refraction-mc__media--video::after {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.18);
+	content: "";
+	transition: background-color 0.2s ease;
+}
+
+.refraction-mc__media--video:hover::after,
+.refraction-mc__media--video:focus-visible::after {
+	background: rgba(0, 0, 0, 0.35);
+}
+
+.refraction-mc__play {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 64px;
+	height: 64px;
+	margin: -32px 0 0 -32px;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.65);
+	color: #fff;
+	font-size: 30px;
+	pointer-events: none;
+}
+
+.refraction-mc__caption {
+	padding-top: 8px;
+	font-size: 0.9rem;
+	line-height: 1.4;
+}
+
+.refraction-mc--slideshow .refraction-mc__media {
+	aspect-ratio: 16 / 9;
+}
+
+.refraction-pc-thumbs {
+	margin-top: 10px;
+	overflow: hidden;
+}
+
+.refraction-pc-thumb {
+	box-sizing: border-box;
+	flex-shrink: 0;
+	width: 88px;
+	padding: 0;
+	overflow: hidden;
+	border: 2px solid transparent;
+	border-radius: 4px;
+	background: #e9ecef;
+	cursor: pointer;
+	opacity: 0.65;
+	transition: opacity 0.2s ease;
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	&:hover,
+	&:focus-visible,
+	&.swiper-slide-thumb-active {
+		opacity: 1;
+	}
+
+	&.swiper-slide-thumb-active {
+		border-color: #0f766e;
+	}
+
+	&:focus-visible {
+		outline: 3px solid currentColor;
+		outline-offset: 2px;
+	}
+}

@@ -36,6 +36,11 @@ To turn the update check off completely, add this to wp-config.php:
 To read releases from a different repository (for example your own fork), define `REFRACTION_UPDATE_REPOSITORY` as `owner/repo` or use the `refraction/updater/repository` filter.
 
 Forms contact a service only when you set it up yourself: a Webhook action sends the submission from your server to the URL you enter, and the optional reCAPTCHA, hCaptcha or Cloudflare Turnstile setting (Refraction > Submissions > Settings) loads the provider's script in visitors' browsers and sends the visitor's response token to the provider to verify it. Both are off until you configure them.
+Embeds you add yourself. These are not requested unless you place the widget on a page and enter an address; the visitor's browser then contacts the service (its own terms and privacy policy apply). Refraction adds no SDK script or tracking pixel for any of them.
+
+* Facebook widgets (Button, Comments, Embed, Page): a lazy-loaded iframe to https://www.facebook.com/plugins/. Sent: the address you entered and what a browser sends with any request (IP address, cookies Facebook already has). Terms: https://www.facebook.com/terms. Privacy: https://www.facebook.com/privacy/policy.
+* Video Playlist and the Media Carousel's video slides: YouTube (the privacy-enhanced youtube-nocookie.com address) or Vimeo (do-not-track mode) are contacted only after a visitor presses play. Video files from your own site make no external request. YouTube terms: https://www.youtube.com/t/terms. Vimeo terms: https://vimeo.com/terms.
+* Lottie, when you choose "External URL": the visitor's browser fetches the animation JSON from the address you entered when the animation comes near the screen. Files from your Media Library stay on your site. The Lottie player itself (lottie-web, MIT license) is bundled in the plugin.
 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
@@ -54,6 +59,10 @@ Other things you may notice that are not Refraction's own services: the editor l
 * New: spam protection with a honeypot, a minimum fill time, a per-IP rate limit and a local math question; optional reCAPTCHA, hCaptcha or Turnstile that load only after you choose a provider and enter your keys.
 * New: Refraction > Submissions with search and filters, read/unread/trash, bulk actions, a per-submission action log, CSV export, retention (auto delete), IP and browser storage off by default, and WordPress privacy export and erase support.
 * New: Login widget (remember me, lost password link, redirect, logged-in state, register link when registration is open).
+* New: an "Advanced" widget category with 12 built-in widgets: Nav Menu (horizontal, vertical or dropdown, accessible hamburger, hover effects), Slides, Price List, Price Table, Flip Box, Call to Action, Animated Headline, Countdown (due date or per-visitor timer; hide, message or redirect when it ends), Share Buttons (plain links, copy link, print), Blockquote (with a tweet link), Progress Tracker and Table of Contents (automatic, numbered, collapsible, sticky).
+* New: 11 more widgets in the Advanced category: Media Carousel (images and videos, coverflow, thumbnail slideshow, lightbox), Testimonial Carousel, Reviews (star ratings you type in, grid or carousel), Hotspot (click, hover or always-on tooltips), Code Highlight (JS, PHP, CSS, HTML, JSON, Bash, Python; line numbers, copy button, themes), Lottie (bundled player, Media Library or URL), Video Playlist (YouTube, Vimeo and video files, loaded on click), Gallery (grid, masonry, justified, filter buttons, lightbox) and four Facebook embeds (Button, Comments, Embed, Page; plain iframes, no SDK).
+* New: Lottie `.json` files can be uploaded to the Media Library; only real Lottie animations are accepted.
+* Fix: typing in the editor's widget search no longer raises JavaScript errors.
 
 = 0.2.0 =
 * New: complete rebrand. The editor, loading screens, toolbar and onboarding logos and the icon font are Refraction's own artwork (icon classes now use the `rficon-` prefix); documentation links point to this project; the kit export no longer lists removed features; the old changelog moved to docs/refraction/upstream-changelog.txt.
