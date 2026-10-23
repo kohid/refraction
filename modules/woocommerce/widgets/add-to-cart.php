@@ -41,6 +41,7 @@ class Add_To_Cart extends Woo_Widget_Base {
 		$this->start_controls_section( 'section_content', [ 'label' => esc_html__( 'Add to Cart', 'refraction' ) ] );
 
 		$this->add_control( 'ajax', [ 'label' => esc_html__( 'Add without reloading the page', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
+		$this->add_control( 'show_stock', [ 'label' => esc_html__( 'Stock message above the form', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'The Product Stock widget shows it better.', 'refraction' ) ] );
 		$this->add_control( 'quantity', [ 'label' => esc_html__( 'Quantity field', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'show', 'options' => [ 'show' => esc_html__( 'Show', 'refraction' ), 'hide' => esc_html__( 'Hide', 'refraction' ) ], 'prefix_class' => 'refraction-woo-qty-' ] );
 		$this->add_control( 'button_text', [ 'label' => esc_html__( 'Button text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Add to cart', 'refraction' ) ] );
 		$this->add_responsive_control( 'align', [ 'label' => esc_html__( 'Alignment', 'refraction' ), 'type' => Controls_Manager::CHOOSE, 'options' => [ 'flex-start' => [ 'title' => esc_html__( 'Start', 'refraction' ), 'icon' => 'rficon-text-align-left' ], 'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-text-align-center' ], 'flex-end' => [ 'title' => esc_html__( 'End', 'refraction' ), 'icon' => 'rficon-text-align-right' ] ], 'selectors' => [ '{{WRAPPER}} form.cart, {{WRAPPER}} .woocommerce-variation-add-to-cart' => 'justify-content: {{VALUE}};' ] ] );
@@ -92,7 +93,18 @@ class Add_To_Cart extends Woo_Widget_Base {
 
 		echo '</div>';
 
+		// WooCommerce prints the stock message inside the form template; the Product Stock widget is the place for it.
+		$hide_stock = 'yes' !== $this->get_settings( 'show_stock' );
+
+		if ( $hide_stock ) {
+			add_filter( 'woocommerce_get_stock_html', '__return_empty_string', 99 );
+		}
+
 		woocommerce_template_single_add_to_cart();
+
+		if ( $hide_stock ) {
+			remove_filter( 'woocommerce_get_stock_html', '__return_empty_string', 99 );
+		}
 
 		echo '</div>';
 

@@ -38,7 +38,7 @@ class Related_Products extends Woo_Widget_Base {
 		$this->start_controls_section( 'section_content', [ 'label' => esc_html__( 'Related products', 'refraction' ) ] );
 		$this->add_control( 'heading', [ 'label' => esc_html__( 'Heading', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Related products', 'refraction' ) ] );
 		$this->add_control( 'limit', [ 'label' => esc_html__( 'Products', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 24, 'default' => 4 ] );
-		$this->add_responsive_control( 'columns', [ 'label' => esc_html__( 'Columns', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 6, 'default' => 4, 'selectors' => [ '{{WRAPPER}} ul.products' => '--refraction-woo-columns: {{VALUE}};' ] ] );
+		$this->add_control( 'columns', [ 'label' => esc_html__( 'Columns', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 6, 'default' => 4 ] );
 		$this->add_control( 'orderby', [ 'label' => esc_html__( 'Order by', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'rand', 'options' => [ 'rand' => esc_html__( 'Random', 'refraction' ), 'date' => esc_html__( 'Date', 'refraction' ), 'title' => esc_html__( 'Title', 'refraction' ), 'price' => esc_html__( 'Price', 'refraction' ) ] ] );
 		$this->add_control( 'order', [ 'label' => esc_html__( 'Order', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'desc', 'options' => [ 'desc' => esc_html__( 'Descending', 'refraction' ), 'asc' => esc_html__( 'Ascending', 'refraction' ) ] ] );
 		$this->end_controls_section();

@@ -40,6 +40,49 @@
 		}
 	} );
 
+	// --- Product Data Tabs --------------------------------------------------------------------------------
+	// WooCommerce's own tab script is not loaded by block themes. When it did not run (every panel is still
+	// visible), turn the tab list into working tabs here.
+	const initTabs = () => {
+		document.querySelectorAll( '.woocommerce-tabs' ).forEach( ( wrapper ) => {
+			const panels = Array.from( wrapper.querySelectorAll( '.woocommerce-Tabs-panel' ) );
+			const links = Array.from( wrapper.querySelectorAll( '.wc-tabs li a' ) );
+
+			if ( ! panels.length || ! links.length || panels.some( ( panel ) => 'none' === panel.style.display ) ) {
+				return;
+			}
+
+			const show = ( id ) => {
+				links.forEach( ( link ) => {
+					const active = link.getAttribute( 'href' ) === '#' + id;
+
+					link.parentElement.classList.toggle( 'active', active );
+					link.setAttribute( 'aria-selected', active ? 'true' : 'false' );
+				} );
+				panels.forEach( ( panel ) => {
+					panel.style.display = panel.id === id ? '' : 'none';
+				} );
+			};
+
+			wrapper.classList.add( 'refraction-tabs-ready' );
+			wrapper.querySelector( '.wc-tabs' ).addEventListener( 'click', ( event ) => {
+				const link = event.target.closest( 'a' );
+
+				if ( link && link.getAttribute( 'href' ).startsWith( '#' ) ) {
+					event.preventDefault();
+					show( link.getAttribute( 'href' ).slice( 1 ) );
+				}
+			} );
+			show( panels[ 0 ].id );
+		} );
+	};
+
+	if ( 'loading' === document.readyState ) {
+		window.addEventListener( 'load', initTabs );
+	} else {
+		initTabs();
+	}
+
 	// --- Menu Cart --------------------------------------------------------------------------------------
 	const closeCart = ( cart ) => {
 		const panel = cart.querySelector( '.refraction-menu-cart__panel' );

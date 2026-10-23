@@ -48,7 +48,70 @@
 	}
 }
 
+// Upsells and Related Products let WooCommerce print the list and pass the columns as its own class.
+.refraction-woo--woo-upsells,
+.refraction-woo--woo-related-products {
+	@for $i from 1 through 6 {
+		ul.products.columns-#{$i} {
+			--refraction-woo-columns: #{$i};
+		}
+	}
+
+	@media (max-width: 768px) {
+		ul.products.columns-3,
+		ul.products.columns-4,
+		ul.products.columns-5,
+		ul.products.columns-6 {
+			--refraction-woo-columns: 2;
+		}
+	}
+}
+
+// Product Meta
+.refraction-woo-meta--stacked .product_meta > span {
+	display: block;
+}
+
+.refraction-woo-meta--inline .product_meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 20px;
+}
+
+// Tabs the fallback script drives (block themes)
+.refraction-tabs-ready .wc-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 20px;
+	margin: 0 0 1em;
+	padding: 0;
+	border-bottom: 1px solid rgba(128, 128, 128, 0.35);
+	list-style: none;
+
+	li {
+		margin: 0;
+
+		a {
+			display: block;
+			padding: 0.6em 0.2em;
+			border-bottom: 2px solid transparent;
+			text-decoration: none;
+		}
+
+		&.active a {
+			border-bottom-color: currentColor;
+			font-weight: 600;
+		}
+	}
+}
+
 // Product Images
+.refraction-woo div.refraction-product-images.images {
+	float: none;
+	width: 100%;
+	margin: 0;
+}
+
 .refraction-product-images {
 	position: relative;
 
@@ -71,12 +134,6 @@
 		margin: 0;
 		padding: 0.4em 0.7em;
 		line-height: 1.2;
-	}
-
-	&.images {
-		float: none;
-		width: 100%;
-		margin: 0;
 	}
 
 	&__slide {
