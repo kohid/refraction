@@ -44,6 +44,18 @@ class Product_Data_Tabs extends Woo_Widget_Base {
 	}
 
 	protected function render_product( \WC_Product $product ): void {
+		// WooCommerce registers its reviews template only on the front end; the editor page is an admin request.
+		$loader = [ 'WC_Template_Loader', 'comments_template_loader' ];
+		$added = is_callable( $loader ) && false === has_filter( 'comments_template', $loader );
+
+		if ( $added ) {
+			add_filter( 'comments_template', $loader );
+		}
+
 		woocommerce_output_product_data_tabs();
+
+		if ( $added ) {
+			remove_filter( 'comments_template', $loader );
+		}
 	}
 }

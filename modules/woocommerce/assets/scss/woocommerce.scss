@@ -52,12 +52,25 @@
 .refraction-product-images {
 	position: relative;
 
+	// Themes size WooCommerce's badge differently (some stretch it to the width of its container): set it here.
 	.onsale {
 		position: absolute;
 		z-index: 2;
 		top: 12px;
 		left: 12px;
+		right: auto;
+		bottom: auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		width: auto;
+		height: auto;
+		min-width: 3.2em;
+		min-height: 3.2em;
 		margin: 0;
+		padding: 0.4em 0.7em;
+		line-height: 1.2;
 	}
 
 	&.images {
@@ -182,14 +195,12 @@
 		min-width: 1.6em;
 		padding: 0 0.4em;
 		border-radius: 999px;
-		background: currentColor;
+		background-color: #1d2327;
+		color: #fff;
 		font-size: 0.75em;
 		font-weight: 600;
 		line-height: 1.6em;
 		text-align: center;
-
-		// The badge takes the page background as its text so it reads on any color.
-		color: var(--refraction-menu-cart-badge-text, #fff);
 	}
 
 	&__panel {

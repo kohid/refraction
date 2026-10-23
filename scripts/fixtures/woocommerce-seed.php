@@ -32,6 +32,8 @@ update_option( 'woocommerce_cart_redirect_after_add', 'no' );
 update_option( 'woocommerce_enable_ajax_add_to_cart', 'yes' );
 update_option( 'woocommerce_hide_out_of_stock_items', 'no' );
 update_option( 'blog_public', 0 );
+// WooCommerce's stock reservation uses SQL the SQLite test database cannot run (it fails the checkout); real MySQL sites are not affected.
+update_option( 'woocommerce_hold_stock_minutes', '' );
 
 $term = static function ( string $name, string $taxonomy, int $parent = 0 ): int {
 	$existing = term_exists( $name, $taxonomy );
@@ -51,15 +53,23 @@ $ids['cat_accessories'] = $term( 'Accessories', 'product_cat' );
 $ids['tag_new'] = $term( 'New', 'product_tag' );
 $ids['tag_gift'] = $term( 'Gift', 'product_tag' );
 
-// Three tiny images for the gallery.
-$png = base64_decode( 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' );
+// Gallery images: real pictures (plain colour blocks with a caption) so layouts can be judged.
+require_once ABSPATH . 'wp-admin/includes/image.php';
 $upload = wp_upload_dir();
 $images = [];
+$palette = [ [ 'tee-front', 38, 70, 83 ], [ 'tee-back', 42, 157, 143 ], [ 'tee-detail', 233, 196, 106 ], [ 'hoodie', 231, 111, 81 ], [ 'cap', 108, 117, 125 ], [ 'scarf', 157, 78, 221 ], [ 'shirt', 69, 123, 157 ], [ 'mug', 244, 162, 97 ] ];
 
-foreach ( [ 'tee-front', 'tee-back', 'tee-detail' ] as $slug ) {
+foreach ( $palette as [ $slug, $r, $g, $bl ] ) {
 	$file = $upload['path'] . '/' . $slug . '.png';
-	file_put_contents( $file, $png );
-	$images[] = wp_insert_attachment( [ 'post_mime_type' => 'image/png', 'post_title' => $slug, 'post_status' => 'inherit' ], $file );
+	$img = imagecreatetruecolor( 800, 800 );
+	imagefill( $img, 0, 0, imagecolorallocate( $img, $r, $g, $bl ) );
+	imagefilledellipse( $img, 400, 400, 420, 420, imagecolorallocate( $img, min( 255, $r + 50 ), min( 255, $g + 50 ), min( 255, $bl + 50 ) ) );
+	imagestring( $img, 5, 330, 390, $slug, imagecolorallocate( $img, 255, 255, 255 ) );
+	imagepng( $img, $file );
+	imagedestroy( $img );
+	$attachment = wp_insert_attachment( [ 'post_mime_type' => 'image/png', 'post_title' => $slug, 'post_status' => 'inherit' ], $file );
+	wp_update_attachment_metadata( $attachment, wp_generate_attachment_metadata( $attachment, $file ) );
+	$images[] = $attachment;
 }
 
 $make = static function ( \WC_Product $product, array $args ) {
@@ -104,9 +114,9 @@ $make = static function ( \WC_Product $product, array $args ) {
 };
 
 $ids['tee'] = $make( new \WC_Product_Simple(), [ 'name' => 'Basic Tee', 'sku' => 'TEE-1', 'price' => 20, 'sale' => 15, 'stock' => 10, 'cats' => [ $ids['cat_clothing'] ], 'tags' => [ $ids['tag_new'] ], 'weight' => 0.4, 'image' => $images[0], 'gallery' => [ $images[1], $images[2] ] ] );
-$ids['hoodie'] = $make( new \WC_Product_Simple(), [ 'name' => 'Zip Hoodie', 'sku' => 'HOOD-1', 'price' => 45, 'stock' => 5, 'cats' => [ $ids['cat_hoodies'] ], 'featured' => true ] );
-$ids['cap'] = $make( new \WC_Product_Simple(), [ 'name' => 'Canvas Cap', 'sku' => 'CAP-1', 'price' => 12, 'stock' => 0, 'cats' => [ $ids['cat_accessories'] ], 'tags' => [ $ids['tag_gift'] ] ] );
-$ids['scarf'] = $make( new \WC_Product_Simple(), [ 'name' => 'Wool Scarf', 'sku' => 'SCARF-1', 'price' => 30, 'stock' => 8, 'cats' => [ $ids['cat_accessories'] ], 'tags' => [ $ids['tag_gift'], $ids['tag_new'] ] ] );
+$ids['hoodie'] = $make( new \WC_Product_Simple(), [ 'name' => 'Zip Hoodie', 'sku' => 'HOOD-1', 'price' => 45, 'stock' => 5, 'cats' => [ $ids['cat_hoodies'] ], 'featured' => true, 'image' => $images[3] ] );
+$ids['cap'] = $make( new \WC_Product_Simple(), [ 'name' => 'Canvas Cap', 'sku' => 'CAP-1', 'price' => 12, 'stock' => 0, 'cats' => [ $ids['cat_accessories'] ], 'tags' => [ $ids['tag_gift'] ], 'image' => $images[4] ] );
+$ids['scarf'] = $make( new \WC_Product_Simple(), [ 'name' => 'Wool Scarf', 'sku' => 'SCARF-1', 'price' => 30, 'stock' => 8, 'cats' => [ $ids['cat_accessories'] ], 'tags' => [ $ids['tag_gift'], $ids['tag_new'] ], 'image' => $images[5] ] );
 
 // Variable product with a Size attribute.
 $variable = new \WC_Product_Variable();
@@ -117,7 +127,7 @@ $attribute->set_position( 0 );
 $attribute->set_visible( true );
 $attribute->set_variation( true );
 $variable->set_attributes( [ $attribute ] );
-$ids['variable'] = $make( $variable, [ 'name' => 'Logo Shirt', 'sku' => 'SHIRT', 'cats' => [ $ids['cat_clothing'] ] ] );
+$ids['variable'] = $make( $variable, [ 'name' => 'Logo Shirt', 'sku' => 'SHIRT', 'cats' => [ $ids['cat_clothing'] ], 'image' => $images[6] ] );
 
 foreach ( [ 'S' => 25, 'M' => 27, 'L' => 30 ] as $size => $price ) {
 	$variation = new \WC_Product_Variation();
@@ -133,7 +143,7 @@ foreach ( [ 'S' => 25, 'M' => 27, 'L' => 30 ] as $size => $price ) {
 
 \WC_Product_Variable::sync( $ids['variable'] );
 
-$ids['external'] = $make( new \WC_Product_External(), [ 'name' => 'Partner Mug', 'sku' => 'MUG', 'price' => 9, 'cats' => [ $ids['cat_accessories'] ] ] );
+$ids['external'] = $make( new \WC_Product_External(), [ 'name' => 'Partner Mug', 'sku' => 'MUG', 'price' => 9, 'cats' => [ $ids['cat_accessories'] ], 'image' => $images[7] ] );
 $external = wc_get_product( $ids['external'] );
 $external->set_product_url( 'https://example.com/mug' );
 $external->set_button_text( 'Buy at partner' );

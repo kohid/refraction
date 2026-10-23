@@ -106,6 +106,8 @@ abstract class Woo_Widget_Base extends Theme_Widget_Base {
 	}
 
 	protected function render() {
+		Woo_Assets::ensure_cart();
+
 		if ( $this->needs_product() ) {
 			$product = Product_Context::get_product( absint( $this->get_settings( 'product_id' ) ) );
 

@@ -160,8 +160,9 @@
 			.then( ( response ) => response.text().then( ( html ) => ( { html, url: response.url, ok: response.ok } ) ) )
 			.then( ( result ) => {
 				const doc = new DOMParser().parseFromString( result.html, 'text/html' );
-				const found = doc.querySelectorAll( '.woocommerce-notices-wrapper .woocommerce-message, .woocommerce-notices-wrapper .woocommerce-error, .woocommerce-notices-wrapper .woocommerce-info' );
-				const error = doc.querySelector( '.woocommerce-notices-wrapper .woocommerce-error' );
+				// Classic themes print .woocommerce-message and friends, block themes print notice banners: take whatever the wrapper holds.
+				const found = Array.from( doc.querySelectorAll( '.woocommerce-notices-wrapper > *' ) ).filter( ( node ) => node.textContent.trim() );
+				const error = doc.querySelector( '.woocommerce-notices-wrapper .woocommerce-error, .woocommerce-notices-wrapper .is-error' );
 
 				// The store redirects to the cart after adding when that option is on.
 				if ( ! error && result.ok && /\/cart\/?(\?|$)/.test( result.url ) && ! /\/cart\/?(\?|$)/.test( window.location.href ) ) {
@@ -170,7 +171,7 @@
 				}
 
 				if ( notices ) {
-					notices.replaceChildren( ...Array.from( found ).map( ( node ) => document.importNode( node, true ) ) );
+					notices.replaceChildren( ...found.map( ( node ) => document.importNode( node, true ) ) );
 
 					if ( ! found.length ) {
 						const message = document.createElement( 'div' );

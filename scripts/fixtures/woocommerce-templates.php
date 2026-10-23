@@ -71,9 +71,19 @@ if ( 'templates' === $action ) {
 } elseif ( 'page' === $action ) {
 	$spec = json_decode( getenv( 'WOO_SPEC' ), true );
 	$id = wp_insert_post( [ 'post_type' => 'page', 'post_title' => $spec['title'], 'post_status' => 'publish', 'post_content' => '' ] );
+	update_post_meta( $id, '_refraction_edit_mode', 'builder' );
 	$doc = $docs->get( $id );
 	$doc->save( [ 'elements' => woo_elements( $spec['title'], $spec['widgets'] ), 'settings' => [] ] );
 	echo wp_json_encode( [ 'id' => $id, 'url' => get_permalink( $id ) ] );
+} elseif ( 'loopgrid' === $action ) {
+	// A Loop Item with product widgets and a page that prints it for every product.
+	$item = $docs->create( 'loop-item', [ 'post_title' => 'Woo loop item', 'post_status' => 'publish' ] );
+	$item->save( [ 'elements' => woo_elements( 'LOOP', [ [ 'type' => 'woo-product-title', 'settings' => [ 'html_tag' => 'h4' ] ], [ 'type' => 'woo-product-price' ], [ 'type' => 'woo-product-stock' ] ] ), 'settings' => [ 'post_status' => 'publish' ] ] );
+	$page = wp_insert_post( [ 'post_type' => 'page', 'post_title' => 'Woo loop page', 'post_status' => 'publish', 'post_content' => '' ] );
+	update_post_meta( $page, '_refraction_edit_mode', 'builder' );
+	$doc = $docs->get( $page );
+	$doc->save( [ 'elements' => woo_elements( 'LOOPPAGE', [ [ 'type' => 'loop-grid', 'settings' => [ 'template_id' => (string) $item->get_main_id(), 'query_post_type' => 'product', 'query_posts_per_page' => 20, 'query_exclude_current' => '', 'query_ignore_sticky_posts' => 'yes' ] ] ] ), 'settings' => [] ] );
+	echo wp_json_encode( [ 'id' => $page, 'url' => get_permalink( $page ) ] );
 } elseif ( 'content' === $action ) {
 	wp_update_post( [ 'ID' => (int) getenv( 'WOO_ID' ), 'post_content' => getenv( 'WOO_CONTENT' ) ] );
 	echo '{}';

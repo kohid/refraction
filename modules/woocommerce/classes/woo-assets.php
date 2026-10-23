@@ -13,6 +13,18 @@ final class Woo_Assets {
 	const STYLES = [ 'woocommerce-layout', 'woocommerce-smallscreen', 'woocommerce-general' ];
 
 	/**
+	 * The editor page itself is an admin request, where WooCommerce does not start the session, customer and cart
+	 * that the cart, checkout and mini cart templates read. Start them when a widget needs them.
+	 */
+	public static function ensure_cart(): void {
+		if ( ! function_exists( 'WC' ) || ! WC() || WC()->cart || ! function_exists( 'wc_load_cart' ) ) {
+			return;
+		}
+
+		wc_load_cart();
+	}
+
+	/**
 	 * @param string[] $scripts WooCommerce script handles (`wc-cart-fragments`, `wc-add-to-cart-variation`...).
 	 */
 	public static function enqueue( array $scripts = [] ): void {
