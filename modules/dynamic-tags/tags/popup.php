@@ -43,26 +43,34 @@ class Popup extends Data_Tag {
 			]
 		);
 
+		$options = class_exists( '\\Refraction\\Modules\\Popups\\Module' ) ? \Refraction\Modules\Popups\Module::get_popup_options() : [];
+
 		$this->add_control(
 			'popup_id',
 			[
-				'label' => esc_html__( 'Popup template ID', 'refraction' ),
-				'type' => Controls_Manager::NUMBER,
-				'min' => 0,
+				'label' => esc_html__( 'Popup', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'options' => [ '' => esc_html__( 'Select a popup', 'refraction' ) ] + $options,
+				'default' => '',
 				'condition' => [ 'popup_action' => [ 'open', 'toggle' ] ],
+				'description' => esc_html__( 'The popup must be published and its Display Conditions must match the page the link is on.', 'refraction' ),
 			]
 		);
 	}
 
-
 	/**
-	 * Placeholder for the Popups module: it prints the action link the popup script will react to. Without the
-	 * popups module the link does nothing.
+	 * The link the popup runtime reacts to: `#refraction-popup:open:12`, `#refraction-popup:toggle:12` or
+	 * `#refraction-popup:close` (closes the popup the link is in). The colons are percent-encoded because
+	 * esc_url() strips an unknown "protocol" such as `#refraction-popup:`; the runtime decodes the link.
 	 */
 	public function get_value( array $options = [] ) {
-		$id = (int) $this->get_settings( 'popup_id' );
+		$id = absint( $this->get_settings( 'popup_id' ) );
 		$action = in_array( $this->get_settings( 'popup_action' ), [ 'open', 'close', 'toggle' ], true ) ? $this->get_settings( 'popup_action' ) : 'open';
 
-		return Plugin::$instance->frontend->create_action_hash( 'popup:' . $action, $id ? [ 'id' => $id ] : [] );
+		if ( 'close' === $action ) {
+			return '#refraction-popup%3Aclose';
+		}
+
+		return $id ? '#refraction-popup%3A' . $action . '%3A' . $id : '';
 	}
 }

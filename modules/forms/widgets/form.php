@@ -397,6 +397,8 @@ class Form extends Widget_Base {
 				'webhook' => esc_html__( 'Webhook', 'refraction' ),
 				'discord' => esc_html__( 'Discord (incoming webhook)', 'refraction' ),
 				'slack' => esc_html__( 'Slack (incoming webhook)', 'refraction' ),
+				'popup_open' => esc_html__( 'Open popup', 'refraction' ),
+				'popup_close' => esc_html__( 'Close popup', 'refraction' ),
 			],
 		] );
 
@@ -458,6 +460,15 @@ class Form extends Widget_Base {
 			'placeholder' => esc_html__( 'https://your-link.com or /thank-you/', 'refraction' ),
 			'description' => esc_html__( 'Field tags are URL-encoded when used here.', 'refraction' ),
 			'condition' => [ 'action_type' => 'redirect' ],
+		] );
+
+		$r->add_control( 'popup_id', [
+			'label' => esc_html__( 'Popup', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'options' => [ '0' => esc_html__( 'The popup this form is in', 'refraction' ) ] + ( class_exists( '\\Refraction\\Modules\\Popups\\Module' ) ? \Refraction\Modules\Popups\Module::get_popup_options() : [] ),
+			'default' => '0',
+			'description' => esc_html__( 'Runs in the visitor\'s browser after the form was sent. Needs the popups to be on the same page.', 'refraction' ),
+			'condition' => [ 'action_type' => [ 'popup_open', 'popup_close' ] ],
 		] );
 
 		$r->add_control( 'webhook_url', [

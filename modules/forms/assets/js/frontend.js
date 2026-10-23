@@ -300,7 +300,12 @@
 							showStep( 0, false );
 							message( region, data.message, 'success' );
 							region.focus();
-							form.dispatchEvent( new window.CustomEvent( 'refraction/forms/success', { bubbles: true } ) );
+							form.dispatchEvent( new window.CustomEvent( 'refraction/forms/success', { bubbles: true, detail: { popups: data.popups || [] } } ) );
+
+							// "Open popup" / "Close popup" actions (Popups module).
+							if ( data.popups && data.popups.length && window.refractionPopup ) {
+								window.refractionPopup.apply( data.popups, form );
+							}
 
 							return;
 						}
@@ -348,6 +353,13 @@
 	} else {
 		initAll();
 	}
+
+	// Popups render their widgets on the first open: set up the forms inside them then.
+	document.addEventListener( 'refraction:popup:shown', ( event ) => {
+		if ( event.detail && event.detail.root ) {
+			initAll( event.detail.root );
+		}
+	} );
 
 	// The editor preview re-renders widgets; initialise the new markup.
 	window.addEventListener( 'refraction/frontend/init', () => {

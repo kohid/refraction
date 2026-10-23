@@ -24,11 +24,12 @@ class Action_Runner {
 	 * @param array $ctx     Template context: fields, extra, meta.
 	 * @param array $uploads Validated $_FILES entries by field id.
 	 * @param array $info    form_key, post_id, element_id, ip, user_agent, page_url, user_id.
-	 * @return array{submission_id: int, redirect: string, success: bool, results: array}
+	 * @return array{submission_id: int, redirect: string, popups: array, success: bool, results: array}
 	 */
 	public function run( Form_Definition $def, array $ctx, array $uploads, array $info ): array {
 		$results = [];
 		$redirect = '';
+		$popups = [];
 		$actions = $def->get_actions();
 		$ordered = array_merge(
 			array_filter( $actions, fn( $a ) => 'collect' === $a['type'] ),
@@ -48,6 +49,10 @@ class Action_Runner {
 
 			if ( ! empty( $result['redirect'] ) ) {
 				$redirect = $result['redirect'];
+			}
+
+			if ( ! empty( $result['popup'] ) ) {
+				$popups[] = $result['popup'];
 			}
 
 			$results[] = [ 'type' => $action['type'], 'status' => $result['status'], 'message' => $result['message'] ];
@@ -70,7 +75,7 @@ class Action_Runner {
 			}
 		}
 
-		return [ 'submission_id' => $this->submission_id, 'redirect' => $redirect, 'success' => $collected || ! $mail_failed, 'results' => $results ];
+		return [ 'submission_id' => $this->submission_id, 'redirect' => $redirect, 'popups' => $popups, 'success' => $collected || ! $mail_failed, 'results' => $results ];
 	}
 
 	private function run_one( array $action, Form_Definition $def, array $ctx, array $uploads, array $info ): array {
@@ -82,6 +87,11 @@ class Action_Runner {
 				return $this->email( $action, $ctx );
 			case 'redirect':
 				return $this->redirect( $action, $ctx );
+			case 'popup_open':
+			case 'popup_close':
+				$id = absint( $action['popup_id'] ?? 0 );
+
+				return [ 'status' => 'success', 'message' => 'popup_open' === $action['type'] ? __( 'Opens a popup in the browser.', 'refraction' ) : __( 'Closes a popup in the browser.', 'refraction' ), 'popup' => [ 'action' => 'popup_open' === $action['type'] ? 'open' : 'close', 'id' => $id ] ];
 			default:
 				return $this->webhook( $action, $ctx );
 		}

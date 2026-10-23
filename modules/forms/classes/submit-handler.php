@@ -105,7 +105,7 @@ class Submit_Handler {
 	}
 
 	private function public_result( array $r ): array {
-		return [ 'success' => $r['success'], 'message' => $r['message'], 'errors' => (object) $r['errors'], 'redirect' => $r['redirect'] ];
+		return [ 'success' => $r['success'], 'message' => $r['message'], 'errors' => (object) $r['errors'], 'redirect' => $r['redirect'], 'popups' => $r['popups'] ?? [] ];
 	}
 
 	private function fail( int $status, string $message, array $errors = [] ): array {
@@ -230,6 +230,6 @@ class Submit_Handler {
 			return $this->fail( 500, $error_message );
 		}
 
-		return [ 'success' => true, 'status' => 200, 'message' => (string) ( $widget['success_message'] ?? __( 'The form was sent successfully.', 'refraction' ) ), 'errors' => [], 'redirect' => $outcome['redirect'] ];
+		return [ 'success' => true, 'status' => 200, 'message' => (string) ( $widget['success_message'] ?? __( 'The form was sent successfully.', 'refraction' ) ), 'errors' => [], 'redirect' => $outcome['redirect'], 'popups' => $outcome['popups'] ];
 	}
 }
