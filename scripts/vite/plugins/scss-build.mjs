@@ -34,6 +34,8 @@ const SASS_TARGETS = [
 	{ cwd: 'modules/editor-one/assets/scss', src: '*.scss', dest: 'assets/css/modules/editor-one' },
 	{ cwd: 'modules/theme-builder/assets/scss', src: '*.scss', dest: 'assets/css/modules/theme-builder' },
 	{ cwd: 'modules/loop-builder/assets/scss', src: '*.scss', dest: 'assets/css/modules/loop-builder' },
+	{ cwd: 'modules/custom-code/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-code' },
+	{ cwd: 'modules/display-conditions/assets/scss', src: '*.scss', dest: 'assets/css/modules/display-conditions' },
 	{ cwd: 'modules/forms/assets/scss', src: '*.scss', dest: 'assets/css/modules/forms' },
 	{ cwd: 'modules/popups/assets/scss', src: '*.scss', dest: 'assets/css/modules/popups' },
 	{ cwd: 'assets/dev/scss/frontend', src: 'admin-bar.scss', dest: 'assets/css' },

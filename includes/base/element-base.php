@@ -489,6 +489,17 @@ abstract class Element_Base extends Controls_Stack {
 		}
 
 		/**
+		 * Whether the element is printed at all for this visitor (Display Conditions). Returning false
+		 * leaves the element, and its children, out of the HTML.
+		 *
+		 * @param bool         $should_print Default true.
+		 * @param Element_Base $this         The element.
+		 */
+		if ( ! apply_filters( 'refraction/frontend/should_print_element', true, $this ) ) {
+			return;
+		}
+
+		/**
 		 * Before frontend element render.
 		 *
 		 * Fires before Refraction element is rendered in the frontend.
