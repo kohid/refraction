@@ -552,7 +552,7 @@ async function fontChecks( browser, admin, outer ) {
 	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-custom-fonts` );
 	page.once( 'dialog', ( d ) => d.accept() );
 	await Promise.all( [ page.waitForURL( /custom-fonts/ ), page.click( '.rf-cf__family[data-family="Arsenal Check"] header .rf-cf__delete' ) ] );
-	check( A, 'deleting the family removes it, its files and the generated faces', await page.locator( '.rf-cf__family[data-family="Arsenal Check"]' ).count() === 0 && ! existsSync( dir ) && ! /Arsenal Check/.test( readFileSync( cssPath, 'utf8' ) ) );
+	check( A, 'deleting the family removes it, its files and the generated faces', await page.locator( '.rf-cf__family[data-family="Arsenal Check"]' ).count() === 0 && ! existsSync( dir ) && ! ( existsSync( cssPath ) && /Arsenal Check/.test( readFileSync( cssPath, 'utf8' ) ) ) );
 	await page.close();
 }
 
