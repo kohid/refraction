@@ -236,7 +236,7 @@ async function main() {
 			check( A, 'tags: page title, site title, tagline with before/after, request parameter (tags stripped), shortcode, anonymous fallback', same( heads.slice( 0, 6 ), [ 'LB Tags Page', 'RefractionTest', 'Tagline: Loops and tags!', 'Bob', 'SC-OK', 'visitor-anon' ] ), heads.join( '|' ) );
 			check( A, 'tags: post id and the protected key is never read', heads[ 6 ] === String( T.tags_page ) && heads[ 7 ] === 'protected-key-empty' && ! page.includes( 'must-not-leak' ), heads.join( '|' ) );
 			const hrefs = grab( page, /<a class="refraction-button[^"]*" href="([^"]*)"/g );
-			check( A, 'tags: contact URLs, popup stub, internal URL and lightbox action', hrefs[ 0 ] === 'mailto:hi@example.com?subject=Hello' && hrefs[ 1 ] === 'tel:+15550102030' && hrefs[ 2 ] === 'https://wa.me/442079460958?text=Hi' && hrefs[ 3 ].startsWith( '#refraction-action' ) && hrefs[ 3 ].includes( 'popup' ) && hrefs[ 4 ].endsWith( `?p=${ c.posts[ 2 ] }` ) && hrefs[ 5 ].includes( 'lightbox' ), hrefs.join( ' | ' ) );
+			check( A, 'tags: contact URLs, popup link, internal URL and lightbox action', hrefs[ 0 ] === 'mailto:hi@example.com?subject=Hello' && hrefs[ 1 ] === 'tel:+15550102030' && hrefs[ 2 ] === 'https://wa.me/442079460958?text=Hi' && hrefs[ 3 ].startsWith( '#refraction-popup' ) && hrefs[ 3 ].includes( 'open' ) && hrefs[ 4 ].endsWith( `?p=${ c.posts[ 2 ] }` ) && hrefs[ 5 ].includes( 'lightbox' ), hrefs.join( ' | ' ) );
 			page = await html( tagsUrl, admin );
 			check( A, 'tags: visitor info shows the logged in user', grab( page, /<h2 class="refraction-heading-title[^"]*">([^<]*)<\/h2>/g )[ 5 ] === 'admin', '' );
 
