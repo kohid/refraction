@@ -46,6 +46,12 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.4.0 =
+* New: Motion Effects on every container, section, column and widget (Advanced tab): scrolling effects (vertical and horizontal scroll, transparency, blur, rotate, scale with direction, speed, viewport range, per-device switch, relative to viewport or page) and mouse effects (mouse track, 3D tilt). Off for visitors who prefer reduced motion.
+* New: Sticky (top or bottom) with offset, Sticky On devices, stay in column, effects offset and shrink / transparent-to-solid styles; works with Theme Builder headers and the admin bar.
+* New: Custom Fonts (Refraction > Custom Fonts): upload woff2, woff, ttf or otf fonts with weights and styles, font-display and preload; they appear under "Custom Fonts" in every typography font list.
+* New: Custom Icons (Refraction > Custom Icons): upload a ZIP of SVG icons or an IcoMoon or Fontello icon font; each set is a tab in the icon picker.
+
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.
 * New: Preview Settings in the template settings: design a Single, Archive, Search Results, 404, Header or Footer template against a real post, page, custom post type item, term, author, month, search word or the 404 page.

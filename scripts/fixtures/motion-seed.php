@@ -97,7 +97,7 @@ if ( 'pages' === $action ) {
 
 	$out['sticky'] = mo_page( 'RFM Sticky', [
 		mo_spacer( 'k0', 300 ),
-		mo_box( 'stk1', [ 'rf_sticky' => 'top', 'rf_sticky_offset' => '30', 'rf_sticky_effects_offset' => '100', 'rf_sticky_shrink' => 'yes', 'rf_sticky_shrink_padding' => '4', 'rf_sticky_solid' => '#ff0066' ], 100 ),
+		mo_box( 'stk1', [ 'rf_sticky' => 'top', 'rf_sticky_offset' => '30', 'rf_sticky_effects_offset' => '2000', 'rf_sticky_shrink' => 'yes', 'rf_sticky_shrink_padding' => '4', 'rf_sticky_solid' => '#ff0066' ], 100 ),
 		mo_spacer( 'k1', 700 ),
 		mo_container( 'par', [ 'min_height' => [ 'unit' => 'px', 'size' => 1500 ], 'background_background' => 'classic', 'background_color' => '#e8eef0' ], [
 			mo_box( 'stkin', [ 'rf_sticky' => 'top', 'rf_sticky_offset' => '150', 'rf_sticky_parent' => 'yes' ], 150 ),
@@ -110,6 +110,20 @@ if ( 'pages' === $action ) {
 	] );
 
 	echo wp_json_encode( $out );
+} elseif ( 'font' === $action ) {
+	$family = getenv( 'MO_FONT' );
+	$out = mo_page( 'RFM Font', [
+		mo_container( 'fontc', [], [
+			mo_heading( 'fonth', 'Custom font heading', [ 'typography_typography' => 'custom', 'typography_font_family' => $family, 'typography_font_size' => [ 'unit' => 'px', 'size' => 48 ] ] ),
+		] ),
+	] );
+	echo wp_json_encode( $out );
+} elseif ( 'icons' === $action ) {
+	$els = [];
+	foreach ( json_decode( getenv( 'MO_ICONS' ), true ) as $i => $icon ) {
+		$els[] = [ 'id' => 'ico' . $i, 'elType' => 'widget', 'widgetType' => 'icon', 'settings' => [ 'selected_icon' => $icon ], 'elements' => [] ];
+	}
+	echo wp_json_encode( mo_page( 'RFM Icons', [ mo_container( 'icoc', [], $els ) ] ) );
 } elseif ( 'header' === $action ) {
 	mo_reset_headers();
 	$doc = $docs->create( 'header', [ 'post_title' => 'MO Header', 'post_status' => 'publish' ] );
