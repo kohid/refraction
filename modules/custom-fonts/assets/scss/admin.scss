@@ -1,0 +1,222 @@
+// Refraction > Custom Fonts
+.rf-cf {
+	max-width: 1180px;
+
+	&__title {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 26px;
+		font-weight: 600;
+		margin-bottom: 4px;
+	}
+
+	&__lead {
+		float: none;
+		clear: both;
+		max-width: 62ch;
+		font-size: 14px;
+		color: #50575e;
+		margin: 0 0 18px;
+	}
+
+	&__notice {
+		display: flex;
+		float: none;
+		clear: both;
+		width: fit-content;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 14px;
+		margin: 0 0 18px;
+		border-radius: 6px;
+		border: 1px solid;
+		max-width: 62ch;
+
+		&--success {
+			background: #edf7ee;
+			border-color: #7ab87f;
+			color: #1e4d24;
+		}
+
+		&--error {
+			background: #fcf0f0;
+			border-color: #d98c8c;
+			color: #7a1f1f;
+		}
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+		gap: 28px;
+		align-items: start;
+
+		@media (max-width: 960px) {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	h2 {
+		font-size: 16px;
+		margin: 0 0 12px;
+		padding: 0;
+	}
+
+	&__empty {
+		padding: 22px;
+		border: 1px dashed #c3c4c7;
+		border-radius: 6px;
+		color: #50575e;
+		margin: 0;
+	}
+
+	&__family {
+		background: #fff;
+		border: 1px solid #dcdcde;
+		border-radius: 6px;
+		padding: 14px 18px 12px;
+		margin-bottom: 14px;
+
+		header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 12px;
+
+			h3 {
+				margin: 0;
+				font-size: 15px;
+			}
+
+			form {
+				margin: 0;
+			}
+		}
+	}
+
+	&__specimen {
+		font-size: 30px;
+		line-height: 1.25;
+		margin: 10px 0 12px;
+		overflow-wrap: anywhere;
+	}
+
+	&__variations {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 6px 0;
+			border-top: 1px solid #f0f0f1;
+
+			form {
+				margin: 0 0 0 auto;
+			}
+		}
+	}
+
+	&__chip {
+		font-weight: 600;
+		min-width: 9ch;
+	}
+
+	&__formats,
+	&__meta {
+		color: #646970;
+		font-size: 12.5px;
+	}
+
+	&__meta {
+		margin: 8px 0 0;
+	}
+
+	&__delete {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		color: #b32d2e;
+		text-decoration: none;
+
+		&:hover,
+		&:focus {
+			color: #8a2424;
+		}
+	}
+
+	&__add {
+		background: #fff;
+		border: 1px solid #dcdcde;
+		border-radius: 6px;
+		padding: 18px 20px 8px;
+
+		.button {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+		}
+	}
+
+	&__field {
+		margin: 0 0 14px;
+
+		label {
+			display: block;
+			font-weight: 600;
+			margin-bottom: 4px;
+		}
+
+		input[type="text"],
+		select {
+			width: 100%;
+			max-width: 100%;
+		}
+
+		.description {
+			display: block;
+			margin-top: 4px;
+		}
+
+		&--check label {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-weight: 500;
+		}
+	}
+
+	&__row {
+		min-width: 0;
+		box-sizing: border-box;
+		border: 1px solid #e3e3e5;
+		border-radius: 6px;
+		padding: 8px 14px 4px;
+		margin: 0 0 12px;
+		background: #fafafa;
+
+		legend {
+			font-weight: 600;
+			padding: 0 6px;
+		}
+	}
+
+	&__row-head {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 12px;
+	}
+
+	&__files {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+		input[type="file"] {
+			max-width: 100%;
+		}
+		gap: 0 12px;
+	}
+}

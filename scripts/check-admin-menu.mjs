@@ -35,8 +35,8 @@ const WP = join( SITE, 'wordpress' );
 const LOG = join( SITE, 'php-error.log' );
 
 const USERS = {
-	admin: { login: 'admin', pass: 'admin', expect: [ 'Home', 'Settings', 'Tools', 'Saved Templates', 'Theme Builder', 'Floating Elements', 'Role Manager', 'System Info' ] },
-	editor: { login: 'editor', pass: 'editor', expect: [ 'Home', 'Saved Templates', 'Theme Builder' ], forbid: [ 'Settings', 'Tools', 'System Info' ] },
+	admin: { login: 'admin', pass: 'admin', expect: [ 'Home', 'Settings', 'Tools', 'Saved Templates', 'Theme Builder', 'Floating Elements', 'Custom Fonts', 'Custom Icons', 'Role Manager', 'System Info' ] },
+	editor: { login: 'editor', pass: 'editor', expect: [ 'Home', 'Saved Templates', 'Theme Builder' ], forbid: [ 'Custom Fonts', 'Custom Icons', 'Settings', 'Tools', 'System Info' ] },
 };
 
 const failures = [];

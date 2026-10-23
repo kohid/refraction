@@ -57,6 +57,10 @@ Other things you may notice that are not Refraction's own services: the editor l
 * New: Refraction > Custom Code: HTML, JavaScript and CSS snippets in the head, after the opening body tag or in the footer, with Theme Builder display conditions, priority, an Active switch and a code editor with syntax hints. Administrators only; `REFRACTION_DISABLE_CUSTOM_CODE` and `?refraction-disable-code=1` switch snippets off.
 * New: Display Conditions on every element (logged in, role, user, post type, page, term, author, date range, time of day, day of week, URL parameter, cookie, referrer, device, browser language) with AND/OR. Hidden elements are not in the HTML. The editor shows a badge and a "Show elements with conditions" switch.
 * New: Custom Attributes on every element (`key|value` lines, event handlers and `javascript:` links removed).
+* New: Motion Effects on every container, section, column and widget (Advanced tab): scrolling effects (vertical and horizontal scroll, transparency, blur, rotate, scale with direction, speed, viewport range, per-device switch, relative to viewport or page) and mouse effects (mouse track, 3D tilt). Off for visitors who prefer reduced motion.
+* New: Sticky (top or bottom) with offset, Sticky On devices, stay in column, effects offset and shrink / transparent-to-solid styles; works with Theme Builder headers and the admin bar.
+* New: Custom Fonts (Refraction > Custom Fonts): upload woff2, woff, ttf or otf fonts with weights and styles, font-display and preload; they appear under "Custom Fonts" in every typography font list.
+* New: Custom Icons (Refraction > Custom Icons): upload a ZIP of SVG icons or an IcoMoon or Fontello icon font; each set is a tab in the icon picker.
 
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.

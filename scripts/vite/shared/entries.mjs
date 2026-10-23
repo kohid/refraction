@@ -62,6 +62,8 @@ export const BASE_ENTRIES = {
 	'custom-code-admin': 'modules/custom-code/assets/js/admin.js',
 	'display-conditions-editor': 'modules/display-conditions/assets/js/editor.js',
 	'custom-css-editor': 'modules/custom-css/assets/js/editor.js',
+	'motion-effects-frontend': 'modules/motion-effects/assets/js/motion.js',
+	'sticky-frontend': 'modules/motion-effects/assets/js/sticky.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 
