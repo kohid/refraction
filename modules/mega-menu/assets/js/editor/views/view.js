@@ -21,6 +21,10 @@ export default class View extends $e.components.get( 'nested-elements' ).exports
 
 	onRender() {
 		super.onRender();
+
+		// On the first render the containers are attached after the menu, once all children exist (onAddChild
+		// runs before they are in the DOM), so each one is moved into its own item here.
+		this.children.each( ( childView ) => this.decoratePanel( childView ) );
 		this.syncPanels();
 	}
 
@@ -32,9 +36,15 @@ export default class View extends $e.components.get( 'nested-elements' ).exports
 
 	decoratePanel( childView ) {
 		const index = childView.model.attributes.dataIndex,
+			// On the first render the containers are attached after the menu; each belongs inside its own item.
+			listItem = this.$el.find( '.refraction-mm__list > .refraction-mm__item' )[ index - 1 ],
 			item = this.itemOf( index ),
 			widgetId = this.model.get( 'id' ),
 			trigger = this.$el.find( `.refraction-mm__item:nth-child(${ index }) .refraction-mm__trigger` );
+
+		if ( listItem && childView.el.parentNode !== listItem ) {
+			listItem.appendChild( childView.el );
+		}
 
 		childView.$el.addClass( 'refraction-mm__panel' ).attr( {
 			id: `refraction-mm-${ widgetId }-p${ index }`,

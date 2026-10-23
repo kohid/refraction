@@ -527,7 +527,6 @@ async function dragWidget( admin, title, type, targetSel ) {
 		const added = kids.find( ( c ) => ! b.includes( c.id ) );
 		return added ? { id: added.id, type: added.model.get( 'widgetType' ), children: added.children.length } : null;
 	}, [ before, type ] );
-	await admin.page.fill( '#refraction-panel-elements-search-input', '' );
 	return { found: inPanel_, created };
 }
 
@@ -587,8 +586,8 @@ SECTIONS.editor = async ( { admin, pages } ) => {
 	check( k, 'mega menu: editing an item title updates the preview', await g.evaluate( () => /Renamed home/.test( document.querySelector( '[data-id="ab00001"] .refraction-mm__list' ).textContent ) ) );
 	await admin.page.evaluate( () => { $e.run( 'document/repeater/select', { container: refraction.getContainer( 'ab00001' ), index: 2 } ); } );
 	await sleep( 1200 );
-	const open2 = await g.evaluate( () => { const p = document.querySelector( '[data-id="ab00001"] .refraction-mm__item:nth-child(2) .refraction-mm__panel' ); return p && p.classList.contains( 'is-open' ) && p.getBoundingClientRect().height > 20; } );
-	check( k, 'mega menu: selecting an item shows its dropdown in the preview', open2 );
+	const open2 = await g.evaluate( () => { const p = document.querySelector( '[data-id="ab00001"] .refraction-mm__item:nth-child(2) .refraction-mm__panel' ); return p ? p.className.slice( -60 ) + ' h=' + p.getBoundingClientRect().height : 'none'; } );
+	check( k, 'mega menu: selecting an item shows its dropdown in the preview', /is-open/.test( open2 ) && parseFloat( open2.split( 'h=' )[ 1 ] ) > 20, open2 );
 	await g.locator( '[data-id="ab00001"]' ).scrollIntoViewIfNeeded();
 	await admin.page.screenshot( { path: join( SHOTS, 'editor-mega-menu.png' ) } );
 	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'ab00001' ).repeaters.items.children[ 1 ], settings: { item_type: 'link' } } ); } );
@@ -614,9 +613,10 @@ SECTIONS.editor = async ( { admin, pages } ) => {
 	await admin.page.evaluate( () => { $e.run( 'document/elements/settings', { container: refraction.getContainer( 'ca00001' ), settings: { slides_to_show: '2' } } ); } );
 	await sleep( 2000 );
 	check( k, 'carousel: slides to show updates the live Swiper', await h.evaluate( () => document.querySelector( '[data-id="ca00001"] .refraction-nc__viewport' ).swiper.params.slidesPerView === 2 ) );
-	await admin.page.evaluate( () => { $e.run( 'document/repeater/select', { container: refraction.getContainer( 'ca00002' ), index: 3 } ); } );
+	await admin.page.evaluate( () => { $e.run( 'document/repeater/select', { container: refraction.getContainer( 'ca00001' ), index: 3 } ); } );
 	await sleep( 1500 );
-	check( k, 'carousel: selecting a slide in the panel shows it', ( await h.evaluate( () => document.querySelector( '[data-id="ca00002"] .refraction-nc__viewport' ).swiper.activeIndex ) ) === 2 );
+	const act = await h.evaluate( () => document.querySelector( '[data-id="ca00001"] .refraction-nc__viewport' ).swiper.activeIndex );
+	check( k, 'carousel: selecting a slide in the panel shows it', act === 2, String( act ) );
 
 	// navigator lists the child containers with their titles
 	await admin.page.evaluate( () => { $e.run( 'navigator/open' ); } ).catch( () => {} );
