@@ -74,7 +74,7 @@
 	}
 
 	function devices( s, key, valid, fallback ) {
-		return Array.isArray( s[ key ] ) ? valid.filter( ( d ) => s[ key ].indexOf( d ) > -1 ) : fallback;
+		return Array.isArray( s[ key ] ) && s[ key ].length ? valid.filter( ( d ) => s[ key ].indexOf( d ) > -1 ) : fallback;
 	}
 
 	/** Same rules as Pure_Motion_Settings::normalize() in PHP. */
@@ -295,7 +295,7 @@
 		[ 'tx', 'ty', 'ax', 'ay' ].forEach( ( k ) => {
 			const d = entry.target[ k ] - entry.eased[ k ];
 
-			if ( Math.abs( d ) < 0.01 ) {
+			if ( Math.abs( d ) < ( 'ax' === k || 'ay' === k ? 0.05 : 0.05 ) ) {
 				entry.eased[ k ] = entry.target[ k ];
 			} else {
 				entry.eased[ k ] += d * 0.14;
@@ -489,7 +489,9 @@
 		} );
 
 		if ( ! fx || ! ( fx.scroll || fx.mouse ) ) {
-			el.style.willChange = '';
+			[ 'translate', 'rotate', 'scale', 'filter', 'transform', 'willChange' ].forEach( ( p ) => {
+				el.style[ p ] = '';
+			} );
 			return;
 		}
 
@@ -557,12 +559,11 @@
 		Array.prototype.forEach.call( ( root || document ).querySelectorAll( '[data-rf-fx]' ), init );
 	}
 
-	function boot() {
+	/** The editor preview builds `refractionFrontend` after this script runs: wait for it, then hook in. */
+	function hookIntoEditor( tries ) {
 		const fe = window.refractionFrontend;
 
-		scan();
-
-		if ( fe && fe.hooks && fe.isEditMode && fe.isEditMode() ) {
+		if ( fe && fe.hooks && fe.config && fe.config.elements && fe.isEditMode && fe.isEditMode() ) {
 			fe.hooks.addAction( 'frontend/element_ready/global', ( $scope ) => {
 				const el = $scope && $scope[ 0 ];
 
@@ -571,8 +572,21 @@
 				}
 			} );
 
-			// Elements already rendered before this script ran.
+			// Elements already rendered before the hook existed.
 			Array.prototype.forEach.call( document.querySelectorAll( '.refraction-element[data-model-cid]' ), init );
+			return;
+		}
+
+		if ( tries < 300 ) {
+			window.setTimeout( () => hookIntoEditor( tries + 1 ), 100 );
+		}
+	}
+
+	function boot() {
+		scan();
+
+		if ( /[?&]refraction-preview=/.test( window.location.search ) ) {
+			hookIntoEditor( 0 );
 		}
 	}
 

@@ -126,7 +126,7 @@ class Pure_Motion_Settings {
 
 	/** @return string[] */
 	public static function devices( array $settings, string $key, array $valid, array $default ): array {
-		if ( ! isset( $settings[ $key ] ) || ! is_array( $settings[ $key ] ) ) {
+		if ( empty( $settings[ $key ] ) || ! is_array( $settings[ $key ] ) ) {
 			return array_values( $default );
 		}
 

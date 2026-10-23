@@ -56,12 +56,46 @@ class Module extends BaseModule {
 		$this->register_sticky_controls( $element );
 	}
 
+
+	/**
+	 * Page-assets declaration: Refraction saves which scripts a document needs and re-enables them even when the
+	 * rendered HTML comes from the element cache (where our render hooks do not run).
+	 */
+	private function asset_conditions( string $kind ): array {
+		if ( 'sticky' === $kind ) {
+			return [ 'terms' => [ [ 'name' => 'rf_sticky', 'operator' => 'in', 'value' => [ 'top', 'bottom' ] ] ] ];
+		}
+
+		$terms = [];
+
+		foreach ( array_merge( array_map( static function ( $k ) {
+			return "rf_scroll_{$k}";
+		}, array_keys( Pure_Motion_Settings::SCROLL ) ), [ 'rf_mouse_track', 'rf_mouse_tilt' ] ) as $name ) {
+			$terms[] = [ 'name' => $name, 'operator' => '===', 'value' => 'yes' ];
+		}
+
+		return [ 'relation' => 'or', 'terms' => $terms ];
+	}
+
 	// -------------------------------------------------------------- scrolling
 
 	private function register_scrolling_controls( Element_Base $element ) {
 		$element->start_controls_section( 'section_rf_scroll', [
 			'label' => esc_html__( 'Scrolling Effects', 'refraction' ),
 			'tab' => Controls_Manager::TAB_ADVANCED,
+		] );
+
+		$element->add_control( 'rf_assets', [
+			'type' => Controls_Manager::HIDDEN,
+			'assets' => [
+				'scripts' => [
+					[ 'name' => 'refraction-motion-effects', 'conditions' => $this->asset_conditions( 'motion' ) ],
+					[ 'name' => 'refraction-sticky', 'conditions' => $this->asset_conditions( 'sticky' ) ],
+				],
+				'styles' => [
+					[ 'name' => 'refraction-motion-effects', 'conditions' => $this->asset_conditions( 'sticky' ) ],
+				],
+			],
 		] );
 
 		$effects = [
@@ -132,7 +166,7 @@ class Module extends BaseModule {
 			'multiple' => true,
 			'label_block' => true,
 			'options' => $devices,
-			'default' => array_keys( $devices ),
+			'description' => esc_html__( 'Leave empty to apply on every device.', 'refraction' ),
 			'frontend_available' => true,
 			'separator' => 'before',
 		] );
@@ -231,7 +265,7 @@ class Module extends BaseModule {
 			'multiple' => true,
 			'label_block' => true,
 			'options' => $devices,
-			'default' => [ 'desktop' ],
+			'description' => esc_html__( 'Leave empty for desktop only.', 'refraction' ),
 			'frontend_available' => true,
 			'separator' => 'before',
 		] );
@@ -268,7 +302,7 @@ class Module extends BaseModule {
 			'multiple' => true,
 			'label_block' => true,
 			'options' => $devices,
-			'default' => array_keys( $devices ),
+			'description' => esc_html__( 'Leave empty for every device.', 'refraction' ),
 			'frontend_available' => true,
 			'condition' => $condition,
 		] );

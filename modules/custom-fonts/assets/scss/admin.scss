@@ -12,6 +12,8 @@
 	}
 
 	&__lead {
+		float: none;
+		clear: both;
 		max-width: 62ch;
 		font-size: 14px;
 		color: #50575e;
@@ -20,6 +22,9 @@
 
 	&__notice {
 		display: flex;
+		float: none;
+		clear: both;
+		width: fit-content;
 		align-items: center;
 		gap: 10px;
 		padding: 10px 14px;
@@ -185,6 +190,8 @@
 	}
 
 	&__row {
+		min-width: 0;
+		box-sizing: border-box;
 		border: 1px solid #e3e3e5;
 		border-radius: 6px;
 		padding: 8px 14px 4px;
@@ -199,13 +206,17 @@
 
 	&__row-head {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 		gap: 12px;
 	}
 
 	&__files {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+		input[type="file"] {
+			max-width: 100%;
+		}
 		gap: 0 12px;
 	}
 }

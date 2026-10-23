@@ -62,7 +62,7 @@
 
 		return {
 			side: s.rf_sticky,
-			devices: Array.isArray( s.rf_sticky_on ) ? valid.filter( ( d ) => s.rf_sticky_on.indexOf( d ) > -1 ) : valid,
+			devices: Array.isArray( s.rf_sticky_on ) && s.rf_sticky_on.length ? valid.filter( ( d ) => s.rf_sticky_on.indexOf( d ) > -1 ) : valid,
 			offset: Math.round( num( s.rf_sticky_offset, 0, 0, 1000 ) ),
 			effectsOffset: Math.round( num( s.rf_sticky_effects_offset, 0, 0, 5000 ) ),
 			inParent: 'yes' === s.rf_sticky_parent,
@@ -127,7 +127,7 @@
 		const ref = ( entry.stuck ? entry.placeholder : el ).getBoundingClientRect();
 		const top = cfg.offset + ( 'top' === cfg.side ? bar : 0 );
 		const gap = cfg.offset;
-		const shouldStick = 'top' === cfg.side ? ref.top <= top : ref.bottom >= vh - gap;
+		const shouldStick = 'top' === cfg.side ? ref.top < top : ref.bottom > vh - gap;
 
 		if ( shouldStick && ! entry.stuck ) {
 			stick( entry );
@@ -249,12 +249,11 @@
 		setup( el, cfg, model );
 	}
 
-	function boot() {
-		Array.prototype.forEach.call( document.querySelectorAll( '[data-rf-sticky]' ), init );
-
+	/** The editor preview builds `refractionFrontend` after this script runs: wait for it, then hook in. */
+	function hookIntoEditor( tries ) {
 		const fe = window.refractionFrontend;
 
-		if ( fe && fe.hooks && fe.isEditMode && fe.isEditMode() ) {
+		if ( fe && fe.hooks && fe.config && fe.config.elements && fe.isEditMode && fe.isEditMode() ) {
 			fe.hooks.addAction( 'frontend/element_ready/global', ( $scope ) => {
 				const el = $scope && $scope[ 0 ];
 
@@ -263,7 +262,21 @@
 				}
 			} );
 
+			// Elements already rendered before the hook existed.
 			Array.prototype.forEach.call( document.querySelectorAll( '.refraction-element[data-model-cid]' ), init );
+			return;
+		}
+
+		if ( tries < 300 ) {
+			window.setTimeout( () => hookIntoEditor( tries + 1 ), 100 );
+		}
+	}
+
+	function boot() {
+		Array.prototype.forEach.call( document.querySelectorAll( '[data-rf-sticky]' ), init );
+
+		if ( /[?&]refraction-preview=/.test( window.location.search ) ) {
+			hookIntoEditor( 0 );
 		}
 	}
 
