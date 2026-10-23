@@ -123,6 +123,7 @@ class Modules_Manager {
 			'agents',
 			'assets-manager',
 			'theme-builder',
+			'woocommerce',
 			'loop-builder',
 			'forms',
 			'pro-widgets',

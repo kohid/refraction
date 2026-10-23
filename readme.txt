@@ -46,6 +46,10 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.4.0 =
+* New: WooCommerce builder (loads only when WooCommerce is active). Theme Builder templates for Single Product, Product Archive, Cart, Checkout, My Account and Purchase Summary, with product conditions (ID, category, tag, type, on sale, in stock, shop, cart, checkout, account pages) and Preview Settings with a sample product, category or order.
+* New: 23 WooCommerce widgets: Products, Product Categories, Product Title, Images, Price, Rating, Stock, Meta, Short Description, Content, Data Tabs, Additional Information, Upsells, Related Products, Add to Cart, Menu Cart, Cart, Checkout, My Account, Purchase Summary, Order Tracking, Notices and Breadcrumbs.
+
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.
 * New: Preview Settings in the template settings: design a Single, Archive, Search Results, 404, Header or Footer template against a real post, page, custom post type item, term, author, month, search word or the 404 page.
