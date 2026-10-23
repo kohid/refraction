@@ -218,7 +218,7 @@ class Off_Canvas extends Widget_Nested_Base {
 			'return_value' => 'yes',
 		] );
 
-		$this->add_control( 'animation', [
+		$this->add_control( 'panel_animation', [
 			'label' => esc_html__( 'Animation', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'slide',

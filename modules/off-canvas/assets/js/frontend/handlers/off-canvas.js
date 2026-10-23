@@ -74,28 +74,28 @@ export default class OffCanvas extends Base {
 		const selectors = this.getSettings( 'selectors' );
 
 		return {
-			$root: this.$element.find( selectors.root ),
-			$layer: this.$element.find( selectors.layer ),
-			$panel: this.$element.find( selectors.panel ),
-			$trigger: this.$element.find( selectors.trigger ),
-			$close: this.$element.find( selectors.close ),
-			$overlay: this.$element.find( selectors.overlay ),
+			$root: this.findElement( selectors.root ),
+			$layer: this.findElement( selectors.layer ),
+			$panel: this.findElement( selectors.panel ),
+			$trigger: this.findElement( selectors.trigger ),
+			$close: this.findElement( selectors.close ),
+			$overlay: this.findElement( selectors.overlay ),
 		};
 	}
 
 	onInit() {
-		super.onInit();
-
+		// The base class binds events inside onInit(), so the state they need is prepared first.
 		this.isOpen = false;
 		this.returnTo = null;
-		this.root = this.elements.$root[ 0 ];
+		this.root = this.findElement( this.getSettings( 'selectors' ).root )[ 0 ];
+		this.data = this.root ? this.root.dataset : {};
+		this.panelId = this.data.panelId;
+
+		super.onInit();
 
 		if ( ! this.root ) {
 			return;
 		}
-
-		this.data = this.root.dataset;
-		this.panelId = this.data.panelId;
 
 		bindGlobals();
 

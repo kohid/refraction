@@ -27,13 +27,13 @@ export default class NestedCarousel extends Base {
 		const s = this.getSettings( 'selectors' );
 
 		return {
-			$root: this.$element.find( s.root ),
-			$viewport: this.$element.find( s.viewport ),
-			$track: this.$element.find( s.track ),
-			$prev: this.$element.find( s.prev ),
-			$next: this.$element.find( s.next ),
-			$pagination: this.$element.find( s.pagination ),
-			$autoplayToggle: this.$element.find( s.autoplayToggle ),
+			$root: this.findElement( s.root ),
+			$viewport: this.findElement( s.viewport ),
+			$track: this.findElement( s.track ),
+			$prev: this.findElement( s.prev ),
+			$next: this.findElement( s.next ),
+			$pagination: this.findElement( s.pagination ),
+			$autoplayToggle: this.findElement( s.autoplayToggle ),
 		};
 	}
 

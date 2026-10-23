@@ -78,15 +78,15 @@ $pages = [];
 // ------------------------------------------------------------- off-canvas
 $pages['off-canvas'] = rfn_page( 'RFN Off Canvas', [
 	rfn_w( 'html', [ 'html' => '<p><a id="hash-link" href="#refraction-offcanvas:side-menu">Open with a link</a> <button id="custom-trigger" class="open-oc" type="button">Custom trigger</button> <button id="before-btn" type="button">Before</button></p>' ] ),
-	rfn_nested( 'refraction-off-canvas', 'oc00001', [
+	rfn_nested( 'refraction-off-canvas', 'ac00001', [
 		'panel_id' => 'side-menu',
 		'panel_label' => 'Side menu',
 		'position' => 'left',
 		'button_text' => 'Open side menu',
 		'trigger_selector' => '.open-oc',
 		'duration' => 200,
-	], [ rfn_c( 'Off-canvas content', [ $h( 'Side panel' ), $btn( 'First action', 'ocbtn01' ), $txt( '<p><a id="oc-link" href="#inner">Inner link</a></p>' ), $btn( 'Last action', 'ocbtn02' ) ] ) ] ),
-	rfn_nested( 'refraction-off-canvas', 'oc00002', [
+	], [ rfn_c( 'Off-canvas content', [ $h( 'Side panel' ), $btn( 'First action', 'acb0001' ), $txt( '<p><a id="oc-link" href="#inner">Inner link</a></p>' ), $btn( 'Last action', 'acb0002' ) ] ) ] ),
+	rfn_nested( 'refraction-off-canvas', 'ac00002', [
 		'panel_id' => 'push-panel',
 		'panel_label' => 'Push panel',
 		'position' => 'right',
@@ -95,7 +95,7 @@ $pages['off-canvas'] = rfn_page( 'RFN Off Canvas', [
 		'lock_scroll' => '',
 		'duration' => 200,
 	], [ rfn_c( 'Push content', [ $h( 'Pushed' ), $btn( 'Push action' ) ] ) ] ),
-	rfn_nested( 'refraction-off-canvas', 'oc00003', [
+	rfn_nested( 'refraction-off-canvas', 'ac00003', [
 		'panel_id' => 'locked-panel',
 		'position' => 'center',
 		'button_text' => 'Open modal-like',
@@ -122,11 +122,11 @@ $mm_children = function () use ( $dd ) {
 	return [ rfn_c( 'Home', [] ), rfn_c( 'Products', $dd( 'Products' ) ), rfn_c( 'Company', $dd( 'Company' ) ), rfn_c( 'Contact', [] ) ];
 };
 $pages['mega-menu'] = rfn_page( 'RFN Mega Menu', [
-	rfn_nested( 'refraction-mega-menu', 'mm00001', [ 'items' => $items( 'a' ), 'trigger' => 'hover', 'hover_delay' => 100, 'close_delay' => 300, 'dropdown_width' => 'custom', 'menu_label' => 'Primary', 'breakpoint' => 'tablet', 'mobile_layout' => 'accordion' ], $mm_children() ),
+	rfn_nested( 'refraction-mega-menu', 'ab00001', [ 'items' => $items( 'a' ), 'trigger' => 'hover', 'hover_delay' => 100, 'close_delay' => 300, 'dropdown_width' => 'custom', 'menu_label' => 'Primary', 'breakpoint' => 'tablet', 'mobile_layout' => 'accordion' ], $mm_children() ),
 	rfn_w( 'spacer', [ 'space' => [ 'size' => 300, 'unit' => 'px' ] ] ),
-	rfn_nested( 'refraction-mega-menu', 'mm00002', [ 'items' => $items( 'b' ), 'trigger' => 'click', 'dropdown_width' => 'full', 'menu_label' => 'Click menu', 'breakpoint' => 'tablet', 'mobile_layout' => 'offcanvas' ], $mm_children() ),
+	rfn_nested( 'refraction-mega-menu', 'ab00002', [ 'items' => $items( 'b' ), 'trigger' => 'click', 'dropdown_width' => 'full', 'menu_label' => 'Click menu', 'breakpoint' => 'tablet', 'mobile_layout' => 'offcanvas' ], $mm_children() ),
 	rfn_w( 'spacer', [ 'space' => [ 'size' => 300, 'unit' => 'px' ] ] ),
-	rfn_nested( 'refraction-mega-menu', 'mm00003', [ 'items' => $items( 'c' ), 'layout' => 'vertical', 'trigger' => 'click', 'menu_label' => 'Vertical', 'breakpoint' => 'none' ], $mm_children() ),
+	rfn_nested( 'refraction-mega-menu', 'ab00003', [ 'items' => $items( 'c' ), 'layout' => 'vertical', 'trigger' => 'click', 'menu_label' => 'Vertical', 'breakpoint' => 'none' ], $mm_children() ),
 	rfn_w( 'html', [ 'html' => '<p id="outside">Outside the menus</p>' ] ),
 ] );
 
@@ -146,16 +146,16 @@ list( $i3, $c3 ) = $slides( 3, 'C' );
 list( $i4, $c4 ) = $slides( 4, 'D' );
 list( $i5, $c5 ) = $slides( 1, 'E' );
 $pages['carousel'] = rfn_page( 'RFN Carousel', [
-	rfn_nested( 'refraction-nested-carousel', 'nc00001', [ 'slides' => $i1, 'slides_to_show' => '3', 'slides_to_show_tablet' => '2', 'slides_to_show_mobile' => '1', 'spacing' => [ 'size' => 20, 'unit' => 'px' ], 'pagination' => 'bullets', 'carousel_label' => 'Features', 'speed' => 300 ], $c1 ),
-	rfn_nested( 'refraction-nested-carousel', 'nc00002', [ 'slides' => $i2, 'slides_to_show' => '1', 'autoplay' => 'yes', 'autoplay_speed' => 1500, 'pause_on_hover' => 'yes', 'loop' => 'yes', 'pagination' => 'fraction', 'speed' => 200 ], $c2 ),
-	rfn_nested( 'refraction-nested-carousel', 'nc00003', [ 'slides' => $i3, 'effect' => 'fade', 'pagination' => 'progress', 'arrows' => '', 'speed' => 200 ], $c3 ),
-	rfn_nested( 'refraction-nested-carousel', 'nc00004', [ 'slides' => $i4, 'direction' => 'vertical', 'vertical_height' => [ 'size' => 220, 'unit' => 'px' ], 'pagination' => 'none', 'speed' => 200 ], $c4 ),
-	rfn_nested( 'refraction-nested-carousel', 'nc00005', [ 'slides' => $i5 ], $c5 ),
+	rfn_nested( 'refraction-nested-carousel', 'ca00001', [ 'slides' => $i1, 'slides_to_show' => '3', 'slides_to_show_tablet' => '2', 'slides_to_show_mobile' => '1', 'spacing' => [ 'size' => 20, 'unit' => 'px' ], 'pagination' => 'bullets', 'carousel_label' => 'Features', 'speed' => 300 ], $c1 ),
+	rfn_nested( 'refraction-nested-carousel', 'ca00002', [ 'slides' => $i2, 'slides_to_show' => '1', 'autoplay' => 'yes', 'autoplay_speed' => 1500, 'pause_on_hover' => 'yes', 'loop' => 'yes', 'pagination' => 'fraction', 'speed' => 200 ], $c2 ),
+	rfn_nested( 'refraction-nested-carousel', 'ca00003', [ 'slides' => $i3, 'effect' => 'fade', 'pagination' => 'progress', 'arrows' => '', 'speed' => 200 ], $c3 ),
+	rfn_nested( 'refraction-nested-carousel', 'ca00004', [ 'slides' => $i4, 'direction' => 'vertical', 'vertical_height' => [ 'size' => 220, 'unit' => 'px' ], 'pagination' => 'none', 'speed' => 200 ], $c4 ),
+	rfn_nested( 'refraction-nested-carousel', 'ca00005', [ 'slides' => $i5 ], $c5 ),
 ] );
 
 // ------------------------------------------------------------ combinations
 list( $ci, $cc ) = $slides( 3, 'M' );
-$carousel_in_menu = rfn_nested( 'refraction-nested-carousel', 'nc00010', [ 'slides' => $ci, 'speed' => 200, 'pagination' => 'bullets' ], $cc );
+$carousel_in_menu = rfn_nested( 'refraction-nested-carousel', 'ca00010', [ 'slides' => $ci, 'speed' => 200, 'pagination' => 'bullets' ], $cc );
 $combo_items = [
 	[ '_id' => 'cm1', 'item_title' => 'Gallery', 'item_type' => 'dropdown' ],
 	[ '_id' => 'cm2', 'item_title' => 'Plain', 'item_type' => 'link', 'item_link' => [ 'url' => home_url( '/' ) ] ],
@@ -165,12 +165,15 @@ $stack_items = [
 	[ '_id' => 'sm1', 'item_title' => 'Shop', 'item_type' => 'dropdown' ],
 	[ '_id' => 'sm2', 'item_title' => 'Help', 'item_type' => 'link', 'item_link' => [ 'url' => home_url( '/' ) ] ],
 ];
-$nested_mm = rfn_nested( 'refraction-mega-menu', 'mm00020', [ 'items' => $stack_items, 'breakpoint' => 'none', 'trigger' => 'click', 'menu_label' => 'In panel' ], [ rfn_c( 'Shop', $dd( 'Shop' ) ), rfn_c( 'Help', [] ) ] );
-$carousel_in_oc = rfn_nested( 'refraction-nested-carousel', 'nc00020', [ 'slides' => $oi, 'speed' => 200 ], $oc );
+$nested_mm = rfn_nested( 'refraction-mega-menu', 'ab00020', [ 'items' => $stack_items, 'breakpoint' => 'none', 'trigger' => 'click', 'menu_label' => 'In panel' ], [ rfn_c( 'Shop', $dd( 'Shop' ) ), rfn_c( 'Help', [] ) ] );
+$carousel_in_oc = rfn_nested( 'refraction-nested-carousel', 'ca00020', [ 'slides' => $oi, 'speed' => 200 ], $oc );
+list( $ti, $tc ) = $slides( 3, 'T' );
+$carousel_in_tab = rfn_nested( 'refraction-nested-carousel', 'ca00030', [ 'slides' => $ti, 'speed' => 200 ], $tc );
 $pages['combos'] = rfn_page( 'RFN Combos', [
-	rfn_nested( 'refraction-mega-menu', 'mm00010', [ 'items' => $combo_items, 'trigger' => 'click', 'dropdown_width' => 'custom', 'dropdown_custom_width' => [ 'size' => 600, 'unit' => 'px' ], 'breakpoint' => 'none', 'menu_label' => 'Gallery menu' ], [ rfn_c( 'Gallery', [ $carousel_in_menu ] ), rfn_c( 'Plain', [] ) ] ),
-	rfn_nested( 'refraction-off-canvas', 'oc00010', [ 'panel_id' => 'menu-panel', 'panel_label' => 'Menu panel', 'button_text' => 'Open menu panel', 'position' => 'left' ], [ rfn_c( 'Panel', [ $nested_mm ] ) ] ),
-	rfn_nested( 'refraction-off-canvas', 'oc00011', [ 'panel_id' => 'carousel-panel', 'panel_label' => 'Carousel panel', 'button_text' => 'Open carousel panel', 'position' => 'center', 'duration' => 100 ], [ rfn_c( 'Carousel panel', [ $carousel_in_oc ] ) ] ),
+	rfn_nested( 'nested-tabs', 'ad00001', [ 'tabs' => [ [ '_id' => 'tb1', 'tab_title' => 'One' ], [ '_id' => 'tb2', 'tab_title' => 'Two' ] ] ], [ rfn_c( 'One', [ $h( 'First tab' ) ] ), rfn_c( 'Two', [ $carousel_in_tab ] ) ] ),
+	rfn_nested( 'refraction-mega-menu', 'ab00010', [ 'items' => $combo_items, 'trigger' => 'click', 'dropdown_width' => 'custom', 'dropdown_custom_width' => [ 'size' => 600, 'unit' => 'px' ], 'breakpoint' => 'none', 'menu_label' => 'Gallery menu' ], [ rfn_c( 'Gallery', [ $carousel_in_menu ] ), rfn_c( 'Plain', [] ) ] ),
+	rfn_nested( 'refraction-off-canvas', 'ac00010', [ 'panel_id' => 'menu-panel', 'panel_label' => 'Menu panel', 'button_text' => 'Open menu panel', 'position' => 'left' ], [ rfn_c( 'Panel', [ $nested_mm ] ) ] ),
+	rfn_nested( 'refraction-off-canvas', 'ac00011', [ 'panel_id' => 'carousel-panel', 'panel_label' => 'Carousel panel', 'button_text' => 'Open carousel panel', 'position' => 'center', 'duration' => 100 ], [ rfn_c( 'Carousel panel', [ $carousel_in_oc ] ) ] ),
 	rfn_w( 'html', [ 'html' => '<p>After</p>' ] ),
 ] );
 

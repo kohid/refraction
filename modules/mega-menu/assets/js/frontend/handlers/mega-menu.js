@@ -27,25 +27,25 @@ export default class MegaMenu extends Base {
 		const s = this.getSettings( 'selectors' );
 
 		return {
-			$root: this.$element.find( s.root ),
-			$toggle: this.$element.find( s.toggle ),
-			$close: this.$element.find( s.close ),
-			$scrim: this.$element.find( s.scrim ),
-			$drawer: this.$element.find( s.drawer ),
+			$root: this.findElement( s.root ),
+			$toggle: this.findElement( s.toggle ),
+			$close: this.findElement( s.close ),
+			$scrim: this.findElement( s.scrim ),
+			$drawer: this.findElement( s.drawer ),
 		};
 	}
 
 	onInit() {
-		super.onInit();
+		// The base class binds events inside onInit(), so the state they need is prepared first.
+		this.root = this.findElement( this.getSettings( 'selectors' ).root )[ 0 ];
+		this.openItem = null;
+		this.timers = new Map();
 
-		this.root = this.elements.$root[ 0 ];
+		super.onInit();
 
 		if ( ! this.root ) {
 			return;
 		}
-
-		this.openItem = null;
-		this.timers = new Map();
 
 		if ( this.root.closest( '.refraction-offcanvas__panel' ) ) {
 			this.root.classList.add( 'is-embedded' );
@@ -66,7 +66,7 @@ export default class MegaMenu extends Base {
 	}
 
 	items() {
-		return Array.from( this.root.querySelectorAll( ':scope .refraction-mm__list > .refraction-mm__item' ) );
+		return Array.from( this.root.querySelectorAll( ':scope > .refraction-mm__drawer > .refraction-mm__list > .refraction-mm__item' ) );
 	}
 
 	topLevelControls() {
@@ -91,7 +91,7 @@ export default class MegaMenu extends Base {
 		this.onClick = ( event ) => {
 			const trigger = event.target.closest( '.refraction-mm__trigger' );
 
-			if ( trigger && root.contains( trigger ) ) {
+			if ( trigger && trigger.closest( '.refraction-mm' ) === root ) {
 				this.onTriggerClick( trigger, event );
 			}
 		};
@@ -102,6 +102,10 @@ export default class MegaMenu extends Base {
 			}
 
 			const li = event.target.closest( '.refraction-mm__item' );
+
+			if ( ! li || li.closest( '.refraction-mm' ) !== root ) {
+				return;
+			}
 
 			if ( li && li.classList.contains( 'has-dropdown' ) && ! li.contains( event.relatedTarget ) ) {
 				this.scheduleOpen( li );
@@ -118,7 +122,7 @@ export default class MegaMenu extends Base {
 
 			const li = event.target.closest( '.refraction-mm__item' );
 
-			if ( li && li.classList.contains( 'has-dropdown' ) && ! li.contains( event.relatedTarget ) ) {
+			if ( li && li.closest( '.refraction-mm' ) === root && li.classList.contains( 'has-dropdown' ) && ! li.contains( event.relatedTarget ) ) {
 				this.cancelTimer( li );
 				this.scheduleClose( li );
 			}
@@ -129,7 +133,7 @@ export default class MegaMenu extends Base {
 		this.onFocusOut = ( event ) => {
 			const li = event.target.closest( '.refraction-mm__item' );
 
-			if ( li && this.openItem === li && ! li.contains( event.relatedTarget ) && ! this.isMobile ) {
+			if ( li && li.closest( '.refraction-mm' ) === root && this.openItem === li && ! li.contains( event.relatedTarget ) && ! this.isMobile ) {
 				this.closeItem( li );
 			}
 		};
