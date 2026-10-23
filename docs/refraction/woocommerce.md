@@ -2,7 +2,7 @@
 
 The `woocommerce` module adds WooCommerce templates and widgets to the Theme Builder. It loads only when WooCommerce is active (`Module::is_active()` is `class_exists( 'WooCommerce' )`): with WooCommerce off, no template type, tab, condition, widget or script is registered and nothing changes on the site.
 
-Tested with WooCommerce 11.2.1, WordPress 6.9, Twenty Twenty-One (classic theme) and Twenty Twenty-Five (block theme). Plan: `docs/refraction/woo-plan.md`. Check: `scripts/check-woocommerce.mjs`; pure-logic test: `php scripts/test-woocommerce.php`.
+Tested with WooCommerce 11.2.1, WordPress 7.1.3, Twenty Twenty-One (classic theme) and Twenty Twenty-Five (block theme). Plan: `docs/refraction/woo-plan.md`. Check: `scripts/check-woocommerce.mjs`; pure-logic test: `php scripts/test-woocommerce.php`.
 
 ## Template types
 

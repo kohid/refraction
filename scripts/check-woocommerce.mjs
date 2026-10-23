@@ -275,6 +275,13 @@ async function frontEnd( browser, theme, seed, watch ) {
 	await vp.goto( BASE + pages.tee );
 	check( 'cart', `${ theme }: Menu Cart starts empty`, ( await count() ) === '0' );
 	await vp.screenshot( { path: join( SHOTS, `${ theme }-product.png` ), fullPage: true } );
+	await vp.click( '.refraction-product-images__thumb[data-index="1"]' );
+	check( 'widgets', `${ theme }: a thumbnail swaps the main image`, ( await vp.locator( '.refraction-product-images__slide.is-active' ).getAttribute( 'data-index' ) ) === '1' );
+	await vp.click( '.refraction-product-images__slide.is-active a' );
+	await vp.waitForSelector( '.dialog-lightbox-widget', { state: 'visible', timeout: 10000 } ).catch( () => {} );
+	check( 'widgets', `${ theme }: clicking the image opens the Refraction lightbox`, await vp.locator( '.dialog-lightbox-widget' ).first().isVisible().catch( () => false ) );
+	await vp.keyboard.press( 'Escape' );
+	await vp.waitForSelector( '.dialog-lightbox-widget', { state: 'hidden', timeout: 5000 } ).catch( () => {} );
 	await vp.locator( '.wc-tabs li.additional_information_tab a' ).click();
 	check( 'widgets', `${ theme }: Product Data Tabs switch panels (WooCommerce script or the fallback)`, await vp.locator( '#tab-additional_information' ).isVisible() && ! ( await vp.locator( '#tab-description' ).isVisible() ) );
 	await vp.locator( '.wc-tabs li.reviews_tab a' ).click();
