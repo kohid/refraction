@@ -61,8 +61,8 @@ class Upsells extends Woo_Widget_Base {
 		}
 
 		woocommerce_upsell_display(
-			\Refraction\Modules\Woocommerce\Classes\Settings::limit( $this->get_settings( 'limit' ) ),
-			\Refraction\Modules\Woocommerce\Classes\Settings::columns( $this->get_settings( 'columns' ) ),
+			\Refraction\Modules\Woocommerce\Classes\Settings::limit( $this->get_settings( 'limit' ) ?: 4 ),
+			\Refraction\Modules\Woocommerce\Classes\Settings::columns( $this->get_settings( 'columns' ) ?: 4 ),
 			in_array( $this->get_settings( 'orderby' ), [ 'rand', 'date', 'title', 'price' ], true ) ? $this->get_settings( 'orderby' ) : 'rand',
 			'asc' === $this->get_settings( 'order' ) ? 'asc' : 'desc'
 		);

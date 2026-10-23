@@ -92,6 +92,19 @@ abstract class Woo_Widget_Base extends Theme_Widget_Base {
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => $name, 'selector' => $selector ] );
 	}
 
+	/** The settings for display, with the default of every control that has no saved value. */
+	protected function get_all_settings(): array {
+		$settings = $this->get_settings_for_display();
+
+		foreach ( $this->get_controls() as $id => $control ) {
+			if ( ! array_key_exists( $id, $settings ) && array_key_exists( 'default', $control ) ) {
+				$settings[ $id ] = $control['default'];
+			}
+		}
+
+		return $settings;
+	}
+
 	protected function render() {
 		if ( $this->needs_product() ) {
 			$product = Product_Context::get_product( absint( $this->get_settings( 'product_id' ) ) );

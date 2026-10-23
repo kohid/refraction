@@ -70,7 +70,7 @@ class Menu_Cart extends Woo_Widget_Base {
 	}
 
 	protected function render_widget(): void {
-		$s = $this->get_settings_for_display();
+		$s = $this->get_all_settings();
 		$cart = function_exists( 'WC' ) ? WC()->cart : null;
 		$count = $cart ? (int) $cart->get_cart_contents_count() : 0;
 		$total = $cart ? wp_kses_post( $cart->get_cart_subtotal() ) : '';

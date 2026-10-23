@@ -57,8 +57,8 @@ class Related_Products extends Woo_Widget_Base {
 		ob_start();
 		woocommerce_related_products(
 			[
-				'posts_per_page' => \Refraction\Modules\Woocommerce\Classes\Settings::limit( $this->get_settings( 'limit' ) ),
-				'columns' => \Refraction\Modules\Woocommerce\Classes\Settings::columns( $this->get_settings( 'columns' ) ),
+				'posts_per_page' => \Refraction\Modules\Woocommerce\Classes\Settings::limit( $this->get_settings( 'limit' ) ?: 4 ),
+				'columns' => \Refraction\Modules\Woocommerce\Classes\Settings::columns( $this->get_settings( 'columns' ) ?: 4 ),
 				'orderby' => in_array( $this->get_settings( 'orderby' ), [ 'rand', 'date', 'title', 'price' ], true ) ? $this->get_settings( 'orderby' ) : 'rand',
 				'order' => 'asc' === $this->get_settings( 'order' ) ? 'asc' : 'desc',
 			]

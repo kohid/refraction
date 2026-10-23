@@ -57,7 +57,7 @@ class Product_Images extends Woo_Widget_Base {
 	}
 
 	protected function render_product( \WC_Product $product ): void {
-		$settings = $this->get_settings_for_display();
+		$settings = $this->get_all_settings();
 		$size = in_array( $settings['image_size'], [ 'woocommerce_single', 'large', 'full' ], true ) ? $settings['image_size'] : 'woocommerce_single';
 		$ids = array_values( array_unique( array_filter( array_map( 'absint', array_merge( [ $product->get_image_id() ], $product->get_gallery_image_ids() ) ) ) ) );
 		$lightbox = 'yes' === $settings['lightbox'];

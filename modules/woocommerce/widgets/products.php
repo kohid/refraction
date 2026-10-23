@@ -239,7 +239,7 @@ class Products extends Woo_Widget_Base {
 
 	/** Which parts of the product card are hidden. */
 	private function hidden_parts(): array {
-		$s = $this->get_settings_for_display();
+		$s = $this->get_all_settings();
 		$map = [
 			'show_image' => [ 'woocommerce_before_shop_loop_item_title', 'woocommerce_template_loop_product_thumbnail' ],
 			'show_badge' => [ 'woocommerce_before_shop_loop_item_title', 'woocommerce_show_product_loop_sale_flash' ],
@@ -260,8 +260,8 @@ class Products extends Woo_Widget_Base {
 	}
 
 	protected function render_widget(): void {
-		$s = $this->get_settings_for_display();
-		$columns = Settings::columns( $s['columns'] ?: 4 );
+		$s = $this->get_all_settings();
+		$columns = Settings::columns( ( $s['columns'] ?? 4 ) ?: 4 );
 		$current = 'current' === $s['source'];
 		$paged = isset( $_GET[ $this->page_param() ] ) ? max( 1, absint( wp_unslash( $_GET[ $this->page_param() ] ) ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 

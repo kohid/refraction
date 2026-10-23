@@ -63,7 +63,7 @@ class Product_Categories extends Woo_Widget_Base {
 	}
 
 	private function get_terms(): array {
-		$s = $this->get_settings_for_display();
+		$s = $this->get_all_settings();
 		$args = [
 			'taxonomy' => 'product_cat',
 			'hide_empty' => 'yes' === $s['hide_empty'],
@@ -127,7 +127,7 @@ class Product_Categories extends Woo_Widget_Base {
 			return;
 		}
 
-		$s = $this->get_settings_for_display();
+		$s = $this->get_all_settings();
 		$hidden = [];
 
 		if ( 'yes' !== $s['show_image'] ) {
@@ -138,7 +138,7 @@ class Product_Categories extends Woo_Widget_Base {
 			add_filter( 'woocommerce_subcategory_count_html', '__return_empty_string', 99 );
 		}
 
-		wc_set_loop_prop( 'columns', Settings::columns( $s['columns'] ?: 4 ) );
+		wc_set_loop_prop( 'columns', Settings::columns( ( $s['columns'] ?? 4 ) ?: 4 ) );
 		woocommerce_product_loop_start();
 
 		Product_Context::without_hooks(
