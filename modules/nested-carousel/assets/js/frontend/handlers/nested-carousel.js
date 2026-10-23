@@ -156,6 +156,12 @@ export default class NestedCarousel extends Base {
 			return;
 		}
 
+		// A carousel in a closed popup, tab or dropdown has no size yet: it is built when it first gets one
+		// (see observe()), because a Swiper built at zero width binds its arrows twice once it unlocks.
+		if ( ! viewport.offsetWidth ) {
+			return;
+		}
+
 		const Swiper = refractionFrontend.utils.swiper,
 			token = ( this.buildToken = ( this.buildToken || 0 ) + 1),
 			swiper = await new Swiper( this.elements.$viewport, this.getSwiperOptions() );
@@ -248,7 +254,12 @@ export default class NestedCarousel extends Base {
 		} );
 
 		// Keyboard and screen reader users should not be moved on while they read a slide.
-		this.onFocusIn = () => {
+		this.onFocusIn = ( event ) => {
+			// Focusing the pause button itself must not pre-empt its own click.
+			if ( event.target.closest( '.refraction-nc__autoplay' ) ) {
+				return;
+			}
+
 			if ( this.swiper?.autoplay?.running ) {
 				this.swiper.autoplay.stop();
 				this.syncAutoplayToggle();

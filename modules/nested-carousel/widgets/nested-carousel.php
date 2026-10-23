@@ -373,7 +373,14 @@ class Nested_Carousel extends Widget_Nested_Base {
 		$children = $this->get_children();
 		$title = $settings['slides'][ $index ]['slide_title'] ?? '';
 
-		$decorate = function ( $should_render, $container ) use ( $index, $count, $title ) {
+		$target_id = $children[ $index ]->get_id();
+
+		// Only the slide's own container is decorated, not containers nested inside its content.
+		$decorate = function ( $should_render, $container ) use ( $index, $count, $title, $target_id ) {
+			if ( $container->get_id() !== $target_id ) {
+				return $should_render;
+			}
+
 			$container->add_render_attribute( '_wrapper', [
 				'class' => [ 'swiper-slide', 'refraction-nc__slide' ],
 				'role' => 'group',

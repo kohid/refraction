@@ -574,7 +574,14 @@ class Mega_Menu extends Widget_Nested_Base {
 			return;
 		}
 
-		$decorate = function ( $should_render, $container ) use ( $ids ) {
+		$target_id = $children[ $index ]->get_id();
+
+		// Only the item's own container is decorated, not containers nested inside its content.
+		$decorate = function ( $should_render, $container ) use ( $ids, $target_id ) {
+			if ( $container->get_id() !== $target_id ) {
+				return $should_render;
+			}
+
 			$container->add_render_attribute( '_wrapper', [
 				'id' => $ids['panel'],
 				'class' => 'refraction-mm__panel',

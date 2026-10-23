@@ -257,7 +257,7 @@ SECTIONS[ 'mega-menu' ] = async ( { browser, pages, theme } ) => {
 	await p.hover( `${ m1 } #refraction-mm-ab00001-t3` );
 	await sleep( 700 );
 	check( k, 'hover: moving to another item switches dropdowns (only one open)', ( await visibleNow( p, `${ m1 } #refraction-mm-ab00001-p3` ) ) && ! ( await visibleNow( p, panel1 ) ) );
-	await p.mouse.move( 700, 600 );
+	await p.mouse.move( 1250, 880 );
 	await sleep( 120 );
 	const stillOpen = await visibleNow( p, `${ m1 } #refraction-mm-ab00001-p3` );
 	await sleep( 700 );
@@ -267,7 +267,7 @@ SECTIONS[ 'mega-menu' ] = async ( { browser, pages, theme } ) => {
 	const pbb = await box( p, panel1 );
 	await p.mouse.move( pbb.x + 40, pbb.y + 30, { steps: 8 } ); await sleep( 600 );
 	check( k, 'hover: moving into the dropdown keeps it open', await visibleNow( p, panel1 ) );
-	await p.mouse.move( 700, 700 ); await sleep( 700 );
+	await p.mouse.move( 1250, 880 ); await sleep( 700 );
 
 	// keyboard
 	await p.locator( `${ m1 } .refraction-mm__item a` ).first().focus();

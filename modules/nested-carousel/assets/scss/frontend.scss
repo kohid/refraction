@@ -9,9 +9,16 @@
 	--swiper-theme-color: currentcolor;
 }
 
+.refraction-widget-nested-carousel {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
 .refraction-nc {
 	position: relative;
 	width: 100%;
+	min-width: 0;
 }
 
 .refraction-nc__viewport {
@@ -29,11 +36,12 @@
 	flex-direction: column;
 }
 
-.refraction-nc__slide {
-	flex-shrink: 0;
+.refraction-nc__track > .refraction-nc__slide.swiper-slide {
+	flex: 0 0 auto;
 	box-sizing: border-box;
 	height: auto;
 	margin: 0;
+	max-width: none;
 }
 
 // The browser skips layout and paint of slides that are far from the view.
