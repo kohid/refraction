@@ -124,6 +124,7 @@ class Modules_Manager {
 			'assets-manager',
 			'theme-builder',
 			'motion-effects',
+			'custom-fonts',
 			'loop-builder',
 			'forms',
 			'pro-widgets',
