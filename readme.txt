@@ -61,6 +61,9 @@ Other things you may notice that are not Refraction's own services: the editor l
 * New: Sticky (top or bottom) with offset, Sticky On devices, stay in column, effects offset and shrink / transparent-to-solid styles; works with Theme Builder headers and the admin bar.
 * New: Custom Fonts (Refraction > Custom Fonts): upload woff2, woff, ttf or otf fonts with weights and styles, font-display and preload; they appear under "Custom Fonts" in every typography font list.
 * New: Custom Icons (Refraction > Custom Icons): upload a ZIP of SVG icons or an IcoMoon or Fontello icon font; each set is a tab in the icon picker.
+* New: Off-Canvas widget: a panel holding any widgets that slides in from the left, right, top or bottom, opens centered, or pushes the page aside. Opens from a built-in button, any element (CSS selector) or a #refraction-offcanvas:ID link; closes with its button, the overlay or Escape; focus is trapped and returned, page scroll is locked.
+* New: Mega Menu widget: menu items that are links or open a dropdown made of a container with any widgets. Horizontal or vertical, menu-width, full-width or custom-width dropdowns, open on hover (with delays) or click, full keyboard support, and a mobile layout (stacked list or slide-in panel) from the breakpoint you choose.
+* New: Nested Carousel widget: slides are containers with any widgets. Slides per view per device, spacing, slide or fade, vertical, autoplay with pause button, loop, arrows, bullets, fraction or progress, keyboard and screen reader support; works inside tabs, dropdowns and panels.
 
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.

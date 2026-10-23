@@ -34,6 +34,11 @@ module.exports = function( $ ) {
 		this.elementsHandlers[ 'floating-bars-var-1.default' ] = () => import( /* webpackChunkName: 'floating-bars' */ 'refraction/modules/floating-buttons/assets/js/floating-bars/frontend/handlers/floating-bars' );
 	}
 
+	// Nested widgets (Off-Canvas, Mega Menu, Nested Carousel).
+	this.elementsHandlers[ 'refraction-off-canvas.default' ] = () => import( /* webpackChunkName: 'off-canvas' */ 'refraction/modules/off-canvas/assets/js/frontend/handlers/off-canvas' );
+	this.elementsHandlers[ 'refraction-mega-menu.default' ] = () => import( /* webpackChunkName: 'mega-menu' */ 'refraction/modules/mega-menu/assets/js/frontend/handlers/mega-menu' );
+	this.elementsHandlers[ 'refraction-nested-carousel.default' ] = () => import( /* webpackChunkName: 'nested-carousel' */ 'refraction/modules/nested-carousel/assets/js/frontend/handlers/nested-carousel' );
+
 	// Pro widgets (Advanced category).
 	this.elementsHandlers[ 'refraction-nav-menu.default' ] = () => import( /* webpackChunkName: 'pro-nav-menu' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/nav-menu' );
 	this.elementsHandlers[ 'refraction-slides.default' ] = () => import( /* webpackChunkName: 'pro-slides' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/slides' );

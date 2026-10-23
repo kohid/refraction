@@ -1,0 +1,394 @@
+//
+// Mega Menu
+//
+
+.refraction-widget-mega-menu {
+	--refraction-mm-gap: 4px;
+	--refraction-mm-justify: flex-start;
+	--refraction-mm-dd-width: 420px;
+	--refraction-mm-dd-offset: 8px;
+	--refraction-mm-mobile-bg: #fff;
+	--refraction-mm-duration: 160ms;
+}
+
+.refraction-mm {
+	position: relative;
+}
+
+.refraction-mm__drawer {
+	display: contents;
+}
+
+.refraction-mm__list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: var(--refraction-mm-justify);
+	gap: var(--refraction-mm-gap);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.refraction-mm[data-layout="vertical"] .refraction-mm__list {
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: var(--refraction-mm-justify);
+}
+
+.refraction-mm__item {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.refraction-mm__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45em;
+	box-sizing: border-box;
+	padding: 0.65em 0.9em;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	line-height: 1.2;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease;
+
+	&:hover,
+	&:focus-visible {
+		background: rgba(120, 120, 140, 0.12);
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentcolor;
+		outline-offset: -2px;
+	}
+
+	&[aria-current="page"] {
+		font-weight: 600;
+	}
+}
+
+.refraction-mm__icon,
+.refraction-mm__indicator {
+	display: inline-flex;
+
+	i,
+	svg {
+		display: block;
+		width: 1em;
+		height: 1em;
+	}
+
+	svg {
+		fill: currentcolor;
+	}
+}
+
+.refraction-mm__indicator svg {
+	transition: transform var(--refraction-mm-duration) ease;
+}
+
+.refraction-mm__trigger[aria-expanded="true"] .refraction-mm__indicator svg {
+	transform: rotate(180deg);
+}
+
+// The dropdown is the item's container.
+.refraction-mm__panel {
+	position: absolute;
+	z-index: 50;
+	box-sizing: border-box;
+	max-height: 80vh;
+	overflow: auto;
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 0 14px 40px rgba(10, 12, 18, 0.18);
+	opacity: 0;
+	transform: translateY(6px);
+	transition: opacity var(--refraction-mm-duration) ease, transform var(--refraction-mm-duration) ease;
+
+	&[hidden] {
+		display: none !important;
+	}
+
+	&.is-open {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.refraction-mm__panel--unused {
+	display: none !important;
+}
+
+// Horizontal: the dropdown hangs under the menu (menu width / full width) or under its item (custom width).
+.refraction-mm[data-layout="horizontal"] {
+
+	.refraction-mm__item {
+		position: static;
+	}
+
+	.refraction-mm__panel {
+		inset-block-start: calc(100% + var(--refraction-mm-dd-offset));
+		inset-inline: 0;
+	}
+}
+
+.refraction-mm[data-layout="horizontal"][data-width="full"] .refraction-mm__panel {
+	inset-inline: auto;
+	inset-inline-start: var(--refraction-mm-shift, 0);
+	width: 100vw;
+	max-width: 100vw;
+	border-radius: 0;
+}
+
+.refraction-mm[data-layout="horizontal"][data-width="custom"] {
+
+	.refraction-mm__item {
+		position: relative;
+	}
+
+	.refraction-mm__panel {
+		inset-block-start: calc(100% + var(--refraction-mm-dd-offset));
+		inset-inline: auto;
+		inset-inline-start: 0;
+		width: var(--refraction-mm-dd-width);
+		max-width: 92vw;
+	}
+}
+
+.refraction-mm-align-center .refraction-mm[data-layout="horizontal"][data-width="custom"] .refraction-mm__panel {
+	inset-inline-start: 50%;
+	translate: -50% 0;
+}
+
+.refraction-mm-align-end .refraction-mm[data-layout="horizontal"][data-width="custom"] .refraction-mm__panel {
+	inset-inline-start: auto;
+	inset-inline-end: 0;
+}
+
+// Vertical: the dropdown opens beside the menu.
+.refraction-mm[data-layout="vertical"] {
+
+	.refraction-mm__panel {
+		inset-block-start: 0;
+		inset-inline-start: calc(100% + var(--refraction-mm-dd-offset));
+		width: var(--refraction-mm-dd-width);
+		max-width: 80vw;
+	}
+}
+
+// Mobile menu button and drawer pieces are hidden until a breakpoint turns them on.
+.refraction-mm__toggle,
+.refraction-mm__close {
+	display: none;
+	align-items: center;
+	gap: 0.5em;
+	padding: 0.55em 0.8em;
+	border: 1px solid currentcolor;
+	border-radius: 6px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+
+	svg {
+		display: block;
+		fill: currentcolor;
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentcolor;
+		outline-offset: 2px;
+	}
+}
+
+.refraction-mm__scrim {
+	display: none;
+}
+
+@mixin mm-stacked() {
+
+	.refraction-mm__list {
+		flex-direction: column;
+		flex-wrap: nowrap;
+		align-items: stretch;
+		gap: 0;
+	}
+
+	.refraction-mm__link {
+		width: 100%;
+		justify-content: space-between;
+		border-radius: 0;
+	}
+
+	.refraction-mm__panel {
+		position: static;
+		width: auto;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		overflow: visible;
+		border-radius: 0;
+		box-shadow: none;
+		opacity: 1;
+		transform: none;
+		translate: none;
+	}
+}
+
+@mixin mm-mobile() {
+
+	.refraction-mm__toggle {
+		display: inline-flex;
+	}
+
+	.refraction-mm__drawer {
+		display: none;
+		box-sizing: border-box;
+		width: 100%;
+		background: var(--refraction-mm-mobile-bg);
+	}
+
+	&.is-menu-open .refraction-mm__drawer {
+		display: block;
+	}
+
+	@include mm-stacked;
+
+	// Slide-in panel.
+	&[data-mobile-layout="offcanvas"] {
+
+		.refraction-mm__drawer {
+			position: fixed;
+			inset-block: 0;
+			inset-inline-start: 0;
+			z-index: 99991;
+			display: block;
+			width: min(86vw, 360px);
+			padding: 56px 12px 16px;
+			overflow: auto;
+			visibility: hidden;
+			transform: translateX(-100%);
+			transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 0.28s;
+		}
+
+		&.is-menu-open .refraction-mm__drawer {
+			visibility: visible;
+			transform: none;
+			transition-delay: 0s;
+		}
+
+		.refraction-mm__close {
+			position: absolute;
+			inset-block-start: 10px;
+			inset-inline-end: 10px;
+			display: inline-flex;
+			padding: 6px;
+			border: 0;
+			border-radius: 50%;
+		}
+
+		.refraction-mm__scrim {
+			position: fixed;
+			inset: 0;
+			z-index: 99990;
+			display: block;
+			background: rgba(10, 12, 18, 0.5);
+
+			&[hidden] {
+				display: none;
+			}
+		}
+	}
+}
+
+[dir="rtl"] .refraction-mm[data-mobile-layout="offcanvas"] .refraction-mm__drawer {
+	transform: translateX(100%);
+}
+
+[dir="rtl"] .refraction-mm[data-mobile-layout="offcanvas"].is-menu-open .refraction-mm__drawer {
+	transform: none;
+}
+
+// A menu inside an Off-Canvas panel is always the stacked list; it needs no menu button.
+.refraction-mm.is-embedded {
+	@include mm-stacked;
+}
+
+// Breakpoints.
+@media (max-width: $screen-mobile-max) {
+
+	.refraction-mm[data-breakpoint="mobile"] {
+		@include mm-mobile;
+	}
+}
+
+@media (max-width: $screen-mobile-extra-max) {
+
+	.refraction-mm[data-breakpoint="mobile_extra"] {
+		@include mm-mobile;
+	}
+}
+
+@media (max-width: $screen-tablet-max) {
+
+	.refraction-mm[data-breakpoint="tablet"] {
+		@include mm-mobile;
+	}
+}
+
+@media (max-width: $screen-tablet-extra-max) {
+
+	.refraction-mm[data-breakpoint="tablet_extra"] {
+		@include mm-mobile;
+	}
+}
+
+@media (max-width: $screen-laptop-max) {
+
+	.refraction-mm[data-breakpoint="laptop"] {
+		@include mm-mobile;
+	}
+}
+
+// The editor shows the dropdown of the item being edited, in the flow.
+.refraction-editor-active {
+
+	.refraction-mm .refraction-mm__panel {
+		position: static;
+		display: none;
+		width: auto;
+		max-width: none;
+		margin-block-start: 8px;
+		opacity: 1;
+		transform: none;
+		translate: none;
+		outline: 1px dashed rgba(120, 120, 140, 0.6);
+
+		&.is-open {
+			display: flex;
+		}
+
+		&[hidden] {
+			display: none !important;
+		}
+	}
+
+	.refraction-mm .refraction-mm__panel--unused {
+		display: none !important;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-mm__panel,
+	.refraction-mm__indicator svg,
+	.refraction-mm__drawer {
+		transition-duration: 0s !important;
+		transition-delay: 0s !important;
+	}
+}
