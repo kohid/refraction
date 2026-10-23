@@ -1,0 +1,340 @@
+// WooCommerce widgets (front end and editor preview).
+.refraction-woo {
+	// Product grids: WooCommerce floats its columns; a grid gives the same result for any column count.
+	ul.products {
+		display: grid;
+		grid-template-columns: repeat(var(--refraction-woo-columns, 4), minmax(0, 1fr));
+		gap: 24px;
+		margin: 0 0 1.5em;
+		padding: 0;
+		list-style: none;
+
+		&::before,
+		&::after {
+			display: none;
+		}
+
+		li.product {
+			float: none;
+			width: auto;
+			margin: 0;
+		}
+	}
+
+	.refraction-woo-empty {
+		margin: 0;
+	}
+
+	.price del {
+		opacity: 0.6;
+	}
+
+	.woocommerce-pagination ul,
+	ul.page-numbers {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		margin: 1.5em 0 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			margin: 0;
+		}
+	}
+
+	.woocommerce-result-count {
+		margin: 0 0 1em;
+	}
+}
+
+// Upsells and Related Products let WooCommerce print the list and pass the columns as its own class.
+.refraction-woo--woo-upsells,
+.refraction-woo--woo-related-products {
+	@for $i from 1 through 6 {
+		ul.products.columns-#{$i} {
+			--refraction-woo-columns: #{$i};
+		}
+	}
+
+	@media (max-width: 768px) {
+		ul.products.columns-3,
+		ul.products.columns-4,
+		ul.products.columns-5,
+		ul.products.columns-6 {
+			--refraction-woo-columns: 2;
+		}
+	}
+}
+
+// Product Meta
+.refraction-woo-meta--stacked .product_meta > span {
+	display: block;
+}
+
+.refraction-woo-meta--inline .product_meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 20px;
+}
+
+// Tabs the fallback script drives (block themes)
+.refraction-tabs-ready .wc-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 20px;
+	margin: 0 0 1em;
+	padding: 0;
+	border-bottom: 1px solid rgba(128, 128, 128, 0.35);
+	list-style: none;
+
+	li {
+		margin: 0;
+
+		a {
+			display: block;
+			padding: 0.6em 0.2em;
+			border-bottom: 2px solid transparent;
+			text-decoration: none;
+		}
+
+		&.active a {
+			border-bottom-color: currentColor;
+			font-weight: 600;
+		}
+	}
+}
+
+// Product Images
+.refraction-woo div.refraction-product-images.images {
+	float: none;
+	width: 100%;
+	margin: 0;
+}
+
+.refraction-product-images {
+	position: relative;
+
+	// Themes size WooCommerce's badge differently (some stretch it to the width of its container): set it here.
+	.onsale {
+		position: absolute;
+		z-index: 2;
+		top: 12px;
+		left: 12px;
+		right: auto;
+		bottom: auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		width: auto;
+		height: auto;
+		min-width: 3.2em;
+		min-height: 3.2em;
+		margin: 0;
+		padding: 0.4em 0.7em;
+		line-height: 1.2;
+	}
+
+	&__slide {
+		display: none;
+		overflow: hidden;
+		line-height: 0;
+
+		&.is-active {
+			display: block;
+		}
+
+		a {
+			display: block;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+			transition: transform 0.2s ease-out;
+		}
+	}
+
+	&.has-zoom &__slide:hover img {
+		transform: scale(1.9);
+		transform-origin: var(--refraction-zoom-x, 50%) var(--refraction-zoom-y, 50%);
+	}
+
+	&__thumbs {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 10px;
+		margin-top: 10px;
+	}
+
+	&__thumb {
+		padding: 0;
+		border: 2px solid transparent;
+		background: none;
+		line-height: 0;
+		cursor: pointer;
+		opacity: 0.7;
+
+		&.is-active,
+		&:hover,
+		&:focus-visible {
+			opacity: 1;
+		}
+
+		&.is-active {
+			border-color: currentColor;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+	}
+}
+
+@media (hover: none) {
+	.refraction-product-images.has-zoom .refraction-product-images__slide:hover img {
+		transform: none;
+	}
+}
+
+// Add to Cart
+.refraction-add-to-cart {
+	form.cart,
+	.woocommerce-variation-add-to-cart {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: stretch;
+		gap: 10px;
+	}
+
+	form.cart.variations_form {
+		display: block;
+	}
+
+	.woocommerce-notices-wrapper:empty {
+		display: none;
+	}
+
+	&.is-busy .single_add_to_cart_button {
+		opacity: 0.6;
+		pointer-events: none;
+	}
+}
+
+.refraction-woo-qty-hide .quantity {
+	display: none;
+}
+
+// Menu Cart
+.refraction-menu-cart {
+	position: relative;
+	display: inline-block;
+
+	&__toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&__icon svg {
+		display: block;
+		width: 24px;
+		height: 24px;
+	}
+
+	&__count {
+		min-width: 1.6em;
+		padding: 0 0.4em;
+		border-radius: 999px;
+		background-color: #1d2327;
+		color: #fff;
+		font-size: 0.75em;
+		font-weight: 600;
+		line-height: 1.6em;
+		text-align: center;
+	}
+
+	&__panel {
+		z-index: 99;
+		box-sizing: border-box;
+		padding: 16px;
+		background: #fff;
+		color: #1d2327;
+		box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+		border-radius: 8px;
+
+		&[hidden] {
+			display: none;
+		}
+
+		.woocommerce-mini-cart {
+			max-height: 50vh;
+			margin: 0;
+			padding: 0;
+			overflow: auto;
+			list-style: none;
+		}
+
+		.woocommerce-mini-cart__buttons {
+			display: flex;
+			gap: 8px;
+			margin: 12px 0 0;
+
+			.button {
+				flex: 1;
+				text-align: center;
+			}
+		}
+	}
+
+	&[data-mode="dropdown"] &__panel {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		width: 340px;
+		max-width: 90vw;
+		margin-top: 8px;
+	}
+
+	&[data-mode="offcanvas"] &__panel {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 380px;
+		max-width: 92vw;
+		margin: 0;
+		overflow: auto;
+		border-radius: 0;
+	}
+
+	&__overlay {
+		position: fixed;
+		z-index: 98;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.45);
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__close {
+		position: absolute;
+		top: 8px;
+		right: 12px;
+		padding: 0 6px;
+		border: 0;
+		background: none;
+		color: inherit;
+		font-size: 28px;
+		line-height: 1;
+		cursor: pointer;
+	}
+}

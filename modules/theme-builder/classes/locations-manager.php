@@ -39,7 +39,7 @@ class Locations_Manager {
 	 * @return array<string, array{label: string, tag: string}>
 	 */
 	public function get_locations(): array {
-		return [
+		$locations = [
 			self::HEADER => [
 				'label' => esc_html__( 'Header', 'refraction' ),
 				'tag' => 'header',
@@ -65,6 +65,13 @@ class Locations_Manager {
 				'tag' => 'main',
 			],
 		];
+
+		/**
+		 * Other modules add their template locations (WooCommerce adds product, cart, checkout...).
+		 *
+		 * @param array<string, array{label: string, tag: string}> $locations
+		 */
+		return (array) apply_filters( 'refraction/theme_builder/locations', $locations );
 	}
 
 	public function is_location( string $location ): bool {
@@ -172,12 +179,22 @@ class Locations_Manager {
 
 		$tag = $this->get_locations()[ $location ]['tag'];
 
+		/**
+		 * Extra CSS classes for the wrapper of a location (WooCommerce adds the product classes the variation script looks for).
+		 *
+		 * @param string $classes  Space separated classes.
+		 * @param string $location Location.
+		 * @param int    $id       Template ID.
+		 */
+		$classes = (string) apply_filters( 'refraction/theme_builder/location_classes', '', $location, $id );
+
 		return sprintf(
-			'<%1$s class="refraction-location-%2$s" data-refraction-location="%2$s" data-refraction-template-id="%3$d">%4$s</%1$s>',
+			'<%1$s class="refraction-location-%2$s%5$s" data-refraction-location="%2$s" data-refraction-template-id="%3$d">%4$s</%1$s>',
 			tag_escape( $tag ),
 			esc_attr( $location ),
 			$id,
-			$content // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Builder output is escaped by the elements.
+			$content,
+			'' !== $classes ? ' ' . esc_attr( $classes ) : '' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Builder output is escaped by the elements.
 		);
 	}
 

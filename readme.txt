@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.4.0
+Stable tag: 0.5.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -46,6 +46,10 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.5.0 =
+* New: WooCommerce builder (loads only when WooCommerce is active). Theme Builder templates for Single Product, Product Archive, Cart, Checkout, My Account and Purchase Summary, with product conditions (ID, category, tag, type, on sale, in stock, shop, cart, checkout, account pages) and Preview Settings with a sample product, category or order.
+* New: 23 WooCommerce widgets: Products, Product Categories, Product Title, Images, Price, Rating, Stock, Meta, Short Description, Content, Data Tabs, Additional Information, Upsells, Related Products, Add to Cart, Menu Cart, Cart, Checkout, My Account, Purchase Summary, Order Tracking, Notices and Breadcrumbs.
+
 = 0.4.0 =
 * New: Theme tab in Settings (Automatic, Daylight, Graphite, Ember, Blueprint, Contrast). The choice applies to your account and re-skins Refraction's admin screens and the editor panel, top bar, navigator, library and finder; your site and the page preview are never changed. Automatic keeps today's look. Admins can set a default theme for people who have not chosen.
 
@@ -64,6 +68,7 @@ Other things you may notice that are not Refraction's own services: the editor l
 * New: Off-Canvas widget: a panel holding any widgets that slides in from the left, right, top or bottom, opens centered, or pushes the page aside. Opens from a built-in button, any element (CSS selector) or a #refraction-offcanvas:ID link; closes with its button, the overlay or Escape; focus is trapped and returned, page scroll is locked.
 * New: Mega Menu widget: menu items that are links or open a dropdown made of a container with any widgets. Horizontal or vertical, menu-width, full-width or custom-width dropdowns, open on hover (with delays) or click, full keyboard support, and a mobile layout (stacked list or slide-in panel) from the breakpoint you choose.
 * New: Nested Carousel widget: slides are containers with any widgets. Slides per view per device, spacing, slide or fade, vertical, autoplay with pause button, loop, arrows, bullets, fraction or progress, keyboard and screen reader support; works inside tabs, dropdowns and panels.
+
 
 = 0.3.0 =
 * New: Theme Builder templates for Single (posts, pages, custom post types), Archive (category, tag, custom taxonomy, author, date, posts page, post type archives), Search Results and Error 404. Each shows between your header and footer, on classic and block themes; when nothing matches your theme renders normally.

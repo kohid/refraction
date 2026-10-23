@@ -33,6 +33,7 @@ const SASS_TARGETS = [
 	{ cwd: 'modules/styleguide/assets/scss', src: 'editor.scss', dest: 'assets/css/modules/styleguide' },
 	{ cwd: 'modules/editor-one/assets/scss', src: '*.scss', dest: 'assets/css/modules/editor-one' },
 	{ cwd: 'modules/theme-builder/assets/scss', src: '*.scss', dest: 'assets/css/modules/theme-builder' },
+	{ cwd: 'modules/woocommerce/assets/scss', src: '*.scss', dest: 'assets/css/modules/woocommerce' },
 	{ cwd: 'modules/loop-builder/assets/scss', src: '*.scss', dest: 'assets/css/modules/loop-builder' },
 	{ cwd: 'modules/custom-code/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-code' },
 	{ cwd: 'modules/display-conditions/assets/scss', src: '*.scss', dest: 'assets/css/modules/display-conditions' },

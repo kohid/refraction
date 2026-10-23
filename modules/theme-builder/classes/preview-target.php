@@ -17,6 +17,19 @@ final class Preview_Target {
 	/** The document setting that holds `source`, `id`, `search` and `date`. */
 	const SETTING = 'refraction_preview_target';
 
+	/** @var array<string, array{kinds: string[], default: string}> Locations other modules add. */
+	private static array $locations = [];
+
+	/**
+	 * Preview Settings of a location another module adds.
+	 *
+	 * @param string[] $kinds   Source kinds the location may preview.
+	 * @param string   $default Source used until the user picks one.
+	 */
+	public static function register_location( string $location, array $kinds, string $default ): void {
+		self::$locations[ $location ] = [ 'kinds' => $kinds, 'default' => $default ];
+	}
+
 	/** @return array{kind: string, sub: string}|null */
 	public static function parse_source( $source ): ?array {
 		if ( ! is_string( $source ) ) {
@@ -27,7 +40,7 @@ final class Preview_Target {
 			return [ 'kind' => $source, 'sub' => '' ];
 		}
 
-		if ( preg_match( '/^(post|term|postype):([a-z0-9_\-]{1,32})$/', $source, $m ) ) {
+		if ( preg_match( '/^(post|term|postype|order):([a-z0-9_\-]{1,32})$/', $source, $m ) ) {
 			return [ 'kind' => $m[1], 'sub' => $m[2] ];
 		}
 
@@ -36,6 +49,10 @@ final class Preview_Target {
 
 	/** Source kinds a location may preview. */
 	public static function allowed_kinds( string $location ): array {
+		if ( isset( self::$locations[ $location ] ) ) {
+			return self::$locations[ $location ]['kinds'];
+		}
+
 		switch ( $location ) {
 			case Location_Scope::SINGLE:
 				return [ 'post' ];
@@ -51,6 +68,10 @@ final class Preview_Target {
 	}
 
 	public static function default_source( string $location ): string {
+		if ( isset( self::$locations[ $location ] ) ) {
+			return self::$locations[ $location ]['default'];
+		}
+
 		switch ( $location ) {
 			case Location_Scope::SINGLE:
 				return 'post:post';

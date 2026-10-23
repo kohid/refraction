@@ -19,9 +19,22 @@ final class Location_Scope {
 	const SEARCH = 'search-results';
 	const NOT_FOUND = 'error-404';
 
-	/** Locations that replace the main content of the page. */
+	/** @var array<string, callable> Body locations other modules add (WooCommerce), location => fn( Environment ): bool. */
+	private static array $extra = [];
+
+	/**
+	 * Add a body location. Extra locations are checked before the core ones: they are more specific (a product
+	 * page is a single post too), so they win when both could serve the request.
+	 *
+	 * @param callable $applies fn( Environment $environment ): bool, whether the request is one this location serves.
+	 */
+	public static function register( string $location, callable $applies ): void {
+		self::$extra[ $location ] = $applies;
+	}
+
+	/** Locations that replace the main content of the page, in the order they are tried. */
 	public static function body_locations(): array {
-		return [ self::SINGLE, self::ARCHIVE, self::SEARCH, self::NOT_FOUND ];
+		return array_merge( array_keys( self::$extra ), [ self::SINGLE, self::ARCHIVE, self::SEARCH, self::NOT_FOUND ] );
 	}
 
 	public static function is_body_location( string $location ): bool {
@@ -47,7 +60,7 @@ final class Location_Scope {
 				// Posts as front page is the blog home too.
 				return $environment->is_archive() || $environment->is_blog_index() || $environment->is_front_page();
 			default:
-				return false;
+				return isset( self::$extra[ $location ] ) && (bool) call_user_func( self::$extra[ $location ], $environment );
 		}
 	}
 }
