@@ -275,8 +275,15 @@ async function frontEnd( browser, theme, seed, watch ) {
 	await vp.goto( BASE + pages.tee );
 	check( 'cart', `${ theme }: Menu Cart starts empty`, ( await count() ) === '0' );
 	await vp.screenshot( { path: join( SHOTS, `${ theme }-product.png` ), fullPage: true } );
+	await vp.locator( '.wc-tabs li.additional_information_tab a' ).click();
+	check( 'widgets', `${ theme }: Product Data Tabs switch panels (WooCommerce script or the fallback)`, await vp.locator( '#tab-additional_information' ).isVisible() && ! ( await vp.locator( '#tab-description' ).isVisible() ) );
+	await vp.locator( '.wc-tabs li.reviews_tab a' ).click();
+	check( 'widgets', `${ theme }: the Reviews tab shows the review`, await vp.locator( '#tab-reviews' ).isVisible() && /Great tee/.test( await vp.locator( '#tab-reviews' ).innerText() ) );
+	const metaDisplay = await vp.evaluate( () => [ ...document.querySelectorAll( '.product_meta > span' ) ].map( ( e ) => getComputedStyle( e ).display ) );
+	check( 'widgets', `${ theme }: Product Meta stacks its lines`, metaDisplay.length >= 3 && metaDisplay.every( ( d ) => d === 'block' ), metaDisplay.join() );
+	check( 'widgets', `${ theme }: the stock message is printed once (Add to Cart hides WooCommerce's copy)`, ( await vp.locator( 'p.stock' ).count() ) === 1 );
 	await vp.click( '.refraction-add-to-cart .single_add_to_cart_button' );
-	await vp.waitForSelector( '.refraction-add-to-cart__notices .woocommerce-message', { timeout: 20000 } ).catch( () => {} );
+	await vp.waitForSelector( '.refraction-add-to-cart__notices .woocommerce-message, .refraction-add-to-cart__notices .wc-block-components-notice-banner', { timeout: 20000 } ).catch( () => {} );
 	const note = await vp.locator( '.refraction-add-to-cart__notices' ).innerText().catch( () => '' );
 	check( 'cart', `${ theme }: ajax add to cart shows WooCommerce's message without leaving the page`, /Basic Tee/.test( note ) && vp.url().endsWith( pages.tee ), note );
 	check( 'cart', `${ theme }: Menu Cart count updates to 1`, await waitCount( 1 ) );
