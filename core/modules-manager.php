@@ -125,6 +125,7 @@ class Modules_Manager {
 			'theme-builder',
 			'motion-effects',
 			'custom-fonts',
+			'custom-icons',
 			'loop-builder',
 			'forms',
 			'pro-widgets',

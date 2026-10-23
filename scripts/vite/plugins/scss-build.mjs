@@ -37,6 +37,7 @@ const SASS_TARGETS = [
 	{ cwd: 'modules/forms/assets/scss', src: '*.scss', dest: 'assets/css/modules/forms' },
 	{ cwd: 'modules/motion-effects/assets/scss', src: '*.scss', dest: 'assets/css/modules/motion-effects' },
 	{ cwd: 'modules/custom-fonts/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-fonts' },
+	{ cwd: 'modules/custom-icons/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-icons' },
 	{ cwd: 'assets/dev/scss/frontend', src: 'admin-bar.scss', dest: 'assets/css' },
 	{ cwd: 'assets/dev/scss/frontend/conditionals', src: '*.scss', dest: 'assets/css/conditionals' },
 	{ cwd: 'assets/dev/scss/frontend/conditionals/with-breakpoints', src: '*.scss', dest: 'assets/css/conditionals' },

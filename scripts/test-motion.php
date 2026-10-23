@@ -47,7 +47,7 @@ t( 'relative page accepted', 'page' === $n['scroll']['relative'] );
 $n = M::normalize( [ 'rf_scroll_ty' => 'yes', 'rf_scroll_devices' => 'desktop', 'rf_scroll_relative' => 'weird' ], $devices );
 t( 'a non-array devices value falls back to all', $devices === $n['scroll']['devices'] && 'viewport' === $n['scroll']['relative'] );
 $n = M::normalize( [ 'rf_scroll_ty' => 'yes', 'rf_scroll_devices' => [] ], $devices );
-t( 'an empty device list means nowhere', [] === $n['scroll']['devices'] );
+t( 'an empty device list means the default (every device)', $devices === $n['scroll']['devices'] );
 
 $n = M::normalize( [ 'rf_mouse_track' => 'yes', 'rf_mouse_track_speed' => '50', 'rf_mouse_tilt' => 'yes', 'rf_mouse_tilt_intensity' => '-3', 'rf_mouse_tilt_keep' => 'yes' ], $devices );
 t( 'mouse track opposite by default, speed clamped', 'opposite' === $n['mouse']['track']['dir'] && 10.0 === $n['mouse']['track']['speed'] );
@@ -122,6 +122,70 @@ $pre = FC::preload_urls( $fam, 'https://example.test/uploads/refraction-fonts/' 
 t( 'preload lists woff2 only, for flagged families', [ 'https://example.test/uploads/refraction-fonts/acme/a.woff2' ] === $pre );
 $fam[0]['preload'] = false;
 t( 'no preload when not flagged', [] === FC::preload_urls( $fam, 'https://example.test/' ) );
+
+// ---- custom icons
+use Refraction\Modules\CustomIcons\Classes\Pure_Svg_Sanitizer as SV;
+use Refraction\Modules\CustomIcons\Classes\Pure_Zip_Validator as ZV;
+use Refraction\Modules\CustomIcons\Classes\Pure_Icon_Set as IS;
+
+$ok = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2L2 22h20z" fill="currentColor"/></svg>';
+$clean = SV::sanitize( $ok );
+t( 'a clean svg survives', false !== strpos( $clean, '<path' ) && false !== strpos( $clean, 'viewBox="0 0 24 24"' ) && 0 === strpos( $clean, '<svg' ) );
+t( 'script element removed', false === stripos( SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script><path d="M0 0h1"/></svg>' ), 'script' ) );
+$h = SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"><path d="M0 0h1" onclick="x()" onmouseover = "y()"/></svg>' );
+t( 'on* attributes removed', '' !== $h && false === stripos( $h, 'onload' ) && false === stripos( $h, 'onclick' ) && false === stripos( $h, 'onmouseover' ) );
+t( 'foreignObject removed with its content', false === stripos( SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg"><foreignObject><div>hi</div></foreignObject><path d="M0 0h1"/></svg>' ), 'foreignobject' ) );
+$a = SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="javascript:alert(1)"><path d="M0 0h1"/></a><use xlink:href="http://evil.test/x.svg#a"/><image href="http://evil.test/p.png"/><use href="#ok"/><path id="ok" d="M0 0h1"/></svg>' );
+t( 'javascript links and external references removed', false === stripos( $a, 'javascript' ) && false === stripos( $a, 'evil.test' ) && false === stripos( $a, '<image' ) );
+t( 'the drawing inside a removed link is kept', false !== strpos( $a, '<path d="M0 0h1"/>' ) );
+t( 'a use element with an external target is removed entirely', false === strpos( $a, '<use xlink' ) && 1 === substr_count( $a, '<use' ) );
+t( 'local use reference kept', false !== strpos( $a, 'href="#ok"' ) );
+t( 'style elements removed', false === stripos( SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg"><style>@import url(http://evil.test/a.css);</style><path d="M0 0h1"/></svg>' ), 'style' ) );
+t( 'external url() in style attribute removed', false === stripos( SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h1" style="fill:url(http://evil.test/x)"/></svg>' ), 'evil.test' ) );
+t( 'fill url(#id) kept', false !== strpos( SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g"><stop offset="0" stop-color="#fff"/></linearGradient></defs><path d="M0 0h1" fill="url(#g)"/></svg>' ), 'fill="url(#g)"' ) );
+t( 'doctype/entity svg rejected', '' === SV::sanitize( '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY a "aaaa">]><svg xmlns="http://www.w3.org/2000/svg"><text>&a;</text></svg>' ) );
+t( 'not an svg rejected', '' === SV::sanitize( '<html><body>x</body></html>' ) && '' === SV::sanitize( 'garbage' ) && '' === SV::sanitize( '' ) );
+t( 'oversized svg rejected', '' === SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg"><path d="' . str_repeat( 'M0 0h1', 60000 ) . '"/></svg>' ) );
+t( 'php inside svg is inert text only', false === strpos( SV::sanitize( '<svg xmlns="http://www.w3.org/2000/svg"><?php echo 1; ?><path d="M0 0h1"/></svg>' ), '<?php' ) );
+
+$entries = [ [ 'name' => 'icons/home.svg', 'size' => 500, 'comp' => 300 ], [ 'name' => 'icons/star.SVG', 'size' => 400, 'comp' => 250 ], [ 'name' => 'icons/', 'size' => 0, 'comp' => 0 ], [ 'name' => '__MACOSX/._home.svg', 'size' => 100, 'comp' => 80 ], [ 'name' => 'readme.txt', 'size' => 10, 'comp' => 10 ], [ 'name' => 'selection.json', 'size' => 900, 'comp' => 400 ] ];
+$z = ZV::check( $entries );
+t( 'a normal zip is accepted', $z['ok'] && 3 === count( $z['accepted'] ) );
+t( 'macos junk, directories and other types are skipped', ! isset( $z['accepted'][2] ) && ! isset( $z['accepted'][3] ) && ! isset( $z['accepted'][4] ) );
+t( 'accepted entries carry a lowercase ext', 'svg' === $z['accepted'][1]['ext'] && 'json' === $z['accepted'][5]['ext'] );
+t( 'zip-slip dot-dot rejected', ! ZV::check( [ [ 'name' => '../evil.svg', 'size' => 10, 'comp' => 10 ] ] )['ok'] );
+t( 'zip-slip nested rejected', ! ZV::check( [ [ 'name' => 'a/../../evil.svg', 'size' => 10, 'comp' => 10 ] ] )['ok'] );
+t( 'absolute path rejected', ! ZV::check( [ [ 'name' => '/etc/x.svg', 'size' => 10, 'comp' => 10 ] ] )['ok'] );
+t( 'backslash traversal rejected', ! ZV::check( [ [ 'name' => 'a\\..\\b.svg', 'size' => 10, 'comp' => 10 ] ] )['ok'] );
+t( 'windows drive path rejected', ! ZV::check( [ [ 'name' => 'C:\\x.svg', 'size' => 10, 'comp' => 10 ] ] )['ok'] );
+t( 'null byte rejected', ! ZV::check( [ [ 'name' => "a.svg\0.php", 'size' => 10, 'comp' => 10 ] ] )['ok'] );
+$many = []; for ( $i = 0; $i < ZV::MAX_FILES + 1; $i++ ) { $many[] = [ 'name' => "i$i.svg", 'size' => 10, 'comp' => 10 ]; }
+t( 'too many files rejected', ! ZV::check( $many )['ok'] );
+t( 'a huge svg is rejected', ! ZV::check( [ [ 'name' => 'a.svg', 'size' => ZV::MAX_SVG_BYTES + 1, 'comp' => 1000 ] ] )['ok'] );
+t( 'total size limit', ! ZV::check( [ [ 'name' => 'a.ttf', 'size' => ZV::MAX_FONT_BYTES, 'comp' => ZV::MAX_FONT_BYTES ], [ 'name' => 'b.woff', 'size' => ZV::MAX_FONT_BYTES, 'comp' => ZV::MAX_FONT_BYTES ], [ 'name' => 'c.woff2', 'size' => ZV::MAX_FONT_BYTES, 'comp' => ZV::MAX_FONT_BYTES ], [ 'name' => 'd.otf', 'size' => ZV::MAX_FONT_BYTES, 'comp' => ZV::MAX_FONT_BYTES ] ] )['ok'] );
+t( 'zip bomb ratio rejected', ! ZV::check( [ [ 'name' => 'a.svg', 'size' => 90000, 'comp' => 10 ] ] )['ok'] );
+t( 'a zip with nothing usable is rejected', ! ZV::check( [ [ 'name' => 'readme.txt', 'size' => 10, 'comp' => 10 ] ] )['ok'] );
+
+t( 'icon names are slugged', 'home-alt' === IS::icon_name( 'Home Alt.svg' ) && 'arrow-left' === IS::icon_name( 'dir/arrow_left.svg' ) );
+t( 'hostile icon names are neutralised', 'scriptalert1script' === str_replace( '-', '', IS::icon_name( '"><script>alert(1)</script>.svg' ) ) || preg_match( '/^[a-z0-9-]+$/', IS::icon_name( '"><script>alert(1)</script>.svg' ) ) );
+t( 'duplicate names are made unique', [ 'home', 'home-2' ] === array_values( IS::unique_names( [ 'a/home.svg', 'b/home.svg' ] ) ) );
+t( 'set slug', 'my-set' === IS::set_slug( 'My Set' ) && '' === IS::set_slug( '!!!' ) );
+
+$icomoon = json_encode( [ 'icons' => [ [ 'properties' => [ 'name' => 'home, house', 'code' => 59648 ] ], [ 'properties' => [ 'name' => 'user', 'code' => 59649 ] ] ], 'preferences' => [ 'fontPref' => [ 'metadata' => [ 'fontFamily' => 'icomoon' ] ] ] ] );
+$p = IS::parse_icomoon( $icomoon );
+t( 'icomoon names and codepoints', $p && 59648 === $p['icons']['home'] && 59649 === $p['icons']['user'] && 'icomoon' === $p['family'] );
+$fontello = json_encode( [ 'name' => 'fontello', 'css_prefix_text' => 'icon-', 'glyphs' => [ [ 'css' => 'star', 'code' => 59392 ], [ 'css' => 'heart', 'code' => 59393 ] ] ] );
+$p2 = IS::parse_fontello( $fontello );
+t( 'fontello names and codepoints', $p2 && 59392 === $p2['icons']['star'] && 'fontello' === $p2['family'] );
+t( 'bad json gives null', null === IS::parse_icomoon( '{nope' ) && null === IS::parse_fontello( '[]' ) );
+t( 'codepoints outside the unicode range are dropped', [] === ( IS::parse_fontello( json_encode( [ 'glyphs' => [ [ 'css' => 'x', 'code' => 99999999 ] ] ] ) )['icons'] ?? [] ) );
+
+$fcss = IS::font_css( 'my-set', 'icomoon', [ 'woff2' => 'f.woff2', 'ttf' => 'f.ttf' ], [ 'home' => 59648 ], 'https://e.test/ci/my-set' );
+t( 'font css has face, base class and glyph', false !== strpos( $fcss, '@font-face' ) && false !== strpos( $fcss, '.rf-cf-my-set{' ) && false !== strpos( $fcss, '.rf-cf-my-set-home:before{content:"\e900"}' ) );
+t( 'font css lists formats', false !== strpos( $fcss, 'url("https://e.test/ci/my-set/f.woff2") format("woff2")' ) && false !== strpos( $fcss, 'format("truetype")' ) );
+t( 'font css cannot be broken out of', 1 === substr_count( IS::font_css( 'x', 'a"};b', [ 'ttf' => 'f.ttf' ], [ 'a"}b' => 59648 ], 'https://e.test' ), '@font-face' ) && false === strpos( IS::font_css( 'x', 'a"};b', [ 'ttf' => 'f.ttf' ], [], 'https://e.test' ), 'a"};b' ) );
+$scss = IS::svg_css( 'my-set', [ 'home' => 'home.svg' ], 'https://e.test/ci/my-set' );
+t( 'svg css masks the icon with currentColor', false !== strpos( $scss, '.rf-ci-my-set-home{' ) && false !== strpos( $scss, 'mask-image:url("https://e.test/ci/my-set/home.svg")' ) && false !== strpos( $scss, 'background-color:currentColor' ) );
 
 echo "\n$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );
