@@ -1,31 +1,45 @@
 // The drag and drop designer (Refraction > Builder > Design).
 .rfb-wrap {
-	.rfb-palette-group h3 {
-		margin: 14px 0 8px;
-		color: $rfb-gray-500;
-		font-size: 11px;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
+	.rfb-palette-group {
+		margin: 0 0 6px;
+		padding: 0 0 8px;
+		border-bottom: 1px solid var(--rfb-line);
+
+		&:last-child {
+			border-bottom: 0;
+		}
+
+		summary {
+			padding: 8px 0;
+			cursor: pointer;
+			font-size: 13px;
+			font-weight: 700;
+		}
 	}
 
 	.rfb-palette-grid {
 		display: grid;
-		gap: 6px;
+		gap: 8px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	.rfb-palette-item {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		gap: 8px;
-		padding: 8px 10px;
-		border: 1px dashed $rfb-gray-300;
+		justify-content: center;
+		gap: 6px;
+		min-height: 74px;
+		padding: 10px 6px;
+		border: 1px solid $rfb-gray-300;
 		border-radius: 8px;
 		background: var(--rfb-card);
-		color: var(--rfb-ink);
+		color: $rfb-gray-700;
 		cursor: grab;
-		font-size: 13px;
+		font-size: 12px;
 		font-weight: 600;
-		text-align: left;
+		line-height: 1.2;
+		text-align: center;
 
 		&:hover,
 		&:focus-visible {
@@ -40,9 +54,10 @@
 		}
 	}
 
-	.rfb-palette-grip {
-		color: $rfb-gray-500;
-		letter-spacing: -2px;
+	.rfb-palette-icon svg {
+		display: block;
+		width: 26px;
+		height: 26px;
 	}
 
 	// ---- canvas
@@ -643,7 +658,91 @@
 		}
 	}
 
-	.rfb-palette-grid {
-		grid-template-columns: minmax(0, 1fr);
+	// ---- full-height designer: the form gets the whole screen under the title, each panel scrolls on its own
+	&.rfb-wrap-design {
+		margin-bottom: 8px;
+
+		.rfb-subtitle {
+			display: none;
+		}
+
+		.rfb-page-head {
+			margin-bottom: 0;
+		}
+
+		.rfb-title {
+			font-size: 18px;
+		}
+
+		.rfb-workspace {
+			grid-template-rows: minmax(0, 1fr);
+			align-items: stretch;
+			margin-top: 8px;
+		}
+
+		.rfb-side {
+			position: static;
+			max-height: none;
+			height: 100%;
+		}
+
+		.rfb-canvas-col {
+			min-height: 0;
+			height: 100%;
+		}
+
+		.rfb-canvas-scroll {
+			box-sizing: border-box;
+			height: 100%;
+			overflow: auto;
+		}
+
+		.rfb-sticky-actions {
+			position: static;
+			margin: 10px 0 0;
+			padding: 10px 16px;
+			box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
+		}
+
+		@media (max-width: 900px) {
+			.rfb-side {
+				height: auto;
+			}
+
+			.rfb-canvas-scroll {
+				height: auto;
+				overflow: visible;
+			}
+		}
+	}
+
+	.rfb-cv-step em,
+	.rfb-cv-step small {
+		color: var(--rfb-muted);
+		font-style: normal;
+		font-size: 12px;
+	}
+
+	.rfb-cv-title.is-faint {
+		color: var(--rfb-muted);
+		font-weight: 600;
+	}
+
+	.rfb-image-controls {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.rfb-image-preview {
+		padding: 10px;
+		border: 1px dashed $rfb-gray-300;
+		border-radius: 8px;
+		text-align: center;
+
+		img {
+			max-width: 100%;
+			max-height: 140px;
+		}
 	}
 }

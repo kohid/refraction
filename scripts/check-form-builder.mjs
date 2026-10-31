@@ -189,12 +189,12 @@ async function main() {
 		await page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 2 ).scrollIntoViewIfNeeded();
 		await drag( page, page.locator( '.rfb-palette-item[data-type="toggle"]' ), page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 2 ), { x: 40, y: 4 } );
 		labels = await itemLabels();
-		check( 'design', 'dragging from the palette drops at the pointer', labels[ 2 ] === 'Yes / No switch' && labels.length === 9, labels.join( '|' ) );
+		check( 'design', 'dragging from the palette drops at the pointer', labels[ 2 ] === 'Yes / No' && labels.length === 9, labels.join( '|' ) );
 		// drag an existing field two places down (kept short: a native drag does not scroll the page by itself in a script)
-		await drag( page, page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No switch"))' ), page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 4 ), { x: 40, y: 4 } );
+		await drag( page, page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No"))' ), page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 4 ), { x: 40, y: 4 } );
 		labels = await itemLabels();
-		check( 'design', 'dragging a field on the canvas reorders it', labels[ 3 ] === 'Yes / No switch' && labels[ 0 ] === 'Name' && labels.length === 9, labels.join( '|' ) );
-		await page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No switch"))' ).click();
+		check( 'design', 'dragging a field on the canvas reorders it', labels[ 3 ] === 'Yes / No' && labels[ 0 ] === 'Name' && labels.length === 9, labels.join( '|' ) );
+		await page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No"))' ).click();
 		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Delete"]' ).click();
 		// keyboard add
 		await page.locator( '.rfb-palette-item[data-type="heading"]' ).focus();

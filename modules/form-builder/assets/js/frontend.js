@@ -194,6 +194,118 @@
 		} );
 	}
 
+	// ---------------------------------------------------------------- signature pad
+
+	const isMissing = ( box ) => box.hasAttribute( 'data-rfb-required' ) && ! box._rfbDrawn && ! box.closest( '[hidden]' );
+
+	function showSignatureError( box ) {
+		const error = box.parentElement.querySelector( '.rfb-sig-error' );
+
+		error.hidden = false;
+		box.scrollIntoView( { block: 'center', behavior: 'smooth' } );
+	}
+
+	function initSignature( box ) {
+		const canvas = box.querySelector( 'canvas' );
+		const hint = box.querySelector( '.rfb-sig-hint' );
+		const value = box.querySelector( '[data-rfb-sig-value]' );
+		const clear = box.parentElement.querySelector( '[data-rfb-sig-clear]' );
+		const error = box.parentElement.querySelector( '.rfb-sig-error' );
+		const context = canvas.getContext( '2d' );
+		let drawing = false;
+		let last = null;
+
+		box._rfbDrawn = false;
+
+		/** Match the drawing buffer to the box (and the screen's pixel density); keep what was drawn. */
+		const fit = () => {
+			const box_ = box.getBoundingClientRect();
+
+			if ( box_.width < 1 || box_.height < 1 ) {
+				return;
+			}
+
+			const ratio = window.devicePixelRatio || 1;
+			const saved = box._rfbDrawn ? value.value : '';
+
+			canvas.width = Math.round( box_.width * ratio );
+			canvas.height = Math.round( box_.height * ratio );
+			context.setTransform( ratio, 0, 0, ratio, 0, 0 );
+			context.lineWidth = 2.4;
+			context.lineCap = 'round';
+			context.lineJoin = 'round';
+			context.strokeStyle = '#14213d';
+			context.fillStyle = '#14213d';
+
+			if ( saved ) {
+				const image = new Image();
+
+				image.onload = () => context.drawImage( image, 0, 0, box_.width, box_.height );
+				image.src = saved;
+			}
+		};
+
+		const point = ( event ) => {
+			const rect = canvas.getBoundingClientRect();
+
+			return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+		};
+
+		canvas.addEventListener( 'pointerdown', ( event ) => {
+			event.preventDefault();
+			drawing = true;
+			last = point( event );
+			canvas.setPointerCapture( event.pointerId );
+			context.beginPath();
+			context.arc( last.x, last.y, 1.1, 0, Math.PI * 2 );
+			context.fill();
+		} );
+
+		canvas.addEventListener( 'pointermove', ( event ) => {
+			if ( ! drawing ) {
+				return;
+			}
+
+			const next = point( event );
+
+			context.beginPath();
+			context.moveTo( last.x, last.y );
+			context.lineTo( next.x, next.y );
+			context.stroke();
+			last = next;
+		} );
+
+		const finish = () => {
+			if ( ! drawing ) {
+				return;
+			}
+
+			drawing = false;
+			box._rfbDrawn = true;
+			value.value = canvas.toDataURL( 'image/png' );
+			hint.hidden = true;
+			clear.hidden = false;
+			error.hidden = true;
+		};
+
+		canvas.addEventListener( 'pointerup', finish );
+		canvas.addEventListener( 'pointercancel', finish );
+
+		clear.addEventListener( 'click', () => {
+			context.clearRect( 0, 0, canvas.width, canvas.height );
+			box._rfbDrawn = false;
+			value.value = '';
+			hint.hidden = false;
+			clear.hidden = true;
+		} );
+
+		if ( window.ResizeObserver ) {
+			new ResizeObserver( fit ).observe( box ); // Also runs when a hidden step is shown and the box gets its size.
+		} else {
+			fit();
+		}
+	}
+
 	// ---------------------------------------------------------------- steps
 
 	function initSteps( form ) {
@@ -271,7 +383,12 @@
 		};
 
 		/** First invalid visible control in a step, after showing a message; null when the step is fine. */
-		const firstInvalid = ( step ) => Array.from( step.querySelectorAll( 'input, select, textarea' ) ).find( ( el ) => ! el.disabled && 'hidden' !== el.type && ! el.checkValidity() ) || null;
+		const firstInvalid = ( step ) => {
+			const field = Array.from( step.querySelectorAll( 'input, select, textarea' ) ).find( ( el ) => ! el.disabled && 'hidden' !== el.type && ! el.checkValidity() );
+			const pad = Array.from( step.querySelectorAll( '[data-rfb-signature]' ) ).find( isMissing );
+
+			return field || ( pad ? { reportValidity: () => showSignatureError( pad ) } : null );
+		};
 
 		next.addEventListener( 'click', () => {
 			const bad = firstInvalid( steps[ current ] );
@@ -317,6 +434,7 @@
 	function init( form ) {
 		form.querySelectorAll( '.rfb-repeater' ).forEach( ( repeater ) => initRepeater( repeater, form ) );
 		form.querySelectorAll( 'input[type=file][data-rfb-max-size]' ).forEach( initFile );
+		form.querySelectorAll( '[data-rfb-signature]' ).forEach( initSignature );
 		form.addEventListener( 'input', () => applyConditions( form ) );
 		form.addEventListener( 'change', () => applyConditions( form ) );
 		applyConditions( form );
@@ -329,10 +447,14 @@
 			}
 
 			const bad = Array.from( form.querySelectorAll( 'input, select, textarea' ) ).find( ( el ) => ! el.disabled && 'hidden' !== el.type && ! el.checkValidity() );
+			const pad = Array.from( form.querySelectorAll( '[data-rfb-signature]' ) ).find( isMissing );
 
 			if ( bad ) {
 				event.preventDefault();
 				bad.reportValidity();
+			} else if ( pad ) {
+				event.preventDefault();
+				showSignatureError( pad );
 			}
 		} );
 	}

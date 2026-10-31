@@ -171,7 +171,7 @@ class Admin_Views {
 		echo '<form method="post" class="rfb-design" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" id="rfb-design">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_SAVE_COLLECTION ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="design" id="rfb-design-json" value="">';
 		wp_nonce_field( Admin_Page::ACTION_SAVE_COLLECTION );
-		echo '<div id="rfb-builder" data-design="' . esc_attr( (string) wp_json_encode( $definition ) ) . '" data-shortcode-form="' . esc_attr( '[refraction_form collection="' . $slug . '"]' ) . '" data-shortcode-list="' . esc_attr( '[refraction_records collection="' . $slug . '" status="published" view="cards"]' ) . '"></div>';
+		echo '<div id="rfb-builder" data-design="' . esc_attr( (string) wp_json_encode( $this->with_previews( $definition ) ) ) . '" data-shortcode-form="' . esc_attr( '[refraction_form collection="' . $slug . '"]' ) . '" data-shortcode-list="' . esc_attr( '[refraction_records collection="' . $slug . '" status="published" view="cards"]' ) . '"></div>';
 		echo '<noscript><div class="rfb-alert rfb-alert-warning">' . esc_html__( 'The form designer needs JavaScript. Please turn it on for this page.', 'refraction' ) . '</div></noscript>';
 		echo '</form>';
 
@@ -183,6 +183,26 @@ class Admin_Views {
 		echo '<button type="submit" class="rfb-btn rfb-btn-danger">' . esc_html__( 'Delete collection and records', 'refraction' ) . '</button></div></form>';
 
 		$this->close();
+	}
+
+	/** Adds a preview address to every Image block so the designer can show the picture (never saved). */
+	private function with_previews( array $definition ): array {
+		$walk = function ( array $fields ) use ( &$walk ): array {
+			foreach ( $fields as $i => $field ) {
+				if ( 'image' === $field['type'] && $field['image_id'] ) {
+					$fields[ $i ]['image_url'] = (string) wp_get_attachment_image_url( $field['image_id'], 'medium' );
+				}
+
+				if ( $field['children'] ) {
+					$fields[ $i ]['children'] = $walk( $field['children'] );
+				}
+			}
+
+			return $fields;
+		};
+		$definition['fields'] = $walk( $definition['fields'] );
+
+		return $definition;
 	}
 
 	public static function icon_choices(): array {
@@ -265,9 +285,8 @@ class Admin_Views {
 		$columns = array_values( array_filter( Schema::value_fields( $definition ), static function ( $field ) {
 			return $field['in_table'];
 		} ) );
-		$columns = $columns ? $columns : array_slice( array_values( array_filter( Schema::value_fields( $definition ), static function ( $field ) {
-			return Schema::is_scalar_type( $field['type'] );
-		} ) ), 0, 1 );
+		// No column chosen: show the record's title field, so a row is never blank.
+		$columns = $columns ? $columns : array_values( array_filter( [ Schema::field( $definition, $definition['title_field'] ) ] ) );
 
 		$toolbar = $this->button( __( 'Export CSV', 'refraction' ), wp_nonce_url( add_query_arg( array_merge( [ 'action' => Admin_Page::ACTION_EXPORT, 'collection' => $slug ], array_filter( [ 's' => $args['search'], 'status' => $args['status'] ] ) ), admin_url( 'admin-post.php' ) ), Admin_Page::ACTION_EXPORT ), 'light', 'download' )
 			. $this->button( __( 'Edit design', 'refraction' ), $this->url( [ 'view' => 'design', 'collection' => $slug ] ), 'light', 'tune' )
@@ -344,7 +363,7 @@ class Admin_Views {
 		echo '<div class="rfb-table-wrap"><table class="rfb-table"><thead><tr><th class="rfb-check-col"><input type="checkbox" id="rfb-all" aria-label="' . esc_attr__( 'Select all records', 'refraction' ) . '"></th>';
 
 		foreach ( $columns as $index => $field ) {
-			echo $this->sortable_header( $definition, $args, $field['key'], $field['label'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo Schema::is_scalar_type( $field['type'] ) ? $this->sortable_header( $definition, $args, $field['key'], $field['label'] ) : '<th scope="col">' . esc_html( $field['label'] ) . '</th>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		echo $this->sortable_header( $definition, $args, 'status', __( 'Status', 'refraction' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

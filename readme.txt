@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.7.1
+Stable tag: 0.8.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.8.0 =
+* New: the Builder designer fills the screen, so a long form can be built without scrolling the page; the field list, the form and the settings each scroll on their own.
+* New: the field list is grouped (Layout, Content, Basic fields, Choices, Advanced) into icon tiles that fold away.
+* New fields: Name (choose prefix, first, middle and last name), Country (full list, optional pre-selected country), Image (pick from the media library, size, width, alignment, alt text and link) and Signature (draw with a mouse, finger or pen, saved as a private image).
+* New: Step, Group and Repeater titles can be shown or hidden on the form and written as div, p or h2 to h6; every field and block can have a description under its label.
+* Tweak: the step progress display uses numbered circles with the current step in bold.
 
 = 0.7.1 =
 * Tweak: in the Builder designer, the Style, Advanced and General tabs now sit in the right-hand settings panel next to the field settings, and the form stays visible while you change them.

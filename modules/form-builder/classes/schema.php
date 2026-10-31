@@ -33,19 +33,39 @@ class Schema {
 		return $types;
 	}
 
-	/** The builder palette: groups of field types. */
+	/** The builder palette: groups of field types, in the order the panel shows them. */
 	public static function palette(): array {
 		return [
+			'layout' => [
+				'label' => self::t( 'Layout' ),
+				'types' => [
+					'step' => self::t( 'Step' ),
+					'group' => self::t( 'Group' ),
+					'repeater' => self::t( 'Repeater' ),
+					'divider' => self::t( 'Divider' ),
+				],
+			],
+			'content' => [
+				'label' => self::t( 'Content' ),
+				'types' => [
+					'heading' => self::t( 'Heading' ),
+					'paragraph' => self::t( 'Paragraph' ),
+					'image' => self::t( 'Image' ),
+					'html' => self::t( 'Custom HTML' ),
+				],
+			],
 			'basic' => [
 				'label' => self::t( 'Basic fields' ),
 				'types' => [
 					'text' => self::t( 'Text' ),
 					'textarea' => self::t( 'Long text' ),
+					'name' => self::t( 'Name' ),
 					'number' => self::t( 'Number' ),
-					'currency' => self::t( 'Amount (money)' ),
+					'currency' => self::t( 'Amount' ),
 					'email' => self::t( 'Email' ),
 					'phone' => self::t( 'Phone' ),
-					'url' => self::t( 'Website link' ),
+					'url' => self::t( 'Website' ),
+					'country' => self::t( 'Country' ),
 					'date' => self::t( 'Date' ),
 					'time' => self::t( 'Time' ),
 					'datetime' => self::t( 'Date and time' ),
@@ -57,35 +77,36 @@ class Schema {
 					'select' => self::t( 'Dropdown' ),
 					'radio' => self::t( 'Choice (one)' ),
 					'checkbox' => self::t( 'Choices (many)' ),
-					'toggle' => self::t( 'Yes / No switch' ),
-					'rating' => self::t( 'Rating (1 to 5)' ),
+					'toggle' => self::t( 'Yes / No' ),
+					'rating' => self::t( 'Rating' ),
 				],
 			],
 			'advanced' => [
 				'label' => self::t( 'Advanced' ),
 				'types' => [
 					'file' => self::t( 'File upload' ),
+					'signature' => self::t( 'Signature' ),
 					'hidden' => self::t( 'Hidden field' ),
-					'group' => self::t( 'Group' ),
-					'repeater' => self::t( 'Repeater' ),
-				],
-			],
-			'layout' => [
-				'label' => self::t( 'Layout' ),
-				'types' => [
-					'step' => self::t( 'Step (new page)' ),
-					'heading' => self::t( 'Heading' ),
-					'paragraph' => self::t( 'Paragraph' ),
-					'html' => self::t( 'Custom HTML' ),
-					'divider' => self::t( 'Divider' ),
 				],
 			],
 		];
 	}
 
+	/** Material icon (assets/icons/material) of every type, for the palette tiles. */
+	public static function icons(): array {
+		return [
+			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'divider' => 'horizontal-rule',
+			'heading' => 'title', 'paragraph' => 'subject', 'image' => 'image', 'html' => 'code',
+			'text' => 'text-fields', 'textarea' => 'notes', 'name' => 'badge', 'number' => 'pin', 'currency' => 'payments', 'email' => 'mail',
+			'phone' => 'call', 'url' => 'link', 'country' => 'public', 'date' => 'calendar-month', 'time' => 'schedule', 'datetime' => 'event',
+			'select' => 'arrow-drop-down-circle', 'radio' => 'radio-button-checked', 'checkbox' => 'check-box', 'toggle' => 'toggle-on', 'rating' => 'star',
+			'file' => 'upload-file', 'signature' => 'draw', 'hidden' => 'visibility-off',
+		];
+	}
+
 	/** Types that only decorate the form and never hold a value. */
 	public static function is_layout( string $type ): bool {
-		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider' ], true );
+		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider', 'image' ], true );
 	}
 
 	public static function is_step( string $type ): bool {
@@ -103,7 +124,7 @@ class Schema {
 
 	/** True for a value that fits in a table cell and can be sorted or filtered. */
 	public static function is_scalar_type( string $type ): bool {
-		return self::has_value( $type ) && ! self::is_container( $type ) && 'file' !== $type && 'checkbox' !== $type;
+		return self::has_value( $type ) && ! self::is_container( $type ) && ! in_array( $type, [ 'file', 'checkbox', 'name', 'signature' ], true );
 	}
 
 	public static function has_options( string $type ): bool {
@@ -212,6 +233,9 @@ class Schema {
 
 	/** Allowed upload extensions (a field picks a subset). */
 	const FILE_TYPES = [ 'jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'txt', 'zip', 'mp3', 'mp4' ];
+	const LABEL_TAGS = [ 'div', 'p', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+	const NAME_PARTS = [ 'prefix', 'first', 'middle', 'last' ];
+	const IMAGE_SIZES = [ 'thumbnail', 'medium', 'large', 'full' ];
 	const HIDDEN_SOURCES = [ 'static', 'query', 'page_url', 'referrer', 'user_id', 'user_email', 'date' ];
 
 	/** Content that may appear in a Custom HTML block: post-level HTML, no scripts or event handlers. */
@@ -262,6 +286,9 @@ class Schema {
 			return 1 === preg_match( '/^[A-Za-z][A-Za-z0-9_-]{0,39}$/', $c );
 		} ), 0, 3 );
 		$source = in_array( $raw['source'] ?? '', self::HIDDEN_SOURCES, true ) ? $raw['source'] : 'static';
+		$parts = $raw['parts'] ?? [ 'first', 'last' ];
+		$parts = array_values( array_intersect( self::NAME_PARTS, array_map( 'trim', array_map( 'strval', is_array( $parts ) ? $parts : explode( ',', (string) $parts ) ) ) ) );
+		$tag_default = 'step' === $type ? 'h3' : 'div';
 		$layout_text = 'html' === $type ? self::html( $raw['content'] ?? '' ) : ( 'paragraph' === $type ? self::textarea( $raw['content'] ?? '', 2000 ) : self::text( $raw['content'] ?? '', 300 ) );
 
 		return [
@@ -270,12 +297,12 @@ class Schema {
 			'type' => $type,
 			'required' => $has_value && ! self::is_container( $type ) && 'hidden' !== $type && ! empty( $raw['required'] ),
 			'options' => self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [],
-			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ),
+			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ) ?: ( 'signature' === $type ? self::t( 'Sign here' ) : '' ),
 			'help' => self::text( $raw['help'] ?? '', 200 ),
 			'width' => in_array( $raw['width'] ?? '', self::WIDTHS, true ) ? $raw['width'] : 'full',
-			'in_table' => self::is_scalar_type( $type ) && 'hidden' !== $type && ! empty( $raw['in_table'] ),
+			'in_table' => ( self::is_scalar_type( $type ) || 'name' === $type ) && 'hidden' !== $type && ! empty( $raw['in_table'] ),
 			'filter' => ! empty( $raw['filter'] ) && self::has_options( $type ) && 'checkbox' !== $type,
-			'public' => ! empty( $raw['public'] ) && self::is_scalar_type( $type ) && 'hidden' !== $type,
+			'public' => ! empty( $raw['public'] ) && ( self::is_scalar_type( $type ) || 'name' === $type ) && 'hidden' !== $type,
 			'default' => self::text( $raw['default'] ?? '', 255 ),
 			'min' => self::number_or_null( $raw['min'] ?? null ),
 			'max' => self::number_or_null( $raw['max'] ?? null ),
@@ -292,6 +319,16 @@ class Schema {
 			'max_rows' => max( 1, min( 50, (int) ( $raw['max_rows'] ?? 10 ) ) ),
 			'add_label' => self::text( $raw['add_label'] ?? '', 40 ) ?: self::t( 'Add row' ),
 			'source' => 'hidden' === $type ? $source : 'static',
+			'description' => self::text( $raw['description'] ?? '', 300 ),
+			'label_tag' => in_array( $raw['label_tag'] ?? '', self::LABEL_TAGS, true ) ? $raw['label_tag'] : $tag_default,
+			'parts' => 'name' === $type ? ( $parts ?: [ 'first', 'last' ] ) : [ 'first', 'last' ],
+			'image_id' => max( 0, (int) ( $raw['image_id'] ?? 0 ) ),
+			'image_size' => in_array( $raw['image_size'] ?? '', self::IMAGE_SIZES, true ) ? $raw['image_size'] : 'medium',
+			'image_width' => max( 5, min( 100, (int) ( $raw['image_width'] ?? 100 ) ) ),
+			'image_align' => in_array( $raw['image_align'] ?? '', [ 'left', 'center', 'right' ], true ) ? $raw['image_align'] : 'left',
+			'image_alt' => self::text( $raw['image_alt'] ?? '', 160 ),
+			'image_link' => Settings::url( $raw['image_link'] ?? '' ),
+			'sig_height' => max( 100, min( 400, (int) ( $raw['sig_height'] ?? 180 ) ) ),
 		];
 	}
 
@@ -373,14 +410,15 @@ class Schema {
 
 	/** The form split into steps: a list of field lists. One step when the form has no Step field. */
 	public static function steps( array $definition ): array {
-		$steps = [ [ 'title' => '', 'fields' => [] ] ];
+		$steps = [ [ 'title' => '', 'fields' => [], 'step' => null ] ];
 
 		foreach ( $definition['fields'] as $field ) {
 			if ( self::is_step( $field['type'] ) ) {
 				if ( $steps[0]['fields'] || count( $steps ) > 1 ) {
-					$steps[] = [ 'title' => $field['label'], 'fields' => [] ];
+					$steps[] = [ 'title' => $field['label'], 'fields' => [], 'step' => $field ];
 				} else {
 					$steps[0]['title'] = $field['label'];
+					$steps[0]['step'] = $field;
 				}
 
 				continue;
@@ -438,7 +476,7 @@ class Schema {
 		$status_keys = array_column( $statuses, 'key' );
 		$default_status = in_array( $raw['default_status'] ?? '', $status_keys, true ) ? $raw['default_status'] : $status_keys[0];
 		$titles = array_values( array_filter( $fields, static function ( $field ) {
-			return self::is_scalar_type( $field['type'] ) && 'hidden' !== $field['type'];
+			return ( self::is_scalar_type( $field['type'] ) || 'name' === $field['type'] ) && 'hidden' !== $field['type'];
 		} ) );
 		$title_keys = array_column( $titles, 'key' );
 		$title_field = in_array( $raw['title_field'] ?? '', $title_keys, true ) ? $raw['title_field'] : ( $title_keys[0] ?? '' );
@@ -518,7 +556,7 @@ class Schema {
 
 		$value = $scope[ $key ] ?? ( $root[ $key ] ?? '' );
 
-		return is_array( $value ) ? array_map( 'strval', array_filter( $value, 'is_scalar' ) ) : ( is_scalar( $value ) ? (string) $value : '' );
+		return is_array( $value ) ? array_values( array_map( 'strval', array_filter( $value, 'is_scalar' ) ) ) : ( is_scalar( $value ) ? (string) $value : '' );
 	}
 
 	private static function validate_scope( array $fields, array $scope, array $root, string $path, array $only, array $files, array &$values, array &$errors, array &$hidden ): void {
@@ -553,12 +591,23 @@ class Schema {
 				continue;
 			}
 
-			if ( 'file' === $field['type'] ) {
+			if ( 'name' === $field['type'] ) {
+				$result = self::validate_name( $field, is_array( $raw ) ? $raw : [] );
+				$values[ $key ] = $result['value'];
+
+				if ( null !== $result['error'] ) {
+					$errors[ $here ] = $result['error'];
+				}
+
+				continue;
+			}
+
+			if ( 'file' === $field['type'] || 'signature' === $field['type'] ) {
 				$list = isset( $files[ $here ] ) && is_array( $files[ $here ] ) ? array_values( $files[ $here ] ) : [];
 				$values[ $key ] = $list;
 
 				if ( ! $list && $field['required'] ) {
-					$errors[ $here ] = self::t( 'Please choose a file.' );
+					$errors[ $here ] = 'signature' === $field['type'] ? self::t( 'Please sign above.' ) : self::t( 'Please choose a file.' );
 				}
 
 				continue;
@@ -581,6 +630,27 @@ class Schema {
 
 			$values[ $key ] = $result['value'];
 		}
+	}
+
+	/** @return array{value:array<string,string>,error:?string} */
+	private static function validate_name( array $field, array $raw ): array {
+		$value = [];
+		$missing = false;
+
+		foreach ( self::NAME_PARTS as $part ) {
+			if ( ! in_array( $part, $field['parts'], true ) ) {
+				continue;
+			}
+
+			$value[ $part ] = self::text( $raw[ $part ] ?? '', 80 );
+
+			// A required name needs a first and a last name (when it has them); prefix and middle name stay optional.
+			if ( $field['required'] && '' === $value[ $part ] && in_array( $part, [ 'first', 'last' ], true ) ) {
+				$missing = true;
+			}
+		}
+
+		return [ 'value' => $value, 'error' => $missing ? self::t( 'This field is required.' ) : null ];
 	}
 
 	private static function validate_rows( array $field, array $rows, array $root, string $path, array $files, array &$errors, array &$hidden ): array {
@@ -711,6 +781,13 @@ class Schema {
 					? $out( $value, false )
 					: $out( $value, false, self::t( 'Enter a valid date and time.' ) );
 
+			case 'country':
+				$code = strtoupper( $value );
+
+				return Countries::valid( $code )
+					? $out( $code, false )
+					: $out( $value, false, self::t( 'Choose a country from the list.' ) );
+
 			case 'select':
 			case 'radio':
 				return in_array( $value, array_column( $field['options'], 'value' ), true )
@@ -741,6 +818,28 @@ class Schema {
 
 	/** Plain-text version of a stored value, for the CSV export, the search text and aria labels. */
 	public static function display( array $field, $value ): string {
+		if ( 'name' === $field['type'] ) {
+			$words = [];
+
+			foreach ( self::NAME_PARTS as $part ) {
+				$word = is_array( $value ) ? trim( (string) ( $value[ $part ] ?? '' ) ) : '';
+
+				if ( '' !== $word ) {
+					$words[] = $word;
+				}
+			}
+
+			return implode( ' ', $words );
+		}
+
+		if ( 'country' === $field['type'] ) {
+			return '' === (string) $value ? '' : ( Countries::name( (string) $value ) ?: (string) $value );
+		}
+
+		if ( 'signature' === $field['type'] ) {
+			return $value ? self::t( 'Signed' ) : '';
+		}
+
 		if ( 'file' === $field['type'] ) {
 			return implode( ', ', array_filter( array_map( static function ( $file ) {
 				return is_array( $file ) ? (string) ( $file['name'] ?? '' ) : '';
@@ -821,7 +920,7 @@ class Schema {
 		foreach ( self::value_fields( $definition ) as $field ) {
 			$text = self::display( $field, $values[ $field['key'] ] ?? '' );
 
-			if ( '' !== $text && 'toggle' !== $field['type'] && 'hidden' !== $field['type'] ) {
+			if ( '' !== $text && 'toggle' !== $field['type'] && 'hidden' !== $field['type'] && 'signature' !== $field['type'] ) {
 				$parts[] = $text;
 			}
 		}
@@ -835,7 +934,7 @@ class Schema {
 
 		foreach ( $candidates as $key ) {
 			$field = self::field( $definition, (string) $key );
-			$text = $field && self::is_scalar_type( $field['type'] ) && ! in_array( $field['type'], [ 'toggle', 'hidden' ], true ) ? self::text( self::display( $field, $values[ $key ] ?? '' ), 120 ) : '';
+			$text = $field && ( self::is_scalar_type( $field['type'] ) || 'name' === $field['type'] ) && ! in_array( $field['type'], [ 'toggle', 'hidden' ], true ) ? self::text( self::display( $field, $values[ $key ] ?? '' ), 120 ) : '';
 
 			if ( '' !== $text ) {
 				return $text;

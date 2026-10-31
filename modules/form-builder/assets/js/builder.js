@@ -74,10 +74,10 @@
 
 	const all = ( list = state.fields ) => list.flatMap( ( field ) => [ field, ...all( field.children || [] ) ] );
 	const isContainer = ( type ) => 'group' === type || 'repeater' === type;
-	const isLayout = ( type ) => [ 'heading', 'paragraph', 'html', 'divider' ].includes( type );
+	const isLayout = ( type ) => [ 'heading', 'paragraph', 'html', 'divider', 'image' ].includes( type );
 	const hasValue = ( type ) => ! isLayout( type ) && 'step' !== type;
 	const hasOptions = ( type ) => [ 'select', 'radio', 'checkbox' ].includes( type );
-	const isScalar = ( type ) => hasValue( type ) && ! isContainer( type ) && 'file' !== type && 'checkbox' !== type && 'hidden' !== type;
+	const isScalar = ( type ) => hasValue( type ) && ! isContainer( type ) && ! [ 'file', 'checkbox', 'hidden', 'name', 'signature' ].includes( type );
 
 	function slugKey( text ) {
 		let key = String( text ).toLowerCase().replace( /[^a-z0-9_]+/g, '_' ).replace( /^_+|_+$/g, '' ).slice( 0, 36 );
@@ -121,6 +121,7 @@
 			conditions: { enabled: false, action: 'show', match: 'all', rules: [] },
 			css_class: '', hide_label: false, accept: [ 'jpg', 'jpeg', 'png', 'pdf' ], max_size: 5, max_files: 1,
 			children: [], min_rows: 0, max_rows: 10, add_label: __( 'Add row', 'refraction' ), source: 'static',
+			description: '', label_tag: 'div', parts: [ 'first', 'last' ], image_id: 0, image_size: 'medium', image_width: 100, image_align: 'left', image_alt: '', image_link: '', sig_height: 180,
 		};
 	}
 
@@ -145,7 +146,15 @@
 			field.children = [];
 		}
 
-		field.width = [ 'text', 'email', 'phone', 'number', 'currency', 'date', 'time', 'datetime', 'select' ].includes( type ) ? 'half' : 'full';
+		field.width = [ 'text', 'email', 'phone', 'number', 'currency', 'date', 'time', 'datetime', 'select', 'country' ].includes( type ) ? 'half' : 'full';
+
+		if ( 'step' === type ) {
+			field.label_tag = 'h3';
+		}
+
+		if ( 'signature' === type ) {
+			field.placeholder = __( 'Sign here', 'refraction' );
+		}
 
 		// A field you just added follows its label while you rename it; once saved, its key stays put so old answers keep matching.
 		Object.defineProperty( field, '_auto', { value: hasValue( type ) && 'step' !== type, enumerable: false, writable: true } );
@@ -343,6 +352,23 @@
 	function faux( field ) {
 		const t = field.type;
 		const label = h( 'span', { class: 'rfb-label' + ( field.required ? ' is-required' : '' ) + ( field.hide_label ? ' is-faint' : '' ) }, field.label );
+		const desc = field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null;
+
+		if ( 'image' === t ) {
+			return field.image_url
+				? h( 'figure', { class: 'rfb-image rfb-align-' + field.image_align, style: '--rfb-image-width:' + field.image_width + '%' }, h( 'img', { src: field.image_url, alt: field.image_alt || '' } ) )
+				: h( 'div', { class: 'rfb-cv-drop' }, __( 'Image: choose one in the settings panel', 'refraction' ) );
+		}
+
+		if ( 'name' === t ) {
+			const names = { prefix: __( 'Prefix', 'refraction' ), first: __( 'First name', 'refraction' ), middle: __( 'Middle name', 'refraction' ), last: __( 'Last name', 'refraction' ) };
+
+			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-name-row' }, [ 'prefix', 'first', 'middle', 'last' ].filter( ( part ) => field.parts.includes( part ) ).map( ( part ) => h( 'div', { class: 'rfb-name-part rfb-name-' + part }, h( 'div', { class: 'rfb-input rfb-cv-input' } ), h( 'span', { class: 'rfb-sublabel' }, names[ part ] ) ) ) ) );
+		}
+
+		if ( 'signature' === t ) {
+			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-signature', style: '--rfb-sig-height:' + field.sig_height + 'px' }, h( 'span', { class: 'rfb-sig-hint' }, field.placeholder || __( 'Sign here', 'refraction' ) ) ), h( 'span', { class: 'rfb-link-btn' }, __( 'Clear signature', 'refraction' ) ) );
+		}
 
 		if ( 'heading' === t ) {
 			return h( 'div', { class: 'rfb-cv-heading rfb-cv-h' + field.level }, field.content || field.label );
@@ -361,7 +387,7 @@
 		}
 
 		if ( 'step' === t ) {
-			return h( 'div', { class: 'rfb-cv-step' }, h( 'span', null, __( 'New step', 'refraction' ) ), h( 'strong', null, field.label ) );
+			return h( 'div', { class: 'rfb-cv-step' }, h( 'span', null, __( 'New step', 'refraction' ) ), h( 'strong', null, field.label ), field.hide_label ? h( 'em', null, __( '(title hidden on the form)', 'refraction' ) ) : null, field.description ? h( 'small', null, field.description ) : null );
 		}
 
 		if ( 'toggle' === t ) {
@@ -369,11 +395,11 @@
 		}
 
 		if ( [ 'radio', 'checkbox' ].includes( t ) ) {
-			return h( 'div', null, label, h( 'div', { class: 'rfb-cv-choices' }, field.options.slice( 0, 4 ).map( ( o ) => h( 'span', { class: 'rfb-check' }, h( 'input', { type: t, disabled: true, tabindex: '-1' } ), h( 'span', null, o.label ) ) ) ) );
+			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-cv-choices' }, field.options.slice( 0, 4 ).map( ( o ) => h( 'span', { class: 'rfb-check' }, h( 'input', { type: t, disabled: true, tabindex: '-1' } ), h( 'span', null, o.label ) ) ) ) );
 		}
 
 		if ( 'file' === t ) {
-			return h( 'div', null, label, h( 'div', { class: 'rfb-cv-drop' }, __( 'Choose a file', 'refraction' ), ' · ', field.accept.join( ', ' ).toUpperCase(), ' · ', field.max_size + ' MB' ) );
+			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-cv-drop' }, __( 'Choose a file', 'refraction' ), ' · ', field.accept.join( ', ' ).toUpperCase(), ' · ', field.max_size + ' MB' ) );
 		}
 
 		if ( 'hidden' === t ) {
@@ -381,10 +407,10 @@
 		}
 
 		if ( 'textarea' === t ) {
-			return h( 'div', null, label, h( 'div', { class: 'rfb-input rfb-cv-input rfb-cv-area' }, field.placeholder ) );
+			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-input rfb-cv-input rfb-cv-area' }, field.placeholder ) );
 		}
 
-		return h( 'div', null, label, h( 'div', { class: 'rfb-input rfb-cv-input' }, field.placeholder || ( 'select' === t ? __( 'Select...', 'refraction' ) : '' ), 'select' === t || 'rating' === t ? h( 'span', { class: 'rfb-cv-caret' }, '▾' ) : null ) );
+		return h( 'div', null, label, desc, h( 'div', { class: 'rfb-input rfb-cv-input' }, field.placeholder || ( [ 'select', 'country' ].includes( t ) ? __( 'Select...', 'refraction' ) : '' ), [ 'select', 'rating', 'country' ].includes( t ) ? h( 'span', { class: 'rfb-cv-caret' }, '▾' ) : null ) );
 	}
 
 	function list( items, owner ) {
@@ -554,7 +580,7 @@
 		el.append( bar );
 
 		if ( isContainer( field.type ) ) {
-			el.append( h( 'div', { class: 'rfb-cv-container' }, h( 'strong', { class: 'rfb-cv-title' }, field.label, 'repeater' === field.type ? ' · ' + __( 'repeats', 'refraction' ) : '' ), list( field.children, field ) ) );
+			el.append( h( 'div', { class: 'rfb-cv-container' }, h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, 'repeater' === field.type ? ' · ' + __( 'repeats', 'refraction' ) : '', field.hide_label ? ' ' + __( '(title hidden on the form)', 'refraction' ) : '' ), field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, list( field.children, field ) ) );
 		} else {
 			el.append( h( 'div', { class: 'rfb-cv-preview-body' }, faux( field ) ) );
 		}
@@ -638,6 +664,38 @@
 		return wrapper;
 	}
 
+	/** Image block settings: pick from the media library, size, width, alignment, alt text and link. */
+	function imageControls( f, after, rerender ) {
+		const choose = h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary', onClick: () => {
+			if ( ! window.wp || ! window.wp.media ) {
+				return;
+			}
+
+			const frame = window.wp.media( { title: __( 'Choose an image', 'refraction' ), library: { type: 'image' }, button: { text: __( 'Use this image', 'refraction' ) }, multiple: false } );
+
+			frame.on( 'select', () => {
+				const picked = frame.state().get( 'selection' ).first().toJSON();
+
+				f.image_id = picked.id;
+				f.image_url = ( picked.sizes && picked.sizes.medium ? picked.sizes.medium.url : picked.url );
+				f.image_alt = f.image_alt || picked.alt || '';
+				markDirty();
+				rerender();
+			} );
+			frame.open();
+		} }, f.image_id ? __( 'Change image', 'refraction' ) : __( 'Choose image', 'refraction' ) );
+		const remove = f.image_id ? h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-danger', onClick: () => { f.image_id = 0; f.image_url = ''; markDirty(); rerender(); } }, __( 'Remove', 'refraction' ) ) : null;
+
+		return h( 'div', { class: 'rfb-image-controls' },
+			h( 'div', { class: 'rfb-image-preview' }, f.image_url ? h( 'img', { src: f.image_url, alt: '' } ) : h( 'span', { class: 'rfb-help' }, __( 'No image chosen yet.', 'refraction' ) ) ),
+			h( 'div', { class: 'rfb-inline' }, choose, remove ),
+			row( __( 'Size', 'refraction' ), select( f, 'image_size', { thumbnail: __( 'Thumbnail', 'refraction' ), medium: __( 'Medium', 'refraction' ), large: __( 'Large', 'refraction' ), full: __( 'Full', 'refraction' ) }, { after } ) ),
+			row( __( 'Width (% of the form)', 'refraction' ), text( f, 'image_width', { type: 'number', number: true, min: 5, max: 100, after } ) ),
+			row( __( 'Alignment', 'refraction' ), select( f, 'image_align', { left: __( 'Left', 'refraction' ), center: __( 'Center', 'refraction' ), right: __( 'Right', 'refraction' ) }, { after } ) ),
+			row( __( 'Alternative text', 'refraction' ), text( f, 'image_alt', { after } ), __( 'Describe the image for people who can not see it. Leave empty for a purely decorative logo.', 'refraction' ) ),
+			row( __( 'Link (optional)', 'refraction' ), text( f, 'image_link', { type: 'url', placeholder: 'https://' } ) ) );
+	}
+
 	function renderInspector() {
 		const box = refs.rbody;
 		const found = selected ? find( selected ) : null;
@@ -682,6 +740,41 @@
 			} } ) ) );
 		}
 
+		// Title options for the structure blocks, shown or hidden on the form and written as the tag you choose.
+		if ( 'step' === t || isContainer( t ) ) {
+			general.push(
+				h( 'label', { class: 'rfb-check' }, h( 'input', { type: 'checkbox', checked: ! f.hide_label, onChange: ( e ) => { f.hide_label = ! e.target.checked; markDirty(); renderCanvasOnly(); } } ), h( 'span', null, __( 'Show the title on the form', 'refraction' ) ) ),
+				row( __( 'Title tag', 'refraction' ), select( f, 'label_tag', { div: 'div', p: 'p', h2: 'h2', h3: 'h3', h4: 'h4', h5: 'h5', h6: 'h6' }, { after } ), __( 'Pick a heading level for headings, or p / div for plain text.', 'refraction' ) )
+			);
+		}
+
+		if ( ( hasValue( t ) && 'hidden' !== t ) || 'step' === t ) {
+			general.push( row( __( 'Description', 'refraction' ), area( f, 'description', { rows: 2, after } ), __( 'Shown under the label.', 'refraction' ) ) );
+		}
+
+		if ( 'image' === t ) {
+			general.push( imageControls( f, after, rerender ) );
+		}
+
+		if ( 'name' === t ) {
+			general.push( h( 'fieldset', { class: 'rfb-choice' }, h( 'legend', { class: 'rfb-mini' }, __( 'Parts of the name', 'refraction' ) ), h( 'div', { class: 'rfb-types' }, [ [ 'prefix', __( 'Prefix', 'refraction' ) ], [ 'first', __( 'First name', 'refraction' ) ], [ 'middle', __( 'Middle name', 'refraction' ) ], [ 'last', __( 'Last name', 'refraction' ) ] ].map( ( [ part, label ] ) => h( 'label', { class: 'rfb-check' }, h( 'input', { type: 'checkbox', checked: f.parts.includes( part ), onChange: ( e ) => {
+				const order = [ 'prefix', 'first', 'middle', 'last' ];
+				const next = e.target.checked ? [ ...f.parts, part ] : f.parts.filter( ( x ) => x !== part );
+
+				f.parts = order.filter( ( x ) => next.includes( x ) );
+				markDirty();
+				renderCanvasOnly();
+			} } ), h( 'span', null, label ) ) ) ) ) );
+		}
+
+		if ( 'signature' === t ) {
+			general.push( row( __( 'Text on the pad', 'refraction' ), text( f, 'placeholder', { after } ) ), row( __( 'Pad height (px)', 'refraction' ), text( f, 'sig_height', { type: 'number', number: true, min: 100, max: 400, after } ), __( 'Visitors draw with a mouse, finger or pen. Saved as a private image.', 'refraction' ) ) );
+		}
+
+		if ( 'country' === t ) {
+			general.push( row( __( 'Pre-selected country', 'refraction' ), select( f, 'default', Object.assign( { '': __( 'None', 'refraction' ) }, config.countries ), { after } ) ) );
+		}
+
 		if ( 'heading' === t ) {
 			general.push( row( __( 'Heading text', 'refraction' ), text( f, 'content', { after } ) ), row( __( 'Level', 'refraction' ), select( f, 'level', { 2: 'H2', 3: 'H3', 4: 'H4', 5: 'H5', 6: 'H6' }, { number: true, after } ) ) );
 		} else if ( 'paragraph' === t ) {
@@ -706,7 +799,7 @@
 			general.push( row( __( 'Value comes from', 'refraction' ), select( f, 'source', config.hiddenSources, { after: rerender } ) ) );
 		}
 
-		if ( ( hasValue( t ) && ! isContainer( t ) && 'file' !== t ) ) {
+		if ( hasValue( t ) && ! isContainer( t ) && ! [ 'file', 'name', 'signature', 'country' ].includes( t ) ) {
 			general.push( row( 'hidden' === t && 'query' === f.source ? __( 'URL parameter name', 'refraction' ) : ( 'hidden' === t ? __( 'Fixed value', 'refraction' ) : __( 'Default value', 'refraction' ) ), text( f, 'default', { after } ) ) );
 		}
 
@@ -779,7 +872,7 @@
 			look.push( check( f, 'hide_label', __( 'Hide the label (keeps it for screen readers)', 'refraction' ) ) );
 		}
 
-		if ( isScalar( t ) && ! found.parent ) {
+		if ( ( isScalar( t ) || 'name' === t ) && ! found.parent ) {
 			look.push( check( f, 'in_table', __( 'Show as a column in the records table', 'refraction' ) ), check( f, 'public', __( 'Show publicly (in the public list)', 'refraction' ) ) );
 		}
 
@@ -792,6 +885,7 @@
 
 	// ---------------------------------------------------------------- build tab
 
+	/** Fields panel: collapsible groups of square tiles (icon above the name), like a page builder's widget list. */
 	function palette() {
 		const box = h( 'div', { class: 'rfb-palette' } );
 
@@ -799,8 +893,12 @@
 			const grid = h( 'div', { class: 'rfb-palette-grid' } );
 
 			Object.entries( group.types ).forEach( ( [ type, label ] ) => {
+				const icon = h( 'span', { class: 'rfb-palette-icon', 'aria-hidden': 'true' } );
+
+				icon.innerHTML = ( config.typeIcons && config.typeIcons[ type ] ) || ''; // Inline SVG from the plugin's own bundled icons.
+
 				grid.append( h( 'button', {
-					type: 'button', class: 'rfb-palette-item', draggable: 'true', 'data-type': type,
+					type: 'button', class: 'rfb-palette-item', draggable: 'true', 'data-type': type, title: label,
 					onDragstart: ( e ) => {
 						drag = { kind: 'new', type };
 						e.dataTransfer.effectAllowed = 'copy';
@@ -816,9 +914,9 @@
 
 						insert( newField( type ), owner, owner ? owner.children.length : state.fields.length );
 					},
-				}, h( 'span', { class: 'rfb-palette-grip', 'aria-hidden': 'true' }, '⋮⋮' ), label ) );
+				}, icon, h( 'span', { class: 'rfb-palette-label' }, label ) ) );
 			} );
-			box.append( h( 'div', { class: 'rfb-palette-group' }, h( 'h3', null, group.label ), grid ) );
+			box.append( h( 'details', { class: 'rfb-palette-group', open: true }, h( 'summary', null, group.label ), grid ) );
 		} );
 
 		return box;
@@ -1130,6 +1228,25 @@
 		return JSON.stringify( state, ( key, value ) => ( 'min' === key || 'max' === key ) && '' === value ? null : value );
 	}
 
+	/** Gives the designer the rest of the screen (below the title, above the save bar); stacked panels on small screens keep their natural height. */
+	function fitHeight() {
+		const wrap = root.closest( '.rfb-wrap' );
+
+		if ( wrap ) {
+			wrap.classList.add( 'rfb-wrap-design' );
+		}
+
+		if ( window.innerWidth <= 900 ) {
+			refs.workspace.style.height = '';
+			return;
+		}
+
+		const top = refs.workspace.getBoundingClientRect().top + window.scrollY;
+		const bottom = refs.save.offsetHeight + 24;
+
+		refs.workspace.style.height = Math.max( 420, window.innerHeight - top - bottom ) + 'px';
+	}
+
 	function init() {
 		refs.live = h( 'div', { class: 'screen-reader-text', 'aria-live': 'polite' } );
 		refs.save = h( 'div', { class: 'rfb-sticky-actions' }, h( 'span', { class: 'rfb-save-note', 'aria-live': 'polite' } ), h( 'button', { type: 'submit', class: 'rfb-btn rfb-btn-primary' }, __( 'Save collection', 'refraction' ) ) );
@@ -1138,6 +1255,10 @@
 		root.append( workspace(), refs.save, refs.live );
 		[ 'left', 'right' ].forEach( ( side ) => memory.get( side ) && setCollapsed( side, true ) );
 		renderBuild();
+		fitHeight();
+		window.addEventListener( 'resize', fitHeight );
+		window.addEventListener( 'load', fitHeight );
+		window.setTimeout( fitHeight, 400 );
 
 		form.addEventListener( 'submit', ( event ) => {
 			if ( ! state.label.trim() ) {

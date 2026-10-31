@@ -17,6 +17,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Field_Renderer {
 
+	/** The title of a step, group or repeater in the tag the owner chose (div, p, h2 to h6); hidden titles stay for screen readers. */
+	public static function heading( array $field, string $class ): string {
+		$tag = in_array( $field['label_tag'], Schema::LABEL_TAGS, true ) ? $field['label_tag'] : 'div';
+
+		return '<' . $tag . ' class="' . esc_attr( $class . ( $field['hide_label'] ? ' screen-reader-text' : '' ) ) . '">' . esc_html( $field['label'] ) . '</' . $tag . '>';
+	}
+
+	/** The owner's description, printed under the label. */
+	public static function description( array $field, string $id ): string {
+		return '' === $field['description'] ? '' : '<p class="rfb-description" id="' . esc_attr( $id . '-desc' ) . '">' . esc_html( $field['description'] ) . '</p>';
+	}
+
+	/** Heading and description of a step (used by the public form and the admin form). */
+	public static function step_head( array $field ): string {
+		return '<div class="rfb-step-head">' . self::heading( $field, 'rfb-step-title' ) . self::description( $field, 'rfb-step-' . $field['key'] ) . '</div>';
+	}
+
 	/**
 	 * @param array[] $fields Fields to print.
 	 * @param array   $values Current values keyed by field key (null/absent uses the default).
@@ -61,7 +78,7 @@ class Field_Renderer {
 		}
 
 		if ( Schema::is_step( $type ) ) {
-			echo '<h3 class="rfb-step-title rfb-w-full">' . esc_html( $field['label'] ) . '</h3>';
+			echo self::step_head( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 			return;
 		}
 
@@ -75,6 +92,8 @@ class Field_Renderer {
 				echo '<p class="rfb-paragraph">' . nl2br( esc_html( $field['content'] ) ) . '</p>';
 			} elseif ( 'html' === $type ) {
 				echo '<div class="rfb-html">' . wp_kses_post( $field['content'] ) . '</div>';
+			} elseif ( 'image' === $type ) {
+				echo self::image( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from WordPress image markup and escaped parts.
 			} else {
 				echo '<hr class="rfb-divider">';
 			}
@@ -84,6 +103,7 @@ class Field_Renderer {
 		}
 
 		$described = '';
+		$described .= '' !== $field['description'] ? $id . '-desc ' : '';
 		$described .= '' !== $field['help'] ? $id . '-help ' : '';
 		$described .= '' !== $error ? $id . '-error' : '';
 		$described_attr = '' !== trim( $described ) ? ' aria-describedby="' . esc_attr( trim( $described ) ) . '"' : '';
@@ -106,15 +126,19 @@ class Field_Renderer {
 		echo '<div' . $attrs . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( 'group' === $type ) {
-			echo '<fieldset class="rfb-group"><legend class="rfb-label">' . esc_html( $field['label'] ) . '</legend><div class="rfb-form-grid" data-rfb-scope>';
+			echo '<fieldset class="rfb-group"><legend class="rfb-legend">' . self::heading( $field, 'rfb-legend-text' ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-form-grid" data-rfb-scope>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			self::render_fields( $field['children'], is_array( $value ) ? $value : [], $name, $errors, $ctx, $path );
 			echo '</div></fieldset>';
 		} elseif ( 'repeater' === $type ) {
 			self::repeater( $field, is_array( $value ) ? $value : [], $name, $errors, $ctx, $path, $id );
 		} elseif ( 'file' === $type ) {
 			self::file( $field, $id, $required, $described_attr, $label_class, $path, $ctx );
+		} elseif ( 'signature' === $type ) {
+			self::signature( $field, $name, $id, $label_class, $described_attr, $path, $ctx );
+		} elseif ( 'name' === $type ) {
+			self::name( $field, is_array( $value ) ? $value : [], $name, $id, $label_class, $described_attr );
 		} elseif ( in_array( $type, [ 'radio', 'checkbox' ], true ) ) {
-			echo '<fieldset class="rfb-choice"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '">' . esc_html( $field['label'] ) . '</legend>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<fieldset class="rfb-choice"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '">' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$value = null === $value ? ( 'checkbox' === $type ? [] : $field['default'] ) : $value;
 			$picked = array_map( 'strval', (array) $value );
 			$suffix = 'radio' === $type ? '' : '[]';
@@ -128,10 +152,10 @@ class Field_Renderer {
 		} elseif ( 'toggle' === $type ) {
 			$value = null === $value ? $field['default'] : $value;
 			echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="0">';
-			echo '<label class="rfb-switch" for="' . esc_attr( $id ) . '"><input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( '1' === (string) $value, true, false ) . $described_attr . '><span class="rfb-switch-track" aria-hidden="true"></span><span class="rfb-switch-text">' . esc_html( $field['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<label class="rfb-switch" for="' . esc_attr( $id ) . '"><input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( '1' === (string) $value, true, false ) . $described_attr . '><span class="rfb-switch-track" aria-hidden="true"></span><span class="rfb-switch-text">' . esc_html( $field['label'] ) . '</span></label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			$value = null === $value ? $field['default'] : $value;
-			echo '<label class="' . esc_attr( $label_class ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>';
+			echo '<label class="' . esc_attr( $label_class ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			self::control( $field, $value, $name, $id, $required, $described_attr );
 		}
 
@@ -161,6 +185,17 @@ class Field_Renderer {
 
 			foreach ( $field['options'] as $option ) {
 				echo '<option value="' . esc_attr( $option['value'] ) . '"' . selected( (string) $value, $option['value'], false ) . '>' . esc_html( $option['label'] ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+
+			echo '</select>';
+			return;
+		}
+
+		if ( 'country' === $type ) {
+			echo '<select class="rfb-input" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" autocomplete="country"' . $required . $described_attr . '><option value="">' . esc_html( '' !== $field['placeholder'] ? $field['placeholder'] : __( 'Select a country...', 'refraction' ) ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+			foreach ( Countries::all() as $code => $label ) {
+				echo '<option value="' . esc_attr( $code ) . '"' . selected( strtoupper( (string) $value ), $code, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '</select>';
@@ -216,10 +251,75 @@ class Field_Renderer {
 		echo '<p class="rfb-help rfb-file-hint">' . esc_html( $hint ) . '</p><p class="rfb-error rfb-file-error" role="alert" hidden></p>';
 	}
 
+	private static function name( array $field, array $value, string $name, string $id, string $label_class, string $described_attr ): void {
+		$labels = [
+			'prefix' => __( 'Prefix', 'refraction' ),
+			'first' => __( 'First name', 'refraction' ),
+			'middle' => __( 'Middle name', 'refraction' ),
+			'last' => __( 'Last name', 'refraction' ),
+		];
+		$autocomplete = [ 'prefix' => 'honorific-prefix', 'first' => 'given-name', 'middle' => 'additional-name', 'last' => 'family-name' ];
+
+		echo '<fieldset class="rfb-choice rfb-name"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '">' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-name-row">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+		foreach ( Schema::NAME_PARTS as $part ) {
+			if ( ! in_array( $part, $field['parts'], true ) ) {
+				continue;
+			}
+
+			$part_id = $id . '-' . $part;
+			$needed = $field['required'] && in_array( $part, [ 'first', 'last' ], true ) ? ' required aria-required="true"' : '';
+			echo '<div class="rfb-name-part rfb-name-' . esc_attr( $part ) . '"><input class="rfb-input" type="text" id="' . esc_attr( $part_id ) . '" name="' . esc_attr( $name . '[' . $part . ']' ) . '" value="' . esc_attr( (string) ( $value[ $part ] ?? '' ) ) . '" autocomplete="' . esc_attr( $autocomplete[ $part ] ) . '"' . $needed . '><label class="rfb-sublabel" for="' . esc_attr( $part_id ) . '">' . esc_html( $labels[ $part ] ) . '</label></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+
+		echo '</div></fieldset>';
+	}
+
+	/** A pad to draw on (see assets/js/frontend.js); the picture travels as a PNG data URL in a hidden input. */
+	private static function signature( array $field, string $name, string $id, string $label_class, string $described_attr, string $path, array $ctx ): void {
+		$existing = (array) ( $ctx['files'][ $path ] ?? [] );
+		$hint = '' !== $field['placeholder'] ? $field['placeholder'] : __( 'Sign here', 'refraction' );
+
+		echo '<span class="' . esc_attr( $label_class ) . '" id="' . esc_attr( $id ) . '-label">' . esc_html( $field['label'] ) . '</span>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+		if ( $existing ) {
+			foreach ( $existing as $file ) {
+				$url = isset( $ctx['file_url'] ) ? (string) call_user_func( $ctx['file_url'], $file ) : '';
+				echo '<div class="rfb-sig-saved">' . ( '' !== $url ? '<img src="' . esc_url( add_query_arg( 'inline', '1', $url ) ) . '" alt="' . esc_attr__( 'Saved signature', 'refraction' ) . '">' : '' ) . '<label class="rfb-check"><input type="checkbox" name="rfb_remove[]" value="' . esc_attr( (string) $file['id'] ) . '"><span>' . esc_html__( 'Remove the saved signature', 'refraction' ) . '</span></label></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+		}
+
+		echo '<div class="rfb-signature" data-rfb-signature' . ( $field['required'] && ! $existing ? ' data-rfb-required' : '' ) . ' style="--rfb-sig-height:' . (int) $field['sig_height'] . 'px"' . $described_attr . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<canvas class="rfb-sig-canvas" role="img" aria-labelledby="' . esc_attr( $id ) . '-label"></canvas><span class="rfb-sig-hint" aria-hidden="true">' . esc_html( $hint ) . '</span>';
+		echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="" data-rfb-sig-value></div>';
+		echo '<button type="button" class="rfb-link-btn rfb-sig-clear" data-rfb-sig-clear hidden>' . esc_html__( 'Clear signature', 'refraction' ) . '</button>';
+		echo '<noscript><p class="rfb-help">' . esc_html__( 'Drawing a signature needs JavaScript.', 'refraction' ) . '</p></noscript>';
+		echo '<p class="rfb-error rfb-sig-error" role="alert" hidden>' . esc_html__( 'Please sign above.', 'refraction' ) . '</p>';
+	}
+
+	/** The Image block: a media library image at the chosen size, width and alignment, optionally linked. */
+	private static function image( array $field ): string {
+		if ( ! $field['image_id'] || ! wp_attachment_is_image( $field['image_id'] ) ) {
+			return '';
+		}
+
+		$img = wp_get_attachment_image( $field['image_id'], $field['image_size'], false, [ 'class' => 'rfb-image-el', 'alt' => '' !== $field['image_alt'] ? $field['image_alt'] : (string) get_post_meta( $field['image_id'], '_wp_attachment_image_alt', true ), 'loading' => 'lazy' ] );
+
+		if ( '' === $img ) {
+			return '';
+		}
+
+		if ( '' !== $field['image_link'] ) {
+			$img = '<a href="' . esc_url( $field['image_link'] ) . '" rel="noopener noreferrer">' . $img . '</a>';
+		}
+
+		return '<figure class="rfb-image rfb-align-' . esc_attr( $field['image_align'] ) . '" style="--rfb-image-width:' . (int) $field['image_width'] . '%">' . $img . '</figure>';
+	}
+
 	private static function repeater( array $field, array $rows, string $name, array $errors, array $ctx, string $path, string $id ): void {
 		$shown = max( count( $rows ), max( $field['min_rows'], 1 ) );
 
-		echo '<fieldset class="rfb-repeater" data-rfb-min="' . (int) max( $field['min_rows'], $field['required'] ? 1 : 0 ) . '" data-rfb-max="' . (int) $field['max_rows'] . '"><legend class="rfb-label">' . esc_html( $field['label'] ) . '</legend><div class="rfb-rows">';
+		echo '<fieldset class="rfb-repeater" data-rfb-min="' . (int) max( $field['min_rows'], $field['required'] ? 1 : 0 ) . '" data-rfb-max="' . (int) $field['max_rows'] . '"><legend class="rfb-legend">' . self::heading( $field, 'rfb-legend-text' ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-rows">';
 
 		for ( $i = 0; $i < $shown; $i++ ) {
 			self::repeater_row( $field, is_array( $rows[ $i ] ?? null ) ? $rows[ $i ] : [], $name, (string) $i, $errors, $ctx, $path . '.' . $i );

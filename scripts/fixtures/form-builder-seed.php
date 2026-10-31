@@ -84,6 +84,24 @@ switch ( $action ) {
 		$out = [ 'slug' => $saved['slug'] ];
 		break;
 
+	case 'collection': // Save a collection from a raw definition.
+		$saved = $collections->save( $spec['definition'] );
+		$out = [ 'slug' => $saved ? $saved['slug'] : '', 'fields' => $saved ? count( $saved['fields'] ) : 0 ];
+		break;
+
+	case 'attachment': // A small PNG in the media library; returns its id.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		$img = imagecreatetruecolor( 100, 50 );
+		imagefilledrectangle( $img, 0, 0, 100, 50, imagecolorallocate( $img, 20, 120, 220 ) );
+		ob_start();
+		imagepng( $img );
+		$upload = wp_upload_bits( 'fb-logo.png', null, (string) ob_get_clean() );
+		$id = wp_insert_attachment( [ 'post_mime_type' => 'image/png', 'post_title' => 'Logo', 'post_status' => 'inherit' ], $upload['file'] );
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );
+		$out = [ 'id' => $id, 'url' => wp_get_attachment_url( $id ) ];
+		break;
+
 	case 'state': // Counts and a record by title.
 		$slug = $spec['collection'];
 		$definition = $collections->get( $slug );

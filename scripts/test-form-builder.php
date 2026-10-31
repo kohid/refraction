@@ -4,6 +4,7 @@ define( 'ABSPATH', __DIR__ . '/' );
 $root = dirname( __DIR__ );
 require $root . '/modules/custom-css/classes/css-sanitizer.php';
 require $root . '/modules/form-builder/classes/schema.php';
+require $root . '/modules/form-builder/classes/countries.php';
 require $root . '/modules/form-builder/classes/conditions.php';
 require $root . '/modules/form-builder/classes/style.php';
 require $root . '/modules/form-builder/classes/settings.php';
@@ -315,6 +316,55 @@ t( 'availability: closed', 'closed' === SE::availability( $open, '2026-06-01 09:
 t( 'availability: full', 'full' === SE::availability( $open, '2026-05-15 12:00', 5 ) );
 t( 'availability: unlimited by default', 'open' === SE::availability( SE::clean( [] ), '2030-01-01 00:00', 99999 ) );
 t( 'definition carries style and settings', isset( $form['style']['primary'] ) && isset( $form['settings']['submit_text'] ) );
+
+// ---------------------------------------------------------------- name, country, image, signature, descriptions (0.8.0)
+use Refraction\Modules\FormBuilder\Classes\Countries as CO;
+
+$rich = S::definition( [
+	'label' => 'Intake',
+	'fields' => [
+		[ 'type' => 'step', 'label' => 'Owner', 'description' => 'About <b>you</b>', 'label_tag' => 'h2' ],
+		[ 'type' => 'image', 'label' => 'Logo', 'image_id' => '42', 'image_size' => 'huge', 'image_width' => 500, 'image_align' => 'middle', 'image_alt' => 'Our <i>logo</i>', 'image_link' => 'javascript:alert(1)' ],
+		[ 'key' => 'owner', 'label' => 'Owner name', 'type' => 'name', 'required' => true, 'parts' => 'prefix, first, nonsense, last' ],
+		[ 'key' => 'home', 'label' => 'Country', 'type' => 'country', 'description' => 'Where you live' ],
+		[ 'key' => 'sign', 'label' => 'Owner Signature', 'type' => 'signature', 'required' => true, 'sig_height' => 9999 ],
+		[ 'label' => 'Pets', 'type' => 'repeater', 'label_tag' => 'span', 'hide_label' => true, 'children' => [ [ 'label' => 'Pet name', 'key' => 'pet' ] ] ],
+		[ 'label' => 'Contact', 'type' => 'group', 'children' => [ [ 'key' => 'who', 'label' => 'Contact name', 'type' => 'name' ] ] ],
+	],
+] );
+t( 'new types are known', isset( S::types()['name'], S::types()['country'], S::types()['image'], S::types()['signature'] ) );
+t( 'image is a layout block, name and signature hold values', S::is_layout( 'image' ) && ! S::has_value( 'image' ) && S::has_value( 'name' ) && S::has_value( 'signature' ) );
+t( 'name and signature are not table-scalars, country is', ! S::is_scalar_type( 'name' ) && ! S::is_scalar_type( 'signature' ) && S::is_scalar_type( 'country' ) );
+t( 'every palette type has an icon and a label', ! array_diff( array_keys( S::types() ), array_keys( S::icons() ) ) && ! array_diff( array_keys( S::icons() ), array_keys( S::types() ) ) );
+t( 'palette lists layout, content, basic, choices, advanced', [ 'layout', 'content', 'basic', 'choice', 'advanced' ] === array_keys( S::palette() ) );
+t( 'description is plain text', 'About you' === S::field( $rich, 'owner' )['description'] || 'About you' === S::steps( $rich )[0]['step']['description'] );
+t( 'step label tag is kept, bad tags fall back by type', 'h2' === S::steps( $rich )[0]['step']['label_tag'] && 'div' === S::field( $rich, 'pets' )['label_tag'] && 'div' === S::field( $rich, 'home' )['label_tag'] );
+t( 'a step defaults to h3', 'h3' === S::definition( [ 'label' => 'x', 'fields' => [ [ 'type' => 'step', 'label' => 'S' ] ] ] )['fields'][0]['label_tag'] );
+t( 'the label can be hidden on a repeater', S::field( $rich, 'pets' )['hide_label'] );
+t( 'image settings are clamped and cleaned', 42 === S::field( $rich, 'image' )['image_id'] && 'medium' === S::field( $rich, 'image' )['image_size'] && 100 === S::field( $rich, 'image' )['image_width'] && 'left' === S::field( $rich, 'image' )['image_align'] && 'Our logo' === S::field( $rich, 'image' )['image_alt'] && '' === S::field( $rich, 'image' )['image_link'] );
+t( 'name parts are whitelisted and ordered', [ 'prefix', 'first', 'last' ] === S::field( $rich, 'owner' )['parts'] && [ 'first', 'last' ] === S::field( $rich, 'who' )['parts'] );
+t( 'signature height is clamped and it has a default watermark', 400 === S::field( $rich, 'sign' )['sig_height'] && 'Sign here' === S::field( $rich, 'sign' )['placeholder'] );
+t( 'rich definition is idempotent', $rich === S::definition( $rich ) );
+t( 'name and country can be the record title', 'who' === S::definition( [ 'label' => 'x', 'fields' => [ [ 'key' => 'who', 'label' => 'Who', 'type' => 'name' ] ] ] )['title_field'] );
+t( 'steps carry their step field', 'Owner' === S::steps( $rich )[0]['step']['label'] );
+
+$sig = [ [ 'id' => str_repeat( 'a', 32 ), 'name' => 'signature.png', 'size' => 5, 'type' => 'image/png', 'ext' => 'png' ] ];
+$ok = [ 'owner' => [ 'prefix' => 'Dr', 'first' => 'Ada', 'last' => 'Byron', 'evil' => 'x' ], 'home' => 'pt', 'pets' => [ [ 'pet' => 'Rex' ] ], 'who' => [] ];
+$rr = S::validate( $rich, $ok, [], [ 'sign' => $sig ] );
+t( 'rich: valid input passes', [] === $rr['errors'], json_encode( $rr['errors'] ) );
+t( 'rich: a name keeps only its enabled parts', [ 'prefix' => 'Dr', 'first' => 'Ada', 'last' => 'Byron' ] === $rr['values']['owner'] );
+t( 'rich: a country code is upper-cased and checked', 'PT' === $rr['values']['home'] && isset( S::validate( $rich, [ 'home' => 'ZZ' ] + $ok, [], [ 'sign' => $sig ] )['errors']['home'] ) );
+t( 'rich: a required name needs first and last', isset( S::validate( $rich, [ 'owner' => [ 'first' => 'Ada' ] ] + $ok, [], [ 'sign' => $sig ] )['errors']['owner'] ) && ! isset( S::validate( $rich, [ 'owner' => [ 'first' => 'A', 'last' => 'B' ] ] + $ok, [], [ 'sign' => $sig ] )['errors']['owner'] ) );
+t( 'rich: a name that is not an array is harmless', isset( S::validate( $rich, [ 'owner' => 'evil' ] + $ok, [], [ 'sign' => $sig ] )['errors']['owner'] ) );
+t( 'rich: a required signature must be present, and the post can not supply it', isset( S::validate( $rich, $ok )['errors']['sign'] ) && isset( S::validate( $rich, $ok + [ 'sign' => 'data:image/png;base64,AAAA' ] )['errors']['sign'] ) );
+t( 'rich: the signature value comes from the checked files', 'signature.png' === $rr['values']['sign'][0]['name'] );
+t( 'rich: an optional name in a group is not required', ! isset( $rr['errors']['contact.who'] ) );
+t( 'display of a name, a country and a signature', 'Dr Ada Byron' === S::display( S::field( $rich, 'owner' ), $rr['values']['owner'] ) && 'Portugal' === S::display( S::field( $rich, 'home' ), 'PT' ) && 'Signed' === S::display( S::field( $rich, 'sign' ), $sig ) && '' === S::display( S::field( $rich, 'sign' ), [] ) );
+t( 'title and search use the name', 'Dr Ada Byron' === S::title( $rich, $rr['values'] ) && false !== strpos( S::search_text( $rich, $rr['values'] ), 'Portugal' ) && false === strpos( S::search_text( $rich, $rr['values'] ), 'Signed' ) );
+$csv2 = S::csv_rows( $rich, [ [ 'id' => 1, 'status' => 'new', 'created' => '2026-01-01', 'values' => $rr['values'] ] ] );
+t( 'csv shows the name in one cell and the country name', in_array( 'Dr Ada Byron', $csv2[1], true ) && in_array( 'Portugal', $csv2[1], true ) && count( $csv2[0] ) === count( $csv2[1] ) );
+t( 'conditions can look at a name and a country', C::matches( [ 'op' => 'contains', 'value' => 'Ada' ], array_values( $rr['values']['owner'] ) ) );
+t( 'countries: codes and names', 'Portugal' === CO::name( 'pt' ) && CO::valid( 'US' ) && ! CO::valid( 'XX' ) && count( CO::all() ) > 240 && count( CO::all() ) === count( array_unique( array_keys( CO::all() ) ) ) );
 
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

@@ -77,11 +77,11 @@ class Uploads {
 		$found = [];
 
 		foreach ( $definition['fields'] as $field ) {
-			if ( 'file' === $field['type'] ) {
+			if ( in_array( $field['type'], [ 'file', 'signature' ], true ) ) {
 				$found[ $field['key'] ] = $field;
 			} elseif ( 'group' === $field['type'] ) {
 				foreach ( $field['children'] as $child ) {
-					if ( 'file' === $child['type'] ) {
+					if ( in_array( $child['type'], [ 'file', 'signature' ], true ) ) {
 						$found[ $field['key'] . '.' . $child['key'] ] = $child;
 					}
 				}
@@ -98,16 +98,36 @@ class Uploads {
 	 * @param array $files      The $_FILES array.
 	 * @param array $existing   Already stored descriptors by field path (when editing a record).
 	 * @param array $remove     Descriptor ids to drop (when editing a record).
+	 * @param array $input      The posted values (a signature arrives as a PNG data URL inside them).
 	 *
 	 * @return array{files:array<string,array>,errors:array<string,string>,added:string[]} Final descriptors per path, messages per path, ids stored by this call.
 	 */
-	public function process( array $definition, array $files, array $existing = [], array $remove = [] ): array {
+	public function process( array $definition, array $files, array $existing = [], array $remove = [], array $input = [] ): array {
 		$result = [ 'files' => [], 'errors' => [], 'added' => [] ];
 
 		foreach ( self::fields( $definition ) as $path => $field ) {
 			$kept = array_values( array_filter( (array) ( $existing[ $path ] ?? [] ), static function ( $file ) use ( $remove ) {
 				return is_array( $file ) && isset( $file['id'] ) && ! in_array( $file['id'], $remove, true );
 			} ) );
+
+			if ( 'signature' === $field['type'] ) {
+				$drawn = $this->posted( $input, $path );
+
+				if ( '' !== $drawn ) {
+					$stored = $this->store_signature( $definition['slug'], $drawn );
+
+					if ( is_string( $stored ) ) {
+						$result['errors'][ $path ] = $stored;
+					} else {
+						$kept = [ $stored ]; // A new signature replaces the old one.
+						$result['added'][] = $stored['id'];
+					}
+				}
+
+				$result['files'][ $path ] = $kept;
+				continue;
+			}
+
 			$incoming = $this->incoming( $files[ self::input_name( $path ) ] ?? null );
 
 			if ( $incoming && 1 === $field['max_files'] ) {
@@ -135,6 +155,79 @@ class Uploads {
 		}
 
 		return $result;
+	}
+
+	/** The posted text value at a dotted field path ("sign", "owner.sign"), or ''. */
+	private function posted( array $input, string $path ): string {
+		$node = $input;
+
+		foreach ( explode( '.', $path ) as $step ) {
+			$node = is_array( $node ) ? ( $node[ $step ] ?? '' ) : '';
+		}
+
+		return is_string( $node ) ? $node : '';
+	}
+
+	/**
+	 * Stores a signature drawn on the page. The browser sends a PNG as a data URL; it is decoded strictly, must start with
+	 * the PNG signature, have sane dimensions, and (when GD is available) must contain some ink, before it becomes a file.
+	 *
+	 * @return array|string The stored descriptor, or a message for the visitor.
+	 */
+	private function store_signature( string $slug, string $data_url ) {
+		$prefix = 'data:image/png;base64,';
+
+		if ( 0 !== strpos( $data_url, $prefix ) || strlen( $data_url ) > 700000 ) {
+			return Schema::t( 'The signature could not be read. Please sign again.' );
+		}
+
+		$png = base64_decode( substr( $data_url, strlen( $prefix ) ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Strict decoding of a drawn image; the result is verified below.
+		$info = false !== $png && 0 === strpos( $png, "\x89PNG\r\n\x1a\n" ) ? @getimagesizefromstring( $png ) : false; // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+
+		if ( ! $info || IMAGETYPE_PNG !== $info[2] || $info[0] < 20 || $info[1] < 20 || $info[0] > 2400 || $info[1] > 1200 ) {
+			return Schema::t( 'The signature could not be read. Please sign again.' );
+		}
+
+		if ( function_exists( 'imagecreatefromstring' ) && ! $this->has_ink( $png ) ) {
+			return Schema::t( 'Please sign above.' );
+		}
+
+		if ( ! self::prepare( $slug ) ) {
+			return Schema::t( 'The upload folder is not writable.' );
+		}
+
+		$id = bin2hex( random_bytes( 16 ) );
+
+		if ( false === file_put_contents( self::dir( $slug ) . '/' . $id . '.png', $png ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			return Schema::t( 'The signature could not be saved.' );
+		}
+
+		return [ 'id' => $id, 'name' => 'signature.png', 'size' => strlen( $png ), 'type' => 'image/png', 'ext' => 'png' ];
+	}
+
+	/** True when the PNG has at least a few pixels that are not fully transparent. */
+	private function has_ink( string $png ): bool {
+		$image = @imagecreatefromstring( $png ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+
+		if ( ! $image ) {
+			return false;
+		}
+
+		$width = imagesx( $image );
+		$height = imagesy( $image );
+		$ink = 0;
+
+		for ( $y = 0; $y < $height && $ink < 5; $y += 2 ) {
+			for ( $x = 0; $x < $width && $ink < 5; $x += 2 ) {
+				if ( ( ( imagecolorat( $image, $x, $y ) >> 24 ) & 0x7F ) < 100 ) {
+					$ink++;
+				}
+			}
+		}
+
+		imagedestroy( $image );
+
+		return $ink >= 5;
 	}
 
 	/** Flattens PHP's file array shape (single or multiple) into a list of single uploads, skipping empty slots. */

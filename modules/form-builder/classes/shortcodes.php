@@ -140,7 +140,7 @@ class Shortcodes {
 
 		foreach ( $steps as $step ) {
 			echo '<section class="rfb-step" data-rfb-step data-rfb-title="' . esc_attr( $step['title'] ) . '">';
-			echo count( $steps ) > 1 && '' !== $step['title'] ? '<h3 class="rfb-step-title">' . esc_html( $step['title'] ) . '</h3>' : '';
+			echo count( $steps ) > 1 && $step['step'] ? Field_Renderer::step_head( $step['step'] ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 			echo '<div class="rfb-form-grid">';
 			Field_Renderer::render_fields( $step['fields'], $values, 'values', $errors, $ctx );
 			echo '</div></section>';
@@ -289,7 +289,7 @@ class Shortcodes {
 			$fail( [ '_form' => __( 'Too many submissions from your connection. Please try again later.', 'refraction' ) ], Schema::validate( $definition, $input )['values'] );
 		}
 
-		$stored = $this->uploads->process( $definition, $_FILES ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked above; Uploads validates every entry.
+		$stored = $this->uploads->process( $definition, $_FILES, [], [], $input ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked above; Uploads validates every entry.
 		$result = Schema::validate( $definition, $input, [], $stored['files'] );
 		// An upload's own message (wrong type, too large) is more helpful than the generic "choose a file".
 		$errors = $stored['errors'] + $result['errors'];

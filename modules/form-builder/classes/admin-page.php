@@ -1,6 +1,7 @@
 <?php
 namespace Refraction\Modules\FormBuilder\Classes;
 
+use Refraction\Core\Utils\Icons;
 use Refraction\Modules\FormBuilder\Module;
 use Refraction\Utils;
 
@@ -102,6 +103,7 @@ class Admin_Page {
 		$view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
 
 		if ( 'design' === $view ) {
+			wp_enqueue_media(); // The Image block picks from the media library.
 			wp_enqueue_script( 'refraction-form-builder-builder', REFRACTION_ASSETS_URL . 'js/form-builder-builder' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
 			wp_set_script_translations( 'refraction-form-builder-builder', 'refraction' );
 			wp_localize_script( 'refraction-form-builder-builder', 'refractionBuilder', $this->builder_config() );
@@ -122,8 +124,16 @@ class Admin_Page {
 			$palette[] = [ 'id' => $group, 'label' => $data['label'], 'types' => $data['types'] ];
 		}
 
+		$icons = [];
+
+		foreach ( Schema::icons() as $type => $icon ) {
+			$icons[ $type ] = Icons::svg( $icon, [ 'size' => 26 ] );
+		}
+
 		return [
 			'palette' => $palette,
+			'typeIcons' => $icons,
+			'countries' => Countries::all(),
 			'operators' => Conditions::operators(),
 			'styleControls' => Style::controls(),
 			'styleDefaults' => Style::defaults(),
@@ -249,7 +259,7 @@ class Admin_Page {
 
 		$existing = $current ? $this->files_by_path( $definition, $current['values'] ) : [];
 		$remove = array_map( 'sanitize_text_field', (array) $this->post( 'rfb_remove', [] ) );
-		$stored = $this->uploads->process( $definition, $_FILES, $existing, $remove ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked in guard(); Uploads validates every entry.
+		$stored = $this->uploads->process( $definition, $_FILES, $existing, $remove, (array) $this->post( 'values', [] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked in guard(); Uploads validates every entry.
 		$result = Schema::validate( $definition, (array) $this->post( 'values', [] ), [], $stored['files'] );
 		// An upload's own message (wrong type, too large) is more helpful than the generic "choose a file".
 		$errors = $stored['errors'] + $result['errors'];
@@ -306,11 +316,15 @@ class Admin_Page {
 			wp_die( esc_html__( 'That file was not found.', 'refraction' ), 404 );
 		}
 
+		// Only a signature (a PNG this plugin decoded and verified itself) may be shown inline, for the preview on the edit screen.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checked above.
+		$inline = isset( $_GET['inline'] ) && 'signature.png' === $file['name'] && 'png' === $file['ext'];
+
 		nocache_headers();
-		header( 'Content-Type: application/octet-stream' );
+		header( 'Content-Type: ' . ( $inline ? 'image/png' : 'application/octet-stream' ) );
 		header( 'X-Content-Type-Options: nosniff' );
 		header( 'Content-Length: ' . filesize( $path ) );
-		header( 'Content-Disposition: attachment; filename="' . str_replace( [ '"', "\r", "\n" ], '', $file['name'] ) . '"' );
+		header( 'Content-Disposition: ' . ( $inline ? 'inline' : 'attachment' ) . '; filename="' . str_replace( [ '"', "\r", "\n" ], '', $file['name'] ) . '"' );
 		readfile( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
 		exit;
 	}
