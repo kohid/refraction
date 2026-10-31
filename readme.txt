@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.6.0 =
+* New: Builder (Refraction > Builder). Design your own collections of records, such as Bookings, Listings and Transactions, from a ready-made starting point or from scratch: 15 field types (text, long text, number, amount, email, phone, link, date, time, date and time, dropdown, single and multiple choice, yes/no switch, rating), required fields, help text, defaults, number limits and your own statuses with colors.
+* New: a records table with status tabs and counts, search, dropdown filters, sortable columns, pagination, bulk status change, bulk delete and CSV export, plus add and edit forms with validation. The look follows the Metronic admin layout (cards, solid inputs, soft badges, initials), written from scratch.
+* New: shortcodes `[refraction_form collection="..."]` for a public submission form (honeypot, minimum fill time, hourly limit per visitor) and `[refraction_records collection="..."]` for a public list as cards or a table, showing only published statuses and the fields you mark "Show publicly".
 
 = 0.5.0 =
 * New: WooCommerce builder (loads only when WooCommerce is active). Theme Builder templates for Single Product, Product Archive, Cart, Checkout, My Account and Purchase Summary, with product conditions (ID, category, tag, type, on sale, in stock, shop, cart, checkout, account pages) and Preview Settings with a sample product, category or order.

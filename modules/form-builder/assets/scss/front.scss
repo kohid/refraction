@@ -1,0 +1,79 @@
+@import "controls";
+
+.rfb-front {
+	@include rfb-controls;
+
+	margin: 1.5em 0;
+
+	.rfb-hp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
+	.rfb-form {
+		padding: 24px;
+		border-radius: 12px;
+		background: #fff;
+		box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
+	}
+
+	.rfb-public-cards {
+		display: grid;
+		gap: 20px;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	}
+
+	.rfb-public-card {
+		border-radius: 12px;
+		background: #fff;
+		box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
+
+		.rfb-card-body {
+			padding: 20px;
+		}
+
+		h3 {
+			margin: 0 0 12px;
+			font-size: 18px;
+		}
+	}
+
+	.rfb-public-row {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 8px 0;
+		border-top: 1px dashed $rfb-gray-300;
+
+		&:first-of-type {
+			border-top: 0;
+		}
+	}
+
+	.rfb-public-label {
+		color: var(--rfb-muted);
+	}
+
+	.rfb-public-table-wrap {
+		overflow-x: auto;
+		border-radius: 12px;
+		background: #fff;
+		box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.rfb-form,
+		.rfb-public-card,
+		.rfb-public-table-wrap {
+			background: #1e1e2d;
+		}
+
+		--rfb-ink: #e8e9f1;
+		--rfb-muted: #9899ac;
+		--rfb-solid: #2b2b40;
+		--rfb-solid-hover: #323248;
+	}
+}

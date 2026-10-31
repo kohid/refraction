@@ -25,6 +25,7 @@ Containers, sections/columns, the core widget set, global colors and fonts (kit)
 | B2 | Site-wide extras | Custom CSS (element, page, global), Custom Code snippets (head/body/footer, with conditions), Display Conditions per element, Custom Attributes, Motion Effects (scroll, mouse), Sticky, Custom Fonts and Custom Icons upload, Global Widgets-style reusable templates, Notes | TODO |
 | B3 | Mega Menu, Nested Carousel, Off-Canvas, Modal | Interactive nested widgets | TODO |
 | B4 | WooCommerce builder | Product, Product Archive, Cart, Checkout, My Account, Purchase Summary templates; Woo widgets (Products, Add to Cart, Title, Images, Price, Rating, Stock, Meta, Short Description, Content, Data Tabs, Additional Info, Upsells, Related, Menu Cart, Cart, Checkout, My Account, Order Tracking, Notices, Categories, Breadcrumb); loads only when WooCommerce is active | DONE on `feat/woo` (see woocommerce.md) |
+| B6 | Builder | Own collections (Bookings, Listings, Transactions...) with fields, statuses, records table and public form/list | Done (0.6.0, [form-builder.md](form-builder.md)) |
 | B5 | Integrations and polish | Webhook-based form integrations, activity log, dashboard overview, accessibility pass | TODO |
 
 ## Rules for every module

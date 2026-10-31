@@ -135,6 +135,7 @@ class Modules_Manager {
 			'mega-menu',
 			'nested-carousel',
 			'woocommerce',
+			'form-builder',
 			'loop-builder',
 			'forms',
 			'pro-widgets',
