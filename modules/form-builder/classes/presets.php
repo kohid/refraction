@@ -25,7 +25,7 @@ class Presets {
 	}
 
 	public static function keys(): array {
-		return [ 'booking', 'listing', 'transaction', 'blank' ];
+		return [ 'booking', 'listing', 'transaction', 'application', 'blank' ];
 	}
 
 	public static function get( string $key ): array {
@@ -101,6 +101,47 @@ class Presets {
 					[ 'key' => 'method', 'label' => Schema::t( 'Payment method' ), 'type' => 'select', 'width' => 'third', 'in_table' => true, 'filter' => true, 'options' => "Card\nBank transfer\nCash\nOther" ],
 					[ 'key' => 'paid_on', 'label' => Schema::t( 'Date' ), 'type' => 'date', 'width' => 'third', 'in_table' => true ],
 					[ 'key' => 'notes', 'label' => Schema::t( 'Notes' ), 'type' => 'textarea' ],
+				],
+			],
+			'application' => [
+				'label' => Schema::t( 'Applications' ),
+				'singular' => Schema::t( 'Application' ),
+				'description' => Schema::t( 'A multi-step form with conditional questions, repeating rows, a group and a file upload.' ),
+				'icon' => 'person',
+				'title_field' => 'full_name',
+				'default_status' => 'new',
+				'public_form' => true,
+				'success_message' => Schema::t( 'Thank you. Your application was received.' ),
+				'statuses' => [
+					[ 'key' => 'new', 'label' => Schema::t( 'New' ), 'color' => 'primary' ],
+					[ 'key' => 'review', 'label' => Schema::t( 'In review' ), 'color' => 'warning' ],
+					[ 'key' => 'accepted', 'label' => Schema::t( 'Accepted' ), 'color' => 'success' ],
+					[ 'key' => 'rejected', 'label' => Schema::t( 'Rejected' ), 'color' => 'danger' ],
+				],
+				'fields' => [
+					[ 'key' => 'step_about', 'type' => 'step', 'label' => Schema::t( 'About you' ) ],
+					[ 'key' => 'intro', 'type' => 'heading', 'label' => Schema::t( 'Heading' ), 'content' => Schema::t( 'Tell us about yourself' ), 'level' => 3 ],
+					[ 'key' => 'intro_text', 'type' => 'paragraph', 'label' => Schema::t( 'Paragraph' ), 'content' => Schema::t( 'It takes about five minutes. You can go back and change your answers before you send them.' ) ],
+					[ 'key' => 'full_name', 'label' => Schema::t( 'Full name' ), 'type' => 'text', 'required' => true, 'width' => 'half', 'in_table' => true ],
+					[ 'key' => 'email', 'label' => Schema::t( 'Email' ), 'type' => 'email', 'required' => true, 'width' => 'half', 'in_table' => true ],
+					[ 'key' => 'role', 'label' => Schema::t( 'Role you are applying for' ), 'type' => 'select', 'required' => true, 'width' => 'half', 'in_table' => true, 'filter' => true, 'options' => "Developer\nDesigner\nManager" ],
+					[ 'key' => 'has_portfolio', 'label' => Schema::t( 'I have an online portfolio' ), 'type' => 'toggle', 'width' => 'half' ],
+					[ 'key' => 'portfolio', 'label' => Schema::t( 'Portfolio link' ), 'type' => 'url', 'conditions' => [ 'enabled' => true, 'action' => 'show', 'match' => 'all', 'rules' => [ [ 'field' => 'has_portfolio', 'op' => 'equals', 'value' => '1' ] ] ] ],
+					[ 'key' => 'address', 'label' => Schema::t( 'Address' ), 'type' => 'group', 'children' => [
+						[ 'key' => 'street', 'label' => Schema::t( 'Street' ), 'type' => 'text', 'width' => 'half' ],
+						[ 'key' => 'city', 'label' => Schema::t( 'City' ), 'type' => 'text', 'width' => 'half' ],
+					] ],
+					[ 'key' => 'step_experience', 'type' => 'step', 'label' => Schema::t( 'Experience' ) ],
+					[ 'key' => 'jobs', 'label' => Schema::t( 'Previous jobs' ), 'type' => 'repeater', 'max_rows' => 5, 'add_label' => Schema::t( 'Add another job' ), 'children' => [
+						[ 'key' => 'company', 'label' => Schema::t( 'Company' ), 'type' => 'text', 'required' => true, 'width' => 'half' ],
+						[ 'key' => 'job_title', 'label' => Schema::t( 'Job title' ), 'type' => 'text', 'width' => 'half' ],
+						[ 'key' => 'years', 'label' => Schema::t( 'Years' ), 'type' => 'number', 'min' => 0, 'max' => 60, 'width' => 'third' ],
+					] ],
+					[ 'key' => 'cv', 'label' => Schema::t( 'Your CV' ), 'type' => 'file', 'required' => true, 'accept' => [ 'pdf', 'docx' ], 'max_size' => 5, 'help' => Schema::t( 'PDF or Word, up to 5 MB.' ) ],
+					[ 'key' => 'step_finish', 'type' => 'step', 'label' => Schema::t( 'Finish' ) ],
+					[ 'key' => 'cover', 'label' => Schema::t( 'Cover letter' ), 'type' => 'textarea' ],
+					[ 'key' => 'referral', 'label' => Schema::t( 'Referral' ), 'type' => 'hidden', 'source' => 'query', 'default' => 'ref' ],
+					[ 'key' => 'consent', 'label' => Schema::t( 'I agree to the processing of my data' ), 'type' => 'toggle', 'required' => true ],
 				],
 			],
 			'blank' => [

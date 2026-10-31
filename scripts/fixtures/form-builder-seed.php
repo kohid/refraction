@@ -50,6 +50,10 @@ switch ( $action ) {
 		$out = [ 'id' => $id ];
 		break;
 
+	case 'definition': // The saved definition of a collection.
+		$out = $collections->get( $spec['collection'] ) ?: [];
+		break;
+
 	case 'state': // Counts and a record by title.
 		$slug = $spec['collection'];
 		$definition = $collections->get( $slug );

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.6.0
+Stable tag: 0.7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.7.0 =
+* New: drag and drop form designer in Builder. Drag fields from the list onto the form, reorder them, drop them into groups and repeaters, or use the buttons on each field; a settings panel changes the selected field.
+* New: Multi Step (Step fields with a numbered or bar progress display and Back / Next), Repeater (rows people can add and remove), Group (fields kept together), File Upload (private, type and size checked, downloaded by administrators only), Hidden Field (fixed value, URL parameter, page address, user or date), Heading, Paragraph, Custom HTML and Divider.
+* New: conditional visibility on any field (show or hide when all or any of several rules match; hidden fields are never required or saved).
+* New: Style editor (colors, fonts, sizes, spacing, label position, shadow, button size and position, custom CSS) with a live preview, and an Advanced tab (redirect after submit, email notification, webhook, login required, opening and closing dates, submission limit, spam protection settings).
+* New: Applications starting point showing a multi-step form with conditions, a group, a repeater and an upload.
 
 = 0.6.0 =
 * New: Builder (Refraction > Builder). Design your own collections of records, such as Bookings, Listings and Transactions, from a ready-made starting point or from scratch: 15 field types (text, long text, number, amount, email, phone, link, date, time, date and time, dropdown, single and multiple choice, yes/no switch, rating), required fields, help text, defaults, number limits and your own statuses with colors.

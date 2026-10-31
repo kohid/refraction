@@ -110,14 +110,26 @@ class Records {
 	}
 
 	public function delete( int $id, string $slug ): bool {
-		return $this->owned( $id, $slug ) && (bool) wp_delete_post( $id, true );
+		if ( ! $this->owned( $id, $slug ) ) {
+			return false;
+		}
+
+		$record = $this->describe( get_post( $id ) );
+
+		if ( ! wp_delete_post( $id, true ) ) {
+			return false;
+		}
+
+		Uploads::delete( $slug, Uploads::descriptors( $record['values'] ) );
+
+		return true;
 	}
 
 	public function delete_all( string $slug ): int {
 		$ids = get_posts( $this->base_args( $slug ) + [ 'posts_per_page' => -1, 'fields' => 'ids', 'no_found_rows' => true ] );
 
 		foreach ( $ids as $id ) {
-			wp_delete_post( (int) $id, true );
+			$this->delete( (int) $id, $slug );
 		}
 
 		return count( $ids );
@@ -162,7 +174,7 @@ class Records {
 		foreach ( (array) ( $args['filters'] ?? [] ) as $key => $value ) {
 			$field = Schema::field( $definition, (string) $key );
 
-			if ( $field && $field['filter'] && '' !== (string) $value ) {
+			if ( $field && $field['filter'] && in_array( $key, array_column( Schema::value_fields( $definition ), 'key' ), true ) && '' !== (string) $value ) {
 				$meta[] = [ 'key' => self::META_FIELD . $key, 'value' => (string) $value ];
 			}
 		}
@@ -171,6 +183,7 @@ class Records {
 
 		$orderby = (string) ( $args['orderby'] ?? '' );
 		$sort_field = Schema::field( $definition, $orderby );
+		$sort_field = $sort_field && in_array( $orderby, array_column( Schema::value_fields( $definition ), 'key' ), true ) && Schema::is_scalar_type( $sort_field['type'] ) ? $sort_field : null;
 
 		if ( $sort_field ) {
 			$query_args['meta_key'] = self::META_FIELD . $orderby;
@@ -242,7 +255,12 @@ class Records {
 		update_post_meta( $id, self::META_STATUS, $status );
 		update_post_meta( $id, self::META_DATA, wp_slash( wp_json_encode( $values ) ) );
 
-		foreach ( $definition['fields'] as $field ) {
+		// One meta key per plain top-level field, so the table can sort and filter on it.
+		foreach ( Schema::value_fields( $definition ) as $field ) {
+			if ( ! Schema::is_scalar_type( $field['type'] ) && 'checkbox' !== $field['type'] ) {
+				continue;
+			}
+
 			$value = $values[ $field['key'] ] ?? '';
 			update_post_meta( $id, self::META_FIELD . $field['key'], is_array( $value ) ? implode( ',', $value ) : (string) $value );
 		}

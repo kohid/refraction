@@ -24,15 +24,18 @@ class Admin_Page {
 	const ACTION_DELETE_RECORDS = 'refraction_fb_delete_records';
 	const ACTION_STATUS = 'refraction_fb_status';
 	const ACTION_EXPORT = 'refraction_fb_export';
+	const ACTION_DOWNLOAD = 'refraction_fb_download';
 
 	private Collections $collections;
 	private Records $records;
 	private Admin_Views $views;
+	private Uploads $uploads;
 
 	public function __construct( Collections $collections, Records $records ) {
 		$this->collections = $collections;
 		$this->records = $records;
-		$this->views = new Admin_Views( $collections, $records );
+		$this->views = new Admin_Views( $collections, $records, [ $this, 'download_url' ] );
+		$this->uploads = new Uploads();
 
 		foreach (
 			[
@@ -43,6 +46,7 @@ class Admin_Page {
 				self::ACTION_DELETE_RECORDS => 'handle_delete_records',
 				self::ACTION_STATUS => 'handle_status',
 				self::ACTION_EXPORT => 'handle_export',
+				self::ACTION_DOWNLOAD => 'handle_download',
 			] as $action => $method
 		) {
 			add_action( 'admin_post_' . $action, [ $this, $method ] );
@@ -97,12 +101,45 @@ class Admin_Page {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
 
-		if ( ! in_array( $view, [ 'design', 'records' ], true ) ) {
-			return;
+		if ( 'design' === $view ) {
+			wp_enqueue_script( 'refraction-form-builder-builder', REFRACTION_ASSETS_URL . 'js/form-builder-builder' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
+			wp_set_script_translations( 'refraction-form-builder-builder', 'refraction' );
+			wp_localize_script( 'refraction-form-builder-builder', 'refractionBuilder', $this->builder_config() );
+		} elseif ( 'records' === $view ) {
+			wp_enqueue_script( 'refraction-form-builder-admin', REFRACTION_ASSETS_URL . 'js/form-builder-admin' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
+			wp_set_script_translations( 'refraction-form-builder-admin', 'refraction' );
+		} elseif ( 'record' === $view ) {
+			Shortcodes::enqueue();
+			wp_enqueue_script( 'refraction-form-builder-admin', REFRACTION_ASSETS_URL . 'js/form-builder-admin' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
+		}
+	}
+
+	/** Everything the drag and drop builder needs to know that only the server knows. */
+	private function builder_config(): array {
+		$palette = [];
+
+		foreach ( Schema::palette() as $group => $data ) {
+			$palette[] = [ 'id' => $group, 'label' => $data['label'], 'types' => $data['types'] ];
 		}
 
-		wp_enqueue_script( 'refraction-form-builder-admin', REFRACTION_ASSETS_URL . 'js/form-builder-admin' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
-		wp_set_script_translations( 'refraction-form-builder-admin', 'refraction' );
+		return [
+			'palette' => $palette,
+			'operators' => Conditions::operators(),
+			'styleControls' => Style::controls(),
+			'styleDefaults' => Style::defaults(),
+			'colors' => Admin_Views::color_names(),
+			'icons' => Admin_Views::icon_choices(),
+			'fileTypes' => Schema::FILE_TYPES,
+			'hiddenSources' => [
+				'static' => __( 'Fixed value', 'refraction' ),
+				'query' => __( 'URL parameter', 'refraction' ),
+				'page_url' => __( 'Page address', 'refraction' ),
+				'referrer' => __( 'Referring page', 'refraction' ),
+				'user_id' => __( 'Logged-in user ID', 'refraction' ),
+				'user_email' => __( 'Logged-in user email', 'refraction' ),
+				'date' => __( 'Today\'s date', 'refraction' ),
+			],
+		];
 	}
 
 	public function render(): void {
@@ -149,21 +186,14 @@ class Admin_Page {
 		$slug = Schema::slug( (string) $this->post( 'collection' ) );
 		$this->collection_or_die( $slug );
 
-		$fields = array_values( (array) $this->post( 'fields', [] ) );
-		$statuses = array_values( (array) $this->post( 'statuses', [] ) );
-		$raw = [
-			'label' => $this->post( 'label' ),
-			'singular' => $this->post( 'singular' ),
-			'description' => $this->post( 'description' ),
-			'icon' => $this->post( 'icon' ),
-			'title_field' => $this->post( 'title_field' ),
-			'default_status' => $this->post( 'default_status' ),
-			'public_form' => '1' === (string) $this->post( 'public_form' ),
-			'public_list' => '1' === (string) $this->post( 'public_list' ),
-			'success_message' => $this->post( 'success_message' ),
-			'fields' => $fields,
-			'statuses' => $statuses,
-		];
+		// The drag and drop builder posts the whole design as one JSON value; Schema cleans every part of it.
+		$json = (string) $this->post( 'design' );
+		$raw = strlen( $json ) <= 400000 ? json_decode( $json, true ) : null;
+
+		if ( ! is_array( $raw ) ) {
+			$this->redirect( [ 'view' => 'design', 'collection' => $slug, 'done' => 'invalid' ] );
+		}
+
 		$saved = $this->collections->save( $raw, $slug );
 
 		$saved
@@ -189,18 +219,48 @@ class Admin_Page {
 		$this->redirect( [ 'done' => 'collection-deleted' ] );
 	}
 
+	/** Stored file descriptors of a record by field path ("cv", "address.photo"). */
+	private function files_by_path( array $definition, array $values ): array {
+		$by_path = [];
+
+		foreach ( Uploads::fields( $definition ) as $path => $field ) {
+			$node = $values;
+
+			foreach ( explode( '.', $path ) as $step ) {
+				$node = is_array( $node ) ? ( $node[ $step ] ?? [] ) : [];
+			}
+
+			$by_path[ $path ] = is_array( $node ) ? $node : [];
+		}
+
+		return $by_path;
+	}
+
 	public function handle_save_record(): void {
 		$this->guard( self::ACTION_SAVE_RECORD );
 
 		$definition = $this->collection_or_die( (string) $this->post( 'collection' ) );
 		$id = absint( $this->post( 'record', 0 ) );
-		$result = Schema::validate( $definition, (array) $this->post( 'values', [] ) );
+		$current = $id ? $this->records->get( $id, $definition['slug'] ) : null;
+
+		if ( $id && ! $current ) {
+			wp_die( esc_html__( 'That record was not found.', 'refraction' ), 404 );
+		}
+
+		$existing = $current ? $this->files_by_path( $definition, $current['values'] ) : [];
+		$remove = array_map( 'sanitize_text_field', (array) $this->post( 'rfb_remove', [] ) );
+		$stored = $this->uploads->process( $definition, $_FILES, $existing, $remove ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked in guard(); Uploads validates every entry.
+		$result = Schema::validate( $definition, (array) $this->post( 'values', [] ), [], $stored['files'] );
+		$errors = $result['errors'] + $stored['errors'];
 		$status = sanitize_key( (string) $this->post( 'status' ) );
 
-		if ( $result['errors'] ) {
-			set_transient( 'refraction_fb_form_' . get_current_user_id(), [ 'values' => $result['values'], 'errors' => $result['errors'], 'status' => $status, 'record' => $id ], 120 );
+		if ( $errors ) {
+			Uploads::prune( $definition['slug'], $stored['added'], [] );
+			set_transient( 'refraction_fb_form_' . get_current_user_id(), [ 'values' => $result['values'], 'errors' => $errors, 'status' => $status, 'record' => $id ], 120 );
 			$this->redirect( [ 'view' => 'record', 'collection' => $definition['slug'], 'record' => $id, 'done' => 'errors' ] );
 		}
+
+		Uploads::prune( $definition['slug'], $stored['added'], $result['values'] );
 
 		if ( $id ) {
 			$saved = $this->records->update( $id, $definition, $result['values'], $status );
@@ -209,7 +269,53 @@ class Admin_Page {
 			$saved = (bool) $id;
 		}
 
+		// Files the editor removed, or replaced, are no longer referenced.
+		if ( $saved && $current ) {
+			$kept = array_column( Uploads::descriptors( $result['values'] ), 'id' );
+			Uploads::delete( $definition['slug'], array_filter( Uploads::descriptors( $current['values'] ), static function ( $file ) use ( $kept ) {
+				return ! in_array( $file['id'], $kept, true );
+			} ) );
+		}
+
 		$this->redirect( [ 'view' => 'records', 'collection' => $definition['slug'], 'done' => $saved ? 'record-saved' : 'record-failed' ] );
+	}
+
+	/** An administrator downloads an uploaded file: authenticated, nonce-protected, always as an attachment. */
+	public function handle_download(): void {
+		$this->guard();
+		check_admin_referer( self::ACTION_DOWNLOAD );
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Checked above.
+		$definition = $this->collection_or_die( isset( $_GET['collection'] ) ? sanitize_text_field( wp_unslash( $_GET['collection'] ) ) : '' );
+		$record = $this->records->get( isset( $_GET['record'] ) ? absint( $_GET['record'] ) : 0, $definition['slug'] );
+		$file_id = isset( $_GET['file'] ) ? sanitize_text_field( wp_unslash( $_GET['file'] ) ) : '';
+		// phpcs:enable
+
+		$file = null;
+
+		foreach ( $record ? Uploads::descriptors( $record['values'] ) : [] as $candidate ) {
+			if ( $candidate['id'] === $file_id ) {
+				$file = $candidate;
+			}
+		}
+
+		$path = $file ? Uploads::path( $definition['slug'], $file ) : '';
+
+		if ( '' === $path || ! is_readable( $path ) ) {
+			wp_die( esc_html__( 'That file was not found.', 'refraction' ), 404 );
+		}
+
+		nocache_headers();
+		header( 'Content-Type: application/octet-stream' );
+		header( 'X-Content-Type-Options: nosniff' );
+		header( 'Content-Length: ' . filesize( $path ) );
+		header( 'Content-Disposition: attachment; filename="' . str_replace( [ '"', "\r", "\n" ], '', $file['name'] ) . '"' );
+		readfile( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
+		exit;
+	}
+
+	public function download_url( string $slug, int $record, array $file ): string {
+		return wp_nonce_url( add_query_arg( [ 'action' => self::ACTION_DOWNLOAD, 'collection' => $slug, 'record' => $record, 'file' => $file['id'] ], admin_url( 'admin-post.php' ) ), self::ACTION_DOWNLOAD );
 	}
 
 	public function handle_delete_records(): void {

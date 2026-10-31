@@ -81,6 +81,33 @@ async function login( browser, user, pass ) {
 	return { ctx, page };
 }
 
+
+/** Drag with real mouse events: scroll both ends into view first, then move in steps so Chromium starts a native drag. */
+async function drag( page, source, target, offset = { x: 40, y: 4 } ) {
+	if ( process.env.DEBUG_DRAG ) {
+		await page.evaluate( () => { window.__ev = []; [ 'dragstart', 'dragover', 'dragend', 'drop' ].forEach( ( n ) => document.addEventListener( n, ( e ) => window.__ev.push( n + ':' + String( e.target.className || e.target.tagName ).slice( 0, 30 ) + '@' + Math.round( e.clientX ) + ',' + Math.round( e.clientY ) ), true ) ); } );
+	}
+	await target.evaluate( ( el ) => el.scrollIntoView( { block: 'center' } ) );
+	await source.evaluate( ( el ) => el.scrollIntoView( { block: 'center' } ) );
+	const from = await source.boundingBox();
+	await page.mouse.move( from.x + from.width / 2, from.y + from.height / 2 );
+	await page.mouse.down();
+	await page.mouse.move( from.x + from.width / 2 + 10, from.y + from.height / 2 + 10, { steps: 4 } );
+	// Scrolling the canvas while a drag is active would move the target, so bring it into view with the wheel-free API first.
+	const to = await target.boundingBox();
+	const y = offset.y < 0 ? to.height + offset.y : offset.y; // a negative offset counts from the bottom edge
+	await page.mouse.move( to.x + offset.x, to.y + y, { steps: 12 } );
+	await page.waitForTimeout( 200 ); // Chromium needs a dragover tick on the target before it will deliver a drop.
+	await page.mouse.move( to.x + offset.x + 1, to.y + y + 1 );
+	await page.waitForTimeout( 200 );
+	await page.mouse.up();
+	await page.waitForTimeout( 400 );
+
+	if ( process.env.DEBUG_DRAG ) {
+		console.log( 'drag events', JSON.stringify( ( await page.evaluate( () => window.__ev ) ) ), JSON.stringify( await source.boundingBox().catch( () => null ) ), JSON.stringify( to ) );
+	}
+}
+
 /** Every visible input, select and textarea has a label, an aria-label or a wrapping label. */
 const unlabelled = ( page ) => page.evaluate( () => Array.from( document.querySelectorAll( '.rfb-wrap input, .rfb-wrap select, .rfb-wrap textarea, .rfb-front input, .rfb-front select, .rfb-front textarea' ) )
 	.filter( ( el ) => el.type !== 'hidden' && ! el.closest( 'template, [hidden], .rfb-hp' ) && el.offsetParent !== null )
@@ -131,51 +158,81 @@ async function main() {
 		// ------------------------------------------------------------ create from presets
 		await page.goto( `${ BUILDER }&view=new` );
 		const presetNames = await page.$$eval( '.rfb-collection h2', ( hs ) => hs.map( ( h ) => h.textContent.trim() ) );
-		check( 'new', 'four starting points', presetNames.length === 4, presetNames.join( '|' ) );
+		check( 'new', 'five starting points', presetNames.length === 5, presetNames.join( '|' ) );
 		await page.screenshot( { path: join( SHOTS, 'new.png' ) } );
 		await Promise.all( [ page.waitForURL( /view=design&collection=bookings/ ), page.click( 'form:has(input[value="booking"]) button' ) ] );
 		check( 'new', 'Booking preset opens its design screen', ( await page.textContent( '.rfb-alert-success' ) ).includes( 'Collection created' ) );
 
-		// ------------------------------------------------------------ design screen
-		const fieldRows = () => page.$$eval( '#rfb-fields > .rfb-row', ( rows ) => rows.map( ( r ) => r.querySelector( '[data-role="label"]' ).value ) );
-		let labels = await fieldRows();
-		check( 'design', 'booking fields are listed', labels.length === 8 && labels[ 0 ] === 'Name', labels.join( '|' ) );
-		check( 'design', 'four statuses are listed', ( await page.$$( '#rfb-statuses > .rfb-row' ) ).length === 4 );
+		// ------------------------------------------------------------ design screen (drag and drop designer)
+		const itemLabels = () => page.$$eval( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item', ( els ) => els.map( ( e ) => e.querySelector( '.rfb-label, .rfb-switch-text, .rfb-cv-title, strong' )?.textContent.trim() ) );
+		let labels = await itemLabels();
+		check( 'design', 'booking fields are on the canvas', labels.length === 8 && labels[ 0 ] === 'Name', labels.join( '|' ) );
 		await page.screenshot( { path: join( SHOTS, 'design.png' ), fullPage: true } );
 
-		await page.click( '#rfb-add-field' );
-		const newRow = page.locator( '#rfb-fields > .rfb-row' ).last();
-		await newRow.locator( '[data-role="label"]' ).fill( 'Budget' );
-		await newRow.locator( '[data-role="type"]' ).selectOption( 'currency' );
-		await newRow.locator( '[data-toggle="more"]' ).click();
-		check( 'design', 'number limits show for an amount, options hide', await newRow.locator( '.rfb-only-number' ).first().isVisible() && ! ( await newRow.locator( '.rfb-only-choice' ).first().isVisible() ) );
-		await newRow.locator( '[data-role="type"]' ).selectOption( 'select' );
-		check( 'design', 'options show for a dropdown, limits hide', await newRow.locator( '.rfb-only-choice' ).first().isVisible() && ! ( await newRow.locator( '.rfb-only-number' ).first().isVisible() ) );
-		await newRow.locator( '[data-role="type"]' ).selectOption( 'currency' );
-		await newRow.locator( 'input[name$="[in_table]"]' ).check();
-		const rowAt = ( i ) => page.locator( '#rfb-fields > .rfb-row' ).nth( i );
-		await rowAt( 8 ).locator( '[data-move="up"]' ).first().click();
-		await rowAt( 7 ).locator( '[data-move="up"]' ).first().click();
-		labels = await fieldRows();
-		check( 'design', 'a field moves up', labels[ labels.length - 3 ] === 'Budget', labels.join( '|' ) );
-		await page.locator( '#rfb-fields > .rfb-row' ).nth( 7 ).locator( '[data-remove]' ).click(); // Guests, now the 8th row
-		await page.fill( '#rfb-success_message', 'Booked! We will email you.' );
-		await Promise.all( [ page.waitForURL( /done=saved/ ), page.click( '.rfb-sticky-actions button' ) ] );
-		labels = await fieldRows();
-		check( 'design', 'saved design keeps the new field and the removal', labels.includes( 'Budget' ) && labels.length === 8, labels.join( '|' ) );
+		// add by clicking the palette, then name it in the inspector
+		await page.click( '.rfb-palette-item[data-type="currency"]' );
+		check( 'design', 'clicking a field type adds it and selects it', ( await itemLabels() ).length === 9 && ( await page.$( '.rfb-cv-item.is-selected' ) ) !== null );
+		await page.locator( '.rfb-inspector input.rfb-input' ).first().fill( 'Budget' );
+		await page.locator( '.rfb-inspector label:has-text("Show as a column") input' ).check();
+		check( 'design', 'the inspector renames the field on the canvas', ( await itemLabels() ).includes( 'Budget' ) );
+		// delete Guests with its button
+		await page.locator( '.rfb-cv-item:has(.rfb-label:text-is("Guests"))' ).click();
+		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Delete"]' ).click();
+		labels = await itemLabels();
+		check( 'design', 'delete removes a field', ! labels.includes( 'Guests' ) && labels.length === 8, labels.join( '|' ) );
+		// move with the buttons
+		await page.locator( '.rfb-cv-item:has(.rfb-label:text-is("Budget"))' ).click();
+		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Move"][aria-label$="up"]' ).click();
+		labels = await itemLabels();
+		check( 'design', 'move up works', labels[ labels.length - 2 ] === 'Budget', labels.join( '|' ) );
+		// drag a new field from the palette to just above the third field (away from the fixed admin bar)
+		await page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 2 ).scrollIntoViewIfNeeded();
+		await drag( page, page.locator( '.rfb-palette-item[data-type="toggle"]' ), page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 2 ), { x: 40, y: 4 } );
+		labels = await itemLabels();
+		check( 'design', 'dragging from the palette drops at the pointer', labels[ 2 ] === 'Yes / No switch' && labels.length === 9, labels.join( '|' ) );
+		// drag an existing field two places down (kept short: a native drag does not scroll the page by itself in a script)
+		await drag( page, page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No switch"))' ), page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 4 ), { x: 40, y: 4 } );
+		labels = await itemLabels();
+		check( 'design', 'dragging a field on the canvas reorders it', labels[ 3 ] === 'Yes / No switch' && labels[ 0 ] === 'Name' && labels.length === 9, labels.join( '|' ) );
+		await page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No switch"))' ).click();
+		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Delete"]' ).click();
+		// keyboard add
+		await page.locator( '.rfb-palette-item[data-type="heading"]' ).focus();
+		await page.keyboard.press( 'Enter' );
+		check( 'design', 'Enter on a palette item adds it', ( await itemLabels() ).length === 9 );
+		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Delete"]' ).click();
+
+		// advanced tab, style tab, general tab edits
+		await page.click( '[data-tab="advanced"]' );
+		await page.locator( '.rfb-advanced .rfb-field:has(.rfb-mini:text("Success message")) input' ).fill( 'Booked! We will email you.' );
+		await page.locator( '.rfb-advanced .rfb-field:has(.rfb-mini:text("Submit button text")) input' ).fill( 'Book now' );
+		await page.click( '[data-tab="style"]' );
+		await page.locator( '.rfb-style-controls .rfb-color:has(.rfb-mini:text("Accent color")) .rfb-hex' ).fill( '#7239ea' );
+		check( 'design', 'style changes apply to the live preview', ( await page.$eval( '.rfb-style-preview', ( el ) => el.style.getPropertyValue( '--rfb-primary' ) ) ) === '#7239ea' );
+		await page.screenshot( { path: join( SHOTS, 'design-style.png' ), fullPage: true } );
+		await page.click( '[data-tab="general"]' );
+		check( 'design', 'general tab shows the name, statuses and shortcodes', ( await page.inputValue( '#rfb-g-label' ) ) === 'Bookings' && ( await page.$$( '.rfb-general .rfb-row' ) ).length === 4 && ( await page.textContent( '.rfb-general' ) ).includes( '[refraction_form collection="bookings"]' ) );
+		await Promise.all( [ page.waitForURL( /done=saved/ ), page.click( '.rfb-sticky-actions button[type=submit]' ) ] );
+		await page.waitForSelector( '.rfb-cv-item' );
+		labels = await itemLabels();
+		check( 'design', 'saved design keeps the changes after a reload', labels.includes( 'Budget' ) && ! labels.includes( 'Guests' ) && labels.length === 8, labels.join( '|' ) );
+		check( 'design', 'saved style and settings are kept', JSON.stringify( seed( 'definition', { collection: 'bookings' } ).style.primary ) === '"#7239ea"' && seed( 'definition', { collection: 'bookings' } ).settings.submit_text === 'Book now' );
 		check( 'design', 'saved message shown', ( await page.textContent( '.rfb-alert-success' ) ).includes( 'Collection saved' ) );
-		check( 'design', 'the shortcode is shown', ( await page.textContent( '.rfb-design' ) ).includes( '[refraction_form collection="bookings"]' ) );
 		const unl = await unlabelled( page );
 		check( 'a11y', 'design screen controls are labelled', unl.length === 0, unl.join( ',' ) );
 
 		// ------------------------------------------------------------ add a record
 		await page.goto( `${ BUILDER }&view=records&collection=bookings` );
 		check( 'records', 'empty table says so', ( await page.textContent( '.rfb-empty-body' ) ).includes( 'No records yet' ) );
-		await page.click( 'a:has-text("Add Booking")' );
+		await Promise.all( [ page.waitForURL( /view=record/ ), page.click( 'a:has-text("Add Booking")' ) ] );
+		await page.waitForLoadState( 'load' );
 		await page.fill( '#rfb-values-guest_name', '<b>Ada</b> Lovelace' );
 		await page.fill( '#rfb-values-email', 'not-an-email' );
 		await page.click( '.rfb-card-footer button[type=submit]' );
-		await page.waitForURL( /done=errors/ );
+		await page.waitForTimeout( 600 );
+		check( 'record form', 'the browser stops an invalid email before it is sent', ! /done=errors/.test( page.url() ) && ( await page.$eval( '#rfb-values-email', ( el ) => ! el.validity.valid ) ) );
+		// Skip the script's check to prove the server validates too.
+		await Promise.all( [ page.waitForURL( /done=errors/ ), page.evaluate( () => HTMLFormElement.prototype.submit.call( document.querySelector( 'form[data-rfb-form]' ) ) ) ] );
 		const errorTexts = await page.$$eval( '.rfb-error', ( els ) => els.map( ( e ) => e.textContent ) );
 		check( 'record form', 'invalid email and missing required fields are reported', errorTexts.some( ( t ) => /valid email/.test( t ) ) && errorTexts.some( ( t ) => /required/.test( t ) ), errorTexts.join( '|' ) );
 		check( 'record form', 'what was typed is kept', ( await page.inputValue( '#rfb-values-email' ) ) === 'not-an-email' );
@@ -272,7 +329,8 @@ async function main() {
 			await visitor.fill( '#rfb-values-date', values.date ?? '' );
 			await visitor.fill( '#rfb-values-time', values.time ?? '' );
 			if ( opts.honeypot ) { await visitor.evaluate( ( v ) => ( document.querySelector( 'input[name=rfb_website]' ).value = v ), opts.honeypot ); }
-			await Promise.all( [ visitor.waitForLoadState( 'load' ), visitor.click( '.rfb-form button[type=submit]' ) ] );
+			// `native` skips the page script's own checks so the server's validation is what gets tested.
+			await Promise.all( [ visitor.waitForNavigation(), opts.native ? visitor.evaluate( () => HTMLFormElement.prototype.submit.call( document.querySelector( '.rfb-form' ) ) ) : visitor.click( '.rfb-form button[type=submit]' ) ] );
 			await visitor.waitForLoadState( 'load' );
 		};
 
@@ -296,7 +354,13 @@ async function main() {
 			await submit( visitor, { name: 'Quick Quentin', email: 'q@example.com', service: 'Consultation', date: '2027-01-02', time: '09:00' } );
 			check( `form ${ theme }`, 'a submission faster than 3 seconds is refused', ( await visitor.textContent( '.rfb-front' ) ).includes( 'too quickly' ) && seed( 'state', { collection: 'bookings' } ).count === before );
 
-			await submit( visitor, { name: '', email: 'bad', service: 'Consultation', date: '2027-01-02', time: '09:00' }, { wait: true } );
+			await visitor.goto( formPage.url );
+			await visitor.waitForLoadState( 'load' );
+			await visitor.fill( '#rfb-values-email', 'bad' );
+			await visitor.click( '.rfb-form button[type=submit]' );
+			await sleep( 700 );
+			check( `form ${ theme }`, 'the page script stops an incomplete form before it is sent', ! /rfb_e=/.test( visitor.url() ) && ( await visitor.locator( '.rfb-front .rfb-error' ).count() ) === 0 );
+			await submit( visitor, { name: '', email: 'bad', service: 'Consultation', date: '2027-01-02', time: '09:00' }, { wait: true, native: true } );
 			const publicErrors = await visitor.$$eval( '.rfb-front .rfb-error', ( els ) => els.map( ( e ) => e.textContent ) );
 			check( `form ${ theme }`, 'validation errors are shown to the visitor', publicErrors.length >= 2 && ( await visitor.$( '.rfb-alert-error[role=alert]' ) ) !== null, publicErrors.join( '|' ) );
 			check( `form ${ theme }`, 'typed values survive the error', ( await visitor.inputValue( '#rfb-values-email' ) ) === 'bad' );
@@ -335,8 +399,8 @@ async function main() {
 		// ------------------------------------------------------------ listings
 		await page.goto( `${ BUILDER }&view=new` );
 		await Promise.all( [ page.waitForURL( /collection=listings/ ), page.click( 'form:has(input[value="listing"]) button' ) ] );
-		const privatePublic = await page.$$eval( '#rfb-fields > .rfb-row', ( rows ) => rows.map( ( r ) => [ r.querySelector( '[data-role="label"]' ).value, r.querySelector( 'input[name$="[public]"]' ).checked ] ) );
-		check( 'listing', 'preset marks only some fields public', privatePublic.some( ( [ l, p ] ) => l === 'Featured' && ! p ) && privatePublic.some( ( [ l, p ] ) => l === 'Price' && p ) );
+		const listingFields = seed( 'definition', { collection: 'listings' } ).fields;
+		check( 'listing', 'preset marks only some fields public', listingFields.some( ( f ) => f.label === 'Featured' && ! f.public ) && listingFields.some( ( f ) => f.label === 'Price' && f.public ) );
 		for ( const [ title, price, status, featured ] of [ [ 'Sea View Villa', '450000', 'published', '1' ], [ 'City Loft', '210000.5', 'published', '0' ], [ 'Draft Cabin', '99000', 'draft', '0' ], [ 'Sold Barn', '120000', 'sold', '0' ] ] ) {
 			const r = seed( 'listing', { status, values: { title, price, category: 'Residential', location: 'Lisbon', rating: '4', featured, link: 'https://example.com/' + title.split( ' ' )[ 0 ].toLowerCase(), description: `About ${ title }` } } );
 			if ( r.errors && Object.keys( r.errors ).length ) { throw new Error( 'listing seed: ' + JSON.stringify( r.errors ) ); }

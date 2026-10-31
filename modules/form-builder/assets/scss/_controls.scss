@@ -30,14 +30,34 @@ $rfb-colors: (
 );
 
 @mixin rfb-controls {
+	// Defaults for every property the Style tab can change; a form's own style="" overrides them.
 	--rfb-card: #fff;
 	--rfb-page: #f5f8fa;
 	--rfb-line: #{$rfb-gray-200};
 	--rfb-ink: #{$rfb-gray-900};
 	--rfb-muted: #{$rfb-gray-600};
-	--rfb-solid: #{$rfb-gray-100};
-	--rfb-solid-hover: #{$rfb-gray-200};
 	--rfb-primary: #{$rfb-primary};
+	--rfb-label: #{$rfb-gray-900};
+	--rfb-input-bg: #{$rfb-gray-100};
+	--rfb-input-border: #{$rfb-gray-100};
+	--rfb-input-text: #{$rfb-gray-900};
+	--rfb-focus: #{$rfb-primary};
+	--rfb-error: #{$rfb-danger};
+	--rfb-form-bg: #fff;
+	--rfb-button-bg: #{$rfb-primary};
+	--rfb-button-text: #fff;
+	--rfb-radius: 8px;
+	--rfb-input-height: 42px;
+	--rfb-font-size: 14px;
+	--rfb-label-size: 13px;
+	--rfb-label-weight: 600;
+	--rfb-gap: 20px;
+	--rfb-padding: 24px;
+	--rfb-border-width: 1px;
+	--rfb-max-width: none;
+	--rfb-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
+	--rfb-font: inherit;
+	--rfb-button-padding: 9px 20px;
 
 	color: var(--rfb-ink);
 	font-size: 13px;
@@ -53,7 +73,7 @@ $rfb-colors: (
 	.rfb-form-grid {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 20px 24px;
+		gap: var(--rfb-gap) 24px;
 	}
 
 	.rfb-field {
@@ -70,7 +90,14 @@ $rfb-colors: (
 		}
 	}
 
-	.rfb-label,
+	.rfb-label {
+		display: block;
+		margin: 0 0 6px;
+		color: var(--rfb-label);
+		font-size: var(--rfb-label-size);
+		font-weight: var(--rfb-label-weight);
+	}
+
 	.rfb-mini {
 		display: block;
 		margin: 0 0 6px;
@@ -89,32 +116,32 @@ $rfb-colors: (
 
 	.rfb-label.is-required::after {
 		margin-left: 3px;
-		color: $rfb-danger;
+		color: var(--rfb-error);
 		content: '*';
 	}
 
 	.rfb-input {
 		display: block;
 		width: 100%;
-		min-height: 42px;
+		min-height: var(--rfb-input-height);
 		padding: 9px 14px;
-		border: 1px solid var(--rfb-solid);
-		border-radius: 8px;
-		background: var(--rfb-solid);
+		border: var(--rfb-border-width) solid var(--rfb-input-border);
+		border-radius: var(--rfb-radius);
+		background: var(--rfb-input-bg);
 		box-shadow: none;
-		color: var(--rfb-ink);
-		font-size: 14px;
+		color: var(--rfb-input-text);
+		font-family: var(--rfb-font);
+		font-size: var(--rfb-font-size);
 		line-height: 1.5;
 		transition: background-color 0.15s, border-color 0.15s;
 
 		&:hover {
-			background: var(--rfb-solid-hover);
+			filter: brightness(0.97);
 		}
 
 		&:focus {
-			border-color: var(--rfb-primary);
-			background: var(--rfb-card);
-			box-shadow: 0 0 0 3px rgba($rfb-primary, 0.15);
+			border-color: var(--rfb-focus);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--rfb-focus) 22%, transparent);
 			outline: 0;
 		}
 
@@ -134,8 +161,7 @@ $rfb-colors: (
 	}
 
 	.has-error .rfb-input {
-		border-color: $rfb-danger;
-		background: $rfb-danger-light;
+		border-color: var(--rfb-error);
 	}
 
 	.rfb-help {
@@ -146,7 +172,7 @@ $rfb-colors: (
 
 	.rfb-error {
 		margin: 6px 0 0;
-		color: $rfb-danger;
+		color: var(--rfb-error);
 		font-size: 12px;
 		font-weight: 600;
 	}
@@ -206,7 +232,7 @@ $rfb-colors: (
 		}
 
 		input:checked + .rfb-switch-track {
-			background: $rfb-primary;
+			background: var(--rfb-primary);
 
 			&::after {
 				transform: translateX(18px);
@@ -232,7 +258,7 @@ $rfb-colors: (
 		min-height: 38px;
 		padding: 8px 18px;
 		border: 0;
-		border-radius: 8px;
+		border-radius: var(--rfb-radius);
 		cursor: pointer;
 		font-size: 13px;
 		font-weight: 600;
@@ -251,13 +277,14 @@ $rfb-colors: (
 	}
 
 	.rfb-btn-primary {
-		background: $rfb-primary;
-		color: #fff;
+		padding: var(--rfb-button-padding);
+		background: var(--rfb-button-bg);
+		color: var(--rfb-button-text);
 
 		&:hover,
 		&:focus {
-			background: #0095e8;
-			color: #fff;
+			color: var(--rfb-button-text);
+			filter: brightness(0.92);
 		}
 	}
 
@@ -459,6 +486,261 @@ $rfb-colors: (
 			background: $rfb-primary;
 			color: #fff;
 		}
+	}
+
+
+	// ---- the form box, steps, repeaters, files and layout blocks (public form, admin record form, designer canvas)
+	.rfb-form {
+		max-width: var(--rfb-max-width);
+		margin-right: auto;
+		margin-left: auto;
+		padding: var(--rfb-padding);
+		border-radius: calc(var(--rfb-radius) + 4px);
+		background: var(--rfb-form-bg);
+		box-shadow: var(--rfb-shadow);
+		color: var(--rfb-ink);
+		font-family: var(--rfb-font);
+		font-size: var(--rfb-font-size);
+
+		.rfb-step,
+		.rfb-form-grid {
+			margin: 0;
+		}
+	}
+
+	[hidden] {
+		display: none !important;
+	}
+
+	.rfb-field.rfb-w-full {
+		flex-basis: 100%;
+	}
+
+	.rfb-heading {
+		margin: 0;
+		color: var(--rfb-ink);
+		line-height: 1.3;
+	}
+
+	.rfb-paragraph {
+		margin: 0;
+		color: var(--rfb-muted);
+	}
+
+	.rfb-html > :first-child {
+		margin-top: 0;
+	}
+
+	.rfb-html > :last-child {
+		margin-bottom: 0;
+	}
+
+	.rfb-divider {
+		margin: 4px 0;
+		border: 0;
+		border-top: 1px dashed $rfb-gray-300;
+	}
+
+	.rfb-step-title {
+		flex-basis: 100%;
+		margin: 0 0 4px;
+		font-size: 17px;
+	}
+
+	.rfb-group,
+	.rfb-repeater {
+		margin: 0;
+		padding: 16px;
+		border: 1px dashed $rfb-gray-300;
+		border-radius: var(--rfb-radius);
+		min-width: 0;
+
+		> legend {
+			padding: 0 8px;
+			font-weight: 700;
+		}
+	}
+
+	.rfb-rows {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+
+	.rfb-rep-row {
+		position: relative;
+		padding: 14px 40px 14px 14px;
+		border-radius: var(--rfb-radius);
+		background: color-mix(in srgb, var(--rfb-input-bg) 55%, transparent);
+	}
+
+	.rfb-rep-remove {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 28px;
+		height: 28px;
+		border: 0;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--rfb-muted);
+		cursor: pointer;
+		font-size: 20px;
+		line-height: 1;
+
+		&:hover,
+		&:focus-visible {
+			background: $rfb-danger-light;
+			color: $rfb-danger;
+		}
+	}
+
+	.rfb-files {
+		margin: 0 0 8px;
+		padding: 0;
+		list-style: none;
+
+		li {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px;
+			margin: 0 0 4px;
+		}
+	}
+
+	.rfb-file {
+		padding-top: 10px;
+	}
+
+	// ---- multi-step progress
+	.rfb-progress {
+		margin: 0 0 var(--rfb-gap);
+	}
+
+	.rfb-stepper {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 16px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin: 0;
+			color: var(--rfb-muted);
+			font-weight: 600;
+		}
+
+		.rfb-stepper-num {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			background: var(--rfb-input-bg);
+			color: var(--rfb-muted);
+			font-size: 13px;
+		}
+
+		li.is-current {
+			color: var(--rfb-ink);
+
+			.rfb-stepper-num {
+				background: var(--rfb-primary);
+				color: #fff;
+			}
+		}
+
+		li.is-done .rfb-stepper-num {
+			background: color-mix(in srgb, var(--rfb-primary) 20%, transparent);
+			color: var(--rfb-primary);
+		}
+	}
+
+	.rfb-bar {
+		height: 8px;
+		overflow: hidden;
+		border-radius: 8px;
+		background: var(--rfb-input-bg);
+
+		span {
+			display: block;
+			height: 100%;
+			border-radius: 8px;
+			background: var(--rfb-primary);
+			transition: width 0.25s;
+		}
+	}
+
+	.rfb-progress-label {
+		margin: 6px 0 0;
+		color: var(--rfb-muted);
+		font-size: 12px;
+		font-weight: 600;
+	}
+
+	// ---- actions row and label layouts chosen in the Style tab
+	.rfb-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: var(--rfb-gap);
+	}
+
+	&.rfb-btn-center .rfb-actions,
+	.rfb-btn-center .rfb-actions {
+		justify-content: center;
+	}
+
+	&.rfb-btn-right .rfb-actions,
+	.rfb-btn-right .rfb-actions {
+		justify-content: flex-end;
+	}
+
+	&.rfb-btn-stretch .rfb-actions .rfb-btn,
+	.rfb-btn-stretch .rfb-actions .rfb-btn {
+		flex: 1 1 0;
+	}
+
+	&.rfb-label-left .rfb-field:not(.rfb-t-toggle):not(.rfb-t-heading):not(.rfb-t-paragraph):not(.rfb-t-html):not(.rfb-t-divider):not(.rfb-t-group):not(.rfb-t-repeater),
+	.rfb-label-left .rfb-field:not(.rfb-t-toggle):not(.rfb-t-heading):not(.rfb-t-paragraph):not(.rfb-t-html):not(.rfb-t-divider):not(.rfb-t-group):not(.rfb-t-repeater) {
+		display: grid;
+		align-items: start;
+		gap: 4px 16px;
+		grid-template-columns: 32% minmax(0, 1fr);
+
+		> .rfb-label {
+			grid-column: 1;
+			margin: 10px 0 0;
+		}
+
+		> :not(.rfb-label) {
+			grid-column: 2;
+		}
+	}
+
+	&.rfb-label-hidden .rfb-field > .rfb-label,
+	.rfb-label-hidden .rfb-field > .rfb-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+	}
+
+	.screen-reader-text {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
 	}
 
 	@media (max-width: 640px) {

@@ -65,6 +65,8 @@ export const BASE_ENTRIES = {
 	'popups-frontend': 'modules/popups/assets/js/frontend.js',
 	'custom-code-admin': 'modules/custom-code/assets/js/admin.js',
 	'form-builder-admin': 'modules/form-builder/assets/js/admin.js',
+	'form-builder-builder': 'modules/form-builder/assets/js/builder.js',
+	'form-builder-frontend': 'modules/form-builder/assets/js/frontend.js',
 	'display-conditions-editor': 'modules/display-conditions/assets/js/editor.js',
 	'custom-css-editor': 'modules/custom-css/assets/js/editor.js',
 	'motion-effects-frontend': 'modules/motion-effects/assets/js/motion.js',

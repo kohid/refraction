@@ -24,23 +24,86 @@ class Schema {
 
 	/** @return array<string,string> field type => label */
 	public static function types(): array {
+		$types = [];
+
+		foreach ( self::palette() as $group ) {
+			$types += $group['types'];
+		}
+
+		return $types;
+	}
+
+	/** The builder palette: groups of field types. */
+	public static function palette(): array {
 		return [
-			'text' => self::t( 'Text' ),
-			'textarea' => self::t( 'Long text' ),
-			'number' => self::t( 'Number' ),
-			'currency' => self::t( 'Amount (money)' ),
-			'email' => self::t( 'Email' ),
-			'phone' => self::t( 'Phone' ),
-			'url' => self::t( 'Website link' ),
-			'date' => self::t( 'Date' ),
-			'time' => self::t( 'Time' ),
-			'datetime' => self::t( 'Date and time' ),
-			'select' => self::t( 'Dropdown' ),
-			'radio' => self::t( 'Choice (one)' ),
-			'checkbox' => self::t( 'Choices (many)' ),
-			'toggle' => self::t( 'Yes / No switch' ),
-			'rating' => self::t( 'Rating (1 to 5)' ),
+			'basic' => [
+				'label' => self::t( 'Basic fields' ),
+				'types' => [
+					'text' => self::t( 'Text' ),
+					'textarea' => self::t( 'Long text' ),
+					'number' => self::t( 'Number' ),
+					'currency' => self::t( 'Amount (money)' ),
+					'email' => self::t( 'Email' ),
+					'phone' => self::t( 'Phone' ),
+					'url' => self::t( 'Website link' ),
+					'date' => self::t( 'Date' ),
+					'time' => self::t( 'Time' ),
+					'datetime' => self::t( 'Date and time' ),
+				],
+			],
+			'choice' => [
+				'label' => self::t( 'Choices' ),
+				'types' => [
+					'select' => self::t( 'Dropdown' ),
+					'radio' => self::t( 'Choice (one)' ),
+					'checkbox' => self::t( 'Choices (many)' ),
+					'toggle' => self::t( 'Yes / No switch' ),
+					'rating' => self::t( 'Rating (1 to 5)' ),
+				],
+			],
+			'advanced' => [
+				'label' => self::t( 'Advanced' ),
+				'types' => [
+					'file' => self::t( 'File upload' ),
+					'hidden' => self::t( 'Hidden field' ),
+					'group' => self::t( 'Group' ),
+					'repeater' => self::t( 'Repeater' ),
+				],
+			],
+			'layout' => [
+				'label' => self::t( 'Layout' ),
+				'types' => [
+					'step' => self::t( 'Step (new page)' ),
+					'heading' => self::t( 'Heading' ),
+					'paragraph' => self::t( 'Paragraph' ),
+					'html' => self::t( 'Custom HTML' ),
+					'divider' => self::t( 'Divider' ),
+				],
+			],
 		];
+	}
+
+	/** Types that only decorate the form and never hold a value. */
+	public static function is_layout( string $type ): bool {
+		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider' ], true );
+	}
+
+	public static function is_step( string $type ): bool {
+		return 'step' === $type;
+	}
+
+	public static function is_container( string $type ): bool {
+		return in_array( $type, [ 'group', 'repeater' ], true );
+	}
+
+	/** True for every type that has a stored value (containers hold their children's values). */
+	public static function has_value( string $type ): bool {
+		return ! self::is_layout( $type ) && ! self::is_step( $type );
+	}
+
+	/** True for a value that fits in a table cell and can be sorted or filtered. */
+	public static function is_scalar_type( string $type ): bool {
+		return self::has_value( $type ) && ! self::is_container( $type ) && 'file' !== $type && 'checkbox' !== $type;
 	}
 
 	public static function has_options( string $type ): bool {
@@ -147,42 +210,186 @@ class Schema {
 		);
 	}
 
-	public static function clean_field( $raw ): ?array {
+	/** Allowed upload extensions (a field picks a subset). */
+	const FILE_TYPES = [ 'jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'txt', 'zip', 'mp3', 'mp4' ];
+	const HIDDEN_SOURCES = [ 'static', 'query', 'page_url', 'referrer', 'user_id', 'user_email', 'date' ];
+
+	/** Content that may appear in a Custom HTML block: post-level HTML, no scripts or event handlers. */
+	public static function html( $value ): string {
+		$value = is_scalar( $value ) ? (string) $value : '';
+		$value = substr( $value, 0, 20000 );
+
+		if ( function_exists( 'wp_kses_post' ) ) {
+			return trim( wp_kses_post( $value ) );
+		}
+
+		// Fallback for tests outside WordPress: drop script and style blocks, then keep a few tags without attributes.
+		$value = preg_replace( '~<(script|style)\b.*?</\1\s*>~is', '', $value );
+		$value = strip_tags( (string) $value, '<p><br><a><strong><em><b><i><ul><ol><li><h2><h3><h4><span><div><hr>' );
+
+		return trim( (string) preg_replace( '~<(\w+)\s+[^>]*>~', '<$1>', $value ) );
+	}
+
+	/** Cleans one field. Containers clean their children; use clean_tree() for a whole list. */
+	public static function clean_field( $raw, int $depth = 0, string $parent = '' ): ?array {
 		if ( ! is_array( $raw ) ) {
 			return null;
 		}
 
-		$label = self::text( $raw['label'] ?? '', 80 );
-		$key = self::key( '' !== (string) ( $raw['key'] ?? '' ) ? $raw['key'] : $label );
+		$type = isset( $raw['type'] ) && isset( self::types()[ $raw['type'] ] ) ? $raw['type'] : 'text';
 
-		if ( '' === $key || '' === $label ) {
+		// Containers and steps only exist at the top level; a repeater can not hold uploads.
+		if ( $depth > 0 && ( self::is_container( $type ) || self::is_step( $type ) || ( 'repeater' === $parent && 'file' === $type ) ) ) {
 			return null;
 		}
 
-		$type = isset( $raw['type'] ) && isset( self::types()[ $raw['type'] ] ) ? $raw['type'] : 'text';
-		$width = in_array( $raw['width'] ?? '', self::WIDTHS, true ) ? $raw['width'] : 'full';
-		$field = [
+		$label = self::text( $raw['label'] ?? '', 80 );
+		$has_value = self::has_value( $type );
+
+		if ( '' === $label && $has_value ) {
+			return null;
+		}
+
+		$key = self::key( '' !== (string) ( $raw['key'] ?? '' ) ? $raw['key'] : ( $has_value ? $label : $type ) );
+
+		if ( '' === $key ) {
+			return null;
+		}
+
+		$accept = $raw['accept'] ?? [ 'jpg', 'jpeg', 'png', 'pdf' ];
+		$accept = array_values( array_intersect( self::FILE_TYPES, array_map( 'strtolower', array_map( 'trim', is_array( $accept ) ? $accept : explode( ',', (string) $accept ) ) ) ) );
+		$classes = array_slice( array_filter( preg_split( '/\s+/', (string) ( $raw['css_class'] ?? '' ) ), static function ( $c ) {
+			return 1 === preg_match( '/^[A-Za-z][A-Za-z0-9_-]{0,39}$/', $c );
+		} ), 0, 3 );
+		$source = in_array( $raw['source'] ?? '', self::HIDDEN_SOURCES, true ) ? $raw['source'] : 'static';
+		$layout_text = 'html' === $type ? self::html( $raw['content'] ?? '' ) : ( 'paragraph' === $type ? self::textarea( $raw['content'] ?? '', 2000 ) : self::text( $raw['content'] ?? '', 300 ) );
+
+		return [
 			'key' => $key,
-			'label' => $label,
+			'label' => '' !== $label ? $label : ( self::types()[ $type ] ?? '' ),
 			'type' => $type,
-			'required' => ! empty( $raw['required'] ),
+			'required' => $has_value && ! self::is_container( $type ) && 'hidden' !== $type && ! empty( $raw['required'] ),
 			'options' => self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [],
 			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ),
 			'help' => self::text( $raw['help'] ?? '', 200 ),
-			'width' => $width,
-			'in_table' => ! empty( $raw['in_table'] ),
-			'filter' => ! empty( $raw['filter'] ) && self::has_options( $type ),
-			'public' => ! empty( $raw['public'] ),
+			'width' => in_array( $raw['width'] ?? '', self::WIDTHS, true ) ? $raw['width'] : 'full',
+			'in_table' => self::is_scalar_type( $type ) && 'hidden' !== $type && ! empty( $raw['in_table'] ),
+			'filter' => ! empty( $raw['filter'] ) && self::has_options( $type ) && 'checkbox' !== $type,
+			'public' => ! empty( $raw['public'] ) && self::is_scalar_type( $type ) && 'hidden' !== $type,
 			'default' => self::text( $raw['default'] ?? '', 255 ),
 			'min' => self::number_or_null( $raw['min'] ?? null ),
 			'max' => self::number_or_null( $raw['max'] ?? null ),
+			'content' => $layout_text,
+			'level' => max( 2, min( 6, (int) ( $raw['level'] ?? 3 ) ) ),
+			'conditions' => Conditions::clean( $raw['conditions'] ?? [] ),
+			'css_class' => implode( ' ', $classes ),
+			'hide_label' => ! empty( $raw['hide_label'] ),
+			'accept' => $accept ?: [ 'jpg', 'jpeg', 'png', 'pdf' ],
+			'max_size' => (float) max( 0.1, min( 64.0, is_numeric( $raw['max_size'] ?? null ) ? (float) $raw['max_size'] : 5.0 ) ),
+			'max_files' => max( 1, min( 10, (int) ( $raw['max_files'] ?? 1 ) ) ),
+			'children' => [],
+			'min_rows' => max( 0, min( 20, (int) ( $raw['min_rows'] ?? 0 ) ) ),
+			'max_rows' => max( 1, min( 50, (int) ( $raw['max_rows'] ?? 10 ) ) ),
+			'add_label' => self::text( $raw['add_label'] ?? '', 40 ) ?: self::t( 'Add row' ),
+			'source' => 'hidden' === $type ? $source : 'static',
 		];
-
-		return $field;
 	}
 
 	private static function number_or_null( $value ): ?float {
 		return is_numeric( $value ) ? (float) $value : null;
+	}
+
+	/**
+	 * Cleans a list of fields (and the children of containers), dropping junk and duplicate keys.
+	 *
+	 * @param array  $raw    Raw fields.
+	 * @param array  $used   Keys already taken anywhere in the form (by reference).
+	 * @param int    $budget Fields left before the form-wide cap (by reference).
+	 */
+	public static function clean_tree( $raw, array &$used, int &$budget, int $depth = 0, string $parent = '' ): array {
+		$fields = [];
+
+		foreach ( (array) $raw as $item ) {
+			if ( $budget <= 0 ) {
+				break;
+			}
+
+			$field = self::clean_field( $item, $depth, $parent );
+
+			if ( ! $field ) {
+				continue;
+			}
+
+			// A field without its own key gets a free one (Heading, Heading 2...); a clash on a value field is dropped.
+			$explicit = '' !== (string) ( $item['key'] ?? '' );
+			$base = $field['key'];
+
+			if ( isset( $used[ $base ] ) ) {
+				if ( self::has_value( $field['type'] ) && $explicit ) {
+					continue;
+				}
+
+				for ( $i = 2; isset( $used[ $base . '_' . $i ] ); $i++ ) {
+					continue;
+				}
+
+				$field['key'] = substr( $base, 0, 36 ) . '_' . $i;
+			}
+
+			$used[ $field['key'] ] = true;
+			$budget--;
+
+			if ( self::is_container( $field['type'] ) ) {
+				$field['children'] = self::clean_tree( $item['children'] ?? [], $used, $budget, $depth + 1, $field['type'] );
+			}
+
+			$fields[] = $field;
+		}
+
+		return $fields;
+	}
+
+	/** Every field of the form, containers followed by their children, in order. */
+	public static function walk( array $fields ): array {
+		$all = [];
+
+		foreach ( $fields as $field ) {
+			$all[] = $field;
+
+			if ( $field['children'] ) {
+				$all = array_merge( $all, self::walk( $field['children'] ) );
+			}
+		}
+
+		return $all;
+	}
+
+	/** Top-level fields that store a value (including groups and repeaters). */
+	public static function value_fields( array $definition ): array {
+		return array_values( array_filter( $definition['fields'], static function ( $field ) {
+			return self::has_value( $field['type'] );
+		} ) );
+	}
+
+	/** The form split into steps: a list of field lists. One step when the form has no Step field. */
+	public static function steps( array $definition ): array {
+		$steps = [ [ 'title' => '', 'fields' => [] ] ];
+
+		foreach ( $definition['fields'] as $field ) {
+			if ( self::is_step( $field['type'] ) ) {
+				if ( $steps[0]['fields'] || count( $steps ) > 1 ) {
+					$steps[] = [ 'title' => $field['label'], 'fields' => [] ];
+				} else {
+					$steps[0]['title'] = $field['label'];
+				}
+
+				continue;
+			}
+
+			$steps[ count( $steps ) - 1 ]['fields'][] = $field;
+		}
+
+		return $steps;
 	}
 
 	/** @return array{key:string,label:string,color:string}[] */
@@ -218,23 +425,9 @@ class Schema {
 		$raw = is_array( $raw ) ? $raw : [];
 		$label = self::text( $raw['label'] ?? '', 60 );
 		$slug = self::slug( '' !== (string) ( $raw['slug'] ?? '' ) ? $raw['slug'] : $label );
-		$fields = [];
-		$keys = [];
-
-		foreach ( (array) ( $raw['fields'] ?? [] ) as $field ) {
-			$field = self::clean_field( $field );
-
-			if ( ! $field || isset( $keys[ $field['key'] ] ) ) {
-				continue;
-			}
-
-			$keys[ $field['key'] ] = true;
-			$fields[] = $field;
-
-			if ( count( $fields ) >= self::MAX_FIELDS ) {
-				break;
-			}
-		}
+		$used = [];
+		$budget = self::MAX_FIELDS;
+		$fields = self::clean_tree( $raw['fields'] ?? [], $used, $budget );
 
 		$statuses = self::clean_statuses( $raw['statuses'] ?? [] );
 
@@ -244,7 +437,11 @@ class Schema {
 
 		$status_keys = array_column( $statuses, 'key' );
 		$default_status = in_array( $raw['default_status'] ?? '', $status_keys, true ) ? $raw['default_status'] : $status_keys[0];
-		$title_field = isset( $keys[ $raw['title_field'] ?? '' ] ) ? $raw['title_field'] : ( $fields ? $fields[0]['key'] : '' );
+		$titles = array_values( array_filter( $fields, static function ( $field ) {
+			return self::is_scalar_type( $field['type'] ) && 'hidden' !== $field['type'];
+		} ) );
+		$title_keys = array_column( $titles, 'key' );
+		$title_field = in_array( $raw['title_field'] ?? '', $title_keys, true ) ? $raw['title_field'] : ( $title_keys[0] ?? '' );
 
 		return [
 			'slug' => $slug,
@@ -259,6 +456,8 @@ class Schema {
 			'success_message' => self::text( $raw['success_message'] ?? '', 300 ) ?: self::t( 'Thank you. We received your submission.' ),
 			'fields' => $fields,
 			'statuses' => $statuses,
+			'style' => Style::clean( $raw['style'] ?? [] ),
+			'settings' => Settings::clean( $raw['settings'] ?? [] ),
 		];
 	}
 
@@ -268,7 +467,7 @@ class Schema {
 	}
 
 	public static function field( array $definition, string $key ): ?array {
-		foreach ( $definition['fields'] as $field ) {
+		foreach ( self::walk( $definition['fields'] ) as $field ) {
 			if ( $field['key'] === $key ) {
 				return $field;
 			}
@@ -290,38 +489,134 @@ class Schema {
 	/**
 	 * Validate and normalise the submitted values of one record.
 	 *
+	 * Fields hidden by their visibility rules are skipped: never required, never stored. Group values are keyed by
+	 * their children, repeater values are a list of rows, and file values come from $files (already checked and stored
+	 * by Uploads; the form post never supplies them).
+	 *
 	 * @param array $definition A cleaned definition.
 	 * @param array $input      Raw values keyed by field key (typically unslashed $_POST data).
-	 * @param array $only       When set, only these field keys are read (public forms accept only the fields they show).
+	 * @param array $only       When set, only these top-level field keys are read.
+	 * @param array $files      Accepted file descriptors, keyed by field path ("photo", "group.photo").
 	 *
-	 * @return array{values:array,errors:array<string,string>}
+	 * @return array{values:array,errors:array<string,string>} Errors are keyed by field path ("key", "group.child", "rows.0.child").
 	 */
-	public static function validate( array $definition, array $input, array $only = [] ): array {
+	public static function validate( array $definition, array $input, array $only = [], array $files = [] ): array {
 		$values = [];
 		$errors = [];
+		$hidden = [];
 
-		foreach ( $definition['fields'] as $field ) {
+		self::validate_scope( $definition['fields'], $input, $input, '', $only, $files, $values, $errors, $hidden );
+
+		return [ 'values' => $values, 'errors' => $errors ];
+	}
+
+	/** Value of a field as the visibility rules see it: hidden fields count as empty. */
+	private static function seen( array $scope, array $root, array $hidden, string $key ) {
+		if ( isset( $hidden[ $key ] ) ) {
+			return '';
+		}
+
+		$value = $scope[ $key ] ?? ( $root[ $key ] ?? '' );
+
+		return is_array( $value ) ? array_map( 'strval', array_filter( $value, 'is_scalar' ) ) : ( is_scalar( $value ) ? (string) $value : '' );
+	}
+
+	private static function validate_scope( array $fields, array $scope, array $root, string $path, array $only, array $files, array &$values, array &$errors, array &$hidden ): void {
+		foreach ( $fields as $field ) {
 			$key = $field['key'];
 
-			if ( $only && ! in_array( $key, $only, true ) ) {
+			if ( ! self::has_value( $field['type'] ) || ( '' === $path && $only && ! in_array( $key, $only, true ) ) ) {
 				continue;
 			}
 
-			$raw = $input[ $key ] ?? ( 'toggle' === $field['type'] ? '0' : '' );
-			$result = self::clean_value( $field, $raw );
+			$lookup = static function ( string $name ) use ( $scope, $root, &$hidden ) {
+				return self::seen( $scope, $root, $hidden, $name );
+			};
+
+			if ( ! Conditions::is_visible( $field['conditions'], $lookup ) ) {
+				$hidden[ $key ] = true;
+				continue;
+			}
+
+			$here = '' === $path ? $key : $path . '.' . $key;
+			$raw = $scope[ $key ] ?? null;
+
+			if ( 'group' === $field['type'] ) {
+				$child_values = [];
+				self::validate_scope( $field['children'], is_array( $raw ) ? $raw : [], $root, $here, [], $files, $child_values, $errors, $hidden );
+				$values[ $key ] = $child_values;
+				continue;
+			}
+
+			if ( 'repeater' === $field['type'] ) {
+				$values[ $key ] = self::validate_rows( $field, is_array( $raw ) ? $raw : [], $root, $here, $files, $errors, $hidden );
+				continue;
+			}
+
+			if ( 'file' === $field['type'] ) {
+				$list = isset( $files[ $here ] ) && is_array( $files[ $here ] ) ? array_values( $files[ $here ] ) : [];
+				$values[ $key ] = $list;
+
+				if ( ! $list && $field['required'] ) {
+					$errors[ $here ] = self::t( 'Please choose a file.' );
+				}
+
+				continue;
+			}
+
+			if ( 'hidden' === $field['type'] ) {
+				$values[ $key ] = self::text( $raw ?? $field['default'], 255 );
+				continue;
+			}
+
+			$result = self::clean_value( $field, $raw ?? ( 'toggle' === $field['type'] ? '0' : '' ) );
 
 			if ( null === $result['error'] && $result['empty'] && $field['required'] ) {
 				$result['error'] = self::t( 'This field is required.' );
 			}
 
 			if ( null !== $result['error'] ) {
-				$errors[ $key ] = $result['error'];
+				$errors[ $here ] = $result['error'];
 			}
 
 			$values[ $key ] = $result['value'];
 		}
+	}
 
-		return [ 'values' => $values, 'errors' => $errors ];
+	private static function validate_rows( array $field, array $rows, array $root, string $path, array $files, array &$errors, array &$hidden ): array {
+		$clean = [];
+
+		foreach ( array_values( $rows ) as $row ) {
+			if ( ! is_array( $row ) || count( $clean ) >= $field['max_rows'] ) {
+				continue;
+			}
+
+			$index = count( $clean );
+			$row_values = [];
+			$row_errors = [];
+			$row_hidden = [];
+			self::validate_scope( $field['children'], $row, $root, $path . '.' . $index, [], $files, $row_values, $row_errors, $row_hidden );
+
+			// A row nobody touched (every answer empty) is dropped instead of reported.
+			$filled = array_filter( $row_values, static function ( $value ) {
+				return is_array( $value ) ? (bool) array_filter( $value ) : ( '' !== $value && '0' !== $value );
+			} );
+
+			if ( ! $filled ) {
+				continue;
+			}
+
+			$errors += $row_errors;
+			$clean[] = $row_values;
+		}
+
+		$minimum = max( $field['min_rows'], $field['required'] ? 1 : 0 );
+
+		if ( count( $clean ) < $minimum ) {
+			$errors[ $path ] = sprintf( self::t( 'Add at least %d.' ), $minimum );
+		}
+
+		return $clean;
 	}
 
 	/** @return array{value:string|array,empty:bool,error:?string} */
@@ -426,12 +721,12 @@ class Schema {
 		return $out( $value, false );
 	}
 
-	private static function textarea( $raw ): string {
+	private static function textarea( $raw, int $max = 5000 ): string {
 		$value = is_scalar( $raw ) ? (string) $raw : '';
 		$value = strip_tags( str_replace( "\r\n", "\n", $value ) );
 		$value = preg_replace( '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $value );
 
-		return trim( function_exists( 'mb_substr' ) ? mb_substr( $value, 0, 5000 ) : substr( $value, 0, 5000 ) );
+		return trim( function_exists( 'mb_substr' ) ? mb_substr( $value, 0, $max ) : substr( $value, 0, $max ) );
 	}
 
 	private static function number_text( float $number ): string {
@@ -446,6 +741,24 @@ class Schema {
 
 	/** Plain-text version of a stored value, for the CSV export, the search text and aria labels. */
 	public static function display( array $field, $value ): string {
+		if ( 'file' === $field['type'] ) {
+			return implode( ', ', array_filter( array_map( static function ( $file ) {
+				return is_array( $file ) ? (string) ( $file['name'] ?? '' ) : '';
+			}, (array) $value ) ) );
+		}
+
+		if ( 'group' === $field['type'] ) {
+			return self::summary( $field['children'], is_array( $value ) ? $value : [], '; ', true );
+		}
+
+		if ( 'repeater' === $field['type'] ) {
+			$rows = array_map( function ( $row ) use ( $field ) {
+				return self::summary( $field['children'], is_array( $row ) ? $row : [], ', ', false );
+			}, is_array( $value ) ? $value : [] );
+
+			return implode( ' | ', array_filter( $rows ) );
+		}
+
 		if ( is_array( $value ) ) {
 			$labels = [];
 
@@ -473,6 +786,24 @@ class Schema {
 		return $value;
 	}
 
+	private static function summary( array $children, array $values, string $glue, bool $labelled ): string {
+		$parts = [];
+
+		foreach ( $children as $child ) {
+			if ( ! self::has_value( $child['type'] ) || 'hidden' === $child['type'] ) {
+				continue;
+			}
+
+			$text = self::display( $child, $values[ $child['key'] ] ?? '' );
+
+			if ( '' !== $text && ! ( 'toggle' === $child['type'] && '0' === (string) ( $values[ $child['key'] ] ?? '' ) ) ) {
+				$parts[] = $labelled ? $child['label'] . ': ' . $text : $text;
+			}
+		}
+
+		return implode( $glue, $parts );
+	}
+
 	private static function option_label( array $field, string $value ): string {
 		foreach ( $field['options'] as $option ) {
 			if ( $option['value'] === $value ) {
@@ -487,10 +818,10 @@ class Schema {
 	public static function search_text( array $definition, array $values ): string {
 		$parts = [];
 
-		foreach ( $definition['fields'] as $field ) {
+		foreach ( self::value_fields( $definition ) as $field ) {
 			$text = self::display( $field, $values[ $field['key'] ] ?? '' );
 
-			if ( '' !== $text && 'toggle' !== $field['type'] ) {
+			if ( '' !== $text && 'toggle' !== $field['type'] && 'hidden' !== $field['type'] ) {
 				$parts[] = $text;
 			}
 		}
@@ -498,13 +829,13 @@ class Schema {
 		return implode( "\n", $parts );
 	}
 
-	/** The title of a record: its title field, else the first filled field, else "#id". */
+	/** The title of a record: its title field, else the first filled text-like field, else "#id". */
 	public static function title( array $definition, array $values, int $id = 0 ): string {
-		$candidates = array_merge( [ $definition['title_field'] ], array_column( $definition['fields'], 'key' ) );
+		$candidates = array_merge( [ $definition['title_field'] ], array_column( self::value_fields( $definition ), 'key' ) );
 
 		foreach ( $candidates as $key ) {
 			$field = self::field( $definition, (string) $key );
-			$text = $field && 'toggle' !== $field['type'] ? self::text( self::display( $field, $values[ $key ] ?? '' ), 120 ) : '';
+			$text = $field && self::is_scalar_type( $field['type'] ) && ! in_array( $field['type'], [ 'toggle', 'hidden' ], true ) ? self::text( self::display( $field, $values[ $key ] ?? '' ), 120 ) : '';
 
 			if ( '' !== $text ) {
 				return $text;
@@ -514,16 +845,36 @@ class Schema {
 		return $id ? '#' . $id : self::t( 'Untitled' );
 	}
 
+	/** CSV columns: one per stored value, group children get their own column ("Group > Child"). */
+	public static function csv_columns( array $definition ): array {
+		$columns = [];
+
+		foreach ( self::value_fields( $definition ) as $field ) {
+			if ( 'group' === $field['type'] ) {
+				foreach ( $field['children'] as $child ) {
+					if ( self::has_value( $child['type'] ) ) {
+						$columns[] = [ 'label' => $field['label'] . ' > ' . $child['label'], 'field' => $child, 'path' => [ $field['key'], $child['key'] ] ];
+					}
+				}
+			} else {
+				$columns[] = [ 'label' => $field['label'], 'field' => $field, 'path' => [ $field['key'] ] ];
+			}
+		}
+
+		return $columns;
+	}
+
 	/**
 	 * CSV rows (header first). Cells that start with = + - @ get a leading apostrophe so spreadsheets never run them.
 	 *
 	 * @param array[] $records Each: id, status, created, values.
 	 */
 	public static function csv_rows( array $definition, array $records ): array {
+		$columns = self::csv_columns( $definition );
 		$header = [ 'ID' ];
 
-		foreach ( $definition['fields'] as $field ) {
-			$header[] = $field['label'];
+		foreach ( $columns as $column ) {
+			$header[] = $column['label'];
 		}
 
 		$header[] = self::t( 'Status' );
@@ -533,8 +884,14 @@ class Schema {
 		foreach ( $records as $record ) {
 			$row = [ (string) $record['id'] ];
 
-			foreach ( $definition['fields'] as $field ) {
-				$row[] = self::csv_cell( self::display( $field, $record['values'][ $field['key'] ] ?? '' ) );
+			foreach ( $columns as $column ) {
+				$value = $record['values'];
+
+				foreach ( $column['path'] as $step ) {
+					$value = is_array( $value ) ? ( $value[ $step ] ?? '' ) : '';
+				}
+
+				$row[] = self::csv_cell( self::display( $column['field'], $value ) );
 			}
 
 			$status = self::status( $definition, (string) $record['status'] );

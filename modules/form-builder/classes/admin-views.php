@@ -14,10 +14,13 @@ class Admin_Views {
 
 	private Collections $collections;
 	private Records $records;
+	/** @var callable|null descriptor-aware download URL builder: ( slug, record id, file ) => url */
+	private $download;
 
-	public function __construct( Collections $collections, Records $records ) {
+	public function __construct( Collections $collections, Records $records, ?callable $download = null ) {
 		$this->collections = $collections;
 		$this->records = $records;
+		$this->download = $download;
 	}
 
 	private function url( array $args = [] ): string {
@@ -160,79 +163,20 @@ class Admin_Views {
 		$this->open(
 			/* translators: %s: collection name. */
 			sprintf( __( 'Design: %s', 'refraction' ), $definition['label'] ),
-			__( 'Choose the fields people fill in, the statuses a record moves through, and what is public.', 'refraction' ),
+			__( 'Drag fields onto the form, set how they look and behave, and choose what happens on submit.', 'refraction' ),
 			[ __( 'Builder', 'refraction' ) => $this->url(), $definition['label'] => $this->url( [ 'view' => 'records', 'collection' => $slug ] ) ],
 			$this->button( __( 'View records', 'refraction' ), $this->url( [ 'view' => 'records', 'collection' => $slug ] ), 'light', 'visibility' )
 		);
 
 		echo '<form method="post" class="rfb-design" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" id="rfb-design">';
-		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_SAVE_COLLECTION ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '">';
+		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_SAVE_COLLECTION ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="design" id="rfb-design-json" value="">';
 		wp_nonce_field( Admin_Page::ACTION_SAVE_COLLECTION );
-
-		// Details.
-		echo '<div class="rfb-card"><div class="rfb-card-header"><h2>' . esc_html__( 'Details', 'refraction' ) . '</h2></div><div class="rfb-card-body rfb-form-grid">';
-		$this->plain_input( 'label', __( 'Name (plural)', 'refraction' ), $definition['label'], 'half', true );
-		$this->plain_input( 'singular', __( 'Name (single record)', 'refraction' ), $definition['singular'], 'half' );
-		$this->plain_input( 'description', __( 'Description', 'refraction' ), $definition['description'], 'full' );
-		echo '<div class="rfb-field rfb-w-half"><label class="rfb-label" for="rfb-icon">' . esc_html__( 'Icon', 'refraction' ) . '</label><select class="rfb-input" id="rfb-icon" name="icon">';
-
-		foreach ( $this->icon_choices() as $name => $label ) {
-			echo '<option value="' . esc_attr( $name ) . '"' . selected( $definition['icon'], $name, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-
-		echo '</select></div>';
-		echo '<div class="rfb-field rfb-w-half"><label class="rfb-label" for="rfb-title-field">' . esc_html__( 'Field used as the record title', 'refraction' ) . '</label><select class="rfb-input" id="rfb-title-field" name="title_field">';
-
-		foreach ( $definition['fields'] as $field ) {
-			echo '<option value="' . esc_attr( $field['key'] ) . '"' . selected( $definition['title_field'], $field['key'], false ) . '>' . esc_html( $field['label'] ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-
-		echo '</select></div></div></div>';
-
-		// Fields.
-		echo '<div class="rfb-card"><div class="rfb-card-header"><div><h2>' . esc_html__( 'Fields', 'refraction' ) . '</h2><p>' . esc_html__( 'Drag with the arrows to reorder. A field marked "Show in table" becomes a column.', 'refraction' ) . '</p></div>';
-		echo '<button type="button" class="rfb-btn rfb-btn-light-primary" id="rfb-add-field">' . $this->icon( 'add', 18 ) . esc_html__( 'Add field', 'refraction' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<div class="rfb-card-body"><ol class="rfb-rows" id="rfb-fields">';
-
-		foreach ( $definition['fields'] as $index => $field ) {
-			$this->field_row( $field, (string) $index );
-		}
-
-		echo '</ol>';
-		echo '<template id="rfb-field-template">';
-		$this->field_row( Schema::clean_field( [ 'label' => 'New field' ] ), '__INDEX__' );
-		echo '</template></div></div>';
-
-		// Statuses.
-		echo '<div class="rfb-card"><div class="rfb-card-header"><div><h2>' . esc_html__( 'Statuses', 'refraction' ) . '</h2><p>' . esc_html__( 'Every record has one status, shown as a colored badge.', 'refraction' ) . '</p></div>';
-		echo '<button type="button" class="rfb-btn rfb-btn-light-primary" id="rfb-add-status">' . $this->icon( 'add', 18 ) . esc_html__( 'Add status', 'refraction' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<div class="rfb-card-body"><ol class="rfb-rows" id="rfb-statuses">';
-
-		foreach ( $definition['statuses'] as $index => $status ) {
-			$this->status_row( $status, (string) $index );
-		}
-
-		echo '</ol><template id="rfb-status-template">';
-		$this->status_row( [ 'key' => '', 'label' => '', 'color' => 'primary' ], '__INDEX__' );
-		echo '</template><div class="rfb-field rfb-w-half"><label class="rfb-label" for="rfb-default-status">' . esc_html__( 'Status of a new record', 'refraction' ) . '</label><select class="rfb-input" id="rfb-default-status" name="default_status">';
-
-		foreach ( $definition['statuses'] as $status ) {
-			echo '<option value="' . esc_attr( $status['key'] ) . '"' . selected( $definition['default_status'], $status['key'], false ) . '>' . esc_html( $status['label'] ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-
-		echo '</select></div></div></div>';
-
-		// Public.
-		echo '<div class="rfb-card"><div class="rfb-card-header"><div><h2>' . esc_html__( 'Show on your site', 'refraction' ) . '</h2><p>' . esc_html__( 'Optional. Nothing is public until you turn it on and place the shortcode on a page.', 'refraction' ) . '</p></div></div><div class="rfb-card-body rfb-form-grid">';
-		$this->switch_input( 'public_form', __( 'Accept submissions from visitors (public form)', 'refraction' ), $definition['public_form'], '[refraction_form collection="' . $slug . '"]' );
-		$this->switch_input( 'public_list', __( 'Show records publicly (list)', 'refraction' ), $definition['public_list'], '[refraction_records collection="' . $slug . '" status="published" view="cards"]', __( 'Only records with the status named in the shortcode, and only fields marked "Show publicly", are shown.', 'refraction' ) );
-		$this->plain_input( 'success_message', __( 'Message after a visitor submits', 'refraction' ), $definition['success_message'], 'full' );
-		echo '</div></div>';
-
-		echo '<div class="rfb-sticky-actions"><button type="submit" class="rfb-btn rfb-btn-primary">' . esc_html__( 'Save collection', 'refraction' ) . '</button></div></form>';
+		echo '<div id="rfb-builder" data-design="' . esc_attr( (string) wp_json_encode( $definition ) ) . '" data-shortcode-form="' . esc_attr( '[refraction_form collection="' . $slug . '"]' ) . '" data-shortcode-list="' . esc_attr( '[refraction_records collection="' . $slug . '" status="published" view="cards"]' ) . '"></div>';
+		echo '<noscript><div class="rfb-alert rfb-alert-warning">' . esc_html__( 'The form designer needs JavaScript. Please turn it on for this page.', 'refraction' ) . '</div></noscript>';
+		echo '</form>';
 
 		// Danger zone.
-		echo '<form method="post" class="rfb-card rfb-danger" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><div class="rfb-card-header"><div><h2>' . esc_html__( 'Delete this collection', 'refraction' ) . '</h2><p>' . esc_html__( 'This permanently deletes the collection and every record in it. It cannot be undone.', 'refraction' ) . '</p></div></div><div class="rfb-card-body">';
+		echo '<form method="post" class="rfb-card rfb-danger" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><div class="rfb-card-header"><div><h2>' . esc_html__( 'Delete this collection', 'refraction' ) . '</h2><p>' . esc_html__( 'This permanently deletes the collection, every record in it and its uploaded files. It cannot be undone.', 'refraction' ) . '</p></div></div><div class="rfb-card-body">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_DELETE_COLLECTION ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '">';
 		wp_nonce_field( Admin_Page::ACTION_DELETE_COLLECTION );
 		echo '<div class="rfb-field"><label class="rfb-label" for="rfb-confirm">' . esc_html( sprintf( /* translators: %s: collection name. */ __( 'Type "%s" to confirm', 'refraction' ), $definition['label'] ) ) . '</label><input class="rfb-input" id="rfb-confirm" name="confirm" autocomplete="off"></div>';
@@ -241,7 +185,7 @@ class Admin_Views {
 		$this->close();
 	}
 
-	private function icon_choices(): array {
+	public static function icon_choices(): array {
 		return [
 			'grid-view' => __( 'Grid', 'refraction' ),
 			'schedule' => __( 'Clock (bookings)', 'refraction' ),
@@ -255,75 +199,7 @@ class Admin_Views {
 		];
 	}
 
-	private function plain_input( string $name, string $label, string $value, string $width, bool $required = false ): void {
-		$id = 'rfb-' . $name;
-		echo '<div class="rfb-field rfb-w-' . esc_attr( $width ) . '"><label class="rfb-label' . ( $required ? ' is-required' : '' ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label><input class="rfb-input" type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '"' . ( $required ? ' required' : '' ) . '></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-
-	private function switch_input( string $name, string $label, bool $on, string $shortcode, string $note = '' ): void {
-		$id = 'rfb-' . $name;
-		echo '<div class="rfb-field rfb-w-full"><input type="hidden" name="' . esc_attr( $name ) . '" value="0"><label class="rfb-switch" for="' . esc_attr( $id ) . '"><input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( $on, true, false ) . '><span class="rfb-switch-track" aria-hidden="true"></span><span class="rfb-switch-text">' . esc_html( $label ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<p class="rfb-help">' . esc_html__( 'Shortcode:', 'refraction' ) . ' <code>' . esc_html( $shortcode ) . '</code></p>';
-
-		if ( '' !== $note ) {
-			echo '<p class="rfb-help">' . esc_html( $note ) . '</p>';
-		}
-
-		echo '</div>';
-	}
-
-	private function field_row( array $field, string $index ): void {
-		$p = 'fields[' . $index . ']';
-		$types = Schema::types();
-		echo '<li class="rfb-row" data-type="' . esc_attr( $field['type'] ) . '"><div class="rfb-row-main">';
-		echo '<div class="rfb-row-move"><button type="button" class="rfb-icon-btn" data-move="up" aria-label="' . esc_attr__( 'Move up', 'refraction' ) . '">' . $this->icon( 'expand-less' ) . '</button><button type="button" class="rfb-icon-btn" data-move="down" aria-label="' . esc_attr__( 'Move down', 'refraction' ) . '">' . $this->icon( 'expand-more' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-row-cell rfb-grow"><span class="rfb-mini">' . esc_html__( 'Label', 'refraction' ) . '</span><input class="rfb-input" type="text" name="' . esc_attr( $p ) . '[label]" value="' . esc_attr( $field['label'] ) . '" data-role="label"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-row-cell"><span class="rfb-mini">' . esc_html__( 'Type', 'refraction' ) . '</span><select class="rfb-input" name="' . esc_attr( $p ) . '[type]" data-role="type">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-		foreach ( $types as $value => $label ) {
-			echo '<option value="' . esc_attr( $value ) . '"' . selected( $field['type'], $value, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-
-		echo '</select></label>';
-		echo '<label class="rfb-check rfb-row-cell"><input type="checkbox" name="' . esc_attr( $p ) . '[required]" value="1"' . checked( $field['required'], true, false ) . '><span>' . esc_html__( 'Required', 'refraction' ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-check rfb-row-cell"><input type="checkbox" name="' . esc_attr( $p ) . '[in_table]" value="1"' . checked( $field['in_table'], true, false ) . '><span>' . esc_html__( 'Show in table', 'refraction' ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<button type="button" class="rfb-icon-btn" data-toggle="more" aria-expanded="false" aria-label="' . esc_attr__( 'More options', 'refraction' ) . '">' . $this->icon( 'tune' ) . '</button>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<button type="button" class="rfb-icon-btn rfb-icon-danger" data-remove aria-label="' . esc_attr__( 'Remove field', 'refraction' ) . '">' . $this->icon( 'delete' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-		echo '<div class="rfb-row-more" hidden><input type="hidden" name="' . esc_attr( $p ) . '[key]" value="' . esc_attr( $field['key'] ) . '" data-role="key">';
-		echo '<label class="rfb-field rfb-w-third"><span class="rfb-mini">' . esc_html__( 'Width', 'refraction' ) . '</span><select class="rfb-input" name="' . esc_attr( $p ) . '[width]">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-		foreach ( [ 'full' => __( 'Full', 'refraction' ), 'half' => __( 'Half', 'refraction' ), 'third' => __( 'One third', 'refraction' ) ] as $value => $label ) {
-			echo '<option value="' . esc_attr( $value ) . '"' . selected( $field['width'], $value, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-
-		echo '</select></label>';
-		echo '<label class="rfb-field rfb-w-third"><span class="rfb-mini">' . esc_html__( 'Placeholder', 'refraction' ) . '</span><input class="rfb-input" type="text" name="' . esc_attr( $p ) . '[placeholder]" value="' . esc_attr( $field['placeholder'] ) . '"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-field rfb-w-third"><span class="rfb-mini">' . esc_html__( 'Default value', 'refraction' ) . '</span><input class="rfb-input" type="text" name="' . esc_attr( $p ) . '[default]" value="' . esc_attr( $field['default'] ) . '"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-field rfb-w-full"><span class="rfb-mini">' . esc_html__( 'Help text', 'refraction' ) . '</span><input class="rfb-input" type="text" name="' . esc_attr( $p ) . '[help]" value="' . esc_attr( $field['help'] ) . '"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-field rfb-w-full rfb-only-choice"><span class="rfb-mini">' . esc_html__( 'Options (one per line, or value|Label)', 'refraction' ) . '</span><textarea class="rfb-input" rows="4" name="' . esc_attr( $p ) . '[options]">' . esc_textarea( Schema::options_to_text( $field['options'] ) ) . '</textarea></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-field rfb-w-third rfb-only-number"><span class="rfb-mini">' . esc_html__( 'Lowest value', 'refraction' ) . '</span><input class="rfb-input" type="number" step="any" name="' . esc_attr( $p ) . '[min]" value="' . esc_attr( null === $field['min'] ? '' : (string) $field['min'] ) . '"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-field rfb-w-third rfb-only-number"><span class="rfb-mini">' . esc_html__( 'Highest value', 'refraction' ) . '</span><input class="rfb-input" type="number" step="any" name="' . esc_attr( $p ) . '[max]" value="' . esc_attr( null === $field['max'] ? '' : (string) $field['max'] ) . '"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-check rfb-only-choice"><input type="checkbox" name="' . esc_attr( $p ) . '[filter]" value="1"' . checked( $field['filter'], true, false ) . '><span>' . esc_html__( 'Add a filter above the table', 'refraction' ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-check"><input type="checkbox" name="' . esc_attr( $p ) . '[public]" value="1"' . checked( $field['public'], true, false ) . '><span>' . esc_html__( 'Show publicly (in the public list)', 'refraction' ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '</div></li>';
-	}
-
-	private function status_row( array $status, string $index ): void {
-		$p = 'statuses[' . $index . ']';
-		echo '<li class="rfb-row"><div class="rfb-row-main"><div class="rfb-row-move"><button type="button" class="rfb-icon-btn" data-move="up" aria-label="' . esc_attr__( 'Move up', 'refraction' ) . '">' . $this->icon( 'expand-less' ) . '</button><button type="button" class="rfb-icon-btn" data-move="down" aria-label="' . esc_attr__( 'Move down', 'refraction' ) . '">' . $this->icon( 'expand-more' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<input type="hidden" name="' . esc_attr( $p ) . '[key]" value="' . esc_attr( $status['key'] ) . '">';
-		echo '<label class="rfb-row-cell rfb-grow"><span class="rfb-mini">' . esc_html__( 'Label', 'refraction' ) . '</span><input class="rfb-input" type="text" name="' . esc_attr( $p ) . '[label]" value="' . esc_attr( $status['label'] ) . '"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<label class="rfb-row-cell"><span class="rfb-mini">' . esc_html__( 'Color', 'refraction' ) . '</span><select class="rfb-input" name="' . esc_attr( $p ) . '[color]">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-		foreach ( $this->color_names() as $color => $label ) {
-			echo '<option value="' . esc_attr( $color ) . '"' . selected( $status['color'], $color, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-
-		echo '</select></label><button type="button" class="rfb-icon-btn rfb-icon-danger" data-remove aria-label="' . esc_attr__( 'Remove status', 'refraction' ) . '">' . $this->icon( 'delete' ) . '</button></div></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-
-	private function color_names(): array {
+	public static function color_names(): array {
 		return [
 			'primary' => __( 'Blue', 'refraction' ),
 			'success' => __( 'Green', 'refraction' ),
@@ -351,7 +227,7 @@ class Admin_Views {
 			'filters' => [],
 		];
 
-		foreach ( (array) ( $definition['fields'] ?? [] ) as $field ) {
+		foreach ( $definition ? Schema::value_fields( $definition ) : [] as $field ) {
 			if ( $field['filter'] && isset( $_GET[ 'f_' . $field['key'] ] ) ) {
 				$args['filters'][ $field['key'] ] = Schema::text( wp_unslash( $_GET[ 'f_' . $field['key'] ] ), 120 );
 			}
@@ -386,10 +262,12 @@ class Admin_Views {
 		$args = $this->table_args();
 		$result = $this->records->query( $definition, $args );
 		$counts = $this->records->counts( $definition );
-		$columns = array_values( array_filter( $definition['fields'], static function ( $field ) {
+		$columns = array_values( array_filter( Schema::value_fields( $definition ), static function ( $field ) {
 			return $field['in_table'];
 		} ) );
-		$columns = $columns ? $columns : array_slice( $definition['fields'], 0, 1 );
+		$columns = $columns ? $columns : array_slice( array_values( array_filter( Schema::value_fields( $definition ), static function ( $field ) {
+			return Schema::is_scalar_type( $field['type'] );
+		} ) ), 0, 1 );
 
 		$toolbar = $this->button( __( 'Export CSV', 'refraction' ), wp_nonce_url( add_query_arg( array_merge( [ 'action' => Admin_Page::ACTION_EXPORT, 'collection' => $slug ], array_filter( [ 's' => $args['search'], 'status' => $args['status'] ] ) ), admin_url( 'admin-post.php' ) ), Admin_Page::ACTION_EXPORT ), 'light', 'download' )
 			. $this->button( __( 'Edit design', 'refraction' ), $this->url( [ 'view' => 'design', 'collection' => $slug ] ), 'light', 'tune' )
@@ -422,7 +300,7 @@ class Admin_Views {
 
 		echo '<label class="rfb-search"><span class="screen-reader-text">' . esc_html__( 'Search records', 'refraction' ) . '</span>' . $this->icon( 'search', 18 ) . '<input class="rfb-input" type="search" name="s" value="' . esc_attr( $args['search'] ) . '" placeholder="' . esc_attr__( 'Search...', 'refraction' ) . '"></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
-		foreach ( $definition['fields'] as $field ) {
+		foreach ( Schema::value_fields( $definition ) as $field ) {
 			if ( ! $field['filter'] ) {
 				continue;
 			}
@@ -550,17 +428,30 @@ class Admin_Views {
 			delete_transient( 'refraction_fb_form_' . get_current_user_id() );
 		}
 
+		// A new record starts from the field defaults; an edited one shows exactly what was saved.
+		$blank = ! $id && ! $errors;
+		$download = $this->download;
+		$ctx = [
+			'admin' => true,
+			'files' => $record ? $this->file_lists( $definition, $record['values'] ) : [],
+			'file_url' => $download && $id ? static function ( array $file ) use ( $download, $slug, $id ) {
+				return $download( $slug, $id, $file );
+			} : null,
+		];
+
 		/* translators: %s: singular collection name. */
 		$title = $id ? sprintf( __( 'Edit %s', 'refraction' ), $definition['singular'] ) : sprintf( __( 'Add %s', 'refraction' ), $definition['singular'] );
 		$this->open( $title, $record ? $record['title'] : '', [ __( 'Builder', 'refraction' ) => $this->url(), $definition['label'] => $this->url( [ 'view' => 'records', 'collection' => $slug ] ) ] );
 
-		echo '<form method="post" class="rfb-card" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate>';
+		echo '<form method="post" class="rfb-card rfb-form" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-i18n="' . esc_attr( (string) wp_json_encode( [ 'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ), 'badType' => __( '%s is not an allowed file type.', 'refraction' ), 'tooMany' => __( 'You can choose at most %d files.', 'refraction' ) ] ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_SAVE_RECORD ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="record" value="' . esc_attr( (string) $id ) . '">';
 		wp_nonce_field( Admin_Page::ACTION_SAVE_RECORD );
 		echo '<div class="rfb-card-body rfb-form-grid">';
 
-		foreach ( $definition['fields'] as $field ) {
-			Field_Renderer::render( $field, $values[ $field['key'] ] ?? ( $id || $errors ? ( 'checkbox' === $field['type'] ? [] : '' ) : null ), 'values', $errors[ $field['key'] ] ?? '' );
+		if ( $blank ) {
+			Field_Renderer::render_fields( $definition['fields'], [], 'values', $errors, $ctx );
+		} else {
+			Field_Renderer::render_fields( $definition['fields'], $this->fill_gaps( $definition['fields'], $values ), 'values', $errors, $ctx );
 		}
 
 		echo '<div class="rfb-field rfb-w-half"><label class="rfb-label" for="rfb-status">' . esc_html__( 'Status', 'refraction' ) . '</label><select class="rfb-input" id="rfb-status" name="status">';
@@ -578,5 +469,38 @@ class Admin_Views {
 		}
 
 		$this->close();
+	}
+
+	/**
+	 * Saved values with an empty answer for every field that has none, so a checkbox the editor unticked stays unticked
+	 * instead of falling back to its default.
+	 */
+	private function fill_gaps( array $fields, array $values ): array {
+		foreach ( $fields as $field ) {
+			if ( ! Schema::has_value( $field['type'] ) || array_key_exists( $field['key'], $values ) ) {
+				continue;
+			}
+
+			$values[ $field['key'] ] = in_array( $field['type'], [ 'checkbox', 'group', 'repeater', 'file' ], true ) ? [] : '';
+		}
+
+		return $values;
+	}
+
+	/** Stored file descriptors by field path for the record form. */
+	private function file_lists( array $definition, array $values ): array {
+		$lists = [];
+
+		foreach ( Uploads::fields( $definition ) as $path => $field ) {
+			$node = $values;
+
+			foreach ( explode( '.', $path ) as $step ) {
+				$node = is_array( $node ) ? ( $node[ $step ] ?? [] ) : [];
+			}
+
+			$lists[ $path ] = is_array( $node ) ? $node : [];
+		}
+
+		return $lists;
 	}
 }
