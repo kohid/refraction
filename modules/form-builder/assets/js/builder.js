@@ -173,6 +173,11 @@
 
 	/** Gives every field (and child) a private id used by the designer only; it is stripped before saving. */
 	function tag( field ) {
+		// PHP sends an empty list as [], and properties set on an array are lost when the design is saved as JSON.
+		if ( ! field.style || Array.isArray( field.style ) ) {
+			field.style = {};
+		}
+
 		Object.defineProperty( field, '_id', { value: ++uid, enumerable: false, writable: true } );
 		( field.children || [] ).forEach( tag );
 
@@ -572,17 +577,20 @@
 		} );
 		const button = ( label, symbol, action, extra = '' ) => h( 'button', { type: 'button', class: 'rfb-icon-btn ' + extra, 'aria-label': label, title: label, onClick: ( e ) => { e.stopPropagation(); action(); } }, symbol );
 		const bar = h( 'div', { class: 'rfb-cv-bar' },
-			h( 'span', { class: 'rfb-cv-handle', 'aria-hidden': 'true', title: __( 'Drag to move', 'refraction' ) }, '⋮⋮' ),
-			h( 'span', { class: 'rfb-cv-type' }, typeLabels[ field.type ] || field.type ),
-			conditional ? h( 'span', { class: 'rfb-badge rfb-badge-light-info' }, __( 'Conditional', 'refraction' ) ) : null,
-			field.required ? h( 'span', { class: 'rfb-badge rfb-badge-light-danger' }, __( 'Required', 'refraction' ) ) : null,
-			h( 'span', { class: 'rfb-cv-actions' },
-				button( sprintf( __( 'Move %s up', 'refraction' ), field.label ), '↑', () => index > 0 && move( field._id, owner, index - 1 ) ),
-				button( sprintf( __( 'Move %s down', 'refraction' ), field.label ), '↓', () => index < items.length - 1 && move( field._id, owner, index + 2 ) ),
-				button( sprintf( __( 'Duplicate %s', 'refraction' ), field.label ), '⧉', () => insert( clone( field ), owner, index + 1 ) ),
-				button( sprintf( __( 'Delete %s', 'refraction' ), field.label ), '✕', () => removeField( field ), 'rfb-icon-danger' ) ) );
+			h( 'span', { class: 'rfb-cv-type', title: __( 'Drag to move', 'refraction' ) }, typeLabels[ field.type ] || field.type ),
+			button( sprintf( __( 'Move %s up', 'refraction' ), field.label ), '↑', () => index > 0 && move( field._id, owner, index - 1 ), 'rfb-cv-move' ),
+			button( sprintf( __( 'Move %s down', 'refraction' ), field.label ), '↓', () => index < items.length - 1 && move( field._id, owner, index + 2 ), 'rfb-cv-move' ),
+			button( sprintf( __( 'Duplicate %s', 'refraction' ), field.label ), '⧉', () => insert( clone( field ), owner, index + 1 ) ),
+			button( sprintf( __( 'Delete %s', 'refraction' ), field.label ), '✕', () => removeField( field ), 'rfb-icon-danger' ) );
+		const badges = conditional || field.required
+			? h( 'div', { class: 'rfb-cv-badges', 'aria-hidden': 'true' }, conditional ? h( 'span', { class: 'rfb-badge rfb-badge-light-info' }, __( 'Conditional', 'refraction' ) ) : null, field.required ? h( 'span', { class: 'rfb-badge rfb-badge-light-danger' }, __( 'Required', 'refraction' ) ) : null )
+			: null;
 
 		el.append( bar );
+
+		if ( badges ) {
+			el.append( badges );
+		}
 
 		if ( isContainer( field.type ) ) {
 			el.append( h( 'div', { class: 'rfb-cv-container' }, h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, 'repeater' === field.type ? ' · ' + __( 'repeats', 'refraction' ) : '', field.hide_label ? ' ' + __( '(title hidden on the form)', 'refraction' ) : '' ), field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, list( field.children, field ) ) );

@@ -98,6 +98,8 @@
 		text-align: center;
 	}
 
+	// A field on the canvas: no frame and nothing that moves. Hovering draws a thin dashed outline and a small toolbar floats over the
+	// top-right edge (type name, duplicate, delete); the selected field gets a solid outline and a few more buttons.
 	.rfb-cv-item {
 		position: relative;
 		flex: 1 1 100%;
@@ -106,7 +108,9 @@
 		border: 2px solid transparent;
 		border-radius: var(--rfb-radius);
 		cursor: pointer;
-		transition: border-color 0.12s, background-color 0.12s;
+		outline: 0 solid transparent;
+		outline-offset: 2px;
+		transition: outline-color 0.1s, background-color 0.1s;
 
 		&.rfb-w-half {
 			flex-basis: calc(50% - 8px);
@@ -116,13 +120,15 @@
 			flex-basis: calc(33.333% - 11px);
 		}
 
-		&:hover {
-			border-color: color-mix(in srgb, var(--rfb-primary) 35%, transparent);
+		// Only the innermost hovered field reacts (a repeater does not light up while you hover a field inside it).
+		&:hover:not(:has(.rfb-cv-item:hover)) {
+			outline: 1px dashed color-mix(in srgb, var(--rfb-primary) 70%, transparent);
 		}
 
-		&.is-selected {
-			border-color: var(--rfb-primary);
-			background: color-mix(in srgb, var(--rfb-primary) 5%, transparent);
+		&.is-selected,
+		&.is-selected:hover:not(:has(.rfb-cv-item:hover)) {
+			outline: 2px solid var(--rfb-primary);
+			background: color-mix(in srgb, var(--rfb-primary) 4%, transparent);
 		}
 
 		&.is-dragging {
@@ -131,48 +137,90 @@
 	}
 
 	.rfb-cv-bar {
+		position: absolute;
+		top: -13px;
+		right: 6px;
+		z-index: 6;
 		display: none;
-		align-items: center;
-		gap: 8px;
-		padding: 4px 8px;
-		border-radius: 6px 6px 0 0;
-		background: var(--rfb-primary);
+		align-items: stretch;
+		gap: 2px;
 		color: #fff;
 		font-size: 11px;
 		font-weight: 700;
+		line-height: 1;
+		pointer-events: auto;
+
+		.rfb-cv-type,
+		.rfb-icon-btn {
+			height: 24px;
+			border-radius: 3px;
+			background: var(--rfb-primary);
+			color: #fff;
+		}
+
+		.rfb-cv-type {
+			display: inline-flex;
+			align-items: center;
+			padding: 0 9px;
+			cursor: grab;
+			letter-spacing: 0.02em;
+			text-transform: uppercase;
+		}
 
 		.rfb-icon-btn {
 			width: 26px;
-			height: 26px;
-			color: #fff;
+			font-size: 13px;
 
 			&:hover,
 			&:focus-visible {
-				background: rgba(255, 255, 255, 0.25);
+				background: color-mix(in srgb, var(--rfb-primary) 80%, #000);
 				color: #fff;
 			}
+
+			&.rfb-icon-danger:hover,
+			&.rfb-icon-danger:focus-visible {
+				background: $rfb-danger;
+			}
+		}
+
+		.rfb-cv-move {
+			display: none;
 		}
 	}
 
-	.rfb-cv-item:hover > .rfb-cv-bar,
+	.rfb-cv-item.is-selected > .rfb-cv-bar .rfb-cv-move,
+	.rfb-cv-item:focus-within > .rfb-cv-bar .rfb-cv-move {
+		display: inline-flex;
+	}
+
+	.rfb-cv-item:hover:not(:has(.rfb-cv-item:hover)) > .rfb-cv-bar,
 	.rfb-cv-item.is-selected > .rfb-cv-bar,
-	.rfb-cv-item:focus-within > .rfb-cv-bar {
+	.rfb-cv-item:focus-within:not(:has(.rfb-cv-item:focus-within)) > .rfb-cv-bar {
 		display: flex;
 	}
 
-	.rfb-cv-handle {
-		cursor: grab;
-		letter-spacing: -2px;
+	// "Conditional" and "Required" float over the top edge, centered, only while the field is hovered or selected.
+	.rfb-cv-badges {
+		position: absolute;
+		top: -12px;
+		left: 50%;
+		z-index: 5;
+		display: none;
+		gap: 4px;
+		transform: translateX(-50%);
+		pointer-events: none;
+
+		.rfb-badge {
+			border: 2px solid var(--rfb-primary);
+			background: #fff;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+			font-size: 11px;
+		}
 	}
 
-	.rfb-cv-type {
-		margin-right: auto;
-		text-transform: uppercase;
-	}
-
-	.rfb-cv-actions {
+	.rfb-cv-item:hover:not(:has(.rfb-cv-item:hover)) > .rfb-cv-badges,
+	.rfb-cv-item.is-selected > .rfb-cv-badges {
 		display: inline-flex;
-		margin-left: auto;
 	}
 
 	.rfb-cv-preview-body {

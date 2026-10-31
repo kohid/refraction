@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.9.0
+Stable tag: 0.9.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.9.1 =
+* Fix: field styles set in the Builder designer were not saved (and so never reached the form). Existing fields could not keep a style; they can now.
+* Tweak: fields on the designer canvas no longer grow a full-width bar when you hover or select them. A thin outline marks the field and a small toolbar floats over its top-right edge (type, duplicate, delete, and move up / down when selected); Conditional and Required tags float over the top edge. Nothing shifts, and only the field under the pointer reacts, not the repeater or group around it.
 
 = 0.9.0 =
 * Fix: a field with conditional visibility stayed disabled when its rule stopped and then started matching again (change the choice, go back, and the field could not be edited). It now comes back enabled and keeps what was typed, on the public form and in the admin.

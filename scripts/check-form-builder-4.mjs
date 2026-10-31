@@ -260,6 +260,41 @@ async function main() {
 		await page.locator( '.rfb-cv-item[data-rfb-key="pet_type"] .rfb-cv-preview-body' ).click( { force: true } );
 		check( 'style tab', 'a field has Settings and Style tabs under its name', ( await page.locator( '.rfb-field-tab' ).allTextContents() ).join( '|' ) === 'Settings|Style' );
 		check( 'style tab', 'Settings is shown first with its sections', ( await page.locator( '.rfb-inspector summary' ).allTextContents() ).includes( 'General' ) );
+
+		// ---- canvas hover and selection: nothing moves, a small toolbar floats over the top edge, only the innermost field reacts
+		const itemBox = ( k ) => page.locator( `.rfb-cv-item[data-rfb-key="${ k }"]` );
+		await page.locator( '.rfb-cv-item.is-selected' ).first().evaluate( () => null );
+		await page.keyboard.press( 'Escape' );
+		await page.locator( '.rfb-canvas-inner' ).dispatchEvent( 'click' ); // a click on the empty canvas deselects
+		await page.mouse.move( 5, 5 );
+		const before = [ await itemBox( 'owner' ).boundingBox(), await itemBox( 'specify' ).boundingBox() ];
+		await itemBox( 'specify' ).hover( { position: { x: 80, y: 30 } } );
+		await page.waitForTimeout( 250 );
+		const after = [ await itemBox( 'owner' ).boundingBox(), await itemBox( 'specify' ).boundingBox() ];
+		check( 'canvas', 'hovering a field moves nothing', JSON.stringify( before ) === JSON.stringify( after ) );
+		const bar = itemBox( 'specify' ).locator( '> .rfb-cv-bar' );
+		const barBox = await bar.boundingBox();
+		check( 'canvas', 'a small toolbar floats over the top-right edge', await bar.isVisible() && barBox.height <= 26 && barBox.y < after[ 1 ].y + 6 && barBox.x > after[ 1 ].x + after[ 1 ].width / 2 );
+		check( 'canvas', 'it shows the type, duplicate and delete, not the move buttons', ( await bar.locator( '.rfb-cv-type' ).textContent() ) === 'Text' && await bar.locator( 'button[aria-label^="Duplicate"]' ).isVisible() && await bar.locator( 'button[aria-label^="Delete"]' ).isVisible() && ! ( await bar.locator( 'button[aria-label^="Move"]' ).first().isVisible() ) );
+		check( 'canvas', 'a conditional field floats a Conditional tag at the top', await itemBox( 'specify' ).locator( '> .rfb-cv-badges' ).isVisible() && ( await itemBox( 'specify' ).locator( '> .rfb-cv-badges' ).textContent() ).includes( 'Conditional' ) );
+		check( 'canvas', 'the hovered field gets a thin dashed outline', ( await itemBox( 'specify' ).evaluate( ( el ) => getComputedStyle( el ).outlineStyle + ' ' + getComputedStyle( el ).outlineWidth ) ) === 'dashed 1px' );
+		check( 'canvas', 'other fields show no toolbar', ! ( await itemBox( 'owner' ).locator( '> .rfb-cv-bar' ).isVisible() ) && ( await page.locator( '.rfb-cv-bar:visible' ).count() ) === 1 );
+		await itemBox( 'specify' ).click( { position: { x: 80, y: 30 } } );
+		await page.waitForTimeout( 200 );
+		check( 'canvas', 'the selected field has a solid outline and also the move buttons', ( await itemBox( 'specify' ).evaluate( ( el ) => getComputedStyle( el ).outlineStyle + ' ' + getComputedStyle( el ).outlineWidth ) ) === 'solid 2px' && await bar.locator( 'button[aria-label^="Move"]' ).first().isVisible() );
+		await page.mouse.move( 5, 5 );
+		await page.waitForTimeout( 150 );
+		check( 'canvas', 'it keeps its toolbar when the pointer leaves', await bar.isVisible() && ( await page.locator( '.rfb-cv-bar:visible' ).count() ) === 1 );
+		await itemBox( 'kind_note' ).hover( { position: { x: 60, y: 30 } } ).catch( () => null );
+		await itemBox( 'kind' ).hover( { position: { x: 60, y: 30 } } );
+		await page.waitForTimeout( 250 );
+		check( 'canvas', 'inside a repeater only the hovered field shows a toolbar, not the repeater around it', await itemBox( 'kind' ).locator( '> .rfb-cv-bar' ).isVisible() && ! ( await itemBox( 'pets' ).locator( '> .rfb-cv-bar' ).isVisible() ) );
+		await itemBox( 'pets' ).hover( { position: { x: 20, y: 6 } } );
+		await page.waitForTimeout( 250 );
+		check( 'canvas', 'hovering the repeater itself shows the repeater toolbar', ( await itemBox( 'pets' ).locator( '> .rfb-cv-bar .rfb-cv-type' ).textContent() ) === 'Repeater' );
+		await page.screenshot( { path: join( SHOTS, 'canvas-hover.png' ) } );
+		await page.mouse.move( 5, 5 );
+		await page.locator( '.rfb-cv-item[data-rfb-key="pet_type"] .rfb-cv-preview-body' ).click( { force: true } );
 		await page.click( '.rfb-field-tab[data-fieldtab="style"]' );
 		const sections = await page.$$eval( '.rfb-inspector .rfb-section > summary', ( els ) => els.map( ( e ) => e.textContent.trim() ) );
 		check( 'style tab', 'a choice field offers: choice look, spacing/background/border, label, description, hover', [ 'Choice look', 'Spacing, background and border', 'Hover: the whole field', 'Label', 'Description and help' ].every( ( s ) => sections.includes( s ) ) && ! sections.includes( 'Input' ), sections.join( '|' ) );
@@ -321,7 +356,33 @@ async function main() {
 		// reset
 		await page.locator( '.rfb-fieldstyle button:has-text("Reset this field")' ).click();
 		check( 'style tab', 'reset removes the field\'s styling', ( await css( ownerInput, 'borderTopLeftRadius' ) ) !== '24px' && ( await page.locator( '.rfb-inspector .rfb-hex' ).first().inputValue() ) === '' );
-		await inputSection.locator( '.rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).fill( '#e8f5e9' ).catch( () => null );
+		// save through the designer, then read back, reopen and view on the public page (the styles used to vanish on save)
+		await inputSection.locator( '.rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).fill( '#e8f5e9' );
+		await inputSection.locator( '.rfb-field:has(.rfb-mini:text-is("Border radius (px)")) input' ).fill( '24' );
+		await Promise.all( [ page.waitForURL( /done=saved/ ), page.click( '.rfb-sticky-actions button[type=submit]' ) ] );
+		const afterSave = seed( 'definition', { collection: 'pets' } );
+		const stOf = ( key ) => afterSave.fields.find( ( f ) => f.key === key ).style;
+		check( 'save', 'styles set in the designer are saved with the collection', stOf( 'pet_type' ).margin_top === 30 && stOf( 'pet_type' ).margin_bottom === 18 && stOf( 'pet_type' ).bg === '#fff3e0' && stOf( 'pet_type' ).choice_look === 'buttons' && stOf( 'pet_type' ).b_on_bg === '#2e7d32' && stOf( 'pet_type' ).l_transform === 'uppercase' && stOf( 'owner' ).c_bg === '#e8f5e9' && stOf( 'owner' ).c_radius === 24, JSON.stringify( [ stOf( 'pet_type' ), stOf( 'owner' ) ] ) );
+		await page.goto( `${ BUILDER }&view=design&collection=pets` );
+		await page.waitForSelector( '.rfb-cv-item' );
+		await page.locator( '.rfb-cv-item[data-rfb-key="pet_type"] .rfb-cv-preview-body' ).click( { force: true } );
+		await page.click( '.rfb-field-tab[data-fieldtab="style"]' );
+		check( 'save', 'reopening the designer shows the saved values in the Style tab', ( await page.locator( '.rfb-inspector fieldset:has(legend:text-is("Margin (px)")) input' ).nth( 0 ).inputValue() ) === '30' && ( await page.locator( '.rfb-inspector select[aria-label="Choice look"]' ).inputValue() ) === 'buttons' && ( await page.locator( '.rfb-inspector .rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).first().inputValue() ) === '#fff3e0' );
+		check( 'save', 'and on the canvas', ( await css( bodyOf( 'pet_type' ), 'marginTop' ) ) === '30px' );
+		await page.click( '.rfb-field-tab[data-fieldtab="settings"]' );
+		await page.locator( '.rfb-cv-item[data-rfb-key="pet_type"] .rfb-cv-preview-body' ).click( { force: true } );
+		await Promise.all( [ page.waitForURL( /done=saved/ ), page.click( '.rfb-sticky-actions button[type=submit]' ) ] );
+		check( 'save', 'saving again without touching the style keeps it', seed( 'definition', { collection: 'pets' } ).fields.find( ( f ) => f.key === 'pet_type' ).style.margin_top === 30 );
+		const petsPage = seed( 'page', { title: 'Pets saved', slug: 'pets-saved', content: '[refraction_form collection="pets"]' } );
+		for ( const theme of themes ) {
+			wp( [ 'theme', 'activate', theme ] );
+			const sv = await browser.newContext( { viewport: { width: 1200, height: 900 } } );
+			const sp = await sv.newPage();
+			await sp.goto( petsPage.url );
+			const sq = ( sel, prop ) => sp.locator( sel ).first().evaluate( ( el, p ) => getComputedStyle( el )[ p ], prop );
+			check( `save ${ theme }`, 'the saved styles reach the public form', ( await sq( '[data-rfb-key="pet_type"]', 'marginTop' ) ) === '30px' && ( await sq( '[data-rfb-key="pet_type"]', 'backgroundColor' ) ) === 'rgb(255, 243, 224)' && ( await sq( '[data-rfb-key="pet_type"] .rfb-label', 'textTransform' ) ) === 'uppercase' && ( await sq( '[data-rfb-key="owner"] .rfb-input', 'backgroundColor' ) ) === 'rgb(232, 245, 233)' && ( await sq( '[data-rfb-key="owner"] .rfb-input', 'borderTopLeftRadius' ) ) === '24px' && ( await sp.locator( '[data-rfb-key="pet_type"] .rfb-choice-buttons, [data-rfb-key="pet_type"].rfb-choice-buttons' ).count() ) >= 1 );
+			await sv.close();
+		}
 
 		// other field types offer the groups that make sense for them
 		const groupsOf = async ( k ) => { await page.locator( `${ field( k ) } .rfb-cv-preview-body, ${ field( k ) } .rfb-cv-title` ).first().click( { force: true } ); await page.click( '.rfb-field-tab[data-fieldtab="style"]' ); return page.$$eval( '.rfb-inspector .rfb-section > summary', ( els ) => els.map( ( e ) => e.textContent.trim() ) ); };

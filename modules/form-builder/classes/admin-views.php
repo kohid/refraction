@@ -189,6 +189,9 @@ class Admin_Views {
 	private function with_previews( array $definition ): array {
 		$walk = function ( array $fields ) use ( &$walk ): array {
 			foreach ( $fields as $i => $field ) {
+				// An empty style must reach the designer as {} (a JSON object), not [] (a list).
+				$fields[ $i ]['style'] = (object) $field['style'];
+
 				if ( 'image' === $field['type'] && $field['image_id'] ) {
 					$fields[ $i ]['image_url'] = (string) wp_get_attachment_image_url( $field['image_id'], 'medium' );
 				}
