@@ -90,7 +90,7 @@ class Shortcodes {
 		$anchor = 'rfb-form-' . $slug;
 		$style = $definition['style'];
 		$wrap = '<div class="rfb-front rfb-form-wrap ' . esc_attr( Style::classes( $style ) ) . '" id="' . esc_attr( $anchor ) . '" style="' . esc_attr( Style::inline( $style ) ) . '">';
-		$css = Style::scoped_css( $style, '#' . $anchor );
+		$css = Field_Style::css( $definition, '#' . $anchor ) . Style::scoped_css( $style, '#' . $anchor );
 		$wrap .= '' !== $css ? '<style>' . $css . '</style>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitised by Css_Sanitizer; no markup survives it.
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended

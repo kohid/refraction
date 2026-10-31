@@ -745,4 +745,76 @@
 			max-height: 140px;
 		}
 	}
+
+	// ---- field Style sub-tab
+	.rfb-field-tabs {
+		display: flex;
+		gap: 4px;
+		margin: 0 0 14px;
+		border-bottom: 1px solid var(--rfb-line);
+	}
+
+	.rfb-field-tab {
+		margin-bottom: -1px;
+		padding: 8px 14px;
+		border: 0;
+		border-bottom: 2px solid transparent;
+		background: transparent;
+		color: $rfb-gray-700;
+		cursor: pointer;
+		font-size: 13px;
+		font-weight: 700;
+
+		&:hover {
+			color: $rfb-primary;
+		}
+
+		&.is-active {
+			border-bottom-color: $rfb-primary;
+			color: $rfb-primary;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $rfb-primary;
+			outline-offset: -2px;
+		}
+	}
+
+	.rfb-fieldstyle {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+
+		.rfb-btn {
+			align-self: flex-start;
+			margin-top: 8px;
+		}
+	}
+
+	.rfb-preview-state {
+		margin-bottom: 8px;
+	}
+
+	.rfb-sides-row {
+		display: grid;
+		gap: 6px;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
+	.rfb-side-box {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		margin: 0;
+
+		.rfb-input {
+			min-height: 34px;
+			padding: 4px 6px;
+			text-align: center;
+		}
+
+		.rfb-sublabel {
+			text-align: center;
+		}
+	}
 }

@@ -902,6 +902,61 @@ $rfb-colors: (
 		}
 	}
 
+
+	// ---- choices: plain list or a row of buttons (the "Yes / No" look); fields can restyle the buttons from their Style tab
+	.rfb-choice-options {
+		display: block;
+	}
+
+	.rfb-choice-buttons {
+		.rfb-choice-options,
+		&.rfb-cv-choices {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.rfb-check {
+			position: relative;
+			flex: 1 1 0;
+			justify-content: center;
+			min-width: 90px;
+			margin: 0;
+			padding: 12px 16px;
+			border: 1px solid var(--rfb-input-border);
+			border-radius: var(--rfb-radius);
+			background: var(--rfb-input-bg);
+			color: var(--rfb-ink);
+			cursor: pointer;
+			font-weight: 700;
+			letter-spacing: 0.03em;
+			text-align: center;
+			text-transform: uppercase;
+			transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+
+			input {
+				position: absolute;
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			&:hover {
+				filter: brightness(0.97);
+			}
+
+			&:has(input:checked) {
+				border-color: var(--rfb-primary);
+				background: var(--rfb-primary);
+				color: #fff;
+			}
+
+			&:has(input:focus-visible) {
+				outline: 2px solid var(--rfb-focus);
+				outline-offset: 2px;
+			}
+		}
+	}
+
 	@media (max-width: 640px) {
 		.rfb-field.rfb-w-half,
 		.rfb-field.rfb-w-third {

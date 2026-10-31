@@ -329,6 +329,7 @@ class Schema {
 			'image_alt' => self::text( $raw['image_alt'] ?? '', 160 ),
 			'image_link' => Settings::url( $raw['image_link'] ?? '' ),
 			'sig_height' => max( 100, min( 400, (int) ( $raw['sig_height'] ?? 180 ) ) ),
+			'style' => Field_Style::clean( $raw['style'] ?? [] ),
 		];
 	}
 

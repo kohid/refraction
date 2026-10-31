@@ -462,7 +462,9 @@ class Admin_Views {
 		$title = $id ? sprintf( __( 'Edit %s', 'refraction' ), $definition['singular'] ) : sprintf( __( 'Add %s', 'refraction' ), $definition['singular'] );
 		$this->open( $title, $record ? $record['title'] : '', [ __( 'Builder', 'refraction' ) => $this->url(), $definition['label'] => $this->url( [ 'view' => 'records', 'collection' => $slug ] ) ] );
 
-		echo '<form method="post" class="rfb-card rfb-form" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-i18n="' . esc_attr( (string) wp_json_encode( [ 'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ), 'badType' => __( '%s is not an allowed file type.', 'refraction' ), 'tooMany' => __( 'You can choose at most %d files.', 'refraction' ) ] ) ) . '">';
+		$field_css = Field_Style::css( $definition, '#rfb-record-form' );
+		echo '' !== $field_css ? '<style>' . $field_css . '</style>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from validated colors, numbers and keywords only.
+		echo '<form method="post" id="rfb-record-form" class="rfb-card rfb-form" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-i18n="' . esc_attr( (string) wp_json_encode( [ 'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ), 'badType' => __( '%s is not an allowed file type.', 'refraction' ), 'tooMany' => __( 'You can choose at most %d files.', 'refraction' ) ] ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_SAVE_RECORD ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="record" value="' . esc_attr( (string) $id ) . '">';
 		wp_nonce_field( Admin_Page::ACTION_SAVE_RECORD );
 		echo '<div class="rfb-card-body rfb-form-grid">';

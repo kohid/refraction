@@ -28,6 +28,8 @@
 	let tab = 'field'; // right panel: field | style | advanced | general
 	let dirty = false;
 	let drag = null;
+	let fieldTab = 'settings'; // inside the Field panel: settings | style
+	let previewState = false; // show hover and focus looks on the selected field of the canvas
 	const refs = {};
 
 	// ---------------------------------------------------------------- tiny DOM helper
@@ -116,6 +118,7 @@
 
 	function baseField( type ) {
 		return {
+			style: {},
 			key: '', label: '', type, required: false, options: [], placeholder: '', help: '', width: 'full', in_table: false, filter: false, public: false,
 			default: '', min: null, max: null, content: '', level: 3,
 			conditions: { enabled: false, action: 'show', match: 'all', rules: [] },
@@ -395,7 +398,9 @@
 		}
 
 		if ( [ 'radio', 'checkbox' ].includes( t ) ) {
-			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-cv-choices' }, field.options.slice( 0, 4 ).map( ( o ) => h( 'span', { class: 'rfb-check' }, h( 'input', { type: t, disabled: true, tabindex: '-1' } ), h( 'span', null, o.label ) ) ) ) );
+			const looks = field.style && 'buttons' === field.style.choice_look;
+
+			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-cv-choices' + ( looks ? ' rfb-choice-buttons' : '' ) }, field.options.slice( 0, 4 ).map( ( o, i ) => h( 'span', { class: 'rfb-check' }, h( 'input', { type: t, disabled: true, tabindex: '-1', checked: 0 === i } ), h( 'span', null, o.label ) ) ) ) );
 		}
 
 		if ( 'file' === t ) {
@@ -543,8 +548,8 @@
 	function block( field, items, index, owner ) {
 		const conditional = field.conditions && field.conditions.enabled;
 		const el = h( 'div', {
-			class: 'rfb-cv-item rfb-cv-' + field.type + ( selected === field._id ? ' is-selected' : '' ) + ' rfb-w-' + field.width,
-			draggable: 'true', 'data-id': field._id,
+			class: 'rfb-cv-item rfb-cv-' + field.type + ( selected === field._id ? ' is-selected' : '' ) + ( selected === field._id && previewState ? ' is-force' : '' ) + ' rfb-w-' + field.width,
+			draggable: 'true', 'data-id': field._id, 'data-rfb-key': field.key,
 			onClick: ( e ) => {
 				e.stopPropagation();
 				selected = field._id;
@@ -582,7 +587,7 @@
 		if ( isContainer( field.type ) ) {
 			el.append( h( 'div', { class: 'rfb-cv-container' }, h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, 'repeater' === field.type ? ' · ' + __( 'repeats', 'refraction' ) : '', field.hide_label ? ' ' + __( '(title hidden on the form)', 'refraction' ) : '' ), field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, list( field.children, field ) ) );
 		} else {
-			el.append( h( 'div', { class: 'rfb-cv-preview-body' }, faux( field ) ) );
+			el.append( h( 'div', { class: 'rfb-cv-preview-body', 'aria-hidden': 'true' }, faux( field ) ) );
 		}
 
 		return el;
@@ -609,6 +614,8 @@
 	}
 
 	function renderCanvasOnly() {
+		updateFieldCss();
+
 		if ( refs.canvas ) {
 			const scroll = refs.canvas.parentElement.scrollTop;
 
@@ -696,6 +703,268 @@
 			row( __( 'Link (optional)', 'refraction' ), text( f, 'image_link', { type: 'url', placeholder: 'https://' } ) ) );
 	}
 
+	// ---------------------------------------------------------------- per-field styling (the Style sub-tab of a field)
+
+	const FS_LABELS = {
+		bg: __( 'Background color', 'refraction' ), border_style: __( 'Border style', 'refraction' ), border_width: __( 'Border width (px)', 'refraction' ), border_color: __( 'Border color', 'refraction' ),
+		radius: __( 'Border radius (px)', 'refraction' ), shadow: __( 'Box shadow', 'refraction' ), align: __( 'Alignment', 'refraction' ),
+		h_bg: __( 'Background color', 'refraction' ), h_border_color: __( 'Border color', 'refraction' ), h_shadow: __( 'Box shadow', 'refraction' ),
+		l_color: __( 'Text color', 'refraction' ), l_family: __( 'Font', 'refraction' ), l_size: __( 'Size (px)', 'refraction' ), l_weight: __( 'Weight', 'refraction' ),
+		l_transform: __( 'Capitalization', 'refraction' ), l_spacing: __( 'Letter spacing (px)', 'refraction' ), l_height: __( 'Line height (%)', 'refraction' ), l_italic: __( 'Italic', 'refraction' ),
+		c_color: __( 'Text color', 'refraction' ), c_bg: __( 'Background color', 'refraction' ), c_border_style: __( 'Border style', 'refraction' ), c_border_width: __( 'Border width (px)', 'refraction' ),
+		c_border_color: __( 'Border color', 'refraction' ), c_radius: __( 'Border radius (px)', 'refraction' ), c_shadow: __( 'Box shadow', 'refraction' ), c_family: __( 'Font', 'refraction' ),
+		c_size: __( 'Text size (px)', 'refraction' ), c_weight: __( 'Text weight', 'refraction' ), c_pad_y: __( 'Padding above and below (px)', 'refraction' ), c_pad_x: __( 'Padding left and right (px)', 'refraction' ),
+		ch_color: __( 'Text color', 'refraction' ), ch_bg: __( 'Background color', 'refraction' ), ch_border_color: __( 'Border color', 'refraction' ), ch_shadow: __( 'Box shadow', 'refraction' ),
+		cf_border_color: __( 'Border color', 'refraction' ), cf_shadow: __( 'Box shadow', 'refraction' ),
+		d_color: __( 'Text color', 'refraction' ), d_size: __( 'Size (px)', 'refraction' ), d_italic: __( 'Italic', 'refraction' ),
+		b_bg: __( 'Background color', 'refraction' ), b_color: __( 'Text color', 'refraction' ), b_border_color: __( 'Border color', 'refraction' ), b_radius: __( 'Border radius (px)', 'refraction' ),
+		b_on_bg: __( 'Background color', 'refraction' ), b_on_color: __( 'Text color', 'refraction' ), b_on_border_color: __( 'Border color', 'refraction' ),
+	};
+
+	const FS_ENUMS = {
+		border_style: { none: __( 'None', 'refraction' ), solid: __( 'Solid', 'refraction' ), dashed: __( 'Dashed', 'refraction' ), dotted: __( 'Dotted', 'refraction' ), double: __( 'Double', 'refraction' ) },
+		shadow: { none: __( 'None', 'refraction' ), soft: __( 'Soft', 'refraction' ), medium: __( 'Medium', 'refraction' ), strong: __( 'Strong', 'refraction' ) },
+		align: { left: __( 'Left', 'refraction' ), center: __( 'Center', 'refraction' ), right: __( 'Right', 'refraction' ), justify: __( 'Justify', 'refraction' ) },
+		family: { inherit: __( 'Same as the form', 'refraction' ), system: __( 'System', 'refraction' ), serif: __( 'Serif', 'refraction' ), mono: __( 'Monospace', 'refraction' ) },
+		weight: { 300: __( 'Light', 'refraction' ), 400: __( 'Normal', 'refraction' ), 500: __( 'Medium', 'refraction' ), 600: __( 'Semi-bold', 'refraction' ), 700: __( 'Bold', 'refraction' ), 800: __( 'Extra bold', 'refraction' ), 900: __( 'Black', 'refraction' ) },
+		transform: { none: __( 'None', 'refraction' ), uppercase: __( 'UPPERCASE', 'refraction' ), lowercase: __( 'lowercase', 'refraction' ), capitalize: __( 'Capitalize', 'refraction' ) },
+	};
+
+	/** The label of a style group depends on what the field is: a heading has "text", a divider has a "line". */
+	function fsGroupTitle( group, type ) {
+		const titles = {
+			box: __( 'Spacing, background and border', 'refraction' ), box_hover: __( 'Hover: the whole field', 'refraction' ),
+			label: [ 'heading', 'paragraph' ].includes( type ) ? __( 'Text', 'refraction' ) : ( [ 'step', 'group', 'repeater' ].includes( type ) ? __( 'Title', 'refraction' ) : __( 'Label', 'refraction' ) ),
+			control: { divider: __( 'Line', 'refraction' ), image: __( 'Image', 'refraction' ), html: __( 'HTML block', 'refraction' ), signature: __( 'Signature pad', 'refraction' ), file: __( 'File box', 'refraction' ) }[ type ] || __( 'Input', 'refraction' ),
+			control_hover: __( 'Hover: the input', 'refraction' ), control_focus: __( 'Focus: the input', 'refraction' ), desc: __( 'Description and help', 'refraction' ),
+			choice: __( 'Buttons', 'refraction' ), choice_on: __( 'Selected button', 'refraction' ),
+		};
+
+		return titles[ group ];
+	}
+
+	/** Declarations per group for one field: the same table the server uses (Classes\Field_Style), so the canvas matches the page. */
+	function fsDeclarations( style ) {
+		const cfg = config.fieldStyle;
+		const groups = {};
+
+		Object.entries( style ).forEach( ( [ key, value ] ) => {
+			const prop = cfg.properties[ key ];
+
+			if ( ! prop ) {
+				return;
+			}
+
+			let text = String( value );
+
+			if ( 'int' === prop.kind ) {
+				text = 'pct' === prop.unit ? String( Math.round( value ) / 100 ) : value + 'px';
+			} else if ( 'bool' === prop.kind ) {
+				text = 'italic';
+			} else if ( 'box-shadow' === prop.css ) {
+				text = cfg.shadows[ value ];
+			} else if ( 'font-family' === prop.css ) {
+				text = cfg.fonts[ value ];
+			}
+
+			groups[ prop.group ] = ( groups[ prop.group ] || '' ) + prop.css + ':' + text + ';';
+		} );
+
+		[ [ 'box', 'border_style', 'border_width' ], [ 'control', 'c_border_style', 'c_border_width' ] ].forEach( ( [ group, styleKey, widthKey ] ) => {
+			if ( ! groups[ group ] ) {
+				return;
+			}
+
+			if ( undefined !== style[ widthKey ] && undefined === style[ styleKey ] ) {
+				groups[ group ] += 'border-style:solid;';
+			} else if ( undefined !== style[ styleKey ] && undefined === style[ widthKey ] && 'none' !== style[ styleKey ] ) {
+				groups[ group ] += 'border-width:1px;';
+			}
+		} );
+
+		return groups;
+	}
+
+	/** Writes the styling of every field into the canvas, so you see it while you edit (hover and focus too, for the selected field if asked). */
+	function updateFieldCss() {
+		if ( ! refs.fieldCss || ! config.fieldStyle ) {
+			return;
+		}
+
+		const cfg = config.fieldStyle;
+		const parts = Object.assign( {}, cfg.parts, { box: '> .rfb-cv-preview-body, > .rfb-cv-container', box_hover: '> .rfb-cv-preview-body:hover, > .rfb-cv-container:hover', choice: '.rfb-choice-buttons .rfb-check', choice_on: '.rfb-choice-buttons .rfb-check:has(input:checked)' } );
+		const interactive = [ 'box_hover', 'control_hover', 'control_focus' ];
+		let css = '';
+
+		all().forEach( ( field ) => {
+			if ( ! field.style || ! Object.keys( field.style ).length ) {
+				return;
+			}
+
+			const base = '.rfb-canvas [data-rfb-key="' + String( field.key ).replace( /[^a-z0-9_-]/g, '' ) + '"]';
+
+			Object.entries( fsDeclarations( field.style ) ).forEach( ( [ group, declarations ] ) => {
+				const list = parts[ group ].split( ',' ).map( ( s ) => s.trim() );
+				const selectors = list.map( ( s ) => base + ( '' === s ? '' : ( s.startsWith( ':' ) ? s : ( s.startsWith( '&' ) ? s.slice( 1 ) : ' ' + s ) ) ) );
+
+				if ( interactive.includes( group ) ) {
+					// "Preview hover and focus": the same rule, as if the pointer were on the selected field.
+					list.forEach( ( s ) => selectors.push( base + '.is-force' + ( '' === s ? '' : ' ' + s.replace( /:(hover|focus-visible|focus)\b/g, '' ) ) ) );
+				}
+
+				css += selectors.join( ', ' ) + '{' + declarations + '}';
+			} );
+		} );
+
+		refs.fieldCss.textContent = css;
+	}
+
+	function fsColor( style, key, after ) {
+		const hex = h( 'input', { class: 'rfb-input rfb-hex', type: 'text', maxlength: 11, placeholder: __( 'default', 'refraction' ), 'aria-label': FS_LABELS[ key ] + ' (hex)', value: style[ key ] || '' } );
+		const picker = h( 'input', { type: 'color', 'aria-label': FS_LABELS[ key ], value: /^#[0-9a-f]{6}$/.test( style[ key ] || '' ) ? style[ key ] : '#ffffff' } );
+		const set = ( value ) => {
+			if ( value ) {
+				style[ key ] = value;
+			} else {
+				delete style[ key ];
+			}
+
+			markDirty();
+			after();
+		};
+
+		picker.addEventListener( 'input', () => { hex.value = picker.value; set( picker.value ); } );
+		hex.addEventListener( 'input', () => {
+			if ( '' === hex.value || 'transparent' === hex.value || /^#[0-9a-fA-F]{6}$/.test( hex.value ) ) {
+				set( hex.value.toLowerCase() );
+
+				if ( /^#/.test( hex.value ) ) {
+					picker.value = hex.value;
+				}
+			}
+		} );
+
+		return h( 'div', { class: 'rfb-field rfb-w-full rfb-color' }, h( 'span', { class: 'rfb-mini' }, FS_LABELS[ key ] ), h( 'div', { class: 'rfb-color-row' }, picker, hex, h( 'button', { type: 'button', class: 'rfb-icon-btn', 'aria-label': sprintf( __( 'Reset %s', 'refraction' ), FS_LABELS[ key ] ), title: __( 'Reset', 'refraction' ), onClick: () => { hex.value = ''; set( '' ); } }, '↺' ) ) );
+	}
+
+	function fsNumber( style, key, prop, label, after ) {
+		const input = h( 'input', { class: 'rfb-input', type: 'number', min: prop.min, max: prop.max, placeholder: '–', 'aria-label': label, value: undefined === style[ key ] ? '' : style[ key ] } );
+
+		input.addEventListener( 'input', () => {
+			if ( '' === input.value ) {
+				delete style[ key ];
+			} else {
+				style[ key ] = Math.max( prop.min, Math.min( prop.max, Math.round( Number( input.value ) ) ) );
+			}
+
+			markDirty();
+			after();
+		} );
+
+		return input;
+	}
+
+	function fsControl( style, key, after ) {
+		const prop = config.fieldStyle.properties[ key ];
+
+		if ( 'color' === prop.kind ) {
+			return fsColor( style, key, after );
+		}
+
+		if ( 'int' === prop.kind ) {
+			return row( FS_LABELS[ key ], fsNumber( style, key, prop, FS_LABELS[ key ], after ) );
+		}
+
+		if ( 'bool' === prop.kind ) {
+			return h( 'label', { class: 'rfb-check' }, h( 'input', { type: 'checkbox', checked: !! style[ key ], onChange: ( e ) => {
+				if ( e.target.checked ) {
+					style[ key ] = true;
+				} else {
+					delete style[ key ];
+				}
+
+				markDirty();
+				after();
+			} } ), h( 'span', null, FS_LABELS[ key ] ) );
+		}
+
+		const labels = FS_ENUMS[ key ] || FS_ENUMS[ key.replace( /^(?:b_on|ch|cf|[lchdb])_/, '' ) ] || Object.fromEntries( prop.values.map( ( v ) => [ v, v ] ) );
+		const choose = h( 'select', { class: 'rfb-input', 'aria-label': FS_LABELS[ key ], onChange: ( e ) => {
+			if ( '' === e.target.value ) {
+				delete style[ key ];
+			} else {
+				style[ key ] = e.target.value;
+			}
+
+			markDirty();
+			after();
+		} }, h( 'option', { value: '' }, __( 'Default', 'refraction' ) ), prop.values.map( ( v ) => h( 'option', { value: String( v ), selected: String( style[ key ] ) === String( v ) }, labels[ v ] || v ) ) );
+
+		return row( FS_LABELS[ key ], choose );
+	}
+
+	/** Margin and padding as four boxes: top, right, bottom, left. */
+	function fsSides( style, prefix, title, after ) {
+		const sides = [ [ 'top', __( 'Top', 'refraction' ) ], [ 'right', __( 'Right', 'refraction' ) ], [ 'bottom', __( 'Bottom', 'refraction' ) ], [ 'left', __( 'Left', 'refraction' ) ] ];
+
+		return h( 'fieldset', { class: 'rfb-choice rfb-sides' }, h( 'legend', { class: 'rfb-mini' }, title + ' (px)' ), h( 'div', { class: 'rfb-sides-row' }, sides.map( ( [ edge, label ] ) => h( 'label', { class: 'rfb-side-box' }, fsNumber( style, prefix + '_' + edge, config.fieldStyle.properties[ prefix + '_' + edge ], title + ' ' + label.toLowerCase(), after ), h( 'span', { class: 'rfb-sublabel' }, label ) ) ) ) );
+	}
+
+	function fieldStylePanel( f ) {
+		const cfg = config.fieldStyle;
+		const groups = Object.keys( cfg.applies ).filter( ( g ) => '*' === cfg.applies[ g ] || cfg.applies[ g ].includes( f.type ) );
+		const style = f.style || ( f.style = {} );
+		const panel = h( 'div', { class: 'rfb-fieldstyle' } );
+		const choiceLook = 'buttons' === style.choice_look;
+		const after = () => {
+			renderCanvasOnly();
+		};
+		const reset = () => {
+			f.style = {};
+			markDirty();
+			renderInspector();
+			renderCanvasOnly();
+		};
+
+		panel.append( h( 'label', { class: 'rfb-check rfb-preview-state' }, h( 'input', { type: 'checkbox', checked: previewState, onChange: ( e ) => { previewState = e.target.checked; renderCanvasOnly(); } } ), h( 'span', null, __( 'Show hover and focus on the form', 'refraction' ) ) ) );
+
+		groups.forEach( ( group ) => {
+			if ( ( 'choice' === group || 'choice_on' === group ) && ! choiceLook ) {
+				return;
+			}
+
+			const keys = Object.keys( cfg.properties ).filter( ( k ) => cfg.properties[ k ].group === group );
+			const controls = [];
+
+			if ( 'box' === group ) {
+				controls.push( fsSides( style, 'margin', __( 'Margin', 'refraction' ), after ), fsSides( style, 'padding', __( 'Padding', 'refraction' ), after ) );
+			}
+
+			keys.filter( ( k ) => ! /^(margin|padding)_/.test( k ) ).forEach( ( k ) => controls.push( fsControl( style, k, after ) ) );
+			panel.append( section( fsGroupTitle( group, f.type ), controls ) );
+		} );
+
+		if ( [ 'radio', 'checkbox' ].includes( f.type ) ) {
+			const look = h( 'select', { class: 'rfb-input', 'aria-label': __( 'Choice look', 'refraction' ), onChange: ( e ) => {
+				if ( 'buttons' === e.target.value ) {
+					style.choice_look = 'buttons';
+				} else {
+					delete style.choice_look;
+				}
+
+				markDirty();
+				renderInspector();
+				renderCanvasOnly();
+			} }, h( 'option', { value: 'default' }, __( 'Plain list', 'refraction' ) ), h( 'option', { value: 'buttons', selected: choiceLook }, __( 'Buttons (like Yes / No)', 'refraction' ) ) );
+
+			panel.prepend( section( __( 'Choice look', 'refraction' ), row( __( 'Show the choices as', 'refraction' ), look ) ) );
+		}
+
+		panel.append( h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light', onClick: reset }, __( 'Reset this field\'s style', 'refraction' ) ) );
+
+		return panel;
+	}
+
 	function renderInspector() {
 		const box = refs.rbody;
 		const found = selected ? find( selected ) : null;
@@ -716,6 +985,15 @@
 		};
 
 		box.append( h( 'div', { class: 'rfb-inspector-head' }, h( 'strong', null, typeLabels[ t ] || t ), h( 'code', null, f.key ) ) );
+		box.append( h( 'div', { class: 'rfb-field-tabs', role: 'tablist', 'aria-label': __( 'Field options', 'refraction' ) }, [ [ 'settings', __( 'Settings', 'refraction' ) ], [ 'style', __( 'Style', 'refraction' ) ] ].map( ( [ id, label ] ) => h( 'button', {
+			type: 'button', role: 'tab', class: 'rfb-field-tab' + ( fieldTab === id ? ' is-active' : '' ), 'aria-selected': String( fieldTab === id ), 'data-fieldtab': id,
+			onClick: () => { fieldTab = id; renderInspector(); },
+		}, label ) ) ) );
+
+		if ( 'style' === fieldTab ) {
+			box.append( fieldStylePanel( f ) );
+			return;
+		}
 
 		// General.
 		const general = [];
@@ -980,7 +1258,8 @@
 
 	function workspace() {
 		refs.canvas = h( 'div', { class: 'rfb-canvas-inner' } );
-		refs.canvasWrap = h( 'div', { class: 'rfb-canvas rfb-form rfb-front' }, refs.canvas );
+		refs.fieldCss = h( 'style' );
+		refs.canvasWrap = h( 'div', { class: 'rfb-canvas rfb-form rfb-front' }, refs.fieldCss, refs.canvas );
 		applyStyle( refs.canvasWrap );
 		refs.submit = h( 'span', { class: 'rfb-btn rfb-btn-primary', 'aria-hidden': 'true' }, state.settings.submit_text );
 

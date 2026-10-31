@@ -134,6 +134,7 @@ class Admin_Page {
 			'palette' => $palette,
 			'typeIcons' => $icons,
 			'countries' => Countries::all(),
+			'fieldStyle' => Field_Style::config(),
 			'operators' => Conditions::operators(),
 			'styleControls' => Style::controls(),
 			'styleDefaults' => Style::defaults(),

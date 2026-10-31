@@ -31,7 +31,7 @@ class Field_Renderer {
 
 	/** Heading and description of a step (used by the public form and the admin form). */
 	public static function step_head( array $field ): string {
-		return '<div class="rfb-step-head">' . self::heading( $field, 'rfb-step-title' ) . self::description( $field, 'rfb-step-' . $field['key'] ) . '</div>';
+		return '<div class="rfb-step-head" data-rfb-key="' . esc_attr( $field['key'] ) . '">' . self::heading( $field, 'rfb-step-title' ) . self::description( $field, 'rfb-step-' . $field['key'] ) . '</div>';
 	}
 
 	/**
@@ -62,6 +62,10 @@ class Field_Renderer {
 		$error = (string) ( $errors[ $path ] ?? '' );
 		$id = 'rfb-' . trim( (string) preg_replace( '/[^a-z0-9_]+/i', '-', $name ), '-' );
 		$classes = [ 'rfb-field', 'rfb-w-' . $field['width'], 'rfb-t-' . $type ];
+
+		if ( in_array( $type, [ 'radio', 'checkbox' ], true ) && '' !== Field_Style::choice_class( $field ) ) {
+			$classes[] = Field_Style::choice_class( $field );
+		}
 
 		if ( '' !== $field['css_class'] ) {
 			$classes[] = $field['css_class'];
@@ -143,12 +147,14 @@ class Field_Renderer {
 			$picked = array_map( 'strval', (array) $value );
 			$suffix = 'radio' === $type ? '' : '[]';
 
+			echo '<div class="rfb-choice-options">';
+
 			foreach ( $field['options'] as $index => $option ) {
 				$option_id = $id . '-' . $index;
 				echo '<label class="rfb-check" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . checked( in_array( $option['value'], $picked, true ), true, false ) . '><span>' . esc_html( $option['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
-			echo '</fieldset>';
+			echo '</div></fieldset>';
 		} elseif ( 'toggle' === $type ) {
 			$value = null === $value ? $field['default'] : $value;
 			echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="0">';

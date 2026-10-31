@@ -7,6 +7,7 @@ require $root . '/modules/form-builder/classes/schema.php';
 require $root . '/modules/form-builder/classes/countries.php';
 require $root . '/modules/form-builder/classes/conditions.php';
 require $root . '/modules/form-builder/classes/style.php';
+require $root . '/modules/form-builder/classes/field-style.php';
 require $root . '/modules/form-builder/classes/settings.php';
 require $root . '/modules/form-builder/classes/presets.php';
 
@@ -365,6 +366,50 @@ $csv2 = S::csv_rows( $rich, [ [ 'id' => 1, 'status' => 'new', 'created' => '2026
 t( 'csv shows the name in one cell and the country name', in_array( 'Dr Ada Byron', $csv2[1], true ) && in_array( 'Portugal', $csv2[1], true ) && count( $csv2[0] ) === count( $csv2[1] ) );
 t( 'conditions can look at a name and a country', C::matches( [ 'op' => 'contains', 'value' => 'Ada' ], array_values( $rr['values']['owner'] ) ) );
 t( 'countries: codes and names', 'Portugal' === CO::name( 'pt' ) && CO::valid( 'US' ) && ! CO::valid( 'XX' ) && count( CO::all() ) > 240 && count( CO::all() ) === count( array_unique( array_keys( CO::all() ) ) ) );
+
+// ---------------------------------------------------------------- per-field style (0.9.0)
+use Refraction\Modules\FormBuilder\Classes\Field_Style as FS;
+
+$fs = FS::clean( [
+	'margin_top' => '12', 'margin_left' => '-9999', 'padding_bottom' => 'abc', 'bg' => '#FA0', 'color' => '#111111', 'border_width' => '3',
+	'border_color' => 'red; background:url(javascript:x)', 'radius' => '999', 'shadow' => 'huge', 'align' => 'center', 'l_italic' => '1', 'l_weight' => '700',
+	'l_family' => 'comic', 'c_bg' => 'transparent', 'ch_bg' => '#00ff00', 'choice_look' => 'buttons', 'evil' => '1', 'b_on_bg' => '#ff7f50',
+] );
+t( 'field style: numbers are clamped and junk is dropped', 12 === $fs['margin_top'] && -100 === $fs['margin_left'] && ! isset( $fs['padding_bottom'] ) && 200 === $fs['radius'] && 3 === $fs['border_width'] );
+t( 'field style: short colors expand, unsafe colors vanish', '#ffaa00' === $fs['bg'] && ! isset( $fs['border_color'] ) && 'transparent' === $fs['c_bg'] );
+t( 'field style: unknown words and keys are dropped', ! isset( $fs['shadow'] ) && ! isset( $fs['l_family'] ) && ! isset( $fs['evil'] ) && 'center' === $fs['align'] && '700' === $fs['l_weight'] );
+t( 'field style: booleans and the choice look', true === $fs['l_italic'] && 'buttons' === $fs['choice_look'] );
+t( 'field style: an empty style stays empty', [] === FS::clean( [] ) && [] === FS::clean( 'x' ) && [] === FS::clean( [ 'bg' => '', 'radius' => null ] ) );
+t( 'field style: clean is idempotent', $fs === FS::clean( $fs ) );
+t( 'field style: every property belongs to a group that has a selector', ! array_diff( array_unique( array_column( FS::spec(), 0 ) ), array_keys( FS::PARTS ) ) );
+t( 'field style: every group applies to some type', count( FS::groups_for( 'text' ) ) >= 5 && in_array( 'choice', FS::groups_for( 'radio' ), true ) && ! in_array( 'choice', FS::groups_for( 'text' ), true ) );
+t( 'field style: a divider gets the line group but no label or input hover', in_array( 'control', FS::groups_for( 'divider' ), true ) && ! in_array( 'label', FS::groups_for( 'divider' ), true ) && ! in_array( 'control_hover', FS::groups_for( 'divider' ), true ) );
+t( 'field style: every spec int has a range and unit', ! array_filter( FS::spec(), static function ( $s ) { return 'int' === $s[2] && ( $s[3] >= $s[4] || ! in_array( $s[5], [ 'px', 'pct' ], true ) ); } ) );
+
+$decl = FS::declarations( $fs );
+t( 'field style: box declarations', false !== strpos( $decl['box'], 'margin-top:12px;' ) && false !== strpos( $decl['box'], 'margin-left:-100px;' ) && false !== strpos( $decl['box'], 'background-color:#ffaa00;' ) && false !== strpos( $decl['box'], 'text-align:center;' ) );
+t( 'field style: a border width alone gets a solid style', false !== strpos( $decl['box'], 'border-width:3px;' ) && false !== strpos( $decl['box'], 'border-style:solid;' ) );
+t( 'field style: a border style alone gets a width', false !== strpos( FS::declarations( [ 'border_style' => 'dashed' ] )['box'], 'border-width:1px;' ) && false === strpos( FS::declarations( [ 'border_style' => 'none' ] )['box'], 'border-width' ) );
+t( 'field style: italic and font weight on the label', 'font-weight:700;font-style:italic;' === $decl['label'] || ( false !== strpos( $decl['label'], 'font-style:italic;' ) && false !== strpos( $decl['label'], 'font-weight:700;' ) ) );
+t( 'field style: line height is a unitless number', false !== strpos( FS::declarations( [ 'l_height' => 150 ] )['label'], 'line-height:1.5;' ) );
+t( 'field style: shadows and fonts come from fixed tables', false !== strpos( FS::declarations( [ 'c_shadow' => 'soft', 'c_family' => 'mono' ] )['control'], 'box-shadow:0 2px 8px' ) && false !== strpos( FS::declarations( [ 'c_family' => 'serif' ] )['control'], 'Georgia' ) );
+
+$fd = S::definition( [ 'label' => 'x', 'fields' => [
+	[ 'key' => 'pet', 'label' => 'Pet', 'type' => 'radio', 'options' => "Dog\nCat", 'style' => [ 'choice_look' => 'buttons', 'b_on_bg' => '#ff7f50', 'margin_bottom' => 20, 'c_bg' => '#eee', 'ch_bg' => '#ddd' ] ],
+	[ 'key' => 'plain', 'label' => 'Plain', 'type' => 'text' ],
+	[ 'type' => 'step', 'key' => 'stp', 'label' => 'Step', 'style' => [ 'l_color' => '#cc0000' ] ],
+] ] );
+$css = FS::css( $fd, '#form' );
+t( 'field style: only styled fields produce css', false === strpos( $css, 'plain' ) );
+t( 'field style: the box rule targets the field by key under the scope', false !== strpos( $css, '#form [data-rfb-key="pet"]{margin-bottom:20px;}' ) );
+t( 'field style: hover and checked states use their selectors', false !== strpos( $css, '#form [data-rfb-key="pet"] .rfb-input:hover, #form [data-rfb-key="pet"] .rfb-signature:hover{background-color:#dddddd;}' ) && false !== strpos( $css, '.rfb-check:has(input:checked){background-color:#ff7f50;}' ) );
+t( 'field style: a step title is reachable too', false !== strpos( $css, '#form [data-rfb-key="stp"] .rfb-label' ) && false !== strpos( $css, 'color:#cc0000;' ) );
+t( 'field style: css contains no markup or quotes except the key selector', 0 === preg_match( '/[<>]/', $css ) && 0 === preg_match( '/url\(|javascript|expression/i', $css ) );
+t( 'field style: canvas selectors can replace the parts', false !== strpos( FS::css( $fd, '.rfb-canvas', [ 'box' => '> .rfb-cv-preview-body' ] ), '.rfb-canvas [data-rfb-key="pet"] > .rfb-cv-preview-body{margin-bottom:20px;}' ) );
+t( 'field style: the style survives definition cleaning and is idempotent', 'buttons' === S::field( $fd, 'pet' )['style']['choice_look'] && [] === S::field( $fd, 'plain' )['style'] && $fd === S::definition( $fd ) );
+t( 'field style: choice class', 'rfb-choice-buttons' === FS::choice_class( S::field( $fd, 'pet' ) ) && '' === FS::choice_class( S::field( $fd, 'plain' ) ) );
+t( 'field style: every group list is a plain list (it becomes a JSON array)', ! array_filter( FS::config()['applies'], static function ( $v ) { return is_array( $v ) && array_values( $v ) !== $v; } ) );
+t( 'field style: config has everything the designer needs', isset( FS::config()['properties']['bg']['css'], FS::config()['parts']['box'], FS::config()['applies']['choice'] ) && isset( FS::config()['properties']['radius']['min'] ) );
 
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

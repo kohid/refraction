@@ -97,7 +97,12 @@
 			wrapper.hidden = ! visible;
 			wrapper.querySelectorAll( 'input, select, textarea, button' ).forEach( ( el ) => {
 				if ( ! visible ) {
-					el.dataset.rfbWasDisabled = el.disabled ? '1' : '';
+					// Remember the control's own state only the first time it is hidden. This runs on every keystroke and
+					// click, so writing it again while hidden would store "disabled" and the control would never come back.
+					if ( undefined === el.dataset.rfbWasDisabled ) {
+						el.dataset.rfbWasDisabled = el.disabled ? '1' : '';
+					}
+
 					el.disabled = true;
 				} else if ( undefined !== el.dataset.rfbWasDisabled ) {
 					el.disabled = '1' === el.dataset.rfbWasDisabled;
