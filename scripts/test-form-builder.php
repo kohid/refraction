@@ -411,5 +411,41 @@ t( 'field style: choice class', 'rfb-choice-buttons' === FS::choice_class( S::fi
 t( 'field style: every group list is a plain list (it becomes a JSON array)', ! array_filter( FS::config()['applies'], static function ( $v ) { return is_array( $v ) && array_values( $v ) !== $v; } ) );
 t( 'field style: config has everything the designer needs', isset( FS::config()['properties']['bg']['css'], FS::config()['parts']['box'], FS::config()['applies']['choice'] ) && isset( FS::config()['properties']['radius']['min'] ) );
 
+// ---------------------------------------------------------------- shared type styles, states, repeater parts (0.10.0)
+$ts = S::definition( [ 'label' => 'x', 'fields' => [
+	[ 'key' => 'a', 'label' => 'A', 'type' => 'text' ],
+	[ 'key' => 'b', 'label' => 'B', 'type' => 'text', 'style' => [ 'bg' => '#eeeeee' ] ],
+	[ 'key' => 'reps', 'label' => 'Reps', 'type' => 'repeater', 'children' => [ [ 'key' => 'c', 'label' => 'C', 'type' => 'text' ] ] ],
+], 'type_styles' => [
+	'repeater' => [ 'rep_border_width' => 2, 'rep_border_color' => '#ff0000', 'rep_padding_top' => 20, 'row_bg' => '#f0f0f0', 'row_radius' => 8, 'rows_gap' => 24, 'rb_bg' => '#00aa00', 'rbh_bg' => '#008800', 'rr_color' => '#cc0000' ],
+	'text' => [ 'c_bg' => '#fafafa', 'cf_border_color' => '#d81b60', 'ch_bg' => '#f0f0ff', 'lh_color' => '#123456', 'lf_color' => '#654321' ],
+	'nonsense' => [ 'bg' => '#000000' ],
+	'toggle' => [ 'evil' => 'x' ],
+	'group' => 'junk',
+] ] );
+t( 'type styles: known types are kept, cleaned and sparse', array_keys( $ts['type_styles'] ) === [ 'repeater', 'text' ] && 2 === $ts['type_styles']['repeater']['rep_border_width'] && '#fafafa' === $ts['type_styles']['text']['c_bg'] );
+t( 'type styles: unknown types, unknown keys and junk are dropped', ! isset( $ts['type_styles']['nonsense'] ) && ! isset( $ts['type_styles']['toggle'] ) && ! isset( $ts['type_styles']['group'] ) );
+t( 'type styles: cleaning is idempotent', $ts === S::definition( $ts ) && [] === S::definition( [ 'label' => 'x' ] )['type_styles'] );
+$tcss = FS::css( $ts, '#f' );
+t( 'type styles: rules target every field of the type under the scope', false !== strpos( $tcss, '#f .rfb-t-text .rfb-input, #f .rfb-t-text .rfb-signature' ) && false !== strpos( $tcss, 'background-color:#fafafa;' ) );
+t( 'type styles: they come before a field\'s own style so the field wins', strpos( $tcss, '#f .rfb-t-text' ) < strpos( $tcss, '#f [data-rfb-key="b"]{background-color:#eeeeee;}' ) );
+t( 'repeater: the container, the rows, the gap, the add button and the remove button each get their own rule', false !== strpos( $tcss, '#f .rfb-t-repeater .rfb-repeater{padding-top:20px;border-width:2px;border-color:#ff0000;border-style:solid;}' ) || ( false !== strpos( $tcss, '#f .rfb-t-repeater .rfb-repeater{' ) && false !== strpos( $tcss, 'border-style:solid;' ) ) );
+t( 'repeater: rows and gap', false !== strpos( $tcss, '#f .rfb-t-repeater .rfb-rep-row{background-color:#f0f0f0;border-radius:8px;}' ) && false !== strpos( $tcss, '#f .rfb-t-repeater .rfb-rows{gap:24px;}' ) );
+t( 'repeater: add and remove buttons with hover', false !== strpos( $tcss, '#f .rfb-t-repeater .rfb-repeater > [data-rfb-add]{background-color:#00aa00;}' ) && false !== strpos( $tcss, '[data-rfb-add]:hover{background-color:#008800;}' ) && false !== strpos( $tcss, '.rfb-rep-remove{color:#cc0000;}' ) );
+t( 'states: hover and focus look of a text field', false !== strpos( $tcss, '.rfb-t-text .rfb-input:focus, #f .rfb-t-text .rfb-input:focus-visible{border-color:#d81b60;}' ) && false !== strpos( $tcss, '.rfb-t-text .rfb-input:hover, #f .rfb-t-text .rfb-signature:hover{background-color:#f0f0ff;}' ) );
+t( 'states: label hover and focus-within continue the field selector', false !== strpos( $tcss, '#f .rfb-t-text:hover .rfb-label' ) && false !== strpos( $tcss, '#f .rfb-t-text:focus-within .rfb-label' ) );
+t( 'states: every group belongs to exactly one state and every state group has a selector', ( function () {
+	$all = array_merge( ...array_values( FS::STATES ) );
+
+	return count( $all ) === count( array_unique( $all ) ) && ! array_diff( $all, array_keys( FS::PARTS ) ) && ! array_diff( array_keys( FS::PARTS ), $all );
+} )() );
+t( 'states: config maps each group to its state', 'hover' === FS::config()['states']['control_hover'] && 'focus' === FS::config()['states']['choice_on'] && 'normal' === FS::config()['states']['rep'] && FS::config()['order'][0] === 'box' );
+t( 'groups per type: a text field has all three states, a repeater has its parts, a toggle its track', ! array_diff( [ 'control', 'control_hover', 'control_focus' ], FS::groups_for( 'text' ) ) && ! array_diff( [ 'rep', 'row', 'rep_button', 'rep_remove', 'rep_rows', 'rep_hover', 'row_hover' ], FS::groups_for( 'repeater' ) ) && ! array_diff( [ 'toggle', 'toggle_on', 'toggle_knob' ], FS::groups_for( 'toggle' ) ) );
+t( 'groups per type: a group has its box groups, plain choices have accent and selected', ! array_diff( [ 'grp', 'grp_hover', 'grp_focus' ], FS::groups_for( 'group' ) ) && ! array_diff( [ 'plain', 'plain_accent', 'plain_on', 'plain_hover' ], FS::groups_for( 'radio' ) ) && ! in_array( 'rep', FS::groups_for( 'text' ), true ) );
+t( 'groups per type: nothing else leaks (a divider has no focus or label groups)', ! in_array( 'control_focus', FS::groups_for( 'divider' ), true ) && ! in_array( 'label', FS::groups_for( 'divider' ), true ) );
+t( 'border completion works for the repeater parts', false !== strpos( FS::declarations( [ 'row_border_width' => 3 ] )['row'], 'border-style:solid;' ) && false !== strpos( FS::declarations( [ 'rep_border_style' => 'dashed' ] )['rep'], 'border-width:1px;' ) );
+t( 'toggle and plain choices write the properties they should', false !== strpos( FS::declarations( [ 'pa_accent' => '#ff00ff' ] )['plain_accent'], 'accent-color:#ff00ff;' ) && false !== strpos( FS::declarations( [ 'tg_on' => '#00ff00' ] )['toggle_on'], 'background-color:#00ff00;' ) );
+t( 'every int in the new properties has a range', ! array_filter( FS::spec(), static function ( $s ) { return 'int' === $s[2] && $s[3] >= $s[4]; } ) );
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

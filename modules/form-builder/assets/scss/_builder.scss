@@ -316,15 +316,20 @@
 		}
 	}
 
+	// The repeater and group boxes carry their own (real) frame; this wrapper adds nothing.
 	.rfb-cv-container {
-		padding: 10px 12px 12px;
-		border: 1px dashed $rfb-gray-300;
-		border-radius: var(--rfb-radius);
+		padding: 0;
+		border: 0;
 
 		.rfb-cv-title {
 			display: block;
 			margin-bottom: 8px;
 			font-size: 13px;
+		}
+
+		.rfb-repeater [data-rfb-add],
+		.rfb-rep-remove {
+			pointer-events: none;
 		}
 	}
 
@@ -863,6 +868,73 @@
 
 		.rfb-sublabel {
 			text-align: center;
+		}
+	}
+
+	// ---- who the style is for, and which look (normal, hover, focus) is being edited
+	.rfb-scope {
+		display: flex;
+		gap: 4px;
+		margin: 0 0 6px;
+		padding: 3px;
+		border-radius: 10px;
+		background: $rfb-gray-100;
+	}
+
+	.rfb-scope-btn {
+		flex: 1;
+		padding: 7px 6px;
+		border: 0;
+		border-radius: 8px;
+		background: transparent;
+		color: $rfb-gray-700;
+		cursor: pointer;
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1.25;
+
+		&.is-active {
+			background: var(--rfb-card);
+			box-shadow: 0 1px 4px rgba(76, 87, 125, 0.18);
+			color: $rfb-primary;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $rfb-primary;
+			outline-offset: 1px;
+		}
+	}
+
+	.rfb-state-tabs {
+		display: flex;
+		margin: 6px 0 12px;
+		border-bottom: 1px solid var(--rfb-line);
+	}
+
+	.rfb-state-tab {
+		flex: 1;
+		margin-bottom: -1px;
+		padding: 8px 4px;
+		border: 0;
+		border-bottom: 2px solid transparent;
+		background: transparent;
+		color: $rfb-gray-700;
+		cursor: pointer;
+		font-size: 12px;
+		font-weight: 700;
+
+		&:hover {
+			color: $rfb-primary;
+		}
+
+		&.is-active {
+			border-bottom-color: $rfb-primary;
+			color: $rfb-primary;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $rfb-primary;
+			outline-offset: -2px;
 		}
 	}
 }

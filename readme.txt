@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.9.1
+Stable tag: 0.10.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.10.0 =
+* New: field styles are shared by field type. Style one Repeater and every Repeater follows; the same for every other type. Choose "Only this field" in a field's Style tab to give one field its own look, which wins over the shared one. There is a reset for the shared style of a type.
+* New: every styled part has Normal, Hover and Focus (Selected for choices, On for switches, Active for repeaters and groups) tabs: field box, label, input, choice buttons, plain choices, switch track and knob. The selected field previews the state you are editing.
+* New: repeaters and groups can be styled part by part: the repeater box (.rfb-repeater), each row (.rfb-rep-row), the space between rows, the add-row and remove-row buttons, and the group box (.rfb-group), each with margin, padding, background, border, radius and shadow where it makes sense.
 
 = 0.9.1 =
 * Fix: field styles set in the Builder designer were not saved (and so never reached the form). Existing fields could not keep a style; they can now.

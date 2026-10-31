@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *   files   array<path,list>     stored file descriptors by field path (admin edit)
  *   file_url callable            descriptor => download URL (admin edit)
  *   hidden  array<key,string>    resolved value of hidden fields (public form)
+ *   type_styles array            the definition's styles shared by field type
  */
 class Field_Renderer {
 
@@ -31,7 +32,7 @@ class Field_Renderer {
 
 	/** Heading and description of a step (used by the public form and the admin form). */
 	public static function step_head( array $field ): string {
-		return '<div class="rfb-step-head" data-rfb-key="' . esc_attr( $field['key'] ) . '">' . self::heading( $field, 'rfb-step-title' ) . self::description( $field, 'rfb-step-' . $field['key'] ) . '</div>';
+		return '<div class="rfb-step-head rfb-t-step" data-rfb-key="' . esc_attr( $field['key'] ) . '">' . self::heading( $field, 'rfb-step-title' ) . self::description( $field, 'rfb-step-' . $field['key'] ) . '</div>';
 	}
 
 	/**
@@ -63,8 +64,8 @@ class Field_Renderer {
 		$id = 'rfb-' . trim( (string) preg_replace( '/[^a-z0-9_]+/i', '-', $name ), '-' );
 		$classes = [ 'rfb-field', 'rfb-w-' . $field['width'], 'rfb-t-' . $type ];
 
-		if ( in_array( $type, [ 'radio', 'checkbox' ], true ) && '' !== Field_Style::choice_class( $field ) ) {
-			$classes[] = Field_Style::choice_class( $field );
+		if ( in_array( $type, [ 'radio', 'checkbox' ], true ) && '' !== Field_Style::choice_class( $field, (array) ( $ctx['type_styles'] ?? [] ) ) ) {
+			$classes[] = Field_Style::choice_class( $field, (array) ( $ctx['type_styles'] ?? [] ) );
 		}
 
 		if ( '' !== $field['css_class'] ) {

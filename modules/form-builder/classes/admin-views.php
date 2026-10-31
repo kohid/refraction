@@ -455,6 +455,7 @@ class Admin_Views {
 		$download = $this->download;
 		$ctx = [
 			'admin' => true,
+			'type_styles' => $definition['type_styles'],
 			'files' => $record ? $this->file_lists( $definition, $record['values'] ) : [],
 			'file_url' => $download && $id ? static function ( array $file ) use ( $download, $slug, $id ) {
 				return $download( $slug, $id, $file );

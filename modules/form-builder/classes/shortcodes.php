@@ -118,7 +118,7 @@ class Shortcodes {
 		}
 
 		$steps = Schema::steps( $definition );
-		$ctx = [ 'hidden' => $this->hidden_values( $definition ) ];
+		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'] ];
 		$i18n = [
 			'required' => __( 'This field is required.', 'refraction' ),
 			'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ),

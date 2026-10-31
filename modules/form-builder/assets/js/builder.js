@@ -29,6 +29,7 @@
 	let dirty = false;
 	let drag = null;
 	let fieldTab = 'settings'; // inside the Field panel: settings | style
+	let fieldState = 'normal'; // normal | hover | focus: which look of the selected field the Style tab edits
 	let previewState = false; // show hover and focus looks on the selected field of the canvas
 	const refs = {};
 
@@ -403,7 +404,7 @@
 		}
 
 		if ( [ 'radio', 'checkbox' ].includes( t ) ) {
-			const looks = field.style && 'buttons' === field.style.choice_look;
+			const looks = 'buttons' === ( ( field.style && field.style.choice_look ) || ( ( state.type_styles && state.type_styles[ field.type ] ) || {} ).choice_look );
 
 			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-cv-choices' + ( looks ? ' rfb-choice-buttons' : '' ) }, field.options.slice( 0, 4 ).map( ( o, i ) => h( 'span', { class: 'rfb-check' }, h( 'input', { type: t, disabled: true, tabindex: '-1', checked: 0 === i } ), h( 'span', null, o.label ) ) ) ) );
 		}
@@ -557,6 +558,11 @@
 			draggable: 'true', 'data-id': field._id, 'data-rfb-key': field.key,
 			onClick: ( e ) => {
 				e.stopPropagation();
+				if ( selected !== field._id ) {
+					fieldState = 'normal'; // a newly picked field starts on its normal look
+					previewState = false;
+				}
+
 				selected = field._id;
 				tab = 'field';
 				expand( 'right' );
@@ -593,7 +599,15 @@
 		}
 
 		if ( isContainer( field.type ) ) {
-			el.append( h( 'div', { class: 'rfb-cv-container' }, h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, 'repeater' === field.type ? ' · ' + __( 'repeats', 'refraction' ) : '', field.hide_label ? ' ' + __( '(title hidden on the form)', 'refraction' ) : '' ), field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, list( field.children, field ) ) );
+			// Drawn with the real classes (rfb-repeater, rfb-rep-row, rfb-group) so what you style here is what the page gets.
+			const title = h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, 'repeater' === field.type ? ' · ' + __( 'repeats', 'refraction' ) : '', field.hide_label ? ' ' + __( '(title hidden on the form)', 'refraction' ) : '' );
+			const description = field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null;
+			const inner = list( field.children, field );
+			const body = 'repeater' === field.type
+				? h( 'div', { class: 'rfb-repeater' }, title, description, h( 'div', { class: 'rfb-rows' }, h( 'div', { class: 'rfb-rep-row' }, inner, h( 'span', { class: 'rfb-rep-remove', 'aria-hidden': 'true' }, '×' ) ) ), h( 'span', { class: 'rfb-btn rfb-btn-light-primary', 'data-rfb-add': '', 'aria-hidden': 'true' }, field.add_label ) )
+				: h( 'div', { class: 'rfb-group' }, title, description, inner );
+
+			el.append( h( 'div', { class: 'rfb-cv-container' }, body ) );
 		} else {
 			el.append( h( 'div', { class: 'rfb-cv-preview-body', 'aria-hidden': 'true' }, faux( field ) ) );
 		}
@@ -711,23 +725,39 @@
 			row( __( 'Link (optional)', 'refraction' ), text( f, 'image_link', { type: 'url', placeholder: 'https://' } ) ) );
 	}
 
-	// ---------------------------------------------------------------- per-field styling (the Style sub-tab of a field)
+	// ---------------------------------------------------------------- field styling (the Style sub-tab of a field)
+
+	const scopeChoice = {}; // field id => 'type' | 'field'
 
 	const FS_LABELS = {
 		bg: __( 'Background color', 'refraction' ), border_style: __( 'Border style', 'refraction' ), border_width: __( 'Border width (px)', 'refraction' ), border_color: __( 'Border color', 'refraction' ),
 		radius: __( 'Border radius (px)', 'refraction' ), shadow: __( 'Box shadow', 'refraction' ), align: __( 'Alignment', 'refraction' ),
 		h_bg: __( 'Background color', 'refraction' ), h_border_color: __( 'Border color', 'refraction' ), h_shadow: __( 'Box shadow', 'refraction' ),
+		f_bg: __( 'Background color', 'refraction' ), f_border_color: __( 'Border color', 'refraction' ), f_shadow: __( 'Box shadow', 'refraction' ),
 		l_color: __( 'Text color', 'refraction' ), l_family: __( 'Font', 'refraction' ), l_size: __( 'Size (px)', 'refraction' ), l_weight: __( 'Weight', 'refraction' ),
 		l_transform: __( 'Capitalization', 'refraction' ), l_spacing: __( 'Letter spacing (px)', 'refraction' ), l_height: __( 'Line height (%)', 'refraction' ), l_italic: __( 'Italic', 'refraction' ),
+		lh_color: __( 'Text color', 'refraction' ), lh_bg: __( 'Background color', 'refraction' ), lf_color: __( 'Text color', 'refraction' ), lf_bg: __( 'Background color', 'refraction' ),
 		c_color: __( 'Text color', 'refraction' ), c_bg: __( 'Background color', 'refraction' ), c_border_style: __( 'Border style', 'refraction' ), c_border_width: __( 'Border width (px)', 'refraction' ),
 		c_border_color: __( 'Border color', 'refraction' ), c_radius: __( 'Border radius (px)', 'refraction' ), c_shadow: __( 'Box shadow', 'refraction' ), c_family: __( 'Font', 'refraction' ),
 		c_size: __( 'Text size (px)', 'refraction' ), c_weight: __( 'Text weight', 'refraction' ), c_pad_y: __( 'Padding above and below (px)', 'refraction' ), c_pad_x: __( 'Padding left and right (px)', 'refraction' ),
 		ch_color: __( 'Text color', 'refraction' ), ch_bg: __( 'Background color', 'refraction' ), ch_border_color: __( 'Border color', 'refraction' ), ch_shadow: __( 'Box shadow', 'refraction' ),
-		cf_border_color: __( 'Border color', 'refraction' ), cf_shadow: __( 'Box shadow', 'refraction' ),
+		cf_color: __( 'Text color', 'refraction' ), cf_bg: __( 'Background color', 'refraction' ), cf_border_color: __( 'Border color', 'refraction' ), cf_shadow: __( 'Box shadow', 'refraction' ),
 		d_color: __( 'Text color', 'refraction' ), d_size: __( 'Size (px)', 'refraction' ), d_italic: __( 'Italic', 'refraction' ),
 		b_bg: __( 'Background color', 'refraction' ), b_color: __( 'Text color', 'refraction' ), b_border_color: __( 'Border color', 'refraction' ), b_radius: __( 'Border radius (px)', 'refraction' ),
+		bh_bg: __( 'Background color', 'refraction' ), bh_color: __( 'Text color', 'refraction' ), bh_border_color: __( 'Border color', 'refraction' ),
 		b_on_bg: __( 'Background color', 'refraction' ), b_on_color: __( 'Text color', 'refraction' ), b_on_border_color: __( 'Border color', 'refraction' ),
+		pc_color: __( 'Text color', 'refraction' ), pc_size: __( 'Size (px)', 'refraction' ), pc_weight: __( 'Weight', 'refraction' ), pa_accent: __( 'Radio / checkbox color', 'refraction' ),
+		ph_color: __( 'Text color', 'refraction' ), po_color: __( 'Text color', 'refraction' ), po_weight: __( 'Weight', 'refraction' ),
+		tg_off: __( 'Track color (off)', 'refraction' ), tg_radius: __( 'Track radius (px)', 'refraction' ), tgh_off: __( 'Track color (off)', 'refraction' ), tg_on: __( 'Track color (on)', 'refraction' ), tg_knob: __( 'Knob color', 'refraction' ),
+		rows_gap: __( 'Space between rows (px)', 'refraction' ),
+		rb_bg: __( 'Background color', 'refraction' ), rb_color: __( 'Text color', 'refraction' ), rb_border_color: __( 'Border color', 'refraction' ), rb_radius: __( 'Border radius (px)', 'refraction' ), rb_size: __( 'Text size (px)', 'refraction' ), rb_weight: __( 'Text weight', 'refraction' ),
+		rbh_bg: __( 'Background color', 'refraction' ), rbh_color: __( 'Text color', 'refraction' ), rbh_border_color: __( 'Border color', 'refraction' ),
+		rbf_bg: __( 'Background color', 'refraction' ), rbf_color: __( 'Text color', 'refraction' ), rbf_border_color: __( 'Border color', 'refraction' ),
+		rr_color: __( 'Symbol color', 'refraction' ), rr_bg: __( 'Background color', 'refraction' ), rrh_color: __( 'Symbol color', 'refraction' ), rrh_bg: __( 'Background color', 'refraction' ),
 	};
+
+	/** The label of a property: its own, or (for the repeater, row and group copies of the box properties) the box property's. */
+	const fsLabel = ( key ) => FS_LABELS[ key ] || FS_LABELS[ key.replace( /^(?:rep|row|grp)_/, '' ) ] || key;
 
 	const FS_ENUMS = {
 		border_style: { none: __( 'None', 'refraction' ), solid: __( 'Solid', 'refraction' ), dashed: __( 'Dashed', 'refraction' ), dotted: __( 'Dotted', 'refraction' ), double: __( 'Double', 'refraction' ) },
@@ -738,20 +768,37 @@
 		transform: { none: __( 'None', 'refraction' ), uppercase: __( 'UPPERCASE', 'refraction' ), lowercase: __( 'lowercase', 'refraction' ), capitalize: __( 'Capitalize', 'refraction' ) },
 	};
 
-	/** The label of a style group depends on what the field is: a heading has "text", a divider has a "line". */
+	/** What a group is called in the panel; hover and focus groups carry their state in the tab, so they share the name. */
 	function fsGroupTitle( group, type ) {
+		const base = group.replace( /_(hover|focus|on)$/, '' );
 		const titles = {
-			box: __( 'Spacing, background and border', 'refraction' ), box_hover: __( 'Hover: the whole field', 'refraction' ),
+			box: __( 'Spacing, background and border', 'refraction' ),
 			label: [ 'heading', 'paragraph' ].includes( type ) ? __( 'Text', 'refraction' ) : ( [ 'step', 'group', 'repeater' ].includes( type ) ? __( 'Title', 'refraction' ) : __( 'Label', 'refraction' ) ),
 			control: { divider: __( 'Line', 'refraction' ), image: __( 'Image', 'refraction' ), html: __( 'HTML block', 'refraction' ), signature: __( 'Signature pad', 'refraction' ), file: __( 'File box', 'refraction' ) }[ type ] || __( 'Input', 'refraction' ),
-			control_hover: __( 'Hover: the input', 'refraction' ), control_focus: __( 'Focus: the input', 'refraction' ), desc: __( 'Description and help', 'refraction' ),
-			choice: __( 'Buttons', 'refraction' ), choice_on: __( 'Selected button', 'refraction' ),
+			desc: __( 'Description and help', 'refraction' ),
+			choice: __( 'Buttons', 'refraction' ), plain: __( 'Choice text', 'refraction' ), plain_accent: __( 'Radio / checkbox', 'refraction' ),
+			toggle: __( 'Switch track', 'refraction' ), toggle_knob: __( 'Switch knob', 'refraction' ),
+			rep: __( 'Repeater box (.rfb-repeater)', 'refraction' ), rep_rows: __( 'Rows list', 'refraction' ), row: __( 'Each row (.rfb-rep-row)', 'refraction' ),
+			rep_button: __( 'Add-row button', 'refraction' ), rep_remove: __( 'Remove-row button', 'refraction' ), grp: __( 'Group box (.rfb-group)', 'refraction' ),
 		};
 
-		return titles[ group ];
+		return titles[ base ] || titles[ group ];
 	}
 
-	/** Declarations per group for one field: the same table the server uses (Classes\Field_Style), so the canvas matches the page. */
+	/** The third state's name depends on the field: inputs have focus, choices have a selected option, switches are on, boxes become active. */
+	function fsFocusName( type ) {
+		if ( [ 'radio', 'checkbox' ].includes( type ) ) {
+			return __( 'Selected', 'refraction' );
+		}
+
+		if ( 'toggle' === type ) {
+			return __( 'On', 'refraction' );
+		}
+
+		return [ 'repeater', 'group' ].includes( type ) ? __( 'Active', 'refraction' ) : __( 'Focus', 'refraction' );
+	}
+
+	/** Declarations per group for one style: the same table the server uses (Classes\Field_Style), so the canvas matches the page. */
 	function fsDeclarations( style ) {
 		const cfg = config.fieldStyle;
 		const groups = {};
@@ -778,14 +825,17 @@
 			groups[ prop.group ] = ( groups[ prop.group ] || '' ) + prop.css + ':' + text + ';';
 		} );
 
-		[ [ 'box', 'border_style', 'border_width' ], [ 'control', 'c_border_style', 'c_border_width' ] ].forEach( ( [ group, styleKey, widthKey ] ) => {
+		[ [ 'box', '' ], [ 'rep', 'rep_' ], [ 'row', 'row_' ], [ 'grp', 'grp_' ], [ 'control', 'c_' ] ].forEach( ( [ group, prefix ] ) => {
 			if ( ! groups[ group ] ) {
 				return;
 			}
 
-			if ( undefined !== style[ widthKey ] && undefined === style[ styleKey ] ) {
+			const hasStyle = undefined !== style[ prefix + 'border_style' ];
+			const hasWidth = undefined !== style[ prefix + 'border_width' ];
+
+			if ( hasWidth && ! hasStyle ) {
 				groups[ group ] += 'border-style:solid;';
-			} else if ( undefined !== style[ styleKey ] && undefined === style[ widthKey ] && 'none' !== style[ styleKey ] ) {
+			} else if ( hasStyle && ! hasWidth && 'none' !== style[ prefix + 'border_style' ] ) {
 				groups[ group ] += 'border-width:1px;';
 			}
 		} );
@@ -793,43 +843,80 @@
 		return groups;
 	}
 
-	/** Writes the styling of every field into the canvas, so you see it while you edit (hover and focus too, for the selected field if asked). */
+	/** The parts of a field as they are drawn on the canvas: the preview body stands in for the field, choices sit one level down. */
+	function canvasParts() {
+		const parts = Object.assign( {}, config.fieldStyle.parts );
+
+		Object.keys( parts ).forEach( ( group ) => {
+			parts[ group ] = parts[ group ].split( ',' ).map( ( s ) => s.trim() ).map( ( s ) => {
+				if ( s.startsWith( '&.rfb-choice-buttons' ) ) {
+					return s.slice( 1 );
+				}
+
+				if ( s.startsWith( '&:not(.rfb-choice-buttons)' ) ) {
+					return '.rfb-cv-choices' + s.slice( 1 );
+				}
+
+				return s;
+			} ).join( ', ' );
+		} );
+		parts.box = '> .rfb-cv-preview-body, > .rfb-cv-container';
+		parts.box_hover = '> .rfb-cv-preview-body:hover, > .rfb-cv-container:hover';
+		parts.box_focus = '> .rfb-cv-preview-body:focus-within, > .rfb-cv-container:focus-within';
+
+		return parts;
+	}
+
+	/** Builds the rules of one style under a base selector; hover and focus rules also get a forced twin for the "preview" of the selected field. */
+	function fsRules( style, base, parts ) {
+		const cfg = config.fieldStyle;
+		let css = '';
+
+		Object.entries( fsDeclarations( style ) ).forEach( ( [ group, declarations ] ) => {
+			const list = parts[ group ].split( ',' ).map( ( s ) => s.trim() );
+			const join = ( prefix, s ) => prefix + ( '' === s ? '' : ( s.startsWith( ':' ) ? s : ( s.startsWith( '&' ) ? s.slice( 1 ) : ' ' + s ) ) );
+			const selectors = list.map( ( s ) => join( base, s ) );
+
+			if ( 'normal' !== cfg.states[ group ] && base.includes( '.rfb-cv-item' ) ) {
+				// The same rule as if the pointer or focus were on the selected field.
+				list.forEach( ( s ) => selectors.push( join( base + '.is-force', s.replace( /:(hover|focus-within|focus-visible|focus|active)\b/g, '' ).replace( /^(&?)\s+/, '$1 ' ) ) ) );
+			}
+
+			css += selectors.join( ', ' ) + '{' + declarations + '}';
+		} );
+
+		return css;
+	}
+
+	/** Writes the styling of every field and field type into the canvas, so you see it while you edit. */
 	function updateFieldCss() {
 		if ( ! refs.fieldCss || ! config.fieldStyle ) {
 			return;
 		}
 
-		const cfg = config.fieldStyle;
-		const parts = Object.assign( {}, cfg.parts, { box: '> .rfb-cv-preview-body, > .rfb-cv-container', box_hover: '> .rfb-cv-preview-body:hover, > .rfb-cv-container:hover', choice: '.rfb-choice-buttons .rfb-check', choice_on: '.rfb-choice-buttons .rfb-check:has(input:checked)' } );
-		const interactive = [ 'box_hover', 'control_hover', 'control_focus' ];
+		const parts = canvasParts();
 		let css = '';
 
-		all().forEach( ( field ) => {
-			if ( ! field.style || ! Object.keys( field.style ).length ) {
-				return;
+		Object.entries( state.type_styles || {} ).forEach( ( [ type, style ] ) => {
+			if ( style && Object.keys( style ).length ) {
+				css += fsRules( style, '.rfb-canvas .rfb-cv-item.rfb-cv-' + type, parts );
 			}
+		} );
 
-			const base = '.rfb-canvas [data-rfb-key="' + String( field.key ).replace( /[^a-z0-9_-]/g, '' ) + '"]';
-
-			Object.entries( fsDeclarations( field.style ) ).forEach( ( [ group, declarations ] ) => {
-				const list = parts[ group ].split( ',' ).map( ( s ) => s.trim() );
-				const selectors = list.map( ( s ) => base + ( '' === s ? '' : ( s.startsWith( ':' ) ? s : ( s.startsWith( '&' ) ? s.slice( 1 ) : ' ' + s ) ) ) );
-
-				if ( interactive.includes( group ) ) {
-					// "Preview hover and focus": the same rule, as if the pointer were on the selected field.
-					list.forEach( ( s ) => selectors.push( base + '.is-force' + ( '' === s ? '' : ' ' + s.replace( /:(hover|focus-visible|focus)\b/g, '' ) ) ) );
-				}
-
-				css += selectors.join( ', ' ) + '{' + declarations + '}';
-			} );
+		all().forEach( ( field ) => {
+			if ( field.style && Object.keys( field.style ).length ) {
+				// "rfb-cv-item" keeps this as specific as the shared type rules above it, so the later (own) rule wins.
+				css += fsRules( field.style, '.rfb-canvas .rfb-cv-item[data-rfb-key="' + String( field.key ).replace( /[^a-z0-9_-]/g, '' ) + '"]', parts );
+			}
 		} );
 
 		refs.fieldCss.textContent = css;
 	}
 
 	function fsColor( style, key, after ) {
-		const hex = h( 'input', { class: 'rfb-input rfb-hex', type: 'text', maxlength: 11, placeholder: __( 'default', 'refraction' ), 'aria-label': FS_LABELS[ key ] + ' (hex)', value: style[ key ] || '' } );
-		const picker = h( 'input', { type: 'color', 'aria-label': FS_LABELS[ key ], value: /^#[0-9a-f]{6}$/.test( style[ key ] || '' ) ? style[ key ] : '#ffffff' } );
+		const label = fsLabel( key );
+		const hex = h( 'input', { class: 'rfb-input rfb-hex', type: 'text', maxlength: 11, placeholder: __( 'default', 'refraction' ), 'aria-label': label + ' (hex)', value: style[ key ] || '' } );
+		const picker = h( 'input', { type: 'color', 'aria-label': label, value: /^#[0-9a-f]{6}$/.test( style[ key ] || '' ) ? style[ key ] : '#ffffff' } );
 		const set = ( value ) => {
 			if ( value ) {
 				style[ key ] = value;
@@ -852,10 +939,11 @@
 			}
 		} );
 
-		return h( 'div', { class: 'rfb-field rfb-w-full rfb-color' }, h( 'span', { class: 'rfb-mini' }, FS_LABELS[ key ] ), h( 'div', { class: 'rfb-color-row' }, picker, hex, h( 'button', { type: 'button', class: 'rfb-icon-btn', 'aria-label': sprintf( __( 'Reset %s', 'refraction' ), FS_LABELS[ key ] ), title: __( 'Reset', 'refraction' ), onClick: () => { hex.value = ''; set( '' ); } }, '↺' ) ) );
+		return h( 'div', { class: 'rfb-field rfb-w-full rfb-color' }, h( 'span', { class: 'rfb-mini' }, label ), h( 'div', { class: 'rfb-color-row' }, picker, hex, h( 'button', { type: 'button', class: 'rfb-icon-btn', 'aria-label': sprintf( __( 'Reset %s', 'refraction' ), label ), title: __( 'Reset', 'refraction' ), onClick: () => { hex.value = ''; set( '' ); } }, '↺' ) ) );
 	}
 
-	function fsNumber( style, key, prop, label, after ) {
+	function fsNumber( style, key, label, after ) {
+		const prop = config.fieldStyle.properties[ key ];
 		const input = h( 'input', { class: 'rfb-input', type: 'number', min: prop.min, max: prop.max, placeholder: '–', 'aria-label': label, value: undefined === style[ key ] ? '' : style[ key ] } );
 
 		input.addEventListener( 'input', () => {
@@ -874,13 +962,14 @@
 
 	function fsControl( style, key, after ) {
 		const prop = config.fieldStyle.properties[ key ];
+		const label = fsLabel( key );
 
 		if ( 'color' === prop.kind ) {
 			return fsColor( style, key, after );
 		}
 
 		if ( 'int' === prop.kind ) {
-			return row( FS_LABELS[ key ], fsNumber( style, key, prop, FS_LABELS[ key ], after ) );
+			return row( label, fsNumber( style, key, label, after ) );
 		}
 
 		if ( 'bool' === prop.kind ) {
@@ -893,11 +982,12 @@
 
 				markDirty();
 				after();
-			} } ), h( 'span', null, FS_LABELS[ key ] ) );
+			} } ), h( 'span', null, label ) );
 		}
 
-		const labels = FS_ENUMS[ key ] || FS_ENUMS[ key.replace( /^(?:b_on|ch|cf|[lchdb])_/, '' ) ] || Object.fromEntries( prop.values.map( ( v ) => [ v, v ] ) );
-		const choose = h( 'select', { class: 'rfb-input', 'aria-label': FS_LABELS[ key ], onChange: ( e ) => {
+		const base = key.replace( /^(?:rep|row|grp)_/, '' ).replace( /^(?:b_on|ch|cf|rb|rbh|rbf|[lchdbp])_/, '' );
+		const labels = FS_ENUMS[ base ] || FS_ENUMS[ key ] || Object.fromEntries( prop.values.map( ( v ) => [ v, v ] ) );
+		const choose = h( 'select', { class: 'rfb-input', 'aria-label': label, onChange: ( e ) => {
 			if ( '' === e.target.value ) {
 				delete style[ key ];
 			} else {
@@ -908,67 +998,99 @@
 			after();
 		} }, h( 'option', { value: '' }, __( 'Default', 'refraction' ) ), prop.values.map( ( v ) => h( 'option', { value: String( v ), selected: String( style[ key ] ) === String( v ) }, labels[ v ] || v ) ) );
 
-		return row( FS_LABELS[ key ], choose );
+		return row( label, choose );
 	}
 
 	/** Margin and padding as four boxes: top, right, bottom, left. */
 	function fsSides( style, prefix, title, after ) {
 		const sides = [ [ 'top', __( 'Top', 'refraction' ) ], [ 'right', __( 'Right', 'refraction' ) ], [ 'bottom', __( 'Bottom', 'refraction' ) ], [ 'left', __( 'Left', 'refraction' ) ] ];
 
-		return h( 'fieldset', { class: 'rfb-choice rfb-sides' }, h( 'legend', { class: 'rfb-mini' }, title + ' (px)' ), h( 'div', { class: 'rfb-sides-row' }, sides.map( ( [ edge, label ] ) => h( 'label', { class: 'rfb-side-box' }, fsNumber( style, prefix + '_' + edge, config.fieldStyle.properties[ prefix + '_' + edge ], title + ' ' + label.toLowerCase(), after ), h( 'span', { class: 'rfb-sublabel' }, label ) ) ) ) );
+		return h( 'fieldset', { class: 'rfb-choice rfb-sides' }, h( 'legend', { class: 'rfb-mini' }, title + ' (px)' ), h( 'div', { class: 'rfb-sides-row' }, sides.map( ( [ edge, label ] ) => h( 'label', { class: 'rfb-side-box' }, fsNumber( style, prefix + '_' + edge, title + ' ' + label.toLowerCase(), after ), h( 'span', { class: 'rfb-sublabel' }, label ) ) ) ) );
+	}
+
+	/** The style being edited: the shared one for every field of this type, or this field's own. */
+	function fsScope( f ) {
+		if ( ! scopeChoice[ f._id ] ) {
+			scopeChoice[ f._id ] = f.style && Object.keys( f.style ).length ? 'field' : 'type';
+		}
+
+		return scopeChoice[ f._id ];
 	}
 
 	function fieldStylePanel( f ) {
 		const cfg = config.fieldStyle;
-		const groups = Object.keys( cfg.applies ).filter( ( g ) => '*' === cfg.applies[ g ] || cfg.applies[ g ].includes( f.type ) );
-		const style = f.style || ( f.style = {} );
+		const typeName = typeLabels[ f.type ] || f.type;
+		const scope = fsScope( f );
+		const typeStyles = state.type_styles || ( state.type_styles = {} );
+		const style = 'type' === scope ? ( typeStyles[ f.type ] || ( typeStyles[ f.type ] = {} ) ) : ( f.style || ( f.style = {} ) );
+		const sameType = all().filter( ( x ) => x.type === f.type ).length;
 		const panel = h( 'div', { class: 'rfb-fieldstyle' } );
-		const choiceLook = 'buttons' === style.choice_look;
-		const after = () => {
-			renderCanvasOnly();
-		};
-		const reset = () => {
-			f.style = {};
-			markDirty();
-			renderInspector();
-			renderCanvasOnly();
-		};
+		const choiceLook = 'buttons' === ( ( f.style && f.style.choice_look ) || ( typeStyles[ f.type ] || {} ).choice_look );
+		const after = () => renderCanvasOnly();
 
-		panel.append( h( 'label', { class: 'rfb-check rfb-preview-state' }, h( 'input', { type: 'checkbox', checked: previewState, onChange: ( e ) => { previewState = e.target.checked; renderCanvasOnly(); } } ), h( 'span', null, __( 'Show hover and focus on the form', 'refraction' ) ) ) );
+		// Who is edited: every field of this type (the default), or only this one.
+		panel.append( h( 'div', { class: 'rfb-scope', role: 'group', 'aria-label': __( 'Apply the style to', 'refraction' ) },
+			h( 'button', { type: 'button', class: 'rfb-scope-btn' + ( 'type' === scope ? ' is-active' : '' ), 'aria-pressed': String( 'type' === scope ), 'data-scope': 'type', onClick: () => { scopeChoice[ f._id ] = 'type'; renderInspector(); } }, sprintf( __( 'All %1$s fields (%2$d)', 'refraction' ), typeName, sameType ) ),
+			h( 'button', { type: 'button', class: 'rfb-scope-btn' + ( 'field' === scope ? ' is-active' : '' ), 'aria-pressed': String( 'field' === scope ), 'data-scope': 'field', onClick: () => { scopeChoice[ f._id ] = 'field'; renderInspector(); } }, __( 'Only this field', 'refraction' ) ) ) );
+		panel.append( h( 'p', { class: 'rfb-help' }, 'type' === scope
+			? sprintf( __( 'Changes apply to every %s field. Choose "Only this field" to give this one its own look.', 'refraction' ), typeName )
+			: __( 'This field\'s own style wins over the one shared by its type.', 'refraction' ) ) );
 
-		groups.forEach( ( group ) => {
-			if ( ( 'choice' === group || 'choice_on' === group ) && ! choiceLook ) {
-				return;
-			}
+		const groups = cfg.order.filter( ( g ) => cfg.applies[ g ] && ( '*' === cfg.applies[ g ] || cfg.applies[ g ].includes( f.type ) ) )
+			.filter( ( g ) => ! ( [ 'choice', 'choice_hover', 'choice_on' ].includes( g ) && ! choiceLook ) && ! ( [ 'plain', 'plain_accent', 'plain_hover', 'plain_on' ].includes( g ) && choiceLook ) );
+		const states = [ 'normal', 'hover', 'focus' ].filter( ( s ) => groups.some( ( g ) => cfg.states[ g ] === s ) );
 
-			const keys = Object.keys( cfg.properties ).filter( ( k ) => cfg.properties[ k ].group === group );
-			const controls = [];
+		if ( ! states.includes( fieldState ) ) {
+			fieldState = 'normal';
+		}
 
-			if ( 'box' === group ) {
-				controls.push( fsSides( style, 'margin', __( 'Margin', 'refraction' ), after ), fsSides( style, 'padding', __( 'Padding', 'refraction' ), after ) );
-			}
+		if ( states.length > 1 ) {
+			const names = { normal: __( 'Normal', 'refraction' ), hover: __( 'Hover', 'refraction' ), focus: fsFocusName( f.type ) };
 
-			keys.filter( ( k ) => ! /^(margin|padding)_/.test( k ) ).forEach( ( k ) => controls.push( fsControl( style, k, after ) ) );
-			panel.append( section( fsGroupTitle( group, f.type ), controls ) );
-		} );
+			panel.append( h( 'div', { class: 'rfb-state-tabs', role: 'tablist', 'aria-label': __( 'Look of the field when', 'refraction' ) }, states.map( ( s ) => h( 'button', {
+				type: 'button', role: 'tab', class: 'rfb-state-tab' + ( fieldState === s ? ' is-active' : '' ), 'aria-selected': String( fieldState === s ), 'data-state': s,
+				onClick: () => { fieldState = s; previewState = 'normal' !== s; renderInspector(); renderCanvasOnly(); },
+			}, names[ s ] ) ) ) );
+		}
 
-		if ( [ 'radio', 'checkbox' ].includes( f.type ) ) {
+		previewState = 'normal' !== fieldState;
+
+		if ( 'normal' === fieldState && [ 'radio', 'checkbox' ].includes( f.type ) ) {
 			const look = h( 'select', { class: 'rfb-input', 'aria-label': __( 'Choice look', 'refraction' ), onChange: ( e ) => {
-				if ( 'buttons' === e.target.value ) {
-					style.choice_look = 'buttons';
-				} else {
-					delete style.choice_look;
-				}
+				style.choice_look = e.target.value;
 
 				markDirty();
 				renderInspector();
 				renderCanvasOnly();
 			} }, h( 'option', { value: 'default' }, __( 'Plain list', 'refraction' ) ), h( 'option', { value: 'buttons', selected: choiceLook }, __( 'Buttons (like Yes / No)', 'refraction' ) ) );
 
-			panel.prepend( section( __( 'Choice look', 'refraction' ), row( __( 'Show the choices as', 'refraction' ), look ) ) );
+			panel.append( section( __( 'Choice look', 'refraction' ), row( __( 'Show the choices as', 'refraction' ), look ) ) );
 		}
 
-		panel.append( h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light', onClick: reset }, __( 'Reset this field\'s style', 'refraction' ) ) );
+		groups.filter( ( g ) => cfg.states[ g ] === fieldState ).forEach( ( group ) => {
+			const keys = Object.keys( cfg.properties ).filter( ( k ) => cfg.properties[ k ].group === group );
+			const controls = [];
+
+			keys.filter( ( k ) => /margin_top$|padding_top$/.test( k ) ).forEach( ( k ) => {
+				const kind = k.includes( 'margin' ) ? 'margin' : 'padding';
+
+				controls.push( fsSides( style, k.replace( /_top$/, '' ), 'margin' === kind ? __( 'Margin', 'refraction' ) : __( 'Padding', 'refraction' ), after ) );
+			} );
+			keys.filter( ( k ) => ! /(margin|padding)_(top|right|bottom|left)$/.test( k ) ).forEach( ( k ) => controls.push( fsControl( style, k, after ) ) );
+			panel.append( section( fsGroupTitle( group, f.type ), controls ) );
+		} );
+
+		panel.append( h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light', onClick: () => {
+			if ( 'type' === scope ) {
+				delete typeStyles[ f.type ];
+			} else {
+				f.style = {};
+			}
+
+			markDirty();
+			renderInspector();
+			renderCanvasOnly();
+		} }, 'type' === scope ? sprintf( __( 'Reset the style of all %s fields', 'refraction' ), typeName ) : __( 'Reset this field\'s style', 'refraction' ) ) );
 
 		return panel;
 	}
@@ -1537,6 +1659,11 @@
 	function init() {
 		refs.live = h( 'div', { class: 'screen-reader-text', 'aria-live': 'polite' } );
 		refs.save = h( 'div', { class: 'rfb-sticky-actions' }, h( 'span', { class: 'rfb-save-note', 'aria-live': 'polite' } ), h( 'button', { type: 'submit', class: 'rfb-btn rfb-btn-primary' }, __( 'Save collection', 'refraction' ) ) );
+
+		// PHP sends an empty list as [] (see tag()); the styles shared by type are an object keyed by type.
+		if ( ! state.type_styles || Array.isArray( state.type_styles ) ) {
+			state.type_styles = {};
+		}
 
 		state.fields.forEach( tag );
 		root.append( workspace(), refs.save, refs.live );

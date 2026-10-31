@@ -496,6 +496,7 @@ class Schema {
 			'fields' => $fields,
 			'statuses' => $statuses,
 			'style' => Style::clean( $raw['style'] ?? [] ),
+			'type_styles' => Field_Style::clean_types( $raw['type_styles'] ?? [] ),
 			'settings' => Settings::clean( $raw['settings'] ?? [] ),
 		];
 	}

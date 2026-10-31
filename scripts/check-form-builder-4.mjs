@@ -296,8 +296,9 @@ async function main() {
 		await page.mouse.move( 5, 5 );
 		await page.locator( '.rfb-cv-item[data-rfb-key="pet_type"] .rfb-cv-preview-body' ).click( { force: true } );
 		await page.click( '.rfb-field-tab[data-fieldtab="style"]' );
+		await page.click( '.rfb-scope-btn[data-scope="field"]' );
 		const sections = await page.$$eval( '.rfb-inspector .rfb-section > summary', ( els ) => els.map( ( e ) => e.textContent.trim() ) );
-		check( 'style tab', 'a choice field offers: choice look, spacing/background/border, label, description, hover', [ 'Choice look', 'Spacing, background and border', 'Hover: the whole field', 'Label', 'Description and help' ].every( ( s ) => sections.includes( s ) ) && ! sections.includes( 'Input' ), sections.join( '|' ) );
+		check( 'style tab', 'a choice field offers: choice look, spacing/background/border, label, description, choice text', [ 'Choice look', 'Spacing, background and border', 'Label', 'Description and help', 'Choice text', 'Radio / checkbox' ].every( ( s ) => sections.includes( s ) ) && ! sections.includes( 'Input' ), sections.join( '|' ) );
 		const unlS = await unlabelled( page );
 		check( 'a11y', 'every style control is labelled', unlS.length === 0, unlS.join( ',' ) );
 
@@ -333,25 +334,28 @@ async function main() {
 		// choice look
 		await page.locator( '.rfb-inspector select[aria-label="Choice look"]' ).selectOption( 'buttons' );
 		const sections2 = await page.$$eval( '.rfb-inspector .rfb-section > summary', ( els ) => els.map( ( e ) => e.textContent.trim() ) );
-		check( 'style tab', 'choosing buttons reveals the button and selected-button groups', sections2.includes( 'Buttons' ) && sections2.includes( 'Selected button' ) );
-		await page.locator( '.rfb-inspector .rfb-section:has(> summary:text-is("Selected button")) .rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).fill( '#2e7d32' );
+		check( 'style tab', 'choosing buttons reveals the button and selected-button groups', sections2.includes( 'Buttons' ) && ! sections2.includes( 'Choice text' ) );
+		await page.click( '.rfb-state-tab[data-state="focus"]' );
+		await page.locator( '.rfb-inspector .rfb-section:has(> summary:text-is("Buttons")) .rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).fill( '#2e7d32' );
 		check( 'style tab', 'the canvas previews the buttons and the selected color', ( await page.locator( `${ field( 'pet_type' ) } .rfb-choice-buttons .rfb-check` ).count() ) >= 2 && ( await css( page.locator( `${ field( 'pet_type' ) } .rfb-check:has(input:checked)` ), 'backgroundColor' ) ) === 'rgb(46, 125, 50)' );
 		await page.screenshot( { path: join( SHOTS, 'style-tab-choice.png' ) } );
 
 		// input styling with hover and focus preview on a text field
 		await page.locator( `${ field( 'owner' ) } .rfb-cv-preview-body` ).click( { force: true } );
 		await page.click( '.rfb-field-tab[data-fieldtab="style"]' );
+		await page.click( '.rfb-scope-btn[data-scope="field"]' );
 		const inputSection = page.locator( '.rfb-inspector .rfb-section:has(> summary:text-is("Input"))' );
 		await inputSection.locator( '.rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).fill( '#e8f5e9' );
 		await inputSection.locator( '.rfb-field:has(.rfb-mini:text-is("Border radius (px)")) input' ).fill( '24' );
 		await inputSection.locator( '.rfb-field:has(.rfb-mini:text-is("Padding above and below (px)")) input' ).fill( '16' );
-		const hover = page.locator( '.rfb-inspector .rfb-section:has(> summary:text-is("Hover: the input"))' );
-		await hover.locator( '.rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).fill( '#c8e6c9' );
 		const ownerInput = page.locator( `${ field( 'owner' ) } .rfb-input` );
 		check( 'style tab', 'input styling applies to the input', ( await css( ownerInput, 'backgroundColor' ) ) === 'rgb(232, 245, 233)' && ( await css( ownerInput, 'borderTopLeftRadius' ) ) === '24px' && ( await css( ownerInput, 'paddingTop' ) ) === '16px' );
-		await page.locator( '.rfb-preview-state input' ).check();
+		await page.click( '.rfb-state-tab[data-state="hover"]' );
+		const hover = page.locator( '.rfb-inspector .rfb-section:has(> summary:text-is("Input"))' );
+		await hover.locator( '.rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).fill( '#c8e6c9' );
+		// the Hover tab previews its look on the selected field already
 		check( 'style tab', 'the hover look can be previewed on the form', ( await css( ownerInput, 'backgroundColor' ) ) === 'rgb(200, 230, 201)' );
-		await page.locator( '.rfb-preview-state input' ).uncheck();
+		await page.click( '.rfb-state-tab[data-state="normal"]' );
 		check( 'style tab', 'and switched off again', ( await css( ownerInput, 'backgroundColor' ) ) === 'rgb(232, 245, 233)' );
 		// reset
 		await page.locator( '.rfb-fieldstyle button:has-text("Reset this field")' ).click();
@@ -367,6 +371,7 @@ async function main() {
 		await page.waitForSelector( '.rfb-cv-item' );
 		await page.locator( '.rfb-cv-item[data-rfb-key="pet_type"] .rfb-cv-preview-body' ).click( { force: true } );
 		await page.click( '.rfb-field-tab[data-fieldtab="style"]' );
+		await page.click( '.rfb-scope-btn[data-scope="field"]' );
 		check( 'save', 'reopening the designer shows the saved values in the Style tab', ( await page.locator( '.rfb-inspector fieldset:has(legend:text-is("Margin (px)")) input' ).nth( 0 ).inputValue() ) === '30' && ( await page.locator( '.rfb-inspector select[aria-label="Choice look"]' ).inputValue() ) === 'buttons' && ( await page.locator( '.rfb-inspector .rfb-color:has(.rfb-mini:text-is("Background color")) .rfb-hex' ).first().inputValue() ) === '#fff3e0' );
 		check( 'save', 'and on the canvas', ( await css( bodyOf( 'pet_type' ), 'marginTop' ) ) === '30px' );
 		await page.click( '.rfb-field-tab[data-fieldtab="settings"]' );
@@ -386,7 +391,7 @@ async function main() {
 
 		// other field types offer the groups that make sense for them
 		const groupsOf = async ( k ) => { await page.locator( `${ field( k ) } .rfb-cv-preview-body, ${ field( k ) } .rfb-cv-title` ).first().click( { force: true } ); await page.click( '.rfb-field-tab[data-fieldtab="style"]' ); return page.$$eval( '.rfb-inspector .rfb-section > summary', ( els ) => els.map( ( e ) => e.textContent.trim() ) ); };
-		check( 'style tab', 'a group offers box, hover, title and description but no input', ( await groupsOf( 'contact' ) ).join( '|' ) === 'Spacing, background and border|Hover: the whole field|Title|Description and help' );
+		check( 'style tab', 'a group offers box, title, description and its own box, but no input', ( await groupsOf( 'contact' ) ).join( '|' ) === 'Spacing, background and border|Title|Description and help|Group box (.rfb-group)' );
 		await page.click( '.rfb-field-tab[data-fieldtab="settings"]' );
 		const unlS2 = await unlabelled( page );
 		check( 'a11y', 'settings controls are still labelled', unlS2.length === 0, unlS2.join( ',' ) );
