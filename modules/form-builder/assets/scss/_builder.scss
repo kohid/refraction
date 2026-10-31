@@ -1,56 +1,5 @@
 // The drag and drop designer (Refraction > Builder > Design).
 .rfb-wrap {
-	.rfb-design-tabs {
-		margin: 0 0 20px;
-		padding: 6px;
-		border-radius: 12px;
-		background: var(--rfb-card);
-		box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
-
-		.rfb-tab {
-			border: 0;
-			background: transparent;
-			cursor: pointer;
-			font-size: 14px;
-		}
-	}
-
-	.rfb-build {
-		display: grid;
-		align-items: start;
-		gap: 20px;
-		grid-template-columns: 220px minmax(0, 1fr) 320px;
-
-		@media (max-width: 1100px) {
-			grid-template-columns: 200px minmax(0, 1fr);
-
-			.rfb-inspector {
-				grid-column: 1 / -1;
-			}
-		}
-
-		@media (max-width: 720px) {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-
-	.rfb-palette-col,
-	.rfb-inspector {
-		position: sticky;
-		top: 44px;
-		max-height: calc(100vh - 60px);
-		overflow: auto;
-		padding: 16px;
-		border-radius: 12px;
-		background: var(--rfb-card);
-		box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
-
-		@media (max-width: 1100px) {
-			position: static;
-			max-height: none;
-		}
-	}
-
 	.rfb-palette-group h3 {
 		margin: 14px 0 8px;
 		color: $rfb-gray-500;
@@ -426,34 +375,6 @@
 		gap: 2px 12px;
 	}
 
-	// ---- style tab
-	.rfb-style {
-		display: grid;
-		align-items: start;
-		gap: 24px;
-		grid-template-columns: minmax(0, 1fr) 420px;
-
-		@media (max-width: 1100px) {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-
-	.rfb-style-controls {
-		padding: 8px 20px 20px;
-		border-radius: 12px;
-		background: var(--rfb-card);
-		box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
-	}
-
-	.rfb-style-side {
-		position: sticky;
-		top: 44px;
-
-		h3 {
-			margin: 0 0 8px;
-		}
-	}
-
 	.rfb-color-row,
 	.rfb-range-row {
 		display: flex;
@@ -490,32 +411,239 @@
 		font-size: 12px;
 	}
 
-	.rfb-style-preview {
-		padding: var(--rfb-padding);
+	.rfb-save-note {
+		margin-right: auto;
+		color: var(--rfb-muted);
+	}
 
-		.rfb-cv-preview-item {
-			display: inline-block;
-			width: 100%;
-			margin-bottom: var(--rfb-gap);
-			vertical-align: top;
+	// ---- workspace: fields | form | settings, each side folds away
+	.rfb-workspace {
+		--rfb-left-w: 240px;
+		--rfb-right-w: 360px;
+		display: grid;
+		align-items: start;
+		gap: 16px;
+		grid-template-columns: var(--rfb-left-w) minmax(0, 1fr) var(--rfb-right-w);
+		transition: grid-template-columns 0.2s ease;
 
-			&.rfb-w-half {
-				width: calc(50% - 8px);
+		&.is-left-collapsed {
+			--rfb-left-w: 44px;
+		}
+
+		&.is-right-collapsed {
+			--rfb-right-w: 44px;
+		}
+
+		@media (max-width: 900px) {
+			grid-template-columns: minmax(0, 1fr);
+
+			&.is-left-collapsed,
+			&.is-right-collapsed {
+				grid-template-columns: minmax(0, 1fr);
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+	}
+
+	.rfb-side {
+		position: sticky;
+		top: 44px;
+		display: flex;
+		flex-direction: column;
+		max-height: calc(100vh - 60px);
+		min-width: 0;
+		border-radius: 12px;
+		background: var(--rfb-card);
+		box-shadow: 0 0 20px rgba(76, 87, 125, 0.08);
+
+		@media (max-width: 900px) {
+			position: static;
+			max-height: none;
+		}
+	}
+
+	.rfb-side-head {
+		display: flex;
+		flex: none;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 12px;
+		border-bottom: 1px solid var(--rfb-line);
+	}
+
+	.rfb-side-head {
+		justify-content: space-between;
+	}
+
+	.rfb-right .rfb-side-head {
+		flex-direction: row-reverse;
+	}
+
+	.rfb-side-title {
+		font-size: 13px;
+	}
+
+	.rfb-side-body {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: auto;
+		padding: 14px 16px 16px;
+		overscroll-behavior: contain;
+	}
+
+	.rfb-collapse {
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		padding: 0;
+		border: 0;
+		border-radius: 8px;
+		background: $rfb-gray-100;
+		color: $rfb-gray-700;
+		cursor: pointer;
+		font-size: 20px;
+		line-height: 1;
+
+		&:hover,
+		&:focus-visible {
+			background: $rfb-primary-light;
+			color: $rfb-primary;
+		}
+	}
+
+	// A folded panel is a slim rail with the expand button and a vertical name.
+	.rfb-side.is-collapsed {
+		align-self: stretch;
+		min-height: 160px;
+
+		.rfb-side-head {
+			flex-direction: column;
+			flex: 1;
+			justify-content: flex-start;
+			padding: 10px 8px;
+			border-bottom: 0;
+		}
+
+		.rfb-side-title {
+			margin-top: 8px;
+			color: var(--rfb-muted);
+			font-size: 12px;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			writing-mode: vertical-rl;
+		}
+
+		@media (max-width: 900px) {
+			min-height: 0;
+
+			.rfb-side-head {
+				flex-direction: row;
+				padding: 10px 12px;
 			}
 
-			&.rfb-w-third {
-				width: calc(33.333% - 11px);
+			.rfb-side-title {
+				writing-mode: horizontal-tb;
 			}
 		}
 	}
 
-	.rfb-advanced,
-	.rfb-general {
-		max-width: 900px;
+	.rfb-side-tabs {
+		display: flex;
+		gap: 2px;
+		margin: -4px 0 14px;
+		padding: 4px;
+		border-radius: 10px;
+		background: $rfb-gray-100;
 	}
 
-	.rfb-save-note {
-		margin-right: auto;
-		color: var(--rfb-muted);
+	.rfb-side-tab {
+		flex: 1;
+		padding: 7px 4px;
+		border: 0;
+		border-radius: 8px;
+		background: transparent;
+		color: $rfb-gray-700;
+		cursor: pointer;
+		font-size: 12px;
+		font-weight: 700;
+
+		&:hover {
+			color: $rfb-primary;
+		}
+
+		&.is-active {
+			background: var(--rfb-card);
+			box-shadow: 0 1px 4px rgba(76, 87, 125, 0.18);
+			color: $rfb-primary;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $rfb-primary;
+			outline-offset: 1px;
+		}
+	}
+
+	// Cards were written for a full-width page; inside the settings panel they are plain stacked groups.
+	.rfb-right {
+		.rfb-card {
+			margin: 0 0 16px;
+			border-radius: 0;
+			background: transparent;
+			box-shadow: none;
+		}
+
+		.rfb-card-header {
+			padding: 0 0 8px;
+			border-bottom: 0;
+			flex-wrap: wrap;
+		}
+
+		.rfb-card-header h2 {
+			font-size: 14px;
+		}
+
+		.rfb-card-body {
+			padding: 0;
+		}
+
+		.rfb-form-grid {
+			gap: 14px;
+		}
+
+		.rfb-field,
+		.rfb-field.rfb-w-half,
+		.rfb-field.rfb-w-third {
+			flex-basis: 100%;
+		}
+
+		.rfb-row-main {
+			padding: 8px;
+		}
+
+		.rfb-style-controls {
+			padding: 0;
+			background: transparent;
+			box-shadow: none;
+		}
+
+		.rfb-advanced,
+		.rfb-general {
+			max-width: none;
+		}
+
+		.rfb-color-row .rfb-hex {
+			flex: 1;
+			max-width: none;
+		}
+	}
+
+	.rfb-palette-grid {
+		grid-template-columns: minmax(0, 1fr);
 	}
 }

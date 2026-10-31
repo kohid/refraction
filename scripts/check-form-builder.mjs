@@ -208,7 +208,7 @@ async function main() {
 		await page.locator( '.rfb-advanced .rfb-field:has(.rfb-mini:text("Submit button text")) input' ).fill( 'Book now' );
 		await page.click( '[data-tab="style"]' );
 		await page.locator( '.rfb-style-controls .rfb-color:has(.rfb-mini:text("Accent color")) .rfb-hex' ).fill( '#7239ea' );
-		check( 'design', 'style changes apply to the live preview', ( await page.$eval( '.rfb-style-preview', ( el ) => el.style.getPropertyValue( '--rfb-primary' ) ) ) === '#7239ea' );
+		check( 'design', 'style changes apply to the form on the canvas right away', ( await page.$eval( '.rfb-canvas', ( el ) => el.style.getPropertyValue( '--rfb-primary' ) ) ) === '#7239ea' );
 		await page.screenshot( { path: join( SHOTS, 'design-style.png' ), fullPage: true } );
 		await page.click( '[data-tab="general"]' );
 		check( 'design', 'general tab shows the name, statuses and shortcodes', ( await page.inputValue( '#rfb-g-label' ) ) === 'Bookings' && ( await page.$$( '.rfb-general .rfb-row' ) ).length === 4 && ( await page.textContent( '.rfb-general' ) ).includes( '[refraction_form collection="bookings"]' ) );

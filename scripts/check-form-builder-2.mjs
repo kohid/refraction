@@ -169,6 +169,33 @@ async function main() {
 		check( 'designer', 'three step banners', kinds.filter( ( k ) => k === 'step' ).length === 3 );
 		await page.screenshot( { path: join( SHOTS, 'designer-application.png' ), fullPage: true } );
 
+		// ---- side panels: settings tabs on the right, both sides fold away
+		check( 'panels', 'Field, Style, Advanced and General are tabs of the right panel', ( await page.locator( '.rfb-right .rfb-side-tab' ).allTextContents() ).join( '|' ) === 'Field|Style|Advanced|General' && ( await page.locator( '.rfb-design-tabs' ).count() ) === 0 );
+		await page.click( '.rfb-right [data-tab="style"]' );
+		check( 'panels', 'the form and the field list stay on screen while Style is open', await page.locator( '.rfb-canvas' ).isVisible() && await page.locator( '.rfb-palette-item' ).first().isVisible() && await page.locator( '.rfb-right .rfb-style-controls' ).isVisible() );
+		await page.locator( '.rfb-cv-item' ).first().click();
+		check( 'panels', 'selecting a field switches the right panel to Field', ( await page.getAttribute( '.rfb-right [data-tab="field"]', 'aria-selected' ) ) === 'true' && await page.locator( '.rfb-inspector .rfb-inspector-head' ).isVisible() );
+		const width = async () => Math.round( ( await page.locator( '.rfb-canvas-col' ).boundingBox() ).width );
+		const open = await width();
+		await page.click( '[data-collapse="left"]' );
+		await page.waitForTimeout( 400 );
+		const leftFolded = await width();
+		check( 'panels', 'the left panel folds to a rail and the form gets wider', leftFolded > open + 150 && ! ( await page.locator( '.rfb-palette-item' ).first().isVisible() ) && ( await page.getAttribute( '[data-collapse="left"]', 'aria-expanded' ) ) === 'false' && ( await page.locator( '.rfb-left' ).boundingBox() ).width < 60, `${ open } -> ${ leftFolded }` );
+		await page.click( '[data-collapse="right"]' );
+		await page.waitForTimeout( 400 );
+		const bothFolded = await width();
+		check( 'panels', 'the right panel folds too', bothFolded > leftFolded + 200 && ! ( await page.locator( '.rfb-right [data-tab="style"]' ).isVisible() ) && ( await page.locator( '.rfb-right' ).boundingBox() ).width < 60, `${ leftFolded } -> ${ bothFolded }` );
+		await page.screenshot( { path: join( SHOTS, 'panels-folded.png' ), fullPage: true } );
+		await page.reload();
+		await page.waitForSelector( '.rfb-cv-item' );
+		check( 'panels', 'folded panels stay folded after a reload', await page.locator( '.rfb-workspace.is-left-collapsed.is-right-collapsed' ).count() === 1 );
+		await page.locator( '.rfb-cv-item' ).first().click();
+		check( 'panels', 'selecting a field opens the right panel again', ( await page.locator( '.rfb-right [data-tab="style"]' ).isVisible() ) && ( await page.locator( '.rfb-workspace.is-right-collapsed' ).count() ) === 0 );
+		await page.click( '[data-collapse="left"]' );
+		await page.waitForTimeout( 400 );
+		check( 'panels', 'the left panel opens again', await page.locator( '.rfb-palette-item' ).first().isVisible() && ( await page.getAttribute( '[data-collapse="left"]', 'aria-expanded' ) ) === 'true' && Math.abs( ( await width() ) - open ) < 4, `${ await width() } vs ${ open }` );
+		await page.keyboard.press( 'Escape' );
+
 		const groupList = page.locator( '.rfb-cv-group .rfb-cv-list' ).first();
 		const groupBefore = await page.locator( '.rfb-cv-group .rfb-cv-list > .rfb-cv-item' ).count();
 		await drag( page, page.locator( '.rfb-palette-item[data-type="step"]' ), groupList.locator( '.rfb-cv-item' ).first() );

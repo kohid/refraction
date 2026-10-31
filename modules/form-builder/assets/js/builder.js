@@ -25,7 +25,7 @@
 
 	let uid = 0;
 	let selected = null;
-	let tab = 'build';
+	let tab = 'field'; // right panel: field | style | advanced | general
 	let dirty = false;
 	let drag = null;
 	const refs = {};
@@ -220,6 +220,8 @@
 
 		list.splice( Math.max( 0, Math.min( list.length, index ) ), 0, field );
 		selected = field._id;
+		tab = 'field';
+		expand( 'right' );
 		markDirty();
 		renderBuild();
 		announce( sprintf( __( '%1$s added at position %2$d.', 'refraction' ), field.label, list.indexOf( field ) + 1 ) );
@@ -520,6 +522,8 @@
 			onClick: ( e ) => {
 				e.stopPropagation();
 				selected = field._id;
+				tab = 'field';
+				expand( 'right' );
 				renderBuild();
 			},
 			onDragstart: ( e ) => {
@@ -635,7 +639,7 @@
 	}
 
 	function renderInspector() {
-		const box = refs.inspector;
+		const box = refs.rbody;
 		const found = selected ? find( selected ) : null;
 
 		box.replaceChildren();
@@ -822,28 +826,119 @@
 
 	function renderBuild() {
 		renderCanvasOnly();
-		renderInspector();
+		renderRight();
 	}
 
-	function buildPanel() {
+	// ---------------------------------------------------------------- workspace: fields | form | settings
+
+	const TABS = [
+		[ 'field', __( 'Field', 'refraction' ) ],
+		[ 'style', __( 'Style', 'refraction' ) ],
+		[ 'advanced', __( 'Advanced', 'refraction' ) ],
+		[ 'general', __( 'General', 'refraction' ) ],
+	];
+
+	/** Remembers which side panels the person closed, per browser (a convenience; the page works without it). */
+	const memory = {
+		get: ( side ) => {
+			try {
+				return '1' === window.localStorage.getItem( 'refraction-fb-collapsed-' + side );
+			} catch ( e ) {
+				return false;
+			}
+		},
+		set: ( side, value ) => {
+			try {
+				window.localStorage.setItem( 'refraction-fb-collapsed-' + side, value ? '1' : '0' );
+			} catch ( e ) {} // eslint-disable-line no-empty
+		},
+	};
+
+	function setCollapsed( side, collapsed ) {
+		const panel = refs[ side ];
+
+		refs.workspace.classList.toggle( 'is-' + side + '-collapsed', collapsed );
+		panel.classList.toggle( 'is-collapsed', collapsed );
+		panel.querySelector( '[data-collapse]' ).setAttribute( 'aria-expanded', String( ! collapsed ) );
+		panel.querySelector( '.rfb-collapse-arrow' ).textContent = ( 'left' === side ) !== collapsed ? '‹' : '›';
+		panel.querySelector( '.rfb-side-body' ).hidden = collapsed;
+		memory.set( side, collapsed );
+	}
+
+	const expand = ( side ) => refs[ side ] && refs[ side ].classList.contains( 'is-collapsed' ) && setCollapsed( side, false );
+
+	/** The edge button of a side panel: points toward the edge the panel folds into, and back out when folded. */
+	function collapseButton( side, label ) {
+		const folded = () => refs[ side ].classList.contains( 'is-collapsed' );
+
+		return h( 'button', {
+			type: 'button', class: 'rfb-collapse', 'data-collapse': side, 'aria-expanded': 'true', 'aria-controls': 'rfb-side-' + side,
+			title: label, 'aria-label': label, onClick: () => {
+				setCollapsed( side, ! folded() );
+				announce( folded() ? sprintf( __( '%s panel hidden.', 'refraction' ), label ) : sprintf( __( '%s panel shown.', 'refraction' ), label ) );
+			},
+		}, h( 'span', { 'aria-hidden': 'true', class: 'rfb-collapse-arrow' }, 'left' === side ? '‹' : '›' ) );
+	}
+
+	function workspace() {
 		refs.canvas = h( 'div', { class: 'rfb-canvas-inner' } );
 		refs.canvasWrap = h( 'div', { class: 'rfb-canvas rfb-form rfb-front' }, refs.canvas );
 		applyStyle( refs.canvasWrap );
-		refs.inspector = h( 'aside', { class: 'rfb-inspector', 'aria-label': __( 'Field settings', 'refraction' ) } );
+		refs.submit = h( 'span', { class: 'rfb-btn rfb-btn-primary', 'aria-hidden': 'true' }, state.settings.submit_text );
 
-		const panel = h( 'div', { class: 'rfb-build' },
-			h( 'aside', { class: 'rfb-palette-col', 'aria-label': __( 'Field types', 'refraction' ) }, h( 'p', { class: 'rfb-help' }, __( 'Drag a field onto the form, or press Enter on it.', 'refraction' ) ), palette() ),
-			h( 'div', { class: 'rfb-canvas-col' }, h( 'div', { class: 'rfb-canvas-scroll' }, refs.canvasWrap, h( 'div', { class: 'rfb-cv-submit' }, h( 'span', { class: 'rfb-btn rfb-btn-primary', 'aria-hidden': 'true' }, state.settings.submit_text ) ) ) ),
-			refs.inspector );
+		refs.left = h( 'aside', { class: 'rfb-side rfb-left', id: 'rfb-side-left', 'aria-label': __( 'Field types', 'refraction' ) },
+			h( 'div', { class: 'rfb-side-head' }, h( 'strong', { class: 'rfb-side-title' }, __( 'Fields', 'refraction' ) ), collapseButton( 'left', __( 'Fields', 'refraction' ) ) ),
+			h( 'div', { class: 'rfb-side-body' }, h( 'p', { class: 'rfb-help' }, __( 'Drag a field onto the form, or press Enter on it.', 'refraction' ) ), palette() ) );
 
-		root.addEventListener( 'click', ( event ) => {
+		refs.tabs = h( 'div', { class: 'rfb-side-tabs', role: 'tablist', 'aria-label': __( 'Settings sections', 'refraction' ) }, TABS.map( ( [ id, label ] ) => h( 'button', {
+			type: 'button', role: 'tab', class: 'rfb-side-tab', 'data-tab': id, onClick: () => { tab = id; renderRight(); },
+			onKeydown: ( e ) => {
+				const order = TABS.map( ( x ) => x[ 0 ] );
+				const at = order.indexOf( tab );
+				const next = 'ArrowRight' === e.key ? order[ ( at + 1 ) % order.length ] : ( 'ArrowLeft' === e.key ? order[ ( at + order.length - 1 ) % order.length ] : null );
+
+				if ( next ) {
+					tab = next;
+					renderRight();
+					refs.tabs.querySelector( `[data-tab="${ next }"]` ).focus();
+				}
+			},
+		}, label ) ) );
+		refs.rbody = h( 'div', { class: 'rfb-side-panel rfb-inspector', role: 'tabpanel' } );
+		refs.right = h( 'aside', { class: 'rfb-side rfb-right', id: 'rfb-side-right', 'aria-label': __( 'Settings', 'refraction' ) },
+			h( 'div', { class: 'rfb-side-head' }, collapseButton( 'right', __( 'Settings', 'refraction' ) ), h( 'strong', { class: 'rfb-side-title' }, __( 'Settings', 'refraction' ) ) ),
+			h( 'div', { class: 'rfb-side-body' }, refs.tabs, refs.rbody ) );
+
+		refs.workspace = h( 'div', { class: 'rfb-workspace' },
+			refs.left,
+			h( 'div', { class: 'rfb-canvas-col' }, h( 'div', { class: 'rfb-canvas-scroll' }, refs.canvasWrap, h( 'div', { class: 'rfb-cv-submit' }, refs.submit ) ) ),
+			refs.right );
+
+		refs.workspace.addEventListener( 'click', ( event ) => {
 			if ( event.target.closest( '.rfb-canvas-inner' ) && ! event.target.closest( '.rfb-cv-item' ) ) {
 				selected = null;
 				renderBuild();
 			}
 		} );
 
-		return panel;
+		return refs.workspace;
+	}
+
+	/** Draws the right panel for the current tab. */
+	function renderRight() {
+		if ( 'field' === tab ) {
+			renderInspector();
+		} else {
+			refs.rbody.replaceChildren( 'style' === tab ? stylePanel() : ( 'advanced' === tab ? advancedPanel() : generalPanel() ) );
+		}
+
+		refs.tabs.querySelectorAll( '[role=tab]' ).forEach( ( button ) => {
+			const on = button.dataset.tab === tab;
+
+			button.setAttribute( 'aria-selected', String( on ) );
+			button.tabIndex = on ? 0 : -1;
+			button.classList.toggle( 'is-active', on );
+		} );
 	}
 
 	// ---------------------------------------------------------------- style tab
@@ -878,9 +973,6 @@
 		const spec = config.styleControls[ key ];
 		const live = () => {
 			applyStyle( refs.canvasWrap );
-			if ( refs.stylePreview ) {
-				applyStyle( refs.stylePreview );
-			}
 		};
 
 		if ( 'color' === spec.type ) {
@@ -928,23 +1020,11 @@
 		controls.append( h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light', onClick: () => {
 			Object.assign( state.style, config.styleDefaults, { custom_css: state.style.custom_css } );
 			markDirty();
-			renderTab();
+			applyStyle( refs.canvasWrap );
+			renderRight();
 		} }, __( 'Reset colors and sizes', 'refraction' ) ) );
 
-		refs.stylePreview = h( 'div', { class: 'rfb-canvas rfb-form rfb-front rfb-style-preview' } );
-		applyStyle( refs.stylePreview );
-
-		const sample = [ ...state.fields.filter( ( f ) => 'step' !== f.type ).slice( 0, 6 ) ];
-
-		sample.forEach( ( field ) => refs.stylePreview.append( h( 'div', { class: 'rfb-cv-preview-item rfb-w-' + ( isContainer( field.type ) ? 'full' : field.width ) }, isContainer( field.type ) ? h( 'strong', null, field.label ) : faux( field ) ) ) );
-
-		if ( ! sample.length ) {
-			refs.stylePreview.append( h( 'p', { class: 'rfb-help' }, __( 'Add fields on the Build tab to see them here.', 'refraction' ) ) );
-		}
-
-		refs.stylePreview.append( h( 'div', { class: 'rfb-cv-submit' }, h( 'span', { class: 'rfb-btn rfb-btn-primary' }, state.settings.submit_text ) ) );
-
-		return h( 'div', { class: 'rfb-style' }, controls, h( 'div', { class: 'rfb-style-side' }, h( 'h3', null, __( 'Live preview', 'refraction' ) ), refs.stylePreview ) );
+		return h( 'div', { class: 'rfb-style' }, h( 'p', { class: 'rfb-help' }, __( 'Changes show on the form right away.', 'refraction' ) ), controls );
 	}
 
 	// ---------------------------------------------------------------- advanced tab
@@ -957,13 +1037,13 @@
 		const s = state.settings;
 		const emails = all().filter( ( f ) => 'email' === f.type ).reduce( ( map, f ) => Object.assign( map, { [ f.key ]: f.label } ), { '': __( 'None', 'refraction' ) } );
 		const dateInput = ( key ) => h( 'input', { class: 'rfb-input', type: 'datetime-local', value: toLocal( s[ key ] ), onInput: ( e ) => { s[ key ] = e.target.value.replace( 'T', ' ' ); markDirty(); } } );
-		const reload = renderTab;
+		const reload = renderRight;
 
 		return h( 'div', { class: 'rfb-advanced' },
 			h( 'div', { class: 'rfb-card' }, h( 'div', { class: 'rfb-card-header' }, h( 'h2', null, __( 'After the visitor submits', 'refraction' ) ) ), h( 'div', { class: 'rfb-card-body rfb-form-grid' },
 				row( __( 'Success message', 'refraction' ), text( state, 'success_message', { after: () => {} } ) ),
 				row( __( 'Redirect to this address instead (optional)', 'refraction' ), text( s, 'redirect_url', { type: 'url', placeholder: 'https://', after: () => {} } ), __( 'Leave empty to show the success message.', 'refraction' ) ),
-				row( __( 'Submit button text', 'refraction' ), text( s, 'submit_text', { after: () => {} } ) ) ) ),
+				row( __( 'Submit button text', 'refraction' ), text( s, 'submit_text', { after: () => { refs.submit.textContent = s.submit_text; } } ) ) ) ),
 			h( 'div', { class: 'rfb-card' }, h( 'div', { class: 'rfb-card-header' }, h( 'h2', null, __( 'Multi-step forms', 'refraction' ) ), h( 'p', null, __( 'Add Step fields on the Build tab to split the form into pages.', 'refraction' ) ) ), h( 'div', { class: 'rfb-card-body rfb-form-grid' },
 				row( __( 'Progress display', 'refraction' ), select( s, 'progress', { steps: __( 'Numbered steps', 'refraction' ), bar: __( 'Progress bar', 'refraction' ), none: __( 'None', 'refraction' ) }, { after: () => {} } ) ),
 				row( __( 'Next button text', 'refraction' ), text( s, 'next_text', { after: () => {} } ) ),
@@ -1046,61 +1126,25 @@
 
 	// ---------------------------------------------------------------- shell
 
-	const TABS = [
-		[ 'build', __( 'Build', 'refraction' ) ],
-		[ 'style', __( 'Style', 'refraction' ) ],
-		[ 'advanced', __( 'Advanced', 'refraction' ) ],
-		[ 'general', __( 'General', 'refraction' ) ],
-	];
-
-	function renderTab() {
-		refs.body.replaceChildren( 'build' === tab ? buildPanel() : ( 'style' === tab ? stylePanel() : ( 'advanced' === tab ? advancedPanel() : generalPanel() ) ) );
-
-		if ( 'build' === tab ) {
-			renderBuild();
-		}
-
-		refs.tabs.querySelectorAll( '[role=tab]' ).forEach( ( button ) => {
-			const on = button.dataset.tab === tab;
-
-			button.setAttribute( 'aria-selected', String( on ) );
-			button.tabIndex = on ? 0 : -1;
-			button.classList.toggle( 'is-active', on );
-		} );
-	}
-
 	function serialise() {
 		return JSON.stringify( state, ( key, value ) => ( 'min' === key || 'max' === key ) && '' === value ? null : value );
 	}
 
 	function init() {
 		refs.live = h( 'div', { class: 'screen-reader-text', 'aria-live': 'polite' } );
-		refs.tabs = h( 'div', { class: 'rfb-tabs rfb-design-tabs', role: 'tablist', 'aria-label': __( 'Designer sections', 'refraction' ) }, TABS.map( ( [ id, label ] ) => h( 'button', {
-			type: 'button', role: 'tab', class: 'rfb-tab', 'data-tab': id, onClick: () => { tab = id; renderTab(); },
-			onKeydown: ( e ) => {
-				const order = TABS.map( ( x ) => x[ 0 ] );
-				const at = order.indexOf( tab );
-				const next = 'ArrowRight' === e.key ? order[ ( at + 1 ) % order.length ] : ( 'ArrowLeft' === e.key ? order[ ( at + order.length - 1 ) % order.length ] : null );
-
-				if ( next ) {
-					tab = next;
-					renderTab();
-					refs.tabs.querySelector( `[data-tab="${ next }"]` ).focus();
-				}
-			},
-		}, label ) ) );
-		refs.body = h( 'div', { class: 'rfb-design-body', role: 'tabpanel' } );
 		refs.save = h( 'div', { class: 'rfb-sticky-actions' }, h( 'span', { class: 'rfb-save-note', 'aria-live': 'polite' } ), h( 'button', { type: 'submit', class: 'rfb-btn rfb-btn-primary' }, __( 'Save collection', 'refraction' ) ) );
 
-		root.append( refs.tabs, refs.body, refs.save, refs.live );
 		state.fields.forEach( tag );
-		renderTab();
+		root.append( workspace(), refs.save, refs.live );
+		[ 'left', 'right' ].forEach( ( side ) => memory.get( side ) && setCollapsed( side, true ) );
+		renderBuild();
 
 		form.addEventListener( 'submit', ( event ) => {
 			if ( ! state.label.trim() ) {
 				event.preventDefault();
 				tab = 'general';
-				renderTab();
+				expand( 'right' );
+				renderRight();
 				document.getElementById( 'rfb-g-label' ).focus();
 				return;
 			}
@@ -1117,7 +1161,7 @@
 		} );
 
 		document.addEventListener( 'keydown', ( event ) => {
-			if ( 'Delete' === event.key && selected && ! /^(INPUT|TEXTAREA|SELECT)$/.test( document.activeElement.tagName ) && 'build' === tab ) {
+			if ( 'Delete' === event.key && selected && ! /^(INPUT|TEXTAREA|SELECT)$/.test( document.activeElement.tagName ) ) {
 				const found = find( selected );
 
 				if ( found ) {
