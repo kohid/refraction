@@ -291,6 +291,7 @@ t( 'style: unknown words fall back to the default', 'soft' === $st['shadow'] );
 t( 'style: a color can not carry css', '#181c32' === $st['text'] );
 t( 'style: custom css keeps rules, loses markup', false !== strpos( $st['custom_css'], 'color:red' ) && false === strpos( $st['custom_css'], '<' ) );
 t( 'style: custom css is scoped to the form', '.f input{color:red}' === trim( explode( '/', ST::scoped_css( [ 'custom_css' => 'selector input{color:red}' ], '.f' ) )[0] ) || false !== strpos( ST::scoped_css( [ 'custom_css' => 'selector input{color:red}' ], '.f' ), '.f input' ) );
+t( 'style: only the standalone word selector is replaced', '.f .my-selector{a:b} .f p{c:d}' === ST::scoped_css( [ 'custom_css' => '.my-selector{a:b} selector p{c:d}' ], '.f' ) || false !== strpos( ST::scoped_css( [ 'custom_css' => 'selector .my-selector{a:b}' ], '.f' ), '.f .my-selector' ) );
 t( 'style: clean is idempotent', $st === ST::clean( $st ) );
 t( 'style: variables are plain declarations', 1 === preg_match( '/^(--[a-z-]+:[^;<>"{}]+;)+$/', ST::inline( $st ) ) );
 t( 'style: width 0 means no max width', 'none' === ST::variables( [] )['--rfb-max-width'] && '640px' === ST::variables( [ 'width' => 640 ] )['--rfb-max-width'] );

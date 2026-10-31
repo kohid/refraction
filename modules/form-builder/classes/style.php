@@ -169,6 +169,7 @@ class Style {
 	public static function scoped_css( array $style, string $selector ): string {
 		$css = self::clean( $style )['custom_css'];
 
-		return '' === $css ? '' : str_replace( 'selector', $selector, $css );
+		// Only the standalone word: ".my-selector" or "selectors" stay as written.
+		return '' === $css ? '' : (string) preg_replace( '/(?<![\w-])selector(?![\w-])/', $selector, $css );
 	}
 }

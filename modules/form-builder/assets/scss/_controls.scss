@@ -276,10 +276,17 @@ $rfb-colors: (
 		}
 	}
 
-	.rfb-btn-primary {
+	// Repeated class names raise the specificity: themes style bare `button` elements with several :not() terms and must not win over the Style tab.
+	.rfb-btn.rfb-btn-primary.rfb-btn-primary {
 		padding: var(--rfb-button-padding);
+		border: 0;
 		background: var(--rfb-button-bg);
+		box-shadow: none;
 		color: var(--rfb-button-text);
+		font-family: var(--rfb-font);
+		font-size: var(--rfb-font-size);
+		font-weight: 600;
+		text-transform: none;
 
 		&:hover,
 		&:focus {
@@ -288,9 +295,12 @@ $rfb-colors: (
 		}
 	}
 
-	.rfb-btn-light,
-	.rfb-btn-light-primary,
-	.rfb-btn-light-danger {
+	.rfb-btn.rfb-btn-light.rfb-btn-light,
+	.rfb-btn.rfb-btn-light-primary.rfb-btn-light-primary,
+	.rfb-btn.rfb-btn-light-danger.rfb-btn-light-danger {
+		border: 0;
+		box-shadow: none;
+		text-transform: none;
 		background: $rfb-gray-100;
 		color: $rfb-gray-700;
 
@@ -301,7 +311,7 @@ $rfb-colors: (
 		}
 	}
 
-	.rfb-btn-light-primary {
+	.rfb-btn.rfb-btn-light-primary.rfb-btn-light-primary {
 		background: $rfb-primary-light;
 		color: $rfb-primary;
 
@@ -312,7 +322,7 @@ $rfb-colors: (
 		}
 	}
 
-	.rfb-btn-light-danger {
+	.rfb-btn.rfb-btn-light-danger.rfb-btn-light-danger {
 		background: $rfb-danger-light;
 		color: $rfb-danger;
 
@@ -323,7 +333,7 @@ $rfb-colors: (
 		}
 	}
 
-	.rfb-btn-danger {
+	.rfb-btn.rfb-btn-danger.rfb-btn-danger {
 		background: $rfb-danger;
 		color: #fff;
 

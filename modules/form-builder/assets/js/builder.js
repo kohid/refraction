@@ -280,7 +280,7 @@
 
 	function text( target, key, options = {} ) {
 		return h( 'input', {
-			class: 'rfb-input', type: options.type || 'text', value: null === target[ key ] || undefined === target[ key ] ? '' : target[ key ], placeholder: options.placeholder,
+			class: 'rfb-input', type: options.type || 'text', 'aria-label': options.label, value: null === target[ key ] || undefined === target[ key ] ? '' : target[ key ], placeholder: options.placeholder,
 			min: options.min, max: options.max, step: options.step, maxlength: options.maxlength,
 			onInput: ( e ) => {
 				target[ key ] = options.number ? ( '' === e.target.value ? null : Number( e.target.value ) ) : e.target.value;
@@ -304,7 +304,7 @@
 		const entries = Array.isArray( choices ) ? choices.map( ( c ) => [ c, c ] ) : Object.entries( choices );
 
 		return h( 'select', {
-			class: 'rfb-input', onChange: ( e ) => {
+			class: 'rfb-input', 'aria-label': options.label, onChange: ( e ) => {
 				target[ key ] = options.number ? Number( e.target.value ) : e.target.value;
 				markDirty();
 				( options.after || renderCanvasOnly )( e );
@@ -609,18 +609,18 @@
 			return wrapper;
 		}
 
-		wrapper.append( h( 'div', { class: 'rfb-inline' }, select( c, 'action', { show: __( 'Show', 'refraction' ), hide: __( 'Hide', 'refraction' ) } ), h( 'span', null, __( 'this field when', 'refraction' ) ), select( c, 'match', { all: __( 'all', 'refraction' ), any: __( 'any', 'refraction' ) } ), h( 'span', null, __( 'of these match:', 'refraction' ) ) ) );
+		wrapper.append( h( 'div', { class: 'rfb-inline' }, select( c, 'action', { show: __( 'Show', 'refraction' ), hide: __( 'Hide', 'refraction' ) }, { label: __( 'Show or hide', 'refraction' ) } ), h( 'span', null, __( 'this field when', 'refraction' ) ), select( c, 'match', { all: __( 'all', 'refraction' ), any: __( 'any', 'refraction' ) }, { label: __( 'Match all or any rule', 'refraction' ) } ), h( 'span', null, __( 'of these match:', 'refraction' ) ) ) );
 
 		c.rules.forEach( ( rule, i ) => {
 			const source = candidates.find( ( f ) => f.key === rule.field );
 			const needsValue = ! [ 'empty', 'not_empty' ].includes( rule.op );
 			const valueControl = source && [ 'select', 'radio', 'checkbox' ].includes( source.type ) && needsValue
-				? select( rule, 'value', Object.fromEntries( [ [ '', __( 'Choose...', 'refraction' ) ], ...source.options.map( ( o ) => [ o.value, o.label ] ) ] ) )
-				: ( source && 'toggle' === source.type && needsValue ? select( rule, 'value', { 1: __( 'On', 'refraction' ), 0: __( 'Off', 'refraction' ) } ) : text( rule, 'value', { placeholder: __( 'value', 'refraction' ) } ) );
+				? select( rule, 'value', Object.fromEntries( [ [ '', __( 'Choose...', 'refraction' ) ], ...source.options.map( ( o ) => [ o.value, o.label ] ) ] ), { label: __( 'Value to compare with', 'refraction' ) } )
+				: ( source && 'toggle' === source.type && needsValue ? select( rule, 'value', { 1: __( 'On', 'refraction' ), 0: __( 'Off', 'refraction' ) }, { label: __( 'Value to compare with', 'refraction' ) } ) : text( rule, 'value', { placeholder: __( 'value', 'refraction' ), label: __( 'Value to compare with', 'refraction' ) } ) );
 
 			wrapper.append( h( 'div', { class: 'rfb-rule' },
-				select( rule, 'field', Object.fromEntries( candidates.map( ( f ) => [ f.key, f.label ] ) ), { after: refresh } ),
-				select( rule, 'op', config.operators, { after: refresh } ),
+				select( rule, 'field', Object.fromEntries( candidates.map( ( f ) => [ f.key, f.label ] ) ), { after: refresh, label: __( 'Field to look at', 'refraction' ) } ),
+				select( rule, 'op', config.operators, { after: refresh, label: __( 'Condition', 'refraction' ) } ),
 				needsValue ? valueControl : null,
 				h( 'button', { type: 'button', class: 'rfb-icon-btn rfb-icon-danger', 'aria-label': __( 'Remove rule', 'refraction' ), onClick: () => { c.rules.splice( i, 1 ); markDirty(); refresh(); } }, '✕' ) ) );
 		} );

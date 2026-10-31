@@ -54,6 +54,36 @@ switch ( $action ) {
 		$out = $collections->get( $spec['collection'] ) ?: [];
 		break;
 
+	case 'configure': // Merge settings / style / top-level definition values into a collection and save it.
+		$definition = $collections->get( $spec['collection'] );
+		$definition['settings'] = array_merge( $definition['settings'], $spec['settings'] ?? [] );
+		$definition['style'] = array_merge( $definition['style'], $spec['style'] ?? [] );
+
+		foreach ( [ 'public_form', 'public_list', 'success_message' ] as $key ) {
+			if ( isset( $spec[ $key ] ) ) {
+				$definition[ $key ] = $spec[ $key ];
+			}
+		}
+
+		$saved = $collections->save( $definition, $definition['slug'] );
+		$out = [ 'settings' => $saved['settings'], 'style' => $saved['style'] ];
+		break;
+
+	case 'files': // Stored upload files of a collection (names only) and whether a given id exists.
+		$dir = \Refraction\Modules\FormBuilder\Classes\Uploads::dir( $spec['collection'] );
+		$out = [ 'files' => is_dir( $dir ) ? array_values( array_diff( scandir( $dir ), [ '.', '..', 'index.php' ] ) ) : [], 'guard' => file_exists( \Refraction\Modules\FormBuilder\Classes\Uploads::base_dir() . '/.htaccess' ) && file_exists( \Refraction\Modules\FormBuilder\Classes\Uploads::base_dir() . '/index.php' ), 'mode' => is_dir( $dir ) ? substr( sprintf( '%o', fileperms( $dir ) ), -4 ) : '' ];
+		break;
+
+	case 'latest': // Newest record of a collection with its values.
+		$definition = $collections->get( $spec['collection'] );
+		$out = [ 'record' => $records->query( $definition, [ 'per_page' => 1 ] )['items'][0] ?? null ];
+		break;
+
+	case 'preset': // Create a collection from a starting point.
+		$saved = $collections->save( \Refraction\Modules\FormBuilder\Classes\Presets::get( $spec['preset'] ) );
+		$out = [ 'slug' => $saved['slug'] ];
+		break;
+
 	case 'state': // Counts and a record by title.
 		$slug = $spec['collection'];
 		$definition = $collections->get( $slug );

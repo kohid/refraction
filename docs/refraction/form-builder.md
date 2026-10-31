@@ -1,6 +1,6 @@
 # Builder (Form Builder)
 
-Refraction > Builder lets the site owner design their own record types ("collections") such as Bookings, Listings or Transactions, manage the records in an admin table, and optionally take submissions or show records on the site. Added in 0.6.0. Pure-logic tests: `php scripts/test-form-builder.php`; browser check: `node scripts/check-form-builder.mjs --site DIR --port N`.
+Refraction > Builder lets the site owner design their own record types ("collections") such as Bookings, Listings or Transactions, manage the records in an admin table, and optionally take submissions or show records on the site. Added in 0.6.0, drag and drop designer and the advanced field kinds in 0.7.0. Pure-logic tests: `php scripts/test-form-builder.php`; browser checks: `node scripts/check-form-builder.mjs --site DIR --port N` (records, public form, listings) and `node scripts/check-form-builder-2.mjs --site DIR --port N` (designer rules, steps, repeater, group, uploads, hidden, conditions, style, settings; serve the site with `php -d upload_max_filesize=20M -d post_max_size=25M -S ...`).
 
 ## Design reference
 
@@ -8,18 +8,30 @@ The screens follow the layout language of the Metronic 8 admin demo (cards with 
 
 ## What it does
 
-- **Collections** (Builder overview): start from Bookings, Listings, Transactions or a blank one, then edit freely. Each has fields, statuses (label and color), a title field, a default status and optional public switches. Stored in the option `refraction_form_builder_collections`.
-- **Fields** (15 types): text, long text, number, amount, email, phone, link, date, time, date and time, dropdown, single choice, multiple choice, yes/no switch, rating. Per field: required, width (full, half, third), placeholder, help, default, options, number limits, "show in table", "add a filter", "show publicly". Every value is validated and cleaned by `Classes\Schema`; invalid input shows an error under the field and keeps what was typed.
-- **Records** are posts of the private type `refraction_fb_record` (meta: collection, status, JSON values, one meta key per field for sorting and filtering). The table has status tabs with counts, search, dropdown filters, sortable columns, pagination (20 per page), bulk status change, bulk delete, and CSV export (cells that start with `=`, `+`, `-` or `@` get a leading apostrophe).
-- **Public form**: `[refraction_form collection="bookings"]`, only when the collection has "Accept submissions from visitors" on. Protected by a nonce, a hidden honeypot, a 3 second minimum fill time and 10 submissions per hour per visitor. A saved submission has the collection's default status. Hook: `refraction/form_builder/submitted` ( $id, $definition, $values ).
-- **Public list**: `[refraction_records collection="listings" status="published" view="cards|table" per_page="12"]`, only when "Show records publicly" is on; it shows only the status named in the shortcode and only fields marked "Show publicly". An administrator who mistypes a shortcode sees a hint; visitors see nothing.
-- Deleting a collection needs its name typed and removes its records. Only users who can `manage_options` can use the admin screens; every action has a nonce.
+- **Collections** (Builder overview): start from Bookings, Listings, Transactions, Applications or a blank one, then edit freely. Stored in the option `refraction_form_builder_collections`.
+- **Drag and drop designer** (Design screen, four tabs):
+  - **Build**: a field list on the left, the form in the middle, the selected field's settings on the right. Drag a field type onto the form, or press Enter on it; drag a field to move it, drop it into a group or repeater, or use the move up / down, duplicate and delete buttons on every field (the Delete key works too). A group refuses steps and other groups, a repeater also refuses uploads (the drop shows a red outline).
+  - **Style**: colors, font, text and label sizes, label position (above, beside, hidden), spacing, width, corner radius, input height, border, shadow, button color, size and position, and your own CSS (write `selector` for this form). A live preview updates as you type. Values are colors, numbers in range or one of a few words; custom CSS goes through the Custom CSS sanitiser and is scoped to the form.
+  - **Advanced**: success message, redirect address, button texts, step progress display (numbered steps or bar), email notification (to up to five addresses, optional subject and reply-to field), webhook, login required, opening and closing dates, submission cap, closed message, spam protection (hidden trap field, minimum fill time, submissions per visitor per hour).
+  - **General**: names, icon, record title field, statuses (label and color), what is public and the shortcodes.
+- **Field types**: text, long text, number, amount, email, phone, link, date, time, date and time, dropdown, single choice, multiple choice, yes/no switch, rating, **file upload**, **hidden field**, **group**, **repeater**, and layout blocks **step**, **heading**, **paragraph**, **custom HTML** and **divider**. Per field: required, width, placeholder, help, default, options, number limits, CSS class, hide label, "show in table", "add a filter", "show publicly", and **conditional visibility**.
+- **Multi-step**: Step fields split the form into pages with Back / Next, a progress display and per-step validation. Without JavaScript every step is shown on one page.
+- **Conditional visibility**: show or hide a field when all or any of up to ten rules match (is, is not, contains, does not contain, is empty, is not empty, greater, less). Rules look at other fields, including siblings inside a group or repeater row. A hidden field is never required and never saved; a hidden field counts as empty for rules that follow it. The same rules run in the browser and on the server (the server decides).
+- **Group**: fields kept together; their answers are stored under the group. **Repeater**: rows visitors add and remove (minimum and maximum rows, button text); blank rows are dropped.
+- **File upload**: allowed extensions per field (jpg, jpeg, png, gif, webp, pdf, doc, docx, xls, xlsx, csv, txt, zip, mp3, mp4), size limit up to 64 MB (the server's own `upload_max_filesize` also applies), up to 10 files. Checked in the browser and again on the server by extension, WordPress's file type check and the real content type. Files are stored outside the media library in `wp-content/uploads/refraction-builder/<collection>/` under a random name; the original name is only a label. Only administrators can download them (through a nonce-protected handler, always as an attachment); deleting a record or collection deletes its files.
+- **Hidden field**: a fixed value, a URL parameter, the page address, the referrer, the logged-in user's ID or email, or today's date. It is filled when the page loads, so a visitor can change it: never use it for anything that must be trusted.
+- **Records** are posts of the private type `refraction_fb_record` (meta: collection, status, JSON values, one meta key per plain top-level field for sorting and filtering). The table has status tabs with counts, search, dropdown filters, sortable columns, pagination (20 per page), bulk status change, bulk delete and CSV export (group children get their own column, repeater rows and file names are summarised; cells that start with `=`, `+`, `-` or `@` get a leading apostrophe).
+- **Public form**: `[refraction_form collection="bookings"]`, only when the collection has "Accept submissions from visitors" on. Protected by a nonce, the Advanced tab's spam settings, the opening window and the submission cap. Hook: `refraction/form_builder/submitted` ( $id, $definition, $values ).
+- **Public list**: `[refraction_records collection="listings" status="published" view="cards|table" per_page="12"]`, only when "Show records publicly" is on; it shows only the status named in the shortcode and only fields marked "Show publicly" (uploads and hidden fields can not be public). An administrator who mistypes a shortcode sees a hint; visitors see nothing.
+- Deleting a collection needs its name typed and removes its records and uploads. Only users who can `manage_options` can use the admin screens; every action has a nonce.
 
 ## Limits
 
-- No file or image upload field; use a link field.
-- No email notification on a new submission (use the Forms widget actions for mail, or the hook above).
-- No relations between collections, no per-record history, no import.
+- The designer needs JavaScript. The public form works without it (all steps on one page, server validation).
+- **Upload folder protection**: the folder holds an `.htaccess` and `index.php`. Apache honours the first; nginx does not read `.htaccess`, so on nginx add `location ~* /uploads/refraction-builder/ { deny all; }`. Names are random 32-character values, so they can not be guessed, but a deny rule is the proper protection.
+- Uploads inside a repeater are not supported (use a group or a top-level upload).
+- Hidden fields can be changed by the visitor; webhooks and email run when the page is submitted, not queued, and are not retried.
 - Public form pages should not be fully page-cached (the nonce and minimum-time token are per page load); exclude them from caching plugins.
-- Sorting and filtering rely on post meta, which is fine for thousands of records, not millions.
-- Tested in Chromium on a classic and a block theme, SQLite test site; not on MySQL.
+- Sorting and filtering rely on post meta, which is fine for thousands of records, not millions; only plain top-level fields can be sorted or filtered.
+- Conditions can not look at an upload; a group inside a repeater and a repeater inside a repeater are not possible.
+- Tested in Chromium on a classic and a block theme, SQLite test site, with PHP's built-in server; not on MySQL, Apache or nginx.

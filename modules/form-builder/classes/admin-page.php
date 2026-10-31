@@ -251,7 +251,8 @@ class Admin_Page {
 		$remove = array_map( 'sanitize_text_field', (array) $this->post( 'rfb_remove', [] ) );
 		$stored = $this->uploads->process( $definition, $_FILES, $existing, $remove ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked in guard(); Uploads validates every entry.
 		$result = Schema::validate( $definition, (array) $this->post( 'values', [] ), [], $stored['files'] );
-		$errors = $result['errors'] + $stored['errors'];
+		// An upload's own message (wrong type, too large) is more helpful than the generic "choose a file".
+		$errors = $stored['errors'] + $result['errors'];
 		$status = sanitize_key( (string) $this->post( 'status' ) );
 
 		if ( $errors ) {

@@ -291,7 +291,8 @@ class Shortcodes {
 
 		$stored = $this->uploads->process( $definition, $_FILES ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked above; Uploads validates every entry.
 		$result = Schema::validate( $definition, $input, [], $stored['files'] );
-		$errors = $result['errors'] + $stored['errors'];
+		// An upload's own message (wrong type, too large) is more helpful than the generic "choose a file".
+		$errors = $stored['errors'] + $result['errors'];
 
 		// Files of fields that ended up hidden by a condition, or of a submission that failed, are not kept.
 		Uploads::prune( $slug, $stored['added'], $errors ? [] : $result['values'] );
