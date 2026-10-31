@@ -957,6 +957,291 @@ $rfb-colors: (
 		}
 	}
 
+	// ---- amount: a text box that writes 1,200.50 as you type, with the symbol and the period beside it
+	.rfb-amount {
+		display: flex;
+		align-items: stretch;
+		min-width: 0;
+
+		.rfb-amount-input {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+
+		> :not(:first-child) {
+			margin-left: -1px;
+		}
+
+		> :first-child {
+			border-radius: var(--rfb-radius) 0 0 var(--rfb-radius);
+		}
+
+		> :last-child {
+			border-radius: 0 var(--rfb-radius) var(--rfb-radius) 0;
+		}
+
+		> :first-child:last-child {
+			border-radius: var(--rfb-radius);
+		}
+
+		> :not(:first-child):not(:last-child) {
+			border-radius: 0;
+		}
+	}
+
+	.rfb-amount-affix {
+		display: inline-flex;
+		align-items: center;
+		padding: 0 14px;
+		border: 1px solid var(--rfb-input-border);
+		background: var(--rfb-input-bg);
+		color: var(--rfb-muted);
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	// ---- accordion
+	.rfb-accordion {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.rfb-host-title {
+		margin: 0 0 4px;
+		font-weight: 700;
+	}
+
+	.rfb-acc-item {
+		border: 1px solid var(--rfb-line);
+		border-radius: var(--rfb-radius);
+		background: var(--rfb-form-bg);
+	}
+
+	.rfb-acc-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 12px 16px;
+		color: var(--rfb-ink);
+		cursor: pointer;
+		font-weight: 700;
+		list-style: none;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&::after {
+			content: "+";
+			color: var(--rfb-muted);
+			font-size: 20px;
+			line-height: 1;
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--rfb-focus);
+			outline-offset: -2px;
+		}
+	}
+
+	.rfb-acc-item[open] > .rfb-acc-head::after {
+		content: "\2212";
+	}
+
+	.rfb-acc-body {
+		padding: 4px 16px 16px;
+	}
+
+	// ---- tabs (the tab row only appears when the script is running; without it every panel is shown one under the other)
+	.rfb-tablist {
+		display: flex;
+		gap: 4px;
+		margin: 0 0 16px;
+		border-bottom: 1px solid var(--rfb-line);
+		overflow-x: auto;
+	}
+
+	.rfb-tab {
+		margin-bottom: -1px;
+		padding: 10px 16px;
+		border: 0;
+		border-bottom: 2px solid transparent;
+		background: none;
+		color: var(--rfb-muted);
+		cursor: pointer;
+		font: inherit;
+		font-weight: 600;
+		white-space: nowrap;
+
+		&:hover {
+			color: var(--rfb-ink);
+		}
+
+		&[aria-selected="true"] {
+			border-bottom-color: var(--rfb-primary);
+			color: var(--rfb-primary);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--rfb-focus);
+			outline-offset: -2px;
+		}
+	}
+
+	.rfb-tabs-pills > .rfb-tablist {
+		gap: 6px;
+		border-bottom: 0;
+
+		.rfb-tab {
+			margin: 0;
+			border: 0;
+			border-radius: 999px;
+
+			&[aria-selected="true"] {
+				background: var(--rfb-primary);
+				color: #fff;
+			}
+		}
+	}
+
+	[data-rfb-tabs][data-rfb-ready] > .rfb-tabpanel:not(.is-active) {
+		display: none;
+	}
+
+	.rfb-tablist[hidden],
+	.rfb-tab[hidden],
+	.rfb-tabpanel[hidden],
+	.rfb-acc-item[hidden],
+	.rfb-choice-card[hidden] {
+		display: none;
+	}
+
+	// ---- choice cards (a Group or Repeater the visitor picks; what is inside is shown but can not be changed)
+	.rfb-cc-list {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.rfb-choice-card {
+		position: relative;
+		padding: 14px 16px;
+		border: 1px solid transparent;
+		border-radius: var(--rfb-radius);
+		background: var(--rfb-input-bg);
+		transition: background-color 0.15s, border-color 0.15s;
+
+		&:hover {
+			border-color: var(--rfb-input-border);
+		}
+
+		&.is-selected {
+			border-color: var(--rfb-primary);
+			background: color-mix(in srgb, var(--rfb-primary) 9%, var(--rfb-form-bg));
+		}
+	}
+
+	.rfb-cc-main {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		margin: 0;
+		cursor: pointer;
+
+		input {
+			flex: none;
+			margin: 3px 0 0;
+			accent-color: var(--rfb-primary);
+		}
+	}
+
+	.rfb-cc-mark {
+		flex: none;
+		width: 16px;
+		height: 16px;
+		margin-top: 3px;
+		border: 2px solid var(--rfb-gray-500, #a1a5b7);
+		border-radius: 50%;
+
+		&.is-check {
+			border-radius: 4px;
+		}
+	}
+
+	.is-selected > .rfb-cc-main > .rfb-cc-mark {
+		border-color: var(--rfb-primary);
+		background: radial-gradient(var(--rfb-primary) 45%, transparent 50%);
+	}
+
+	.rfb-cc-body {
+		display: flex;
+		flex: 1 1 auto;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+	}
+
+	.rfb-cc-title {
+		color: var(--rfb-ink);
+		font-weight: 700;
+	}
+
+	.rfb-cc-badge {
+		display: inline-block;
+		margin-left: 6px;
+		padding: 1px 9px;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--rfb-primary) 14%, transparent);
+		color: var(--rfb-primary);
+		font-size: 12px;
+		font-weight: 600;
+	}
+
+	.rfb-cc-sub {
+		color: var(--rfb-muted);
+		font-size: 13px;
+	}
+
+	.rfb-cc-price {
+		margin-left: auto;
+		color: var(--rfb-ink);
+		font-weight: 700;
+		text-align: right;
+		white-space: nowrap;
+	}
+
+	.rfb-cc-amount {
+		font-size: 18px;
+	}
+
+	.rfb-cc-per {
+		font-weight: 600;
+	}
+
+	.rfb-cc-note {
+		color: var(--rfb-muted);
+		font-size: 13px;
+		font-weight: 500;
+	}
+
+	.rfb-cc-details {
+		margin: 10px 0 0 28px;
+
+		> summary {
+			color: var(--rfb-primary);
+			cursor: pointer;
+			font-size: 13px;
+			font-weight: 700;
+		}
+	}
+
+	.rfb-cc-fields {
+		margin-top: 10px;
+		opacity: 0.9;
+	}
+
 	@media (max-width: 640px) {
 		.rfb-field.rfb-w-half,
 		.rfb-field.rfb-w-third {

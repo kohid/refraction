@@ -383,9 +383,9 @@ class Admin_Views {
 				$value = $record['values'][ $field['key'] ] ?? '';
 
 				if ( 0 === $index ) {
-					echo '<td><div class="rfb-user"><span class="rfb-symbol rfb-symbol-light-primary" aria-hidden="true">' . esc_html( Schema::initials( $record['title'] ) ) . '</span><div><a class="rfb-user-name" href="' . esc_url( $edit ) . '">' . Field_Renderer::cell( $field, $value ) . '</a><span class="rfb-muted">#' . esc_html( (string) $record['id'] ) . '</span></div></div></td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<td><div class="rfb-user"><span class="rfb-symbol rfb-symbol-light-primary" aria-hidden="true">' . esc_html( Schema::initials( $record['title'] ) ) . '</span><div><a class="rfb-user-name" href="' . esc_url( $edit ) . '">' . Field_Renderer::cell( $field, $value, $definition['settings'] ) . '</a><span class="rfb-muted">#' . esc_html( (string) $record['id'] ) . '</span></div></div></td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				} else {
-					echo '<td>' . Field_Renderer::cell( $field, $value ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<td>' . Field_Renderer::cell( $field, $value, $definition['settings'] ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 			}
 
@@ -456,6 +456,7 @@ class Admin_Views {
 		$ctx = [
 			'admin' => true,
 			'type_styles' => $definition['type_styles'],
+			'money' => $definition['settings'],
 			'files' => $record ? $this->file_lists( $definition, $record['values'] ) : [],
 			'file_url' => $download && $id ? static function ( array $file ) use ( $download, $slug, $id ) {
 				return $download( $slug, $id, $file );
@@ -468,7 +469,7 @@ class Admin_Views {
 
 		$field_css = Field_Style::css( $definition, '#rfb-record-form' );
 		echo '' !== $field_css ? '<style>' . $field_css . '</style>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from validated colors, numbers and keywords only.
-		echo '<form method="post" id="rfb-record-form" class="rfb-card rfb-form" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-i18n="' . esc_attr( (string) wp_json_encode( [ 'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ), 'badType' => __( '%s is not an allowed file type.', 'refraction' ), 'tooMany' => __( 'You can choose at most %d files.', 'refraction' ) ] ) ) . '">';
+		echo '<form method="post" id="rfb-record-form" class="rfb-card rfb-form" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-money="' . esc_attr( (string) wp_json_encode( Money::js( Money::config( $definition['settings'] ) ) ) ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( [ 'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ), 'badType' => __( '%s is not an allowed file type.', 'refraction' ), 'tooMany' => __( 'You can choose at most %d files.', 'refraction' ), 'number' => __( 'Enter a number.', 'refraction' ), 'lowest' => __( 'The lowest allowed value is %s.', 'refraction' ), 'highest' => __( 'The highest allowed value is %s.', 'refraction' ) ] ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_SAVE_RECORD ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="record" value="' . esc_attr( (string) $id ) . '">';
 		wp_nonce_field( Admin_Page::ACTION_SAVE_RECORD );
 		echo '<div class="rfb-card-body rfb-form-grid">';
@@ -501,12 +502,12 @@ class Admin_Views {
 	 * instead of falling back to its default.
 	 */
 	private function fill_gaps( array $fields, array $values ): array {
-		foreach ( $fields as $field ) {
+		foreach ( Schema::flat( $fields ) as $field ) {
 			if ( ! Schema::has_value( $field['type'] ) || array_key_exists( $field['key'], $values ) ) {
 				continue;
 			}
 
-			$values[ $field['key'] ] = in_array( $field['type'], [ 'checkbox', 'group', 'repeater', 'file' ], true ) ? [] : '';
+			$values[ $field['key'] ] = in_array( $field['type'], [ 'checkbox', 'group', 'repeater', 'file', 'choice_set' ], true ) ? [] : '';
 		}
 
 		return $values;

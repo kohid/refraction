@@ -141,6 +141,7 @@ class Admin_Page {
 			'colors' => Admin_Views::color_names(),
 			'icons' => Admin_Views::icon_choices(),
 			'fileTypes' => Schema::FILE_TYPES,
+			'periods' => Money::periods(),
 			'hiddenSources' => [
 				'static' => __( 'Fixed value', 'refraction' ),
 				'query' => __( 'URL parameter', 'refraction' ),

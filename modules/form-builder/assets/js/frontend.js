@@ -21,7 +21,8 @@
 		const find = ( container ) => container.querySelector( `[data-rfb-key="${ CSS.escape( key ) }"]` );
 		const wrapper = ( scope && find( scope ) ) || find( root );
 
-		if ( ! wrapper || wrapper.hidden ) {
+		// A field counts as empty when it, or a panel, card or group around it, is hidden by a rule.
+		if ( ! wrapper || wrapper.closest( '[data-rfb-cond][hidden]' ) ) {
 			return '';
 		}
 
@@ -45,6 +46,12 @@
 			const box = inputs.find( ( el ) => 'checkbox' === el.type );
 
 			return box && box.checked ? '1' : '0';
+		}
+
+		if ( inputs[ 0 ].hasAttribute( 'data-rfb-amount' ) ) {
+			const plain = parseAmount( inputs[ 0 ].value, moneyOf( root ) );
+
+			return null === plain ? '' : plain;
 		}
 
 		return String( inputs[ 0 ].value ).trim();
@@ -95,8 +102,12 @@
 			const visible = cond.enabled && cond.rules.length ? ( 'hide' === cond.action ? ! matched : matched ) : true;
 
 			wrapper.hidden = ! visible;
+
+			// Controls stay off while this wrapper, or a panel, card or group around it, is hidden.
+			const blocked = ! visible || !! ( wrapper.parentElement && wrapper.parentElement.closest( '[data-rfb-cond][hidden]' ) );
+
 			wrapper.querySelectorAll( 'input, select, textarea, button' ).forEach( ( el ) => {
-				if ( ! visible ) {
+				if ( blocked ) {
 					// Remember the control's own state only the first time it is hidden. This runs on every keystroke and
 					// click, so writing it again while hidden would store "disabled" and the control would never come back.
 					if ( undefined === el.dataset.rfbWasDisabled ) {
@@ -110,6 +121,224 @@
 				}
 			} );
 		} );
+
+		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( ( host ) => host.rfbSync && host.rfbSync() );
+	}
+
+	// ---------------------------------------------------------------- amounts
+
+	/** The money format the collection chose: thousands separator, decimal separator and decimals. */
+	function moneyOf( form ) {
+		try {
+			return Object.assign( { t: ',', d: '.', n: 2 }, JSON.parse( ( form.closest ? form.closest( '[data-rfb-money]' ) || form : form ).dataset.rfbMoney || '{}' ) );
+		} catch ( e ) {
+			return { t: ',', d: '.', n: 2 };
+		}
+	}
+
+	/** What was typed as a plain number string ("1200.5"), or null when it is not an amount. */
+	function parseAmount( text, cfg ) {
+		let plain = String( text ).replace( /\s/g, '' );
+
+		if ( cfg.t && ' ' !== cfg.t ) {
+			plain = plain.split( cfg.t ).join( '' );
+		}
+
+		plain = plain.split( cfg.d ).join( '.' );
+
+		return /^-?(\d+(\.\d*)?|\.\d+)$/.test( plain ) ? plain : null;
+	}
+
+	/** Writes the digits typed so far as 1,200 or 350,329.45, keeping the caret next to the same digit. */
+	function formatAmount( input, cfg, allowNegative ) {
+		const value = input.value;
+		const caret = null === input.selectionStart ? value.length : input.selectionStart;
+		const significant = ( ch ) => /\d/.test( ch ) || ch === cfg.d;
+		const before = Array.from( value.slice( 0, caret ) ).filter( significant ).length;
+		const negative = allowNegative && value.trim().startsWith( '-' );
+		let whole = '';
+		let part = '';
+		let seen = false;
+
+		Array.from( value ).forEach( ( ch ) => {
+			if ( /\d/.test( ch ) ) {
+				seen ? ( part += ch ) : ( whole += ch );
+			} else if ( ch === cfg.d && ! seen && cfg.n > 0 ) {
+				seen = true;
+			}
+		} );
+
+		whole = whole.replace( /^0+(?=\d)/, '' );
+		part = part.slice( 0, cfg.n );
+
+		const grouped = cfg.t ? whole.replace( /\B(?=(\d{3})+(?!\d))/g, cfg.t ) : whole;
+		const text = ( negative ? '-' : '' ) + grouped + ( seen ? cfg.d + part : '' );
+
+		if ( text === value ) {
+			return;
+		}
+
+		input.value = text;
+
+		// Put the caret after the same number of digits as before.
+		let count = 0;
+		let position = 0;
+
+		while ( position < text.length && count < before ) {
+			count += significant( text[ position ] ) ? 1 : 0;
+			position++;
+		}
+
+		input.setSelectionRange( position, position );
+	}
+
+	function initAmount( input, form ) {
+		const cfg = moneyOf( form );
+		const i18n = form.dataset.rfbI18n ? JSON.parse( form.dataset.rfbI18n ) : {};
+		const min = input.dataset.rfbMin;
+		const max = input.dataset.rfbMax;
+		const check = () => {
+			const plain = parseAmount( input.value, cfg );
+			const number = null === plain ? NaN : Number( plain );
+			let message = '';
+
+			if ( '' !== input.value && Number.isNaN( number ) ) {
+				message = i18n.number || 'Enter a number.';
+			} else if ( ! Number.isNaN( number ) && undefined !== min && number < Number( min ) ) {
+				message = sprintf( i18n.lowest || 'The lowest allowed value is %s.', min );
+			} else if ( ! Number.isNaN( number ) && undefined !== max && number > Number( max ) ) {
+				message = sprintf( i18n.highest || 'The highest allowed value is %s.', max );
+			}
+
+			input.setCustomValidity( message );
+		};
+
+		input.addEventListener( 'input', () => {
+			formatAmount( input, cfg, Number( min ) < 0 );
+			check();
+		} );
+		input.addEventListener( 'blur', () => {
+			// Tidy a lone separator ("12.") and pad to the decimals only when the visitor typed some.
+			if ( cfg.d && input.value.endsWith( cfg.d ) ) {
+				input.value = input.value.slice( 0, -1 );
+			}
+
+			check();
+		} );
+		formatAmount( input, cfg, Number( min ) < 0 );
+		check();
+	}
+
+	// ---------------------------------------------------------------- accordion, tabs and choice cards
+
+	/** Shows a control that sits in a closed panel, an inactive tab or closed card details, so its message can be seen. */
+	function reveal( el ) {
+		let node = el.parentElement;
+
+		while ( node ) {
+			if ( node.matches( 'details' ) ) {
+				node.open = true;
+			}
+
+			if ( node.matches( '.rfb-tabpanel' ) && node.parentElement && node.parentElement.rfbActivate ) {
+				node.parentElement.rfbActivate( node );
+			}
+
+			node = node.parentElement;
+		}
+	}
+
+	/** Shows the browser's own message on a control, after opening whatever hides it. */
+	function report( bad ) {
+		if ( bad.nodeType ) {
+			reveal( bad );
+		}
+
+		bad.reportValidity();
+	}
+
+	function initAccordion( host ) {
+		const items = Array.from( host.querySelectorAll( ':scope > .rfb-acc-item' ) );
+
+		if ( host.hasAttribute( 'data-rfb-multiple' ) ) {
+			return;
+		}
+
+		items.forEach( ( item ) => item.addEventListener( 'toggle', () => {
+			if ( item.open ) {
+				items.filter( ( other ) => other !== item ).forEach( ( other ) => ( other.open = false ) );
+			}
+		} ) );
+
+		// Only one panel is open at a time; when several are marked open, the first one wins.
+		const open = items.filter( ( item ) => item.open );
+
+		open.slice( 1 ).forEach( ( item ) => ( item.open = false ) );
+	}
+
+	function initTabs( host ) {
+		const list = host.querySelector( ':scope > .rfb-tablist' );
+		const tabs = Array.from( list.querySelectorAll( '[data-rfb-tab]' ) );
+		const panels = Array.from( host.querySelectorAll( ':scope > .rfb-tabpanel' ) );
+		const visible = () => tabs.filter( ( tab, i ) => ! panels[ i ].hidden );
+		const activate = ( index, focus ) => {
+			tabs.forEach( ( tab, i ) => {
+				const on = i === index;
+
+				tab.setAttribute( 'aria-selected', String( on ) );
+				tab.tabIndex = on ? 0 : -1;
+				tab.classList.toggle( 'is-active', on );
+				panels[ i ].classList.toggle( 'is-active', on );
+			} );
+
+			if ( focus ) {
+				tabs[ index ].focus();
+			}
+		};
+
+		host.rfbActivate = ( panel ) => activate( panels.indexOf( panel ), false );
+		host.rfbSync = () => {
+			tabs.forEach( ( tab, i ) => ( tab.hidden = panels[ i ].hidden ) );
+
+			if ( ! tabs.some( ( tab, i ) => tab.classList.contains( 'is-active' ) && ! panels[ i ].hidden ) ) {
+				const first = tabs.findIndex( ( tab, i ) => ! panels[ i ].hidden );
+
+				activate( first < 0 ? 0 : first, false );
+			}
+		};
+
+		tabs.forEach( ( tab, i ) => tab.addEventListener( 'click', () => activate( i, false ) ) );
+		list.addEventListener( 'keydown', ( event ) => {
+			const shown = visible();
+			const at = shown.indexOf( document.activeElement );
+
+			if ( at < 0 || ! [ 'ArrowLeft', 'ArrowRight', 'Home', 'End' ].includes( event.key ) ) {
+				return;
+			}
+
+			event.preventDefault();
+
+			const next = 'Home' === event.key ? 0 : ( 'End' === event.key ? shown.length - 1 : ( at + ( 'ArrowRight' === event.key ? 1 : -1 ) + shown.length ) % shown.length );
+
+			activate( tabs.indexOf( shown[ next ] ), true );
+		} );
+
+		const withError = panels.findIndex( ( panel ) => panel.querySelector( '.has-error' ) );
+
+		host.setAttribute( 'data-rfb-ready', '' );
+		list.hidden = false;
+		activate( withError > -1 ? withError : 0, false );
+	}
+
+	function initCards( set ) {
+		const mark = () => set.querySelectorAll( ':scope .rfb-cc-list > .rfb-choice-card' ).forEach( ( card ) => {
+			const input = card.querySelector( '.rfb-cc-main input' );
+
+			card.classList.toggle( 'is-selected', !! input && input.checked );
+		} );
+
+		set.addEventListener( 'change', mark );
+		mark();
 	}
 
 	// ---------------------------------------------------------------- repeaters
@@ -141,6 +370,7 @@
 			const row = holder.firstElementChild;
 
 			rows.appendChild( row );
+			row.querySelectorAll( 'input[data-rfb-amount]' ).forEach( ( input ) => initAmount( input, form ) );
 			sync();
 			applyConditions( form );
 
@@ -399,7 +629,7 @@
 			const bad = firstInvalid( steps[ current ] );
 
 			if ( bad ) {
-				bad.reportValidity();
+				report( bad );
 				return;
 			}
 
@@ -423,7 +653,7 @@
 				if ( bad ) {
 					event.preventDefault();
 					show( i, false );
-					bad.reportValidity();
+					report( bad );
 					return;
 				}
 			}
@@ -440,6 +670,10 @@
 		form.querySelectorAll( '.rfb-repeater' ).forEach( ( repeater ) => initRepeater( repeater, form ) );
 		form.querySelectorAll( 'input[type=file][data-rfb-max-size]' ).forEach( initFile );
 		form.querySelectorAll( '[data-rfb-signature]' ).forEach( initSignature );
+		form.querySelectorAll( 'input[data-rfb-amount]' ).forEach( ( input ) => initAmount( input, form ) );
+		form.querySelectorAll( '[data-rfb-accordion]' ).forEach( initAccordion );
+		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( initTabs );
+		form.querySelectorAll( '.rfb-cards' ).forEach( initCards );
 		form.addEventListener( 'input', () => applyConditions( form ) );
 		form.addEventListener( 'change', () => applyConditions( form ) );
 		applyConditions( form );
@@ -456,7 +690,7 @@
 
 			if ( bad ) {
 				event.preventDefault();
-				bad.reportValidity();
+				report( bad );
 			} else if ( pad ) {
 				event.preventDefault();
 				showSignatureError( pad );

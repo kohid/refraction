@@ -31,7 +31,7 @@ class Settings {
 			'honeypot' => true,
 			'min_seconds' => 3,
 			'hourly_limit' => 10,
-		];
+		] + Money::defaults();
 	}
 
 	public static function clean( $raw ): array {
@@ -64,7 +64,7 @@ class Settings {
 			'honeypot' => ! array_key_exists( 'honeypot', $raw ) || ! empty( $raw['honeypot'] ),
 			'min_seconds' => max( 0, min( 60, is_numeric( $raw['min_seconds'] ?? null ) ? (int) $raw['min_seconds'] : $d['min_seconds'] ) ),
 			'hourly_limit' => max( 0, min( 1000, is_numeric( $raw['hourly_limit'] ?? null ) ? (int) $raw['hourly_limit'] : $d['hourly_limit'] ) ),
-		];
+		] + Money::clean( $raw );
 	}
 
 	/** An http(s) address or an empty string. */

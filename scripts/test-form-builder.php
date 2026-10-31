@@ -9,6 +9,7 @@ require $root . '/modules/form-builder/classes/conditions.php';
 require $root . '/modules/form-builder/classes/style.php';
 require $root . '/modules/form-builder/classes/field-style.php';
 require $root . '/modules/form-builder/classes/settings.php';
+require $root . '/modules/form-builder/classes/money.php';
 require $root . '/modules/form-builder/classes/presets.php';
 
 use Refraction\Modules\FormBuilder\Classes\Schema as S;
@@ -446,6 +447,102 @@ t( 'groups per type: nothing else leaks (a divider has no focus or label groups)
 t( 'border completion works for the repeater parts', false !== strpos( FS::declarations( [ 'row_border_width' => 3 ] )['row'], 'border-style:solid;' ) && false !== strpos( FS::declarations( [ 'rep_border_style' => 'dashed' ] )['rep'], 'border-width:1px;' ) );
 t( 'toggle and plain choices write the properties they should', false !== strpos( FS::declarations( [ 'pa_accent' => '#ff00ff' ] )['plain_accent'], 'accent-color:#ff00ff;' ) && false !== strpos( FS::declarations( [ 'tg_on' => '#00ff00' ] )['toggle_on'], 'background-color:#00ff00;' ) );
 t( 'every int in the new properties has a range', ! array_filter( FS::spec(), static function ( $s ) { return 'int' === $s[2] && $s[3] >= $s[4]; } ) );
+
+// ---- 0.11.0: Accordion, Tabs, choice cards and the Amount format ----
+$MO = 'Refraction\Modules\FormBuilder\Classes\Money';
+$layout = S::definition( [ 'label' => 'Orders', 'fields' => [
+	[ 'label' => 'Top', 'type' => 'text', 'key' => 'top' ],
+	[ 'type' => 'accordion', 'label' => 'More', 'key' => 'more', 'multiple' => 1, 'children' => [
+		[ 'type' => 'panel', 'label' => 'Contact', 'key' => 'p1', 'open' => 1, 'children' => [
+			[ 'label' => 'Email', 'type' => 'email', 'key' => 'mail', 'required' => 1 ],
+			[ 'type' => 'group', 'label' => 'Address', 'key' => 'addr', 'children' => [ [ 'label' => 'Street', 'type' => 'text', 'key' => 'street' ] ] ],
+			[ 'type' => 'tabs', 'label' => 'Nested tabs', 'key' => 'nt' ],
+			[ 'type' => 'step', 'label' => 'Nope', 'key' => 'nope' ],
+		] ],
+		[ 'label' => 'Stray text', 'type' => 'text', 'key' => 'stray' ],
+		[ 'type' => 'panel', 'label' => 'Money', 'key' => 'p2', 'children' => [
+			[ 'label' => 'Price', 'type' => 'currency', 'key' => 'price', 'per' => 'month', 'min' => 5 ],
+		] ],
+	] ],
+	[ 'type' => 'tabs', 'label' => 'Tabs', 'key' => 'tb', 'tab_look' => 'pills', 'children' => [
+		[ 'type' => 'panel', 'label' => 'One', 'key' => 'tab1', 'children' => [ [ 'label' => 'Note', 'type' => 'text', 'key' => 'note', 'conditions' => [ 'enabled' => 1, 'action' => 'show', 'match' => 'all', 'rules' => [ [ 'field' => 'top', 'op' => 'equals', 'value' => 'go' ] ] ] ] ] ],
+	] ],
+	[ 'type' => 'choice_set', 'label' => 'Plan', 'key' => 'plan', 'required' => 1, 'default' => 'basic', 'children' => [
+		[ 'type' => 'group', 'label' => 'Basic', 'key' => 'basic', 'card_badge' => 'Monthly', 'card_price' => '20', 'per' => 'month', 'required' => 1, 'children' => [
+			[ 'label' => 'Visits', 'type' => 'text', 'key' => 'visits', 'required' => 1, 'default' => 'Unlimited' ],
+			[ 'label' => 'File', 'type' => 'file', 'key' => 'cardfile' ],
+			[ 'type' => 'group', 'label' => 'Deep', 'key' => 'deep' ],
+		] ],
+		[ 'type' => 'repeater', 'label' => 'Pro', 'key' => 'pro', 'card_note' => 'Price on request', 'children' => [ [ 'label' => 'Seat', 'type' => 'text', 'key' => 'seat' ] ] ],
+		[ 'label' => 'Loose text', 'type' => 'text', 'key' => 'loose' ],
+	] ],
+	[ 'type' => 'panel', 'label' => 'Top panel', 'key' => 'toppanel' ],
+] ] );
+$keys = array_column( S::walk( $layout['fields'] ), 'key' );
+t( 'layout: accordion, tabs and choice cards are palette types, a panel is not', isset( S::types()['accordion'], S::types()['tabs'], S::types()['choice_set'], S::types()['panel'] ) && ! isset( S::palette()['layout']['types']['panel'] ) );
+t( 'layout: transparent types never store a value', ! S::has_value( 'accordion' ) && ! S::has_value( 'tabs' ) && ! S::has_value( 'panel' ) && S::has_value( 'choice_set' ) && S::is_transparent( 'panel' ) && ! S::is_scalar_type( 'choice_set' ) );
+t( 'layout: a panel can only sit in a host and a host only holds panels', ! in_array( 'stray', $keys, true ) && ! in_array( 'toppanel', $keys, true ) && in_array( 'p1', $keys, true ) );
+t( 'layout: a group, a repeater or a choice set may live in a panel but no step or second host', in_array( 'addr', $keys, true ) && ! in_array( 'nt', $keys, true ) && ! in_array( 'nope', $keys, true ) );
+t( 'layout: value_fields reaches the fields inside Accordion and Tabs', [ 'top', 'mail', 'addr', 'price', 'note', 'plan' ] === array_column( S::value_fields( $layout ), 'key' ) );
+t( 'layout: the title field can be chosen from fields inside a panel', in_array( 'top', [ $layout['title_field'] ], true ) );
+t( 'layout: panel options are cleaned', $layout['fields'][1]['multiple'] && $layout['fields'][1]['children'][0]['open'] && ! $layout['fields'][1]['children'][1]['open'] && 'pills' === $layout['fields'][2]['tab_look'] && 'line' === S::definition( [ 'label' => 'x', 'fields' => [ [ 'type' => 'tabs', 'label' => 'T', 'tab_look' => 'zig' ] ] ] )['fields'][0]['tab_look'] );
+$v = S::validate( $layout, [ 'top' => 'go', 'mail' => 'a@b.co', 'addr' => [ 'street' => 'Main' ], 'price' => '1,250.5', 'note' => 'hi', 'plan' => 'basic' ] );
+t( 'layout: fields in panels validate and store at the scope level', [] === $v['errors'] && 'a@b.co' === $v['values']['mail'] && 'Main' === $v['values']['addr']['street'] && '1250.50' === $v['values']['price'] && 'hi' === $v['values']['note'] && ! isset( $v['values']['more'], $v['values']['p1'] ) );
+$v = S::validate( $layout, [ 'top' => 'go', 'plan' => 'basic' ] );
+t( 'layout: a required field inside a panel is still required', 'This field is required.' === ( $v['errors']['mail'] ?? '' ) );
+$v = S::validate( $layout, [ 'top' => 'x', 'mail' => 'a@b.co', 'note' => 'sneaky', 'plan' => 'basic' ] );
+t( 'layout: a condition on a field inside a panel works', ! isset( $v['values']['note'] ) );
+$hide = $layout;
+$hide['fields'][1]['children'][0]['conditions'] = [ 'enabled' => 1, 'action' => 'show', 'match' => 'all', 'rules' => [ [ 'field' => 'top', 'op' => 'equals', 'value' => 'open' ] ] ];
+$v = S::validate( $hide, [ 'top' => 'closed', 'plan' => 'basic', 'mail' => '', 'price' => '10' ] );
+t( 'layout: a hidden panel hides every field inside it (nothing required, nothing stored)', ! isset( $v['errors']['mail'] ) && ! isset( $v['values']['mail'] ) && ! isset( $v['values']['addr'] ) && '10.00' === $v['values']['price'] );
+t( 'layout: csv columns and search text include fields inside panels', in_array( 'Email', array_column( S::csv_columns( $layout ), 'label' ), true ) && false !== strpos( S::search_text( $layout, [ 'mail' => 'a@b.co' ] ), 'a@b.co' ) );
+
+// Choice cards.
+$set = $layout['fields'][3];
+t( 'cards: a set keeps only Group and Repeater children, cards keep value fields only', 'plan' === $set['key'] && [ 'basic', 'pro' ] === array_column( $set['children'], 'key' ) && [ 'visits' ] === array_column( $set['children'][0]['children'], 'key' ) );
+t( 'cards: the card options are cleaned on cards only', 'Monthly' === $set['children'][0]['card_badge'] && 20.0 === $set['children'][0]['card_price'] && 'month' === $set['children'][0]['per'] && 'Price on request' === $set['children'][1]['card_note'] && '' === $layout['fields'][0]['card_badge'] && null === $layout['fields'][0]['card_price'] );
+t( 'cards: fields inside a card can never be required', ! $set['children'][0]['children'][0]['required'] && ! $set['children'][0]['required'] );
+$v = S::validate( $layout, [ 'mail' => 'a@b.co', 'plan' => 'basic', 'visits' => 'hacked' ] );
+t( 'cards: the picked card is stored with its title and price taken from the form, not the post', [] === $v['errors'] && [ [ 'key' => 'basic', 'title' => 'Basic', 'price' => 20.0, 'per' => 'month' ] ] === $v['values']['plan'] && ! isset( $v['values']['visits'] ) );
+$v = S::validate( $layout, [ 'mail' => 'a@b.co', 'plan' => 'ghost' ] );
+t( 'cards: a card that does not exist can not be picked', 'Choose one of the listed options.' === ( $v['errors']['plan'] ?? '' ) );
+$v = S::validate( $layout, [ 'mail' => 'a@b.co' ] );
+t( 'cards: a required set needs a pick', 'This field is required.' === ( $v['errors']['plan'] ?? '' ) );
+$v = S::validate( $layout, [ 'mail' => 'a@b.co', 'plan' => [ 'basic', 'pro' ] ] );
+t( 'cards: one card only unless the set allows several', 1 === count( $v['values']['plan'] ) );
+$many = $layout;
+$many['fields'][3]['multiple'] = true;
+$v = S::validate( $many, [ 'mail' => 'a@b.co', 'plan' => [ 'pro', 'basic', 'basic', 'ghost' ] ] );
+t( 'cards: several cards when allowed, in form order, each once', [ 'basic', 'pro' ] === array_column( $v['values']['plan'], 'key' ) );
+$cond = $layout;
+$cond['fields'][3]['children'][1]['conditions'] = [ 'enabled' => 1, 'action' => 'show', 'match' => 'all', 'rules' => [ [ 'field' => 'top', 'op' => 'equals', 'value' => 'vip' ] ] ];
+$v = S::validate( $cond, [ 'mail' => 'a@b.co', 'top' => 'x', 'plan' => 'pro' ] );
+t( 'cards: a card hidden by its condition can not be picked', isset( $v['errors']['plan'] ) );
+t( 'cards: display shows the picked titles', 'Basic' === S::display( $set, [ [ 'key' => 'basic', 'title' => 'Basic', 'price' => 20.0, 'per' => 'month' ] ] ) );
+
+// Amount and the currency format.
+$cfg = $MO::config( [] );
+t( 'money: default format is $ before, comma thousands, point decimals', '$' === $cfg['currency_symbol'] && 'before' === $cfg['currency_position'] && ',' === $cfg['thousands_sep'] && '.' === $cfg['decimal_sep'] && 2 === $cfg['decimals'] );
+t( 'money: format writes thousands and decimals', '1,200.00' === $MO::format( 1200, $cfg ) && '350,329.45' === $MO::format( '350329.45', $cfg ) && '1,200' === $MO::format( 1200, $cfg, 0 ) );
+t( 'money: parse reads what is typed', '1200' === $MO::parse( '1,200', $cfg ) && '350329.45' === $MO::parse( '350,329.45', $cfg ) && '1250.5' === $MO::parse( '$1,250.5', $cfg ) && '12' === $MO::parse( ' 12 ', $cfg ) && null === $MO::parse( '12abc', $cfg ) && null === $MO::parse( '1.2.3', $cfg ) && null === $MO::parse( '', $cfg ) && null === $MO::parse( '--5', $cfg ) );
+$eu = $MO::config( [ 'currency_symbol' => '€', 'currency_position' => 'after', 'thousands_sep' => '.', 'decimal_sep' => ',', 'decimals' => 2 ] );
+t( 'money: European format both ways', '1.234,50' === $MO::format( 1234.5, $eu ) && '1234.50' === $MO::parse( '1.234,50', $eu ) && '1234.5' === $MO::parse( '1234,5', $eu ) && '1.234,50 €' === $MO::display( 1234.5, $eu ) );
+t( 'money: display adds the symbol and the period', '$20.00 / month' === $MO::display( 20, $cfg, 'month' ) && '$20.00 / seat' === $MO::display( 20, $cfg, 'custom', 'seat' ) && '$20.00' === $MO::display( 20, $cfg, 'custom', '' ) );
+$bad = $MO::config( [ 'thousands_sep' => '.', 'decimal_sep' => '.', 'decimals' => 99, 'currency_position' => 'up' ] );
+t( 'money: separators can not clash, decimals and position are clamped', $bad['thousands_sep'] !== $bad['decimal_sep'] && 4 === $bad['decimals'] && 'before' === $bad['currency_position'] );
+t( 'money: the settings carry the format and clean it', '€' === S::definition( [ 'label' => 'x', 'settings' => [ 'currency_symbol' => '€', 'thousands_sep' => ' ' ] ] )['settings']['currency_symbol'] && ' ' === S::definition( [ 'label' => 'x', 'settings' => [ 'thousands_sep' => ' ' ] ] )['settings']['thousands_sep'] && '$' === S::definition( [ 'label' => 'x' ] )['settings']['currency_symbol'] );
+$priced = S::definition( [ 'label' => 'x', 'settings' => [ 'thousands_sep' => '.', 'decimal_sep' => ',' ], 'fields' => [ [ 'label' => 'Fee', 'type' => 'currency', 'key' => 'fee', 'min' => 10, 'per' => 'week' ], [ 'label' => 'Name', 'type' => 'text', 'key' => 'nm', 'per' => 'week' ] ] ] );
+$v = S::validate( $priced, [ 'fee' => '1.250,5' ] );
+t( 'amount: validation understands the collection\'s separators and stores a plain decimal', '1250.50' === $v['values']['fee'] && [] === $v['errors'] );
+$v = S::validate( $priced, [ 'fee' => '5' ] );
+t( 'amount: the lowest allowed value still applies', isset( $v['errors']['fee'] ) );
+$v = S::validate( $priced, [ 'fee' => 'abc' ] );
+t( 'amount: letters are rejected', 'Enter a number.' === ( $v['errors']['fee'] ?? '' ) );
+t( 'amount: the period is kept on Amount only, from a fixed list', 'week' === $priced['fields'][0]['per'] && '' === $priced['fields'][1]['per'] && '' === S::clean_field( [ 'label' => 'F', 'type' => 'currency', 'per' => 'decade' ] )['per'] );
+S::validate( S::definition( [ 'label' => 'x' ] ), [] );
+$v = S::validate( S::definition( [ 'label' => 'x', 'fields' => [ [ 'label' => 'P', 'type' => 'currency', 'key' => 'p' ] ] ] ), [ 'p' => '1,234.5' ] );
+t( 'amount: the default format still reads 1,234.5 (older forms)', '1234.50' === $v['values']['p'] );
 
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

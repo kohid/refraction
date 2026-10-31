@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.10.0
+Stable tag: 0.11.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.11.0 =
+* New: Accordion and Tabs fields. Add panels (or tabs), then drag any field into a panel, including groups, repeaters and choice cards. A panel only arranges its fields: their answers are saved exactly as if they sat at the top of the form. Panels can have visibility rules (a hidden panel hides and skips every field inside it), an accordion can keep one or several panels open, tabs come as underline or pills and work with the arrow keys, and a closed panel or inactive tab opens by itself when it holds the field that needs attention.
+* New: Choice cards. A Choice cards field holds Group or Repeater cards. Each card has a title, badge, short text, price with a period and a "What's included" details area; visitors pick one card (or several if you allow it). The fields inside a card are shown but locked: they can not be edited, and the server ignores them. The record stores the picked card with its title and price taken from the form, never from the post.
+* New: Amount fields type like money. 1200 becomes 1,200 and 350329.45 becomes 350,329.45 as you type, with the currency symbol and an optional period (per hour, day, week, month, quarter, year, or your own text) beside the box. The General tab has a Currency card: symbol, position, thousands and decimal separators and decimal places, used by every Amount field, the records table, the public list and the cards. Saved values stay plain numbers, so sorting and exports keep working.
 
 = 0.10.0 =
 * New: field styles are shared by field type. Style one Repeater and every Repeater follows; the same for every other type. Choose "Only this field" in a field's Style tab to give one field its own look, which wins over the shared one. There is a reset for the shared style of a type.

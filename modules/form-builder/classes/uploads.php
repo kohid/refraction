@@ -76,7 +76,7 @@ class Uploads {
 	public static function fields( array $definition ): array {
 		$found = [];
 
-		foreach ( $definition['fields'] as $field ) {
+		foreach ( Schema::flat( $definition['fields'] ) as $field ) {
 			if ( in_array( $field['type'], [ 'file', 'signature' ], true ) ) {
 				$found[ $field['key'] ] = $field;
 			} elseif ( 'group' === $field['type'] ) {

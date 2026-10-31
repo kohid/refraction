@@ -333,6 +333,48 @@
 		}
 	}
 
+	// Accordion, Tabs and choice sets on the canvas: every panel is drawn so fields can be dropped into any of them.
+	.rfb-cv-host,
+	.rfb-cv-cards {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.rfb-cv-panel {
+		padding: 8px 10px 10px;
+		border: 1px dashed var(--rfb-line);
+		border-radius: var(--rfb-radius);
+		background: color-mix(in srgb, var(--rfb-form-bg) 70%, transparent);
+
+		&.is-selected {
+			border-style: solid;
+			border-color: var(--rfb-primary);
+		}
+
+		&.is-conditional .rfb-cv-panel-head strong::after {
+			content: " · conditional";
+			color: var(--rfb-muted);
+			font-weight: 500;
+		}
+	}
+
+	.rfb-cv-panel-head {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin-bottom: 8px;
+
+		strong {
+			flex: 1 1 auto;
+			font-size: 12px;
+		}
+	}
+
+	.rfb-cv-addpanel {
+		align-self: flex-start;
+	}
+
 	.rfb-cv-list {
 		position: relative;
 	}

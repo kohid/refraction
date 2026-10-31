@@ -118,18 +118,21 @@ class Shortcodes {
 		}
 
 		$steps = Schema::steps( $definition );
-		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'] ];
+		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'], 'money' => $settings ];
 		$i18n = [
 			'required' => __( 'This field is required.', 'refraction' ),
 			'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ),
 			'badType' => __( '%s is not an allowed file type.', 'refraction' ),
 			'tooMany' => __( 'You can choose at most %d files.', 'refraction' ),
+			'number' => __( 'Enter a number.', 'refraction' ),
+			'lowest' => __( 'The lowest allowed value is %s.', 'refraction' ),
+			'highest' => __( 'The highest allowed value is %s.', 'refraction' ),
 			'step' => __( 'Step %1$d of %2$d', 'refraction' ),
 			'progress' => __( 'Form progress', 'refraction' ),
 		];
 
 		ob_start();
-		echo '<form class="rfb-form" method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-progress="' . esc_attr( $settings['progress'] ) . '" data-rfb-next="' . esc_attr( $settings['next_text'] ) . '" data-rfb-back="' . esc_attr( $settings['back_text'] ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( $i18n ) ) . '">';
+		echo '<form class="rfb-form" method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-progress="' . esc_attr( $settings['progress'] ) . '" data-rfb-next="' . esc_attr( $settings['next_text'] ) . '" data-rfb-back="' . esc_attr( $settings['back_text'] ) . '" data-rfb-money="' . esc_attr( (string) wp_json_encode( Money::js( Money::config( $settings ) ) ) ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( $i18n ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SUBMIT ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="rfb_t" value="' . esc_attr( $this->time_token() ) . '">';
 
 		if ( $settings['honeypot'] ) {
@@ -451,7 +454,7 @@ class Shortcodes {
 				$out .= '<tr>';
 
 				foreach ( $fields as $field ) {
-					$out .= '<td data-label="' . esc_attr( $field['label'] ) . '">' . Field_Renderer::cell( $field, $record['values'][ $field['key'] ] ?? '' ) . '</td>';
+					$out .= '<td data-label="' . esc_attr( $field['label'] ) . '">' . Field_Renderer::cell( $field, $record['values'][ $field['key'] ] ?? '', $definition['settings'] ) . '</td>';
 				}
 
 				$out .= '</tr>';
@@ -473,7 +476,7 @@ class Shortcodes {
 						continue;
 					}
 
-					$cell = Field_Renderer::cell( $field, $record['values'][ $field['key'] ] ?? '' );
+					$cell = Field_Renderer::cell( $field, $record['values'][ $field['key'] ] ?? '', $definition['settings'] );
 					$out .= '<div class="rfb-public-row"><span class="rfb-public-label">' . esc_html( $field['label'] ) . '</span><span>' . $cell . '</span></div>';
 				}
 

@@ -30,6 +30,9 @@ class Schema {
 			$types += $group['types'];
 		}
 
+		// A panel only exists inside an Accordion or Tabs; it is not offered in the palette.
+		$types['panel'] = self::t( 'Panel' );
+
 		return $types;
 	}
 
@@ -42,6 +45,8 @@ class Schema {
 					'step' => self::t( 'Step' ),
 					'group' => self::t( 'Group' ),
 					'repeater' => self::t( 'Repeater' ),
+					'accordion' => self::t( 'Accordion' ),
+					'tabs' => self::t( 'Tabs' ),
 					'divider' => self::t( 'Divider' ),
 				],
 			],
@@ -77,6 +82,7 @@ class Schema {
 					'select' => self::t( 'Dropdown' ),
 					'radio' => self::t( 'Choice (one)' ),
 					'checkbox' => self::t( 'Choices (many)' ),
+					'choice_set' => self::t( 'Choice cards' ),
 					'toggle' => self::t( 'Yes / No' ),
 					'rating' => self::t( 'Rating' ),
 				],
@@ -95,7 +101,7 @@ class Schema {
 	/** Material icon (assets/icons/material) of every type, for the palette tiles. */
 	public static function icons(): array {
 		return [
-			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'divider' => 'horizontal-rule',
+			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'accordion' => 'table-rows', 'tabs' => 'tablet', 'choice_set' => 'layers', 'panel' => 'table-rows', 'divider' => 'horizontal-rule',
 			'heading' => 'title', 'paragraph' => 'subject', 'image' => 'image', 'html' => 'code',
 			'text' => 'text-fields', 'textarea' => 'notes', 'name' => 'badge', 'number' => 'pin', 'currency' => 'payments', 'email' => 'mail',
 			'phone' => 'call', 'url' => 'link', 'country' => 'public', 'date' => 'calendar-month', 'time' => 'schedule', 'datetime' => 'event',
@@ -113,18 +119,66 @@ class Schema {
 		return 'step' === $type;
 	}
 
+	/** Groups and repeaters: containers whose children are stored inside the container's own value. */
 	public static function is_container( string $type ): bool {
 		return in_array( $type, [ 'group', 'repeater' ], true );
 	}
 
+	/** Accordion and Tabs: they hold panels and have no value of their own. */
+	public static function is_host( string $type ): bool {
+		return in_array( $type, [ 'accordion', 'tabs' ], true );
+	}
+
+	/** Accordion, Tabs and their panels: layout only, the fields inside store their values as if the layout was not there. */
+	public static function is_transparent( string $type ): bool {
+		return self::is_host( $type ) || 'panel' === $type;
+	}
+
+	/** A set of choice cards: its children are Group or Repeater cards and its value is the picked card(s). */
+	public static function is_choice_set( string $type ): bool {
+		return 'choice_set' === $type;
+	}
+
+	/** True for every type that can have children. */
+	public static function has_children( string $type ): bool {
+		return self::is_container( $type ) || self::is_transparent( $type ) || self::is_choice_set( $type );
+	}
+
 	/** True for every type that has a stored value (containers hold their children's values). */
 	public static function has_value( string $type ): bool {
-		return ! self::is_layout( $type ) && ! self::is_step( $type );
+		return ! self::is_layout( $type ) && ! self::is_step( $type ) && ! self::is_transparent( $type );
+	}
+
+	/**
+	 * May a field of this type sit inside a parent? $parent is '' (top level), a container type, or "card" for a
+	 * Group or Repeater that is a choice card. Steps, hosts and panels never nest deeper than one panel level.
+	 */
+	public static function allowed_in( string $type, string $parent ): bool {
+		$structural = self::is_step( $type ) || self::is_host( $type ) || 'panel' === $type;
+		$nested = self::is_container( $type ) || self::is_choice_set( $type );
+
+		switch ( $parent ) {
+			case '':
+				return 'panel' !== $type;
+			case 'accordion':
+			case 'tabs':
+				return 'panel' === $type;
+			case 'panel':
+				return ! $structural;
+			case 'choice_set':
+				return self::is_container( $type );
+			case 'repeater':
+				return ! $structural && ! $nested && ! in_array( $type, [ 'file' ], true );
+			case 'card':
+				return ! $structural && ! $nested && ! in_array( $type, [ 'file', 'signature' ], true );
+			default:
+				return ! $structural && ! $nested;
+		}
 	}
 
 	/** True for a value that fits in a table cell and can be sorted or filtered. */
 	public static function is_scalar_type( string $type ): bool {
-		return self::has_value( $type ) && ! self::is_container( $type ) && ! in_array( $type, [ 'file', 'checkbox', 'name', 'signature' ], true );
+		return self::has_value( $type ) && ! self::is_container( $type ) && ! self::is_choice_set( $type ) && ! in_array( $type, [ 'file', 'checkbox', 'name', 'signature' ], true );
 	}
 
 	public static function has_options( string $type ): bool {
@@ -255,20 +309,20 @@ class Schema {
 	}
 
 	/** Cleans one field. Containers clean their children; use clean_tree() for a whole list. */
-	public static function clean_field( $raw, int $depth = 0, string $parent = '' ): ?array {
+	public static function clean_field( $raw, string $parent = '' ): ?array {
 		if ( ! is_array( $raw ) ) {
 			return null;
 		}
 
 		$type = isset( $raw['type'] ) && isset( self::types()[ $raw['type'] ] ) ? $raw['type'] : 'text';
 
-		// Containers and steps only exist at the top level; a repeater can not hold uploads.
-		if ( $depth > 0 && ( self::is_container( $type ) || self::is_step( $type ) || ( 'repeater' === $parent && 'file' === $type ) ) ) {
+		if ( ! self::allowed_in( $type, $parent ) ) {
 			return null;
 		}
 
 		$label = self::text( $raw['label'] ?? '', 80 );
 		$has_value = self::has_value( $type );
+		$is_card = 'choice_set' === $parent && self::is_container( $type );
 
 		if ( '' === $label && $has_value ) {
 			return null;
@@ -295,7 +349,7 @@ class Schema {
 			'key' => $key,
 			'label' => '' !== $label ? $label : ( self::types()[ $type ] ?? '' ),
 			'type' => $type,
-			'required' => $has_value && ! self::is_container( $type ) && 'hidden' !== $type && ! empty( $raw['required'] ),
+			'required' => $has_value && ! self::is_container( $type ) && 'hidden' !== $type && 'card' !== $parent && ! empty( $raw['required'] ),
 			'options' => self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [],
 			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ) ?: ( 'signature' === $type ? self::t( 'Sign here' ) : '' ),
 			'help' => self::text( $raw['help'] ?? '', 200 ),
@@ -330,6 +384,17 @@ class Schema {
 			'image_link' => Settings::url( $raw['image_link'] ?? '' ),
 			'sig_height' => max( 100, min( 400, (int) ( $raw['sig_height'] ?? 180 ) ) ),
 			'style' => Field_Style::clean( $raw['style'] ?? [] ),
+			'multiple' => ( self::is_choice_set( $type ) || 'accordion' === $type ) && ! empty( $raw['multiple'] ),
+			'open' => 'panel' === $type && ! empty( $raw['open'] ),
+			'tab_look' => in_array( $raw['tab_look'] ?? '', [ 'line', 'pills' ], true ) ? $raw['tab_look'] : 'line',
+			'per' => in_array( $type, [ 'currency', 'group', 'repeater' ], true ) && isset( Money::periods()[ $raw['per'] ?? '' ] ) ? (string) ( $raw['per'] ?? '' ) : '',
+			'per_label' => self::text( $raw['per_label'] ?? '', 20 ),
+			'card_badge' => $is_card ? self::text( $raw['card_badge'] ?? '', 30 ) : '',
+			'card_subtitle' => $is_card ? self::text( $raw['card_subtitle'] ?? '', 160 ) : '',
+			'card_price' => $is_card ? self::number_or_null( $raw['card_price'] ?? null ) : null,
+			'card_note' => $is_card ? self::text( $raw['card_note'] ?? '', 60 ) : '',
+			'card_details' => $is_card ? ( self::text( $raw['card_details'] ?? '', 40 ) ?: self::t( "What's included" ) ) : '',
+			'card_details_open' => $is_card && ! empty( $raw['card_details_open'] ),
 		];
 	}
 
@@ -344,7 +409,7 @@ class Schema {
 	 * @param array  $used   Keys already taken anywhere in the form (by reference).
 	 * @param int    $budget Fields left before the form-wide cap (by reference).
 	 */
-	public static function clean_tree( $raw, array &$used, int &$budget, int $depth = 0, string $parent = '' ): array {
+	public static function clean_tree( $raw, array &$used, int &$budget, string $parent = '' ): array {
 		$fields = [];
 
 		foreach ( (array) $raw as $item ) {
@@ -352,7 +417,7 @@ class Schema {
 				break;
 			}
 
-			$field = self::clean_field( $item, $depth, $parent );
+			$field = self::clean_field( $item, $parent );
 
 			if ( ! $field ) {
 				continue;
@@ -377,8 +442,9 @@ class Schema {
 			$used[ $field['key'] ] = true;
 			$budget--;
 
-			if ( self::is_container( $field['type'] ) ) {
-				$field['children'] = self::clean_tree( $item['children'] ?? [], $used, $budget, $depth + 1, $field['type'] );
+			if ( self::has_children( $field['type'] ) ) {
+				$as = self::is_container( $field['type'] ) && 'choice_set' === $parent ? 'card' : $field['type'];
+				$field['children'] = self::clean_tree( $item['children'] ?? [], $used, $budget, $as );
 			}
 
 			$fields[] = $field;
@@ -402,11 +468,37 @@ class Schema {
 		return $all;
 	}
 
-	/** Top-level fields that store a value (including groups and repeaters). */
+	/** The fields as they store values: Accordion, Tabs and panels are replaced by the fields inside them. */
+	public static function flat( array $fields ): array {
+		$out = [];
+
+		foreach ( $fields as $field ) {
+			if ( self::is_transparent( $field['type'] ) ) {
+				$out = array_merge( $out, self::flat( $field['children'] ) );
+			} else {
+				$out[] = $field;
+			}
+		}
+
+		return $out;
+	}
+
+	/** Top-level fields that store a value (including groups and repeaters), also those inside an Accordion or Tabs. */
 	public static function value_fields( array $definition ): array {
-		return array_values( array_filter( $definition['fields'], static function ( $field ) {
+		return array_values( array_filter( self::flat( $definition['fields'] ), static function ( $field ) {
 			return self::has_value( $field['type'] );
 		} ) );
+	}
+
+	/** The cards of a choice set that are picked by default. */
+	public static function card( array $set, string $key ): ?array {
+		foreach ( $set['children'] as $card ) {
+			if ( $card['key'] === $key ) {
+				return $card;
+			}
+		}
+
+		return null;
 	}
 
 	/** The form split into steps: a list of field lists. One step when the form has no Step field. */
@@ -476,7 +568,7 @@ class Schema {
 
 		$status_keys = array_column( $statuses, 'key' );
 		$default_status = in_array( $raw['default_status'] ?? '', $status_keys, true ) ? $raw['default_status'] : $status_keys[0];
-		$titles = array_values( array_filter( $fields, static function ( $field ) {
+		$titles = array_values( array_filter( self::flat( $fields ), static function ( $field ) {
 			return ( self::is_scalar_type( $field['type'] ) || 'name' === $field['type'] ) && 'hidden' !== $field['type'];
 		} ) );
 		$title_keys = array_column( $titles, 'key' );
@@ -541,6 +633,7 @@ class Schema {
 	 * @return array{values:array,errors:array<string,string>} Errors are keyed by field path ("key", "group.child", "rows.0.child").
 	 */
 	public static function validate( array $definition, array $input, array $only = [], array $files = [] ): array {
+		self::$money = Money::config( $definition['settings'] ?? [] );
 		$values = [];
 		$errors = [];
 		$hidden = [];
@@ -561,9 +654,29 @@ class Schema {
 		return is_array( $value ) ? array_values( array_map( 'strval', array_filter( $value, 'is_scalar' ) ) ) : ( is_scalar( $value ) ? (string) $value : '' );
 	}
 
+	/** The money format of the form being validated, so amounts typed with its separators are understood. */
+	private static $money = null;
+
 	private static function validate_scope( array $fields, array $scope, array $root, string $path, array $only, array $files, array &$values, array &$errors, array &$hidden ): void {
 		foreach ( $fields as $field ) {
 			$key = $field['key'];
+
+			// Accordion, Tabs and panels only arrange fields: the fields inside are read as if they sat in this scope.
+			if ( self::is_transparent( $field['type'] ) ) {
+				$see = static function ( string $name ) use ( $scope, $root, &$hidden ) {
+					return self::seen( $scope, $root, $hidden, $name );
+				};
+
+				if ( Conditions::is_visible( $field['conditions'], $see ) ) {
+					self::validate_scope( $field['children'], $scope, $root, $path, $only, $files, $values, $errors, $hidden );
+				} else {
+					foreach ( self::walk( $field['children'] ) as $inner ) {
+						$hidden[ $inner['key'] ] = true;
+					}
+				}
+
+				continue;
+			}
 
 			if ( ! self::has_value( $field['type'] ) || ( '' === $path && $only && ! in_array( $key, $only, true ) ) ) {
 				continue;
@@ -580,6 +693,17 @@ class Schema {
 
 			$here = '' === $path ? $key : $path . '.' . $key;
 			$raw = $scope[ $key ] ?? null;
+
+			if ( 'choice_set' === $field['type'] ) {
+				$result = self::validate_cards( $field, $raw, $scope, $root, $hidden );
+				$values[ $key ] = $result['value'];
+
+				if ( null !== $result['error'] ) {
+					$errors[ $here ] = $result['error'];
+				}
+
+				continue;
+			}
 
 			if ( 'group' === $field['type'] ) {
 				$child_values = [];
@@ -632,6 +756,39 @@ class Schema {
 
 			$values[ $key ] = $result['value'];
 		}
+	}
+
+	/**
+	 * The picked cards of a choice set. Only cards that exist (and are visible) can be picked, and what is stored comes
+	 * from the definition (title, price), never from the post, so a visitor can not change a price.
+	 *
+	 * @return array{value:array<int,array<string,mixed>>,error:?string}
+	 */
+	private static function validate_cards( array $set, $raw, array $scope, array $root, array $hidden ): array {
+		$posted = array_values( array_unique( array_map( 'strval', array_filter( (array) $raw, 'is_scalar' ) ) ) );
+		$picked = [];
+
+		foreach ( $set['children'] as $card ) {
+			$see = static function ( string $name ) use ( $scope, $root, &$hidden ) {
+				return self::seen( $scope, $root, $hidden, $name );
+			};
+
+			if ( ! in_array( $card['key'], $posted, true ) || ! Conditions::is_visible( $card['conditions'], $see ) ) {
+				continue;
+			}
+
+			$picked[] = [ 'key' => $card['key'], 'title' => $card['label'], 'price' => $card['card_price'], 'per' => $card['per'] ];
+
+			if ( ! $set['multiple'] ) {
+				break;
+			}
+		}
+
+		if ( $posted && ! $picked ) {
+			return [ 'value' => [], 'error' => self::t( 'Choose one of the listed options.' ) ];
+		}
+
+		return [ 'value' => $picked, 'error' => ! $picked && $set['required'] ? self::t( 'This field is required.' ) : null ];
 	}
 
 	/** @return array{value:array<string,string>,error:?string} */
@@ -725,9 +882,9 @@ class Schema {
 			case 'number':
 			case 'currency':
 			case 'rating':
-				$normalised = str_replace( ',', '', $value );
+				$normalised = 'currency' === $type ? Money::parse( $value, self::$money ?? Money::config( [] ) ) : str_replace( ',', '', $value );
 
-				if ( ! is_numeric( $normalised ) ) {
+				if ( null === $normalised || ! is_numeric( $normalised ) ) {
 					return $out( $value, false, self::t( 'Enter a number.' ) );
 				}
 
@@ -846,6 +1003,12 @@ class Schema {
 			return implode( ', ', array_filter( array_map( static function ( $file ) {
 				return is_array( $file ) ? (string) ( $file['name'] ?? '' ) : '';
 			}, (array) $value ) ) );
+		}
+
+		if ( 'choice_set' === $field['type'] ) {
+			return implode( ', ', array_filter( array_map( static function ( $pick ) {
+				return is_array( $pick ) ? (string) ( $pick['title'] ?? '' ) : (string) $pick;
+			}, is_array( $value ) ? $value : [] ) ) );
 		}
 
 		if ( 'group' === $field['type'] ) {
