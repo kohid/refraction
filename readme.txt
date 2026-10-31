@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.7.0
+Stable tag: 0.7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.7.1 =
+* Tweak: in the Builder designer, the Style, Advanced and General tabs now sit in the right-hand settings panel next to the field settings, and the form stays visible while you change them.
+* Tweak: the field list (left) and the settings panel (right) can each be folded away to give the form more room; the choice is remembered in the browser.
 
 = 0.7.0 =
 * New: drag and drop form designer in Builder. Drag fields from the list onto the form, reorder them, drop them into groups and repeaters, or use the buttons on each field; a settings panel changes the selected field.
