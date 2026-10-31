@@ -80,7 +80,7 @@ class Uploads {
 			if ( in_array( $field['type'], [ 'file', 'signature' ], true ) ) {
 				$found[ $field['key'] ] = $field;
 			} elseif ( 'group' === $field['type'] ) {
-				foreach ( $field['children'] as $child ) {
+				foreach ( Schema::flat( $field['children'] ) as $child ) {
 					if ( in_array( $child['type'], [ 'file', 'signature' ], true ) ) {
 						$found[ $field['key'] . '.' . $child['key'] ] = $child;
 					}

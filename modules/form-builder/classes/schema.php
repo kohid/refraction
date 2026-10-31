@@ -20,7 +20,13 @@ class Schema {
 	const MAX_OPTIONS = 100;
 	const MAX_STATUSES = 12;
 	const COLORS = [ 'primary', 'success', 'danger', 'warning', 'info', 'dark', 'secondary' ];
-	const WIDTHS = [ 'full', 'half', 'third' ];
+	/** Field and column widths: key => share of the row in percent. */
+	const WIDTH_PERCENT = [
+		'full' => 100, 'w90' => 90, 'w80' => 80, 'w75' => 75, 'w70' => 70, 'w66' => 66.667, 'w60' => 60, 'half' => 50,
+		'w40' => 40, 'third' => 33.333, 'w30' => 30, 'w25' => 25, 'w20' => 20, 'w10' => 10,
+	];
+	const WIDTHS = [ 'full', 'w90', 'w80', 'w75', 'w70', 'w66', 'w60', 'half', 'w40', 'third', 'w30', 'w25', 'w20', 'w10' ];
+	const MAX_ICON_ITEMS = 30;
 
 	/** @return array<string,string> field type => label */
 	public static function types(): array {
@@ -45,6 +51,7 @@ class Schema {
 					'step' => self::t( 'Step' ),
 					'group' => self::t( 'Group' ),
 					'repeater' => self::t( 'Repeater' ),
+					'columns' => self::t( 'Columns' ),
 					'accordion' => self::t( 'Accordion' ),
 					'tabs' => self::t( 'Tabs' ),
 					'divider' => self::t( 'Divider' ),
@@ -56,6 +63,7 @@ class Schema {
 					'heading' => self::t( 'Heading' ),
 					'paragraph' => self::t( 'Paragraph' ),
 					'image' => self::t( 'Image' ),
+					'icon_list' => self::t( 'Icon List' ),
 					'html' => self::t( 'Custom HTML' ),
 				],
 			],
@@ -98,10 +106,34 @@ class Schema {
 		];
 	}
 
+	/** Share of a row (percent) a width key takes. */
+	public static function width_percent( string $width ): float {
+		return (float) ( self::WIDTH_PERCENT[ $width ] ?? 100 );
+	}
+
+	/** Widths for the designer's select: key => label. */
+	public static function width_choices(): array {
+		return [
+			'full' => self::t( 'Full width' ), 'w90' => '90%', 'w80' => '80%', 'w75' => '3/4 (75%)', 'w70' => '70%', 'w66' => '2/3 (66%)', 'w60' => '60%',
+			'half' => '1/2 (50%)', 'w40' => '40%', 'third' => '1/3 (33%)', 'w30' => '30%', 'w25' => '1/4 (25%)', 'w20' => '1/5 (20%)', 'w10' => '10%',
+		];
+	}
+
+	/** Icons offered for the Icon List (only those bundled with the plugin are shown). */
+	public static function list_icons(): array {
+		return [
+			'check', 'check-circle', 'done-all', 'star', 'favorite', 'verified', 'thumb-up', 'thumb-down', 'bolt', 'arrow-forward', 'circle',
+			'radio-button-unchecked', 'remove', 'add', 'close', 'cancel', 'block', 'info', 'warning', 'error', 'lock', 'shield', 'key', 'person',
+			'group', 'home', 'mail', 'call', 'location-on', 'schedule', 'event', 'language', 'link', 'local-offer', 'sell', 'redeem',
+			'workspace-premium', 'diamond', 'rocket-launch', 'pets', 'spa', 'content-cut', 'pill', 'support-agent', 'local-shipping',
+			'credit-card', 'shopping-bag', 'payments', 'palette', 'settings',
+		];
+	}
+
 	/** Material icon (assets/icons/material) of every type, for the palette tiles. */
 	public static function icons(): array {
 		return [
-			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'accordion' => 'table-rows', 'tabs' => 'tablet', 'choice_set' => 'layers', 'panel' => 'table-rows', 'divider' => 'horizontal-rule',
+			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'accordion' => 'table-rows', 'tabs' => 'tablet', 'columns' => 'view-column', 'icon_list' => 'checklist', 'choice_set' => 'layers', 'panel' => 'table-rows', 'divider' => 'horizontal-rule',
 			'heading' => 'title', 'paragraph' => 'subject', 'image' => 'image', 'html' => 'code',
 			'text' => 'text-fields', 'textarea' => 'notes', 'name' => 'badge', 'number' => 'pin', 'currency' => 'payments', 'email' => 'mail',
 			'phone' => 'call', 'url' => 'link', 'country' => 'public', 'date' => 'calendar-month', 'time' => 'schedule', 'datetime' => 'event',
@@ -112,7 +144,7 @@ class Schema {
 
 	/** Types that only decorate the form and never hold a value. */
 	public static function is_layout( string $type ): bool {
-		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider', 'image' ], true );
+		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list' ], true );
 	}
 
 	public static function is_step( string $type ): bool {
@@ -126,10 +158,10 @@ class Schema {
 
 	/** Accordion and Tabs: they hold panels and have no value of their own. */
 	public static function is_host( string $type ): bool {
-		return in_array( $type, [ 'accordion', 'tabs' ], true );
+		return in_array( $type, [ 'accordion', 'tabs', 'columns' ], true );
 	}
 
-	/** Accordion, Tabs and their panels: layout only, the fields inside store their values as if the layout was not there. */
+	/** Accordion, Tabs, Columns and their panels (a column is a panel): layout only, the fields inside store their values as if the layout was not there. */
 	public static function is_transparent( string $type ): bool {
 		return self::is_host( $type ) || 'panel' === $type;
 	}
@@ -150,30 +182,51 @@ class Schema {
 	}
 
 	/**
-	 * May a field of this type sit inside a parent? $parent is '' (top level), a container type, or "card" for a
-	 * Group or Repeater that is a choice card. Steps, hosts and panels never nest deeper than one panel level.
+	 * May a field of this type sit inside a parent?
+	 *
+	 * @param string $type   The field's type.
+	 * @param string $parent '' (top level), a host type, "panel" (a panel of an Accordion or Tabs), "colpanel" (a column), a container
+	 *                       type, "card" (a Group or Repeater that is a choice card) or "choice_set".
+	 * @param string $root   The nearest value container around: '' (none), "group", "repeater" or "card". Groups, repeaters, choice
+	 *                       sets, steps, accordions and tabs never nest inside a value container; uploads are refused in repeaters and
+	 *                       cards, signatures in cards.
 	 */
-	public static function allowed_in( string $type, string $parent ): bool {
-		$structural = self::is_step( $type ) || self::is_host( $type ) || 'panel' === $type;
-		$nested = self::is_container( $type ) || self::is_choice_set( $type );
-
-		switch ( $parent ) {
-			case '':
-				return 'panel' !== $type;
-			case 'accordion':
-			case 'tabs':
-				return 'panel' === $type;
-			case 'panel':
-				return ! $structural;
-			case 'choice_set':
-				return self::is_container( $type );
-			case 'repeater':
-				return ! $structural && ! $nested && ! in_array( $type, [ 'file' ], true );
-			case 'card':
-				return ! $structural && ! $nested && ! in_array( $type, [ 'file', 'signature' ], true );
-			default:
-				return ! $structural && ! $nested;
+	public static function allowed_in( string $type, string $parent, string $root = '' ): bool {
+		if ( '' === $parent ) {
+			return 'panel' !== $type;
 		}
+
+		if ( self::is_host( $parent ) ) {
+			return 'panel' === $type;
+		}
+
+		if ( 'choice_set' === $parent ) {
+			return self::is_container( $type );
+		}
+
+		if ( self::is_step( $type ) || 'panel' === $type ) {
+			return false;
+		}
+
+		$inside_host = in_array( $parent, [ 'panel', 'colpanel' ], true );
+
+		if ( in_array( $type, [ 'accordion', 'tabs' ], true ) ) {
+			return '' === $root && ! $inside_host;
+		}
+
+		if ( 'columns' === $type ) {
+			return true;
+		}
+
+		if ( self::is_container( $type ) || self::is_choice_set( $type ) ) {
+			return '' === $root;
+		}
+
+		if ( 'file' === $type ) {
+			return ! in_array( $root, [ 'repeater', 'card' ], true );
+		}
+
+		return ! ( 'signature' === $type && 'card' === $root );
 	}
 
 	/** True for a value that fits in a table cell and can be sorted or filtered. */
@@ -309,20 +362,21 @@ class Schema {
 	}
 
 	/** Cleans one field. Containers clean their children; use clean_tree() for a whole list. */
-	public static function clean_field( $raw, string $parent = '' ): ?array {
+	public static function clean_field( $raw, string $parent = '', string $root = '' ): ?array {
 		if ( ! is_array( $raw ) ) {
 			return null;
 		}
 
 		$type = isset( $raw['type'] ) && isset( self::types()[ $raw['type'] ] ) ? $raw['type'] : 'text';
 
-		if ( ! self::allowed_in( $type, $parent ) ) {
+		if ( ! self::allowed_in( $type, $parent, $root ) ) {
 			return null;
 		}
 
 		$label = self::text( $raw['label'] ?? '', 80 );
 		$has_value = self::has_value( $type );
 		$is_card = 'choice_set' === $parent && self::is_container( $type );
+		$col_widths = array_merge( [ 'auto' ], self::WIDTHS );
 
 		if ( '' === $label && $has_value ) {
 			return null;
@@ -349,7 +403,7 @@ class Schema {
 			'key' => $key,
 			'label' => '' !== $label ? $label : ( self::types()[ $type ] ?? '' ),
 			'type' => $type,
-			'required' => $has_value && ! self::is_container( $type ) && 'hidden' !== $type && 'card' !== $parent && ! empty( $raw['required'] ),
+			'required' => $has_value && ! self::is_container( $type ) && 'hidden' !== $type && 'card' !== $root && ! $is_card && ! empty( $raw['required'] ),
 			'options' => self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [],
 			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ) ?: ( 'signature' === $type ? self::t( 'Sign here' ) : '' ),
 			'help' => self::text( $raw['help'] ?? '', 200 ),
@@ -395,7 +449,40 @@ class Schema {
 			'card_note' => $is_card ? self::text( $raw['card_note'] ?? '', 60 ) : '',
 			'card_details' => $is_card ? ( self::text( $raw['card_details'] ?? '', 40 ) ?: self::t( "What's included" ) ) : '',
 			'card_details_open' => $is_card && ! empty( $raw['card_details_open'] ),
+			'card_inline' => $is_card && ! empty( $raw['card_inline'] ),
+			'card_width' => $is_card && in_array( $raw['card_width'] ?? '', $col_widths, true ) ? $raw['card_width'] : 'auto',
+			'card_columns' => 'choice_set' === $type ? max( 1, min( 6, (int) ( $raw['card_columns'] ?? 1 ) ) ) : 1,
+			'card_gap' => 'choice_set' === $type ? max( 0, min( 60, is_numeric( $raw['card_gap'] ?? null ) ? (int) $raw['card_gap'] : 10 ) ) : 10,
+			'col_gap' => 'columns' === $type ? max( 0, min( 80, is_numeric( $raw['col_gap'] ?? null ) ? (int) $raw['col_gap'] : 24 ) ) : 24,
+			'list_layout' => 'icon_list' === $type && 'horizontal' === ( $raw['list_layout'] ?? '' ) ? 'horizontal' : 'vertical',
+			'items' => 'icon_list' === $type ? self::icon_items( $raw['items'] ?? [] ) : [],
 		];
+	}
+
+	/** @return array<int,array{text:string,icon:string,link:string}> */
+	public static function icon_items( $raw ): array {
+		$items = [];
+
+		foreach ( is_array( $raw ) ? $raw : [] as $item ) {
+			if ( ! is_array( $item ) || count( $items ) >= self::MAX_ICON_ITEMS ) {
+				continue;
+			}
+
+			$text = self::text( $item['text'] ?? '', 160 );
+
+			if ( '' === $text ) {
+				continue;
+			}
+
+			$icon = (string) ( $item['icon'] ?? '' );
+			$items[] = [
+				'text' => $text,
+				'icon' => preg_match( '/^[a-z0-9][a-z0-9-]{0,40}$/', $icon ) ? $icon : 'check',
+				'link' => Settings::url( $item['link'] ?? '' ),
+			];
+		}
+
+		return $items;
 	}
 
 	private static function number_or_null( $value ): ?float {
@@ -409,7 +496,7 @@ class Schema {
 	 * @param array  $used   Keys already taken anywhere in the form (by reference).
 	 * @param int    $budget Fields left before the form-wide cap (by reference).
 	 */
-	public static function clean_tree( $raw, array &$used, int &$budget, string $parent = '' ): array {
+	public static function clean_tree( $raw, array &$used, int &$budget, string $parent = '', string $root = '' ): array {
 		$fields = [];
 
 		foreach ( (array) $raw as $item ) {
@@ -417,7 +504,7 @@ class Schema {
 				break;
 			}
 
-			$field = self::clean_field( $item, $parent );
+			$field = self::clean_field( $item, $parent, $root );
 
 			if ( ! $field ) {
 				continue;
@@ -443,8 +530,21 @@ class Schema {
 			$budget--;
 
 			if ( self::has_children( $field['type'] ) ) {
-				$as = self::is_container( $field['type'] ) && 'choice_set' === $parent ? 'card' : $field['type'];
-				$field['children'] = self::clean_tree( $item['children'] ?? [], $used, $budget, $as );
+				$type = $field['type'];
+				$is_card = self::is_container( $type ) && 'choice_set' === $parent;
+
+				if ( $is_card ) {
+					$as = 'card';
+					$inner = 'card';
+				} elseif ( 'panel' === $type ) {
+					$as = 'columns' === $parent ? 'colpanel' : 'panel';
+					$inner = $root;
+				} else {
+					$as = $type;
+					$inner = self::is_container( $type ) ? $type : $root;
+				}
+
+				$field['children'] = self::clean_tree( $item['children'] ?? [], $used, $budget, $as, $inner );
 			}
 
 			$fields[] = $field;
@@ -1053,7 +1153,7 @@ class Schema {
 	private static function summary( array $children, array $values, string $glue, bool $labelled ): string {
 		$parts = [];
 
-		foreach ( $children as $child ) {
+		foreach ( self::flat( $children ) as $child ) {
 			if ( ! self::has_value( $child['type'] ) || 'hidden' === $child['type'] ) {
 				continue;
 			}
@@ -1115,7 +1215,7 @@ class Schema {
 
 		foreach ( self::value_fields( $definition ) as $field ) {
 			if ( 'group' === $field['type'] ) {
-				foreach ( $field['children'] as $child ) {
+				foreach ( self::flat( $field['children'] ) as $child ) {
 					if ( self::has_value( $child['type'] ) ) {
 						$columns[] = [ 'label' => $field['label'] . ' > ' . $child['label'], 'field' => $child, 'path' => [ $field['key'], $child['key'] ] ];
 					}

@@ -1,6 +1,8 @@
 <?php
 namespace Refraction\Modules\FormBuilder\Classes;
 
+use Refraction\Core\Utils\Icons;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -105,6 +107,8 @@ class Field_Renderer {
 				echo '<div class="rfb-html">' . wp_kses_post( $field['content'] ) . '</div>';
 			} elseif ( 'image' === $type ) {
 				echo self::image( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from WordPress image markup and escaped parts.
+			} elseif ( 'icon_list' === $type ) {
+				echo self::icon_list( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from bundled icons and escaped parts.
 			} else {
 				echo '<hr class="rfb-divider">';
 			}
@@ -279,15 +283,29 @@ class Field_Renderer {
 
 		$attrs = ' class="' . esc_attr( implode( ' ', $classes ) ) . '" data-rfb-key="' . esc_attr( $field['key'] ) . '" data-rfb-type="' . esc_attr( $type ) . '"';
 		$attrs .= ! empty( $field['conditions']['enabled'] ) ? ' data-rfb-cond="' . esc_attr( (string) wp_json_encode( $field['conditions'] ) ) . '"' : '';
-		$attrs .= 'tabs' === $type ? ' data-rfb-tabs' : ' data-rfb-accordion' . ( $field['multiple'] ? ' data-rfb-multiple' : '' );
+		$attrs .= 'tabs' === $type ? ' data-rfb-tabs' : ( 'columns' === $type ? '' : ' data-rfb-accordion' . ( $field['multiple'] ? ' data-rfb-multiple' : '' ) );
 
 		echo '<div' . $attrs . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 
-		if ( ! $field['hide_label'] || '' !== $field['description'] ) {
+		if ( 'columns' !== $type && ( ! $field['hide_label'] || '' !== $field['description'] ) ) {
 			echo self::heading( $field, 'rfb-host-title' ) . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$panels = $field['children'];
+
+		if ( 'columns' === $type ) {
+			echo '<div class="rfb-columns" style="--rfb-col-gap:' . (int) $field['col_gap'] . 'px">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Number only.
+
+			foreach ( $panels as $panel ) {
+				$cond = ! empty( $panel['conditions']['enabled'] ) ? ' data-rfb-cond="' . esc_attr( (string) wp_json_encode( $panel['conditions'] ) ) . '"' : '';
+				echo '<div class="rfb-column rfb-w-' . esc_attr( $panel['width'] ) . '" data-rfb-key="' . esc_attr( $panel['key'] ) . '"' . $cond . '><div class="rfb-form-grid" style="--rfb-col-gap:' . (int) $field['col_gap'] . 'px">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+				self::render_fields( $panel['children'], $values, $prefix, $errors, $ctx, $path );
+				echo '</div></div>';
+			}
+
+			echo '</div></div>';
+			return;
+		}
 
 		if ( 'tabs' === $type ) {
 			echo '<div class="rfb-tablist" role="tablist" hidden>';
@@ -331,7 +349,7 @@ class Field_Renderer {
 		$kind = $field['multiple'] ? 'checkbox' : 'radio';
 		$described = '' !== $field['description'] ? ' aria-describedby="' . esc_attr( $id . '-desc' ) . '"' : '';
 
-		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"' . $described . '><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '">' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-cc-list">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"' . $described . '><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '">' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-cc-list" style="--rfb-cc-gap:' . (int) $field['card_gap'] . 'px">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		foreach ( $field['children'] as $i => $card ) {
 			$card_id = $id . '-' . $i;
@@ -339,12 +357,17 @@ class Field_Renderer {
 			$cond = ! empty( $card['conditions']['enabled'] ) ? ' data-rfb-cond="' . esc_attr( (string) wp_json_encode( $card['conditions'] ) ) . '"' : '';
 			$price = null !== $card['card_price'] ? '<span class="rfb-cc-amount">' . esc_html( Money::display( $card['card_price'], $cfg ) ) . '</span>' . ( '' !== Money::per_label( $card['per'], $card['per_label'] ) ? ' <span class="rfb-cc-per">' . esc_html( Money::per_label( $card['per'], $card['per_label'] ) ) . '</span>' : '' ) : ( '' !== $card['card_note'] ? '<span class="rfb-cc-note">' . esc_html( $card['card_note'] ) . '</span>' : '' );
 
-			echo '<div class="rfb-choice-card rfb-t-card' . ( $on ? ' is-selected' : '' ) . '" data-rfb-key="' . esc_attr( $card['key'] ) . '" data-rfb-type="card"' . $cond . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$percent = 'auto' === $card['card_width'] ? 100 / max( 1, (int) $field['card_columns'] ) : Schema::width_percent( $card['card_width'] );
+			$basis = 'calc(' . round( $percent, 3 ) . '% - var(--rfb-cc-gap) * ' . round( 1 - $percent / 100, 4 ) . ')';
+
+			echo '<div class="rfb-choice-card rfb-t-card' . ( $on ? ' is-selected' : '' ) . '" style="flex-basis:' . esc_attr( $basis ) . '" data-rfb-key="' . esc_attr( $card['key'] ) . '" data-rfb-type="card"' . $cond . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<label class="rfb-cc-main" for="' . esc_attr( $card_id ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $card_id ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<span class="rfb-cc-body"><span class="rfb-cc-title">' . esc_html( $card['label'] ) . ( '' !== $card['card_badge'] ? ' <span class="rfb-cc-badge">' . esc_html( $card['card_badge'] ) . '</span>' : '' ) . '</span>' . ( '' !== $card['card_subtitle'] ? '<span class="rfb-cc-sub">' . esc_html( $card['card_subtitle'] ) . '</span>' : '' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<span class="rfb-cc-price">' . $price . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
-			if ( $card['children'] ) {
+			if ( $card['children'] && $card['card_inline'] ) {
+				echo '<div class="rfb-cc-fields rfb-cc-inline">' . self::locked( $card, $ctx, $path . '.' . $card['key'] ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+			} elseif ( $card['children'] ) {
 				echo '<details class="rfb-cc-details"' . ( $card['card_details_open'] ? ' open' : '' ) . '><summary>' . esc_html( $card['card_details'] ) . '</summary><div class="rfb-cc-fields">' . self::locked( $card, $ctx, $path . '.' . $card['key'] ) . '</div></details>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
@@ -447,6 +470,22 @@ class Field_Renderer {
 		echo '<button type="button" class="rfb-link-btn rfb-sig-clear" data-rfb-sig-clear hidden>' . esc_html__( 'Clear signature', 'refraction' ) . '</button>';
 		echo '<noscript><p class="rfb-help">' . esc_html__( 'Drawing a signature needs JavaScript.', 'refraction' ) . '</p></noscript>';
 		echo '<p class="rfb-error rfb-sig-error" role="alert" hidden>' . esc_html__( 'Please sign above.', 'refraction' ) . '</p>';
+	}
+
+	/** The Icon List block: items with an icon each (bundled icons only), as a column or a wrapping row. */
+	private static function icon_list( array $field ): string {
+		if ( ! $field['items'] ) {
+			return '';
+		}
+
+		$out = '<ul class="rfb-il rfb-il-' . esc_attr( $field['list_layout'] ) . '">';
+
+		foreach ( $field['items'] as $item ) {
+			$inner = '<span class="rfb-il-icon" aria-hidden="true">' . Icons::svg( $item['icon'], [ 'size' => 20 ] ) . '</span><span class="rfb-il-text">' . esc_html( $item['text'] ) . '</span>';
+			$out .= '<li class="rfb-il-item">' . ( '' !== $item['link'] ? '<a class="rfb-il-link" href="' . esc_url( $item['link'] ) . '">' . $inner . '</a>' : $inner ) . '</li>';
+		}
+
+		return $out . '</ul>';
 	}
 
 	/** The Image block: a media library image at the chosen size, width and alignment, optionally linked. */

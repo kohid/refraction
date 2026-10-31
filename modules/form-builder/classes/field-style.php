@@ -58,6 +58,15 @@ class Field_Style {
 		'grp' => '.rfb-group',
 		'grp_hover' => '.rfb-group:hover',
 		'grp_focus' => '.rfb-group:focus-within',
+		'image_box' => '.rfb-image',
+		'image_img' => '.rfb-image img',
+		'image_img_hover' => '.rfb-image img:hover',
+		'image_img_focus' => '.rfb-image img:focus',
+		'il_list' => '.rfb-il',
+		'il_icon' => '.rfb-il-icon',
+		'il_icon_hover' => '.rfb-il-item:hover .rfb-il-icon',
+		'il_text' => '.rfb-il-text',
+		'il_text_hover' => '.rfb-il-item:hover .rfb-il-text',
 		'acc_item' => '.rfb-acc-item',
 		'acc_item_hover' => '.rfb-acc-item:hover',
 		'acc_item_on' => '.rfb-acc-item[open]',
@@ -77,9 +86,9 @@ class Field_Style {
 
 	/** Which look of the field each group belongs to: the style tab shows one state at a time. */
 	const STATES = [
-		'normal' => [ 'box', 'label', 'control', 'desc', 'choice', 'plain', 'plain_accent', 'toggle', 'toggle_knob', 'rep', 'rep_rows', 'row', 'rep_button', 'rep_remove', 'grp', 'acc_item', 'acc_head', 'tab', 'tab_panel', 'card', 'card_title', 'card_price' ],
-		'hover' => [ 'box_hover', 'label_hover', 'control_hover', 'choice_hover', 'plain_hover', 'toggle_hover', 'rep_hover', 'row_hover', 'rep_button_hover', 'rep_remove_hover', 'grp_hover', 'acc_item_hover', 'acc_head_hover', 'tab_hover', 'card_hover' ],
-		'focus' => [ 'box_focus', 'label_focus', 'control_focus', 'choice_on', 'plain_on', 'toggle_on', 'rep_focus', 'row_focus', 'rep_button_focus', 'grp_focus', 'acc_item_on', 'acc_head_on', 'tab_on', 'card_on' ],
+		'normal' => [ 'box', 'label', 'control', 'desc', 'choice', 'plain', 'plain_accent', 'toggle', 'toggle_knob', 'rep', 'rep_rows', 'row', 'rep_button', 'rep_remove', 'grp', 'acc_item', 'acc_head', 'tab', 'tab_panel', 'card', 'card_title', 'card_price', 'image_box', 'image_img', 'il_list', 'il_icon', 'il_text' ],
+		'hover' => [ 'box_hover', 'label_hover', 'control_hover', 'choice_hover', 'plain_hover', 'toggle_hover', 'rep_hover', 'row_hover', 'rep_button_hover', 'rep_remove_hover', 'grp_hover', 'acc_item_hover', 'acc_head_hover', 'tab_hover', 'card_hover', 'image_img_hover', 'il_icon_hover', 'il_text_hover' ],
+		'focus' => [ 'box_focus', 'label_focus', 'control_focus', 'choice_on', 'plain_on', 'toggle_on', 'rep_focus', 'row_focus', 'rep_button_focus', 'grp_focus', 'acc_item_on', 'acc_head_on', 'tab_on', 'card_on', 'image_img_focus' ],
 	];
 
 	const SHADOWS = [
@@ -97,7 +106,7 @@ class Field_Style {
 		$applies = [
 			'box' => '*', 'box_hover' => '*', 'box_focus' => '*',
 			'label' => $labelled, 'label_hover' => $labelled, 'label_focus' => array_diff( $labelled, [ 'step', 'heading', 'paragraph' ] ),
-			'control' => array_merge( $inputs, [ 'divider', 'image', 'html' ] ), 'control_hover' => $inputs, 'control_focus' => array_diff( $inputs, [ 'file' ] ),
+			'control' => array_merge( $inputs, [ 'divider', 'html' ] ), 'control_hover' => $inputs, 'control_focus' => array_diff( $inputs, [ 'file' ] ),
 			'desc' => $described,
 		];
 
@@ -115,6 +124,14 @@ class Field_Style {
 
 		foreach ( [ 'grp', 'grp_hover', 'grp_focus' ] as $group ) {
 			$applies[ $group ] = [ 'group' ];
+		}
+
+		foreach ( [ 'image_box', 'image_img', 'image_img_hover' ] as $group ) {
+			$applies[ $group ] = [ 'image' ];
+		}
+
+		foreach ( [ 'il_list', 'il_icon', 'il_icon_hover', 'il_text', 'il_text_hover' ] as $group ) {
+			$applies[ $group ] = [ 'icon_list' ];
 		}
 
 		foreach ( [ 'acc_item', 'acc_item_hover', 'acc_item_on', 'acc_head', 'acc_head_hover', 'acc_head_on' ] as $group ) {
@@ -142,7 +159,7 @@ class Field_Style {
 		$weights = [ '300', '400', '500', '600', '700', '800', '900' ];
 
 		// The same set of box properties styles the field itself and, for repeaters and groups, the parts inside it.
-		foreach ( [ '' => [ 'box', 'box_hover', 'box_focus' ], 'rep_' => [ 'rep', 'rep_hover', 'rep_focus' ], 'row_' => [ 'row', 'row_hover', 'row_focus' ], 'grp_' => [ 'grp', 'grp_hover', 'grp_focus' ], 'acc_' => [ 'acc_item', 'acc_item_hover', 'acc_item_on' ], 'acch_' => [ 'acc_head', 'acc_head_hover', 'acc_head_on' ], 'tab_' => [ 'tab', 'tab_hover', 'tab_on' ], 'card_' => [ 'card', 'card_hover', 'card_on' ] ] as $prefix => $groups ) {
+		foreach ( [ '' => [ 'box', 'box_hover', 'box_focus' ], 'rep_' => [ 'rep', 'rep_hover', 'rep_focus' ], 'row_' => [ 'row', 'row_hover', 'row_focus' ], 'grp_' => [ 'grp', 'grp_hover', 'grp_focus' ], 'acc_' => [ 'acc_item', 'acc_item_hover', 'acc_item_on' ], 'acch_' => [ 'acc_head', 'acc_head_hover', 'acc_head_on' ], 'tab_' => [ 'tab', 'tab_hover', 'tab_on' ], 'card_' => [ 'card', 'card_hover', 'card_on' ], 'im_' => [ 'image_img', 'image_img_hover', 'image_img_focus' ] ] as $prefix => $groups ) {
 			foreach ( [ 'top', 'right', 'bottom', 'left' ] as $edge ) {
 				$spec[ $prefix . 'margin_' . $edge ] = [ $groups[0], 'margin-' . $edge, 'int', -100, 300, 'px' ];
 			}
@@ -249,6 +266,21 @@ class Field_Style {
 			'rbf_bg' => [ 'rep_button_focus', 'background-color', 'color' ],
 			'rbf_color' => [ 'rep_button_focus', 'color', 'color' ],
 			'rbf_border_color' => [ 'rep_button_focus', 'border-color', 'color' ],
+
+			'im_align' => [ 'image_box', 'margin', 'enum', [ 'left', 'center', 'right' ] ],
+			'im_width' => [ 'image_box', 'width', 'int', 5, 100, '%' ],
+			'im_fit' => [ 'image_img', 'object-fit', 'enum', [ 'cover', 'contain', 'fill' ] ],
+			'im_height' => [ 'image_img', 'height', 'int', 40, 1200, 'px' ],
+
+			'il_gap' => [ 'il_list', 'gap', 'int', 0, 60, 'px' ],
+			'il_ic_color' => [ 'il_icon', 'color', 'color' ],
+			'il_ic_bg' => [ 'il_icon', 'background-color', 'color' ],
+			'il_ic_size' => [ 'il_icon', 'font-size', 'int', 8, 80, 'px' ],
+			'il_ich_color' => [ 'il_icon_hover', 'color', 'color' ],
+			'il_tx_color' => [ 'il_text', 'color', 'color' ],
+			'il_tx_size' => [ 'il_text', 'font-size', 'int', 8, 60, 'px' ],
+			'il_tx_weight' => [ 'il_text', 'font-weight', 'enum', $weights ],
+			'il_txh_color' => [ 'il_text_hover', 'color', 'color' ],
 
 			'ah_color' => [ 'acc_head', 'color', 'color' ],
 			'ah_size' => [ 'acc_head', 'font-size', 'int', 8, 60, 'px' ],
@@ -381,11 +413,18 @@ class Field_Style {
 
 			list( $group, $css, $kind ) = $spec[ $key ];
 
+			// The picture's own alignment is made of margins, so it is written as such.
+			if ( 'im_align' === $key ) {
+				$sides = [ 'left' => 'margin-left:0;margin-right:auto;', 'center' => 'margin-left:auto;margin-right:auto;', 'right' => 'margin-left:auto;margin-right:0;' ];
+				$groups[ $group ] = ( $groups[ $group ] ?? '' ) . $sides[ $value ];
+				continue;
+			}
+
 			if ( 'color' === $kind ) {
 				$text = (string) $value;
 			} elseif ( 'int' === $kind ) {
 				$unit = $spec[ $key ][5];
-				$text = 'pct' === $unit ? (string) round( $value / 100, 2 ) : $value . 'px';
+				$text = 'pct' === $unit ? (string) round( $value / 100, 2 ) : $value . ( '%' === $unit ? '%' : 'px' );
 			} elseif ( 'bool' === $kind ) {
 				$text = 'italic';
 			} elseif ( 'box-shadow' === $css ) {
@@ -400,7 +439,7 @@ class Field_Style {
 		}
 
 		// A width alone or a style alone would draw nothing; give the other half a sensible value.
-		foreach ( [ 'box' => '', 'rep' => 'rep_', 'row' => 'row_', 'grp' => 'grp_', 'control' => 'c_', 'acc_item' => 'acc_', 'acc_head' => 'acch_', 'tab' => 'tab_', 'tab_panel' => 'tp_', 'card' => 'card_' ] as $group => $prefix ) {
+		foreach ( [ 'box' => '', 'rep' => 'rep_', 'row' => 'row_', 'grp' => 'grp_', 'control' => 'c_', 'acc_item' => 'acc_', 'acc_head' => 'acch_', 'tab' => 'tab_', 'tab_panel' => 'tp_', 'card' => 'card_', 'image_img' => 'im_' ] as $group => $prefix ) {
 			$has_style = isset( $style[ $prefix . 'border_style' ] );
 			$has_width = isset( $style[ $prefix . 'border_width' ] );
 

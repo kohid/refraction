@@ -78,8 +78,8 @@
 
 	const all = ( list = state.fields ) => list.flatMap( ( field ) => [ field, ...all( field.children || [] ) ] );
 	const isContainer = ( type ) => 'group' === type || 'repeater' === type;
-	const isLayout = ( type ) => [ 'heading', 'paragraph', 'html', 'divider', 'image' ].includes( type );
-	const isHost = ( type ) => 'accordion' === type || 'tabs' === type;
+	const isLayout = ( type ) => [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list' ].includes( type );
+	const isHost = ( type ) => [ 'accordion', 'tabs', 'columns' ].includes( type );
 	const isTransparent = ( type ) => isHost( type ) || 'panel' === type;
 	const isChoiceSet = ( type ) => 'choice_set' === type;
 	const hasKids = ( type ) => isContainer( type ) || isTransparent( type ) || isChoiceSet( type );
@@ -134,6 +134,7 @@
 			children: [], min_rows: 0, max_rows: 10, add_label: __( 'Add row', 'refraction' ), source: 'static',
 			description: '', label_tag: 'div', parts: [ 'first', 'last' ], image_id: 0, image_size: 'medium', image_width: 100, image_align: 'left', image_alt: '', image_link: '', sig_height: 180,
 			multiple: false, open: false, tab_look: 'line', per: '', per_label: '',
+			card_inline: false, card_width: 'auto', card_columns: 1, card_gap: 10, col_gap: 24, list_layout: 'vertical', items: [],
 			card_badge: '', card_subtitle: '', card_price: null, card_note: '', card_details: __( "What's included", 'refraction' ), card_details_open: false,
 		};
 	}
@@ -157,13 +158,16 @@
 			field.content = '<p>' + __( 'Custom HTML', 'refraction' ) + '</p>';
 		} else if ( [ 'group', 'repeater' ].includes( type ) ) {
 			field.children = [];
+		} else if ( 'icon_list' === type ) {
+			field.items = [ __( 'First thing included', 'refraction' ), __( 'Second thing included', 'refraction' ), __( 'Third thing included', 'refraction' ) ].map( ( text ) => ( { text, icon: 'check', link: '' } ) );
 		} else if ( isHost( type ) ) {
 			const used = [ field.key ];
 
 			field.children = [ 1, 2 ].map( ( n ) => {
 				const panel = baseField( 'panel' );
 
-				panel.label = ( 'tabs' === type ? __( 'Tab', 'refraction' ) : __( 'Panel', 'refraction' ) ) + ' ' + n;
+				panel.width = 'columns' === type ? 'half' : 'full';
+				panel.label = ( 'tabs' === type ? __( 'Tab', 'refraction' ) : ( 'columns' === type ? __( 'Column', 'refraction' ) : __( 'Panel', 'refraction' ) ) ) + ' ' + n;
 				panel.key = uniqueKey( 'panel', null, used );
 				used.push( panel.key );
 				panel.open = 'accordion' === type && 1 === n;
@@ -268,50 +272,93 @@
 		return copy;
 	}
 
-	/** Can a field of this type be dropped into this list owner (null = the top level)? */
-	function canDrop( type, owner ) {
-		return allowedIn( type, kindOf( owner ) );
-	}
+	/** The fields from the top down to (and including) the one with this id, or null. */
+	function ancestors( id, list = state.fields, trail = [] ) {
+		for ( const field of list ) {
+			if ( field._id === id ) {
+				return [ ...trail, field ];
+			}
 
-	/** What a list owner is for the nesting rules: '' (top level), its type, or "card" for a Group or Repeater inside a choice set. */
-	function kindOf( owner ) {
-		if ( ! owner ) {
-			return '';
-		}
+			const inner = ancestors( id, field.children || [], [ ...trail, field ] );
 
-		if ( isContainer( owner.type ) ) {
-			const found = find( owner._id );
-
-			if ( found && found.parent && isChoiceSet( found.parent.type ) ) {
-				return 'card';
+			if ( inner ) {
+				return inner;
 			}
 		}
 
-		return owner.type;
+		return null;
 	}
 
-	/** Mirror of Schema::allowed_in. */
-	function allowedIn( type, kind ) {
-		const structural = 'step' === type || isHost( type ) || 'panel' === type;
-		const nested = isContainer( type ) || isChoiceSet( type );
-
-		switch ( kind ) {
-			case '':
-				return 'panel' !== type;
-			case 'accordion':
-			case 'tabs':
-				return 'panel' === type;
-			case 'panel':
-				return ! structural;
-			case 'choice_set':
-				return isContainer( type );
-			case 'repeater':
-				return ! structural && ! nested && 'file' !== type;
-			case 'card':
-				return ! structural && ! nested && ! [ 'file', 'signature' ].includes( type );
-			default:
-				return ! structural && ! nested;
+	/** What a list owner is for the nesting rules (mirror of Schema::allowed_in): its kind and the nearest value container around it. */
+	function contextOf( owner ) {
+		if ( ! owner ) {
+			return { parent: '', root: '' };
 		}
+
+		const chain = ancestors( owner._id ) || [ owner ];
+		let root = '';
+
+		chain.forEach( ( f, i ) => {
+			if ( isContainer( f.type ) ) {
+				root = i > 0 && isChoiceSet( chain[ i - 1 ].type ) ? 'card' : f.type;
+			}
+		} );
+
+		const before = chain.length > 1 ? chain[ chain.length - 2 ] : null;
+		let parent = owner.type;
+
+		if ( isContainer( owner.type ) && before && isChoiceSet( before.type ) ) {
+			parent = 'card';
+		} else if ( 'panel' === owner.type ) {
+			parent = before && 'columns' === before.type ? 'colpanel' : 'panel';
+		}
+
+		return { parent, root };
+	}
+
+	/** Can a field of this type be dropped into this list owner (null = the top level)? */
+	function canDrop( type, owner ) {
+		const { parent, root } = contextOf( owner );
+
+		return allowedIn( type, parent, root );
+	}
+
+	function allowedIn( type, parent, root ) {
+		if ( '' === parent ) {
+			return 'panel' !== type;
+		}
+
+		if ( isHost( parent ) ) {
+			return 'panel' === type;
+		}
+
+		if ( 'choice_set' === parent ) {
+			return isContainer( type );
+		}
+
+		if ( 'step' === type || 'panel' === type ) {
+			return false;
+		}
+
+		const inside = [ 'panel', 'colpanel' ].includes( parent );
+
+		if ( [ 'accordion', 'tabs' ].includes( type ) ) {
+			return '' === root && ! inside;
+		}
+
+		if ( 'columns' === type ) {
+			return true;
+		}
+
+		if ( isContainer( type ) || isChoiceSet( type ) ) {
+			return '' === root;
+		}
+
+		if ( 'file' === type ) {
+			return ! [ 'repeater', 'card' ].includes( root );
+		}
+
+		return ! ( 'signature' === type && 'card' === root );
 	}
 
 	function insert( field, owner, index ) {
@@ -329,7 +376,7 @@
 	function move( id, owner, index ) {
 		const from = find( id );
 
-		if ( ! from || ! canDrop( from.field.type, owner ) || ( owner && owner._id === id ) ) {
+		if ( ! from || ! canDrop( from.field.type, owner ) || ( owner && ( ancestors( owner._id ) || [] ).some( ( f ) => f._id === id ) ) ) {
 			return;
 		}
 
@@ -483,6 +530,18 @@
 
 		if ( 'signature' === t ) {
 			return h( 'div', null, label, desc, h( 'div', { class: 'rfb-signature', style: '--rfb-sig-height:' + field.sig_height + 'px' }, h( 'span', { class: 'rfb-sig-hint' }, field.placeholder || __( 'Sign here', 'refraction' ) ) ), h( 'span', { class: 'rfb-link-btn' }, __( 'Clear signature', 'refraction' ) ) );
+		}
+
+		if ( 'icon_list' === t ) {
+			return field.items.length
+				? h( 'ul', { class: 'rfb-il rfb-il-' + field.list_layout }, field.items.map( ( item ) => {
+					const icon = h( 'span', { class: 'rfb-il-icon' } );
+
+					icon.innerHTML = ( config.listIcons && ( config.listIcons[ item.icon ] || config.listIcons.check ) ) || '';
+
+					return h( 'li', { class: 'rfb-il-item' }, icon, h( 'span', { class: 'rfb-il-text' }, item.text ) );
+				} ) )
+				: h( 'div', { class: 'rfb-cv-drop' }, __( 'Icon List: add items in the settings panel', 'refraction' ) );
 		}
 
 		if ( 'heading' === t ) {
@@ -665,10 +724,19 @@
 		root.querySelectorAll( '.is-denied' ).forEach( ( el ) => el.classList.remove( 'is-denied' ) );
 	}
 
+	/** flex-basis of a card: its own share, or an equal share of the set's cards per row (mirror of the renderer). */
+	function cardBasis( card, set ) {
+		const percent = 'auto' === card.card_width ? 100 / Math.max( 1, set.card_columns || 1 ) : ( config.widthPercent[ card.card_width ] || 100 );
+
+		return 'calc(' + Math.round( percent * 1000 ) / 1000 + '% - var(--rfb-cc-gap, 10px) * ' + Math.round( ( 1 - percent / 100 ) * 10000 ) / 10000 + ')';
+	}
+
 	function block( field, items, index, owner ) {
 		const conditional = field.conditions && field.conditions.enabled;
+		const isCardItem = !! owner && isChoiceSet( owner.type );
 		const el = h( 'div', {
-			class: 'rfb-cv-item rfb-cv-' + field.type + ( selected === field._id ? ' is-selected' : '' ) + ( selected === field._id && previewState ? ' is-force' : '' ) + ' rfb-w-' + field.width,
+			style: isCardItem ? 'flex-basis:' + cardBasis( field, owner ) : undefined,
+			class: 'rfb-cv-item rfb-cv-' + field.type + ( selected === field._id ? ' is-selected' : '' ) + ( selected === field._id && previewState ? ' is-force' : '' ) + ( isCardItem ? '' : ' rfb-w-' + field.width ),
 			draggable: 'true', 'data-id': field._id, 'data-rfb-key': field.key,
 			onClick: ( e ) => {
 				e.stopPropagation();
@@ -716,12 +784,15 @@
 			const title = h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, field.hide_label ? ' ' + __( '(title hidden on the form)', 'refraction' ) : '' );
 			const panels = field.children.map( ( panel, i ) => panelBlock( panel, field, i ) );
 
-			el.append( h( 'div', { class: 'rfb-cv-container rfb-cv-host rfb-' + field.type + ( 'tabs' === field.type ? ' rfb-tabs-' + field.tab_look : '' ) }, title, field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, ...panels,
-				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary rfb-cv-addpanel', onClick: ( e ) => { e.stopPropagation(); addPanel( field ); } }, 'tabs' === field.type ? __( 'Add tab', 'refraction' ) : __( 'Add panel', 'refraction' ) ) ) );
+			const columns = 'columns' === field.type;
+			const body = columns ? h( 'div', { class: 'rfb-cv-columns', style: '--rfb-col-gap:' + field.col_gap + 'px' }, panels ) : null;
+
+			el.append( h( 'div', { class: 'rfb-cv-container rfb-cv-host rfb-' + field.type + ( 'tabs' === field.type ? ' rfb-tabs-' + field.tab_look : '' ) }, title, field.description && ! columns ? h( 'p', { class: 'rfb-description' }, field.description ) : null, ...( columns ? [ body ] : panels ),
+				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary rfb-cv-addpanel', onClick: ( e ) => { e.stopPropagation(); addPanel( field ); } }, 'tabs' === field.type ? __( 'Add tab', 'refraction' ) : ( 'columns' === field.type ? __( 'Add column', 'refraction' ) : __( 'Add panel', 'refraction' ) ) ) ) );
 		} else if ( isChoiceSet( field.type ) ) {
 			const title = h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, ' · ', field.multiple ? __( 'pick several', 'refraction' ) : __( 'pick one', 'refraction' ) );
 
-			el.append( h( 'div', { class: 'rfb-cv-container rfb-cv-cards' }, title, field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, h( 'div', { class: 'rfb-cc-list' }, list( field.children, field ) ),
+			el.append( h( 'div', { class: 'rfb-cv-container rfb-cv-cards', style: '--rfb-cc-gap:' + field.card_gap + 'px' }, title, field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, h( 'div', { class: 'rfb-cc-list' }, list( field.children, field ) ),
 				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary rfb-cv-addpanel', onClick: ( e ) => { e.stopPropagation(); addCard( field ); } }, __( 'Add card', 'refraction' ) ) ) );
 		} else if ( isContainer( field.type ) && owner && isChoiceSet( owner.type ) ) {
 			el.append( h( 'div', { class: 'rfb-cv-container' }, cardBlock( field, owner ) ) );
@@ -744,11 +815,11 @@
 
 	/** A panel (or tab) inside an Accordion or Tabs: a titled drop area you can select, move and delete. */
 	function panelBlock( panel, host, index ) {
-		const kind = 'tabs' === host.type ? __( 'Tab', 'refraction' ) : __( 'Panel', 'refraction' );
+		const kind = 'tabs' === host.type ? __( 'Tab', 'refraction' ) : ( 'columns' === host.type ? __( 'Column', 'refraction' ) : __( 'Panel', 'refraction' ) );
 		const button = ( label, symbol, action, extra = '' ) => h( 'button', { type: 'button', class: 'rfb-icon-btn ' + extra, 'aria-label': label, title: label, onClick: ( e ) => { e.stopPropagation(); action(); } }, symbol );
 
 		return h( 'div', {
-			class: 'rfb-cv-panel' + ( selected === panel._id ? ' is-selected' : '' ) + ( panel.conditions && panel.conditions.enabled ? ' is-conditional' : '' ), 'data-id': panel._id, 'data-rfb-key': panel.key,
+			class: 'rfb-cv-panel' + ( 'columns' === host.type ? ' rfb-w-' + panel.width : '' ) + ( selected === panel._id ? ' is-selected' : '' ) + ( panel.conditions && panel.conditions.enabled ? ' is-conditional' : '' ), 'data-id': panel._id, 'data-rfb-key': panel.key,
 			onClick: ( e ) => {
 				e.stopPropagation();
 				selected = panel._id;
@@ -769,7 +840,8 @@
 	function addPanel( host ) {
 		const panel = baseField( 'panel' );
 
-		panel.label = ( 'tabs' === host.type ? __( 'Tab', 'refraction' ) : __( 'Panel', 'refraction' ) ) + ' ' + ( host.children.length + 1 );
+		panel.label = ( 'tabs' === host.type ? __( 'Tab', 'refraction' ) : ( 'columns' === host.type ? __( 'Column', 'refraction' ) : __( 'Panel', 'refraction' ) ) ) + ' ' + ( host.children.length + 1 );
+		panel.width = 'columns' === host.type ? 'half' : 'full';
 		panel.key = uniqueKey( 'panel' );
 		insert( tag( panel ), host, host.children.length );
 	}
@@ -869,6 +941,87 @@
 		return wrapper;
 	}
 
+	/** Ready-made splits for the Columns block: label and the width of each column. */
+	const SPLITS = [
+		[ '50 / 50', [ 'half', 'half' ] ], [ '33 / 33 / 33', [ 'third', 'third', 'third' ] ], [ '25 × 4', [ 'w25', 'w25', 'w25', 'w25' ] ], [ '20 × 5', [ 'w20', 'w20', 'w20', 'w20', 'w20' ] ],
+		[ '10 / 90', [ 'w10', 'w90' ] ], [ '20 / 80', [ 'w20', 'w80' ] ], [ '25 / 75', [ 'w25', 'w75' ] ], [ '30 / 70', [ 'w30', 'w70' ] ], [ '40 / 60', [ 'w40', 'w60' ] ],
+		[ '60 / 40', [ 'w60', 'w40' ] ], [ '70 / 30', [ 'w70', 'w30' ] ], [ '75 / 25', [ 'w75', 'w25' ] ], [ '80 / 20', [ 'w80', 'w20' ] ], [ '90 / 10', [ 'w90', 'w10' ] ],
+		[ '25 / 50 / 25', [ 'w25', 'half', 'w25' ] ], [ '20 / 60 / 20', [ 'w20', 'w60', 'w20' ] ],
+	];
+
+	/** Makes the columns match a split: adds columns, or folds the fields of the extra ones into the last kept column. */
+	function applySplit( host, widths ) {
+		while ( host.children.length < widths.length ) {
+			const panel = tag( baseField( 'panel' ) );
+
+			panel.label = __( 'Column', 'refraction' ) + ' ' + ( host.children.length + 1 );
+			panel.key = uniqueKey( 'panel' );
+			host.children.push( panel );
+		}
+
+		if ( host.children.length > widths.length ) {
+			const extra = host.children.splice( widths.length );
+			const last = host.children[ widths.length - 1 ];
+
+			extra.forEach( ( column ) => last.children.push( ...column.children ) );
+		}
+
+		widths.forEach( ( width, i ) => ( host.children[ i ].width = width ) );
+		markDirty();
+		renderBuild();
+	}
+
+	function columnsControls( f, rerender ) {
+		const current = f.children.map( ( c ) => c.width ).join( ',' );
+
+		return h( 'div', { class: 'rfb-splits' },
+			h( 'span', { class: 'rfb-mini' }, __( 'Split', 'refraction' ) ),
+			h( 'div', { class: 'rfb-split-grid', role: 'group', 'aria-label': __( 'Column split', 'refraction' ) }, SPLITS.map( ( [ label, widths ] ) => h( 'button', {
+				type: 'button', class: 'rfb-split-btn' + ( widths.join( ',' ) === current ? ' is-active' : '' ), 'aria-pressed': String( widths.join( ',' ) === current ), title: label,
+				onClick: () => applySplit( f, widths ),
+			}, label ) ) ),
+			row( __( 'Space between columns (px)', 'refraction' ), text( f, 'col_gap', { type: 'number', number: true, min: 0, max: 80, after: rerender } ) ),
+			h( 'p', { class: 'rfb-help' }, __( 'Pick a split, or add columns and give each its own width. Fields from removed columns move to the last column.', 'refraction' ) ) );
+	}
+
+	/** The items of an Icon List: icon, text and an optional link each, in the order shown. */
+	function iconItemsEditor( f ) {
+		const wrap = h( 'div', { class: 'rfb-il-editor' } );
+		const icons = Object.keys( config.listIcons || {} );
+		const choices = Object.fromEntries( icons.map( ( name ) => [ name, name.replace( /-/g, ' ' ) ] ) );
+		const draw = () => {
+			wrap.replaceChildren(
+				h( 'span', { class: 'rfb-mini' }, __( 'Items', 'refraction' ) ),
+				...f.items.map( ( item, i ) => {
+					const preview = h( 'span', { class: 'rfb-il-pick-icon', 'aria-hidden': 'true' } );
+					const show = () => { preview.innerHTML = ( config.listIcons && config.listIcons[ item.icon ] ) || ''; };
+
+					show();
+
+					return h( 'div', { class: 'rfb-il-row' },
+						h( 'div', { class: 'rfb-il-row-top' }, preview,
+							select( item, 'icon', choices, { label: __( 'Icon', 'refraction' ), after: () => { show(); renderCanvasOnly(); } } ),
+							h( 'button', { type: 'button', class: 'rfb-icon-btn', 'aria-label': __( 'Move item up', 'refraction' ), onClick: () => { if ( i > 0 ) { f.items.splice( i - 1, 0, f.items.splice( i, 1 )[ 0 ] ); markDirty(); draw(); renderCanvasOnly(); } } }, '↑' ),
+							h( 'button', { type: 'button', class: 'rfb-icon-btn', 'aria-label': __( 'Move item down', 'refraction' ), onClick: () => { if ( i < f.items.length - 1 ) { f.items.splice( i + 1, 0, f.items.splice( i, 1 )[ 0 ] ); markDirty(); draw(); renderCanvasOnly(); } } }, '↓' ),
+							h( 'button', { type: 'button', class: 'rfb-icon-btn rfb-icon-danger', 'aria-label': __( 'Remove item', 'refraction' ), onClick: () => { f.items.splice( i, 1 ); markDirty(); draw(); renderCanvasOnly(); } }, '✕' ) ),
+						text( item, 'text', { label: __( 'Item text', 'refraction' ), placeholder: __( 'Text', 'refraction' ), after: renderCanvasOnly } ),
+						text( item, 'link', { label: __( 'Link (optional)', 'refraction' ), placeholder: 'https://', after: () => {} } ) );
+				} ),
+				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary', onClick: () => {
+					const last = f.items[ f.items.length - 1 ];
+
+					f.items.push( { text: __( 'New item', 'refraction' ), icon: last ? last.icon : 'check', link: '' } );
+					markDirty();
+					draw();
+					renderCanvasOnly();
+				} }, __( 'Add item', 'refraction' ) ) );
+		};
+
+		draw();
+
+		return wrap;
+	}
+
 	/** Image block settings: pick from the media library, size, width, alignment, alt text and link. */
 	function imageControls( f, after, rerender ) {
 		const choose = h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary', onClick: () => {
@@ -896,7 +1049,7 @@
 			h( 'div', { class: 'rfb-inline' }, choose, remove ),
 			row( __( 'Size', 'refraction' ), select( f, 'image_size', { thumbnail: __( 'Thumbnail', 'refraction' ), medium: __( 'Medium', 'refraction' ), large: __( 'Large', 'refraction' ), full: __( 'Full', 'refraction' ) }, { after } ) ),
 			row( __( 'Width (% of the form)', 'refraction' ), text( f, 'image_width', { type: 'number', number: true, min: 5, max: 100, after } ) ),
-			row( __( 'Alignment', 'refraction' ), select( f, 'image_align', { left: __( 'Left', 'refraction' ), center: __( 'Center', 'refraction' ), right: __( 'Right', 'refraction' ) }, { after } ) ),
+			row( __( 'Alignment', 'refraction' ), select( f, 'image_align', { left: __( 'Left', 'refraction' ), center: __( 'Center', 'refraction' ), right: __( 'Right', 'refraction' ) }, { after } ), __( 'Shows when the width is below 100%.', 'refraction' ) ),
 			row( __( 'Alternative text', 'refraction' ), text( f, 'image_alt', { after } ), __( 'Describe the image for people who can not see it. Leave empty for a purely decorative logo.', 'refraction' ) ),
 			row( __( 'Link (optional)', 'refraction' ), text( f, 'image_link', { type: 'url', placeholder: 'https://' } ) ) );
 	}
@@ -929,6 +1082,9 @@
 		rb_bg: __( 'Background color', 'refraction' ), rb_color: __( 'Text color', 'refraction' ), rb_border_color: __( 'Border color', 'refraction' ), rb_radius: __( 'Border radius (px)', 'refraction' ), rb_size: __( 'Text size (px)', 'refraction' ), rb_weight: __( 'Text weight', 'refraction' ),
 		rbh_bg: __( 'Background color', 'refraction' ), rbh_color: __( 'Text color', 'refraction' ), rbh_border_color: __( 'Border color', 'refraction' ),
 		rbf_bg: __( 'Background color', 'refraction' ), rbf_color: __( 'Text color', 'refraction' ), rbf_border_color: __( 'Border color', 'refraction' ),
+		im_align: __( 'Alignment', 'refraction' ), im_width: __( 'Width (%)', 'refraction' ), im_fit: __( 'Fit', 'refraction' ), im_height: __( 'Height (px)', 'refraction' ),
+		il_gap: __( 'Space between items (px)', 'refraction' ), il_ic_color: __( 'Icon color', 'refraction' ), il_ic_bg: __( 'Icon background', 'refraction' ), il_ic_size: __( 'Icon size (px)', 'refraction' ), il_ich_color: __( 'Icon color', 'refraction' ),
+		il_tx_color: __( 'Text color', 'refraction' ), il_tx_size: __( 'Text size (px)', 'refraction' ), il_tx_weight: __( 'Text weight', 'refraction' ), il_txh_color: __( 'Text color', 'refraction' ),
 		ah_color: __( 'Text color', 'refraction' ), ah_size: __( 'Text size (px)', 'refraction' ), ah_weight: __( 'Text weight', 'refraction' ), ahh_color: __( 'Text color', 'refraction' ), aho_color: __( 'Text color', 'refraction' ),
 		tb_color: __( 'Text color', 'refraction' ), tb_size: __( 'Text size (px)', 'refraction' ), tb_weight: __( 'Text weight', 'refraction' ), tbh_color: __( 'Text color', 'refraction' ), tbo_color: __( 'Text color', 'refraction' ),
 		tp_bg: __( 'Background color', 'refraction' ), tp_border_style: __( 'Border style', 'refraction' ), tp_border_width: __( 'Border width (px)', 'refraction' ), tp_border_color: __( 'Border color', 'refraction' ), tp_radius: __( 'Border radius (px)', 'refraction' ), tp_pad: __( 'Padding (px)', 'refraction' ),
@@ -937,7 +1093,7 @@
 	};
 
 	/** The label of a property: its own, or (for the repeater, row and group copies of the box properties) the box property's. */
-	const fsLabel = ( key ) => FS_LABELS[ key ] || FS_LABELS[ key.replace( /^(?:rep|row|grp|acc|acch|tab|card)_/, '' ) ] || key;
+	const fsLabel = ( key ) => FS_LABELS[ key ] || FS_LABELS[ key.replace( /^(?:rep|row|grp|acc|acch|tab|card|im)_/, '' ) ] || key;
 
 	const FS_ENUMS = {
 		border_style: { none: __( 'None', 'refraction' ), solid: __( 'Solid', 'refraction' ), dashed: __( 'Dashed', 'refraction' ), dotted: __( 'Dotted', 'refraction' ), double: __( 'Double', 'refraction' ) },
@@ -945,6 +1101,8 @@
 		align: { left: __( 'Left', 'refraction' ), center: __( 'Center', 'refraction' ), right: __( 'Right', 'refraction' ), justify: __( 'Justify', 'refraction' ) },
 		family: { inherit: __( 'Same as the form', 'refraction' ), system: __( 'System', 'refraction' ), serif: __( 'Serif', 'refraction' ), mono: __( 'Monospace', 'refraction' ) },
 		weight: { 300: __( 'Light', 'refraction' ), 400: __( 'Normal', 'refraction' ), 500: __( 'Medium', 'refraction' ), 600: __( 'Semi-bold', 'refraction' ), 700: __( 'Bold', 'refraction' ), 800: __( 'Extra bold', 'refraction' ), 900: __( 'Black', 'refraction' ) },
+		fit: { cover: __( 'Fill the box (crop)', 'refraction' ), contain: __( 'Show all of it', 'refraction' ), fill: __( 'Stretch', 'refraction' ) },
+		im_align: { left: __( 'Left', 'refraction' ), center: __( 'Center', 'refraction' ), right: __( 'Right', 'refraction' ) },
 		transform: { none: __( 'None', 'refraction' ), uppercase: __( 'UPPERCASE', 'refraction' ), lowercase: __( 'lowercase', 'refraction' ), capitalize: __( 'Capitalize', 'refraction' ) },
 	};
 
@@ -958,6 +1116,8 @@
 			desc: __( 'Description and help', 'refraction' ),
 			choice: __( 'Buttons', 'refraction' ), plain: __( 'Choice text', 'refraction' ), plain_accent: __( 'Radio / checkbox', 'refraction' ),
 			toggle: __( 'Switch track', 'refraction' ), toggle_knob: __( 'Switch knob', 'refraction' ),
+			image_box: __( 'Image box (.rfb-image)', 'refraction' ), image_img: __( 'The picture', 'refraction' ),
+			il_list: __( 'List', 'refraction' ), il_icon: __( 'Icons', 'refraction' ), il_text: __( 'Item text', 'refraction' ),
 			rep: __( 'Repeater box (.rfb-repeater)', 'refraction' ), rep_rows: __( 'Rows list', 'refraction' ), row: __( 'Each row (.rfb-rep-row)', 'refraction' ),
 			rep_button: __( 'Add-row button', 'refraction' ), rep_remove: __( 'Remove-row button', 'refraction' ), grp: __( 'Group box (.rfb-group)', 'refraction' ),
 			acc_item: __( 'Each panel (.rfb-acc-item)', 'refraction' ), acc_head: __( 'Panel header (.rfb-acc-head)', 'refraction' ),
@@ -1003,8 +1163,14 @@
 
 			let text = String( value );
 
+			// The picture's alignment is made of margins (mirror of Field_Style::declarations).
+			if ( 'im_align' === key ) {
+				groups[ prop.group ] = ( groups[ prop.group ] || '' ) + { left: 'margin-left:0;margin-right:auto;', center: 'margin-left:auto;margin-right:auto;', right: 'margin-left:auto;margin-right:0;' }[ value ];
+				return;
+			}
+
 			if ( 'int' === prop.kind ) {
-				text = 'pct' === prop.unit ? String( Math.round( value ) / 100 ) : value + 'px';
+				text = 'pct' === prop.unit ? String( Math.round( value ) / 100 ) : value + ( '%' === prop.unit ? '%' : 'px' );
 			} else if ( 'bool' === prop.kind ) {
 				text = 'italic';
 			} else if ( 'box-shadow' === prop.css ) {
@@ -1016,7 +1182,7 @@
 			groups[ prop.group ] = ( groups[ prop.group ] || '' ) + prop.css + ':' + text + ';';
 		} );
 
-		[ [ 'box', '' ], [ 'rep', 'rep_' ], [ 'row', 'row_' ], [ 'grp', 'grp_' ], [ 'control', 'c_' ] ].forEach( ( [ group, prefix ] ) => {
+		[ [ 'box', '' ], [ 'rep', 'rep_' ], [ 'row', 'row_' ], [ 'grp', 'grp_' ], [ 'control', 'c_' ], [ 'acc_item', 'acc_' ], [ 'acc_head', 'acch_' ], [ 'tab', 'tab_' ], [ 'tab_panel', 'tp_' ], [ 'card', 'card_' ], [ 'image_img', 'im_' ] ].forEach( ( [ group, prefix ] ) => {
 			if ( ! groups[ group ] ) {
 				return;
 			}
@@ -1177,7 +1343,8 @@
 		}
 
 		const base = key.replace( /^(?:rep|row|grp)_/, '' ).replace( /^(?:b_on|ch|cf|rb|rbh|rbf|[lchdbp])_/, '' );
-		const labels = FS_ENUMS[ base ] || FS_ENUMS[ key ] || Object.fromEntries( prop.values.map( ( v ) => [ v, v ] ) );
+		const kind = [ 'weight', 'border_style', 'shadow', 'transform', 'family', 'fit' ].find( ( k ) => key.endsWith( k ) );
+		const labels = FS_ENUMS[ key ] || FS_ENUMS[ kind ] || FS_ENUMS[ base ] || Object.fromEntries( prop.values.map( ( v ) => [ v, v ] ) );
 		const choose = h( 'select', { class: 'rfb-input', 'aria-label': label, onChange: ( e ) => {
 			if ( '' === e.target.value ) {
 				delete style[ key ];
@@ -1267,7 +1434,8 @@
 
 				controls.push( fsSides( style, k.replace( /_top$/, '' ), 'margin' === kind ? __( 'Margin', 'refraction' ) : __( 'Padding', 'refraction' ), after ) );
 			} );
-			keys.filter( ( k ) => ! /(margin|padding)_(top|right|bottom|left)$/.test( k ) ).forEach( ( k ) => controls.push( fsControl( style, k, after ) ) );
+			keys.filter( ( k ) => ! /(margin|padding)_(top|right|bottom|left)$/.test( k ) && ! ( 'align' === k && [ 'image', 'divider', 'columns', 'accordion', 'tabs', 'choice_set', 'icon_list' ].includes( f.type ) ) )
+				.forEach( ( k ) => controls.push( fsControl( style, k, after ) ) );
 			panel.append( section( fsGroupTitle( group, f.type ), controls ) );
 		} );
 
@@ -1380,12 +1548,24 @@
 			general.push( check( f, 'multiple', __( 'Allow several panels to be open at once', 'refraction' ) ) );
 		}
 
+		if ( 'columns' === t ) {
+			general.push( columnsControls( f, rerender ) );
+		}
+
+		if ( 'panel' === t && found.parent && 'columns' === found.parent.type ) {
+			general.push( row( __( 'Column width', 'refraction' ), select( f, 'width', config.widths, { after: renderCanvasOnly } ), __( 'On a phone the columns stack.', 'refraction' ) ) );
+		}
+
+		if ( 'icon_list' === t ) {
+			general.push( row( __( 'Layout', 'refraction' ), select( f, 'list_layout', { vertical: __( 'One under the other', 'refraction' ), horizontal: __( 'Side by side, wrapping', 'refraction' ) }, { after } ) ), iconItemsEditor( f ) );
+		}
+
 		if ( 'tabs' === t ) {
 			general.push( row( __( 'Tab look', 'refraction' ), select( f, 'tab_look', { line: __( 'Underline', 'refraction' ), pills: __( 'Pills', 'refraction' ) }, { after } ) ) );
 		}
 
 		if ( isHost( t ) ) {
-			general.push( h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary', onClick: () => { addPanel( f ); } }, 'tabs' === t ? __( 'Add tab', 'refraction' ) : __( 'Add panel', 'refraction' ) ), h( 'p', { class: 'rfb-help' }, __( 'Drag any field into a panel. The fields keep their own answers; a panel only arranges them.', 'refraction' ) ) );
+			general.push( h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary', onClick: () => { addPanel( f ); } }, 'tabs' === t ? __( 'Add tab', 'refraction' ) : ( 'columns' === t ? __( 'Add column', 'refraction' ) : __( 'Add panel', 'refraction' ) ) ), h( 'p', { class: 'rfb-help' }, __( 'Drag any field into a panel. The fields keep their own answers; a panel only arranges them.', 'refraction' ) ) );
 		}
 
 		if ( 'panel' === t && found.parent && 'accordion' === found.parent.type ) {
@@ -1395,6 +1575,7 @@
 		if ( isChoiceSet( t ) ) {
 			general.push(
 				check( f, 'multiple', __( 'Visitors can pick several cards', 'refraction' ), { after: rerender } ),
+				h( 'div', { class: 'rfb-inline' }, row( __( 'Cards per row', 'refraction' ), text( f, 'card_columns', { type: 'number', number: true, min: 1, max: 6, after: rerender } ) ), row( __( 'Space between cards (px)', 'refraction' ), text( f, 'card_gap', { type: 'number', number: true, min: 0, max: 60, after: rerender } ) ) ),
 				row( __( 'Card picked at first', 'refraction' ), select( f, 'default', Object.assign( { '': __( 'None', 'refraction' ) }, Object.fromEntries( f.children.map( ( c ) => [ c.key, c.label ] ) ) ), { after } ) ),
 				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary', onClick: () => { addCard( f ); } }, __( 'Add card', 'refraction' ) ),
 				h( 'p', { class: 'rfb-help' }, __( 'Each card is a Group or Repeater. Fields inside a card are shown on the form but visitors can not change them.', 'refraction' ) )
@@ -1409,7 +1590,9 @@
 				'custom' === f.per ? row( __( 'Period text', 'refraction' ), text( f, 'per_label', { after, placeholder: __( 'seat', 'refraction' ) } ) ) : null,
 				row( __( 'Text when there is no price', 'refraction' ), text( f, 'card_note', { after, placeholder: __( 'Price on request', 'refraction' ) } ) ),
 				row( __( 'Name of the details link', 'refraction' ), text( f, 'card_details', { after } ) ),
-				check( f, 'card_details_open', __( 'Show the details open', 'refraction' ) )
+				row( __( 'Card width', 'refraction' ), select( f, 'card_width', Object.assign( { auto: __( 'Automatic (the set\'s cards per row)', 'refraction' ) }, config.widths ), { after } ), __( 'Give cards different widths for rows like 3 on top and 4 below.', 'refraction' ) ),
+				check( f, 'card_inline', __( 'Always show what is inside (no "What\'s included" link)', 'refraction' ), { after: rerender } ),
+				f.card_inline ? null : check( f, 'card_details_open', __( 'Show the details open', 'refraction' ) )
 			);
 		}
 
@@ -1504,8 +1687,8 @@
 		// Layout and table.
 		const look = [];
 
-		if ( 'step' !== t && 'divider' !== t && 'panel' !== t && ! isCard ) {
-			look.push( row( __( 'Width', 'refraction' ), select( f, 'width', { full: __( 'Full', 'refraction' ), half: __( 'Half', 'refraction' ), third: __( 'One third', 'refraction' ) }, { after: renderCanvasOnly } ) ) );
+		if ( 'step' !== t && 'divider' !== t && 'panel' !== t && ! isCard && ! isHost( t ) || ( isHost( t ) && ! found.parent ) ) {
+			look.push( row( __( 'Width', 'refraction' ), select( f, 'width', config.widths, { after: renderCanvasOnly } ), __( 'Shares of a row: fields and columns with widths that add up to 100% sit side by side.', 'refraction' ) ) );
 		}
 
 		look.push( row( __( 'CSS class', 'refraction' ), text( f, 'css_class', { placeholder: 'my-class' } ), __( 'Added to the field wrapper so you can style it in Custom CSS.', 'refraction' ) ) );

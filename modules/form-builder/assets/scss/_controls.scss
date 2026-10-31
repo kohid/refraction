@@ -29,6 +29,12 @@ $rfb-colors: (
 	secondary: ($rfb-gray-300, $rfb-gray-100, $rfb-gray-700)
 );
 
+// Share of a row (percent) per width key; mirrors Classes\Schema::WIDTH_PERCENT.
+$rfb-widths: (
+	full: 100, w90: 90, w80: 80, w75: 75, w70: 70, w66: 66.667, w60: 60, half: 50,
+	w40: 40, third: 33.333, w30: 30, w25: 25, w20: 20, w10: 10
+);
+
 @mixin rfb-controls {
 	// Defaults for every property the Style tab can change; a form's own style="" overrides them.
 	--rfb-card: #fff;
@@ -73,21 +79,40 @@ $rfb-colors: (
 	.rfb-form-grid {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--rfb-gap) 24px;
+		gap: var(--rfb-gap) var(--rfb-col-gap, 24px);
 	}
 
 	.rfb-field {
 		flex: 1 1 100%;
 		min-width: 0;
 		margin: 0;
+	}
 
-		&.rfb-w-half {
-			flex-basis: calc(50% - 12px);
+	// Widths: a field takes its share of the row minus its share of the gaps, so shares that add up to 100% fill the row exactly.
+	@each $name, $percent in $rfb-widths {
+		.rfb-field.rfb-w-#{$name},
+		.rfb-column.rfb-w-#{$name} {
+			flex-basis: #{"calc(" + $percent + "% - var(--rfb-col-gap, 24px) * " + ((100 - $percent) * 0.01) + ")"};
 		}
 
-		&.rfb-w-third {
-			flex-basis: calc(33.333% - 16px);
+		// The two older widths keep stretching when they sit alone on a row; the new ones stay as wide as they say.
+		@if $name != half and $name != third and $name != full {
+			.rfb-field.rfb-w-#{$name} {
+				flex-grow: 0;
+			}
 		}
+	}
+
+	// ---- columns: each column is a share of the row with its own fields
+	.rfb-columns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--rfb-gap) var(--rfb-col-gap, 24px);
+	}
+
+	.rfb-column {
+		flex: 0 0 auto;
+		min-width: 0;
 	}
 
 	.rfb-label {
@@ -1121,12 +1146,16 @@ $rfb-colors: (
 	// ---- choice cards (a Group or Repeater the visitor picks; what is inside is shown but can not be changed)
 	.rfb-cc-list {
 		display: flex;
-		flex-direction: column;
-		gap: 10px;
+		flex-wrap: wrap;
+		gap: var(--rfb-cc-gap, 10px);
 	}
 
 	.rfb-choice-card {
 		position: relative;
+		box-sizing: border-box;
+		flex: 0 0 auto;
+		min-width: 0;
+		max-width: 100%;
 		padding: 14px 16px;
 		border: 1px solid transparent;
 		border-radius: var(--rfb-radius);
@@ -1145,8 +1174,9 @@ $rfb-colors: (
 
 	.rfb-cc-main {
 		display: flex;
+		flex-wrap: wrap; // a narrow card puts the price under the title instead of on top of it
 		align-items: flex-start;
-		gap: 12px;
+		gap: 4px 12px;
 		margin: 0;
 		cursor: pointer;
 
@@ -1177,7 +1207,7 @@ $rfb-colors: (
 
 	.rfb-cc-body {
 		display: flex;
-		flex: 1 1 auto;
+		flex: 1 1 8em;
 		flex-direction: column;
 		gap: 2px;
 		min-width: 0;
@@ -1205,6 +1235,7 @@ $rfb-colors: (
 	}
 
 	.rfb-cc-price {
+		flex: 0 0 auto;
 		margin-left: auto;
 		color: var(--rfb-ink);
 		font-weight: 700;
@@ -1242,10 +1273,69 @@ $rfb-colors: (
 		opacity: 0.9;
 	}
 
+	.rfb-cc-inline {
+		margin-left: 28px;
+	}
+
+	// ---- icon list: items with an icon each
+	.rfb-il {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.rfb-il-horizontal {
+		flex-flow: row wrap;
+		gap: 8px 20px;
+	}
+
+	.rfb-il-item {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.rfb-il-item,
+	.rfb-il-link {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.rfb-il-link:hover .rfb-il-text {
+		text-decoration: underline;
+	}
+
+	.rfb-il-icon {
+		display: inline-flex;
+		flex: none;
+		color: var(--rfb-primary);
+		font-size: 18px;
+
+		svg {
+			width: 1em;
+			height: 1em;
+		}
+	}
+
+	.rfb-il-text {
+		color: var(--rfb-ink);
+		line-height: 1.4;
+	}
+
 	@media (max-width: 640px) {
-		.rfb-field.rfb-w-half,
-		.rfb-field.rfb-w-third {
+		.rfb-field[class*="rfb-w-"],
+		.rfb-column[class*="rfb-w-"] {
 			flex-basis: 100%;
+		}
+
+		.rfb-choice-card {
+			flex-basis: 100% !important; // beats the width written on each card
 		}
 	}
 }

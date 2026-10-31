@@ -193,7 +193,7 @@ async function main() {
 		const groups = await page.$$eval( '.rfb-palette-group summary', ( els ) => els.map( ( e ) => e.textContent.trim() ) );
 		check( 'tiles', 'field groups: Layout, Content, Basic fields, Choices, Advanced', groups.join( '|' ) === 'Layout|Content|Basic fields|Choices|Advanced', groups.join( '|' ) );
 		const tiles = await page.$$eval( '.rfb-palette-item', ( els ) => els.map( ( e ) => ( { type: e.dataset.type, svg: !! e.querySelector( '.rfb-palette-icon svg' ), label: e.textContent.trim() } ) ) );
-		check( 'tiles', 'every tile has an icon and a name', tiles.length === 31 && tiles.every( ( t ) => t.svg && t.label ), JSON.stringify( tiles.filter( ( t ) => ! t.svg ) ) );
+		check( 'tiles', 'every tile has an icon and a name', tiles.length === 33 && tiles.every( ( t ) => t.svg && t.label ), JSON.stringify( tiles.filter( ( t ) => ! t.svg ) ) );
 		check( 'tiles', 'Name, Country, Image and Signature are in the list', [ 'name', 'country', 'image', 'signature' ].every( ( type ) => tiles.some( ( t ) => t.type === type ) ) );
 		const firstTwo = await page.$$eval( '.rfb-palette-group:first-child .rfb-palette-item', ( els ) => els.slice( 0, 3 ).map( ( e ) => Math.round( e.getBoundingClientRect().top ) ) );
 		check( 'tiles', 'tiles sit two to a row', firstTwo[ 0 ] === firstTwo[ 1 ] && firstTwo[ 2 ] > firstTwo[ 1 ], firstTwo.join( ',' ) );

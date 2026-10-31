@@ -130,7 +130,20 @@ class Admin_Page {
 			$icons[ $type ] = Icons::svg( $icon, [ 'size' => 26 ] );
 		}
 
+		$list_icons = [];
+
+		foreach ( Schema::list_icons() as $name ) {
+			$svg = Icons::svg( $name, [ 'size' => 20 ] );
+
+			if ( '' !== $svg ) {
+				$list_icons[ $name ] = $svg;
+			}
+		}
+
 		return [
+			'widths' => Schema::width_choices(),
+			'widthPercent' => Schema::WIDTH_PERCENT,
+			'listIcons' => $list_icons,
 			'palette' => $palette,
 			'typeIcons' => $icons,
 			'countries' => Countries::all(),

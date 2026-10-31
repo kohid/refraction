@@ -385,7 +385,7 @@ t( 'field style: clean is idempotent', $fs === FS::clean( $fs ) );
 t( 'field style: every property belongs to a group that has a selector', ! array_diff( array_unique( array_column( FS::spec(), 0 ) ), array_keys( FS::PARTS ) ) );
 t( 'field style: every group applies to some type', count( FS::groups_for( 'text' ) ) >= 5 && in_array( 'choice', FS::groups_for( 'radio' ), true ) && ! in_array( 'choice', FS::groups_for( 'text' ), true ) );
 t( 'field style: a divider gets the line group but no label or input hover', in_array( 'control', FS::groups_for( 'divider' ), true ) && ! in_array( 'label', FS::groups_for( 'divider' ), true ) && ! in_array( 'control_hover', FS::groups_for( 'divider' ), true ) );
-t( 'field style: every spec int has a range and unit', ! array_filter( FS::spec(), static function ( $s ) { return 'int' === $s[2] && ( $s[3] >= $s[4] || ! in_array( $s[5], [ 'px', 'pct' ], true ) ); } ) );
+t( 'field style: every spec int has a range and unit', ! array_filter( FS::spec(), static function ( $s ) { return 'int' === $s[2] && ( $s[3] >= $s[4] || ! in_array( $s[5], [ 'px', 'pct', '%' ], true ) ); } ) );
 
 $decl = FS::declarations( $fs );
 t( 'field style: box declarations', false !== strpos( $decl['box'], 'margin-top:12px;' ) && false !== strpos( $decl['box'], 'margin-left:-100px;' ) && false !== strpos( $decl['box'], 'background-color:#ffaa00;' ) && false !== strpos( $decl['box'], 'text-align:center;' ) );
@@ -543,6 +543,89 @@ t( 'amount: the period is kept on Amount only, from a fixed list', 'week' === $p
 S::validate( S::definition( [ 'label' => 'x' ] ), [] );
 $v = S::validate( S::definition( [ 'label' => 'x', 'fields' => [ [ 'label' => 'P', 'type' => 'currency', 'key' => 'p' ] ] ] ), [ 'p' => '1,234.5' ] );
 t( 'amount: the default format still reads 1,234.5 (older forms)', '1234.50' === $v['values']['p'] );
+
+// ---- 0.12.0: widths, Columns, free card layout, Icon List, image style ----
+t( 'widths: every width key has a share and a label, and shares are percents', array_keys( S::WIDTH_PERCENT ) === S::WIDTHS && array_keys( S::width_choices() ) === S::WIDTHS && 10.0 === S::width_percent( 'w10' ) && 100.0 === S::width_percent( 'nonsense' ) );
+t( 'widths: a field keeps any known width and falls back to full', 'w20' === S::clean_field( [ 'label' => 'A', 'width' => 'w20' ] )['width'] && 'w75' === S::clean_field( [ 'label' => 'A', 'width' => 'w75' ] )['width'] && 'full' === S::clean_field( [ 'label' => 'A', 'width' => 'w55' ] )['width'] );
+$cols = S::definition( [ 'label' => 'Cols', 'fields' => [
+	[ 'type' => 'columns', 'label' => 'Split', 'key' => 'split', 'col_gap' => 500, 'children' => [
+		[ 'type' => 'panel', 'label' => 'Left', 'key' => 'c1', 'width' => 'w20', 'children' => [
+			[ 'label' => 'Name', 'type' => 'text', 'key' => 'nm', 'required' => 1 ],
+			[ 'type' => 'columns', 'label' => 'Deep', 'key' => 'deep' ],
+			[ 'type' => 'accordion', 'label' => 'Acc', 'key' => 'acc' ],
+			[ 'type' => 'group', 'label' => 'Grp', 'key' => 'grp', 'children' => [ [ 'label' => 'Inner', 'type' => 'text', 'key' => 'inner' ] ] ],
+		] ],
+		[ 'type' => 'panel', 'label' => 'Right', 'key' => 'c2', 'width' => 'w80', 'children' => [ [ 'label' => 'Notes', 'type' => 'textarea', 'key' => 'notes' ] ] ],
+		[ 'label' => 'Stray', 'type' => 'text', 'key' => 'stray' ],
+	] ],
+	[ 'type' => 'group', 'label' => 'Wrap', 'key' => 'wrap', 'children' => [
+		[ 'type' => 'columns', 'label' => 'In group', 'key' => 'ig', 'children' => [
+			[ 'type' => 'panel', 'label' => 'A', 'key' => 'ga', 'width' => 'half', 'children' => [ [ 'label' => 'Street', 'type' => 'text', 'key' => 'street' ], [ 'label' => 'Pic', 'type' => 'file', 'key' => 'pic' ] ] ],
+			[ 'type' => 'panel', 'label' => 'B', 'key' => 'gb', 'width' => 'half', 'children' => [ [ 'label' => 'City', 'type' => 'text', 'key' => 'city' ] ] ],
+		] ],
+		[ 'type' => 'accordion', 'label' => 'No', 'key' => 'noacc' ],
+	] ],
+] ] );
+$ckeys = array_column( S::walk( $cols['fields'] ), 'key' );
+t( 'columns: a host of panels with a width each and a gap that is clamped', 'columns' === $cols['fields'][0]['type'] && [ 'w20', 'w80' ] === array_column( $cols['fields'][0]['children'], 'width' ) && 80 === $cols['fields'][0]['col_gap'] && in_array( 'c1', $ckeys, true ) );
+t( 'columns: a column holds fields, groups and more Columns, but no Accordion and no stray field', in_array( 'nm', $ckeys, true ) && in_array( 'grp', $ckeys, true ) && in_array( 'inner', $ckeys, true ) && in_array( 'deep', $ckeys, true ) && ! in_array( 'acc', $ckeys, true ) && ! in_array( 'stray', $ckeys, true ) );
+t( 'columns: a group may hold Columns, but not an Accordion, and uploads in them are kept (not in a repeater)', in_array( 'ig', $ckeys, true ) && in_array( 'pic', $ckeys, true ) && ! in_array( 'noacc', $ckeys, true ) );
+$v = S::validate( $cols, [ 'nm' => 'Ann', 'notes' => 'Hi', 'wrap' => [ 'street' => 'Main', 'city' => 'Town' ], 'grp' => [ 'inner' => 'x' ] ] );
+t( 'columns: values are stored as if the layout was not there, inside a group too', [] === $v['errors'] && 'Ann' === $v['values']['nm'] && 'Hi' === $v['values']['notes'] && 'Main' === $v['values']['wrap']['street'] && 'Town' === $v['values']['wrap']['city'] && ! isset( $v['values']['split'], $v['values']['c1'] ) );
+t( 'columns: required still applies inside a column', 'This field is required.' === ( S::validate( $cols, [] )['errors']['nm'] ?? '' ) );
+t( 'columns: a file inside Columns inside a group is found by the uploader logic', isset( S::field( $cols, 'pic' )['key'] ) );
+$rep = S::definition( [ 'label' => 'R', 'fields' => [ [ 'type' => 'repeater', 'label' => 'Rows', 'key' => 'rows', 'children' => [ [ 'type' => 'columns', 'label' => 'C', 'key' => 'rc', 'children' => [ [ 'type' => 'panel', 'label' => 'P', 'key' => 'rp', 'children' => [ [ 'label' => 'Item', 'type' => 'text', 'key' => 'item' ], [ 'label' => 'Up', 'type' => 'file', 'key' => 'up' ] ] ] ] ] ] ] ] ] );
+t( 'columns: a repeater may hold Columns but still refuses uploads, even inside them', in_array( 'item', array_column( S::walk( $rep['fields'] ), 'key' ), true ) && ! in_array( 'up', array_column( S::walk( $rep['fields'] ), 'key' ), true ) );
+
+// Card layout.
+$lay = S::definition( [ 'label' => 'Cards', 'fields' => [
+	[ 'type' => 'choice_set', 'label' => 'Plan', 'key' => 'plan', 'card_columns' => 9, 'card_gap' => 100, 'children' => [
+		[ 'type' => 'group', 'label' => 'One', 'key' => 'one', 'card_width' => 'w20', 'card_inline' => 1, 'children' => [
+			[ 'type' => 'icon_list', 'label' => 'Included', 'key' => 'inc', 'items' => [ [ 'text' => 'Trim', 'icon' => 'check' ] ] ],
+			[ 'type' => 'columns', 'label' => 'Cols', 'key' => 'cc', 'children' => [
+				[ 'type' => 'panel', 'label' => 'L', 'key' => 'cl', 'width' => 'w10', 'children' => [ [ 'type' => 'image', 'label' => 'Logo', 'key' => 'logo' ] ] ],
+				[ 'type' => 'panel', 'label' => 'R', 'key' => 'cr', 'width' => 'w90', 'children' => [ [ 'type' => 'heading', 'label' => 'H', 'key' => 'hd' ], [ 'label' => 'Visits', 'type' => 'text', 'key' => 'visits', 'required' => 1 ], [ 'label' => 'Sig', 'type' => 'signature', 'key' => 'sg' ], [ 'label' => 'File', 'type' => 'file', 'key' => 'fl' ] ] ],
+			] ],
+			[ 'type' => 'group', 'label' => 'No', 'key' => 'nogrp' ],
+		] ],
+		[ 'type' => 'group', 'label' => 'Two', 'key' => 'two', 'card_width' => 'bogus' ],
+	] ],
+] ] );
+$set = $lay['fields'][0];
+$lkeys = array_column( S::walk( $set['children'] ), 'key' );
+t( 'card layout: cards per row and gap are clamped', 6 === $set['card_columns'] && 60 === $set['card_gap'] && 1 === S::clean_field( [ 'label' => 'x', 'type' => 'text' ] )['card_columns'] );
+t( 'card layout: a card has its own width (or auto) and an inline option', 'w20' === $set['children'][0]['card_width'] && 'auto' === $set['children'][1]['card_width'] && $set['children'][0]['card_inline'] && ! $set['children'][1]['card_inline'] );
+t( 'card layout: a card can hold content blocks and Columns, and the columns hold fields and content', ! array_diff( [ 'inc', 'cc', 'cl', 'cr', 'logo', 'hd', 'visits' ], $lkeys ) );
+t( 'card layout: no upload, signature or group inside a card, even inside its columns', ! array_intersect( [ 'sg', 'fl', 'nogrp' ], $lkeys ) );
+t( 'card layout: nothing inside a card can be required', ! S::field( $lay, 'visits' )['required'] );
+$vc = S::validate( $lay, [ 'plan' => 'one', 'visits' => 'hacked' ] );
+t( 'card layout: the pick is stored and the fields inside are still ignored', [] === $vc['errors'] && 'one' === $vc['values']['plan'][0]['key'] && ! isset( $vc['values']['visits'] ) );
+t( 'card layout: width keys outside the list are refused for cards', 'auto' === $set['children'][1]['card_width'] );
+
+// Icon List.
+$il = S::clean_field( [ 'type' => 'icon_list', 'label' => 'List', 'list_layout' => 'horizontal', 'items' => [
+	[ 'text' => 'One', 'icon' => 'check-circle', 'link' => 'https://example.com/a' ],
+	[ 'text' => '  ', 'icon' => 'star' ],
+	[ 'text' => 'Two <b>x</b>', 'icon' => '../../evil', 'link' => 'javascript:alert(1)' ],
+	'junk',
+	[ 'text' => 'Three' ],
+] ] );
+t( 'icon list: it is a layout block with no value, in the palette', S::is_layout( 'icon_list' ) && ! S::has_value( 'icon_list' ) && isset( S::types()['icon_list'] ) && isset( S::icons()['icon_list'] ) && isset( S::icons()['columns'] ) );
+t( 'icon list: blank and junk items are dropped, text is plain, the icon name is checked, the link must be http(s)', 3 === count( $il['items'] ) && 'One' === $il['items'][0]['text'] && 'check-circle' === $il['items'][0]['icon'] && 'https://example.com/a' === $il['items'][0]['link'] && 'check' === $il['items'][1]['icon'] && '' === $il['items'][1]['link'] && false === strpos( $il['items'][1]['text'], '<' ) && 'check' === $il['items'][2]['icon'] );
+t( 'icon list: layout is vertical unless horizontal, and only an icon list has items', 'horizontal' === $il['list_layout'] && 'vertical' === S::clean_field( [ 'type' => 'icon_list', 'label' => 'x', 'list_layout' => 'zig' ] )['list_layout'] && [] === S::clean_field( [ 'label' => 'x', 'type' => 'text', 'items' => [ [ 'text' => 'a' ] ] ] )['items'] );
+$many = [];
+for ( $i = 0; $i < 60; $i++ ) { $many[] = [ 'text' => 'Item ' . $i ]; }
+t( 'icon list: the number of items is capped', S::MAX_ICON_ITEMS === count( S::clean_field( [ 'type' => 'icon_list', 'label' => 'x', 'items' => $many ] )['items'] ) );
+t( 'icon list: it can sit anywhere content can (top, panel, card, group) and every listed icon name is well formed', true === S::allowed_in( 'icon_list', 'card', 'card' ) && true === S::allowed_in( 'icon_list', 'colpanel', '' ) && ! array_filter( S::list_icons(), static function ( $n ) { return 1 !== preg_match( '/^[a-z0-9][a-z0-9-]*$/', $n ); } ) );
+
+// Image style.
+$imc = FS::css( [ 'fields' => [ [ 'key' => 'pic', 'type' => 'image', 'children' => [], 'style' => FS::clean( [ 'im_align' => 'right', 'im_width' => 40, 'im_radius' => 12, 'im_fit' => 'cover', 'im_height' => 200, 'im_border_width' => 2, 'im_h_shadow' => 'strong' ] ) ] ], 'type_styles' => [] ], '#f' );
+t( 'image style: alignment becomes margins on the figure, width a percent', false !== strpos( $imc, '#f [data-rfb-key="pic"] .rfb-image{margin-left:auto;margin-right:0;width:40%;}' ), $imc );
+t( 'image style: the picture gets radius, height, fit and a completed border, and a hover shadow', false !== strpos( $imc, '.rfb-image img{' ) && false !== strpos( $imc, 'border-radius:12px;' ) && false !== strpos( $imc, 'height:200px;' ) && false !== strpos( $imc, 'object-fit:cover;' ) && false !== strpos( $imc, 'border-style:solid;' ) && false !== strpos( $imc, '.rfb-image img:hover{box-shadow:' ) );
+t( 'image style: only an image offers these groups, and an image no longer offers text controls', in_array( 'image_box', FS::groups_for( 'image' ), true ) && ! in_array( 'image_box', FS::groups_for( 'text' ), true ) && ! in_array( 'control', FS::groups_for( 'image' ), true ) && in_array( 'il_icon', FS::groups_for( 'icon_list' ), true ) );
+t( 'image style: bad values are dropped', [] === FS::clean( [ 'im_align' => 'middle', 'im_width' => 'x', 'im_fit' => 'zoom' ] ) && 100 === FS::clean( [ 'im_width' => 500 ] )['im_width'] );
+$ilc = FS::css( [ 'fields' => [ [ 'key' => 'li', 'type' => 'icon_list', 'children' => [], 'style' => FS::clean( [ 'il_ic_color' => '#ff0000', 'il_ic_size' => 24, 'il_tx_weight' => '700', 'il_gap' => 14, 'il_txh_color' => '#00ff00' ] ) ] ], 'type_styles' => [] ], '#f' );
+t( 'icon list style: list gap, icon and text get their own rules and hover', false !== strpos( $ilc, '.rfb-il{gap:14px;}' ) && false !== strpos( $ilc, '.rfb-il-icon{color:#ff0000;font-size:24px;}' ) && false !== strpos( $ilc, '.rfb-il-text{font-weight:700;}' ) && false !== strpos( $ilc, '.rfb-il-item:hover .rfb-il-text{color:#00ff00;}' ), $ilc );
 
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

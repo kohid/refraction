@@ -112,12 +112,10 @@
 		outline-offset: 2px;
 		transition: outline-color 0.1s, background-color 0.1s;
 
-		&.rfb-w-half {
-			flex-basis: calc(50% - 8px);
-		}
-
-		&.rfb-w-third {
-			flex-basis: calc(33.333% - 11px);
+		@each $name, $percent in $rfb-widths {
+			&.rfb-w-#{$name} {
+				flex-basis: #{"calc(" + $percent + "% - 16px * " + ((100 - $percent) * 0.01) + ")"};
+			}
 		}
 
 		// Only the innermost hovered field reacts (a repeater does not light up while you hover a field inside it).
@@ -341,6 +339,35 @@
 		gap: 10px;
 	}
 
+	// Columns on the canvas sit side by side like on the page.
+	.rfb-cv-columns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px var(--rfb-col-gap, 24px);
+
+		> .rfb-cv-panel {
+			flex: 0 0 auto;
+			min-width: 0;
+			box-sizing: border-box;
+		}
+
+		@each $name, $percent in $rfb-widths {
+			> .rfb-cv-panel.rfb-w-#{$name} {
+				flex-basis: #{"calc(" + $percent + "% - var(--rfb-col-gap, 24px) * " + ((100 - $percent) * 0.01) + ")"};
+			}
+		}
+	}
+
+	// Choice cards on the canvas share one gap and take their own widths.
+	.rfb-cv-cards > .rfb-cv-list,
+	.rfb-cv-cards .rfb-cc-list > .rfb-cv-list {
+		gap: var(--rfb-cc-gap, 10px);
+
+		> .rfb-cv-item {
+			flex: 0 0 auto;
+		}
+	}
+
 	.rfb-cv-panel {
 		padding: 8px 10px 10px;
 		border: 1px dashed var(--rfb-line);
@@ -361,13 +388,16 @@
 
 	.rfb-cv-panel-head {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 4px;
 		margin-bottom: 8px;
 
 		strong {
-			flex: 1 1 auto;
+			flex: 1 1 4em;
+			min-width: 0;
 			font-size: 12px;
+			overflow-wrap: anywhere;
 		}
 	}
 
@@ -821,6 +851,85 @@
 	.rfb-cv-title.is-faint {
 		color: var(--rfb-muted);
 		font-weight: 600;
+	}
+
+	// Columns split buttons and the Icon List item editor, in the settings panel.
+	.rfb-splits {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.rfb-split-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+		gap: 6px;
+	}
+
+	.rfb-split-btn {
+		padding: 7px 6px;
+		border: 1px solid $rfb-gray-300;
+		border-radius: 6px;
+		background: #fff;
+		color: $rfb-gray-700;
+		cursor: pointer;
+		font: inherit;
+		font-size: 12px;
+		font-weight: 600;
+
+		&:hover {
+			border-color: var(--rfb-primary);
+		}
+
+		&.is-active {
+			border-color: var(--rfb-primary);
+			background: $rfb-primary-light;
+			color: var(--rfb-primary);
+		}
+	}
+
+	.rfb-il-editor {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.rfb-il-row {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 8px;
+		border: 1px solid $rfb-gray-200;
+		border-radius: 8px;
+		background: #fff;
+	}
+
+	.rfb-il-row-top {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+	}
+
+	.rfb-il-pick-icon {
+		display: inline-flex;
+		flex: none;
+		width: 28px;
+		height: 28px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 6px;
+		background: $rfb-gray-100;
+		color: var(--rfb-primary);
+
+		svg {
+			width: 18px;
+			height: 18px;
+		}
 	}
 
 	.rfb-image-controls {

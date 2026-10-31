@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.11.0
+Stable tag: 0.12.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.12.0 =
+* New: free layout. Fields now take any width from 10% to 100% (1/2, 1/3, 1/4, 1/5, 2/3, 3/4, 20%, 30%...), and widths that add up to a full row sit side by side. A new Columns block splits a row into columns with ready-made splits (50/50, 33/33/33, 10/90, 20/80, 30/70, 25/50/25 and more) or your own widths, with a gap you choose. Any field, group, repeater or content block can go in a column, and Columns can nest. On a phone everything stacks.
+* New: choice cards take any content. Drop any field or content block (heading, paragraph, image, Icon List, HTML, Columns) anywhere inside a card. The set has cards per row and a gap; each card has its own width, so 3 cards on top and 4 below, or one full-width card, are all possible. A card can show its content always, or behind "What's included".
+* New: Icon List block. Add items with an icon each (from a bundled set), text and an optional link; vertical or side by side. Style the list gap, icon color, size and background, and the text color, size and weight, with hover looks.
+* Fix: the Image style did not do what it said. Alignment in the Style tab now really aligns the picture (left, center, right), with its own width, fit, height, border, radius, shadow and hover shadow; the text options that never applied to a picture are gone.
 
 = 0.11.0 =
 * New: Accordion and Tabs fields. Add panels (or tabs), then drag any field into a panel, including groups, repeaters and choice cards. A panel only arranges its fields: their answers are saved exactly as if they sat at the top of the form. Panels can have visibility rules (a hidden panel hides and skips every field inside it), an accordion can keep one or several panels open, tabs come as underline or pills and work with the arrow keys, and a closed panel or inactive tab opens by itself when it holds the field that needs attention.
