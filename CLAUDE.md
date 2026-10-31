@@ -13,6 +13,8 @@ Always use the installed skills whenever one applies to the task, and invoke it 
 - UI work: `frontend-design:frontend-design`; WordPress/PHP/JS full-stack work: `anthropic-skills:fullstack-developer`.
 - Reviews: `code-review`, `simplify`, `security-review`.
 
+Always collaborate with all three of `feature-dev:feature-dev`, `frontend-design:frontend-design` and `anthropic-skills:fullstack-developer` on every feature or change, invoking them before starting; do not wait for the task to look big enough.
+
 The owner has also said: do not stop to ask what to do next; decide, build and verify, and report. Features requested so far: the whole Elementor free + Pro feature set, rebranded as Refraction (see `docs/refraction/pro-roadmap.md`).
 
 ## What this is
