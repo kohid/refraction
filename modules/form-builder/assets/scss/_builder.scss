@@ -331,6 +331,65 @@
 		}
 	}
 
+	// A choice card on the canvas is its own container; the pick control is drawn but not clickable.
+	.rfb-cv-container.rfb-choice-card {
+		padding: 14px 16px;
+		border: 1px solid transparent;
+
+		// More specific than the page rule that lets clicks through to the input: on the canvas the blocks must take clicks and drops.
+		&.is-free .rfb-cc-content {
+			pointer-events: auto;
+		}
+
+		.rfb-cc-pick {
+			pointer-events: none;
+		}
+	}
+
+	// Accordion panels and tabs on the canvas wear the real classes, so the Style tab shows up here too.
+	.rfb-cv-panel.rfb-acc-item {
+		position: relative;
+		padding: 0;
+		border: 1px solid var(--rfb-line);
+		border-radius: var(--rfb-radius);
+		background: var(--rfb-form-bg);
+
+		&.is-selected {
+			border-color: var(--rfb-primary);
+			outline: 1px solid var(--rfb-primary);
+		}
+
+		.rfb-acc-head {
+			cursor: pointer;
+		}
+
+		.rfb-acc-body {
+			padding-top: 8px;
+		}
+	}
+
+	.rfb-cv-panel.rfb-tabpanel {
+		position: relative;
+		margin-top: 8px;
+	}
+
+	.rfb-cv-panel-tools {
+		position: absolute;
+		top: 4px;
+		right: 36px;
+		z-index: 4;
+		display: flex;
+		gap: 2px;
+	}
+
+	.rfb-cv-host .rfb-tablist {
+		margin-bottom: 4px;
+
+		.rfb-tab {
+			cursor: pointer;
+		}
+	}
+
 	// Accordion, Tabs and choice sets on the canvas: every panel is drawn so fields can be dropped into any of them.
 	.rfb-cv-host,
 	.rfb-cv-cards {

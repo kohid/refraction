@@ -23,6 +23,7 @@
 
 	config.palette.forEach( ( group ) => Object.assign( typeLabels, group.types ) );
 	typeLabels.panel = __( 'Panel', 'refraction' );
+	typeLabels.card = __( 'Choice card', 'refraction' );
 
 	let uid = 0;
 	let selected = null;
@@ -78,7 +79,7 @@
 
 	const all = ( list = state.fields ) => list.flatMap( ( field ) => [ field, ...all( field.children || [] ) ] );
 	const isContainer = ( type ) => 'group' === type || 'repeater' === type;
-	const isLayout = ( type ) => [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list' ].includes( type );
+	const isLayout = ( type ) => [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list', 'badge', 'price' ].includes( type );
 	const isHost = ( type ) => [ 'accordion', 'tabs', 'columns' ].includes( type );
 	const isTransparent = ( type ) => isHost( type ) || 'panel' === type;
 	const isChoiceSet = ( type ) => 'choice_set' === type;
@@ -135,6 +136,7 @@
 			description: '', label_tag: 'div', parts: [ 'first', 'last' ], image_id: 0, image_size: 'medium', image_width: 100, image_align: 'left', image_alt: '', image_link: '', sig_height: 180,
 			multiple: false, open: false, tab_look: 'line', per: '', per_label: '',
 			card_inline: false, card_width: 'auto', card_columns: 1, card_gap: 10, col_gap: 24, list_layout: 'vertical', items: [],
+			card_mode: 'standard', marker_pos: '', marker_look: '', price_card: true, price_amount: null, from_card: false,
 			card_badge: '', card_subtitle: '', card_price: null, card_note: '', card_details: __( "What's included", 'refraction' ), card_details_open: false,
 		};
 	}
@@ -175,7 +177,14 @@
 				return panel;
 			} );
 		} else if ( isChoiceSet( type ) ) {
+			field.marker_pos = 'left';
+			field.marker_look = 'radio';
 			field.children = newCards( field.key, 2 );
+		} else if ( 'badge' === type ) {
+			field.content = __( 'Popular', 'refraction' );
+			field.width = 'full';
+		} else if ( 'price' === type ) {
+			field.price_amount = 10;
 		}
 
 		field.width = [ 'text', 'email', 'phone', 'number', 'currency', 'date', 'time', 'datetime', 'select', 'country' ].includes( type ) ? 'half' : 'full';
@@ -198,21 +207,23 @@
 	function newCards( setKey, count, taken = [] ) {
 		const used = [ setKey, ...taken ];
 		const cards = [];
+		const make = ( type, label, extra = {} ) => {
+			const block = baseField( type );
+
+			Object.assign( block, { label, key: uniqueKey( type, null, used ) }, extra );
+			used.push( block.key );
+
+			return block;
+		};
+		const column = ( label, width, children ) => Object.assign( make( 'panel', label ), { width, children } );
 
 		for ( let n = 1; n <= count; n++ ) {
-			const card = baseField( 'group' );
-			const text = baseField( 'paragraph' );
-			const number = all().filter( ( f ) => 'group' === f.type ).length + cards.length + 1;
+			const card = make( 'group', sprintf( __( 'Option %d', 'refraction' ), all().filter( ( f ) => 'group' === f.type ).length + cards.length + 1 ), { card_mode: 'free', card_price: 10 * n } );
+			const title = make( 'heading', __( 'Card title', 'refraction' ), { from_card: true, level: 3 } );
+			const text = make( 'paragraph', __( 'Paragraph', 'refraction' ), { content: __( 'Describe this option.', 'refraction' ) } );
+			const price = make( 'price', __( 'Price', 'refraction' ), { style: { align: 'right' } } );
 
-			card.label = sprintf( __( 'Option %d', 'refraction' ), number );
-			card.key = uniqueKey( 'option', null, used );
-			used.push( card.key );
-			card.card_price = 10 * n;
-			text.label = __( 'Paragraph', 'refraction' );
-			text.content = __( 'Describe what is included.', 'refraction' );
-			text.key = uniqueKey( 'paragraph', null, used );
-			used.push( text.key );
-			card.children = [ text ];
+			card.children = [ Object.assign( make( 'columns', __( 'Header', 'refraction' ) ), { children: [ column( __( 'Column', 'refraction' ) + ' 1', 'w70', [ title, text ] ), column( __( 'Column', 'refraction' ) + ' 2', 'w30', [ price ] ) ] } ) ];
 			cards.push( card );
 		}
 
@@ -270,6 +281,23 @@
 		} );
 
 		return copy;
+	}
+
+	/** A Group or Repeater inside a choice set is a card. */
+	function isCardField( field ) {
+		const found = find( field._id );
+
+		return !! found && isContainer( field.type ) && !! found.parent && isChoiceSet( found.parent.type );
+	}
+
+	/** The type a field is styled as: a card has its own styles, apart from the Group it is built on. */
+	const styleTypeOf = ( field ) => ( isCardField( field ) ? 'card' : field.type );
+
+	/** The card a block sits in (any depth), or null. */
+	function cardAround( field ) {
+		const chain = ancestors( field._id ) || [];
+
+		return chain.find( ( f, i ) => i > 0 && isContainer( f.type ) && isChoiceSet( chain[ i - 1 ].type ) ) || null;
 	}
 
 	/** The fields from the top down to (and including) the one with this id, or null. */
@@ -343,7 +371,7 @@
 		const inside = [ 'panel', 'colpanel' ].includes( parent );
 
 		if ( [ 'accordion', 'tabs' ].includes( type ) ) {
-			return '' === root && ! inside;
+			return [ '', 'card' ].includes( root ) && ! inside;
 		}
 
 		if ( 'columns' === type ) {
@@ -544,8 +572,24 @@
 				: h( 'div', { class: 'rfb-cv-drop' }, __( 'Icon List: add items in the settings panel', 'refraction' ) );
 		}
 
+		if ( 'badge' === t ) {
+			return h( 'span', { class: 'rfb-badge-pill' }, field.content || field.label );
+		}
+
+		if ( 'price' === t ) {
+			const card = field.price_card ? cardAround( field ) : null;
+			const amount = card ? card.card_price : field.price_amount;
+			const source = card || field;
+
+			return null === amount || '' === amount || undefined === amount
+				? h( 'span', { class: 'rfb-help' }, __( 'Price (no price set)', 'refraction' ) )
+				: h( 'span', { class: 'rfb-price' }, h( 'span', { class: 'rfb-price-amount' }, fmtMoney( amount, true ) ), perText( source ) ? h( 'span', { class: 'rfb-price-per' }, ' ' + perText( source ) ) : null );
+		}
+
 		if ( 'heading' === t ) {
-			return h( 'div', { class: 'rfb-cv-heading rfb-cv-h' + field.level }, field.content || field.label );
+			const owner = field.from_card ? cardAround( field ) : null;
+
+			return h( 'div', { class: 'rfb-cv-heading rfb-cv-h' + field.level }, owner ? owner.label : ( field.content || field.label ) );
 		}
 
 		if ( 'paragraph' === t ) {
@@ -736,7 +780,7 @@
 		const isCardItem = !! owner && isChoiceSet( owner.type );
 		const el = h( 'div', {
 			style: isCardItem ? 'flex-basis:' + cardBasis( field, owner ) : undefined,
-			class: 'rfb-cv-item rfb-cv-' + field.type + ( selected === field._id ? ' is-selected' : '' ) + ( selected === field._id && previewState ? ' is-force' : '' ) + ( isCardItem ? '' : ' rfb-w-' + field.width ),
+			class: 'rfb-cv-item ' + ( isCardItem && isContainer( field.type ) ? 'rfb-cv-card' : 'rfb-cv-' + field.type ) + ( selected === field._id ? ' is-selected' : '' ) + ( selected === field._id && previewState ? ' is-force' : '' ) + ( isCardItem ? '' : ' rfb-w-' + field.width ),
 			draggable: 'true', 'data-id': field._id, 'data-rfb-key': field.key,
 			onClick: ( e ) => {
 				e.stopPropagation();
@@ -765,7 +809,7 @@
 		} );
 		const button = ( label, symbol, action, extra = '' ) => h( 'button', { type: 'button', class: 'rfb-icon-btn ' + extra, 'aria-label': label, title: label, onClick: ( e ) => { e.stopPropagation(); action(); } }, symbol );
 		const bar = h( 'div', { class: 'rfb-cv-bar' },
-			h( 'span', { class: 'rfb-cv-type', title: __( 'Drag to move', 'refraction' ) }, typeLabels[ field.type ] || field.type ),
+			h( 'span', { class: 'rfb-cv-type', title: __( 'Drag to move', 'refraction' ) }, typeLabels[ isCardItem && isContainer( field.type ) ? 'card' : field.type ] || field.type ),
 			button( sprintf( __( 'Move %s up', 'refraction' ), field.label ), '↑', () => index > 0 && move( field._id, owner, index - 1 ), 'rfb-cv-move' ),
 			button( sprintf( __( 'Move %s down', 'refraction' ), field.label ), '↓', () => index < items.length - 1 && move( field._id, owner, index + 2 ), 'rfb-cv-move' ),
 			button( sprintf( __( 'Duplicate %s', 'refraction' ), field.label ), '⧉', () => insert( clone( field ), owner, index + 1 ) ),
@@ -787,7 +831,7 @@
 			const columns = 'columns' === field.type;
 			const body = columns ? h( 'div', { class: 'rfb-cv-columns', style: '--rfb-col-gap:' + field.col_gap + 'px' }, panels ) : null;
 
-			el.append( h( 'div', { class: 'rfb-cv-container rfb-cv-host rfb-' + field.type + ( 'tabs' === field.type ? ' rfb-tabs-' + field.tab_look : '' ) }, title, field.description && ! columns ? h( 'p', { class: 'rfb-description' }, field.description ) : null, ...( columns ? [ body ] : panels ),
+			el.append( h( 'div', { class: 'rfb-cv-container rfb-cv-host rfb-' + field.type + ( 'tabs' === field.type ? ' rfb-tabs-' + field.tab_look : '' ) }, title, field.description && ! columns ? h( 'p', { class: 'rfb-description' }, field.description ) : null, ...( columns ? [ body ] : ( 'tabs' === field.type ? [ canvasTabs( field ), ...panels ] : panels ) ),
 				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary rfb-cv-addpanel', onClick: ( e ) => { e.stopPropagation(); addPanel( field ); } }, 'tabs' === field.type ? __( 'Add tab', 'refraction' ) : ( 'columns' === field.type ? __( 'Add column', 'refraction' ) : __( 'Add panel', 'refraction' ) ) ) ) );
 		} else if ( isChoiceSet( field.type ) ) {
 			const title = h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, ' · ', field.multiple ? __( 'pick several', 'refraction' ) : __( 'pick one', 'refraction' ) );
@@ -795,7 +839,7 @@
 			el.append( h( 'div', { class: 'rfb-cv-container rfb-cv-cards', style: '--rfb-cc-gap:' + field.card_gap + 'px' }, title, field.description ? h( 'p', { class: 'rfb-description' }, field.description ) : null, h( 'div', { class: 'rfb-cc-list' }, list( field.children, field ) ),
 				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary rfb-cv-addpanel', onClick: ( e ) => { e.stopPropagation(); addCard( field ); } }, __( 'Add card', 'refraction' ) ) ) );
 		} else if ( isContainer( field.type ) && owner && isChoiceSet( owner.type ) ) {
-			el.append( h( 'div', { class: 'rfb-cv-container' }, cardBlock( field, owner ) ) );
+			el.append( cardBlock( field, owner ) );
 		} else if ( isContainer( field.type ) ) {
 			// Drawn with the real classes (rfb-repeater, rfb-rep-row, rfb-group) so what you style here is what the page gets.
 			const title = h( 'strong', { class: 'rfb-cv-title' + ( field.hide_label ? ' is-faint' : '' ) }, field.label, 'repeater' === field.type ? ' · ' + __( 'repeats', 'refraction' ) : '', field.hide_label ? ' ' + __( '(title hidden on the form)', 'refraction' ) : '' );
@@ -815,11 +859,21 @@
 
 	/** A panel (or tab) inside an Accordion or Tabs: a titled drop area you can select, move and delete. */
 	function panelBlock( panel, host, index ) {
+		const accordion = 'accordion' === host.type;
 		const kind = 'tabs' === host.type ? __( 'Tab', 'refraction' ) : ( 'columns' === host.type ? __( 'Column', 'refraction' ) : __( 'Panel', 'refraction' ) );
 		const button = ( label, symbol, action, extra = '' ) => h( 'button', { type: 'button', class: 'rfb-icon-btn ' + extra, 'aria-label': label, title: label, onClick: ( e ) => { e.stopPropagation(); action(); } }, symbol );
+		const tools = [
+			button( sprintf( __( 'Move %s up', 'refraction' ), panel.label ), '↑', () => index > 0 && move( panel._id, host, index - 1 ) ),
+			button( sprintf( __( 'Move %s down', 'refraction' ), panel.label ), '↓', () => index < host.children.length - 1 && move( panel._id, host, index + 2 ) ),
+			button( sprintf( __( 'Delete %s', 'refraction' ), panel.label ), '✕', () => removeField( panel ), 'rfb-icon-danger' ),
+		];
+		const classes = 'rfb-cv-panel'
+			+ ( 'columns' === host.type ? ' rfb-w-' + panel.width : '' )
+			+ ( accordion ? ' rfb-acc-item' : '' ) + ( 'tabs' === host.type ? ' rfb-tabpanel' : '' )
+			+ ( selected === panel._id ? ' is-selected' : '' ) + ( panel.conditions && panel.conditions.enabled ? ' is-conditional' : '' );
 
 		return h( 'div', {
-			class: 'rfb-cv-panel' + ( 'columns' === host.type ? ' rfb-w-' + panel.width : '' ) + ( selected === panel._id ? ' is-selected' : '' ) + ( panel.conditions && panel.conditions.enabled ? ' is-conditional' : '' ), 'data-id': panel._id, 'data-rfb-key': panel.key,
+			class: classes, 'data-id': panel._id, 'data-rfb-key': panel.key, open: accordion ? '' : undefined,
 			onClick: ( e ) => {
 				e.stopPropagation();
 				selected = panel._id;
@@ -830,11 +884,20 @@
 				renderBuild();
 			},
 		},
-		h( 'div', { class: 'rfb-cv-panel-head' }, h( 'strong', null, kind + ': ' + panel.label ),
-			button( sprintf( __( 'Move %s up', 'refraction' ), panel.label ), '↑', () => index > 0 && move( panel._id, host, index - 1 ) ),
-			button( sprintf( __( 'Move %s down', 'refraction' ), panel.label ), '↓', () => index < host.children.length - 1 && move( panel._id, host, index + 2 ) ),
-			button( sprintf( __( 'Delete %s', 'refraction' ), panel.label ), '✕', () => removeField( panel ), 'rfb-icon-danger' ) ),
-		list( panel.children, panel ) );
+		// An accordion panel is drawn with the real header and body classes, so the Style tab shows here as on the page.
+		accordion ? h( 'div', { class: 'rfb-cv-panel-tools' }, tools ) : null,
+		accordion ? h( 'div', { class: 'rfb-acc-head' }, panel.label ) : h( 'div', { class: 'rfb-cv-panel-head' }, h( 'strong', null, kind + ': ' + panel.label ), ...tools ),
+		accordion ? h( 'div', { class: 'rfb-acc-body' }, list( panel.children, panel ) ) : list( panel.children, panel ) );
+	}
+
+	/** The tab row of a Tabs block on the canvas, with the real classes; the tab you picked (or the first) looks selected. */
+	function canvasTabs( host ) {
+		const current = host.children.find( ( p ) => p._id === selected ) || host.children[ 0 ];
+
+		return h( 'div', { class: 'rfb-tablist', role: 'tablist' }, host.children.map( ( p ) => h( 'span', {
+			class: 'rfb-tab' + ( p === current ? ' is-active' : '' ), role: 'tab', 'aria-selected': String( p === current ),
+			onClick: ( e ) => { e.stopPropagation(); selected = p._id; renderBuild(); },
+		}, p.label ) ) );
 	}
 
 	function addPanel( host ) {
@@ -850,15 +913,26 @@
 		insert( tag( newCards( set.key, 1, all( set.children ).map( ( f ) => f.key ) )[ 0 ] ), set, set.children.length );
 	}
 
-	/** One card of a choice set as the visitor will see it; the fields inside are for show (the form disables them). */
+	/** One card of a choice set: its own container (free: the pick control and the blocks you drop in; standard: the fixed header and a details area). */
 	function cardBlock( card, set ) {
+		const cardLook = ( card.marker_look || set.marker_look || 'radio' );
+		const cardPos = ( card.marker_pos || set.marker_pos || 'left' );
+		const picked = set.default === card.key || ( selected === card._id && previewState );
+		const free = 'free' === card.card_mode;
+		const mark = h( 'span', { class: 'rfb-cc-mark' + ( set.multiple ? ' is-check' : '' ) } );
+
+		if ( free ) {
+			return h( 'div', { class: 'rfb-cv-container rfb-choice-card rfb-t-card is-free rfb-mpos-' + cardPos + ' rfb-mlook-' + cardLook + ( picked ? ' is-selected' : '' ) },
+				h( 'span', { class: 'rfb-cc-pick', 'aria-hidden': 'true' }, mark ),
+				h( 'div', { class: 'rfb-cc-content' }, list( card.children, card ) ) );
+		}
+
 		const price = null !== card.card_price && '' !== card.card_price
 			? h( 'span', { class: 'rfb-cc-price' }, h( 'span', { class: 'rfb-cc-amount' }, fmtMoney( card.card_price, true ) ), perText( card ) ? h( 'span', { class: 'rfb-cc-per' }, ' ' + perText( card ) ) : null )
 			: ( card.card_note ? h( 'span', { class: 'rfb-cc-price' }, h( 'span', { class: 'rfb-cc-note' }, card.card_note ) ) : h( 'span', { class: 'rfb-cc-price' } ) );
-		const picked = set.default === card.key;
 
-		return h( 'div', { class: 'rfb-choice-card rfb-t-card' + ( picked ? ' is-selected' : '' ) },
-			h( 'div', { class: 'rfb-cc-main' }, h( 'span', { class: 'rfb-cc-mark' + ( set.multiple ? ' is-check' : '' ) } ),
+		return h( 'div', { class: 'rfb-cv-container rfb-choice-card rfb-t-card' + ( picked ? ' is-selected' : '' ) },
+			h( 'div', { class: 'rfb-cc-main' }, mark,
 				h( 'span', { class: 'rfb-cc-body' }, h( 'span', { class: 'rfb-cc-title' }, card.label, card.card_badge ? h( 'span', { class: 'rfb-cc-badge' }, ' ' + card.card_badge ) : null ), card.card_subtitle ? h( 'span', { class: 'rfb-cc-sub' }, card.card_subtitle ) : null ), price ),
 			h( 'div', { class: 'rfb-cc-fields' }, h( 'span', { class: 'rfb-mini' }, card.card_details + ' · ' + __( 'shown, not editable on the form', 'refraction' ) ), list( card.children, card ) ) );
 	}
@@ -939,6 +1013,53 @@
 		} }, __( 'Add rule', 'refraction' ) ) );
 
 		return wrapper;
+	}
+
+	const MARKER_POS = { left: __( 'Left', 'refraction' ), right: __( 'Right', 'refraction' ), 'top-left': __( 'Top left corner', 'refraction' ), 'top-right': __( 'Top right corner', 'refraction' ), hidden: __( 'Hidden (the whole card is clickable)', 'refraction' ) };
+	const MARKER_LOOK = { radio: __( 'Radio circle (square when several can be picked)', 'refraction' ), tick: __( 'Tick badge once picked', 'refraction' ), none: __( 'None', 'refraction' ) };
+
+	/** Switching a standard card to a free container keeps how it looked: its title, text, badge and price become blocks. */
+	function cardToFree( card ) {
+		if ( card.children.some( ( c ) => 'columns' === c.type || ( 'heading' === c.type && c.from_card ) ) ) {
+			return;
+		}
+
+		const used = [];
+		const make = ( type, label, extra = {} ) => {
+			const block = tag( Object.assign( baseField( type ), { label, key: uniqueKey( type, null, used ) }, extra ) );
+
+			used.push( block.key );
+
+			return block;
+		};
+		const left = [ make( 'heading', __( 'Card title', 'refraction' ), { from_card: true, level: 3 } ) ];
+
+		if ( card.card_badge ) {
+			left.push( make( 'badge', __( 'Badge', 'refraction' ), { content: card.card_badge } ) );
+		}
+
+		if ( card.card_subtitle ) {
+			left.push( make( 'paragraph', __( 'Paragraph', 'refraction' ), { content: card.card_subtitle } ) );
+		}
+
+		const right = [];
+
+		if ( null !== card.card_price && '' !== card.card_price ) {
+			right.push( make( 'price', __( 'Price', 'refraction' ), { style: { align: 'right' } } ) );
+		} else if ( card.card_note ) {
+			right.push( make( 'paragraph', __( 'Paragraph', 'refraction' ), { content: card.card_note, style: { align: 'right' } } ) );
+		}
+
+		const column = ( label, width, children ) => tag( Object.assign( baseField( 'panel' ), { label, width, children, key: uniqueKey( 'panel', null, used ) } ) );
+		const header = make( 'columns', __( 'Header', 'refraction' ) );
+
+		header.children = [ column( __( 'Column', 'refraction' ) + ' 1', right.length ? 'w70' : 'full', left ) ];
+
+		if ( right.length ) {
+			header.children.push( column( __( 'Column', 'refraction' ) + ' 2', 'w30', right ) );
+		}
+
+		card.children = [ header, ...card.children ];
 	}
 
 	/** Ready-made splits for the Columns block: label and the width of each column. */
@@ -1085,6 +1206,9 @@
 		im_align: __( 'Alignment', 'refraction' ), im_width: __( 'Width (%)', 'refraction' ), im_fit: __( 'Fit', 'refraction' ), im_height: __( 'Height (px)', 'refraction' ),
 		il_gap: __( 'Space between items (px)', 'refraction' ), il_ic_color: __( 'Icon color', 'refraction' ), il_ic_bg: __( 'Icon background', 'refraction' ), il_ic_size: __( 'Icon size (px)', 'refraction' ), il_ich_color: __( 'Icon color', 'refraction' ),
 		il_tx_color: __( 'Text color', 'refraction' ), il_tx_size: __( 'Text size (px)', 'refraction' ), il_tx_weight: __( 'Text weight', 'refraction' ), il_txh_color: __( 'Text color', 'refraction' ),
+		cs_bg: __( 'Background color', 'refraction' ), cs_border_style: __( 'Border style', 'refraction' ), cs_border_width: __( 'Border width (px)', 'refraction' ), cs_border_color: __( 'Border color', 'refraction' ), cs_shadow: __( 'Box shadow', 'refraction' ),
+		mk_size: __( 'Size (px)', 'refraction' ), mk_color: __( 'Tick color', 'refraction' ), mk_bg: __( 'Background color', 'refraction' ), mk_border_color: __( 'Border color', 'refraction' ),
+		mko_color: __( 'Tick color', 'refraction' ), mko_bg: __( 'Background color', 'refraction' ), mko_border_color: __( 'Border color', 'refraction' ),
 		ah_color: __( 'Text color', 'refraction' ), ah_size: __( 'Text size (px)', 'refraction' ), ah_weight: __( 'Text weight', 'refraction' ), ahh_color: __( 'Text color', 'refraction' ), aho_color: __( 'Text color', 'refraction' ),
 		tb_color: __( 'Text color', 'refraction' ), tb_size: __( 'Text size (px)', 'refraction' ), tb_weight: __( 'Text weight', 'refraction' ), tbh_color: __( 'Text color', 'refraction' ), tbo_color: __( 'Text color', 'refraction' ),
 		tp_bg: __( 'Background color', 'refraction' ), tp_border_style: __( 'Border style', 'refraction' ), tp_border_width: __( 'Border width (px)', 'refraction' ), tp_border_color: __( 'Border color', 'refraction' ), tp_radius: __( 'Border radius (px)', 'refraction' ), tp_pad: __( 'Padding (px)', 'refraction' ),
@@ -1122,6 +1246,7 @@
 			rep_button: __( 'Add-row button', 'refraction' ), rep_remove: __( 'Remove-row button', 'refraction' ), grp: __( 'Group box (.rfb-group)', 'refraction' ),
 			acc_item: __( 'Each panel (.rfb-acc-item)', 'refraction' ), acc_head: __( 'Panel header (.rfb-acc-head)', 'refraction' ),
 			tab: __( 'Tab buttons (.rfb-tab)', 'refraction' ), tab_panel: __( 'Tab content (.rfb-tabpanel)', 'refraction' ),
+			cbox_on: __( 'Spacing, background and border', 'refraction' ), cmark: __( 'Pick control (radio / tick)', 'refraction' ), cmark_size: __( 'Pick control size', 'refraction' ),
 			card: __( 'Each card (.rfb-choice-card)', 'refraction' ), card_title: __( 'Card title', 'refraction' ), card_price: __( 'Card price', 'refraction' ),
 		};
 
@@ -1138,7 +1263,7 @@
 			return __( 'On', 'refraction' );
 		}
 
-		if ( 'choice_set' === type ) {
+		if ( [ 'choice_set', 'card' ].includes( type ) ) {
 			return __( 'Selected', 'refraction' );
 		}
 
@@ -1182,7 +1307,7 @@
 			groups[ prop.group ] = ( groups[ prop.group ] || '' ) + prop.css + ':' + text + ';';
 		} );
 
-		[ [ 'box', '' ], [ 'rep', 'rep_' ], [ 'row', 'row_' ], [ 'grp', 'grp_' ], [ 'control', 'c_' ], [ 'acc_item', 'acc_' ], [ 'acc_head', 'acch_' ], [ 'tab', 'tab_' ], [ 'tab_panel', 'tp_' ], [ 'card', 'card_' ], [ 'image_img', 'im_' ] ].forEach( ( [ group, prefix ] ) => {
+		[ [ 'box', '' ], [ 'rep', 'rep_' ], [ 'row', 'row_' ], [ 'grp', 'grp_' ], [ 'control', 'c_' ], [ 'acc_item', 'acc_' ], [ 'acc_head', 'acch_' ], [ 'tab', 'tab_' ], [ 'tab_panel', 'tp_' ], [ 'card', 'card_' ], [ 'image_img', 'im_' ], [ 'cbox_on', 'cs_' ] ].forEach( ( [ group, prefix ] ) => {
 			if ( ! groups[ group ] ) {
 				return;
 			}
@@ -1217,6 +1342,11 @@
 				return s;
 			} ).join( ', ' );
 		} );
+		// A choice card is its own container: its box, selected look and pick control are drawn on that container.
+		parts.cbox_on = '> .rfb-cv-container.is-selected';
+		parts.cmark = '> .rfb-cv-container:not(.is-selected) .rfb-cc-mark';
+		parts.cmark_size = '> .rfb-cv-container .rfb-cc-mark';
+		parts.cmark_on = '> .rfb-cv-container.is-selected .rfb-cc-mark';
 		parts.box = '> .rfb-cv-preview-body, > .rfb-cv-container';
 		parts.box_hover = '> .rfb-cv-preview-body:hover, > .rfb-cv-container:hover';
 		parts.box_focus = '> .rfb-cv-preview-body:focus-within, > .rfb-cv-container:focus-within';
@@ -1377,13 +1507,14 @@
 
 	function fieldStylePanel( f ) {
 		const cfg = config.fieldStyle;
-		const typeName = typeLabels[ f.type ] || f.type;
+		const ty = styleTypeOf( f ); // a card is styled as a card, not as the Group it is built on
+		const typeName = typeLabels[ ty ] || ty;
 		const scope = fsScope( f );
 		const typeStyles = state.type_styles || ( state.type_styles = {} );
-		const style = 'type' === scope ? ( typeStyles[ f.type ] || ( typeStyles[ f.type ] = {} ) ) : ( f.style || ( f.style = {} ) );
-		const sameType = all().filter( ( x ) => x.type === f.type ).length;
+		const style = 'type' === scope ? ( typeStyles[ ty ] || ( typeStyles[ ty ] = {} ) ) : ( f.style || ( f.style = {} ) );
+		const sameType = all().filter( ( x ) => styleTypeOf( x ) === ty ).length;
 		const panel = h( 'div', { class: 'rfb-fieldstyle' } );
-		const choiceLook = 'buttons' === ( ( f.style && f.style.choice_look ) || ( typeStyles[ f.type ] || {} ).choice_look );
+		const choiceLook = 'buttons' === ( ( f.style && f.style.choice_look ) || ( typeStyles[ ty ] || {} ).choice_look );
 		const after = () => renderCanvasOnly();
 
 		// Who is edited: every field of this type (the default), or only this one.
@@ -1394,7 +1525,8 @@
 			? sprintf( __( 'Changes apply to every %s field. Choose "Only this field" to give this one its own look.', 'refraction' ), typeName )
 			: __( 'This field\'s own style wins over the one shared by its type.', 'refraction' ) ) );
 
-		const groups = cfg.order.filter( ( g ) => cfg.applies[ g ] && ( '*' === cfg.applies[ g ] || cfg.applies[ g ].includes( f.type ) ) )
+		const groups = cfg.order.filter( ( g ) => cfg.applies[ g ] && ( '*' === cfg.applies[ g ] || cfg.applies[ g ].includes( ty ) ) )
+			.filter( ( g ) => ! ( 'card' === ty && 'box_focus' === g ) ) // a card is "Selected", not "focused": its own selected look replaces it
 			.filter( ( g ) => ! ( [ 'choice', 'choice_hover', 'choice_on' ].includes( g ) && ! choiceLook ) && ! ( [ 'plain', 'plain_accent', 'plain_hover', 'plain_on' ].includes( g ) && choiceLook ) );
 		const states = [ 'normal', 'hover', 'focus' ].filter( ( s ) => groups.some( ( g ) => cfg.states[ g ] === s ) );
 
@@ -1403,7 +1535,7 @@
 		}
 
 		if ( states.length > 1 ) {
-			const names = { normal: __( 'Normal', 'refraction' ), hover: __( 'Hover', 'refraction' ), focus: fsFocusName( f.type ) };
+			const names = { normal: __( 'Normal', 'refraction' ), hover: __( 'Hover', 'refraction' ), focus: fsFocusName( ty ) };
 
 			panel.append( h( 'div', { class: 'rfb-state-tabs', role: 'tablist', 'aria-label': __( 'Look of the field when', 'refraction' ) }, states.map( ( s ) => h( 'button', {
 				type: 'button', role: 'tab', class: 'rfb-state-tab' + ( fieldState === s ? ' is-active' : '' ), 'aria-selected': String( fieldState === s ), 'data-state': s,
@@ -1436,12 +1568,12 @@
 			} );
 			keys.filter( ( k ) => ! /(margin|padding)_(top|right|bottom|left)$/.test( k ) && ! ( 'align' === k && [ 'image', 'divider', 'columns', 'accordion', 'tabs', 'choice_set', 'icon_list' ].includes( f.type ) ) )
 				.forEach( ( k ) => controls.push( fsControl( style, k, after ) ) );
-			panel.append( section( fsGroupTitle( group, f.type ), controls ) );
+			panel.append( section( fsGroupTitle( group, ty ), controls ) );
 		} );
 
 		panel.append( h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light', onClick: () => {
 			if ( 'type' === scope ) {
-				delete typeStyles[ f.type ];
+				delete typeStyles[ ty ];
 			} else {
 				f.style = {};
 			}
@@ -1475,7 +1607,7 @@
 			renderCanvasOnly();
 		};
 
-		box.append( h( 'div', { class: 'rfb-inspector-head' }, h( 'strong', null, typeLabels[ t ] || t ), h( 'code', null, f.key ) ) );
+		box.append( h( 'div', { class: 'rfb-inspector-head' }, h( 'strong', null, typeLabels[ isCard ? 'card' : t ] || t ), h( 'code', null, f.key ) ) );
 		box.append( h( 'div', { class: 'rfb-field-tabs', role: 'tablist', 'aria-label': __( 'Field options', 'refraction' ) }, [ [ 'settings', __( 'Settings', 'refraction' ) ], [ 'style', __( 'Style', 'refraction' ) ] ].map( ( [ id, label ] ) => h( 'button', {
 			type: 'button', role: 'tab', class: 'rfb-field-tab' + ( fieldTab === id ? ' is-active' : '' ), 'aria-selected': String( fieldTab === id ), 'data-fieldtab': id,
 			onClick: () => { fieldTab = id; renderInspector(); },
@@ -1510,7 +1642,7 @@
 		}
 
 		// Title options for the structure blocks, shown or hidden on the form and written as the tag you choose.
-		if ( 'step' === t || isContainer( t ) || isHost( t ) || isChoiceSet( t ) ) {
+		if ( ( 'step' === t || isContainer( t ) || isHost( t ) || isChoiceSet( t ) ) && ! isCard ) {
 			general.push(
 				h( 'label', { class: 'rfb-check' }, h( 'input', { type: 'checkbox', checked: ! f.hide_label, onChange: ( e ) => { f.hide_label = ! e.target.checked; markDirty(); renderCanvasOnly(); } } ), h( 'span', null, __( 'Show the title on the form', 'refraction' ) ) ),
 				row( __( 'Title tag', 'refraction' ), select( f, 'label_tag', { div: 'div', p: 'p', h2: 'h2', h3: 'h3', h4: 'h4', h5: 'h5', h6: 'h6' }, { after } ), __( 'Pick a heading level for headings, or p / div for plain text.', 'refraction' ) )
@@ -1576,6 +1708,8 @@
 			general.push(
 				check( f, 'multiple', __( 'Visitors can pick several cards', 'refraction' ), { after: rerender } ),
 				h( 'div', { class: 'rfb-inline' }, row( __( 'Cards per row', 'refraction' ), text( f, 'card_columns', { type: 'number', number: true, min: 1, max: 6, after: rerender } ) ), row( __( 'Space between cards (px)', 'refraction' ), text( f, 'card_gap', { type: 'number', number: true, min: 0, max: 60, after: rerender } ) ) ),
+				row( __( 'Pick control position', 'refraction' ), select( f, 'marker_pos', MARKER_POS, { after: rerender } ) ),
+				row( __( 'Pick control look', 'refraction' ), select( f, 'marker_look', MARKER_LOOK, { after: rerender } ), __( 'Radio circle, a tick badge that shows once picked, or none (the whole card is still clickable).', 'refraction' ) ),
 				row( __( 'Card picked at first', 'refraction' ), select( f, 'default', Object.assign( { '': __( 'None', 'refraction' ) }, Object.fromEntries( f.children.map( ( c ) => [ c.key, c.label ] ) ) ), { after } ) ),
 				h( 'button', { type: 'button', class: 'rfb-btn rfb-btn-light-primary', onClick: () => { addCard( f ); } }, __( 'Add card', 'refraction' ) ),
 				h( 'p', { class: 'rfb-help' }, __( 'Each card is a Group or Repeater. Fields inside a card are shown on the form but visitors can not change them.', 'refraction' ) )
@@ -1583,17 +1717,48 @@
 		}
 
 		if ( isCard ) {
+			const free = 'free' === f.card_mode;
+			const inherit = ( choices ) => Object.assign( { '': __( 'Same as the set', 'refraction' ) }, choices );
+
 			general.push(
-				h( 'div', { class: 'rfb-inline' }, row( __( 'Badge', 'refraction' ), text( f, 'card_badge', { after, placeholder: __( 'Monthly', 'refraction' ) } ) ), row( __( 'Price', 'refraction' ), text( f, 'card_price', { type: 'number', number: true, step: 'any', after } ) ) ),
-				row( __( 'Short text under the title', 'refraction' ), text( f, 'card_subtitle', { after } ) ),
-				row( __( 'Price period', 'refraction' ), select( f, 'per', config.periods, { after: rerender } ) ),
+				row( __( 'Card is built as', 'refraction' ), select( f, 'card_mode', { free: __( 'Free container (drop blocks in)', 'refraction' ), standard: __( 'Standard (title, badge, price header)', 'refraction' ) }, { after: () => { if ( 'free' === f.card_mode ) { cardToFree( f ); } rerender(); } } ), free ? __( 'The card name below is what is saved with the record. Everything you see on the card is a block you drop in.', 'refraction' ) : null ),
+				row( __( 'Pick control position', 'refraction' ), select( f, 'marker_pos', inherit( MARKER_POS ), { after: rerender } ) ),
+				row( __( 'Pick control look', 'refraction' ), select( f, 'marker_look', inherit( MARKER_LOOK ), { after: rerender } ) ),
+				h( 'div', { class: 'rfb-inline' }, row( free ? __( 'Price saved with the record', 'refraction' ) : __( 'Price', 'refraction' ), text( f, 'card_price', { type: 'number', number: true, step: 'any', after } ) ), row( __( 'Price period', 'refraction' ), select( f, 'per', config.periods, { after: rerender } ) ) ),
 				'custom' === f.per ? row( __( 'Period text', 'refraction' ), text( f, 'per_label', { after, placeholder: __( 'seat', 'refraction' ) } ) ) : null,
-				row( __( 'Text when there is no price', 'refraction' ), text( f, 'card_note', { after, placeholder: __( 'Price on request', 'refraction' ) } ) ),
-				row( __( 'Name of the details link', 'refraction' ), text( f, 'card_details', { after } ) ),
-				row( __( 'Card width', 'refraction' ), select( f, 'card_width', Object.assign( { auto: __( 'Automatic (the set\'s cards per row)', 'refraction' ) }, config.widths ), { after } ), __( 'Give cards different widths for rows like 3 on top and 4 below.', 'refraction' ) ),
-				check( f, 'card_inline', __( 'Always show what is inside (no "What\'s included" link)', 'refraction' ), { after: rerender } ),
-				f.card_inline ? null : check( f, 'card_details_open', __( 'Show the details open', 'refraction' ) )
+				row( __( 'Card width', 'refraction' ), select( f, 'card_width', Object.assign( { auto: __( 'Automatic (the set\'s cards per row)', 'refraction' ) }, config.widths ), { after } ), __( 'Give cards different widths for rows like 3 on top and 4 below.', 'refraction' ) )
 			);
+
+			if ( ! free ) {
+				general.push(
+					h( 'div', { class: 'rfb-inline' }, row( __( 'Badge', 'refraction' ), text( f, 'card_badge', { after, placeholder: __( 'Monthly', 'refraction' ) } ) ) ),
+					row( __( 'Short text under the title', 'refraction' ), text( f, 'card_subtitle', { after } ) ),
+					row( __( 'Text when there is no price', 'refraction' ), text( f, 'card_note', { after, placeholder: __( 'Price on request', 'refraction' ) } ) ),
+					row( __( 'Name of the details link', 'refraction' ), text( f, 'card_details', { after } ) ),
+					check( f, 'card_inline', __( 'Always show what is inside (no "What\'s included" link)', 'refraction' ), { after: rerender } ),
+					f.card_inline ? null : check( f, 'card_details_open', __( 'Show the details open', 'refraction' ) )
+				);
+			}
+		}
+
+		if ( 'heading' === t && cardAround( f ) ) {
+			general.push( check( f, 'from_card', __( 'Show the card\'s name', 'refraction' ), { after: rerender } ) );
+		}
+
+		if ( 'badge' === t ) {
+			general.push( row( __( 'Badge text', 'refraction' ), text( f, 'content', { after } ) ) );
+		}
+
+		if ( 'price' === t ) {
+			const around = cardAround( f );
+
+			if ( around ) {
+				general.push( check( f, 'price_card', __( 'Show the card\'s price', 'refraction' ), { after: rerender } ), h( 'p', { class: 'rfb-help' }, __( 'Set the card\'s price and period in the card\'s settings. It is also what is saved with the record.', 'refraction' ) ) );
+			}
+
+			if ( ! around || ! f.price_card ) {
+				general.push( h( 'div', { class: 'rfb-inline' }, row( __( 'Price', 'refraction' ), text( f, 'price_amount', { type: 'number', number: true, step: 'any', after } ) ), row( __( 'Price period', 'refraction' ), select( f, 'per', config.periods, { after: rerender } ) ) ), 'custom' === f.per ? row( __( 'Period text', 'refraction' ), text( f, 'per_label', { after, placeholder: __( 'seat', 'refraction' ) } ) ) : null );
+			}
 		}
 
 		if ( 'currency' === t ) {

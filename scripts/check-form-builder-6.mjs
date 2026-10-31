@@ -200,7 +200,7 @@ async function main() {
 		check( 'drag', 'tabs can not go inside a panel', ( await page.locator( '.rfb-cv-panel[data-rfb-key="p_extra"] .rfb-cv-item.rfb-cv-tabs' ).count() ) === 0 );
 
 		// Inspector of a panel, a card and the amount.
-		await page.locator( '.rfb-cv-panel[data-rfb-key="p_extra"] .rfb-cv-panel-head' ).click();
+		await page.locator( '.rfb-cv-panel[data-rfb-key="p_extra"] .rfb-acc-head' ).click();
 		check( 'inspector', 'a panel can be renamed, opened by default and given a visibility rule', ( await page.locator( '.rfb-inspector .rfb-inspector-head strong' ).textContent() ) === 'Panel' && ( await page.locator( '.rfb-inspector label:has-text("Open when the page loads")' ).count() ) === 1 && ( await page.locator( '.rfb-inspector summary:text-is("Conditional visibility")' ).count() ) === 1 );
 		await page.locator( '.rfb-cv-item[data-rfb-key="member"] .rfb-cc-main' ).first().click( { force: true } );
 		const labels = await page.$$eval( '.rfb-inspector .rfb-mini', ( els ) => els.map( ( e ) => e.textContent.trim() ) );

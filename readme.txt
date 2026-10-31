@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.12.0
+Stable tag: 0.13.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.13.0 =
+* New: build your own Choice card. A card can now be a free container: it has a pick control and whatever blocks you drop in (heading, text, badge, price, image, Icon List, Columns, an Accordion for "What's included", any field). Nothing is fixed: no title, price or details unless you add them. Existing cards keep their old header and can be switched to a free container at any time (their title, badge and price become blocks).
+* New: the pick control is yours to place and style: left, right, a top corner or hidden (the whole card is clickable), as a radio circle (a square when several can be picked), a tick badge that shows once picked, or none. Set it for the whole set or per card.
+* New: Badge and Price blocks. A Price block shows the card's price (or its own amount) in your currency with the period, and shows nothing when there is none. A Heading can show the card's name.
+* Fix: a Choice card's Style tab now styles the card itself (box, hover, selected look, pick control) and no longer edits the Group style. A card has its own Selected state.
+* Fix: Accordion and Tabs are drawn in the designer with their real header and tab classes, so their style shows while you edit (it already worked on the page).
 
 = 0.12.0 =
 * New: free layout. Fields now take any width from 10% to 100% (1/2, 1/3, 1/4, 1/5, 2/3, 3/4, 20%, 30%...), and widths that add up to a full row sit side by side. A new Columns block splits a row into columns with ready-made splits (50/50, 33/33/33, 10/90, 20/80, 30/70, 25/50/25 and more) or your own widths, with a gap you choose. Any field, group, repeater or content block can go in a column, and Columns can nest. On a phone everything stacks.

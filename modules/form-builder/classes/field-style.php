@@ -79,6 +79,10 @@ class Field_Style {
 		'tab_panel' => '.rfb-tabpanel',
 		'card' => '.rfb-choice-card',
 		'card_hover' => '.rfb-choice-card:hover',
+		'cbox_on' => '&.is-selected',
+		'cmark_size' => '.rfb-cc-mark',
+		'cmark' => '&:not(.is-selected) .rfb-cc-mark',
+		'cmark_on' => '&.is-selected .rfb-cc-mark',
 		'card_on' => '.rfb-choice-card.is-selected',
 		'card_title' => '.rfb-cc-title',
 		'card_price' => '.rfb-cc-price',
@@ -86,9 +90,9 @@ class Field_Style {
 
 	/** Which look of the field each group belongs to: the style tab shows one state at a time. */
 	const STATES = [
-		'normal' => [ 'box', 'label', 'control', 'desc', 'choice', 'plain', 'plain_accent', 'toggle', 'toggle_knob', 'rep', 'rep_rows', 'row', 'rep_button', 'rep_remove', 'grp', 'acc_item', 'acc_head', 'tab', 'tab_panel', 'card', 'card_title', 'card_price', 'image_box', 'image_img', 'il_list', 'il_icon', 'il_text' ],
+		'normal' => [ 'box', 'label', 'control', 'desc', 'choice', 'plain', 'plain_accent', 'toggle', 'toggle_knob', 'rep', 'rep_rows', 'row', 'rep_button', 'rep_remove', 'grp', 'acc_item', 'acc_head', 'tab', 'tab_panel', 'card', 'card_title', 'card_price', 'cmark', 'cmark_size', 'image_box', 'image_img', 'il_list', 'il_icon', 'il_text' ],
 		'hover' => [ 'box_hover', 'label_hover', 'control_hover', 'choice_hover', 'plain_hover', 'toggle_hover', 'rep_hover', 'row_hover', 'rep_button_hover', 'rep_remove_hover', 'grp_hover', 'acc_item_hover', 'acc_head_hover', 'tab_hover', 'card_hover', 'image_img_hover', 'il_icon_hover', 'il_text_hover' ],
-		'focus' => [ 'box_focus', 'label_focus', 'control_focus', 'choice_on', 'plain_on', 'toggle_on', 'rep_focus', 'row_focus', 'rep_button_focus', 'grp_focus', 'acc_item_on', 'acc_head_on', 'tab_on', 'card_on', 'image_img_focus' ],
+		'focus' => [ 'box_focus', 'label_focus', 'control_focus', 'choice_on', 'plain_on', 'toggle_on', 'rep_focus', 'row_focus', 'rep_button_focus', 'grp_focus', 'acc_item_on', 'acc_head_on', 'tab_on', 'card_on', 'image_img_focus', 'cbox_on', 'cmark_on' ],
 	];
 
 	const SHADOWS = [
@@ -124,6 +128,11 @@ class Field_Style {
 
 		foreach ( [ 'grp', 'grp_hover', 'grp_focus' ] as $group ) {
 			$applies[ $group ] = [ 'group' ];
+		}
+
+		// A choice card is styled as itself (its own box); its selected look and its pick control belong to the card type only.
+		foreach ( [ 'cbox_on', 'cmark', 'cmark_size', 'cmark_on' ] as $group ) {
+			$applies[ $group ] = [ 'card' ];
 		}
 
 		foreach ( [ 'image_box', 'image_img', 'image_img_hover' ] as $group ) {
@@ -282,6 +291,19 @@ class Field_Style {
 			'il_tx_weight' => [ 'il_text', 'font-weight', 'enum', $weights ],
 			'il_txh_color' => [ 'il_text_hover', 'color', 'color' ],
 
+			'cs_bg' => [ 'cbox_on', 'background-color', 'color' ],
+			'cs_border_style' => [ 'cbox_on', 'border-style', 'enum', $borders ],
+			'cs_border_width' => [ 'cbox_on', 'border-width', 'int', 0, 20, 'px' ],
+			'cs_border_color' => [ 'cbox_on', 'border-color', 'color' ],
+			'cs_shadow' => [ 'cbox_on', 'box-shadow', 'enum', array_keys( self::SHADOWS ) ],
+			'mk_size' => [ 'cmark_size', 'font-size', 'int', 10, 60, 'px' ],
+			'mk_color' => [ 'cmark', 'color', 'color' ],
+			'mk_bg' => [ 'cmark', 'background-color', 'color' ],
+			'mk_border_color' => [ 'cmark', 'border-color', 'color' ],
+			'mko_color' => [ 'cmark_on', 'color', 'color' ],
+			'mko_bg' => [ 'cmark_on', 'background-color', 'color' ],
+			'mko_border_color' => [ 'cmark_on', 'border-color', 'color' ],
+
 			'ah_color' => [ 'acc_head', 'color', 'color' ],
 			'ah_size' => [ 'acc_head', 'font-size', 'int', 8, 60, 'px' ],
 			'ah_weight' => [ 'acc_head', 'font-weight', 'enum', $weights ],
@@ -439,7 +461,7 @@ class Field_Style {
 		}
 
 		// A width alone or a style alone would draw nothing; give the other half a sensible value.
-		foreach ( [ 'box' => '', 'rep' => 'rep_', 'row' => 'row_', 'grp' => 'grp_', 'control' => 'c_', 'acc_item' => 'acc_', 'acc_head' => 'acch_', 'tab' => 'tab_', 'tab_panel' => 'tp_', 'card' => 'card_', 'image_img' => 'im_' ] as $group => $prefix ) {
+		foreach ( [ 'box' => '', 'rep' => 'rep_', 'row' => 'row_', 'grp' => 'grp_', 'control' => 'c_', 'acc_item' => 'acc_', 'acc_head' => 'acch_', 'tab' => 'tab_', 'tab_panel' => 'tp_', 'card' => 'card_', 'cbox_on' => 'cs_', 'image_img' => 'im_' ] as $group => $prefix ) {
 			$has_style = isset( $style[ $prefix . 'border_style' ] );
 			$has_width = isset( $style[ $prefix . 'border_width' ] );
 
@@ -499,7 +521,7 @@ class Field_Style {
 		$clean = [];
 
 		foreach ( (array) $raw as $type => $style ) {
-			if ( isset( Schema::types()[ $type ] ) && is_array( $style ) ) {
+			if ( ( isset( Schema::types()[ $type ] ) || 'card' === $type ) && is_array( $style ) ) {
 				$cleaned = self::clean( $style );
 
 				if ( $cleaned ) {

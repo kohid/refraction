@@ -287,7 +287,7 @@ async function main() {
 		// drag a field into the second column and into a card
 		await drag( page, page.locator( '.rfb-palette-item[data-type="number"]' ), page.locator( '.rfb-cv-item[data-rfb-key="split"] .rfb-cv-panel[data-rfb-key="cr"] .rfb-cv-list' ) );
 		check( 'drag', 'a field dragged into a column lands in it', ( await page.locator( '.rfb-cv-panel[data-rfb-key="cr"] .rfb-cv-item.rfb-cv-number' ).count() ) === 1 );
-		await drag( page, page.locator( '.rfb-palette-item[data-type="columns"]' ), page.locator( '.rfb-cv-item[data-rfb-key="h"] > .rfb-cv-container > .rfb-choice-card > .rfb-cc-fields > .rfb-cv-list' ) );
+		await drag( page, page.locator( '.rfb-palette-item[data-type="columns"]' ), page.locator( '.rfb-cv-item[data-rfb-key="h"] > .rfb-cv-container.rfb-choice-card > .rfb-cc-fields > .rfb-cv-list' ) );
 		check( 'drag', 'a Columns block can be dropped inside a card', ( await page.locator( '.rfb-cv-item[data-rfb-key="h"] .rfb-cv-item.rfb-cv-columns' ).count() ) === 1 );
 		await drag( page, page.locator( '.rfb-palette-item[data-type="columns"]' ), page.locator( '.rfb-cv-item[data-rfb-key="split"] .rfb-cv-panel[data-rfb-key="cr"] .rfb-cv-list' ) );
 		check( 'drag', 'Columns can be dropped into a column of another Columns block (30 / 70 with two rows inside)', ( await page.locator( '.rfb-cv-panel[data-rfb-key="cr"] .rfb-cv-item.rfb-cv-columns' ).count() ) === 1 );
@@ -295,7 +295,7 @@ async function main() {
 		check( 'drag', 'the inner Columns block starts with two columns of its own', await inner.count() === 2 );
 		await drag( page, page.locator( '.rfb-palette-item[data-type="accordion"]' ), inner.first().locator( '.rfb-cv-list' ) );
 		check( 'drag', 'an Accordion can not go into a column', ( await page.locator( '.rfb-cv-panel[data-rfb-key="cr"] .rfb-cv-item.rfb-cv-accordion' ).count() ) === 0 );
-		await drag( page, page.locator( '.rfb-palette-item[data-type="file"]' ), page.locator( '.rfb-cv-item[data-rfb-key="h"] > .rfb-cv-container > .rfb-choice-card > .rfb-cc-fields > .rfb-cv-list' ) );
+		await drag( page, page.locator( '.rfb-palette-item[data-type="file"]' ), page.locator( '.rfb-cv-item[data-rfb-key="h"] > .rfb-cv-container.rfb-choice-card > .rfb-cc-fields > .rfb-cv-list' ) );
 		check( 'drag', 'an upload is refused inside a card', ( await page.locator( '.rfb-cv-item[data-rfb-key="h"] .rfb-cv-item.rfb-cv-file' ).count() ) === 0 );
 
 		// card options

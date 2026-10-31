@@ -332,11 +332,26 @@
 
 	function initCards( set ) {
 		const mark = () => set.querySelectorAll( ':scope .rfb-cc-list > .rfb-choice-card' ).forEach( ( card ) => {
-			const input = card.querySelector( '.rfb-cc-main input' );
+			const input = card.querySelector( '.rfb-cc-main input, .rfb-cc-pick input' );
 
 			card.classList.toggle( 'is-selected', !! input && input.checked );
 		} );
 
+		// A free card picks itself when you click anywhere on it (some themes stop the hidden input from receiving the click),
+		// but not when the click is on a link, a toggle or a control inside it.
+		set.addEventListener( 'click', ( event ) => {
+			const card = event.target.closest( '.rfb-choice-card.is-free' );
+
+			if ( ! card || event.target.closest( 'a, summary, button, input, select, textarea, label' ) ) {
+				return;
+			}
+
+			const input = card.querySelector( '.rfb-cc-pick input' );
+
+			if ( input && ! input.disabled ) {
+				input.click();
+			}
+		} );
 		set.addEventListener( 'change', mark );
 		mark();
 	}

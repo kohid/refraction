@@ -27,6 +27,8 @@ class Schema {
 	];
 	const WIDTHS = [ 'full', 'w90', 'w80', 'w75', 'w70', 'w66', 'w60', 'half', 'w40', 'third', 'w30', 'w25', 'w20', 'w10' ];
 	const MAX_ICON_ITEMS = 30;
+	const MARKER_POSITIONS = [ 'left', 'right', 'top-left', 'top-right', 'hidden' ];
+	const MARKER_LOOKS = [ 'radio', 'tick', 'none' ];
 
 	/** @return array<string,string> field type => label */
 	public static function types(): array {
@@ -64,6 +66,8 @@ class Schema {
 					'paragraph' => self::t( 'Paragraph' ),
 					'image' => self::t( 'Image' ),
 					'icon_list' => self::t( 'Icon List' ),
+					'badge' => self::t( 'Badge' ),
+					'price' => self::t( 'Price' ),
 					'html' => self::t( 'Custom HTML' ),
 				],
 			],
@@ -133,7 +137,7 @@ class Schema {
 	/** Material icon (assets/icons/material) of every type, for the palette tiles. */
 	public static function icons(): array {
 		return [
-			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'accordion' => 'table-rows', 'tabs' => 'tablet', 'columns' => 'view-column', 'icon_list' => 'checklist', 'choice_set' => 'layers', 'panel' => 'table-rows', 'divider' => 'horizontal-rule',
+			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'accordion' => 'table-rows', 'tabs' => 'tablet', 'columns' => 'view-column', 'icon_list' => 'checklist', 'badge' => 'label', 'price' => 'sell', 'choice_set' => 'layers', 'panel' => 'table-rows', 'divider' => 'horizontal-rule',
 			'heading' => 'title', 'paragraph' => 'subject', 'image' => 'image', 'html' => 'code',
 			'text' => 'text-fields', 'textarea' => 'notes', 'name' => 'badge', 'number' => 'pin', 'currency' => 'payments', 'email' => 'mail',
 			'phone' => 'call', 'url' => 'link', 'country' => 'public', 'date' => 'calendar-month', 'time' => 'schedule', 'datetime' => 'event',
@@ -144,7 +148,7 @@ class Schema {
 
 	/** Types that only decorate the form and never hold a value. */
 	public static function is_layout( string $type ): bool {
-		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list' ], true );
+		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list', 'badge', 'price' ], true );
 	}
 
 	public static function is_step( string $type ): bool {
@@ -211,7 +215,7 @@ class Schema {
 		$inside_host = in_array( $parent, [ 'panel', 'colpanel' ], true );
 
 		if ( in_array( $type, [ 'accordion', 'tabs' ], true ) ) {
-			return '' === $root && ! $inside_host;
+			return in_array( $root, [ '', 'card' ], true ) && ! $inside_host;
 		}
 
 		if ( 'columns' === $type ) {
@@ -441,7 +445,7 @@ class Schema {
 			'multiple' => ( self::is_choice_set( $type ) || 'accordion' === $type ) && ! empty( $raw['multiple'] ),
 			'open' => 'panel' === $type && ! empty( $raw['open'] ),
 			'tab_look' => in_array( $raw['tab_look'] ?? '', [ 'line', 'pills' ], true ) ? $raw['tab_look'] : 'line',
-			'per' => in_array( $type, [ 'currency', 'group', 'repeater' ], true ) && isset( Money::periods()[ $raw['per'] ?? '' ] ) ? (string) ( $raw['per'] ?? '' ) : '',
+			'per' => in_array( $type, [ 'currency', 'group', 'repeater', 'price' ], true ) && isset( Money::periods()[ $raw['per'] ?? '' ] ) ? (string) ( $raw['per'] ?? '' ) : '',
 			'per_label' => self::text( $raw['per_label'] ?? '', 20 ),
 			'card_badge' => $is_card ? self::text( $raw['card_badge'] ?? '', 30 ) : '',
 			'card_subtitle' => $is_card ? self::text( $raw['card_subtitle'] ?? '', 160 ) : '',
@@ -450,6 +454,12 @@ class Schema {
 			'card_details' => $is_card ? ( self::text( $raw['card_details'] ?? '', 40 ) ?: self::t( "What's included" ) ) : '',
 			'card_details_open' => $is_card && ! empty( $raw['card_details_open'] ),
 			'card_inline' => $is_card && ! empty( $raw['card_inline'] ),
+			'card_mode' => $is_card && 'free' === ( $raw['card_mode'] ?? '' ) ? 'free' : 'standard',
+			'marker_pos' => self::marker( $raw['marker_pos'] ?? '', self::MARKER_POSITIONS, 'choice_set' === $type ? 'left' : '', 'choice_set' === $type || $is_card ),
+			'marker_look' => self::marker( $raw['marker_look'] ?? '', self::MARKER_LOOKS, 'choice_set' === $type ? 'radio' : '', 'choice_set' === $type || $is_card ),
+			'price_card' => 'price' === $type && ( ! array_key_exists( 'price_card', $raw ) || ! empty( $raw['price_card'] ) ),
+			'price_amount' => 'price' === $type ? self::number_or_null( $raw['price_amount'] ?? null ) : null,
+			'from_card' => 'heading' === $type && ! empty( $raw['from_card'] ),
 			'card_width' => $is_card && in_array( $raw['card_width'] ?? '', $col_widths, true ) ? $raw['card_width'] : 'auto',
 			'card_columns' => 'choice_set' === $type ? max( 1, min( 6, (int) ( $raw['card_columns'] ?? 1 ) ) ) : 1,
 			'card_gap' => 'choice_set' === $type ? max( 0, min( 60, is_numeric( $raw['card_gap'] ?? null ) ? (int) $raw['card_gap'] : 10 ) ) : 10,
@@ -457,6 +467,11 @@ class Schema {
 			'list_layout' => 'icon_list' === $type && 'horizontal' === ( $raw['list_layout'] ?? '' ) ? 'horizontal' : 'vertical',
 			'items' => 'icon_list' === $type ? self::icon_items( $raw['items'] ?? [] ) : [],
 		];
+	}
+
+	/** A whitelisted choice, or the fallback; a card or set that does not set one inherits ('' is allowed when $inherit). */
+	private static function marker( $value, array $allowed, string $fallback, bool $applies ): string {
+		return $applies && in_array( $value, $allowed, true ) ? (string) $value : $fallback;
 	}
 
 	/** @return array<int,array{text:string,icon:string,link:string}> */

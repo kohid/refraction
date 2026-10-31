@@ -100,7 +100,12 @@ class Field_Renderer {
 			echo '<div' . $attrs . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 
 			if ( 'heading' === $type ) {
-				echo '<h' . (int) $field['level'] . ' class="rfb-heading">' . esc_html( '' !== $field['content'] ? $field['content'] : $field['label'] ) . '</h' . (int) $field['level'] . '>';
+				$text = $field['from_card'] && isset( $ctx['card'] ) ? $ctx['card']['label'] : ( '' !== $field['content'] ? $field['content'] : $field['label'] );
+				echo '<h' . (int) $field['level'] . ' class="rfb-heading">' . esc_html( $text ) . '</h' . (int) $field['level'] . '>';
+			} elseif ( 'badge' === $type ) {
+				echo '' !== $field['content'] ? '<span class="rfb-badge-pill">' . esc_html( $field['content'] ) . '</span>' : '';
+			} elseif ( 'price' === $type ) {
+				echo self::price( $field, $ctx ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 			} elseif ( 'paragraph' === $type ) {
 				echo '<p class="rfb-paragraph">' . nl2br( esc_html( $field['content'] ) ) . '</p>';
 			} elseif ( 'html' === $type ) {
@@ -360,7 +365,20 @@ class Field_Renderer {
 			$percent = 'auto' === $card['card_width'] ? 100 / max( 1, (int) $field['card_columns'] ) : Schema::width_percent( $card['card_width'] );
 			$basis = 'calc(' . round( $percent, 3 ) . '% - var(--rfb-cc-gap) * ' . round( 1 - $percent / 100, 4 ) . ')';
 
-			echo '<div class="rfb-choice-card rfb-t-card' . ( $on ? ' is-selected' : '' ) . '" style="flex-basis:' . esc_attr( $basis ) . '" data-rfb-key="' . esc_attr( $card['key'] ) . '" data-rfb-type="card"' . $cond . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$free = 'free' === $card['card_mode'];
+			$pos = '' !== $card['marker_pos'] ? $card['marker_pos'] : $field['marker_pos'];
+			$look = '' !== $card['marker_look'] ? $card['marker_look'] : $field['marker_look'];
+			$classes = 'rfb-choice-card rfb-t-card' . ( $on ? ' is-selected' : '' ) . ( $free ? ' is-free rfb-mpos-' . $pos . ' rfb-mlook-' . $look : '' );
+
+			echo '<div class="' . esc_attr( $classes ) . '" style="flex-basis:' . esc_attr( $basis ) . '" data-rfb-key="' . esc_attr( $card['key'] ) . '" data-rfb-type="card"' . $cond . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+			if ( $free ) {
+				// A free container: the pick control and whatever blocks the owner dropped in. The label stretches over the card so the whole card picks it.
+				echo '<label class="rfb-cc-pick" for="' . esc_attr( $card_id ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $card_id ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '><span class="rfb-cc-mark' . ( $field['multiple'] ? ' is-check' : '' ) . '" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html( $card['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<div class="rfb-cc-content">' . self::locked( $card, $ctx, $path . '.' . $card['key'] ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+				continue;
+			}
+
 			echo '<label class="rfb-cc-main" for="' . esc_attr( $card_id ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $card_id ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<span class="rfb-cc-body"><span class="rfb-cc-title">' . esc_html( $card['label'] ) . ( '' !== $card['card_badge'] ? ' <span class="rfb-cc-badge">' . esc_html( $card['card_badge'] ) . '</span>' : '' ) . '</span>' . ( '' !== $card['card_subtitle'] ? '<span class="rfb-cc-sub">' . esc_html( $card['card_subtitle'] ) . '</span>' : '' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<span class="rfb-cc-price">' . $price . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -379,6 +397,7 @@ class Field_Renderer {
 
 	/** The fields of a card, shown but never editable: every control is disabled, so nothing in them is posted. */
 	private static function locked( array $card, array $ctx, string $path ): string {
+		$ctx['card'] = $card; // blocks inside (a heading with the card's name, a price) read it
 		ob_start();
 
 		if ( 'repeater' === $card['type'] ) {
@@ -470,6 +489,21 @@ class Field_Renderer {
 		echo '<button type="button" class="rfb-link-btn rfb-sig-clear" data-rfb-sig-clear hidden>' . esc_html__( 'Clear signature', 'refraction' ) . '</button>';
 		echo '<noscript><p class="rfb-help">' . esc_html__( 'Drawing a signature needs JavaScript.', 'refraction' ) . '</p></noscript>';
 		echo '<p class="rfb-error rfb-sig-error" role="alert" hidden>' . esc_html__( 'Please sign above.', 'refraction' ) . '</p>';
+	}
+
+	/** The Price block: the card's price (inside a choice card) or its own amount, in the collection's currency, with the period. Nothing when there is none. */
+	private static function price( array $field, array $ctx ): string {
+		$card = $field['price_card'] && isset( $ctx['card'] ) ? $ctx['card'] : null;
+		$amount = $card ? $card['card_price'] : $field['price_amount'];
+
+		if ( null === $amount ) {
+			return '';
+		}
+
+		$source = $card ?: $field;
+		$per = Money::per_label( $source['per'], $source['per_label'] );
+
+		return '<span class="rfb-price"><span class="rfb-price-amount">' . esc_html( Money::display( $amount, Money::config( (array) ( $ctx['money'] ?? [] ) ) ) ) . '</span>' . ( '' !== $per ? ' <span class="rfb-price-per">' . esc_html( $per ) . '</span>' : '' ) . '</span>';
 	}
 
 	/** The Icon List block: items with an icon each (bundled icons only), as a column or a wrapping row. */

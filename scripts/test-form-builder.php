@@ -627,5 +627,37 @@ t( 'image style: bad values are dropped', [] === FS::clean( [ 'im_align' => 'mid
 $ilc = FS::css( [ 'fields' => [ [ 'key' => 'li', 'type' => 'icon_list', 'children' => [], 'style' => FS::clean( [ 'il_ic_color' => '#ff0000', 'il_ic_size' => 24, 'il_tx_weight' => '700', 'il_gap' => 14, 'il_txh_color' => '#00ff00' ] ) ] ], 'type_styles' => [] ], '#f' );
 t( 'icon list style: list gap, icon and text get their own rules and hover', false !== strpos( $ilc, '.rfb-il{gap:14px;}' ) && false !== strpos( $ilc, '.rfb-il-icon{color:#ff0000;font-size:24px;}' ) && false !== strpos( $ilc, '.rfb-il-text{font-weight:700;}' ) && false !== strpos( $ilc, '.rfb-il-item:hover .rfb-il-text{color:#00ff00;}' ), $ilc );
 
+// ---- 0.13.0: free choice cards, Badge and Price blocks, card styles ----
+$free = S::definition( [ 'label' => 'Free', 'fields' => [
+	[ 'type' => 'choice_set', 'label' => 'Pick', 'key' => 'pick', 'marker_pos' => 'top-right', 'marker_look' => 'tick', 'children' => [
+		[ 'type' => 'group', 'label' => 'Car', 'key' => 'car', 'card_mode' => 'free', 'card_price' => 30, 'marker_pos' => 'right', 'marker_look' => 'bogus', 'children' => [
+			[ 'type' => 'image', 'label' => 'Photo', 'key' => 'photo' ],
+			[ 'type' => 'columns', 'label' => 'Head', 'key' => 'head', 'children' => [ [ 'type' => 'panel', 'label' => 'L', 'key' => 'hl', 'width' => 'w70', 'children' => [ [ 'type' => 'heading', 'label' => 'T', 'key' => 'ttl', 'from_card' => 1 ], [ 'type' => 'badge', 'label' => 'B', 'key' => 'bdg', 'content' => 'Popular' ] ] ], [ 'type' => 'panel', 'label' => 'R', 'key' => 'hr', 'width' => 'w30', 'children' => [ [ 'type' => 'price', 'label' => 'P', 'key' => 'prc' ] ] ] ] ],
+			[ 'type' => 'accordion', 'label' => 'More', 'key' => 'moreacc', 'children' => [ [ 'type' => 'panel', 'label' => 'Included', 'key' => 'inc', 'children' => [ [ 'type' => 'icon_list', 'label' => 'L', 'key' => 'incl', 'items' => [ [ 'text' => 'Seats 4' ] ] ] ] ] ] ],
+			[ 'type' => 'tabs', 'label' => 'Tabs', 'key' => 'tabsin' ],
+		] ],
+		[ 'type' => 'group', 'label' => 'Bus', 'key' => 'bus', 'children' => [] ],
+	] ],
+	[ 'type' => 'price', 'label' => 'Loose price', 'key' => 'loose', 'price_amount' => '12.5', 'per' => 'week', 'price_card' => 0 ],
+	[ 'type' => 'heading', 'label' => 'Head', 'key' => 'hd', 'from_card' => 1 ],
+] ] );
+$fset = $free['fields'][0];
+t( 'free card: mode, marker overrides and set defaults are cleaned', 'free' === $fset['children'][0]['card_mode'] && 'standard' === $fset['children'][1]['card_mode'] && 'right' === $fset['children'][0]['marker_pos'] && '' === $fset['children'][0]['marker_look'] && 'top-right' === $fset['marker_pos'] && 'tick' === $fset['marker_look'] && '' === $fset['children'][1]['marker_pos'] );
+t( 'free card: only sets and cards keep marker options, a set falls back to left / radio', '' === S::clean_field( [ 'label' => 'x', 'type' => 'text', 'marker_pos' => 'left' ] )['marker_pos'] && 'left' === S::clean_field( [ 'type' => 'choice_set', 'label' => 'x', 'marker_pos' => 'nowhere' ] )['marker_pos'] && 'radio' === S::clean_field( [ 'type' => 'choice_set', 'label' => 'x' ] )['marker_look'] );
+$fkeys = array_column( S::walk( $fset['children'] ), 'key' );
+t( 'free card: it holds content blocks, Columns, Tabs and an Accordion with an Icon List', ! array_diff( [ 'photo', 'head', 'ttl', 'bdg', 'prc', 'moreacc', 'inc', 'incl', 'tabsin' ], $fkeys ) );
+t( 'free card: badge and price are content blocks without a value, in the palette', S::is_layout( 'badge' ) && S::is_layout( 'price' ) && ! S::has_value( 'price' ) && isset( S::types()['badge'], S::types()['price'], S::icons()['badge'], S::icons()['price'] ) );
+t( 'price block: its own amount and period, and the use-the-card flag', 12.5 === $free['fields'][1]['price_amount'] && 'week' === $free['fields'][1]['per'] && ! $free['fields'][1]['price_card'] && S::field( $free, 'prc' )['price_card'] && null === S::field( $free, 'prc' )['price_amount'] && null === S::clean_field( [ 'label' => 'x', 'type' => 'text', 'price_amount' => 5 ] )['price_amount'] );
+t( 'heading: the show-the-card-name flag is kept on headings only', S::field( $free, 'ttl' )['from_card'] && $free['fields'][2]['from_card'] && ! S::clean_field( [ 'label' => 'x', 'type' => 'text', 'from_card' => 1 ] )['from_card'] );
+$vf = S::validate( $free, [ 'pick' => 'car', 'ttl' => 'hack' ] );
+t( 'free card: picking stores the card with its saved title and price, nothing from the blocks', [] === $vf['errors'] && [ [ 'key' => 'car', 'title' => 'Car', 'price' => 30.0, 'per' => '' ] ] === $vf['values']['pick'] && ! isset( $vf['values']['ttl'] ) );
+t( 'free card: a card with no price stores none', null === S::validate( $free, [ 'pick' => 'bus' ] )['values']['pick'][0]['price'] );
+$cs = FS::clean( [ 'cs_bg' => '#ffeeee', 'cs_border_color' => '#ff0000', 'cs_border_width' => 2, 'mk_size' => 30, 'mk_color' => '#00ff00', 'mko_bg' => '#0000ff', 'bg' => '#fafafa', 'h_bg' => '#eeeeee' ] );
+$ccss = FS::css( [ 'fields' => [], 'type_styles' => [ 'card' => $cs ] ], '#f' );
+t( 'card style: the card type is accepted (and nothing like it is) in shared styles', isset( S::definition( [ 'label' => 'x', 'type_styles' => [ 'card' => [ 'bg' => '#ffffff' ], 'nonsense' => [ 'bg' => '#ffffff' ] ] ] )['type_styles']['card'] ) && ! isset( S::definition( [ 'label' => 'x', 'type_styles' => [ 'nonsense' => [ 'bg' => '#ffffff' ] ] ] )['type_styles']['nonsense'] ) );
+t( 'card style: the card is the element itself (no descendant), with its selected look, hover and pick control', false !== strpos( $ccss, '#f .rfb-t-card{background-color:#fafafa;}' ) && false !== strpos( $ccss, '#f .rfb-t-card:hover{background-color:#eeeeee;}' ) && false !== strpos( $ccss, '#f .rfb-t-card.is-selected{background-color:#ffeeee;border-width:2px;border-color:#ff0000;border-style:solid;}' ), $ccss );
+t( 'card style: the pick control size always applies, its colors only while not picked, the picked look on its own', false !== strpos( $ccss, '#f .rfb-t-card .rfb-cc-mark{font-size:30px;}' ) && false !== strpos( $ccss, '#f .rfb-t-card:not(.is-selected) .rfb-cc-mark{color:#00ff00;}' ) && false !== strpos( $ccss, '#f .rfb-t-card.is-selected .rfb-cc-mark{background-color:#0000ff;}' ), $ccss );
+t( 'card style: the groups belong to cards only, and every state group still has its selector', in_array( 'cmark_on', FS::groups_for( 'card' ), true ) && in_array( 'cbox_on', FS::groups_for( 'card' ), true ) && in_array( 'box', FS::groups_for( 'card' ), true ) && ! in_array( 'cbox_on', FS::groups_for( 'group' ), true ) && ! in_array( 'label', FS::groups_for( 'card' ), true ) );
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );
