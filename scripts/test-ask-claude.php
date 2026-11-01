@@ -14,10 +14,12 @@ function wp_strip_all_tags( $text ) { return trim( strip_tags( $text ) ); }
 require $root . '/modules/ask-claude/classes/layout-sanitizer.php';
 require $root . '/modules/ask-claude/classes/claude-builder.php';
 require $root . '/modules/ask-claude/classes/prompt-builder.php';
+require $root . '/modules/ask-claude/classes/job-rules.php';
 
 use Refraction\Modules\AskClaude\Classes\Layout_Sanitizer as L;
 use Refraction\Modules\AskClaude\Classes\Claude_Builder as B;
 use Refraction\Modules\AskClaude\Classes\Prompt_Builder as P;
+use Refraction\Modules\AskClaude\Classes\Job_Rules as J;
 
 $pass = 0; $fail = 0;
 function t( $name, $ok ) { global $pass, $fail; if ( $ok ) { $pass++; } else { $fail++; echo "FAIL $name\n"; } }
@@ -155,6 +157,13 @@ t( 'chat answer: one bare element without a fence', $a && 'container' === $a['el
 t( 'chat answer: cut off halfway is refused', null === P::parse_answer( "```json\n{\"elements\": [{\"elType\":\"container\",\"settings\":{" ) );
 t( 'chat answer: no JSON at all', null === P::parse_answer( 'I cannot help with that.' ) && null === P::parse_answer( '' ) );
 t( 'chat request: task, images note, description and the selected element', false !== strpos( P::request( 'selected', 'Shorter.', '{"id":"a"}', 'Note.' ), "exactly one element (the replacement for it), keeping what the request does not ask to change. The selected element is shown as JSON after the request. Note.\n\nREQUEST:\nShorter.\n\nCURRENT SELECTED ELEMENT:\n{\"id\":\"a\"}" ) );
+
+// The Claude Code queue.
+t( 'queue: start, result and decline from a waiting request', J::can( 'start', 'queued' ) && J::can( 'result', 'queued' ) && J::can( 'decline', 'queued' ) && 'building' === J::next( 'start' ) && 'ready' === J::next( 'result' ) );
+t( 'queue: a ready or declined request does not move again', ! J::can( 'start', 'ready' ) && ! J::can( 'result', 'ready' ) && ! J::can( 'decline', 'declined' ) && ! J::can( 'requeue', 'queued' ) && ! J::can( 'nonsense', 'queued' ) );
+t( 'queue: a result can be resent while building', J::can( 'result', 'building' ) && J::can( 'start', 'building' ) );
+t( 'queue: building for more than 30 minutes goes back to the queue', J::is_stale( 'building', 1000, 1000 + 1801 ) && ! J::is_stale( 'building', 1000, 1000 + 1700 ) && ! J::is_stale( 'queued', 1000, 99999 ) && ! J::is_stale( 'building', 0, 99999 ) );
+t( 'queue: watching while the last beat is under 30 seconds old', J::watching( 100, 120 ) && ! J::watching( 100, 131 ) && ! J::watching( 0, 10 ) );
 
 echo "ask-claude: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

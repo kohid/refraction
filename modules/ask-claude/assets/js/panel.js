@@ -24,16 +24,24 @@ import {
 import { PhotoIcon, SettingsIcon, XIcon } from '@elementor/icons';
 import { context, insert, pageIsEmpty, selected } from './insert';
 import { ChatFlow } from './chat';
+import { CodeFlow } from './code';
 
 const cfg = () => window.refractionAskClaude || {};
 
 // The model menus open outside the panel: they get the panel's themed look through this class.
 const MENU = { PaperProps: { className: 'rf-ac-menu' } };
 
-// Where Claude runs: the site's API key (paid as API credit), or the person's own Claude.ai chat (their plan).
+// Where Claude runs: Claude Code or a Claude.ai chat on the person's own Claude plan, or the site's API key (API credit).
 const SOURCES = {
-	api: __( 'API key', 'refraction' ),
+	code: __( 'Claude Code', 'refraction' ),
 	chat: __( 'Claude.ai chat', 'refraction' ),
+	api: __( 'API key', 'refraction' ),
+};
+
+const SOURCE_HELP = {
+	code: __( 'Uses your Claude Pro or Max plan: the request waits here, Claude Code builds it, and you insert it. No API key or credit.', 'refraction' ),
+	chat: __( 'Uses your Claude Pro or Max plan: copy a prompt into a Claude.ai chat and paste the answer back. No API key or credit.', 'refraction' ),
+	api: __( 'Builds here in one step with an Anthropic API key, billed per use to that key. A Claude Pro or Max plan does not cover this.', 'refraction' ),
 };
 const SOURCE_KEY = 'refraction-ask-claude-source';
 
@@ -133,7 +141,7 @@ export function Panel( { open, onClose, initialMode } ) {
 	const [ settings, setSettings ] = React.useState( false );
 	const [ confirmReplace, setConfirmReplace ] = React.useState( false );
 	const max = Number( cfg().maxPrompt ) || 60000;
-	const [ source, setSourceState ] = React.useState( () => storedSource() || ( cfg().phpOk && cfg().hasKey ? 'api' : 'chat' ) );
+	const [ source, setSourceState ] = React.useState( () => ( SOURCES[ storedSource() ] && storedSource() ) || ( cfg().phpOk && cfg().hasKey ? 'api' : 'code' ) );
 
 	const setSource = ( value ) => {
 		setSourceState( value );
@@ -217,15 +225,13 @@ export function Panel( { open, onClose, initialMode } ) {
 					{ Object.entries( SOURCES ).map( ( [ id, label ] ) => <ToggleButton key={ id } value={ id } data-ask-claude={ `source-${ id }` }>{ label }</ToggleButton> ) }
 				</ToggleButtonGroup>
 				<Typography variant="caption" className="rf-ac-muted">
-					{ 'api' === source
-						? __( 'Builds here in one step. Paid as API credit on console.anthropic.com, not by a Claude.ai plan.', 'refraction' )
-						: __( 'Uses your own Claude.ai Pro or Max plan: copy a prompt into a chat, paste the answer back. No API key or credit needed.', 'refraction' ) }
+					{ SOURCE_HELP[ source ] }
 				</Typography>
 			</Stack>
 		);
 
 		if ( 'api' === source && ! cfg().phpOk ) {
-			return <Stack gap={ 2 }>{ sourcePicker }<Alert severity="info">{ __( 'Building with an API key needs PHP 8.1 or newer on your server (with the sodium extension). Ask your host to update PHP, or use the Claude.ai chat.', 'refraction' ) }</Alert></Stack>;
+			return <Stack gap={ 2 }>{ sourcePicker }<Alert severity="info">{ __( 'Building with an API key needs PHP 8.1 or newer on your server (with the sodium extension). Ask your host to update PHP, or use Claude Code or the Claude.ai chat.', 'refraction' ) }</Alert></Stack>;
 		}
 
 		if ( 'api' === source && ( settings || ! state.hasKey ) ) {
@@ -234,12 +240,13 @@ export function Panel( { open, onClose, initialMode } ) {
 					{ sourcePicker }
 					{ cfg().canManage
 						? <KeySettings state={ state } setState={ setState } onDone={ () => setSettings( false ) } />
-						: <Alert severity="info">{ __( 'An administrator needs to add an Anthropic API key before it can be used. You can use the Claude.ai chat meanwhile.', 'refraction' ) }</Alert> }
+						: <Alert severity="info">{ __( 'An administrator needs to add an Anthropic API key before it can be used. You can use Claude Code or the Claude.ai chat meanwhile.', 'refraction' ) }</Alert> }
 				</Stack>
 			);
 		}
 
-		const chat = 'chat' === source;
+		// Claude Code and the chat run on the person's Claude plan: no model choice or image upload here.
+		const viaPlan = 'api' !== source;
 
 		return (
 			<Stack gap={ 2 }>
@@ -259,14 +266,16 @@ export function Panel( { open, onClose, initialMode } ) {
 					onChange={ ( e ) => setPrompt( e.target.value ) }
 					inputProps={ { maxLength: max, 'data-ask-claude': 'prompt' } }
 				/>
-				{ ! chat && (
+				{ ! viaPlan && (
 					<Stack direction="row" gap={ 1 } alignItems="center" flexWrap="wrap">
 						<Button size="small" variant="outlined" startIcon={ <PhotoIcon /> } onClick={ pickImages }>{ __( 'Reference images', 'refraction' ) }</Button>
 						{ images.map( ( image ) => <Chip key={ image.id } size="small" label={ image.title } onDelete={ () => setImages( images.filter( ( i ) => i.id !== image.id ) ) } /> ) }
 					</Stack>
 				) }
 				<FormControlLabel control={ <Checkbox size="small" checked={ useStyles } onChange={ ( e ) => setUseStyles( e.target.checked ) } /> } label={ __( "Use the site's colors and fonts", 'refraction' ) } />
-				{ chat ? <ChatFlow mode={ mode } prompt={ prompt } useStyles={ useStyles } /> : (
+				{ 'code' === source && <CodeFlow active={ open } mode={ mode } prompt={ prompt } useStyles={ useStyles } /> }
+				{ 'chat' === source && <ChatFlow mode={ mode } prompt={ prompt } useStyles={ useStyles } /> }
+				{ ! viaPlan && (
 					<>
 						<Select size="small" value={ model } onChange={ ( e ) => setModel( e.target.value ) } inputProps={ { 'aria-label': __( 'Model', 'refraction' ) } } MenuProps={ MENU }>
 							{ Object.entries( cfg().models || {} ).map( ( [ id, label ] ) => <MenuItem key={ id } value={ id }>{ label }</MenuItem> ) }

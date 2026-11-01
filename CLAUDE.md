@@ -47,6 +47,10 @@ Toolchain: Node per `.nvmrc`, npm **11.12.1** (the lock file is generated with i
 - **Release**: `.github/workflows/release.yml` runs on a pushed `v*` tag (or manually with a tag input), builds the zip and publishes `refraction.zip` + checksum to a GitHub release; the in-plugin updater reads `releases/latest` and needs that asset. Branches never auto-release. The same release also carries `just-refraction.zip`, the companion theme from `themes/just-refraction` (built by `scripts/build-theme.mjs`, kept out of the plugin zip; see `docs/refraction/just-refraction-theme.md`).
 - **Docs**: `docs/refraction/` holds the roadmap, per-module docs, audits and leftover lists (`parity-audit.md`, `branding-status.md`, `*-leftovers.md`). Update them with the code.
 
+## Ask Claude through Claude Code
+
+When asked to watch or build Ask Claude requests (or on `/ask-claude-watch`), follow `.claude/commands/ask-claude-watch.md`: keep a Monitor on `node scripts/claude/ask-claude-queue.mjs watch` against `REFRACTION_REST_URL`, and for each request `start`, read the `brief`, write the `{"elements", "summary"}` answer to a file, send it with `result` (fix and resend when refused) or `decline` with a note. It runs on the owner's Claude plan, with no API credit (details: `docs/refraction/ask-claude.md`, "Claude Code").
+
 ## Pitfalls seen in this repo
 
 - A passing `php -l` or direct-URL smoke test is not verification: the menu, tabs and "Edit with Refraction" entry points broke without either failing. Check real admin and editor flows in the browser.

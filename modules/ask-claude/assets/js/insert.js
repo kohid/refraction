@@ -43,8 +43,9 @@ function create( parent, elements, at ) {
 /**
  * @param {string} mode     page, section or selected.
  * @param {Array}  elements The checked elements from the server.
+ * @param {Object} [target] For "selected": the element to replace (default: the selected one).
  */
-export function insert( mode, elements ) {
+export function insert( mode, elements, target = null ) {
 	const log = window.$e.internal( 'document/history/start-log', { type: 'add', title: 'Ask Claude' } );
 
 	try {
@@ -56,13 +57,13 @@ export function insert( mode, elements ) {
 			const at = after ? indexIn( after ) + 1 : preview().children.length;
 			create( preview(), elements, at );
 		} else {
-			const target = selected();
-			const parent = target.parent;
-			const at = indexIn( target );
+			const replaced = target || selected();
+			const parent = replaced.parent;
+			const at = indexIn( replaced );
 			// A container that replaces a top-level one is top-level too.
 			const top = parent.id === preview().id;
 			create( parent, elements.map( ( el ) => ( 'container' === el.elType ? { ...el, isInner: ! top } : el ) ), at );
-			window.$e.run( 'document/elements/delete', { container: target } );
+			window.$e.run( 'document/elements/delete', { container: replaced } );
 		}
 	} finally {
 		window.$e.internal( 'document/history/end-log', { id: log } );

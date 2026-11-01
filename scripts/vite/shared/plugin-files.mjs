@@ -7,6 +7,7 @@
  */
 export const PLUGIN_FILE_PATTERNS = [
 	'**',
+	'!.claude/**',
 	'!.cursor/**',
 	'!.vscode/**',
 	'!.git/**',

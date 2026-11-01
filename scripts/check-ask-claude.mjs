@@ -6,7 +6,9 @@
  * (unknown widgets and scripts dropped, library images only, site colors kept) and undone in one step; the requests
  * carry the model, effort, tools, cached instructions, fallback and echoed thinking; refusals, the hourly limit,
  * reference images and who may use it (editors yes, key settings administrators only, authors and visitors no); and the
- * Claude.ai chat mode (no key: the prompt is copied, the pasted answer is checked and inserted, the site calls nobody).
+ * Claude.ai chat mode (no key: the prompt is copied, the pasted answer is checked and inserted, the site calls nobody);
+ * and the Claude Code queue (requests queued in the panel, answered by scripts/claude/ask-claude-queue.mjs with an
+ * Application Password of the builder role, checked, and inserted from the panel).
  *
  * Usage: node scripts/check-ask-claude.mjs [--site /tmp/rf-claude-site] [--port 8970] [--api-port 8971] [--shots /tmp/ask-claude-shots]
  */
@@ -139,6 +141,20 @@ async function main() {
 		const dir = join( tmpdir(), `rfclaude-${ PORT }` );
 		mkdirSync( dir, { recursive: true } );
 		execFileSync( 'ffmpeg', [ '-loglevel', 'error', '-y', '-f', 'lavfi', '-i', 'testsrc=size=800x500', '-frames:v', '1', join( dir, 'oak-house.jpg' ) ] );
+		// Application Passwords over plain http (the test site has no https).
+		writeFileSync( MU, `<?php define( 'REFRACTION_CLAUDE_BASE_URL', 'http://127.0.0.1:${ API_PORT }' );\nadd_filter( 'wp_is_application_passwords_available', '__return_true' );\n` );
+		wp( [ 'user', 'create', 'claude-builder', 'claude-builder@example.test', '--role=refraction_claude_builder' ], { allowFail: true } );
+		const appPass = wp( [ 'user', 'application-password', 'create', 'claude-builder', 'Claude Code', '--porcelain' ] ).trim();
+		const queueEnv = { ...process.env, REFRACTION_REST_URL: BASE, REFRACTION_REST_USER: 'claude-builder', REFRACTION_REST_PASSWORD: appPass };
+		const q = ( ...args ) => execFileSync( 'node', [ join( dirname( fileURLToPath( import.meta.url ) ), 'claude/ask-claude-queue.mjs' ), ...args.map( String ) ], { encoding: 'utf8', env: queueEnv, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
+		const qFails = ( ...args ) => {
+			try {
+				q( ...args );
+				return '';
+			} catch ( err ) {
+				return String( err.stderr );
+			}
+		};
 		const imageId = Number( wp( [ 'media', 'import', join( dir, 'oak-house.jpg' ), '--user=admin', '--porcelain', '--title=Oak house' ] ).trim() );
 		const home = page( 'Home', [] );
 		const other = page( 'About', [] );
@@ -152,7 +168,60 @@ async function main() {
 		await p.waitForSelector( '[data-ask-claude="panel"]' );
 
 		// ------------------------------------------------------------ Claude.ai chat: no key, no call from the site
-		check( 'chat', 'without a key the panel opens on the Claude.ai chat', await p.locator( '[data-ask-claude="source-chat"][aria-pressed="true"]' ).isVisible() && await p.locator( '[data-ask-claude="chat"]' ).isVisible() );
+		// ------------------------------------------------------------ Claude Code queue: no key, the site calls nobody
+		check( 'code', 'without a key the panel opens on Claude Code', await p.locator( '[data-ask-claude="source-code"][aria-pressed="true"]' ).isVisible() && await p.locator( '[data-ask-claude="code"]' ).isVisible() );
+		check( 'code', 'nobody watches yet, and an administrator sees how to set it up', 'no' === await p.getAttribute( '[data-ask-claude="code-watching"]', 'data-watching' ) && await p.locator( '[data-ask-claude="code-setup"]' ).isVisible() );
+		await p.click( '[data-ask-claude="mode-page"]' );
+		await p.fill( '[data-ask-claude="prompt"]', 'A page for a bakery in Leith. CODEBRIEF' );
+		await p.click( '[data-ask-claude="code-send"]' );
+		await p.waitForSelector( '[data-ask-claude="job"][data-state="queued"]' );
+		const announced = q( 'watch', '--max-runtime', '3' ).trim().split( '\n' ).filter( Boolean ).map( ( line ) => JSON.parse( line ) );
+		const job = announced[ 0 ] || {};
+		check( 'code', 'the watcher announces the waiting request', 1 === announced.length && 'page' === job.mode && /bakery/.test( job.title ), JSON.stringify( announced ) );
+		await p.waitForSelector( '[data-ask-claude="code-watching"][data-watching="yes"]', { timeout: 15000 } ).catch( () => null );
+		check( 'code', 'the panel then says Claude Code is watching', 'yes' === await p.getAttribute( '[data-ask-claude="code-watching"]', 'data-watching' ) );
+		q( 'start', job.id );
+		await p.waitForSelector( '[data-ask-claude="job"][data-state="building"]', { timeout: 15000 } ).catch( () => null );
+		check( 'code', 'start shows "Claude is building"', await p.locator( '[data-ask-claude="job"][data-state="building"]' ).isVisible() );
+		const briefFile = join( dir, 'brief.md' );
+		q( 'brief', job.id, '--out', briefFile );
+		const codeBrief = readFileSync( briefFile, 'utf8' );
+		check( 'code', 'the brief holds the request, every setting and the answer format', codeBrief.includes( 'CODEBRIEF' ) && /\nheading: [^\n]*title:/.test( codeBrief ) && codeBrief.includes( 'ANSWER FORMAT' ) && codeBrief.includes( 'Oak house' ) );
+		const badFile = join( dir, 'bad.json' );
+		writeFileSync( badFile, JSON.stringify( { elements: [ { elType: 'widget', widgetType: 'html', settings: {}, elements: [] } ], summary: 'x' } ) );
+		const refused = qFails( 'result', job.id, '--file', badFile );
+		check( 'code', 'an answer with nothing usable is refused, and the request stays open', /No valid element/.test( refused ) && /widget "html"/.test( refused ), refused );
+		const answerFile = join( dir, 'answer.json' );
+		writeFileSync( answerFile, JSON.stringify( { elements: [ { elType: 'container', settings: { flex_direction: 'column' }, elements: [
+			{ elType: 'widget', widgetType: 'heading', settings: { title: 'Bread, early' }, elements: [] },
+			{ elType: 'widget', widgetType: 'html', settings: { html: '<script>alert(1)</script>' }, elements: [] },
+		] } ], summary: 'A warm bakery page.' } ) );
+		const accepted = q( 'result', job.id, '--file', answerFile );
+		check( 'code', 'a good answer is checked (unsafe widget left out) and becomes Ready', /is now ready/.test( accepted ) && /html/.test( accepted ), accepted );
+		await p.waitForSelector( '[data-ask-claude="job"][data-state="ready"]', { timeout: 15000 } ).catch( () => null );
+		await p.screenshot( { path: join( SHOTS, 'panel-code.png' ) } );
+		await p.click( '[data-ask-claude="job-insert"]' );
+		await p.waitForTimeout( 1500 );
+		const codeTree = await topLevel( p );
+		check( 'code', 'Insert builds it in the editor and clears the request', 1 === codeTree.length && /heading:Bread, early/.test( codeTree[ 0 ] ) && ! /html/.test( codeTree[ 0 ] ) && 0 === await p.locator( '[data-ask-claude="job"]' ).count() && /warm bakery/.test( await p.textContent( '[data-ask-claude="done"]' ) ), JSON.stringify( codeTree ) );
+		await p.evaluate( () => $e.run( 'document/history/undo' ) );
+		check( 'code', 'Undo removes it in one step', 0 === ( await topLevel( p ) ).length );
+		await p.evaluate( ( id ) => wp.apiFetch( { path: '/refraction/v1/ask-claude/jobs', method: 'POST', data: { post_id: id, prompt: 'A spinning globe made of HTML', mode: 'section' } } ), home.id );
+		const declined = q( 'list' ).match( /#(\d+)/ );
+		q( 'decline', declined ? declined[ 1 ] : 0, '--note', 'Raw HTML is not available; ask for a section with an image instead.' );
+		await p.waitForSelector( '[data-ask-claude="job"][data-state="declined"]', { timeout: 15000 } ).catch( () => null );
+		check( 'code', 'a declined request shows the note', /Raw HTML is not available/.test( await p.textContent( '[data-ask-claude="job"][data-state="declined"]' ).catch( () => '' ) ) );
+		await p.click( '[data-ask-claude="job-remove"]' );
+		const builderAuth = { Authorization: 'Basic ' + Buffer.from( `claude-builder:${ appPass }` ).toString( 'base64' ), 'Content-Type': 'application/json' };
+		const builderPage = ( await fetch( `${ BASE }/?rest_route=/wp/v2/pages`, { method: 'POST', headers: builderAuth, body: JSON.stringify( { title: 'x' } ) } ) ).status;
+		const builderSettings = ( await fetch( `${ BASE }/?rest_route=/refraction/v1/ask-claude/settings`, { method: 'POST', headers: builderAuth, body: JSON.stringify( { model: 'claude-haiku-5-5' } ) } ) ).status;
+		const anonWatch = ( await fetch( `${ BASE }/?rest_route=/refraction/v1/ask-claude/jobs/watch`, { method: 'POST' } ) ).status;
+		check( 'code', 'the Claude Code account can do nothing else (no pages, no key), and visitors can not watch', 403 === builderPage && 403 === builderSettings && [ 401, 403 ].includes( anonWatch ), `${ builderPage } ${ builderSettings } ${ anonWatch }` );
+		check( 'code', 'the site called nobody', 0 === api.requests.length, api.requests.length );
+
+		// ------------------------------------------------------------ Claude.ai chat
+		await p.click( '[data-ask-claude="source-chat"]' );
+		check( 'chat', 'the Claude.ai chat is one switch away', await p.locator( '[data-ask-claude="chat"]' ).isVisible() );
 		await p.click( '[data-ask-claude="mode-page"]' );
 		await p.fill( '[data-ask-claude="prompt"]', 'A page for a ceramics studio in Porto. CHATBRIEF' );
 		await p.click( '[data-ask-claude="chat-copy"]' );

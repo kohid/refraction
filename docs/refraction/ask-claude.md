@@ -6,10 +6,25 @@ Tests: `php scripts/test-ask-claude.php` (layout checker, sending turns back, re
 
 ## Two ways to reach Claude
 
-The panel's first switch picks one (remembered per browser; a site without a key starts on the chat):
+The panel's first switch picks one of three (remembered per browser; a site with a key starts on API key, otherwise on Claude Code):
+
+- **Claude Code** (on the person's Claude Pro or Max plan, like Sprint Illustrations' piece requests): see the next section.
 
 - **API key**: the site calls Anthropic's API with its own key and builds in one step. Paid as API credit on console.anthropic.com, which a Claude.ai plan does not include.
 - **Claude.ai chat**: for people with a Claude.ai Pro or Max plan and no API credit. **Copy prompt for Claude.ai** puts one self-contained prompt on the clipboard (or saves `refraction-prompt.txt` when the browser has no clipboard access): the task, the description, the page or selected element as JSON, the widget catalog, **every control** of the container and of each widget (the settings every widget shares are listed once), the library images (id, title, alt), the site styles and the answer format (one `json` code block with `elements` and `summary`). About 30,000 tokens for a full page brief, which counts against the plan's usage. The person pastes it into a new chat (attaching reference images there), then pastes Claude's reply into **Claude's answer** and presses **Insert into the page**. The REST route `chat-import` finds the JSON (the longest `json` block, or the text from the first bracket to the last; an answer cut off halfway is refused with a message) and checks it with the same `Layout_Sanitizer` as the API mode. **The site calls nobody in this mode**, it needs no key and no PHP 8.1 (the SDK is not loaded), and there is no hourly limit. Prompts are built by `Classes\Prompt_Builder`, shared with the API mode.
+
+## Claude Code
+
+No API key or credit: the request waits on the site and a Claude Code session (claude.ai/code, the desktop app or the CLI, all included in Claude Pro and Max) builds it.
+
+1. **Send to Claude Code** queues the request (`POST refraction/v1/ask-claude/jobs`: the description, mode, page or selected element as JSON, site styles switch and, for "Change selected", the element's id). Stored as the private post type `refraction_ai_job` (author = who asked, parent = the page, meta `_refraction_job`); at most 5 waiting per person and 20 an hour.
+2. The session runs `/ask-claude-watch` (`.claude/commands/ask-claude-watch.md`), which keeps a Monitor on `node scripts/claude/ask-claude-queue.mjs watch`. Every 5 s the watcher calls `POST …/jobs/watch`: that beats the heartbeat (option `refraction_ask_claude_watcher`; the panel shows "Claude Code is watching" while it is under 30 s old), puts requests stuck in "building" for 30 minutes back in the queue, and lists what waits; the script prints one JSON line per newly waiting request.
+3. For each one the session runs `start <id>` (the panel shows "Claude is building"), `brief <id>` (`GET …/jobs/<id>/brief`: the same self-contained prompt as the Claude.ai chat mode, built for that page), writes the answer to a file and sends it with `result <id> --file F`. The answer is read and checked by `Layout_Sanitizer` before it is stored; when nothing usable is left (or not exactly one element for "Change selected") it is refused with the reason and the request stays open, so the session fixes it and resends. `decline <id> --note …` explains what can not be built.
+4. The panel polls every 5 s while it is open. A ready request shows Claude's summary with **Insert into the page** (one Undo step; "Whole page" asks before replacing) and **Discard**; a waiting one can be cancelled; a declined one shows the note.
+
+The rules (states queued → building → ready, declined; requeue after 30 minutes; the 30 s watching window) are pure in `Classes\Job_Rules`; storage is `Classes\Job_Queue`, the routes `Classes\Queue_Rest`.
+
+**Set up** (an administrator; the panel shows the same steps while nobody watches): create a user with the role **Claude Code builder (Refraction)** (`refraction_claude_builder`: only `read` and `refraction_claude_build`, so its Application Password can't do anything else), add an Application Password to it, and start Claude Code on this repository with `REFRACTION_REST_URL` (the site, https), `REFRACTION_REST_USER` and `REFRACTION_REST_PASSWORD`. In a Claude Code cloud environment, allow the site's host in the network policy (or let the proxy add the credential, in which case the user and password can be left out). Then type `/ask-claude-watch`. Administrators can also watch with their own Application Password.
 
 ## Remote calls (owner-approved exception)
 
