@@ -253,7 +253,9 @@ class Layout_Sanitizer {
 			case 'icons':
 				return $this->icon( $value );
 
+			// The items of tabs, accordions and other nested widgets (their titles; the content is the child containers).
 			case 'repeater':
+			case 'nested-elements-repeater':
 				return $this->repeater( $value, $control );
 
 			case 'font':

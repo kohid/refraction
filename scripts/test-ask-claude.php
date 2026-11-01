@@ -172,5 +172,9 @@ t( 'responsive: no copies of a control that is not responsive, nor of unknown on
 $cleaned = ( new L( function () { return null; }, function () { return ''; } ) )->settings( [ 'padding_mobile' => [ 'unit' => 'px', 'top' => '20', 'right' => '20', 'bottom' => '20', 'left' => '20' ], 'title_mobile' => 'x' ], $rc );
 t( 'responsive: the copy is kept and cleaned like its control', isset( $cleaned['padding_mobile'] ) && '20' === (string) $cleaned['padding_mobile']['top'] && ! isset( $cleaned['title_mobile'] ) );
 
+// Items of nested widgets (accordion titles) are kept like repeater items.
+$nested = ( new L( function () { return null; }, function () { return ''; } ) )->settings( [ 'items' => [ [ 'item_title' => 'Q one', 'evil' => 'x' ] ] ], [ 'items' => [ 'type' => 'nested-elements-repeater', 'fields' => [ 'item_title' => [ 'type' => 'text', 'name' => 'item_title' ] ] ] ] );
+t( 'nested items: titles kept, unknown fields dropped', 'Q one' === ( $nested['items'][0]['item_title'] ?? '' ) && ! isset( $nested['items'][0]['evil'] ) );
+
 echo "ask-claude: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

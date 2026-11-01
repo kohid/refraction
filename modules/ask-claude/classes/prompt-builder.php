@@ -83,7 +83,7 @@ class Prompt_Builder {
 			$out .= '(' . implode( '|', array_slice( array_map( 'strval', array_keys( $control['options'] ) ), 0, 25 ) ) . ')';
 		}
 
-		if ( 'repeater' === $type && ! empty( $control['fields'] ) ) {
+		if ( in_array( $type, [ 'repeater', 'nested-elements-repeater' ], true ) && ! empty( $control['fields'] ) ) {
 			$fields = [];
 
 			foreach ( (array) $control['fields'] as $field_key => $field ) {
