@@ -8,8 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * REST routes of the Ask Claude panel (refraction/v1/ask-claude): generate (anyone who may edit that page), and the
- * key and default model (administrators). Every route checks the cookie nonce through the REST API.
+ * REST routes of the Ask Claude panel (refraction/v1/ask-claude): generate, and chat-prompt and chat-import for the
+ * Claude.ai chat mode (anyone who may edit that page), and the key and default model (administrators). Every route
+ * checks the cookie nonce through the REST API.
  */
 class Rest {
 
@@ -28,6 +29,17 @@ class Rest {
 				return Module::can_use() && current_user_can( 'edit_post', (int) $request->get_param( 'post_id' ) );
 			},
 		] );
+		// The Claude.ai chat mode: the site builds the prompt and checks the pasted answer; it calls nobody.
+		foreach ( [ 'chat-prompt' => 'chat_prompt', 'chat-import' => 'chat_import' ] as $route => $method ) {
+			register_rest_route( self::NS, '/ask-claude/' . $route, [
+				'methods' => 'POST',
+				'callback' => [ $this, $method ],
+				'permission_callback' => static function ( \WP_REST_Request $request ) {
+					return Module::can_use() && current_user_can( 'edit_post', (int) $request->get_param( 'post_id' ) );
+				},
+			] );
+		}
+
 		register_rest_route( self::NS, '/ask-claude/settings', [
 			[
 				'methods' => 'POST',
@@ -111,15 +123,8 @@ class Rest {
 		return $out;
 	}
 
-	public function generate( \WP_REST_Request $request ) {
-		if ( ! Module::php_ok() ) {
-			return self::error( __( 'Ask Claude needs PHP 8.1 or newer with the sodium extension.', 'refraction' ), 400 );
-		}
-
-		if ( ! Key_Store::has_key() ) {
-			return self::error( __( 'Add an Anthropic API key first (an administrator can do it in this panel).', 'refraction' ), 400 );
-		}
-
+	/** The description and mode of a request, or an error. */
+	private static function brief( \WP_REST_Request $request ) {
 		$prompt = trim( sanitize_textarea_field( (string) $request->get_param( 'prompt' ) ) );
 		$mode = (string) $request->get_param( 'mode' );
 
@@ -135,6 +140,74 @@ class Rest {
 		if ( ! in_array( $mode, [ 'page', 'section', 'selected' ], true ) ) {
 			return self::error( __( 'Unknown mode.', 'refraction' ), 400 );
 		}
+
+		return [ $prompt, $mode ];
+	}
+
+	/** The whole prompt to paste into a Claude.ai chat, with every widget's controls (no tools there). */
+	public function chat_prompt( \WP_REST_Request $request ) {
+		$brief = self::brief( $request );
+
+		if ( is_wp_error( $brief ) ) {
+			return $brief;
+		}
+
+		[ $prompt, $mode ] = $brief;
+		$text = Prompt_Builder::chat( new Widget_Specs( (int) $request->get_param( 'post_id' ) ), [
+			'prompt' => $prompt,
+			'mode' => $mode,
+			'context' => 'page' === $mode ? '' : substr( (string) $request->get_param( 'context' ), 0, self::MAX_CONTEXT ),
+			'use_styles' => (bool) $request->get_param( 'use_styles' ),
+		] );
+
+		// About four characters per token: shown so people know what the chat will count against their plan.
+		return [ 'text' => $text, 'tokens' => (int) ceil( strlen( $text ) / 4 ) ];
+	}
+
+	/** Checks the answer pasted from the chat, exactly like an answer from the API. */
+	public function chat_import( \WP_REST_Request $request ) {
+		$mode = (string) $request->get_param( 'mode' );
+		$answer = (string) $request->get_param( 'answer' );
+
+		if ( ! in_array( $mode, [ 'page', 'section', 'selected' ], true ) ) {
+			return self::error( __( 'Unknown mode.', 'refraction' ), 400 );
+		}
+
+		if ( strlen( $answer ) > Prompt_Builder::MAX_ANSWER ) {
+			return self::error( __( 'That answer is too long to insert. Build the page in parts with "Add a section".', 'refraction' ), 400 );
+		}
+
+		$parsed = Prompt_Builder::parse_answer( $answer );
+
+		if ( ! $parsed ) {
+			return self::error( __( 'No complete JSON was found in that answer. Copy Claude\'s whole reply (the code block). If the reply stopped halfway, ask Claude to "continue", or build the page in parts with "Add a section".', 'refraction' ), 422 );
+		}
+
+		[ $elements, $dropped, $ok ] = Prompt_Builder::clean( new Widget_Specs( (int) $request->get_param( 'post_id' ) ), $parsed['elements'], $mode );
+
+		if ( ! $ok ) {
+			return self::error( 'selected' === $mode ? __( 'The answer must hold exactly one element to replace the selected one.', 'refraction' ) : __( 'Nothing in that answer could be used: it has no elements Refraction knows.', 'refraction' ), 422 );
+		}
+
+		return [ 'elements' => $elements, 'summary' => sanitize_textarea_field( $parsed['summary'] ), 'dropped' => $dropped ];
+	}
+
+	public function generate( \WP_REST_Request $request ) {
+		if ( ! Module::php_ok() ) {
+			return self::error( __( 'Ask Claude needs PHP 8.1 or newer with the sodium extension.', 'refraction' ), 400 );
+		}
+
+		if ( ! Key_Store::has_key() ) {
+			return self::error( __( 'Add an Anthropic API key first (an administrator can do it in this panel).', 'refraction' ), 400 );
+		}
+
+		$brief = self::brief( $request );
+
+		if ( is_wp_error( $brief ) ) {
+			return $brief;
+		}
+
+		[ $prompt, $mode ] = $brief;
 
 		// Every generation spends credits on the site's key: a cap per person per hour.
 		$count_key = 'rf_ask_claude_' . get_current_user_id();

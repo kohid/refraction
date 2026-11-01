@@ -13,9 +13,11 @@ function wp_strip_all_tags( $text ) { return trim( strip_tags( $text ) ); }
 
 require $root . '/modules/ask-claude/classes/layout-sanitizer.php';
 require $root . '/modules/ask-claude/classes/claude-builder.php';
+require $root . '/modules/ask-claude/classes/prompt-builder.php';
 
 use Refraction\Modules\AskClaude\Classes\Layout_Sanitizer as L;
 use Refraction\Modules\AskClaude\Classes\Claude_Builder as B;
+use Refraction\Modules\AskClaude\Classes\Prompt_Builder as P;
 
 $pass = 0; $fail = 0;
 function t( $name, $ok ) { global $pass, $fail; if ( $ok ) { $pass++; } else { $fail++; echo "FAIL $name\n"; } }
@@ -139,6 +141,20 @@ $echo = B::echo_content( [
 t( 'echo: after a fallback, only text from before it, the marker dropped', 2 === count( $echo ) && 'Partial.' === $echo[0]['text'] && 'new' === $echo[1]['id'] );
 
 t( 'api message: Anthropic\'s one line, not the JSON', 'Your credit balance is too low.' === B::api_message( [ 'type' => 'error', 'error' => [ 'type' => 'invalid_request_error', 'message' => 'Your credit balance is too low.' ] ] ) && '' === B::api_message( 'oops' ) && '' === B::api_message( null ) );
+
+// Answers pasted from a Claude.ai chat.
+$el = '{"elType":"container","settings":{},"elements":[]}';
+$a = P::parse_answer( "Here is your page:\n\n```json\n{\"elements\": [$el], \"summary\": \"A hero.\"}\n```\n\nLet me know!" );
+t( 'chat answer: the json block inside prose', $a && 1 === count( $a['elements'] ) && 'A hero.' === $a['summary'] );
+$a = P::parse_answer( "```\n{\"x\":1}\n```\n```json\n{\"elements\": [$el, $el], \"summary\": \"\"}\n```" );
+t( 'chat answer: the longest block wins', $a && 2 === count( $a['elements'] ) );
+$a = P::parse_answer( "[$el]" );
+t( 'chat answer: a bare list of elements', $a && 1 === count( $a['elements'] ) && '' === $a['summary'] );
+$a = P::parse_answer( "Sure: $el" );
+t( 'chat answer: one bare element without a fence', $a && 'container' === $a['elements'][0]['elType'] );
+t( 'chat answer: cut off halfway is refused', null === P::parse_answer( "```json\n{\"elements\": [{\"elType\":\"container\",\"settings\":{" ) );
+t( 'chat answer: no JSON at all', null === P::parse_answer( 'I cannot help with that.' ) && null === P::parse_answer( '' ) );
+t( 'chat request: task, images note, description and the selected element', false !== strpos( P::request( 'selected', 'Shorter.', '{"id":"a"}', 'Note.' ), "exactly one element (the replacement for it), keeping what the request does not ask to change. The selected element is shown as JSON after the request. Note.\n\nREQUEST:\nShorter.\n\nCURRENT SELECTED ELEMENT:\n{\"id\":\"a\"}" ) );
 
 echo "ask-claude: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

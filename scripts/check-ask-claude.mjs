@@ -5,7 +5,8 @@
  * selected element (from the right-click menu) are built in the editor from what the official SDK received, cleaned
  * (unknown widgets and scripts dropped, library images only, site colors kept) and undone in one step; the requests
  * carry the model, effort, tools, cached instructions, fallback and echoed thinking; refusals, the hourly limit,
- * reference images and who may use it (editors yes, key settings administrators only, authors and visitors no).
+ * reference images and who may use it (editors yes, key settings administrators only, authors and visitors no); and the
+ * Claude.ai chat mode (no key: the prompt is copied, the pasted answer is checked and inserted, the site calls nobody).
  *
  * Usage: node scripts/check-ask-claude.mjs [--site /tmp/rf-claude-site] [--port 8970] [--api-port 8971] [--shots /tmp/ask-claude-shots]
  */
@@ -77,6 +78,7 @@ const spacer = ( id, text ) => ( { id, elType: 'widget', widgetType: 'heading', 
 
 async function login( browser, user ) {
 	const ctx = await browser.newContext( { viewport: { width: 1500, height: 950 } } );
+	await ctx.grantPermissions( [ 'clipboard-read', 'clipboard-write' ], { origin: BASE } );
 	const p = await ctx.newPage();
 	// Straight to the profile: the dashboard waits on remote news feeds this test site can not reach.
 	await p.goto( `${ BASE }/wp-login.php?redirect_to=${ encodeURIComponent( `${ BASE }/wp-admin/profile.php` ) }` );
@@ -148,6 +150,59 @@ async function main() {
 		check( 'editor', 'Ask Claude is in the top bar', await askButton( p ).isVisible() );
 		await askButton( p ).click();
 		await p.waitForSelector( '[data-ask-claude="panel"]' );
+
+		// ------------------------------------------------------------ Claude.ai chat: no key, no call from the site
+		check( 'chat', 'without a key the panel opens on the Claude.ai chat', await p.locator( '[data-ask-claude="source-chat"][aria-pressed="true"]' ).isVisible() && await p.locator( '[data-ask-claude="chat"]' ).isVisible() );
+		await p.click( '[data-ask-claude="mode-page"]' );
+		await p.fill( '[data-ask-claude="prompt"]', 'A page for a ceramics studio in Porto. CHATBRIEF' );
+		await p.click( '[data-ask-claude="chat-copy"]' );
+		await p.waitForSelector( '[data-ask-claude="chat-copied"], [data-ask-claude="error"]' );
+		const copied = await p.evaluate( () => navigator.clipboard.readText() );
+		writeFileSync( join( SHOTS, 'chat-prompt.txt' ), copied );
+		check( 'chat', 'the copied prompt holds the description, the catalog, every control, library images and the answer format', copied.includes( 'CHATBRIEF' ) && copied.includes( 'WIDGET CATALOG' ) && /\nheading: [^\n]*title:/.test( copied ) && /\ncontainer: [^\n]*flex_direction:/.test( copied ) && copied.includes( "\ntypography: " ) && copied.includes( 'shared by every widget' ) && copied.includes( '```json' ) && copied.includes( 'Oak house' ), copied.slice( 0, 300 ) );
+		check( 'chat', 'it offers no unsafe widget', ! /\n(html|shortcode): /.test( copied ) );
+		check( 'chat', 'its size is shown', /tokens/.test( await p.textContent( '[data-ask-claude="chat-copied"]' ) ) );
+		const contrast = await p.evaluate( () => {
+			const lum = ( c ) => {
+				const [ r, g, b ] = c.match( /\d+(\.\d+)?/g ).slice( 0, 3 ).map( ( v ) => {
+					const x = Number( v ) / 255;
+					return x <= 0.03928 ? x / 12.92 : ( ( x + 0.055 ) / 1.055 ) ** 2.4;
+				} );
+				return ( 0.2126 * r ) + ( 0.7152 * g ) + ( 0.0722 * b );
+			};
+			const ratio = ( el ) => {
+				const a = lum( getComputedStyle( el ).color );
+				const b = lum( getComputedStyle( el ).backgroundColor );
+				return ( Math.max( a, b ) + 0.05 ) / ( Math.min( a, b ) + 0.05 );
+			};
+			return { alert: ratio( document.querySelector( '[data-ask-claude="chat-copied"]' ) ), field: ratio( document.querySelector( '[data-ask-claude="prompt"]' ).closest( '.MuiInputBase-root' ) ) };
+		} );
+		check( 'chat', 'text in the boxes and fields is readable in the default theme', contrast.alert >= 4.5 && contrast.field >= 4.5, JSON.stringify( contrast ) );
+		const answer = 'Here is the page.\n\n```json\n' + JSON.stringify( { elements: [ { elType: 'container', settings: { flex_direction: 'column' }, elements: [
+			{ elType: 'widget', widgetType: 'heading', settings: { title: 'Clay, slowly' }, elements: [] },
+			{ elType: 'widget', widgetType: 'html', settings: { html: '<script>alert(1)</script>' }, elements: [] },
+			{ elType: 'widget', widgetType: 'text-editor', settings: { editor: '<p>Hand-thrown pieces.</p><script>x()</script>' }, elements: [] },
+		] } ], summary: 'A calm studio page.' }, null, 2 ) + '\n```\n\nWant any changes?';
+		await p.fill( '[data-ask-claude="chat-answer"]', answer );
+		await p.click( '[data-ask-claude="chat-insert"]' );
+		await p.waitForSelector( '[data-ask-claude="done"], [data-ask-claude="error"]' );
+		const chatTree = await topLevel( p );
+		const chatDone = await p.textContent( '[data-ask-claude="done"]' ).catch( () => '' );
+		check( 'chat', 'the pasted answer is checked and built in the editor (unknown and unsafe widgets left out)', 1 === chatTree.length && /heading:Clay, slowly/.test( chatTree[ 0 ] ) && /text-editor/.test( chatTree[ 0 ] ) && ! /html/.test( chatTree[ 0 ] ) && /calm studio page/.test( chatDone ) && /html/.test( chatDone ), JSON.stringify( chatTree ) + ' ' + ( chatDone || await p.textContent( '[data-ask-claude="error"]' ).catch( () => '' ) ) );
+		const chatText = await p.evaluate( () => refraction.getPreviewContainer().children[ 0 ].children.find( ( w ) => 'text-editor' === w.model.get( 'widgetType' ) ).settings.get( 'editor' ) );
+		check( 'chat', 'scripts in the text are removed', ! /script/.test( chatText ) && /Hand-thrown/.test( chatText ), chatText );
+		await p.screenshot( { path: join( SHOTS, 'panel-chat.png' ) } );
+		await p.click( '[data-ask-claude="mode-section"]' );
+		await p.fill( '[data-ask-claude="chat-answer"]', '```json\n{"elements": [{"elType": "container", "settings": {' );
+		await p.click( '[data-ask-claude="chat-insert"]' );
+		await p.waitForSelector( '[data-ask-claude="error"]' );
+		check( 'chat', 'an answer cut off halfway is explained, nothing is added', /continue/.test( await p.textContent( '[data-ask-claude="error"]' ) ) && 1 === ( await topLevel( p ) ).length );
+		await p.evaluate( () => $e.run( 'document/history/undo' ) );
+		check( 'chat', 'Undo removes it in one step', 0 === ( await topLevel( p ) ).length );
+		check( 'chat', 'the site called nobody', 0 === api.requests.length, api.requests.length );
+
+		// ------------------------------------------------------------ API key
+		await p.click( '[data-ask-claude="source-api"]' );
 		check( 'key', 'without a key an administrator is asked for one', await p.locator( '[data-ask-claude="settings"]' ).isVisible() );
 		await p.fill( '[data-ask-claude="key"]', 'not-a-key' );
 		await p.click( '[data-ask-claude="save-key"]' );
@@ -297,7 +352,8 @@ async function main() {
 		check( 'roles', 'an author can not generate for a page they can not edit', 403 === authorTry || 401 === authorTry, authorTry );
 		await a.ctx.close();
 		const anon = await ( await fetch( `${ BASE }/?rest_route=/refraction/v1/ask-claude/generate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify( { post_id: home.id, prompt: 'x', mode: 'page' } ) } ) ).status;
-		check( 'roles', 'visitors get nothing', 401 === anon || 403 === anon, anon );
+		const anonChat = await ( await fetch( `${ BASE }/?rest_route=/refraction/v1/ask-claude/chat-prompt`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify( { post_id: home.id, prompt: 'x', mode: 'page' } ) } ) ).status;
+		check( 'roles', 'visitors get nothing', [ 401, 403 ].includes( anon ) && [ 401, 403 ].includes( anonChat ), `${ anon } ${ anonChat }` );
 	} catch ( err ) {
 		failures++;
 		console.log( 'FAIL  script / ' + ( err.stack || err.message ).slice( 0, 900 ) );

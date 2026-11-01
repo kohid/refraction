@@ -7,7 +7,7 @@ $panel: "#refraction-ask-claude";
 #{$panel} .rf-ac-panel,
 body .rf-ac-menu.MuiPaper-root {
 	--rf-ac-bg: var(--e-a-bg-default, #fff);
-	--rf-ac-field: var(--e-a-bg-secondary, var(--e-a-bg-default, #fff));
+	--rf-ac-field: var(--e-a-bg-hover, var(--e-a-bg-default, #fff));
 	--rf-ac-txt: var(--e-a-color-txt, #3f444b);
 	--rf-ac-muted: var(--e-a-color-txt-muted, #69727d);
 	--rf-ac-line: var(--e-a-border-color-bold, #d5d8dc);
