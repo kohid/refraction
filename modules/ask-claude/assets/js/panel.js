@@ -23,11 +23,27 @@ import {
 } from '@elementor/ui';
 import { PhotoIcon, SettingsIcon, XIcon } from '@elementor/icons';
 import { context, insert, pageIsEmpty, selected } from './insert';
+import { ChatFlow } from './chat';
 
 const cfg = () => window.refractionAskClaude || {};
 
 // The model menus open outside the panel: they get the panel's themed look through this class.
 const MENU = { PaperProps: { className: 'rf-ac-menu' } };
+
+// Where Claude runs: the site's API key (paid as API credit), or the person's own Claude.ai chat (their plan).
+const SOURCES = {
+	api: __( 'API key', 'refraction' ),
+	chat: __( 'Claude.ai chat', 'refraction' ),
+};
+const SOURCE_KEY = 'refraction-ask-claude-source';
+
+function storedSource() {
+	try {
+		return window.localStorage.getItem( SOURCE_KEY );
+	} catch ( e ) {
+		return null;
+	}
+}
 
 const MODES = {
 	page: __( 'Whole page', 'refraction' ),
@@ -117,6 +133,16 @@ export function Panel( { open, onClose, initialMode } ) {
 	const [ settings, setSettings ] = React.useState( false );
 	const [ confirmReplace, setConfirmReplace ] = React.useState( false );
 	const max = Number( cfg().maxPrompt ) || 60000;
+	const [ source, setSourceState ] = React.useState( () => storedSource() || ( cfg().phpOk && cfg().hasKey ? 'api' : 'chat' ) );
+
+	const setSource = ( value ) => {
+		setSourceState( value );
+		setSettings( false );
+
+		try {
+			window.localStorage.setItem( SOURCE_KEY, value );
+		} catch ( e ) {}
+	};
 
 	React.useEffect( () => {
 		if ( initialMode ) {
@@ -185,18 +211,39 @@ export function Panel( { open, onClose, initialMode } ) {
 	};
 
 	const body = () => {
-		if ( ! cfg().phpOk ) {
-			return <Alert severity="info">{ __( 'Ask Claude needs PHP 8.1 or newer on your server (with the sodium extension). Ask your host to update PHP; the rest of Refraction works as before.', 'refraction' ) }</Alert>;
+		const sourcePicker = (
+			<Stack gap={ 0.5 }>
+				<ToggleButtonGroup size="small" exclusive fullWidth value={ source } onChange={ ( e, value ) => value && setSource( value ) } aria-label={ __( 'How to reach Claude', 'refraction' ) }>
+					{ Object.entries( SOURCES ).map( ( [ id, label ] ) => <ToggleButton key={ id } value={ id } data-ask-claude={ `source-${ id }` }>{ label }</ToggleButton> ) }
+				</ToggleButtonGroup>
+				<Typography variant="caption" className="rf-ac-muted">
+					{ 'api' === source
+						? __( 'Builds here in one step. Paid as API credit on console.anthropic.com, not by a Claude.ai plan.', 'refraction' )
+						: __( 'Uses your own Claude.ai Pro or Max plan: copy a prompt into a chat, paste the answer back. No API key or credit needed.', 'refraction' ) }
+				</Typography>
+			</Stack>
+		);
+
+		if ( 'api' === source && ! cfg().phpOk ) {
+			return <Stack gap={ 2 }>{ sourcePicker }<Alert severity="info">{ __( 'Building with an API key needs PHP 8.1 or newer on your server (with the sodium extension). Ask your host to update PHP, or use the Claude.ai chat.', 'refraction' ) }</Alert></Stack>;
 		}
 
-		if ( settings || ! state.hasKey ) {
-			return cfg().canManage
-				? <KeySettings state={ state } setState={ setState } onDone={ () => setSettings( false ) } />
-				: <Alert severity="info">{ __( 'An administrator needs to add an Anthropic API key before Ask Claude can be used.', 'refraction' ) }</Alert>;
+		if ( 'api' === source && ( settings || ! state.hasKey ) ) {
+			return (
+				<Stack gap={ 2 }>
+					{ sourcePicker }
+					{ cfg().canManage
+						? <KeySettings state={ state } setState={ setState } onDone={ () => setSettings( false ) } />
+						: <Alert severity="info">{ __( 'An administrator needs to add an Anthropic API key before it can be used. You can use the Claude.ai chat meanwhile.', 'refraction' ) }</Alert> }
+				</Stack>
+			);
 		}
+
+		const chat = 'chat' === source;
 
 		return (
 			<Stack gap={ 2 }>
+				{ sourcePicker }
 				<ToggleButtonGroup size="small" exclusive fullWidth value={ mode } onChange={ ( e, value ) => value && setMode( value ) } aria-label={ __( 'What to build', 'refraction' ) }>
 					{ Object.entries( MODES ).map( ( [ id, label ] ) => <ToggleButton key={ id } value={ id } data-ask-claude={ `mode-${ id }` }>{ label }</ToggleButton> ) }
 				</ToggleButtonGroup>
@@ -212,29 +259,35 @@ export function Panel( { open, onClose, initialMode } ) {
 					onChange={ ( e ) => setPrompt( e.target.value ) }
 					inputProps={ { maxLength: max, 'data-ask-claude': 'prompt' } }
 				/>
-				<Stack direction="row" gap={ 1 } alignItems="center" flexWrap="wrap">
-					<Button size="small" variant="outlined" startIcon={ <PhotoIcon /> } onClick={ pickImages }>{ __( 'Reference images', 'refraction' ) }</Button>
-					{ images.map( ( image ) => <Chip key={ image.id } size="small" label={ image.title } onDelete={ () => setImages( images.filter( ( i ) => i.id !== image.id ) ) } /> ) }
-				</Stack>
-				<FormControlLabel control={ <Checkbox size="small" checked={ useStyles } onChange={ ( e ) => setUseStyles( e.target.checked ) } /> } label={ __( "Use the site's colors and fonts", 'refraction' ) } />
-				<Select size="small" value={ model } onChange={ ( e ) => setModel( e.target.value ) } inputProps={ { 'aria-label': __( 'Model', 'refraction' ) } } MenuProps={ MENU }>
-					{ Object.entries( cfg().models || {} ).map( ( [ id, label ] ) => <MenuItem key={ id } value={ id }>{ label }</MenuItem> ) }
-				</Select>
-				{ confirmReplace && <Alert severity="warning" data-ask-claude="confirm">{ __( 'This replaces everything on the page. Undo brings it back. Press Generate again to continue.', 'refraction' ) }</Alert> }
-				<Button variant="contained" disabled={ busy || ! prompt.trim() } onClick={ run } data-ask-claude="generate">{ busy ? __( 'Building…', 'refraction' ) : __( 'Generate', 'refraction' ) }</Button>
-				{ busy && (
-					<Box>
-						<LinearProgress />
-						<Typography variant="caption" className="rf-ac-muted">{ __( 'Claude is building. A whole page can take a few minutes.', 'refraction' ) } { seconds }s</Typography>
-					</Box>
+				{ ! chat && (
+					<Stack direction="row" gap={ 1 } alignItems="center" flexWrap="wrap">
+						<Button size="small" variant="outlined" startIcon={ <PhotoIcon /> } onClick={ pickImages }>{ __( 'Reference images', 'refraction' ) }</Button>
+						{ images.map( ( image ) => <Chip key={ image.id } size="small" label={ image.title } onDelete={ () => setImages( images.filter( ( i ) => i.id !== image.id ) ) } /> ) }
+					</Stack>
 				) }
-				{ error && <Alert severity="error" data-ask-claude="error">{ error }</Alert> }
-				{ result && (
-					<Alert severity="success" data-ask-claude="done">
-						<Typography variant="body2">{ result.summary || __( 'Done.', 'refraction' ) }</Typography>
-						{ result.dropped && result.dropped.length > 0 && <Typography variant="caption" display="block">{ __( 'Left out (not available here):', 'refraction' ) } { result.dropped.join( ', ' ) }</Typography> }
-						<Typography variant="caption" display="block" className="rf-ac-muted">{ result.usage.input + result.usage.output } { __( 'tokens', 'refraction' ) } · { result.usage.model }</Typography>
-					</Alert>
+				<FormControlLabel control={ <Checkbox size="small" checked={ useStyles } onChange={ ( e ) => setUseStyles( e.target.checked ) } /> } label={ __( "Use the site's colors and fonts", 'refraction' ) } />
+				{ chat ? <ChatFlow mode={ mode } prompt={ prompt } useStyles={ useStyles } /> : (
+					<>
+						<Select size="small" value={ model } onChange={ ( e ) => setModel( e.target.value ) } inputProps={ { 'aria-label': __( 'Model', 'refraction' ) } } MenuProps={ MENU }>
+							{ Object.entries( cfg().models || {} ).map( ( [ id, label ] ) => <MenuItem key={ id } value={ id }>{ label }</MenuItem> ) }
+						</Select>
+						{ confirmReplace && <Alert severity="warning" data-ask-claude="confirm">{ __( 'This replaces everything on the page. Undo brings it back. Press Generate again to continue.', 'refraction' ) }</Alert> }
+						<Button variant="contained" disabled={ busy || ! prompt.trim() } onClick={ run } data-ask-claude="generate">{ busy ? __( 'Building…', 'refraction' ) : __( 'Generate', 'refraction' ) }</Button>
+						{ busy && (
+							<Box>
+								<LinearProgress />
+								<Typography variant="caption" className="rf-ac-muted">{ __( 'Claude is building. A whole page can take a few minutes.', 'refraction' ) } { seconds }s</Typography>
+							</Box>
+						) }
+						{ error && <Alert severity="error" data-ask-claude="error">{ error }</Alert> }
+						{ result && (
+							<Alert severity="success" data-ask-claude="done">
+								<Typography variant="body2">{ result.summary || __( 'Done.', 'refraction' ) }</Typography>
+								{ result.dropped && result.dropped.length > 0 && <Typography variant="caption" display="block">{ __( 'Left out (not available here):', 'refraction' ) } { result.dropped.join( ', ' ) }</Typography> }
+								<Typography variant="caption" display="block" className="rf-ac-muted">{ result.usage.input + result.usage.output } { __( 'tokens', 'refraction' ) } · { result.usage.model }</Typography>
+							</Alert>
+						) }
+					</>
 				) }
 			</Stack>
 		);
@@ -245,7 +298,7 @@ export function Panel( { open, onClose, initialMode } ) {
 			<Stack direction="row" alignItems="center" justifyContent="space-between" sx={ { px: 2, py: 1.5 } }>
 				<Typography variant="subtitle1" component="h2">{ __( 'Ask Claude', 'refraction' ) }</Typography>
 				<Stack direction="row">
-					{ cfg().canManage && cfg().phpOk && state.hasKey && <IconButton size="small" onClick={ () => setSettings( ! settings ) } aria-label={ __( 'API key and model', 'refraction' ) }><SettingsIcon fontSize="small" /></IconButton> }
+					{ cfg().canManage && cfg().phpOk && state.hasKey && 'api' === source && <IconButton size="small" onClick={ () => setSettings( ! settings ) } aria-label={ __( 'API key and model', 'refraction' ) }><SettingsIcon fontSize="small" /></IconButton> }
 					<IconButton size="small" onClick={ onClose } aria-label={ __( 'Close', 'refraction' ) }><XIcon fontSize="small" /></IconButton>
 				</Stack>
 			</Stack>

@@ -2,7 +2,14 @@
 
 A panel in the editor (top bar: **Ask Claude**, and **Ask Claude to change this** in an element's right-click menu) that builds with Refraction's own widgets from a prompt: a **whole page**, a **new section** (after the selected element, or at the end), or a **new version of the selected element**. What Claude builds arrives as ordinary, editable elements, and one **Undo** removes it. Added in 0.19.0; module `modules/ask-claude`.
 
-Tests: `php scripts/test-ask-claude.php` (layout checker, sending turns back), browser check `node scripts/check-ask-claude.mjs --site DIR --port N` (against a fake Anthropic API in `scripts/fixtures/fake-anthropic.mjs`, so it costs nothing).
+Tests: `php scripts/test-ask-claude.php` (layout checker, sending turns back, reading pasted chat answers), browser check `node scripts/check-ask-claude.mjs --site DIR --port N` (against a fake Anthropic API in `scripts/fixtures/fake-anthropic.mjs`, so it costs nothing).
+
+## Two ways to reach Claude
+
+The panel's first switch picks one (remembered per browser; a site without a key starts on the chat):
+
+- **API key**: the site calls Anthropic's API with its own key and builds in one step. Paid as API credit on console.anthropic.com, which a Claude.ai plan does not include.
+- **Claude.ai chat**: for people with a Claude.ai Pro or Max plan and no API credit. **Copy prompt for Claude.ai** puts one self-contained prompt on the clipboard (or saves `refraction-prompt.txt` when the browser has no clipboard access): the task, the description, the page or selected element as JSON, the widget catalog, **every control** of the container and of each widget (the settings every widget shares are listed once), the library images (id, title, alt), the site styles and the answer format (one `json` code block with `elements` and `summary`). About 30,000 tokens for a full page brief, which counts against the plan's usage. The person pastes it into a new chat (attaching reference images there), then pastes Claude's reply into **Claude's answer** and presses **Insert into the page**. The REST route `chat-import` finds the JSON (the longest `json` block, or the text from the first bracket to the last; an answer cut off halfway is refused with a message) and checks it with the same `Layout_Sanitizer` as the API mode. **The site calls nobody in this mode**, it needs no key and no PHP 8.1 (the SDK is not loaded), and there is no hourly limit. Prompts are built by `Classes\Prompt_Builder`, shared with the API mode.
 
 ## Remote calls (owner-approved exception)
 

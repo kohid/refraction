@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.23.2
+Stable tag: 0.24.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.24.0 =
+* New: Ask Claude can use your Claude.ai Pro or Max plan instead of API credit. Pick "Claude.ai chat" in the panel, copy the prompt into a chat, and paste Claude's answer back; it is checked and inserted like any other result, and the site calls nobody.
+* Fix: the Ask Claude description box and messages were dark gray on gray (unreadable) in the light interface themes.
 
 = 0.23.2 =
 * Fix: Ask Claude shows a plain message when the Anthropic account has no credit left (with where to add it), and Anthropic's own one-line message for other errors, instead of the raw response.
