@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.26.1
+Stable tag: 0.26.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -46,8 +46,10 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
-= 0.26.1 =
+= 0.26.2 =
 * Fix: the private preview link of MCP drafts redirected to the home page on sites with pretty permalinks.
+
+= 0.26.1 =
 * Fix: Ask Claude dropped the item titles of accordions, tabs and other nested widgets; they are kept now.
 
 = 0.26.0 =
