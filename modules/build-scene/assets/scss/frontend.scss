@@ -1,0 +1,192 @@
+// 3D Build Scene: a tall track (scroll length x scene height) with the scene pinned inside it while the model builds.
+.rf3d {
+	--rf3d-length: 3;
+	--rf3d-height: 100vh;
+	--rf3d-progress: rgba(30, 32, 36, 0.18);
+	--rf3d-progress-done: #1e2024;
+
+	position: relative;
+	height: calc(var(--rf3d-length) * var(--rf3d-height));
+
+	// Reduced motion, the still image, or no model: the scene takes its own height only.
+	&.rf3d--still,
+	&.rf3d--poster,
+	&.rf3d--empty {
+		height: auto;
+
+		.rf3d-stage {
+			position: relative;
+		}
+	}
+}
+
+.rf3d-stage {
+	position: sticky;
+	top: 0;
+	height: var(--rf3d-height);
+	overflow: hidden;
+}
+
+.rf3d-canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+	touch-action: pan-y; // vertical swipes still scroll the page
+
+	.rf3d--done & {
+		cursor: grab;
+	}
+
+	.rf3d--done &:active {
+		cursor: grabbing;
+	}
+
+	.rf3d--poster & {
+		display: none;
+	}
+}
+
+.rf3d-poster {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.rf3d-status {
+	position: absolute;
+	inset: auto 0 50% 0;
+	margin: 0;
+	text-align: center;
+	font-size: 0.95rem;
+	opacity: 0.7;
+
+	&:empty {
+		display: none;
+	}
+}
+
+// ---- captions: one per stage, stacked in the same spot; the stage being built shows
+.rf3d-caps {
+	position: absolute;
+	top: 50%;
+	left: clamp(16px, 5vw, 72px);
+	display: grid;
+	width: min(360px, 38%);
+	transform: translateY(-50%);
+	pointer-events: none;
+
+	.rf3d-cap-right & {
+		left: auto;
+		right: clamp(16px, 5vw, 72px);
+	}
+
+	.rf3d-cap-bottom & {
+		top: auto;
+		bottom: 72px;
+		left: 50%;
+		width: min(560px, calc(100% - 32px));
+		transform: translateX(-50%);
+		text-align: center;
+	}
+}
+
+.rf3d-cap {
+	grid-area: 1 / 1;
+	padding: 22px 24px;
+	border-radius: 6px;
+	background-color: rgba(255, 255, 255, 0.86);
+	backdrop-filter: blur(6px);
+	opacity: 0;
+	transform: translateY(10px);
+	transition: opacity 0.35s ease, transform 0.35s ease;
+
+	&.is-active {
+		opacity: 1;
+		transform: none;
+	}
+
+	.rf3d--still & {
+		transition: none;
+	}
+}
+
+.rf3d-cap-title {
+	margin: 0 0 6px;
+	font-size: 1.5rem;
+	line-height: 1.2;
+}
+
+.rf3d-cap-text {
+	margin: 0;
+	font-size: 1rem;
+	line-height: 1.55;
+}
+
+// ---- progress: one bar per stage along the bottom, filled as the stages are built
+.rf3d-progress {
+	position: absolute;
+	right: clamp(16px, 5vw, 72px);
+	bottom: 24px;
+	left: clamp(16px, 5vw, 72px);
+	display: flex;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		flex: 1 1 0;
+		min-width: 0;
+		padding-top: 8px;
+		border-top: 3px solid var(--rf3d-progress);
+		font-size: 0.75rem;
+		line-height: 1.3;
+		opacity: 0.55;
+		transition: border-color 0.3s ease, opacity 0.3s ease;
+
+		span {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	li.is-done,
+	li.is-active {
+		border-color: var(--rf3d-progress-done);
+		opacity: 1;
+	}
+
+	.rf3d-cap-bottom & {
+		bottom: 16px;
+
+		li span {
+			display: none;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.rf3d-caps,
+	.rf3d-cap-right .rf3d-caps {
+		top: auto;
+		right: auto;
+		bottom: 56px;
+		left: 50%;
+		width: calc(100% - 32px);
+		transform: translateX(-50%);
+	}
+
+	.rf3d-progress li span {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.rf3d-cap,
+	.rf3d-progress li {
+		transition: none;
+	}
+}

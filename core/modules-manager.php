@@ -136,6 +136,7 @@ class Modules_Manager {
 			'nested-carousel',
 			'woocommerce',
 			'form-builder',
+			'build-scene',
 			'loop-builder',
 			'forms',
 			'pro-widgets',

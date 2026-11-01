@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.16.0
+Stable tag: 0.17.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.17.0 =
+* New: 3D Build Scene widget (Advanced). Show a 3D model whose parts fly in stage by stage while visitors scroll: the scene stays pinned while it builds, captions and a progress line follow the stages, and the finished model can be turned by dragging. Use the built-in sample house or upload your own .glb model; group its parts into stages by name (roof*, glass*), choose where parts come from, the camera angles, the light and shadows. A preview slider shows any point of the build in the editor. Respects reduced motion, falls back to a still image without 3D, and can show the still image on phones. Everything runs from your site: nothing is loaded from elsewhere.
 
 = 0.16.0 =
 * New: Choice cards for forms built in the page editor. Each card is a container: drop in a heading, image, badge, price, Icon List, Accordion or anything else. Set each card's name, price and period (what is saved with the record), its width and where its pick control sits; visitors click anywhere on a card to pick it, one or several. Fields inside a card are shown but locked.

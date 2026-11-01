@@ -27,6 +27,9 @@ Containers, sections/columns, the core widget set, global colors and fonts (kit)
 | B4 | WooCommerce builder | Product, Product Archive, Cart, Checkout, My Account, Purchase Summary templates; Woo widgets (Products, Add to Cart, Title, Images, Price, Rating, Stock, Meta, Short Description, Content, Data Tabs, Additional Info, Upsells, Related, Menu Cart, Cart, Checkout, My Account, Order Tracking, Notices, Categories, Breadcrumb); loads only when WooCommerce is active | DONE on `feat/woo` (see woocommerce.md) |
 | B6 | Builder | Own collections (Bookings, Listings, Transactions...) with fields, statuses, records table and public form/list | Done (0.6.0 collections and records; 0.7.0 drag and drop designer, multi-step, repeater, group, uploads, hidden, conditions, style, advanced settings; [form-builder.md](form-builder.md)) |
 | B5 | Integrations and polish | Webhook-based form integrations, activity log, dashboard overview, accessibility pass | TODO |
+| B7 | 3D Build Scene | Widget: a 3D model (sample house or uploaded .glb) whose parts fly in stage by stage with the scroll, captions, progress, camera, light, editor preview | Done (0.17.0, see [build-scene.md](build-scene.md)) |
+| B8 | Ask Claude panel | A prompt panel in the editor that builds pages from Refraction's widgets. The owner approved one exception to "no remote calls": it calls Anthropic only when the user presses Generate, with the user's own API key | TODO |
+| B9 | Seedance video through Claude | Claude generates hero/background videos with the user's Seedance key and puts them in the media library | TODO (after B8) |
 
 ## Rules for every module
 
