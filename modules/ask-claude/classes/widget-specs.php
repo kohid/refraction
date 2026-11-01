@@ -206,13 +206,20 @@ class Widget_Specs {
 		return $out;
 	}
 
-	/** The URL of an image in the library ('' when the id is not an image attachment). */
-	public static function image_url( int $id ): string {
-		if ( $id <= 0 || ! wp_attachment_is_image( $id ) ) {
-			return '';
+	/**
+	 * The URL of a library attachment of one of the given types ('image', 'video', or a full MIME type such as
+	 * model/gltf-binary); '' when the id is not such an attachment.
+	 */
+	public static function image_url( int $id, array $types = [ 'image' ] ): string {
+		$mime = $id > 0 && 'attachment' === get_post_type( $id ) ? (string) get_post_mime_type( $id ) : '';
+
+		foreach ( $types as $type ) {
+			if ( '' !== $mime && ( $mime === $type || 0 === strpos( $mime, rtrim( (string) $type, '/' ) . '/' ) ) ) {
+				return 'image' === $type ? (string) wp_get_attachment_image_url( $id, 'full' ) : (string) wp_get_attachment_url( $id );
+			}
 		}
 
-		return (string) wp_get_attachment_image_url( $id, 'full' );
+		return '';
 	}
 
 	/** Images in the library, newest first, optionally matching a search. */

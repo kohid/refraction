@@ -26,6 +26,23 @@ The rules (states queued → building → ready, declined; requeue after 30 minu
 
 **Set up** (an administrator; the panel shows the same steps while nobody watches): create a user with the role **Claude Code builder (Refraction)** (`refraction_claude_builder`: only `read` and `refraction_claude_build`, so its Application Password can't do anything else), add an Application Password to it, and start Claude Code on this repository with `REFRACTION_REST_URL` (the site, https), `REFRACTION_REST_USER` and `REFRACTION_REST_PASSWORD`. In a Claude Code cloud environment, allow the site's host in the network policy (or let the proxy add the credential, in which case the user and password can be left out). Then type `/ask-claude-watch`. Administrators can also watch with their own Application Password.
 
+## MCP server
+
+Refraction is also an MCP server (Model Context Protocol, Streamable HTTP, stateless JSON) at `/wp-json/refraction/v1/mcp` (or `/?rest_route=/refraction/v1/mcp`), so Claude Code can work on the site directly instead of answering in one go: read the widgets and pages, build a **draft page**, open its preview in a browser, compare it with a reference and save again until it matches. `Classes\Mcp_Server` (JSON-RPC: `initialize`, `ping`, `tools/list`, `tools/call`; notifications get 202; GET gets 405) and `Classes\Mcp_Tools`:
+
+| Tool | Does |
+| --- | --- |
+| `get_format`, `get_site`, `list_widgets`, `get_widget_controls` | the element format and content rules, version, global colors and fonts, the widget catalog, and compact settings of chosen widgets (`*` = has tablet/mobile copies) |
+| `list_media`, `upload_media` | library files (images, video, .glb) with ids; add a file from a URL or base64 (normal upload checks) |
+| `list_pages`, `get_page` | pages and a page's saved element tree |
+| `save_draft` | creates or replaces a draft page made through MCP (never publishes, never touches other pages), checked by `Layout_Sanitizer`; returns a **secret preview link** (`?page_id=ID&rf_preview=KEY`, `Classes\Draft_Preview`: works without login, renewed on every save, noindex, no-store) and what was left out |
+| `propose_to_page` | offers elements to an existing page as a ready request in that page's Ask Claude panel (Claude Code), for whoever edits the page to insert |
+| `list_requests`, `get_request`, `answer_request`, `decline_request` | the Claude Code queue |
+
+It runs as the user of the Application Password. The **Claude Code builder (Refraction)** role now also holds `edit_pages` (its own drafts) and `upload_files`, still no publishing and no other people's pages. Media settings now accept the file types a control asks for (a .glb for the 3D Build Scene, video for the Scroll Sequence), not only images. `upload_media` with a `url` is the only outbound request, made when the connected client asks for it.
+
+**Connect Claude Code**: `claude mcp add --transport http refraction https://SITE/wp-json/refraction/v1/mcp --header "Authorization: Basic BASE64"` where BASE64 is `user:application-password` in base64 (`printf '%s' 'claude-builder:xxxx xxxx xxxx xxxx xxxx xxxx' | base64`). Sessions that can not add an MCP server use the same tools through `node scripts/claude/refraction-mcp.mjs tools | call <tool> '<json>'` with `REFRACTION_REST_URL`, `REFRACTION_REST_USER` and `REFRACTION_REST_PASSWORD`. Claude.ai's own connectors need OAuth, which this server does not offer.
+
 ## Remote calls (owner-approved exception)
 
 Refraction otherwise makes no remote calls besides the update check. Ask Claude calls Anthropic's API (`api.anthropic.com`), **only when someone presses Generate**, with the site's own API key. Nothing is sent at any other time.

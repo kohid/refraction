@@ -32,17 +32,20 @@ class Module extends BaseModule {
 			return $data;
 		}
 
-		return Plugin::$instance->db->iterate_data( $data, function ( $element ) {
-			if ( $this->is_target_widget( $element ) ) {
+		// Only the elements: the page settings next to them are not elements (and are often plain strings).
+		$data['elements'] = Plugin::$instance->db->iterate_data( $data['elements'], function ( $element ) {
+			if ( $this->is_target_widget( $element ) && isset( $element['settings']['title'] ) ) {
 				$element['settings']['title'] = Plugin::$instance->widgets_manager->get_widget_types( self::WIDGET_TO_SANITIZE )->sanitize( $element['settings']['title'] );
 			}
 
 			return $element;
 		});
+
+		return $data;
 	}
 
 	private function is_target_widget( $element ) {
-		return self::WIDGET_TO_SANITIZE === $element['widgetType'];
+		return self::WIDGET_TO_SANITIZE === ( $element['widgetType'] ?? '' );
 	}
 
 	private function is_widget_present( array $elements ): bool {

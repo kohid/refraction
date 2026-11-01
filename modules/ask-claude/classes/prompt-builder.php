@@ -158,9 +158,9 @@ class Prompt_Builder {
 	/**
 	 * Every control of the container and of each widget, one compact line each ("name:type(options)", * when it has
 	 * _tablet and _mobile copies). The settings every widget shares (the Advanced tab: margins, motion...) are listed
-	 * once, and so are the fields of each kind of group control.
+	 * once, and so are the fields of each kind of group control. $only limits the element lines to some names.
 	 */
-	public static function controls( Widget_Specs $specs ): string {
+	public static function controls( Widget_Specs $specs, array $only = [] ): string {
 		$groups = [];
 		$all = [];
 
@@ -192,10 +192,15 @@ class Prompt_Builder {
 		$lines[] = '';
 		$lines[] = 'ELEMENT SETTINGS';
 		$lines[] = 'shared by every widget: ' . self::line( $shared );
-		$lines[] = 'container: ' . self::line( $container );
+
+		if ( ! $only || in_array( 'container', $only, true ) ) {
+			$lines[] = 'container: ' . self::line( $container );
+		}
 
 		foreach ( $all as $name => $compact ) {
-			$lines[] = $name . ': ' . self::line( array_diff_key( $compact, $shared ) );
+			if ( ! $only || in_array( $name, $only, true ) ) {
+				$lines[] = $name . ': ' . self::line( array_diff_key( $compact, $shared ) );
+			}
 		}
 
 		return implode( "\n", $lines );

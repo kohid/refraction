@@ -31,8 +31,19 @@ class Job_Queue {
 			'label' => 'Ask Claude requests',
 		] );
 
-		if ( ! get_role( self::ROLE ) ) {
-			add_role( self::ROLE, 'Claude Code builder (Refraction)', [ 'read' => true, self::CAP => true ] );
+		// The builder may also make its own draft pages and add media (MCP server), but never publish or touch
+		// anyone else's pages.
+		$caps = [ 'read' => true, self::CAP => true, 'edit_pages' => true, 'upload_files' => true ];
+		$role = get_role( self::ROLE );
+
+		if ( ! $role ) {
+			add_role( self::ROLE, 'Claude Code builder (Refraction)', $caps );
+		} else {
+			foreach ( array_keys( $caps ) as $cap ) {
+				if ( ! $role->has_cap( $cap ) ) {
+					$role->add_cap( $cap );
+				}
+			}
 		}
 	}
 

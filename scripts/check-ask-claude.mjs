@@ -8,7 +8,8 @@
  * reference images and who may use it (editors yes, key settings administrators only, authors and visitors no); and the
  * Claude.ai chat mode (no key: the prompt is copied, the pasted answer is checked and inserted, the site calls nobody);
  * and the Claude Code queue (requests queued in the panel, answered by scripts/claude/ask-claude-queue.mjs with an
- * Application Password of the builder role, checked, and inserted from the panel).
+ * Application Password of the builder role, checked, and inserted from the panel); and the MCP server (tools, drafts
+ * with secret preview links, proposals to a page).
  *
  * Usage: node scripts/check-ask-claude.mjs [--site /tmp/rf-claude-site] [--port 8970] [--api-port 8971] [--shots /tmp/ask-claude-shots]
  */
@@ -212,11 +213,31 @@ async function main() {
 		await p.waitForSelector( '[data-ask-claude="job"][data-state="declined"]', { timeout: 15000 } ).catch( () => null );
 		check( 'code', 'a declined request shows the note', /Raw HTML is not available/.test( await p.textContent( '[data-ask-claude="job"][data-state="declined"]' ).catch( () => '' ) ) );
 		await p.click( '[data-ask-claude="job-remove"]' );
+		// The MCP server, as Claude Code uses it (scripts/claude/refraction-mcp.mjs with the same account).
+		const mcp = ( ...args ) => execFileSync( 'node', [ join( dirname( fileURLToPath( import.meta.url ) ), 'claude/refraction-mcp.mjs' ), ...args ], { encoding: 'utf8', env: queueEnv, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
+		const toolList = mcp( 'tools' );
+		check( 'mcp', 'the MCP server lists its tools', [ 'get_widget_controls', 'save_draft', 'propose_to_page', 'answer_request' ].every( ( t ) => toolList.includes( t ) ), toolList.slice( 0, 300 ) );
+		const draft = JSON.parse( mcp( 'call', 'save_draft', JSON.stringify( { title: 'MCP draft', elements: [ { elType: 'container', settings: { padding_mobile: { unit: 'px', top: '12', right: '12', bottom: '12', left: '12' } }, elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'Drafted over MCP' } }, { elType: 'widget', widgetType: 'html', settings: { html: '<script>x</script>' } } ] } ] } ) ) );
+		const previewHtml = await ( await fetch( draft.preview ) ).text();
+		const hiddenHtml = await ( await fetch( `${ BASE }/?page_id=${ draft.id }` ) ).text();
+		const draftData = wp( [ 'post', 'meta', 'get', String( draft.id ), '_refraction_data' ] );
+		check( 'mcp', 'save_draft makes a checked draft page with a secret preview link (unsafe widget left out, mobile settings kept)', /Drafted over MCP/.test( previewHtml ) && ! /Drafted over MCP/.test( hiddenHtml ) && /widget "html"/.test( draft.dropped.join() ) && /padding_mobile/.test( draftData ) && 'draft' === wp( [ 'post', 'get', String( draft.id ), '--field=post_status' ] ).trim(), JSON.stringify( draft ) );
+		let replaceOther = '';
+		try {
+			mcp( 'call', 'save_draft', JSON.stringify( { id: Number( home.id ), title: 'x', elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'y' } } ] } ) );
+		} catch ( err ) {
+			replaceOther = String( err.stdout );
+		}
+		check( 'mcp', 'it can not overwrite a page it did not make', /Only drafts made with save_draft/.test( replaceOther ), replaceOther );
+		const proposal = JSON.parse( mcp( 'call', 'propose_to_page', JSON.stringify( { page_id: Number( home.id ), mode: 'section', summary: 'A proposed section.', elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'Proposed over MCP' } } ] } ) ) );
+		await p.waitForSelector( '[data-ask-claude="job"][data-state="ready"]', { timeout: 15000 } ).catch( () => null );
+		check( 'mcp', 'propose_to_page shows up ready in the page\'s Ask Claude panel', 'ready' === proposal.state && /proposed section/i.test( await p.textContent( '[data-ask-claude="job"][data-state="ready"]' ).catch( () => '' ) ) );
+		await p.click( '[data-ask-claude="job-remove"]' );
 		const builderAuth = { Authorization: 'Basic ' + Buffer.from( `claude-builder:${ appPass }` ).toString( 'base64' ), 'Content-Type': 'application/json' };
-		const builderPage = ( await fetch( `${ BASE }/?rest_route=/wp/v2/pages`, { method: 'POST', headers: builderAuth, body: JSON.stringify( { title: 'x' } ) } ) ).status;
+		const builderPage = ( await fetch( `${ BASE }/?rest_route=/wp/v2/pages`, { method: 'POST', headers: builderAuth, body: JSON.stringify( { title: 'x', status: 'publish' } ) } ) ).status;
 		const builderSettings = ( await fetch( `${ BASE }/?rest_route=/refraction/v1/ask-claude/settings`, { method: 'POST', headers: builderAuth, body: JSON.stringify( { model: 'claude-haiku-5-5' } ) } ) ).status;
 		const anonWatch = ( await fetch( `${ BASE }/?rest_route=/refraction/v1/ask-claude/jobs/watch`, { method: 'POST' } ) ).status;
-		check( 'code', 'the Claude Code account can do nothing else (no pages, no key), and visitors can not watch', 403 === builderPage && 403 === builderSettings && [ 401, 403 ].includes( anonWatch ), `${ builderPage } ${ builderSettings } ${ anonWatch }` );
+		check( 'code', 'the Claude Code account can not publish pages or change the key, and visitors can not watch', 403 === builderPage && 403 === builderSettings && [ 401, 403 ].includes( anonWatch ), `${ builderPage } ${ builderSettings } ${ anonWatch }` );
 		check( 'code', 'the site called nobody', 0 === api.requests.length, api.requests.length );
 
 		// ------------------------------------------------------------ Claude.ai chat
