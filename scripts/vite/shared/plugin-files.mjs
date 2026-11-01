@@ -46,6 +46,7 @@ export const PLUGIN_FILE_PATTERNS = [
 	'!README.md',
 	'!ruleset.xml',
 	'!tests/**',
+	'!themes/**',
 	'!test-results/',
 	'!tmp/**',
 	'!vendor/**',

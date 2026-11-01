@@ -78,6 +78,8 @@ jobs:
           unzip -p dist/refraction.zip refraction/refraction.php | grep -E "^\s*\*\s*Version:\s*${RELEASE_TAG#v}\s*$"
           unzip -l dist/refraction.zip | grep -q ' refraction/vendor/autoload.php$'
           unzip -l dist/refraction.zip | grep -q ' refraction/vendor-prefixed/claude-sdk/autoload.php$'
+          ! unzip -l dist/refraction.zip | grep -q ' refraction/themes/'
+          unzip -l dist/just-refraction.zip | grep -q ' just-refraction/style.css$'
 
       - name: Checksum
         run: |
@@ -85,6 +87,7 @@ jobs:
           cd dist
           sha256sum refraction.zip | tee refraction.zip.sha256
           test -s refraction.zip.sha256
+          sha256sum just-refraction.zip | tee just-refraction.zip.sha256
 
       - name: Create or update GitHub Release
         uses: softprops/action-gh-release@v2
@@ -93,6 +96,8 @@ jobs:
           files: |
             dist/refraction.zip
             dist/refraction.zip.sha256
+            dist/just-refraction.zip
+            dist/just-refraction.zip.sha256
           fail_on_unmatched_files: true
           generate_release_notes: true
           prerelease: ${{ contains(env.RELEASE_TAG, '-') }}
