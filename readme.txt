@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.19.0
+Stable tag: 0.20.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.20.0 =
+* New: Reveal, in the Advanced tab of every widget and container. Headings and text can come in line by line, word by word or letter by letter, sliding up from behind their line; cards and columns inside a container can come in one after another; any element can fade, slide, zoom, sharpen or rise into view. Play it once, every time it comes into view, or with the scroll so it runs backwards when scrolling up. Respects reduced motion, keeps text readable for screen readers, and never leaves content hidden if the script cannot run.
+* New: parallax presets in Scrolling Effects (far, middle and near layers, float, drift, come closer) to make the pieces of an illustration move at different speeds.
 
 = 0.19.0 =
 * New: Ask Claude in the editor. Describe a page, a section or a change to the selected element (and attach reference images from your library), and Claude builds it with Refraction's own widgets as ordinary, editable elements; one Undo takes it back. It uses your site's colors and fonts, writes placeholders instead of inventing facts about your business, and everything it returns is checked before it reaches the page (only real widgets and settings, library images, no raw HTML or scripts). Uses your own Anthropic API key, stored encrypted; your site calls Claude only when someone presses Generate. Anyone who can edit pages may use it; administrators manage the key. Needs PHP 8.1 or newer; the rest of Refraction still runs on PHP 7.4.

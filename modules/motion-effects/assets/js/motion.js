@@ -22,6 +22,17 @@
 		scale: { dirs: [ 'up', 'down' ], amount: 'speed', def: 4, max: 10 },
 	};
 
+	// Parallax presets, same as Pure_Reveal_Settings::PRESETS in PHP: effect => [ direction, amount ].
+	const PRESETS = {
+		far: { ty: [ 'up', 2 ] },
+		mid: { ty: [ 'up', 4 ] },
+		near: { ty: [ 'up', 7 ] },
+		float: { ty: [ 'up', 3 ], rotate: [ 'right', 1 ] },
+		'drift-left': { ty: [ 'up', 2 ], tx: [ 'left', 3 ] },
+		'drift-right': { ty: [ 'up', 2 ], tx: [ 'right', 3 ] },
+		depth: { ty: [ 'up', 2 ], scale: [ 'up', 2 ] },
+	};
+
 	const reducedQuery = window.matchMedia ? window.matchMedia( '(prefers-reduced-motion: reduce)' ) : null;
 	const entries = new Set();
 	const pointer = { x: 0, y: 0, seen: false };
@@ -77,8 +88,30 @@
 		return Array.isArray( s[ key ] ) && s[ key ].length ? valid.filter( ( d ) => s[ key ].indexOf( d ) > -1 ) : fallback;
 	}
 
+	// A chosen preset turns its effects on and the hand-made ones off (Pure_Reveal_Settings::with_preset() in PHP).
+	function withPreset( settings ) {
+		const preset = PRESETS[ settings.rf_scroll_preset ];
+
+		if ( ! preset ) {
+			return settings;
+		}
+
+		const s = Object.assign( {}, settings );
+		Object.keys( SCROLL ).forEach( ( key ) => ( s[ 'rf_scroll_' + key ] = '' ) );
+		Object.keys( preset ).forEach( ( key ) => {
+			s[ 'rf_scroll_' + key ] = 'yes';
+			s[ 'rf_scroll_' + key + '_dir' ] = preset[ key ][ 0 ];
+			s[ 'rf_scroll_' + key + '_' + SCROLL[ key ].amount ] = preset[ key ][ 1 ];
+			s[ 'rf_scroll_' + key + '_start' ] = 0;
+			s[ 'rf_scroll_' + key + '_end' ] = 100;
+		} );
+
+		return s;
+	}
+
 	/** Same rules as Pure_Motion_Settings::normalize() in PHP. */
-	function fromSettings( s ) {
+	function fromSettings( settings ) {
+		const s = withPreset( settings );
 		const valid = validDevices();
 		const out = {};
 		const effects = {};

@@ -5,6 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Core\Base\Module as BaseModule;
 use Refraction\Element_Base;
 use Refraction\Modules\MotionEffects\Classes\Pure_Motion_Settings;
+use Refraction\Modules\MotionEffects\Classes\Pure_Reveal_Settings;
 use Refraction\Modules\MotionEffects\Classes\Pure_Sticky_Settings;
 use Refraction\Plugin;
 use Refraction\Utils;
@@ -14,7 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Motion Effects (scrolling and mouse effects) and Sticky, always on.
+ * Motion Effects (scrolling and mouse effects, with parallax presets), Reveal (whole element, text pieces and children,
+ * once, every time or with the scroll) and Sticky, always on.
  *
  * Controls live in the Advanced tab of containers, sections, columns and widgets. The front end scripts are
  * registered here and enqueued only when an element on the page uses them (always in the editor preview).
@@ -51,6 +53,7 @@ class Module extends BaseModule {
 	}
 
 	public function register_controls( Element_Base $element ) {
+		$this->register_reveal_controls( $element );
 		$this->register_scrolling_controls( $element );
 		$this->register_mouse_controls( $element );
 		$this->register_sticky_controls( $element );
@@ -61,12 +64,25 @@ class Module extends BaseModule {
 	 * Page-assets declaration: Refraction saves which scripts a document needs and re-enables them even when the
 	 * rendered HTML comes from the element cache (where our render hooks do not run).
 	 */
-	private function asset_conditions( string $kind ): array {
+	private function asset_conditions( string $kind, bool $is_container = false ): array {
 		if ( 'sticky' === $kind ) {
 			return [ 'terms' => [ [ 'name' => 'rf_sticky', 'operator' => 'in', 'value' => [ 'top', 'bottom' ] ] ] ];
 		}
 
-		$terms = [];
+		if ( 'reveal' === $kind ) {
+			return [
+				'relation' => 'or',
+				'terms' => [
+					[ 'name' => 'rf_reveal', 'operator' => 'in', 'value' => Pure_Reveal_Settings::EFFECTS ],
+					// Only the control this kind of element has: text for widgets, children for containers.
+					$is_container
+						? [ 'name' => 'rf_reveal_children', 'operator' => 'in', 'value' => Pure_Reveal_Settings::EFFECTS ]
+						: [ 'name' => 'rf_reveal_text', 'operator' => 'in', 'value' => Pure_Reveal_Settings::TEXT_SPLITS ],
+				],
+			];
+		}
+
+		$terms = [ [ 'name' => 'rf_scroll_preset', 'operator' => 'in', 'value' => array_keys( Pure_Reveal_Settings::PRESETS ) ] ];
 
 		foreach ( array_merge( array_map( static function ( $k ) {
 			return "rf_scroll_{$k}";
@@ -77,9 +93,153 @@ class Module extends BaseModule {
 		return [ 'relation' => 'or', 'terms' => $terms ];
 	}
 
+	// ----------------------------------------------------------------- reveal
+
+	private function effect_options( string $none ): array {
+		return [
+			'' => $none,
+			'fade-up' => esc_html__( 'Fade up', 'refraction' ),
+			'fade-down' => esc_html__( 'Fade down', 'refraction' ),
+			'fade-left' => esc_html__( 'Fade in from the right', 'refraction' ),
+			'fade-right' => esc_html__( 'Fade in from the left', 'refraction' ),
+			'fade' => esc_html__( 'Fade', 'refraction' ),
+			'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
+			'zoom-out' => esc_html__( 'Zoom out', 'refraction' ),
+			'blur' => esc_html__( 'Sharpen from blur', 'refraction' ),
+			'rise' => esc_html__( 'Rise and turn', 'refraction' ),
+		];
+	}
+
+	private function register_reveal_controls( Element_Base $element ) {
+		$is_container = in_array( $element->get_type(), [ 'container', 'section', 'column' ], true );
+
+		$element->start_controls_section( 'section_rf_reveal', [
+			'label' => esc_html__( 'Reveal', 'refraction' ),
+			'tab' => Controls_Manager::TAB_ADVANCED,
+		] );
+
+		$element->add_control( 'rf_reveal', [
+			'label' => $is_container ? esc_html__( 'Whole container', 'refraction' ) : esc_html__( 'Whole element', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => $this->effect_options( esc_html__( 'None', 'refraction' ) ),
+			'description' => esc_html__( 'Use this or the Entrance Animation above, not both on the same element.', 'refraction' ),
+			'frontend_available' => true,
+		] );
+
+		if ( $is_container ) {
+			$element->add_control( 'rf_reveal_children', [
+				'label' => esc_html__( 'Its elements, one after another', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => $this->effect_options( esc_html__( 'None', 'refraction' ) ),
+				'description' => esc_html__( 'Cards, icons or columns inside this container come in one after another.', 'refraction' ),
+				'frontend_available' => true,
+			] );
+		} else {
+			$element->add_control( 'rf_reveal_text', [
+				'label' => esc_html__( 'Text', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => [
+					'' => esc_html__( 'None', 'refraction' ),
+					'lines' => esc_html__( 'Line by line', 'refraction' ),
+					'words' => esc_html__( 'Word by word', 'refraction' ),
+					'chars' => esc_html__( 'Letter by letter', 'refraction' ),
+				],
+				'description' => esc_html__( 'For headings and text: each piece comes in on its own.', 'refraction' ),
+				'frontend_available' => true,
+			] );
+
+			$element->add_control( 'rf_reveal_text_effect', [
+				'label' => esc_html__( 'Text comes', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'mask',
+				'options' => [ 'mask' => esc_html__( 'Up from behind a line', 'refraction' ) ] + array_slice( $this->effect_options( '' ), 1, null, true ),
+				'frontend_available' => true,
+				'condition' => [ 'rf_reveal_text!' => '' ],
+			] );
+		}
+
+		$any = [
+			'relation' => 'or',
+			'terms' => [
+				[ 'name' => 'rf_reveal', 'operator' => '!==', 'value' => '' ],
+				[ 'name' => $is_container ? 'rf_reveal_children' : 'rf_reveal_text', 'operator' => '!==', 'value' => '' ],
+			],
+		];
+
+		$element->add_control( 'rf_reveal_trigger', [
+			'label' => esc_html__( 'Plays', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'once',
+			'options' => [
+				'once' => esc_html__( 'Once, when it comes into view', 'refraction' ),
+				'always' => esc_html__( 'Every time it comes into view', 'refraction' ),
+				'scroll' => esc_html__( 'With the scroll (back when scrolling up)', 'refraction' ),
+			],
+			'frontend_available' => true,
+			'separator' => 'before',
+			'conditions' => $any,
+		] );
+
+		$number = function ( string $key, string $label, int $min, int $max, int $placeholder, array $extra = [] ) use ( $element, $any ) {
+			$element->add_control( $key, array_merge( [
+				'label' => $label,
+				'type' => Controls_Manager::NUMBER,
+				'min' => $min,
+				'max' => $max,
+				'placeholder' => (string) $placeholder,
+				'frontend_available' => true,
+				'conditions' => $any,
+			], $extra ) );
+		};
+
+		$timed = [ 'conditions' => [ 'relation' => 'and', 'terms' => [ $any, [ 'name' => 'rf_reveal_trigger', 'operator' => '!==', 'value' => 'scroll' ] ] ] ];
+		$scrolled = [ 'conditions' => [ 'relation' => 'and', 'terms' => [ $any, [ 'name' => 'rf_reveal_trigger', 'operator' => '===', 'value' => 'scroll' ] ] ] ];
+
+		$number( 'rf_reveal_duration', esc_html__( 'Duration (ms)', 'refraction' ), 100, 4000, 700, $timed );
+		$number( 'rf_reveal_delay', esc_html__( 'Delay (ms)', 'refraction' ), 0, 4000, 0, $timed );
+		$number( 'rf_reveal_stagger', esc_html__( 'Time between pieces (ms)', 'refraction' ), 0, 1000, 80 );
+		$number( 'rf_reveal_distance', esc_html__( 'Distance (px)', 'refraction' ), 0, 300, 40 );
+		$number( 'rf_reveal_offset', esc_html__( 'Starts when this far into the screen (%)', 'refraction' ), 0, 50, 10, $timed );
+		$number( 'rf_reveal_start', esc_html__( 'Viewport start (%)', 'refraction' ), 0, 100, 0, $scrolled + [ 'description' => esc_html__( '0: when the element enters at the bottom of the screen. 100: when it leaves at the top.', 'refraction' ) ] );
+		$number( 'rf_reveal_end', esc_html__( 'Viewport end (%)', 'refraction' ), 0, 100, 50, $scrolled );
+
+		$element->add_control( 'rf_reveal_easing', [
+			'label' => esc_html__( 'Movement', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'smooth',
+			'options' => [
+				'smooth' => esc_html__( 'Slows down at the end', 'refraction' ),
+				'soft' => esc_html__( 'Gentle', 'refraction' ),
+				'snappy' => esc_html__( 'Quick start', 'refraction' ),
+				'back' => esc_html__( 'Settles with a small bounce', 'refraction' ),
+				'linear' => esc_html__( 'Even', 'refraction' ),
+			],
+			'frontend_available' => true,
+			'conditions' => $any,
+		] );
+
+		$element->add_control( 'rf_reveal_devices', [
+			'label' => esc_html__( 'Play on', 'refraction' ),
+			'type' => Controls_Manager::SELECT2,
+			'multiple' => true,
+			'label_block' => true,
+			'options' => self::device_options(),
+			'description' => esc_html__( 'Leave empty to play on every device.', 'refraction' ),
+			'frontend_available' => true,
+			'conditions' => $any,
+		] );
+
+		$element->end_controls_section();
+	}
+
 	// -------------------------------------------------------------- scrolling
 
 	private function register_scrolling_controls( Element_Base $element ) {
+		$is_container = in_array( $element->get_type(), [ 'container', 'section', 'column' ], true );
+
 		$element->start_controls_section( 'section_rf_scroll', [
 			'label' => esc_html__( 'Scrolling Effects', 'refraction' ),
 			'tab' => Controls_Manager::TAB_ADVANCED,
@@ -91,11 +251,31 @@ class Module extends BaseModule {
 				'scripts' => [
 					[ 'name' => 'refraction-motion-effects', 'conditions' => $this->asset_conditions( 'motion' ) ],
 					[ 'name' => 'refraction-sticky', 'conditions' => $this->asset_conditions( 'sticky' ) ],
+					[ 'name' => 'refraction-reveal', 'conditions' => $this->asset_conditions( 'reveal', $is_container ) ],
 				],
 				'styles' => [
 					[ 'name' => 'refraction-motion-effects', 'conditions' => $this->asset_conditions( 'sticky' ) ],
+					[ 'name' => 'refraction-motion-effects', 'conditions' => $this->asset_conditions( 'reveal', $is_container ) ],
 				],
 			],
+		] );
+
+		$element->add_control( 'rf_scroll_preset', [
+			'label' => esc_html__( 'Preset', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'None: set the effects below', 'refraction' ),
+				'far' => esc_html__( 'Far layer (slow)', 'refraction' ),
+				'mid' => esc_html__( 'Middle layer', 'refraction' ),
+				'near' => esc_html__( 'Near layer (fast)', 'refraction' ),
+				'float' => esc_html__( 'Float and turn', 'refraction' ),
+				'drift-left' => esc_html__( 'Drift left', 'refraction' ),
+				'drift-right' => esc_html__( 'Drift right', 'refraction' ),
+				'depth' => esc_html__( 'Come closer', 'refraction' ),
+			],
+			'description' => esc_html__( 'For layered art: give the pieces of an illustration different layers so they move at different speeds while scrolling.', 'refraction' ),
+			'frontend_available' => true,
 		] );
 
 		$effects = [
@@ -115,6 +295,7 @@ class Module extends BaseModule {
 				'type' => Controls_Manager::SWITCHER,
 				'frontend_available' => true,
 				'separator' => 'before',
+				'condition' => [ 'rf_scroll_preset' => '' ],
 			] );
 
 			$element->add_control( "{$on}_dir", [
@@ -123,7 +304,7 @@ class Module extends BaseModule {
 				'options' => $directions,
 				'default' => '',
 				'frontend_available' => true,
-				'condition' => [ $on => 'yes' ],
+				'condition' => [ $on => 'yes', 'rf_scroll_preset' => '' ],
 			] );
 
 			$element->add_control( "{$on}_{$amount_key}", [
@@ -134,7 +315,7 @@ class Module extends BaseModule {
 				'step' => 0.5,
 				'placeholder' => 'level' === $amount_key ? '5' : '4',
 				'frontend_available' => true,
-				'condition' => [ $on => 'yes' ],
+				'condition' => [ $on => 'yes', 'rf_scroll_preset' => '' ],
 			] );
 
 			$element->add_control( "{$on}_start", [
@@ -144,7 +325,7 @@ class Module extends BaseModule {
 				'max' => 100,
 				'placeholder' => '0',
 				'frontend_available' => true,
-				'condition' => [ $on => 'yes' ],
+				'condition' => [ $on => 'yes', 'rf_scroll_preset' => '' ],
 			] );
 
 			$element->add_control( "{$on}_end", [
@@ -154,7 +335,7 @@ class Module extends BaseModule {
 				'max' => 100,
 				'placeholder' => '100',
 				'frontend_available' => true,
-				'condition' => [ $on => 'yes' ],
+				'condition' => [ $on => 'yes', 'rf_scroll_preset' => '' ],
 			] );
 		}
 
@@ -376,21 +557,28 @@ class Module extends BaseModule {
 
 		wp_register_script( 'refraction-motion-effects', REFRACTION_ASSETS_URL . 'js/motion-effects-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_script( 'refraction-sticky', REFRACTION_ASSETS_URL . 'js/sticky-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
+		wp_register_script( 'refraction-reveal', REFRACTION_ASSETS_URL . 'js/reveal-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_style( 'refraction-motion-effects', REFRACTION_ASSETS_URL . 'css/modules/motion-effects/frontend' . $min . '.css', [], REFRACTION_VERSION );
 	}
 
 	public function enqueue_for_preview() {
 		wp_enqueue_script( 'refraction-motion-effects' );
 		wp_enqueue_script( 'refraction-sticky' );
+		wp_enqueue_script( 'refraction-reveal' );
 		wp_enqueue_style( 'refraction-motion-effects' );
 	}
 
 	/** @param \Refraction\Element_Base $element */
 	public function maybe_enqueue( $element ) {
-		$settings = $element->get_settings();
+		$settings = Pure_Reveal_Settings::with_preset( $element->get_settings() );
 
 		if ( Pure_Motion_Settings::uses_motion( $settings ) ) {
 			wp_enqueue_script( 'refraction-motion-effects' );
+		}
+
+		if ( Pure_Reveal_Settings::uses_reveal( $settings ) ) {
+			wp_enqueue_script( 'refraction-reveal' );
+			wp_enqueue_style( 'refraction-motion-effects' );
 		}
 
 		if ( Pure_Sticky_Settings::uses_sticky( $settings ) ) {
@@ -401,10 +589,17 @@ class Module extends BaseModule {
 
 	/** Prints the clamped config on the wrapper, so the front end never reads raw control values. */
 	public function add_attributes( $element ) {
-		$settings = $element->get_settings();
+		$settings = Pure_Reveal_Settings::with_preset( $element->get_settings() );
 		$devices = array_keys( self::device_options() );
 
 		$fx = Pure_Motion_Settings::normalize( $settings, $devices );
+		$reveal = Pure_Reveal_Settings::normalize( $settings, $devices );
+
+		if ( $reveal ) {
+			// Hidden until the script takes over; a CSS fallback shows it after a few seconds if the script never runs.
+			$element->add_render_attribute( '_wrapper', 'data-rf-reveal', wp_json_encode( $reveal ) );
+			$element->add_render_attribute( '_wrapper', 'class', 'rf-rv-wait' );
+		}
 
 		if ( $fx ) {
 			$element->add_render_attribute( '_wrapper', 'data-rf-fx', wp_json_encode( $fx ) );
