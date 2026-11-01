@@ -155,6 +155,13 @@ class Server extends Base {
 			'value' => (string) ini_get( 'memory_limit' ),
 		];
 
+		// -1 means no limit at all, not a limit below the recommendation.
+		if ( '-1' === trim( $result['value'] ) ) {
+			$result['value'] = '-1 (' . __( 'unlimited', 'refraction' ) . ')';
+
+			return $result;
+		}
+
 		$min_recommended_memory = '128M';
 		$preferred_memory = '256M';
 
