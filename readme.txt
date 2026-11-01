@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.24.0
+Stable tag: 0.24.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.24.1 =
+* Fix: System Info no longer warns about a PHP memory limit of -1, which means unlimited; it now shows "-1 (unlimited)".
 
 = 0.24.0 =
 * New: Ask Claude can use your Claude.ai Pro or Max plan instead of API credit. Pick "Claude.ai chat" in the panel, copy the prompt into a chat, and paste Claude's answer back; it is checked and inserted like any other result, and the site calls nobody.
