@@ -9,6 +9,7 @@ function wp_kses_post( $text ) { return strip_tags( $text, '<p><a><strong><em><u
 function sanitize_text_field( $text ) { return trim( strip_tags( $text ) ); }
 function sanitize_textarea_field( $text ) { return strip_tags( $text ); }
 function esc_url_raw( $url ) { return filter_var( $url, FILTER_SANITIZE_URL ); }
+function wp_strip_all_tags( $text ) { return trim( strip_tags( $text ) ); }
 
 require $root . '/modules/ask-claude/classes/layout-sanitizer.php';
 require $root . '/modules/ask-claude/classes/claude-builder.php';
@@ -136,6 +137,8 @@ $echo = B::echo_content( [
 	$block( [ 'type' => 'tool_use', 'id' => 'new', 'name' => 'list_images', 'input' => [ 'search' => 'oak' ] ] ),
 ] );
 t( 'echo: after a fallback, only text from before it, the marker dropped', 2 === count( $echo ) && 'Partial.' === $echo[0]['text'] && 'new' === $echo[1]['id'] );
+
+t( 'api message: Anthropic\'s one line, not the JSON', 'Your credit balance is too low.' === B::api_message( [ 'type' => 'error', 'error' => [ 'type' => 'invalid_request_error', 'message' => 'Your credit balance is too low.' ] ] ) && '' === B::api_message( 'oops' ) && '' === B::api_message( null ) );
 
 echo "ask-claude: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

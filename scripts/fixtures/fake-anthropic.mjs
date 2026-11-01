@@ -1,7 +1,7 @@
 /**
  * A fake Anthropic Messages API for the Ask Claude browser check: records every request and answers like Claude
  * would, without spending credits. Turn 1 looks up controls and images (with a thinking block that must be sent
- * back); turn 2 submits elements for the mode found in the prompt. "REFUSE" in a prompt gets a refusal.
+ * back); turn 2 submits elements for the mode found in the prompt. "REFUSE" in a prompt gets a refusal, "NOCREDIT" the API's low-balance error.
  */
 import { createServer } from 'node:http';
 
@@ -35,6 +35,12 @@ export function fakeAnthropic( port ) {
 				res.end( JSON.stringify( obj ) );
 			};
 			const prompt = textOf( body );
+
+			if ( prompt.includes( 'NOCREDIT' ) ) {
+				res.writeHead( 400, { 'content-type': 'application/json', 'request-id': 'req_nocredit' } );
+				res.end( JSON.stringify( { type: 'error', error: { type: 'invalid_request_error', message: 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.' } } ) );
+				return;
+			}
 
 			if ( prompt.includes( 'REFUSE' ) ) {
 				reply( { ...message( [], 'refusal' ), stop_details: { type: 'refusal', category: null, explanation: 'test' } } );
