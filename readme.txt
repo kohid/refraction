@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.26.0
+Stable tag: 0.26.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -46,9 +46,11 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
+= 0.26.1 =
+* Fix: Ask Claude dropped the item titles of accordions, tabs and other nested widgets; they are kept now.
+
 = 0.26.0 =
 * New: Refraction is an MCP server. Claude Code (on your Claude plan) can read your widgets, pages and media, build draft pages with a private preview link, compare them with a reference in a browser and refine them, then offer the result to a page through the Ask Claude panel.
-* Fix: Ask Claude dropped the item titles of accordions, tabs and other nested widgets; they are kept now.
 * Fix: Ask Claude kept media settings only for images; a .glb model in the 3D Build Scene and videos are now kept too.
 
 = 0.25.1 =
