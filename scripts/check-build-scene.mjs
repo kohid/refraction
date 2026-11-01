@@ -127,7 +127,7 @@ async function main() {
 		// ------------------------------------------------------------ pages
 		const house = page( 'House build', [
 			container( 'c1', [ spacer( 'h1', 'Our way of building' ) ] ),
-			container( 'c2', [ scene( 's1', { length: { size: 3 } } ) ] ),
+			container( 'c2', [ scene( 's1', { length: { size: 3 }, progress_label_color: '#ff0000', progress_label_active: '#00ff00', scene_width: { unit: '%', size: 80 }, scene_align: 'center' } ) ] ),
 			container( 'c3', [ spacer( 'h2', 'Talk to us' ) ] ),
 		] );
 		const tower = page( 'Tower build', [
@@ -159,6 +159,55 @@ async function main() {
 		const end = await scrollTo( v, '.rf3d', 1 );
 		check( 'site', 'at the end every stage is done and the model can be turned', end.progress > 0.98 && end.done === 6 && /rf3d--done/.test( end.classes ), JSON.stringify( end ) );
 		await v.screenshot( { path: join( SHOTS, 'house-100.png' ) } );
+		// ---- view buttons, on the finished model
+		const dataOf = () => v.evaluate( () => {
+			const { rf3d, ...rest } = document.querySelector( '.rf3d' ).dataset; // eslint-disable-line no-unused-vars
+			return rest;
+		} );
+		const buttons = await v.$$eval( '.rf3d-tools button', ( els ) => els.map( ( b ) => b.textContent ) );
+		check( 'views', 'the scene shows Build, Parts, Aerial, Auto-rotate, Day and Dusk buttons', buttons.join() === 'Build,Parts,Aerial,Auto-rotate,Day,Dusk', buttons.join() );
+		await v.click( '.rf3d-tools [data-rf3d-view="parts"]' );
+		await v.waitForFunction( () => document.querySelector( '.rf3d' ).dataset.rf3dExplode === '1.00', null, { timeout: 15000 } ).catch( () => {} );
+		const parts = await dataOf();
+		check( 'views', 'Parts spreads the model out and hides the build captions', parts.rf3dExplode === '1.00' && parts.rf3dView === 'parts' && await v.evaluate( () => getComputedStyle( document.querySelector( '.rf3d-caps' ) ).visibility === 'hidden' ), JSON.stringify( parts ) );
+		const box = await v.locator( '.rf3d-canvas' ).boundingBox();
+		await v.mouse.move( box.x + ( box.width / 2 ), box.y + ( box.height / 2 ) );
+		await v.mouse.down();
+		await v.mouse.move( box.x + ( box.width / 2 ) + 160, box.y + ( box.height / 2 ) - 120, { steps: 8 } );
+		await v.mouse.up();
+		await sleep( 1500 );
+		const dragged = await dataOf();
+		check( 'views', 'in Parts the mouse turns the model sideways and up and down', Number( dragged.rf3dYaw ) !== 0 && Number( dragged.rf3dElevation ) !== 18, JSON.stringify( dragged ) );
+		await v.screenshot( { path: join( SHOTS, 'house-parts.png' ) } );
+		await v.click( '.rf3d-tools [data-rf3d-view="aerial"]' );
+		await v.waitForFunction( () => Math.abs( Number( document.querySelector( '.rf3d' ).dataset.rf3dElevation ) - 72 ) < 0.2, null, { timeout: 15000 } ).catch( () => {} );
+		const aerial = await dataOf();
+		check( 'views', 'Aerial looks from above with the parts back in place', Math.abs( Number( aerial.rf3dElevation ) - 72 ) < 0.2 && aerial.rf3dExplode === '0.00', JSON.stringify( aerial ) );
+		await v.click( '.rf3d-tools [data-rf3d-light="dusk"]' );
+		await sleep( 500 );
+		await v.screenshot( { path: join( SHOTS, 'house-aerial-dusk.png' ) } );
+		check( 'views', 'Dusk switches the light and shows which one is on', ( await dataOf() ).rf3dLighting === 'dusk' && 'true' === await v.getAttribute( '[data-rf3d-light="dusk"]', 'aria-pressed' ) && 'false' === await v.getAttribute( '[data-rf3d-light="day"]', 'aria-pressed' ) );
+		const yaw1 = Number( ( await dataOf() ).rf3dYaw );
+		await v.click( '.rf3d-tools [data-rf3d-toggle="rotate"]' );
+		await sleep( 1200 );
+		const yaw2 = Number( ( await dataOf() ).rf3dYaw );
+		await v.click( '.rf3d-tools [data-rf3d-toggle="rotate"]' );
+		await sleep( 400 );
+		const yaw3 = Number( ( await dataOf() ).rf3dYaw );
+		await sleep( 600 );
+		check( 'views', 'Auto-rotate turns the model until it is switched off', yaw2 > yaw1 + 5 && Math.abs( Number( ( await dataOf() ).rf3dYaw ) - yaw3 ) < 0.5, `${ yaw1 } ${ yaw2 } ${ yaw3 }` );
+		await v.click( '.rf3d-tools [data-rf3d-view="build"]' );
+		await v.click( '.rf3d-tools [data-rf3d-light="day"]' );
+		await sleep( 800 );
+		const looks = await v.evaluate( () => ( {
+			label: getComputedStyle( document.querySelector( '.rf3d-progress li.is-done span' ) ).color,
+			width: Math.round( document.querySelector( '.rf3d' ).getBoundingClientRect().width ),
+			parent: Math.round( document.querySelector( '.rf3d' ).parentElement.getBoundingClientRect().width ),
+			left: Math.round( document.querySelector( '.rf3d' ).getBoundingClientRect().left ),
+		} ) );
+		check( 'style', 'the stage names take their own color', looks.label === 'rgb(0, 255, 0)', looks.label );
+		check( 'style', 'the scene width and alignment apply', Math.abs( looks.width - ( looks.parent * 0.8 ) ) < 2 && looks.left > 50, JSON.stringify( looks ) );
+
 		const back = await scrollTo( v, '.rf3d', 0.1 );
 		check( 'site', 'scrolling back up takes it apart again', back.progress < 0.15 && back.done < 6, JSON.stringify( back ) );
 		const drawn = await v.evaluate( () => {

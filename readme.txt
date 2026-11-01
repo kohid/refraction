@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.20.0
+Stable tag: 0.21.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.21.0 =
+* New: view buttons on the 3D Build Scene for visitors: Build, Parts (the finished model spread out), Aerial (seen from above), Auto-rotate, and Day / Dusk light. In Parts and Aerial visitors drag to turn the model in any direction. Each button can be turned off, placed in any corner and styled; the model can also rotate on its own once built.
+* New: 3D Build Scene width and alignment, and colors and typography for the stage names under the progress line.
 
 = 0.20.0 =
 * New: Reveal, in the Advanced tab of every widget and container. Headings and text can come in line by line, word by word or letter by letter, sliding up from behind their line; cards and columns inside a container can come in one after another; any element can fade, slide, zoom, sharpen or rise into view. Play it once, every time it comes into view, or with the scroll so it runs backwards when scrolling up. Respects reduced motion, keeps text readable for screen readers, and never leaves content hidden if the script cannot run.
