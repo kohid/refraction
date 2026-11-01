@@ -194,12 +194,55 @@ class Build_Scene extends Widget_Base {
 		$this->add_control( 'mobile_poster', [ 'label' => esc_html__( 'Show the still image on phones instead', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'Lighter for slow phones. Needs a still image.', 'refraction' ) ] );
 		$this->end_controls_section();
 
+		$this->start_controls_section( 'section_tools', [ 'label' => esc_html__( 'Visitor controls', 'refraction' ) ] );
+		$this->add_control( 'show_tools', [ 'label' => esc_html__( 'Show view buttons on the scene', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'description' => esc_html__( 'Visitors can switch views; in Parts and Aerial they drag to turn the model in any direction.', 'refraction' ) ] );
+		$tools = [
+			'tool_parts' => esc_html__( 'Parts (exploded view)', 'refraction' ),
+			'tool_aerial' => esc_html__( 'Aerial view', 'refraction' ),
+			'tool_rotate' => esc_html__( 'Auto-rotate button', 'refraction' ),
+			'tool_light' => esc_html__( 'Day / Dusk button', 'refraction' ),
+		];
+
+		foreach ( $tools as $key => $label ) {
+			$this->add_control( $key, [ 'label' => $label, 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'show_tools' => 'yes' ] ] );
+		}
+
+		$this->add_control( 'tools_position', [
+			'label' => esc_html__( 'Buttons position', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'top-right',
+			'options' => [ 'top-right' => esc_html__( 'Top right', 'refraction' ), 'top-left' => esc_html__( 'Top left', 'refraction' ), 'bottom-right' => esc_html__( 'Bottom right', 'refraction' ), 'bottom-left' => esc_html__( 'Bottom left', 'refraction' ) ],
+			'condition' => [ 'show_tools' => 'yes' ],
+		] );
+		$this->add_control( 'auto_rotate', [ 'label' => esc_html__( 'Rotate on its own', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'separator' => 'before', 'description' => esc_html__( 'Starts turning slowly once the model is built. Visitors can stop it with the button.', 'refraction' ) ] );
+		$this->add_control( 'rotate_speed', [ 'label' => esc_html__( 'Rotation speed (degrees per second)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 2, 'max' => 60 ] ], 'default' => [ 'size' => 12 ] ] );
+		$this->add_control( 'spread', [ 'label' => esc_html__( 'Parts view spread', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.1, 'max' => 2, 'step' => 0.05 ] ], 'default' => [ 'size' => 0.8 ], 'description' => esc_html__( 'How far the parts move apart, compared to the size of the model.', 'refraction' ) ] );
+		$this->end_controls_section();
+
 		$this->register_style_controls();
 	}
 
 	private function register_style_controls(): void {
 		$this->start_controls_section( 'section_scene_style', [ 'label' => esc_html__( 'Scene', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
 		$this->add_control( 'background', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf3d-stage' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_responsive_control( 'scene_width', [
+			'label' => esc_html__( 'Scene width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%', 'px', 'vw' ],
+			'range' => [ '%' => [ 'min' => 20, 'max' => 100 ], 'px' => [ 'min' => 240, 'max' => 2400 ], 'vw' => [ 'min' => 20, 'max' => 100 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf3d' => 'width: {{SIZE}}{{UNIT}}; max-width: 100%;' ],
+		] );
+		$this->add_responsive_control( 'scene_align', [
+			'label' => esc_html__( 'Scene alignment', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-h-align-center' ],
+				'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+			],
+			'selectors_dictionary' => [ 'left' => 'margin-left: 0; margin-right: auto;', 'center' => 'margin-left: auto; margin-right: auto;', 'right' => 'margin-left: auto; margin-right: 0;' ],
+			'selectors' => [ '{{WRAPPER}} .rf3d' => '{{VALUE}}' ],
+		] );
 		$this->add_responsive_control( 'height', [
 			'label' => esc_html__( 'Scene height', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
@@ -232,6 +275,20 @@ class Build_Scene extends Widget_Base {
 		$this->add_control( 'show_progress', [ 'label' => esc_html__( 'Show the stages as a progress line', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
 		$this->add_control( 'progress_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf3d' => '--rf3d-progress: {{VALUE}};' ] ] );
 		$this->add_control( 'progress_done', [ 'label' => esc_html__( 'Done color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf3d' => '--rf3d-progress-done: {{VALUE}};' ] ] );
+		$this->add_control( 'progress_label_color', [ 'label' => esc_html__( 'Stage name color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => [ '{{WRAPPER}} .rf3d-progress li span' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'progress_label_active', [ 'label' => esc_html__( 'Stage name color (built and current)', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf3d-progress li.is-done span, {{WRAPPER}} .rf3d-progress li.is-active span' => 'color: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'progress_typography', 'selector' => '{{WRAPPER}} .rf3d-progress li span' ] );
+		$this->add_control( 'progress_dim', [ 'label' => esc_html__( 'Dim stages not built yet', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'selectors' => [ '{{WRAPPER}} .rf3d-progress li' => '--rf3d-dim: 0.55;' ], 'selectors_dictionary' => [ '' => '--rf3d-dim: 1;' ] ] );
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'section_tools_style', [ 'label' => esc_html__( 'Visitor controls', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => [ 'show_tools' => 'yes' ] ] );
+		$btn = '{{WRAPPER}} .rf3d-tools button';
+		$this->add_control( 'tools_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf3d-tools' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'tools_color', [ 'label' => esc_html__( 'Text color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $btn => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'tools_active_bg', [ 'label' => esc_html__( 'Selected background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $btn . '[aria-pressed="true"]' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'tools_active_color', [ 'label' => esc_html__( 'Selected text color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $btn . '[aria-pressed="true"]' => 'color: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'tools_typography', 'selector' => $btn ] );
+		$this->add_responsive_control( 'tools_radius', [ 'label' => esc_html__( 'Border radius', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}} .rf3d-tools' => 'border-radius: {{SIZE}}px;', $btn => 'border-radius: calc({{SIZE}}px - 3px);' ] ] );
 		$this->end_controls_section();
 	}
 
@@ -283,9 +340,53 @@ class Build_Scene extends Widget_Base {
 			'light' => $pick( $s['light'] ?? '', [ 'daylight', 'studio', 'dusk' ], 'daylight' ),
 			'shadows' => 'yes' === ( $s['shadows'] ?? '' ),
 			'mobilePoster' => 'yes' === ( $s['mobile_poster'] ?? '' ) && ! empty( $s['poster']['url'] ),
+			'tools' => 'yes' === ( $s['show_tools'] ?? '' ),
+			'autoRotate' => 'yes' === ( $s['auto_rotate'] ?? '' ),
+			'rotateSpeed' => self::number( $s['rotate_speed'] ?? null, 2, 60, 12 ),
+			'spread' => self::number( $s['spread'] ?? null, 0.1, 2, 0.8 ),
 			'preview' => $editor && is_numeric( $preview ) ? max( 0, min( 100, (float) $preview ) ) / 100 : null,
 			'editor' => $editor,
 		];
+	}
+
+	/** The view buttons for visitors: Build, Parts, Aerial, Auto-rotate and Day / Dusk. */
+	private function render_tools( array $s, array $config ): void {
+		if ( ! $config['tools'] ) {
+			return;
+		}
+
+		$views = [ 'build' => esc_html__( 'Build', 'refraction' ) ];
+
+		if ( 'yes' === ( $s['tool_parts'] ?? '' ) ) {
+			$views['parts'] = esc_html__( 'Parts', 'refraction' );
+		}
+
+		if ( 'yes' === ( $s['tool_aerial'] ?? '' ) ) {
+			$views['aerial'] = esc_html__( 'Aerial', 'refraction' );
+		}
+
+		$position = in_array( $s['tools_position'] ?? '', [ 'top-right', 'top-left', 'bottom-right', 'bottom-left' ], true ) ? $s['tools_position'] : 'top-right';
+		echo '<div class="rf3d-tools rf3d-tools--' . esc_attr( $position ) . '" role="toolbar" aria-label="' . esc_attr__( '3D view', 'refraction' ) . '">';
+
+		if ( count( $views ) > 1 ) {
+			foreach ( $views as $view => $label ) {
+				echo '<button type="button" data-rf3d-view="' . esc_attr( $view ) . '" aria-pressed="' . ( 'build' === $view ? 'true' : 'false' ) . '">' . esc_html( $label ) . '</button>';
+			}
+		}
+
+		if ( 'yes' === ( $s['tool_rotate'] ?? '' ) ) {
+			echo '<span class="rf3d-tools-sep" aria-hidden="true"></span>';
+			echo '<button type="button" data-rf3d-toggle="rotate" aria-pressed="' . ( $config['autoRotate'] ? 'true' : 'false' ) . '">' . esc_html__( 'Auto-rotate', 'refraction' ) . '</button>';
+		}
+
+		if ( 'yes' === ( $s['tool_light'] ?? '' ) ) {
+			$dusk = 'dusk' === $config['light'];
+			echo '<span class="rf3d-tools-sep" aria-hidden="true"></span>';
+			echo '<button type="button" data-rf3d-light="day" aria-pressed="' . ( $dusk ? 'false' : 'true' ) . '">' . esc_html__( 'Day', 'refraction' ) . '</button>';
+			echo '<button type="button" data-rf3d-light="dusk" aria-pressed="' . ( $dusk ? 'true' : 'false' ) . '">' . esc_html__( 'Dusk', 'refraction' ) . '</button>';
+		}
+
+		echo '</div>';
 	}
 
 	protected function render() {
@@ -329,6 +430,7 @@ class Build_Scene extends Widget_Base {
 			echo '</ol>';
 		}
 
+		$this->render_tools( $s, $config );
 		echo '<p class="rf3d-status" role="status"></p>';
 		echo '</div></div>';
 	}
