@@ -1,7 +1,6 @@
 <?php
 namespace Refraction\Modules\FormBuilder\Classes;
 
-use Refraction\Core\Utils\Icons;
 use Refraction\Modules\FormBuilder\Module;
 use Refraction\Utils;
 
@@ -12,14 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Refraction > Builder: routing, form handlers and assets. The screens themselves are printed by Admin_Views.
  *
- * Screens (query argument `view`): overview (default), new, design, records, record.
+ * Screens (query argument `view`): overview (default), records, record. A collection's form is built in the page editor.
  */
 class Admin_Page {
 
 	const SLUG = 'refraction-builder';
 
-	const ACTION_CREATE = 'refraction_fb_create';
-	const ACTION_SAVE_COLLECTION = 'refraction_fb_save_collection';
 	const ACTION_DELETE_COLLECTION = 'refraction_fb_delete_collection';
 	const ACTION_SAVE_RECORD = 'refraction_fb_save_record';
 	const ACTION_DELETE_RECORDS = 'refraction_fb_delete_records';
@@ -40,8 +37,6 @@ class Admin_Page {
 
 		foreach (
 			[
-				self::ACTION_CREATE => 'handle_create',
-				self::ACTION_SAVE_COLLECTION => 'handle_save_collection',
 				self::ACTION_DELETE_COLLECTION => 'handle_delete_collection',
 				self::ACTION_SAVE_RECORD => 'handle_save_record',
 				self::ACTION_DELETE_RECORDS => 'handle_delete_records',
@@ -102,69 +97,13 @@ class Admin_Page {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
 
-		if ( 'design' === $view ) {
-			wp_enqueue_media(); // The Image block picks from the media library.
-			wp_enqueue_script( 'refraction-form-builder-builder', REFRACTION_ASSETS_URL . 'js/form-builder-builder' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
-			wp_set_script_translations( 'refraction-form-builder-builder', 'refraction' );
-			wp_localize_script( 'refraction-form-builder-builder', 'refractionBuilder', $this->builder_config() );
-		} elseif ( 'records' === $view ) {
+		if ( 'records' === $view ) {
 			wp_enqueue_script( 'refraction-form-builder-admin', REFRACTION_ASSETS_URL . 'js/form-builder-admin' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
 			wp_set_script_translations( 'refraction-form-builder-admin', 'refraction' );
 		} elseif ( 'record' === $view ) {
 			Shortcodes::enqueue();
 			wp_enqueue_script( 'refraction-form-builder-admin', REFRACTION_ASSETS_URL . 'js/form-builder-admin' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
 		}
-	}
-
-	/** Everything the drag and drop builder needs to know that only the server knows. */
-	private function builder_config(): array {
-		$palette = [];
-
-		foreach ( Schema::palette() as $group => $data ) {
-			$palette[] = [ 'id' => $group, 'label' => $data['label'], 'types' => $data['types'] ];
-		}
-
-		$icons = [];
-
-		foreach ( Schema::icons() as $type => $icon ) {
-			$icons[ $type ] = Icons::svg( $icon, [ 'size' => 26 ] );
-		}
-
-		$list_icons = [];
-
-		foreach ( Schema::list_icons() as $name ) {
-			$svg = Icons::svg( $name, [ 'size' => 20 ] );
-
-			if ( '' !== $svg ) {
-				$list_icons[ $name ] = $svg;
-			}
-		}
-
-		return [
-			'widths' => Schema::width_choices(),
-			'widthPercent' => Schema::WIDTH_PERCENT,
-			'listIcons' => $list_icons,
-			'palette' => $palette,
-			'typeIcons' => $icons,
-			'countries' => Countries::all(),
-			'fieldStyle' => Field_Style::config(),
-			'operators' => Conditions::operators(),
-			'styleControls' => Style::controls(),
-			'styleDefaults' => Style::defaults(),
-			'colors' => Admin_Views::color_names(),
-			'icons' => Admin_Views::icon_choices(),
-			'fileTypes' => Schema::FILE_TYPES,
-			'periods' => Money::periods(),
-			'hiddenSources' => [
-				'static' => __( 'Fixed value', 'refraction' ),
-				'query' => __( 'URL parameter', 'refraction' ),
-				'page_url' => __( 'Page address', 'refraction' ),
-				'referrer' => __( 'Referring page', 'refraction' ),
-				'user_id' => __( 'Logged-in user ID', 'refraction' ),
-				'user_email' => __( 'Logged-in user email', 'refraction' ),
-				'date' => __( 'Today\'s date', 'refraction' ),
-			],
-		];
 	}
 
 	public function render(): void {
@@ -175,18 +114,9 @@ class Admin_Page {
 		$slug = isset( $_GET['collection'] ) ? Schema::slug( wp_unslash( $_GET['collection'] ) ) : '';
 		// phpcs:enable
 
-		if ( 'new' === $view ) {
-			$this->views->render_new();
-			return;
-		}
-
 		$definition = '' !== $slug ? $this->collections->get( $slug ) : null;
 
-		if ( $definition && 'design' === $view && Editor_Forms::doc_for( $slug ) ) {
-			$this->views->render_editor_notice( $definition, Editor_Forms::doc_for( $slug ) );
-		} elseif ( $definition && 'design' === $view ) {
-			$this->views->render_design( $definition );
-		} elseif ( $definition && 'record' === $view ) {
+		if ( $definition && 'record' === $view ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$this->views->render_record( $definition, isset( $_GET['record'] ) ? absint( $_GET['record'] ) : 0 );
 		} elseif ( $definition && 'records' === $view ) {
@@ -198,41 +128,6 @@ class Admin_Page {
 
 	// ---------------------------------------------------------------- handlers
 
-	public function handle_create(): void {
-		$this->guard( self::ACTION_CREATE );
-
-		$preset = sanitize_key( (string) $this->post( 'preset' ) );
-		$saved = $this->collections->save( Presets::get( in_array( $preset, Presets::keys(), true ) ? $preset : 'blank' ) );
-
-		$saved ? $this->redirect( [ 'view' => 'design', 'collection' => $saved['slug'], 'done' => 'created' ] ) : $this->redirect( [ 'view' => 'new' ] );
-	}
-
-	public function handle_save_collection(): void {
-		$this->guard( self::ACTION_SAVE_COLLECTION );
-
-		$slug = Schema::slug( (string) $this->post( 'collection' ) );
-		$this->collection_or_die( $slug );
-
-		// A form built in the page editor is saved from there; an old designer tab must not overwrite its fields.
-		if ( Editor_Forms::doc_for( $slug ) ) {
-			$this->redirect( [ 'view' => 'design', 'collection' => $slug ] );
-		}
-
-		// The drag and drop builder posts the whole design as one JSON value; Schema cleans every part of it.
-		$json = (string) $this->post( 'design' );
-		$raw = strlen( $json ) <= 400000 ? json_decode( $json, true ) : null;
-
-		if ( ! is_array( $raw ) ) {
-			$this->redirect( [ 'view' => 'design', 'collection' => $slug, 'done' => 'invalid' ] );
-		}
-
-		$saved = $this->collections->save( $raw, $slug );
-
-		$saved
-			? $this->redirect( [ 'view' => 'design', 'collection' => $slug, 'done' => 'saved' ] )
-			: $this->redirect( [ 'view' => 'design', 'collection' => $slug, 'done' => 'invalid' ] );
-	}
-
 	public function handle_delete_collection(): void {
 		$this->guard( self::ACTION_DELETE_COLLECTION );
 
@@ -243,11 +138,12 @@ class Admin_Page {
 		$definition = $this->collections->get( $slug );
 
 		if ( trim( (string) $this->post( 'confirm' ) ) !== $definition['label'] ) {
-			$this->redirect( [ 'view' => 'design', 'collection' => $slug, 'done' => 'confirm' ] );
+			$this->redirect( [ 'view' => 'records', 'collection' => $slug, 'done' => 'confirm' ] );
 		}
 
 		$this->records->delete_all( $slug );
 		$this->collections->delete( $slug );
+		Editor_Forms::forget( $slug );
 		$this->redirect( [ 'done' => 'collection-deleted' ] );
 	}
 

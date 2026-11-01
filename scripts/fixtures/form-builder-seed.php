@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/form-builder-presets.php';
 // Seed helper for scripts/check-form-builder.mjs, run through `wp eval-file`. Action comes from the FB_ACTION env var.
 use Refraction\Modules\FormBuilder\Classes\Collections;
 use Refraction\Modules\FormBuilder\Classes\Records;
@@ -77,6 +78,11 @@ switch ( $action ) {
 	case 'latest': // Newest record of a collection with its values.
 		$definition = $collections->get( $spec['collection'] );
 		$out = [ 'record' => $records->query( $definition, [ 'per_page' => 1 ] )['items'][0] ?? null ];
+		break;
+
+	case 'save': // Save a definition over its own collection (same slug).
+		$saved = $collections->save( $spec['definition'], $spec['definition']['slug'] );
+		$out = [ 'slug' => $saved ? $saved['slug'] : '', 'fields' => $saved ? count( $saved['fields'] ) : 0 ];
 		break;
 
 	case 'preset': // Create a collection from a starting point.

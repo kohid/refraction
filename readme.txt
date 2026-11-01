@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.15.0
+Stable tag: 0.16.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.16.0 =
+* New: Choice cards for forms built in the page editor. Each card is a container: drop in a heading, image, badge, price, Icon List, Accordion or anything else. Set each card's name, price and period (what is saved with the record), its width and where its pick control sits; visitors click anywhere on a card to pick it, one or several. Fields inside a card are shown but locked.
+* New: Badge and Price widgets in the Form Builder category. Inside a card the Price shows the card's price, elsewhere its own amount, in the form's currency.
+* Change: the Builder's own drag and drop designer is gone. "New form" and "Edit form" open the page editor; each collection's records screen shows its shortcodes and the delete option.
 
 = 0.15.0 =
 * New: Steps, Group and Repeater for forms built in the page editor. Steps splits the form into pages: add steps in the panel and drop each step's fields into its box; visitors see one step at a time with Back / Next and the progress from the form settings. Group keeps fields together under one answer (an address). Repeater lets visitors add and remove rows (guests, items) with a minimum, a maximum and its own button text. Each has its own Style tab (box, title, rows and buttons).

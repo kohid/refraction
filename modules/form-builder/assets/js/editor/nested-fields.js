@@ -15,5 +15,5 @@ export function formNestedTypes() {
 		}
 	} )();
 
-	return [ 'rfb-field-group', 'rfb-field-repeater', 'rfb-steps' ].map( make );
+	return [ 'rfb-field-group', 'rfb-field-repeater', 'rfb-field-choice_set', 'rfb-steps' ].map( make );
 }

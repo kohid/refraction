@@ -125,7 +125,7 @@ async function main() {
 		await page.setViewportSize( { width: 1500, height: 950 } );
 
 		await page.goto( BUILDER );
-		await page.goto( await page.locator( 'a:has-text("New form in the page editor")' ).getAttribute( 'href' ), { timeout: 120000 } );
+		await page.goto( await page.locator( 'a:has-text("New form")' ).first().getAttribute( 'href' ), { timeout: 120000 } );
 		await page.waitForFunction( () => window.refraction && window.$e && refraction.documents && refraction.documents.getCurrent() && document.querySelector( '.refraction-panel-category' ), null, { timeout: 120000 } );
 		await page.waitForTimeout( 2500 );
 		const tiles = await page.$$eval( '.refraction-panel-category', ( els ) => [ ...els[ 0 ].querySelectorAll( '.refraction-element' ) ].map( ( e ) => e.textContent.trim() ) );

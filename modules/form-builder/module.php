@@ -107,7 +107,7 @@ class Module extends BaseModule {
 		return [
 			'Field_Text', 'Field_Textarea', 'Field_Name', 'Field_Email', 'Field_Phone', 'Field_Website', 'Field_Number', 'Field_Amount',
 			'Field_Country', 'Field_Date', 'Field_Time', 'Field_Datetime', 'Field_Select', 'Field_Radio', 'Field_Checkbox', 'Field_Toggle',
-			'Field_Rating', 'Field_Hidden', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Steps', 'Submit_Button',
+			'Field_Rating', 'Field_Hidden', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Field_Choice_Set', 'Steps', 'Badge', 'Price', 'Submit_Button',
 		];
 	}
 

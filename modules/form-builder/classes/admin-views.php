@@ -94,20 +94,11 @@ class Admin_Views {
 		return '<a class="rfb-btn rfb-btn-' . esc_attr( $style ) . '" href="' . esc_url( $href ) . '">' . $this->icon( $icon, 18 ) . esc_html( $label ) . '</a>';
 	}
 
-	/** The Builder's own designer is not used for a form built in the page editor: point there instead. */
-	public function render_editor_notice( array $definition, int $doc_id ): void {
-		$this->open( $definition['label'], __( 'This form is built in the page editor.', 'refraction' ), [ __( 'Builder', 'refraction' ) => $this->url() ], $this->design_button( $definition['slug'] ) );
-		echo '<div class="rfb-card"><div class="rfb-card-body"><p>' . esc_html__( 'Open it in the page editor to change its fields, layout and look. Records, statuses and exports stay here.', 'refraction' ) . '</p>' . $this->button( __( 'Edit form', 'refraction' ), Editor_Forms::edit_url( $doc_id ), 'primary', 'edit' ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		$this->close();
-	}
-
-	/** A collection built in the page editor is edited there; the others in the Builder's own designer. */
+	/** A collection's form is a Form page in the page editor; one made before that has no form to edit. */
 	private function design_button( string $slug ): string {
 		$doc_id = Editor_Forms::doc_for( $slug );
 
-		return $doc_id
-			? $this->button( __( 'Edit form', 'refraction' ), Editor_Forms::edit_url( $doc_id ), 'light', 'edit' )
-			: $this->button( __( 'Edit design', 'refraction' ), $this->url( [ 'view' => 'design', 'collection' => $slug ] ), 'light', 'tune' );
+		return $doc_id ? $this->button( __( 'Edit form', 'refraction' ), Editor_Forms::edit_url( $doc_id ), 'light', 'edit' ) : '';
 	}
 
 	private function badge( array $status ): string {
@@ -122,11 +113,11 @@ class Admin_Views {
 			__( 'Builder', 'refraction' ),
 			__( 'Design your own forms and tables for bookings, listings, orders or anything you keep records of.', 'refraction' ),
 			[],
-			$this->button( __( 'New form in the page editor', 'refraction' ), Editor_Forms::new_url(), 'light-primary', 'edit' ) . $this->button( __( 'New collection', 'refraction' ), $this->url( [ 'view' => 'new' ] ), 'primary', 'add' )
+			$this->button( __( 'New form', 'refraction' ), Editor_Forms::new_url(), 'primary', 'add' )
 		);
 
 		if ( ! $all ) {
-			echo '<div class="rfb-card rfb-empty"><div class="rfb-card-body">' . $this->icon( 'layers', 40 ) . '<h2>' . esc_html__( 'Create your first collection', 'refraction' ) . '</h2><p>' . esc_html__( 'A collection is a set of records with the fields you choose, a status workflow, an admin table, and optionally a public form or list. Start from a ready-made design or from scratch.', 'refraction' ) . '</p>' . $this->button( __( 'Choose a starting point', 'refraction' ), $this->url( [ 'view' => 'new' ] ), 'primary', 'add' ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<div class="rfb-card rfb-empty"><div class="rfb-card-body">' . $this->icon( 'layers', 40 ) . '<h2>' . esc_html__( 'Create your first collection', 'refraction' ) . '</h2><p>' . esc_html__( 'A collection is a set of records with the fields you choose, a status workflow, an admin table, and optionally a public form or list. Build its form in the page editor: drop fields from the Form Builder category and lay them out like any page.', 'refraction' ) . '</p>' . $this->button( __( 'New form', 'refraction' ), Editor_Forms::new_url(), 'primary', 'add' ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$this->close();
 			return;
 		}
@@ -155,99 +146,15 @@ class Admin_Views {
 		$this->close();
 	}
 
-	public function render_new(): void {
-		$this->open( __( 'New collection', 'refraction' ), __( 'Pick a starting point. Everything in it can be changed afterwards.', 'refraction' ), [ __( 'Builder', 'refraction' ) => $this->url() ] );
-		echo '<div class="rfb-grid">';
-
-		foreach ( Presets::list() as $key => $preset ) {
-			echo '<form class="rfb-card rfb-collection" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><div class="rfb-card-body">';
-			echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_CREATE ) . '"><input type="hidden" name="preset" value="' . esc_attr( $key ) . '">';
-			wp_nonce_field( Admin_Page::ACTION_CREATE );
-			echo '<div class="rfb-collection-head"><span class="rfb-symbol rfb-symbol-light-primary">' . $this->icon( $preset['icon'], 24 ) . '</span><div><h2>' . esc_html( 'blank' === $key ? __( 'Start from scratch', 'refraction' ) : $preset['label'] ) . '</h2><p>' . esc_html( $preset['description'] ) . '</p></div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo '<div class="rfb-actions"><button type="submit" class="rfb-btn rfb-btn-primary">' . esc_html__( 'Use this', 'refraction' ) . '</button></div>';
-			echo '</div></form>';
-		}
-
-		echo '</div>';
-		$this->close();
-	}
-
-	// ---------------------------------------------------------------- design
-
-	public function render_design( array $definition ): void {
+	/** Delete a collection: its records, uploads and Form page go with it. The name must be typed, so no stray click wipes it. */
+	private function delete_card( array $definition ): void {
 		$slug = $definition['slug'];
-		$this->open(
-			/* translators: %s: collection name. */
-			sprintf( __( 'Design: %s', 'refraction' ), $definition['label'] ),
-			__( 'Drag fields onto the form, set how they look and behave, and choose what happens on submit.', 'refraction' ),
-			[ __( 'Builder', 'refraction' ) => $this->url(), $definition['label'] => $this->url( [ 'view' => 'records', 'collection' => $slug ] ) ],
-			$this->button( __( 'View records', 'refraction' ), $this->url( [ 'view' => 'records', 'collection' => $slug ] ), 'light', 'visibility' )
-		);
-
-		echo '<form method="post" class="rfb-design" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" id="rfb-design">';
-		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_SAVE_COLLECTION ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="design" id="rfb-design-json" value="">';
-		wp_nonce_field( Admin_Page::ACTION_SAVE_COLLECTION );
-		echo '<div id="rfb-builder" data-design="' . esc_attr( (string) wp_json_encode( $this->with_previews( $definition ) ) ) . '" data-shortcode-form="' . esc_attr( '[refraction_form collection="' . $slug . '"]' ) . '" data-shortcode-list="' . esc_attr( '[refraction_records collection="' . $slug . '" status="published" view="cards"]' ) . '"></div>';
-		echo '<noscript><div class="rfb-alert rfb-alert-warning">' . esc_html__( 'The form designer needs JavaScript. Please turn it on for this page.', 'refraction' ) . '</div></noscript>';
-		echo '</form>';
-
-		// Danger zone.
-		echo '<form method="post" class="rfb-card rfb-danger" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><div class="rfb-card-header"><div><h2>' . esc_html__( 'Delete this collection', 'refraction' ) . '</h2><p>' . esc_html__( 'This permanently deletes the collection, every record in it and its uploaded files. It cannot be undone.', 'refraction' ) . '</p></div></div><div class="rfb-card-body">';
-		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_DELETE_COLLECTION ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '">';
+		echo '<div class="rfb-card"><div class="rfb-card-header"><div><h2>' . esc_html__( 'On your site', 'refraction' ) . '</h2><p>' . esc_html__( 'Nothing is public until it is turned on in the form settings (the cog in the page editor) and the shortcode is placed on a page.', 'refraction' ) . '</p></div></div><div class="rfb-card-body"><p>' . esc_html__( 'Form:', 'refraction' ) . ' <code>' . esc_html( '[refraction_form collection="' . $slug . '"]' ) . '</code></p><p>' . esc_html__( 'Records list:', 'refraction' ) . ' <code>' . esc_html( '[refraction_records collection="' . $slug . '" status="' . ( $definition['statuses'][0]['key'] ?? 'new' ) . '" view="cards"]' ) . '</code></p></div></div>';
+		echo '<form method="post" class="rfb-card rfb-danger" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><div class="rfb-card-header"><div><h2>' . esc_html__( 'Delete this collection', 'refraction' ) . '</h2><p>' . esc_html__( 'This permanently deletes the collection, every record in it, its uploaded files and its form page. It cannot be undone.', 'refraction' ) . '</p></div></div><div class="rfb-card-body">';
+		echo '<input type="hidden" name="action" value="' . esc_attr( Admin_Page::ACTION_DELETE_COLLECTION ) . '"><input type="hidden" name="collection" value="' . esc_attr( $definition['slug'] ) . '">';
 		wp_nonce_field( Admin_Page::ACTION_DELETE_COLLECTION );
 		echo '<div class="rfb-field"><label class="rfb-label" for="rfb-confirm">' . esc_html( sprintf( /* translators: %s: collection name. */ __( 'Type "%s" to confirm', 'refraction' ), $definition['label'] ) ) . '</label><input class="rfb-input" id="rfb-confirm" name="confirm" autocomplete="off"></div>';
 		echo '<button type="submit" class="rfb-btn rfb-btn-danger">' . esc_html__( 'Delete collection and records', 'refraction' ) . '</button></div></form>';
-
-		$this->close();
-	}
-
-	/** Adds a preview address to every Image block so the designer can show the picture (never saved). */
-	private function with_previews( array $definition ): array {
-		$walk = function ( array $fields ) use ( &$walk ): array {
-			foreach ( $fields as $i => $field ) {
-				// An empty style must reach the designer as {} (a JSON object), not [] (a list).
-				$fields[ $i ]['style'] = (object) $field['style'];
-
-				if ( 'image' === $field['type'] && $field['image_id'] ) {
-					$fields[ $i ]['image_url'] = (string) wp_get_attachment_image_url( $field['image_id'], 'medium' );
-				}
-
-				if ( $field['children'] ) {
-					$fields[ $i ]['children'] = $walk( $field['children'] );
-				}
-			}
-
-			return $fields;
-		};
-		$definition['fields'] = $walk( $definition['fields'] );
-
-		return $definition;
-	}
-
-	public static function icon_choices(): array {
-		return [
-			'grid-view' => __( 'Grid', 'refraction' ),
-			'schedule' => __( 'Clock (bookings)', 'refraction' ),
-			'web' => __( 'Window (listings)', 'refraction' ),
-			'shopping-bag' => __( 'Bag (orders)', 'refraction' ),
-			'shopping-cart' => __( 'Cart', 'refraction' ),
-			'person' => __( 'Person', 'refraction' ),
-			'star' => __( 'Star', 'refraction' ),
-			'layers' => __( 'Layers', 'refraction' ),
-			'interests' => __( 'Shapes', 'refraction' ),
-		];
-	}
-
-	public static function color_names(): array {
-		return [
-			'primary' => __( 'Blue', 'refraction' ),
-			'success' => __( 'Green', 'refraction' ),
-			'warning' => __( 'Yellow', 'refraction' ),
-			'danger' => __( 'Red', 'refraction' ),
-			'info' => __( 'Purple', 'refraction' ),
-			'dark' => __( 'Dark', 'refraction' ),
-			'secondary' => __( 'Gray', 'refraction' ),
-		];
 	}
 
 	// ---------------------------------------------------------------- records table
@@ -362,6 +269,7 @@ class Admin_Views {
 
 		if ( ! $result['items'] ) {
 			echo '<div class="rfb-card-body rfb-empty-body">' . $this->icon( 'search', 36 ) . '<p>' . esc_html( $result['total'] || $counts['all'] ? __( 'No records match these filters.', 'refraction' ) : __( 'No records yet. Add the first one, or place the public form on a page.', 'refraction' ) ) . '</p></div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$this->delete_card( $definition );
 			$this->close();
 			return;
 		}
@@ -432,6 +340,7 @@ class Admin_Views {
 		}
 
 		echo '</div></div>';
+		$this->delete_card( $definition );
 		$this->close();
 	}
 
