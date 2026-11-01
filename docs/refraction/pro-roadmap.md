@@ -28,14 +28,14 @@ Containers, sections/columns, the core widget set, global colors and fonts (kit)
 | B6 | Builder | Own collections (Bookings, Listings, Transactions...) with fields, statuses, records table and public form/list | Done (0.6.0 collections and records; 0.7.0 drag and drop designer, multi-step, repeater, group, uploads, hidden, conditions, style, advanced settings; [form-builder.md](form-builder.md)) |
 | B5 | Integrations and polish | Webhook-based form integrations, activity log, dashboard overview, accessibility pass | TODO |
 | B7 | 3D Build Scene | Widget: a 3D model (sample house or uploaded .glb) whose parts fly in stage by stage with the scroll, captions, progress, camera, light, editor preview | Done (0.17.0, see [build-scene.md](build-scene.md)). Scroll Sequence (video or image frames scrubbed with the scroll, text overlays): done in 0.18.0 |
-| B8 | Ask Claude panel | A prompt panel in the editor that builds pages from Refraction's widgets. The owner approved one exception to "no remote calls": it calls Anthropic only when the user presses Generate, with the user's own API key | TODO |
+| B8 | Ask Claude panel | A prompt panel in the editor that builds pages from Refraction's widgets. The owner approved one exception to "no remote calls": it calls Anthropic only when the user presses Generate, with the user's own API key | Done (0.19.0, see [ask-claude.md](ask-claude.md)) |
 | B9 | Seedance video through Claude | Claude generates hero/background videos with the user's Seedance key and puts them in the media library | TODO (after B8) |
 
 ## Rules for every module
 
 - Namespace `Refraction\Modules\<Name>`, text domain `refraction`, CSS prefix `refraction-`, icon prefix `rficon-`.
 - Registered in `core/modules-manager.php` (one line per module).
-- No remote calls, no license or upsell code, no Atomic Editor, no telemetry.
+- No remote calls (except the update check and the user-initiated ones: Forms webhooks, embeds, Ask Claude), no license or upsell code, no Atomic Editor, no telemetry.
 - Written test-first; a Playwright check script `scripts/check-<module>.mjs` and, where logic is pure, a standalone PHP test `scripts/test-<module>.php`.
 - The compiled JS/CSS must be in the release zip (entries in `scripts/vite/shared/entries.mjs`, SCSS in `scripts/vite/plugins/scss-build.mjs`).
 - Each module ends with a short `docs/refraction/<module>.md` (what it does, limits).

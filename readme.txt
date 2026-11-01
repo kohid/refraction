@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.18.0
+Stable tag: 0.19.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.19.0 =
+* New: Ask Claude in the editor. Describe a page, a section or a change to the selected element (and attach reference images from your library), and Claude builds it with Refraction's own widgets as ordinary, editable elements; one Undo takes it back. It uses your site's colors and fonts, writes placeholders instead of inventing facts about your business, and everything it returns is checked before it reaches the page (only real widgets and settings, library images, no raw HTML or scripts). Uses your own Anthropic API key, stored encrypted; your site calls Claude only when someone presses Generate. Anyone who can edit pages may use it; administrators manage the key. Needs PHP 8.1 or newer; the rest of Refraction still runs on PHP 7.4.
 
 = 0.18.0 =
 * New: Scroll Sequence widget (Advanced). Play a video or a numbered image sequence with the scroll, forward and backward, while the section stays pinned: a camera move through a room, a product turning, a drone shot. Add text that shows between two points of the scroll, with a shade behind it so it stays readable. Frames load progressively and play by file name; videos are scrubbed from memory. Reduced motion shows a still picture and all the text.

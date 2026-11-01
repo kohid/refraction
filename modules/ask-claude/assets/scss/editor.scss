@@ -1,0 +1,4 @@
+// Ask Claude panel: the drawer sits under the editor's top bar, over the preview, and never covers the top bar.
+#refraction-ask-claude .MuiDrawer-paper {
+	box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+}

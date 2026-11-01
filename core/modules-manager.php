@@ -137,6 +137,7 @@ class Modules_Manager {
 			'woocommerce',
 			'form-builder',
 			'build-scene',
+			'ask-claude',
 			'loop-builder',
 			'forms',
 			'pro-widgets',
