@@ -16,7 +16,8 @@ class Rest {
 	const NS = 'refraction/v1';
 	const HOURLY_LIMIT = 40;
 	const MAX_IMAGES = 4;
-	const MAX_PROMPT = 4000;
+	/** A full brief (sections, copy, stages) fits easily: about 15,000 tokens. */
+	const MAX_PROMPT = 60000;
 	const MAX_CONTEXT = 60000;
 
 	public function register(): void {
@@ -126,6 +127,11 @@ class Rest {
 			return self::error( __( 'Describe what Claude should build.', 'refraction' ), 400 );
 		}
 
+		if ( mb_strlen( $prompt ) > self::MAX_PROMPT ) {
+			/* translators: %s: Maximum number of characters. */
+			return self::error( sprintf( __( 'The description is longer than %s characters. Shorten it, or build the page in two parts with "Add a section".', 'refraction' ), number_format_i18n( self::MAX_PROMPT ) ), 400 );
+		}
+
 		if ( ! in_array( $mode, [ 'page', 'section', 'selected' ], true ) ) {
 			return self::error( __( 'Unknown mode.', 'refraction' ), 400 );
 		}
@@ -150,7 +156,7 @@ class Rest {
 
 		$builder = new Claude_Builder( new Widget_Specs( (int) $request->get_param( 'post_id' ) ) );
 		$result = $builder->generate( [
-			'prompt' => substr( $prompt, 0, self::MAX_PROMPT ),
+			'prompt' => $prompt,
 			'mode' => $mode,
 			'context' => 'page' === $mode ? '' : substr( $context, 0, self::MAX_CONTEXT ),
 			'images' => self::images( (array) $request->get_param( 'images' ) ),

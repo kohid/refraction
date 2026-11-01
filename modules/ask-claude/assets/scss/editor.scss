@@ -1,4 +1,258 @@
-// Ask Claude panel: the drawer sits under the editor's top bar, over the preview, and never covers the top bar.
-#refraction-ask-claude .MuiDrawer-paper {
-	box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+// Ask Claude panel. Every color comes from the editor's palette (--e-a-*), which the interface theme
+// (Settings > Theme: Daylight, Graphite, Ember, Blueprint, Contrast) points at its own colors, and which follows the
+// editor's light/dark mode under Automatic. So the panel looks like the rest of the editor in every theme.
+
+$panel: "#refraction-ask-claude";
+
+#{$panel} .rf-ac-panel,
+body .rf-ac-menu.MuiPaper-root {
+	--rf-ac-bg: var(--e-a-bg-default, #fff);
+	--rf-ac-field: var(--e-a-bg-secondary, var(--e-a-bg-default, #fff));
+	--rf-ac-txt: var(--e-a-color-txt, #3f444b);
+	--rf-ac-muted: var(--e-a-color-txt-muted, #69727d);
+	--rf-ac-line: var(--e-a-border-color-bold, #d5d8dc);
+	--rf-ac-soft-line: var(--e-a-border-color, #e6e8ea);
+	--rf-ac-accent: var(--e-a-color-accent, #93003f);
+	--rf-ac-focus: var(--e-a-border-color-focus, var(--e-a-color-accent, #93003f));
+	--rf-ac-hover: var(--e-a-bg-hover, rgba(0, 0, 0, 0.04));
+	--rf-ac-active: var(--e-a-bg-active, rgba(0, 0, 0, 0.08));
+	--rf-ac-btn: var(--e-a-btn-bg-accent, var(--e-a-color-accent, #93003f));
+	--rf-ac-btn-hover: var(--e-a-btn-bg-accent-hover, var(--rf-ac-btn));
+	--rf-ac-btn-ink: var(--e-a-btn-color-invert, #fff);
+
+	background-color: var(--rf-ac-bg);
+	color: var(--rf-ac-txt);
+}
+
+#{$panel} .rf-ac-panel {
+	border-left: 1px solid var(--rf-ac-soft-line);
+	box-shadow: -10px 0 30px rgba(0, 0, 0, 0.18);
+
+	.MuiTypography-root,
+	.MuiFormControlLabel-label,
+	.MuiIconButton-root,
+	.MuiSvgIcon-root {
+		color: inherit;
+	}
+
+	.rf-ac-muted,
+	.MuiFormHelperText-root {
+		color: var(--rf-ac-muted);
+	}
+
+	.MuiDivider-root {
+		border-color: var(--rf-ac-soft-line);
+	}
+
+	// ---- fields (prompt, key, model)
+	.MuiInputLabel-root {
+		color: var(--rf-ac-muted);
+
+		&.Mui-focused {
+			color: var(--rf-ac-accent);
+		}
+	}
+
+	.MuiOutlinedInput-root {
+		background-color: var(--rf-ac-field);
+		color: var(--rf-ac-txt);
+
+		.MuiOutlinedInput-notchedOutline {
+			border-color: var(--rf-ac-line);
+		}
+
+		&:hover .MuiOutlinedInput-notchedOutline {
+			border-color: var(--rf-ac-muted);
+		}
+
+		&.Mui-focused .MuiOutlinedInput-notchedOutline {
+			border-color: var(--rf-ac-focus);
+			border-width: 2px;
+		}
+	}
+
+	.MuiInputBase-input,
+	.MuiSelect-select {
+		color: var(--rf-ac-txt);
+
+		&::placeholder {
+			color: var(--rf-ac-muted);
+			opacity: 1;
+		}
+	}
+
+	.MuiSelect-icon {
+		color: var(--rf-ac-muted);
+	}
+
+	// The prompt can be long: let it be pulled taller, and keep its counter on the right.
+	textarea[data-ask-claude="prompt"] {
+		resize: vertical;
+		line-height: 1.5;
+	}
+
+	.rf-ac-count {
+		margin: 4px 2px 0;
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+	}
+
+	// ---- mode switch
+	.MuiToggleButtonGroup-root {
+		background-color: var(--rf-ac-field);
+	}
+
+	.MuiToggleButton-root {
+		border-color: var(--rf-ac-line);
+		color: var(--rf-ac-muted);
+		line-height: 1.25;
+
+		&:hover {
+			background-color: var(--rf-ac-hover);
+		}
+
+		&.Mui-selected,
+		&.Mui-selected:hover {
+			background-color: var(--rf-ac-active);
+			color: var(--rf-ac-txt);
+		}
+	}
+
+	// ---- buttons
+	.MuiButton-contained:not(.Mui-disabled) {
+		background-color: var(--rf-ac-btn);
+		color: var(--rf-ac-btn-ink);
+		box-shadow: none;
+
+		&:hover {
+			background-color: var(--rf-ac-btn-hover);
+		}
+	}
+
+	.MuiButton-contained.Mui-disabled {
+		background-color: var(--e-a-btn-bg-disabled, var(--rf-ac-active));
+		color: var(--e-a-btn-color-disabled, var(--rf-ac-muted));
+	}
+
+	.MuiButton-outlined {
+		border-color: var(--rf-ac-line);
+		color: var(--rf-ac-txt);
+
+		&:hover {
+			border-color: var(--rf-ac-accent);
+			background-color: var(--rf-ac-hover);
+		}
+	}
+
+	.MuiButton-text {
+		color: var(--rf-ac-accent);
+	}
+
+	.MuiButton-root:focus-visible,
+	.MuiToggleButton-root:focus-visible,
+	.MuiIconButton-root:focus-visible {
+		outline: 2px solid var(--rf-ac-focus);
+		outline-offset: 2px;
+	}
+
+	.MuiCheckbox-root {
+		color: var(--rf-ac-muted);
+
+		&.Mui-checked {
+			color: var(--rf-ac-accent);
+		}
+	}
+
+	.MuiChip-root {
+		background-color: var(--e-a-bg-chip, var(--rf-ac-active));
+		color: var(--rf-ac-txt);
+
+		.MuiChip-deleteIcon {
+			color: var(--rf-ac-muted);
+		}
+	}
+
+	.MuiLinearProgress-root {
+		background-color: var(--rf-ac-active);
+
+		.MuiLinearProgress-bar {
+			background-color: var(--rf-ac-accent);
+		}
+	}
+
+	// ---- messages: a tinted line on the panel's own background, readable in every theme
+	.MuiAlert-root {
+		border: 1px solid var(--rf-ac-soft-line);
+		border-left-width: 4px;
+		background-color: var(--rf-ac-field);
+		color: var(--rf-ac-txt);
+
+		.MuiAlert-message,
+		.MuiTypography-root {
+			color: inherit;
+		}
+	}
+
+	.MuiAlert-standardSuccess {
+		border-left-color: var(--e-a-color-success, #0a875a);
+
+		.MuiAlert-icon {
+			color: var(--e-a-color-success, #0a875a);
+		}
+	}
+
+	.MuiAlert-standardError {
+		border-left-color: var(--e-a-color-danger, #dc2626);
+
+		.MuiAlert-icon {
+			color: var(--e-a-color-danger, #dc2626);
+		}
+	}
+
+	.MuiAlert-standardWarning {
+		border-left-color: var(--e-a-color-warning, #bb5b1d);
+
+		.MuiAlert-icon {
+			color: var(--e-a-color-warning, #bb5b1d);
+		}
+	}
+
+	.MuiAlert-standardInfo {
+		border-left-color: var(--e-a-color-info, #2563eb);
+
+		.MuiAlert-icon {
+			color: var(--e-a-color-info, #2563eb);
+		}
+	}
+
+	code {
+		padding: 1px 5px;
+		border-radius: 4px;
+		background-color: var(--rf-ac-active);
+		color: inherit;
+	}
+}
+
+// ---- the model menu (opens outside the panel)
+body .rf-ac-menu.MuiPaper-root {
+	border: 1px solid var(--rf-ac-soft-line);
+
+	.MuiMenuItem-root {
+		color: var(--rf-ac-txt);
+
+		&:hover {
+			background-color: var(--rf-ac-hover);
+		}
+
+		&.Mui-selected,
+		&.Mui-selected:hover {
+			background-color: var(--rf-ac-active);
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#{$panel} .rf-ac-panel * {
+		transition: none !important;
+	}
 }

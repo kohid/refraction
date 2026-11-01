@@ -14,7 +14,8 @@ What is sent: the prompt, the chosen reference images (library images, scaled to
 
 - **API key**: an administrator pastes it in the panel (or its settings button). It is encrypted at rest with libsodium (a key derived from the site's `SECURE_AUTH` salt; changing the salts makes it unreadable, so it must be pasted again), never sent to the browser (only `sk-ant-…wxyz`), and can be replaced or removed.
 - **Who may generate**: anyone who can edit the page (`edit_posts` and `edit_post` for that page). Only administrators (`manage_options`) see and change the key and the default model.
-- **Limit**: 40 generations per person per hour (each spends credits on the key).
+- **Limit**: 40 generations per person per hour (each spends credits on the key). A description can be up to 60,000 characters (a full brief with sections, copy and stages, about 15,000 tokens); the box shows a live count and can be pulled taller, and a longer description is refused with a message, never cut.
+- **Look**: the panel and its model menu take every color from the editor palette (`--e-a-*`), so they follow the interface theme (Settings > Theme) and, under Automatic, the editor's light or dark mode (`assets/scss/editor.scss`).
 - **Model**: Claude Opus 5.5 by default (best design); Sonnet 5.5 and Haiku 5.5 can be chosen per request or as the site default. Effort is `high`; thinking is adaptive (always on for Opus 5.5). On Opus 5.5 and Sonnet 5.5 the request turns on Anthropic's **server-side fallback** (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`), so a request a safety classifier declines can be finished by another model instead of failing; a request that is still declined shows "Claude declined this request".
 - **Requirements**: PHP 8.1+ with the sodium extension (Anthropic's official PHP SDK needs PHP 8.1). On older PHP the panel says so and nothing is called; the rest of Refraction works on PHP 7.4.
 

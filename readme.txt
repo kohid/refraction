@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.23.0
+Stable tag: 0.23.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.23.1 =
+* Fix: the Ask Claude panel follows the Refraction interface theme (Daylight, Graphite, Ember, Blueprint, Contrast, or the editor's own light/dark mode).
+* Fix: Ask Claude descriptions can be up to 60,000 characters (they were cut at 4,000), with a live character count and a taller, resizable box.
 
 = 0.23.0 =
 * New: smooth page scrolling in Page Settings > Scrolling: one section per scroll (with section dots; tall scroll scenes scroll through first), smooth eased scrolling, or snap to sections. Site only, off for reduced motion.
