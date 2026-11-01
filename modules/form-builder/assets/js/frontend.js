@@ -559,14 +559,27 @@
 	// ---------------------------------------------------------------- steps
 
 	function initSteps( form ) {
-		const steps = Array.from( form.querySelectorAll( ':scope > [data-rfb-step]' ) );
+		// Steps are sections of the form itself, or of a Steps widget on a form built in the page editor.
+		const steps = Array.from( form.querySelectorAll( ':scope > [data-rfb-step], [data-rfb-steps] > [data-rfb-step]' ) );
 
 		if ( steps.length < 2 ) {
 			return;
 		}
 
 		const i18n = form.dataset.rfbI18n ? JSON.parse( form.dataset.rfbI18n ) : {};
-		const submit = form.querySelector( '.rfb-actions' );
+		const actions = form.querySelector( '.rfb-actions' );
+		const submitButton = form.querySelector( '.rfb-submit' );
+		let submit = actions;
+
+		// A Submit button placed inside a step (page editor forms) would take Back / Next away with that step: they get
+		// their own row after the steps instead.
+		const lastActions = actions && actions.closest( '[data-rfb-step]' ) ? actions : null;
+
+		if ( ! actions || lastActions ) {
+			submit = document.createElement( 'div' );
+			submit.className = 'rfb-actions rfb-step-nav';
+			steps[ steps.length - 1 ].after( submit );
+		}
 		const nextText = form.dataset.rfbNext || 'Next';
 		const backText = form.dataset.rfbBack || 'Back';
 		const style = form.dataset.rfbProgress || 'steps';
@@ -586,7 +599,7 @@
 				progress.querySelectorAll( '.rfb-stepper-title' ).forEach( ( el, i ) => ( el.textContent = steps[ i ].dataset.rfbTitle || sprintf( i18n.step || 'Step %1$d of %2$d', i + 1, steps.length ) ) );
 			}
 
-			form.insertBefore( progress, steps[ 0 ] );
+			steps[ 0 ].parentNode.insertBefore( progress, steps[ 0 ] );
 		}
 
 		const back = document.createElement( 'button' );
@@ -604,8 +617,13 @@
 			current = Math.max( 0, Math.min( steps.length - 1, index ) );
 			steps.forEach( ( step, i ) => ( step.hidden = i !== current ) );
 			back.hidden = 0 === current;
+
+			// On the last step Back sits next to the Submit button placed in that step.
+			( current === steps.length - 1 && lastActions ? lastActions : submit ).prepend( back );
 			next.hidden = current === steps.length - 1;
-			submit.querySelector( '.rfb-submit' ).hidden = current !== steps.length - 1;
+			if ( submitButton ) {
+				submitButton.hidden = current !== steps.length - 1;
+			}
 
 			const label = sprintf( i18n.step || 'Step %1$d of %2$d', current + 1, steps.length );
 

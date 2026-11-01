@@ -23,7 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * to the editor's own Layout, Motion and Responsive sections) how its answers show in the records table. The markup and
  * the validation are the Form Builder's own (Field_Renderer, Schema), so a field looks and behaves the same everywhere.
  */
-abstract class Field_Widget extends Widget_Base {
+abstract class Field_Widget extends Widget_Base implements Form_Field {
+
+	use Field_Settings;
 
 	/** Every field widget's name starts with this; the Form page reads its fields by it. */
 	const PREFIX = 'rfb-field-';
@@ -44,29 +46,13 @@ abstract class Field_Widget extends Widget_Base {
 		return Schema::types()[ $this->field_type() ] ?? $this->field_type();
 	}
 
-	public function get_categories() {
-		return [ Editor_Forms::CATEGORY ];
-	}
 
 	public function get_keywords() {
 		return [ 'form', 'field', 'input', $this->field_type() ];
 	}
 
-	public function get_style_depends(): array {
-		return [ 'refraction-form-builder-front' ];
-	}
 
-	public function get_script_depends(): array {
-		return [ 'refraction-form-builder-front' ];
-	}
 
-	/** Only offered while you build a Form page: a field means nothing on an ordinary page. */
-	public function show_in_panel() {
-		$editor = Plugin::$instance->editor;
-		$post_id = $editor ? (int) $editor->get_post_id() : 0;
-
-		return ! $post_id || Plugin::$instance->documents->get( $post_id ) instanceof Form_Document;
-	}
 
 	public function has_widget_inner_wrapper(): bool {
 		return false;
@@ -149,13 +135,30 @@ abstract class Field_Widget extends Widget_Base {
 			] );
 		}
 
+		if ( $this->has( 'upload' ) ) {
+			$this->add_control( 'file_accept', [
+				'label' => esc_html__( 'Allowed file types', 'refraction' ),
+				'type' => Controls_Manager::SELECT2,
+				'multiple' => true,
+				'default' => [ 'jpg', 'jpeg', 'png', 'pdf' ],
+				'options' => array_combine( Schema::FILE_TYPES, array_map( 'strtoupper', Schema::FILE_TYPES ) ),
+			] );
+			$this->add_control( 'file_max_size', [ 'label' => esc_html__( 'Max size per file (MB)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0.1, 'max' => 64, 'step' => 0.1, 'default' => 5 ] );
+			$this->add_control( 'file_max_files', [ 'label' => esc_html__( 'Max files', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 10, 'default' => 1, 'description' => esc_html__( 'Uploads are private: only administrators can download them.', 'refraction' ) ] );
+		}
+
+		if ( $this->has( 'pad' ) ) {
+			$this->add_control( 'sig_height', [ 'label' => esc_html__( 'Pad height (px)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 100, 'max' => 400, 'default' => 180 ] );
+		}
+
 		$this->add_control( 'field_description', [ 'label' => esc_html__( 'Description', 'refraction' ), 'type' => Controls_Manager::TEXT, 'label_block' => true, 'separator' => 'before', 'description' => esc_html__( 'Shown under the label.', 'refraction' ) ] );
 		$this->add_control( 'field_help', [ 'label' => esc_html__( 'Help text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'label_block' => true, 'description' => esc_html__( 'Shown under the field.', 'refraction' ) ] );
 
 		$this->end_controls_section();
 
 		$this->register_style_controls();
-		$this->register_record_controls();
+		$this->register_condition_controls();
+		$this->register_record_controls( Schema::is_scalar_type( $this->field_type() ) || 'name' === $this->field_type(), in_array( $this->field_type(), [ 'select', 'radio' ], true ) );
 	}
 
 	/** Style tab: label, input (normal, hover, focus), description and help, and the choices of a choice field. */
@@ -243,27 +246,6 @@ abstract class Field_Widget extends Widget_Base {
 		$this->end_controls_section();
 	}
 
-	/** Advanced tab: the key answers are saved under, and how they show in Refraction > Builder and the public list. */
-	protected function register_record_controls(): void {
-		$this->start_controls_section( 'section_records', [ 'label' => esc_html__( 'Records table', 'refraction' ), 'tab' => Controls_Manager::TAB_ADVANCED ] );
-		$this->add_control( 'field_key', [
-			'label' => esc_html__( 'Field key', 'refraction' ),
-			'type' => Controls_Manager::TEXT,
-			'description' => esc_html__( 'Used in exports, rules, notifications and webhooks. Leave empty to make one from the label; once given it does not change, so saved answers keep matching.', 'refraction' ),
-		] );
-
-		if ( Schema::is_scalar_type( $this->field_type() ) || 'name' === $this->field_type() ) {
-			$this->add_control( 'in_table', [ 'label' => esc_html__( 'Show as a column in the records table', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
-			$this->add_control( 'show_public', [ 'label' => esc_html__( 'Show publicly (in the public list)', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
-		}
-
-		if ( in_array( $this->field_type(), [ 'select', 'radio' ], true ) ) {
-			$this->add_control( 'add_filter', [ 'label' => esc_html__( 'Add a filter above the table', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
-		}
-
-		$this->end_controls_section();
-	}
-
 	/** The field as the Form Builder sees it, before cleaning (Schema::clean_field cleans it). */
 	public function raw_field(): array {
 		$s = $this->get_settings();
@@ -271,11 +253,12 @@ abstract class Field_Widget extends Widget_Base {
 			return 'yes' === ( $s[ $key ] ?? '' );
 		};
 
-		return [
+		return $this->shared_raw() + [
 			'type' => $this->field_type(),
-			'label' => (string) ( $s['field_label'] ?? '' ),
-			'key' => (string) ( $s['field_key'] ?? '' ),
-			'hide_label' => $yes( 'hide_label' ),
+			'accept' => (array) ( $s['file_accept'] ?? [] ),
+			'max_size' => $s['file_max_size'] ?? 5,
+			'max_files' => $s['file_max_files'] ?? 1,
+			'sig_height' => $s['sig_height'] ?? 180,
 			'required' => $yes( 'field_required' ),
 			'placeholder' => (string) ( $s['placeholder'] ?? '' ),
 			'options' => (string) ( $s['field_options'] ?? '' ),
@@ -286,11 +269,7 @@ abstract class Field_Widget extends Widget_Base {
 			'parts' => (array) ( $s['name_parts'] ?? [ 'first', 'last' ] ),
 			'source' => (string) ( $s['hidden_source'] ?? 'static' ),
 			'default' => (string) ( $s['default_value'] ?? '' ),
-			'description' => (string) ( $s['field_description'] ?? '' ),
 			'help' => (string) ( $s['field_help'] ?? '' ),
-			'in_table' => $yes( 'in_table' ),
-			'public' => $yes( 'show_public' ),
-			'filter' => $yes( 'add_filter' ),
 		];
 	}
 
@@ -305,6 +284,11 @@ abstract class Field_Widget extends Widget_Base {
 		if ( $state ) {
 			$key = $state['keys'][ $this->get_id() ] ?? '';
 			$field = '' !== $key ? Schema::field( $state['definition'], $key ) : null;
+
+			// A field whose page was edited but not saved since is not in the collection yet: it is left out, as on submit.
+			if ( ! $field ) {
+				return;
+			}
 		}
 
 		if ( ! $field ) {
@@ -324,7 +308,13 @@ abstract class Field_Widget extends Widget_Base {
 			Shortcodes::enqueue();
 		}
 
+		// Inside a Group or a Repeater row the names, paths and answers are that container's (see Editor_Forms::scope()).
+		$scope = Editor_Forms::scope();
+		$values = $scope ? $scope['values'] : (array) $state['values'];
 		$key = $field['key'];
-		Field_Renderer::render( $field, $state['values'][ $key ] ?? null, 'values[' . $key . ']', (array) $state['errors'], (array) $state['ctx'], $key );
+		$name = ( $scope ? $scope['name'] : 'values' ) . '[' . $key . ']';
+		$path = $scope ? $scope['path'] . '.' . $key : $key;
+
+		Field_Renderer::render( $field, array_key_exists( $key, $values ) ? $values[ $key ] : null, $name, (array) $state['errors'], (array) $state['ctx'], $path );
 	}
 }

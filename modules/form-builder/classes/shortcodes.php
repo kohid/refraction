@@ -139,7 +139,10 @@ class Shortcodes {
 			Editor_Forms::begin( [ 'definition' => $definition, 'keys' => (array) get_post_meta( $doc_id, Editor_Forms::META_KEYS, true ), 'values' => $values, 'errors' => $errors, 'ctx' => $ctx ] );
 			ob_start();
 			$this->form_open( $slug, $settings, $i18n, 'rfb-form-editor' );
+			// Printed live (see Form_Document::print_elements), and no field is put off as a cached placeholder either.
+			add_filter( 'refraction/element/should_render_shortcode', '__return_false', 999 );
 			echo Plugin::$instance->frontend->get_builder_content_for_display( $doc_id, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered by the editor's own widgets.
+			remove_filter( 'refraction/element/should_render_shortcode', '__return_false', 999 );
 
 			if ( ! Editor_Forms::has_submit( (array) json_decode( (string) get_post_meta( $doc_id, '_refraction_data', true ), true ) ) ) {
 				echo '<div class="rfb-actions"><button type="submit" class="rfb-btn rfb-btn-primary rfb-submit">' . esc_html( $settings['submit_text'] ) . '</button></div>';

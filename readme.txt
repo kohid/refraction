@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.14.0
+Stable tag: 0.15.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.15.0 =
+* New: Steps, Group and Repeater for forms built in the page editor. Steps splits the form into pages: add steps in the panel and drop each step's fields into its box; visitors see one step at a time with Back / Next and the progress from the form settings. Group keeps fields together under one answer (an address). Repeater lets visitors add and remove rows (guests, items) with a minimum, a maximum and its own button text. Each has its own Style tab (box, title, rows and buttons).
+* New: conditional visibility in every field's Advanced tab: show or hide a field, group or repeater when all or any rules on other fields match. A hidden field is not required and not saved (checked on the server too).
+* New: File upload and Signature widgets, with allowed file types, size and count, and the pad height.
+* Fix: a form built in the page editor is always printed live, never from the page cache, so every visitor sees their own answers and errors.
 
 = 0.14.0 =
 * New: build forms in the page editor. Refraction > Builder > "New form in the page editor" opens a Form page in the editor, with a Form Builder widget category on top of the panel: Text, Long text, Name, Email, Phone, Website, Number, Amount, Country, Date, Time, Date and time, Dropdown, Choice, Choices, Yes / No, Rating, Hidden field and a Submit button. Each field has the editor's Content, Style and Advanced tabs (Advanced adds a Records table section: field key, table column, public, filter), with responsive controls. Lay the form out with the editor's own Container, Grid, Heading, Image, Text Editor, Icon List and the rest.

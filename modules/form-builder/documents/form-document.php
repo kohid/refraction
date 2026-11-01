@@ -73,6 +73,14 @@ class Form_Document extends Library_Document {
 		return $attributes;
 	}
 
+	/**
+	 * A form is printed live every time, never from the page cache: its fields carry the visitor's answers and errors,
+	 * and a Group or Repeater row names the fields inside it while it prints them.
+	 */
+	public function print_elements( $elements_data ) {
+		$this->do_print_elements( $elements_data );
+	}
+
 	protected function register_controls() {
 		parent::register_controls();
 

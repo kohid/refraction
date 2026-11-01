@@ -1479,6 +1479,48 @@ $rfb-widths: (
 		font-weight: 600;
 	}
 
+	// ---- Steps widget in the page editor: every step is shown, each box under its own numbered title
+	.rfb-steps-editor {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		.rfb-step-slot {
+			padding: 12px;
+			border: 1px dashed var(--rfb-line);
+			border-radius: var(--rfb-radius);
+		}
+
+		.rfb-step-head {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 10px;
+		}
+
+		.rfb-step-number {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 26px;
+			height: 26px;
+			border-radius: 50%;
+			background: var(--rfb-primary);
+			color: #fff;
+			font-size: 13px;
+			font-weight: 700;
+		}
+
+		.rfb-step-title {
+			margin: 0;
+			font-size: 16px;
+		}
+	}
+
+	.rfb-actions .rfb-back + .rfb-submit {
+		margin-left: 8px;
+	}
+
 	// ---- icon list: items with an icon each
 	.rfb-il {
 		display: flex;

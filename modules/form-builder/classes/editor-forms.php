@@ -2,6 +2,7 @@
 namespace Refraction\Modules\FormBuilder\Classes;
 
 use Refraction\Modules\FormBuilder\Base\Field_Widget;
+use Refraction\Modules\FormBuilder\Base\Form_Field;
 use Refraction\Modules\FormBuilder\Documents\Form_Document;
 use Refraction\Plugin;
 
@@ -40,6 +41,21 @@ class Editor_Forms {
 
 	public static function rendering(): ?array {
 		return self::$render;
+	}
+
+	/** @var array[] The Group or Repeater rows being printed, innermost last: name prefix, path and answers. */
+	private static $scopes = [];
+
+	public static function push_scope( string $name, string $path, array $values ): void {
+		self::$scopes[] = [ 'name' => $name, 'path' => $path, 'values' => $values ];
+	}
+
+	public static function pop_scope(): void {
+		array_pop( self::$scopes );
+	}
+
+	public static function scope(): ?array {
+		return self::$scopes ? self::$scopes[ count( self::$scopes ) - 1 ] : null;
 	}
 
 	public function __construct( Collections $collections ) {
@@ -89,6 +105,62 @@ class Editor_Forms {
 	}
 
 	/**
+	 * The Builder fields of an element tree, in page order and with their nesting: a field widget is a field, a Group or
+	 * Repeater widget holds the fields inside it, and a Steps widget becomes a step break before the fields of each step.
+	 * Any other element (containers, the editor's own widgets) only arranges, so its fields are read as if it was not there.
+	 *
+	 * @param callable $key ( element id, raw field ) => final key
+	 */
+	public static function collect( array $elements, callable $key ): array {
+		$fields = [];
+
+		foreach ( $elements as $element ) {
+			if ( ! is_array( $element ) ) {
+				continue;
+			}
+
+			$type = (string) ( $element['widgetType'] ?? '' );
+			$children = (array) ( $element['elements'] ?? [] );
+
+			if ( 'widget' === ( $element['elType'] ?? '' ) && 0 === strpos( $type, Field_Widget::PREFIX ) ) {
+				$widget = Plugin::$instance->elements_manager->create_element_instance( $element );
+
+				if ( ! $widget instanceof Form_Field ) {
+					continue;
+				}
+
+				$raw = $widget->raw_field();
+				$raw['key'] = $key( (string) $element['id'], $raw );
+
+				if ( Schema::is_container( $raw['type'] ) ) {
+					$raw['children'] = self::collect( $children, $key );
+				}
+
+				$fields[] = $raw;
+				continue;
+			}
+
+			if ( self::STEPS === $type ) {
+				foreach ( array_values( (array) ( $element['settings']['steps'] ?? [] ) ) as $i => $step ) {
+					$marker = [ 'type' => 'step', 'label' => (string) ( $step['step_title'] ?? '' ), 'description' => (string) ( $step['step_description'] ?? '' ), 'hide_label' => false, 'label_tag' => 'h3' ];
+					$marker['key'] = $key( $element['id'] . '-' . $i, $marker );
+					$fields[] = $marker;
+					$fields = array_merge( $fields, self::collect( (array) ( $children[ $i ]['elements'] ?? [] ), $key ) );
+				}
+
+				continue;
+			}
+
+			$fields = array_merge( $fields, self::collect( $children, $key ) );
+		}
+
+		return $fields;
+	}
+
+	/** The Steps widget's name. */
+	const STEPS = 'rfb-steps';
+
+	/**
 	 * The collection a Form page saves into. Field keys are given once and kept: the field's own key if you set one,
 	 * else the key it already had, else one made from its label; clashes get a number.
 	 */
@@ -117,18 +189,10 @@ class Editor_Forms {
 
 		$keys = (array) get_post_meta( $id, self::META_KEYS, true );
 		$used = [];
-		$fields = [];
 		$new_keys = [];
-
-		foreach ( self::field_elements( is_array( $stored ) ? $stored : [] ) as $element ) {
-			$widget = Plugin::$instance->elements_manager->create_element_instance( $element );
-
-			if ( ! $widget instanceof Field_Widget ) {
-				continue;
-			}
-
-			$raw = $widget->raw_field();
-			$base = Schema::key( '' !== $raw['key'] ? $raw['key'] : ( $keys[ $element['id'] ] ?? ( '' !== $raw['label'] ? $raw['label'] : $raw['type'] ) ) );
+		$assign = static function ( string $element_id, array $raw ) use ( $keys, &$used, &$new_keys ): string {
+			$label = (string) ( $raw['label'] ?? '' );
+			$base = Schema::key( '' !== (string) ( $raw['key'] ?? '' ) ? $raw['key'] : ( $keys[ $element_id ] ?? ( '' !== $label ? $label : $raw['type'] ) ) );
 			$base = '' === $base ? 'field' : $base;
 			$key = $base;
 
@@ -137,10 +201,11 @@ class Editor_Forms {
 			}
 
 			$used[ $key ] = true;
-			$raw['key'] = $key;
-			$new_keys[ $element['id'] ] = $key;
-			$fields[] = $raw;
-		}
+			$new_keys[ $element_id ] = $key;
+
+			return $key;
+		};
+		$fields = self::collect( is_array( $stored ) ? $stored : [], $assign );
 
 		$slug = (string) get_post_meta( $id, self::META_COLLECTION, true );
 		$existing = '' !== $slug ? $this->collections->get( $slug ) : null;

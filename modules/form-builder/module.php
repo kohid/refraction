@@ -76,6 +76,11 @@ class Module extends BaseModule {
 			}
 		} );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ], 1 );
+		// Group, Repeater and Steps hold containers; the editor learns them as nested element types.
+		add_action( 'refraction/editor/before_enqueue_scripts', static function () {
+			$min = \Refraction\Utils::is_script_debug() ? '' : '.min';
+			wp_enqueue_script( 'refraction-form-builder-editor', REFRACTION_ASSETS_URL . 'js/form-builder-editor' . $min . '.js', [ 'nested-elements' ], REFRACTION_VERSION, true );
+		} );
 		add_filter( 'template_include', [ $this, 'canvas_for_form_preview' ], 20 );
 	}
 
@@ -102,7 +107,7 @@ class Module extends BaseModule {
 		return [
 			'Field_Text', 'Field_Textarea', 'Field_Name', 'Field_Email', 'Field_Phone', 'Field_Website', 'Field_Number', 'Field_Amount',
 			'Field_Country', 'Field_Date', 'Field_Time', 'Field_Datetime', 'Field_Select', 'Field_Radio', 'Field_Checkbox', 'Field_Toggle',
-			'Field_Rating', 'Field_Hidden', 'Submit_Button',
+			'Field_Rating', 'Field_Hidden', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Steps', 'Submit_Button',
 		];
 	}
 
