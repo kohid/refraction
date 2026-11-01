@@ -62,6 +62,7 @@ coverage/
 .cursor/plans/
 .claude/*
 !.claude/commands/
+/*/**/.claude/
 docs/superpowers/
 
 # PHPunit and PHPlint cache files
