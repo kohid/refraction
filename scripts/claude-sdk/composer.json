@@ -1,0 +1,30 @@
+{
+    "name": "refraction/claude-sdk",
+    "description": "Builds the prefixed copy of Anthropic's PHP SDK that the Ask Claude module ships in vendor-prefixed/claude-sdk (see scripts/build-claude-sdk.mjs). Not shipped itself.",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "php": ">=8.1",
+        "anthropic-ai/sdk": "^1.3",
+        "nyholm/psr7": "^1.8"
+    },
+    "require-dev": {
+        "brianhenryie/strauss": "^0.22"
+    },
+    "config": {
+        "platform": { "php": "8.1" },
+        "allow-plugins": { "php-http/discovery": false },
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "strauss": {
+            "target_directory": "../../vendor-prefixed/claude-sdk",
+            "namespace_prefix": "Refraction\\Vendor\\",
+            "classmap_prefix": "Refraction_Vendor_",
+            "constant_prefix": "REFRACTION_VENDOR_",
+            "packages": [ "anthropic-ai/sdk", "nyholm/psr7" ],
+            "delete_vendor_packages": false,
+            "include_modified_date": false,
+            "include_author": false
+        }
+    }
+}

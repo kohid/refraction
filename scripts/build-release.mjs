@@ -88,10 +88,11 @@ if ( ! SKIP_BUILD ) {
 		env: { ...process.env, COMPOSER_ALLOW_SUPERUSER: '1' },
 	} );
 	run( 'npm', [ 'run', 'build' ] );
+	run( 'node', [ 'scripts/build-claude-sdk.mjs' ] );
 }
 
 // Prerequisites: compiled assets and the production autoloader must exist.
-for ( const required of [ 'assets/js/editor.min.js', 'assets/js/frontend.min.js', 'assets/css/frontend.min.css', 'vendor/autoload_packages.php' ] ) {
+for ( const required of [ 'assets/js/editor.min.js', 'assets/js/frontend.min.js', 'assets/css/frontend.min.css', 'vendor/autoload_packages.php', 'vendor-prefixed/claude-sdk/autoload.php' ] ) {
 	if ( ! existsSync( join( ROOT, required ) ) ) {
 		fail( `${ required } is missing. Run without --skip-build (or run composer install --no-dev and npm run build first).` );
 	}

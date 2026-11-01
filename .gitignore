@@ -79,3 +79,5 @@ docker-output/
 .wp-env.override.json
 tests/wp-env/plugins/
 dist/
+/vendor-prefixed/
+/scripts/claude-sdk/vendor/
