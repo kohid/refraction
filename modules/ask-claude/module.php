@@ -2,8 +2,10 @@
 namespace Refraction\Modules\AskClaude;
 
 use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Modules\AskClaude\Classes\Draft_Preview;
 use Refraction\Modules\AskClaude\Classes\Job_Queue;
 use Refraction\Modules\AskClaude\Classes\Key_Store;
+use Refraction\Modules\AskClaude\Classes\Mcp_Server;
 use Refraction\Modules\AskClaude\Classes\Queue_Rest;
 use Refraction\Modules\AskClaude\Classes\Rest;
 
@@ -41,6 +43,8 @@ class Module extends BaseModule {
 
 		add_action( 'rest_api_init', [ new Rest(), 'register' ] );
 		add_action( 'rest_api_init', [ new Queue_Rest(), 'register' ] );
+		add_action( 'rest_api_init', [ new Mcp_Server(), 'register' ] );
+		Draft_Preview::register();
 		add_action( 'init', [ Job_Queue::class, 'register' ] );
 		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'enqueue' ] );
 	}

@@ -34,7 +34,7 @@ class Queue_Rest {
 		$owner = static function ( \WP_REST_Request $request ) {
 			$job = Job_Queue::get( (int) $request['id'] );
 
-			return $job && Module::can_use() && ( get_current_user_id() === $job['author'] || current_user_can( 'manage_options' ) );
+			return $job && Module::can_use() && ( get_current_user_id() === $job['author'] || current_user_can( 'manage_options' ) || ( ! empty( $job['proposal'] ) && current_user_can( 'edit_post', $job['post_id'] ) ) );
 		};
 		$builder = [ Job_Queue::class, 'can_build' ];
 		$routes = [
@@ -117,7 +117,10 @@ class Queue_Rest {
 	}
 
 	public function mine( \WP_REST_Request $request ) {
-		$jobs = Job_Queue::find( [ 'post_id' => (int) $request->get_param( 'post_id' ), 'author' => get_current_user_id() ] );
+		// Own requests, and proposals made over MCP, which are for whoever edits the page.
+		$jobs = array_values( array_filter( Job_Queue::find( [ 'post_id' => (int) $request->get_param( 'post_id' ) ] ), static function ( $job ) {
+			return get_current_user_id() === $job['author'] || ! empty( $job['proposal'] );
+		} ) );
 
 		return [ 'jobs' => array_map( [ self::class, 'public_view' ], $jobs ), 'watching' => Job_Queue::watching() ];
 	}

@@ -51,6 +51,10 @@ Toolchain: Node per `.nvmrc`, npm **11.12.1** (the lock file is generated with i
 
 When asked to watch or build Ask Claude requests (or on `/ask-claude-watch`), follow `.claude/commands/ask-claude-watch.md`: keep a Monitor on `node scripts/claude/ask-claude-queue.mjs watch` against `REFRACTION_REST_URL`, and for each request `start`, read the `brief`, write the `{"elements", "summary"}` answer to a file, send it with `result` (fix and resend when refused) or `decline` with a note. It runs on the owner's Claude plan, with no API credit (details: `docs/refraction/ask-claude.md`, "Claude Code").
 
+## Building pages over MCP
+
+Refraction is an MCP server (`refraction/v1/mcp`, see `docs/refraction/ask-claude.md`, "MCP server"). When asked to build or restyle a page to match a reference, work in a loop instead of one answer: study the reference (for a Pinterest pin, its video through the pin JSON), `get_format`, `list_widgets`, `get_widget_controls`, `list_media`/`upload_media`, then `save_draft`, open the preview link in Playwright at desktop and phone widths, compare with the reference frames side by side, and save again until it matches; then `propose_to_page`. Without an MCP connection use `node scripts/claude/refraction-mcp.mjs`.
+
 ## Pitfalls seen in this repo
 
 - A passing `php -l` or direct-URL smoke test is not verification: the menu, tabs and "Edit with Refraction" entry points broke without either failing. Check real admin and editor flows in the browser.

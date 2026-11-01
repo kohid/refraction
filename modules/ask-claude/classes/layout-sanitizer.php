@@ -245,7 +245,7 @@ class Layout_Sanitizer {
 				return $this->link( $value );
 
 			case 'media':
-				return $this->media( $value );
+				return $this->media( $value, (array) ( $control['media_types'] ?? [] ) );
 
 			case 'gallery':
 				return is_array( $value ) ? array_values( array_filter( array_map( [ $this, 'media' ], $value ) ) ) : null;
@@ -373,9 +373,15 @@ class Layout_Sanitizer {
 	}
 
 	/** Media must be an image already in the library; its URL is taken from the library, never from the proposal. */
-	public function media( $value ): ?array {
+	/**
+	 * A library attachment: an image, or the file types the control asks for (a .glb model, a video).
+	 *
+	 * @param mixed    $value [ 'id' => attachment id ].
+	 * @param string[] $types The control's media_types ('image' when empty).
+	 */
+	public function media( $value, array $types = [] ): ?array {
 		$id = is_array( $value ) ? (int) ( $value['id'] ?? 0 ) : 0;
-		$url = $id > 0 ? (string) ( $this->attachment )( $id ) : '';
+		$url = $id > 0 ? (string) ( $this->attachment )( $id, $types ?: [ 'image' ] ) : '';
 
 		if ( '' === $url ) {
 			return is_array( $value ) && empty( $value['id'] ) && empty( $value['url'] ) ? null : [ 'id' => '', 'url' => '' ];
