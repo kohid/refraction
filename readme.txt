@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.26.2
+Stable tag: 0.27.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.27.0 =
+* New: Loading screen (Page Settings > Loading screen): covers the page while it loads with your logo and a progress line, a spinning ring or a large percentage, then fades, slides up or splits open. It never blocks the page: it shows only with JavaScript and is lifted after a time limit.
 
 = 0.26.2 =
 * Fix: the private preview link of MCP drafts redirected to the home page on sites with pretty permalinks.
