@@ -152,74 +152,21 @@ async function main() {
 		const menuLabels = await page.$$eval( '#adminmenu a', ( as ) => as.map( ( a ) => a.textContent.trim() ) );
 		check( 'menu', 'Builder is in the Refraction menu', menuLabels.includes( 'Builder' ), menuLabels.join( '|' ) );
 		await page.goto( BUILDER );
-		check( 'overview', 'empty state offers a starting point', ( await page.textContent( '.rfb-empty' ) ).includes( 'Create your first collection' ) );
+		check( 'overview', 'empty state offers to build a form in the page editor', ( await page.textContent( '.rfb-empty' ) ).includes( 'Create your first collection' ) && ( await page.locator( '.rfb-empty a:has-text("New form")' ).getAttribute( 'href' ) ).includes( 'template_type=rfb-form' ) );
+		check( 'overview', 'the old designer and its starting points are gone', ( await page.locator( 'a[href*="view=new"], a[href*="view=design"]' ).count() ) === 0 );
 		await page.screenshot( { path: join( SHOTS, 'overview-empty.png' ) } );
 
-		// ------------------------------------------------------------ create from presets
-		await page.goto( `${ BUILDER }&view=new` );
-		const presetNames = await page.$$eval( '.rfb-collection h2', ( hs ) => hs.map( ( h ) => h.textContent.trim() ) );
-		check( 'new', 'five starting points', presetNames.length === 5, presetNames.join( '|' ) );
-		await page.screenshot( { path: join( SHOTS, 'new.png' ) } );
-		await Promise.all( [ page.waitForURL( /view=design&collection=bookings/ ), page.click( 'form:has(input[value="booking"]) button' ) ] );
-		check( 'new', 'Booking preset opens its design screen', ( await page.textContent( '.rfb-alert-success' ) ).includes( 'Collection created' ) );
-
-		// ------------------------------------------------------------ design screen (drag and drop designer)
-		const itemLabels = () => page.$$eval( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item', ( els ) => els.map( ( e ) => e.querySelector( '.rfb-label, .rfb-switch-text, .rfb-cv-title, strong' )?.textContent.trim() ) );
-		let labels = await itemLabels();
-		check( 'design', 'booking fields are on the canvas', labels.length === 8 && labels[ 0 ] === 'Name', labels.join( '|' ) );
-		await page.screenshot( { path: join( SHOTS, 'design.png' ), fullPage: true } );
-
-		// add by clicking the palette, then name it in the inspector
-		await page.click( '.rfb-palette-item[data-type="currency"]' );
-		check( 'design', 'clicking a field type adds it and selects it', ( await itemLabels() ).length === 9 && ( await page.$( '.rfb-cv-item.is-selected' ) ) !== null );
-		await page.locator( '.rfb-inspector input.rfb-input' ).first().fill( 'Budget' );
-		await page.locator( '.rfb-inspector label:has-text("Show as a column") input' ).check();
-		check( 'design', 'the inspector renames the field on the canvas', ( await itemLabels() ).includes( 'Budget' ) );
-		// delete Guests with its button
-		await page.locator( '.rfb-cv-item:has(.rfb-label:text-is("Guests"))' ).click();
-		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Delete"]' ).click();
-		labels = await itemLabels();
-		check( 'design', 'delete removes a field', ! labels.includes( 'Guests' ) && labels.length === 8, labels.join( '|' ) );
-		// move with the buttons
-		await page.locator( '.rfb-cv-item:has(.rfb-label:text-is("Budget"))' ).click();
-		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Move"][aria-label$="up"]' ).click();
-		labels = await itemLabels();
-		check( 'design', 'move up works', labels[ labels.length - 2 ] === 'Budget', labels.join( '|' ) );
-		// drag a new field from the palette to just above the third field (away from the fixed admin bar)
-		await page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 2 ).scrollIntoViewIfNeeded();
-		await drag( page, page.locator( '.rfb-palette-item[data-type="toggle"]' ), page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 2 ), { x: 40, y: 4 } );
-		labels = await itemLabels();
-		check( 'design', 'dragging from the palette drops at the pointer', labels[ 2 ] === 'Yes / No' && labels.length === 9, labels.join( '|' ) );
-		// drag an existing field two places down (kept short: a native drag does not scroll the page by itself in a script)
-		await drag( page, page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No"))' ), page.locator( '#rfb-builder .rfb-canvas-inner > .rfb-cv-list > .rfb-cv-item' ).nth( 4 ), { x: 40, y: 4 } );
-		labels = await itemLabels();
-		check( 'design', 'dragging a field on the canvas reorders it', labels[ 3 ] === 'Yes / No' && labels[ 0 ] === 'Name' && labels.length === 9, labels.join( '|' ) );
-		await page.locator( '.rfb-cv-item:has(.rfb-switch-text:text-is("Yes / No"))' ).click();
-		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Delete"]' ).click();
-		// keyboard add
-		await page.locator( '.rfb-palette-item[data-type="heading"]' ).focus();
-		await page.keyboard.press( 'Enter' );
-		check( 'design', 'Enter on a palette item adds it', ( await itemLabels() ).length === 9 );
-		await page.locator( '.rfb-cv-item.is-selected button[aria-label^="Delete"]' ).click();
-
-		// advanced tab, style tab, general tab edits
-		await page.click( '[data-tab="advanced"]' );
-		await page.locator( '.rfb-advanced .rfb-field:has(.rfb-mini:text("Success message")) input' ).fill( 'Booked! We will email you.' );
-		await page.locator( '.rfb-advanced .rfb-field:has(.rfb-mini:text("Submit button text")) input' ).fill( 'Book now' );
-		await page.click( '[data-tab="style"]' );
-		await page.locator( '.rfb-style-controls .rfb-color:has(.rfb-mini:text("Accent color")) .rfb-hex' ).fill( '#7239ea' );
-		check( 'design', 'style changes apply to the form on the canvas right away', ( await page.$eval( '.rfb-canvas', ( el ) => el.style.getPropertyValue( '--rfb-primary' ) ) ) === '#7239ea' );
-		await page.screenshot( { path: join( SHOTS, 'design-style.png' ), fullPage: true } );
-		await page.click( '[data-tab="general"]' );
-		check( 'design', 'general tab shows the name, statuses and shortcodes', ( await page.inputValue( '#rfb-g-label' ) ) === 'Bookings' && ( await page.$$( '.rfb-general .rfb-row' ) ).length === 4 && ( await page.textContent( '.rfb-general' ) ).includes( '[refraction_form collection="bookings"]' ) );
-		await Promise.all( [ page.waitForURL( /done=saved/ ), page.click( '.rfb-sticky-actions button[type=submit]' ) ] );
-		await page.waitForSelector( '.rfb-cv-item' );
-		labels = await itemLabels();
-		check( 'design', 'saved design keeps the changes after a reload', labels.includes( 'Budget' ) && ! labels.includes( 'Guests' ) && labels.length === 8, labels.join( '|' ) );
-		check( 'design', 'saved style and settings are kept', JSON.stringify( seed( 'definition', { collection: 'bookings' } ).style.primary ) === '"#7239ea"' && seed( 'definition', { collection: 'bookings' } ).settings.submit_text === 'Book now' );
-		check( 'design', 'saved message shown', ( await page.textContent( '.rfb-alert-success' ) ).includes( 'Collection saved' ) );
-		const unl = await unlabelled( page );
-		check( 'a11y', 'design screen controls are labelled', unl.length === 0, unl.join( ',' ) );
+		// ------------------------------------------------------------ a booking collection (seeded: forms are built in the page editor, see checks 9 and 10)
+		check( 'setup', 'the Bookings collection is created', seed( 'preset', { preset: 'booking' } ).slug === 'bookings' );
+		const booking = seed( 'definition', { collection: 'bookings' } );
+		booking.fields = booking.fields.filter( ( f ) => f.key !== 'guests' );
+		booking.fields.push( { key: 'budget', label: 'Budget', type: 'currency', in_table: true } );
+		booking.success_message = 'Booked! We will email you.';
+		booking.settings.submit_text = 'Book now';
+		booking.style.primary = '#7239ea';
+		check( 'setup', 'the booking fields and settings are saved', seed( 'save', { definition: booking } ).fields === 8 && seed( 'definition', { collection: 'bookings' } ).settings.submit_text === 'Book now' );
+		await page.goto( BUILDER );
+		check( 'overview', 'a collection without a form page offers no designer, only its records', ( await page.locator( '.rfb-collection:has-text("Bookings") a:has-text("Open records")' ).count() ) === 1 && ( await page.locator( '.rfb-collection:has-text("Bookings") a:has-text("Edit design")' ).count() ) === 0 );
 
 		// ------------------------------------------------------------ add a record
 		await page.goto( `${ BUILDER }&view=records&collection=bookings` );
@@ -397,8 +344,7 @@ async function main() {
 		check( 'shortcodes', 'an administrator sees a hint for a mistaken shortcode', adminSees.includes( 'Refraction form: that collection does not exist' ) && adminSees.includes( 'turn on "Show records publicly"' ) );
 
 		// ------------------------------------------------------------ listings
-		await page.goto( `${ BUILDER }&view=new` );
-		await Promise.all( [ page.waitForURL( /collection=listings/ ), page.click( 'form:has(input[value="listing"]) button' ) ] );
+		seed( 'preset', { preset: 'listing' } );
 		const listingFields = seed( 'definition', { collection: 'listings' } ).fields;
 		check( 'listing', 'preset marks only some fields public', listingFields.some( ( f ) => f.label === 'Featured' && ! f.public ) && listingFields.some( ( f ) => f.label === 'Price' && f.public ) );
 		for ( const [ title, price, status, featured ] of [ [ 'Sea View Villa', '450000', 'published', '1' ], [ 'City Loft', '210000.5', 'published', '0' ], [ 'Draft Cabin', '99000', 'draft', '0' ], [ 'Sold Barn', '120000', 'sold', '0' ] ] ) {
@@ -446,7 +392,8 @@ async function main() {
 		check( 'permissions', 'a post without a nonce is refused for an administrator', nonceless.status() >= 400 && seed( 'state', { collection: 'bookings' } ).count === bookingCount );
 
 		// ------------------------------------------------------------ delete a collection
-		await page.goto( `${ BUILDER }&view=design&collection=listings` );
+		await page.goto( `${ BUILDER }&view=records&collection=listings` );
+		check( 'delete', 'the collection page shows the shortcodes and the delete box', ( await page.textContent( '.rfb-wrap' ) ).includes( '[refraction_form collection="listings"]' ) && ( await page.locator( '.rfb-danger' ).count() ) === 1 );
 		await page.fill( '#rfb-confirm', 'wrong name' );
 		await Promise.all( [ page.waitForURL( /done=confirm/ ), page.click( '.rfb-danger button' ) ] );
 		check( 'delete', 'a wrong confirmation deletes nothing', seed( 'state', { collection: 'listings' } ).exists && seed( 'state', { collection: 'listings' } ).count === 4 );

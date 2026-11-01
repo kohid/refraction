@@ -127,7 +127,7 @@ async function main() {
 
 		// ------------------------------------------------------------ from the Builder into the editor
 		await page.goto( BUILDER );
-		const newHref = await page.locator( 'a:has-text("New form in the page editor")' ).getAttribute( 'href' );
+		const newHref = await page.locator( 'a:has-text("New form")' ).first().getAttribute( 'href' );
 		check( 'builder', 'Refraction > Builder offers a new form in the page editor', !! newHref && newHref.includes( 'template_type=rfb-form' ) );
 		const t0 = Date.now();
 		await page.goto( newHref, { timeout: 120000 } );

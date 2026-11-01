@@ -58,6 +58,59 @@ class Editor_Forms {
 		return self::$scopes ? self::$scopes[ count( self::$scopes ) - 1 ] : null;
 	}
 
+	/** @var array[] The choice cards being printed, innermost last (a Price widget in a card shows its price). */
+	private static $cards = [];
+
+	public static function push_card( array $card ): void {
+		self::$cards[] = $card;
+	}
+
+	public static function pop_card(): void {
+		array_pop( self::$cards );
+	}
+
+	public static function card(): ?array {
+		return self::$cards ? self::$cards[ count( self::$cards ) - 1 ] : null;
+	}
+
+	/**
+	 * The Choice cards item (its settings: price, period...) of the card that holds the element $id, found in a page's
+	 * saved data; null when it is not in a card. Used in the editor, where cards do not print their children.
+	 */
+	public static function card_item_of( array $elements, string $id ): ?array {
+		foreach ( $elements as $element ) {
+			$children = (array) ( $element['elements'] ?? [] );
+
+			if ( 'rfb-field-choice_set' === ( $element['widgetType'] ?? '' ) ) {
+				$items = array_values( (array) ( $element['settings']['cards'] ?? [] ) );
+
+				foreach ( $children as $i => $child ) {
+					if ( isset( $items[ $i ] ) && self::contains( [ $child ], $id ) ) {
+						return $items[ $i ];
+					}
+				}
+			}
+
+			$found = self::card_item_of( $children, $id );
+
+			if ( $found ) {
+				return $found;
+			}
+		}
+
+		return null;
+	}
+
+	private static function contains( array $elements, string $id ): bool {
+		foreach ( $elements as $element ) {
+			if ( (string) ( $element['id'] ?? '' ) === $id || self::contains( (array) ( $element['elements'] ?? [] ), $id ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public function __construct( Collections $collections ) {
 		$this->collections = $collections;
 	}
@@ -70,6 +123,18 @@ class Editor_Forms {
 		$id = (int) ( $map[ $slug ] ?? 0 );
 
 		return $id && Form_Document::TYPE === get_post_meta( $id, '_refraction_template_type', true ) && 'trash' !== get_post_status( $id ) ? $id : 0;
+	}
+
+	/** A deleted collection takes its Form page with it. */
+	public static function forget( string $slug ): void {
+		$doc_id = self::doc_for( $slug );
+		$map = (array) get_option( self::OPTION, [] );
+		unset( $map[ $slug ] );
+		update_option( self::OPTION, $map, false );
+
+		if ( $doc_id ) {
+			wp_delete_post( $doc_id, true );
+		}
 	}
 
 	public static function edit_url( int $doc_id ): string {
@@ -134,6 +199,22 @@ class Editor_Forms {
 
 				if ( Schema::is_container( $raw['type'] ) ) {
 					$raw['children'] = self::collect( $children, $key );
+				}
+
+				// Choice cards: each card (a repeater item and its container) is a free Group card of the set.
+				if ( 'choice_set' === $raw['type'] && $widget instanceof \Refraction\Modules\FormBuilder\Widgets\Field_Choice_Set ) {
+					$items = array_values( (array) ( $element['settings']['cards'] ?? [] ) );
+					$raw['children'] = [];
+
+					foreach ( $items as $i => $item ) {
+						$card = $widget->card_raw( $i );
+						$card['key'] = $key( $element['id'] . '-' . ( $item['_id'] ?? $i ), $card );
+						$card['children'] = self::collect( (array) ( $children[ $i ]['elements'] ?? [] ), $key );
+						$raw['children'][] = $card;
+					}
+
+					$picked = $widget->default_index();
+					$raw['default'] = $picked > 0 && isset( $raw['children'][ $picked - 1 ] ) ? $raw['children'][ $picked - 1 ]['key'] : '';
 				}
 
 				$fields[] = $raw;

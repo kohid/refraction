@@ -1453,6 +1453,20 @@ $rfb-widths: (
 		}
 	}
 
+	// ---- Choice cards widget: each card holds one editor container, which takes the room beside the pick control
+	.rfb-choice-card > .e-con,
+	.rfb-cc-content > .e-con {
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	.rfb-price-empty {
+		color: var(--rfb-muted, #6b7280);
+		font-size: 13px;
+		font-weight: 400;
+		font-style: italic;
+	}
+
 	// ---- badge and price blocks
 	.rfb-badge-pill {
 		display: inline-block;

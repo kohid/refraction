@@ -1,11 +1,10 @@
 <?php
 namespace Refraction\Modules\FormBuilder\Classes;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
-/** Starting points for a new collection. Each one is an ordinary definition the owner can change freely. */
+/**
+ * Test data only (scripts/test-form-builder.php, scripts/fixtures/form-builder-seed.php): ready-made collection
+ * definitions, from the time collections were designed in the Builder's own designer.
+ */
 class Presets {
 
 	/** @return array<string,array{label:string,description:string,icon:string}> */

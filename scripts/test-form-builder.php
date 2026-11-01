@@ -10,7 +10,7 @@ require $root . '/modules/form-builder/classes/style.php';
 require $root . '/modules/form-builder/classes/field-style.php';
 require $root . '/modules/form-builder/classes/settings.php';
 require $root . '/modules/form-builder/classes/money.php';
-require $root . '/modules/form-builder/classes/presets.php';
+require $root . '/scripts/fixtures/form-builder-presets.php';
 
 use Refraction\Modules\FormBuilder\Classes\Schema as S;
 use Refraction\Modules\FormBuilder\Classes\Presets as P;

@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * typography, hover and focus looks, and button-style choices.
  *
  * Data-driven: SPEC lists every property once (which part of the field it styles, which CSS property it writes, what kind of
- * value it takes). The same table drives the cleaning here, the CSS written for the public form, the controls of the designer
- * and the live preview on its canvas (assets/js/builder.js reads it through the page config), so they can not drift apart.
+ * value it takes). The same table drives the cleaning here and the CSS written for the public form and the admin edit
+ * screen, so they can not drift apart.
  * Every value is a color, a number in a range or one of a few words, never free text, so the CSS can not carry markup.
  * Pure logic, tested in scripts/test-form-builder.php.
  */
