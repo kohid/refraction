@@ -17,6 +17,13 @@ class Draft_Preview {
 
 	public static function register(): void {
 		add_filter( 'posts_results', [ self::class, 'show_draft' ], 10, 2 );
+		// With pretty permalinks WordPress would redirect ?page_id= away (to the home page, dropping the id).
+		add_filter( 'redirect_canonical', [ self::class, 'keep_preview_url' ] );
+	}
+
+	/** @param string|false $redirect */
+	public static function keep_preview_url( $redirect ) {
+		return isset( $_GET['rf_preview'] ) ? false : $redirect; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only stops a redirect.
 	}
 
 	/** A new key for a draft; returns its preview link. */

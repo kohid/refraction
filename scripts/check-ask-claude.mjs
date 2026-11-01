@@ -222,6 +222,10 @@ async function main() {
 		const hiddenHtml = await ( await fetch( `${ BASE }/?page_id=${ draft.id }` ) ).text();
 		const draftData = wp( [ 'post', 'meta', 'get', String( draft.id ), '_refraction_data' ] );
 		check( 'mcp', 'save_draft makes a checked draft page with a secret preview link (unsafe widget left out, mobile settings kept)', /Drafted over MCP/.test( previewHtml ) && ! /Drafted over MCP/.test( hiddenHtml ) && /widget "html"/.test( draft.dropped.join() ) && /padding_mobile/.test( draftData ) && 'draft' === wp( [ 'post', 'get', String( draft.id ), '--field=post_status' ] ).trim(), JSON.stringify( draft ) );
+		wp( [ 'rewrite', 'structure', '/%postname%/' ] );
+		const prettyHtml = await ( await fetch( draft.preview, { redirect: 'manual' } ).then( ( r ) => r.text() ) );
+		wp( [ 'rewrite', 'structure', '' ] );
+		check( 'mcp', 'the preview link also works with pretty permalinks (no redirect away)', /Drafted over MCP/.test( prettyHtml ) );
 		let replaceOther = '';
 		try {
 			mcp( 'call', 'save_draft', JSON.stringify( { id: Number( home.id ), title: 'x', elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'y' } } ] } ) );

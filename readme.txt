@@ -47,6 +47,7 @@ Other things you may notice that are not Refraction's own services: the editor l
 == Changelog ==
 
 = 0.26.1 =
+* Fix: the private preview link of MCP drafts redirected to the home page on sites with pretty permalinks.
 * Fix: Ask Claude dropped the item titles of accordions, tabs and other nested widgets; they are kept now.
 
 = 0.26.0 =
