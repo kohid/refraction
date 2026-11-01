@@ -1,0 +1,16 @@
+/*
+Theme Name: Just Refraction
+Theme URI: https://github.com/kohid/refraction
+Author: Refraction contributors
+Description: A plain theme for sites built with Refraction. It adds no design of its own: Refraction's Theme Builder supplies the header, footer and templates, and its widgets and site styles are never overridden. Pages not built with Refraction get an optional, minimal reading style (Appearance > Customize > Just Refraction).
+Version: 1.0.0
+Requires at least: 6.8
+Tested up to: 6.8
+Requires PHP: 7.4
+License: GNU General Public License v3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Text Domain: just-refraction
+Tags: one-column, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready, accessibility-ready, blog, full-width-template
+
+This file only names the theme. It holds no styles on purpose: the theme must not change how Refraction pages look.
+*/

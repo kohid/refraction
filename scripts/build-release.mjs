@@ -152,3 +152,6 @@ const sha256 = createHash( 'sha256' ).update( readFileSync( ZIP_PATH ) ).digest(
 
 console.log( `[release] ${ files.length } files -> ${ relative( ROOT, ZIP_PATH ) } (${ ( size / 1048576 ).toFixed( 2 ) } MiB)` );
 console.log( `[release] sha256 ${ sha256 }` );
+
+// The Just Refraction theme ships as its own zip next to the plugin's.
+run( 'node', [ 'scripts/build-theme.mjs' ] );

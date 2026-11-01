@@ -1,0 +1,123 @@
+/*
+ * Just Refraction: basic reading style. Loaded only on pages NOT built with Refraction, and only while
+ * "Basic styles" is on in the Customizer. Every rule is under body.jr-basic, so it can never reach Refraction content.
+ */
+body.jr-basic {
+	margin: 0;
+	color: #1f1f1f;
+	background: #fff;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-size: 1.0625rem;
+	line-height: 1.65;
+}
+
+.jr-basic .jr-header,
+.jr-basic .jr-footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px 32px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px 24px;
+}
+
+.jr-basic .jr-site-title {
+	color: inherit;
+	font-size: 1.25rem;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.jr-basic .jr-nav ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.jr-basic .jr-nav a {
+	color: inherit;
+}
+
+.jr-basic .jr-main {
+	max-width: 760px;
+	margin: 0 auto;
+	padding: 32px 24px 64px;
+}
+
+.jr-basic .entry-title {
+	margin: 0 0 12px;
+	font-size: clamp(2rem, 4vw, 2.75rem);
+	line-height: 1.15;
+}
+
+.jr-basic .jr-summary + .jr-summary {
+	margin-top: 40px;
+}
+
+.jr-basic .jr-summary .entry-title {
+	font-size: 1.5rem;
+}
+
+.jr-basic .jr-summary .entry-title a {
+	color: inherit;
+}
+
+.jr-basic .jr-meta {
+	color: #5f5f5f;
+	font-size: 0.9rem;
+}
+
+.jr-basic .jr-main img {
+	max-width: 100%;
+	height: auto;
+}
+
+.jr-basic .jr-main a {
+	color: #1a5fb4;
+}
+
+.jr-basic .jr-footer {
+	color: #5f5f5f;
+	font-size: 0.9rem;
+}
+
+.jr-basic .jr-comments {
+	margin-top: 48px;
+}
+
+.jr-basic .comment-form label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+.jr-basic .comment-form input[type="text"],
+.jr-basic .comment-form input[type="email"],
+.jr-basic .comment-form input[type="url"],
+.jr-basic .comment-form textarea,
+.jr-basic .search-form input[type="search"] {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid #c8c8c8;
+	border-radius: 6px;
+	font: inherit;
+}
+
+.jr-basic .comment-form .comment-form-cookies-consent label {
+	display: inline;
+}
+
+.jr-basic input[type="submit"] {
+	padding: 10px 18px;
+	border: 0;
+	border-radius: 6px;
+	background: #1f1f1f;
+	color: #fff;
+	font: inherit;
+	cursor: pointer;
+}

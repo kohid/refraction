@@ -34,6 +34,7 @@ export const MARKDOWN_PRUNE_PATTERNS = [
  */
 const PRUNED = [
 	'**/node_modules/**',
+	'themes/**',
 	'.git/**',
 	'.github/**',
 	'.cursor/**',
