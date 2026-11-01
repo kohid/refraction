@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.13.0
+Stable tag: 0.14.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.14.0 =
+* New: build forms in the page editor. Refraction > Builder > "New form in the page editor" opens a Form page in the editor, with a Form Builder widget category on top of the panel: Text, Long text, Name, Email, Phone, Website, Number, Amount, Country, Date, Time, Date and time, Dropdown, Choice, Choices, Yes / No, Rating, Hidden field and a Submit button. Each field has the editor's Content, Style and Advanced tabs (Advanced adds a Records table section: field key, table column, public, filter), with responsive controls. Lay the form out with the editor's own Container, Grid, Heading, Image, Text Editor, Icon List and the rest.
+* New: the page-settings cog of a Form page holds the whole form: names, statuses, the message after sending, submit and step texts, redirect, notifications, webhook, opening and closing, spam protection, currency, and the form's colors and sizes.
+* New: saving a Form page saves it as a collection, so records, statuses, exports, notifications and [refraction_form] work as before. Field keys are given once and kept, so renaming a field never breaks saved answers. The Builder's "Edit form" opens these forms in the editor. Groups, repeaters, steps, conditions, uploads and choice cards come in the next stages; forms made in the Builder's own designer keep working there.
 
 = 0.13.0 =
 * New: build your own Choice card. A card can now be a free container: it has a pick control and whatever blocks you drop in (heading, text, badge, price, image, Icon List, Columns, an Accordion for "What's included", any field). Nothing is fixed: no title, price or details unless you add them. Existing cards keep their old header and can be switched to a free container at any time (their title, badge and price become blocks).

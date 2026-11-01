@@ -268,8 +268,8 @@ async function main() {
 		await Promise.all( [ page.waitForURL( /paged=2/ ), page.click( '.rfb-pagination a:has-text("2")' ) ] );
 		check( 'table', 'page 2 shows the remaining 8', ( await page.$$( '.rfb-table tbody tr' ) ).length === 8 );
 		await page.goto( `${ BUILDER }&view=records&collection=bookings` );
-		await page.fill( '.rfb-search input', 'Guest 07' );
-		await Promise.all( [ page.waitForURL( /s=Guest/ ), page.press( '.rfb-search input', 'Enter' ) ] );
+		await page.fill( '.rfb-search input', 'guest7@example.com' );
+		await Promise.all( [ page.waitForURL( /s=guest7/ ), page.press( '.rfb-search input', 'Enter' ) ] );
 		const found = await page.$$eval( '.rfb-table tbody .rfb-user-name', ( els ) => els.map( ( e ) => e.textContent ) );
 		check( 'table', 'search finds one guest', found.length === 1 && found[ 0 ] === 'Guest 07', found.join( '|' ) );
 		await page.goto( `${ BUILDER }&view=records&collection=bookings&status=confirmed` );

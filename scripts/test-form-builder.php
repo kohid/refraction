@@ -659,5 +659,23 @@ t( 'card style: the card is the element itself (no descendant), with its selecte
 t( 'card style: the pick control size always applies, its colors only while not picked, the picked look on its own', false !== strpos( $ccss, '#f .rfb-t-card .rfb-cc-mark{font-size:30px;}' ) && false !== strpos( $ccss, '#f .rfb-t-card:not(.is-selected) .rfb-cc-mark{color:#00ff00;}' ) && false !== strpos( $ccss, '#f .rfb-t-card.is-selected .rfb-cc-mark{background-color:#0000ff;}' ), $ccss );
 t( 'card style: the groups belong to cards only, and every state group still has its selector', in_array( 'cmark_on', FS::groups_for( 'card' ), true ) && in_array( 'cbox_on', FS::groups_for( 'card' ), true ) && in_array( 'box', FS::groups_for( 'card' ), true ) && ! in_array( 'cbox_on', FS::groups_for( 'group' ), true ) && ! in_array( 'label', FS::groups_for( 'card' ), true ) );
 
+// ---- 0.14.0: forms built in the page editor (stage 1) ----
+require_once $root . '/modules/form-builder/classes/editor-forms.php';
+$EF = 'Refraction\Modules\FormBuilder\Classes\Editor_Forms';
+if ( ! class_exists( 'Refraction\Modules\FormBuilder\Base\Field_Widget' ) ) {
+	eval( 'namespace Refraction\Modules\FormBuilder\Base; abstract class Field_Widget { const PREFIX = "rfb-field-"; }' );
+}
+$tree = [
+	[ 'id' => 'c1', 'elType' => 'container', 'elements' => [
+		[ 'id' => 'w1', 'elType' => 'widget', 'widgetType' => 'rfb-field-text', 'settings' => [] ],
+		[ 'id' => 'w2', 'elType' => 'widget', 'widgetType' => 'heading', 'settings' => [] ],
+		[ 'id' => 'c2', 'elType' => 'container', 'elements' => [ [ 'id' => 'w3', 'elType' => 'widget', 'widgetType' => 'rfb-field-email', 'settings' => [] ], [ 'id' => 'w4', 'elType' => 'widget', 'widgetType' => 'rfb-submit' ] ] ],
+	] ],
+	[ 'id' => 'w5', 'elType' => 'widget', 'widgetType' => 'rfb-field-select', 'settings' => [] ],
+	'junk',
+];
+t( 'editor forms: field widgets are found at any depth, in page order, and nothing else', [ 'w1', 'w3', 'w5' ] === array_column( $EF::field_elements( $tree ), 'id' ) );
+t( 'editor forms: a Submit button widget is found at any depth', $EF::has_submit( $tree ) && ! $EF::has_submit( [ $tree[0]['elements'][0], $tree[1] ] ) );
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

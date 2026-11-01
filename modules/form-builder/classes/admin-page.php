@@ -182,7 +182,9 @@ class Admin_Page {
 
 		$definition = '' !== $slug ? $this->collections->get( $slug ) : null;
 
-		if ( $definition && 'design' === $view ) {
+		if ( $definition && 'design' === $view && Editor_Forms::doc_for( $slug ) ) {
+			$this->views->render_editor_notice( $definition, Editor_Forms::doc_for( $slug ) );
+		} elseif ( $definition && 'design' === $view ) {
 			$this->views->render_design( $definition );
 		} elseif ( $definition && 'record' === $view ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -210,6 +212,11 @@ class Admin_Page {
 
 		$slug = Schema::slug( (string) $this->post( 'collection' ) );
 		$this->collection_or_die( $slug );
+
+		// A form built in the page editor is saved from there; an old designer tab must not overwrite its fields.
+		if ( Editor_Forms::doc_for( $slug ) ) {
+			$this->redirect( [ 'view' => 'design', 'collection' => $slug ] );
+		}
 
 		// The drag and drop builder posts the whole design as one JSON value; Schema cleans every part of it.
 		$json = (string) $this->post( 'design' );

@@ -94,6 +94,22 @@ class Admin_Views {
 		return '<a class="rfb-btn rfb-btn-' . esc_attr( $style ) . '" href="' . esc_url( $href ) . '">' . $this->icon( $icon, 18 ) . esc_html( $label ) . '</a>';
 	}
 
+	/** The Builder's own designer is not used for a form built in the page editor: point there instead. */
+	public function render_editor_notice( array $definition, int $doc_id ): void {
+		$this->open( $definition['label'], __( 'This form is built in the page editor.', 'refraction' ), [ __( 'Builder', 'refraction' ) => $this->url() ], $this->design_button( $definition['slug'] ) );
+		echo '<div class="rfb-card"><div class="rfb-card-body"><p>' . esc_html__( 'Open it in the page editor to change its fields, layout and look. Records, statuses and exports stay here.', 'refraction' ) . '</p>' . $this->button( __( 'Edit form', 'refraction' ), Editor_Forms::edit_url( $doc_id ), 'primary', 'edit' ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$this->close();
+	}
+
+	/** A collection built in the page editor is edited there; the others in the Builder's own designer. */
+	private function design_button( string $slug ): string {
+		$doc_id = Editor_Forms::doc_for( $slug );
+
+		return $doc_id
+			? $this->button( __( 'Edit form', 'refraction' ), Editor_Forms::edit_url( $doc_id ), 'light', 'edit' )
+			: $this->button( __( 'Edit design', 'refraction' ), $this->url( [ 'view' => 'design', 'collection' => $slug ] ), 'light', 'tune' );
+	}
+
 	private function badge( array $status ): string {
 		return '<span class="rfb-badge rfb-badge-light-' . esc_attr( $status['color'] ) . '">' . esc_html( $status['label'] ) . '</span>';
 	}
@@ -106,7 +122,7 @@ class Admin_Views {
 			__( 'Builder', 'refraction' ),
 			__( 'Design your own forms and tables for bookings, listings, orders or anything you keep records of.', 'refraction' ),
 			[],
-			$this->button( __( 'New collection', 'refraction' ), $this->url( [ 'view' => 'new' ] ), 'primary', 'add' )
+			$this->button( __( 'New form in the page editor', 'refraction' ), Editor_Forms::new_url(), 'light-primary', 'edit' ) . $this->button( __( 'New collection', 'refraction' ), $this->url( [ 'view' => 'new' ] ), 'primary', 'add' )
 		);
 
 		if ( ! $all ) {
@@ -131,7 +147,7 @@ class Admin_Views {
 
 			echo '</div><div class="rfb-actions">';
 			echo $this->button( __( 'Open records', 'refraction' ), $this->url( [ 'view' => 'records', 'collection' => $slug ] ), 'primary' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $this->button( __( 'Edit design', 'refraction' ), $this->url( [ 'view' => 'design', 'collection' => $slug ] ), 'light', 'tune' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $this->design_button( $slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '</div></div></div>';
 		}
 
@@ -292,7 +308,7 @@ class Admin_Views {
 		$columns = $columns ? $columns : array_values( array_filter( [ Schema::field( $definition, $definition['title_field'] ) ] ) );
 
 		$toolbar = $this->button( __( 'Export CSV', 'refraction' ), wp_nonce_url( add_query_arg( array_merge( [ 'action' => Admin_Page::ACTION_EXPORT, 'collection' => $slug ], array_filter( [ 's' => $args['search'], 'status' => $args['status'] ] ) ), admin_url( 'admin-post.php' ) ), Admin_Page::ACTION_EXPORT ), 'light', 'download' )
-			. $this->button( __( 'Edit design', 'refraction' ), $this->url( [ 'view' => 'design', 'collection' => $slug ] ), 'light', 'tune' )
+			. $this->design_button( $slug )
 			/* translators: %s: singular collection name. */
 			. $this->button( sprintf( __( 'Add %s', 'refraction' ), $definition['singular'] ), $this->url( [ 'view' => 'record', 'collection' => $slug ] ), 'primary', 'add' );
 		$this->open( $definition['label'], $definition['description'], [ __( 'Builder', 'refraction' ) => $this->url() ], $toolbar );

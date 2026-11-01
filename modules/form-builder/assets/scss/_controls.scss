@@ -47,10 +47,10 @@ $rfb-widths: (
 	--rfb-input-bg: #{$rfb-gray-100};
 	--rfb-input-border: #{$rfb-gray-100};
 	--rfb-input-text: #{$rfb-gray-900};
-	--rfb-focus: #{$rfb-primary};
+	--rfb-focus: var(--rfb-primary);
 	--rfb-error: #{$rfb-danger};
 	--rfb-form-bg: #fff;
-	--rfb-button-bg: #{$rfb-primary};
+	--rfb-button-bg: var(--rfb-primary);
 	--rfb-button-text: #fff;
 	--rfb-radius: 8px;
 	--rfb-input-height: 42px;

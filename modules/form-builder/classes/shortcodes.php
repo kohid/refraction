@@ -1,6 +1,7 @@
 <?php
 namespace Refraction\Modules\FormBuilder\Classes;
 
+use Refraction\Plugin;
 use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -131,15 +132,27 @@ class Shortcodes {
 			'progress' => __( 'Form progress', 'refraction' ),
 		];
 
-		ob_start();
-		echo '<form class="rfb-form" method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-progress="' . esc_attr( $settings['progress'] ) . '" data-rfb-next="' . esc_attr( $settings['next_text'] ) . '" data-rfb-back="' . esc_attr( $settings['back_text'] ) . '" data-rfb-money="' . esc_attr( (string) wp_json_encode( Money::js( Money::config( $settings ) ) ) ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( $i18n ) ) . '">';
-		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SUBMIT ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="rfb_t" value="' . esc_attr( $this->time_token() ) . '">';
+		$doc_id = Editor_Forms::doc_for( $slug );
 
-		if ( $settings['honeypot'] ) {
-			echo '<div class="rfb-hp" aria-hidden="true"><label>' . esc_html__( 'Leave this field empty', 'refraction' ) . '<input type="text" name="rfb_website" tabindex="-1" autocomplete="off"></label></div>';
+		// A form built in the page editor prints its page inside the form; its field widgets read the answers and errors here.
+		if ( $doc_id ) {
+			Editor_Forms::begin( [ 'definition' => $definition, 'keys' => (array) get_post_meta( $doc_id, Editor_Forms::META_KEYS, true ), 'values' => $values, 'errors' => $errors, 'ctx' => $ctx ] );
+			ob_start();
+			$this->form_open( $slug, $settings, $i18n, 'rfb-form-editor' );
+			echo Plugin::$instance->frontend->get_builder_content_for_display( $doc_id, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered by the editor's own widgets.
+
+			if ( ! Editor_Forms::has_submit( (array) json_decode( (string) get_post_meta( $doc_id, '_refraction_data', true ), true ) ) ) {
+				echo '<div class="rfb-actions"><button type="submit" class="rfb-btn rfb-btn-primary rfb-submit">' . esc_html( $settings['submit_text'] ) . '</button></div>';
+			}
+
+			echo '</form>';
+			Editor_Forms::end();
+
+			return $out . ob_get_clean() . '</div>';
 		}
 
-		wp_nonce_field( self::ACTION_SUBMIT . $slug, '_rfb_nonce' );
+		ob_start();
+		$this->form_open( $slug, $settings, $i18n, 'rfb-form' );
 
 		foreach ( $steps as $step ) {
 			echo '<section class="rfb-step" data-rfb-step data-rfb-title="' . esc_attr( $step['title'] ) . '">';
@@ -152,6 +165,18 @@ class Shortcodes {
 		echo '<div class="rfb-actions"><button type="submit" class="rfb-btn rfb-btn-primary rfb-submit">' . esc_html( $settings['submit_text'] ) . '</button></div></form>';
 
 		return $out . ob_get_clean() . '</div>';
+	}
+
+	/** The opening form tag with everything the submit handler checks (action, collection, time token, honeypot, nonce). */
+	private function form_open( string $slug, array $settings, array $i18n, string $class ): void {
+		echo '<form class="' . esc_attr( $class ) . '" method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-progress="' . esc_attr( $settings['progress'] ) . '" data-rfb-next="' . esc_attr( $settings['next_text'] ) . '" data-rfb-back="' . esc_attr( $settings['back_text'] ) . '" data-rfb-money="' . esc_attr( (string) wp_json_encode( Money::js( Money::config( $settings ) ) ) ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( $i18n ) ) . '">';
+		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SUBMIT ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="rfb_t" value="' . esc_attr( $this->time_token() ) . '">';
+
+		if ( $settings['honeypot'] ) {
+			echo '<div class="rfb-hp" aria-hidden="true"><label>' . esc_html__( 'Leave this field empty', 'refraction' ) . '<input type="text" name="rfb_website" tabindex="-1" autocomplete="off"></label></div>';
+		}
+
+		wp_nonce_field( self::ACTION_SUBMIT . $slug, '_rfb_nonce' );
 	}
 
 	/** Values for hidden fields that read from the request (query string, page address, referrer, user, date). */
