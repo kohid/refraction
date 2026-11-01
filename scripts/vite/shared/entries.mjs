@@ -71,6 +71,7 @@ export const BASE_ENTRIES = {
 	'custom-css-editor': 'modules/custom-css/assets/js/editor.js',
 	'motion-effects-frontend': 'modules/motion-effects/assets/js/motion.js',
 	'build-scene-frontend': 'modules/build-scene/assets/js/frontend.js',
+	'scroll-sequence-frontend': 'modules/build-scene/assets/js/sequence-frontend.js',
 	'sticky-frontend': 'modules/motion-effects/assets/js/sticky.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };

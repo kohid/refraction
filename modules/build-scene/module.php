@@ -9,12 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * 3D Build Scene: a widget that shows a 3D model (an uploaded .glb or the built-in sample house) whose parts fly in
- * stage by stage while the visitor scrolls. three.js is bundled with the plugin; nothing is loaded from elsewhere.
+ * Scroll-driven scenes. 3D Build Scene shows a 3D model (an uploaded .glb or the built-in sample house) whose parts fly
+ * in stage by stage while the visitor scrolls; Scroll Sequence plays a video or image sequence with the scroll. Both pin
+ * the section while they play. three.js is bundled with the plugin; nothing is loaded from elsewhere.
  */
 class Module extends BaseModule {
 
 	const SCRIPT = 'refraction-build-scene';
+	const SEQUENCE = 'refraction-scroll-sequence';
 
 	public function get_name() {
 		return 'build-scene';
@@ -33,7 +35,7 @@ class Module extends BaseModule {
 	}
 
 	protected function get_widgets() {
-		return [ 'Build_Scene' ];
+		return [ 'Build_Scene', 'Scroll_Sequence' ];
 	}
 
 	public function register_assets(): void {
@@ -44,6 +46,8 @@ class Module extends BaseModule {
 		$min = \Refraction\Utils::is_script_debug() ? '' : '.min';
 		wp_register_style( self::SCRIPT, REFRACTION_ASSETS_URL . 'css/modules/build-scene/frontend' . $min . '.css', [], REFRACTION_VERSION );
 		wp_register_script( self::SCRIPT, REFRACTION_ASSETS_URL . 'js/build-scene-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
+		// The Scroll Sequence has its own small script: it plays pictures, it does not need the 3D library.
+		wp_register_script( self::SEQUENCE, REFRACTION_ASSETS_URL . 'js/scroll-sequence-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 	}
 
 	public function allow_glb_uploads( $mimes ) {

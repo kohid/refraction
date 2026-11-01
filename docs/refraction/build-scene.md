@@ -1,4 +1,4 @@
-# 3D Build Scene
+# 3D Build Scene and Scroll Sequence
 
 A widget (Advanced category, `build-scene`, module `modules/build-scene`) that shows a 3D model whose parts fly in stage by stage while the visitor scrolls through the section. Added in 0.17.0. Works on any site: a house being built, a product being assembled, an engine coming together.
 
@@ -20,6 +20,19 @@ Tests: `php scripts/test-build-scene.php` (.glb check), `node scripts/test-build
 - Phones draw at a lower pixel ratio and smaller shadow maps; **Show the still image on phones instead** skips 3D there entirely.
 - **Reduced motion**: the finished model shows and the section is not stretched. **No WebGL**: the still image shows, or a short message.
 - The canvas has `role="img"` and the screen reader description from the Model section; the captions are real text.
+
+## Scroll Sequence (0.18.0)
+
+A second widget in the same module (`scroll-sequence`, Advanced category) for cinematic, photo-real scenes that a browser can not draw live: a pre-rendered camera move through a room, a product turning, a drone shot. It plays a **video** or a numbered **image sequence** with the scroll, forward and backward, while the section is pinned (the same track and pin as the 3D Build Scene).
+
+- **Image sequence** (smoothest): select the frames in a gallery; they play **by file name** (natural order, `frame-2` before `frame-10`) or as selected, at the chosen size. Frames are drawn on a canvas (cover or contain) and loaded progressively: first and last, then every 16th, 8th, 4th... frame, so a rough version plays at once and the nearest loaded frame is shown until the exact one arrives (`loadOrder`, `frameAt`, `fitRect` in `assets/js/sequence.js`, tested). Up to 600 frames.
+- **Video**: MP4 or WebM without sound. The script downloads it once and plays it from memory, so seeking is instant and works where the server does not answer range requests; if that download fails it uses the address directly. Export with a keyframe on every frame (`ffmpeg -g 1`) for smooth scrubbing.
+- **Text over the sequence** (repeater): title, text, where it shows (from % to % of the scroll) and where it sits (left, center, right, bottom). While a text shows, a shade darkens its side of the picture (**Shade behind the text**, Style tab) so it stays readable. Titles default to a large light display size; typography, colors and width are editable.
+- **Scroll**: scroll length, a pause on the last frame, an optional progress line, and the editor **Preview** slider.
+- **Reduced motion** (and **Show the still image on phones instead**): the still image (or the first frame) and every text one after another, without the long scroll.
+- It has its own small script (`scroll-sequence-frontend.js`, about 10 KB); pages with only a Scroll Sequence do not load three.js.
+- Footage: a 3D artist's render, a real camera walkthrough exported as frames, or (planned) Seedance video through Claude.
+- Browser check: `node scripts/check-scroll-sequence.mjs --site DIR --port N` (needs ffmpeg; frames imported in reverse order still play by name, overlays, video seeking, reduced motion, editor preview).
 
 ## Not yet
 
