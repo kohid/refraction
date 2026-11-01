@@ -130,9 +130,9 @@ class Claude_Builder {
 			} catch ( RateLimitException $e ) {
 				return [ 'error' => __( 'Claude is busy or the account reached its rate limit. Try again in a minute.', 'refraction' ), 'status' => 429 ];
 			} catch ( BadRequestException $e ) {
-				return [ 'error' => __( 'Claude could not take this request: ', 'refraction' ) . self::short( $e->getMessage() ), 'status' => 400 ];
+				return [ 'error' => self::explain( $e ), 'status' => 400 ];
 			} catch ( APIStatusException $e ) {
-				return [ 'error' => __( 'Claude answered with an error. Try again.', 'refraction' ) . ' (' . (int) $e->status . ')', 'status' => 502 ];
+				return [ 'error' => self::explain( $e ), 'status' => 502 ];
 			} catch ( APIConnectionException $e ) {
 				return [ 'error' => __( 'The site could not reach Claude: ', 'refraction' ) . self::short( $e->getMessage() ), 'status' => 502 ];
 			}
@@ -247,6 +247,32 @@ class Claude_Builder {
 		$this->usage['input'] += (int) ( $message->usage->inputTokens ?? 0 );
 		$this->usage['output'] += (int) ( $message->usage->outputTokens ?? 0 );
 		$this->usage['cache_read'] += (int) ( $message->usage->cacheReadInputTokens ?? 0 );
+	}
+
+	/** Anthropic's own one-line message of an error response (not the whole JSON). */
+	public static function api_message( $body ): string {
+		$message = is_array( $body ) ? ( $body['error']['message'] ?? '' ) : '';
+
+		return is_string( $message ) ? self::short( $message ) : '';
+	}
+
+	/** A plain message for an error from Anthropic, with what to do about it. */
+	public static function explain( APIStatusException $e ): string {
+		$message = self::api_message( $e->body );
+
+		if ( false !== stripos( $message, 'credit balance' ) ) {
+			return __( 'The Anthropic account of this API key has no credit left. Add credit at console.anthropic.com (Settings > Billing), then try again. A Claude.ai subscription does not include API credit.', 'refraction' );
+		}
+
+		if ( in_array( (int) $e->status, [ 500, 503, 529 ], true ) ) {
+			return __( 'Claude is busy right now. Try again in a minute.', 'refraction' );
+		}
+
+		if ( '' === $message ) {
+			return __( 'Claude answered with an error. Try again.', 'refraction' ) . ' (' . (int) $e->status . ')';
+		}
+
+		return __( 'Claude could not take this request: ', 'refraction' ) . $message;
 	}
 
 	private static function short( string $text ): string {

@@ -230,6 +230,9 @@ async function main() {
 		await p.waitForTimeout( 400 );
 
 		// ------------------------------------------------------------ refusals and limits
+		await generate( p, 'section', 'NOCREDIT please' );
+		const credit = await p.textContent( '[data-ask-claude="error"]' );
+		check( 'errors', 'an account without credit gets a plain message with what to do, not the raw response', /no credit left/.test( credit ) && /console\.anthropic\.com/.test( credit ) && ! /[{}]/.test( credit ), credit );
 		await generate( p, 'section', 'REFUSE this one' );
 		check( 'errors', 'a refusal is explained, nothing is added', /declined/.test( await p.textContent( '[data-ask-claude="error"]' ) ) && ( await topLevel( p ) ).length === 3 );
 		await p.screenshot( { path: join( SHOTS, 'panel.png' ) } );
