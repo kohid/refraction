@@ -213,6 +213,22 @@ async function main() {
 		const changed = await topLevel( p );
 		check( 'selected', 'the selected heading is replaced in place', /^heading:Homes that age well,text-editor/.test( changed[ 0 ] ) && changed.length === 3, JSON.stringify( changed ) );
 
+		// ------------------------------------------------------------ a long brief
+		const brief = '# Luxury villa\n\n' + Array.from( { length: 300 }, ( _, i ) => `## Section ${ i }\nHeadline: Architecture beyond imagination, part ${ i }.\n` ).join( '\n' );
+		await p.click( '[data-ask-claude="mode-section"]' );
+		await p.fill( '[data-ask-claude="prompt"]', brief );
+		const typed = await p.inputValue( '[data-ask-claude="prompt"]' );
+		const counter = await p.textContent( '[data-ask-claude="count"]' );
+		check( 'long', 'a long brief is kept whole in the box, with a character count', typed.length === brief.length && brief.length > 15000 && counter.replace( /[^\d/]/g, '' ) === `${ brief.length }/60000` && counter.includes( '60,000' ), `${ typed.length } of ${ brief.length }, "${ counter }"` );
+		await p.click( '[data-ask-claude="generate"]' );
+		await p.waitForSelector( '[data-ask-claude="done"], [data-ask-claude="error"]', { timeout: 60000 } );
+		const sentBrief = JSON.stringify( api.requests.filter( ( r ) => 1 === r.body.messages.length ).pop().body.messages[ 0 ] );
+		check( 'long', 'the whole brief reaches Claude', sentBrief.includes( 'part 299.' ), sentBrief.length );
+		const tooLong = await p.evaluate( ( id ) => wp.apiFetch( { path: '/refraction/v1/ask-claude/generate', method: 'POST', data: { post_id: id, prompt: 'x'.repeat( 60001 ), mode: 'section' } } ).then( () => 'ok', ( e ) => e.message ), home.id );
+		check( 'long', 'more than 60,000 characters is refused with a clear message', /longer than 60,000 characters/.test( tooLong ), tooLong );
+		await p.evaluate( () => $e.run( 'document/history/undo' ) );
+		await p.waitForTimeout( 400 );
+
 		// ------------------------------------------------------------ refusals and limits
 		await generate( p, 'section', 'REFUSE this one' );
 		check( 'errors', 'a refusal is explained, nothing is added', /declined/.test( await p.textContent( '[data-ask-claude="error"]' ) ) && ( await topLevel( p ) ).length === 3 );
@@ -227,6 +243,39 @@ async function main() {
 		const imageBlock = withImage.body.messages[ 0 ].content.find( ( b ) => 'image' === b.type );
 		check( 'images', 'reference images from the library are sent to Claude as JPEG', imageSent === 'ok' && imageBlock && imageBlock.source.type === 'base64' && imageBlock.source.media_type === 'image/jpeg' && imageBlock.source.data.length > 1000 );
 		await ctx.close();
+
+		// ------------------------------------------------------------ the interface theme
+		wp( [ 'user', 'meta', 'update', 'admin', 'refraction_ui_theme', 'blueprint' ] );
+		const themed = await login( browser, 'admin' );
+		watch( themed.p, 'themed' );
+		const themedPage = page( 'Themed', [] );
+		await openEditor( themed.p, themedPage.id );
+
+		if ( await themed.p.locator( '.dialog-widget:visible' ).count() ) {
+			await themed.p.locator( '.dialog-widget:visible .dialog-button' ).first().click();
+		}
+
+		await askButton( themed.p ).click();
+		await themed.p.waitForSelector( '[data-ask-claude="prompt"]' );
+		const look = await themed.p.evaluate( () => {
+			const probe = document.createElement( 'div' );
+			probe.style.background = 'var(--e-a-bg-default)';
+			document.body.appendChild( probe );
+			const expected = getComputedStyle( probe ).backgroundColor;
+			probe.remove();
+			const panel = document.querySelector( '[data-ask-claude="panel"]' );
+			const rgb = getComputedStyle( panel ).backgroundColor.match( /\d+/g ).map( Number );
+			return { theme: document.documentElement.getAttribute( 'data-refraction-theme' ), panel: getComputedStyle( panel ).backgroundColor, expected, dark: ( ( 0.2126 * rgb[ 0 ] ) + ( 0.7152 * rgb[ 1 ] ) + ( 0.0722 * rgb[ 2 ] ) ) < 80, field: getComputedStyle( document.querySelector( '[data-ask-claude="prompt"]' ) ).color };
+		} );
+		check( 'theme', 'the panel follows the interface theme (Blueprint: the editor\'s own dark background)', look.theme === 'blueprint' && look.panel === look.expected && look.dark && look.field !== 'rgba(0, 0, 0, 0.87)', JSON.stringify( look ) );
+		await themed.p.click( '[data-ask-claude="panel"] [aria-label="Model"]' );
+		await themed.p.waitForSelector( '.rf-ac-menu' );
+		const menuBg = await themed.p.evaluate( () => getComputedStyle( document.querySelector( '.rf-ac-menu' ) ).backgroundColor );
+		check( 'theme', 'its model menu too', menuBg === look.panel, `${ menuBg } vs ${ look.panel }` );
+		await themed.p.keyboard.press( 'Escape' );
+		await themed.p.screenshot( { path: join( SHOTS, 'panel-blueprint.png' ) } );
+		await themed.ctx.close();
+		wp( [ 'user', 'meta', 'delete', 'admin', 'refraction_ui_theme' ] );
 
 		// ------------------------------------------------------------ who may use it
 		const e = await login( browser, 'editor1' );

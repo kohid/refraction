@@ -26,6 +26,9 @@ import { context, insert, pageIsEmpty, selected } from './insert';
 
 const cfg = () => window.refractionAskClaude || {};
 
+// The model menus open outside the panel: they get the panel's themed look through this class.
+const MENU = { PaperProps: { className: 'rf-ac-menu' } };
+
 const MODES = {
 	page: __( 'Whole page', 'refraction' ),
 	section: __( 'Add a section', 'refraction' ),
@@ -69,12 +72,12 @@ function KeySettings( { state, setState, onDone } ) {
 	return (
 		<Stack gap={ 1.5 } data-ask-claude="settings">
 			<Typography variant="subtitle2">{ __( 'Anthropic API key', 'refraction' ) }</Typography>
-			<Typography variant="body2" color="text.secondary">
+			<Typography variant="body2" className="rf-ac-muted">
 				{ __( 'Requests are paid with this key. It is stored encrypted on your site and never sent to the browser. Your site calls Claude only when someone presses Generate.', 'refraction' ) }
 			</Typography>
 			{ state.hasKey && <Typography variant="body2">{ __( 'Current key:', 'refraction' ) } <code>{ state.masked }</code></Typography> }
 			<TextField size="small" type="password" autoComplete="off" label={ state.hasKey ? __( 'Replace the key', 'refraction' ) : __( 'Paste the key (sk-ant-…)', 'refraction' ) } value={ key } onChange={ ( e ) => setKey( e.target.value ) } inputProps={ { 'data-ask-claude': 'key' } } />
-			<Select size="small" value={ state.model } onChange={ ( e ) => save( { model: e.target.value } ) } inputProps={ { 'aria-label': __( 'Default model', 'refraction' ) } }>
+			<Select size="small" value={ state.model } onChange={ ( e ) => save( { model: e.target.value } ) } inputProps={ { 'aria-label': __( 'Default model', 'refraction' ) } } MenuProps={ MENU }>
 				{ Object.entries( cfg().models || {} ).map( ( [ id, label ] ) => <MenuItem key={ id } value={ id }>{ label }</MenuItem> ) }
 			</Select>
 			{ error && <Alert severity="error">{ error }</Alert> }
@@ -113,6 +116,7 @@ export function Panel( { open, onClose, initialMode } ) {
 	const [ result, setResult ] = React.useState( null );
 	const [ settings, setSettings ] = React.useState( false );
 	const [ confirmReplace, setConfirmReplace ] = React.useState( false );
+	const max = Number( cfg().maxPrompt ) || 60000;
 
 	React.useEffect( () => {
 		if ( initialMode ) {
@@ -198,20 +202,22 @@ export function Panel( { open, onClose, initialMode } ) {
 				</ToggleButtonGroup>
 				<TextField
 					multiline
-					minRows={ 6 }
-					maxRows={ 14 }
+					minRows={ 8 }
+					maxRows={ 24 }
+					helperText={ `${ prompt.length.toLocaleString() } / ${ max.toLocaleString() }` }
+					FormHelperTextProps={ { className: 'rf-ac-count', 'data-ask-claude': 'count', 'aria-live': 'polite' } }
 					label={ { page: __( 'Describe the page', 'refraction' ), section: __( 'Describe the section', 'refraction' ), selected: __( 'What should change?', 'refraction' ) }[ mode ] }
 					placeholder={ { page: __( 'A home page for a small architecture studio in Lisbon: a calm hero with our tagline, three services, recent projects and a contact form.', 'refraction' ), section: __( 'A pricing section with three plans, the middle one highlighted.', 'refraction' ), selected: __( 'Make it two columns and the headline shorter.', 'refraction' ) }[ mode ] }
 					value={ prompt }
 					onChange={ ( e ) => setPrompt( e.target.value ) }
-					inputProps={ { maxLength: 4000, 'data-ask-claude': 'prompt' } }
+					inputProps={ { maxLength: max, 'data-ask-claude': 'prompt' } }
 				/>
 				<Stack direction="row" gap={ 1 } alignItems="center" flexWrap="wrap">
 					<Button size="small" variant="outlined" startIcon={ <PhotoIcon /> } onClick={ pickImages }>{ __( 'Reference images', 'refraction' ) }</Button>
 					{ images.map( ( image ) => <Chip key={ image.id } size="small" label={ image.title } onDelete={ () => setImages( images.filter( ( i ) => i.id !== image.id ) ) } /> ) }
 				</Stack>
 				<FormControlLabel control={ <Checkbox size="small" checked={ useStyles } onChange={ ( e ) => setUseStyles( e.target.checked ) } /> } label={ __( "Use the site's colors and fonts", 'refraction' ) } />
-				<Select size="small" value={ model } onChange={ ( e ) => setModel( e.target.value ) } inputProps={ { 'aria-label': __( 'Model', 'refraction' ) } }>
+				<Select size="small" value={ model } onChange={ ( e ) => setModel( e.target.value ) } inputProps={ { 'aria-label': __( 'Model', 'refraction' ) } } MenuProps={ MENU }>
 					{ Object.entries( cfg().models || {} ).map( ( [ id, label ] ) => <MenuItem key={ id } value={ id }>{ label }</MenuItem> ) }
 				</Select>
 				{ confirmReplace && <Alert severity="warning" data-ask-claude="confirm">{ __( 'This replaces everything on the page. Undo brings it back. Press Generate again to continue.', 'refraction' ) }</Alert> }
@@ -219,7 +225,7 @@ export function Panel( { open, onClose, initialMode } ) {
 				{ busy && (
 					<Box>
 						<LinearProgress />
-						<Typography variant="caption" color="text.secondary">{ __( 'Claude is building. A whole page can take a few minutes.', 'refraction' ) } { seconds }s</Typography>
+						<Typography variant="caption" className="rf-ac-muted">{ __( 'Claude is building. A whole page can take a few minutes.', 'refraction' ) } { seconds }s</Typography>
 					</Box>
 				) }
 				{ error && <Alert severity="error" data-ask-claude="error">{ error }</Alert> }
@@ -227,7 +233,7 @@ export function Panel( { open, onClose, initialMode } ) {
 					<Alert severity="success" data-ask-claude="done">
 						<Typography variant="body2">{ result.summary || __( 'Done.', 'refraction' ) }</Typography>
 						{ result.dropped && result.dropped.length > 0 && <Typography variant="caption" display="block">{ __( 'Left out (not available here):', 'refraction' ) } { result.dropped.join( ', ' ) }</Typography> }
-						<Typography variant="caption" display="block" color="text.secondary">{ result.usage.input + result.usage.output } { __( 'tokens', 'refraction' ) } · { result.usage.model }</Typography>
+						<Typography variant="caption" display="block" className="rf-ac-muted">{ result.usage.input + result.usage.output } { __( 'tokens', 'refraction' ) } · { result.usage.model }</Typography>
 					</Alert>
 				) }
 			</Stack>
@@ -235,7 +241,7 @@ export function Panel( { open, onClose, initialMode } ) {
 	};
 
 	return (
-		<Drawer anchor="right" open={ open } onClose={ onClose } variant="persistent" PaperProps={ { sx: { width: 380, maxWidth: '100vw', top: 48, height: 'calc(100% - 48px)' }, 'data-ask-claude': 'panel' } }>
+		<Drawer anchor="right" open={ open } onClose={ onClose } variant="persistent" PaperProps={ { className: 'rf-ac-panel', sx: { width: 400, maxWidth: '100vw', top: 48, height: 'calc(100% - 48px)' }, 'data-ask-claude': 'panel' } }>
 			<Stack direction="row" alignItems="center" justifyContent="space-between" sx={ { px: 2, py: 1.5 } }>
 				<Typography variant="subtitle1" component="h2">{ __( 'Ask Claude', 'refraction' ) }</Typography>
 				<Stack direction="row">

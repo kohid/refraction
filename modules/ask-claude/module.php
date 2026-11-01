@@ -60,6 +60,7 @@ class Module extends BaseModule {
 				'claude-haiku-5-5' => __( 'Claude Haiku 5.5 (fastest, simple pages)', 'refraction' ),
 			],
 			'route' => 'refraction/v1/ask-claude',
+			'maxPrompt' => \Refraction\Modules\AskClaude\Classes\Rest::MAX_PROMPT,
 		] );
 	}
 }
