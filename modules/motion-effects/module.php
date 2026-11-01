@@ -5,6 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Core\Base\Module as BaseModule;
 use Refraction\Element_Base;
 use Refraction\Modules\MotionEffects\Classes\Pure_Motion_Settings;
+use Refraction\Modules\MotionEffects\Classes\Pure_Page_Scroll_Settings;
 use Refraction\Modules\MotionEffects\Classes\Pure_Reveal_Settings;
 use Refraction\Modules\MotionEffects\Classes\Pure_Sticky_Settings;
 use Refraction\Plugin;
@@ -39,6 +40,123 @@ class Module extends BaseModule {
 		add_action( 'refraction/preview/enqueue_scripts', [ $this, 'enqueue_for_preview' ] );
 		add_action( 'refraction/frontend/before_render', [ $this, 'maybe_enqueue' ] );
 		add_action( 'refraction/element/after_add_attributes', [ $this, 'add_attributes' ] );
+		add_action( 'refraction/documents/register_controls', [ $this, 'register_page_scroll_controls' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_page_scroll' ], 30 );
+	}
+
+	// ------------------------------------------------------------ page scrolling
+
+	/** Page Settings > Scrolling, on pages, posts and landing pages. */
+	public function register_page_scroll_controls( $document ) {
+		if ( ! in_array( $document->get_name(), [ 'wp-page', 'wp-post', 'landing-page' ], true ) ) {
+			return;
+		}
+
+		$document->start_controls_section( 'section_rf_page_scroll', [
+			'label' => esc_html__( 'Scrolling', 'refraction' ),
+			'tab' => Controls_Manager::TAB_SETTINGS,
+		] );
+
+		$document->add_control( 'rf_page_scroll', [
+			'label' => esc_html__( 'Scrolling', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'Normal', 'refraction' ),
+				'sections' => esc_html__( 'One section per scroll', 'refraction' ),
+				'smooth' => esc_html__( 'Smooth (eased)', 'refraction' ),
+				'snap' => esc_html__( 'Snap to sections', 'refraction' ),
+			],
+			'description' => esc_html__( 'Sections are the top-level containers of the page. A section taller than the screen (a 3D Build Scene or Scroll Sequence) scrolls through first. Plays only on the site, not in the editor; off for visitors who ask for reduced motion.', 'refraction' ),
+		] );
+
+		$document->add_control( 'rf_page_scroll_speed', [
+			'label' => esc_html__( 'Time to the next section (ms)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 300,
+			'max' => 2500,
+			'placeholder' => '900',
+			'condition' => [ 'rf_page_scroll' => 'sections' ],
+		] );
+
+		$document->add_control( 'rf_page_scroll_easing', [
+			'label' => esc_html__( 'Movement', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'inout',
+			'options' => [ 'inout' => esc_html__( 'Smooth start and end', 'refraction' ), 'out' => esc_html__( 'Slows down at the end', 'refraction' ), 'linear' => esc_html__( 'Even', 'refraction' ) ],
+			'condition' => [ 'rf_page_scroll' => 'sections' ],
+		] );
+
+		$document->add_control( 'rf_page_scroll_dots', [
+			'label' => esc_html__( 'Section dots', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'Dots at the side of the screen, one per section, to jump to it.', 'refraction' ),
+			'condition' => [ 'rf_page_scroll' => 'sections' ],
+		] );
+
+		$document->add_control( 'rf_page_scroll_smoothness', [
+			'label' => esc_html__( 'Smoothness', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 1, 'max' => 10 ] ],
+			'default' => [ 'size' => 5 ],
+			'condition' => [ 'rf_page_scroll' => 'smooth' ],
+		] );
+
+		$document->add_control( 'rf_page_scroll_snap', [
+			'label' => esc_html__( 'Snap', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'proximity',
+			'options' => [ 'proximity' => esc_html__( 'When near a section', 'refraction' ), 'mandatory' => esc_html__( 'Always to a section', 'refraction' ) ],
+			'condition' => [ 'rf_page_scroll' => 'snap' ],
+		] );
+
+		$document->add_control( 'rf_page_scroll_offset', [
+			'label' => esc_html__( 'Space for a fixed header (px)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 400,
+			'placeholder' => '0',
+			'condition' => [ 'rf_page_scroll!' => '' ],
+		] );
+
+		$document->add_control( 'rf_page_scroll_touch', [
+			'label' => esc_html__( 'Also on phones and tablets', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'Touch screens use the browser\'s own snapping for "One section per scroll" and keep their native scrolling for "Smooth".', 'refraction' ),
+			'condition' => [ 'rf_page_scroll!' => '' ],
+		] );
+
+		$document->end_controls_section();
+	}
+
+	/** The page's scrolling: the script and its config, on the site only (never in the editor or its preview). */
+	public function enqueue_page_scroll() {
+		if ( ! is_singular() || ( Plugin::$instance->preview && Plugin::$instance->preview->is_preview_mode() ) ) {
+			return;
+		}
+
+		$document = Plugin::$instance->documents->get( get_queried_object_id() );
+
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
+			return;
+		}
+
+		$config = Pure_Page_Scroll_Settings::normalize( (array) $document->get_settings() );
+
+		if ( ! $config ) {
+			return;
+		}
+
+		$config['id'] = (int) $document->get_main_id();
+
+		if ( ! wp_script_is( 'refraction-page-scroll', 'registered' ) ) {
+			$this->register_assets();
+		}
+
+		wp_enqueue_style( 'refraction-motion-effects' );
+		wp_enqueue_script( 'refraction-page-scroll' );
+		wp_add_inline_script( 'refraction-page-scroll', 'window.refractionPageScroll = ' . wp_json_encode( $config ) . ';', 'before' );
 	}
 
 	/** Device keys that exist on this site, desktop first. */
@@ -557,6 +675,7 @@ class Module extends BaseModule {
 
 		wp_register_script( 'refraction-motion-effects', REFRACTION_ASSETS_URL . 'js/motion-effects-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_script( 'refraction-sticky', REFRACTION_ASSETS_URL . 'js/sticky-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
+		wp_register_script( 'refraction-page-scroll', REFRACTION_ASSETS_URL . 'js/page-scroll-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_script( 'refraction-reveal', REFRACTION_ASSETS_URL . 'js/reveal-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_style( 'refraction-motion-effects', REFRACTION_ASSETS_URL . 'css/modules/motion-effects/frontend' . $min . '.css', [], REFRACTION_VERSION );
 	}

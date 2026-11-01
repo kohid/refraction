@@ -162,6 +162,42 @@
 	}
 }
 
+// ---- stage names are buttons: same look as a label, with a pointer and a visible focus
+.rf3d-progress button {
+	display: block;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	text-align: inherit;
+	cursor: pointer;
+
+	&:hover span {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 4px;
+	}
+}
+
+.rf3d-progress li:has(button[aria-pressed="true"]) {
+	border-color: var(--rf3d-progress-done);
+	opacity: 1;
+}
+
+// A stage picked in Parts or Aerial shows its caption again.
+.rf3d--free.rf3d--focus .rf3d-caps {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.3s ease;
+}
+
 // ---- captions: one per stage, stacked in the same spot; the stage being built shows
 .rf3d-caps {
 	position: absolute;

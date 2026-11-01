@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Pure-logic tests for the 3D Build Scene timeline: node scripts/test-build-scene.mjs
-import { fitRect, frameAt, loadOrder } from '../modules/build-scene/assets/js/sequence.js';
+import { fitRect, frameAt, galleryLayers, loadOrder } from '../modules/build-scene/assets/js/sequence.js';
+import { humanize, proposeStages, readGlbJson } from '../modules/build-scene/assets/js/glb-outline.js';
+import { makeGlb } from './fixtures/make-glb.mjs';
 import { activeStep, assignStages, EASINGS, nameMatcher, partProgress, schedule, scrollProgress, sortParts } from '../modules/build-scene/assets/js/timeline.js';
 
 let pass = 0;
@@ -47,6 +49,28 @@ t( 'sequence: coarse frames come before fine ones', order.indexOf( 16 ) < order.
 t( 'sequence: one frame', loadOrder( 1 ).join() === '0' );
 t( 'sequence: the frame follows the progress and stays on the last one in the pause', frameAt( 0, 100, 0.1 ) === 0 && frameAt( 0.45, 100, 0.1 ) === 50 && frameAt( 0.9, 100, 0.1 ) === 99 && frameAt( 1, 100, 0.1 ) === 99 );
 t( 'sequence: cover fills the box, contain shows it whole', fitRect( 200, 100, 100, 100, 'cover' ).join() === '-50,0,200,100' && fitRect( 200, 100, 100, 100, 'contain' ).join() === '0,25,100,50' );
+
+
+// ---- filling stages from a model
+const bytes = ( buf ) => buf.buffer.slice( buf.byteOffset, buf.byteOffset + buf.byteLength );
+t( 'outline: reads the JSON of a glb, refuses other bytes', readGlbJson( bytes( makeGlb( [ 'a' ] ) ) ).nodes[ 0 ].name === 'a' && null === readGlbJson( new ArrayBuffer( 40 ) ) && null === readGlbJson( null ) );
+t( 'outline: titles from names', humanize( 'Box_06 - Default' ) === 'Box' && humanize( 'roof-glass_left.002' ) === 'Roof glass left' && humanize( 'GlassCurtainWall' ) === 'Glass curtain wall' );
+const grouped = proposeStages( readGlbJson( bytes( makeGlb( [ 'Roof', 'Foundation', 'Walls' ].reverse(), { wrap: 'Villa' } ) ) ) );
+t( 'outline: named groups inside a wrapper become stages, bottom to top', 'groups' === grouped.by && grouped.stages.map( ( s ) => s.title ).join() === 'Walls,Foundation,Roof' && grouped.stages[ 0 ].parts[ 0 ] === 'Walls' );
+const byMaterial = proposeStages( readGlbJson( bytes( makeGlb( [ 'Box_01', 'Box_01', 'Box_02', 'Box_03' ], { materials: [ 'Concrete', 'Concrete', 'Glass', 'Slate_Roof' ] } ) ) ) );
+t( 'outline: repeated generic names fall back to materials', 'materials' === byMaterial.by && byMaterial.stages.map( ( s ) => s.title ).join() === 'Concrete,Glass,Slate roof' && byMaterial.stages[ 1 ].parts[ 0 ] === 'Glass' );
+t( 'outline: nothing usable gives no stages', 0 === proposeStages( readGlbJson( bytes( makeGlb( [ 'x', 'x' ] ) ) ) ).stages.length );
+t( 'outline: too many groups and no materials gives no stages', 0 === proposeStages( readGlbJson( bytes( makeGlb( Array.from( { length: 20 }, ( _, i ) => 'p' + i ) ) ) ), 12 ).stages.length );
+
+
+// ---- gallery mode
+const at = ( p ) => galleryLayers( p, 4, 0, 0.3 ).map( ( l ) => `${ l.index }:${ l.alpha.toFixed( 2 ) }:${ l.motion.toFixed( 2 ) }` ).join( ' ' );
+t( 'gallery: the first image alone at the start, not moving yet', at( 0 ) === '0:1.00:0.18' || at( 0 ).startsWith( '0:1.00' ) );
+t( 'gallery: the next image fades in over the last 30% of the share', galleryLayers( 0.2125, 4, 0, 0.3 ).map( ( l ) => l.index ).join() === '0,1' && Math.abs( galleryLayers( 0.2125, 4, 0, 0.3 )[ 1 ].alpha - 0.5 ) < 0.01 );
+t( 'gallery: once covered, an image is not drawn', galleryLayers( 0.3, 4, 0, 0.3 ).map( ( l ) => l.index ).join() === '1' );
+t( 'gallery: motion runs on without jumping when an image takes over', Math.abs( galleryLayers( 0.2499, 4, 0, 0.3 )[ 1 ].motion - galleryLayers( 0.2501, 4, 0, 0.3 )[ 0 ].motion ) < 0.01 );
+t( 'gallery: the last image stays in the pause', galleryLayers( 1, 4, 0.1, 0.3 ).map( ( l ) => l.index ).join() === '3' && galleryLayers( 0.95, 4, 0.1, 0.3 )[ 0 ].alpha === 1 );
+t( 'gallery: never more than two layers', [ 0, 0.1, 0.33, 0.5, 0.74, 0.9 ].every( ( p ) => galleryLayers( p, 6, 0, 0.7 ).length <= 2 ) );
 
 console.log( `build-scene timeline: ${ pass } passed, ${ fail } failed` );
 process.exit( fail ? 1 : 0 );

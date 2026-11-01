@@ -41,6 +41,17 @@ How it works: PHP clamps the settings (`Pure_Reveal_Settings`) into `data-rf-rev
 
 Scrolling Effects has a **Preset** for layered art: far layer (slow), middle layer, near layer (fast), float and turn, drift left or right, and come closer. A preset switches on its effects with fixed values (start 0, end 100) and hides the hand-made ones (`Pure_Reveal_Settings::PRESETS`, mirrored in `motion.js`). Give the pieces of an illustration different layers to make them move at different speeds.
 
+## Page scrolling (0.23.0)
+
+Page Settings (the cog) > **Scrolling**, on pages, posts and landing pages. Sections are the page's top-level containers.
+
+- **One section per scroll**: each wheel turn, Page Down / Page Up, Space or arrow key moves to the next or previous section with an eased animation (**Time to the next section**, **Movement**). A section taller than the screen, such as a 3D Build Scene or Scroll Sequence, scrolls through normally first and moves on at its end; scrolling up enters it at its end. The tail of a trackpad swipe is swallowed so one swipe is one section. Optional **Section dots** at the right edge (named after each section's first heading) jump to a section and mark the current one. Above the first section (a header) the first move goes to it; after the last one the footer scrolls normally.
+- **Smooth (eased)**: the wheel moves the page with easing (**Smoothness** 1 quick to 10 slow); the keyboard, scrollbar, links and find still work and the smoothing continues from there.
+- **Snap to sections**: the browser's own CSS scroll snapping, **when near a section** or **always**.
+- **Space for a fixed header** offsets every stop. Elements that scroll by themselves (a map, a code box) keep the wheel. Touch screens: off unless **Also on phones and tablets**; then "one section per scroll" uses the browser's snapping and "smooth" stays native.
+- Runs only on the site (never in the editor or its preview) and is off for reduced motion. `Pure_Page_Scroll_Settings` clamps the settings into `window.refractionPageScroll`; `page-scroll.js` is enqueued only on pages that use it.
+- Browser check: `node scripts/check-page-scroll.mjs --site DIR --port N`.
+
 ## Sticky
 
 Sticky (none/top/bottom), Sticky On (devices), Offset, Effects offset, Stay in column, Shrink when scrolled (padding) and
