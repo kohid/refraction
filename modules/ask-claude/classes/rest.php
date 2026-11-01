@@ -237,6 +237,10 @@ class Rest {
 			'use_styles' => (bool) $request->get_param( 'use_styles' ),
 		] );
 
-		return isset( $result['error'] ) ? self::error( $result['error'], (int) ( $result['status'] ?? 500 ) ) : $result;
+		if ( isset( $result['error'] ) ) {
+			return new \WP_Error( ! empty( $result['code'] ) ? $result['code'] : 'refraction_ask_claude', $result['error'], [ 'status' => (int) ( $result['status'] ?? 500 ) ] );
+		}
+
+		return $result;
 	}
 }

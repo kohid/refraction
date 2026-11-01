@@ -97,7 +97,7 @@ class Prompt_Builder {
 			$out .= '{' . implode( ', ', $fields ) . '}';
 		}
 
-		return $out . ( isset( $all[ $key . '_mobile' ] ) ? '*' : '' );
+		return $out . ( isset( $all[ $key . '_mobile' ] ) || ! empty( $control['is_responsive'] ) ? '*' : '' );
 	}
 
 	/**

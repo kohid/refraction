@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.25.0
+Stable tag: 0.25.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.25.1 =
+* Fix: Ask Claude kept no tablet or mobile settings (padding_mobile, font sizes...), so generated pages did not adapt to phones; the editor's responsive copies are now accepted and checked like their control.
+* Ask Claude: when the API key's account has no credit, the message says a Claude plan does not pay for API calls and offers one-click switches to Claude Code or the Claude.ai chat, keeping the description.
 
 = 0.25.0 =
 * New: Ask Claude can be built by Claude Code on your Claude Pro or Max plan, with no API key or credit. Choose "Claude Code" in the panel and send the request; a Claude Code session watching the site builds it, and you insert the result. The site never calls Claude.

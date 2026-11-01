@@ -136,7 +136,7 @@ class Widget_Specs {
 					$row['tab'] = $control['tab'];
 				}
 
-				if ( $this->is_device_copy( $key . '_mobile' ) && isset( $spec['controls'][ $key . '_mobile' ] ) ) {
+				if ( ! empty( $control['is_responsive'] ) || isset( $spec['controls'][ $key . '_mobile' ] ) ) {
 					$row['responsive'] = true;
 				}
 

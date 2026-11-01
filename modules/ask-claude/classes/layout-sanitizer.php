@@ -129,6 +129,26 @@ class Layout_Sanitizer {
 		}
 	}
 
+	const DEVICES = [ '_widescreen', '_laptop', '_tablet_extra', '_tablet', '_mobile_extra', '_mobile' ];
+
+	/**
+	 * The control behind a device copy such as padding_mobile: the editor makes those copies from a control marked
+	 * responsive (is_responsive) instead of registering them, so they are not in the list of controls.
+	 */
+	public static function device_copy_of( string $name, array $controls ): ?array {
+		foreach ( self::DEVICES as $suffix ) {
+			if ( substr( $name, -strlen( $suffix ) ) !== $suffix ) {
+				continue;
+			}
+
+			$base = $controls[ substr( $name, 0, -strlen( $suffix ) ) ] ?? null;
+
+			return is_array( $base ) && ( ! empty( $base['is_responsive'] ) || isset( $base['responsive'] ) ) ? $base : null;
+		}
+
+		return null;
+	}
+
 	/** Keeps only real controls, each value cleaned for its type. */
 	public function settings( array $settings, array $controls ): array {
 		$out = [];
@@ -146,7 +166,7 @@ class Layout_Sanitizer {
 				continue;
 			}
 
-			$control = $controls[ $name ] ?? null;
+			$control = $controls[ $name ] ?? self::device_copy_of( $name, $controls );
 
 			if ( ! is_array( $control ) || in_array( $control['type'] ?? '', self::NO_VALUE, true ) ) {
 				continue;

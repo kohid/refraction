@@ -137,6 +137,7 @@ export function Panel( { open, onClose, initialMode } ) {
 	const [ busy, setBusy ] = React.useState( false );
 	const [ seconds, setSeconds ] = React.useState( 0 );
 	const [ error, setError ] = React.useState( '' );
+	const [ noCredit, setNoCredit ] = React.useState( false );
 	const [ result, setResult ] = React.useState( null );
 	const [ settings, setSettings ] = React.useState( false );
 	const [ confirmReplace, setConfirmReplace ] = React.useState( false );
@@ -146,6 +147,8 @@ export function Panel( { open, onClose, initialMode } ) {
 	const setSource = ( value ) => {
 		setSourceState( value );
 		setSettings( false );
+		setError( '' );
+		setNoCredit( false );
 
 		try {
 			window.localStorage.setItem( SOURCE_KEY, value );
@@ -213,6 +216,7 @@ export function Panel( { open, onClose, initialMode } ) {
 			setResult( data );
 		} catch ( e ) {
 			setError( e.message || __( 'Something went wrong. Try again.', 'refraction' ) );
+			setNoCredit( 'refraction_ask_claude_no_credit' === e.code );
 		} finally {
 			setBusy( false );
 		}
@@ -288,7 +292,17 @@ export function Panel( { open, onClose, initialMode } ) {
 								<Typography variant="caption" className="rf-ac-muted">{ __( 'Claude is building. A whole page can take a few minutes.', 'refraction' ) } { seconds }s</Typography>
 							</Box>
 						) }
-						{ error && <Alert severity="error" data-ask-claude="error">{ error }</Alert> }
+						{ error && (
+							<Alert severity="error" data-ask-claude="error">
+								{ error }
+								{ noCredit && (
+									<Stack direction="row" gap={ 1 } flexWrap="wrap" sx={ { mt: 1 } }>
+										<Button size="small" variant="contained" onClick={ () => setSource( 'code' ) } data-ask-claude="switch-code">{ __( 'Use Claude Code', 'refraction' ) }</Button>
+										<Button size="small" variant="outlined" onClick={ () => setSource( 'chat' ) } data-ask-claude="switch-chat">{ __( 'Use Claude.ai chat', 'refraction' ) }</Button>
+									</Stack>
+								) }
+							</Alert>
+						) }
 						{ result && (
 							<Alert severity="success" data-ask-claude="done">
 								<Typography variant="body2">{ result.summary || __( 'Done.', 'refraction' ) }</Typography>
