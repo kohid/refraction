@@ -18,3 +18,129 @@
 		transition: none;
 	}
 }
+
+// ---- Reveal (reveal.js). Every animated piece has a progress --rf-rv-p from 0 (hidden) to 1 (in place); its look
+// is computed from it, so a timed reveal (the property transitions) and a scroll-linked one (the script sets it) are
+// the same. Only `opacity`, `transform` and, for the blur effect, `filter` are used: Scrolling Effects write the
+// separate `translate` / `rotate` / `scale` properties, so both stack on one element.
+@property --rf-rv-p {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 1;
+}
+
+// Hidden until the script takes over. If it never runs (blocked, failed), the element shows after 3 seconds anyway.
+.rf-rv-wait {
+	opacity: 0;
+	animation: rf-rv-failsafe 0s linear 3s forwards;
+}
+
+@keyframes rf-rv-failsafe {
+	to {
+		opacity: 1;
+	}
+}
+
+[data-rf-rv-piece] {
+	--rf-rv-q: calc(1 - var(--rf-rv-p));
+	--rf-rv-dx: 0px;
+	--rf-rv-dy: 0px;
+	--rf-rv-ds: 0;
+	--rf-rv-dr: 0deg;
+
+	opacity: var(--rf-rv-p);
+	transform: translate3d(calc(var(--rf-rv-q) * var(--rf-rv-dx)), calc(var(--rf-rv-q) * var(--rf-rv-dy)), 0) scale(calc(1 + var(--rf-rv-q) * var(--rf-rv-ds))) rotate(calc(var(--rf-rv-q) * var(--rf-rv-dr)));
+	transition: --rf-rv-p var(--rf-rv-dur, 700ms) var(--rf-rv-ease, cubic-bezier(0.22, 1, 0.36, 1)) var(--rf-rv-delay, 0ms);
+}
+
+[data-rf-rv-fx="fade-up"] {
+	--rf-rv-dy: var(--rf-rv-dist, 40px);
+}
+
+[data-rf-rv-fx="fade-down"] {
+	--rf-rv-dy: calc(-1 * var(--rf-rv-dist, 40px));
+}
+
+[data-rf-rv-fx="fade-left"] {
+	--rf-rv-dx: var(--rf-rv-dist, 40px);
+}
+
+[data-rf-rv-fx="fade-right"] {
+	--rf-rv-dx: calc(-1 * var(--rf-rv-dist, 40px));
+}
+
+[data-rf-rv-fx="zoom-in"] {
+	--rf-rv-ds: -0.15;
+}
+
+[data-rf-rv-fx="zoom-out"] {
+	--rf-rv-ds: 0.15;
+}
+
+[data-rf-rv-fx="blur"] {
+	filter: blur(calc(var(--rf-rv-q) * 12px));
+}
+
+[data-rf-rv-fx="rise"] {
+	--rf-rv-dy: var(--rf-rv-dist, 40px);
+	--rf-rv-dr: 4deg;
+
+	transform-origin: 0 100%;
+}
+
+// Text that slides up from behind its own line: the word clips its inner piece.
+[data-rf-rv-fx="mask"] {
+	--rf-rv-dy: 110%;
+
+	display: inline-block;
+	opacity: 1;
+}
+
+.rf-rv-word {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.rf-rv-clip {
+	display: inline-block;
+	overflow: hidden;
+	vertical-align: bottom;
+	// Room for descenders and accents, taken back so the line height stays the same.
+	padding: 0.12em 0 0.12em;
+	margin: -0.12em 0 -0.12em;
+}
+
+.rf-rv-char {
+	display: inline-block;
+}
+
+// Scroll-linked pieces follow the script frame by frame, without their own transition.
+.rf-rv-scrub [data-rf-rv-piece],
+[data-rf-rv-piece].rf-rv-scrub,
+.rf-rv-instant [data-rf-rv-piece],
+[data-rf-rv-piece].rf-rv-instant {
+	transition: none;
+}
+
+// The full text stays readable for screen readers while the split pieces are hidden from them.
+.rf-rv-sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-rf-rv-piece] {
+		--rf-rv-p: 1 !important;
+
+		transition: none;
+	}
+
+	.rf-rv-wait {
+		opacity: 1;
+		animation: none;
+	}
+}

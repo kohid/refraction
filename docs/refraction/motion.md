@@ -25,6 +25,22 @@ is built from the element settings with the same limits and updates live when a 
 Limits: effects of elements that are off screen are not updated until they come into view (with a 150px margin); the tilt
 reacts only while the pointer is over the element; touch pointers are ignored.
 
+## Reveal (0.20.0)
+
+Advanced tab of every widget and container, section **Reveal** (before Scrolling Effects). Things come into view on their own:
+
+- **Whole element / Whole container**: fade up, fade down, fade in from either side, fade, zoom in, zoom out, sharpen from blur, rise and turn. Use it or the Entrance Animation, not both on one element (the Entrance Animation wins).
+- **Text** (widgets): **line by line**, **word by word** or **letter by letter**, each piece **up from behind a line** (masked) or with any of the effects above. The text is split into word spans (letters inside them) around its existing markup, so bold, links and line breaks stay; screen readers get the whole text once (`.rf-rv-sr`) and the pieces are `aria-hidden`. Lines are measured after splitting and measured again after a resize.
+- **Its elements, one after another** (containers): the widgets and inner containers directly inside come in with a delay each (elements with their own Entrance Animation are left alone).
+- **Plays**: **once** when it comes into view (`Starts when this far into the screen`), **every time** (hidden again once it has left the screen completely), or **with the scroll**: a progress from Viewport start to Viewport end (0 = the element's top at the bottom of the screen) drives every piece, so it plays backwards when scrolling up.
+- Duration, delay, time between pieces, distance, movement (easing) and devices.
+
+How it works: PHP clamps the settings (`Pure_Reveal_Settings`) into `data-rf-reveal` and adds `rf-rv-wait` (hidden; a CSS animation shows it after 3 seconds if the script never runs). `reveal.js` (enqueued only when used, always in the editor preview) gives every piece `--rf-rv-p` from 0 to 1 and the CSS draws it (`opacity`, `transform`, and `filter` for the blur effect). `--rf-rv-p` is a registered custom property, so a timed reveal simply transitions it with a delay per piece, and a scroll-linked one sets it frame by frame with the same stagger. Scrolling Effects use the separate `translate` / `rotate` / `scale` properties, so both stack on one element. `prefers-reduced-motion: reduce` shows everything at once without splitting. In the editor the config is built from the settings and rebuilt when one changes.
+
+## Parallax presets (0.20.0)
+
+Scrolling Effects has a **Preset** for layered art: far layer (slow), middle layer, near layer (fast), float and turn, drift left or right, and come closer. A preset switches on its effects with fixed values (start 0, end 100) and hides the hand-made ones (`Pure_Reveal_Settings::PRESETS`, mirrored in `motion.js`). Give the pieces of an illustration different layers to make them move at different speeds.
+
 ## Sticky
 
 Sticky (none/top/bottom), Sticky On (devices), Offset, Effects offset, Stay in column, Shrink when scrolled (padding) and
@@ -69,5 +85,5 @@ SVG icon is single-colour (mask), the front end keeps the SVG's own fills.
 
 ## Tests
 
-`php scripts/test-motion.php` (pure logic), `node scripts/check-motion.mjs --site DIR --port N` (browser, classic and block
-theme), fixture `scripts/fixtures/motion-seed.php`.
+`php scripts/test-motion.php` (pure logic, reveal and presets included), `node scripts/check-motion.mjs --site DIR --port N` (browser, classic and block
+theme), fixture `scripts/fixtures/motion-seed.php`, and `node scripts/check-reveal.mjs --site DIR --port N` (text, children, once / every time / with the scroll, presets, reduced motion, no-script failsafe, editor; saves a scroll recording).

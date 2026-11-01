@@ -11,6 +11,7 @@ function t( $name, $ok ) { global $pass, $fail; if ( $ok ) { $pass++; } else { $
 
 use Refraction\Modules\MotionEffects\Classes\Pure_Motion_Settings as M;
 use Refraction\Modules\MotionEffects\Classes\Pure_Sticky_Settings as S;
+use Refraction\Modules\MotionEffects\Classes\Pure_Reveal_Settings as R;
 
 $devices = [ 'desktop', 'tablet', 'mobile' ];
 
@@ -186,6 +187,27 @@ t( 'font css lists formats', false !== strpos( $fcss, 'url("https://e.test/ci/my
 t( 'font css cannot be broken out of', 1 === substr_count( IS::font_css( 'x', 'a"};b', [ 'ttf' => 'f.ttf' ], [ 'a"}b' => 59648 ], 'https://e.test' ), '@font-face' ) && false === strpos( IS::font_css( 'x', 'a"};b', [ 'ttf' => 'f.ttf' ], [], 'https://e.test' ), 'a"};b' ) );
 $scss = IS::svg_css( 'my-set', [ 'home' => 'home.svg' ], 'https://e.test/ci/my-set' );
 t( 'svg css masks the icon with currentColor', false !== strpos( $scss, '.rf-ci-my-set-home{' ) && false !== strpos( $scss, 'mask-image:url("https://e.test/ci/my-set/home.svg")' ) && false !== strpos( $scss, 'background-color:currentColor' ) );
+
+
+// ---- reveal
+t( 'reveal: nothing chosen gives no config', [] === R::normalize( [ 'rf_reveal_duration' => 900 ], $devices ) && ! R::uses_reveal( [] ) );
+t( 'reveal: an unknown effect is ignored', [] === R::normalize( [ 'rf_reveal' => 'explode' ], $devices ) );
+$rv = R::normalize( [ 'rf_reveal' => 'fade-up' ], $devices );
+t( 'reveal: defaults', 'fade-up' === $rv['effect'] && 'once' === $rv['trigger'] && 700 === $rv['duration'] && 0 === $rv['delay'] && 80 === $rv['stagger'] && 40 === $rv['distance'] && 'smooth' === $rv['easing'] && 10 === $rv['offset'] && $devices === $rv['devices'] && ! isset( $rv['text'] ) && ! isset( $rv['children'] ) );
+$rv = R::normalize( [ 'rf_reveal_text' => 'lines', 'rf_reveal_trigger' => 'scroll', 'rf_reveal_duration' => 99999, 'rf_reveal_stagger' => -5, 'rf_reveal_distance' => [ 'size' => 500 ], 'rf_reveal_easing' => 'wobble', 'rf_reveal_start' => 80, 'rf_reveal_end' => 20, 'rf_reveal_devices' => [ 'mobile', 'watch' ] ], $devices );
+t( 'reveal: text by line, mask by default, scroll-linked', 'lines' === $rv['text'] && 'mask' === $rv['textEffect'] && 'scroll' === $rv['trigger'] && ! isset( $rv['effect'] ) );
+t( 'reveal: numbers are clamped, the easing whitelisted', 4000 === $rv['duration'] && 0 === $rv['stagger'] && 300 === $rv['distance'] && 'smooth' === $rv['easing'] );
+t( 'reveal: the scroll range is ordered, devices filtered', 20 === $rv['start'] && 80 === $rv['end'] && [ 'mobile' ] === $rv['devices'] );
+$rv = R::normalize( [ 'rf_reveal_children' => 'zoom-in', 'rf_reveal_text_effect' => 'blur' ], $devices );
+t( 'reveal: children of a container; a text effect only with a text split', 'zoom-in' === $rv['children'] && ! isset( $rv['textEffect'] ) );
+t( 'reveal: the text effect may be any effect or the mask', 'blur' === R::normalize( [ 'rf_reveal_text' => 'words', 'rf_reveal_text_effect' => 'blur' ], $devices )['textEffect'] && 'mask' === R::normalize( [ 'rf_reveal_text' => 'words', 'rf_reveal_text_effect' => '<x>' ], $devices )['textEffect'] );
+
+// ---- parallax presets
+$preset = R::with_preset( [ 'rf_scroll_preset' => 'float', 'rf_scroll_blur' => 'yes', 'rf_scroll_ty_speed' => 9 ] );
+$fx = M::normalize( $preset, $devices );
+t( 'preset: turns its effects on with its values, hand-made ones off', [ 'ty', 'rotate' ] === array_keys( $fx['scroll']['effects'] ) && 3.0 === $fx['scroll']['effects']['ty']['speed'] && 'up' === $fx['scroll']['effects']['ty']['dir'] && 'right' === $fx['scroll']['effects']['rotate']['dir'] && 0 === $fx['scroll']['effects']['ty']['start'] && 100 === $fx['scroll']['effects']['ty']['end'] );
+t( 'preset: none or unknown leaves the settings alone', [ 'rf_scroll_preset' => 'zzz', 'a' => 1 ] === R::with_preset( [ 'rf_scroll_preset' => 'zzz', 'a' => 1 ] ) );
+t( 'preset: every preset gives motion', count( array_filter( array_keys( R::PRESETS ), function ( $k ) { return M::uses_motion( R::with_preset( [ 'rf_scroll_preset' => $k ] ) ); } ) ) === count( R::PRESETS ) );
 
 echo "\n$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

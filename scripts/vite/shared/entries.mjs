@@ -70,6 +70,7 @@ export const BASE_ENTRIES = {
 	'display-conditions-editor': 'modules/display-conditions/assets/js/editor.js',
 	'custom-css-editor': 'modules/custom-css/assets/js/editor.js',
 	'motion-effects-frontend': 'modules/motion-effects/assets/js/motion.js',
+	'reveal-frontend': 'modules/motion-effects/assets/js/reveal.js',
 	'build-scene-frontend': 'modules/build-scene/assets/js/frontend.js',
 	'scroll-sequence-frontend': 'modules/build-scene/assets/js/sequence-frontend.js',
 	'ask-claude-editor': 'modules/ask-claude/assets/js/editor.js',
