@@ -41,6 +41,7 @@ const SASS_TARGETS = [
 	{ cwd: 'modules/forms/assets/scss', src: '*.scss', dest: 'assets/css/modules/forms' },
 	{ cwd: 'modules/popups/assets/scss', src: '*.scss', dest: 'assets/css/modules/popups' },
 	{ cwd: 'modules/motion-effects/assets/scss', src: '*.scss', dest: 'assets/css/modules/motion-effects' },
+	{ cwd: 'modules/build-scene/assets/scss', src: '*.scss', dest: 'assets/css/modules/build-scene' },
 	{ cwd: 'modules/custom-fonts/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-fonts' },
 	{ cwd: 'modules/custom-icons/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-icons' },
 	{ cwd: 'assets/dev/scss/frontend', src: 'admin-bar.scss', dest: 'assets/css' },
