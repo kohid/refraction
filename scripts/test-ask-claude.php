@@ -165,5 +165,12 @@ t( 'queue: a result can be resent while building', J::can( 'result', 'building' 
 t( 'queue: building for more than 30 minutes goes back to the queue', J::is_stale( 'building', 1000, 1000 + 1801 ) && ! J::is_stale( 'building', 1000, 1000 + 1700 ) && ! J::is_stale( 'queued', 1000, 99999 ) && ! J::is_stale( 'building', 0, 99999 ) );
 t( 'queue: watching while the last beat is under 30 seconds old', J::watching( 100, 120 ) && ! J::watching( 100, 131 ) && ! J::watching( 0, 10 ) );
 
+// Device copies of responsive controls (the editor makes them; they are not registered controls).
+$rc = [ 'padding' => [ 'type' => 'dimensions', 'is_responsive' => true ], 'title' => [ 'type' => 'text' ] ];
+t( 'responsive: padding_mobile follows the padding control', null !== L::device_copy_of( 'padding_mobile', $rc ) && null !== L::device_copy_of( 'padding_tablet', $rc ) );
+t( 'responsive: no copies of a control that is not responsive, nor of unknown ones', null === L::device_copy_of( 'title_mobile', $rc ) && null === L::device_copy_of( 'nothing_mobile', $rc ) && null === L::device_copy_of( 'padding', $rc ) );
+$cleaned = ( new L( function () { return null; }, function () { return ''; } ) )->settings( [ 'padding_mobile' => [ 'unit' => 'px', 'top' => '20', 'right' => '20', 'bottom' => '20', 'left' => '20' ], 'title_mobile' => 'x' ], $rc );
+t( 'responsive: the copy is kept and cleaned like its control', isset( $cleaned['padding_mobile'] ) && '20' === (string) $cleaned['padding_mobile']['top'] && ! isset( $cleaned['title_mobile'] ) );
+
 echo "ask-claude: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );
