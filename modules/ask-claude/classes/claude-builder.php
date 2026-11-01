@@ -112,9 +112,9 @@ class Claude_Builder {
 			} catch ( RateLimitException $e ) {
 				return [ 'error' => __( 'Claude is busy or the account reached its rate limit. Try again in a minute.', 'refraction' ), 'status' => 429 ];
 			} catch ( BadRequestException $e ) {
-				return [ 'error' => self::explain( $e ), 'status' => 400 ];
+				return [ 'error' => self::explain( $e ), 'status' => 400, 'code' => self::is_no_credit( $e ) ? 'refraction_ask_claude_no_credit' : '' ];
 			} catch ( APIStatusException $e ) {
-				return [ 'error' => self::explain( $e ), 'status' => 502 ];
+				return [ 'error' => self::explain( $e ), 'status' => 502, 'code' => self::is_no_credit( $e ) ? 'refraction_ask_claude_no_credit' : '' ];
 			} catch ( APIConnectionException $e ) {
 				return [ 'error' => __( 'The site could not reach Claude: ', 'refraction' ) . self::short( $e->getMessage() ), 'status' => 502 ];
 			}
@@ -236,12 +236,17 @@ class Claude_Builder {
 		return is_string( $message ) ? self::short( $message ) : '';
 	}
 
+	/** Whether Anthropic refused because the key's account has no credit. */
+	public static function is_no_credit( APIStatusException $e ): bool {
+		return false !== stripos( self::api_message( $e->body ), 'credit balance' );
+	}
+
 	/** A plain message for an error from Anthropic, with what to do about it. */
 	public static function explain( APIStatusException $e ): string {
 		$message = self::api_message( $e->body );
 
-		if ( false !== stripos( $message, 'credit balance' ) ) {
-			return __( 'The Anthropic account of this API key has no credit left. Add credit at console.anthropic.com (Settings > Billing), then try again. A Claude.ai subscription does not include API credit.', 'refraction' );
+		if ( self::is_no_credit( $e ) ) {
+			return __( 'The API key\'s account has no credit, and a Claude Pro or Max plan does not pay for API calls. To build with your plan instead, use Claude Code or the Claude.ai chat (no credit needed). Or add credit at console.anthropic.com (Settings > Billing).', 'refraction' );
 		}
 
 		if ( in_array( (int) $e->status, [ 500, 503, 529 ], true ) ) {
