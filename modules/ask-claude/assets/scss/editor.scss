@@ -180,6 +180,56 @@ body .rf-ac-menu.MuiPaper-root {
 		}
 	}
 
+	// ---- Claude Code queue
+	.rf-ac-dot {
+		flex: none;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background-color: var(--rf-ac-muted);
+
+		&.is-on {
+			background-color: var(--e-a-color-success, #0a875a);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-a-color-success, #0a875a) 25%, transparent);
+		}
+	}
+
+	.rf-ac-job {
+		padding: 10px 12px;
+		border: 1px solid var(--rf-ac-soft-line);
+		border-radius: 4px;
+		background-color: var(--rf-ac-field);
+	}
+
+	.rf-ac-job-title {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	.rf-ac-state.MuiChip-root {
+		height: 20px;
+		background-color: var(--rf-ac-active);
+		color: var(--rf-ac-txt);
+		font-size: 11px;
+
+		&.is-ready {
+			background-color: var(--e-a-color-success, #0a875a);
+			color: #fff;
+		}
+
+		&.is-declined {
+			background-color: var(--e-a-color-danger, #dc2626);
+			color: #fff;
+		}
+	}
+
+	.rf-ac-setup summary {
+		cursor: pointer;
+		color: var(--rf-ac-accent);
+	}
+
 	// ---- messages: a tinted line on the panel's own background, readable in every theme
 	.MuiAlert-root {
 		border: 1px solid var(--rf-ac-soft-line);

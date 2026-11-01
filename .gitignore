@@ -60,7 +60,8 @@ coverage/
 .cursor/rules/LOCAL_RULES.md
 .cursor/skills/create-ship-deploy/
 .cursor/plans/
-.claude/
+.claude/*
+!.claude/commands/
 docs/superpowers/
 
 # PHPunit and PHPlint cache files

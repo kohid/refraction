@@ -2,7 +2,9 @@
 namespace Refraction\Modules\AskClaude;
 
 use Refraction\Core\Base\Module as BaseModule;
+use Refraction\Modules\AskClaude\Classes\Job_Queue;
 use Refraction\Modules\AskClaude\Classes\Key_Store;
+use Refraction\Modules\AskClaude\Classes\Queue_Rest;
 use Refraction\Modules\AskClaude\Classes\Rest;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * prompt (and reference images), using Refraction's own widgets. It calls Anthropic's API with the site's own API key,
  * only when someone presses Generate; nothing else in Refraction makes such calls. Needs PHP 8.1+ (the official SDK);
  * on older PHP the panel explains that and nothing is called. Its "Claude.ai chat" mode makes no call at all: the person
- * copies the prompt into their own Claude.ai chat and pastes the answer back (Classes\Prompt_Builder).
+ * copies the prompt into their own Claude.ai chat and pastes the answer back (Classes\Prompt_Builder). Its "Claude Code"
+ * mode makes none either: requests wait in a queue that a Claude Code session watches and answers (Classes\Queue_Rest).
  */
 class Module extends BaseModule {
 
@@ -37,6 +40,8 @@ class Module extends BaseModule {
 		parent::__construct();
 
 		add_action( 'rest_api_init', [ new Rest(), 'register' ] );
+		add_action( 'rest_api_init', [ new Queue_Rest(), 'register' ] );
+		add_action( 'init', [ Job_Queue::class, 'register' ] );
 		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'enqueue' ] );
 	}
 
@@ -61,6 +66,7 @@ class Module extends BaseModule {
 				'claude-haiku-5-5' => __( 'Claude Haiku 5.5 (fastest, simple pages)', 'refraction' ),
 			],
 			'route' => 'refraction/v1/ask-claude',
+			'watching' => Job_Queue::watching(),
 			'maxPrompt' => \Refraction\Modules\AskClaude\Classes\Rest::MAX_PROMPT,
 		] );
 	}

@@ -212,7 +212,7 @@ class Prompt_Builder {
 
 		return implode( "\n\n", array_filter( [
 			'# Build page content for Refraction',
-			self::INTRO . ' There are no tools in this conversation: everything you need is below, and the person pastes your answer back into the editor.',
+			self::INTRO . ' Everything you need is below (no tools are needed): your answer is checked and inserted into the editor as it is.',
 			"WIDGET CATALOG (name - title (keywords))\n" . $specs->catalog(),
 			"CONTROLS (setting:type(allowed options); * = also has _tablet and _mobile copies)\n" . self::controls( $specs ),
 			$images ? "IMAGES IN THE MEDIA LIBRARY (use only these ids in media settings; never invent image URLs)\n" . wp_json_encode( $images ) : "IMAGES\nThe media library has no images yet: leave image settings out and say in the summary which pictures to add.",
@@ -274,7 +274,7 @@ class Prompt_Builder {
 	/**
 	 * Cleans proposed elements for a mode.
 	 *
-	 * @return array [ elements, dropped, ok ] where ok is false when nothing usable is left (or, for "selected", not
+	 * @return array [ elements, dropped, ok ] where ok is false when no widget is left (or, for "selected", not
 	 *               exactly one element).
 	 */
 	public static function clean( Widget_Specs $specs, $elements, string $mode ): array {
@@ -282,6 +282,17 @@ class Prompt_Builder {
 		// A replacement for the selected element may be a widget; elsewhere the top level holds containers.
 		$clean = $sanitizer->elements( $elements, 0, 'selected' === $mode ? 'container' : 'root' );
 
-		return [ $clean, $sanitizer->dropped, $clean && ( 'selected' !== $mode || 1 === count( $clean ) ) ];
+		return [ $clean, $sanitizer->dropped, self::has_widget( $clean ) && ( 'selected' !== $mode || 1 === count( $clean ) ) ];
+	}
+
+	/** Whether any widget is left: empty containers alone (everything in them dropped) are not a result. */
+	private static function has_widget( array $elements ): bool {
+		foreach ( $elements as $element ) {
+			if ( 'widget' === $element['elType'] || self::has_widget( $element['elements'] ?? [] ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
