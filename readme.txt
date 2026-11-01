@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.17.0
+Stable tag: 0.18.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.18.0 =
+* New: Scroll Sequence widget (Advanced). Play a video or a numbered image sequence with the scroll, forward and backward, while the section stays pinned: a camera move through a room, a product turning, a drone shot. Add text that shows between two points of the scroll, with a shade behind it so it stays readable. Frames load progressively and play by file name; videos are scrubbed from memory. Reduced motion shows a still picture and all the text.
 
 = 0.17.0 =
 * New: 3D Build Scene widget (Advanced). Show a 3D model whose parts fly in stage by stage while visitors scroll: the scene stays pinned while it builds, captions and a progress line follow the stages, and the finished model can be turned by dragging. Use the built-in sample house or upload your own .glb model; group its parts into stages by name (roof*, glass*), choose where parts come from, the camera angles, the light and shadows. A preview slider shows any point of the build in the editor. Respects reduced motion, falls back to a still image without 3D, and can show the still image on phones. Everything runs from your site: nothing is loaded from elsewhere.

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Pure-logic tests for the 3D Build Scene timeline: node scripts/test-build-scene.mjs
+import { fitRect, frameAt, loadOrder } from '../modules/build-scene/assets/js/sequence.js';
 import { activeStep, assignStages, EASINGS, nameMatcher, partProgress, schedule, scrollProgress, sortParts } from '../modules/build-scene/assets/js/timeline.js';
 
 let pass = 0;
@@ -39,6 +40,13 @@ t( 'easings start at 0 and end at 1', Object.values( EASINGS ).every( ( e ) => M
 t( 'active step: the last one started', activeStep( plan.steps, 0 ) === 0 && activeStep( plan.steps, 0.5 ) === 1 && activeStep( plan.steps, 1 ) === 1 );
 t( 'scroll progress: 0 above, 1 at the end, clamped', scrollProgress( 100, 3000, 1000 ) === 0 && scrollProgress( -1000, 3000, 1000 ) === 0.5 && scrollProgress( -5000, 3000, 1000 ) === 1 );
 t( 'scroll progress: a track no taller than the screen', scrollProgress( 0, 800, 1000 ) === 1 && scrollProgress( 10, 800, 1000 ) === 0 );
+
+const order = loadOrder( 40 );
+t( 'sequence: every frame is loaded once, first and last first', order.length === 40 && new Set( order ).size === 40 && order[ 0 ] === 0 && order[ 1 ] === 39 );
+t( 'sequence: coarse frames come before fine ones', order.indexOf( 16 ) < order.indexOf( 8 ) && order.indexOf( 8 ) < order.indexOf( 3 ) );
+t( 'sequence: one frame', loadOrder( 1 ).join() === '0' );
+t( 'sequence: the frame follows the progress and stays on the last one in the pause', frameAt( 0, 100, 0.1 ) === 0 && frameAt( 0.45, 100, 0.1 ) === 50 && frameAt( 0.9, 100, 0.1 ) === 99 && frameAt( 1, 100, 0.1 ) === 99 );
+t( 'sequence: cover fills the box, contain shows it whole', fitRect( 200, 100, 100, 100, 'cover' ).join() === '-50,0,200,100' && fitRect( 200, 100, 100, 100, 'contain' ).join() === '0,25,100,50' );
 
 console.log( `build-scene timeline: ${ pass } passed, ${ fail } failed` );
 process.exit( fail ? 1 : 0 );
