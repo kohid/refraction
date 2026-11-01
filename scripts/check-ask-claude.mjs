@@ -171,7 +171,7 @@ async function main() {
 			const c = refraction.getPreviewContainer().children[ 0 ];
 			return { bg: c.settings.get( 'background_image' ), text: c.children[ 1 ].settings.get( 'editor' ), globals: c.children[ 0 ].settings.get( '__globals__' ) };
 		} );
-		check( 'page', 'the image is the library image, the script is gone, the site color is used', hero.bg && hero.bg.id === imageId && /oak-house/.test( hero.bg.url ) && ! /script/.test( hero.text ) && hero.globals && hero.globals.title_color === 'globals/colors?id=primary', JSON.stringify( hero ) );
+		check( 'page', 'the image is the library image, the script is gone, the site color is used', hero.bg && hero.bg.id === imageId && /oak-house/.test( hero.bg.url ) && ! /script|steal/.test( hero.text ) && hero.globals && hero.globals.title_color === 'globals/colors?id=primary', JSON.stringify( hero ) );
 		const preview = p.frameLocator( '#refraction-preview-iframe' );
 		check( 'page', 'the preview shows it', ( await preview.locator( 'h1' ).first().textContent() ).includes( 'Houses that age well' ) );
 		await p.screenshot( { path: join( SHOTS, 'page.png' ) } );

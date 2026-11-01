@@ -5,7 +5,7 @@ $root = dirname( __DIR__ );
 
 // Minimal stand-ins for the WordPress functions the sanitizer calls.
 function wp_kses( $text, $allowed ) { return strip_tags( $text, '<' . implode( '><', array_keys( $allowed ) ) . '>' ); }
-function wp_kses_post( $text ) { return preg_replace( '#<script\b[^>]*>.*?</script>#is', '', $text ); }
+function wp_kses_post( $text ) { return strip_tags( $text, '<p><a><strong><em><ul><li><h2><h3>' ); } // like WordPress: tags go, their text stays
 function sanitize_text_field( $text ) { return trim( strip_tags( $text ) ); }
 function sanitize_textarea_field( $text ) { return strip_tags( $text ); }
 function esc_url_raw( $url ) { return filter_var( $url, FILTER_SANITIZE_URL ); }
@@ -87,7 +87,7 @@ t( 'dimensions are normalised', [ 'unit' => 'px', 'top' => '80', 'right' => '20'
 t( 'a gap number becomes a linked gap', '24' === $c['settings']['flex_gap']['row'] && '24' === $c['settings']['flex_gap']['column'] && $c['settings']['flex_gap']['isLinked'] );
 t( 'media must be a library image; its URL comes from the library', 7 === $c['settings']['background_image']['id'] && 'https://site.test/wp-content/uploads/hero.jpg' === $c['settings']['background_image']['url'] );
 t( 'unknown widgets and element types are dropped and reported', 1 === count( $c['elements'] ) && in_array( 'widget "html"', $s->dropped, true ) && in_array( 'element type "section"', $s->dropped, true ) );
-t( 'text keeps inline tags, loses scripts', 'Calm <b>rooms</b>alert(1)' === $h['settings']['title'] );
+t( 'text keeps inline tags, loses scripts with their content', 'Calm <b>rooms</b>' === $h['settings']['title'] );
 t( 'a choice outside the options is dropped', ! isset( $h['settings']['header_size'] ) );
 t( 'a color that is not a color is dropped', ! isset( $h['settings']['title_color'] ) );
 t( 'a slider unit outside the control units falls back to px', [ 'unit' => 'px', 'size' => 64, 'sizes' => [] ] === $h['settings']['typography_font_size'] );
@@ -106,7 +106,8 @@ $tabs = $new()->elements( [ [ 'elType' => 'container', 'elements' => [ [ 'elType
 t( 'nested widgets keep their child containers, marked inner', 1 === count( $tabs[0]['elements'][0]['elements'] ) && true === $tabs[0]['elements'][0]['elements'][0]['isInner'] );
 
 $text = $new()->settings( [ 'editor' => '<p>Hello</p><script>bad()</script>', 'columns' => 40, 'drop_cap' => 'on' ], $controls['text-editor'] );
-t( 'wysiwyg keeps markup but not scripts, numbers are bounded, switchers are yes or empty', '<p>Hello</p>' === $text['editor'] && 10 === $text['columns'] && '' === $text['drop_cap'] );
+t( 'wysiwyg keeps markup but not scripts (nor their text), numbers are bounded, switchers are yes or empty', '<p>Hello</p>' === $text['editor'] && 10 === $text['columns'] && '' === $text['drop_cap'] );
+t( 'an unclosed script or a style block goes too', '<p>A</p>' === L::without_code( '<p>A</p><style>p{}</style><script>x' ) );
 
 $many = $new();
 $tree = array_fill( 0, 300, [ 'elType' => 'container', 'settings' => [] ] );

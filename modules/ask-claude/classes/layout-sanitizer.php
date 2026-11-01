@@ -191,7 +191,7 @@ class Layout_Sanitizer {
 				return is_scalar( $value ) ? $this->inline( (string) $value ) : null;
 
 			case 'wysiwyg':
-				return is_scalar( $value ) ? wp_kses_post( substr( (string) $value, 0, self::MAX_TEXT ) ) : null;
+				return is_scalar( $value ) ? wp_kses_post( self::without_code( substr( (string) $value, 0, self::MAX_TEXT ) ) ) : null;
 
 			case 'number':
 				return is_numeric( $value ) ? $this->bounded( (float) $value, $control ) : null;
@@ -250,7 +250,12 @@ class Layout_Sanitizer {
 
 	/** Short text: a few inline tags are allowed (bold, italics, line breaks, spans), nothing else. */
 	private function inline( string $text ): string {
-		return wp_kses( substr( $text, 0, self::MAX_TEXT ), [ 'b' => [], 'strong' => [], 'em' => [], 'i' => [], 'br' => [], 'span' => [ 'class' => [] ] ] );
+		return wp_kses( self::without_code( substr( $text, 0, self::MAX_TEXT ) ), [ 'b' => [], 'strong' => [], 'em' => [], 'i' => [], 'br' => [], 'span' => [ 'class' => [] ] ] );
+	}
+
+	/** Script, style and similar blocks go with their content (the HTML filters would keep the text inside them). */
+	public static function without_code( string $html ): string {
+		return (string) preg_replace( '#<(script|style|noscript|template|iframe|object)\b[^>]*>.*?(</\1\s*>|$)#is', '', $html );
 	}
 
 	private function bounded( float $number, array $control ) {
