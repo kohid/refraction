@@ -107,6 +107,13 @@ class Build_Scene extends Widget_Base {
 			'placeholder' => 'roof*, chimney',
 			'description' => esc_html__( 'Part names, separated by commas; * matches anything. A part counts when its name or a parent\'s name matches.', 'refraction' ),
 		] );
+		$this->add_control( 'fill_stages', [
+			'type' => Controls_Manager::BUTTON,
+			'text' => esc_html__( 'Fill stages from the model', 'refraction' ),
+			'event' => 'refraction:build-scene:fill',
+			'description' => esc_html__( 'Reads the uploaded .glb: one stage per named group, or per material when the parts have generic names. Replaces the stages below.', 'refraction' ),
+			'condition' => [ 'model_source' => 'media' ],
+		] );
 		$this->add_control( 'stages', [
 			'label' => esc_html__( 'Stages', 'refraction' ),
 			'type' => Controls_Manager::REPEATER,
@@ -421,13 +428,14 @@ class Build_Scene extends Widget_Base {
 		}
 
 		if ( 'yes' === ( $s['show_progress'] ?? '' ) && count( $stages ) > 1 ) {
-			echo '<ol class="rf3d-progress" aria-hidden="true">';
+			// Each stage name is a button: in Build it scrolls to that stage, in Parts and Aerial it picks those parts out.
+			echo '<nav class="rf3d-progress-nav" aria-label="' . esc_attr__( 'Build stages', 'refraction' ) . '"><ol class="rf3d-progress">';
 
 			foreach ( $stages as $i => $stage ) {
-				echo '<li data-rf3d-step="' . (int) $i . '"><span>' . esc_html( (string) ( $stage['stage_title'] ?? '' ) ) . '</span></li>';
+				echo '<li data-rf3d-step="' . (int) $i . '"><button type="button" data-rf3d-go="' . (int) $i . '"><span>' . esc_html( (string) ( $stage['stage_title'] ?? '' ) ) . '</span></button></li>';
 			}
 
-			echo '</ol>';
+			echo '</ol></nav>';
 		}
 
 		$this->render_tools( $s, $config );

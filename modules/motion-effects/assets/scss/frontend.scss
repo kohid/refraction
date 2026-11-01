@@ -144,3 +144,71 @@
 		animation: none;
 	}
 }
+
+// ---- Page Settings > Scrolling (page-scroll.js)
+// The page script takes over the wheel: the browser's own smooth scrolling would fight it.
+html[data-rf-page-scroll] {
+	scroll-behavior: auto;
+}
+
+// Snap to sections with the browser's own scroll snapping (also "one section per scroll" on touch screens).
+html.rf-page-snap {
+	scroll-padding-top: var(--rf-page-offset, 0px);
+}
+
+html.rf-page-snap--proximity {
+	scroll-snap-type: y proximity;
+}
+
+html.rf-page-snap--mandatory {
+	scroll-snap-type: y mandatory;
+}
+
+.rf-page-section {
+	scroll-snap-align: start;
+}
+
+// One dot per section, at the right edge; the current one is filled.
+.rf-page-dots {
+	position: fixed;
+	top: 50%;
+	right: 18px;
+	z-index: 9990;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 8px 6px;
+	border-radius: 999px;
+	background: rgba(20, 20, 24, 0.35);
+	transform: translateY(-50%);
+
+	button {
+		width: 10px;
+		height: 10px;
+		padding: 0;
+		border: 2px solid rgba(255, 255, 255, 0.85);
+		border-radius: 50%;
+		background: transparent;
+		cursor: pointer;
+		transition: background-color 0.2s ease, transform 0.2s ease;
+
+		&:hover {
+			transform: scale(1.2);
+		}
+
+		&:focus-visible {
+			outline: 2px solid #fff;
+			outline-offset: 3px;
+		}
+
+		&[aria-current="true"] {
+			background: #fff;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.rf-page-dots {
+		right: 8px;
+	}
+}

@@ -179,6 +179,28 @@ async function main() {
 		check( 'site', 'the progress line follows', /scaleX\(0\.1/.test( bar ), bar );
 		await vctx.close();
 
+		// ------------------------------------------------------------ gallery: zoom and turn, cross-fading
+		const pics = page( 'Gallery', [
+			container( 'g1', [ spacer( 'gh1', 'Gallery' ) ] ),
+			container( 'g2', [ { id: 'q3', elType: 'widget', widgetType: 'scroll-sequence', settings: { source: 'gallery', frames: frames.slice( 0, 4 ), frame_order: 'picked', overlays: [], length: { size: 4 }, gallery_blend: { size: 35 } }, elements: [] } ] ),
+			container( 'g3', [ spacer( 'gh2', 'After' ) ] ),
+		] );
+		const gctx = await browser.newContext( { viewport: { width: 1200, height: 800 } } );
+		const g = await gctx.newPage();
+		watch( g, 'gallery' );
+		await g.goto( pics.url );
+		await g.waitForFunction( () => Number( document.querySelector( '.rfseq' )?.dataset.rfseqLoaded ) === 4, null, { timeout: 60000 } );
+		const galleryAt = async ( share ) => {
+			await scrollTo( g, share );
+			return g.evaluate( () => ( { image: document.querySelector( '.rfseq' ).dataset.rfseqImage, blend: Number( document.querySelector( '.rfseq' ).dataset.rfseqBlend ) } ) );
+		};
+		const g0 = await galleryAt( 0 );
+		const g1 = await galleryAt( 0.5 );
+		const g2 = await galleryAt( 0.6498 );
+		check( 'gallery', 'gallery mode: one image after another, the next fading in over the overlap', g0.image === '0' && g1.image === '2' && g1.blend === 1 && g2.image === '3' && Math.abs( g2.blend - 0.5 ) < 0.06 && await painted( g ), JSON.stringify( [ g0, g1, g2 ] ) );
+		await g.screenshot( { path: join( SHOTS, 'gallery-blend.png' ) } );
+		await gctx.close();
+
 		// ------------------------------------------------------------ video
 		const fctx = await browser.newContext( { viewport: { width: 1200, height: 800 } } );
 		const f = await fctx.newPage();

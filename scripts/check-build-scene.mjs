@@ -196,6 +196,17 @@ async function main() {
 		const yaw3 = Number( ( await dataOf() ).rf3dYaw );
 		await sleep( 600 );
 		check( 'views', 'Auto-rotate turns the model until it is switched off', yaw2 > yaw1 + 5 && Math.abs( Number( ( await dataOf() ).rf3dYaw ) - yaw3 ) < 0.5, `${ yaw1 } ${ yaw2 } ${ yaw3 }` );
+		// Stage names: in Parts they pick a stage out (and show its caption); again to clear.
+		await v.click( '.rf3d-tools [data-rf3d-view="parts"]' );
+		await v.click( '.rf3d-progress [data-rf3d-go="2"]' );
+		await sleep( 600 );
+		const picked = await dataOf();
+		const pickedCaption = await v.evaluate( () => ( { visible: getComputedStyle( document.querySelector( '.rf3d-caps' ) ).visibility, text: document.querySelector( '.rf3d-cap.is-active .rf3d-cap-title' ).textContent, pressed: document.querySelector( '[data-rf3d-go="2"]' ).getAttribute( 'aria-pressed' ) } ) );
+		check( 'stages', 'in Parts a stage name picks that stage out and shows its caption', picked.rf3dFocus === '2' && pickedCaption.visible === 'visible' && pickedCaption.text === 'Stone and walls' && pickedCaption.pressed === 'true', JSON.stringify( [ picked.rf3dFocus, pickedCaption ] ) );
+		await v.screenshot( { path: join( SHOTS, 'house-parts-stage.png' ) } );
+		await v.click( '.rf3d-progress [data-rf3d-go="2"]' );
+		await sleep( 300 );
+		check( 'stages', 'clicking it again clears it', ( await dataOf() ).rf3dFocus === '' );
 		await v.click( '.rf3d-tools [data-rf3d-view="build"]' );
 		await v.click( '.rf3d-tools [data-rf3d-light="day"]' );
 		await sleep( 800 );
@@ -207,6 +218,12 @@ async function main() {
 		} ) );
 		check( 'style', 'the stage names take their own color', looks.label === 'rgb(0, 255, 0)', looks.label );
 		check( 'style', 'the scene width and alignment apply', Math.abs( looks.width - ( looks.parent * 0.8 ) ) < 2 && looks.left > 50, JSON.stringify( looks ) );
+
+		// In Build a stage name scrolls the page to where that stage is finished (stage 2 of 6, pause 12%: 0.293).
+		await scrollTo( v, '.rf3d', 0 );
+		await v.click( '.rf3d-progress [data-rf3d-go="1"]' );
+		await v.waitForFunction( () => Math.abs( Number( document.querySelector( '.rf3d' ).dataset.rf3dProgress ) - 0.293 ) < 0.02, null, { timeout: 15000 } ).catch( () => {} );
+		check( 'stages', 'in Build a stage name scrolls to where that stage is built', Math.abs( Number( ( await dataOf() ).rf3dProgress ) - 0.293 ) < 0.02, ( await dataOf() ).rf3dProgress );
 
 		const back = await scrollTo( v, '.rf3d', 0.1 );
 		check( 'site', 'scrolling back up takes it apart again', back.progress < 0.15 && back.done < 6, JSON.stringify( back ) );
@@ -283,7 +300,31 @@ async function main() {
 		check( 'editor', 'the preview slider shows the build at that point, without scrolling', Math.abs( ep.progress - 0.5 ) < 0.02 && Number( ep.parts ) > 50, JSON.stringify( ep ) );
 		await preview.locator( '.rf3d' ).scrollIntoViewIfNeeded();
 		await a.screenshot( { path: join( SHOTS, 'editor.png' ) } );
+		// "Fill stages from the model" on the uploaded tower (three named parts).
+		await a.goto( `${ BASE }/wp-admin/post.php?post=${ tower.id }&action=refraction`, { timeout: 120000 } );
+		await a.waitForFunction( () => window.refraction && window.$e && refraction.documents && refraction.documents.getCurrent() && document.querySelector( '.refraction-panel-category' ), null, { timeout: 120000 } );
+		await a.waitForTimeout( 2000 );
+		await a.frameLocator( '#refraction-preview-iframe' ).locator( '.refraction-widget-build-scene' ).click( { position: { x: 20, y: 20 } } );
+		await a.waitForTimeout( 800 );
+		await a.click( '.refraction-control-section_build .refraction-panel-heading, .refraction-control-section_build' ).catch( () => {} );
+		await a.waitForTimeout( 500 );
+		const fillButton = a.locator( '.refraction-control-fill_stages button' );
+		check( 'editor', 'the Build section has "Fill stages from the model"', await fillButton.isVisible() );
+		await fillButton.click();
+		await a.waitForSelector( '.dialog-confirm-ok, .dialog-ok', { timeout: 10000 } );
+		await a.click( '.dialog-confirm-ok, .dialog-ok' );
+		await a.waitForTimeout( 1200 );
+		const filled = await a.evaluate( () => refraction.getContainer( 's2' ).settings.get( 'stages' ).map( ( m ) => m.get( 'stage_title' ) + '=' + m.get( 'stage_parts' ) ) );
+		check( 'editor', 'it asks, then fills one stage per named part, bottom to top', filled.join( '|' ) === 'Base slab=base-slab|Middle floor=middle-floor|Top roof=top-roof', filled.join( '|' ) );
+		await a.evaluate( () => $e.run( 'document/history/undo' ) );
+		await a.waitForTimeout( 600 );
+		const undone = await a.evaluate( () => refraction.getContainer( 's2' ).settings.get( 'stages' ).map( ( m ) => m.get( 'stage_title' ) ) );
+		check( 'editor', 'one Undo brings the old stages back', undone.join() === 'Base,Top', undone.join() );
+
 		const sections = [];
+		await a.goto( `${ BASE }/wp-admin/post.php?post=${ house.id }&action=refraction`, { timeout: 120000 } );
+		await a.waitForFunction( () => window.refraction && window.$e && refraction.documents && refraction.documents.getCurrent() && document.querySelector( '.refraction-panel-category' ), null, { timeout: 120000 } );
+		await a.waitForTimeout( 2000 );
 		await preview.locator( '.refraction-widget-build-scene' ).click( { position: { x: 20, y: 20 } } );
 		await a.waitForTimeout( 800 );
 		sections.push( ...await a.$$eval( '.refraction-section-title', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ) ) );

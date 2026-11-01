@@ -55,6 +55,7 @@ export class BuildScene {
 		this.view = 'build';
 		this.explode = 0;
 		this.free = 0;
+		this.focus = null;
 		this.elevation = this.cfg.elevation;
 		this.rotating = !! this.cfg.autoRotate && ! this.reduced;
 		this.lastTime = 0;
@@ -235,6 +236,9 @@ export class BuildScene {
 				}
 			}
 
+			// Stages can also name a material ("Glass"): stages filled from the model by material use that.
+			( Array.isArray( object.material ) ? object.material : [ object.material ] ).forEach( ( m ) => m && m.name && names.push( m.name ) );
+
 			const own = new Box3().setFromObject( object );
 			const at = own.getCenter( new Vector3() );
 			const away = this.direction( at );
@@ -265,6 +269,7 @@ export class BuildScene {
 		const steps = assignStages( parts, this.cfg.stages, this.cfg.order );
 		this.timeline = schedule( steps, this.cfg.overlap, this.cfg.hold );
 		this.byStage = steps.length === ( this.cfg.stages || [] ).length;
+		steps.forEach( ( stepParts, i ) => stepParts.forEach( ( part ) => ( part.stage = i ) ) );
 		this.root.dataset.rf3dParts = String( parts.length );
 
 		if ( this.cfg.shadows ) {
@@ -340,6 +345,65 @@ export class BuildScene {
 		this.on( this.canvas, 'pointerup', () => ( from = null ) );
 		this.on( this.canvas, 'pointercancel', () => ( from = null ) );
 		this.bindTools();
+		this.bindStages();
+	}
+
+	/**
+	 * The stage names under the progress line. In Build a name scrolls the page to where that stage is finished; in
+	 * Parts and Aerial it picks that stage's parts out (the others fade) and shows its caption; again to clear.
+	 */
+	bindStages() {
+		const nav = this.root.querySelector( '.rf3d-progress' );
+
+		if ( ! nav ) {
+			return;
+		}
+
+		this.on( nav, 'click', ( e ) => {
+			const button = e.target.closest( '[data-rf3d-go]' );
+
+			if ( ! button ) {
+				return;
+			}
+
+			const index = Number( button.dataset.rf3dGo );
+
+			if ( 'build' === this.view ) {
+				this.scrollToStage( index );
+				return;
+			}
+
+			this.focus = this.focus === index || ! this.byStage ? null : index;
+			nav.querySelectorAll( '[data-rf3d-go]' ).forEach( ( b ) => b.setAttribute( 'aria-pressed', String( Number( b.dataset.rf3dGo ) === this.focus ) ) );
+			this.root.classList.toggle( 'rf3d--focus', null !== this.focus );
+			this.captionKey = null;
+			this.kick();
+		} );
+	}
+
+	/**
+	 * Where a stage is finished, as a share of the scroll through the section.
+	 *
+	 * @param {number} index The stage.
+	 * @return {number} 0 to 1.
+	 */
+	stageEnd( index ) {
+		if ( this.byStage && this.timeline.steps[ index ] ) {
+			return this.timeline.steps[ index ].end;
+		}
+
+		const count = Math.max( this.caps.length, this.steps.length, 1 );
+
+		return ( ( index + 1 ) * ( 1 - this.cfg.hold ) ) / count;
+	}
+
+	scrollToStage( index ) {
+		const stage = this.root.querySelector( '.rf3d-stage' );
+		const rect = this.root.getBoundingClientRect();
+		const room = this.root.offsetHeight - ( stage ? stage.offsetHeight : window.innerHeight );
+		const top = window.scrollY + rect.top + ( Math.min( 1, this.stageEnd( index ) ) * Math.max( 0, room ) );
+
+		window.scrollTo( { top: Math.round( top ), behavior: this.reduced ? 'auto' : 'smooth' } );
 	}
 
 	canTurn() {
@@ -385,6 +449,13 @@ export class BuildScene {
 	setView( view ) {
 		this.view = [ 'build', 'parts', 'aerial' ].indexOf( view ) > -1 ? view : 'build';
 		this.pitch = 0;
+
+		if ( 'build' === this.view && null !== this.focus ) {
+			this.focus = null;
+			this.root.classList.remove( 'rf3d--focus' );
+			this.root.querySelectorAll( '[data-rf3d-go]' ).forEach( ( b ) => b.removeAttribute( 'aria-pressed' ) );
+			this.captionKey = null;
+		}
 		this.root.dataset.rf3dView = this.view;
 		this.root.classList.toggle( 'rf3d--free', 'build' !== this.view );
 		this.kick();
@@ -515,7 +586,10 @@ export class BuildScene {
 			const { mesh, home, offset, spread } = item.part;
 			mesh.visible = t > 0;
 			mesh.position.copy( home ).addScaledVector( offset, 1 - e ).addScaledVector( spread, this.explode );
-			const fade = Math.min( 1, t * 3 );
+			// A picked stage (Parts and Aerial): its parts stay solid, the others are ghosted.
+			const ghost = null !== this.focus && item.part.stage !== this.focus ? 0.12 : 1;
+			mesh.castShadow = !! this.cfg.shadows && 1 === ghost;
+			const fade = Math.min( 1, t * 3 ) * ghost;
 
 			for ( const m of item.part.materials ) {
 				m.m.opacity = m.opacity * fade;
@@ -541,6 +615,7 @@ export class BuildScene {
 		this.root.dataset.rf3dExplode = this.explode.toFixed( 2 );
 		this.root.dataset.rf3dElevation = this.elevation.toFixed( 1 );
 		this.root.dataset.rf3dYaw = this.yaw.toFixed( 1 );
+		this.root.dataset.rf3dFocus = null === this.focus ? '' : String( this.focus );
 		this.root.classList.toggle( 'rf3d--done', this.canTurn() );
 	}
 
@@ -556,7 +631,7 @@ export class BuildScene {
 		}
 
 		const spans = this.byStage ? this.timeline.steps : Array.from( { length: count }, ( _, i ) => ( { start: ( i * ( 1 - this.cfg.hold ) ) / count } ) );
-		const active = activeStep( spans, progress );
+		const active = null !== this.focus ? this.focus : activeStep( spans, progress );
 		const finished = progress >= 0.999;
 		const key = active + ( finished ? '+' : '' );
 

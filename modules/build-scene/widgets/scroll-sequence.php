@@ -57,12 +57,12 @@ class Scroll_Sequence extends Widget_Base {
 			'label' => esc_html__( 'Play', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'images',
-			'options' => [ 'images' => esc_html__( 'Image sequence (smoothest)', 'refraction' ), 'video' => esc_html__( 'Video', 'refraction' ) ],
+			'options' => [ 'images' => esc_html__( 'Image sequence (smoothest)', 'refraction' ), 'gallery' => esc_html__( 'Image gallery (zoom and turn)', 'refraction' ), 'video' => esc_html__( 'Video', 'refraction' ) ],
 		] );
 		$this->add_control( 'frames', [
 			'label' => esc_html__( 'Frames', 'refraction' ),
 			'type' => Controls_Manager::GALLERY,
-			'condition' => [ 'source' => 'images' ],
+			'condition' => [ 'source' => [ 'images', 'gallery' ] ],
 			'description' => esc_html__( 'Upload the frames (frame-001.jpg, frame-002.jpg...) and select them all. 60 to 150 frames of about 1600 px wide work well.', 'refraction' ),
 		] );
 		$this->add_control( 'frame_order', [
@@ -70,15 +70,25 @@ class Scroll_Sequence extends Widget_Base {
 			'type' => Controls_Manager::SELECT,
 			'default' => 'name',
 			'options' => [ 'name' => esc_html__( 'By file name', 'refraction' ), 'picked' => esc_html__( 'As selected', 'refraction' ) ],
-			'condition' => [ 'source' => 'images' ],
+			'condition' => [ 'source' => [ 'images', 'gallery' ] ],
 		] );
 		$this->add_control( 'frame_size', [
 			'label' => esc_html__( 'Frame size', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'full',
 			'options' => [ 'full' => esc_html__( 'Original', 'refraction' ), 'large' => esc_html__( 'Large', 'refraction' ), 'medium_large' => esc_html__( 'Medium', 'refraction' ) ],
-			'condition' => [ 'source' => 'images' ],
+			'condition' => [ 'source' => [ 'images', 'gallery' ] ],
 		] );
+		$this->add_control( 'gallery_motion', [
+			'label' => esc_html__( 'Each image', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'alternate',
+			'options' => [ 'zoom-in' => esc_html__( 'Zooms in', 'refraction' ), 'zoom-out' => esc_html__( 'Zooms out', 'refraction' ), 'alternate' => esc_html__( 'Zooms in, then the next out', 'refraction' ) ],
+			'condition' => [ 'source' => 'gallery' ],
+		] );
+		$this->add_control( 'gallery_zoom', [ 'label' => esc_html__( 'Zoom (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ], 'default' => [ 'size' => 20 ], 'condition' => [ 'source' => 'gallery' ] ] );
+		$this->add_control( 'gallery_rotate', [ 'label' => esc_html__( 'Turn (degrees)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 25 ] ], 'default' => [ 'size' => 6 ], 'condition' => [ 'source' => 'gallery' ], 'description' => esc_html__( 'Each image turns this much while it shows, one way then the other.', 'refraction' ) ] );
+		$this->add_control( 'gallery_blend', [ 'label' => esc_html__( 'Overlap with the next image (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 10, 'max' => 70 ] ], 'default' => [ 'size' => 35 ], 'condition' => [ 'source' => 'gallery' ] ] );
 		$this->add_control( 'video', [
 			'label' => esc_html__( 'Video', 'refraction' ),
 			'type' => Controls_Manager::MEDIA,
@@ -209,9 +219,21 @@ class Scroll_Sequence extends Widget_Base {
 		$preview = $s['preview']['size'] ?? '';
 		$hold = $s['hold']['size'] ?? 8;
 		$video = 'video' === ( $s['source'] ?? '' ) ? (string) ( $s['video']['url'] ?? '' ) : '';
+		$source = in_array( $s['source'] ?? '', [ 'images', 'gallery', 'video' ], true ) ? $s['source'] : 'images';
+		$size = static function ( $value, float $min, float $max, float $default ): float {
+			$value = is_array( $value ) ? ( $value['size'] ?? null ) : $value;
+
+			return is_numeric( $value ) ? max( $min, min( $max, (float) $value ) ) : $default;
+		};
 
 		return [
-			'source' => 'video' === ( $s['source'] ?? '' ) ? 'video' : 'images',
+			'source' => $source,
+			'gallery' => 'gallery' === $source ? [
+				'motion' => in_array( $s['gallery_motion'] ?? '', [ 'zoom-in', 'zoom-out', 'alternate' ], true ) ? $s['gallery_motion'] : 'alternate',
+				'zoom' => $size( $s['gallery_zoom'] ?? null, 0, 60, 20 ) / 100,
+				'rotate' => $size( $s['gallery_rotate'] ?? null, 0, 25, 6 ),
+				'blend' => $size( $s['gallery_blend'] ?? null, 10, 70, 35 ) / 100,
+			] : null,
 			'frames' => 'video' === ( $s['source'] ?? '' ) ? [] : $this->frame_urls( $s ),
 			'video' => '' !== $video ? esc_url_raw( $video ) : '',
 			'fit' => 'contain' === ( $s['fit'] ?? '' ) ? 'contain' : 'cover',

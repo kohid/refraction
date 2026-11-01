@@ -28,6 +28,7 @@ class Module extends BaseModule {
 		add_action( 'refraction/frontend/after_register_scripts', [ $this, 'register_assets' ] );
 		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_assets' ] );
 		add_action( 'refraction/editor/after_enqueue_scripts', [ $this, 'register_assets' ] );
+		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'enqueue_editor' ] );
 
 		// A .glb is a binary 3D model; WordPress refuses it unless it is allowed here and its content checks out.
 		add_filter( 'upload_mimes', [ $this, 'allow_glb_uploads' ] );
@@ -48,6 +49,12 @@ class Module extends BaseModule {
 		wp_register_script( self::SCRIPT, REFRACTION_ASSETS_URL . 'js/build-scene-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		// The Scroll Sequence has its own small script: it plays pictures, it does not need the 3D library.
 		wp_register_script( self::SEQUENCE, REFRACTION_ASSETS_URL . 'js/scroll-sequence-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
+	}
+
+	/** The editor side: "Fill stages from the model". */
+	public function enqueue_editor(): void {
+		$min = \Refraction\Utils::is_script_debug() ? '' : '.min';
+		wp_enqueue_script( 'refraction-build-scene-editor', REFRACTION_ASSETS_URL . 'js/build-scene-editor' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
 	}
 
 	public function allow_glb_uploads( $mimes ) {

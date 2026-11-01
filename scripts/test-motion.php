@@ -12,6 +12,7 @@ function t( $name, $ok ) { global $pass, $fail; if ( $ok ) { $pass++; } else { $
 use Refraction\Modules\MotionEffects\Classes\Pure_Motion_Settings as M;
 use Refraction\Modules\MotionEffects\Classes\Pure_Sticky_Settings as S;
 use Refraction\Modules\MotionEffects\Classes\Pure_Reveal_Settings as R;
+use Refraction\Modules\MotionEffects\Classes\Pure_Page_Scroll_Settings as PS;
 
 $devices = [ 'desktop', 'tablet', 'mobile' ];
 
@@ -208,6 +209,15 @@ $fx = M::normalize( $preset, $devices );
 t( 'preset: turns its effects on with its values, hand-made ones off', [ 'ty', 'rotate' ] === array_keys( $fx['scroll']['effects'] ) && 3.0 === $fx['scroll']['effects']['ty']['speed'] && 'up' === $fx['scroll']['effects']['ty']['dir'] && 'right' === $fx['scroll']['effects']['rotate']['dir'] && 0 === $fx['scroll']['effects']['ty']['start'] && 100 === $fx['scroll']['effects']['ty']['end'] );
 t( 'preset: none or unknown leaves the settings alone', [ 'rf_scroll_preset' => 'zzz', 'a' => 1 ] === R::with_preset( [ 'rf_scroll_preset' => 'zzz', 'a' => 1 ] ) );
 t( 'preset: every preset gives motion', count( array_filter( array_keys( R::PRESETS ), function ( $k ) { return M::uses_motion( R::with_preset( [ 'rf_scroll_preset' => $k ] ) ); } ) ) === count( R::PRESETS ) );
+
+
+// ---- page scrolling
+t( 'page scroll: normal or unknown gives no config', [] === PS::normalize( [] ) && [] === PS::normalize( [ 'rf_page_scroll' => 'warp' ] ) );
+$ps = PS::normalize( [ 'rf_page_scroll' => 'sections', 'rf_page_scroll_dots' => 'yes' ] );
+t( 'page scroll: sections defaults', 'sections' === $ps['mode'] && 900 === $ps['speed'] && 'inout' === $ps['easing'] && true === $ps['dots'] && 0 === $ps['offset'] && false === $ps['touch'] );
+t( 'page scroll: dots off when switched off, and only for sections', false === PS::normalize( [ 'rf_page_scroll' => 'sections', 'rf_page_scroll_dots' => '' ] )['dots'] && false === PS::normalize( [ 'rf_page_scroll' => 'smooth', 'rf_page_scroll_dots' => 'yes' ] )['dots'] );
+$ps = PS::normalize( [ 'rf_page_scroll' => 'smooth', 'rf_page_scroll_speed' => 99999, 'rf_page_scroll_smoothness' => [ 'size' => 40 ], 'rf_page_scroll_offset' => -5, 'rf_page_scroll_snap' => 'hard', 'rf_page_scroll_touch' => 'yes' ] );
+t( 'page scroll: numbers are clamped, choices whitelisted', 2500 === $ps['speed'] && 10 === $ps['smoothness'] && 0 === $ps['offset'] && 'proximity' === $ps['snap'] && true === $ps['touch'] );
 
 echo "\n$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

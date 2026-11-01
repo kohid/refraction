@@ -66,6 +66,39 @@ export function fitRect( w, h, W, H, fit ) {
 }
 
 /**
+ * Gallery mode: the images showing at a progress, bottom first. Each image has its own share of the scroll; during the
+ * last `blend` of it the next image fades in on top. `motion` (0 to 1) is how far an image is through its own zoom
+ * and turn, from the moment it starts fading in to the end of its share, so the movement never jumps.
+ *
+ * @param {number} progress The scroll progress, 0 to 1.
+ * @param {number} count    The number of images.
+ * @param {number} hold     Share of the scroll kept on the last image.
+ * @param {number} blend    Overlap with the next image, 0.1 to 0.7 of an image's share.
+ * @return {Array<{index: number, alpha: number, motion: number}>} At most two layers.
+ */
+export function galleryLayers( progress, count, hold, blend ) {
+	const u = Math.min( 1, progress / Math.max( 0.01, 1 - hold ) ) * count;
+	const layers = [];
+
+	for ( let i = 0; i < count; i++ ) {
+		const fadeStart = i - blend;
+		const covered = i + 1 < count && u >= i + 1;
+
+		if ( ( i > 0 && u < fadeStart ) || covered ) {
+			continue;
+		}
+
+		layers.push( {
+			index: i,
+			alpha: 0 === i ? 1 : Math.min( 1, Math.max( 0, ( u - fadeStart ) / blend ) ),
+			motion: Math.min( 1, Math.max( 0, ( u - fadeStart ) / ( 1 + blend ) ) ),
+		} );
+	}
+
+	return layers.slice( -2 );
+}
+
+/**
  * One Scroll Sequence: plays image frames (drawn on a canvas, loaded progressively) or a video (seeked) as the page
  * scrolls through the pinned section, and shows each text overlay between its two points.
  */
@@ -233,12 +266,18 @@ export class ScrollSequence {
 
 		const target = this.wanted();
 		const diff = target - this.shown;
-		this.shown = ! this.drawn || null !== this.cfg.preview || Math.abs( diff ) < 0.0005 ? target : this.shown + ( diff * 0.25 );
+		const now = window.performance.now();
+		const dt = this.lastTime ? Math.min( 0.1, ( now - this.lastTime ) / 1000 ) : 1 / 60;
+		this.lastTime = now;
+		// Follows the scroll with the same easing on slow and fast screens.
+		this.shown = ! this.drawn || null !== this.cfg.preview || Math.abs( diff ) < 0.0005 ? target : this.shown + ( diff * ( 1 - Math.exp( -dt * 14 ) ) );
 		this.drawn = true;
 		this.show( this.shown );
 
 		if ( this.shown !== target ) {
 			this.kick();
+		} else {
+			this.lastTime = 0;
 		}
 	}
 
@@ -264,6 +303,11 @@ export class ScrollSequence {
 		if ( this.video ) {
 			this.seek( progress );
 
+			return;
+		}
+
+		if ( 'gallery' === this.cfg.source && this.cfg.gallery ) {
+			this.drawGallery( progress );
 			return;
 		}
 
@@ -325,6 +369,49 @@ export class ScrollSequence {
 		this.seeking = true;
 		this.video.currentTime = time;
 		this.root.dataset.rfseqTime = time.toFixed( 2 );
+	}
+
+	/**
+	 * Gallery mode: the current image zooms and turns; the next fades in on top, already moving.
+	 *
+	 * @param {number} progress The scroll progress, 0 to 1.
+	 */
+	drawGallery( progress ) {
+		const g = this.cfg.gallery;
+		const layers = galleryLayers( progress, this.cfg.frames.length, this.cfg.hold, g.blend );
+		const { width, height } = this.canvas;
+
+		this.ctx.globalAlpha = 1;
+		this.ctx.fillStyle = getComputedStyle( this.root.querySelector( '.rf3d-stage' ) ).backgroundColor || '#111';
+		this.ctx.fillRect( 0, 0, width, height );
+
+		layers.forEach( ( layer ) => {
+			const img = this.images[ layer.index ];
+
+			if ( ! img ) {
+				return;
+			}
+
+			const odd = 1 === layer.index % 2;
+			const zoomIn = 'zoom-in' === g.motion || ( 'alternate' === g.motion && ! odd );
+			const zoom = 1 + ( g.zoom * ( zoomIn ? layer.motion : 1 - layer.motion ) );
+			const angle = ( g.rotate * ( layer.motion - 0.5 ) * ( odd ? -1 : 1 ) * Math.PI ) / 180;
+			// Turning a picture shows its corners: grow it enough to keep the screen covered.
+			const cover = 'cover' === this.cfg.fit ? Math.abs( Math.cos( angle ) ) + ( Math.abs( Math.sin( angle ) ) * Math.max( width / height, height / width ) ) : 1;
+			const [ , , w, h ] = fitRect( img.naturalWidth, img.naturalHeight, width, height, this.cfg.fit );
+
+			this.ctx.save();
+			this.ctx.globalAlpha = layer.alpha;
+			this.ctx.translate( width / 2, height / 2 );
+			this.ctx.rotate( angle );
+			this.ctx.scale( zoom * cover, zoom * cover );
+			this.ctx.drawImage( img, -w / 2, -h / 2, w, h );
+			this.ctx.restore();
+		} );
+
+		const top = layers[ layers.length - 1 ];
+		this.root.dataset.rfseqImage = top ? String( top.index ) : '';
+		this.root.dataset.rfseqBlend = top ? top.alpha.toFixed( 2 ) : '';
 	}
 
 	paint( source, w, h ) {

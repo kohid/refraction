@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.22.0
+Stable tag: 0.23.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.23.0 =
+* New: smooth page scrolling in Page Settings > Scrolling: one section per scroll (with section dots; tall scroll scenes scroll through first), smooth eased scrolling, or snap to sections. Site only, off for reduced motion.
+* New: 3D Build Scene "Fill stages from the model" reads an uploaded .glb and makes one stage per named group (or per material), bottom to top.
+* New: 3D Build Scene stage names are clickable: in Build they scroll to that stage, in Parts and Aerial they pick that stage's parts out.
+* New: Scroll Sequence gallery mode: images zoom in or out and turn as you scroll, fading into the next.
 
 = 0.22.0 =
 * New: Just Refraction, a plain companion theme, released as just-refraction.zip next to the plugin. It adds no design of its own and never styles pages built with Refraction; Refraction's Theme Builder header, footer and templates are printed by the theme in the right place. Pages not built with Refraction get an optional minimal reading style, and the theme's own simple header and footer can be switched off in the Customizer.
