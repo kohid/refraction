@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.30.1
+Stable tag: 0.31.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.31.0 =
+* New Timed Slides widget (Advanced): the Timed cards slider where every slide is a container you drop any widgets into. Each slide has its own background image or YouTube video (thumbnail used when there is no image) and card. Content Position (horizontal, vertical, text alignment, width, spacing) and the Cards (position, width, shape, corners, gaps) are separate, responsive settings, with styles for cards, arrows, progress line and number.
+* Slides, Timed cards: the slider engine is shared with Timed Slides; cards relayout when their size changes, and the arrow keys no longer move the slider while typing in a field.
 
 = 0.30.1 =
 * Slides: the slider no longer shrinks to nothing when it sits alone in a container laid out as a row (the Timed cards layout disappeared on the site).

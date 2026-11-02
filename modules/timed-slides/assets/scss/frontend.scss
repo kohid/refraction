@@ -1,0 +1,118 @@
+//
+// Timed Slides: the Timed cards look (modules/card-motion frontend.scss: .rf-tco, cards, arrows, line, counter)
+// with the content and the cards in two layers placed separately (Content Position and Cards settings).
+//
+
+// Like the Slides widget: everything is in positioned layers, so the widget takes its container's width.
+.e-con .refraction-widget-timed-slides {
+	width: 100%;
+}
+
+.rf-ts__layer {
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	pointer-events: none;
+
+	> * {
+		pointer-events: auto;
+	}
+}
+
+.rf-ts__layer--content {
+	justify-content: flex-start;
+	padding: 0 0 0 6%;
+}
+
+// The cards and their arrows sit above the content where the two meet.
+.rf-ts__layer--cards {
+	z-index: 4;
+	justify-content: flex-end;
+}
+
+.rf-ts .rf-ts__content {
+	width: 42%;
+	max-width: 100%;
+	min-height: 0;
+	text-align: left;
+
+	// One slide container per slide, stacked; only the current one shows (.is-active, set by the script).
+	> .rf-tco__text {
+		padding-right: 0;
+		max-width: 100%;
+	}
+}
+
+.rf-ts .rf-ts__rail {
+	width: 56%;
+	max-width: 100%;
+	padding: 20px 0;
+
+	.rf-tco__nav {
+		padding-right: 10%;
+	}
+
+	.refraction-slide__sound {
+		position: static;
+		flex: none;
+
+		&:not(.is-current) {
+			display: none;
+		}
+	}
+}
+
+.rf-ts__spacer {
+	flex: 1;
+}
+
+// Pause on hover: off.
+.rf-tco.rf-ts--no-pause:hover .rf-tco__timer i,
+.rf-tco.rf-ts--no-pause:focus-within .rf-tco__timer i {
+	animation-play-state: running;
+}
+
+// Content comes in: fading only, or at once.
+.rf-ts-in-fade .rf-ts__content > .rf-tco__text > * {
+	transform: none;
+}
+
+.rf-ts-in-none .rf-ts__content > .rf-tco__text > * {
+	transform: none;
+	transition: none;
+}
+
+.refraction-widget-timed-slides:not(.rf-ts-shade-yes) .rf-tco__card::after {
+	display: none;
+}
+
+.rf-ts-lift-yes .rf-tco__card:not(.is-gone) {
+	&:hover,
+	&:focus-visible {
+		translate: 0 -6px;
+	}
+}
+
+.rf-ts .rf-tco__card {
+	transition: transform var(--rf-tco-speed) cubic-bezier(.65, 0, .35, 1), opacity .4s ease, translate .3s ease;
+}
+
+// The editor: an empty slide container needs room to drop widgets into.
+.refraction-edit-area-active .rf-ts__content > .rf-tco__text.e-con:empty,
+.refraction-edit-area-active .rf-ts__content > .rf-tco__text .refraction-empty-view {
+	min-height: 120px;
+}
+
+@media (max-width: 767px) {
+	// The shared phone rules stack the old layout; here the layers keep their own placement.
+	.rf-ts .rf-ts__content {
+		min-height: 0;
+	}
+
+	.rf-ts .rf-ts__rail {
+		padding: 12px 0 0;
+	}
+}
