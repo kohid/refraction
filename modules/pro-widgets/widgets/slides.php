@@ -268,6 +268,32 @@ class Slides extends Pro_Widget {
 		);
 
 		$this->add_control(
+			'cards_ratio',
+			[
+				'label' => esc_html__( 'Card shape', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => '3/4',
+				'options' => [ '3/4' => '3/4', '4/5' => '4/5', '1/1' => '1/1', '2/3' => '2/3', '4/3' => '4/3', '16/9' => '16/9' ],
+				// Height over width, for the cards and the row they sit in.
+				'selectors_dictionary' => [ '3/4' => '1.3333', '4/5' => '1.25', '1/1' => '1', '2/3' => '1.5', '4/3' => '0.75', '16/9' => '0.5625' ],
+				'selectors' => [ '{{WRAPPER}} .rf-tco' => '--rf-tco-card-k: {{VALUE}};' ],
+				'condition' => [ 'layout' => 'cards' ],
+			]
+		);
+
+		$this->add_control(
+			'cards_radius',
+			[
+				'label' => esc_html__( 'Card corners', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+				'default' => [ 'size' => 14 ],
+				'selectors' => [ '{{WRAPPER}} .rf-tco' => '--rf-tco-radius: {{SIZE}}px;' ],
+				'condition' => [ 'layout' => 'cards' ],
+			]
+		);
+
+		$this->add_control(
 			'cards_accent',
 			[
 				'label' => esc_html__( 'Timer and progress color', 'refraction' ),

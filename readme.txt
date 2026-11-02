@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.30.0
+Stable tag: 0.30.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.30.1 =
+* Slides: the slider no longer shrinks to nothing when it sits alone in a container laid out as a row (the Timed cards layout disappeared on the site).
+* Slides, Timed cards: new Card shape (3/4, 4/5, 1/1, 2/3, 4/3, 16/9) and Card corners controls for the waiting cards, video thumbnails included; the growing card keeps the same corners.
 
 = 0.30.0 =
 * 3D Build Scene: animations other than Build in stages hide the stage captions and progress line unless "Show the stages on the site" is on; the first view button is named after the animation.
