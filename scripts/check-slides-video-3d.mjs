@@ -116,7 +116,10 @@ async function main() {
 		const slide = ( i, video ) => ( { _id: 'v' + i, heading: 'Slide ' + i, description: 'Text ' + i, button_text: 'Book now', button_link: { url: '#book' }, button2_text: 'Watch the film', button2_link: { url: '#film' }, background_image: { id: poster, url: posterUrl }, background_color: '#223344', ...( video ? { background_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', video_next: 'yes', video_sound: 'yes' } : {} ) } );
 		const slidesWidget = ( id, layout ) => ( { id, elType: 'widget', widgetType: 'refraction-slides', settings: { layout, autoplay: 'yes', autoplay_speed: 9000, transition_speed: 400, slides_height: { unit: 'px', size: 560 }, navigation: 'both', slides: [ slide( 1, true ), slide( 2, false ), slide( 3, false ), { _id: 'v4', heading: 'Video only', background_video: 'https://youtu.be/aBcDeFgHiJk' } ] }, elements: [] } );
 		const classic = page( 'Video slides', [ { id: 'c1', elType: 'container', settings: { content_width: 'full' }, isInner: false, elements: [ slidesWidget( 'sclassic', 'classic' ) ] } ] );
-		const cards = page( 'Video cards', [ { id: 'c2', elType: 'container', settings: { content_width: 'full' }, isInner: false, elements: [ slidesWidget( 'scards', 'cards' ) ] } ] );
+		// As on a real site: the slider alone in a container laid out as a row (where it once shrank to nothing).
+		const cardsWidget = slidesWidget( 'scards', 'cards' );
+		Object.assign( cardsWidget.settings, { cards_ratio: '1/1', cards_radius: { unit: 'px', size: 22 } } );
+		const cards = page( 'Video cards', [ { id: 'c2', elType: 'container', settings: { content_width: 'full', flex_direction: 'row', min_height: { unit: 'vh', size: 100 } }, isInner: false, elements: [ cardsWidget ] } ] );
 
 		const ctx = await browser.newContext( { viewport: { width: 1280, height: 800 } } );
 		await ctx.route( /youtube\.com\/iframe_api/, ( route ) => route.fulfill( { contentType: 'text/javascript', body: FAKE_YT } ) );
@@ -149,6 +152,28 @@ async function main() {
 			check( name, 'the slide waits for its video and moves on when it ends (before the 9 s autoplay)', 0 === before && 1 === after, `${ before } -> ${ after }` );
 		}
 
+		const shape = await p.evaluate( () => {
+			const el = document.querySelector( '.refraction-widget-refraction-slides' );
+			const w = el.getBoundingClientRect();
+			const parent = el.parentElement;
+			const ps = getComputedStyle( parent );
+			const inner = parent.clientWidth - parseFloat( ps.paddingLeft ) - parseFloat( ps.paddingRight );
+			const card = document.querySelector( '.rf-tco__card' ).getBoundingClientRect();
+			return { widget: Math.round( w.width ), inner: Math.round( inner ), card: [ Math.round( card.width ), Math.round( card.height ) ], radius: getComputedStyle( document.querySelector( '.rf-tco__card' ) ).borderTopLeftRadius };
+		} );
+		check( 'cards', 'in a row container the slider still takes the full width', shape.widget > 0 && shape.widget >= shape.inner - 2, JSON.stringify( shape ) );
+		const custom = await p.evaluate( () => {
+			const el = document.querySelector( '.refraction-widget-refraction-slides' );
+			const style = document.createElement( 'style' );
+			// What Advanced > Layout > Width: Custom writes in the page's CSS file.
+			style.textContent = `.refraction-${ el.closest( '.refraction[data-refraction-id]' ).dataset.refractionId } .refraction-element.refraction-element-${ el.dataset.id } { --container-widget-width: 400px; --container-widget-flex-grow: 0; width: var( --container-widget-width, 400px ); max-width: 400px; }`;
+			document.head.appendChild( style );
+			const width = Math.round( el.getBoundingClientRect().width );
+			style.remove();
+			return width;
+		} );
+		check( 'cards', 'a Custom Width from Advanced > Layout still wins', 400 === custom, String( custom ) );
+		check( 'cards', 'Card shape 1/1 and Card corners shape the cards', shape.card[ 0 ] === shape.card[ 1 ] && '22px' === shape.radius, JSON.stringify( shape ) );
 		const twoStyles = await p.evaluate( () => {
 			const a = getComputedStyle( document.querySelector( '.refraction-slide__button--1' ) );
 			const b = getComputedStyle( document.querySelector( '.refraction-slide__button--2' ) );

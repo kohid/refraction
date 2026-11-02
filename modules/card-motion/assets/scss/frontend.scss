@@ -103,11 +103,14 @@
 // ---------------------------------------------------------------- slides: timed cards
 .rf-tco {
 	--rf-tco-card-w: 168px;
+	--rf-tco-card-k: 1.3333; // height / width: the Card shape setting
+	--rf-tco-radius: 14px;
 	--rf-tco-gap: 18px;
 	--rf-tco-accent: #f4b63f;
 	--rf-tco-speed: 900ms;
 
 	position: relative;
+	width: 100%;
 	height: 100vh;
 	min-height: 420px;
 	overflow: hidden;
@@ -149,7 +152,7 @@
 .rf-tco__grow {
 	z-index: 2;
 	overflow: hidden;
-	border-radius: 14px;
+	border-radius: var(--rf-tco-radius);
 }
 
 .rf-tco__timer {
@@ -281,7 +284,7 @@
 
 .rf-tco__cards {
 	position: relative;
-	height: calc(var(--rf-tco-card-w) * 4 / 3);
+	height: calc(var(--rf-tco-card-w) * var(--rf-tco-card-k));
 }
 
 .rf-tco__card {
@@ -289,10 +292,10 @@
 	top: 0;
 	left: 0;
 	width: var(--rf-tco-card-w);
-	aspect-ratio: 3 / 4;
+	height: calc(var(--rf-tco-card-w) * var(--rf-tco-card-k));
 	padding: 0;
 	border: 0;
-	border-radius: 14px;
+	border-radius: var(--rf-tco-radius);
 	overflow: hidden;
 	color: #fff;
 	text-align: left;

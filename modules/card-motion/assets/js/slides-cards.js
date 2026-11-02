@@ -180,8 +180,9 @@ import { slideVideo } from '../../../pro-widgets/assets/js/frontend/handlers/sli
 			slides[ active ].parentNode.appendChild( grow );
 			card.classList.add( 'is-gone' );
 
+			const radius = getComputedStyle( card ).borderTopLeftRadius || '14px';
 			const frames = [
-				{ left: ( from.left - box.left ) + 'px', top: ( from.top - box.top ) + 'px', width: from.width + 'px', height: from.height + 'px', borderRadius: '14px' },
+				{ left: ( from.left - box.left ) + 'px', top: ( from.top - box.top ) + 'px', width: from.width + 'px', height: from.height + 'px', borderRadius: radius },
 				{ left: '0px', top: '0px', width: box.width + 'px', height: box.height + 'px', borderRadius: '0px' },
 			];
 
