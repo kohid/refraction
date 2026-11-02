@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Pure-logic tests for the 3D Build Scene timeline: node scripts/test-build-scene.mjs
 import { fitRect, frameAt, galleryLayers, loadOrder } from '../modules/build-scene/assets/js/sequence.js';
-import { humanize, proposeStages, readGlbJson } from '../modules/build-scene/assets/js/glb-outline.js';
+import { detectMotion, humanize, proposeStages, readGlbJson } from '../modules/build-scene/assets/js/glb-outline.js';
+import { makeCar, makeCharacter } from './fixtures/make-figures.mjs';
 import { makeGlb } from './fixtures/make-glb.mjs';
 import { activeStep, assignStages, EASINGS, nameMatcher, partProgress, schedule, scrollProgress, sortParts } from '../modules/build-scene/assets/js/timeline.js';
 
@@ -71,6 +72,16 @@ t( 'gallery: once covered, an image is not drawn', galleryLayers( 0.3, 4, 0, 0.3
 t( 'gallery: motion runs on without jumping when an image takes over', Math.abs( galleryLayers( 0.2499, 4, 0, 0.3 )[ 1 ].motion - galleryLayers( 0.2501, 4, 0, 0.3 )[ 0 ].motion ) < 0.01 );
 t( 'gallery: the last image stays in the pause', galleryLayers( 1, 4, 0.1, 0.3 ).map( ( l ) => l.index ).join() === '3' && galleryLayers( 0.95, 4, 0.1, 0.3 )[ 0 ].alpha === 1 );
 t( 'gallery: never more than two layers', [ 0, 0.1, 0.33, 0.5, 0.74, 0.9 ].every( ( p ) => galleryLayers( p, 6, 0, 0.7 ).length <= 2 ) );
+
+// Detecting wheels and animations (Drive in, the model's own animation).
+const ab = ( b ) => b.buffer.slice( b.byteOffset, b.byteOffset + b.byteLength );
+const car = detectMotion( readGlbJson( ab( makeCar() ) ) );
+t( 'detect: the four wheels of a car; names with "wheel" keep the general pattern', 4 === car.wheels.length && '*wheel*, *tire*, *tyre*' === car.patterns && 0 === car.animations.length );
+const person = detectMotion( readGlbJson( ab( makeCharacter() ) ) );
+t( 'detect: a character has no wheels and two animations, in file order', 0 === person.wheels.length && 'Wave,Idle' === person.animations.join() );
+const odd = detectMotion( { nodes: [ { name: 'Rim Front.L' }, { name: 'Steering Wheel' }, { name: 'Spare_Tire' }, { name: 'Body' } ], animations: [ {} ] } );
+t( 'detect: other wheel names become patterns; steering wheel and spare left out; unnamed clips are numbered', 'Rim*Front*L' === odd.patterns && 1 === odd.wheels.length && 'Animation 1' === odd.animations[ 0 ] );
+t( 'detect: the patterns find the parts as the loader names them', nameMatcher( odd.patterns.split( ',' ) )( 'Rim_Front_L' ) );
 
 console.log( `build-scene timeline: ${ pass } passed, ${ fail } failed` );
 process.exit( fail ? 1 : 0 );

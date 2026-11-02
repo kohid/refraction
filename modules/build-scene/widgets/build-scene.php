@@ -153,6 +153,20 @@ class Build_Scene extends Widget_Base {
 			'default' => [ 'size' => 1 ],
 			'condition' => [ 'motion' => 'clip', 'clip_play' => 'loop' ],
 		] );
+		$this->add_control( 'detect_model', [
+			'type' => Controls_Manager::BUTTON,
+			'text' => esc_html__( 'Detect wheels and animations', 'refraction' ),
+			'event' => 'refraction:build-scene:detect',
+			'description' => esc_html__( 'Reads the chosen .glb and fills in its wheel parts and animation name. Also runs by itself when you choose a model.', 'refraction' ),
+			'condition' => [ 'model_source' => 'media', 'motion' => [ 'drive', 'clip' ] ],
+		] );
+		$this->add_control( 'show_stages', [
+			'label' => esc_html__( 'Show the stages on the site', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => '',
+			'description' => esc_html__( 'The captions and the progress line of the stages. Off: only the model shows.', 'refraction' ),
+			'condition' => [ 'motion!' => 'build' ],
+		] );
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_build', [ 'label' => esc_html__( 'Build', 'refraction' ) ] );
@@ -278,6 +292,13 @@ class Build_Scene extends Widget_Base {
 			$this->add_control( $key, [ 'label' => $label, 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'show_tools' => 'yes' ] ] );
 		}
 
+		$this->add_control( 'tool_clips', [
+			'label' => esc_html__( 'Animation buttons', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'One button per animation in the model, so visitors can switch between them (walk, run, wave...).', 'refraction' ),
+			'condition' => [ 'show_tools' => 'yes', 'motion' => 'clip' ],
+		] );
 		$this->add_control( 'tools_position', [
 			'label' => esc_html__( 'Buttons position', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -455,7 +476,14 @@ class Build_Scene extends Widget_Base {
 			return;
 		}
 
-		$views = [ 'build' => esc_html__( 'Build', 'refraction' ) ];
+		$first = [
+			'build' => esc_html__( 'Build', 'refraction' ),
+			'turntable' => esc_html__( 'Turntable', 'refraction' ),
+			'drive' => esc_html__( 'Drive', 'refraction' ),
+			'clip' => esc_html__( 'Animation', 'refraction' ),
+			'float' => esc_html__( 'Float', 'refraction' ),
+		];
+		$views = [ 'build' => $first[ $config['motion'] ] ?? $first['build'] ];
 
 		if ( 'yes' === ( $s['tool_parts'] ?? '' ) ) {
 			$views['parts'] = esc_html__( 'Parts', 'refraction' );
@@ -472,6 +500,11 @@ class Build_Scene extends Widget_Base {
 			foreach ( $views as $view => $label ) {
 				echo '<button type="button" data-rf3d-view="' . esc_attr( $view ) . '" aria-pressed="' . ( 'build' === $view ? 'true' : 'false' ) . '">' . esc_html( $label ) . '</button>';
 			}
+		}
+
+		// Filled by the script with one button per animation in the model.
+		if ( 'clip' === $config['motion'] && 'yes' === ( $s['tool_clips'] ?? 'yes' ) ) {
+			echo '<span class="rf3d-clips" data-rf3d-clips aria-label="' . esc_attr__( 'Animations', 'refraction' ) . '"></span>';
 		}
 
 		if ( 'yes' === ( $s['tool_rotate'] ?? '' ) ) {
@@ -507,7 +540,10 @@ class Build_Scene extends Widget_Base {
 			echo '<img class="rf3d-poster" src="' . esc_url( $poster ) . '" alt="' . esc_attr( (string) ( $s['label'] ?? '' ) ) . '" loading="lazy" hidden>';
 		}
 
-		if ( $titled && 'none' !== $position ) {
+		// Animations other than building show the stages only when asked.
+		$show_stages = 'build' === $config['motion'] || 'yes' === ( $s['show_stages'] ?? '' );
+
+		if ( $show_stages && $titled && 'none' !== $position ) {
 			echo '<div class="rf3d-caps">';
 
 			foreach ( $stages as $i => $stage ) {
@@ -520,7 +556,7 @@ class Build_Scene extends Widget_Base {
 			echo '</div>';
 		}
 
-		if ( 'yes' === ( $s['show_progress'] ?? '' ) && count( $stages ) > 1 ) {
+		if ( $show_stages && 'yes' === ( $s['show_progress'] ?? '' ) && count( $stages ) > 1 ) {
 			// Each stage name is a button: in Build it scrolls to that stage, in Parts and Aerial it picks those parts out.
 			echo '<nav class="rf3d-progress-nav" aria-label="' . esc_attr__( 'Build stages', 'refraction' ) . '"><ol class="rf3d-progress">';
 

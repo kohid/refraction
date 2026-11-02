@@ -143,3 +143,32 @@ export function proposeStages( gltf, max = 12 ) {
 
 	return { by: '', stages: [] };
 }
+
+const WHEEL = /(wheel|tire|tyre|\brim\b|rims\b)/i;
+const NOT_WHEEL = /(steering|spare|wheelhouse|wheel_?arch|arch)/i;
+
+/**
+ * What the Drive and character animations need from a model: its wheel parts (nodes or meshes named like a wheel,
+ * tyre or rim, but not a steering wheel, a spare or a wheel arch) and the names of its animations.
+ *
+ * @param {Object} gltf The glTF JSON.
+ * @return {{wheels: string[], patterns: string, animations: string[]}} Names, the Wheel parts setting to use, clips.
+ */
+export function detectMotion( gltf ) {
+	const names = new Set();
+
+	( gltf.nodes || [] ).forEach( ( n ) => n.name && names.add( n.name ) );
+	( gltf.meshes || [] ).forEach( ( m ) => m.name && names.add( m.name ) );
+
+	const wheels = [ ...names ].filter( ( n ) => WHEEL.test( n ) && ! NOT_WHEEL.test( n ) ).slice( 0, 24 );
+	// The loader turns spaces and punctuation in names into other characters: match those with *.
+	const patterns = wheels.length && wheels.every( ( n ) => /wheel|tire|tyre/i.test( n ) )
+		? '*wheel*, *tire*, *tyre*'
+		: wheels.slice( 0, 12 ).map( ( n ) => n.replace( /[^A-Za-z0-9]+/g, '*' ) ).join( ', ' );
+
+	return {
+		wheels,
+		patterns,
+		animations: ( gltf.animations || [] ).map( ( a, i ) => a.name || `Animation ${ i + 1 }` ),
+	};
+}

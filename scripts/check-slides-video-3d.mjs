@@ -114,7 +114,7 @@ async function main() {
 		const poster = Number( wp( [ 'media', 'import', join( dir, 'poster.jpg' ), '--porcelain' ] ).trim() );
 		const posterUrl = wp( [ 'post', 'list', '--post_type=attachment', `--post__in=${ poster }`, '--field=guid' ] ).trim();
 		const slide = ( i, video ) => ( { _id: 'v' + i, heading: 'Slide ' + i, description: 'Text ' + i, button_text: 'Book now', button_link: { url: '#book' }, button2_text: 'Watch the film', button2_link: { url: '#film' }, background_image: { id: poster, url: posterUrl }, background_color: '#223344', ...( video ? { background_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', video_next: 'yes', video_sound: 'yes' } : {} ) } );
-		const slidesWidget = ( id, layout ) => ( { id, elType: 'widget', widgetType: 'refraction-slides', settings: { layout, autoplay: 'yes', autoplay_speed: 9000, transition_speed: 400, slides_height: { unit: 'px', size: 560 }, navigation: 'both', slides: [ slide( 1, true ), slide( 2, false ), slide( 3, false ) ] }, elements: [] } );
+		const slidesWidget = ( id, layout ) => ( { id, elType: 'widget', widgetType: 'refraction-slides', settings: { layout, autoplay: 'yes', autoplay_speed: 9000, transition_speed: 400, slides_height: { unit: 'px', size: 560 }, navigation: 'both', slides: [ slide( 1, true ), slide( 2, false ), slide( 3, false ), { _id: 'v4', heading: 'Video only', background_video: 'https://youtu.be/aBcDeFgHiJk' } ] }, elements: [] } );
 		const classic = page( 'Video slides', [ { id: 'c1', elType: 'container', settings: { content_width: 'full' }, isInner: false, elements: [ slidesWidget( 'sclassic', 'classic' ) ] } ] );
 		const cards = page( 'Video cards', [ { id: 'c2', elType: 'container', settings: { content_width: 'full' }, isInner: false, elements: [ slidesWidget( 'scards', 'cards' ) ] } ] );
 
@@ -136,11 +136,13 @@ async function main() {
 				const box = document.querySelector( '.refraction-slide__video' );
 				const r = frame ? frame.getBoundingClientRect() : null;
 				const slideBox = box ? box.getBoundingClientRect() : null;
-				return { player: window.rfFakeYt && window.rfFakeYt.players[ 0 ], playing: !! document.querySelector( '.refraction-slide__video.is-playing' ), covers: !! r && r.width >= slideBox.width - 1 && r.height >= slideBox.height - 1, sound: !! document.querySelector( '.refraction-slide__sound:not([hidden])' ), buttons: [ ...document.querySelectorAll( '.refraction-slide__buttons' ) ][ 0 ].textContent.replace( /\s+/g, ' ' ).trim() };
+				return { player: window.rfFakeYt && window.rfFakeYt.players[ 0 ], playing: !! document.querySelector( '.refraction-slide__video.is-playing' ), covers: !! r && r.width >= slideBox.width - 1 && r.height >= slideBox.height - 1, sound: !! document.querySelector( '.refraction-slide__sound:not([hidden])' ), buttons: document.querySelector( '.swiper-slide-active .refraction-slide__buttons, .rf-tco__text.is-active .refraction-slide__buttons' ).textContent.replace( /\s+/g, ' ' ).trim() };
 			} );
 			await p.screenshot( { path: join( SHOTS, `slides-${ name }.png` ) } );
 			check( name, 'the slide\'s YouTube video plays muted from youtube-nocookie.com, covering the slide, with a sound button', v.player && 'dQw4w9WgXcQ' === v.player.id && /youtube-nocookie\.com/.test( v.player.host ) && 1 === v.player.mute && v.playing && v.covers && v.sound, JSON.stringify( v ) );
 			check( name, 'two buttons per slide', 'Book now Watch the film' === v.buttons, v.buttons );
+			const thumbs = await p.evaluate( () => [ ...document.querySelectorAll( '.refraction-slide__bg, .rf-tco__bg, .rf-tco__card' ) ].map( ( el ) => el.getAttribute( 'style' ) || '' ).filter( ( st ) => /ytimg/.test( st ) ) );
+			check( name, 'a slide with a YouTube video and no image uses the video\'s thumbnail (large, with the small one behind)', thumbs.length >= 1 && thumbs.every( ( st ) => /i\.ytimg\.com\/vi\/aBcDeFgHiJk\/maxresdefault\.jpg/.test( st ) && /aBcDeFgHiJk\/hqdefault\.jpg/.test( st ) ) && ( 'classic' === name || 2 === thumbs.length ), JSON.stringify( thumbs ) );
 			const before = await activeIndex();
 			await sleep( 2400 );
 			const after = await activeIndex();
@@ -166,9 +168,9 @@ async function main() {
 		const person = media( 'character.glb' );
 		const scene = ( id, model, more ) => ( { id: 'c' + id, elType: 'container', settings: { content_width: 'full' }, isInner: false, elements: [ { id, elType: 'widget', widgetType: 'build-scene', settings: { model_source: 'media', model, stages: [], show_tools: '', caption_position: 'none', show_progress: '', height: { unit: 'vh', size: 100 }, ...more }, elements: [] } ] } );
 		const scenes = page( '3D animations', [
-			scene( 'sdrive', car, { motion: 'drive', length: { size: 2 } } ),
-			scene( 'sturn', car, { motion: 'turntable', turns: { size: 1 }, length: { size: 2 } } ),
-			scene( 'swave', person, { motion: 'clip', clip: 'wave', clip_play: 'loop', follow: 'head', grab: 'yes', drag: '' } ),
+			scene( 'sdrive', car, { motion: 'drive', length: { size: 2 }, caption_position: 'left', show_progress: 'yes', show_tools: 'yes', tool_parts: 'yes', stages: [ { stage_title: 'Body', stage_text: 'Steel', stage_parts: 'body' }, { stage_title: 'Wheels', stage_text: 'Four', stage_parts: '*wheel*' } ] } ),
+			scene( 'sturn', car, { motion: 'turntable', turns: { size: 1 }, length: { size: 2 }, caption_position: 'left', show_progress: 'yes', show_stages: 'yes', stages: [ { stage_title: 'Body', stage_text: 'Steel', stage_parts: 'body' }, { stage_title: 'Wheels', stage_text: 'Four', stage_parts: '*wheel*' } ] } ),
+			scene( 'swave', person, { motion: 'clip', clip: 'wave', clip_play: 'loop', follow: 'head', grab: 'yes', drag: '', show_tools: 'yes', tool_clips: 'yes' } ),
 			scene( 'sidle', person, { motion: 'clip', clip: '', clip_play: 'scroll', follow: 'turn', length: { size: 2 } } ),
 			scene( 'sfloat', car, { motion: 'float', grab: 'yes' } ),
 		] );
@@ -206,6 +208,14 @@ async function main() {
 		await q.screenshot( { path: join( SHOTS, 'drive-arrived.png' ) } );
 		check( '3d', 'Drive in: the car finds its four wheels and rolls in with the scroll, then stands', '4' === d0.rf3dWheels && Number( d0.rf3dTravel ) > 2 && Number( d1.rf3dTravel ) < 0.05, JSON.stringify( [ d0.rf3dWheels, d0.rf3dTravel, d1.rf3dTravel ] ) );
 
+		const stagesShown = await q.evaluate( () => [ 'sdrive', 'sturn' ].map( ( i ) => ( {
+			caps: !! document.querySelector( `.refraction-element-${ i } .rf3d-caps` ),
+			line: !! document.querySelector( `.refraction-element-${ i } .rf3d-progress` ),
+		} ) ) );
+		check( '3d', 'other animations hide the stages unless "Show the stages on the site" is on', ! stagesShown[ 0 ].caps && ! stagesShown[ 0 ].line && stagesShown[ 1 ].caps && stagesShown[ 1 ].line, JSON.stringify( stagesShown ) );
+		const label = await q.textContent( '.refraction-element-sdrive [data-rf3d-view="build"]' );
+		check( '3d', 'the first view button is named after the animation ("Drive")', 'Drive' === label.trim(), label );
+
 		await into( 'sturn', 0.1 );
 		const t0 = Number( ( await data( 'sturn' ) ).rf3dTurn );
 		await into( 'sturn', 0.6 );
@@ -218,6 +228,11 @@ async function main() {
 		await sleep( 500 );
 		const w1 = await data( 'swave' );
 		check( '3d', 'the character plays its own animation by name ("wave" finds "Wave"), in a loop', 'Wave' === w0.rf3dClip && w0.rf3dClipTime !== w1.rf3dClipTime, JSON.stringify( [ w0.rf3dClip, w0.rf3dClipTime, w1.rf3dClipTime ] ) );
+		const clipButtons = await q.evaluate( () => [ ...document.querySelectorAll( '.refraction-element-swave [data-rf3d-clip-name]' ) ].map( ( b ) => b.textContent + ':' + b.getAttribute( 'aria-pressed' ) ) );
+		await q.click( '.refraction-element-swave [data-rf3d-clip-name="Idle"]' );
+		await until( 'swave', 'd.rf3dClip === "Idle"' );
+		check( '3d', 'animation buttons: one per animation in the model; a click switches to it', 'Wave:true,Idle:false' === clipButtons.join() && 'Idle' === ( await data( 'swave' ) ).rf3dClip, JSON.stringify( clipButtons ) );
+		await q.mouse.move( 5, 5 );
 		const box = await q.locator( '.refraction-element-swave .rf3d-canvas' ).boundingBox();
 		await q.mouse.move( box.x + box.width - 20, box.y + ( box.height / 2 ) );
 		await sleep( 900 );
@@ -246,6 +261,44 @@ async function main() {
 		const fl1 = await data( 'sfloat' );
 		check( '3d', 'Float: the model hovers and turns by itself', fl0.rf3dLift !== fl1.rf3dLift && fl0.rf3dTurn !== fl1.rf3dTurn, JSON.stringify( [ fl0.rf3dLift, fl1.rf3dLift, fl0.rf3dTurn, fl1.rf3dTurn ] ) );
 		await g.close();
+
+		// ------------------------------------------------------------ editor: detecting wheels and animations
+		wp( [ 'user', 'update', 'admin', '--user_pass=admin' ] );
+		const ed = await browser.newContext( { viewport: { width: 1400, height: 900 } } );
+		const ep = await ed.newPage();
+		ep.on( 'pageerror', ( e ) => errors.push( e.message ) );
+		await ep.goto( `${ BASE }/wp-login.php?redirect_to=${ encodeURIComponent( `${ BASE }/wp-admin/profile.php` ) }` );
+		await ep.fill( '#user_login', 'admin' );
+		await ep.fill( '#user_pass', 'admin' );
+		await Promise.all( [ ep.waitForURL( /wp-admin/, { timeout: 120000, waitUntil: 'commit' } ), ep.click( '#wp-submit' ) ] );
+		await ep.goto( `${ BASE }/wp-admin/post.php?post=${ scenes.id }&action=refraction`, { timeout: 120000 } );
+		await ep.waitForFunction( () => window.refraction && refraction.documents && refraction.documents.getCurrent() && document.querySelector( '.refraction-panel-category' ), null, { timeout: 120000 } );
+		await sleep( 1500 );
+		const detected = await ep.evaluate( async ( [ carUrl, personUrl ] ) => {
+			const find = ( id ) => refraction.getPreviewContainer().children.find( ( c ) => c.children[ 0 ].id === id ).children[ 0 ];
+			const wait = ( fn ) => new Promise( ( resolve ) => {
+				let n = 0;
+				const t = setInterval( () => {
+					if ( fn() || ++n > 60 ) {
+						clearInterval( t );
+						resolve();
+					}
+				}, 100 );
+			} );
+			const float = find( 'sfloat' );
+			// A car chosen for a Drive scene with no wheel names yet.
+			$e.run( 'document/elements/settings', { container: float, settings: { wheels: '' } } );
+			$e.run( 'document/elements/settings', { container: float, settings: { motion: 'drive' } } );
+			await wait( () => float.settings.get( 'wheels' ) );
+			const wheels = float.settings.get( 'wheels' );
+			// A character chosen for its own animation, with no name.
+			$e.run( 'document/elements/settings', { container: float, settings: { clip: '', model: { id: 0, url: personUrl } } } );
+			$e.run( 'document/elements/settings', { container: float, settings: { motion: 'clip' } } );
+			await wait( () => float.settings.get( 'clip' ) );
+			return { wheels, clip: float.settings.get( 'clip' ), car: carUrl };
+		}, [ car.url, person.url ] );
+		check( 'editor', 'choosing Drive in fills the wheel parts from the model; choosing its own animation fills the first animation name', '*wheel*, *tire*, *tyre*' === detected.wheels && 'Wave' === detected.clip, JSON.stringify( detected ) );
+		await ed.close();
 
 		// Reduced motion: nothing moves by itself.
 		const r = await browser.newContext( { viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' } );
