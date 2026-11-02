@@ -1,7 +1,9 @@
 import {
 	ACESFilmicToneMapping,
+	AnimationMixer,
 	Box3,
 	DirectionalLight,
+	Euler,
 	HemisphereLight,
 	MathUtils,
 	Mesh,
@@ -9,6 +11,7 @@ import {
 	PerspectiveCamera,
 	PlaneGeometry,
 	PMREMGenerator,
+	Quaternion,
 	Scene,
 	ShadowMaterial,
 	SRGBColorSpace,
@@ -18,7 +21,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { sampleHouse } from './sample-house.js';
-import { activeStep, assignStages, EASINGS, partProgress, schedule, scrollProgress } from './timeline.js';
+import { activeStep, assignStages, EASINGS, nameMatcher, partProgress, schedule, scrollProgress } from './timeline.js';
 
 const LIGHTS = {
 	daylight: { sky: '#dfe9f5', ground: '#6b5f52', hemi: 0.9, sun: '#fff3e0', power: 2.2, dir: [ -0.6, 1, 0.7 ], env: 0.55 },
@@ -62,6 +65,11 @@ export class BuildScene {
 		this.dirty = true;
 		this.visible = false;
 		this.listeners = [];
+		// Animation other than building: turntable, drive, clip (the model's own animation) or float.
+		this.motion = this.cfg.motion || 'build';
+		this.clock = 0;
+		this.spin = 0;
+		this.follow = { x: 0, y: 0, nx: 0, ny: 0 };
 
 		if ( this.reduced ) {
 			root.classList.add( 'rf3d--still' );
@@ -166,7 +174,11 @@ export class BuildScene {
 			return Promise.resolve( sampleHouse() );
 		}
 
-		return new GLTFLoader().loadAsync( this.cfg.model ).then( ( gltf ) => gltf.scene );
+		return new GLTFLoader().loadAsync( this.cfg.model ).then( ( gltf ) => {
+			this.clips = gltf.animations || [];
+
+			return gltf.scene;
+		} );
 	}
 
 	light( small ) {
@@ -266,6 +278,11 @@ export class BuildScene {
 			} );
 		} );
 
+		this.model = model;
+		this.modelHome = model.position.clone();
+		this.size = box.getSize( new Vector3() );
+		this.prepareMotion( parts );
+
 		const steps = assignStages( parts, this.cfg.stages, this.cfg.order );
 		this.timeline = schedule( steps, this.cfg.overlap, this.cfg.hold );
 		this.byStage = steps.length === ( this.cfg.stages || [] ).length;
@@ -290,6 +307,110 @@ export class BuildScene {
 		this.sun.position.copy( this.center ).addScaledVector( this.sunDir, this.radius * 3 );
 		this.sun.target.position.copy( this.center );
 		this.resize();
+	}
+
+	/**
+	 * Drive: the wheels (parts named like the Wheels setting) spin around their thinnest side while the model rolls in
+	 * along its length. Clip: the model's own animation (by name, else the first). Follow cursor "head": the first
+	 * part or bone named like a head.
+	 *
+	 * @param {Array} parts The meshes of the model.
+	 */
+	prepareMotion( parts ) {
+		if ( 'drive' === this.motion ) {
+			const isWheel = nameMatcher( String( this.cfg.wheels || '' ).split( ',' ) );
+			// Along the model's long side; from the left or the right of the first view.
+			this.driveAxis = this.size.x >= this.size.z ? new Vector3( 1, 0, 0 ) : new Vector3( 0, 0, 1 );
+			this.wheels = parts.filter( ( p ) => p.names.some( isWheel ) ).map( ( p ) => {
+				const mesh = p.mesh;
+				const own = new Box3().setFromObject( mesh );
+				const dims = own.getSize( new Vector3() );
+				let thin = dims.y <= dims.z ? 'y' : 'z';
+
+				if ( dims.x <= dims.y && dims.x <= dims.z ) {
+					thin = 'x';
+				}
+
+				const axis = new Vector3( 'x' === thin ? 1 : 0, 'y' === thin ? 1 : 0, 'z' === thin ? 1 : 0 );
+				const parentTurn = mesh.parent.getWorldQuaternion( new Quaternion() ).invert();
+				const pivot = mesh.parent.worldToLocal( own.getCenter( new Vector3() ) );
+
+				return {
+					mesh,
+					axis: axis.applyQuaternion( parentTurn ).normalize(),
+					pivot,
+					quat: mesh.quaternion.clone(),
+					radius: Math.max( 0.001, Math.max( ...[ 'x', 'y', 'z' ].filter( ( k ) => k !== thin ).map( ( k ) => dims[ k ] ) ) / 2 ),
+				};
+			} );
+			this.root.dataset.rf3dWheels = String( this.wheels.length );
+		}
+
+		if ( 'clip' === this.motion && this.clips && this.clips.length ) {
+			const wanted = String( this.cfg.clip || '' ).trim().toLowerCase();
+			const clip = this.clips.find( ( c ) => wanted && c.name.toLowerCase() === wanted ) || this.clips.find( ( c ) => wanted && c.name.toLowerCase().includes( wanted ) ) || this.clips[ 0 ];
+			this.mixer = new AnimationMixer( this.model );
+			this.action = this.mixer.clipAction( clip );
+			this.action.play();
+			this.root.dataset.rf3dClip = clip.name;
+		}
+
+		if ( 'head' === this.cfg.follow ) {
+			this.model.traverse( ( o ) => {
+				if ( ! this.head && /head/i.test( o.name ) && ! /headlight|header/i.test( o.name ) ) {
+					this.head = o;
+					this.headQuat = o.quaternion.clone();
+				}
+			} );
+		}
+	}
+
+	/**
+	 * The whole model's own movement for the animations other than building, at scroll progress p.
+	 *
+	 * @param {number} progress 0 to 1.
+	 * @return {number} Extra turn of the view, in degrees.
+	 */
+	moveModel( progress ) {
+		if ( ! this.model ) {
+			return 0;
+		}
+
+		this.model.position.copy( this.modelHome );
+
+		if ( 'turntable' === this.motion ) {
+			return progress * ( this.cfg.turns || 1 ) * 360;
+		}
+
+		if ( 'drive' === this.motion ) {
+			// Rolls in during the first 60 % of the scroll, then the view turns around it.
+			const arrive = EASINGS.out( MathUtils.clamp( progress / 0.6, 0, 1 ) );
+			const length = Math.max( this.size.x, this.size.z );
+			const travel = ( 1 - arrive ) * length * 2.4;
+			const side = 'right' === this.cfg.driveFrom ? 1 : -1;
+			this.model.position.addScaledVector( this.driveAxis, side * travel );
+			this.root.dataset.rf3dTravel = travel.toFixed( 2 );
+
+			for ( const w of this.wheels || [] ) {
+				const turn = new Quaternion().setFromAxisAngle( w.axis, side * travel / w.radius );
+				w.mesh.quaternion.copy( turn ).multiply( w.quat );
+			}
+
+			return 0;
+		}
+
+		if ( 'float' === this.motion ) {
+			this.model.position.y += Math.sin( this.clock * 1.6 ) * this.radius * 0.035;
+
+			return this.clock * 10;
+		}
+
+		if ( this.action && 'scroll' === this.cfg.clipPlay ) {
+			this.action.time = progress * this.action.getClip().duration * 0.999;
+			this.mixer.update( 0 );
+		}
+
+		return 0;
 	}
 
 	/**
@@ -322,16 +443,21 @@ export class BuildScene {
 
 		// Drag to turn: sideways always; up and down too in the Parts and Aerial views (mouse and pen only, so a
 		// vertical swipe on a phone still scrolls the page).
+		// Grab to rotate: at any time, in any direction with a mouse, and it keeps turning a little after letting go.
 		let from = null;
 		this.on( this.canvas, 'pointerdown', ( e ) => {
 			if ( this.canTurn() ) {
-				from = { x: e.clientX, y: e.clientY, orbit: 'build' !== this.view && 'touch' !== e.pointerType };
+				from = { x: e.clientX, y: e.clientY, v: 0, orbit: ( 'build' !== this.view || !! this.cfg.grab ) && 'touch' !== e.pointerType };
+				this.spin = 0;
 				this.canvas.setPointerCapture( e.pointerId );
+				this.root.classList.add( 'rf3d--grabbing' );
 			}
 		} );
 		this.on( this.canvas, 'pointermove', ( e ) => {
 			if ( null !== from ) {
-				this.yaw -= ( e.clientX - from.x ) * 0.35;
+				const dx = ( e.clientX - from.x ) * 0.35;
+				this.yaw -= dx;
+				from.v = dx;
 
 				if ( from.orbit ) {
 					this.pitch = MathUtils.clamp( this.pitch + ( ( e.clientY - from.y ) * 0.3 ), -60, 60 );
@@ -342,8 +468,38 @@ export class BuildScene {
 				this.kick();
 			}
 		} );
-		this.on( this.canvas, 'pointerup', () => ( from = null ) );
-		this.on( this.canvas, 'pointercancel', () => ( from = null ) );
+		const release = () => {
+			if ( from && this.cfg.grab && ! this.reduced ) {
+				this.spin = from.v;
+			}
+
+			from = null;
+			this.root.classList.remove( 'rf3d--grabbing' );
+			this.kick();
+		};
+		this.on( this.canvas, 'pointerup', release );
+		this.on( this.canvas, 'pointercancel', release );
+
+		// Follow the cursor: the model (or its head) turns toward the pointer while it is over the scene.
+		if ( this.cfg.follow && ! this.reduced ) {
+			this.on( this.root, 'pointermove', ( e ) => {
+				if ( 'touch' === e.pointerType ) {
+					return;
+				}
+
+				const r = this.root.getBoundingClientRect();
+				const stage = this.root.querySelector( '.rf3d-stage' );
+				const view = stage ? stage.getBoundingClientRect() : r;
+				this.follow.x = MathUtils.clamp( ( ( e.clientX - view.left ) / ( view.width || 1 ) * 2 ) - 1, -1, 1 );
+				this.follow.y = MathUtils.clamp( ( ( e.clientY - view.top ) / ( view.height || 1 ) * 2 ) - 1, -1, 1 );
+				this.kick();
+			} );
+			this.on( this.root, 'pointerleave', () => {
+				this.follow.x = 0;
+				this.follow.y = 0;
+				this.kick();
+			} );
+		}
 		this.bindTools();
 		this.bindStages();
 	}
@@ -407,7 +563,7 @@ export class BuildScene {
 	}
 
 	canTurn() {
-		return 'build' !== this.view || ( this.cfg.drag && this.shown >= 0.999 );
+		return !! this.cfg.grab || 'build' !== this.view || ( this.cfg.drag && this.shown >= 0.999 );
 	}
 
 	/** The view buttons: Build, Parts, Aerial, Auto-rotate, Day and Dusk. */
@@ -560,6 +716,33 @@ export class BuildScene {
 			moving = true;
 		}
 
+		// Animations that run by themselves: float, and a model's own animation played in a loop.
+		if ( ! this.reduced && ( 'float' === this.motion || ( this.mixer && 'scroll' !== this.cfg.clipPlay ) ) ) {
+			this.clock += dt;
+
+			if ( this.mixer && 'scroll' !== this.cfg.clipPlay ) {
+				this.mixer.update( dt * ( this.cfg.clipSpeed || 1 ) );
+			}
+
+			moving = true;
+		}
+
+		// After letting go of a grab, the turn slows down.
+		if ( Math.abs( this.spin ) > 0.01 ) {
+			this.yaw -= this.spin;
+			this.spin *= Math.exp( -dt * 4 );
+			moving = true;
+		} else {
+			this.spin = 0;
+		}
+
+		for ( const k of [ 'x', 'y' ] ) {
+			const n = 'n' + k;
+			const gap = this.follow[ k ] - this.follow[ n ];
+			this.follow[ n ] = Math.abs( gap ) < 0.001 ? this.follow[ k ] : this.follow[ n ] + ( gap * ( 1 - Math.exp( -dt * 6 ) ) );
+			moving = moving || this.follow[ n ] !== this.follow[ k ];
+		}
+
 		// Follow the scroll with a little smoothing; jump on the first drawing (a page opened halfway down), in the
 		// editor preview, and when the difference is tiny.
 		const diff = this.target - this.shown;
@@ -580,8 +763,11 @@ export class BuildScene {
 	apply( progress ) {
 		const ease = EASINGS[ this.cfg.easing ] || EASINGS.out;
 
+		const building = 'build' === this.motion;
+
 		for ( const item of this.timeline.parts ) {
-			const t = partProgress( item, progress );
+			// Other animations show the whole model; the stages only drive the captions.
+			const t = building ? partProgress( item, progress ) : 1;
 			const e = ease( t );
 			const { mesh, home, offset, spread } = item.part;
 			mesh.visible = t > 0;
@@ -598,9 +784,25 @@ export class BuildScene {
 			}
 		}
 
+		const extra = building ? 0 : this.moveModel( progress );
+		this.root.dataset.rf3dTurn = extra.toFixed( 1 );
+
+		if ( this.model && ! building ) {
+			this.root.dataset.rf3dLift = ( this.model.position.y - this.modelHome.y ).toFixed( 3 );
+		}
+		const strength = this.cfg.followStrength || 15;
+		const fx = this.follow.nx * strength;
+		const fy = this.follow.ny * strength * 0.5;
+		const headTurn = this.head && 'head' === this.cfg.follow;
+
+		if ( headTurn ) {
+			const look = new Quaternion().setFromEuler( new Euler( MathUtils.degToRad( fy * 1.6 ), MathUtils.degToRad( fx * 1.8 ), 0, 'YXZ' ) );
+			this.head.quaternion.copy( this.headQuat ).multiply( look );
+		}
+
 		const turn = this.reduced ? 1 : EASINGS.inout( Math.min( 1, progress / Math.max( 0.01, 1 - this.cfg.hold ) ) );
-		const azimuth = MathUtils.degToRad( MathUtils.lerp( this.cfg.angleStart, this.cfg.angleEnd, turn ) + this.yaw );
-		const elevation = MathUtils.degToRad( this.elevation );
+		const azimuth = MathUtils.degToRad( MathUtils.lerp( this.cfg.angleStart, this.cfg.angleEnd, turn ) + this.yaw + extra - ( headTurn ? 0 : fx ) );
+		const elevation = MathUtils.degToRad( MathUtils.clamp( this.elevation + ( headTurn ? 0 : fy ), 2, 88 ) );
 		// Pulled back while the parts are spread, so the whole spread-out model stays in view.
 		const distance = this.distance * ( 1 + ( this.explode * ( this.cfg.spread || 0.8 ) * 0.9 ) );
 		this.offsetCamera();
@@ -615,6 +817,15 @@ export class BuildScene {
 		this.root.dataset.rf3dExplode = this.explode.toFixed( 2 );
 		this.root.dataset.rf3dElevation = this.elevation.toFixed( 1 );
 		this.root.dataset.rf3dYaw = this.yaw.toFixed( 1 );
+		this.root.dataset.rf3dFollow = this.follow.nx.toFixed( 2 );
+
+		if ( this.action ) {
+			this.root.dataset.rf3dClipTime = this.action.time.toFixed( 2 );
+		}
+
+		if ( this.head ) {
+			this.root.dataset.rf3dHead = this.head.name;
+		}
 		this.root.dataset.rf3dFocus = null === this.focus ? '' : String( this.focus );
 		this.root.classList.toggle( 'rf3d--done', this.canTurn() );
 	}

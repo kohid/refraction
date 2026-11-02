@@ -96,6 +96,65 @@ class Build_Scene extends Widget_Base {
 		] );
 		$this->end_controls_section();
 
+		$this->start_controls_section( 'section_animation', [ 'label' => esc_html__( 'Animation', 'refraction' ) ] );
+		$this->add_control( 'motion', [
+			'label' => esc_html__( 'Animation', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'build',
+			'options' => [
+				'build' => esc_html__( 'Build in stages', 'refraction' ),
+				'turntable' => esc_html__( 'Turntable (turns with the scroll)', 'refraction' ),
+				'drive' => esc_html__( 'Drive in (cars: rolls in, wheels turn)', 'refraction' ),
+				'clip' => esc_html__( 'Play the model\'s own animation (characters)', 'refraction' ),
+				'float' => esc_html__( 'Float (hovers and turns slowly)', 'refraction' ),
+			],
+			'description' => esc_html__( 'Every animation follows the scroll through the section; the stages below still give the captions and the progress line.', 'refraction' ),
+		] );
+		$this->add_control( 'turns', [
+			'label' => esc_html__( 'Turns over the scroll', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0.25, 'max' => 3, 'step' => 0.25 ] ],
+			'default' => [ 'size' => 1 ],
+			'condition' => [ 'motion' => 'turntable' ],
+		] );
+		$this->add_control( 'wheels', [
+			'label' => esc_html__( 'Wheel parts', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'default' => '*wheel*, *tire*, *tyre*',
+			'label_block' => true,
+			'description' => esc_html__( 'Part names, separated by commas; * matches anything. These spin as the model rolls in.', 'refraction' ),
+			'condition' => [ 'motion' => 'drive' ],
+		] );
+		$this->add_control( 'drive_from', [
+			'label' => esc_html__( 'Comes from', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'left',
+			'options' => [ 'left' => esc_html__( 'One side', 'refraction' ), 'right' => esc_html__( 'The other side', 'refraction' ) ],
+			'condition' => [ 'motion' => 'drive' ],
+		] );
+		$this->add_control( 'clip', [
+			'label' => esc_html__( 'Animation name', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => 'Walk',
+			'description' => esc_html__( 'As named in the .glb file. Empty: the first animation in the file.', 'refraction' ),
+			'condition' => [ 'motion' => 'clip' ],
+		] );
+		$this->add_control( 'clip_play', [
+			'label' => esc_html__( 'Plays', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'loop',
+			'options' => [ 'loop' => esc_html__( 'On its own, in a loop', 'refraction' ), 'scroll' => esc_html__( 'With the scroll', 'refraction' ) ],
+			'condition' => [ 'motion' => 'clip' ],
+		] );
+		$this->add_control( 'clip_speed', [
+			'label' => esc_html__( 'Speed', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0.25, 'max' => 3, 'step' => 0.05 ] ],
+			'default' => [ 'size' => 1 ],
+			'condition' => [ 'motion' => 'clip', 'clip_play' => 'loop' ],
+		] );
+		$this->end_controls_section();
+
 		$this->start_controls_section( 'section_build', [ 'label' => esc_html__( 'Build', 'refraction' ) ] );
 		$stages = new Repeater();
 		$stages->add_control( 'stage_title', [ 'label' => esc_html__( 'Title', 'refraction' ), 'type' => Controls_Manager::TEXT, 'label_block' => true ] );
@@ -127,12 +186,14 @@ class Build_Scene extends Widget_Base {
 			'type' => Controls_Manager::SELECT,
 			'default' => 'bottom',
 			'options' => [ 'bottom' => esc_html__( 'Bottom to top', 'refraction' ), 'name' => esc_html__( 'By part name', 'refraction' ), 'file' => esc_html__( 'As in the file', 'refraction' ) ],
+			'condition' => [ 'motion' => 'build' ],
 		] );
 		$this->add_control( 'from', [
 			'label' => esc_html__( 'Parts come', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'drop',
 			'options' => [ 'drop' => esc_html__( 'From above', 'refraction' ), 'sides' => esc_html__( 'From the sides', 'refraction' ), 'explode' => esc_html__( 'From all around', 'refraction' ) ],
+			'condition' => [ 'motion' => 'build' ],
 		] );
 		$this->add_control( 'distance', [
 			'label' => esc_html__( 'Distance', 'refraction' ),
@@ -140,6 +201,7 @@ class Build_Scene extends Widget_Base {
 			'range' => [ 'px' => [ 'min' => 0.1, 'max' => 2, 'step' => 0.05 ] ],
 			'default' => [ 'size' => 0.6 ],
 			'description' => esc_html__( 'How far a part starts from its place, compared to the size of the model.', 'refraction' ),
+			'condition' => [ 'motion' => 'build' ],
 		] );
 		$this->add_control( 'overlap', [
 			'label' => esc_html__( 'Overlap', 'refraction' ),
@@ -147,12 +209,14 @@ class Build_Scene extends Widget_Base {
 			'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
 			'default' => [ 'size' => 70 ],
 			'description' => esc_html__( '0: parts of a stage come one after another. 100: all at once.', 'refraction' ),
+			'condition' => [ 'motion' => 'build' ],
 		] );
 		$this->add_control( 'easing', [
 			'label' => esc_html__( 'Movement', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'out',
 			'options' => [ 'out' => esc_html__( 'Slows down at the end', 'refraction' ), 'inout' => esc_html__( 'Smooth', 'refraction' ), 'back' => esc_html__( 'Settles with a small bounce', 'refraction' ), 'linear' => esc_html__( 'Even', 'refraction' ) ],
+			'condition' => [ 'motion' => 'build' ],
 		] );
 		$this->end_controls_section();
 
@@ -220,6 +284,25 @@ class Build_Scene extends Widget_Base {
 			'default' => 'top-right',
 			'options' => [ 'top-right' => esc_html__( 'Top right', 'refraction' ), 'top-left' => esc_html__( 'Top left', 'refraction' ), 'bottom-right' => esc_html__( 'Bottom right', 'refraction' ), 'bottom-left' => esc_html__( 'Bottom left', 'refraction' ) ],
 			'condition' => [ 'show_tools' => 'yes' ],
+		] );
+		$this->add_control( 'grab', [ 'label' => esc_html__( 'Grab to rotate', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'separator' => 'before', 'description' => esc_html__( 'Visitors can turn the model at any time by dragging it (also up and down with a mouse); it keeps turning a little after they let go.', 'refraction' ) ] );
+		$this->add_control( 'follow', [
+			'label' => esc_html__( 'Follow the cursor', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'Off', 'refraction' ),
+				'turn' => esc_html__( 'The model turns toward the cursor', 'refraction' ),
+				'head' => esc_html__( 'The head looks at the cursor (characters)', 'refraction' ),
+			],
+			'description' => esc_html__( 'Head: the first part or bone named like a head; without one the whole model turns.', 'refraction' ),
+		] );
+		$this->add_control( 'follow_strength', [
+			'label' => esc_html__( 'How far it turns (degrees)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 2, 'max' => 45 ] ],
+			'default' => [ 'size' => 15 ],
+			'condition' => [ 'follow!' => '' ],
 		] );
 		$this->add_control( 'auto_rotate', [ 'label' => esc_html__( 'Rotate on its own', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'separator' => 'before', 'description' => esc_html__( 'Starts turning slowly once the model is built. Visitors can stop it with the button.', 'refraction' ) ] );
 		$this->add_control( 'rotate_speed', [ 'label' => esc_html__( 'Rotation speed (degrees per second)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 2, 'max' => 60 ] ], 'default' => [ 'size' => 12 ] ] );
@@ -351,6 +434,16 @@ class Build_Scene extends Widget_Base {
 			'autoRotate' => 'yes' === ( $s['auto_rotate'] ?? '' ),
 			'rotateSpeed' => self::number( $s['rotate_speed'] ?? null, 2, 60, 12 ),
 			'spread' => self::number( $s['spread'] ?? null, 0.1, 2, 0.8 ),
+			'motion' => $pick( $s['motion'] ?? '', [ 'build', 'turntable', 'drive', 'clip', 'float' ], 'build' ),
+			'turns' => self::number( $s['turns'] ?? null, 0.25, 3, 1 ),
+			'wheels' => implode( ',', array_slice( array_filter( array_map( 'trim', explode( ',', sanitize_text_field( (string) ( $s['wheels'] ?? '' ) ) ) ), 'strlen' ), 0, 12 ) ),
+			'driveFrom' => $pick( $s['drive_from'] ?? '', [ 'left', 'right' ], 'left' ),
+			'clip' => mb_substr( sanitize_text_field( (string) ( $s['clip'] ?? '' ) ), 0, 80 ),
+			'clipPlay' => $pick( $s['clip_play'] ?? '', [ 'loop', 'scroll' ], 'loop' ),
+			'clipSpeed' => self::number( $s['clip_speed'] ?? null, 0.25, 3, 1 ),
+			'grab' => 'yes' === ( $s['grab'] ?? '' ),
+			'follow' => $pick( $s['follow'] ?? '', [ '', 'turn', 'head' ], '' ),
+			'followStrength' => self::number( $s['follow_strength'] ?? null, 2, 45, 15 ),
 			'preview' => $editor && is_numeric( $preview ) ? max( 0, min( 100, (float) $preview ) ) / 100 : null,
 			'editor' => $editor,
 		];

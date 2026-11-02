@@ -18,6 +18,20 @@ Tests: `php scripts/test-build-scene.php` (.glb check), `node scripts/test-build
 - **Scene width and alignment** (Style > Scene, responsive), and the **stage names** under the progress line have their own color (also for built and current stages), typography, and an option not to dim the stages not built yet (Style > Progress).
 - **Editor**: **Preview in the editor** (Scroll section) holds the build at a point, so you can check any stage without scrolling. The editor redraws the widget after each change and the old scene frees its WebGL context.
 
+## Animations other than building (0.29.0)
+
+Content > **Animation** picks what the scroll does to the model (`assets/js/scene.js`, `moveModel()`); the stages still give the captions and the progress line, and the Build-only options (order, direction, distance, overlap, movement) hide for the others:
+
+- **Build in stages**: the parts fly in (as before).
+- **Turntable**: the whole model turns **Turns over the scroll** times (0.25 to 3) while the visitor scrolls.
+- **Drive in** (cars): the model rolls in along its long side during the first 60 % of the scroll, from **one side or the other**, and stands while the view turns around it. Parts named like **Wheel parts** (`*wheel*, *tire*, *tyre*` by default) spin around their thinnest side, by the distance travelled over their radius.
+- **Play the model's own animation** (characters): a clip from the .glb (`AnimationMixer`), by **Animation name** (exact, then contained, case-insensitive; empty: the first clip), **on its own in a loop** at a **Speed**, or **with the scroll** (the scroll sets the time).
+- **Float**: the model hovers up and down and turns slowly.
+
+Visitor controls gain **Grab to rotate** (drag at any point of the scroll, also up and down with a mouse, and the turn eases out after letting go; touch drags turn sideways only, so pages still scroll) and **Follow the cursor**: the model turns toward the pointer, or, for characters, the head does (the first part or bone named like a head; without one the whole model turns), by **How far it turns**. Reduced motion: no float, no looping clip, no follow, no easing-out turn.
+
+Test models: `scripts/fixtures/make-figures.mjs` (a car with four wheels, a character with a head and the clips Wave and Idle). Check: `node scripts/check-slides-video-3d.mjs --site DIR --port N`.
+
 ## Performance and accessibility
 
 - three.js (0.187, MIT) is bundled into `build-scene-frontend.js` (about 700 KB minified, 180 KB gzipped). It is loaded only on pages that use the widget, and the model is loaded only when the section comes within a screen of the viewport; drawing happens only when something changed and while the scene is near the screen.
