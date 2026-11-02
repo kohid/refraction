@@ -77,6 +77,8 @@ export const BASE_ENTRIES = {
 	'build-scene-editor': 'modules/build-scene/assets/js/editor.js',
 	'ask-claude-editor': 'modules/ask-claude/assets/js/editor.js',
 	'sticky-frontend': 'modules/motion-effects/assets/js/sticky.js',
+	'card-stack-frontend': 'modules/card-motion/assets/js/card-stack.js',
+	'slides-cards-frontend': 'modules/card-motion/assets/js/slides-cards.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 

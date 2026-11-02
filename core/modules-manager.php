@@ -138,6 +138,8 @@ class Modules_Manager {
 			'form-builder',
 			'build-scene',
 			'ask-claude',
+			'page-loader',
+			'card-motion',
 			'loop-builder',
 			'forms',
 			'pro-widgets',

@@ -1,0 +1,413 @@
+// Card motion: the Card stack (Image, Image Box) and the Slides "Timed cards" layout.
+
+// ---------------------------------------------------------------- card stack
+.rf-stack {
+	--rf-stack-w: 320px;
+	--rf-stack-radius: 18px;
+	--rf-stack-shadow: 30px;
+	--rf-stack-glow: transparent;
+
+	position: relative;
+	width: var(--rf-stack-w);
+	max-width: 100%;
+	aspect-ratio: var(--rf-stack-ratio, 3/4);
+	margin-inline: auto;
+	isolation: isolate;
+	text-align: initial;
+
+	&.rf-stack--glow::before {
+		content: "";
+		position: absolute;
+		inset: -30% -14%;
+		z-index: -1;
+		background: radial-gradient(closest-side, var(--rf-stack-glow), transparent);
+		opacity: .55;
+		filter: blur(30px);
+		transition: background .9s ease;
+		pointer-events: none;
+	}
+}
+
+.rf-stack__card {
+	position: absolute;
+	inset: 0;
+	border-radius: var(--rf-stack-radius);
+	overflow: hidden;
+	box-shadow: 0 calc(var(--rf-stack-shadow) * .4) var(--rf-stack-shadow) rgba(15, 18, 30, .22);
+	transform-origin: 50% 100%;
+	transition: transform .75s cubic-bezier(.22, 1, .36, 1), opacity .5s ease, translate .35s ease, box-shadow .35s ease;
+	will-change: transform;
+	cursor: pointer;
+	background: rgba(127, 127, 127, .15);
+
+	img {
+		display: block;
+		width: 100% !important;
+		height: 100% !important;
+		max-width: none !important;
+		object-fit: cover;
+		border-radius: 0 !important;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	&.is-lift {
+		translate: 0 -6%;
+		box-shadow: 0 calc(var(--rf-stack-shadow) * .7) calc(var(--rf-stack-shadow) * 1.4) rgba(15, 18, 30, .3);
+	}
+}
+
+.rf-stack--carousel .rf-stack__card,
+.rf-stack--fan .rf-stack__card {
+	transform-origin: 50% 50%;
+}
+
+.rf-stack--reflect .rf-stack__card.is-front {
+	-webkit-box-reflect: below 10px linear-gradient(transparent 72%, rgba(255, 255, 255, .22));
+}
+
+.rf-stack__dots {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 22px;
+
+	button {
+		width: 7px;
+		height: 7px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: currentColor;
+		opacity: .25;
+		cursor: pointer;
+		transition: opacity .3s, transform .3s;
+
+		&[aria-current="true"] {
+			opacity: .9;
+			transform: scale(1.3);
+		}
+	}
+}
+
+// The widget's own image keeps no width or alignment of its own inside the stack.
+.refraction-widget-image .rf-stack img,
+.refraction-image-box-img .rf-stack img {
+	width: 100%;
+}
+
+.refraction-image-box-img:has(.rf-stack) {
+	width: 100%;
+}
+
+// ---------------------------------------------------------------- slides: timed cards
+.rf-tco {
+	--rf-tco-card-w: 168px;
+	--rf-tco-gap: 18px;
+	--rf-tco-accent: #f4b63f;
+	--rf-tco-speed: 900ms;
+
+	position: relative;
+	height: 100vh;
+	min-height: 420px;
+	overflow: hidden;
+	color: #fff;
+	background: #111;
+}
+
+.rf-tco__stage {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.rf-tco__slide {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity .5s ease;
+
+	&.is-active {
+		opacity: 1;
+	}
+
+	.refraction-slide__overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(90deg, rgba(0, 0, 0, .55), rgba(0, 0, 0, .1) 55%, rgba(0, 0, 0, .25));
+	}
+}
+
+.rf-tco__bg,
+.rf-tco__grow {
+	position: absolute;
+	inset: 0;
+	background-size: cover;
+	background-position: center;
+}
+
+.rf-tco__grow {
+	z-index: 2;
+	overflow: hidden;
+	border-radius: 14px;
+}
+
+.rf-tco__timer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 5;
+	height: 3px;
+
+	i {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: var(--rf-tco-accent);
+	}
+}
+
+.rf-tco.is-playing .rf-tco__timer i {
+	animation: rf-tco-timer var(--rf-tco-interval, 5000ms) linear forwards;
+}
+
+.rf-tco:hover .rf-tco__timer i,
+.rf-tco:focus-within .rf-tco__timer i {
+	animation-play-state: paused;
+}
+
+@keyframes rf-tco-timer {
+	to { width: 100%; }
+}
+
+.rf-tco__body {
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+	display: grid;
+	grid-template-columns: minmax(0, 40%) minmax(0, 60%);
+	align-items: center;
+	padding: 0 0 0 6%;
+}
+
+.rf-tco__texts {
+	position: relative;
+	min-height: 50%;
+	display: grid;
+	align-items: center;
+}
+
+.rf-tco__text {
+	grid-area: 1 / 1;
+	text-align: start;
+	padding-right: 32px;
+	visibility: hidden;
+
+	> * {
+		opacity: 0;
+		transform: translateY(26px);
+		transition: opacity .55s ease, transform .7s cubic-bezier(.22, 1, .36, 1);
+	}
+
+	&.is-active {
+		visibility: visible;
+
+		> * {
+			opacity: 1;
+			transform: none;
+		}
+
+		> :nth-child(2) { transition-delay: .08s; }
+		> :nth-child(3) { transition-delay: .16s; }
+		> :nth-child(4) { transition-delay: .24s; }
+	}
+
+	.refraction-slide__title {
+		margin: 0 0 16px;
+		font-size: clamp(36px, 5.4vw, 84px);
+		line-height: .95;
+		text-transform: uppercase;
+		font-weight: 700;
+		letter-spacing: -.01em;
+	}
+
+	.refraction-slide__description {
+		max-width: 420px;
+		margin-bottom: 26px;
+		font-size: 14px;
+		line-height: 1.6;
+		opacity: .85;
+	}
+}
+
+.rf-tco__eyebrow {
+	margin-bottom: 14px;
+	font-size: 15px;
+
+	&::before {
+		content: "";
+		display: block;
+		width: 22px;
+		height: 3px;
+		margin-bottom: 12px;
+		background: currentColor;
+	}
+}
+
+.rf-tco__rail {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 34px;
+	overflow: hidden;
+	padding: 20px 0;
+}
+
+.rf-tco__cards {
+	position: relative;
+	height: calc(var(--rf-tco-card-w) * 4 / 3);
+}
+
+.rf-tco__card {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: var(--rf-tco-card-w);
+	aspect-ratio: 3 / 4;
+	padding: 0;
+	border: 0;
+	border-radius: 14px;
+	overflow: hidden;
+	color: #fff;
+	text-align: left;
+	background: #222 center / cover no-repeat;
+	box-shadow: 0 18px 40px rgba(0, 0, 0, .35);
+	cursor: pointer;
+	transition: transform var(--rf-tco-speed) cubic-bezier(.65, 0, .35, 1), opacity .4s ease;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, .65));
+	}
+
+	&.is-gone {
+		opacity: 0;
+		transition: none;
+	}
+}
+
+.rf-tco__card-text {
+	position: absolute;
+	left: 14px;
+	right: 14px;
+	bottom: 14px;
+	z-index: 1;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1.05;
+	text-transform: uppercase;
+
+	small {
+		display: block;
+		margin-bottom: 4px;
+		font-size: 10px;
+		font-weight: 400;
+		text-transform: none;
+		opacity: .8;
+	}
+}
+
+.rf-tco__nav {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding-right: 6%;
+}
+
+.rf-tco__arrow {
+	display: grid;
+	place-items: center;
+	width: 46px;
+	height: 46px;
+	padding: 0;
+	border: 1px solid rgba(255, 255, 255, .45);
+	border-radius: 50%;
+	color: inherit;
+	background: transparent;
+	cursor: pointer;
+	transition: background .25s, border-color .25s;
+
+	&:hover,
+	&:focus-visible {
+		background: rgba(255, 255, 255, .12);
+		border-color: #fff;
+	}
+}
+
+.rf-tco__line {
+	flex: 1;
+	height: 2px;
+	background: rgba(255, 255, 255, .25);
+
+	i {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: var(--rf-tco-accent);
+		transition: width var(--rf-tco-speed) ease;
+	}
+}
+
+.rf-tco__count {
+	min-width: 2.2em;
+	font-size: 40px;
+	font-weight: 700;
+	line-height: 1;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 767px) {
+	.rf-tco {
+		--rf-tco-card-w: 110px;
+		--rf-tco-gap: 12px;
+
+		// Text above and the cards below need the room, whatever the slider's phone height is.
+		min-height: 560px;
+	}
+
+	.rf-tco__body {
+		grid-template-columns: 1fr;
+		align-content: end;
+		gap: 18px;
+		padding: 0 0 28px 20px;
+	}
+
+	.rf-tco__texts {
+		min-height: 0;
+	}
+
+	.rf-tco__count {
+		font-size: 28px;
+	}
+
+	.rf-tco__arrow {
+		width: 38px;
+		height: 38px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.rf-stack__card,
+	.rf-tco__card,
+	.rf-tco__text > * {
+		transition-duration: .01s !important;
+	}
+
+	.rf-tco__timer {
+		display: none;
+	}
+}
