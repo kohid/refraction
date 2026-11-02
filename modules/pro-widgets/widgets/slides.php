@@ -95,6 +95,27 @@ class Slides extends Pro_Widget {
 		);
 
 		$repeater->add_control(
+			'button2_text',
+			[
+				'label' => esc_html__( 'Second Button Text', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'dynamic' => [ 'active' => true ],
+				'separator' => 'before',
+			]
+		);
+
+		$repeater->add_control(
+			'button2_link',
+			[
+				'label' => esc_html__( 'Second Button Link', 'refraction' ),
+				'type' => Controls_Manager::URL,
+				'dynamic' => [ 'active' => true ],
+				'placeholder' => esc_html__( 'https://your-link.com', 'refraction' ),
+				'condition' => [ 'button2_text!' => '' ],
+			]
+		);
+
+		$repeater->add_control(
 			'background_color',
 			[
 				'label' => esc_html__( 'Background Color', 'refraction' ),
@@ -110,6 +131,39 @@ class Slides extends Pro_Widget {
 				'label' => esc_html__( 'Background Image', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'dynamic' => [ 'active' => true ],
+			]
+		);
+
+		$repeater->add_control(
+			'background_video',
+			[
+				'label' => esc_html__( 'YouTube Video', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'label_block' => true,
+				'placeholder' => 'https://www.youtube.com/watch?v=…',
+				'description' => esc_html__( 'Plays over the background image, muted and without controls. The image shows until the video starts, and for visitors who ask for less motion.', 'refraction' ),
+			]
+		);
+
+		$repeater->add_control(
+			'video_next',
+			[
+				'label' => esc_html__( 'Next Slide When the Video Ends', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+				'description' => esc_html__( 'The slide stays until its video has played to the end, even with Autoplay.', 'refraction' ),
+				'condition' => [ 'background_video!' => '' ],
+			]
+		);
+
+		$repeater->add_control(
+			'video_sound',
+			[
+				'label' => esc_html__( 'Sound Button', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+				'description' => esc_html__( 'A small button visitors use to switch the sound on (browsers only start videos muted).', 'refraction' ),
+				'condition' => [ 'background_video!' => '' ],
 			]
 		);
 
@@ -456,6 +510,19 @@ class Slides extends Pro_Widget {
 		$this->button_style_controls( 'button', '{{WRAPPER}} .refraction-slide__content .refraction-pro-button' );
 		$this->end_section();
 
+		$this->style_section( 'style_button2', esc_html__( 'Second Button', 'refraction' ) );
+		$this->button_style_controls( 'button2', '{{WRAPPER}} .refraction-slide__content .refraction-slide__button--2' );
+		$this->add_responsive_control(
+			'buttons_gap',
+			[
+				'label' => esc_html__( 'Space Between the Buttons', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+				'selectors' => [ '{{WRAPPER}} .refraction-slide__buttons' => 'gap: {{SIZE}}px;' ],
+			]
+		);
+		$this->end_section();
+
 		$this->style_section( 'style_arrows', esc_html__( 'Arrows', 'refraction' ), [ 'navigation' => [ 'both', 'arrows' ] ] );
 
 		$this->add_responsive_control(
@@ -527,6 +594,49 @@ class Slides extends Pro_Widget {
 		return '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="' . esc_attr( $d ) . '"/></svg>';
 	}
 
+	/** The 11-character id of a YouTube address (watch, youtu.be, embed, shorts, live), or ''. */
+	public static function youtube_id( string $url ): string {
+		return preg_match( '~(?:youtube(?:-nocookie)?\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/|live/|v/)|youtu\.be/)([A-Za-z0-9_-]{11})~', $url, $m ) ? $m[1] : '';
+	}
+
+	/** A slide's video layer and its sound button (both layouts; script: handlers/slides-video.js). */
+	private function render_video( array $slide ): void {
+		$id = self::youtube_id( (string) ( $slide['background_video'] ?? '' ) );
+
+		if ( '' === $id ) {
+			return;
+		}
+
+		printf( '<div class="refraction-slide__video" data-rf-yt="%1$s" data-rf-yt-next="%2$s"></div>', esc_attr( $id ), 'yes' === ( $slide['video_next'] ?? 'yes' ) ? '1' : '0' );
+	}
+
+	private function render_sound( array $slide, int $index ): void {
+		if ( '' === self::youtube_id( (string) ( $slide['background_video'] ?? '' ) ) || 'yes' !== ( $slide['video_sound'] ?? 'yes' ) ) {
+			return;
+		}
+
+		printf(
+			'<button type="button" class="refraction-slide__sound" data-rf-sound="%1$d" aria-pressed="false" aria-label="%2$s" hidden><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path class="refraction-slide__sound-on" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/><path class="refraction-slide__sound-off" d="m23 9-6 6m0-6 6 6"/></svg></button>',
+			(int) $index,
+			esc_attr__( 'Sound', 'refraction' )
+		);
+	}
+
+	/** The slide's one or two buttons. */
+	private function render_buttons( array $slide, string $suffix ): void {
+		$first = ! Utils::is_empty( $slide['button_text'] ?? '' );
+		$second = ! Utils::is_empty( $slide['button2_text'] ?? '' );
+
+		if ( ! $first && ! $second ) {
+			return;
+		}
+
+		echo '<div class="refraction-slide__buttons">';
+		$this->render_button( [ 'btn_text' => $slide['button_text'] ?? '', 'btn_link' => $slide['button_link'] ?? [] ], 'btn', 'refraction-slide__button--1', $suffix );
+		$this->render_button( [ 'btn2_text' => $slide['button2_text'] ?? '', 'btn2_link' => $slide['button2_link'] ?? [] ], 'btn2', 'refraction-slide__button--2', $suffix );
+		echo '</div>';
+	}
+
 	/** The "Timed cards" layout (script: modules/card-motion/assets/js/slides-cards.js). */
 	private function render_cards( array $settings, array $slides ) {
 		$total = count( $slides );
@@ -549,6 +659,7 @@ class Slides extends Pro_Widget {
 				<?php foreach ( $slides as $index => $slide ) : ?>
 					<div class="rf-tco__slide refraction-repeater-item-<?php echo esc_attr( $slide['_id'] ); ?>">
 						<div class="rf-tco__bg refraction-slide__bg" style="<?php echo esc_attr( $bg( $slide ) ); ?>"<?php echo ( ! empty( $slide['background_image']['url'] ) && ! empty( $slide['image_alt'] ) ) ? ' role="img" aria-label="' . esc_attr( $slide['image_alt'] ) . '"' : ''; ?>></div>
+						<?php $this->render_video( $slide ); ?>
 						<div class="refraction-slide__overlay"></div>
 					</div>
 				<?php endforeach; ?>
@@ -569,12 +680,10 @@ class Slides extends Pro_Widget {
 							<?php if ( ! Utils::is_empty( $slide['description'] ) ) : ?>
 								<div class="refraction-slide__description"><?php echo wp_kses_post( nl2br( esc_html( $slide['description'] ) ) ); ?></div>
 							<?php endif; ?>
-							<?php
-							$this->render_button( [
-								'btn_text' => $slide['button_text'] ?? '',
-								'btn_link' => $slide['button_link'] ?? [],
-							], 'btn', '', 'cards_btn_' . $index );
-							?>
+							<div class="refraction-slide__content rf-tco__actions">
+								<?php $this->render_buttons( $slide, '_cards_' . $index ); ?>
+								<?php $this->render_sound( $slide, $index ); ?>
+							</div>
 						</div>
 					<?php endforeach; ?>
 				</div>
@@ -655,6 +764,7 @@ class Slides extends Pro_Widget {
 					?>
 					<div <?php $this->print_render_attribute_string( $slide_key ); ?>>
 						<div class="refraction-slide__bg"<?php echo $image_url ? ' style="background-image:url(' . esc_url( $image_url ) . ')"' : ''; ?><?php echo ( $image_url && ! empty( $slide['image_alt'] ) ) ? ' role="img" aria-label="' . esc_attr( $slide['image_alt'] ) . '"' : ''; ?>></div>
+						<?php $this->render_video( $slide ); ?>
 						<div class="refraction-slide__overlay"></div>
 						<div class="refraction-slide__inner">
 							<div class="refraction-slide__content">
@@ -664,14 +774,10 @@ class Slides extends Pro_Widget {
 								<?php if ( ! Utils::is_empty( $slide['description'] ) ) : ?>
 									<div class="refraction-slide__description"><?php echo wp_kses_post( nl2br( esc_html( $slide['description'] ) ) ); ?></div>
 								<?php endif; ?>
-								<?php
-								$this->render_button( [
-									'btn_text' => $slide['button_text'] ?? '',
-									'btn_link' => $slide['button_link'] ?? [],
-								], 'btn', '', 'btn_' . $index );
-								?>
+								<?php $this->render_buttons( $slide, '_' . $index ); ?>
 							</div>
 						</div>
+						<?php $this->render_sound( $slide, $index ); ?>
 					</div>
 				<?php endforeach; ?>
 			</div>

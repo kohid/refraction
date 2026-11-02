@@ -4,6 +4,8 @@
  * A line at the top times each slide (its animationend moves on), a second line and a counter show the progress.
  * Markup from Slides::render_cards(); config in data-rf-tco.
  */
+import { slideVideo } from '../../../pro-widgets/assets/js/frontend/handlers/slides-video';
+
 ( function() {
 	const reduce = () => window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 	const pad = ( n ) => ( n < 10 ? '0' : '' ) + n;
@@ -82,9 +84,52 @@
 			}
 		}
 
-		/** Restarts the timer line; when it fills, the next slide comes. */
+		// YouTube slides: the shown slide's video plays; the timer line follows the video, and its end moves on.
+		const videos = slides.map( ( slide, i ) => {
+			const box = slide.querySelector( '.refraction-slide__video' );
+
+			return box ? {
+				next: '1' === box.getAttribute( 'data-rf-yt-next' ),
+				player: slideVideo( box, {
+					sound: texts[ i ] ? texts[ i ].querySelector( '.refraction-slide__sound' ) : null,
+					onProgress: ( share ) => {
+						if ( timerBar && i === active ) {
+							timerBar.style.width = ( share * 100 ) + '%';
+						}
+					},
+					onEnd: () => {
+						if ( i === active && '1' === box.getAttribute( 'data-rf-yt-next' ) && n > 1 ) {
+							go( active + 1 );
+						}
+					},
+				} ),
+			} : null;
+		} );
+		const waitsForVideo = () => !! ( videos[ active ] && videos[ active ].player.has && videos[ active ].next );
+
+		function syncVideos() {
+			videos.forEach( ( video, i ) => {
+				if ( video ) {
+					if ( i === active ) {
+						video.player.play();
+					} else {
+						video.player.pause();
+					}
+				}
+			} );
+		}
+
+		/** Restarts the timer line; when it fills, the next slide comes. A video slide waits for its video instead. */
 		function restartTimer() {
 			root.classList.remove( 'is-playing' );
+
+			if ( timerBar ) {
+				timerBar.style.width = '';
+			}
+
+			if ( waitsForVideo() ) {
+				return;
+			}
 
 			if ( cfg.autoplay && n > 1 && ! reduce() ) {
 				// Reflow, so the animation starts again from zero.
@@ -117,6 +162,7 @@
 				layoutCards();
 				progress();
 				restartTimer();
+				syncVideos();
 				busy = false;
 			};
 
@@ -198,6 +244,7 @@
 		layoutCards( true );
 		progress();
 		restartTimer();
+		syncVideos();
 
 		root.rfTco = {
 			go,
@@ -205,6 +252,7 @@
 			active: () => active,
 			destroy() {
 				window.removeEventListener( 'resize', onResize );
+				videos.forEach( ( video ) => video && video.player.destroy() );
 			},
 		};
 	}

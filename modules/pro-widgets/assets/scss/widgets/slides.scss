@@ -159,3 +159,79 @@
 		transition-duration: 0.01ms !important;
 	}
 }
+
+// ---- a YouTube video over the slide's background (handlers/slides-video.js)
+.refraction-slide__video {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	container-type: size;
+	opacity: 0;
+	transition: opacity .6s ease;
+	pointer-events: none;
+
+	&.is-playing {
+		opacity: 1;
+	}
+
+	iframe {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		// Covers the slide like a background image (16:9).
+		width: max(100cqw, 177.78cqh);
+		height: max(100cqh, 56.25cqw);
+		transform: translate(-50%, -50%);
+		border: 0;
+	}
+}
+
+.refraction-slide__sound {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+	z-index: 4;
+	display: grid;
+	place-items: center;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border: 1px solid rgba(255, 255, 255, .5);
+	border-radius: 50%;
+	color: #fff;
+	font-size: 18px;
+	background: rgba(0, 0, 0, .3);
+	cursor: pointer;
+
+	&[hidden] {
+		display: none;
+	}
+
+	.refraction-slide__sound-on {
+		display: none;
+	}
+
+	&[aria-pressed="true"] {
+		.refraction-slide__sound-on {
+			display: inline;
+		}
+
+		.refraction-slide__sound-off {
+			display: none;
+		}
+	}
+}
+
+// ---- one or two buttons
+.refraction-slide__buttons {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+}
+
+.refraction-slide__content .refraction-slide__button--2 {
+	border: 1px solid currentColor;
+	background: transparent;
+	color: inherit;
+}

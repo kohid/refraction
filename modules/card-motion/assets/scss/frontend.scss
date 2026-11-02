@@ -241,6 +241,21 @@
 	}
 }
 
+// Buttons and the sound button of the current slide (the slider's own content styles do not apply here).
+.rf-tco .rf-tco__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 14px;
+	width: auto;
+	max-width: none;
+	text-align: start;
+
+	.refraction-slide__sound {
+		position: static;
+	}
+}
+
 .rf-tco__eyebrow {
 	margin-bottom: 14px;
 	font-size: 15px;

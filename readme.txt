@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.28.0
+Stable tag: 0.29.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.29.0 =
+* New: Slides can show a YouTube video per slide (muted background video, image until it plays, optional sound button); the slide moves on when its video ends. Slides also take a second button.
+* New: 3D Build Scene animations besides building: Turntable, Drive in (a car rolls in with its wheels turning), the model's own animation (characters: by name, looping or with the scroll) and Float; plus Grab to rotate at any time and Follow the cursor (the model, or a character's head).
 
 = 0.28.0 =
 * New: Card stack for the Image and Image Box widgets: up to five images as a fan, a deck whose top card flies off, a carousel with cards at the sides, or a shuffling pile with glow and reflection; hovering a card behind brings it forward.

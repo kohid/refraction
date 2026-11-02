@@ -1,3 +1,5 @@
+import { slideVideo } from './slides-video';
+
 /**
  * Slides: one Swiper, one slide per view. Everything comes from the widget settings.
  */
@@ -88,6 +90,71 @@ export default class Slides extends refractionModules.frontend.handlers.Carousel
 		this.elements.$swiperArrows.off();
 		this.elements.$paginationWrapper.off();
 		this.elements.$swiperContainer.off();
+	}
+
+	async onInit( ...args ) {
+		await super.onInit( ...args );
+		this.setupVideos();
+	}
+
+	/** YouTube slides: the shown slide's video plays (the others pause), and its end moves the slider on. */
+	setupVideos() {
+		const boxes = this.$element[ 0 ].querySelectorAll( '.refraction-slide__video' );
+
+		if ( ! boxes.length ) {
+			return;
+		}
+
+		this.videos = Array.from( boxes ).map( ( box ) => ( {
+			slide: box.closest( '.refraction-slide' ),
+			next: '1' === box.getAttribute( 'data-rf-yt-next' ),
+			player: slideVideo( box, {
+				onEnd: () => {
+					if ( '1' === box.getAttribute( 'data-rf-yt-next' ) && this.swiper ) {
+						this.swiper.slideNext();
+					}
+				},
+			} ),
+		} ) );
+
+		if ( this.swiper ) {
+			this.swiper.on( 'slideChange', () => this.syncVideos() );
+		}
+
+		this.syncVideos();
+	}
+
+	syncVideos() {
+		const active = this.swiper ? this.swiper.slides[ this.swiper.activeIndex ] : this.$element[ 0 ].querySelector( '.refraction-slide' );
+		let waiting = false;
+
+		this.videos.forEach( ( video ) => {
+			if ( video.slide === active && video.player.has ) {
+				video.player.play();
+				waiting = waiting || video.next;
+			} else {
+				video.player.pause();
+			}
+		} );
+
+		// Autoplay waits for the video to end instead of its own timer.
+		const autoplay = this.swiper && this.swiper.autoplay;
+
+		if ( autoplay && waiting && autoplay.running ) {
+			autoplay.stop();
+			this.autoplayHeld = true;
+		} else if ( autoplay && ! waiting && this.autoplayHeld ) {
+			this.autoplayHeld = false;
+			autoplay.start();
+		}
+	}
+
+	onDestroy() {
+		( this.videos || [] ).forEach( ( video ) => video.player.destroy() );
+
+		if ( super.onDestroy ) {
+			super.onDestroy();
+		}
 	}
 
 	onElementChange( propertyName ) {
