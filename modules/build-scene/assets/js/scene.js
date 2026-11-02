@@ -353,6 +353,7 @@ export class BuildScene {
 			this.action = this.mixer.clipAction( clip );
 			this.action.play();
 			this.root.dataset.rf3dClip = clip.name;
+			this.clipButtons();
 		}
 
 		if ( 'head' === this.cfg.follow ) {
@@ -363,6 +364,54 @@ export class BuildScene {
 				}
 			} );
 		}
+	}
+
+	/** Visitor buttons, one per animation in the model (when there is more than one). */
+	clipButtons() {
+		const holder = this.root.querySelector( '[data-rf3d-clips]' );
+
+		if ( ! holder || this.clips.length < 2 ) {
+			return;
+		}
+
+		holder.insertAdjacentHTML( 'beforebegin', '<span class="rf3d-tools-sep" aria-hidden="true"></span>' );
+		this.clips.forEach( ( clip ) => {
+			const button = document.createElement( 'button' );
+			button.type = 'button';
+			button.dataset.rf3dClipName = clip.name;
+			button.textContent = clip.name.replace( /[_-]+/g, ' ' );
+			button.setAttribute( 'aria-pressed', clip === this.action.getClip() ? 'true' : 'false' );
+			holder.appendChild( button );
+		} );
+
+		this.on( holder, 'click', ( e ) => {
+			const button = e.target.closest( '[data-rf3d-clip-name]' );
+
+			if ( button ) {
+				this.playClip( button.dataset.rf3dClipName );
+				holder.querySelectorAll( 'button' ).forEach( ( b ) => b.setAttribute( 'aria-pressed', b === button ? 'true' : 'false' ) );
+			}
+		} );
+	}
+
+	/**
+	 * Switches to another animation of the model, blending over a moment.
+	 *
+	 * @param {string} name The clip's name.
+	 */
+	playClip( name ) {
+		const clip = ( this.clips || [] ).find( ( c ) => c.name === name );
+
+		if ( ! clip || ! this.mixer || clip === this.action.getClip() ) {
+			return;
+		}
+
+		const next = this.mixer.clipAction( clip );
+		next.reset().play();
+		this.action.crossFadeTo( next, 0.4, false );
+		this.action = next;
+		this.root.dataset.rf3dClip = clip.name;
+		this.kick();
 	}
 
 	/**

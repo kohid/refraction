@@ -30,6 +30,8 @@ Content > **Animation** picks what the scroll does to the model (`assets/js/scen
 
 Visitor controls gain **Grab to rotate** (drag at any point of the scroll, also up and down with a mouse, and the turn eases out after letting go; touch drags turn sideways only, so pages still scroll) and **Follow the cursor**: the model turns toward the pointer, or, for characters, the head does (the first part or bone named like a head; without one the whole model turns), by **How far it turns**. Reduced motion: no float, no looping clip, no follow, no easing-out turn.
 
+0.30.0: for the other animations the stage captions and progress line show only with **Show the stages on the site** (off by default), and the first view button is named after the animation (Drive, Turntable, Animation, Float). **Detect wheels and animations** (button, and by itself when a model or the Drive / own-animation option is chosen; `detectMotion()` in `glb-outline.js` reads only the file's outline) fills **Wheel parts** (nodes and meshes named like a wheel, tyre or rim, not a steering wheel, spare or wheel arch; the general patterns when the names say wheel or tyre) and **Animation name** (the first clip), and reports the animations in the model; the automatic run only fills empty or default fields. **Animation buttons** (Visitor controls, own animation): one button per animation in the model, which cross-fades to it.
+
 Test models: `scripts/fixtures/make-figures.mjs` (a car with four wheels, a character with a head and the clips Wave and Idle). Check: `node scripts/check-slides-video-3d.mjs --site DIR --port N`.
 
 ## Performance and accessibility

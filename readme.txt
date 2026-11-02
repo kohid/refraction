@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.29.0
+Stable tag: 0.30.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.30.0 =
+* 3D Build Scene: animations other than Build in stages hide the stage captions and progress line unless "Show the stages on the site" is on; the first view button is named after the animation.
+* 3D Build Scene: the wheel parts and the animation name are detected from the uploaded .glb (by itself, or with the new button), and characters get a visitor button per animation.
+* Slides: a slide with a YouTube video and no image shows the video's thumbnail, on the slide and on its card.
 
 = 0.29.0 =
 * New: Slides can show a YouTube video per slide (muted background video, image until it plays, optional sound button); the slide moves on when its video ends. Slides also take a second button.

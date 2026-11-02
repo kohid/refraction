@@ -599,6 +599,20 @@ class Slides extends Pro_Widget {
 		return preg_match( '~(?:youtube(?:-nocookie)?\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/|live/|v/)|youtu\.be/)([A-Za-z0-9_-]{11})~', $url, $m ) ? $m[1] : '';
 	}
 
+	/**
+	 * The slide's background picture as CSS: its image, else the YouTube video's thumbnail (the largest one, with the
+	 * always-present smaller one behind it in case the video has no large thumbnail). '' when there is neither.
+	 */
+	public static function background_css( array $slide ): string {
+		if ( ! empty( $slide['background_image']['url'] ) ) {
+			return 'background-image:url(' . esc_url( $slide['background_image']['url'] ) . ');';
+		}
+
+		$id = self::youtube_id( (string) ( $slide['background_video'] ?? '' ) );
+
+		return '' === $id ? '' : sprintf( 'background-image:url(https://i.ytimg.com/vi/%1$s/maxresdefault.jpg),url(https://i.ytimg.com/vi/%1$s/hqdefault.jpg);', $id );
+	}
+
 	/** A slide's video layer and its sound button (both layouts; script: handlers/slides-video.js). */
 	private function render_video( array $slide ): void {
 		$id = self::youtube_id( (string) ( $slide['background_video'] ?? '' ) );
@@ -649,9 +663,7 @@ class Slides extends Pro_Widget {
 		];
 		$label = '' !== trim( (string) ( $settings['slider_label'] ?? '' ) ) ? $settings['slider_label'] : __( 'Slides', 'refraction' );
 		$bg = static function ( array $slide ): string {
-			$url = ! empty( $slide['background_image']['url'] ) ? 'background-image:url(' . esc_url( $slide['background_image']['url'] ) . ');' : '';
-
-			return $url . ( ! empty( $slide['background_color'] ) ? 'background-color:' . esc_attr( $slide['background_color'] ) . ';' : '' );
+			return self::background_css( $slide ) . ( ! empty( $slide['background_color'] ) ? 'background-color:' . esc_attr( $slide['background_color'] ) . ';' : '' );
 		};
 		?>
 		<div class="rf-tco" data-rf-tco="<?php echo esc_attr( wp_json_encode( $config ) ); ?>" role="region" aria-roledescription="carousel" aria-label="<?php echo esc_attr( $label ); ?>" tabindex="0">
@@ -761,9 +773,10 @@ class Slides extends Pro_Widget {
 					], null, true );
 
 					$image_url = ! empty( $slide['background_image']['url'] ) ? $slide['background_image']['url'] : '';
+					$background = self::background_css( $slide );
 					?>
 					<div <?php $this->print_render_attribute_string( $slide_key ); ?>>
-						<div class="refraction-slide__bg"<?php echo $image_url ? ' style="background-image:url(' . esc_url( $image_url ) . ')"' : ''; ?><?php echo ( $image_url && ! empty( $slide['image_alt'] ) ) ? ' role="img" aria-label="' . esc_attr( $slide['image_alt'] ) . '"' : ''; ?>></div>
+						<div class="refraction-slide__bg"<?php echo $background ? ' style="' . esc_attr( $background ) . '"' : ''; ?><?php echo ( $image_url && ! empty( $slide['image_alt'] ) ) ? ' role="img" aria-label="' . esc_attr( $slide['image_alt'] ) . '"' : ''; ?>></div>
 						<?php $this->render_video( $slide ); ?>
 						<div class="refraction-slide__overlay"></div>
 						<div class="refraction-slide__inner">
