@@ -30,17 +30,28 @@ class Slides extends Pro_Widget {
 	}
 
 	public function get_style_depends(): array {
-		return [ 'e-swiper', 'widget-slides' ];
+		return [ 'e-swiper', 'widget-slides', 'refraction-card-motion' ];
 	}
 
 	public function get_script_depends(): array {
-		return [ 'swiper' ];
+		return [ 'swiper', 'refraction-slides-cards' ];
 	}
 
 	protected function register_controls() {
 		$this->content_section( 'section_slides', esc_html__( 'Slides', 'refraction' ) );
 
 		$repeater = new Repeater();
+
+		$repeater->add_control(
+			'subtitle',
+			[
+				'label' => esc_html__( 'Small text above the title', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'label_block' => true,
+				'description' => esc_html__( 'Shown in the Timed cards layout, over the title and on the slide\'s card.', 'refraction' ),
+				'dynamic' => [ 'active' => true ],
+			]
+		);
 
 		$repeater->add_control(
 			'heading',
@@ -175,6 +186,44 @@ class Slides extends Pro_Widget {
 
 		$this->content_section( 'section_options', esc_html__( 'Slider Options', 'refraction' ) );
 
+		$this->add_control(
+			'layout',
+			[
+				'label' => esc_html__( 'Layout', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'classic',
+				'options' => [
+					'classic' => esc_html__( 'Classic slider', 'refraction' ),
+					'cards' => esc_html__( 'Timed cards (the next slide grows from its card)', 'refraction' ),
+				],
+				'description' => esc_html__( 'Timed cards: the slides that come next wait as cards beside the text; a line at the top times each slide.', 'refraction' ),
+			]
+		);
+
+		$this->add_responsive_control(
+			'cards_width',
+			[
+				'label' => esc_html__( 'Card width', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 80, 'max' => 320 ] ],
+				'default' => [ 'size' => 168 ],
+				'mobile_default' => [ 'size' => 110 ],
+				'selectors' => [ '{{WRAPPER}} .rf-tco' => '--rf-tco-card-w: {{SIZE}}px;' ],
+				'condition' => [ 'layout' => 'cards' ],
+			]
+		);
+
+		$this->add_control(
+			'cards_accent',
+			[
+				'label' => esc_html__( 'Timer and progress color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'default' => '#f4b63f',
+				'selectors' => [ '{{WRAPPER}} .rf-tco' => '--rf-tco-accent: {{VALUE}};' ],
+				'condition' => [ 'layout' => 'cards' ],
+			]
+		);
+
 		$this->add_responsive_control(
 			'slides_height',
 			[
@@ -188,7 +237,7 @@ class Slides extends Pro_Widget {
 				'default' => [ 'size' => 400, 'unit' => 'px' ],
 				'tablet_default' => [ 'size' => 360, 'unit' => 'px' ],
 				'mobile_default' => [ 'size' => 320, 'unit' => 'px' ],
-				'selectors' => [ '{{WRAPPER}} .refraction-slide' => 'height: {{SIZE}}{{UNIT}};' ],
+				'selectors' => [ '{{WRAPPER}} .refraction-slide, {{WRAPPER}} .rf-tco' => 'height: {{SIZE}}{{UNIT}};' ],
 			]
 		);
 
@@ -478,12 +527,96 @@ class Slides extends Pro_Widget {
 		return '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="' . esc_attr( $d ) . '"/></svg>';
 	}
 
+	/** The "Timed cards" layout (script: modules/card-motion/assets/js/slides-cards.js). */
+	private function render_cards( array $settings, array $slides ) {
+		$total = count( $slides );
+		$tag = Utils::validate_html_tag( $settings['title_tag'] ?? 'h2' );
+		$autoplay = 'yes' === ( $settings['autoplay'] ?? '' );
+		$config = [
+			'autoplay' => $autoplay,
+			'interval' => max( 1500, (int) ( $settings['autoplay_speed'] ?? 5000 ) ),
+			'speed' => max( 300, min( 3000, (int) ( $settings['transition_speed'] ?? 900 ) ) ),
+		];
+		$label = '' !== trim( (string) ( $settings['slider_label'] ?? '' ) ) ? $settings['slider_label'] : __( 'Slides', 'refraction' );
+		$bg = static function ( array $slide ): string {
+			$url = ! empty( $slide['background_image']['url'] ) ? 'background-image:url(' . esc_url( $slide['background_image']['url'] ) . ');' : '';
+
+			return $url . ( ! empty( $slide['background_color'] ) ? 'background-color:' . esc_attr( $slide['background_color'] ) . ';' : '' );
+		};
+		?>
+		<div class="rf-tco" data-rf-tco="<?php echo esc_attr( wp_json_encode( $config ) ); ?>" role="region" aria-roledescription="carousel" aria-label="<?php echo esc_attr( $label ); ?>" tabindex="0">
+			<div class="rf-tco__stage">
+				<?php foreach ( $slides as $index => $slide ) : ?>
+					<div class="rf-tco__slide refraction-repeater-item-<?php echo esc_attr( $slide['_id'] ); ?>">
+						<div class="rf-tco__bg refraction-slide__bg" style="<?php echo esc_attr( $bg( $slide ) ); ?>"<?php echo ( ! empty( $slide['background_image']['url'] ) && ! empty( $slide['image_alt'] ) ) ? ' role="img" aria-label="' . esc_attr( $slide['image_alt'] ) . '"' : ''; ?>></div>
+						<div class="refraction-slide__overlay"></div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+			<?php if ( $autoplay && $total > 1 ) : ?>
+				<div class="rf-tco__timer" aria-hidden="true"><i></i></div>
+			<?php endif; ?>
+			<div class="rf-tco__body">
+				<div class="rf-tco__texts" aria-live="<?php echo $autoplay ? 'off' : 'polite'; ?>">
+					<?php foreach ( $slides as $index => $slide ) : ?>
+						<div class="rf-tco__text">
+							<?php if ( ! Utils::is_empty( $slide['subtitle'] ?? '' ) ) : ?>
+								<div class="rf-tco__eyebrow"><?php echo esc_html( $slide['subtitle'] ); ?></div>
+							<?php endif; ?>
+							<?php if ( ! Utils::is_empty( $slide['heading'] ) ) : ?>
+								<<?php Utils::print_validated_html_tag( $tag ); ?> class="refraction-slide__title"><?php echo esc_html( $slide['heading'] ); ?></<?php Utils::print_validated_html_tag( $tag ); ?>>
+							<?php endif; ?>
+							<?php if ( ! Utils::is_empty( $slide['description'] ) ) : ?>
+								<div class="refraction-slide__description"><?php echo wp_kses_post( nl2br( esc_html( $slide['description'] ) ) ); ?></div>
+							<?php endif; ?>
+							<?php
+							$this->render_button( [
+								'btn_text' => $slide['button_text'] ?? '',
+								'btn_link' => $slide['button_link'] ?? [],
+							], 'btn', '', 'cards_btn_' . $index );
+							?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+				<?php if ( $total > 1 ) : ?>
+					<div class="rf-tco__rail">
+						<div class="rf-tco__cards">
+							<?php foreach ( $slides as $index => $slide ) : ?>
+								<?php /* translators: 1: slide number, 2: slide title */ ?>
+								<button type="button" class="rf-tco__card" style="<?php echo esc_attr( $bg( $slide ) ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Show slide %1$d: %2$s', 'refraction' ), $index + 1, wp_strip_all_tags( (string) $slide['heading'] ) ) ); ?>">
+									<span class="rf-tco__card-text">
+										<?php if ( ! Utils::is_empty( $slide['subtitle'] ?? '' ) ) : ?>
+											<small><?php echo esc_html( $slide['subtitle'] ); ?></small>
+										<?php endif; ?>
+										<?php echo esc_html( $slide['heading'] ); ?>
+									</span>
+								</button>
+							<?php endforeach; ?>
+						</div>
+						<div class="rf-tco__nav">
+							<button type="button" class="rf-tco__arrow rf-tco__prev" aria-label="<?php esc_attr_e( 'Previous slide', 'refraction' ); ?>"><?php echo $this->arrow_svg( 'prev' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></button>
+							<button type="button" class="rf-tco__arrow rf-tco__next" aria-label="<?php esc_attr_e( 'Next slide', 'refraction' ); ?>"><?php echo $this->arrow_svg( 'next' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></button>
+							<span class="rf-tco__line" aria-hidden="true"><i></i></span>
+							<span class="rf-tco__count" aria-hidden="true">01</span>
+						</div>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php
+	}
+
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$slides = $settings['slides'] ?? [];
 
 		if ( empty( $slides ) ) {
 			$this->render_editor_hint( esc_html__( 'Add at least one slide.', 'refraction' ) );
+			return;
+		}
+
+		if ( 'cards' === ( $settings['layout'] ?? 'classic' ) ) {
+			$this->render_cards( $settings, $slides );
 			return;
 		}
 

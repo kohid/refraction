@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.27.0
+Stable tag: 0.28.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.28.0 =
+* New: Card stack for the Image and Image Box widgets: up to five images as a fan, a deck whose top card flies off, a carousel with cards at the sides, or a shuffling pile with glow and reflection; hovering a card behind brings it forward.
+* New: Slides widget layout "Timed cards": the next slides wait as cards, and the next one grows from its card into the slide, with a timer line, progress line and a large counter.
 
 = 0.27.0 =
 * New: Loading screen (Page Settings > Loading screen): covers the page while it loads with your logo and a progress line, a spinning ring or a large percentage, then fades, slides up or splits open. It never blocks the page: it shows only with JavaScript and is lifted after a time limit.
