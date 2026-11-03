@@ -78,7 +78,35 @@ class Form_Document extends Library_Document {
 	 * and a Group or Repeater row names the fields inside it while it prints them.
 	 */
 	public function print_elements( $elements_data ) {
+		$slug = $this->standalone_form_slug();
+
+		// The Form page opened on its own address ("View" in the admin) is the real form, so it can be sent from there too.
+		if ( '' !== $slug ) {
+			echo do_shortcode( '[refraction_form collection="' . esc_attr( $slug ) . '"]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The form shortcode escapes its output.
+			return;
+		}
+
 		$this->do_print_elements( $elements_data );
+	}
+
+	/**
+	 * The collection to print as a working form when this page is shown on the site by itself: not in the editor or
+	 * its preview, and not while the form shortcode is already printing it. '' otherwise.
+	 */
+	private function standalone_form_slug(): string {
+		if ( Editor_Forms::rendering() || is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return '';
+		}
+
+		$plugin = Plugin::$instance;
+
+		if ( $plugin->editor->is_edit_mode() || $plugin->preview->is_preview_mode() ) {
+			return '';
+		}
+
+		$slug = (string) get_post_meta( $this->get_main_id(), Editor_Forms::META_COLLECTION, true );
+
+		return '' !== $slug && Editor_Forms::doc_for( $slug ) === $this->get_main_id() ? $slug : '';
 	}
 
 	protected function register_controls() {

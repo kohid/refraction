@@ -82,6 +82,51 @@ class Module extends BaseModule {
 			wp_enqueue_script( 'refraction-form-builder-editor', REFRACTION_ASSETS_URL . 'js/form-builder-editor' . $min . '.js', [ 'nested-elements' ], REFRACTION_VERSION, true );
 		} );
 		add_filter( 'template_include', [ $this, 'canvas_for_form_preview' ], 20 );
+
+		// Any page can show a form: the Form Canvas widget, and "Form Builder form" under the Shortcode widget's shortcode.
+		add_action( 'refraction/element/shortcode/section_shortcode/before_section_end', [ $this, 'add_shortcode_form_control' ] );
+		add_filter( 'refraction/widgets/shortcode/content', [ $this, 'shortcode_form_content' ], 10, 2 );
+	}
+
+	/**
+	 * The forms a page can show, for the Form Canvas and Shortcode widgets: collection slug => name (marked when it does
+	 * not take submissions from visitors).
+	 */
+	public function form_options(): array {
+		$options = [];
+
+		foreach ( $this->get_collections()->all() as $slug => $definition ) {
+			$options[ $slug ] = $definition['label'] . ( empty( $definition['public_form'] ) ? ' ' . __( '(not accepting submissions)', 'refraction' ) : '' );
+		}
+
+		return $options;
+	}
+
+	/** The form of a collection as the site prints it (the same as [refraction_form]); '' when none is chosen. */
+	public static function form_html( string $slug ): string {
+		$slug = Classes\Schema::slug( $slug );
+
+		return '' === $slug ? '' : do_shortcode( '[refraction_form collection="' . esc_attr( $slug ) . '"]' );
+	}
+
+	/** @param \Refraction\Widget_Base $widget The Shortcode widget. */
+	public function add_shortcode_form_control( $widget ) {
+		$widget->add_control( 'rfb_form', [
+			'label' => esc_html__( 'Form Builder form', 'refraction' ),
+			'type' => \Refraction\Controls_Manager::SELECT,
+			'options' => [ '' => esc_html__( 'None', 'refraction' ) ] + $this->form_options(),
+			'default' => '',
+			'separator' => 'before',
+			'description' => esc_html__( 'Shows a form made in Refraction > Builder below the shortcode, ready for visitors to send. The Form Canvas widget does the same with its own box styles.', 'refraction' ),
+		] );
+	}
+
+	/**
+	 * @param string                  $content The rendered shortcode.
+	 * @param \Refraction\Widget_Base $widget  The Shortcode widget.
+	 */
+	public function shortcode_form_content( $content, $widget ) {
+		return $content . self::form_html( (string) $widget->get_settings_for_display( 'rfb_form' ) );
 	}
 
 	/** A Form page opened on its own (the editor preview) shows only the form, on the blank canvas. */
@@ -107,7 +152,7 @@ class Module extends BaseModule {
 		return [
 			'Field_Text', 'Field_Textarea', 'Field_Name', 'Field_Email', 'Field_Phone', 'Field_Website', 'Field_Number', 'Field_Amount',
 			'Field_Country', 'Field_Date', 'Field_Time', 'Field_Datetime', 'Field_Select', 'Field_Radio', 'Field_Checkbox', 'Field_Toggle',
-			'Field_Rating', 'Field_Hidden', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Field_Choice_Set', 'Steps', 'Badge', 'Price', 'Submit_Button',
+			'Field_Rating', 'Field_Hidden', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Field_Choice_Set', 'Steps', 'Badge', 'Price', 'Submit_Button', 'Form_Canvas',
 		];
 	}
 
