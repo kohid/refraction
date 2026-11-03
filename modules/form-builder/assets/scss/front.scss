@@ -64,3 +64,25 @@
 		}
 	}
 }
+
+// ---------------------------------------------------------------- Form Canvas widget (widgets/form-canvas.php)
+.rfb-canvas {
+	box-sizing: border-box;
+	width: 100%;
+
+	> .rfb-front {
+		margin: 0;
+	}
+
+	.rfb-canvas__head {
+		margin-bottom: 20px;
+	}
+
+	.rfb-canvas__title {
+		margin: 0 0 8px;
+	}
+
+	.rfb-canvas__text {
+		opacity: .85;
+	}
+}

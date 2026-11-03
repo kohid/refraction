@@ -697,9 +697,63 @@
 		show( withError > -1 ? withError : 0, withError > -1 );
 	}
 
+	// ---------------------------------------------------------------- page caches
+
+	/**
+	 * A page cache (LiteSpeed and the like) can serve the form for days, while its security token lasts a day: when the
+	 * page is older than a few minutes, swap in a fresh token before the visitor sends it. The submit waits for it.
+	 *
+	 * @param {Element} form
+	 */
+	function refreshToken( form ) {
+		const url = form.dataset.rfbTokenUrl;
+		const issued = Number( form.dataset.rfbIssued ) || 0;
+
+		if ( ! url || ! window.fetch || Math.abs( ( Date.now() / 1000 ) - issued ) < 300 ) {
+			return;
+		}
+
+		form.rfbTokenReady = window.fetch( url, { credentials: 'same-origin', cache: 'no-store' } )
+			.then( ( response ) => response.json() )
+			.then( ( body ) => {
+				if ( body && body.success && body.data ) {
+					const nonce = form.querySelector( 'input[name="_rfb_nonce"]' );
+					const time = form.querySelector( 'input[name="rfb_t"]' );
+
+					if ( nonce ) {
+						nonce.value = body.data.nonce;
+					}
+
+					if ( time ) {
+						time.value = body.data.t;
+					}
+
+					form.dataset.rfbIssued = String( body.data.issued );
+				}
+			} )
+			.catch( () => {} )
+			.then( () => {
+				form.rfbTokenReady = null;
+			} );
+
+		// Sent before the fresh token arrived: wait for it, then send.
+		form.addEventListener( 'submit', ( event ) => {
+			if ( form.rfbTokenReady && ! event.defaultPrevented ) {
+				event.preventDefault();
+				form.rfbTokenReady.then( () => form.requestSubmit ? form.requestSubmit( event.submitter || undefined ) : form.submit() );
+			}
+		} );
+	}
+
 	// ---------------------------------------------------------------- boot
 
 	function init( form ) {
+		if ( form.rfbReady ) {
+			return;
+		}
+
+		form.rfbReady = true;
+		refreshToken( form );
 		form.querySelectorAll( '.rfb-repeater' ).forEach( ( repeater ) => initRepeater( repeater, form ) );
 		form.querySelectorAll( 'input[type=file][data-rfb-max-size]' ).forEach( initFile );
 		form.querySelectorAll( '[data-rfb-signature]' ).forEach( initSignature );
@@ -731,5 +785,12 @@
 		} );
 	}
 
-	document.addEventListener( 'DOMContentLoaded', () => document.querySelectorAll( '[data-rfb-form]' ).forEach( init ) );
+	const boot = () => document.querySelectorAll( '[data-rfb-form]' ).forEach( init );
+
+	// Optimisation plugins can load this script after the page is ready (deferred or delayed scripts).
+	if ( 'loading' === document.readyState ) {
+		document.addEventListener( 'DOMContentLoaded', boot );
+	} else {
+		boot();
+	}
 }() );

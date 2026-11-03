@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Shortcodes {
 
 	const ACTION_SUBMIT = 'refraction_fb_submit';
+	const ACTION_TOKEN = 'refraction_fb_token';
 
 	private Collections $collections;
 	private Records $records;
@@ -35,6 +36,27 @@ class Shortcodes {
 		add_shortcode( 'refraction_records', [ $this, 'list' ] );
 		add_action( 'admin_post_nopriv_' . self::ACTION_SUBMIT, [ $this, 'handle_submit' ] );
 		add_action( 'admin_post_' . self::ACTION_SUBMIT, [ $this, 'handle_submit' ] );
+		add_action( 'wp_ajax_nopriv_' . self::ACTION_TOKEN, [ $this, 'fresh_token' ] );
+		add_action( 'wp_ajax_' . self::ACTION_TOKEN, [ $this, 'fresh_token' ] );
+	}
+
+	/**
+	 * A fresh nonce and time token for a form on a page that came from a page cache (LiteSpeed and the like keep the
+	 * page for days, while a nonce lasts a day): frontend.js asks for them when the page is older than a few minutes.
+	 * Only for a collection that takes submissions; it reveals nothing else.
+	 */
+	public function fresh_token(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hands out the nonce.
+		$slug = isset( $_REQUEST['collection'] ) ? Schema::slug( wp_unslash( $_REQUEST['collection'] ) ) : '';
+		$definition = '' !== $slug ? $this->collections->get( $slug ) : null;
+
+		nocache_headers();
+
+		if ( ! $definition || ! $definition['public_form'] ) {
+			wp_send_json_error( null, 404 );
+		}
+
+		wp_send_json_success( [ 'nonce' => wp_create_nonce( self::ACTION_SUBMIT . $slug ), 't' => $this->time_token(), 'issued' => time() ] );
 	}
 
 	public static function enqueue(): void {
@@ -141,7 +163,10 @@ class Shortcodes {
 			$this->form_open( $slug, $settings, $i18n, 'rfb-form-editor' );
 			// Printed live (see Form_Document::print_elements), and no field is put off as a cached placeholder either.
 			add_filter( 'refraction/element/should_render_shortcode', '__return_false', 999 );
-			echo Plugin::$instance->frontend->get_builder_content_for_display( $doc_id, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered by the editor's own widgets.
+			// On the Form page's own address the builder's recursion guard would print nothing: the page is printed
+			// directly (Form_Document::print_elements prints its elements as usual while this form is rendering).
+			$frontend = Plugin::$instance->frontend;
+			echo get_the_ID() === $doc_id ? $frontend->get_builder_content( $doc_id, true ) : $frontend->get_builder_content_for_display( $doc_id, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered by the editor's own widgets.
 			remove_filter( 'refraction/element/should_render_shortcode', '__return_false', 999 );
 
 			if ( ! Editor_Forms::has_submit( (array) json_decode( (string) get_post_meta( $doc_id, '_refraction_data', true ), true ) ) ) {
@@ -172,7 +197,7 @@ class Shortcodes {
 
 	/** The opening form tag with everything the submit handler checks (action, collection, time token, honeypot, nonce). */
 	private function form_open( string $slug, array $settings, array $i18n, string $class ): void {
-		echo '<form class="' . esc_attr( $class ) . '" method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-progress="' . esc_attr( $settings['progress'] ) . '" data-rfb-next="' . esc_attr( $settings['next_text'] ) . '" data-rfb-back="' . esc_attr( $settings['back_text'] ) . '" data-rfb-money="' . esc_attr( (string) wp_json_encode( Money::js( Money::config( $settings ) ) ) ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( $i18n ) ) . '">';
+		echo '<form class="' . esc_attr( $class ) . '" method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-issued="' . esc_attr( (string) time() ) . '" data-rfb-token-url="' . esc_url( add_query_arg( [ 'action' => self::ACTION_TOKEN, 'collection' => $slug ], admin_url( 'admin-ajax.php' ) ) ) . '" data-rfb-progress="' . esc_attr( $settings['progress'] ) . '" data-rfb-next="' . esc_attr( $settings['next_text'] ) . '" data-rfb-back="' . esc_attr( $settings['back_text'] ) . '" data-rfb-money="' . esc_attr( (string) wp_json_encode( Money::js( Money::config( $settings ) ) ) ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( $i18n ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SUBMIT ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="rfb_t" value="' . esc_attr( $this->time_token() ) . '">';
 
 		if ( $settings['honeypot'] ) {

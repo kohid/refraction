@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.31.0
+Stable tag: 0.32.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.32.0 =
+* Form Builder: new Form Canvas widget (Form Builder category, on any page) shows a form made in Refraction > Builder in a box you style: title and text, width, alignment, padding, background, border, corners, shadow, and the form's colors on that page.
+* Shortcode widget: new "Form Builder form" option under the shortcode shows a chosen form below it, without typing the shortcode.
+* Form Builder: a Form page opened on its own address (View) is now a real form that sends; before, its Submit button did nothing there.
+* Form Builder: forms on pages kept by a page cache (LiteSpeed and the like) fetch a fresh security token when the page is old, so they no longer fail with "This page expired"; the form script also starts when an optimisation plugin loads it late.
 
 = 0.31.0 =
 * New Timed Slides widget (Advanced): the Timed cards slider where every slide is a container you drop any widgets into. Each slide has its own background image or YouTube video (thumbnail used when there is no image) and card. Content Position (horizontal, vertical, text alignment, width, spacing) and the Cards (position, width, shape, corners, gaps) are separate, responsive settings, with styles for cards, arrows, progress line and number.

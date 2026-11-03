@@ -132,13 +132,21 @@ class Widget_Shortcode extends Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		$shortcode = $this->get_settings_for_display( 'shortcode' );
+		$shortcode = (string) $this->get_settings_for_display( 'shortcode' );
+		$shortcode = '' !== trim( $shortcode ) ? do_shortcode( shortcode_unautop( $shortcode ) ) : '';
 
-		if ( empty( $shortcode ) ) {
+		/**
+		 * The widget's output: the shortcode's, plus what modules add below it (Form Builder: the form picked under
+		 * "Form Builder form").
+		 *
+		 * @param string      $shortcode The rendered shortcode, or ''.
+		 * @param Widget_Base $widget    The Shortcode widget.
+		 */
+		$shortcode = (string) apply_filters( 'refraction/widgets/shortcode/content', $shortcode, $this );
+
+		if ( '' === $shortcode ) {
 			return;
 		}
-
-		$shortcode = do_shortcode( shortcode_unautop( $shortcode ) );
 		?>
 		<div class="refraction-shortcode"><?php echo $shortcode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 		<?php
