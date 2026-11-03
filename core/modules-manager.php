@@ -137,6 +137,7 @@ class Modules_Manager {
 			'timed-slides',
 			'woocommerce',
 			'form-builder',
+			'events',
 			'build-scene',
 			'ask-claude',
 			'page-loader',

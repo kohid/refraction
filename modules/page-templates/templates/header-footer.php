@@ -6,7 +6,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 \Refraction\Plugin::$instance->frontend->add_body_class( 'refraction-template-full-width' );
 
-get_header();
+// A block theme has no header.php or footer.php: its header and footer are template parts. They are rendered before
+// wp_head() so the styles of their blocks are printed in the head.
+$refraction_block_theme = function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
+
+if ( $refraction_block_theme ) {
+	ob_start();
+	block_template_part( 'header' );
+	$refraction_header = ob_get_clean();
+	ob_start();
+	block_template_part( 'footer' );
+	$refraction_footer = ob_get_clean();
+	?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+	<?php wp_body_open(); ?>
+<div class="wp-site-blocks">
+	<?php
+	echo $refraction_header; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The theme's own blocks.
+} else {
+	get_header();
+}
 /**
  * Before Header-Footer page template content.
  *
@@ -27,4 +52,11 @@ do_action( 'refraction/page_templates/header-footer/before_content' );
  */
 do_action( 'refraction/page_templates/header-footer/after_content' );
 
-get_footer();
+if ( $refraction_block_theme ) {
+	echo $refraction_footer; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The theme's own blocks.
+	echo '</div>';
+	wp_footer();
+	echo '</body></html>';
+} else {
+	get_footer();
+}

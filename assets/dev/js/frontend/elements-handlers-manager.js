@@ -39,6 +39,7 @@ module.exports = function( $ ) {
 	this.elementsHandlers[ 'refraction-mega-menu.default' ] = () => import( /* webpackChunkName: 'mega-menu' */ 'refraction/modules/mega-menu/assets/js/frontend/handlers/mega-menu' );
 	this.elementsHandlers[ 'refraction-nested-carousel.default' ] = () => import( /* webpackChunkName: 'nested-carousel' */ 'refraction/modules/nested-carousel/assets/js/frontend/handlers/nested-carousel' );
 	this.elementsHandlers[ 'refraction-timed-slides.default' ] = () => import( /* webpackChunkName: 'timed-slides' */ 'refraction/modules/timed-slides/assets/js/frontend/handlers/timed-slides' );
+	this.elementsHandlers[ 'refraction-event-calendar.default' ] = () => import( /* webpackChunkName: 'event-calendar' */ 'refraction/modules/events/assets/js/frontend/handlers/event-calendar' );
 
 	// Pro widgets (Advanced category).
 	this.elementsHandlers[ 'refraction-nav-menu.default' ] = () => import( /* webpackChunkName: 'pro-nav-menu' */ 'refraction/modules/pro-widgets/assets/js/frontend/handlers/nav-menu' );
