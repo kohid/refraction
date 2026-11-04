@@ -96,3 +96,43 @@ form; your staff use it to make events of that type. `Classes\Event_Types`; chec
   payment link leads.
 - **Event Calendar** and **Events List** have **Only these types of event**: the types, plus "Made in the editor (no
   type)". The events table has a Type column and can be filtered by type (`?rfe_type=`).
+
+## Type addresses, templates and Event tags (0.35.0)
+
+- **Addresses**: an event of a type lives at `/<address>/<event>/` and `/<address>/` lists the type's events. The
+  address is the form's page settings > Events > **Address of its events**, else the type's key (`/workshop/`).
+  `/events/<event>/` keeps working. Rewrite rules are added for each type (`Event_Types::add_rewrites`, flushed when
+  the addresses change). The links come from `post_type_link` and `term_link`. Keep an address different from your
+  pages' addresses: the type's address wins.
+- **Event Types taxonomy** (`refraction_event_type`, no admin screen): every event of a type is in that type's term
+  (`Event_Types::assign_term`, from `Event_Data::save`). Terms are named after the types and renamed with them. The
+  type archive is that term's archive, and Theme Builder conditions use it: "In Event Types: Workshop" (singular) and
+  "Event Types: Workshop" (archive).
+- **Refraction > Event types** links each type's address, plus:
+  - **Design the event page**: a Theme Builder **Single** template with the condition
+    `include/singular/in_refraction_event_type/<term>`;
+  - **Design the archive**: an **Archive** template with `include/archive/tax/refraction_event_type/<term>`.
+
+  Each is made the first time and opened again after. Starters: the title (Post Title), date and time (Event Detail),
+  picture (Featured Image), Event Details, Event Button (payment), Event Gallery and description (Post Excerpt). The
+  archive starter has the archive title and an Events List set to "The archive being shown". An event follows a
+  Single template that matches it even when it has a page template of its own (filter
+  `refraction/theme_builder/keep_own_page_template`).
+- **Event tags** (dynamic tags, group Event; `modules/events/tags/`):
+  - **Event Detail** (text): date and time, date, time, start or end with a format, venue, address, price, ticket
+    limit, tickets per person, total amount, organizer, categories, type;
+  - **Event Link** (URL): tickets, payment, map, event page, add to Google Calendar, Outlook 365 or Outlook.com;
+  - **Event Form Field** (text): any answer of the event form that made the event, including fields you added
+    yourself, read from its record;
+  - **Event Gallery** (gallery);
+  - **Event Start** (date and time, for a Countdown).
+- **New widgets**:
+  - **Event Button**: Tickets, Payment, map, event page or add to a calendar. It shows only when the event has that
+    link, and takes the text set on the form ("Pay now"), else its own.
+  - **Event Gallery**: the event's gallery as a grid that opens in the lightbox, with columns, shape, gap, corners
+    and zoom.
+- **New event form field**: **Image gallery** (2 to 10 pictures, copied into the media library as the event's gallery).
+  An event's gallery can also be set in its page settings (Gallery).
+- The form's Event button is named "Event button (tickets, payment, submit)", so searching "payment" finds it.
+- Theme Builder pages on block themes now render the header and footer template parts before `wp_head()`. Before,
+  the Navigation block's script modules were missing from the import map.

@@ -35,6 +35,7 @@ class Event extends PageBase {
 		'rfe_total_amount' => 'total_amount',
 		'rfe_organizer' => 'organizer',
 		'rfe_type' => 'type',
+		'rfe_gallery' => 'gallery',
 	];
 
 	public static function get_properties() {
@@ -173,6 +174,13 @@ class Event extends PageBase {
 			'label_block' => true,
 		] );
 
+		$this->add_control( 'rfe_gallery', [
+			'label' => esc_html__( 'Gallery', 'refraction' ),
+			'type' => Controls_Manager::GALLERY,
+			'description' => esc_html__( 'Shown by the Event Gallery widget and the Event Gallery tag.', 'refraction' ),
+			'separator' => 'before',
+		] );
+
 		$this->add_control( 'rfe_type', [
 			'label' => esc_html__( 'Event type', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -224,6 +232,9 @@ class Event extends PageBase {
 		foreach ( self::SETTINGS as $setting => $key ) {
 			$settings[ $setting ] = $data[ $key ];
 		}
+
+		// The gallery control keeps [{id, url}].
+		$settings['rfe_gallery'] = array_map( static fn( $id ) => [ 'id' => $id, 'url' => (string) wp_get_attachment_url( $id ) ], Event_Data::gallery( $post_id ) );
 
 		$terms = wp_get_object_terms( $post_id, Module::TAXONOMY, [ 'fields' => 'ids' ] );
 		$settings['rfe_categories'] = is_array( $terms ) ? array_map( 'strval', $terms ) : [];

@@ -19,6 +19,10 @@ $refraction_body = $refraction_locations->get_markup( $refraction_locations->get
 Plugin::$instance->frontend->add_body_class( 'refraction-template-theme-builder' );
 
 if ( wp_is_block_theme() ) :
+	// The header and footer template parts are rendered before wp_head(): their blocks' styles and script modules (the
+	// Navigation block's) are then in the head and the import map, as on the theme's own pages.
+	$refraction_header = do_blocks( '<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->' );
+	$refraction_footer = do_blocks( '<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->' );
 	?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -31,9 +35,9 @@ if ( wp_is_block_theme() ) :
 	<?php wp_body_open(); ?>
 <div class="wp-site-blocks">
 	<?php
-	echo do_blocks( '<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block output.
+	echo $refraction_header; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block output.
 	echo $refraction_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built in Locations_Manager::get_markup().
-	echo do_blocks( '<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block output.
+	echo $refraction_footer; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block output.
 	?>
 </div>
 	<?php wp_footer(); ?>
