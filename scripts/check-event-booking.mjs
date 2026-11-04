@@ -151,6 +151,12 @@ async function main() {
 			pay: [ document.querySelector( '.rf-ed-pay' )?.textContent.trim(), document.querySelector( '.rf-ed-pay' )?.getAttribute( 'href' ) ],
 			book: document.querySelector( '.rfe-book summary' )?.textContent.trim(),
 		} ) );
+		const tight = await p.evaluate( () => {
+			const label = document.querySelector( '.rf-ed-date .rf-ed-label' ).getBoundingClientRect();
+			const value = document.querySelector( '.rf-ed-date .rf-ed-value' ).getBoundingClientRect();
+			return { gap: Math.round( value.top - label.bottom ), paragraphs: document.querySelectorAll( '.rf-ed p:not([class^="rfe-book"])' ).length };
+		} );
+		check( 'details', 'on an event written in the WordPress editor the details box is not broken into paragraphs', tight.gap < 10 && 0 === tight.paragraphs, JSON.stringify( tight ) );
 		check( 'dates', 'the date reads "Wednesday, November 5, 2031" whatever the site\'s date format', 'Wednesday, November 5, 2031' === first.date, JSON.stringify( first ) );
 		check( 'payment', 'the Pay button shows the total amount and pays it ({amount} in the link)', 'Pay online · £20.00' === first.pay[ 0 ] && 'https://pay.example.com/salsa/20.00' === first.pay[ 1 ], JSON.stringify( first.pay ) );
 		check( 'booking', 'Book now and the places left show', 'Book now' === first.book && /5 tickets, up to 2 per person, 5 left/.test( first.places || '' ), JSON.stringify( first ) );
@@ -200,6 +206,11 @@ async function main() {
 		const before = await gp.evaluate( () => ( { main: document.querySelector( '.rfe-showcase__main img' )?.getAttribute( 'src' ), thumbs: document.querySelectorAll( '.rfe-showcase__thumb' ).length, lightbox: document.querySelector( '.rfe-showcase__main' )?.dataset.refractionOpenLightbox } ) );
 		await gp.click( '.rfe-showcase__thumb >> nth=1' );
 		const after = await gp.evaluate( () => ( { main: document.querySelector( '.rfe-showcase__main img' ).getAttribute( 'src' ), href: document.querySelector( '.rfe-showcase__main' ).getAttribute( 'href' ), active: document.querySelector( '.rfe-showcase__thumb.is-active' ) === document.querySelectorAll( '.rfe-showcase__thumb' )[ 1 ] } ) );
+		const shape = await gp.evaluate( () => {
+			const r = document.querySelector( '.rfe-showcase__main img' ).getBoundingClientRect();
+			return [ Math.round( r.width ), Math.round( r.height ) ];
+		} );
+		check( 'gallery', 'the main picture keeps its own (portrait) shape by default', shape[ 1 ] > shape[ 0 ], JSON.stringify( shape ) );
 		check( 'gallery', 'Main picture with thumbnails: one big picture (lightbox) and two thumbnails', /tall1/.test( before.main || '' ) && 2 === before.thumbs && 'yes' === before.lightbox, JSON.stringify( before ) );
 		check( 'gallery', 'a thumbnail shows its picture as the main one', /tall2/.test( after.main ) && /tall2/.test( after.href ) && after.active, JSON.stringify( after ) );
 		await gp.screenshot( { path: join( SHOTS, 'gallery-showcase.png' ), fullPage: true } );

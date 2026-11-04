@@ -78,7 +78,8 @@ class Module extends BaseModule {
 		add_action( 'refraction/dynamic_tags/register', [ $this, 'register_tags' ] );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 		add_action( 'wp_head', [ $this, 'print_schema' ] );
-		add_filter( 'the_content', [ $this, 'details_for_classic_events' ], 9 );
+		// After wpautop (10), which would wrap the box's parts in paragraphs.
+		add_filter( 'the_content', [ $this, 'details_for_classic_events' ], 20 );
 
 		if ( is_admin() ) {
 			add_action( 'add_meta_boxes_' . self::CPT, [ $this, 'add_meta_box' ] );

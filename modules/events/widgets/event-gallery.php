@@ -114,8 +114,8 @@ class Event_Gallery extends Widget_Base {
 		$this->add_control( 'ratio', [
 			'label' => esc_html__( 'Shape', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
-			'default' => '1/1',
-			'options' => [ 'auto' => esc_html__( 'As the pictures are', 'refraction' ), '1/1' => '1/1', '4/3' => '4/3', '3/4' => '3/4', '2/3' => '2/3', '16/9' => '16/9' ],
+			'default' => '',
+			'options' => [ '' => esc_html__( 'Default (grid: square; main picture: as it is)', 'refraction' ), 'auto' => esc_html__( 'As the pictures are', 'refraction' ), '1/1' => '1/1', '4/3' => '4/3', '3/4' => '3/4', '2/3' => '2/3', '16/9' => '16/9' ],
 			'selectors_dictionary' => [ 'auto' => 'auto', '1/1' => '1 / 1', '4/3' => '4 / 3', '3/4' => '3 / 4', '2/3' => '2 / 3', '16/9' => '16 / 9' ],
 			'selectors' => [ '{{WRAPPER}} .rfe-gallery, {{WRAPPER}} .rfe-showcase' => '--rfe-ratio: {{VALUE}};' ],
 			'description' => esc_html__( 'Main picture with thumbnails: the main picture\'s shape.', 'refraction' ),
