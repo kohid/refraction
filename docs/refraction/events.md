@@ -54,3 +54,45 @@ Event Details widget (panel category **Events**). Browser check: `scripts/check-
   pick. Rows: date, time, venue and address (with a map link), price and organizer, each of which can be hidden. It
   also has a tickets button and an **Add to calendar** menu (a `<details>` element, so it needs no script). Layout: one
   under another, or in a row. Style: box, rows (icon, label, text) and buttons.
+
+## Event types and event forms (0.34.0)
+
+An **event type** is a Form Builder form (a Form page built in the editor) that holds event fields. You design its
+form; your staff use it to make events of that type. `Classes\Event_Types`; check: `scripts/check-event-types.mjs`.
+
+- **Refraction > Event types** lists the types with who may use each form, their number of events, the shortcode and
+  **Design the form** / **Use the form**. To make one, type its name and press **New event type**: this makes a Form
+  page holding every event field and opens it in the editor. The name gives the type its key (`workshop`), which stays
+  the same when the form is renamed, because events point to it.
+- **Event Form** fields (panel category `refraction-event-fields`, on Form pages only):
+  - Event name, Start date and time, End date and time, All day, Category, Venue, Address, Price, Ticket limit, Tickets
+    per person, Total amount, Organizer, Event image, Description;
+  - **Event button**, which is for a *Ticket link*, a *Payment* link or *Submit*. A ticket or payment button asks for
+    the address in the form, and the event page shows a button with the text set here. Submit sends the form and is not
+    a field.
+
+  Each event field is a Form Builder field widget (same Content, Style and Advanced tabs, same checks) with a fixed key,
+  `event_<role>` (`Base\Event_Field`). A form with a Start field is an event type. **Category** offers the Event
+  Categories (all of them, or the ones picked), as a dropdown or as checkboxes. Its choices are read again every time
+  the form is used (filter `refraction/form_builder/definition`), so a new category appears in the form at once.
+  **Total amount** uses the form's currency.
+- **Page settings > Events** of the form:
+  - **Who can use this event form**: staff (people who can write posts, the default), anyone logged in, or anyone;
+  - **New events are**: published, waiting for review, or drafts;
+  - **Event page design**: the standard page (title, picture, Event Details, the description through the Post Excerpt
+    tag), or a copy of the page of an event you built.
+- **Sending the form**: the Form Builder checks and saves the submission as usual (a record of the collection). Then
+  the event is made (`refraction/form_builder/submitted`):
+  - its details, type (`_rfe_type`), category and author (the person who sent it);
+  - the picture, copied from the private upload into the media library as the featured image;
+  - the description as content and excerpt;
+  - the record and the event point to each other (`_rfe_record`, `_rfe_event`).
+
+  The success message links to the event (or to its preview while it waits for review). Someone who may not use the
+  form sees "This form is only for the site's staff" or the log-in prompt (filter `refraction/form_builder/availability`).
+- **Event details** gained a payment link and its button text, ticket limit, tickets per person, total amount and the
+  type, in the page settings, the admin box and the Event Details widget (Tickets row, Total amount row, Pay button).
+  Ticket limit and tickets per person are shown on the event; selling the tickets happens wherever the ticket or
+  payment link leads.
+- **Event Calendar** and **Events List** have **Only these types of event**: the types, plus "Made in the editor (no
+  type)". The events table has a Type column and can be filtered by type (`?rfe_type=`).

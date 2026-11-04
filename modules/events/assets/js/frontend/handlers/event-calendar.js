@@ -67,7 +67,7 @@ export default class EventCalendar extends Base {
 		const c = this.config;
 		const url = new URL( c.rest, window.location.href );
 
-		Object.entries( { date, search: this.query(), categories: c.categories || '', week_start: c.week_start, per_day: c.per_day, times: c.times } )
+		Object.entries( { date, search: this.query(), categories: c.categories || '', types: c.types || '', week_start: c.week_start, per_day: c.per_day, times: c.times } )
 			.forEach( ( [ key, value ] ) => url.searchParams.set( key, value ) );
 
 		this.cal.classList.add( 'is-loading' );

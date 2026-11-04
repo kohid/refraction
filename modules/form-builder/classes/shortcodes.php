@@ -90,7 +90,16 @@ class Shortcodes {
 		$settings = $definition['settings'];
 		$state = Settings::availability( $settings, $this->now(), '' !== $settings['opens'] || $settings['max_submissions'] > 0 ? $this->records->count( $definition['slug'] ) : 0 );
 
-		return 'open' === $state && $settings['require_login'] && ! is_user_logged_in() ? 'login' : $state;
+		$state = 'open' === $state && $settings['require_login'] && ! is_user_logged_in() ? 'login' : $state;
+
+		/**
+		 * Whether the form takes a submission now: open, not_yet, closed, full, login, or denied (the visitor may not
+		 * use it, as an event form for staff only).
+		 *
+		 * @param string $state
+		 * @param array  $definition
+		 */
+		return (string) apply_filters( 'refraction/form_builder/availability', $state, $definition );
 	}
 
 	// ---------------------------------------------------------------- form
@@ -118,13 +127,24 @@ class Shortcodes {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['rfb_done'] ) && $slug === sanitize_text_field( wp_unslash( $_GET['rfb_done'] ) ) ) {
-			return $wrap . '<div class="rfb-alert rfb-alert-success" role="status">' . esc_html( $definition['success_message'] ) . '</div></div>';
+			/**
+			 * The success message after a submission (escaped text); modules can add to it, such as a link to the event
+			 * an event form made.
+			 *
+			 * @param string $html
+			 * @param array  $definition
+			 */
+			return $wrap . '<div class="rfb-alert rfb-alert-success" role="status">' . apply_filters( 'refraction/form_builder/success_html', esc_html( $definition['success_message'] ), $definition ) . '</div></div>';
 		}
 
 		$availability = $this->availability( $definition );
 
 		if ( 'login' === $availability ) {
 			return $wrap . '<div class="rfb-alert rfb-alert-info" role="status">' . sprintf( /* translators: %s: login link. */ esc_html__( 'Please %s to use this form.', 'refraction' ), '<a href="' . esc_url( wp_login_url( get_permalink() ?: home_url( '/' ) ) ) . '">' . esc_html__( 'log in', 'refraction' ) . '</a>' ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+
+		if ( 'denied' === $availability ) {
+			return $wrap . '<div class="rfb-alert rfb-alert-info" role="status">' . esc_html__( 'This form is only for the site\'s staff.', 'refraction' ) . '</div></div>';
 		}
 
 		if ( 'open' !== $availability ) {
@@ -333,6 +353,10 @@ class Shortcodes {
 			$fail( [ '_form' => __( 'Please log in to use this form.', 'refraction' ) ], [] );
 		}
 
+		if ( 'denied' === $availability ) {
+			$fail( [ '_form' => __( 'This form is only for the site\'s staff.', 'refraction' ) ], [] );
+		}
+
 		if ( 'open' !== $availability ) {
 			$fail( [ '_form' => $settings['closed_message'] ], [] );
 		}
@@ -381,7 +405,15 @@ class Shortcodes {
 			exit;
 		}
 
-		wp_safe_redirect( add_query_arg( 'rfb_done', $slug, $back ) . '#rfb-form-' . $slug );
+		/**
+		 * Where the visitor goes after a saved submission (the form's page, which shows the success message).
+		 *
+		 * @param string $url
+		 * @param int    $id         Record id.
+		 * @param array  $definition
+		 */
+		$done = (string) apply_filters( 'refraction/form_builder/done_url', add_query_arg( 'rfb_done', $slug, $back ), $id, $definition );
+		wp_safe_redirect( $done . '#rfb-form-' . $slug );
 		exit;
 	}
 

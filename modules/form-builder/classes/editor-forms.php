@@ -190,7 +190,8 @@ class Editor_Forms {
 			if ( 'widget' === ( $element['elType'] ?? '' ) && 0 === strpos( $type, Field_Widget::PREFIX ) ) {
 				$widget = Plugin::$instance->elements_manager->create_element_instance( $element );
 
-				if ( ! $widget instanceof Form_Field ) {
+				// Not a field (an element that only looks like one, such as an event form's Submit button).
+				if ( ! $widget instanceof Form_Field || ( method_exists( $widget, 'is_field' ) && ! $widget->is_field() ) ) {
 					continue;
 				}
 
@@ -340,7 +341,10 @@ class Editor_Forms {
 	/** Does this element tree have its own Submit button? */
 	public static function has_submit( array $elements ): bool {
 		foreach ( $elements as $element ) {
-			if ( 'rfb-submit' === ( $element['widgetType'] ?? '' ) || ( ! empty( $element['elements'] ) && self::has_submit( (array) $element['elements'] ) ) ) {
+			// The Submit button widget, or a button widget set to submit (the event form's Event button).
+			$is_submit = 'rfb-submit' === ( $element['widgetType'] ?? '' ) || 'submit' === ( $element['settings']['button_kind'] ?? '' );
+
+			if ( $is_submit || ( ! empty( $element['elements'] ) && self::has_submit( (array) $element['elements'] ) ) ) {
 				return true;
 			}
 		}

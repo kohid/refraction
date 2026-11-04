@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Event_Details extends Widget_Base {
 
-	const ROWS = [ 'date', 'time', 'venue', 'price', 'organizer' ];
+	const ROWS = [ 'date', 'time', 'venue', 'price', 'places', 'total', 'organizer' ];
 
 	public function get_name() {
 		return 'refraction-event-details';
@@ -75,6 +75,8 @@ class Event_Details extends Widget_Base {
 			'time' => esc_html__( 'Time', 'refraction' ),
 			'venue' => esc_html__( 'Venue and address', 'refraction' ),
 			'price' => esc_html__( 'Price', 'refraction' ),
+			'places' => esc_html__( 'Ticket limit and tickets per person', 'refraction' ),
+			'total' => esc_html__( 'Total amount', 'refraction' ),
 			'organizer' => esc_html__( 'Organizer', 'refraction' ),
 		] as $row => $label ) {
 			$this->add_control( 'show_' . $row, [ 'label' => $label, 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
@@ -92,6 +94,12 @@ class Event_Details extends Widget_Base {
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
 			'separator' => 'before',
+		] );
+
+		$this->add_control( 'show_payment', [
+			'label' => esc_html__( 'Payment button', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
 		] );
 
 		$this->add_control( 'show_calendar', [
@@ -212,6 +220,8 @@ class Event_Details extends Widget_Base {
 			'venue' => '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
 			'price' => '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
 			'organizer' => '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',
+			'places' => '<path d="M3 9a2 2 0 0 0 0 6v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3a2 2 0 0 0 0-6V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1z"/><line x1="14" y1="5" x2="14" y2="19" stroke-dasharray="2 2"/>',
+			'total' => '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="18" y1="12" x2="18.01" y2="12"/>',
 		];
 
 		return '<span class="rf-ed-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . ( $paths[ $name ] ?? '' ) . '</svg></span>';
@@ -251,14 +261,35 @@ class Event_Details extends Widget_Base {
 			$rows['price'] = [ __( 'Price', 'refraction' ), esc_html( $data['price'] ) ];
 		}
 
+		if ( $on( 'show_places' ) && ( '' !== $data['ticket_limit'] || '' !== $data['tickets_per_person'] ) ) {
+			$parts = [];
+
+			if ( '' !== $data['ticket_limit'] ) {
+				/* translators: %s: number of tickets. */
+				$parts[] = sprintf( _n( '%s ticket', '%s tickets', (int) $data['ticket_limit'], 'refraction' ), number_format_i18n( (int) $data['ticket_limit'] ) );
+			}
+
+			if ( '' !== $data['tickets_per_person'] ) {
+				/* translators: %s: number of tickets. */
+				$parts[] = sprintf( __( 'up to %s per person', 'refraction' ), number_format_i18n( (int) $data['tickets_per_person'] ) );
+			}
+
+			$rows['places'] = [ __( 'Tickets', 'refraction' ), esc_html( ucfirst( implode( ', ', $parts ) ) ) ];
+		}
+
+		if ( $on( 'show_total' ) && '' !== $data['total_amount'] ) {
+			$rows['total'] = [ __( 'Total amount', 'refraction' ), esc_html( $data['total_amount'] ) ];
+		}
+
 		if ( $on( 'show_organizer' ) && '' !== $data['organizer'] ) {
 			$rows['organizer'] = [ __( 'Organizer', 'refraction' ), esc_html( $data['organizer'] ) ];
 		}
 
 		$tickets = $on( 'show_tickets' ) && '' !== $data['ticket_url'];
+		$payment = $on( 'show_payment' ) && '' !== $data['payment_url'];
 		$calendar = $on( 'show_calendar' ) && $card['links'];
 
-		if ( ! $rows && ! $tickets && ! $calendar ) {
+		if ( ! $rows && ! $tickets && ! $payment && ! $calendar ) {
 			return '';
 		}
 
@@ -278,10 +309,13 @@ class Event_Details extends Widget_Base {
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
-			<?php if ( $tickets || $calendar ) : ?>
+			<?php if ( $tickets || $payment || $calendar ) : ?>
 				<div class="rf-ed-actions">
 					<?php if ( $tickets ) : ?>
 						<a class="rf-ed-tickets" href="<?php echo esc_url( $data['ticket_url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( '' !== $data['ticket_label'] ? $data['ticket_label'] : __( 'Get tickets', 'refraction' ) ); ?></a>
+					<?php endif; ?>
+					<?php if ( $payment ) : ?>
+						<a class="rf-ed-tickets rf-ed-pay" href="<?php echo esc_url( $data['payment_url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( '' !== $data['payment_label'] ? $data['payment_label'] : __( 'Pay now', 'refraction' ) ); ?></a>
 					<?php endif; ?>
 					<?php if ( $calendar ) : ?>
 						<details class="rf-ed-addcal">
@@ -321,7 +355,7 @@ class Event_Details extends Widget_Base {
 
 		$options = [ 'show_map' => 'yes' === ( $s['show_map'] ?? '' ) ];
 
-		foreach ( array_merge( self::ROWS, [ 'tickets', 'calendar' ] ) as $key ) {
+		foreach ( array_merge( self::ROWS, [ 'tickets', 'payment', 'calendar' ] ) as $key ) {
 			$options[ 'show_' . $key ] = 'yes' === ( $s[ 'show_' . $key ] ?? '' );
 		}
 

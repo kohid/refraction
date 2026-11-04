@@ -424,6 +424,24 @@
 	}
 }
 
+.rf-ed-tickets.rf-ed-pay {
+	color: var(--rf-ed-primary);
+	background: transparent;
+	box-shadow: inset 0 0 0 2px var(--rf-ed-primary);
+
+	&:hover,
+	&:focus {
+		color: #fff;
+		background: var(--rf-ed-primary);
+		filter: none;
+	}
+}
+
+.rfe-made-link {
+	font-weight: 700;
+	white-space: nowrap;
+}
+
 .rf-ed-addcal {
 	position: relative;
 

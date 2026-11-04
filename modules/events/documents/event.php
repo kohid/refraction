@@ -28,7 +28,13 @@ class Event extends PageBase {
 		'rfe_price' => 'price',
 		'rfe_ticket_url' => 'ticket_url',
 		'rfe_ticket_label' => 'ticket_label',
+		'rfe_payment_url' => 'payment_url',
+		'rfe_payment_label' => 'payment_label',
+		'rfe_ticket_limit' => 'ticket_limit',
+		'rfe_tickets_per_person' => 'tickets_per_person',
+		'rfe_total_amount' => 'total_amount',
 		'rfe_organizer' => 'organizer',
+		'rfe_type' => 'type',
 	];
 
 	public static function get_properties() {
@@ -129,10 +135,50 @@ class Event extends PageBase {
 			'placeholder' => esc_html__( 'Get tickets', 'refraction' ),
 		] );
 
+		$this->add_control( 'rfe_payment_url', [
+			'label' => esc_html__( 'Payment link', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'input_type' => 'url',
+			'placeholder' => 'https://',
+			'label_block' => true,
+		] );
+
+		$this->add_control( 'rfe_payment_label', [
+			'label' => esc_html__( 'Payment button text', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Pay now', 'refraction' ),
+		] );
+
+		$this->add_control( 'rfe_ticket_limit', [
+			'label' => esc_html__( 'Ticket limit', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 1,
+		] );
+
+		$this->add_control( 'rfe_tickets_per_person', [
+			'label' => esc_html__( 'Tickets per person', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 1,
+		] );
+
+		$this->add_control( 'rfe_total_amount', [
+			'label' => esc_html__( 'Total amount', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( '£1,250.00', 'refraction' ),
+		] );
+
 		$this->add_control( 'rfe_organizer', [
 			'label' => esc_html__( 'Organizer', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
 			'label_block' => true,
+		] );
+
+		$this->add_control( 'rfe_type', [
+			'label' => esc_html__( 'Event type', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'options' => [ '' => esc_html__( 'None', 'refraction' ) ] + \Refraction\Modules\Events\Classes\Event_Types::types(),
+			'description' => esc_html__( 'Set by the event form that made the event. Calendars and lists can show only some types.', 'refraction' ),
+			'separator' => 'before',
 		] );
 
 		$this->end_controls_section();

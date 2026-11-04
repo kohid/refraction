@@ -24,7 +24,13 @@ class Event_Data {
 		'price' => '',
 		'ticket_url' => '',
 		'ticket_label' => '',
+		'payment_url' => '',
+		'payment_label' => '',
+		'ticket_limit' => '',
+		'tickets_per_person' => '',
+		'total_amount' => '',
 		'organizer' => '',
+		'type' => '',
 	];
 
 	const META_PREFIX = '_rfe_';
@@ -67,7 +73,15 @@ class Event_Data {
 					$out[ $key ] = in_array( $value, [ 'yes', '1', 1, true ], true ) ? 'yes' : '';
 					break;
 				case 'ticket_url':
+				case 'payment_url':
 					$out[ $key ] = esc_url_raw( trim( (string) $value ), [ 'http', 'https' ] );
+					break;
+				case 'ticket_limit':
+				case 'tickets_per_person':
+					$out[ $key ] = is_numeric( $value ) && (int) $value > 0 ? (string) (int) $value : '';
+					break;
+				case 'type':
+					$out[ $key ] = sanitize_key( (string) $value );
 					break;
 				case 'address':
 					$out[ $key ] = sanitize_textarea_field( (string) $value );
@@ -188,7 +202,7 @@ class Event_Data {
 	 * @param int    $limit -1 for all.
 	 * @return int[] Event ids.
 	 */
-	public static function query( string $from, string $to, string $search = '', array $categories = [], int $limit = -1 ): array {
+	public static function query( string $from, string $to, string $search = '', array $categories = [], int $limit = -1, array $types = [] ): array {
 		$args = [
 			'post_type' => Module::CPT,
 			'post_status' => 'publish',
@@ -208,6 +222,20 @@ class Event_Data {
 
 		if ( '' !== $search ) {
 			$args['s'] = $search;
+		}
+
+		$types = array_values( array_filter( array_map( 'sanitize_key', $types ) ) );
+
+		// Event types: the event forms they were made with (Event_Types); "manual" is events made in the editor or admin.
+		if ( $types ) {
+			$type_query = [ 'relation' => 'OR', [ 'key' => self::META_PREFIX . 'type', 'value' => $types, 'compare' => 'IN' ] ];
+
+			if ( in_array( 'manual', $types, true ) ) {
+				$type_query[] = [ 'key' => self::META_PREFIX . 'type', 'value' => '' ];
+				$type_query[] = [ 'key' => self::META_PREFIX . 'type', 'compare' => 'NOT EXISTS' ];
+			}
+
+			$args['meta_query'][] = $type_query;
 		}
 
 		$categories = array_filter( array_map( 'absint', $categories ) );

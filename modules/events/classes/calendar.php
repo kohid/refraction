@@ -32,6 +32,7 @@ class Calendar {
 			'per_day' => max( 1, min( 10, (int) ( $raw['per_day'] ?? 3 ) ) ),
 			'times' => ! isset( $raw['times'] ) || in_array( $raw['times'], [ true, 1, '1', 'yes' ], true ),
 			'categories' => array_values( array_filter( array_map( 'absint', is_array( $raw['categories'] ?? null ) ? $raw['categories'] : explode( ',', (string) ( $raw['categories'] ?? '' ) ) ) ) ),
+			'types' => array_values( array_filter( array_map( 'sanitize_key', is_array( $raw['types'] ?? null ) ? $raw['types'] : explode( ',', (string) ( $raw['types'] ?? '' ) ) ) ) ),
 			'search' => mb_substr( sanitize_text_field( (string) ( $raw['search'] ?? '' ) ), 0, 100 ),
 		];
 	}
@@ -79,7 +80,7 @@ class Calendar {
 		$window_start = strtotime( $from . ' UTC' );
 		$window_end = strtotime( $to . ' UTC' );
 
-		foreach ( Event_Data::query( $from, $to, $this->options['search'], $this->options['categories'] ) as $id ) {
+		foreach ( Event_Data::query( $from, $to, $this->options['search'], $this->options['categories'], -1, $this->options['types'] ) as $id ) {
 			$card = Event_Data::card( $id );
 
 			if ( ! $card['start'] ) {

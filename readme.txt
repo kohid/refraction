@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.33.0
+Stable tag: 0.34.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.34.0 =
+* Events: event types. Design an event form in the editor with the new Event Form fields (event name, start and end date and time, all day, category, venue, address, price, ticket limit, tickets per person, total amount, organizer, image, description, and an Event button for a ticket link, a payment link or submitting). Each form is one type of event; staff use it (on any page with Form Canvas) to make events of that type, with their picture, details and a page in the type's design. Refraction > Event types lists them.
+* Event forms can be for staff only, anyone logged in or anyone, and make events that are published, waiting for review or drafts.
+* Event Calendar and Events List can show only some types of event. Event Details shows the ticket limit, tickets per person, total amount and a payment button.
 
 = 0.33.0 =
 * New Events (Refraction > Events): each event is a page you build in the editor, with its date and time, venue, price, tickets and organizer in the page settings (Event details); Event Categories with their own colors; schema.org Event data on each event's page.

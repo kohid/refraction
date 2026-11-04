@@ -3,9 +3,11 @@ namespace Refraction\Modules\Events;
 
 use Refraction\Core\Base\Module as BaseModule;
 use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
+use Refraction\Modules\Events\AdminMenuItems\Editor_One_Event_Types_Menu;
 use Refraction\Modules\Events\AdminMenuItems\Editor_One_Events_Menu;
 use Refraction\Modules\Events\Classes\Calendar;
 use Refraction\Modules\Events\Classes\Event_Data;
+use Refraction\Modules\Events\Classes\Event_Types;
 use Refraction\Modules\Events\Documents\Event;
 use Refraction\Modules\Events\Widgets\Event_Details;
 use Refraction\Plugin;
@@ -27,19 +29,27 @@ class Module extends BaseModule {
 	const WIDGET_CATEGORY = 'refraction-events';
 	const ADMIN_SLUG = 'edit.php?post_type=' . self::CPT;
 	const NONCE = 'refraction_event_details';
+	const TYPES_SLUG = 'refraction-event-types';
 
 	public function get_name() {
 		return 'events';
 	}
 
 	protected function get_widgets() {
-		return [ 'Event_Calendar', 'Events_List', 'Event_Details' ];
+		return [
+			'Event_Calendar', 'Events_List', 'Event_Details',
+			// The event form's fields (Classes\Event_Types).
+			'Event_Field_Title', 'Event_Field_Start', 'Event_Field_End', 'Event_Field_All_Day', 'Event_Field_Category', 'Event_Field_Venue',
+			'Event_Field_Address', 'Event_Field_Price', 'Event_Field_Ticket_Limit', 'Event_Field_Tickets_Per_Person', 'Event_Field_Total_Amount',
+			'Event_Field_Organizer', 'Event_Field_Image', 'Event_Field_Description', 'Event_Field_Button',
+		];
 	}
 
 	public function __construct() {
 		parent::__construct();
 
 		add_action( 'init', [ $this, 'register_types' ], 5 );
+		Event_Types::register();
 		add_action( 'init', [ $this, 'maybe_flush_rewrites' ], 99 );
 
 		add_action( 'refraction/documents/register', static function ( $documents_manager ) {
@@ -53,6 +63,7 @@ class Module extends BaseModule {
 		} );
 		add_action( 'refraction/editor-one/menu/register', static function ( Menu_Data_Provider $menu_data_provider ) {
 			$menu_data_provider->register_menu( new Editor_One_Events_Menu() );
+			$menu_data_provider->register_menu( new Editor_One_Event_Types_Menu() );
 		} );
 		add_filter( 'refraction/editor-one/menu/refraction_post_types', static function ( array $post_types ): array {
 			$post_types[ self::CPT ] = [ 'menu_slug' => 'refraction-editor-templates', 'child_slug' => self::ADMIN_SLUG ];
@@ -149,20 +160,33 @@ class Module extends BaseModule {
 		return Plugin::$instance->documents->get_create_new_post_url( self::CPT, self::DOCUMENT_TYPE );
 	}
 
-	/** What a new event starts with in the editor: its title (from the event), the Event Details box and a text. */
-	public static function starter_elements(): array {
+	/**
+	 * What a new event starts with in the editor: its title (from the event), the Event Details box and a text. An event
+	 * made by an event form also shows its picture and its description (the excerpt).
+	 *
+	 * @param array $options image, excerpt (bool).
+	 */
+	public static function starter_elements( array $options = [] ): array {
 		$id = static fn() => \Refraction\Utils::generate_random_string();
-		$tag = '[refraction-tag id="' . substr( md5( wp_rand() ), 0, 7 ) . '" name="post-title" settings="%7B%7D"]';
+		$tag = static fn( string $name ) => '[refraction-tag id="' . substr( md5( (string) wp_rand() ), 0, 7 ) . '" name="' . $name . '" settings="%7B%7D"]';
+		$widgets = [
+			[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'heading', 'settings' => [ 'title' => get_the_title() ?: __( 'Event title', 'refraction' ), 'header_size' => 'h1', '__dynamic__' => [ 'title' => $tag( 'post-title' ) ] ], 'elements' => [] ],
+		];
+
+		if ( ! empty( $options['image'] ) ) {
+			$widgets[] = [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'image', 'settings' => [ 'image' => [ 'url' => '', 'id' => '' ], 'image_size' => 'large', '__dynamic__' => [ 'image' => $tag( 'post-featured-image' ) ] ], 'elements' => [] ];
+		}
+
+		$widgets[] = [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'refraction-event-details', 'settings' => [], 'elements' => [] ];
+		$widgets[] = ! empty( $options['excerpt'] )
+			? [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'text-editor', 'settings' => [ 'editor' => '', '__dynamic__' => [ 'editor' => $tag( 'post-excerpt' ) ] ], 'elements' => [] ]
+			: [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'text-editor', 'settings' => [ 'editor' => '<p>' . esc_html__( 'Tell people what the event is about. Set its date, venue and tickets in the page settings (the cog), under Event details.', 'refraction' ) . '</p>' ], 'elements' => [] ];
 
 		return [ [
 			'id' => $id(),
 			'elType' => 'container',
 			'settings' => [ 'flex_gap' => [ 'unit' => 'px', 'size' => 24, 'column' => '24', 'row' => '24', 'isLinked' => true ] ],
-			'elements' => [
-				[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'heading', 'settings' => [ 'title' => get_the_title() ?: __( 'Event title', 'refraction' ), 'header_size' => 'h1', '__dynamic__' => [ 'title' => $tag ] ], 'elements' => [] ],
-				[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'refraction-event-details', 'settings' => [], 'elements' => [] ],
-				[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'text-editor', 'settings' => [ 'editor' => '<p>' . esc_html__( 'Tell people what the event is about. Set its date, venue and tickets in the page settings (the cog), under Event details.', 'refraction' ) . '</p>' ], 'elements' => [] ],
-			],
+			'elements' => $widgets,
 		] ];
 	}
 
@@ -177,6 +201,7 @@ class Module extends BaseModule {
 				'date' => [ 'type' => 'string' ],
 				'search' => [ 'type' => 'string' ],
 				'categories' => [ 'type' => 'string' ],
+				'types' => [ 'type' => 'string' ],
 				'week_start' => [ 'type' => 'integer' ],
 				'per_day' => [ 'type' => 'integer' ],
 				'times' => [ 'type' => 'string' ],
@@ -185,6 +210,7 @@ class Module extends BaseModule {
 				$calendar = new Calendar( [
 					'search' => (string) $request->get_param( 'search' ),
 					'categories' => (string) $request->get_param( 'categories' ),
+					'types' => (string) $request->get_param( 'types' ),
 					'week_start' => $request->get_param( 'week_start' ) ?? 1,
 					'per_day' => $request->get_param( 'per_day' ) ?? 3,
 					'times' => $request->get_param( 'times' ) ?? '1',
@@ -268,6 +294,45 @@ class Module extends BaseModule {
 
 	// ---------------------------------------------------------------- admin
 
+	/** Refraction > Event types: each event form, its events, and the links to design it, use it and make a new one. */
+	public function render_types_page(): void {
+		$types = Event_Types::types();
+		?>
+		<div class="wrap">
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Event types', 'refraction' ); ?></h1>
+			<hr class="wp-header-end">
+			<?php echo Event_Types::new_type_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
+			<p><?php esc_html_e( 'Each event type is a form you design in the editor with the Event Form fields (start, end, venue, tickets, price...). Your staff use the form to make events of that type: put it on a page with the Form Canvas widget (or a Shortcode widget with "Form Builder form"). Calendars and lists can show only some types.', 'refraction' ); ?></p>
+			<table class="widefat striped">
+				<thead><tr><th><?php esc_html_e( 'Event type', 'refraction' ); ?></th><th><?php esc_html_e( 'Who can use the form', 'refraction' ); ?></th><th><?php esc_html_e( 'Events', 'refraction' ); ?></th><th><?php esc_html_e( 'Shortcode', 'refraction' ); ?></th><th></th></tr></thead>
+				<tbody>
+				<?php if ( ! $types ) : ?>
+					<tr><td colspan="5"><?php esc_html_e( 'No event types yet. Name one above and press "New event type".', 'refraction' ); ?></td></tr>
+				<?php endif; ?>
+				<?php foreach ( $types as $slug => $label ) :
+					$settings = Event_Types::settings( $slug );
+					$count = count( get_posts( [ 'post_type' => self::CPT, 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids', 'meta_key' => Event_Data::META_PREFIX . 'type', 'meta_value' => $slug ] ) );
+					$who = [ 'staff' => __( 'Staff', 'refraction' ), 'logged_in' => __( 'Anyone logged in', 'refraction' ), 'anyone' => __( 'Anyone', 'refraction' ) ][ $settings['who'] ];
+					?>
+					<tr data-type="<?php echo esc_attr( $slug ); ?>">
+						<td><strong><?php echo esc_html( $label ); ?></strong></td>
+						<td><?php echo esc_html( $who ); ?></td>
+						<td><a href="<?php echo esc_url( admin_url( self::ADMIN_SLUG . '&rfe_type=' . $slug ) ); ?>"><?php echo esc_html( number_format_i18n( $count ) ); ?></a></td>
+						<td><code>[refraction_form collection="<?php echo esc_html( $slug ); ?>"]</code></td>
+						<td>
+							<?php if ( $settings['doc'] ) : ?>
+								<a class="button" href="<?php echo esc_url( \Refraction\Modules\FormBuilder\Classes\Editor_Forms::edit_url( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Design the form', 'refraction' ); ?></a>
+								<a class="button" href="<?php echo esc_url( (string) get_permalink( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Use the form', 'refraction' ); ?></a>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+		<?php
+	}
+
 	public function add_meta_box(): void {
 		add_meta_box( 'refraction-event-details', esc_html__( 'Event details', 'refraction' ), [ $this, 'meta_box' ], self::CPT, 'normal', 'high' );
 	}
@@ -331,6 +396,7 @@ class Module extends BaseModule {
 	/** Above the events table: make a new event in the page editor, and the categories. */
 	public function list_links( array $views ): array {
 		$views['rfe_new'] = '<a class="button button-primary" href="' . esc_url( self::new_event_url() ) . '">' . esc_html__( 'New event in the editor', 'refraction' ) . '</a>';
+		$views['rfe_types'] = '<a href="' . esc_url( admin_url( 'admin.php?page=' . self::TYPES_SLUG ) ) . '">' . esc_html__( 'Event types and their forms', 'refraction' ) . '</a>';
 		$views['rfe_categories'] = '<a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::CPT ) ) . '">' . esc_html__( 'Categories and colors', 'refraction' ) . '</a>';
 
 		return $views;
@@ -345,6 +411,7 @@ class Module extends BaseModule {
 			if ( 'title' === $key ) {
 				$out['rfe_when'] = esc_html__( 'When', 'refraction' );
 				$out['rfe_venue'] = esc_html__( 'Venue', 'refraction' );
+				$out['rfe_type'] = esc_html__( 'Type', 'refraction' );
 			}
 		}
 
@@ -360,6 +427,8 @@ class Module extends BaseModule {
 			echo '' === $data['start'] ? '<em>' . esc_html__( 'No date yet', 'refraction' ) . '</em>' : esc_html( Event_Data::date_range( $data ) . ' · ' . Event_Data::time_range( $data ) );
 		} elseif ( 'rfe_venue' === $column ) {
 			echo esc_html( $data['venue'] );
+		} elseif ( 'rfe_type' === $column ) {
+			echo esc_html( Event_Types::types()[ $data['type'] ] ?? '—' );
 		}
 	}
 
@@ -373,6 +442,13 @@ class Module extends BaseModule {
 	public function admin_order( \WP_Query $query ): void {
 		if ( ! $query->is_main_query() || self::CPT !== $query->get( 'post_type' ) ) {
 			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- A list filter.
+		$type = isset( $_GET['rfe_type'] ) ? sanitize_key( wp_unslash( $_GET['rfe_type'] ) ) : '';
+
+		if ( '' !== $type ) {
+			$query->set( 'meta_query', [ [ 'key' => Event_Data::META_PREFIX . 'type', 'value' => $type ] ] );
 		}
 
 		$orderby = $query->get( 'orderby' );
