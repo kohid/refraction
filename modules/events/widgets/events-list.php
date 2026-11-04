@@ -69,6 +69,14 @@ class Events_List extends Widget_Base {
 			'max' => 50,
 		] );
 
+		$this->add_control( 'event_types', [
+			'label' => esc_html__( 'Only these types of event', 'refraction' ),
+			'type' => Controls_Manager::SELECT2,
+			'multiple' => true,
+			'label_block' => true,
+			'options' => Event_Calendar::type_options(),
+		] );
+
 		$this->add_control( 'categories', [
 			'label' => esc_html__( 'Only these categories', 'refraction' ),
 			'type' => Controls_Manager::SELECT2,
@@ -190,10 +198,11 @@ class Events_List extends Widget_Base {
 		$today = current_time( 'Y-m-d' );
 		$past = 'past' === ( $s['which'] ?? 'upcoming' );
 		$categories = (array) ( $s['categories'] ?? [] );
+		$types = (array) ( $s['event_types'] ?? [] );
 		$ids = $past
-			? array_reverse( array_filter( Event_Data::query( '1970-01-01', $today, '', $categories ), static fn( $id ) => Event_Data::get( $id )['end'] < current_time( 'Y-m-d H:i' ) ) )
+			? array_reverse( array_filter( Event_Data::query( '1970-01-01', $today, '', $categories, -1, $types ), static fn( $id ) => Event_Data::get( $id )['end'] < current_time( 'Y-m-d H:i' ) ) )
 			// Not ended yet: still to come, or happening now.
-			: array_filter( Event_Data::query( $today, '9999-12-31', '', $categories, $count + 20 ), static fn( $id ) => Event_Data::get( $id )['end'] >= current_time( 'Y-m-d H:i' ) );
+			: array_filter( Event_Data::query( $today, '9999-12-31', '', $categories, $count + 20, $types ), static fn( $id ) => Event_Data::get( $id )['end'] >= current_time( 'Y-m-d H:i' ) );
 		$ids = array_slice( array_values( $ids ), 0, $count );
 		$layout = 'rows' === ( $s['layout'] ?? 'cards' ) ? 'rows' : 'cards';
 

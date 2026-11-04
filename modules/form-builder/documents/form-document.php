@@ -54,8 +54,11 @@ class Form_Document extends Library_Document {
 	protected static function get_editor_panel_categories() {
 		$categories = parent::get_editor_panel_categories();
 
-		if ( isset( $categories[ Editor_Forms::CATEGORY ] ) ) {
-			$categories = [ Editor_Forms::CATEGORY => $categories[ Editor_Forms::CATEGORY ] ] + $categories;
+		// Then the event fields (Events), which make the form an event type.
+		foreach ( [ 'refraction-event-fields', Editor_Forms::CATEGORY ] as $first ) {
+			if ( isset( $categories[ $first ] ) ) {
+				$categories = [ $first => $categories[ $first ] ] + $categories;
+			}
 		}
 
 		return $categories;

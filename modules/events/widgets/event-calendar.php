@@ -60,6 +60,11 @@ class Event_Calendar extends Widget_Base {
 		return is_array( $terms ) ? wp_list_pluck( $terms, 'name', 'term_id' ) : [];
 	}
 
+	/** Event types to choose from: the event forms, and events made without one. */
+	public static function type_options(): array {
+		return \Refraction\Modules\Events\Classes\Event_Types::types() + [ 'manual' => esc_html__( 'Made in the editor (no type)', 'refraction' ) ];
+	}
+
 	protected function register_controls() {
 		$this->start_controls_section( 'section_calendar', [ 'label' => esc_html__( 'Calendar', 'refraction' ) ] );
 
@@ -78,6 +83,16 @@ class Event_Calendar extends Widget_Base {
 			$this->add_control( 'view_' . $view, [ 'label' => $label, 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
 		}
 
+		$this->add_control( 'event_types', [
+			'label' => esc_html__( 'Only these types of event', 'refraction' ),
+			'type' => Controls_Manager::SELECT2,
+			'multiple' => true,
+			'label_block' => true,
+			'options' => self::type_options(),
+			'description' => esc_html__( 'Empty: every type. Types are the event forms under Refraction > Event types.', 'refraction' ),
+			'separator' => 'before',
+		] );
+
 		$this->add_control( 'categories', [
 			'label' => esc_html__( 'Only these categories', 'refraction' ),
 			'type' => Controls_Manager::SELECT2,
@@ -85,7 +100,6 @@ class Event_Calendar extends Widget_Base {
 			'label_block' => true,
 			'options' => self::category_options(),
 			'description' => esc_html__( 'Empty: every event.', 'refraction' ),
-			'separator' => 'before',
 		] );
 
 		$this->add_control( 'week_start', [
@@ -288,6 +302,7 @@ class Event_Calendar extends Widget_Base {
 			'per_day' => $s['per_day'] ?? 3,
 			'times' => $on( 'show_times' ),
 			'categories' => (array) ( $s['categories'] ?? [] ),
+			'types' => (array) ( $s['event_types'] ?? [] ),
 		] );
 		$views = array_values( array_filter( [ 'list', 'month', 'day' ], static fn( $view ) => $on( 'view_' . $view ) ) );
 		$view = in_array( $s['default_view'] ?? 'month', $views ?: [ 'month' ], true ) ? $s['default_view'] : ( $views[0] ?? 'month' );
@@ -299,6 +314,7 @@ class Event_Calendar extends Widget_Base {
 			'per_day' => $options['per_day'],
 			'times' => $options['times'] ? '1' : '0',
 			'categories' => implode( ',', $options['categories'] ),
+			'types' => implode( ',', $options['types'] ),
 			'preview' => $on( 'preview' ),
 			'addToCalendar' => $on( 'add_to_calendar' ),
 			'id' => $this->get_id(),

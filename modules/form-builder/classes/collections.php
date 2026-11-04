@@ -27,7 +27,15 @@ class Collections {
 	}
 
 	public function get( string $slug ): ?array {
-		return $this->all()[ $slug ] ?? null;
+		$definition = $this->all()[ $slug ] ?? null;
+
+		/**
+		 * A collection as it is used now (shown, checked, saved into): modules can bring parts of it up to date, such as
+		 * an event form's category choices (Events).
+		 *
+		 * @param array|null $definition
+		 */
+		return $definition ? apply_filters( 'refraction/form_builder/definition', $definition ) : null;
 	}
 
 	/**
