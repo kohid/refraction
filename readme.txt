@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.34.0
+Stable tag: 0.35.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.35.0 =
+* Events: each event type has its own address: /workshops/ lists its events and /workshops/event-name/ is one of them (set under Events in the form's page settings).
+* Events: "Design the event page" and "Design the archive" (Refraction > Event types) make Theme Builder Single and Archive templates for a type, ready to edit with Refraction.
+* New Event dynamic tags: Event Detail, Event Link (tickets, payment, map, add to calendar), Event Form Field (any answer of the event form, also your own fields), Event Gallery and Event Start.
+* New Event Button (payment, tickets, map, calendar) and Event Gallery widgets, and an Image gallery field for event forms.
+* Theme Builder on block themes: the header and footer are rendered before the page head, so the Navigation block's scripts load.
 
 = 0.34.0 =
 * Events: event types. Design an event form in the editor with the new Event Form fields (event name, start and end date and time, all day, category, venue, address, price, ticket limit, tickets per person, total amount, organizer, image, description, and an Event button for a ticket link, a payment link or submitting). Each form is one type of event; staff use it (on any page with Form Canvas) to make events of that type, with their picture, details and a page in the type's design. Refraction > Event types lists them.

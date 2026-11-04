@@ -31,6 +31,7 @@ class Event_Data {
 		'total_amount' => '',
 		'organizer' => '',
 		'type' => '',
+		'gallery' => '',
 	];
 
 	const META_PREFIX = '_rfe_';
@@ -83,6 +84,11 @@ class Event_Data {
 				case 'type':
 					$out[ $key ] = sanitize_key( (string) $value );
 					break;
+				case 'gallery':
+					// Media library image ids, in order: "12,15,9" (also from a gallery control's [{id, url}] list).
+					$ids = is_array( $value ) ? array_map( static fn( $item ) => is_array( $item ) ? ( $item['id'] ?? 0 ) : $item, $value ) : explode( ',', (string) $value );
+					$out[ $key ] = implode( ',', array_slice( array_values( array_unique( array_filter( array_map( 'absint', $ids ) ) ) ), 0, 50 ) );
+					break;
 				case 'address':
 					$out[ $key ] = sanitize_textarea_field( (string) $value );
 					break;
@@ -111,7 +117,17 @@ class Event_Data {
 			update_post_meta( $post_id, self::META_PREFIX . $key, $value );
 		}
 
+		// The type is also a term of the Event Type taxonomy: its archive and the Theme Builder conditions use it.
+		Event_Types::assign_term( $post_id, $clean['type'] );
+
 		return $clean;
+	}
+
+	/** The event's gallery: media library image ids, in order. */
+	public static function gallery( int $post_id ): array {
+		$ids = array_filter( array_map( 'absint', explode( ',', (string) get_post_meta( $post_id, self::META_PREFIX . 'gallery', true ) ) ) );
+
+		return array_values( array_filter( $ids, static fn( $id ) => wp_attachment_is_image( $id ) ) );
 	}
 
 	public static function get( int $post_id ): array {

@@ -25,6 +25,7 @@ class Module extends BaseModule {
 
 	const CPT = 'refraction_event';
 	const TAXONOMY = 'refraction_event_cat';
+	const TYPE_TAXONOMY = 'refraction_event_type';
 	const DOCUMENT_TYPE = 'refraction-event';
 	const WIDGET_CATEGORY = 'refraction-events';
 	const ADMIN_SLUG = 'edit.php?post_type=' . self::CPT;
@@ -37,11 +38,11 @@ class Module extends BaseModule {
 
 	protected function get_widgets() {
 		return [
-			'Event_Calendar', 'Events_List', 'Event_Details',
+			'Event_Calendar', 'Events_List', 'Event_Details', 'Event_Button', 'Event_Gallery',
 			// The event form's fields (Classes\Event_Types).
 			'Event_Field_Title', 'Event_Field_Start', 'Event_Field_End', 'Event_Field_All_Day', 'Event_Field_Category', 'Event_Field_Venue',
 			'Event_Field_Address', 'Event_Field_Price', 'Event_Field_Ticket_Limit', 'Event_Field_Tickets_Per_Person', 'Event_Field_Total_Amount',
-			'Event_Field_Organizer', 'Event_Field_Image', 'Event_Field_Description', 'Event_Field_Button',
+			'Event_Field_Organizer', 'Event_Field_Image', 'Event_Field_Gallery', 'Event_Field_Description', 'Event_Field_Button',
 		];
 	}
 
@@ -72,6 +73,7 @@ class Module extends BaseModule {
 		} );
 
 		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/dynamic_tags/register', [ $this, 'register_tags' ] );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 		add_action( 'wp_head', [ $this, 'print_schema' ] );
 		add_filter( 'the_content', [ $this, 'details_for_classic_events' ], 9 );
@@ -132,6 +134,20 @@ class Module extends BaseModule {
 			'rewrite' => [ 'slug' => 'event-category', 'with_front' => false ],
 		] );
 
+		// Each event's type (the event form that made it), as a term: the type's archive (/workshop/) and the Theme
+		// Builder conditions ("In Event Types: Workshop") use it. Kept in step by Event_Types; not edited by hand.
+		register_taxonomy( self::TYPE_TAXONOMY, self::CPT, [
+			'labels' => [
+				'name' => esc_html__( 'Event Types', 'refraction' ),
+				'singular_name' => esc_html__( 'Event Type', 'refraction' ),
+			],
+			'public' => true,
+			'hierarchical' => false,
+			'show_ui' => false,
+			'show_in_rest' => true,
+			'rewrite' => [ 'slug' => 'event-type', 'with_front' => false ],
+		] );
+
 		foreach ( array_keys( Event_Data::FIELDS ) as $key ) {
 			register_post_meta( self::CPT, Event_Data::META_PREFIX . $key, [
 				'type' => 'string',
@@ -147,6 +163,16 @@ class Module extends BaseModule {
 		if ( get_option( 'refraction_events_rewrites' ) !== REFRACTION_VERSION ) {
 			flush_rewrite_rules( false );
 			update_option( 'refraction_events_rewrites', REFRACTION_VERSION, true );
+		}
+	}
+
+	/** The Event group of dynamic tags: an event's details, links, form answers and gallery, for designing its pages. */
+	public function register_tags( $dynamic_tags ): void {
+		$dynamic_tags->register_group( 'event', [ 'title' => esc_html__( 'Event', 'refraction' ) ] );
+
+		foreach ( [ 'Event_Detail', 'Event_Link', 'Event_Form_Field', 'Event_Gallery_Tag', 'Event_Start_Date' ] as $tag ) {
+			$class = __NAMESPACE__ . '\\Tags\\' . $tag;
+			$dynamic_tags->register( new $class() );
 		}
 	}
 
@@ -178,6 +204,10 @@ class Module extends BaseModule {
 		}
 
 		$widgets[] = [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'refraction-event-details', 'settings' => [], 'elements' => [] ];
+
+		if ( ! empty( $options['gallery'] ) ) {
+			$widgets[] = [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'refraction-event-gallery', 'settings' => [], 'elements' => [] ];
+		}
 		$widgets[] = ! empty( $options['excerpt'] )
 			? [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'text-editor', 'settings' => [ 'editor' => '', '__dynamic__' => [ 'editor' => $tag( 'post-excerpt' ) ] ], 'elements' => [] ]
 			: [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'text-editor', 'settings' => [ 'editor' => '<p>' . esc_html__( 'Tell people what the event is about. Set its date, venue and tickets in the page settings (the cog), under Event details.', 'refraction' ) . '</p>' ], 'elements' => [] ];
@@ -323,6 +353,9 @@ class Module extends BaseModule {
 							<?php if ( $settings['doc'] ) : ?>
 								<a class="button" href="<?php echo esc_url( \Refraction\Modules\FormBuilder\Classes\Editor_Forms::edit_url( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Design the form', 'refraction' ); ?></a>
 								<a class="button" href="<?php echo esc_url( (string) get_permalink( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Use the form', 'refraction' ); ?></a>
+								<a class="button" href="<?php echo esc_url( Event_Types::design_url( $slug, 'single' ) ); ?>"><?php esc_html_e( 'Design the event page', 'refraction' ); ?></a>
+								<a class="button" href="<?php echo esc_url( Event_Types::design_url( $slug, 'archive' ) ); ?>"><?php esc_html_e( 'Design the archive', 'refraction' ); ?></a>
+								<a href="<?php echo esc_url( (string) get_term_link( Event_Types::term_id( $slug ), self::TYPE_TAXONOMY ) ); ?>"><?php echo esc_html( '/' . ( Event_Types::bases()[ $slug ] ?? $slug ) . '/' ); ?></a>
 							<?php endif; ?>
 						</td>
 					</tr>

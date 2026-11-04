@@ -34,11 +34,15 @@ class Event_Field_Button extends Field_Website {
 	}
 
 	protected function event_title(): string {
-		return esc_html__( 'Event button', 'refraction' );
+		return esc_html__( 'Event button (tickets, payment, submit)', 'refraction' );
 	}
 
 	public function get_icon() {
 		return 'rficon-button';
+	}
+
+	public function get_keywords() {
+		return [ 'event', 'button', 'payment', 'pay', 'ticket', 'tickets', 'submit', 'send', 'link' ];
 	}
 
 	/** The name stays the same whatever the button is for. */
@@ -115,7 +119,7 @@ class Event_Field_Button extends Field_Website {
 
 	public function raw_field(): array {
 		$raw = $this->event_raw( parent::raw_field() );
-		$raw['label'] = '' !== trim( $raw['label'] ) && __( 'Event button', 'refraction' ) !== $raw['label'] ? $raw['label'] : ( 'payment_url' === $this->role() ? __( 'Payment link', 'refraction' ) : __( 'Ticket link', 'refraction' ) );
+		$raw['label'] = '' !== trim( $raw['label'] ) && __( 'Event button (tickets, payment, submit)', 'refraction' ) !== $raw['label'] ? $raw['label'] : ( 'payment_url' === $this->role() ? __( 'Payment link', 'refraction' ) : __( 'Ticket link', 'refraction' ) );
 
 		return $raw;
 	}

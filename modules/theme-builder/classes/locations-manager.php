@@ -158,9 +158,17 @@ class Locations_Manager {
 
 	/** A page that picked the Refraction Canvas or Header-Footer page template keeps it. */
 	private function uses_own_page_template(): bool {
-		$template = (string) get_post_meta( (int) get_queried_object_id(), '_wp_page_template', true );
+		$post_id = (int) get_queried_object_id();
+		$template = (string) get_post_meta( $post_id, '_wp_page_template', true );
 
-		return in_array( $template, [ 'refraction_canvas', 'refraction_header_footer' ], true );
+		/**
+		 * Whether this page keeps its own Refraction page template instead of a matching Single template (Events: an
+		 * event follows its type's Single template).
+		 *
+		 * @param bool $keeps
+		 * @param int  $post_id
+		 */
+		return (bool) apply_filters( 'refraction/theme_builder/keep_own_page_template', in_array( $template, [ 'refraction_canvas', 'refraction_header_footer' ], true ), $post_id );
 	}
 
 	/** Markup of the winning template wrapped for its location; empty when nothing matches. */

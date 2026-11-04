@@ -49,7 +49,14 @@ class Event_Details extends Widget_Base {
 		return false;
 	}
 
-	private static function event_options(): array {
+	/** The event being shown: the page's own, or the one a Theme Builder template is showing (also in its preview). */
+	public static function current_event(): int {
+		$post = \Refraction\Modules\DynamicTags\Classes\Context::get_post();
+
+		return $post && Module::CPT === $post->post_type ? (int) $post->ID : 0;
+	}
+
+	public static function event_options(): array {
 		$options = [ '' => esc_html__( 'This event (on an event page)', 'refraction' ) ];
 
 		foreach ( get_posts( [ 'post_type' => Module::CPT, 'post_status' => [ 'publish', 'future', 'draft' ], 'posts_per_page' => 200, 'orderby' => 'date', 'order' => 'DESC' ] ) as $post ) {
@@ -340,10 +347,7 @@ class Event_Details extends Widget_Base {
 		$s = $this->get_settings_for_display();
 		$id = (int) ( $s['event'] ?? 0 );
 
-		if ( ! $id ) {
-			$current = get_the_ID();
-			$id = $current && Module::CPT === get_post_type( $current ) ? (int) $current : 0;
-		}
+		$id = $id ?: self::current_event();
 
 		if ( ! $id ) {
 			if ( \Refraction\Plugin::$instance->editor->is_edit_mode() || current_user_can( 'edit_posts' ) ) {

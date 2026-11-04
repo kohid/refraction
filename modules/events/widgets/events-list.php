@@ -51,6 +51,17 @@ class Events_List extends Widget_Base {
 	protected function register_controls() {
 		$this->start_controls_section( 'section_list', [ 'label' => esc_html__( 'Events', 'refraction' ) ] );
 
+		$this->add_control( 'source', [
+			'label' => esc_html__( 'Events of', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'settings',
+			'options' => [
+				'settings' => esc_html__( 'The types and categories chosen below', 'refraction' ),
+				'archive' => esc_html__( 'The archive being shown (its type or category)', 'refraction' ),
+			],
+			'description' => esc_html__( 'For an Archive template: on /workshop/ it lists the workshops.', 'refraction' ),
+		] );
+
 		$this->add_control( 'which', [
 			'label' => esc_html__( 'Show', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -199,6 +210,19 @@ class Events_List extends Widget_Base {
 		$past = 'past' === ( $s['which'] ?? 'upcoming' );
 		$categories = (array) ( $s['categories'] ?? [] );
 		$types = (array) ( $s['event_types'] ?? [] );
+
+		// On an event type or category archive: that type's or category's events.
+		if ( 'archive' === ( $s['source'] ?? '' ) ) {
+			$term = \Refraction\Modules\DynamicTags\Classes\Context::get_term();
+
+			if ( $term && Module::TYPE_TAXONOMY === $term->taxonomy ) {
+				$types = [ $term->slug ];
+				$categories = [];
+			} elseif ( $term && Module::TAXONOMY === $term->taxonomy ) {
+				$categories = [ $term->term_id ];
+				$types = [];
+			}
+		}
 		$ids = $past
 			? array_reverse( array_filter( Event_Data::query( '1970-01-01', $today, '', $categories, -1, $types ), static fn( $id ) => Event_Data::get( $id )['end'] < current_time( 'Y-m-d H:i' ) ) )
 			// Not ended yet: still to come, or happening now.

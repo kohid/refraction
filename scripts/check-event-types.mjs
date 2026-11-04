@@ -174,7 +174,7 @@ async function main() {
 		const types = JSON.parse( php( 'echo wp_json_encode( Refraction\\Modules\\Events\\Classes\\Event_Types::types() );' ) );
 		check( 'editor', 'saved, the form is the event type "Workshop"', 'workshop' === slug && 'Workshop' === types.workshop, JSON.stringify( [ slug, types ] ) );
 		const keys = JSON.parse( php( `$d = ( new Refraction\\Modules\\FormBuilder\\Classes\\Collections() )->get( '${ slug }' ); echo wp_json_encode( array_column( Refraction\\Modules\\FormBuilder\\Classes\\Schema::walk( $d['fields'] ), 'key' ) );` ) );
-		check( 'editor', 'its fields are the event details (the Submit button is not a field)', [ 'event_title', 'event_start', 'event_end', 'event_all_day', 'event_category', 'event_ticket_limit', 'event_tickets_per_person', 'event_total_amount', 'event_ticket_url', 'event_payment_url', 'event_image', 'event_description' ].every( ( k ) => keys.includes( k ) ) && 16 === keys.length, keys.join() );
+		check( 'editor', 'its fields are the event details (the Submit button is not a field)', [ 'event_title', 'event_start', 'event_end', 'event_all_day', 'event_category', 'event_ticket_limit', 'event_tickets_per_person', 'event_total_amount', 'event_ticket_url', 'event_payment_url', 'event_image', 'event_description' ].every( ( k ) => keys.includes( k ) ) && 17 === keys.length && keys.includes( 'event_gallery' ), keys.join() );
 		await admin.p.goto( `${ BASE }/wp-admin/admin.php?page=refraction-event-types` );
 		check( 'admin', 'the type is listed with links to design and use its form', 1 === await admin.p.locator( 'tr[data-type="workshop"] a:has-text("Design the form")' ).count() );
 

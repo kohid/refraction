@@ -38,6 +38,7 @@ class Event_Types {
 	const META_RECORD = '_rfe_record';
 
 	const NEW_ACTION = 'refraction_new_event_type';
+	const DESIGN_ACTION = 'refraction_event_type_design';
 
 	public static function register(): void {
 		add_action( 'refraction/elements/categories_registered', static function ( $elements_manager ) {
@@ -54,6 +55,224 @@ class Event_Types {
 		add_filter( 'refraction/form_builder/done_url', [ __CLASS__, 'done_url' ], 10, 3 );
 		add_filter( 'refraction/form_builder/success_html', [ __CLASS__, 'success_html' ], 10, 2 );
 		add_action( 'admin_post_' . self::NEW_ACTION, [ __CLASS__, 'new_type' ] );
+		add_action( 'admin_post_' . self::DESIGN_ACTION, [ __CLASS__, 'design_template' ] );
+
+		// Each type has an address of its own: /workshop/ lists its events, /workshop/<event>/ is one of them.
+		add_action( 'init', [ __CLASS__, 'add_rewrites' ], 20 );
+		add_filter( 'post_type_link', [ __CLASS__, 'event_link' ], 10, 2 );
+		add_filter( 'term_link', [ __CLASS__, 'type_link' ], 10, 3 );
+		// An event follows a Single template made for it (its type's), whatever page template it has itself.
+		add_filter( 'refraction/theme_builder/keep_own_page_template', static fn( $keeps, $post_id ) => Module::CPT === get_post_type( $post_id ) ? false : $keeps, 10, 2 );
+		add_action( 'refraction/document/after_save', static function ( $document ) {
+			if ( $document instanceof Form_Document ) {
+				self::sync_terms();
+			}
+		}, 20 );
+	}
+
+	// ---------------------------------------------------------------- addresses and the type taxonomy
+
+	/** Event types => the first part of their events' addresses (the "Address" setting, else the type's key). */
+	public static function bases(): array {
+		$bases = [];
+
+		foreach ( array_keys( self::types() ) as $slug ) {
+			$base = self::settings( $slug )['base'];
+			$bases[ $slug ] = '' !== $base ? $base : $slug;
+		}
+
+		return $bases;
+	}
+
+	public static function add_rewrites(): void {
+		$bases = self::bases();
+
+		foreach ( $bases as $slug => $base ) {
+			$base = preg_quote( $base, '#' );
+			add_rewrite_rule( '^' . $base . '/?$', 'index.php?' . Module::TYPE_TAXONOMY . '=' . $slug, 'top' );
+			add_rewrite_rule( '^' . $base . '/page/([0-9]{1,})/?$', 'index.php?' . Module::TYPE_TAXONOMY . '=' . $slug . '&paged=$matches[1]', 'top' );
+			add_rewrite_rule( '^' . $base . '/([^/]+)/?$', 'index.php?' . Module::CPT . '=$matches[1]', 'top' );
+		}
+
+		// New or changed addresses work without visiting Settings > Permalinks.
+		$fingerprint = md5( (string) wp_json_encode( $bases ) . REFRACTION_VERSION );
+
+		if ( get_option( 'refraction_event_type_rewrites' ) !== $fingerprint ) {
+			update_option( 'refraction_event_type_rewrites', $fingerprint, true );
+			flush_rewrite_rules( false );
+		}
+	}
+
+	/** An event of a type lives under the type's address. */
+	public static function event_link( $link, $post ) {
+		if ( ! $post instanceof \WP_Post || Module::CPT !== $post->post_type || ! get_option( 'permalink_structure' ) || in_array( $post->post_status, [ 'draft', 'pending', 'auto-draft' ], true ) ) {
+			return $link;
+		}
+
+		$type = (string) get_post_meta( $post->ID, Event_Data::META_PREFIX . 'type', true );
+		$base = '' !== $type ? ( self::bases()[ $type ] ?? '' ) : '';
+
+		return '' !== $base ? home_url( user_trailingslashit( $base . '/' . $post->post_name ) ) : $link;
+	}
+
+	public static function type_link( $link, $term, $taxonomy ) {
+		if ( Module::TYPE_TAXONOMY !== $taxonomy || ! get_option( 'permalink_structure' ) ) {
+			return $link;
+		}
+
+		$base = self::bases()[ $term->slug ] ?? '';
+
+		return '' !== $base ? home_url( user_trailingslashit( $base ) ) : $link;
+	}
+
+	/** Puts an event in its type's term (made, and named after the type, when needed); no type, no term. */
+	public static function assign_term( int $post_id, string $slug ): void {
+		if ( '' === $slug ) {
+			wp_set_object_terms( $post_id, [], Module::TYPE_TAXONOMY );
+
+			return;
+		}
+
+		$term = get_term_by( 'slug', $slug, Module::TYPE_TAXONOMY );
+
+		if ( ! $term ) {
+			$made = wp_insert_term( self::types()[ $slug ] ?? $slug, Module::TYPE_TAXONOMY, [ 'slug' => $slug ] );
+			$term = is_wp_error( $made ) ? null : get_term( (int) $made['term_id'], Module::TYPE_TAXONOMY );
+		}
+
+		if ( $term instanceof \WP_Term ) {
+			wp_set_object_terms( $post_id, [ (int) $term->term_id ], Module::TYPE_TAXONOMY );
+		}
+	}
+
+	/** A term for every type, named as the type is (a renamed form renames its term). */
+	public static function sync_terms(): void {
+		foreach ( ( new Collections() )->all() as $slug => $definition ) {
+			if ( ! self::is_type( $definition ) ) {
+				continue;
+			}
+
+			$term = get_term_by( 'slug', $slug, Module::TYPE_TAXONOMY );
+
+			if ( ! $term ) {
+				wp_insert_term( $definition['label'], Module::TYPE_TAXONOMY, [ 'slug' => $slug ] );
+			} elseif ( $term->name !== $definition['label'] ) {
+				wp_update_term( $term->term_id, Module::TYPE_TAXONOMY, [ 'name' => $definition['label'] ] );
+			}
+		}
+	}
+
+	public static function term_id( string $slug ): int {
+		self::sync_terms();
+		$term = get_term_by( 'slug', $slug, Module::TYPE_TAXONOMY );
+
+		return $term ? (int) $term->term_id : 0;
+	}
+
+	// ---------------------------------------------------------------- single and archive templates
+
+	/** Opens (or first makes) the Theme Builder template for a type's event pages or its archive. */
+	public static function design_url( string $slug, string $kind ): string {
+		return wp_nonce_url( admin_url( 'admin-post.php?action=' . self::DESIGN_ACTION . '&type=' . rawurlencode( $slug ) . '&kind=' . $kind ), self::DESIGN_ACTION );
+	}
+
+	/** The Theme Builder template already showing this type's events (single) or its archive, if there is one. */
+	public static function template_for( string $slug, string $kind ): int {
+		$rule = self::template_rule( $slug, $kind );
+		$found = get_posts( [ 'post_type' => 'refraction_library', 'post_status' => [ 'publish', 'draft' ], 'posts_per_page' => 1, 'fields' => 'ids', 'meta_query' => [ [ 'key' => '_refraction_template_type', 'value' => $kind ], [ 'key' => '_refraction_conditions', 'value' => $rule, 'compare' => 'LIKE' ] ] ] );
+
+		return $found ? (int) $found[0] : 0;
+	}
+
+	private static function template_rule( string $slug, string $kind ): string {
+		$term = self::term_id( $slug );
+
+		return 'single' === $kind
+			? 'include/singular/in_' . Module::TYPE_TAXONOMY . '/' . $term
+			: 'include/archive/tax/' . Module::TYPE_TAXONOMY . '/' . $term;
+	}
+
+	public static function design_template(): void {
+		check_admin_referer( self::DESIGN_ACTION );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to do that.', 'refraction' ), 403 );
+		}
+
+		$slug = isset( $_GET['type'] ) ? sanitize_key( wp_unslash( $_GET['type'] ) ) : '';
+		$kind = isset( $_GET['kind'] ) && 'archive' === $_GET['kind'] ? 'archive' : 'single';
+		$label = self::types()[ $slug ] ?? '';
+
+		if ( '' === $label ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=' . Module::TYPES_SLUG ) );
+			exit;
+		}
+
+		$id = self::template_for( $slug, $kind );
+
+		if ( ! $id ) {
+			$id = wp_insert_post( [
+				'post_type' => 'refraction_library',
+				'post_status' => 'publish',
+				/* translators: %s: event type. */
+				'post_title' => sprintf( 'single' === $kind ? __( '%s: event page', 'refraction' ) : __( '%s: archive', 'refraction' ), $label ),
+			], true );
+
+			if ( is_wp_error( $id ) ) {
+				wp_die( esc_html( $id->get_error_message() ) );
+			}
+
+			update_post_meta( $id, '_refraction_edit_mode', 'builder' );
+			update_post_meta( $id, '_refraction_template_type', $kind );
+			update_post_meta( $id, '_refraction_version', REFRACTION_VERSION );
+			update_post_meta( $id, '_refraction_data', wp_slash( (string) wp_json_encode( 'single' === $kind ? self::single_starter() : self::archive_starter( $slug ) ) ) );
+			wp_set_object_terms( $id, $kind, 'refraction_library_type' );
+			Plugin::$instance->modules_manager->get_modules( 'theme-builder' )->get_store()->save_rules( $id, $kind, [ self::template_rule( $slug, $kind ) ] );
+		}
+
+		$document = Plugin::$instance->documents->get( $id );
+		wp_safe_redirect( $document ? $document->get_edit_url() : admin_url( 'edit.php?post_type=refraction_library' ) );
+		exit;
+	}
+
+	private static function tag( string $name, array $settings = [] ): string {
+		return '[refraction-tag id="' . substr( md5( (string) wp_rand() ), 0, 7 ) . '" name="' . $name . '" settings="' . rawurlencode( (string) wp_json_encode( (object) $settings ) ) . '"]';
+	}
+
+	/** A type's event page to start from: title, picture, details, buttons, gallery and description, all from the event. */
+	public static function single_starter(): array {
+		$id = static fn() => \Refraction\Utils::generate_random_string();
+		$widget = static fn( string $type, array $settings ) => [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => $type, 'settings' => $settings, 'elements' => [] ];
+
+		return [ [
+			'id' => $id(),
+			'elType' => 'container',
+			'settings' => [ 'flex_gap' => [ 'unit' => 'px', 'size' => 24, 'column' => '24', 'row' => '24', 'isLinked' => true ] ],
+			'elements' => [
+				$widget( 'heading', [ 'title' => __( 'Event title', 'refraction' ), 'header_size' => 'h1', '__dynamic__' => [ 'title' => self::tag( 'post-title' ) ] ] ),
+				$widget( 'heading', [ 'title' => __( 'Date', 'refraction' ), 'header_size' => 'p', '__dynamic__' => [ 'title' => self::tag( 'refraction-event-detail', [ 'detail' => 'when' ] ) ] ] ),
+				$widget( 'image', [ 'image' => [ 'url' => '', 'id' => '' ], 'image_size' => 'large', '__dynamic__' => [ 'image' => self::tag( 'post-featured-image' ) ] ] ),
+				$widget( 'refraction-event-details', [] ),
+				$widget( 'refraction-event-button', [ 'action' => 'payment' ] ),
+				$widget( 'refraction-event-gallery', [] ),
+				$widget( 'text-editor', [ 'editor' => '', '__dynamic__' => [ 'editor' => self::tag( 'post-excerpt' ) ] ] ),
+			],
+		] ];
+	}
+
+	/** A type's archive to start from: its name and its events. */
+	public static function archive_starter( string $slug ): array {
+		$id = static fn() => \Refraction\Utils::generate_random_string();
+
+		return [ [
+			'id' => $id(),
+			'elType' => 'container',
+			'settings' => [ 'flex_gap' => [ 'unit' => 'px', 'size' => 24, 'column' => '24', 'row' => '24', 'isLinked' => true ] ],
+			'elements' => [
+				[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'heading', 'settings' => [ 'title' => self::types()[ $slug ] ?? '', 'header_size' => 'h1', '__dynamic__' => [ 'title' => self::tag( 'archive-title', [ 'include_context' => '' ] ) ] ], 'elements' => [] ],
+				[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'refraction-events-list', 'settings' => [ 'source' => 'archive', 'count' => 12 ], 'elements' => [] ],
+			],
+		] ];
 	}
 
 	// ---------------------------------------------------------------- what is an event type
@@ -99,6 +318,7 @@ class Event_Types {
 			'who' => in_array( $saved['rfe_who'] ?? '', [ 'anyone', 'logged_in', 'staff' ], true ) ? $saved['rfe_who'] : 'staff',
 			'status' => in_array( $saved['rfe_status'] ?? '', [ 'publish', 'pending', 'draft' ], true ) ? $saved['rfe_status'] : 'publish',
 			'design' => (int) ( $saved['rfe_design'] ?? 0 ),
+			'base' => sanitize_title( (string) ( $saved['rfe_base'] ?? '' ) ),
 			'doc' => $doc_id,
 		];
 	}
@@ -232,12 +452,19 @@ class Event_Types {
 			],
 		] );
 
+		$document->add_control( 'rfe_base', [
+			'label' => esc_html__( 'Address of its events', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'workshops', 'refraction' ),
+			'description' => esc_html__( 'Its events live at /this-address/event-name/ and /this-address/ lists them. Empty: the type\'s own name. Keep it different from your pages\' addresses.', 'refraction' ),
+		] );
+
 		$document->add_control( 'rfe_design', [
 			'label' => esc_html__( 'Event page design', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '0',
 			'options' => $designs,
-			'description' => esc_html__( 'To use your own design, build one event in the editor (with the Post Title, Featured Image and Post Excerpt tags and the Event Details widget) and pick it here: each new event gets a copy of its page.', 'refraction' ),
+			'description' => esc_html__( 'Used when the type has no Single template. For one design kept in one place, use "Design the event page" under Refraction > Event types (a Theme Builder template with the Event tags).', 'refraction' ),
 		] );
 
 		$document->end_controls_section();
@@ -310,7 +537,22 @@ class Event_Types {
 			set_post_thumbnail( $event_id, $image );
 		}
 
-		self::give_page( $event_id, $settings['design'], (bool) $image );
+		// The gallery pictures: into the media library too, kept in order.
+		$gallery = [];
+
+		foreach ( (array) $value( 'gallery' ) as $file ) {
+			$id = is_array( $file ) ? self::image( $slug, [ $file ], $event_id ) : 0;
+
+			if ( $id ) {
+				$gallery[] = $id;
+			}
+		}
+
+		if ( $gallery ) {
+			update_post_meta( $event_id, Event_Data::META_PREFIX . 'gallery', implode( ',', $gallery ) );
+		}
+
+		self::give_page( $event_id, $settings['design'], (bool) $image, (bool) $gallery );
 		Event::sync_to_settings( $event_id );
 
 		update_post_meta( $event_id, self::META_RECORD, (int) $record_id );
@@ -362,7 +604,7 @@ class Event_Types {
 	}
 
 	/** The new event's page: a copy of the type's design event, or the standard layout. */
-	private static function give_page( int $event_id, int $design, bool $has_image ): void {
+	private static function give_page( int $event_id, int $design, bool $has_image, bool $has_gallery = false ): void {
 		$elements = null;
 		$template = Page_Templates_Module::TEMPLATE_HEADER_FOOTER;
 
@@ -381,7 +623,7 @@ class Event_Types {
 		}
 
 		if ( null === $elements ) {
-			$elements = Module::starter_elements( [ 'image' => $has_image, 'excerpt' => true ] );
+			$elements = Module::starter_elements( [ 'image' => $has_image, 'excerpt' => true, 'gallery' => $has_gallery ] );
 		}
 
 		update_post_meta( $event_id, '_refraction_edit_mode', 'builder' );
@@ -490,6 +732,7 @@ class Event_Types {
 				$field( 'button', [ 'button_kind' => 'ticket', 'page_button_text' => __( 'Get tickets', 'refraction' ) ] ),
 				$field( 'button', [ 'button_kind' => 'payment', 'page_button_text' => __( 'Pay now', 'refraction' ) ] ),
 				$field( 'image' ),
+				$field( 'gallery', [ 'file_max_files' => 6 ] ),
 				$field( 'description' ),
 				$field( 'button', [ 'button_kind' => 'submit', 'submit_text' => __( 'Create event', 'refraction' ) ] ),
 			],
