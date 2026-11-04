@@ -36,6 +36,8 @@ class Event extends PageBase {
 		'rfe_organizer' => 'organizer',
 		'rfe_type' => 'type',
 		'rfe_gallery' => 'gallery',
+		'rfe_booking' => 'booking',
+		'rfe_booking_label' => 'booking_label',
 	];
 
 	public static function get_properties() {
@@ -148,6 +150,19 @@ class Event extends PageBase {
 			'label' => esc_html__( 'Payment button text', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
 			'placeholder' => esc_html__( 'Pay now', 'refraction' ),
+		] );
+
+		$this->add_control( 'rfe_booking', [
+			'label' => esc_html__( 'Book now (pay in cash)', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'A Book now button and booking form on the event page, keeping to the ticket limit and tickets per person. Bookings: Refraction > Events > Bookings.', 'refraction' ),
+		] );
+
+		$this->add_control( 'rfe_booking_label', [
+			'label' => esc_html__( 'Book now button text', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Book now', 'refraction' ),
+			'condition' => [ 'rfe_booking' => 'yes' ],
 		] );
 
 		$this->add_control( 'rfe_ticket_limit', [

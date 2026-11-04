@@ -53,7 +53,18 @@ class Event_Details extends Widget_Base {
 	public static function current_event(): int {
 		$post = \Refraction\Modules\DynamicTags\Classes\Context::get_post();
 
-		return $post && Module::CPT === $post->post_type ? (int) $post->ID : 0;
+		if ( $post && Module::CPT === $post->post_type ) {
+			return (int) $post->ID;
+		}
+
+		// While designing (a page, a template), the widgets show an event: the template's type's, or the newest.
+		$plugin = \Refraction\Plugin::$instance;
+
+		if ( $plugin->editor->is_edit_mode() || $plugin->preview->is_preview_mode() || ( wp_doing_ajax() && current_user_can( 'edit_posts' ) ) ) {
+			return \Refraction\Modules\Events\Classes\Event_Types::sample_for_document( $plugin->documents->get_current() );
+		}
+
+		return 0;
 	}
 
 	public static function event_options(): array {
@@ -107,6 +118,13 @@ class Event_Details extends Widget_Base {
 			'label' => esc_html__( 'Payment button', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
+		] );
+
+		$this->add_control( 'show_booking', [
+			'label' => esc_html__( 'Book now button (pay in cash)', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'For events with Book now.', 'refraction' ),
 		] );
 
 		$this->add_control( 'show_calendar', [
@@ -281,6 +299,14 @@ class Event_Details extends Widget_Base {
 				$parts[] = sprintf( __( 'up to %s per person', 'refraction' ), number_format_i18n( (int) $data['tickets_per_person'] ) );
 			}
 
+			// With bookings, how many are left.
+			$left = \Refraction\Modules\Events\Classes\Bookings::enabled( (int) $card['id'] ) ? \Refraction\Modules\Events\Classes\Bookings::left( (int) $card['id'] ) : null;
+
+			if ( null !== $left ) {
+				/* translators: %s: number of places. */
+				$parts[] = 0 === $left ? __( 'fully booked', 'refraction' ) : sprintf( _n( '%s left', '%s left', $left, 'refraction' ), number_format_i18n( $left ) );
+			}
+
 			$rows['places'] = [ __( 'Tickets', 'refraction' ), esc_html( ucfirst( implode( ', ', $parts ) ) ) ];
 		}
 
@@ -294,9 +320,10 @@ class Event_Details extends Widget_Base {
 
 		$tickets = $on( 'show_tickets' ) && '' !== $data['ticket_url'];
 		$payment = $on( 'show_payment' ) && '' !== $data['payment_url'];
+		$booking = $on( 'show_booking' ) ? \Refraction\Modules\Events\Classes\Bookings::form( (int) $card['id'] ) : '';
 		$calendar = $on( 'show_calendar' ) && $card['links'];
 
-		if ( ! $rows && ! $tickets && ! $payment && ! $calendar ) {
+		if ( ! $rows && ! $tickets && ! $payment && '' === $booking && ! $calendar ) {
 			return '';
 		}
 
@@ -316,14 +343,15 @@ class Event_Details extends Widget_Base {
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
-			<?php if ( $tickets || $payment || $calendar ) : ?>
+			<?php if ( $tickets || $payment || '' !== $booking || $calendar ) : ?>
 				<div class="rf-ed-actions">
 					<?php if ( $tickets ) : ?>
 						<a class="rf-ed-tickets" href="<?php echo esc_url( $data['ticket_url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( '' !== $data['ticket_label'] ? $data['ticket_label'] : __( 'Get tickets', 'refraction' ) ); ?></a>
 					<?php endif; ?>
 					<?php if ( $payment ) : ?>
-						<a class="rf-ed-tickets rf-ed-pay" href="<?php echo esc_url( $data['payment_url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( '' !== $data['payment_label'] ? $data['payment_label'] : __( 'Pay now', 'refraction' ) ); ?></a>
+						<a class="rf-ed-tickets rf-ed-pay" href="<?php echo esc_url( Event_Data::payment_url( $data ) ); ?>" target="_blank" rel="noopener"><?php echo esc_html( Event_Data::payment_text( $data ) ); ?></a>
 					<?php endif; ?>
+					<?php echo $booking; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 					<?php if ( $calendar ) : ?>
 						<details class="rf-ed-addcal">
 							<summary><?php echo self::icon( 'date' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static SVG. ?><?php esc_html_e( 'Add to calendar', 'refraction' ); ?></summary>
@@ -359,7 +387,7 @@ class Event_Details extends Widget_Base {
 
 		$options = [ 'show_map' => 'yes' === ( $s['show_map'] ?? '' ) ];
 
-		foreach ( array_merge( self::ROWS, [ 'tickets', 'payment', 'calendar' ] ) as $key ) {
+		foreach ( array_merge( self::ROWS, [ 'tickets', 'payment', 'booking', 'calendar' ] ) as $key ) {
 			$options[ 'show_' . $key ] = 'yes' === ( $s[ 'show_' . $key ] ?? '' );
 		}
 
