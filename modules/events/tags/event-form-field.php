@@ -70,6 +70,13 @@ class Event_Form_Field extends Tag {
 			'options' => self::field_options(),
 			'description' => esc_html__( 'The answer given in the event form that made this event.', 'refraction' ),
 		] );
+
+		$this->add_control( 'date_format', [
+			'label' => esc_html__( 'Date format (date and time fields)', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => 'F j, Y',
+			'description' => esc_html__( 'Empty: November 5, 2026 (and the time).', 'refraction' ),
+		] );
 	}
 
 	public function render() {
@@ -89,6 +96,21 @@ class Event_Form_Field extends Tag {
 			return;
 		}
 
-		echo nl2br( esc_html( Schema::display( $field, $record['values'][ $key ] ?? '' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped, then line breaks.
+		$value = $record['values'][ $key ] ?? '';
+
+		// Dates and times are written out ("November 5, 2026", "19:00"), not as the form stores them (2026-11-05T19:00).
+		if ( in_array( $field['type'], [ 'date', 'time', 'datetime' ], true ) && is_string( $value ) && '' !== $value ) {
+			$ts = strtotime( str_replace( 'T', ' ', 'time' === $field['type'] ? '2000-01-01 ' . $value : $value ) . ' UTC' );
+			$formats = [ 'date' => Event_Detail::DATE_FORMAT, 'time' => get_option( 'time_format', 'H:i' ), 'datetime' => Event_Detail::DATE_FORMAT . ' ' . get_option( 'time_format', 'H:i' ) ];
+			$format = trim( (string) $this->get_settings( 'date_format' ) );
+
+			if ( $ts ) {
+				echo esc_html( date_i18n( '' !== $format ? $format : $formats[ $field['type'] ], $ts ) );
+
+				return;
+			}
+		}
+
+		echo nl2br( esc_html( Schema::display( $field, $value ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped, then line breaks.
 	}
 }

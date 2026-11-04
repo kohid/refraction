@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.35.0
+Stable tag: 0.36.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.36.0 =
+* Events: Book now (pay in cash). Event forms and events can offer a booking form on the event page that keeps to the ticket limit and tickets per person. Bookings are emailed, listed under Refraction > Events > Bookings and can be marked as paid.
+* Events: the Pay button pays the total amount: it shows it, and {amount} in the payment link is replaced by it.
+* Event Gallery: new "Main picture with thumbnails" layout.
+* Events: dates read "November 5, 2026"; new Event Detail tags for the start and end date and time; date answers of event forms are written out.
+* Fixed: Event Gallery, Event Button and Event Details showed only a hint in the editor; they now show an event while you design pages and event templates.
 
 = 0.35.0 =
 * Events: each event type has its own address: /workshops/ lists its events and /workshops/event-name/ is one of them (set under Events in the form's page settings).

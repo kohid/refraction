@@ -61,6 +61,8 @@ class Event_Types {
 		add_action( 'init', [ __CLASS__, 'add_rewrites' ], 20 );
 		add_filter( 'post_type_link', [ __CLASS__, 'event_link' ], 10, 2 );
 		add_filter( 'term_link', [ __CLASS__, 'type_link' ], 10, 3 );
+		// While an event template is edited, its tags and widgets show an event (the template may preview a blog post).
+		add_filter( 'refraction/dynamic_tags/context_post_id', [ __CLASS__, 'preview_context' ], 20 );
 		// An event follows a Single template made for it (its type's), whatever page template it has itself.
 		add_filter( 'refraction/theme_builder/keep_own_page_template', static fn( $keeps, $post_id ) => Module::CPT === get_post_type( $post_id ) ? false : $keeps, 10, 2 );
 		add_action( 'refraction/document/after_save', static function ( $document ) {
@@ -169,6 +171,58 @@ class Event_Types {
 		return $term ? (int) $term->term_id : 0;
 	}
 
+	// ---------------------------------------------------------------- the editor's sample event
+
+	private static function editing(): bool {
+		$plugin = Plugin::$instance;
+
+		return $plugin->editor->is_edit_mode() || $plugin->preview->is_preview_mode() || ( wp_doing_ajax() && current_user_can( 'edit_posts' ) && isset( $_REQUEST['action'] ) && 'refraction_ajax' === $_REQUEST['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only decides what the editor previews.
+	}
+
+	/** The newest published event (of an Event Types term when given), to show while designing. 0 when there is none. */
+	public static function sample_event( int $term = 0 ): int {
+		$args = [ 'post_type' => Module::CPT, 'post_status' => 'publish', 'numberposts' => 1, 'fields' => 'ids', 'orderby' => 'date', 'order' => 'DESC' ];
+
+		if ( $term ) {
+			$args['tax_query'] = [ [ 'taxonomy' => Module::TYPE_TAXONOMY, 'terms' => $term ] ];
+		}
+
+		$found = get_posts( $args );
+
+		return $found ? (int) $found[0] : ( $term ? self::sample_event() : 0 );
+	}
+
+	/** The event a template being edited is about: from its conditions (its type), else the newest event. */
+	public static function sample_for_document( $document ): int {
+		$rules = $document ? (array) get_post_meta( (int) $document->get_main_id(), '_refraction_conditions', true ) : [];
+		$term = 0;
+
+		foreach ( $rules as $rule ) {
+			if ( preg_match( '#' . Module::TYPE_TAXONOMY . '/(\d+)#', (string) $rule, $m ) ) {
+				$term = (int) $m[1];
+				break;
+			}
+		}
+
+		return self::sample_event( $term );
+	}
+
+	/** In the editor, a Single template made for events speaks about an event, whatever post it previews. */
+	public static function preview_context( $post_id ) {
+		if ( Module::CPT === get_post_type( (int) $post_id ) || ! self::editing() ) {
+			return $post_id;
+		}
+
+		$document = Plugin::$instance->documents->get_current();
+		$rules = $document ? implode( ' ', (array) get_post_meta( (int) $document->get_main_id(), '_refraction_conditions', true ) ) : '';
+
+		if ( false === strpos( $rules, Module::CPT ) && false === strpos( $rules, Module::TYPE_TAXONOMY ) ) {
+			return $post_id;
+		}
+
+		return self::sample_for_document( $document ) ?: $post_id;
+	}
+
 	// ---------------------------------------------------------------- single and archive templates
 
 	/** Opens (or first makes) the Theme Builder template for a type's event pages or its archive. */
@@ -227,6 +281,15 @@ class Event_Types {
 			update_post_meta( $id, '_refraction_version', REFRACTION_VERSION );
 			update_post_meta( $id, '_refraction_data', wp_slash( (string) wp_json_encode( 'single' === $kind ? self::single_starter() : self::archive_starter( $slug ) ) ) );
 			wp_set_object_terms( $id, $kind, 'refraction_library_type' );
+
+			// Preview Settings: an event of the type (Single), or the type's archive (Archive).
+			$term = self::term_id( $slug );
+			$sample = self::sample_event( $term );
+			update_post_meta( $id, '_refraction_page_settings', [
+				'refraction_preview_target' => 'single' === $kind
+					? [ 'source' => 'post:' . Module::CPT, 'id' => $sample ]
+					: [ 'source' => 'term:' . Module::TYPE_TAXONOMY, 'id' => $term ],
+			] );
 			Plugin::$instance->modules_manager->get_modules( 'theme-builder' )->get_store()->save_rules( $id, $kind, [ self::template_rule( $slug, $kind ) ] );
 		}
 
@@ -325,7 +388,7 @@ class Event_Types {
 
 	/** The settings of the event form's own widgets (button texts, the categories to choose from), from its Form page. */
 	private static function widget_settings( int $doc_id ): array {
-		$found = [ 'ticket_label' => '', 'payment_label' => '', 'category_terms' => [] ];
+		$found = [ 'ticket_label' => '', 'payment_label' => '', 'booking' => '', 'booking_label' => '', 'category_terms' => [] ];
 		$walk = static function ( array $elements ) use ( &$walk, &$found ): void {
 			foreach ( $elements as $element ) {
 				$type = (string) ( $element['widgetType'] ?? '' );
@@ -336,6 +399,9 @@ class Event_Types {
 
 					if ( in_array( $kind, [ 'ticket', 'payment' ], true ) ) {
 						$found[ $kind . '_label' ] = sanitize_text_field( (string) ( $settings['page_button_text'] ?? '' ) );
+					} elseif ( 'book' === $kind ) {
+						$found['booking'] = 'yes';
+						$found['booking_label'] = sanitize_text_field( (string) ( $settings['page_button_text'] ?? '' ) );
 					}
 				} elseif ( 'rfb-field-event-category' === $type ) {
 					$found['category_terms'] = array_map( 'intval', (array) ( $settings['category_terms'] ?? [] ) );
@@ -486,7 +552,7 @@ class Event_Types {
 
 		$slug = $definition['slug'];
 		$settings = self::settings( $slug );
-		$labels = $settings['doc'] ? self::widget_settings( $settings['doc'] ) : [ 'ticket_label' => '', 'payment_label' => '' ];
+		$labels = $settings['doc'] ? self::widget_settings( $settings['doc'] ) : [ 'ticket_label' => '', 'payment_label' => '', 'booking' => '', 'booking_label' => '' ];
 		$value = static fn( string $role ) => $values[ self::KEY_PREFIX . $role ] ?? '';
 		$description = trim( (string) $value( 'description' ) );
 		$title = trim( (string) $value( 'title' ) );
@@ -518,6 +584,8 @@ class Event_Types {
 			'ticket_label' => $labels['ticket_label'],
 			'payment_url' => (string) $value( 'payment_url' ),
 			'payment_label' => $labels['payment_label'],
+			'booking' => $labels['booking'],
+			'booking_label' => $labels['booking_label'],
 			'ticket_limit' => (string) $value( 'ticket_limit' ),
 			'tickets_per_person' => (string) $value( 'tickets_per_person' ),
 			'total_amount' => '' !== $total ? Money::display( $total, Money::config( $definition['settings'] ) ) : '',
@@ -731,6 +799,7 @@ class Event_Types {
 				$row( $field( 'ticket-limit', $half ), $field( 'tickets-per-person', $half ) ),
 				$field( 'button', [ 'button_kind' => 'ticket', 'page_button_text' => __( 'Get tickets', 'refraction' ) ] ),
 				$field( 'button', [ 'button_kind' => 'payment', 'page_button_text' => __( 'Pay now', 'refraction' ) ] ),
+				$field( 'button', [ 'button_kind' => 'book', 'page_button_text' => __( 'Book now', 'refraction' ) ] ),
 				$field( 'image' ),
 				$field( 'gallery', [ 'file_max_files' => 6 ] ),
 				$field( 'description' ),

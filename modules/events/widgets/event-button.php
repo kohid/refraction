@@ -130,6 +130,13 @@ class Event_Button extends Widget_Base {
 		$id = (int) ( $s['event'] ?? 0 ) ?: Event_Details::current_event();
 		$action = (string) ( $s['action'] ?? 'payment' );
 		$editing = Plugin::$instance->editor->is_edit_mode() || Plugin::$instance->preview->is_preview_mode();
+		// Book now is the booking form itself, with this widget's look on its button.
+		if ( 'book' === $action && $id && \Refraction\Modules\Events\Classes\Bookings::enabled( $id ) ) {
+			echo '<div class="rfe-btn-wrap" style="--ev:' . esc_attr( \Refraction\Modules\Events\Classes\Event_Data::card( $id )['color'] ) . '">' . \Refraction\Modules\Events\Classes\Bookings::form( $id, 'rfe-btn rfe-btn--book', trim( (string) ( $s['text'] ?? '' ) ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+
+			return;
+		}
+
 		$url = $id ? Event_Link::url( $id, $action ) : '';
 		$names = Event_Link::links();
 
@@ -147,7 +154,7 @@ class Event_Button extends Widget_Base {
 		$text = trim( (string) ( $s['text'] ?? '' ) );
 
 		if ( '' === $text ) {
-			$own = [ 'ticket' => $data['ticket_label'] ?: __( 'Get tickets', 'refraction' ), 'payment' => $data['payment_label'] ?: __( 'Pay now', 'refraction' ), 'map' => __( 'Show on a map', 'refraction' ), 'page' => __( 'View event', 'refraction' ) ];
+			$own = [ 'ticket' => $data['ticket_label'] ?: __( 'Get tickets', 'refraction' ), 'payment' => \Refraction\Modules\Events\Classes\Event_Data::payment_text( $data ), 'map' => __( 'Show on a map', 'refraction' ), 'page' => __( 'View event', 'refraction' ) ];
 			$text = $own[ $action ] ?? ( $names[ $action ] ?? '' );
 		}
 

@@ -66,7 +66,7 @@ class Calendar {
 		return [
 			'date' => $day,
 			'monthTitle' => date_i18n( 'F Y', $first ),
-			'dayTitle' => date_i18n( get_option( 'date_format', 'F j, Y' ), $ts ),
+			'dayTitle' => date_i18n( Event_Data::DATE_FORMAT, $ts ),
 			'month' => $this->grid( $grid_start, $grid_end, $month, $by_date ),
 			'list' => $this->agenda( $first, $last, $by_date ),
 			'day' => $this->timeline( $ts, $by_date[ $day ] ?? [] ),
@@ -248,7 +248,7 @@ class Calendar {
 	private function timeline( int $ts, array $events ): string {
 		if ( ! $events ) {
 			/* translators: %s: a date. */
-			return $this->empty_state( sprintf( __( 'No events on %s.', 'refraction' ), date_i18n( 'l, ' . get_option( 'date_format', 'F j, Y' ), $ts ) ) );
+			return $this->empty_state( sprintf( __( 'No events on %s.', 'refraction' ), date_i18n( 'l, ' . Event_Data::DATE_FORMAT, $ts ) ) );
 		}
 
 		ob_start();

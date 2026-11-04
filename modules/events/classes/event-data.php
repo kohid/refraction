@@ -32,9 +32,14 @@ class Event_Data {
 		'organizer' => '',
 		'type' => '',
 		'gallery' => '',
+		'booking' => '',
+		'booking_label' => '',
 	];
 
 	const META_PREFIX = '_rfe_';
+
+	/** How event dates are written: "November 5, 2026". */
+	const DATE_FORMAT = 'F j, Y';
 
 	/** Category term meta: its color on the calendar. */
 	const TERM_COLOR = '_rfe_color';
@@ -70,12 +75,19 @@ class Event_Data {
 				case 'end':
 					$out[ $key ] = self::clean_datetime( $value, true );
 					break;
+				case 'booking':
+					$out[ $key ] = in_array( $value, [ 'yes', '1', 1, true ], true ) ? 'yes' : '';
+					break;
 				case 'all_day':
 					$out[ $key ] = in_array( $value, [ 'yes', '1', 1, true ], true ) ? 'yes' : '';
 					break;
 				case 'ticket_url':
-				case 'payment_url':
 					$out[ $key ] = esc_url_raw( trim( (string) $value ), [ 'http', 'https' ] );
+					break;
+				case 'payment_url':
+					// {amount} stays as it is: it is replaced by the total amount when the link is shown.
+					$url = esc_url_raw( str_replace( '{amount}', 'RFEAMOUNT', trim( (string) $value ) ), [ 'http', 'https' ] );
+					$out[ $key ] = str_replace( 'RFEAMOUNT', '{amount}', $url );
 					break;
 				case 'ticket_limit':
 				case 'tickets_per_person':
@@ -121,6 +133,39 @@ class Event_Data {
 		Event_Types::assign_term( $post_id, $clean['type'] );
 
 		return $clean;
+	}
+
+	/**
+	 * The total amount as a plain number ("1250.50") for payment links: the digits of the amount as written
+	 * ("£1,250.50", "1.250,50 €"), '' when there is none.
+	 */
+	public static function total_number( array $data ): string {
+		$text = preg_replace( '/[^\d.,]/', '', (string) $data['total_amount'] );
+
+		if ( '' === $text ) {
+			return '';
+		}
+
+		// The last separator followed by one or two digits is the decimal one; the others group thousands.
+		if ( preg_match( '/^(.*)[.,](\d{1,2})$/', $text, $m ) ) {
+			return preg_replace( '/[.,]/', '', $m[1] ) . '.' . str_pad( $m[2], 2, '0' );
+		}
+
+		return preg_replace( '/[.,]/', '', $text );
+	}
+
+	/** The payment link, with {amount} replaced by the total amount (for links such as https://paypal.me/name/{amount}). */
+	public static function payment_url( array $data ): string {
+		$url = (string) $data['payment_url'];
+
+		return '' === $url ? '' : str_replace( [ '{amount}', '%7Bamount%7D' ], rawurlencode( self::total_number( $data ) ), $url );
+	}
+
+	/** The Pay button's text: the event's own, else "Pay now", with the total amount ("Pay now · £1,250.00"). */
+	public static function payment_text( array $data ): string {
+		$text = '' !== $data['payment_label'] ? $data['payment_label'] : __( 'Pay now', 'refraction' );
+
+		return '' !== $data['total_amount'] && false === strpos( $text, $data['total_amount'] ) ? $text . ' · ' . $data['total_amount'] : $text;
 	}
 
 	/** The event's gallery: media library image ids, in order. */
@@ -182,13 +227,15 @@ class Event_Data {
 			return '';
 		}
 
-		$format = get_option( 'date_format', 'F j, Y' );
-
+		// "Friday, November 5, 2026"; over several days "November 5 – 7, 2026" or "November 30 – December 2, 2026".
 		if ( ! self::is_multiday( $data ) ) {
-			return date_i18n( 'l, ' . $format, $times[0] );
+			return date_i18n( 'l, ' . self::DATE_FORMAT, $times[0] );
 		}
 
-		return date_i18n( $format, $times[0] ) . ' – ' . date_i18n( $format, $times[1] );
+		$same_year = gmdate( 'Y', $times[0] ) === gmdate( 'Y', $times[1] );
+		$same_month = $same_year && gmdate( 'm', $times[0] ) === gmdate( 'm', $times[1] );
+
+		return date_i18n( $same_year ? 'F j' : self::DATE_FORMAT, $times[0] ) . ' – ' . date_i18n( $same_month ? 'j, Y' : self::DATE_FORMAT, $times[1] );
 	}
 
 	/** The color of a category: its own, else one picked from the palette by its name. */

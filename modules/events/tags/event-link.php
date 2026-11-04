@@ -34,7 +34,8 @@ class Event_Link extends Data_Tag {
 	public static function links(): array {
 		return [
 			'ticket' => esc_html__( 'Tickets', 'refraction' ),
-			'payment' => esc_html__( 'Payment', 'refraction' ),
+			'payment' => esc_html__( 'Payment (the total amount)', 'refraction' ),
+			'book' => esc_html__( 'Book now (pay in cash)', 'refraction' ),
 			'map' => esc_html__( 'Map of the venue', 'refraction' ),
 			'page' => esc_html__( 'Event page', 'refraction' ),
 			'google' => esc_html__( 'Add to Google Calendar', 'refraction' ),
@@ -64,9 +65,11 @@ class Event_Link extends Data_Tag {
 			case 'ticket':
 				return $card['data']['ticket_url'];
 			case 'payment':
-				return $card['data']['payment_url'];
+				return Event_Data::payment_url( $card['data'] );
 			case 'page':
 				return $card['url'];
+			case 'book':
+				return \Refraction\Modules\Events\Classes\Bookings::enabled( $post_id ) ? $card['url'] . '#rfe-book-' . $post_id : '';
 			case 'map':
 				$query = trim( $card['venue'] . ', ' . str_replace( "\n", ', ', $card['address'] ), ', ' );
 

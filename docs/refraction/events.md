@@ -136,3 +136,31 @@ form; your staff use it to make events of that type. `Classes\Event_Types`; chec
 - The form's Event button is named "Event button (tickets, payment, submit)", so searching "payment" finds it.
 - Theme Builder pages on block themes now render the header and footer template parts before `wp_head()`. Before,
   the Navigation block's script modules were missing from the import map.
+
+## Book now, payment, gallery layouts and the editor's sample event (0.36.0)
+
+- **Book now (pay in cash)** (`Classes\Bookings`):
+  - Turned on by the event form's Event button set to *Book now (pay in cash)*, which marks every event the form
+    makes; or per event in its page settings (**Book now**, with its button text). The button is a "Book now"
+    `<details>` with a form: name, email, phone, tickets.
+  - Bookings keep to the **Ticket limit** (places left) and **Tickets per person** (counted by email). They are
+    refused once the event has ended. The visitor and the site's admin email get the details and the amount to pay
+    in cash (the total amount, else the price).
+  - A booking is a private `refraction_booking` post: **Refraction > Events > Bookings**, filterable by event
+    (`?rfe_event=`), with "Mark: Paid / To pay / Cancelled". The events table has a **Booked** column (booked / limit).
+    Event Details shows "N left" or "fully booked".
+  - The form has no nonce, because event pages are often cached; it uses a hidden field, a minimum time, a signed
+    event id and 10 bookings an hour per visitor.
+- **Payment = the total amount**: the Pay button reads "Pay now · £1,250.00" (`Event_Data::payment_text`). A payment
+  link may contain `{amount}`, replaced by the total amount as a plain number (`https://paypal.me/name/{amount}`,
+  `Event_Data::payment_url`). This applies to Event Details, the Event Button and the Event Link tag.
+- **Event Gallery** layout **Main picture with thumbnails**: a big picture (lightbox) with the thumbnails under it.
+  Clicking a thumbnail shows it (`assets/js/frontend/handlers/event-gallery.js`). Settings: thumbnail size and
+  alignment, the chosen thumbnail's border, and the main picture's shape (also 2/3).
+- **Dates** read "November 5, 2026" (`Event_Data::DATE_FORMAT`) everywhere, whatever the site's date format. The Event
+  Detail tag has **Start date**, **Start time**, **End date** and **End time** (each with an optional format). The
+  Event Form Field tag writes date and time answers out instead of `2026-11-05T19:00`.
+- **The editor shows an event**: on a page, the event widgets without a chosen event show the newest event while you
+  edit. An event template shows an event of its type, even when its Preview Settings point to a blog post: dynamic
+  tags through `refraction/dynamic_tags/context_post_id`, widgets through `Event_Details::current_event()`. New
+  templates from "Design the event page" / "Design the archive" preview an event of the type / the type's archive.

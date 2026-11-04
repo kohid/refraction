@@ -156,7 +156,7 @@ async function main() {
 			return { type: refraction.config.document.type, widgets: types, cat: start?.categories, show: start?.show_in_panel };
 		} );
 		const wanted = [ 'title', 'start', 'end', 'all-day', 'category', 'venue', 'organizer', 'address', 'price', 'total-amount', 'ticket-limit', 'tickets-per-person', 'button', 'image', 'description' ];
-		check( 'editor', '"New event type" opens a Form page with every event field and a Submit button', 'rfb-form' === editor.type && wanted.every( ( w ) => editor.widgets.includes( 'rfb-field-event-' + w ) ) && 3 === editor.widgets.filter( ( w ) => 'rfb-field-event-button' === w ).length, JSON.stringify( editor.widgets ) );
+		check( 'editor', '"New event type" opens a Form page with every event field and a Submit button', 'rfb-form' === editor.type && wanted.every( ( w ) => editor.widgets.includes( 'rfb-field-event-' + w ) ) && 4 === editor.widgets.filter( ( w ) => 'rfb-field-event-button' === w ).length, JSON.stringify( editor.widgets ) );
 		check( 'editor', 'the event fields are in the Event Form category of a Form page', editor.cat && editor.cat.includes( 'refraction-event-fields' ) && false !== editor.show, JSON.stringify( editor ) );
 		await admin.p.evaluate( () => $e.route( 'panel/page-settings/settings' ) );
 		await sleep( 800 );
@@ -222,7 +222,7 @@ async function main() {
 		const made = JSON.parse( php( `$p = get_posts( [ 'post_type' => 'refraction_event', 'title' => 'Clay Basics', 'post_status' => 'any', 'numberposts' => 1 ] ); $id = $p[0]->ID ?? 0; echo wp_json_encode( [ 'id' => $id, 'status' => get_post_status( $id ), 'author' => (int) get_post_field( 'post_author', $id ), 'data' => Refraction\\Modules\\Events\\Classes\\Event_Data::get( $id ), 'cats' => wp_get_object_terms( $id, 'refraction_event_cat', [ 'fields' => 'names' ] ), 'thumb' => (int) get_post_thumbnail_id( $id ), 'excerpt' => get_post_field( 'post_excerpt', $id ), 'built' => get_post_meta( $id, '_refraction_edit_mode', true ) ] );` ) );
 		const staffId = Number( php( "echo get_user_by( 'login', 'staffer' )->ID;" ) );
 		check( 'event', 'an event of the type, published, by the member of staff', made.id && 'publish' === made.status && staffId === made.author && 'workshop' === made.data.type, JSON.stringify( made ) );
-		check( 'event', 'with every detail from the form', '2031-03-14 10:00' === made.data.start && '2031-03-14 13:30' === made.data.end && 'Studio 5' === made.data.venue && '1 High Street' === made.data.address && '£40' === made.data.price && '100' === made.data.ticket_limit && '4' === made.data.tickets_per_person && '£1,250.50' === made.data.total_amount && 'Clay Club' === made.data.organizer && 'https://example.com/tickets' === made.data.ticket_url && 'https://example.com/pay' === made.data.payment_url && 'Get tickets' === made.data.ticket_label && 'Pay now' === made.data.payment_label, JSON.stringify( made.data ) );
+		check( 'event', 'with every detail from the form', '2031-03-14 10:00' === made.data.start && '2031-03-14 13:30' === made.data.end && 'Studio 5' === made.data.venue && '1 High Street' === made.data.address && '£40' === made.data.price && '100' === made.data.ticket_limit && '4' === made.data.tickets_per_person && '£1,250.50' === made.data.total_amount && 'Clay Club' === made.data.organizer && 'https://example.com/tickets' === made.data.ticket_url && 'https://example.com/pay' === made.data.payment_url && 'Get tickets' === made.data.ticket_label && 'Pay now' === made.data.payment_label && 'yes' === made.data.booking && 'Book now' === made.data.booking_label, JSON.stringify( made.data ) );
 		check( 'event', 'its category, picture (featured image) and description', 'Late Category' === made.cats.join() && made.thumb > 0 && 'Learn to throw a pot.' === made.excerpt && 'builder' === made.built, JSON.stringify( made ) );
 		await sp.goto( link );
 		const shown = await sp.evaluate( () => {
@@ -231,13 +231,13 @@ async function main() {
 				h1: document.querySelector( '.refraction-widget-heading .refraction-heading-title' )?.textContent,
 				img: !! document.querySelector( '.refraction-widget-image img[src*="poster"]' ),
 				text: box ? box.textContent.replace( /\s+/g, ' ' ) : '',
-				buttons: box ? Array.from( box.querySelectorAll( '.rf-ed-tickets' ) ).map( ( a ) => [ a.textContent.trim(), a.getAttribute( 'href' ) ] ) : [],
+				buttons: box ? Array.from( box.querySelectorAll( 'a.rf-ed-tickets' ) ).map( ( a ) => [ a.textContent.trim(), a.getAttribute( 'href' ) ] ) : [],
 				desc: /Learn to throw a pot\./.test( document.body.textContent ),
 			};
 		} );
 		check( 'event page', 'its page: title, picture, description', 'Clay Basics' === shown.h1 && shown.img && shown.desc, JSON.stringify( shown ) );
 		check( 'event page', 'details with tickets, per person and the total amount', /100 tickets, up to 4 per person/.test( shown.text ) && /£1,250\.50/.test( shown.text ) && /Studio 5/.test( shown.text ), shown.text.slice( 0, 400 ) );
-		check( 'event page', 'Tickets and Pay buttons with the texts set on the form', 'Get tickets,https://example.com/tickets,Pay now,https://example.com/pay' === shown.buttons.flat().join(), JSON.stringify( shown.buttons ) );
+		check( 'event page', 'Tickets and Pay buttons with the texts set on the form (Pay shows the total amount)', 'Get tickets,https://example.com/tickets,Pay now · £1,250.50,https://example.com/pay' === shown.buttons.flat().join(), JSON.stringify( shown.buttons ) );
 		await sp.screenshot( { path: join( SHOTS, 'event.png' ), fullPage: true } );
 		await staff.ctx.close();
 

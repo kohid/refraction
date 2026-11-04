@@ -684,3 +684,185 @@
 .rfe-gallery-zoom-yes .rfe-gallery__item:hover .rfe-gallery__img {
 	transform: scale(1.05);
 }
+
+// "Main picture with thumbnails"
+.rfe-showcase {
+	--rfe-thumb: 64px;
+	--rfe-gap: 12px;
+	--rfe-radius: 10px;
+	--rfe-ratio: auto;
+	--rfe-active: #2b6344;
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--rfe-gap);
+}
+
+.rfe-showcase__main {
+	display: block;
+	overflow: hidden;
+	border-radius: var(--rfe-radius);
+}
+
+.rfe-showcase__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: var(--rfe-ratio);
+	object-fit: cover;
+}
+
+.rfe-showcase__thumbs {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 8px;
+}
+
+.rfe-showcase__thumb {
+	width: var(--rfe-thumb);
+	height: calc(var(--rfe-thumb) * 1.33);
+	padding: 0;
+	overflow: hidden;
+	border: 2px solid transparent;
+	border-radius: 4px;
+	background: none;
+	opacity: .75;
+	cursor: pointer;
+	transition: opacity .2s, border-color .2s;
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	&:hover,
+	&:focus-visible,
+	&.is-active {
+		opacity: 1;
+	}
+
+	&.is-active {
+		border-color: var(--rfe-active);
+	}
+}
+
+// ---------------------------------------------------------------- Book now (classes/bookings.php)
+.rfe-book {
+	position: relative;
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	scroll-margin-top: 120px;
+}
+
+.rfe-book__details {
+	position: relative;
+
+	> summary {
+		list-style: none;
+		cursor: pointer;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+	}
+
+	&[open] > summary {
+		filter: brightness(.92);
+	}
+}
+
+.rf-ed-tickets.rf-ed-book,
+.rfe-btn--book {
+	color: #fff;
+	background: var(--rf-ed-primary, var(--ev, #2b6344));
+}
+
+.rf-ed-book.is-disabled,
+.rfe-btn--book.is-disabled {
+	opacity: .55;
+	cursor: not-allowed;
+}
+
+.rfe-book__form {
+	position: absolute;
+	top: calc(100% + 8px);
+	left: 0;
+	z-index: 30;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: min(340px, 90vw);
+	padding: 18px;
+	border: 1px solid #e4e6ef;
+	border-radius: 12px;
+	color: #181c32;
+	background: #fff;
+	box-shadow: 0 18px 44px -14px rgba(24, 28, 50, .35);
+	text-align: left;
+}
+
+.rfe-book__row {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin: 0;
+
+	label {
+		font-size: 13px;
+		font-weight: 600;
+	}
+
+	input {
+		width: 100%;
+		padding: 9px 11px;
+		border: 1px solid #dfe3ea;
+		border-radius: 8px;
+		font-size: 14px;
+	}
+}
+
+.rfe-book__note {
+	margin: 0;
+	color: #5e6278;
+	font-size: 13px;
+}
+
+.rfe-book__submit {
+	padding: 11px 16px;
+	border: 0;
+	border-radius: 8px;
+	color: #fff;
+	background: var(--rf-ed-primary, var(--ev, #2b6344));
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.rfe-book__hp {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.rfe-book__notice {
+	flex-basis: 100%;
+	margin: 0 0 6px;
+	padding: 10px 14px;
+	border-radius: 8px;
+	font-size: 14px;
+
+	&.is-done {
+		color: #1b5e3b;
+		background: #e8f7ee;
+	}
+
+	&.is-error {
+		color: #8a1c33;
+		background: #fdecef;
+	}
+}

@@ -16,6 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Event Detail: one detail of the current event as text (its date, time, venue, price, tickets, organizer...). */
 class Event_Detail extends Tag {
 
+	/** Dates read as "November 5, 2026" unless a format is set. */
+	const DATE_FORMAT = Event_Data::DATE_FORMAT;
+
 	public function get_name() {
 		return 'refraction-event-detail';
 	}
@@ -38,7 +41,11 @@ class Event_Detail extends Tag {
 			'date' => esc_html__( 'Date', 'refraction' ),
 			'time' => esc_html__( 'Time', 'refraction' ),
 			'start' => esc_html__( 'Start date and time', 'refraction' ),
+			'start_date' => esc_html__( 'Start date', 'refraction' ),
+			'start_time' => esc_html__( 'Start time', 'refraction' ),
 			'end' => esc_html__( 'End date and time', 'refraction' ),
+			'end_date' => esc_html__( 'End date', 'refraction' ),
+			'end_time' => esc_html__( 'End time', 'refraction' ),
 			'venue' => esc_html__( 'Venue', 'refraction' ),
 			'address' => esc_html__( 'Address', 'refraction' ),
 			'price' => esc_html__( 'Price', 'refraction' ),
@@ -66,9 +73,9 @@ class Event_Detail extends Tag {
 		$this->add_control( 'date_format', [
 			'label' => esc_html__( 'Date format', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
-			'placeholder' => get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			'description' => esc_html__( 'For the start and end: PHP date letters, as in Settings > General. Empty: the site\'s.', 'refraction' ),
-			'condition' => [ 'detail' => [ 'start', 'end' ] ],
+			'placeholder' => 'F j, Y',
+			'description' => esc_html__( 'PHP date letters, as in Settings > General: F j, Y is "November 5, 2026", g:i A is "7:00 PM". Empty: November 5, 2026 for dates and the site\'s time format for times.', 'refraction' ),
+			'condition' => [ 'detail' => [ 'start', 'start_date', 'start_time', 'end', 'end_date', 'end_time' ] ],
 		] );
 	}
 
@@ -86,9 +93,18 @@ class Event_Detail extends Tag {
 				return $card['time'];
 			case 'start':
 			case 'end':
-				$ts = 'start' === $detail ? $card['start'] : $card['end'];
+			case 'start_date':
+			case 'end_date':
+			case 'start_time':
+			case 'end_time':
+				$ts = 0 === strpos( $detail, 'start' ) ? $card['start'] : $card['end'];
+				$part = substr( $detail, strpos( $detail, '_' ) ?: strlen( $detail ) );
 
-				return $ts ? date_i18n( '' !== $format ? $format : get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $ts ) : '';
+				if ( '' === $format ) {
+					$format = [ '_date' => self::DATE_FORMAT, '_time' => get_option( 'time_format', 'H:i' ) ][ $part ] ?? self::DATE_FORMAT . ' ' . get_option( 'time_format', 'H:i' );
+				}
+
+				return $ts ? date_i18n( $format, $ts ) : '';
 			case 'ticket_limit':
 			case 'tickets_per_person':
 				return '' !== $data[ $detail ] ? number_format_i18n( (int) $data[ $detail ] ) : '';

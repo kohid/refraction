@@ -5,6 +5,7 @@ use Refraction\Core\Base\Module as BaseModule;
 use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
 use Refraction\Modules\Events\AdminMenuItems\Editor_One_Event_Types_Menu;
 use Refraction\Modules\Events\AdminMenuItems\Editor_One_Events_Menu;
+use Refraction\Modules\Events\Classes\Bookings;
 use Refraction\Modules\Events\Classes\Calendar;
 use Refraction\Modules\Events\Classes\Event_Data;
 use Refraction\Modules\Events\Classes\Event_Types;
@@ -51,6 +52,7 @@ class Module extends BaseModule {
 
 		add_action( 'init', [ $this, 'register_types' ], 5 );
 		Event_Types::register();
+		Bookings::register();
 		add_action( 'init', [ $this, 'maybe_flush_rewrites' ], 99 );
 
 		add_action( 'refraction/documents/register', static function ( $documents_manager ) {
@@ -76,7 +78,8 @@ class Module extends BaseModule {
 		add_action( 'refraction/dynamic_tags/register', [ $this, 'register_tags' ] );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 		add_action( 'wp_head', [ $this, 'print_schema' ] );
-		add_filter( 'the_content', [ $this, 'details_for_classic_events' ], 9 );
+		// After wpautop (10), which would wrap the box's parts in paragraphs.
+		add_filter( 'the_content', [ $this, 'details_for_classic_events' ], 20 );
 
 		if ( is_admin() ) {
 			add_action( 'add_meta_boxes_' . self::CPT, [ $this, 'add_meta_box' ] );
@@ -429,6 +432,7 @@ class Module extends BaseModule {
 	/** Above the events table: make a new event in the page editor, and the categories. */
 	public function list_links( array $views ): array {
 		$views['rfe_new'] = '<a class="button button-primary" href="' . esc_url( self::new_event_url() ) . '">' . esc_html__( 'New event in the editor', 'refraction' ) . '</a>';
+		$views['rfe_bookings'] = '<a href="' . esc_url( Bookings::admin_url() ) . '">' . esc_html__( 'Bookings', 'refraction' ) . '</a>';
 		$views['rfe_types'] = '<a href="' . esc_url( admin_url( 'admin.php?page=' . self::TYPES_SLUG ) ) . '">' . esc_html__( 'Event types and their forms', 'refraction' ) . '</a>';
 		$views['rfe_categories'] = '<a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::CPT ) ) . '">' . esc_html__( 'Categories and colors', 'refraction' ) . '</a>';
 
@@ -445,6 +449,7 @@ class Module extends BaseModule {
 				$out['rfe_when'] = esc_html__( 'When', 'refraction' );
 				$out['rfe_venue'] = esc_html__( 'Venue', 'refraction' );
 				$out['rfe_type'] = esc_html__( 'Type', 'refraction' );
+				$out['rfe_booked'] = esc_html__( 'Booked', 'refraction' );
 			}
 		}
 
@@ -460,6 +465,13 @@ class Module extends BaseModule {
 			echo '' === $data['start'] ? '<em>' . esc_html__( 'No date yet', 'refraction' ) . '</em>' : esc_html( Event_Data::date_range( $data ) . ' · ' . Event_Data::time_range( $data ) );
 		} elseif ( 'rfe_venue' === $column ) {
 			echo esc_html( $data['venue'] );
+		} elseif ( 'rfe_booked' === $column ) {
+			if ( Bookings::enabled( $post_id ) ) {
+				$limit = (int) $data['ticket_limit'];
+				echo '<a href="' . esc_url( Bookings::admin_url( $post_id ) ) . '">' . esc_html( Bookings::booked( $post_id ) . ( $limit ? ' / ' . $limit : '' ) ) . '</a>';
+			} else {
+				echo '—';
+			}
 		} elseif ( 'rfe_type' === $column ) {
 			echo esc_html( Event_Types::types()[ $data['type'] ] ?? '—' );
 		}

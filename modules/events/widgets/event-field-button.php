@@ -20,7 +20,7 @@ class Event_Field_Button extends Field_Website {
 
 	use Event_Field;
 
-	const KINDS = [ 'ticket', 'payment', 'submit' ];
+	const KINDS = [ 'ticket', 'payment', 'book', 'submit' ];
 
 	/** What this button is for. The panel's own copy of the widget (no element, no settings) is a ticket button. */
 	private function kind(): string {
@@ -50,9 +50,9 @@ class Event_Field_Button extends Field_Website {
 		return \Refraction\Modules\FormBuilder\Base\Field_Widget::PREFIX . 'event-button';
 	}
 
-	/** The Submit button is not a field: the Form page leaves it out of the collection (Editor_Forms::collect). */
+	/** Submit and Book now are not fields: the Form page leaves them out of the collection (Editor_Forms::collect). */
 	public function is_field(): bool {
-		return 'submit' !== $this->kind();
+		return ! in_array( $this->kind(), [ 'submit', 'book' ], true );
 	}
 
 	protected function register_controls() {
@@ -64,10 +64,11 @@ class Event_Field_Button extends Field_Website {
 			'default' => 'ticket',
 			'options' => [
 				'ticket' => esc_html__( 'Ticket link', 'refraction' ),
-				'payment' => esc_html__( 'Payment', 'refraction' ),
+				'payment' => esc_html__( 'Payment (pays the total amount)', 'refraction' ),
+				'book' => esc_html__( 'Book now (pay in cash)', 'refraction' ),
 				'submit' => esc_html__( 'Submit (makes the event)', 'refraction' ),
 			],
-			'description' => esc_html__( 'Ticket link and Payment ask for the address in the form; the event page then shows a button that opens it. Submit sends the form.', 'refraction' ),
+			'description' => esc_html__( 'Ticket link and Payment ask for the address in the form; the event page then shows a button that opens it. A payment link may hold {amount}, which becomes the event\'s total amount (https://paypal.me/yourname/{amount}). Book now lets people book places on the event page and pay in cash there. Submit sends the form.', 'refraction' ),
 		] );
 
 		$this->add_control( 'page_button_text', [
@@ -75,6 +76,13 @@ class Event_Field_Button extends Field_Website {
 			'type' => Controls_Manager::TEXT,
 			'placeholder' => esc_html__( 'Get tickets', 'refraction' ),
 			'condition' => [ 'button_kind!' => 'submit' ],
+		] );
+
+		$this->add_control( 'book_note', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'Not shown in the form: every event made by it gets a Book now button (with the text above) and a booking form, which keeps to the Ticket limit and Tickets per person. Bookings are under Refraction > Events > Bookings.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+			'condition' => [ 'button_kind' => 'book' ],
 		] );
 
 		$this->add_control( 'submit_text', [
@@ -125,6 +133,17 @@ class Event_Field_Button extends Field_Website {
 	}
 
 	protected function render() {
+		// Book now only marks the type's events as bookable: in the form, it is a note for whoever designs it.
+		if ( 'book' === $this->kind() ) {
+			if ( \Refraction\Plugin::$instance->editor->is_edit_mode() ) {
+				$text = trim( (string) $this->get_settings_for_display( 'page_button_text' ) );
+				/* translators: %s: button text. */
+				echo '<div class="rfb-help">' . esc_html( sprintf( __( 'Book now: events made with this form get a "%s" button and a booking form (pay in cash).', 'refraction' ), '' !== $text ? $text : __( 'Book now', 'refraction' ) ) ) . '</div>';
+			}
+
+			return;
+		}
+
 		if ( 'submit' === $this->kind() ) {
 			$text = trim( (string) $this->get_settings_for_display( 'submit_text' ) );
 			// In the editor the button does nothing; on the site it sends the form, which makes the event.
