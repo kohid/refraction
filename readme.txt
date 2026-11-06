@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.40.0
+Stable tag: 0.41.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.41.0 =
+* Editor: with Site Settings open, clicking anything on the page goes back to editing it (asking whether to save Site Settings changes first).
+* Nav Menu: submenu icon from the icon library or the built-in ones, with its size, colors (normal, hover, open), button background, padding, radius, border, space from the text and turn when open. Hamburger: six animations (X, spin, arrow left or right, lines collapsing, none), your own open and close icons, line thickness and speed. Collapsed menu panel: dropdown (full screen width by default, or the widget's width), slide in from the right or left, or full screen, with an open and close animation (fade, slide down or up, zoom, from the side) and its duration, panel width, backdrop color, a close button, item alignment and a line between items.
 
 = 0.40.0 =
 * Site Settings > Buttons now styles the Button widget only (not menu toggles, sub menu arrows and other buttons), and Site Settings > Images the Image widget only.

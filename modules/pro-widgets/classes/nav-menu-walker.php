@@ -11,6 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Nav_Menu_Walker extends \Walker_Nav_Menu {
 
+	/** The widget's own submenu icon (icon library), '' for the CSS-drawn indicator. */
+	private string $indicator_html;
+
+	public function __construct( string $indicator_html = '' ) {
+		$this->indicator_html = $indicator_html;
+	}
+
 	public function start_lvl( &$output, $depth = 0, $args = null ) {
 		$output .= '<ul class="refraction-nav-menu__sub refraction-nav-menu__sub--depth-' . (int) ( $depth + 1 ) . '">';
 	}
@@ -63,7 +70,7 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 				__( 'Toggle submenu of %s', 'refraction' ),
 				wp_strip_all_tags( $title )
 			);
-			$output .= '<button type="button" class="refraction-nav-menu__subtoggle" aria-expanded="false" aria-label="' . esc_attr( $label ) . '"><span class="refraction-nav-menu__indicator" aria-hidden="true"></span></button>';
+			$output .= '<button type="button" class="refraction-nav-menu__subtoggle" aria-expanded="false" aria-label="' . esc_attr( $label ) . '"><span class="refraction-nav-menu__indicator' . ( '' !== $this->indicator_html ? ' refraction-nav-menu__indicator--icon' : '' ) . '" aria-hidden="true">' . $this->indicator_html . '</span></button>';
 		}
 	}
 

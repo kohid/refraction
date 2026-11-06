@@ -4,6 +4,19 @@ export default class PanelMenu extends MenuPageView {
 	initialize() {
 		this.collection = PanelMenu.getGroups();
 	}
+
+	onRender() {
+		super.onRender?.();
+
+		// The page stays editable from here: clicking one of its elements goes back to editing it (edit-from-preview.js).
+		if ( ! this.$el.children( '.refraction-kit-edit-hint' ).length ) {
+			this.$el.prepend( jQuery( '<div>', {
+				class: 'refraction-kit-edit-hint refraction-panel-alert refraction-panel-alert-info',
+				css: { margin: '15px 15px 0' },
+				text: __( 'Click anything on the page to go back to editing it. To see the page as visitors do, use Preview (the eye in the top bar).', 'refraction' ),
+			} ) );
+		}
+	}
 }
 
 PanelMenu.groups = null;
