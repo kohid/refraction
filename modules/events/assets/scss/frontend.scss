@@ -788,6 +788,7 @@
 }
 
 .rfe-book__form {
+	box-sizing: border-box;
 	position: absolute;
 	top: calc(100% + 8px);
 	left: 0;
@@ -817,6 +818,7 @@
 	}
 
 	input {
+		box-sizing: border-box;
 		width: 100%;
 		padding: 9px 11px;
 		border: 1px solid #dfe3ea;

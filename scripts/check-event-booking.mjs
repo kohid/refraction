@@ -255,6 +255,8 @@ async function main() {
 		await admin.ctx.close();
 
 		// ------------------------------------------------------------ pay online: a total amount, no payment link
+		// The Single template above would now show every event; the event page's own details box is checked here.
+		php( `wp_delete_post( ${ tpl }, true );` );
 		const soul = Number( wp( [ 'post', 'create', '--post_type=refraction_event', '--post_status=publish', '--post_title=Soul Dance', '--porcelain' ] ).trim() );
 		php( `Refraction\\Modules\\Events\\Classes\\Event_Data::save( ${ soul }, [ 'start' => '2031-12-01 19:00', 'total_amount' => 'PHP 400', 'ticket_limit' => '3', 'tickets_per_person' => '2', 'payment_note' => "GCash 0917 000 0000\nName: Unfold Studio", 'payment_qr' => '${ images[ 1 ] }' ] ); set_post_thumbnail( ${ soul }, ${ images[ 0 ] } );` );
 		const soulUrl = php( `echo get_permalink( ${ soul } );` );
@@ -280,7 +282,7 @@ async function main() {
 			const f = document.querySelector( '.rfe-book--online form' );
 			const body = new FormData( f );
 			body.set( 'event', String( id ) );
-			const r = await fetch( f.action, { method: 'POST', body, redirect: 'manual' } );
+			const r = await fetch( f.getAttribute( 'action' ), { method: 'POST', body, redirect: 'manual' } );
 			return r.type;
 		}, [ eventId ] );
 		const count = php( `echo count( get_posts( [ 'post_type' => 'refraction_booking', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_rfe_booking_method', 'meta_value' => 'online' ] ) );` );
