@@ -7,6 +7,9 @@
  * - Event Gallery "Main picture with thumbnails": a thumbnail shows its picture as the main one.
  * - Dates read "November 5, 2026" (Event Detail start date / start time tags).
  * - In the editor, event widgets and tags show an event while a page or an event template is designed.
+ * - Pay without a payment link: a total amount alone gives a Pay form (amount, instructions, QR code, payment
+ *   reference), listed in the admin as "To check"; the Event Link tag points at it; the gallery falls back to the
+ *   featured image; an event made by an event form fills its total amount and gallery from the form's answers.
  *
  * Usage: node scripts/check-event-booking.mjs [--site /tmp/rf-eb-site] [--port 8992] [--shots /tmp/event-booking-shots]
  */
@@ -250,6 +253,62 @@ async function main() {
 		check( 'editor', 'an event Single template previewing a blog post still shows an event: start date and time tags, gallery', 'November 5, 2031' === tshown.date && '19:00' === tshown.time && 2 === tshown.thumbs, JSON.stringify( tshown ) );
 		await admin.p.screenshot( { path: join( SHOTS, 'editor-template.png' ) } );
 		await admin.ctx.close();
+
+		// ------------------------------------------------------------ pay online: a total amount, no payment link
+		// The Single template above would now show every event; the event page's own details box is checked here.
+		php( `wp_delete_post( ${ tpl }, true );` );
+		const soul = Number( wp( [ 'post', 'create', '--post_type=refraction_event', '--post_status=publish', '--post_title=Soul Dance', '--porcelain' ] ).trim() );
+		php( `Refraction\\Modules\\Events\\Classes\\Event_Data::save( ${ soul }, [ 'start' => '2031-12-01 19:00', 'total_amount' => 'PHP 400', 'ticket_limit' => '3', 'tickets_per_person' => '2', 'payment_note' => "GCash 0917 000 0000\nName: Unfold Studio", 'payment_qr' => '${ images[ 1 ] }' ] ); set_post_thumbnail( ${ soul }, ${ images[ 0 ] } );` );
+		const soulUrl = php( `echo get_permalink( ${ soul } );` );
+		const sp = await ( await browser.newContext( { viewport: { width: 1280, height: 1100 } } ) ).newPage();
+		watch( sp );
+		await sp.goto( soulUrl );
+		const payBtn = await sp.evaluate( () => ( { summary: document.querySelector( '.rfe-book--online summary' )?.textContent.trim(), anchor: document.querySelector( '.rfe-book--online' )?.id, link: !! document.querySelector( 'a.rf-ed-pay' ), book: !! document.querySelector( '.rfe-book:not(.rfe-book--online)' ) } ) );
+		check( 'pay online', 'a total amount without a payment link gives a Pay button that opens a form (no Book now)', 'Pay now · PHP 400' === payBtn.summary && `rfe-pay-${ soul }` === payBtn.anchor && ! payBtn.link && ! payBtn.book, JSON.stringify( payBtn ) );
+		await sp.click( '.rfe-book--online summary' );
+		const form = await sp.evaluate( () => ( { amount: document.querySelector( '.rfe-book__amount strong' )?.textContent, note: document.querySelector( '.rfe-book__instructions' )?.innerText, qr: !! document.querySelector( 'img.rfe-book__qr' ), ref: document.querySelector( '.rfe-book--online [name="reference"]' )?.required, button: document.querySelector( '.rfe-book--online .rfe-book__submit' )?.textContent } ) );
+		check( 'pay online', 'the form shows the amount, the instructions, the QR code and asks for the reference', 'PHP 400' === form.amount && /GCash 0917 000 0000\nName: Unfold Studio/.test( form.note || '' ) && form.qr && true === form.ref && 'Send payment' === form.button, JSON.stringify( form ) );
+		await sp.screenshot( { path: join( SHOTS, 'pay-online.png' ), fullPage: true } );
+		await sp.fill( '.rfe-book--online [name="name"]', 'Dee' );
+		await sp.fill( '.rfe-book--online [name="email"]', 'dee@example.com' );
+		await sp.fill( '.rfe-book--online [name="tickets"]', '2' );
+		await sp.fill( '.rfe-book--online [name="reference"]', 'GC-778899' );
+		await sleep( 2200 );
+		await Promise.all( [ sp.waitForNavigation(), sp.click( '.rfe-book--online .rfe-book__submit' ) ] );
+		const paid = ( await sp.locator( '.rfe-book__notice' ).textContent().catch( () => '' ) ).trim();
+		check( 'pay online', 'sending the reference: thanked, to be confirmed', /payment reference GC-778899 for 2 tickets/.test( paid ) && sp.url().endsWith( `#rfe-pay-${ soul }` ), `${ paid } @ ${ sp.url() }` );
+		// The server refuses an online payment for an event that has a payment link (Salsa Night).
+		const refused = await sp.evaluate( async ( [ id ] ) => {
+			const f = document.querySelector( '.rfe-book--online form' );
+			const body = new FormData( f );
+			body.set( 'event', String( id ) );
+			const r = await fetch( f.getAttribute( 'action' ), { method: 'POST', body, redirect: 'manual' } );
+			return r.type;
+		}, [ eventId ] );
+		const count = php( `echo count( get_posts( [ 'post_type' => 'refraction_booking', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_rfe_booking_method', 'meta_value' => 'online' ] ) );` );
+		check( 'pay online', 'only the one online payment is saved (not for an event with a payment link)', '1' === count, `${ count } ${ refused }` );
+		const gal2 = await sp.evaluate( () => document.querySelectorAll( '.rfe-gallery__item, .rfe-showcase__main' ).length );
+		const link = php( `echo Refraction\\Modules\\Events\\Tags\\Event_Link::url( ${ soul }, 'payment' );` );
+		check( 'pay online', 'the Event Link tag (payment) points at the Pay form', link === `${ soulUrl }#rfe-pay-${ soul }`, link );
+		const featured = php( `echo implode( ',', Refraction\\Modules\\Events\\Classes\\Event_Data::gallery( ${ soul } ) );` );
+		check( 'gallery', 'an event without a gallery shows its featured image', String( images[ 0 ] ) === featured, `${ featured } ${ gal2 }` );
+		await sp.context().close();
+
+		// An event made by an event form whose own fields hold the amount and a picture: filled from the answers.
+		const filled = php( `
+			$def = ( new Refraction\\Modules\\FormBuilder\\Classes\\Collections() )->save( [ 'label' => 'Old dance', 'fields' => [ [ 'key' => 'fee', 'type' => 'currency', 'label' => 'PHP' ], [ 'key' => 'photos', 'type' => 'file', 'label' => 'Photos' ] ] ] );
+			$dir = Refraction\\Modules\\FormBuilder\\Classes\\Uploads::dir( $def['slug'] );
+			wp_mkdir_p( $dir );
+			copy( get_attached_file( ${ images[ 1 ] } ), $dir . '/' . md5( 'old' ) . '.png' );
+			$record = ( new Refraction\\Modules\\FormBuilder\\Classes\\Records() )->insert( $def, [ 'fee' => '450', 'photos' => [ [ 'name' => 'pic.png', 'id' => md5( 'old' ), 'ext' => 'png', 'size' => 1 ] ] ], 'approved' );
+			$id = wp_insert_post( [ 'post_type' => 'refraction_event', 'post_status' => 'publish', 'post_title' => 'Old dance' ] );
+			update_post_meta( $id, '_rfe_type', $def['slug'] );
+			update_post_meta( $id, Refraction\\Modules\\Events\\Classes\\Event_Types::META_RECORD, $record );
+			$data = Refraction\\Modules\\Events\\Classes\\Event_Data::get( $id );
+			echo wp_json_encode( [ 'total' => $data['total_amount'], 'gallery' => count( Refraction\\Modules\\Events\\Classes\\Event_Data::gallery( $id, false ) ), 'mode' => Refraction\\Modules\\Events\\Classes\\Event_Data::payment_mode( $data ) ] );
+		` );
+		const f = JSON.parse( filled || '{}' );
+		check( 'backfill', 'an event form\'s own currency and file fields fill the total amount and the gallery', /450/.test( f.total || '' ) && 1 === f.gallery && 'form' === f.mode, filled );
 
 		check( 'console', 'no JavaScript errors in the browser', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );
 		const phpLog = logTail( logStart ).trim();

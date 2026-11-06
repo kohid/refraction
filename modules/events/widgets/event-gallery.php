@@ -168,7 +168,9 @@ class Event_Gallery extends Widget_Base {
 
 		if ( ! $ids ) {
 			if ( Plugin::$instance->editor->is_edit_mode() || Plugin::$instance->preview->is_preview_mode() ) {
-				echo '<div class="rf-ed rf-ed-hint">' . esc_html__( 'Event Gallery: shows the event\'s gallery (its event form\'s Image gallery field, or Gallery in its page settings).', 'refraction' ) . '</div>';
+				$text = __( 'Event Gallery: shows the event\'s gallery pictures (its event form\'s Image gallery field, or Gallery in the page settings (the cog) > Event details), or else its featured image.', 'refraction' );
+				/* translators: 1: event title, 2: the hint. */
+				echo '<div class="rf-ed rf-ed-hint">' . esc_html( $event ? sprintf( __( '%1$s has no pictures yet. %2$s', 'refraction' ), get_the_title( $event ), $text ) : $text ) . '</div>';
 			}
 
 			return;

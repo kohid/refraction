@@ -65,7 +65,10 @@ class Event_Link extends Data_Tag {
 			case 'ticket':
 				return $card['data']['ticket_url'];
 			case 'payment':
-				return Event_Data::payment_url( $card['data'] );
+				$url = Event_Data::payment_url( $card['data'] );
+
+				// No payment link but a total amount: the Pay form on the event's page.
+				return '' === $url && 'form' === Event_Data::payment_mode( $card['data'] ) ? $card['url'] . '#rfe-pay-' . $post_id : $url;
 			case 'page':
 				return $card['url'];
 			case 'book':

@@ -120,25 +120,29 @@ class Bookings {
 	 * @param int    $event_id
 	 * @param string $class   Classes of the button (summary).
 	 * @param string $text    The button's text ('' for the event's own).
+	 * @param string $method  'cash' (Book now, pay at the event) or 'online' (Pay: pay the total amount as the event's
+	 *                        instructions say and send the payment's reference; for events without a payment link).
 	 */
-	public static function form( int $event_id, string $class = 'rf-ed-tickets rf-ed-book', string $text = '' ): string {
-		if ( ! $event_id || ! self::enabled( $event_id ) ) {
+	public static function form( int $event_id, string $class = 'rf-ed-tickets rf-ed-book', string $text = '', string $method = 'cash' ): string {
+		$online = 'online' === $method;
+
+		if ( ! $event_id || ! ( $online ? self::pays_online( $event_id ) : self::enabled( $event_id ) ) ) {
 			return '';
 		}
 
 		$data = Event_Data::get( $event_id );
-		$text = '' !== $text ? $text : ( '' !== $data['booking_label'] ? $data['booking_label'] : __( 'Book now', 'refraction' ) );
+		$text = '' !== $text ? $text : ( $online ? Event_Data::payment_text( $data ) : ( '' !== $data['booking_label'] ? $data['booking_label'] : __( 'Book now', 'refraction' ) ) );
 		$most = self::most( $event_id );
 		$left = self::left( $event_id );
 		$ended = '' !== $data['end'] && $data['end'] < current_time( 'Y-m-d H:i' );
 		$time = time();
-		$anchor = 'rfe-book-' . $event_id;
-		$notice = self::notice( $event_id );
+		$anchor = self::anchor( $event_id, $method );
+		$notice = self::notice( $event_id, $method );
 		$cash = self::cash_text( $data );
 
 		ob_start();
 		?>
-		<div class="rfe-book" id="<?php echo esc_attr( $anchor ); ?>">
+		<div class="rfe-book<?php echo $online ? ' rfe-book--online' : ''; ?>" id="<?php echo esc_attr( $anchor ); ?>">
 			<?php echo $notice; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 			<?php if ( $ended || 0 === $most ) : ?>
 				<span class="<?php echo esc_attr( $class ); ?> is-disabled" aria-disabled="true"><?php echo esc_html( $ended ? __( 'Booking closed', 'refraction' ) : __( 'Fully booked', 'refraction' ) ); ?></span>
@@ -148,17 +152,34 @@ class Bookings {
 					<form class="rfe-book__form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 						<input type="hidden" name="action" value="<?php echo esc_attr( self::ACTION ); ?>">
 						<input type="hidden" name="event" value="<?php echo esc_attr( (string) $event_id ); ?>">
+						<input type="hidden" name="method" value="<?php echo esc_attr( $online ? 'online' : 'cash' ); ?>">
+						<?php if ( $online ) : ?>
+							<div class="rfe-book__pay">
+								<p class="rfe-book__amount"><?php esc_html_e( 'Total amount', 'refraction' ); ?> <strong><?php echo esc_html( $data['total_amount'] ); ?></strong></p>
+								<?php if ( '' !== $data['payment_note'] ) : ?>
+									<p class="rfe-book__instructions"><?php echo nl2br( esc_html( $data['payment_note'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped, then line breaks. ?></p>
+								<?php endif; ?>
+								<?php if ( (int) $data['payment_qr'] ) : ?>
+									<?php echo wp_get_attachment_image( (int) $data['payment_qr'], 'medium', false, [ 'class' => 'rfe-book__qr', 'alt' => esc_attr__( 'Payment QR code', 'refraction' ) ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by WordPress. ?>
+								<?php endif; ?>
+							</div>
+						<?php endif; ?>
 						<input type="hidden" name="t" value="<?php echo esc_attr( $time . '.' . self::signature( $event_id, $time ) ); ?>">
 						<div class="rfe-book__hp" aria-hidden="true"><label><?php esc_html_e( 'Leave this empty', 'refraction' ); ?><input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 						<p class="rfe-book__row"><label for="<?php echo esc_attr( $anchor ); ?>-name"><?php esc_html_e( 'Your name', 'refraction' ); ?></label><input id="<?php echo esc_attr( $anchor ); ?>-name" type="text" name="name" required maxlength="100" autocomplete="name"></p>
 						<p class="rfe-book__row"><label for="<?php echo esc_attr( $anchor ); ?>-email"><?php esc_html_e( 'Email', 'refraction' ); ?></label><input id="<?php echo esc_attr( $anchor ); ?>-email" type="email" name="email" required maxlength="150" autocomplete="email"></p>
 						<p class="rfe-book__row"><label for="<?php echo esc_attr( $anchor ); ?>-phone"><?php esc_html_e( 'Phone (optional)', 'refraction' ); ?></label><input id="<?php echo esc_attr( $anchor ); ?>-phone" type="tel" name="phone" maxlength="40" autocomplete="tel"></p>
 						<p class="rfe-book__row"><label for="<?php echo esc_attr( $anchor ); ?>-tickets"><?php esc_html_e( 'Tickets', 'refraction' ); ?></label><input id="<?php echo esc_attr( $anchor ); ?>-tickets" type="number" name="tickets" value="1" min="1" max="<?php echo esc_attr( (string) $most ); ?>" required></p>
+						<?php if ( $online ) : ?>
+							<p class="rfe-book__row"><label for="<?php echo esc_attr( $anchor ); ?>-reference"><?php esc_html_e( 'Payment reference number', 'refraction' ); ?></label><input id="<?php echo esc_attr( $anchor ); ?>-reference" type="text" name="reference" required maxlength="80" autocomplete="off"></p>
+						<?php endif; ?>
 						<p class="rfe-book__note">
 							<?php
 							$notes = [];
 
-							if ( '' !== $cash ) {
+							if ( $online ) {
+								$notes[] = __( 'Your places are confirmed once the payment is checked.', 'refraction' );
+							} elseif ( '' !== $cash ) {
 								/* translators: %s: amount. */
 								$notes[] = sprintf( __( 'Pay %s in cash at the event.', 'refraction' ), $cash );
 							} else {
@@ -178,7 +199,7 @@ class Bookings {
 							echo esc_html( implode( ' ', $notes ) );
 							?>
 						</p>
-						<button type="submit" class="rfe-book__submit"><?php esc_html_e( 'Confirm booking', 'refraction' ); ?></button>
+						<button type="submit" class="rfe-book__submit"><?php echo esc_html( $online ? __( 'Send payment', 'refraction' ) : __( 'Confirm booking', 'refraction' ) ); ?></button>
 					</form>
 				</details>
 			<?php endif; ?>
@@ -187,8 +208,17 @@ class Bookings {
 		return (string) ob_get_clean();
 	}
 
+	private static function anchor( int $event_id, string $method ): string {
+		return ( 'online' === $method ? 'rfe-pay-' : 'rfe-book-' ) . $event_id;
+	}
+
+	/** Pay with the form: no payment link, but a total amount to pay. */
+	public static function pays_online( int $event_id ): bool {
+		return 'form' === Event_Data::payment_mode( Event_Data::get( $event_id ) );
+	}
+
 	/** The answer to a booking just sent from this page. */
-	private static function notice( int $event_id ): string {
+	private static function notice( int $event_id, string $method = 'cash' ): string {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Messages only; the booking is checked by its key.
 		$error = isset( $_GET['rfe_book_error'] ) ? sanitize_key( wp_unslash( $_GET['rfe_book_error'] ) ) : '';
 		$for = isset( $_GET['rfe_event'] ) ? absint( $_GET['rfe_event'] ) : 0;
@@ -196,13 +226,15 @@ class Bookings {
 		$key = isset( $_GET['rfe_key'] ) ? sanitize_text_field( wp_unslash( $_GET['rfe_key'] ) ) : '';
 		// phpcs:enable
 
-		if ( $for !== $event_id ) {
+		$sent = isset( $_GET['rfe_method'] ) && 'online' === $_GET['rfe_method'] ? 'online' : 'cash'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ( $for !== $event_id || $sent !== $method ) {
 			return '';
 		}
 
 		if ( '' !== $error ) {
 			$messages = [
-				'missing' => __( 'Please give your name, a valid email address and how many tickets.', 'refraction' ),
+				'missing' => 'online' === $method ? __( 'Please give your name, a valid email address, how many tickets and your payment\'s reference number.', 'refraction' ) : __( 'Please give your name, a valid email address and how many tickets.', 'refraction' ),
 				'full' => __( 'Sorry, there are not enough places left for that many tickets.', 'refraction' ),
 				'person' => __( 'That is more tickets than one person may book for this event.', 'refraction' ),
 				'closed' => __( 'Booking for this event is closed.', 'refraction' ),
@@ -215,6 +247,14 @@ class Bookings {
 		if ( $booking && self::CPT === get_post_type( $booking ) && hash_equals( self::key( $booking ), $key ) ) {
 			$tickets = (int) get_post_meta( $booking, self::META . '_tickets', true );
 			$cash = self::cash_text( Event_Data::get( $event_id ) );
+
+			if ( 'online' === $method ) {
+				/* translators: 1: reference, 2: number of tickets. */
+				$text = sprintf( _n( 'Thank you: we received your payment reference %1$s for %2$d ticket. We will confirm it by email once the payment is checked.', 'Thank you: we received your payment reference %1$s for %2$d tickets. We will confirm it by email once the payment is checked.', $tickets, 'refraction' ), (string) get_post_meta( $booking, self::META . '_reference', true ), $tickets );
+
+				return '<p class="rfe-book__notice is-done" role="status">' . esc_html( $text ) . '</p>';
+			}
+
 			/* translators: %d: number of tickets. */
 			$text = sprintf( _n( 'Booked: %d ticket.', 'Booked: %d tickets.', $tickets, 'refraction' ), $tickets );
 			/* translators: %s: amount. */
@@ -236,14 +276,15 @@ class Bookings {
 	public static function handle(): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Public form, see the class note.
 		$event_id = isset( $_POST['event'] ) ? absint( $_POST['event'] ) : 0;
+		$method = isset( $_POST['method'] ) && 'online' === $_POST['method'] ? 'online' : 'cash';
 		$back = wp_validate_redirect( (string) wp_get_referer(), $event_id ? (string) get_permalink( $event_id ) : home_url( '/' ) );
-		$back = remove_query_arg( [ 'rfe_book_error', 'rfe_booked', 'rfe_key', 'rfe_event' ], $back );
-		$fail = static function ( string $code ) use ( $back, $event_id ): void {
-			wp_safe_redirect( add_query_arg( [ 'rfe_book_error' => $code, 'rfe_event' => $event_id ], $back ) . '#rfe-book-' . $event_id );
+		$back = remove_query_arg( [ 'rfe_book_error', 'rfe_booked', 'rfe_key', 'rfe_event', 'rfe_method' ], $back );
+		$fail = static function ( string $code ) use ( $back, $event_id, $method ): void {
+			wp_safe_redirect( add_query_arg( [ 'rfe_book_error' => $code, 'rfe_event' => $event_id, 'rfe_method' => $method ], $back ) . '#' . self::anchor( $event_id, $method ) );
 			exit;
 		};
 
-		if ( ! $event_id || Module::CPT !== get_post_type( $event_id ) || 'publish' !== get_post_status( $event_id ) || ! self::enabled( $event_id ) ) {
+		if ( ! $event_id || Module::CPT !== get_post_type( $event_id ) || 'publish' !== get_post_status( $event_id ) || ! ( 'online' === $method ? self::pays_online( $event_id ) : self::enabled( $event_id ) ) ) {
 			wp_safe_redirect( home_url( '/' ) );
 			exit;
 		}
@@ -266,9 +307,10 @@ class Bookings {
 		$email = isset( $_POST['email'] ) ? strtolower( sanitize_email( wp_unslash( $_POST['email'] ) ) ) : '';
 		$phone = isset( $_POST['phone'] ) ? preg_replace( '/[^0-9+()\-.\s]/', '', sanitize_text_field( wp_unslash( $_POST['phone'] ) ) ) : '';
 		$tickets = isset( $_POST['tickets'] ) ? absint( $_POST['tickets'] ) : 0;
+		$reference = isset( $_POST['reference'] ) ? mb_substr( sanitize_text_field( wp_unslash( $_POST['reference'] ) ), 0, 80 ) : '';
 		// phpcs:enable
 
-		if ( '' === $name || ! is_email( $email ) || $tickets < 1 ) {
+		if ( '' === $name || ! is_email( $email ) || $tickets < 1 || ( 'online' === $method && '' === $reference ) ) {
 			$fail( 'missing' );
 		}
 
@@ -301,7 +343,7 @@ class Bookings {
 			$fail( 'again' );
 		}
 
-		foreach ( [ 'event' => $event_id, 'name' => $name, 'email' => $email, 'phone' => $phone, 'tickets' => $tickets, 'status' => 'booked', 'method' => 'cash' ] as $key => $value ) {
+		foreach ( [ 'event' => $event_id, 'name' => $name, 'email' => $email, 'phone' => $phone, 'tickets' => $tickets, 'status' => 'booked', 'method' => $method, 'reference' => $reference, 'amount' => Event_Data::get( $event_id )['total_amount'] ] as $key => $value ) {
 			update_post_meta( $booking, self::META . '_' . $key, $value );
 		}
 
@@ -316,7 +358,7 @@ class Bookings {
 		 */
 		do_action( 'refraction/events/booked', (int) $booking, $event_id );
 
-		wp_safe_redirect( add_query_arg( [ 'rfe_booked' => $booking, 'rfe_key' => self::key( (int) $booking ), 'rfe_event' => $event_id ], $back ) . '#rfe-book-' . $event_id );
+		wp_safe_redirect( add_query_arg( [ 'rfe_booked' => $booking, 'rfe_key' => self::key( (int) $booking ), 'rfe_event' => $event_id, 'rfe_method' => $method ], $back ) . '#' . self::anchor( $event_id, $method ) );
 		exit;
 	}
 
@@ -333,8 +375,11 @@ class Bookings {
 			'' !== $card['venue'] ? sprintf( __( 'Where: %s', 'refraction' ), $card['venue'] ) : '',
 			/* translators: %d: number of tickets. */
 			sprintf( __( 'Tickets: %d', 'refraction' ), (int) $meta( 'tickets' ) ),
-			/* translators: %s: amount. */
-			'' !== $cash ? sprintf( __( 'To pay in cash at the event: %s', 'refraction' ), $cash ) : __( 'To pay in cash at the event.', 'refraction' ),
+			'online' === $meta( 'method' )
+				/* translators: 1: amount, 2: reference. */
+				? sprintf( __( 'Paid online: %1$s, reference %2$s (to be checked).', 'refraction' ), $meta( 'amount' ), $meta( 'reference' ) )
+				/* translators: %s: amount. */
+				: ( '' !== $cash ? sprintf( __( 'To pay in cash at the event: %s', 'refraction' ), $cash ) : __( 'To pay in cash at the event.', 'refraction' ) ),
 			$card['url'],
 		];
 		$body = implode( "\n", array_filter( $lines ) );
@@ -358,7 +403,7 @@ class Bookings {
 			'rfe_event' => esc_html__( 'Event', 'refraction' ),
 			'rfe_contact' => esc_html__( 'Contact', 'refraction' ),
 			'rfe_tickets' => esc_html__( 'Tickets', 'refraction' ),
-			'rfe_status' => esc_html__( 'Cash', 'refraction' ),
+			'rfe_status' => esc_html__( 'Payment', 'refraction' ),
 			'date' => $columns['date'] ?? esc_html__( 'Date', 'refraction' ),
 		];
 	}
@@ -379,8 +424,11 @@ class Bookings {
 				break;
 			case 'rfe_status':
 				$status = in_array( $meta( 'status' ), self::STATUSES, true ) ? $meta( 'status' ) : 'booked';
-				$labels = [ 'booked' => __( 'To pay', 'refraction' ), 'paid' => __( 'Paid', 'refraction' ), 'cancelled' => __( 'Cancelled', 'refraction' ) ];
-				echo '<strong class="rfe-booking-' . esc_attr( $status ) . '">' . esc_html( $labels[ $status ] ) . '</strong><br>';
+				$online = 'online' === $meta( 'method' );
+				$labels = [ 'booked' => $online ? __( 'To check', 'refraction' ) : __( 'To pay', 'refraction' ), 'paid' => __( 'Paid', 'refraction' ), 'cancelled' => __( 'Cancelled', 'refraction' ) ];
+				/* translators: 1: amount, 2: reference. */
+				$how = $online ? sprintf( __( 'Online %1$s · ref. %2$s', 'refraction' ), $meta( 'amount' ), $meta( 'reference' ) ) : __( 'Cash at the event', 'refraction' );
+				echo '<strong class="rfe-booking-' . esc_attr( $status ) . '">' . esc_html( $labels[ $status ] ) . '</strong> <span class="description">' . esc_html( $how ) . '</span><br>';
 
 				foreach ( $labels as $to => $label ) {
 					if ( $to !== $status && current_user_can( 'edit_post', $id ) ) {

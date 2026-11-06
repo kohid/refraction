@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.36.0
+Stable tag: 0.37.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.37.0 =
+* Events: Pay without a payment link. When an event has a total amount but no payment link, the Pay button opens a form with the total amount, the payment instructions and a QR code (new in the event form's Pay button and the event's page settings), where people send their payment's reference number. These payments are listed under Refraction > Events > Bookings as "To check" until marked paid.
+* Events: events made by an event form before 0.36 (or with the form's own fields) fill their total amount, payment link and gallery from the form's answers.
+* Event Gallery: falls back to the event's featured image when it has no gallery.
+* Event widgets: editor hints now say what the event is missing and where to set it.
 
 = 0.36.0 =
 * Events: Book now (pay in cash). Event forms and events can offer a booking form on the event page that keeps to the ticket limit and tickets per person. Bookings are emailed, listed under Refraction > Events > Bookings and can be marked as paid.

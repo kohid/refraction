@@ -164,3 +164,21 @@ form; your staff use it to make events of that type. `Classes\Event_Types`; chec
   edit. An event template shows an event of its type, even when its Preview Settings point to a blog post: dynamic
   tags through `refraction/dynamic_tags/context_post_id`, widgets through `Event_Details::current_event()`. New
   templates from "Design the event page" / "Design the archive" preview an event of the type / the type's archive.
+
+## Pay online without a payment link, backfill and fallbacks (0.37.0)
+
+- **Pay form** (`Classes\Bookings::form( $id, $class, $text, 'online' )`): `Event_Data::payment_mode()` is `link` when
+  the event has a payment link (the Pay button opens it, `{amount}` replaced), `form` when it has only a total amount,
+  and `''` otherwise. In `form` mode, the Pay button of Event Details, the Event Button (payment) and the Event Link tag
+  (`#rfe-pay-ID` on the event page) open a form with the total amount, the **payment instructions**
+  (`_rfe_payment_note`) and the **payment QR code** (`_rfe_payment_qr`, an image id), asking for name, email, phone,
+  tickets and a required payment reference. It is saved as a booking with method `online`, its reference and the
+  amount, keeps to the ticket limit and tickets per person, is emailed, and is listed as **To check** until marked
+  paid. Set the instructions and QR code on the event form's Event button (kind Payment) or in the event's page
+  settings.
+- **Backfill**: the first time an event made by an event form is read (`Event_Data::get`, marker `_rfe_backfill`),
+  `Event_Types::backfill()` fills empty details from the form's answers: the total amount from the first currency field
+  (else a number/text field named total or amount), the payment link from a URL field named pay/gcash/checkout, and the
+  gallery from image files in the form's other file fields.
+- **Gallery fallback**: `Event_Data::gallery()` returns the featured image when the event has no gallery.
+- Editor hints name the event and say what is missing and where to set it.

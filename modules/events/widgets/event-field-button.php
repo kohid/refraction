@@ -78,6 +78,21 @@ class Event_Field_Button extends Field_Website {
 			'condition' => [ 'button_kind!' => 'submit' ],
 		] );
 
+		$this->add_control( 'payment_note', [
+			'label' => esc_html__( 'Payment instructions', 'refraction' ),
+			'type' => Controls_Manager::TEXTAREA,
+			'rows' => 3,
+			'placeholder' => esc_html__( 'Send PHP 400 by GCash to 0917 000 0000 (Unfold Studio), then type the reference number.', 'refraction' ),
+			'description' => esc_html__( 'For events without a payment link: their Pay button opens a form with the total amount, these instructions and the QR code, where people send their payment\'s reference number. You check it under Refraction > Events > Bookings.', 'refraction' ),
+			'condition' => [ 'button_kind' => 'payment' ],
+		] );
+
+		$this->add_control( 'payment_qr', [
+			'label' => esc_html__( 'Payment QR code', 'refraction' ),
+			'type' => Controls_Manager::MEDIA,
+			'condition' => [ 'button_kind' => 'payment' ],
+		] );
+
 		$this->add_control( 'book_note', [
 			'type' => Controls_Manager::RAW_HTML,
 			'raw' => esc_html__( 'Not shown in the form: every event made by it gets a Book now button (with the text above) and a booking form, which keeps to the Ticket limit and Tickets per person. Bookings are under Refraction > Events > Bookings.', 'refraction' ),

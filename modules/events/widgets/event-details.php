@@ -319,8 +319,11 @@ class Event_Details extends Widget_Base {
 		}
 
 		$tickets = $on( 'show_tickets' ) && '' !== $data['ticket_url'];
-		$payment = $on( 'show_payment' ) && '' !== $data['payment_url'];
-		$booking = $on( 'show_booking' ) ? \Refraction\Modules\Events\Classes\Bookings::form( (int) $card['id'] ) : '';
+		$mode = $on( 'show_payment' ) ? Event_Data::payment_mode( $data ) : '';
+		$payment = 'link' === $mode;
+		// No payment link but a total amount: Pay opens the form for paying it and sending the payment's reference.
+		$booking = ( 'form' === $mode ? \Refraction\Modules\Events\Classes\Bookings::form( (int) $card['id'], 'rf-ed-tickets rf-ed-pay', '', 'online' ) : '' )
+			. ( $on( 'show_booking' ) ? \Refraction\Modules\Events\Classes\Bookings::form( (int) $card['id'] ) : '' );
 		$calendar = $on( 'show_calendar' ) && $card['links'];
 
 		if ( ! $rows && ! $tickets && ! $payment && '' === $booking && ! $calendar ) {
