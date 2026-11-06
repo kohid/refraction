@@ -1,0 +1,6 @@
+/* Solar icons (480 Design, CC BY 4.0): inline SVG, sized and colored like a font icon. Duotone styles: the second
+   layer takes --rf-icon-duo (color) and --rf-icon-duo-opacity, set by the widgets' "Duotone" controls. */
+.rf-solar{display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.rf-solar svg{width:1em;height:1em;flex:none}
+.rf-solar .rf-duo-f{fill:var(--rf-icon-duo,currentColor);opacity:var(--rf-icon-duo-opacity,.5)}
+.rf-solar .rf-duo-s{stroke:var(--rf-icon-duo,currentColor);opacity:var(--rf-icon-duo-opacity,.5)}

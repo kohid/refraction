@@ -1,17 +1,30 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
+import { svgLibrary, svgMarkup } from 'refraction-editor/utils/icon-svg-bodies';
 
 export default class Icon extends Component {
 	setSelected = () => {
 		this.props.setSelectedHandler( { value: this.props.data.displayPrefix + ' ' + this.props.data.selector, library: this.props.library } );
 	};
+	// A library drawn as inline SVG (Solar) shows its SVG; a font library its class.
+	renderIcon() {
+		const library = svgLibrary( this.props.library );
+
+		if ( library ) {
+			const svg = svgMarkup( library, this.props.data.filter, () => this.forceUpdate() ) || '';
+
+			return <i className={ 'refraction-icons-manager__tab__item__icon rf-solar' } dangerouslySetInnerHTML={ { __html: svg } }></i>;
+		}
+
+		return <i className={ 'refraction-icons-manager__tab__item__icon ' + this.props.className }></i>;
+	}
+
 	render = () => {
 		return (
 			// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
 			<div className={ this.props.containerClass } key={ this.props.keyID } onClick={ this.setSelected } filter={ this.props.data.filter }>
 				<div className="refraction-icons-manager__tab__item__content">
-					<i className={ 'refraction-icons-manager__tab__item__icon ' + this.props.className }>
-					</i>
+					{ this.renderIcon() }
 					<div className={ 'refraction-icons-manager__tab__item__name' } title={ this.props.data.name }>{ this.props.data.name }</div>
 				</div>
 			</div>

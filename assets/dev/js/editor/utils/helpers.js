@@ -1,3 +1,4 @@
+import { svgLibrary, svgIconName, svgMarkup } from './icon-svg-bodies';
 import ColorPicker from './color-picker';
 import DocumentHelper from 'refraction-editor/document/helper-bc';
 import ContainerHelper from 'refraction-editor-utils/container-helper';
@@ -181,6 +182,26 @@ module.exports = {
 				value: this.getInlineSvg( iconValue, view ),
 			};
 		}
+		// Libraries drawn as inline SVG (Solar).
+		const svgLib = svgLibrary( iconType );
+		if ( svgLib ) {
+			const name = svgIconName( svgLib, iconValue ),
+				svg = ( name ? svgMarkup( svgLib, name, () => view?.render?.() ) : '' ) || '';
+
+			if ( 'panel' === returnType || ! view ) {
+				const plain = '<' + tag + ' class="rf-solar">' + svg + '</' + tag + '>';
+
+				return 'object' === returnType ? { rendered: true, value: plain } : plain;
+			}
+
+			const svgTagID = tag + refractionCommon.helpers.getUniqueId();
+			view.addRenderAttribute( svgTagID, attributes );
+			view.addRenderAttribute( svgTagID, 'class', 'rf-solar' );
+			const svgTag = '<' + tag + ' ' + view.getRenderAttributeString( svgTagID ) + '>' + svg + '</' + tag + '>';
+
+			return 'object' === returnType ? { rendered: true, value: svgTag } : svgTag;
+		}
+
 		const iconSettings = this.getIconLibrarySettings( iconType );
 		if ( iconSettings && ! Object.prototype.hasOwnProperty.call( iconSettings, 'isCustom' ) ) {
 			this.enqueueIconFonts( iconType );
