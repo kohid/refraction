@@ -7,16 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 \Refraction\Plugin::$instance->frontend->add_body_class( 'refraction-template-full-width' );
 
 // A block theme has no header.php or footer.php: its header and footer are template parts. They are rendered before
-// wp_head() so the styles of their blocks are printed in the head.
+// wp_head() so the styles of their blocks are printed in the head. As template-part blocks, so that a Theme Builder
+// header or footer takes their place (as on the theme's own pages).
 $refraction_block_theme = function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
 
 if ( $refraction_block_theme ) {
-	ob_start();
-	block_template_part( 'header' );
-	$refraction_header = ob_get_clean();
-	ob_start();
-	block_template_part( 'footer' );
-	$refraction_footer = ob_get_clean();
+	$refraction_header = do_blocks( '<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->' );
+	$refraction_footer = do_blocks( '<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->' );
 	?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
