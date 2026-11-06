@@ -145,6 +145,7 @@ class Modules_Manager {
 			'loop-builder',
 			'forms',
 			'pro-widgets',
+			'migration',
 		];
 	}
 
