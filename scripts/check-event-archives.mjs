@@ -260,6 +260,14 @@ async function main() {
 		await admin.p.goto( designSingle );
 		await openEditor( admin.p );
 		check( 'single', 'the same template opens the next time', single.id === await admin.p.evaluate( () => refraction.config.document.id ) );
+
+		// The event itself still opens in the editor although its type's Single template (no Post Content widget) shows it
+		// on the site: the editor shows the event's own page, with the site's header and footer.
+		await admin.p.goto( `${ BASE }/wp-admin/post.php?post=${ eventId }&action=refraction` );
+		const opened = await admin.p.waitForFunction( () => ( window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0 ? 'editor' : ( /content area was not found/.test( document.body.innerText ) ? 'no content area' : false ) ), null, { timeout: 120000 } ).then( ( h ) => h.jsonValue() ).catch( ( e ) => e.message );
+		const own = 'editor' === opened ? await admin.p.frame( { name: 'refraction-preview-iframe' } ).evaluate( ( id ) => ( { own: !! document.querySelector( `[data-refraction-id="${ id }"]` ), template: !! document.querySelector( '[data-refraction-type="single"]' ) } ), String( eventId ) ) : {};
+		check( 'single', 'an event of a type with a Single template still opens in the editor, showing its own page', 'editor' === opened && own.own && ! own.template, JSON.stringify( [ opened, own ] ) );
+		await admin.p.screenshot( { path: join( SHOTS, 'event-editor.png' ) } );
 		await admin.ctx.close();
 
 		check( 'console', 'no JavaScript errors in the browser', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );
