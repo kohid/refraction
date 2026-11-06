@@ -146,6 +146,7 @@ class Modules_Manager {
 			'forms',
 			'pro-widgets',
 			'migration',
+			'solar-icons',
 		];
 	}
 

@@ -30,7 +30,7 @@ class IconsManager extends Component {
 			if ( loaded[ tabSettings.name ] ) {
 				return;
 			}
-			if ( -1 < [ 'all', 'recommended' ].indexOf( tabSettings.name ) ) {
+			if ( -1 < [ 'all', 'recommended' ].indexOf( tabSettings.name ) || tabSettings.hidden ) {
 				return;
 			}
 
@@ -90,12 +90,13 @@ class IconsManager extends Component {
 	}
 
 	isNativeTab( tab ) {
-		return ( 'all' === tab.name || 'recommended' === tab.name || 'fa-' === tab.name.substr( 0, 3 ) ) && tab.native;
+		return ( 'all' === tab.name || 'recommended' === tab.name || 'fa-' === tab.name.substr( 0, 3 ) || 'solar-' === tab.name.substr( 0, 6 ) ) && tab.native;
 	}
 
 	getIconTabsLinks = ( native = true ) => {
 		return this.props.icons.map( ( tab ) => {
-			if ( native ^ this.isNativeTab( tab ) ) {
+			// Hidden libraries (Font Awesome, unless shown in Settings) still draw the icons already chosen.
+			if ( tab.hidden || ( native ^ this.isNativeTab( tab ) ) ) {
 				return '';
 			}
 
@@ -160,7 +161,7 @@ class IconsManager extends Component {
 
 		const icons = {};
 		this.props.icons.forEach( ( tabSettings ) => {
-			if ( 'all' === tabSettings.name || 'recommended' === tabSettings.name ) {
+			if ( 'all' === tabSettings.name || 'recommended' === tabSettings.name || tabSettings.hidden ) {
 				return;
 			}
 			icons[ tabSettings.name ] = this.getActiveTabIcons( tabSettings.name );
