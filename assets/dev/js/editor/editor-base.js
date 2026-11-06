@@ -797,8 +797,7 @@ export default class EditorBase extends Marionette.Application {
 				mobile: {
 					minHeight: 480,
 					height: 736,
-					width: 360,
-					maxHeight: 896,
+					maxHeight: 1024,
 				},
 				mobile_extra: {
 					minHeight: 480,
@@ -829,8 +828,18 @@ export default class EditorBase extends Marionette.Application {
 
 		let deviceConstrains = this.getCurrentDeviceConstrains();
 
+		// Phones: a phone's height.
+		if ( /^phone_/.test( currentBreakpoint ) ) {
+			deviceConstrains = { ...deviceConstrains, ...specialBreakpointsHeights.mobile_extra };
+		}
+
 		if ( specialBreakpointsHeights[ currentBreakpoint ] ) {
 			deviceConstrains = { ...deviceConstrains, ...specialBreakpointsHeights[ currentBreakpoint ] };
+		}
+
+		// Each view opens at its own width (1024, 820, 768, 480, 430, 393, 375px): the widest the device's settings apply to.
+		if ( 'widescreen' !== currentBreakpoint ) {
+			deviceConstrains.width = deviceConstrains.maxWidth;
 		}
 
 		return deviceConstrains;

@@ -52,6 +52,19 @@
 		return [ 'desktop', 'tablet', 'mobile' ];
 	}
 
+
+	// A list chosen before the phone views and Mobile Landscape existed keeps its meaning: "mobile" took in the phones
+	// and "tablet" the 820px screens (Pure_Motion_Settings::with_newer_devices() in PHP).
+	function withNewerDevices( list ) {
+		const phones = [ 'phone_lg', 'phone_md', 'phone_sm', 'phone_xs' ];
+
+		if ( list.some( ( d ) => 'mobile_extra' === d || phones.indexOf( d ) > -1 ) ) {
+			return list;
+		}
+
+		return list.concat( list.indexOf( 'mobile' ) > -1 ? phones : [], list.indexOf( 'tablet' ) > -1 ? [ 'mobile_extra' ] : [] );
+	}
+
 	/** Same rules as Pure_Sticky_Settings::normalize() in PHP. */
 	function fromSettings( s ) {
 		if ( 'top' !== s.rf_sticky && 'bottom' !== s.rf_sticky ) {
@@ -62,7 +75,7 @@
 
 		return {
 			side: s.rf_sticky,
-			devices: Array.isArray( s.rf_sticky_on ) && s.rf_sticky_on.length ? valid.filter( ( d ) => s.rf_sticky_on.indexOf( d ) > -1 ) : valid,
+			devices: Array.isArray( s.rf_sticky_on ) && s.rf_sticky_on.length ? valid.filter( ( d ) => withNewerDevices( s.rf_sticky_on ).indexOf( d ) > -1 ) : valid,
 			offset: Math.round( num( s.rf_sticky_offset, 0, 0, 1000 ) ),
 			effectsOffset: Math.round( num( s.rf_sticky_effects_offset, 0, 0, 5000 ) ),
 			inParent: 'yes' === s.rf_sticky_parent,

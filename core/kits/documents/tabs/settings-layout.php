@@ -216,10 +216,7 @@ class Settings_Layout extends Tab_Base {
 				'type' => $active_breakpoints_control_type,
 				'description' => esc_html__( 'Mobile and Tablet options cannot be deleted.', 'refraction' ),
 				'options' => $options,
-				'default' => [
-					$prefix . $breakpoint_key_mobile,
-					$prefix . $breakpoint_key_tablet,
-				],
+				'default' => Breakpoints_Manager::default_active_breakpoints(),
 				'select2options' => [
 					'allowClear' => false,
 				],
@@ -235,6 +232,9 @@ class Settings_Layout extends Tab_Base {
 		);
 
 		$this->add_breakpoints_controls();
+
+		// Marks the devices list as having been offered the phone views (Breakpoints_Manager::init_breakpoints()).
+		$this->add_control( Breakpoints_Manager::DEVICES_VERSION_SETTING, [ 'type' => Controls_Manager::HIDDEN, 'default' => 1 ] );
 
 		// Include the old mobile and tablet breakpoint controls as hidden for backwards compatibility.
 		$this->add_control( 'viewport_md', [ 'type' => Controls_Manager::HIDDEN ] );
@@ -275,6 +275,8 @@ class Settings_Layout extends Tab_Base {
 		if ( empty( $data['settings'] ) ) {
 			return $data;
 		}
+
+		$data['settings'][ Breakpoints_Manager::DEVICES_VERSION_SETTING ] = 1;
 
 		$prefix = Breakpoints_Manager::BREAKPOINT_SETTING_PREFIX;
 		$mobile_breakpoint_key = $prefix . Breakpoints_Manager::BREAKPOINT_KEY_MOBILE;

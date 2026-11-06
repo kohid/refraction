@@ -130,6 +130,29 @@ class Pure_Motion_Settings {
 			return array_values( $default );
 		}
 
-		return array_values( array_intersect( $valid, array_map( 'strval', $settings[ $key ] ) ) );
+		return array_values( array_intersect( $valid, self::with_newer_devices( array_map( 'strval', $settings[ $key ] ) ) ) );
+	}
+
+	const PHONES = [ 'phone_lg', 'phone_md', 'phone_sm', 'phone_xs' ];
+
+	/**
+	 * A list of devices chosen before the phone views (480, 430, 393, 375px) and Mobile Landscape (820px) existed keeps
+	 * meaning what it did: "mobile" took in the phones and "tablet" the 820px screens. A list that names any of the
+	 * newer devices is taken as it is. (motion.js, reveal.js and sticky.js do the same.)
+	 */
+	public static function with_newer_devices( array $devices ): array {
+		if ( array_intersect( $devices, array_merge( self::PHONES, [ 'mobile_extra' ] ) ) ) {
+			return $devices;
+		}
+
+		if ( in_array( 'mobile', $devices, true ) ) {
+			$devices = array_merge( $devices, self::PHONES );
+		}
+
+		if ( in_array( 'tablet', $devices, true ) ) {
+			$devices[] = 'mobile_extra';
+		}
+
+		return $devices;
 	}
 }

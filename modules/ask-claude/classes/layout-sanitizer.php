@@ -129,7 +129,7 @@ class Layout_Sanitizer {
 		}
 	}
 
-	const DEVICES = [ '_widescreen', '_laptop', '_tablet_extra', '_tablet', '_mobile_extra', '_mobile' ];
+	const DEVICES = [ '_widescreen', '_laptop', '_tablet_extra', '_tablet', '_mobile_extra', '_mobile', '_phone_lg', '_phone_md', '_phone_sm', '_phone_xs' ];
 
 	/**
 	 * The control behind a device copy such as padding_mobile: the editor makes those copies from a control marked

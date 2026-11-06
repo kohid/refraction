@@ -29,6 +29,23 @@ $title-size: 12px;
 	&.refraction-responsive-switchers-open {
 		z-index: 11000;
 
+		// Open, each device shows its width next to its icon (several views share an icon).
+		.refraction-control-responsive-switchers__holder {
+			width: auto;
+			min-width: 100%;
+		}
+
+		.refraction-responsive-switcher {
+			justify-content: flex-start;
+			gap: 6px;
+			padding: 0 8px;
+			box-sizing: border-box;
+		}
+
+		.refraction-responsive-switcher__width {
+			display: inline;
+		}
+
 		.refraction-responsive-switcher {
 			height: $item-size;
 			transform: scale(1);
@@ -79,6 +96,12 @@ $title-size: 12px;
 			}
 		}
 	}
+}
+.refraction-responsive-switcher__width {
+	display: none;
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
 }
 //End responsive switcher
 

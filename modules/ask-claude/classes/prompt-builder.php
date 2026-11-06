@@ -62,7 +62,7 @@ class Prompt_Builder {
 	/** Settings left out of the chat prompt: rarely wanted in a generated page, and they make the prompt much longer. */
 	const CHAT_SKIP = '/^(_transform_|_background_hover_|_mask_|_element_cache|_attributes|_position_description|hide_|rf_mouse_|rf_assets)|(slideshow|_video_|_video$|play_once|privacy_mode)/';
 
-	const DEVICES = [ '_widescreen', '_laptop', '_tablet_extra', '_tablet', '_mobile_extra', '_mobile' ];
+	const DEVICES = [ '_widescreen', '_laptop', '_tablet_extra', '_tablet', '_mobile_extra', '_mobile', '_phone_lg', '_phone_md', '_phone_sm', '_phone_xs' ];
 
 	private static function is_device_copy( string $key ): bool {
 		foreach ( self::DEVICES as $suffix ) {

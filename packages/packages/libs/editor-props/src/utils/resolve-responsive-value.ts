@@ -1,4 +1,8 @@
 export const RESPONSIVE_BREAKPOINT_KEYS = [
+	'phone_xs',
+	'phone_sm',
+	'phone_md',
+	'phone_lg',
 	'mobile',
 	'mobile_extra',
 	'tablet',

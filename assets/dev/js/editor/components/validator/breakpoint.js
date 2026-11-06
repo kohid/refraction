@@ -62,8 +62,8 @@ export default class BreakpointValidator extends NumberValidator {
 
 		this.initBreakpointProperties();
 
-		// Since the following comparison is <=, allow usage of the 320px value for the mobile breakpoint.
-		if ( 'mobile' === validationTerms.breakpointName && 320 === this.bottomBreakpoint ) {
+		// Since the following comparison is <=, allow usage of the 320px value for the smallest breakpoint.
+		if ( 320 === this.bottomBreakpoint ) {
 			this.bottomBreakpoint -= 1;
 		}
 

@@ -59,9 +59,9 @@ export default class SwiperHandler {
 			let breakpointToUpdate;
 
 			// The `configBPKeyInt + 1` is a BC Fix for Refraction Pro Carousels from 2.8.0-2.8.3 used with Refraction >= 2.9.0
-			if ( configBPKeyInt === refractionBreakpoints.mobile.value || ( configBPKeyInt + 1 ) === refractionBreakpoints.mobile.value ) {
-				// This handles the mobile breakpoint. Refraction's default sm breakpoint is never actually used,
-				// so the mobile breakpoint (md) needs to be handled separately and set to the 0 breakpoint (xs)
+			if ( configBPKeyInt === refractionBreakpointValues[ 0 ] || ( configBPKeyInt + 1 ) === refractionBreakpointValues[ 0 ] ) {
+				// The smallest breakpoint (the 375px phone view, or mobile when the phone views are off) applies from
+				// the 0 breakpoint (xs).
 				breakpointToUpdate = 0;
 			} else if ( refractionBreakpoints.widescreen && ( configBPKeyInt === refractionBreakpoints.widescreen.value || ( configBPKeyInt + 1 ) === refractionBreakpoints.widescreen.value ) ) {
 				// Widescreen is a min-width breakpoint. Since in Swiper >5.0 the breakpoint system is min-width based,

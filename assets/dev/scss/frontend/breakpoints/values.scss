@@ -10,6 +10,18 @@ $screen-desktop-max: 99999px;
 $screen-tablet-next: map.get($breakpoints, lg);
 
 // Additional Custom Breakpoints - SCSS placeholders
+$screen-phone-xs-max: -1;
+$screen-phone-xs-next: -1;
+$screen-phone-xs-min: -1;
+$screen-phone-sm-max: -1;
+$screen-phone-sm-next: -1;
+$screen-phone-sm-min: -1;
+$screen-phone-md-max: -1;
+$screen-phone-md-next: -1;
+$screen-phone-md-min: -1;
+$screen-phone-lg-max: -1;
+$screen-phone-lg-next: -1;
+$screen-phone-lg-min: -1;
 $screen-mobile-extra-min: -1;
 $screen-mobile-extra-max: -1;
 $screen-mobile-extra-next: -1;

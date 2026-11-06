@@ -40,9 +40,9 @@ $breakpoint_classes_map = array_intersect_key( Plugin::$instance->breakpoints->g
 					data-tooltip="%2$s">
 
 					<input type="radio" name="breakpoint" id="e-responsive-bar-switch-%1$s" value="%1$s">
-					<i class="%3$s" aria-hidden="true"></i>
+					<i class="%3$s" aria-hidden="true"></i>%4$s
 					<span class="screen-reader-text">%2$s</span>
-				</label>', esc_attr( $device_key ), esc_attr( $tooltip_label ), esc_attr( $breakpoint_classes_map[ $device_key ] ) );
+				</label>', esc_attr( $device_key ), esc_attr( $tooltip_label ), esc_attr( $breakpoint_classes_map[ $device_key ] ), in_array( $device_key, [ 'desktop', 'widescreen' ], true ) ? '' : '<span class="e-responsive-bar-switcher__width" aria-hidden="true">' . esc_html( $active_breakpoints[ $device_key ]->get_value() ) . '</span>' );
 			} ?>
 			</div>
 			<div id="e-responsive-bar-scale">

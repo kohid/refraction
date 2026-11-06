@@ -59,7 +59,9 @@ export default function BreakpointsSwitcher() {
 			} }
 		>
 			{ breakpoints.map( ( { id, label, type, width } ) => {
-				const Icon = iconsMap[ id ];
+				const Icon = iconsMap[ id ] || MobilePortraitIcon;
+				// Several views share an icon: the max-width ones show their width under it.
+				const caption = 'max-width' === type && width ? String( width ) : '';
 
 				const title = labelsMap[ type || 'default' ]
 					.replace( '%s', label )
@@ -72,10 +74,17 @@ export default function BreakpointsSwitcher() {
 						aria-label={ title }
 						icon={
 							<Tooltip title={ title }>
-								<Icon />
+								<span style={ { display: 'inline-flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1 } }>
+									<Icon />
+									{ caption && (
+										<span style={ { fontSize: 10, marginTop: 2, fontVariantNumeric: 'tabular-nums' } }>
+											{ caption }
+										</span>
+									) }
+								</span>
 							</Tooltip>
 						}
-						sx={ { minWidth: 'auto' } }
+						sx={ { minWidth: 'auto', px: 1.25 } }
 						data-testid={ `switch-device-to-${ id }` }
 					/>
 				);
@@ -107,6 +116,10 @@ const iconsMap = {
 	tablet: TabletPortraitIcon,
 	mobile_extra: MobileLandscapeIcon,
 	mobile: MobilePortraitIcon,
+	phone_lg: MobilePortraitIcon,
+	phone_md: MobilePortraitIcon,
+	phone_sm: MobilePortraitIcon,
+	phone_xs: MobilePortraitIcon,
 };
 
 const labelsMap = {

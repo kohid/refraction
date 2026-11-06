@@ -84,8 +84,20 @@
 		return [ 'desktop', 'tablet', 'mobile' ];
 	}
 
+	// A list chosen before the phone views and Mobile Landscape existed keeps its meaning: "mobile" took in the phones
+	// and "tablet" the 820px screens (Pure_Motion_Settings::with_newer_devices() in PHP).
+	function withNewerDevices( list ) {
+		const phones = [ 'phone_lg', 'phone_md', 'phone_sm', 'phone_xs' ];
+
+		if ( list.some( ( d ) => 'mobile_extra' === d || phones.indexOf( d ) > -1 ) ) {
+			return list;
+		}
+
+		return list.concat( list.indexOf( 'mobile' ) > -1 ? phones : [], list.indexOf( 'tablet' ) > -1 ? [ 'mobile_extra' ] : [] );
+	}
+
 	function devices( s, key, valid, fallback ) {
-		return Array.isArray( s[ key ] ) && s[ key ].length ? valid.filter( ( d ) => s[ key ].indexOf( d ) > -1 ) : fallback;
+		return Array.isArray( s[ key ] ) && s[ key ].length ? valid.filter( ( d ) => withNewerDevices( s[ key ] ).indexOf( d ) > -1 ) : fallback;
 	}
 
 	// A chosen preset turns its effects on and the hand-made ones off (Pure_Reveal_Settings::with_preset() in PHP).

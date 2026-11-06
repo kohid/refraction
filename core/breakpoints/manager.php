@@ -14,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Manager extends Module {
 
 	const BREAKPOINT_SETTING_PREFIX = 'viewport_';
+	const BREAKPOINT_KEY_PHONE_XS = 'phone_xs';
+	const BREAKPOINT_KEY_PHONE_SM = 'phone_sm';
+	const BREAKPOINT_KEY_PHONE_MD = 'phone_md';
+	const BREAKPOINT_KEY_PHONE_LG = 'phone_lg';
 	const BREAKPOINT_KEY_MOBILE = 'mobile';
 	const BREAKPOINT_KEY_MOBILE_EXTRA = 'mobile_extra';
 	const BREAKPOINT_KEY_TABLET = 'tablet';
@@ -67,6 +71,9 @@ class Manager extends Module {
 	private $responsive_control_duplication_mode = 'off';
 
 	private $icons_map;
+
+	/** Whether the active kit's devices list was just given the phone views (its CSS files are then remade). */
+	private $devices_upgraded = false;
 
 	/**
 	 * Has Custom Breakpoints
@@ -178,6 +185,10 @@ class Manager extends Module {
 		$breakpoints = $this->get_active_breakpoints();
 
 		$additional_breakpoints = [
+			self::BREAKPOINT_KEY_PHONE_XS,
+			self::BREAKPOINT_KEY_PHONE_SM,
+			self::BREAKPOINT_KEY_PHONE_MD,
+			self::BREAKPOINT_KEY_PHONE_LG,
 			self::BREAKPOINT_KEY_MOBILE_EXTRA,
 			self::BREAKPOINT_KEY_TABLET_EXTRA,
 			self::BREAKPOINT_KEY_LAPTOP,
@@ -287,6 +298,10 @@ class Manager extends Module {
 	public function get_responsive_icons_classes_map( $device = null ) {
 		if ( ! $this->icons_map ) {
 			$this->icons_map = [
+				'phone_xs' => 'rficon-device-mobile',
+				'phone_sm' => 'rficon-device-mobile',
+				'phone_md' => 'rficon-device-mobile',
+				'phone_lg' => 'rficon-device-mobile',
 				'mobile' => 'rficon-device-mobile',
 				'mobile_extra' => 'rficon-device-mobile rficon-tilted',
 				'tablet' => 'rficon-device-tablet',
@@ -309,19 +324,42 @@ class Manager extends Module {
 	 * @return array
 	 */
 	public static function get_default_config() {
+		// From the smallest up: each device's settings apply up to its width (the views of the editor: 375, 393, 430,
+		// 480, 768, 820 and 1024px under Desktop). The four phones and Mobile Landscape are on by default
+		// (see default_active_breakpoints()); tablet extra, laptop and widescreen can be turned on in Site Settings.
 		return [
+			self::BREAKPOINT_KEY_PHONE_XS => [
+				'label' => esc_html__( 'Small Phone', 'refraction' ),
+				'default_value' => 375,
+				'direction' => 'max',
+			],
+			self::BREAKPOINT_KEY_PHONE_SM => [
+				'label' => esc_html__( 'Phone', 'refraction' ),
+				'default_value' => 393,
+				'direction' => 'max',
+			],
+			self::BREAKPOINT_KEY_PHONE_MD => [
+				'label' => esc_html__( 'Large Phone', 'refraction' ),
+				'default_value' => 430,
+				'direction' => 'max',
+			],
+			self::BREAKPOINT_KEY_PHONE_LG => [
+				'label' => esc_html__( 'Phablet', 'refraction' ),
+				'default_value' => 480,
+				'direction' => 'max',
+			],
 			self::BREAKPOINT_KEY_MOBILE => [
-				'label' => esc_html__( 'Mobile Portrait', 'refraction' ),
-				'default_value' => 767,
+				'label' => esc_html__( 'Mobile', 'refraction' ),
+				'default_value' => 768,
 				'direction' => 'max',
 			],
 			self::BREAKPOINT_KEY_MOBILE_EXTRA => [
 				'label' => esc_html__( 'Mobile Landscape', 'refraction' ),
-				'default_value' => 880,
+				'default_value' => 820,
 				'direction' => 'max',
 			],
 			self::BREAKPOINT_KEY_TABLET => [
-				'label' => esc_html__( 'Tablet Portrait', 'refraction' ),
+				'label' => esc_html__( 'Tablet', 'refraction' ),
 				'default_value' => 1024,
 				'direction' => 'max',
 			],
@@ -437,10 +475,7 @@ class Manager extends Module {
 
 		$setting_prefix = self::BREAKPOINT_SETTING_PREFIX;
 
-		$active_breakpoint_keys = [
-			$setting_prefix . self::BREAKPOINT_KEY_MOBILE,
-			$setting_prefix . self::BREAKPOINT_KEY_TABLET,
-		];
+		$active_breakpoint_keys = self::default_active_breakpoints();
 
 		if ( Plugin::$instance->experiments->is_feature_active( 'additional_custom_breakpoints' ) ) {
 			$kit_active_id = Plugin::$instance->kits_manager->get_active_id();
@@ -449,7 +484,17 @@ class Manager extends Module {
 
 			// If there is an existing kit with an active breakpoints value saved, use it.
 			if ( isset( $raw_kit_settings[ Settings_Layout::ACTIVE_BREAKPOINTS_CONTROL_ID ] ) ) {
-				$active_breakpoint_keys = $raw_kit_settings[ Settings_Layout::ACTIVE_BREAKPOINTS_CONTROL_ID ];
+				$active_breakpoint_keys = (array) $raw_kit_settings[ Settings_Layout::ACTIVE_BREAKPOINTS_CONTROL_ID ];
+
+				// A kit saved before the phone views existed gets them (and Mobile Landscape) once. Marked, so that a
+				// device turned off later in Site Settings stays off.
+				if ( empty( $raw_kit_settings[ self::DEVICES_VERSION_SETTING ] ) ) {
+					$active_breakpoint_keys = array_values( array_unique( array_merge( $active_breakpoint_keys, self::default_active_breakpoints() ) ) );
+					$raw_kit_settings[ Settings_Layout::ACTIVE_BREAKPOINTS_CONTROL_ID ] = $active_breakpoint_keys;
+					$raw_kit_settings[ self::DEVICES_VERSION_SETTING ] = 1;
+					update_post_meta( $kit_active_id, '_refraction_page_settings', wp_slash( $raw_kit_settings ) );
+					$this->devices_upgraded = true;
+				}
 			}
 		}
 
@@ -473,6 +518,25 @@ class Manager extends Module {
 		$this->breakpoints = $breakpoints;
 	}
 
+	/** The kit setting marking a kit whose devices list already had the phone views offered. */
+	const DEVICES_VERSION_SETTING = 'refraction_devices_version';
+
+	/**
+	 * The devices on by default (as `viewport_<key>` setting names): Desktop, 1024 (tablet), 820 (mobile_extra),
+	 * 768 (mobile), 480, 430, 393 and 375 (the phones).
+	 */
+	public static function default_active_breakpoints(): array {
+		return array_map( static fn( $key ) => self::BREAKPOINT_SETTING_PREFIX . $key, [
+			self::BREAKPOINT_KEY_PHONE_XS,
+			self::BREAKPOINT_KEY_PHONE_SM,
+			self::BREAKPOINT_KEY_PHONE_MD,
+			self::BREAKPOINT_KEY_PHONE_LG,
+			self::BREAKPOINT_KEY_MOBILE,
+			self::BREAKPOINT_KEY_MOBILE_EXTRA,
+			self::BREAKPOINT_KEY_TABLET,
+		] );
+	}
+
 	/**
 	 * Init Active Breakpoints
 	 *
@@ -485,6 +549,15 @@ class Manager extends Module {
 			/** @var Breakpoint $breakpoint */
 			return $breakpoint->is_enabled();
 		} );
+
+		if ( $this->devices_upgraded ) {
+			$this->devices_upgraded = false;
+			// The device CSS (hide on device, columns...) and the pages' CSS are made again for the new devices.
+			add_action( 'init', static function () {
+				self::compile_stylesheet_templates();
+				Plugin::$instance->files_manager->clear_cache();
+			}, 99 );
+		}
 	}
 
 	private function get_desktop_previous_device_key() {

@@ -1,4 +1,30 @@
 .refraction {
+	// The phone views (375, 393, 430, 480px): each hides only in its own range. "Hide on Mobile" still hides on every
+	// smaller screen too, as before these views existed.
+	@media (max-width: $screen-phone-xs-max) {
+		.refraction-hidden-phone_xs {
+			display: none;
+		}
+	}
+
+	@media (min-width: $screen-phone-sm-min) and (max-width: $screen-phone-sm-max) {
+		.refraction-hidden-phone_sm {
+			display: none;
+		}
+	}
+
+	@media (min-width: $screen-phone-md-min) and (max-width: $screen-phone-md-max) {
+		.refraction-hidden-phone_md {
+			display: none;
+		}
+	}
+
+	@media (min-width: $screen-phone-lg-min) and (max-width: $screen-phone-lg-max) {
+		.refraction-hidden-phone_lg {
+			display: none;
+		}
+	}
+
 	@media (max-width: $screen-mobile-max) {
 		// TODO: Delete `.refraction-hidden-phone` in the future. It's BC since 3.4.0.
 		.refraction-hidden-phone,

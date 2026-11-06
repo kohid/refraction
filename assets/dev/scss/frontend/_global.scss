@@ -319,6 +319,22 @@
 	@include button-alignment(-mobile);
 }
 
+@media (max-width: $screen-phone-lg-max) {
+	@include button-alignment(-phone_lg);
+}
+
+@media (max-width: $screen-phone-md-max) {
+	@include button-alignment(-phone_md);
+}
+
+@media (max-width: $screen-phone-sm-max) {
+	@include button-alignment(-phone_sm);
+}
+
+@media (max-width: $screen-phone-xs-max) {
+	@include button-alignment(-phone_xs);
+}
+
 // Refraction Page Title
 :root {
 	--page-title-display: block;

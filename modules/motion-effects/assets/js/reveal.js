@@ -76,7 +76,7 @@
 			offset: Math.round( num( s.rf_reveal_offset, 10, 0, 50 ) ),
 			start,
 			end,
-			devices: Array.isArray( s.rf_reveal_devices ) && s.rf_reveal_devices.length ? valid.filter( ( d ) => s.rf_reveal_devices.indexOf( d ) > -1 ) : valid,
+			devices: Array.isArray( s.rf_reveal_devices ) && s.rf_reveal_devices.length ? valid.filter( ( d ) => withNewerDevices( s.rf_reveal_devices ).indexOf( d ) > -1 ) : valid,
 		} );
 	}
 
@@ -90,6 +90,18 @@
 		} catch ( e ) {
 			return [ 'desktop', 'tablet', 'mobile' ];
 		}
+	}
+
+	// A list chosen before the phone views and Mobile Landscape existed keeps its meaning: "mobile" took in the phones
+	// and "tablet" the 820px screens (Pure_Motion_Settings::with_newer_devices() in PHP).
+	function withNewerDevices( list ) {
+		const phones = [ 'phone_lg', 'phone_md', 'phone_sm', 'phone_xs' ];
+
+		if ( list.some( ( d ) => 'mobile_extra' === d || phones.indexOf( d ) > -1 ) ) {
+			return list;
+		}
+
+		return list.concat( list.indexOf( 'mobile' ) > -1 ? phones : [], list.indexOf( 'tablet' ) > -1 ? [ 'mobile_extra' ] : [] );
 	}
 
 	function currentDevice() {
