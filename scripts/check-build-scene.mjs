@@ -304,7 +304,7 @@ async function main() {
 		await a.goto( `${ BASE }/wp-admin/post.php?post=${ tower.id }&action=refraction`, { timeout: 120000 } );
 		await a.waitForFunction( () => window.refraction && window.$e && refraction.documents && refraction.documents.getCurrent() && document.querySelector( '.refraction-panel-category' ), null, { timeout: 120000 } );
 		await a.waitForTimeout( 2000 );
-		await a.frameLocator( '#refraction-preview-iframe' ).locator( '.refraction-widget-build-scene' ).click( { position: { x: 20, y: 20 } } );
+		await a.frameLocator( '#refraction-preview-iframe' ).locator( '.refraction-widget-build-scene' ).click(); // its middle: the floating panel covers the preview's left edge
 		await a.waitForTimeout( 800 );
 		await a.click( '.refraction-control-section_build .refraction-panel-heading, .refraction-control-section_build' ).catch( () => {} );
 		await a.waitForTimeout( 500 );
@@ -325,7 +325,7 @@ async function main() {
 		await a.goto( `${ BASE }/wp-admin/post.php?post=${ house.id }&action=refraction`, { timeout: 120000 } );
 		await a.waitForFunction( () => window.refraction && window.$e && refraction.documents && refraction.documents.getCurrent() && document.querySelector( '.refraction-panel-category' ), null, { timeout: 120000 } );
 		await a.waitForTimeout( 2000 );
-		await preview.locator( '.refraction-widget-build-scene' ).click( { position: { x: 20, y: 20 } } );
+		await preview.locator( '.refraction-widget-build-scene' ).click(); // its middle: the floating panel covers the preview's left edge
 		await a.waitForTimeout( 800 );
 		sections.push( ...await a.$$eval( '.refraction-section-title', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ) ) );
 		check( 'editor', 'its Content tab has Model, Build, Scroll and Camera and light', [ 'Model', 'Build', 'Scroll', 'Camera and light' ].every( ( s ) => sections.includes( s ) ), sections.join( '|' ) );

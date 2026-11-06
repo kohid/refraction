@@ -173,6 +173,19 @@ async function main() {
 		await sleep( 900 );
 		const back = await p.evaluate( () => Math.round( document.querySelector( '#refraction-panel' ).getBoundingClientRect().left ) );
 		check( 'panel', 'and back', 0 === back, String( back ) );
+
+		// Editor Preferences > Panel > Position: beside the page.
+		wp( [ 'eval', "$u = get_user_by( 'login', 'admin' ); update_user_meta( $u->ID, 'refraction_preferences', [ 'panel_position' => 'beside' ] );" ] );
+		await p.reload();
+		await p.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
+		await sleep( 2500 );
+		const beside = await p.evaluate( () => {
+			const panel = document.querySelector( '#refraction-panel' ).getBoundingClientRect();
+			const preview = document.querySelector( '#refraction-preview' ).getBoundingClientRect();
+			return { panelRight: Math.round( panel.right ), previewLeft: Math.round( preview.left ), position: getComputedStyle( document.querySelector( '#refraction-panel' ) ).position };
+		} );
+		check( 'panel', 'set beside the page in Editor Preferences, the preview starts where the panel ends', 'relative' === beside.position && Math.abs( beside.panelRight - beside.previewLeft ) <= 1, JSON.stringify( beside ) );
+		wp( [ 'eval', "$u = get_user_by( 'login', 'admin' ); delete_user_meta( $u->ID, 'refraction_preferences' );" ] );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

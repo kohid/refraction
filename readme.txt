@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.42.0
+Stable tag: 0.42.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.42.1 =
+* Editor Preferences > Panel > Position: the panel floats over the page (full width view, the default) or sits beside it, so the page's left side can be clicked without sliding the panel away.
+* Checked every feature (all PHP tests and browser checks pass); the roadmap's statuses brought up to date.
 
 = 0.42.0 =
 * New: Solar icons (480 Design, CC BY 4.0) in the icon library: 8,859 icons in six styles (Bold Duotone, Line Duotone, Bold, Linear, Outline, Broken), drawn as inline SVG. Font Awesome is no longer offered in the icon library (Settings > Advanced can show it again); the Font Awesome icons already on your pages keep working.
