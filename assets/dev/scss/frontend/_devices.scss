@@ -30,5 +30,21 @@
 		@media (max-width: $screen-mobile-max) {
 			content: 'mobile';
 		}
+
+		@media (max-width: $screen-phone-lg-max) {
+			content: 'phone_lg';
+		}
+
+		@media (max-width: $screen-phone-md-max) {
+			content: 'phone_md';
+		}
+
+		@media (max-width: $screen-phone-sm-max) {
+			content: 'phone_sm';
+		}
+
+		@media (max-width: $screen-phone-xs-max) {
+			content: 'phone_xs';
+		}
 	}
 }

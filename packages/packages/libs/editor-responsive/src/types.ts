@@ -1,4 +1,15 @@
-export type BreakpointId = 'widescreen' | 'desktop' | 'laptop' | 'tablet_extra' | 'tablet' | 'mobile_extra' | 'mobile';
+export type BreakpointId =
+	| 'widescreen'
+	| 'desktop'
+	| 'laptop'
+	| 'tablet_extra'
+	| 'tablet'
+	| 'mobile_extra'
+	| 'mobile'
+	| 'phone_lg'
+	| 'phone_md'
+	| 'phone_sm'
+	| 'phone_xs';
 
 export type BreakpointSize = number;
 

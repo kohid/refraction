@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.38.1
+Stable tag: 0.39.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.39.0 =
+* New: eight views in the editor (pages, Theme Builder templates, forms and events): Desktop, 1024, 820, 768, 480, 430, 393 and 375px, in the top bar and in every responsive setting of every widget, each opening the preview at its own width and showing its width next to its icon. The phone views (480, 430, 393, 375px) are new devices; 1024 is Tablet, 820 Mobile Landscape and 768 Mobile. Settings flow down: a phone view shows the 768px settings until it is given its own. Existing sites get the new views once (they can be turned off in Site Settings > Layout > Breakpoints).
+* Change: the Mobile breakpoint is 768px by default (was 767px), Mobile Landscape 820px (was 880px).
+* Motion effects, sticky and reveal device lists chosen before keep their meaning on the new views ("Mobile" includes the phones, "Tablet" the 820px view).
 
 = 0.38.1 =
 * Just Refraction theme 1.1.0: the theme always uses the site's global fonts (Site Settings > Global Fonts) on every page, Refraction pages included: Text for text, Primary for headings and the site title, Secondary for post details and the footer, Accent for the menu and buttons. Site Settings > Typography and widgets' own fonts still win.

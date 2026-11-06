@@ -31,12 +31,23 @@
 
 .e-responsive-bar {
 
+	// Several views share an icon: each shows its width next to it.
+	&-switcher__width {
+		margin-inline-start: 3px;
+		font-size: 10px;
+		vertical-align: middle;
+		font-variant-numeric: tabular-nums;
+	}
+
 	&-switcher__option {
 		cursor: pointer;
 		text-align: center;
-		width: 22px;
+		min-width: 22px;
+		width: auto;
 		height: 22px;
-		margin: 0 4px;
+		margin: 0 2px;
+		padding: 0 3px;
+		white-space: nowrap;
 		line-height: 22px;
 		border-radius: 3px;
 		font-size: 16px;

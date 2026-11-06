@@ -192,10 +192,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 			_.each( devices, function( device ) {
 				// The 'Desktop' label is made accessible via the global config because it needs to be translated.
 				var deviceLabel = 'desktop' === device ? '<?php esc_html_e( 'Desktop', 'refraction' ); ?>' : activeBreakpoints[ device ].label,
+					deviceWidth = 'desktop' === device || 'widescreen' === device ? '' : activeBreakpoints[ device ].value,
 					tooltipDir = "<?php echo is_rtl() ? 'e' : 'w'; ?>";
+
+				if ( deviceWidth ) {
+					deviceLabel += ' (' + deviceWidth + 'px)';
+				}
 			#>
 				<button class="refraction-responsive-switcher tooltip-target refraction-responsive-switcher-{{ device }}" data-device="{{ device }}" data-tooltip="{{ deviceLabel }}" data-tooltip-pos="{{ tooltipDir }}" aria-label="{{ deviceLabel }}">
 					<i class="{{ refraction.config.responsive.icons_map[ device ] }}" aria-hidden="true"></i>
+					<# if ( deviceWidth ) { #><span class="refraction-responsive-switcher__width" aria-hidden="true">{{ deviceWidth }}</span><# } #>
 				</button>
 			<# } );
 		#>

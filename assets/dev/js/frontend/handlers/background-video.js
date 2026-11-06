@@ -269,7 +269,7 @@ export default class BackgroundVideo extends refractionModules.frontend.handlers
 	run() {
 		const elementSettings = this.getElementSettings();
 
-		if ( ! elementSettings.background_play_on_mobile && 'mobile' === refractionFrontend.getCurrentDeviceMode() ) {
+		if ( ! elementSettings.background_play_on_mobile && /^(mobile|phone_[a-z]+)$/.test( refractionFrontend.getCurrentDeviceMode() ) ) {
 			return;
 		}
 

@@ -517,6 +517,10 @@ html.refraction-html {
 .e-preview--show-hidden-elements[data-refraction-device-mode="tablet_extra"] .refraction-edit-area-active .refraction-hidden-tablet_extra,
 .e-preview--show-hidden-elements[data-refraction-device-mode="tablet"] .refraction-edit-area-active .refraction-hidden-tablet,
 .e-preview--show-hidden-elements[data-refraction-device-mode="mobile_extra"] .refraction-edit-area-active .refraction-hidden-mobile_extra,
+.e-preview--show-hidden-elements[data-refraction-device-mode="phone_lg"] .refraction-edit-area-active .refraction-hidden-phone_lg,
+.e-preview--show-hidden-elements[data-refraction-device-mode="phone_md"] .refraction-edit-area-active .refraction-hidden-phone_md,
+.e-preview--show-hidden-elements[data-refraction-device-mode="phone_sm"] .refraction-edit-area-active .refraction-hidden-phone_sm,
+.e-preview--show-hidden-elements[data-refraction-device-mode="phone_xs"] .refraction-edit-area-active .refraction-hidden-phone_xs,
 .e-preview--show-hidden-elements[data-refraction-device-mode="mobile"] .refraction-edit-area-active .refraction-hidden-mobile {
 	display: inherit; //to overcome the display:none;
 	background: repeating-linear-gradient(125deg,rgba(0, 0, 0, 0.05),rgba(0, 0, 0, 0.05) 1px,transparent 2px,transparent 9px);

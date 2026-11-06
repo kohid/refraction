@@ -19,7 +19,7 @@ class Widget_Specs {
 	const UNSAFE = [ 'html', 'shortcode', 'wp-widget-', 'template', 'global', 'code-highlight' ];
 
 	/** Responsive copies of a control (padding_tablet...) are not listed for Claude; it is told they exist. */
-	const DEVICES = [ '_widescreen', '_laptop', '_tablet_extra', '_tablet', '_mobile_extra', '_mobile' ];
+	const DEVICES = [ '_widescreen', '_laptop', '_tablet_extra', '_tablet', '_mobile_extra', '_mobile', '_phone_lg', '_phone_md', '_phone_sm', '_phone_xs' ];
 
 	private $post_id;
 

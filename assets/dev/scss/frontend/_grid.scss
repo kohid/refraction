@@ -356,4 +356,20 @@
 	@media (max-width: $screen-mobile-max) {
 		@include grid_loop(-mobile);
 	}
+
+	@media (max-width: $screen-phone-lg-max) {
+		@include grid_loop(-phone_lg);
+	}
+
+	@media (max-width: $screen-phone-md-max) {
+		@include grid_loop(-phone_md);
+	}
+
+	@media (max-width: $screen-phone-sm-max) {
+		@include grid_loop(-phone_sm);
+	}
+
+	@media (max-width: $screen-phone-xs-max) {
+		@include grid_loop(-phone_xs);
+	}
 }

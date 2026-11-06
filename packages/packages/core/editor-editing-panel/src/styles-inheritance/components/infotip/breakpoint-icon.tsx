@@ -26,6 +26,10 @@ const breakpointIconMap: Record< string, React.ElementType > = {
 	tablet: TabletPortraitIcon,
 	mobile_extra: MobileLandscapeIcon,
 	mobile: MobilePortraitIcon,
+	phone_lg: MobilePortraitIcon,
+	phone_md: MobilePortraitIcon,
+	phone_sm: MobilePortraitIcon,
+	phone_xs: MobilePortraitIcon,
 };
 
 export const BreakpointIcon = ( { breakpoint }: Props ) => {

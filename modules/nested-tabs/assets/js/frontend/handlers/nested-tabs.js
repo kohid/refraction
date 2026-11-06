@@ -384,7 +384,7 @@ export default class NestedTabs extends Base {
 		const widgetSelector = this.getSettings( 'selectors' ).widgetContainer;
 
 		if ( refractionFrontend.isEditMode() || 'resize' === event?.type ) {
-			const responsiveDevices = [ 'mobile', 'mobile_extra', 'tablet', 'tablet_extra' ],
+			const responsiveDevices = [ 'phone_xs', 'phone_sm', 'phone_md', 'phone_lg', 'mobile', 'mobile_extra', 'tablet', 'tablet_extra' ],
 				currentDevice = refractionFrontend.getCurrentDeviceMode();
 
 			if ( -1 !== responsiveDevices.indexOf( currentDevice ) ) {
