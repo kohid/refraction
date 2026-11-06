@@ -148,12 +148,41 @@ class Locations_Manager {
 		}
 
 		foreach ( Location_Scope::body_locations() as $location ) {
-			if ( $this->get_template_id( $location ) ) {
-				return $location;
+			$id = $this->get_template_id( $location );
+
+			if ( $id ) {
+				// The editor's preview of the page itself needs the page's content: a template without a content widget
+				// (Post Content) leaves the page as it is there, so the page stays editable; the site still uses it.
+				return $this->is_editing_own_page() && ! $this->shows_post_content( $id ) ? '' : $location;
 			}
 		}
 
 		return '';
+	}
+
+	/** The editor's preview frame of the page being shown (not of a template). */
+	private function is_editing_own_page(): bool {
+		$preview_id = isset( $_GET['refraction-preview'] ) ? absint( wp_unslash( $_GET['refraction-preview'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		return $preview_id && is_singular() && $preview_id === (int) get_queried_object_id() && Plugin::$instance->preview->is_preview_mode( $preview_id );
+	}
+
+	/** Whether a template has a widget that prints the page's own content. */
+	private function shows_post_content( int $template_id ): bool {
+		$data = (string) get_post_meta( $template_id, '_refraction_data', true );
+
+		/**
+		 * Widgets that print the page's own content (the_content), so the page can be edited inside a template.
+		 *
+		 * @param string[] $widgets
+		 */
+		foreach ( (array) apply_filters( 'refraction/theme_builder/content_widgets', [ 'theme-post-content', 'woo-product-content' ] ) as $widget ) {
+			if ( false !== strpos( $data, '"widgetType":"' . $widget . '"' ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/** A page that picked the Refraction Canvas or Header-Footer page template keeps it. */

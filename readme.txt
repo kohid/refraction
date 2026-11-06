@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.37.0
+Stable tag: 0.37.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.37.1 =
+* Fix: an event (or any page) whose Single template has no Post Content widget could not be opened in the editor ("the content area was not found"). The editor now shows the page's own content there; the site still uses the template.
 
 = 0.37.0 =
 * Events: Pay without a payment link. When an event has a total amount but no payment link, the Pay button opens a form with the total amount, the payment instructions and a QR code (new in the event form's Pay button and the event's page settings), where people send their payment's reference number. These payments are listed under Refraction > Events > Bookings as "To check" until marked paid.

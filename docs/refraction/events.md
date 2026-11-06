@@ -182,3 +182,11 @@ form; your staff use it to make events of that type. `Classes\Event_Types`; chec
   gallery from image files in the form's other file fields.
 - **Gallery fallback**: `Event_Data::gallery()` returns the featured image when the event has no gallery.
 - Editor hints name the event and say what is missing and where to set it.
+
+## Editing an event that has a type Single template (0.37.1)
+
+The type's starter Single template has no Post Content widget, so the editor's preview of the event itself used to
+show the template and could not find the event's content area. `Locations_Manager::get_body_location()` now leaves the
+page as it is in the editor's preview of the page itself when the winning template has no content widget
+(`theme-post-content`, `woo-product-content`; filter `refraction/theme_builder/content_widgets`). The site still uses the
+template.
