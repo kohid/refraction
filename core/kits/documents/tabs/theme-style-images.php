@@ -34,12 +34,13 @@ class Theme_Style_Images extends Tab_Base {
 	}
 
 	protected function register_tab_controls() {
+		// The Image widget's image only: not every picture of the site (logos, icons, gallery and carousel pictures).
 		$image_selectors = [
-			'{{WRAPPER}} img',
+			'{{WRAPPER}} :where(.refraction-widget-image) img',
 		];
 
 		$image_hover_selectors = [
-			'{{WRAPPER}} img:hover',
+			'{{WRAPPER}} :where(.refraction-widget-image) img:hover',
 		];
 
 		$image_selectors = implode( ',', $image_selectors );

@@ -83,6 +83,7 @@ body {
 }
 
 #refraction-editor-wrapper {
+	position: relative; // The panel floats inside it, over the preview.
 	display: flex;
 	width: 100%;
 	height: 100vh;

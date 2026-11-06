@@ -379,7 +379,20 @@ class Manager {
 	}
 
 	public function is_custom_typography_enabled() {
-		return ! get_option( 'refraction_disable_typography_schemes' );
+		return ! get_option( 'refraction_disable_typography_schemes' ) && ! $this->is_theme_typography_default();
+	}
+
+	/** The kit setting: Site Settings > Typography is the widgets' default instead of the Global Fonts. */
+	const THEME_TYPOGRAPHY_DEFAULT = 'theme_typography_default';
+
+	/**
+	 * Whether Site Settings > Typography (body, links, headings) is the widgets' default instead of the Global Fonts.
+	 * Read from the saved settings, as the kit's own controls ask while they are being made.
+	 */
+	public function is_theme_typography_default(): bool {
+		$settings = get_post_meta( (int) $this->get_active_id(), '_refraction_page_settings', true );
+
+		return is_array( $settings ) && 'yes' === ( $settings[ self::THEME_TYPOGRAPHY_DEFAULT ] ?? '' );
 	}
 
 	/**

@@ -36,22 +36,16 @@ class Theme_Style_Buttons extends Tab_Base {
 	}
 
 	protected function register_tab_controls() {
+		// The Button widget's button only: not every <button> of the site (menu toggles, sub menu arrows, close buttons,
+		// carousel arrows, the theme's own buttons). :where() keeps the weight these rules always had, so what wins over
+		// what is as before.
 		$button_selectors = [
-			'{{WRAPPER}} button',
-			'{{WRAPPER}} input[type="button"]',
-			'{{WRAPPER}} input[type="submit"]',
-			'{{WRAPPER}} .refraction-button',
+			'{{WRAPPER}} :where(.refraction-widget-button) .refraction-button',
 		];
 
 		$button_hover_selectors = [
-			'{{WRAPPER}} button:hover',
-			'{{WRAPPER}} button:focus',
-			'{{WRAPPER}} input[type="button"]:hover',
-			'{{WRAPPER}} input[type="button"]:focus',
-			'{{WRAPPER}} input[type="submit"]:hover',
-			'{{WRAPPER}} input[type="submit"]:focus',
-			'{{WRAPPER}} .refraction-button:hover',
-			'{{WRAPPER}} .refraction-button:focus',
+			'{{WRAPPER}} :where(.refraction-widget-button) .refraction-button:hover',
+			'{{WRAPPER}} :where(.refraction-widget-button) .refraction-button:focus',
 		];
 
 		$button_selector = implode( ',', $button_selectors );

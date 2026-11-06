@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.39.0
+Stable tag: 0.40.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.40.0 =
+* Site Settings > Buttons now styles the Button widget only (not menu toggles, sub menu arrows and other buttons), and Site Settings > Images the Image widget only.
+* Site Settings > Typography: new "Use as the default" switch. On, widgets' headings, text and links follow Typography instead of the Global Fonts (a widget given its own font keeps it).
+* The editor's panel floats over the preview, like the Ask Claude panel, so pages, forms and events are shown at the full width of the window (the arrow on its edge slides it away).
 
 = 0.39.0 =
 * New: eight views in the editor (pages, Theme Builder templates, forms and events): Desktop, 1024, 820, 768, 480, 430, 393 and 375px, in the top bar and in every responsive setting of every widget, each opening the preview at its own width and showing its width next to its icon. The phone views (480, 430, 393, 375px) are new devices; 1024 is Tablet, 820 Mobile Landscape and 768 Mobile. Settings flow down: a phone view shows the 768px settings until it is given its own. Existing sites get the new views once (they can be turned off in Site Settings > Layout > Breakpoints).
