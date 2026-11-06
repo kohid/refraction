@@ -39,6 +39,16 @@ class Theme_Style_Typography extends Tab_Base {
 			]
 		);
 
+		$this->add_control(
+			\Refraction\Core\Kits\Manager::THEME_TYPOGRAPHY_DEFAULT,
+			[
+				'label' => esc_html__( 'Use as the default', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'description' => esc_html__( 'On: widgets\' headings, text and links follow the styles below instead of the Global Fonts (a widget given its own font keeps it). Off: widgets use the Global Fonts. Applies once saved.', 'refraction' ),
+				'render_type' => 'none',
+			]
+		);
+
 		$this->add_default_globals_notice();
 
 		$this->add_control(
