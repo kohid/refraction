@@ -18,3 +18,10 @@
   slides it away as before; resizing it still works. Applies to every editor (pages, templates, forms, events).
 
 Check: `node scripts/check-site-settings.mjs --site DIR --port N`.
+
+## Panel position (0.42.1)
+
+Editor Preferences > Panel > **Position** (`panel_position`): *Float over the page* (default, the above) or *Beside the
+page*: `body.refraction-panel--beside` puts the panel back in the layout (`position: relative`, no shadow) and the
+preview takes what is left (`--e-preview-width: calc(100% - panel width)`), so the page's left side is never under the
+panel. Set live by the editor preferences manager (`onPanelPositionChanged`).

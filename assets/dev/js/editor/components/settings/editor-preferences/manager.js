@@ -14,10 +14,14 @@ export default class extends BaseManager {
 			ui_theme: this.onUIThemeChanged,
 			refraction_theme: this.onRefractionThemeChanged,
 			panel_width: this.onPanelWidthChanged,
+			panel_position: this.onPanelPositionChanged,
 			edit_buttons: this.onEditButtonsChanged,
 			show_hidden_elements: this.onShowHiddenElementsChange,
 			show_launchpad_checklist: this.toggleChecklistIconVisibility,
 		};
+
+		// The saved panel position, once the preferences model exists.
+		refraction.once( 'preview:loaded', () => this.onPanelPositionChanged( this.model?.get( 'panel_position' ) ) );
 	}
 
 	toggleChecklistIconVisibility( switcherValue ) {
@@ -58,6 +62,11 @@ export default class extends BaseManager {
 		} else {
 			root.setAttribute( 'data-refraction-theme', newValue );
 		}
+	}
+
+	/** The panel floats over the page (default) or sits beside it. */
+	onPanelPositionChanged( newValue ) {
+		refractionCommon.elements.$body.toggleClass( 'refraction-panel--beside', 'beside' === newValue );
 	}
 
 	onPanelWidthChanged( newValue ) {

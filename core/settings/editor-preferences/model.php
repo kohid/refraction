@@ -113,6 +113,20 @@ class Model extends BaseModel {
 		);
 
 		$this->add_control(
+			'panel_position',
+			[
+				'label' => esc_html__( 'Position', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'float',
+				'options' => [
+					'float' => esc_html__( 'Float over the page (full width view)', 'refraction' ),
+					'beside' => esc_html__( 'Beside the page', 'refraction' ),
+				],
+				'description' => esc_html__( 'Floating, the page is shown at the full width of the window and the panel covers its left side (the arrow on its edge slides it away). Beside, the panel takes its own space.', 'refraction' ),
+			]
+		);
+
+		$this->add_control(
 			'preview_heading',
 			[
 				'label' => esc_html__( 'Canvas', 'refraction' ),

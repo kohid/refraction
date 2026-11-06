@@ -46,6 +46,12 @@
 		font-size: 13px;
 	}
 
+	// Editor Preferences > Panel > Position: beside the page, in its own space.
+	.refraction-panel--beside & {
+		position: relative;
+		box-shadow: none;
+	}
+
 	.refraction-editor-preview & {
 		--e-is-preview-mode: 1;
 
