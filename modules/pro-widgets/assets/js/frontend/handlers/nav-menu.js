@@ -6,6 +6,8 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 				toggle: '.refraction-nav-menu__toggle',
 				subToggle: '.refraction-nav-menu__subtoggle',
 				item: '.refraction-nav-menu__item',
+				panel: '.refraction-nav-menu__panel',
+				close: '.refraction-nav-menu__close, .refraction-nav-menu__backdrop',
 			},
 		};
 	}
@@ -16,6 +18,7 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		return {
 			$nav: this.$element.find( selectors.nav ),
 			$toggle: this.$element.find( selectors.toggle ),
+			$panel: this.$element.find( selectors.panel ),
 		};
 	}
 
@@ -25,7 +28,10 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		const selectors = this.getSettings( 'selectors' );
 
 		this.boundDocumentClick = this.onDocumentClick.bind( this );
+		this.boundResize = this.stretch.bind( this );
 		this.elements.$toggle.on( 'click', this.onToggleClick.bind( this ) );
+		this.elements.$nav.on( 'click', selectors.close, () => this.close() );
+		jQuery( window ).on( 'resize', this.boundResize );
 		this.elements.$nav.on( 'click', selectors.subToggle, this.onSubToggleClick.bind( this ) );
 		this.elements.$nav.on( 'keydown', this.onKeyDown.bind( this ) );
 		jQuery( document ).on( 'click', this.boundDocumentClick );
@@ -34,11 +40,74 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 	onDestroy() {
 		super.onDestroy();
 		jQuery( document ).off( 'click', this.boundDocumentClick );
+		jQuery( window ).off( 'resize', this.boundResize );
+		this.lockPage( false );
 	}
 
 	setMenuOpen( open ) {
-		this.elements.$nav.toggleClass( 'is-open', open );
+		const $nav = this.elements.$nav;
+
+		clearTimeout( this.closingTimer );
 		this.elements.$toggle.attr( 'aria-expanded', open ? 'true' : 'false' );
+
+		if ( open ) {
+			$nav.removeClass( 'is-closing' ).addClass( 'is-open' );
+			this.stretch();
+			this.lockPage( true );
+
+			return;
+		}
+
+		if ( ! $nav.hasClass( 'is-open' ) ) {
+			return;
+		}
+
+		// Closing plays the panel's animation backwards, then hides it.
+		const duration = this.panelDuration();
+
+		this.lockPage( false );
+
+		if ( ! duration ) {
+			$nav.removeClass( 'is-open is-closing' );
+
+			return;
+		}
+
+		$nav.addClass( 'is-closing' );
+		this.closingTimer = setTimeout( () => $nav.removeClass( 'is-open is-closing' ), duration );
+	}
+
+	close() {
+		this.closeAllSubs();
+		this.setMenuOpen( false );
+	}
+
+	/** The panel's animation length in ms (0 when it has none or is not shown). */
+	panelDuration() {
+		const panel = this.elements.$panel[ 0 ];
+
+		if ( ! panel || 'none' === getComputedStyle( panel ).display || 'none' === getComputedStyle( panel ).animationName ) {
+			return 0;
+		}
+
+		return parseFloat( getComputedStyle( panel ).animationDuration ) * 1000 || 0;
+	}
+
+	/** A dropdown stretched to the screen: offset it to the screen's left edge. */
+	stretch() {
+		const nav = this.elements.$nav[ 0 ];
+
+		if ( nav ) {
+			nav.style.setProperty( '--refraction-nav-stretch-left', ( -nav.getBoundingClientRect().left ) + 'px' );
+		}
+	}
+
+	/** A panel over the whole page (side or full screen) keeps the page from scrolling under it. */
+	lockPage( lock ) {
+		const panel = this.elements.$panel[ 0 ],
+			covers = lock && panel && 'fixed' === getComputedStyle( panel ).position;
+
+		document.documentElement.classList.toggle( 'refraction-nav-menu-locked', !! covers );
 	}
 
 	setSubOpen( $item, open ) {
@@ -52,7 +121,8 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 	}
 
 	onToggleClick() {
-		const open = ! this.elements.$nav.hasClass( 'is-open' );
+		// While it is closing, a click opens it again.
+		const open = ! this.elements.$nav.hasClass( 'is-open' ) || this.elements.$nav.hasClass( 'is-closing' );
 
 		this.setMenuOpen( open );
 

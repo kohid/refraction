@@ -46,3 +46,32 @@ re-renders from the same PHP as the front end. Front-end behaviour sits in lazy 
 
 * The editor's widget search threw two uncaught errors (a stale Marionette `ui.input` in `trackWidgetSearch`, and a call to
   a removed upsell template in `appendStickyPromotion`). Both are fixed in `assets/dev/js/editor/regions/panel/pages/elements/`.
+
+## Nav Menu: submenu icon, hamburger and collapsed panel (0.41.0)
+
+- **Submenu icon** (Content > Menu > Submenu Indicator): none, chevron, caret, plus or *Choose an icon* (`indicator_icon`,
+  from the icon library; the walker, `Nav_Menu_Walker( $indicator_html )`, prints it in the indicator). Style >
+  **Submenu Icon**: size (`--refraction-nav-indicator`), space from the text, turn when open
+  (`--refraction-nav-indicator-turn`, icon and caret), colors and button background for normal / hover / open, button
+  padding, radius and border.
+- **Hamburger** (Content > Mobile Menu): *Button Animation* (`refraction-nav-menu--burger-{x,spin,arrow-left,arrow-right,collapse,none}`)
+  or your own *Button Icon* and *Close Icon* (without a close icon, an X is drawn); Style: line thickness
+  (`--refraction-nav-burger-line`) and animation speed (`--refraction-nav-burger-speed`).
+- **Collapsed menu panel** (Content > Mobile Menu > *Menu Panel*, `refraction-nav-menu--panel-*`): dropdown under the
+  button (*Dropdown Width*: full width of the screen, the default, or the widget's width; the handler sets
+  `--refraction-nav-stretch-left` to reach the screen's left edge), slide in from the right or left (fixed, full height,
+  width from Style > Panel Width, default min(320px, 85vw)), or full screen. Side and full screen panels have a backdrop
+  (its color in Style) and a close button (switchable), and keep the page from scrolling
+  (`html.refraction-nav-menu-locked`). *Open Animation* (`refraction-nav-menu--panel-anim-*`: none, fade, slide down,
+  slide up, zoom, from the side; side panels always slide) plays on opening and, backwards, on closing (the handler
+  keeps `is-open` with `is-closing` for the duration); *Animation Duration* (`--refraction-nav-panel-duration`).
+  Style: item alignment and a line between items. Z-Index sets `--refraction-nav-panel-z`; the backdrop sits one under.
+
+Check: `node scripts/check-nav-menu.mjs --site DIR --port N` (also covers editing from Site Settings).
+
+## Editing from Site Settings (0.41.0)
+
+Site Settings opens the site's kit as the document being edited; the page stays in the preview. Clicking one of the
+page's elements (`core/kits/assets/js/edit-from-preview.js`) goes back to the page (asking first to save or discard
+unsaved Site Settings changes) and selects that element. The Site Settings menu says so. Elements of other documents
+(a Theme Builder header or footer) are left alone.

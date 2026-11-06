@@ -2,6 +2,7 @@ import Component from './component';
 import PanelView from './panel';
 import PanelMenuView from './panel-menu';
 import PanelHeaderBehavior from './panel-header-behavior';
+import EditFromPreview from './edit-from-preview';
 import GlobalControlSelect from './globals/global-select-behavior';
 import ControlsCSSParser from 'refraction-assets-js/editor/utils/controls-css-parser';
 
@@ -42,6 +43,8 @@ export default class Manager extends refractionModules.editor.utils.Module {
 		}
 
 		$e.components.register( new Component( { manager: this } ) );
+
+		this.editFromPreview = new EditFromPreview();
 	}
 
 	addPanelPages() {

@@ -15,16 +15,96 @@
 
 	.refraction-nav-menu.is-open .refraction-nav-menu__panel {
 		display: block;
+		animation: var(--refraction-nav-panel-in, none) var(--refraction-nav-panel-duration, 300ms) ease both;
 	}
 
-	&.refraction-nav-menu--overlay-yes .refraction-nav-menu__panel {
+	.refraction-nav-menu.is-open.is-closing .refraction-nav-menu__panel {
+		animation-name: var(--refraction-nav-panel-out, none);
+	}
+
+	&.refraction-nav-menu--overlay-yes.refraction-nav-menu--panel-dropdown .refraction-nav-menu__panel {
 		position: absolute;
 		top: 100%;
 		left: 0;
 		right: 0;
-		z-index: 999;
+		z-index: var(--refraction-nav-panel-z, 999);
 		background: #fff;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+	}
+
+	// Stretched to the width of the screen (the handler sets the offset from the widget's left edge).
+	&.refraction-nav-menu--overlay-yes.refraction-nav-menu--panel-dropdown.refraction-nav-menu--stretch-full .refraction-nav-menu__panel {
+		left: var(--refraction-nav-stretch-left, 0);
+		right: auto;
+		width: 100vw;
+	}
+
+	// Slide in from a side, or full screen: over the page, with a backdrop and a close button.
+	&.refraction-nav-menu--panel-offcanvas-right,
+	&.refraction-nav-menu--panel-offcanvas-left,
+	&.refraction-nav-menu--panel-fullscreen {
+
+		.refraction-nav-menu__panel {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			z-index: var(--refraction-nav-panel-z, 9999);
+			overflow-y: auto;
+			padding: 64px 16px 24px;
+			background: #fff;
+			box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+		}
+
+		.refraction-nav-menu.is-open .refraction-nav-menu__backdrop {
+			display: block;
+			animation: refraction-nav-fade var(--refraction-nav-panel-duration, 300ms) ease both;
+		}
+
+		.refraction-nav-menu.is-open.is-closing .refraction-nav-menu__backdrop {
+			animation-name: refraction-nav-fade-out;
+		}
+
+		.refraction-nav-menu__close {
+			display: inline-flex;
+		}
+	}
+
+	&.refraction-nav-menu--panel-offcanvas-right .refraction-nav-menu__panel {
+		inset-inline: auto 0;
+		width: var(--refraction-nav-panel-width, min(320px, 85vw));
+		--refraction-nav-panel-in: refraction-nav-from-right;
+		--refraction-nav-panel-out: refraction-nav-from-right-out;
+	}
+
+	&.refraction-nav-menu--panel-offcanvas-left .refraction-nav-menu__panel {
+		inset-inline: 0 auto;
+		width: var(--refraction-nav-panel-width, min(320px, 85vw));
+		--refraction-nav-panel-in: refraction-nav-from-left;
+		--refraction-nav-panel-out: refraction-nav-from-left-out;
+	}
+
+	&.refraction-nav-menu--panel-fullscreen {
+
+		.refraction-nav-menu__panel {
+			left: 0;
+			right: 0;
+			box-shadow: none;
+		}
+
+		.refraction-nav-menu.is-open .refraction-nav-menu__panel {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+	}
+
+	// Items in the panel: alignment and a line between them.
+	.refraction-nav-menu__panel .refraction-nav-menu__link {
+		text-align: var(--refraction-nav-panel-align, start);
+	}
+
+	.refraction-nav-menu__panel .refraction-nav-menu__list > .refraction-nav-menu__item + .refraction-nav-menu__item {
+		border-top: 1px solid var(--refraction-nav-panel-divider, transparent);
 	}
 
 	.refraction-nav-menu__list {
@@ -113,14 +193,15 @@
 	display: inline-block;
 	width: var(--refraction-nav-burger);
 	height: var(--refraction-nav-burger);
+	transition: transform var(--refraction-nav-burger-speed, 250ms) ease;
 
 	span {
 		position: absolute;
 		inset-inline: 12%;
-		height: 2px;
+		height: var(--refraction-nav-burger-line, 2px);
 		border-radius: 2px;
 		background: currentColor;
-		transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+		transition: transform var(--refraction-nav-burger-speed, 250ms) ease, opacity var(--refraction-nav-burger-speed, 200ms) ease, top var(--refraction-nav-burger-speed, 250ms) ease, left var(--refraction-nav-burger-speed, 250ms) ease, right var(--refraction-nav-burger-speed, 250ms) ease;
 
 		&:nth-child(1) {
 			top: 28%;
@@ -206,8 +287,8 @@
 
 .refraction-nav-menu__indicator {
 	display: inline-block;
-	width: 0.55em;
-	height: 0.55em;
+	width: var(--refraction-nav-indicator, 0.55em);
+	height: var(--refraction-nav-indicator, 0.55em);
 	transition: transform 0.2s ease;
 }
 
@@ -242,7 +323,7 @@
 }
 
 .refraction-nav-menu--indicator-caret .is-open > .refraction-nav-menu__subtoggle .refraction-nav-menu__indicator {
-	transform: rotate(180deg);
+	transform: rotate(var(--refraction-nav-indicator-turn, 180deg));
 }
 
 .refraction-nav-menu--indicator-plus .is-open > .refraction-nav-menu__subtoggle .refraction-nav-menu__indicator {
@@ -412,6 +493,247 @@
 .refraction-nav-menu--fx-background > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:focus-visible {
 	background-color: var(--refraction-nav-pointer);
 	color: #fff;
+}
+
+// The collapsed menu panel: its animation (in and out).
+.refraction-nav-menu--panel-anim-fade { --refraction-nav-panel-in: refraction-nav-fade; --refraction-nav-panel-out: refraction-nav-fade-out; }
+.refraction-nav-menu--panel-anim-slide-down { --refraction-nav-panel-in: refraction-nav-slide-down; --refraction-nav-panel-out: refraction-nav-slide-down-out; }
+.refraction-nav-menu--panel-anim-slide-up { --refraction-nav-panel-in: refraction-nav-slide-up; --refraction-nav-panel-out: refraction-nav-slide-up-out; }
+.refraction-nav-menu--panel-anim-zoom { --refraction-nav-panel-in: refraction-nav-zoom; --refraction-nav-panel-out: refraction-nav-zoom-out; }
+.refraction-nav-menu--panel-anim-side { --refraction-nav-panel-in: refraction-nav-side; --refraction-nav-panel-out: refraction-nav-side-out; }
+
+@mixin refraction-nav-keyframes( $name, $hidden ) {
+	@keyframes #{$name} {
+		from { transform: $hidden; opacity: 0; }
+		to { transform: none; opacity: 1; }
+	}
+
+	@keyframes #{$name}-out {
+		from { transform: none; opacity: 1; }
+		to { transform: $hidden; opacity: 0; }
+	}
+}
+
+@include refraction-nav-keyframes( refraction-nav-slide-down, translateY(-14px) );
+@include refraction-nav-keyframes( refraction-nav-slide-up, translateY(14px) );
+@include refraction-nav-keyframes( refraction-nav-zoom, scale(0.94) );
+@include refraction-nav-keyframes( refraction-nav-side, translateX(-24px) );
+
+@keyframes refraction-nav-fade {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes refraction-nav-fade-out {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+@keyframes refraction-nav-from-right {
+	from { transform: translateX(100%); }
+	to { transform: none; }
+}
+
+@keyframes refraction-nav-from-right-out {
+	from { transform: none; }
+	to { transform: translateX(100%); }
+}
+
+@keyframes refraction-nav-from-left {
+	from { transform: translateX(-100%); }
+	to { transform: none; }
+}
+
+@keyframes refraction-nav-from-left-out {
+	from { transform: none; }
+	to { transform: translateX(-100%); }
+}
+
+html.refraction-nav-menu-locked {
+	overflow: hidden;
+}
+
+.refraction-nav-menu__backdrop {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--refraction-nav-panel-z, 9999) - 1); // Just under the panel.
+	background: rgba(0, 0, 0, 0.45);
+}
+
+.refraction-nav-menu__close {
+	display: none;
+	position: absolute;
+	top: 14px;
+	inset-inline-end: 14px;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+	--refraction-nav-burger: 24px;
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+}
+
+// An X drawn with two lines (close buttons, and the toggle's close icon when none is chosen).
+.refraction-nav-menu__x {
+	position: relative;
+	display: inline-block;
+	width: var(--refraction-nav-burger);
+	height: var(--refraction-nav-burger);
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		inset-inline: 12%;
+		top: calc(50% - var(--refraction-nav-burger-line, 2px) / 2);
+		height: var(--refraction-nav-burger-line, 2px);
+		border-radius: 2px;
+		background: currentColor;
+		transform: rotate(45deg);
+	}
+
+	&::after {
+		transform: rotate(-45deg);
+	}
+}
+
+// The toggle's own icons (open / close).
+.refraction-nav-menu__toggle-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--refraction-nav-burger);
+	line-height: 1;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.refraction-nav-menu__toggle-icon--close,
+.refraction-nav-menu.is-open .refraction-nav-menu__toggle-icon--open {
+	display: none;
+}
+
+.refraction-nav-menu.is-open .refraction-nav-menu__toggle-icon--close {
+	display: inline-flex;
+}
+
+// Hamburger animations (the X is the default, above).
+.refraction-nav-menu--burger-spin .refraction-nav-menu.is-open .refraction-nav-menu__burger {
+	transform: rotate(180deg);
+}
+
+.refraction-nav-menu--burger-arrow-left,
+.refraction-nav-menu--burger-arrow-right {
+
+	.refraction-nav-menu.is-open .refraction-nav-menu__burger span:nth-child(2) {
+		opacity: 1;
+	}
+}
+
+.refraction-nav-menu--burger-arrow-left .refraction-nav-menu.is-open .refraction-nav-menu__burger span {
+
+	&:nth-child(1),
+	&:nth-child(3) {
+		top: calc(50% - var(--refraction-nav-burger-line, 2px) / 2);
+		left: 12%;
+		right: 46%;
+		transform-origin: left center;
+	}
+
+	&:nth-child(1) {
+		transform: rotate(-40deg);
+	}
+
+	&:nth-child(3) {
+		transform: rotate(40deg);
+	}
+}
+
+.refraction-nav-menu--burger-arrow-right .refraction-nav-menu.is-open .refraction-nav-menu__burger span {
+
+	&:nth-child(1),
+	&:nth-child(3) {
+		top: calc(50% - var(--refraction-nav-burger-line, 2px) / 2);
+		left: 46%;
+		right: 12%;
+		transform-origin: right center;
+	}
+
+	&:nth-child(1) {
+		transform: rotate(40deg);
+	}
+
+	&:nth-child(3) {
+		transform: rotate(-40deg);
+	}
+}
+
+.refraction-nav-menu--burger-collapse .refraction-nav-menu.is-open .refraction-nav-menu__burger span {
+
+	&:nth-child(1),
+	&:nth-child(3) {
+		top: calc(50% - var(--refraction-nav-burger-line, 2px) / 2);
+		transform: none;
+	}
+
+	&:nth-child(2) {
+		opacity: 1;
+	}
+}
+
+.refraction-nav-menu--burger-none .refraction-nav-menu.is-open .refraction-nav-menu__burger span {
+
+	&:nth-child(1) {
+		top: 28%;
+		transform: none;
+	}
+
+	&:nth-child(2) {
+		opacity: 1;
+	}
+
+	&:nth-child(3) {
+		top: calc(72% - var(--refraction-nav-burger-line, 2px));
+		transform: none;
+	}
+}
+
+// The submenu icon chosen from the icon library.
+.refraction-nav-menu__indicator.refraction-nav-menu__indicator--icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: auto;
+	height: auto;
+	border: 0;
+	font-size: var(--refraction-nav-indicator, 0.8em);
+	line-height: 1;
+	transform: none;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.refraction-nav-menu__item.is-open > .refraction-nav-menu__subtoggle .refraction-nav-menu__indicator--icon {
+	transform: rotate(var(--refraction-nav-indicator-turn, 180deg));
 }
 
 // Collapsed (hamburger) modes.
