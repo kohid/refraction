@@ -866,3 +866,50 @@
 		background: #fdecef;
 	}
 }
+
+// Pay online: the total amount, the instructions and the QR code above the form's fields.
+.rfe-book--online .rfe-book__form {
+	max-height: min(80vh, 720px);
+	overflow-y: auto;
+}
+
+.rfe-book__pay {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #eef0f5;
+}
+
+.rfe-book__amount {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	margin: 0;
+	font-size: 13px;
+	color: #5e6278;
+
+	strong {
+		color: #181c32;
+		font-size: 20px;
+	}
+}
+
+.rfe-book__instructions {
+	margin: 0;
+	padding: 10px 12px;
+	border-radius: 8px;
+	background: #f6f8fb;
+	font-size: 13px;
+	line-height: 1.5;
+	white-space: normal;
+}
+
+.rfe-book__qr {
+	display: block;
+	width: 100%;
+	max-width: 220px;
+	height: auto;
+	margin: 0 auto;
+	border-radius: 8px;
+}

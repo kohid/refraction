@@ -137,14 +137,29 @@ class Event_Button extends Widget_Base {
 			return;
 		}
 
+		// Pay without a payment link: the form for paying the total amount, with this widget's look on its button.
+		if ( 'payment' === $action && $id && \Refraction\Modules\Events\Classes\Bookings::pays_online( $id ) ) {
+			echo '<div class="rfe-btn-wrap" style="--ev:' . esc_attr( \Refraction\Modules\Events\Classes\Event_Data::card( $id )['color'] ) . '">' . \Refraction\Modules\Events\Classes\Bookings::form( $id, 'rfe-btn rfe-btn--payment', trim( (string) ( $s['text'] ?? '' ) ), 'online' ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+
+			return;
+		}
+
 		$url = $id ? Event_Link::url( $id, $action ) : '';
 		$names = Event_Link::links();
 
 		if ( '' === $url ) {
 			// Nothing to open: the button stays away, except in the editor, where it says why.
 			if ( $editing ) {
+				$why = [
+					'payment' => __( 'Event Button (Pay): shows when the event has a total amount or a payment link. Set them in the page settings (the cog) > Event details, or in the event form.', 'refraction' ),
+					'book' => __( 'Event Button (Book now): turn on "Book now (pay in cash)" in the page settings (the cog) > Event details, or on the event form\'s button.', 'refraction' ),
+					'ticket' => __( 'Event Button (Tickets): shows when the event has a tickets link. Set it in the page settings (the cog) > Event details.', 'refraction' ),
+				];
+				$title = $id ? get_the_title( $id ) : '';
 				/* translators: %s: link name, for example "Payment". */
-				echo '<div class="rf-ed rf-ed-hint">' . esc_html( sprintf( __( 'Event Button: shows when the event has a link for "%s".', 'refraction' ), $names[ $action ] ?? $action ) ) . '</div>';
+				$text = $why[ $action ] ?? sprintf( __( 'Event Button: shows when the event has a link for "%s".', 'refraction' ), $names[ $action ] ?? $action );
+				/* translators: 1: event title, 2: the hint. */
+				echo '<div class="rf-ed rf-ed-hint">' . esc_html( '' !== $title ? sprintf( __( '%1$s: %2$s', 'refraction' ), $title, $text ) : $text ) . '</div>';
 			}
 
 			return;

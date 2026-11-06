@@ -36,6 +36,8 @@ class Event extends PageBase {
 		'rfe_organizer' => 'organizer',
 		'rfe_type' => 'type',
 		'rfe_gallery' => 'gallery',
+		'rfe_payment_note' => 'payment_note',
+		'rfe_payment_qr' => 'payment_qr',
 		'rfe_booking' => 'booking',
 		'rfe_booking_label' => 'booking_label',
 	];
@@ -152,6 +154,18 @@ class Event extends PageBase {
 			'placeholder' => esc_html__( 'Pay now', 'refraction' ),
 		] );
 
+		$this->add_control( 'rfe_payment_note', [
+			'label' => esc_html__( 'Payment instructions', 'refraction' ),
+			'type' => Controls_Manager::TEXTAREA,
+			'rows' => 3,
+			'description' => esc_html__( 'Without a payment link, the Pay button (shown when there is a total amount) opens a form with the total amount, these instructions and the QR code, where people send their payment\'s reference number.', 'refraction' ),
+		] );
+
+		$this->add_control( 'rfe_payment_qr', [
+			'label' => esc_html__( 'Payment QR code', 'refraction' ),
+			'type' => Controls_Manager::MEDIA,
+		] );
+
 		$this->add_control( 'rfe_booking', [
 			'label' => esc_html__( 'Book now (pay in cash)', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
@@ -248,8 +262,11 @@ class Event extends PageBase {
 			$settings[ $setting ] = $data[ $key ];
 		}
 
+		$qr = (int) $data['payment_qr'];
+		$settings['rfe_payment_qr'] = [ 'id' => $qr ?: '', 'url' => $qr ? (string) wp_get_attachment_url( $qr ) : '' ];
+
 		// The gallery control keeps [{id, url}].
-		$settings['rfe_gallery'] = array_map( static fn( $id ) => [ 'id' => $id, 'url' => (string) wp_get_attachment_url( $id ) ], Event_Data::gallery( $post_id ) );
+		$settings['rfe_gallery'] = array_map( static fn( $id ) => [ 'id' => $id, 'url' => (string) wp_get_attachment_url( $id ) ], Event_Data::gallery( $post_id, false ) );
 
 		$terms = wp_get_object_terms( $post_id, Module::TAXONOMY, [ 'fields' => 'ids' ] );
 		$settings['rfe_categories'] = is_array( $terms ) ? array_map( 'strval', $terms ) : [];

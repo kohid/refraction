@@ -388,7 +388,7 @@ class Event_Types {
 
 	/** The settings of the event form's own widgets (button texts, the categories to choose from), from its Form page. */
 	private static function widget_settings( int $doc_id ): array {
-		$found = [ 'ticket_label' => '', 'payment_label' => '', 'booking' => '', 'booking_label' => '', 'category_terms' => [] ];
+		$found = [ 'ticket_label' => '', 'payment_label' => '', 'payment_note' => '', 'payment_qr' => '', 'booking' => '', 'booking_label' => '', 'category_terms' => [] ];
 		$walk = static function ( array $elements ) use ( &$walk, &$found ): void {
 			foreach ( $elements as $element ) {
 				$type = (string) ( $element['widgetType'] ?? '' );
@@ -399,6 +399,11 @@ class Event_Types {
 
 					if ( in_array( $kind, [ 'ticket', 'payment' ], true ) ) {
 						$found[ $kind . '_label' ] = sanitize_text_field( (string) ( $settings['page_button_text'] ?? '' ) );
+
+						if ( 'payment' === $kind ) {
+							$found['payment_note'] = sanitize_textarea_field( (string) ( $settings['payment_note'] ?? '' ) );
+							$found['payment_qr'] = (string) absint( $settings['payment_qr']['id'] ?? 0 );
+						}
 					} elseif ( 'book' === $kind ) {
 						$found['booking'] = 'yes';
 						$found['booking_label'] = sanitize_text_field( (string) ( $settings['page_button_text'] ?? '' ) );
@@ -552,7 +557,7 @@ class Event_Types {
 
 		$slug = $definition['slug'];
 		$settings = self::settings( $slug );
-		$labels = $settings['doc'] ? self::widget_settings( $settings['doc'] ) : [ 'ticket_label' => '', 'payment_label' => '', 'booking' => '', 'booking_label' => '' ];
+		$labels = $settings['doc'] ? self::widget_settings( $settings['doc'] ) : [ 'ticket_label' => '', 'payment_label' => '', 'payment_note' => '', 'payment_qr' => '', 'booking' => '', 'booking_label' => '' ];
 		$value = static fn( string $role ) => $values[ self::KEY_PREFIX . $role ] ?? '';
 		$description = trim( (string) $value( 'description' ) );
 		$title = trim( (string) $value( 'title' ) );
@@ -584,6 +589,8 @@ class Event_Types {
 			'ticket_label' => $labels['ticket_label'],
 			'payment_url' => (string) $value( 'payment_url' ),
 			'payment_label' => $labels['payment_label'],
+			'payment_note' => $labels['payment_note'],
+			'payment_qr' => $labels['payment_qr'],
 			'booking' => $labels['booking'],
 			'booking_label' => $labels['booking_label'],
 			'ticket_limit' => (string) $value( 'ticket_limit' ),
@@ -635,6 +642,69 @@ class Event_Types {
 		 * @param array $definition
 		 */
 		do_action( 'refraction/events/created_from_form', $event_id, (int) $record_id, $definition );
+	}
+
+	/**
+	 * Fills what an event lacks from the answers of the event form that made it (once, Event_Data::get): the total
+	 * amount from the form's first Amount field, the payment link from a link field about paying, and the gallery from
+	 * the pictures of its upload fields (copied into the media library). For events made before those event fields
+	 * existed, or forms that use fields of their own.
+	 */
+	public static function backfill( int $event_id ): void {
+		$slug = (string) get_post_meta( $event_id, Event_Data::META_PREFIX . 'type', true );
+		$definition = '' !== $slug ? ( new Collections() )->get( $slug ) : null;
+		$record = $definition ? ( new \Refraction\Modules\FormBuilder\Classes\Records() )->get( (int) get_post_meta( $event_id, self::META_RECORD, true ), $slug ) : null;
+
+		if ( ! $record ) {
+			return;
+		}
+
+		$values = $record['values'];
+		$meta = static fn( string $key ) => (string) get_post_meta( $event_id, Event_Data::META_PREFIX . $key, true );
+		$fields = Schema::walk( $definition['fields'] );
+
+		foreach ( $fields as $field ) {
+			$value = $values[ $field['key'] ] ?? '';
+
+			if ( '' === $meta( 'total_amount' ) && 'currency' === $field['type'] && is_scalar( $value ) && '' !== (string) $value ) {
+				update_post_meta( $event_id, Event_Data::META_PREFIX . 'total_amount', Money::display( (string) $value, Money::config( $definition['settings'] ) ) );
+			}
+
+			if ( '' === $meta( 'payment_url' ) && 'url' === $field['type'] && is_string( $value ) && '' !== $value && preg_match( '/pay|gcash|checkout/i', $field['key'] . ' ' . $field['label'] ) ) {
+				update_post_meta( $event_id, Event_Data::META_PREFIX . 'payment_url', esc_url_raw( $value ) );
+			}
+		}
+
+		// No currency field: a number or text field named as the total amount ("Total", "Amount to pay").
+		foreach ( $fields as $field ) {
+			$value = $values[ $field['key'] ] ?? '';
+
+			if ( '' === $meta( 'total_amount' ) && in_array( $field['type'], [ 'number', 'text' ], true ) && is_scalar( $value ) && preg_match( '/\d/', (string) $value ) && preg_match( '/total|amount/i', $field['key'] . ' ' . $field['label'] ) ) {
+				update_post_meta( $event_id, Event_Data::META_PREFIX . 'total_amount', sanitize_text_field( (string) $value ) );
+			}
+		}
+
+		if ( '' === $meta( 'gallery' ) ) {
+			$ids = [];
+
+			foreach ( $fields as $field ) {
+				if ( 'file' !== $field['type'] || self::KEY_PREFIX . 'image' === $field['key'] ) {
+					continue;
+				}
+
+				foreach ( (array) ( $values[ $field['key'] ] ?? [] ) as $file ) {
+					$id = is_array( $file ) && in_array( strtolower( (string) ( $file['ext'] ?? '' ) ), [ 'jpg', 'jpeg', 'png', 'gif', 'webp' ], true ) ? self::image( $slug, [ $file ], $event_id ) : 0;
+
+					if ( $id ) {
+						$ids[] = $id;
+					}
+				}
+			}
+
+			if ( $ids ) {
+				update_post_meta( $event_id, Event_Data::META_PREFIX . 'gallery', implode( ',', $ids ) );
+			}
+		}
 	}
 
 	/** The event just made in this request (for the address after sending). */

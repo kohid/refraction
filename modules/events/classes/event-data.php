@@ -34,6 +34,8 @@ class Event_Data {
 		'gallery' => '',
 		'booking' => '',
 		'booking_label' => '',
+		'payment_note' => '',
+		'payment_qr' => '',
 	];
 
 	const META_PREFIX = '_rfe_';
@@ -74,6 +76,14 @@ class Event_Data {
 					break;
 				case 'end':
 					$out[ $key ] = self::clean_datetime( $value, true );
+					break;
+				case 'payment_note':
+					$out[ $key ] = sanitize_textarea_field( (string) $value );
+					break;
+				case 'payment_qr':
+					// A media library image: its id (also from a media control's {id, url}).
+					$id = absint( is_array( $value ) ? ( $value['id'] ?? 0 ) : $value );
+					$out[ $key ] = $id && wp_attachment_is_image( $id ) ? (string) $id : '';
 					break;
 				case 'booking':
 					$out[ $key ] = in_array( $value, [ 'yes', '1', 1, true ], true ) ? 'yes' : '';
@@ -169,13 +179,36 @@ class Event_Data {
 	}
 
 	/** The event's gallery: media library image ids, in order. */
-	public static function gallery( int $post_id ): array {
+	public static function gallery( int $post_id, bool $or_featured = true ): array {
+		self::get( $post_id ); // Fills the gallery from the event form's pictures the first time.
 		$ids = array_filter( array_map( 'absint', explode( ',', (string) get_post_meta( $post_id, self::META_PREFIX . 'gallery', true ) ) ) );
+		$ids = array_values( array_filter( $ids, static fn( $id ) => wp_attachment_is_image( $id ) ) );
 
-		return array_values( array_filter( $ids, static fn( $id ) => wp_attachment_is_image( $id ) ) );
+		// No gallery: the event's picture, so the gallery never stands empty when there is one.
+		if ( ! $ids && $or_featured && has_post_thumbnail( $post_id ) ) {
+			$ids = [ (int) get_post_thumbnail_id( $post_id ) ];
+		}
+
+		return $ids;
+	}
+
+	/** How the Pay button works: 'link' (a payment link), 'form' (no link but a total amount: pay and send a reference), ''. */
+	public static function payment_mode( array $data ): string {
+		if ( '' !== $data['payment_url'] ) {
+			return 'link';
+		}
+
+		return '' !== $data['total_amount'] ? 'form' : '';
 	}
 
 	public static function get( int $post_id ): array {
+		// Events made by an event form before a detail existed (or with the form's own fields): filled from the form's
+		// answers once (Event_Types::backfill).
+		if ( '' === (string) get_post_meta( $post_id, self::META_PREFIX . 'backfill', true ) && get_post_meta( $post_id, Event_Types::META_RECORD, true ) ) {
+			update_post_meta( $post_id, self::META_PREFIX . 'backfill', REFRACTION_VERSION );
+			Event_Types::backfill( $post_id );
+		}
+
 		$out = [];
 
 		foreach ( self::FIELDS as $key => $default ) {
