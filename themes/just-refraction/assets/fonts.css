@@ -1,0 +1,28 @@
+/*
+ * Just Refraction: the site's global fonts (Refraction > Site Settings > Global Fonts) on every page, Refraction pages
+ * included: Text for text, Primary for headings and the site title, Secondary for post details, Accent for the menu and
+ * buttons. Refraction's site settings set them as CSS variables on the body; without Refraction (or a global font) the
+ * system font is used. Every selector is wrapped in :where(), so it has no weight: the Site Settings > Typography
+ * styles, widgets' own fonts and any custom CSS always win.
+ */
+:where(body) {
+	font-family: var(--e-global-typography-text-font-family, system-ui), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-weight: var(--e-global-typography-text-font-weight, 400);
+}
+
+:where(h1, h2, h3, h4, h5, h6, .jr-site-title) {
+	font-family: var(--e-global-typography-primary-font-family, var(--e-global-typography-text-font-family, system-ui)), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	font-weight: var(--e-global-typography-primary-font-weight, 700);
+}
+
+:where(.jr-meta, .jr-footer) {
+	font-family: var(--e-global-typography-secondary-font-family, var(--e-global-typography-text-font-family, system-ui)), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+:where(.jr-nav, button, input[type="submit"], input[type="button"], .wp-element-button, .button) {
+	font-family: var(--e-global-typography-accent-font-family, var(--e-global-typography-text-font-family, system-ui)), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+:where(.jr-nav) {
+	font-weight: var(--e-global-typography-accent-font-weight, inherit);
+}
