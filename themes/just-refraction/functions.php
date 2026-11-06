@@ -2,8 +2,8 @@
 /**
  * Just Refraction: a plain theme for Refraction.
  *
- * It prints the page skeleton and nothing that competes with Refraction: no styles on pages built with Refraction, no
- * scripts, no fonts. Refraction's Theme Builder supplies the header and footer when it has one for the page (the theme
+ * It prints the page skeleton and nothing that competes with Refraction: no styles on pages built with Refraction (but
+ * the site's global fonts from Refraction's Site Settings, on every page), no scripts, no fonts of its own. Refraction's Theme Builder supplies the header and footer when it has one for the page (the theme
  * declares `refraction-theme-builder` support and calls refraction_theme_builder_header() / _footer() itself).
  *
  * @package Just_Refraction
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JUST_REFRACTION_VERSION', '1.0.0' );
+define( 'JUST_REFRACTION_VERSION', '1.1.0' );
 
 /** Theme features. */
 function just_refraction_setup() {
@@ -74,8 +74,12 @@ function just_refraction_styles() {
 	wp_enqueue_style( 'just-refraction-a11y' );
 	wp_add_inline_style( 'just-refraction-a11y', '.screen-reader-text{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);clip-path:inset(50%);white-space:nowrap}.skip-link.screen-reader-text:focus{z-index:100000;top:8px;left:8px;width:auto;height:auto;padding:12px 16px;clip:auto!important;clip-path:none;background:#fff;color:#111;font-size:15px;text-decoration:none}' );
 
+	// Always: the site's global fonts (Refraction > Site Settings > Global Fonts), on every page.
+	wp_enqueue_style( 'just-refraction-fonts', get_template_directory_uri() . '/assets/fonts.css', [], JUST_REFRACTION_VERSION );
+	just_refraction_site_settings();
+
 	if ( just_refraction_option( 'basic_styles' ) && ! just_refraction_is_refraction_page() ) {
-		wp_enqueue_style( 'just-refraction-basic', get_template_directory_uri() . '/assets/basic.css', [], JUST_REFRACTION_VERSION );
+		wp_enqueue_style( 'just-refraction-basic', get_template_directory_uri() . '/assets/basic.css', [ 'just-refraction-fonts' ], JUST_REFRACTION_VERSION );
 	}
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -83,6 +87,18 @@ function just_refraction_styles() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'just_refraction_styles' );
+
+/**
+ * Refraction's site settings (its global fonts and colors, and the font files they need) on pages not built with
+ * Refraction too, where Refraction does not load them itself. On Refraction pages they are already there.
+ */
+function just_refraction_site_settings() {
+	if ( ! class_exists( '\\Refraction\\Plugin' ) || empty( \Refraction\Plugin::$instance->kits_manager ) ) {
+		return;
+	}
+
+	\Refraction\Plugin::$instance->kits_manager->frontend_before_enqueue_styles();
+}
 
 /** A body class for the basic style to hang on, so its rules can never reach Refraction content. */
 function just_refraction_body_class( $classes ) {

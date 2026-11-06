@@ -144,7 +144,7 @@ async function main() {
 
 		const page1 = await inspect( p, built.url );
 		check( 'refraction', 'a page built with Refraction gets no theme styles and no theme title', ! page1.basicCss && ! page1.basicClass && page1.title === '' && /Designed in Refraction/.test( page1.html ), JSON.stringify( { ...page1, html: undefined } ) );
-		check( 'refraction', 'only the accessibility rule is added (skip link), nothing that styles content', page1.themeStyles.length === 0 && /just-refraction-a11y-inline-css/.test( page1.html ) );
+		check( 'refraction', 'only the accessibility rule (skip link) and the global fonts (no weight) are added, nothing that styles content', page1.themeStyles.every( ( f ) => /assets\/fonts\.css/.test( f ) ) && /just-refraction-a11y-inline-css/.test( page1.html ), page1.themeStyles.join() );
 
 		// ------------------------------------------------------------ Refraction header and footer templates
 		tbSeed( 'templates', { TB_SPEC: JSON.stringify( [ { key: 'h', type: 'header', title: 'Site header', rules: [ 'include/general' ] }, { key: 'f', type: 'footer', title: 'Site footer', rules: [ 'include/general' ] } ] ) } );
@@ -166,6 +166,33 @@ async function main() {
 		const bare = await inspect( p, postUrl );
 		check( 'switches', 'both switches off: no theme header or footer and no styles at all', ! bare.jrHeader && ! bare.jrFooter && ! bare.basicClass && ! bare.basicCss && bare.title === 'A plain story', JSON.stringify( { ...bare, html: undefined } ) );
 		wp( [ 'theme', 'mod', 'remove', 'just_refraction_header_footer', 'just_refraction_basic_styles' ] );
+
+		// ------------------------------------------------------------ the site's global fonts, on every page
+		const kit = wp( [ 'eval', 'echo Refraction\\Plugin::$instance->kits_manager->get_active_id();' ] ).trim();
+		const setKit = ( extra ) => wp( [ 'eval', `$s = get_post_meta( ${ kit }, '_refraction_page_settings', true ); $s = is_array( $s ) ? $s : []; $s['system_typography'] = [ [ '_id' => 'primary', 'title' => 'Primary', 'typography_typography' => 'custom', 'typography_font_family' => 'Oswald' ], [ '_id' => 'secondary', 'title' => 'Secondary', 'typography_typography' => 'custom', 'typography_font_family' => 'Roboto Slab' ], [ '_id' => 'text', 'title' => 'Text', 'typography_typography' => 'custom', 'typography_font_family' => 'Lora' ], [ '_id' => 'accent', 'title' => 'Accent', 'typography_typography' => 'custom', 'typography_font_family' => 'Poppins' ] ]; ${ extra } update_post_meta( ${ kit }, '_refraction_page_settings', $s ); Refraction\\Plugin::$instance->files_manager->clear_cache();` ] );
+		setKit( '' );
+		wp( [ 'menu', 'create', 'Main' ] );
+		wp( [ 'menu', 'item', 'add-custom', 'Main', 'Home', BASE ] );
+		wp( [ 'menu', 'location', 'assign', 'Main', 'primary' ], { allowFail: true } );
+		const fonts = async ( url ) => {
+			await p.goto( url );
+			return p.evaluate( () => {
+				const f = ( sel ) => ( document.querySelector( sel ) ? getComputedStyle( document.querySelector( sel ) ).fontFamily.split( ',' )[ 0 ].replace( /"/g, '' ) : null );
+				return { body: f( 'body' ), title: f( '.jr-site-title' ), entry: f( 'h1.entry-title' ), footer: f( '.jr-footer' ), nav: f( '.jr-nav a' ), widget: f( '.refraction-widget-heading .refraction-heading-title' ), loaded: [ ...document.querySelectorAll( 'link[href*="fonts.googleapis.com"]' ) ].map( ( l ) => decodeURIComponent( l.href ).match( /family=([^:&]+)/ )?.[ 1 ].replace( /\+/g, ' ' ) ) };
+			} );
+		};
+		const postFonts = await fonts( postUrl );
+		check( 'fonts', 'a post not built with Refraction: text in the global Text font, title and headings in Primary, footer in Secondary, menu in Accent', 'Lora' === postFonts.body && 'Oswald' === postFonts.title && 'Oswald' === postFonts.entry && 'Roboto Slab' === postFonts.footer && ( null === postFonts.nav || 'Poppins' === postFonts.nav ), JSON.stringify( postFonts ) );
+		check( 'fonts', 'the global fonts are loaded there too', [ 'Lora', 'Oswald' ].every( ( f ) => postFonts.loaded.includes( f ) ), JSON.stringify( postFonts.loaded ) );
+		const builtPage = page( 'Fonts page', [ container( 'fc01', [ spacer( 'fh01', 'Global heading' ) ] ) ] );
+		wp( [ 'post', 'update', builtPage.id, '--page_template=default' ] );
+		const pageFonts = await fonts( builtPage.url );
+		check( 'fonts', 'a Refraction page: the theme header and footer follow the global fonts, the widget keeps its own (Primary)', 'Lora' === pageFonts.body && 'Oswald' === pageFonts.title && 'Roboto Slab' === pageFonts.footer && 'Oswald' === pageFonts.widget, JSON.stringify( pageFonts ) );
+		await p.screenshot( { path: join( SHOTS, 'global-fonts-page.png' ), fullPage: true } );
+		setKit( "$s['body_typography_typography'] = 'custom'; $s['body_typography_font_family'] = 'Merriweather';" );
+		const typo = await fonts( postUrl );
+		check( 'fonts', 'Site Settings > Typography (body) still wins over the theme', 'Merriweather' === typo.body && 'Oswald' === typo.title, JSON.stringify( typo ) );
+		await p.screenshot( { path: join( SHOTS, 'global-fonts-post.png' ), fullPage: true } );
 
 		// ------------------------------------------------------------ other views
 		const missing = await inspect( p, `${ BASE }/no-such-page-here/` );

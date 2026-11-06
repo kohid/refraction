@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.38.0
+Stable tag: 0.38.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.38.1 =
+* Just Refraction theme 1.1.0: the theme always uses the site's global fonts (Site Settings > Global Fonts) on every page, Refraction pages included: Text for text, Primary for headings and the site title, Secondary for post details and the footer, Accent for the menu and buttons. Site Settings > Typography and widgets' own fonts still win.
 
 = 0.38.0 =
 * New: move a site from Elementor. "Convert to Refraction" under each page built with Elementor (and as a bulk action) converts it in place: content, layout, styles, dynamic tags, popup links and template shortcodes come along, Elementor Pro widgets become their Refraction versions, and widgets from add-ons Refraction has no version of are kept as HTML showing what they showed. The first conversion also moves the global colors, fonts and layout settings and every template (headers, footers, single and archive templates, popups with their conditions and triggers, sections). "Back to Elementor" undoes a page while Elementor is installed. Refraction > Move from Elementor converts everything at once and says when Elementor can be removed.
