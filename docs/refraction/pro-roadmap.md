@@ -2,7 +2,7 @@
 
 Goal (owner): Refraction contains the whole feature set of the Elementor free plugin and of Elementor Pro, built in, always on, no license, no toggles, no remote services. Everything is written fresh for Refraction; no code is copied from any commercial or license-restricted source.
 
-Status key: DONE = shipped and browser-checked, TODO = not started.
+Status key: DONE = shipped and browser-checked, PARTIAL = shipped except what is named, TODO = not started. Statuses checked against the code in 0.42.0.
 
 ## Already in the free base (inherited, working)
 
@@ -12,9 +12,9 @@ Containers, sections/columns, the core widget set, global colors and fonts (kit)
 
 | # | Module | Scope | Status |
 |---|--------|-------|--------|
-| A1 | Theme Builder part 2 | Single (post/page/CPT), Archive, Search Results, 404 templates and the Theme Elements widgets (Site Logo, Site Title, Site Tagline, Page Title, Post Title, Post Content, Post Excerpt, Featured Image, Post Info, Author Box, Post Comments, Post Navigation, Breadcrumbs, Archive Title, Sitemap, Search Form) | TODO |
+| A1 | Theme Builder part 2 | Single (post/page/CPT), Archive, Search Results, 404 templates and the Theme Elements widgets (Site Logo, Site Title, Site Tagline, Page Title, Post Title, Post Content, Post Excerpt, Featured Image, Post Info, Author Box, Post Comments, Post Navigation, Breadcrumbs, Archive Title, Sitemap, Search Form) | DONE (see [theme-builder.md](theme-builder.md), [theme-builder-2-plan.md](theme-builder-2-plan.md)) |
 | A2 | Dynamic content and Loop Builder | Dynamic tags (post, site, user, archive, author, ACF-compatible fields when ACF is present, custom fields), query controls, Posts, Portfolio, Loop Grid, Loop Carousel, Archive Posts, Taxonomy Filter, Loop Item template type | DONE (see [loop-builder.md](loop-builder.md), [dynamic-tags.md](dynamic-tags.md)) |
-| A3 | Forms | Form widget (fields, validation, steps, multi-step), actions (email, redirect, webhook, mailchimp-style HTTP integrations as generic webhooks, collect submissions), form submissions admin (list, view, export CSV, spam protection: honeypot and a local math/time check), Login widget | TODO |
+| A3 | Forms | Form widget (fields, validation, steps, multi-step), actions (email, redirect, webhook, mailchimp-style HTTP integrations as generic webhooks, collect submissions), form submissions admin (list, view, export CSV, spam protection: honeypot and a local math/time check), Login widget | DONE (see [forms.md](forms.md)) |
 | A4 | Pro widgets batch 1 | Nav Menu, Slides, Price List, Price Table, Flip Box, Call to Action, Animated Headline, Countdown, Share Buttons, Blockquote, Progress Tracker, Table of Contents: DONE (see pro-widgets.md). Batch 2 DONE (see pro-widgets-2.md): Media Carousel, Testimonial Carousel, Reviews, Hotspot, Code Highlight, Lottie, Video Playlist, Gallery (grid/masonry/justified, filters), Facebook Button/Comments/Embed/Page as plain embeds. Social Icons extras: skipped, the existing Social Icons widget already has shapes, sizes, columns, per-icon colours and hover animations | DONE |
 
 ## Wave B
@@ -22,11 +22,11 @@ Containers, sections/columns, the core widget set, global colors and fonts (kit)
 | # | Module | Scope | Status |
 |---|--------|-------|--------|
 | B1 | Popups | Popup template type, triggers (page load, scroll, exit intent, click, inactivity, after N views), conditions via the shared engine, entrance/exit animations, close rules, advanced rules (once per session/visit) | Done (0.4.0, [popups.md](popups.md)) |
-| B2 | Site-wide extras | Custom CSS (element, page, global), Custom Code snippets (head/body/footer, with conditions), Display Conditions per element, Custom Attributes, Motion Effects (scroll, mouse), Sticky, Custom Fonts and Custom Icons upload, Global Widgets-style reusable templates, Notes | TODO |
-| B3 | Mega Menu, Nested Carousel, Off-Canvas, Modal | Interactive nested widgets | TODO |
-| B4 | WooCommerce builder | Product, Product Archive, Cart, Checkout, My Account, Purchase Summary templates; Woo widgets (Products, Add to Cart, Title, Images, Price, Rating, Stock, Meta, Short Description, Content, Data Tabs, Additional Info, Upsells, Related, Menu Cart, Cart, Checkout, My Account, Order Tracking, Notices, Categories, Breadcrumb); loads only when WooCommerce is active | DONE on `feat/woo` (see woocommerce.md) |
+| B2 | Site-wide extras | Custom CSS (element, page, global), Custom Code snippets (head/body/footer, with conditions), Display Conditions per element, Custom Attributes, Motion Effects (scroll, mouse), Sticky, Custom Fonts and Custom Icons upload, Global Widgets-style reusable templates, Notes | PARTIAL: all but Notes (see [extras-a.md](extras-a.md), [motion.md](motion.md); reusable templates: the Template widget, [migration.md](migration.md)) |
+| B3 | Mega Menu, Nested Carousel, Off-Canvas, Modal | Interactive nested widgets | DONE (see [nested.md](nested.md); Modal: the Popup template type) |
+| B4 | WooCommerce builder | Product, Product Archive, Cart, Checkout, My Account, Purchase Summary templates; Woo widgets (Products, Add to Cart, Title, Images, Price, Rating, Stock, Meta, Short Description, Content, Data Tabs, Additional Info, Upsells, Related, Menu Cart, Cart, Checkout, My Account, Order Tracking, Notices, Categories, Breadcrumb); loads only when WooCommerce is active | DONE (see woocommerce.md) |
 | B6 | Builder | Own collections (Bookings, Listings, Transactions...) with fields, statuses, records table and public form/list | Done (0.6.0 collections and records; 0.7.0 drag and drop designer, multi-step, repeater, group, uploads, hidden, conditions, style, advanced settings; [form-builder.md](form-builder.md)) |
-| B5 | Integrations and polish | Webhook-based form integrations, activity log, dashboard overview, accessibility pass | TODO |
+| B5 | Integrations and polish | Webhook-based form integrations, activity log, dashboard overview, accessibility pass | PARTIAL: webhook actions in Forms and the Form Builder; activity log, dashboard overview and an accessibility pass not done |
 | B7 | 3D Build Scene | Widget: a 3D model (sample house or uploaded .glb) whose parts fly in stage by stage with the scroll, captions, progress, camera, light, editor preview | Done (0.17.0, see [build-scene.md](build-scene.md)). Scroll Sequence (video or image frames scrubbed with the scroll, text overlays): done in 0.18.0 |
 | B8 | Ask Claude panel | A prompt panel in the editor that builds pages from Refraction's widgets. The owner approved one exception to "no remote calls": it calls Anthropic only when the user presses Generate, with the user's own API key | Done (0.19.0, see [ask-claude.md](ask-claude.md)) |
 | B9 | Seedance video through Claude | Claude generates hero/background videos with the user's Seedance key and puts them in the media library | TODO (after B8) |
@@ -39,3 +39,10 @@ Containers, sections/columns, the core widget set, global colors and fonts (kit)
 - Written test-first; a Playwright check script `scripts/check-<module>.mjs` and, where logic is pure, a standalone PHP test `scripts/test-<module>.php`.
 - The compiled JS/CSS must be in the release zip (entries in `scripts/vite/shared/entries.mjs`, SCSS in `scripts/vite/plugins/scss-build.mjs`).
 - Each module ends with a short `docs/refraction/<module>.md` (what it does, limits).
+
+## Also shipped (beyond the plan)
+
+Timed Slides, Form Canvas and the Form Builder form on the Shortcode widget, Events (event types as forms, calendar, archives, bookings, pay
+online; [events.md](events.md)), page loader and card motion, the Just Refraction theme ([just-refraction-theme.md](just-refraction-theme.md)),
+moving a site from Elementor ([migration.md](migration.md)), eight editor views ([devices.md](devices.md)), Site Settings scope and the
+floating editor panel ([site-settings-scope.md](site-settings-scope.md)), Solar icons with duotone ([solar-icons.md](solar-icons.md)).
