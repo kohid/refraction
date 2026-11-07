@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.43.0
+Stable tag: 0.44.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.44.0 =
+* Icon Box and Image Box: the title has no margin of its own any more, so a theme's heading margin no longer shows (Title Spacing and Margin still add space when set).
+* Icon Box: Icon Layout "Arrange freely": the main icon and More Icons share one area (width and height in Style > Icon) and each is placed across and down it, turned and layered, with its own size and color, to build one picture from several icons.
+* Image Box and Icon Box: a Button under the text (text, link, icon before or after, filled, outline or text link; Style > Button with typography, colors for normal and hover, padding, radius, border, space above). The description can be shown as text, cut to a number of lines (with its full text in a tooltip if wanted) or as a tooltip of the box (above or under it; Style > Tooltip).
 
 = 0.43.0 =
 * Nav Menu: the collapsed menu panel no longer scrolls sideways (long items wrap; the full width dropdown fits the page without its scrollbar). New: the site logo, site name, an image or your own text at the top of the panel, linked to the home page, and buttons under the menu items (filled or outline, with icons, typography, colors, padding, radius and layout).

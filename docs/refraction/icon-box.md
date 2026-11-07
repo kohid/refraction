@@ -16,3 +16,18 @@
 - Fixed with it: the editor's image details request no longer warns for an image given by its address only.
 
 Check: `node scripts/check-iconbox-navpanel.mjs --site DIR --port N`.
+
+## 0.44.0
+
+- The box titles have `margin-block: 0` of their own (`icon-box.scss`, `image-box.scss`), so a theme's heading margin
+  does not show; Title Spacing and Margin still set it.
+- **Icon Layout** (Icon Box, Content): *In a row* or *Arrange freely*. The icons sit in one inline
+  `.refraction-icon-box-icons-area` (it follows the box alignment). Arranged freely, the area is
+  `--rf-icons-area-w` × `--rf-icons-area-h` (Style > Icon > Area Width / Height) and each icon is centered on its point:
+  `--x` / `--y` (Across / Down, %), turned by `--r` (`rotate`) and layered by `--z`; the main icon's are under Style >
+  Icon > Main Icon, each More Icon's in its own item. `translate` and `rotate` leave `transform` to the animations.
+- **Button and description display** (Image Box and Icon Box, `Box_Extras_Trait` in
+  `includes/widgets/traits/box-extras-trait.php`, styles `assets/dev/scss/frontend/partials/_box-extras.scss`):
+  *Show The Description* as text, cut to a number of lines (`--rf-box-lines`, with *Full Text In A Tooltip*), or as a
+  tooltip (`.refraction-box-tooltip`, shown on hover or keyboard focus, above or under the box); a Button (text, link,
+  icon, filled / outline / text link) with Style > Button and Style > Tooltip sections.
