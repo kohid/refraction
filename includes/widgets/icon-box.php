@@ -183,38 +183,7 @@ class Widget_Icon_Box extends Widget_Base {
 			'description' => esc_html__( 'Read by screen readers when the icon has a link.', 'refraction' ),
 		] );
 
-		$more_icons->add_control( 'color', [
-			'label' => esc_html__( 'Icon Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'separator' => 'before',
-			'selectors' => [
-				'{{WRAPPER}}.refraction-view-default {{CURRENT_ITEM}}.refraction-icon, {{WRAPPER}}.refraction-view-framed {{CURRENT_ITEM}}.refraction-icon' => 'color: {{VALUE}}; fill: {{VALUE}}; border-color: {{VALUE}};',
-				'{{WRAPPER}}.refraction-view-stacked {{CURRENT_ITEM}}.refraction-icon' => 'color: {{VALUE}}; fill: {{VALUE}};',
-			],
-		] );
-
-		$more_icons->add_control( 'background', [
-			'label' => esc_html__( 'Background Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'description' => esc_html__( 'For the Stacked and Framed views.', 'refraction' ),
-			'selectors' => [
-				'{{WRAPPER}}.refraction-view-stacked {{CURRENT_ITEM}}.refraction-icon, {{WRAPPER}}.refraction-view-framed {{CURRENT_ITEM}}.refraction-icon' => 'background-color: {{VALUE}};',
-			],
-		] );
-
-		$more_icons->add_control( 'duo', [
-			'label' => esc_html__( 'Duotone Second Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}.refraction-icon' => '--rf-icon-duo: {{VALUE}};' ],
-		] );
-
-		$more_icons->add_responsive_control( 'size', [
-			'label' => esc_html__( 'Size', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ 'px', 'em', 'rem' ],
-			'range' => [ 'px' => [ 'min' => 6, 'max' => 300 ] ],
-			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}.refraction-icon' => 'font-size: {{SIZE}}{{UNIT}};' ],
-		] );
+		self::add_own_icon_controls( $more_icons, '', '{{CURRENT_ITEM}}.refraction-icon' );
 
 		self::add_arrange_controls( $more_icons, '{{WRAPPER}} {{CURRENT_ITEM}}.refraction-icon', '' );
 
@@ -227,7 +196,7 @@ class Widget_Icon_Box extends Widget_Base {
 				'default' => [],
 				'prevent_empty' => false,
 				'title_field' => '{{{ refraction.helpers.renderIcon( this, icon, {}, "i", "panel" ) || "" }}} {{{ label }}}',
-				'description' => esc_html__( 'Icons shown next to the main one. They take the icon styles (Style > Icon) unless given their own color or size.', 'refraction' ),
+				'description' => esc_html__( 'Icons shown next to the main one. Each takes the icon styles (Style > Icon) unless given its own settings here: colors, hover, size, border, shape, turn, shadow and animation.', 'refraction' ),
 				'condition' => [ 'selected_icon[value]!' => '' ],
 			]
 		);
@@ -496,6 +465,15 @@ class Widget_Icon_Box extends Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'icon_style_note',
+			[
+				'type' => Controls_Manager::RAW_HTML,
+				'raw' => esc_html__( 'These style every icon. Each icon\'s own settings win over them: the main icon in Style > Main Icon, the others in Content > More Icons.', 'refraction' ),
+				'content_classes' => 'refraction-descriptor',
+			]
+		);
+
 		$this->start_controls_tabs( 'icon_colors' );
 
 		$this->start_controls_tab(
@@ -657,8 +635,6 @@ class Widget_Icon_Box extends Widget_Base {
 			]
 		);
 
-		self::add_arrange_controls( $this, '{{WRAPPER}} .refraction-icon-box-icons-area > .refraction-icon:first-child', 'main_icon_', [ 'icons_layout' => 'free' ] );
-
 		$this->add_control(
 			'icons_animation',
 			[
@@ -694,8 +670,7 @@ class Widget_Icon_Box extends Widget_Base {
 					'view' => esc_html__( 'Once, when it comes into view', 'refraction' ),
 				],
 				'prefix_class' => 'refraction-icons-anim-on-',
-				'condition' => [ 'icons_animation!' => 'none' ],
-				'description' => esc_html__( 'Fade in and Zoom in play once.', 'refraction' ),
+				'description' => esc_html__( 'Also for icons with their own animation. Fade in and Zoom in play once.', 'refraction' ),
 			]
 		);
 
@@ -706,7 +681,6 @@ class Widget_Icon_Box extends Widget_Base {
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => 100, 'max' => 5000, 'step' => 50 ] ],
 				'selectors' => [ '{{WRAPPER}}' => '--rf-icons-anim-duration: {{SIZE}}ms;' ],
-				'condition' => [ 'icons_animation!' => 'none' ],
 			]
 		);
 
@@ -717,7 +691,6 @@ class Widget_Icon_Box extends Widget_Base {
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => 0, 'max' => 2000, 'step' => 25 ] ],
 				'selectors' => [ '{{WRAPPER}}' => '--rf-icons-anim-stagger: {{SIZE}}ms;' ],
-				'condition' => [ 'icons_animation!' => 'none' ],
 			]
 		);
 
@@ -833,6 +806,30 @@ class Widget_Icon_Box extends Widget_Base {
 				'separator' => 'before',
 			]
 		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style_main_icon',
+			[
+				'label' => esc_html__( 'Main Icon', 'refraction' ),
+				'tab' => Controls_Manager::TAB_STYLE,
+				'condition' => [ 'selected_icon[value]!' => '' ],
+			]
+		);
+
+		$this->add_control(
+			'main_icon_note',
+			[
+				'type' => Controls_Manager::RAW_HTML,
+				'raw' => esc_html__( 'Only the main icon. Settings left empty follow Style > Icon.', 'refraction' ),
+				'content_classes' => 'refraction-descriptor',
+			]
+		);
+
+		self::add_own_icon_controls( $this, 'main_icon_', '.refraction-icon.refraction-icon--main' );
+
+		self::add_arrange_controls( $this, '{{WRAPPER}} .refraction-icon-box-icons-area > .refraction-icon:first-child', 'main_icon_', [ 'icons_layout' => 'free' ] );
 
 		$this->end_controls_section();
 
@@ -1024,7 +1021,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$has_link = ! empty( $settings['link']['url'] );
 		$html_tag = $has_link ? 'a' : 'span';
 
-		$this->add_render_attribute( 'icon', 'class', 'refraction-icon' );
+		$this->add_render_attribute( 'icon', 'class', [ 'refraction-icon', 'refraction-icon--main' ] );
 
 		if ( ! empty( $settings['hover_animation'] ) ) {
 			$this->add_render_attribute( 'icon', 'class', 'refraction-animation-' . $settings['hover_animation'] );
@@ -1110,6 +1107,179 @@ class Widget_Icon_Box extends Widget_Base {
 
 		</div>
 		<?php
+	}
+
+	/**
+	 * One icon's own style: colors (normal, and while the box is hovered), size, padding, border, shape, turn, opacity,
+	 * shadow and animation. They win over Style > Icon (which styles every icon); left empty, that one applies.
+	 *
+	 * @param Controls_Stack $stack  The widget (main icon), or the More Icons repeater.
+	 * @param string         $prefix Control name prefix ('' in the repeater, where the names predate this).
+	 * @param string         $item   The icon, inside .refraction-icon-box-icon.
+	 */
+	private static function add_own_icon_controls( $stack, string $prefix, string $item ): void {
+		$normal = '{{WRAPPER}}.refraction-widget-icon-box .refraction-icon-box-icon ' . $item;
+		$hover = '{{WRAPPER}}.refraction-widget-icon-box:has(:hover) .refraction-icon-box-icon ' . $item . ', {{WRAPPER}}.refraction-widget-icon-box:has(:focus-visible) .refraction-icon-box-icon ' . $item;
+
+		$stack->start_controls_tabs( $prefix . 'own_colors', [ 'separator' => 'before' ] );
+
+		$stack->start_controls_tab( $prefix . 'own_colors_normal', [ 'label' => esc_html__( 'Normal', 'refraction' ) ] );
+
+		$stack->add_control( $prefix . 'color', [
+			'label' => esc_html__( 'Icon Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $normal => 'color: {{VALUE}}; fill: {{VALUE}}; border-color: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $prefix . 'duo', [
+			'label' => esc_html__( 'Duotone Second Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $normal => '--rf-icon-duo: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $prefix . 'background', [
+			'label' => esc_html__( 'Background Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $normal => 'background-color: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $prefix . 'border_color', [
+			'label' => esc_html__( 'Border Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $normal => 'border-color: {{VALUE}};' ],
+		] );
+
+		$stack->end_controls_tab();
+
+		$stack->start_controls_tab( $prefix . 'own_colors_hover', [ 'label' => esc_html__( 'Hover', 'refraction' ) ] );
+
+		$stack->add_control( $prefix . 'hover_color', [
+			'label' => esc_html__( 'Icon Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $hover => 'color: {{VALUE}}; fill: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $prefix . 'hover_background', [
+			'label' => esc_html__( 'Background Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $hover => 'background-color: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $prefix . 'hover_border_color', [
+			'label' => esc_html__( 'Border Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $hover => 'border-color: {{VALUE}};' ],
+			'description' => esc_html__( 'Hover: while the box is hovered.', 'refraction' ),
+		] );
+
+		$stack->end_controls_tab();
+
+		$stack->end_controls_tabs();
+
+		$stack->add_responsive_control( $prefix . 'size', [
+			'label' => esc_html__( 'Size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em', 'rem' ],
+			'range' => [ 'px' => [ 'min' => 6, 'max' => 300 ] ],
+			'selectors' => [ $normal => 'font-size: {{SIZE}}{{UNIT}};' ],
+			'separator' => 'before',
+		] );
+
+		$stack->add_responsive_control( $prefix . 'padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em' ],
+			'range' => [ 'px' => [ 'max' => 60 ], 'em' => [ 'max' => 5 ] ],
+			'selectors' => [ $normal => 'padding: {{SIZE}}{{UNIT}};' ],
+			'description' => esc_html__( 'Space around the icon, inside its background and border.', 'refraction' ),
+		] );
+
+		$stack->add_responsive_control( $prefix . 'border_width', [
+			'label' => esc_html__( 'Border Width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'max' => 20 ] ],
+			'selectors' => [ $normal => 'border-style: solid; border-width: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$stack->add_responsive_control( $prefix . 'radius', [
+			'label' => esc_html__( 'Border Radius', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%', 'em' ],
+			'selectors' => [ $normal => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+
+		$stack->add_responsive_control( $prefix . 'rotate', [
+			'label' => esc_html__( 'Rotate', 'refraction' ) . ' (deg)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ],
+			'selectors' => [ $normal . ' > :is(i, svg)' => 'rotate: {{SIZE}}deg;' ],
+			'description' => esc_html__( 'Turns the symbol inside its background.', 'refraction' ),
+		] );
+
+		$stack->add_control( $prefix . 'opacity', [
+			'label' => esc_html__( 'Opacity', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
+			'selectors' => [ $normal => 'opacity: {{SIZE}}; --rf-ib-opacity: {{SIZE}};' ],
+		] );
+
+		$stack->add_group_control( Group_Control_Box_Shadow::get_type(), [
+			'name' => $prefix . 'shadow',
+			'selector' => $normal,
+		] );
+
+		$once = 'animation-timing-function: ease-in-out; --rf-ib-count: 1; --rf-ib-wait: 0;';
+		$loop = 'animation-timing-function: ease-in-out; --rf-ib-count: infinite; --rf-ib-wait: 1;';
+		$stack->add_control( $prefix . 'animation', [
+			'label' => esc_html__( 'Animation', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'Same as the others', 'refraction' ),
+				'none' => esc_html__( 'None', 'refraction' ),
+				'pulse' => esc_html__( 'Pulse', 'refraction' ),
+				'float' => esc_html__( 'Float', 'refraction' ),
+				'bounce' => esc_html__( 'Bounce', 'refraction' ),
+				'spin' => esc_html__( 'Spin', 'refraction' ),
+				'swing' => esc_html__( 'Swing', 'refraction' ),
+				'shake' => esc_html__( 'Shake', 'refraction' ),
+				'heartbeat' => esc_html__( 'Heartbeat', 'refraction' ),
+				'fade-in' => esc_html__( 'Fade in', 'refraction' ),
+				'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
+			],
+			'selectors_dictionary' => [
+				'none' => '--rf-ib-anim: none; --rf-ib-wait: 1;',
+				'pulse' => '--rf-ib-anim: rf-ib-pulse; ' . $loop,
+				'float' => '--rf-ib-anim: rf-ib-float; ' . $loop,
+				'bounce' => '--rf-ib-anim: rf-ib-bounce; ' . $loop,
+				'spin' => '--rf-ib-anim: rf-ib-spin; --rf-ib-count: infinite; --rf-ib-wait: 1; animation-timing-function: linear;',
+				'swing' => '--rf-ib-anim: rf-ib-swing; ' . $loop,
+				'shake' => '--rf-ib-anim: rf-ib-shake; ' . $loop,
+				'heartbeat' => '--rf-ib-anim: rf-ib-heartbeat; ' . $loop,
+				'fade-in' => '--rf-ib-anim: rf-ib-fade-in; ' . $once,
+				'zoom-in' => '--rf-ib-anim: rf-ib-zoom-in; ' . $once,
+			],
+			'selectors' => [ $normal => '{{VALUE}}' ],
+			'separator' => 'before',
+			'description' => esc_html__( 'Played as set in Style > Icon > Play.', 'refraction' ),
+		] );
+
+		$stack->add_control( $prefix . 'animation_duration', [
+			'label' => esc_html__( 'Animation Duration', 'refraction' ) . ' (ms)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 100, 'max' => 5000, 'step' => 50 ] ],
+			'selectors' => [ $normal => 'animation-duration: {{SIZE}}ms;' ],
+			'condition' => [ $prefix . 'animation!' => 'none' ],
+		] );
+
+		$stack->add_control( $prefix . 'animation_delay', [
+			'label' => esc_html__( 'Animation Delay', 'refraction' ) . ' (ms)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 5000, 'step' => 25 ] ],
+			'selectors' => [ $normal => 'animation-delay: {{SIZE}}ms;' ],
+			'condition' => [ $prefix . 'animation!' => 'none' ],
+		] );
 	}
 
 	/**
@@ -1219,7 +1389,7 @@ class Widget_Icon_Box extends Widget_Base {
 			migrated = refraction.helpers.isIconMigrated( settings, 'selected_icon' ),
 			titleSizeTag = refraction.helpers.validateHTMLTag( settings.title_size );
 
-		view.addRenderAttribute( 'icon', 'class', 'refraction-icon' );
+		view.addRenderAttribute( 'icon', 'class', [ 'refraction-icon', 'refraction-icon--main' ] );
 		view.addRenderAttribute( 'icon', 'style', '--i: 0' );
 
 		var moreIcons = hasIcon ? _.filter( settings.more_icons || [], function( item ) { return item.icon && item.icon.value; } ) : [];

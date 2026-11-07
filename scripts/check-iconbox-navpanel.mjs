@@ -182,6 +182,14 @@ async function main() {
 				main_icon_pos_x: { unit: 'px', size: 30 }, main_icon_pos_y: { unit: 'px', size: 40 }, main_icon_layer: 1,
 				more_icons: [ { _id: 'ar1', icon: { value: 'fas fa-car', library: 'fa-solid' }, pos_x: { unit: 'px', size: 70 }, pos_y: { unit: 'px', size: 75 }, size: { unit: 'px', size: 40 }, color: '#00AA00', turn: { unit: 'px', size: 20 }, layer: 3 } ],
 			}, elements: [] },
+			{ id: 'ib06', elType: 'widget', widgetType: 'icon-box', settings: {
+				title_text: 'Each its own', view: 'stacked', primary_color: '#333333',
+				main_icon_background: '#FF8800', main_icon_size: { unit: 'px', size: 30 },
+				more_icons: [
+					{ _id: 'own1', icon: { value: 'fas fa-car', library: 'fa-solid' }, color: '#FFFFFF', background: '#0055FF', border_color: '#00FF00', border_width: { unit: 'px', size: 3 }, padding: { unit: 'px', size: 12 }, radius: { unit: '%', top: '50', right: '50', bottom: '50', left: '50', isLinked: true }, rotate: { unit: 'px', size: 45 }, opacity: { unit: 'px', size: 0.6 }, shadow_box_shadow_type: 'yes', shadow_box_shadow: { horizontal: 0, vertical: 4, blur: 10, spread: 0, color: 'rgba(0,0,0,0.5)' }, hover_background: '#FF0000', animation: 'spin', animation_duration: { unit: 'px', size: 2000 } },
+					{ _id: 'own2', icon: { value: 'fas fa-phone', library: 'fa-solid' } },
+				],
+			}, elements: [] },
 			{ id: 'ib05', elType: 'widget', widgetType: 'icon-box', settings: { title_text: 'Corporate', description_text: 'Inverness Taxis, with over 60 years of service in the Highlands, offers tailored corporate transportation solutions designed to meet the needs of every business, large or small, every day of the year.', box_description_display: 'clamp', box_description_lines: 2, box_description_full_tooltip: 'yes', box_button_text: 'Learn more', box_button_link: { url: '#corporate' }, box_button_style: 'outline' }, elements: [] },
 			{ id: 'mb02', elType: 'widget', widgetType: 'image-box', settings: { title_text: 'Safe transfers', description_text: 'We are dedicated to offering safe transfer to give you peace of mind on each and every journey 24/7.', box_description_display: 'tooltip', box_button_text: 'Book now', box_button_link: { url: '#book' }, image: { url: `${ BASE }/wp-includes/images/w-logo-blue.png` } }, elements: [] },
 			{ id: 'mb01', elType: 'widget', widgetType: 'image-box', settings: { title_text: 'Our cars', title_margin: zero, image: { url: `${ BASE }/wp-includes/images/w-logo-blue.png` } }, elements: [] },
@@ -220,6 +228,25 @@ async function main() {
 		check( 'titles', 'by default the Icon Box title has no margin (the theme\'s heading margin does not show)', '0px' === box.defaultTitle, box.defaultTitle );
 		const ar = box.arranged;
 		check( 'arrange', 'arranged freely: the area has its size, each icon sits on its point with its size, color, turn and layer', '120,100' === ar.area.join() && Math.abs( ar.main[ 0 ] - 30 ) <= 3 && Math.abs( ar.main[ 1 ] - 40 ) <= 3 && Math.abs( ar.car[ 0 ] - 70 ) <= 3 && Math.abs( ar.car[ 1 ] - 75 ) <= 3 && 'rgb(0, 170, 0)' === ar.carColor && '40px' === ar.carSize && '20deg' === ar.carRotate && '3' === ar.carZ, JSON.stringify( ar ) );
+		const own = await b.evaluate( () => {
+			const q = ( sel ) => document.querySelector( '[data-id="ib06"] ' + sel );
+			const main = q( '.refraction-icon--main' ), car = q( '.refraction-repeater-item-own1' ), phone = q( '.refraction-repeater-item-own2' );
+			const cs = getComputedStyle( car );
+			return {
+				main: [ getComputedStyle( main ).backgroundColor, getComputedStyle( main ).fontSize ],
+				phone: getComputedStyle( phone ).backgroundColor,
+				car: [ cs.backgroundColor, cs.color, cs.borderTopWidth, cs.borderTopColor, cs.paddingTop, cs.borderTopLeftRadius, getComputedStyle( car.firstElementChild ).rotate, cs.opacity, 'none' !== cs.boxShadow, cs.animationName, cs.animationDuration ],
+				phoneAnim: getComputedStyle( phone ).animationName,
+			};
+		} );
+		check( 'own style', 'the main icon has its own background and size; an icon without its own takes Style > Icon', 'rgb(255, 136, 0)' === own.main[ 0 ] && '30px' === own.main[ 1 ] && 'rgb(51, 51, 51)' === own.phone, JSON.stringify( own ) );
+		check( 'own style', 'a More Icon has its own colors, border, padding, shape, turn, opacity, shadow and animation', 'rgb(0, 85, 255),rgb(255, 255, 255),3px,rgb(0, 255, 0),12px,50%,45deg,0.6,true,rf-ib-spin,2s' === own.car.join() && 'none' === own.phoneAnim, JSON.stringify( own ) );
+		await b.hover( '[data-id="ib06"] .refraction-icon-box-title' );
+		await sleep( 500 );
+		const ownHover = await b.evaluate( () => [ getComputedStyle( document.querySelector( '[data-id="ib06"] .refraction-repeater-item-own1' ) ).backgroundColor, getComputedStyle( document.querySelector( '[data-id="ib06"] .refraction-icon--main' ) ).backgroundColor ] );
+		check( 'own style', 'and its own hover color while the box is hovered (the main icon keeps its own)', 'rgb(255, 0, 0),rgb(255, 136, 0)' === ownHover.join(), ownHover.join( ' ' ) );
+		await b.mouse.move( 5, 5 );
+		await b.locator( '[data-id="ib06"]' ).screenshot( { path: join( SHOTS, 'own-style.png' ) } );
 		check( 'icon box', 'with "when it comes into view", the icon waits hidden', '0' === box.laterBefore, box.laterBefore );
 		// The button, the description cut to two lines with its full text on hover, and the description as a tooltip.
 		const extras = await b.evaluate( () => {
@@ -268,8 +295,25 @@ async function main() {
 		await p.goto( `${ BASE }/wp-admin/post.php?post=${ boxes.id }&action=refraction` );
 		await p.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
 		await sleep( 3000 );
-		const inEditor = await p.frame( { name: 'refraction-preview-iframe' } ).evaluate( () => ( { count: document.querySelectorAll( '[data-id="ib01"] .refraction-icon-box-icon .refraction-icon' ).length, svg: !! document.querySelector( '[data-id="ib01"] .refraction-repeater-item-mi1 svg' ), buttons: document.querySelectorAll( '.refraction-box-button' ).length, tooltip: !! document.querySelector( '[data-id="mb02"] .refraction-box-tooltip' ), arranged: !! document.querySelector( '[data-id="ib04"] .refraction-icon-box-icons-area' ) } ) );
+		const inEditor = await p.frame( { name: 'refraction-preview-iframe' } ).evaluate( () => ( { count: document.querySelectorAll( '[data-id="ib01"] .refraction-icon-box-icon .refraction-icon' ).length, svg: !! document.querySelector( '[data-id="ib01"] .refraction-repeater-item-mi1 svg' ), buttons: document.querySelectorAll( '.refraction-box-button' ).length, tooltip: !! document.querySelector( '[data-id="mb02"] .refraction-box-tooltip' ), arranged: !! document.querySelector( '[data-id="ib04"] .refraction-icon-box-icons-area' ), ownBg: getComputedStyle( document.querySelector( '[data-id="ib06"] .refraction-repeater-item-own1' ) ).backgroundColor, mainBg: getComputedStyle( document.querySelector( '[data-id="ib06"] .refraction-icon--main' ) ).backgroundColor } ) );
 		check( 'editor', 'the editor draws the five icons (the Solar one as SVG), the arranged icons, the buttons and the tooltip', 5 === inEditor.count && inEditor.svg && 2 === inEditor.buttons && inEditor.tooltip && inEditor.arranged, JSON.stringify( inEditor ) );
+		check( 'editor', 'and each icon\'s own style', 'rgb(0, 85, 255)' === inEditor.ownBg && 'rgb(255, 136, 0)' === inEditor.mainBg, JSON.stringify( inEditor ) );
+		// The panel: a More Icon's own settings (Normal / Hover tabs and the rest) and Style > Main Icon.
+		await p.frame( { name: 'refraction-preview-iframe' } ).click( '[data-id="ib06"] .refraction-icon-box-title', { position: { x: 5, y: 5 } } );
+		await p.waitForSelector( '.refraction-control-more_icons', { timeout: 20000 } );
+		await p.click( '.refraction-control-more_icons .refraction-repeater-row-item-title >> nth=0' );
+		await sleep( 800 );
+		const row = await p.evaluate( () => {
+			const r = document.querySelector( '.refraction-control-more_icons .refraction-repeater-fields-wrapper .refraction-repeater-fields' );
+			const visible = ( sel ) => [ ...r.querySelectorAll( sel ) ].some( ( e ) => e.offsetParent );
+			return { tabs: [ ...r.querySelectorAll( '.refraction-control-type-tab' ) ].filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ), color: visible( '.refraction-control-color' ), padding: visible( '.refraction-control-padding' ), shadow: visible( '.refraction-control-shadow_box_shadow_type' ), anim: visible( '.refraction-control-animation' ) };
+		} );
+		await p.screenshot( { path: join( SHOTS, 'own-panel.png' ) } );
+		check( 'editor', 'a More Icon shows its own settings in the panel (Normal / Hover, padding, shadow, animation)', 'Normal,Hover' === row.tabs.join() && row.color && row.padding && row.shadow && row.anim, JSON.stringify( row ) );
+		await p.click( '.refraction-tab-control-style' );
+		await sleep( 600 );
+		const sections = await p.evaluate( () => [ ...document.querySelectorAll( '.refraction-control-type-section .refraction-panel-heading-title' ) ].map( ( e ) => e.textContent.trim() ) );
+		check( 'editor', 'Style has a Main Icon section', sections.includes( 'Main Icon' ), sections.join( ', ' ) );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );
