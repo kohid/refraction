@@ -16,6 +16,8 @@ use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
  * @since 1.0.0
  */
 class Widget_Testimonial extends Widget_Base {
+	use \Refraction\Includes\Widgets\Traits\Text_Display_Trait;
+
 
 	/**
 	 * Get widget name.
@@ -245,6 +247,8 @@ class Widget_Testimonial extends Widget_Base {
 			]
 		);
 
+		$this->add_text_display_controls( [ 'label' => esc_html__( 'Show The Text', 'refraction' ) ] );
+
 		$this->end_controls_section();
 
 		// Content.
@@ -434,6 +438,8 @@ class Widget_Testimonial extends Widget_Base {
 		);
 
 		$this->end_controls_section();
+
+		$this->add_text_display_style_controls();
 	}
 
 	/**
@@ -475,10 +481,11 @@ class Widget_Testimonial extends Widget_Base {
 		<div <?php $this->print_render_attribute_string( 'wrapper' ); ?>>
 			<?php
 			if ( $has_content ) :
-				$this->add_render_attribute( 'testimonial_content', 'class', 'refraction-testimonial-content' );
+				$this->add_render_attribute( 'testimonial_content', 'class', array_merge( [ 'refraction-testimonial-content' ], 'text' !== $this->text_display_mode( $settings ) ? $this->text_display_classes( $settings ) : [] ) );
 				$this->add_inline_editing_attributes( 'testimonial_content' );
 				?>
 				<div <?php $this->print_render_attribute_string( 'testimonial_content' ); ?>><?php echo wp_kses_post( $settings['testimonial_content'] ); ?></div>
+				<?php echo $this->text_display_after_html( $settings, wp_kses_post( (string) $settings['testimonial_content'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 			<?php endif; ?>
 
 			<?php if ( $has_image || $has_name || $has_job ) : ?>
@@ -573,6 +580,7 @@ class Widget_Testimonial extends Widget_Base {
 	}
 
 	protected function content_template() {
+		$this->print_text_display_template( "_.escape( settings.testimonial_content || '' )" );
 		?>
 		<#
 		if ( '' === settings.testimonial_content && '' === settings.testimonial_image.url && '' === settings.testimonial_name && '' === settings.testimonial_job ) {
@@ -611,11 +619,12 @@ class Widget_Testimonial extends Widget_Base {
 						}
 					})
 				} );
-				view.addRenderAttribute( 'testimonial_content', 'class', 'refraction-testimonial-content' );
+				view.addRenderAttribute( 'testimonial_content', 'class', 'refraction-testimonial-content' + ( 'text' !== textDisplay ? ' ' + textDescClass : '' ) );
 
 				view.addInlineEditingAttributes( 'testimonial_content' );
 				#>
 				<div {{{ view.getRenderAttributeString( 'testimonial_content' ) }}}>{{ settings.testimonial_content }}</div>
+				{{{ textAfter }}}
 			<# } #>
 			<div class="refraction-testimonial-meta{{ hasImage }}{{ testimonial_image_position }}">
 				<div class="refraction-testimonial-meta-inner">

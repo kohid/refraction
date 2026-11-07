@@ -1,3 +1,5 @@
+import readMore from './read-more';
+
 class GlobalHandler extends refractionModules.frontend.handlers.Base {
 	getWidgetType() {
 		return 'global';
@@ -58,4 +60,5 @@ class GlobalHandler extends refractionModules.frontend.handlers.Base {
 
 export default ( $scope ) => {
 	refractionFrontend.elementsHandler.addHandler( GlobalHandler, { $element: $scope } );
+	readMore( $scope );
 };

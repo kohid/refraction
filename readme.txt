@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.45.0
+Stable tag: 0.46.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.46.0 =
+* Text Editor, Icon Box, Image Box, Testimonial, Alert, Call to Action and Author Box: the text can be shown as text, cut to a number of lines, or as a tooltip (Call to Action: cut to lines only). Cut text can have a Show more / Show less toggle under it, a full-width button or a text link with its own words and icon (hidden when the text is short enough not to be cut, usable from the keyboard), and its full text in a tooltip. Text Editor in tooltip mode shows a trigger text and icon to hover. New Style > Show More Toggle section; Style > Tooltip for every one of them.
 
 = 0.45.0 =
 * Icon Box: every icon has its own style settings. Each More Icon (Content > More Icons, open the item) and the main icon (new Style > Main Icon) have icon, duotone, background and border colors for normal and while the box is hovered, size, padding, border width, border radius, rotate, opacity, box shadow, and their own animation with its duration and delay. Settings left empty follow Style > Icon, which still styles every icon. The arranged-freely position of the main icon moved to Style > Main Icon.

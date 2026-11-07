@@ -1,0 +1,248 @@
+//
+// How a widget shows its description or main text (includes/widgets/traits/text-display-trait.php): cut to a number of
+// lines with a Show more / Show less toggle (frontend/handlers/read-more.js), and the text (or its full text) as a
+// tooltip. The widget carries refraction-box-desc-<text|clamp|tooltip>; its text element .refraction-box-description.
+//
+
+// Cut to a number of lines, ending with "...". Works on rich text too (paragraphs, lists): the lines are counted
+// through them.
+.refraction-box-desc-clamp .refraction-box-description:not(.refraction-box-tooltip) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: var(--rf-box-lines, 3);
+	line-clamp: var(--rf-box-lines, 3);
+	overflow: hidden;
+
+	> :first-child {
+		margin-block-start: 0;
+	}
+
+	> :last-child {
+		margin-block-end: 0;
+	}
+}
+
+// Opened with Show more.
+.refraction-box-desc-clamp.is-text-expanded .refraction-box-description:not(.refraction-box-tooltip) {
+	display: block;
+	-webkit-line-clamp: none;
+	line-clamp: none;
+	overflow: visible;
+}
+
+// The toggle: a full-width button (or a text link at the start) under the text.
+.refraction-read-more-wrap {
+	display: flex;
+	justify-content: var(--rf-read-more-justify, flex-start);
+	margin-block-start: 12px;
+}
+
+.refraction-read-more {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	margin: 0;
+	font: inherit;
+	line-height: 1.3;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+	&--button {
+		width: var(--rf-read-more-width, 100%);
+		padding: 0.85em 1.5em;
+		border: 1px solid #c8d3ea;
+		border-radius: 999px;
+		background-color: #fff;
+		color: #1f1f1f;
+		font-weight: 500;
+
+		&:hover,
+		&:focus-visible {
+			background-color: #f3f6fc;
+		}
+	}
+
+	&--text {
+		width: var(--rf-read-more-width, auto);
+		padding: 0;
+		border: 0;
+		border-radius: 0;
+		background: none;
+		color: var(--e-global-color-accent, #1a5fd0);
+		font-weight: 600;
+
+		&:hover,
+		&:focus-visible {
+			background: none;
+			text-decoration: underline;
+		}
+	}
+
+	&__icon {
+		display: inline-flex;
+		line-height: 0;
+		font-size: 0.85em;
+		transition: rotate 0.2s ease;
+
+		svg {
+			width: 1em;
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+
+	&__less {
+		display: none;
+	}
+
+	&[aria-expanded="true"] {
+
+		.refraction-read-more__more {
+			display: none;
+		}
+
+		.refraction-read-more__less {
+			display: inline;
+		}
+
+		.refraction-read-more__icon {
+			rotate: 180deg;
+		}
+	}
+}
+
+// Short enough not to be cut (the handler checks), or open with no Show less text: no toggle.
+.refraction-box-desc-clamp.is-text-short .refraction-read-more-wrap,
+.refraction-box-desc-clamp.is-text-expanded .refraction-read-more-wrap:has(.refraction-read-more--once) {
+	display: none;
+}
+
+// The tooltip. It hangs from the widget (or from the box wrapper, or from the trigger's anchor in widgets that give
+// one), under it or above it, and shows while that is hovered or has the keyboard focus.
+:where(.refraction-box-desc-tooltip, .refraction-box-desc-clamp) {
+	position: relative;
+}
+
+.refraction-text-tooltip-anchor {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+}
+
+.refraction-text-tooltip-trigger {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	cursor: help;
+	text-decoration: underline dotted;
+	text-underline-offset: 3px;
+
+	&__icon {
+		display: inline-flex;
+		line-height: 0;
+
+		svg {
+			width: 1em;
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+}
+
+.refraction-box-tooltip {
+	--rf-box-tooltip-bg: #2b2b2b;
+
+	position: absolute;
+	inset-inline-start: 50%;
+	top: calc(100% + 12px);
+	z-index: 20;
+	box-sizing: border-box;
+	display: block;
+	width: max-content;
+	max-width: min(320px, 90vw);
+	margin: 0;
+	padding: 14px 18px;
+	border-radius: 6px;
+	background: var(--rf-box-tooltip-bg);
+	color: #fff;
+	font-size: 15px;
+	line-height: 1.5;
+	text-align: center;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transform: translate(-50%, 6px);
+	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+
+	[dir="rtl"] & {
+		transform: translate(50%, 6px);
+	}
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset-inline-start: 50%;
+		bottom: 100%;
+		margin-inline-start: -8px;
+		border: 8px solid transparent;
+		border-bottom-color: var(--rf-box-tooltip-bg);
+	}
+
+	> :first-child {
+		margin-block-start: 0;
+	}
+
+	> :last-child {
+		margin-block-end: 0;
+	}
+}
+
+.refraction-box-tooltip-top .refraction-box-tooltip {
+	top: auto;
+	bottom: calc(100% + 12px);
+	transform: translate(-50%, -6px);
+
+	&::before {
+		top: 100%;
+		bottom: auto;
+		border-bottom-color: transparent;
+		border-top-color: var(--rf-box-tooltip-bg);
+	}
+}
+
+// Shown: on the whole widget, or only on the trigger's anchor when the widget gives one. Not while the text is open.
+.refraction-box-desc-tooltip:not(:has(.refraction-text-tooltip-anchor)):is(:hover, :focus-within) .refraction-box-tooltip,
+.refraction-text-tooltip-anchor:is(:hover, :focus-within) .refraction-box-tooltip,
+.refraction-box-desc-clamp:not(.is-text-expanded):is(:hover, :focus-within) .refraction-box-tooltip--full {
+	opacity: 1;
+	visibility: visible;
+	transform: translate(-50%, 0);
+	transition-delay: 0s;
+}
+
+[dir="rtl"] {
+
+	.refraction-box-desc-tooltip:not(:has(.refraction-text-tooltip-anchor)):is(:hover, :focus-within) .refraction-box-tooltip,
+	.refraction-text-tooltip-anchor:is(:hover, :focus-within) .refraction-box-tooltip,
+	.refraction-box-desc-clamp:not(.is-text-expanded):is(:hover, :focus-within) .refraction-box-tooltip--full {
+		transform: translate(50%, 0);
+	}
+}
+
+// White text on the dark tooltip, over the widget's own text color (Style > Tooltip > Text Color still wins).
+[class*="refraction-box-desc-"] .refraction-box-tooltip.refraction-box-tooltip {
+	color: #fff;
+
+	:not(a) {
+		color: inherit;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-box-tooltip,
+	.refraction-read-more__icon {
+		transition: none;
+	}
+}

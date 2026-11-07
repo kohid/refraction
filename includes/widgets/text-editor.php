@@ -18,6 +18,8 @@ use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
  */
 class Widget_Text_Editor extends Widget_Base {
 
+	use \Refraction\Includes\Widgets\Traits\Text_Display_Trait;
+
 	/**
 	 * Get widget name.
 	 *
@@ -244,6 +246,8 @@ class Widget_Text_Editor extends Widget_Base {
 				],
 			]
 		);
+
+		$this->add_text_display_controls( [ 'label' => esc_html__( 'Show The Text', 'refraction' ), 'trigger' => true ] );
 
 		$this->end_controls_section();
 
@@ -583,6 +587,8 @@ class Widget_Text_Editor extends Widget_Base {
 		);
 
 		$this->end_controls_section();
+
+		$this->add_text_display_style_controls();
 	}
 
 	/**
@@ -595,30 +601,47 @@ class Widget_Text_Editor extends Widget_Base {
 	 */
 	protected function render() {
 		$should_render_inline_editing = Plugin::$instance->editor->is_edit_mode();
+		$settings = $this->get_settings_for_display();
 
-		$editor_content = $this->get_settings_for_display( 'editor' );
-		$editor_content = $this->parse_text_editor( $editor_content );
+		$editor_content = $this->parse_text_editor( $settings['editor'] );
 
 		if ( empty( $editor_content ) ) {
 			return;
 		}
 
-		if ( $should_render_inline_editing ) {
+		$mode = $this->text_display_mode( $settings );
+		// Cut to lines or a tooltip: the text needs its own element (on the page it has none otherwise).
+		$wrap = $should_render_inline_editing || 'text' !== $mode;
+
+		if ( $wrap ) {
 			$this->add_render_attribute( 'editor', 'class', [ 'refraction-text-editor', 'refraction-clearfix' ] );
+
+			if ( 'text' !== $mode ) {
+				$this->add_render_attribute( 'editor', 'class', $this->text_display_classes( $settings ) );
+			}
 		}
 
 		$this->add_inline_editing_attributes( 'editor', 'advanced' );
+
+		if ( 'tooltip' === $mode ) {
+			echo '<div class="refraction-text-tooltip-anchor">' . $this->text_display_trigger_html( $settings ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		}
 		?>
-		<?php if ( $should_render_inline_editing ) { ?>
+		<?php if ( $wrap ) { ?>
 			<div <?php $this->print_render_attribute_string( 'editor' ); ?>>
 		<?php } ?>
 		<?php // PHPCS - DO NOT REMOVE THIS ECHO - THE MAIN TEXT OF A WIDGET SHOULD NOT BE ESCAPED!
 			echo $editor_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
-		<?php if ( $should_render_inline_editing ) { ?>
+		<?php if ( $wrap ) { ?>
 			</div>
 		<?php } ?>
 		<?php
+		if ( 'tooltip' === $mode ) {
+			echo '</div>';
+		}
+
+		echo $this->text_display_after_html( $settings, $editor_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The widget's own text (as above) and escaped parts.
 	}
 
 	/**
@@ -654,29 +677,31 @@ class Widget_Text_Editor extends Widget_Base {
 	}
 
 	protected function content_template() {
+		$this->print_text_display_template( 'settings.editor' );
 		?>
 		<#
 		if ( '' === settings.editor ) {
 			return;
 		}
 
-		const shouldRenderInlineEditing = refractionFrontend.isEditMode();
+		view.addRenderAttribute( 'editor', 'class', [ 'refraction-text-editor', 'refraction-clearfix' ] );
 
-		if ( shouldRenderInlineEditing ) {
-			view.addRenderAttribute( 'editor', 'class', [ 'refraction-text-editor', 'refraction-clearfix' ] );
+		if ( 'text' !== textDisplay ) {
+			view.addRenderAttribute( 'editor', 'class', textDescClass );
 		}
 
 		view.addInlineEditingAttributes( 'editor', 'advanced' );
 
-		if ( shouldRenderInlineEditing ) { #>
-			<div {{{ view.getRenderAttributeString( 'editor' ) }}}>
+		if ( 'tooltip' === textDisplay ) { #>
+			<div class="refraction-text-tooltip-anchor">{{{ textTrigger }}}
 		<# } #>
-
-			{{{ settings.editor }}}
-
-		<# if ( shouldRenderInlineEditing ) { #>
+			<div {{{ view.getRenderAttributeString( 'editor' ) }}}>
+				{{{ settings.editor }}}
+			</div>
+		<# if ( 'tooltip' === textDisplay ) { #>
 			</div>
 		<# } #>
+		{{{ textAfter }}}
 		<?php
 	}
 }
