@@ -635,6 +635,21 @@ class Widget_Image_Box extends Widget_Base {
 			]
 		);
 
+		// The title's own margin, to undo the margin a theme gives headings (set to 0) or to place it exactly. It takes
+		// over Title Spacing once set.
+		$this->add_responsive_control(
+			'title_margin',
+			[
+				'label' => esc_html__( 'Margin', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em', 'rem', '%' ],
+				'allowed_dimensions' => 'all',
+				'selectors' => [
+					'{{WRAPPER}} .refraction-image-box-title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
 		$this->start_controls_tabs( 'image_box_title_colors' );
 
 		$this->start_controls_tab(

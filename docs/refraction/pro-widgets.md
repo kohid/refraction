@@ -75,3 +75,18 @@ Site Settings opens the site's kit as the document being edited; the page stays 
 page's elements (`core/kits/assets/js/edit-from-preview.js`) goes back to the page (asking first to save or discard
 unsaved Site Settings changes) and selects that element. The Site Settings menu says so. Elements of other documents
 (a Theme Builder header or footer) are left alone.
+
+## Nav Menu panel: no sideways scroll, header and buttons (0.43.0)
+
+- In the collapsed panel, items wrap (`white-space: normal; overflow-wrap: anywhere`) and the panel hides any sideways
+  overflow; the full width dropdown is as wide as `document.documentElement.clientWidth` (the handler sets
+  `--refraction-nav-stretch-width`; `100vw` counted the scrollbar and made the page scroll sideways).
+- **Panel Header** (Content > Mobile Menu): none, the site logo (the site name until there is one), the site name, an
+  image or your own text, linked to the home page, in a row with the close button (`.refraction-nav-menu__panel-head`).
+  Style: logo width, text typography and color.
+- **Buttons In The Panel**: a repeater (text, link, filled or outline, icon) shown under the menu items
+  (`.refraction-nav-menu__panel-buttons`); Style: typography, layout (full width stacked or side by side), text,
+  background (filled) and border (outline) colors for normal and hover, padding, radius, space between.
+- The header and the buttons show only in the collapsed panel, never in the desktop menu.
+
+Check: `node scripts/check-iconbox-navpanel.mjs --site DIR --port N`.

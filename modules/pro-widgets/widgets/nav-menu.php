@@ -315,6 +315,89 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_control(
+			'panel_brand',
+			[
+				'label' => esc_html__( 'Panel Header', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'none',
+				'options' => [
+					'none' => esc_html__( 'None', 'refraction' ),
+					'logo' => esc_html__( 'Site logo', 'refraction' ),
+					'name' => esc_html__( 'Site name', 'refraction' ),
+					'image' => esc_html__( 'Choose an image', 'refraction' ),
+					'text' => esc_html__( 'Your own text', 'refraction' ),
+				],
+				'description' => esc_html__( 'Shown at the top of the opened menu, linked to the home page. The site logo and name are set in Site Settings > Site Identity.', 'refraction' ),
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_control(
+			'panel_brand_image',
+			[
+				'label' => esc_html__( 'Image', 'refraction' ),
+				'type' => Controls_Manager::MEDIA,
+				'condition' => [ 'panel_brand' => 'image' ],
+			]
+		);
+
+		$this->add_control(
+			'panel_brand_text',
+			[
+				'label' => esc_html__( 'Text', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'default' => get_bloginfo( 'name' ),
+				'condition' => [ 'panel_brand' => 'text' ],
+			]
+		);
+
+		$panel_buttons = new \Refraction\Repeater();
+
+		$panel_buttons->add_control( 'text', [
+			'label' => esc_html__( 'Text', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'default' => esc_html__( 'Book now', 'refraction' ),
+			'dynamic' => [ 'active' => true ],
+		] );
+
+		$panel_buttons->add_control( 'link', [
+			'label' => esc_html__( 'Link', 'refraction' ),
+			'type' => Controls_Manager::URL,
+			'dynamic' => [ 'active' => true ],
+			'default' => [ 'url' => '#' ],
+		] );
+
+		$panel_buttons->add_control( 'style', [
+			'label' => esc_html__( 'Style', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'filled',
+			'options' => [
+				'filled' => esc_html__( 'Filled', 'refraction' ),
+				'outline' => esc_html__( 'Outline', 'refraction' ),
+			],
+		] );
+
+		$panel_buttons->add_control( 'icon', [
+			'label' => esc_html__( 'Icon', 'refraction' ),
+			'type' => Controls_Manager::ICONS,
+			'skin' => 'inline',
+			'label_block' => false,
+		] );
+
+		$this->add_control(
+			'panel_buttons',
+			[
+				'label' => esc_html__( 'Buttons In The Panel', 'refraction' ),
+				'type' => Controls_Manager::REPEATER,
+				'fields' => $panel_buttons->get_controls(),
+				'default' => [],
+				'title_field' => '{{{ text }}}',
+				'prevent_empty' => false,
+				'description' => esc_html__( 'Shown under the menu items when the menu is opened.', 'refraction' ),
+			]
+		);
+
+		$this->add_control(
 			'toggle_animation',
 			[
 				'label' => esc_html__( 'Button Animation', 'refraction' ),
@@ -906,6 +989,141 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_control(
+			'panel_brand_style_heading',
+			[
+				'label' => esc_html__( 'Panel Header', 'refraction' ),
+				'type' => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => [ 'panel_brand!' => 'none' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'panel_brand_width',
+			[
+				'label' => esc_html__( 'Logo Width', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range' => [ 'px' => [ 'min' => 20, 'max' => 400 ] ],
+				'selectors' => [ '{{WRAPPER}} .refraction-nav-menu__brand img' => 'width: {{SIZE}}{{UNIT}}; max-width: 100%; height: auto;' ],
+				'condition' => [ 'panel_brand' => [ 'logo', 'image' ] ],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'panel_brand_typography',
+				'selector' => '{{WRAPPER}} .refraction-nav-menu__brand-text',
+				'condition' => [ 'panel_brand' => [ 'name', 'text' ] ],
+			]
+		);
+
+		$this->add_control(
+			'panel_brand_color',
+			[
+				'label' => esc_html__( 'Text Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}} .refraction-nav-menu__brand-text' => 'color: {{VALUE}};' ],
+				'condition' => [ 'panel_brand' => [ 'name', 'text' ] ],
+			]
+		);
+
+		$buttons = '{{WRAPPER}} .refraction-nav-menu__panel-button';
+
+		$this->add_control(
+			'panel_buttons_style_heading',
+			[
+				'label' => esc_html__( 'Panel Buttons', 'refraction' ),
+				'type' => Controls_Manager::HEADING,
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'panel_buttons_typography',
+				'selector' => $buttons,
+			]
+		);
+
+		$this->add_control(
+			'panel_buttons_layout',
+			[
+				'label' => esc_html__( 'Layout', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'stack',
+				'options' => [
+					'stack' => esc_html__( 'Full width, one under the other', 'refraction' ),
+					'row' => esc_html__( 'Side by side', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-nav-menu--buttons-',
+			]
+		);
+
+		$this->start_controls_tabs( 'panel_buttons_tabs' );
+
+		foreach ( [ 'normal' => esc_html__( 'Normal', 'refraction' ), 'hover' => esc_html__( 'Hover', 'refraction' ) ] as $state => $state_label ) {
+			$sel = 'hover' === $state ? $buttons . ':hover, ' . $buttons . ':focus-visible' : $buttons;
+
+			$this->start_controls_tab( 'panel_buttons_tab_' . $state, [ 'label' => $state_label ] );
+
+			$this->add_control( 'panel_buttons_color_' . $state, [
+				'label' => esc_html__( 'Text Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sel => 'color: {{VALUE}};' ],
+			] );
+
+			$this->add_control( 'panel_buttons_bg_' . $state, [
+				'label' => esc_html__( 'Background (Filled)', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ str_replace( $buttons, $buttons . '--filled', $sel ) => 'background-color: {{VALUE}}; border-color: {{VALUE}};' ],
+			] );
+
+			$this->add_control( 'panel_buttons_border_color_' . $state, [
+				'label' => esc_html__( 'Border Color (Outline)', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ str_replace( $buttons, $buttons . '--outline', $sel ) => 'border-color: {{VALUE}};' ],
+			] );
+
+			$this->end_controls_tab();
+		}
+
+		$this->end_controls_tabs();
+
+		$this->add_responsive_control(
+			'panel_buttons_padding',
+			[
+				'label' => esc_html__( 'Padding', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em' ],
+				'selectors' => [ $buttons => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_responsive_control(
+			'panel_buttons_radius',
+			[
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
+				'selectors' => [ $buttons => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'panel_buttons_gap',
+			[
+				'label' => esc_html__( 'Space Between', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+				'selectors' => [ '{{WRAPPER}} .refraction-nav-menu__panel-buttons' => 'gap: {{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control(
 			'panel_z_index',
 			[
 				'label' => esc_html__( 'Z-Index', 'refraction' ),
@@ -979,12 +1197,73 @@ class Nav_Menu extends Pro_Widget {
 				<div class="refraction-nav-menu__backdrop" aria-hidden="true"></div>
 			<?php endif; ?>
 			<div class="refraction-nav-menu__panel" id="<?php echo esc_attr( $panel_id ); ?>">
-				<?php if ( 'dropdown' !== ( $settings['panel_style'] ?? 'dropdown' ) && 'yes' === ( $settings['panel_close_button'] ?? 'yes' ) ) : ?>
-					<button type="button" class="refraction-nav-menu__close" aria-label="<?php esc_attr_e( 'Close menu', 'refraction' ); ?>"><span class="refraction-nav-menu__x" aria-hidden="true"></span></button>
+				<?php
+				$brand = $this->panel_brand_html( $settings );
+				$close = 'dropdown' !== ( $settings['panel_style'] ?? 'dropdown' ) && 'yes' === ( $settings['panel_close_button'] ?? 'yes' );
+				?>
+				<?php if ( '' !== $brand || $close ) : ?>
+					<div class="refraction-nav-menu__panel-head">
+						<?php echo $brand; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
+						<?php if ( $close ) : ?>
+							<button type="button" class="refraction-nav-menu__close" aria-label="<?php esc_attr_e( 'Close menu', 'refraction' ); ?>"><span class="refraction-nav-menu__x" aria-hidden="true"></span></button>
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
 				<?php echo $menu_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built by wp_nav_menu() with an escaping walker. ?>
+				<?php $this->render_panel_buttons( $settings ); ?>
 			</div>
 		</nav>
 		<?php
+	}
+
+	/** The logo, site name or text at the top of the opened menu, linked to the home page ('' for none). */
+	private function panel_brand_html( array $settings ): string {
+		$kind = (string) ( $settings['panel_brand'] ?? 'none' );
+		$inner = '';
+
+		if ( 'logo' === $kind && has_custom_logo() ) {
+			$inner = wp_get_attachment_image( (int) get_theme_mod( 'custom_logo' ), 'medium', false, [ 'alt' => get_bloginfo( 'name' ) ] );
+		} elseif ( 'image' === $kind && ! empty( $settings['panel_brand_image']['url'] ) ) {
+			$id = (int) ( $settings['panel_brand_image']['id'] ?? 0 );
+			$inner = $id ? wp_get_attachment_image( $id, 'medium', false, [ 'alt' => get_bloginfo( 'name' ) ] ) : '<img src="' . esc_url( $settings['panel_brand_image']['url'] ) . '" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '">';
+		}
+
+		// The site name when there is no logo yet, or when asked for.
+		if ( '' === $inner && in_array( $kind, [ 'logo', 'name', 'text' ], true ) ) {
+			$text = 'text' === $kind ? (string) ( $settings['panel_brand_text'] ?? '' ) : get_bloginfo( 'name' );
+			$inner = '' !== trim( $text ) ? '<span class="refraction-nav-menu__brand-text">' . esc_html( $text ) . '</span>' : '';
+		}
+
+		return '' === $inner ? '' : '<a class="refraction-nav-menu__brand" href="' . esc_url( home_url( '/' ) ) . '">' . $inner . '</a>';
+	}
+
+	/** The buttons under the menu items in the opened menu. */
+	private function render_panel_buttons( array $settings ): void {
+		$buttons = array_filter( (array) ( $settings['panel_buttons'] ?? [] ), static fn( $b ) => is_array( $b ) && '' !== trim( (string) ( $b['text'] ?? '' ) ) );
+
+		if ( ! $buttons ) {
+			return;
+		}
+
+		echo '<div class="refraction-nav-menu__panel-buttons">';
+
+		foreach ( $buttons as $i => $button ) {
+			$key = 'panel_button_' . $i;
+			$this->add_render_attribute( $key, 'class', [ 'refraction-nav-menu__panel-button', 'refraction-nav-menu__panel-button--' . ( 'outline' === ( $button['style'] ?? '' ) ? 'outline' : 'filled' ), 'refraction-repeater-item-' . ( $button['_id'] ?? '' ) ] );
+
+			if ( ! empty( $button['link']['url'] ) ) {
+				$this->add_link_attributes( $key, $button['link'] );
+			}
+
+			echo '<a ' . $this->get_render_attribute_string( $key ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the render attributes.
+
+			if ( ! empty( $button['icon']['value'] ) ) {
+				Icons_Manager::render_icon( $button['icon'], [ 'aria-hidden' => 'true' ] );
+			}
+
+			echo '<span>' . esc_html( $button['text'] ) . '</span></a>';
+		}
+
+		echo '</div>';
 	}
 }

@@ -99,6 +99,8 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 
 		if ( nav ) {
 			nav.style.setProperty( '--refraction-nav-stretch-left', ( -nav.getBoundingClientRect().left ) + 'px' );
+			// The page's width without the scrollbar (100vw includes it and would scroll sideways).
+			nav.style.setProperty( '--refraction-nav-stretch-width', document.documentElement.clientWidth + 'px' );
 		}
 	}
 

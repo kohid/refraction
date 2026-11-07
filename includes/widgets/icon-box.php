@@ -161,6 +161,73 @@ class Widget_Icon_Box extends Widget_Base {
 			]
 		);
 
+		$more_icons = new Repeater();
+
+		$more_icons->add_control( 'icon', [
+			'label' => esc_html__( 'Icon', 'refraction' ),
+			'type' => Controls_Manager::ICONS,
+			'default' => [ 'value' => 'fas fa-star', 'library' => 'fa-solid' ],
+		] );
+
+		$more_icons->add_control( 'link', [
+			'label' => esc_html__( 'Link', 'refraction' ),
+			'type' => Controls_Manager::URL,
+			'dynamic' => [ 'active' => true ],
+		] );
+
+		$more_icons->add_control( 'label', [
+			'label' => esc_html__( 'Label', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'description' => esc_html__( 'Read by screen readers when the icon has a link.', 'refraction' ),
+		] );
+
+		$more_icons->add_control( 'color', [
+			'label' => esc_html__( 'Icon Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'separator' => 'before',
+			'selectors' => [
+				'{{WRAPPER}}.refraction-view-default {{CURRENT_ITEM}}.refraction-icon, {{WRAPPER}}.refraction-view-framed {{CURRENT_ITEM}}.refraction-icon' => 'color: {{VALUE}}; fill: {{VALUE}}; border-color: {{VALUE}};',
+				'{{WRAPPER}}.refraction-view-stacked {{CURRENT_ITEM}}.refraction-icon' => 'color: {{VALUE}}; fill: {{VALUE}};',
+			],
+		] );
+
+		$more_icons->add_control( 'background', [
+			'label' => esc_html__( 'Background Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'description' => esc_html__( 'For the Stacked and Framed views.', 'refraction' ),
+			'selectors' => [
+				'{{WRAPPER}}.refraction-view-stacked {{CURRENT_ITEM}}.refraction-icon, {{WRAPPER}}.refraction-view-framed {{CURRENT_ITEM}}.refraction-icon' => 'background-color: {{VALUE}};',
+			],
+		] );
+
+		$more_icons->add_control( 'duo', [
+			'label' => esc_html__( 'Duotone Second Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}.refraction-icon' => '--rf-icon-duo: {{VALUE}};' ],
+		] );
+
+		$more_icons->add_responsive_control( 'size', [
+			'label' => esc_html__( 'Size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em', 'rem' ],
+			'range' => [ 'px' => [ 'min' => 6, 'max' => 300 ] ],
+			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}.refraction-icon' => 'font-size: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_control(
+			'more_icons',
+			[
+				'label' => esc_html__( 'More Icons', 'refraction' ),
+				'type' => Controls_Manager::REPEATER,
+				'fields' => $more_icons->get_controls(),
+				'default' => [],
+				'prevent_empty' => false,
+				'title_field' => '{{{ refraction.helpers.renderIcon( this, icon, {}, "i", "panel" ) || "" }}} {{{ label }}}',
+				'description' => esc_html__( 'Icons shown next to the main one. They take the icon styles (Style > Icon) unless given their own color or size.', 'refraction' ),
+				'condition' => [ 'selected_icon[value]!' => '' ],
+			]
+		);
+
 		$this->add_control(
 			'title_text',
 			[
@@ -520,6 +587,80 @@ class Widget_Icon_Box extends Widget_Base {
 		$this->end_controls_tabs();
 
 		$this->add_responsive_control(
+			'icons_gap',
+			[
+				'label' => esc_html__( 'Space Between Icons', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
+				'selectors' => [ '{{WRAPPER}}' => '--rf-icon-box-icons-gap: {{SIZE}}{{UNIT}};' ],
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_control(
+			'icons_animation',
+			[
+				'label' => esc_html__( 'Icon Animation', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'none',
+				'options' => [
+					'none' => esc_html__( 'None', 'refraction' ),
+					'pulse' => esc_html__( 'Pulse', 'refraction' ),
+					'float' => esc_html__( 'Float', 'refraction' ),
+					'bounce' => esc_html__( 'Bounce', 'refraction' ),
+					'spin' => esc_html__( 'Spin', 'refraction' ),
+					'swing' => esc_html__( 'Swing', 'refraction' ),
+					'shake' => esc_html__( 'Shake', 'refraction' ),
+					'heartbeat' => esc_html__( 'Heartbeat', 'refraction' ),
+					'fade-in' => esc_html__( 'Fade in', 'refraction' ),
+					'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-icons-anim-',
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_control(
+			'icons_animation_trigger',
+			[
+				'label' => esc_html__( 'Play', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'loop',
+				'options' => [
+					'loop' => esc_html__( 'All the time', 'refraction' ),
+					'hover' => esc_html__( 'While the box is hovered', 'refraction' ),
+					'view' => esc_html__( 'Once, when it comes into view', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-icons-anim-on-',
+				'condition' => [ 'icons_animation!' => 'none' ],
+				'description' => esc_html__( 'Fade in and Zoom in play once.', 'refraction' ),
+			]
+		);
+
+		$this->add_control(
+			'icons_animation_duration',
+			[
+				'label' => esc_html__( 'Duration', 'refraction' ) . ' (ms)',
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 100, 'max' => 5000, 'step' => 50 ] ],
+				'selectors' => [ '{{WRAPPER}}' => '--rf-icons-anim-duration: {{SIZE}}ms;' ],
+				'condition' => [ 'icons_animation!' => 'none' ],
+			]
+		);
+
+		$this->add_control(
+			'icons_animation_stagger',
+			[
+				'label' => esc_html__( 'Delay Between Icons', 'refraction' ) . ' (ms)',
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 2000, 'step' => 25 ] ],
+				'selectors' => [ '{{WRAPPER}}' => '--rf-icons-anim-stagger: {{SIZE}}ms;' ],
+				'condition' => [ 'icons_animation!' => 'none' ],
+			]
+		);
+
+		$this->add_responsive_control(
 			'icon_size',
 			[
 				'label' => esc_html__( 'Size', 'refraction' ),
@@ -675,6 +816,21 @@ class Widget_Icon_Box extends Widget_Base {
 			[
 				'name' => 'title_shadow',
 				'selector' => '{{WRAPPER}} .refraction-icon-box-title',
+			]
+		);
+
+		// The title's own margin, to undo the margin a theme gives headings (set to 0) or to place it exactly. It takes
+		// over Title Spacing once set.
+		$this->add_responsive_control(
+			'title_margin',
+			[
+				'label' => esc_html__( 'Margin', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em', 'rem', '%' ],
+				'allowed_dimensions' => 'all',
+				'selectors' => [
+					'{{WRAPPER}} .refraction-icon-box-title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
 			]
 		);
 
@@ -846,8 +1002,12 @@ class Widget_Icon_Box extends Widget_Base {
 		?>
 		<div class="refraction-icon-box-wrapper">
 
+			<?php
+			$more_icons = $has_icon ? array_values( array_filter( (array) ( $settings['more_icons'] ?? [] ), static fn( $item ) => ! empty( $item['icon']['value'] ) ) ) : [];
+			$this->add_render_attribute( 'icon', 'style', '--i: 0' );
+			?>
 			<?php if ( $has_icon ) : ?>
-			<div class="refraction-icon-box-icon">
+			<div class="refraction-icon-box-icon<?php echo $more_icons ? ' has-more-icons' : ''; ?>">
 				<<?php Utils::print_validated_html_tag( $html_tag ); ?> <?php $this->print_render_attribute_string( 'link' ); ?> <?php $this->print_render_attribute_string( 'icon' ); ?>>
 				<?php
 				if ( $is_new || $migrated ) {
@@ -857,6 +1017,7 @@ class Widget_Icon_Box extends Widget_Base {
 				}
 				?>
 				</<?php Utils::print_validated_html_tag( $html_tag ); ?>>
+				<?php $this->render_more_icons( $more_icons, $settings ); ?>
 			</div>
 			<?php endif; ?>
 
@@ -882,6 +1043,36 @@ class Widget_Icon_Box extends Widget_Base {
 
 		</div>
 		<?php
+	}
+
+	/** The icons after the main one: each a .refraction-icon (so the icon styles apply), a link when it has one. */
+	private function render_more_icons( array $items, array $settings ): void {
+		foreach ( $items as $index => $item ) {
+			$key = 'more_icon_' . $index;
+			$has_link = ! empty( $item['link']['url'] );
+			$tag = $has_link ? 'a' : 'span';
+
+			$this->add_render_attribute( $key, [
+				'class' => [ 'refraction-icon', 'refraction-repeater-item-' . ( $item['_id'] ?? '' ) ],
+				'style' => '--i: ' . ( $index + 1 ),
+			] );
+
+			if ( ! empty( $settings['hover_animation'] ) ) {
+				$this->add_render_attribute( $key, 'class', 'refraction-animation-' . $settings['hover_animation'] );
+			}
+
+			if ( $has_link ) {
+				$this->add_link_attributes( $key, $item['link'] );
+
+				if ( '' !== trim( (string) ( $item['label'] ?? '' ) ) ) {
+					$this->add_render_attribute( $key, 'aria-label', $item['label'] );
+				}
+			}
+
+			echo '<' . $tag . ' ' . $this->get_render_attribute_string( $key ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the render attributes.
+			Icons_Manager::render_icon( $item['icon'], [ 'aria-hidden' => 'true' ] );
+			echo '</' . $tag . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- A fixed tag.
+		}
 	}
 
 	/**
@@ -910,6 +1101,9 @@ class Widget_Icon_Box extends Widget_Base {
 			titleSizeTag = refraction.helpers.validateHTMLTag( settings.title_size );
 
 		view.addRenderAttribute( 'icon', 'class', 'refraction-icon' );
+		view.addRenderAttribute( 'icon', 'style', '--i: 0' );
+
+		var moreIcons = hasIcon ? _.filter( settings.more_icons || [], function( item ) { return item.icon && item.icon.value; } ) : [];
 
 		if ( '' !== settings.hover_animation ) {
 			view.addRenderAttribute( 'icon', 'class', 'refraction-animation-' + settings.hover_animation );
@@ -931,7 +1125,7 @@ class Widget_Icon_Box extends Widget_Base {
 		<div class="refraction-icon-box-wrapper">
 
 			<# if ( hasIcon ) { #>
-			<div class="refraction-icon-box-icon">
+			<div class="refraction-icon-box-icon{{ moreIcons.length ? ' has-more-icons' : '' }}">
 				<{{{ htmlTag }}} {{{ view.getRenderAttributeString( 'link' ) }}} {{{ view.getRenderAttributeString( 'icon' ) }}}>
 					<# if ( iconHTML && iconHTML.rendered && ( ! settings.icon || migrated ) ) { #>
 						{{{ refraction.helpers.sanitize( iconHTML.value ) }}}
@@ -939,6 +1133,13 @@ class Widget_Icon_Box extends Widget_Base {
 						<i class="{{ _.escape( settings.icon ) }}" aria-hidden="true"></i>
 					<# } #>
 				</{{{ htmlTag }}}>
+				<# _.each( moreIcons, function( item, index ) {
+					var moreHTML = refraction.helpers.renderIcon( view, item.icon, { 'aria-hidden': true }, 'i', 'object' ),
+						moreTag = item.link && item.link.url ? 'a' : 'span',
+						moreClass = 'refraction-icon refraction-repeater-item-' + item._id + ( settings.hover_animation ? ' refraction-animation-' + settings.hover_animation : '' );
+				#>
+					<{{{ moreTag }}} class="{{ moreClass }}" style="--i: {{ index + 1 }}">{{{ moreHTML && moreHTML.rendered ? refraction.helpers.sanitize( moreHTML.value ) : '' }}}</{{{ moreTag }}}>
+				<# } ); #>
 			</div>
 			<# } #>
 
