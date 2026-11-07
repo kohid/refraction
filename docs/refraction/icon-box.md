@@ -48,3 +48,7 @@ Check: `node scripts/check-iconbox-navpanel.mjs --site DIR --port N`.
   an icon's own choice sets `--rf-ib-anim` / `--rf-ib-count` / `--rf-ib-wait` ("None" stops it). Play, Duration and
   Delay Between Icons are always shown, since they also serve icons with their own animation. Fade in and Zoom in end
   on the icon's own opacity (`--rf-ib-opacity`).
+
+## 0.46.0
+
+- The description display moved into `Text_Display_Trait` (see `text-display.md`), shared with Text Editor and other widgets; cut text gains a Show more / Show less toggle. Saved settings keep working (same control names).

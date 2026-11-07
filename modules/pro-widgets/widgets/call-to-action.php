@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Call_To_Action extends Pro_Widget {
 
+	use \Refraction\Includes\Widgets\Traits\Text_Display_Trait;
+
 	public function get_name() {
 		return 'refraction-call-to-action';
 	}
@@ -132,6 +134,8 @@ class Call_To_Action extends Pro_Widget {
 				'description' => esc_html__( 'Whole Box makes the entire area clickable while the button stays the one real link.', 'refraction' ),
 			]
 		);
+
+		$this->add_text_display_controls( [ 'tooltip' => false ] );
 
 		$this->end_section();
 
@@ -274,6 +278,8 @@ class Call_To_Action extends Pro_Widget {
 			[ 'name' => 'ribbon_typography', 'selector' => '{{WRAPPER}} .refraction-cta__ribbon-inner' ]
 		);
 		$this->end_section();
+
+		$this->add_text_display_style_controls();
 	}
 
 	protected function render() {
@@ -305,7 +311,9 @@ class Call_To_Action extends Pro_Widget {
 					<<?php Utils::print_validated_html_tag( $tag ); ?> class="refraction-cta__title"><?php echo esc_html( $settings['title'] ); ?></<?php Utils::print_validated_html_tag( $tag ); ?>>
 				<?php endif; ?>
 				<?php if ( ! Utils::is_empty( $settings['description'] ) ) : ?>
-					<div class="refraction-cta__description"><?php echo wp_kses_post( nl2br( esc_html( $settings['description'] ) ) ); ?></div>
+					<?php $description = wp_kses_post( nl2br( esc_html( $settings['description'] ) ) ); ?>
+					<div class="<?php echo esc_attr( implode( ' ', array_merge( [ 'refraction-cta__description' ], 'text' !== $this->text_display_mode( $settings ) ? $this->text_display_classes( $settings ) : [] ) ) ); ?>"><?php echo $description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above. ?></div>
+					<?php echo $this->text_display_after_html( $settings, $description ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 				<?php endif; ?>
 				<?php $this->render_button( $settings, 'btn' ); ?>
 			</div>

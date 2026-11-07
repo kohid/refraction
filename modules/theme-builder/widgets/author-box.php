@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Author_Box extends Theme_Widget_Base {
 
+	use \Refraction\Includes\Widgets\Traits\Text_Display_Trait;
+
 	public function get_name() {
 		return 'theme-author-box';
 	}
@@ -135,6 +137,8 @@ class Author_Box extends Theme_Widget_Base {
 				'prefix_class' => 'refraction-theme-author--',
 			]
 		);
+
+		$this->add_text_display_controls( [ 'label' => esc_html__( 'Show The Biography', 'refraction' ), 'condition' => [ 'show_biography' => 'yes' ] ] );
 
 		$this->end_controls_section();
 
@@ -268,6 +272,8 @@ class Author_Box extends Theme_Widget_Base {
 		);
 
 		$this->end_controls_section();
+
+		$this->add_text_display_style_controls();
 	}
 
 	protected function render() {
@@ -308,7 +314,10 @@ class Author_Box extends Theme_Widget_Base {
 		$bio = (string) get_the_author_meta( 'description', $user->ID );
 
 		if ( 'yes' === $settings['show_biography'] && '' !== trim( $bio ) ) {
-			echo '<div class="refraction-theme-author__bio">' . wp_kses_post( wpautop( $bio ) ) . '</div>';
+			$bio = wp_kses_post( wpautop( $bio ) );
+			$classes = array_merge( [ 'refraction-theme-author__bio' ], 'text' !== $this->text_display_mode( $settings ) ? $this->text_display_classes( $settings ) : [] );
+
+			echo '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">' . $bio . '</div>' . $this->text_display_after_html( $settings, $bio ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above and built from escaped parts.
 		}
 
 		if ( 'yes' === $settings['show_link'] && '' !== trim( (string) $settings['link_text'] ) ) {

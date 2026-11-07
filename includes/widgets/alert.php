@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Widget_Alert extends Widget_Base {
+	use \Refraction\Includes\Widgets\Traits\Text_Display_Trait;
+
 
 	/**
 	 * Get widget name.
@@ -201,6 +203,8 @@ class Widget_Alert extends Widget_Base {
 				],
 			]
 		);
+
+		$this->add_text_display_controls( [ 'label' => esc_html__( 'Show The Description', 'refraction' ) ] );
 
 		$this->end_controls_section();
 
@@ -463,6 +467,8 @@ class Widget_Alert extends Widget_Base {
 		$this->end_controls_tabs();
 
 		$this->end_controls_section();
+
+		$this->add_text_display_style_controls();
 	}
 
 	/**
@@ -486,7 +492,7 @@ class Widget_Alert extends Widget_Base {
 
 		$this->add_render_attribute( 'alert_title', 'class', 'refraction-alert-title' );
 
-		$this->add_render_attribute( 'alert_description', 'class', 'refraction-alert-description' );
+		$this->add_render_attribute( 'alert_description', 'class', array_merge( [ 'refraction-alert-description' ], 'text' !== $this->text_display_mode( $settings ) ? $this->text_display_classes( $settings ) : [] ) );
 
 		$this->add_inline_editing_attributes( 'alert_title', 'none' );
 
@@ -500,6 +506,7 @@ class Widget_Alert extends Widget_Base {
 
 			<?php if ( ! Utils::is_empty( $settings['alert_description'] ) ) : ?>
 			<span <?php $this->print_render_attribute_string( 'alert_description' ); ?>><?php echo wp_kses_post( $settings['alert_description'] ); ?></span>
+			<?php echo $this->text_display_after_html( $settings, wp_kses_post( (string) $settings['alert_description'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 			<?php endif; ?>
 
 			<?php if ( 'show' === $settings['show_dismiss'] ) : ?>
@@ -547,6 +554,7 @@ class Widget_Alert extends Widget_Base {
 	}
 
 	protected function content_template() {
+		$this->print_text_display_template( "_.escape( settings.alert_description || '' )" );
 		?>
 		<#
 		if ( ! settings.alert_title && ! settings.alert_description ) {
@@ -559,7 +567,7 @@ class Widget_Alert extends Widget_Base {
 
 		view.addRenderAttribute( 'alert_title', 'class', 'refraction-alert-title' );
 
-		view.addRenderAttribute( 'alert_description', 'class', 'refraction-alert-description' );
+		view.addRenderAttribute( 'alert_description', 'class', 'refraction-alert-description' + ( 'text' !== textDisplay ? ' ' + textDescClass : '' ) );
 
 		view.addInlineEditingAttributes( 'alert_title', 'none' );
 
@@ -576,6 +584,7 @@ class Widget_Alert extends Widget_Base {
 
 			<# if ( settings.alert_description ) { #>
 			<span {{{ view.getRenderAttributeString( 'alert_description' ) }}}>{{ settings.alert_description }}</span>
+			{{{ textAfter }}}
 			<# } #>
 
 			<# if ( 'show' === settings.show_dismiss ) { #>
