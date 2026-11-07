@@ -12,7 +12,7 @@
 ( function() {
 	'use strict';
 
-	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise' ];
+	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise', 'wipe-up', 'wipe-down', 'wipe-left', 'wipe-right', 'dim' ];
 	const EASE_CSS = {
 		smooth: 'cubic-bezier(0.22, 1, 0.36, 1)',
 		soft: 'cubic-bezier(0.4, 0, 0.2, 1)',

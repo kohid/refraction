@@ -1,0 +1,328 @@
+//
+// Interactions (modules/interactions): the Marquee widget, the site cursor and magnetic elements.
+//
+
+// ---- Marquee (marquee.js runs it; without it, or with reduced motion, the items wrap in rows)
+.rf-marquee {
+	--rf-mq-gap: 2.5rem;
+	--rf-mq-fade: 10%;
+	--rf-mq-tilt: 0deg;
+	--rf-mq-stroke: 1px;
+
+	display: flex;
+	flex-direction: column;
+	color: var(--rf-mq-color, inherit);
+	rotate: var(--rf-mq-tilt);
+}
+
+// A tilted band reaches past the page's sides: the page clips it instead of scrolling sideways (clip, unlike hidden,
+// keeps sticky elements working).
+body:has(.rf-marquee) {
+	overflow-x: clip;
+}
+
+// A tilted band would show its corners: it is widened a little past the section's sides (--rf-mq-bleed, set with
+// the tilt).
+.rf-marquee__row {
+	overflow: hidden;
+	margin-inline: calc(-1 * var(--rf-mq-bleed, 0%));
+	padding-block: 0.6em;
+}
+
+.rf-marquee-fade-yes .rf-marquee__row {
+	mask-image: linear-gradient(to right, transparent, #000 var(--rf-mq-fade), #000 calc(100% - var(--rf-mq-fade)), transparent);
+}
+
+.rf-marquee__track {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 100%;
+}
+
+.rf-marquee__group {
+	display: flex;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	gap: var(--rf-mq-gap);
+	padding-inline-end: var(--rf-mq-gap);
+}
+
+.rf-marquee.is-running {
+
+	.rf-marquee__track {
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		width: max-content;
+		animation: rf-marquee var(--rf-mq-time, 30s) linear infinite;
+		will-change: transform;
+	}
+
+	.rf-marquee__group {
+		flex-wrap: nowrap;
+	}
+
+	.rf-marquee__row[data-dir="right"] .rf-marquee__track {
+		animation-direction: reverse;
+	}
+
+	&.is-offscreen .rf-marquee__track,
+	&.rf-marquee--pause:hover .rf-marquee__track,
+	&.rf-marquee--pause:focus-within .rf-marquee__track {
+		animation-play-state: paused;
+	}
+}
+
+@keyframes rf-marquee {
+	to {
+		transform: translate3d(var(--rf-mq-shift, -50%), 0, 0);
+	}
+}
+
+[dir="rtl"] .rf-marquee__track {
+	direction: ltr;
+}
+
+.rf-marquee__item {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	color: inherit;
+	font-size: clamp(1.5rem, 4vw, 3.5rem);
+	font-weight: 600;
+	line-height: 1.1;
+	white-space: nowrap;
+	text-decoration: none;
+	transition: color 0.2s ease, -webkit-text-stroke-color 0.2s ease;
+}
+
+a.rf-marquee__item:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 4px;
+}
+
+.rf-marquee__item--outline {
+	color: transparent;
+	-webkit-text-stroke: var(--rf-mq-stroke) var(--rf-mq-color, currentColor);
+
+	@supports not (-webkit-text-stroke: 1px black) {
+		color: inherit;
+		opacity: 0.55;
+	}
+}
+
+.rf-marquee__icon,
+.rf-marquee__sep {
+	display: inline-flex;
+	align-items: center;
+	line-height: 0;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.rf-marquee__sep {
+	font-size: 0.6em;
+}
+
+.rf-marquee__item + .rf-marquee__sep,
+.rf-marquee__group > .rf-marquee__sep {
+	font-size: clamp(0.9rem, 2.4vw, 2rem);
+}
+
+.rf-marquee__sep--text {
+	line-height: 1;
+}
+
+.rf-marquee-spin-yes .rf-marquee.is-running .rf-marquee__sep {
+	animation: rf-marquee-spin 8s linear infinite;
+}
+
+@keyframes rf-marquee-spin {
+	to {
+		rotate: 1turn;
+	}
+}
+
+.rf-marquee__img {
+	display: block;
+	width: auto;
+	max-width: none;
+	height: 48px;
+	object-fit: contain;
+	transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.rf-marquee-gray-yes .rf-marquee__img {
+	filter: grayscale(1);
+	opacity: 0.65;
+}
+
+.rf-marquee-gray-yes .rf-marquee__item:hover .rf-marquee__img {
+	filter: none;
+	opacity: 1;
+}
+
+.rf-marquee__sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+// ---- The site cursor (interactions.js). Only for a fine pointer that can hover; the system cursor stays for touch.
+.rf-cursor {
+	--rf-cursor-color: #111;
+	--rf-cursor-size: 36px;
+	--rf-cursor-dot: 8px;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 2147483000;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.25s ease;
+}
+
+.rf-cursor.is-on {
+	opacity: 1;
+}
+
+.rf-cursor__dot,
+.rf-cursor__ring {
+	position: fixed;
+	top: 0;
+	left: 0;
+	border-radius: 50%;
+	translate: -50% -50%;
+}
+
+.rf-cursor__dot {
+	width: var(--rf-cursor-dot);
+	height: var(--rf-cursor-dot);
+	background: var(--rf-cursor-color);
+}
+
+.rf-cursor__ring {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: var(--rf-cursor-size);
+	height: var(--rf-cursor-size);
+	border: 1.5px solid var(--rf-cursor-color);
+	color: #fff;
+	font: 600 12px/1.1 system-ui, sans-serif;
+	text-align: center;
+	transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1), height 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.rf-cursor__label {
+	padding: 0 0.6em;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.rf-cursor--ring .rf-cursor__dot,
+.rf-cursor--dot .rf-cursor__ring {
+	display: none;
+}
+
+// Over a link or a button: the ring grows (the dot hides inside it).
+.rf-cursor.is-link .rf-cursor__ring {
+	width: calc(var(--rf-cursor-size) * 1.8);
+	height: calc(var(--rf-cursor-size) * 1.8);
+	background-color: color-mix(in srgb, var(--rf-cursor-color) 12%, transparent);
+}
+
+.rf-cursor.is-link .rf-cursor__dot {
+	opacity: 0;
+}
+
+// Over an element with a cursor label: a filled disc with the word in it.
+.rf-cursor.has-label .rf-cursor__ring {
+	width: calc(var(--rf-cursor-size) * 2.6);
+	height: calc(var(--rf-cursor-size) * 2.6);
+	border-color: transparent;
+	background-color: var(--rf-cursor-color);
+}
+
+.rf-cursor.has-label .rf-cursor__label {
+	opacity: 1;
+}
+
+.rf-cursor.has-label .rf-cursor__dot {
+	opacity: 0;
+}
+
+.rf-cursor.is-down .rf-cursor__ring {
+	scale: 0.85;
+}
+
+// Blend: the cursor inverts what is under it (white on any background).
+.rf-cursor--blend {
+	--rf-cursor-color: #fff;
+
+	mix-blend-mode: difference;
+}
+
+.rf-cursor--blend.has-label .rf-cursor__ring {
+	color: #000;
+}
+
+html.rf-cursor-hide-system,
+html.rf-cursor-hide-system * {
+	cursor: none !important;
+}
+
+// Text fields keep their caret and their own cursor.
+html.rf-cursor-hide-system :is(input, textarea, select, [contenteditable="true"]) {
+	cursor: auto !important;
+}
+
+.rf-cursor-hidden-here .rf-cursor {
+	opacity: 0;
+}
+
+// ---- Magnetic elements: the inside of the element is drawn towards the pointer (interactions.js sets --rf-mag-x/y).
+[data-rf-magnetic] > * {
+	translate: var(--rf-mag-x, 0) var(--rf-mag-y, 0);
+	transition: translate 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-rf-magnetic].is-pulled > * {
+	transition-duration: 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-marquee__track,
+	.rf-marquee__sep {
+		animation: none !important;
+	}
+
+	[data-rf-magnetic] > * {
+		translate: none;
+	}
+
+	.rf-cursor__ring {
+		transition: none;
+	}
+}
+
+// "No site cursor here": the usual cursor comes back over the element.
+html.rf-cursor-hide-system :is([data-rf-cursor-hide], [data-rf-cursor-hide] *) {
+	cursor: auto !important;
+}
+
+html.rf-cursor-hide-system [data-rf-cursor-hide] :is(a[href], button, [role="button"], summary, label[for]) {
+	cursor: pointer !important;
+}

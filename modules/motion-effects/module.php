@@ -225,6 +225,11 @@ class Module extends BaseModule {
 			'zoom-out' => esc_html__( 'Zoom out', 'refraction' ),
 			'blur' => esc_html__( 'Sharpen from blur', 'refraction' ),
 			'rise' => esc_html__( 'Rise and turn', 'refraction' ),
+			'wipe-up' => esc_html__( 'Wipe up (uncovered from the bottom)', 'refraction' ),
+			'wipe-down' => esc_html__( 'Wipe down (uncovered from the top)', 'refraction' ),
+			'wipe-left' => esc_html__( 'Wipe from the right', 'refraction' ),
+			'wipe-right' => esc_html__( 'Wipe from the left', 'refraction' ),
+			'dim' => esc_html__( 'Light up from faint (best for text with the scroll)', 'refraction' ),
 		];
 	}
 

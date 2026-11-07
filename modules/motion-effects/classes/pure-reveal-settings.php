@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Pure_Reveal_Settings {
 
 	/** How a whole element, a text piece or a child comes in. */
-	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise' ];
+	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise', 'wipe-up', 'wipe-down', 'wipe-left', 'wipe-right', 'dim' ];
 
 	/** How text comes in: each piece slides up from behind its own mask, or uses the element effect. */
 	const TEXT_SPLITS = [ 'lines', 'words', 'chars' ];
