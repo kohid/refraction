@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.44.0
+Stable tag: 0.45.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.45.0 =
+* Icon Box: every icon has its own style settings. Each More Icon (Content > More Icons, open the item) and the main icon (new Style > Main Icon) have icon, duotone, background and border colors for normal and while the box is hovered, size, padding, border width, border radius, rotate, opacity, box shadow, and their own animation with its duration and delay. Settings left empty follow Style > Icon, which still styles every icon. The arranged-freely position of the main icon moved to Style > Main Icon.
 
 = 0.44.0 =
 * Icon Box and Image Box: the title has no margin of its own any more, so a theme's heading margin no longer shows (Title Spacing and Margin still add space when set).

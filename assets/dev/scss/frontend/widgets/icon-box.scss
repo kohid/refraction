@@ -145,8 +145,8 @@
 @keyframes rf-ib-swing { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(15deg); } 40% { transform: rotate(-10deg); } 60% { transform: rotate(5deg); } 80% { transform: rotate(-5deg); } }
 @keyframes rf-ib-shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
 @keyframes rf-ib-heartbeat { 0%, 28%, 70%, 100% { transform: scale(1); } 14%, 42% { transform: scale(1.18); } }
-@keyframes rf-ib-fade-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-@keyframes rf-ib-zoom-in { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+@keyframes rf-ib-fade-in { from { opacity: 0; transform: translateY(12px); } to { opacity: var(--rf-ib-opacity, 1); transform: none; } }
+@keyframes rf-ib-zoom-in { from { opacity: 0; transform: scale(0.4); } to { opacity: var(--rf-ib-opacity, 1); transform: none; } }
 
 [class*="refraction-icons-anim-"] .refraction-icon-box-icon .refraction-icon {
 	animation-duration: var(--rf-icons-anim-duration, 1200ms);
@@ -158,31 +158,38 @@
 $rf-ib-loops: pulse, float, bounce, spin, swing, shake, heartbeat;
 $rf-ib-once: fade-in, zoom-in;
 
+// The box's animation, as variables on each icon (--rf-ib-box-*). An icon given its own animation sets --rf-ib-anim,
+// --rf-ib-count and --rf-ib-wait (its opacity while waiting to come into view), which win; "None" stops it.
 @each $name in $rf-ib-loops {
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-loop .refraction-icon-box-icon .refraction-icon,
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-hover:hover .refraction-icon-box-icon .refraction-icon {
-		animation-name: rf-ib-#{$name};
-		animation-iteration-count: infinite;
-	}
-
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view.is-visible .refraction-icon-box-icon .refraction-icon {
-		animation-name: rf-ib-#{$name};
-		animation-iteration-count: 1;
+	.refraction-icons-anim-#{$name} .refraction-icon-box-icon .refraction-icon {
+		--rf-ib-box-anim: rf-ib-#{$name};
+		--rf-ib-box-count: infinite;
 	}
 }
 
 @each $name in $rf-ib-once {
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-loop .refraction-icon-box-icon .refraction-icon,
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-hover:hover .refraction-icon-box-icon .refraction-icon,
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view.is-visible .refraction-icon-box-icon .refraction-icon {
-		animation-name: rf-ib-#{$name};
-		animation-iteration-count: 1;
+	.refraction-icons-anim-#{$name} .refraction-icon-box-icon .refraction-icon {
+		--rf-ib-box-anim: rf-ib-#{$name};
+		--rf-ib-box-count: 1;
+		--rf-ib-box-wait: 0;
 	}
+}
 
-	// Waiting to come into view: hidden until then.
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view:not(.is-visible) .refraction-icon-box-icon .refraction-icon {
-		opacity: 0;
-	}
+.refraction-icons-anim-on-loop .refraction-icon-box-icon .refraction-icon,
+.refraction-icons-anim-on-hover:hover .refraction-icon-box-icon .refraction-icon {
+	animation-name: var(--rf-ib-anim, var(--rf-ib-box-anim, none));
+	animation-iteration-count: var(--rf-ib-count, var(--rf-ib-box-count, 1));
+}
+
+.refraction-icons-anim-on-view.is-visible .refraction-icon-box-icon .refraction-icon {
+	animation-name: var(--rf-ib-anim, var(--rf-ib-box-anim, none));
+	animation-iteration-count: 1;
+}
+
+// Waiting to come into view: an icon that fades or zooms in is hidden until then (over its own opacity, which the
+// fade then ends on through --rf-ib-opacity).
+.refraction-widget-icon-box.refraction-icons-anim-on-view:not(.is-visible) .refraction-icon-box-icon .refraction-icon.refraction-icon {
+	opacity: var(--rf-ib-wait, var(--rf-ib-box-wait, 1));
 }
 
 .refraction-icons-anim-spin .refraction-icon-box-icon .refraction-icon {

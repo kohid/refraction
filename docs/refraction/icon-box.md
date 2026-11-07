@@ -31,3 +31,20 @@ Check: `node scripts/check-iconbox-navpanel.mjs --site DIR --port N`.
   *Show The Description* as text, cut to a number of lines (`--rf-box-lines`, with *Full Text In A Tooltip*), or as a
   tooltip (`.refraction-box-tooltip`, shown on hover or keyboard focus, above or under the box); a Button (text, link,
   icon, filled / outline / text link) with Style > Button and Style > Tooltip sections.
+
+## 0.45.0
+
+- **Each icon's own style.** `add_own_icon_controls()` in `includes/widgets/icon-box.php` gives one icon: *Normal* /
+  *Hover* tabs (icon color, duotone second color, background, border color; Hover applies while the box is hovered or
+  has keyboard focus), size, padding, border width (solid), border radius, rotate (`rotate` on the inner `i` / `svg`,
+  so it does not fight the free arrangement's turn or the animations), opacity, box shadow, and an animation with its
+  duration and delay. It is used twice: in the More Icons repeater (names without a prefix, so the 0.43 `color`,
+  `background`, `duo` and `size` values keep working) and in the new **Style > Main Icon** section (`main_icon_*`; the
+  main icon carries `refraction-icon--main`). The main icon's Across / Down / Turn / Layer moved there too.
+- Selectors are `{{WRAPPER}}.refraction-widget-icon-box .refraction-icon-box-icon <icon>`, more specific than Style >
+  Icon (also its hover), so an icon's own setting always wins and an empty one leaves Style > Icon in charge.
+- **Per-icon animation**: the box's animation is now set as variables on each icon (`--rf-ib-box-anim`,
+  `--rf-ib-box-count`, `--rf-ib-box-wait`) and the Play rules use `var(--rf-ib-anim, var(--rf-ib-box-anim, none))`;
+  an icon's own choice sets `--rf-ib-anim` / `--rf-ib-count` / `--rf-ib-wait` ("None" stops it). Play, Duration and
+  Delay Between Icons are always shown, since they also serve icons with their own animation. Fade in and Zoom in end
+  on the icon's own opacity (`--rf-ib-opacity`).
