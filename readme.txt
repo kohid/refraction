@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.42.1
+Stable tag: 0.43.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.43.0 =
+* Nav Menu: the collapsed menu panel no longer scrolls sideways (long items wrap; the full width dropdown fits the page without its scrollbar). New: the site logo, site name, an image or your own text at the top of the panel, linked to the home page, and buttons under the menu items (filled or outline, with icons, typography, colors, padding, radius and layout).
+* Icon Box and Image Box: a Margin control for the title, to remove the margin a theme gives headings.
+* Icon Box: More Icons, shown next to the main icon, each with its own link, color, background, duotone color and size; space between icons; Icon Animation (pulse, float, bounce, spin, swing, shake, heartbeat, fade in, zoom in) played all the time, while hovered or once when it comes into view, with its duration and a delay between icons.
 
 = 0.42.1 =
 * Editor Preferences > Panel > Position: the panel floats over the page (full width view, the default) or sits beside it, so the page's left side can be clicked without sliding the panel away.

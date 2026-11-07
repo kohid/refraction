@@ -37,8 +37,13 @@ class Images_Manager {
 		$items = Utils::get_super_global_value( $_POST, 'items' ) ?? []; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$urls  = [];
 
-		foreach ( $items as $item ) {
-			$urls[ $item['id'] ] = $this->get_details( $item['id'], $item['size'], $item['is_first_time'] );
+		foreach ( (array) $items as $item ) {
+			// An image given by its address only (no media library id) has no sizes to look up.
+			if ( empty( $item['id'] ) ) {
+				continue;
+			}
+
+			$urls[ $item['id'] ] = $this->get_details( $item['id'], $item['size'] ?? '', $item['is_first_time'] ?? false );
 		}
 
 		wp_send_json_success( $urls );

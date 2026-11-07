@@ -36,7 +36,8 @@
 	&.refraction-nav-menu--overlay-yes.refraction-nav-menu--panel-dropdown.refraction-nav-menu--stretch-full .refraction-nav-menu__panel {
 		left: var(--refraction-nav-stretch-left, 0);
 		right: auto;
-		width: 100vw;
+		// The page's width without its scrollbar (set by the handler); 100vw would add a horizontal scroll.
+		width: var(--refraction-nav-stretch-width, 100vw);
 	}
 
 	// Slide in from a side, or full screen: over the page, with a backdrop and a close button.
@@ -50,7 +51,8 @@
 			bottom: 0;
 			z-index: var(--refraction-nav-panel-z, 9999);
 			overflow-y: auto;
-			padding: 64px 16px 24px;
+			padding: 16px 16px 24px;
+			max-width: 100%;
 			background: #fff;
 			box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
 		}
@@ -67,6 +69,39 @@
 		.refraction-nav-menu__close {
 			display: inline-flex;
 		}
+	}
+
+	// Never wider than the panel: long items wrap instead of scrolling sideways.
+	.refraction-nav-menu__panel {
+		overflow-x: hidden;
+		box-sizing: border-box;
+	}
+
+	.refraction-nav-menu__panel .refraction-nav-menu__link {
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	// The panel's header (logo or name, and the close button) and its buttons.
+	.refraction-nav-menu__panel-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		min-height: 40px;
+		margin-bottom: 12px;
+	}
+
+	.refraction-nav-menu__panel-buttons {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin-top: 16px;
+	}
+
+	&.refraction-nav-menu--buttons-row .refraction-nav-menu__panel-buttons {
+		flex-direction: row;
+		flex-wrap: wrap;
 	}
 
 	&.refraction-nav-menu--panel-offcanvas-right .refraction-nav-menu__panel {
@@ -561,11 +596,67 @@ html.refraction-nav-menu-locked {
 	background: rgba(0, 0, 0, 0.45);
 }
 
+.refraction-nav-menu__panel-head,
+.refraction-nav-menu__panel-buttons {
+	display: none;
+}
+
+.refraction-nav-menu__brand {
+	display: inline-flex;
+	align-items: center;
+	min-width: 0;
+	color: inherit;
+	text-decoration: none;
+
+	img {
+		display: block;
+		max-height: 48px;
+		width: auto;
+		max-width: 100%;
+	}
+}
+
+.refraction-nav-menu__brand-text {
+	font-size: 1.25em;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.refraction-nav-menu__panel-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	padding: 0.75em 1.25em;
+	border: 2px solid var(--e-global-color-accent, #111);
+	border-radius: 6px;
+	font-weight: 600;
+	line-height: 1.2;
+	text-align: center;
+	text-decoration: none;
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.refraction-nav-menu__panel-button--filled {
+	background-color: var(--e-global-color-accent, #111);
+	color: #fff;
+}
+
+.refraction-nav-menu__panel-button--outline {
+	background-color: transparent;
+	color: inherit;
+}
+
 .refraction-nav-menu__close {
 	display: none;
-	position: absolute;
-	top: 14px;
-	inset-inline-end: 14px;
+	flex: none;
+	margin-inline-start: auto;
 	align-items: center;
 	justify-content: center;
 	width: 40px;

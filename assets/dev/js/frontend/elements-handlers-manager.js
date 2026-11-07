@@ -12,6 +12,7 @@ module.exports = function( $ ) {
 		'accordion.default': () => import( /* webpackChunkName: 'accordion' */ './handlers/accordion' ),
 		'alert.default': () => import( /* webpackChunkName: 'alert' */ './handlers/alert' ),
 		'counter.default': () => import( /* webpackChunkName: 'counter' */ './handlers/counter' ),
+		'icon-box.default': () => import( /* webpackChunkName: 'icon-box' */ './handlers/icon-box' ),
 		'progress.default': () => import( /* webpackChunkName: 'progress' */ './handlers/progress' ),
 		'tabs.default': () => import( /* webpackChunkName: 'tabs' */ './handlers/tabs' ),
 		'toggle.default': () => import( /* webpackChunkName: 'toggle' */ './handlers/toggle' ),
