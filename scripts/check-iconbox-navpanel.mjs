@@ -176,13 +176,21 @@ async function main() {
 				],
 				icons_gap: { unit: 'px', size: 18 }, icons_animation: 'pulse', icons_animation_trigger: 'loop', icons_animation_stagger: { unit: 'px', size: 200 },
 			}, elements: [] },
+			{ id: 'ib03', elType: 'widget', widgetType: 'icon-box', settings: { title_text: 'Default title' }, elements: [] },
+			{ id: 'ib04', elType: 'widget', widgetType: 'icon-box', settings: {
+				title_text: 'Arranged', icons_layout: 'free', icons_area_width: { unit: 'px', size: 120 }, icons_area_height: { unit: 'px', size: 100 },
+				main_icon_pos_x: { unit: 'px', size: 30 }, main_icon_pos_y: { unit: 'px', size: 40 }, main_icon_layer: 1,
+				more_icons: [ { _id: 'ar1', icon: { value: 'fas fa-car', library: 'fa-solid' }, pos_x: { unit: 'px', size: 70 }, pos_y: { unit: 'px', size: 75 }, size: { unit: 'px', size: 40 }, color: '#00AA00', turn: { unit: 'px', size: 20 }, layer: 3 } ],
+			}, elements: [] },
+			{ id: 'ib05', elType: 'widget', widgetType: 'icon-box', settings: { title_text: 'Corporate', description_text: 'Inverness Taxis, with over 60 years of service in the Highlands, offers tailored corporate transportation solutions designed to meet the needs of every business, large or small, every day of the year.', box_description_display: 'clamp', box_description_lines: 2, box_description_full_tooltip: 'yes', box_button_text: 'Learn more', box_button_link: { url: '#corporate' }, box_button_style: 'outline' }, elements: [] },
+			{ id: 'mb02', elType: 'widget', widgetType: 'image-box', settings: { title_text: 'Safe transfers', description_text: 'We are dedicated to offering safe transfer to give you peace of mind on each and every journey 24/7.', box_description_display: 'tooltip', box_button_text: 'Book now', box_button_link: { url: '#book' }, image: { url: `${ BASE }/wp-includes/images/w-logo-blue.png` } }, elements: [] },
 			{ id: 'mb01', elType: 'widget', widgetType: 'image-box', settings: { title_text: 'Our cars', title_margin: zero, image: { url: `${ BASE }/wp-includes/images/w-logo-blue.png` } }, elements: [] },
 			filler,
 			{ id: 'ib02', elType: 'widget', widgetType: 'icon-box', settings: { title_text: 'Later', icons_animation: 'fade-in', icons_animation_trigger: 'view' }, elements: [] },
 		] );
 		const b = await at( boxes.url, 1280 );
 		const box = await b.evaluate( () => {
-			const icons = [ ...document.querySelectorAll( '[data-id="ib01"] .refraction-icon-box-icon > .refraction-icon' ) ];
+			const icons = [ ...document.querySelectorAll( '[data-id="ib01"] .refraction-icon-box-icon .refraction-icon' ) ];
 			const holder = document.querySelector( '[data-id="ib01"] .refraction-icon-box-icon' );
 			const red = document.querySelector( '[data-id="ib01"] .refraction-repeater-item-mi1' );
 			return {
@@ -194,18 +202,57 @@ async function main() {
 				anim: icons.map( ( i ) => getComputedStyle( i ).animationName + '@' + getComputedStyle( i ).animationDelay ),
 				titleMargin: [ getComputedStyle( document.querySelector( '[data-id="ib01"] .refraction-icon-box-title' ) ).marginTop, getComputedStyle( document.querySelector( '[data-id="ib01"] .refraction-icon-box-title' ) ).marginBottom ],
 				imageTitleMargin: [ getComputedStyle( document.querySelector( '[data-id="mb01"] .refraction-image-box-title' ) ).marginTop, getComputedStyle( document.querySelector( '[data-id="mb01"] .refraction-image-box-title' ) ).marginBottom ],
-				laterBefore: getComputedStyle( document.querySelector( '[data-id="ib02"] .refraction-icon-box-icon > .refraction-icon' ) ).opacity,
+				defaultTitle: getComputedStyle( document.querySelector( '[data-id="ib03"] .refraction-icon-box-title' ) ).marginTop,
+				arranged: ( () => {
+					const area = document.querySelector( '[data-id="ib04"] .refraction-icon-box-icons-area' ).getBoundingClientRect();
+					const center = ( el ) => { const r = el.getBoundingClientRect(); return [ Math.round( ( r.left + r.width / 2 - area.left ) / area.width * 100 ), Math.round( ( r.top + r.height / 2 - area.top ) / area.height * 100 ) ]; };
+					const main = document.querySelector( '[data-id="ib04"] .refraction-icon-box-icons-area > .refraction-icon:first-child' );
+					const car = document.querySelector( '[data-id="ib04"] .refraction-repeater-item-ar1' );
+					return { area: [ Math.round( area.width ), Math.round( area.height ) ], main: center( main ), car: center( car ), carColor: getComputedStyle( car ).color, carSize: getComputedStyle( car ).fontSize, carRotate: getComputedStyle( car ).rotate, carZ: getComputedStyle( car ).zIndex };
+				} )(),
+				laterBefore: getComputedStyle( document.querySelector( '[data-id="ib02"] .refraction-icon-box-icon .refraction-icon' ) ).opacity,
 			};
 		} );
 		check( 'icon box', 'the main icon and four more, in a row with the space between them, following the box alignment (center)', 5 === box.count && '18px' === box.gap && box.centered, JSON.stringify( box ) );
 		check( 'icon box', 'an icon with its own color and link', 'rgb(255, 0, 0)' === box.red && '#map' === box.link, JSON.stringify( box ) );
 		check( 'icon box', 'the animation plays on every icon, each 200 ms after the one before', box.anim.every( ( a, i ) => 'rf-ib-pulse' === a.split( '@' )[ 0 ] && Math.abs( parseFloat( a.split( '@' )[ 1 ] ) - i * 0.2 ) < 0.001 ), box.anim.join() );
 		check( 'titles', 'the Margin control removes the title margin (Icon Box and Image Box)', '0px,0px' === box.titleMargin.join() && '0px,0px' === box.imageTitleMargin.join(), JSON.stringify( [ box.titleMargin, box.imageTitleMargin ] ) );
+		check( 'titles', 'by default the Icon Box title has no margin (the theme\'s heading margin does not show)', '0px' === box.defaultTitle, box.defaultTitle );
+		const ar = box.arranged;
+		check( 'arrange', 'arranged freely: the area has its size, each icon sits on its point with its size, color, turn and layer', '120,100' === ar.area.join() && Math.abs( ar.main[ 0 ] - 30 ) <= 3 && Math.abs( ar.main[ 1 ] - 40 ) <= 3 && Math.abs( ar.car[ 0 ] - 70 ) <= 3 && Math.abs( ar.car[ 1 ] - 75 ) <= 3 && 'rgb(0, 170, 0)' === ar.carColor && '40px' === ar.carSize && '20deg' === ar.carRotate && '3' === ar.carZ, JSON.stringify( ar ) );
 		check( 'icon box', 'with "when it comes into view", the icon waits hidden', '0' === box.laterBefore, box.laterBefore );
+		// The button, the description cut to two lines with its full text on hover, and the description as a tooltip.
+		const extras = await b.evaluate( () => {
+			const desc = document.querySelector( '[data-id="ib05"] .refraction-icon-box-description' );
+			const lh = parseFloat( getComputedStyle( desc ).lineHeight );
+			const btn = document.querySelector( '[data-id="ib05"] .refraction-box-button' );
+			const tip = document.querySelector( '[data-id="mb02"] .refraction-box-tooltip' );
+			return {
+				lines: Math.round( desc.getBoundingClientRect().height / lh ), cut: desc.scrollHeight > desc.clientHeight,
+				button: [ btn?.textContent.trim(), btn?.getAttribute( 'href' ), btn?.classList.contains( 'refraction-box-button--outline' ) ],
+				imageButton: document.querySelector( '[data-id="mb02"] .refraction-box-button' )?.getAttribute( 'href' ),
+				tipHidden: getComputedStyle( tip ).opacity,
+				fullHidden: getComputedStyle( document.querySelector( '[data-id="ib05"] .refraction-box-tooltip--full' ) ).visibility,
+			};
+		} );
+		check( 'box extras', 'the description cut to two lines', 2 === extras.lines && extras.cut, JSON.stringify( extras ) );
+		check( 'box extras', 'a button under the text (Icon Box outline, Image Box)', 'Learn more' === extras.button[ 0 ] && '#corporate' === extras.button[ 1 ] && extras.button[ 2 ] && '#book' === extras.imageButton, JSON.stringify( extras ) );
+		check( 'box extras', 'the tooltips wait hidden', '0' === extras.tipHidden && 'hidden' === extras.fullHidden, JSON.stringify( extras ) );
+		await b.hover( '[data-id="mb02"] .refraction-image-box-title' );
+		await sleep( 400 );
+		const tipShown = await b.evaluate( () => { const t = document.querySelector( '[data-id="mb02"] .refraction-box-tooltip' ); const box = document.querySelector( '[data-id="mb02"] .refraction-image-box-wrapper' ).getBoundingClientRect(); const r = t.getBoundingClientRect(); return { opacity: getComputedStyle( t ).opacity, below: r.top >= box.bottom, text: t.textContent.trim().slice( 0, 30 ), color: getComputedStyle( t ).color }; } );
+		check( 'box extras', 'hovering the Image Box shows its description as a tooltip under it', '1' === tipShown.opacity && tipShown.below && /We are dedicated/.test( tipShown.text ) && 'rgb(255, 255, 255)' === tipShown.color, JSON.stringify( tipShown ) );
+		await b.screenshot( { path: join( SHOTS, 'tooltip.png' ), fullPage: false } );
+		await b.hover( '[data-id="ib05"] .refraction-icon-box-title' );
+		await sleep( 400 );
+		const full = await b.evaluate( () => { const t = document.querySelector( '[data-id="ib05"] .refraction-box-tooltip--full' ); return { opacity: getComputedStyle( t ).opacity, text: /every day of the year/.test( t.textContent ) }; } );
+		check( 'box extras', 'hovering the cut description shows the full text', '1' === full.opacity && full.text, JSON.stringify( full ) );
 		await b.locator( '[data-id="ib02"]' ).scrollIntoViewIfNeeded();
 		await sleep( 1800 );
-		const later = await b.evaluate( () => ( { visible: document.querySelector( '[data-id="ib02"]' ).classList.contains( 'is-visible' ), name: getComputedStyle( document.querySelector( '[data-id="ib02"] .refraction-icon-box-icon > .refraction-icon' ) ).animationName, opacity: getComputedStyle( document.querySelector( '[data-id="ib02"] .refraction-icon-box-icon > .refraction-icon' ) ).opacity } ) );
+		const later = await b.evaluate( () => ( { visible: document.querySelector( '[data-id="ib02"]' ).classList.contains( 'is-visible' ), name: getComputedStyle( document.querySelector( '[data-id="ib02"] .refraction-icon-box-icon .refraction-icon' ) ).animationName, opacity: getComputedStyle( document.querySelector( '[data-id="ib02"] .refraction-icon-box-icon .refraction-icon' ) ).opacity } ) );
 		check( 'icon box', 'and fades in once it is seen', later.visible && 'rf-ib-fade-in' === later.name && '1' === later.opacity, JSON.stringify( later ) );
+		await b.locator( '[data-id="ib04"]' ).scrollIntoViewIfNeeded();
+		await b.locator( '[data-id="ib04"]' ).screenshot( { path: join( SHOTS, 'arranged.png' ) } );
 		await b.evaluate( () => window.scrollTo( 0, 0 ) );
 		await b.screenshot( { path: join( SHOTS, 'icon-box.png' ), clip: { x: 0, y: 0, width: 1280, height: 700 } } );
 		await b.context().close();
@@ -221,8 +268,8 @@ async function main() {
 		await p.goto( `${ BASE }/wp-admin/post.php?post=${ boxes.id }&action=refraction` );
 		await p.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
 		await sleep( 3000 );
-		const inEditor = await p.frame( { name: 'refraction-preview-iframe' } ).evaluate( () => ( { count: document.querySelectorAll( '[data-id="ib01"] .refraction-icon-box-icon > .refraction-icon' ).length, svg: !! document.querySelector( '[data-id="ib01"] .refraction-repeater-item-mi1 svg' ) } ) );
-		check( 'editor', 'the editor draws the five icons (the Solar one as SVG)', 5 === inEditor.count && inEditor.svg, JSON.stringify( inEditor ) );
+		const inEditor = await p.frame( { name: 'refraction-preview-iframe' } ).evaluate( () => ( { count: document.querySelectorAll( '[data-id="ib01"] .refraction-icon-box-icon .refraction-icon' ).length, svg: !! document.querySelector( '[data-id="ib01"] .refraction-repeater-item-mi1 svg' ), buttons: document.querySelectorAll( '.refraction-box-button' ).length, tooltip: !! document.querySelector( '[data-id="mb02"] .refraction-box-tooltip' ), arranged: !! document.querySelector( '[data-id="ib04"] .refraction-icon-box-icons-area' ) } ) );
+		check( 'editor', 'the editor draws the five icons (the Solar one as SVG), the arranged icons, the buttons and the tooltip', 5 === inEditor.count && inEditor.svg && 2 === inEditor.buttons && inEditor.tooltip && inEditor.arranged, JSON.stringify( inEditor ) );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

@@ -93,7 +93,9 @@
 		}
 	}
 
+	// No margin of its own: a theme's heading margin does not show. Title Spacing and Margin add space when set.
 	.refraction-image-box-title {
+		margin-block: 0;
 
 		a {
 			color: inherit;
@@ -108,3 +110,5 @@
 		margin: 0;
 	}
 }
+
+@import "../partials/box-extras";

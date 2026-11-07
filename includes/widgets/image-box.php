@@ -16,6 +16,8 @@ use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
  * @since 1.0.0
  */
 class Widget_Image_Box extends Widget_Base {
+	use \Refraction\Includes\Widgets\Traits\Box_Extras_Trait;
+
 
 	/**
 	 * Get widget name.
@@ -195,6 +197,8 @@ class Widget_Image_Box extends Widget_Base {
 				'default' => 'h3',
 			]
 		);
+
+		$this->add_box_extras_content_controls();
 
 		$this->end_controls_section();
 
@@ -762,6 +766,8 @@ class Widget_Image_Box extends Widget_Base {
 		);
 
 		$this->end_controls_section();
+
+		$this->add_box_extras_style_controls();
 	}
 
 	/**
@@ -779,7 +785,7 @@ class Widget_Image_Box extends Widget_Base {
 		$title_text = wp_kses_post( $settings['title_text'] );
 
 		$has_image = ! empty( $settings['image']['url'] );
-		$has_content = ! Utils::is_empty( $title_text ) || ! Utils::is_empty( $description_text );
+		$has_content = ! Utils::is_empty( $title_text ) || ! Utils::is_empty( $description_text ) || $this->box_has_button( $settings );
 
 		if ( ! $has_image && ! $has_content ) {
 			return;
@@ -819,12 +825,14 @@ class Widget_Image_Box extends Widget_Base {
 			}
 
 			if ( ! Utils::is_empty( $description_text ) ) {
-				$this->add_render_attribute( 'description_text', 'class', 'refraction-image-box-description' );
+				$this->add_render_attribute( 'description_text', 'class', array_merge( [ 'refraction-image-box-description' ], $this->box_description_classes( $settings ) ) );
 
 				$this->add_inline_editing_attributes( 'description_text' );
 
 				$html .= sprintf( '<p %1$s>%2$s</p>', $this->get_render_attribute_string( 'description_text' ), $description_text );
 			}
+
+			$html .= $this->box_after_description_html( $settings, $description_text );
 
 			$html .= '</div>';
 		}
@@ -843,13 +851,14 @@ class Widget_Image_Box extends Widget_Base {
 	 * @access protected
 	 */
 	protected function content_template() {
+		$this->print_box_extras_template();
 		?>
 		<#
 		const titleText = refraction.helpers.sanitize( settings.title_text, { ALLOW_DATA_ATTR: false } )
 		const descriptionText = refraction.helpers.sanitize( settings.description_text, { ALLOW_DATA_ATTR: false } )
 
 		var hasImage = !! settings.image.url;
-		var hasContent = !! ( titleText || descriptionText );
+		var hasContent = !! ( titleText || descriptionText || settings.box_button_text );
 
 		if ( ! hasImage && ! hasContent ) {
 			return;
@@ -895,12 +904,14 @@ class Widget_Image_Box extends Widget_Base {
 			}
 
 			if ( descriptionText ) {
-				view.addRenderAttribute( 'description_text', 'class', 'refraction-image-box-description' );
+				view.addRenderAttribute( 'description_text', 'class', 'refraction-image-box-description ' + boxDescClass );
 
 				view.addInlineEditingAttributes( 'description_text' );
 
 				html += '<p ' + view.getRenderAttributeString( 'description_text' ) + '>' + descriptionText + '</p>';
 			}
+
+			html += boxAfter;
 
 			html += '</div>';
 		}

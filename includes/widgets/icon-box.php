@@ -16,6 +16,8 @@ use Refraction\Core\Kits\Documents\Tabs\Global_Typography;
  * @since 1.0.0
  */
 class Widget_Icon_Box extends Widget_Base {
+	use \Refraction\Includes\Widgets\Traits\Box_Extras_Trait;
+
 
 	/**
 	 * Get widget name.
@@ -214,6 +216,8 @@ class Widget_Icon_Box extends Widget_Base {
 			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}.refraction-icon' => 'font-size: {{SIZE}}{{UNIT}};' ],
 		] );
 
+		self::add_arrange_controls( $more_icons, '{{WRAPPER}} {{CURRENT_ITEM}}.refraction-icon', '' );
+
 		$this->add_control(
 			'more_icons',
 			[
@@ -224,6 +228,22 @@ class Widget_Icon_Box extends Widget_Base {
 				'prevent_empty' => false,
 				'title_field' => '{{{ refraction.helpers.renderIcon( this, icon, {}, "i", "panel" ) || "" }}} {{{ label }}}',
 				'description' => esc_html__( 'Icons shown next to the main one. They take the icon styles (Style > Icon) unless given their own color or size.', 'refraction' ),
+				'condition' => [ 'selected_icon[value]!' => '' ],
+			]
+		);
+
+		$this->add_control(
+			'icons_layout',
+			[
+				'label' => esc_html__( 'Icon Layout', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'row',
+				'options' => [
+					'row' => esc_html__( 'In a row', 'refraction' ),
+					'free' => esc_html__( 'Arrange freely (one picture)', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-icons-layout-',
+				'description' => esc_html__( 'Arrange freely: the icons share one area (its size in Style > Icon) and each is placed by its own position, size, color, turn and layer, like the parts of a single picture.', 'refraction' ),
 				'condition' => [ 'selected_icon[value]!' => '' ],
 			]
 		);
@@ -287,6 +307,8 @@ class Widget_Icon_Box extends Widget_Base {
 				'default' => 'h3',
 			]
 		);
+
+		$this->add_box_extras_content_controls();
 
 		$this->end_controls_section();
 
@@ -595,8 +617,47 @@ class Widget_Icon_Box extends Widget_Base {
 				'range' => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
 				'selectors' => [ '{{WRAPPER}}' => '--rf-icon-box-icons-gap: {{SIZE}}{{UNIT}};' ],
 				'separator' => 'before',
+				'condition' => [ 'icons_layout!' => 'free' ],
 			]
 		);
+
+		$this->add_control(
+			'icons_area_heading',
+			[
+				'label' => esc_html__( 'Arranged Icons', 'refraction' ),
+				'type' => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => [ 'icons_layout' => 'free' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'icons_area_width',
+			[
+				'label' => esc_html__( 'Area Width', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', '%' ],
+				'range' => [ 'px' => [ 'min' => 20, 'max' => 800 ] ],
+				'default' => [ 'size' => 160, 'unit' => 'px' ],
+				'selectors' => [ '{{WRAPPER}}' => '--rf-icons-area-w: {{SIZE}}{{UNIT}};' ],
+				'condition' => [ 'icons_layout' => 'free' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'icons_area_height',
+			[
+				'label' => esc_html__( 'Area Height', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'min' => 20, 'max' => 800 ] ],
+				'default' => [ 'size' => 160, 'unit' => 'px' ],
+				'selectors' => [ '{{WRAPPER}}' => '--rf-icons-area-h: {{SIZE}}{{UNIT}};' ],
+				'condition' => [ 'icons_layout' => 'free' ],
+			]
+		);
+
+		self::add_arrange_controls( $this, '{{WRAPPER}} .refraction-icon-box-icons-area > .refraction-icon:first-child', 'main_icon_', [ 'icons_layout' => 'free' ] );
 
 		$this->add_control(
 			'icons_animation',
@@ -946,6 +1007,8 @@ class Widget_Icon_Box extends Widget_Base {
 		);
 
 		$this->end_controls_section();
+
+		$this->add_box_extras_style_controls();
 	}
 
 	/**
@@ -968,7 +1031,7 @@ class Widget_Icon_Box extends Widget_Base {
 		}
 
 		$has_icon = ! empty( $settings['selected_icon']['value'] );
-		$has_content = ! Utils::is_empty( $settings['title_text'] ) || ! Utils::is_empty( $settings['description_text'] );
+		$has_content = ! Utils::is_empty( $settings['title_text'] ) || ! Utils::is_empty( $settings['description_text'] ) || $this->box_has_button( $settings );
 
 		if ( ! $has_icon && ! $has_content ) {
 			return;
@@ -992,7 +1055,7 @@ class Widget_Icon_Box extends Widget_Base {
 			$this->add_render_attribute( 'i', 'aria-hidden', 'true' );
 		}
 
-		$this->add_render_attribute( 'description_text', 'class', 'refraction-icon-box-description' );
+		$this->add_render_attribute( 'description_text', 'class', array_merge( [ 'refraction-icon-box-description' ], $this->box_description_classes( $settings ) ) );
 
 		$this->add_inline_editing_attributes( 'title_text', 'none' );
 		$this->add_inline_editing_attributes( 'description_text' );
@@ -1008,6 +1071,7 @@ class Widget_Icon_Box extends Widget_Base {
 			?>
 			<?php if ( $has_icon ) : ?>
 			<div class="refraction-icon-box-icon<?php echo $more_icons ? ' has-more-icons' : ''; ?>">
+				<?php if ( $more_icons ) : ?><span class="refraction-icon-box-icons-area"><?php endif; ?>
 				<<?php Utils::print_validated_html_tag( $html_tag ); ?> <?php $this->print_render_attribute_string( 'link' ); ?> <?php $this->print_render_attribute_string( 'icon' ); ?>>
 				<?php
 				if ( $is_new || $migrated ) {
@@ -1018,6 +1082,7 @@ class Widget_Icon_Box extends Widget_Base {
 				?>
 				</<?php Utils::print_validated_html_tag( $html_tag ); ?>>
 				<?php $this->render_more_icons( $more_icons, $settings ); ?>
+				<?php if ( $more_icons ) : ?></span><?php endif; ?>
 			</div>
 			<?php endif; ?>
 
@@ -1038,11 +1103,64 @@ class Widget_Icon_Box extends Widget_Base {
 					</p>
 				<?php endif; ?>
 
+				<?php echo $this->box_after_description_html( $settings, wp_kses_post( (string) $settings['description_text'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
+
 			</div>
 			<?php endif; ?>
 
 		</div>
 		<?php
+	}
+
+	/**
+	 * Where an icon sits in the free arrangement: across and down the area (its center, in %), its turn and its layer.
+	 *
+	 * @param Controls_Stack $stack     The widget, or the More Icons repeater.
+	 * @param string         $selector  The icon.
+	 * @param string         $prefix    Control name prefix ('' in the repeater).
+	 * @param array          $condition Shown when.
+	 */
+	private static function add_arrange_controls( $stack, string $selector, string $prefix, array $condition = [] ): void {
+		$stack->add_control( $prefix . 'arrange_heading', [
+			'label' => '' === $prefix ? esc_html__( 'Arranged freely', 'refraction' ) : esc_html__( 'Main Icon', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+			'condition' => $condition,
+		] );
+
+		$stack->add_responsive_control( $prefix . 'pos_x', [
+			'label' => esc_html__( 'Across', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -50, 'max' => 150 ] ],
+			'selectors' => [ $selector => '--x: {{SIZE}}%;' ],
+			'condition' => $condition,
+		] );
+
+		$stack->add_responsive_control( $prefix . 'pos_y', [
+			'label' => esc_html__( 'Down', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -50, 'max' => 150 ] ],
+			'selectors' => [ $selector => '--y: {{SIZE}}%;' ],
+			'condition' => $condition,
+		] );
+
+		$stack->add_responsive_control( $prefix . 'turn', [
+			'label' => esc_html__( 'Turn', 'refraction' ) . ' (deg)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ],
+			'selectors' => [ $selector => '--r: {{SIZE}}deg;' ],
+			'condition' => $condition,
+		] );
+
+		$stack->add_control( $prefix . 'layer', [
+			'label' => esc_html__( 'Layer', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 99,
+			'description' => esc_html__( 'Higher sits on top.', 'refraction' ),
+			'selectors' => [ $selector => '--z: {{VALUE}};' ],
+			'condition' => $condition,
+		] );
 	}
 
 	/** The icons after the main one: each a .refraction-icon (so the icon styles apply), a link when it has one. */
@@ -1084,11 +1202,12 @@ class Widget_Icon_Box extends Widget_Base {
 	 * @access protected
 	 */
 	protected function content_template() {
+		$this->print_box_extras_template();
 		?>
 		<#
 		// For older version `settings.icon` is needed.
 		var hasIcon = settings.icon || settings.selected_icon.value;
-		var hasContent = settings.title_text || settings.description_text;
+		var hasContent = settings.title_text || settings.description_text || settings.box_button_text;
 
 		if ( ! hasIcon && ! hasContent ) {
 			return;
@@ -1117,7 +1236,7 @@ class Widget_Icon_Box extends Widget_Base {
 			}
 		}
 
-		view.addRenderAttribute( 'description_text', 'class', 'refraction-icon-box-description' );
+		view.addRenderAttribute( 'description_text', 'class', 'refraction-icon-box-description ' + boxDescClass );
 
 		view.addInlineEditingAttributes( 'title_text', 'none' );
 		view.addInlineEditingAttributes( 'description_text' );
@@ -1126,6 +1245,7 @@ class Widget_Icon_Box extends Widget_Base {
 
 			<# if ( hasIcon ) { #>
 			<div class="refraction-icon-box-icon{{ moreIcons.length ? ' has-more-icons' : '' }}">
+				<# if ( moreIcons.length ) { #><span class="refraction-icon-box-icons-area"><# } #>
 				<{{{ htmlTag }}} {{{ view.getRenderAttributeString( 'link' ) }}} {{{ view.getRenderAttributeString( 'icon' ) }}}>
 					<# if ( iconHTML && iconHTML.rendered && ( ! settings.icon || migrated ) ) { #>
 						{{{ refraction.helpers.sanitize( iconHTML.value ) }}}
@@ -1140,6 +1260,7 @@ class Widget_Icon_Box extends Widget_Base {
 				#>
 					<{{{ moreTag }}} class="{{ moreClass }}" style="--i: {{ index + 1 }}">{{{ moreHTML && moreHTML.rendered ? refraction.helpers.sanitize( moreHTML.value ) : '' }}}</{{{ moreTag }}}>
 				<# } ); #>
+				<# if ( moreIcons.length ) { #></span><# } #>
 			</div>
 			<# } #>
 
@@ -1157,6 +1278,8 @@ class Widget_Icon_Box extends Widget_Base {
 				<# if ( settings.description_text ) { #>
 				<p {{{ view.getRenderAttributeString( 'description_text' ) }}}>{{{ refraction.helpers.sanitize( settings.description_text ) }}}</p>
 				<# } #>
+
+				{{{ boxAfter }}}
 
 			</div>
 			<# } #>

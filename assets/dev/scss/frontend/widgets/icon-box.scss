@@ -60,7 +60,9 @@
 		flex-grow: 1;
 	}
 
+	// No margin of its own: a theme's heading margin does not show. Title Spacing and Margin add space when set.
 	.refraction-icon-box-title {
+		margin-block: 0;
 
 		a {
 			color: inherit;
@@ -98,9 +100,10 @@
 	}
 }
 
-// More icons: the main icon and the others in a row (they all are .refraction-icon, so the icon styles apply to each).
-// Inline, so the row follows the box's alignment (left, center, right) as a single icon does.
-.refraction-widget-icon-box .refraction-icon-box-icon.has-more-icons {
+// More icons: the main icon and the others in one inline area (they all are .refraction-icon, so the icon styles apply
+// to each); inline, so it follows the box's alignment (left, center, right) as a single icon does.
+.refraction-widget-icon-box .refraction-icon-box-icons-area {
+	display: inline-block;
 	line-height: 0;
 
 	> .refraction-icon {
@@ -110,6 +113,26 @@
 
 	> .refraction-icon + .refraction-icon {
 		margin-inline-start: var(--rf-icon-box-icons-gap, 10px);
+	}
+}
+
+// Arranged freely: the area is a canvas of its own size; each icon is centered on its point (--x, --y in %), turned
+// (--r) and layered (--z). translate / rotate leave transform to the animations.
+.refraction-widget-icon-box.refraction-icons-layout-free .refraction-icon-box-icons-area {
+	position: relative;
+	width: var(--rf-icons-area-w, 160px);
+	max-width: 100%;
+	height: var(--rf-icons-area-h, 160px);
+	vertical-align: top;
+
+	> .refraction-icon {
+		position: absolute;
+		left: var(--x, 50%);
+		top: var(--y, 50%);
+		z-index: var(--z, auto);
+		margin: 0;
+		translate: -50% -50%;
+		rotate: var(--r, 0deg);
 	}
 }
 
@@ -125,7 +148,7 @@
 @keyframes rf-ib-fade-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @keyframes rf-ib-zoom-in { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
 
-[class*="refraction-icons-anim-"] .refraction-icon-box-icon > .refraction-icon {
+[class*="refraction-icons-anim-"] .refraction-icon-box-icon .refraction-icon {
 	animation-duration: var(--rf-icons-anim-duration, 1200ms);
 	animation-delay: calc(var(--i, 0) * var(--rf-icons-anim-stagger, 150ms));
 	animation-timing-function: ease-in-out;
@@ -136,40 +159,42 @@ $rf-ib-loops: pulse, float, bounce, spin, swing, shake, heartbeat;
 $rf-ib-once: fade-in, zoom-in;
 
 @each $name in $rf-ib-loops {
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-loop .refraction-icon-box-icon > .refraction-icon,
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-hover:hover .refraction-icon-box-icon > .refraction-icon {
+	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-loop .refraction-icon-box-icon .refraction-icon,
+	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-hover:hover .refraction-icon-box-icon .refraction-icon {
 		animation-name: rf-ib-#{$name};
 		animation-iteration-count: infinite;
 	}
 
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view.is-visible .refraction-icon-box-icon > .refraction-icon {
+	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view.is-visible .refraction-icon-box-icon .refraction-icon {
 		animation-name: rf-ib-#{$name};
 		animation-iteration-count: 1;
 	}
 }
 
 @each $name in $rf-ib-once {
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-loop .refraction-icon-box-icon > .refraction-icon,
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-hover:hover .refraction-icon-box-icon > .refraction-icon,
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view.is-visible .refraction-icon-box-icon > .refraction-icon {
+	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-loop .refraction-icon-box-icon .refraction-icon,
+	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-hover:hover .refraction-icon-box-icon .refraction-icon,
+	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view.is-visible .refraction-icon-box-icon .refraction-icon {
 		animation-name: rf-ib-#{$name};
 		animation-iteration-count: 1;
 	}
 
 	// Waiting to come into view: hidden until then.
-	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view:not(.is-visible) .refraction-icon-box-icon > .refraction-icon {
+	.refraction-icons-anim-#{$name}.refraction-icons-anim-on-view:not(.is-visible) .refraction-icon-box-icon .refraction-icon {
 		opacity: 0;
 	}
 }
 
-.refraction-icons-anim-spin .refraction-icon-box-icon > .refraction-icon {
+.refraction-icons-anim-spin .refraction-icon-box-icon .refraction-icon {
 	animation-timing-function: linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-	[class*="refraction-icons-anim-"] .refraction-icon-box-icon > .refraction-icon {
+	[class*="refraction-icons-anim-"] .refraction-icon-box-icon .refraction-icon {
 		animation: none !important;
 		opacity: 1 !important;
 	}
 }
+
+@import "../partials/box-extras";
