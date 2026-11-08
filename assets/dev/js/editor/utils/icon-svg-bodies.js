@@ -1,6 +1,6 @@
 /**
- * Icon libraries drawn as inline SVG (Solar: a library config with `svgJson`, the { bodies: { name: inner markup } } of
- * one style). Each style's file is fetched once, when an icon of it is first drawn in the picker, the preview or a
+ * Icon libraries drawn as inline SVG (Solar, Phosphor: a library config with `svgJson`, the { bodies: { name: inner
+ * markup } } of one style, and `viewBox` when it is not 0 0 24 24). Each style's file is fetched once, when an icon of it is first drawn in the picker, the preview or a
  * control.
  */
 const bodies = {},
@@ -12,14 +12,23 @@ export function svgLibrary( libraryName ) {
 	return library?.svgJson ? library : null;
 }
 
-/** The icon's name in a value such as "rf-solar rf-solar-home-smile". */
+/**
+ * The icon's name in a value such as "rf-solar rf-solar-home-smile".
+ * @param {Object} library
+ * @param {string} value
+ */
 export function svgIconName( library, value ) {
 	const last = String( value || '' ).trim().split( /\s+/ ).pop();
 
 	return last.startsWith( library.prefix ) ? last.slice( library.prefix.length ) : '';
 }
 
-/** The inline SVG of an icon, or null while its library is being fetched (then `onLoad` is called). */
+/**
+ * The inline SVG of an icon, or null while its library is being fetched (then `onLoad` is called).
+ * @param {Object}   library
+ * @param {string}   name
+ * @param {Function} onLoad
+ */
 export function svgMarkup( library, name, onLoad ) {
 	const loaded = bodies[ library.name ];
 
@@ -31,7 +40,7 @@ export function svgMarkup( library, name, onLoad ) {
 
 	const body = loaded[ name ];
 
-	return body ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">${ body }</svg>` : '';
+	return body ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ library.viewBox || '0 0 24 24' }" width="1em" height="1em">${ body }</svg>` : '';
 }
 
 export function loadBodies( library ) {

@@ -148,6 +148,7 @@ class Modules_Manager {
 			'pro-widgets',
 			'migration',
 			'solar-icons',
+			'phosphor-icons',
 		];
 	}
 

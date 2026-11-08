@@ -6,14 +6,14 @@ export default class Icon extends Component {
 	setSelected = () => {
 		this.props.setSelectedHandler( { value: this.props.data.displayPrefix + ' ' + this.props.data.selector, library: this.props.library } );
 	};
-	// A library drawn as inline SVG (Solar) shows its SVG; a font library its class.
+	// A library drawn as inline SVG (Solar, Phosphor) shows its SVG; a font library its class.
 	renderIcon() {
 		const library = svgLibrary( this.props.library );
 
 		if ( library ) {
 			const svg = svgMarkup( library, this.props.data.filter, () => this.forceUpdate() ) || '';
 
-			return <i className={ 'refraction-icons-manager__tab__item__icon rf-solar' } dangerouslySetInnerHTML={ { __html: svg } }></i>;
+			return <i className={ 'refraction-icons-manager__tab__item__icon ' + ( library.displayPrefix || 'rf-solar' ) } dangerouslySetInnerHTML={ { __html: svg } }></i>;
 		}
 
 		return <i className={ 'refraction-icons-manager__tab__item__icon ' + this.props.className }></i>;

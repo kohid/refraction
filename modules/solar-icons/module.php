@@ -172,7 +172,7 @@ class Module extends BaseModule {
 			'label' => esc_html__( 'Second Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [ '{{WRAPPER}}' => '--rf-icon-duo: {{VALUE}};' ],
-			'description' => esc_html__( 'For Solar duotone icons (Bold Duotone, Line Duotone): the color of their second layer. Empty: the icon\'s color.', 'refraction' ),
+			'description' => esc_html__( 'For duotone icons (Solar Bold Duotone and Line Duotone, Phosphor Duotone): the color of their second layer. Empty: the icon\'s color.', 'refraction' ),
 		] );
 
 		$element->add_control( 'rf_icon_duo_opacity', [
@@ -190,10 +190,10 @@ class Module extends BaseModule {
 				'type' => 'select',
 				'std' => '',
 				'options' => [
-					'' => esc_html__( 'Hidden (Solar icons only)', 'refraction' ),
+					'' => esc_html__( 'Hidden (Solar and Phosphor icons only)', 'refraction' ),
 					'yes' => esc_html__( 'Shown', 'refraction' ),
 				],
-				'desc' => esc_html__( 'The icon library offers the Solar icons. Font Awesome icons already chosen on your pages keep working either way.', 'refraction' ),
+				'desc' => esc_html__( 'The icon library offers the Solar and Phosphor icons. Font Awesome icons already chosen on your pages keep working either way.', 'refraction' ),
 			],
 		] );
 	}

@@ -1,0 +1,5 @@
+/* Phosphor Icons (MIT): inline SVG, sized and colored like a font icon. Duotone: the faint layer takes --rf-icon-duo
+   (color) and --rf-icon-duo-opacity, set by the widgets' "Duotone" controls. */
+.rf-ph{display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.rf-ph svg{width:1em;height:1em;flex:none}
+.rf-ph .rf-duo-f{fill:var(--rf-icon-duo,currentColor);opacity:var(--rf-icon-duo-opacity,.2)}

@@ -189,14 +189,14 @@ module.exports = {
 				svg = ( name ? svgMarkup( svgLib, name, () => view?.render?.() ) : '' ) || '';
 
 			if ( 'panel' === returnType || ! view ) {
-				const plain = '<' + tag + ' class="rf-solar">' + svg + '</' + tag + '>';
+				const plain = '<' + tag + ' class="' + ( svgLib.displayPrefix || 'rf-solar' ) + '">' + svg + '</' + tag + '>';
 
 				return 'object' === returnType ? { rendered: true, value: plain } : plain;
 			}
 
 			const svgTagID = tag + refractionCommon.helpers.getUniqueId();
 			view.addRenderAttribute( svgTagID, attributes );
-			view.addRenderAttribute( svgTagID, 'class', 'rf-solar' );
+			view.addRenderAttribute( svgTagID, 'class', svgLib.displayPrefix || 'rf-solar' );
 			const svgTag = '<' + tag + ' ' + view.getRenderAttributeString( svgTagID ) + '>' + svg + '</' + tag + '>';
 
 			return 'object' === returnType ? { rendered: true, value: svgTag } : svgTag;

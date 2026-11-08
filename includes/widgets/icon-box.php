@@ -582,6 +582,21 @@ class Widget_Icon_Box extends Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'icons_hover_on',
+			[
+				'label' => esc_html__( 'Each Icon\'s Hover Starts When', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'box',
+				'options' => [
+					'box' => esc_html__( 'The box is hovered (all icons)', 'refraction' ),
+					'icon' => esc_html__( 'The icon itself is hovered', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-icons-hover-on-',
+				'description' => esc_html__( 'For the Hover tab of the main icon (Style > Main Icon) and of each More Icon.', 'refraction' ),
+			]
+		);
+
 		$this->end_controls_tab();
 
 		$this->end_controls_tabs();
@@ -1110,134 +1125,169 @@ class Widget_Icon_Box extends Widget_Base {
 	}
 
 	/**
-	 * One icon's own style: colors (normal, and while the box is hovered), size, padding, border, shape, turn, opacity,
-	 * shadow and animation. They win over Style > Icon (which styles every icon); left empty, that one applies.
+	 * One icon's own style, in two tabs with the same settings: Normal, and Hover (while the box is hovered, or the icon
+	 * itself: Style > Icon > Hover Starts When). Colors (icon, duotone, background, border), size, padding, border,
+	 * corners, rotate, scale, opacity, shadow and an animation (Normal: played as set in Style > Icon > Play; Hover:
+	 * played while hovered). Each wins over Style > Icon (which styles every icon); left empty, that one applies.
 	 *
 	 * @param Controls_Stack $stack  The widget (main icon), or the More Icons repeater.
 	 * @param string         $prefix Control name prefix ('' in the repeater, where the names predate this).
 	 * @param string         $item   The icon, inside .refraction-icon-box-icon.
 	 */
 	private static function add_own_icon_controls( $stack, string $prefix, string $item ): void {
-		$normal = '{{WRAPPER}}.refraction-widget-icon-box .refraction-icon-box-icon ' . $item;
-		$hover = '{{WRAPPER}}.refraction-widget-icon-box:has(:hover) .refraction-icon-box-icon ' . $item . ', {{WRAPPER}}.refraction-widget-icon-box:has(:focus-visible) .refraction-icon-box-icon ' . $item;
+		$normal = [ '{{WRAPPER}}.refraction-widget-icon-box .refraction-icon-box-icon ' . $item ];
+		$hover = [
+			'{{WRAPPER}}.refraction-icons-hover-on-box:has(:hover) .refraction-icon-box-icon ' . $item,
+			'{{WRAPPER}}.refraction-icons-hover-on-box:has(:focus-visible) .refraction-icon-box-icon ' . $item,
+			'{{WRAPPER}}.refraction-icons-hover-on-icon .refraction-icon-box-icon ' . $item . ':is(:hover, :focus-visible)',
+		];
 
 		$stack->start_controls_tabs( $prefix . 'own_colors', [ 'separator' => 'before' ] );
 
-		$stack->start_controls_tab( $prefix . 'own_colors_normal', [ 'label' => esc_html__( 'Normal', 'refraction' ) ] );
+		foreach ( [ 'normal' => $normal, 'hover' => $hover ] as $state => $selectors ) {
+			$stack->start_controls_tab( $prefix . 'own_colors_' . $state, [
+				'label' => 'hover' === $state ? esc_html__( 'Hover', 'refraction' ) : esc_html__( 'Normal', 'refraction' ),
+			] );
 
-		$stack->add_control( $prefix . 'color', [
-			'label' => esc_html__( 'Icon Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $normal => 'color: {{VALUE}}; fill: {{VALUE}}; border-color: {{VALUE}};' ],
-		] );
+			self::add_icon_state_controls( $stack, $prefix . ( 'hover' === $state ? 'hover_' : '' ), $selectors, 'hover' === $state );
 
-		$stack->add_control( $prefix . 'duo', [
-			'label' => esc_html__( 'Duotone Second Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $normal => '--rf-icon-duo: {{VALUE}};' ],
-		] );
-
-		$stack->add_control( $prefix . 'background', [
-			'label' => esc_html__( 'Background Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $normal => 'background-color: {{VALUE}};' ],
-		] );
-
-		$stack->add_control( $prefix . 'border_color', [
-			'label' => esc_html__( 'Border Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $normal => 'border-color: {{VALUE}};' ],
-		] );
-
-		$stack->end_controls_tab();
-
-		$stack->start_controls_tab( $prefix . 'own_colors_hover', [ 'label' => esc_html__( 'Hover', 'refraction' ) ] );
-
-		$stack->add_control( $prefix . 'hover_color', [
-			'label' => esc_html__( 'Icon Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $hover => 'color: {{VALUE}}; fill: {{VALUE}};' ],
-		] );
-
-		$stack->add_control( $prefix . 'hover_background', [
-			'label' => esc_html__( 'Background Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $hover => 'background-color: {{VALUE}};' ],
-		] );
-
-		$stack->add_control( $prefix . 'hover_border_color', [
-			'label' => esc_html__( 'Border Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $hover => 'border-color: {{VALUE}};' ],
-			'description' => esc_html__( 'Hover: while the box is hovered.', 'refraction' ),
-		] );
-
-		$stack->end_controls_tab();
+			$stack->end_controls_tab();
+		}
 
 		$stack->end_controls_tabs();
 
-		$stack->add_responsive_control( $prefix . 'size', [
+		$stack->add_control( $prefix . 'hover_transition', [
+			'label' => esc_html__( 'Hover Change Time', 'refraction' ) . ' (ms)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 2000, 'step' => 50 ] ],
+			'selectors' => [ self::selectors( $normal, '' ) . ', ' . self::selectors( $normal, ' > :is(i, svg)' ) => 'transition-duration: {{SIZE}}ms;' ],
+			'description' => esc_html__( 'How long the change to and from the Hover settings takes.', 'refraction' ),
+		] );
+	}
+
+	/** Selectors joined, each with a suffix (the inner glyph, for the rotation). */
+	private static function selectors( array $list, string $suffix ): string {
+		return implode( ', ', array_map( static fn( $s ) => $s . $suffix, $list ) );
+	}
+
+	/**
+	 * The settings of one tab: Normal (names without "hover_", kept from 0.43 and 0.45) or Hover.
+	 *
+	 * @param Controls_Stack $stack
+	 * @param string         $p        Name prefix ('', 'main_icon_', 'hover_', 'main_icon_hover_').
+	 * @param array          $list     The icon's selectors in this state.
+	 * @param bool           $is_hover
+	 */
+	private static function add_icon_state_controls( $stack, string $p, array $list, bool $is_hover ): void {
+		$on = self::selectors( $list, '' );
+		$glyph = self::selectors( $list, ' > :is(i, svg)' );
+
+		$stack->add_control( $p . 'color', [
+			'label' => esc_html__( 'Icon Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $on => $is_hover ? 'color: {{VALUE}}; fill: {{VALUE}};' : 'color: {{VALUE}}; fill: {{VALUE}}; border-color: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $p . 'duo', [
+			'label' => esc_html__( 'Duotone Second Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $on => '--rf-icon-duo: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $p . 'background', [
+			'label' => esc_html__( 'Background Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $on => 'background-color: {{VALUE}};' ],
+		] );
+
+		$stack->add_control( $p . 'border_color', [
+			'label' => esc_html__( 'Border Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $on => 'border-color: {{VALUE}};' ],
+		] );
+
+		$stack->add_responsive_control( $p . 'size', [
 			'label' => esc_html__( 'Size', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em', 'rem' ],
 			'range' => [ 'px' => [ 'min' => 6, 'max' => 300 ] ],
-			'selectors' => [ $normal => 'font-size: {{SIZE}}{{UNIT}};' ],
+			'selectors' => [ $on => 'font-size: {{SIZE}}{{UNIT}};' ],
 			'separator' => 'before',
 		] );
 
-		$stack->add_responsive_control( $prefix . 'padding', [
+		$stack->add_responsive_control( $p . 'padding', [
 			'label' => esc_html__( 'Padding', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', 'em' ],
 			'range' => [ 'px' => [ 'max' => 60 ], 'em' => [ 'max' => 5 ] ],
-			'selectors' => [ $normal => 'padding: {{SIZE}}{{UNIT}};' ],
-			'description' => esc_html__( 'Space around the icon, inside its background and border.', 'refraction' ),
+			'selectors' => [ $on => 'padding: {{SIZE}}{{UNIT}};' ],
 		] );
 
-		$stack->add_responsive_control( $prefix . 'border_width', [
+		$stack->add_responsive_control( $p . 'border_width', [
 			'label' => esc_html__( 'Border Width', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px' ],
 			'range' => [ 'px' => [ 'max' => 20 ] ],
-			'selectors' => [ $normal => 'border-style: solid; border-width: {{SIZE}}{{UNIT}};' ],
+			'selectors' => [ $on => 'border-style: solid; border-width: {{SIZE}}{{UNIT}};' ],
 		] );
 
-		$stack->add_responsive_control( $prefix . 'radius', [
+		$stack->add_responsive_control( $p . 'radius', [
 			'label' => esc_html__( 'Border Radius', 'refraction' ),
 			'type' => Controls_Manager::DIMENSIONS,
 			'size_units' => [ 'px', '%', 'em' ],
-			'selectors' => [ $normal => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			'selectors' => [ $on => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
 		] );
 
-		$stack->add_responsive_control( $prefix . 'rotate', [
+		$stack->add_responsive_control( $p . 'rotate', [
 			'label' => esc_html__( 'Rotate', 'refraction' ) . ' (deg)',
 			'type' => Controls_Manager::SLIDER,
-			'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ],
-			'selectors' => [ $normal . ' > :is(i, svg)' => 'rotate: {{SIZE}}deg;' ],
-			'description' => esc_html__( 'Turns the symbol inside its background.', 'refraction' ),
+			'range' => [ 'px' => [ 'min' => -360, 'max' => 360 ] ],
+			'selectors' => [ $glyph => 'rotate: {{SIZE}}deg;' ],
+			'description' => $is_hover ? '' : esc_html__( 'Turns the symbol inside its background.', 'refraction' ),
 		] );
 
-		$stack->add_control( $prefix . 'opacity', [
+		$stack->add_responsive_control( $p . 'scale', [
+			'label' => esc_html__( 'Scale', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0.2, 'max' => 3, 'step' => 0.05 ] ],
+			'selectors' => [ $on => 'scale: {{SIZE}};' ],
+			'description' => $is_hover ? esc_html__( 'Grows or shrinks the whole icon, background and all, without moving what is around it.', 'refraction' ) : '',
+		] );
+
+		$stack->add_control( $p . 'opacity', [
 			'label' => esc_html__( 'Opacity', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
-			'selectors' => [ $normal => 'opacity: {{SIZE}}; --rf-ib-opacity: {{SIZE}};' ],
+			'selectors' => [ $on => 'opacity: {{SIZE}}; --rf-ib-opacity: {{SIZE}};' ],
 		] );
 
 		$stack->add_group_control( Group_Control_Box_Shadow::get_type(), [
-			'name' => $prefix . 'shadow',
-			'selector' => $normal,
+			'name' => $p . 'shadow',
+			'selector' => $on,
 		] );
 
-		$once = 'animation-timing-function: ease-in-out; --rf-ib-count: 1; --rf-ib-wait: 0;';
-		$loop = 'animation-timing-function: ease-in-out; --rf-ib-count: infinite; --rf-ib-wait: 1;';
-		$stack->add_control( $prefix . 'animation', [
-			'label' => esc_html__( 'Animation', 'refraction' ),
+		// Normal: plays as Style > Icon > Play says (through the variables of icon-box.scss). Hover: plays while hovered.
+		$names = [ 'pulse', 'float', 'bounce', 'spin', 'swing', 'shake', 'heartbeat', 'fade-in', 'zoom-in' ];
+		$dictionary = [];
+
+		foreach ( $names as $name ) {
+			$once = in_array( $name, [ 'fade-in', 'zoom-in' ], true );
+			$timing = 'spin' === $name ? 'linear' : 'ease-in-out';
+
+			$dictionary[ $name ] = $is_hover
+				? 'animation-name: rf-ib-' . $name . '; animation-iteration-count: ' . ( $once ? '1' : 'infinite' ) . '; animation-delay: 0s; animation-timing-function: ' . $timing . ';'
+				: '--rf-ib-anim: rf-ib-' . $name . '; --rf-ib-count: ' . ( $once ? '1' : 'infinite' ) . '; --rf-ib-wait: ' . ( $once ? '0' : '1' ) . '; animation-timing-function: ' . $timing . ';';
+		}
+
+		$dictionary['none'] = $is_hover ? 'animation-name: none;' : '--rf-ib-anim: none; --rf-ib-wait: 1;';
+
+		$stack->add_control( $p . 'animation', [
+			'label' => $is_hover ? esc_html__( 'Hover Animation', 'refraction' ) : esc_html__( 'Animation', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Same as the others', 'refraction' ),
-				'none' => esc_html__( 'None', 'refraction' ),
+				'' => $is_hover ? esc_html__( 'Keep the normal one', 'refraction' ) : esc_html__( 'Same as the others', 'refraction' ),
+				'none' => $is_hover ? esc_html__( 'Stop while hovered', 'refraction' ) : esc_html__( 'None', 'refraction' ),
 				'pulse' => esc_html__( 'Pulse', 'refraction' ),
 				'float' => esc_html__( 'Float', 'refraction' ),
 				'bounce' => esc_html__( 'Bounce', 'refraction' ),
@@ -1248,38 +1298,29 @@ class Widget_Icon_Box extends Widget_Base {
 				'fade-in' => esc_html__( 'Fade in', 'refraction' ),
 				'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
 			],
-			'selectors_dictionary' => [
-				'none' => '--rf-ib-anim: none; --rf-ib-wait: 1;',
-				'pulse' => '--rf-ib-anim: rf-ib-pulse; ' . $loop,
-				'float' => '--rf-ib-anim: rf-ib-float; ' . $loop,
-				'bounce' => '--rf-ib-anim: rf-ib-bounce; ' . $loop,
-				'spin' => '--rf-ib-anim: rf-ib-spin; --rf-ib-count: infinite; --rf-ib-wait: 1; animation-timing-function: linear;',
-				'swing' => '--rf-ib-anim: rf-ib-swing; ' . $loop,
-				'shake' => '--rf-ib-anim: rf-ib-shake; ' . $loop,
-				'heartbeat' => '--rf-ib-anim: rf-ib-heartbeat; ' . $loop,
-				'fade-in' => '--rf-ib-anim: rf-ib-fade-in; ' . $once,
-				'zoom-in' => '--rf-ib-anim: rf-ib-zoom-in; ' . $once,
-			],
-			'selectors' => [ $normal => '{{VALUE}}' ],
+			'selectors_dictionary' => $dictionary,
+			'selectors' => [ $on => '{{VALUE}}' ],
 			'separator' => 'before',
-			'description' => esc_html__( 'Played as set in Style > Icon > Play.', 'refraction' ),
+			'description' => $is_hover ? esc_html__( 'Plays while hovered, then the normal one (if any) comes back.', 'refraction' ) : esc_html__( 'Played as set in Style > Icon > Play.', 'refraction' ),
 		] );
 
-		$stack->add_control( $prefix . 'animation_duration', [
+		$stack->add_control( $p . 'animation_duration', [
 			'label' => esc_html__( 'Animation Duration', 'refraction' ) . ' (ms)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 100, 'max' => 5000, 'step' => 50 ] ],
-			'selectors' => [ $normal => 'animation-duration: {{SIZE}}ms;' ],
-			'condition' => [ $prefix . 'animation!' => 'none' ],
+			'selectors' => [ $on => 'animation-duration: {{SIZE}}ms;' ],
+			'condition' => [ $p . 'animation!' => 'none' ],
 		] );
 
-		$stack->add_control( $prefix . 'animation_delay', [
-			'label' => esc_html__( 'Animation Delay', 'refraction' ) . ' (ms)',
-			'type' => Controls_Manager::SLIDER,
-			'range' => [ 'px' => [ 'min' => 0, 'max' => 5000, 'step' => 25 ] ],
-			'selectors' => [ $normal => 'animation-delay: {{SIZE}}ms;' ],
-			'condition' => [ $prefix . 'animation!' => 'none' ],
-		] );
+		if ( ! $is_hover ) {
+			$stack->add_control( $p . 'animation_delay', [
+				'label' => esc_html__( 'Animation Delay', 'refraction' ) . ' (ms)',
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 5000, 'step' => 25 ] ],
+				'selectors' => [ $on => 'animation-delay: {{SIZE}}ms;' ],
+				'condition' => [ $p . 'animation!' => 'none' ],
+			] );
+		}
 	}
 
 	/**

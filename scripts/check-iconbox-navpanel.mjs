@@ -190,6 +190,10 @@ async function main() {
 					{ _id: 'own2', icon: { value: 'fas fa-phone', library: 'fa-solid' } },
 				],
 			}, elements: [] },
+			{ id: 'ib07', elType: 'widget', widgetType: 'icon-box', settings: {
+				title_text: 'Phosphor and hover', icons_hover_on: 'icon', selected_icon: { value: 'rf-ph rf-ph-car', library: 'phosphor-regular' },
+				more_icons: [ { _id: 'hv1', icon: { value: 'rf-ph rf-ph-shield-check', library: 'phosphor-duotone' }, hover_color: '#FF0000', hover_scale: { unit: 'px', size: 1.3 }, hover_rotate: { unit: 'px', size: 90 }, hover_animation: 'pulse' } ],
+			}, elements: [] },
 			{ id: 'ib05', elType: 'widget', widgetType: 'icon-box', settings: { title_text: 'Corporate', description_text: 'Inverness Taxis, with over 60 years of service in the Highlands, offers tailored corporate transportation solutions designed to meet the needs of every business, large or small, every day of the year.', box_description_display: 'clamp', box_description_lines: 2, box_description_full_tooltip: 'yes', box_button_text: 'Learn more', box_button_link: { url: '#corporate' }, box_button_style: 'outline' }, elements: [] },
 			{ id: 'mb02', elType: 'widget', widgetType: 'image-box', settings: { title_text: 'Safe transfers', description_text: 'We are dedicated to offering safe transfer to give you peace of mind on each and every journey 24/7.', box_description_display: 'tooltip', box_button_text: 'Book now', box_button_link: { url: '#book' }, image: { url: `${ BASE }/wp-includes/images/w-logo-blue.png` } }, elements: [] },
 			{ id: 'mb01', elType: 'widget', widgetType: 'image-box', settings: { title_text: 'Our cars', title_margin: zero, image: { url: `${ BASE }/wp-includes/images/w-logo-blue.png` } }, elements: [] },
@@ -213,7 +217,9 @@ async function main() {
 				defaultTitle: getComputedStyle( document.querySelector( '[data-id="ib03"] .refraction-icon-box-title' ) ).marginTop,
 				arranged: ( () => {
 					const area = document.querySelector( '[data-id="ib04"] .refraction-icon-box-icons-area' ).getBoundingClientRect();
-					const center = ( el ) => { const r = el.getBoundingClientRect(); return [ Math.round( ( r.left + r.width / 2 - area.left ) / area.width * 100 ), Math.round( ( r.top + r.height / 2 - area.top ) / area.height * 100 ) ]; };
+					const center = ( el ) => {
+						const r = el.getBoundingClientRect(); return [ Math.round( ( r.left + r.width / 2 - area.left ) / area.width * 100 ), Math.round( ( r.top + r.height / 2 - area.top ) / area.height * 100 ) ];
+					};
 					const main = document.querySelector( '[data-id="ib04"] .refraction-icon-box-icons-area > .refraction-icon:first-child' );
 					const car = document.querySelector( '[data-id="ib04"] .refraction-repeater-item-ar1' );
 					return { area: [ Math.round( area.width ), Math.round( area.height ) ], main: center( main ), car: center( car ), carColor: getComputedStyle( car ).color, carSize: getComputedStyle( car ).fontSize, carRotate: getComputedStyle( car ).rotate, carZ: getComputedStyle( car ).zIndex };
@@ -230,7 +236,9 @@ async function main() {
 		check( 'arrange', 'arranged freely: the area has its size, each icon sits on its point with its size, color, turn and layer', '120,100' === ar.area.join() && Math.abs( ar.main[ 0 ] - 30 ) <= 3 && Math.abs( ar.main[ 1 ] - 40 ) <= 3 && Math.abs( ar.car[ 0 ] - 70 ) <= 3 && Math.abs( ar.car[ 1 ] - 75 ) <= 3 && 'rgb(0, 170, 0)' === ar.carColor && '40px' === ar.carSize && '20deg' === ar.carRotate && '3' === ar.carZ, JSON.stringify( ar ) );
 		const own = await b.evaluate( () => {
 			const q = ( sel ) => document.querySelector( '[data-id="ib06"] ' + sel );
-			const main = q( '.refraction-icon--main' ), car = q( '.refraction-repeater-item-own1' ), phone = q( '.refraction-repeater-item-own2' );
+			const main = q( '.refraction-icon--main' ),
+				car = q( '.refraction-repeater-item-own1' ),
+				phone = q( '.refraction-repeater-item-own2' );
 			const cs = getComputedStyle( car );
 			return {
 				main: [ getComputedStyle( main ).backgroundColor, getComputedStyle( main ).fontSize ],
@@ -247,6 +255,28 @@ async function main() {
 		check( 'own style', 'and its own hover color while the box is hovered (the main icon keeps its own)', 'rgb(255, 0, 0),rgb(255, 136, 0)' === ownHover.join(), ownHover.join( ' ' ) );
 		await b.mouse.move( 5, 5 );
 		await b.locator( '[data-id="ib06"]' ).screenshot( { path: join( SHOTS, 'own-style.png' ) } );
+		// Phosphor icons, and the Hover tab started by the icon itself.
+		const hv = () => b.evaluate( () => {
+			const icon = document.querySelector( '[data-id="ib07"] .refraction-repeater-item-hv1' );
+			const mainIcon = document.querySelector( '[data-id="ib07"] .refraction-icon--main' );
+			const cs = getComputedStyle( icon );
+			const svg = mainIcon.querySelector( 'svg' );
+			return { scale: cs.scale, rotate: getComputedStyle( icon.firstElementChild ).rotate, anim: cs.animationName, color: cs.color, mainScale: getComputedStyle( mainIcon ).scale, mainSvg: svg ? [ svg.getAttribute( 'viewBox' ), Math.round( svg.getBoundingClientRect().width ), !! svg.querySelector( 'path' ) ] : null, duo: !! icon.querySelector( '.rf-duo-f' ), classes: icon.firstElementChild?.className };
+		} );
+		const hv0 = await hv();
+		check( 'phosphor', 'Phosphor icons on the site: inline SVG (256 grid) with a size, the Duotone weight with its second layer', hv0.mainSvg && '0 0 256 256' === hv0.mainSvg[ 0 ] && hv0.mainSvg[ 1 ] > 20 && hv0.mainSvg[ 2 ] && hv0.duo && /rf-ph/.test( hv0.classes ), JSON.stringify( hv0 ) );
+		await b.hover( '[data-id="ib07"] .refraction-icon-box-title' );
+		await sleep( 500 );
+		const hvBox = await hv();
+		check( 'own hover', 'with "the icon itself", hovering the box does not start an icon\'s Hover', 'none' === hvBox.scale && 'none' === hvBox.anim, JSON.stringify( hvBox ) );
+		await b.hover( '[data-id="ib07"] .refraction-repeater-item-hv1' );
+		await sleep( 600 );
+		const hv1 = await hv();
+		check( 'own hover', 'hovering the icon: its Hover tab\'s color, scale, rotate and hover animation; the main icon is left alone', '1.3' === hv1.scale && '90deg' === hv1.rotate && 'rf-ib-pulse' === hv1.anim && 'rgb(255, 0, 0)' === hv1.color && 'none' === hv1.mainScale, JSON.stringify( hv1 ) );
+		await b.mouse.move( 5, 5 );
+		await sleep( 600 );
+		const hv2 = await hv();
+		check( 'own hover', 'and back to normal when the pointer leaves', 'none' === hv2.scale && 'none' === hv2.anim, JSON.stringify( hv2 ) );
 		check( 'icon box', 'with "when it comes into view", the icon waits hidden', '0' === box.laterBefore, box.laterBefore );
 		// The button, the description cut to two lines with its full text on hover, and the description as a tooltip.
 		const extras = await b.evaluate( () => {
@@ -267,12 +297,16 @@ async function main() {
 		check( 'box extras', 'the tooltips wait hidden', '0' === extras.tipHidden && 'hidden' === extras.fullHidden, JSON.stringify( extras ) );
 		await b.hover( '[data-id="mb02"] .refraction-image-box-title' );
 		await sleep( 400 );
-		const tipShown = await b.evaluate( () => { const t = document.querySelector( '[data-id="mb02"] .refraction-box-tooltip' ); const box = document.querySelector( '[data-id="mb02"] .refraction-image-box-wrapper' ).getBoundingClientRect(); const r = t.getBoundingClientRect(); return { opacity: getComputedStyle( t ).opacity, below: r.top >= box.bottom, text: t.textContent.trim().slice( 0, 30 ), color: getComputedStyle( t ).color }; } );
+		const tipShown = await b.evaluate( () => {
+			const t = document.querySelector( '[data-id="mb02"] .refraction-box-tooltip' ); const box = document.querySelector( '[data-id="mb02"] .refraction-image-box-wrapper' ).getBoundingClientRect(); const r = t.getBoundingClientRect(); return { opacity: getComputedStyle( t ).opacity, below: r.top >= box.bottom, text: t.textContent.trim().slice( 0, 30 ), color: getComputedStyle( t ).color };
+		} );
 		check( 'box extras', 'hovering the Image Box shows its description as a tooltip under it', '1' === tipShown.opacity && tipShown.below && /We are dedicated/.test( tipShown.text ) && 'rgb(255, 255, 255)' === tipShown.color, JSON.stringify( tipShown ) );
 		await b.screenshot( { path: join( SHOTS, 'tooltip.png' ), fullPage: false } );
 		await b.hover( '[data-id="ib05"] .refraction-icon-box-title' );
 		await sleep( 400 );
-		const full = await b.evaluate( () => { const t = document.querySelector( '[data-id="ib05"] .refraction-box-tooltip--full' ); return { opacity: getComputedStyle( t ).opacity, text: /every day of the year/.test( t.textContent ) }; } );
+		const full = await b.evaluate( () => {
+			const t = document.querySelector( '[data-id="ib05"] .refraction-box-tooltip--full' ); return { opacity: getComputedStyle( t ).opacity, text: /every day of the year/.test( t.textContent ) };
+		} );
 		check( 'box extras', 'hovering the cut description shows the full text', '1' === full.opacity && full.text, JSON.stringify( full ) );
 		await b.locator( '[data-id="ib02"]' ).scrollIntoViewIfNeeded();
 		await sleep( 1800 );
@@ -314,6 +348,27 @@ async function main() {
 		await sleep( 600 );
 		const sections = await p.evaluate( () => [ ...document.querySelectorAll( '.refraction-control-type-section .refraction-panel-heading-title' ) ].map( ( e ) => e.textContent.trim() ) );
 		check( 'editor', 'Style has a Main Icon section', sections.includes( 'Main Icon' ), sections.join( ', ' ) );
+		await p.click( '.refraction-tab-control-content' );
+		// The icon previews in the panel draw SVG icons (Phosphor main icon, Phosphor duotone More Icon), and the Hover tab holds every setting.
+		await p.frame( { name: 'refraction-preview-iframe' } ).click( '[data-id="ib07"] .refraction-icon-box-title', { position: { x: 5, y: 5 } } );
+		await p.waitForSelector( '.refraction-control-selected_icon', { timeout: 20000 } );
+		await p.click( '.refraction-control-more_icons .refraction-repeater-row-item-title >> nth=0' );
+		await sleep( 1500 );
+		const previews = await p.evaluate( () => [ ...document.querySelectorAll( '.refraction-control-type-icons .refraction-control-media__preview' ) ].filter( ( x ) => x.offsetParent ).slice( 0, 2 ).map( ( x ) => {
+			const svg = x.querySelector( 'svg' ); return svg ? Math.round( svg.getBoundingClientRect().width ) : 0;
+		} ) );
+		check( 'editor', 'the Icon previews in the panel show the chosen SVG icons (main and More Icon)', 2 === previews.length && previews.every( ( w ) => w > 30 ), JSON.stringify( previews ) );
+		await p.click( '.refraction-control-more_icons .refraction-repeater-fields .refraction-control-type-tab:has-text("Hover") >> nth=0' );
+		await sleep( 500 );
+		const hoverTab = await p.evaluate( () => {
+			const r = document.querySelector( '.refraction-control-more_icons .refraction-repeater-fields' );
+			const visible = ( name ) => [ ...r.querySelectorAll( '.refraction-control-' + name ) ].some( ( e ) => e.offsetParent );
+			return [ 'hover_color', 'hover_background', 'hover_size', 'hover_padding', 'hover_border_width', 'hover_radius', 'hover_rotate', 'hover_scale', 'hover_opacity', 'hover_shadow_box_shadow_type', 'hover_animation' ].filter( ( n ) => ! visible( n ) );
+		} );
+		await p.screenshot( { path: join( SHOTS, 'hover-panel.png' ) } );
+		check( 'editor', 'a More Icon\'s Hover tab has every setting (colors, size, padding, border, corners, rotate, scale, opacity, shadow, hover animation)', 0 === hoverTab.length, 'missing: ' + hoverTab.join() );
+		const libs = await p.evaluate( () => ( window.refraction.config.icons?.libraries || [] ).map( ( l ) => l.name ).filter( ( n ) => n.startsWith( 'phosphor-' ) ) );
+		check( 'editor', 'the icon library has the six Phosphor weights', 6 === libs.length, libs.join() );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

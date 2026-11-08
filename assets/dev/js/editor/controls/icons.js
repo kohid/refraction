@@ -1,4 +1,5 @@
 import FilesUploadHandler from '../utils/files-upload-handler';
+import { svgLibrary, svgIconName, svgMarkup } from '../utils/icon-svg-bodies';
 
 const ControlMultipleBaseItemView = require( 'refraction-controls/base-multiple' );
 
@@ -299,6 +300,18 @@ class ControlIconsView extends ControlMultipleBaseItemView {
 			return refraction.helpers.fetchInlineSvg( iconValue.url, ( data ) => {
 				this.ui.previewPlaceholder.html( data );
 			} );
+		}
+
+		// Libraries drawn as inline SVG (Solar, Phosphor): the SVG itself, drawn again once its library has loaded.
+		const svgLib = svgLibrary( iconType );
+
+		if ( svgLib ) {
+			const name = svgIconName( svgLib, iconValue ),
+				svg = name ? svgMarkup( svgLib, name, () => this.isRendered && ! this.isDestroyed && this.applySavedValue() ) : '';
+
+			iconContainer.html( svg ? '<i class="' + ( svgLib.displayPrefix || 'rf-solar' ) + '">' + svg + '</i>' : '' );
+
+			return;
 		}
 
 		if ( 'media' === skin || 'svg' !== iconType ) {
