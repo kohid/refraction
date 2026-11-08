@@ -66,6 +66,15 @@ check( 'pages loop', S::pages( [ 'rf_hp' => 'book', 'rf_hp_loop' => 'yes' ] )['l
 check( 'pages phone ask', S::pages( [ 'rf_hp' => 'book', 'rf_hp_phone' => 'ask' ] )['phone'], 'ask' );
 check( 'pages phone unknown', S::pages( [ 'rf_hp' => 'book', 'rf_hp_phone' => 'tilt' ] )['phone'], 'rotate' );
 check( 'pages keep the header', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_header' => 'yes' ] )['header'], true );
+check( 'doors off', S::doors( [] ), [] );
+check( 'doors unknown', S::doors( [ 'rf_doors' => 'revolving' ] ), [] );
+check( 'doors defaults', S::doors( [ 'rf_doors' => 'alternate' ] ), [ 'pattern' => 'alternate', 'angle' => 100, 'shade' => true, 'phones' => true ] );
+check( 'doors angle clamped', S::doors( [ 'rf_doors' => 'left', 'rf_doors_angle' => [ 'size' => 400 ] ] )['angle'], 120 );
+check( 'doors push, no shade, not on phones', S::doors( [ 'rf_doors' => 'push', 'rf_doors_shade' => 'no', 'rf_doors_phones' => 'no' ] ), [ 'pattern' => 'push', 'angle' => 100, 'shade' => false, 'phones' => false ] );
+check( 'doors off with pages side by side', S::doors( [ 'rf_doors' => 'alternate', 'rf_hp' => 'slide' ] ), [] );
+check( 'door own', S::door( [ 'rf_door' => 'push' ] ), 'push' );
+check( 'door own unknown', S::door( [ 'rf_door' => 'spin' ] ), '' );
+check( 'door own none', S::door( [ 'rf_door' => 'none' ] ), 'none' );
 check( 'depth automatic', S::page_depth( [] ), null );
 check( 'depth set', S::page_depth( [ 'rf_hp_depth_own' => [ 'size' => 0.75 ] ] ), 0.75 );
 check( 'depth clamped', S::page_depth( [ 'rf_hp_depth_own' => [ 'size' => 9 ] ] ), 2.0 );

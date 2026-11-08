@@ -83,6 +83,7 @@ export const BASE_ENTRIES = {
 	'marquee-frontend': 'modules/interactions/assets/js/marquee.js',
 	'interactions-frontend': 'modules/interactions/assets/js/interactions.js',
 	'pages-frontend': 'modules/interactions/assets/js/pages.js',
+	'doors-frontend': 'modules/interactions/assets/js/doors.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 
