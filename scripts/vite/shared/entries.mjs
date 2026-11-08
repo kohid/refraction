@@ -82,6 +82,7 @@ export const BASE_ENTRIES = {
 	'slides-cards-frontend': 'modules/card-motion/assets/js/slides-cards.js',
 	'marquee-frontend': 'modules/interactions/assets/js/marquee.js',
 	'interactions-frontend': 'modules/interactions/assets/js/interactions.js',
+	'pages-frontend': 'modules/interactions/assets/js/pages.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 

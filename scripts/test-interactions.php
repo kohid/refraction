@@ -52,5 +52,24 @@ check( 'label trimmed', S::label( [ 'rf_cursor_label' => '  View  ' ] ), 'View' 
 check( 'label cut to 24', strlen( S::label( [ 'rf_cursor_label' => str_repeat( 'a', 40 ) ] ) ), 24 );
 check( 'label not a string', S::label( [ 'rf_cursor_label' => [ 'x' ] ] ), '' );
 
+check( 'pages off', S::pages( [] ), [] );
+check( 'pages unknown mode', S::pages( [ 'rf_hp' => 'flip' ] ), [] );
+check( 'pages slide defaults', S::pages( [ 'rf_hp' => 'slide' ] ), [ 'mode' => 'slide', 'speed' => 900, 'depth' => 30, 'arrows' => true, 'counter' => 'number', 'prefix' => '', 'progress' => true, 'loop' => false, 'phone' => 'rotate', 'header' => false ] );
+check( 'book is slower by default', S::pages( [ 'rf_hp' => 'book' ] )['speed'], 1100 );
+check( 'pages speed clamped', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_speed' => [ 'size' => 99999 ] ] )['speed'], 2500 );
+check( 'pages depth clamped', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_depth' => [ 'size' => -5 ] ] )['depth'], 0 );
+check( 'pages counter none', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_counter' => '' ] )['counter'], '' );
+check( 'pages counter unknown', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_counter' => 'roman' ] )['counter'], 'number' );
+check( 'pages prefix cut', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_counter_prefix' => ' *Page* ' ] )['prefix'], '*Pag' );
+check( 'pages arrows off', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_arrows' => 'no' ] )['arrows'], false );
+check( 'pages loop', S::pages( [ 'rf_hp' => 'book', 'rf_hp_loop' => 'yes' ] )['loop'], true );
+check( 'pages phone ask', S::pages( [ 'rf_hp' => 'book', 'rf_hp_phone' => 'ask' ] )['phone'], 'ask' );
+check( 'pages phone unknown', S::pages( [ 'rf_hp' => 'book', 'rf_hp_phone' => 'tilt' ] )['phone'], 'rotate' );
+check( 'pages keep the header', S::pages( [ 'rf_hp' => 'slide', 'rf_hp_header' => 'yes' ] )['header'], true );
+check( 'depth automatic', S::page_depth( [] ), null );
+check( 'depth set', S::page_depth( [ 'rf_hp_depth_own' => [ 'size' => 0.75 ] ] ), 0.75 );
+check( 'depth clamped', S::page_depth( [ 'rf_hp_depth_own' => [ 'size' => 9 ] ] ), 2.0 );
+check( 'depth zero kept', S::page_depth( [ 'rf_hp_depth_own' => [ 'size' => 0 ] ] ), 0.0 );
+
 echo "$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

@@ -142,7 +142,9 @@ class Module extends BaseModule {
 			return;
 		}
 
-		$config = Pure_Page_Scroll_Settings::normalize( (array) $document->get_settings() );
+		$settings = (array) $document->get_settings();
+		// Pages side by side (modules/interactions) replaces the page's vertical scrolling.
+		$config = in_array( $settings['rf_hp'] ?? '', [ 'slide', 'book' ], true ) ? [] : Pure_Page_Scroll_Settings::normalize( $settings );
 
 		if ( ! $config ) {
 			return;

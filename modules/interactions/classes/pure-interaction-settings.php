@@ -93,6 +93,43 @@ class Pure_Interaction_Settings {
 		return $css . '@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}';
 	}
 
+	const PAGE_MODES = [ 'slide', 'book' ];
+	const PAGE_PHONE = [ 'rotate', 'ask', 'stack' ];
+	const PAGE_COUNTERS = [ 'number', 'of', '' ];
+
+	/** Pages side by side (Page Settings): the config of pages.js, or [] when off. */
+	public static function pages( array $settings ): array {
+		$mode = $settings['rf_hp'] ?? '';
+
+		if ( ! in_array( $mode, self::PAGE_MODES, true ) ) {
+			return [];
+		}
+
+		$pick = static fn( string $key, array $allowed, string $default ) => in_array( $settings[ $key ] ?? null, $allowed, true ) ? $settings[ $key ] : $default;
+		$prefix = is_string( $settings['rf_hp_counter_prefix'] ?? null ) ? trim( $settings['rf_hp_counter_prefix'] ) : '';
+
+		return [
+			'mode' => $mode,
+			'speed' => (int) self::number( $settings['rf_hp_speed'] ?? '', 200, 2500, 'book' === $mode ? 1100 : 900 ),
+			'depth' => (int) self::number( $settings['rf_hp_depth'] ?? '', 0, 100, 30 ),
+			'arrows' => 'no' !== ( $settings['rf_hp_arrows'] ?? 'yes' ),
+			'counter' => $pick( 'rf_hp_counter', self::PAGE_COUNTERS, 'number' ),
+			'prefix' => function_exists( 'mb_substr' ) ? mb_substr( $prefix, 0, 4 ) : substr( $prefix, 0, 4 ),
+			'progress' => 'no' !== ( $settings['rf_hp_progress'] ?? 'yes' ),
+			'loop' => 'yes' === ( $settings['rf_hp_loop'] ?? '' ),
+			'phone' => $pick( 'rf_hp_phone', self::PAGE_PHONE, 'rotate' ),
+			'header' => 'yes' === ( $settings['rf_hp_header'] ?? '' ),
+		];
+	}
+
+	/** An element's own depth when pages slide (Advanced > Interactions), or null for "automatic". */
+	public static function page_depth( array $settings ): ?float {
+		$value = $settings['rf_hp_depth_own'] ?? '';
+		$value = is_array( $value ) ? ( $value['size'] ?? '' ) : $value;
+
+		return is_numeric( $value ) ? round( max( -2, min( 2, (float) $value ) ), 2 ) : null;
+	}
+
 	/** An element's magnetic pull for interactions.js, or [] when off. */
 	public static function magnetic( array $settings ): array {
 		if ( 'yes' !== ( $settings['rf_magnetic'] ?? '' ) ) {
