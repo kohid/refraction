@@ -122,6 +122,32 @@ class Pure_Interaction_Settings {
 		];
 	}
 
+	const DOOR_PATTERNS = [ 'alternate', 'left', 'right', 'push' ];
+	const DOOR_EFFECTS = [ 'left', 'right', 'push', 'none' ];
+
+	/** Sections that open like doors (Page Settings): the config of doors.js, or [] when off (or pages side by side). */
+	public static function doors( array $settings ): array {
+		$pattern = $settings['rf_doors'] ?? '';
+
+		if ( ! in_array( $pattern, self::DOOR_PATTERNS, true ) || self::pages( $settings ) ) {
+			return [];
+		}
+
+		return [
+			'pattern' => $pattern,
+			'angle' => (int) self::number( $settings['rf_doors_angle'] ?? '', 30, 120, 100 ),
+			'shade' => 'no' !== ( $settings['rf_doors_shade'] ?? 'yes' ),
+			'phones' => 'no' !== ( $settings['rf_doors_phones'] ?? 'yes' ),
+		];
+	}
+
+	/** A container's own door (Advanced > Interactions), or '' for the page's pattern. */
+	public static function door( array $settings ): string {
+		$door = $settings['rf_door'] ?? '';
+
+		return in_array( $door, self::DOOR_EFFECTS, true ) ? $door : '';
+	}
+
 	/** An element's own depth when pages slide (Advanced > Interactions), or null for "automatic". */
 	public static function page_depth( array $settings ): ?float {
 		$value = $settings['rf_hp_depth_own'] ?? '';

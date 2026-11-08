@@ -585,3 +585,58 @@ html.rf-hp-on body {
 		animation: none;
 	}
 }
+
+// ---- Sections that open like doors (doors.js gives each moving section --rf-door-p from 0 to 1).
+.rf-doors .rf-door--moves {
+	position: sticky;
+	top: var(--rf-door-top, 0);
+	will-change: transform;
+}
+
+// Measuring: where each section sits in the page's flow, unmoved and unturned.
+.rf-doors-measure .rf-door--moves {
+	position: static !important;
+	transform: none !important;
+}
+
+.rf-doors-measure .rf-door {
+	translate: none !important;
+}
+
+// Opaque, so the next section does not show through before the door opens.
+:where(.rf-doors .rf-door) {
+	background-color: var(--rf-doors-bg, var(--rf-doors-body-bg, #fff));
+}
+
+// A door swings away from the viewer on its hinge (left or right edge), seen from the middle of the screen: the
+// perspective is moved to the middle (translate, perspective, translate back), the turn is about the hinge.
+.rf-doors .rf-door--left {
+	transform-origin: 0 50%;
+	transform: translateX(50%) perspective(1800px) translateX(-50%) rotateY(calc(var(--rf-door-p, 0) * var(--rf-door-angle, 100deg)));
+}
+
+.rf-doors .rf-door--right {
+	transform-origin: 100% 50%;
+	transform: translateX(-50%) perspective(1800px) translateX(50%) rotateY(calc(var(--rf-door-p, 0) * var(--rf-door-angle, 100deg) * -1));
+}
+
+.rf-doors .rf-door--push {
+	transform-origin: 50% 40%;
+	transform: scale(calc(1 - (var(--rf-door-p, 0) * 0.18)));
+	border-radius: calc(var(--rf-door-p, 0) * 28px);
+}
+
+.rf-doors-shade .rf-door--moves {
+	filter: brightness(calc(1 - (var(--rf-door-p, 0) * 0.45)));
+}
+
+// A door that opens casts a shadow on the section it shows.
+.rf-doors .rf-door--left.is-opening,
+.rf-doors .rf-door--right.is-opening {
+	box-shadow: 0 0 calc(var(--rf-door-p, 0) * 60px) rgba(0, 0, 0, calc(var(--rf-door-p, 0) * 0.35));
+}
+
+// Fully open (or fully covered): out of the way.
+.rf-doors .rf-door.is-open {
+	visibility: hidden;
+}
