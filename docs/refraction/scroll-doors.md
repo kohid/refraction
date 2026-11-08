@@ -1,4 +1,4 @@
-# Scrolling effects of containers (0.51.0)
+# Scrolling effects of containers (0.51.0, zoom 0.52.0)
 
 Container > **Layout** > **Scrolling Effect** (module `modules/interactions`, script `assets/js/doors.js`, styles in
 `assets/scss/frontend.scss`). Each top-level container chooses how it leaves the screen as the page scrolls down; one
@@ -14,6 +14,8 @@ page can mix them. (0.50 had this as a page setting, "Sections Open Like Doors";
 | Sinks back as the next slides over it | shrinks a little, rounds its corners, darkens | slides up over it |
 | Slides to the left as the next comes in | moves out to the left | comes in from the right at the same height |
 | Turns over like a book page | turns towards the viewer and over to the left | waits behind it, like the next page |
+| Zooms through into the next (0.52) | the camera moves through it: its titles (headings) grow past the viewer, the rest a little; it blurs and fades once the titles have grown | waits behind, slightly blurred, and comes into focus |
+| Falls away into the distance (0.52) | the reverse: it shrinks away, its titles most, blurring and fading | comes in from close up (larger, blurred) and settles into focus |
 
 Options: **How Far It Opens** (doors, 30 to 120 degrees, default 100), **Parallax Depth** (slide: what is on the
 outgoing and the incoming container moves as layers, trailing behind them; 0 = as one piece; an element's own depth
@@ -30,6 +32,12 @@ and leaves at its end. Scrolling back up brings everything back.
   (with sticking, turning and shifting off: `.rf-doors-measure`) and on scroll gives each `--rf-door-p` (0 to 1 over
   one screen from its start), `is-opening`, `is-open` (then `visibility: hidden`). The next container is held in place
   with `translate` (and, after a slide, moved in from the right); a sliding pair gets `--rf-door-x` for its layers.
+- Zoom (0.52): the leaving container's direct children get `data-rf-zoom-layer` with `--rf-zd` (3 for headings, 1.2
+  for the rest) and `scale` from it; the container itself scales a little, fades and blurs (for the zoom through, the
+  fade starts at 30% and the blur at 40% of the way, so the title rushes past sharp). The next container gets
+  `rf-door--incoming`, `data-rf-door-in` (zoom or zoom-out) and `--rf-door-in` (1 to 0): a blur that clears, and a
+  `scale` from 1.06 (zoom) or 1.45 (zoom-out) down to 1. One `filter` carries the shade, the leaving blur and the
+  incoming blur.
 - The CSS draws it: doors and pages `rotateY` about their edge with the perspective moved to the middle of the screen,
   the page with `backface-visibility: hidden`; the slide `translateX`; sinking `scale` and `border-radius`; shade
   `filter: brightness()`. Moving containers keep only their color transitions (a transition on `transform` would lag

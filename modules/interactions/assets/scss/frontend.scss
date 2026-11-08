@@ -648,8 +648,45 @@ html.rf-hp-on body {
 	border-radius: calc(var(--rf-door-p, 0) * 28px);
 }
 
+// The camera moves through it: titles grow past the viewer (most), the rest a little; it fades to the next one.
+// The title rushes past still sharp; blur and fade start later (from 30% and 40% of the way), as a camera would.
+.rf-doors .rf-door--zoom {
+	transform: scale(calc(1 + (var(--rf-door-p, 0) * 0.15)));
+	opacity: calc(1 - max(0, (var(--rf-door-p, 0) - 0.3) / 0.7));
+	--rf-door-blur: max(0, (var(--rf-door-p, 0) - 0.4) / 0.6);
+}
+
+.rf-doors .rf-door--zoom [data-rf-zoom-layer] {
+	scale: calc(1 + (var(--rf-door-p, 0) * var(--rf-zd, 1)));
+}
+
+// The reverse: it falls away into the distance, titles shrinking most.
+.rf-doors .rf-door--zoom-out {
+	transform: scale(calc(1 - (var(--rf-door-p, 0) * 0.3)));
+	opacity: calc(1 - var(--rf-door-p, 0));
+	--rf-door-blur: var(--rf-door-p, 0);
+}
+
+.rf-doors .rf-door--zoom-out [data-rf-zoom-layer] {
+	scale: calc(1 / (1 + (var(--rf-door-p, 0) * var(--rf-zd, 1))));
+}
+
+// After a zoom the next one comes into focus: from a little blurred (zoom), or from close up and blurred (zoom-out).
+.rf-doors .rf-door--incoming[data-rf-door-in="zoom"] {
+	scale: calc(1 + (var(--rf-door-in, 0) * 0.06));
+}
+
+.rf-doors .rf-door--incoming[data-rf-door-in="zoom-out"] {
+	scale: calc(1 + (var(--rf-door-in, 0) * 0.45));
+}
+
+// One filter for all: the shade as it goes, the blur of a zoom leaving, the focus of the one coming in.
+.rf-doors :is(.rf-door--moves, .rf-door--incoming) {
+	filter: brightness(var(--rf-door-b, 1)) blur(calc((var(--rf-door-blur, 0) + var(--rf-door-in, 0)) * 14px));
+}
+
 .rf-doors .rf-door--shade {
-	filter: brightness(calc(1 - (var(--rf-door-p, 0) * 0.45)));
+	--rf-door-b: calc(1 - (var(--rf-door-p, 0) * 0.45));
 }
 
 // A door or a page that opens casts a shadow on what it shows.
