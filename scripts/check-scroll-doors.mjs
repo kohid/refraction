@@ -3,7 +3,9 @@
  * Scrolling effects of containers (Container > Layout > Scrolling Effect; modules/interactions/assets/js/doors.js),
  * SQLite test site, Chromium. Six containers, each with its own effect: a door to the left, a door to the right (taller
  * than the screen: it scrolls through first), sinking back as the next slides over, sliding to the left as the next
- * comes in (with layers), turning over like a book page, and the last one, which stays. Also: closed again when
+ * comes in (with layers), turning over like a book page, and the last one, which stays. On another page: zooming
+ * through into the next (titles growing past the viewer, the next coming into focus) and its reverse (falling away
+ * into the distance, the next coming in from close up). Also: closed again when
  * scrolling up, phones, "not on phones", reduced motion, not with Pages Side By Side, and the editor (a plain page
  * there, the setting in the container's Layout tab).
  *
@@ -139,6 +141,8 @@ async function main() {
 		const doors = page( 'Doors', sections(), {} );
 		const noPhones = page( 'Doors not on phones', sections( { rf_door_phones: 'no' } ), {} );
 		const both = page( 'Doors and side pages', sections(), { rf_hp: 'slide' } );
+		const zoomSection = ( id, color, door, title ) => ( { ...section( id, 100, color, door ? { rf_door: door } : {}, title ), elements: [ w( `t${ id }`, 'heading', { title, header_size: 'h2' } ), w( `x${ id }`, 'text-editor', { editor: '<p>A rentable creative studio.</p>' } ) ] } );
+		const zoom = page( 'Zoom', [ zoomSection( 'z1', '#2B2118', 'zoom', 'The art of life' ), zoomSection( 'z2', '#1E2A24', 'zoom-out', 'The art of god' ), zoomSection( 'z3', '#3A2A1E', '', 'A walk in nature' ) ], {} );
 
 		const d = await at( doors.url, 1280, 800 );
 		await sleep( 800 );
@@ -213,6 +217,36 @@ async function main() {
 		check( 'doors', 'scrolling back up closes them again', 0 === s.p[ 0 ] && ! s.open[ 0 ] && Math.abs( closed[ 0 ] - 1 ) < 1e-6 && Math.abs( closed[ 1 ] ) < 1e-6, JSON.stringify( closed ) );
 		await d.context().close();
 
+		// Zoom through, and its reverse.
+		const zp = await at( zoom.url, 1280, 800 );
+		await sleep( 800 );
+		const zStart = await zp.evaluate( () => Number( document.querySelector( '[data-id="z1"]' ).getAttribute( 'data-rf-door-start' ) ) );
+		const look = () => zp.evaluate( () => {
+			const blur = ( el ) => Number( ( getComputedStyle( el ).filter.match( /blur\(([\d.]+)px\)/ ) || [ 0, 0 ] )[ 1 ] );
+			const q = ( id ) => document.querySelector( `[data-id="${ id }"]` );
+			return {
+				z1: { opacity: Number( getComputedStyle( q( 'z1' ) ).opacity ), blur: blur( q( 'z1' ) ), title: Number( getComputedStyle( q( 'tz1' ) ).scale ), text: Number( getComputedStyle( q( 'xz1' ) ).scale ), open: q( 'z1' ).classList.contains( 'is-open' ) },
+				z2: { blur: blur( q( 'z2' ) ), scale: getComputedStyle( q( 'z2' ) ).scale, top: Math.round( q( 'z2' ).getBoundingClientRect().top ), shrink: new DOMMatrix( getComputedStyle( q( 'z2' ) ).transform ).a, title: Number( getComputedStyle( q( 'tz2' ) ).scale ), opacity: Number( getComputedStyle( q( 'z2' ) ).opacity ) },
+				z3: { blur: blur( q( 'z3' ) ), scale: 'none' === getComputedStyle( q( 'z3' ) ).scale ? 1 : Number( getComputedStyle( q( 'z3' ) ).scale ) },
+			};
+		} );
+		await scrollTo( zp, zStart + 400 );
+		let z = await look();
+		check( 'zoom', 'half way: its title grows past the viewer (most), the rest a little; it is only starting to blur and fade; the next waits behind, still a little blurred', Math.abs( z.z1.title - 2.5 ) < 0.05 && Math.abs( z.z1.text - 1.6 ) < 0.05 && Math.abs( z.z1.opacity - 0.714 ) < 0.03 && Math.abs( z.z1.blur - 2.33 ) < 0.3 && Math.abs( z.z2.top ) <= 13 && Math.abs( z.z2.blur - 7 ) < 0.5 && Math.abs( Number( z.z2.scale ) - 1.03 ) < 0.01, JSON.stringify( z ) );
+		await zp.screenshot( { path: join( SHOTS, 'zoom.png' ) } );
+		await scrollTo( zp, zStart + 800 );
+		z = await look();
+		check( 'zoom', 'then it is gone and the next is in focus', z.z1.open && 0 === z.z2.blur && 0 === z.z2.top && ( 'none' === z.z2.scale || 1 === Number( z.z2.scale ) ), JSON.stringify( z ) );
+		const z2Start = await zp.evaluate( () => Number( document.querySelector( '[data-id="z2"]' ).getAttribute( 'data-rf-door-start' ) ) );
+		await scrollTo( zp, z2Start + 400 );
+		z = await look();
+		check( 'zoom out', 'the reverse: it falls away (smaller, its title most), blurs and fades; the next comes in from close up, blurred', Math.abs( z.z2.shrink - 0.85 ) < 0.02 && Math.abs( z.z2.title - 0.4 ) < 0.02 && Math.abs( z.z2.opacity - 0.5 ) < 0.03 && Math.abs( z.z2.blur - 7 ) < 0.5 && Math.abs( z.z3.scale - 1.225 ) < 0.01 && Math.abs( z.z3.blur - 7 ) < 0.5, JSON.stringify( z ) );
+		await zp.screenshot( { path: join( SHOTS, 'zoom-out.png' ) } );
+		await scrollTo( zp, z2Start + 800 );
+		z = await look();
+		check( 'zoom out', 'and the last one settles into focus', 0 === z.z3.blur && 1 === z.z3.scale, JSON.stringify( z ) );
+		await zp.context().close();
+
 		// Phones: on by default, off when asked.
 		const phone = async ( url ) => {
 			const ctx = await browser.newContext( { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } );
@@ -265,7 +299,7 @@ async function main() {
 		const controls = await e.evaluate( () => {
 			const c = window.refraction.config.elements?.container?.controls || {}; return { page: Object.keys( window.refraction.documents.getCurrent().config.settings.controls ).filter( ( k ) => k.startsWith( 'rf_doors' ) ), tab: c.rf_door?.tab, options: Object.keys( c.rf_door?.options || {} ), more: [ 'rf_door_angle', 'rf_door_depth', 'rf_door_shade', 'rf_door_phones' ].every( ( k ) => c[ k ] ) };
 		} );
-		check( 'editor', 'a plain page in the editor; the choice is in the container\'s Layout tab (no longer in Page Settings)', ! ed && 0 === controls.page.length && 'layout' === controls.tab && ',left,right,push,slide,book' === controls.options.join() && controls.more, JSON.stringify( [ ed, controls ] ) );
+		check( 'editor', 'a plain page in the editor; the choice is in the container\'s Layout tab (no longer in Page Settings)', ! ed && 0 === controls.page.length && 'layout' === controls.tab && ',left,right,push,slide,book,zoom,zoom-out' === controls.options.join() && controls.more, JSON.stringify( [ ed, controls ] ) );
 		await ectx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

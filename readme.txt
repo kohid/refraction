@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.51.0
+Stable tag: 0.52.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.52.0 =
+* Container > Layout > Scrolling Effect: two more. "Zooms through into the next": the camera moves through the container, its titles growing past the viewer while it blurs and fades, and the next one comes into focus. "Falls away into the distance", the reverse: it shrinks away, titles first, and the next comes in from close up, settling into focus.
 
 = 0.51.0 =
 * Container > Layout > Scrolling Effect: each top-level container chooses how it leaves the screen as the page scrolls down: opens like a door to the left or to the right (the next one waiting behind it), sinks back as the next slides over it, slides to the left as the next comes in from the right (with layers moving at different speeds), or turns over like a book page. Mix them on one page. Options for how far a door opens, parallax depth, shading and phones. Tall containers scroll through first; scrolling up brings everything back.

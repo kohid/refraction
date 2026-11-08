@@ -73,6 +73,8 @@ check( 'scroll effect angle clamped', S::scroll_effect( [ 'rf_door' => 'right', 
 check( 'scroll effect slide depth clamped', S::scroll_effect( [ 'rf_door' => 'slide', 'rf_door_depth' => [ 'size' => 300 ] ] )['depth'], 100 );
 check( 'scroll effect book, no shade, not on phones', S::scroll_effect( [ 'rf_door' => 'book', 'rf_door_shade' => 'no', 'rf_door_phones' => 'no' ] ), [ 'fx' => 'book', 'angle' => 100, 'shade' => false, 'phones' => false, 'depth' => 30 ] );
 check( 'scroll effect push', S::scroll_effect( [ 'rf_door' => 'push' ] )['fx'], 'push' );
+check( 'scroll effect zoom', S::scroll_effect( [ 'rf_door' => 'zoom' ] )['fx'], 'zoom' );
+check( 'scroll effect zoom out', S::scroll_effect( [ 'rf_door' => 'zoom-out' ] )['fx'], 'zoom-out' );
 check( 'depth automatic', S::page_depth( [] ), null );
 check( 'depth set', S::page_depth( [ 'rf_hp_depth_own' => [ 'size' => 0.75 ] ] ), 0.75 );
 check( 'depth clamped', S::page_depth( [ 'rf_hp_depth_own' => [ 'size' => 9 ] ] ), 2.0 );

@@ -348,6 +348,8 @@ class Module extends BaseModule {
 				'push' => esc_html__( 'Sinks back as the next slides over it', 'refraction' ),
 				'slide' => esc_html__( 'Slides to the left as the next comes in', 'refraction' ),
 				'book' => esc_html__( 'Turns over like a book page', 'refraction' ),
+				'zoom' => esc_html__( 'Zooms through into the next (its titles grow past you, the next comes into focus)', 'refraction' ),
+				'zoom-out' => esc_html__( 'Falls away into the distance (the next comes in from close up)', 'refraction' ),
 			],
 			'description' => esc_html__( 'For a container at the top level of the page: it stays on the screen while the next one comes, then leaves this way over one screen of scrolling (the next one waits behind it, or slides over or in). Mix them: one container a door, the next a book page... The page\'s last container always stays. On the site; the editor shows them one under another.', 'refraction' ),
 		] );

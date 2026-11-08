@@ -4,7 +4,11 @@
  *   left / right: opens like a door on that hinge (the next waits in place behind it);
  *   book:         turns over like a book page, towards the viewer and over to the left (the next waits behind it);
  *   slide:        slides out to the left as the next comes in from the right (what is on them moves as layers);
- *   push:         sinks back, smaller and darker, as the next slides up over it.
+ *   push:         sinks back, smaller and darker, as the next slides up over it;
+ *   zoom:         the camera moves through it: its titles grow past the viewer, it blurs and fades, and the next one
+ *                 (waiting behind) comes into focus;
+ *   zoom-out:     the reverse: it falls away into the distance, smaller and blurred, and the next one comes in from
+ *                 close up, settling into focus.
  * Each has its own settings in data-rf-door (fx, angle, shade, phones, depth). The page's last container stays. Each
  * gets --rf-door-p, its progress from 0 to 1; the CSS draws it. A container taller than the screen scrolls through
  * first. Off for reduced motion, on a page shown as Pages Side By Side, and on phones for containers that say so.
@@ -96,6 +100,7 @@
 
 		stages.forEach( ( stage ) => {
 			const xs = stage.items.map( () => 0 );
+			const ins = stage.items.map( () => 0 );
 			const shifts = stage.items.map( () => null );
 
 			stage.items.forEach( ( item, i ) => {
@@ -124,6 +129,11 @@
 					if ( 'slide' === item.cfg.fx ) {
 						xs[ i + 1 ] += 1 - p;
 					}
+
+					// After a zoom, the next one comes into focus (from blurred, or from close up).
+					if ( isZoom( item.cfg.fx ) ) {
+						ins[ i + 1 ] = 1 - p;
+					}
 				}
 			} );
 
@@ -135,7 +145,31 @@
 				}
 
 				item.el.style.setProperty( '--rf-door-x', xs[ i ].toFixed( 4 ) );
+				item.el.style.setProperty( '--rf-door-in', ins[ i ].toFixed( 4 ) );
 			} );
+		} );
+	}
+
+	function isZoom( fx ) {
+		return 'zoom' === fx || 'zoom-out' === fx;
+	}
+
+	/**
+	 * What a zooming container's camera moves through: its titles (headings) most, the rest less.
+	 * @param {Element} section
+	 */
+	function zoomLayers( section ) {
+		let box = section.querySelector( ':scope > .e-con-inner' ) || section;
+
+		if ( 1 === box.children.length && box.firstElementChild.classList.contains( 'refraction-element' ) ) {
+			box = box.firstElementChild.querySelector( ':scope > .e-con-inner' ) || box.firstElementChild;
+		}
+
+		Array.from( box.children ).filter( ( el ) => el.classList.contains( 'refraction-element' ) ).forEach( ( el ) => {
+			const title = el.classList.contains( 'refraction-widget-heading' ) || el.classList.contains( 'refraction-widget-animated-headline' );
+
+			el.setAttribute( 'data-rf-zoom-layer', '' );
+			el.style.setProperty( '--rf-zd', title ? '3' : '1.2' );
 		} );
 	}
 
@@ -169,6 +203,15 @@
 
 			if ( item.cfg ) {
 				item.el.style.setProperty( '--rf-door-angle', `${ item.cfg.angle }deg` );
+			}
+
+			if ( item.cfg && isZoom( item.cfg.fx ) ) {
+				zoomLayers( item.el );
+
+				if ( items[ i + 1 ] ) {
+					items[ i + 1 ].el.classList.add( 'rf-door--incoming' );
+					items[ i + 1 ].el.setAttribute( 'data-rf-door-in', item.cfg.fx );
+				}
 			}
 
 			if ( item.cfg && 'slide' === item.cfg.fx && item.cfg.depth ) {

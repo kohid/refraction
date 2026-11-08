@@ -122,7 +122,7 @@ class Pure_Interaction_Settings {
 		];
 	}
 
-	const SCROLL_EFFECTS = [ 'left', 'right', 'push', 'slide', 'book' ];
+	const SCROLL_EFFECTS = [ 'left', 'right', 'push', 'slide', 'book', 'zoom', 'zoom-out' ];
 
 	/**
 	 * A container's scrolling effect (Container > Layout > Scrolling Effect): how it leaves the screen as the page
