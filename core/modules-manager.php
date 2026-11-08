@@ -142,11 +142,13 @@ class Modules_Manager {
 			'ask-claude',
 			'page-loader',
 			'card-motion',
+			'interactions',
 			'loop-builder',
 			'forms',
 			'pro-widgets',
 			'migration',
 			'solar-icons',
+			'phosphor-icons',
 		];
 	}
 

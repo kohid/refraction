@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.46.0
+Stable tag: 0.48.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,17 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.48.0 =
+* Icons: the Phosphor icon library (MIT), six weights (Regular, Bold, Fill, Duotone, Light, Thin) of 1,512 icons each, in the icon library after the Solar icons. Drawn as inline SVG like Solar; the Duotone weight takes the Duotone controls.
+* Icon controls: icons drawn as SVG (Solar, Phosphor) now show in the panel's icon preview (it was empty).
+* Icon Box: each icon's Hover tab (main icon in Style > Main Icon, each More Icon in its item) has every setting of the Normal tab: colors, size, padding, border, corners, rotate, a new Scale, opacity, shadow, and a Hover Animation that plays while hovered (or stops the normal one), plus Hover Change Time. Style > Icon > "Each Icon's Hover Starts When": the box is hovered, or the icon itself.
+
+= 0.47.0 =
+* New Marquee widget: words, icons or logos that keep running, in one row or two going opposite ways, solid and outlined words, speeding up with the scroll (or turning with its direction), tilted into a ribbon, with faded edges, a turning separator and gray logos that take their color under the pointer. Pauses on hover and keyboard focus; stands still and wraps for reduced motion.
+* Site Settings > Motion & Cursor: a site cursor (dot and trailing ring, ring, dot or an inverting disc) that grows over links and buttons and shows a word over chosen elements, and page transitions between the pages of the site (cross-fade, rise in, wipe up, step back).
+* Advanced > Interactions on every element: Magnetic (drawn towards the pointer), Cursor Word ("View", "Play", "Drag") and No Site Cursor Here.
+* Reveal: new effects Wipe up, Wipe down, Wipe from either side, and Light up from faint (text that fills in word by word as it is read).
 
 = 0.46.0 =
 * Text Editor, Icon Box, Image Box, Testimonial, Alert, Call to Action and Author Box: the text can be shown as text, cut to a number of lines, or as a tooltip (Call to Action: cut to lines only). Cut text can have a Show more / Show less toggle under it, a full-width button or a text link with its own words and icon (hidden when the text is short enough not to be cut, usable from the keyboard), and its full text in a tooltip. Text Editor in tooltip mode shows a trigger text and icon to hover. New Style > Show More Toggle section; Style > Tooltip for every one of them.

@@ -88,6 +88,33 @@
 	transform-origin: 0 100%;
 }
 
+// Wipes: uncovered by a clip from one side, without moving (images, cards, whole sections).
+[data-rf-rv-fx^="wipe-"] {
+	opacity: 1;
+}
+
+[data-rf-rv-fx="wipe-up"] {
+	clip-path: inset(calc(var(--rf-rv-q) * 100%) 0 0 0);
+}
+
+[data-rf-rv-fx="wipe-down"] {
+	clip-path: inset(0 0 calc(var(--rf-rv-q) * 100%) 0);
+}
+
+[data-rf-rv-fx="wipe-left"] {
+	clip-path: inset(0 0 0 calc(var(--rf-rv-q) * 100%));
+}
+
+[data-rf-rv-fx="wipe-right"] {
+	clip-path: inset(0 calc(var(--rf-rv-q) * 100%) 0 0);
+}
+
+// Light up from faint: each piece goes from a trace of itself to full, in place. With "with the scroll" and word by
+// word, the text fills in as it is read.
+[data-rf-rv-fx="dim"] {
+	opacity: calc(0.18 + 0.82 * var(--rf-rv-p));
+}
+
 // Text that slides up from behind its own line: the word clips its inner piece.
 [data-rf-rv-fx="mask"] {
 	--rf-rv-dy: 110%;

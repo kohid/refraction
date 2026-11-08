@@ -136,6 +136,11 @@
 	}
 }
 
+// An icon's own Rotate (Normal and Hover) turns its symbol: eased like the rest of the icon's changes.
+.refraction-widget-icon-box .refraction-icon-box-icon .refraction-icon > :is(i, svg) {
+	transition: rotate 0.3s;
+}
+
 // Icon animation: played all the time, while the box is hovered, or once when it comes into view (the handler adds
 // .is-visible). Each icon starts --i times the delay between icons after the one before it.
 @keyframes rf-ib-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }

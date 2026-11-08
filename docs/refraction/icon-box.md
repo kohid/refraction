@@ -52,3 +52,17 @@ Check: `node scripts/check-iconbox-navpanel.mjs --site DIR --port N`.
 ## 0.46.0
 
 - The description display moved into `Text_Display_Trait` (see `text-display.md`), shared with Text Editor and other widgets; cut text gains a Show more / Show less toggle. Saved settings keep working (same control names).
+
+## 0.48.0
+
+- **Hover tab = Normal tab.** `add_own_icon_controls()` now builds both tabs with `add_icon_state_controls()`: Normal keeps
+  the names it had (`color`, `background`, `size`, ...; `main_icon_*` for the main icon); Hover uses `hover_*`
+  (`hover_color`, `hover_background` and `hover_border_color` existed already). New in both: **Scale** (`scale`, so it
+  does not fight the free arrangement's `translate` / `rotate` or the animations' `transform`). Hover's **Hover
+  Animation** sets `animation-name` itself (it beats the Play rules) and starts at once; "Stop while hovered" sets
+  `none`. **Hover Change Time** sets the icon's `transition-duration` (icons already have `transition: all`; the
+  symbol's `rotate` got its own transition).
+- **When Hover starts**: Style > Icon (Hover tab) > *Each Icon's Hover Starts When*: the box is hovered (default; the
+  0.45 behaviour) or the icon itself, prefix class `refraction-icons-hover-on-<box|icon>`.
+- The panel's icon preview draws SVG libraries (Solar, Phosphor) from their SVG JSON (`controls/icons.js`); it showed
+  nothing before.
