@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Sections that open like doors (Page Settings > Sections Open Like Doors; modules/interactions/assets/js/doors.js),
- * SQLite test site, Chromium. Four sections: the first opens like a door to the left, the second (taller than the
- * screen: it scrolls through first) to the right, the third sinks back as the last slides over it (its own choice),
- * the last stays. Also: back to closed when scrolling up, phones, "not on phones", reduced motion, not with Pages
- * Side By Side, and the editor (a plain page there, the settings in the panel).
+ * Scrolling effects of containers (Container > Layout > Scrolling Effect; modules/interactions/assets/js/doors.js),
+ * SQLite test site, Chromium. Six containers, each with its own effect: a door to the left, a door to the right (taller
+ * than the screen: it scrolls through first), sinking back as the next slides over, sliding to the left as the next
+ * comes in (with layers), turning over like a book page, and the last one, which stays. Also: closed again when
+ * scrolling up, phones, "not on phones", reduced motion, not with Pages Side By Side, and the editor (a plain page
+ * there, the setting in the container's Layout tab).
  *
  * Usage: node scripts/check-scroll-doors.mjs [--site /tmp/rf-door-site] [--port 9240] [--shots /tmp/scroll-doors-shots]
  */
@@ -106,17 +107,19 @@ async function main() {
 
 	const w = ( id, widgetType, settings ) => ( { id, elType: 'widget', widgetType, settings, elements: [] } );
 	const section = ( id, vh, color, extra, title ) => ( { id, elType: 'container', isInner: false, settings: { min_height: { unit: 'vh', size: vh }, flex_justify_content: 'center', flex_align_items: 'center', background_background: 'classic', background_color: color, ...extra }, elements: [ w( `h${ id }`, 'heading', { title, header_size: 'h2' } ) ] } );
-	const sections = [
-		section( 's1', 100, '#1B3A2F', {}, 'The first door' ),
-		section( 's2', 160, '#C9E4D6', {}, 'A tall room' ),
-		section( 's3', 100, '#F2C14E', { rf_door: 'push' }, 'Sinks back' ),
-		section( 's4', 100, '#F6E8F4', {}, 'The last one stays' ),
+	const sections = ( own = {} ) => [
+		section( 's1', 100, '#1B3A2F', { rf_door: 'left', ...own }, 'The first door' ),
+		section( 's2', 160, '#C9E4D6', { rf_door: 'right', ...own }, 'A tall room' ),
+		section( 's3', 100, '#F2C14E', { rf_door: 'push', ...own }, 'Sinks back' ),
+		{ ...section( 's4', 100, '#B8D8F0', { rf_door: 'slide', ...own }, 'Slides away' ), elements: [ w( 'h4a', 'heading', { title: 'Slides away' } ), w( 'h4b', 'heading', { title: 'in layers' } ) ] },
+		{ ...section( 's5', 100, '#EADBC8', { rf_door: 'book', ...own }, 'A book page' ), elements: [ w( 'h5a', 'heading', { title: 'A book page' } ), w( 'h5b', 'heading', { title: 'comes in' } ) ] },
+		section( 's6', 100, '#F6E8F4', {}, 'The last one stays' ),
 	];
 	const state = ( p ) => p.evaluate( () => {
 		const all = [ ...document.querySelectorAll( '.rf-door' ) ];
 		return {
 			on: document.documentElement.classList.contains( 'rf-doors' ),
-			effects: all.map( ( el ) => ( el.className.match( /rf-door--(left|right|push|none)/ ) || [] )[ 1 ] ),
+			effects: all.map( ( el ) => ( el.className.match( /rf-door--(left|right|push|slide|book|none)/ ) || [] )[ 1 ] ),
 			z: all.map( ( el ) => Number( el.style.zIndex ) ),
 			p: all.map( ( el ) => Number( el.style.getPropertyValue( '--rf-door-p' ) || 0 ) ),
 			tops: all.map( ( el ) => Math.round( el.getBoundingClientRect().top ) ),
@@ -133,16 +136,16 @@ async function main() {
 	const hit = ( p, x, y ) => p.evaluate( ( [ px, py ] ) => document.elementFromPoint( px, py )?.closest( '.rf-door' )?.getAttribute( 'data-id' ), [ x, y ] );
 
 	try {
-		const doors = page( 'Doors', sections, { rf_doors: 'alternate' } );
-		const noPhones = page( 'Doors not on phones', sections, { rf_doors: 'alternate', rf_doors_phones: 'no' } );
-		const both = page( 'Doors and side pages', sections, { rf_doors: 'alternate', rf_hp: 'slide' } );
+		const doors = page( 'Doors', sections(), {} );
+		const noPhones = page( 'Doors not on phones', sections( { rf_door_phones: 'no' } ), {} );
+		const both = page( 'Doors and side pages', sections(), { rf_hp: 'slide' } );
 
 		const d = await at( doors.url, 1280, 800 );
 		await sleep( 800 );
 		let s = await state( d );
-		check( 'doors', 'left, then right; the third sinks back (its own choice); the last stays', s.on && 'left,right,push,none' === s.effects.join() && 'sticky,sticky,sticky,static' === s.sticky.join().replace( 'relative', 'static' ), JSON.stringify( s ) );
+		check( 'doors', 'each container its own effect: door left, door right, sink back, slide, book page; the last stays', s.on && 'left,right,push,slide,book,none' === s.effects.join() && 'sticky,sticky,sticky,sticky,sticky,static' === s.sticky.join().replace( 'relative', 'static' ), JSON.stringify( s ) );
 		const A = Math.round( s.starts[ 0 ] ); // Where the first section starts (below the theme's header)
-		check( 'doors', 'a door lies above the next section, a sinking one under it', s.z[ 0 ] > s.z[ 1 ] && s.z[ 1 ] > s.z[ 2 ] && s.z[ 2 ] < s.z[ 3 ], JSON.stringify( s.z ) );
+		check( 'doors', 'a door, a slide or a page lies above the next container, a sinking one under it', s.z[ 0 ] > s.z[ 1 ] && s.z[ 1 ] > s.z[ 2 ] && s.z[ 2 ] < s.z[ 3 ] && s.z[ 3 ] > s.z[ 4 ] && s.z[ 4 ] > s.z[ 5 ], JSON.stringify( s.z ) );
 
 		// The first door, half way.
 		await scrollTo( d, A + 400 );
@@ -172,11 +175,36 @@ async function main() {
 		s = await state( d );
 		const scale = await d.evaluate( () => new DOMMatrix( getComputedStyle( document.querySelector( '[data-id="s3"]' ) ).transform ).a );
 		const middle = await hit( d, 640, 700 );
-		check( 'doors', 'the third sinks back (smaller) while the last slides over it', Math.abs( s.p[ 2 ] - 0.5 ) < 0.02 && scale < 0.95 && scale > 0.85 && Math.abs( s.tops[ 3 ] - 400 ) < 3 && 's4' === middle, JSON.stringify( { p: s.p, scale, tops: s.tops, middle } ) );
+		check( 'doors', 'the third sinks back (smaller) while the next slides over it', Math.abs( s.p[ 2 ] - 0.5 ) < 0.02 && scale < 0.95 && scale > 0.85 && Math.abs( s.tops[ 3 ] - 400 ) < 3 && 's4' === middle, JSON.stringify( { p: s.p, scale, tops: s.tops, middle } ) );
 		await d.screenshot( { path: join( SHOTS, 'push-back.png' ) } );
+
+		// The fourth slides out to the left as the fifth comes in from the right, their headings as layers.
+		const fourth = third + 800;
+		await scrollTo( d, fourth + 400 );
+		const sl = await d.evaluate( () => {
+			const r = ( id ) => document.querySelector( `[data-id="${ id }"]` ).getBoundingClientRect();
+			const layer = ( id ) => Math.round( r( id ).left - r( id.slice( 0, 2 ).replace( 'h', 's' ) ).left );
+			const home = r( 's6' ); // The last one does not move: where a container sits, and how wide
+			return { home: [ Math.round( home.left ), Math.round( home.width ) ], s4: [ Math.round( r( 's4' ).left ), Math.round( r( 's4' ).top ) ], s5: [ Math.round( r( 's5' ).left ), Math.round( r( 's5' ).top ) ], layers: [ document.querySelectorAll( '[data-id="s4"] [data-rf-door-layer]' ).length, document.querySelectorAll( '[data-id="s5"] [data-rf-door-layer]' ).length ], offsets: [ layer( 'h4a' ), layer( 'h4b' ) ], sideways: document.documentElement.scrollWidth > window.innerWidth };
+		} );
+		const slideRight = await hit( d, 1200, 400 );
+		check( 'slide', 'half way: the fourth is half out to the left, the fifth half in from the right at the same height, no sideways scroll', Math.abs( sl.s4[ 0 ] - ( sl.home[ 0 ] - ( sl.home[ 1 ] / 2 ) ) ) < 4 && Math.abs( sl.s5[ 0 ] - ( sl.home[ 0 ] + ( sl.home[ 1 ] / 2 ) ) ) < 4 && 0 === sl.s5[ 1 ] && 's5' === slideRight && ! sl.sideways, JSON.stringify( { sl, slideRight } ) );
+		const sl2 = await d.evaluate( () => [ ...document.querySelectorAll( '[data-id="s4"] [data-rf-door-layer]' ) ].map( ( el ) => getComputedStyle( el ).translate ) );
+		check( 'slide', 'what is on them moves as layers (each its own offset)', sl.layers[ 0 ] >= 2 && sl.layers[ 1 ] >= 2 && new Set( sl2 ).size >= 2 && sl2.some( ( t ) => 'none' !== t && ! /^0px/.test( t ) ), JSON.stringify( { sl2, layers: sl.layers } ) );
+		await d.screenshot( { path: join( SHOTS, 'slide.png' ) } );
+
+		// The fifth turns over like a book page, showing the last one under it.
+		const fifth = fourth + 800;
+		await scrollTo( d, fifth + 200 );
+		const bookEarly = await hit( d, 900, 400 );
+		await d.screenshot( { path: join( SHOTS, 'book-turning.png' ) } );
+		await scrollTo( d, fifth + 600 );
+		const bookLate = await hit( d, 640, 400 );
+		s = await state( d );
+		check( 'book', 'it turns towards the viewer and over: still covering early on, gone past the middle, the last one under it', 's5' === bookEarly && 's6' === bookLate && Math.abs( s.p[ 4 ] - 0.75 ) < 0.02 && 0 === s.tops[ 5 ], JSON.stringify( { bookEarly, bookLate, p: s.p, tops: s.tops } ) );
 		await scrollTo( d, 100000 );
 		s = await state( d );
-		check( 'doors', 'at the end the last one is in view, the page ends as usual', s.tops[ 3 ] <= 0 && s.open[ 2 ], JSON.stringify( s ) );
+		check( 'doors', 'at the end the last one is in view, the page ends as usual', s.tops[ 5 ] <= 0 && s.open[ 4 ], JSON.stringify( s ) );
 		await scrollTo( d, 0 );
 		s = await state( d );
 		const closed = await d.evaluate( () => {
@@ -234,8 +262,10 @@ async function main() {
 		await e.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
 		await sleep( 3000 );
 		const ed = await e.frame( { name: 'refraction-preview-iframe' } ).evaluate( () => document.documentElement.classList.contains( 'rf-doors' ) );
-		const controls = await e.evaluate( () => ( { page: Object.keys( window.refraction.documents.getCurrent().config.settings.controls ).filter( ( k ) => k.startsWith( 'rf_doors' ) ), container: !! window.refraction.config.elements?.container?.controls?.rf_door } ) );
-		check( 'editor', 'a plain page in the editor; Page Settings and each container have the door settings', ! ed && controls.page.includes( 'rf_doors' ) && controls.page.includes( 'rf_doors_angle' ) && controls.container, JSON.stringify( [ ed, controls ] ) );
+		const controls = await e.evaluate( () => {
+			const c = window.refraction.config.elements?.container?.controls || {}; return { page: Object.keys( window.refraction.documents.getCurrent().config.settings.controls ).filter( ( k ) => k.startsWith( 'rf_doors' ) ), tab: c.rf_door?.tab, options: Object.keys( c.rf_door?.options || {} ), more: [ 'rf_door_angle', 'rf_door_depth', 'rf_door_shade', 'rf_door_phones' ].every( ( k ) => c[ k ] ) };
+		} );
+		check( 'editor', 'a plain page in the editor; the choice is in the container\'s Layout tab (no longer in Page Settings)', ! ed && 0 === controls.page.length && 'layout' === controls.tab && ',left,right,push,slide,book' === controls.options.join() && controls.more, JSON.stringify( [ ed, controls ] ) );
 		await ectx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

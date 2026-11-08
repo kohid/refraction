@@ -586,14 +586,25 @@ html.rf-hp-on body {
 	}
 }
 
-// ---- Sections that open like doors (doors.js gives each moving section --rf-door-p from 0 to 1).
+// ---- Scrolling effects of containers (doors.js gives each moving one --rf-door-p from 0 to 1, and --rf-door-x to a
+// sliding one and the one coming in after it).
 .rf-doors .rf-door--moves {
 	position: sticky;
 	top: var(--rf-door-top, 0);
 	will-change: transform;
 }
 
-// Measuring: where each section sits in the page's flow, unmoved and unturned.
+// They follow the scroll exactly: a container's own transitions (transform, filter, corners) would lag behind it.
+.rf-doors .rf-door {
+	transition-property: background-color, border-color, color !important;
+}
+
+// A container held in place by the script stays inside the page's width (one coming in from the right).
+.rf-doors .rf-doors-stage {
+	overflow-x: clip;
+}
+
+// Measuring: where each container sits in the page's flow, unmoved, unturned and unshifted.
 .rf-doors-measure .rf-door--moves {
 	position: static !important;
 	transform: none !important;
@@ -603,13 +614,13 @@ html.rf-hp-on body {
 	translate: none !important;
 }
 
-// Opaque, so the next section does not show through before the door opens.
+// Opaque, so the next one does not show through before this one has gone.
 :where(.rf-doors .rf-door) {
-	background-color: var(--rf-doors-bg, var(--rf-doors-body-bg, #fff));
+	background-color: var(--rf-doors-body-bg, #fff);
 }
 
-// A door swings away from the viewer on its hinge (left or right edge), seen from the middle of the screen: the
-// perspective is moved to the middle (translate, perspective, translate back), the turn is about the hinge.
+// A door swings away from the viewer on its hinge, seen from the middle of the screen: the perspective is moved to
+// the middle (translate, perspective, translate back), the turn is about the hinge.
 .rf-doors .rf-door--left {
 	transform-origin: 0 50%;
 	transform: translateX(50%) perspective(1800px) translateX(-50%) rotateY(calc(var(--rf-door-p, 0) * var(--rf-door-angle, 100deg)));
@@ -620,23 +631,38 @@ html.rf-hp-on body {
 	transform: translateX(-50%) perspective(1800px) translateX(50%) rotateY(calc(var(--rf-door-p, 0) * var(--rf-door-angle, 100deg) * -1));
 }
 
+// A book page turns towards the viewer and over to the left, showing the next page under it.
+.rf-doors .rf-door--book {
+	transform-origin: 0 50%;
+	transform: translateX(50%) perspective(3200px) translateX(-50%) rotateY(calc(var(--rf-door-p, 0) * -180deg));
+	backface-visibility: hidden;
+}
+
+.rf-doors .rf-door--slide {
+	transform: translateX(calc(var(--rf-door-p, 0) * -100%));
+}
+
 .rf-doors .rf-door--push {
 	transform-origin: 50% 40%;
 	transform: scale(calc(1 - (var(--rf-door-p, 0) * 0.18)));
 	border-radius: calc(var(--rf-door-p, 0) * 28px);
 }
 
-.rf-doors-shade .rf-door--moves {
+.rf-doors .rf-door--shade {
 	filter: brightness(calc(1 - (var(--rf-door-p, 0) * 0.45)));
 }
 
-// A door that opens casts a shadow on the section it shows.
-.rf-doors .rf-door--left.is-opening,
-.rf-doors .rf-door--right.is-opening {
+// A door or a page that opens casts a shadow on what it shows.
+.rf-doors :is(.rf-door--left, .rf-door--right, .rf-door--book).is-opening {
 	box-shadow: 0 0 calc(var(--rf-door-p, 0) * 60px) rgba(0, 0, 0, calc(var(--rf-door-p, 0) * 0.35));
 }
 
-// Fully open (or fully covered): out of the way.
+// The things on a sliding container (and on the one coming in) move as layers.
+.rf-doors [data-rf-door-layer] {
+	translate: calc(var(--rf-door-x, 0) * var(--rf-hp-d, 0) * var(--rf-door-depth, 30vw)) 0;
+}
+
+// Gone (fully open, turned, slid away or covered): out of the way.
 .rf-doors .rf-door.is-open {
 	visibility: hidden;
 }

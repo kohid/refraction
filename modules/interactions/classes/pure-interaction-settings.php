@@ -122,30 +122,26 @@ class Pure_Interaction_Settings {
 		];
 	}
 
-	const DOOR_PATTERNS = [ 'alternate', 'left', 'right', 'push' ];
-	const DOOR_EFFECTS = [ 'left', 'right', 'push', 'none' ];
+	const SCROLL_EFFECTS = [ 'left', 'right', 'push', 'slide', 'book' ];
 
-	/** Sections that open like doors (Page Settings): the config of doors.js, or [] when off (or pages side by side). */
-	public static function doors( array $settings ): array {
-		$pattern = $settings['rf_doors'] ?? '';
+	/**
+	 * A container's scrolling effect (Container > Layout > Scrolling Effect): how it leaves the screen as the page
+	 * scrolls down. The config of doors.js, or [] for "as usual".
+	 */
+	public static function scroll_effect( array $settings ): array {
+		$fx = $settings['rf_door'] ?? '';
 
-		if ( ! in_array( $pattern, self::DOOR_PATTERNS, true ) || self::pages( $settings ) ) {
+		if ( ! in_array( $fx, self::SCROLL_EFFECTS, true ) ) {
 			return [];
 		}
 
 		return [
-			'pattern' => $pattern,
-			'angle' => (int) self::number( $settings['rf_doors_angle'] ?? '', 30, 120, 100 ),
-			'shade' => 'no' !== ( $settings['rf_doors_shade'] ?? 'yes' ),
-			'phones' => 'no' !== ( $settings['rf_doors_phones'] ?? 'yes' ),
+			'fx' => $fx,
+			'angle' => (int) self::number( $settings['rf_door_angle'] ?? '', 30, 120, 100 ),
+			'shade' => 'no' !== ( $settings['rf_door_shade'] ?? 'yes' ),
+			'phones' => 'no' !== ( $settings['rf_door_phones'] ?? 'yes' ),
+			'depth' => (int) self::number( $settings['rf_door_depth'] ?? '', 0, 100, 30 ),
 		];
-	}
-
-	/** A container's own door (Advanced > Interactions), or '' for the page's pattern. */
-	public static function door( array $settings ): string {
-		$door = $settings['rf_door'] ?? '';
-
-		return in_array( $door, self::DOOR_EFFECTS, true ) ? $door : '';
 	}
 
 	/** An element's own depth when pages slide (Advanced > Interactions), or null for "automatic". */

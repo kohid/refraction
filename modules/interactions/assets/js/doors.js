@@ -1,75 +1,90 @@
 /**
- * Sections that open like doors (Page Settings > Sections Open Like Doors), site only. The page's top-level
- * containers stick to the screen in turn. A "door" stays on top of the next one and, while the page scrolls one screen,
- * swings open on its left or right hinge to show it; a "push" one stays under the next one and sinks back (smaller,
- * darker) while the next slides over it. The last one stays. Each container's own choice (data-rf-door) wins over the
- * page's pattern (alternate: left, right, left...). Each section gets --rf-door-p, its progress from 0 to 1; the CSS
- * draws it. A section taller than the screen scrolls through first and opens at its end. Reduced motion: off.
- * Config: window.refractionDoors.
+ * Scrolling effects of containers (Container > Layout > Scrolling Effect), site only. A top-level container with an
+ * effect stays on the screen while the next one comes, then leaves over one screen of scrolling:
+ *   left / right: opens like a door on that hinge (the next waits in place behind it);
+ *   book:         turns over like a book page, towards the viewer and over to the left (the next waits behind it);
+ *   slide:        slides out to the left as the next comes in from the right (what is on them moves as layers);
+ *   push:         sinks back, smaller and darker, as the next slides up over it.
+ * Each has its own settings in data-rf-door (fx, angle, shade, phones, depth). The page's last container stays. Each
+ * gets --rf-door-p, its progress from 0 to 1; the CSS draws it. A container taller than the screen scrolls through
+ * first. Off for reduced motion, on a page shown as Pages Side By Side, and on phones for containers that say so.
  */
 ( function() {
-	const cfg = window.refractionDoors;
 	const reduce = window.matchMedia( '(prefers-reduced-motion: reduce)' );
+
+	if ( reduce.matches ) {
+		return;
+	}
+
 	const phone = window.matchMedia( '(max-width: 767px)' );
 
-	if ( ! cfg || reduce.matches || ( ! cfg.phones && phone.matches ) ) {
-		return;
-	}
-
 	const root = document.documentElement;
-	const stage = document.querySelector( '.refraction-' + cfg.id + '[data-refraction-type]' ) || document.querySelector( '[data-refraction-id="' + cfg.id + '"]' );
-	const sections = stage ? Array.from( stage.children ).filter( ( el ) => el.classList.contains( 'refraction-element' ) ) : [];
-
-	if ( sections.length < 2 ) {
-		return;
-	}
-
-	const EFFECTS = [ 'left', 'right', 'push', 'none' ];
-	let starts = [];
+	// Automatic layers trail behind their container (less than 0): they stay longer as it leaves and arrive early.
+	const AUTO_DEPTHS = [ -0.5, -1, -0.25, -0.75 ];
+	const stages = [];
 	let ticking = false;
 
-	/**
-	 * The effect of section i: its own, or the page's pattern; the last one stays.
-	 * @param {Element} section
-	 * @param {number}  i
-	 */
-	function effectOf( section, i ) {
-		if ( i === sections.length - 1 ) {
-			return 'none';
+	function config( el ) {
+		try {
+			const cfg = JSON.parse( el.getAttribute( 'data-rf-door' ) || '{}' );
+
+			return cfg && cfg.fx && ( cfg.phones || ! phone.matches ) ? cfg : null;
+		} catch ( e ) {
+			return null;
 		}
-
-		const own = section.getAttribute( 'data-rf-door' );
-
-		if ( own && EFFECTS.indexOf( own ) > -1 ) {
-			return own;
-		}
-
-		if ( 'alternate' === cfg.pattern ) {
-			return 0 === i % 2 ? 'left' : 'right';
-		}
-
-		return cfg.pattern;
 	}
 
-	/** Positions in the page's flow (measured without sticking), and where each sticks (a tall one at its end). */
-	function measure() {
+	/**
+	 * Layers of a sliding container: elements with their own depth, or its direct children (or its only child's).
+	 * @param {Element} section
+	 */
+	function layers( section ) {
+		const own = section.querySelectorAll( '[data-rf-hp-depth]' );
+
+		if ( own.length ) {
+			own.forEach( ( el ) => {
+				el.setAttribute( 'data-rf-door-layer', '' );
+				el.style.setProperty( '--rf-hp-d', el.getAttribute( 'data-rf-hp-depth' ) );
+			} );
+			return;
+		}
+
+		let box = section.querySelector( ':scope > .e-con-inner' ) || section;
+
+		if ( 1 === box.children.length && box.firstElementChild.classList.contains( 'refraction-element' ) ) {
+			box = box.firstElementChild.querySelector( ':scope > .e-con-inner' ) || box.firstElementChild;
+		}
+
+		Array.from( box.children ).filter( ( el ) => el.classList.contains( 'refraction-element' ) ).forEach( ( el, k ) => {
+			el.setAttribute( 'data-rf-door-layer', '' );
+			el.style.setProperty( '--rf-hp-d', String( AUTO_DEPTHS[ k % AUTO_DEPTHS.length ] ) );
+		} );
+	}
+
+	/**
+	 * Where each section sits in the page's flow (not sticking, turned or shifted), and where it sticks.
+	 * @param {Object} stage
+	 */
+	function measure( stage ) {
 		root.classList.add( 'rf-doors-measure' );
 
 		const vh = window.innerHeight;
 		const scroll = window.scrollY;
 
-		starts = sections.map( ( section ) => {
-			const box = section.getBoundingClientRect();
+		stage.items.forEach( ( item ) => {
+			const box = item.el.getBoundingClientRect();
 			const tall = Math.max( 0, box.height - vh );
 
-			const start = Math.round( box.top + scroll + tall );
-
-			section.style.setProperty( '--rf-door-top', `${ -Math.round( tall ) }px` );
-			section.setAttribute( 'data-rf-door-start', String( start ) );
-
-			return start;
+			item.start = Math.round( box.top + scroll + tall );
+			item.width = box.width;
+			item.el.style.setProperty( '--rf-door-top', `${ -Math.round( tall ) }px` );
+			item.el.setAttribute( 'data-rf-door-start', String( item.start ) );
 		} );
 		root.classList.remove( 'rf-doors-measure' );
+	}
+
+	function measureAll() {
+		stages.forEach( measure );
 		frame();
 	}
 
@@ -79,29 +94,48 @@
 		const vh = window.innerHeight;
 		const y = window.scrollY;
 
-		sections.forEach( ( section, i ) => {
-			if ( ! section.classList.contains( 'rf-door--moves' ) ) {
-				return;
-			}
+		stages.forEach( ( stage ) => {
+			const xs = stage.items.map( () => 0 );
+			const shifts = stage.items.map( () => null );
 
-			const p = Math.max( 0, Math.min( 1, ( y - starts[ i ] ) / vh ) );
-			const value = p.toFixed( 4 );
-			const next = sections[ i + 1 ];
-
-			// Behind a door the next section waits in place (it would still be rising from the bottom of the screen).
-			if ( next && ( section.classList.contains( 'rf-door--left' ) || section.classList.contains( 'rf-door--right' ) ) ) {
-				const shift = `0 ${ ( -( 1 - p ) * vh ).toFixed( 1 ) }px`;
-
-				if ( next.style.translate !== shift ) {
-					next.style.translate = p >= 1 ? '' : shift;
+			stage.items.forEach( ( item, i ) => {
+				if ( ! item.cfg ) {
+					return;
 				}
-			}
 
-			if ( section.style.getPropertyValue( '--rf-door-p' ) !== value ) {
-				section.style.setProperty( '--rf-door-p', value );
-				section.classList.toggle( 'is-opening', p > 0 && p < 1 );
-				section.classList.toggle( 'is-open', p >= 1 );
-			}
+				const p = Math.max( 0, Math.min( 1, ( y - item.start ) / vh ) );
+				const next = stage.items[ i + 1 ];
+
+				item.el.style.setProperty( '--rf-door-p', p.toFixed( 4 ) );
+				item.el.classList.toggle( 'is-opening', p > 0 && p < 1 );
+				item.el.classList.toggle( 'is-open', p >= 1 );
+
+				if ( 'slide' === item.cfg.fx ) {
+					xs[ i ] -= p;
+				}
+
+				// The next one waits in place behind a door or a page (it would still be rising from the bottom of the
+				// screen); after a slide it comes in from the right at the same height.
+				if ( next && p < 1 && 'push' !== item.cfg.fx ) {
+					const across = 'slide' === item.cfg.fx ? ( 1 - p ) * item.width : 0;
+
+					shifts[ i + 1 ] = `${ across.toFixed( 1 ) }px ${ ( -( 1 - p ) * vh ).toFixed( 1 ) }px`;
+
+					if ( 'slide' === item.cfg.fx ) {
+						xs[ i + 1 ] += 1 - p;
+					}
+				}
+			} );
+
+			stage.items.forEach( ( item, i ) => {
+				const shift = shifts[ i ] || '';
+
+				if ( item.el.style.translate !== shift ) {
+					item.el.style.translate = shift;
+				}
+
+				item.el.style.setProperty( '--rf-door-x', xs[ i ].toFixed( 4 ) );
+			} );
 		} );
 	}
 
@@ -112,42 +146,78 @@
 		}
 	}
 
-	function init() {
-		const n = sections.length;
-		// A door is above the next section (it opens to show it); a push is under it (the next slides over).
+	function setUp( stage ) {
+		const els = Array.from( stage.children ).filter( ( el ) => el.classList.contains( 'refraction-element' ) );
+		const items = els.map( ( el, i ) => ( { el, cfg: i < els.length - 1 ? config( el ) : null, start: 0, width: 0 } ) );
+
+		if ( ! items.some( ( item ) => item.cfg ) ) {
+			return;
+		}
+
+		// A door, a page or a slide lies above the next container; a sinking one under it (the next slides over).
 		let z = 1000;
 
-		root.classList.add( 'rf-doors' );
-		root.classList.toggle( 'rf-doors-shade', !! cfg.shade );
 		stage.classList.add( 'rf-doors-stage' );
-		stage.style.setProperty( '--rf-door-angle', `${ cfg.angle }deg` );
+		items.forEach( ( item, i ) => {
+			const fx = item.cfg ? item.cfg.fx : 'none';
+
+			item.el.classList.add( 'rf-door', 'rf-door--' + fx );
+			item.el.classList.toggle( 'rf-door--moves', !! item.cfg );
+			item.el.classList.toggle( 'rf-door--shade', !! ( item.cfg && item.cfg.shade ) );
+			item.el.style.zIndex = String( z );
+			z += 'push' === fx ? 1 : -1;
+
+			if ( item.cfg ) {
+				item.el.style.setProperty( '--rf-door-angle', `${ item.cfg.angle }deg` );
+			}
+
+			if ( item.cfg && 'slide' === item.cfg.fx && item.cfg.depth ) {
+				[ item.el, items[ i + 1 ] && items[ i + 1 ].el ].filter( Boolean ).forEach( ( el ) => {
+					el.style.setProperty( '--rf-door-depth', `${ item.cfg.depth }vw` );
+					layers( el );
+				} );
+			}
+		} );
+
+		stages.push( { el: stage, items } );
+	}
+
+	function init() {
+		const pages = window.refractionPages;
+		const found = new Set();
+
+		document.querySelectorAll( '[data-rf-door]' ).forEach( ( el ) => {
+			const stage = el.parentElement;
+
+			// Top-level containers only, and not on a page shown as Pages Side By Side.
+			if ( stage && stage.hasAttribute( 'data-refraction-type' ) && ! ( pages && stage.classList.contains( 'refraction-' + pages.id ) ) ) {
+				found.add( stage );
+			}
+		} );
+
+		found.forEach( setUp );
+
+		if ( ! stages.length ) {
+			return;
+		}
+
+		root.classList.add( 'rf-doors' );
 
 		const bodyBg = window.getComputedStyle( document.body ).backgroundColor;
 
 		if ( bodyBg && ! /rgba\(0, 0, 0, 0\)|transparent/.test( bodyBg ) ) {
-			stage.style.setProperty( '--rf-doors-body-bg', bodyBg );
+			root.style.setProperty( '--rf-doors-body-bg', bodyBg );
 		}
 
-		sections.forEach( ( section, i ) => {
-			const effect = effectOf( section, i );
-
-			section.classList.add( 'rf-door', 'rf-door--' + effect );
-			section.classList.toggle( 'rf-door--moves', 'none' !== effect );
-			section.style.zIndex = String( z );
-			z += 'push' === effect ? 1 : -1;
-
-			if ( i === n - 1 ) {
-				section.classList.add( 'rf-door--last' );
-			}
-		} );
-
-		measure();
+		measureAll();
 		window.addEventListener( 'scroll', onScroll, { passive: true } );
-		window.addEventListener( 'resize', measure );
-		window.addEventListener( 'load', measure );
+		window.addEventListener( 'resize', measureAll );
+		window.addEventListener( 'load', measureAll );
 
 		if ( 'ResizeObserver' in window ) {
-			new ResizeObserver( () => window.requestAnimationFrame( measure ) ).observe( stage );
+			const watch = new ResizeObserver( () => window.requestAnimationFrame( measureAll ) );
+
+			stages.forEach( ( stage ) => watch.observe( stage.el ) );
 		}
 
 		// Turning reduced motion on: back to a plain page.

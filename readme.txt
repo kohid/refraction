@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.50.0
+Stable tag: 0.51.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -46,8 +46,8 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 == Changelog ==
 
-= 0.50.0 =
-* Page Settings > Sections Open Like Doors: as the page scrolls down, each top-level container stays in place and opens like a door (left, then right, then left; or always left or right) to show the next one waiting behind it, or sinks back while the next slides over it. Each container can choose its own (Advanced > Interactions > When The Page Scrolls Past). How far doors open, shading, phones and a background for sections without one. Tall sections scroll through first; scrolling up closes the doors again.
+= 0.51.0 =
+* Container > Layout > Scrolling Effect: each top-level container chooses how it leaves the screen as the page scrolls down: opens like a door to the left or to the right (the next one waiting behind it), sinks back as the next slides over it, slides to the left as the next comes in from the right (with layers moving at different speeds), or turns over like a book page. Mix them on one page. Options for how far a door opens, parallax depth, shading and phones. Tall containers scroll through first; scrolling up brings everything back.
 
 = 0.49.0 =
 * Page Settings > Pages Side By Side: the page's top-level containers become pages that fill the screen, with no scrolling down. They slide to the left (the things on them moving as layers, with a depth you choose, per element too) or turn like a book's pages. Turned by the wheel, the keys, a swipe, arrows and links to a part of the page, with a large page number (01, with your own mark before it, or 1 / 6), a progress line and an optional return to the first page. Phones held upright show the pages in landscape (turn the phone to read), ask to be turned, or keep one long page.

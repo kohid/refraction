@@ -35,6 +35,7 @@ class Module extends BaseModule {
 			add_action( "refraction/element/{$stack}/section_effects/after_section_end", [ $this, 'register_element_controls' ] );
 		}
 
+		add_action( 'refraction/element/container/section_layout_additional_options/after_section_end', [ $this, 'register_scroll_effect_controls' ] );
 		add_action( 'refraction/kit/register_tabs', [ $this, 'register_kit_tab' ] );
 		add_action( 'refraction/frontend/after_register_scripts', [ $this, 'register_assets' ] );
 		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_assets' ] );
@@ -45,7 +46,6 @@ class Module extends BaseModule {
 		add_action( 'wp_head', [ $this, 'print_transition' ], 2 );
 		add_action( 'refraction/documents/register_controls', [ $this, 'register_page_controls' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_pages' ], 30 );
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_doors' ], 30 );
 	}
 
 	public function register_kit_tab( $kit ) {
@@ -113,6 +113,12 @@ class Module extends BaseModule {
 	}
 
 	public function maybe_enqueue( $element ) {
+		if ( 'container' === $element->get_type() && self::on_site() && Pure_Interaction_Settings::scroll_effect( $element->get_settings() ) ) {
+			$this->register_assets();
+			wp_enqueue_script( 'refraction-doors' );
+			wp_enqueue_style( 'refraction-interactions' );
+		}
+
 		if ( Pure_Interaction_Settings::magnetic( $element->get_settings() ) && self::on_site() ) {
 			$this->register_assets();
 			wp_enqueue_script( 'refraction-interactions' );
@@ -137,10 +143,10 @@ class Module extends BaseModule {
 			$element->add_render_attribute( '_wrapper', 'data-rf-cursor-hide', '' );
 		}
 
-		$door = in_array( $element->get_type(), [ 'container', 'section' ], true ) ? Pure_Interaction_Settings::door( $settings ) : '';
+		$effect = 'container' === $element->get_type() ? Pure_Interaction_Settings::scroll_effect( $settings ) : [];
 
-		if ( '' !== $door ) {
-			$element->add_render_attribute( '_wrapper', 'data-rf-door', $door );
+		if ( $effect ) {
+			$element->add_render_attribute( '_wrapper', 'data-rf-door', wp_json_encode( $effect ) );
 		}
 
 		$depth = Pure_Interaction_Settings::page_depth( $settings );
@@ -176,40 +182,6 @@ class Module extends BaseModule {
 		}
 
 		return $config;
-	}
-
-	/** The current page's doors config (sections that open like doors as the page scrolls), or []. */
-	public static function doors_config(): array {
-		if ( ! is_singular() || ! self::on_site() ) {
-			return [];
-		}
-
-		$document = Plugin::$instance->documents->get( get_queried_object_id() );
-
-		if ( ! $document || ! $document->is_built_with_refraction() ) {
-			return [];
-		}
-
-		$config = Pure_Interaction_Settings::doors( (array) $document->get_settings() );
-
-		if ( $config ) {
-			$config['id'] = (int) $document->get_main_id();
-		}
-
-		return $config;
-	}
-
-	public function enqueue_doors() {
-		$config = self::doors_config();
-
-		if ( ! $config ) {
-			return;
-		}
-
-		$this->register_assets();
-		wp_enqueue_style( 'refraction-interactions' );
-		wp_enqueue_script( 'refraction-doors' );
-		wp_add_inline_script( 'refraction-doors', 'window.refractionDoors=' . wp_json_encode( $config ) . ';', 'before' );
 	}
 
 	public function enqueue_pages() {
@@ -354,50 +326,58 @@ class Module extends BaseModule {
 		] );
 
 		$document->end_controls_section();
-
-		$this->register_door_controls( $document );
 	}
 
-	/** Page Settings > Sections Open Like Doors. */
-	private function register_door_controls( $document ) {
-		$on = [ 'rf_doors!' => '' ];
+	/** Container > Layout > Scrolling Effect: how a top-level container leaves the screen as the page scrolls down. */
+	public function register_scroll_effect_controls( $element ) {
+		$on = [ 'rf_door!' => '' ];
 
-		$document->start_controls_section( 'section_rf_doors', [
-			'label' => esc_html__( 'Sections Open Like Doors', 'refraction' ),
-			'tab' => Controls_Manager::TAB_SETTINGS,
+		$element->start_controls_section( 'section_rf_scroll_effect', [
+			'label' => esc_html__( 'Scrolling Effect', 'refraction' ),
+			'tab' => Controls_Manager::TAB_LAYOUT,
 		] );
 
-		$document->add_control( 'rf_doors', [
-			'label' => esc_html__( 'As The Page Scrolls Down', 'refraction' ),
+		$element->add_control( 'rf_door', [
+			'label' => esc_html__( 'When The Page Scrolls Past', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [
-				'' => esc_html__( 'Sections scroll away as usual', 'refraction' ),
-				'alternate' => esc_html__( 'Each opens like a door: left, then right, then left...', 'refraction' ),
-				'left' => esc_html__( 'Each opens like a door to the left', 'refraction' ),
-				'right' => esc_html__( 'Each opens like a door to the right', 'refraction' ),
-				'push' => esc_html__( 'Each sinks back as the next slides over it', 'refraction' ),
+				'' => esc_html__( 'Scrolls away as usual', 'refraction' ),
+				'left' => esc_html__( 'Opens like a door to the left', 'refraction' ),
+				'right' => esc_html__( 'Opens like a door to the right', 'refraction' ),
+				'push' => esc_html__( 'Sinks back as the next slides over it', 'refraction' ),
+				'slide' => esc_html__( 'Slides to the left as the next comes in', 'refraction' ),
+				'book' => esc_html__( 'Turns over like a book page', 'refraction' ),
 			],
-			'description' => esc_html__( 'For the page\'s top-level containers: each stays in place while the next one comes, and opens on its hinge to show it (or sinks back, smaller and darker, under it). A container can choose its own in Advanced > Interactions. The last one stays. On the site only; not with Pages Side By Side.', 'refraction' ),
+			'description' => esc_html__( 'For a container at the top level of the page: it stays on the screen while the next one comes, then leaves this way over one screen of scrolling (the next one waits behind it, or slides over or in). Mix them: one container a door, the next a book page... The page\'s last container always stays. On the site; the editor shows them one under another.', 'refraction' ),
 		] );
 
-		$document->add_control( 'rf_doors_angle', [
-			'label' => esc_html__( 'How Far A Door Opens', 'refraction' ) . ' (deg)',
+		$element->add_control( 'rf_door_angle', [
+			'label' => esc_html__( 'How Far It Opens', 'refraction' ) . ' (deg)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 30, 'max' => 120 ] ],
 			'default' => [ 'size' => 100 ],
-			'condition' => $on,
+			'condition' => [ 'rf_door' => [ 'left', 'right' ] ],
 		] );
 
-		$document->add_control( 'rf_doors_shade', [
-			'label' => esc_html__( 'Shade As It Opens', 'refraction' ),
+		$element->add_control( 'rf_door_depth', [
+			'label' => esc_html__( 'Parallax Depth', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'default' => [ 'size' => 30 ],
+			'description' => esc_html__( 'While it slides out (and the next one in), what is on it moves as layers at different speeds. 0: as one piece. An element\'s own depth: Advanced > Interactions > Depth When Pages Slide.', 'refraction' ),
+			'condition' => [ 'rf_door' => 'slide' ],
+		] );
+
+		$element->add_control( 'rf_door_shade', [
+			'label' => esc_html__( 'Shade As It Goes', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
 			'return_value' => 'yes',
 			'condition' => $on,
 		] );
 
-		$document->add_control( 'rf_doors_phones', [
+		$element->add_control( 'rf_door_phones', [
 			'label' => esc_html__( 'Also On Phones', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
@@ -405,15 +385,7 @@ class Module extends BaseModule {
 			'condition' => $on,
 		] );
 
-		$document->add_control( 'rf_doors_bg', [
-			'label' => esc_html__( 'Section Background', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'description' => esc_html__( 'Behind containers without a background of their own, so the next one does not show through before its door opens.', 'refraction' ),
-			'selectors' => [ '{{WRAPPER}}' => '--rf-doors-bg: {{VALUE}};' ],
-			'condition' => $on,
-		] );
-
-		$document->end_controls_section();
+		$element->end_controls_section();
 	}
 
 	/** Advanced > Interactions, after the Motion Effects sections. */
@@ -453,28 +425,11 @@ class Module extends BaseModule {
 			'separator' => 'before',
 		] );
 
-		if ( in_array( $element->get_type(), [ 'container', 'section' ], true ) ) {
-			$element->add_control( 'rf_door', [
-				'label' => esc_html__( 'When The Page Scrolls Past', 'refraction' ),
-				'type' => Controls_Manager::SELECT,
-				'default' => '',
-				'options' => [
-					'' => esc_html__( 'As the page says', 'refraction' ),
-					'left' => esc_html__( 'Open like a door to the left', 'refraction' ),
-					'right' => esc_html__( 'Open like a door to the right', 'refraction' ),
-					'push' => esc_html__( 'Sink back as the next slides over', 'refraction' ),
-					'none' => esc_html__( 'Scroll away as usual', 'refraction' ),
-				],
-				'description' => esc_html__( 'For a top-level container, with Page Settings > Sections Open Like Doors on.', 'refraction' ),
-				'separator' => 'before',
-			] );
-		}
-
 		$element->add_control( 'rf_hp_depth_own', [
 			'label' => esc_html__( 'Depth When Pages Slide', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => -2, 'max' => 2, 'step' => 0.25 ] ],
-			'description' => esc_html__( 'With Page Settings > Pages Side By Side > slide: how much faster (more than 0) or slower (less than 0) this element moves than its page while the page slides. Empty: automatic layers.', 'refraction' ),
+			'description' => esc_html__( 'With Page Settings > Pages Side By Side > slide, or a container that slides (Layout > Scrolling Effect): how much faster (more than 0) or slower (less than 0) this element moves than its container while it slides. Empty: automatic layers.', 'refraction' ),
 			'separator' => 'before',
 		] );
 
