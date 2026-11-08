@@ -43,6 +43,8 @@ class Module extends BaseModule {
 		add_action( 'refraction/element/after_add_attributes', [ $this, 'add_attributes' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_site_wide' ], 30 );
 		add_action( 'wp_head', [ $this, 'print_transition' ], 2 );
+		add_action( 'refraction/documents/register_controls', [ $this, 'register_page_controls' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_pages' ], 30 );
 	}
 
 	public function register_kit_tab( $kit ) {
@@ -57,6 +59,7 @@ class Module extends BaseModule {
 		$min = Utils::is_script_debug() ? '' : '.min';
 		wp_register_script( 'refraction-interactions', REFRACTION_ASSETS_URL . 'js/interactions-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_script( 'refraction-marquee', REFRACTION_ASSETS_URL . 'js/marquee-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
+		wp_register_script( 'refraction-pages', REFRACTION_ASSETS_URL . 'js/pages-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_style( 'refraction-interactions', REFRACTION_ASSETS_URL . 'css/modules/interactions/frontend' . $min . '.css', [], REFRACTION_VERSION );
 	}
 
@@ -131,6 +134,184 @@ class Module extends BaseModule {
 		if ( 'yes' === ( $settings['rf_cursor_hide'] ?? '' ) ) {
 			$element->add_render_attribute( '_wrapper', 'data-rf-cursor-hide', '' );
 		}
+
+		$depth = Pure_Interaction_Settings::page_depth( $settings );
+
+		if ( null !== $depth ) {
+			$element->add_render_attribute( '_wrapper', 'data-rf-hp-depth', (string) $depth );
+		}
+	}
+
+	/** The current page's "pages side by side" config, or [] (not a Refraction page, the editor, or off). */
+	public static function pages_config(): array {
+		if ( ! is_singular() || ! self::on_site() ) {
+			return [];
+		}
+
+		$document = Plugin::$instance->documents->get( get_queried_object_id() );
+
+		if ( ! $document || ! $document->is_built_with_refraction() ) {
+			return [];
+		}
+
+		$config = Pure_Interaction_Settings::pages( (array) $document->get_settings() );
+
+		if ( $config ) {
+			$config['id'] = (int) $document->get_main_id();
+			$config['labels'] = [
+				'prev' => __( 'Previous page', 'refraction' ),
+				'next' => __( 'Next page', 'refraction' ),
+				'first' => __( 'Back to the first page', 'refraction' ),
+				'of' => __( 'Page %1$s of %2$s', 'refraction' ),
+				'turn' => __( 'Turn your phone sideways to see this page.', 'refraction' ),
+			];
+		}
+
+		return $config;
+	}
+
+	public function enqueue_pages() {
+		$config = self::pages_config();
+
+		if ( ! $config ) {
+			return;
+		}
+
+		$this->register_assets();
+		wp_enqueue_style( 'refraction-interactions' );
+		wp_enqueue_script( 'refraction-pages' );
+		wp_add_inline_script( 'refraction-pages', 'window.refractionPages=' . wp_json_encode( $config ) . ';', 'before' );
+	}
+
+	/** Page Settings > Pages Side By Side, on pages, posts and landing pages. */
+	public function register_page_controls( $document ) {
+		if ( ! in_array( $document->get_name(), [ 'wp-page', 'wp-post', 'landing-page' ], true ) ) {
+			return;
+		}
+
+		$on = [ 'rf_hp!' => '' ];
+
+		$document->start_controls_section( 'section_rf_hp', [
+			'label' => esc_html__( 'Pages Side By Side', 'refraction' ),
+			'tab' => Controls_Manager::TAB_SETTINGS,
+		] );
+
+		$document->add_control( 'rf_hp', [
+			'label' => esc_html__( 'Show The Page As', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'One long page (scrolls down)', 'refraction' ),
+				'slide' => esc_html__( 'Pages that slide to the left', 'refraction' ),
+				'book' => esc_html__( 'Pages turned like a book', 'refraction' ),
+			],
+			'description' => esc_html__( 'Each top-level container becomes a page that fills the screen; the page no longer scrolls down. The wheel, the arrow keys, a swipe, the arrows and links to a part of the page turn the pages. On the site only: the editor keeps the containers one under another. Replaces Scrolling > One section per scroll on this page.', 'refraction' ),
+		] );
+
+		$document->add_control( 'rf_hp_speed', [
+			'label' => esc_html__( 'Time To Turn A Page', 'refraction' ) . ' (ms)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 200, 'max' => 2500, 'step' => 50 ] ],
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_depth', [
+			'label' => esc_html__( 'Parallax Depth', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'default' => [ 'size' => 30 ],
+			'description' => esc_html__( 'While a page slides, the things on it move at different speeds, as layers. 0: the page moves as one. Set an element\'s own depth in Advanced > Interactions.', 'refraction' ),
+			'condition' => [ 'rf_hp' => 'slide' ],
+		] );
+
+		$document->add_control( 'rf_hp_header', [
+			'label' => esc_html__( 'Keep The Site\'s Header Above The Pages', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'Off: the pages fill the whole screen (put your menu on the pages, as in a magazine). On: they start below the header (hide the page title in Page Settings, or use the Canvas template without one).', 'refraction' ),
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_arrows', [
+			'label' => esc_html__( 'Arrows', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'return_value' => 'yes',
+			'separator' => 'before',
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_counter', [
+			'label' => esc_html__( 'Page Number', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'number',
+			'options' => [
+				'number' => esc_html__( 'Large number (01)', 'refraction' ),
+				'of' => esc_html__( 'Number of pages (1 / 6)', 'refraction' ),
+				'' => esc_html__( 'None', 'refraction' ),
+			],
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_counter_prefix', [
+			'label' => esc_html__( 'Before The Number', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => '*',
+			'condition' => $on + [ 'rf_hp_counter' => 'number' ],
+		] );
+
+		$document->add_control( 'rf_hp_progress', [
+			'label' => esc_html__( 'Progress Line', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'return_value' => 'yes',
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_loop', [
+			'label' => esc_html__( 'After The Last Page, Back To The First', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_phone', [
+			'label' => esc_html__( 'Phones Held Upright', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'rotate',
+			'options' => [
+				'rotate' => esc_html__( 'Show the pages in landscape (turn the phone to read)', 'refraction' ),
+				'ask' => esc_html__( 'Ask to turn the phone sideways', 'refraction' ),
+				'stack' => esc_html__( 'One long page, as usual', 'refraction' ),
+			],
+			'description' => esc_html__( 'Held sideways, a phone shows the pages like a computer.', 'refraction' ),
+			'separator' => 'before',
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_page_bg', [
+			'label' => esc_html__( 'Page Background', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'default' => '',
+			'description' => esc_html__( 'Behind containers without a background of their own. A book\'s pages need one so the page underneath does not show through.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}}' => '--rf-hp-page-bg: {{VALUE}};' ],
+			'separator' => 'before',
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_nav_color', [
+			'label' => esc_html__( 'Arrows And Number Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}}' => '--rf-hp-nav: {{VALUE}};' ],
+			'condition' => $on,
+		] );
+
+		$document->add_control( 'rf_hp_accent', [
+			'label' => esc_html__( 'Progress Line Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}}' => '--rf-hp-accent: {{VALUE}};' ],
+			'condition' => $on + [ 'rf_hp_progress' => 'yes' ],
+		] );
+
+		$document->end_controls_section();
 	}
 
 	/** Advanced > Interactions, after the Motion Effects sections. */
@@ -167,6 +348,14 @@ class Module extends BaseModule {
 			'type' => Controls_Manager::TEXT,
 			'placeholder' => esc_html__( 'View', 'refraction' ),
 			'description' => esc_html__( 'With the site cursor on (Site Settings > Motion & Cursor), the cursor becomes a disc with this word while it is over this element: "View", "Play", "Drag", "Read".', 'refraction' ),
+			'separator' => 'before',
+		] );
+
+		$element->add_control( 'rf_hp_depth_own', [
+			'label' => esc_html__( 'Depth When Pages Slide', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -2, 'max' => 2, 'step' => 0.25 ] ],
+			'description' => esc_html__( 'With Page Settings > Pages Side By Side > slide: how much faster (more than 0) or slower (less than 0) this element moves than its page while the page slides. Empty: automatic layers.', 'refraction' ),
 			'separator' => 'before',
 		] );
 

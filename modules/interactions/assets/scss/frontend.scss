@@ -326,3 +326,262 @@ html.rf-cursor-hide-system :is([data-rf-cursor-hide], [data-rf-cursor-hide] *) {
 html.rf-cursor-hide-system [data-rf-cursor-hide] :is(a[href], button, [role="button"], summary, label[for]) {
 	cursor: pointer !important;
 }
+
+// ---- Pages side by side (pages.js): the page's top-level containers as pages that fill the screen.
+.rf-hp-nav,
+.rf-hp-progress,
+.rf-hp-turn {
+	display: none;
+}
+
+.rf-hp-live {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+html.rf-hp-on,
+html.rf-hp-on body {
+	height: 100%;
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+.rf-hp-on .rf-hp-stage {
+	position: fixed;
+	top: var(--rf-hp-top, 0);
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	box-sizing: border-box;
+	width: auto !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	overflow: hidden;
+	background-color: var(--rf-hp-page-bg, var(--rf-hp-body-bg, #fff));
+	touch-action: pan-y;
+}
+
+.rf-hp-on .rf-hp-page {
+	position: absolute !important;
+	inset: 0;
+	box-sizing: border-box;
+	width: 100% !important;
+	max-width: none !important;
+	height: 100%;
+	min-height: 0;
+	margin: 0 !important;
+	overflow-x: hidden;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+// Slide: each page sits its distance from the current one to the right; what is on it moves as layers.
+.rf-hp--slide.rf-hp-on {
+
+	.rf-hp-page {
+		translate: calc((var(--rf-hp-i, 0) - var(--rf-hp-at, 0)) * 100%) 0;
+		transition: translate var(--rf-hp-speed, 900ms) cubic-bezier(0.77, 0, 0.18, 1);
+	}
+
+	:is([data-rf-hp-layer], [data-rf-hp-depth]) {
+		translate: calc((var(--rf-hp-i, 0) - var(--rf-hp-at, 0)) * var(--rf-hp-d, 0) * var(--rf-hp-depth, 30vw)) 0;
+		transition: translate var(--rf-hp-speed, 900ms) cubic-bezier(0.77, 0, 0.18, 1);
+	}
+}
+
+// Book: the pages lie one on another; each turns over its left edge to show the next.
+.rf-hp--book.rf-hp-on {
+
+	.rf-hp-stage {
+		perspective: 2600px;
+		perspective-origin: 0 50%;
+	}
+
+	:where(.rf-hp-page) {
+		background-color: var(--rf-hp-page-bg, var(--rf-hp-body-bg, #fff));
+	}
+
+	.rf-hp-page {
+		transform-origin: 0 50%;
+		backface-visibility: hidden;
+		box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
+		transition: transform var(--rf-hp-speed, 1100ms) cubic-bezier(0.645, 0.045, 0.355, 1);
+	}
+
+	.rf-hp-page.is-turned {
+		transform: rotateY(-178deg);
+	}
+}
+
+// Arrows, page number and progress line.
+.rf-hp-on .rf-hp-nav {
+	position: absolute;
+	right: clamp(16px, 3vw, 48px);
+	bottom: clamp(16px, 4vh, 44px);
+	z-index: 300;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--rf-hp-nav, #111);
+
+	button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: none;
+		color: inherit;
+		cursor: pointer;
+		transition: opacity 0.2s ease, background-color 0.2s ease;
+
+		&:hover,
+		&:focus-visible {
+			background-color: color-mix(in srgb, currentColor 10%, transparent);
+		}
+
+		&:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 2px;
+		}
+
+		&:disabled {
+			opacity: 0.3;
+			cursor: default;
+		}
+	}
+
+	svg {
+		width: 22px;
+		height: 22px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.6;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+}
+
+.rf-hp-count {
+	margin-inline-start: 0.5rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.rf-hp-count--number {
+	font-size: clamp(2rem, 4.5vw, 3.75rem);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.rf-hp-count--of {
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.rf-hp-on .rf-hp-progress {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 300;
+	display: block;
+	height: 3px;
+	background-color: color-mix(in srgb, var(--rf-hp-accent, var(--rf-hp-nav, #111)) 15%, transparent);
+
+	span {
+		display: block;
+		height: 100%;
+		background-color: var(--rf-hp-accent, var(--rf-hp-nav, #111));
+		transform-origin: 0 50%;
+		transition: transform var(--rf-hp-speed, 900ms) cubic-bezier(0.77, 0, 0.18, 1);
+	}
+}
+
+// Phones held upright: the pages shown in landscape (turned a quarter to the right; turn the phone to read them).
+.rf-hp-full.rf-hp-on .rf-hp-stage {
+	z-index: 99980;
+}
+
+// Below a logged-in visitor's admin bar.
+.rf-hp-full.rf-hp-on:not(.rf-hp-rotated) body.admin-bar .rf-hp-stage {
+	top: var(--wp-admin--admin-bar--height, 32px);
+}
+
+.rf-hp-rotated.rf-hp-on .rf-hp-stage {
+	top: 0;
+	right: auto;
+	bottom: auto;
+	left: 0;
+	z-index: 99990;
+	width: 100vh !important;
+	width: 100dvh !important;
+	height: 100vw;
+	transform: translateX(100vw) rotate(90deg);
+	transform-origin: 0 0;
+	touch-action: pan-x;
+}
+
+// …or a message asking to turn the phone.
+.rf-hp-ask.rf-hp-on .rf-hp-turn {
+	position: fixed;
+	inset: 0;
+	z-index: 99991;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1.25rem;
+	padding: 2rem;
+	background-color: rgba(20, 20, 20, 0.94);
+	color: #fff;
+	font-size: 1.05rem;
+	line-height: 1.5;
+	text-align: center;
+
+	svg {
+		width: 64px;
+		height: 64px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		animation: rf-hp-turn-phone 2.4s ease-in-out infinite;
+	}
+
+	p {
+		max-width: 18em;
+		margin: 0;
+	}
+}
+
+@keyframes rf-hp-turn-phone {
+	0%, 30% { rotate: 0deg; }
+	60%, 100% { rotate: -90deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-hp-on :is(.rf-hp-page, [data-rf-hp-layer], [data-rf-hp-depth], .rf-hp-progress span) {
+		transition: none !important;
+	}
+
+	.rf-hp--slide.rf-hp-on :is([data-rf-hp-layer], [data-rf-hp-depth]) {
+		translate: none;
+	}
+
+	.rf-hp-turn svg {
+		animation: none;
+	}
+}

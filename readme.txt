@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.48.0
+Stable tag: 0.49.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.49.0 =
+* Page Settings > Pages Side By Side: the page's top-level containers become pages that fill the screen, with no scrolling down. They slide to the left (the things on them moving as layers, with a depth you choose, per element too) or turn like a book's pages. Turned by the wheel, the keys, a swipe, arrows and links to a part of the page, with a large page number (01, with your own mark before it, or 1 / 6), a progress line and an optional return to the first page. Phones held upright show the pages in landscape (turn the phone to read), ask to be turned, or keep one long page.
 
 = 0.48.0 =
 * Icons: the Phosphor icon library (MIT), six weights (Regular, Bold, Fill, Duotone, Light, Thin) of 1,512 icons each, in the icon library after the Solar icons. Drawn as inline SVG like Solar; the Duotone weight takes the Duotone controls.
