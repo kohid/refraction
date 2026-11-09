@@ -222,6 +222,128 @@
 	}
 }
 
+// Stack effect (nested-carousel.js, buildStack()): one card open, the cards around it as bars (their top strip),
+// in one column ordered by the handler (style order). Heights, widths and opacity animate.
+.refraction-nc.is-stack {
+	--rf-stack-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+	.refraction-nc__viewport {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: var(--rf-stack-min, 0);
+		overflow: visible;
+	}
+
+	.refraction-nc__track {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.refraction-nc__track > .refraction-nc__slide {
+		width: 100%;
+		margin-block: calc(var(--rf-stack-gap, 10px) / 2);
+		overflow: hidden;
+		transition:
+			height var(--rf-stack-speed, 500ms) var(--rf-stack-ease),
+			width var(--rf-stack-speed, 500ms) var(--rf-stack-ease),
+			opacity var(--rf-stack-speed, 500ms) ease,
+			margin var(--rf-stack-speed, 500ms) var(--rf-stack-ease),
+			padding var(--rf-stack-speed, 500ms) var(--rf-stack-ease);
+	}
+
+	// Before the handler runs (and without it): the first card only.
+	&:not(.is-stack-ready) .refraction-nc__track > .refraction-nc__slide:not(:first-child) {
+		display: none;
+	}
+
+	.refraction-nc__track > .refraction-nc__slide.is-stack-open {
+		z-index: 2;
+	}
+
+	.refraction-nc__track > .refraction-nc__slide.is-stack-bar {
+		height: var(--rf-stack-bar, 56px);
+		min-height: 0;
+		width: calc(var(--rf-stack-bar-w, 90) * 1%);
+		opacity: var(--rf-stack-dim, 1);
+		cursor: pointer;
+	}
+
+	.refraction-nc__track > .refraction-nc__slide.is-stack-far {
+		width: calc((var(--rf-stack-bar-w, 90) - (var(--rf-stack-level, 2) - 1) * 8) * 1%);
+		opacity: calc(var(--rf-stack-dim, 1) * 0.55);
+	}
+
+	.refraction-nc__track > .refraction-nc__slide.is-stack-hidden,
+	.refraction-nc__track > .refraction-nc__slide.is-stack-entering {
+		height: 0;
+		min-height: 0;
+		width: calc((var(--rf-stack-bar-w, 90) - 16) * 1%);
+		margin-block: 0;
+		padding-block: 0;
+		border-block-width: 0;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.refraction-nc__track > .refraction-nc__slide.is-stack-entering {
+		transition: none;
+	}
+
+	// Arrows under the stack, either side of the dots: up goes to the card above, down to the card below.
+	& {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		column-gap: 12px;
+	}
+
+	.refraction-nc__viewport {
+		flex: 0 0 100%;
+	}
+
+	.refraction-nc__pagination {
+		order: 2;
+		width: auto;
+	}
+
+	.refraction-nc__prev,
+	.refraction-nc__next {
+		position: static;
+		margin-block-start: 14px;
+		translate: none;
+	}
+
+	&.is-flow-top .refraction-nc__next,
+	&.is-flow-bottom .refraction-nc__prev {
+		order: 1;
+		transform: rotate(-90deg);
+	}
+
+	&.is-flow-top .refraction-nc__prev,
+	&.is-flow-bottom .refraction-nc__next {
+		order: 3;
+		transform: rotate(90deg);
+	}
+
+	&.is-flow-top .refraction-nc__prev {
+		transform: rotate(-90deg);
+	}
+
+	&.is-flow-bottom .refraction-nc__prev {
+		transform: rotate(90deg);
+	}
+}
+
+// The arrows sit under the stack, so "outside" needs no room at the sides.
+.refraction-nc-arrows-outside .refraction-nc.is-stack {
+	padding-inline: 0;
+}
+
 // Editor: the preview scrolls normally and shows every slide's container.
 .refraction-editor-active .refraction-nc__slide {
 	min-height: 60px;

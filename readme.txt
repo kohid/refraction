@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.56.0
+Stable tag: 0.57.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.57.0 =
+* Nested Carousel: new Stack effect. One card is open and the cards around it show as bars (their top strip), above and below; on each step the next bar grows into the open card while the open one shrinks into a bar, and a new bar fades in at the far end. Next cards come from above or below, 0 to 3 bars on each side, bar height and width, space between cards, bar opacity and a minimum height that keeps the page still. Click a bar to open it; arrows, dots, fraction or progress, arrow keys, autoplay with its pause button, loop. Heights animate in every browser.
 
 = 0.56.0 =
 * Fix: Image Box and Icon Box: a linked title keeps the title's font size, font and color; before, the site's link style (Site Settings > Typography > Link) or the theme's could set the link's own size.

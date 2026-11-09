@@ -14,7 +14,7 @@ class Carousel_Logic {
 
 	public static function sanitize( array $settings ): array {
 		return [
-			'effect' => isset( $settings['effect'] ) && 'fade' === $settings['effect'] ? 'fade' : 'slide',
+			'effect' => isset( $settings['effect'] ) && in_array( $settings['effect'], [ 'fade', 'stack' ], true ) ? $settings['effect'] : 'slide',
 			'pagination' => isset( $settings['pagination'] ) && in_array( $settings['pagination'], self::PAGINATION, true ) ? $settings['pagination'] : 'bullets',
 			'slides_to_show' => self::range( $settings, 'slides_to_show', 1, 8, 1 ),
 			'spacing' => self::range( $settings, 'spacing', 0, 200, 20 ),
@@ -38,7 +38,39 @@ class Carousel_Logic {
 		return $slides > $per_view;
 	}
 
-	public static function swiper_pagination_type( string $pagination ): string {
+	/**
+	 * The Stack effect: each slide's place around the open one. 0 is the open slide, 1..$peek the slides that come
+	 * next (shown as bars on the side they come from), -1..-$peek the ones before; null is out of sight. Without a
+	 * loop the ends have no slides beyond them. Mirrored in the frontend handler (stackRoles()).
+	 *
+	 * @return array<int, int|null> Slide index => place.
+	 */
+	public static function stack_roles( int $count, int $active, int $peek, bool $loop ): array {
+		$roles = [];
+
+		if ( $count < 1 ) {
+			return $roles;
+		}
+
+		$active = ( ( $active % $count ) + $count ) % $count;
+		$peek = max( 0, $peek );
+
+		for ( $i = 0; $i < $count; $i++ ) {
+			$d = $i - $active;
+
+			if ( $loop ) {
+				// The shorter way round; a tie (even count) counts as next.
+				$d = ( ( $d % $count ) + $count ) % $count;
+				$d = $d > $count / 2 ? $d - $count : $d;
+			}
+
+			$roles[ $i ] = abs( $d ) <= $peek ? $d : null;
+		}
+
+		return $roles;
+	}
+
+		public static function swiper_pagination_type( string $pagination ): string {
 		return in_array( $pagination, [ 'bullets', 'fraction', 'progressbar' ], true ) ? $pagination : ( 'progress' === $pagination ? 'progressbar' : '' );
 	}
 
