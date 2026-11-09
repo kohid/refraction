@@ -146,8 +146,83 @@ class Nested_Carousel extends Widget_Nested_Base {
 			'options' => [
 				'slide' => esc_html__( 'Slide', 'refraction' ),
 				'fade' => esc_html__( 'Fade', 'refraction' ),
+				'stack' => esc_html__( 'Stack (cards open in place)', 'refraction' ),
 			],
 			'frontend_available' => true,
+		] );
+
+		$stack = [ 'effect' => 'stack' ];
+
+		$this->add_control( 'stack_flow', [
+			'label' => esc_html__( 'Next Card Comes From', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'top' => [ 'title' => esc_html__( 'Above', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
+				'bottom' => [ 'title' => esc_html__( 'Below', 'refraction' ), 'icon' => 'rficon-v-align-bottom' ],
+			],
+			'default' => 'top',
+			'toggle' => false,
+			'frontend_available' => true,
+			'description' => esc_html__( 'One card is open; the cards around it show as bars (their top strip). Put each card\'s title row at its top.', 'refraction' ),
+			'condition' => $stack,
+		] );
+
+		$this->add_control( 'stack_peek', [
+			'label' => esc_html__( 'Bars On Each Side', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '1',
+			'options' => [ '0' => '0', '1' => '1', '2' => '2', '3' => '3' ],
+			'frontend_available' => true,
+			'condition' => $stack,
+		] );
+
+		$this->add_responsive_control( 'stack_bar_height', [
+			'label' => esc_html__( 'Bar Height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 24, 'max' => 200 ] ],
+			'default' => [ 'size' => 56, 'unit' => 'px' ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc' => '--rf-stack-bar: {{SIZE}}{{UNIT}};' ],
+			'condition' => $stack,
+		] );
+
+		$this->add_responsive_control( 'stack_bar_width', [
+			'label' => esc_html__( 'Bar Width', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%' ],
+			'range' => [ '%' => [ 'min' => 40, 'max' => 100 ] ],
+			'default' => [ 'size' => 90, 'unit' => '%' ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc' => '--rf-stack-bar-w: {{SIZE}};' ],
+			'description' => esc_html__( 'Of the open card. Bars further away are narrower still.', 'refraction' ),
+			'condition' => $stack,
+		] );
+
+		$this->add_responsive_control( 'stack_gap', [
+			'label' => esc_html__( 'Space Between Cards', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+			'default' => [ 'size' => 10, 'unit' => 'px' ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc' => '--rf-stack-gap: {{SIZE}}{{UNIT}};' ],
+			'condition' => $stack,
+		] );
+
+		$this->add_control( 'stack_dim', [
+			'label' => esc_html__( 'Bar Opacity', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0.2, 'max' => 1, 'step' => 0.05 ] ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc' => '--rf-stack-dim: {{SIZE}};' ],
+			'condition' => $stack,
+		] );
+
+		$this->add_responsive_control( 'stack_min_height', [
+			'label' => esc_html__( 'Minimum Height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'vh' ],
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 1200 ], 'vh' => [ 'min' => 0, 'max' => 100 ] ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc' => '--rf-stack-min: {{SIZE}}{{UNIT}};' ],
+			'description' => esc_html__( 'Keeps the page below still while cards of different heights open; the stack stays centred.', 'refraction' ),
+			'condition' => $stack,
 		] );
 
 		$this->add_control( 'direction', [
@@ -338,7 +413,7 @@ class Nested_Carousel extends Widget_Nested_Base {
 		$autoplay = 'yes' === ( $settings['autoplay'] ?? '' );
 
 		$this->add_render_attribute( 'root', [
-			'class' => array_filter( [ 'refraction-nc', 'yes' === ( $settings['lazy_slides'] ?? '' ) ? 'is-lazy' : '', 'vertical' === $o['direction'] && 'slide' === $o['effect'] ? 'is-vertical' : '' ] ),
+			'class' => array_filter( [ 'refraction-nc', 'yes' === ( $settings['lazy_slides'] ?? '' ) && 'stack' !== $o['effect'] ? 'is-lazy' : '', 'vertical' === $o['direction'] && 'slide' === $o['effect'] ? 'is-vertical' : '', 'stack' === $o['effect'] ? 'is-stack' : '' ] ),
 			'role' => 'region',
 			'aria-roledescription' => 'carousel',
 			'aria-label' => $label,
@@ -398,7 +473,7 @@ class Nested_Carousel extends Widget_Nested_Base {
 
 	protected function content_template() {
 		?>
-		<div class="refraction-nc {{ 'yes' === settings.lazy_slides ? 'is-lazy' : '' }} {{ 'vertical' === settings.direction && 'slide' === settings.effect ? 'is-vertical' : '' }}" role="region" aria-roledescription="carousel" aria-label="{{ settings.carousel_label }}">
+		<div class="refraction-nc {{ 'yes' === settings.lazy_slides && 'stack' !== settings.effect ? 'is-lazy' : '' }} {{ 'vertical' === settings.direction && 'slide' === settings.effect ? 'is-vertical' : '' }} {{ 'stack' === settings.effect ? 'is-stack' : '' }}" role="region" aria-roledescription="carousel" aria-label="{{ settings.carousel_label }}">
 			<div class="refraction-nc__viewport swiper">
 				<div class="refraction-nc__track swiper-wrapper"></div>
 			</div>

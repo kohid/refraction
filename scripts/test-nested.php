@@ -81,6 +81,14 @@ t( 'nc: speed clamp', [ NC::sanitize( [ 'speed' => 5 ] )['speed'], NC::sanitize(
 t( 'nc: autoplay speed clamp', [ NC::sanitize( [ 'autoplay_speed' => 5 ] )['autoplay_speed'], NC::sanitize( [ 'autoplay_speed' => 999999 ] )['autoplay_speed'] ], [ 500, 30000 ] );
 t( 'nc: fade shows one slide', NC::slides_per_view( 'fade', 4 ), 1 );
 t( 'nc: slide effect keeps count', NC::slides_per_view( 'slide', 4 ), 4 );
+t( 'nc: stack accepted', NC::sanitize( [ 'effect' => 'stack' ] )['effect'], 'stack' );
+t( 'nc: stack, 5 slides, loop, open 0, one bar each side', NC::stack_roles( 5, 0, 1, true ), [ 0, 1, null, null, -1 ] );
+t( 'nc: stack, 5 slides, loop, two bars each side', NC::stack_roles( 5, 0, 2, true ), [ 0, 1, 2, -2, -1 ] );
+t( 'nc: stack, no loop: nothing before the first', NC::stack_roles( 5, 0, 1, false ), [ 0, 1, null, null, null ] );
+t( 'nc: stack, no loop: last open', NC::stack_roles( 4, 3, 2, false ), [ null, -2, -1, 0 ] );
+t( 'nc: stack, 2 slides loop: one bar only (no slide on both sides)', NC::stack_roles( 2, 0, 1, true ), [ 0, 1 ] );
+t( 'nc: stack, 3 slides loop, two bars asked: one each side', NC::stack_roles( 3, 1, 2, true ), [ -1, 0, 1 ] );
+t( 'nc: stack, active wraps', NC::stack_roles( 3, 4, 1, true ), [ -1, 0, 1 ] );
 t( 'nc: loop needs more slides than the view', [ NC::can_loop( 3, 3 ), NC::can_loop( 4, 3 ), NC::can_loop( 1, 1 ) ], [ false, true, false ] );
 t( 'nc: pagination type maps to swiper', [ NC::swiper_pagination_type( 'bullets' ), NC::swiper_pagination_type( 'none' ) ], [ 'bullets', '' ] );
 

@@ -3,6 +3,40 @@ import Base from 'refraction-frontend/handlers/base';
 const reducedMotion = () => !! ( window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches );
 
 /**
+ * The Stack effect: each slide's signed distance from the open one (the shorter way round with a loop; a tie counts
+ * as next) and its place: 0 open, 1..peek the next ones, -1..-peek the previous ones, null out of sight. Mirrors
+ * Carousel_Logic::stack_roles().
+ *
+ * @param {number}  count
+ * @param {number}  active
+ * @param {number}  peek
+ * @param {boolean} loop
+ * @return {Array<{d: number, role: number|null}>} One entry per slide.
+ */
+export function stackRoles( count, active, peek, loop ) {
+	const places = [];
+
+	if ( count < 1 ) {
+		return places;
+	}
+
+	active = ( ( active % count ) + count ) % count;
+
+	for ( let i = 0; i < count; i++ ) {
+		let d = i - active;
+
+		if ( loop ) {
+			d = ( ( d % count ) + count ) % count;
+			d = d > count / 2 ? d - count : d;
+		}
+
+		places.push( { d, role: Math.abs( d ) <= peek ? d : null } );
+	}
+
+	return places;
+}
+
+/**
  * Nested Carousel: a Swiper whose slides are containers. Looping rewinds instead of cloning (clones would duplicate
  * the widgets inside). The Swiper is rebuilt when the slides change (editor), and re-measured whenever its box
  * changes size, which covers popups, tabs and mega menu dropdowns that start hidden.
@@ -147,10 +181,20 @@ export default class NestedCarousel extends Base {
 		} );
 	}
 
+	isStack() {
+		return 'stack' === this.getElementSettings( 'effect' );
+	}
+
 	async buildSwiper() {
 		const viewport = this.elements.$viewport[ 0 ];
 
 		this.destroySwiper();
+		this.destroyStack();
+
+		if ( this.isStack() ) {
+			this.buildStack();
+			return;
+		}
 
 		if ( ! viewport || this.slides().length < 2 ) {
 			return;
@@ -183,6 +227,289 @@ export default class NestedCarousel extends Base {
 				swiper.slideTo( active - 1, 0 );
 			}
 		}
+	}
+
+	// ---------------------------------------------------------------- Stack effect
+	// One slide open, the ones around it shown as bars (their top strip). The slides stay in the page's flow in one
+	// column; their order and height change, so the others move with the height animation.
+	buildStack() {
+		const slides = this.slides(),
+			root = this.elements.$root[ 0 ];
+
+		if ( ! root || ! slides.length ) {
+			return;
+		}
+
+		const settings = this.getElementSettings(),
+			editIndex = this.isEdit ? ( this.getEditSettings( 'activeItemIndex' ) || 1 ) - 1 : 0;
+
+		this.stack = {
+			index: Math.max( 0, Math.min( slides.length - 1, editIndex ) ),
+			places: [],
+			flowTop: 'bottom' !== settings.stack_flow,
+			peek: Math.max( 0, Math.min( 3, Number( settings.stack_peek ?? 1 ) ) ),
+			loop: 'yes' === settings.loop,
+			speed: Math.max( 100, Number( settings.speed ) || 500 ),
+		};
+
+		root.classList.add( 'is-stack-ready' );
+		root.classList.toggle( 'is-flow-top', this.stack.flowTop );
+		root.classList.toggle( 'is-flow-bottom', ! this.stack.flowTop );
+		root.style.setProperty( '--rf-stack-speed', this.stack.speed + 'ms' );
+
+		this.buildStackPagination();
+		this.layoutStack( true );
+
+		const ns = '.rfStack';
+
+		this.elements.$prev.on( 'click' + ns, () => this.stackStep( -1 ) );
+		this.elements.$next.on( 'click' + ns, () => this.stackStep( 1 ) );
+
+		// Bars are inert (out of the keyboard order and hidden from screen readers), so a click on one reaches the
+		// track: the bar under the pointer opens.
+		this.elements.$track.on( 'click' + ns, ( event ) => {
+			const hit = this.slides().findIndex( ( slide, i ) => {
+				const r = slide.getBoundingClientRect();
+				return i !== this.stack.index && slide.classList.contains( 'is-stack-bar' ) && event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom;
+			} );
+
+			if ( hit > -1 ) {
+				this.stackGo( hit );
+			}
+		} );
+
+		this.elements.$root.on( 'keydown' + ns, ( event ) => {
+			if ( event.target.closest( 'input, textarea, select, [contenteditable="true"]' ) ) {
+				return;
+			}
+
+			const toNext = this.stack.flowTop ? [ 'ArrowUp', 'ArrowLeft' ] : [ 'ArrowDown', 'ArrowRight' ],
+				toPrev = this.stack.flowTop ? [ 'ArrowDown', 'ArrowRight' ] : [ 'ArrowUp', 'ArrowLeft' ];
+
+			if ( toNext.includes( event.key ) || toPrev.includes( event.key ) ) {
+				event.preventDefault();
+				this.stackStep( toNext.includes( event.key ) ? 1 : -1 );
+			}
+		} );
+
+		if ( 'yes' === settings.autoplay && ! reducedMotion() && slides.length > 1 ) {
+			this.stack.autoplay = { delay: Math.max( 500, Number( settings.autoplay_speed ) || 5000 ), running: ! this.userPaused, hover: false };
+
+			if ( 'yes' === settings.pause_on_hover ) {
+				this.elements.$root.on( 'mouseenter' + ns, () => {
+					this.stack.autoplay.hover = true;
+					this.stackSchedule();
+				} ).on( 'mouseleave' + ns, () => {
+					this.stack.autoplay.hover = false;
+					this.stackSchedule();
+				} );
+			}
+
+			this.stackSchedule();
+		}
+
+		this.syncAutoplayToggle();
+	}
+
+	stackStep( delta ) {
+		if ( ! this.stack ) {
+			return;
+		}
+
+		const count = this.slides().length;
+		let index = this.stack.index + delta;
+
+		if ( this.stack.loop ) {
+			index = ( ( index % count ) + count ) % count;
+		} else if ( index < 0 || index >= count ) {
+			return;
+		}
+
+		this.stackGo( index );
+	}
+
+	stackGo( index ) {
+		if ( ! this.stack || index === this.stack.index ) {
+			return;
+		}
+
+		this.stack.index = index;
+		this.layoutStack( false );
+		this.stackSchedule();
+	}
+
+	// Places every slide around the open one. The open slide's height goes from its bar height to its own height
+	// (measured, so it animates in every browser), and back to a bar when it closes.
+	layoutStack( initial ) {
+		const slides = this.slides(),
+			{ index, peek, loop, flowTop } = this.stack,
+			places = stackRoles( slides.length, index, peek, loop ),
+			before = slides.map( ( slide ) => slide.getBoundingClientRect().height );
+
+		slides.forEach( ( slide, i ) => {
+			const { d, role } = places[ i ],
+				was = this.stack.places[ i ],
+				open = 0 === role;
+
+			// A slide that comes round from the far end grows in place instead of crossing the stack.
+			const jumps = ! initial && was && null !== role && Math.sign( was.d ) !== Math.sign( d ) && Math.abs( was.d - d ) > 1;
+
+			slide.style.order = String( flowTop ? -d : d );
+			slide.style.setProperty( '--rf-stack-level', String( Math.abs( d ) ) );
+			slide.classList.toggle( 'is-stack-open', open );
+			slide.classList.toggle( 'is-stack-bar', null !== role && ! open );
+			slide.classList.toggle( 'is-stack-far', null !== role && Math.abs( role ) > 1 );
+			slide.classList.toggle( 'is-stack-hidden', null === role );
+
+			if ( open ) {
+				slide.removeAttribute( 'aria-hidden' );
+				slide.removeAttribute( 'inert' );
+			} else {
+				slide.setAttribute( 'aria-hidden', 'true' );
+				slide.setAttribute( 'inert', '' );
+			}
+
+			if ( initial ) {
+				slide.style.height = '';
+				return;
+			}
+
+			clearTimeout( slide.rfStackTimer );
+
+			if ( open ) {
+				slide.style.transition = 'none';
+				slide.style.height = '';
+				const to = slide.offsetHeight;
+				slide.style.height = before[ i ] + 'px';
+				void slide.offsetHeight; // eslint-disable-line no-void -- applies the start height before animating.
+				slide.style.transition = '';
+				slide.style.height = to + 'px';
+				slide.rfStackTimer = setTimeout( () => {
+					slide.style.height = '';
+				}, this.stack.speed + 60 );
+			} else if ( was && 0 === was.role ) {
+				slide.style.transition = 'none';
+				slide.style.height = before[ i ] + 'px';
+				void slide.offsetHeight; // eslint-disable-line no-void -- applies the start height before animating.
+				slide.style.transition = '';
+				slide.style.height = '';
+			} else if ( jumps ) {
+				slide.classList.add( 'is-stack-entering' );
+				void slide.offsetHeight; // eslint-disable-line no-void -- shows it collapsed first.
+				slide.classList.remove( 'is-stack-entering' );
+			}
+		} );
+
+		this.stack.places = places;
+		this.syncStackControls();
+	}
+
+	buildStackPagination() {
+		const el = this.elements.$pagination[ 0 ];
+
+		if ( ! el ) {
+			return;
+		}
+
+		const type = this.getElementSettings( 'pagination' ),
+			count = this.slides().length;
+
+		el.innerHTML = '';
+		el.className = 'refraction-nc__pagination swiper-pagination';
+
+		if ( 'bullets' === type ) {
+			el.classList.add( 'swiper-pagination-bullets' );
+
+			for ( let i = 0; i < count; i++ ) {
+				const dot = document.createElement( 'button' );
+
+				dot.type = 'button';
+				dot.className = 'swiper-pagination-bullet';
+				dot.setAttribute( 'aria-label', ( refractionFrontend.config.i18n?.a11yCarouselPaginationBulletMessage || 'Go to slide' ) + ' ' + ( i + 1 ) );
+				dot.addEventListener( 'click', () => this.stackGo( i ) );
+				el.appendChild( dot );
+			}
+		} else if ( 'fraction' === type ) {
+			el.classList.add( 'swiper-pagination-fraction' );
+			el.innerHTML = '<span class="swiper-pagination-current"></span> / <span class="swiper-pagination-total">' + count + '</span>';
+		} else if ( 'progress' === type ) {
+			el.classList.add( 'swiper-pagination-progressbar' );
+			el.innerHTML = '<span class="swiper-pagination-progressbar-fill"></span>';
+		}
+	}
+
+	syncStackControls() {
+		const { index, loop } = this.stack,
+			count = this.slides().length,
+			el = this.elements.$pagination[ 0 ];
+
+		if ( el ) {
+			el.querySelectorAll( '.swiper-pagination-bullet' ).forEach( ( dot, i ) => {
+				dot.classList.toggle( 'swiper-pagination-bullet-active', i === index );
+				dot.setAttribute( 'aria-current', i === index ? 'true' : 'false' );
+			} );
+
+			const current = el.querySelector( '.swiper-pagination-current' ),
+				fill = el.querySelector( '.swiper-pagination-progressbar-fill' );
+
+			if ( current ) {
+				current.textContent = String( index + 1 );
+			}
+
+			if ( fill ) {
+				fill.style.transform = `scaleX(${ ( index + 1 ) / count })`;
+			}
+		}
+
+		this.elements.$prev.toggleClass( 'swiper-button-disabled', ! loop && 0 === index );
+		this.elements.$next.toggleClass( 'swiper-button-disabled', ! loop && count - 1 === index );
+	}
+
+	// Autoplay: the next slide after the delay, unless paused (button, hover, focus inside).
+	stackSchedule() {
+		const autoplay = this.stack?.autoplay;
+
+		clearTimeout( this.stackTimer );
+
+		if ( ! autoplay || ! autoplay.running || autoplay.hover ) {
+			return;
+		}
+
+		this.stackTimer = setTimeout( () => {
+			const last = this.slides().length - 1;
+
+			if ( ! this.stack.loop && this.stack.index >= last ) {
+				this.stackGo( 0 );
+			} else {
+				this.stackStep( 1 );
+			}
+		}, autoplay.delay );
+	}
+
+	destroyStack() {
+		clearTimeout( this.stackTimer );
+
+		if ( ! this.stack ) {
+			return;
+		}
+
+		const ns = '.rfStack';
+
+		this.elements.$prev.off( ns );
+		this.elements.$next.off( ns );
+		this.elements.$track.off( ns );
+		this.elements.$root.off( ns );
+		this.elements.$root.removeClass( 'is-stack-ready is-flow-top is-flow-bottom' );
+		this.slides().forEach( ( slide ) => {
+			clearTimeout( slide.rfStackTimer );
+			slide.classList.remove( 'is-stack-open', 'is-stack-bar', 'is-stack-far', 'is-stack-hidden', 'is-stack-entering' );
+			slide.style.removeProperty( 'order' );
+			slide.style.removeProperty( 'height' );
+			slide.style.removeProperty( '--rf-stack-level' );
+			slide.removeAttribute( 'aria-hidden' );
+			slide.removeAttribute( 'inert' );
+		} );
+		this.stack = null;
 	}
 
 	destroySwiper() {
@@ -227,7 +554,7 @@ export default class NestedCarousel extends Base {
 				this.updateFrame = requestAnimationFrame( () => {
 					if ( this.swiper && ! this.swiper.destroyed && viewport.offsetWidth ) {
 						this.swiper.update();
-					} else if ( ! this.swiper && viewport.offsetWidth && this.slides().length > 1 ) {
+					} else if ( ! this.swiper && ! this.stack && ! this.isStack() && viewport.offsetWidth && this.slides().length > 1 ) {
 						this.buildSwiper();
 					}
 				} );
@@ -238,6 +565,14 @@ export default class NestedCarousel extends Base {
 
 	bindEvents() {
 		this.elements.$autoplayToggle.on( 'click', () => {
+			if ( this.stack?.autoplay ) {
+				this.stack.autoplay.running = ! this.stack.autoplay.running;
+				this.userPaused = ! this.stack.autoplay.running;
+				this.stackSchedule();
+				this.syncAutoplayToggle();
+				return;
+			}
+
 			if ( ! this.swiper?.autoplay ) {
 				return;
 			}
@@ -264,13 +599,19 @@ export default class NestedCarousel extends Base {
 				this.swiper.autoplay.stop();
 				this.syncAutoplayToggle();
 			}
+
+			if ( this.stack?.autoplay?.running ) {
+				this.stack.autoplay.running = false;
+				this.stackSchedule();
+				this.syncAutoplayToggle();
+			}
 		};
 		this.elements.$root.on( 'focusin', this.onFocusIn );
 	}
 
 	syncAutoplayToggle() {
 		const toggle = this.elements.$autoplayToggle[ 0 ],
-			running = !! this.swiper?.autoplay?.running,
+			running = !! ( this.swiper?.autoplay?.running || this.stack?.autoplay?.running ),
 			track = this.elements.$track[ 0 ];
 
 		if ( track ) {
@@ -286,13 +627,18 @@ export default class NestedCarousel extends Base {
 	}
 
 	onElementChange( propertyName ) {
-		if ( /^(slides_to_show|spacing|effect|direction|speed|loop|autoplay|autoplay_speed|pause_on_hover|arrows|pagination)/.test( propertyName ) ) {
+		if ( /^(slides_to_show|spacing|effect|direction|speed|loop|autoplay|autoplay_speed|pause_on_hover|arrows|pagination|stack_flow|stack_peek)/.test( propertyName ) ) {
 			clearTimeout( this.rebuildTimer );
 			this.rebuildTimer = setTimeout( () => this.buildSwiper(), 60 );
 		}
 	}
 
 	onEditSettingsChange( propertyName ) {
+		if ( 'activeItemIndex' === propertyName && this.stack ) {
+			this.stackGo( Math.max( 0, ( this.getEditSettings( 'activeItemIndex' ) || 1 ) - 1 ) );
+			return;
+		}
+
 		if ( 'activeItemIndex' === propertyName && this.swiper && ! this.swiper.destroyed ) {
 			this.swiper.slideTo( this.getEditSettings( 'activeItemIndex' ) - 1 );
 		}
@@ -305,6 +651,7 @@ export default class NestedCarousel extends Base {
 		this.resizeObserver?.disconnect();
 		this.elements.$root.off( 'focusin', this.onFocusIn );
 		this.destroySwiper();
+		this.destroyStack();
 		super.onDestroy();
 	}
 }
