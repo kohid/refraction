@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.52.0
+Stable tag: 0.53.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.53.0 =
+* New Phone Showcase widget: an interactive walk-through of an app. Up to 20 steps (icon, title, description and a screenshot each) beside a phone that shows the current step's screen; click a step, use the arrow keys, or tap inside the phone for the next one, or let it play by itself. A library of 13 devices drawn in code (camera island, notch, camera holes, edge-to-edge, classic with a home button, compact, foldable, clay, outline, tablets) in 9 colors or your own, or your own frame image. Status bar, screen changes (slide, fade, zoom), floating cards (ratings, "Booked!", points) shown always or with a step, a button under the steps, and full styling.
 
 = 0.52.0 =
 * Container > Layout > Scrolling Effect: two more. "Zooms through into the next": the camera moves through the container, its titles growing past the viewer while it blurs and fades, and the next one comes into focus. "Falls away into the distance", the reverse: it shrinks away, titles first, and the next comes in from close up, settling into focus.

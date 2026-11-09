@@ -703,3 +703,776 @@ html.rf-hp-on body {
 .rf-doors .rf-door.is-open {
 	visibility: hidden;
 }
+
+// ---- Phone Showcase (widgets/phone-showcase.php, phone-showcase.js): steps beside a device showing each step's screen.
+.rf-showcase {
+	--rf-showcase-accent: var(--e-global-color-accent, #0d9488);
+	--rf-showcase-on-accent: #fff;
+
+	display: grid;
+	grid-template-columns: minmax(0, var(--rf-steps-w, 1fr)) minmax(0, 1fr);
+	align-items: center;
+	column-gap: clamp(24px, 5vw, 80px);
+	row-gap: 40px;
+}
+
+.rf-showcase-phone-left .rf-showcase__side {
+	order: 2;
+}
+
+.rf-showcase__side {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	min-width: 0;
+}
+
+.rf-showcase__label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55em;
+	margin: 0;
+	color: var(--rf-showcase-accent);
+	font-size: 0.85rem;
+	font-weight: 700;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.rf-showcase__steps {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.rf-showcase__step {
+	position: relative;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 14px;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
+	padding: 14px 16px;
+	overflow: hidden;
+	border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+	border-radius: 12px;
+	background-color: color-mix(in srgb, currentColor 5%, transparent);
+	color: inherit;
+	font: inherit;
+	text-align: start;
+	cursor: pointer;
+	appearance: none;
+	transition: background-color 0.25s ease, border-color 0.25s ease;
+
+	&:hover {
+		background-color: color-mix(in srgb, currentColor 9%, transparent);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--rf-showcase-accent);
+		outline-offset: 2px;
+	}
+
+	&.is-active {
+		border-color: color-mix(in srgb, var(--rf-showcase-accent) 65%, transparent);
+		background-color: color-mix(in srgb, var(--rf-showcase-accent) 16%, transparent);
+	}
+}
+
+.rf-showcase__badge {
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 9px;
+	background-color: color-mix(in srgb, currentColor 10%, transparent);
+	font-weight: 800;
+	line-height: 1;
+	transition: background-color 0.25s ease, color 0.25s ease;
+
+	svg {
+		width: 16px;
+		height: 16px;
+		fill: currentColor;
+	}
+
+	i {
+		font-size: 15px;
+	}
+}
+
+.rf-showcase__icon,
+.rf-showcase__number {
+	display: inline-flex;
+	grid-area: 1 / 1;
+}
+
+.rf-showcase__number {
+	display: none;
+}
+
+.rf-showcase--numbers-all .rf-showcase__step,
+.rf-showcase--numbers-active .rf-showcase__step.is-active {
+
+	.rf-showcase__icon {
+		display: none;
+	}
+
+	.rf-showcase__number {
+		display: inline-flex;
+	}
+}
+
+.rf-showcase__step.is-active .rf-showcase__badge {
+	background-color: var(--rf-showcase-accent);
+	color: var(--rf-showcase-on-accent);
+}
+
+.rf-showcase__words {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+}
+
+.rf-showcase__title {
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+.rf-showcase__text {
+	font-size: 0.88em;
+	line-height: 1.45;
+	opacity: 0.75;
+}
+
+.rf-showcase__chevron {
+	width: 18px;
+	height: 18px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	opacity: 0;
+	transition: opacity 0.25s ease;
+
+	.is-active > & {
+		opacity: 0.85;
+	}
+}
+
+// Playing by itself: a line times the current step.
+.rf-showcase__timer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 2px;
+	width: 100%;
+	background-color: var(--rf-showcase-accent);
+	transform: scaleX(0);
+	transform-origin: 0 50%;
+}
+
+.rf-showcase.is-playing .rf-showcase__step.is-active .rf-showcase__timer {
+	animation: rf-showcase-timer var(--rf-showcase-interval, 5s) linear forwards;
+}
+
+.rf-showcase.is-paused .rf-showcase__step.is-active .rf-showcase__timer {
+	animation-play-state: paused;
+}
+
+@keyframes rf-showcase-timer {
+	to {
+		transform: scaleX(1);
+	}
+}
+
+.rf-showcase__button {
+	display: inline-flex;
+	align-items: center;
+	align-self: flex-start;
+	gap: 0.6em;
+	margin-top: 6px;
+	padding: 0.85em 1.6em;
+	border-radius: 8px;
+	background-color: var(--rf-showcase-accent);
+	color: var(--rf-showcase-on-accent);
+	font-weight: 700;
+	text-decoration: none;
+	transition: filter 0.2s ease, background-color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		filter: brightness(1.08);
+	}
+
+	svg {
+		width: 1.1em;
+		height: 1.1em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+}
+
+// The device: every size is a share of its width (container query units), so it scales as one piece.
+.rf-showcase__device {
+	position: relative;
+	justify-self: center;
+	width: var(--rf-phone-w, 320px);
+	max-width: 100%;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: -25% -35%;
+		z-index: -1;
+		background: radial-gradient(closest-side, var(--rf-showcase-glow, transparent), transparent);
+		pointer-events: none;
+	}
+}
+
+.rf-phone {
+	--rf-phone-color: #17181b;
+
+	position: relative;
+	width: 100%;
+	container-type: inline-size;
+}
+
+.rf-phone__body {
+	position: relative;
+	box-sizing: border-box;
+	aspect-ratio: var(--rf-phone-ar, 0.488);
+	padding: calc(var(--rf-phone-b, 0.035) * 100cqw);
+	border-radius: calc(var(--rf-phone-r, 0.17) * 100cqw);
+	background-color: var(--rf-phone-color);
+	box-shadow: inset 0 0 0 0.7cqw color-mix(in srgb, var(--rf-phone-color) 72%, #fff), inset 0 0 0 1.4cqw color-mix(in srgb, var(--rf-phone-color) 85%, #000), 0 40px 80px -30px rgba(0, 0, 0, 0.55);
+}
+
+.rf-phone__screen {
+	position: relative;
+	z-index: 0;
+	height: 100%;
+	overflow: hidden;
+	border-radius: calc((var(--rf-phone-r, 0.17) - var(--rf-phone-b, 0.035)) * 100cqw);
+	background-color: #fff;
+	isolation: isolate;
+}
+
+.rf-showcase.is-tappable .rf-phone__screen {
+	cursor: pointer;
+}
+
+// Side buttons.
+.rf-phone__btn {
+	position: absolute;
+	width: 1cqw;
+	border-radius: 1cqw;
+	background-color: color-mix(in srgb, var(--rf-phone-color) 80%, #000);
+
+	&--a {
+		top: 20%;
+		left: -0.8cqw;
+		height: 5%;
+	}
+
+	&--b {
+		top: 28%;
+		left: -0.8cqw;
+		height: 9%;
+	}
+
+	&--c {
+		top: 26%;
+		right: -0.8cqw;
+		height: 13%;
+	}
+}
+
+:is(.rf-phone--clay, .rf-phone--outline, .rf-phone--tablet, .rf-phone--tablet-wide, .rf-phone--fold, .rf-phone--custom) .rf-phone__btn {
+	display: none;
+}
+
+// The camera cutouts.
+.rf-phone__cutout {
+	position: absolute;
+	top: 2.7cqw;
+	left: 50%;
+	z-index: 3;
+	display: none;
+	background-color: #050506;
+	translate: -50% 0;
+}
+
+.rf-phone--cut-island .rf-phone__cutout {
+	display: block;
+	width: 29cqw;
+	height: 8.4cqw;
+	border-radius: 99px;
+}
+
+.rf-phone--cut-notch .rf-phone__cutout {
+	display: block;
+	top: 0;
+	width: 46cqw;
+	height: 7.4cqw;
+	border-radius: 0 0 5cqw 5cqw;
+}
+
+.rf-phone--cut-hole .rf-phone__cutout,
+.rf-phone--cut-hole-left .rf-phone__cutout,
+.rf-phone--cut-hole-right .rf-phone__cutout {
+	display: block;
+	top: 2.8cqw;
+	width: 4.2cqw;
+	height: 4.2cqw;
+	border-radius: 50%;
+}
+
+.rf-phone--cut-hole-left .rf-phone__cutout {
+	left: 7cqw;
+	translate: 0 0;
+}
+
+.rf-phone--cut-hole-right .rf-phone__cutout {
+	right: 6cqw;
+	left: auto;
+	top: 2cqw;
+	width: 2.2cqw;
+	height: 2.2cqw;
+	translate: 0 0;
+}
+
+// Classic: wide bezels top and bottom, an earpiece and a home button.
+.rf-phone--cut-classic {
+
+	.rf-phone__body {
+		padding: 15cqw 5.5cqw;
+	}
+
+	.rf-phone__screen {
+		border-radius: 1cqw;
+	}
+
+	.rf-phone__body::before {
+		content: "";
+		position: absolute;
+		top: 6.5cqw;
+		left: 50%;
+		width: 14cqw;
+		height: 1.5cqw;
+		border-radius: 1cqw;
+		background-color: color-mix(in srgb, var(--rf-phone-color) 60%, #000);
+		translate: -50% 0;
+	}
+
+	.rf-phone__home {
+		display: block;
+		bottom: 2.6cqw;
+		width: 10cqw;
+		height: 10cqw;
+		border-radius: 50%;
+		box-shadow: inset 0 0 0 0.6cqw color-mix(in srgb, var(--rf-phone-color) 65%, #888);
+	}
+
+	.rf-phone__bar {
+		display: none;
+	}
+}
+
+.rf-phone__home {
+	position: absolute;
+	left: 50%;
+	display: none;
+	translate: -50% 0;
+}
+
+// Tablets: a camera dot in the bezel.
+.rf-phone--cut-dot .rf-phone__home,
+.rf-phone--cut-dot-side .rf-phone__home {
+	display: block;
+	top: 1.4cqw;
+	width: 1.4cqw;
+	height: 1.4cqw;
+	border-radius: 50%;
+	background-color: color-mix(in srgb, var(--rf-phone-color) 55%, #000);
+}
+
+.rf-phone--cut-dot-side .rf-phone__home {
+	top: 50%;
+	left: 1cqw;
+	width: 1cqw;
+	height: 1cqw;
+	translate: 0 -50%;
+}
+
+// Clay: soft, matte, no buttons. Outline: a drawn line.
+.rf-phone--clay .rf-phone__body {
+	background: linear-gradient(145deg, color-mix(in srgb, var(--rf-phone-color) 80%, #fff), var(--rf-phone-color));
+	box-shadow: inset 0 0 0 0.5cqw color-mix(in srgb, var(--rf-phone-color) 90%, #fff), 0 30px 60px -24px rgba(0, 0, 0, 0.35), inset -2cqw -2cqw 5cqw rgba(0, 0, 0, 0.08);
+}
+
+.rf-phone--outline .rf-phone__body {
+	--rf-phone-color: currentColor;
+
+	background: none;
+	box-shadow: inset 0 0 0 0.8cqw var(--rf-phone-color);
+}
+
+// My own frame image: the screen sits where it is set, under the picture.
+.rf-phone--custom .rf-phone__body {
+	padding: 0;
+	aspect-ratio: auto;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+}
+
+.rf-phone--custom .rf-phone__screen {
+	position: absolute;
+	height: auto;
+	border-radius: 0;
+}
+
+.rf-phone__frame {
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	height: auto;
+	pointer-events: none;
+}
+
+// Status bar and home indicator.
+.rf-phone__status {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-sizing: border-box;
+	height: 11cqw;
+	padding: 0 7.5cqw 0 9cqw;
+	font: 600 3.8cqw/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+	pointer-events: none;
+
+	&--dark {
+		color: #111;
+	}
+
+	&--light {
+		color: #fff;
+	}
+
+	svg {
+		height: 0.8em;
+		width: auto;
+		fill: currentColor;
+	}
+}
+
+.rf-phone__icons {
+	display: inline-flex;
+	align-items: center;
+	gap: 1.4cqw;
+}
+
+// The notch: time and icons sit in the ears either side of it.
+.rf-phone--cut-notch .rf-phone__status {
+	height: 7.4cqw;
+	padding: 0 5.5cqw 0 8cqw;
+	font-size: 3.3cqw;
+
+	.rf-phone__icons {
+		gap: 0.9cqw;
+	}
+}
+
+.rf-phone--cut-classic .rf-phone__status {
+	height: 6.5cqw;
+	padding: 0 3.5cqw;
+	font-size: 3.2cqw;
+}
+
+:is(.rf-phone--tablet, .rf-phone--tablet-wide, .rf-phone--fold) .rf-phone__status {
+	height: 6cqw;
+	padding: 0 4cqw;
+	font-size: 2.6cqw;
+}
+
+:is(.rf-phone--tablet-wide) .rf-phone__status {
+	height: 3.6cqw;
+	font-size: 1.6cqw;
+}
+
+.rf-phone__bar {
+	position: absolute;
+	bottom: 1.8cqw;
+	left: 50%;
+	z-index: 2;
+	width: 34cqw;
+	height: 1.2cqw;
+	border-radius: 1cqw;
+	background-color: rgba(0, 0, 0, 0.8);
+	translate: -50% 0;
+	pointer-events: none;
+}
+
+.rf-phone__status--light ~ .rf-phone__bar {
+	background-color: rgba(255, 255, 255, 0.85);
+}
+
+:is(.rf-phone--tablet, .rf-phone--tablet-wide, .rf-phone--fold, .rf-phone--custom) .rf-phone__bar {
+	width: 22%;
+	height: 0.8cqw;
+}
+
+// The screens, one per step.
+.rf-phone__shots {
+	position: absolute;
+	inset: 0;
+}
+
+.rf-phone__shot {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	overflow: hidden;
+	background-color: inherit;
+	visibility: hidden;
+	transition: translate 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.45s ease, scale 0.5s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 0.5s;
+
+	&.is-active {
+		z-index: 2;
+		visibility: visible;
+		transition-delay: 0s;
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top center;
+	}
+}
+
+.rf-phone--fit-contain .rf-phone__shot img {
+	object-fit: contain;
+}
+
+.rf-phone--fit-scroll .rf-phone__shot {
+	overflow-y: auto;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	img {
+		height: auto;
+	}
+}
+
+.rf-phone--change-slide .rf-phone__shot {
+	translate: 100% 0;
+
+	&.is-past {
+		translate: -30% 0;
+	}
+
+	&.is-active {
+		translate: 0 0;
+		box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
+	}
+}
+
+.rf-phone--change-fade .rf-phone__shot {
+	opacity: 0;
+
+	&.is-active {
+		opacity: 1;
+	}
+}
+
+.rf-phone--change-zoom .rf-phone__shot {
+	opacity: 0;
+	scale: 0.92;
+
+	&.is-active {
+		opacity: 1;
+		scale: 1;
+	}
+}
+
+.rf-phone--change-none .rf-phone__shot {
+	transition: none;
+}
+
+.rf-phone__placeholder {
+	display: grid;
+	place-content: center;
+	justify-items: center;
+	gap: 10px;
+	height: 100%;
+	padding: 12cqw;
+	background: linear-gradient(165deg, #f5f7f9, #e3e9ee);
+	color: #44505c;
+	font-size: 4.5cqw;
+	font-weight: 600;
+	line-height: 1.35;
+	text-align: center;
+}
+
+.rf-phone__placeholder-n {
+	display: grid;
+	place-items: center;
+	width: 16cqw;
+	height: 16cqw;
+	border-radius: 50%;
+	background-color: #fff;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+	font-size: 7cqw;
+	font-weight: 800;
+}
+
+// Floating cards: placed by their middle, in % of the device.
+.rf-showcase__card {
+	position: absolute;
+	top: var(--y, 20%);
+	left: var(--x, 0%);
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 11px 16px;
+	border-radius: 14px;
+	background-color: #fff;
+	color: #14181f;
+	box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.4);
+	white-space: nowrap;
+	translate: -50% -50%;
+	transition: opacity 0.35s ease, scale 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+	&.is-hidden {
+		opacity: 0;
+		scale: 0.85;
+		pointer-events: none;
+	}
+}
+
+.rf-showcase__card-icon {
+	display: grid;
+	flex-shrink: 0;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 10px;
+	background-color: #e6f7ec;
+	color: #15803d;
+
+	svg {
+		width: 16px;
+		height: 16px;
+		fill: currentColor;
+	}
+}
+
+.rf-showcase__card-words {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.rf-showcase__card-title {
+	font-size: 15px;
+	font-weight: 800;
+	line-height: 1.2;
+}
+
+.rf-showcase__card-text {
+	font-size: 12px;
+	line-height: 1.3;
+	opacity: 0.6;
+}
+
+.rf-showcase__stars {
+	margin-inline-end: 0.45em;
+	color: #f5b301;
+	letter-spacing: 1px;
+}
+
+.rf-showcase-cards-float-yes .rf-showcase__card {
+	animation: rf-showcase-bob 5.5s ease-in-out infinite;
+
+	&:nth-of-type(2n) {
+		animation-delay: -1.8s;
+	}
+
+	&:nth-of-type(3n) {
+		animation-delay: -3.4s;
+	}
+}
+
+.rf-showcase-float-yes .rf-phone {
+	animation: rf-showcase-bob 7s ease-in-out infinite;
+}
+
+@keyframes rf-showcase-bob {
+	0%, 100% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(-8px);
+	}
+}
+
+@media (max-width: 767px) {
+
+	.rf-showcase {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.rf-showcase-phone-left .rf-showcase__side {
+		order: 0;
+	}
+
+	.rf-showcase-stack-phone .rf-showcase__device {
+		order: -1;
+	}
+
+	.rf-showcase__device {
+		width: min(var(--rf-phone-w, 320px), 78vw);
+	}
+
+	.refraction-widget-refraction-phone-showcase:not(.rf-showcase-cards-phone-yes) .rf-showcase__card {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-phone__shot,
+	.rf-showcase__card {
+		transition: none;
+	}
+
+	.rf-showcase-cards-float-yes .rf-showcase__card,
+	.rf-showcase-float-yes .rf-phone {
+		animation: none;
+	}
+}
