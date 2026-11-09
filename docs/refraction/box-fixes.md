@@ -1,0 +1,7 @@
+# Image Box and Icon Box: linked titles, content padding, editor image size (0.56.0)
+
+- **Linked title.** With a Link set, the title is wrapped in `<a>`. Site Settings > Typography > Link (the kit's `.refraction-kit-N a`) or a theme's `a { font-size }` used to give the link its own size and underline, over the title's typography. The link now inherits the title's font, size, spacing, case, decoration and color, on hover and focus too (`.refraction-*-box-wrapper .refraction-*-box-title a`, in `image-box.scss` / `icon-box.scss`). Style the title with Style > Content > Title.
+- **Content Padding** (Style > Content, responsive): padding on `.refraction-image-box-content` / `.refraction-icon-box-content`, the text area with the title, description and button.
+- **Editor image size.** The editor's template asks the images manager for the image's URL at the chosen size. When that size isn't loaded yet, it shows the address saved in the widget, which can be another, smaller size of the image, so the preview was narrower than the page. Until now nothing redrew it when the right URL arrived (only custom sizes were redrawn). `assets/dev/js/editor/utils/images-manager.js` now redraws the edited element once its size arrives, once per image and size, without the loading overlay.
+
+Check: `node scripts/check-box-fixes.mjs --site DIR --port N`. It sets a 14px blue underlined site link style, then checks the linked titles at 32px in the title color (page and editor), the content padding, and the image filling its 100% width after editing the title and description.

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.55.0
+Stable tag: 0.56.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.56.0 =
+* Fix: Image Box and Icon Box: a linked title keeps the title's font size, font and color; before, the site's link style (Site Settings > Typography > Link) or the theme's could set the link's own size.
+* Fix: in the editor, an image shown before its size had loaded (for example after changing the title or description) could appear narrower than on the page until the next change; the element is now drawn again once its size arrives.
+* Image Box and Icon Box: Content Padding (Style > Content), space around the title, description and button.
 
 = 0.55.0 =
 * Nav Menu: more hover effects for the menu items (line through, highlighter, dot, corners, brackets, pill, glow, lift) and ways in (grow from the left or right, drop in), with the effect's width (as wide as the text by default, or your own in %, px or em, placed left, center or right), distance, roundness, speed and the text color on a background or pill.

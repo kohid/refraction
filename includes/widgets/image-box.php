@@ -603,6 +603,19 @@ class Widget_Image_Box extends Widget_Base {
 			]
 		);
 
+		$this->add_responsive_control(
+			'content_padding',
+			[
+				'label' => esc_html__( 'Content Padding', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'selectors' => [
+					'{{WRAPPER}} .refraction-image-box-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'description' => esc_html__( 'Space inside the text area (title, description and button), around it.', 'refraction' ),
+			]
+		);
+
 		$this->add_control(
 			'heading_title',
 			[

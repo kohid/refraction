@@ -96,10 +96,19 @@
 	// No margin of its own: a theme's heading margin does not show. Title Spacing and Margin add space when set.
 	.refraction-image-box-title {
 		margin-block: 0;
+	}
 
-		a {
-			color: inherit;
-		}
+	// A linked title: the link takes the title's font and color, not the site's link style (Site Settings >
+	// Typography > Link, or a theme's a { font-size }). The wrapper raises it above the kit's ".refraction-kit-N a".
+	.refraction-image-box-wrapper .refraction-image-box-title a,
+	.refraction-image-box-wrapper .refraction-image-box-title a:hover,
+	.refraction-image-box-wrapper .refraction-image-box-title a:focus {
+		color: inherit;
+		font: inherit;
+		letter-spacing: inherit;
+		word-spacing: inherit;
+		text-transform: inherit;
+		text-decoration: inherit;
 	}
 
 	.refraction-image-box-wrapper {
