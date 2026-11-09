@@ -299,6 +299,29 @@ class Timed_Slides extends Widget_Nested_Base {
 			'render_type' => 'template',
 		] );
 
+		$this->add_control( 'transition', [
+			'label' => esc_html__( 'Transition', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'grow',
+			'options' => [
+				'grow' => esc_html__( 'Card grows into the slide', 'refraction' ),
+				'fade' => esc_html__( 'Fade', 'refraction' ),
+				'slide' => esc_html__( 'Slide in from the side', 'refraction' ),
+				'slide-up' => esc_html__( 'Slide up', 'refraction' ),
+				'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
+				'zoom-out' => esc_html__( 'Zoom out', 'refraction' ),
+				'blur' => esc_html__( 'Blur', 'refraction' ),
+				'circle' => esc_html__( 'Circle opens from the card', 'refraction' ),
+				'wipe' => esc_html__( 'Wipe from the side', 'refraction' ),
+				'wipe-up' => esc_html__( 'Wipe up', 'refraction' ),
+				'curtain' => esc_html__( 'Curtain (opens from the middle)', 'refraction' ),
+				'diagonal' => esc_html__( 'Diagonal wipe', 'refraction' ),
+				'flip' => esc_html__( 'Flip', 'refraction' ),
+			],
+			'description' => esc_html__( 'How the next slide comes in. Going back (previous arrow, left arrow key) runs side and wipe transitions the other way.', 'refraction' ),
+			'frontend_available' => true,
+		] );
+
 		$this->add_control( 'transition_speed', [
 			'label' => esc_html__( 'Transition speed (ms)', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,

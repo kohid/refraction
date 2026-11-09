@@ -37,3 +37,29 @@ Vertical are `justify-content` and `align-items`, each set separately. The scrip
 (`modules/card-motion/assets/js/timed-cards.js`). In the editor the slider follows the slide picked in the panel,
 does not autoplay, and is rebuilt when slides are added, removed or moved. Styles: `assets/scss/frontend.scss` (built to
 `widget-timed-slides`). Check: `scripts/check-timed-slides.mjs`.
+
+## Transitions (0.61.0)
+
+Slider > **Transition** chooses how the next slide comes in:
+
+- **Card grows into the slide** (the default, as before)
+- **Fade**
+- **Slide in from the side** (the old slide moves away a little) and **Slide up**
+- **Zoom in** and **Zoom out**
+- **Blur**
+- **Circle opens from the card**: from the clicked card's centre, or from the middle for the arrows and autoplay
+- **Wipe from the side** and **Wipe up**
+- **Curtain**: opens from the middle
+- **Diagonal wipe**
+- **Flip**
+
+Going back (the previous arrow, the left arrow key) runs the side, wipe, diagonal and flip transitions the other way. **Transition speed** applies to all of them. With reduced motion, slides change at once.
+
+How it works:
+
+- The engine (`modules/card-motion/assets/js/timed-cards.js`) takes `cfg.effect`.
+- For anything but `grow`, `transition()` lays a copy of the new slide's picture (with its shade) over the whole slider as `.rf-tco__grow--full`, and animates it with `transitionFrames( effect, dir, at )`. For some effects the old slide moves too.
+- When the animation ends, the slides switch at once underneath and the copy is removed.
+- The Slides widget's Timed cards layout uses the same engine and keeps the grow transition.
+
+`scripts/check-timed-slides.mjs` runs all twelve transitions on one page. For each, it checks the transition is under way halfway through, then that the second slide shows, no copy is left and nothing is still moving. It also checks that the previous arrow slides in from the left.
