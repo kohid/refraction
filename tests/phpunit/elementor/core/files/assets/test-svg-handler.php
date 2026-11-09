@@ -46,7 +46,8 @@ class Test_Svg_Handler extends Elementor_Test_Base {
 		// Act.
 		$mimes = apply_filters( 'upload_mimes', [] );
 
-		// Assert.
-		$this->assertEmpty( $mimes );
+		// Assert. Other modules (e.g. glTF models) may add their own types.
+		$this->assertArrayNotHasKey( 'svg', $mimes );
+		$this->assertNotContains( 'image/svg+xml', $mimes );
 	}
 }
