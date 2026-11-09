@@ -160,6 +160,31 @@ class Phone_Showcase extends Widget_Base {
 			'condition' => [ 'label!' => '' ],
 		] );
 
+		$this->add_control( 'heading', [
+			'label' => esc_html__( 'Heading', 'refraction' ),
+			'type' => Controls_Manager::TEXTAREA,
+			'rows' => 2,
+			'dynamic' => [ 'active' => true ],
+			'placeholder' => esc_html__( 'Book your ride in four taps', 'refraction' ),
+			'description' => esc_html__( 'Under the text above the steps. Empty: no heading.', 'refraction' ),
+		] );
+
+		$this->add_control( 'heading_tag', [
+			'label' => esc_html__( 'Heading HTML Tag', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'h2',
+			'options' => [ 'h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4', 'h5' => 'H5', 'h6' => 'H6', 'p' => 'p', 'div' => 'div' ],
+			'condition' => [ 'heading!' => '' ],
+		] );
+
+		$this->add_control( 'description', [
+			'label' => esc_html__( 'Description', 'refraction' ),
+			'type' => Controls_Manager::TEXTAREA,
+			'rows' => 3,
+			'dynamic' => [ 'active' => true ],
+			'description' => esc_html__( 'Under the heading. Empty: no description.', 'refraction' ),
+		] );
+
 		$this->add_control( 'number_shows', [
 			'label' => esc_html__( 'Step Number', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -185,6 +210,21 @@ class Phone_Showcase extends Widget_Base {
 			'type' => Controls_Manager::URL,
 			'dynamic' => [ 'active' => true ],
 			'condition' => [ 'button_text!' => '' ],
+		] );
+
+		$this->add_control( 'button2_text', [
+			'label' => esc_html__( 'Second Button', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'dynamic' => [ 'active' => true ],
+			'placeholder' => esc_html__( 'Call us', 'refraction' ),
+			'description' => esc_html__( 'Beside the first one, as an outline button. Empty: no second button.', 'refraction' ),
+		] );
+
+		$this->add_control( 'button2_link', [
+			'label' => esc_html__( 'Second Button Link', 'refraction' ),
+			'type' => Controls_Manager::URL,
+			'dynamic' => [ 'active' => true ],
+			'condition' => [ 'button2_text!' => '' ],
 		] );
 
 		$this->end_controls_section();
@@ -581,6 +621,43 @@ class Phone_Showcase extends Widget_Base {
 			'selector' => '{{WRAPPER}} .rf-showcase__label',
 		] );
 
+		$this->add_control( 'heading_color', [
+			'label' => esc_html__( 'Heading Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__heading' => 'color: {{VALUE}};' ],
+			'separator' => 'before',
+			'condition' => [ 'heading!' => '' ],
+		] );
+
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'heading_typography',
+			'selector' => '{{WRAPPER}} .rf-showcase__heading',
+			'condition' => [ 'heading!' => '' ],
+		] );
+
+		$this->add_control( 'description_color', [
+			'label' => esc_html__( 'Description Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__description' => 'color: {{VALUE}};' ],
+			'separator' => 'before',
+			'condition' => [ 'description!' => '' ],
+		] );
+
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'description_typography',
+			'selector' => '{{WRAPPER}} .rf-showcase__description',
+			'condition' => [ 'description!' => '' ],
+		] );
+
+		$this->add_responsive_control( 'intro_gap', [
+			'label' => esc_html__( 'Space Under The Heading And Description', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'max' => 80 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__intro' => 'gap: {{SIZE}}{{UNIT}};' ],
+			'separator' => 'before',
+		] );
+
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_phone', [
@@ -642,30 +719,71 @@ class Phone_Showcase extends Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_button', [
-			'label' => esc_html__( 'Button', 'refraction' ),
+			'label' => esc_html__( 'Buttons', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
-			'condition' => [ 'button_text!' => '' ],
+			'conditions' => [
+				'relation' => 'or',
+				'terms' => [
+					[ 'name' => 'button_text', 'operator' => '!==', 'value' => '' ],
+					[ 'name' => 'button2_text', 'operator' => '!==', 'value' => '' ],
+				],
+			],
 		] );
 
-		$button = '{{WRAPPER}} .rf-showcase__button';
+		$any = '{{WRAPPER}} .rf-showcase__button';
+		$button = '{{WRAPPER}} .rf-showcase__button--primary';
+		$second = '{{WRAPPER}} .rf-showcase__button--secondary';
+
+		$this->add_responsive_control( 'buttons_gap', [
+			'label' => esc_html__( 'Space Between The Buttons', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'max' => 60 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__buttons' => 'gap: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_control( 'heading_button1', [
+			'label' => esc_html__( 'First Button', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
 
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'button_typography', 'selector' => $button ] );
 		$this->add_control( 'button_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
 		$this->add_control( 'button_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'background-color: {{VALUE}};' ] ] );
 		$this->add_control( 'button_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
 
+		$this->add_control( 'heading_button2', [
+			'label' => esc_html__( 'Second Button', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
+
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'button2_typography', 'selector' => $second ] );
+		$this->add_control( 'button2_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_border', [ 'label' => esc_html__( 'Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second => 'border-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_hover_color', [ 'label' => esc_html__( 'Hover Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
+
+		$this->add_control( 'heading_buttons_both', [
+			'label' => esc_html__( 'Both Buttons', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
+
 		$this->add_responsive_control( 'button_padding', [
 			'label' => esc_html__( 'Padding', 'refraction' ),
 			'type' => Controls_Manager::DIMENSIONS,
 			'size_units' => [ 'px', 'em' ],
-			'selectors' => [ $button => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			'selectors' => [ $any => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
 		] );
 
 		$this->add_control( 'button_radius', [
 			'label' => esc_html__( 'Corners', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'max' => 40 ] ],
-			'selectors' => [ $button => 'border-radius: {{SIZE}}{{UNIT}};' ],
+			'selectors' => [ $any => 'border-radius: {{SIZE}}{{UNIT}};' ],
 		] );
 
 		$this->end_controls_section();
@@ -723,8 +841,27 @@ class Phone_Showcase extends Widget_Base {
 		// The steps.
 		echo '<div class="rf-showcase__side">';
 
-		if ( '' !== trim( (string) ( $s['label'] ?? '' ) ) ) {
-			echo '<p class="rf-showcase__label">' . $this->icon( $s['label_icon'] ?? [] ) . '<span>' . esc_html( $s['label'] ) . '</span></p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup from the icons manager.
+		$heading = trim( (string) ( $s['heading'] ?? '' ) );
+		$description = trim( (string) ( $s['description'] ?? '' ) );
+		$label = trim( (string) ( $s['label'] ?? '' ) );
+
+		if ( '' !== $label || '' !== $heading || '' !== $description ) {
+			echo '<div class="rf-showcase__intro">';
+
+			if ( '' !== $label ) {
+				echo '<p class="rf-showcase__label">' . $this->icon( $s['label_icon'] ?? [] ) . '<span>' . esc_html( $label ) . '</span></p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup from the icons manager.
+			}
+
+			if ( '' !== $heading ) {
+				$tag = Utils::validate_html_tag( $s['heading_tag'] ?? 'h2' );
+				printf( '<%1$s class="rf-showcase__heading">%2$s</%1$s>', $tag, nl2br( esc_html( $heading ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Validated tag, escaped text.
+			}
+
+			if ( '' !== $description ) {
+				echo '<p class="rf-showcase__description">' . nl2br( esc_html( $description ) ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped text.
+			}
+
+			echo '</div>';
 		}
 
 		echo '<div class="rf-showcase__steps" role="tablist" aria-orientation="vertical" aria-label="' . esc_attr__( 'Steps', 'refraction' ) . '">';
@@ -749,14 +886,24 @@ class Phone_Showcase extends Widget_Base {
 
 		echo '</div>';
 
-		if ( '' !== trim( (string) ( $s['button_text'] ?? '' ) ) ) {
-			$this->add_render_attribute( 'button', 'class', 'rf-showcase__button' );
+		$buttons = '';
 
-			if ( ! empty( $s['button_link']['url'] ) ) {
-				$this->add_link_attributes( 'button', $s['button_link'] );
+		foreach ( [ [ 'button', 'primary' ], [ 'button2', 'secondary' ] ] as [ $key, $kind ] ) {
+			if ( '' === trim( (string) ( $s[ $key . '_text' ] ?? '' ) ) ) {
+				continue;
 			}
 
-			echo '<a ' . $this->get_render_attribute_string( 'button' ) . '><span>' . esc_html( $s['button_text'] ) . '</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Render attributes are escaped.
+			$this->add_render_attribute( $key, 'class', [ 'rf-showcase__button', 'rf-showcase__button--' . $kind ] );
+
+			if ( ! empty( $s[ $key . '_link' ]['url'] ) ) {
+				$this->add_link_attributes( $key, $s[ $key . '_link' ] );
+			}
+
+			$buttons .= '<a ' . $this->get_render_attribute_string( $key ) . '><span>' . esc_html( $s[ $key . '_text' ] ) . '</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>';
+		}
+
+		if ( '' !== $buttons ) {
+			echo '<div class="rf-showcase__buttons">' . $buttons . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Render attributes are escaped.
 		}
 
 		echo '</div>';
@@ -822,6 +969,12 @@ class Phone_Showcase extends Widget_Base {
 
 	public function render_plain_content() {
 		$s = $this->get_settings_for_display();
+
+		foreach ( [ 'heading', 'description' ] as $key ) {
+			if ( '' !== trim( (string) ( $s[ $key ] ?? '' ) ) ) {
+				echo esc_html( $s[ $key ] ) . "\n";
+			}
+		}
 
 		foreach ( array_slice( (array) ( $s['steps'] ?? [] ), 0, self::MAX_STEPS ) as $i => $step ) {
 			echo esc_html( ( $i + 1 ) . '. ' . ( $step['title'] ?? '' ) . ( empty( $step['text'] ) ? '' : ': ' . $step['text'] ) ) . "\n";

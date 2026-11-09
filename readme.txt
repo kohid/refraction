@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.58.0
+Stable tag: 0.59.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.59.0 =
+* Phone Showcase: a Heading (with its HTML tag) and a Description under the text above the steps, with their colors, typography and spacing; and a Second Button beside the first (an outline by default) with its own link, colors and hover colors. The Button style section now covers both buttons and the space between them.
 
 = 0.58.0 =
 * Image uploads (Refraction > Settings > Images, on when installed): every uploaded image is turned upright, brought down to a maximum dimension (1600px by default; landscape by width, portrait by height, smaller images keep their size) and saved as WebP at the chosen quality (80% by default); an image uploaded without alt text gets its file name ("inverness-airport-van.jpg" becomes "Inverness airport van"). Works in the Media Library, the editor's Insert Media window, drag and drop and images added from a URL. Animated GIFs and SVGs stay as they are; images already in the library are not changed.

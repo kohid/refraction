@@ -35,3 +35,11 @@ timing it; it pauses while hovered or focused, off screen and in a hidden tab, a
 (which also stops the floating). It works the same in the editor's preview.
 
 Check: `node scripts/check-phone-showcase.mjs --site DIR --port N`.
+
+## Heading, description and a second button (0.59.0)
+
+- **Content > Steps**: under **Text Above The Steps** (and its icon) come a **Heading** (multi-line; its line breaks are kept; **Heading HTML Tag**, H2 by default) and a **Description**. Each is left out when empty. With the text above the steps, they sit in `.rf-showcase__intro`, before the steps.
+- **Second Button** with its own link, beside the first in `.rf-showcase__buttons` (they wrap onto a second line when they don't fit). The first is `.rf-showcase__button--primary`, filled in the accent. The second is `--secondary`, an outline in the accent by default.
+- **Style > Steps**: Heading Color and Typography, Description Color and Typography, Space Under The Heading And Description.
+- **Style > Buttons** (shown when either button has text): Space Between The Buttons. Each button has its own colors (the second also has a border and hover text color), and both share padding and corners. The first button's existing settings carry over.
+- `scripts/check-phone-showcase.mjs` checks the order (text above the steps, heading, description, steps, buttons), the heading tag and line break, and the two buttons side by side with their own links.
