@@ -113,7 +113,7 @@ async function main() {
 	];
 
 	try {
-		const showcase = page( 'Showcase', box( [ w( 'ps01', { steps: [ step( 1, 'w-logo-blue.png' ), step( 2, 'wordpress-logo.png' ), step( 3 ), step( 4 ) ], cards, button_text: 'Open full demo', button_link: { url: '#demo' } } ) ] ), {} );
+		const showcase = page( 'Showcase', box( [ w( 'ps01', { steps: [ step( 1, 'w-logo-blue.png' ), step( 2, 'wordpress-logo.png' ), step( 3 ), step( 4 ) ], cards, button_text: 'Open full demo', button_link: { url: '#demo' }, heading: 'Book your ride\nin four taps', heading_tag: 'h2', description: 'Download the app or call us, day or night.', button2_text: 'Call us', button2_link: { url: 'tel:+441463222222' } } ) ] ), {} );
 		const many = page( 'Many steps', box( [ w( 'ps02', { steps: Array.from( { length: 25 }, ( x, i ) => step( i + 1 ) ), cards: [] } ) ] ), {} );
 		const devices = [ 'island', 'notch', 'hole', 'hole-left', 'edge', 'rounded', 'compact', 'classic', 'fold', 'clay', 'outline', 'tablet', 'tablet-wide' ];
 		const ratios = { island: 0.488, notch: 0.488, hole: 0.46, 'hole-left': 0.46, edge: 0.47, rounded: 0.47, compact: 0.52, classic: 0.49, fold: 0.87, clay: 0.48, outline: 0.48, tablet: 0.72, 'tablet-wide': 1.39 };
@@ -143,6 +143,17 @@ async function main() {
 		// ------------------------------------------------------------ the steps and the phone
 		const d = await at( showcase.url, 1280, 900 );
 		await sleep( 800 );
+		const intro = await d.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps01"] .rf-showcase__side' );
+			const order = [ ...root.querySelectorAll( '.rf-showcase__label, .rf-showcase__heading, .rf-showcase__description, .rf-showcase__steps, .rf-showcase__buttons' ) ].map( ( e ) => e.className.replace( 'rf-showcase__', '' ).split( ' ' )[ 0 ] );
+			const h = root.querySelector( '.rf-showcase__heading' );
+			const b = [ ...root.querySelectorAll( '.rf-showcase__button' ) ];
+			const r = b.map( ( x ) => x.getBoundingClientRect() );
+			return { order: order.join( ',' ), tag: h?.tagName, lines: h?.querySelectorAll( 'br' ).length, size: parseFloat( getComputedStyle( h ).fontSize ), desc: root.querySelector( '.rf-showcase__description' )?.textContent, buttons: b.map( ( x ) => [ x.className.replace( /.*--/, '' ), x.getAttribute( 'href' ), x.textContent.trim() ] ), sameRow: 2 === r.length && Math.abs( r[ 0 ].top - r[ 1 ].top ) < 2 && r[ 1 ].left > r[ 0 ].right, outline: b[ 1 ] ? getComputedStyle( b[ 1 ] ).backgroundColor : '' };
+		} );
+		check( 'intro', 'the text above the steps, then the heading (h2, its line break kept) and the description, then the steps and the buttons', 'label,heading,description,steps,buttons' === intro.order && 'H2' === intro.tag && 1 === intro.lines && intro.size > 24 && 'Download the app or call us, day or night.' === intro.desc, JSON.stringify( intro ) );
+		check( 'buttons', 'two buttons side by side: the first filled, the second an outline with its own link', 2 === intro.buttons.length && 'primary' === intro.buttons[ 0 ][ 0 ] && 'secondary' === intro.buttons[ 1 ][ 0 ] && 'tel:+441463222222' === intro.buttons[ 1 ][ 1 ] && intro.sameRow && 'rgba(0, 0, 0, 0)' === intro.outline, JSON.stringify( intro ) );
+		await d.locator( '[data-id="ps01"]' ).screenshot( { path: join( SHOTS, 'heading-two-buttons.png' ) } );
 		const phone = await d.evaluate( () => {
 			const body = document.querySelector( '[data-id="ps01"] .rf-phone__body' ).getBoundingClientRect();
 			const cut = document.querySelector( '[data-id="ps01"] .rf-phone__cutout' ).getBoundingClientRect();
