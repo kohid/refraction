@@ -43,7 +43,7 @@ def parse_args(argv):
     parser.add_argument("--artwork", default=os.path.join(HERE, "artwork"))
     parser.add_argument("--target-tris", type=int, default=100_000)
     parser.add_argument("--front", choices=sorted(FRONT_ROTATIONS), default="-x",
-                        help="Axis the car's front points along in the input file (Meshy: -x)")
+                        help="Axis the car's nose points along in the input file. Write it with =, e.g. --front=-x (Meshy).")
     parser.add_argument("--draco", action="store_true", help="Draco-compress the .glb (needs Blender's Draco library)")
     parser.add_argument("--no-previews", action="store_true")
     return parser.parse_args(argv)
@@ -80,7 +80,9 @@ def import_body(path):
         bpy.ops.object.join()
 
     body = bpy.context.view_layer.objects.active
+    world = body.matrix_world.copy()
     body.parent = None
+    body.matrix_world = world
     body.name = "SafeKab Taxi"
     body.data.name = "SafeKab Taxi"
 
@@ -414,7 +416,7 @@ def build_decal(decal, body, bvh, bounds, artwork_dir):
 
             verts.append(bm.verts.new(hit - direction * offset))
 
-        for face_index, face in enumerate(piece.faces):
+        for face in piece.faces:
             try:
                 bm_face = bm.faces.new([verts[i] for i in face])
             except ValueError:  # Duplicate face in the font mesh.
@@ -473,7 +475,8 @@ def setup_scene():
 def render_previews(out_dir):
     scene = bpy.context.scene
     target = Vector((0, 0, 0.7))
-    views = {"front-left": (-35, 14), "rear-right": (145, 18), "side-left": (90, 6), "front": (0, 12)}
+    # Azimuth 0 looks at the nose, 90 at the car's left (+X), 180 at the tail.
+    views = {"front-left": (35, 14), "rear-right": (215, 18), "side-left": (90, 6), "front": (0, 12)}
     paths = []
 
     for name, (azimuth, elevation) in views.items():
