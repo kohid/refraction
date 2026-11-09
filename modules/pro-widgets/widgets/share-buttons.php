@@ -281,6 +281,26 @@ class Share_Buttons extends Pro_Widget {
 			]
 		);
 
+		$this->add_control(
+			'primary_color_hover',
+			[
+				'label' => esc_html__( 'Primary Color (Hover)', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}}.refraction-share--color-custom .refraction-share__button:hover, {{WRAPPER}}.refraction-share--color-custom .refraction-share__button:focus-visible' => '--refraction-share-color: {{VALUE}}; opacity: 1;' ],
+				'condition' => [ 'color_mode' => 'custom' ],
+			]
+		);
+
+		$this->add_control(
+			'secondary_color_hover',
+			[
+				'label' => esc_html__( 'Secondary Color (Hover)', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}}.refraction-share--color-custom .refraction-share__button:hover, {{WRAPPER}}.refraction-share--color-custom .refraction-share__button:focus-visible' => '--refraction-share-contrast: {{VALUE}};' ],
+				'condition' => [ 'color_mode' => 'custom' ],
+			]
+		);
+
 		$this->add_responsive_control(
 			'button_size',
 			[

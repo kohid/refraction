@@ -2,6 +2,9 @@
 namespace Refraction\Modules\NestedCarousel\Widgets;
 
 use Refraction\Controls_Manager;
+use Refraction\Group_Control_Border;
+use Refraction\Group_Control_Box_Shadow;
+use Refraction\Group_Control_Typography;
 use Refraction\Core\Utils\Icons;
 use Refraction\Modules\NestedCarousel\Classes\Carousel_Logic;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
@@ -356,6 +359,56 @@ class Nested_Carousel extends Widget_Nested_Base {
 			'selectors' => [ $arrow => 'background-color: {{VALUE}};' ],
 		] );
 
+		$this->add_control( 'arrow_color_hover', [
+			'label' => esc_html__( 'Hover Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'color: {{VALUE}};' ],
+		] );
+
+		$this->add_control( 'arrow_bg_hover', [
+			'label' => esc_html__( 'Hover Background', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'background-color: {{VALUE}};' ],
+		] );
+
+		$this->add_responsive_control( 'arrow_icon_size', [
+			'label' => esc_html__( 'Icon Size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%', 'px' ],
+			'range' => [ '%' => [ 'min' => 20, 'max' => 100 ], 'px' => [ 'min' => 8, 'max' => 60 ] ],
+			'selectors' => [ $arrow . ' svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'arrow_radius', [
+			'label' => esc_html__( 'Corners', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%', 'px' ],
+			'range' => [ '%' => [ 'max' => 50 ], 'px' => [ 'max' => 50 ] ],
+			'selectors' => [ $arrow => 'border-radius: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_group_control( Group_Control_Border::get_type(), [
+			'name' => 'arrow_border',
+			'selector' => $arrow,
+		] );
+
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [
+			'name' => 'arrow_shadow',
+			'selector' => $arrow,
+		] );
+
+		$this->add_responsive_control( 'arrow_offset', [
+			'label' => esc_html__( 'Distance From The Edge', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => -60, 'max' => 120 ] ],
+			'selectors' => [
+				'{{WRAPPER}} .refraction-nc:not(.is-stack):not(.is-vertical) .refraction-nc__prev' => 'inset-inline-start: {{SIZE}}{{UNIT}};',
+				'{{WRAPPER}} .refraction-nc:not(.is-stack):not(.is-vertical) .refraction-nc__next' => 'inset-inline-end: {{SIZE}}{{UNIT}};',
+			],
+			'description' => esc_html__( 'Side by side and over the slides; not for the vertical and stack layouts.', 'refraction' ),
+		] );
+
 		$this->add_control( 'arrow_placement', [
 			'label' => esc_html__( 'Placement', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -394,6 +447,51 @@ class Nested_Carousel extends Widget_Nested_Base {
 			'default' => [ 'size' => 10, 'unit' => 'px' ],
 			'condition' => [ 'pagination' => 'bullets' ],
 			'selectors' => [ '{{WRAPPER}}' => '--refraction-nc-dot-size: {{SIZE}}px;' ],
+		] );
+
+		$this->add_responsive_control( 'dots_active_width', [
+			'label' => esc_html__( 'Active Bullet Width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 4, 'max' => 60 ] ],
+			'description' => esc_html__( 'Wider than the bullet size makes the current one a pill.', 'refraction' ),
+			'condition' => [ 'pagination' => 'bullets' ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc__pagination .swiper-pagination-bullet-active' => 'width: {{SIZE}}px; border-radius: 999px;' ],
+		] );
+
+		$this->add_responsive_control( 'dots_gap', [
+			'label' => esc_html__( 'Space Between Bullets', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 30 ] ],
+			'condition' => [ 'pagination' => 'bullets' ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc__pagination' => 'gap: {{SIZE}}px;' ],
+		] );
+
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'fraction_typography',
+			'selector' => '{{WRAPPER}} .refraction-nc__pagination.swiper-pagination-fraction',
+			'condition' => [ 'pagination' => 'fraction' ],
+		] );
+
+		$this->add_control( 'fraction_color', [
+			'label' => esc_html__( 'Text Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'condition' => [ 'pagination' => 'fraction' ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc__pagination.swiper-pagination-fraction' => 'color: {{VALUE}};' ],
+		] );
+
+		$this->add_responsive_control( 'progress_height', [
+			'label' => esc_html__( 'Bar Height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 1, 'max' => 16 ] ],
+			'condition' => [ 'pagination' => 'progress' ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc__pagination.swiper-pagination-progressbar' => 'height: {{SIZE}}px;' ],
+		] );
+
+		$this->add_responsive_control( 'pagination_spacing', [
+			'label' => esc_html__( 'Distance From The Slides', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 80 ] ],
+			'selectors' => [ '{{WRAPPER}} .refraction-nc__pagination' => 'margin-block-start: {{SIZE}}px;' ],
 		] );
 
 		$this->end_controls_section();
