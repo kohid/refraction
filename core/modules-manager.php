@@ -149,6 +149,7 @@ class Modules_Manager {
 			'migration',
 			'solar-icons',
 			'phosphor-icons',
+			'image-optimizer',
 		];
 	}
 
