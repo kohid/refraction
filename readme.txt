@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.61.0
+Stable tag: 0.61.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.61.1 =
+* Fix: Tabs: icons from the Solar and Phosphor libraries (and any icon drawn as inline SVG) were hidden on every tab; they now show, in the tab icon colors (normal, hover, active).
+* Fix: Image Box, Icon Box and the other widgets with a tooltip description: the tooltip's Background Color (Style > Tooltip) now applies; the default dark color always won before.
 
 = 0.61.0 =
 * Timed Slides: a Transition setting with twelve new ways for the next slide to come in, besides the card growing into the slide: fade, slide in from the side, slide up, zoom in, zoom out, blur, a circle opening from the clicked card, wipe from the side, wipe up, curtain (opening from the middle), diagonal wipe and flip. Going back runs the side and wipe transitions the other way. The slide's shade is kept during the change.

@@ -117,6 +117,8 @@ async function main() {
 			w( 'ts01', 'testimonial', { testimonial_content: long, testimonial_name: 'Anna', ...clamp( 2 ) } ),
 			w( 'ts02', 'testimonial', { testimonial_content: 'Always on time.', testimonial_name: 'Ben', box_description_display: 'tooltip' } ),
 			w( 'al01', 'alert', { alert_title: 'Road works', alert_description: 'The A9 is closed at night this week.', box_description_display: 'tooltip' } ),
+			w( 'ib02', 'icon-box', { title_text: 'Coloured tooltip', description_text: 'Red tooltip.', box_description_display: 'tooltip', box_tooltip_bg: '#E20A17' } ),
+			w( 'mb02', 'image-box', { title_text: 'Green tooltip', description_text: 'Green tooltip.', image: { url: '' }, box_description_display: 'tooltip', box_tooltip_bg: '#0B8A5B' } ),
 			w( 'ct01', 'refraction-call-to-action', { title: 'Book now', description: long, ...clamp( 2 ) } ),
 			w( 'au01', 'theme-author-box', { source: 'custom', user: '1', ...clamp( 2 ) } ),
 		] );
@@ -186,6 +188,9 @@ async function main() {
 		await sleep( 400 );
 		check( 'text editor', 'and reaching the trigger with the keyboard shows it too', '1' === ( await tip( 'te03', '.refraction-text-tooltip-trigger' ) ).opacity );
 		await b.locator( '[data-id="te03"] .refraction-text-tooltip-trigger' ).blur();
+
+		const tipBg = await b.evaluate( () => [ 'ib02', 'mb02', 'al01' ].map( ( id ) => getComputedStyle( document.querySelector( `[data-id="${ id }"] .refraction-box-tooltip` ) ).backgroundColor ) );
+		check( 'tooltip', 'Style > Tooltip > Background Color applies (Icon Box red, Image Box green); the default stays dark', 'rgb(226, 10, 23)' === tipBg[ 0 ] && 'rgb(11, 138, 91)' === tipBg[ 1 ] && 'rgb(43, 43, 43)' === tipBg[ 2 ], JSON.stringify( tipBg ) );
 
 		// Icon Box: text link toggle and the full text in a tooltip, which stops while the text is open.
 		await b.mouse.move( 1270, 5 );
