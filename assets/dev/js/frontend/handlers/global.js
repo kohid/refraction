@@ -1,4 +1,5 @@
 import readMore from './read-more';
+import headingDual from './heading-dual';
 
 class GlobalHandler extends refractionModules.frontend.handlers.Base {
 	getWidgetType() {
@@ -61,4 +62,5 @@ class GlobalHandler extends refractionModules.frontend.handlers.Base {
 export default ( $scope ) => {
 	refractionFrontend.elementsHandler.addHandler( GlobalHandler, { $element: $scope } );
 	readMore( $scope );
+	headingDual( $scope );
 };

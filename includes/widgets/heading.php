@@ -18,6 +18,8 @@ use Refraction\Modules\ContentSanitizer\Interfaces\Sanitizable;
  */
 class Widget_Heading extends Widget_Base implements Sanitizable {
 
+	use \Refraction\Includes\Widgets\Traits\Heading_Dual_Trait;
+
 	/**
 	 * Get widget name.
 	 *
@@ -224,6 +226,8 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			]
 		);
 
+		$this->add_heading_dual_content_controls();
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -396,6 +400,8 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		$this->end_controls_tabs();
 
 		$this->end_controls_section();
+
+		$this->add_heading_dual_style_controls();
 	}
 
 	/**
@@ -421,9 +427,14 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			$this->add_render_attribute( 'title', 'class', 'refraction-size-default' );
 		}
 
-		$this->add_inline_editing_attributes( 'title' );
+		$dual = 'yes' === ( $settings['rf_dual'] ?? '' ) && '' !== trim( (string) ( $settings['rf_dual_text'] ?? '' ) );
 
-		$title = wp_kses_post( $settings['title'] );
+		// Inline editing writes the heading's whole content back into the title, so it is left off with the dual parts.
+		if ( ! $dual ) {
+			$this->add_inline_editing_attributes( 'title' );
+		}
+
+		$title = $this->heading_dual_html( $settings, wp_kses_post( $settings['title'] ) );
 
 		if ( ! empty( $settings['link']['url'] ) ) {
 			$this->add_link_attributes( 'url', $settings['link'] );
@@ -454,7 +465,7 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			'h6' => 6,
 		];
 		$level = $level_map[ $tag ] ?? 2;
-		$title = Utils::html_to_plain_text( $settings['title'] );
+		$title = Utils::html_to_plain_text( $this->heading_dual_html( $settings, (string) $settings['title'] ) );
 
 		$md = str_repeat( '#', $level ) . ' ' . $title;
 
@@ -477,6 +488,19 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 		?>
 		<#
 		let title = refraction.helpers.sanitize( settings.title, { ALLOW_DATA_ATTR: false } );
+		const dualText = 'yes' === settings.rf_dual ? String( settings.rf_dual_text || '' ).trim() : '';
+
+		if ( dualText ) {
+			const after = refraction.helpers.sanitize( String( settings.rf_dual_after || '' ), { ALLOW_DATA_ATTR: false } );
+			const joiner = 'yes' === settings.rf_dual_break ? '<br>' : ( title.trim() ? ' ' : '' );
+			let tail = '';
+
+			if ( after.trim() ) {
+				tail = /^\s*[.,!?;:)\]}…%’”'"»。！？]/.test( after ) ? after.replace( /^\s+/, '' ) : ' ' + after.replace( /^\s+/, '' );
+			}
+
+			title += joiner + '<span class="refraction-heading-dual">' + refraction.helpers.sanitize( dualText, { ALLOW_DATA_ATTR: false } ) + '</span>' + tail;
+		}
 
 		if ( '' !== settings.link?.url ) {
 			title = '<a href="' + refraction.helpers.sanitizeUrl( settings.link?.url ) + '">' + title + '</a>';
@@ -490,7 +514,9 @@ class Widget_Heading extends Widget_Base implements Sanitizable {
 			view.addRenderAttribute( 'title', 'class', [ 'refraction-size-default' ] );
 		}
 
-		view.addInlineEditingAttributes( 'title' );
+		if ( ! dualText ) {
+			view.addInlineEditingAttributes( 'title' );
+		}
 
 		var headerSizeTag = refraction.helpers.validateHTMLTag( settings.header_size ),
 			title_html = '<' + headerSizeTag  + ' ' + view.getRenderAttributeString( 'title' ) + '>' + title + '</' + headerSizeTag + '>';

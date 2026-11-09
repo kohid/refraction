@@ -1,0 +1,86 @@
+//
+// Dual Heading (includes/widgets/traits/heading-dual-trait.php): the highlighted part of a Heading,
+// <span class="refraction-heading-dual">, in its own color or gradient, with a mark behind it. The widget carries
+// refraction-dual-mark-<round|marker|underline|block>, refraction-dual-fill-<color|gradient> and, when the mark draws
+// itself as the heading comes into view, refraction-dual-draw-yes (frontend/handlers/heading-dual.js adds is-drawn).
+//
+// The mark is the span's background, cut per line (box-decoration-break: clone), so it follows the words when they
+// wrap. --rf-dual-p (0 to 1) is how much of it is drawn; --rf-dual-rc the color of the round end that closes it.
+//
+
+@property --rf-dual-p {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 1;
+}
+
+@property --rf-dual-rc {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+.refraction-heading-dual {
+	--rf-dual-c: var(--rf-dual-mc, #d4f25a);
+	--rf-dual-band: linear-gradient(90deg, var(--rf-dual-c) calc(var(--rf-dual-p) * 100%), transparent 0);
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+.refraction-dual-fill-color {
+
+	// Highlighter: a straight band over the lower part of the words.
+	&.refraction-dual-mark-marker .refraction-heading-dual {
+		padding-inline: var(--rf-dual-mx, 0.06em);
+		background: var(--rf-dual-band) left 0 bottom var(--rf-dual-mo, 0.1em) / 100% var(--rf-dual-mh, 0.46em) no-repeat;
+	}
+
+	// Rounded highlighter: the band with round ends.
+	&.refraction-dual-mark-round .refraction-heading-dual {
+		--rf-dual-h: var(--rf-dual-mh, 0.46em);
+		--rf-dual-rc: var(--rf-dual-c);
+		padding-inline: var(--rf-dual-mx, 0.1em);
+		background:
+			radial-gradient(circle closest-side, var(--rf-dual-c) 97%, transparent) left 0 bottom var(--rf-dual-mo, 0.1em) / var(--rf-dual-h) var(--rf-dual-h) no-repeat,
+			radial-gradient(circle closest-side, var(--rf-dual-rc) 97%, transparent) right 0 bottom var(--rf-dual-mo, 0.1em) / var(--rf-dual-h) var(--rf-dual-h) no-repeat,
+			var(--rf-dual-band) left calc(var(--rf-dual-h) / 2) bottom var(--rf-dual-mo, 0.1em) / calc(100% - var(--rf-dual-h)) var(--rf-dual-h) no-repeat;
+	}
+
+	// Underline.
+	&.refraction-dual-mark-underline .refraction-heading-dual {
+		padding-inline: var(--rf-dual-mx, 0);
+		background: var(--rf-dual-band) left 0 bottom var(--rf-dual-mo, 0) / 100% var(--rf-dual-mh, 0.08em) no-repeat;
+	}
+
+	// Background behind the whole words.
+	&.refraction-dual-mark-block .refraction-heading-dual {
+		padding: 0.02em var(--rf-dual-mx, 0.18em);
+		border-radius: var(--rf-dual-mr, 0.2em);
+		background: var(--rf-dual-band);
+	}
+}
+
+// Gradient text: the words are filled with the gradient, without a mark (both would need the background).
+.refraction-dual-fill-gradient .refraction-heading-dual {
+	background-image: linear-gradient(var(--rf-dual-gangle, 90deg), var(--rf-dual-ga, #0f766e), var(--rf-dual-gb, #84cc16));
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+
+// Drawing the mark when the heading comes into view.
+@media (prefers-reduced-motion: no-preference) {
+
+	.refraction-dual-draw-yes .refraction-heading-dual {
+		transition:
+			--rf-dual-p var(--rf-dual-dur, 800ms) cubic-bezier(0.65, 0, 0.35, 1) var(--rf-dual-delay, 150ms),
+			--rf-dual-rc 120ms linear calc(var(--rf-dual-delay, 150ms) + var(--rf-dual-dur, 800ms) * 0.94);
+
+		&:not(.is-drawn) {
+			--rf-dual-p: 0;
+			--rf-dual-rc: transparent;
+			transition: none;
+		}
+	}
+}
