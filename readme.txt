@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.54.0
+Stable tag: 0.55.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.55.0 =
+* Nav Menu: more hover effects for the menu items (line through, highlighter, dot, corners, brackets, pill, glow, lift) and ways in (grow from the left or right, drop in), with the effect's width (as wide as the text by default, or your own in %, px or em, placed left, center or right), distance, roundness, speed and the text color on a background or pill.
+* Nav Menu submenus: their own hover effect, separate from the main items (background, underline, side bar, text slides in, arrow, dot, highlighter), with its color and thickness; the panel's open animation (fade up, fade, slide down, zoom, flip down), its position under the item, distance from it, padding, space and lines between items, item corners and the current page's color. The main items' hover effect no longer applies inside submenus.
+* Nav Menu hamburger button: hover animations (grow, shrink, lift, turn, wiggle, pulse, lines shift) and click animations (press, bounce, jelly, ripple, spin), and a hover background.
 
 = 0.54.0 =
 * Heading: Dual Heading. Add a highlighted part after the title (and text after it, such as the full stop) in its own color or a gradient, with its own typography, and a mark behind it: a rounded highlighter, a highlighter, an underline or a background, in any color, thickness and height. The mark follows the words when they wrap, and can draw itself when the heading scrolls into view.

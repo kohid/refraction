@@ -176,6 +176,17 @@
 		display: block;
 	}
 
+	.refraction-nav-menu__list > .refraction-nav-menu__item > .refraction-nav-menu__sub {
+		left: auto;
+		right: auto;
+		margin-top: 0;
+		translate: none;
+
+		&::before {
+			display: none;
+		}
+	}
+
 	// Hover/focus must not open submenus in collapsed mode; only the toggle button does.
 	.refraction-nav-menu__item:hover > .refraction-nav-menu__sub,
 	.refraction-nav-menu__item:focus-within > .refraction-nav-menu__sub {
@@ -377,8 +388,8 @@
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 	opacity: 0;
 	visibility: hidden;
-	transform: translateY(6px);
-	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+	transform: var(--refraction-nav-sub-from, translateY(6px));
+	transition: opacity 0.2s ease, transform 0.25s ease, visibility 0s linear 0.25s;
 }
 
 .refraction-nav-menu__sub .refraction-nav-menu__sub {
@@ -447,76 +458,248 @@
 	}
 }
 
-// Hover effects (pointer lines drawn on the link).
-.refraction-nav-menu--fx-underline,
-.refraction-nav-menu--fx-overline,
-.refraction-nav-menu--fx-double {
+// Hover effects on the main menu items (top level only; submenus have their own, below). Lines are as wide as the
+// text (the item padding sets --refraction-nav-link-pl / -pr), or --refraction-nav-pointer-width, placed by
+// --refraction-nav-pointer-pos (0 left, 0.5 center, 1 right).
+$rf-nav-top: "> .refraction-nav-menu .refraction-nav-menu__list > .refraction-nav-menu__item > .refraction-nav-menu__link";
+$rf-nav-lines: ".refraction-nav-menu--fx-underline, .refraction-nav-menu--fx-overline, .refraction-nav-menu--fx-double, .refraction-nav-menu--fx-strike, .refraction-nav-menu--fx-highlight";
+$rf-nav-marks: ".refraction-nav-menu--fx-underline, .refraction-nav-menu--fx-overline, .refraction-nav-menu--fx-double, .refraction-nav-menu--fx-strike, .refraction-nav-menu--fx-highlight, .refraction-nav-menu--fx-dot, .refraction-nav-menu--fx-corners, .refraction-nav-menu--fx-brackets";
 
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
-		content: "";
+.refraction-widget-refraction-nav-menu {
+	--refraction-nav-pointer-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#{$rf-nav-marks} {
+
+	#{$rf-nav-top} {
+		isolation: isolate;
+	}
+
+	#{$rf-nav-top}::before,
+	#{$rf-nav-top}::after {
 		position: absolute;
-		inset-inline: 1em;
-		height: var(--refraction-nav-pointer-size);
-		background: var(--refraction-nav-pointer);
+		pointer-events: none;
 		opacity: 0;
-		transition: opacity 0.25s ease, transform 0.25s ease;
+		transition: opacity var(--refraction-nav-pointer-speed, 250ms) ease, transform var(--refraction-nav-pointer-speed, 300ms) var(--refraction-nav-pointer-ease);
 	}
 }
 
-.refraction-nav-menu--fx-underline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after,
-.refraction-nav-menu--fx-double > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
-	bottom: 0.25em;
+#{$rf-nav-lines} {
+
+	#{$rf-nav-top}::before,
+	#{$rf-nav-top}::after {
+		--refraction-nav-inner: calc(100% - var(--refraction-nav-link-pl, 1em) - var(--refraction-nav-link-pr, 1em));
+		--refraction-nav-w: var(--refraction-nav-pointer-width, var(--refraction-nav-inner));
+		content: "";
+		left: calc(var(--refraction-nav-link-pl, 1em) + (var(--refraction-nav-inner) - var(--refraction-nav-w)) * var(--refraction-nav-pointer-pos, 0.5));
+		width: var(--refraction-nav-w);
+		height: var(--refraction-nav-pointer-size);
+		border-radius: var(--refraction-nav-pointer-radius, 0);
+		background: var(--refraction-nav-pointer);
+		transform-origin: calc(var(--refraction-nav-pointer-pos, 0.5) * 100%) center;
+	}
 }
 
-.refraction-nav-menu--fx-overline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
-.refraction-nav-menu--fx-double > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before {
-	top: 0.25em;
+.refraction-nav-menu--fx-underline,
+.refraction-nav-menu--fx-overline,
+.refraction-nav-menu--fx-strike,
+.refraction-nav-menu--fx-highlight {
+
+	#{$rf-nav-top}::before {
+		display: none;
+	}
 }
 
-.refraction-nav-menu--fx-underline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
-.refraction-nav-menu--fx-overline > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
-	display: none;
+.refraction-nav-menu--fx-underline,
+.refraction-nav-menu--fx-double {
+
+	#{$rf-nav-top}::after {
+		bottom: var(--refraction-nav-pointer-offset, 0.25em);
+	}
 }
 
-.refraction-nav-menu--anim-slide.refraction-nav-menu--fx-underline,
-.refraction-nav-menu--anim-slide.refraction-nav-menu--fx-overline,
-.refraction-nav-menu--anim-slide.refraction-nav-menu--fx-double {
+.refraction-nav-menu--fx-overline #{$rf-nav-top}::after {
+	top: var(--refraction-nav-pointer-offset, 0.25em);
+}
 
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
+.refraction-nav-menu--fx-double #{$rf-nav-top}::before {
+	top: var(--refraction-nav-pointer-offset, 0.25em);
+}
+
+.refraction-nav-menu--fx-strike #{$rf-nav-top}::after {
+	top: calc(50% - var(--refraction-nav-pointer-size) / 2);
+}
+
+// Highlighter: a band behind the lower half of the text.
+.refraction-nav-menu--fx-highlight #{$rf-nav-top}::after {
+	z-index: -1;
+	bottom: calc(var(--refraction-nav-link-pb, 0.6em) - 0.05em);
+	height: max(var(--refraction-nav-pointer-size), 0.5em);
+	border-radius: var(--refraction-nav-pointer-radius, 0.15em);
+}
+
+// Dot under the text.
+.refraction-nav-menu--fx-dot #{$rf-nav-top}::after {
+	--refraction-nav-dot: max(5px, calc(var(--refraction-nav-pointer-size) * 2.5));
+	content: "";
+	left: calc(50% - var(--refraction-nav-dot) / 2);
+	bottom: var(--refraction-nav-pointer-offset, 0.2em);
+	width: var(--refraction-nav-dot);
+	height: var(--refraction-nav-dot);
+	border-radius: 50%;
+	background: var(--refraction-nav-pointer);
+}
+
+// Corners: two brackets of the frame, at the top left and the bottom right.
+.refraction-nav-menu--fx-corners {
+
+	#{$rf-nav-top}::before,
+	#{$rf-nav-top}::after {
+		content: "";
+		width: 0.7em;
+		height: 0.7em;
+		border: 0 solid var(--refraction-nav-pointer);
+	}
+
+	#{$rf-nav-top}::before {
+		top: 0;
+		left: 0;
+		border-top-width: var(--refraction-nav-pointer-size);
+		border-left-width: var(--refraction-nav-pointer-size);
+		transform: translate(4px, 4px);
+	}
+
+	#{$rf-nav-top}::after {
+		right: 0;
+		bottom: 0;
+		border-right-width: var(--refraction-nav-pointer-size);
+		border-bottom-width: var(--refraction-nav-pointer-size);
+		transform: translate(-4px, -4px);
+	}
+}
+
+// Brackets: [ text ].
+.refraction-nav-menu--fx-brackets {
+
+	#{$rf-nav-top}::before,
+	#{$rf-nav-top}::after {
+		top: 50%;
+		color: var(--refraction-nav-pointer);
+		line-height: 1;
+	}
+
+	#{$rf-nav-top}::before {
+		content: "[";
+		left: calc(var(--refraction-nav-link-pl, 1em) * 0.25);
+		transform: translate(6px, -50%);
+	}
+
+	#{$rf-nav-top}::after {
+		content: "]";
+		right: calc(var(--refraction-nav-link-pr, 1em) * 0.25);
+		transform: translate(-6px, -50%);
+	}
+}
+
+// How the lines and the dot come in.
+.refraction-nav-menu--anim-slide {
+
+	#{$rf-nav-top}::before,
+	#{$rf-nav-top}::after {
 		transform: translateX(-12px);
 	}
 }
 
-.refraction-nav-menu--anim-grow.refraction-nav-menu--fx-underline,
-.refraction-nav-menu--anim-grow.refraction-nav-menu--fx-overline,
-.refraction-nav-menu--anim-grow.refraction-nav-menu--fx-double {
+.refraction-nav-menu--anim-drop {
 
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::before,
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link::after {
-		transform: scaleX(0);
-		opacity: 1;
+	#{$rf-nav-top}::before,
+	#{$rf-nav-top}::after {
+		transform: translateY(-8px);
 	}
 }
 
-.refraction-nav-menu--fx-underline,
-.refraction-nav-menu--fx-overline,
-.refraction-nav-menu--fx-double {
+.refraction-nav-menu--anim-grow,
+.refraction-nav-menu--anim-from-left,
+.refraction-nav-menu--anim-from-right {
 
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:hover::before,
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:hover::after,
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:focus-visible::before,
-	> .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:focus-visible::after,
-	> .refraction-nav-menu .current-menu-item > .refraction-nav-menu__link::before,
-	> .refraction-nav-menu .current-menu-item > .refraction-nav-menu__link::after {
+	#{$rf-nav-top}::before,
+	#{$rf-nav-top}::after {
+		opacity: 1;
+		transform: scaleX(0);
+	}
+}
+
+.refraction-nav-menu--anim-from-left #{$rf-nav-top}::before,
+.refraction-nav-menu--anim-from-left #{$rf-nav-top}::after {
+	transform-origin: left center;
+}
+
+.refraction-nav-menu--anim-from-right #{$rf-nav-top}::before,
+.refraction-nav-menu--anim-from-right #{$rf-nav-top}::after {
+	transform-origin: right center;
+}
+
+.refraction-nav-menu--anim-grow.refraction-nav-menu--fx-dot #{$rf-nav-top}::after {
+	transform: scale(0);
+}
+
+// The corners and brackets keep their own way in.
+.refraction-nav-menu--fx-corners,
+.refraction-nav-menu--fx-brackets {
+
+	&[class*="refraction-nav-menu--anim-"] #{$rf-nav-top}::before,
+	&[class*="refraction-nav-menu--anim-"] #{$rf-nav-top}::after {
+		opacity: 0;
+	}
+
+	&.refraction-nav-menu--fx-corners[class*="refraction-nav-menu--anim-"] #{$rf-nav-top}::before {
+		transform: translate(4px, 4px);
+	}
+
+	&.refraction-nav-menu--fx-corners[class*="refraction-nav-menu--anim-"] #{$rf-nav-top}::after {
+		transform: translate(-4px, -4px);
+	}
+
+	&.refraction-nav-menu--fx-brackets[class*="refraction-nav-menu--anim-"] #{$rf-nav-top}::before {
+		transform: translate(6px, -50%);
+	}
+
+	&.refraction-nav-menu--fx-brackets[class*="refraction-nav-menu--anim-"] #{$rf-nav-top}::after {
+		transform: translate(-6px, -50%);
+	}
+}
+
+// Shown on hover, focus and on the current page.
+#{$rf-nav-marks} {
+
+	#{$rf-nav-top}:hover::before,
+	#{$rf-nav-top}:hover::after,
+	#{$rf-nav-top}:focus-visible::before,
+	#{$rf-nav-top}:focus-visible::after,
+	> .refraction-nav-menu .refraction-nav-menu__list > .current-menu-item > .refraction-nav-menu__link::before,
+	> .refraction-nav-menu .refraction-nav-menu__list > .current-menu-item > .refraction-nav-menu__link::after {
 		opacity: 1;
 		transform: none;
 	}
 }
 
-.refraction-nav-menu--fx-framed > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link {
+.refraction-nav-menu--fx-brackets {
+
+	#{$rf-nav-top}:hover::before,
+	#{$rf-nav-top}:hover::after,
+	#{$rf-nav-top}:focus-visible::before,
+	#{$rf-nav-top}:focus-visible::after,
+	> .refraction-nav-menu .refraction-nav-menu__list > .current-menu-item > .refraction-nav-menu__link::before,
+	> .refraction-nav-menu .refraction-nav-menu__list > .current-menu-item > .refraction-nav-menu__link::after {
+		transform: translateY(-50%);
+	}
+}
+
+// Effects on the item itself.
+.refraction-nav-menu--fx-framed #{$rf-nav-top} {
 	border: var(--refraction-nav-pointer-size) solid transparent;
+	border-radius: var(--refraction-nav-pointer-radius, 0);
+	transition: color var(--refraction-nav-pointer-speed, 200ms) ease, border-color var(--refraction-nav-pointer-speed, 200ms) ease;
 
 	&:hover,
 	&:focus-visible {
@@ -524,10 +707,157 @@
 	}
 }
 
-.refraction-nav-menu--fx-background > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:hover,
-.refraction-nav-menu--fx-background > .refraction-nav-menu .refraction-nav-menu__item > .refraction-nav-menu__link:focus-visible {
-	background-color: var(--refraction-nav-pointer);
-	color: #fff;
+.refraction-nav-menu--fx-background,
+.refraction-nav-menu--fx-pill {
+
+	#{$rf-nav-top} {
+		transition: color var(--refraction-nav-pointer-speed, 200ms) ease, background-color var(--refraction-nav-pointer-speed, 200ms) ease;
+
+		&:hover,
+		&:focus-visible {
+			background-color: var(--refraction-nav-pointer);
+			color: var(--refraction-nav-pointer-text, #fff);
+		}
+	}
+}
+
+.refraction-nav-menu--fx-background #{$rf-nav-top} {
+	border-radius: var(--refraction-nav-pointer-radius, 0);
+}
+
+.refraction-nav-menu--fx-pill #{$rf-nav-top} {
+	border-radius: 999px;
+}
+
+.refraction-nav-menu--fx-glow #{$rf-nav-top} {
+	transition: color var(--refraction-nav-pointer-speed, 250ms) ease, text-shadow var(--refraction-nav-pointer-speed, 250ms) ease;
+
+	&:hover,
+	&:focus-visible {
+		text-shadow: 0 0 0.5em var(--refraction-nav-pointer), 0 0 1.2em var(--refraction-nav-pointer);
+	}
+}
+
+.refraction-nav-menu--fx-lift #{$rf-nav-top} {
+	transition: color var(--refraction-nav-pointer-speed, 250ms) ease, translate var(--refraction-nav-pointer-speed, 250ms) var(--refraction-nav-pointer-ease);
+
+	&:hover,
+	&:focus-visible {
+		translate: 0 -0.2em;
+	}
+}
+
+// Submenus: their own hover effect (refraction-nav-menu--subfx-*), separate from the main items.
+$rf-nav-sub: ".refraction-nav-menu__sub .refraction-nav-menu__link";
+$rf-nav-sub-on: ".refraction-nav-menu__sub .refraction-nav-menu__link:hover, .refraction-nav-menu__sub .refraction-nav-menu__link:focus-visible, .refraction-nav-menu__sub .current-menu-item > .refraction-nav-menu__link";
+
+[class*="refraction-nav-menu--subfx-"] #{$rf-nav-sub} {
+	--refraction-nav-sub-c: var(--refraction-nav-sub-pointer, currentColor);
+	--refraction-nav-sub-s: var(--refraction-nav-sub-pointer-size, 2px);
+	isolation: isolate;
+	transition: color 0.2s ease, background-color 0.2s ease, padding 0.25s var(--refraction-nav-pointer-ease, ease);
+}
+
+.refraction-nav-menu--subfx-underline,
+.refraction-nav-menu--subfx-bar,
+.refraction-nav-menu--subfx-slide,
+.refraction-nav-menu--subfx-arrow,
+.refraction-nav-menu--subfx-dot,
+.refraction-nav-menu--subfx-highlight {
+
+	#{$rf-nav-sub}::after {
+		content: "";
+		position: absolute;
+		pointer-events: none;
+		transition: opacity 0.25s ease, transform 0.3s var(--refraction-nav-pointer-ease, ease);
+	}
+}
+
+.refraction-nav-menu--subfx-underline #{$rf-nav-sub}::after {
+	left: var(--refraction-nav-sub-pl, 1em);
+	right: var(--refraction-nav-sub-pl, 1em);
+	bottom: 0.35em;
+	height: var(--refraction-nav-sub-s);
+	background: var(--refraction-nav-sub-c);
+	transform: scaleX(0);
+	transform-origin: left center;
+}
+
+.refraction-nav-menu--subfx-bar #{$rf-nav-sub}::after,
+.refraction-nav-menu--subfx-slide #{$rf-nav-sub}::after {
+	inset-block: 0.4em;
+	inset-inline-start: 0;
+	width: max(3px, var(--refraction-nav-sub-s));
+	border-radius: 2px;
+	background: var(--refraction-nav-sub-c);
+	transform: scaleY(0);
+}
+
+.refraction-nav-menu--subfx-arrow #{$rf-nav-sub} {
+	padding-inline-end: 2.2em;
+
+	&::after {
+		content: "\2192";
+		inset-inline-end: 0.8em;
+		top: 50%;
+		color: var(--refraction-nav-sub-c);
+		line-height: 1;
+		opacity: 0;
+		transform: translate(-6px, -50%);
+	}
+}
+
+.refraction-nav-menu--subfx-dot #{$rf-nav-sub}::after {
+	--refraction-nav-dot: max(5px, calc(var(--refraction-nav-sub-s) * 2.5));
+	inset-inline-start: calc(0.5em - var(--refraction-nav-dot) / 2);
+	top: calc(50% - var(--refraction-nav-dot) / 2);
+	width: var(--refraction-nav-dot);
+	height: var(--refraction-nav-dot);
+	border-radius: 50%;
+	background: var(--refraction-nav-sub-c);
+	transform: scale(0);
+}
+
+.refraction-nav-menu--subfx-highlight #{$rf-nav-sub} {
+	background-image: linear-gradient(var(--refraction-nav-sub-pointer, #fde68a), var(--refraction-nav-sub-pointer, #fde68a));
+	background-repeat: no-repeat;
+	background-position: left bottom 0.55em;
+	background-size: 0% 0.45em;
+	transition: color 0.2s ease, background-size 0.3s var(--refraction-nav-pointer-ease, ease);
+
+	&::after {
+		display: none;
+	}
+}
+
+.refraction-nav-menu--subfx-underline,
+.refraction-nav-menu--subfx-bar,
+.refraction-nav-menu--subfx-slide,
+.refraction-nav-menu--subfx-dot {
+
+	#{$rf-nav-sub-on} {
+
+		&::after {
+			transform: none;
+		}
+	}
+}
+
+.refraction-nav-menu--subfx-arrow #{$rf-nav-sub-on} {
+
+	&::after {
+		opacity: 1;
+		transform: translate(0, -50%);
+	}
+}
+
+.refraction-nav-menu--subfx-slide #{$rf-nav-sub-on},
+.refraction-nav-menu--subfx-dot #{$rf-nav-sub-on} {
+	padding-inline-start: calc(var(--refraction-nav-sub-pl, 1em) + 0.6em);
+}
+
+.refraction-nav-menu--subfx-highlight #{$rf-nav-sub-on} {
+	background-size: 100% 0.45em;
 }
 
 // The collapsed menu panel: its animation (in and out).
@@ -825,6 +1155,204 @@ html.refraction-nav-menu-locked {
 
 .refraction-nav-menu__item.is-open > .refraction-nav-menu__subtoggle .refraction-nav-menu__indicator--icon {
 	transform: rotate(var(--refraction-nav-indicator-turn, 180deg));
+}
+
+// Submenu panels (side by side menus): how they open, where they sit under their item and how far from it.
+$rf-nav-top-sub: ".refraction-nav-menu__list > .refraction-nav-menu__item > .refraction-nav-menu__sub";
+
+.refraction-nav-menu--subanim-fade { --refraction-nav-sub-from: none; }
+.refraction-nav-menu--subanim-slide-down { --refraction-nav-sub-from: translateY(-10px); }
+.refraction-nav-menu--subanim-zoom { --refraction-nav-sub-from: scale(0.94); }
+.refraction-nav-menu--subanim-flip { --refraction-nav-sub-from: perspective(700px) rotateX(-75deg); }
+
+.refraction-nav-menu--subanim-zoom .refraction-nav-menu__sub,
+.refraction-nav-menu--subanim-flip .refraction-nav-menu__sub {
+	transform-origin: top center;
+}
+
+.refraction-nav-menu--subanim-none .refraction-nav-menu__sub {
+	--refraction-nav-sub-from: none;
+	transition: none;
+}
+
+#{$rf-nav-top-sub} {
+	margin-top: var(--refraction-nav-sub-offset, 0);
+
+	// Keeps the hover while the pointer crosses the gap to the panel.
+	&::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 100%;
+		height: var(--refraction-nav-sub-offset, 0);
+	}
+}
+
+.refraction-nav-menu--sub-align-center #{$rf-nav-top-sub} {
+	left: 50%;
+	right: auto;
+	translate: -50% 0;
+}
+
+.refraction-nav-menu--sub-align-end #{$rf-nav-top-sub} {
+	inset-inline-start: auto;
+	inset-inline-end: 0;
+}
+
+.refraction-nav-menu--layout-vertical #{$rf-nav-top-sub} {
+	left: auto;
+	right: auto;
+	margin-top: 0;
+	translate: none;
+
+	&::before {
+		display: none;
+	}
+}
+
+// The hamburger (toggle) button: hover and click animations (the handler adds is-clicked on each click).
+.refraction-nav-menu__toggle {
+	position: relative;
+	transition: color 0.2s ease, background-color 0.2s ease, scale 0.25s ease, translate 0.25s ease, box-shadow 0.25s ease;
+
+	.refraction-nav-menu__burger,
+	.refraction-nav-menu__toggle-icon {
+		transition: transform var(--refraction-nav-burger-speed, 250ms) ease, rotate 0.3s ease;
+	}
+}
+
+.refraction-nav-menu--toggle-hover-grow .refraction-nav-menu__toggle:hover {
+	scale: 1.1;
+}
+
+.refraction-nav-menu--toggle-hover-shrink .refraction-nav-menu__toggle:hover {
+	scale: 0.92;
+}
+
+.refraction-nav-menu--toggle-hover-lift .refraction-nav-menu__toggle:hover {
+	translate: 0 -2px;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.refraction-nav-menu--toggle-hover-rotate .refraction-nav-menu__toggle:hover {
+
+	.refraction-nav-menu__burger,
+	.refraction-nav-menu__toggle-icon {
+		rotate: 90deg;
+	}
+}
+
+.refraction-nav-menu--toggle-hover-wiggle .refraction-nav-menu__toggle:hover {
+	animation: refraction-nav-wiggle 0.5s ease;
+}
+
+.refraction-nav-menu--toggle-hover-pulse .refraction-nav-menu__toggle:hover {
+	animation: refraction-nav-pulse 1s ease-in-out infinite;
+}
+
+.refraction-nav-menu--toggle-hover-lines .refraction-nav-menu:not(.is-open) .refraction-nav-menu__toggle:hover .refraction-nav-menu__burger span {
+
+	&:nth-child(1) {
+		inset-inline-end: 40%;
+	}
+
+	&:nth-child(3) {
+		inset-inline-start: 40%;
+	}
+}
+
+.refraction-nav-menu--toggle-click-press .refraction-nav-menu__toggle.is-clicked {
+	animation: refraction-nav-press 0.3s ease;
+}
+
+.refraction-nav-menu--toggle-click-bounce .refraction-nav-menu__toggle.is-clicked {
+	animation: refraction-nav-bounce 0.55s ease;
+}
+
+.refraction-nav-menu--toggle-click-jelly .refraction-nav-menu__toggle.is-clicked {
+	animation: refraction-nav-jelly 0.6s ease;
+}
+
+.refraction-nav-menu--toggle-click-spin .refraction-nav-menu__toggle.is-clicked {
+
+	.refraction-nav-menu__burger,
+	.refraction-nav-menu__toggle-icon {
+		animation: refraction-nav-spin 0.5s ease;
+	}
+}
+
+.refraction-nav-menu--toggle-click-ripple .refraction-nav-menu__toggle {
+	overflow: hidden;
+
+	&::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: 100%;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--refraction-nav-ripple, currentColor);
+		opacity: 0;
+		pointer-events: none;
+		translate: -50% -50%;
+		scale: 0;
+	}
+
+	&.is-clicked::after {
+		animation: refraction-nav-ripple 0.6s ease-out;
+	}
+}
+
+@keyframes refraction-nav-wiggle {
+	0%, 100% { rotate: 0deg; }
+	25% { rotate: -8deg; }
+	50% { rotate: 7deg; }
+	75% { rotate: -4deg; }
+}
+
+@keyframes refraction-nav-pulse {
+	0%, 100% { scale: 1; }
+	50% { scale: 1.08; }
+}
+
+@keyframes refraction-nav-press {
+	0%, 100% { scale: 1; }
+	40% { scale: 0.86; }
+}
+
+@keyframes refraction-nav-bounce {
+	0%, 100% { scale: 1; }
+	30% { scale: 0.84; }
+	60% { scale: 1.12; }
+	80% { scale: 0.97; }
+}
+
+@keyframes refraction-nav-jelly {
+	0%, 100% { scale: 1 1; }
+	30% { scale: 1.2 0.8; }
+	45% { scale: 0.85 1.15; }
+	65% { scale: 1.06 0.95; }
+}
+
+@keyframes refraction-nav-spin {
+	from { rotate: 0deg; }
+	to { rotate: 360deg; }
+}
+
+@keyframes refraction-nav-ripple {
+	from { opacity: 0.35; scale: 0; }
+	to { opacity: 0; scale: 2.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-nav-menu__toggle,
+	.refraction-nav-menu__toggle *,
+	.refraction-nav-menu__toggle::after {
+		animation: none !important;
+	}
 }
 
 // Collapsed (hamburger) modes.

@@ -123,6 +123,8 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 	}
 
 	onToggleClick() {
+		this.playClickAnimation();
+
 		// While it is closing, a click opens it again.
 		const open = ! this.elements.$nav.hasClass( 'is-open' ) || this.elements.$nav.hasClass( 'is-closing' );
 
@@ -131,6 +133,22 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		if ( ! open ) {
 			this.closeAllSubs();
 		}
+	}
+
+	// The button's click animation (Hamburger Button > Click Animation) is a CSS animation on is-clicked: taken off and
+	// put back so every click plays it again.
+	playClickAnimation() {
+		const button = this.elements.$toggle[ 0 ];
+
+		if ( ! button ) {
+			return;
+		}
+
+		button.classList.remove( 'is-clicked' );
+		void button.offsetWidth; // eslint-disable-line no-void -- restarts the animation.
+		button.classList.add( 'is-clicked' );
+		clearTimeout( this.clickTimer );
+		this.clickTimer = setTimeout( () => button.classList.remove( 'is-clicked' ), 700 );
 	}
 
 	onSubToggleClick( event ) {
