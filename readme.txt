@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.59.0
+Stable tag: 0.61.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,16 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.61.1 =
+* Fix: Tabs: icons from the Solar and Phosphor libraries (and any icon drawn as inline SVG) were hidden on every tab; they now show, in the tab icon colors (normal, hover, active).
+* Fix: Image Box, Icon Box and the other widgets with a tooltip description: the tooltip's Background Color (Style > Tooltip) now applies; the default dark color always won before.
+
+= 0.61.0 =
+* Timed Slides: a Transition setting with twelve new ways for the next slide to come in, besides the card growing into the slide: fade, slide in from the side, slide up, zoom in, zoom out, blur, a circle opening from the clicked card, wipe from the side, wipe up, curtain (opening from the middle), diagonal wipe and flip. Going back runs the side and wipe transitions the other way. The slide's shade is kept during the change.
+
+= 0.60.0 =
+* Phone Showcase buttons: each button shows text and an icon (before or after, in place of the arrow) with an optional small line above the text, for app store badges ("GET IT ON" over "Google Play" with the Google Play icon), or an image only (for example an official store badge), with the button text as its alt text. Icon size and spacing, small text typography, border width and the first button's border color.
 
 = 0.59.0 =
 * Phone Showcase: a Heading (with its HTML tag) and a Description under the text above the steps, with their colors, typography and spacing; and a Second Button beside the first (an outline by default) with its own link, colors and hover colors. The Button style section now covers both buttons and the space between them.

@@ -21,8 +21,10 @@
 			fill: var(--n-tabs-icon-color-active);
 		}
 
-		i,
-		svg {
+		// Only the two icons themselves (direct children): an icon library that draws inline SVG puts its <svg> inside
+		// the <i>, and that <svg> is always its own first and last child.
+		> i,
+		> svg {
 
 			&:first-child {
 				transform: translate(0, -100vh);
@@ -259,8 +261,8 @@
 						fill: var(--n-tabs-icon-color);
 					}
 
-					i,
-					svg {
+					> i,
+					> svg {
 
 						&:last-child {
 							transform: translate(0, -100vh);
@@ -307,8 +309,8 @@
 
 			.e-n-tab-icon {
 
-				i,
-				svg {
+				> i,
+				> svg {
 
 					&:last-child {
 						transform: initial;

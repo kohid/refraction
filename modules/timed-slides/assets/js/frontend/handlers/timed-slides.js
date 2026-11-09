@@ -61,6 +61,7 @@ export default class TimedSlides extends Base {
 			autoplay: 'yes' === settings.autoplay && ! this.isEdit,
 			interval: Math.max( 1500, Number( settings.autoplay_speed ) || 5000 ),
 			speed: Math.max( 300, Math.min( 3000, Number( settings.transition_speed ) || 900 ) ),
+			effect: settings.transition || 'grow',
 		}, {
 			slides,
 			texts,
@@ -115,7 +116,7 @@ export default class TimedSlides extends Base {
 	}
 
 	onElementChange( propertyName ) {
-		if ( [ 'autoplay_speed', 'transition_speed' ].includes( propertyName ) ) {
+		if ( [ 'autoplay_speed', 'transition_speed', 'transition' ].includes( propertyName ) ) {
 			this.build();
 		}
 	}

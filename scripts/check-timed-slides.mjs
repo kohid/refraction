@@ -302,6 +302,65 @@ async function main() {
 		check( 'autoplay', 'moves on by itself, also on hover when Pause on hover is off', moved && await c.p.evaluate( () => document.querySelector( '[data-id="wc"] .rf-tco' ).classList.contains( 'rf-ts--no-pause' ) ), '' );
 		await c.ctx.close();
 
+		// ------------------------------------------------------------ transitions
+		const effects = [ 'fade', 'slide', 'slide-up', 'zoom-in', 'zoom-out', 'blur', 'circle', 'wipe', 'wipe-up', 'curtain', 'diagonal', 'flip' ];
+		const colour = [ { _id: 'k1', slide_title: 'One', background_color: '#1E508C' }, { _id: 'k2', slide_title: 'Two', background_color: '#E20A17' }, { _id: 'k3', slide_title: 'Three', background_color: '#0B8A5B' } ];
+		const fx = page( 'Timed slides transitions', effects.flatMap( ( e, i ) => row( `t${ i }`, slider( `t${ i }`, { transition: e, transition_speed: 800, height: { unit: 'px', size: 320 } }, colour ) ) ) );
+		const tv = await visit( fx.url, 1280, 800 );
+		const mid = ( id ) => tv.p.evaluate( ( wid ) => {
+			const el = document.querySelector( `[data-id="${ wid }"]` );
+			const g = el.querySelector( '.rf-tco__grow--full' );
+			const layers = [ ...el.querySelectorAll( '.rf-tco__slide' ) ];
+			if ( ! g ) {
+				return null;
+			}
+			const cs = getComputedStyle( g );
+			return { clip: cs.clipPath, transform: cs.transform, opacity: Number( cs.opacity ).toFixed( 2 ), filter: cs.filter, color: cs.backgroundColor, oldMoves: layers.some( ( sl ) => sl.getAnimations().length > 0 ) };
+		}, id );
+		const settled = ( id ) => tv.p.evaluate( ( wid ) => {
+			const el = document.querySelector( `[data-id="${ wid }"]` );
+			return { grow: !! el.querySelector( '.rf-tco__grow' ), shown: [ ...el.querySelectorAll( '.rf-ts__content > .rf-tco__text' ) ].findIndex( ( x ) => x.classList.contains( 'is-active' ) ), still: [ ...el.querySelectorAll( '.rf-tco__slide' ) ].every( ( sl ) => 0 === sl.getAnimations().length && 'none' === getComputedStyle( sl ).transform ) };
+		}, id );
+		const moving = ( e, m ) => {
+			if ( ! m ) {
+				return false;
+			}
+			const changed = { clip: 'none' !== m.clip, transform: 'none' !== m.transform, opacity: '1.00' !== m.opacity };
+			return {
+				fade: changed.opacity, slide: changed.transform && m.oldMoves, 'slide-up': changed.transform && m.oldMoves, 'zoom-in': changed.transform && changed.opacity, 'zoom-out': changed.transform && m.oldMoves, blur: /blur/.test( m.filter ),
+				circle: /circle/.test( m.clip ), wipe: /inset/.test( m.clip ), 'wipe-up': /inset/.test( m.clip ), curtain: /inset/.test( m.clip ), diagonal: /polygon/.test( m.clip ), flip: changed.transform && m.oldMoves,
+			}[ e ];
+		};
+		const bad = [];
+		for ( const [ i, e ] of effects.entries() ) {
+			const id = `wt${ i }`;
+			await tv.p.locator( `[data-id="${ id }"]` ).scrollIntoViewIfNeeded();
+			await sleep( 150 );
+			await tv.p.click( `[data-id="${ id }"] .rf-tco__next` );
+			await sleep( 330 );
+			const m = await mid( id );
+			if ( [ 'circle', 'slide', 'curtain', 'flip' ].includes( e ) ) {
+				await tv.p.locator( `[data-id="${ id }"]` ).screenshot( { path: join( SHOTS, `transition-${ e }.png` ) } );
+			}
+			await sleep( 800 );
+			const a = await settled( id );
+			if ( ! moving( e, m ) || a.grow || 1 !== a.shown || ! a.still ) {
+				bad.push( { e, m, a } );
+			}
+		}
+		check( 'transitions', 'each of the 12 new transitions animates the next slide in (and the old one out for slide, zoom out and flip), then leaves the second slide shown and nothing moving', 0 === bad.length, JSON.stringify( bad ) );
+
+		// Going back runs "slide" the other way: the new picture comes from the left.
+		await tv.p.locator( '[data-id="wt1"]' ).scrollIntoViewIfNeeded();
+		await tv.p.click( '[data-id="wt1"] .rf-tco__prev' );
+		await sleep( 250 );
+		const back = await tv.p.evaluate( () => new DOMMatrix( getComputedStyle( document.querySelector( '[data-id="wt1"] .rf-tco__grow--full' ) ).transform ).m41 );
+		await sleep( 900 );
+		check( 'transitions', 'the previous arrow slides the other way (in from the left)', back < 0, String( back ) );
+		const grown = await tv.p.evaluate( () => document.querySelector( '[data-id="wt0"] .rf-tco' ) && ! document.querySelector( '[data-id="wt0"] .rf-tco__grow' ) );
+		check( 'transitions', 'no picture copy is left behind once a transition ends', grown, '' );
+		await tv.ctx.close();
+
 		// ------------------------------------------------------------ phone
 		const m = await visit( main.url, 390, 844 );
 		s = await state( m.p, 'wa' );

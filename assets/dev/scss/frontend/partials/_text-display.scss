@@ -151,8 +151,6 @@
 }
 
 .refraction-box-tooltip {
-	--rf-box-tooltip-bg: #2b2b2b;
-
 	position: absolute;
 	inset-inline-start: 50%;
 	top: calc(100% + 12px);
@@ -164,7 +162,7 @@
 	margin: 0;
 	padding: 14px 18px;
 	border-radius: 6px;
-	background: var(--rf-box-tooltip-bg);
+	background: var(--rf-box-tooltip-bg, #2b2b2b);
 	color: #fff;
 	font-size: 15px;
 	line-height: 1.5;
@@ -186,7 +184,7 @@
 		bottom: 100%;
 		margin-inline-start: -8px;
 		border: 8px solid transparent;
-		border-bottom-color: var(--rf-box-tooltip-bg);
+		border-bottom-color: var(--rf-box-tooltip-bg, #2b2b2b);
 	}
 
 	> :first-child {
@@ -207,7 +205,7 @@
 		top: 100%;
 		bottom: auto;
 		border-bottom-color: transparent;
-		border-top-color: var(--rf-box-tooltip-bg);
+		border-top-color: var(--rf-box-tooltip-bg, #2b2b2b);
 	}
 }
 

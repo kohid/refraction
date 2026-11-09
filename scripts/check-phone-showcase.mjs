@@ -114,6 +114,7 @@ async function main() {
 
 	try {
 		const showcase = page( 'Showcase', box( [ w( 'ps01', { steps: [ step( 1, 'w-logo-blue.png' ), step( 2, 'wordpress-logo.png' ), step( 3 ), step( 4 ) ], cards, button_text: 'Open full demo', button_link: { url: '#demo' }, heading: 'Book your ride\nin four taps', heading_tag: 'h2', description: 'Download the app or call us, day or night.', button2_text: 'Call us', button2_link: { url: 'tel:+441463222222' } } ) ] ), {} );
+		const badges = page( 'Badges', box( [ w( 'ps06', { steps: [ step( 1 ) ], cards: [], button_text: 'Google Play', button_small: 'Android app on', button_icon: { value: 'fab fa-google-play', library: 'fa-brands' }, button_link: { url: '#play' }, button_bg: '#000000', button_color: '#FFFFFF', button2_text: 'Download on the App Store', button2_look: 'image', button2_image: { url: img( 'w-logo-blue.png' ) }, button2_link: { url: '#store' }, button2_image_height: { unit: 'px', size: 52 } } ) ] ), {} );
 		const many = page( 'Many steps', box( [ w( 'ps02', { steps: Array.from( { length: 25 }, ( x, i ) => step( i + 1 ) ), cards: [] } ) ] ), {} );
 		const devices = [ 'island', 'notch', 'hole', 'hole-left', 'edge', 'rounded', 'compact', 'classic', 'fold', 'clay', 'outline', 'tablet', 'tablet-wide' ];
 		const ratios = { island: 0.488, notch: 0.488, hole: 0.46, 'hole-left': 0.46, edge: 0.47, rounded: 0.47, compact: 0.52, classic: 0.49, fold: 0.87, clay: 0.48, outline: 0.48, tablet: 0.72, 'tablet-wide': 1.39 };
@@ -154,6 +155,24 @@ async function main() {
 		check( 'intro', 'the text above the steps, then the heading (h2, its line break kept) and the description, then the steps and the buttons', 'label,heading,description,steps,buttons' === intro.order && 'H2' === intro.tag && 1 === intro.lines && intro.size > 24 && 'Download the app or call us, day or night.' === intro.desc, JSON.stringify( intro ) );
 		check( 'buttons', 'two buttons side by side: the first filled, the second an outline with its own link', 2 === intro.buttons.length && 'primary' === intro.buttons[ 0 ][ 0 ] && 'secondary' === intro.buttons[ 1 ][ 0 ] && 'tel:+441463222222' === intro.buttons[ 1 ][ 1 ] && intro.sameRow && 'rgba(0, 0, 0, 0)' === intro.outline, JSON.stringify( intro ) );
 		await d.locator( '[data-id="ps01"]' ).screenshot( { path: join( SHOTS, 'heading-two-buttons.png' ) } );
+
+		const bd = await at( badges.url, 1280, 900 );
+		await sleep( 600 );
+		const badge = await bd.evaluate( () => {
+			const [ a, b ] = document.querySelectorAll( '[data-id="ps06"] .rf-showcase__button' );
+			const icon = a.querySelector( '.rf-showcase__button-icon' ),
+				words = a.querySelector( '.rf-showcase__button-words' );
+			const pic = b.querySelector( 'img' );
+			return {
+				order: [ ...a.children ].map( ( c ) => c.className.replace( 'rf-showcase__button-', '' ) ).join(), small: a.querySelector( '.rf-showcase__button-small' )?.textContent, text: a.querySelector( '.rf-showcase__button-text' )?.textContent, arrow: !! a.querySelector( ':scope > svg' ), iconSvg: !! icon?.querySelector( 'svg, i' ),
+				smallAbove: a.querySelector( '.rf-showcase__button-small' ).getBoundingClientRect().bottom <= a.querySelector( '.rf-showcase__button-text' ).getBoundingClientRect().top + 1, iconLeft: icon.getBoundingClientRect().right <= words.getBoundingClientRect().left,
+				img: { alt: pic?.alt, h: Math.round( pic?.getBoundingClientRect().height || 0 ), loaded: pic?.naturalWidth > 0, bg: getComputedStyle( b ).backgroundColor, pad: getComputedStyle( b ).paddingLeft, text: b.textContent.trim(), href: b.getAttribute( 'href' ) },
+			};
+		} );
+		check( 'buttons', 'text and icon: the icon before, a small line above the text (a store badge), no arrow', 'icon,words' === badge.order && 'Android app on' === badge.small && 'Google Play' === badge.text && ! badge.arrow && badge.iconSvg && badge.smallAbove && badge.iconLeft, JSON.stringify( badge ) );
+		check( 'buttons', 'image only: just the image (52px high), the text as its alt text, no background or padding', 'Download on the App Store' === badge.img.alt && 52 === badge.img.h && badge.img.loaded && 'rgba(0, 0, 0, 0)' === badge.img.bg && '0px' === badge.img.pad && '' === badge.img.text && '#store' === badge.img.href, JSON.stringify( badge.img ) );
+		await bd.locator( '[data-id="ps06"] .rf-showcase__buttons' ).screenshot( { path: join( SHOTS, 'badge-buttons.png' ) } );
+		await bd.context().close();
 		const phone = await d.evaluate( () => {
 			const body = document.querySelector( '[data-id="ps01"] .rf-phone__body' ).getBoundingClientRect();
 			const cut = document.querySelector( '[data-id="ps01"] .rf-phone__cutout' ).getBoundingClientRect();

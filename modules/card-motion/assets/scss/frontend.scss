@@ -155,6 +155,12 @@
 	border-radius: var(--rf-tco-radius);
 }
 
+// The other transitions (timed-cards.js transition()): the copy covers the whole slider from the start.
+.rf-tco__grow--full {
+	border-radius: 0;
+	will-change: transform, opacity, clip-path;
+}
+
 .rf-tco__timer {
 	position: absolute;
 	top: 0;
