@@ -83,3 +83,4 @@ tests/wp-env/plugins/
 # Blender add-on build output
 integrations/blender/dist/
 __pycache__/
+integrations/blender/examples/*/dist/

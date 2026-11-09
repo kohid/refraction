@@ -64,10 +64,15 @@ Then in the page editor, add the **3D Model** widget and choose the model from t
 `GET /?rest_route=/refraction/v1/blender` checks the connection. Both need the `upload_files`
 capability. The `?rest_route=` form works whether or not the site uses pretty permalinks.
 
+## Example: SafeKab taxi
+
+[`examples/safekab-taxi/`](examples/safekab-taxi/README.md) turns an untextured Meshy AI car into a
+liveried, web-ready taxi with a repeatable Blender script, ready to publish with this add-on.
+
 ## Tests
 
 ```bash
 python3 -m unittest discover -s integrations/blender/tests
 ```
 
-These cover the HTTP client, which has no `bpy` dependency. The `ui.py` operators need Blender.
+These cover the HTTP client and the taxi example's layout rules, neither of which needs `bpy`. The `ui.py` operators need Blender.
