@@ -30,10 +30,20 @@ ImagesManager = function() {
 
 	var viewsToUpdate = {};
 
-	self.updateOnReceiveImage = function() {
+	// Sizes already waited for once (id|size): a size the server cannot give is not asked for again and again.
+	var awaited = {};
+
+	self.updateOnReceiveImage = function( showLoading = true ) {
 		var elementView = refraction.getPanelView().getCurrentPageView().getOption( 'editedElementView' );
 
-		elementView.$el.addClass( 'refraction-loading' );
+		if ( ! elementView ) {
+			return;
+		}
+
+		if ( showLoading ) {
+			elementView.$el.addClass( 'refraction-loading' );
+		}
+
 		// Add per cid for multiple images in a single view.
 		viewsToUpdate[ elementView.cid ] = elementView;
 
@@ -66,6 +76,15 @@ ImagesManager = function() {
 
 			// If it's a new dropped widget
 			imageUrl = image.url;
+
+			// Not in cache yet: the saved address can be another size of the image (a smaller one makes the preview
+			// narrower than the page). Draw the edited element again once its own size arrives, as the page shows it.
+			var key = image.id + '|' + getNormalizedSize( image );
+
+			if ( image.id && image.model && ! awaited[ key ] && $e.routes.isPartOf( 'panel/editor' ) ) {
+				awaited[ key ] = true;
+				self.updateOnReceiveImage( false );
+			}
 		}
 
 		return imageUrl;
