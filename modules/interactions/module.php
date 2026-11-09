@@ -25,7 +25,7 @@ class Module extends BaseModule {
 	}
 
 	protected function get_widgets() {
-		return [ 'Marquee' ];
+		return [ 'Marquee', 'Phone_Showcase' ];
 	}
 
 	public function __construct() {
@@ -61,6 +61,7 @@ class Module extends BaseModule {
 		wp_register_script( 'refraction-interactions', REFRACTION_ASSETS_URL . 'js/interactions-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_script( 'refraction-marquee', REFRACTION_ASSETS_URL . 'js/marquee-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_script( 'refraction-pages', REFRACTION_ASSETS_URL . 'js/pages-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
+		wp_register_script( 'refraction-phone-showcase', REFRACTION_ASSETS_URL . 'js/phone-showcase-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_script( 'refraction-doors', REFRACTION_ASSETS_URL . 'js/doors-frontend' . $min . '.js', [], REFRACTION_VERSION, true );
 		wp_register_style( 'refraction-interactions', REFRACTION_ASSETS_URL . 'css/modules/interactions/frontend' . $min . '.css', [], REFRACTION_VERSION );
 	}
@@ -69,6 +70,7 @@ class Module extends BaseModule {
 	public function enqueue_for_preview() {
 		$this->register_assets();
 		wp_enqueue_script( 'refraction-marquee' );
+		wp_enqueue_script( 'refraction-phone-showcase' );
 		wp_enqueue_style( 'refraction-interactions' );
 	}
 
