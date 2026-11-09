@@ -46,6 +46,7 @@ const PRUNED = [
 	'docs/**',
 	'examples/**',
 	'hello-elementor/**',
+	'integrations/**',
 	'local-site/**',
 	'modules/**/assets/**',
 	'packages/**',

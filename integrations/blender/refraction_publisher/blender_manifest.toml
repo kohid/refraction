@@ -1,0 +1,18 @@
+schema_version = "1.0.0"
+
+id = "refraction_publisher"
+version = "1.0.0"
+name = "Refraction Publisher"
+tagline = "Publish scenes as glTF to a Refraction site"
+maintainer = "Refraction contributors"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:GPL-3.0-or-later"]
+
+tags = ["Import-Export"]
+
+[permissions]
+network = "Upload exported models to the Refraction site you configure"
+files = "Write the exported model and poster to a temporary folder"

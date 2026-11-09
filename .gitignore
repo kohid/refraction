@@ -79,3 +79,7 @@ playwright-test-results
 docker-output/
 .wp-env.override.json
 tests/wp-env/plugins/
+
+# Blender add-on build output
+integrations/blender/dist/
+__pycache__/

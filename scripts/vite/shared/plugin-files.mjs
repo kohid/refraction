@@ -21,6 +21,7 @@ export const PLUGIN_FILE_PATTERNS = [
 	'!app/**/assets/**',
 	'!assets/**/*.map',
 	'!assets/dev/**',
+	'!integrations/**',
 	'!assets/js/qunit-tests*',
 	'!bin/**',
 	'!build/**',
