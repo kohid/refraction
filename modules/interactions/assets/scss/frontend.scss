@@ -1561,6 +1561,20 @@ html.rf-hp-on body {
 	.refraction-widget-refraction-phone-showcase:not(.rf-showcase-cards-phone-yes) .rf-showcase__card {
 		display: none;
 	}
+
+	// Nothing reaches past the sides on a phone (the glow behind the device spreads 35% beyond it); clip does not
+	// make a scroll box, so sticky parts keep working.
+	.rf-showcase {
+		overflow-x: clip;
+	}
+
+	// Shown on phones: kept inside the device (centred between 35% and 65%, at most 70% wide), so they never push
+	// the page sideways; long text wraps.
+	.rf-showcase__card {
+		left: clamp(35%, var(--x, 0%), 65%);
+		max-width: 70%;
+		white-space: normal;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {

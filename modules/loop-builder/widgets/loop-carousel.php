@@ -182,16 +182,62 @@ class Loop_Carousel extends Template_Loop_Widget {
 			]
 		);
 
+		$arrow = '{{WRAPPER}} .refraction-swiper-button';
+		$arrows_on = [ 'navigation' => [ 'arrows', 'both' ] ];
+		$dots_on = [ 'navigation' => [ 'dots', 'both' ] ];
+
+		$this->add_control( 'arrows_heading', [ 'label' => esc_html__( 'Arrows', 'refraction' ), 'type' => Controls_Manager::HEADING, 'condition' => $arrows_on ] );
+
 		$this->add_control(
 			'arrows_color',
 			[
 				'label' => esc_html__( 'Arrow color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .refraction-swiper-button' => 'color: {{VALUE}};',
+					$arrow => 'color: {{VALUE}}; fill: {{VALUE}};',
 				],
+				'condition' => $arrows_on,
 			]
 		);
+
+		$this->add_control( 'arrows_bg', [ 'label' => esc_html__( 'Arrow background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $arrow => 'background-color: {{VALUE}};' ], 'condition' => $arrows_on ] );
+		$this->add_control( 'arrows_color_hover', [ 'label' => esc_html__( 'Hover color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ], 'condition' => $arrows_on ] );
+		$this->add_control( 'arrows_bg_hover', [ 'label' => esc_html__( 'Hover background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'background-color: {{VALUE}};' ], 'condition' => $arrows_on ] );
+
+		$this->add_responsive_control( 'arrows_size', [
+			'label' => esc_html__( 'Button size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 20, 'max' => 90 ] ],
+			'selectors' => [ $arrow => 'width: {{SIZE}}px; height: {{SIZE}}px;' ],
+			'condition' => $arrows_on,
+		] );
+
+		$this->add_responsive_control( 'arrows_icon_size', [
+			'label' => esc_html__( 'Icon size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 8, 'max' => 50 ] ],
+			'selectors' => [ $arrow => 'font-size: {{SIZE}}px;', $arrow . ' svg' => 'width: {{SIZE}}px; height: {{SIZE}}px;' ],
+			'condition' => $arrows_on,
+		] );
+
+		$this->add_responsive_control( 'arrows_radius', [
+			'label' => esc_html__( 'Corners', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%', 'px' ],
+			'range' => [ '%' => [ 'max' => 50 ], 'px' => [ 'max' => 50 ] ],
+			'selectors' => [ $arrow => 'border-radius: {{SIZE}}{{UNIT}};' ],
+			'condition' => $arrows_on,
+		] );
+
+		$this->add_responsive_control( 'arrows_offset', [
+			'label' => esc_html__( 'Distance from the edge', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -40, 'max' => 120 ] ],
+			'selectors' => [ $arrow . '-prev' => 'inset-inline-start: {{SIZE}}px;', $arrow . '-next' => 'inset-inline-end: {{SIZE}}px;' ],
+			'condition' => $arrows_on,
+		] );
+
+		$this->add_control( 'dots_heading', [ 'label' => esc_html__( 'Dots', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'condition' => $dots_on ] );
 
 		$this->add_control(
 			'dots_color',
@@ -199,10 +245,47 @@ class Loop_Carousel extends Template_Loop_Widget {
 				'label' => esc_html__( 'Dots color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .swiper-pagination-bullet' => 'background: {{VALUE}};',
+					// Not the current dot: it keeps its own color (below), so it still shows which slide is in view.
+					'{{WRAPPER}} .swiper-pagination-bullet:not(.swiper-pagination-bullet-active)' => 'background: {{VALUE}};',
 				],
+				'condition' => $dots_on,
 			]
 		);
+
+		$this->add_control( 'dots_active_color', [ 'label' => esc_html__( 'Current dot color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .swiper-pagination-bullet-active' => 'background: {{VALUE}}; opacity: 1;' ], 'condition' => $dots_on ] );
+
+		$this->add_responsive_control( 'dots_size', [
+			'label' => esc_html__( 'Dot size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 4, 'max' => 24 ] ],
+			'selectors' => [ '{{WRAPPER}} .swiper-pagination-bullet' => 'width: {{SIZE}}px; height: {{SIZE}}px;' ],
+			'condition' => $dots_on,
+		] );
+
+		$this->add_responsive_control( 'dots_active_width', [
+			'label' => esc_html__( 'Current dot width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 4, 'max' => 60 ] ],
+			'description' => esc_html__( 'Wider than the dot size makes the current one a pill.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .swiper-pagination-bullet-active' => 'width: {{SIZE}}px; border-radius: 999px;' ],
+			'condition' => $dots_on,
+		] );
+
+		$this->add_responsive_control( 'dots_gap', [
+			'label' => esc_html__( 'Space between dots', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 30 ] ],
+			'selectors' => [ '{{WRAPPER}} .swiper-pagination-bullet' => 'margin: 0 calc({{SIZE}}px / 2) !important;' ],
+			'condition' => $dots_on,
+		] );
+
+		$this->add_responsive_control( 'dots_spacing', [
+			'label' => esc_html__( 'Distance from the slides', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 80 ] ],
+			'selectors' => [ '{{WRAPPER}} .swiper-pagination' => 'margin-top: {{SIZE}}px;' ],
+			'condition' => $dots_on,
+		] );
 
 		$this->end_controls_section();
 	}
