@@ -212,6 +212,8 @@ class Phone_Showcase extends Widget_Base {
 			'condition' => [ 'button_text!' => '' ],
 		] );
 
+		$this->add_button_look_controls( 'button' );
+
 		$this->add_control( 'button2_text', [
 			'label' => esc_html__( 'Second Button', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
@@ -226,6 +228,8 @@ class Phone_Showcase extends Widget_Base {
 			'dynamic' => [ 'active' => true ],
 			'condition' => [ 'button2_text!' => '' ],
 		] );
+
+		$this->add_button_look_controls( 'button2' );
 
 		$this->end_controls_section();
 
@@ -772,6 +776,41 @@ class Phone_Showcase extends Widget_Base {
 			'separator' => 'before',
 		] );
 
+		$this->add_responsive_control( 'button_icon_size', [
+			'label' => esc_html__( 'Icon Size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em' ],
+			'range' => [ 'px' => [ 'min' => 10, 'max' => 60 ] ],
+			'selectors' => [ $any => '--rf-showcase-button-icon: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'button_icon_gap', [
+			'label' => esc_html__( 'Space Between Icon And Text', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'max' => 30 ] ],
+			'selectors' => [ $any => 'gap: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'button_small_typography',
+			'label' => esc_html__( 'Small Text Typography', 'refraction' ),
+			'selector' => '{{WRAPPER}} .rf-showcase__button-small',
+		] );
+
+		$this->add_control( 'button_border_width', [
+			'label' => esc_html__( 'Border Width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 6 ] ],
+			'selectors' => [ $any => 'border-width: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_control( 'button_border', [
+			'label' => esc_html__( 'First Button Border Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $button => 'border-color: {{VALUE}};' ],
+		] );
+
 		$this->add_responsive_control( 'button_padding', [
 			'label' => esc_html__( 'Padding', 'refraction' ),
 			'type' => Controls_Manager::DIMENSIONS,
@@ -787,6 +826,112 @@ class Phone_Showcase extends Widget_Base {
 		] );
 
 		$this->end_controls_section();
+	}
+
+	/**
+	 * A button's look (Content > Steps): text with an icon and a small line above it (a store badge: "GET IT ON" over
+	 * "Google Play"), or an image only (the text is then its alt text).
+	 */
+	private function add_button_look_controls( string $key ): void {
+		$on = [ $key . '_text!' => '' ];
+		$text_look = array_merge( $on, [ $key . '_look!' => 'image' ] );
+
+		$this->add_control( $key . '_look', [
+			'label' => esc_html__( 'Show', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'text' => [ 'title' => esc_html__( 'Text and icon', 'refraction' ), 'icon' => 'rficon-t-letter' ],
+				'image' => [ 'title' => esc_html__( 'Image only', 'refraction' ), 'icon' => 'rficon-image' ],
+			],
+			'default' => 'text',
+			'toggle' => false,
+			'condition' => $on,
+		] );
+
+		$this->add_control( $key . '_image', [
+			'label' => esc_html__( 'Button Image', 'refraction' ),
+			'type' => Controls_Manager::MEDIA,
+			'description' => esc_html__( 'For example an app store badge. The button text becomes its alt text.', 'refraction' ),
+			'condition' => array_merge( $on, [ $key . '_look' => 'image' ] ),
+		] );
+
+		$this->add_responsive_control( $key . '_image_height', [
+			'label' => esc_html__( 'Image Height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 20, 'max' => 120 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__button--' . ( 'button' === $key ? 'primary' : 'secondary' ) . ' .rf-showcase__button-image' => 'height: {{SIZE}}{{UNIT}};' ],
+			'condition' => array_merge( $on, [ $key . '_look' => 'image' ] ),
+		] );
+
+		$this->add_control( $key . '_small', [
+			'label' => esc_html__( 'Small Text Above', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'GET IT ON', 'refraction' ),
+			'condition' => $text_look,
+		] );
+
+		$this->add_control( $key . '_icon', [
+			'label' => esc_html__( 'Icon', 'refraction' ),
+			'type' => Controls_Manager::ICONS,
+			'skin' => 'inline',
+			'label_block' => false,
+			'description' => esc_html__( 'Empty: an arrow after the text. Brands icons include Google Play and Apple.', 'refraction' ),
+			'condition' => $text_look,
+		] );
+
+		$this->add_control( $key . '_icon_position', [
+			'label' => esc_html__( 'Icon Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'before' => [ 'title' => esc_html__( 'Before', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'after' => [ 'title' => esc_html__( 'After', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+			],
+			'default' => 'before',
+			'toggle' => false,
+			'condition' => array_merge( $text_look, [ $key . '_icon[value]!' => '' ] ),
+		] );
+	}
+
+	/** One button's markup, '' without text. */
+	private function button_html( array $s, string $key, string $kind ): string {
+		$text = trim( (string) ( $s[ $key . '_text' ] ?? '' ) );
+
+		if ( '' === $text ) {
+			return '';
+		}
+
+		$image = 'image' === ( $s[ $key . '_look' ] ?? '' ) ? (string) ( $s[ $key . '_image' ]['url'] ?? '' ) : '';
+		$classes = [ 'rf-showcase__button', 'rf-showcase__button--' . $kind ];
+
+		if ( '' !== $image ) {
+			$classes[] = 'rf-showcase__button--image';
+		}
+
+		$this->add_render_attribute( $key, 'class', $classes );
+
+		if ( ! empty( $s[ $key . '_link' ]['url'] ) ) {
+			$this->add_link_attributes( $key, $s[ $key . '_link' ] );
+		}
+
+		if ( '' !== $image ) {
+			$inner = '<img class="rf-showcase__button-image" src="' . esc_url( $image ) . '" alt="' . esc_attr( $text ) . '" />';
+		} else {
+			$icon = $this->icon( $s[ $key . '_icon' ] ?? [] );
+			$small = trim( (string) ( $s[ $key . '_small' ] ?? '' ) );
+			$words = '' !== $small
+				? '<span class="rf-showcase__button-words"><span class="rf-showcase__button-small">' . esc_html( $small ) . '</span><span class="rf-showcase__button-text">' . esc_html( $text ) . '</span></span>'
+				: '<span>' . esc_html( $text ) . '</span>';
+
+			if ( '' === $icon ) {
+				$inner = $words . '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+			} else {
+				$icon = '<span class="rf-showcase__button-icon">' . $icon . '</span>';
+				$inner = 'after' === ( $s[ $key . '_icon_position' ] ?? '' ) ? $words . $icon : $icon . $words;
+			}
+		}
+
+		return '<a ' . $this->get_render_attribute_string( $key ) . '>' . $inner . '</a>';
 	}
 
 	// ---------------------------------------------------------------- render
@@ -886,21 +1031,7 @@ class Phone_Showcase extends Widget_Base {
 
 		echo '</div>';
 
-		$buttons = '';
-
-		foreach ( [ [ 'button', 'primary' ], [ 'button2', 'secondary' ] ] as [ $key, $kind ] ) {
-			if ( '' === trim( (string) ( $s[ $key . '_text' ] ?? '' ) ) ) {
-				continue;
-			}
-
-			$this->add_render_attribute( $key, 'class', [ 'rf-showcase__button', 'rf-showcase__button--' . $kind ] );
-
-			if ( ! empty( $s[ $key . '_link' ]['url'] ) ) {
-				$this->add_link_attributes( $key, $s[ $key . '_link' ] );
-			}
-
-			$buttons .= '<a ' . $this->get_render_attribute_string( $key ) . '><span>' . esc_html( $s[ $key . '_text' ] ) . '</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>';
-		}
+		$buttons = $this->button_html( $s, 'button', 'primary' ) . $this->button_html( $s, 'button2', 'secondary' );
 
 		if ( '' !== $buttons ) {
 			echo '<div class="rf-showcase__buttons">' . $buttons . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Render attributes are escaped.

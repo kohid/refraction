@@ -43,3 +43,11 @@ Check: `node scripts/check-phone-showcase.mjs --site DIR --port N`.
 - **Style > Steps**: Heading Color and Typography, Description Color and Typography, Space Under The Heading And Description.
 - **Style > Buttons** (shown when either button has text): Space Between The Buttons. Each button has its own colors (the second also has a border and hover text color), and both share padding and corners. The first button's existing settings carry over.
 - `scripts/check-phone-showcase.mjs` checks the order (text above the steps, heading, description, steps, buttons), the heading tag and line break, and the two buttons side by side with their own links.
+
+## Button icons, store badges and image buttons (0.60.0)
+
+- Each button (Content > Steps) has **Show**:
+  - **Text and icon**: an **Icon** before or after the text, in place of the arrow (empty keeps the arrow), and an optional **Small Text Above** (`.rf-showcase__button-small` over `.rf-showcase__button-text`), which makes store badges: "GET IT ON" over "Google Play" with `fab fa-google-play`, "Download on the" over "App Store" with `fab fa-apple`.
+  - **Image only**: the **Button Image** is the whole button (`.rf-showcase__button--image`: no background, border or padding), with an **Image Height**. The button text becomes the image's alt text. Use it for the official store badges.
+- Style > Buttons > Both Buttons: **Icon Size**, **Space Between Icon And Text**, **Small Text Typography** and **Border Width**; plus **First Button Border Color**.
+- `scripts/check-phone-showcase.mjs` checks a badge (icon before the text, the small line above it, no arrow) and an image button (the image only, its alt text, no background or padding).
