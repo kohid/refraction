@@ -76,6 +76,10 @@ page's elements (`core/kits/assets/js/edit-from-preview.js`) goes back to the pa
 unsaved Site Settings changes) and selects that element. The Site Settings menu says so. Elements of other documents
 (a Theme Builder header or footer) are left alone.
 
+## Nav Menu: more hover effects, submenu styling and button animations (0.55.0)
+
+See [nav-menu-effects.md](nav-menu-effects.md).
+
 ## Nav Menu panel: no sideways scroll, header and buttons (0.43.0)
 
 - In the collapsed panel, items wrap (`white-space: normal; overflow-wrap: anywhere`) and the panel hides any sideways
