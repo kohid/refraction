@@ -1,0 +1,1117 @@
+//
+// Dashboard widgets: Chart, Data Table, Stat Card (modules/dashboard-widgets). A clean admin dashboard look: white
+// cards with soft corners and a faint shadow, a bold ink title over a muted subtitle, muted uppercase table headings
+// over dashed rows, and tinted badges. Every color is a variable the Style settings can set.
+//
+
+.rf-dash,
+.rf-stat {
+	--rf-ink: #181C32;
+	--rf-text: #3F4254;
+	--rf-muted: #A1A5B7;
+	--rf-soft: #B5B5C3;
+	--rf-line: #EFF2F5;
+	--rf-dashed: #E4E6EF;
+	--rf-bg-soft: #F5F8FA;
+	--rf-good: #1BC5BD;
+	--rf-good-light: #C9F7F5;
+	--rf-bad: #F64E60;
+	--rf-bad-light: #FFE2E5;
+	color: var(--rf-text);
+}
+
+// Tones: the main color and its light tint.
+.rf-dash-tone--primary { --tone: #3699FF; --tone-light: #F1FAFF; }
+.rf-dash-tone--success { --tone: #1BC5BD; --tone-light: #C9F7F5; }
+.rf-dash-tone--info { --tone: #8950FC; --tone-light: #EEE5FF; }
+.rf-dash-tone--warning { --tone: #FFA800; --tone-light: #FFF4DE; }
+.rf-dash-tone--danger { --tone: #F64E60; --tone-light: #FFE2E5; }
+.rf-dash-tone--dark { --tone: #181C32; --tone-light: #EFF2F5; }
+
+// ---------------------------------------------------------------- the card
+.rf-dash--card {
+	padding: var(--rf-dash-pad-top, 1.75rem) var(--rf-dash-pad-right, 2rem) var(--rf-dash-pad-bottom, 1.75rem) var(--rf-dash-pad-left, 2rem);
+	border-radius: 0.75rem;
+	background-color: #fff;
+	box-shadow: 0 0 20px 0 rgba(76, 87, 125, 0.06);
+}
+
+.rf-dash__head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.rf-dash__title {
+	margin: 0;
+	color: var(--rf-ink);
+	font-size: 1.2rem;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.rf-dash__subtitle {
+	margin-top: 0.3rem;
+	color: var(--rf-muted);
+	font-size: 0.9rem;
+	font-weight: 500;
+}
+
+.rf-dash__badge {
+	flex: none;
+	padding: 0.4em 0.8em;
+	border-radius: 0.475rem;
+	background-color: var(--tone-light);
+	color: var(--tone);
+	font-size: 0.85rem;
+	font-weight: 600;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+// ---------------------------------------------------------------- chart
+.rf-chart {
+	--rf-chart-h: 300px;
+	--rf-chart-axis: var(--rf-muted);
+	--rf-chart-grid: var(--rf-dashed);
+	--rf-chart-radius: 6px;
+	--rf-chart-bar: 55%;
+	--rf-chart-line: 3px;
+	--rf-chart-fill: 0.35;
+	--rf-chart-ring: 22;
+	--rf-chart-tip-bg: #fff;
+	--rf-chart-tip-color: var(--rf-text);
+	position: relative;
+	margin: 0;
+}
+
+.rf-chart__empty {
+	margin: 0;
+	padding: 2rem 0;
+	color: var(--rf-muted);
+	text-align: center;
+}
+
+// Values on the left, plot to the right, labels underneath.
+.rf-chart__frame {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: var(--rf-chart-h) auto;
+	column-gap: 12px;
+	row-gap: 10px;
+}
+
+.rf-chart__ticks {
+	position: relative;
+	min-width: 2.5em;
+}
+
+.rf-chart__tick,
+.rf-chart__label {
+	color: var(--rf-chart-axis);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.rf-chart__tick {
+	position: absolute;
+	right: 0;
+	bottom: var(--at);
+	translate: 0 50%;
+}
+
+.rf-chart__tick-sizer {
+	display: block;
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.rf-chart__plot {
+	position: relative;
+}
+
+.rf-chart__grid {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: var(--at);
+	border-top: 1px dashed var(--rf-chart-grid);
+}
+
+.rf-chart--no-grid .rf-chart__grid {
+	display: none;
+}
+
+.rf-chart__labels {
+	grid-column: 2;
+	position: relative;
+	height: 1.2em;
+}
+
+.rf-chart__label {
+	position: absolute;
+	left: calc((var(--i) + 0.5) / var(--n) * 100%);
+	translate: -50% 0;
+	max-width: calc(100% / var(--n));
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+// A category: a slot of the plot, holding its bars (side by side) or the hover area of a line.
+.rf-chart__group {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: calc(var(--i) / var(--n) * 100%);
+	width: calc(100% / var(--n));
+	display: flex;
+	justify-content: center;
+	gap: 3px;
+}
+
+.rf-chart__bar {
+	position: relative;
+	width: calc(var(--rf-chart-bar) / var(--rf-chart-series, 2));
+	min-width: 3px;
+	max-width: 48px;
+	flex: 0 1 auto;
+}
+
+.rf-chart__bar::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: var(--from);
+	height: var(--size);
+	border-radius: var(--rf-chart-radius) var(--rf-chart-radius) 0 0;
+	background-color: var(--c);
+	transform-origin: center bottom;
+	transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.15s ease;
+}
+
+.rf-chart__bar.is-negative::before {
+	border-radius: 0 0 var(--rf-chart-radius) var(--rf-chart-radius);
+	transform-origin: center top;
+}
+
+.rf-chart__group.is-active .rf-chart__bar::before {
+	filter: brightness(1.08);
+}
+
+// Stacked: one bar wide, the series one on top of another (each placed by --from).
+.rf-chart__group.is-stacked {
+	justify-content: center;
+
+	.rf-chart__bar {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		width: var(--rf-chart-bar);
+		max-width: 64px;
+		translate: -50% 0;
+	}
+
+	.rf-chart__bar::before {
+		border-radius: 0;
+	}
+
+	.rf-chart__bar:last-child::before {
+		border-radius: var(--rf-chart-radius) var(--rf-chart-radius) 0 0;
+	}
+}
+
+.rf-chart__value {
+	position: absolute;
+	left: 50%;
+	bottom: calc(var(--from) + var(--size) + 4px);
+	translate: -50% 0;
+	color: var(--rf-text);
+	font-size: 11px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+// Horizontal bars: categories down the side, values across.
+.rf-chart__frame.is-horizontal {
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto auto;
+
+	.rf-chart__ticks {
+		grid-column: 2;
+		grid-row: 2;
+		height: 1.2em;
+		min-width: 0;
+	}
+
+	.rf-chart__tick {
+		left: var(--at);
+		right: auto;
+		bottom: auto;
+		translate: -50% 0;
+	}
+
+	.rf-chart__plot {
+		grid-column: 2;
+		grid-row: 1;
+		height: auto;
+		min-height: calc(var(--n) * 40px);
+	}
+
+	.rf-chart__grid {
+		top: 0;
+		bottom: 0;
+		left: var(--at);
+		right: auto;
+		border-top: 0;
+		border-left: 1px dashed var(--rf-chart-grid);
+	}
+
+	// The category names in the flow, one row each, so their column takes their width.
+	.rf-chart__labels {
+		grid-column: 1;
+		grid-row: 1;
+		display: grid;
+		grid-template-rows: repeat(var(--n), minmax(0, 1fr));
+		height: auto;
+	}
+
+	.rf-chart__label {
+		position: static;
+		align-self: center;
+		max-width: 12em;
+		translate: none;
+		text-align: end;
+	}
+
+	.rf-chart__tick-sizer {
+		display: none;
+	}
+
+	.rf-chart__group {
+		top: calc(var(--i) / var(--n) * 100%);
+		bottom: auto;
+		left: 0;
+		right: 0;
+		width: auto;
+		height: calc(100% / var(--n));
+		flex-direction: column;
+	}
+
+	.rf-chart__bar {
+		width: auto;
+		max-width: none;
+		height: calc(var(--rf-chart-bar) / var(--rf-chart-series, 2));
+		max-height: 28px;
+	}
+
+	.rf-chart__bar::before {
+		top: 0;
+		bottom: 0;
+		left: var(--from);
+		right: auto;
+		width: var(--size);
+		height: auto;
+		border-radius: 0 var(--rf-chart-radius) var(--rf-chart-radius) 0;
+		transform-origin: left center;
+	}
+
+	.rf-chart__group.is-stacked .rf-chart__bar {
+		top: 50%;
+		bottom: auto;
+		left: 0;
+		right: 0;
+		width: auto;
+		height: var(--rf-chart-bar);
+		max-height: 32px;
+		translate: 0 -50%;
+	}
+
+	.rf-chart__value {
+		left: calc(var(--from) + var(--size) + 6px);
+		bottom: 50%;
+		translate: 0 50%;
+	}
+}
+
+// Lines and areas: an SVG path across the whole plot; the stroke keeps its width as the plot stretches.
+.rf-chart__svg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+.rf-chart__line {
+	fill: none;
+	stroke-width: var(--rf-chart-line);
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+	stroke-dasharray: 1;
+	stroke-dashoffset: 0;
+	transition: stroke-dashoffset 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rf-chart__area {
+	opacity: var(--rf-chart-fill);
+	transition: opacity 1s ease 0.3s;
+}
+
+.rf-chart__dot {
+	position: absolute;
+	left: var(--x);
+	bottom: var(--y);
+	width: 10px;
+	height: 10px;
+	margin: -5px 0 0 -5px;
+	translate: 0 50%;
+	border: 3px solid var(--c);
+	border-radius: 50%;
+	background: #fff;
+	box-sizing: border-box;
+	pointer-events: none;
+}
+
+.rf-chart__hit.is-active::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	border-left: 1px dashed var(--rf-muted);
+}
+
+// Pie and donut: SVG circles, one per slice, drawn by their stroke (pathLength 100: a share is a dash length).
+.rf-chart__ring-wrap {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 1.5rem 2.5rem;
+}
+
+.rf-chart__ring {
+	position: relative;
+	width: min(100%, var(--rf-chart-h));
+	aspect-ratio: 1;
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		rotate: -90deg;
+	}
+}
+
+.rf-chart__slice {
+	fill: none;
+	stroke-width: 50;
+	r: 25;
+	stroke-dasharray: var(--share) calc(100 - var(--share));
+	stroke-dashoffset: calc(var(--start) * -1);
+	transition: stroke-dasharray 1s cubic-bezier(0.22, 1, 0.36, 1), stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease;
+	cursor: default;
+}
+
+.rf-chart__ring.is-donut .rf-chart__slice {
+	stroke-width: var(--rf-chart-ring);
+	r: calc(50 - var(--rf-chart-ring) / 2);
+}
+
+.rf-chart__ring:has(.rf-chart__slice.is-active) .rf-chart__slice:not(.is-active) {
+	opacity: 0.45;
+}
+
+.rf-chart__center {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+}
+
+.rf-chart__total {
+	color: var(--rf-ink);
+	font-size: 1.75rem;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.rf-chart__caption {
+	margin-top: 0.25rem;
+	color: var(--rf-muted);
+	font-size: 0.85rem;
+	font-weight: 500;
+}
+
+// Legend.
+.rf-chart__legend {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem 1.25rem;
+	margin: 1.25rem 0 0;
+	padding: 0;
+	list-style: none;
+	color: var(--rf-text);
+	font-size: 0.9rem;
+	font-weight: 500;
+
+	li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0;
+	}
+
+	i {
+		flex: none;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+	}
+}
+
+.rf-chart--legend-top .rf-chart__legend {
+	margin: 0 0 1.25rem;
+}
+
+.rf-chart--legend-side .rf-chart__legend {
+	flex-direction: column;
+	align-items: stretch;
+	min-width: 12rem;
+	margin: 0;
+
+	li {
+		justify-content: space-between;
+		gap: 1.25rem;
+		padding: 0.55rem 0;
+		border-bottom: 1px dashed var(--rf-dashed);
+	}
+
+	li:last-child {
+		border-bottom: 0;
+	}
+}
+
+.rf-chart__legend-name {
+	flex: 1;
+}
+
+.rf-chart__legend-value {
+	color: var(--rf-ink);
+	font-weight: 600;
+
+	small {
+		margin-left: 0.25rem;
+		color: var(--rf-muted);
+		font-weight: 500;
+	}
+}
+
+// Tooltip.
+.rf-chart__tip {
+	position: absolute;
+	z-index: 5;
+	min-width: 140px;
+	padding: 0.65rem 0.85rem;
+	border-radius: 0.475rem;
+	background: var(--rf-chart-tip-bg);
+	color: var(--rf-chart-tip-color);
+	box-shadow: 0 8px 24px rgba(24, 28, 50, 0.12);
+	font-size: 0.85rem;
+	line-height: 1.5;
+	pointer-events: none;
+	opacity: 0;
+	translate: -50% calc(-100% - 12px);
+	transition: opacity 0.15s ease;
+
+	&.is-shown {
+		opacity: 1;
+	}
+
+	b {
+		display: block;
+		margin-bottom: 0.25rem;
+		color: var(--rf-ink);
+		font-weight: 600;
+	}
+
+	span {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		white-space: nowrap;
+	}
+
+	i {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+	}
+
+	em {
+		margin-left: auto;
+		padding-left: 1rem;
+		color: var(--rf-ink);
+		font-style: normal;
+		font-weight: 600;
+	}
+}
+
+// The numbers for screen readers.
+.rf-chart__sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+// Drawing in (dashboard.js adds is-drawn when the chart comes into view).
+.rf-chart--animate:not(.is-drawn) {
+
+	.rf-chart__bar::before {
+		transform: scaleY(0);
+	}
+
+	.rf-chart__frame.is-horizontal .rf-chart__bar::before {
+		transform: scaleX(0);
+	}
+
+	.rf-chart__line {
+		stroke-dashoffset: 1;
+	}
+
+	.rf-chart__area {
+		opacity: 0;
+	}
+
+	.rf-chart__slice {
+		stroke-dasharray: 0 100;
+	}
+}
+
+// ---------------------------------------------------------------- data table
+.rf-table-tools {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 1rem;
+
+	input {
+		width: min(100%, 260px);
+		padding: 0.6rem 0.9rem 0.6rem 2.4rem;
+		border: 1px solid var(--rf-dashed);
+		border-radius: 0.475rem;
+		background: var(--rf-bg-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A5B7' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 0.8rem center / 1rem;
+		color: var(--rf-text);
+		font: inherit;
+		font-size: 0.9rem;
+
+		&:focus {
+			outline: 2px solid #3699FF;
+			outline-offset: 1px;
+			background-color: #fff;
+		}
+	}
+}
+
+.rf-table-scroll {
+	overflow-x: auto;
+}
+
+.rf-table {
+	--rf-table-line: var(--rf-dashed);
+	--rf-table-head-bg: var(--rf-bg-soft);
+	--rf-table-stripe: var(--rf-bg-soft);
+	--rf-table-hover: #F9FAFB;
+	--rf-table-progress: #3699FF;
+	width: 100%;
+	margin: 0;
+	border-collapse: collapse;
+	border: 0;
+	font-size: 0.95rem;
+
+	th,
+	td {
+		padding: 0.95rem 0.75rem;
+		border: 0;
+		background: none;
+		text-align: start;
+		vertical-align: middle;
+	}
+
+	th:first-child,
+	td:first-child {
+		padding-inline-start: 0;
+	}
+
+	th:last-child,
+	td:last-child {
+		padding-inline-end: 0;
+	}
+
+	th {
+		color: var(--rf-muted);
+		font-size: 0.8rem;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	td {
+		color: var(--rf-text);
+		font-weight: 500;
+	}
+
+	td.is-bold {
+		color: var(--rf-ink);
+		font-weight: 600;
+	}
+
+	// Dates, numbers and badges stay on one line (the table scrolls sideways when the columns do not fit).
+	td.is-date,
+	td.is-number,
+	td.is-badge {
+		white-space: nowrap;
+	}
+
+	.is-center {
+		text-align: center;
+	}
+
+	.is-end {
+		text-align: end;
+	}
+
+	td a {
+		color: var(--rf-ink);
+		font-weight: 600;
+		text-decoration: none;
+
+		&:hover {
+			color: #3699FF;
+		}
+	}
+}
+
+.rf-table--head-muted th {
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.rf-table--head-filled {
+
+	th {
+		background: var(--rf-table-head-bg);
+		color: var(--rf-text);
+	}
+
+	th:first-child {
+		padding-inline-start: 0.75rem;
+		border-start-start-radius: 0.475rem;
+		border-end-start-radius: 0.475rem;
+	}
+
+	th:last-child {
+		padding-inline-end: 0.75rem;
+		border-start-end-radius: 0.475rem;
+		border-end-end-radius: 0.475rem;
+	}
+
+	td:first-child {
+		padding-inline-start: 0.75rem;
+	}
+
+	td:last-child {
+		padding-inline-end: 0.75rem;
+	}
+}
+
+.rf-table--rows-dashed thead tr,
+.rf-table--rows-dashed tbody tr:not(:last-child) {
+	border-bottom: 1px dashed var(--rf-table-line);
+}
+
+.rf-table--rows-lines thead tr,
+.rf-table--rows-lines tbody tr:not(:last-child) {
+	border-bottom: 1px solid var(--rf-table-line);
+}
+
+.rf-table--rows-striped tbody tr:nth-child(even) td {
+	background: var(--rf-table-stripe);
+}
+
+.rf-table--hover tbody tr:hover td {
+	background: var(--rf-table-hover);
+}
+
+.rf-table__sort {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	letter-spacing: inherit;
+	text-transform: inherit;
+	cursor: pointer;
+
+	&:hover {
+		color: var(--rf-ink);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #3699FF;
+		outline-offset: 2px;
+		border-radius: 3px;
+	}
+}
+
+.rf-table__arrow {
+	width: 0;
+	height: 0;
+	border: 4px solid transparent;
+	border-top-color: currentColor;
+	opacity: 0.25;
+	translate: 0 2px;
+}
+
+th[aria-sort="ascending"] .rf-table__arrow {
+	border-top-color: transparent;
+	border-bottom-color: currentColor;
+	opacity: 1;
+	translate: 0 -2px;
+}
+
+th[aria-sort="descending"] .rf-table__arrow {
+	opacity: 1;
+}
+
+.rf-table__badge {
+	display: inline-block;
+	padding: 0.4em 0.75em;
+	border-radius: 0.475rem;
+	background-color: var(--tone-light);
+	color: var(--tone);
+	font-size: 0.8rem;
+	font-weight: 600;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.rf-table__progress-wrap {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	min-width: 110px;
+}
+
+.rf-table__progress {
+	flex: 1;
+	height: 6px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--rf-bg-soft);
+
+	i {
+		display: block;
+		height: 100%;
+		border-radius: inherit;
+		background: var(--rf-table-progress);
+	}
+}
+
+.rf-table__progress-num {
+	color: var(--rf-muted);
+	font-size: 0.85rem;
+	font-weight: 600;
+}
+
+.rf-table__empty {
+	margin: 1rem 0 0;
+	color: var(--rf-muted);
+	text-align: center;
+}
+
+.rf-table-pager {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 0.35rem;
+	margin-top: 1.25rem;
+
+	button {
+		min-width: 2.2rem;
+		height: 2.2rem;
+		padding: 0 0.6rem;
+		border: 1px solid transparent;
+		border-radius: 0.475rem;
+		background: transparent;
+		color: var(--rf-text);
+		font: inherit;
+		font-size: 0.9rem;
+		font-weight: 600;
+		cursor: pointer;
+
+		&:hover:not([disabled]) {
+			background: var(--rf-bg-soft);
+		}
+
+		&[aria-current="page"] {
+			border-color: #3699FF;
+			background: #3699FF;
+			color: #fff;
+		}
+
+		&[disabled] {
+			opacity: 0.4;
+			cursor: default;
+		}
+	}
+}
+
+// On phones: each row as a card (Table > On Phones).
+@media (max-width: 767px) {
+
+	.rf-table-wrap--stack {
+
+		.rf-table thead {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip: rect(0 0 0 0);
+		}
+
+		.rf-table,
+		.rf-table tbody,
+		.rf-table tr,
+		.rf-table td {
+			display: block;
+		}
+
+		.rf-table tr {
+			padding: 0.75rem 0;
+		}
+
+		.rf-table td {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: 0.35rem 0;
+			text-align: end;
+		}
+
+		.rf-table td::before {
+			content: attr(data-label);
+			flex: none;
+			color: var(--rf-muted);
+			font-size: 0.75rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.03em;
+			text-align: start;
+		}
+	}
+}
+
+// ---------------------------------------------------------------- stat card
+.rf-stat {
+	--tone: #3699FF;
+	--tone-light: #F1FAFF;
+	--rf-stat-good: var(--rf-good);
+	--rf-stat-bad: var(--rf-bad);
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	overflow: hidden;
+	padding: 1.75rem 2rem;
+	border-radius: 0.75rem;
+	background: #fff;
+	box-shadow: 0 0 20px 0 rgba(76, 87, 125, 0.06);
+}
+
+.rf-stat__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 50px;
+	height: 50px;
+	border-radius: 0.475rem;
+	background: var(--tone-light);
+	color: var(--tone);
+	font-size: 22px;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.rf-stat__label {
+	color: var(--rf-muted);
+	font-size: 0.95rem;
+	font-weight: 500;
+}
+
+.rf-stat__value {
+	margin-top: 0.35rem;
+	color: var(--rf-ink);
+	font-size: 2.25rem;
+	font-weight: 700;
+	line-height: 1.1;
+	letter-spacing: -0.01em;
+	font-variant-numeric: tabular-nums;
+}
+
+.rf-stat__change {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: 0.75rem;
+}
+
+.rf-stat__badge {
+	padding: 0.35em 0.65em;
+	border-radius: 0.475rem;
+	font-size: 0.85rem;
+	font-weight: 600;
+	line-height: 1;
+
+	&.is-good {
+		background: color-mix(in srgb, var(--rf-stat-good) 18%, #fff);
+		color: var(--rf-stat-good);
+	}
+
+	&.is-bad {
+		background: color-mix(in srgb, var(--rf-stat-bad) 15%, #fff);
+		color: var(--rf-stat-bad);
+	}
+
+	&.is-flat {
+		background: var(--rf-bg-soft);
+		color: var(--rf-muted);
+	}
+}
+
+.rf-stat__note {
+	color: var(--rf-muted);
+	font-size: 0.85rem;
+	font-weight: 500;
+}
+
+.rf-stat__spark {
+	display: block;
+	width: calc(100% + 4rem);
+	height: 70px;
+	margin: 0 -2rem -1.75rem;
+}
+
+.rf-stat__spark-line {
+	fill: none;
+	stroke: var(--tone);
+	stroke-width: 2.5px;
+	stroke-linecap: round;
+	vector-effect: non-scaling-stroke;
+}
+
+.rf-stat__spark-fill {
+	fill: var(--tone);
+	opacity: 0.12;
+}
+
+.rf-stat__spark--bars {
+	display: flex;
+	align-items: flex-end;
+	gap: 4px;
+	width: 100%;
+	margin: 0;
+
+	i {
+		flex: 1;
+		border-radius: 3px 3px 0 0;
+		background: var(--tone);
+		opacity: 0.75;
+	}
+}
+
+.rf-stat--inline {
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+
+	.rf-stat__main {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.rf-stat__spark {
+		flex-basis: 100%;
+	}
+}
+
+// Filled: the whole card in the tone color, white text.
+.rf-stat--filled {
+	background: var(--tone);
+
+	.rf-stat__label,
+	.rf-stat__note {
+		color: rgba(255, 255, 255, 0.78);
+	}
+
+	.rf-stat__value {
+		color: #fff;
+	}
+
+	.rf-stat__icon {
+		background: rgba(255, 255, 255, 0.2);
+		color: #fff;
+	}
+
+	.rf-stat__badge {
+		background: rgba(255, 255, 255, 0.22);
+		color: #fff;
+	}
+
+	.rf-stat__spark-line {
+		stroke: #fff;
+	}
+
+	.rf-stat__spark-fill,
+	.rf-stat__spark--bars i {
+		fill: #fff;
+		background: #fff;
+		opacity: 0.25;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-chart *,
+	.rf-chart *::before {
+		transition: none !important;
+	}
+}

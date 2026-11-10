@@ -150,6 +150,7 @@ class Modules_Manager {
 			'solar-icons',
 			'phosphor-icons',
 			'image-optimizer',
+			'dashboard-widgets',
 		];
 	}
 

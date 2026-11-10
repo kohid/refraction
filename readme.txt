@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.62.0
+Stable tag: 0.63.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.63.0 =
+* New Dashboard widgets (a new Dashboard category), in a clean admin-dashboard look: white cards with soft shadows, muted labels, dashed table rows and tinted badges.
+* Chart: bars, horizontal bars, line, area, pie and donut, from series typed in, a pasted table (CSV) or this site's own numbers (posts, comments or form submissions per month, posts per category, users per role). Drawn on the site without a chart library; tooltip, legend, stacked bars, smooth curves, the total in a donut, number format (prefix, suffix, decimals, 1.2K), drawing in when shown, and the numbers as a table for screen readers.
+* Data Table: columns of text, numbers, badges (colored by the word: Paid, Pending, Failed...), progress bars, dates and links, over rows typed in, a pasted table or the latest posts; sorting, search, pages, and on phones scrolling or each row as a card.
+* Stat Card: an icon, a label, a big number that counts up, its change as a green or red badge (or the other way when down is good) and a sparkline.
+* Every value of the three widgets can come from a Dynamic Tag. New Site Statistic tag: published posts of a type, comments, users (of a role) or form submissions, all time or the last 7, 30 or 365 days.
 
 = 0.62.0 =
 * Widget audit: every widget rendered on desktop and phone with each color setting set to its own color, checking for settings that do nothing, widgets that render nothing, sideways scrolling on phones, JavaScript errors and PHP notices (scripts/audit-widgets-editor.mjs and audit-widgets-render.mjs).
