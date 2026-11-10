@@ -194,7 +194,7 @@ async function main() {
 		check( 'code', 'an answer with nothing usable is refused, and the request stays open', /No valid element/.test( refused ) && /widget "html"/.test( refused ), refused );
 		check( 'design', 'the brief carries the design direction, signature features, recipes and review list', [ 'DESIGN DIRECTION', 'SIGNATURE FEATURES', 'SECTION RECIPES', 'REVIEW BEFORE ANSWERING', 'rf_reveal_text' ].every( ( part ) => codeBrief.includes( part ) ) );
 		const recipes = JSON.parse( wp( [ "--exec=define( 'REST_REQUEST', true );", 'eval', "$s = new Refraction\\Modules\\AskClaude\\Classes\\Widget_Specs( 0 ); $o = []; foreach ( Refraction\\Modules\\AskClaude\\Classes\\Design_Guide::recipes() as $n => $e ) { $c = Refraction\\Modules\\AskClaude\\Classes\\Prompt_Builder::clean( $s, [ $e ], 'page' ); $o[ $n ] = array_merge( $c[1], $c[3] ); } echo wp_json_encode( $o );" ] ).trim().split( '\n' ).pop() );
-		check( 'design', 'every recipe of the design guide is valid: no setting or value is left out', 5 === Object.keys( recipes ).length && Object.values( recipes ).every( ( left ) => 0 === left.length ), JSON.stringify( recipes ) );
+		check( 'design', 'every recipe of the design guide is valid: no setting or value is left out', Object.keys( recipes ).length >= 5 && Object.values( recipes ).every( ( left ) => 0 === left.length ), JSON.stringify( recipes ) );
 		const previewFile = join( dir, 'preview.json' );
 		writeFileSync( previewFile, JSON.stringify( { elements: [ { elType: 'container', settings: { flex_direction: 'column', shape_divider_top: 'curve' }, elements: [
 			{ elType: 'widget', widgetType: 'heading', settings: { title: 'PREVIEWHEAD', title_colour: '#ff0000', header_size: 'h7' }, elements: [] },

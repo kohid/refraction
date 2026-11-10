@@ -1,0 +1,18 @@
+[
+	{ "id": "taxi", "mode": "page", "prompt": "Home page for an Inverness taxi company: 24/7 local and airport rides, booking by phone or app, fixed fares to Inverness Airport, wheelchair accessible cars." },
+	{ "id": "bakery", "mode": "page", "prompt": "Home page for a small sourdough bakery in Leith, Edinburgh: bread baked overnight, a cafe with ten seats, pre-orders for the weekend, opening hours." },
+	{ "id": "dentist", "mode": "page", "prompt": "Home page for a family dental clinic: check-ups, hygienist, Invisalign, emergency appointments, nervous patients welcome, online booking." },
+	{ "id": "saas", "mode": "page", "prompt": "Landing page for a SaaS that turns support tickets into product insights for software teams: integrations with help desks, weekly digest, free trial." },
+	{ "id": "architect", "mode": "page", "prompt": "Portfolio home page for a two-person architecture studio that designs timber homes in the Highlands: selected projects, approach, contact." },
+	{ "id": "festival", "mode": "page", "prompt": "Page for a three-day summer music festival by a lake: line-up announcement, tickets, camping, getting there, FAQ." },
+	{ "id": "law", "mode": "page", "prompt": "Home page for a small employment law firm that advises staff and employers: free first call, areas of practice, how fees work." },
+	{ "id": "yoga", "mode": "page", "prompt": "Home page for a yoga and pilates studio: class timetable, beginners course, private sessions, first class free." },
+	{ "id": "restaurant", "mode": "page", "prompt": "Home page for a seafood restaurant on a harbour: seasonal menu, table booking, private dining, the story of the boats they buy from." },
+	{ "id": "charity", "mode": "page", "prompt": "Home page for a charity that repairs donated laptops and gives them to school pupils: how to donate, how to apply, volunteering, impact." },
+	{ "id": "estate", "mode": "page", "prompt": "Home page for an independent estate agent: free valuation, properties for sale and to let, local market knowledge, fees explained." },
+	{ "id": "app", "mode": "page", "prompt": "Landing page for a habit-tracking mobile app: streaks, reminders, privacy (data stays on the phone), download links, pricing." },
+	{ "id": "pricing", "mode": "section", "prompt": "A pricing section with three plans (Starter, Team, Business) and a monthly/yearly toggle feeling; the middle plan recommended." },
+	{ "id": "testimonials", "mode": "section", "prompt": "A testimonials section for a web design agency, with placeholders for three client quotes and their logos." },
+	{ "id": "faq", "mode": "section", "prompt": "An FAQ section for an online course: refunds, access length, certificates, group discounts, support." },
+	{ "id": "team", "mode": "section", "prompt": "A meet-the-team section for a veterinary practice with four vets and two nurses." }
+]
