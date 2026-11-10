@@ -13,28 +13,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Highlight Words (0.67.0): any number of words or phrases in a widget's text, highlighted like the Dual Heading's
- * part (own color or gradient, a mark behind them that can draw itself in). Added to the text and card widgets in
- * WIDGETS: a Content section with the phrases, and (except the Heading, which shares its Dual Heading style) a Style
- * section. The site gets the spans from the server (render_content); the editor's preview, which draws widgets with
+ * Highlight Words (0.67.0, every widget with a title or description since 0.67.1): any number of words or phrases in
+ * a widget's text, highlighted like the Dual Heading's part (own color or gradient, a mark behind them that can draw
+ * itself in). A Content section with the phrases and (except the Heading, which shares its Dual Heading style) a
+ * Style section, added before the widget's first Style section when it has a title or description control. The site gets the spans from the server (render_content); the editor's preview, which draws widgets with
  * their JS templates, gets them from assets/js/highlight-preview.js.
  *
  * Also the Pill Label of the Heading: a small heading shown as a pill with a round badge (a number or an icon).
  */
 class Module extends BaseModule {
 
-	/** The widgets that get Highlight Words, with the content section it follows. */
-	const WIDGETS = [
-		'heading' => 'section_title',
-		'text-editor' => 'section_editor',
-		'image-box' => 'section_image',
-		'icon-box' => 'section_icon',
-		'testimonial' => 'section_testimonial',
-		'refraction-call-to-action' => 'section_main',
-		'refraction-flip-box' => 'section_back',
-		'refraction-price-table' => 'section_header',
-		'refraction-blockquote' => 'section_quote',
-	];
+	/**
+	 * Widgets left out: their text is drawn or rewritten by a script, lives in SVG, or is not the visitor's text (forms,
+	 * code, maps, media, post lists).
+	 */
+	const EXCLUDE = '/^(rfb-|refraction-form$|refraction-login$|html$|shortcode$|wp-widget-|text-path$|refraction-animated-headline$|refraction-countdown$|build-scene$|scroll-sequence$|refraction-code-highlight$|google_maps$|video$|audio$|refraction-lottie$|image-gallery$|image-carousel$|refraction-gallery$|refraction-media-carousel$|refraction-video-playlist$|spacer$|divider$|menu-anchor$|sidebar$|social-icons$|refraction-share-buttons$|refraction-nav-menu$|refraction-mega-menu$|refraction-facebook|refraction-template$|loop-|posts$|archive-posts$|portfolio$|taxonomy-filter$|theme-site-logo$|theme-search-form$|theme-sitemap$|refraction-table-of-contents$|refraction-event-calendar$|refraction-off-canvas$)/';
+
+	/** A control that holds a title or a description. */
+	const TEXT_NAMES = '/(^|_)(title|heading|headline|description|desc|text|content|editor|caption|subtitle|quote|label|tweet|testimonial)(_|$)/';
+
+	const TEXT_TYPES = [ 'text', 'textarea', 'wysiwyg' ];
 
 	public function get_name() {
 		return 'highlight-words';
@@ -43,16 +41,50 @@ class Module extends BaseModule {
 	public function __construct() {
 		parent::__construct();
 
-		foreach ( self::WIDGETS as $widget => $section ) {
-			add_action( "refraction/element/{$widget}/{$section}/after_section_end", [ $this, 'add_sections' ] );
-		}
+		add_action( 'refraction/element/before_section_start', [ $this, 'maybe_add_sections' ], 10, 3 );
 
 		add_action( 'refraction/element/heading/section_title_style/after_section_end', [ $this, 'add_pill_controls' ] );
 		add_filter( 'refraction/widget/render_content', [ $this, 'render' ], 10, 2 );
 		add_action( 'refraction/preview/enqueue_scripts', [ $this, 'enqueue_preview' ] );
 	}
 
-	/** After the widget's main content section: Highlight Words, and its Style section (the Heading has its own). */
+	/** Whether a widget has a title or a description: a text control, also inside a repeater, named like one. */
+	public static function has_text( array $controls ): bool {
+		foreach ( $controls as $name => $control ) {
+			$type = (string) ( $control['type'] ?? '' );
+
+			if ( in_array( $type, self::TEXT_TYPES, true ) && preg_match( self::TEXT_NAMES, (string) $name ) ) {
+				return true;
+			}
+
+			if ( in_array( $type, [ 'repeater', 'nested-elements-repeater' ], true ) && ! empty( $control['fields'] ) && self::has_text( (array) $control['fields'] ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Before a widget's first Style section (its content controls are all there by then): Highlight Words for every
+	 * widget with a title or a description.
+	 */
+	public function maybe_add_sections( $element, $section_id, $args ) {
+		if ( ! $element instanceof Widget_Base || Controls_Manager::TAB_STYLE !== ( $args['tab'] ?? '' ) ) {
+			return;
+		}
+
+		// Once per set of controls: a widget's controls can be built more than once in a request.
+		if ( preg_match( self::EXCLUDE, $element->get_name() ) || $element->get_controls( 'section_rf_hl' ) ) {
+			return;
+		}
+
+		if ( self::has_text( $element->get_controls() ) ) {
+			$this->add_sections( $element );
+		}
+	}
+
+	/** Highlight Words, and its Style section (the Heading has its own, shared with the Dual Heading). */
 	public function add_sections( $element ) {
 		$heading = 'heading' === $element->get_name();
 
@@ -142,7 +174,7 @@ class Module extends BaseModule {
 
 	/** On the site: the highlighted words, and the Heading's pill badge. */
 	public function render( $content, $widget ) {
-		if ( ! $widget instanceof Widget_Base || ! isset( self::WIDGETS[ $widget->get_name() ] ) ) {
+		if ( ! $widget instanceof Widget_Base || preg_match( self::EXCLUDE, $widget->get_name() ) ) {
 			return $content;
 		}
 

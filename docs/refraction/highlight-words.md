@@ -4,7 +4,7 @@ Module `modules/highlight-words`.
 
 ## Highlight Words
 
-Content > **Highlight Words** on the Heading, Text Editor, Image Box, Icon Box, Testimonial, Call to Action, Flip Box (after the back side), Price Table (after the header) and Blockquote:
+Content > **Highlight Words** on every widget with a title or a description (0.67.1): the module adds it before a widget's first Style section when the widget has a text, textarea or wysiwyg control (also inside a repeater) named like a title or description (`title`, `heading`, `description`, `text`, `content`, `editor`, `caption`, `subtitle`, `quote`, `label`...). Left out (`Module::EXCLUDE`): widgets whose text is drawn or rewritten by a script or lives in SVG (Animated Headline, Countdown, Text Path, 3D Build Scene, Scroll Sequence, Lottie), forms and login, code, maps, media and galleries, menus, post lists and loops, and layout widgets. In a nested widget (Tabs, Accordion, Nested Carousel) the phrases are also highlighted in the widgets inside it.
 
 - **Words To Highlight**: one word or phrase per line, any number (up to 30). Each is highlighted wherever it appears in the widget's text, titles and descriptions alike, also inside links.
 - **Match Upper And Lower Case**: off by default, so "Safe" and "safe" both match.
