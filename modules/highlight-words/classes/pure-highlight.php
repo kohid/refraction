@@ -85,4 +85,110 @@ class Pure_Highlight {
 
 		return implode( '', $parts );
 	}
+
+	/** Class name parts that mark a title, and a description. */
+	const TITLE_PARTS = [ 'title', 'heading', 'headline', 'name' ];
+	const DESC_PARTS = [ 'description', 'desc', 'content', 'text', 'subtitle', 'subheading', 'excerpt', 'caption', 'quote', 'editor' ];
+
+	const VOID = [ 'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr' ];
+
+	/** 'title', 'desc' or '' for a class attribute: a part of a class name (split at - and _) that says which. */
+	public static function kind( string $classes ): string {
+		$desc = false;
+
+		foreach ( preg_split( '/\s+/', trim( $classes ) ) ?: [] as $class ) {
+			$parts = preg_split( '/[-_]+/', strtolower( $class ) ) ?: [];
+
+			if ( array_intersect( $parts, self::TITLE_PARTS ) ) {
+				return 'title';
+			}
+
+			if ( array_intersect( $parts, self::DESC_PARTS ) ) {
+				$desc = true;
+			}
+		}
+
+		return $desc ? 'desc' : '';
+	}
+
+	/**
+	 * Title words in the title, description words in the description: the innermost element whose class says title or
+	 * description decides; text in neither gets both lists.
+	 */
+	public static function wrap_parts( string $html, string $title_words, string $desc_words, bool $match_case = false ): string {
+		$title = self::phrases( $title_words );
+		$desc = self::phrases( $desc_words );
+
+		if ( ( ! $title && ! $desc ) || '' === $html ) {
+			return $html;
+		}
+
+		$patterns = [
+			'title' => self::pattern( $title, $match_case ),
+			'desc' => self::pattern( $desc, $match_case ),
+			'' => self::pattern( array_values( array_unique( array_merge( $title, $desc ) ) ), $match_case ),
+		];
+		$parts = preg_split( '/(<[^>]*>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE );
+
+		if ( false === $parts ) {
+			return $html;
+		}
+
+		$stack = [];
+		$skip = 0;
+
+		foreach ( $parts as $i => $part ) {
+			if ( '' === $part ) {
+				continue;
+			}
+
+			if ( '<' === $part[0] ) {
+				if ( preg_match( '#^<\s*/\s*([a-z0-9-]+)#i', $part, $m ) ) {
+					$tag = strtolower( $m[1] );
+
+					// Close up to the matching tag (forgiving about tags left open).
+					for ( $j = count( $stack ) - 1; $j >= 0; $j-- ) {
+						if ( $stack[ $j ]['tag'] === $tag ) {
+							$stack = array_slice( $stack, 0, $j );
+							break;
+						}
+					}
+
+					$skip = (int) array_sum( array_column( $stack, 'skip' ) );
+				} elseif ( preg_match( '#^<\s*([a-z0-9-]+)#i', $part, $m ) && '!' !== $part[1] ) {
+					$tag = strtolower( $m[1] );
+
+					if ( in_array( $tag, self::VOID, true ) || preg_match( '#/\s*>$#', $part ) ) {
+						continue;
+					}
+
+					$class = preg_match( '#\bclass\s*=\s*("([^"]*)"|\'([^\']*)\')#i', $part, $c ) ? ( '' !== ( $c[2] ?? '' ) ? $c[2] : ( $c[3] ?? '' ) ) : '';
+					$no = in_array( $tag, [ 'script', 'style', 'textarea' ], true ) || preg_match( '#\brefraction-heading-dual\b#', $class );
+					$stack[] = [ 'tag' => $tag, 'kind' => self::kind( $class ), 'skip' => $no ? 1 : 0 ];
+					$skip = (int) array_sum( array_column( $stack, 'skip' ) );
+				}
+
+				continue;
+			}
+
+			if ( $skip ) {
+				continue;
+			}
+
+			$kind = '';
+
+			for ( $j = count( $stack ) - 1; $j >= 0; $j-- ) {
+				if ( '' !== $stack[ $j ]['kind'] ) {
+					$kind = $stack[ $j ]['kind'];
+					break;
+				}
+			}
+
+			if ( '' !== $patterns[ $kind ] ) {
+				$parts[ $i ] = preg_replace( $patterns[ $kind ], self::SPAN . '$1</span>', $part );
+			}
+		}
+
+		return implode( '', $parts );
+	}
 }

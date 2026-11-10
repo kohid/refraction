@@ -102,8 +102,8 @@ async function main() {
 			[ [ w( 'hl00001', 'heading', { title: 'Payments go straight into your bank. Not ours.', header_size: 'h2', rf_hl_words: 'your bank\nNot ours', rf_dual_mark: 'round', rf_dual_mark_color: '#D4F25A', rf_dual_draw: 'yes' } ), 100 ] ],
 			[ [ w( 'hl00002', 'heading', { title: 'How it works', header_size: 'h6', rf_pill: 'yes', rf_pill_badge: '3' } ), 100 ] ],
 			[ [ w( 'hl00003', 'text-editor', { editor: '<p>Book a taxi any hour. Fixed fares to the airport, and <a href="#x">airport</a> pick-ups too.</p><p>Our drivers know the Highlands.</p>', rf_hl_words: 'any hour\nairport\nthe Highlands', rf_dual_fill: 'gradient' } ), 100 ] ],
-			[ [ w( 'hl00004', 'icon-box', { title_text: 'Safe transport', description_text: 'Licensed drivers, safe cars, every journey.', rf_hl_words: 'Safe\nevery journey', rf_dual_mark: 'underline', rf_dual_color: '#E20A17' } ), 50 ], [ w( 'hl00005', 'refraction-call-to-action', { title: 'Book your ride today', description: 'Call us any time.', rf_hl_words: 'today\nany time' } ), 50 ] ],
-			[ [ w( 'hl00007', 'alert', { alert_title: 'Bookings open', alert_description: 'Call us any time.', rf_hl_words: 'any time\nopen' } ), 34 ], [ w( 'hl00008', 'counter', { title: 'Happy riders', ending_number: 500, rf_hl_words: 'Happy' } ), 33 ], [ w( 'hl00009', 'refraction-stat-card', { label: 'Monthly riders', value: '1200', rf_hl_words: 'riders' } ), 33 ] ],
+			[ [ w( 'hl00004', 'icon-box', { title_text: 'Safe transport', description_text: 'Licensed drivers, safe cars, every journey.', rf_hl_words: 'Safe', rf_hl_desc: 'every journey', rf_dual_mark: 'underline', rf_dual_color: '#E20A17' } ), 50 ], [ w( 'hl00005', 'refraction-call-to-action', { title: 'Book your ride today', description: 'Call us any time.', rf_hl_words: 'today', rf_hl_desc: 'any time' } ), 50 ] ],
+			[ [ w( 'hl00007', 'alert', { alert_title: 'Bookings open', alert_description: 'Call us any time, we are open.', rf_hl_words: 'open', rf_hl_desc: 'any time' } ), 34 ], [ w( 'hl00008', 'counter', { title: 'Happy riders', ending_number: 500, rf_hl_words: 'Happy' } ), 33 ], [ w( 'hl00009', 'refraction-stat-card', { label: 'Monthly riders', value: '1200', rf_hl_words: 'riders' } ), 33 ] ],
 			[ [ w( 'hl00010', 'refraction-slides', { rf_hl_words: 'Heading' } ), 100 ] ],
 			[ [ w( 'hl00006', 'refraction-phone-showcase', { label: 'How it works', label_icon: { value: 'fas fa-taxi', library: 'fa-solid' }, label_pill: 'yes', steps: [ { title: 'Step one', text: 'One' } ] } ), 100 ] ],
 		] );
@@ -131,9 +131,9 @@ async function main() {
 		} );
 		check( 'heading', 'many phrases highlighted in a Heading, with a rounded mark that draws in', 'your bank,Not ours' === front.heading.join() && front.mark && front.drawn, JSON.stringify( front ) );
 		check( 'text editor', 'phrases highlighted in a Text Editor wherever they appear (also inside a link), with a gradient fill', 'any hour,airport,airport,the Highlands' === front.text.join() && 'airport' === front.linkKept && front.gradient, JSON.stringify( front.text ) );
-		check( 'cards', 'Icon Box title and description (every match, any case), and Call to Action, highlighted with their own style (red underline)', 'Safe,safe,every journey' === front.iconBox.join() && 'rgb(226, 10, 23)' === front.underline && 'today,any time' === front.cta.join(), JSON.stringify( [ front.iconBox, front.underline, front.cta ] ) );
+		check( 'cards', 'Icon Box and Call to Action with Title and Description Words: title words only in the title (not "safe" in the description), highlighted with their own style (red underline)', 'Safe,every journey' === front.iconBox.join() && 'rgb(226, 10, 23)' === front.underline && 'today,any time' === front.cta.join(), JSON.stringify( [ front.iconBox, front.underline, front.cta ] ) );
 		const more = await d.evaluate( () => Object.fromEntries( [ 'hl00007', 'hl00008', 'hl00009', 'hl00010' ].map( ( id ) => [ id, [ ...document.querySelectorAll( `[data-id="${ id }"] .rf-hl` ) ].map( ( s ) => s.textContent ).join() ] ) ) );
-		check( 'all widgets', 'every widget with a title or description has it: Alert (title and description), Counter title, Stat Card label, Slides headings', 'open,any time' === more.hl00007 && 'Happy' === more.hl00008 && 'riders' === more.hl00009 && /Heading/.test( more.hl00010 ), JSON.stringify( more ) );
+		check( 'all widgets', 'every widget with a title or description has it: Alert ("open" only in its title, "any time" in its description), Counter title, Stat Card label, Slides headings', 'open,any time' === more.hl00007 && 'Happy' === more.hl00008 && 'riders' === more.hl00009 && /Heading/.test( more.hl00010 ), JSON.stringify( more ) );
 		check( 'pill', 'a Heading as a pill label: rounded, tinted, capitals, a round badge "3" first', front.pill && '999px' === front.pill.radius && 'rgb(221, 247, 238)' === front.pill.bg && 'uppercase' === front.pill.caps && '3' === front.pill.badge && '50%' === front.pill.round && front.pill.first, JSON.stringify( front.pill ) );
 		check( 'pill', 'the Phone Showcase text above the steps as a pill, its icon in a badge', front.label && '999px' === front.label.radius && 'rgb(221, 247, 238)' === front.label.bg && front.label.badge && 'uppercase' === front.label.caps, JSON.stringify( front.label ) );
 		await d.locator( '[data-id="hl00001"]' ).screenshot( { path: join( SHOTS, 'heading.png' ) } );
@@ -163,6 +163,21 @@ async function main() {
 		await sleep( 1500 );
 		const changed = await frame.evaluate( () => [ ...document.querySelectorAll( '[data-id="hl00001"] .rf-hl' ) ].map( ( s ) => s.textContent ).join() );
 		check( 'editor', 'changing the words redraws the preview', 'straight' === changed, changed );
+		const panel = await e.evaluate( async () => {
+			const c = window.refraction.getContainer( 'hl00004' );
+			window.$e.run( 'document/elements/select', { container: c } );
+			await new Promise( ( r ) => setTimeout( r, 1500 ) );
+			const page = window.refraction.getPanelView().getCurrentPageView();
+			page.activateSection( 'section_rf_hl' );
+			page._renderChildren();
+			await new Promise( ( r ) => setTimeout( r, 500 ) );
+			const label = ( n ) => document.querySelector( `.refraction-control-${ n } .refraction-control-title` )?.textContent.trim();
+			window.$e.run( 'document/elements/settings', { container: c, settings: { rf_hl_desc: 'Licensed' } } );
+			return [ label( 'rf_hl_words' ), label( 'rf_hl_desc' ) ];
+		} );
+		await sleep( 1500 );
+		const two = await frame.evaluate( () => [ ...document.querySelectorAll( '[data-id="hl00004"] .rf-hl' ) ].map( ( s ) => s.textContent ).join() );
+		check( 'editor', 'a widget with a title and a description has two boxes, and the preview follows each', 'Title Words To Highlight' === panel[ 0 ] && 'Description Words To Highlight' === panel[ 1 ] && 'Safe,Licensed' === two, JSON.stringify( [ panel, two ] ) );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

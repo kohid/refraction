@@ -32,6 +32,9 @@ class Module extends BaseModule {
 	/** A control that holds a title or a description. */
 	const TEXT_NAMES = '/(^|_)(title|heading|headline|description|desc|text|content|editor|caption|subtitle|quote|label|tweet|testimonial)(_|$)/';
 
+	/** Of those, a title (the rest is a description: description, text, content, caption...). */
+	const TITLE_NAMES = '/(^|_)(title|heading|headline)(_|$)/';
+
 	const TEXT_TYPES = [ 'text', 'textarea', 'wysiwyg' ];
 
 	public function get_name() {
@@ -48,21 +51,27 @@ class Module extends BaseModule {
 		add_action( 'refraction/preview/enqueue_scripts', [ $this, 'enqueue_preview' ] );
 	}
 
-	/** Whether a widget has a title or a description: a text control, also inside a repeater, named like one. */
-	public static function has_text( array $controls ): bool {
+	/**
+	 * What text a widget holds: [ 'title' => bool, 'desc' => bool ], from its text controls (also inside repeaters)
+	 * named like a title or a description.
+	 */
+	public static function text_kinds( array $controls ): array {
+		$out = [ 'title' => false, 'desc' => false ];
+
 		foreach ( $controls as $name => $control ) {
 			$type = (string) ( $control['type'] ?? '' );
+			$name = (string) ( $control['name'] ?? $name );
 
-			if ( in_array( $type, self::TEXT_TYPES, true ) && preg_match( self::TEXT_NAMES, (string) $name ) ) {
-				return true;
-			}
-
-			if ( in_array( $type, [ 'repeater', 'nested-elements-repeater' ], true ) && ! empty( $control['fields'] ) && self::has_text( (array) $control['fields'] ) ) {
-				return true;
+			if ( in_array( $type, self::TEXT_TYPES, true ) && preg_match( self::TEXT_NAMES, $name ) ) {
+				$out[ preg_match( self::TITLE_NAMES, $name ) ? 'title' : 'desc' ] = true;
+			} elseif ( in_array( $type, [ 'repeater', 'nested-elements-repeater' ], true ) && ! empty( $control['fields'] ) ) {
+				$inner = self::text_kinds( (array) $control['fields'] );
+				$out['title'] = $out['title'] || $inner['title'];
+				$out['desc'] = $out['desc'] || $inner['desc'];
 			}
 		}
 
-		return false;
+		return $out;
 	}
 
 	/**
@@ -79,13 +88,15 @@ class Module extends BaseModule {
 			return;
 		}
 
-		if ( self::has_text( $element->get_controls() ) ) {
-			$this->add_sections( $element );
+		$kinds = self::text_kinds( $element->get_controls() );
+
+		if ( $kinds['title'] || $kinds['desc'] ) {
+			$this->add_sections( $element, $kinds['title'] && $kinds['desc'] );
 		}
 	}
 
 	/** Highlight Words, and its Style section (the Heading has its own, shared with the Dual Heading). */
-	public function add_sections( $element ) {
+	public function add_sections( $element, bool $two = false ) {
 		$heading = 'heading' === $element->get_name();
 
 		$element->start_controls_section( 'section_rf_hl', [
@@ -94,27 +105,37 @@ class Module extends BaseModule {
 		] );
 
 		$element->add_control( 'rf_hl_words', [
-			'label' => esc_html__( 'Words To Highlight', 'refraction' ),
+			'label' => $two ? esc_html__( 'Title Words To Highlight', 'refraction' ) : esc_html__( 'Words To Highlight', 'refraction' ),
 			'type' => Controls_Manager::TEXTAREA,
 			'rows' => 4,
 			'placeholder' => esc_html__( "your bank\nfree first call", 'refraction' ),
 			'description' => $heading
 				? esc_html__( 'One word or phrase per line; each is highlighted wherever it appears in the title. Style them in Style > Highlighted Text (shared with the Dual Heading).', 'refraction' )
-				: esc_html__( 'One word or phrase per line; each is highlighted wherever it appears in this widget\'s text. Style them in Style > Highlighted Text.', 'refraction' ),
+				: ( $two ? esc_html__( 'One word or phrase per line, highlighted in the title.', 'refraction' ) : esc_html__( 'One word or phrase per line; each is highlighted wherever it appears in this widget\'s text. Style them in Style > Highlighted Text.', 'refraction' ) ),
 			'render_type' => 'template',
 		] );
+
+		if ( $two ) {
+			$element->add_control( 'rf_hl_desc', [
+				'label' => esc_html__( 'Description Words To Highlight', 'refraction' ),
+				'type' => Controls_Manager::TEXTAREA,
+				'rows' => 4,
+				'placeholder' => esc_html__( "any time\nfixed fares", 'refraction' ),
+				'description' => esc_html__( 'One word or phrase per line, highlighted in the description and the other text. Style them in Style > Highlighted Text.', 'refraction' ),
+				'render_type' => 'template',
+			] );
+		}
 
 		$element->add_control( 'rf_hl_case', [
 			'label' => esc_html__( 'Match Upper And Lower Case', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'render_type' => 'template',
-			'condition' => [ 'rf_hl_words!' => '' ],
 		] );
 
 		$element->end_controls_section();
 
 		if ( ! $heading ) {
-			Heading_Dual_Style::controls( $element, [ 'condition' => [ 'rf_hl_words!' => '' ] ] );
+			Heading_Dual_Style::controls( $element, $two ? [ 'conditions' => [ 'relation' => 'or', 'terms' => [ [ 'name' => 'rf_hl_words', 'operator' => '!==', 'value' => '' ], [ 'name' => 'rf_hl_desc', 'operator' => '!==', 'value' => '' ] ] ] ] : [ 'condition' => [ 'rf_hl_words!' => '' ] ] );
 		}
 	}
 
@@ -180,9 +201,13 @@ class Module extends BaseModule {
 
 		$settings = $widget->get_settings_for_display();
 		$words = (string) ( $settings['rf_hl_words'] ?? '' );
+		$case = 'yes' === ( $settings['rf_hl_case'] ?? '' );
 
-		if ( '' !== trim( $words ) ) {
-			$content = Pure_Highlight::wrap( (string) $content, $words, 'yes' === ( $settings['rf_hl_case'] ?? '' ) );
+		if ( array_key_exists( 'rf_hl_desc', $settings ) ) {
+			// A title and a description: each list in its own part.
+			$content = Pure_Highlight::wrap_parts( (string) $content, $words, (string) $settings['rf_hl_desc'], $case );
+		} elseif ( '' !== trim( $words ) ) {
+			$content = Pure_Highlight::wrap( (string) $content, $words, $case );
 		}
 
 		if ( 'heading' === $widget->get_name() ) {
