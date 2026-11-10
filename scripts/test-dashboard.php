@@ -80,5 +80,13 @@ check( 'color: palette by index', D::color( '', 1 ), '#1BC5BD' );
 check( 'color: bad value', D::color( 'red;}', 2 ), '#8950FC' );
 check( 'color: global variable', D::color( 'var(--e-global-color-primary)', 0 ), 'var(--e-global-color-primary)' );
 
+// Cell by cell rows.
+$items = [ [ 'new_row' => 'yes', 'content' => 'a' ], [ 'content' => 'b' ], [ 'content' => 'c' ], [ 'content' => 'd' ], [ 'new_row' => 'yes', 'content' => 'e', 'span' => 2 ], [ 'content' => 'f' ], 'junk' ];
+$rows = D::cell_rows( $items, 3 );
+check( 'cells: a full row starts the next', array_map( static fn( $r ) => implode( '', array_column( $r, 'content' ) ), $rows ), [ 'abc', 'd', 'ef' ] );
+check( 'cells: a new row on request, and spans count', D::row_width( $rows[2] ), 3 );
+check( 'cells: a span never counts more than 12', D::row_width( [ [ 'span' => 40 ], 'x' ] ), 13 );
+check( 'cells: a span too wide for the row starts a new one', count( D::cell_rows( [ [ 'content' => 'a' ], [ 'content' => 'b', 'span' => 3 ] ], 3 ) ), 2 );
+
 echo "$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

@@ -124,6 +124,16 @@ async function main() {
 				[ w( 'tb00001', 'refraction-data-table', { search: 'yes', per_page: 3 } ), 64 ],
 				[ w( 'tb00002', 'refraction-data-table', { source: 'posts', post_count: 5, card_title: 'Latest posts', card_subtitle: 'From this site', rows_look: 'lines', header_look: 'filled' } ), 36 ],
 			],
+			[
+				[ w( 'tb00003', 'refraction-data-table', { source: 'cells', card_title: 'Bookings', cell_items: [
+					{ _id: 'c01', new_row: 'yes', content: '#2001', icon: { value: 'fas fa-taxi', library: 'fa-solid' } },
+					{ _id: 'c02', content: 'Anna Brown', sub: 'anna@example.com', image: { url: `${ BASE }/wp-includes/images/w-logo-blue.png` }, link: { url: '#anna' } },
+					{ _id: 'c03', content: '2026-11-02' }, { _id: 'c04', content: '1250.50' }, { _id: 'c05', content: '100' },
+					{ _id: 'c06', content: 'Paid', cell_tone: 'danger', cell_bg: '#FFEEDD' },
+					{ _id: 'c07', new_row: 'yes', content: '#2002' }, { _id: 'c08', content: 'Group booking, two days', span: 2 }, { _id: 'c09', content: '900' }, { _id: 'c10', content: '40' }, { _id: 'c11', content: 'Pending' },
+					{ _id: 'c12', new_row: 'yes', content: '#2003' }, { _id: 'c13', content: 'Leo Grant' }, { _id: 'c14', content: '2026-11-06' }, { _id: 'c15', content: '5000' }, { _id: 'c16', content: '10' }, { _id: 'c17', content: 'Done' },
+				] } ), 100 ],
+			],
 		] );
 
 		const d = await ( await browser.newContext( { viewport: { width: 1400, height: 1000 } } ) ).newPage();
@@ -197,6 +207,18 @@ async function main() {
 		const postsTable = await d.evaluate( () => {
 			const el = document.querySelector( '[data-id="tb00002"]' ); return { rows: el.querySelectorAll( 'tbody tr' ).length, link: el.querySelector( 'tbody td a' )?.getAttribute( 'href' ), head: el.querySelector( 'th' )?.textContent };
 		} );
+		const cells = await d.evaluate( () => {
+			const el = document.querySelector( '[data-id="tb00003"]' );
+			const rows = [ ...el.querySelectorAll( 'tbody tr' ) ];
+			const anna = rows[ 0 ].cells[ 1 ];
+			const paid = rows[ 0 ].cells[ 5 ];
+			return { rows: rows.length, pic: !! anna.querySelector( 'img.rf-table__pic' ), sub: anna.querySelector( '.rf-table__sub' )?.textContent, link: anna.querySelector( 'a' )?.getAttribute( 'href' ), icon: !! rows[ 0 ].cells[ 0 ].querySelector( '.rf-table__icon svg, .rf-table__icon i' ), tone: paid.querySelector( '.rf-table__badge' )?.className, bg: getComputedStyle( paid ).backgroundColor, span: rows[ 1 ].cells[ 1 ].getAttribute( 'colspan' ), cellsInSpanRow: rows[ 1 ].cells.length, total: rows[ 1 ].cells[ 2 ].textContent };
+		} );
+		check( 'table', 'cell by cell: a picture, an icon, a small line under, a link, its own badge color and background, a cell spanning two columns', 3 === cells.rows && cells.pic && 'anna@example.com' === cells.sub && '#anna' === cells.link && cells.icon && /rf-dash-tone--danger/.test( cells.tone ) && 'rgb(255, 238, 221)' === cells.bg && '2' === cells.span && 5 === cells.cellsInSpanRow && '$900.00' === cells.total.trim(), JSON.stringify( cells ) );
+		await d.click( '[data-id="tb00003"] .rf-table__sort[data-col="3"]' );
+		await d.click( '[data-id="tb00003"] .rf-table__sort[data-col="3"]' );
+		const firstTotal = await d.evaluate( () => document.querySelector( '[data-id="tb00003"] tbody tr td[data-col="3"]' ).textContent.trim() );
+		check( 'table', 'cell by cell: sorting by Total finds the right cells past a spanning cell ($5,000.00 first)', '$5,000.00' === firstTotal, firstTotal );
 		check( 'table', 'the latest posts: 5 rows, titles linked', 5 === postsTable.rows && /\?p=|\//.test( postsTable.link || '' ) && /Title/.test( postsTable.head ), JSON.stringify( postsTable ) );
 		await d.screenshot( { path: join( SHOTS, 'dashboard.png' ), fullPage: true } );
 		await d.context().close();

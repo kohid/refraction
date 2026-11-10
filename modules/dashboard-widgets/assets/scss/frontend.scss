@@ -683,6 +683,47 @@
 		font-weight: 600;
 	}
 
+	// Cell by cell: a picture or icon before the content, a small line under it.
+	.rf-table__cell {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75em;
+		text-align: start;
+	}
+
+	.rf-table__pic {
+		flex: none;
+		width: var(--rf-table-pic, 36px);
+		height: var(--rf-table-pic, 36px);
+		border-radius: var(--rf-table-pic-radius, 50%);
+		object-fit: cover;
+	}
+
+	.rf-table__icon {
+		flex: none;
+		display: inline-flex;
+		color: var(--rf-table-icon, #3699FF);
+		font-size: 1.15em;
+
+		svg {
+			width: 1em;
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+
+	.rf-table__lines {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15em;
+	}
+
+	.rf-table__sub {
+		color: var(--rf-muted);
+		font-size: 0.85em;
+		font-weight: 400;
+	}
+
 	// Dates, numbers and badges stay on one line (the table scrolls sideways when the columns do not fit).
 	td.is-date,
 	td.is-number,
