@@ -22,7 +22,12 @@ class Prompt_Builder {
 
 	const FORMAT = "FORMAT\n- An element is {\"elType\": \"container\"|\"widget\", \"widgetType\": \"<widget name, widgets only>\", \"settings\": {...}, \"elements\": [...]}.\n- The top level holds containers only. Containers hold widgets and other containers (flex layout: flex_direction row or column, gaps, alignment, padding, background, min height). Widgets have \"elements\": [] unless they are marked [holds containers] in the catalog (tabs, accordions, carousels and similar), whose items are containers.\n- Setting values by control type: text/textarea/wysiwyg strings; select/choose one of the listed options; switcher \"yes\" or \"\"; color \"#rrggbb\" or rgba(); slider {\"unit\": \"px\", \"size\": 24}; dimensions {\"unit\": \"px\", \"top\": \"40\", \"right\": \"20\", \"bottom\": \"40\", \"left\": \"20\"}; gaps {\"unit\": \"px\", \"row\": \"24\", \"column\": \"24\"}; url {\"url\": \"https://...\"}; media {\"id\": <library image id>}; icons {\"value\": \"fas fa-star\", \"library\": \"fa-solid\"}; repeater: a list of objects using the repeater's own fields.\n- Group controls are flat settings with a prefix and a switch: typography needs \"typography_typography\": \"custom\" before typography_font_size and the rest; backgrounds need \"background_background\": \"classic\" before background_color or background_image.\n- Responsive controls also accept a _tablet and a _mobile copy (padding_mobile, flex_direction_mobile...). Use them so every layout works on a phone.";
 
-	const CONTENT = "CONTENT AND DESIGN\n- Write real, specific copy for the subject in the request, in plain sentence case. Do not invent facts about the business: no made-up prices, addresses, phone numbers, client names, testimonials, ratings, awards or statistics. Where such a fact is needed, write a short bracketed placeholder such as [Phone number] and mention it in the summary.\n- Give the page a point of view that fits the subject: a deliberate palette, a clear type scale, generous spacing, and one memorable moment rather than many decorations. Avoid template habits: identical card grids, gradient washes, all-caps labels above every heading, emoji, and filler like \"Lorem ipsum\" or \"Welcome to our website\".\n- Use headings in order (one h1 per page), descriptive link and button text, alt text on images, and enough color contrast to read.\n- Refraction has widgets for scroll scenes: build-scene (a 3D model that assembles while scrolling; it has a built-in sample house) and scroll-sequence (a video or image frames played with the scroll). Use them only when the request calls for that kind of experience.";
+	const CONTENT = "CONTENT AND DESIGN\n- Write real, specific copy for the subject in the request, in plain sentence case. Do not invent facts about the business: no made-up prices, addresses, phone numbers, client names, testimonials, ratings, awards or statistics. Where such a fact is needed, write a short bracketed placeholder such as [Phone number] and mention it in the summary.\n- Avoid template habits: identical card grids, gradient washes, all-caps labels above every heading, emoji, and filler like \"Lorem ipsum\" or \"Welcome to our website\".\n- Use headings in order (one h1 per page), descriptive link and button text, alt text on images, and enough color contrast to read.\n- Refraction has widgets for scroll scenes: build-scene (a 3D model that assembles while scrolling; it has a built-in sample house) and scroll-sequence (a video or image frames played with the scroll). Use them only when the request calls for that kind of experience.";
+
+	/** The content rules and the design guide, for every mode. */
+	public static function design(): string {
+		return self::CONTENT . "\n\n" . Design_Guide::text();
+	}
 
 	public static function task( string $mode ): string {
 		return [
@@ -53,7 +58,7 @@ class Prompt_Builder {
 			self::INTRO,
 			self::FORMAT . "\n- Use only setting names and option values returned by get_widget_controls; anything else is dropped.",
 			"WORKFLOW\n1. Decide the structure. 2. Call get_widget_controls for \"container\" and for each widget you will use (several at once). 3. If the design needs pictures, call list_images and use matching library images; never invent image URLs. If none fit, leave image settings out and say in the summary which pictures to add. 4. Call submit_elements once with the complete result.",
-			self::CONTENT,
+			self::design(),
 			self::styles( $specs, $use_styles ),
 			"WIDGET CATALOG (name - title (keywords))\n" . $specs->catalog(),
 		] ) );
@@ -79,7 +84,7 @@ class Prompt_Builder {
 		$type = (string) ( $control['type'] ?? '' );
 		$out = $type;
 
-		if ( ! empty( $control['options'] ) && is_array( $control['options'] ) && in_array( $type, [ 'select', 'choose', 'select2', 'font' ], true ) && 'font' !== $type ) {
+		if ( ! empty( $control['options'] ) && is_array( $control['options'] ) && in_array( $type, [ 'select', 'choose', 'select2', 'visual_choice' ], true ) ) {
 			$out .= '(' . implode( '|', array_slice( array_map( 'strval', array_keys( $control['options'] ) ), 0, 25 ) ) . ')';
 		}
 
@@ -222,10 +227,10 @@ class Prompt_Builder {
 			"CONTROLS (setting:type(allowed options); * = also has _tablet and _mobile copies)\n" . self::controls( $specs ),
 			$images ? "IMAGES IN THE MEDIA LIBRARY (use only these ids in media settings; never invent image URLs)\n" . wp_json_encode( $images ) : "IMAGES\nThe media library has no images yet: leave image settings out and say in the summary which pictures to add.",
 			self::FORMAT . "\n- Use only setting names and option values listed under CONTROLS; anything else is dropped.",
-			self::CONTENT,
+			self::design(),
 			self::styles( $specs, (bool) $request['use_styles'] ),
 			self::request( $request['mode'], $request['prompt'], $request['context'], 'If images are attached to this message, they are references for layout, colors and mood; do not copy text or logos from them.' ),
-			"ANSWER FORMAT\nReply with a single ```json code block and nothing else: no artifact, no file, no explanation before or after it. The block holds one object: {\"elements\": [ ...the elements... ], \"summary\": \"Two or three sentences for the person: what you built and anything they should replace (placeholders, images).\"}" . ( 'selected' === $request['mode'] ? ' "elements" holds exactly one element.' : '' ) . ' If the answer would be very long, keep the copy tight rather than stopping halfway: an answer that is cut off cannot be inserted.',
+			"ANSWER FORMAT\nReply with a single ```json code block and nothing else: no artifact, no file, no explanation before or after it. The block holds one object: {\"elements\": [ ...the elements... ], \"summary\": \"Two or three sentences for the person: what you built and anything they should replace (placeholders, images).\"}" . ( 'selected' === $request['mode'] ? ' "elements" holds exactly one element.' : '' ) . ' If the answer would be very long, keep every item and save elements instead (one image-box or icon-box per card, fewer wrapper containers) rather than stopping halfway: an answer that is cut off cannot be inserted.',
 		] ) );
 	}
 
@@ -279,15 +284,15 @@ class Prompt_Builder {
 	/**
 	 * Cleans proposed elements for a mode.
 	 *
-	 * @return array [ elements, dropped, ok ] where ok is false when no widget is left (or, for "selected", not
-	 *               exactly one element).
+	 * @return array [ elements, dropped, ok, ignored ] where ok is false when no widget is left (or, for "selected",
+	 *               not exactly one element) and ignored lists the settings left out, for Claude to correct.
 	 */
 	public static function clean( Widget_Specs $specs, $elements, string $mode ): array {
 		$sanitizer = new Layout_Sanitizer( [ $specs, 'spec' ], [ Widget_Specs::class, 'image_url' ], $specs->global_ids() );
 		// A replacement for the selected element may be a widget; elsewhere the top level holds containers.
 		$clean = $sanitizer->elements( $elements, 0, 'selected' === $mode ? 'container' : 'root' );
 
-		return [ $clean, $sanitizer->dropped, self::has_widget( $clean ) && ( 'selected' !== $mode || 1 === count( $clean ) ) ];
+		return [ $clean, $sanitizer->dropped, self::has_widget( $clean ) && ( 'selected' !== $mode || 1 === count( $clean ) ), $sanitizer->ignored ];
 	}
 
 	/** Whether any widget is left: empty containers alone (everything in them dropped) are not a result. */

@@ -2,6 +2,7 @@
 namespace Refraction\Modules\AskClaude\Classes;
 
 use Refraction\Modules\AskClaude\Module;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -45,6 +46,7 @@ class Queue_Rest {
 			[ self::BASE . '/(?P<id>\d+)/brief', 'GET', 'brief', $builder ],
 			[ self::BASE . '/(?P<id>\d+)/start', 'POST', 'start', $builder ],
 			[ self::BASE . '/(?P<id>\d+)/result', 'POST', 'result', $builder ],
+			[ self::BASE . '/(?P<id>\d+)/preview', 'POST', 'preview', $builder ],
 			[ self::BASE . '/(?P<id>\d+)/decline', 'POST', 'decline', $builder ],
 		];
 
@@ -127,6 +129,7 @@ class Queue_Rest {
 
 	/** Cancel a request, remove a declined one, or clear one after its result was inserted. */
 	public function remove( \WP_REST_Request $request ) {
+		self::remove_preview( (int) $request['id'] );
 		Job_Queue::delete( (int) $request['id'] );
 
 		return [ 'removed' => true ];
@@ -191,6 +194,8 @@ class Queue_Rest {
 	}
 
 	public function decline( \WP_REST_Request $request ) {
+		self::remove_preview( (int) $request['id'] );
+
 		return $this->step( $request, 'decline', [ 'note' => mb_substr( sanitize_textarea_field( (string) $request->get_param( 'note' ) ), 0, 500 ) ] );
 	}
 
@@ -209,14 +214,126 @@ class Queue_Rest {
 			return self::error( 'No complete JSON object {"elements": [...], "summary": "..."} was found in the answer.', 422 );
 		}
 
-		[ $elements, $dropped, $ok ] = Prompt_Builder::clean( new Widget_Specs( $job['post_id'] ), $parsed['elements'], $job['mode'] );
+		[ $elements, $dropped, $ok, $ignored ] = Prompt_Builder::clean( new Widget_Specs( $job['post_id'] ), $parsed['elements'], $job['mode'] );
 
 		if ( ! $ok ) {
-			return new \WP_Error( 'refraction_ask_claude', 'selected' === $job['mode'] ? 'Send exactly one valid element.' : 'No valid element was left after checking. Use only catalog widgets and the listed settings.', [ 'status' => 422, 'dropped' => $dropped ] );
+			return new \WP_Error( 'refraction_ask_claude', 'selected' === $job['mode'] ? 'Send exactly one valid element.' : 'No valid element was left after checking. Use only catalog widgets and the listed settings.', [ 'status' => 422, 'dropped' => $dropped, 'ignored_settings' => $ignored ] );
 		}
 
 		$moved = $this->step( $request, 'result', [ 'elements' => $elements, 'summary' => sanitize_textarea_field( $parsed['summary'] ), 'dropped' => $dropped ] );
 
-		return is_wp_error( $moved ) ? $moved : $moved + [ 'dropped' => $dropped ];
+		if ( ! is_wp_error( $moved ) ) {
+			self::remove_preview( $job['id'] );
+		}
+
+		return is_wp_error( $moved ) ? $moved : $moved + [ 'dropped' => $dropped, 'ignored_settings' => $ignored ];
+	}
+
+	/** The meta that ties a preview draft to its request. */
+	const PREVIEW_META = '_refraction_ask_preview';
+
+	private static function preview_id( int $job_id ): int {
+		$ids = get_posts( [ 'post_type' => 'page', 'post_status' => 'draft', 'meta_key' => self::PREVIEW_META, 'meta_value' => $job_id, 'fields' => 'ids', 'posts_per_page' => 1 ] ); // phpcs:ignore WordPress.DB.SlowDBQuery -- One lookup per preview.
+
+		return $ids ? (int) $ids[0] : 0;
+	}
+
+	public static function remove_preview( int $job_id ): void {
+		$id = self::preview_id( $job_id );
+
+		if ( $id ) {
+			wp_delete_post( $id, true );
+		}
+	}
+
+	/** Replaces the element with this id in a tree; false when it is not there. */
+	private static function replace_in( array &$elements, string $id, array $replacement ): bool {
+		foreach ( $elements as $i => $element ) {
+			if ( ( $element['id'] ?? '' ) === $id ) {
+				$elements[ $i ] = $replacement;
+
+				return true;
+			}
+
+			if ( ! empty( $element['elements'] ) && self::replace_in( $elements[ $i ]['elements'], $id, $replacement ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * A draft copy of the page with the answer in place (the whole page, the page plus the new section, or the page
+	 * with the selected element replaced), so Claude Code can look at it in a browser and improve it before sending
+	 * the result. The draft opens through a secret link without logging in, stays a draft and is deleted when the
+	 * result or a decline is sent. Nothing changes on the person's page.
+	 */
+	public function preview( \WP_REST_Request $request ) {
+		$job = self::job_or_error( (int) $request['id'] );
+
+		if ( is_wp_error( $job ) ) {
+			return $job;
+		}
+
+		$answer = (string) $request->get_param( 'answer' );
+		$parsed = strlen( $answer ) <= Prompt_Builder::MAX_ANSWER ? Prompt_Builder::parse_answer( $answer ) : null;
+
+		if ( ! $parsed ) {
+			return self::error( 'No complete JSON object {"elements": [...], "summary": "..."} was found in the answer.', 422 );
+		}
+
+		[ $elements, $dropped, $ok, $ignored ] = Prompt_Builder::clean( new Widget_Specs( $job['post_id'] ), $parsed['elements'], $job['mode'] );
+
+		if ( ! $ok ) {
+			return new \WP_Error( 'refraction_ask_claude', 'No valid element was left after checking.', [ 'status' => 422, 'dropped' => $dropped, 'ignored_settings' => $ignored ] );
+		}
+
+		$source = Plugin::$instance->documents->get( (int) $job['post_id'], false );
+		$current = $source ? (array) $source->get_elements_data() : [];
+		$page = $elements;
+
+		if ( 'section' === $job['mode'] ) {
+			$page = array_merge( $current, $elements );
+		} elseif ( 'selected' === $job['mode'] ) {
+			$page = $current;
+			$element = 'widget' === $elements[0]['elType'] ? [ 'id' => $elements[0]['id'] . 'w', 'elType' => 'container', 'isInner' => false, 'settings' => [], 'elements' => $elements ] : $elements[0];
+
+			$target = (string) ( $job['target'] ?? '' );
+
+			if ( '' === $target || ! self::replace_in( $page, $target, $elements[0] ) ) {
+				$page[] = $element;
+			}
+		}
+
+		$id = self::preview_id( $job['id'] );
+
+		if ( ! $id ) {
+			$id = wp_insert_post( [ 'post_type' => 'page', 'post_status' => 'draft', 'post_title' => 'Ask Claude preview #' . $job['id'] ], true );
+
+			if ( is_wp_error( $id ) ) {
+				return self::error( $id->get_error_message(), 500 );
+			}
+
+			update_post_meta( $id, self::PREVIEW_META, $job['id'] );
+			update_post_meta( $id, Draft_Preview::FLAG, 1 );
+			update_post_meta( $id, '_refraction_edit_mode', 'builder' );
+		}
+
+		$settings = $source ? (array) $source->get_settings() : [];
+		$settings = array_intersect_key( $settings, array_flip( [ 'template', 'background_background', 'background_color', 'background_color_b', 'background_gradient_angle', 'padding', 'margin' ] ) );
+
+		if ( empty( $settings['template'] ) ) {
+			$template = (string) get_page_template_slug( (int) $job['post_id'] );
+			$settings['template'] = '' !== $template ? $template : 'default';
+		}
+
+		$document = Plugin::$instance->documents->get( $id, false );
+
+		if ( ! $document || false === $document->save( [ 'elements' => $page, 'settings' => $settings ] ) ) {
+			return self::error( 'The preview could not be saved.', 500 );
+		}
+
+		return [ 'id' => $job['id'], 'preview' => Draft_Preview::renew( $id ), 'dropped' => $dropped, 'ignored_settings' => $ignored ];
 	}
 }

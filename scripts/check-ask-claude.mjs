@@ -192,6 +192,21 @@ async function main() {
 		writeFileSync( badFile, JSON.stringify( { elements: [ { elType: 'widget', widgetType: 'html', settings: {}, elements: [] } ], summary: 'x' } ) );
 		const refused = qFails( 'result', job.id, '--file', badFile );
 		check( 'code', 'an answer with nothing usable is refused, and the request stays open', /No valid element/.test( refused ) && /widget "html"/.test( refused ), refused );
+		check( 'design', 'the brief carries the design direction, signature features, recipes and review list', [ 'DESIGN DIRECTION', 'SIGNATURE FEATURES', 'SECTION RECIPES', 'REVIEW BEFORE ANSWERING', 'rf_reveal_text' ].every( ( part ) => codeBrief.includes( part ) ) );
+		const recipes = JSON.parse( wp( [ "--exec=define( 'REST_REQUEST', true );", 'eval', "$s = new Refraction\\Modules\\AskClaude\\Classes\\Widget_Specs( 0 ); $o = []; foreach ( Refraction\\Modules\\AskClaude\\Classes\\Design_Guide::recipes() as $n => $e ) { $c = Refraction\\Modules\\AskClaude\\Classes\\Prompt_Builder::clean( $s, [ $e ], 'page' ); $o[ $n ] = array_merge( $c[1], $c[3] ); } echo wp_json_encode( $o );" ] ).trim().split( '\n' ).pop() );
+		check( 'design', 'every recipe of the design guide is valid: no setting or value is left out', Object.keys( recipes ).length >= 5 && Object.values( recipes ).every( ( left ) => 0 === left.length ), JSON.stringify( recipes ) );
+		const previewFile = join( dir, 'preview.json' );
+		writeFileSync( previewFile, JSON.stringify( { elements: [ { elType: 'container', settings: { flex_direction: 'column', shape_divider_top: 'curve' }, elements: [
+			{ elType: 'widget', widgetType: 'heading', settings: { title: 'PREVIEWHEAD', title_colour: '#ff0000', header_size: 'h7' }, elements: [] },
+		] } ], summary: 'x' } ) );
+		const shotsDir = join( dir, 'shots' );
+		const previewOut = q( 'preview', job.id, '--file', previewFile, '--shots', shotsDir );
+		const previewUrl = ( previewOut.match( /preview: (\S+)/ ) || [] )[ 1 ] || '';
+		check( 'preview', 'preview saves a hidden draft and names the settings that were left out', /rf_preview=/.test( previewUrl ) && /title_colour/.test( previewOut ) && /header_size \(value\)/.test( previewOut ), previewOut );
+		const anonPreview = await ( await fetch( previewUrl ) ).text();
+		check( 'preview', 'the preview link opens without logging in and shows the answer with its shape divider', anonPreview.includes( 'PREVIEWHEAD' ) && /refraction-shape-top/.test( anonPreview ) );
+		check( 'preview', 'preview --shots saves desktop and phone screenshots', existsSync( join( shotsDir, 'desktop.png' ) ) && existsSync( join( shotsDir, 'phone.png' ) ), previewOut );
+		check( 'preview', 'the person\'s page is unchanged by a preview', ! /PREVIEWHEAD/.test( wp( [ 'post', 'meta', 'get', home.id, '_refraction_data' ], { allowFail: true } ) || '' ) );
 		const answerFile = join( dir, 'answer.json' );
 		writeFileSync( answerFile, JSON.stringify( { elements: [ { elType: 'container', settings: { flex_direction: 'column' }, elements: [
 			{ elType: 'widget', widgetType: 'heading', settings: { title: 'Bread, early' }, elements: [] },
@@ -199,6 +214,7 @@ async function main() {
 		] } ], summary: 'A warm bakery page.' } ) );
 		const accepted = q( 'result', job.id, '--file', answerFile );
 		check( 'code', 'a good answer is checked (unsafe widget left out) and becomes Ready', /is now ready/.test( accepted ) && /html/.test( accepted ), accepted );
+		check( 'preview', 'sending the result deletes the preview draft', ! ( await ( await fetch( previewUrl ) ).text() ).includes( 'PREVIEWHEAD' ) );
 		await p.waitForSelector( '[data-ask-claude="job"][data-state="ready"]', { timeout: 15000 } ).catch( () => null );
 		await p.screenshot( { path: join( SHOTS, 'panel-code.png' ) } );
 		await p.click( '[data-ask-claude="job-insert"]' );

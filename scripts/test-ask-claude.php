@@ -115,8 +115,8 @@ t( 'wysiwyg keeps markup but not scripts (nor their text), numbers are bounded, 
 t( 'an unclosed script or a style block goes too', '<p>A</p>' === L::without_code( '<p>A</p><style>p{}</style><script>x' ) );
 
 $many = $new();
-$tree = array_fill( 0, 300, [ 'elType' => 'container', 'settings' => [] ] );
-t( 'at most 250 elements', L::MAX_ELEMENTS === count( $many->elements( $tree ) ) );
+$tree = array_fill( 0, 700, [ 'elType' => 'container', 'settings' => [] ] );
+t( 'at most 600 elements (a rich page fits)', L::MAX_ELEMENTS === count( $many->elements( $tree ) ) );
 $deep = [ 'elType' => 'container', 'elements' => [] ];
 for ( $i = 0; $i < 20; $i++ ) { $deep = [ 'elType' => 'container', 'elements' => [ $deep ] ]; }
 $depth = 0; $node = $new()->elements( [ $deep ] )[0];
@@ -173,6 +173,10 @@ $cleaned = ( new L( function () { return null; }, function () { return ''; } ) )
 t( 'responsive: the copy is kept and cleaned like its control', isset( $cleaned['padding_mobile'] ) && '20' === (string) $cleaned['padding_mobile']['top'] && ! isset( $cleaned['title_mobile'] ) );
 
 // Items of nested widgets (accordion titles) are kept like repeater items.
+$sx = new L( function () { return null; }, function () { return ''; } );
+$shadowed = $sx->settings( [ 'shadow' => [ 'horizontal' => 0, 'vertical' => 40, 'blur' => 80, 'spread' => -20, 'color' => 'rgba(0,0,0,0.5)' ], 'bad_shadow' => [ 'blur' => 'x' ], 'divider' => 'curve', 'divider_b' => 'nope', 'unknown' => 1 ], [ 'shadow' => [ 'type' => 'box_shadow' ], 'bad_shadow' => [ 'type' => 'box_shadow' ], 'divider' => [ 'type' => 'visual_choice', 'options' => [ 'curve' => [], 'waves' => [] ] ], 'divider_b' => [ 'type' => 'visual_choice', 'options' => [ 'curve' => [] ] ] ] );
+t( 'box shadows and visual choices (shape dividers) are kept', 40.0 === ( $shadowed['shadow']['vertical'] ?? null ) && 'curve' === ( $shadowed['divider'] ?? '' ) && ! isset( $shadowed['bad_shadow'] ) );
+t( 'settings left out are reported for Claude: unknown names, and values that do not fit', in_array( 'unknown', $sx->ignored, true ) && in_array( 'bad_shadow (value)', $sx->ignored, true ) && [] === $sx->dropped );
 $nested = ( new L( function () { return null; }, function () { return ''; } ) )->settings( [ 'items' => [ [ 'item_title' => 'Q one', 'evil' => 'x' ] ] ], [ 'items' => [ 'type' => 'nested-elements-repeater', 'fields' => [ 'item_title' => [ 'type' => 'text', 'name' => 'item_title' ] ] ] ] );
 t( 'nested items: titles kept, unknown fields dropped', 'Q one' === ( $nested['items'][0]['item_title'] ?? '' ) && ! isset( $nested['items'][0]['evil'] ) );
 
