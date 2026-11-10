@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.67.0
+Stable tag: 0.67.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.67.1 =
+* Highlight Words is now on every widget with a title or a description (39 widgets, among them Button, Icon List, Alert, Counter, Progress Bar, Tabs, Accordion, Slides, Timed Slides, Phone Showcase, Price List, Reviews, Testimonial Carousel, Hotspot, Marquee, Data Table, Chart, Stat Card, the events widgets and the theme titles), found by their title and description fields.
 
 = 0.67.0 =
 * Highlight Words: highlight any number of words or phrases (one per line) in the Heading, Text Editor, Image Box, Icon Box, Testimonial, Call to Action, Flip Box, Price Table and Blockquote, with the Dual Heading's look: a color or gradient, a highlighter, underline or background mark that can draw itself in.
