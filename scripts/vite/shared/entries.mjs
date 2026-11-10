@@ -87,6 +87,7 @@ export const BASE_ENTRIES = {
 	'phone-showcase-frontend': 'modules/interactions/assets/js/phone-showcase.js',
 	'dashboard-frontend': 'modules/dashboard-widgets/assets/js/dashboard.js',
 	'dashboard-editor': 'modules/dashboard-widgets/assets/js/dashboard-editor.js',
+	'highlight-preview': 'modules/highlight-words/assets/js/highlight-preview.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 

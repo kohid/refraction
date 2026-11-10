@@ -151,6 +151,7 @@ class Modules_Manager {
 			'phosphor-icons',
 			'image-optimizer',
 			'dashboard-widgets',
+			'highlight-words',
 		];
 	}
 

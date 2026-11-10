@@ -768,6 +768,47 @@ html.rf-hp-on body {
 	}
 }
 
+.rf-showcase__label-badge {
+	display: inline-flex;
+}
+
+// Text above the steps as a pill (label_pill): a rounded tinted label, its icon in a round badge.
+.rf-showcase-label-pill-yes .rf-showcase__label {
+	align-self: flex-start;
+	padding: 0.4em 1em 0.4em 0.45em;
+	border: 1px solid #b8ebd9;
+	border-radius: 999px;
+	background-color: #ddf7ee;
+	color: #06372a;
+	line-height: 1.2;
+
+	.rf-showcase__label-badge {
+		align-items: center;
+		justify-content: center;
+		width: 1.9em;
+		height: 1.9em;
+		border-radius: 50%;
+		background-color: #1fcb97;
+		letter-spacing: 0;
+
+		svg,
+		i {
+			width: 0.95em;
+			height: 0.95em;
+			font-size: 0.95em;
+		}
+	}
+
+	> span:only-child {
+		padding-inline-start: 0.55em;
+	}
+}
+
+.rf-showcase-label-pill-yes.rf-showcase-label-caps-yes .rf-showcase__label {
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
 .rf-showcase__steps {
 	display: flex;
 	flex-direction: column;

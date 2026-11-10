@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.66.1
+Stable tag: 0.67.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.67.0 =
+* Highlight Words: highlight any number of words or phrases (one per line) in the Heading, Text Editor, Image Box, Icon Box, Testimonial, Call to Action, Flip Box, Price Table and Blockquote, with the Dual Heading's look: a color or gradient, a highlighter, underline or background mark that can draw itself in.
+* Pill Label: a Heading can be shown as a small rounded label with a round badge (a number or an icon) and spaced capitals, and so can the Phone Showcase's text above the steps.
 
 = 0.66.1 =
 * Data Table, rows typed in: Type Each Row can now be Field per column. Each row then shows a field for every column, named after its heading (up to 12, each open to Dynamic Tags), instead of one line separated by |; switching fills the fields from the line. The line stays the default.
