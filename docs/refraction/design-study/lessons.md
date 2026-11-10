@@ -36,6 +36,8 @@ What went wrong in practice and what changed because of it. Read this before eac
 - Full-page screenshots do not show what comes after a scroll door: check those sections by scrolling in the browser, not from the full-page picture.
 - The loading screen removes itself after the reveal: test for it in the page source, not in the DOM after load.
 
+- Story pages (`rf_hp`): each page must fit one screen. Ten index rows needed 30px names and 7px padding; set `rf_hp_nav_color` to a colour that reads on every page (a mid grey when pages alternate dark and light). On a phone held sideways (390px tall) the desktop sizes apply and pages scroll inside themselves, so keep each page's text short.
+
 ## Feature ideas
 
 - A typographic index row that shows its picture next to the cursor on hover (Locomotive, Basement): a hover image on link rows.

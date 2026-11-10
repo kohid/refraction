@@ -2,6 +2,12 @@
 
 One entry per day: what was studied, what was practised (with rubric scores), what changed in the guide.
 
+## 2026-11-10 (surprises)
+
+- Studied: Apple AirPods, Basement, Cosmos, Linear, Locomotive, Stripe.
+- Built: Ask Claude page settings (0.65.0); four surprise recipes; the capability atlas; a "Highland tours" story-pages demo on the practice site (pages that slide, loading screen, floating gallery, typographic index of all ten tours, card stack of castles, Loch Ness statement, red closing page) from the real tour content and photos. Scores: specific 5, hierarchy 5, rhythm 5, signature 5, phone 3, craft 4, honest 5.
+- Fixed: the card stack on phones.
+
 ## 2026-11-10 (Inverness Taxis home page, version 2)
 
 - Owner feedback: do not cut content, add more. Rebuilt the home page with all the real content and more (15 sections, 218 elements, three preview rounds), proposed as request 4238 (supersedes 4229). Scores: specific 5, hierarchy 4, rhythm 4, signature 4, phone 4, craft 4, honest 5.
