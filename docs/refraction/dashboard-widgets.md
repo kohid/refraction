@@ -33,7 +33,7 @@ No chart library and no outside requests: the server draws everything. Bars, gri
 
   Each column also has alignment and a bold option.
 - **Rows**:
-  - Typed in: one row per item, cells separated by `|`. Every row accepts Dynamic Tags.
+  - Typed in: one row per item, cells separated by `|`, or (0.66.1, **Type Each Row: Field per column**) one field per column in each row, named after the column's heading by the editor script `assets/js/dashboard-editor.js` (fields `cell_1`...`cell_12`; switching fills them from the line; a row with no field filled still reads its line). Every row and field accepts Dynamic Tags.
   - A pasted table, whose first row can supply the headings.
   - Cell by cell (0.66.0): one repeater item per cell, filling the columns from left to right; **Starts A New Row** begins the next row (a full row starts one by itself). Each cell has its **Content** (shown as its column says, Dynamic Tags allowed), **Small Text Under**, a **Picture** (small, round) or an **Icon** before it, a **Link**, its own **Badge Color**, **Alignment** and **Bold**, **Text Color** and **Background**, and **Spans Columns**. Style > Table adds the picture size and corners, the icon color, and the small text's color and typography.
   - This site's latest posts (title linked, author, date, comments, status).

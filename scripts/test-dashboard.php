@@ -88,5 +88,10 @@ check( 'cells: a new row on request, and spans count', D::row_width( $rows[2] ),
 check( 'cells: a span never counts more than 12', D::row_width( [ [ 'span' => 40 ], 'x' ] ), 13 );
 check( 'cells: a span too wide for the row starts a new one', count( D::cell_rows( [ [ 'content' => 'a' ], [ 'content' => 'b', 'span' => 3 ] ], 3 ) ), 2 );
 
+// Typed-in rows: one line, or one field per column.
+check( 'typed row: the line split at |', D::typed_row( [ 'cells' => 'a | b |c' ], 0 ), [ 'a', 'b', 'c' ] );
+check( 'typed row: one field per column', D::typed_row( [ 'cells' => 'x | y', 'cell_1' => 'a', 'cell_3' => 'c' ], 3 ), [ 'a', '', 'c' ] );
+check( 'typed row: empty fields fall back to the line', D::typed_row( [ 'cells' => 'x | y' ], 3 ), [ 'x', 'y' ] );
+
 echo "$pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

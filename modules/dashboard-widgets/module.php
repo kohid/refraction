@@ -33,6 +33,7 @@ class Module extends BaseModule {
 		add_action( 'refraction/frontend/after_register_scripts', [ $this, 'register_assets' ] );
 		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_assets' ] );
 		add_action( 'refraction/preview/enqueue_scripts', [ $this, 'enqueue_for_preview' ] );
+		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'enqueue_editor' ] );
 		add_action( 'refraction/dynamic_tags/register', [ $this, 'register_tags' ] );
 		add_action( 'refraction/elements/categories_registered', [ $this, 'register_category' ] );
 	}
@@ -58,6 +59,12 @@ class Module extends BaseModule {
 		$this->register_assets();
 		wp_enqueue_style( 'refraction-dashboard' );
 		wp_enqueue_script( 'refraction-dashboard' );
+	}
+
+	/** The editor side: the Data Table's fields per column (named after the headings). */
+	public function enqueue_editor(): void {
+		$min = Utils::is_script_debug() ? '' : '.min';
+		wp_enqueue_script( 'refraction-dashboard-editor', REFRACTION_ASSETS_URL . 'js/dashboard-editor' . $min . '.js', [], REFRACTION_VERSION, true );
 	}
 
 	public function register_tags( $dynamic_tags ) {

@@ -23,6 +23,9 @@ class Data_Table extends Widget_Base {
 
 	use Card_Controls;
 
+	/** The most fields a typed-in row offers (one per column). */
+	const ROW_FIELDS = 12;
+
 	const CELL_TYPES = [ 'text', 'number', 'badge', 'progress', 'date', 'link' ];
 
 	/** Words that pick a badge's color when it is set to automatic. */
@@ -141,6 +144,18 @@ class Data_Table extends Widget_Base {
 			],
 		] );
 
+		$this->add_control( 'manual_input', [
+			'label' => esc_html__( 'Type Each Row', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'line',
+			'options' => [
+				'line' => esc_html__( 'On one line, cells separated by |', 'refraction' ),
+				'fields' => esc_html__( 'Field per column', 'refraction' ),
+			],
+			'description' => esc_html__( 'Field per column shows a field for each column of the Columns list, named after its heading. Switching fills the fields from the line.', 'refraction' ),
+			'condition' => [ 'source' => 'manual' ],
+		] );
+
 		$row = new Repeater();
 		$row->add_control( 'cells', [
 			'label' => esc_html__( 'Cells', 'refraction' ),
@@ -149,6 +164,19 @@ class Data_Table extends Widget_Base {
 			'dynamic' => [ 'active' => true ],
 			'description' => esc_html__( 'Separated by |, in the order of the columns. Use dynamic tags for live values.', 'refraction' ),
 		] );
+
+		// One field per column (Type Each Row: One field per column). The editor shows as many as there are columns and
+		// names them after the headings (assets/js/dashboard-editor.js).
+		for ( $i = 1; $i <= self::ROW_FIELDS; $i++ ) {
+			$row->add_control( 'cell_' . $i, [
+				/* translators: %d: Column number. */
+				'label' => sprintf( esc_html__( 'Column %d', 'refraction' ), $i ),
+				'type' => Controls_Manager::TEXT,
+				'dynamic' => [ 'active' => true ],
+				'label_block' => true,
+				'classes' => 'rf-table-row-field',
+			] );
+		}
 
 		$this->add_control( 'rows', [
 			'label' => esc_html__( 'Rows', 'refraction' ),
@@ -160,7 +188,7 @@ class Data_Table extends Widget_Base {
 				[ 'cells' => '#1044 | Mia Clarke | 2026-11-04 | 2190 | 85 | In progress' ],
 				[ 'cells' => '#1045 | Leo Grant | 2026-11-05 | 380 | 20 | Failed' ],
 			],
-			'title_field' => '{{{ cells }}}',
+			'title_field' => '<# var rfCells = [ cell_1, cell_2, cell_3, cell_4 ].filter( Boolean ); #>{{{ rfCells.length ? rfCells.join( " | " ) : cells }}}',
 			'condition' => [ 'source' => 'manual' ],
 		] );
 
@@ -371,7 +399,8 @@ class Data_Table extends Widget_Base {
 		} elseif ( 'cells' === $source ) {
 			$rows = D::cell_rows( (array) ( $s['cell_items'] ?? [] ), max( 1, count( $columns ) ) );
 		} else {
-			$rows = array_map( static fn( $r ) => array_map( 'trim', explode( '|', (string) ( $r['cells'] ?? '' ) ) ), (array) ( $s['rows'] ?? [] ) );
+			$fields = 'fields' === ( $s['manual_input'] ?? 'line' ) ? max( 1, min( self::ROW_FIELDS, count( $columns ) ) ) : 0;
+			$rows = array_map( static fn( $r ) => D::typed_row( (array) $r, $fields ), (array) ( $s['rows'] ?? [] ) );
 		}
 
 		$width = max( count( $columns ), ...array_map( [ D::class, 'row_width' ], $rows ?: [ [] ] ) );

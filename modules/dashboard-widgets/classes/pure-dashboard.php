@@ -339,4 +339,28 @@ class Pure_Dashboard {
 
 		return $rows;
 	}
+
+	/**
+	 * The cells of a typed-in row: its fields cell_1... (one per column) when there are fields to read and any is filled,
+	 * otherwise its one line split at |.
+	 *
+	 * @param array $row    The repeater item.
+	 * @param int   $fields How many column fields to read (0: the line).
+	 * @return string[]
+	 */
+	public static function typed_row( array $row, int $fields ): array {
+		if ( $fields > 0 ) {
+			$cells = [];
+
+			for ( $i = 1; $i <= $fields; $i++ ) {
+				$cells[] = trim( (string) ( $row[ 'cell_' . $i ] ?? '' ) );
+			}
+
+			if ( implode( '', $cells ) !== '' ) {
+				return $cells;
+			}
+		}
+
+		return array_map( 'trim', explode( '|', (string) ( $row['cells'] ?? '' ) ) );
+	}
 }

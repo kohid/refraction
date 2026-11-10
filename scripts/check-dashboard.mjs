@@ -251,6 +251,32 @@ async function main() {
 		const frame = e.frame( { name: 'refraction-preview-iframe' } );
 		const drawn = await frame.evaluate( () => document.querySelectorAll( '.rf-chart.is-drawn' ).length );
 		check( 'editor', 'the three widgets in the Dashboard category, values open to Dynamic Tags, the Site Statistic tag listed, charts drawn in the preview', ed.cats.every( ( c ) => 'refraction-dashboard' === c ) && ed.dynamic && ed.tag && drawn >= 2, JSON.stringify( { ...ed, drawn } ) );
+		const filled = await e.evaluate( async () => {
+			const c = window.refraction.getContainer( 'tb00001' );
+			window.$e.run( 'document/elements/select', { container: c } );
+			await new Promise( ( r ) => setTimeout( r, 1500 ) );
+			window.$e.run( 'document/elements/settings', { container: c, settings: { manual_input: 'fields' } } );
+			await new Promise( ( r ) => setTimeout( r, 1000 ) );
+			const row = c.repeaters.rows.children[ 0 ].settings;
+			return [ 1, 2, 3, 4, 5, 6 ].map( ( i ) => row.get( `cell_${ i }` ) ).join( ',' );
+		} );
+		check( 'editor', 'switching to One field per column fills each row\'s fields from its line', '#1042,Anna Brown,2026-11-02,1250.50,100,Paid' === filled, filled );
+		await e.evaluate( () => {
+			const page = window.refraction.getPanelView().getCurrentPageView();
+			page.activateSection( 'section_rows' );
+			page._renderChildren();
+		} );
+		await sleep( 800 );
+		await e.evaluate( () => document.querySelector( '.refraction-control-rows .refraction-repeater-row-item-title' )?.click() );
+		await sleep( 800 );
+		const shown = await e.evaluate( () => {
+			const row = document.querySelector( '.refraction-control-rows .refraction-repeater-fields' );
+			const visible = [ ...row.querySelectorAll( '.rf-table-row-field' ) ].filter( ( el ) => el.offsetParent );
+			return { titles: visible.map( ( el ) => el.querySelector( '.refraction-control-title' )?.textContent.trim() ).join( ',' ), line: !! row.querySelector( '.refraction-control-cells' )?.offsetParent };
+		} );
+		check( 'editor', 'a typed-in row then shows one field per column, named after the headings, and hides the one-line field', 'Order,Customer,Date,Total,Progress,Status' === shown.titles && ! shown.line, JSON.stringify( shown ) );
+		const previewCell = await frame.evaluate( () => new Promise( ( r ) => setTimeout( () => r( document.querySelector( '[data-id="tb00001"] tbody td' )?.textContent.trim() ), 2000 ) ) );
+		check( 'editor', 'the preview reads the fields', /#104/.test( previewCell || '' ), previewCell );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

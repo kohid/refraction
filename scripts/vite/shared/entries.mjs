@@ -86,6 +86,7 @@ export const BASE_ENTRIES = {
 	'doors-frontend': 'modules/interactions/assets/js/doors.js',
 	'phone-showcase-frontend': 'modules/interactions/assets/js/phone-showcase.js',
 	'dashboard-frontend': 'modules/dashboard-widgets/assets/js/dashboard.js',
+	'dashboard-editor': 'modules/dashboard-widgets/assets/js/dashboard-editor.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 
