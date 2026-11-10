@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.64.1
+Stable tag: 0.64.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.64.2 =
+* Ask Claude keeps every real fact and item when it redesigns a page and adds more (counters, FAQ from real facts, latest posts, app showcase, map), building cards as single Image Box / Icon Box widgets; an answer may now hold up to 600 elements (was 250), so rich pages are no longer cut off.
 
 = 0.64.1 =
 * Ask Claude design guide: rules learned from redesigning a real taxi home page (grid rows, legible text over photos, whole-card links, booking first on service pages).

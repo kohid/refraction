@@ -21,6 +21,14 @@ What went wrong in practice and what changed because of it. Read this before eac
 - Sites on Refraction before 0.64.0 drop box shadows and shape dividers: check the site's version (get_site) and design without them.
 - Validate on a local practice site first (Prompt_Builder::clean with REST_REQUEST defined) to see every left-out setting, because older sites do not report them.
 
+## 2026-11-10: the owner's review of the first taxi redesign
+
+- **The owner wants pages enriched, not cut.** The first redesign kept 4 of 10 tours, shortened every service text, dropped the fleet descriptions, the welcome text, the app section, the About facts and the blog. Version 2 keeps all of it in the business's own words and adds more: 1M+ passengers a year, who the company serves, safety technology, the Fringe partnership, national coverage, an app phone showcase, the latest posts, an FAQ from real facts, both offices with a map. The guide now says "rich, never thin", and the checklist starts with "is every real fact, item and link still there?".
+- A rich page passed the old 250-element limit (302 elements), so the end of the page was cut off. Cards now use one image-box or icon-box widget each (218 elements for the whole page), and the limit is now 600.
+- The phone showcase built for an earlier request (saved JSON) could be reused as it was, with only the copy and store links changed.
+- A gradient overlay that is clear on one side does not work on phones, where the text covers the whole banner: keep the light end at about 0.35 alpha.
+- The site's cookie plugin adds a hidden settings panel that is wider than the phone: check that overflow comes from the page itself before you fix anything.
+
 ## Feature ideas
 
 - A booking bar that embeds the SafeKab online booker as a native widget (an iframe widget limited to allowed booking domains), so Ask Claude can place it without raw HTML.

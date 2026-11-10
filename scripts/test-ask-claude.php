@@ -115,8 +115,8 @@ t( 'wysiwyg keeps markup but not scripts (nor their text), numbers are bounded, 
 t( 'an unclosed script or a style block goes too', '<p>A</p>' === L::without_code( '<p>A</p><style>p{}</style><script>x' ) );
 
 $many = $new();
-$tree = array_fill( 0, 300, [ 'elType' => 'container', 'settings' => [] ] );
-t( 'at most 250 elements', L::MAX_ELEMENTS === count( $many->elements( $tree ) ) );
+$tree = array_fill( 0, 700, [ 'elType' => 'container', 'settings' => [] ] );
+t( 'at most 600 elements (a rich page fits)', L::MAX_ELEMENTS === count( $many->elements( $tree ) ) );
 $deep = [ 'elType' => 'container', 'elements' => [] ];
 for ( $i = 0; $i < 20; $i++ ) { $deep = [ 'elType' => 'container', 'elements' => [ $deep ] ]; }
 $depth = 0; $node = $new()->elements( [ $deep ] )[0];

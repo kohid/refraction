@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Layout_Sanitizer {
 
-	const MAX_ELEMENTS = 250;
+	const MAX_ELEMENTS = 600;
 	const MAX_DEPTH = 8;
 	const MAX_TEXT = 20000;
 

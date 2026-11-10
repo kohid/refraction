@@ -230,7 +230,7 @@ class Prompt_Builder {
 			self::design(),
 			self::styles( $specs, (bool) $request['use_styles'] ),
 			self::request( $request['mode'], $request['prompt'], $request['context'], 'If images are attached to this message, they are references for layout, colors and mood; do not copy text or logos from them.' ),
-			"ANSWER FORMAT\nReply with a single ```json code block and nothing else: no artifact, no file, no explanation before or after it. The block holds one object: {\"elements\": [ ...the elements... ], \"summary\": \"Two or three sentences for the person: what you built and anything they should replace (placeholders, images).\"}" . ( 'selected' === $request['mode'] ? ' "elements" holds exactly one element.' : '' ) . ' If the answer would be very long, keep the copy tight rather than stopping halfway: an answer that is cut off cannot be inserted.',
+			"ANSWER FORMAT\nReply with a single ```json code block and nothing else: no artifact, no file, no explanation before or after it. The block holds one object: {\"elements\": [ ...the elements... ], \"summary\": \"Two or three sentences for the person: what you built and anything they should replace (placeholders, images).\"}" . ( 'selected' === $request['mode'] ? ' "elements" holds exactly one element.' : '' ) . ' If the answer would be very long, keep every item and save elements instead (one image-box or icon-box per card, fewer wrapper containers) rather than stopping halfway: an answer that is cut off cannot be inserted.',
 		] ) );
 	}
 
