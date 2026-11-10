@@ -15,28 +15,81 @@
 
 	const escape = ( s ) => s.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
 
-	function wrap( root, words, matchCase ) {
-		const list = phrases( words );
+	const TITLE = [ 'title', 'heading', 'headline', 'name' ];
+	const DESC = [ 'description', 'desc', 'content', 'text', 'subtitle', 'subheading', 'excerpt', 'caption', 'quote', 'editor' ];
 
-		if ( ! list.length ) {
-			return;
+	/**
+	 * 'title', 'desc' or '' for an element, from the parts of its class names (split at - and _).
+	 *
+	 * @param {Element} el
+	 */
+	function kind( el ) {
+		let desc = false;
+
+		for ( const name of el.classList ) {
+			const parts = name.toLowerCase().split( /[-_]+/ );
+
+			if ( parts.some( ( p ) => TITLE.includes( p ) ) ) {
+				return 'title';
+			}
+
+			desc = desc || parts.some( ( p ) => DESC.includes( p ) );
 		}
 
-		const source = `(?<![\\p{L}\\p{N}])(${ list.map( escape ).join( '|' ) })(?![\\p{L}\\p{N}])`;
+		return desc ? 'desc' : '';
+	}
+
+	/**
+	 * The part a text node is in: its innermost ancestor (inside root) whose class says title or description.
+	 *
+	 * @param {Node}    node A text node.
+	 * @param {Element} root The widget.
+	 */
+	function partOf( node, root ) {
+		for ( let el = node.parentElement; el && el !== root; el = el.parentElement ) {
+			const k = kind( el );
+
+			if ( k ) {
+				return k;
+			}
+		}
+
+		return '';
+	}
+
+	const regex = ( list, flags ) => ( list.length ? new RegExp( `(?<![\\p{L}\\p{N}])(${ list.map( escape ).join( '|' ) })(?![\\p{L}\\p{N}])`, flags ) : null );
+
+	/**
+	 * @param {Element}     root      The widget.
+	 * @param {string}      words     Words for the title (or everywhere, without descWords).
+	 * @param {string|null} descWords Words for the description, or null when the widget has one list.
+	 * @param {boolean}     matchCase
+	 */
+	function wrap( root, words, descWords, matchCase ) {
 		const flags = matchCase ? 'u' : 'iu';
-		const test = new RegExp( source, flags );
+		const title = phrases( words );
+		const desc = null === descWords ? [] : phrases( descWords );
+		const lists = null === descWords ? { '': title, title, desc: title } : { title, desc, '': phrases( [ ...title, ...desc ].join( '\n' ) ) };
+		const tests = Object.fromEntries( Object.entries( lists ).map( ( [ k, l ] ) => [ k, regex( l, flags ) ] ) );
 		const nodes = [];
 		const walker = document.createTreeWalker( root, NodeFilter.SHOW_TEXT );
 
 		for ( let node = walker.nextNode(); node; node = walker.nextNode() ) {
 			const parent = node.parentElement;
 
-			if ( parent && ! parent.closest( '.refraction-heading-dual' ) && ! SKIP.includes( parent.tagName ) && test.test( node.nodeValue ) ) {
-				nodes.push( node );
+			if ( ! parent || parent.closest( '.refraction-heading-dual' ) || SKIP.includes( parent.tagName ) ) {
+				continue;
+			}
+
+			const part = null === descWords ? '' : partOf( node, root );
+
+			if ( tests[ part ] && tests[ part ].test( node.nodeValue ) ) {
+				nodes.push( [ node, lists[ part ] ] );
 			}
 		}
 
-		nodes.forEach( ( node ) => {
+		nodes.forEach( ( [ node, list ] ) => {
+			const source = regex( list, flags ).source;
 			const fragment = document.createDocumentFragment();
 			const parts = node.nodeValue.split( new RegExp( source, `g${ flags }` ) );
 
@@ -95,8 +148,10 @@
 
 		const settings = container.settings.attributes || {};
 
-		if ( settings.rf_hl_words ) {
-			wrap( element, settings.rf_hl_words, 'yes' === settings.rf_hl_case );
+		const two = Object.prototype.hasOwnProperty.call( settings, 'rf_hl_desc' );
+
+		if ( settings.rf_hl_words || ( two && settings.rf_hl_desc ) ) {
+			wrap( element, settings.rf_hl_words, two ? settings.rf_hl_desc || '' : null, 'yes' === settings.rf_hl_case );
 		}
 
 		pill( element, settings );

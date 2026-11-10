@@ -36,5 +36,17 @@ check( 'letters of other scripts are word letters too', H::wrap( 'Café café', 
 check( 'no phrases: unchanged', H::wrap( '<b>x</b>', "\n  \n" ), '<b>x</b>' );
 check( 'special characters in a phrase are literal', H::wrap( 'Price (from) £20', '(from)' ), "Price {$s}(from)</span> £20" );
 
+// Title and description words.
+check( 'kind: a title class', H::kind( 'refraction-icon-box-title extra' ), 'title' );
+check( 'kind: a description class', H::kind( 'refraction-icon-box-description' ), 'desc' );
+check( 'kind: a heading wins over content', H::kind( 'rf-dash__head-content rf-dash__heading' ), 'title' );
+check( 'kind: neither', H::kind( 'refraction-icon-box-wrapper' ), '' );
+$box = '<div class="refraction-icon-box-content"><h3 class="refraction-icon-box-title"><span>Safe transport</span></h3><p class="refraction-icon-box-description">Licensed drivers, safe cars, every journey.</p></div>';
+check( 'title words only in the title, description words only in the description', H::wrap_parts( $box, 'Safe', 'every journey' ), "<div class=\"refraction-icon-box-content\"><h3 class=\"refraction-icon-box-title\"><span>{$s}Safe</span> transport</span></h3><p class=\"refraction-icon-box-description\">Licensed drivers, safe cars, {$s}every journey</span>.</p></div>" );
+check( 'text in neither part gets both lists', H::wrap_parts( '<div class="box"><span>Safe and every journey</span></div>', 'Safe', 'every journey' ), "<div class=\"box\"><span>{$s}Safe</span> and {$s}every journey</span></span></div>" );
+check( 'void tags and self-closing tags do not open a part', H::wrap_parts( '<p class="x-title">A<br>B<img class="y-description" src="a.png"/>C</p>', 'C', 'A' ), "<p class=\"x-title\">A<br>B<img class=\"y-description\" src=\"a.png\"/>{$s}C</span></p>" );
+check( 'script stays untouched in parts', H::wrap_parts( '<p class="t-title"><script>var Safe=1</script>Safe</p>', 'Safe', '' ), "<p class=\"t-title\"><script>var Safe=1</script>{$s}Safe</span></p>" );
+check( 'no words: unchanged', H::wrap_parts( '<p class="a-title">x</p>', '', "\n" ), '<p class="a-title">x</p>' );
+
 echo "highlight-words: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );
