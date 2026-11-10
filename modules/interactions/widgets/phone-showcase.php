@@ -625,6 +625,21 @@ class Phone_Showcase extends Widget_Base {
 			'selector' => '{{WRAPPER}} .rf-showcase__label',
 		] );
 
+		// Pill Label: the text above the steps as a rounded tinted label, its icon in a round badge.
+		$label = '{{WRAPPER}}.rf-showcase-label-pill-yes .rf-showcase__label';
+		$label_on = [ 'label_pill' => 'yes' ];
+
+		$this->add_control( 'label_pill', [
+			'label' => esc_html__( 'Text Above The Steps As A Pill', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'prefix_class' => 'rf-showcase-label-pill-',
+		] );
+		$this->add_control( 'label_pill_caps', [ 'label' => esc_html__( 'Capital Letters, Spaced Out', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'prefix_class' => 'rf-showcase-label-caps-', 'condition' => $label_on ] );
+		$this->add_control( 'label_pill_bg', [ 'label' => esc_html__( 'Pill Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#DDF7EE', 'selectors' => [ $label => 'background-color: {{VALUE}};' ], 'condition' => $label_on ] );
+		$this->add_control( 'label_pill_border', [ 'label' => esc_html__( 'Pill Border', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#B8EBD9', 'selectors' => [ $label => 'border-color: {{VALUE}};' ], 'condition' => $label_on ] );
+		$this->add_control( 'label_pill_badge_bg', [ 'label' => esc_html__( 'Icon Badge Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#1FCB97', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'background-color: {{VALUE}};' ], 'condition' => $label_on ] );
+		$this->add_control( 'label_pill_badge_color', [ 'label' => esc_html__( 'Icon Badge Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#06372A', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'color: {{VALUE}}; fill: {{VALUE}};' ], 'condition' => $label_on ] );
+
 		$this->add_control( 'heading_color', [
 			'label' => esc_html__( 'Heading Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
@@ -1000,7 +1015,8 @@ class Phone_Showcase extends Widget_Base {
 			echo '<div class="rf-showcase__intro">';
 
 			if ( '' !== $label ) {
-				echo '<p class="rf-showcase__label">' . $this->icon( $s['label_icon'] ?? [] ) . '<span>' . esc_html( $label ) . '</span></p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup from the icons manager.
+				$label_icon = $this->icon( $s['label_icon'] ?? [] );
+				echo '<p class="rf-showcase__label">' . ( '' !== $label_icon ? '<span class="rf-showcase__label-badge">' . $label_icon . '</span>' : '' ) . '<span>' . esc_html( $label ) . '</span></p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup from the icons manager.
 			}
 
 			if ( '' !== $heading ) {

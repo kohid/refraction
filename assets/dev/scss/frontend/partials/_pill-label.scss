@@ -1,0 +1,43 @@
+//
+// Pill Label (Heading > Style > Pill Label, modules/highlight-words): a small heading shown as a rounded tinted
+// label with a round badge holding a number or an icon (rf-pill-yes on the widget, .rf-pill__badge in the title).
+//
+
+.rf-pill-yes.refraction-widget-heading .refraction-heading-title {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6em;
+	padding: 0.45em 1.1em 0.45em 0.5em;
+	border: 1px solid var(--rf-pill-border, transparent);
+	border-radius: 999px;
+	background-color: var(--rf-pill-bg, #ddf7ee);
+	line-height: 1.2;
+}
+
+.rf-pill-yes.rf-pill-caps-yes.refraction-widget-heading .refraction-heading-title {
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.rf-pill__badge {
+	--rf-pill-badge: 1.9em;
+
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--rf-pill-badge);
+	height: var(--rf-pill-badge);
+	border-radius: 50%;
+	background-color: #1fcb97;
+	color: #06372a;
+	font-size: 0.85em;
+	letter-spacing: 0;
+	line-height: 1;
+
+	svg {
+		width: 0.95em;
+		height: 0.95em;
+		fill: currentColor;
+	}
+}
