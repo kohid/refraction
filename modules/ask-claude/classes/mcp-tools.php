@@ -87,7 +87,7 @@ class Mcp_Tools {
 	}
 
 	private static function format(): string {
-		return implode( "\n\n", [ Prompt_Builder::INTRO, Prompt_Builder::FORMAT, Prompt_Builder::CONTENT, 'Media settings take {"id": <library id>} from list_media (upload files with upload_media first). Section ids (_element_id) make anchors for links like {"url": "#about"}. Motion: rf_reveal* (enter animations, text split, scroll-scrubbed with rf_reveal_trigger "scroll"), rf_scroll_* (parallax presets and scroll effects), rf_sticky (pin). Build the page with save_draft, open the preview link in a browser, compare it with the reference, and save again until it matches.' ] );
+		return implode( "\n\n", [ Prompt_Builder::INTRO, Prompt_Builder::FORMAT, Prompt_Builder::design(), 'Media settings take {"id": <library id>} from list_media (upload files with upload_media first). Section ids (_element_id) make anchors for links like {"url": "#about"}. Motion: rf_reveal* (enter animations, text split, scroll-scrubbed with rf_reveal_trigger "scroll"), rf_scroll_* (parallax presets and scroll effects), rf_sticky (pin). Build the page with save_draft, open the preview link in a browser, compare it with the reference, and save again until it matches.' ] );
 	}
 
 	private static function site(): array {
@@ -217,7 +217,7 @@ class Mcp_Tools {
 			return self::error( 'This account may not create pages.' );
 		}
 
-		[ $elements, $dropped, $ok ] = Prompt_Builder::clean( self::specs( $id ), $args['elements'], 'page' );
+		[ $elements, $dropped, $ok, $ignored ] = Prompt_Builder::clean( self::specs( $id ), $args['elements'], 'page' );
 
 		if ( ! $ok ) {
 			return self::error( 'No valid element was left after checking. Use only listed widgets and settings.', [ 'dropped' => $dropped ] );
@@ -245,7 +245,7 @@ class Mcp_Tools {
 			return self::error( 'The page could not be saved with this account.' );
 		}
 
-		return [ 'id' => $id, 'preview' => Draft_Preview::renew( $id ), 'edit' => admin_url( 'post.php?post=' . $id . '&action=refraction' ), 'dropped' => $dropped ];
+		return [ 'id' => $id, 'preview' => Draft_Preview::renew( $id ), 'edit' => admin_url( 'post.php?post=' . $id . '&action=refraction' ), 'dropped' => $dropped, 'ignored_settings' => $ignored ];
 	}
 
 	private static function propose( array $args ) {

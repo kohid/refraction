@@ -39,6 +39,9 @@ class Layout_Sanitizer {
 	/** @var string[] What was dropped, for the summary shown to the user. */
 	public $dropped = [];
 
+	/** Settings left out (unknown names, or values that do not fit), for Claude to correct. */
+	public $ignored = [];
+
 	public function __construct( callable $spec, callable $attachment, array $globals = [] ) {
 		$this->spec = $spec;
 		$this->attachment = $attachment;
@@ -123,6 +126,13 @@ class Layout_Sanitizer {
 		return $id;
 	}
 
+	/** A setting that is not a control here, or whose value did not fit it: told to Claude, not to the person. */
+	private function ignore( string $what ): void {
+		if ( count( $this->ignored ) < 60 && ! in_array( $what, $this->ignored, true ) ) {
+			$this->ignored[] = $what;
+		}
+	}
+
 	private function drop( string $what ): void {
 		if ( count( $this->dropped ) < 30 && ! in_array( $what, $this->dropped, true ) ) {
 			$this->dropped[] = $what;
@@ -169,6 +179,7 @@ class Layout_Sanitizer {
 			$control = $controls[ $name ] ?? self::device_copy_of( $name, $controls );
 
 			if ( ! is_array( $control ) || in_array( $control['type'] ?? '', self::NO_VALUE, true ) ) {
+				$this->ignore( $name );
 				continue;
 			}
 
@@ -176,6 +187,8 @@ class Layout_Sanitizer {
 
 			if ( null !== $clean ) {
 				$out[ $name ] = $clean;
+			} else {
+				$this->ignore( $name . ' (value)' );
 			}
 		}
 
@@ -219,6 +232,7 @@ class Layout_Sanitizer {
 			case 'select':
 			case 'choose':
 			case 'select2':
+			case 'visual_choice':
 				return $this->choice( $value, $control );
 
 			case 'switcher':
@@ -253,6 +267,10 @@ class Layout_Sanitizer {
 			case 'icons':
 				return $this->icon( $value );
 
+			case 'box_shadow':
+			case 'text_shadow':
+				return $this->shadow( $value );
+
 			// The items of tabs, accordions and other nested widgets (their titles; the content is the child containers).
 			case 'repeater':
 			case 'nested-elements-repeater':
@@ -268,6 +286,35 @@ class Layout_Sanitizer {
 			default:
 				return null;
 		}
+	}
+
+	/** A box or text shadow: numbers for its offsets, blur and spread, and a color. */
+	private function shadow( $value ): ?array {
+		if ( ! is_array( $value ) ) {
+			return null;
+		}
+
+		$out = [];
+
+		foreach ( [ 'horizontal', 'vertical', 'blur', 'spread' ] as $key ) {
+			if ( isset( $value[ $key ] ) ) {
+				if ( ! is_numeric( $value[ $key ] ) ) {
+					return null;
+				}
+
+				$out[ $key ] = max( -500, min( 500, (float) $value[ $key ] ) );
+			}
+		}
+
+		if ( isset( $value['color'] ) ) {
+			if ( ! is_string( $value['color'] ) || ! self::is_color( $value['color'] ) ) {
+				return null;
+			}
+
+			$out['color'] = $value['color'];
+		}
+
+		return $out ?: null;
 	}
 
 	/** Short text: a few inline tags are allowed (bold, italics, line breaks, spans), nothing else. */

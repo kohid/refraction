@@ -7,6 +7,9 @@
  *   node scripts/claude/ask-claude-queue.mjs list                          what waits now
  *   node scripts/claude/ask-claude-queue.mjs brief <id> [--out file]       the full brief (prompt) as text
  *   node scripts/claude/ask-claude-queue.mjs start <id>                    marks it "Claude is building"
+ *   node scripts/claude/ask-claude-queue.mjs preview <id> --file answer.json [--shots DIR]
+ *       saves the answer into a hidden draft copy of the page and prints its link; with --shots, also screenshots
+ *       of it at desktop (1440px) and phone (390px) width (needs Playwright), to look at before sending the result
  *   node scripts/claude/ask-claude-queue.mjs result <id> --file answer.json
  *   node scripts/claude/ask-claude-queue.mjs decline <id> --note "why, and what to ask instead"
  *
@@ -14,7 +17,7 @@
  * REFRACTION_REST_PASSWORD (an Application Password of a user with the role "Claude Code builder (Refraction)").
  * Without the user and password no credentials are sent, for a proxy that adds them. Exit code 1 on any failure.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -31,7 +34,7 @@ function fail( message ) {
 const base = ( process.env.REFRACTION_REST_URL || '' ).replace( /\/+$/, '' );
 
 if ( ! command ) {
-	fail( 'usage: watch | list | brief <id> | start <id> | result <id> --file F | decline <id> --note N' );
+	fail( 'usage: watch | list | brief <id> | start <id> | preview <id> --file F [--shots DIR] | result <id> --file F | decline <id> --note N' );
 }
 
 if ( ! /^https:\/\//.test( base ) && ! /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test( base ) ) {
@@ -62,10 +65,58 @@ async function call( method, route, body ) {
 
 	if ( ! response.ok ) {
 		const dropped = data.data && data.data.dropped && data.data.dropped.length ? ` Dropped: ${ data.data.dropped.join( '; ' ) }` : '';
-		throw new Error( `${ response.status } ${ data.message || '' }${ dropped }` );
+		throw new Error( `${ response.status } ${ data.message || '' }${ dropped }${ ignoredNote( data.data ) }` );
 	}
 
 	return data;
+}
+
+/** The settings the site left out (unknown names or values that do not fit), to correct before sending. */
+function ignoredNote( data ) {
+	return data && data.ignored_settings && data.ignored_settings.length ? `\nsettings left out (fix the names or values): ${ data.ignored_settings.join( ', ' ) }` : '';
+}
+
+/**
+ * Full-page screenshots of a link at desktop and phone width. The page is scrolled through first, so reveal
+ * animations and counters have played; the phone shot also reports a page wider than the screen.
+ */
+async function shoot( url, dir ) {
+	let chromium;
+
+	try {
+		( { chromium } = await import( 'playwright' ) );
+	} catch {
+		fail( 'screenshots need Playwright (npm i -D playwright), or open the preview link yourself' );
+	}
+
+	const browser = await chromium.launch();
+	const out = [];
+
+	try {
+		for ( const [ name, width, height ] of [ [ 'desktop', 1440, 900 ], [ 'phone', 390, 844 ] ] ) {
+			const page = await browser.newPage( { viewport: { width, height }, deviceScaleFactor: 1 } );
+			await page.goto( url, { waitUntil: 'networkidle', timeout: 60000 } );
+
+			for ( let y = 0, total = await page.evaluate( () => document.body.scrollHeight ); y < total; y += height / 2 ) {
+				await page.evaluate( ( top ) => window.scrollTo( 0, top ), y );
+				await page.waitForTimeout( 250 );
+			}
+
+			await page.evaluate( () => window.scrollTo( 0, 0 ) );
+			await page.waitForTimeout( 1200 );
+
+			const file = join( dir, `${ name }.png` );
+			await page.screenshot( { path: file, fullPage: true } );
+
+			const wide = await page.evaluate( () => document.documentElement.scrollWidth - window.innerWidth );
+			out.push( `${ file }${ wide > 1 ? ` (the page is ${ wide }px wider than the screen: fix the overflow)` : '' }` );
+			await page.close();
+		}
+	} finally {
+		await browser.close();
+	}
+
+	return out;
 }
 
 const needId = () => ( /^\d+$/.test( id || '' ) ? id : fail( 'give the request id' ) );
@@ -109,10 +160,19 @@ try {
 	} else if ( 'start' === command ) {
 		const data = await call( 'POST', `/${ needId() }/start` );
 		console.log( `#${ data.id } is now ${ data.state }` );
+	} else if ( 'preview' === command ) {
+		const file = flag( 'file' ) || fail( 'give --file with the answer' );
+		const data = await call( 'POST', `/${ needId() }/preview`, { answer: readFileSync( file, 'utf8' ) } );
+		console.log( `#${ data.id } preview: ${ data.preview }${ data.dropped && data.dropped.length ? `\nleft out: ${ data.dropped.join( '; ' ) }` : '' }${ ignoredNote( data ) }` );
+
+		if ( flag( 'shots' ) ) {
+			mkdirSync( flag( 'shots' ), { recursive: true } );
+			console.log( ( await shoot( data.preview, flag( 'shots' ) ) ).join( '\n' ) );
+		}
 	} else if ( 'result' === command ) {
 		const file = flag( 'file' ) || fail( 'give --file with the answer' );
 		const data = await call( 'POST', `/${ needId() }/result`, { answer: readFileSync( file, 'utf8' ) } );
-		console.log( `#${ data.id } is now ${ data.state }${ data.dropped && data.dropped.length ? `; left out: ${ data.dropped.join( '; ' ) }` : '' }` );
+		console.log( `#${ data.id } is now ${ data.state }${ data.dropped && data.dropped.length ? `; left out: ${ data.dropped.join( '; ' ) }` : '' }${ ignoredNote( data ) }` );
 	} else if ( 'decline' === command ) {
 		const data = await call( 'POST', `/${ needId() }/decline`, { note: flag( 'note', '' ) } );
 		console.log( `#${ data.id } is now ${ data.state }` );
