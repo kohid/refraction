@@ -294,4 +294,49 @@ class Pure_Dashboard {
 
 		return self::PALETTE[ $i % count( self::PALETTE ) ];
 	}
+
+	/** How many columns a row covers (a cell item may span several). */
+	public static function row_width( array $row ): int {
+		$width = 0;
+
+		foreach ( $row as $cell ) {
+			$width += is_array( $cell ) ? max( 1, min( 12, (int) ( $cell['span'] ?? 1 ) ) ) : 1;
+		}
+
+		return $width;
+	}
+
+	/**
+	 * Cell items into rows: a new row where an item says so, or when the row is full.
+	 *
+	 * @return array<int, array<int, array>>
+	 */
+	public static function cell_rows( array $items, int $columns ): array {
+		$rows = [];
+		$row = [];
+		$used = 0;
+
+		foreach ( $items as $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+
+			$span = max( 1, min( 12, (int) ( $item['span'] ?? 1 ) ) );
+
+			if ( $row && ( 'yes' === ( $item['new_row'] ?? '' ) || $used + $span > $columns ) ) {
+				$rows[] = $row;
+				$row = [];
+				$used = 0;
+			}
+
+			$row[] = $item;
+			$used += $span;
+		}
+
+		if ( $row ) {
+			$rows[] = $row;
+		}
+
+		return $rows;
+	}
 }

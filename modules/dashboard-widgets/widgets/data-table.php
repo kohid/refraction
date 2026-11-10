@@ -135,6 +135,7 @@ class Data_Table extends Widget_Base {
 			'default' => 'manual',
 			'options' => [
 				'manual' => esc_html__( 'Rows typed in', 'refraction' ),
+				'cells' => esc_html__( 'Cell by cell', 'refraction' ),
 				'table' => esc_html__( 'A pasted table (CSV)', 'refraction' ),
 				'posts' => esc_html__( 'Latest posts of this site', 'refraction' ),
 			],
@@ -161,6 +162,64 @@ class Data_Table extends Widget_Base {
 			],
 			'title_field' => '{{{ cells }}}',
 			'condition' => [ 'source' => 'manual' ],
+		] );
+
+		// Cell by cell: one item per cell, with a picture, an icon, a link, a small line under it, its own colors and a
+		// span across columns. Items fill the columns from left to right; "Starts A New Row" begins the next row.
+		$cell = new Repeater();
+		$cell->add_control( 'new_row', [
+			'label' => esc_html__( 'Starts A New Row', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'Also starts one by itself when the row is full.', 'refraction' ),
+		] );
+		$cell->add_control( 'content', [ 'label' => esc_html__( 'Content', 'refraction' ), 'type' => Controls_Manager::TEXT, 'dynamic' => [ 'active' => true ], 'label_block' => true, 'description' => esc_html__( 'Shown as its column says: text, number, badge, progress, date or link.', 'refraction' ) ] );
+		$cell->add_control( 'sub', [ 'label' => esc_html__( 'Small Text Under', 'refraction' ), 'type' => Controls_Manager::TEXT, 'dynamic' => [ 'active' => true ], 'label_block' => true, 'placeholder' => esc_html__( 'anna@example.com', 'refraction' ) ] );
+		$cell->add_control( 'image', [ 'label' => esc_html__( 'Picture', 'refraction' ), 'type' => Controls_Manager::MEDIA, 'dynamic' => [ 'active' => true ], 'default' => [ 'url' => '' ], 'description' => esc_html__( 'A small round picture before the content (a person, a product, a logo).', 'refraction' ) ] );
+		$cell->add_control( 'icon', [ 'label' => esc_html__( 'Icon', 'refraction' ), 'type' => Controls_Manager::ICONS, 'skin' => 'inline', 'label_block' => false ] );
+		$cell->add_control( 'link', [ 'label' => esc_html__( 'Link', 'refraction' ), 'type' => Controls_Manager::URL, 'dynamic' => [ 'active' => true ] ] );
+		$cell->add_control( 'cell_tone', [
+			'label' => esc_html__( 'Badge Color', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'As the column', 'refraction' ) ] + self::tone_options(),
+			'description' => esc_html__( 'In a badge column.', 'refraction' ),
+		] );
+		$cell->add_control( 'span', [ 'label' => esc_html__( 'Spans Columns', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'default' => 1, 'min' => 1, 'max' => 12 ] );
+		$cell->add_control( 'cell_align', [
+			'label' => esc_html__( 'Alignment', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'start' => [ 'title' => esc_html__( 'Start', 'refraction' ), 'icon' => 'rficon-text-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-text-align-center' ],
+				'end' => [ 'title' => esc_html__( 'End', 'refraction' ), 'icon' => 'rficon-text-align-right' ],
+			],
+			'description' => esc_html__( 'Empty: as the column.', 'refraction' ),
+		] );
+		$cell->add_control( 'cell_bold', [ 'label' => esc_html__( 'Bold', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
+		$cell->add_control( 'cell_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf-table {{CURRENT_ITEM}}' => 'color: {{VALUE}};' ] ] );
+		$cell->add_control( 'cell_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf-table {{CURRENT_ITEM}}' => 'background-color: {{VALUE}};' ] ] );
+
+		$this->add_control( 'cell_items', [
+			'label' => esc_html__( 'Cells', 'refraction' ),
+			'type' => Controls_Manager::REPEATER,
+			'fields' => $cell->get_controls(),
+			'default' => [
+				[ 'new_row' => 'yes', 'content' => '#1042' ],
+				[ 'content' => 'Anna Brown', 'sub' => 'anna@example.com' ],
+				[ 'content' => '2026-11-02' ],
+				[ 'content' => '1250.50' ],
+				[ 'content' => '100' ],
+				[ 'content' => 'Paid' ],
+				[ 'new_row' => 'yes', 'content' => '#1043' ],
+				[ 'content' => 'James Wilson', 'sub' => 'james@example.com' ],
+				[ 'content' => '2026-11-03' ],
+				[ 'content' => '640' ],
+				[ 'content' => '60' ],
+				[ 'content' => 'Pending' ],
+			],
+			'title_field' => '<# if ( new_row ) { #>↵ <# } #>{{{ content }}}',
+			'description' => esc_html__( 'One item per cell, left to right in the order of the columns.', 'refraction' ),
+			'condition' => [ 'source' => 'cells' ],
 		] );
 
 		$this->add_control( 'table_data', [
@@ -267,6 +326,11 @@ class Data_Table extends Widget_Base {
 		$this->add_control( 'badge_radius', [ 'label' => esc_html__( 'Badge Corners', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'max' => 20 ] ], 'selectors' => [ '{{WRAPPER}} .rf-table__badge' => 'border-radius: {{SIZE}}px;' ], 'separator' => 'before' ] );
 		$this->add_control( 'progress_color', [ 'label' => esc_html__( 'Progress Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf-table' => '--rf-table-progress: {{VALUE}};' ] ] );
 		$this->add_control( 'progress_height', [ 'label' => esc_html__( 'Progress Height', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 2, 'max' => 16 ] ], 'selectors' => [ '{{WRAPPER}} .rf-table__progress' => 'height: {{SIZE}}px;' ] ] );
+		$this->add_control( 'pic_size', [ 'label' => esc_html__( 'Cell Picture Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 16, 'max' => 96 ] ], 'selectors' => [ '{{WRAPPER}} .rf-table' => '--rf-table-pic: {{SIZE}}px;' ], 'separator' => 'before', 'condition' => [ 'source' => 'cells' ] ] );
+		$this->add_control( 'pic_radius', [ 'label' => esc_html__( 'Cell Picture Corners', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px', '%' ], 'range' => [ 'px' => [ 'max' => 48 ], '%' => [ 'max' => 50 ] ], 'selectors' => [ '{{WRAPPER}} .rf-table' => '--rf-table-pic-radius: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'source' => 'cells' ] ] );
+		$this->add_control( 'icon_color', [ 'label' => esc_html__( 'Cell Icon Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf-table' => '--rf-table-icon: {{VALUE}};' ], 'condition' => [ 'source' => 'cells' ] ] );
+		$this->add_control( 'sub_color', [ 'label' => esc_html__( 'Small Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf-table__sub' => 'color: {{VALUE}};' ], 'condition' => [ 'source' => 'cells' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'sub_typography', 'label' => esc_html__( 'Small Text Typography', 'refraction' ), 'selector' => '{{WRAPPER}} .rf-table__sub', 'condition' => [ 'source' => 'cells' ] ] );
 		$this->add_control( 'link_color', [ 'label' => esc_html__( 'Link Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf-table td a' => 'color: {{VALUE}};' ] ] );
 
 		$this->add_control( 'search_border', [ 'label' => esc_html__( 'Search Box Border', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rf-table-tools input' => 'border-color: {{VALUE}};' ], 'separator' => 'before', 'condition' => [ 'search' => 'yes' ] ] );
@@ -304,18 +368,21 @@ class Data_Table extends Widget_Base {
 					}
 				}
 			}
+		} elseif ( 'cells' === $source ) {
+			$rows = D::cell_rows( (array) ( $s['cell_items'] ?? [] ), max( 1, count( $columns ) ) );
 		} else {
 			$rows = array_map( static fn( $r ) => array_map( 'trim', explode( '|', (string) ( $r['cells'] ?? '' ) ) ), (array) ( $s['rows'] ?? [] ) );
 		}
 
-		$width = max( count( $columns ), ...array_map( 'count', $rows ?: [ [] ] ) );
+		$width = max( count( $columns ), ...array_map( [ D::class, 'row_width' ], $rows ?: [ [] ] ) );
 
 		for ( $i = count( $columns ); $i < $width; $i++ ) {
 			$columns[] = [ 'heading' => '', 'kind' => 'text' ];
 		}
 
-		return [ 'columns' => $columns, 'rows' => array_map( static fn( $r ) => array_pad( $r, $width, '' ), $rows ) ];
+		return [ 'columns' => $columns, 'rows' => array_map( static fn( $r ) => array_pad( $r, $width - D::row_width( $r ) + count( $r ), '' ), $rows ) ];
 	}
+
 
 	private function posts_table( array $s ): array {
 		$posts = get_posts( [ 'post_type' => sanitize_key( (string) ( $s['post_type'] ?? 'post' ) ), 'numberposts' => max( 1, min( 100, (int) ( $s['post_count'] ?? 8 ) ) ), 'post_status' => 'publish' ] );
@@ -391,6 +458,35 @@ class Data_Table extends Widget_Base {
 		return [ esc_html( $text ), $text ];
 	}
 
+	/** A cell item's extras around its content: picture or icon before, a small line under, a link around. */
+	private function dress( string $html, array $item, array $col ): string {
+		$before = '';
+		$picture = (string) ( $item['image']['url'] ?? '' );
+
+		if ( '' !== $picture ) {
+			$before = '<img class="rf-table__pic" src="' . esc_url( $picture ) . '" alt="" loading="lazy" />';
+		} elseif ( ! empty( $item['icon']['value'] ) ) {
+			$before = '<span class="rf-table__icon">' . \Refraction\Icons_Manager::try_get_icon_html( $item['icon'], [ 'aria-hidden' => 'true' ] ) . '</span>';
+		}
+
+		$sub = trim( (string) ( $item['sub'] ?? '' ) );
+		$url = (string) ( $item['link']['url'] ?? '' );
+
+		if ( '' !== $url && 'link' !== ( $col['kind'] ?? '' ) ) {
+			$key = 'cell-link-' . ( $item['_id'] ?? wp_rand() );
+			$this->add_link_attributes( $key, $item['link'] );
+			$html = '<a ' . $this->get_render_attribute_string( $key ) . '>' . $html . '</a>';
+		}
+
+		if ( '' === $before && '' === $sub ) {
+			return $html;
+		}
+
+		$text = '' === $sub ? $html : '<span class="rf-table__lines"><span class="rf-table__main">' . $html . '</span><span class="rf-table__sub">' . esc_html( wp_strip_all_tags( $sub ) ) . '</span></span>';
+
+		return '<span class="rf-table__cell">' . $before . $text . '</span>';
+	}
+
 	protected function render() {
 		$s = $this->get_settings_for_display();
 		$table = $this->table( $s );
@@ -436,20 +532,49 @@ class Data_Table extends Widget_Base {
 
 		echo '</tr></thead><tbody>';
 
+		$count = count( $table['columns'] );
+
 		foreach ( $table['rows'] as $row ) {
 			echo '<tr>';
+			$i = 0;
 
-			foreach ( $table['columns'] as $i => $col ) {
-				[ $html, $sort ] = $this->cell( (string) ( $row[ $i ] ?? '' ), $col );
-				$classes = trim( ( in_array( $col['align'] ?? '', [ 'start', 'center', 'end' ], true ) ? 'is-' . $col['align'] : '' ) . ( 'yes' === ( $col['bold'] ?? '' ) ? ' is-bold' : '' ) . ' is-' . ( $col['kind'] ?? 'text' ) );
+			foreach ( $row as $value ) {
+				if ( $i >= $count ) {
+					break;
+				}
+
+				$col = $table['columns'][ $i ];
+				$item = is_array( $value ) ? $value : null;
+				$span = $item ? max( 1, min( $count - $i, (int) ( $item['span'] ?? 1 ) ) ) : 1;
+
+				if ( $item && '' !== (string) ( $item['cell_tone'] ?? '' ) ) {
+					$col['tone'] = $item['cell_tone'];
+				}
+
+				[ $html, $sort ] = $this->cell( $item ? (string) ( $item['content'] ?? '' ) : (string) $value, $col );
+				$align = $item && in_array( $item['cell_align'] ?? '', [ 'start', 'center', 'end' ], true ) ? $item['cell_align'] : ( $col['align'] ?? '' );
+				$bold = 'yes' === ( $col['bold'] ?? '' ) || ( $item && 'yes' === ( $item['cell_bold'] ?? '' ) );
+				$classes = trim( ( in_array( $align, [ 'start', 'center', 'end' ], true ) ? 'is-' . $align : '' ) . ( $bold ? ' is-bold' : '' ) . ' is-' . ( $col['kind'] ?? 'text' ) . ( $item ? ' refraction-repeater-item-' . ( $item['_id'] ?? '' ) : '' ) );
+
+				if ( $item ) {
+					$html = $this->dress( $html, $item, $col );
+				}
 
 				printf(
-					'<td class="%1$s" data-label="%2$s" data-sort="%3$s">%4$s</td>',
+					'<td class="%1$s" data-label="%2$s" data-sort="%3$s" data-col="%4$d"%5$s>%6$s</td>',
 					esc_attr( $classes ),
 					esc_attr( (string) ( $col['heading'] ?? '' ) ),
 					esc_attr( $sort ),
-					$html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts in cell().
+					(int) $i,
+					$span > 1 ? ' colspan="' . (int) $span . '"' : '',
+					$html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts in cell() and dress().
 				);
+
+				$i += $span;
+			}
+
+			for ( ; $i < $count; $i++ ) {
+				printf( '<td class="is-%1$s" data-label="%2$s" data-sort="" data-col="%3$d"></td>', esc_attr( (string) ( $table['columns'][ $i ]['kind'] ?? 'text' ) ), esc_attr( (string) ( $table['columns'][ $i ]['heading'] ?? '' ) ), (int) $i );
 			}
 
 			echo '</tr>';
@@ -472,7 +597,7 @@ class Data_Table extends Widget_Base {
 		echo esc_html( implode( ' | ', array_map( static fn( $c ) => (string) ( $c['heading'] ?? '' ), $table['columns'] ) ) ) . "\n";
 
 		foreach ( $table['rows'] as $row ) {
-			echo esc_html( implode( ' | ', $row ) ) . "\n";
+			echo esc_html( implode( ' | ', array_map( static fn( $c ) => is_array( $c ) ? (string) ( $c['content'] ?? '' ) : (string) $c, $row ) ) ) . "\n";
 		}
 	}
 }

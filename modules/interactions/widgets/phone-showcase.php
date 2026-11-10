@@ -887,9 +887,10 @@ class Phone_Showcase extends Widget_Base {
 				'before' => [ 'title' => esc_html__( 'Before', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
 				'after' => [ 'title' => esc_html__( 'After', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
 			],
-			'default' => 'before',
-			'toggle' => false,
-			'condition' => array_merge( $text_look, [ $key . '_icon[value]!' => '' ] ),
+			// Empty: a chosen icon goes before the text and the default arrow after it (as before this option existed).
+			'default' => '',
+			'description' => esc_html__( 'Where the icon sits: before or after the text. Not set: a chosen icon before the text, the default arrow after it.', 'refraction' ),
+			'condition' => $text_look,
 		] );
 	}
 
@@ -923,12 +924,17 @@ class Phone_Showcase extends Widget_Base {
 				? '<span class="rf-showcase__button-words"><span class="rf-showcase__button-small">' . esc_html( $small ) . '</span><span class="rf-showcase__button-text">' . esc_html( $text ) . '</span></span>'
 				: '<span>' . esc_html( $text ) . '</span>';
 
+			$position = (string) ( $s[ $key . '_icon_position' ] ?? '' );
+
 			if ( '' === $icon ) {
-				$inner = $words . '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+				$icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+				$after = 'before' !== $position;
 			} else {
 				$icon = '<span class="rf-showcase__button-icon">' . $icon . '</span>';
-				$inner = 'after' === ( $s[ $key . '_icon_position' ] ?? '' ) ? $words . $icon : $icon . $words;
+				$after = 'after' === $position;
 			}
+
+			$inner = $after ? $words . $icon : $icon . $words;
 		}
 
 		return '<a ' . $this->get_render_attribute_string( $key ) . '>' . $inner . '</a>';

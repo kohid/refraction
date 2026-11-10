@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.65.0
+Stable tag: 0.66.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.66.0 =
+* Data Table: a new way to fill the rows, Cell by cell, next to the rows typed in (which stay as they are). Each cell is its own item, with its content (Dynamic Tags), a small text under it, a picture or an icon before it, a link, its own badge color, alignment, bold, text and background color, and a span across several columns. Sorting finds the right cells past spanning ones.
+
+= 0.65.1 =
+* Phone Showcase: Icon Position (before or after the text) is now offered for every text button, also before an icon is chosen, and it moves the default arrow too.
 
 = 0.65.0 =
 * Ask Claude can now set page settings with a whole page: pages that slide side by side or turn like a book, a loading screen, the canvas template and the page background. Insert applies them in the same undo step; previews and MCP drafts show them.

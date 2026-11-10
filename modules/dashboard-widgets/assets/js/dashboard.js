@@ -263,7 +263,12 @@
 					table.querySelectorAll( 'th[aria-sort]' ).forEach( ( h ) => h.setAttribute( 'aria-sort', 'none' ) );
 					th.setAttribute( 'aria-sort', dir );
 
-					const key = ( r ) => ( r.cells[ col ] ? r.cells[ col ].getAttribute( 'data-sort' ) || r.cells[ col ].textContent.trim() : '' );
+					// A cell found by its column (cells can span several columns, so their position is not the column).
+					const key = ( r ) => {
+						const c = r.querySelector( `td[data-col="${ col }"]` ) || r.cells[ col ];
+
+						return c ? c.getAttribute( 'data-sort' ) || c.textContent.trim() : '';
+					};
 					const factor = 'ascending' === dir ? 1 : -1;
 
 					order = rows.slice().sort( ( a, b ) => {

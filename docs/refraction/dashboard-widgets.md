@@ -35,6 +35,7 @@ No chart library and no outside requests: the server draws everything. Bars, gri
 - **Rows**:
   - Typed in: one row per item, cells separated by `|`. Every row accepts Dynamic Tags.
   - A pasted table, whose first row can supply the headings.
+  - Cell by cell (0.66.0): one repeater item per cell, filling the columns from left to right; **Starts A New Row** begins the next row (a full row starts one by itself). Each cell has its **Content** (shown as its column says, Dynamic Tags allowed), **Small Text Under**, a **Picture** (small, round) or an **Icon** before it, a **Link**, its own **Badge Color**, **Alignment** and **Bold**, **Text Color** and **Background**, and **Spans Columns**. Style > Table adds the picture size and corners, the icon color, and the small text's color and typography.
   - This site's latest posts (title linked, author, date, comments, status).
 - **Table**: sorting by clicking a heading (numbers, dates and progress sort as numbers; `aria-sort`), a search box, rows per page with a pager, the text shown when nothing matches, the heading look (muted uppercase, a tinted band, or plain), row lines (dashed, solid, striped, none), the row highlight on hover, and on phones either sideways scrolling or each row as a card with its labels.
 

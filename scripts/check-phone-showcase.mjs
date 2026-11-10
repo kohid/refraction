@@ -114,6 +114,7 @@ async function main() {
 
 	try {
 		const showcase = page( 'Showcase', box( [ w( 'ps01', { steps: [ step( 1, 'w-logo-blue.png' ), step( 2, 'wordpress-logo.png' ), step( 3 ), step( 4 ) ], cards, button_text: 'Open full demo', button_link: { url: '#demo' }, heading: 'Book your ride\nin four taps', heading_tag: 'h2', description: 'Download the app or call us, day or night.', button2_text: 'Call us', button2_link: { url: 'tel:+441463222222' } } ) ] ), {} );
+		const flipped = page( 'Icon positions', box( [ w( 'ps07', { steps: [ step( 1 ) ], cards: [], button_text: 'Call us', button_icon: { value: 'fas fa-phone', library: 'fa-solid' }, button_icon_position: 'after', button_link: { url: '#call' }, button2_text: 'Back', button2_icon_position: 'before', button2_link: { url: '#back' } } ) ] ), {} );
 		const badges = page( 'Badges', box( [ w( 'ps06', { steps: [ step( 1 ) ], cards: [], button_text: 'Google Play', button_small: 'Android app on', button_icon: { value: 'fab fa-google-play', library: 'fa-brands' }, button_link: { url: '#play' }, button_bg: '#000000', button_color: '#FFFFFF', button2_text: 'Download on the App Store', button2_look: 'image', button2_image: { url: img( 'w-logo-blue.png' ) }, button2_link: { url: '#store' }, button2_image_height: { unit: 'px', size: 52 } } ) ] ), {} );
 		const many = page( 'Many steps', box( [ w( 'ps02', { steps: Array.from( { length: 25 }, ( x, i ) => step( i + 1 ) ), cards: [] } ) ] ), {} );
 		const devices = [ 'island', 'notch', 'hole', 'hole-left', 'edge', 'rounded', 'compact', 'classic', 'fold', 'clay', 'outline', 'tablet', 'tablet-wide' ];
@@ -172,6 +173,12 @@ async function main() {
 		check( 'buttons', 'text and icon: the icon before, a small line above the text (a store badge), no arrow', 'icon,words' === badge.order && 'Android app on' === badge.small && 'Google Play' === badge.text && ! badge.arrow && badge.iconSvg && badge.smallAbove && badge.iconLeft, JSON.stringify( badge ) );
 		check( 'buttons', 'image only: just the image (52px high), the text as its alt text, no background or padding', 'Download on the App Store' === badge.img.alt && 52 === badge.img.h && badge.img.loaded && 'rgba(0, 0, 0, 0)' === badge.img.bg && '0px' === badge.img.pad && '' === badge.img.text && '#store' === badge.img.href, JSON.stringify( badge.img ) );
 		await bd.locator( '[data-id="ps06"] .rf-showcase__buttons' ).screenshot( { path: join( SHOTS, 'badge-buttons.png' ) } );
+		const fl = await bd.context().newPage();
+		await fl.goto( flipped.url );
+		await sleep( 600 );
+		const flip = await fl.evaluate( () => [ ...document.querySelectorAll( '[data-id="ps07"] .rf-showcase__button' ) ].map( ( a ) => [ ...a.children ].map( ( c ) => ( 'svg' === c.tagName.toLowerCase() ? 'arrow' : c.className.replace( 'rf-showcase__button-', '' ) || 'text' ) ).join() ) );
+		check( 'buttons', 'Icon Position: a chosen icon after the text, and the default arrow before it', 'text,icon' === flip[ 0 ] && 'arrow,text' === flip[ 1 ], JSON.stringify( flip ) );
+		await fl.close();
 		await bd.context().close();
 		const phone = await d.evaluate( () => {
 			const body = document.querySelector( '[data-id="ps01"] .rf-phone__body' ).getBoundingClientRect();
