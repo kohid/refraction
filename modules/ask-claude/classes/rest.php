@@ -189,7 +189,9 @@ class Rest {
 			return self::error( 'selected' === $mode ? __( 'The answer must hold exactly one element to replace the selected one.', 'refraction' ) : __( 'Nothing in that answer could be used: it has no elements Refraction knows.', 'refraction' ), 422 );
 		}
 
-		return [ 'elements' => $elements, 'summary' => sanitize_textarea_field( $parsed['summary'] ), 'dropped' => $dropped ];
+		$page_settings = 'page' === $mode ? Prompt_Builder::clean_page( new Widget_Specs( (int) $request->get_param( 'post_id' ) ), $parsed['page_settings'] ?? [] )[0] : [];
+
+		return [ 'elements' => $elements, 'summary' => sanitize_textarea_field( $parsed['summary'] ), 'dropped' => $dropped, 'page_settings' => (object) $page_settings ];
 	}
 
 	public function generate( \WP_REST_Request $request ) {

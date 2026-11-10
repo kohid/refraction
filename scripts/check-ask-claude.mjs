@@ -206,9 +206,23 @@ async function main() {
 		const anonPreview = await ( await fetch( previewUrl ) ).text();
 		check( 'preview', 'the preview link opens without logging in and shows the answer with its shape divider', anonPreview.includes( 'PREVIEWHEAD' ) && /refraction-shape-top/.test( anonPreview ) );
 		check( 'preview', 'preview --shots saves desktop and phone screenshots', existsSync( join( shotsDir, 'desktop.png' ) ) && existsSync( join( shotsDir, 'phone.png' ) ), previewOut );
+		const pageFile = join( dir, 'page-settings.json' );
+		writeFileSync( pageFile, JSON.stringify( { elements: [
+			{ elType: 'container', settings: { min_height: { unit: 'vh', size: 100 } }, elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'PAGEONE' }, elements: [] } ] },
+			{ elType: 'container', settings: { min_height: { unit: 'vh', size: 100 } }, elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'PAGETWO' }, elements: [] } ] },
+		], page_settings: { rf_hp: 'slide', rf_loader: 'yes', rf_loader_style: 'counter', rf_loader_exit: 'split', bogus_page: 1, rf_hp_counter: 'nope' }, summary: 'x' } ) );
+		const pageOut = q( 'preview', job.id, '--file', pageFile );
+		const pageUrl = ( pageOut.match( /preview: (\S+)/ ) || [] )[ 1 ] || '';
+		check( 'page settings', 'a whole-page answer may set page settings; unknown ones and wrong values are named', /page: bogus_page/.test( pageOut ) && /page: rf_hp_counter \(value\)/.test( pageOut ), pageOut );
+		const anonPage = await browser.newPage();
+		await anonPage.goto( pageUrl );
+		await anonPage.waitForTimeout( 2500 );
+		const pageHtml = await ( await fetch( pageUrl ) ).text();
+		check( 'page settings', 'the preview shows the pages side by side and the loading screen', await anonPage.evaluate( () => document.documentElement.classList.contains( 'rf-hp-on' ) ) && /id="rf-loader"/.test( pageHtml ) );
+		await anonPage.close();
 		check( 'preview', 'the person\'s page is unchanged by a preview', ! /PREVIEWHEAD/.test( wp( [ 'post', 'meta', 'get', home.id, '_refraction_data' ], { allowFail: true } ) || '' ) );
 		const answerFile = join( dir, 'answer.json' );
-		writeFileSync( answerFile, JSON.stringify( { elements: [ { elType: 'container', settings: { flex_direction: 'column' }, elements: [
+		writeFileSync( answerFile, JSON.stringify( { page_settings: { rf_loader: 'yes' }, elements: [ { elType: 'container', settings: { flex_direction: 'column' }, elements: [
 			{ elType: 'widget', widgetType: 'heading', settings: { title: 'Bread, early' }, elements: [] },
 			{ elType: 'widget', widgetType: 'html', settings: { html: '<script>alert(1)</script>' }, elements: [] },
 		] } ], summary: 'A warm bakery page.' } ) );
@@ -221,6 +235,7 @@ async function main() {
 		await p.waitForTimeout( 1500 );
 		const codeTree = await topLevel( p );
 		check( 'code', 'Insert builds it in the editor and clears the request', 1 === codeTree.length && /heading:Bread, early/.test( codeTree[ 0 ] ) && ! /html/.test( codeTree[ 0 ] ) && 0 === await p.locator( '[data-ask-claude="job"]' ).count() && /warm bakery/.test( await p.textContent( '[data-ask-claude="done"]' ) ), JSON.stringify( codeTree ) );
+		check( 'page settings', 'Insert also sets the page settings of a whole-page answer', 'yes' === await p.evaluate( () => refraction.documents.getCurrent().container.settings.get( 'rf_loader' ) ) );
 		await p.evaluate( () => $e.run( 'document/history/undo' ) );
 		check( 'code', 'Undo removes it in one step', 0 === ( await topLevel( p ) ).length );
 		await p.evaluate( ( id ) => wp.apiFetch( { path: '/refraction/v1/ask-claude/jobs', method: 'POST', data: { post_id: id, prompt: 'A spinning globe made of HTML', mode: 'section' } } ), home.id );

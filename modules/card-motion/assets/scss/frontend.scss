@@ -1,6 +1,13 @@
 // Card motion: the Card stack (Image, Image Box) and the Slides "Timed cards" layout.
 
 // ---------------------------------------------------------------- card stack
+// A widget holding a stack takes the width of its column: its card width can be a % of it, and a column that centres
+// its items would otherwise shrink the widget (and so the stack) to nothing.
+.refraction-widget:has(.rf-stack) {
+	width: 100%;
+	max-width: 100%;
+}
+
 .rf-stack {
 	--rf-stack-w: 320px;
 	--rf-stack-radius: 18px;

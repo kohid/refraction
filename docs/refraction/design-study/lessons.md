@@ -29,7 +29,16 @@ What went wrong in practice and what changed because of it. Read this before eac
 - A gradient overlay that is clear on one side does not work on phones, where the text covers the whole banner: keep the light end at about 0.35 alpha.
 - The site's cookie plugin adds a hidden settings panel that is wider than the phone: check that overflow comes from the page itself before you fix anything.
 
+## 2026-11-10: surprises
+
+- Page-level features (pages side by side, loading screen, canvas template) were out of Ask Claude's reach: an answer could only hold elements. Whole-page answers can now carry `page_settings` (0.65.0).
+- The card stack vanished on phones inside a column that centres its items: its width is a % of a widget that had shrunk to nothing. Fixed in Refraction (a widget holding a stack spans its column).
+- Full-page screenshots do not show what comes after a scroll door: check those sections by scrolling in the browser, not from the full-page picture.
+- The loading screen removes itself after the reveal: test for it in the page source, not in the DOM after load.
+
 ## Feature ideas
+
+- A typographic index row that shows its picture next to the cursor on hover (Locomotive, Basement): a hover image on link rows.
 
 - A booking bar that embeds the SafeKab online booker as a native widget (an iframe widget limited to allowed booking domains), so Ask Claude can place it without raw HTML.
 

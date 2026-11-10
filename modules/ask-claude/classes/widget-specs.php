@@ -79,6 +79,28 @@ class Widget_Specs {
 		return [ 'controls' => $widget->get_controls(), 'nested' => $widget instanceof \Refraction\Modules\NestedElements\Base\Widget_Nested_Base ];
 	}
 
+	/** Page settings Ask Claude may set with a whole page: the template, pages side by side, the loading screen, the page background. */
+	const PAGE_SETTINGS = '/^(template$|rf_hp|rf_loader|background_)/';
+
+	/** The page settings Claude may set on this page (empty when the page has none, or there is no page yet). */
+	public function page_controls(): array {
+		$document = $this->post_id > 0 ? Plugin::$instance->documents->get( $this->post_id ) : null;
+
+		if ( ! $document ) {
+			return [];
+		}
+
+		$out = [];
+
+		foreach ( $document->get_controls() as $key => $control ) {
+			if ( preg_match( self::PAGE_SETTINGS, (string) $key ) && ! $this->is_device_copy( (string) $key ) ) {
+				$out[ $key ] = $control;
+			}
+		}
+
+		return $out;
+	}
+
 	/** One line per widget for the system prompt: name, title and keywords. */
 	public function catalog(): string {
 		$lines = [];

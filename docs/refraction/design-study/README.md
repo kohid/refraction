@@ -2,6 +2,8 @@
 
 A daily session (about four hours) that makes Ask Claude's designs better. The owner asked for it: the results of `ask-claude-watch` should look like the work of a good studio, not a template. Each day studies current, well-made websites, practises real requests on a local site with Refraction, and turns what it learns into the design guide that every Ask Claude prompt carries (`modules/ask-claude/classes/design-guide.php`).
 
+Start from [capabilities.md](capabilities.md), the atlas of what Refraction can do, and add to it whenever a study finds something new.
+
 ## Rules
 
 - **Inspiration, never copying.** Study a site's ideas: layout, rhythm, type scale, color use, motion, the order of sections and how it guides the visitor. Do not copy its text, images, logos, code, or its whole look. Note patterns in your own words in `references.md`. Recipes are built from scratch with Refraction widgets.

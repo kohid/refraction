@@ -23,6 +23,26 @@ Sites studied for the design study, with patterns noted in our own words and how
 ### Wheely (wheely.com)
 - Stacked full-width rounded image cards with a short centred caption: one idea per screen. Refraction: rounded containers with background images, generous min_height.
 
+## 2026-11-10: product storytelling and studios
+
+### Apple AirPods (apple.com)
+- One product, one sentence, then big feature moments with a single short claim each; paired figures ("2x more", "4x more") with a small caption. Refraction: counters in a two-column grid; a full-width section per feature.
+
+### Basement (basement.studio)
+- A huge sentence as the hero, a dense logo wall in a hairline grid, project rows with a big image on the left and short text on the right. Refraction: grid of image widgets with borders; image + text rows.
+
+### Cosmos (cosmos.so)
+- Small images floating around a centred headline and search: the hero feels alive without a video. Refraction: images with `_position` absolute and % offsets, `rf_mouse_track` and `rf_scroll_preset` (recipe "floating gallery hero").
+
+### Linear (linear.app)
+- Product screenshot as the hero; each section has a short title on the left and its explanation on the right; quiet dark palette with one light. Refraction: row container, title 40%, text 60%; image of the real product.
+
+### Locomotive (locomotive.ca)
+- A typographic index: project names in a large light serif, one per row with hairlines, the list as the main navigation. Refraction: link rows (recipe "typographic index").
+
+### Stripe (stripe.com)
+- A bento of product cards, each with its own UI picture; a full-width coloured band of four big figures. Refraction: grid with spanning tiles; counters on a coloured container.
+
 <!-- Add entries newest first:
 ## YYYY-MM-DD: field
 ### Site name (address)

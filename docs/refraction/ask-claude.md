@@ -38,6 +38,10 @@ The rules (states queued → building → ready, declined; requeue after 30 minu
 
 The sanitizer also reports the settings it leaves out (`ignored_settings`: unknown names, or `name (value)` when the value does not fit) to Claude, in the `preview`, `result` and MCP `save_draft` answers. The person's panel still lists only left-out widgets. Box and text shadows and visual-choice controls (shape dividers) are now accepted; before 0.64.0 they were always dropped.
 
+## Page settings (0.65.0)
+
+A whole-page answer may hold `"page_settings": {...}` next to `"elements"`. Only the settings `Widget_Specs::page_controls()` allows are kept (`/^(template$|rf_hp|rf_loader|background_)/`: the template, pages side by side, the loading screen, the page background), each cleaned like an element setting; anything else is named back to Claude as `page: <name>`. The chat prompt and the Claude Code brief list them in a PAGE SETTINGS part (whole-page requests only); MCP `get_format` lists those of the front page, and `save_draft` and `propose_to_page` take `page_settings`. Insert in the editor applies them to the document in the same undo step as the elements. The API-key mode does not set page settings yet.
+
 ## MCP server
 
 Refraction is also an MCP server (Model Context Protocol, Streamable HTTP, stateless JSON) at `/wp-json/refraction/v1/mcp` (or `/?rest_route=/refraction/v1/mcp`), so Claude Code can work on the site directly instead of answering in one go: read the widgets and pages, build a **draft page**, open its preview in a browser, compare it with a reference and save again until it matches. `Classes\Mcp_Server` (JSON-RPC: `initialize`, `ping`, `tools/list`, `tools/call`; notifications get 202; GET gets 405) and `Classes\Mcp_Tools`:
