@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.64.0
+Stable tag: 0.64.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.64.1 =
+* Ask Claude design guide: rules learned from redesigning a real taxi home page (grid rows, legible text over photos, whole-card links, booking first on service pages).
 
 = 0.64.0 =
 * Ask Claude designs with more intent: every mode (API key, Claude.ai chat, Claude Code, MCP) now gets a design direction (palette, type scale, 8px spacing rhythm, varied section shapes, motion with restraint, phone rules), the list of Refraction's signature features with their exact settings (text reveals, two-tone headings, marquee bands, parallax, sticky columns, magnetic buttons, scroll doors, shape dividers, animated headlines), five tested section recipes and a review checklist.
