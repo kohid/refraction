@@ -67,7 +67,7 @@ class Queue_Rest {
 		];
 
 		if ( 'ready' === $job['state'] ) {
-			$out += [ 'elements' => $job['elements'] ?? [], 'summary' => $job['summary'] ?? '', 'dropped' => $job['dropped'] ?? [] ];
+			$out += [ 'elements' => $job['elements'] ?? [], 'summary' => $job['summary'] ?? '', 'dropped' => $job['dropped'] ?? [], 'page_settings' => (object) ( $job['page_settings'] ?? [] ) ];
 		}
 
 		return $out;
@@ -220,7 +220,11 @@ class Queue_Rest {
 			return new \WP_Error( 'refraction_ask_claude', 'selected' === $job['mode'] ? 'Send exactly one valid element.' : 'No valid element was left after checking. Use only catalog widgets and the listed settings.', [ 'status' => 422, 'dropped' => $dropped, 'ignored_settings' => $ignored ] );
 		}
 
-		$moved = $this->step( $request, 'result', [ 'elements' => $elements, 'summary' => sanitize_textarea_field( $parsed['summary'] ), 'dropped' => $dropped ] );
+		[ $page_settings, $page_ignored ] = 'page' === $job['mode'] ? Prompt_Builder::clean_page( new Widget_Specs( $job['post_id'] ), $parsed['page_settings'] ?? [] ) : [ [], [] ];
+		$ignored = array_merge( $ignored, array_map( static function ( $name ) {
+			return 'page: ' . $name;
+		}, $page_ignored ) );
+		$moved = $this->step( $request, 'result', [ 'elements' => $elements, 'summary' => sanitize_textarea_field( $parsed['summary'] ), 'dropped' => $dropped, 'page_settings' => $page_settings ] );
 
 		if ( ! is_wp_error( $moved ) ) {
 			self::remove_preview( $job['id'] );
@@ -322,6 +326,14 @@ class Queue_Rest {
 
 		$settings = $source ? (array) $source->get_settings() : [];
 		$settings = array_intersect_key( $settings, array_flip( [ 'template', 'background_background', 'background_color', 'background_color_b', 'background_gradient_angle', 'padding', 'margin' ] ) );
+
+		if ( 'page' === $job['mode'] ) {
+			[ $page_settings, $page_ignored ] = Prompt_Builder::clean_page( new Widget_Specs( $job['post_id'] ), $parsed['page_settings'] ?? [] );
+			$settings = array_merge( $settings, $page_settings );
+			$ignored = array_merge( $ignored, array_map( static function ( $name ) {
+				return 'page: ' . $name;
+			}, $page_ignored ) );
+		}
 
 		if ( empty( $settings['template'] ) ) {
 			$template = (string) get_page_template_slug( (int) $job['post_id'] );

@@ -41,17 +41,24 @@ function create( parent, elements, at ) {
 }
 
 /**
- * @param {string} mode     page, section or selected.
- * @param {Array}  elements The checked elements from the server.
- * @param {Object} [target] For "selected": the element to replace (default: the selected one).
+ * @param {string} mode           page, section or selected.
+ * @param {Array}  elements       The checked elements from the server.
+ * @param {Object} [target]       For "selected": the element to replace (default: the selected one).
+ * @param {Object} [pageSettings] For "page": page settings to set too (pages side by side, loading screen...).
  */
-export function insert( mode, elements, target = null ) {
+export function insert( mode, elements, target = null, pageSettings = null ) {
 	const log = window.$e.internal( 'document/history/start-log', { type: 'add', title: 'Ask Claude' } );
 
 	try {
 		if ( 'page' === mode ) {
 			[ ...preview().children ].forEach( ( child ) => window.$e.run( 'document/elements/delete', { container: child } ) );
 			create( preview(), elements, 0 );
+
+			const document = window.refraction.documents && window.refraction.documents.getCurrent();
+
+			if ( document && pageSettings && Object.keys( pageSettings ).length ) {
+				window.$e.run( 'document/elements/settings', { container: document.container, settings: pageSettings, options: { external: true } } );
+			}
 		} else if ( 'section' === mode ) {
 			const after = selected() ? topLevel( selected() ) : null;
 			const at = after ? indexIn( after ) + 1 : preview().children.length;

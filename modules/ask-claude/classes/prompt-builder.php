@@ -229,6 +229,7 @@ class Prompt_Builder {
 			self::FORMAT . "\n- Use only setting names and option values listed under CONTROLS; anything else is dropped.",
 			self::design(),
 			self::styles( $specs, (bool) $request['use_styles'] ),
+			'page' === $request['mode'] ? self::page_settings_text( $specs ) : '',
 			self::request( $request['mode'], $request['prompt'], $request['context'], 'If images are attached to this message, they are references for layout, colors and mood; do not copy text or logos from them.' ),
 			"ANSWER FORMAT\nReply with a single ```json code block and nothing else: no artifact, no file, no explanation before or after it. The block holds one object: {\"elements\": [ ...the elements... ], \"summary\": \"Two or three sentences for the person: what you built and anything they should replace (placeholders, images).\"}" . ( 'selected' === $request['mode'] ? ' "elements" holds exactly one element.' : '' ) . ' If the answer would be very long, keep every item and save elements instead (one image-box or icon-box per card, fewer wrapper containers) rather than stopping halfway: an answer that is cut off cannot be inserted.',
 		] ) );
@@ -270,7 +271,7 @@ class Prompt_Builder {
 			}
 
 			if ( isset( $data['elements'] ) && is_array( $data['elements'] ) ) {
-				return [ 'elements' => $data['elements'], 'summary' => is_string( $data['summary'] ?? null ) ? $data['summary'] : '' ];
+				return [ 'elements' => $data['elements'], 'summary' => is_string( $data['summary'] ?? null ) ? $data['summary'] : '', 'page_settings' => is_array( $data['page_settings'] ?? null ) ? $data['page_settings'] : [] ];
 			}
 
 			if ( array_values( $data ) === $data ) {
@@ -293,6 +294,38 @@ class Prompt_Builder {
 		$clean = $sanitizer->elements( $elements, 0, 'selected' === $mode ? 'container' : 'root' );
 
 		return [ $clean, $sanitizer->dropped, self::has_widget( $clean ) && ( 'selected' !== $mode || 1 === count( $clean ) ), $sanitizer->ignored ];
+	}
+
+	/**
+	 * Cleans the page settings of a whole-page answer (only the settings Widget_Specs::page_controls() allows).
+	 *
+	 * @return array [ settings, ignored ]
+	 */
+	public static function clean_page( Widget_Specs $specs, $settings ): array {
+		$controls = $specs->page_controls();
+
+		if ( ! $controls || ! is_array( $settings ) || ! $settings ) {
+			return [ [], is_array( $settings ) ? array_map( 'strval', array_keys( $settings ) ) : [] ];
+		}
+
+		$sanitizer = new Layout_Sanitizer( [ $specs, 'spec' ], [ Widget_Specs::class, 'image_url' ], $specs->global_ids() );
+		$clean = $sanitizer->settings( $settings, $controls );
+
+		return [ $clean, $sanitizer->ignored ];
+	}
+
+	/** The page settings part of a prompt for a whole page ('' when the page has none). */
+	public static function page_settings_text( Widget_Specs $specs ): string {
+		$controls = $specs->page_controls();
+
+		if ( ! $controls ) {
+			return '';
+		}
+
+		$groups = [];
+		$line = self::line( self::compact( $controls, $groups ) );
+
+		return "PAGE SETTINGS (whole page only; optional)\nAdd \"page_settings\": {...} next to \"elements\" to set the page itself, with these settings only: " . $line . "\nUse them for a page-level experience: rf_hp \"slide\" (each top-level container becomes a full-screen page that slides in from the right, with arrows, a big page number and a progress line) or \"book\" (pages turned like a book); rf_loader \"yes\" with rf_loader_style (bar, spinner, counter) and rf_loader_exit (fade, slide, split) for a loading screen; template \"refraction_canvas\" for a page without the theme's header and footer. Leave them out for an ordinary page.";
 	}
 
 	/** Whether any widget is left: empty containers alone (everything in them dropped) are not a result. */

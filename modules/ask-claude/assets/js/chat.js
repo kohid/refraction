@@ -95,7 +95,7 @@ export function ChatFlow( { mode, prompt, useStyles } ) {
 
 		try {
 			const data = await apiFetch( { path: `/${ cfg().route }/chat-import`, method: 'POST', data: { post_id: postId(), mode, answer } } );
-			insert( mode, data.elements );
+			insert( mode, data.elements, null, data.page_settings );
 			setResult( data );
 			setAnswer( '' );
 		} catch ( e ) {

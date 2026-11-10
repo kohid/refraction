@@ -126,7 +126,7 @@ export function CodeFlow( { active, mode, prompt, useStyles } ) {
 		}
 
 		setConfirm( null );
-		insert( job.mode, job.elements, target );
+		insert( job.mode, job.elements, target, job.page_settings );
 		setDone( job.summary || __( 'Done.', 'refraction' ) );
 		await remove( job );
 	};

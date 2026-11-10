@@ -30,8 +30,8 @@ class Mcp_Tools {
 			'upload_media' => [ 'Adds a file to the media library from a public URL or base64 data (images, video, .glb). Returns its id.', [ 'url' => $string, 'data' => [ 'type' => 'string', 'description' => 'Base64 file content.' ], 'filename' => $string, 'title' => $string, 'alt' => $string ], 'upload', [ 'filename' ] ],
 			'list_pages' => [ 'Pages: id, title, status, address, whether Refraction edits them, and drafts made through this server.', [ 'search' => $string ], 'pages' ],
 			'get_page' => [ 'A page\'s Refraction elements (the full tree as saved), title, status and template.', [ 'id' => $int ], 'page', [ 'id' ] ],
-			'save_draft' => [ 'Creates (no id) or replaces (id of a draft made here) a draft page with these elements, checked like every Ask Claude result. Returns the preview link (opens without logging in) and what was left out. Never publishes.', [ 'id' => $int, 'title' => $string, 'elements' => $elements, 'template' => [ 'type' => 'string', 'enum' => [ 'canvas', 'full-width', 'default' ] ] ], 'save_draft', [ 'title', 'elements' ] ],
-			'propose_to_page' => [ 'Offers these elements to an existing page: they appear as a ready request in that page\'s Ask Claude panel (Claude Code), for whoever edits the page to insert. mode page replaces the page, section adds them.', [ 'page_id' => $int, 'elements' => $elements, 'summary' => $string, 'mode' => [ 'type' => 'string', 'enum' => [ 'page', 'section' ] ] ], 'propose', [ 'page_id', 'elements', 'summary' ] ],
+			'save_draft' => [ 'Creates (no id) or replaces (id of a draft made here) a draft page with these elements, checked like every Ask Claude result. Returns the preview link (opens without logging in) and what was left out. Never publishes.', [ 'id' => $int, 'title' => $string, 'elements' => $elements, 'template' => [ 'type' => 'string', 'enum' => [ 'canvas', 'full-width', 'default' ] ], 'page_settings' => [ 'type' => 'object', 'description' => 'Optional page settings (pages side by side rf_hp*, loading screen rf_loader*, page background background_*); the page settings get_format lists.' ] ], 'save_draft', [ 'title', 'elements' ] ],
+			'propose_to_page' => [ 'Offers these elements to an existing page: they appear as a ready request in that page\'s Ask Claude panel (Claude Code), for whoever edits the page to insert. mode page replaces the page, section adds them.', [ 'page_id' => $int, 'elements' => $elements, 'summary' => $string, 'mode' => [ 'type' => 'string', 'enum' => [ 'page', 'section' ] ], 'page_settings' => [ 'type' => 'object', 'description' => 'Optional page settings, with mode page only (see save_draft).' ] ], 'propose', [ 'page_id', 'elements', 'summary' ] ],
 			'list_requests' => [ 'Ask Claude requests waiting for Claude Code (queued, or building for over 30 minutes).', [], 'requests' ],
 			'get_request' => [ 'One request\'s full brief (the person\'s description, the page or element, and everything about the widgets). Marks it "Claude is building".', [ 'id' => $int ], 'request', [ 'id' ] ],
 			'answer_request' => [ 'Sends the result of a request: {"elements": [...], "summary": "..."}, checked before it is stored. Refused (with the reason) when nothing usable is left; fix and send again.', [ 'id' => $int, 'elements' => $elements, 'summary' => $string ], 'answer', [ 'id', 'elements' ] ],
@@ -87,7 +87,7 @@ class Mcp_Tools {
 	}
 
 	private static function format(): string {
-		return implode( "\n\n", [ Prompt_Builder::INTRO, Prompt_Builder::FORMAT, Prompt_Builder::design(), 'Media settings take {"id": <library id>} from list_media (upload files with upload_media first). Section ids (_element_id) make anchors for links like {"url": "#about"}. Motion: rf_reveal* (enter animations, text split, scroll-scrubbed with rf_reveal_trigger "scroll"), rf_scroll_* (parallax presets and scroll effects), rf_sticky (pin). Build the page with save_draft, open the preview link in a browser, compare it with the reference, and save again until it matches.' ] );
+		return implode( "\n\n", [ Prompt_Builder::INTRO, Prompt_Builder::FORMAT, Prompt_Builder::design(), Prompt_Builder::page_settings_text( self::specs( (int) get_option( 'page_on_front' ) ?: (int) ( get_posts( [ 'post_type' => 'page', 'posts_per_page' => 1, 'fields' => 'ids' ] )[0] ?? 0 ) ) ), 'Media settings take {"id": <library id>} from list_media (upload files with upload_media first). Section ids (_element_id) make anchors for links like {"url": "#about"}. Motion: rf_reveal* (enter animations, text split, scroll-scrubbed with rf_reveal_trigger "scroll"), rf_scroll_* (parallax presets and scroll effects), rf_sticky (pin). Build the page with save_draft, open the preview link in a browser, compare it with the reference, and save again until it matches.' ] );
 	}
 
 	private static function site(): array {
@@ -239,13 +239,16 @@ class Mcp_Tools {
 		}
 
 		$template = [ 'canvas' => 'refraction_canvas', 'full-width' => 'refraction_header_footer', 'default' => 'default' ][ $args['template'] ?? 'canvas' ] ?? 'refraction_canvas';
+		[ $page_settings, $page_ignored ] = Prompt_Builder::clean_page( self::specs( $id ), $args['page_settings'] ?? [] );
 		$document = Plugin::$instance->documents->get( $id, false );
 
-		if ( ! $document || false === $document->save( [ 'elements' => $elements, 'settings' => [ 'template' => $template ] ] ) ) {
+		if ( ! $document || false === $document->save( [ 'elements' => $elements, 'settings' => array_merge( $page_settings, [ 'template' => $template ] ) ] ) ) {
 			return self::error( 'The page could not be saved with this account.' );
 		}
 
-		return [ 'id' => $id, 'preview' => Draft_Preview::renew( $id ), 'edit' => admin_url( 'post.php?post=' . $id . '&action=refraction' ), 'dropped' => $dropped, 'ignored_settings' => $ignored ];
+		return [ 'id' => $id, 'preview' => Draft_Preview::renew( $id ), 'edit' => admin_url( 'post.php?post=' . $id . '&action=refraction' ), 'dropped' => $dropped, 'ignored_settings' => array_merge( $ignored, array_map( static function ( $name ) {
+			return 'page: ' . $name;
+		}, $page_ignored ) ) ];
 	}
 
 	private static function propose( array $args ) {
@@ -269,7 +272,8 @@ class Mcp_Tools {
 			return $id;
 		}
 
-		Job_Queue::move( Job_Queue::get( $id ), 'result', [ 'elements' => $elements, 'summary' => sanitize_textarea_field( (string) $args['summary'] ), 'dropped' => $dropped ] );
+		$page_settings = 'page' === $mode ? Prompt_Builder::clean_page( self::specs( $page->ID ), $args['page_settings'] ?? [] )[0] : [];
+		Job_Queue::move( Job_Queue::get( $id ), 'result', [ 'elements' => $elements, 'summary' => sanitize_textarea_field( (string) $args['summary'] ), 'dropped' => $dropped, 'page_settings' => $page_settings ] );
 
 		return [ 'request' => $id, 'state' => 'ready', 'dropped' => $dropped ];
 	}

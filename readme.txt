@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.64.2
+Stable tag: 0.65.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.65.0 =
+* Ask Claude can now set page settings with a whole page: pages that slide side by side or turn like a book, a loading screen, the canvas template and the page background. Insert applies them in the same undo step; previews and MCP drafts show them.
+* Ask Claude design guide: four new section recipes (a floating gallery hero, a typographic index, a card stack beside text, a scroll door) and whole-page experiences; a capability atlas of Refraction's features for the design study.
+* Fixed: the Image / Image Box card stack disappeared on phones inside a column that centres its items.
 
 = 0.64.2 =
 * Ask Claude keeps every real fact and item when it redesigns a page and adds more (counters, FAQ from real facts, latest posts, app showcase, map), building cards as single Image Box / Icon Box widgets; an answer may now hold up to 600 elements (was 250), so rich pages are no longer cut off.
