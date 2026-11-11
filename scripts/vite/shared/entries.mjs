@@ -88,6 +88,7 @@ export const BASE_ENTRIES = {
 	'dashboard-frontend': 'modules/dashboard-widgets/assets/js/dashboard.js',
 	'dashboard-editor': 'modules/dashboard-widgets/assets/js/dashboard-editor.js',
 	'highlight-preview': 'modules/highlight-words/assets/js/highlight-preview.js',
+	'organic-fx': 'modules/organic-fx/assets/js/organic-fx.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 
