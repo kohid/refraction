@@ -119,16 +119,51 @@ class Pure_Highlight {
 		$title = self::phrases( $title_words );
 		$desc = self::phrases( $desc_words );
 
-		if ( ( ! $title && ! $desc ) || '' === $html ) {
+		if ( ! $title && ! $desc ) {
 			return $html;
 		}
 
-		$patterns = [
+		return self::walk( $html, [ self::class, 'kind' ], [
 			'title' => self::pattern( $title, $match_case ),
 			'desc' => self::pattern( $desc, $match_case ),
 			'' => self::pattern( array_values( array_unique( array_merge( $title, $desc ) ) ), $match_case ),
-		];
-		$parts = preg_split( '/(<[^>]*>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE );
+		] );
+	}
+
+	/**
+	 * Each list only inside its own part, a part being the elements with that class (a whole class name): for widgets
+	 * made of several components. The innermost listed part decides; text in no listed part is left alone.
+	 *
+	 * @param array $lists [ class name => words, one per line ].
+	 */
+	public static function wrap_classes( string $html, array $lists, bool $match_case = false ): string {
+		$patterns = [];
+
+		foreach ( $lists as $class => $words ) {
+			$patterns[ (string) $class ] = self::pattern( self::phrases( (string) $words ), $match_case );
+		}
+
+		if ( ! array_filter( $patterns ) ) {
+			return $html;
+		}
+
+		$names = array_keys( $patterns );
+		$kind = static function ( string $classes ) use ( $names ): string {
+			$found = array_values( array_intersect( preg_split( '/\s+/', trim( $classes ) ) ?: [], $names ) );
+
+			return $found[0] ?? '';
+		};
+
+		return self::walk( $html, $kind, $patterns + [ '' => '' ] );
+	}
+
+	/**
+	 * Walks the HTML, keeping a stack of open elements with the kind $kind_of gives each class attribute; every text
+	 * piece gets the pattern of the innermost element with a kind (or of '' when none has one). Script, style, textarea
+	 * and parts already highlighted are left alone.
+	 */
+	private static function walk( string $html, callable $kind_of, array $patterns ): string {
+		$parts = '' === $html ? false : preg_split( '/(<[^>]*>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE );
 
 		if ( false === $parts ) {
 			return $html;
@@ -164,7 +199,7 @@ class Pure_Highlight {
 
 					$class = preg_match( '#\bclass\s*=\s*("([^"]*)"|\'([^\']*)\')#i', $part, $c ) ? ( '' !== ( $c[2] ?? '' ) ? $c[2] : ( $c[3] ?? '' ) ) : '';
 					$no = in_array( $tag, [ 'script', 'style', 'textarea' ], true ) || preg_match( '#\brefraction-heading-dual\b#', $class );
-					$stack[] = [ 'tag' => $tag, 'kind' => self::kind( $class ), 'skip' => $no ? 1 : 0 ];
+					$stack[] = [ 'tag' => $tag, 'kind' => $kind_of( $class ), 'skip' => $no ? 1 : 0 ];
 					$skip = (int) array_sum( array_column( $stack, 'skip' ) );
 				}
 
@@ -184,7 +219,7 @@ class Pure_Highlight {
 				}
 			}
 
-			if ( '' !== $patterns[ $kind ] ) {
+			if ( '' !== ( $patterns[ $kind ] ?? '' ) ) {
 				$parts[ $i ] = preg_replace( $patterns[ $kind ], self::SPAN . '$1</span>', $part );
 			}
 		}

@@ -88,11 +88,101 @@ class Module extends BaseModule {
 			return;
 		}
 
+		$parts = self::parts_of( $element );
+
+		if ( $parts ) {
+			$this->add_part_sections( $element, $parts );
+			return;
+		}
+
 		$kinds = self::text_kinds( $element->get_controls() );
 
 		if ( $kinds['title'] || $kinds['desc'] ) {
 			$this->add_sections( $element, $kinds['title'] && $kinds['desc'] );
 		}
+	}
+
+	/**
+	 * A widget made of several components lists them (public static function highlight_parts(): [ key => [ label,
+	 * class name ] ]), and gets one box per component, so words typed for one never mark another.
+	 */
+	public static function parts_of( $widget ): array {
+		$class = is_object( $widget ) ? get_class( $widget ) : (string) $widget;
+
+		return method_exists( $class, 'highlight_parts' ) ? (array) $class::highlight_parts() : [];
+	}
+
+	/** One words box per component; the two lists of 0.67 stay (hidden) until one of these boxes is filled. */
+	public function add_part_sections( $element, array $parts ): void {
+		$element->start_controls_section( 'section_rf_hl', [
+			'label' => esc_html__( 'Highlight Words', 'refraction' ),
+			'tab' => Controls_Manager::TAB_CONTENT,
+		] );
+
+		$element->add_control( 'rf_hl_parts_note', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'Each part has its own words, one word or phrase per line. Words typed for one part are never highlighted in another.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+		] );
+
+		$terms = [];
+
+		foreach ( $parts as $key => [ $label ] ) {
+			$element->add_control( 'rf_hl_part_' . $key, [
+				/* translators: %s: Part of the widget, like Heading or Buttons. */
+				'label' => sprintf( esc_html__( '%s: Words To Highlight', 'refraction' ), $label ),
+				'type' => Controls_Manager::TEXTAREA,
+				'rows' => 2,
+				'render_type' => 'template',
+			] );
+			$terms[] = [ 'name' => 'rf_hl_part_' . $key, 'operator' => '!==', 'value' => '' ];
+		}
+
+		// The earlier Title / Description lists of this widget: kept so saved pages look the same until a box above
+		// is filled, then ignored.
+		foreach ( [ 'rf_hl_words', 'rf_hl_desc' ] as $legacy ) {
+			$element->add_control( $legacy, [ 'type' => Controls_Manager::HIDDEN, 'default' => '' ] );
+		}
+
+		$element->add_control( 'rf_hl_legacy_note', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'This widget still uses its earlier Title and Description words until you fill one of the boxes above.', 'refraction' ),
+			'content_classes' => 'refraction-control-field-description',
+			'conditions' => [ 'relation' => 'and', 'terms' => array_merge(
+				array_map( static fn( $t ) => [ 'name' => $t['name'], 'operator' => '===', 'value' => '' ], $terms ),
+				[ [ 'relation' => 'or', 'terms' => [ [ 'name' => 'rf_hl_words', 'operator' => '!==', 'value' => '' ], [ 'name' => 'rf_hl_desc', 'operator' => '!==', 'value' => '' ] ] ] ]
+			) ],
+		] );
+
+		$element->add_control( 'rf_hl_case', [
+			'label' => esc_html__( 'Match Upper And Lower Case', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'render_type' => 'template',
+			'separator' => 'before',
+		] );
+
+		$element->end_controls_section();
+
+		$terms[] = [ 'name' => 'rf_hl_words', 'operator' => '!==', 'value' => '' ];
+		$terms[] = [ 'name' => 'rf_hl_desc', 'operator' => '!==', 'value' => '' ];
+		Heading_Dual_Style::controls( $element, [ 'conditions' => [ 'relation' => 'or', 'terms' => $terms ] ] );
+	}
+
+	/**
+	 * The words of each listed part: [ class name => words ], empty when no part box is filled.
+	 */
+	public static function part_lists( array $parts, array $settings ): array {
+		$lists = [];
+
+		foreach ( $parts as $key => [ , $class ] ) {
+			$words = (string) ( $settings[ 'rf_hl_part_' . $key ] ?? '' );
+
+			if ( '' !== trim( $words ) ) {
+				$lists[ $class ] = $words;
+			}
+		}
+
+		return $lists;
 	}
 
 	/** Highlight Words, and its Style section (the Heading has its own, shared with the Dual Heading). */
@@ -203,7 +293,12 @@ class Module extends BaseModule {
 		$words = (string) ( $settings['rf_hl_words'] ?? '' );
 		$case = 'yes' === ( $settings['rf_hl_case'] ?? '' );
 
-		if ( array_key_exists( 'rf_hl_desc', $settings ) ) {
+		$parts = self::parts_of( $widget );
+		$lists = $parts ? self::part_lists( $parts, $settings ) : [];
+
+		if ( $lists ) {
+			$content = Pure_Highlight::wrap_classes( (string) $content, $lists, $case );
+		} elseif ( array_key_exists( 'rf_hl_desc', $settings ) ) {
 			// A title and a description: each list in its own part.
 			$content = Pure_Highlight::wrap_parts( (string) $content, $words, (string) $settings['rf_hl_desc'], $case );
 		} elseif ( '' !== trim( $words ) ) {
@@ -224,5 +319,18 @@ class Module extends BaseModule {
 	public function enqueue_preview() {
 		$min = Utils::is_script_debug() ? '' : '.min';
 		wp_enqueue_script( 'refraction-highlight-preview', REFRACTION_ASSETS_URL . 'js/highlight-preview' . $min . '.js', [], REFRACTION_VERSION, true );
+
+		// Widgets with parts: widget name => [ key => class name ], for the preview.
+		$map = [];
+
+		foreach ( \Refraction\Plugin::$instance->widgets_manager->get_widget_types() as $name => $widget ) {
+			foreach ( self::parts_of( $widget ) as $key => [ , $class ] ) {
+				$map[ $name ][ $key ] = $class;
+			}
+		}
+
+		if ( $map ) {
+			wp_add_inline_script( 'refraction-highlight-preview', 'window.refractionHighlightParts=' . wp_json_encode( $map ) . ';', 'before' );
+		}
 	}
 }

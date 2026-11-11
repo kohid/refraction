@@ -105,6 +105,8 @@ async function main() {
 			[ [ w( 'hl00004', 'icon-box', { title_text: 'Safe transport', description_text: 'Licensed drivers, safe cars, every journey.', rf_hl_words: 'Safe', rf_hl_desc: 'every journey', rf_dual_mark: 'underline', rf_dual_color: '#E20A17' } ), 50 ], [ w( 'hl00005', 'refraction-call-to-action', { title: 'Book your ride today', description: 'Call us any time.', rf_hl_words: 'today', rf_hl_desc: 'any time' } ), 50 ] ],
 			[ [ w( 'hl00007', 'alert', { alert_title: 'Bookings open', alert_description: 'Call us any time, we are open.', rf_hl_words: 'open', rf_hl_desc: 'any time' } ), 34 ], [ w( 'hl00008', 'counter', { title: 'Happy riders', ending_number: 500, rf_hl_words: 'Happy' } ), 33 ], [ w( 'hl00009', 'refraction-stat-card', { label: 'Monthly riders', value: '1200', rf_hl_words: 'riders' } ), 33 ] ],
 			[ [ w( 'hl00010', 'refraction-slides', { rf_hl_words: 'Heading' } ), 100 ] ],
+			[ [ w( 'hl00012', 'refraction-phone-showcase', { label: 'Download for free', heading: 'Download our app today', description: 'Book in the SafeKab app.', steps: [ { _id: 'st1', title: 'Download the SafeKab app', text: 'Free on Google Play. Download now.' } ], button_text: 'Google Play', button_small: 'Download on', button2_text: 'App Store', button2_small: 'Download on', button_hover_animation: 'grow', cards: [ { _id: 'cd1', title: 'Download', text: 'Booked' } ], rf_hl_part_heading: 'Download', rf_hl_part_step_text: 'Download', rf_hl_part_buttons: 'App Store', rf_hl_part_description: 'SafeKab' } ), 100 ] ],
+			[ [ w( 'hl00013', 'refraction-phone-showcase', { label: 'Download for free', heading: 'Download our app', description: 'Use SafeKab.', steps: [ { _id: 'st2', title: 'Step', text: 'Text' } ], rf_hl_words: 'Download', rf_hl_desc: 'SafeKab' } ), 100 ] ],
 			[ [ w( 'hl00006', 'refraction-phone-showcase', { label: 'How it works', label_icon: { value: 'fas fa-taxi', library: 'fa-solid' }, label_pill: 'yes', steps: [ { title: 'Step one', text: 'One' } ] } ), 100 ] ],
 		] );
 
@@ -132,6 +134,28 @@ async function main() {
 		check( 'heading', 'many phrases highlighted in a Heading, with a rounded mark that draws in', 'your bank,Not ours' === front.heading.join() && front.mark && front.drawn, JSON.stringify( front ) );
 		check( 'text editor', 'phrases highlighted in a Text Editor wherever they appear (also inside a link), with a gradient fill', 'any hour,airport,airport,the Highlands' === front.text.join() && 'airport' === front.linkKept && front.gradient, JSON.stringify( front.text ) );
 		check( 'cards', 'Icon Box and Call to Action with Title and Description Words: title words only in the title (not "safe" in the description), highlighted with their own style (red underline)', 'Safe,every journey' === front.iconBox.join() && 'rgb(226, 10, 23)' === front.underline && 'today,any time' === front.cta.join(), JSON.stringify( [ front.iconBox, front.underline, front.cta ] ) );
+		const parts = await d.evaluate( () => {
+			const hl = ( sel ) => [ ...document.querySelectorAll( `[data-id="hl00012"] ${ sel } .rf-hl` ) ].map( ( x ) => x.textContent ).join();
+			return { label: hl( '.rf-showcase__label' ), heading: hl( '.rf-showcase__heading' ), desc: hl( '.rf-showcase__description' ), stepTitle: hl( '.rf-showcase__title' ), stepText: hl( '.rf-showcase__text' ), buttons: hl( '.rf-showcase__buttons' ), cards: hl( '.rf-showcase__card' ), legacy: [ ...document.querySelectorAll( '[data-id="hl00013"] .rf-hl' ) ].map( ( x ) => x.textContent ).join() };
+		} );
+		check( 'phone showcase parts', 'each part has its own words: "Download" only in the heading and the step text (not the label, step title, buttons or cards), "App Store" only in the buttons, "SafeKab" only in the description', '' === parts.label && 'Download' === parts.heading && 'SafeKab' === parts.desc && '' === parts.stepTitle && 'Download' === parts.stepText && 'App Store' === parts.buttons && '' === parts.cards, JSON.stringify( parts ) );
+		check( 'phone showcase parts', 'a showcase saved with the earlier Title / Description lists still looks the same', /Download/.test( parts.legacy ) && /SafeKab/.test( parts.legacy ), parts.legacy );
+		const btn = await d.evaluate( () => {
+			const b = document.querySelector( '[data-id="hl00012"] .rf-showcase__button--primary' );
+			const b2 = document.querySelector( '[data-id="hl00012"] .rf-showcase__button--secondary' );
+			return { anim: b.classList.contains( 'refraction-animation-grow' ), animCss: [ ...document.styleSheets ].some( ( sh ) => {
+				try {
+					return [ ...sh.cssRules ].some( ( r ) => /refraction-animation-grow/.test( r.selectorText || '' ) );
+				} catch ( e ) {
+					return false;
+				}
+			} ), transition: getComputedStyle( b2 ).transitionProperty, lift: document.querySelector( '[data-id="hl00012"]' ).classList.contains( 'rf-showcase-lift-yes' ) };
+		} );
+		await d.hover( '[data-id="hl00012"] .rf-showcase__button--secondary' );
+		await sleep( 500 );
+		const lifted = await d.evaluate( () => getComputedStyle( document.querySelector( '[data-id="hl00012"] .rf-showcase__button--secondary' ) ).transform );
+		check( 'phone showcase buttons', 'Hover Animation (Grow) on the first button with its CSS loaded; the second lifts on hover; colours, border, shadow and movement ease in', btn.anim && btn.animCss && btn.lift && /color/.test( btn.transition ) && /transform/.test( btn.transition ) && /matrix\(1, 0, 0, 1, 0, -3\)/.test( lifted ), JSON.stringify( [ btn, lifted ] ) );
+		await d.locator( '[data-id="hl00012"]' ).screenshot( { path: join( SHOTS, 'showcase-parts.png' ) } );
 		const more = await d.evaluate( () => Object.fromEntries( [ 'hl00007', 'hl00008', 'hl00009', 'hl00010' ].map( ( id ) => [ id, [ ...document.querySelectorAll( `[data-id="${ id }"] .rf-hl` ) ].map( ( s ) => s.textContent ).join() ] ) ) );
 		check( 'all widgets', 'every widget with a title or description has it: Alert ("open" only in its title, "any time" in its description), Counter title, Stat Card label, Slides headings', 'open,any time' === more.hl00007 && 'Happy' === more.hl00008 && 'riders' === more.hl00009 && /Heading/.test( more.hl00010 ), JSON.stringify( more ) );
 		check( 'pill', 'a Heading as a pill label: rounded, tinted, capitals, a round badge "3" first', front.pill && '999px' === front.pill.radius && 'rgb(221, 247, 238)' === front.pill.bg && 'uppercase' === front.pill.caps && '3' === front.pill.badge && '50%' === front.pill.round && front.pill.first, JSON.stringify( front.pill ) );
@@ -178,6 +202,25 @@ async function main() {
 		await sleep( 1500 );
 		const two = await frame.evaluate( () => [ ...document.querySelectorAll( '[data-id="hl00004"] .rf-hl' ) ].map( ( s ) => s.textContent ).join() );
 		check( 'editor', 'a widget with a title and a description has two boxes, and the preview follows each', 'Title Words To Highlight' === panel[ 0 ] && 'Description Words To Highlight' === panel[ 1 ] && 'Safe,Licensed' === two, JSON.stringify( [ panel, two ] ) );
+		const showPanel = await e.evaluate( async () => {
+			const c = window.refraction.getContainer( 'hl00012' );
+			window.$e.run( 'document/elements/select', { container: c } );
+			await new Promise( ( r ) => setTimeout( r, 1500 ) );
+			const v = window.refraction.getPanelView().getCurrentPageView();
+			v.activateSection( 'section_rf_hl' );
+			v._renderChildren();
+			await new Promise( ( r ) => setTimeout( r, 500 ) );
+			const boxes = [ ...document.querySelectorAll( '[class*="refraction-control-rf_hl_part_"] .refraction-control-title' ) ].map( ( t ) => t.textContent.trim() );
+			window.$e.run( 'document/elements/settings', { container: c, settings: { rf_hl_part_label: 'free' } } );
+			return boxes;
+		} );
+		await sleep( 2500 );
+		const showLive = await frame.evaluate( () => ( {
+			label: [ ...document.querySelectorAll( '[data-id="hl00012"] .rf-showcase__label .rf-hl' ) ].map( ( x ) => x.textContent ).join(),
+			heading: [ ...document.querySelectorAll( '[data-id="hl00012"] .rf-showcase__heading .rf-hl' ) ].map( ( x ) => x.textContent ).join(),
+		} ) );
+		check( 'editor', 'Phone Showcase has a words box per part (Label, Heading, Description, Step Titles, Step Texts, Buttons, Floating Cards); typing in the Label box highlights only the label', 7 === showPanel.length && /^Label/.test( showPanel[ 0 ] ) && /^Floating Cards/.test( showPanel[ 6 ] ) && 'free' === showLive.label && 'Download' === showLive.heading, JSON.stringify( [ showPanel, showLive ] ) );
+		await e.locator( '#refraction-panel' ).screenshot( { path: join( SHOTS, 'showcase-panel.png' ) } ).catch( () => {} );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

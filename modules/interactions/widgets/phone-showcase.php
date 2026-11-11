@@ -66,6 +66,22 @@ class Phone_Showcase extends Widget_Base {
 		return 'refraction-phone-showcase';
 	}
 
+	/**
+	 * Highlight Words gives each of these parts its own words box: [ key => [ label, class name ] ]. Text outside them
+	 * (the phone's screen, the step numbers) is never highlighted.
+	 */
+	public static function highlight_parts(): array {
+		return [
+			'label' => [ esc_html__( 'Label', 'refraction' ), 'rf-showcase__label' ],
+			'heading' => [ esc_html__( 'Heading', 'refraction' ), 'rf-showcase__heading' ],
+			'description' => [ esc_html__( 'Description', 'refraction' ), 'rf-showcase__description' ],
+			'step_title' => [ esc_html__( 'Step Titles', 'refraction' ), 'rf-showcase__title' ],
+			'step_text' => [ esc_html__( 'Step Texts', 'refraction' ), 'rf-showcase__text' ],
+			'buttons' => [ esc_html__( 'Buttons', 'refraction' ), 'rf-showcase__buttons' ],
+			'cards' => [ esc_html__( 'Floating Cards', 'refraction' ), 'rf-showcase__card' ],
+		];
+	}
+
 	public function get_title() {
 		return esc_html__( 'Phone Showcase', 'refraction' );
 	}
@@ -771,6 +787,9 @@ class Phone_Showcase extends Widget_Base {
 		$this->add_control( 'button_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
 		$this->add_control( 'button_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'background-color: {{VALUE}};' ] ] );
 		$this->add_control( 'button_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button_hover_color', [ 'label' => esc_html__( 'Hover Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
+		$this->add_control( 'button_hover_border', [ 'label' => esc_html__( 'Hover Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'border-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button_hover_animation', [ 'label' => esc_html__( 'Hover Animation', 'refraction' ), 'type' => Controls_Manager::HOVER_ANIMATION ] );
 
 		$this->add_control( 'heading_button2', [
 			'label' => esc_html__( 'Second Button', 'refraction' ),
@@ -784,6 +803,8 @@ class Phone_Showcase extends Widget_Base {
 		$this->add_control( 'button2_border', [ 'label' => esc_html__( 'Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second => 'border-color: {{VALUE}};' ] ] );
 		$this->add_control( 'button2_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
 		$this->add_control( 'button2_hover_color', [ 'label' => esc_html__( 'Hover Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_hover_border', [ 'label' => esc_html__( 'Hover Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'border-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_hover_animation', [ 'label' => esc_html__( 'Hover Animation', 'refraction' ), 'type' => Controls_Manager::HOVER_ANIMATION ] );
 
 		$this->add_control( 'heading_buttons_both', [
 			'label' => esc_html__( 'Both Buttons', 'refraction' ),
@@ -838,6 +859,31 @@ class Phone_Showcase extends Widget_Base {
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'max' => 40 ] ],
 			'selectors' => [ $any => 'border-radius: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'button_shadow', 'selector' => $any ] );
+
+		$this->add_control( 'heading_buttons_hover', [
+			'label' => esc_html__( 'On Hover', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
+
+		$this->add_control( 'button_hover_lift', [
+			'label' => esc_html__( 'Lift On Hover', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'The button rises a little with a soft shadow. A button with its own Hover Animation uses that instead.', 'refraction' ),
+			'prefix_class' => 'rf-showcase-lift-',
+		] );
+
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'button_hover_shadow', 'label' => esc_html__( 'Hover Shadow', 'refraction' ), 'selector' => $any . ':hover, ' . $any . ':focus-visible' ] );
+
+		$this->add_control( 'button_transition', [
+			'label' => esc_html__( 'Hover Transition (s)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 2, 'step' => 0.05 ] ],
+			'selectors' => [ $any => '--rf-showcase-btn-t: {{SIZE}}s;' ],
 		] );
 
 		$this->end_controls_section();
@@ -919,6 +965,10 @@ class Phone_Showcase extends Widget_Base {
 
 		$image = 'image' === ( $s[ $key . '_look' ] ?? '' ) ? (string) ( $s[ $key . '_image' ]['url'] ?? '' ) : '';
 		$classes = [ 'rf-showcase__button', 'rf-showcase__button--' . $kind ];
+
+		if ( ! empty( $s[ $key . '_hover_animation' ] ) ) {
+			$classes[] = 'refraction-animation-' . sanitize_html_class( $s[ $key . '_hover_animation' ] );
+		}
 
 		if ( '' !== $image ) {
 			$classes[] = 'rf-showcase__button--image';

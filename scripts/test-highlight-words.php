@@ -48,5 +48,12 @@ check( 'void tags and self-closing tags do not open a part', H::wrap_parts( '<p 
 check( 'script stays untouched in parts', H::wrap_parts( '<p class="t-title"><script>var Safe=1</script>Safe</p>', 'Safe', '' ), "<p class=\"t-title\"><script>var Safe=1</script>{$s}Safe</span></p>" );
 check( 'no words: unchanged', H::wrap_parts( '<p class="a-title">x</p>', '', "\n" ), '<p class="a-title">x</p>' );
 
+// Parts named by class (widgets with several components, like the Phone Showcase).
+$show = '<p class="rf-showcase__label">Download for free</p><h2 class="rf-showcase__heading">Download our app</h2><div class="rf-showcase__buttons"><a class="rf-showcase__button"><span class="rf-showcase__button-small">Download on</span><span>App Store</span></a></div><div class="rf-phone">Download</div>';
+check( 'parts by class: each list only in its part', H::wrap_classes( $show, [ 'rf-showcase__heading' => 'Download', 'rf-showcase__buttons' => 'App Store' ] ), "<p class=\"rf-showcase__label\">Download for free</p><h2 class=\"rf-showcase__heading\">{$s}Download</span> our app</h2><div class=\"rf-showcase__buttons\"><a class=\"rf-showcase__button\"><span class=\"rf-showcase__button-small\">Download on</span><span>{$s}App Store</span></span></a></div><div class=\"rf-phone\">Download</div>" );
+check( 'parts by class: a class must match whole, not as a prefix', H::wrap_classes( '<span class="rf-showcase__card-title">Booked</span>', [ 'rf-showcase__card' => 'Booked' ] ), '<span class="rf-showcase__card-title">Booked</span>' );
+check( 'parts by class: the innermost listed part decides', H::wrap_classes( '<div class="outer">Safe <p class="inner">Safe</p></div>', [ 'outer' => 'Safe', 'inner' => '' ] ), "<div class=\"outer\">{$s}Safe</span> <p class=\"inner\">Safe</p></div>" );
+check( 'parts by class: no words anywhere leaves it alone', H::wrap_classes( '<p class="a">x</p>', [ 'a' => ' ' ] ), '<p class="a">x</p>' );
+
 echo "highlight-words: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

@@ -51,3 +51,12 @@ Check: `node scripts/check-phone-showcase.mjs --site DIR --port N`.
   - **Image only**: the **Button Image** is the whole button (`.rf-showcase__button--image`: no background, border or padding), with an **Image Height**. The button text becomes the image's alt text. Use it for the official store badges.
 - Style > Buttons > Both Buttons: **Icon Size**, **Space Between Icon And Text**, **Small Text Typography** and **Border Width**; plus **First Button Border Color**.
 - `scripts/check-phone-showcase.mjs` checks a badge (icon before the text, the small line above it, no arrow) and an image button (the image only, its alt text, no background or padding).
+
+
+## Button hover (0.71.0)
+
+Style > Buttons: per button Hover Background, Hover Text Color, Hover Border Color and Hover Animation (the standard
+`refraction-animation-*` classes, their CSS loaded with the setting); for both, Box Shadow, Hover Shadow, Hover
+Transition (`--rf-showcase-btn-t`) and Lift On Hover (`rf-showcase-lift-yes`, default on: rises 3px with a soft shadow,
+skipped for a button with a Hover Animation and for reduced motion; written with `:where()` so a Hover Shadow wins).
+Highlight Words has a box per part (see highlight-words.md).

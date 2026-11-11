@@ -108,6 +108,61 @@
 		} );
 	}
 
+	/**
+	 * Widgets with parts: each list only inside the elements with its class (the innermost listed one decides).
+	 *
+	 * @param {Element} root      The widget.
+	 * @param {Object}  lists     { class name: words }.
+	 * @param {boolean} matchCase
+	 */
+	function wrapClasses( root, lists, matchCase ) {
+		const flags = matchCase ? 'u' : 'iu';
+		const names = Object.keys( lists );
+		const tests = {};
+		const nodes = [];
+
+		names.forEach( ( n ) => {
+			tests[ n ] = regex( phrases( lists[ n ] ), flags );
+		} );
+
+		const walker = document.createTreeWalker( root, NodeFilter.SHOW_TEXT );
+
+		for ( let node = walker.nextNode(); node; node = walker.nextNode() ) {
+			const parent = node.parentElement;
+
+			if ( ! parent || parent.closest( '.refraction-heading-dual' ) || SKIP.includes( parent.tagName ) ) {
+				continue;
+			}
+
+			let part = '';
+
+			for ( let el = parent; el && el !== root.parentElement && ! part; el = el.parentElement ) {
+				part = names.find( ( n ) => el.classList.contains( n ) ) || '';
+			}
+
+			if ( part && tests[ part ] && tests[ part ].test( node.nodeValue ) ) {
+				nodes.push( [ node, part ] );
+			}
+		}
+
+		nodes.forEach( ( [ node, part ] ) => {
+			const fragment = document.createDocumentFragment();
+
+			node.nodeValue.split( new RegExp( tests[ part ].source, `g${ flags }` ) ).forEach( ( piece, i ) => {
+				if ( i % 2 ) {
+					const span = document.createElement( 'span' );
+					span.className = 'refraction-heading-dual rf-hl is-drawn';
+					span.textContent = piece;
+					fragment.appendChild( span );
+				} else if ( piece ) {
+					fragment.appendChild( document.createTextNode( piece ) );
+				}
+			} );
+
+			node.parentNode.replaceChild( fragment, node );
+		} );
+	}
+
 	function pill( root, settings ) {
 		const title = root.querySelector( '.refraction-heading-title' );
 
@@ -148,9 +203,22 @@
 
 		const settings = container.settings.attributes || {};
 
+		const parts = ( window.refractionHighlightParts || {} )[ String( element.getAttribute( 'data-widget_type' ) || '' ).split( '.' )[ 0 ] ];
+		const lists = {};
+
+		Object.keys( parts || {} ).forEach( ( key ) => {
+			const words = settings[ 'rf_hl_part_' + key ];
+
+			if ( words && String( words ).trim() ) {
+				lists[ parts[ key ] ] = words;
+			}
+		} );
+
 		const two = Object.prototype.hasOwnProperty.call( settings, 'rf_hl_desc' );
 
-		if ( settings.rf_hl_words || ( two && settings.rf_hl_desc ) ) {
+		if ( Object.keys( lists ).length ) {
+			wrapClasses( element, lists, 'yes' === settings.rf_hl_case );
+		} else if ( settings.rf_hl_words || ( two && settings.rf_hl_desc ) ) {
 			wrap( element, settings.rf_hl_words, two ? settings.rf_hl_desc || '' : null, 'yes' === settings.rf_hl_case );
 		}
 
