@@ -98,6 +98,7 @@ class Module extends BaseModule {
 		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_assets' ] );
 		add_action( 'refraction/frontend/after_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_action( 'refraction/preview/enqueue_scripts', [ $this, 'enqueue' ] );
+		add_action( 'refraction/editor/after_enqueue_styles', [ $this, 'editor_styles' ] );
 	}
 
 	public function register_assets() {
@@ -124,6 +125,16 @@ class Module extends BaseModule {
 			$paths = array_map( static fn( $s ) => [ 'd' => $s['d'], 'vb' => $s['vb'], 'rule' => $s['rule'] ], $mine );
 			wp_add_inline_script( self::SCRIPT, 'window.refractionMyShapes=' . wp_json_encode( $paths ) . ';', 'before' );
 		}
+	}
+
+	/** The Built-in / Uploaded switch as text tabs, and roomier shape tiles. */
+	public function editor_styles() {
+		$css = '.rf-shape-tabs .refraction-choices{display:flex}.rf-shape-tabs .refraction-choices label{flex:1;width:auto;padding:6px 8px;font-size:12px;line-height:1.4}'
+			. '.rf-shape-tabs .refraction-choices label i{display:none}.rf-shape-tabs .refraction-choices label .refraction-screen-only{position:static;width:auto;height:auto;clip:auto;margin:0;overflow:visible}'
+			. '.refraction-control-rf_mask .refraction-visual-choice-label img,.refraction-control-rf_mask_mine .refraction-visual-choice-label img,.refraction-control-rf_blob_shape .refraction-visual-choice-label img,.refraction-control-rf_blob_mine .refraction-visual-choice-label img{padding:6px;aspect-ratio:1;object-fit:contain}';
+		wp_register_style( 'refraction-organic-fx-editor', false, [], REFRACTION_VERSION );
+		wp_enqueue_style( 'refraction-organic-fx-editor' );
+		wp_add_inline_style( 'refraction-organic-fx-editor', $css );
 	}
 
 	/** My Shapes as select options, labelled so they stand apart from the built-in shapes. */
@@ -157,44 +168,237 @@ class Module extends BaseModule {
 		$this->blob_section( $element );
 	}
 
+	/** A grey thumbnail of a shape for the visual pickers. */
+	private static function thumb( string $d, string $vb = '0 0 100 100', string $rule = 'nonzero' ): string {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' . $vb . '" preserveAspectRatio="xMidYMid meet"><path fill="#A4AFB7" fill-rule="' . $rule . '" d="' . $d . '"/></svg>';
+
+		return 'data:image/svg+xml,' . rawurlencode( $svg );
+	}
+
+	/** Built-in shapes as visual choices. */
+	private static function builtin_choices(): array {
+		$out = [];
+
+		foreach ( Pure_Organic::paths() as $id => $d ) {
+			$out[ $id ] = [ 'title' => esc_html__( Pure_Organic::SHAPES[ $id ], 'refraction' ), 'image' => self::thumb( $d ) ]; // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- fixed list of shape names.
+		}
+
+		return $out;
+	}
+
+	/** My Shapes as visual choices. */
+	private function mine_choices(): array {
+		$out = [];
+
+		foreach ( $this->get_repository()->all() as $id => $shape ) {
+			$out[ $id ] = [ 'title' => esc_html( $shape['name'] ), 'image' => self::thumb( $shape['d'], $shape['vb'], $shape['rule'] ) ];
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Built-in / Uploaded tabs and the two shape pickers. Both pickers keep the prefix class (only the active one is
+	 * applied), so a saved page keeps its mask with no script. Returns the condition set "a shape is chosen".
+	 */
+	private function shape_picker( $element, string $source, string $builtin, string $mine, string $prefix_class, bool $toggle, array $extra = [] ): array {
+		$element->add_control( $source, [
+			'label' => esc_html__( 'Shape', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [ 'builtin' => [ 'title' => esc_html__( 'Built-in', 'refraction' ) ], 'mine' => [ 'title' => esc_html__( 'Uploaded', 'refraction' ) ] ],
+			'default' => 'builtin',
+			'toggle' => false,
+			'label_block' => true,
+			'classes' => 'rf-shape-tabs',
+			'frontend_available' => true,
+			'render_type' => 'template',
+		] + $extra );
+
+		$picker = [ 'type' => Controls_Manager::VISUAL_CHOICE, 'label_block' => true, 'columns' => 4, 'toggle' => $toggle, 'frontend_available' => true, 'render_type' => 'template' ];
+
+		if ( '' !== $prefix_class ) {
+			$picker['prefix_class'] = $prefix_class;
+		}
+
+		$element->add_control( $builtin, [
+			'label' => esc_html__( 'Built-in shapes', 'refraction' ),
+			'options' => self::builtin_choices(),
+			'description' => $toggle ? esc_html__( 'Click the chosen shape again for none.', 'refraction' ) : '',
+			'condition' => array_merge( $extra['condition'] ?? [], [ $source . '!' => 'mine' ] ),
+		] + $picker );
+
+		$mine_choices = $this->mine_choices();
+		$element->add_control( $mine, [
+			'label' => esc_html__( 'Uploaded shapes', 'refraction' ),
+			'options' => $mine_choices,
+			'description' => sprintf(
+				/* translators: %s: link to Refraction > My Shapes. */
+				esc_html__( 'Your shapes from %s.', 'refraction' ),
+				'<a href="' . esc_url( admin_url( 'admin.php?page=' . Admin_Page::SLUG ) ) . '" target="_blank">' . esc_html__( 'Refraction > My Shapes', 'refraction' ) . '</a>'
+			) . ( $mine_choices ? '' : ' ' . esc_html__( 'None uploaded yet.', 'refraction' ) ),
+			'condition' => array_merge( $extra['condition'] ?? [], [ $source => 'mine' ] ),
+		] + $picker );
+
+		return [
+			'relation' => 'or',
+			'terms' => [
+				[ 'terms' => [ [ 'name' => $source, 'operator' => '!==', 'value' => 'mine' ], [ 'name' => $builtin, 'operator' => '!==', 'value' => '' ] ] ],
+				[ 'terms' => [ [ 'name' => $source, 'operator' => '===', 'value' => 'mine' ], [ 'name' => $mine, 'operator' => '!==', 'value' => '' ] ] ],
+			],
+		];
+	}
+
+	/** Responsive Horizontal / Vertical position, written as 0 / 0.5 / 1 into custom properties. */
+	private static function position_controls( $element, string $p, string $target, array $show ): void {
+		$element->add_responsive_control( $p . 'ax', [
+			'label' => esc_html__( 'Horizontal Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-h-align-center' ],
+				'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+			],
+			'selectors_dictionary' => [ 'left' => '0', 'center' => '0.5', 'right' => '1' ],
+			'selectors' => [ $target => '--' . str_replace( '_', '-', $p ) . 'ax: {{VALUE}};' ],
+		] + $show );
+		$element->add_responsive_control( $p . 'ay', [
+			'label' => esc_html__( 'Vertical Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'top' => [ 'title' => esc_html__( 'Top', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
+				'middle' => [ 'title' => esc_html__( 'Middle', 'refraction' ), 'icon' => 'rficon-v-align-middle' ],
+				'bottom' => [ 'title' => esc_html__( 'Bottom', 'refraction' ), 'icon' => 'rficon-v-align-bottom' ],
+			],
+			'selectors_dictionary' => [ 'top' => '0', 'middle' => '0.5', 'bottom' => '1' ],
+			'selectors' => [ $target => '--' . str_replace( '_', '-', $p ) . 'ay: {{VALUE}};' ],
+		] + $show );
+	}
+
+	private static function edge_control( $element, string $id, string $prefix_class, array $show, string $help ): void {
+		$element->add_control( $id, [
+			'label' => esc_html__( 'Flat Edge', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'None', 'refraction' ), 'left' => esc_html__( 'Left', 'refraction' ), 'right' => esc_html__( 'Right', 'refraction' ), 'top' => esc_html__( 'Top', 'refraction' ), 'bottom' => esc_html__( 'Bottom', 'refraction' ) ],
+			'description' => $help,
+			'frontend_available' => true,
+			'render_type' => 'template',
+		] + ( '' !== $prefix_class ? [ 'prefix_class' => $prefix_class ] : [] ) + $show );
+	}
+
+	private static function flip_controls( $element, string $p, array $show, array $css = [] ): void {
+		foreach ( [ 'h' => esc_html__( 'Flip Horizontal', 'refraction' ), 'v' => esc_html__( 'Flip Vertical', 'refraction' ) ] as $axis => $label ) {
+			$args = [ 'label' => $label, 'type' => Controls_Manager::SWITCHER ] + $show;
+
+			if ( isset( $css[ $axis ] ) ) {
+				$args['selectors'] = $css[ $axis ];
+			} else {
+				$args += [ 'frontend_available' => true, 'render_type' => 'template' ];
+			}
+
+			$element->add_control( $p . 'flip_' . $axis, $args );
+		}
+	}
+
 	private function mask_section( $element, bool $image ): void {
 		$element->start_controls_section( 'section_rf_mask', [ 'label' => esc_html__( 'Shape Mask', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
 
-		$element->add_control( 'rf_mask', [
-			'label' => esc_html__( 'Shape', 'refraction' ),
-			'type' => Controls_Manager::SELECT,
-			'options' => $this->shape_options( esc_html__( 'None', 'refraction' ) ),
-			'prefix_class' => 'rf-mask--',
-			'description' => $image ? esc_html__( 'Cuts the picture to this shape.', 'refraction' ) : esc_html__( 'Cuts the container, its background and content, to this shape. Wavy edges suit full-width sections.', 'refraction' ),
-		] );
+		if ( ! $image ) {
+			$element->add_control( 'rf_mask_mode', [
+				'label' => esc_html__( 'Mode', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'clip',
+				'options' => [ 'clip' => esc_html__( 'Clip whole container', 'refraction' ), 'bg' => esc_html__( 'Clip background only', 'refraction' ) ],
+				'description' => esc_html__( 'Clip background only cuts just the background to the shape; the content, border and shadow stay whole. For a shape behind the content use Deco Blob below.', 'refraction' ),
+				'prefix_class' => 'rf-mask-mode-',
+				'frontend_available' => true,
+				'render_type' => 'template',
+			] );
+		}
+
+		$shaped = $this->shape_picker( $element, 'rf_mask_source', 'rf_mask', 'rf_mask_mine', 'rf-mask--', true );
+		$show = [ 'conditions' => $shaped ];
+		$bg = [ 'conditions' => [ 'relation' => 'and', 'terms' => [ $shaped, [ 'name' => 'rf_mask_mode', 'operator' => '===', 'value' => 'bg' ] ] ] ];
+
+		if ( ! $image ) {
+			$fill = '{{WRAPPER}} > .rf-ofx-fill';
+			$element->add_control( 'rf_mask_bg_color', [ 'label' => esc_html__( 'Background Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $fill => 'background-color: {{VALUE}} !important;' ], 'separator' => 'before' ] + $bg );
+			$element->add_control( 'rf_mask_overlay', [ 'label' => esc_html__( 'Overlay Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $fill => '--rf-ov: {{VALUE}};' ], 'description' => esc_html__( 'Tints the clipped area, over the background and under the grain.', 'refraction' ) ] + $bg );
+			$element->add_control( 'rf_mask_overlay_opacity', [ 'label' => esc_html__( 'Overlay Opacity', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ], 'default' => [ 'size' => 1 ], 'selectors' => [ $fill => '--rf-ov-o: {{SIZE}};' ] ] + $bg );
+		}
 
 		$element->add_control( 'rf_mask_fit', [
 			'label' => esc_html__( 'Fit', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'stretch',
-			'options' => [ 'stretch' => esc_html__( 'Stretch to the element', 'refraction' ), 'keep' => esc_html__( 'Keep the shape\'s proportions', 'refraction' ) ],
+			'options' => [ 'stretch' => esc_html__( 'Stretch to the box', 'refraction' ), 'keep' => esc_html__( 'Keep the shape\'s proportions', 'refraction' ) ],
 			'prefix_class' => 'rf-mask-fit-',
-			'condition' => [ 'rf_mask!' => '' ],
-		] );
+			'frontend_available' => true,
+			'render_type' => 'template',
+			'separator' => 'before',
+		] + $show );
+
+		self::edge_control( $element, 'rf_mask_edge', '', $show, esc_html__( 'Lets the shape run past this side, so the element\'s edge cuts it straight and it sits flush with the page edge. Wavy-edge shapes already have straight sides.', 'refraction' ) );
+		self::flip_controls( $element, 'rf_mask_', $show );
 
 		$element->add_control( 'rf_mask_hover', [
-			'label' => esc_html__( 'Zoom The Inside On Hover', 'refraction' ),
+			'label' => $image ? esc_html__( 'Zoom The Picture On Hover', 'refraction' ) : esc_html__( 'Zoom The Inside On Hover', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'prefix_class' => 'rf-mask-zoom-',
-			'condition' => [ 'rf_mask!' => '' ],
+		] + $show );
+
+		// Placement: numbers in custom properties, turned into the mask's size and position by the script.
+		$element->add_control( 'rf_mask_placement', [ 'label' => esc_html__( 'Placement', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] + $show );
+		self::position_controls( $element, 'rf_mask_', '{{WRAPPER}}', $show );
+
+		foreach ( [
+			'w' => [ esc_html__( 'Width (%)', 'refraction' ), 10, 200, 100 ],
+			'h' => [ esc_html__( 'Height (%)', 'refraction' ), 10, 200, 100 ],
+			'ox' => [ esc_html__( 'Offset X (%)', 'refraction' ), -100, 100, 0 ],
+			'oy' => [ esc_html__( 'Offset Y (%)', 'refraction' ), -100, 100, 0 ],
+		] as $key => [ $label, $min, $max, $default ] ) {
+			$element->add_responsive_control( 'rf_mask_' . $key, [
+				'label' => $label,
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => $min, 'max' => $max ] ],
+				'default' => [ 'size' => $default ],
+				'selectors' => [ '{{WRAPPER}}' => '--rf-mask-' . $key . ': {{SIZE}};' ],
+			] + $show );
+		}
+
+		$element->add_control( 'rf_mask_motion_heading', [ 'label' => esc_html__( 'Motion', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] + $show );
+		$element->add_control( 'rf_mask_trigger', [
+			'label' => esc_html__( 'Trigger', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'None (static)', 'refraction' ), 'loop' => esc_html__( 'Continuous gentle loop', 'refraction' ), 'hover' => esc_html__( 'On hover', 'refraction' ), 'inview' => esc_html__( 'Once, when scrolled into view', 'refraction' ) ],
+			'description' => esc_html__( 'The shape breathes and sways a little. Visitors who ask for less motion see it still.', 'refraction' ),
+			'frontend_available' => true,
+			'render_type' => 'template',
+		] + $show );
+		$element->add_control( 'rf_mask_duration', [
+			'label' => esc_html__( 'Duration (ms)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 400, 'max' => 10000, 'step' => 100 ] ],
+			'default' => [ 'size' => 5000 ],
+			'frontend_available' => true,
+			'render_type' => 'template',
+			'conditions' => [ 'relation' => 'and', 'terms' => [ $shaped, [ 'name' => 'rf_mask_trigger', 'operator' => '!==', 'value' => '' ] ] ],
 		] );
 
 		$element->end_controls_section();
 	}
 
 	private function blob_section( $element ): void {
-		$layer = '{{WRAPPER}} > .rf-ofx-blob, {{WRAPPER}} > .refraction-widget-container > .rf-ofx-blob, {{WRAPPER}} > .e-con-inner > .rf-ofx-blob';
+		$layer = '{{WRAPPER}} > .rf-ofx-blob, {{WRAPPER}} > .refraction-widget-container > .rf-ofx-blob, {{WRAPPER}} > .e-con-inner > .rf-ofx-blob, {{WRAPPER}} > .rf-ofx-bclip > .rf-ofx-blob';
 		$on = [ 'rf_blob' => 'yes' ];
+		$show = [ 'condition' => $on ];
+		$container = 'container' === $element->get_name();
 
 		$element->start_controls_section( 'section_rf_blob', [ 'label' => esc_html__( 'Deco Blob', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
 
 		$element->add_control( 'rf_blob', [ 'label' => esc_html__( 'Deco Blob', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'A shape behind the element, like a splash of colour under a photo.', 'refraction' ), 'frontend_available' => true, 'render_type' => 'template' ] );
-		$element->add_control( 'rf_blob_shape', [ 'label' => esc_html__( 'Shape', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'blob-1', 'options' => $this->shape_options(), 'frontend_available' => true, 'render_type' => 'template', 'condition' => $on ] );
+		$this->shape_picker( $element, 'rf_blob_source', 'rf_blob_shape', 'rf_blob_mine', '', false, $show );
 		$element->add_control( 'rf_blob_style', [
 			'label' => esc_html__( 'Style', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -203,27 +407,49 @@ class Module extends BaseModule {
 			'frontend_available' => true,
 			'render_type' => 'template',
 			'condition' => $on,
+			'separator' => 'before',
 		] );
 		$element->add_control( 'rf_blob_color', [ 'label' => esc_html__( 'Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#F6C94A', 'selectors' => [ $layer => '--rf-blob-c: {{VALUE}};' ], 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'outline' ] ) ] );
 		$element->add_control( 'rf_blob_line', [ 'label' => esc_html__( 'Outline Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#1E1E1E', 'selectors' => [ $layer => '--rf-blob-line: {{VALUE}};' ], 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'solid' ] ) ] );
 		$element->add_control( 'rf_blob_line_width', [ 'label' => esc_html__( 'Outline Width', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.5, 'max' => 10, 'step' => 0.5 ] ], 'default' => [ 'unit' => 'px', 'size' => 2 ], 'selectors' => [ $layer => '--rf-blob-lw: {{SIZE}}px;' ], 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'solid' ] ) ] );
 		$element->add_control( 'rf_blob_line_shape', [ 'label' => esc_html__( 'Outline Shape', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'blob-2', 'options' => $this->shape_options(), 'description' => esc_html__( 'A different shape reads hand-drawn.', 'refraction' ), 'frontend_available' => true, 'render_type' => 'template', 'condition' => array_merge( $on, [ 'rf_blob_style' => 'both' ] ) ] );
 		$element->add_control( 'rf_blob_grain', [ 'label' => esc_html__( 'Grain On The Blob', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'frontend_available' => true, 'render_type' => 'template', 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'outline' ] ) ] );
-		$element->add_responsive_control( 'rf_blob_size', [ 'label' => esc_html__( 'Size (% of the element)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ '%' ], 'range' => [ '%' => [ 'min' => 20, 'max' => 200 ] ], 'default' => [ 'unit' => '%', 'size' => 100 ], 'selectors' => [ $layer => '--rf-blob-s: {{SIZE}};' ], 'condition' => $on, 'separator' => 'before' ] );
-		$element->add_responsive_control( 'rf_blob_x', [ 'label' => esc_html__( 'Move Sideways (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ '%' ], 'range' => [ '%' => [ 'min' => -60, 'max' => 60 ] ], 'default' => [ 'unit' => '%', 'size' => 8 ], 'selectors' => [ $layer => '--rf-blob-x: {{SIZE}}%;' ], 'condition' => $on ] );
-		$element->add_responsive_control( 'rf_blob_y', [ 'label' => esc_html__( 'Move Down (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ '%' ], 'range' => [ '%' => [ 'min' => -60, 'max' => 60 ] ], 'default' => [ 'unit' => '%', 'size' => 6 ], 'selectors' => [ $layer => '--rf-blob-y: {{SIZE}}%;' ], 'condition' => $on ] );
-		$element->add_control( 'rf_blob_rotate', [ 'label' => esc_html__( 'Turn (deg)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ], 'selectors' => [ $layer => '--rf-blob-r: {{SIZE}}deg;' ], 'condition' => $on ] );
-		$element->add_control( 'rf_blob_place', [ 'label' => esc_html__( 'Place', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'behind', 'options' => [ 'behind' => esc_html__( 'Behind the content', 'refraction' ), 'over' => esc_html__( 'Over the content (clicks pass through)', 'refraction' ) ], 'prefix_class' => 'rf-blob-', 'condition' => $on ] );
+
+		if ( $container ) {
+			self::edge_control( $element, 'rf_blob_edge', 'rf-blob-edge-', $show, esc_html__( 'Puts the blob against this side and cuts it straight there, flush with the container edge.', 'refraction' ) );
+		}
+
+		self::flip_controls( $element, 'rf_blob_', $show, [ 'h' => [ $layer => '--rf-blob-fx: -1;' ], 'v' => [ $layer => '--rf-blob-fy: -1;' ] ] );
+
+		$element->add_control( 'rf_blob_placement', [ 'label' => esc_html__( 'Placement', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] + $show );
+		self::position_controls( $element, 'rf_blob_', $layer, $show );
+		$element->add_responsive_control( 'rf_blob_size', [ 'label' => esc_html__( 'Width (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ '%' ], 'range' => [ '%' => [ 'min' => 10, 'max' => 200 ] ], 'default' => [ 'unit' => '%', 'size' => 100 ], 'selectors' => [ $layer => '--rf-blob-s: {{SIZE}};' ] ] + $show );
+		$element->add_responsive_control( 'rf_blob_h', [ 'label' => esc_html__( 'Height (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ '%' ], 'range' => [ '%' => [ 'min' => 10, 'max' => 200 ] ], 'description' => esc_html__( 'Empty: the same as the width.', 'refraction' ), 'selectors' => [ $layer => '--rf-blob-hh: {{SIZE}};' ] ] + $show );
+		$element->add_responsive_control( 'rf_blob_x', [ 'label' => esc_html__( 'Offset X (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ '%' ], 'range' => [ '%' => [ 'min' => -60, 'max' => 60 ] ], 'default' => [ 'unit' => '%', 'size' => 8 ], 'selectors' => [ $layer => '--rf-blob-x: {{SIZE}}%;' ] ] + $show );
+		$element->add_responsive_control( 'rf_blob_y', [ 'label' => esc_html__( 'Offset Y (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ '%' ], 'range' => [ '%' => [ 'min' => -60, 'max' => 60 ] ], 'default' => [ 'unit' => '%', 'size' => 6 ], 'selectors' => [ $layer => '--rf-blob-y: {{SIZE}}%;' ] ] + $show );
+		$element->add_control( 'rf_blob_rotate', [ 'label' => esc_html__( 'Turn (deg)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ], 'selectors' => [ $layer => '--rf-blob-r: {{SIZE}}deg;' ] ] + $show );
+		$element->add_control( 'rf_blob_place', [ 'label' => esc_html__( 'Place', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'behind', 'options' => [ 'behind' => esc_html__( 'Behind the content', 'refraction' ), 'over' => esc_html__( 'Over the content (clicks pass through)', 'refraction' ) ], 'prefix_class' => 'rf-blob-' ] + $show );
+
+		$element->add_control( 'rf_blob_motion_heading', [ 'label' => esc_html__( 'Motion', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] + $show );
 		$element->add_control( 'rf_blob_motion', [
 			'label' => esc_html__( 'Motion', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'float',
 			'options' => [ '' => esc_html__( 'None', 'refraction' ), 'float' => esc_html__( 'Float gently', 'refraction' ), 'breathe' => esc_html__( 'Breathe (grow and shrink)', 'refraction' ), 'spin' => esc_html__( 'Turn slowly', 'refraction' ), 'wobble' => esc_html__( 'Wobble', 'refraction' ) ],
 			'prefix_class' => 'rf-blob-motion-',
-			'condition' => $on,
+		] + $show );
+		$element->add_control( 'rf_blob_trigger', [
+			'label' => esc_html__( 'Trigger', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'loop',
+			'options' => [ 'loop' => esc_html__( 'Continuous gentle loop', 'refraction' ), 'hover' => esc_html__( 'On hover', 'refraction' ), 'inview' => esc_html__( 'Once, when scrolled into view', 'refraction' ) ],
+			'prefix_class' => 'rf-blob-trigger-',
+			'frontend_available' => true,
+			'render_type' => 'template',
+			'condition' => array_merge( $on, [ 'rf_blob_motion!' => '' ] ),
 		] );
-		$element->add_control( 'rf_blob_speed', [ 'label' => esc_html__( 'Motion Time (s)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 2, 'max' => 40, 'step' => 0.5 ] ], 'default' => [ 'size' => 9 ], 'selectors' => [ $layer => '--rf-blob-t: {{SIZE}}s;' ], 'condition' => array_merge( $on, [ 'rf_blob_motion!' => '' ] ) ] );
-		$element->add_control( 'rf_blob_opacity', [ 'label' => esc_html__( 'Opacity', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ], 'selectors' => [ $layer => 'opacity: {{SIZE}};' ], 'condition' => $on ] );
+		$element->add_control( 'rf_blob_speed', [ 'label' => esc_html__( 'Duration (s)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.5, 'max' => 40, 'step' => 0.5 ] ], 'default' => [ 'size' => 9 ], 'selectors' => [ $layer => '--rf-blob-t: {{SIZE}}s;' ], 'condition' => array_merge( $on, [ 'rf_blob_motion!' => '' ] ) ] );
+		$element->add_control( 'rf_blob_opacity', [ 'label' => esc_html__( 'Opacity', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ], 'selectors' => [ $layer => 'opacity: {{SIZE}};' ], 'condition' => $on, 'separator' => 'before' ] );
 
 		$element->end_controls_section();
 	}

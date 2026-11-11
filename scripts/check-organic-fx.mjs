@@ -222,6 +222,61 @@ async function main() {
 		await ph.screenshot( { path: join( SHOTS, 'phone.png' ), fullPage: true } );
 		await ph.context().close();
 
+		// ---- 0.69: mode, placement, flips, flat edge, uploaded tab, motion triggers
+		const hd = ( id, title ) => w( id, 'heading', { title, align: 'center', title_color: '#FFFFFF' } );
+		const p2 = page( 'Organic panel', [
+			con( 'pan0001', { background_color: '#00AA77', rf_mask_mode: 'bg', rf_mask: 'blob-1', rf_mask_overlay: '#000000', rf_mask_overlay_opacity: { size: 0.5 }, rf_grain: 'yes', flex_justify_content: 'center' }, [ hd( 'pan0002', 'Only the background is cut' ) ] ),
+			con( 'pan0003', { background_color: '#3858E9', rf_mask: 'circle', rf_mask_w: { size: 50 }, rf_mask_h: { size: 60 }, rf_mask_ax: 'right', rf_mask_flip_h: 'yes' }, [ hd( 'pan0004', 'Placed right' ) ] ),
+			con( 'pan0005', { background_color: '#E20A17', rf_mask: 'blob-3', rf_mask_edge: 'left', rf_mask_trigger: 'loop', rf_mask_duration: { size: 1200 } }, [ hd( 'pan0006', 'Flat left edge, moving' ) ] ),
+			con( 'pan0007', { background_color: '#F6C94A', rf_mask_source: 'mine', rf_mask: 'blob-1', rf_mask_mine: 'my-heart', rf_blob: 'yes', rf_blob_source: 'mine', rf_blob_mine: 'my-heart', rf_blob_color: '#263238', rf_blob_ax: 'right', rf_blob_size: { unit: '%', size: 40 }, rf_blob_h: { unit: '%', size: 50 }, rf_blob_x: { unit: '%', size: 0 }, rf_blob_y: { unit: '%', size: 0 }, rf_blob_trigger: 'hover' }, [ hd( 'pan0008', 'Uploaded heart' ) ] ),
+			con( 'pan0009', { background_color: '#FFFFFF', rf_blob: 'yes', rf_blob_edge: 'left', rf_blob_size: { unit: '%', size: 50 }, rf_blob_x: { unit: '%', size: 0 }, rf_blob_color: '#2EC4B6', rf_blob_flip_v: 'yes' }, [ w( 'pan0010', 'heading', { title: 'Blob against the left edge', align: 'center' } ) ] ),
+		] );
+		const q = await ( await browser.newContext( { viewport: { width: 1280, height: 900 } } ) ).newPage();
+		watch( q );
+		await q.goto( p2.url );
+		await sleep( 2500 );
+		const panel = await q.evaluate( () => {
+			const $ = ( id ) => document.querySelector( `[data-id="${ id }"]` );
+			const cs = ( el ) => getComputedStyle( el );
+			const mask = ( el ) => cs( el ).maskImage || cs( el ).webkitMaskImage;
+			const bg = $( 'pan0001' );
+			const fill = bg.querySelector( ':scope > .rf-ofx-fill' );
+			const right = $( 'pan0003' );
+			const edge = $( 'pan0005' );
+			const heart = $( 'pan0007' );
+			const hb = heart.querySelector( ':scope > .rf-ofx-blob' );
+			const clip = $( 'pan0009' ).querySelector( ':scope > .rf-ofx-bclip' );
+			const cb = clip?.querySelector( '.rf-ofx-blob' );
+			const r = ( el ) => el.getBoundingClientRect();
+			return {
+				bg: { hostMask: mask( bg ), hostBg: cs( bg ).backgroundColor, fillBg: fill && cs( fill ).backgroundColor, fillMask: fill && /data:image/.test( mask( fill ) ), overlay: fill && getComputedStyle( fill, '::before' ).opacity, grainIn: !! fill?.querySelector( '.rf-ofx-grain' ) },
+				right: { w: right.offsetWidth, h: right.offsetHeight, size: right.style.maskSize || right.style.webkitMaskSize, pos: right.style.maskPosition || right.style.webkitMaskPosition, flipped: /scale\(-1/.test( decodeURIComponent( right.style.maskImage || right.style.webkitMaskImage ) ) },
+				edge: { pos: edge.style.maskPosition || edge.style.webkitMaskPosition, size: edge.style.maskSize || edge.style.webkitMaskSize },
+				heart: { cls: heart.classList.contains( 'rf-mask--my-heart' ) && ! heart.classList.contains( 'rf-mask--blob-1' ), blob: hb?.classList.contains( 'rf-shape--my-heart' ), right: Math.round( r( heart ).right - r( hb ).right ), wr: Math.round( r( hb ).width / r( heart ).width * 100 ), hr: Math.round( r( hb ).height / r( heart ).height * 100 ), state: cs( hb.firstElementChild ).animationPlayState },
+				clip: cb && { left: Math.round( r( cb ).left - r( clip ).left ), w: Math.round( r( cb ).width ), cut: 'hidden' === cs( clip ).overflow, flip: /matrix\(1, 0, 0, -1/.test( cs( cb ).transform ) },
+			};
+		} );
+		check( 'mode', 'Clip background only: the container keeps its content unclipped, its background moves to a fill cut to the shape, with the overlay and the grain inside', 'none' === panel.bg.hostMask && 'rgba(0, 0, 0, 0)' === panel.bg.hostBg && 'rgb(0, 170, 119)' === panel.bg.fillBg && panel.bg.fillMask && '0.5' === panel.bg.overlay && panel.bg.grainIn, JSON.stringify( panel.bg ) );
+		const [ sw, sh ] = ( panel.right.size || '' ).split( ' ' ).map( parseFloat );
+		const [ px ] = ( panel.right.pos || '' ).split( ' ' ).map( parseFloat );
+		check( 'placement', 'Width 50%, Height 60%, Horizontal Position right: the mask is half as wide, 60% as tall, against the right side; Flip Horizontal mirrors it', Math.abs( sw - ( panel.right.w / 2 ) ) < 2 && Math.abs( sh - ( panel.right.h * 0.6 ) ) < 2 && Math.abs( px - ( panel.right.w / 2 ) ) < 2 && panel.right.flipped, JSON.stringify( panel.right ) );
+		check( 'flat edge', 'Flat edge left: the shape runs past the left side so the edge cuts it straight', parseFloat( panel.edge.pos ) < -10, JSON.stringify( panel.edge ) );
+		// The loop rests while out of view: bring it into view first.
+		await q.locator( '[data-id="pan0005"]' ).scrollIntoViewIfNeeded();
+		const before = await q.evaluate( () => document.querySelector( '[data-id="pan0005"]' ).style.maskSize );
+		await sleep( 400 );
+		const moved = await q.evaluate( () => document.querySelector( '[data-id="pan0005"]' ).style.maskSize );
+		check( 'motion', 'Continuous gentle loop: the mask breathes in view (its size changes over time) and rests out of view', moved !== before && before === panel.edge.size, JSON.stringify( [ panel.edge.size, before, moved ] ) );
+		check( 'uploaded tab', 'the Uploaded tab: the mask and the blob use the uploaded heart (the built-in choice is ignored)', panel.heart.cls && panel.heart.blob, JSON.stringify( panel.heart ) );
+		check( 'blob placement', 'blob Width 40%, Height 50%, Horizontal Position right', Math.abs( panel.heart.right ) <= 2 && Math.abs( panel.heart.wr - 40 ) <= 1 && Math.abs( panel.heart.hr - 50 ) <= 1, JSON.stringify( panel.heart ) );
+		await q.hover( '[data-id="pan0007"]' );
+		await sleep( 300 );
+		const hovered = await q.evaluate( () => getComputedStyle( document.querySelector( '[data-id="pan0007"] .rf-ofx-blob' ).firstElementChild ).animationPlayState );
+		check( 'blob trigger', 'blob motion On hover: paused until the pointer is over it', 'paused' === panel.heart.state && 'running' === hovered, JSON.stringify( [ panel.heart.state, hovered ] ) );
+		check( 'blob flat edge', 'blob Flat edge left: in a clipping layer, pushed 30% past the left side; Flip Vertical mirrors it', panel.clip && panel.clip.cut && panel.clip.left < -( panel.clip.w * 0.25 ) && panel.clip.flip, JSON.stringify( panel.clip ) );
+		await q.screenshot( { path: join( SHOTS, 'panel-page.png' ), fullPage: true } );
+		await q.context().close();
+
 		// ---- the editor's preview
 		const e = a;
 		await e.setViewportSize( { width: 1500, height: 950 } );
@@ -237,10 +292,32 @@ async function main() {
 		check( 'editor', 'changing the count and picking an uploaded shape redraws the floating shapes', 5 === re.n && '0 0 24 24' === re.vb, JSON.stringify( re ) );
 		const option = await e.evaluate( () => {
 			const c = window.refraction.getContainer( 'ofx0005' );
-			const opts = c.controls.rf_mask?.options || {};
-			return opts[ 'my-heart' ];
+			return [ c.controls.rf_mask_mine?.options?.[ 'my-heart' ]?.title, Object.keys( c.controls.rf_mask?.options || {} ).length, c.controls.rf_blob_line_shape?.options?.[ 'my-heart' ] ];
 		} );
-		check( 'editor', 'the Shape lists offer "My shape: Heart"', 'My shape: Heart' === option, option );
+		check( 'editor', 'the Uploaded picker offers Heart, the Built-in picker the 21 shapes, and the outline list "My shape: Heart"', 'Heart' === option[ 0 ] && 21 === option[ 1 ] && 'My shape: Heart' === option[ 2 ], JSON.stringify( option ) );
+		const tiles = await e.evaluate( async () => {
+			const c = window.refraction.getContainer( 'ofx0005' );
+			window.$e.run( 'document/elements/select', { container: c } );
+			await new Promise( ( r ) => setTimeout( r, 1200 ) );
+			const view = window.refraction.getPanelView().getCurrentPageView();
+			view.activateTab( 'style' );
+			view.activateSection( 'section_rf_mask' );
+			view._renderChildren();
+			await new Promise( ( r ) => setTimeout( r, 600 ) );
+			const tabs = [ ...document.querySelectorAll( '.refraction-control-rf_mask_source .refraction-choices-label' ) ].map( ( l ) => l.innerText.trim() );
+			const n = document.querySelectorAll( '.refraction-control-rf_mask .refraction-visual-choice-element' ).length;
+			const picked = document.querySelector( '.refraction-control-rf_mask input:checked' )?.value;
+			return { tabs, n, picked, heading: !! document.querySelector( '.refraction-control-rf_mask_placement' ), trigger: !! document.querySelector( '.refraction-control-rf_mask_trigger' ) };
+		} );
+		check( 'editor', 'the Shape Mask panel: Built-in / Uploaded tabs, 21 shape tiles with the saved one ticked, Placement and Motion', 'Built-in,Uploaded' === tiles.tabs.join() && 21 === tiles.n && 'my-heart' !== tiles.picked && tiles.heading && tiles.trigger, JSON.stringify( tiles ) );
+		await e.locator( '#refraction-panel' ).screenshot( { path: join( SHOTS, 'panel.png' ) } ).catch( () => {} );
+		await e.evaluate( () => window.$e.run( 'document/elements/settings', { container: window.refraction.getContainer( 'ofx0005' ), settings: { rf_mask_w: { unit: 'px', size: 50 } } } ) );
+		await sleep( 1200 );
+		const live = await frame.evaluate( () => {
+			const el = document.querySelector( '[data-id="ofx0005"]' );
+			return [ parseFloat( el.style.maskSize || el.style.webkitMaskSize ), el.offsetWidth ];
+		} );
+		check( 'editor', 'changing Width moves the mask at once in the preview', Math.abs( live[ 0 ] - ( live[ 1 ] / 2 ) ) < 2, JSON.stringify( live ) );
 		await ctx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );
