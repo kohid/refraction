@@ -17,8 +17,29 @@
 	mask-size: 100% 100%;
 }
 
-.e-con[class*="rf-mask--"] {
+.e-con[class*="rf-mask--"]:not(.rf-mask-mode-bg) {
 	@include rf-mask;
+}
+
+// Clip background only: the background moves onto this layer (organic-fx.js), which alone is cut to the shape.
+.rf-ofx-fill {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	@include rf-mask;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: var(--rf-ov, transparent);
+		opacity: var(--rf-ov-o, 1);
+	}
+
+	> .rf-ofx-grain {
+		z-index: auto;
+	}
 }
 
 .refraction-widget-image[class*="rf-mask--"] img {
@@ -80,11 +101,17 @@
 	--rf-blob-r: 0deg;
 	--rf-blob-t: 9s;
 
-	top: 50%;
-	left: 50%;
+	--rf-blob-ax: 0.5;
+	--rf-blob-ay: 0.5;
+	--rf-blob-fx: 1;
+	--rf-blob-fy: 1;
+
+	// Horizontal / Vertical position (0, 0.5, 1) place the box inside the element; offsets are % of the blob.
+	left: calc((100% - var(--rf-blob-s) * 1%) * var(--rf-blob-ax));
+	top: calc((100% - var(--rf-blob-hh, var(--rf-blob-s)) * 1%) * var(--rf-blob-ay));
 	width: calc(var(--rf-blob-s) * 1%);
-	height: calc(var(--rf-blob-s) * 1%);
-	transform: translate(calc(-50% + var(--rf-blob-x)), calc(-50% + var(--rf-blob-y))) rotate(var(--rf-blob-r));
+	height: calc(var(--rf-blob-hh, var(--rf-blob-s)) * 1%);
+	transform: translate(var(--rf-blob-x), var(--rf-blob-y)) rotate(var(--rf-blob-r)) scale(var(--rf-blob-fx), var(--rf-blob-fy));
 
 	> .rf-ofx-blob__fill {
 		position: absolute;
@@ -115,6 +142,7 @@
 }
 
 .rf-blob-over > .rf-ofx-blob,
+.rf-blob-over > .rf-ofx-bclip,
 .rf-blob-over > .e-con-inner > .rf-ofx-blob,
 .rf-blob-over > .refraction-widget-container > .rf-ofx-blob {
 	z-index: 5;
@@ -127,10 +155,41 @@
 }
 
 .refraction-widget-image .rf-ofx-blob {
-	top: calc(var(--rf-frame-t, 0px) + (var(--rf-frame-h, 100%) / 2));
-	left: calc(var(--rf-frame-l, 0px) + (var(--rf-frame-w, 100%) / 2));
+	left: calc(var(--rf-frame-l, 0px) + (var(--rf-frame-w, 100%) - var(--rf-frame-w, 100%) * var(--rf-blob-s) / 100) * var(--rf-blob-ax));
+	top: calc(var(--rf-frame-t, 0px) + (var(--rf-frame-h, 100%) - var(--rf-frame-h, 100%) * var(--rf-blob-hh, var(--rf-blob-s)) / 100) * var(--rf-blob-ay));
 	width: calc(var(--rf-frame-w, 100%) * var(--rf-blob-s) / 100);
-	height: calc(var(--rf-frame-h, 100%) * var(--rf-blob-s) / 100);
+	height: calc(var(--rf-frame-h, 100%) * var(--rf-blob-hh, var(--rf-blob-s)) / 100);
+}
+
+// Flat edge (containers): the blob is held in a clipping layer the size of the container and pushed 30% past the
+// chosen side, so the container's edge cuts it straight.
+.rf-ofx-bclip {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	overflow: hidden;
+	pointer-events: none;
+	border-radius: inherit;
+
+	> .rf-ofx-blob {
+		z-index: auto;
+	}
+}
+
+.rf-blob-edge-left > .rf-ofx-bclip > .rf-ofx-blob {
+	left: calc(var(--rf-blob-s) * -0.3%);
+}
+
+.rf-blob-edge-right > .rf-ofx-bclip > .rf-ofx-blob {
+	left: calc(100% - var(--rf-blob-s) * 0.7%);
+}
+
+.rf-blob-edge-top > .rf-ofx-bclip > .rf-ofx-blob {
+	top: calc(var(--rf-blob-hh, var(--rf-blob-s)) * -0.3%);
+}
+
+.rf-blob-edge-bottom > .rf-ofx-bclip > .rf-ofx-blob {
+	top: calc(100% - var(--rf-blob-hh, var(--rf-blob-s)) * 0.7%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -149,6 +208,21 @@
 
 	.rf-blob-motion-wobble .rf-ofx-blob > * {
 		animation: rf-ofx-wobble var(--rf-blob-t) ease-in-out infinite;
+	}
+
+	// Trigger: on hover, or once (there and back) when scrolled into view (organic-fx.js adds rf-ofx-inview).
+	.rf-blob-trigger-hover .rf-ofx-blob > *,
+	.rf-blob-trigger-inview .rf-ofx-blob > * {
+		animation-play-state: paused;
+	}
+
+	.rf-blob-trigger-inview .rf-ofx-blob > * {
+		animation-iteration-count: 2;
+	}
+
+	.rf-blob-trigger-hover:hover .rf-ofx-blob > *,
+	.rf-blob-trigger-inview.rf-ofx-inview .rf-ofx-blob > * {
+		animation-play-state: running;
 	}
 }
 

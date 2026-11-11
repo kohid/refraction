@@ -168,8 +168,11 @@ import { SHAPES } from './shapes-data';
 		return svg;
 	}
 
+	// The shape a picker pair chose: the Uploaded tab's, else the Built-in one (which may hold an older my- id).
+	const chosen = ( s, source, builtin, uploaded ) => ( 'mine' === s[ source ] ? s[ uploaded ] : s[ builtin ] ) || '';
+
 	function blob( el, host, s ) {
-		const id = s.rf_blob_shape || 'blob-1';
+		const id = chosen( s, 'rf_blob_source', 'rf_blob_shape', 'rf_blob_mine' ) || 'blob-1';
 
 		if ( ! bigShape( id ) ) {
 			return;
@@ -200,7 +203,297 @@ import { SHAPES } from './shapes-data';
 			b.appendChild( line );
 		}
 
+		// Flat edge (containers): held in a layer the container's size that cuts it straight at that side.
+		if ( s.rf_blob_edge && host === el && ! el.matches( '.refraction-widget-image' ) ) {
+			const clip = layer( 'rf-ofx-bclip', false );
+			clip.appendChild( b );
+			host.insertBefore( clip, host.firstChild );
+			return;
+		}
+
 		host.insertBefore( b, host.firstChild );
+	}
+
+	// ----------------------------------------------------------------- shape mask: placement, flips, motion, fill
+
+	const css = ( el, name, fallback ) => {
+		const v = parseFloat( window.getComputedStyle( el ).getPropertyValue( name ) );
+
+		return Number.isFinite( v ) ? v : fallback;
+	};
+
+	/**
+	 * The mask image of a shape, flipped as asked (an SVG in a data URI; path data from the built-in list or My
+	 * Shapes, both only numbers and path letters).
+	 *
+	 * @param {Array}   shape [ path data, viewBox, fill rule ].
+	 * @param {boolean} fh    Flip horizontally.
+	 * @param {boolean} fv    Flip vertically.
+	 */
+	function maskImage( shape, fh, fv ) {
+		const [ vx, vy, vw, vh ] = shape[ 1 ].split( ' ' ).map( Number );
+		const turn = fh || fv ? ` transform="translate(${ fh ? ( 2 * vx ) + vw : 0 } ${ fv ? ( 2 * vy ) + vh : 0 }) scale(${ fh ? -1 : 1 } ${ fv ? -1 : 1 })"` : '';
+		const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ shape[ 1 ] }" preserveAspectRatio="none"><path fill-rule="${ shape[ 2 ] }" d="${ shape[ 0 ] }"${ turn }/></svg>`;
+
+		return `url("data:image/svg+xml,${ encodeURIComponent( svg ) }")`;
+	}
+
+	/**
+	 * Where the shape sits inside a box of W x H px: Placement (custom properties on the element), Fit, Flat edge, and
+	 * the motion pose { k: scale, dx, dy: shift as fractions of the box }.
+	 *
+	 * @param {Element} el   The element holding the Placement properties.
+	 * @param {number}  W    Box width.
+	 * @param {number}  H    Box height.
+	 * @param {Object}  o    { keep, aspect, edge }.
+	 * @param {Object}  pose Motion pose.
+	 */
+	function maskBox( el, W, H, o, pose ) {
+		let w = W * css( el, '--rf-mask-w', 100 ) / 100;
+		let h = H * css( el, '--rf-mask-h', 100 ) / 100;
+
+		if ( o.keep && o.aspect ) {
+			if ( w / h > o.aspect ) {
+				w = h * o.aspect;
+			} else {
+				h = w / o.aspect;
+			}
+		}
+
+		let x = ( ( W - w ) * css( el, '--rf-mask-ax', 0.5 ) ) + ( W * css( el, '--rf-mask-ox', 0 ) / 100 );
+		let y = ( ( H - h ) * css( el, '--rf-mask-ay', 0.5 ) ) + ( H * css( el, '--rf-mask-oy', 0 ) / 100 );
+
+		// Flat edge: 30% of the shape runs past that side, so the element's edge cuts it straight.
+		if ( 'left' === o.edge ) {
+			x = -0.3 * w;
+		} else if ( 'right' === o.edge ) {
+			x = W - ( 0.7 * w );
+		} else if ( 'top' === o.edge ) {
+			y = -0.3 * h;
+		} else if ( 'bottom' === o.edge ) {
+			y = H - ( 0.7 * h );
+		}
+
+		const cx = x + ( w / 2 ) + ( pose.dx * W );
+		const cy = y + ( h / 2 ) + ( pose.dy * H );
+		w *= pose.k;
+		h *= pose.k;
+
+		return { w, h, x: cx - ( w / 2 ), y: cy - ( h / 2 ) };
+	}
+
+	const BG = [ 'background-color', 'background-image', 'background-size', 'background-position', 'background-repeat', 'background-attachment', 'background-origin', 'background-clip', 'background-blend-mode' ];
+
+	/**
+	 * Shape Mask driven by the script: size and position from Placement, flips, flat edge, motion, and for "Clip
+	 * background only" a fill layer that takes the container's background. Without the script the mask still shows
+	 * from its CSS class, stretched to the element.
+	 *
+	 * @param {Element} el    The container or Image widget.
+	 * @param {Object}  s     Settings.
+	 * @param {Object}  state The element's layer state.
+	 */
+	function shapeMask( el, s, state ) {
+		const id = chosen( s, 'rf_mask_source', 'rf_mask', 'rf_mask_mine' );
+		const shape = bigShape( id );
+
+		if ( ! shape ) {
+			return;
+		}
+
+		const isImage = el.matches( '.refraction-widget-image' );
+		const bgOnly = ! isImage && 'bg' === s.rf_mask_mode;
+		const vb = shape[ 1 ].split( ' ' ).map( Number );
+		const o = { keep: 'keep' === s.rf_mask_fit, aspect: vb[ 2 ] / vb[ 3 ], edge: s.rf_mask_edge || '' };
+		const url = maskImage( shape, on( s.rf_mask_flip_h ), on( s.rf_mask_flip_v ) );
+		const m = { pose: { k: 1, dx: 0, dy: 0 }, target: null, fill: null, styleAttr: null, raf: 0, frame: null };
+
+		state.mask = m;
+
+		function target() {
+			return isImage ? el.querySelector( 'img' ) : ( m.fill || el );
+		}
+
+		function takeBackground() {
+			const cs = window.getComputedStyle( el );
+
+			BG.forEach( ( p ) => m.fill.style.setProperty( p, cs.getPropertyValue( p ) ) );
+			m.fill.style.borderRadius = cs.borderRadius;
+			el.style.setProperty( 'background', 'none', 'important' );
+		}
+
+		if ( bgOnly ) {
+			m.styleAttr = el.getAttribute( 'style' );
+			m.fill = layer( 'rf-ofx-fill rf-shape--' + id, false );
+			takeBackground();
+			el.insertBefore( m.fill, el.firstChild );
+		}
+
+		m.apply = () => {
+			const t = target();
+
+			if ( ! t || ! t.offsetWidth ) {
+				return;
+			}
+
+			const b = maskBox( el, t.offsetWidth, t.offsetHeight, o, m.pose );
+
+			[ 'mask', '-webkit-mask' ].forEach( ( p ) => {
+				t.style.setProperty( p + '-image', url );
+				t.style.setProperty( p + '-size', `${ b.w.toFixed( 1 ) }px ${ b.h.toFixed( 1 ) }px` );
+				t.style.setProperty( p + '-position', `${ b.x.toFixed( 1 ) }px ${ b.y.toFixed( 1 ) }px` );
+				t.style.setProperty( p + '-repeat', 'no-repeat' );
+			} );
+			m.target = t;
+		};
+
+		/** The background again (it changed in the editor, or a lazy-loaded image arrived). */
+		m.refill = () => {
+			if ( m.fill ) {
+				el.style.removeProperty( 'background' );
+				takeBackground();
+			}
+
+			m.apply();
+		};
+
+		m.destroy = () => {
+			window.cancelAnimationFrame( m.raf );
+
+			if ( m.target ) {
+				[ 'mask', '-webkit-mask' ].forEach( ( p ) => [ '-image', '-size', '-position', '-repeat' ].forEach( ( q ) => m.target.style.removeProperty( p + q ) ) );
+			}
+
+			if ( m.fill ) {
+				if ( null === m.styleAttr ) {
+					el.removeAttribute( 'style' );
+				} else {
+					el.setAttribute( 'style', m.styleAttr );
+				}
+			}
+
+			if ( m.lazy ) {
+				m.lazy.disconnect();
+			}
+		};
+
+		// A lazy-loaded background image shows once the container gets e-lazyloaded: copy it again then.
+		if ( bgOnly && ! el.classList.contains( 'e-lazyloaded' ) && 'MutationObserver' in window ) {
+			m.lazy = new MutationObserver( () => {
+				if ( el.classList.contains( 'e-lazyloaded' ) ) {
+					m.lazy.disconnect();
+					m.refill();
+				}
+			} );
+			m.lazy.observe( el, { attributes: true, attributeFilter: [ 'class' ] } );
+		}
+
+		m.apply();
+
+		if ( isImage ) {
+			const img = el.querySelector( 'img' );
+
+			if ( img ) {
+				img.addEventListener( 'load', m.apply );
+			}
+		}
+
+		maskMotion( el, s, state, m );
+	}
+
+	const easeOut = ( t ) => 1 - Math.pow( 1 - t, 3 );
+
+	/**
+	 * Mask motion: Continuous gentle loop (breathes and sways), On hover (grows a little and lifts), Once when
+	 * scrolled into view (grows from smaller). Only size and position change, so nothing is redrawn.
+	 *
+	 * @param {Element} el    The element.
+	 * @param {Object}  s     Settings.
+	 * @param {Object}  state The element's layer state.
+	 * @param {Object}  m     The mask.
+	 */
+	function maskMotion( el, s, state, m ) {
+		const trigger = s.rf_mask_trigger || '';
+
+		if ( ! trigger || reduced.matches ) {
+			return;
+		}
+
+		const dur = Math.max( 400, size( s.rf_mask_duration, 5000 ) );
+		const frame = ( fn ) => {
+			m.raf = window.requestAnimationFrame( ( now ) => {
+				if ( ! state.stopped ) {
+					fn( now );
+				}
+			} );
+		};
+
+		if ( 'loop' === trigger ) {
+			const tick = ( now ) => {
+				const a = ( now % dur ) / dur * 2 * Math.PI;
+
+				if ( state.visible ) {
+					m.pose = { k: 1 + ( 0.035 * Math.sin( a ) ), dx: 0.012 * Math.sin( a + 1 ), dy: 0.012 * Math.sin( 2 * a ) };
+					m.apply();
+				}
+
+				frame( tick );
+			};
+
+			frame( tick );
+		} else if ( 'hover' === trigger ) {
+			let v = 0;
+			let goal = 0;
+			let last = 0;
+			const tick = ( now ) => {
+				const step = last ? ( now - last ) / dur : 0;
+				last = now;
+				v = goal > v ? Math.min( goal, v + step ) : Math.max( goal, v - step );
+				const e = easeOut( v );
+				m.pose = { k: 1 + ( 0.06 * e ), dx: 0, dy: -0.015 * e };
+				m.apply();
+
+				if ( v !== goal ) {
+					frame( tick );
+				}
+			};
+			const go = ( g ) => {
+				goal = g;
+				last = 0;
+				window.cancelAnimationFrame( m.raf );
+				frame( tick );
+			};
+
+			el.addEventListener( 'mouseenter', () => go( 1 ) );
+			el.addEventListener( 'mouseleave', () => go( 0 ) );
+		} else if ( 'inview' === trigger && 'IntersectionObserver' in window ) {
+			m.pose = { k: 0.8, dx: 0, dy: 0.03 };
+			m.apply();
+
+			const seen = new IntersectionObserver( ( entries ) => {
+				if ( ! entries.some( ( en ) => en.isIntersecting ) ) {
+					return;
+				}
+
+				seen.disconnect();
+				let start = 0;
+				const tick = ( now ) => {
+					start = start || now;
+					const e = easeOut( Math.min( 1, ( now - start ) / dur ) );
+					m.pose = { k: 0.8 + ( 0.2 * e ), dx: 0, dy: 0.03 * ( 1 - e ) };
+					m.apply();
+
+					if ( e < 1 ) {
+						frame( tick );
+					}
+				};
+
+				frame( tick );
+			}, { threshold: 0.25 } );
+
+			seen.observe( el );
+			state.seen = seen;
+		}
 	}
 
 	// ----------------------------------------------------------------- floating shapes and text: where they may go
@@ -595,6 +888,12 @@ import { SHAPES } from './shapes-data';
 				el.__rfOfx.resize.disconnect();
 			}
 
+			[ 'seen', 'blobSeen' ].forEach( ( k ) => el.__rfOfx[ k ] && el.__rfOfx[ k ].disconnect() );
+
+			if ( el.__rfOfx.mask ) {
+				el.__rfOfx.mask.destroy();
+			}
+
 			el.__rfOfx = null;
 		}
 
@@ -610,8 +909,9 @@ import { SHAPES } from './shapes-data';
 		const grainOn = on( s.rf_grain );
 		const fsOn = on( s.rf_fs );
 		const ftOn = on( s.rf_ft );
+		const maskOn = !! chosen( s, 'rf_mask_source', 'rf_mask', 'rf_mask_mine' );
 
-		if ( ! blobOn && ! grainOn && ! fsOn && ! ftOn ) {
+		if ( ! blobOn && ! grainOn && ! fsOn && ! ftOn && ! maskOn ) {
 			return;
 		}
 
@@ -626,6 +926,11 @@ import { SHAPES } from './shapes-data';
 			if ( blobOn ) {
 				blob( el, host, s );
 				frameToPicture( host, state );
+				blobInView( el, s, state );
+			}
+
+			if ( maskOn ) {
+				shapeMask( el, s, state );
 			}
 
 			return;
@@ -645,9 +950,21 @@ import { SHAPES } from './shapes-data';
 
 		if ( blobOn ) {
 			blob( el, el, s );
+			blobInView( el, s, state );
 		}
 
-		if ( ( fsOn || ftOn ) && 'IntersectionObserver' in window ) {
+		if ( maskOn ) {
+			shapeMask( el, s, state );
+
+			// Clip background only: grain belongs to the background, so it is cut to the shape with it.
+			const grain = el.querySelector( ':scope > .rf-ofx-grain' );
+
+			if ( state.mask && state.mask.fill && grain ) {
+				state.mask.fill.appendChild( grain );
+			}
+		}
+
+		if ( ( fsOn || ftOn || 'loop' === s.rf_mask_trigger ) && 'IntersectionObserver' in window ) {
 			state.observer = new IntersectionObserver( ( entries ) => {
 				state.visible = entries[ entries.length - 1 ].isIntersecting;
 				el.classList.toggle( 'rf-ofx-paused', ! state.visible );
@@ -656,12 +973,35 @@ import { SHAPES } from './shapes-data';
 		}
 	}
 
+	/**
+	 * Deco Blob "Once, when scrolled into view": the CSS keeps its motion paused until the element has this class.
+	 *
+	 * @param {Element} el    The element.
+	 * @param {Object}  s     Settings.
+	 * @param {Object}  state The element's layer state.
+	 */
+	function blobInView( el, s, state ) {
+		if ( 'inview' !== s.rf_blob_trigger || ! ( 'IntersectionObserver' in window ) ) {
+			return;
+		}
+
+		const seen = new IntersectionObserver( ( entries ) => {
+			if ( entries.some( ( en ) => en.isIntersecting ) ) {
+				el.classList.add( 'rf-ofx-inview' );
+				seen.disconnect();
+			}
+		}, { threshold: 0.25 } );
+
+		seen.observe( el );
+		state.blobSeen = seen;
+	}
+
 	const SELECTOR = '.e-con, .refraction-widget-image';
 
 	function wanted( el ) {
 		const s = settings( el );
 
-		return on( s.rf_blob ) || on( s.rf_grain ) || on( s.rf_fs ) || on( s.rf_ft ) || !! el.__rfOfx;
+		return on( s.rf_blob ) || on( s.rf_grain ) || on( s.rf_fs ) || on( s.rf_ft ) || !! chosen( s, 'rf_mask_source', 'rf_mask', 'rf_mask_mine' ) || !! el.__rfOfx;
 	}
 
 	function buildAll() {
@@ -681,9 +1021,44 @@ import { SHAPES } from './shapes-data';
 			document.querySelectorAll( '.rf-ofx-host' ).forEach( ( el ) => {
 				if ( el.__rfOfx && Math.abs( el.__rfOfx.width - el.clientWidth ) > 40 ) {
 					build( el );
+				} else if ( el.__rfOfx && el.__rfOfx.mask ) {
+					el.__rfOfx.mask.apply(); // A breakpoint may hold other Placement values.
 				}
 			} );
 		}, 250 );
+	}
+
+	/**
+	 * Editor: Placement, background and overlay settings change only CSS (no redraw), so the mask is placed again,
+	 * and the background copied again, a moment after the new CSS is in.
+	 *
+	 * @param {Element} el The element.
+	 */
+	function watchModel( el ) {
+		const m = model( el );
+
+		if ( ! m || ! m.on || m.__rfOfxWatch ) {
+			return;
+		}
+
+		m.__rfOfxWatch = true;
+		let timer = 0;
+		m.on( 'change', () => {
+			const keys = Object.keys( m.changed || {} );
+
+			if ( ! keys.some( ( k ) => 0 === k.indexOf( 'rf_mask' ) || 0 === k.indexOf( 'background' ) ) ) {
+				return;
+			}
+
+			window.clearTimeout( timer );
+			timer = window.setTimeout( () => {
+				const now = document.querySelector( `[data-model-cid="${ el.getAttribute( 'data-model-cid' ) }"]` );
+
+				if ( now && now.__rfOfx && now.__rfOfx.mask ) {
+					now.__rfOfx.mask.refill();
+				}
+			}, 150 );
+		} );
 	}
 
 	function hookIntoEditor( tries ) {
@@ -693,6 +1068,7 @@ import { SHAPES } from './shapes-data';
 			const ready = ( $scope ) => {
 				if ( $scope && $scope[ 0 ] && wanted( $scope[ 0 ] ) ) {
 					build( $scope[ 0 ] );
+					watchModel( $scope[ 0 ] );
 				}
 			};
 
