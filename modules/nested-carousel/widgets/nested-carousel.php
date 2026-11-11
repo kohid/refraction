@@ -321,6 +321,57 @@ class Nested_Carousel extends Widget_Nested_Base {
 			'frontend_available' => true,
 		] );
 
+		// Slide Titles: the slides' titles as a list of buttons that show their slide.
+		$this->add_control( 'title_nav', [
+			'label' => esc_html__( 'Slide Titles', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => '',
+			'return_value' => 'yes',
+			'separator' => 'before',
+			'description' => esc_html__( 'Shows the slides\' titles on the page as buttons: a click shows that slide, and the current one is marked. Made for the Vertical direction, works with every effect.', 'refraction' ),
+			'frontend_available' => true,
+		] );
+
+		$titles = [ 'title_nav' => 'yes' ];
+
+		$this->add_control( 'title_nav_position', [
+			'label' => esc_html__( 'Titles Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'top' => [ 'title' => esc_html__( 'Top', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
+				'bottom' => [ 'title' => esc_html__( 'Bottom', 'refraction' ), 'icon' => 'rficon-v-align-bottom' ],
+				'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+			],
+			'default' => 'left',
+			'toggle' => false,
+			'prefix_class' => 'refraction-nc-titles-',
+			'condition' => $titles,
+		] );
+
+		$this->add_control( 'title_nav_mobile', [
+			'label' => esc_html__( 'Titles On Phones', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'top',
+			'options' => [
+				'same' => esc_html__( 'Where they are set', 'refraction' ),
+				'top' => esc_html__( 'Above the slides (a scrolling row)', 'refraction' ),
+				'bottom' => esc_html__( 'Below the slides (a scrolling row)', 'refraction' ),
+				'hide' => esc_html__( 'Hidden', 'refraction' ),
+			],
+			'prefix_class' => 'refraction-nc-titles-m-',
+			'condition' => $titles,
+		] );
+
+		$this->add_control( 'title_nav_numbers', [
+			'label' => esc_html__( 'Number Before Each Title', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => '',
+			'return_value' => 'yes',
+			'description' => esc_html__( '01, 02, 03... An empty title shows its number only.', 'refraction' ),
+			'condition' => $titles,
+		] );
+
 		$this->add_control( 'lazy_slides', [
 			'label' => esc_html__( 'Skip rendering of off-screen slides', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
@@ -422,6 +473,8 @@ class Nested_Carousel extends Widget_Nested_Base {
 
 		$this->end_controls_section();
 
+		$this->add_title_nav_style();
+
 		$this->start_controls_section( 'section_style_pagination', [
 			'label' => esc_html__( 'Pagination', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
@@ -497,6 +550,141 @@ class Nested_Carousel extends Widget_Nested_Base {
 		$this->end_controls_section();
 	}
 
+	/** Style > Slide Titles. */
+	private function add_title_nav_style(): void {
+		$root = '{{WRAPPER}} .refraction-nc.has-titles';
+		$nav = '{{WRAPPER}} .refraction-nc__titles';
+		$item = '{{WRAPPER}} .refraction-nc__title';
+
+		$this->start_controls_section( 'section_style_titles', [
+			'label' => esc_html__( 'Slide Titles', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+			'condition' => [ 'title_nav' => 'yes' ],
+		] );
+
+		$this->add_responsive_control( 'titles_width', [
+			'label' => esc_html__( 'Width Of The Titles', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range' => [ 'px' => [ 'min' => 80, 'max' => 600 ], '%' => [ 'min' => 10, 'max' => 60 ] ],
+			'description' => esc_html__( 'For titles on the left or right.', 'refraction' ),
+			'selectors' => [ $root => '--rf-nc-titles-w: {{SIZE}}{{UNIT}};' ],
+			'condition' => [ 'title_nav_position' => [ 'left', 'right' ] ],
+		] );
+
+		$this->add_responsive_control( 'titles_gap', [
+			'label' => esc_html__( 'Space To The Slides', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 120 ] ],
+			'selectors' => [ $root => '--rf-nc-titles-gap: {{SIZE}}px;' ],
+		] );
+
+		$this->add_responsive_control( 'titles_spacing', [
+			'label' => esc_html__( 'Space Between Titles', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 60 ] ],
+			'selectors' => [ $nav => 'gap: {{SIZE}}px;' ],
+		] );
+
+		$this->add_responsive_control( 'titles_align', [
+			'label' => esc_html__( 'Alignment', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'flex-start' => [ 'title' => esc_html__( 'Start', 'refraction' ), 'icon' => 'rficon-text-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-text-align-center' ],
+				'flex-end' => [ 'title' => esc_html__( 'End', 'refraction' ), 'icon' => 'rficon-text-align-right' ],
+				'stretch' => [ 'title' => esc_html__( 'Fill', 'refraction' ), 'icon' => 'rficon-text-align-justify' ],
+			],
+			'description' => esc_html__( 'Where the titles sit in their row (top or bottom) or column (left or right).', 'refraction' ),
+			'selectors' => [ $nav => '--rf-nc-titles-align: {{VALUE}};' ],
+		] );
+
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'titles_typography', 'selector' => $item, 'separator' => 'before' ] );
+
+		$this->add_responsive_control( 'titles_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'selectors' => [ $item => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'titles_radius', [
+			'label' => esc_html__( 'Corners', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em' ],
+			'range' => [ 'px' => [ 'max' => 40 ] ],
+			'selectors' => [ $item => 'border-radius: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_control( 'titles_border_width', [
+			'label' => esc_html__( 'Border Width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 6 ] ],
+			'selectors' => [ $item => 'border-width: {{SIZE}}px;' ],
+		] );
+
+		$this->start_controls_tabs( 'titles_states' );
+
+		foreach ( [
+			'normal' => [ esc_html__( 'Normal', 'refraction' ), $item ],
+			'hover' => [ esc_html__( 'Hover', 'refraction' ), $item . ':hover, ' . $item . ':focus-visible' ],
+			'active' => [ esc_html__( 'Current', 'refraction' ), $item . '.is-active' ],
+		] as $state => [ $label, $selector ] ) {
+			$this->start_controls_tab( 'titles_tab_' . $state, [ 'label' => $label ] );
+			$this->add_control( 'titles_color_' . $state, [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $selector => 'color: {{VALUE}};' ] ] );
+			$this->add_control( 'titles_bg_' . $state, [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $selector => 'background-color: {{VALUE}};' ] ] );
+			$this->add_control( 'titles_border_' . $state, [ 'label' => esc_html__( 'Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $selector => 'border-color: {{VALUE}};' ] ] );
+
+			if ( 'active' === $state ) {
+				$this->add_control( 'titles_marker_color', [ 'label' => esc_html__( 'Marker Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item => '--rf-nc-marker: {{VALUE}};' ] ] );
+				$this->add_control( 'titles_marker_size', [
+					'label' => esc_html__( 'Marker Thickness', 'refraction' ),
+					'type' => Controls_Manager::SLIDER,
+					'range' => [ 'px' => [ 'max' => 10 ] ],
+					'description' => esc_html__( 'The bar on the side of the current title that faces the slides. 0: none.', 'refraction' ),
+					'selectors' => [ $item => '--rf-nc-marker-w: {{SIZE}}px;' ],
+				] );
+			}
+
+			$this->end_controls_tab();
+		}
+
+		$this->end_controls_tabs();
+
+		$this->add_control( 'titles_number_color', [ 'label' => esc_html__( 'Number Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item . ' .refraction-nc__title-num' => 'color: {{VALUE}};' ], 'condition' => [ 'title_nav_numbers' => 'yes' ], 'separator' => 'before' ] );
+		$this->add_control( 'titles_transition', [
+			'label' => esc_html__( 'Transition (s)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 2, 'step' => 0.05 ] ],
+			'selectors' => [ $item => '--rf-nc-title-t: {{SIZE}}s;' ],
+			'separator' => 'before',
+		] );
+
+		$this->end_controls_section();
+	}
+
+	/** The Slide Titles list (server side; the editor's template draws the same). */
+	private function print_title_nav( array $settings, int $count ): void {
+		$numbers = 'yes' === ( $settings['title_nav_numbers'] ?? '' );
+		echo '<nav class="refraction-nc__titles" aria-label="' . esc_attr__( 'Slides', 'refraction' ) . '">';
+
+		for ( $i = 0; $i < $count; $i++ ) {
+			$title = trim( wp_strip_all_tags( (string) ( $settings['slides'][ $i ]['slide_title'] ?? '' ) ) );
+			$number = str_pad( (string) ( $i + 1 ), 2, '0', STR_PAD_LEFT );
+
+			printf(
+				'<button type="button" class="refraction-nc__title%1$s" data-index="%2$d" aria-current="%3$s">%4$s%5$s</button>',
+				0 === $i ? ' is-active' : '',
+				(int) $i,
+				0 === $i ? 'true' : 'false',
+				$numbers || '' === $title ? '<span class="refraction-nc__title-num">' . esc_html( $number ) . '</span>' : '',
+				'' !== $title ? '<span class="refraction-nc__title-text">' . esc_html( $title ) . '</span>' : ''
+			);
+		}
+
+		echo '</nav>';
+	}
+
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$o = Carousel_Logic::sanitize( [
@@ -510,14 +698,22 @@ class Nested_Carousel extends Widget_Nested_Base {
 		$label = '' !== (string) ( $settings['carousel_label'] ?? '' ) ? $settings['carousel_label'] : __( 'Carousel', 'refraction' );
 		$autoplay = 'yes' === ( $settings['autoplay'] ?? '' );
 
+		$titles = 'yes' === ( $settings['title_nav'] ?? '' ) && $count > 1;
+
 		$this->add_render_attribute( 'root', [
-			'class' => array_filter( [ 'refraction-nc', 'yes' === ( $settings['lazy_slides'] ?? '' ) && 'stack' !== $o['effect'] ? 'is-lazy' : '', 'vertical' === $o['direction'] && 'slide' === $o['effect'] ? 'is-vertical' : '', 'stack' === $o['effect'] ? 'is-stack' : '' ] ),
+			'class' => array_filter( [ 'refraction-nc', $titles ? 'has-titles' : '', 'yes' === ( $settings['lazy_slides'] ?? '' ) && 'stack' !== $o['effect'] ? 'is-lazy' : '', 'vertical' === $o['direction'] && 'slide' === $o['effect'] ? 'is-vertical' : '', 'stack' === $o['effect'] ? 'is-stack' : '' ] ),
 			'role' => 'region',
 			'aria-roledescription' => 'carousel',
 			'aria-label' => $label,
 		] );
 		?>
 		<div <?php $this->print_render_attribute_string( 'root' ); ?>>
+			<?php
+			if ( $titles ) {
+				$this->print_title_nav( $settings, $count );
+				echo '<div class="refraction-nc__stage">';
+			}
+			?>
 			<div class="refraction-nc__viewport swiper">
 				<div class="refraction-nc__track swiper-wrapper" aria-live="<?php echo $autoplay ? 'off' : 'polite'; ?>">
 					<?php foreach ( $this->get_children() as $index => $child ) {
@@ -538,6 +734,7 @@ class Nested_Carousel extends Widget_Nested_Base {
 					<span class="refraction-nc__autoplay-play"><?php echo Icons::svg( 'play-arrow', [ 'size' => 20 ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				</button>
 			<?php endif; ?>
+			<?php echo $titles ? '</div>' : ''; ?>
 		</div>
 		<?php
 	}
@@ -571,7 +768,17 @@ class Nested_Carousel extends Widget_Nested_Base {
 
 	protected function content_template() {
 		?>
-		<div class="refraction-nc {{ 'yes' === settings.lazy_slides && 'stack' !== settings.effect ? 'is-lazy' : '' }} {{ 'vertical' === settings.direction && 'slide' === settings.effect ? 'is-vertical' : '' }} {{ 'stack' === settings.effect ? 'is-stack' : '' }}" role="region" aria-roledescription="carousel" aria-label="{{ settings.carousel_label }}">
+		<# var rfTitles = 'yes' === settings.title_nav && settings.slides && settings.slides.length > 1; #>
+		<div class="refraction-nc {{ rfTitles ? 'has-titles' : '' }} {{ 'yes' === settings.lazy_slides && 'stack' !== settings.effect ? 'is-lazy' : '' }} {{ 'vertical' === settings.direction && 'slide' === settings.effect ? 'is-vertical' : '' }} {{ 'stack' === settings.effect ? 'is-stack' : '' }}" role="region" aria-roledescription="carousel" aria-label="{{ settings.carousel_label }}">
+			<# if ( rfTitles ) { #>
+				<nav class="refraction-nc__titles" aria-label="<?php echo esc_attr__( 'Slides', 'refraction' ); ?>">
+					<# _.each( settings.slides, function( slide, i ) {
+						var title = ( slide.slide_title || '' ).replace( /<[^>]*>/g, '' ).trim(), num = ( i < 9 ? '0' : '' ) + ( i + 1 ); #>
+						<button type="button" class="refraction-nc__title {{ 0 === i ? 'is-active' : '' }}" data-index="{{ i }}" aria-current="{{ 0 === i ? 'true' : 'false' }}"><# if ( 'yes' === settings.title_nav_numbers || ! title ) { #><span class="refraction-nc__title-num">{{ num }}</span><# } #><# if ( title ) { #><span class="refraction-nc__title-text">{{ title }}</span><# } #></button>
+					<# } ); #>
+				</nav>
+				<div class="refraction-nc__stage">
+			<# } #>
 			<div class="refraction-nc__viewport swiper">
 				<div class="refraction-nc__track swiper-wrapper"></div>
 			</div>
@@ -580,6 +787,7 @@ class Nested_Carousel extends Widget_Nested_Base {
 				<button type="button" class="refraction-nc__arrow refraction-nc__next" aria-label="Next slide"><?php echo Icons::svg( 'arrow-forward', [ 'size' => 24 ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>
 			<# } #>
 			<# if ( 'none' !== settings.pagination ) { #><div class="refraction-nc__pagination swiper-pagination"></div><# } #>
+			<# if ( rfTitles ) { #></div><# } #>
 		</div>
 		<?php
 	}

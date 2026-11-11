@@ -53,6 +53,7 @@ export default class NestedCarousel extends Base {
 				next: '.refraction-nc__next',
 				pagination: '.refraction-nc__pagination',
 				autoplayToggle: '.refraction-nc__autoplay',
+				titles: '.refraction-nc__titles',
 			},
 		};
 	}
@@ -68,6 +69,7 @@ export default class NestedCarousel extends Base {
 			$next: this.findElement( s.next ),
 			$pagination: this.findElement( s.pagination ),
 			$autoplayToggle: this.findElement( s.autoplayToggle ),
+			$titles: this.findElement( s.titles ),
 		};
 	}
 
@@ -153,8 +155,14 @@ export default class NestedCarousel extends Base {
 		}
 
 		options.on = {
-			init: () => this.syncSlideVisibility(),
-			slideChange: () => this.syncSlideVisibility(),
+			init: () => {
+				this.syncSlideVisibility();
+				this.syncTitles( this.swiper?.activeIndex ?? 0 );
+			},
+			slideChange: ( sw ) => {
+				this.syncSlideVisibility();
+				this.syncTitles( sw.activeIndex );
+			},
 			progress: () => this.syncSlideVisibility(),
 			resize: () => this.syncSlideVisibility(),
 		};
@@ -218,6 +226,7 @@ export default class NestedCarousel extends Base {
 
 		this.swiper = swiper;
 		this.elements.$viewport.data( 'swiper', swiper );
+		this.syncTitles( swiper.activeIndex );
 		this.syncAutoplayToggle();
 
 		if ( this.isEdit ) {
@@ -402,6 +411,7 @@ export default class NestedCarousel extends Base {
 
 		this.stack.places = places;
 		this.syncStackControls();
+		this.syncTitles( index );
 	}
 
 	buildStackPagination() {
@@ -607,6 +617,68 @@ export default class NestedCarousel extends Base {
 			}
 		};
 		this.elements.$root.on( 'focusin', this.onFocusIn );
+
+		this.elements.$titles.on( 'click', '.refraction-nc__title', ( event ) => {
+			event.preventDefault();
+			this.goToSlide( Number( event.currentTarget.dataset.index ) || 0 );
+		} );
+	}
+
+	// ---------------------------------------------------------------- Slide Titles
+	titleButtons() {
+		return Array.from( this.elements.$titles[ 0 ]?.querySelectorAll( '.refraction-nc__title' ) || [] );
+	}
+
+	/**
+	 * Shows the slide of a clicked title (Swiper or the Stack effect).
+	 *
+	 * @param {number} index Slide index.
+	 */
+	goToSlide( index ) {
+		if ( this.stack ) {
+			this.stackGo( index );
+		} else if ( this.swiper && ! this.swiper.destroyed ) {
+			this.swiper.slideTo( index );
+		} else {
+			this.syncTitles( index );
+		}
+	}
+
+	/**
+	 * Marks the current slide's title and keeps it in view inside the titles list (never scrolling the page).
+	 *
+	 * @param {number} index Slide index.
+	 */
+	syncTitles( index ) {
+		const list = this.elements.$titles[ 0 ],
+			buttons = this.titleButtons();
+
+		if ( ! list || ! buttons.length ) {
+			return;
+		}
+
+		const current = Math.max( 0, Math.min( buttons.length - 1, Number( index ) || 0 ) );
+
+		buttons.forEach( ( button, i ) => {
+			button.classList.toggle( 'is-active', i === current );
+			button.setAttribute( 'aria-current', i === current ? 'true' : 'false' );
+		} );
+
+		const button = buttons[ current ];
+
+		if ( list.scrollHeight > list.clientHeight + 1 ) {
+			const top = button.offsetTop - list.offsetTop;
+
+			if ( top < list.scrollTop || top + button.offsetHeight > list.scrollTop + list.clientHeight ) {
+				list.scrollTo( { top: top - ( ( list.clientHeight - button.offsetHeight ) / 2 ), behavior: reducedMotion() ? 'auto' : 'smooth' } );
+			}
+		} else if ( list.scrollWidth > list.clientWidth + 1 ) {
+			const left = button.offsetLeft - list.offsetLeft;
+
+			if ( left < list.scrollLeft || left + button.offsetWidth > list.scrollLeft + list.clientWidth ) {
+				list.scrollTo( { left: left - ( ( list.clientWidth - button.offsetWidth ) / 2 ), behavior: reducedMotion() ? 'auto' : 'smooth' } );
+			}
+		}
 	}
 
 	syncAutoplayToggle() {
@@ -627,7 +699,7 @@ export default class NestedCarousel extends Base {
 	}
 
 	onElementChange( propertyName ) {
-		if ( /^(slides_to_show|spacing|effect|direction|speed|loop|autoplay|autoplay_speed|pause_on_hover|arrows|pagination|stack_flow|stack_peek)/.test( propertyName ) ) {
+		if ( /^(slides_to_show|spacing|effect|direction|speed|loop|autoplay|autoplay_speed|pause_on_hover|arrows|pagination|stack_flow|stack_peek|title_nav)/.test( propertyName ) ) {
 			clearTimeout( this.rebuildTimer );
 			this.rebuildTimer = setTimeout( () => this.buildSwiper(), 60 );
 		}
@@ -650,6 +722,7 @@ export default class NestedCarousel extends Base {
 		this.mutations?.disconnect();
 		this.resizeObserver?.disconnect();
 		this.elements.$root.off( 'focusin', this.onFocusIn );
+		this.elements.$titles.off( 'click' );
 		this.destroySwiper();
 		this.destroyStack();
 		super.onDestroy();

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.72.0
+Stable tag: 0.73.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.73.0 =
+* Nested Carousel: Slide Titles. The slides' titles show on the page as buttons beside the slides (left or right, made for the Vertical direction) or above or below them; a click shows that slide and the current one is marked as the slides move (arrows, dots, autoplay, the Stack effect). Optional numbers (01, 02...), Titles On Phones (a scrolling row above or below, as set, or hidden), and Style > Slide Titles: width, space to the slides and between titles, alignment, typography, padding, corners, border, text / background / border colours for normal, hover and current, a marker bar on the current title, number colour and transition time.
 
 = 0.72.0 =
 * Phone Showcase: up to 100 floating cards (was 8). Each card has Content and Style tabs: its own background, title, text and stars colours, icon colour and background, Icon Size, Icon Padding, Icon Corners, card corners and shadow (empty fields keep the shared Style > Floating Cards look, which also gains Icon Size, Icon Padding and Icon Corners).
