@@ -24,3 +24,14 @@ On the site the spans come from the server (`refraction/widget/render_content`);
 ## Check
 
 `node scripts/check-highlight-words.mjs --site DIR --port N`: phrases in a Heading (drawn mark), a Text Editor (gradient, inside a link), an Icon Box and a Call to Action (own color, underline); the Heading and Phone Showcase pills; the editor preview and a live change.
+
+
+## Widgets with several parts (0.71.0)
+
+A widget can list its components with `public static function highlight_parts(): array` (`[ key => [ label, class
+name ] ]`). It then gets one box per part (`rf_hl_part_<key>`) instead of Title / Description; `Pure_Highlight::
+wrap_classes()` (server) and `wrapClasses()` in `highlight-preview.js` (editor preview; the map comes as
+`window.refractionHighlightParts`) highlight each list only inside elements with that whole class name, the innermost
+listed one deciding; text in no listed part is left alone. The widget's earlier `rf_hl_words` / `rf_hl_desc` stay as
+hidden controls and still apply until a part box is filled (a note in the panel says so). The Phone Showcase is the
+first: Label, Heading, Description, Step Titles, Step Texts, Buttons, Floating Cards.

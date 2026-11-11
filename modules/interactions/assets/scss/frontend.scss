@@ -980,7 +980,6 @@ html.rf-hp-on body {
 	color: var(--rf-showcase-on-accent);
 	font-weight: 700;
 	text-decoration: none;
-	transition: filter 0.2s ease, background-color 0.2s ease;
 
 	&:hover,
 	&:focus-visible {
@@ -1009,6 +1008,25 @@ html.rf-hp-on body {
 		stroke-width: 2;
 		stroke-linecap: round;
 		stroke-linejoin: round;
+	}
+}
+
+// Hover: colours, border and shadow ease in (time from Style > Buttons > Hover Transition). Scoped under
+// .rf-showcase so a Hover Animation class (refraction-animation-*) keeps its own transform transition too.
+.rf-showcase .rf-showcase__button {
+	transition: filter var(--rf-showcase-btn-t, 0.25s) ease, background-color var(--rf-showcase-btn-t, 0.25s) ease, color var(--rf-showcase-btn-t, 0.25s) ease, border-color var(--rf-showcase-btn-t, 0.25s) ease, box-shadow var(--rf-showcase-btn-t, 0.25s) ease, transform var(--rf-showcase-btn-t, 0.25s) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+// Lift On Hover (default on): the button rises with a soft shadow, unless it has its own Hover Animation.
+.rf-showcase-lift-yes :where(.rf-showcase__button:not([class*="refraction-animation-"])):is(:hover, :focus-visible) {
+	transform: translateY(-3px);
+	box-shadow: 0 12px 24px -12px rgb(0 0 0 / 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-showcase-lift-yes :where(.rf-showcase__button:not([class*="refraction-animation-"])):is(:hover, :focus-visible) {
+		transform: none;
 	}
 }
 

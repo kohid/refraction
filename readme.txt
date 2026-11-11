@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.70.0
+Stable tag: 0.71.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.71.0 =
+* Phone Showcase: Highlight Words has its own box for each part (Label, Heading, Description, Step Titles, Step Texts, Buttons, Floating Cards), so words typed for one part are never highlighted in another, and nothing inside the phone's screen is. A showcase saved with the earlier Title and Description lists looks the same until one of the new boxes is filled.
+* Phone Showcase buttons: Hover Text Color and Hover Border Color for both buttons, a Hover Animation for each (grow, float, pulse...), Box Shadow and Hover Shadow, a Hover Transition time, and Lift On Hover (on by default): the button rises a little with a soft shadow.
 
 = 0.70.0 =
 * My Shapes now live in the editor: the Uploaded tab of Shape Mask and Deco Blob has an "Upload or manage" button that opens your shape library right there. Drag and drop or choose several SVG files at once (or paste SVG code), rename and delete shapes; a new shape shows in the panel and on the page at once and is picked for the element. The Refraction > My Shapes admin page is gone (your shapes are kept).
