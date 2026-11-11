@@ -152,6 +152,7 @@ class Modules_Manager {
 			'image-optimizer',
 			'dashboard-widgets',
 			'highlight-words',
+			'organic-fx',
 		];
 	}
 

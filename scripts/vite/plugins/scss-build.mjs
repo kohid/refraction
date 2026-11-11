@@ -45,6 +45,7 @@ const SASS_TARGETS = [
 	{ cwd: 'modules/card-motion/assets/scss', src: '*.scss', dest: 'assets/css/modules/card-motion' },
 	{ cwd: 'modules/interactions/assets/scss', src: '*.scss', dest: 'assets/css/modules/interactions' },
 	{ cwd: 'modules/dashboard-widgets/assets/scss', src: '*.scss', dest: 'assets/css/modules/dashboard-widgets' },
+	{ cwd: 'modules/organic-fx/assets/scss', src: '*.scss', dest: 'assets/css/modules/organic-fx' },
 	{ cwd: 'modules/ask-claude/assets/scss', src: '*.scss', dest: 'assets/css/modules/ask-claude' },
 	{ cwd: 'modules/custom-fonts/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-fonts' },
 	{ cwd: 'modules/custom-icons/assets/scss', src: '*.scss', dest: 'assets/css/modules/custom-icons' },

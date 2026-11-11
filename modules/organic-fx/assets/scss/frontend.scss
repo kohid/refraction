@@ -1,0 +1,300 @@
+//
+// Organic FX (modules/organic-fx): Shape Mask, Deco Blob, Grain, Floating Shapes, Floating Text.
+// The shapes (--rf-shape, a mask image per class) are generated into _shapes.scss.
+//
+
+@import "shapes";
+
+// ---------------------------------------------------------------- shape mask
+@mixin rf-mask {
+	-webkit-mask-image: var(--rf-shape);
+	mask-image: var(--rf-shape);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+}
+
+.e-con[class*="rf-mask--"] {
+	@include rf-mask;
+}
+
+.refraction-widget-image[class*="rf-mask--"] img {
+	@include rf-mask;
+}
+
+.rf-mask-fit-keep {
+	&.e-con,
+	& img {
+		-webkit-mask-size: contain;
+		mask-size: contain;
+	}
+}
+
+// Zoom the inside on hover: the content (or picture) grows a little inside the shape.
+.e-con.rf-mask-zoom-yes > .e-con-inner,
+.e-con.rf-mask-zoom-yes:not(:has(> .e-con-inner)) > *,
+.refraction-widget-image.rf-mask-zoom-yes img {
+	transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.e-con.rf-mask-zoom-yes:hover > .e-con-inner,
+.e-con.rf-mask-zoom-yes:not(:has(> .e-con-inner)):hover > *,
+.refraction-widget-image.rf-mask-zoom-yes:hover img {
+	transform: scale(1.06);
+}
+
+// ---------------------------------------------------------------- layers (blob, grain, floating)
+.rf-ofx-host {
+	position: relative;
+	isolation: isolate;
+}
+
+.rf-ofx-blob,
+.rf-ofx-grain,
+.rf-ofx-shapes,
+.rf-ofx-text {
+	position: absolute;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.rf-ofx-grain,
+.rf-ofx-shapes,
+.rf-ofx-text {
+	inset: 0;
+	overflow: hidden;
+}
+
+.rf-ofx-over {
+	z-index: 5;
+}
+
+// ---------------------------------------------------------------- deco blob
+.rf-ofx-blob {
+	--rf-blob-s: 100;
+	--rf-blob-x: 8%;
+	--rf-blob-y: 6%;
+	--rf-blob-r: 0deg;
+	--rf-blob-t: 9s;
+
+	top: 50%;
+	left: 50%;
+	width: calc(var(--rf-blob-s) * 1%);
+	height: calc(var(--rf-blob-s) * 1%);
+	transform: translate(calc(-50% + var(--rf-blob-x)), calc(-50% + var(--rf-blob-y))) rotate(var(--rf-blob-r));
+
+	> .rf-ofx-blob__fill {
+		position: absolute;
+		inset: 0;
+		background-color: var(--rf-blob-c, #f6c94a);
+		@include rf-mask;
+	}
+
+	> svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+
+		path {
+			fill: none;
+			stroke: var(--rf-blob-line, #1e1e1e);
+			stroke-width: var(--rf-blob-lw, 2px);
+			stroke-linejoin: round;
+			vector-effect: non-scaling-stroke;
+		}
+	}
+
+	> svg.rf-ofx-blob__line--offset {
+		transform: translate(4%, -3%) rotate(-6deg);
+	}
+}
+
+.rf-blob-over > .rf-ofx-blob,
+.rf-blob-over > .e-con-inner > .rf-ofx-blob,
+.rf-blob-over > .refraction-widget-container > .rf-ofx-blob {
+	z-index: 5;
+}
+
+// A blob behind an image follows the picture's box (--rf-frame-*, measured by the script), not the whole widget.
+.refraction-widget-image > .refraction-widget-container {
+	position: relative;
+	isolation: isolate;
+}
+
+.refraction-widget-image .rf-ofx-blob {
+	top: calc(var(--rf-frame-t, 0px) + (var(--rf-frame-h, 100%) / 2));
+	left: calc(var(--rf-frame-l, 0px) + (var(--rf-frame-w, 100%) / 2));
+	width: calc(var(--rf-frame-w, 100%) * var(--rf-blob-s) / 100);
+	height: calc(var(--rf-frame-h, 100%) * var(--rf-blob-s) / 100);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.rf-blob-motion-float .rf-ofx-blob > * {
+		animation: rf-ofx-float var(--rf-blob-t) ease-in-out infinite alternate;
+	}
+
+	.rf-blob-motion-breathe .rf-ofx-blob > * {
+		animation: rf-ofx-breathe var(--rf-blob-t) ease-in-out infinite alternate;
+	}
+
+	.rf-blob-motion-spin .rf-ofx-blob > * {
+		animation: rf-ofx-spin calc(var(--rf-blob-t) * 4) linear infinite;
+	}
+
+	.rf-blob-motion-wobble .rf-ofx-blob > * {
+		animation: rf-ofx-wobble var(--rf-blob-t) ease-in-out infinite;
+	}
+}
+
+@keyframes rf-ofx-float {
+	from { transform: translate(-1.5%, 1.5%) rotate(-2deg); }
+	to { transform: translate(1.5%, -2%) rotate(2deg); }
+}
+
+@keyframes rf-ofx-breathe {
+	from { transform: scale(0.94); }
+	to { transform: scale(1.04); }
+}
+
+@keyframes rf-ofx-spin {
+	to { transform: rotate(360deg); }
+}
+
+@keyframes rf-ofx-wobble {
+	0%, 100% { transform: scale(1, 1) rotate(0deg); }
+	25% { transform: scale(1.04, 0.96) rotate(2deg); }
+	50% { transform: scale(0.97, 1.03) rotate(-1deg); }
+	75% { transform: scale(1.02, 0.98) rotate(1deg); }
+}
+
+// ---------------------------------------------------------------- grain
+.rf-ofx-grain {
+	opacity: 0.25;
+	mix-blend-mode: multiply;
+	background-repeat: repeat;
+}
+
+.rf-grain-over-yes > .rf-ofx-grain,
+.rf-grain-over-yes > .e-con-inner > .rf-ofx-grain {
+	z-index: 6;
+}
+
+// Grain inside a blob: masked to the blob's shape.
+.rf-ofx-blob > .rf-ofx-grain {
+	z-index: auto;
+	@include rf-mask;
+}
+
+// ---------------------------------------------------------------- floating shapes
+.rf-ofx-fs {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: var(--fs-size, 30px);
+	height: var(--fs-size, 30px);
+	opacity: var(--fs-opacity, 0.7);
+
+	> span {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.rf-ofx-fs {
+		animation: rf-ofx-fs-drift var(--fs-time, 22s) linear var(--fs-delay, 0s) infinite;
+
+		> span {
+			animation: rf-ofx-fs-sway calc(var(--fs-time, 22s) / 4) ease-in-out var(--fs-delay, 0s) infinite alternate;
+		}
+
+		&.is-spin svg {
+			animation: rf-ofx-spin calc(var(--fs-time, 22s) / 2) linear infinite var(--fs-turn, normal);
+		}
+
+		&.is-stay {
+			animation: rf-ofx-fs-bob calc(var(--fs-time, 22s) / 4) ease-in-out var(--fs-delay, 0s) infinite alternate;
+		}
+	}
+}
+
+@keyframes rf-ofx-fs-drift {
+	0% { transform: translate(var(--fs-x0), var(--fs-y0)); opacity: 0; }
+	10% { opacity: var(--fs-opacity, 0.7); }
+	90% { opacity: var(--fs-opacity, 0.7); }
+	100% { transform: translate(var(--fs-x1), var(--fs-y1)); opacity: 0; }
+}
+
+@keyframes rf-ofx-fs-sway {
+	from { transform: translate(calc(var(--fs-sway, 12px) * -1), 0); }
+	to { transform: translate(var(--fs-sway, 12px), 0); }
+}
+
+@keyframes rf-ofx-fs-bob {
+	from { transform: translate(var(--fs-x0), var(--fs-y0)); }
+	to { transform: translate(var(--fs-x0), calc(var(--fs-y0) - 14px)); }
+}
+
+// Reduced motion: shapes stay where they are.
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-ofx-fs {
+		transform: translate(var(--fs-x0), var(--fs-y0));
+	}
+}
+
+// ---------------------------------------------------------------- floating text
+.rf-ofx-word {
+	position: absolute;
+	left: 0;
+	top: 0;
+	margin: 0;
+	white-space: nowrap;
+	font-size: 28px;
+	font-weight: 600;
+	line-height: 1.1;
+	color: var(--ft-color, #1e1e1e);
+	opacity: 0;
+
+	&.is-outline {
+		-webkit-text-fill-color: transparent;
+		-webkit-text-stroke: 1px var(--ft-color, #1e1e1e);
+	}
+
+	> .rf-ofx-word__mask {
+		display: inline-block;
+		overflow: hidden;
+		vertical-align: top;
+	}
+
+	> .rf-ofx-word__mask > span {
+		display: inline-block;
+	}
+
+	.rf-ofx-letter {
+		display: inline-block;
+		white-space: pre;
+	}
+}
+
+// Out of view: the floating layers rest.
+.rf-ofx-paused .rf-ofx-fs,
+.rf-ofx-paused .rf-ofx-fs > span,
+.rf-ofx-paused .rf-ofx-fs svg {
+	animation-play-state: paused;
+}
