@@ -60,3 +60,14 @@ Style > Buttons: per button Hover Background, Hover Text Color, Hover Border Col
 Transition (`--rf-showcase-btn-t`) and Lift On Hover (`rf-showcase-lift-yes`, default on: rises 3px with a soft shadow,
 skipped for a button with a Hover Animation and for reduced motion; written with `:where()` so a Hover Shadow wins).
 Highlight Words has a box per part (see highlight-words.md).
+
+
+## Cards and progress bar (0.72.0)
+
+Up to 100 floating cards (`MAX_CARDS`). The cards repeater has Content / Style tabs; the Style tab's controls use
+`{{CURRENT_ITEM}}.rf-showcase__card` and win over Style > Floating Cards. Icon Size / Icon Padding / Icon Corners
+(shared and per card, `card_icon_controls()`) set `--rf-card-icon-size` (default 16px) and `--rf-card-icon-pad`
+(default 10px) on `.rf-showcase__card-icon` (content-box, so 16 + 2 x 10 = the old 36px box). Progress bar (Style >
+Steps, with autoplay): `progress_show` (prefix class `rf-showcase-progress-yes`, default on; without it the bar is
+hidden), `progress_color` (now only the bar's background), `progress_height`, `progress_radius`, `progress_inset`,
+`progress_offset` (`--rf-showcase-timer-gap`) and `progress_position` (`rf-showcase-progress-at-top`).

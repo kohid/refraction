@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Phone_Showcase extends Widget_Base {
 
 	const MAX_STEPS = 20;
-	const MAX_CARDS = 8;
+	const MAX_CARDS = 100;
 
 	/**
 	 * The device library: aspect ratio (width / height), corner radius and bezel (shares of the width), the screen's
@@ -396,6 +396,10 @@ class Phone_Showcase extends Widget_Base {
 		$this->start_controls_section( 'section_cards', [ 'label' => esc_html__( 'Floating Cards', 'refraction' ) ] );
 
 		$cards = new Repeater();
+		$item = '{{WRAPPER}} {{CURRENT_ITEM}}.rf-showcase__card';
+
+		$cards->start_controls_tabs( 'card_tabs' );
+		$cards->start_controls_tab( 'card_tab_content', [ 'label' => esc_html__( 'Content', 'refraction' ) ] );
 
 		$cards->add_control( 'icon', [
 			'label' => esc_html__( 'Icon', 'refraction' ),
@@ -447,6 +451,22 @@ class Phone_Showcase extends Widget_Base {
 			'default' => 0,
 			'description' => esc_html__( '0: on every step. A number: only while that step is shown (it pops in).', 'refraction' ),
 		] );
+
+		$cards->end_controls_tab();
+
+		// This card's own look; empty fields keep Style > Floating Cards.
+		$cards->start_controls_tab( 'card_tab_style', [ 'label' => esc_html__( 'Style', 'refraction' ) ] );
+		$cards->add_control( 'card_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item => 'background-color: {{VALUE}};' ] ] );
+		$cards->add_control( 'card_title_color', [ 'label' => esc_html__( 'Title Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item . ' .rf-showcase__card-title' => 'color: {{VALUE}};' ] ] );
+		$cards->add_control( 'card_text_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item . ' .rf-showcase__card-text' => 'color: {{VALUE}};' ] ] );
+		$cards->add_control( 'card_star_color', [ 'label' => esc_html__( 'Stars Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item . ' .rf-showcase__stars' => 'color: {{VALUE}};' ] ] );
+		$cards->add_control( 'card_icon_color', [ 'label' => esc_html__( 'Icon Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item . ' .rf-showcase__card-icon' => 'color: {{VALUE}}; fill: {{VALUE}};' ], 'separator' => 'before' ] );
+		$cards->add_control( 'card_icon_bg', [ 'label' => esc_html__( 'Icon Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item . ' .rf-showcase__card-icon' => 'background-color: {{VALUE}};' ] ] );
+		self::card_icon_controls( $cards, $item );
+		$cards->add_control( 'card_radius', [ 'label' => esc_html__( 'Card Corners', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'max' => 40 ] ], 'selectors' => [ $item => 'border-radius: {{SIZE}}{{UNIT}};' ], 'separator' => 'before' ] );
+		$cards->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'card_shadow', 'selector' => $item ] );
+		$cards->end_controls_tab();
+		$cards->end_controls_tabs();
 
 		$this->add_control( 'cards', [
 			'label' => esc_html__( 'Cards', 'refraction' ) . ' (' . sprintf( /* translators: %d: maximum. */ esc_html__( 'up to %d', 'refraction' ), self::MAX_CARDS ) . ')',
@@ -622,11 +642,36 @@ class Phone_Showcase extends Widget_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__step' => 'border-radius: {{SIZE}}{{UNIT}};' ],
 		] );
 
-		$this->add_control( 'progress_color', [
-			'label' => esc_html__( 'Timing Line Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ '{{WRAPPER}} .rf-showcase' => '--rf-showcase-accent: {{VALUE}};' ],
-			'condition' => [ 'autoplay' => 'yes' ],
+		// The progress bar under the current step while the steps play on their own.
+		$timer = '{{WRAPPER}} .rf-showcase__timer';
+		$playing = [ 'autoplay' => 'yes' ];
+		$shown = [ 'autoplay' => 'yes', 'progress_show' => 'yes' ];
+
+		$this->add_control( 'heading_progress', [ 'label' => esc_html__( 'Progress Bar', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'condition' => $playing ] );
+		$this->add_control( 'progress_show', [
+			'label' => esc_html__( 'Show Progress Bar', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'The line that times the current step while the steps play on their own.', 'refraction' ),
+			'prefix_class' => 'rf-showcase-progress-',
+			'condition' => $playing,
+		] );
+		$this->add_control( 'progress_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $timer => 'background: {{VALUE}};' ], 'condition' => $shown ] );
+		$this->add_responsive_control( 'progress_height', [ 'label' => esc_html__( 'Height', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 1, 'max' => 12 ] ], 'selectors' => [ $timer => 'height: {{SIZE}}{{UNIT}};' ], 'condition' => $shown ] );
+		$this->add_control( 'progress_radius', [ 'label' => esc_html__( 'Corners', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'max' => 12 ] ], 'selectors' => [ $timer => 'border-radius: {{SIZE}}{{UNIT}};' ], 'condition' => $shown ] );
+		$this->add_responsive_control( 'progress_inset', [ 'label' => esc_html__( 'Space At The Sides', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px', '%' ], 'range' => [ 'px' => [ 'max' => 60 ], '%' => [ 'max' => 20 ] ], 'selectors' => [ $timer => 'left: {{SIZE}}{{UNIT}}; width: calc(100% - 2 * {{SIZE}}{{UNIT}});' ], 'condition' => $shown ] );
+		$this->add_responsive_control( 'progress_offset', [ 'label' => esc_html__( 'Space From The Edge', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => -10, 'max' => 30 ] ], 'selectors' => [ $timer => '--rf-showcase-timer-gap: {{SIZE}}{{UNIT}};' ], 'condition' => $shown ] );
+		$this->add_control( 'progress_position', [
+			'label' => esc_html__( 'Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'top' => [ 'title' => esc_html__( 'Top', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
+				'bottom' => [ 'title' => esc_html__( 'Bottom', 'refraction' ), 'icon' => 'rficon-v-align-bottom' ],
+			],
+			'default' => 'bottom',
+			'toggle' => false,
+			'prefix_class' => 'rf-showcase-progress-at-',
+			'condition' => $shown,
 		] );
 
 		$this->add_control( 'label_color', [
@@ -750,6 +795,8 @@ class Phone_Showcase extends Widget_Base {
 			'name' => 'card_shadow',
 			'selector' => $card,
 		] );
+
+		self::card_icon_controls( $this, $card );
 
 		$this->end_controls_section();
 
@@ -893,6 +940,13 @@ class Phone_Showcase extends Widget_Base {
 	 * A button's look (Content > Steps): text with an icon and a small line above it (a store badge: "GET IT ON" over
 	 * "Google Play"), or an image only (the text is then its alt text).
 	 */
+	/** Icon Size, Icon Padding and Icon Corners of the floating cards (for all of them, or one in the repeater). */
+	private static function card_icon_controls( $stack, string $card ): void {
+		$stack->add_responsive_control( 'card_icon_size', [ 'label' => esc_html__( 'Icon Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px', 'em' ], 'range' => [ 'px' => [ 'min' => 8, 'max' => 64 ] ], 'selectors' => [ $card . ' .rf-showcase__card-icon' => '--rf-card-icon-size: {{SIZE}}{{UNIT}};' ] ] );
+		$stack->add_responsive_control( 'card_icon_padding', [ 'label' => esc_html__( 'Icon Padding', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px', 'em' ], 'range' => [ 'px' => [ 'max' => 40 ] ], 'selectors' => [ $card . ' .rf-showcase__card-icon' => '--rf-card-icon-pad: {{SIZE}}{{UNIT}};' ] ] );
+		$stack->add_control( 'card_icon_radius', [ 'label' => esc_html__( 'Icon Corners', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px', '%' ], 'range' => [ 'px' => [ 'max' => 40 ], '%' => [ 'max' => 50 ] ], 'selectors' => [ $card . ' .rf-showcase__card-icon' => 'border-radius: {{SIZE}}{{UNIT}};' ] ] );
+	}
+
 	private function add_button_look_controls( string $key ): void {
 		$on = [ $key . '_text!' => '' ];
 		$text_look = array_merge( $on, [ $key . '_look!' => 'image' ] );

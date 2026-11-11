@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.71.0
+Stable tag: 0.72.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.72.0 =
+* Phone Showcase: up to 100 floating cards (was 8). Each card has Content and Style tabs: its own background, title, text and stars colours, icon colour and background, Icon Size, Icon Padding, Icon Corners, card corners and shadow (empty fields keep the shared Style > Floating Cards look, which also gains Icon Size, Icon Padding and Icon Corners).
+* Phone Showcase progress bar (the line timing the current step when the steps play on their own): Show Progress Bar switch, Color, Height, Corners, Space At The Sides, Space From The Edge and Position (bottom or top). Its colour no longer changes the widget's accent colour.
 
 = 0.71.0 =
 * Phone Showcase: Highlight Words has its own box for each part (Label, Heading, Description, Step Titles, Step Texts, Buttons, Floating Cards), so words typed for one part are never highlighted in another, and nothing inside the phone's screen is. A showcase saved with the earlier Title and Description lists looks the same until one of the new boxes is filled.
