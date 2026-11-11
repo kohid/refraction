@@ -121,6 +121,9 @@ async function main() {
 		const ratios = { island: 0.488, notch: 0.488, hole: 0.46, 'hole-left': 0.46, edge: 0.47, rounded: 0.47, compact: 0.52, classic: 0.49, fold: 0.87, clay: 0.48, outline: 0.48, tablet: 0.72, 'tablet-wide': 1.39 };
 		const library = page( 'Devices', box( [ ...devices.map( ( d, i ) => w( `dv${ i }`, { device: d, color: [ 'black', 'silver', 'gold', 'blue', 'green', 'rose', 'purple', 'white', 'graphite' ][ i % 9 ], steps: [ step( 1 ) ], cards: [], label: '', phone_width: { unit: 'px', size: d.startsWith( 'tablet' ) || 'fold' === d ? 420 : 220 } } ) ), w( 'dvx', { device: 'custom', frame_image: { url: img( 'w-logo-blue.png' ) }, frame_top: { size: 10 }, frame_right: { size: 20 }, frame_bottom: { size: 10 }, frame_left: { size: 20 }, steps: [ step( 1 ) ], cards: [], label: '', phone_width: { unit: 'px', size: 200 } } ) ], { flex_wrap: 'wrap', flex_direction: 'row' } ), {} );
 		const auto = page( 'Autoplay', box( [ w( 'ps04', { steps: [ step( 1 ), step( 2 ), step( 3 ) ], cards: [], autoplay: 'yes', interval: { size: 2 } } ) ] ), {} );
+		const manyCards = Array.from( { length: 12 }, ( x, i ) => ( { _id: `mc${ i }`, title: `Card ${ i + 1 }`, icon: { value: 'fas fa-check', library: 'fa-solid' }, x: { size: ( i % 2 ) ? 110 : -10 }, y: { size: 5 + ( i * 7 ) } } ) );
+		manyCards[ 0 ] = { ...manyCards[ 0 ], card_bg: '#222222', card_title_color: '#FFFFFF', card_icon_bg: '#E20A17', card_icon_color: '#FFFFFF', card_icon_size: { unit: 'px', size: 30 }, card_icon_padding: { unit: 'px', size: 4 }, card_radius: { unit: 'px', size: 2 } };
+		const styled = page( 'Card styles', box( [ w( 'ps08', { steps: [ step( 1 ), step( 2 ) ], cards: manyCards, card_icon_size: { unit: 'px', size: 22 }, card_icon_padding: { unit: 'px', size: 6 }, autoplay: 'yes', interval: { size: 3 }, progress_color: '#E20A17', progress_height: { unit: 'px', size: 6 }, progress_radius: { unit: 'px', size: 3 }, progress_inset: { unit: 'px', size: 12 }, progress_position: 'top' } ), w( 'ps09', { steps: [ step( 1 ), step( 2 ) ], cards: [], autoplay: 'yes', interval: { size: 3 }, progress_show: '' } ) ] ), {} );
 		const phoneOnly = page( 'Phone layout', box( [ w( 'ps05', { steps: [ step( 1 ), step( 2 ) ], cards, cards_phone: '', stack_order: 'phone' } ) ] ), {} );
 
 		const state = ( p, id ) => p.evaluate( ( wid ) => {
@@ -261,6 +264,36 @@ async function main() {
 		check( 'autoplay', 'not for visitors who ask for reduced motion', 0 === ( await state( r, 'ps04' ) ).at );
 		await rctx.close();
 
+		// ------------------------------------------------------------ card styles, icon size, progress bar
+		const cs = await at( styled.url, 1280, 900 );
+		await cs.mouse.move( 5, 5 );
+		await sleep( 1200 );
+		const look = await cs.evaluate( () => {
+			const cardsEls = [ ...document.querySelectorAll( '[data-id="ps08"] .rf-showcase__card' ) ];
+			const icon = ( el ) => {
+				const i = el.querySelector( '.rf-showcase__card-icon' );
+				const st = getComputedStyle( i );
+				return { box: Math.round( i.getBoundingClientRect().width ), pad: st.paddingLeft, bg: st.backgroundColor };
+			};
+			const t = document.querySelector( '[data-id="ps08"] .rf-showcase__step.is-active .rf-showcase__timer' );
+			const step1 = t.parentElement.getBoundingClientRect();
+			const tr = t.getBoundingClientRect();
+			const ts = getComputedStyle( t );
+			const off = document.querySelector( '[data-id="ps09"] .rf-showcase__timer' );
+			return {
+				count: cardsEls.length,
+				first: { ...icon( cardsEls[ 0 ] ), cardBg: getComputedStyle( cardsEls[ 0 ] ).backgroundColor, title: getComputedStyle( cardsEls[ 0 ].querySelector( '.rf-showcase__card-title' ) ).color },
+				second: { ...icon( cardsEls[ 1 ] ), cardBg: getComputedStyle( cardsEls[ 1 ] ).backgroundColor },
+				timer: { color: ts.backgroundColor, h: Math.round( tr.height ), top: Math.round( tr.top - step1.top ), left: Math.round( tr.left - step1.left ), radius: ts.borderRadius },
+				off: getComputedStyle( off ).display,
+			};
+		} );
+		check( 'cards', 'more than 8 floating cards (12 given, up to 100)', 12 === look.count, look.count );
+		check( 'cards', 'each card has its own Style tab: the first is dark with a red 30px icon in 4px padding; the others keep the shared style (22px icons, 6px padding)', 'rgb(34, 34, 34)' === look.first.cardBg && 'rgb(255, 255, 255)' === look.first.title && 'rgb(226, 10, 23)' === look.first.bg && 38 === look.first.box && '4px' === look.first.pad && 34 === look.second.box && '6px' === look.second.pad && 'rgb(34, 34, 34)' !== look.second.cardBg, JSON.stringify( look ) );
+		check( 'progress bar', 'its own style: red, 6px high, rounded, 12px in from the sides (inside the 1px step border), at the top of the step; switched off it does not show', 'rgb(226, 10, 23)' === look.timer.color && 6 === look.timer.h && look.timer.top <= 1 && Math.abs( look.timer.left - 12 ) <= 1 && '3px' === look.timer.radius && 'none' === look.off, JSON.stringify( look ) );
+		await cs.locator( '[data-id="ps08"]' ).screenshot( { path: join( SHOTS, 'card-styles.png' ) } );
+		await cs.context().close();
+
 		// ------------------------------------------------------------ a phone screen
 		const pctx = await browser.newContext( { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } );
 		const p = await pctx.newPage();
@@ -293,7 +326,7 @@ async function main() {
 		const panel = await e.evaluate( () => {
 			const c = window.refraction.widgetsCache[ 'refraction-phone-showcase' ]?.controls || {}; return { max: c.steps?.max_items, devices: Object.keys( c.device?.options || {} ).length, cards: c.cards?.max_items };
 		} );
-		check( 'editor', 'the preview draws it and a click on a step works there; up to 20 steps, 14 device choices (13 and my own frame)', ed.phone && 2 === ed.at && 20 === panel.max && 14 === panel.devices && 8 === panel.cards, JSON.stringify( [ ed, panel ] ) );
+		check( 'editor', 'the preview draws it and a click on a step works there; up to 20 steps, 14 device choices (13 and my own frame), up to 100 cards', ed.phone && 2 === ed.at && 20 === panel.max && 14 === panel.devices && 100 === panel.cards, JSON.stringify( [ ed, panel ] ) );
 		await ectx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

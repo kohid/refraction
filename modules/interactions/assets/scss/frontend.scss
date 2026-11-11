@@ -937,7 +937,7 @@ html.rf-hp-on body {
 // Playing by itself: a line times the current step.
 .rf-showcase__timer {
 	position: absolute;
-	bottom: 0;
+	bottom: var(--rf-showcase-timer-gap, 0px);
 	left: 0;
 	height: 2px;
 	width: 100%;
@@ -952,6 +952,17 @@ html.rf-hp-on body {
 
 .rf-showcase.is-paused .rf-showcase__step.is-active .rf-showcase__timer {
 	animation-play-state: paused;
+}
+
+// Progress Bar: hidden by its switch, or at the top of the step.
+.rf-showcase-progress-at-top .rf-showcase__timer {
+	top: var(--rf-showcase-timer-gap, 0px);
+	bottom: auto;
+}
+
+// Off (or no autoplay, where the switch is not in use): no class, no bar. Saved pages get the default (on).
+.refraction-widget-refraction-phone-showcase:not(.rf-showcase-progress-yes) .rf-showcase__timer {
+	display: none;
 }
 
 @keyframes rf-showcase-timer {
@@ -1533,18 +1544,26 @@ html.rf-hp-on body {
 }
 
 .rf-showcase__card-icon {
+	// Size of the icon and the room around it (Icon Size, Icon Padding): 16 + 2 x 10 = the 36px box of before.
+	--rf-card-icon-size: 16px;
+	--rf-card-icon-pad: 10px;
+
 	display: grid;
 	flex-shrink: 0;
 	place-items: center;
-	width: 36px;
-	height: 36px;
+	box-sizing: content-box;
+	width: var(--rf-card-icon-size);
+	height: var(--rf-card-icon-size);
+	padding: var(--rf-card-icon-pad);
 	border-radius: 10px;
 	background-color: #e6f7ec;
 	color: #15803d;
+	font-size: var(--rf-card-icon-size);
+	line-height: 1;
 
 	svg {
-		width: 16px;
-		height: 16px;
+		width: var(--rf-card-icon-size);
+		height: var(--rf-card-icon-size);
 		fill: currentColor;
 	}
 }
