@@ -57,22 +57,39 @@ Modelled on Framify's Organic Shape panel, written for Refraction.
   Layers pause out of view, are placed again when the width changes, and with reduced motion the shapes stay still
   and the words stay put.
 
-## My Shapes
+## My Shapes and grain textures (in the editor, 0.70.0)
 
-**Refraction > My Shapes** (`classes/admin-page.php`, menu item `admin-menu-items/editor-one-my-shapes-menu.php`,
-capability `manage_options`, filter `refraction/organic-fx/capability`). Only upload and a library: there is no
-drawing or generating.
+There is no admin page: the library is managed from the editor (`assets/js/organic-fx-editor.js`, entry
+`organic-fx-editor`, enqueued on `refraction/editor/after_enqueue_scripts` with `refractionOrganicEditor`).
 
-- Add a shape from an `.svg` file or pasted SVG code, with a name (empty: the file name). Rename and delete in the list.
-- `classes/pure-shape-store.php` keeps only path data (letters of path commands, numbers, separators) and a numeric
-  viewBox; rectangles, circles, ellipses, polygons and polylines become path data; `fill-rule="evenodd"` is kept so
-  holes stay holes. Scripts, handlers, colours, text and images are dropped, so nothing in the upload can run.
-  Limits: 200 KB per upload, 60,000 characters of path data, 100 shapes.
-- Stored in the option `refraction_my_shapes` (`id => name, d, vb, rule`), ids `my-<name>`; read back through
-  `clean_shape()` again.
-- Uploaded shapes show as "My shape: Name" in every Shape list (mask, blob, outline, floating shapes). Their mask CSS
-  is printed inline with the Organic FX stylesheet, and their paths go to the script as `window.refractionMyShapes`.
-- Deleting a shape leaves elements that use it without that mask or blob.
+- **Open it** from the Uploaded tab's "Upload or manage" button (BUTTON controls `rf_mask_mine_upload`,
+  `rf_blob_mine_upload`, event `refraction:organicLibrary:<setting>`) or from Grain's "Upload or manage" textures
+  button (`refraction:organicTextures`). The dialog has Shapes and Textures tabs.
+- **Add**: choose or drag and drop one or several files anywhere on the dialog (a drop adds at once), or paste SVG
+  code. Files are added one after another; each takes its file name (one file can take the Name field); files that
+  fail are named in the message. The first new item is picked for the element (`rf_*_source = mine` + the id, or
+  `rf_grain_texture`). Rename (shapes) and delete in the list; Use picks one.
+- **Live**: after any change the dialog rewrites the options of `rf_mask_mine`, `rf_blob_mine`, `rf_blob_line_shape`,
+  `rf_fs_shapes` and `rf_grain_texture` in every control config (element configs, widget cache and the elements on the
+  page), redraws those controls in the open panel, and gives the preview the new mask CSS, `refractionMyShapes` and
+  `refractionGrainTextures`, so nothing needs a reload.
+- **Server** (`classes/editor-library.php`): `wp_ajax_refraction_ofx_{shape_add,shape_rename,shape_delete,
+  texture_add,texture_delete}`, nonce `refraction_ofx_library`, capability `upload_files` (filter
+  `refraction/organic-fx/capability`). Shapes: `Pure_Shape_Store` keeps only path data, a numeric viewBox and the fill
+  rule (option `refraction_my_shapes`, max 100). Textures: the editor turns the picture into ink (alpha = darkness, at
+  most 1024 px) and sends a PNG; `Textures_Repository` accepts only a PNG GD can open, writes it again with GD into
+  `uploads/refraction-grain/<slug>.png` and lists it in `refraction_grain_textures` (max 40).
+
+## Grain (0.70.0)
+
+Grain On Container Fill, Texture (Film grain (classic) by default: the 0.68 grey noise unless a colour is set;
+Speckle, Distressed chalk, Dry brush, Paper fibre, Halftone dots, Dispersion, Brush strokes, Grunge splatter,
+Scratches; Uploaded: ...), Fade From (left, right, top, bottom, centre) with Fade Reach, Grain Colour, Grain Amount,
+Grain Size (1-100, 50 = the classic size; a 0.68 Medium / Coarse is read from a hidden `rf_grain_size`), Pattern, Blend,
+Also Over The Content. Built-in textures are seamless SVG tiles drawn by `textureUrl()` (noise whose alpha is
+`a x noise + b`, painted in the colour; halftone is a dot pattern under a noise mask). An uploaded texture paints the
+colour through the PNG as a repeating mask. Fade is a gradient mask; inside a Deco Blob the blob's shape is one more
+mask layer, all intersected. The blob's grain uses the same texture, colour and size.
 
 ## Checks
 

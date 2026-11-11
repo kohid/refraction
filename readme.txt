@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.69.0
+Stable tag: 0.70.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.70.0 =
+* My Shapes now live in the editor: the Uploaded tab of Shape Mask and Deco Blob has an "Upload or manage" button that opens your shape library right there. Drag and drop or choose several SVG files at once (or paste SVG code), rename and delete shapes; a new shape shows in the panel and on the page at once and is picked for the element. The Refraction > My Shapes admin page is gone (your shapes are kept).
+* Grain is complete: ten textures (film grain, speckle, distressed chalk, dry brush, paper fibre, halftone dots, dispersion, brush strokes, grunge splatter, scratches) plus your own uploaded texture pictures (dark parts become the grain), a Grain Colour, a Grain Size slider, Fade From any side or the centre with a reach, and the same texture on a Deco Blob's grain.
+* Shape position: the panel now explains that Horizontal and Vertical Position move the shape within the room Width and Height leave, and that Offset pushes a full-size shape.
 
 = 0.69.0 =
 * Shape Mask and Deco Blob get a fuller panel: shapes picked from pictures, with Built-in and Uploaded (My Shapes) tabs; Flat Edge (the shape runs past a side so the edge cuts it straight); Flip Horizontal and Vertical; Placement with Horizontal and Vertical Position, Width, Height and Offsets, per device; and a motion Trigger (continuous loop, on hover, or once when scrolled into view) with its duration.

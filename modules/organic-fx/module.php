@@ -4,12 +4,11 @@ namespace Refraction\Modules\OrganicFx;
 use Refraction\Controls_Manager;
 use Refraction\Core\Base\Module as BaseModule;
 use Refraction\Group_Control_Typography;
-use Refraction\Modules\EditorOne\Classes\Menu_Data_Provider;
-use Refraction\Modules\OrganicFx\AdminMenuItems\Editor_One_My_Shapes_Menu;
-use Refraction\Modules\OrganicFx\Classes\Admin_Page;
+use Refraction\Modules\OrganicFx\Classes\Editor_Library;
 use Refraction\Modules\OrganicFx\Classes\Pure_Organic;
 use Refraction\Modules\OrganicFx\Classes\Pure_Shape_Store;
 use Refraction\Modules\OrganicFx\Classes\Shapes_Repository;
+use Refraction\Modules\OrganicFx\Classes\Textures_Repository;
 use Refraction\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -51,7 +50,9 @@ class Module extends BaseModule {
 
 	private ?Shapes_Repository $repository = null;
 
-	private ?Admin_Page $admin_page = null;
+	private ?Textures_Repository $textures = null;
+
+	private ?Editor_Library $library = null;
 
 	private bool $inline_added = false;
 
@@ -60,7 +61,7 @@ class Module extends BaseModule {
 	}
 
 	public static function capability(): string {
-		return (string) apply_filters( 'refraction/organic-fx/capability', 'manage_options' );
+		return (string) apply_filters( 'refraction/organic-fx/capability', 'upload_files' );
 	}
 
 	public function get_repository(): Shapes_Repository {
@@ -71,25 +72,28 @@ class Module extends BaseModule {
 		return $this->repository;
 	}
 
-	public function get_admin_page(): Admin_Page {
-		if ( ! $this->admin_page ) {
-			$this->admin_page = new Admin_Page( $this->get_repository() );
+	public function get_textures(): Textures_Repository {
+		if ( ! $this->textures ) {
+			$this->textures = new Textures_Repository();
 		}
 
-		return $this->admin_page;
+		return $this->textures;
 	}
 
-	public function register_menu( Menu_Data_Provider $menu_data_provider ): void {
-		$menu_data_provider->register_menu( new Editor_One_My_Shapes_Menu() );
+	public function get_library(): Editor_Library {
+		if ( ! $this->library ) {
+			$this->library = new Editor_Library( $this->get_repository(), $this->get_textures() );
+		}
+
+		return $this->library;
 	}
 
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'refraction/editor-one/menu/register', [ $this, 'register_menu' ] );
-
-		if ( is_admin() ) {
-			$this->get_admin_page();
+		// My Shapes and grain textures are managed from the editor (no admin page).
+		if ( wp_doing_ajax() ) {
+			$this->get_library();
 		}
 
 		add_action( 'refraction/element/container/section_shape_divider/after_section_end', [ $this, 'container_controls' ] );
@@ -99,6 +103,20 @@ class Module extends BaseModule {
 		add_action( 'refraction/frontend/after_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_action( 'refraction/preview/enqueue_scripts', [ $this, 'enqueue' ] );
 		add_action( 'refraction/editor/after_enqueue_styles', [ $this, 'editor_styles' ] );
+		add_action( 'refraction/editor/after_enqueue_scripts', [ $this, 'editor_scripts' ] );
+	}
+
+	/** The editor's library dialog (shapes and grain textures). */
+	public function editor_scripts() {
+		$min = Utils::is_script_debug() ? '' : '.min';
+		wp_enqueue_script( 'refraction-organic-fx-editor', REFRACTION_ASSETS_URL . 'js/organic-fx-editor' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
+		wp_localize_script( 'refraction-organic-fx-editor', 'refractionOrganicEditor', [
+			'ajax' => admin_url( 'admin-ajax.php' ),
+			'nonce' => wp_create_nonce( Editor_Library::NONCE ),
+			'can' => current_user_can( self::capability() ),
+			'shapes' => $this->get_library()->shapes_payload(),
+			'textures' => $this->get_textures()->for_script(),
+		] );
 	}
 
 	public function register_assets() {
@@ -117,13 +135,22 @@ class Module extends BaseModule {
 		wp_enqueue_style( self::SCRIPT );
 		wp_enqueue_script( self::SCRIPT );
 
-		$mine = $this->get_repository()->all();
+		if ( $this->inline_added ) {
+			return;
+		}
 
-		if ( $mine && ! $this->inline_added ) {
-			$this->inline_added = true;
+		$this->inline_added = true;
+		$mine = $this->get_repository()->all();
+		$textures = $this->get_textures()->for_script();
+
+		if ( $mine ) {
 			wp_add_inline_style( self::SCRIPT, Pure_Shape_Store::css( $mine ) );
 			$paths = array_map( static fn( $s ) => [ 'd' => $s['d'], 'vb' => $s['vb'], 'rule' => $s['rule'] ], $mine );
 			wp_add_inline_script( self::SCRIPT, 'window.refractionMyShapes=' . wp_json_encode( $paths ) . ';', 'before' );
+		}
+
+		if ( $textures ) {
+			wp_add_inline_script( self::SCRIPT, 'window.refractionGrainTextures=' . wp_json_encode( array_map( static fn( $t ) => [ 'url' => $t['url'], 'w' => $t['w'], 'h' => $t['h'] ], $textures ) ) . ';', 'before' );
 		}
 	}
 
@@ -228,14 +255,17 @@ class Module extends BaseModule {
 		] + $picker );
 
 		$mine_choices = $this->mine_choices();
+		$element->add_control( $mine . '_upload', [
+			'type' => Controls_Manager::BUTTON,
+			'label' => esc_html__( 'Your shapes', 'refraction' ),
+			'text' => esc_html__( 'Upload or manage', 'refraction' ),
+			'event' => 'refraction:organicLibrary:' . $mine,
+			'description' => esc_html__( 'Add an SVG (a file or pasted code), rename or delete your shapes. Only the outline is kept.', 'refraction' ),
+			'condition' => array_merge( $extra['condition'] ?? [], [ $source => 'mine' ] ),
+		] );
 		$element->add_control( $mine, [
 			'label' => esc_html__( 'Uploaded shapes', 'refraction' ),
 			'options' => $mine_choices,
-			'description' => sprintf(
-				/* translators: %s: link to Refraction > My Shapes. */
-				esc_html__( 'Your shapes from %s.', 'refraction' ),
-				'<a href="' . esc_url( admin_url( 'admin.php?page=' . Admin_Page::SLUG ) ) . '" target="_blank">' . esc_html__( 'Refraction > My Shapes', 'refraction' ) . '</a>'
-			) . ( $mine_choices ? '' : ' ' . esc_html__( 'None uploaded yet.', 'refraction' ) ),
 			'condition' => array_merge( $extra['condition'] ?? [], [ $source => 'mine' ] ),
 		] + $picker );
 
@@ -270,6 +300,7 @@ class Module extends BaseModule {
 				'bottom' => [ 'title' => esc_html__( 'Bottom', 'refraction' ), 'icon' => 'rficon-v-align-bottom' ],
 			],
 			'selectors_dictionary' => [ 'top' => '0', 'middle' => '0.5', 'bottom' => '1' ],
+			'description' => esc_html__( 'Positions move the shape within the room Width and Height leave free. At 100% or more there is no room that way: use Offset X / Y to push it, or lower Width / Height.', 'refraction' ),
 			'selectors' => [ $target => '--' . str_replace( '_', '-', $p ) . 'ay: {{VALUE}};' ],
 		] + $show );
 	}
@@ -454,15 +485,63 @@ class Module extends BaseModule {
 		$element->end_controls_section();
 	}
 
+	/** Grain textures: the built-in ones (drawn by organic-fx.js) and the uploaded ones (tex-<slug>). */
+	private function texture_options(): array {
+		$out = [
+			'film' => esc_html__( 'Film grain (classic)', 'refraction' ),
+			'speckle' => esc_html__( 'Speckle', 'refraction' ),
+			'chalk' => esc_html__( 'Distressed chalk', 'refraction' ),
+			'brush' => esc_html__( 'Dry brush', 'refraction' ),
+			'fibre' => esc_html__( 'Paper fibre', 'refraction' ),
+			'halftone' => esc_html__( 'Halftone dots', 'refraction' ),
+			'dispersion' => esc_html__( 'Dispersion (stipple fade)', 'refraction' ),
+			'strokes' => esc_html__( 'Brush strokes', 'refraction' ),
+			'splatter' => esc_html__( 'Grunge splatter', 'refraction' ),
+			'scratches' => esc_html__( 'Scratches', 'refraction' ),
+		];
+
+		foreach ( $this->get_textures()->for_script() as $id => $t ) {
+			/* translators: %s: name of an uploaded texture. */
+			$out[ $id ] = sprintf( esc_html__( 'Uploaded: %s', 'refraction' ), $t['name'] );
+		}
+
+		return $out;
+	}
+
 	private function grain_section( $element ): void {
-		$layer = '{{WRAPPER}} > .rf-ofx-grain, {{WRAPPER}} > .e-con-inner > .rf-ofx-grain';
+		$layer = '{{WRAPPER}} > .rf-ofx-grain, {{WRAPPER}} > .e-con-inner > .rf-ofx-grain, {{WRAPPER}} > .rf-ofx-fill > .rf-ofx-grain';
 		$on = [ 'rf_grain' => 'yes' ];
+		$live = [ 'frontend_available' => true, 'render_type' => 'template' ];
 
 		$element->start_controls_section( 'section_rf_grain', [ 'label' => esc_html__( 'Grain', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
-		$element->add_control( 'rf_grain', [ 'label' => esc_html__( 'Film Grain', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'A fine speckle over the background, like printed paper or film.', 'refraction' ), 'frontend_available' => true, 'render_type' => 'template' ] );
-		$element->add_control( 'rf_grain_amount', [ 'label' => esc_html__( 'Amount', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.02, 'max' => 1, 'step' => 0.01 ] ], 'default' => [ 'size' => 0.25 ], 'selectors' => [ $layer => 'opacity: {{SIZE}};' ], 'condition' => $on ] );
-		$element->add_control( 'rf_grain_size', [ 'label' => esc_html__( 'Grain Size', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'fine', 'options' => [ 'fine' => esc_html__( 'Fine', 'refraction' ), 'medium' => esc_html__( 'Medium', 'refraction' ), 'coarse' => esc_html__( 'Coarse', 'refraction' ) ], 'frontend_available' => true, 'render_type' => 'template', 'condition' => $on ] );
-		$element->add_control( 'rf_grain_pattern', [ 'label' => esc_html__( 'Pattern', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 999, 'default' => 0, 'description' => esc_html__( '0: every element its own speckle. Any other number fixes the pattern.', 'refraction' ), 'frontend_available' => true, 'render_type' => 'template', 'condition' => $on ] );
+		$element->add_control( 'rf_grain', [ 'label' => esc_html__( 'Grain On Container Fill', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'A texture over the container background, under its content. The texture, colour and size also dress a Deco Blob with grain.', 'refraction' ) ] + $live );
+		$element->add_control( 'rf_grain_texture', [
+			'label' => esc_html__( 'Texture', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'film',
+			'options' => $this->texture_options(),
+			'description' => esc_html__( 'Pictures you upload are turned into ink (their dark parts) and show here as Uploaded.', 'refraction' ),
+		] + $live );
+		$element->add_control( 'rf_grain_texture_upload', [
+			'type' => Controls_Manager::BUTTON,
+			'label' => esc_html__( 'Your textures', 'refraction' ),
+			'text' => esc_html__( 'Upload or manage', 'refraction' ),
+			'event' => 'refraction:organicTextures',
+		] );
+		$element->add_control( 'rf_grain_fade', [
+			'label' => esc_html__( 'Fade From', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'None', 'refraction' ), 'left' => esc_html__( 'Left', 'refraction' ), 'right' => esc_html__( 'Right', 'refraction' ), 'top' => esc_html__( 'Top', 'refraction' ), 'bottom' => esc_html__( 'Bottom', 'refraction' ), 'center' => esc_html__( 'Centre', 'refraction' ) ],
+			'description' => esc_html__( 'The grain is densest on this side and fades out across the element. Dispersion fades from the left unless you choose another side.', 'refraction' ),
+		] + $live );
+		$element->add_control( 'rf_grain_reach', [ 'label' => esc_html__( 'Fade Reach (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 5, 'max' => 100 ] ], 'default' => [ 'size' => 70 ] ] + $live );
+		$element->add_control( 'rf_grain_color', [ 'label' => esc_html__( 'Grain Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'global' => [ 'active' => false ], 'description' => esc_html__( 'Empty: dark ink (the classic film grain stays grey).', 'refraction' ) ] + $live );
+		$element->add_control( 'rf_grain_amount', [ 'label' => esc_html__( 'Grain Amount', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.02, 'max' => 1, 'step' => 0.01 ] ], 'default' => [ 'size' => 0.25 ], 'selectors' => [ $layer => 'opacity: {{SIZE}};' ], 'condition' => $on ] );
+		$element->add_control( 'rf_grain_scale', [ 'label' => esc_html__( 'Grain Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 1, 'max' => 100 ] ], 'default' => [ 'size' => 50 ], 'description' => esc_html__( 'Higher = coarser patches, lower = finer.', 'refraction' ) ] + $live );
+		// The 0.68 size select, kept hidden so a saved Medium or Coarse still reaches the script.
+		$element->add_control( 'rf_grain_size', [ 'type' => Controls_Manager::HIDDEN, 'default' => '' ] + $live );
+		$element->add_control( 'rf_grain_pattern', [ 'label' => esc_html__( 'Pattern', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 999, 'default' => 0, 'description' => esc_html__( '0 gives every element its own random speckle. Any other number fixes the pattern.', 'refraction' ) ] + $live );
 		$element->add_control( 'rf_grain_blend', [ 'label' => esc_html__( 'Blend', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'multiply', 'options' => [ 'multiply' => esc_html__( 'Darken (multiply)', 'refraction' ), 'overlay' => esc_html__( 'Overlay', 'refraction' ), 'soft-light' => esc_html__( 'Soft light', 'refraction' ), 'screen' => esc_html__( 'Lighten (screen)', 'refraction' ), 'normal' => esc_html__( 'Normal', 'refraction' ) ], 'selectors' => [ $layer => 'mix-blend-mode: {{VALUE}};' ], 'condition' => $on ] );
 		$element->add_control( 'rf_grain_over', [ 'label' => esc_html__( 'Also Over The Content', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'prefix_class' => 'rf-grain-over-', 'condition' => $on ] );
 		$element->end_controls_section();
