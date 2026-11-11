@@ -359,3 +359,200 @@
 		transition-duration: 0s !important;
 	}
 }
+
+// ---------------------------------------------------------------- Slide Titles
+// The slides' titles as buttons beside (left, right) or above / below (top, bottom) the slides. The slides, arrows,
+// dots and pause button sit in .refraction-nc__stage, so the arrows stay centred on the slides.
+
+.refraction-nc.has-titles {
+	--rf-nc-titles-w: 240px;
+	--rf-nc-titles-gap: 24px;
+
+	display: grid;
+	gap: var(--rf-nc-titles-gap);
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.refraction-nc__stage {
+	position: relative;
+	min-width: 0;
+}
+
+.refraction-nc__titles {
+	--rf-nc-titles-align: stretch;
+
+	display: flex;
+	flex-direction: column;
+	align-items: var(--rf-nc-titles-align);
+	gap: 6px;
+	min-width: 0;
+	scrollbar-width: thin;
+}
+
+.refraction-nc__title {
+	--rf-nc-marker: currentcolor;
+	--rf-nc-marker-w: 3px;
+	--rf-nc-title-t: 0.25s;
+
+	position: relative;
+	display: flex;
+	align-items: baseline;
+	gap: 0.6em;
+	flex: 0 0 auto;
+	margin: 0;
+	padding: 12px 16px;
+	border: 0 solid transparent;
+	border-radius: 8px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	line-height: 1.35;
+	text-align: start;
+	cursor: pointer;
+	opacity: 0.7;
+	transition: color var(--rf-nc-title-t) ease, background-color var(--rf-nc-title-t) ease, border-color var(--rf-nc-title-t) ease, opacity var(--rf-nc-title-t) ease;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 1;
+		background-color: rgba(120, 120, 140, 0.1);
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentcolor;
+		outline-offset: 2px;
+	}
+
+	&.is-active {
+		opacity: 1;
+		background-color: rgba(120, 120, 140, 0.14);
+	}
+
+	// The marker: a bar on the side that faces the slides.
+	&::after {
+		content: "";
+		position: absolute;
+		inset-block: 8px;
+		inset-inline-end: 0;
+		width: var(--rf-nc-marker-w);
+		border-radius: var(--rf-nc-marker-w);
+		background: var(--rf-nc-marker);
+		opacity: 0;
+		transform: scale(1, 0.4);
+		transition: opacity var(--rf-nc-title-t) ease, transform var(--rf-nc-title-t) ease;
+	}
+
+	&.is-active::after {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.refraction-nc__title-num {
+	font-variant-numeric: tabular-nums;
+	opacity: 0.6;
+}
+
+// Left / right: a column beside the slides, as tall as they are (it scrolls when longer).
+.refraction-nc-titles-left .refraction-nc.has-titles {
+	grid-template-columns: var(--rf-nc-titles-w) minmax(0, 1fr);
+}
+
+.refraction-nc-titles-right .refraction-nc.has-titles {
+	grid-template-columns: minmax(0, 1fr) var(--rf-nc-titles-w);
+}
+
+.refraction-nc-titles-left,
+.refraction-nc-titles-right {
+
+	.refraction-nc__titles {
+		contain: size;
+		overflow-y: auto;
+		align-self: stretch;
+	}
+}
+
+.refraction-nc-titles-right .refraction-nc__titles {
+	order: 2;
+}
+
+.refraction-nc-titles-right .refraction-nc__title::after {
+	inset-inline: 0 auto;
+}
+
+// Top / bottom: a row that scrolls sideways when it does not fit.
+.refraction-nc-titles-top,
+.refraction-nc-titles-bottom {
+
+	.refraction-nc__titles {
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: var(--rf-nc-titles-align);
+		overflow-x: auto;
+	}
+
+	.refraction-nc__title::after {
+		inset-block: auto 0;
+		inset-inline: 12px;
+		width: auto;
+		height: var(--rf-nc-marker-w);
+		transform: scale(0.4, 1);
+	}
+}
+
+.refraction-nc-titles-bottom .refraction-nc__titles {
+	order: 2;
+}
+
+.refraction-nc-titles-bottom .refraction-nc__title::after {
+	inset-block: 0 auto;
+}
+
+// Titles On Phones.
+@media (max-width: 767px) {
+
+	.refraction-nc-titles-m-hide .refraction-nc__titles {
+		display: none;
+	}
+
+	.refraction-nc-titles-m-top,
+	.refraction-nc-titles-m-bottom {
+
+		.refraction-nc.has-titles {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.refraction-nc__titles {
+			contain: none;
+			flex-direction: row;
+			align-items: stretch;
+			justify-content: flex-start;
+			order: 0;
+			overflow-x: auto;
+			overflow-y: visible;
+		}
+
+		.refraction-nc__title::after {
+			inset-block: auto 0;
+			inset-inline: 12px;
+			width: auto;
+			height: var(--rf-nc-marker-w);
+		}
+	}
+
+	.refraction-nc-titles-m-bottom .refraction-nc__titles {
+		order: 2;
+	}
+
+	.refraction-nc-titles-m-bottom .refraction-nc__title::after {
+		inset-block: 0 auto;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.refraction-nc__title,
+	.refraction-nc__title::after {
+		transition: none;
+	}
+}
