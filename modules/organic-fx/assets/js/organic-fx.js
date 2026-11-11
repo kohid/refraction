@@ -136,22 +136,165 @@ import { SHAPES } from './shapes-data';
 		return d;
 	}
 
-	function grainUrl( seed, grainSize ) {
-		const freq = { fine: 0.9, medium: 0.62, coarse: 0.4 }[ grainSize ] || 0.9;
-		const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="${ freq }" numOctaves="3" seed="${ seed % 1000 }" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>`;
+	// ----------------------------------------------------------------- grain textures
+
+	/**
+	 * A colour setting as [ r, g, b ] (0-1), or null. Accepts #rgb, #rrggbb, #rrggbbaa and rgb()/rgba().
+	 *
+	 * @param {string} c Colour.
+	 */
+	function rgb( c ) {
+		const v = String( c || '' ).trim();
+		let m = /^#([0-9a-f]{3})$/i.exec( v );
+
+		if ( m ) {
+			return m[ 1 ].split( '' ).map( ( h ) => parseInt( h + h, 16 ) / 255 );
+		}
+
+		m = /^#([0-9a-f]{6})(?:[0-9a-f]{2})?$/i.exec( v );
+
+		if ( m ) {
+			return [ 0, 2, 4 ].map( ( i ) => parseInt( m[ 1 ].slice( i, i + 2 ), 16 ) / 255 );
+		}
+
+		m = /^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i.exec( v );
+
+		return m ? [ m[ 1 ], m[ 2 ], m[ 3 ] ].map( ( n ) => Math.min( 255, Number( n ) ) / 255 ) : null;
+	}
+
+	const fx = ( n ) => Number( n.toFixed( 4 ) );
+
+	/**
+	 * The filter pieces of one texture. Every texture ends in a result painted in the ink colour whose alpha comes
+	 * from noise: alpha = a x noise + b, so a steep a with a negative b keeps only the peaks (specks, streaks).
+	 *
+	 * @param {string} t    Texture.
+	 * @param {number} k    Frequency multiplier from Grain Size.
+	 * @param {number} seed Pattern.
+	 * @param {Array}  ink  [ r, g, b ].
+	 */
+	function textureFilter( t, k, seed, ink ) {
+		const noise = ( id, fxy, oct, type = 'fractalNoise' ) => `<feTurbulence type="${ type }" baseFrequency="${ fxy.map( ( f ) => fx( f * k ) ).join( ' ' ) }" numOctaves="${ oct }" seed="${ seed }" stitchTiles="stitch" result="${ id }"/>`;
+		const paint = ( from, id, a, b ) => `<feColorMatrix in="${ from }" type="matrix" values="0 0 0 0 ${ fx( ink[ 0 ] ) } 0 0 0 0 ${ fx( ink[ 1 ] ) } 0 0 0 0 ${ fx( ink[ 2 ] ) } ${ a } 0 0 0 ${ b }" result="${ id }"/>`;
+		const merge = ( ...ids ) => `<feMerge>${ ids.map( ( id ) => `<feMergeNode in="${ id }"/>` ).join( '' ) }</feMerge>`;
+
+		switch ( t ) {
+			case 'speckle':
+				return noise( 'n', [ 0.65, 0.65 ], 2 ) + paint( 'n', 'o', 10, -6.1 );
+			case 'dispersion':
+				return noise( 'n', [ 0.9, 0.9 ], 2 ) + paint( 'n', 'o', 12, -7.4 );
+			case 'chalk':
+				return noise( 'p', [ 0.03, 0.03 ], 5 ) + paint( 'p', 'pa', 7, -3.3 ) + noise( 'q', [ 0.8, 0.8 ], 2 ) + paint( 'q', 'qa', 4, -1.6 ) + '<feComposite in="pa" in2="qa" operator="in"/>';
+			case 'brush':
+				return noise( 'n', [ 0.004, 0.18 ], 3 ) + paint( 'n', 'o', 8, -4.1 );
+			case 'fibre':
+				return noise( 'a', [ 0.6, 0.012 ], 2 ) + paint( 'a', 'aa', 9, -5.3 ) + noise( 'b', [ 0.012, 0.6 ], 2 ) + paint( 'b', 'ba', 9, -5.3 ) + merge( 'aa', 'ba' );
+			case 'strokes':
+				return noise( 'n', [ 0.012, 0.09 ], 2 ) + paint( 'n', 'o', 14, -7.6 );
+			case 'splatter':
+				return noise( 'a', [ 0.025, 0.025 ], 3 ) + paint( 'a', 'aa', 16, -10.4 ) + noise( 'b', [ 0.5, 0.5 ], 2 ) + paint( 'b', 'ba', 14, -10.2 ) + merge( 'aa', 'ba' );
+			case 'scratches':
+				return noise( 'a', [ 0.002, 0.9 ], 1 ) + paint( 'a', 'aa', 22, -14.6 ) + noise( 'b', [ 0.9, 0.002 ], 1 ) + paint( 'b', 'ba', 22, -14.6 ) + merge( 'aa', 'ba' );
+			default: // Film grain in a colour.
+				return noise( 'n', [ 0.9, 0.9 ], 3 ) + paint( 'n', 'o', 1.6, -0.4 );
+		}
+	}
+
+	/**
+	 * A seamless tile of a built-in texture, as a CSS url().
+	 *
+	 * @param {string} t Texture.
+	 * @param {Object} o { seed, scale (1-100, 50 = the classic size), color }.
+	 */
+	function textureUrl( t, o ) {
+		const k = Math.pow( 2, ( 50 - o.scale ) / 25 );
+		const seed = o.seed % 1000;
+		const ink = rgb( o.color );
+		let svg;
+
+		if ( 'film' === t && ! ink ) {
+			// The 0.68 grain: grey noise, darkening through its blend mode.
+			svg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="${ fx( 0.9 * k ) }" numOctaves="3" seed="${ seed }" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>`;
+		} else if ( 'halftone' === t ) {
+			const d = Math.max( 4, Math.round( 9 / k ) );
+			const tile = d * 24;
+			const c = ink || [ 0.12, 0.12, 0.12 ];
+			const fill = `rgb(${ c.map( ( v ) => Math.round( v * 255 ) ).join( ',' ) })`;
+			svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${ tile }" height="${ tile }"><defs><pattern id="p" width="${ d }" height="${ d }" patternUnits="userSpaceOnUse"><circle cx="${ d / 2 }" cy="${ d / 2 }" r="${ fx( d * 0.34 ) }" fill="${ fill }"/></pattern><filter id="n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${ fx( 0.02 * k ) }" numOctaves="3" seed="${ seed }" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 4 0 0 0 -1.6"/></filter><mask id="m"><rect width="100%" height="100%" filter="url(#n)"/></mask></defs><rect width="100%" height="100%" fill="url(#p)" mask="url(#m)"/></svg>`;
+		} else {
+			svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><filter id="n" x="0" y="0" width="100%" height="100%">${ textureFilter( t, k, seed, ink || [ 0.12, 0.12, 0.12 ] ) }</filter><rect width="100%" height="100%" filter="url(#n)"/></svg>`;
+		}
 
 		return `url("data:image/svg+xml,${ encodeURIComponent( svg ) }")`;
 	}
 
+	const FADES = {
+		left: ( r ) => `linear-gradient(to right, #000 0%, transparent ${ r }%)`,
+		right: ( r ) => `linear-gradient(to left, #000 0%, transparent ${ r }%)`,
+		top: ( r ) => `linear-gradient(to bottom, #000 0%, transparent ${ r }%)`,
+		bottom: ( r ) => `linear-gradient(to top, #000 0%, transparent ${ r }%)`,
+		center: ( r ) => `radial-gradient(closest-side, #000 0%, transparent ${ r }%)`,
+	};
+
+	/**
+	 * A grain layer: the texture, its colour and size, the fade, and inside a blob the blob's shape. The masks are
+	 * stacked (intersected), so an uploaded texture can fade and stay inside a blob too.
+	 *
+	 * @param {Element} el     The element.
+	 * @param {Object}  s      Settings.
+	 * @param {boolean} inBlob A blob's grain.
+	 */
 	function grainLayer( el, s, inBlob ) {
 		const g = layer( 'rf-ofx-grain', false );
 		const pattern = int( s.rf_grain_pattern, 0 );
 		const seed = inBlob || ! pattern ? hash( el.getAttribute( 'data-id' ) || 'rf' ) : pattern;
+		const texture = s.rf_grain_texture || 'film';
+		let scale = Math.max( 1, Math.min( 100, size( s.rf_grain_scale, 50 ) ) );
 
-		g.style.backgroundImage = grainUrl( seed, inBlob ? 'medium' : s.rf_grain_size );
+		// A 0.68 page saved with Medium or Coarse, never given a Grain Size.
+		if ( 50 === scale && ( { medium: 64, coarse: 80 } )[ s.rf_grain_size ] ) {
+			scale = ( { medium: 64, coarse: 80 } )[ s.rf_grain_size ];
+		}
+
+		if ( inBlob && ! s.rf_grain_texture && ! s.rf_grain_size ) {
+			scale = 64; // The blob's grain was a little coarser in 0.68.
+		}
+
+		const masks = [];
+		const uploaded = ( window.refractionGrainTextures || {} )[ texture ];
+
+		if ( 0 === texture.indexOf( 'tex-' ) && uploaded ) {
+			g.style.backgroundColor = s.rf_grain_color || '#1E1E1E';
+			masks.push( [ `url("${ encodeURI( uploaded.url ) }")`, `${ Math.round( ( uploaded.w || 400 ) * scale / 50 ) }px auto`, 'repeat' ] );
+		} else {
+			g.style.backgroundImage = textureUrl( TEXTURES.includes( texture ) ? texture : 'film', { seed, scale, color: s.rf_grain_color } );
+		}
+
+		const fade = s.rf_grain_fade || ( 'dispersion' === texture ? 'left' : '' );
+
+		if ( FADES[ fade ] ) {
+			masks.push( [ FADES[ fade ]( Math.max( 5, Math.min( 100, size( s.rf_grain_reach, 70 ) ) ) ), '100% 100%', 'no-repeat' ] );
+		}
+
+		if ( inBlob ) {
+			masks.push( [ 'var(--rf-shape)', '100% 100%', 'no-repeat' ] );
+		}
+
+		if ( masks.length ) {
+			[ 'mask', '-webkit-mask' ].forEach( ( p ) => {
+				g.style.setProperty( p + '-image', masks.map( ( m ) => m[ 0 ] ).join( ', ' ) );
+				g.style.setProperty( p + '-size', masks.map( ( m ) => m[ 1 ] ).join( ', ' ) );
+				g.style.setProperty( p + '-repeat', masks.map( ( m ) => m[ 2 ] ).join( ', ' ) );
+				g.style.setProperty( p + '-position', masks.map( () => '0 0' ).join( ', ' ) );
+			} );
+			g.style.setProperty( 'mask-composite', masks.map( () => 'intersect' ).join( ', ' ) );
+			g.style.setProperty( '-webkit-mask-composite', masks.map( () => 'source-in' ).join( ', ' ) );
+		}
 
 		return g;
 	}
+
+	const TEXTURES = [ 'film', 'speckle', 'chalk', 'brush', 'fibre', 'halftone', 'dispersion', 'strokes', 'splatter', 'scratches' ];
 
 	// ----------------------------------------------------------------- deco blob
 

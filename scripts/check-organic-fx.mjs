@@ -78,15 +78,6 @@ function page( title, data ) {
 const HEART = '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><script>window.pwned=1</script><path onload="window.pwned=2" fill="red" d="M12 21C5 16 2 12.5 2 8.5C2 5.5 4.5 3 7.5 3C9.5 3 11 4 12 5.5C13 4 14.5 3 16.5 3C19.5 3 22 5.5 22 8.5C22 12.5 19 16 12 21Z"/></svg>';
 const RING = '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>';
 
-// Submits a form and waits for the page it redirects to (a new document, not the old one still loading).
-async function submit( p, selector ) {
-	await p.evaluate( () => {
-		window.__rfOld = true;
-	} );
-	await p.click( selector );
-	await p.waitForFunction( () => ! window.__rfOld && 'complete' === document.readyState, null, { timeout: 60000 } );
-}
-
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) {
 		throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` );
@@ -110,44 +101,123 @@ async function main() {
 	try {
 		wp( [ 'option', 'delete', 'refraction_my_shapes' ] );
 
-		// ---- My Shapes admin page
-		const ctx = await browser.newContext( { viewport: { width: 1400, height: 950 } } );
+		// ---- My Shapes and grain textures in the editor (no admin page)
+		wp( [ 'option', 'delete', 'refraction_grain_textures' ] );
+		const ctx = await browser.newContext( { viewport: { width: 1500, height: 950 } } );
 		const a = await ctx.newPage();
 		watch( a );
 		await a.goto( `${ BASE }/wp-login.php` );
 		await a.fill( '#user_login', 'admin' );
 		await a.fill( '#user_pass', 'admin' );
 		await Promise.all( [ a.waitForURL( /wp-admin/, { timeout: 120000 } ), a.click( '#wp-submit' ) ] );
-		await a.goto( `${ BASE }/wp-admin/admin.php?page=refraction-my-shapes` );
-		check( 'admin', 'Refraction > My Shapes opens, empty at first', /My Shapes/.test( await a.locator( 'h1' ).innerText() ) && await a.locator( '.rf-ms-admin__empty' ).isVisible() );
 		const menu = await a.locator( '#adminmenu a[href*="refraction-my-shapes"]' ).count();
-		check( 'admin', 'it is in the Refraction menu', menu > 0, menu );
+		const oldPage = await ( await fetch( `${ BASE }/wp-admin/admin.php?page=refraction-my-shapes`, { redirect: 'manual' } ) ).status;
+		check( 'library', 'no My Shapes page in the WordPress menu any more', 0 === menu, JSON.stringify( [ menu, oldPage ] ) );
 
-		await a.fill( '#rf-ms-new-name', 'Heart' );
-		await a.setInputFiles( '#rf-ms-file', { name: 'heart.svg', mimeType: 'image/svg+xml', buffer: Buffer.from( HEART ) } );
-		await submit( a, '.rf-ms-admin__add button[type=submit]' );
-		await a.waitForSelector( '.rf-ms-admin__notice' );
-		const added = await a.evaluate( () => ( { notice: document.querySelector( '.rf-ms-admin__notice' ).className, shapes: [ ...document.querySelectorAll( '.rf-ms-admin__shape' ) ].map( ( s ) => s.dataset.shape ), preview: document.querySelector( '.rf-ms-admin__preview' )?.innerHTML, pwned: window.pwned } ) );
-		check( 'admin', 'an SVG file is added as my-heart, previewed, its script and handlers dropped', /success/.test( added.notice ) && 'my-heart' === added.shapes.join() && /<path/.test( added.preview ) && ! /script|onload|red/.test( added.preview ) && undefined === added.pwned, JSON.stringify( added ) );
+		const p0 = page( 'Library', [ con( 'lib0001', { background_color: '#3858E9' }, [ w( 'lib0002', 'heading', { title: 'Library' } ) ] ) ] );
+		await a.goto( `${ BASE }/wp-admin/post.php?post=${ p0.id }&action=refraction` );
+		await a.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
+		await sleep( 2500 );
+		const openSection = ( id, sec, settings ) => a.evaluate( async ( [ cid, section, set ] ) => {
+			const c = window.refraction.getContainer( cid );
+			window.$e.run( 'document/elements/select', { container: c } );
+			if ( set ) {
+				window.$e.run( 'document/elements/settings', { container: c, settings: set } );
+			}
+			await new Promise( ( r ) => setTimeout( r, 1200 ) );
+			const v = window.refraction.getPanelView().getCurrentPageView();
+			v.activateTab( 'style' );
+			v.activateSection( section );
+			v._renderChildren();
+		}, [ id, sec, settings ] );
+		await openSection( 'lib0001', 'section_rf_mask', { rf_mask_source: 'mine' } );
+		await sleep( 600 );
+		await a.click( '.refraction-control-rf_mask_mine_upload button' );
+		await a.waitForSelector( '.rf-lib__box' );
+		await a.setInputFiles( '.rf-lib__drop input[type=file]', { name: 'heart.svg', mimeType: 'image/svg+xml', buffer: Buffer.from( HEART ) } );
+		await a.fill( '#rf-lib-name', 'Heart' );
+		await a.click( '.rf-lib__go' );
+		await a.waitForSelector( '.rf-lib__item[data-id="my-heart"]' );
+		await sleep( 1500 );
+		const added = await a.evaluate( () => ( {
+			item: document.querySelector( '.rf-lib__item[data-id="my-heart"] img' )?.getAttribute( 'src' ),
+			setting: [ window.refraction.getContainer( 'lib0001' ).settings.get( 'rf_mask_source' ), window.refraction.getContainer( 'lib0001' ).settings.get( 'rf_mask_mine' ) ],
+			pwned: window.pwned,
+		} ) );
+		const livePreview = await a.frame( { name: 'refraction-preview-iframe' } ).evaluate( () => {
+			const el = document.querySelector( '[data-id="lib0001"]' );
+			return { cls: el.classList.contains( 'rf-mask--my-heart' ), mask: /data:image/.test( getComputedStyle( el ).maskImage || getComputedStyle( el ).webkitMaskImage ), pwned: window.pwned };
+		} );
+		check( 'library', 'Uploaded tab > Upload or manage: an SVG file is added as my-heart, shown, picked for the container and masking it at once (no reload); its script never runs', /data:image\/svg/.test( added.item ) && 'mine,my-heart' === added.setting.join() && livePreview.cls && livePreview.mask && undefined === added.pwned && undefined === livePreview.pwned, JSON.stringify( [ added, livePreview ] ) );
 		const stored = JSON.parse( wp( [ 'option', 'get', 'refraction_my_shapes', '--format=json' ] ) );
-		check( 'admin', 'only path data, viewBox and fill rule are stored', '0 0 24 24' === stored[ 'my-heart' ].vb && /^M12 21C/.test( stored[ 'my-heart' ].d ) && ! /script/.test( JSON.stringify( stored ) ), JSON.stringify( stored ).slice( 0, 200 ) );
+		check( 'library', 'only path data, viewBox and fill rule are stored', '0 0 24 24' === stored[ 'my-heart' ].vb && /^M12 21C/.test( stored[ 'my-heart' ].d ) && ! /script|onload/.test( JSON.stringify( stored ) ), JSON.stringify( stored ).slice( 0, 200 ) );
 
-		await a.fill( '#rf-ms-new-name', 'Ring' );
-		await a.fill( '#rf-ms-code', RING );
-		await submit( a, '.rf-ms-admin__add button[type=submit]' );
-		await a.fill( '#rf-ms-code', '<svg><text>nothing</text></svg>' );
-		await submit( a, '.rf-ms-admin__add button[type=submit]' );
-		const bad = await a.evaluate( () => ( { notice: document.querySelector( '.rf-ms-admin__notice' )?.className, count: document.querySelectorAll( '.rf-ms-admin__shape' ).length } ) );
-		check( 'admin', 'pasted code adds a shape (a circle); an SVG with no shape is refused with a message', /error/.test( bad.notice ) && 2 === bad.count, JSON.stringify( bad ) );
+		await a.fill( '#rf-lib-name', 'Ring' );
+		await a.fill( '#rf-lib-code', RING );
+		await a.click( '.rf-lib__go' );
+		await a.waitForSelector( '.rf-lib__item[data-id="my-ring"]' );
+		await a.fill( '#rf-lib-code', '<svg><text>nothing</text></svg>' );
+		await a.click( '.rf-lib__go' );
+		await a.waitForSelector( '.rf-lib__msg.is-error' );
+		const bad = await a.evaluate( () => ( { msg: document.querySelector( '.rf-lib__msg' ).textContent, count: document.querySelectorAll( '.rf-lib__item' ).length } ) );
+		check( 'library', 'pasted code adds a shape (a circle); an SVG with no shape is refused with a message', /No shape found/.test( bad.msg ) && 2 === bad.count, JSON.stringify( bad ) );
 
-		await a.fill( '[data-shape="my-ring"] input[name=shape_name]', 'Halo' );
-		await submit( a, '[data-shape="my-ring"] .rf-ms-admin__rename button' );
-		const renamed = await a.inputValue( '[data-shape="my-ring"] input[name=shape_name]' );
+		await a.fill( '.rf-lib__item[data-id="my-ring"] input[type=text]', 'Halo' );
+		await a.press( '.rf-lib__item[data-id="my-ring"] input[type=text]', 'Tab' );
+		await sleep( 1200 );
+		const renamed = JSON.parse( wp( [ 'option', 'get', 'refraction_my_shapes', '--format=json' ] ) )[ 'my-ring' ]?.name;
 		a.once( 'dialog', ( dlg ) => dlg.accept() );
-		await submit( a, '[data-shape="my-ring"] .rf-ms-admin__delete' );
-		const left = await a.evaluate( () => [ ...document.querySelectorAll( '.rf-ms-admin__shape' ) ].map( ( s ) => s.dataset.shape ).join() );
-		check( 'admin', 'a shape can be renamed and deleted', 'Halo' === renamed && 'my-heart' === left, JSON.stringify( [ renamed, left ] ) );
-		await a.screenshot( { path: join( SHOTS, 'my-shapes.png' ), fullPage: true } );
+		await a.click( '.rf-lib__item[data-id="my-ring"] .rf-lib__del' );
+		await a.waitForFunction( () => ! document.querySelector( '.rf-lib__item[data-id="my-ring"]' ) );
+		const mineTiles = await a.evaluate( () => [ ...document.querySelectorAll( '.refraction-control-rf_mask_mine .refraction-visual-choice-element input' ) ].map( ( i ) => i.value ).join() );
+		check( 'library', 'a shape can be renamed and deleted, and the panel tiles follow', 'Halo' === renamed && 'my-heart' === mineTiles, JSON.stringify( [ renamed, mineTiles ] ) );
+		// Several files dropped at once onto the dialog: all added in turn, the bad one reported by name.
+		await a.evaluate( () => {
+			const dt = new DataTransfer();
+			const svg = ( d ) => `<svg viewBox="0 0 10 10"><path d="${ d }"/></svg>`;
+			dt.items.add( new File( [ svg( 'M0 0H10V10Z' ) ], 'blob-a.svg', { type: 'image/svg+xml' } ) );
+			dt.items.add( new File( [ '<svg><text>x</text></svg>' ], 'empty.svg', { type: 'image/svg+xml' } ) );
+			dt.items.add( new File( [ svg( 'M0 10L5 0L10 10Z' ) ], 'blob-b.svg', { type: 'image/svg+xml' } ) );
+			const box = document.querySelector( '.rf-lib__box' );
+			[ 'dragenter', 'dragover', 'drop' ].forEach( ( type ) => box.dispatchEvent( new DragEvent( type, { bubbles: true, cancelable: true, dataTransfer: dt } ) ) );
+		} );
+		await a.waitForSelector( '.rf-lib__item[data-id="my-blob-b"]', { timeout: 30000 } );
+		await sleep( 500 );
+		const many = await a.evaluate( () => ( {
+			items: [ ...document.querySelectorAll( '.rf-lib__item' ) ].map( ( i ) => i.dataset.id ).join(),
+			fresh: [ ...document.querySelectorAll( '.rf-lib__item.is-new' ) ].map( ( i ) => i.dataset.id ).join(),
+			msg: document.querySelector( '.rf-lib__msg' ).textContent,
+			picked: window.refraction.getContainer( 'lib0001' ).settings.get( 'rf_mask_mine' ),
+		} ) );
+		check( 'library', 'drag and drop several SVGs onto the dialog: each is added under its file name, the first is picked, and a file with no shape is named in the message', 'my-heart,my-blob-a,my-blob-b' === many.items && 'my-blob-a,my-blob-b' === many.fresh && /2 added\. Not added: empty\.svg: No shape found/.test( many.msg ) && 'my-blob-a' === many.picked, JSON.stringify( many ) );
+		await a.screenshot( { path: join( SHOTS, 'library-shapes.png' ) } );
+
+		// Textures tab: a picture becomes ink.
+		await a.click( '.rf-lib__tabs button:nth-child(2)' );
+		const png = await a.evaluate( () => {
+			const c = document.createElement( 'canvas' );
+			c.width = 256;
+			c.height = 256;
+			const x = c.getContext( '2d' );
+			x.fillStyle = '#fff';
+			x.fillRect( 0, 0, 256, 256 );
+			x.fillStyle = '#000';
+			for ( let i = 0; i < 400; i++ ) {
+				x.beginPath();
+				x.arc( ( i * 73 ) % 256, ( i * 151 ) % 256, 1 + ( i % 4 ), 0, 7 );
+				x.fill();
+			}
+			return c.toDataURL( 'image/png' ).split( ',' )[ 1 ];
+		} );
+		await a.setInputFiles( '.rf-lib__drop input[type=file]', { name: 'rough-ink.png', mimeType: 'image/png', buffer: Buffer.from( png, 'base64' ) } );
+		await a.click( '.rf-lib__go' );
+		await a.waitForSelector( '.rf-lib__item[data-id="tex-rough-ink"]' );
+		const tex = JSON.parse( wp( [ 'option', 'get', 'refraction_grain_textures', '--format=json' ] ) );
+		const file = join( WPDIR, 'wp-content/uploads/refraction-grain/rough-ink.png' );
+		const opt = await a.evaluate( () => window.refraction.getContainer( 'lib0001' ).controls?.rf_grain_texture?.options?.[ 'tex-rough-ink' ] );
+		check( 'library', 'Textures tab: a picture is turned into ink, saved as a PNG in uploads and offered as "Uploaded: rough-ink"', 'rough-ink.png' === tex[ 'rough-ink' ]?.file && existsSync( file ) && /Uploaded: rough-ink/.test( opt || '' ), JSON.stringify( [ tex, opt ] ) );
+		await a.screenshot( { path: join( SHOTS, 'library-textures.png' ) } );
+		await a.keyboard.press( 'Escape' );
 
 		// ---- the page
 		const img = { url: `${ BASE }/wp-admin/images/wordpress-logo.png`, id: '' };
@@ -276,6 +346,41 @@ async function main() {
 		check( 'blob flat edge', 'blob Flat edge left: in a clipping layer, pushed 30% past the left side; Flip Vertical mirrors it', panel.clip && panel.clip.cut && panel.clip.left < -( panel.clip.w * 0.25 ) && panel.clip.flip, JSON.stringify( panel.clip ) );
 		await q.screenshot( { path: join( SHOTS, 'panel-page.png' ), fullPage: true } );
 		await q.context().close();
+
+		// ---- Grain: every texture, colour, size, fade, an uploaded texture, and a blob's grain
+		const TEX = [ 'film', 'speckle', 'chalk', 'brush', 'fibre', 'halftone', 'dispersion', 'strokes', 'splatter', 'scratches', 'tex-rough-ink' ];
+		const g = ( id, t, extra = {} ) => ( { id, elType: 'container', isInner: true, settings: { min_height: { unit: 'px', size: 170 }, width: { unit: '%', size: 23 }, background_background: 'classic', background_color: '#F4EFE6', rf_grain: 'yes', rf_grain_texture: t, rf_grain_amount: { size: 0.9 }, rf_grain_blend: 'normal', ...extra }, elements: [ w( id + 'h', 'heading', { title: t, header_size: 'h6' } ) ] } );
+		const p3 = page( 'Grain', [
+			{ id: 'grn0000', elType: 'container', isInner: false, settings: { flex_direction: 'row', flex_wrap: 'wrap', flex_gap: { unit: 'px', column: '12', row: '12', isLinked: true } }, elements: TEX.map( ( t, i ) => g( 'grn' + String( i + 1 ).padStart( 4, '0' ), t ) ) },
+			con( 'grn0100', { background_color: '#263238', rf_grain: 'yes', rf_grain_texture: 'chalk', rf_grain_color: '#FFFFFF', rf_grain_fade: 'left', rf_grain_reach: { size: 60 }, rf_grain_scale: { size: 80 }, rf_grain_amount: { size: 0.8 }, rf_grain_blend: 'normal', rf_blob: 'yes', rf_blob_grain: 'yes', rf_blob_color: '#F69216' }, [ hd( 'grn0101', 'White chalk fading from the left' ) ] ),
+		] );
+		const gq = await ( await browser.newContext( { viewport: { width: 1280, height: 900 } } ) ).newPage();
+		watch( gq );
+		await gq.goto( p3.url );
+		await sleep( 2500 );
+		const grain = await gq.evaluate( ( ids ) => {
+			const layer = ( id ) => document.querySelector( `[data-id="${ id }"] > .rf-ofx-grain` );
+			const kinds = ids.map( ( id ) => {
+				const l = layer( id );
+				const cs = l && getComputedStyle( l );
+				if ( ! l ) {
+					return 'missing';
+				}
+				if ( /data:image\/svg/.test( cs.backgroundImage ) ) {
+					return 'svg';
+				}
+				return /refraction-grain\/rough-ink\.png/.test( cs.maskImage || cs.webkitMaskImage ) ? 'uploaded' : 'none';
+			} );
+			const urls = ids.map( ( id ) => layer( id )?.style.backgroundImage || '' );
+			const chalk = layer( 'grn0100' );
+			const cs = getComputedStyle( chalk );
+			const blobGrain = document.querySelector( '[data-id="grn0100"] .rf-ofx-blob > .rf-ofx-grain' );
+			return { kinds, distinct: new Set( urls.filter( Boolean ) ).size, white: /255%2C255%2C255|0 0 0 0 1 0 0 0 0 1 0 0 0 0 1/.test( decodeURIComponent( chalk.style.backgroundImage ) ), fade: /linear-gradient\(to right/.test( cs.maskImage || cs.webkitMaskImage ), blobMasked: !! blobGrain && /--rf-shape|data:image/.test( blobGrain.style.maskImage || blobGrain.style.webkitMaskImage ) };
+		}, TEX.map( ( _t, i ) => 'grn' + String( i + 1 ).padStart( 4, '0' ) ) );
+		check( 'grain', 'all ten textures draw, each its own pattern, and the uploaded texture paints through its PNG', 10 === grain.kinds.filter( ( k ) => 'svg' === k ).length && 'uploaded' === grain.kinds[ 10 ] && 10 === grain.distinct, JSON.stringify( grain ) );
+		check( 'grain', 'Grain Colour white and Fade From left (with reach); the blob\'s grain uses the same texture inside the blob', grain.white && grain.fade && grain.blobMasked, JSON.stringify( grain ) );
+		await gq.screenshot( { path: join( SHOTS, 'grain.png' ), fullPage: true } );
+		await gq.context().close();
 
 		// ---- the editor's preview
 		const e = a;
