@@ -138,3 +138,24 @@ export function scrollProgress( top, height, viewport ) {
 
 	return Math.min( 1, Math.max( 0, -top / room ) );
 }
+
+/**
+ * The first row of Content > Parts whose names match one of a part's names (its own, its parents', its materials').
+ *
+ * @param {string[]} names     The part's names.
+ * @param {Object[]} overrides The rows: { match: [patterns], ... }.
+ * @return {Object|null} The row, or null.
+ */
+export function partOverride( names, overrides ) {
+	for ( const row of overrides || [] ) {
+		if ( row && Array.isArray( row.match ) && row.match.length ) {
+			row.test = row.test || nameMatcher( row.match );
+
+			if ( names.some( row.test ) ) {
+				return row;
+			}
+		}
+	}
+
+	return null;
+}

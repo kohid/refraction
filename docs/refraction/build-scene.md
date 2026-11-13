@@ -18,6 +18,27 @@ Tests: `php scripts/test-build-scene.php` (.glb check), `node scripts/test-build
 - **Scene width and alignment** (Style > Scene, responsive), and the **stage names** under the progress line have their own color (also for built and current stages), typography, and an option not to dim the stages not built yet (Style > Progress).
 - **Editor**: **Preview in the editor** (Scroll section) holds the build at a point, so you can check any stage without scrolling. The editor redraws the widget after each change and the old scene frees its WebGL context.
 
+## Parts, each like a widget (0.85.0)
+
+Content > **Parts** (`parts` repeater, up to 100): a row names a part by **Part** (`part_match`: names or patterns,
+comma separated; a parent's or material's name counts, like the stage patterns; the first matching row wins,
+`partOverride()` in `timeline.js`) and has four tabs:
+
+- **Content**: Hide this part; **Label on the part** (a tag that follows the part once it is in place, projected on the
+  canvas each frame, `.rf3d-label`); **Link** (clicking the part or its label opens it; a hand shows over it).
+- **Look**: Color, Opacity, Metal, Roughness, Glow (emissive), applied to the part's own cloned materials.
+- **Place**: Move left/right, down/up, back/front (% of the model's size), Tilt forward/back, Turn, Tilt sideways
+  (degrees), Size (%). Applied before the part is measured, so the build and the Parts view use the new place.
+- **Build**: **Comes** from above, below, the side, further out (1.6x the distance) or fades in place; **Later by** (% of
+  the build).
+
+In the editor's preview a part under the pointer lights up (blue) with its name as a tooltip; a click selects the widget,
+finds the row naming that part (or adds one with its name) and opens it (`refractionBuildScenePick` in `editor.js`,
+called from `scene.js`); the clicked part stays lit (purple). **Add every part of the model** (button) adds a row per
+part not named yet, read from the scene in the preview, as one undo step. PHP clamps every value (`parts_config()`).
+
+Check: `node scripts/check-build-scene-parts.mjs --site DIR --port N`.
+
 ## Animations other than building (0.29.0)
 
 Content > **Animation** picks what the scroll does to the model (`assets/js/scene.js`, `moveModel()`); the stages still give the captions and the progress line, and the Build-only options (order, direction, distance, overlap, movement) hide for the others:
@@ -61,4 +82,4 @@ A second widget in the same module (`scroll-sequence`, Advanced category) for ci
 ## Not yet
 
 - The Ask Claude panel (building pages from a prompt) and Seedance video are the next parts of this work (see the roadmap).
-- Draco / Meshopt compressed models; per-part settings (direction, delay) beyond the stage patterns.
+- Draco / Meshopt compressed models.

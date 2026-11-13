@@ -234,6 +234,8 @@ class Build_Scene extends Widget_Base {
 		] );
 		$this->end_controls_section();
 
+		$this->register_part_controls();
+
 		$this->start_controls_section( 'section_scroll', [ 'label' => esc_html__( 'Scroll', 'refraction' ) ] );
 		$this->add_responsive_control( 'length', [
 			'label' => esc_html__( 'Scroll length (screens)', 'refraction' ),
@@ -411,6 +413,157 @@ class Build_Scene extends Widget_Base {
 	}
 
 	/** What the script needs, cleaned: only whitelisted words and numbers within range, and a model URL of a .glb/.gltf. */
+	/** Most parts that can have their own settings. */
+	const MAX_PARTS = 100;
+
+	/**
+	 * Content > Parts: each part of the model with its own settings, like a widget in the scene. A row names the
+	 * part (or parts: a pattern), and has Content (hide, a label on it, a link), Look (color, opacity, metal,
+	 * roughness, glow), Place (move, turn, size) and Build (where it comes from, a delay). In the editor's preview,
+	 * pointing at a part lights it up with its name; clicking it opens its row here (added if it has none).
+	 */
+	private function register_part_controls(): void {
+		$this->start_controls_section( 'section_parts', [ 'label' => esc_html__( 'Parts', 'refraction' ) ] );
+
+		$this->add_control( 'parts_hint', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'Give any part of the model its own settings. In the preview, point at a part to see its name and click it to open its settings here.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+		] );
+
+		$part = new Repeater();
+		$part->start_controls_tabs( 'part_tabs' );
+
+		$part->start_controls_tab( 'part_tab_content', [ 'label' => esc_html__( 'Content', 'refraction' ) ] );
+		$part->add_control( 'part_match', [
+			'label' => esc_html__( 'Part', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'label_block' => true,
+			'placeholder' => 'roof*, chimney',
+			'description' => esc_html__( 'The part\'s name (click it in the preview), or several, separated by commas; * matches anything. A parent\'s or material\'s name counts too.', 'refraction' ),
+		] );
+		$part->add_control( 'part_hide', [ 'label' => esc_html__( 'Hide this part', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
+		$part->add_control( 'part_label', [
+			'label' => esc_html__( 'Label on the part', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'label_block' => true,
+			'description' => esc_html__( 'A small tag that follows the part once it is in place.', 'refraction' ),
+		] );
+		$part->add_control( 'part_link', [
+			'label' => esc_html__( 'Link', 'refraction' ),
+			'type' => Controls_Manager::URL,
+			'description' => esc_html__( 'Clicking the part (or its label) opens it.', 'refraction' ),
+		] );
+		$part->end_controls_tab();
+
+		$part->start_controls_tab( 'part_tab_look', [ 'label' => esc_html__( 'Look', 'refraction' ) ] );
+		$part->add_control( 'part_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'alpha' => false ] );
+		$part->add_control( 'part_opacity', [ 'label' => esc_html__( 'Opacity', 'refraction' ) . ' (%)', 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ] ] );
+		$part->add_control( 'part_metal', [ 'label' => esc_html__( 'Metal', 'refraction' ) . ' (%)', 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ] ] );
+		$part->add_control( 'part_rough', [ 'label' => esc_html__( 'Roughness', 'refraction' ) . ' (%)', 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ], 'description' => esc_html__( '0: shiny. 100: matt.', 'refraction' ) ] );
+		$part->add_control( 'part_glow', [ 'label' => esc_html__( 'Glow', 'refraction' ), 'type' => Controls_Manager::COLOR, 'alpha' => false, 'description' => esc_html__( 'The part gives off this light (lit windows, a lamp).', 'refraction' ) ] );
+		$part->end_controls_tab();
+
+		$part->start_controls_tab( 'part_tab_place', [ 'label' => esc_html__( 'Place', 'refraction' ) ] );
+		foreach ( [ 'x' => esc_html__( 'Move left / right', 'refraction' ), 'y' => esc_html__( 'Move down / up', 'refraction' ), 'z' => esc_html__( 'Move back / front', 'refraction' ) ] as $axis => $label ) {
+			$part->add_control( 'part_move_' . $axis, [ 'label' => $label . ' (%)', 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => -100, 'max' => 100, 'step' => 0.5 ] ], 'description' => 'z' === $axis ? esc_html__( 'In % of the model\'s size.', 'refraction' ) : '' ] );
+		}
+		foreach ( [ 'x' => esc_html__( 'Tilt forward / back', 'refraction' ), 'y' => esc_html__( 'Turn', 'refraction' ), 'z' => esc_html__( 'Tilt sideways', 'refraction' ) ] as $axis => $label ) {
+			$part->add_control( 'part_turn_' . $axis, [ 'label' => $label . ' (deg)', 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ] ] );
+		}
+		$part->add_control( 'part_scale', [ 'label' => esc_html__( 'Size', 'refraction' ) . ' (%)', 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 10, 'max' => 300 ] ] ] );
+		$part->end_controls_tab();
+
+		$part->start_controls_tab( 'part_tab_build', [ 'label' => esc_html__( 'Build', 'refraction' ) ] );
+		$part->add_control( 'part_from', [
+			'label' => esc_html__( 'Comes', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'Like the others', 'refraction' ),
+				'drop' => esc_html__( 'From above', 'refraction' ),
+				'below' => esc_html__( 'From below', 'refraction' ),
+				'sides' => esc_html__( 'From the side', 'refraction' ),
+				'explode' => esc_html__( 'From further out', 'refraction' ),
+				'fade' => esc_html__( 'Fades in, in place', 'refraction' ),
+			],
+		] );
+		$part->add_control( 'part_delay', [
+			'label' => esc_html__( 'Later by', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 50 ] ],
+			'description' => esc_html__( '% of the build: this part comes that much later.', 'refraction' ),
+		] );
+		$part->end_controls_tab();
+		$part->end_controls_tabs();
+
+		$this->add_control( 'parts', [
+			/* translators: %d: Most parts. */
+			'label' => sprintf( esc_html__( 'Parts (up to %d)', 'refraction' ), self::MAX_PARTS ),
+			'type' => Controls_Manager::REPEATER,
+			'fields' => $part->get_controls(),
+			'default' => [],
+			'max_items' => self::MAX_PARTS,
+			'title_field' => '{{{ part_match || "' . esc_html__( 'Part', 'refraction' ) . '" }}}',
+			'prevent_empty' => false,
+		] );
+
+		$this->add_control( 'parts_add_all', [
+			'type' => Controls_Manager::BUTTON,
+			'text' => esc_html__( 'Add every part of the model', 'refraction' ),
+			'event' => 'refraction:build-scene:parts',
+			'description' => esc_html__( 'One row per part not listed yet, read from the model shown in the preview.', 'refraction' ),
+		] );
+
+		$this->end_controls_section();
+	}
+
+	/** The parts' own settings for scene.js, clamped. */
+	private function parts_config( array $s ): array {
+		$num = static function ( $value, float $min, float $max ) {
+			$n = is_array( $value ) ? ( $value['size'] ?? '' ) : $value;
+
+			return is_numeric( $n ) ? max( $min, min( $max, (float) $n ) ) : null;
+		};
+		$color = static function ( $value ): string {
+			$value = sanitize_hex_color( (string) $value );
+
+			return $value ? $value : '';
+		};
+		$out = [];
+
+		foreach ( array_slice( array_values( array_filter( (array) ( $s['parts'] ?? [] ), 'is_array' ) ), 0, self::MAX_PARTS ) as $row ) {
+			$match = array_slice( array_values( array_filter( array_map( 'trim', explode( ',', sanitize_text_field( (string) ( $row['part_match'] ?? '' ) ) ) ), 'strlen' ) ), 0, 20 );
+
+			if ( ! $match ) {
+				continue;
+			}
+
+			$part = array_filter( [
+				'id' => sanitize_key( (string) ( $row['_id'] ?? '' ) ),
+				'match' => $match,
+				'hide' => 'yes' === ( $row['part_hide'] ?? '' ),
+				'label' => mb_substr( sanitize_text_field( (string) ( $row['part_label'] ?? '' ) ), 0, 80 ),
+				'link' => esc_url_raw( (string) ( $row['part_link']['url'] ?? '' ) ),
+				'newTab' => 'on' === ( $row['part_link']['is_external'] ?? '' ),
+				'color' => $color( $row['part_color'] ?? '' ),
+				'glow' => $color( $row['part_glow'] ?? '' ),
+				'opacity' => $num( $row['part_opacity'] ?? null, 0, 100 ),
+				'metal' => $num( $row['part_metal'] ?? null, 0, 100 ),
+				'rough' => $num( $row['part_rough'] ?? null, 0, 100 ),
+				'move' => array_map( static fn( $a ) => $num( $row[ 'part_move_' . $a ] ?? null, -100, 100 ) ?? 0, [ 'x', 'y', 'z' ] ),
+				'turn' => array_map( static fn( $a ) => $num( $row[ 'part_turn_' . $a ] ?? null, -180, 180 ) ?? 0, [ 'x', 'y', 'z' ] ),
+				'scale' => $num( $row['part_scale'] ?? null, 10, 300 ),
+				'from' => in_array( $row['part_from'] ?? '', [ 'drop', 'below', 'sides', 'explode', 'fade' ], true ) ? $row['part_from'] : '',
+				'delay' => $num( $row['part_delay'] ?? null, 0, 50 ),
+			], static fn( $v ) => null !== $v && '' !== $v && false !== $v && [ 0, 0, 0 ] !== $v );
+
+			$out[] = $part;
+		}
+
+		return $out;
+	}
+
 	public function scene_config(): array {
 		$s = $this->get_settings_for_display();
 		$pick = static function ( $value, array $allowed, string $default ): string {
@@ -437,6 +590,7 @@ class Build_Scene extends Widget_Base {
 			'source' => 'media' === ( $s['model_source'] ?? '' ) ? 'media' : 'sample',
 			'model' => $model,
 			'stages' => $stages,
+			'parts' => $this->parts_config( $s ),
 			'order' => $pick( $s['order'] ?? '', [ 'bottom', 'name', 'file' ], 'bottom' ),
 			'from' => $pick( $s['from'] ?? '', [ 'drop', 'sides', 'explode' ], 'drop' ),
 			'distance' => self::number( $s['distance'] ?? null, 0.1, 2, 0.6 ),
