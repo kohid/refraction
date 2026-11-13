@@ -212,6 +212,18 @@ class Heading_Dual_Style {
 		);
 
 		$el->add_control(
+			'rf_dual_draw_repeat',
+			[
+				'label' => esc_html__( 'Draw Every Time It Comes Into View', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'description' => esc_html__( 'Off: drawn once. On: drawn again each time the heading comes back into view (it resets once it has left the screen).', 'refraction' ),
+				'prefix_class' => 'refraction-dual-redraw-',
+				'render_type' => 'template',
+				'condition' => array_merge( $marked, [ 'rf_dual_draw' => 'yes' ] ),
+			]
+		);
+
+		$el->add_control(
 			'rf_dual_draw_duration',
 			[
 				'label' => esc_html__( 'Drawing Time (ms)', 'refraction' ),

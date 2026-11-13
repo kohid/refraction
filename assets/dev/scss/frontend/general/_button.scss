@@ -20,6 +20,7 @@
 	&-content-wrapper {
 		display: flex;
 		justify-content: center;
+		align-items: center; // The text stays level with an icon in a box (Style > Icon: padding, size).
 		flex-direction: row;
 		gap: 5px;
 	}

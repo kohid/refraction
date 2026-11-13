@@ -35,12 +35,66 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		this.elements.$nav.on( 'click', selectors.subToggle, this.onSubToggleClick.bind( this ) );
 		this.elements.$nav.on( 'keydown', this.onKeyDown.bind( this ) );
 		jQuery( document ).on( 'click', this.boundDocumentClick );
+
+		this.boundBrandScroll = () => {
+			if ( ! this.brandFrame ) {
+				this.brandFrame = requestAnimationFrame( () => {
+					this.brandFrame = 0;
+					this.updateBrand();
+				} );
+			}
+		};
+		window.addEventListener( 'scroll', this.boundBrandScroll, { passive: true } );
+		this.updateBrand( true );
+	}
+
+	/**
+	 * Logo or Site Title: shown only once the page is scrolled down past the offset ('after'), or until then
+	 * ('before'); the animation is CSS (nav-menu.scss, is-brand-hidden). The first state is set without animating.
+	 *
+	 * @param {boolean} instant Set the state without its animation.
+	 */
+	updateBrand( instant = false ) {
+		const $nav = this.elements.$nav;
+		const show = this.getElementSettings( 'bar_brand_show' ) || 'always';
+
+		if ( ! this.getElementSettings( 'bar_brand' ) || 'always' === show ) {
+			$nav.removeClass( 'is-brand-hidden' );
+			return;
+		}
+
+		const offset = Math.max( 0, Number( this.getElementSettings( 'bar_brand_offset' ) ) || 0 );
+		const scrolled = ( window.scrollY || document.documentElement.scrollTop ) >= offset;
+		const hidden = 'after' === show ? ! scrolled : scrolled;
+
+		if ( hidden === $nav.hasClass( 'is-brand-hidden' ) && ! instant ) {
+			return;
+		}
+
+		if ( instant ) {
+			$nav.addClass( 'is-brand-instant' );
+		}
+
+		$nav.toggleClass( 'is-brand-hidden', hidden );
+
+		if ( instant ) {
+			void $nav[ 0 ]?.offsetWidth; // eslint-disable-line no-void
+			requestAnimationFrame( () => $nav.removeClass( 'is-brand-instant' ) );
+		}
+	}
+
+	onElementChange( setting ) {
+		if ( 0 === setting.indexOf( 'bar_brand' ) ) {
+			this.updateBrand( true );
+		}
 	}
 
 	onDestroy() {
 		super.onDestroy();
 		jQuery( document ).off( 'click', this.boundDocumentClick );
 		jQuery( window ).off( 'resize', this.boundResize );
+		window.removeEventListener( 'scroll', this.boundBrandScroll );
+		cancelAnimationFrame( this.brandFrame );
 		this.lockPage( false );
 	}
 
@@ -104,7 +158,11 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		}
 	}
 
-	/** A panel over the whole page (side or full screen) keeps the page from scrolling under it. */
+	/**
+	 * A panel over the whole page (side or full screen) keeps the page from scrolling under it.
+	 *
+	 * @param {boolean} lock Lock (true) or release (false) the page's scrolling.
+	 */
 	lockPage( lock ) {
 		const panel = this.elements.$panel[ 0 ],
 			covers = lock && panel && 'fixed' === getComputedStyle( panel ).position;

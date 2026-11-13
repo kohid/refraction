@@ -14,8 +14,17 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 	/** The widget's own submenu icon (icon library), '' for the CSS-drawn indicator. */
 	private string $indicator_html;
 
-	public function __construct( string $indicator_html = '' ) {
+	/** Top-level items before the brand in the middle (0: no split), the brand's HTML, and top-level items so far. */
+	private int $split_at;
+
+	private string $split_html;
+
+	private int $top_count = 0;
+
+	public function __construct( string $indicator_html = '', int $split_at = 0, string $split_html = '' ) {
 		$this->indicator_html = $indicator_html;
+		$this->split_at = $split_at;
+		$this->split_html = $split_html;
 	}
 
 	public function start_lvl( &$output, $depth = 0, $args = null ) {
@@ -28,6 +37,15 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 
 	public function start_el( &$output, $data_object, $depth = 0, $args = null, $current_object_id = 0 ) {
 		$item = $data_object;
+
+		// The brand in the middle: the first list ends here and a second one starts after it (both are the menu).
+		if ( 0 === $depth ) {
+			if ( $this->split_at > 0 && $this->top_count === $this->split_at ) {
+				$output .= '</ul>' . $this->split_html . '<ul class="refraction-nav-menu__list refraction-nav-menu__list--after">';
+			}
+
+			++$this->top_count;
+		}
 		$has_children = in_array( 'menu-item-has-children', (array) $item->classes, true );
 
 		$classes = [ 'refraction-nav-menu__item' ];

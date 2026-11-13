@@ -1355,15 +1355,192 @@ $rf-nav-top-sub: ".refraction-nav-menu__list > .refraction-nav-menu__item > .ref
 	}
 }
 
+// ---- Logo or Site Title in the menu bar (Content > Logo or Site Title). The widget carries
+// refraction-nav-menu--bar-brand-<kind>, --brand-<left|center|right>, --brand-show-<always|after|before> and
+// --brand-anim-<name>; nav-menu.js puts is-brand-hidden on the nav while it should not show.
+[class*="refraction-nav-menu--bar-brand-"] .refraction-nav-menu {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	column-gap: var(--refraction-nav-brand-gap, 24px);
+}
+
+[class*="refraction-nav-menu--bar-brand-"] .refraction-nav-menu__panel {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.refraction-nav-menu__bar-brand {
+	--refraction-nav-brand-speed-used: var(--refraction-nav-brand-speed, 400ms);
+
+	display: flex;
+	flex: none;
+	align-items: center;
+	max-width: 60vw;
+	transition:
+		opacity var(--refraction-nav-brand-speed-used) ease,
+		transform var(--refraction-nav-brand-speed-used) cubic-bezier(0.22, 1, 0.36, 1),
+		filter var(--refraction-nav-brand-speed-used) ease,
+		max-width var(--refraction-nav-brand-speed-used) ease,
+		margin var(--refraction-nav-brand-speed-used) ease,
+		visibility 0s linear 0s;
+
+	img {
+		max-height: none;
+		height: auto;
+	}
+
+	.refraction-nav-menu__brand {
+		gap: 0.6em;
+	}
+}
+
+.refraction-nav-menu--brand-right .refraction-nav-menu__bar-brand {
+	order: 3;
+}
+
+// The copy for the collapsed menu (brand in the middle) only shows there.
+.refraction-nav-menu__bar-brand--collapsed {
+	display: none;
+}
+
+// In the middle: the two halves of the menu on each side, the brand between them.
+.refraction-nav-menu--brand-center .refraction-nav-menu__panel {
+	display: flex;
+	align-items: center;
+	column-gap: var(--refraction-nav-brand-gap, 24px);
+
+	> .refraction-nav-menu__list {
+		flex: 1 1 0;
+		justify-content: flex-end;
+	}
+
+	> .refraction-nav-menu__list--after {
+		justify-content: flex-start;
+	}
+}
+
+// Hidden (before or after the scroll point): faded, and moved per animation. Hidden from clicks and screen readers
+// once the animation has ended.
+.refraction-nav-menu.is-brand-hidden .refraction-nav-menu__bar-brand {
+	opacity: 0;
+	pointer-events: none;
+	visibility: hidden;
+	transition-property: opacity, transform, filter, max-width, margin, visibility;
+	transition-delay: 0s, 0s, 0s, 0s, 0s, var(--refraction-nav-brand-speed-used);
+}
+
+.refraction-nav-menu.is-brand-instant .refraction-nav-menu__bar-brand {
+	transition: none;
+}
+
+.refraction-nav-menu--brand-anim-slide-down .is-brand-hidden .refraction-nav-menu__bar-brand {
+	transform: translateY(-100%);
+}
+
+.refraction-nav-menu--brand-anim-slide-up .is-brand-hidden .refraction-nav-menu__bar-brand {
+	transform: translateY(80%);
+}
+
+.refraction-nav-menu--brand-anim-slide-side .is-brand-hidden .refraction-nav-menu__bar-brand {
+	transform: translateX(-40px);
+}
+
+.refraction-nav-menu--brand-right.refraction-nav-menu--brand-anim-slide-side .is-brand-hidden .refraction-nav-menu__bar-brand {
+	transform: translateX(40px);
+}
+
+.refraction-nav-menu--brand-anim-zoom .is-brand-hidden .refraction-nav-menu__bar-brand {
+	transform: scale(0.6);
+}
+
+.refraction-nav-menu--brand-anim-pop {
+
+	.refraction-nav-menu__bar-brand {
+		transition-timing-function: ease, cubic-bezier(0.34, 1.56, 0.64, 1), ease, ease, ease, linear;
+	}
+
+	.is-brand-hidden .refraction-nav-menu__bar-brand {
+		transform: scale(0.3);
+	}
+}
+
+.refraction-nav-menu--brand-anim-flip {
+
+	.refraction-nav-menu__bar-brand {
+		transform-origin: 50% 0;
+	}
+
+	.is-brand-hidden .refraction-nav-menu__bar-brand {
+		transform: perspective(600px) rotateX(-90deg);
+	}
+}
+
+.refraction-nav-menu--brand-anim-blur .is-brand-hidden .refraction-nav-menu__bar-brand {
+	filter: blur(8px);
+	transform: scale(1.06);
+}
+
+// Grow in: hidden, it takes no room and the menu moves over; shown, it pushes the menu aside.
+.refraction-nav-menu--brand-anim-collapse {
+
+	.refraction-nav-menu__bar-brand {
+		overflow: hidden;
+	}
+
+	.is-brand-hidden .refraction-nav-menu__bar-brand {
+		max-width: 0;
+		margin-inline: calc(-0.5 * var(--refraction-nav-brand-gap, 24px));
+	}
+}
+
+@mixin refraction-nav-brand-collapsed() {
+
+	.refraction-nav-menu__bar-brand--middle {
+		display: none;
+	}
+
+	.refraction-nav-menu__bar-brand--collapsed {
+		display: flex;
+	}
+
+	// The brand and the hamburger on one line, the opened menu under them at full width.
+	.refraction-nav-menu__panel {
+		flex-basis: 100%;
+	}
+
+	// The two halves of the menu are one list again, one item under the other.
+	.refraction-nav-menu__panel > .refraction-nav-menu__list {
+		flex: none;
+		justify-content: flex-start;
+	}
+
+	&:not(.refraction-nav-menu--brand-right) .refraction-nav-menu__toggle-wrap {
+		margin-inline-start: auto;
+	}
+
+	&.refraction-nav-menu--brand-right .refraction-nav-menu__bar-brand {
+		margin-inline-start: auto;
+	}
+}
+
 // Collapsed (hamburger) modes.
 .refraction-nav-menu--layout-dropdown {
 	@include refraction-nav-collapsed();
+
+	&[class*="refraction-nav-menu--bar-brand-"] {
+		@include refraction-nav-brand-collapsed();
+	}
 }
 
 @media (max-width: $screen-tablet-max) {
 
 	.refraction-nav-menu--bp-tablet {
 		@include refraction-nav-collapsed();
+
+		&[class*="refraction-nav-menu--bar-brand-"] {
+			@include refraction-nav-brand-collapsed();
+		}
 	}
 }
 
@@ -1371,6 +1548,10 @@ $rf-nav-top-sub: ".refraction-nav-menu__list > .refraction-nav-menu__item > .ref
 
 	.refraction-nav-menu--bp-mobile {
 		@include refraction-nav-collapsed();
+
+		&[class*="refraction-nav-menu--bar-brand-"] {
+			@include refraction-nav-brand-collapsed();
+		}
 	}
 }
 

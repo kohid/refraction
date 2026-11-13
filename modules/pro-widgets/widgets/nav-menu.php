@@ -175,6 +175,8 @@ class Nav_Menu extends Pro_Widget {
 
 		$this->end_section();
 
+		$this->register_bar_brand_controls();
+
 		$this->content_section( 'section_toggle', esc_html__( 'Mobile Menu', 'refraction' ) );
 
 		$this->add_control(
@@ -1024,6 +1026,8 @@ class Nav_Menu extends Pro_Widget {
 
 		$toggle = '{{WRAPPER}} .refraction-nav-menu__toggle';
 
+		$this->register_bar_brand_style();
+
 		$this->style_section( 'style_toggle', esc_html__( 'Hamburger Button', 'refraction' ) );
 
 		$this->add_control(
@@ -1428,6 +1432,254 @@ class Nav_Menu extends Pro_Widget {
 		$this->end_section();
 	}
 
+	/**
+	 * Content > Logo or Site Title: the site logo, site title, an image or a text in the menu bar, on the left, in the
+	 * middle (the items share out on both sides) or on the right; shown always, only once the page is scrolled down
+	 * past a number of pixels, or until then, with an animation (nav-menu.js toggles is-brand-hidden).
+	 */
+	private function register_bar_brand_controls(): void {
+		$this->content_section( 'section_bar_brand', esc_html__( 'Logo or Site Title', 'refraction' ) );
+
+		$on = [ 'bar_brand!' => '' ];
+
+		$this->add_control(
+			'bar_brand',
+			[
+				'label' => esc_html__( 'Show', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => [
+					'' => esc_html__( 'Nothing', 'refraction' ),
+					'logo' => esc_html__( 'Site logo', 'refraction' ),
+					'title' => esc_html__( 'Site title', 'refraction' ),
+					'logo_title' => esc_html__( 'Site logo and title', 'refraction' ),
+					'image' => esc_html__( 'An image', 'refraction' ),
+					'text' => esc_html__( 'A text', 'refraction' ),
+				],
+				'description' => esc_html__( 'The site logo and title come from Appearance > Customize > Site Identity (or Site Settings); without a logo the title shows.', 'refraction' ),
+				'render_type' => 'template',
+				'frontend_available' => true,
+				'prefix_class' => 'refraction-nav-menu--bar-brand-',
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_image',
+			[
+				'label' => esc_html__( 'Image', 'refraction' ),
+				'type' => Controls_Manager::MEDIA,
+				'condition' => [ 'bar_brand' => 'image' ],
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_text',
+			[
+				'label' => esc_html__( 'Text', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'default' => get_bloginfo( 'name' ),
+				'condition' => [ 'bar_brand' => 'text' ],
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_position',
+			[
+				'label' => esc_html__( 'Position', 'refraction' ),
+				'type' => Controls_Manager::CHOOSE,
+				'default' => 'left',
+				'toggle' => false,
+				'options' => [
+					'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+					'center' => [ 'title' => esc_html__( 'Middle (menu items on both sides)', 'refraction' ), 'icon' => 'rficon-h-align-center' ],
+					'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+				],
+				'prefix_class' => 'refraction-nav-menu--brand-',
+				'render_type' => 'template',
+				'condition' => $on,
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_link',
+			[
+				'label' => esc_html__( 'Link to the home page', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+				'render_type' => 'template',
+				'condition' => $on,
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_show',
+			[
+				'label' => esc_html__( 'When', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'always',
+				'options' => [
+					'always' => esc_html__( 'Always', 'refraction' ),
+					'after' => esc_html__( 'Show once the page is scrolled down', 'refraction' ),
+					'before' => esc_html__( 'Hide once the page is scrolled down', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-nav-menu--brand-show-',
+				'frontend_available' => true,
+				'separator' => 'before',
+				'condition' => $on,
+			]
+		);
+
+		$scrolled = [
+			'bar_brand!' => '',
+			'bar_brand_show!' => 'always',
+		];
+
+		$this->add_control(
+			'bar_brand_offset',
+			[
+				'label' => esc_html__( 'Scrolled down by (px)', 'refraction' ),
+				'type' => Controls_Manager::NUMBER,
+				'min' => 0,
+				'max' => 5000,
+				'default' => 100,
+				'frontend_available' => true,
+				'condition' => $scrolled,
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_animation',
+			[
+				'label' => esc_html__( 'Animation', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'fade',
+				'options' => [
+					'fade' => esc_html__( 'Fade', 'refraction' ),
+					'slide-down' => esc_html__( 'Slide down', 'refraction' ),
+					'slide-up' => esc_html__( 'Slide up', 'refraction' ),
+					'slide-side' => esc_html__( 'Slide in from the side', 'refraction' ),
+					'zoom' => esc_html__( 'Zoom', 'refraction' ),
+					'pop' => esc_html__( 'Pop (with a little bounce)', 'refraction' ),
+					'flip' => esc_html__( 'Flip', 'refraction' ),
+					'blur' => esc_html__( 'Sharpen from blur', 'refraction' ),
+					'collapse' => esc_html__( 'Grow in (the menu makes room)', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-nav-menu--brand-anim-',
+				'condition' => $scrolled,
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_duration',
+			[
+				'label' => esc_html__( 'Duration (ms)', 'refraction' ),
+				'type' => Controls_Manager::NUMBER,
+				'min' => 0,
+				'max' => 3000,
+				'placeholder' => '400',
+				'selectors' => [ '{{WRAPPER}}' => '--refraction-nav-brand-speed: {{VALUE}}ms;' ],
+				'condition' => $scrolled,
+			]
+		);
+
+		$this->end_section();
+	}
+
+	/** Style > Logo or Site Title. */
+	private function register_bar_brand_style(): void {
+		$brand = '{{WRAPPER}} .refraction-nav-menu__bar-brand';
+
+		$this->style_section( 'style_bar_brand', esc_html__( 'Logo or Site Title', 'refraction' ), [ 'bar_brand!' => '' ] );
+
+		$this->add_responsive_control(
+			'bar_brand_width',
+			[
+				'label' => esc_html__( 'Logo width', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'vw' ],
+				'range' => [ 'px' => [ 'min' => 20, 'max' => 400 ] ],
+				'default' => [ 'unit' => 'px', 'size' => 140 ],
+				'selectors' => [ $brand . ' img' => 'width: {{SIZE}}{{UNIT}};' ],
+				'condition' => [ 'bar_brand' => [ 'logo', 'logo_title', 'image' ] ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'bar_brand_max_height',
+			[
+				'label' => esc_html__( 'Logo max height', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'min' => 10, 'max' => 200 ] ],
+				'selectors' => [ $brand . ' img' => 'max-height: {{SIZE}}{{UNIT}}; object-fit: contain;' ],
+				'condition' => [ 'bar_brand' => [ 'logo', 'logo_title', 'image' ] ],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'bar_brand_typography',
+				'label' => esc_html__( 'Title', 'refraction' ),
+				'selector' => $brand . ' .refraction-nav-menu__brand-text',
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_color',
+			[
+				'label' => esc_html__( 'Title color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $brand . ', ' . $brand . ' a' => 'color: {{VALUE}};' ],
+			]
+		);
+
+		$this->add_control(
+			'bar_brand_color_hover',
+			[
+				'label' => esc_html__( 'Title color on hover', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $brand . ' a:hover, ' . $brand . ' a:focus-visible' => 'color: {{VALUE}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'bar_brand_gap',
+			[
+				'label' => esc_html__( 'Space beside the menu', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'max' => 120 ] ],
+				'selectors' => [ '{{WRAPPER}}' => '--refraction-nav-brand-gap: {{SIZE}}{{UNIT}};' ],
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_responsive_control(
+			'bar_brand_inner_gap',
+			[
+				'label' => esc_html__( 'Space between logo and title', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'max' => 60 ] ],
+				'selectors' => [ $brand . ' .refraction-nav-menu__brand' => 'gap: {{SIZE}}{{UNIT}};' ],
+				'condition' => [ 'bar_brand' => 'logo_title' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'bar_brand_padding',
+			[
+				'label' => esc_html__( 'Padding', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em' ],
+				'selectors' => [ $brand => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->end_section();
+	}
+
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$menu_id = isset( $settings['menu'] ) ? (int) $settings['menu'] : 0;
@@ -1437,6 +1689,18 @@ class Nav_Menu extends Pro_Widget {
 			return;
 		}
 
+		$brand_kind = (string) ( $settings['bar_brand'] ?? '' );
+		$brand_html = '' !== $brand_kind ? $this->bar_brand_html( $settings ) : '';
+		$brand_where = in_array( $settings['bar_brand_position'] ?? 'left', [ 'left', 'center', 'right' ], true ) ? $settings['bar_brand_position'] : 'left';
+		$split_at = 0;
+
+		// In the middle: the walker closes the list halfway through the top-level items and opens a second one, with the
+		// brand between them.
+		if ( '' !== $brand_html && 'center' === $brand_where ) {
+			$top = array_filter( (array) wp_get_nav_menu_items( $menu_id ), static fn( $item ) => 0 === (int) $item->menu_item_parent );
+			$split_at = (int) ceil( count( $top ) / 2 );
+		}
+
 		$menu_html = wp_nav_menu( [
 			'menu' => $menu_id,
 			'container' => false,
@@ -1444,7 +1708,11 @@ class Nav_Menu extends Pro_Widget {
 			'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul>',
 			'menu_id' => 'refraction-nav-' . $this->get_id(),
 			'depth' => (int) ( $settings['depth'] ?? 0 ),
-			'walker' => new Nav_Menu_Walker( 'icon' === ( $settings['indicator'] ?? '' ) && ! empty( $settings['indicator_icon']['value'] ) ? (string) Icons_Manager::try_get_icon_html( $settings['indicator_icon'], [ 'aria-hidden' => 'true' ] ) : '' ),
+			'walker' => new Nav_Menu_Walker(
+				'icon' === ( $settings['indicator'] ?? '' ) && ! empty( $settings['indicator_icon']['value'] ) ? (string) Icons_Manager::try_get_icon_html( $settings['indicator_icon'], [ 'aria-hidden' => 'true' ] ) : '',
+				$split_at,
+				$split_at ? '<div class="refraction-nav-menu__bar-brand refraction-nav-menu__bar-brand--middle">' . $brand_html . '</div>' : ''
+			),
 			'fallback_cb' => false,
 			'echo' => false,
 		] );
@@ -1463,6 +1731,9 @@ class Nav_Menu extends Pro_Widget {
 		] );
 		?>
 		<nav <?php $this->print_render_attribute_string( 'nav' ); ?>>
+			<?php if ( '' !== $brand_html ) : ?>
+				<div class="refraction-nav-menu__bar-brand refraction-nav-menu__bar-brand--<?php echo esc_attr( 'center' === $brand_where ? 'collapsed' : $brand_where ); ?>"><?php echo $brand_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?></div>
+			<?php endif; ?>
 			<div class="refraction-nav-menu__toggle-wrap">
 				<button type="button" class="refraction-nav-menu__toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $panel_id ); ?>" aria-label="<?php echo esc_attr( $label ); ?>">
 					<?php if ( ! empty( $settings['toggle_icon']['value'] ) ) : ?>
@@ -1505,6 +1776,42 @@ class Nav_Menu extends Pro_Widget {
 			</div>
 		</nav>
 		<?php
+	}
+
+	/** The logo, title, both, image or text of the menu bar ('' for none), linked to the home page unless switched off. */
+	private function bar_brand_html( array $settings ): string {
+		$kind = (string) ( $settings['bar_brand'] ?? '' );
+		$name = get_bloginfo( 'name' );
+		$logo = '';
+		$text = '';
+
+		if ( in_array( $kind, [ 'logo', 'logo_title' ], true ) && has_custom_logo() ) {
+			$logo = wp_get_attachment_image( (int) get_theme_mod( 'custom_logo' ), 'medium', false, [ 'alt' => $name ] );
+		} elseif ( 'image' === $kind ) {
+			$id = (int) ( $settings['bar_brand_image']['id'] ?? 0 );
+			$url = (string) ( $settings['bar_brand_image']['url'] ?? '' );
+			$logo = $id ? (string) wp_get_attachment_image( $id, 'medium', false, [ 'alt' => $name ] ) : '';
+
+			if ( '' === $logo && '' !== $url ) {
+				$logo = '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $name ) . '">';
+			}
+		}
+
+		if ( 'title' === $kind || 'logo_title' === $kind || ( 'logo' === $kind && '' === $logo ) ) {
+			$text = $name;
+		} elseif ( 'text' === $kind ) {
+			$text = (string) ( $settings['bar_brand_text'] ?? '' );
+		}
+
+		$inner = $logo . ( '' !== trim( $text ) ? '<span class="refraction-nav-menu__brand-text">' . esc_html( $text ) . '</span>' : '' );
+
+		if ( '' === $inner ) {
+			return '';
+		}
+
+		return 'yes' === ( $settings['bar_brand_link'] ?? 'yes' )
+			? '<a class="refraction-nav-menu__brand" href="' . esc_url( home_url( '/' ) ) . '">' . $inner . '</a>'
+			: '<span class="refraction-nav-menu__brand">' . $inner . '</span>';
 	}
 
 	/** The logo, site name or text at the top of the opened menu, linked to the home page ('' for none). */
