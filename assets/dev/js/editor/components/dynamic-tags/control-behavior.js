@@ -39,9 +39,10 @@ module.exports = Marionette.Behavior.extend( {
 		if ( 'color' === this.view.model.get( 'type' ) ) {
 			if ( this.view.colorPicker ) {
 				this.moveDynamicSwitcherToColorPicker();
-			} else {
-				setTimeout( () => this.moveDynamicSwitcherToColorPicker() );
 			}
+
+			// The colour picker is built on first use (controls/color.js): the switcher moves into it then.
+			this.listenTo( this.view, 'picker:ready', () => this.moveDynamicSwitcherToColorPicker() );
 		}
 
 		// Add a Tipsy Tooltip to the Dynamic Switcher
@@ -54,6 +55,10 @@ module.exports = Marionette.Behavior.extend( {
 	},
 
 	moveDynamicSwitcherToColorPicker() {
+		if ( ! this.view.colorPicker ) {
+			return;
+		}
+
 		const $colorPickerToolsContainer = this.view.colorPicker.$pickerToolsContainer;
 
 		this.ui.dynamicSwitcher.removeClass( 'refraction-control-unit-1' ).addClass( 'e-control-tool' );

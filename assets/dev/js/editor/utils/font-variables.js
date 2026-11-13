@@ -44,8 +44,14 @@ export class FontVariables {
 			( model ) => currentGroupPrefix === model.get( 'groupPrefix' ) && 'font' === model.get( 'type' ),
 		);
 
+		const element = refraction.getCurrentElement?.();
+
+		if ( ! fontControlModel || ! element?.model ) {
+			return;
+		}
+
 		const settingName = fontControlModel.get( 'name' );
-		const controlValue = refraction.getCurrentElement().model.get( 'settings' ).get( settingName );
+		const controlValue = element.model.get( 'settings' ).get( settingName );
 
 		if ( ! controlValue ) {
 			return;
@@ -92,21 +98,26 @@ export class FontVariables {
 	}
 
 	applyFontVariableRange( controls, controlKey, fieldData ) {
-		const controlView = $e.components.get( 'panel' ).getControlViewByPath(
-			refraction.getPanelView().getCurrentPageView(),
-			controlKey,
-		);
+		const page = refraction.getPanelView().getCurrentPageView(),
+			controlView = $e.components.get( 'panel' ).getControlViewByPath( page, controlKey ),
+			// A control that is not built (hidden by its conditions, another screen size's copy) still gets the range on
+			// its model, used when it is built.
+			model = controlView?.model || page.getControlModel?.( controlKey );
 
-		const range = controlView.model.get( 'range' );
+		if ( ! model ) {
+			return;
+		}
+
+		const range = model.get( 'range' );
 
 		range.px.min = fieldData.min;
 		range.px.max = fieldData.max;
 
-		controlView.model.set( 'range', range );
+		model.set( 'range', range );
 
-		controlView.render();
+		controlView?.render();
 
-		const inheritors = controlView.model.get( 'inheritors' );
+		const inheritors = model.get( 'inheritors' );
 
 		if ( ! inheritors ) {
 			return;

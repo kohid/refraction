@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.74.0
+Stable tag: 0.76.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.76.0 =
+* Faster editor panel sections: settings hidden by their conditions are not built until a change makes them apply (for example the gradient options until Gradient is chosen, typography options until the pencil is clicked); colour pickers and font lists are built the first time they are pointed at, focused or clicked; list items (floating cards, slides...) build their settings when opened. The slowest sections open two to four times faster; the median section in half the time.
+* Fixed editor errors when a section was opened while another was still loading (global colours and fonts), and when a link asked for a setting that was not shown.
+
+= 0.75.0 =
+* Faster editor panel: a tab now builds only the current screen size's copy of each responsive setting (Refraction has 8 screen sizes, so Advanced > Layout built 8 copies of margin, padding, width, position, z-index...). Opening the Advanced tab takes about a seventh of the time (184 settings drawn before, 44 now); Style tabs with typography and other responsive settings are quicker too. Switching the screen size draws that size's settings.
 
 = 0.74.0 =
 * Fixed: a Global Color picked on an item of a list (a floating card, a slide, any repeater item) did nothing in the editor's preview; it now shows there as on the page. A Global Color on a setting that needs !important keeps it in the editor too.

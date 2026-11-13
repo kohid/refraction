@@ -50,7 +50,32 @@ module.exports = Marionette.CompositeView.extend( {
 	},
 
 	getChildControlView( name ) {
+		this.buildFields();
+
 		return this.getControlViewByModel( this.getControlModel( name ) );
+	},
+
+	/**
+	 * A closed row only shows its title: its fields are built the first time it is opened (or a field of it is asked
+	 * for), so a list of many items opens quickly. See also editRow() in repeater.js.
+	 *
+	 * @return {boolean} Whether the fields are built.
+	 */
+	filter() {
+		return !! this.fieldsBuilt;
+	},
+
+	buildFields() {
+		if ( this.fieldsBuilt || this.isDestroyed ) {
+			return;
+		}
+
+		this.fieldsBuilt = true;
+
+		if ( this.isRendered ) {
+			this._renderChildren();
+			ControlsStack.handlePopovers( this );
+		}
 	},
 
 	getControlViewByModel( model ) {

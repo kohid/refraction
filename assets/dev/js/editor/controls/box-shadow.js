@@ -70,7 +70,7 @@ ControlBoxShadowItemView = ControlMultipleBaseItemView.extend( {
 	},
 
 	onBeforeDestroy() {
-		this.colorPicker.destroy();
+		this.colorPicker?.destroy();
 	},
 } );
 

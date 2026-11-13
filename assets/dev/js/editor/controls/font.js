@@ -11,7 +11,45 @@ module.exports = ControlSelect2View.extend( {
 		};
 	},
 
+	/**
+	 * The searchable font list (select2) is built when the control is first pointed at or focused: a section with
+	 * several typography groups built one per group. Until then the plain select shows the chosen font.
+	 */
+	applySavedValue() {
+		if ( this.fontSelectReady ) {
+			ControlSelect2View.prototype.applySavedValue.apply( this, arguments );
+			return;
+		}
+
+		ControlSelect2View.__super__.applySavedValue.apply( this, arguments );
+	},
+
 	onReady() {
+		this.ui.select.one( 'pointerenter focus mousedown touchstart', ( event ) => {
+			const opening = 'mousedown' === event.type || 'touchstart' === event.type;
+
+			if ( opening ) {
+				event.preventDefault();
+			}
+
+			this.buildFontSelect();
+
+			if ( opening ) {
+				this.ui.select.select2( 'open' );
+			} else if ( 'focus' === event.type ) {
+				this.$el.find( '.select2-selection' ).trigger( 'focus' );
+			}
+		} );
+	},
+
+	buildFontSelect() {
+		if ( this.fontSelectReady || this.isDestroyed ) {
+			return;
+		}
+
+		this.fontSelectReady = true;
+		this.ui.select.off( 'pointerenter focus mousedown touchstart' );
+
 		const self = this;
 		this.ui.select.select2( this.getSelect2Options() );
 		this.ui.select.on( 'select2:open', function() {

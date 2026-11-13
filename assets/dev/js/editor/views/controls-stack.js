@@ -81,7 +81,33 @@ ControlsStack = Marionette.CompositeView.extend( {
 
 		var section = controlModel.get( 'section' );
 
-		return ! section || section === this.activeSection;
+		if ( section && section !== this.activeSection ) {
+			return false;
+		}
+
+		return ! this.isOtherDeviceCopy( controlModel );
+	},
+
+	/**
+	 * A responsive control is copied once per screen size (desktop, tablet, mobile, the phone sizes...), and only the
+	 * current size's copy is shown. Building the others made a tab with many responsive controls slow to open
+	 * (Advanced > Layout: 8 copies of each), so they are built when that screen size is chosen. A copy that opens or
+	 * closes a popover (a typography group) is always built, or the popover would not close.
+	 *
+	 * @param {Backbone.Model} controlModel
+	 * @return {boolean} Whether this is another screen size's copy.
+	 */
+	isOtherDeviceCopy( controlModel ) {
+		const responsive = controlModel.get( 'responsive' ),
+			popover = controlModel.get( 'popover' );
+
+		if ( ! responsive || ( popover && ( popover.start || popover.end ) ) ) {
+			return false;
+		}
+
+		const device = responsive.max || responsive.min;
+
+		return !! device && device !== refraction.channels.deviceMode.request( 'currentMode' );
 	},
 
 	getControlViewByModel( model ) {
@@ -190,6 +216,11 @@ ControlsStack = Marionette.CompositeView.extend( {
 	onDeviceModeChange() {
 		if ( 'desktop' === refraction.channels.deviceMode.request( 'currentMode' ) ) {
 			this.$el.removeClass( 'refraction-responsive-switchers-open' );
+		}
+
+		// The new screen size's copies of the responsive controls (see isOtherDeviceCopy()).
+		if ( this.isRendered && ! this.isDestroyed && this.activeTab ) {
+			this._renderChildren();
 		}
 	},
 

@@ -20,7 +20,9 @@ export default class ComponentBase extends ApiComponentBase {
 		const currentView = editor.content ? editor.content.currentView : editor;
 
 		const controlView = this.getControlViewByPath( currentView, controlPath );
-		controlView.activate?.();
+
+		// The control may not be built (hidden by its conditions, another screen size's copy, a closed list row).
+		controlView?.activate?.();
 	}
 
 	/**
@@ -36,7 +38,7 @@ export default class ComponentBase extends ApiComponentBase {
 		let controlView = currentView.getControlViewByName( controls[ 0 ] );
 
 		controls.slice( 1 ).forEach( ( control ) => {
-			controlView = controlView.getChildControlView?.( control );
+			controlView = controlView?.getChildControlView?.( control );
 		} );
 
 		return controlView;

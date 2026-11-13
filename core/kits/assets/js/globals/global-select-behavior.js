@@ -56,6 +56,11 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 	fetchGlobalValue() {
 		return $e.data.get( this.view.getGlobalKey() )
 			.then( ( globalData ) => {
+				// The panel may have been drawn again meanwhile (another section or tab opened).
+				if ( this.view.isDestroyed ) {
+					return globalData.data;
+				}
+
 				this.view.globalValue = globalData.data.value;
 
 				this.onValueTypeChange();
@@ -132,6 +137,10 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 
 	// Update the behavior's components.
 	onValueTypeChange() {
+		if ( this.view.isDestroyed || ! this.ui.globalPopoverToggle ) {
+			return;
+		}
+
 		this.updateCurrentGlobalName();
 	}
 
@@ -194,7 +203,7 @@ export default class GlobalControlSelect extends Marionette.Behavior {
 
 		if ( this.view.getGlobalKey() ) {
 			// This setTimeout is here to overcome an issue with a requestAnimationFrame that runs in the Pickr library.
-			setTimeout( () => this.fetchGlobalValue(), 50 );
+			setTimeout( () => ! this.view.isDestroyed && this.fetchGlobalValue(), 50 );
 		} else {
 			this.onValueTypeChange();
 		}
