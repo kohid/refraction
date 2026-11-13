@@ -114,6 +114,9 @@ class Field_Renderer {
 				echo self::image( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from WordPress image markup and escaped parts.
 			} elseif ( 'icon_list' === $type ) {
 				echo self::icon_list( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from bundled icons and escaped parts.
+			} elseif ( 'summary' === $type ) {
+				// Filled by the script with the answers given so far (labels and values), for a last look before sending.
+				echo '<div class="rfb-summary" data-rfb-summary data-rfb-empty="' . esc_attr__( 'Your answers will show here.', 'refraction' ) . '">' . ( '' !== $field['content'] ? '<div class="rfb-summary-title">' . esc_html( $field['content'] ) . '</div>' : '' ) . '<dl class="rfb-summary-list"></dl></div>';
 			} else {
 				echo '<hr class="rfb-divider">';
 			}
@@ -145,6 +148,12 @@ class Field_Renderer {
 
 		echo '<div' . $attrs . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
+		if ( 'total' === $type ) {
+			self::total( $field, $value, $id, $label_class, $ctx );
+			echo '</div>';
+			return;
+		}
+
 		if ( 'group' === $type ) {
 			echo '<fieldset class="rfb-group"><legend class="rfb-legend">' . self::heading( $field, 'rfb-legend-text' ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-form-grid" data-rfb-scope>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			self::render_fields( $field['children'], is_array( $value ) ? $value : [], $name, $errors, $ctx, $path );
@@ -169,7 +178,7 @@ class Field_Renderer {
 
 			foreach ( $field['options'] as $index => $option ) {
 				$option_id = $id . '-' . $index;
-				echo '<label class="rfb-check" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . checked( in_array( $option['value'], $picked, true ), true, false ) . '><span>' . esc_html( $option['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<label class="rfb-check" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . '><span>' . esc_html( $option['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '</div></fieldset>';
@@ -213,7 +222,7 @@ class Field_Renderer {
 			echo '<option value="">' . esc_html( '' !== $field['placeholder'] ? $field['placeholder'] : __( 'Select...', 'refraction' ) ) . '</option>';
 
 			foreach ( $field['options'] as $option ) {
-				echo '<option value="' . esc_attr( $option['value'] ) . '"' . selected( (string) $value, $option['value'], false ) . '>' . esc_html( $option['label'] ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<option value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . selected( (string) $value, $option['value'], false ) . '>' . esc_html( $option['label'] ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '</select>';
@@ -249,12 +258,91 @@ class Field_Renderer {
 		$attributes = '';
 
 		if ( 'number' === $type || 'currency' === $type ) {
-			$attributes .= ' step="' . ( 'currency' === $type ? '0.01' : 'any' ) . '" inputmode="decimal"';
+			$attributes .= ' step="' . ( 'currency' === $type ? '0.01' : ( ! empty( $field['stepper'] ) ? '1' : 'any' ) ) . '" inputmode="decimal"';
 			$attributes .= null !== $field['min'] ? ' min="' . esc_attr( (string) $field['min'] ) . '"' : '';
 			$attributes .= null !== $field['max'] ? ' max="' . esc_attr( (string) $field['max'] ) . '"' : '';
 		}
 
-		echo '<input class="rfb-input" type="' . esc_attr( $html_types[ $type ] ?? 'text' ) . '" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $value ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . $attributes . $required . $described_attr . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$attributes .= self::when_attributes( $field );
+		$list = '';
+
+		if ( 'text' === $type && ! empty( $field['suggestions'] ) ) {
+			// Typing suggestions from the site's own list (no outside address service).
+			$list = $id . '-list';
+			$attributes .= ' list="' . esc_attr( $list ) . '" autocomplete="off"';
+		}
+
+		$input = '<input class="rfb-input" type="' . esc_attr( $html_types[ $type ] ?? 'text' ) . '" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $value ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . $attributes . $required . $described_attr . '>';
+
+		if ( 'number' === $type && ! empty( $field['stepper'] ) ) {
+			// A minus and a plus button around the box (the script wires them; without it the box still takes a number).
+			$input = '<div class="rfb-count" data-rfb-count><button type="button" class="rfb-count-btn" data-rfb-step="-1" aria-label="' . esc_attr__( 'One less', 'refraction' ) . '" tabindex="-1">&minus;</button>' . $input . '<button type="button" class="rfb-count-btn" data-rfb-step="1" aria-label="' . esc_attr__( 'One more', 'refraction' ) . '" tabindex="-1">+</button></div>';
+		}
+
+		echo $input; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+
+		if ( '' !== $list ) {
+			echo '<datalist id="' . esc_attr( $list ) . '">';
+
+			foreach ( $field['suggestions'] as $suggestion ) {
+				echo '<option value="' . esc_attr( $suggestion ) . '"></option>';
+			}
+
+			echo '</datalist>';
+		}
+	}
+
+	/** The number a choice or card adds to a Total, as a data attribute (nothing when it has none). */
+	private static function number_attr( array $option ): string {
+		return isset( $option['number'] ) && null !== $option['number'] ? ' data-rfb-n="' . esc_attr( (string) (float) $option['number'] ) . '"' : '';
+	}
+
+	/** min, max and step of a date, time or date-and-time box, and the closed weekdays for the script. */
+	private static function when_attributes( array $field ): string {
+		$type = $field['type'];
+
+		if ( ! in_array( $type, [ 'date', 'time', 'datetime' ], true ) ) {
+			return '';
+		}
+
+		$out = '';
+
+		if ( 'time' !== $type ) {
+			$limits = Schema::when_limits( $field );
+			$out .= $field['notice_hours'] > 0 ? ' min="' . esc_attr( 'date' === $type ? $limits['min_date'] : $limits['min_datetime'] ) . '"' : '';
+			$out .= '' !== $limits['max_date'] ? ' max="' . esc_attr( 'date' === $type ? $limits['max_date'] : $limits['max_date'] . 'T23:59' ) . '"' : '';
+			$out .= $field['closed_days'] ? ' data-rfb-closed="' . esc_attr( implode( ',', $field['closed_days'] ) ) . '"' : '';
+		}
+
+		if ( 'date' !== $type ) {
+			$out .= 'time' === $type && '' !== $field['time_min'] ? ' min="' . esc_attr( $field['time_min'] ) . '"' : '';
+			$out .= 'time' === $type && '' !== $field['time_max'] ? ' max="' . esc_attr( $field['time_max'] ) . '"' : '';
+			$out .= '' !== $field['time_min'] || '' !== $field['time_max'] ? ' data-rfb-hours="' . esc_attr( ( '' !== $field['time_min'] ? $field['time_min'] : '00:00' ) . '-' . ( '' !== $field['time_max'] ? $field['time_max'] : '23:59' ) ) . '"' : '';
+			$out .= $field['time_step'] > 0 ? ' step="' . (int) ( $field['time_step'] * 60 ) . '"' : '';
+		}
+
+		return $out;
+	}
+
+	/**
+	 * A Total: the amount the answers come to, worked out by the script as the visitor answers (the formula and rules ride
+	 * along as JSON) and again by the server, whose figure is stored. Nothing is posted.
+	 */
+	private static function total( array $field, $value, string $id, string $label_class, array $ctx ): void {
+		$cfg = Money::config( (array) ( $ctx['money'] ?? [] ) );
+		$per = Money::per_label( $field['per'], $field['per_label'] );
+		$shown = is_numeric( $value ) ? Money::display( $value, $cfg, $field['per'], $field['per_label'] ) : $field['no_price'];
+		$config = [
+			'formula' => $field['formula'],
+			'rules' => $field['rules'],
+			'none' => $field['no_price'],
+			'symbol' => $cfg['currency_symbol'],
+			'after' => 'after' === $cfg['currency_position'],
+			'per' => $per,
+		];
+
+		echo '<span class="' . esc_attr( $label_class ) . '" id="' . esc_attr( $id ) . '-label">' . esc_html( $field['label'] ) . '</span>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<output class="rfb-total" aria-labelledby="' . esc_attr( $id ) . '-label" aria-live="polite" data-rfb-total="' . esc_attr( (string) wp_json_encode( $config ) ) . '"><span class="rfb-total-amount">' . esc_html( $shown ) . '</span></output>';
 	}
 
 	/** The Amount input: a text box that writes 1,200.50 as you type, with the currency symbol and the period beside it. */
@@ -374,12 +462,12 @@ class Field_Renderer {
 
 			if ( $free ) {
 				// A free container: the pick control and whatever blocks the owner dropped in. The label stretches over the card so the whole card picks it.
-				echo '<label class="rfb-cc-pick" for="' . esc_attr( $card_id ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $card_id ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '><span class="rfb-cc-mark' . ( $field['multiple'] ? ' is-check' : '' ) . '" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html( $card['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<label class="rfb-cc-pick" for="' . esc_attr( $card_id ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $card_id ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . self::number_attr( [ 'number' => $card['card_price'] ] ) . ' data-rfb-title="' . esc_attr( $card['label'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '><span class="rfb-cc-mark' . ( $field['multiple'] ? ' is-check' : '' ) . '" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html( $card['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '<div class="rfb-cc-content">' . self::locked( $card, $ctx, $path . '.' . $card['key'] ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 				continue;
 			}
 
-			echo '<label class="rfb-cc-main" for="' . esc_attr( $card_id ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $card_id ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<label class="rfb-cc-main" for="' . esc_attr( $card_id ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $card_id ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . self::number_attr( [ 'number' => $card['card_price'] ] ) . ' data-rfb-title="' . esc_attr( $card['label'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<span class="rfb-cc-body"><span class="rfb-cc-title">' . esc_html( $card['label'] ) . ( '' !== $card['card_badge'] ? ' <span class="rfb-cc-badge">' . esc_html( $card['card_badge'] ) . '</span>' : '' ) . '</span>' . ( '' !== $card['card_subtitle'] ? '<span class="rfb-cc-sub">' . esc_html( $card['card_subtitle'] ) . '</span>' : '' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<span class="rfb-cc-price">' . $price . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
@@ -577,6 +665,7 @@ class Field_Renderer {
 			case 'url':
 				return '<a href="' . esc_url( $text ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( preg_replace( '#^https?://#', '', $text ) ) . '</a>';
 			case 'currency':
+			case 'total':
 				return '<span class="rfb-money">' . esc_html( Money::display( $text, Money::config( $money ), $field['per'], $field['per_label'] ) ) . '</span>';
 			case 'rating':
 				return '<span class="rfb-stars" role="img" aria-label="' . esc_attr( $text ) . '">' . esc_html( str_repeat( '★', (int) $value ) . str_repeat( '☆', 5 - (int) $value ) ) . '</span>';

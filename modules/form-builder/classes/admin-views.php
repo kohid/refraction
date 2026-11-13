@@ -116,6 +116,15 @@ class Admin_Views {
 			$this->button( __( 'New form', 'refraction' ), Editor_Forms::new_url(), 'primary', 'add' )
 		);
 
+		// Starters (0.90.0): a ready-made form to begin from.
+		echo '<div class="rfb-card rfb-starters"><div class="rfb-card-body"><h2 class="rfb-starters-title">' . esc_html__( 'Start from a ready-made form', 'refraction' ) . '</h2>';
+
+		foreach ( Starters::all() as $key => $starter ) {
+			echo '<div class="rfb-starter"><div><strong>' . esc_html( $starter['title'] ) . '</strong><p class="rfb-muted">' . esc_html( $starter['text'] ) . '</p></div>' . $this->button( __( 'Use this form', 'refraction' ), Starters::url( $key ), 'light-primary', 'add' ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+
+		echo '</div></div>';
+
 		if ( ! $all ) {
 			echo '<div class="rfb-card rfb-empty"><div class="rfb-card-body">' . $this->icon( 'layers', 40 ) . '<h2>' . esc_html__( 'Create your first collection', 'refraction' ) . '</h2><p>' . esc_html__( 'A collection is a set of records with the fields you choose, a status workflow, an admin table, and optionally a public form or list. Build its form in the page editor: drop fields from the Form Builder category and lay them out like any page.', 'refraction' ) . '</p>' . $this->button( __( 'New form', 'refraction' ), Editor_Forms::new_url(), 'primary', 'add' ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$this->close();

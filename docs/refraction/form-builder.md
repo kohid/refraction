@@ -75,3 +75,35 @@ The screens follow the layout language of the Metronic 8 admin demo (cards with 
   - **The Form page's own address**: `Form_Document::print_elements()` prints the real form (the shortcode's output) when the page is shown on the site by itself, outside the editor and its preview; the shortcode prints the page with `get_builder_content()` there, because the builder's recursion guard returns nothing for the page being viewed.
   - **Page caches**: the form carries `data-rfb-issued` and `data-rfb-token-url`; when the page is older than five minutes, `frontend.js` fetches a fresh nonce and time token from `admin-ajax.php?action=refraction_fb_token` (only for a collection that takes submissions) and a submit made before it arrives waits for it. The script also starts when it is loaded after `DOMContentLoaded`.
   - Check: `scripts/check-form-canvas.mjs`.
+- **Booking fields and the taxi booking starter (0.90.0)**:
+  - **Total** (`total`, widget `rfb-field-total`): an amount worked out from the answers. **Formula** uses field keys in braces, numbers, `+ - * /`, brackets and `min max round ceil floor abs` (`Classes\Formula`, a small parser with no `eval`, mirrored in `frontend.js`). A field counts as its number; a select, radio or checkbox counts the **number of the chosen choice(s)**, written `value|Label|number`; a set of choice cards counts the prices of the picked cards; a Yes / No switch counts 1 when on. **Other formulas when...** are rules of one or two conditions each (the Conditions engine); the first that matches gives the formula, and an empty formula means no price, shown as the **Text when there is no price**. The script shows the total live; the server never reads a posted total and works it out in `Schema::validate()` (`totals()`) once every answer is known. Only top-level totals and those in Accordion, Tabs or Columns are worked out.
+  - **Choice cards**: each card has a **Card key** (stable keys for rules, totals and prefill) and **Offer this card only when** (up to two rules, such as `passengers is less than 5`). These are saved as the card group's `conditions`, so the server also refuses a hidden card.
+  - **Date limits** (Date, Date and time): **Notice needed (hours)** (the browser's `min` and a server check), **Bookable up to (days ahead)** (`max`), **Closed on** weekdays (the script's own message, checked on the server). **Time limits** (Time, Date and time): **From**, **Until** and **Minutes between choices** (`step`). "Now" is the site's time zone (`Schema::now()`, which tests set).
+  - **Number**: **Minus and plus buttons** (`.rfb-count`, whole steps within the lowest and highest). **Text**: **Suggestions while typing** from your own list (a `<datalist>`, no outside service).
+  - **Summary** (`rfb-summary`): the answers given so far as label and value, filled by the script (choices by their labels, cards by their names, the total as shown). Hidden fields, locked card inputs and uploads are left out. Nothing is stored.
+  - **Reference** (cog > Notifications > **Reference prefix**): `PREFIX-yymmdd-NNNN`, unique per collection (record meta `_rfb_reference`). It is passed back as `rfb_ref` (only a well-formed one is shown), replaces `{reference}` in the message after sending, and is added to the office email and the webhook (`reference`).
+  - **Email the visitor a copy**: to the address in a field, with a subject and a plain-text message using `{reference}`, `{summary}` (every answer, one per line) and `{field_key}`. Replies go to the first notification address. Amounts and totals are written with the form's currency.
+  - **Prefill**: Form Canvas > **Answers filled in on this page** (field key = value) becomes the shortcode's `fill="key=value;key=value"`; `?fill_key=value` in the address does the same. Only top-level fields. Choice cards and checkboxes take keys or values separated by commas. Visitors can change them, and the server checks them like any answer.
+  - **Starters** (`Classes\Starters`, files in `modules/form-builder/starters/`): Refraction > Builder > **Start from a ready-made form** makes a Form page from the starter's elements and settings, saves it once (which makes the collection) and opens it in the editor. **Taxi and tour booking** (`taxi-booking.php`) has three steps:
+    - **Your trip**: the service (airport, corporate, golf, wedding, minibus, tour), airport direction and flight, the tour (hours as the choice's number), minibus hire length, company and account, pickup with place suggestions, up to 5 stops, drop-off, pickup date and time (2 hours notice, 15-minute steps), and an optional return.
+    - **Passengers and vehicle**: passengers, suitcases and carry-on with minus and plus buttons; vehicle cards (saloon, executive, estate, wheelchair accessible, 6, 8 and 16 seats) offered only when they seat everyone (minibus hire offers minibuses only); for tours, car (£55 an hour) or minibus (£65 an hour).
+    - **Your details**: name, email, mobile, notes, payment to the driver (cash or card), the **Price** total (tour hours x hourly rate; Isle of Skye £600 by car or £700 by minibus; transfers "we confirm the fare"), the Summary, terms, and Send my booking.
+    - Reference prefix `IT`, an email to the customer and to the site's admin address, red `#E20A17` form colors and £. Put it on each service and tour page with Form Canvas and prefill the service (and tour).
+  - Check: `node scripts/check-booking-form.mjs --site DIR --port N`; pure logic in `php scripts/test-form-builder.php`.
+
+  - **Putting it on the Inverness Taxis pages**: one Form Canvas per page, with **Answers filled in on this page**:
+
+    | Page | service | tour |
+    |---|---|---|
+    | /services/airport-transfers/ | airport | |
+    | /services/corporate-service/ | corporate | |
+    | /services/golf-transfers/ | golf | |
+    | /services/wedding-cars/ | wedding | |
+    | /services/minibus-service/ | minibus | |
+    | /inverness-tours/loch-ness-urquhart-castle-tour/ | tour | loch-ness-urquhart-castle |
+    | /inverness-tours/culloden-clava-cawdor-tour/ | tour | culloden-clava-cawdor |
+    | /inverness-tours/dunrobin-castle-northern-highlands-tour/ | tour | dunrobin-northern-highlands |
+    | /inverness-tours/isle-of-skye-full-day-tour/ | tour | isle-of-skye |
+    | /inverness-tours/short-loch-ness-tour/ | tour | short-loch-ness |
+
+    A "Book now" button elsewhere can link to the booking page with `?fill_service=golf` (and `&fill_tour=...`).

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.89.0
+Stable tag: 0.90.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,15 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.90.0 =
+* Form Builder: a ready-made Taxi and tour booking form (Refraction > Builder > Start from a ready-made form). It covers airport transfers, corporate travel, golf transfers, wedding cars, minibus hire and the five Inverness tours, in three steps.
+* Form Builder, new: Total field. It works out an amount from the answers as visitors fill the form (field keys, + - * / and min, max, round), with rules for other formulas such as a fixed tour price. The server works it out again and stores its own figure.
+* Form Builder, new: choices can carry a number (value|Label|number). Choice cards have their own key and up to two rules for when they are offered, for example a vehicle only when it seats everyone.
+* Form Builder, new: Date and Date and time fields take a notice period (hours), how far ahead bookings can go and closed weekdays. Time takes earliest and latest times and minutes between choices. All are checked in the browser and on the server.
+* Form Builder, new: minus and plus buttons on Number fields; place suggestions on Text fields from your own list (no outside address service); a Summary widget that lists the answers before sending.
+* Form Builder, new: a reference for every record (prefix, date and four digits, such as IT-261113-4821), shown after sending and included in the emails and the webhook. Optionally emails visitors a copy with {reference}, {summary} and {field} tags.
+* Form Builder, new: Form Canvas and the [refraction_form] fill="..." attribute prefill answers per page, and so does a link with ?fill_key=value. One form serves every service and tour page with the right one already chosen.
 
 = 0.89.0 =
 * Phone Showcase: each step has its own icon colors (icon or number color and background) in Normal, Hover and Active tabs, over the Style tab's colors. Steps without their own keep the Style tab's look.

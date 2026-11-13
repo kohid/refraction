@@ -19,6 +19,6 @@ class Field_Time extends Field_Widget {
 	}
 
 	protected function features(): array {
-		return [ 'default', 'required', 'input' ];
+		return [ 'default', 'required', 'input', 'time_limits' ];
 	}
 }

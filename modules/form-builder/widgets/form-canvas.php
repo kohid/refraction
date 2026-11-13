@@ -74,6 +74,22 @@ class Form_Canvas extends Widget_Base {
 		return $module ? $module->form_options() : [];
 	}
 
+	/** The prefill rows as the shortcode's fill="key=value;key=value". */
+	public static function fill_text( array $rows ): string {
+		$pairs = [];
+
+		foreach ( $rows as $row ) {
+			$key = \Refraction\Modules\FormBuilder\Classes\Schema::key( $row['key'] ?? '' );
+			$value = str_replace( [ ';', '=', '"', ']' ], '', (string) ( $row['value'] ?? '' ) );
+
+			if ( '' !== $key ) {
+				$pairs[] = $key . '=' . $value;
+			}
+		}
+
+		return implode( ';', $pairs );
+	}
+
 	protected function register_controls() {
 		$forms = self::forms();
 
@@ -109,6 +125,20 @@ class Form_Canvas extends Widget_Base {
 			'label' => esc_html__( 'Text above the form', 'refraction' ),
 			'type' => Controls_Manager::TEXTAREA,
 			'dynamic' => [ 'active' => true ],
+		] );
+
+		// Prefill (0.90.0): one form for many pages, each opening with its own service or tour already chosen.
+		$fill = new \Refraction\Repeater();
+		$fill->add_control( 'key', [ 'label' => esc_html__( 'Field key', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => 'service' ] );
+		$fill->add_control( 'value', [ 'label' => esc_html__( 'Value', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => 'airport', 'description' => esc_html__( 'For choices, the saved value (value|Label: the value); for choice cards, the card\'s field key.', 'refraction' ) ] );
+		$this->add_control( 'fill', [
+			'label' => esc_html__( 'Answers filled in on this page', 'refraction' ),
+			'type' => Controls_Manager::REPEATER,
+			'fields' => $fill->get_controls(),
+			'title_field' => '{{{ key }}} = {{{ value }}}',
+			'default' => [],
+			'separator' => 'before',
+			'description' => esc_html__( 'The form opens with these answers given; visitors can still change them. A link can do the same: ?fill_service=airport.', 'refraction' ),
 		] );
 
 		$this->end_controls_section();
@@ -286,7 +316,7 @@ class Form_Canvas extends Widget_Base {
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-			<?php echo Module::form_html( $slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The form shortcode escapes its output. ?>
+			<?php echo Module::form_html( $slug, self::fill_text( (array) ( $settings['fill'] ?? [] ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The form shortcode escapes its output. ?>
 		</div>
 		<?php
 	}

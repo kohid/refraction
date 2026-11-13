@@ -19,6 +19,6 @@ class Field_Datetime extends Field_Widget {
 	}
 
 	protected function features(): array {
-		return [ 'default', 'required', 'input' ];
+		return [ 'default', 'required', 'input', 'date_limits', 'time_limits' ];
 	}
 }
