@@ -37,7 +37,16 @@ ControlsCSSParser = refractionModules.ViewModule.extend( {
 		} );
 	},
 
-	addStyleRules( styleControls, values, controls, placeholders, replacements ) {
+	/**
+	 * @param {Array}  styleControls
+	 * @param {Object} values
+	 * @param {Object} controls
+	 * @param {Array}  placeholders
+	 * @param {Array}  replacements
+	 * @param {Object} [itemGlobals] For a repeater item: its own global links (an item keeps them in its own
+	 *                               __globals__; the element's do not apply to it).
+	 */
+	addStyleRules( styleControls, values, controls, placeholders, replacements, itemGlobals ) {
 		// If the current element contains dynamic values, parse these values
 		const dynamicParsedValues = this.getSettings( 'settingsModel' ).parseDynamicSettings( values, this.getSettings( 'dynamicParsing' ), styleControls );
 
@@ -58,7 +67,9 @@ ControlsCSSParser = refractionModules.ViewModule.extend( {
 			const context = this.getSettings( 'context' );
 			let globalKeys;
 
-			if ( context ) {
+			if ( itemGlobals ) {
+				globalKeys = itemGlobals;
+			} else if ( context ) {
 				globalKeys = context.model.get( 'settings' ).get( '__globals__' );
 			}
 
@@ -104,7 +115,8 @@ ControlsCSSParser = refractionModules.ViewModule.extend( {
 
 					// This regex handles a case where a control's selector property value includes more than one CSS selector.
 					// Example: 'selector' => 'background: {{VALUE}}; background-color: {{VALUE}};'.
-					outputCssProperty = cssProperty.replace( /(:)[^;]+(;?)/g, '$1' + selectorGlobalValue + '$2' );
+					// Each declaration keeps its !important (a global would otherwise lose to what it had to beat).
+					outputCssProperty = cssProperty.replace( /(:)[^;]+(;?)/g, ( match, colon, end ) => colon + selectorGlobalValue + ( /!\s*important/i.test( match ) ? ' !important' : '' ) + end );
 				}
 			} else {
 				try {
@@ -314,7 +326,8 @@ ControlsCSSParser = refractionModules.ViewModule.extend( {
 
 	addRepeaterControlsStyleRules( repeaterValues, repeaterControlsItems, controls, placeholders, replacements ) {
 		repeaterControlsItems.forEach( ( item, index ) => {
-			const itemModel = repeaterValues.models[ index ];
+			const itemModel = repeaterValues.models[ index ],
+				globals = itemModel.get( '__globals__' );
 
 			this.addStyleRules(
 				item,
@@ -322,6 +335,8 @@ ControlsCSSParser = refractionModules.ViewModule.extend( {
 				controls,
 				placeholders.concat( [ '{{CURRENT_ITEM}}' ] ),
 				replacements.concat( [ '.refraction-repeater-item-' + itemModel.get( '_id' ) ] ),
+				// An empty object, not undefined, so the element's own links are never used for the item.
+				( globals && globals.toJSON ? globals.toJSON() : globals ) || {},
 			);
 		} );
 	},

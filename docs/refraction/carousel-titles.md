@@ -21,3 +21,11 @@ marked as the carousel moves. Made for the Vertical direction; works with Horizo
   Padding, Corners, Border Width, Normal / Hover / Current tabs (text, background, border colours; marker colour and
   thickness on Current), Number Color, Transition.
 - **Check**: `node scripts/check-carousel-titles.mjs --site DIR --port N`.
+
+## Icons and marker (0.74.0)
+
+Each slide can have a Title Icon (`slides[].slide_icon`), placed by Icon Position (`title_nav_icon_position`: before,
+above, after; prefix class `refraction-nc-title-icon-*`). Style > Slide Titles: Icon Color / Icon Background in the
+Normal, Hover and Current tabs, Title Icons (`Icon_Box_Style`: size, padding, corners) and Space Between Icon And
+Title. Current Marker: Show Marker (`refraction-nc-marker-yes`, default on), Marker Color, Thickness, Length (%),
+Distance From The Edge and Corners (`--rf-nc-marker-*`).

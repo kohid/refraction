@@ -5,6 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
 use Refraction\Icons_Manager;
+use Refraction\Includes\Widgets\Traits\Icon_Box_Style;
 use Refraction\Modules\ProWidgets\Module as ProWidgets;
 use Refraction\Repeater;
 use Refraction\Utils;
@@ -642,6 +643,15 @@ class Phone_Showcase extends Widget_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__step' => 'border-radius: {{SIZE}}{{UNIT}};' ],
 		] );
 
+		Icon_Box_Style::controls( $this, 'step_icon_box', '{{WRAPPER}} .rf-showcase__badge', [ 'colors' => false, 'heading' => esc_html__( 'Step Icon', 'refraction' ) ] );
+		$this->add_responsive_control( 'step_number_size', [
+			'label' => esc_html__( 'Number Size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em' ],
+			'range' => [ 'px' => [ 'min' => 8, 'max' => 48 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__number' => 'font-size: {{SIZE}}{{UNIT}};' ],
+		] );
+
 		// The progress bar under the current step while the steps play on their own.
 		$timer = '{{WRAPPER}} .rf-showcase__timer';
 		$playing = [ 'autoplay' => 'yes' ];
@@ -700,6 +710,8 @@ class Phone_Showcase extends Widget_Base {
 		$this->add_control( 'label_pill_border', [ 'label' => esc_html__( 'Pill Border', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#B8EBD9', 'selectors' => [ $label => 'border-color: {{VALUE}};' ], 'condition' => $label_on ] );
 		$this->add_control( 'label_pill_badge_bg', [ 'label' => esc_html__( 'Icon Badge Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#1FCB97', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'background-color: {{VALUE}};' ], 'condition' => $label_on ] );
 		$this->add_control( 'label_pill_badge_color', [ 'label' => esc_html__( 'Icon Badge Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#06372A', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'color: {{VALUE}}; fill: {{VALUE}};' ], 'condition' => $label_on ] );
+		Icon_Box_Style::controls( $this, 'label_pill_icon', $label . ' .rf-showcase__label-badge', [ 'colors' => false, 'condition' => $label_on ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'label_pill_typography', 'label' => esc_html__( 'Pill Typography', 'refraction' ), 'selector' => '{{WRAPPER}}.rf-showcase-label-pill-yes .rf-showcase__label', 'condition' => $label_on ] );
 
 		$this->add_control( 'heading_color', [
 			'label' => esc_html__( 'Heading Color', 'refraction' ),
@@ -874,6 +886,8 @@ class Phone_Showcase extends Widget_Base {
 			'range' => [ 'px' => [ 'max' => 30 ] ],
 			'selectors' => [ $any => 'gap: {{SIZE}}{{UNIT}};' ],
 		] );
+
+		Icon_Box_Style::controls( $this, 'button_icon_box', $any . ' .rf-showcase__button-icon', [ 'size' => false ] );
 
 		$this->add_group_control( Group_Control_Typography::get_type(), [
 			'name' => 'button_small_typography',

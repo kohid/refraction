@@ -122,8 +122,9 @@ async function main() {
 		const library = page( 'Devices', box( [ ...devices.map( ( d, i ) => w( `dv${ i }`, { device: d, color: [ 'black', 'silver', 'gold', 'blue', 'green', 'rose', 'purple', 'white', 'graphite' ][ i % 9 ], steps: [ step( 1 ) ], cards: [], label: '', phone_width: { unit: 'px', size: d.startsWith( 'tablet' ) || 'fold' === d ? 420 : 220 } } ) ), w( 'dvx', { device: 'custom', frame_image: { url: img( 'w-logo-blue.png' ) }, frame_top: { size: 10 }, frame_right: { size: 20 }, frame_bottom: { size: 10 }, frame_left: { size: 20 }, steps: [ step( 1 ) ], cards: [], label: '', phone_width: { unit: 'px', size: 200 } } ) ], { flex_wrap: 'wrap', flex_direction: 'row' } ), {} );
 		const auto = page( 'Autoplay', box( [ w( 'ps04', { steps: [ step( 1 ), step( 2 ), step( 3 ) ], cards: [], autoplay: 'yes', interval: { size: 2 } } ) ] ), {} );
 		const manyCards = Array.from( { length: 12 }, ( x, i ) => ( { _id: `mc${ i }`, title: `Card ${ i + 1 }`, icon: { value: 'fas fa-check', library: 'fa-solid' }, x: { size: ( i % 2 ) ? 110 : -10 }, y: { size: 5 + ( i * 7 ) } } ) );
+		manyCards[ 1 ] = { ...manyCards[ 1 ], __globals__: { card_icon_bg: 'globals/colors?id=primary' } };
 		manyCards[ 0 ] = { ...manyCards[ 0 ], card_bg: '#222222', card_title_color: '#FFFFFF', card_icon_bg: '#E20A17', card_icon_color: '#FFFFFF', card_icon_size: { unit: 'px', size: 30 }, card_icon_padding: { unit: 'px', size: 4 }, card_radius: { unit: 'px', size: 2 } };
-		const styled = page( 'Card styles', box( [ w( 'ps08', { steps: [ step( 1 ), step( 2 ) ], cards: manyCards, card_icon_size: { unit: 'px', size: 22 }, card_icon_padding: { unit: 'px', size: 6 }, autoplay: 'yes', interval: { size: 3 }, progress_color: '#E20A17', progress_height: { unit: 'px', size: 6 }, progress_radius: { unit: 'px', size: 3 }, progress_inset: { unit: 'px', size: 12 }, progress_position: 'top' } ), w( 'ps09', { steps: [ step( 1 ), step( 2 ) ], cards: [], autoplay: 'yes', interval: { size: 3 }, progress_show: '' } ) ] ), {} );
+		const styled = page( 'Card styles', box( [ w( 'ps08', { steps: [ step( 1 ), step( 2 ) ], cards: manyCards, card_icon_size: { unit: 'px', size: 22 }, card_icon_padding: { unit: 'px', size: 6 }, autoplay: 'yes', interval: { size: 3 }, progress_color: '#E20A17', progress_height: { unit: 'px', size: 6 }, progress_radius: { unit: 'px', size: 3 }, progress_inset: { unit: 'px', size: 12 }, progress_position: 'top', step_icon_box_size: { unit: 'px', size: 20 }, step_icon_box_padding: { unit: 'px', size: 5 }, step_icon_box_radius: { unit: 'px', size: 15 }, button_text: 'Google Play', button_icon: { value: 'fab fa-google-play', library: 'fa-brands' }, button_icon_box_padding: { unit: 'px', size: 6 }, button_icon_box_bg: '#FFFFFF', button_icon_box_color: '#E20A17', label: 'Download for free', label_pill: 'yes', label_icon: { value: 'fas fa-taxi', library: 'fa-solid' }, label_pill_icon_size: { unit: 'px', size: 14 }, label_pill_icon_padding: { unit: 'px', size: 7 }, label_pill_typography_typography: 'custom', label_pill_typography_font_size: { unit: 'px', size: 13 } } ), w( 'ps09', { steps: [ step( 1 ), step( 2 ) ], cards: [], autoplay: 'yes', interval: { size: 3 }, progress_show: '' } ) ] ), {} );
 		const phoneOnly = page( 'Phone layout', box( [ w( 'ps05', { steps: [ step( 1 ), step( 2 ) ], cards, cards_phone: '', stack_order: 'phone' } ) ] ), {} );
 
 		const state = ( p, id ) => p.evaluate( ( wid ) => {
@@ -288,6 +289,21 @@ async function main() {
 				off: getComputedStyle( off ).display,
 			};
 		} );
+		const icons = await cs.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps08"]' );
+			const stepBadge = root.querySelector( '.rf-showcase__step:not(.is-active) .rf-showcase__badge' );
+			const bicon = root.querySelector( '.rf-showcase__button-icon' );
+			const lb = root.querySelector( '.rf-showcase__label-badge' );
+			const width = ( el ) => Math.round( el.getBoundingClientRect().width );
+			return {
+				step: { box: width( stepBadge ), radius: getComputedStyle( stepBadge ).borderRadius, icon: Math.round( stepBadge.querySelector( 'svg, i' ).getBoundingClientRect().height ) },
+				button: { pad: getComputedStyle( bicon ).paddingTop, bg: getComputedStyle( bicon ).backgroundColor, color: getComputedStyle( bicon ).color },
+				label: { pad: getComputedStyle( lb ).paddingTop, icon: Math.round( lb.querySelector( 'svg, i' ).getBoundingClientRect().height ), font: getComputedStyle( root.querySelector( '.rf-showcase__label' ) ).fontSize },
+				globalCard: getComputedStyle( root.querySelectorAll( '.rf-showcase__card-icon' )[ 1 ] ).backgroundColor,
+			};
+		} );
+		check( 'icons', 'every icon has its own settings: step icons 20px in 5px padding with round corners; button icons with padding, background and colour; the pill label\'s icon 14px in 7px padding and the pill\'s own 13px font', 30 === icons.step.box && 20 === icons.step.icon && '15px' === icons.step.radius && '6px' === icons.button.pad && 'rgb(255, 255, 255)' === icons.button.bg && 'rgb(226, 10, 23)' === icons.button.color && '7px' === icons.label.pad && 14 === icons.label.icon && '13px' === icons.label.font, JSON.stringify( icons ) );
+		check( 'globals', 'a Global Color picked on one floating card\'s icon background shows on the page', 'rgb(110, 193, 228)' === icons.globalCard, icons.globalCard );
 		check( 'cards', 'more than 8 floating cards (12 given, up to 100)', 12 === look.count, look.count );
 		check( 'cards', 'each card has its own Style tab: the first is dark with a red 30px icon in 4px padding; the others keep the shared style (22px icons, 6px padding)', 'rgb(34, 34, 34)' === look.first.cardBg && 'rgb(255, 255, 255)' === look.first.title && 'rgb(226, 10, 23)' === look.first.bg && 38 === look.first.box && '4px' === look.first.pad && 34 === look.second.box && '6px' === look.second.pad && 'rgb(34, 34, 34)' !== look.second.cardBg, JSON.stringify( look ) );
 		check( 'progress bar', 'its own style: red, 6px high, rounded, 12px in from the sides (inside the 1px step border), at the top of the step; switched off it does not show', 'rgb(226, 10, 23)' === look.timer.color && 6 === look.timer.h && look.timer.top <= 1 && Math.abs( look.timer.left - 12 ) <= 1 && '3px' === look.timer.radius && 'none' === look.off, JSON.stringify( look ) );
@@ -327,6 +343,26 @@ async function main() {
 			const c = window.refraction.widgetsCache[ 'refraction-phone-showcase' ]?.controls || {}; return { max: c.steps?.max_items, devices: Object.keys( c.device?.options || {} ).length, cards: c.cards?.max_items };
 		} );
 		check( 'editor', 'the preview draws it and a click on a step works there; up to 20 steps, 14 device choices (13 and my own frame), up to 100 cards', ed.phone && 2 === ed.at && 20 === panel.max && 14 === panel.devices && 100 === panel.cards, JSON.stringify( [ ed, panel ] ) );
+
+		// Global colours inside a card (a repeater item) in the editor's preview: the saved one, and one picked now.
+		await e.goto( `${ BASE }/wp-admin/post.php?post=${ styled.id }&action=refraction` );
+		await e.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
+		await sleep( 3500 );
+		const gframe = e.frame( { name: 'refraction-preview-iframe' } );
+		const iconBg = ( n ) => gframe.evaluate( ( i ) => getComputedStyle( document.querySelectorAll( '[data-id="ps08"] .rf-showcase__card-icon' )[ i ] ).backgroundColor, n );
+		const savedGlobal = await iconBg( 1 );
+		const picked = await e.evaluate( () => {
+			const c = window.refraction.getContainer( 'ps08' );
+			const item = c.repeaters?.cards?.children?.[ 2 ];
+			if ( ! item ) {
+				return 'no item container';
+			}
+			window.$e.run( 'document/globals/enable', { container: item, settings: { card_icon_bg: 'globals/colors?id=secondary' } } );
+			return 'ok';
+		} ).catch( ( x ) => x.message );
+		await sleep( 1500 );
+		const pickedGlobal = await iconBg( 2 );
+		check( 'globals', 'in the editor a card\'s Global Color shows too: the saved one (primary) and one picked now (secondary)', 'rgb(110, 193, 228)' === savedGlobal && 'ok' === picked && 'rgb(84, 89, 95)' === pickedGlobal, JSON.stringify( [ savedGlobal, picked, pickedGlobal ] ) );
 		await ectx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

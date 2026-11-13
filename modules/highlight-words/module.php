@@ -259,6 +259,8 @@ class Module extends BaseModule {
 		$element->add_control( 'rf_pill_badge_bg', [ 'label' => esc_html__( 'Badge Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#1FCB97', 'selectors' => [ $badge => 'background-color: {{VALUE}};' ], 'condition' => $on, 'separator' => 'before' ] );
 		$element->add_control( 'rf_pill_badge_color', [ 'label' => esc_html__( 'Badge Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#06372A', 'selectors' => [ $badge => 'color: {{VALUE}};' ], 'condition' => $on ] );
 		$element->add_responsive_control( 'rf_pill_badge_size', [ 'label' => esc_html__( 'Badge Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'em', 'px' ], 'range' => [ 'em' => [ 'min' => 1, 'max' => 4, 'step' => 0.1 ], 'px' => [ 'min' => 14, 'max' => 64 ] ], 'selectors' => [ $badge => '--rf-pill-badge: {{SIZE}}{{UNIT}};' ], 'condition' => $on ] );
+		\Refraction\Includes\Widgets\Traits\Icon_Box_Style::controls( $element, 'rf_pill_badge_icon', $badge, [ 'colors' => false, 'condition' => $on ] );
+		$element->add_group_control( \Refraction\Group_Control_Typography::get_type(), [ 'name' => 'rf_pill_typography', 'label' => esc_html__( 'Pill Typography', 'refraction' ), 'selector' => $title, 'condition' => $on ] );
 		$element->add_responsive_control( 'rf_pill_gap', [ 'label' => esc_html__( 'Space After The Badge', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'em', 'px' ], 'range' => [ 'em' => [ 'max' => 2, 'step' => 0.05 ], 'px' => [ 'max' => 40 ] ], 'selectors' => [ $title => 'gap: {{SIZE}}{{UNIT}};' ], 'condition' => $on ] );
 
 		$element->end_controls_section();
