@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Section groups and shadow global colors check (SQLite test site, Chromium): a long section (Phone Showcase > Style
- * > Steps) shows tabs for its groups (General and one per heading), one group of settings at a time, and remembers the
+ * Organised settings check (SQLite test site, Chromium): Phone Showcase > Style has a section per part (Pill, Heading,
+ * Description, Steps, Phone, Floating Cards, Buttons); Steps has Normal / Hover / Active with categories inside (Colors,
+ * Text, Box, Icon) and its Hover colors apply; a long section (Phone) shows its categories as tabs and remembers the
  * tab; a short section has none; Box / Text Shadow pickers list the global colors and link the shadow to one.
  *
  * Usage: node scripts/check-section-groups.mjs [--site /tmp/rf-sg-site] [--port 8994] [--shots /tmp/section-groups-shots]
@@ -86,7 +87,7 @@ async function main() {
 
 	try {
 		const doc = page( 'Section groups', [ box( 'top', {}, [
-			{ id: 'ps1', elType: 'widget', widgetType: 'refraction-phone-showcase', settings: { steps: [ { _id: 's1', title: 'One' }, { _id: 's2', title: 'Two' } ], cards: [], autoplay: 'yes' }, elements: [] },
+			{ id: 'ps1', elType: 'widget', widgetType: 'refraction-phone-showcase', settings: { steps: [ { _id: 's1', title: 'One' }, { _id: 's2', title: 'Two' } ], cards: [], autoplay: 'yes', heading: 'Book in four taps', description: 'Call us or tap the app.', button_text: 'Get the app', rf_hl_part_heading: 'four taps' }, elements: [] },
 			heading( 'h1', 'Shadow me' ),
 		] ) ] );
 		const ctx = await browser.newContext( { viewport: { width: 1500, height: 950 } } );
@@ -112,32 +113,55 @@ async function main() {
 				s.querySelector( '.refraction-panel-heading' ).click();
 			}
 		}, name );
-		const state = () => a.evaluate( () => ( {
-			tabs: [ ...document.querySelectorAll( '.rf-section-groups__tab' ) ].map( ( t ) => t.textContent + ( t.classList.contains( 'is-active' ) ? '*' : '' ) ),
-			bg: !! document.querySelector( '.refraction-control-step_bg_normal' )?.offsetParent,
-			iconSize: !! document.querySelector( '.refraction-control-step_icon_box_size' )?.offsetParent,
-			progress: !! document.querySelector( '.refraction-control-progress_show' )?.offsetParent,
-			headingShown: !! document.querySelector( '.refraction-control-step_icon_box_heading' )?.offsetParent,
-		} ) );
 
 		await edit( 'ps1', 'Style' );
+		const sections = await a.$$eval( '.refraction-control-type-section', ( x ) => x.filter( ( e ) => e.offsetParent ).map( ( e ) => e.querySelector( '.refraction-panel-heading-title, .refraction-section-title' )?.textContent.trim() ) );
+		check( 'organised', 'Phone Showcase > Style has one section per part, in order: Highlighted Text, Pill, Heading, Description, Steps, Phone, Floating Cards, Buttons', 'Highlighted Text,Pill,Heading,Description,Steps,Phone,Floating Cards' === sections.slice( 0, 7 ).join() || 'Highlighted Text,Pill,Heading,Description,Steps,Phone,Floating Cards,Buttons' === sections.join(), sections.join() );
+
 		await openSection( 'section_style_steps' );
 		await a.waitForTimeout( 800 );
-		let s = await state();
-		check( 'groups', 'Phone Showcase > Style > Steps shows its groups as tabs: General, Step Icon, Progress Bar (General first)', 'General*,Step Icon,Progress Bar' === s.tabs.join(), JSON.stringify( s ) );
-		check( 'groups', 'only the General settings show (colors yes, the step icon size and the progress bar no)', s.bg && ! s.iconSize && ! s.progress, JSON.stringify( s ) );
-		await a.screenshot( { path: join( SHOTS, 'steps-general.png' ) } );
-		await a.locator( '.rf-section-groups__tab:has-text("Step Icon")' ).click();
-		await a.waitForTimeout( 500 );
-		s = await state();
-		check( 'groups', 'the Step Icon tab shows the step icon settings only, without repeating its heading', s.iconSize && ! s.bg && ! s.progress && ! s.headingShown && 'Step Icon*' === s.tabs[ 1 ], JSON.stringify( s ) );
-		await a.screenshot( { path: join( SHOTS, 'steps-icon.png' ) } );
+		const steps = () => a.evaluate( () => ( {
+			states: [ ...document.querySelectorAll( '.refraction-control-type-tab' ) ].filter( ( t ) => t.offsetParent ).map( ( t ) => t.textContent.trim() + ( t.classList.contains( 'e-tab-active' ) || t.classList.contains( 'refraction-tab-active' ) ? '*' : '' ) ),
+			cats: [ ...document.querySelectorAll( '.rf-panel-category' ) ].filter( ( c ) => c.offsetParent ).map( ( c ) => c.textContent.trim() ),
+			hoverBg: !! document.querySelector( '.refraction-control-step_bg_hover' )?.offsetParent,
+			typo: !! document.querySelector( '.refraction-control-step_title_typography_typography' )?.offsetParent,
+		} ) );
+		let st = await steps();
+		check( 'organised', 'Steps has the state tabs Normal, Hover, Active', 'Normal,Hover,Active' === st.states.map( ( x ) => x.replace( '*', '' ) ).join(), JSON.stringify( st ) );
+		check( 'organised', 'inside Normal the settings are grouped: Colors, Text, Box, Icon', 'Colors,Text,Box,Icon' === st.cats.join() && st.typo && ! st.hoverBg, JSON.stringify( st ) );
+		await a.screenshot( { path: join( SHOTS, 'steps-normal.png' ) } );
+		await a.locator( '.refraction-control-type-tab:has-text("Hover")' ).first().click();
+		await a.waitForTimeout( 600 );
+		st = await steps();
+		check( 'organised', 'the Hover tab has its own colors', 'Colors' === st.cats.join() && st.hoverBg && ! st.typo, JSON.stringify( st ) );
+		await a.screenshot( { path: join( SHOTS, 'steps-hover.png' ) } );
+
+		// The Phone section: its categories (Colors, Box, Place) become group tabs, as it is long.
 		await openSection( 'section_style_phone' );
+		await a.waitForTimeout( 800 );
+		const phoneTabs = await a.$$eval( '.rf-section-groups__tab', ( t ) => t.map( ( x ) => x.textContent + ( x.classList.contains( 'is-active' ) ? '*' : '' ) ) );
+		check( 'groups', 'a long section (Phone) shows its categories as tabs: Colors, Box, Place, Size And Tilt', 'Colors*,Box,Place, Size And Tilt (per screen size)' === phoneTabs.join(), phoneTabs.join() );
+		await a.locator( '.rf-section-groups__tab:has-text("Box")' ).click();
 		await a.waitForTimeout( 500 );
-		await openSection( 'section_style_steps' );
+		const boxTab = await a.evaluate( () => ( { shadow: !! document.querySelector( '.refraction-control-phone_shadow_box_shadow_type' )?.offsetParent, screen: !! document.querySelector( '.refraction-control-screen_bg' )?.offsetParent } ) );
+		check( 'groups', 'the Box tab shows the shadow and padding, not the colors', boxTab.shadow && ! boxTab.screen, JSON.stringify( boxTab ) );
+		await a.screenshot( { path: join( SHOTS, 'phone-box.png' ) } );
+		await openSection( 'section_style_cards' );
+		await a.waitForTimeout( 500 );
+		await openSection( 'section_style_phone' );
 		await a.waitForTimeout( 700 );
-		s = await state();
-		check( 'groups', 'closing and opening the section again keeps the tab chosen (Step Icon)', 'Step Icon*' === s.tabs[ 1 ] && s.iconSize, JSON.stringify( s ) );
+		const kept = await a.$$eval( '.rf-section-groups__tab.is-active', ( t ) => t.map( ( x ) => x.textContent ).join() );
+		check( 'groups', 'closing and opening the section again keeps the tab chosen (Box)', 'Box' === kept, kept );
+
+		// On the page: a step's own Hover background.
+		await a.evaluate( () => $e.run( 'document/elements/settings', { container: refraction.getContainer( 'ps1' ), settings: { step_bg_hover: '#ffd400' } } ) );
+		await a.waitForTimeout( 1200 );
+		const pframe = a.frame( { name: 'refraction-preview-iframe' } );
+		const step2 = pframe.locator( '[data-id="ps1"] .rf-showcase__step >> nth=1' );
+		await step2.hover();
+		await a.waitForTimeout( 600 );
+		const hovered = await step2.evaluate( ( el ) => getComputedStyle( el ).backgroundColor );
+		check( 'organised', 'Steps > Hover > Background applies when pointing at a step', 'rgb(255, 212, 0)' === hovered, hovered );
 
 		await edit( 'h1', 'Style' );
 		await a.waitForTimeout( 500 );

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.86.0
+Stable tag: 0.87.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.87.0 =
+* Phone Showcase > Style organised by the parts of the widget: Highlighted Text, Pill, Heading, Description, Steps, Phone, Floating Cards and Buttons, each its own section. Steps has Normal, Hover (new) and Active tabs; Floating Cards and Buttons have Normal and Hover tabs; inside, settings are grouped as Colors, Text, Box and Icon (Buttons: First Button, Second Button, Both Buttons, Icon). Long sections show their groups as tabs. Every setting keeps its value.
+* New: Steps > Hover colors (background, border, title, description, icon); Floating Cards > Hover (background, title color, icon background, shadow).
 
 = 0.86.0 =
 * Long settings sections are split into tabs: a section with 12 settings or more that its headings divide into groups (such as Phone Showcase > Style > Steps: General, Step Icon, Progress Bar) shows a row of tabs under its title and one group at a time, so there is no long scroll. It works for every widget, and the tab chosen is remembered while editing.

@@ -97,3 +97,17 @@ printed; new cards start there too.
 `--rf-card-*`, the phone's scale accounted for); let go, the Offsets of its orientation are written for the device shown
 (`card_offset_x_mobile`, ...) through `$e` `document/elements/settings` (undoable), in % of the phone, or px when the
 setting already is in px.
+
+## Style tab, organised (0.87.0)
+
+One section per part, in the order they show: Highlighted Text (Highlight Words), **Pill** (`section_style_label`:
+Text, Pill, Icon), **Heading** (`section_style_heading`: Text), **Description** (`section_style_description`: Text,
+Spacing), **Steps** (tabs Normal / Hover / Active; Normal: Colors, Text, Box, Icon; Hover and Active: Colors; then the
+Progress Bar), **Phone** (Colors, Box, Place, Size And Tilt), **Floating Cards** (Normal: Colors, Text, Box, Icon;
+Hover: Colors, Box) and **Buttons** (Normal: First Button, Second Button, Both Buttons, Icon; Hover: First, Second,
+Both). The category names are headings made by `category()` (class `rf-panel-category`, a quieter heading); in a long
+section they also become the section's group tabs (`groupSection()`, 0.86). Setting ids did not change, so saved
+pages keep their look. New: `step_*_hover` colors, `card_bg_hover`, `card_title_color_hover`, `card_icon_bg_hover`,
+`card_shadow_hover`.
+
+This is the pattern for organising other widgets: sections per part, state tabs where a part changes, categories inside.
