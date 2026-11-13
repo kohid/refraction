@@ -2,7 +2,9 @@
 namespace Refraction\Modules\TimedSlides\Widgets;
 
 use Refraction\Controls_Manager;
+use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
+use Refraction\Includes\Widgets\Traits\Box_Style;
 use Refraction\Group_Control_Typography;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
@@ -626,6 +628,9 @@ class Timed_Slides extends Widget_Nested_Base {
 			'condition' => [ 'autoplay' => 'yes', 'show_timer' => 'yes' ],
 		] );
 
+		// The slider's box: it already cuts its content to its corners.
+		Box_Style::controls( $this, 'ts_box', '{{WRAPPER}} .rf-tco', [ 'background' => false, 'padding' => false, 'clip' => false ] );
+
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_cards', [
@@ -657,6 +662,11 @@ class Timed_Slides extends Widget_Nested_Base {
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
 			'prefix_class' => 'rf-ts-shade-',
+		] );
+
+		$this->add_group_control( Group_Control_Border::get_type(), [
+			'name' => 'card_border',
+			'selector' => '{{WRAPPER}} .rf-tco__card',
 		] );
 
 		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [

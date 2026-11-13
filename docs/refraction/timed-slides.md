@@ -74,3 +74,12 @@ How it works:
 - Headings with Highlight Words inside a slide keep their own mark and colors: `Heading_Dual_Style` now puts the
   section's condition on each of its settings (a widget that highlights nothing prints no highlight CSS or classes), and
   its selector stops at nested elements (`:not({{WRAPPER}} .refraction-element *)`).
+
+## Box of the slider (0.89.0)
+
+Style > Slider > **Box**: Normal / Hover tabs with border (Hover: border color), **Rounded Corners** and box shadow
+(`ts_box_*`, on `.rf-tco`, which already cuts its content to its corners), and a change duration. Style > Cards has a
+**Border** (`card_border`). The controls come from `Refraction\Includes\Widgets\Traits\Box_Style`, shared with the Image
+Box (Style > Box: also background, padding and **Cut The Content To The Corners**, which applies only once a corner is
+rounded). Check: `node scripts/check-box-style.mjs --site DIR --port N`.
+

@@ -1,6 +1,8 @@
 <?php
 namespace Refraction;
 
+use Refraction\Includes\Widgets\Traits\Box_Style;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -351,6 +353,8 @@ class Widget_Image_Box extends Widget_Base {
 				],
 			]
 		);
+
+		Box_Style::controls( $this, 'ib_box', '{{WRAPPER}} .refraction-image-box-wrapper' );
 
 		$this->end_controls_section();
 
