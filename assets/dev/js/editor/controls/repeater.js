@@ -91,6 +91,8 @@ ControlRepeaterItemView = ControlBaseDataView.extend( {
 			return;
 		}
 
+		rowView.buildFields?.();
+
 		rowView.getChildViewContainer( rowView ).addClass( 'editable' );
 
 		this.currentEditableChild = rowView;

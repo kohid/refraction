@@ -25,10 +25,55 @@ export default class extends ControlBaseDataView {
 				this.colorPicker.picker._clearColor( true );
 			}
 		} else {
-			this.initPicker();
+			this.showSwatch( currentValue );
 		}
 
 		this.$el.toggleClass( 'e-control-color--no-value', ! currentValue );
+	}
+
+	/**
+	 * Until the colour picker is first used, a swatch with the picker button's look stands in for it: building a picker
+	 * is the slowest part of a section full of colours. Pointing at it, focusing it or clicking it builds the real one.
+	 *
+	 * @param {string} value Current colour.
+	 */
+	showSwatch( value ) {
+		if ( ! this.$swatch ) {
+			const $button = jQuery( '<button>', { type: 'button', class: 'pcr-button', 'aria-label': __( 'Pick a color', 'refraction' ) } );
+
+			this.$swatch = jQuery( '<div>', { class: 'pickr refraction-control-unit-1 refraction-control-tag-area e-color-swatch' } ).append( $button );
+			this.ui.pickerContainer.after( this.$swatch );
+
+			const build = ( event ) => {
+				this.ensurePicker();
+
+				if ( 'click' === event.type ) {
+					this.colorPicker.picker.getRoot().button.click();
+				} else if ( 'focusin' === event.type ) {
+					this.colorPicker.picker.getRoot().button.focus();
+				}
+			};
+
+			this.$swatch.on( 'pointerenter focusin click', build );
+		}
+
+		this.$swatch.find( '.pcr-button' ).css( '--pcr-color', value || 'transparent' ).toggleClass( 'clear', ! value );
+	}
+
+	/** Builds the colour picker if it is not built yet (in place of the swatch). */
+	ensurePicker() {
+		if ( this.colorPicker || this.isDestroyed ) {
+			return;
+		}
+
+		if ( this.$swatch ) {
+			this.$swatch.remove();
+			this.$swatch = null;
+		}
+
+		this.initPicker();
+		this.applySavedValue();
+		this.triggerMethod( 'picker:ready' );
 	}
 
 	initPicker() {
@@ -301,6 +346,7 @@ export default class extends ControlBaseDataView {
 	}
 
 	activate() {
+		this.ensurePicker();
 		this.colorPicker.picker.show();
 	}
 
