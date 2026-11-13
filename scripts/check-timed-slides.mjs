@@ -369,6 +369,58 @@ async function main() {
 		await m.p.screenshot( { path: join( SHOTS, 'site-phone.png' ) } );
 		await m.ctx.close();
 
+		// ------------------------------------------------------------ progress number, line colors, highlighted words inside
+		const marked = ( id, n ) => ( { id, elType: 'widget', widgetType: 'heading', settings: { title: `Why take this Highland tour ${ n }`, rf_hl_words: 'Highland tour', rf_dual_mark: 'underline', rf_dual_mark_color: '#ff0000', rf_dual_color: '#00ff00' }, elements: [] } );
+		const three = slides.slice( 1 ).concat( [ { _id: 's9', slide_title: 'Third', background_color: '#335533' } ] );
+		const formats = { percent: [ '33%', '67%' ], fraction: [ '1/3', '2/3' ], 'fraction-spaced': [ '1 / 3', '2 / 3' ], of: [ '1 of 3', '2 of 3' ], padded: [ '01 / 03', '02 / 03' ] };
+		const progressSlider = ( key, extra ) => ( {
+			...slider( key, { show_progress: 'yes', progress_format: key.replace( /^p_/, '' ).replace( /_/g, '-' ), ...extra }, three ),
+			elements: three.map( ( _, i ) => ( { ...content( i + 1 ), id: `${ key }c${ i + 1 }`, elements: [ marked( `${ key }h${ i + 1 }`, i + 1 ) ] } ) ),
+		} );
+		const keys = Object.keys( formats ).map( ( f ) => 'p_' + f.replace( /-/g, '_' ) );
+		const prog = page( 'Timed slides progress', keys.flatMap( ( k, i ) => row( k, progressSlider( k, 0 === i ? { line_fill_color: '#ff00ff', line_color: '#0000ff', line_thickness: { unit: 'px', size: 6 }, progress_color: '#ffff00', progress_position: 'before' } : {} ) ) ) );
+		const pv = await visit( prog.url );
+		const readProgress = () => pv.p.evaluate( ( ids ) => ids.map( ( id ) => {
+			const el = document.querySelector( `[data-id="w${ id }"]` );
+			const n = el.querySelector( '.rf-tco__progress' );
+			return n ? n.textContent : null;
+		} ), keys );
+		const first = await readProgress();
+		for ( const k of keys ) {
+			await pv.p.click( `[data-id="w${ k }"] .rf-tco__next` );
+		}
+		await sleep( 1000 );
+		const second = await readProgress();
+		const want = Object.values( formats );
+		check( 'progress', 'the progress number shows each format: 33% / 1/3 / 1 / 3 / 1 of 3 / 01 / 03, and follows the slides', want.every( ( w, i ) => first[ i ] === w[ 0 ] && second[ i ] === w[ 1 ] ), JSON.stringify( { first, second } ) );
+		const lineLook = await pv.p.evaluate( () => {
+			const el = document.querySelector( '[data-id="wp_percent"]' );
+			const line = el.querySelector( '.rf-tco__line' );
+			const nav = [ ...el.querySelector( '.rf-tco__nav' ).children ].map( ( c ) => c.className.split( ' ' )[ 0 ] );
+			return {
+				fill: getComputedStyle( line.querySelector( 'i' ) ).backgroundColor,
+				track: getComputedStyle( line ).backgroundColor,
+				height: line.getBoundingClientRect().height,
+				number: getComputedStyle( el.querySelector( '.rf-tco__progress' ) ).color,
+				order: nav.indexOf( 'rf-tco__progress' ) < nav.indexOf( 'rf-tco__line' ),
+				afterByDefault: ( () => {
+					const n2 = [ ...document.querySelector( '[data-id="wp_fraction"] .rf-tco__nav' ).children ].map( ( c ) => c.className.split( ' ' )[ 0 ] );
+					return n2.indexOf( 'rf-tco__progress' ) > n2.indexOf( 'rf-tco__line' );
+				} )(),
+			};
+		} );
+		check( 'progress', 'the line has its own color (the filled part), apart from the track; thickness 6px', 'rgb(255, 0, 255)' === lineLook.fill && 'rgb(0, 0, 255)' === lineLook.track && 6 === Math.round( lineLook.height ), JSON.stringify( lineLook ) );
+		check( 'progress', 'the number has its own color and goes before or after the line', 'rgb(255, 255, 0)' === lineLook.number && lineLook.order && lineLook.afterByDefault, JSON.stringify( lineLook ) );
+		const hl = await pv.p.evaluate( () => {
+			const d = document.querySelector( '[data-id="wp_percent"] .rf-tco__text.is-active .refraction-heading-dual' );
+			const w = document.querySelector( '[data-id="wp_percent"]' );
+			return { mark: getComputedStyle( d ).getPropertyValue( '--rf-dual-mc' ).trim(), color: getComputedStyle( d ).color, sliderClasses: w.className, bg: getComputedStyle( d ).backgroundImage.slice( 0, 60 ) };
+		} );
+		check( 'highlight', 'a heading inside a slide keeps its own highlight mark color and text color', '#ff0000' === hl.mark && 'rgb(0, 255, 0)' === hl.color, JSON.stringify( hl ) );
+		check( 'highlight', 'the slider itself, highlighting nothing, puts no highlight style on the widgets inside it', ! /refraction-dual-/.test( hl.sliderClasses ), hl.sliderClasses );
+		await pv.p.locator( '[data-id="wp_percent"]' ).screenshot( { path: join( SHOTS, 'progress.png' ) } );
+		await pv.ctx.close();
+
 		// ------------------------------------------------------------ editor
 		const blank = page( 'Timed slides editor', [ { id: 'ed01', elType: 'container', isInner: false, settings: { min_height: { unit: 'px', size: 200 } }, elements: [ { id: 'edh1', elType: 'widget', widgetType: 'heading', settings: { title: 'Above the slider' }, elements: [] } ] } ] );
 		const actx = await browser.newContext( { viewport: { width: 1400, height: 1000 } } );

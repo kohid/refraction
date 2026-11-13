@@ -18,10 +18,12 @@ widgets into it (headings, text, buttons, forms, images, other sliders...).
   content comes in (rising one widget after another, fading, at once).
 - **Cards** (responsive, separate from the content): show the cards, Horizontal, Vertical, Width (cards that do not fit
   run off the edge), Space from the edges, Card width, Card shape (3/4, 4/5, 1/1, 2/3, 4/3, 16/9), Space between cards,
-  Card corners, Titles on the cards, Arrows, Progress line, Slide number.
+  Card corners, Titles on the cards, Arrows, Progress line, Progress number (0.79.0: percent, fraction, spaced
+  fraction, "2 of 5" or padded "02 / 05"; before or after the line; off by default), Slide number.
 - **Style**: Slider background and text color, Shade color (empty: a dark gradient), Timer and progress color, Timer
   line thickness; Cards: title and small text typography, text color, shade under the title, shadow, lift on hover;
-  Arrows, line and number: space above, space after the number, arrow size, colors and background, line track color,
+  Arrows, line and number: space above, space after the number, arrow size, colors and background, line color (the filled part) and track color, line thickness and corners (0.79.0), progress number typography and
+  color,
   number typography and color.
 
 Phones by default: the content at the top, the cards at the bottom, full width.
@@ -63,3 +65,12 @@ How it works:
 - The Slides widget's Timed cards layout uses the same engine and keeps the grow transition.
 
 `scripts/check-timed-slides.mjs` runs all twelve transitions on one page. For each, it checks the transition is under way halfway through, then that the second slide shows, no copy is left and nothing is still moving. It also checks that the previous arrow slides in from the left.
+
+## Notes (0.79.0)
+
+- The progress number is `.rf-tco__progress[data-format]`, printed for the first slide by `Timed_Slides::progress_text()`
+  and kept current by `progressText()` in `modules/card-motion/assets/js/timed-cards.js` (same formats); the translated
+  "%1$d of %2$d" travels in `data-of`.
+- Headings with Highlight Words inside a slide keep their own mark and colors: `Heading_Dual_Style` now puts the
+  section's condition on each of its settings (a widget that highlights nothing prints no highlight CSS or classes), and
+  its selector stops at nested elements (`:not({{WRAPPER}} .refraction-element *)`).

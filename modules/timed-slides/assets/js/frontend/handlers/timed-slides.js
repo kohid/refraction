@@ -69,6 +69,7 @@ export default class TimedSlides extends Base {
 			sounds,
 			timer: this.own( '.rf-tco__timer i' )[ 0 ],
 			line: this.own( '.rf-tco__line i' )[ 0 ],
+			progress: this.own( '.rf-tco__progress' )[ 0 ],
 			count: this.own( '.rf-tco__count' )[ 0 ],
 			next: this.own( '.rf-tco__next' )[ 0 ],
 			prev: this.own( '.rf-tco__prev' )[ 0 ],
