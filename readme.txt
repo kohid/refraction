@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.88.0
+Stable tag: 0.89.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.89.0 =
+* Phone Showcase: each step has its own icon colors (icon or number color and background) in Normal, Hover and Active tabs, over the Style tab's colors. Steps without their own keep the Style tab's look.
+* Image Box > Style > Box: Normal and Hover tabs with background, border (Hover: border color), rounded corners and box shadow, plus padding and a hover duration. A rounded box cuts its image to the corners (switchable); boxes without rounded corners are unchanged.
+* Timed Slides > Style > Slider: rounded corners, border and box shadow for the slider (Normal and Hover); Cards: a border.
 
 = 0.88.0 =
 * Every widget checked: each section with many settings now has categories, shown as tabs once a section is long. Shared parts too: Highlighted Text (Text, Mark Behind, Drawing) in about 50 widgets, Long Text and Tooltip, Card Stack, Query (Source, Include, Exclude, Order) and Card. Widgets include Chart, Data Table, Stat Card, Login, Countdown, the event widgets, Posts, Slides, Nested Carousel, Timed Slides, Icon Box, Image Box, Call to Action, Testimonial, Video, 3D Build Scene, Scroll Sequence, Social Icons, and the Container's Floating Shapes and Floating Text.

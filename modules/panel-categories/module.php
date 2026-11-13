@@ -145,6 +145,12 @@ class Module extends BaseModule {
 				'selected_icon' => esc_html__( 'Icon', 'refraction' ),
 				'title_text' => $text,
 			],
+			'image-box/section_style_box' => [
+				'position' => $layout,
+			],
+			'refraction-timed-slides/section_style_slider' => [
+				'slider_background' => $colors,
+			],
 			'image-box/section_image' => [
 				'image' => $image,
 				'title_text' => $text,

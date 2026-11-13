@@ -164,6 +164,41 @@ class Phone_Showcase extends Widget_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-phone__shot{{CURRENT_ITEM}}' => 'background-color: {{VALUE}};' ],
 		] );
 
+		// This step's own icon colors (0.89.0), over the Style tab's: Normal (not the step shown), Hover and Active.
+		$steps->add_control( 'step_own_heading', [
+			'label' => esc_html__( 'Icon Colors Of This Step', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
+
+		$steps->start_controls_tabs( 'step_own_tabs' );
+
+		$own = '{{WRAPPER}} .rf-showcase__step{{CURRENT_ITEM}}';
+
+		foreach ( [
+			'normal' => [ esc_html__( 'Normal', 'refraction' ), $own . ':not(.is-active):not(:hover)' ],
+			'hover' => [ esc_html__( 'Hover', 'refraction' ), $own . ':hover' ],
+			'active' => [ esc_html__( 'Active', 'refraction' ), $own . '.is-active' ],
+		] as $state => [ $label, $sel ] ) {
+			$steps->start_controls_tab( 'step_own_tab_' . $state, [ 'label' => $label ] );
+
+			$steps->add_control( 'own_icon_color_' . $state, [
+				'label' => esc_html__( 'Icon / Number Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sel . ' .rf-showcase__badge' => 'color: {{VALUE}}; fill: {{VALUE}};' ],
+			] );
+
+			$steps->add_control( 'own_icon_bg_' . $state, [
+				'label' => esc_html__( 'Icon / Number Background', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sel . ' .rf-showcase__badge' => 'background-color: {{VALUE}};' ],
+			] );
+
+			$steps->end_controls_tab();
+		}
+
+		$steps->end_controls_tabs();
+
 		$this->add_control( 'steps', [
 			'label' => esc_html__( 'Steps', 'refraction' ) . ' (' . sprintf( /* translators: %d: maximum. */ esc_html__( 'up to %d', 'refraction' ), self::MAX_STEPS ) . ')',
 			'type' => Controls_Manager::REPEATER,

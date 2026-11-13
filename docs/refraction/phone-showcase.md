@@ -111,3 +111,12 @@ pages keep their look. New: `step_*_hover` colors, `card_bg_hover`, `card_title_
 `card_shadow_hover`.
 
 This is the pattern for organising other widgets: sections per part, state tabs where a part changes, categories inside.
+
+## Each step's own icon colors (0.89.0)
+
+Content > Steps > a step > **Icon Colors Of This Step**: Normal / Hover / Active tabs, each with **Icon / Number Color**
+and **Icon / Number Background** (`own_icon_color_<state>`, `own_icon_bg_<state>`, on `.rf-showcase__step{{CURRENT_ITEM}}
+.rf-showcase__badge`). Normal applies while the step is neither pointed at nor shown (`:not(.is-active):not(:hover)`), so
+the Style tab's Hover and Active colors still apply to a step that only has its own Normal colors; its own Hover and
+Active win over the Style tab's. Check: `node scripts/check-box-style.mjs --site DIR --port N`.
+
