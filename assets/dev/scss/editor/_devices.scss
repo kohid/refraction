@@ -37,7 +37,9 @@ body {
 	background-color: #333;
 	height: 100%;
 	border: 0;
-	width: var(--e-preview-width);
+	// A docked floating Elements window takes its space from the page (elements-float.scss).
+	width: calc(var(--e-preview-width) - var(--rf-ef-reserve, 0px));
+	margin-inline-start: var(--rf-ef-shift, 0px);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;

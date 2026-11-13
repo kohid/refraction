@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.77.0
+Stable tag: 0.78.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.78.0 =
+* Floating Elements: the widgets list in a window of its own, like Structure. Move it by its title, resize it from any edge, and dock it to the left (beside the panel) or the right (before a docked Structure) with its header buttons or by dragging it against that edge; docked, the page makes room for it. Show and hide it from the top bar (Floating Elements), its close button or Ctrl+Shift+K. Drag a widget into the page or click it to add it, as in the panel; its search is its own. Where it was, its size and whether it is shown are remembered.
 
 = 0.77.0 =
 * Reveal: 12 more animations, in groups in the list: Soft rise, Drop in, Slanted rise, Pop, Spin in, Flip up, Flip from the side, Swing down (3D), and Curtain, Split, Circle and Diagonal wipes. Every one works for the whole element, its text (line, word or letter) and a container's elements.
