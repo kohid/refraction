@@ -7,6 +7,7 @@ import { init as initDocumentsPreview } from './documents-preview';
 import { init as initDocumentsSave } from './documents-save';
 import { init as initDocumentsSettings } from './documents-settings';
 import { init as initElements } from './elements';
+import { init as initElementsFloat } from './elements-float';
 import { init as initFeedback } from './feedback';
 import { init as initFinder } from './finder';
 import { init as initHelp } from './help';
@@ -24,6 +25,7 @@ export function init() {
 	initDocumentsSave();
 	initDocumentsSettings();
 	initElements();
+	initElementsFloat();
 	initFinder();
 	initHelp();
 	initHistory();

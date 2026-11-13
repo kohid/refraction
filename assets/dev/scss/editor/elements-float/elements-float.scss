@@ -1,0 +1,199 @@
+//
+// Floating Elements window (assets/dev/js/editor/regions/elements-float). Floats like Structure, or docks to the left
+// edge (beside the panel) or the right edge (before a docked Structure). Docked, it takes its width from the page.
+//
+
+body {
+	--rf-ef-width: 280px;
+
+	&.rf-ef-docked--right {
+		--rf-ef-reserve: var(--rf-ef-width);
+	}
+
+	// Left: beside the panel. Floating over the page, the panel covers its own width of the page, so the page starts
+	// after both; beside the page (Editor Preferences), the page already starts after the panel.
+	&.rf-ef-docked--left {
+		--rf-ef-shift: calc(var(--e-editor-panel-width) + var(--rf-ef-width));
+		--rf-ef-reserve: var(--rf-ef-shift);
+
+		&.refraction-panel--beside {
+			--rf-ef-shift: var(--rf-ef-width);
+			--rf-ef-reserve: var(--rf-ef-width);
+		}
+	}
+
+	// Where it docks when let go here.
+	&.rf-ef--dock-hint-left #refraction-elements-float,
+	&.rf-ef--dock-hint-right #refraction-elements-float {
+		outline: 2px dashed var(--e-a-border-color-focus, #8d88ff);
+		outline-offset: -2px;
+	}
+}
+
+#refraction-elements-float {
+	position: fixed;
+	inset-block-start: 100px;
+	inset-inline-start: calc(var(--e-editor-panel-width, 300px) + 30px);
+	width: var(--rf-ef-width);
+	height: min(560px, calc(100vh - 140px));
+	display: none;
+	background-color: var(--e-a-bg-default);
+	border: var(--e-a-border);
+	border-radius: 5px;
+	box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
+	overflow: hidden;
+	user-select: none;
+	z-index: 100; // Above the Responsive Bar, like Structure.
+
+	// Docked: from under the top bar to the bottom of the window.
+	body.rf-ef-docked & {
+		inset-block: var(--editor-v2-top-bar-height, 0px) 0;
+		height: auto;
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	body.rf-ef-docked--left & {
+		inset-inline-start: var(--e-editor-panel-width);
+		inset-inline-end: auto;
+		border-block: 0;
+	}
+
+	body.rf-ef-docked--right & {
+		inset-inline-start: auto;
+		inset-inline-end: 0;
+		border-block: 0;
+	}
+
+	body.rf-ef-docked--right.refraction-navigator-docked & {
+		inset-inline-end: var(--e-editor-navigator-width);
+	}
+
+	.rf-ef__header {
+		display: flex;
+		align-items: stretch;
+		border-block-end: var(--e-a-border);
+		color: var(--e-a-color-txt-accent);
+	}
+
+	.rf-ef__title {
+		flex: 1;
+		margin: 0;
+		padding: 10px 0;
+		text-align: center;
+		font-size: 13px;
+		font-weight: 400;
+		cursor: move;
+	}
+
+	.rf-ef__button {
+		padding: 10px;
+		color: var(--e-a-color-txt);
+		background: transparent;
+		border: 0;
+		outline: 0;
+		font-size: 13px;
+		cursor: pointer;
+		transition: color .3s;
+
+		&:hover,
+		&:focus-visible {
+			color: var(--e-a-color-txt-hover);
+		}
+	}
+
+	.rf-ef__close {
+		font-size: 11px;
+	}
+
+	.rf-ef__dock--active {
+		color: var(--e-a-color-txt-accent);
+		background-color: var(--e-a-bg-active);
+	}
+
+	// The panel's look for categories and tiles without the panel's own placement.
+	.rf-ef__panel {
+		position: relative;
+		inset: auto;
+		width: auto;
+		height: auto;
+		margin: 0;
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		border: 0;
+		box-shadow: none;
+		z-index: auto;
+	}
+
+	.rf-ef__search {
+		position: relative;
+		padding: 12px 15px;
+
+		input {
+			width: 100%;
+			font-size: 11px;
+			padding-block: 9px;
+			padding-inline: 29px 10px;
+			font-style: italic;
+			border: var(--e-a-border-bold);
+			border-radius: 0;
+			appearance: none;
+
+			&:focus {
+				border-color: var(--e-a-border-color-focus);
+			}
+		}
+
+		i {
+			position: absolute;
+			inset-block-start: 50%;
+			inset-inline-start: 25px;
+			transform: translateY(-50%);
+			color: var(--e-a-color-txt-disabled);
+		}
+	}
+
+	.rf-ef__body {
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+
+	.rf-ef__results {
+		padding-block: 5px 20px;
+	}
+
+	.rf-ef__empty {
+		grid-column: 1 / -1;
+		padding: 20px 0;
+		text-align: center;
+		font-style: italic;
+		color: var(--e-a-color-txt-muted);
+	}
+
+	.rf-ef__footer {
+		border-block-start: var(--e-a-border);
+		text-align: center;
+		font-size: 13px;
+		line-height: 1;
+		padding: 2px 0;
+		color: var(--e-a-color-txt-muted);
+
+		body.rf-ef-docked & {
+			display: none;
+		}
+	}
+}
+
+#refraction-elements-float__inner {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+body.refraction-editor-preview #refraction-elements-float {
+	display: none !important;
+}
