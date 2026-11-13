@@ -24,3 +24,6 @@ Check: `node scripts/check-panel-dock.mjs --site DIR --port N`.
 120px of the panel on screen: while dragging, and in `ensurePosition()` (on load, window resize, and when the panel is
 shown again). `followTopBarHeight()` keeps `--editor-v2-top-bar-height` equal to the real top bar (60px, the variable
 said 48px), so a docked Structure and the editor wrapper do not go under it.
+
+Popups over a floating panel (0.83.0): the panel is a fixed window at z-index 101, so with `body.rf-panel--floating`
+the simple dialogs (global colors and fonts lists), `.e-global__popover` and the context menu go to 102 (`_dock.scss`).

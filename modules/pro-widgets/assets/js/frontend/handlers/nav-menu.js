@@ -49,8 +49,9 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 	}
 
 	/**
-	 * Logo or Site Title: shown only once the page is scrolled down past the offset ('after'), or until then
-	 * ('before'); the animation is CSS (nav-menu.scss, is-brand-hidden). The first state is set without animating.
+	 * Logo or Site Title: shown only once the page is scrolled down past the scroll point ('after'), or until then
+	 * ('before'), with is-brand-hidden; past it the nav has is-scrolled for the After Scrolling look. The animations
+	 * are CSS (nav-menu.scss); the first state is set without animating.
 	 *
 	 * @param {boolean} instant Set the state without its animation.
 	 */
@@ -58,16 +59,16 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 		const $nav = this.elements.$nav;
 		const show = this.getElementSettings( 'bar_brand_show' ) || 'always';
 
-		if ( ! this.getElementSettings( 'bar_brand' ) || 'always' === show ) {
-			$nav.removeClass( 'is-brand-hidden' );
+		if ( ! this.getElementSettings( 'bar_brand' ) ) {
+			$nav.removeClass( 'is-brand-hidden is-scrolled' );
 			return;
 		}
 
 		const offset = Math.max( 0, Number( this.getElementSettings( 'bar_brand_offset' ) ) || 0 );
 		const scrolled = ( window.scrollY || document.documentElement.scrollTop ) >= offset;
-		const hidden = 'after' === show ? ! scrolled : scrolled;
+		const hidden = 'always' !== show && ( 'after' === show ? ! scrolled : scrolled );
 
-		if ( hidden === $nav.hasClass( 'is-brand-hidden' ) && ! instant ) {
+		if ( hidden === $nav.hasClass( 'is-brand-hidden' ) && scrolled === $nav.hasClass( 'is-scrolled' ) && ! instant ) {
 			return;
 		}
 
@@ -75,7 +76,8 @@ export default class NavMenu extends refractionModules.frontend.handlers.Base {
 			$nav.addClass( 'is-brand-instant' );
 		}
 
-		$nav.toggleClass( 'is-brand-hidden', hidden );
+		// Is-scrolled: Style > Logo or Site Title > After Scrolling.
+		$nav.toggleClass( 'is-brand-hidden', hidden ).toggleClass( 'is-scrolled', scrolled );
 
 		if ( instant ) {
 			void $nav[ 0 ]?.offsetWidth; // eslint-disable-line no-void

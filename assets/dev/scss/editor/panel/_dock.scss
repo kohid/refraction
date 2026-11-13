@@ -119,3 +119,15 @@ body.rf-panel--dock-hint-right #refraction-panel {
 	outline: 2px dashed var(--e-a-border-color-focus, #8d88ff);
 	outline-offset: -2px;
 }
+
+// Its popups over a floating panel (it is a fixed window at z-index 101): the global colors and fonts lists and other
+// simple dialogs sit at 1, the context menu at 101. Lightboxes, colour pickers, tooltips and the dynamic tags list are
+// higher already.
+body.rf-panel--floating {
+
+	.dialog-simple-widget,
+	.e-global__popover,
+	.refraction-context-menu {
+		z-index: 102;
+	}
+}
