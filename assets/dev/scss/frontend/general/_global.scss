@@ -11,3 +11,17 @@
 	margin: 0;
 	line-height: 1;
 }
+
+// Text Editor (here, not in widget-text-editor.css, which loads only with a drop cap): no margin above the first paragraph or below the last one: a theme's `p { margin }` otherwise pads the widget top
+// and bottom (it shows when the widget is selected in the editor). Spacing between paragraphs stays, and the widget's
+// own Paragraph Spacing ({{WRAPPER}} p) still wins. Covers both markups: the text right in the widget, or in its
+// container (and the editor's inline-editing box).
+.refraction-widget-text-editor > :first-child,
+.refraction-widget-text-editor :where(.refraction-widget-container, .refraction-text-editor) > :first-child {
+	margin-block-start: 0;
+}
+
+.refraction-widget-text-editor > :last-child,
+.refraction-widget-text-editor :where(.refraction-widget-container, .refraction-text-editor) > :last-child {
+	margin-block-end: 0;
+}

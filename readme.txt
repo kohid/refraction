@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.80.0
+Stable tag: 0.81.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.81.0 =
+* Nav Menu > Logo or Site Title: the site logo, site title, both, an image or a text in the menu bar, on the left, in the middle (the menu items share out on both sides) or on the right, linked to the home page. Show it always, only once the page is scrolled down past a number of pixels, or only until then, with an animation: fade, slide down, slide up, slide in from the side, zoom, pop, flip, sharpen from blur, or grow in (the menu makes room). On phones it sits beside the hamburger. Style: logo width and height, title typography and colors, spacing, padding.
+* Button > Style > Icon: icon size, padding, corners, color and background (and on hover), border, move up or down, hover transition.
+* Highlighted words: Draw Every Time It Comes Into View (Style > Highlighted Text, with Draw When Scrolled Into View).
+* Text Editor: no more space above the first paragraph and below the last (a theme's paragraph margin showed as a band when the widget was selected); the space between paragraphs and Paragraph Spacing stay.
 
 = 0.80.0 =
 * The whole side panel floats and docks, like Structure and Floating Elements: its header has Dock left and Dock right buttons (press the docked side again to float it) and a Hide button. Drag it by its header to move it, against the left or right edge to dock it there, away from its edge to float it; resize it from any edge while floating. Docked right, it sits before a docked Structure and the hide arrow moves to its other side; beside-the-page panels work on either side. Show and hide it with the new Panel button in the top bar, the arrow, its Hide button or Ctrl+P. Its place and size are remembered.

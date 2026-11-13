@@ -43,3 +43,25 @@ Additions to the Nav Menu widget (`modules/pro-widgets/widgets/nav-menu.php`, st
 - The hamburger button: grow on hover; the ripple on click, played again on the next click.
 - The collapsed menu: submenus stay in the list.
 - The editor has the settings.
+
+## Logo or Site Title in the bar (0.81.0)
+
+Content > **Logo or Site Title** (`bar_brand`): the site logo, site title, both, an image or a text, linked to the home
+page (switchable). The site logo is the theme's custom logo (Customize > Site Identity); without one the title shows.
+
+- **Position** left, middle or right (`refraction-nav-menu--brand-<pos>` on the widget). In the middle the
+  `Nav_Menu_Walker` closes the list after half of the top-level items, prints the brand
+  (`.refraction-nav-menu__bar-brand--middle`) and opens `.refraction-nav-menu__list--after`; the two lists share the bar
+  on each side so the brand is centered. Collapsed (hamburger) the middle copy hides and a copy beside the hamburger
+  (`--collapsed`) shows; the opened menu lists every item.
+- **When**: always, show once the page is scrolled down by N px, or hide once scrolled (`bar_brand_show`,
+  `bar_brand_offset`, frontend settings). `nav-menu.js` (`updateBrand()`) toggles `is-brand-hidden` on the nav; the first
+  state is set without animating (`is-brand-instant`).
+- **Animation** (`refraction-nav-menu--brand-anim-<name>`): fade, slide down, slide up, slide in from the side (from the
+  right when on the right), zoom, pop, flip, blur, collapse (grow in: hidden it takes no room). Duration:
+  `--refraction-nav-brand-speed`.
+- Style > Logo or Site Title: logo width and max height, title typography and colors, space beside the menu
+  (`--refraction-nav-brand-gap`), space between logo and title, padding.
+
+Check: `node scripts/check-nav-brand.mjs --site DIR --port N` (also covers the Button icon style, the Text Editor's
+outer paragraph margins and highlighted words drawn every time).
