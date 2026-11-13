@@ -215,7 +215,6 @@ final class Editor_Loader {
 			'repeater',
 			'templates',
 			'navigator',
-			'elements-float',
 			'hotkeys',
 			'responsive-bar',
 		];

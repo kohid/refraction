@@ -41,5 +41,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</main>
 	<aside id="refraction-navigator" aria-labelledby="refraction-navigator__header__title"></aside>
-	<aside id="refraction-elements-float" aria-labelledby="refraction-elements-float__title"></aside>
 </div>

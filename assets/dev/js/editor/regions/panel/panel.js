@@ -43,13 +43,44 @@ module.exports = BaseRegion.extend( {
 		} );
 
 		this.listenTo( refraction.channels.dataEditMode, 'switch', this.onEditModeSwitched );
+		this.followTopBarHeight();
+		window.addEventListener( 'resize', () => this.ensurePosition() );
+	},
+
+	// The editor's layout reads the top bar height from --editor-v2-top-bar-height (48px), but Refraction's top bar is
+	// taller: a docked Structure and the editor wrapper went under it. Keep the variable equal to the real height.
+	followTopBarHeight() {
+		const bar = document.getElementById( 'refraction-editor-wrapper-v2' );
+
+		if ( ! bar || ! window.ResizeObserver ) {
+			return;
+		}
+
+		const sync = () => {
+			const height = Math.round( bar.getBoundingClientRect().height );
+
+			if ( height > 0 ) {
+				document.body.style.setProperty( '--editor-v2-top-bar-height', height + 'px' );
+			}
+
+			// The bar's full height is known late: a floating panel placed before must not stay under it.
+			this.ensurePosition();
+		};
+
+		new ResizeObserver( sync ).observe( bar );
+		sync();
+	},
+
+	// The top bar's height: a floating panel's header never goes under it.
+	topBarHeight() {
+		return Math.round( document.getElementById( 'refraction-editor-wrapper-v2' )?.getBoundingClientRect().height || 0 );
 	},
 
 	/**
 	 * Docks the panel to 'left' or 'right', or floats it ('') like the Structure and Elements windows. Pressing the
 	 * side it is docked to floats it (header buttons); dragging it by its header against an edge docks it there,
 	 * pulling it away from its edge floats it. Docked on the right it sits before a docked Structure or Elements
-	 * window; the page makes room as it does on the left (see panel.scss and elements-float.scss).
+	 * window; the page makes room as it does on the left (see panel.scss and _dock.scss).
 	 *
 	 * @param {string} side 'left', 'right' or ''.
 	 */
@@ -92,16 +123,38 @@ module.exports = BaseRegion.extend( {
 		} );
 	},
 
-	// A floating panel left outside the window (a smaller window) comes back to its default place.
+	/**
+	 * Where a floating panel may be: its header below the top bar and inside the window, with at least 120px of it
+	 * left on screen to grab, so it can always be dragged back.
+	 *
+	 * @param {number}  left  Left edge, px.
+	 * @param {number}  top   Top edge, px.
+	 * @param {boolean} whole All of it inside the window (not just 120px).
+	 * @return {{left: number, top: number}} The nearest allowed place.
+	 */
+	allowedPlace( left, top, whole = false ) {
+		const width = this.el.offsetWidth || 300;
+		const keep = whole ? width : Math.min( 120, width );
+
+		return {
+			left: Math.round( Math.min( Math.max( left, keep - width ), innerWidth - keep ) ),
+			top: Math.round( Math.min( Math.max( top, this.topBarHeight() ), Math.max( this.topBarHeight(), innerHeight - 50 ) ) ),
+		};
+	},
+
+	// A floating panel out of reach (moved under the top bar, the window made smaller) comes back within it.
 	ensurePosition() {
-		if ( this.dockSide ) {
+		if ( this.dockSide || ! this.el.offsetWidth ) {
 			return;
 		}
 
 		const rect = this.el.getBoundingClientRect();
+		// Brought back whole (dragging may leave part of it outside, as long as it can be grabbed).
+		const place = this.allowedPlace( rect.left, rect.top, true );
 
-		if ( rect.left > innerWidth - 60 || rect.right < 60 || rect.top > innerHeight - 40 || rect.top < 0 ) {
-			this.$el.css( { top: '', left: '' } );
+		if ( place.left !== Math.round( rect.left ) || place.top !== Math.round( rect.top ) ) {
+			this.$el.css( { left: place.left + 'px', top: place.top + 'px' } );
+			this.saveFloat();
 		}
 	},
 
@@ -128,7 +181,11 @@ module.exports = BaseRegion.extend( {
 			return;
 		}
 
-		ui.position.top = Math.max( 0, ui.position.top );
+		// Never under the top bar or out of the window (it could not be grabbed again).
+		const place = this.allowedPlace( ui.position.left, ui.position.top );
+
+		ui.position.top = place.top;
+		ui.position.left = place.left;
 
 		const edge = this.edgeAt( ui.position.left );
 
@@ -218,6 +275,11 @@ module.exports = BaseRegion.extend( {
 	onEditModeSwitched( activeMode ) {
 		// For the top bar's Panel button (editor-app-bar, extensions/panel-toggle).
 		window.dispatchEvent( new CustomEvent( 'refraction/panel/visibility', { detail: { visible: 'preview' !== activeMode } } ) );
+
+		// Shown again (Add Element, the Panel button, Ctrl+P): within reach.
+		if ( 'edit' === activeMode ) {
+			requestAnimationFrame( () => this.ensurePosition() );
+		}
 
 		if ( 'edit' !== activeMode ) {
 			return;

@@ -125,6 +125,20 @@ async function main() {
 		manyCards[ 1 ] = { ...manyCards[ 1 ], __globals__: { card_icon_bg: 'globals/colors?id=primary' } };
 		manyCards[ 0 ] = { ...manyCards[ 0 ], card_bg: '#222222', card_title_color: '#FFFFFF', card_icon_bg: '#E20A17', card_icon_color: '#FFFFFF', card_icon_size: { unit: 'px', size: 30 }, card_icon_padding: { unit: 'px', size: 4 }, card_radius: { unit: 'px', size: 2 } };
 		const styled = page( 'Card styles', box( [ w( 'ps08', { steps: [ step( 1 ), step( 2 ) ], cards: manyCards, card_icon_size: { unit: 'px', size: 22 }, card_icon_padding: { unit: 'px', size: 6 }, autoplay: 'yes', interval: { size: 3 }, progress_color: '#E20A17', progress_height: { unit: 'px', size: 6 }, progress_radius: { unit: 'px', size: 3 }, progress_inset: { unit: 'px', size: 12 }, progress_position: 'top', step_icon_box_size: { unit: 'px', size: 20 }, step_icon_box_padding: { unit: 'px', size: 5 }, step_icon_box_radius: { unit: 'px', size: 15 }, button_text: 'Google Play', button_icon: { value: 'fab fa-google-play', library: 'fa-brands' }, button_icon_box_padding: { unit: 'px', size: 6 }, button_icon_box_bg: '#FFFFFF', button_icon_box_color: '#E20A17', label: 'Download for free', label_pill: 'yes', label_icon: { value: 'fas fa-taxi', library: 'fa-solid' }, label_pill_icon_size: { unit: 'px', size: 14 }, label_pill_icon_padding: { unit: 'px', size: 7 }, label_pill_typography_typography: 'custom', label_pill_typography_font_size: { unit: 'px', size: 13 } } ), w( 'ps09', { steps: [ step( 1 ), step( 2 ) ], cards: [], autoplay: 'yes', interval: { size: 3 }, progress_show: '' } ) ] ), {} );
+		const perScreen = page( 'Per screen size', box( [ w( 'ps10', {
+			steps: [ step( 1 ), step( 2 ) ],
+			cards: [
+				{ _id: 'pc1', title: 'Kept left', x: { size: -20 }, y: { size: 20 }, x_mobile: { size: 10 }, card_scale_mobile: { size: 70 } },
+				{ _id: 'pc2', title: 'Gone on phones', x: { size: 110 }, y: { size: 60 }, card_show_mobile: 'none' },
+				{ _id: 'pc3', title: 'Clamped', x: { size: 130 }, y: { size: 80 } },
+			],
+			phone_scale_mobile: { size: 80 },
+			phone_offset_y_mobile: { unit: 'px', size: 30 },
+			phone_rotate: { size: 6 },
+			phone_rotate_mobile: { size: 0 },
+			card_padding_mobile: { unit: 'px', top: '4', right: '6', bottom: '4', left: '6', isLinked: false },
+			card_radius_mobile: { unit: 'px', size: 4 },
+		} ) ] ), {} );
 		const phoneOnly = page( 'Phone layout', box( [ w( 'ps05', { steps: [ step( 1 ), step( 2 ) ], cards, cards_phone: '', stack_order: 'phone' } ) ] ), {} );
 
 		const state = ( p, id ) => p.evaluate( ( wid ) => {
@@ -321,7 +335,33 @@ async function main() {
 		} );
 		check( 'phone screen', 'on a phone: the phone first (as set), then the steps; no sideways scroll; cards hidden (as set)', small.stacked && ! small.sideways && 'none,none' === small.cards, JSON.stringify( small ) );
 		await p.screenshot( { path: join( SHOTS, 'small.png' ), fullPage: true } );
+
+		// Per screen size: the phone's scale, place and tilt, each card's place, size and showing, card padding/corners.
+		const perScreenLook = async ( pg ) => pg.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps10"]' );
+			const dev = root.querySelector( '.rf-showcase__device' );
+			const ds = getComputedStyle( dev );
+			const cards = [ ...root.querySelectorAll( '.rf-showcase__card' ) ].map( ( c ) => {
+				const cs = getComputedStyle( c );
+				// Layout boxes (offsetLeft: where its middle is, before its own -50% shift), so the phone's tilt does not count.
+				return { display: cs.display, scale: cs.scale, across: Math.round( c.offsetLeft / dev.offsetWidth * 100 ), pad: cs.paddingTop, radius: cs.borderTopLeftRadius };
+			} );
+			return { scale: ds.scale, rotate: ds.rotate, translate: ds.translate, cards };
+		} );
+		await p.goto( perScreen.url );
+		await sleep( 800 );
+		const ph = await perScreenLook( p );
+		check( 'per screen', 'on a phone: the phone at 80%, 30px lower, not tilted (tilted 6° on desktop)', '0.8' === ph.scale && /30px/.test( ph.translate ) && ( 'none' === ph.rotate || '0deg' === ph.rotate ), JSON.stringify( ph ) );
+		check( 'per screen', 'on a phone: a card with a phone place keeps it (10%) at 70% size; one set to hide is hidden; one without stays inside the phone', Math.abs( ph.cards[ 0 ].across - 10 ) <= 6 && '0.7' === ph.cards[ 0 ].scale && 'none' === ph.cards[ 1 ].display && ph.cards[ 2 ].across <= 66 && '4px' === ph.cards[ 0 ].pad && '4px' === ph.cards[ 0 ].radius, JSON.stringify( ph.cards ) );
+		await p.screenshot( { path: join( SHOTS, 'per-screen-phone.png' ), fullPage: true } );
 		await pctx.close();
+		const dk = await browser.newPage( { viewport: { width: 1280, height: 900 } } );
+		watch( dk );
+		await dk.goto( perScreen.url );
+		await sleep( 800 );
+		const dt = await perScreenLook( dk );
+		check( 'per screen', 'on desktop: the phone at full size and tilted 6°; all three cards shown where set (-20%, 110%, 130%)', ( 'none' === dt.scale || '1' === dt.scale ) && '6deg' === dt.rotate && dt.cards.every( ( c ) => 'none' !== c.display ) && Math.abs( dt.cards[ 0 ].across + 20 ) <= 6 && Math.abs( dt.cards[ 2 ].across - 130 ) <= 6, JSON.stringify( dt ) );
+		await dk.close();
 
 		// ------------------------------------------------------------ the editor
 		const ectx = await browser.newContext( { viewport: { width: 1500, height: 950 } } );
