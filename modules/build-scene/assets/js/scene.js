@@ -12,16 +12,18 @@ import {
 	PlaneGeometry,
 	PMREMGenerator,
 	Quaternion,
+	Raycaster,
 	Scene,
 	ShadowMaterial,
 	SRGBColorSpace,
+	Vector2,
 	Vector3,
 	WebGLRenderer,
 } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { sampleHouse } from './sample-house.js';
-import { activeStep, assignStages, EASINGS, nameMatcher, partProgress, schedule, scrollProgress } from './timeline.js';
+import { activeStep, assignStages, EASINGS, nameMatcher, partOverride, partProgress, schedule, scrollProgress } from './timeline.js';
 
 const LIGHTS = {
 	daylight: { sky: '#dfe9f5', ground: '#6b5f52', hemi: 0.9, sun: '#fff3e0', power: 2.2, dir: [ -0.6, 1, 0.7 ], env: 0.55 },
@@ -251,22 +253,37 @@ export class BuildScene {
 			// Stages can also name a material ("Glass"): stages filled from the model by material use that.
 			( Array.isArray( object.material ) ? object.material : [ object.material ] ).forEach( ( m ) => m && m.name && names.push( m.name ) );
 
+			// Its own settings (Content > Parts): its place first, so it is measured where it stands.
+			const row = partOverride( names, this.cfg.parts );
+
+			if ( row ) {
+				this.placePart( object, row );
+			}
+
 			const own = new Box3().setFromObject( object );
 			const at = own.getCenter( new Vector3() );
-			const away = this.direction( at );
+			const away = this.direction( at, row && row.from );
 			const world = object.getWorldPosition( new Vector3() );
 			const parent = object.parent;
-			const offset = parent.worldToLocal( world.clone().addScaledVector( away, reach ) ).sub( parent.worldToLocal( world.clone() ) );
+			const offset = parent.worldToLocal( world.clone().addScaledVector( away, row && 'fade' === row.from ? 0 : reach * ( row && 'explode' === row.from ? 1.6 : 1 ) ) ).sub( parent.worldToLocal( world.clone() ) );
 			// Parts view: every part moves straight out from the middle of the model.
 			const out = new Vector3().subVectors( at, this.center );
 			out.y = Math.max( out.y, 0 ) * 1.4;
 			const spread = parent.worldToLocal( world.clone().addScaledVector( out.lengthSq() < 1e-6 ? new Vector3( 0, 1, 0 ) : out, this.cfg.spread || 0.8 ) ).sub( parent.worldToLocal( world.clone() ) );
 			const materials = ( Array.isArray( object.material ) ? object.material : [ object.material ] ).map( ( m ) => m.clone() );
 			object.material = Array.isArray( object.material ) ? materials : materials[ 0 ];
+
+			if ( row ) {
+				materials.forEach( ( m ) => this.lookPart( m, row ) );
+			}
 			object.castShadow = !! this.cfg.shadows;
 			object.receiveShadow = !! this.cfg.shadows;
 
 			parts.push( {
+				row,
+				hidden: !! ( row && row.hide ),
+				name: names[ 0 ] || '',
+				center: object.worldToLocal( at.clone() ),
 				names: names.length ? names : [ '' ],
 				bottom: own.min.y,
 				index: index++,
@@ -285,6 +302,19 @@ export class BuildScene {
 
 		const steps = assignStages( parts, this.cfg.stages, this.cfg.order );
 		this.timeline = schedule( steps, this.cfg.overlap, this.cfg.hold );
+
+		// A part's own delay (Content > Parts > Build): later by that share of the build.
+		for ( const item of this.timeline.parts ) {
+			const delay = item.part.row && item.part.row.delay;
+
+			if ( delay ) {
+				item.start = Math.min( 0.995, item.start + ( ( delay / 100 ) * ( 1 - this.cfg.hold ) ) );
+			}
+		}
+
+		this.parts = parts;
+		this.makeLabels();
+		this.bindParts();
 		this.byStage = steps.length === ( this.cfg.stages || [] ).length;
 		steps.forEach( ( stepParts, i ) => stepParts.forEach( ( part ) => ( part.stage = i ) ) );
 		this.root.dataset.rf3dParts = String( parts.length );
@@ -464,18 +494,24 @@ export class BuildScene {
 
 	/**
 	 * Where a part comes from, as a unit vector from its place.
-	 * @param {Vector3} at The centre of the part.
+	 * @param {Vector3} at  The centre of the part.
+	 * @param {string}  own The part's own Comes setting (Content > Parts), or empty for the widget's.
 	 */
-	direction( at ) {
+	direction( at, own = '' ) {
 		const v = new Vector3();
+		const from = own && 'fade' !== own ? own : this.cfg.from;
 
-		if ( 'drop' === this.cfg.from ) {
+		if ( 'drop' === from ) {
 			return v.set( 0, 1, 0 );
+		}
+
+		if ( 'below' === from ) {
+			return v.set( 0, -1, 0 );
 		}
 
 		v.subVectors( at, this.center );
 
-		if ( 'sides' === this.cfg.from ) {
+		if ( 'sides' === from ) {
 			v.y = 0;
 		}
 
@@ -730,6 +766,246 @@ export class BuildScene {
 		return null !== this.cfg.preview && undefined !== this.cfg.preview;
 	}
 
+	/**
+	 * A part's Place settings (Content > Parts): moved in % of the model's size (along the scene's axes), turned in
+	 * degrees and resized, before it is measured.
+	 *
+	 * @param {Object3D} object The part.
+	 * @param {Object}   row    Its row.
+	 */
+	placePart( object, row ) {
+		const move = row.move || [ 0, 0, 0 ];
+
+		if ( move.some( ( n ) => n ) ) {
+			const world = object.getWorldPosition( new Vector3() );
+			const to = world.clone().add( new Vector3( ...move ).multiplyScalar( ( this.radius * 2 ) / 100 ) );
+			object.position.add( object.parent.worldToLocal( to ).sub( object.parent.worldToLocal( world.clone() ) ) );
+		}
+
+		const turn = row.turn || [ 0, 0, 0 ];
+		object.rotation.x += MathUtils.degToRad( turn[ 0 ] || 0 );
+		object.rotation.y += MathUtils.degToRad( turn[ 1 ] || 0 );
+		object.rotation.z += MathUtils.degToRad( turn[ 2 ] || 0 );
+
+		if ( row.scale ) {
+			object.scale.multiplyScalar( row.scale / 100 );
+		}
+
+		object.updateMatrixWorld( true );
+	}
+
+	/**
+	 * A part's Look settings (Content > Parts) on one of its (cloned) materials.
+	 *
+	 * @param {Material} m   The material.
+	 * @param {Object}   row Its row.
+	 */
+	lookPart( m, row ) {
+		if ( row.color && m.color ) {
+			m.color.set( row.color );
+		}
+
+		if ( null !== row.metal && undefined !== row.metal && 'metalness' in m ) {
+			m.metalness = row.metal / 100;
+		}
+
+		if ( null !== row.rough && undefined !== row.rough && 'roughness' in m ) {
+			m.roughness = row.rough / 100;
+		}
+
+		if ( row.glow && m.emissive ) {
+			m.emissive.set( row.glow );
+			m.emissiveIntensity = 1;
+		}
+
+		if ( null !== row.opacity && undefined !== row.opacity ) {
+			m.opacity = m.opacity * ( row.opacity / 100 );
+			m.transparent = m.transparent || m.opacity < 1;
+		}
+	}
+
+	/** The labels of Content > Parts: one per row with a label, on the first part it names. */
+	makeLabels() {
+		const stage = this.canvas.parentElement;
+		this.labels = [];
+
+		const seen = new Set();
+
+		for ( const part of this.parts ) {
+			const row = part.row;
+
+			if ( ! row || ! row.label || part.hidden || seen.has( row ) ) {
+				continue;
+			}
+
+			seen.add( row );
+			const el = document.createElement( row.link ? 'a' : 'span' );
+			el.className = 'rf3d-label';
+			el.textContent = row.label;
+			el.hidden = true;
+
+			if ( row.link ) {
+				el.href = row.link;
+
+				if ( row.newTab ) {
+					el.target = '_blank';
+					el.rel = 'noopener';
+				}
+			}
+
+			stage.appendChild( el );
+			this.labels.push( { el, part } );
+		}
+	}
+
+	/** Puts every label over its part (projected on the canvas); shown once the part is in place. */
+	placeLabels() {
+		if ( ! this.labels || ! this.labels.length ) {
+			return;
+		}
+
+		this.camera.updateMatrixWorld();
+		const w = this.canvas.clientWidth;
+		const h = this.canvas.clientHeight;
+
+		for ( const { el, part } of this.labels ) {
+			const at = part.mesh.localToWorld( part.center.clone() ).project( this.camera );
+			const show = part.mesh.visible && ( part.t || 0 ) >= 0.95 && at.z < 1 && Math.abs( at.x ) <= 1.05 && Math.abs( at.y ) <= 1.05;
+
+			el.hidden = ! show;
+
+			if ( show ) {
+				el.style.transform = `translate(${ ( ( at.x + 1 ) / 2 ) * w }px, ${ ( ( 1 - at.y ) / 2 ) * h }px) translate(-50%, -100%)`;
+			}
+		}
+	}
+
+	/**
+	 * The part under a pointer (visible parts only), or null.
+	 *
+	 * @param {PointerEvent} event The pointer event.
+	 * @return {Object|null} The part.
+	 */
+	partAt( event ) {
+		const rect = this.canvas.getBoundingClientRect();
+		const ndc = new Vector2( ( ( ( event.clientX - rect.left ) / rect.width ) * 2 ) - 1, -( ( ( ( event.clientY - rect.top ) / rect.height ) * 2 ) - 1 ) );
+		this.raycaster = this.raycaster || new Raycaster();
+		this.raycaster.setFromCamera( ndc, this.camera );
+		const meshes = this.parts.filter( ( p ) => p.mesh.visible ).map( ( p ) => p.mesh );
+		const hit = this.raycaster.intersectObjects( meshes, false )[ 0 ];
+
+		return hit ? this.parts.find( ( p ) => p.mesh === hit.object ) : null;
+	}
+
+	/**
+	 * Parts under the pointer. On the site: a part with a link shows a hand and opens it on a click. In the editor:
+	 * the part lights up with its name, and a click opens its row in Content > Parts (editor.js).
+	 */
+	bindParts() {
+		const editing = !! this.cfg.editor;
+		const linked = this.parts.some( ( p ) => p.row && p.row.link );
+
+		if ( ! editing && ! linked ) {
+			return;
+		}
+
+		let down = null;
+		let frame = 0;
+		let last = null;
+
+		this.on( this.canvas, 'pointermove', ( e ) => {
+			last = e;
+
+			if ( frame ) {
+				return;
+			}
+
+			frame = requestAnimationFrame( () => {
+				frame = 0;
+				const part = this.partAt( last );
+
+				if ( editing ) {
+					this.hover( part );
+				} else {
+					this.canvas.style.cursor = part && part.row && part.row.link ? 'pointer' : '';
+				}
+			} );
+		} );
+		this.on( this.canvas, 'pointerleave', () => editing && this.hover( null ) );
+		this.on( this.canvas, 'pointerdown', ( e ) => ( down = { x: e.clientX, y: e.clientY, t: performance.now() } ) );
+		this.on( this.canvas, 'pointerup', ( e ) => {
+			// A click, not a drag to turn.
+			if ( ! down || Math.hypot( e.clientX - down.x, e.clientY - down.y ) > 5 || performance.now() - down.t > 600 ) {
+				return;
+			}
+
+			const part = this.partAt( e );
+
+			if ( ! part ) {
+				return;
+			}
+
+			if ( editing ) {
+				const widget = this.root.closest( '[data-id]' );
+				const pick = window.parent && window.parent.refractionBuildScenePick;
+
+				if ( widget && pick ) {
+					this.picked = part;
+					this.hover( part );
+					pick( widget.getAttribute( 'data-id' ), part.name, part.row ? part.row.id : '' );
+				}
+			} else if ( part.row && part.row.link ) {
+				if ( part.row.newTab ) {
+					window.open( part.row.link, '_blank', 'noopener' );
+				} else {
+					window.location.href = part.row.link;
+				}
+			}
+		} );
+	}
+
+	/**
+	 * Editor: the part under the pointer (and the one last clicked) lights up, and its name shows as a tooltip.
+	 *
+	 * @param {Object|null} part The part, or null.
+	 */
+	hover( part ) {
+		const lit = new Set( [ part, this.picked ].filter( Boolean ) );
+
+		for ( const p of this.parts ) {
+			for ( const entry of p.materials ) {
+				const m = entry.m;
+
+				if ( ! m.emissive ) {
+					continue;
+				}
+
+				if ( undefined === entry.emissive ) {
+					entry.emissive = m.emissive.getHex();
+					entry.emissiveIntensity = m.emissiveIntensity;
+				}
+
+				if ( lit.has( p ) ) {
+					m.emissive.setHex( p === part ? 0x3b82f6 : 0x8b5cf6 );
+					m.emissiveIntensity = 0.55;
+				} else {
+					m.emissive.setHex( entry.emissive );
+					m.emissiveIntensity = entry.emissiveIntensity;
+				}
+			}
+		}
+
+		this.canvas.title = part ? part.name : '';
+		this.canvas.style.cursor = part ? 'pointer' : '';
+		this.root.dataset.rf3dHover = part ? part.name : '';
+		this.kick();
+	}
+
+	/** The names of the model's parts (each once), for the editor's Add every part. */
+	partNames() {
+		return [ ...new Set( ( this.parts || [] ).map( ( p ) => p.name ).filter( Boolean ) ) ];
+	}
+
 	kick() {
 		this.dirty = true;
 
@@ -819,7 +1095,8 @@ export class BuildScene {
 			const t = building ? partProgress( item, progress ) : 1;
 			const e = ease( t );
 			const { mesh, home, offset, spread } = item.part;
-			mesh.visible = t > 0;
+			item.part.t = t;
+			mesh.visible = t > 0 && ! item.part.hidden;
 			mesh.position.copy( home ).addScaledVector( offset, 1 - e ).addScaledVector( spread, this.explode );
 			// A picked stage (Parts and Aerial): its parts stay solid, the others are ghosted.
 			const ghost = null !== this.focus && item.part.stage !== this.focus ? 0.12 : 1;
@@ -861,6 +1138,7 @@ export class BuildScene {
 			this.center.z + ( distance * Math.cos( azimuth ) * Math.cos( elevation ) ),
 		);
 		this.camera.lookAt( this.center );
+		this.placeLabels();
 		this.caption( progress );
 		this.root.dataset.rf3dProgress = progress.toFixed( 3 );
 		this.root.dataset.rf3dExplode = this.explode.toFixed( 2 );

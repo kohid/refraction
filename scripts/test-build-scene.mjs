@@ -4,7 +4,7 @@ import { fitRect, frameAt, galleryLayers, loadOrder } from '../modules/build-sce
 import { detectMotion, humanize, proposeStages, readGlbJson } from '../modules/build-scene/assets/js/glb-outline.js';
 import { makeCar, makeCharacter } from './fixtures/make-figures.mjs';
 import { makeGlb } from './fixtures/make-glb.mjs';
-import { activeStep, assignStages, EASINGS, nameMatcher, partProgress, schedule, scrollProgress, sortParts } from '../modules/build-scene/assets/js/timeline.js';
+import { activeStep, assignStages, EASINGS, nameMatcher, partOverride, partProgress, schedule, scrollProgress, sortParts } from '../modules/build-scene/assets/js/timeline.js';
 
 let pass = 0;
 let fail = 0;
@@ -82,6 +82,13 @@ t( 'detect: a character has no wheels and two animations, in file order', 0 === 
 const odd = detectMotion( { nodes: [ { name: 'Rim Front.L' }, { name: 'Steering Wheel' }, { name: 'Spare_Tire' }, { name: 'Body' } ], animations: [ {} ] } );
 t( 'detect: other wheel names become patterns; steering wheel and spare left out; unnamed clips are numbered', 'Rim*Front*L' === odd.patterns && 1 === odd.wheels.length && 'Animation 1' === odd.animations[ 0 ] );
 t( 'detect: the patterns find the parts as the loader names them', nameMatcher( odd.patterns.split( ',' ) )( 'Rim_Front_L' ) );
+
+// Content > Parts: the first row naming one of a part's names (own, parent, material) wins.
+const rows = [ { id: 'a', match: [ 'roof*' ] }, { id: 'b', match: [ 'Glass' ] }, { id: 'c', match: [ 'roof-left' ] } ];
+t( 'parts: a row names a part by its own name (pattern, any case)', 'a' === partOverride( [ 'Roof-Left', 'house' ], rows )?.id );
+t( 'parts: or by a parent or material name', 'b' === partOverride( [ 'pane-3', 'window-group', 'glass' ], rows )?.id );
+t( 'parts: the first matching row wins; no match gives null', 'a' === partOverride( [ 'roof-left' ], rows )?.id && null === partOverride( [ 'door' ], rows ) );
+t( 'parts: rows without names are skipped', null === partOverride( [ 'x' ], [ { match: [] }, null ] ) );
 
 console.log( `build-scene timeline: ${ pass } passed, ${ fail } failed` );
 process.exit( fail ? 1 : 0 );

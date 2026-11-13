@@ -523,3 +523,37 @@
 		transition: none;
 	}
 }
+
+// Content > Parts > Label on the part: a small tag over its part, moved there by scene.js.
+.rf3d-label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 3;
+	padding: 5px 10px;
+	border-radius: 999px;
+	background: rgba(20, 22, 26, 0.86);
+	color: #fff;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.2;
+	white-space: nowrap;
+	pointer-events: none;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+	will-change: transform;
+
+	&[href] {
+		pointer-events: auto;
+		text-decoration: none;
+
+		&:hover,
+		&:focus-visible {
+			background: #fff;
+			color: #14161a;
+		}
+	}
+
+	&[hidden] {
+		display: none;
+	}
+}

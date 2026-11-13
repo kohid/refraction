@@ -1,5 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { detectMotion, proposeStages, readGlbJson } from './glb-outline';
+import { nameMatcher } from './timeline';
 
 // Editor: "Fill stages from the model" (3D Build Scene, Build section). Reads the chosen .glb's outline and replaces the
 // Stages list with one stage per named group (or per material), bottom to top, as one undoable step.
@@ -174,7 +175,131 @@ async function detect( container, quiet ) {
 	}
 }
 
+// ---- Content > Parts: each part of the model like a widget in the scene.
+
+/**
+ * The 3D scene of a widget in the preview (scene.js), or null.
+ *
+ * @param {string} id The widget's id.
+ * @return {Object|null} The scene.
+ */
+function previewScene( id ) {
+	const doc = window.refraction.$preview && window.refraction.$preview[ 0 ].contentDocument;
+	const root = doc && doc.querySelector( `[data-id="${ id }"] .rf3d` );
+
+	return root ? root.rf_build_scene || null : null;
+}
+
+/**
+ * Opens the Parts section of the widget and the row at index (its settings).
+ *
+ * @param {Object} container The widget.
+ * @param {number} index     The row.
+ */
+function openPartRow( container, index ) {
+	const panel = window.refraction.getPanelView();
+	const page = panel && panel.getCurrentPageView();
+
+	if ( ! page || ! page.activateSection ) {
+		return;
+	}
+
+	page.activateSection( 'section_parts' );
+	page._renderChildren();
+
+	window.setTimeout( () => {
+		const rows = document.querySelectorAll( '.refraction-control-parts .refraction-repeater-fields' );
+		const row = rows[ index ];
+
+		if ( ! row ) {
+			return;
+		}
+
+		const open = row.querySelector( '.refraction-repeater-row-controls.editable' );
+
+		if ( ! open ) {
+			row.querySelector( '.refraction-repeater-row-item-title' )?.click();
+		}
+
+		row.scrollIntoView( { block: 'start', behavior: 'smooth' } );
+	}, 80 );
+}
+
+/**
+ * Called by the preview (scene.js) when a part is clicked: selects the widget, finds the row of Content > Parts that
+ * names this part (or adds one with its name) and opens it.
+ *
+ * @param {string} id    The widget's id.
+ * @param {string} name  The part's name.
+ * @param {string} rowId The id of the row that named it on the page, if any.
+ */
+function pickPart( id, name, rowId ) {
+	const container = window.refraction.getContainer( id );
+
+	if ( ! container || ! name ) {
+		return;
+	}
+
+	window.$e.run( 'document/elements/select', { container } );
+
+	const rows = container.settings.get( 'parts' );
+	const list = rows && rows.models ? rows.models : [];
+	let index = list.findIndex( ( row ) => rowId && row.get( '_id' ) === rowId );
+
+	if ( index < 0 ) {
+		index = list.findIndex( ( row ) => nameMatcher( String( row.get( 'part_match' ) || '' ).split( ',' ) )( name ) );
+	}
+
+	if ( index < 0 ) {
+		window.$e.run( 'document/repeater/insert', { container, name: 'parts', model: { part_match: name } } );
+		index = list.length ? list.length - 1 : 0;
+		const after = container.settings.get( 'parts' );
+		index = after && after.models ? after.models.length - 1 : index;
+	}
+
+	window.setTimeout( () => openPartRow( container, index ), 150 );
+}
+
+/**
+ * Add every part of the model: one row per part name not named by a row yet, as one undoable step.
+ *
+ * @param {Object} container The widget.
+ */
+function addAllParts( container ) {
+	const scene = previewScene( container.id );
+	const names = scene && scene.partNames ? scene.partNames() : [];
+
+	if ( ! names.length ) {
+		toast( __( 'The model is not shown in the preview yet: scroll to it, then try again.', 'refraction' ) );
+		return;
+	}
+
+	const rows = container.settings.get( 'parts' );
+	const list = rows && rows.models ? rows.models : [];
+	const named = list.map( ( row ) => nameMatcher( String( row.get( 'part_match' ) || '' ).split( ',' ) ) );
+	const missing = names.filter( ( name ) => ! named.some( ( test ) => test( name ) ) ).slice( 0, Math.max( 0, 100 - list.length ) );
+
+	if ( ! missing.length ) {
+		toast( __( 'Every part of the model already has a row.', 'refraction' ) );
+		return;
+	}
+
+	const log = window.$e.internal( 'document/history/start-log', { type: 'add', title: __( 'Parts of the model', 'refraction' ) } );
+
+	try {
+		missing.forEach( ( name ) => window.$e.run( 'document/repeater/insert', { container, name: 'parts', model: { part_match: name } } ) );
+	} finally {
+		window.$e.internal( 'document/history/end-log', { id: log } );
+	}
+
+	/* Translators: %d: Number of parts. */
+	toast( sprintf( __( '%d parts added. Open one to give it its own settings.', 'refraction' ), missing.length ) );
+}
+
+window.refractionBuildScenePick = pickPart;
+
 window.addEventListener( 'refraction/init', () => {
+	window.refraction.channels.editor.on( 'refraction:build-scene:parts', ( view ) => addAllParts( view.container ) );
 	window.refraction.channels.editor.on( 'refraction:build-scene:fill', ( view ) => onFill( view ) );
 	window.refraction.channels.editor.on( 'refraction:build-scene:detect', ( view ) => detect( view.container, false ) );
 
