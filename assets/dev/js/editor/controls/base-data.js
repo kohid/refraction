@@ -219,7 +219,12 @@ ControlBaseDataView = ControlBaseView.extend( {
 
 		try {
 			for ( const child of children ) {
-				views.push( this.container.panel.getControlView( child ) );
+				const view = this.container.panel.getControlView( child );
+
+				// Only the current screen size's copies are built (controls-stack.js, isOtherDeviceCopy()).
+				if ( view ) {
+					views.push( view );
+				}
 			}
 			// eslint-disable-next-line no-empty
 		} catch ( e ) {}
@@ -232,11 +237,51 @@ ControlBaseDataView = ControlBaseView.extend( {
 	 * control model as placeholder.
 	 */
 	setPlaceholderFromParent() {
+		const parentName = this.model.get( 'parent' );
+
+		if ( ! parentName ) {
+			return;
+		}
+
 		const parent = this.getResponsiveParentView();
 
-		if ( parent ) {
-			this.container.placeholders[ this.model.get( 'name' ) ] = parent.preparePlaceholderForChildren();
+		this.container.placeholders[ this.model.get( 'name' ) ] = parent ? parent.preparePlaceholderForChildren() : this.preparePlaceholderFromSettings( parentName );
+	},
+
+	/**
+	 * The value a responsive copy inherits, read from the saved settings: used when the parent copy has no view (only
+	 * the current screen size's copies are built). Same rules as preparePlaceholderForChildren().
+	 *
+	 * @param {string} name A responsive copy's control name.
+	 * @return {*} Its value, or the value it inherits.
+	 */
+	preparePlaceholderFromSettings( name ) {
+		let model;
+
+		try {
+			model = this.container.panel.getControlModel( name );
+			// eslint-disable-next-line no-empty
+		} catch ( e ) {}
+
+		if ( ! model ) {
+			return;
 		}
+
+		const value = this.container.settings.get( name ),
+			defaults = model.get( 'default' ),
+			parentName = model.get( 'parent' ),
+			parentValue = parentName ? this.preparePlaceholderFromSettings( parentName ) : undefined;
+
+		// Multi-value controls (dimensions, sliders...) keep only the parts that are set and differ from the default,
+		// as ControlBaseMultipleItemView.getCleanControlValue() does.
+		if ( value && 'object' === typeof value ) {
+			const plain = value.toJSON ? value.toJSON() : value,
+				clean = Object.fromEntries( Object.entries( plain ).filter( ( [ k, v ] ) => v && ( defaults || {} )[ k ] !== v ) );
+
+			return Object.keys( clean ).length ? Object.assign( {}, parentValue, clean ) : parentValue;
+		}
+
+		return ( value && value !== defaults ? value : undefined ) || parentValue;
 	},
 
 	/**
@@ -253,7 +298,9 @@ ControlBaseDataView = ControlBaseView.extend( {
 	 */
 	preparePlaceholderForChildren() {
 		const cleanValue = this.getCleanControlValue(),
-			parentValue = this.getResponsiveParentView()?.preparePlaceholderForChildren();
+			parent = this.getResponsiveParentView(),
+			parentName = this.model.get( 'parent' ),
+			parentValue = parent ? parent.preparePlaceholderForChildren() : ( parentName && this.preparePlaceholderFromSettings( parentName ) ) || undefined;
 
 		if ( cleanValue instanceof Object ) {
 			return Object.assign( {}, parentValue, cleanValue );

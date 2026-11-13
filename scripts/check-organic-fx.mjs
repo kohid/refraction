@@ -8,7 +8,7 @@
  * Usage: node scripts/check-organic-fx.mjs [--site /tmp/rf-ofx-site] [--port 9381] [--shots /tmp/organic-shots]
  */
 import { execFileSync, spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -103,6 +103,7 @@ async function main() {
 
 		// ---- My Shapes and grain textures in the editor (no admin page)
 		wp( [ 'option', 'delete', 'refraction_grain_textures' ] );
+		rmSync( join( WPDIR, 'wp-content/uploads/refraction-grain' ), { recursive: true, force: true } );
 		const ctx = await browser.newContext( { viewport: { width: 1500, height: 950 } } );
 		const a = await ctx.newPage();
 		watch( a );
