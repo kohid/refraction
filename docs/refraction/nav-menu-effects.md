@@ -65,3 +65,10 @@ page (switchable). The site logo is the theme's custom logo (Customize > Site Id
 
 Check: `node scripts/check-nav-brand.mjs --site DIR --port N` (also covers the Button icon style, the Text Editor's
 outer paragraph margins and highlighted words drawn every time).
+
+### Before and After Scrolling (0.83.0)
+
+Style > Logo or Site Title has two tabs. Before Scrolling holds the settings of 0.81.0 (same ids); After Scrolling the
+same settings with ids ending in `_scrolled`, applied under `.refraction-nav-menu.is-scrolled`, which `nav-menu.js`
+sets once the page is scrolled past the Scroll point (`bar_brand_offset`, now shown whenever there is a brand). The
+brand, its logo and title transition over `--refraction-nav-brand-speed`.

@@ -1383,15 +1383,26 @@ $rf-nav-top-sub: ".refraction-nav-menu__list > .refraction-nav-menu__item > .ref
 		filter var(--refraction-nav-brand-speed-used) ease,
 		max-width var(--refraction-nav-brand-speed-used) ease,
 		margin var(--refraction-nav-brand-speed-used) ease,
+		padding var(--refraction-nav-brand-speed-used) ease,
+		color var(--refraction-nav-brand-speed-used) ease,
+		background-color var(--refraction-nav-brand-speed-used) ease,
+		border-radius var(--refraction-nav-brand-speed-used) ease,
 		visibility 0s linear 0s;
 
 	img {
 		max-height: none;
 		height: auto;
+		transition: width var(--refraction-nav-brand-speed-used) ease, max-height var(--refraction-nav-brand-speed-used) ease;
 	}
 
 	.refraction-nav-menu__brand {
 		gap: 0.6em;
+		transition: gap var(--refraction-nav-brand-speed-used) ease;
+	}
+
+	// Before and After Scrolling (Style > Logo or Site Title) change smoothly.
+	.refraction-nav-menu__brand-text {
+		transition: font-size var(--refraction-nav-brand-speed-used) ease, color var(--refraction-nav-brand-speed-used) ease, letter-spacing var(--refraction-nav-brand-speed-used) ease;
 	}
 }
 

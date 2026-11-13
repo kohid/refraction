@@ -106,6 +106,8 @@ async function main() {
 			box( 'br', {}, [ nav( 'nright', { bar_brand: 'image', bar_brand_image: { id: Number( logo ), url: '' }, bar_brand_position: 'right' } ) ] ),
 			box( 'ba', {}, [ nav( 'nafter', { bar_brand: 'title', bar_brand_show: 'after', bar_brand_offset: 200, bar_brand_animation: 'zoom', bar_brand_duration: 100 } ) ] ),
 			box( 'bb', {}, [ nav( 'nbefore', { bar_brand: 'title', bar_brand_show: 'before', bar_brand_offset: 200, bar_brand_animation: 'collapse', bar_brand_duration: 100 } ) ] ),
+			box( 'bs', {}, [ nav( 'nshrink', { bar_brand: 'image', bar_brand_image: { id: Number( logo ), url: '' }, bar_brand_offset: 200, bar_brand_duration: 50, bar_brand_width: { unit: 'px', size: 140 }, bar_brand_width_scrolled: { unit: 'px', size: 60 } } ) ] ),
+			box( 'bt', {}, [ nav( 'ncolor', { bar_brand: 'title', bar_brand_offset: 200, bar_brand_duration: 50, bar_brand_color: '#111111', bar_brand_color_scrolled: '#e20a17', bar_brand_typography_scrolled_typography: 'custom', bar_brand_typography_scrolled_font_size: { unit: 'px', size: 14 } } ) ] ),
 			box( 'tall', tall, [ { id: 'spacer', elType: 'widget', widgetType: 'heading', settings: { title: 'Scroll' }, elements: [] } ] ),
 		] );
 
@@ -149,8 +151,17 @@ async function main() {
 		const a0 = await look( 'nafter' );
 		const b0 = await look( 'nbefore' );
 		check( 'scroll', 'at the top: "show once scrolled" is hidden, "hide once scrolled" shows', a0.hidden && 0 === a0.opacity && 'hidden' === a0.visibility && ! b0.hidden && 1 === b0.opacity, JSON.stringify( { a0, b0 } ) );
+		const scrolledLook = () => p.evaluate( () => ( {
+			width: Math.round( document.querySelector( '[data-id="nshrink"] .refraction-nav-menu__bar-brand img' ).getBoundingClientRect().width ),
+			color: getComputedStyle( document.querySelector( '[data-id="ncolor"] .refraction-nav-menu__brand-text' ) ).color,
+			size: getComputedStyle( document.querySelector( '[data-id="ncolor"] .refraction-nav-menu__brand-text' ) ).fontSize,
+			flag: document.querySelector( '[data-id="ncolor"] .refraction-nav-menu' ).classList.contains( 'is-scrolled' ),
+		} ) );
+		const sBefore = await scrolledLook();
 		await p.evaluate( () => window.scrollTo( 0, 300 ) );
 		await sleep( 600 );
+		const sAfter = await scrolledLook();
+		check( 'scrolled look', 'Before / After Scrolling: the logo 140px wide, then 60px past the scroll point; the title dark, then red and 14px', 140 === sBefore.width && ! sBefore.flag && 'rgb(17, 17, 17)' === sBefore.color && 60 === sAfter.width && sAfter.flag && 'rgb(226, 10, 23)' === sAfter.color && '14px' === sAfter.size, JSON.stringify( { sBefore, sAfter } ) );
 		const a1 = await look( 'nafter' );
 		const b1 = await look( 'nbefore' );
 		check( 'scroll', 'scrolled 300px (past 200): the first shows, zoomed back to full size; the second is gone and takes no room (Grow in)', ! a1.hidden && 1 === a1.opacity && b1.hidden && b1.brand.w <= 1, JSON.stringify( { a1, b1 } ) );

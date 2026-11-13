@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.82.0
+Stable tag: 0.83.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.83.0 =
+* Nav Menu > Style > Logo or Site Title: Before Scrolling and After Scrolling tabs. Every setting (logo width and max height, title typography and colors, background, space beside the menu, space between logo and title, padding, corners) can change once the page is scrolled past the Scroll point, smoothly over the Duration: for example a big logo that shrinks in a sticky header. The Scroll point now shows whenever there is a logo or title.
+* Fixed: with the side panel floating, the global colors and fonts lists (and other small popups and the right-click menu) opened behind it.
 
 = 0.82.0 =
 * The separate Floating Elements window is gone: the whole side panel floats and docks now, Elements included.

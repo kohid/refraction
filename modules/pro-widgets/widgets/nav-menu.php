@@ -1537,13 +1537,14 @@ class Nav_Menu extends Pro_Widget {
 		$this->add_control(
 			'bar_brand_offset',
 			[
-				'label' => esc_html__( 'Scrolled down by (px)', 'refraction' ),
+				'label' => esc_html__( 'Scroll point (px)', 'refraction' ),
 				'type' => Controls_Manager::NUMBER,
 				'min' => 0,
 				'max' => 5000,
 				'default' => 100,
+				'description' => esc_html__( 'How far the page is scrolled down before it shows or hides, and before Style > After Scrolling applies.', 'refraction' ),
 				'frontend_available' => true,
-				'condition' => $scrolled,
+				'condition' => $on,
 			]
 		);
 
@@ -1578,55 +1579,92 @@ class Nav_Menu extends Pro_Widget {
 				'max' => 3000,
 				'placeholder' => '400',
 				'selectors' => [ '{{WRAPPER}}' => '--refraction-nav-brand-speed: {{VALUE}}ms;' ],
-				'condition' => $scrolled,
+				'condition' => $on,
 			]
 		);
 
 		$this->end_section();
 	}
 
-	/** Style > Logo or Site Title. */
+	/**
+	 * Style > Logo or Site Title, in two tabs: Before Scrolling and After Scrolling (once the page is scrolled past
+	 * the scroll point, nav-menu.js puts is-scrolled on the nav), so the logo can shrink, the title change color, etc.
+	 * The before ids are the ones of 0.81.0; the after ids end in _scrolled.
+	 */
 	private function register_bar_brand_style(): void {
-		$brand = '{{WRAPPER}} .refraction-nav-menu__bar-brand';
-
 		$this->style_section( 'style_bar_brand', esc_html__( 'Logo or Site Title', 'refraction' ), [ 'bar_brand!' => '' ] );
 
+		$this->start_controls_tabs( 'bar_brand_style_tabs' );
+
+		foreach ( [
+			'' => [ esc_html__( 'Before Scrolling', 'refraction' ), '{{WRAPPER}} .refraction-nav-menu' ],
+			'_scrolled' => [ esc_html__( 'After Scrolling', 'refraction' ), '{{WRAPPER}} .refraction-nav-menu.is-scrolled' ],
+		] as $suffix => [ $label, $nav ] ) {
+			$this->start_controls_tab( 'bar_brand_tab' . ( $suffix ? $suffix : '_before' ), [ 'label' => $label ] );
+			$this->bar_brand_state_controls( $suffix, $nav );
+			$this->end_controls_tab();
+		}
+
+		$this->end_controls_tabs();
+
+		$this->add_control(
+			'bar_brand_style_note',
+			[
+				'type' => Controls_Manager::RAW_HTML,
+				'raw' => esc_html__( 'After Scrolling applies once the page is scrolled past the scroll point (Content > Logo or Site Title); empty settings keep the Before Scrolling ones. It changes smoothly over the Duration.', 'refraction' ),
+				'content_classes' => 'refraction-descriptor',
+			]
+		);
+
+		$this->end_section();
+	}
+
+	/**
+	 * One tab of Style > Logo or Site Title.
+	 *
+	 * @param string $suffix '' (before scrolling) or '_scrolled'.
+	 * @param string $nav    Selector of the nav in that state.
+	 */
+	private function bar_brand_state_controls( string $suffix, string $nav ): void {
+		$brand = $nav . ' .refraction-nav-menu__bar-brand';
+		$logo_kinds = [ 'bar_brand' => [ 'logo', 'logo_title', 'image' ] ];
+
 		$this->add_responsive_control(
-			'bar_brand_width',
+			'bar_brand_width' . $suffix,
 			[
 				'label' => esc_html__( 'Logo width', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', 'vw' ],
 				'range' => [ 'px' => [ 'min' => 20, 'max' => 400 ] ],
-				'default' => [ 'unit' => 'px', 'size' => 140 ],
+				'default' => $suffix ? [] : [ 'unit' => 'px', 'size' => 140 ],
 				'selectors' => [ $brand . ' img' => 'width: {{SIZE}}{{UNIT}};' ],
-				'condition' => [ 'bar_brand' => [ 'logo', 'logo_title', 'image' ] ],
+				'condition' => $logo_kinds,
 			]
 		);
 
 		$this->add_responsive_control(
-			'bar_brand_max_height',
+			'bar_brand_max_height' . $suffix,
 			[
 				'label' => esc_html__( 'Logo max height', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em' ],
 				'range' => [ 'px' => [ 'min' => 10, 'max' => 200 ] ],
 				'selectors' => [ $brand . ' img' => 'max-height: {{SIZE}}{{UNIT}}; object-fit: contain;' ],
-				'condition' => [ 'bar_brand' => [ 'logo', 'logo_title', 'image' ] ],
+				'condition' => $logo_kinds,
 			]
 		);
 
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
-				'name' => 'bar_brand_typography',
+				'name' => 'bar_brand_typography' . $suffix,
 				'label' => esc_html__( 'Title', 'refraction' ),
 				'selector' => $brand . ' .refraction-nav-menu__brand-text',
 			]
 		);
 
 		$this->add_control(
-			'bar_brand_color',
+			'bar_brand_color' . $suffix,
 			[
 				'label' => esc_html__( 'Title color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
@@ -1635,7 +1673,7 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_control(
-			'bar_brand_color_hover',
+			'bar_brand_color_hover' . $suffix,
 			[
 				'label' => esc_html__( 'Title color on hover', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
@@ -1643,20 +1681,29 @@ class Nav_Menu extends Pro_Widget {
 			]
 		);
 
+		$this->add_control(
+			'bar_brand_background' . $suffix,
+			[
+				'label' => esc_html__( 'Background', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $brand => 'background-color: {{VALUE}};' ],
+			]
+		);
+
 		$this->add_responsive_control(
-			'bar_brand_gap',
+			'bar_brand_gap' . $suffix,
 			[
 				'label' => esc_html__( 'Space beside the menu', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em' ],
 				'range' => [ 'px' => [ 'max' => 120 ] ],
-				'selectors' => [ '{{WRAPPER}}' => '--refraction-nav-brand-gap: {{SIZE}}{{UNIT}};' ],
+				'selectors' => [ $suffix ? $nav : '{{WRAPPER}}' => '--refraction-nav-brand-gap: {{SIZE}}{{UNIT}};' ],
 				'separator' => 'before',
 			]
 		);
 
 		$this->add_responsive_control(
-			'bar_brand_inner_gap',
+			'bar_brand_inner_gap' . $suffix,
 			[
 				'label' => esc_html__( 'Space between logo and title', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,
@@ -1668,7 +1715,7 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_responsive_control(
-			'bar_brand_padding',
+			'bar_brand_padding' . $suffix,
 			[
 				'label' => esc_html__( 'Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
@@ -1677,7 +1724,16 @@ class Nav_Menu extends Pro_Widget {
 			]
 		);
 
-		$this->end_section();
+		$this->add_responsive_control(
+			'bar_brand_radius' . $suffix,
+			[
+				'label' => esc_html__( 'Corners', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range' => [ 'px' => [ 'max' => 60 ] ],
+				'selectors' => [ $brand => 'border-radius: {{SIZE}}{{UNIT}};' ],
+			]
+		);
 	}
 
 	protected function render() {

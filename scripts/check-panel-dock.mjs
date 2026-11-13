@@ -163,6 +163,27 @@ async function main() {
 		await a.waitForTimeout( 900 );
 		g = await geo();
 		check( 'float', 'pressing the docked side again floats it: a window over the page, neither button pressed, the page at full width', 'fixed' === g.pos && '' === g.pressed && g.panel.h < 800 && 0 === g.preview.l && W === g.preview.r && /rf-panel--floating/.test( g.body ), JSON.stringify( g ) );
+		// Its popups open over the floating panel: the global colors list of a color setting.
+		await a.evaluate( () => $e.run( 'panel/editor/open', { model: refraction.getContainer( 'h1' ).model, view: refraction.getContainer( 'h1' ).view } ) );
+		await a.waitForTimeout( 800 );
+		await a.click( '.refraction-panel-navigation-tab:has-text("Style")' );
+		await a.waitForTimeout( 600 );
+		await a.click( '.refraction-control-title_color .e-global__popover-toggle' );
+		await a.waitForTimeout( 800 );
+		const onTop = await a.evaluate( () => {
+			const pop = [ ...document.querySelectorAll( '.e-global__popover' ) ].find( ( x ) => x.getClientRects().length );
+			if ( ! pop ) {
+				return 'no popover';
+			}
+			const b = pop.getBoundingClientRect();
+			const at = document.elementFromPoint( b.left + 20, b.top + 20 );
+			return pop.contains( at ) ? 'on top' : 'covered by ' + ( at?.closest( '[id]' )?.id || at?.className );
+		} );
+		await a.screenshot( { path: join( SHOTS, 'floating-popover.png' ) } );
+		check( 'float', 'a setting\'s popup (the global colors list) opens over the floating panel, not behind it', 'on top' === onTop, onTop );
+		await a.keyboard.press( 'Escape' );
+		await a.mouse.click( 700, 500 );
+		await a.waitForTimeout( 400 );
 		const header = a.locator( '#refraction-panel-header-title' );
 		const drag = async ( toX, toY ) => {
 			const b = await header.boundingBox();
