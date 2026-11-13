@@ -12,7 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Pure_Reveal_Settings {
 
 	/** How a whole element, a text piece or a child comes in. */
-	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise', 'wipe-up', 'wipe-down', 'wipe-left', 'wipe-right', 'dim' ];
+	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise', 'wipe-up', 'wipe-down', 'wipe-left', 'wipe-right', 'dim', 'blur-up', 'pop', 'spin', 'skew-up', 'flip-up', 'flip-left', 'swing', 'iris', 'curtain', 'split', 'diagonal', 'drop' ];
+
+	/** "With the scroll" is done when the element's top is halfway up the screen (the panel's placeholder). */
+	const SCROLL_END = 50;
 
 	/** How text comes in: each piece slides up from behind its own mask, or uses the element effect. */
 	const TEXT_SPLITS = [ 'lines', 'words', 'chars' ];
@@ -55,7 +58,7 @@ class Pure_Reveal_Settings {
 		}
 
 		$text = in_array( $settings['rf_reveal_text'] ?? '', self::TEXT_SPLITS, true ) ? $settings['rf_reveal_text'] : '';
-		$range = Pure_Motion_Settings::range( $settings, 'rf_reveal' );
+		$range = Pure_Motion_Settings::range( $settings, 'rf_reveal', self::SCROLL_END );
 
 		return array_filter( [
 			'effect' => self::effect( $settings, 'rf_reveal' ),

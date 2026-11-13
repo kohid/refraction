@@ -215,24 +215,68 @@ class Module extends BaseModule {
 
 	// ----------------------------------------------------------------- reveal
 
-	private function effect_options( string $none ): array {
+	/** The Reveal effects in the groups the panel shows them in. */
+	private function effect_groups(): array {
 		return [
-			'' => $none,
-			'fade-up' => esc_html__( 'Fade up', 'refraction' ),
-			'fade-down' => esc_html__( 'Fade down', 'refraction' ),
-			'fade-left' => esc_html__( 'Fade in from the right', 'refraction' ),
-			'fade-right' => esc_html__( 'Fade in from the left', 'refraction' ),
-			'fade' => esc_html__( 'Fade', 'refraction' ),
-			'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
-			'zoom-out' => esc_html__( 'Zoom out', 'refraction' ),
-			'blur' => esc_html__( 'Sharpen from blur', 'refraction' ),
-			'rise' => esc_html__( 'Rise and turn', 'refraction' ),
-			'wipe-up' => esc_html__( 'Wipe up (uncovered from the bottom)', 'refraction' ),
-			'wipe-down' => esc_html__( 'Wipe down (uncovered from the top)', 'refraction' ),
-			'wipe-left' => esc_html__( 'Wipe from the right', 'refraction' ),
-			'wipe-right' => esc_html__( 'Wipe from the left', 'refraction' ),
-			'dim' => esc_html__( 'Light up from faint (best for text with the scroll)', 'refraction' ),
+			esc_html__( 'Fade and move', 'refraction' ) => [
+				'fade' => esc_html__( 'Fade', 'refraction' ),
+				'fade-up' => esc_html__( 'Fade up', 'refraction' ),
+				'fade-down' => esc_html__( 'Fade down', 'refraction' ),
+				'fade-left' => esc_html__( 'Fade in from the right', 'refraction' ),
+				'fade-right' => esc_html__( 'Fade in from the left', 'refraction' ),
+				'blur-up' => esc_html__( 'Soft rise (up and out of blur)', 'refraction' ),
+				'drop' => esc_html__( 'Drop in and settle', 'refraction' ),
+				'skew-up' => esc_html__( 'Slanted rise', 'refraction' ),
+				'rise' => esc_html__( 'Rise and turn', 'refraction' ),
+			],
+			esc_html__( 'Zoom and turn', 'refraction' ) => [
+				'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
+				'zoom-out' => esc_html__( 'Zoom out', 'refraction' ),
+				'pop' => esc_html__( 'Pop (grows from small)', 'refraction' ),
+				'spin' => esc_html__( 'Spin in', 'refraction' ),
+				'blur' => esc_html__( 'Sharpen from blur', 'refraction' ),
+			],
+			esc_html__( '3D', 'refraction' ) => [
+				'flip-up' => esc_html__( 'Flip up', 'refraction' ),
+				'flip-left' => esc_html__( 'Flip from the side', 'refraction' ),
+				'swing' => esc_html__( 'Swing down (hinged at the top)', 'refraction' ),
+			],
+			esc_html__( 'Uncover', 'refraction' ) => [
+				'wipe-up' => esc_html__( 'Wipe up (uncovered from the bottom)', 'refraction' ),
+				'wipe-down' => esc_html__( 'Wipe down (uncovered from the top)', 'refraction' ),
+				'wipe-left' => esc_html__( 'Wipe from the right', 'refraction' ),
+				'wipe-right' => esc_html__( 'Wipe from the left', 'refraction' ),
+				'curtain' => esc_html__( 'Curtain (opens from the middle)', 'refraction' ),
+				'split' => esc_html__( 'Split (opens top and bottom)', 'refraction' ),
+				'iris' => esc_html__( 'Circle (grows from the centre)', 'refraction' ),
+				'diagonal' => esc_html__( 'Diagonal wipe', 'refraction' ),
+			],
+			esc_html__( 'Light', 'refraction' ) => [
+				'dim' => esc_html__( 'Light up from faint (best for text with the scroll)', 'refraction' ),
+			],
 		];
+	}
+
+	/** Flat list (what the setting may hold) with a first "none" choice. */
+	private function effect_options( string $none ): array {
+		$options = [ '' => $none ];
+
+		foreach ( $this->effect_groups() as $group ) {
+			$options += $group;
+		}
+
+		return $options;
+	}
+
+	/** The same choices as select groups, for the panel. */
+	private function effect_select_groups( array $first ): array {
+		$groups = $first;
+
+		foreach ( $this->effect_groups() as $label => $options ) {
+			$groups[] = [ 'label' => $label, 'options' => $options ];
+		}
+
+		return $groups;
 	}
 
 	private function register_reveal_controls( Element_Base $element ) {
@@ -248,8 +292,24 @@ class Module extends BaseModule {
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => $this->effect_options( esc_html__( 'None', 'refraction' ) ),
-			'description' => esc_html__( 'Use this or the Entrance Animation above, not both on the same element.', 'refraction' ),
+			'groups' => $this->effect_select_groups( [ '' => esc_html__( 'None', 'refraction' ) ] ),
 			'frontend_available' => true,
+		] );
+
+		// The Entrance Animation (Motion Effects) and the whole-element reveal would both move the element: the
+		// entrance wins and the reveal is skipped (reveal.js hasEntrance()). Say so instead of doing nothing silently.
+		$entrance = $is_container ? 'animation' : '_animation';
+		$element->add_control( 'rf_reveal_entrance_notice', [
+			'type' => Controls_Manager::ALERT,
+			'alert_type' => 'warning',
+			'content' => esc_html__( 'This element also has an Entrance Animation (Motion Effects), so the Whole element reveal is skipped. Set Entrance Animation to None to use it. Text and inner elements still reveal.', 'refraction' ),
+			'conditions' => [
+				'relation' => 'and',
+				'terms' => [
+					[ 'name' => 'rf_reveal', 'operator' => '!==', 'value' => '' ],
+					[ 'name' => $entrance, 'operator' => '!in', 'value' => [ '', 'none' ] ],
+				],
+			],
 		] );
 
 		if ( $is_container ) {
@@ -258,6 +318,7 @@ class Module extends BaseModule {
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => $this->effect_options( esc_html__( 'None', 'refraction' ) ),
+				'groups' => $this->effect_select_groups( [ '' => esc_html__( 'None', 'refraction' ) ] ),
 				'description' => esc_html__( 'Cards, icons or columns inside this container come in one after another.', 'refraction' ),
 				'frontend_available' => true,
 			] );
@@ -281,6 +342,7 @@ class Module extends BaseModule {
 				'type' => Controls_Manager::SELECT,
 				'default' => 'mask',
 				'options' => [ 'mask' => esc_html__( 'Up from behind a line', 'refraction' ) ] + array_slice( $this->effect_options( '' ), 1, null, true ),
+				'groups' => $this->effect_select_groups( [ 'mask' => esc_html__( 'Up from behind a line', 'refraction' ) ] ),
 				'frontend_available' => true,
 				'condition' => [ 'rf_reveal_text!' => '' ],
 			] );

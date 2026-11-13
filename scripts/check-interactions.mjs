@@ -184,13 +184,13 @@ async function main() {
 		await b.locator( '[data-id="im01"]' ).scrollIntoViewIfNeeded();
 		await sleep( 1500 );
 		const wipe = await b.evaluate( () => {
-			const el = document.querySelector( '[data-id="im01"]' ); return { fx: el.querySelector( '[data-rf-rv-fx="wipe-up"]' ) ? 'piece' : el.getAttribute( 'data-rf-rv-fx' ), clip: getComputedStyle( el.querySelector( '[data-rf-rv-fx]' ) || el ).clipPath };
+			const el = document.querySelector( '[data-id="im01"]' ); const fxOf = ( x ) => x.getAttribute( 'data-rf-rv-fx' ) || x.getAttribute( 'data-rf-rv-played' ); return { fx: el.querySelector( '[data-rf-rv-fx="wipe-up"], [data-rf-rv-played="wipe-up"]' ) ? 'piece' : fxOf( el ), clip: getComputedStyle( el.querySelector( '[data-rf-rv-fx], [data-rf-rv-played]' ) || el ).clipPath };
 		} );
 		check( 'reveal', 'Wipe up uncovers the image fully once in view', ( 'wipe-up' === wipe.fx || 'piece' === wipe.fx ) && /^(none|inset\(0(%|px)?( 0(%|px)?)*\))$/.test( wipe.clip ), JSON.stringify( wipe ) );
 		await b.locator( '[data-id="hd01"]' ).scrollIntoViewIfNeeded();
 		await sleep( 2500 );
 		const dim = await b.evaluate( () => {
-			const words = [ ...document.querySelectorAll( '[data-id="hd01"] [data-rf-rv-fx="dim"]' ) ]; return { n: words.length, opacities: [ ...new Set( words.map( ( x ) => getComputedStyle( x ).opacity ) ) ] };
+			const words = [ ...document.querySelectorAll( '[data-id="hd01"] [data-rf-rv-fx="dim"], [data-id="hd01"] [data-rf-rv-played="dim"]' ) ]; return { n: words.length, opacities: [ ...new Set( words.map( ( x ) => getComputedStyle( x ).opacity ) ) ] };
 		} );
 		check( 'reveal', 'Light up from faint: the heading word by word, all lit at the end', dim.n > 8 && 1 === dim.opacities.length && '1' === dim.opacities[ 0 ], JSON.stringify( dim ) );
 		await b.context().close();

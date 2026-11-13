@@ -41,15 +41,25 @@
 	}
 }
 
-[data-rf-rv-piece] {
+// Move, grow, turn and slant by the share still to go (--rf-rv-q); the 3D effects put a perspective in front.
+$rf-rv-move: translate3d(calc(var(--rf-rv-q) * var(--rf-rv-dx)), calc(var(--rf-rv-q) * var(--rf-rv-dy)), 0) scale(calc(1 + var(--rf-rv-q) * var(--rf-rv-ds))) rotate(calc(var(--rf-rv-q) * var(--rf-rv-dr))) skewY(calc(var(--rf-rv-q) * var(--rf-rv-dk)));
+
+[data-rf-rv-piece=""] {
 	--rf-rv-q: calc(1 - var(--rf-rv-p));
 	--rf-rv-dx: 0px;
 	--rf-rv-dy: 0px;
 	--rf-rv-ds: 0;
 	--rf-rv-dr: 0deg;
+	--rf-rv-dk: 0deg;
 
 	opacity: var(--rf-rv-p);
-	transform: translate3d(calc(var(--rf-rv-q) * var(--rf-rv-dx)), calc(var(--rf-rv-q) * var(--rf-rv-dy)), 0) scale(calc(1 + var(--rf-rv-q) * var(--rf-rv-ds))) rotate(calc(var(--rf-rv-q) * var(--rf-rv-dr)));
+	transform: $rf-rv-move;
+}
+
+// The timing of the reveal itself. Widgets and containers have their own `transition` (background, border, transform
+// for hover) with a stronger selector, which made the reveal ignore its duration, delay and easing and pop the opacity
+// in at once; `:not(#rf-rv)` gives this rule an id's weight so the reveal's own timing always applies while it plays.
+[data-rf-rv-piece=""]:not(#rf-rv) {
 	transition: --rf-rv-p var(--rf-rv-dur, 700ms) var(--rf-rv-ease, cubic-bezier(0.22, 1, 0.36, 1)) var(--rf-rv-delay, 0ms);
 }
 
@@ -109,6 +119,85 @@
 	clip-path: inset(0 calc(var(--rf-rv-q) * 100%) 0 0);
 }
 
+// Soft rise: up and out of a blur.
+[data-rf-rv-fx="blur-up"] {
+	--rf-rv-dy: var(--rf-rv-dist, 40px);
+
+	filter: blur(calc(var(--rf-rv-q) * 10px));
+}
+
+// Drop in: from a little above and a little larger, as if set down on the page.
+[data-rf-rv-fx="drop"] {
+	--rf-rv-dy: calc(-1 * var(--rf-rv-dist, 40px));
+	--rf-rv-ds: 0.12;
+}
+
+[data-rf-rv-fx="skew-up"] {
+	--rf-rv-dy: var(--rf-rv-dist, 40px);
+	--rf-rv-dk: 7deg;
+
+	transform-origin: 0 100%;
+}
+
+[data-rf-rv-fx="pop"] {
+	--rf-rv-ds: -0.4;
+}
+
+[data-rf-rv-fx="spin"] {
+	--rf-rv-ds: -0.5;
+	--rf-rv-dr: -180deg;
+}
+
+// 3D: turned away from the viewer and back.
+[data-rf-rv-fx="flip-up"],
+[data-rf-rv-fx="flip-left"],
+[data-rf-rv-fx="swing"] {
+	transform: perspective(900px) $rf-rv-move rotateX(calc(var(--rf-rv-q) * var(--rf-rv-dx3, 0deg))) rotateY(calc(var(--rf-rv-q) * var(--rf-rv-dy3, 0deg)));
+	backface-visibility: hidden;
+}
+
+[data-rf-rv-fx="flip-up"] {
+	--rf-rv-dx3: 75deg;
+
+	transform-origin: 50% 100%;
+}
+
+[data-rf-rv-fx="flip-left"] {
+	--rf-rv-dy3: 75deg;
+
+	transform-origin: 0 50%;
+}
+
+[data-rf-rv-fx="swing"] {
+	--rf-rv-dx3: -95deg;
+
+	transform-origin: 50% 0;
+}
+
+// More ways to uncover: from the middle, top and bottom apart, a growing circle, a diagonal.
+[data-rf-rv-fx="curtain"],
+[data-rf-rv-fx="split"],
+[data-rf-rv-fx="iris"],
+[data-rf-rv-fx="diagonal"] {
+	opacity: 1;
+}
+
+[data-rf-rv-fx="curtain"] {
+	clip-path: inset(0 calc(var(--rf-rv-q) * 50%) 0 calc(var(--rf-rv-q) * 50%));
+}
+
+[data-rf-rv-fx="split"] {
+	clip-path: inset(calc(var(--rf-rv-q) * 50%) 0 calc(var(--rf-rv-q) * 50%) 0);
+}
+
+[data-rf-rv-fx="iris"] {
+	clip-path: circle(calc(var(--rf-rv-p) * 75%) at 50% 50%);
+}
+
+[data-rf-rv-fx="diagonal"] {
+	clip-path: polygon(0 0, calc(var(--rf-rv-p) * 210%) 0, 0 calc(var(--rf-rv-p) * 210%));
+}
+
 // Light up from faint: each piece goes from a trace of itself to full, in place. With "with the scroll" and word by
 // word, the text fills in as it is read.
 [data-rf-rv-fx="dim"] {
@@ -142,11 +231,16 @@
 }
 
 // Scroll-linked pieces follow the script frame by frame, without their own transition.
-.rf-rv-scrub [data-rf-rv-piece],
-[data-rf-rv-piece].rf-rv-scrub,
-.rf-rv-instant [data-rf-rv-piece],
-[data-rf-rv-piece].rf-rv-instant {
+.rf-rv-scrub [data-rf-rv-piece]:not(#rf-rv),
+[data-rf-rv-piece].rf-rv-scrub:not(#rf-rv),
+.rf-rv-instant [data-rf-rv-piece]:not(#rf-rv),
+[data-rf-rv-piece].rf-rv-instant:not(#rf-rv) {
 	transition: none;
+}
+
+// Split text sits in one inline run, so the spaces between its words survive in flex labels (counter titles, buttons).
+.rf-rv-run {
+	display: inline;
 }
 
 // The full text stays readable for screen readers while the split pieces are hidden from them.
@@ -160,7 +254,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	[data-rf-rv-piece] {
+	[data-rf-rv-piece]:not(#rf-rv) {
 		--rf-rv-p: 1 !important;
 
 		transition: none;

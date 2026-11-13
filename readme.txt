@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.76.0
+Stable tag: 0.77.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,14 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.77.0 =
+* Reveal: 12 more animations, in groups in the list: Soft rise, Drop in, Slanted rise, Pop, Spin in, Flip up, Flip from the side, Swing down (3D), and Curtain, Split, Circle and Diagonal wipes. Every one works for the whole element, its text (line, word or letter) and a container's elements.
+* Fixed Reveal text splitting where it broke the widget: the changing words of an Animated Headline were doubled, a Marquee's repeated copies stayed hidden, counting numbers and countdown digits were split. That text is now left alone.
+* Fixed: words split by Reveal lost their spaces in flex labels (a Counter title read "CoolNumber").
+* Fixed: "With the scroll" finished when the element reached the top of the screen although the panel showed 50%; it now ends halfway up as shown.
+* Reveal no longer does nothing silently when the element also has an Entrance Animation: the panel says the Whole element reveal is skipped and why.
+* After a reveal that plays once, the element lets go of the reveal's transform, clip and blur, so its own Transform settings, hover movement and sticky or fixed elements inside it work as without a reveal.
 
 = 0.76.0 =
 * Faster editor panel sections: settings hidden by their conditions are not built until a change makes them apply (for example the gradient options until Gradient is chosen, typography options until the pencil is clicked); colour pickers and font lists are built the first time they are pointed at, focused or clicked; list items (floating cards, slides...) build their settings when opened. The slowest sections open two to four times faster; the median section in half the time.
