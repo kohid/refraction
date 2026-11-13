@@ -415,36 +415,14 @@ class Nested_Carousel extends Widget_Nested_Base {
 
 		$arrow = '{{WRAPPER}} .refraction-nc__arrow';
 
+		$this->add_control( 'arrow_cat_place', [ 'label' => esc_html__( 'Size And Place', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'none', 'classes' => 'rf-panel-category' ] );
+
 		$this->add_responsive_control( 'arrow_size', [
 			'label' => esc_html__( 'Size', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 24, 'max' => 90 ] ],
 			'default' => [ 'size' => 44, 'unit' => 'px' ],
 			'selectors' => [ $arrow => 'width: {{SIZE}}px; height: {{SIZE}}px;' ],
-		] );
-
-		$this->add_control( 'arrow_color', [
-			'label' => esc_html__( 'Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $arrow => 'color: {{VALUE}};' ],
-		] );
-
-		$this->add_control( 'arrow_bg', [
-			'label' => esc_html__( 'Background', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $arrow => 'background-color: {{VALUE}};' ],
-		] );
-
-		$this->add_control( 'arrow_color_hover', [
-			'label' => esc_html__( 'Hover Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'color: {{VALUE}};' ],
-		] );
-
-		$this->add_control( 'arrow_bg_hover', [
-			'label' => esc_html__( 'Hover Background', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'background-color: {{VALUE}};' ],
 		] );
 
 		$this->add_responsive_control( 'arrow_icon_size', [
@@ -454,6 +432,31 @@ class Nested_Carousel extends Widget_Nested_Base {
 			'range' => [ '%' => [ 'min' => 20, 'max' => 100 ], 'px' => [ 'min' => 8, 'max' => 60 ] ],
 			'selectors' => [ $arrow . ' svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};' ],
 		] );
+
+		$this->add_control( 'arrow_placement', [
+			'label' => esc_html__( 'Placement', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'inside',
+			'options' => [
+				'inside' => esc_html__( 'Over the slides', 'refraction' ),
+				'outside' => esc_html__( 'Beside the slides', 'refraction' ),
+			],
+			'prefix_class' => 'refraction-nc-arrows-',
+		] );
+
+		$this->add_responsive_control( 'arrow_offset', [
+			'label' => esc_html__( 'Distance From The Edge', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => -60, 'max' => 120 ] ],
+			'selectors' => [
+				'{{WRAPPER}} .refraction-nc:not(.is-stack):not(.is-vertical) .refraction-nc__prev' => 'inset-inline-start: {{SIZE}}{{UNIT}};',
+				'{{WRAPPER}} .refraction-nc:not(.is-stack):not(.is-vertical) .refraction-nc__next' => 'inset-inline-end: {{SIZE}}{{UNIT}};',
+			],
+			'description' => esc_html__( 'Side by side and over the slides; not for the vertical and stack layouts.', 'refraction' ),
+		] );
+
+		$this->add_control( 'arrow_cat_box', [ 'label' => esc_html__( 'Box', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
 
 		$this->add_responsive_control( 'arrow_radius', [
 			'label' => esc_html__( 'Corners', 'refraction' ),
@@ -473,28 +476,43 @@ class Nested_Carousel extends Widget_Nested_Base {
 			'selector' => $arrow,
 		] );
 
-		$this->add_responsive_control( 'arrow_offset', [
-			'label' => esc_html__( 'Distance From The Edge', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ 'px' ],
-			'range' => [ 'px' => [ 'min' => -60, 'max' => 120 ] ],
-			'selectors' => [
-				'{{WRAPPER}} .refraction-nc:not(.is-stack):not(.is-vertical) .refraction-nc__prev' => 'inset-inline-start: {{SIZE}}{{UNIT}};',
-				'{{WRAPPER}} .refraction-nc:not(.is-stack):not(.is-vertical) .refraction-nc__next' => 'inset-inline-end: {{SIZE}}{{UNIT}};',
-			],
-			'description' => esc_html__( 'Side by side and over the slides; not for the vertical and stack layouts.', 'refraction' ),
+		$this->add_control( 'arrow_cat_colors', [ 'label' => esc_html__( 'Colors', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+
+		$this->start_controls_tabs( 'arrow_state_tabs' );
+
+		$this->start_controls_tab( 'arrow_state_normal', [ 'label' => esc_html__( 'Normal', 'refraction' ) ] );
+
+		$this->add_control( 'arrow_color', [
+			'label' => esc_html__( 'Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $arrow => 'color: {{VALUE}};' ],
 		] );
 
-		$this->add_control( 'arrow_placement', [
-			'label' => esc_html__( 'Placement', 'refraction' ),
-			'type' => Controls_Manager::SELECT,
-			'default' => 'inside',
-			'options' => [
-				'inside' => esc_html__( 'Over the slides', 'refraction' ),
-				'outside' => esc_html__( 'Beside the slides', 'refraction' ),
-			],
-			'prefix_class' => 'refraction-nc-arrows-',
+		$this->add_control( 'arrow_bg', [
+			'label' => esc_html__( 'Background', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $arrow => 'background-color: {{VALUE}};' ],
 		] );
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'arrow_state_hover', [ 'label' => esc_html__( 'Hover', 'refraction' ) ] );
+
+		$this->add_control( 'arrow_color_hover', [
+			'label' => esc_html__( 'Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'color: {{VALUE}};' ],
+		] );
+
+		$this->add_control( 'arrow_bg_hover', [
+			'label' => esc_html__( 'Background', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $arrow . ':hover, ' . $arrow . ':focus-visible' => 'background-color: {{VALUE}};' ],
+		] );
+
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
 
 		$this->end_controls_section();
 

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.87.0
+Stable tag: 0.88.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.88.0 =
+* Every widget checked: each section with many settings now has categories, shown as tabs once a section is long. Shared parts too: Highlighted Text (Text, Mark Behind, Drawing) in about 50 widgets, Long Text and Tooltip, Card Stack, Query (Source, Include, Exclude, Order) and Card. Widgets include Chart, Data Table, Stat Card, Login, Countdown, the event widgets, Posts, Slides, Nested Carousel, Timed Slides, Icon Box, Image Box, Call to Action, Testimonial, Video, 3D Build Scene, Scroll Sequence, Social Icons, and the Container's Floating Shapes and Floating Text.
+* Nav Menu: Submenu (Effect, Panel, Items, Colors with Normal / Hover / Current Page tabs), Hamburger Button (Icon, Box, Colors with Normal / Hover, Animation) and Mobile Menu (Button, Opened Menu, In The Panel) reorganised.
+* Nested Carousel > Arrows (Size And Place, Box, Colors with Normal / Hover) and Timed Slides > Arrows, line and number (Place, Arrows, Progress Line, Numbers) reorganised.
+* A category hides when its settings do. Every setting keeps its value.
+* New audit, scripts/audit-widget-panels.mjs: lists the long sections of every widget without categories.
 
 = 0.87.0 =
 * Phone Showcase > Style organised by the parts of the widget: Highlighted Text, Pill, Heading, Description, Steps, Phone, Floating Cards and Buttons, each its own section. Steps has Normal, Hover (new) and Active tabs; Floating Cards and Buttons have Normal and Hover tabs; inside, settings are grouped as Colors, Text, Box and Icon (Buttons: First Button, Second Button, Both Buttons, Icon). Long sections show their groups as tabs. Every setting keeps its value.
