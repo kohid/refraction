@@ -540,6 +540,41 @@ class Timed_Slides extends Widget_Nested_Base {
 			'render_type' => 'template',
 		] );
 
+		$this->add_control( 'show_progress', [
+			'label' => esc_html__( 'Progress number', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => '',
+			'description' => esc_html__( 'How far through the slides: a percent or the slide out of all of them.', 'refraction' ),
+			'render_type' => 'template',
+		] );
+
+		$this->add_control( 'progress_format', [
+			'label' => esc_html__( 'Shown as', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'percent',
+			'options' => [
+				'percent' => esc_html__( 'Percent (40%)', 'refraction' ),
+				'fraction' => esc_html__( 'Fraction (2/5)', 'refraction' ),
+				'fraction-spaced' => esc_html__( 'Fraction, spaced (2 / 5)', 'refraction' ),
+				'of' => esc_html__( 'Slide out of all (2 of 5)', 'refraction' ),
+				'padded' => esc_html__( 'Padded fraction (02 / 05)', 'refraction' ),
+			],
+			'render_type' => 'template',
+			'condition' => [ 'show_progress' => 'yes' ],
+		] );
+
+		$this->add_control( 'progress_position', [
+			'label' => esc_html__( 'Place', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'after',
+			'options' => [
+				'before' => esc_html__( 'Before the line', 'refraction' ),
+				'after' => esc_html__( 'After the line', 'refraction' ),
+			],
+			'render_type' => 'template',
+			'condition' => [ 'show_progress' => 'yes' ],
+		] );
+
 		$this->add_control( 'show_count', [
 			'label' => esc_html__( 'Slide number', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
@@ -689,11 +724,51 @@ class Timed_Slides extends Widget_Nested_Base {
 			'condition' => [ 'show_arrows' => 'yes' ],
 		] );
 
+		$this->add_control( 'line_fill_color', [
+			'label' => esc_html__( 'Line color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'description' => esc_html__( 'The part that fills as the slides go by. Empty: the timer and progress color.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-tco__line i' => 'background-color: {{VALUE}};' ],
+			'condition' => [ 'show_line' => 'yes' ],
+			'separator' => 'before',
+		] );
+
 		$this->add_control( 'line_color', [
 			'label' => esc_html__( 'Line track color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [ '{{WRAPPER}} .rf-tco__line' => 'background-color: {{VALUE}};' ],
 			'condition' => [ 'show_line' => 'yes' ],
+		] );
+
+		$this->add_responsive_control( 'line_thickness', [
+			'label' => esc_html__( 'Line thickness', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 1, 'max' => 12 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-tco__line' => 'height: {{SIZE}}px;' ],
+			'condition' => [ 'show_line' => 'yes' ],
+		] );
+
+		$this->add_control( 'line_radius', [
+			'label' => esc_html__( 'Line corners', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 12 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-tco__line, {{WRAPPER}} .rf-tco__line i' => 'border-radius: {{SIZE}}px;' ],
+			'condition' => [ 'show_line' => 'yes' ],
+		] );
+
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'progress_typography',
+			'label' => esc_html__( 'Progress number', 'refraction' ),
+			'selector' => '{{WRAPPER}} .rf-tco__progress',
+			'condition' => [ 'show_progress' => 'yes' ],
+			'separator' => 'before',
+		] );
+
+		$this->add_control( 'progress_color', [
+			'label' => esc_html__( 'Progress number color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .rf-tco__progress' => 'color: {{VALUE}};' ],
+			'condition' => [ 'show_progress' => 'yes' ],
 		] );
 
 		$this->add_group_control( Group_Control_Typography::get_type(), [
@@ -802,7 +877,7 @@ class Timed_Slides extends Widget_Nested_Base {
 		$cards = $on( 'show_cards' ) && $total > 1;
 		$many = $total > 1;
 
-		if ( ! $cards && '' === $sounds && ! ( $many && ( $on( 'show_arrows' ) || $on( 'show_line' ) || $on( 'show_count' ) ) ) ) {
+		if ( ! $cards && '' === $sounds && ! ( $many && ( $on( 'show_arrows' ) || $on( 'show_line' ) || $on( 'show_count' ) || $on( 'show_progress' ) ) ) ) {
 			return;
 		}
 		?>
@@ -833,11 +908,17 @@ class Timed_Slides extends Widget_Nested_Base {
 						<button type="button" class="rf-tco__arrow rf-tco__prev" aria-label="<?php esc_attr_e( 'Previous slide', 'refraction' ); ?>"><?php echo self::arrow( 'prev' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></button>
 						<button type="button" class="rf-tco__arrow rf-tco__next" aria-label="<?php esc_attr_e( 'Next slide', 'refraction' ); ?>"><?php echo self::arrow( 'next' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></button>
 					<?php endif; ?>
+					<?php if ( $many && $on( 'show_progress' ) && 'before' === ( $settings['progress_position'] ?? 'after' ) ) {
+						echo self::progress_tag( $settings, $total ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside.
+					} ?>
 					<?php if ( $many && $on( 'show_line' ) ) : ?>
 						<span class="rf-tco__line" aria-hidden="true"><i></i></span>
 					<?php else : ?>
 						<span class="rf-ts__spacer"></span>
 					<?php endif; ?>
+					<?php if ( $many && $on( 'show_progress' ) && 'before' !== ( $settings['progress_position'] ?? 'after' ) ) {
+						echo self::progress_tag( $settings, $total ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside.
+					} ?>
 					<?php if ( $many && $on( 'show_count' ) ) : ?>
 						<span class="rf-tco__count" aria-hidden="true">01</span>
 					<?php endif; ?>
@@ -845,6 +926,37 @@ class Timed_Slides extends Widget_Nested_Base {
 			</div>
 		</div>
 		<?php
+	}
+
+	/** The progress number (timed-cards.js keeps it up to date), showing the first slide. */
+	private static function progress_tag( array $settings, int $total ): string {
+		$format = (string) ( $settings['progress_format'] ?? 'percent' );
+
+		/* translators: 1: current slide, 2: number of slides. */
+		$of = __( '%1$d of %2$d', 'refraction' );
+
+		return sprintf( '<span class="rf-tco__progress" data-format="%1$s" data-of="%2$s" aria-hidden="true">%3$s</span>', esc_attr( $format ), esc_attr( $of ), esc_html( self::progress_text( $format, 1, $total ) ) );
+	}
+
+	/** Same formats as progressText() in modules/card-motion/assets/js/timed-cards.js. */
+	public static function progress_text( string $format, int $current, int $total ): string {
+		$pad = static function ( int $n ): string {
+			return str_pad( (string) $n, 2, '0', STR_PAD_LEFT );
+		};
+
+		switch ( $format ) {
+			case 'fraction':
+				return $current . '/' . $total;
+			case 'fraction-spaced':
+				return $current . ' / ' . $total;
+			case 'of':
+				/* translators: 1: current slide, 2: number of slides. */
+				return sprintf( __( '%1$d of %2$d', 'refraction' ), $current, $total );
+			case 'padded':
+				return $pad( $current ) . ' / ' . $pad( $total );
+			default:
+				return (int) round( $current / max( 1, $total ) * 100 ) . '%';
+		}
 	}
 
 	/** Prints a slide's container, marked as that slide's content (only the container itself, not containers inside it). */
@@ -902,7 +1014,7 @@ class Timed_Slides extends Widget_Nested_Base {
 				sounds += '<button type="button" class="refraction-slide__sound" data-rf-sound="' + index + '" aria-pressed="false" aria-label="Sound" hidden><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path class="refraction-slide__sound-on" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/><path class="refraction-slide__sound-off" d="m23 9-6 6m0-6 6 6"/></svg></button>';
 			}
 		} );
-		const rail = showCards || sounds || ( many && ( 'yes' === settings.show_arrows || 'yes' === settings.show_line || 'yes' === settings.show_count ) );
+		const rail = showCards || sounds || ( many && ( 'yes' === settings.show_arrows || 'yes' === settings.show_line || 'yes' === settings.show_count || 'yes' === settings.show_progress ) );
 		#>
 		<div class="rf-tco rf-ts {{ autoplay && 'yes' !== settings.pause_on_hover ? 'rf-ts--no-pause' : '' }}" role="region" aria-roledescription="carousel" aria-label="{{ settings.slider_label }}" tabindex="0">
 			<div class="rf-tco__stage">
@@ -938,7 +1050,16 @@ class Timed_Slides extends Widget_Nested_Base {
 								<button type="button" class="rf-tco__arrow rf-tco__prev" aria-label="Previous slide"><?php echo self::arrow( 'prev' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></button>
 								<button type="button" class="rf-tco__arrow rf-tco__next" aria-label="Next slide"><?php echo self::arrow( 'next' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></button>
 							<# } #>
+							<# var progressTag = '';
+							if ( many && 'yes' === settings.show_progress ) {
+								var pf = settings.progress_format || 'percent', pn = slides.length, pad2 = function( x ) { return ( x < 10 ? '0' : '' ) + x; };
+								var pof = '<?php echo esc_js( __( '%1$d of %2$d', 'refraction' ) ); ?>';
+								var ptext = { fraction: '1/' + pn, 'fraction-spaced': '1 / ' + pn, of: pof.replace( '%1$d', 1 ).replace( '%2$d', pn ), padded: '01 / ' + pad2( pn ) }[ pf ] || Math.round( 100 / pn ) + '%';
+								progressTag = '<span class="rf-tco__progress" data-format="' + _.escape( pf ) + '" data-of="' + _.escape( pof ) + '" aria-hidden="true">' + _.escape( ptext ) + '</span>';
+							} #>
+							<# if ( 'before' === settings.progress_position ) { #>{{{ progressTag }}}<# } #>
 							<# if ( many && 'yes' === settings.show_line ) { #><span class="rf-tco__line" aria-hidden="true"><i></i></span><# } else { #><span class="rf-ts__spacer"></span><# } #>
+							<# if ( 'before' !== settings.progress_position ) { #>{{{ progressTag }}}<# } #>
 							<# if ( many && 'yes' === settings.show_count ) { #><span class="rf-tco__count" aria-hidden="true">01</span><# } #>
 						</div>
 					</div>

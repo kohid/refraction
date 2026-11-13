@@ -442,3 +442,13 @@
 		display: none;
 	}
 }
+
+// Progress number beside the line (Timed Slides > Progress number): percent or slide out of all.
+.rf-tco__progress {
+	flex: none;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}

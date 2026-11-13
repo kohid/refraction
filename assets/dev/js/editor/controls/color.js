@@ -55,6 +55,10 @@ export default class extends ControlBaseDataView {
 			};
 
 			this.$swatch.on( 'pointerenter focusin click', build );
+
+			// The Dynamic Tags button belongs inside the picker (dynamic-tags/control-behavior.js moves it there once the
+			// picker is built); until then it would stand beside the swatch on every colour (hidden in _color.scss).
+			this.$el.addClass( 'e-control-color--swatch' );
 		}
 
 		this.$swatch.find( '.pcr-button' ).css( '--pcr-color', value || 'transparent' ).toggleClass( 'clear', ! value );
@@ -69,6 +73,7 @@ export default class extends ControlBaseDataView {
 		if ( this.$swatch ) {
 			this.$swatch.remove();
 			this.$swatch = null;
+			this.$el.removeClass( 'e-control-color--swatch' );
 		}
 
 		this.initPicker();

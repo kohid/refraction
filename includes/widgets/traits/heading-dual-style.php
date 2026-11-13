@@ -23,7 +23,9 @@ class Heading_Dual_Style {
 	 * @param string                    $section_id The section id.
 	 */
 	public static function controls( $el, array $show, string $section_id = 'section_rf_dual_style' ): void {
-		$part = '{{WRAPPER}} .refraction-heading-dual';
+		// Only this widget's own highlighted parts: a widget that holds other widgets (Timed Slides, carousels) would
+		// otherwise style the highlighted words of every heading inside it over their own settings.
+		$part = '{{WRAPPER}} .refraction-heading-dual:not({{WRAPPER}} .refraction-element *)';
 
 		$el->start_controls_section(
 			$section_id,
@@ -238,5 +240,44 @@ class Heading_Dual_Style {
 		);
 
 		$el->end_controls_section();
+
+		self::apply_section_condition( $el, $section_id, $show );
+	}
+
+	/**
+	 * The section's condition (highlighted words typed, or the Dual Heading on) on each of its settings too: a section
+	 * condition only hides the settings in the panel, so their defaults (the mark, its color) were still printed and
+	 * their classes still put on the widget when it highlighted nothing. A widget holding other widgets then gave them
+	 * its marks and colors.
+	 *
+	 * @param \Refraction\Controls_Stack $el         The widget.
+	 * @param string                    $section_id The section id.
+	 * @param array                     $show       The section's condition or conditions.
+	 */
+	private static function apply_section_condition( $el, string $section_id, array $show ): void {
+		foreach ( $el->get_controls() as $id => $control ) {
+			if ( ( $control['section'] ?? '' ) !== $section_id || 'section' === ( $control['type'] ?? '' ) ) {
+				continue;
+			}
+
+			$args = [];
+
+			if ( ! empty( $show['condition'] ) ) {
+				$args['condition'] = array_merge( (array) ( $control['condition'] ?? [] ), $show['condition'] );
+			}
+
+			if ( ! empty( $show['conditions'] ) ) {
+				$args['conditions'] = empty( $control['conditions'] )
+					? $show['conditions']
+					: [
+						'relation' => 'and',
+						'terms' => [ $show['conditions'], $control['conditions'] ],
+					];
+			}
+
+			if ( $args ) {
+				$el->update_control( $id, $args );
+			}
+		}
 	}
 }

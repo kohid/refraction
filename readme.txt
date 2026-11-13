@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.78.0
+Stable tag: 0.79.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.79.0 =
+* Timed Slides: a Progress number beside the progress line (Content > Progress number), shown as a percent (40%), a fraction (2/5 or 2 / 5), "2 of 5" or padded (02 / 05), before or after the line, with its own typography and color; switch it off to hide it on the page.
+* Timed Slides > Style > Arrows, line and number: Line color (the part that fills, apart from the track), Line thickness and Line corners.
+* Fixed: highlighted words in a heading inside Timed Slides (or any widget holding other widgets) lost their mark and colors on the page: the outer widget's own Highlighted Text defaults were applied over them. A widget that highlights nothing no longer prints any highlight style, and its highlight style never reaches the widgets inside it.
+* Fixed: every colour setting showed a Dynamic Tags button beside its swatch until it was pointed at (since 0.76); it is inside the colour picker again.
 
 = 0.78.0 =
 * Floating Elements: the widgets list in a window of its own, like Structure. Move it by its title, resize it from any edge, and dock it to the left (beside the panel) or the right (before a docked Structure) with its header buttons or by dragging it against that edge; docked, the page makes room for it. Show and hide it from the top bar (Floating Elements), its close button or Ctrl+Shift+K. Drag a widget into the page or click it to add it, as in the panel; its search is its own. Where it was, its size and whether it is shown are remembered.

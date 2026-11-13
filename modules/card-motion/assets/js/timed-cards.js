@@ -58,15 +58,41 @@ export function transitionFrames( effect, dir, at ) {
 /**
  * Parts: slides (.rf-tco__slide layers), texts (each slide's content, shown with .is-active), cards (.rf-tco__card
  * buttons, may be empty), sounds (each slide's sound button or null), timer (.rf-tco__timer i), line (the progress
- * line's i), count (the counter), next and prev (buttons), onChange (called with the new index).
+ * line's i), progress (the progress number, with data-format), count (the counter), next and prev (buttons), onChange (called with the new index).
  *
  * @param {Element} root  The .rf-tco element (keyboard, CSS variables, is-playing).
  * @param {Object}  cfg   { autoplay, interval, speed }.
  * @param {Object}  parts See above.
  * @return {Object|null} go( index, instant ), next(), prev(), active(), destroy().
  */
+/**
+ * The progress number: percent, fraction, "2 of 5" or padded (Timed_Slides::progress_text() in PHP).
+ *
+ * @param {string} format  percent, fraction, fraction-spaced, of or padded.
+ * @param {number} current Slide number, from 1.
+ * @param {number} total   Number of slides.
+ * @param {string} of      The translated "%1$d of %2$d" (data-of, printed by PHP).
+ * @return {string} The text.
+ */
+export function progressText( format, current, total, of = '%1$d of %2$d' ) {
+	const two = ( x ) => String( x ).padStart( 2, '0' );
+
+	switch ( format ) {
+		case 'fraction':
+			return current + '/' + total;
+		case 'fraction-spaced':
+			return current + ' / ' + total;
+		case 'of':
+			return of.replace( '%1$d', current ).replace( '%2$d', total );
+		case 'padded':
+			return two( current ) + ' / ' + two( total );
+		default:
+			return Math.round( current / Math.max( 1, total ) * 100 ) + '%';
+	}
+}
+
 export function timedCards( root, cfg, parts ) {
-	const { slides, texts = [], cards = [], sounds = [], timer: timerBar, line, count, onChange = () => {} } = parts;
+	const { slides, texts = [], cards = [], sounds = [], timer: timerBar, line, progress: progressNumber, count, onChange = () => {} } = parts;
 	const n = slides.length;
 
 	if ( ! n ) {
@@ -131,6 +157,10 @@ export function timedCards( root, cfg, parts ) {
 
 		if ( count ) {
 			count.textContent = pad( active + 1 );
+		}
+
+		if ( progressNumber ) {
+			progressNumber.textContent = progressText( progressNumber.getAttribute( 'data-format' ), active + 1, n, progressNumber.getAttribute( 'data-of' ) || undefined );
 		}
 
 		sounds.forEach( ( sound, i ) => sound && sound.classList.toggle( 'is-current', i === active ) );

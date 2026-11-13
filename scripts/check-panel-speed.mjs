@@ -212,11 +212,14 @@ async function main() {
 			swatches: document.querySelectorAll( '#refraction-panel-page-editor .e-color-swatch' ).length,
 			pickers: document.querySelectorAll( '#refraction-panel-page-editor .refraction-control-type-color .pickr:not(.e-color-swatch)' ).length,
 			fontLists: document.querySelectorAll( '#refraction-panel-page-editor .refraction-control-type-font .select2-container' ).length,
+			// The Dynamic Tags button of a colour belongs inside its picker: none may stand beside the swatches.
+			switchers: [ ...document.querySelectorAll( '#refraction-panel-page-editor .refraction-control-type-color .refraction-control-dynamic-switcher' ) ].filter( ( x ) => x.getClientRects().length ).length,
 		} ) );
 		const colorSetting = 'button_text_color';
 		await e.click( `.refraction-control-${ colorSetting } .pcr-button` );
 		await sleep( 500 );
 		const pickerOpen = await e.evaluate( () => !! document.querySelector( '.pcr-app.visible' ) );
+		const switcherInPicker = await e.evaluate( () => !! document.querySelector( '.pcr-app.visible .e-color-picker__tools .refraction-control-dynamic-switcher' ) );
 		await e.fill( '.pcr-app.visible .pcr-result', '#E20A17' );
 		await e.press( '.pcr-app.visible .pcr-result', 'Enter' );
 		await sleep( 600 );
@@ -231,6 +234,7 @@ async function main() {
 		await sleep( 400 );
 		const fontOpen = await e.evaluate( () => !! document.querySelector( '.select2-container--open .select2-results__option' ) );
 		await e.keyboard.press( 'Escape' );
+		check( 'lazy', 'no Dynamic Tags button stands beside the colour swatches; once a picker is built it sits in the picker', 0 === lazy.switchers && switcherInPicker, JSON.stringify( { lazy, switcherInPicker } ) );
 		check( 'lazy', 'colour settings show a swatch until used, font lists are plain until pointed at; a click opens the real colour picker and font list, and a picked colour is saved', lazy.swatches > 0 && 0 === lazy.pickers && 0 === lazy.fontLists && fontOpen && pickerOpen && /^#E20A17/i.test( picked || '' ), JSON.stringify( { lazy, fontOpen, pickerOpen, picked } ) );
 
 		await open( 'ps00002', 'advanced', '_section_background' );

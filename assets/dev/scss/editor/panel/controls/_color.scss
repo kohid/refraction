@@ -31,3 +31,9 @@
 		justify-content: flex-end;
 	}
 }
+
+// Until the colour picker is built (controls/color.js, a swatch stands in for it), its Dynamic Tags button would show
+// beside the swatch on every colour; it moves into the picker's tools when the picker is built.
+.e-control-color--swatch:not(.refraction-control-dynamic-value) .refraction-control-dynamic-switcher {
+	display: none;
+}
