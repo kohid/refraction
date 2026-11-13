@@ -1,6 +1,12 @@
 var ControlsStack = refractionModules.editor.views.ControlsStack,
 	EditorView;
 
+// The group shown in each long section (per element type and section), for as long as the editor is open.
+const shownGroups = new Map();
+
+// A section gets group tabs when it has at least this many top-level settings (and two groups or more).
+const GROUP_MIN_CONTROLS = 12;
+
 EditorView = ControlsStack.extend( {
 	template: Marionette.TemplateCache.get( '#tmpl-editor-content' ),
 
@@ -71,6 +77,77 @@ EditorView = ControlsStack.extend( {
 		refraction.channels.editor.trigger( 'section:activated', this.activeSection, this );
 	},
 
+	onRenderCollection() {
+		ControlsStack.prototype.onRenderCollection.apply( this, arguments );
+
+		this.groupSection();
+	},
+
+	/**
+	 * A long section is split by its headings ("Step Icon", "Progress Bar"...) into groups shown one at a time, with a
+	 * row of tabs under the section's title: General (the settings before the first heading) and one per heading.
+	 * Only sections with GROUP_MIN_CONTROLS or more top-level settings that make at least two groups; headings inside
+	 * inner tabs (Normal / Hover) or popovers do not split. The tab chosen is kept per element type and section.
+	 */
+	groupSection() {
+		const $container = this.$childViewContainer || this.$el;
+
+		$container.find( '.rf-section-groups' ).remove();
+		$container.find( '.rf-group-off, .rf-group-heading' ).removeClass( 'rf-group-off rf-group-heading' );
+
+		if ( ! this.activeSection ) {
+			return;
+		}
+
+		const views = this.collection
+			.filter( ( model ) => this.activeSection === model.get( 'section' ) && 'section' !== model.get( 'type' ) )
+			.map( ( model ) => this.children.findByModelCid( model.cid ) )
+			.filter( ( view ) => view && ! view.$el.closest( '.refraction-controls-popover' ).length );
+		const isSplit = ( view ) => 'heading' === view.model.get( 'type' ) && ! view.model.get( 'tabs_wrapper' );
+		const groups = [ { label: __( 'General', 'refraction' ), views: [] } ];
+
+		views.forEach( ( view ) => {
+			if ( isSplit( view ) ) {
+				groups.push( { label: jQuery( '<div>' ).html( view.model.get( 'label' ) || '' ).text().trim() || __( 'More', 'refraction' ), views: [ view ], heading: view } );
+			} else {
+				groups[ groups.length - 1 ].views.push( view );
+			}
+		} );
+
+		const used = groups.filter( ( group ) => group.views.some( ( view ) => view !== group.heading ) );
+
+		if ( used.length < 2 || views.length < GROUP_MIN_CONTROLS ) {
+			return;
+		}
+
+		const key = this.getNamespaceArray().join( ':' ) + '|' + this.activeSection;
+		const active = Math.min( shownGroups.get( key ) || 0, used.length - 1 );
+		const sectionView = this.children.find( ( view ) => this.activeSection === view.model.get( 'name' ) );
+		const $tabs = jQuery( '<div>', { class: 'rf-section-groups', role: 'tablist', 'aria-label': __( 'Groups of settings', 'refraction' ) } );
+
+		used.forEach( ( group, index ) => {
+			jQuery( '<button>', { type: 'button', class: 'rf-section-groups__tab', role: 'tab', 'aria-selected': index === active ? 'true' : 'false', text: group.label } )
+				.toggleClass( 'is-active', index === active )
+				.on( 'click', () => {
+					shownGroups.set( key, index );
+					this.groupSection();
+				} )
+				.appendTo( $tabs );
+
+			group.views.forEach( ( view ) => {
+				view.$el.toggleClass( 'rf-group-off', index !== active );
+				// The tab names the group: its heading is not repeated under it.
+				view.$el.toggleClass( 'rf-group-heading', view === group.heading );
+			} );
+		} );
+
+		if ( sectionView ) {
+			sectionView.$el.after( $tabs );
+		}
+
+		refraction.getPanelView().updateScrollbar();
+	},
+
 	/**
 	 * Controls hidden by their conditions are not built (a section of typography, shadow and background options built
 	 * five times what it showed); syncShownControls() builds them when a change makes them apply. The controls that
@@ -119,6 +196,8 @@ EditorView = ControlsStack.extend( {
 		added.forEach( ( model ) => this.insertControl( model, ordered ) );
 
 		if ( added.length ) {
+			// New settings take the group (and tab visibility) of where they stand.
+			this.groupSection();
 			refraction.getPanelView().updateScrollbar();
 		}
 	},

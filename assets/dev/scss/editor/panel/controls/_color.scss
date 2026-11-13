@@ -37,3 +37,56 @@
 .e-control-color--swatch:not(.refraction-control-dynamic-value) .refraction-control-dynamic-switcher {
 	display: none;
 }
+
+// Box / Text Shadow: the Global Colors list inside their color picker (controls/box-shadow.js).
+.rf-shadow-globals__list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	max-height: 220px;
+	overflow-y: auto;
+	padding: 8px 0 4px;
+	border-block-start: var(--e-a-border);
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+.rf-shadow-globals__item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 6px 10px;
+	border: 0;
+	border-radius: 3px;
+	background: transparent;
+	color: var(--e-a-color-txt);
+	font-size: 12px;
+	text-align: start;
+	cursor: pointer;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--e-a-bg-hover);
+	}
+
+	&.is-active {
+		background: var(--e-a-bg-active);
+		color: var(--e-a-color-txt-accent);
+	}
+}
+
+.rf-shadow-globals__swatch {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	border-radius: 3px;
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+// The shadow's picker button when it uses a global color.
+.pcr-button.rf-shadow-global {
+	outline: 2px solid var(--e-a-color-primary-bold, #3b82f6);
+	outline-offset: 1px;
+}
