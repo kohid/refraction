@@ -67,10 +67,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<button id="refraction-panel-header-menu-button" class="refraction-header-button" aria-label="<?php echo esc_attr__( 'Menu', 'refraction' ); ?>">
 		<i class="refraction-icon rficon-menu-bar tooltip-target" aria-hidden="true" data-tooltip="<?php echo esc_attr__( 'Menu', 'refraction' ); ?>"></i>
 	</button>
+	<button type="button" class="refraction-header-button rf-panel-dock" data-dock="left" aria-pressed="false" title="<?php echo esc_attr__( 'Dock to the left (press again to float)', 'refraction' ); ?>">
+		<i class="rficon-align-start-h" aria-hidden="true"></i>
+		<span class="refraction-screen-only"><?php echo esc_html__( 'Dock the panel to the left', 'refraction' ); ?></span>
+	</button>
 	<h2 id="refraction-panel-header-title"></h2>
 	<# const extraClass = $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ? '' : 'refraction-visibility-hidden'; #>
 	<button id="refraction-panel-header-add-button" class="refraction-header-button {{{ extraClass }}}" aria-label="<?php echo esc_attr__( 'Widgets Panel', 'refraction' ); ?>">
 		<i class="refraction-icon rficon-apps tooltip-target" aria-hidden="true" data-tooltip="<?php echo esc_attr__( 'Widgets Panel', 'refraction' ); ?>"></i>
+	</button>
+	<button type="button" class="refraction-header-button rf-panel-dock" data-dock="right" aria-pressed="false" title="<?php echo esc_attr__( 'Dock to the right (press again to float)', 'refraction' ); ?>">
+		<i class="rficon-align-end-h" aria-hidden="true"></i>
+		<span class="refraction-screen-only"><?php echo esc_html__( 'Dock the panel to the right', 'refraction' ); ?></span>
+	</button>
+	<button type="button" class="refraction-header-button rf-panel-hide" title="<?php echo esc_attr__( 'Hide the panel (Ctrl+P)', 'refraction' ); ?>">
+		<i class="rficon-close" aria-hidden="true"></i>
+		<span class="refraction-screen-only"><?php echo esc_html__( 'Hide the panel', 'refraction' ); ?></span>
 	</button>
 </script>
 

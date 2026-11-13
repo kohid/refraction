@@ -65,6 +65,12 @@ EditModeItemView = Marionette.ItemView.extend( {
 	onEditModeChanged( activeMode ) {
 		const ctrlLabel = environment.mac ? '\u2318' : 'Ctrl';
 
+		// Hidden or shown some other way (the panel's Hide button, the top bar, panel/close): Ctrl+P and the arrow read
+		// this box to know what to do next.
+		if ( activeMode ) {
+			this.ui.previewButton.prop( 'checked', 'preview' === activeMode );
+		}
+
 		let text = 'preview' === activeMode ? __( 'Show Panel', 'refraction' ) : __( 'Hide Panel', 'refraction' );
 		text += ` (${ ctrlLabel } + P)`;
 

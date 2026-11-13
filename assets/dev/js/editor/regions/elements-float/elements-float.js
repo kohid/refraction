@@ -292,16 +292,21 @@ export default class extends BaseRegion {
 		this.saveFloatingSize();
 	}
 
-	// Dragged against the left edge of the page (beside the panel) or past the right edge.
+	// Dragged against the panel or the left edge of the page, or against the panel or the right edge (the panel may be
+	// docked on either side, or floating: then only the window edges count).
 	edgeAt( left ) {
+		const $body = refractionCommon.elements.$body;
 		const panel = document.getElementById( 'refraction-panel' );
-		const panelRight = panel && ! refractionCommon.elements.$body.hasClass( 'refraction-editor-preview' ) ? panel.getBoundingClientRect().right : 0;
+		const shown = panel && ! $body.hasClass( 'refraction-editor-preview' ) && ! $body.hasClass( 'rf-panel--floating' );
+		const rect = shown ? panel.getBoundingClientRect() : null;
+		const panelRight = rect && ! $body.hasClass( 'rf-panel--right' ) ? rect.right : 0;
+		const rightLimit = rect && $body.hasClass( 'rf-panel--right' ) ? rect.left : innerWidth;
 
 		if ( left < panelRight + 10 ) {
 			return 'left';
 		}
 
-		if ( left + this.el.offsetWidth > innerWidth - 10 ) {
+		if ( left + this.el.offsetWidth > rightLimit - 10 ) {
 			return 'right';
 		}
 

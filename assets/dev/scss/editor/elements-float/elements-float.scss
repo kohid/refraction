@@ -6,20 +6,40 @@
 body {
 	--rf-ef-width: 280px;
 
-	&.rf-ef-docked--right {
-		--rf-ef-reserve: var(--rf-ef-width);
+	// What is beside the docked window, from the panel (docked left as always, docked right, or floating: 0) and a
+	// docked Structure. Floating over the page, the panel covers its width of the page, so a docked window and the
+	// page start after it; beside the page (Editor Preferences) the page already starts after the panel.
+	--rf-ef-panel-l: var(--e-editor-panel-width);
+	--rf-ef-panel-r: 0px;
+	--rf-ef-nav-r: 0px;
+	--rf-ef-covered-l: var(--rf-ef-panel-l);
+	--rf-ef-covered-r: var(--rf-ef-panel-r);
+
+	&.rf-panel--right {
+		--rf-ef-panel-l: 0px;
+		--rf-ef-panel-r: var(--e-editor-panel-width);
 	}
 
-	// Left: beside the panel. Floating over the page, the panel covers its own width of the page, so the page starts
-	// after both; beside the page (Editor Preferences), the page already starts after the panel.
-	&.rf-ef-docked--left {
-		--rf-ef-shift: calc(var(--e-editor-panel-width) + var(--rf-ef-width));
-		--rf-ef-reserve: var(--rf-ef-shift);
+	&.rf-panel--floating {
+		--rf-ef-panel-l: 0px;
+	}
 
-		&.refraction-panel--beside {
-			--rf-ef-shift: var(--rf-ef-width);
-			--rf-ef-reserve: var(--rf-ef-width);
-		}
+	&.refraction-panel--beside:not(.rf-panel--floating) {
+		--rf-ef-covered-l: 0px;
+		--rf-ef-covered-r: 0px;
+	}
+
+	&.refraction-navigator-docked {
+		--rf-ef-nav-r: var(--e-editor-navigator-width);
+	}
+
+	&.rf-ef-docked--right {
+		--rf-ef-reserve: calc(var(--rf-ef-width) + var(--rf-ef-covered-r));
+	}
+
+	&.rf-ef-docked--left {
+		--rf-ef-shift: calc(var(--rf-ef-covered-l) + var(--rf-ef-width));
+		--rf-ef-reserve: var(--rf-ef-shift);
 	}
 
 	// Where it docks when let go here.
@@ -33,7 +53,7 @@ body {
 #refraction-elements-float {
 	position: fixed;
 	inset-block-start: 100px;
-	inset-inline-start: calc(var(--e-editor-panel-width, 300px) + 30px);
+	inset-inline-start: calc(var(--rf-ef-panel-l, 300px) + 30px);
 	width: var(--rf-ef-width);
 	height: min(560px, calc(100vh - 140px));
 	display: none;
@@ -54,19 +74,15 @@ body {
 	}
 
 	body.rf-ef-docked--left & {
-		inset-inline-start: var(--e-editor-panel-width);
+		inset-inline-start: var(--rf-ef-panel-l);
 		inset-inline-end: auto;
 		border-block: 0;
 	}
 
 	body.rf-ef-docked--right & {
 		inset-inline-start: auto;
-		inset-inline-end: 0;
+		inset-inline-end: calc(var(--rf-ef-panel-r) + var(--rf-ef-nav-r));
 		border-block: 0;
-	}
-
-	body.rf-ef-docked--right.refraction-navigator-docked & {
-		inset-inline-end: var(--e-editor-navigator-width);
 	}
 
 	.rf-ef__header {
