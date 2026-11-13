@@ -670,6 +670,94 @@ class Phone_Showcase extends Widget_Base {
 	}
 
 	private function register_style_controls() {
+		// Style tab: one section per part of the widget, in the order they show (Highlighted Text, from Highlight Words,
+		// comes first); state tabs where a part changes (Normal / Hover / Active); inside, settings by kind (category()).
+		$this->start_controls_section( 'section_style_label', [
+			'label' => esc_html__( 'Pill', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+		] );
+
+		// Pill Label: the text above the steps as a rounded tinted label, its icon in a round badge.
+		$label = '{{WRAPPER}}.rf-showcase-label-pill-yes .rf-showcase__label';
+		$label_on = [ 'label_pill' => 'yes' ];
+
+		$this->category( 'label_cat_text', esc_html__( 'Text', 'refraction' ), true );
+		$this->add_control( 'label_color', [
+			'label' => esc_html__( 'Text Above The Steps Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__label' => 'color: {{VALUE}}; fill: {{VALUE}};' ],
+			'separator' => 'before',
+		] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'label_typography',
+			'selector' => '{{WRAPPER}} .rf-showcase__label',
+		] );
+		$this->category( 'label_cat_pill', esc_html__( 'Pill', 'refraction' ) );
+		$this->add_control( 'label_pill', [
+			'label' => esc_html__( 'Text Above The Steps As A Pill', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'prefix_class' => 'rf-showcase-label-pill-',
+		] );
+		$this->add_control( 'label_pill_caps', [ 'label' => esc_html__( 'Capital Letters, Spaced Out', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'prefix_class' => 'rf-showcase-label-caps-', 'condition' => $label_on ] );
+		$this->add_control( 'label_pill_bg', [ 'label' => esc_html__( 'Pill Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#DDF7EE', 'selectors' => [ $label => 'background-color: {{VALUE}};' ], 'condition' => $label_on ] );
+		$this->add_control( 'label_pill_border', [ 'label' => esc_html__( 'Pill Border', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#B8EBD9', 'selectors' => [ $label => 'border-color: {{VALUE}};' ], 'condition' => $label_on ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'label_pill_typography', 'label' => esc_html__( 'Pill Typography', 'refraction' ), 'selector' => '{{WRAPPER}}.rf-showcase-label-pill-yes .rf-showcase__label', 'condition' => $label_on ] );
+		$this->category( 'label_cat_icon', esc_html__( 'Icon', 'refraction' ), false, $label_on );
+		$this->add_control( 'label_pill_badge_bg', [ 'label' => esc_html__( 'Icon Badge Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#1FCB97', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'background-color: {{VALUE}};' ], 'condition' => $label_on ] );
+		$this->add_control( 'label_pill_badge_color', [ 'label' => esc_html__( 'Icon Badge Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#06372A', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'color: {{VALUE}}; fill: {{VALUE}};' ], 'condition' => $label_on ] );
+		Icon_Box_Style::controls( $this, 'label_pill_icon', $label . ' .rf-showcase__label-badge', [ 'colors' => false, 'condition' => $label_on ] );
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'section_style_heading', [
+			'label' => esc_html__( 'Heading', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+			'condition' => [ 'heading!' => '' ],
+		] );
+
+		$this->category( 'heading_cat_text', esc_html__( 'Text', 'refraction' ), true );
+		$this->add_control( 'heading_color', [
+			'label' => esc_html__( 'Heading Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__heading' => 'color: {{VALUE}};' ],
+			'separator' => 'before',
+			'condition' => [ 'heading!' => '' ],
+		] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'heading_typography',
+			'selector' => '{{WRAPPER}} .rf-showcase__heading',
+			'condition' => [ 'heading!' => '' ],
+		] );
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'section_style_description', [
+			'label' => esc_html__( 'Description', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->category( 'description_cat_text', esc_html__( 'Text', 'refraction' ), true, [ 'description!' => '' ] );
+		$this->add_control( 'description_color', [
+			'label' => esc_html__( 'Description Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__description' => 'color: {{VALUE}};' ],
+			'separator' => 'before',
+			'condition' => [ 'description!' => '' ],
+		] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'description_typography',
+			'selector' => '{{WRAPPER}} .rf-showcase__description',
+			'condition' => [ 'description!' => '' ],
+		] );
+		$this->category( 'description_cat_box', esc_html__( 'Spacing', 'refraction' ) );
+		$this->add_responsive_control( 'intro_gap', [
+			'label' => esc_html__( 'Space Under The Heading And Description', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'max' => 80 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__intro' => 'gap: {{SIZE}}{{UNIT}};' ],
+			'separator' => 'before',
+		] );
+		$this->end_controls_section();
+
 		$this->start_controls_section( 'section_style_steps', [
 			'label' => esc_html__( 'Steps', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
@@ -677,10 +765,13 @@ class Phone_Showcase extends Widget_Base {
 
 		$this->start_controls_tabs( 'step_tabs' );
 
-		foreach ( [ 'normal' => esc_html__( 'Normal', 'refraction' ), 'active' => esc_html__( 'Current', 'refraction' ) ] as $state => $label ) {
-			$sel = '{{WRAPPER}} .rf-showcase__step' . ( 'active' === $state ? '.is-active' : '' );
+		// Normal, Hover (pointing at a step) and Active (the step shown). Typography, box and icon sizes in Normal.
+		foreach ( [ 'normal' => esc_html__( 'Normal', 'refraction' ), 'hover' => esc_html__( 'Hover', 'refraction' ), 'active' => esc_html__( 'Active', 'refraction' ) ] as $state => $label ) {
+			$sel = '{{WRAPPER}} .rf-showcase__step' . [ 'normal' => '', 'hover' => ':hover', 'active' => '.is-active' ][ $state ];
 
 			$this->start_controls_tab( 'step_tab_' . $state, [ 'label' => $label ] );
+
+			$this->category( 'step_cat_colors_' . $state, esc_html__( 'Colors', 'refraction' ), true );
 
 			$this->add_control( 'step_bg_' . $state, [
 				'label' => esc_html__( 'Background', 'refraction' ),
@@ -718,46 +809,46 @@ class Phone_Showcase extends Widget_Base {
 				'selectors' => [ $sel . ' .rf-showcase__badge' => 'background-color: {{VALUE}};' ],
 			] );
 
+			if ( 'normal' === $state ) {
+				$this->category( 'step_cat_text', esc_html__( 'Text', 'refraction' ) );
+				$this->add_group_control( Group_Control_Typography::get_type(), [
+					'name' => 'step_title_typography',
+					'label' => esc_html__( 'Title Typography', 'refraction' ),
+					'selector' => '{{WRAPPER}} .rf-showcase__title',
+				] );
+				$this->add_group_control( Group_Control_Typography::get_type(), [
+					'name' => 'step_text_typography',
+					'label' => esc_html__( 'Description Typography', 'refraction' ),
+					'selector' => '{{WRAPPER}} .rf-showcase__text',
+				] );
+				$this->category( 'step_cat_box', esc_html__( 'Box', 'refraction' ) );
+				$this->add_responsive_control( 'step_padding', [
+					'label' => esc_html__( 'Padding', 'refraction' ),
+					'type' => Controls_Manager::DIMENSIONS,
+					'size_units' => [ 'px', 'em' ],
+					'selectors' => [ '{{WRAPPER}} .rf-showcase__step' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+				] );
+				$this->add_responsive_control( 'step_radius', [
+					'label' => esc_html__( 'Corners', 'refraction' ),
+					'type' => Controls_Manager::SLIDER,
+					'range' => [ 'px' => [ 'max' => 40 ] ],
+					'selectors' => [ '{{WRAPPER}} .rf-showcase__step' => 'border-radius: {{SIZE}}{{UNIT}};' ],
+				] );
+				$this->category( 'step_cat_icon', esc_html__( 'Icon', 'refraction' ) );
+				Icon_Box_Style::controls( $this, 'step_icon_box', '{{WRAPPER}} .rf-showcase__badge', [ 'colors' => false ] );
+				$this->add_responsive_control( 'step_number_size', [
+					'label' => esc_html__( 'Number Size', 'refraction' ),
+					'type' => Controls_Manager::SLIDER,
+					'size_units' => [ 'px', 'em' ],
+					'range' => [ 'px' => [ 'min' => 8, 'max' => 48 ] ],
+					'selectors' => [ '{{WRAPPER}} .rf-showcase__number' => 'font-size: {{SIZE}}{{UNIT}};' ],
+				] );
+			}
+
 			$this->end_controls_tab();
 		}
 
 		$this->end_controls_tabs();
-
-		$this->add_group_control( Group_Control_Typography::get_type(), [
-			'name' => 'step_title_typography',
-			'label' => esc_html__( 'Title Typography', 'refraction' ),
-			'selector' => '{{WRAPPER}} .rf-showcase__title',
-			'separator' => 'before',
-		] );
-
-		$this->add_group_control( Group_Control_Typography::get_type(), [
-			'name' => 'step_text_typography',
-			'label' => esc_html__( 'Description Typography', 'refraction' ),
-			'selector' => '{{WRAPPER}} .rf-showcase__text',
-		] );
-
-		$this->add_responsive_control( 'step_padding', [
-			'label' => esc_html__( 'Padding', 'refraction' ),
-			'type' => Controls_Manager::DIMENSIONS,
-			'size_units' => [ 'px', 'em' ],
-			'selectors' => [ '{{WRAPPER}} .rf-showcase__step' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
-		] );
-
-		$this->add_responsive_control( 'step_radius', [
-			'label' => esc_html__( 'Corners', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'range' => [ 'px' => [ 'max' => 40 ] ],
-			'selectors' => [ '{{WRAPPER}} .rf-showcase__step' => 'border-radius: {{SIZE}}{{UNIT}};' ],
-		] );
-
-		Icon_Box_Style::controls( $this, 'step_icon_box', '{{WRAPPER}} .rf-showcase__badge', [ 'colors' => false, 'heading' => esc_html__( 'Step Icon', 'refraction' ) ] );
-		$this->add_responsive_control( 'step_number_size', [
-			'label' => esc_html__( 'Number Size', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ 'px', 'em' ],
-			'range' => [ 'px' => [ 'min' => 8, 'max' => 48 ] ],
-			'selectors' => [ '{{WRAPPER}} .rf-showcase__number' => 'font-size: {{SIZE}}{{UNIT}};' ],
-		] );
 
 		// The progress bar under the current step while the steps play on their own.
 		$timer = '{{WRAPPER}} .rf-showcase__timer';
@@ -790,73 +881,6 @@ class Phone_Showcase extends Widget_Base {
 			'prefix_class' => 'rf-showcase-progress-at-',
 			'condition' => $shown,
 		] );
-
-		$this->add_control( 'label_color', [
-			'label' => esc_html__( 'Text Above The Steps Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ '{{WRAPPER}} .rf-showcase__label' => 'color: {{VALUE}}; fill: {{VALUE}};' ],
-			'separator' => 'before',
-		] );
-
-		$this->add_group_control( Group_Control_Typography::get_type(), [
-			'name' => 'label_typography',
-			'selector' => '{{WRAPPER}} .rf-showcase__label',
-		] );
-
-		// Pill Label: the text above the steps as a rounded tinted label, its icon in a round badge.
-		$label = '{{WRAPPER}}.rf-showcase-label-pill-yes .rf-showcase__label';
-		$label_on = [ 'label_pill' => 'yes' ];
-
-		$this->add_control( 'label_pill', [
-			'label' => esc_html__( 'Text Above The Steps As A Pill', 'refraction' ),
-			'type' => Controls_Manager::SWITCHER,
-			'prefix_class' => 'rf-showcase-label-pill-',
-		] );
-		$this->add_control( 'label_pill_caps', [ 'label' => esc_html__( 'Capital Letters, Spaced Out', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'prefix_class' => 'rf-showcase-label-caps-', 'condition' => $label_on ] );
-		$this->add_control( 'label_pill_bg', [ 'label' => esc_html__( 'Pill Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#DDF7EE', 'selectors' => [ $label => 'background-color: {{VALUE}};' ], 'condition' => $label_on ] );
-		$this->add_control( 'label_pill_border', [ 'label' => esc_html__( 'Pill Border', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#B8EBD9', 'selectors' => [ $label => 'border-color: {{VALUE}};' ], 'condition' => $label_on ] );
-		$this->add_control( 'label_pill_badge_bg', [ 'label' => esc_html__( 'Icon Badge Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#1FCB97', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'background-color: {{VALUE}};' ], 'condition' => $label_on ] );
-		$this->add_control( 'label_pill_badge_color', [ 'label' => esc_html__( 'Icon Badge Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#06372A', 'selectors' => [ $label . ' .rf-showcase__label-badge' => 'color: {{VALUE}}; fill: {{VALUE}};' ], 'condition' => $label_on ] );
-		Icon_Box_Style::controls( $this, 'label_pill_icon', $label . ' .rf-showcase__label-badge', [ 'colors' => false, 'condition' => $label_on ] );
-		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'label_pill_typography', 'label' => esc_html__( 'Pill Typography', 'refraction' ), 'selector' => '{{WRAPPER}}.rf-showcase-label-pill-yes .rf-showcase__label', 'condition' => $label_on ] );
-
-		$this->add_control( 'heading_color', [
-			'label' => esc_html__( 'Heading Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ '{{WRAPPER}} .rf-showcase__heading' => 'color: {{VALUE}};' ],
-			'separator' => 'before',
-			'condition' => [ 'heading!' => '' ],
-		] );
-
-		$this->add_group_control( Group_Control_Typography::get_type(), [
-			'name' => 'heading_typography',
-			'selector' => '{{WRAPPER}} .rf-showcase__heading',
-			'condition' => [ 'heading!' => '' ],
-		] );
-
-		$this->add_control( 'description_color', [
-			'label' => esc_html__( 'Description Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ '{{WRAPPER}} .rf-showcase__description' => 'color: {{VALUE}};' ],
-			'separator' => 'before',
-			'condition' => [ 'description!' => '' ],
-		] );
-
-		$this->add_group_control( Group_Control_Typography::get_type(), [
-			'name' => 'description_typography',
-			'selector' => '{{WRAPPER}} .rf-showcase__description',
-			'condition' => [ 'description!' => '' ],
-		] );
-
-		$this->add_responsive_control( 'intro_gap', [
-			'label' => esc_html__( 'Space Under The Heading And Description', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ 'px' ],
-			'range' => [ 'px' => [ 'max' => 80 ] ],
-			'selectors' => [ '{{WRAPPER}} .rf-showcase__intro' => 'gap: {{SIZE}}{{UNIT}};' ],
-			'separator' => 'before',
-		] );
-
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_phone', [
@@ -864,44 +888,43 @@ class Phone_Showcase extends Widget_Base {
 			'tab' => Controls_Manager::TAB_STYLE,
 		] );
 
+		$this->category( 'phone_cat_colors', esc_html__( 'Colors', 'refraction' ), true );
 		$this->add_control( 'screen_bg', [
 			'label' => esc_html__( 'Screen Background', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [ '{{WRAPPER}} .rf-phone__screen' => 'background-color: {{VALUE}};' ],
 		] );
-
-		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [
-			'name' => 'phone_shadow',
-			'selector' => '{{WRAPPER}} .rf-phone__body',
-		] );
-
 		$this->add_control( 'glow', [
 			'label' => esc_html__( 'Glow Behind The Phone', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-showcase-glow: {{VALUE}};' ],
 		] );
-
 		$this->add_responsive_control( 'glow_size', [
 			'label' => esc_html__( 'Glow Size', 'refraction' ) . ' (%)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-showcase-glow-size: {{SIZE}}%;' ],
 		] );
-
-		// Per screen size (device icon): where the phone sits, its size and tilt, without changing the layout around it.
-		$this->add_control( 'phone_place_heading', [
-			'label' => esc_html__( 'Place, Size And Tilt (per screen size)', 'refraction' ),
-			'type' => Controls_Manager::HEADING,
+		$this->category( 'phone_cat_box', esc_html__( 'Box', 'refraction' ) );
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [
+			'name' => 'phone_shadow',
+			'selector' => '{{WRAPPER}} .rf-phone__body',
+		] );
+		$this->add_responsive_control( 'screen_padding', [
+			'label' => esc_html__( 'Screen Content Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%' ],
+			'selectors' => [ '{{WRAPPER}} .rf-phone__shot' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; box-sizing: border-box;' ],
 			'separator' => 'before',
 		] );
-
+		// Per screen size (device icon): where the phone sits, its size and tilt, without changing the layout around it.
+		$this->category( 'phone_place_heading', esc_html__( 'Place, Size And Tilt (per screen size)', 'refraction' ) );
 		$this->add_responsive_control( 'phone_scale', [
 			'label' => esc_html__( 'Scale', 'refraction' ) . ' (%)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 30, 'max' => 160 ] ],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-scale: calc({{SIZE}} / 100);' ],
 		] );
-
 		$this->add_responsive_control( 'phone_offset_x', [
 			'label' => esc_html__( 'Move Left Or Right', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
@@ -909,7 +932,6 @@ class Phone_Showcase extends Widget_Base {
 			'range' => [ 'px' => [ 'min' => -300, 'max' => 300 ], '%' => [ 'min' => -100, 'max' => 100 ] ],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-dx: {{SIZE}}{{UNIT}};' ],
 		] );
-
 		$this->add_responsive_control( 'phone_offset_y', [
 			'label' => esc_html__( 'Move Up Or Down', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
@@ -917,14 +939,12 @@ class Phone_Showcase extends Widget_Base {
 			'range' => [ 'px' => [ 'min' => -300, 'max' => 300 ], '%' => [ 'min' => -100, 'max' => 100 ] ],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-dy: {{SIZE}}{{UNIT}};' ],
 		] );
-
 		$this->add_responsive_control( 'phone_rotate', [
 			'label' => esc_html__( 'Tilt', 'refraction' ) . ' (deg)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => -45, 'max' => 45 ] ],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-rotate: {{SIZE}}deg;' ],
 		] );
-
 		$this->add_responsive_control( 'phone_align', [
 			'label' => esc_html__( 'Align', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
@@ -935,15 +955,6 @@ class Phone_Showcase extends Widget_Base {
 			],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => 'justify-self: {{VALUE}};' ],
 		] );
-
-		$this->add_responsive_control( 'screen_padding', [
-			'label' => esc_html__( 'Screen Content Padding', 'refraction' ),
-			'type' => Controls_Manager::DIMENSIONS,
-			'size_units' => [ 'px', '%' ],
-			'selectors' => [ '{{WRAPPER}} .rf-phone__shot' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; box-sizing: border-box;' ],
-			'separator' => 'before',
-		] );
-
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_cards', [
@@ -953,46 +964,45 @@ class Phone_Showcase extends Widget_Base {
 
 		$card = '{{WRAPPER}} .rf-showcase__card';
 
+		$this->start_controls_tabs( 'card_state_tabs' );
+		$this->start_controls_tab( 'card_state_normal', [ 'label' => esc_html__( 'Normal', 'refraction' ) ] );
+		$this->category( 'card_cat_colors', esc_html__( 'Colors', 'refraction' ), true );
 		$this->add_control( 'card_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card => 'background-color: {{VALUE}};' ] ] );
 		$this->add_control( 'card_title_color', [ 'label' => esc_html__( 'Title Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ' .rf-showcase__card-title' => 'color: {{VALUE}};' ] ] );
 		$this->add_control( 'card_text_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ' .rf-showcase__card-text' => 'color: {{VALUE}};' ] ] );
 		$this->add_control( 'card_icon_color', [ 'label' => esc_html__( 'Icon Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ' .rf-showcase__card-icon' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
 		$this->add_control( 'card_icon_bg', [ 'label' => esc_html__( 'Icon Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ' .rf-showcase__card-icon' => 'background-color: {{VALUE}};' ] ] );
 		$this->add_control( 'card_star_color', [ 'label' => esc_html__( 'Stars Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ' .rf-showcase__stars' => 'color: {{VALUE}};' ] ] );
-
+		$this->category( 'card_cat_text', esc_html__( 'Text', 'refraction' ) );
 		$this->add_group_control( Group_Control_Typography::get_type(), [
 			'name' => 'card_title_typography',
 			'label' => esc_html__( 'Title Typography', 'refraction' ),
 			'selector' => $card . ' .rf-showcase__card-title',
 		] );
-
 		$this->add_group_control( Group_Control_Typography::get_type(), [
 			'name' => 'card_text_typography',
 			'label' => esc_html__( 'Text Typography', 'refraction' ),
 			'selector' => $card . ' .rf-showcase__card-text',
 		] );
-
+		$this->category( 'card_cat_box', esc_html__( 'Box', 'refraction' ) );
 		$this->add_responsive_control( 'card_radius', [
 			'label' => esc_html__( 'Corners', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'max' => 40 ] ],
 			'selectors' => [ $card => 'border-radius: {{SIZE}}{{UNIT}};' ],
 		] );
-
 		$this->add_responsive_control( 'card_padding', [
 			'label' => esc_html__( 'Padding', 'refraction' ),
 			'type' => Controls_Manager::DIMENSIONS,
 			'size_units' => [ 'px', 'em' ],
 			'selectors' => [ $card => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
 		] );
-
 		$this->add_responsive_control( 'card_gap', [
 			'label' => esc_html__( 'Space Between Icon And Text', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'max' => 40 ] ],
 			'selectors' => [ $card => 'gap: {{SIZE}}{{UNIT}};' ],
 		] );
-
 		$this->add_responsive_control( 'card_max_width', [
 			'label' => esc_html__( 'Max Width', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
@@ -1001,20 +1011,28 @@ class Phone_Showcase extends Widget_Base {
 			'description' => esc_html__( '% of the phone\'s width. Longer text wraps.', 'refraction' ),
 			'selectors' => [ $card => 'max-width: {{SIZE}}{{UNIT}}; white-space: normal;' ],
 		] );
-
 		$this->add_responsive_control( 'cards_scale', [
 			'label' => esc_html__( 'Size Of All Cards', 'refraction' ) . ' (%)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 40, 'max' => 160 ] ],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase' => '--rf-cards-scale: calc({{SIZE}} / 100);' ],
 		] );
-
 		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [
 			'name' => 'card_shadow',
 			'selector' => $card,
 		] );
-
+		$this->category( 'card_cat_icon', esc_html__( 'Icon', 'refraction' ) );
 		self::card_icon_controls( $this, $card );
+		$this->end_controls_tab();
+		$this->start_controls_tab( 'card_state_hover', [ 'label' => esc_html__( 'Hover', 'refraction' ) ] );
+		$this->category( 'card_cat_colors_hover', esc_html__( 'Colors', 'refraction' ), true );
+		$this->add_control( 'card_bg_hover', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ':hover' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'card_title_color_hover', [ 'label' => esc_html__( 'Title Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ':hover .rf-showcase__card-title' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'card_icon_bg_hover', [ 'label' => esc_html__( 'Icon Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $card . ':hover .rf-showcase__card-icon' => 'background-color: {{VALUE}};' ] ] );
+		$this->category( 'card_cat_box_hover', esc_html__( 'Box', 'refraction' ) );
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'card_shadow_hover', 'selector' => $card . ':hover' ] );
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
 
 		$this->end_controls_section();
 
@@ -1041,42 +1059,59 @@ class Phone_Showcase extends Widget_Base {
 			'range' => [ 'px' => [ 'max' => 60 ] ],
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__buttons' => 'gap: {{SIZE}}{{UNIT}};' ],
 		] );
-
+		$this->start_controls_tabs( 'button_state_tabs' );
+		$this->start_controls_tab( 'button_state_normal', [ 'label' => esc_html__( 'Normal', 'refraction' ) ] );
 		$this->add_control( 'heading_button1', [
 			'label' => esc_html__( 'First Button', 'refraction' ),
 			'type' => Controls_Manager::HEADING,
-			'separator' => 'before',
 		] );
-
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'button_typography', 'selector' => $button ] );
 		$this->add_control( 'button_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
 		$this->add_control( 'button_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'background-color: {{VALUE}};' ] ] );
-		$this->add_control( 'button_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
-		$this->add_control( 'button_hover_color', [ 'label' => esc_html__( 'Hover Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
-		$this->add_control( 'button_hover_border', [ 'label' => esc_html__( 'Hover Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'border-color: {{VALUE}};' ] ] );
-		$this->add_control( 'button_hover_animation', [ 'label' => esc_html__( 'Hover Animation', 'refraction' ), 'type' => Controls_Manager::HOVER_ANIMATION ] );
-
+		$this->add_control( 'button_border', [
+			'label' => esc_html__( 'First Button Border Color', 'refraction' ),
+			'type' => Controls_Manager::COLOR,
+			'selectors' => [ $button => 'border-color: {{VALUE}};' ],
+		] );
 		$this->add_control( 'heading_button2', [
 			'label' => esc_html__( 'Second Button', 'refraction' ),
 			'type' => Controls_Manager::HEADING,
 			'separator' => 'before',
 		] );
-
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'button2_typography', 'selector' => $second ] );
 		$this->add_control( 'button2_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
 		$this->add_control( 'button2_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second => 'background-color: {{VALUE}};' ] ] );
 		$this->add_control( 'button2_border', [ 'label' => esc_html__( 'Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second => 'border-color: {{VALUE}};' ] ] );
-		$this->add_control( 'button2_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
-		$this->add_control( 'button2_hover_color', [ 'label' => esc_html__( 'Hover Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
-		$this->add_control( 'button2_hover_border', [ 'label' => esc_html__( 'Hover Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'border-color: {{VALUE}};' ] ] );
-		$this->add_control( 'button2_hover_animation', [ 'label' => esc_html__( 'Hover Animation', 'refraction' ), 'type' => Controls_Manager::HOVER_ANIMATION ] );
-
 		$this->add_control( 'heading_buttons_both', [
 			'label' => esc_html__( 'Both Buttons', 'refraction' ),
 			'type' => Controls_Manager::HEADING,
 			'separator' => 'before',
 		] );
-
+		$this->add_control( 'button_border_width', [
+			'label' => esc_html__( 'Border Width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 6 ] ],
+			'selectors' => [ $any => 'border-width: {{SIZE}}{{UNIT}};' ],
+		] );
+		$this->add_responsive_control( 'button_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'selectors' => [ $any => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+		$this->add_control( 'button_radius', [
+			'label' => esc_html__( 'Corners', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 40 ] ],
+			'selectors' => [ $any => 'border-radius: {{SIZE}}{{UNIT}};' ],
+		] );
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'button_shadow', 'selector' => $any ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'button_small_typography',
+			'label' => esc_html__( 'Small Text Typography', 'refraction' ),
+			'selector' => '{{WRAPPER}} .rf-showcase__button-small',
+		] );
+		$this->category( 'button_cat_icon', esc_html__( 'Icon', 'refraction' ) );
 		$this->add_responsive_control( 'button_icon_size', [
 			'label' => esc_html__( 'Icon Size', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
@@ -1084,7 +1119,6 @@ class Phone_Showcase extends Widget_Base {
 			'range' => [ 'px' => [ 'min' => 10, 'max' => 60 ] ],
 			'selectors' => [ $any => '--rf-showcase-button-icon: {{SIZE}}{{UNIT}};' ],
 		] );
-
 		$this->add_responsive_control( 'button_icon_gap', [
 			'label' => esc_html__( 'Space Between Icon And Text', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
@@ -1092,50 +1126,20 @@ class Phone_Showcase extends Widget_Base {
 			'range' => [ 'px' => [ 'max' => 30 ] ],
 			'selectors' => [ $any => 'gap: {{SIZE}}{{UNIT}};' ],
 		] );
-
 		Icon_Box_Style::controls( $this, 'button_icon_box', $any . ' .rf-showcase__button-icon', [ 'size' => false ] );
-
-		$this->add_group_control( Group_Control_Typography::get_type(), [
-			'name' => 'button_small_typography',
-			'label' => esc_html__( 'Small Text Typography', 'refraction' ),
-			'selector' => '{{WRAPPER}} .rf-showcase__button-small',
-		] );
-
-		$this->add_control( 'button_border_width', [
-			'label' => esc_html__( 'Border Width', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'range' => [ 'px' => [ 'max' => 6 ] ],
-			'selectors' => [ $any => 'border-width: {{SIZE}}{{UNIT}};' ],
-		] );
-
-		$this->add_control( 'button_border', [
-			'label' => esc_html__( 'First Button Border Color', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'selectors' => [ $button => 'border-color: {{VALUE}};' ],
-		] );
-
-		$this->add_responsive_control( 'button_padding', [
-			'label' => esc_html__( 'Padding', 'refraction' ),
-			'type' => Controls_Manager::DIMENSIONS,
-			'size_units' => [ 'px', 'em' ],
-			'selectors' => [ $any => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
-		] );
-
-		$this->add_control( 'button_radius', [
-			'label' => esc_html__( 'Corners', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'range' => [ 'px' => [ 'max' => 40 ] ],
-			'selectors' => [ $any => 'border-radius: {{SIZE}}{{UNIT}};' ],
-		] );
-
-		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'button_shadow', 'selector' => $any ] );
-
-		$this->add_control( 'heading_buttons_hover', [
-			'label' => esc_html__( 'On Hover', 'refraction' ),
-			'type' => Controls_Manager::HEADING,
-			'separator' => 'before',
-		] );
-
+		$this->end_controls_tab();
+		$this->start_controls_tab( 'button_state_hover', [ 'label' => esc_html__( 'Hover', 'refraction' ) ] );
+		$this->category( 'button_cat_first_hover', esc_html__( 'First Button', 'refraction' ), true );
+		$this->add_control( 'button_hover_color', [ 'label' => esc_html__( 'Hover Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
+		$this->add_control( 'button_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button_hover_border', [ 'label' => esc_html__( 'Hover Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . ':hover, ' . $button . ':focus-visible' => 'border-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button_hover_animation', [ 'label' => esc_html__( 'Hover Animation', 'refraction' ), 'type' => Controls_Manager::HOVER_ANIMATION ] );
+		$this->category( 'button_cat_second_hover', esc_html__( 'Second Button', 'refraction' ) );
+		$this->add_control( 'button2_hover_color', [ 'label' => esc_html__( 'Hover Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_hover_bg', [ 'label' => esc_html__( 'Hover Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'background-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_hover_border', [ 'label' => esc_html__( 'Hover Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $second . ':hover, ' . $second . ':focus-visible' => 'border-color: {{VALUE}};' ] ] );
+		$this->add_control( 'button2_hover_animation', [ 'label' => esc_html__( 'Hover Animation', 'refraction' ), 'type' => Controls_Manager::HOVER_ANIMATION ] );
+		$this->category( 'button_cat_both_hover', esc_html__( 'Both Buttons', 'refraction' ) );
 		$this->add_control( 'button_hover_lift', [
 			'label' => esc_html__( 'Lift On Hover', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
@@ -1143,17 +1147,29 @@ class Phone_Showcase extends Widget_Base {
 			'description' => esc_html__( 'The button rises a little with a soft shadow. A button with its own Hover Animation uses that instead.', 'refraction' ),
 			'prefix_class' => 'rf-showcase-lift-',
 		] );
-
 		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'button_hover_shadow', 'label' => esc_html__( 'Hover Shadow', 'refraction' ), 'selector' => $any . ':hover, ' . $any . ':focus-visible' ] );
-
 		$this->add_control( 'button_transition', [
 			'label' => esc_html__( 'Hover Transition (s)', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 0, 'max' => 2, 'step' => 0.05 ] ],
 			'selectors' => [ $any => '--rf-showcase-btn-t: {{SIZE}}s;' ],
 		] );
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
 
 		$this->end_controls_section();
+	}
+
+	/**
+	 * A small heading that names a kind of settings (Colors, Text, Box, Icon...) inside a section or a state tab.
+	 *
+	 * @param string $id    Control id.
+	 * @param string $label Its name.
+	 * @param bool   $first The first in its group (no line above).
+	 * @param array  $condition When it shows.
+	 */
+	private function category( string $id, string $label, bool $first = false, array $condition = [] ): void {
+		$this->add_control( $id, [ 'label' => $label, 'type' => Controls_Manager::HEADING, 'separator' => $first ? 'none' : 'before', 'classes' => 'rf-panel-category' ] + ( $condition ? [ 'condition' => $condition ] : [] ) );
 	}
 
 	/**

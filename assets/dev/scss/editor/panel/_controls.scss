@@ -500,3 +500,18 @@
 .refraction-control.rf-group-heading {
 	display: none !important;
 }
+
+// A category of settings inside a section or a state tab (Colors, Text, Box, Icon...): a quieter heading than a
+// section's, so it reads as a label of what follows.
+.refraction-control-type-heading.rf-panel-category {
+
+	.refraction-control-title {
+		font-size: 11px;
+		font-weight: 600;
+		color: var(--e-a-color-txt-muted);
+	}
+
+	&.refraction-control-separator-none {
+		padding-block-start: 4px;
+	}
+}
