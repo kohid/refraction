@@ -451,7 +451,8 @@ class Layout_Sanitizer {
 			return [ 'value' => $name, 'library' => $library ];
 		}
 
-		return null;
+		// Refraction's own sets (0.91.0): Solar and Phosphor, only names that exist in the set.
+		return Icon_Sets::clean( $library, $name );
 	}
 
 	private function repeater( $value, array $control ): ?array {

@@ -95,3 +95,12 @@ Tests point the SDK at a local fake API with the constant `REFRACTION_CLAUDE_BAS
 - Seedance video through Claude (roadmap B9): Claude would generate hero or background videos with the site's Seedance key and put them in the media library for the Scroll Sequence and video backgrounds.
 - Streaming progress (the panel shows elapsed time while the request runs; a whole page can take a few minutes).
 - Generating images (Claude uses library images or leaves image settings empty and says which to add).
+
+## Refraction's icons and Form Canvas (0.91.0)
+
+- Results and proposals keep icons from Refraction's own sets: **Solar** (libraries `solar-bold-duotone`, `solar-line-duotone`, `solar-bold`, `solar-linear`, `solar-outline`, `solar-broken`; value `rf-solar rf-solar-<name>`) and **Phosphor** (`phosphor-regular`, `-bold`, `-fill`, `-duotone`, `-light`, `-thin`; value `rf-ph rf-ph-<name>`). `Classes\Icon_Sets` checks the name against the set's list (`assets/lib/<set>/<style>.json`), so a made-up icon is left out, as before. Font Awesome and `rficons` are still accepted.
+- MCP tool **list_icons** (`search`): the Solar and Phosphor icons whose names contain every word, as ready values.
+- The design guide now asks for Refraction's icons first (one set and style per page), Font Awesome for brands only, and icon boxes with layered icons (`icons_layout` "free", `more_icons`).
+- **Form Canvas** (`rfb-form-canvas`) is offered on ordinary pages (it was left out with the form fields), so a proposal can place a Form Builder form, with **Answers filled in on this page**.
+- Tests: `php scripts/test-ask-claude.php`.
+

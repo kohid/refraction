@@ -52,6 +52,11 @@ class Widget_Specs {
 
 			$form_field = in_array( 'refraction-form-fields', (array) $widget->get_categories(), true );
 
+			// Form Canvas sits in the Form Builder category but is made for ordinary pages: it shows a finished form (0.91.0).
+			if ( 'rfb-form-canvas' === $name ) {
+				$form_field = false;
+			}
+
 			if ( ( $form_field && ! $is_form ) || ( ! $form_field && ! $widget->show_in_panel() ) ) {
 				continue;
 			}

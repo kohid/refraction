@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.90.0
+Stable tag: 0.91.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.91.0 =
+* Ask Claude and the MCP server use Refraction's own icons: Solar (six styles) and Phosphor (six weights) are accepted in results and proposals when the icon exists in the set. Font Awesome still works. The design guide asks for Refraction's icons first and for layered icon scenes in icon boxes.
+* MCP server: new list_icons tool (find Solar and Phosphor icons by words, with the value to use).
+* Form Canvas can be used in Ask Claude results and MCP drafts and proposals on ordinary pages, so a booking form can be placed with the rest of a page.
 
 = 0.90.0 =
 * Form Builder: a ready-made Taxi and tour booking form (Refraction > Builder > Start from a ready-made form). It covers airport transfers, corporate travel, golf transfers, wedding cars, minibus hire and the five Inverness tours, in three steps.
