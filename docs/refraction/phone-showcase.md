@@ -83,3 +83,17 @@ hidden), `progress_color` (now only the bar's background), `progress_height`, `p
 Editor fix: `controls-css-parser.js` used the element's `__globals__` for repeater items too, so a Global Color picked
 on an item (a floating card...) did nothing in the preview; items now use their own `__globals__`. Global values also
 keep a declaration's `!important`.
+
+## Placing the floating cards (0.84.0)
+
+Each card: **Horizontal Orientation** (`card_h`: from the left / right of the phone) with **Offset** (`card_offset_x` /
+`card_offset_x_end`), **Vertical Orientation** (`card_v`: from the top / bottom) with **Offset** (`card_offset_y` /
+`card_offset_y_end`); responsive, px / % / em / vw (% of the phone). They set `--rf-card-left|right|top|bottom` and drop
+the centering shift (`--rf-card-tx|ty: 0%`). Until they are set, a card stays where Across / Down (`x`, `y`, the middle
+in % of the phone, before 0.84) put it: those settings are kept, hidden (`rf-legacy-control`), so their CSS is still
+printed; new cards start there too.
+
+**Drag to place** (editor preview, `editDrag()` in `phone-showcase.js`): a card follows the pointer (inline
+`--rf-card-*`, the phone's scale accounted for); let go, the Offsets of its orientation are written for the device shown
+(`card_offset_x_mobile`, ...) through `$e` `document/elements/settings` (undoable), in % of the phone, or px when the
+setting already is in px.
