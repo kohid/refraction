@@ -139,6 +139,16 @@ async function main() {
 			card_padding_mobile: { unit: 'px', top: '4', right: '6', bottom: '4', left: '6', isLinked: false },
 			card_radius_mobile: { unit: 'px', size: 4 },
 		} ) ] ), {} );
+		const placed = page( 'Card placing', box( [ w( 'ps11', {
+			steps: [ step( 1 ) ],
+			cards: [
+				{ _id: 'pl1', title: 'From the right and bottom', card_h: 'end', card_offset_x_end: { unit: 'px', size: 10 }, card_v: 'end', card_offset_y_end: { unit: 'px', size: 20 } },
+				{ _id: 'pl2', title: 'From the left and top', card_offset_x: { unit: '%', size: 5 }, card_offset_y: { unit: 'px', size: 40 } },
+				{ _id: 'pl3', title: 'Old place', x: { size: 100 }, y: { size: 50 } },
+				{ _id: 'pl4', title: 'Drag me', card_offset_x: { unit: '%', size: 10 }, card_offset_y: { unit: '%', size: 10 } },
+			],
+			phone_width: { unit: 'px', size: 320 },
+		} ) ] ), {} );
 		const phoneOnly = page( 'Phone layout', box( [ w( 'ps05', { steps: [ step( 1 ), step( 2 ) ], cards, cards_phone: '', stack_order: 'phone' } ) ] ), {} );
 
 		const state = ( p, id ) => p.evaluate( ( wid ) => {
@@ -383,6 +393,65 @@ async function main() {
 			const c = window.refraction.widgetsCache[ 'refraction-phone-showcase' ]?.controls || {}; return { max: c.steps?.max_items, devices: Object.keys( c.device?.options || {} ).length, cards: c.cards?.max_items };
 		} );
 		check( 'editor', 'the preview draws it and a click on a step works there; up to 20 steps, 14 device choices (13 and my own frame), up to 100 cards', ed.phone && 2 === ed.at && 20 === panel.max && 14 === panel.devices && 100 === panel.cards, JSON.stringify( [ ed, panel ] ) );
+
+		// Placing cards: from the phone's edges, the old middle-based place kept; dragging one in the editor.
+		const pv = await browser.newPage( { viewport: { width: 1280, height: 900 } } );
+		watch( pv );
+		await pv.goto( placed.url );
+		await sleep( 900 );
+		const edges = await pv.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps11"]' );
+			const cards = [ ...root.querySelectorAll( '.rf-showcase__card' ) ];
+			const box = cards[ 0 ].offsetParent;
+			const W = box.offsetWidth;
+			const H = box.offsetHeight;
+			const c = ( i ) => ( { l: cards[ i ].offsetLeft, t: cards[ i ].offsetTop, w: cards[ i ].offsetWidth, h: cards[ i ].offsetHeight } );
+			const a = c( 0 );
+			const b = c( 1 );
+			const old = c( 2 );
+			return { right: W - ( a.l + a.w ), bottom: H - ( a.t + a.h ), left: Math.round( b.l / W * 100 ), top: b.t, oldMiddle: Math.round( old.l / W * 100 ), oldShift: getComputedStyle( cards[ 2 ] ).translate };
+		} );
+		check( 'placing', 'Horizontal / Vertical Orientation with Offset: 10px from the right, 20px from the bottom; 5% from the left, 40px from the top', 10 === edges.right && 20 === edges.bottom && 5 === edges.left && 40 === edges.top, JSON.stringify( edges ) );
+		check( 'placing', 'a card placed the old way (its middle at Across 100%) stays where it was', 100 === edges.oldMiddle && /-50%/.test( edges.oldShift ), JSON.stringify( edges ) );
+		await pv.close();
+
+		await e.goto( `${ BASE }/wp-admin/post.php?post=${ placed.id }&action=refraction` );
+		await e.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
+		await sleep( 3500 );
+		const dframe = e.frame( { name: 'refraction-preview-iframe' } );
+		const dragged = dframe.locator( '[data-id="ps11"] .refraction-repeater-item-pl4' );
+		const before = await dragged.boundingBox();
+		await e.mouse.move( before.x + 20, before.y + ( before.height / 2 ) );
+		await e.mouse.down();
+		for ( let i = 1; i <= 10; i++ ) {
+			await e.mouse.move( before.x + 20 + ( 64 * i / 10 ), before.y + ( before.height / 2 ) + ( 50 * i / 10 ) );
+			await sleep( 30 );
+		}
+		await e.mouse.up();
+		await sleep( 1200 );
+		const after = await dragged.boundingBox();
+		const saved = await e.evaluate( () => {
+			const item = window.refraction.getContainer( 'ps11' ).repeaters.cards.children.find( ( c ) => 'pl4' === c.id );
+			return { x: item.settings.get( 'card_offset_x' ), y: item.settings.get( 'card_offset_y' ) };
+		} );
+		// The phone is 320px wide: 64px right is 20% more (10 -> 30); 50px down in % of its height. Down is measured within
+		// the cards' bob (up to 8px).
+		check( 'drag', 'in the editor a card dragged 64px right and 50px down lands there, and its Offsets are saved in % (10% -> 30% across)', Math.abs( after.x - before.x - 64 ) <= 3 && Math.abs( after.y - before.y - 50 ) <= 10 && '%' === saved.x.unit && Math.abs( saved.x.size - 30 ) <= 0.6 && saved.y.size > 10, JSON.stringify( { before, after, saved } ) );
+		const undone = await e.evaluate( () => { window.$e.run( 'document/history/undo' ); return window.refraction.getContainer( 'ps11' ).repeaters.cards.children.find( ( c ) => 'pl4' === c.id ).settings.get( 'card_offset_x' ).size; } );
+		check( 'drag', 'the move can be undone like any change (Ctrl+Z)', 10 === undone, String( undone ) );
+		await e.evaluate( () => $e.run( 'panel/editor/open', { model: refraction.getContainer( 'ps11' ).model, view: refraction.getContainer( 'ps11' ).view } ) );
+		await sleep( 800 );
+		await e.click( '.refraction-control-section_cards' ).catch( () => {} );
+		await sleep( 400 );
+		await e.locator( '.refraction-control-cards .refraction-repeater-row-item-title' ).first().click();
+		await sleep( 600 );
+		const fields = await e.evaluate( () => {
+			const row = document.querySelector( '.refraction-control-cards .refraction-repeater-fields:not([style*="none"])' ) || document;
+			const shown = ( n ) => { const el = row.querySelector( `.refraction-control-${ n }` ); return !! el && null !== el.offsetParent; };
+			return { h: shown( 'card_h' ), offset: shown( 'card_offset_x_end' ) && ! shown( 'card_offset_x' ), v: shown( 'card_v' ), across: shown( 'x' ), down: shown( 'y' ) };
+		} );
+		await e.screenshot( { path: join( SHOTS, 'card-position-panel.png' ) } );
+		check( 'panel', 'a card shows Horizontal / Vertical Orientation with the Offset of its side (from the right here); the old Across and Down are hidden', fields.h && fields.offset && fields.v && ! fields.across && ! fields.down, JSON.stringify( fields ) );
 
 		// Global colours inside a card (a repeater item) in the editor's preview: the saved one, and one picked now.
 		await e.goto( `${ BASE }/wp-admin/post.php?post=${ styled.id }&action=refraction` );

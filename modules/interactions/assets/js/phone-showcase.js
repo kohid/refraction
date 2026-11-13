@@ -172,12 +172,151 @@
 		( scope || document ).querySelectorAll( '[data-rf-showcase]' ).forEach( init );
 	}
 
+	/**
+	 * Editor preview only: a floating card can be dragged into place on the phone. While dragging it follows the
+	 * pointer (inline --rf-card-* variables); let go, its Offset settings are written for the card's Horizontal and
+	 * Vertical Orientation and the screen size shown (the responsive setting of that device), in the unit the setting
+	 * already has (% of the phone by default). Through $e, so it can be undone like any other change.
+	 *
+	 * @param {HTMLElement} root The widget's .rf-showcase.
+	 */
+	function editDrag( root ) {
+		const editor = window.parent;
+
+		if ( root.rfDrag || ! editor || editor === window || ! editor.$e || ! editor.refraction ) {
+			return;
+		}
+
+		root.rfDrag = true;
+		root.classList.add( 'rf-showcase--edit' );
+
+		const widgetId = root.closest( '[data-id]' )?.getAttribute( 'data-id' );
+		const VARS = [ '--rf-card-left', '--rf-card-right', '--rf-card-top', '--rf-card-bottom', '--rf-card-tx', '--rf-card-ty' ];
+
+		const itemOf = ( card ) => {
+			const id = ( card.className.match( /refraction-repeater-item-([\w-]+)/ ) || [] )[ 1 ];
+			const container = editor.refraction.getContainer( widgetId );
+
+			return id && container?.repeaters?.cards?.children?.find( ( child ) => child.id === id );
+		};
+
+		const unitOf = ( item, key ) => {
+			const value = item.settings.get( key );
+
+			return value && value.unit && '' !== value.size ? value.unit : '%';
+		};
+
+		root.addEventListener( 'pointerdown', ( event ) => {
+			const card = event.target.closest( '.rf-showcase__card' );
+			const device = card && card.offsetParent;
+
+			if ( ! card || ! device || 0 !== event.button ) {
+				return;
+			}
+
+			const item = itemOf( card );
+
+			if ( ! item ) {
+				return;
+			}
+
+			// The phone may be scaled (Style > Phone): pointer distances are divided by that.
+			const ratio = device.getBoundingClientRect().width / device.offsetWidth || 1;
+			const devRect = device.getBoundingClientRect();
+			const cardRect = card.getBoundingClientRect();
+			// The card's layout box (its own size, before its Size scale), from its middle.
+			const startLeft = ( ( ( cardRect.left + ( cardRect.width / 2 ) ) - devRect.left ) / ratio ) - ( card.offsetWidth / 2 );
+			const startTop = ( ( ( cardRect.top + ( cardRect.height / 2 ) ) - devRect.top ) / ratio ) - ( card.offsetHeight / 2 );
+			const x0 = event.clientX;
+			const y0 = event.clientY;
+			let left = startLeft;
+			let top = startTop;
+			let moved = false;
+
+			const move = ( e ) => {
+				left = startLeft + ( ( e.clientX - x0 ) / ratio );
+				top = startTop + ( ( e.clientY - y0 ) / ratio );
+
+				if ( ! moved && Math.hypot( e.clientX - x0, e.clientY - y0 ) < 4 ) {
+					return;
+				}
+
+				moved = true;
+				card.classList.add( 'is-dragging' );
+				card.style.setProperty( '--rf-card-left', left + 'px' );
+				card.style.setProperty( '--rf-card-right', 'auto' );
+				card.style.setProperty( '--rf-card-top', top + 'px' );
+				card.style.setProperty( '--rf-card-bottom', 'auto' );
+				card.style.setProperty( '--rf-card-tx', '0%' );
+				card.style.setProperty( '--rf-card-ty', '0%' );
+			};
+
+			const up = () => {
+				window.removeEventListener( 'pointermove', move );
+				window.removeEventListener( 'pointerup', up );
+				window.removeEventListener( 'pointercancel', up );
+
+				if ( ! moved ) {
+					return;
+				}
+
+				const w = device.offsetWidth || 1;
+				const h = device.offsetHeight || 1;
+				const fromRight = 'end' === item.settings.get( 'card_h' );
+				const fromBottom = 'end' === item.settings.get( 'card_v' );
+				const mode = editor.refraction.channels.deviceMode.request( 'currentMode' ) || 'desktop';
+				const suffix = 'desktop' === mode ? '' : '_' + mode;
+				const keyX = ( fromRight ? 'card_offset_x_end' : 'card_offset_x' ) + suffix;
+				const keyY = ( fromBottom ? 'card_offset_y_end' : 'card_offset_y' ) + suffix;
+				const px = {
+					x: fromRight ? w - ( left + card.offsetWidth ) : left,
+					y: fromBottom ? h - ( top + card.offsetHeight ) : top,
+				};
+				const inUnit = ( value, unit, size ) => {
+					const n = '%' === unit ? value / size * 100 : value;
+
+					return Math.round( n * 10 ) / 10;
+				};
+				const unitX = unitOf( item, keyX );
+				const unitY = unitOf( item, keyY );
+				const settings = {};
+
+				// Only px and % follow the pointer exactly; other units are written as %.
+				settings[ keyX ] = { unit: 'px' === unitX ? 'px' : '%', size: inUnit( px.x, 'px' === unitX ? 'px' : '%', w ) };
+				settings[ keyY ] = { unit: 'px' === unitY ? 'px' : '%', size: inUnit( px.y, 'px' === unitY ? 'px' : '%', h ) };
+
+				editor.$e.run( 'document/elements/settings', { container: item, settings, options: { external: true } } );
+
+				// The printed CSS takes over from the inline place.
+				window.requestAnimationFrame( () => window.requestAnimationFrame( () => {
+					VARS.forEach( ( v ) => card.style.removeProperty( v ) );
+					card.classList.remove( 'is-dragging' );
+				} ) );
+			};
+
+			event.preventDefault();
+			event.stopPropagation();
+			window.addEventListener( 'pointermove', move );
+			window.addEventListener( 'pointerup', up );
+			window.addEventListener( 'pointercancel', up );
+		} );
+	}
+
 	// The editor's preview renders the widget again on every change.
 	function hookIntoEditor( tries ) {
 		const fe = window.refractionFrontend;
 
 		if ( fe && fe.hooks ) {
-			fe.hooks.addAction( 'frontend/element_ready/refraction-phone-showcase.default', ( $scope ) => $scope && $scope[ 0 ] && scan( $scope[ 0 ] ) );
+			const ready = ( scope ) => {
+				scan( scope );
+
+				if ( fe.isEditMode && fe.isEditMode() ) {
+					scope.querySelectorAll( '[data-rf-showcase]' ).forEach( editDrag );
+				}
+			};
+
+			fe.hooks.addAction( 'frontend/element_ready/refraction-phone-showcase.default', ( $scope ) => $scope && $scope[ 0 ] && ready( $scope[ 0 ] ) );
+			ready( document );
 			return;
 		}
 

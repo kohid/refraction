@@ -445,16 +445,80 @@ class Phone_Showcase extends Widget_Base {
 			'description' => esc_html__( 'For a rating card: 5 stars then the title, such as 4.9. 0: none.', 'refraction' ),
 		] );
 
-		// Each screen size has its own place. On phones a card is kept inside the device unless a phone place is set
-		// (--x-phone, see frontend.scss).
+		// Where the card is, from the phone's edges, like Advanced > Position: a side across (left or right) and down (top or
+		// bottom), each with an offset per screen size (the device icon), in px or % of the phone. In the editor's
+		// preview a card can also be dragged into place (phone-showcase.js writes these settings for the screen size
+		// shown). Cards placed before 0.84 by their middle (Across and Down, hidden now) stay there until moved.
 		$card_item = '{{WRAPPER}} {{CURRENT_ITEM}}.rf-showcase__card';
+		$units = [ 'px', '%', 'em', 'vw' ];
 
+		$cards->add_control( 'card_h', [
+			'label' => esc_html__( 'Horizontal Orientation', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'default' => 'start',
+			'toggle' => false,
+			'options' => [
+				'start' => [ 'title' => esc_html__( 'From the left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'end' => [ 'title' => esc_html__( 'From the right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+			],
+			'description' => esc_html__( 'Tip: in the editor, drag the card on the phone to place it (for the screen size shown).', 'refraction' ),
+		] );
+
+		$cards->add_responsive_control( 'card_offset_x', [
+			'label' => esc_html__( 'Offset', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => $units,
+			'range' => [ 'px' => [ 'min' => -500, 'max' => 900 ], '%' => [ 'min' => -100, 'max' => 200 ], 'em' => [ 'min' => -30, 'max' => 60 ], 'vw' => [ 'min' => -50, 'max' => 100 ] ],
+			'selectors' => [ $card_item => '--rf-card-left: {{SIZE}}{{UNIT}}; --rf-card-right: auto; --rf-card-tx: 0%;' ],
+			'condition' => [ 'card_h' => 'start' ],
+		] );
+
+		$cards->add_responsive_control( 'card_offset_x_end', [
+			'label' => esc_html__( 'Offset', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => $units,
+			'range' => [ 'px' => [ 'min' => -500, 'max' => 900 ], '%' => [ 'min' => -100, 'max' => 200 ], 'em' => [ 'min' => -30, 'max' => 60 ], 'vw' => [ 'min' => -50, 'max' => 100 ] ],
+			'selectors' => [ $card_item => '--rf-card-left: auto; --rf-card-right: {{SIZE}}{{UNIT}}; --rf-card-tx: 0%;' ],
+			'condition' => [ 'card_h' => 'end' ],
+		] );
+
+		$cards->add_control( 'card_v', [
+			'label' => esc_html__( 'Vertical Orientation', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'default' => 'start',
+			'toggle' => false,
+			'options' => [
+				'start' => [ 'title' => esc_html__( 'From the top', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
+				'end' => [ 'title' => esc_html__( 'From the bottom', 'refraction' ), 'icon' => 'rficon-v-align-bottom' ],
+			],
+		] );
+
+		$cards->add_responsive_control( 'card_offset_y', [
+			'label' => esc_html__( 'Offset', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => $units,
+			'range' => [ 'px' => [ 'min' => -500, 'max' => 1500 ], '%' => [ 'min' => -50, 'max' => 150 ], 'em' => [ 'min' => -30, 'max' => 90 ], 'vw' => [ 'min' => -50, 'max' => 150 ] ],
+			'selectors' => [ $card_item => '--rf-card-top: {{SIZE}}{{UNIT}}; --rf-card-bottom: auto; --rf-card-ty: 0%;' ],
+			'condition' => [ 'card_v' => 'start' ],
+		] );
+
+		$cards->add_responsive_control( 'card_offset_y_end', [
+			'label' => esc_html__( 'Offset', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => $units,
+			'range' => [ 'px' => [ 'min' => -500, 'max' => 1500 ], '%' => [ 'min' => -50, 'max' => 150 ], 'em' => [ 'min' => -30, 'max' => 90 ], 'vw' => [ 'min' => -50, 'max' => 150 ] ],
+			'selectors' => [ $card_item => '--rf-card-top: auto; --rf-card-bottom: {{SIZE}}{{UNIT}}; --rf-card-ty: 0%;' ],
+			'condition' => [ 'card_v' => 'end' ],
+		] );
+
+		// Before 0.84: the card's middle in % of the phone. Hidden (rf-legacy-control), still printed, so cards placed
+		// this way stay put until an offset above is set; new cards start there too.
 		$cards->add_responsive_control( 'x', [
 			'label' => esc_html__( 'Across', 'refraction' ) . ' (%)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => -60, 'max' => 160 ] ],
 			'default' => [ 'size' => -20 ],
-			'description' => esc_html__( 'Where its middle is, in % of the phone\'s width (0 = its left edge, 100 = its right edge; less or more is outside). Set it per screen size with the device icon.', 'refraction' ),
+			'classes' => 'rf-legacy-control',
 			'selectors' => [ $card_item => '--x: {{SIZE}}%;' ],
 			'device_args' => self::phone_device_args( [ $card_item => '--x-phone: {{SIZE}}%;' ] ),
 		] );
@@ -464,6 +528,7 @@ class Phone_Showcase extends Widget_Base {
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => -20, 'max' => 120 ] ],
 			'default' => [ 'size' => 25 ],
+			'classes' => 'rf-legacy-control',
 			'selectors' => [ $card_item => '--y: {{SIZE}}%;' ],
 		] );
 

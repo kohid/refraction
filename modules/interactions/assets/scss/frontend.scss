@@ -1522,11 +1522,14 @@ html.rf-hp-on body {
 	font-weight: 800;
 }
 
-// Floating cards: placed by their middle, in % of the device.
+// Floating cards: from the phone's edges (Horizontal / Vertical Orientation and Offset: --rf-card-left / right / top /
+// bottom, no centering shift), or, until those are set, by their middle in % of the device (Across / Down, before 0.84).
 .rf-showcase__card {
 	position: absolute;
-	top: var(--y, 20%);
-	left: var(--x, 0%);
+	top: var(--rf-card-top, var(--y, 20%));
+	bottom: var(--rf-card-bottom, auto);
+	left: var(--rf-card-left, var(--x, 0%));
+	right: var(--rf-card-right, auto);
 	z-index: 5;
 	display: flex;
 	align-items: center;
@@ -1537,7 +1540,7 @@ html.rf-hp-on body {
 	color: #14181f;
 	box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.4);
 	white-space: nowrap;
-	translate: -50% -50%;
+	translate: var(--rf-card-tx, -50%) var(--rf-card-ty, -50%);
 	// Its own Size and the Size Of All Cards, per screen size.
 	scale: calc(var(--rf-card-scale, 1) * var(--rf-cards-scale, 1));
 	transition: opacity 0.35s ease, scale 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1656,7 +1659,7 @@ html.rf-hp-on body {
 	// the page sideways; long text wraps.
 	.rf-showcase__card {
 		// A place set for phones (Across, on a phone screen size: --x-phone) is kept as it is.
-		left: var(--x-phone, clamp(35%, var(--x, 0%), 65%));
+		left: var(--rf-card-left, var(--x-phone, clamp(35%, var(--x, 0%), 65%)));
 		max-width: 70%;
 		white-space: normal;
 	}
@@ -1673,4 +1676,19 @@ html.rf-hp-on body {
 	.rf-showcase-float-yes .rf-phone {
 		animation: none;
 	}
+}
+
+// Editor preview: a card can be dragged into place (phone-showcase.js).
+.rf-showcase--edit .rf-showcase__card {
+	cursor: move;
+	touch-action: none;
+	user-select: none;
+}
+
+.rf-showcase__card.is-dragging {
+	z-index: 20;
+	animation: none !important;
+	transition: none;
+	outline: 2px dashed #9e6bff;
+	outline-offset: 3px;
 }

@@ -450,3 +450,9 @@
 @import "controls/wp-widget";
 
 @import "controls/wysiwyg";
+
+// Settings kept only so what they print stays (a newer setting replaced them), never shown: the condition toggling
+// refraction-hidden-control must not bring them back.
+.refraction-control.rf-legacy-control {
+	display: none !important;
+}

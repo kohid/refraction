@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.83.0
+Stable tag: 0.84.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.84.0 =
+* Phone Showcase floating cards are placed like Advanced > Position: Horizontal Orientation (from the left or the right of the phone) and Vertical Orientation (from the top or the bottom), each with an Offset per screen size, in px, %, em or vw. Cards placed before keep their place until moved.
+* In the editor, drag a floating card on the phone to place it: its Offsets are written for the screen size shown (in % of the phone unless the setting is in px), and the move can be undone.
 
 = 0.83.0 =
 * Nav Menu > Style > Logo or Site Title: Before Scrolling and After Scrolling tabs. Every setting (logo width and max height, title typography and colors, background, space beside the menu, space between logo and title, padding, corners) can change once the page is scrolled past the Scroll point, smoothly over the Duration: for example a big logo that shrinks in a sticky header. The Scroll point now shows whenever there is a logo or title.
