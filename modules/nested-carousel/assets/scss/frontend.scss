@@ -428,14 +428,14 @@
 		background-color: rgba(120, 120, 140, 0.14);
 	}
 
-	// The marker: a bar on the side that faces the slides.
+	// The marker: a bar on the side that faces the slides (Current Marker: thickness, length, distance, corners).
 	&::after {
 		content: "";
 		position: absolute;
-		inset-block: 8px;
-		inset-inline-end: 0;
+		inset-block: calc((100% - var(--rf-nc-marker-len, 100%)) / 2 + 8px * var(--rf-nc-marker-pad, 1));
+		inset-inline-end: var(--rf-nc-marker-off, 0px);
 		width: var(--rf-nc-marker-w);
-		border-radius: var(--rf-nc-marker-w);
+		border-radius: var(--rf-nc-marker-r, var(--rf-nc-marker-w));
 		background: var(--rf-nc-marker);
 		opacity: 0;
 		transform: scale(1, 0.4);
@@ -446,6 +446,41 @@
 		opacity: 1;
 		transform: none;
 	}
+}
+
+// Hidden by Current Marker > Show Marker (no class when off). Saved widgets get the default (on).
+.refraction-widget-nested-carousel:not(.refraction-nc-marker-yes) .refraction-nc__title::after {
+	display: none;
+}
+
+.refraction-nc__title-icon {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	align-self: center;
+	line-height: 1;
+	font-size: 1.1em;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentcolor;
+	}
+}
+
+.refraction-nc__title:has(.refraction-nc__title-icon) {
+	align-items: center;
+}
+
+.refraction-nc-title-icon-after .refraction-nc__title-icon {
+	order: 3;
+}
+
+.refraction-nc-title-icon-above .refraction-nc__title:has(.refraction-nc__title-icon) {
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.4em;
 }
 
 .refraction-nc__title-num {
@@ -477,7 +512,7 @@
 }
 
 .refraction-nc-titles-right .refraction-nc__title::after {
-	inset-inline: 0 auto;
+	inset-inline: var(--rf-nc-marker-off, 0px) auto;
 }
 
 // Top / bottom: a row that scrolls sideways when it does not fit.
@@ -492,8 +527,8 @@
 	}
 
 	.refraction-nc__title::after {
-		inset-block: auto 0;
-		inset-inline: 12px;
+		inset-block: auto var(--rf-nc-marker-off, 0px);
+		inset-inline: calc((100% - var(--rf-nc-marker-len, 100%)) / 2 + 12px * var(--rf-nc-marker-pad, 1));
 		width: auto;
 		height: var(--rf-nc-marker-w);
 		transform: scale(0.4, 1);
@@ -505,7 +540,7 @@
 }
 
 .refraction-nc-titles-bottom .refraction-nc__title::after {
-	inset-block: 0 auto;
+	inset-block: var(--rf-nc-marker-off, 0px) auto;
 }
 
 // Titles On Phones.

@@ -71,3 +71,15 @@ Up to 100 floating cards (`MAX_CARDS`). The cards repeater has Content / Style t
 Steps, with autoplay): `progress_show` (prefix class `rf-showcase-progress-yes`, default on; without it the bar is
 hidden), `progress_color` (now only the bar's background), `progress_height`, `progress_radius`, `progress_inset`,
 `progress_offset` (`--rf-showcase-timer-gap`) and `progress_position` (`rf-showcase-progress-at-top`).
+
+## Icon settings (0.74.0)
+
+`includes/widgets/traits/icon-box-style.php` (`Icon_Box_Style::controls()`) gives any icon box Icon Size, Icon Padding
+(the box then fits the icon), Icon Corners and optionally Icon Color / Background. Used for the step icons
+(`step_icon_box_*`, plus `step_number_size`), the button icons (`button_icon_box_*`), the pill label's badge
+(`label_pill_icon_*`, plus `label_pill_typography`), the Heading's Pill Label badge (`rf_pill_badge_icon_*`, plus
+`rf_pill_typography`) and the Nested Carousel's title icons.
+
+Editor fix: `controls-css-parser.js` used the element's `__globals__` for repeater items too, so a Global Color picked
+on an item (a floating card...) did nothing in the preview; items now use their own `__globals__`. Global values also
+keep a declaration's `!important`.

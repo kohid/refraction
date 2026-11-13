@@ -6,6 +6,8 @@ use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
 use Refraction\Core\Utils\Icons;
+use Refraction\Icons_Manager;
+use Refraction\Includes\Widgets\Traits\Icon_Box_Style;
 use Refraction\Modules\NestedCarousel\Classes\Carousel_Logic;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
@@ -93,6 +95,14 @@ class Nested_Carousel extends Widget_Nested_Base {
 			'default' => esc_html__( 'Slide', 'refraction' ),
 			'label_block' => true,
 			'description' => esc_html__( 'Used in the navigator and as the slide name for screen readers.', 'refraction' ),
+		] );
+
+		$repeater->add_control( 'slide_icon', [
+			'label' => esc_html__( 'Title Icon', 'refraction' ),
+			'type' => Controls_Manager::ICONS,
+			'skin' => 'inline',
+			'label_block' => false,
+			'description' => esc_html__( 'Shown with the title when Slide Titles is on.', 'refraction' ),
 		] );
 
 		$this->add_control( 'slides', [
@@ -360,6 +370,21 @@ class Nested_Carousel extends Widget_Nested_Base {
 				'hide' => esc_html__( 'Hidden', 'refraction' ),
 			],
 			'prefix_class' => 'refraction-nc-titles-m-',
+			'condition' => $titles,
+		] );
+
+		$this->add_control( 'title_nav_icon_position', [
+			'label' => esc_html__( 'Icon Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'before' => [ 'title' => esc_html__( 'Before the title', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'above' => [ 'title' => esc_html__( 'Above the title', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
+				'after' => [ 'title' => esc_html__( 'After the title', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+			],
+			'default' => 'before',
+			'toggle' => false,
+			'description' => esc_html__( 'For slides with a Title Icon (Slides > each slide).', 'refraction' ),
+			'prefix_class' => 'refraction-nc-title-icon-',
 			'condition' => $titles,
 		] );
 
@@ -634,22 +659,63 @@ class Nested_Carousel extends Widget_Nested_Base {
 			$this->add_control( 'titles_color_' . $state, [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $selector => 'color: {{VALUE}};' ] ] );
 			$this->add_control( 'titles_bg_' . $state, [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $selector => 'background-color: {{VALUE}};' ] ] );
 			$this->add_control( 'titles_border_' . $state, [ 'label' => esc_html__( 'Border Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $selector => 'border-color: {{VALUE}};' ] ] );
+			$this->add_control( 'titles_icon_color_' . $state, [ 'label' => esc_html__( 'Icon Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ str_replace( ', ', ' .refraction-nc__title-icon, ', $selector ) . ' .refraction-nc__title-icon' => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
+			$this->add_control( 'titles_icon_bg_' . $state, [ 'label' => esc_html__( 'Icon Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ str_replace( ', ', ' .refraction-nc__title-icon, ', $selector ) . ' .refraction-nc__title-icon' => 'background-color: {{VALUE}};' ] ] );
 
-			if ( 'active' === $state ) {
-				$this->add_control( 'titles_marker_color', [ 'label' => esc_html__( 'Marker Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item => '--rf-nc-marker: {{VALUE}};' ] ] );
-				$this->add_control( 'titles_marker_size', [
-					'label' => esc_html__( 'Marker Thickness', 'refraction' ),
-					'type' => Controls_Manager::SLIDER,
-					'range' => [ 'px' => [ 'max' => 10 ] ],
-					'description' => esc_html__( 'The bar on the side of the current title that faces the slides. 0: none.', 'refraction' ),
-					'selectors' => [ $item => '--rf-nc-marker-w: {{SIZE}}px;' ],
-				] );
-			}
 
 			$this->end_controls_tab();
 		}
 
 		$this->end_controls_tabs();
+
+		// The bar on the current title.
+		$this->add_control( 'titles_marker_heading', [ 'label' => esc_html__( 'Current Marker', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+		$this->add_control( 'titles_marker_show', [
+			'label' => esc_html__( 'Show Marker', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'A bar on the side of the current title that faces the slides.', 'refraction' ),
+			'prefix_class' => 'refraction-nc-marker-',
+		] );
+		$marker = [ 'titles_marker_show' => 'yes' ];
+		$this->add_control( 'titles_marker_color', [ 'label' => esc_html__( 'Marker Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item => '--rf-nc-marker: {{VALUE}};' ], 'condition' => $marker ] );
+		$this->add_responsive_control( 'titles_marker_size', [
+			'label' => esc_html__( 'Thickness', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 1, 'max' => 12 ] ],
+			'selectors' => [ $item => '--rf-nc-marker-w: {{SIZE}}px;' ],
+			'condition' => $marker,
+		] );
+		$this->add_responsive_control( 'titles_marker_length', [
+			'label' => esc_html__( 'Length (%)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 10, 'max' => 100 ] ],
+			'description' => esc_html__( 'How much of the title\'s side it covers, centred.', 'refraction' ),
+			'selectors' => [ $item => '--rf-nc-marker-len: {{SIZE}}%; --rf-nc-marker-pad: 0;' ],
+			'condition' => $marker,
+		] );
+		$this->add_responsive_control( 'titles_marker_offset', [
+			'label' => esc_html__( 'Distance From The Edge', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -20, 'max' => 20 ] ],
+			'selectors' => [ $item => '--rf-nc-marker-off: {{SIZE}}px;' ],
+			'condition' => $marker,
+		] );
+		$this->add_control( 'titles_marker_radius', [
+			'label' => esc_html__( 'Corners', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 10 ] ],
+			'selectors' => [ $item => '--rf-nc-marker-r: {{SIZE}}px;' ],
+			'condition' => $marker,
+		] );
+
+		Icon_Box_Style::controls( $this, 'titles_icon', '{{WRAPPER}} .refraction-nc__title-icon', [ 'colors' => false, 'heading' => esc_html__( 'Title Icons', 'refraction' ) ] );
+		$this->add_responsive_control( 'titles_icon_gap', [
+			'label' => esc_html__( 'Space Between Icon And Title', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 40 ] ],
+			'selectors' => [ $item => 'gap: {{SIZE}}px;' ],
+		] );
 
 		$this->add_control( 'titles_number_color', [ 'label' => esc_html__( 'Number Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $item . ' .refraction-nc__title-num' => 'color: {{VALUE}};' ], 'condition' => [ 'title_nav_numbers' => 'yes' ], 'separator' => 'before' ] );
 		$this->add_control( 'titles_transition', [
@@ -670,15 +736,17 @@ class Nested_Carousel extends Widget_Nested_Base {
 
 		for ( $i = 0; $i < $count; $i++ ) {
 			$title = trim( wp_strip_all_tags( (string) ( $settings['slides'][ $i ]['slide_title'] ?? '' ) ) );
+			$icon = ! empty( $settings['slides'][ $i ]['slide_icon']['value'] ) ? (string) Icons_Manager::try_get_icon_html( $settings['slides'][ $i ]['slide_icon'], [ 'aria-hidden' => 'true' ] ) : '';
 			$number = str_pad( (string) ( $i + 1 ), 2, '0', STR_PAD_LEFT );
 
 			printf(
-				'<button type="button" class="refraction-nc__title%1$s" data-index="%2$d" aria-current="%3$s">%4$s%5$s</button>',
+				'<button type="button" class="refraction-nc__title%1$s" data-index="%2$d" aria-current="%3$s">%6$s%4$s%5$s</button>',
 				0 === $i ? ' is-active' : '',
 				(int) $i,
 				0 === $i ? 'true' : 'false',
 				$numbers || '' === $title ? '<span class="refraction-nc__title-num">' . esc_html( $number ) . '</span>' : '',
-				'' !== $title ? '<span class="refraction-nc__title-text">' . esc_html( $title ) . '</span>' : ''
+				'' !== $title ? '<span class="refraction-nc__title-text">' . esc_html( $title ) . '</span>' : '',
+				'' !== $icon ? '<span class="refraction-nc__title-icon">' . $icon . '</span>' : '' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon markup from the icons manager.
 			);
 		}
 
@@ -773,8 +841,9 @@ class Nested_Carousel extends Widget_Nested_Base {
 			<# if ( rfTitles ) { #>
 				<nav class="refraction-nc__titles" aria-label="<?php echo esc_attr__( 'Slides', 'refraction' ); ?>">
 					<# _.each( settings.slides, function( slide, i ) {
-						var title = ( slide.slide_title || '' ).replace( /<[^>]*>/g, '' ).trim(), num = ( i < 9 ? '0' : '' ) + ( i + 1 ); #>
-						<button type="button" class="refraction-nc__title {{ 0 === i ? 'is-active' : '' }}" data-index="{{ i }}" aria-current="{{ 0 === i ? 'true' : 'false' }}"><# if ( 'yes' === settings.title_nav_numbers || ! title ) { #><span class="refraction-nc__title-num">{{ num }}</span><# } #><# if ( title ) { #><span class="refraction-nc__title-text">{{ title }}</span><# } #></button>
+						var title = ( slide.slide_title || '' ).replace( /<[^>]*>/g, '' ).trim(), num = ( i < 9 ? '0' : '' ) + ( i + 1 ),
+							rfIcon = slide.slide_icon && slide.slide_icon.value ? refraction.helpers.renderIcon( view, slide.slide_icon, { 'aria-hidden': true }, 'i', 'object' ) : null; #>
+						<button type="button" class="refraction-nc__title {{ 0 === i ? 'is-active' : '' }}" data-index="{{ i }}" aria-current="{{ 0 === i ? 'true' : 'false' }}"><# if ( rfIcon && rfIcon.rendered ) { #><span class="refraction-nc__title-icon">{{{ rfIcon.value }}}</span><# } #><# if ( 'yes' === settings.title_nav_numbers || ! title ) { #><span class="refraction-nc__title-num">{{ num }}</span><# } #><# if ( title ) { #><span class="refraction-nc__title-text">{{ title }}</span><# } #></button>
 					<# } ); #>
 				</nav>
 				<div class="refraction-nc__stage">

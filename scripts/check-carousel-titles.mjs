@@ -144,6 +144,8 @@ async function main() {
 			carousel( 'nct0001', { title_nav_position: 'top', direction: 'horizontal' } ),
 			carousel( 'ncb0001', { title_nav_position: 'bottom', title_nav_mobile: 'hide' } ),
 			carousel( 'ncs0001', { effect: 'stack', stack_min_height: px( 520 ), title_nav_position: 'left' } ),
+			carousel( 'nci0001', { slides: titles.map( ( t ) => ( { slide_title: t, slide_icon: { value: 'fas fa-car', library: 'fa-solid' } } ) ), titles_icon_size: px( 22 ), titles_icon_padding: px( 6 ), titles_icon_radius: px( 6 ), titles_icon_bg_active: '#E20A17', titles_icon_color_active: '#FFFFFF', titles_marker_length: px( 50 ), titles_marker_offset: px( 4 ), titles_marker_size: px( 5 ) } ),
+			carousel( 'ncn0001', { titles_marker_show: '' } ),
 		] );
 
 		// ---------------------------------------------------------------- titles on the left of a vertical carousel
@@ -184,6 +186,17 @@ async function main() {
 			return { open: slides.findIndex( ( s ) => s.classList.contains( 'is-stack-open' ) ), active: [ ...document.querySelectorAll( '[data-id="ncs0001"] .refraction-nc__title' ) ].findIndex( ( b ) => b.classList.contains( 'is-active' ) ) };
 		} );
 		check( 'stack', 'with the Stack effect a click on a title opens that card', 2 === stack.open && 2 === stack.active, JSON.stringify( stack ) );
+		const icons = await e.evaluate( () => {
+			const btn = document.querySelector( '[data-id="nci0001"] .refraction-nc__title.is-active' );
+			const icon = btn.querySelector( '.refraction-nc__title-icon' );
+			const svg = icon?.querySelector( 'svg, i' )?.getBoundingClientRect();
+			const b = btn.getBoundingClientRect();
+			const m = getComputedStyle( btn, '::after' );
+			const off = getComputedStyle( document.querySelector( '[data-id="ncn0001"] .refraction-nc__title.is-active' ), '::after' ).display;
+			return { count: document.querySelectorAll( '[data-id="nci0001"] .refraction-nc__title-icon' ).length, size: svg && Math.round( svg.height ), pad: icon && getComputedStyle( icon ).paddingTop, bg: icon && getComputedStyle( icon ).backgroundColor, color: icon && getComputedStyle( icon ).color, markerH: Math.round( parseFloat( m.height ) ), btnH: Math.round( b.height ), markerW: m.width, markerRight: m.right, off };
+		} );
+		check( 'icons', 'each title shows its slide icon: 22px, 6px padding, red background and white on the current title', 5 === icons.count && 22 === icons.size && '6px' === icons.pad && 'rgb(226, 10, 23)' === icons.bg && 'rgb(255, 255, 255)' === icons.color, JSON.stringify( icons ) );
+		check( 'marker', 'the Current Marker takes its settings: 5px thick, half the title\'s height, 4px from the edge; switched off it is gone', '5px' === icons.markerW && Math.abs( icons.markerH - ( icons.btnH / 2 ) ) <= 1 && '4px' === icons.markerRight && 'none' === icons.off, JSON.stringify( icons ) );
 		await e.screenshot( { path: join( SHOTS, 'positions.png' ), fullPage: true } );
 		await e.context().close();
 

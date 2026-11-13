@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.73.0
+Stable tag: 0.74.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.74.0 =
+* Fixed: a Global Color picked on an item of a list (a floating card, a slide, any repeater item) did nothing in the editor's preview; it now shows there as on the page. A Global Color on a setting that needs !important keeps it in the editor too.
+* Icon settings everywhere (Icon Size, Icon Padding, Icon Corners, colours): Phone Showcase step icons (and Number Size), button icons (padding, colour, background), the pill label's icon badge, and the Heading's Pill Label badge. Both pill labels also get their own Pill Typography.
+* Nested Carousel Slide Titles: an icon per slide (Slides > each slide > Title Icon), before, above or after the title, with size, padding, corners, gap and colours for normal, hover and current; and a Current Marker group: show or hide, colour, thickness, length, distance from the edge and corners.
 
 = 0.73.0 =
 * Nested Carousel: Slide Titles. The slides' titles show on the page as buttons beside the slides (left or right, made for the Vertical direction) or above or below them; a click shows that slide and the current one is marked as the slides move (arrows, dots, autoplay, the Stack effect). Optional numbers (01, 02...), Titles On Phones (a scrolling row above or below, as set, or hidden), and Style > Slide Titles: width, space to the slides and between titles, alignment, typography, padding, corners, border, text / background / border colours for normal, hover and current, a marker bar on the current title, number colour and transition time.
