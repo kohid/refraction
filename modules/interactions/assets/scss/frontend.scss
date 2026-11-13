@@ -1099,11 +1099,15 @@ html.rf-hp-on body {
 	justify-self: center;
 	width: var(--rf-phone-w, 320px);
 	max-width: 100%;
+	// Style > Phone > Place, Size And Tilt, per screen size; the layout around it does not move.
+	translate: var(--rf-phone-dx, 0) var(--rf-phone-dy, 0);
+	rotate: var(--rf-phone-rotate, 0deg);
+	scale: var(--rf-phone-scale, 1);
 
 	&::before {
 		content: "";
 		position: absolute;
-		inset: -25% -35%;
+		inset: calc(-1 * var(--rf-showcase-glow-size, 25%)) calc(-1.4 * var(--rf-showcase-glow-size, 25%));
 		z-index: -1;
 		background: radial-gradient(closest-side, var(--rf-showcase-glow, transparent), transparent);
 		pointer-events: none;
@@ -1534,11 +1538,13 @@ html.rf-hp-on body {
 	box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.4);
 	white-space: nowrap;
 	translate: -50% -50%;
+	// Its own Size and the Size Of All Cards, per screen size.
+	scale: calc(var(--rf-card-scale, 1) * var(--rf-cards-scale, 1));
 	transition: opacity 0.35s ease, scale 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 
 	&.is-hidden {
 		opacity: 0;
-		scale: 0.85;
+		scale: calc(0.85 * var(--rf-card-scale, 1) * var(--rf-cards-scale, 1));
 		pointer-events: none;
 	}
 }
@@ -1649,7 +1655,8 @@ html.rf-hp-on body {
 	// Shown on phones: kept inside the device (centred between 35% and 65%, at most 70% wide), so they never push
 	// the page sideways; long text wraps.
 	.rf-showcase__card {
-		left: clamp(35%, var(--x, 0%), 65%);
+		// A place set for phones (Across, on a phone screen size: --x-phone) is kept as it is.
+		left: var(--x-phone, clamp(35%, var(--x, 0%), 65%));
 		max-width: 70%;
 		white-space: normal;
 	}

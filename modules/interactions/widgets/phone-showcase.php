@@ -107,6 +107,24 @@ class Phone_Showcase extends Widget_Base {
 		return [ 'refraction-interactions' ];
 	}
 
+	/**
+	 * device_args for a responsive control that writes another CSS variable on phone screens (breakpoints of 900px
+	 * and less: Mobile, Mobile Landscape and the phone sizes), so a value set there wins over the phone layout's rule.
+	 *
+	 * @param array $selectors The selectors for those screens.
+	 */
+	private static function phone_device_args( array $selectors ): array {
+		$args = [];
+
+		foreach ( \Refraction\Plugin::$instance->breakpoints->get_active_breakpoints() as $name => $breakpoint ) {
+			if ( 'max' === $breakpoint->get_direction() && $breakpoint->get_value() <= 900 ) {
+				$args[ $name ] = [ 'selectors' => $selectors ];
+			}
+		}
+
+		return $args;
+	}
+
 	protected function register_controls() {
 		$this->start_controls_section( 'section_steps', [ 'label' => esc_html__( 'Steps', 'refraction' ) ] );
 
@@ -303,7 +321,7 @@ class Phone_Showcase extends Widget_Base {
 		] );
 
 		foreach ( [ 'top' => esc_html__( 'Screen From The Top', 'refraction' ), 'right' => esc_html__( 'Screen From The Right', 'refraction' ), 'bottom' => esc_html__( 'Screen From The Bottom', 'refraction' ), 'left' => esc_html__( 'Screen From The Left', 'refraction' ) ] as $side => $label ) {
-			$this->add_control( 'frame_' . $side, [
+			$this->add_responsive_control( 'frame_' . $side, [
 				'label' => $label . ' (%)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => 0, 'max' => 40, 'step' => 0.1 ] ],
@@ -313,7 +331,7 @@ class Phone_Showcase extends Widget_Base {
 			] );
 		}
 
-		$this->add_control( 'frame_radius', [
+		$this->add_responsive_control( 'frame_radius', [
 			'label' => esc_html__( 'Screen Corners', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px', '%' ],
@@ -427,21 +445,45 @@ class Phone_Showcase extends Widget_Base {
 			'description' => esc_html__( 'For a rating card: 5 stars then the title, such as 4.9. 0: none.', 'refraction' ),
 		] );
 
-		$cards->add_control( 'x', [
+		// Each screen size has its own place. On phones a card is kept inside the device unless a phone place is set
+		// (--x-phone, see frontend.scss).
+		$card_item = '{{WRAPPER}} {{CURRENT_ITEM}}.rf-showcase__card';
+
+		$cards->add_responsive_control( 'x', [
 			'label' => esc_html__( 'Across', 'refraction' ) . ' (%)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => -60, 'max' => 160 ] ],
 			'default' => [ 'size' => -20 ],
-			'description' => esc_html__( 'Where its middle is, in % of the phone\'s width (0 = its left edge, 100 = its right edge; less or more is outside).', 'refraction' ),
-			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}.rf-showcase__card' => '--x: {{SIZE}}%;' ],
+			'description' => esc_html__( 'Where its middle is, in % of the phone\'s width (0 = its left edge, 100 = its right edge; less or more is outside). Set it per screen size with the device icon.', 'refraction' ),
+			'selectors' => [ $card_item => '--x: {{SIZE}}%;' ],
+			'device_args' => self::phone_device_args( [ $card_item => '--x-phone: {{SIZE}}%;' ] ),
 		] );
 
-		$cards->add_control( 'y', [
+		$cards->add_responsive_control( 'y', [
 			'label' => esc_html__( 'Down', 'refraction' ) . ' (%)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => -20, 'max' => 120 ] ],
 			'default' => [ 'size' => 25 ],
-			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}.rf-showcase__card' => '--y: {{SIZE}}%;' ],
+			'selectors' => [ $card_item => '--y: {{SIZE}}%;' ],
+		] );
+
+		$cards->add_responsive_control( 'card_scale', [
+			'label' => esc_html__( 'Size', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 40, 'max' => 160 ] ],
+			'selectors' => [ $card_item => '--rf-card-scale: calc({{SIZE}} / 100);' ],
+		] );
+
+		$cards->add_responsive_control( 'card_show', [
+			'label' => esc_html__( 'Show', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'options' => [
+				'' => esc_html__( 'Yes', 'refraction' ),
+				'none' => esc_html__( 'No, hide it here', 'refraction' ),
+				'flex' => esc_html__( 'Yes, even where cards are hidden', 'refraction' ),
+			],
+			'description' => esc_html__( 'Per screen size: hide this card on phones, for example.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-showcase {{CURRENT_ITEM}}.rf-showcase__card' => 'display: {{VALUE}};' ],
 		] );
 
 		$cards->add_control( 'step', [
@@ -774,6 +816,69 @@ class Phone_Showcase extends Widget_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-showcase-glow: {{VALUE}};' ],
 		] );
 
+		$this->add_responsive_control( 'glow_size', [
+			'label' => esc_html__( 'Glow Size', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-showcase-glow-size: {{SIZE}}%;' ],
+		] );
+
+		// Per screen size (device icon): where the phone sits, its size and tilt, without changing the layout around it.
+		$this->add_control( 'phone_place_heading', [
+			'label' => esc_html__( 'Place, Size And Tilt (per screen size)', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
+
+		$this->add_responsive_control( 'phone_scale', [
+			'label' => esc_html__( 'Scale', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 30, 'max' => 160 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-scale: calc({{SIZE}} / 100);' ],
+		] );
+
+		$this->add_responsive_control( 'phone_offset_x', [
+			'label' => esc_html__( 'Move Left Or Right', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range' => [ 'px' => [ 'min' => -300, 'max' => 300 ], '%' => [ 'min' => -100, 'max' => 100 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-dx: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'phone_offset_y', [
+			'label' => esc_html__( 'Move Up Or Down', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range' => [ 'px' => [ 'min' => -300, 'max' => 300 ], '%' => [ 'min' => -100, 'max' => 100 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-dy: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'phone_rotate', [
+			'label' => esc_html__( 'Tilt', 'refraction' ) . ' (deg)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -45, 'max' => 45 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => '--rf-phone-rotate: {{SIZE}}deg;' ],
+		] );
+
+		$this->add_responsive_control( 'phone_align', [
+			'label' => esc_html__( 'Align', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'start' => [ 'title' => esc_html__( 'Start', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-h-align-center' ],
+				'end' => [ 'title' => esc_html__( 'End', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+			],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__device' => 'justify-self: {{VALUE}};' ],
+		] );
+
+		$this->add_responsive_control( 'screen_padding', [
+			'label' => esc_html__( 'Screen Content Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%' ],
+			'selectors' => [ '{{WRAPPER}} .rf-phone__shot' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; box-sizing: border-box;' ],
+			'separator' => 'before',
+		] );
+
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_cards', [
@@ -796,11 +901,47 @@ class Phone_Showcase extends Widget_Base {
 			'selector' => $card . ' .rf-showcase__card-title',
 		] );
 
-		$this->add_control( 'card_radius', [
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name' => 'card_text_typography',
+			'label' => esc_html__( 'Text Typography', 'refraction' ),
+			'selector' => $card . ' .rf-showcase__card-text',
+		] );
+
+		$this->add_responsive_control( 'card_radius', [
 			'label' => esc_html__( 'Corners', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'max' => 40 ] ],
 			'selectors' => [ $card => 'border-radius: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'card_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'selectors' => [ $card => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'card_gap', [
+			'label' => esc_html__( 'Space Between Icon And Text', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'max' => 40 ] ],
+			'selectors' => [ $card => 'gap: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'card_max_width', [
+			'label' => esc_html__( 'Max Width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range' => [ 'px' => [ 'min' => 80, 'max' => 500 ], '%' => [ 'min' => 20, 'max' => 150 ] ],
+			'description' => esc_html__( '% of the phone\'s width. Longer text wraps.', 'refraction' ),
+			'selectors' => [ $card => 'max-width: {{SIZE}}{{UNIT}}; white-space: normal;' ],
+		] );
+
+		$this->add_responsive_control( 'cards_scale', [
+			'label' => esc_html__( 'Size Of All Cards', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 40, 'max' => 160 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase' => '--rf-cards-scale: calc({{SIZE}} / 100);' ],
 		] );
 
 		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [

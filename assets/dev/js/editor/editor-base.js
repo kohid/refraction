@@ -16,7 +16,6 @@ import PanelMenu from 'refraction-panel/pages/menu/menu';
 import Promotion from './utils/promotion';
 import KitManager from '../../../../core/kits/assets/js/manager.js';
 import Navigator from './regions/navigator/navigator';
-import ElementsFloat from './regions/elements-float/elements-float';
 import NoticeBar from './utils/notice-bar';
 import Preview from 'refraction-views/preview';
 import PopoverToggleControl from 'refraction-controls/popover-toggle';
@@ -699,20 +698,6 @@ export default class EditorBase extends Marionette.Application {
 		this.trigger( 'navigator:init' );
 	}
 
-	// The floating Elements window (regions/elements-float), only where widgets can be added.
-	initElementsFloat() {
-		if ( ! $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ) {
-			return;
-		}
-
-		this.addRegions( {
-			elementsFloat: {
-				el: '#refraction-elements-float',
-				regionClass: ElementsFloat,
-			},
-		} );
-	}
-
 	setAjax() {
 		refractionCommon.ajax.addRequestConstant( 'editor_post_id', this.config.document.id );
 		refractionCommon.ajax.addRequestConstant( 'initial_document_id', this.config.initial_document.id );
@@ -1240,7 +1225,6 @@ export default class EditorBase extends Marionette.Application {
 			.then( () => {
 				Events.dispatch( refractionCommon.elements.$window, 'refraction/init', null, 'refraction:init' );
 				this.initNavigator();
-				this.initElementsFloat();
 			} );
 	}
 

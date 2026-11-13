@@ -82,7 +82,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</li>
 
-
 			</ul>
 
 		</div>
@@ -122,15 +121,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="refraction-hotkeys__item--shortcut">
 						<kbd>{{{ ctrlLabel }}}</kbd>
 						<kbd>I</kbd>
-					</div>
-				</li>
-
-				<li class="refraction-hotkeys__item">
-					<div class="refraction-hotkeys__item--label"><?php echo esc_html__( 'Floating Elements', 'refraction' ); ?></div>
-					<div class="refraction-hotkeys__item--shortcut">
-						<kbd>{{{ ctrlLabel }}}</kbd>
-						<kbd>Shift</kbd>
-						<kbd>K</kbd>
 					</div>
 				</li>
 

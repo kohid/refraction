@@ -2,8 +2,9 @@
 /**
  * Side panel dock check (SQLite test site, Chromium): docked left as before; the header buttons dock it right (before a
  * docked Structure, the hide arrow on its other side, hiding slides it off to the right) and float it; dragging it by
- * its header moves it, against an edge docks it; the top bar Panel button and Ctrl+P hide and show it; Floating
- * Elements docks beside it on its side; the beside-the-page preference works on the right; the place is remembered.
+ * its header moves it, against an edge docks it, never under the top bar or out of the window; the top bar Panel button
+ * and Ctrl+P hide and show it; the beside-the-page preference works on the right; the place is remembered (and brought
+ * back within reach); the old Floating Elements window is gone.
  *
  * Usage: node scripts/check-panel-dock.mjs [--site /tmp/rf-pd-site] [--port 8991] [--shots /tmp/panel-dock-shots]
  */
@@ -112,7 +113,6 @@ async function main() {
 			return {
 				panel: r( 'refraction-panel' ),
 				preview: r( 'refraction-preview' ),
-				ef: r( 'refraction-elements-float' ),
 				nav: r( 'refraction-navigator' ),
 				arrow: Math.round( sw.left + ( sw.width / 2 ) ),
 				pos: getComputedStyle( document.getElementById( 'refraction-panel' ) ).position,
@@ -122,6 +122,8 @@ async function main() {
 		} );
 		const panelHidden = ( g ) => g.panel.r <= 1 || g.panel.l >= W - 1 || ! g.panel.shown;
 
+		const gone = await a.evaluate( () => ( { el: !! document.getElementById( 'refraction-elements-float' ), cmd: !! $e.components.get( 'elements-float' ), button: !! document.querySelector( 'button[aria-label="Floating Elements"]' ) } ) );
+		check( 'removed', 'the separate Floating Elements window, its command and its top bar button are gone', ! gone.el && ! gone.cmd && ! gone.button, JSON.stringify( gone ) );
 		let g = await geo();
 		check( 'left', 'docked left as before: at the left edge, the left button pressed, the arrow on its right edge', 0 === g.panel.l && 'left' === g.pressed && Math.abs( g.arrow - g.panel.r ) < 12, JSON.stringify( g ) );
 
@@ -143,18 +145,6 @@ async function main() {
 		check( 'right', 'with Structure docked, the panel sits just before it', Math.abs( g.panel.r - g.nav.l ) <= 1, JSON.stringify( g ) );
 		await a.evaluate( () => $e.run( 'navigator/close' ) );
 		await a.waitForTimeout( 600 );
-		await a.evaluate( () => { $e.run( 'elements-float/open' ); $e.run( 'elements-float/dock', { side: 'right' } ); } );
-		await a.waitForTimeout( 900 );
-		g = await geo();
-		check( 'elements', 'Floating Elements docked right sits beside the panel, and the page ends before both', Math.abs( g.ef.r - g.panel.l ) <= 1 && Math.abs( g.preview.r - g.ef.l ) <= 1, JSON.stringify( g ) );
-		await a.screenshot( { path: join( SHOTS, 'right-with-elements.png' ) } );
-		await a.evaluate( () => $e.run( 'elements-float/dock', { side: 'left' } ) );
-		await a.waitForTimeout( 900 );
-		g = await geo();
-		check( 'elements', 'docked left while the panel is on the right, it takes the left edge and the page starts after it', 0 === g.ef.l && Math.abs( g.preview.l - g.ef.r ) <= 1, JSON.stringify( g ) );
-		await a.evaluate( () => { $e.run( 'elements-float/dock', { side: '' } ); $e.run( 'elements-float/close' ); } );
-		await a.waitForTimeout( 600 );
-
 		// ------------------------------------------------------------ beside the page, on the right
 		await a.evaluate( () => refraction.settings.editorPreferences.model.set( 'panel_position', 'beside' ) );
 		await a.waitForTimeout( 900 );
@@ -190,6 +180,19 @@ async function main() {
 		await drag( 620, 200 );
 		g = await geo();
 		check( 'float', 'dragged by its header it moves with the pointer', Math.abs( g.panel.l - 600 ) < 40 && Math.abs( g.panel.t - 180 ) < 40, JSON.stringify( g ) );
+		const bar = await a.evaluate( () => Math.round( document.getElementById( 'refraction-editor-wrapper-v2' ).getBoundingClientRect().height ) );
+		await drag( 620, 5 );
+		g = await geo();
+		check( 'limits', 'dragged up into the top bar, its header stops just below the bar (still visible and draggable)', g.panel.t === bar, `${ bar } ${ JSON.stringify( g ) }` );
+		await drag( 620, H + 300 );
+		g = await geo();
+		check( 'limits', 'dragged past the bottom of the window, its header stays on screen', g.panel.t <= H - 50 && g.panel.t >= bar, JSON.stringify( g ) );
+		await drag( 620, 200 );
+		await a.evaluate( () => { refraction.panel.$el.css( { top: '-200px', left: '-2000px' } ); refraction.panel.saveFloat(); } );
+		await openEditor();
+		g = await geo();
+		check( 'limits', 'a place saved out of reach (above the top bar, off the left) is brought back on load', g.panel.t >= bar && g.panel.r >= 100, `${ bar } ${ JSON.stringify( g ) }` );
+		await drag( 620, 200 );
 		await a.screenshot( { path: join( SHOTS, 'floating.png' ) } );
 		await a.click( '#refraction-panel-header .rf-panel-hide' );
 		await a.waitForTimeout( 800 );

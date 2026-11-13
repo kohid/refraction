@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.81.0
+Stable tag: 0.82.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,14 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.82.0 =
+* The separate Floating Elements window is gone: the whole side panel floats and docks now, Elements included.
+* A floating panel can no longer be dragged under the top bar or out of the window (its header always stays within reach); a place saved out of reach is brought back when the editor opens, when the window gets smaller and when the panel is shown again.
+* Phone Showcase per screen size (the device icon beside each setting):
+  * Phone: Scale, Move Left Or Right, Move Up Or Down, Tilt, Align, Glow Size, Screen Content Padding; a custom frame's screen edges and corners.
+  * Each floating card: Across and Down, Size, and Show (hide it on phones, or show it where cards are hidden). A place set for phones is kept as set instead of being pulled inside the phone.
+  * All floating cards: Text Typography, Corners, Padding, Space Between Icon And Text, Max Width, Size Of All Cards.
 
 = 0.81.0 =
 * Nav Menu > Logo or Site Title: the site logo, site title, both, an image or a text in the menu bar, on the left, in the middle (the menu items share out on both sides) or on the right, linked to the home page. Show it always, only once the page is scrolled down past a number of pixels, or only until then, with an animation: fade, slide down, slide up, slide in from the side, zoom, pop, flip, sharpen from blur, or grow in (the menu makes room). On phones it sits beside the hamburger. Style: logo width and height, title typography and colors, spacing, padding.
