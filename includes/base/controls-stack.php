@@ -2441,6 +2441,14 @@ abstract class Controls_Stack extends Base_Object {
 		} else {
 			$this->register_controls();
 		}
+
+		/**
+		 * After an element's controls are registered (all sections closed, injected ones included). The Panel
+		 * Categories module adds its group headings here.
+		 *
+		 * @param Controls_Stack $this The element.
+		 */
+		do_action( 'refraction/element/after_register_controls', $this );
 	}
 
 	protected function handle_control_position( array $args, $control_id, $overwrite ) {

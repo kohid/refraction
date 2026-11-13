@@ -62,6 +62,28 @@ General (before the first heading) and one per heading (the heading itself hides
 settings get `.rf-group-off` (display none, with their popover). The tab is kept per element type and section for the
 editing session (`shownGroups`). No widget had to change: giving a long section headings is enough.
 
+## Categories in every widget (0.88.0)
+
+Every widget was audited (`node scripts/audit-widget-panels.mjs --port N --all [--min 12] [--flagged out.txt]`: for each
+Content and Style section, the settings it can show, its category headings and state tabs). Each section of 12 or more
+settings without categories got them:
+
+- **Module `panel-categories`** (`modules/panel-categories/module.php`): a map of `element/section` (or `*/section`, or
+  `*` for any section) to `[ first setting id => category label ]`. Once an element's controls are registered
+  (`refraction/element/after_register_controls`, fired at the end of `Controls_Stack::init_controls()`), it injects a
+  heading (`rfcat_<id>`, class `rf-panel-category`) before each first setting. The heading takes that setting's
+  condition, so it hides with it, unless the map gives one. Widget files and saved settings are untouched. Shared
+  blocks: Highlighted Text (Text, Mark Behind, Drawing), Long Text and Tooltip, Card Stack, Query, Card.
+- **Reordered in their own files** (settings in a mixed order, hover colors next to normal ones): Nav Menu > Submenu
+  (Effect, Panel, Items, Colors with Normal / Hover / Current Page), Hamburger Button (Icon, Box, Colors with Normal /
+  Hover, Animation), Mobile Menu (Button, Opened Menu, In The Panel); Nested Carousel > Arrows (Size And Place, Box,
+  Colors with Normal / Hover); Timed Slides > Arrows, line and number (Place, Arrows, Progress Line, Numbers). Only the
+  order, labels inside state tabs and separators changed; every id is the same.
+
+With the section groups above, a long section shows its categories as tabs. Check:
+`node scripts/check-panel-categories.mjs --site DIR --port N` (runs the audit, the Nav Menu and Nested Carousel tabs,
+the shared Highlighted Text categories, a category hiding with its settings, and saved colors still on the page).
+
 ## Shadow colors from the Global Colors (0.86.0)
 
 Box Shadow and Text Shadow (`controls/box-shadow.js`) have their own picker; a globe in it lists `globals/colors`, and

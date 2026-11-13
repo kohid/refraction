@@ -678,6 +678,8 @@ class Timed_Slides extends Widget_Nested_Base {
 			'tab' => Controls_Manager::TAB_STYLE,
 		] );
 
+		$this->add_control( 'nav_cat_place', [ 'label' => esc_html__( 'Place', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'none', 'classes' => 'rf-panel-category' ] );
+
 		$this->add_responsive_control( 'nav_space', [
 			'label' => esc_html__( 'Space above', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
@@ -694,6 +696,8 @@ class Timed_Slides extends Widget_Nested_Base {
 			'mobile_default' => [ 'unit' => 'px', 'size' => 20 ],
 			'selectors' => [ '{{WRAPPER}} .rf-ts__rail .rf-tco__nav' => 'padding-right: {{SIZE}}{{UNIT}};' ],
 		] );
+
+		$this->add_control( 'nav_cat_arrows', [ 'label' => esc_html__( 'Arrows', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category', 'condition' => [ 'show_arrows' => 'yes' ] ] );
 
 		$this->add_responsive_control( 'arrow_size', [
 			'label' => esc_html__( 'Arrow size', 'refraction' ),
@@ -724,13 +728,14 @@ class Timed_Slides extends Widget_Nested_Base {
 			'condition' => [ 'show_arrows' => 'yes' ],
 		] );
 
+		$this->add_control( 'nav_cat_line', [ 'label' => esc_html__( 'Progress Line', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category', 'condition' => [ 'show_line' => 'yes' ] ] );
+
 		$this->add_control( 'line_fill_color', [
 			'label' => esc_html__( 'Line color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'description' => esc_html__( 'The part that fills as the slides go by. Empty: the timer and progress color.', 'refraction' ),
 			'selectors' => [ '{{WRAPPER}} .rf-tco__line i' => 'background-color: {{VALUE}};' ],
 			'condition' => [ 'show_line' => 'yes' ],
-			'separator' => 'before',
 		] );
 
 		$this->add_control( 'line_color', [
@@ -756,12 +761,13 @@ class Timed_Slides extends Widget_Nested_Base {
 			'condition' => [ 'show_line' => 'yes' ],
 		] );
 
+		$this->add_control( 'nav_cat_numbers', [ 'label' => esc_html__( 'Numbers', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category', 'conditions' => [ 'relation' => 'or', 'terms' => [ [ 'name' => 'show_progress', 'value' => 'yes' ], [ 'name' => 'show_count', 'value' => 'yes' ] ] ] ] );
+
 		$this->add_group_control( Group_Control_Typography::get_type(), [
 			'name' => 'progress_typography',
 			'label' => esc_html__( 'Progress number', 'refraction' ),
 			'selector' => '{{WRAPPER}} .rf-tco__progress',
 			'condition' => [ 'show_progress' => 'yes' ],
-			'separator' => 'before',
 		] );
 
 		$this->add_control( 'progress_color', [

@@ -179,6 +179,8 @@ class Nav_Menu extends Pro_Widget {
 
 		$this->content_section( 'section_toggle', esc_html__( 'Mobile Menu', 'refraction' ) );
 
+		$this->add_control( 'toggle_cat_button', [ 'label' => esc_html__( 'Button', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'none', 'classes' => 'rf-panel-category' ] );
+
 		$this->add_control(
 			'breakpoint',
 			[
@@ -244,6 +246,49 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_control(
+			'toggle_icon',
+			[
+				'label' => esc_html__( 'Button Icon', 'refraction' ),
+				'type' => Controls_Manager::ICONS,
+				'skin' => 'inline',
+				'label_block' => false,
+				'description' => esc_html__( 'Empty: the three lines.', 'refraction' ),
+			]
+		);
+
+		$this->add_control(
+			'toggle_close_icon',
+			[
+				'label' => esc_html__( 'Close Icon', 'refraction' ),
+				'type' => Controls_Manager::ICONS,
+				'skin' => 'inline',
+				'label_block' => false,
+				'condition' => [ 'toggle_icon[value]!' => '' ],
+			]
+		);
+
+		$this->add_control(
+			'toggle_animation',
+			[
+				'label' => esc_html__( 'Button Animation', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'x',
+				'options' => [
+					'x' => esc_html__( 'Turns into an X', 'refraction' ),
+					'spin' => esc_html__( 'Spins into an X', 'refraction' ),
+					'arrow-left' => esc_html__( 'Turns into an arrow (left)', 'refraction' ),
+					'arrow-right' => esc_html__( 'Turns into an arrow (right)', 'refraction' ),
+					'collapse' => esc_html__( 'Lines collapse into one', 'refraction' ),
+					'none' => esc_html__( 'None', 'refraction' ),
+				],
+				'prefix_class' => 'refraction-nav-menu--burger-',
+				'condition' => [ 'toggle_icon[value]' => '' ],
+			]
+		);
+
+		$this->add_control( 'toggle_cat_panel', [ 'label' => esc_html__( 'Opened Menu', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+
+		$this->add_control(
 			'panel_style',
 			[
 				'label' => esc_html__( 'Menu Panel', 'refraction' ),
@@ -256,7 +301,6 @@ class Nav_Menu extends Pro_Widget {
 					'fullscreen' => esc_html__( 'Full screen', 'refraction' ),
 				],
 				'prefix_class' => 'refraction-nav-menu--panel-',
-				'separator' => 'before',
 			]
 		);
 
@@ -272,6 +316,19 @@ class Nav_Menu extends Pro_Widget {
 				],
 				'prefix_class' => 'refraction-nav-menu--stretch-',
 				'condition' => [ 'panel_style' => 'dropdown', 'panel_full_width' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'panel_full_width',
+			[
+				'label' => esc_html__( 'Open Over Content', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default' => 'yes',
+				'prefix_class' => 'refraction-nav-menu--overlay-',
+				'description' => esc_html__( 'The opened menu floats under the button instead of pushing the page down. Works inside sticky headers.', 'refraction' ),
+				'condition' => [ 'panel_style' => 'dropdown' ],
 			]
 		);
 
@@ -316,6 +373,8 @@ class Nav_Menu extends Pro_Widget {
 			]
 		);
 
+		$this->add_control( 'toggle_cat_panel_top', [ 'label' => esc_html__( 'In The Panel', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+
 		$this->add_control(
 			'panel_brand',
 			[
@@ -330,7 +389,6 @@ class Nav_Menu extends Pro_Widget {
 					'text' => esc_html__( 'Your own text', 'refraction' ),
 				],
 				'description' => esc_html__( 'Shown at the top of the opened menu, linked to the home page. The site logo and name are set in Site Settings > Site Identity.', 'refraction' ),
-				'separator' => 'before',
 			]
 		);
 
@@ -396,61 +454,6 @@ class Nav_Menu extends Pro_Widget {
 				'title_field' => '{{{ text }}}',
 				'prevent_empty' => false,
 				'description' => esc_html__( 'Shown under the menu items when the menu is opened.', 'refraction' ),
-			]
-		);
-
-		$this->add_control(
-			'toggle_animation',
-			[
-				'label' => esc_html__( 'Button Animation', 'refraction' ),
-				'type' => Controls_Manager::SELECT,
-				'default' => 'x',
-				'options' => [
-					'x' => esc_html__( 'Turns into an X', 'refraction' ),
-					'spin' => esc_html__( 'Spins into an X', 'refraction' ),
-					'arrow-left' => esc_html__( 'Turns into an arrow (left)', 'refraction' ),
-					'arrow-right' => esc_html__( 'Turns into an arrow (right)', 'refraction' ),
-					'collapse' => esc_html__( 'Lines collapse into one', 'refraction' ),
-					'none' => esc_html__( 'None', 'refraction' ),
-				],
-				'prefix_class' => 'refraction-nav-menu--burger-',
-				'separator' => 'before',
-				'condition' => [ 'toggle_icon[value]' => '' ],
-			]
-		);
-
-		$this->add_control(
-			'toggle_icon',
-			[
-				'label' => esc_html__( 'Button Icon', 'refraction' ),
-				'type' => Controls_Manager::ICONS,
-				'skin' => 'inline',
-				'label_block' => false,
-				'description' => esc_html__( 'Empty: the three lines.', 'refraction' ),
-			]
-		);
-
-		$this->add_control(
-			'toggle_close_icon',
-			[
-				'label' => esc_html__( 'Close Icon', 'refraction' ),
-				'type' => Controls_Manager::ICONS,
-				'skin' => 'inline',
-				'label_block' => false,
-				'condition' => [ 'toggle_icon[value]!' => '' ],
-			]
-		);
-
-		$this->add_control(
-			'panel_full_width',
-			[
-				'label' => esc_html__( 'Open Over Content', 'refraction' ),
-				'type' => Controls_Manager::SWITCHER,
-				'return_value' => 'yes',
-				'default' => 'yes',
-				'prefix_class' => 'refraction-nav-menu--overlay-',
-				'description' => esc_html__( 'The opened menu floats under the button instead of pushing the page down. Works inside sticky headers.', 'refraction' ),
-				'condition' => [ 'panel_style' => 'dropdown' ],
 			]
 		);
 
@@ -792,6 +795,8 @@ class Nav_Menu extends Pro_Widget {
 
 		$this->style_section( 'style_submenu', esc_html__( 'Submenu', 'refraction' ) );
 
+		$this->add_control( 'sub_cat_effect', [ 'label' => esc_html__( 'Effect', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'none', 'classes' => 'rf-panel-category' ] );
+
 		$this->add_control(
 			'sub_hover_effect',
 			[
@@ -849,10 +854,11 @@ class Nav_Menu extends Pro_Widget {
 					'none' => esc_html__( 'None', 'refraction' ),
 				],
 				'prefix_class' => 'refraction-nav-menu--subanim-',
-				'separator' => 'before',
 				'description' => esc_html__( 'How a submenu opens under its item (side by side menus).', 'refraction' ),
 			]
 		);
+
+		$this->add_control( 'sub_cat_panel', [ 'label' => esc_html__( 'Panel', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
 
 		$this->add_control(
 			'sub_align',
@@ -881,87 +887,23 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_responsive_control(
+			'sub_width',
+			[
+				'label' => esc_html__( 'Minimum Width', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'min' => 100, 'max' => 500 ] ],
+				'selectors' => [ '{{WRAPPER}}' => '--refraction-nav-sub-width: {{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
 			'sub_panel_padding',
 			[
 				'label' => esc_html__( 'Panel Padding', 'refraction' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em' ],
 				'selectors' => [ $sub => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
-			]
-		);
-
-		$this->add_responsive_control(
-			'sub_item_gap',
-			[
-				'label' => esc_html__( 'Space Between Items', 'refraction' ),
-				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
-				'range' => [ 'px' => [ 'min' => 0, 'max' => 30 ] ],
-				'selectors' => [ $sub . ' > .refraction-nav-menu__item + .refraction-nav-menu__item' => 'margin-top: {{SIZE}}{{UNIT}};' ],
-			]
-		);
-
-		$this->add_control(
-			'sub_divider',
-			[
-				'label' => esc_html__( 'Line Between Items', 'refraction' ),
-				'type' => Controls_Manager::COLOR,
-				'selectors' => [ $sub . ' > .refraction-nav-menu__item + .refraction-nav-menu__item' => 'border-top: 1px solid {{VALUE}};' ],
-			]
-		);
-
-		$this->add_responsive_control(
-			'sub_item_radius',
-			[
-				'label' => esc_html__( 'Item Border Radius', 'refraction' ),
-				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%' ],
-				'selectors' => [ $sub . ' .refraction-nav-menu__link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
-				'separator' => 'after',
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Typography::get_type(),
-			[
-				'name' => 'sub_typography',
-				'selector' => $sub . ' .refraction-nav-menu__link',
-			]
-		);
-
-		$this->add_control(
-			'sub_color',
-			[
-				'label' => esc_html__( 'Text Color', 'refraction' ),
-				'type' => Controls_Manager::COLOR,
-				'selectors' => [ $sub . ' .refraction-nav-menu__link' => 'color: {{VALUE}};' ],
-			]
-		);
-
-		$this->add_control(
-			'sub_color_hover',
-			[
-				'label' => esc_html__( 'Text Color (Hover)', 'refraction' ),
-				'type' => Controls_Manager::COLOR,
-				'selectors' => [ $sub . ' .refraction-nav-menu__link:hover, ' . $sub . ' .refraction-nav-menu__link:focus-visible' => 'color: {{VALUE}};' ],
-			]
-		);
-
-		$this->add_control(
-			'sub_bg_hover',
-			[
-				'label' => esc_html__( 'Background (Hover)', 'refraction' ),
-				'type' => Controls_Manager::COLOR,
-				'selectors' => [ $sub . ' .refraction-nav-menu__link:hover, ' . $sub . ' .refraction-nav-menu__link:focus-visible' => 'background-color: {{VALUE}};' ],
-			]
-		);
-
-		$this->add_control(
-			'sub_color_active',
-			[
-				'label' => esc_html__( 'Text Color (Current Page)', 'refraction' ),
-				'type' => Controls_Manager::COLOR,
-				'selectors' => [ $sub . ' .current-menu-item > .refraction-nav-menu__link' => 'color: {{VALUE}};' ],
 			]
 		);
 
@@ -1001,14 +943,13 @@ class Nav_Menu extends Pro_Widget {
 			]
 		);
 
-		$this->add_responsive_control(
-			'sub_width',
+		$this->add_control( 'sub_cat_items', [ 'label' => esc_html__( 'Items', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
 			[
-				'label' => esc_html__( 'Minimum Width', 'refraction' ),
-				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
-				'range' => [ 'px' => [ 'min' => 100, 'max' => 500 ] ],
-				'selectors' => [ '{{WRAPPER}}' => '--refraction-nav-sub-width: {{SIZE}}{{UNIT}};' ],
+				'name' => 'sub_typography',
+				'selector' => $sub . ' .refraction-nav-menu__link',
 			]
 		);
 
@@ -1022,6 +963,90 @@ class Nav_Menu extends Pro_Widget {
 			]
 		);
 
+		$this->add_responsive_control(
+			'sub_item_gap',
+			[
+				'label' => esc_html__( 'Space Between Items', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 30 ] ],
+				'selectors' => [ $sub . ' > .refraction-nav-menu__item + .refraction-nav-menu__item' => 'margin-top: {{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control(
+			'sub_divider',
+			[
+				'label' => esc_html__( 'Line Between Items', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sub . ' > .refraction-nav-menu__item + .refraction-nav-menu__item' => 'border-top: 1px solid {{VALUE}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'sub_item_radius',
+			[
+				'label' => esc_html__( 'Item Border Radius', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
+				'selectors' => [ $sub . ' .refraction-nav-menu__link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control( 'sub_cat_colors', [ 'label' => esc_html__( 'Colors', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+
+		$this->start_controls_tabs( 'sub_state_tabs' );
+
+		$this->start_controls_tab( 'sub_state_normal', [ 'label' => esc_html__( 'Normal', 'refraction' ) ] );
+
+		$this->add_control(
+			'sub_color',
+			[
+				'label' => esc_html__( 'Text Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sub . ' .refraction-nav-menu__link' => 'color: {{VALUE}};' ],
+			]
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'sub_state_hover', [ 'label' => esc_html__( 'Hover', 'refraction' ) ] );
+
+		$this->add_control(
+			'sub_color_hover',
+			[
+				'label' => esc_html__( 'Text Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sub . ' .refraction-nav-menu__link:hover, ' . $sub . ' .refraction-nav-menu__link:focus-visible' => 'color: {{VALUE}};' ],
+			]
+		);
+
+		$this->add_control(
+			'sub_bg_hover',
+			[
+				'label' => esc_html__( 'Background', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sub . ' .refraction-nav-menu__link:hover, ' . $sub . ' .refraction-nav-menu__link:focus-visible' => 'background-color: {{VALUE}};' ],
+			]
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'sub_state_current', [ 'label' => esc_html__( 'Current Page', 'refraction' ) ] );
+
+		$this->add_control(
+			'sub_color_active',
+			[
+				'label' => esc_html__( 'Text Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sub . ' .current-menu-item > .refraction-nav-menu__link' => 'color: {{VALUE}};' ],
+			]
+		);
+
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
 		$this->end_section();
 
 		$toggle = '{{WRAPPER}} .refraction-nav-menu__toggle';
@@ -1029,6 +1054,75 @@ class Nav_Menu extends Pro_Widget {
 		$this->register_bar_brand_style();
 
 		$this->style_section( 'style_toggle', esc_html__( 'Hamburger Button', 'refraction' ) );
+
+		$this->add_control( 'toggle_cat_icon', [ 'label' => esc_html__( 'Icon', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'none', 'classes' => 'rf-panel-category' ] );
+
+		$this->add_responsive_control(
+			'toggle_size',
+			[
+				'label' => esc_html__( 'Icon Size', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range' => [ 'px' => [ 'min' => 12, 'max' => 64 ] ],
+				'selectors' => [ $toggle => '--refraction-nav-burger: {{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'toggle_line',
+			[
+				'label' => esc_html__( 'Line Thickness', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 1, 'max' => 8 ] ],
+				'selectors' => [ $toggle => '--refraction-nav-burger-line: {{SIZE}}{{UNIT}};' ],
+				'condition' => [ 'toggle_icon[value]' => '' ],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'toggle_typography',
+				'selector' => $toggle . ' .refraction-nav-menu__toggle-label',
+				'condition' => [ 'toggle_show_label' => 'yes' ],
+			]
+		);
+
+		$this->add_control( 'toggle_cat_box', [ 'label' => esc_html__( 'Box', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+
+		$this->add_responsive_control(
+			'toggle_padding',
+			[
+				'label' => esc_html__( 'Padding', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em' ],
+				'selectors' => [ $toggle => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name' => 'toggle_border',
+				'selector' => $toggle,
+			]
+		);
+
+		$this->add_responsive_control(
+			'toggle_radius',
+			[
+				'label' => esc_html__( 'Border Radius', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
+				'selectors' => [ $toggle => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control( 'toggle_cat_colors', [ 'label' => esc_html__( 'Colors', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+
+		$this->start_controls_tabs( 'toggle_state_tabs' );
+
+		$this->start_controls_tab( 'toggle_state_normal', [ 'label' => esc_html__( 'Normal', 'refraction' ) ] );
 
 		$this->add_control(
 			'toggle_color',
@@ -1040,9 +1134,22 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_control(
+			'toggle_bg',
+			[
+				'label' => esc_html__( 'Background', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $toggle => 'background-color: {{VALUE}};' ],
+			]
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'toggle_state_hover', [ 'label' => esc_html__( 'Hover', 'refraction' ) ] );
+
+		$this->add_control(
 			'toggle_color_hover',
 			[
-				'label' => esc_html__( 'Hover Color', 'refraction' ),
+				'label' => esc_html__( 'Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [ $toggle . ':hover, ' . $toggle . ':focus-visible' => 'color: {{VALUE}};' ],
 			]
@@ -1051,11 +1158,17 @@ class Nav_Menu extends Pro_Widget {
 		$this->add_control(
 			'toggle_bg_hover',
 			[
-				'label' => esc_html__( 'Hover Background', 'refraction' ),
+				'label' => esc_html__( 'Background', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [ $toggle . ':hover, ' . $toggle . ':focus-visible' => 'background-color: {{VALUE}};' ],
 			]
 		);
+
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
+		$this->add_control( 'toggle_cat_motion', [ 'label' => esc_html__( 'Animation', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
 
 		$this->add_control(
 			'toggle_hover_anim',
@@ -1074,7 +1187,6 @@ class Nav_Menu extends Pro_Widget {
 					'lines' => esc_html__( 'Lines shift (three lines only)', 'refraction' ),
 				],
 				'prefix_class' => 'refraction-nav-menu--toggle-hover-',
-				'separator' => 'before',
 			]
 		);
 
@@ -1108,80 +1220,12 @@ class Nav_Menu extends Pro_Widget {
 		);
 
 		$this->add_control(
-			'toggle_bg',
-			[
-				'label' => esc_html__( 'Background', 'refraction' ),
-				'type' => Controls_Manager::COLOR,
-				'selectors' => [ $toggle => 'background-color: {{VALUE}};' ],
-			]
-		);
-
-		$this->add_responsive_control(
-			'toggle_size',
-			[
-				'label' => esc_html__( 'Icon Size', 'refraction' ),
-				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
-				'range' => [ 'px' => [ 'min' => 12, 'max' => 64 ] ],
-				'selectors' => [ $toggle => '--refraction-nav-burger: {{SIZE}}{{UNIT}};' ],
-			]
-		);
-
-		$this->add_responsive_control(
-			'toggle_line',
-			[
-				'label' => esc_html__( 'Line Thickness', 'refraction' ),
-				'type' => Controls_Manager::SLIDER,
-				'range' => [ 'px' => [ 'min' => 1, 'max' => 8 ] ],
-				'selectors' => [ $toggle => '--refraction-nav-burger-line: {{SIZE}}{{UNIT}};' ],
-				'condition' => [ 'toggle_icon[value]' => '' ],
-			]
-		);
-
-		$this->add_control(
 			'toggle_speed',
 			[
 				'label' => esc_html__( 'Animation Speed', 'refraction' ) . ' (ms)',
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => 0, 'max' => 1200, 'step' => 50 ] ],
 				'selectors' => [ $toggle => '--refraction-nav-burger-speed: {{SIZE}}ms;' ],
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Typography::get_type(),
-			[
-				'name' => 'toggle_typography',
-				'selector' => $toggle . ' .refraction-nav-menu__toggle-label',
-				'condition' => [ 'toggle_show_label' => 'yes' ],
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Border::get_type(),
-			[
-				'name' => 'toggle_border',
-				'selector' => $toggle,
-			]
-		);
-
-		$this->add_responsive_control(
-			'toggle_radius',
-			[
-				'label' => esc_html__( 'Border Radius', 'refraction' ),
-				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%' ],
-				'selectors' => [ $toggle => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
-			]
-		);
-
-		$this->add_responsive_control(
-			'toggle_padding',
-			[
-				'label' => esc_html__( 'Padding', 'refraction' ),
-				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em' ],
-				'selectors' => [ $toggle => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
 			]
 		);
 

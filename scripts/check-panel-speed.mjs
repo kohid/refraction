@@ -246,6 +246,9 @@ async function main() {
 
 		await open( 'ps00003', 'content', 'section_steps' );
 		const linkBefore = await built( 'button_link' );
+		// Steps is long, so its categories are tabs (0.88): the first button's settings are under First Button.
+		await e.click( '.rf-section-groups__tab:has-text("First Button")' ).catch( () => {} );
+		await sleep( 300 );
 		await e.click( '.refraction-control-button_text input' );
 		await e.keyboard.type( 'Get it', { delay: 60 } );
 		await sleep( 800 );
