@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.79.0
+Stable tag: 0.80.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.80.0 =
+* The whole side panel floats and docks, like Structure and Floating Elements: its header has Dock left and Dock right buttons (press the docked side again to float it) and a Hide button. Drag it by its header to move it, against the left or right edge to dock it there, away from its edge to float it; resize it from any edge while floating. Docked right, it sits before a docked Structure and the hide arrow moves to its other side; beside-the-page panels work on either side. Show and hide it with the new Panel button in the top bar, the arrow, its Hide button or Ctrl+P. Its place and size are remembered.
+* Floating Elements docks beside the panel on whichever side the panel is.
 
 = 0.79.0 =
 * Timed Slides: a Progress number beside the progress line (Content > Progress number), shown as a percent (40%), a fraction (2/5 or 2 / 5), "2 of 5" or padded (02 / 05), before or after the line, with its own typography and color; switch it off to hide it on the page.

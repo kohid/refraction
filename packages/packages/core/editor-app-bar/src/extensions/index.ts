@@ -13,6 +13,7 @@ import { init as initFinder } from './finder';
 import { init as initHelp } from './help';
 import { init as initHistory } from './history';
 import { init as initKeyboardShortcuts } from './keyboard-shortcuts';
+import { init as initPanelToggle } from './panel-toggle';
 import { init as initResponsive } from './responsive';
 import { init as initSiteSettings } from './site-settings';
 import { init as initStructure } from './structure';
@@ -30,6 +31,7 @@ export function init() {
 	initHelp();
 	initHistory();
 	initKeyboardShortcuts();
+	initPanelToggle();
 	initResponsive();
 	initSiteSettings();
 	initFeedback();

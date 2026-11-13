@@ -106,6 +106,9 @@
 // Panel Elements
 @import "elements";
 
+// Docked right or floating
+@import "dock";
+
 #refraction-panel-inner {
 	position: relative;
 	height: 100%;

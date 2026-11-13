@@ -10,11 +10,30 @@ PanelHeaderItemView = Marionette.ItemView.extend( {
 		menuIcon: '#refraction-panel-header-menu-button i',
 		title: '#refraction-panel-header-title',
 		addButton: '#refraction-panel-header-add-button',
+		dockButtons: '.rf-panel-dock',
+		hideButton: '.rf-panel-hide',
 	},
 
 	events: {
 		'click @ui.addButton': 'onClickAdd',
 		'click @ui.menuButton': 'onClickMenu',
+		'click @ui.dockButtons': 'onClickDock',
+		'click @ui.hideButton': 'onClickHide',
+	},
+
+	onRender() {
+		refraction.panel?.updateDockButtons?.();
+	},
+
+	// Dock to that side, or float again when it is docked there (panel.js).
+	onClickDock( event ) {
+		const side = event.currentTarget.dataset.dock;
+
+		refraction.panel.setDock( refraction.panel.dockSide === side ? '' : side );
+	},
+
+	onClickHide() {
+		$e.run( 'panel/close' );
 	},
 
 	behaviors() {

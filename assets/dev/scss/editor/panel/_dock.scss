@@ -1,0 +1,121 @@
+//
+// The side panel docked to the right or floating (regions/panel/panel.js: body.rf-panel--right, body.rf-panel--floating;
+// docked left needs no class: the rules in panel.scss). Hiding it (the arrow, Ctrl+P, the header's close button, the
+// top bar's Panel button) is the editor's preview mode as before.
+//
+
+body.rf-panel--right {
+
+	// Floating over the page, at the right edge (before a docked Structure).
+	#refraction-panel {
+		inset-inline-start: auto;
+		inset-inline-end: 0;
+		margin-inline-start: 0;
+		margin-inline-end: calc(-1 * var(--e-editor-panel-width) * var(--e-is-preview-mode));
+		border-inline-end: 0;
+		border-inline-start: 1px solid var(--e-a-border-color, #e6e8ea);
+		box-shadow: -10px 0 30px rgba(0, 0, 0, 0.18);
+	}
+
+	&.refraction-navigator-docked #refraction-panel {
+		inset-inline-end: var(--e-editor-navigator-width);
+	}
+
+	// Beside the page: after it, in its own space.
+	&.refraction-panel--beside #refraction-panel {
+		order: 2;
+		box-shadow: none;
+	}
+
+	// The hide arrow on the panel's other edge, pointing the other way.
+	#refraction-mode-switcher {
+		inset-inline-start: auto;
+		inset-inline-end: 100%;
+	}
+
+	#refraction-mode-switcher-preview i {
+		scale: calc(-1 * var(--direction-multiplier, 1)) 1;
+	}
+
+	&.refraction-editor-preview #refraction-mode-switcher-preview i {
+		scale: calc(1 * var(--direction-multiplier, 1)) 1;
+	}
+}
+
+// Floating: a window over the page, moved by its header, resized from its edges. The page keeps its whole width.
+body.rf-panel--floating {
+	--rf-panel-beside: 0;
+
+	&.refraction-panel--beside:not(.refraction-editor-preview) {
+		--e-preview-width: 100%;
+
+		&.refraction-navigator-docked {
+			--e-preview-width: calc(100% - var(--e-editor-navigator-width, 0px));
+		}
+	}
+
+	#refraction-panel {
+		position: fixed;
+		inset-block-start: 80px;
+		inset-inline-start: 40px;
+		inset-inline-end: auto;
+		inset-block-end: auto;
+		height: min(760px, calc(100vh - 120px));
+		margin: 0;
+		border: var(--e-a-border);
+		border-radius: 6px;
+		box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
+		overflow: hidden;
+		z-index: 101; // Above the Responsive Bar and a floating Structure or Elements window.
+	}
+
+	#refraction-panel-header {
+		cursor: move;
+	}
+
+	// No sliding arrow on a window: hidden with its close button, Ctrl+P or the top bar's Panel button.
+	#refraction-mode-switcher {
+		display: none;
+	}
+
+	&.refraction-editor-preview #refraction-panel {
+		display: none;
+	}
+}
+
+// Header buttons: dock left / right (press the docked side again to float) and hide.
+#refraction-panel-header .rf-panel-dock,
+#refraction-panel-header .rf-panel-hide {
+	flex: none;
+	width: 34px;
+	height: 100%;
+	padding: 0;
+	color: inherit;
+	opacity: .65;
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	font-size: 13px;
+	transition: opacity .2s, background-color .2s;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 1;
+	}
+}
+
+#refraction-panel-header .rf-panel-hide {
+	font-size: 11px;
+}
+
+#refraction-panel-header .rf-panel-dock--active {
+	opacity: 1;
+	background-color: rgba(255, 255, 255, .12);
+}
+
+// Where it docks when let go.
+body.rf-panel--dock-hint-left #refraction-panel,
+body.rf-panel--dock-hint-right #refraction-panel {
+	outline: 2px dashed var(--e-a-border-color-focus, #8d88ff);
+	outline-offset: -2px;
+}
