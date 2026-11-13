@@ -193,6 +193,34 @@
 		gap: 6px;
 	}
 
+	// Starters (0.90.0): ready-made forms on the Builder overview.
+	.rfb-starters {
+		margin-bottom: 20px;
+	}
+
+	.rfb-starters-title {
+		margin: 0 0 12px;
+		font-size: 16px;
+	}
+
+	.rfb-starter {
+		display: flex;
+		gap: 20px;
+		align-items: center;
+		justify-content: space-between;
+
+		p {
+			max-width: 760px;
+			margin: 4px 0 0;
+		}
+
+		& + .rfb-starter {
+			margin-top: 14px;
+			padding-top: 14px;
+			border-top: 1px dashed var(--rfb-input-border, #dbdfe9);
+		}
+	}
+
 	.rfb-empty .rfb-card-body,
 	.rfb-empty-body {
 		display: flex;

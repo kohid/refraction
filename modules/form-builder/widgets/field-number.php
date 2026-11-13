@@ -19,6 +19,6 @@ class Field_Number extends Field_Widget {
 	}
 
 	protected function features(): array {
-		return [ 'placeholder', 'default', 'required', 'limits' ];
+		return [ 'placeholder', 'default', 'required', 'limits', 'stepper' ];
 	}
 }

@@ -3,6 +3,11 @@
 .rfb-front {
 	@include rfb-controls;
 
+	// A widget whose field a rule hides, and a container of only such widgets, leave no gap (frontend.js collapseEmpty).
+	.rfb-off {
+		display: none !important;
+	}
+
 	margin: 1.5em 0;
 
 	.rfb-hp {

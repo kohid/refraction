@@ -105,7 +105,7 @@ class Shortcodes {
 	// ---------------------------------------------------------------- form
 
 	public function form( $atts ): string {
-		$atts = shortcode_atts( [ 'collection' => '' ], (array) $atts, 'refraction_form' );
+		$atts = shortcode_atts( [ 'collection' => '', 'fill' => '' ], (array) $atts, 'refraction_form' );
 		$definition = $this->collections->get( Schema::slug( $atts['collection'] ) );
 
 		if ( ! $definition ) {
@@ -134,7 +134,20 @@ class Shortcodes {
 			 * @param string $html
 			 * @param array  $definition
 			 */
-			return $wrap . '<div class="rfb-alert rfb-alert-success" role="status">' . apply_filters( 'refraction/form_builder/success_html', esc_html( $definition['success_message'] ), $definition ) . '</div></div>';
+			// The booking reference (0.90.0) comes back in the address; only a well-formed one is shown.
+			$reference = isset( $_GET['rfb_ref'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['rfb_ref'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$reference = Settings::is_reference( $reference ) ? $reference : '';
+			$message = esc_html( $definition['success_message'] );
+
+			if ( '' !== $reference ) {
+				$message = false !== strpos( $message, '{reference}' )
+					? str_replace( '{reference}', '<strong class="rfb-reference">' . esc_html( $reference ) . '</strong>', $message )
+					: $message . '<br>' . sprintf( /* translators: %s: booking reference. */ esc_html__( 'Your reference: %s', 'refraction' ), '<strong class="rfb-reference">' . esc_html( $reference ) . '</strong>' );
+			} else {
+				$message = str_replace( '{reference}', '', $message );
+			}
+
+			return $wrap . '<div class="rfb-alert rfb-alert-success" role="status">' . apply_filters( 'refraction/form_builder/success_html', $message, $definition ) . '</div></div>';
 		}
 
 		$availability = $this->availability( $definition );
@@ -152,7 +165,7 @@ class Shortcodes {
 		}
 
 		$state = $this->read_state();
-		$values = $state && $state['collection'] === $slug ? $state['values'] : [];
+		$values = $state && $state['collection'] === $slug ? $state['values'] : $this->prefill( $definition, (string) $atts['fill'] );
 		$errors = $state && $state['collection'] === $slug ? $state['errors'] : [];
 		$out = $wrap;
 
@@ -172,6 +185,9 @@ class Shortcodes {
 			'highest' => __( 'The highest allowed value is %s.', 'refraction' ),
 			'step' => __( 'Step %1$d of %2$d', 'refraction' ),
 			'progress' => __( 'Form progress', 'refraction' ),
+			'closedDay' => __( 'That day is not available. Please choose another date.', 'refraction' ),
+			'hours' => __( 'Choose a time between %1$s and %2$s.', 'refraction' ),
+			'yes' => __( 'Yes', 'refraction' ),
 		];
 
 		$doc_id = Editor_Forms::doc_for( $slug );
@@ -225,6 +241,49 @@ class Shortcodes {
 		}
 
 		wp_nonce_field( self::ACTION_SUBMIT . $slug, '_rfb_nonce' );
+	}
+
+	/**
+	 * Answers the form opens with (0.90.0): the shortcode's fill="key=value;key=value" (Form Canvas writes it), then
+	 * ?fill_key=value in the page address. Only top-level fields; visitors can change them, and the server checks them on
+	 * submit like any answer.
+	 */
+	private function prefill( array $definition, string $fill ): array {
+		$pairs = [];
+
+		foreach ( explode( ';', $fill ) as $pair ) {
+			$parts = explode( '=', $pair, 2 );
+
+			if ( 2 === count( $parts ) ) {
+				$pairs[ Schema::key( $parts[0] ) ] = trim( $parts[1] );
+			}
+		}
+
+		foreach ( $_GET as $name => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( is_string( $name ) && 0 === strpos( $name, 'fill_' ) && is_scalar( $value ) ) {
+				$pairs[ Schema::key( substr( $name, 5 ) ) ] = Schema::text( wp_unslash( (string) $value ), 255 );
+			}
+		}
+
+		$values = [];
+
+		foreach ( Schema::flat( $definition['fields'] ) as $field ) {
+			$key = $field['key'];
+
+			if ( ! isset( $pairs[ $key ] ) || '' === $pairs[ $key ] || ! Schema::has_value( $field['type'] ) || in_array( $field['type'], [ 'group', 'repeater', 'name', 'file', 'signature', 'total' ], true ) ) {
+				continue;
+			}
+
+			$value = $pairs[ $key ];
+
+			if ( 'choice_set' === $field['type'] || 'checkbox' === $field['type'] ) {
+				$values[ $key ] = array_map( 'trim', explode( ',', $value ) );
+			} else {
+				$values[ $key ] = $value;
+			}
+		}
+
+		return $values;
 	}
 
 	/** Values for hidden fields that read from the request (query string, page address, referrer, user, date). */
@@ -388,8 +447,10 @@ class Shortcodes {
 			$fail( [ '_form' => __( 'Your submission could not be saved. Please try again.', 'refraction' ) ], $result['values'] );
 		}
 
-		$this->notify( $id, $definition, $result['values'] );
-		$this->webhook( $id, $definition, $result['values'] );
+		$reference = $this->reference( $id, $settings );
+		$this->notify( $id, $definition, $result['values'], $reference );
+		$this->confirm( $definition, $result['values'], $reference );
+		$this->webhook( $id, $definition, $result['values'], $reference );
 
 		/**
 		 * Fires after a visitor's submission is saved.
@@ -412,31 +473,96 @@ class Shortcodes {
 		 * @param int    $id         Record id.
 		 * @param array  $definition
 		 */
-		$done = (string) apply_filters( 'refraction/form_builder/done_url', add_query_arg( 'rfb_done', $slug, $back ), $id, $definition );
+		$done = (string) apply_filters( 'refraction/form_builder/done_url', add_query_arg( array_filter( [ 'rfb_done' => $slug, 'rfb_ref' => $reference ] ), $back ), $id, $definition );
 		wp_safe_redirect( $done . '#rfb-form-' . $slug );
 		exit;
 	}
 
-	/** Email the people named in the Advanced tab: every answer, plus a link to the record in the admin. */
-	private function notify( int $id, array $definition, array $values ): void {
-		$settings = $definition['settings'];
-
-		if ( ! $settings['notify_enabled'] ) {
-			return;
+	/**
+	 * The record's reference (0.90.0): made when the form has a reference prefix, kept in the record's meta and shown to the
+	 * visitor, in the emails and in the webhook. Unique among the collection's records.
+	 */
+	private function reference( int $id, array $settings ): string {
+		if ( '' === $settings['reference_prefix'] ) {
+			return '';
 		}
 
-		$lines = [];
+		for ( $try = 0; $try < 5; $try++ ) {
+			$reference = Settings::new_reference( $settings['reference_prefix'], Schema::now(), random_int( 0, 9999 ) );
+			$taken = get_posts( [ 'post_type' => Records::POST_TYPE, 'post_status' => 'any', 'meta_key' => self::REFERENCE_META, 'meta_value' => $reference, 'fields' => 'ids', 'posts_per_page' => 1 ] ); // phpcs:ignore WordPress.DB.SlowDBQuery
+
+			if ( ! $taken ) {
+				break;
+			}
+		}
+
+		update_post_meta( $id, self::REFERENCE_META, $reference );
+
+		return $reference;
+	}
+
+	const REFERENCE_META = '_rfb_reference';
+
+	/** Every answer as [ key => [ label, text ] ], in form order (hidden fields left out), for the emails. */
+	private function answers( array $definition, array $values ): array {
+		$cfg = Money::config( $definition['settings'] );
+		$answers = [];
 
 		foreach ( Schema::value_fields( $definition ) as $field ) {
 			if ( 'hidden' === $field['type'] ) {
 				continue;
 			}
 
-			$lines[] = $field['label'] . ': ' . Schema::display( $field, $values[ $field['key'] ] ?? '' );
+			$value = $values[ $field['key'] ] ?? '';
+			$text = in_array( $field['type'], [ 'currency', 'total' ], true ) && is_numeric( $value ) ? Money::display( $value, $cfg, $field['per'], $field['per_label'] ) : Schema::display( $field, $value );
+			$text = 'total' === $field['type'] && '' === $text ? $field['no_price'] : $text;
+			$answers[ $field['key'] ] = [ $field['label'], $text ];
+		}
+
+		return $answers;
+	}
+
+	/** The visitor's own email (0.90.0): to the address in the chosen field, with the reference and their answers. */
+	private function confirm( array $definition, array $values, string $reference ): void {
+		$settings = $definition['settings'];
+		$to = $settings['confirm_enabled'] ? (string) ( $values[ $settings['confirm_field'] ] ?? '' ) : '';
+
+		if ( '' === $to || false === filter_var( $to, FILTER_VALIDATE_EMAIL ) ) {
+			return;
+		}
+
+		$answers = $this->answers( $definition, $values );
+		$template = '' !== $settings['confirm_message'] ? $settings['confirm_message'] : __( "Thank you. We received your request.\n\nReference: {reference}\n\n{summary}\n\nWe will be in touch to confirm.", 'refraction' );
+		$subject = '' !== $settings['confirm_subject'] ? $settings['confirm_subject'] : sprintf( /* translators: %s: site name. */ __( 'Your request at %s', 'refraction' ), get_bloginfo( 'name' ) );
+		$subject = preg_replace( '/[\r\n]+/', ' ', Settings::fill_message( $subject, $reference, $answers ) );
+		$headers = [];
+
+		// Replies go to the office (the first notification address), not to the site's default sender.
+		$office = $settings['notify_enabled'] ? trim( (string) strtok( $settings['notify_to'], ',' ) ) : '';
+
+		if ( '' !== $office && false !== filter_var( $office, FILTER_VALIDATE_EMAIL ) ) {
+			$headers[] = 'Reply-To: ' . $office;
+		}
+
+		wp_mail( $to, $subject, Settings::fill_message( $template, $reference, $answers ), $headers );
+	}
+
+	/** Email the people named in the Advanced tab: every answer, plus a link to the record in the admin. */
+	private function notify( int $id, array $definition, array $values, string $reference = '' ): void {
+		$settings = $definition['settings'];
+
+		if ( ! $settings['notify_enabled'] ) {
+			return;
+		}
+
+		$lines = '' !== $reference ? [ __( 'Reference', 'refraction' ) . ': ' . $reference ] : [];
+
+		foreach ( $this->answers( $definition, $values ) as $row ) {
+			$lines[] = $row[0] . ': ' . $row[1];
 		}
 
 		$title = Schema::title( $definition, $values, $id );
-		$subject = '' !== $settings['notify_subject'] ? $settings['notify_subject'] : sprintf( /* translators: 1: record type, 2: title. */ __( 'New %1$s: %2$s', 'refraction' ), $definition['singular'], $title );
+		$subject = '' !== $settings['notify_subject'] ? Settings::fill_message( $settings['notify_subject'], $reference, $this->answers( $definition, $values ) ) : sprintf( /* translators: 1: record type, 2: title. */ __( 'New %1$s: %2$s', 'refraction' ), $definition['singular'], ( '' !== $reference ? $reference . ' ' : '' ) . $title );
 		$subject = preg_replace( '/[\r\n]+/', ' ', $subject );
 		$body = implode( "\n", $lines ) . "\n\n" . add_query_arg( [ 'view' => 'record', 'collection' => $definition['slug'], 'record' => $id ], admin_url( 'admin.php?page=' . Admin_Page::SLUG ) );
 		$headers = [];
@@ -450,7 +576,7 @@ class Shortcodes {
 	}
 
 	/** POST the submission as JSON to the address the site owner configured (never blocks the visitor, never follows redirects to private hosts). */
-	private function webhook( int $id, array $definition, array $values ): void {
+	private function webhook( int $id, array $definition, array $values, string $reference = '' ): void {
 		$url = $definition['settings']['webhook_url'];
 
 		if ( '' === $url ) {
@@ -472,7 +598,7 @@ class Shortcodes {
 				'blocking' => false,
 				'redirection' => 0,
 				'headers' => [ 'Content-Type' => 'application/json' ],
-				'body' => wp_json_encode( [ 'collection' => $definition['slug'], 'record' => $id, 'submitted' => gmdate( 'c' ), 'fields' => $labelled ] ),
+				'body' => wp_json_encode( [ 'collection' => $definition['slug'], 'record' => $id, 'reference' => $reference, 'submitted' => gmdate( 'c' ), 'fields' => $labelled ] ),
 			]
 		);
 	}

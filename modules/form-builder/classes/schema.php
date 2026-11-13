@@ -68,6 +68,7 @@ class Schema {
 					'icon_list' => self::t( 'Icon List' ),
 					'badge' => self::t( 'Badge' ),
 					'price' => self::t( 'Price' ),
+					'summary' => self::t( 'Summary' ),
 					'html' => self::t( 'Custom HTML' ),
 				],
 			],
@@ -105,6 +106,7 @@ class Schema {
 					'file' => self::t( 'File upload' ),
 					'signature' => self::t( 'Signature' ),
 					'hidden' => self::t( 'Hidden field' ),
+					'total' => self::t( 'Total' ),
 				],
 			],
 		];
@@ -142,13 +144,13 @@ class Schema {
 			'text' => 'text-fields', 'textarea' => 'notes', 'name' => 'badge', 'number' => 'pin', 'currency' => 'payments', 'email' => 'mail',
 			'phone' => 'call', 'url' => 'link', 'country' => 'public', 'date' => 'calendar-month', 'time' => 'schedule', 'datetime' => 'event',
 			'select' => 'arrow-drop-down-circle', 'radio' => 'radio-button-checked', 'checkbox' => 'check-box', 'toggle' => 'toggle-on', 'rating' => 'star',
-			'file' => 'upload-file', 'signature' => 'draw', 'hidden' => 'visibility-off',
+			'file' => 'upload-file', 'signature' => 'draw', 'hidden' => 'visibility-off', 'summary' => 'checklist', 'total' => 'payments',
 		];
 	}
 
 	/** Types that only decorate the form and never hold a value. */
 	public static function is_layout( string $type ): bool {
-		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list', 'badge', 'price' ], true );
+		return in_array( $type, [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list', 'badge', 'price', 'summary' ], true );
 	}
 
 	public static function is_step( string $type ): bool {
@@ -295,14 +297,21 @@ class Schema {
 		$seen = [];
 
 		foreach ( (array) $lines as $line ) {
+			$number = null;
+
 			if ( is_array( $line ) ) {
 				$value = (string) ( $line['value'] ?? '' );
 				$label = (string) ( $line['label'] ?? $value );
+				$number = $line['number'] ?? null;
 			} else {
-				$parts = explode( '|', (string) $line, 2 );
+				// value|Label|number: the number is what a Total counts for this choice (0.90.0).
+				$parts = explode( '|', (string) $line, 3 );
 				$label = isset( $parts[1] ) ? $parts[1] : $parts[0];
 				$value = $parts[0];
+				$number = $parts[2] ?? null;
 			}
+
+			$number = is_numeric( is_string( $number ) ? trim( $number ) : $number ) ? (float) $number : null;
 
 			$label = self::text( $label, 120 );
 			$value = self::text( $value, 120 );
@@ -320,7 +329,7 @@ class Schema {
 			}
 
 			$seen[ $value ] = true;
-			$options[] = [ 'value' => $value, 'label' => $label ];
+			$options[] = [ 'value' => $value, 'label' => $label, 'number' => $number ];
 
 			if ( count( $options ) >= self::MAX_OPTIONS ) {
 				break;
@@ -335,7 +344,9 @@ class Schema {
 			"\n",
 			array_map(
 				static function ( $option ) {
-					return $option['value'] === $option['label'] ? $option['label'] : $option['value'] . '|' . $option['label'];
+					$number = isset( $option['number'] ) && null !== $option['number'] ? '|' . self::number_text( (float) $option['number'] ) : '';
+
+					return $option['value'] === $option['label'] && '' === $number ? $option['label'] : $option['value'] . '|' . $option['label'] . $number;
 				},
 				$options
 			)
@@ -407,7 +418,7 @@ class Schema {
 			'key' => $key,
 			'label' => '' !== $label ? $label : ( self::types()[ $type ] ?? '' ),
 			'type' => $type,
-			'required' => $has_value && ! self::is_container( $type ) && 'hidden' !== $type && 'card' !== $root && ! $is_card && ! empty( $raw['required'] ),
+			'required' => $has_value && ! self::is_container( $type ) && ! in_array( $type, [ 'hidden', 'total' ], true ) && 'card' !== $root && ! $is_card && ! empty( $raw['required'] ),
 			'options' => self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [],
 			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ) ?: ( 'signature' === $type ? self::t( 'Sign here' ) : '' ),
 			'help' => self::text( $raw['help'] ?? '', 200 ),
@@ -466,7 +477,72 @@ class Schema {
 			'col_gap' => 'columns' === $type ? max( 0, min( 80, is_numeric( $raw['col_gap'] ?? null ) ? (int) $raw['col_gap'] : 24 ) ) : 24,
 			'list_layout' => 'icon_list' === $type && 'horizontal' === ( $raw['list_layout'] ?? '' ) ? 'horizontal' : 'vertical',
 			'items' => 'icon_list' === $type ? self::icon_items( $raw['items'] ?? [] ) : [],
+			// Booking fields (0.90.0): totals, date and time limits, a number stepper and typing suggestions.
+			'formula' => 'total' === $type ? self::text( $raw['formula'] ?? '', Formula::MAX_LENGTH ) : '',
+			'rules' => 'total' === $type ? self::total_rules( $raw['rules'] ?? [] ) : [],
+			'no_price' => 'total' === $type ? self::text( $raw['no_price'] ?? '', 120 ) : '',
+			'notice_hours' => in_array( $type, [ 'date', 'datetime' ], true ) ? max( 0, min( 8760, (int) ( $raw['notice_hours'] ?? 0 ) ) ) : 0,
+			'max_days' => in_array( $type, [ 'date', 'datetime' ], true ) ? max( 0, min( 1095, (int) ( $raw['max_days'] ?? 0 ) ) ) : 0,
+			'closed_days' => in_array( $type, [ 'date', 'datetime' ], true ) ? self::weekdays( $raw['closed_days'] ?? [] ) : [],
+			'time_min' => in_array( $type, [ 'time', 'datetime' ], true ) ? self::clock( $raw['time_min'] ?? '' ) : '',
+			'time_max' => in_array( $type, [ 'time', 'datetime' ], true ) ? self::clock( $raw['time_max'] ?? '' ) : '',
+			'time_step' => in_array( $type, [ 'time', 'datetime' ], true ) ? max( 0, min( 240, (int) ( $raw['time_step'] ?? 0 ) ) ) : 0,
+			'stepper' => 'number' === $type && ! empty( $raw['stepper'] ),
+			'suggestions' => 'text' === $type ? self::suggestions( $raw['suggestions'] ?? [] ) : [],
 		];
+	}
+
+	/** Total rules: [ { conditions, formula } ], the first that matches gives the formula. */
+	private static function total_rules( $raw ): array {
+		$rules = [];
+
+		foreach ( is_array( $raw ) ? $raw : [] as $rule ) {
+			if ( ! is_array( $rule ) || count( $rules ) >= 20 ) {
+				continue;
+			}
+
+			$conditions = Conditions::clean( [ 'enabled' => true, 'action' => 'show' ] + (array) ( $rule['conditions'] ?? [] ) );
+
+			if ( ! $conditions['enabled'] ) {
+				continue;
+			}
+
+			$rules[] = [ 'conditions' => $conditions, 'formula' => self::text( $rule['formula'] ?? '', Formula::MAX_LENGTH ) ];
+		}
+
+		return $rules;
+	}
+
+	/** Weekdays as numbers, 0 (Sunday) to 6 (Saturday). */
+	private static function weekdays( $raw ): array {
+		$days = array_map( 'intval', array_filter( is_array( $raw ) ? $raw : explode( ',', (string) $raw ), 'is_numeric' ) );
+
+		return array_values( array_unique( array_filter( $days, static function ( $day ) {
+			return $day >= 0 && $day <= 6;
+		} ) ) );
+	}
+
+	/** "HH:MM" or an empty string. */
+	private static function clock( $raw ): string {
+		$value = is_scalar( $raw ) ? trim( (string) $raw ) : '';
+
+		return 1 === preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $value ) ? $value : '';
+	}
+
+	/** Typing suggestions of a text field: one per line, up to 200. */
+	private static function suggestions( $raw ): array {
+		$lines = is_array( $raw ) ? $raw : preg_split( '/\r\n|\r|\n/', (string) $raw );
+		$out = [];
+
+		foreach ( (array) $lines as $line ) {
+			$line = self::text( $line, 160 );
+
+			if ( '' !== $line && ! in_array( $line, $out, true ) && count( $out ) < 200 ) {
+				$out[] = $line;
+			}
+		}
+
+		return $out;
 	}
 
 	/** A whitelisted choice, or the fallback; a card or set that does not set one inherits ('' is allowed when $inherit). */
@@ -754,6 +830,7 @@ class Schema {
 		$hidden = [];
 
 		self::validate_scope( $definition['fields'], $input, $input, '', $only, $files, $values, $errors, $hidden );
+		self::totals( $definition, $values, $hidden );
 
 		return [ 'values' => $values, 'errors' => $errors ];
 	}
@@ -856,6 +933,12 @@ class Schema {
 
 			if ( 'hidden' === $field['type'] ) {
 				$values[ $key ] = self::text( $raw ?? $field['default'], 255 );
+				continue;
+			}
+
+			// A total is never read from the post: the server works it out once every answer is known (totals()).
+			if ( 'total' === $field['type'] ) {
+				$values[ $key ] = '';
 				continue;
 			}
 
@@ -1040,19 +1123,19 @@ class Schema {
 
 			case 'date':
 				return self::valid_date( 'Y-m-d', $value )
-					? $out( $value, false )
+					? $out( $value, false, self::when_problem( $field, $value, '' ) )
 					: $out( $value, false, self::t( 'Enter a valid date.' ) );
 
 			case 'time':
 				return self::valid_date( 'H:i', $value )
-					? $out( $value, false )
+					? $out( $value, false, self::when_problem( $field, '', $value ) )
 					: $out( $value, false, self::t( 'Enter a valid time.' ) );
 
 			case 'datetime':
 				$value = str_replace( ' ', 'T', $value );
 
 				return self::valid_date( 'Y-m-d\TH:i', $value )
-					? $out( $value, false )
+					? $out( $value, false, self::when_problem( $field, substr( $value, 0, 10 ), substr( $value, 11, 5 ) ) )
 					: $out( $value, false, self::t( 'Enter a valid date and time.' ) );
 
 			case 'country':
@@ -1070,6 +1153,165 @@ class Schema {
 		}
 
 		return $out( $value, false );
+	}
+
+	/** "Now" in the site's time zone; tests set it. */
+	public static $now = null;
+
+	public static function now(): \DateTimeImmutable {
+		if ( self::$now instanceof \DateTimeImmutable ) {
+			return self::$now;
+		}
+
+		return new \DateTimeImmutable( 'now', function_exists( 'wp_timezone' ) ? wp_timezone() : null );
+	}
+
+	/** The first date and time a booking may take (now plus the notice), and the last date, as the browser needs them. */
+	public static function when_limits( array $field ): array {
+		$now = self::now();
+		$earliest = $field['notice_hours'] > 0 ? $now->modify( '+' . $field['notice_hours'] . ' hours' ) : $now;
+
+		// The browser counts the minute steps from the earliest time, so it starts on a step (19:37 with 15 minutes: 19:45).
+		if ( $field['time_step'] > 0 ) {
+			$minutes = (int) $earliest->format( 'H' ) * 60 + (int) $earliest->format( 'i' );
+			$up = (int) ( ceil( $minutes / $field['time_step'] ) * $field['time_step'] ) - $minutes;
+			$earliest = $earliest->modify( '+' . $up . ' minutes' );
+		}
+
+		return [
+			'min_date' => $earliest->format( 'Y-m-d' ),
+			'min_datetime' => $earliest->format( 'Y-m-d\TH:i' ),
+			'max_date' => $field['max_days'] > 0 ? $now->modify( '+' . $field['max_days'] . ' days' )->format( 'Y-m-d' ) : '',
+			'past' => $field['notice_hours'] > 0 || ! empty( $field['no_past'] ),
+		];
+	}
+
+	/**
+	 * Why a date and/or time can not be taken (closed day, too soon, too far ahead, outside the hours), or null.
+	 *
+	 * @param string $date "Y-m-d" or "".
+	 * @param string $time "H:i" or "".
+	 */
+	public static function when_problem( array $field, string $date, string $time ): ?string {
+		if ( '' !== $time && ( '' !== $field['time_min'] || '' !== $field['time_max'] ) ) {
+			$from = '' !== $field['time_min'] ? $field['time_min'] : '00:00';
+			$to = '' !== $field['time_max'] ? $field['time_max'] : '23:59';
+
+			if ( $time < $from || $time > $to ) {
+				return sprintf( self::t( 'Choose a time between %1$s and %2$s.' ), $from, $to );
+			}
+		}
+
+		if ( '' === $date ) {
+			return null;
+		}
+
+		$day = (int) gmdate( 'w', (int) strtotime( $date . ' 12:00:00 UTC' ) );
+
+		if ( in_array( $day, $field['closed_days'], true ) ) {
+			return self::t( 'That day is not available. Please choose another date.' );
+		}
+
+		$limits = self::when_limits( $field );
+
+		if ( $field['notice_hours'] > 0 ) {
+			if ( '' !== $time && 'datetime' === $field['type'] && $date . 'T' . $time < $limits['min_datetime'] ) {
+				return sprintf( self::t( 'Please choose %s or later.' ), str_replace( 'T', ' ', $limits['min_datetime'] ) );
+			}
+
+			if ( $date < $limits['min_date'] ) {
+				return sprintf( self::t( 'Please choose %s or later.' ), $limits['min_date'] );
+			}
+		}
+
+		if ( '' !== $limits['max_date'] && $date > $limits['max_date'] ) {
+			return sprintf( self::t( 'Please choose a date up to %s.' ), $limits['max_date'] );
+		}
+
+		return null;
+	}
+
+	/**
+	 * The number a field adds to a Total: an amount or number as it is, a choice's own number (value|Label|number), the
+	 * sum of picked choices or cards, 1 for a switched-on Yes / No; 0 otherwise.
+	 */
+	public static function number_of( ?array $field, $value ): float {
+		if ( ! $field ) {
+			return 0.0;
+		}
+
+		switch ( $field['type'] ) {
+			case 'select':
+			case 'radio':
+			case 'checkbox':
+				$sum = 0.0;
+
+				foreach ( $field['options'] as $option ) {
+					if ( in_array( $option['value'], array_map( 'strval', (array) $value ), true ) ) {
+						$sum += null !== ( $option['number'] ?? null ) ? (float) $option['number'] : ( is_numeric( $option['value'] ) ? (float) $option['value'] : 0.0 );
+					}
+				}
+
+				return $sum;
+			case 'choice_set':
+				return array_sum( array_map( static function ( $pick ) {
+					return is_array( $pick ) && is_numeric( $pick['price'] ?? null ) ? (float) $pick['price'] : 0.0;
+				}, (array) $value ) );
+			case 'toggle':
+				return '1' === (string) $value ? 1.0 : 0.0;
+		}
+
+		return is_scalar( $value ) && is_numeric( $value ) ? (float) $value : 0.0;
+	}
+
+	/**
+	 * Works out the Total fields of the top level (and of Accordion, Tabs and Columns there) from the stored values:
+	 * the formula of the first rule that matches, else the main formula. A total no formula gives is left empty.
+	 */
+	private static function totals( array $definition, array &$values, array $hidden ): void {
+		$by_key = [];
+
+		foreach ( self::walk( $definition['fields'] ) as $field ) {
+			$by_key[ $field['key'] ] = $field;
+		}
+
+		$lookup = static function ( string $key ) use ( &$values, $by_key ) {
+			$value = $values[ $key ] ?? '';
+
+			if ( 'choice_set' === ( $by_key[ $key ]['type'] ?? '' ) ) {
+				return array_map( static function ( $pick ) {
+					return (string) ( $pick['key'] ?? '' );
+				}, (array) $value );
+			}
+
+			return is_array( $value ) ? array_values( array_map( 'strval', array_filter( $value, 'is_scalar' ) ) ) : (string) $value;
+		};
+		$number = static function ( string $key ) use ( &$values, $by_key ): float {
+			return self::number_of( $by_key[ $key ] ?? null, $values[ $key ] ?? '' );
+		};
+
+		foreach ( self::flat( $definition['fields'] ) as $field ) {
+			if ( 'total' !== $field['type'] || isset( $hidden[ $field['key'] ] ) ) {
+				continue;
+			}
+
+			$formula = $field['formula'];
+
+			foreach ( $field['rules'] as $rule ) {
+				if ( Conditions::is_visible( $rule['conditions'], $lookup ) ) {
+					$formula = $rule['formula'];
+					break;
+				}
+			}
+
+			$result = Formula::evaluate( $formula, $number );
+			$values[ $field['key'] ] = null === $result ? '' : number_format( $result, 2, '.', '' );
+		}
+	}
+
+	/** Multi-line plain text (an email message), cleaned like a long answer. */
+	public static function textarea_text( $raw, int $max = 5000 ): string {
+		return self::textarea( $raw, $max );
 	}
 
 	private static function textarea( $raw, int $max = 5000 ): string {

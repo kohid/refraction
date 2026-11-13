@@ -87,7 +87,7 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 				'type' => Controls_Manager::TEXTAREA,
 				'rows' => 6,
 				'default' => "Option 1\nOption 2\nOption 3",
-				'description' => esc_html__( 'One per line. To save a different value than the one shown, write value|Label.', 'refraction' ),
+				'description' => esc_html__( 'One per line. To save a different value than the one shown, write value|Label. For a Total, add the number this choice counts: value|Label|number (loch-ness|Loch Ness Tour (4 hours)|4).', 'refraction' ),
 			] );
 		}
 
@@ -151,6 +151,40 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			$this->add_control( 'sig_height', [ 'label' => esc_html__( 'Pad height (px)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 100, 'max' => 400, 'default' => 180 ] );
 		}
 
+		if ( $this->has( 'date_limits' ) ) {
+			$this->add_control( 'when_heading', [ 'label' => esc_html__( 'Which dates can be chosen', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+			$this->add_control( 'notice_hours', [ 'label' => esc_html__( 'Notice needed (hours)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 8760, 'description' => esc_html__( 'The earliest choice is now plus this many hours; earlier dates can not be picked. 0: no limit.', 'refraction' ) ] );
+			$this->add_control( 'max_days', [ 'label' => esc_html__( 'Bookable up to (days ahead)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 1095, 'description' => esc_html__( '0: no limit.', 'refraction' ) ] );
+			$this->add_control( 'closed_days', [
+				'label' => esc_html__( 'Closed on', 'refraction' ),
+				'type' => Controls_Manager::SELECT2,
+				'multiple' => true,
+				'options' => [ '1' => esc_html__( 'Monday', 'refraction' ), '2' => esc_html__( 'Tuesday', 'refraction' ), '3' => esc_html__( 'Wednesday', 'refraction' ), '4' => esc_html__( 'Thursday', 'refraction' ), '5' => esc_html__( 'Friday', 'refraction' ), '6' => esc_html__( 'Saturday', 'refraction' ), '0' => esc_html__( 'Sunday', 'refraction' ) ],
+			] );
+		}
+
+		if ( $this->has( 'time_limits' ) ) {
+			$this->add_control( 'hours_heading', [ 'label' => esc_html__( 'Which times can be chosen', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+			$this->add_control( 'time_min', [ 'label' => esc_html__( 'From', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => '08:00', 'description' => esc_html__( '24-hour time; empty: any time.', 'refraction' ) ] );
+			$this->add_control( 'time_max', [ 'label' => esc_html__( 'Until', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => '20:00' ] );
+			$this->add_control( 'time_step', [ 'label' => esc_html__( 'Minutes between choices', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 240, 'placeholder' => '15', 'description' => esc_html__( 'For example 15 or 30. 0: any minute.', 'refraction' ) ] );
+		}
+
+		if ( $this->has( 'stepper' ) ) {
+			$this->add_control( 'stepper', [ 'label' => esc_html__( 'Minus and plus buttons', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'For counts such as passengers or suitcases (whole numbers).', 'refraction' ) ] );
+		}
+
+		if ( $this->has( 'suggestions' ) ) {
+			$this->add_control( 'suggestions', [
+				'label' => esc_html__( 'Suggestions while typing', 'refraction' ),
+				'type' => Controls_Manager::TEXTAREA,
+				'rows' => 5,
+				'description' => esc_html__( 'One per line (places, addresses...). Visitors can pick one or type their own. They come from this list only: no outside address service.', 'refraction' ),
+			] );
+		}
+
+		$this->register_extra_controls();
+
 		$this->add_control( 'field_description', [ 'label' => esc_html__( 'Description', 'refraction' ), 'type' => Controls_Manager::TEXT, 'label_block' => true, 'separator' => 'before', 'description' => esc_html__( 'Shown under the label.', 'refraction' ) ] );
 		$this->add_control( 'field_help', [ 'label' => esc_html__( 'Help text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'label_block' => true, 'description' => esc_html__( 'Shown under the field.', 'refraction' ) ] );
 
@@ -160,6 +194,9 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 		$this->register_condition_controls();
 		$this->register_record_controls( Schema::is_scalar_type( $this->field_type() ) || 'name' === $this->field_type(), in_array( $this->field_type(), [ 'select', 'radio' ], true ) );
 	}
+
+	/** More Content settings of one type (Total). */
+	protected function register_extra_controls(): void {}
 
 	/** Style tab: label, input (normal, hover, focus), description and help, and the choices of a choice field. */
 	protected function register_style_controls(): void {
@@ -270,6 +307,14 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'source' => (string) ( $s['hidden_source'] ?? 'static' ),
 			'default' => (string) ( $s['default_value'] ?? '' ),
 			'help' => (string) ( $s['field_help'] ?? '' ),
+			'notice_hours' => $s['notice_hours'] ?? 0,
+			'max_days' => $s['max_days'] ?? 0,
+			'closed_days' => (array) ( $s['closed_days'] ?? [] ),
+			'time_min' => (string) ( $s['time_min'] ?? '' ),
+			'time_max' => (string) ( $s['time_max'] ?? '' ),
+			'time_step' => $s['time_step'] ?? 0,
+			'stepper' => $yes( 'stepper' ),
+			'suggestions' => (string) ( $s['suggestions'] ?? '' ),
 		];
 	}
 

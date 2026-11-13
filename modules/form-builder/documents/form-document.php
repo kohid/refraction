@@ -190,6 +190,25 @@ class Form_Document extends Library_Document {
 		$this->add_control( 'rfb_notify_subject', [ 'label' => esc_html__( 'Subject', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ 'rfb_notify_enabled' => 'yes' ] ] );
 		$this->add_control( 'rfb_reply_to_field', [ 'label' => esc_html__( 'Reply to the address in field (key)', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => 'email', 'condition' => [ 'rfb_notify_enabled' => 'yes' ] ] );
 		$this->add_control( 'rfb_webhook_url', [ 'label' => esc_html__( 'Webhook address', 'refraction' ), 'type' => Controls_Manager::URL, 'options' => false, 'description' => esc_html__( 'Each new record is sent there as JSON.', 'refraction' ) ] );
+
+		// 0.90.0: a reference per record and the visitor's own confirmation email.
+		$this->add_control( 'rfb_reference_prefix', [
+			'label' => esc_html__( 'Reference prefix', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => 'IT',
+			'separator' => 'before',
+			'description' => esc_html__( 'Gives every record a reference such as IT-251113-4821, shown after sending, in the emails and the webhook. Letters and digits; empty: no reference. Use {reference} in the message after sending.', 'refraction' ),
+		] );
+		$this->add_control( 'rfb_confirm_enabled', [ 'label' => esc_html__( 'Email the visitor a copy', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'separator' => 'before' ] );
+		$this->add_control( 'rfb_confirm_field', [ 'label' => esc_html__( 'Their email is in field (key)', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => 'email', 'condition' => [ 'rfb_confirm_enabled' => 'yes' ] ] );
+		$this->add_control( 'rfb_confirm_subject', [ 'label' => esc_html__( 'Subject', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Your booking {reference}', 'refraction' ), 'condition' => [ 'rfb_confirm_enabled' => 'yes' ] ] );
+		$this->add_control( 'rfb_confirm_message', [
+			'label' => esc_html__( 'Message', 'refraction' ),
+			'type' => Controls_Manager::TEXTAREA,
+			'rows' => 8,
+			'condition' => [ 'rfb_confirm_enabled' => 'yes' ],
+			'description' => esc_html__( 'Plain text. {reference}, {summary} (every answer) and {field_key} for one answer. Replies go to the first address under "Send to".', 'refraction' ),
+		] );
 		$this->end_controls_section();
 	}
 
@@ -286,6 +305,11 @@ class Form_Document extends Library_Document {
 				'notify_subject' => $s['rfb_notify_subject'] ?? '',
 				'reply_to_field' => $s['rfb_reply_to_field'] ?? '',
 				'webhook_url' => $url( $s['rfb_webhook_url'] ?? '' ),
+				'reference_prefix' => $s['rfb_reference_prefix'] ?? '',
+				'confirm_enabled' => $yes( $s['rfb_confirm_enabled'] ?? '' ),
+				'confirm_field' => $s['rfb_confirm_field'] ?? '',
+				'confirm_subject' => $s['rfb_confirm_subject'] ?? '',
+				'confirm_message' => $s['rfb_confirm_message'] ?? '',
 				'require_login' => $yes( $s['rfb_require_login'] ?? '' ),
 				'opens' => substr( (string) ( $s['rfb_opens'] ?? '' ), 0, 16 ),
 				'closes' => substr( (string) ( $s['rfb_closes'] ?? '' ), 0, 16 ),

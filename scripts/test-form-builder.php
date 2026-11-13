@@ -10,6 +10,7 @@ require $root . '/modules/form-builder/classes/style.php';
 require $root . '/modules/form-builder/classes/field-style.php';
 require $root . '/modules/form-builder/classes/settings.php';
 require $root . '/modules/form-builder/classes/money.php';
+require $root . '/modules/form-builder/classes/formula.php';
 require $root . '/scripts/fixtures/form-builder-presets.php';
 
 use Refraction\Modules\FormBuilder\Classes\Schema as S;
@@ -676,6 +677,58 @@ $tree = [
 ];
 t( 'editor forms: field widgets are found at any depth, in page order, and nothing else', [ 'w1', 'w3', 'w5' ] === array_column( $EF::field_elements( $tree ), 'id' ) );
 t( 'editor forms: a Submit button widget is found at any depth', $EF::has_submit( $tree ) && ! $EF::has_submit( [ $tree[0]['elements'][0], $tree[1] ] ) );
+
+// ---- 0.90.0: booking fields (Total, option numbers, date and time limits, references, the visitor's email) ----
+$F = 'Refraction\Modules\FormBuilder\Classes\Formula';
+$nums = [ 'a' => 4, 'b' => 55, 'z' => 0 ];
+$n = static function ( $k ) use ( $nums ) { return $nums[ $k ] ?? 0; };
+t( 'formula: keys, precedence and brackets', 220.0 === $F::evaluate( '{a} * {b}', $n ) && 14.0 === $F::evaluate( '2 + 3 * 4', $n ) && 20.0 === $F::evaluate( '(2 + 3) * 4', $n ) );
+t( 'formula: functions and unary minus', 25.0 === $F::evaluate( 'max(25, {z} * 2)', $n ) && 3.0 === $F::evaluate( 'ceil(2.1)', $n ) && 2.35 === $F::evaluate( 'round(2.345, 2)', $n ) && -4.0 === $F::evaluate( '-{a}', $n ) && 1.0 === $F::evaluate( 'min(3, 1, 2)', $n ) );
+t( 'formula: empty, malformed, unknown words and division by zero give null', null === $F::evaluate( '', $n ) && null === $F::evaluate( '2 +', $n ) && null === $F::evaluate( 'system(1)', $n ) && null === $F::evaluate( '1 / {z}', $n ) && null === $F::evaluate( '{A}', $n ) && null === $F::evaluate( '(1', $n ) );
+t( 'formula: a missing key counts 0, and keys() lists them', 0.0 === $F::evaluate( '{nope}', $n ) && [ 'a', 'b' ] === $F::keys( '{a} * {b} + {a}' ) );
+$on = S::options( "car|Car tour|55\nbus|Minibus tour|65\nplain|Plain" );
+t( 'options: value|Label|number keeps the number, other lines none', 55.0 === $on[0]['number'] && 65.0 === $on[1]['number'] && null === $on[2]['number'] && 'Car tour' === $on[0]['label'] );
+t( 'options with numbers round trip through text', $on === S::options( S::options_to_text( $on ) ) );
+$book = S::definition( [ 'label' => 'Booking', 'fields' => [
+	[ 'label' => 'Tour', 'key' => 'tour', 'type' => 'select', 'options' => "loch|Loch Ness (4 h)|4\nskye|Isle of Skye (12 h)|12\nnone|Airport transfer" ],
+	[ 'label' => 'Vehicle', 'key' => 'vehicle', 'type' => 'radio', 'options' => "car|Car|55\nbus|Minibus|65" ],
+	[ 'label' => 'Bags', 'key' => 'bags', 'type' => 'number', 'stepper' => true ],
+	[ 'label' => 'Total', 'key' => 'total', 'type' => 'total', 'formula' => '{tour} * {vehicle} + {bags} * 0', 'no_price' => 'On request', 'required' => true, 'rules' => [
+		[ 'conditions' => [ 'rules' => [ [ 'field' => 'tour', 'op' => 'equals', 'value' => 'skye' ], [ 'field' => 'vehicle', 'op' => 'equals', 'value' => 'car' ] ] ], 'formula' => '600' ],
+		[ 'conditions' => [ 'rules' => [ [ 'field' => 'tour', 'op' => 'equals', 'value' => 'skye' ] ] ], 'formula' => '700' ],
+		[ 'conditions' => [ 'rules' => [ [ 'field' => 'tour', 'op' => 'equals', 'value' => 'none' ] ] ], 'formula' => '' ],
+	] ],
+] ] );
+$tot = S::field( $book, 'total' );
+t( 'total: never required, rules kept with their conditions', false === $tot['required'] && 3 === count( $tot['rules'] ) && 'all' === $tot['rules'][0]['conditions']['match'] && $tot['rules'][0]['conditions']['enabled'] );
+t( 'total: hours x hourly rate', '220.00' === S::validate( $book, [ 'tour' => 'loch', 'vehicle' => 'car' ] )['values']['total'] && '260.00' === S::validate( $book, [ 'tour' => 'loch', 'vehicle' => 'bus' ] )['values']['total'] );
+t( 'total: the first matching rule wins (fixed Skye prices)', '600.00' === S::validate( $book, [ 'tour' => 'skye', 'vehicle' => 'car' ] )['values']['total'] && '700.00' === S::validate( $book, [ 'tour' => 'skye', 'vehicle' => 'bus' ] )['values']['total'] );
+t( 'total: a rule with no formula leaves it empty (price on request), and a posted total is ignored', '' === S::validate( $book, [ 'tour' => 'none', 'vehicle' => 'car', 'total' => '1' ] )['values']['total'] && '220.00' === S::validate( $book, [ 'tour' => 'loch', 'vehicle' => 'car', 'total' => '0.01' ] )['values']['total'] );
+t( 'number_of: choices, picked cards and switches', 55.0 === S::number_of( S::field( $book, 'vehicle' ), 'car' ) && 30.0 === S::number_of( [ 'type' => 'choice_set' ], [ [ 'key' => 'a', 'price' => 10.0 ], [ 'key' => 'b', 'price' => 20.0 ] ] ) && 1.0 === S::number_of( [ 'type' => 'toggle' ], '1' ) && 0.0 === S::number_of( null, '5' ) );
+t( 'stepper only on numbers, suggestions only on text', S::field( $book, 'bags' )['stepper'] && ! S::clean_field( [ 'label' => 'A', 'type' => 'text', 'stepper' => 1 ] )['stepper'] && [ 'Inverness Airport', 'Inverness Station' ] === S::clean_field( [ 'label' => 'A', 'type' => 'text', 'suggestions' => "Inverness Airport\n\nInverness Station\nInverness Airport" ] )['suggestions'] );
+S::$now = new DateTimeImmutable( '2026-11-13 10:00' ); // a Friday
+$when = S::definition( [ 'label' => 'W', 'fields' => [
+	[ 'label' => 'Date', 'key' => 'date', 'type' => 'date', 'notice_hours' => 24, 'max_days' => 60, 'closed_days' => [ '0' ] ],
+	[ 'label' => 'Time', 'key' => 'time', 'type' => 'time', 'time_min' => '08:00', 'time_max' => '20:00', 'time_step' => 15 ],
+	[ 'label' => 'Pickup', 'key' => 'pickup', 'type' => 'datetime', 'notice_hours' => 2, 'time_min' => '06:00', 'time_max' => '23:30' ],
+] ] );
+$err = static function ( $input ) use ( $when ) { return S::validate( $when, $input )['errors']; };
+t( 'date limits: cleaned (weekdays 0-6, clock HH:MM, step in minutes)', [ 0 ] === S::field( $when, 'date' )['closed_days'] && '08:00' === S::field( $when, 'time' )['time_min'] && 15 === S::field( $when, 'time' )['time_step'] && '' === S::clean_field( [ 'label' => 'T', 'type' => 'time', 'time_min' => '25:00' ] )['time_min'] );
+t( 'date limits: too soon, closed day and too far ahead are refused; a fine date passes', isset( $err( [ 'date' => '2026-11-13' ] )['date'] ) && isset( $err( [ 'date' => '2026-11-15' ] )['date'] ) && isset( $err( [ 'date' => '2027-02-01' ] )['date'] ) && ! isset( $err( [ 'date' => '2026-11-16' ] )['date'] ) );
+t( 'time limits: outside the hours is refused', isset( $err( [ 'time' => '07:30' ] )['time'] ) && isset( $err( [ 'time' => '20:30' ] )['time'] ) && ! isset( $err( [ 'time' => '09:15' ] )['time'] ) );
+t( 'date and time: the notice counts in hours, the hours apply too', isset( $err( [ 'pickup' => '2026-11-13T11:00' ] )['pickup'] ) && ! isset( $err( [ 'pickup' => '2026-11-13T12:30' ] )['pickup'] ) && isset( $err( [ 'pickup' => '2026-11-14T05:00' ] )['pickup'] ) );
+t( 'date limits: the browser gets the earliest and latest days', '2026-11-14' === S::when_limits( S::field( $when, 'date' ) )['min_date'] && '2027-01-12' === S::when_limits( S::field( $when, 'date' ) )['max_date'] && '2026-11-13T12:00' === S::when_limits( S::field( $when, 'pickup' ) )['min_datetime'] );
+S::$now = new DateTimeImmutable( '2026-11-13 10:07' );
+t( 'date limits: the earliest time starts on a minute step (10:07 + 1 hour, 15-minute steps: 11:15)', '2026-11-13T11:15' === S::when_limits( S::clean_field( [ 'label' => 'P', 'type' => 'datetime', 'notice_hours' => 1, 'time_step' => 15 ] ) )['min_datetime'] );
+S::$now = null;
+$ST = 'Refraction\Modules\FormBuilder\Classes\Settings';
+t( 'reference: prefix, date and four digits; checked shape', 'IT-261113-0042' === $ST::new_reference( 'IT', new DateTimeImmutable( '2026-11-13' ), 42 ) && $ST::is_reference( 'IT-261113-0042' ) && $ST::is_reference( '261113-1234' ) && ! $ST::is_reference( '<b>IT</b>' ) && ! $ST::is_reference( 'IT-1' ) );
+$cl = $ST::clean( [ 'reference_prefix' => 'it-x!', 'confirm_enabled' => '1', 'confirm_field' => 'Email', 'confirm_message' => "Hi <b>{name}</b>\nRef {reference}" ] );
+t( 'settings: reference prefix letters and digits only; confirmation needs a field', 'ITX' === $cl['reference_prefix'] && $cl['confirm_enabled'] && 'email' === $cl['confirm_field'] && ! $ST::clean( [ 'confirm_enabled' => 1 ] )['confirm_enabled'] && "Hi {name}\nRef {reference}" === $cl['confirm_message'] );
+$msg = $ST::fill_message( "Hello {name}\nRef: {reference}\n{summary}\n{unknown}", 'IT-1', [ 'name' => [ 'Name', 'Ann' ], 'tour' => [ 'Tour', 'Loch Ness' ], 'note' => [ 'Note', '' ] ] );
+t( 'visitor email: reference, one answer, the summary (empty answers left out), unknown tags kept', "Hello Ann\nRef: IT-1\nName: Ann\nTour: Loch Ness\n{unknown}" === $msg );
+$summary = S::definition( [ 'label' => 'S', 'fields' => [ [ 'label' => 'Review', 'type' => 'summary', 'content' => 'Your booking' ] ] ] );
+t( 'summary is a layout block with its title', 'summary' === $summary['fields'][0]['type'] && 'Your booking' === $summary['fields'][0]['content'] && S::is_layout( 'summary' ) && ! S::has_value( 'summary' ) && S::has_value( 'total' ) );
 
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

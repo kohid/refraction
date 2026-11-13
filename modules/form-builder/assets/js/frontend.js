@@ -42,6 +42,10 @@
 			return picked ? picked.value : '';
 		}
 
+		if ( wrapper.dataset.rfbType === 'choice_set' ) {
+			return pickedCards( wrapper ).map( ( el ) => el.value );
+		}
+
 		if ( wrapper.dataset.rfbType === 'toggle' ) {
 			const box = inputs.find( ( el ) => 'checkbox' === el.type );
 
@@ -123,6 +127,32 @@
 		} );
 
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( ( host ) => host.rfbSync && host.rfbSync() );
+		collapseEmpty( form );
+	}
+
+	/**
+	 * A form built in the page editor: a widget whose field is hidden by a rule, and a container whose widgets are all
+	 * hidden, step out of the layout, so they leave no gap (0.90.0).
+	 *
+	 * @param {Element} form
+	 */
+	function collapseEmpty( form ) {
+		if ( ! form.classList.contains( 'rfb-form-editor' ) ) {
+			return;
+		}
+
+		form.querySelectorAll( '.refraction-widget' ).forEach( ( widget ) => {
+			const field = widget.querySelector( ':scope > [data-rfb-cond], :scope > .refraction-widget-container > [data-rfb-cond]' );
+
+			widget.classList.toggle( 'rfb-off', !! field && field.hidden );
+		} );
+
+		// Innermost containers first, so a row of hidden rows is hidden too.
+		Array.from( form.querySelectorAll( '.e-con' ) ).reverse().forEach( ( box ) => {
+			const items = Array.from( box.querySelectorAll( ':scope > .refraction-element, :scope > .e-con-inner > .refraction-element' ) );
+
+			box.classList.toggle( 'rfb-off', items.length > 0 && items.every( ( item ) => item.classList.contains( 'rfb-off' ) ) );
+		} );
 	}
 
 	// ---------------------------------------------------------------- amounts
@@ -697,6 +727,402 @@
 		show( withError > -1 ? withError : 0, withError > -1 );
 	}
 
+	// ---------------------------------------------------------------- totals (0.90.0)
+
+	/** The pick inputs of a set of choice cards that are checked (not the locked inputs inside the cards). */
+	function pickedCards( wrapper ) {
+		return Array.from( wrapper.querySelectorAll( '.rfb-cc-main > input, .rfb-cc-pick > input' ) ).filter( ( el ) => el.checked && ! el.disabled );
+	}
+
+	const numberOfEl = ( el ) => {
+		const n = el && el.dataset ? el.dataset.rfbN : undefined;
+
+		if ( undefined !== n && '' !== n ) {
+			return Number( n ) || 0;
+		}
+
+		return el && '' !== String( el.value ).trim() && ! Number.isNaN( Number( el.value ) ) ? Number( el.value ) : 0;
+	};
+
+	/** The number a field adds to a Total (mirrors Schema::number_of). */
+	function numberOf( form, key ) {
+		const wrapper = form.querySelector( `[data-rfb-key="${ CSS.escape( key ) }"]` );
+
+		if ( ! wrapper || wrapper.closest( '[data-rfb-cond][hidden]' ) ) {
+			return 0;
+		}
+
+		const type = wrapper.dataset.rfbType;
+
+		if ( 'total' === type ) {
+			const out = wrapper.querySelector( '[data-rfb-total]' );
+
+			return out && 'number' === typeof out.rfbValue ? out.rfbValue : 0;
+		}
+
+		if ( 'choice_set' === type ) {
+			return pickedCards( wrapper ).reduce( ( sum, el ) => sum + numberOfEl( el ), 0 );
+		}
+
+		if ( 'select' === type ) {
+			const select = wrapper.querySelector( 'select' );
+
+			return select && select.value ? numberOfEl( select.options[ select.selectedIndex ] ) : 0;
+		}
+
+		if ( 'radio' === type || 'checkbox' === type ) {
+			return Array.from( wrapper.querySelectorAll( 'input' ) ).filter( ( el ) => el.checked ).reduce( ( sum, el ) => sum + numberOfEl( el ), 0 );
+		}
+
+		const value = fieldValue( form, null, key );
+
+		return 'toggle' === type ? ( '1' === value ? 1 : 0 ) : ( '' !== value && ! Number.isNaN( Number( value ) ) ? Number( value ) : 0 );
+	}
+
+	/**
+	 * The Total formula (mirrors Classes\Formula): numbers, {keys}, + - * / ( ) and min, max, round, ceil, floor, abs.
+	 *
+	 * @param {string}   formula
+	 * @param {Function} number  key => number
+	 * @return {number|null} null when empty or malformed.
+	 */
+	function evaluate( formula, number ) {
+		const text = String( formula || '' ).trim();
+		const tokens = [];
+		let i = 0;
+
+		if ( ! text ) {
+			return null;
+		}
+
+		while ( i < text.length ) {
+			const rest = text.slice( i );
+			let m;
+
+			if ( /^\s/.test( rest ) ) {
+				i++;
+			} else if ( ( m = rest.match( /^(\d+(\.\d+)?|\.\d+)/ ) ) ) {
+				tokens.push( [ 'num', m[ 0 ] ] );
+				i += m[ 0 ].length;
+			} else if ( ( m = rest.match( /^\{([a-z][a-z0-9_]*)\}/ ) ) ) {
+				tokens.push( [ 'key', m[ 1 ] ] );
+				i += m[ 0 ].length;
+			} else if ( ( m = rest.match( /^(min|max|round|ceil|floor|abs)\b/ ) ) ) {
+				tokens.push( [ 'fn', m[ 0 ] ] );
+				i += m[ 0 ].length;
+			} else if ( '+-*/(),'.includes( rest[ 0 ] ) ) {
+				tokens.push( [ 'op', rest[ 0 ] ] );
+				i++;
+			} else {
+				return null;
+			}
+		}
+
+		let at = 0;
+		const peek = ( op ) => tokens[ at ] && 'op' === tokens[ at ][ 0 ] && op === tokens[ at ][ 1 ];
+		const expect = ( op ) => {
+			if ( ! peek( op ) ) {
+				throw new Error( op );
+			}
+			at++;
+		};
+		let sum;
+		const atom = () => {
+			const token = tokens[ at ];
+
+			if ( ! token ) {
+				throw new Error( 'end' );
+			}
+
+			if ( 'num' === token[ 0 ] ) {
+				at++;
+				return Number( token[ 1 ] );
+			}
+
+			if ( 'key' === token[ 0 ] ) {
+				at++;
+				return Number( number( token[ 1 ] ) ) || 0;
+			}
+
+			if ( 'fn' === token[ 0 ] ) {
+				at++;
+				expect( '(' );
+				const args = [ sum() ];
+
+				while ( peek( ',' ) ) {
+					at++;
+					args.push( sum() );
+				}
+
+				expect( ')' );
+
+				if ( 'round' === token[ 1 ] ) {
+					const f = Math.pow( 10, args[ 1 ] ? Math.trunc( args[ 1 ] ) : 0 );
+
+					return Math.round( args[ 0 ] * f ) / f;
+				}
+
+				return 'min' === token[ 1 ] || 'max' === token[ 1 ] ? Math[ token[ 1 ] ]( ...args ) : Math[ token[ 1 ] ]( args[ 0 ] );
+			}
+
+			if ( peek( '(' ) ) {
+				at++;
+				const value = sum();
+				expect( ')' );
+				return value;
+			}
+
+			throw new Error( token[ 1 ] );
+		};
+		const unary = () => {
+			if ( peek( '-' ) ) {
+				at++;
+				return -unary();
+			}
+
+			if ( peek( '+' ) ) {
+				at++;
+				return unary();
+			}
+
+			return atom();
+		};
+		const product = () => {
+			let value = unary();
+
+			while ( peek( '*' ) || peek( '/' ) ) {
+				const times = peek( '*' );
+				at++;
+				const right = unary();
+
+				if ( ! times && 0 === right ) {
+					throw new Error( 'division by zero' );
+				}
+
+				value = times ? value * right : value / right;
+			}
+
+			return value;
+		};
+		sum = () => {
+			let value = product();
+
+			while ( peek( '+' ) || peek( '-' ) ) {
+				const plus = peek( '+' );
+				at++;
+				value = plus ? value + product() : value - product();
+			}
+
+			return value;
+		};
+
+		try {
+			const result = sum();
+
+			return at === tokens.length && Number.isFinite( result ) ? result : null;
+		} catch ( e ) {
+			return null;
+		}
+	}
+
+	function formatMoney( number, cfg, total ) {
+		const fixed = Math.abs( number ).toFixed( cfg.n );
+		const [ whole, part ] = fixed.split( '.' );
+		const grouped = cfg.t ? whole.replace( /\B(?=(\d{3})+(?!\d))/g, cfg.t ) : whole;
+		const text = ( number < 0 ? '-' : '' ) + grouped + ( part ? cfg.d + part : '' );
+		const withSymbol = ! total.symbol ? text : ( total.after ? text + ' ' + total.symbol : total.symbol + text );
+
+		return total.per ? withSymbol + ' ' + total.per : withSymbol;
+	}
+
+	function applyTotals( form ) {
+		const cfg = moneyOf( form );
+
+		// In page order, so a total can count an earlier total.
+		form.querySelectorAll( '[data-rfb-total]' ).forEach( ( out ) => {
+			let total;
+
+			try {
+				total = JSON.parse( out.dataset.rfbTotal );
+			} catch ( e ) {
+				return;
+			}
+
+			let formula = total.formula;
+			const rule = ( total.rules || [] ).find( ( r ) => {
+				const cond = r.conditions || {};
+				const results = ( cond.rules || [] ).map( ( c ) => matches( c, fieldValue( form, null, c.field ) ) );
+
+				return 'any' === cond.match ? results.includes( true ) : ! results.includes( false );
+			} );
+
+			if ( rule ) {
+				formula = rule.formula;
+			}
+
+			const value = evaluate( formula, ( key ) => numberOf( form, key ) );
+			const amount = out.querySelector( '.rfb-total-amount' );
+
+			out.rfbValue = value;
+			out.classList.toggle( 'is-empty', null === value );
+
+			if ( amount ) {
+				amount.textContent = null === value ? ( total.none || '' ) : formatMoney( value, cfg, total );
+			}
+		} );
+	}
+
+	// ---------------------------------------------------------------- summary, stepper, booking hours (0.90.0)
+
+	const NOT_ANSWERS = [ 'heading', 'paragraph', 'html', 'divider', 'image', 'icon_list', 'badge', 'price', 'summary', 'group', 'repeater', 'columns', 'tabs', 'accordion', 'panel', 'card', 'signature', 'file' ];
+
+	/** The answer of a field as the visitor would read it. */
+	function answerText( wrapper, i18n ) {
+		const type = wrapper.dataset.rfbType;
+
+		if ( 'total' === type ) {
+			const out = wrapper.querySelector( '.rfb-total-amount' );
+
+			return out ? out.textContent.trim() : '';
+		}
+
+		if ( 'choice_set' === type ) {
+			return pickedCards( wrapper ).map( ( el ) => el.dataset.rfbTitle || el.value ).join( ', ' );
+		}
+
+		if ( 'select' === type || 'country' === type ) {
+			const select = wrapper.querySelector( 'select' );
+
+			return select && select.value ? select.options[ select.selectedIndex ].text.trim() : '';
+		}
+
+		if ( 'radio' === type || 'checkbox' === type ) {
+			return Array.from( wrapper.querySelectorAll( 'input' ) ).filter( ( el ) => el.checked ).map( ( el ) => ( el.nextElementSibling ? el.nextElementSibling.textContent : el.value ).trim() ).join( ', ' );
+		}
+
+		if ( 'toggle' === type ) {
+			const box = wrapper.querySelector( 'input[type=checkbox]' );
+
+			return box && box.checked ? ( i18n.yes || 'Yes' ) : '';
+		}
+
+		if ( 'name' === type ) {
+			return Array.from( wrapper.querySelectorAll( 'input' ) ).map( ( el ) => el.value.trim() ).filter( Boolean ).join( ' ' );
+		}
+
+		const input = wrapper.querySelector( 'input:not([type=hidden]), textarea' );
+
+		if ( ! input ) {
+			return '';
+		}
+
+		if ( 'datetime' === type ) {
+			return input.value.replace( 'T', ' ' );
+		}
+
+		return input.value.trim();
+	}
+
+	function applySummary( form ) {
+		const boxes = form.querySelectorAll( '[data-rfb-summary]' );
+
+		if ( ! boxes.length ) {
+			return;
+		}
+
+		const i18n = form.dataset.rfbI18n ? JSON.parse( form.dataset.rfbI18n ) : {};
+		const rows = [];
+
+		form.querySelectorAll( '.rfb-field[data-rfb-key][data-rfb-type]' ).forEach( ( wrapper ) => {
+			if ( NOT_ANSWERS.includes( wrapper.dataset.rfbType ) || wrapper.closest( '[data-rfb-cond][hidden], template, .rfb-choice-card, .rfb-hp' ) ) {
+				return;
+			}
+
+			const value = answerText( wrapper, i18n );
+			const label = wrapper.querySelector( '.rfb-label, .rfb-switch-text' );
+
+			// A field whose label the owner hid (a terms box) is not repeated in the summary.
+			if ( value && label && ! label.classList.contains( 'screen-reader-text' ) ) {
+				rows.push( [ label.textContent.trim(), value ] );
+			}
+		} );
+
+		boxes.forEach( ( box ) => {
+			const list = box.querySelector( '.rfb-summary-list' );
+
+			list.textContent = '';
+
+			if ( ! rows.length ) {
+				const empty = document.createElement( 'div' );
+				empty.className = 'rfb-summary-empty';
+				empty.textContent = box.dataset.rfbEmpty || '';
+				list.appendChild( empty );
+				return;
+			}
+
+			rows.forEach( ( [ label, value ] ) => {
+				const row = document.createElement( 'div' );
+				const dt = document.createElement( 'dt' );
+				const dd = document.createElement( 'dd' );
+
+				row.className = 'rfb-summary-row';
+				dt.textContent = label;
+				dd.textContent = value;
+				row.append( dt, dd );
+				list.appendChild( row );
+			} );
+		} );
+	}
+
+	function initStepper( box ) {
+		const input = box.querySelector( 'input' );
+
+		box.addEventListener( 'click', ( event ) => {
+			const button = event.target.closest( '[data-rfb-step]' );
+
+			if ( ! button || input.disabled ) {
+				return;
+			}
+
+			const min = '' !== input.min ? Number( input.min ) : -Infinity;
+			const max = '' !== input.max ? Number( input.max ) : Infinity;
+			const now = '' === input.value || Number.isNaN( Number( input.value ) ) ? ( min > -Infinity ? min : 0 ) - ( Number( button.dataset.rfbStep ) > 0 ? 1 : -1 ) : Number( input.value );
+
+			input.value = String( Math.min( max, Math.max( min, now + Number( button.dataset.rfbStep ) ) ) );
+			input.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+			input.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+		} );
+	}
+
+	/** Closed weekdays and opening hours of a date or time box (min, max and step are the browser's own). */
+	function initWhen( input, form ) {
+		const i18n = form.dataset.rfbI18n ? JSON.parse( form.dataset.rfbI18n ) : {};
+		const closed = ( input.dataset.rfbClosed || '' ).split( ',' ).filter( ( d ) => '' !== d ).map( Number );
+		const hours = ( input.dataset.rfbHours || '' ).split( '-' );
+		const check = () => {
+			const value = input.value;
+			let message = '';
+
+			if ( value && closed.length && /^\d{4}-\d{2}-\d{2}/.test( value ) ) {
+				const day = new Date( value.slice( 0, 10 ) + 'T12:00:00Z' ).getUTCDay();
+
+				message = closed.includes( day ) ? ( i18n.closedDay || 'That day is not available.' ) : '';
+			}
+
+			const time = 'time' === input.type ? value : value.slice( 11, 16 );
+
+			if ( ! message && time && 2 === hours.length && ( time < hours[ 0 ] || time > hours[ 1 ] ) ) {
+				message = sprintf( i18n.hours || 'Choose a time between %1$s and %2$s.', hours[ 0 ], hours[ 1 ] );
+			}
+
+			input.setCustomValidity( message );
+		};
+
+		input.addEventListener( 'input', check );
+		input.addEventListener( 'change', check );
+		check();
+	}
+
 	// ---------------------------------------------------------------- page caches
 
 	/**
@@ -761,9 +1187,19 @@
 		form.querySelectorAll( '[data-rfb-accordion]' ).forEach( initAccordion );
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( initTabs );
 		form.querySelectorAll( '.rfb-cards' ).forEach( initCards );
-		form.addEventListener( 'input', () => applyConditions( form ) );
-		form.addEventListener( 'change', () => applyConditions( form ) );
-		applyConditions( form );
+		form.querySelectorAll( '[data-rfb-count]' ).forEach( initStepper );
+		form.querySelectorAll( 'input[data-rfb-closed], input[data-rfb-hours]' ).forEach( ( input ) => initWhen( input, form ) );
+
+		const update = () => {
+			applyConditions( form );
+			applyTotals( form );
+			applySummary( form );
+		};
+
+		form.addEventListener( 'input', update );
+		form.addEventListener( 'change', update );
+		form.rfbUpdate = update;
+		update();
 		initSteps( form );
 
 		// Browsers do not validate with novalidate; give the visitor the native hints on submit instead.

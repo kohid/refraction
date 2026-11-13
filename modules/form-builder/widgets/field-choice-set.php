@@ -7,6 +7,7 @@ use Refraction\Group_Control_Box_Shadow;
 use Refraction\Modules\FormBuilder\Base\Field_Settings;
 use Refraction\Modules\FormBuilder\Base\Field_Widget;
 use Refraction\Modules\FormBuilder\Base\Form_Field;
+use Refraction\Modules\FormBuilder\Classes\Conditions;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Classes\Field_Renderer;
 use Refraction\Modules\FormBuilder\Classes\Money;
@@ -110,6 +111,14 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 		$card->add_control( 'card_width', [ 'label' => esc_html__( 'Card width', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'auto', 'options' => [ 'auto' => esc_html__( 'Automatic (cards per row)', 'refraction' ) ] + Schema::width_choices() ] );
 		$card->add_control( 'card_marker_pos', [ 'label' => esc_html__( 'Pick control position', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => '', 'options' => self::positions( true ) ] );
 		$card->add_control( 'card_marker_look', [ 'label' => esc_html__( 'Pick control look', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => '', 'options' => self::looks( true ) ] );
+		// 0.90.0: a key of its own (saved with the record, used by rules and prefill) and rules for when the card is offered.
+		$card->add_control( 'card_key', [ 'label' => esc_html__( 'Card key', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => 'saloon', 'separator' => 'before', 'description' => esc_html__( 'Rules, totals and prefilled answers name the card by it. Empty: made from the name.', 'refraction' ) ] );
+		$card->add_control( 'card_when_field', [ 'label' => esc_html__( 'Offer this card only when field (key)', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => 'passengers' ] );
+		$card->add_control( 'card_when_op', [ 'label' => esc_html__( 'Condition', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'equals', 'options' => Conditions::operators(), 'condition' => [ 'card_when_field!' => '' ] ] );
+		$card->add_control( 'card_when_value', [ 'label' => esc_html__( 'Value', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ 'card_when_field!' => '', 'card_when_op!' => [ 'empty', 'not_empty' ] ] ] );
+		$card->add_control( 'card_when_field2', [ 'label' => esc_html__( 'And field (key)', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ 'card_when_field!' => '' ] ] );
+		$card->add_control( 'card_when_op2', [ 'label' => esc_html__( 'Condition', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'equals', 'options' => Conditions::operators(), 'condition' => [ 'card_when_field2!' => '' ] ] );
+		$card->add_control( 'card_when_value2', [ 'label' => esc_html__( 'Value', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ 'card_when_field2!' => '', 'card_when_op2!' => [ 'empty', 'not_empty' ] ] ] );
 		$this->add_control( 'cards', [
 			'label' => esc_html__( 'Cards', 'refraction' ),
 			'type' => Control_Nested_Repeater::CONTROL_TYPE,
@@ -183,8 +192,17 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 	/** One card as a Builder card (a free Group): its name, price and look. */
 	public function card_raw( int $index ): array {
 		$item = array_values( (array) $this->get_settings( 'cards' ) )[ $index ] ?? [];
+		$rules = [];
+
+		foreach ( [ '', '2' ] as $n ) {
+			if ( '' !== trim( (string) ( $item[ 'card_when_field' . $n ] ?? '' ) ) ) {
+				$rules[] = [ 'field' => (string) $item[ 'card_when_field' . $n ], 'op' => (string) ( $item[ 'card_when_op' . $n ] ?? 'equals' ), 'value' => (string) ( $item[ 'card_when_value' . $n ] ?? '' ) ];
+			}
+		}
 
 		return [
+			'key' => (string) ( $item['card_key'] ?? '' ),
+			'conditions' => [ 'enabled' => (bool) $rules, 'action' => 'show', 'match' => 'all', 'rules' => $rules ],
 			'type' => 'group',
 			'card_mode' => 'free',
 			'label' => (string) ( $item['card_title'] ?? '' ),
@@ -257,7 +275,7 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 			$card_cond = ! empty( $card['conditions']['enabled'] ) ? ' data-rfb-cond="' . esc_attr( (string) wp_json_encode( $card['conditions'] ) ) . '"' : '';
 
 			echo '<div class="' . esc_attr( 'rfb-choice-card rfb-t-card is-free rfb-mpos-' . $pos . ' rfb-mlook-' . $look . ( $on ? ' is-selected' : '' ) ) . '" style="flex-basis:' . esc_attr( $basis ) . '" data-rfb-key="' . esc_attr( $card['key'] ) . '" data-rfb-type="card"' . $card_cond . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo '<label class="rfb-cc-pick" for="' . esc_attr( $id . '-' . $i ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $id . '-' . $i ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '"' . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '><span class="rfb-cc-mark' . ( $field['multiple'] ? ' is-check' : '' ) . '" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html( $card['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<label class="rfb-cc-pick" for="' . esc_attr( $id . '-' . $i ) . '"><input type="' . esc_attr( $kind ) . '" id="' . esc_attr( $id . '-' . $i ) . '" name="' . esc_attr( $name . ( $field['multiple'] ? '[]' : '' ) ) . '" value="' . esc_attr( $card['key'] ) . '" data-rfb-title="' . esc_attr( $card['label'] ) . '"' . ( null !== $card['card_price'] ? ' data-rfb-n="' . esc_attr( (string) (float) $card['card_price'] ) . '"' : '' ) . checked( $on, true, false ) . ( $field['required'] && ! $field['multiple'] ? ' required' : '' ) . '><span class="rfb-cc-mark' . ( $field['multiple'] ? ' is-check' : '' ) . '" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html( $card['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 			// Whatever is in the card is shown, but a field in it can not be changed (nothing in it is read on submit).
 			Editor_Forms::push_card( $card );

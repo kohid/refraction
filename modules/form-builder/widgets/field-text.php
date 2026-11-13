@@ -19,6 +19,6 @@ class Field_Text extends Field_Widget {
 	}
 
 	protected function features(): array {
-		return [ 'placeholder', 'default', 'required' ];
+		return [ 'placeholder', 'default', 'required', 'suggestions' ];
 	}
 }

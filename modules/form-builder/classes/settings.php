@@ -31,6 +31,11 @@ class Settings {
 			'honeypot' => true,
 			'min_seconds' => 3,
 			'hourly_limit' => 10,
+			'reference_prefix' => '',
+			'confirm_enabled' => false,
+			'confirm_field' => '',
+			'confirm_subject' => '',
+			'confirm_message' => '',
 		] + Money::defaults();
 	}
 
@@ -64,7 +69,48 @@ class Settings {
 			'honeypot' => ! array_key_exists( 'honeypot', $raw ) || ! empty( $raw['honeypot'] ),
 			'min_seconds' => max( 0, min( 60, is_numeric( $raw['min_seconds'] ?? null ) ? (int) $raw['min_seconds'] : $d['min_seconds'] ) ),
 			'hourly_limit' => max( 0, min( 1000, is_numeric( $raw['hourly_limit'] ?? null ) ? (int) $raw['hourly_limit'] : $d['hourly_limit'] ) ),
+			// A reference per record (IT-251113-4821) and an email to the visitor (0.90.0).
+			'reference_prefix' => substr( (string) preg_replace( '/[^A-Z0-9]/', '', strtoupper( (string) ( $raw['reference_prefix'] ?? '' ) ) ), 0, 8 ),
+			'confirm_enabled' => ! empty( $raw['confirm_enabled'] ) && '' !== Schema::key( $raw['confirm_field'] ?? '' ),
+			'confirm_field' => Schema::key( $raw['confirm_field'] ?? '' ),
+			'confirm_subject' => Schema::text( $raw['confirm_subject'] ?? '', 160 ),
+			'confirm_message' => Schema::textarea_text( $raw['confirm_message'] ?? '', 4000 ),
 		] + Money::clean( $raw );
+	}
+
+	/** A new reference: prefix, the date and four random digits (IT-251113-4821); no prefix: the date and digits. */
+	public static function new_reference( string $prefix, \DateTimeInterface $now, int $random ): string {
+		return ( '' !== $prefix ? $prefix . '-' : '' ) . $now->format( 'ymd' ) . '-' . str_pad( (string) ( $random % 10000 ), 4, '0', STR_PAD_LEFT );
+	}
+
+	/** Is this a reference the form could have made (for the success message, which reads it from the address)? */
+	public static function is_reference( string $value ): bool {
+		return 1 === preg_match( '/^(?:[A-Z0-9]{1,8}-)?\d{6}-\d{4,8}$/', $value );
+	}
+
+	/**
+	 * The visitor's email: {reference}, {summary} (every answer, one per line) and {field_key} for one answer.
+	 *
+	 * @param array $answers field key => answer as text, in form order, with labels: [ key => [ label, text ] ].
+	 */
+	public static function fill_message( string $template, string $reference, array $answers ): string {
+		$summary = implode( "\n", array_map( static function ( $row ) {
+			return $row[0] . ': ' . $row[1];
+		}, array_filter( $answers, static function ( $row ) {
+			return '' !== $row[1];
+		} ) ) );
+
+		return (string) preg_replace_callback( '/\{([a-z][a-z0-9_]*)\}/', static function ( $m ) use ( $reference, $summary, $answers ) {
+			if ( 'reference' === $m[1] ) {
+				return $reference;
+			}
+
+			if ( 'summary' === $m[1] ) {
+				return $summary;
+			}
+
+			return isset( $answers[ $m[1] ] ) ? $answers[ $m[1] ][1] : $m[0];
+		}, $template );
 	}
 
 	/** An http(s) address or an empty string. */

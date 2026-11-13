@@ -54,6 +54,7 @@ class Module extends BaseModule {
 
 		if ( is_admin() ) {
 			$this->get_admin_page();
+			new Classes\Starters();
 		}
 
 		add_action( 'refraction/editor-one/menu/register', [ $this, 'register_menu' ] );
@@ -103,10 +104,11 @@ class Module extends BaseModule {
 	}
 
 	/** The form of a collection as the site prints it (the same as [refraction_form]); '' when none is chosen. */
-	public static function form_html( string $slug ): string {
+	public static function form_html( string $slug, string $fill = '' ): string {
 		$slug = Classes\Schema::slug( $slug );
+		$fill = str_replace( [ '"', ']', '[' ], '', $fill );
 
-		return '' === $slug ? '' : do_shortcode( '[refraction_form collection="' . esc_attr( $slug ) . '"]' );
+		return '' === $slug ? '' : do_shortcode( '[refraction_form collection="' . esc_attr( $slug ) . '"' . ( '' !== $fill ? ' fill="' . esc_attr( $fill ) . '"' : '' ) . ']' );
 	}
 
 	/** @param \Refraction\Widget_Base $widget The Shortcode widget. */
@@ -152,7 +154,7 @@ class Module extends BaseModule {
 		return [
 			'Field_Text', 'Field_Textarea', 'Field_Name', 'Field_Email', 'Field_Phone', 'Field_Website', 'Field_Number', 'Field_Amount',
 			'Field_Country', 'Field_Date', 'Field_Time', 'Field_Datetime', 'Field_Select', 'Field_Radio', 'Field_Checkbox', 'Field_Toggle',
-			'Field_Rating', 'Field_Hidden', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Field_Choice_Set', 'Steps', 'Badge', 'Price', 'Submit_Button', 'Form_Canvas',
+			'Field_Rating', 'Field_Hidden', 'Field_Total', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Field_Choice_Set', 'Steps', 'Badge', 'Price', 'Summary', 'Submit_Button', 'Form_Canvas',
 		];
 	}
 
