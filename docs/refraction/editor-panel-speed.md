@@ -52,3 +52,20 @@ Results on the test machine: Phone Showcase > Style > Steps 233 -> 143 ms, Float
 Style 126 -> 49 ms, Advanced > Background 121 ms -> fast; median section 15 -> 8 ms. Checked by
 `scripts/check-panel-speed.mjs` (conditions, typography popover, gradient, typing that reveals a field, list rows,
 lazy colour picker and font list).
+
+## Section groups (0.86.0)
+
+`groupSection()` in `assets/dev/js/editor/regions/panel/pages/editor.js` (after each render of the section and after
+lazily built settings are added): a section with 12 or more top-level settings whose HEADING controls (not inside
+inner tabs or popovers) divide it into at least two groups gets a row of tabs (`.rf-section-groups`) under its title:
+General (before the first heading) and one per heading (the heading itself hides, the tab names it). The other groups'
+settings get `.rf-group-off` (display none, with their popover). The tab is kept per element type and section for the
+editing session (`shownGroups`). No widget had to change: giving a long section headings is enough.
+
+## Shadow colors from the Global Colors (0.86.0)
+
+Box Shadow and Text Shadow (`controls/box-shadow.js`) have their own picker; a globe in it lists `globals/colors`, and
+picking one saves the shadow's color as `var(--e-global-color-ID)`, so it follows the kit. The picker shows the resolved
+color with a ring (`.rf-shadow-global`); a color picked by hand unlinks it.
+
+Check: `node scripts/check-section-groups.mjs --site DIR --port N`.

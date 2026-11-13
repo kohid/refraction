@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.85.0
+Stable tag: 0.86.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.86.0 =
+* Long settings sections are split into tabs: a section with 12 settings or more that its headings divide into groups (such as Phone Showcase > Style > Steps: General, Step Icon, Progress Bar) shows a row of tabs under its title and one group at a time, so there is no long scroll. It works for every widget, and the tab chosen is remembered while editing.
+* Box Shadow and Text Shadow colors can use the Global Colors: a globe in their color picker lists them, and the shadow follows when the global color changes (they had their own picker, without it).
 
 = 0.85.0 =
 * 3D Build Scene > Parts: give any part of the model its own settings, like a widget in the scene. Each row names a part (or several, with patterns) and has Content (hide it, a label that follows it, a link opened by clicking the part or the label), Look (color, opacity, metal, roughness, glow), Place (move, turn, size) and Build (where it comes from: above, below, the side, further out, or fading in place; and a delay).

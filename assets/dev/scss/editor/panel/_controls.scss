@@ -456,3 +456,47 @@
 .refraction-control.rf-legacy-control {
 	display: none !important;
 }
+
+// Groups of a long section (regions/panel/pages/editor.js groupSection()): a row of tabs under the section's title,
+// one group of settings shown at a time.
+.rf-section-groups {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	padding: 12px 20px 10px;
+
+	&__tab {
+		flex: 1 1 auto;
+		min-width: 0;
+		padding: 7px 10px;
+		border: var(--e-a-border);
+		border-radius: 3px;
+		background: transparent;
+		color: var(--e-a-color-txt);
+		font-size: 11px;
+		line-height: 1.2;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		cursor: pointer;
+		transition: background-color .2s, color .2s;
+
+		&:hover,
+		&:focus-visible {
+			background: var(--e-a-bg-hover);
+		}
+
+		&.is-active {
+			background: var(--e-a-bg-active);
+			color: var(--e-a-color-txt-accent);
+			border-color: var(--e-a-border-color-bold, var(--e-a-border-color));
+			font-weight: 600;
+		}
+	}
+}
+
+.refraction-control.rf-group-off,
+.refraction-control.rf-group-off + .refraction-controls-popover,
+.refraction-control.rf-group-heading {
+	display: none !important;
+}
