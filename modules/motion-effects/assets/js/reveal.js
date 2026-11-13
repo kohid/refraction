@@ -12,7 +12,9 @@
 ( function() {
 	'use strict';
 
-	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise', 'wipe-up', 'wipe-down', 'wipe-left', 'wipe-right', 'dim' ];
+	const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise', 'wipe-up', 'wipe-down', 'wipe-left', 'wipe-right', 'dim', 'blur-up', 'pop', 'spin', 'skew-up', 'flip-up', 'flip-left', 'swing', 'iris', 'curtain', 'split', 'diagonal', 'drop' ];
+	// Pure_Reveal_Settings::SCROLL_END: "with the scroll" is done halfway up the screen unless set.
+	const SCROLL_END = 50;
 	const EASE_CSS = {
 		smooth: 'cubic-bezier(0.22, 1, 0.36, 1)',
 		soft: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -28,6 +30,9 @@
 		linear: ( t ) => t,
 	};
 	const SKIP = { SCRIPT: 1, STYLE: 1, SVG: 1, NOSCRIPT: 1, TEXTAREA: 1, INPUT: 1, SELECT: 1, IFRAME: 1, CODE: 1, PRE: 1 };
+	// Text that another script rewrites or copies (the changing words of an Animated Headline, a running marquee,
+	// numbers that count, countdown digits) is never split: the copies or new words would stay hidden or doubled.
+	const LIVE_TEXT = '.rf-marquee, .refraction-headline__dynamic, .refraction-counter-number, .refraction-countdown__digits, [data-rf-rv-skip]';
 
 	const reducedQuery = window.matchMedia ? window.matchMedia( '(prefers-reduced-motion: reduce)' ) : null;
 	const live = new Set();
@@ -59,7 +64,7 @@
 		}
 
 		let start = Math.round( num( s.rf_reveal_start, 0, 0, 100 ) );
-		let end = Math.round( num( s.rf_reveal_end, 100, 0, 100 ) );
+		let end = Math.round( num( s.rf_reveal_end, SCROLL_END, 0, 100 ) );
 
 		if ( start > end ) {
 			[ start, end ] = [ end, start ];
@@ -157,7 +162,7 @@
 		const walker = document.createTreeWalker( root, NodeFilter.SHOW_TEXT, {
 			acceptNode: ( node ) => {
 				for ( let p = node.parentNode; p && p !== root; p = p.parentNode ) {
-					if ( SKIP[ p.nodeName.toUpperCase() ] || ( p.classList && p.classList.contains( 'rf-rv-sr' ) ) ) {
+					if ( SKIP[ p.nodeName.toUpperCase() ] || ( p.classList && p.classList.contains( 'rf-rv-sr' ) ) || ( p.matches && p.matches( LIVE_TEXT ) ) ) {
 						return NodeFilter.FILTER_REJECT;
 					}
 				}
@@ -173,7 +178,9 @@
 		const words = [];
 
 		nodes.forEach( ( node ) => {
-			const fragment = document.createDocumentFragment();
+			// One inline run per text: inside a flex or grid box the spaces between the word boxes would be dropped.
+			const fragment = document.createElement( 'span' );
+			fragment.className = 'rf-rv-run';
 			const sr = document.createElement( 'span' );
 			sr.className = 'rf-rv-sr';
 			sr.textContent = node.nodeValue;
@@ -381,6 +388,7 @@
 
 					if ( 'once' === item.cfg.trigger ) {
 						item.io.disconnect();
+						item.doneTimer = window.setTimeout( () => finish( item ), item.cfg.delay + ( ( item.groups - 1 ) * item.cfg.stagger ) + item.cfg.duration + 100 );
 					}
 				}
 			} );
@@ -403,6 +411,17 @@
 			} );
 			item.out.observe( item.el );
 		}
+	}
+
+	// Played once: the pieces let go of the reveal styles (transform, clip, filter), so the element's own Transform
+	// settings, hover movement and fixed or sticky children inside it behave as without a reveal.
+	function finish( item ) {
+		item.pieces.forEach( ( piece ) => {
+			piece.el.setAttribute( 'data-rf-rv-piece', 'done' );
+			piece.el.setAttribute( 'data-rf-rv-played', piece.fx );
+			piece.el.removeAttribute( 'data-rf-rv-fx' );
+		} );
+		item.el.setAttribute( 'data-rf-rv-state', 'done' );
 	}
 
 	// Scroll-linked: 0 when the element's top is `start`% into the screen from the bottom, 1 at `end`%.
@@ -468,9 +487,11 @@
 		}
 
 		[ item.io, item.out ].forEach( ( o ) => o && o.disconnect() );
+		window.clearTimeout( item.doneTimer );
 		item.pieces.forEach( ( piece ) => {
 			piece.el.removeAttribute( 'data-rf-rv-piece' );
 			piece.el.removeAttribute( 'data-rf-rv-fx' );
+			piece.el.removeAttribute( 'data-rf-rv-played' );
 			[ '--rf-rv-p', '--rf-rv-dist', '--rf-rv-dur', '--rf-rv-ease', '--rf-rv-delay' ].forEach( ( v ) => piece.el.style.removeProperty( v ) );
 		} );
 

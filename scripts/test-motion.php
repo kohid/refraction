@@ -203,6 +203,14 @@ $rv = R::normalize( [ 'rf_reveal_children' => 'zoom-in', 'rf_reveal_text_effect'
 t( 'reveal: children of a container; a text effect only with a text split', 'zoom-in' === $rv['children'] && ! isset( $rv['textEffect'] ) );
 t( 'reveal: the text effect may be any effect or the mask', 'blur' === R::normalize( [ 'rf_reveal_text' => 'words', 'rf_reveal_text_effect' => 'blur' ], $devices )['textEffect'] && 'mask' === R::normalize( [ 'rf_reveal_text' => 'words', 'rf_reveal_text_effect' => '<x>' ], $devices )['textEffect'] );
 
+t( 'reveal: with the scroll the range defaults to 0-50, as the panel shows', 0 === R::normalize( [ 'rf_reveal' => 'fade', 'rf_reveal_trigger' => 'scroll' ], $devices )['start'] && 50 === R::normalize( [ 'rf_reveal' => 'fade', 'rf_reveal_trigger' => 'scroll' ], $devices )['end'] && 100 === R::normalize( [ 'rf_reveal' => 'fade', 'rf_reveal_end' => 100 ], $devices )['end'] );
+$new_fx = [ 'blur-up', 'pop', 'spin', 'skew-up', 'flip-up', 'flip-left', 'swing', 'iris', 'curtain', 'split', 'diagonal', 'drop' ];
+t( 'reveal: the new effects are accepted for the element, its text and its children', count( array_filter( $new_fx, function ( $fx ) use ( $devices ) {
+	$a = R::normalize( [ 'rf_reveal' => $fx, 'rf_reveal_text' => 'words', 'rf_reveal_text_effect' => $fx ], $devices );
+	$b = R::normalize( [ 'rf_reveal_children' => $fx ], $devices );
+	return $fx === ( $a['effect'] ?? '' ) && $fx === ( $a['textEffect'] ?? '' ) && $fx === ( $b['children'] ?? '' );
+} ) ) === count( $new_fx ) && 26 === count( R::EFFECTS ) );
+
 // ---- parallax presets
 $preset = R::with_preset( [ 'rf_scroll_preset' => 'float', 'rf_scroll_blur' => 'yes', 'rf_scroll_ty_speed' => 9 ] );
 $fx = M::normalize( $preset, $devices );

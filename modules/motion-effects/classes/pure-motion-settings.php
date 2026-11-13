@@ -113,9 +113,9 @@ class Pure_Motion_Settings {
 	}
 
 	/** @return int[] [ start, end ] percent, ordered. */
-	public static function range( array $settings, string $prefix ): array {
+	public static function range( array $settings, string $prefix, int $default_end = 100 ): array {
 		$start = (int) round( self::number( $settings, "{$prefix}_start", 0, 0, 100 ) );
-		$end = (int) round( self::number( $settings, "{$prefix}_end", 100, 0, 100 ) );
+		$end = (int) round( self::number( $settings, "{$prefix}_end", $default_end, 0, 100 ) );
 
 		if ( $start > $end ) {
 			list( $start, $end ) = [ $end, $start ];

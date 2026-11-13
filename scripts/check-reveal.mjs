@@ -77,7 +77,7 @@ const dark = { background_background: 'classic', background_color: '#120f2e', pa
 const piecesOf = ( p, sel ) => p.evaluate( ( s ) => Array.from( document.querySelectorAll( s ) ).map( ( el ) => ( {
 	p: parseFloat( getComputedStyle( el ).getPropertyValue( '--rf-rv-p' ) ),
 	delay: el.style.getPropertyValue( '--rf-rv-delay' ),
-	fx: el.getAttribute( 'data-rf-rv-fx' ),
+	fx: el.getAttribute( 'data-rf-rv-fx' ) || el.getAttribute( 'data-rf-rv-played' ),
 	opacity: parseFloat( getComputedStyle( el ).opacity ),
 } ) ), sel );
 const scrollToEl = ( p, sel, share = 0 ) => p.evaluate( ( [ s, f ] ) => {
@@ -140,7 +140,7 @@ async function main() {
 			const words = el.querySelectorAll( '.rf-rv-word' );
 			return {
 				words: words.length,
-				clipped: el.querySelectorAll( '.rf-rv-clip > .rf-rv-word[data-rf-rv-fx="mask"]' ).length,
+				clipped: el.querySelectorAll( '.rf-rv-clip > .rf-rv-word[data-rf-rv-fx="mask"], .rf-rv-clip > .rf-rv-word[data-rf-rv-played="mask"]' ).length,
 				sr: ( el.querySelector( '.rf-rv-sr' ) || {} ).textContent,
 				hidden: Array.from( words ).every( ( w ) => 'true' === w.getAttribute( 'aria-hidden' ) ),
 				delays: [ ...new Set( Array.from( words ).map( ( w ) => w.style.getPropertyValue( '--rf-rv-delay' ) ) ) ],
@@ -209,6 +209,120 @@ async function main() {
 		const late = await n.evaluate( () => getComputedStyle( document.querySelector( '[data-id="h1"]' ) ).opacity ).catch( () => null );
 		check( 'failsafe', 'without the script the content still shows after 3 seconds', late === '1', `${ early } -> ${ late }` );
 
+		// ------------------------------------------------------------ every effect, the widgets that rewrite their text
+		const EFFECTS = [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'fade', 'zoom-in', 'zoom-out', 'blur', 'rise', 'wipe-up', 'wipe-down', 'wipe-left', 'wipe-right', 'dim', 'blur-up', 'pop', 'spin', 'skew-up', 'flip-up', 'flip-left', 'swing', 'iris', 'curtain', 'split', 'diagonal', 'drop' ];
+		const tall = { min_height: { unit: 'vh', size: 105 } };
+		const fxKey = ( fx ) => fx.replace( /-/g, '' );
+		const all = page( 'Reveal effects', [
+			box( 'first', tall, [ heading( 'firsth', 'Effects' ) ] ),
+			...EFFECTS.map( ( fx ) => box( 'e' + fxKey( fx ), { ...tall, flex_direction: 'row', rf_reveal_children: fx, rf_reveal_duration: 300, rf_reveal_stagger: 20 }, [
+				heading( 'w' + fxKey( fx ), 'Whole ' + fx, { rf_reveal: fx, rf_reveal_duration: 300 } ),
+				heading( 't' + fxKey( fx ), 'Words of ' + fx, { rf_reveal_text: 'words', rf_reveal_text_effect: fx, rf_reveal_duration: 300, rf_reveal_stagger: 20 } ),
+			] ) ),
+			box( 'live', { ...tall, flex_direction: 'column' }, [
+				{ id: 'ahl', elType: 'widget', widgetType: 'refraction-animated-headline', settings: { rf_reveal_text: 'words' }, elements: [] },
+				{ id: 'mq', elType: 'widget', widgetType: 'refraction-marquee', settings: { rf_reveal_text: 'chars' }, elements: [] },
+				{ id: 'cnt', elType: 'widget', widgetType: 'counter', settings: { title: 'Happy riders', rf_reveal_text: 'words' }, elements: [] },
+				{ id: 'cd', elType: 'widget', widgetType: 'refraction-countdown', settings: { rf_reveal_text: 'words' }, elements: [] },
+			] ),
+			box( 'slow', tall, [ heading( 'slowh', 'Takes its time', { rf_reveal: 'fade-up', rf_reveal_duration: 2000 } ) ] ),
+			box( 'own', tall, [ heading( 'ownh', 'Keeps its own transform', { rf_reveal: 'zoom-in', rf_reveal_duration: 200, _transform_rotate_popover: 'transform', _transform_rotateZ_effect: { unit: 'deg', size: 8 } } ) ] ),
+			box( 'scrolldef', { ...tall, min_height: { unit: 'vh', size: 150 } }, [ heading( 'scrolldefh', 'Scroll with the default range', { rf_reveal: 'fade-up', rf_reveal_trigger: 'scroll' } ) ] ),
+		] );
+		const e = await ( await browser.newContext( { viewport: { width: 1200, height: 800 } } ) ).newPage();
+		watch( e, 'effects' );
+		await e.goto( all.url );
+		await e.waitForFunction( () => document.querySelector( '[data-id="wfadeup"][data-rf-rv-piece]' ), null, { timeout: 15000 } );
+		const look = ( id ) => e.evaluate( ( id ) => {
+			const el = document.querySelector( `[data-id="${ id }"]` );
+			const pieces = [ ...( el.hasAttribute( 'data-rf-rv-piece' ) ? [ el ] : [] ), ...el.querySelectorAll( '[data-rf-rv-piece]' ) ];
+			return pieces.map( ( x ) => {
+				const cs = getComputedStyle( x );
+				return { state: x.getAttribute( 'data-rf-rv-piece' ), fx: x.getAttribute( 'data-rf-rv-fx' ) || x.getAttribute( 'data-rf-rv-played' ), o: +cs.opacity, t: cs.transform, c: cs.clipPath, f: cs.filter };
+			} );
+		}, id );
+		// Hidden or changed before it plays: not at full opacity, or moved, clipped or blurred.
+		const changed = ( x ) => x.o < 0.99 || ( 'none' !== x.t && 'matrix(1, 0, 0, 1, 0, 0)' !== x.t ) || 'none' !== x.c || 'none' !== x.f;
+		// No movement left: none, or a matrix (2D or 3D) equal to the identity within rounding.
+		const atRest = ( t ) => {
+			if ( 'none' === t ) { return true; }
+			const m = t.slice( t.indexOf( '(' ) + 1, -1 ).split( ',' ).map( Number );
+			const id = 6 === m.length ? [ 1, 0, 0, 1, 0, 0 ] : [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ];
+			return m.length === id.length && m.every( ( v, i ) => Math.abs( v - id[ i ] ) < 0.001 );
+		};
+		const settled = ( x ) => 'done' === x.state && x.o > 0.99 && atRest( x.t ) && 'none' === x.c && 'none' === x.f;
+		const notHidden = [];
+		const notSettled = [];
+		for ( const fx of EFFECTS ) {
+			const ids = [ 'w' + fxKey( fx ), 't' + fxKey( fx ), 'e' + fxKey( fx ) ];
+			for ( const id of ids ) {
+				const before = ( await look( id ) ).filter( ( x ) => x.fx === fx );
+				if ( ! before.length || ! before.every( changed ) ) { notHidden.push( id ); }
+			}
+			await e.evaluate( ( id ) => document.querySelector( `[data-id="${ id }"]` ).scrollIntoView( { block: 'center' } ), 'e' + fxKey( fx ) );
+			await sleep( 900 );
+			for ( const id of ids ) {
+				const after = ( await look( id ) ).filter( ( x ) => x.fx === fx );
+				if ( ! after.length || ! after.every( settled ) ) { notSettled.push( id + JSON.stringify( after[ 0 ] ) ); }
+			}
+			if ( 'flip-up' === fx || 'iris' === fx ) {
+				await e.evaluate( ( id ) => document.querySelector( `[data-id="${ id }"]` ).scrollIntoView( { block: 'start' } ), 'e' + fxKey( fx === 'flip-up' ? 'swing' : 'diagonal' ) );
+				await e.evaluate( () => window.scrollBy( 0, -500 ) );
+				await sleep( 120 );
+				await e.screenshot( { path: join( SHOTS, `effect-${ fx }-midway.png` ) } );
+			}
+		}
+		check( 'effects', `all ${ EFFECTS.length } effects start hidden or changed: on the element, on its words and on a container's elements`, 0 === notHidden.length, notHidden.join( ', ' ) );
+		check( 'effects', 'and all of them end in place, with nothing of the reveal left (no transform, clip or blur)', 0 === notSettled.length, notSettled.join( ' | ' ) );
+
+		await e.evaluate( () => document.querySelector( '[data-id="live"]' ).scrollIntoView( { block: 'start' } ) );
+		await sleep( 3500 );
+		await e.screenshot( { path: join( SHOTS, 'live-text.png' ) } );
+		const liveText = await e.evaluate( () => {
+			const q = ( s ) => document.querySelector( s );
+			return {
+				headlineWordsSplit: q( '[data-id="ahl"] .refraction-headline__dynamic .rf-rv-word' ) !== null,
+				headlineBeforeSplit: q( '[data-id="ahl"] .refraction-headline__before .rf-rv-word' ) !== null,
+				marqueeSplit: q( '[data-id="mq"] .rf-marquee .rf-rv-char' ) !== null,
+				marqueeHidden: [ ...document.querySelectorAll( '[data-id="mq"] .rf-marquee__text' ) ].filter( ( t ) => +getComputedStyle( t ).opacity < 0.99 ).length,
+				counterTitle: [ ...document.querySelectorAll( '[data-id="cnt"] .refraction-counter-title .rf-rv-word' ) ].map( ( w ) => w.textContent ).join( ' ' ),
+				counterGap: ( () => {
+					const w = document.querySelectorAll( '[data-id="cnt"] .refraction-counter-title .rf-rv-word' );
+					return w.length === 2 ? Math.round( w[ 1 ].getBoundingClientRect().left - w[ 0 ].getBoundingClientRect().right ) : -1;
+				} )(),
+				counterNumberSplit: q( '[data-id="cnt"] .refraction-counter-number .rf-rv-word' ) !== null,
+				countdownSplit: q( '[data-id="cd"] .refraction-countdown__digits .rf-rv-word' ) !== null,
+				countdownLabelSplit: q( '[data-id="cd"] .refraction-countdown__label .rf-rv-word' ) !== null,
+			};
+		} );
+		check( 'live text', 'Animated Headline: the fixed words reveal, the changing words are left to the headline', liveText.headlineBeforeSplit && ! liveText.headlineWordsSplit, JSON.stringify( liveText ) );
+		check( 'live text', 'Marquee: its running text is not split, so no copy stays hidden', ! liveText.marqueeSplit && 0 === liveText.marqueeHidden, JSON.stringify( liveText ) );
+		check( 'live text', 'Counter: the title keeps its space in a flex box ("Happy riders"); the number is left to count', 'Happy riders' === liveText.counterTitle && liveText.counterGap >= 3 && ! liveText.counterNumberSplit, JSON.stringify( liveText ) );
+		check( 'live text', 'Countdown: labels reveal, digits keep ticking unsplit', liveText.countdownLabelSplit && ! liveText.countdownSplit, JSON.stringify( liveText ) );
+
+		await e.evaluate( () => document.querySelector( '[data-id="slow"]' ).scrollIntoView( { block: 'center' } ) );
+		await sleep( 600 );
+		const midway = await e.evaluate( () => { const cs = getComputedStyle( document.querySelector( '[data-id="slowh"]' ) ); return { o: +cs.opacity, t: cs.transform }; } );
+		check( 'timing', "a widget's own hover transition does not cut the reveal short: 600 ms into a 2 s fade it is still on its way", midway.o > 0.2 && midway.o < 0.98 && 'none' !== midway.t, JSON.stringify( midway ) );
+		await e.evaluate( () => document.querySelector( '[data-id="own"]' ).scrollIntoView( { block: 'center' } ) );
+		await sleep( 1400 );
+		const own = await e.evaluate( () => {
+			const el = document.querySelector( '[data-id="ownh"]' );
+			return getComputedStyle( el.querySelector( ':scope > .refraction-widget-container' ) || el ).transform;
+		} );
+		check( 'settled', "after playing once, the element's own Transform (rotate) still applies", /^matrix(3d)?\(0\.990268, 0\.139173,/.test( own ), own );
+
+		// With the scroll and Viewport end left empty: done once the element's top is halfway up the screen.
+		const halfway = await e.evaluate( async () => {
+			const el = document.querySelector( '[data-id="scrolldefh"]' );
+			const top = el.getBoundingClientRect().top + window.scrollY;
+			window.scrollTo( 0, top - ( innerHeight * 0.45 ) );
+			await new Promise( ( r ) => setTimeout( r, 400 ) );
+			return Number( el.getAttribute( 'data-rf-rv-progress' ) );
+		} );
+		check( 'scroll', 'with the scroll and no Viewport end set, it is complete halfway up the screen (as the panel shows)', 1 === halfway, String( halfway ) );
+		await e.context().close();
+
 		// ------------------------------------------------------------ the editor
 		const actx = await browser.newContext( { viewport: { width: 1500, height: 950 } } );
 		const a = await actx.newPage();
@@ -231,6 +345,19 @@ async function main() {
 		await a.waitForTimeout( 500 );
 		const sections = await a.$$eval( '.refraction-section-title', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ) );
 		check( 'editor', 'the Advanced tab has Reveal next to Scrolling Effects', sections.includes( 'Reveal' ) && sections.includes( 'Scrolling Effects' ), sections.join( '|' ) );
+		await a.click( '.refraction-control-section_rf_reveal' );
+		await a.waitForTimeout( 500 );
+		const groups = await a.$$eval( '.refraction-control-rf_reveal select optgroup', ( g ) => g.map( ( x ) => x.label + ':' + x.children.length ) );
+		check( 'editor', 'the effects are listed in groups (26 in all)', groups.length === 5 && groups.reduce( ( n, g ) => n + Number( g.split( ':' )[ 1 ] ), 0 ) === 26, groups.join( ' ' ) );
+		const noticeShown = () => a.evaluate( () => { const n = document.querySelector( '.refraction-control-rf_reveal_entrance_notice' ); return !! n && null !== n.offsetParent; } );
+		await a.selectOption( '.refraction-control-rf_reveal select', 'flip-up' );
+		await a.waitForTimeout( 400 );
+		const quiet = await noticeShown();
+		await a.evaluate( () => $e.run( 'document/elements/settings', { container: refraction.getContainer( 'endh' ), settings: { _animation: 'fadeIn' }, options: { external: true } } ) );
+		await a.waitForTimeout( 600 );
+		const warned = await noticeShown();
+		await a.screenshot( { path: join( SHOTS, 'editor-entrance-notice.png' ) } );
+		check( 'editor', 'with an Entrance Animation too, the panel says the whole-element reveal is skipped', ! quiet && warned, `${ quiet } ${ warned }` );
 		await actx.close();
 	} catch ( e ) {
 		failures++;
