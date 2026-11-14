@@ -782,5 +782,17 @@ $md = $bv( [ 'days' => '2026-11-18, 2026-11-16,2026-11-17' ] );
 t( 'several days: tidied in order, counted in a Total, at most the maximum, no closed day', ! isset( $md['errors']['days'] ) && '2026-11-16, 2026-11-17, 2026-11-18' === $md['values']['days'] && '30.00' === $md['values']['nightly'] && isset( $bv( [ 'days' => '2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19' ] )['errors']['days'] ) && isset( $bv( [ 'days' => '2026-11-15' ] )['errors']['days'] ) );
 S::$now = null;
 
+// Form buttons (0.99.0): the Button widget's type, size and ID on the form's buttons.
+foreach ( [ 'esc_html__' => 'return $t;', 'esc_attr' => 'return htmlspecialchars( (string) $t, ENT_QUOTES );', 'sanitize_html_class' => 'return preg_replace( "/[^A-Za-z0-9_-]/", "", (string) $t );' ] as $fn => $body ) {
+	if ( ! function_exists( $fn ) ) {
+		eval( "function $fn( \$t, \$d = '' ) { $body }" ); // phpcs:ignore Squiz.PHP.Eval.Discouraged -- Test stubs.
+	}
+}
+require_once $root . '/modules/form-builder/classes/form-buttons.php';
+use Refraction\Modules\FormBuilder\Classes\Form_Buttons as FB;
+t( 'form buttons: type, size and hover animation classes, unknown values left out', ' rfb-type-success rfb-size-lg refraction-animation-grow' === FB::classes( [ 'button_type' => 'success', 'size' => 'lg', 'hover_animation' => 'grow' ], '' ) && ' rfb-size-xs' === FB::classes( [ 'next_button_type' => 'evil', 'next_size' => 'xs' ], 'next' ) && '' === FB::classes( [ 'add_button_type' => '', 'add_size' => 'huge', 'add_hover_animation' => 'none' ], 'add' ) );
+t( 'form buttons: the button ID is cleaned, empty gives no attribute', ' id="book-nowx"' === FB::id_attribute( [ 'css_id' => 'book-now"><x' ], '' ) && '' === FB::id_attribute( [ 'add_css_id' => '' ], 'add' ) );
+t( 'form buttons: setting names are the prefix and the name, none for Submit', 'typography' === FB::name( '', 'typography' ) && 'back_color_hover' === FB::name( 'back', 'color_hover' ) );
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

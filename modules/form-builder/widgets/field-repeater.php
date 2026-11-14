@@ -16,6 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Field_Repeater extends Nested_Field {
 
+	/** The buttons, with repeated parts so the Style tab wins over the form's own look and the theme's. */
+	const ADD = '{{WRAPPER}} .rfb-btn[data-rfb-add][data-rfb-add][data-rfb-add]';
+	const REMOVE = '{{WRAPPER}} .rfb-rep-remove.rfb-rep-remove.rfb-rep-remove.rfb-rep-remove';
+
 	protected function field_type(): string {
 		return 'repeater';
 	}
@@ -32,19 +36,45 @@ class Field_Repeater extends Nested_Field {
 		$this->add_control( 'min_rows', [ 'label' => esc_html__( 'Minimum rows', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 20, 'default' => 0, 'separator' => 'before' ] );
 		$this->add_control( 'max_rows', [ 'label' => esc_html__( 'Maximum rows', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 50, 'default' => 10 ] );
 		$this->add_control( 'add_label', [ 'label' => esc_html__( 'Add button text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'default' => esc_html__( 'Add row', 'refraction' ) ] );
-		// The buttons' icons and hover animations (0.97.0), like the Button widget.
-		Form_Buttons::controls( $this, 'add', '{{WRAPPER}} [data-rfb-add]', [ 'heading' => esc_html__( 'Add button', 'refraction' ) ] );
-		Form_Buttons::controls( $this, 'remove', '{{WRAPPER}} .rfb-rep-remove', [ 'heading' => esc_html__( 'Remove button', 'refraction' ), 'text' => false ] );
+		// The buttons' Button widget settings (icons and animations 0.97.0; type, size, ID, position 0.99.0).
+		Form_Buttons::controls( $this, 'add', self::ADD, [ 'heading' => esc_html__( 'Add button', 'refraction' ) ] );
+		$this->add_responsive_control( 'add_align', [
+			'label' => esc_html__( 'Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-h-align-center' ],
+				'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+				'justify' => [ 'title' => esc_html__( 'Stretch', 'refraction' ), 'icon' => 'rficon-h-align-stretch' ],
+			],
+			'selectors_dictionary' => [
+				'left' => 'margin-inline: 0 auto; width: auto;',
+				'center' => 'margin-inline: auto; width: auto;',
+				'right' => 'margin-inline: auto 0; width: auto;',
+				'justify' => 'margin-inline: 0; width: 100%;',
+			],
+			'selectors' => [ self::ADD => 'display: flex; {{VALUE}}' ],
+		] );
+		Form_Buttons::controls( $this, 'remove', self::REMOVE, [ 'heading' => esc_html__( 'Remove button', 'refraction' ), 'text' => false, 'look' => false, 'css_id' => false ] );
 	}
 
 	protected function register_own_style_controls(): void {
-		$this->start_controls_section( 'section_style_rows', [ 'label' => esc_html__( 'Rows and buttons', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+		$this->start_controls_section( 'section_style_rows', [ 'label' => esc_html__( 'Rows', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
 		$this->add_control( 'row_bg', [ 'label' => esc_html__( 'Row background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-rep-row' => 'background-color: {{VALUE}};' ] ] );
 		$this->add_responsive_control( 'row_padding', [ 'label' => esc_html__( 'Row padding', 'refraction' ), 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .rfb-rep-row' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 		$this->add_responsive_control( 'row_gap', [ 'label' => esc_html__( 'Space between rows', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ], 'selectors' => [ '{{WRAPPER}} .rfb-rows' => 'gap: {{SIZE}}{{UNIT}};' ] ] );
-		$this->add_control( 'add_bg', [ 'label' => esc_html__( 'Add button background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => [ '{{WRAPPER}} [data-rfb-add]' => 'background-color: {{VALUE}};' ] ] );
-		$this->add_control( 'add_color', [ 'label' => esc_html__( 'Add button text', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} [data-rfb-add]' => 'color: {{VALUE}};' ] ] );
-		$this->add_control( 'remove_color', [ 'label' => esc_html__( 'Remove button color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-rep-remove' => 'color: {{VALUE}};' ] ] );
+		// Before 0.99.0: three plain colors. They still apply (now over the form's own look), and show only while they hold a value.
+		$this->add_control( 'add_bg', [ 'label' => esc_html__( 'Add button background (earlier setting)', 'refraction' ), 'type' => Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => [ self::ADD => 'background-color: {{VALUE}};' ], 'condition' => [ 'add_bg!' => '' ] ] );
+		$this->add_control( 'add_color', [ 'label' => esc_html__( 'Add button text (earlier setting)', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ self::ADD => 'color: {{VALUE}};' ], 'condition' => [ 'add_color!' => '' ] ] );
+		$this->add_control( 'remove_color', [ 'label' => esc_html__( 'Remove button color (earlier setting)', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ self::REMOVE => 'color: {{VALUE}};' ], 'condition' => [ 'remove_color!' => '' ] ] );
+		$this->end_controls_section();
+
+		// The Button widget's Style tab for each button (0.99.0).
+		$this->start_controls_section( 'section_style_add', [ 'label' => esc_html__( 'Add button', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+		Form_Buttons::style_controls( $this, 'add', self::ADD );
+		$this->end_controls_section();
+		$this->start_controls_section( 'section_style_remove', [ 'label' => esc_html__( 'Remove button', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+		Form_Buttons::style_controls( $this, 'remove', self::REMOVE, [ 'text' => false ] );
 		$this->end_controls_section();
 	}
 
@@ -69,7 +99,7 @@ class Field_Repeater extends Nested_Field {
 		echo '</div><template class="rfb-row-template">';
 		$this->row( $place, '__INDEX__', [] );
 		$settings = $this->get_settings_for_display();
-		echo '</template><button type="button" class="rfb-btn rfb-btn-light-primary' . esc_attr( Form_Buttons::classes( $settings, 'add' ) ) . '" data-rfb-add>' . Form_Buttons::inner( $settings, 'add', $field['add_label'] ) . '</button>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		echo '</template><button type="button"' . Form_Buttons::id_attribute( $settings, 'add' ) . ' class="rfb-btn rfb-btn-light-primary' . esc_attr( Form_Buttons::classes( $settings, 'add' ) ) . '" data-rfb-add>' . Form_Buttons::inner( $settings, 'add', $field['add_label'] ) . '</button>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 		echo $this->error( $place['path'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside.
 		echo '</fieldset></div>';
 	}
@@ -96,8 +126,10 @@ class Field_Repeater extends Nested_Field {
 				var addIconHtml = addIcon && addIcon.rendered ? '<span class="rfb-btn-icon" aria-hidden="true">' + addIcon.value + '</span>' : '';
 				var addText = '<span class="rfb-btn-text">' + _.escape( settings.add_label ) + '</span>';
 				var addAnimation = settings.add_hover_animation ? ' refraction-animation-' + settings.add_hover_animation : '';
+				addAnimation += settings.add_button_type ? ' rfb-type-' + settings.add_button_type : '';
+				addAnimation += settings.add_size ? ' rfb-size-' + settings.add_size : '';
 				#>
-				<span class="rfb-btn rfb-btn-light-primary{{ addIconHtml ? ' has-icon' : '' }}{{ addAnimation }}" data-rfb-add>{{{ 'right' === settings.add_icon_position ? addText + addIconHtml : addIconHtml + addText }}}</span>
+				<span<# if ( settings.add_css_id ) { #> id="{{ settings.add_css_id }}"<# } #> class="rfb-btn rfb-btn-light-primary{{ addIconHtml ? ' has-icon' : '' }}{{ addAnimation }}" data-rfb-add>{{{ 'right' === settings.add_icon_position ? addText + addIconHtml : addIconHtml + addText }}}</span>
 			</fieldset>
 		</div>
 		<?php

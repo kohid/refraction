@@ -87,6 +87,14 @@ class Steps extends Widget_Nested_Base {
 		<?php
 	}
 
+	/**
+	 * Back or Next of this widget, wherever the script puts it: by the class `rfb-from-<widget id>` it adds, repeated so
+	 * the Style tab wins over the form's own button look and the theme's.
+	 */
+	private static function button( string $which ): string {
+		return '.rfb-btn.rfb-' . $which . '.rfb-' . $which . '.rfb-from-{{ID}}.rfb-from-{{ID}}.rfb-from-{{ID}}';
+	}
+
 	protected function register_controls() {
 		$this->start_controls_section( 'section_steps', [ 'label' => esc_html__( 'Steps', 'refraction' ) ] );
 		$step = new Repeater();
@@ -155,10 +163,33 @@ class Steps extends Widget_Nested_Base {
 		] );
 		$this->end_controls_section();
 
-		// Back and Next (0.97.0): icons and hover animations, like the Button widget. Their texts stay in the cog.
+		// Back and Next: icons and hover animations (0.97.0), then the rest of the Button widget's settings (0.99.0). The
+		// script builds them, wherever the form puts them: the Style tab reaches them by a class naming this widget.
 		$this->start_controls_section( 'section_step_buttons', [ 'label' => esc_html__( 'Back and Next buttons', 'refraction' ) ] );
-		Form_Buttons::controls( $this, 'back', '', [ 'heading' => esc_html__( 'Back', 'refraction' ), 'position' => 'left' ] );
-		Form_Buttons::controls( $this, 'next', '', [ 'heading' => esc_html__( 'Next', 'refraction' ), 'position' => 'right' ] );
+		$this->add_responsive_control( 'nav_align', [
+			'label' => esc_html__( 'Position', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'flex-start' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'rficon-h-align-center' ],
+				'flex-end' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+				'space-between' => [ 'title' => esc_html__( 'Space between', 'refraction' ), 'icon' => 'rficon-h-align-stretch' ],
+			],
+			'description' => esc_html__( 'Where Back and Next sit in their row, when they have a row of their own.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rfb-step-nav' => 'display: flex; flex-wrap: wrap; justify-content: {{VALUE}};' ],
+		] );
+
+		foreach ( [ 'back' => [ esc_html__( 'Back', 'refraction' ), 'left' ], 'next' => [ esc_html__( 'Next', 'refraction' ), 'right' ] ] as $which => $spec ) {
+			$this->add_control( $which . '_heading_text', [ 'label' => $spec[0], 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+			$this->add_control( $which . '_text', [
+				'label' => esc_html__( 'Text', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'placeholder' => $spec[0],
+				'description' => esc_html__( 'Empty: the text in the form settings (the cog).', 'refraction' ),
+			] );
+			Form_Buttons::controls( $this, $which, self::button( $which ), [ 'position' => $spec[1] ] );
+		}
+
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_steps', [ 'label' => esc_html__( 'Step titles', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
@@ -185,6 +216,14 @@ class Steps extends Widget_Nested_Base {
 		$this->add_control( 'acc_done', [ 'label' => esc_html__( 'Completed color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => $var( '--rfb-acc-done' ), 'condition' => [ 'step_layout' => 'accordion' ] ] );
 		$this->add_control( 'acc_now', [ 'label' => esc_html__( 'In progress color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-acc-now' ), 'condition' => [ 'step_layout' => 'accordion' ] ] );
 		$this->end_controls_section();
+
+		// The Button widget's Style tab for Back and for Next (0.99.0).
+		$this->start_controls_section( 'section_style_back', [ 'label' => esc_html__( 'Back button', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+		Form_Buttons::style_controls( $this, 'back', self::button( 'back' ) );
+		$this->end_controls_section();
+		$this->start_controls_section( 'section_style_next', [ 'label' => esc_html__( 'Next button', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+		Form_Buttons::style_controls( $this, 'next', self::button( 'next' ) );
+		$this->end_controls_section();
 	}
 
 	protected function render() {
@@ -197,8 +236,11 @@ class Steps extends Widget_Nested_Base {
 		foreach ( [ 'back', 'next' ] as $which ) {
 			$buttons .= ' data-rfb-' . $which . '-icon="' . esc_attr( Form_Buttons::icon( $settings, $which ) ) . '"';
 			$buttons .= ' data-rfb-' . $which . '-place="' . esc_attr( 'right' === ( $settings[ $which . '_icon_position' ] ?? ( 'next' === $which ? 'right' : 'left' ) ) ? 'right' : 'left' ) . '"';
-			$buttons .= ' data-rfb-' . $which . '-class="' . esc_attr( trim( Form_Buttons::classes( $settings, $which ) ) ) . '"';
-			$buttons .= ' data-rfb-' . $which . '-style="' . esc_attr( Form_Buttons::style( $settings, $which ) ) . '"';
+			$buttons .= ' data-rfb-' . $which . '-class="' . esc_attr( trim( 'rfb-from-' . $this->get_id() . Form_Buttons::classes( $settings, $which ) ) ) . '"';
+			$text = trim( (string) ( $settings[ $which . '_text' ] ?? '' ) );
+			$buttons .= '' !== $text ? ' data-rfb-' . $which . '-text="' . esc_attr( $text ) . '"' : '';
+			$id = sanitize_html_class( (string) ( $settings[ $which . '_css_id' ] ?? '' ) );
+			$buttons .= '' !== $id ? ' data-rfb-' . $which . '-id="' . esc_attr( $id ) . '"' : '';
 		}
 
 		// Layout and progress (0.98.0), read by the script.

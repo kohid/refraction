@@ -87,6 +87,27 @@ The screens follow the layout language of the Metronic 8 admin demo (cards with 
 
 - **Step layouts and progress looks (0.98.0)**: the Steps widget's `step_layout` (top, sidebar, accordion), `step_progress` ('' = the form settings' progress; connected, steps, bar_percent, slider, segments, ring, dots, chevrons, bar_label, bar, none), `step_counter`, `side_heading`, and per step `step_icon`. They reach the script as `data-rfb-layout`, `data-rfb-progress-style`, `data-rfb-counter`, `data-rfb-side-heading` on `.rfb-steps` and `data-rfb-description` / `data-rfb-icon` on each step. frontend.js: `buildProgress()` (each look's markup and `update(current)`), `buildSidebar()` (a `<nav>` of buttons beside the steps, a CSS grid; a row on phones) and `buildAccordion()` (a header button before each step, `aria-expanded`, status texts; Back and Next move into the open step). Clicking a step goes back at once and forward only through each step's checks (`goTo`), up to one step past the furthest reached. Colors: `--rfb-pg-active`, `--rfb-pg-track`, `--rfb-pg-text`, `--rfb-side-bg`, `--rfb-side-w`, `--rfb-acc-done`, `--rfb-acc-now` (Style > Progress, sidebar and accordion). Check: `scripts/check-step-layouts.mjs`.
 
+## Form buttons: the Button widget's settings (0.99.0)
+
+Submit, the Repeater's Add and Remove buttons and the Steps widget's Back and Next take the Button widget's settings,
+built once in `classes/form-buttons.php`:
+
+- Content (`Form_Buttons::controls()`): Type (Default, Info, Success, Warning, Danger: `rfb-type-*`), Size (`rfb-size-xs`
+  to `xl`, "As the form" by default), Icon, Icon position, Space between icon and text, Icon size, Button ID. The Link
+  option does not apply: these buttons send the form, add or remove a row, or move between steps. Position: Submit's
+  Alignment, the Add button's Position (`add_align`), Back and Next's row (`nav_align`). The Steps widget also takes Back
+  and Next texts (`back_text`, `next_text`); empty, the form settings' texts stay.
+- Style (`Form_Buttons::style_controls()`), one section per button: Typography, Text Shadow, Normal / Hover tabs (Text
+  Color, Background classic or gradient, Box Shadow; Hover Border Color, Transition Duration, Hover Animation), Border,
+  Border Radius, Padding. Setting names are the prefix (`add`, `remove`, `back`, `next`; none for Submit) + the name.
+  Submit keeps its earlier names (`typography`, `color_normal`, `border_normal`, `shadow_*`, `radius`, `padding`); its
+  older `bg_normal` / `bg_hover` colors and hover border, and the Repeater's `add_bg`, `add_color`, `remove_color`, still
+  apply and show in the panel only while they hold a value.
+- Advanced: each widget's own Advanced tab (margin, padding, position, motion, responsive, attributes, custom CSS).
+- Selectors repeat the button's class so the Style tab wins over the form's own look and the theme's. Back and Next are
+  built by the script, wherever the form places them: they carry `rfb-from-<Steps widget id>`, and the selectors use
+  `{{ID}}`.
+
 ## Limits
 
 - Building a form needs the page editor (JavaScript). The public form works without it (all steps on one page, server validation).

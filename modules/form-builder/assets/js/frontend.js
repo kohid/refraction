@@ -881,7 +881,12 @@
 			const label = document.createElement( 'span' );
 
 			label.className = 'rfb-btn-text';
-			label.textContent = text;
+			// The Steps widget's own text and ID (0.99.0), else the form settings' text.
+			label.textContent = data[ which + 'Text' ] || text;
+
+			if ( data[ which + 'Id' ] && ! document.getElementById( data[ which + 'Id' ] ) ) {
+				button.id = data[ which + 'Id' ];
+			}
 			button.appendChild( label );
 
 			if ( icon ) {

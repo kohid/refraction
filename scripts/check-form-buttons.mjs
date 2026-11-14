@@ -138,7 +138,7 @@ async function main() {
 		await page.locator( '.refraction-control-section_step_buttons' ).click();
 		await page.waitForTimeout( 400 );
 		const groups = await page.$$eval( '.rf-section-groups__tab', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ) );
-		check( 'panel', 'it holds Back and Next, each with an icon and a hover animation like the Button widget', groups.join( '|' ) === 'Back|Next' && ( await page.locator( '.refraction-control-back_hover_animation:visible, .refraction-control-back_icon:visible' ).count() ) === 2, groups.join( '|' ) );
+		check( 'panel', 'it holds General, Back and Next, each button with a type and an icon like the Button widget (hover animation: Style tab)', groups.join( '|' ) === 'General|Back|Next' && await ( async () => { await page.locator( '.rf-section-groups__tab:visible', { hasText: 'Back' } ).first().click(); await page.waitForTimeout( 400 ); return ( await page.locator( '.refraction-control-back_button_type:visible, .refraction-control-back_icon:visible' ).count() ) === 2; } )(), groups.join( '|' ) );
 
 		await page.evaluate( () => $e.run( 'document/save/publish' ) );
 		await page.waitForTimeout( 3500 );
