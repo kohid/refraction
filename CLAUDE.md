@@ -15,6 +15,10 @@ Always use the installed skills whenever one applies to the task, and invoke it 
 
 Always collaborate with all three of `feature-dev:feature-dev`, `frontend-design:frontend-design` and `anthropic-skills:fullstack-developer` on every feature or change, invoking them before starting; do not wait for the task to look big enough.
 
+Do this without being reminded, on every request, however small: invoke `frontend-design:frontend-design` and `anthropic-skills:fullstack-developer` (and `feature-dev:feature-dev` for features) before starting the work.
+
+**Common sense rule (set by the owner): what you set in the panel must show in Edit Mode.** Every setting that changes how something looks (a layout, a progress style, a button style, an icon, a look) must show in the page builder's editor preview as soon as it is chosen, not only on the published site. When a widget's look is built by a front-end script (Steps layouts, Back/Next buttons, pickers), the editor preview must build it too (`content_template` carrying the same data, plus the script running on `frontend/element_ready`). Check every new setting in the editor preview in the browser, and add that to the feature's `check-*.mjs`. A setting that only works on the site is not finished.
+
 The owner has also said: do not stop to ask what to do next; decide, build and verify, and report. Features requested so far: the whole Elementor free + Pro feature set, rebranded as Refraction (see `docs/refraction/pro-roadmap.md`).
 
 ## What this is

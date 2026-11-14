@@ -7,6 +7,7 @@ use Refraction\Icons_Manager;
 use Refraction\Modules\FormBuilder\Base\Field_Settings;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Classes\Form_Buttons;
+use Refraction\Modules\FormBuilder\Classes\Shortcodes;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
 use Refraction\Repeater;
@@ -154,6 +155,29 @@ class Steps extends Widget_Nested_Base {
 			'type' => Controls_Manager::SWITCHER,
 			'condition' => [ 'step_layout!' => 'accordion' ],
 		] );
+		// How the next step comes in (0.100.0): on the site and in the editor's preview.
+		$this->add_control( 'step_animation', [
+			'label' => esc_html__( 'Step transition', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'None', 'refraction' ),
+				'fade' => esc_html__( 'Fade', 'refraction' ),
+				'slide' => esc_html__( 'Slide (from the side you go to)', 'refraction' ),
+				'slide_up' => esc_html__( 'Slide up', 'refraction' ),
+				'zoom' => esc_html__( 'Zoom in', 'refraction' ),
+				'flip' => esc_html__( 'Flip', 'refraction' ),
+			],
+			'separator' => 'before',
+			'description' => esc_html__( 'Plays when Next, Back or a step in the progress is used. Visitors who ask for less motion get none.', 'refraction' ),
+		] );
+		$this->add_control( 'step_animation_ms', [
+			'label' => esc_html__( 'Transition duration (ms)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 100, 'max' => 1500, 'step' => 50 ] ],
+			'default' => [ 'unit' => 'px', 'size' => 350 ],
+			'condition' => [ 'step_animation!' => '' ],
+		] );
 		$this->add_control( 'side_heading', [
 			'label' => esc_html__( 'Sidebar heading', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
@@ -248,6 +272,8 @@ class Steps extends Widget_Nested_Base {
 		$buttons .= ' data-rfb-layout="' . esc_attr( $layout ) . '"';
 		$buttons .= '' !== (string) ( $settings['step_progress'] ?? '' ) ? ' data-rfb-progress-style="' . esc_attr( sanitize_key( $settings['step_progress'] ) ) . '"' : '';
 		$buttons .= 'yes' === ( $settings['step_counter'] ?? '' ) ? ' data-rfb-counter' : '';
+		$animation = (string) ( $settings['step_animation'] ?? '' );
+		$buttons .= in_array( $animation, [ 'fade', 'slide', 'slide_up', 'zoom', 'flip' ], true ) ? ' data-rfb-anim="' . esc_attr( $animation ) . '" data-rfb-anim-ms="' . (int) max( 100, min( 1500, (int) ( $settings['step_animation_ms']['size'] ?? 350 ) ) ) . '"' : '';
 		$buttons .= '' !== trim( (string) ( $settings['side_heading'] ?? '' ) ) ? ' data-rfb-side-heading="' . esc_attr( $settings['side_heading'] ) . '"' : '';
 
 		echo '<div class="rfb-steps rfb-layout-' . esc_attr( $layout ) . '" data-rfb-steps' . $buttons . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
@@ -264,12 +290,41 @@ class Steps extends Widget_Nested_Base {
 		echo '</div>';
 	}
 
+	/**
+	 * The editor's preview: each step's slot, and on the box everything the script needs to draw the chosen layout as on
+	 * the site (0.100.0): layout, progress, "Step 1/6", the sidebar heading, each step's description and icon, Back and
+	 * Next with their icons, places, classes, texts and IDs, and the steps' texts.
+	 */
 	protected function content_template() {
 		?>
-		<div class="rfb-steps rfb-steps-editor">
+		<#
+		var rfbIcon = function( icon ) {
+			var out = icon && icon.value ? refraction.helpers.renderIcon( view, icon, { 'aria-hidden': true }, 'i', 'object' ) : null;
+			return out && out.rendered ? out.value : '';
+		};
+		var rfbMeta = _.map( settings.steps, function( step ) {
+			return { title: step.step_title || '', description: step.step_description || '', icon: rfbIcon( step.step_icon ) };
+		} );
+		var rfbLayout = _.contains( [ 'top', 'sidebar', 'accordion' ], settings.step_layout ) ? settings.step_layout : 'top';
+		var rfbButtons = '';
+		_.each( [ 'back', 'next' ], function( which ) {
+			var icon = rfbIcon( settings[ which + '_icon' ] );
+			var classes = [ 'rfb-from-' + view.getID() ];
+			if ( icon ) { classes.push( 'has-icon' ); }
+			if ( settings[ which + '_button_type' ] ) { classes.push( 'rfb-type-' + settings[ which + '_button_type' ] ); }
+			if ( settings[ which + '_size' ] ) { classes.push( 'rfb-size-' + settings[ which + '_size' ] ); }
+			if ( settings[ which + '_hover_animation' ] && 'none' !== settings[ which + '_hover_animation' ] ) { classes.push( 'refraction-animation-' + settings[ which + '_hover_animation' ] ); }
+			rfbButtons += ' data-rfb-' + which + '-icon="' + _.escape( icon ? '<span class="rfb-btn-icon" aria-hidden="true">' + icon + '</span>' : '' ) + '"';
+			rfbButtons += ' data-rfb-' + which + '-place="' + ( 'right' === ( settings[ which + '_icon_position' ] || ( 'next' === which ? 'right' : 'left' ) ) ? 'right' : 'left' ) + '"';
+			rfbButtons += ' data-rfb-' + which + '-class="' + _.escape( classes.join( ' ' ) ) + '"';
+			rfbButtons += ' data-rfb-' + which + '-text="' + _.escape( settings[ which + '_text' ] || '' ) + '"';
+			rfbButtons += ' data-rfb-' + which + '-id="' + _.escape( settings[ which + '_css_id' ] || '' ) + '"';
+		} );
+		#>
+		<div class="rfb-steps rfb-steps-editor rfb-layout-{{ rfbLayout }}" data-rfb-steps-preview data-rfb-layout="{{ rfbLayout }}" data-rfb-progress-style="{{ 'accordion' === rfbLayout ? '' : ( settings.step_progress || '' ) }}"<# if ( 'yes' === settings.step_counter && 'accordion' !== rfbLayout ) { #> data-rfb-counter<# } #> data-rfb-side-heading="{{ settings.side_heading || '' }}"<# if ( settings.step_animation ) { #> data-rfb-anim="{{ settings.step_animation }}" data-rfb-anim-ms="{{ settings.step_animation_ms && settings.step_animation_ms.size ? settings.step_animation_ms.size : 350 }}"<# } #> data-rfb-meta="{{ JSON.stringify( rfbMeta ) }}" data-rfb-i18n="<?php echo esc_attr( (string) wp_json_encode( Shortcodes::step_i18n() ) ); ?>"{{{ rfbButtons }}}>
 			<# _.each( settings.steps, function( step, index ) { #>
 			<div class="rfb-step-slot">
-				<div class="rfb-step-head rfb-t-step"><span class="rfb-step-number">{{{ index + 1 }}}</span><h3 class="rfb-step-title">{{{ step.step_title }}}</h3></div>
+				<div class="rfb-step-head rfb-t-step"><span class="rfb-step-number">{{{ index + 1 }}}</span><h3 class="rfb-step-title">{{{ step.step_title }}}</h3><# if ( step.step_description ) { #><p class="rfb-description">{{ step.step_description }}</p><# } #></div>
 			</div>
 			<# } ); #>
 		</div>

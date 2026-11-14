@@ -108,6 +108,26 @@ built once in `classes/form-buttons.php`:
   built by the script, wherever the form places them: they carry `rfb-from-<Steps widget id>`, and the selectors use
   `{{ID}}`.
 
+## Steps layouts in Edit Mode (0.100.0)
+
+Whatever the Steps widget is set to shows in the page builder's preview as on the site. The widget's
+`content_template` puts on its box (`data-rfb-steps-preview`) what the form script reads on the site: the layout, the
+progress display, "Step 1/6", the sidebar heading, each step's title, description and icon (`data-rfb-meta`), Back and
+Next (icon, place, classes with type, size, animation and `rfb-from-<id>`, text, ID) and the steps' texts
+(`Shortcodes::step_i18n()`). `frontend.js` `previewSteps()` runs on the editor's `frontend/element_ready` and draws them
+with the site's own `buildProgress()`, `buildSidebar()`, `buildAccordion()` and `dressStepButton()`. An empty progress
+setting falls back to the form settings' (read from the editor's page settings), as do the Back and Next texts.
+
+One step shows at a time. The progress items, the sidebar, the accordion headers and Back / Next move between steps
+without checks, so every step's fields stay reachable; the step shown is kept while the widget is drawn again. The
+editor moves the step boxes when it draws them and when steps are added or removed: a MutationObserver on the box draws
+the preview again after that.
+
+Step transition (`step_animation`, `step_animation_ms`): fade, slide (forward from the right, back from the left), slide
+up, zoom or flip, 100 to 1500 ms, on the box as `data-rfb-anim` / `data-rfb-anim-ms`. `animateStep()` plays it with the
+Web Animations API on the step coming in, on the site (not on the first step shown) and in the editor's preview; never
+with `prefers-reduced-motion: reduce`.
+
 ## Limits
 
 - Building a form needs the page editor (JavaScript). The public form works without it (all steps on one page, server validation).

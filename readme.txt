@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.99.0
+Stable tag: 0.100.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.100.0 =
+* Form Builder: the Steps widget's layout now shows in Edit Mode as on the site. The chosen progress display (or the form's), the sidebar of steps with its heading and descriptions, the accordion with each step's icon and status, "Step 1/6" above each step, and Back and Next with their texts, icons, type, size and Style settings. One step shows at a time, as on the site: click the progress, the sidebar, an accordion header, Back or Next to move between steps and edit their fields.
+* Form Builder: Steps widget > Layout and progress > Step transition: None, Fade, Slide (from the side the visitor goes to), Slide up, Zoom in or Flip, with its duration. It plays on the site and in Edit Mode; visitors who ask for less motion get none.
+* Editor: an icon from an inline-SVG library (Phosphor, Solar) no longer raises an error when its element was drawn again before the icon loaded.
 
 = 0.99.0 =
 * Form Builder: Submit, the Repeater's Add and Remove buttons and the Steps' Back and Next buttons have the Button widget's settings. Content: type (Info, Success, Warning, Danger), size (Extra Small to Extra Large), icon, its place and space, Button ID, and the position (Add button; Back and Next in their row), plus Back and Next texts on the Steps widget. Style, for each button: typography, text shadow, Normal and Hover text color, background (color or gradient), shadow, hover border color, transition duration and hover animation, then border, border radius and padding. Advanced is each widget's own Advanced tab. Earlier Submit and Repeater colors keep working.

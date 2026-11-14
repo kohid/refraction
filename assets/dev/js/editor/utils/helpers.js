@@ -107,7 +107,8 @@ module.exports = {
 		this.fetchInlineSvg( value.url, ( data ) => {
 			if ( data ) {
 				self._inlineSvg[ value.id ] = data; // $( data ).find( 'svg' )[ 0 ].outerHTML;
-				if ( view ) {
+				// The editor may have drawn the element again meanwhile: a destroyed view cannot render.
+				if ( view && ! view.isDestroyed ) {
 					view.render();
 				}
 				refraction.channels.editor.trigger( 'svg:insertion', data, value.id );
@@ -186,7 +187,7 @@ module.exports = {
 		const svgLib = svgLibrary( iconType );
 		if ( svgLib ) {
 			const name = svgIconName( svgLib, iconValue ),
-				svg = ( name ? svgMarkup( svgLib, name, () => view?.render?.() ) : '' ) || '';
+				svg = ( name ? svgMarkup( svgLib, name, () => view && ! view.isDestroyed && view.render?.() ) : '' ) || '';
 
 			if ( 'panel' === returnType || ! view ) {
 				const plain = '<' + tag + ' class="' + ( svgLib.displayPrefix || 'rf-solar' ) + '">' + svg + '</' + tag + '>';
