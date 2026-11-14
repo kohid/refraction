@@ -76,6 +76,11 @@ The screens follow the layout language of the Metronic 8 admin demo (cards with 
   - **Amount**: Icon in the box; the currency symbol beside the box is opt-in (`currency_symbol`, off by default).
   - Panel: fields with an icon get the categories "In the box" (icon, format, flag, growing text, currency symbol) and "Limits" (lowest and highest). Check: `scripts/check-field-icons.mjs`.
 
+- **Calendar, clock and submit icon (0.95.0)**:
+  - `picker` (on unless switched off; widget: Calendar picker / Clock picker) adds `data-rfb-picker="date|time|datetime"` and loads `flatpickr` (bundled in `assets/lib/flatpickr`, MIT; also a script/style dependency of the date widgets so the editor preview has it). `initPicker` (frontend.js, run by `enhance()` on the site and in the preview) opens flatpickr with a visible box (`altInput`, same classes as the field, so icons and styles apply) showing `j F Y` / `H:i` / `j F Y, H:i`, while the real input keeps `Y-m-d` / `H:i` / `Y-m-d\TH:i`. It reads the field's limits: min and max dates, closed weekdays (disabled), opening hours (minTime / maxTime), the minute step. The calendar opens on `<body>` and takes the form's colors (`--rfb-*` copied onto it); its look is `.flatpickr-calendar.rfb-fp` in front.scss, written from scratch in the admin look. A Clear and a Today (Now) button sit at the bottom. The closed-day and hours messages (`initWhen`) are set on the visible box.
+  - Submit button: Icon, Icon position (left / right), space between icon and text, icon size (`.rfb-submit-icon`, `.rfb-submit-text`).
+  - Check: `scripts/check-date-picker.mjs`.
+
 ## Limits
 
 - Building a form needs the page editor (JavaScript). The public form works without it (all steps on one page, server validation).

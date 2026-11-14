@@ -302,6 +302,13 @@ class Field_Renderer {
 
 		$attributes .= self::when_attributes( $field );
 
+		if ( ! empty( $field['picker'] ) ) {
+			// The form's own calendar and clock (bundled flatpickr, frontend.js initPicker); the browser's own is the fallback.
+			$attributes .= ' data-rfb-picker="' . esc_attr( $type ) . '"';
+			wp_enqueue_script( 'flatpickr' );
+			wp_enqueue_style( 'flatpickr' );
+		}
+
 		if ( 'phone' === $type && '' !== ( $field['phone_pattern'] ?? '' ) ) {
 			// Brackets, spaces and dashes are added while typing (frontend.js); the server keeps the number as sent.
 			$attributes .= ' data-rfb-phone="' . esc_attr( $field['phone_pattern'] ) . '" maxlength="' . strlen( $field['phone_pattern'] ) . '" inputmode="tel" autocomplete="tel"';

@@ -242,6 +242,15 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			] );
 		}
 
+		if ( in_array( $type, [ 'date', 'time', 'datetime' ], true ) ) {
+			$this->add_control( 'date_picker', [
+				'label' => 'time' === $type ? esc_html__( 'Clock picker', 'refraction' ) : esc_html__( 'Calendar picker', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+				'description' => esc_html__( 'The form\'s own calendar and clock, in its colors, with Clear and Today. Off: the browser\'s own picker.', 'refraction' ),
+			] );
+		}
+
 		if ( 'textarea' === $type ) {
 			$this->add_control( 'autogrow', [
 				'label' => esc_html__( 'Grow while typing', 'refraction' ),
@@ -288,6 +297,15 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 				'description' => esc_html__( 'The chosen country\'s flag at the left of the box.', 'refraction' ),
 			] );
 		}
+	}
+
+	/** Dates and times also load the calendar (flatpickr), in the editor's preview too. */
+	public function get_script_depends(): array {
+		return in_array( $this->field_type(), [ 'date', 'time', 'datetime' ], true ) ? [ 'flatpickr', 'refraction-form-builder-front' ] : [ 'refraction-form-builder-front' ];
+	}
+
+	public function get_style_depends(): array {
+		return in_array( $this->field_type(), [ 'date', 'time', 'datetime' ], true ) ? [ 'flatpickr', 'refraction-form-builder-front' ] : [ 'refraction-form-builder-front' ];
 	}
 
 	/** A Choice field (one or many): it has looks, and its options can have an icon, a line of text and a badge. */
@@ -683,6 +701,7 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'suggestions' => (string) ( $s['suggestions'] ?? '' ),
 			'icon' => $s['field_icon'] ?? null,
 			'icon_last' => $s['field_icon_last'] ?? null,
+			'picker' => $yes( 'date_picker' ),
 			'currency_symbol' => $yes( 'currency_symbol' ),
 			'autogrow' => $yes( 'autogrow' ),
 			'phone_format' => (string) ( $s['phone_format'] ?? '' ),

@@ -71,6 +71,19 @@ function page( title, elements ) {
 const box = ( id, settings, elements, isInner = false ) => ( { id, elType: 'container', settings: { content_width: 'full', ...settings }, elements, isInner } );
 
 
+/** Picks a date and time as a visitor would in the form's calendar (0.95.0), or types it when there is none. */
+const when = ( p, key, value ) => p.evaluate( ( [ k, v ] ) => {
+	const input = document.querySelector( `input[name="values[${ k }]"]` );
+
+	if ( input._flatpickr ) {
+		input._flatpickr.setDate( v, true );
+	} else {
+		input.value = v;
+		input.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+		input.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+	}
+}, [ key, value ] );
+
 const heading = ( id, title ) => ( { id, elType: 'widget', widgetType: 'heading', settings: { title }, elements: [] } );
 
 const MAIL_PLUGIN = '<?php add_filter( "pre_wp_mail", function ( $null, $atts ) { file_put_contents( WP_CONTENT_DIR . "/rf-mails.jsonl", wp_json_encode( $atts ) . "\n", FILE_APPEND ); return true; }, 10, 2 );';
@@ -162,7 +175,8 @@ async function main() {
 		check( 'dates', 'the pickup date and time can not be earlier than now plus the 2 hours notice', !! min && min > new Date( Date.now() + 90 * 60000 ).toISOString().slice( 0, 16 ) && '900' === await p.getAttribute( 'input[name="values[pickup_at]"]', 'step' ), String( min ) );
 		check( 'suggestions', 'the pickup offers the site\'s own place suggestions', ( await p.locator( 'datalist option' ).count() ) >= 5 );
 		await p.fill( 'input[name="values[pickup][first]"], input[name="values[pickup]"]', 'Kingsmills Hotel, Inverness' );
-		await p.fill( 'input[name="values[pickup_at]"]', `${ tomorrow }T08:00` );
+		await when( p, 'pickup_at', `${ tomorrow }T08:00` );
+		check( 'dates', 'the pickup opens the form\'s calendar: the box reads like "14 November 2026, 08:00", the answer keeps its format', /^\d{1,2} [A-Z][a-z]+ \d{4}, 08:00$/.test( await p.locator( '#rfb-values-pickup_at-shown' ).inputValue() ) && ( await p.locator( 'input[name="values[pickup_at]"]' ).inputValue() ) === `${ tomorrow }T08:00` );
 		await p.screenshot( { path: join( SHOTS, 'step1-tour.png' ), fullPage: true } );
 		await next();
 		check( 'conditions', 'step 2 of a tour: the tour vehicle, no transfer vehicle cards or luggage', ( await shown( 'tour_vehicle' ) ) && ! ( await shown( 'vehicle' ) ) && ! ( await shown( 'suitcases' ) ) && ( await shown( 'passengers' ) ) );
@@ -217,10 +231,10 @@ async function main() {
 		await p.fill( 'input[name="values[dropoff]"]', 'Royal Dornoch Golf Club' );
 		await p.locator( '[data-rfb-key="via"] [data-rfb-add]' ).click();
 		await p.fill( '[data-rfb-key="via"] .rfb-rows input[type=text]', 'Tain' );
-		await p.fill( 'input[name="values[pickup_at]"]', `${ tomorrow }T14:30` );
+		await when( p, 'pickup_at', `${ tomorrow }T14:30` );
 		await p.locator( '[data-rfb-key="return_trip"] .rfb-switch-track' ).click();
 		check( 'conditions', 'a return trip asks for the return date and time', await shown( 'return_at' ) );
-		await p.fill( 'input[name="values[return_at]"]', `${ tomorrow }T19:00` );
+		await when( p, 'return_at', `${ tomorrow }T19:00` );
 		await next();
 		const cards = async () => p.evaluate( () => [ ...document.querySelectorAll( '[data-rfb-key="vehicle"] .rfb-choice-card' ) ].filter( ( c ) => ! c.hidden ).map( ( c ) => c.dataset.rfbKey ) );
 		const fewCards = await cards();
