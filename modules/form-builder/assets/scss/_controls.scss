@@ -2967,6 +2967,44 @@ $rfb-widths: (
 		margin-left: 8px;
 	}
 
+	// ---- a step's chosen icon in place of its number (0.101.0): in every state, done included (the colour says done).
+	.rfb-pg-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.1em;
+		line-height: 1;
+
+		i,
+		svg {
+			width: 1em;
+			height: 1em;
+			font-size: 1em;
+		}
+
+		svg {
+			fill: currentColor;
+		}
+	}
+
+	li.has-icon.is-done .rfb-pg-num,
+	.rfb-steps-side li.has-icon.is-done .rfb-pg-num {
+		display: inline-flex;
+	}
+
+	li.has-icon.is-done .rfb-pg-dot .rfb-pg-check,
+	.rfb-steps-side li.has-icon.is-done .rfb-pg-check {
+		display: none;
+	}
+
+	.rfb-pg-chevrons li.has-icon .rfb-pg-icon {
+		margin-inline-end: 6px;
+	}
+
+	.rfb-pg-chevrons li.has-icon.is-done .rfb-pg-check {
+		display: none;
+	}
+
 	// ---- the Steps widget's layout drawn in the editor (0.100.0): as on the site, one step at a time.
 	.rfb-steps-editor.rfb-ed-ready {
 		.rfb-step-slot {

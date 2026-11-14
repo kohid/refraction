@@ -110,7 +110,7 @@ async function main() {
 			const steps = add( root, { elType: 'widget', widgetType: 'rfb-steps', settings: {
 				step_layout: 'top', step_progress: 'connected', step_counter: 'yes',
 				back_text: 'Previous', next_text: 'Continue', next_button_type: 'success',
-				steps: [ { _id: 'aaa1111', step_title: 'Your details', step_description: 'Who is travelling' }, { _id: 'bbb2222', step_title: 'Your booking', step_description: 'When and where' } ],
+				steps: [ { _id: 'aaa1111', step_title: 'Your details', step_description: 'Who is travelling', step_icon: { value: 'rf-ph rf-ph-car', library: 'phosphor-regular' } }, { _id: 'bbb2222', step_title: 'Your booking', step_description: 'When and where' } ],
 			} } );
 			add( steps.children[ 0 ], { elType: 'widget', widgetType: 'rfb-field-text', settings: { field_label: 'Your name', field_key: 'name' } } );
 			add( steps.children[ 1 ], { elType: 'widget', widgetType: 'rfb-field-email', settings: { field_label: 'Email', field_key: 'email' } } );
@@ -163,6 +163,9 @@ async function main() {
 
 		let st = await state();
 		check( 'top', 'Edit Mode shows the connected progress, "Step 1/2", step 1 only, and Continue (Success) without Previous', st.progress.join() === 'rfb-progress-connected' && st.current === 0 && st.shownSlot === 0 && st.shownCount === 1 && st.count.join() === 'Step 1/2' && st.next === 'Continue' && st.nextClass.includes( 'rfb-type-success' ) && null === st.back, JSON.stringify( st ) );
+		await page.waitForTimeout( 1500 );
+		const icons = () => frame.evaluate( () => [ ...document.querySelectorAll( '.rfb-steps-editor .rfb-progress li, .rfb-steps-editor .rfb-steps-side li' ) ].map( ( li ) => ( li.querySelector( '.rfb-pg-icon svg' ) && getComputedStyle( li.querySelector( '.rfb-pg-icon' ) ).display !== 'none' ? 'icon' : '' ) || ( li.querySelector( '.rfb-pg-num, .rfb-stepper-num' ) || {} ).textContent || '' ) );
+		check( 'icons', 'the step with an icon shows the icon in place of its number in the connected progress; the others keep their numbers', ( await icons() ).join() === 'icon,2', ( await icons() ).join() );
 		await shot( 'top-connected-1.png' );
 		await frame.locator( '.rfb-steps-editor .rfb-next' ).dispatchEvent( 'click' );
 		await page.waitForTimeout( 400 );
@@ -178,6 +181,13 @@ async function main() {
 			st = await state();
 			check( 'progress', `"${ style }" shows in Edit Mode as soon as it is chosen`, st.progress.join() === 'rfb-progress-' + style && st.shownCount === 1, JSON.stringify( st.progress ) );
 			if ( [ 'slider', 'ring', 'chevrons' ].includes( style ) ) { await shot( `progress-${ style }.png` ); }
+			if ( 'steps' === style ) {
+				check( 'icons', 'numbered steps: the icon in place of 1, then 2', ( await icons() ).join() === 'icon,2', ( await icons() ).join() );
+				await shot( 'progress-steps-icon.png' );
+			}
+			if ( 'chevrons' === style ) {
+				check( 'icons', 'arrows: the icon beside the first step\'s title', ( await icons() )[ 0 ] === 'icon' );
+			}
 		}
 		await set( { step_progress: 'none' } );
 		check( 'progress', '"None" shows no progress', ( await state() ).progress.length === 0 );
@@ -193,6 +203,7 @@ async function main() {
 		const tall = await frame.evaluate( () => [ document.querySelector( '.rfb-steps-editor' ).getBoundingClientRect().height, document.querySelector( '.rfb-steps-side ol' ).getBoundingClientRect().height ] );
 		check( 'sidebar', 'the sidebar is as tall as the step, not stretched by the editor\'s gaps', tall[ 0 ] < 600, JSON.stringify( tall ) );
 		await shot( 'sidebar.png' );
+		check( 'icons', 'sidebar: the icon in place of 1 (still shown once the step is done), 2 for the next', ( await icons() ).join() === 'icon,2', ( await icons() ).join() );
 		await frame.click( '.rfb-steps-side li >> nth=0' );
 		await page.waitForTimeout( 400 );
 		check( 'sidebar', 'clicking a step in the sidebar shows it', ( await state() ).shownSlot === 0 );
@@ -225,6 +236,26 @@ async function main() {
 		check( 'animation', 'Edit Mode plays the chosen Slide transition (900 ms) when Next is used', edAnim.includes( 900 ), JSON.stringify( edAnim ) );
 		await shot( 'transition-mid.png' );
 
+		// every transition kind plays in Edit Mode as soon as it is chosen
+		for ( const kind of [ 'fade', 'slide', 'slide_up', 'slide_down', 'slide_flow', 'zoom', 'zoom_out', 'flip', 'flip_x', 'blur', 'rotate', 'skew', 'bounce', 'drop' ] ) {
+			await set( { step_animation: kind, step_animation_ms: { unit: 'px', size: 700 } } );
+			await frame.click( '.rfb-steps-editor .rfb-progress li >> nth=0' );
+			await page.waitForTimeout( 800 );
+			await frame.locator( '.rfb-steps-editor .rfb-next' ).dispatchEvent( 'click' );
+			const played = await frame.evaluate( () => [ ...document.querySelectorAll( '.rfb-steps-editor > .rfb-step-slot' ) ].find( ( s ) => s.offsetParent ).getAnimations().length );
+			check( 'transitions', `"${ kind }" plays in Edit Mode`, played > 0 );
+		}
+		await set( { step_animation: 'drop', step_animation_ms: { unit: 'px', size: 700 }, step_animation_delay: { unit: 'px', size: 100 }, step_animation_ease: 'back', step_animation_stagger: { unit: 'px', size: 80 }, step_animation_distance: { unit: 'px', size: 120 } } );
+		await frame.click( '.rfb-steps-editor .rfb-progress li >> nth=0' );
+		await page.waitForTimeout( 1000 );
+		await frame.locator( '.rfb-steps-editor .rfb-next' ).dispatchEvent( 'click' );
+		const staggered = await frame.evaluate( () => {
+			const slot = [ ...document.querySelectorAll( '.rfb-steps-editor > .rfb-step-slot' ) ].find( ( s ) => s.offsetParent );
+			return [ ...slot.querySelectorAll( '*' ) ].flatMap( ( el ) => el.getAnimations( { subtree: false } ).map( ( a ) => ( { cls: el.className.split( ' ' )[ 0 ], delay: a.effect.getTiming().delay, easing: a.effect.getTiming().easing, from: a.effect.getKeyframes()[ 0 ].transform } ) ) );
+		} );
+		check( 'transitions', 'Field by field: the head, then each field, 80 ms apart after a 100 ms delay, with Overshoot easing and the 120 px distance', staggered.length >= 2 && staggered[ 0 ].delay === 100 && staggered[ 1 ].delay === 180 && staggered.every( ( a ) => a.easing.includes( '1.56' ) ) && staggered[ 0 ].from === 'translateY(-120px)', JSON.stringify( staggered ) );
+		await set( { step_animation: 'slide', step_animation_ms: { unit: 'px', size: 900 }, step_animation_delay: { unit: 'px', size: 0 }, step_animation_stagger: { unit: 'px', size: 0 }, step_animation_ease: 'smooth', step_animation_distance: { unit: 'px', size: 48 } } );
+
 		// the site still works as before
 		await page.evaluate( () => $e.run( 'document/save/publish' ) );
 		await page.waitForTimeout( 3500 );
@@ -237,7 +268,7 @@ async function main() {
 		watch( v, 'visitor' );
 		await v.goto( formPage.url );
 		await v.waitForSelector( 'form[data-rfb-form] .rfb-progress-connected' );
-		check( 'site', 'the site shows the same layout: connected progress, three steps, Continue', ( await v.locator( '.rfb-progress-connected li' ).count() ) === 3 && ( await v.locator( 'button.rfb-next .rfb-btn-text' ).textContent() ) === 'Continue' );
+		check( 'site', 'the site shows the same layout: connected progress, three steps, Continue, and the car icon in place of 1', ( await v.locator( '.rfb-progress-connected li' ).count() ) === 3 && ( await v.locator( 'button.rfb-next .rfb-btn-text' ).textContent() ) === 'Continue' && ( await v.locator( '.rfb-progress-connected li >> nth=0' ).locator( '.rfb-pg-icon svg' ).count() ) === 1 && ( await v.locator( '.rfb-progress-connected li >> nth=1' ).locator( '.rfb-pg-num' ).textContent() ) === '2' );
 		await v.screenshot( { path: join( SHOTS, 'site.png' ), clip: await v.locator( 'form[data-rfb-form]' ).boundingBox() } );
 		await v.fill( '[data-rfb-key="name"] input', 'Ann' );
 		await v.click( 'button.rfb-next' );

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.100.0
+Stable tag: 0.101.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.101.0 =
+* Form Builder: a step's icon (Steps widget > Steps > Icon) now takes the place of its number everywhere: in the progress (circles joined by a line, numbered steps, arrows), the sidebar and the accordion; on the site and in Edit Mode. Without an icon, the number stays.
+* Form Builder: more step transitions: Slide down, Slide up or down with the direction, Zoom out, Flip down, Blur in, Rotate in, Skew in, Bounce and Drop in, besides Fade, Slide, Slide up, Zoom in and Flip. New settings: Delay, Easing (Smooth, Ease, Ease in and out, Linear, Overshoot, Snappy), Distance for the moving ones, and Field by field (each field comes in after the one before it).
 
 = 0.100.0 =
 * Form Builder: the Steps widget's layout now shows in Edit Mode as on the site. The chosen progress display (or the form's), the sidebar of steps with its heading and descriptions, the accordion with each step's icon and status, "Step 1/6" above each step, and Back and Next with their texts, icons, type, size and Style settings. One step shows at a time, as on the site: click the progress, the sidebar, an accordion header, Back or Next to move between steps and edit their fields.

@@ -596,9 +596,10 @@
 	 *                          "bar_label", "steps", "bar" or "none").
 	 * @param {string[]} titles The steps' titles.
 	 * @param {Object}   i18n   The form's texts.
+	 * @param {string[]} icons  Each step's icon markup, '' for its number (0.101.0).
 	 * @return {{el: HTMLElement, update: Function}|null} The display, or null for none.
 	 */
-	function buildProgress( style, titles, i18n ) {
+	function buildProgress( style, titles, i18n, icons = [] ) {
 		if ( 'none' === style ) {
 			return null;
 		}
@@ -608,7 +609,10 @@
 		const pct = ( i ) => Math.round( ( i + 1 ) / n * 100 );
 		const esc = ( text ) => String( text ).replace( /[&<>"]/g, ( c ) => ( { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ c ] ) );
 		const check = '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-		const list = ( cls, item ) => '<ol class="' + cls + '">' + titles.map( ( title, i ) => item( title, i ) ).join( '' ) + '</ol>';
+		// A step's chosen icon takes the place of its number (0.101.0).
+		const icon = ( i ) => ( icons[ i ] ? '<span class="rfb-pg-icon">' + icons[ i ] + '</span>' : '' );
+		const numOrIcon = ( i ) => icon( i ) || String( i + 1 );
+		const list = ( cls, item ) => '<ol class="' + cls + '">' + titles.map( ( title, i ) => item( title, i ).replace( /^<li/, '<li' + ( icons[ i ] ? ' class="has-icon"' : '' ) ) ).join( '' ) + '</ol>';
 		const mark = ( current ) => el.querySelectorAll( 'li' ).forEach( ( li, i ) => {
 			li.classList.toggle( 'is-current', i === current );
 			li.classList.toggle( 'is-done', i < current );
@@ -620,10 +624,10 @@
 
 		switch ( style ) {
 			case 'connected':
-				el.innerHTML = list( 'rfb-pg-connected', ( title, i ) => '<li><span class="rfb-pg-dot"><span class="rfb-pg-num">' + ( i + 1 ) + '</span><span class="rfb-pg-check">' + check + '</span></span><span class="rfb-pg-name">' + esc( title ) + '</span></li>' );
+				el.innerHTML = list( 'rfb-pg-connected', ( title, i ) => '<li><span class="rfb-pg-dot"><span class="rfb-pg-num">' + numOrIcon( i ) + '</span><span class="rfb-pg-check">' + check + '</span></span><span class="rfb-pg-name">' + esc( title ) + '</span></li>' );
 				break;
 			case 'chevrons':
-				el.innerHTML = list( 'rfb-pg-chevrons', ( title ) => '<li><span class="rfb-pg-check">' + check + '</span><span class="rfb-pg-name">' + esc( title ) + '</span></li>' );
+				el.innerHTML = list( 'rfb-pg-chevrons', ( title, i ) => '<li><span class="rfb-pg-check">' + check + '</span>' + icon( i ) + '<span class="rfb-pg-name">' + esc( title ) + '</span></li>' );
 				break;
 			case 'segments':
 				el.innerHTML = list( 'rfb-pg-segments', ( title ) => '<li><span class="screen-reader-text">' + esc( title ) + '</span></li>' );
@@ -669,7 +673,7 @@
 				};
 				break;
 			default:
-				el.innerHTML = list( 'rfb-stepper', ( title, i ) => '<li data-i="' + i + '"><span class="rfb-stepper-num">' + ( i + 1 ) + '</span><span class="rfb-stepper-title">' + esc( title ) + '</span></li>' );
+				el.innerHTML = list( 'rfb-stepper', ( title, i ) => '<li data-i="' + i + '"><span class="rfb-stepper-num">' + numOrIcon( i ) + '</span><span class="rfb-stepper-title">' + esc( title ) + '</span></li>' );
 		}
 
 		return { el, update };
@@ -709,7 +713,13 @@
 			button.type = 'button';
 			button.className = 'rfb-side-step';
 			button.innerHTML = '<span class="rfb-side-num"><span class="rfb-pg-num"></span><svg class="rfb-pg-check" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="rfb-side-text"><strong></strong><span></span></span>';
-			button.querySelector( '.rfb-pg-num' ).textContent = String( i + 1 );
+			// The step's chosen icon takes the place of its number (0.101.0).
+			if ( step.dataset.rfbIcon ) {
+				button.querySelector( '.rfb-pg-num' ).innerHTML = '<span class="rfb-pg-icon">' + step.dataset.rfbIcon + '</span>';
+				li.classList.add( 'has-icon' );
+			} else {
+				button.querySelector( '.rfb-pg-num' ).textContent = String( i + 1 );
+			}
 			button.querySelector( 'strong' ).textContent = titles[ i ];
 			button.querySelector( '.rfb-side-text span' ).textContent = step.dataset.rfbDescription || '';
 			button.addEventListener( 'click', () => goTo( i ) );
@@ -819,8 +829,9 @@
 	}
 
 	/**
-	 * The step coming in (0.100.0): fade, slide (from the side the visitor goes to), slide up, zoom or flip, from the
-	 * Steps widget's data-rfb-anim and data-rfb-anim-ms. Nothing for visitors who ask for less motion.
+	 * The step coming in (0.100.0; more kinds and settings 0.101.0), from the Steps widget's data: data-rfb-anim (the
+	 * kind), -ms (duration), -delay, -ease, -distance (how far slides travel) and -stagger (ms between the step's
+	 * fields: each field comes in after the one before it). Nothing for visitors who ask for less motion.
 	 *
 	 * @param {HTMLElement}      step The step now shown.
 	 * @param {DOMStringMap|{}} data The Steps widget box's data.
@@ -833,25 +844,51 @@
 			return;
 		}
 
-		const from = {
-			fade: {},
-			slide: { transform: 'translateX(' + ( dir * 48 ) + 'px)' },
-			slide_up: { transform: 'translateY(24px)' },
-			zoom: { transform: 'scale(.94)' },
-			flip: { transform: 'perspective(900px) rotateY(' + ( dir * -14 ) + 'deg)', transformOrigin: dir > 0 ? 'left center' : 'right center' },
+		const d = Number( data.rfbAnimDistance ) || 48;
+		const frames = {
+			fade: [ {}, {} ],
+			slide: [ { transform: `translateX(${ dir * d }px)` }, {} ],
+			slide_up: [ { transform: `translateY(${ d }px)` }, {} ],
+			slide_down: [ { transform: `translateY(${ -d }px)` }, {} ],
+			slide_flow: [ { transform: `translateY(${ dir * d }px)` }, {} ],
+			zoom: [ { transform: 'scale(.92)' }, {} ],
+			zoom_out: [ { transform: 'scale(1.08)' }, {} ],
+			flip: [ { transform: `perspective(900px) rotateY(${ dir * -16 }deg)`, transformOrigin: dir > 0 ? 'left center' : 'right center' }, { transformOrigin: dir > 0 ? 'left center' : 'right center' } ],
+			flip_x: [ { transform: 'perspective(900px) rotateX(-18deg)', transformOrigin: 'top center' }, { transformOrigin: 'top center' } ],
+			blur: [ { filter: 'blur(10px)', transform: 'scale(1.02)' }, { filter: 'blur(0)' } ],
+			rotate: [ { transform: `rotate(${ dir * -4 }deg) translateY(${ d / 2 }px)`, transformOrigin: 'center bottom' }, { transformOrigin: 'center bottom' } ],
+			skew: [ { transform: `translateX(${ dir * d }px) skewX(${ dir * -8 }deg)` }, {} ],
+			bounce: [ { transform: 'scale(.86)' }, { offset: 0.6, opacity: 1, transform: 'scale(1.03)' }, { transform: 'scale(.99)', offset: 0.8 }, {} ],
+			drop: [ { transform: `translateY(${ -d }px)` }, { offset: 0.65, opacity: 1, transform: `translateY(${ d / 6 }px)` }, {} ],
 		}[ kind ];
 
-		if ( ! from ) {
+		if ( ! frames ) {
 			return;
 		}
 
-		const to = { opacity: 1, transform: 'none' };
+		const keyframes = frames.map( ( frame, i ) => {
+			const last = i === frames.length - 1;
 
-		if ( from.transformOrigin ) {
-			to.transformOrigin = from.transformOrigin;
+			return Object.assign( { opacity: 0 === i ? 0 : 1 }, last ? { transform: 'none' } : {}, frame );
+		} );
+		const easing = {
+			smooth: 'cubic-bezier(.22,.8,.3,1)',
+			ease: 'ease',
+			in_out: 'ease-in-out',
+			linear: 'linear',
+			back: 'cubic-bezier(.34,1.56,.64,1)',
+			snappy: 'cubic-bezier(.7,0,.2,1)',
+		}[ data.rfbAnimEase ] || 'cubic-bezier(.22,.8,.3,1)';
+		const timing = { duration: Number( data.rfbAnimMs ) || 350, delay: Number( data.rfbAnimDelay ) || 0, easing, fill: 'backwards' };
+		const stagger = Number( data.rfbAnimStagger ) || 0;
+		const parts = stagger ? Array.from( step.querySelectorAll( '.rfb-step-head, .rfb-field, .rfb-actions' ) ).filter( ( el ) => ! el.parentElement.closest( '.rfb-field' ) ) : [];
+
+		// Field by field when the step has them, else the whole step.
+		if ( parts.length ) {
+			parts.forEach( ( part, i ) => part.animate( keyframes, Object.assign( {}, timing, { delay: timing.delay + i * stagger } ) ) );
+		} else {
+			step.animate( keyframes, timing );
 		}
-
-		step.animate( [ Object.assign( { opacity: 0 }, from ), to ], { duration: Number( data.rfbAnimMs ) || 350, easing: 'cubic-bezier(.22,.8,.3,1)' } );
 	}
 
 	function initSteps( form ) {
@@ -890,7 +927,7 @@
 
 		form.classList.add( 'rfb-multistep' );
 
-		const progress = buildProgress( style, titles, i18n );
+		const progress = buildProgress( style, titles, i18n, steps.map( ( step ) => step.dataset.rfbIcon || '' ) );
 
 		if ( progress ) {
 			steps[ 0 ].parentNode.insertBefore( progress.el, steps[ 0 ] );
@@ -1136,7 +1173,7 @@
 				}
 			};
 
-			const progress = buildProgress( style, titles, i18n );
+			const progress = buildProgress( style, titles, i18n, slots.map( ( slot ) => slot.dataset.rfbIcon || '' ) );
 
 			if ( progress ) {
 				slots[ 0 ].before( mark( progress.el ) );
