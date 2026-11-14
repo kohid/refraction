@@ -240,7 +240,8 @@
 				message = sprintf( i18n.highest || 'The highest allowed value is %s.', max );
 			}
 
-			input.setCustomValidity( message );
+			// With the calendar, the visible box is the one the browser checks.
+			( input._flatpickr && input._flatpickr.altInput ? input._flatpickr.altInput : input ).setCustomValidity( message );
 		};
 
 		input.addEventListener( 'input', () => {
@@ -1192,6 +1193,9 @@
 	function initCountry( holder ) {
 		const select = holder.querySelector( 'select' );
 		const flag = holder.querySelector( '.rfb-flag' );
+
+		// A copy of a field that already had its list (the editor draws fields again): start from the plain select.
+		holder.querySelectorAll( '.rfb-cp-button, .rfb-cp-pop' ).forEach( ( el ) => el.remove() );
 		const base = holder.dataset.rfbFlags;
 		const doc = holder.ownerDocument;
 		const flagUrl = ( code ) => base + code.toLowerCase() + '.svg';
@@ -1373,17 +1377,154 @@
 	}
 
 	/**
+	 * The form's own calendar and clock for a date, time or date and time box (0.95.0, bundled flatpickr). The box the
+	 * visitor sees shows a friendly date ("14 November 2026"); the real input keeps the browser format, so sending, totals
+	 * and the summary read it as before. Days the form is closed and times outside its hours can not be picked. Without
+	 * flatpickr (a script blocked or late) the browser's own picker stays.
+	 *
+	 * @param {HTMLInputElement} input The date, time or datetime-local input with data-rfb-picker.
+	 */
+	function initPicker( input ) {
+		const view = input.ownerDocument.defaultView;
+
+		if ( ! view.flatpickr ) {
+			// Not loaded yet (a late or deferred script, or the editor fetching it for a field just added): try again for
+			// a few seconds, then leave the browser's own picker.
+			input.rfbPickerTries = ( input.rfbPickerTries || 0 ) + 1;
+
+			if ( input.rfbPickerTries <= 50 ) {
+				view.setTimeout( () => initPicker( input ), 200 );
+			}
+
+			return;
+		}
+
+		if ( input._flatpickr ) {
+			return;
+		}
+
+		// The editor builds a field's HTML in its own window and moves it into the preview: flatpickr there skips an
+		// element of another window without a word. A copy made by the preview's document belongs to the preview.
+		if ( ! ( input instanceof view.HTMLElement ) ) {
+			const copy = input.ownerDocument.importNode( input, true );
+
+			copy.rfbEnhanced = true;
+			input.replaceWith( copy );
+			input = copy;
+		}
+
+		const kind = input.dataset.rfbPicker;
+
+		// A copy of a field that already had its calendar: drop the copied visible box and give the input its type back.
+		if ( 'hidden' === input.type ) {
+			const copied = input.nextElementSibling;
+
+			if ( copied && copied.classList.contains( 'flatpickr-input' ) ) {
+				copied.remove();
+			}
+
+			input.type = { date: 'date', time: 'time', datetime: 'datetime-local' }[ kind ] || 'date';
+		}
+		const form = input.closest( '[data-rfb-i18n]' );
+		const i18n = form ? JSON.parse( form.dataset.rfbI18n ) : {};
+		const closed = ( input.dataset.rfbClosed || '' ).split( ',' ).filter( ( d ) => '' !== d ).map( Number );
+		const hours = ( input.dataset.rfbHours || '' ).split( '-' );
+		const step = Number( input.getAttribute( 'step' ) ) || 0;
+		// Opening hours (a time or a date and time), else a time box's own earliest and latest.
+		let firstTime = 'time' === kind && input.min ? input.min : null;
+		let lastTime = 'time' === kind && input.max ? input.max : null;
+
+		if ( 2 === hours.length ) {
+			[ firstTime, lastTime ] = hours;
+		}
+
+		const formats = {
+			date: { dateFormat: 'Y-m-d', altFormat: 'j F Y' },
+			time: { dateFormat: 'H:i', altFormat: 'H:i', enableTime: true, noCalendar: true },
+			datetime: { dateFormat: 'Y-m-d\\TH:i', altFormat: 'j F Y, H:i', enableTime: true },
+		};
+		const config = {
+			...( formats[ kind ] || formats.date ),
+			altInput: true,
+			altInputClass: input.className,
+			allowInput: true,
+			disableMobile: true,
+			time_24hr: true,
+			monthSelectorType: 'static',
+			minDate: 'time' === kind ? null : input.min || null,
+			maxDate: 'time' === kind ? null : input.max || null,
+			minTime: firstTime,
+			maxTime: lastTime,
+			minuteIncrement: step >= 60 ? Math.round( step / 60 ) : 5,
+			disable: closed.length ? [ ( date ) => closed.includes( date.getDay() ) ] : [],
+			onReady( selected, value, picker ) {
+				const box = picker.calendarContainer;
+				const styles = view.getComputedStyle( input );
+
+				box.classList.add( 'rfb-fp' );
+
+				// The calendar opens outside the form: it takes the form's colors and font with it.
+				[ '--rfb-primary', '--rfb-radius', '--rfb-font', '--rfb-ink', '--rfb-muted', '--rfb-form-bg', '--rfb-button-text' ].forEach( ( name ) => {
+					const color = styles.getPropertyValue( name ).trim();
+
+					if ( color ) {
+						box.style.setProperty( name, color );
+					}
+				} );
+
+				// Clear and Today (Now for a time), like the browser's own picker.
+				const foot = input.ownerDocument.createElement( 'div' );
+				foot.className = 'rfb-fp-foot';
+				foot.innerHTML = '<button type="button" class="rfb-fp-clear"></button><button type="button" class="rfb-fp-today"></button>';
+				foot.querySelector( '.rfb-fp-clear' ).textContent = i18n.pickerClear || 'Clear';
+				foot.querySelector( '.rfb-fp-today' ).textContent = 'time' === kind ? ( i18n.pickerNow || 'Now' ) : ( i18n.pickerToday || 'Today' );
+				foot.addEventListener( 'click', ( event ) => {
+					if ( event.target.closest( '.rfb-fp-clear' ) ) {
+						picker.clear();
+						picker.close();
+					} else if ( event.target.closest( '.rfb-fp-today' ) ) {
+						const now = new Date();
+
+						if ( 'time' === kind || picker.isEnabled( now ) ) {
+							picker.setDate( now, true );
+						} else {
+							picker.jumpToDate( now );
+						}
+					}
+				} );
+				box.appendChild( foot );
+
+				if ( picker.altInput ) {
+					// The visible box speaks for the field: its label, description and the browser's checks.
+					picker.altInput.id = input.id + '-shown';
+					[ 'aria-describedby', 'aria-invalid' ].forEach( ( name ) => input.hasAttribute( name ) && picker.altInput.setAttribute( name, input.getAttribute( name ) ) );
+					const label = input.id ? input.ownerDocument.querySelector( 'label[for="' + input.id + '"]' ) : null;
+
+					if ( label ) {
+						label.htmlFor = picker.altInput.id;
+					}
+				}
+			},
+		};
+
+		view.flatpickr( input, config );
+	}
+
+	/**
 	 * What each field box adds by itself (0.93.0 / 0.94.0): phone patterns, growing long texts, the country list with
 	 * flags. Run for each form, and in the editor's preview for each field as it is drawn. Safe to run twice.
 	 *
 	 * @param {HTMLElement} root A form, or a field widget in the editor.
 	 */
 	function enhance( root ) {
-		const once = ( el ) => ! el.dataset.rfbEnhanced && ( el.dataset.rfbEnhanced = '1' );
+		// Marked on the element object, not as an attribute: the editor can draw a field again from a copy of its HTML,
+		// and a copy must be set up again.
+		const once = ( el ) => ! el.rfbEnhanced && ( el.rfbEnhanced = true );
 
 		root.querySelectorAll( 'input[data-rfb-phone]' ).forEach( ( el ) => once( el ) && initPhone( el ) );
 		root.querySelectorAll( 'textarea[data-rfb-autogrow]' ).forEach( ( el ) => once( el ) && initAutogrow( el ) );
 		root.querySelectorAll( '[data-rfb-flags]' ).forEach( ( el ) => once( el ) && initCountry( el ) );
+		root.querySelectorAll( 'input[data-rfb-picker]' ).forEach( ( el ) => once( el ) && initPicker( el ) );
 	}
 
 	/** Closed weekdays and opening hours of a date or time box (min, max and step are the browser's own). */
@@ -1401,7 +1542,7 @@
 				message = closed.includes( day ) ? ( i18n.closedDay || 'That day is not available.' ) : '';
 			}
 
-			const time = 'time' === input.type ? value : value.slice( 11, 16 );
+			const time = 'time' === input.type || 'time' === input.dataset.rfbPicker ? value : value.slice( 11, 16 );
 
 			if ( ! message && time && 2 === hours.length && ( time < hours[ 0 ] || time > hours[ 1 ] ) ) {
 				message = sprintf( i18n.hours || 'Choose a time between %1$s and %2$s.', hours[ 0 ], hours[ 1 ] );

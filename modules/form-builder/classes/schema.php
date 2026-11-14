@@ -508,6 +508,8 @@ class Schema {
 			'phone_format' => 'phone' === $type && in_array( $raw['phone_format'] ?? '', self::PHONE_FORMATS, true ) ? (string) ( $raw['phone_format'] ?? '' ) : '',
 			'phone_pattern' => 'phone' === $type ? self::phone_pattern( (string) ( $raw['phone_format'] ?? '' ), (string) ( $raw['phone_pattern'] ?? '' ) ) : '',
 			'country_flag' => 'country' === $type && ( ! array_key_exists( 'country_flag', $raw ) || ! empty( $raw['country_flag'] ) ),
+			// Dates and times open the form's own calendar and clock unless switched off (0.95.0).
+			'picker' => in_array( $type, [ 'date', 'time', 'datetime' ], true ) && ( ! array_key_exists( 'picker', $raw ) || ! empty( $raw['picker'] ) ),
 			// Choice looks (0.92.0).
 			'choice_look' => in_array( $type, [ 'radio', 'checkbox' ], true ) && in_array( $raw['choice_look'] ?? '', self::CHOICE_LOOKS, true ) ? $raw['choice_look'] : 'list',
 			'choice_full' => in_array( $type, [ 'radio', 'checkbox' ], true ) && ! empty( $raw['choice_full'] ),

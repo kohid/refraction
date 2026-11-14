@@ -757,5 +757,8 @@ $ic = [ 'value' => 'rf-ph rf-ph-globe', 'library' => 'phosphor-regular' ];
 t( 'country, amount and name take an icon; the last name its own one', S::clean_field( [ 'label' => 'C', 'type' => 'country', 'icon' => $ic ] )['icon'] && S::clean_field( [ 'label' => 'A', 'type' => 'currency', 'icon' => $ic ] )['icon'] && 'rf-ph rf-ph-globe' === S::clean_field( [ 'label' => 'N', 'type' => 'name', 'icon_last' => $ic ] )['icon_last']['value'] && null === S::clean_field( [ 'label' => 'T', 'type' => 'text', 'icon_last' => $ic ] )['icon_last'] );
 t( 'amount: the currency symbol beside the box only when asked', ! S::clean_field( [ 'label' => 'A', 'type' => 'currency' ] )['currency_symbol'] && S::clean_field( [ 'label' => 'A', 'type' => 'currency', 'currency_symbol' => 1 ] )['currency_symbol'] );
 
+// Calendar and clock (0.95.0).
+t( 'dates and times use the form\'s calendar unless switched off; other fields never', S::clean_field( [ 'label' => 'D', 'type' => 'date' ] )['picker'] && S::clean_field( [ 'label' => 'T', 'type' => 'time', 'picker' => true ] )['picker'] && ! S::clean_field( [ 'label' => 'D', 'type' => 'datetime', 'picker' => false ] )['picker'] && ! S::clean_field( [ 'label' => 'X', 'type' => 'text', 'picker' => true ] )['picker'] );
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

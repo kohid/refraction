@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.94.0
+Stable tag: 0.95.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.95.0 =
+* Form Builder: Date, Time and Date & time fields open the form's own calendar and clock (the bundled flatpickr, styled from scratch in the forms' admin look): a white card with a bold month, rounded days, today in grey, the picked day in the form's main color, big bold hours and minutes, and Clear and Today (Now) buttons. The box shows "14 November 2026"; the answer is stored as before. Closed days can not be picked and times keep to the opening hours. "Calendar picker" (Content) switches back to the browser's own picker.
+* Form Builder: the Submit button can have an icon, on the left or the right, with its size and the space beside the text.
 
 = 0.94.0 =
 * Form Builder: Choice details now follow the order of the choices: the first row is the first choice, unless a row names its choice. A row named differently from every choice (for example "Test 1" for choices 1, 2, 3) used to be dropped, so its picture and icon never showed; it now belongs to the choice in its place.

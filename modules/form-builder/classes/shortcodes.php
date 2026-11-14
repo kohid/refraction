@@ -178,6 +178,9 @@ class Shortcodes {
 		$i18n = [
 			'required' => __( 'This field is required.', 'refraction' ),
 			'countrySearch' => __( 'Search countries', 'refraction' ),
+			'pickerClear' => __( 'Clear', 'refraction' ),
+			'pickerToday' => __( 'Today', 'refraction' ),
+			'pickerNow' => __( 'Now', 'refraction' ),
 			'countryNone' => __( 'No country matches.', 'refraction' ),
 			'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ),
 			'badType' => __( '%s is not an allowed file type.', 'refraction' ),

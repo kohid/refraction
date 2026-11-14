@@ -91,3 +91,271 @@
 		opacity: .85;
 	}
 }
+
+
+// ---- the form's calendar and clock (0.95.0): flatpickr's own layout, restyled from scratch in the forms' admin look (a
+// white card, soft corners, bold month and time, rounded days; the form's main color for the picked day). The calendar
+// opens on <body>, outside the form, so these rules are not inside .rfb-front; the script copies the form's colors onto it.
+.flatpickr-calendar.rfb-fp {
+	--rfb-fp-day: 36px;
+	width: 315px;
+	padding: 8px 0 0;
+	border: 0;
+	border-radius: 10px;
+	background: var(--rfb-form-bg, #fff);
+	box-shadow: 0 10px 30px rgba(16, 24, 40, 0.16), 0 0 0 1px rgba(16, 24, 40, 0.06);
+	color: var(--rfb-ink, #181c32);
+	font-family: var(--rfb-font, inherit);
+
+	&::before,
+	&::after {
+		display: none;
+	}
+
+	.flatpickr-months {
+		align-items: center;
+		padding: 0 14px;
+
+		.flatpickr-month {
+			height: 46px;
+			color: inherit;
+			fill: currentColor;
+		}
+
+		.flatpickr-prev-month,
+		.flatpickr-next-month {
+			top: 8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 34px;
+			height: 34px;
+			padding: 0;
+			border-radius: 8px;
+			color: var(--rfb-muted, #7e8299);
+			fill: currentColor;
+
+			&:hover {
+				background: #f5f8fa;
+				color: var(--rfb-primary, #009ef7);
+
+				svg {
+					fill: currentColor;
+				}
+			}
+
+			svg {
+				width: 12px;
+				height: 12px;
+			}
+		}
+
+		.flatpickr-prev-month {
+			left: 14px;
+		}
+
+		.flatpickr-next-month {
+			right: 14px;
+		}
+	}
+
+	.flatpickr-current-month {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		height: 46px;
+		padding: 0;
+		font-size: 15px;
+		font-weight: 700;
+
+		.cur-month {
+			font-weight: 700;
+		}
+
+		input.cur-year {
+			font-weight: 700;
+		}
+
+		.numInputWrapper:hover {
+			background: transparent;
+		}
+	}
+
+	// Padding inside the card's width (border-box), so Saturday stays inside the card.
+	.flatpickr-weekdays,
+	.flatpickr-days,
+	.flatpickr-months {
+		box-sizing: border-box;
+	}
+
+	.flatpickr-weekdays {
+		height: 32px;
+		padding: 0 14px;
+	}
+
+	span.flatpickr-weekday {
+		color: var(--rfb-ink, #181c32);
+		font-size: 13px;
+		font-weight: 700;
+	}
+
+	.flatpickr-innerContainer,
+	.flatpickr-rContainer,
+	.flatpickr-days,
+	.dayContainer {
+		width: 100%;
+		min-width: 0;
+		max-width: none;
+	}
+
+	.flatpickr-days {
+		padding: 0 14px;
+		border: 0;
+	}
+
+	.dayContainer {
+		padding: 2px 0 8px;
+		gap: 2px 0;
+		justify-content: space-between;
+	}
+
+	.flatpickr-day {
+		flex-basis: 14.2857%;
+		max-width: var(--rfb-fp-day);
+		height: var(--rfb-fp-day);
+		margin: 0 calc((14.2857% - var(--rfb-fp-day)) / 2);
+		border: 0;
+		border-radius: 8px;
+		color: var(--rfb-ink, #181c32);
+		font-size: 14px;
+		font-weight: 500;
+		line-height: var(--rfb-fp-day);
+
+		&:hover,
+		&:focus {
+			background: color-mix(in srgb, var(--rfb-primary, #009ef7) 10%, #fff);
+			color: var(--rfb-primary, #009ef7);
+		}
+
+		&.today {
+			background: #f1f3f7;
+			color: var(--rfb-ink, #181c32);
+			font-weight: 700;
+		}
+
+		&.selected,
+		&.selected:hover,
+		&.selected:focus,
+		&.startRange,
+		&.endRange {
+			background: var(--rfb-primary, #009ef7);
+			color: var(--rfb-button-text, #fff);
+			font-weight: 700;
+			box-shadow: 0 4px 12px color-mix(in srgb, var(--rfb-primary, #009ef7) 35%, transparent);
+		}
+
+		&.prevMonthDay,
+		&.nextMonthDay {
+			color: #b5b5c3;
+		}
+
+		&.flatpickr-disabled,
+		&.flatpickr-disabled:hover {
+			background: transparent;
+			color: #d0d3dc;
+			text-decoration: line-through;
+			cursor: not-allowed;
+		}
+	}
+
+	// The clock: big bold hours and minutes.
+	.flatpickr-time {
+		height: 52px;
+		max-height: 52px;
+		margin: 0 14px;
+		border-top: 1px solid #eff2f5;
+		line-height: 52px;
+
+		input,
+		.flatpickr-time-separator,
+		.flatpickr-am-pm {
+			height: 52px;
+			color: var(--rfb-ink, #181c32);
+			font-size: 18px;
+			font-weight: 700;
+		}
+
+		input:hover,
+		input:focus,
+		.flatpickr-am-pm:hover {
+			border-radius: 8px;
+			background: #f5f8fa;
+		}
+	}
+
+	&.noCalendar .flatpickr-time {
+		border-top: 0;
+	}
+
+	.numInputWrapper span {
+		border: 0;
+		opacity: 0.6;
+
+		&:hover {
+			background: transparent;
+			opacity: 1;
+		}
+	}
+
+	.rfb-fp-foot {
+		display: flex;
+		justify-content: space-between;
+		padding: 8px 14px 12px;
+		border-top: 1px solid #eff2f5;
+
+		button {
+			padding: 6px 10px;
+			border: 0;
+			border-radius: 8px;
+			background: transparent;
+			color: var(--rfb-primary, #009ef7);
+			cursor: pointer;
+			font: inherit;
+			font-size: 14px;
+			font-weight: 600;
+
+			&:hover,
+			&:focus-visible {
+				background: color-mix(in srgb, var(--rfb-primary, #009ef7) 10%, #fff);
+				outline: 0;
+			}
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		&.animate.open {
+			animation: none;
+		}
+	}
+}
+
+// The submit button with an icon (0.95.0).
+.rfb-front .rfb-submit.has-icon,
+.rfb-submit.has-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.rfb-submit-icon {
+	display: inline-flex;
+	line-height: 1;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
+}
