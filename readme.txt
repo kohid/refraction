@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.92.0
+Stable tag: 0.93.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.93.0 =
+* Form Builder: an icon at the left of the box on text, long text, email, phone, website, number, date, time and dropdown fields (Solar, Phosphor or Font Awesome), with its color, color while typing, size and spacing in the Style tab.
+* Form Builder: Phone fields can format while typing: National ((555) 123-4567) or International (+44 789 123 4567), or your own pattern where # is a digit (##### ###### for a UK mobile). Backspace over a bracket or dash removes the digit before it.
+* Form Builder: Long text can grow while typing (switch), with an optional tallest height after which it scrolls.
+* Form Builder: the Country field shows the chosen country's flag at the left of the box (bundled flag-icons, MIT; works offline and on Windows). It can be switched off.
+* Form Builder: Name fields have "Space between First Name and Last Name" (and the space when they wrap) in Style > Name parts.
 
 = 0.92.0 =
 * Form Builder: Choice fields (one or many) have a Look: List, Segmented bar (Weekly / Monthly), Pill switch, Icon tiles (an icon above each name, a dot on the picked one), Cards with text (a radio, the name and a line of text) and Image cards. Segmented bar and Pill switch can fill the width; tiles and cards can have set columns.

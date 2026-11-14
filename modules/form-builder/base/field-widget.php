@@ -96,6 +96,8 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			$this->register_choice_look_controls();
 		}
 
+		$this->register_field_extra_controls();
+
 		if ( $this->has( 'limits' ) ) {
 			$this->add_control( 'field_min', [ 'label' => esc_html__( 'Lowest', 'refraction' ), 'type' => Controls_Manager::NUMBER ] );
 			$this->add_control( 'field_max', [ 'label' => esc_html__( 'Highest', 'refraction' ), 'type' => Controls_Manager::NUMBER ] );
@@ -203,6 +205,70 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 	/** More Content settings of one type (Total). */
 	protected function register_extra_controls(): void {}
 
+	/** Content (0.93.0): an icon in the box, a long text that grows, a phone pattern, the country's flag. */
+	private function register_field_extra_controls(): void {
+		$type = $this->field_type();
+
+		if ( in_array( $type, Schema::ICON_TYPES, true ) ) {
+			$this->add_control( 'field_icon', [
+				'label' => esc_html__( 'Icon in the box', 'refraction' ),
+				'type' => Controls_Manager::ICONS,
+				'skin' => 'inline',
+				'label_block' => false,
+				'exclude_inline_options' => [ 'svg' ],
+				'separator' => 'before',
+				'description' => 'number' === $type ? esc_html__( 'Shown at the left of the box (not with the minus and plus buttons).', 'refraction' ) : esc_html__( 'Shown at the left of the box.', 'refraction' ),
+			] );
+		}
+
+		if ( 'textarea' === $type ) {
+			$this->add_control( 'autogrow', [
+				'label' => esc_html__( 'Grow while typing', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'description' => esc_html__( 'The box gets taller as the text gets longer, instead of scrolling.', 'refraction' ),
+			] );
+			$this->add_responsive_control( 'autogrow_max', [
+				'label' => esc_html__( 'Tallest', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'vh' ],
+				'range' => [ 'px' => [ 'min' => 80, 'max' => 1000 ], 'vh' => [ 'min' => 10, 'max' => 100 ] ],
+				'selectors' => [ '{{WRAPPER}} textarea.rfb-input' => 'max-height: {{SIZE}}{{UNIT}};' ],
+				'description' => esc_html__( 'Empty: no limit. Past it, the box scrolls.', 'refraction' ),
+				'condition' => [ 'autogrow' => 'yes' ],
+			] );
+		}
+
+		if ( 'phone' === $type ) {
+			$this->add_control( 'phone_format', [
+				'label' => esc_html__( 'Format while typing', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => [
+					'' => esc_html__( 'As typed', 'refraction' ),
+					'national' => esc_html__( 'National: (555) 123-4567', 'refraction' ),
+					'international' => esc_html__( 'International: +44 789 123 4567', 'refraction' ),
+				],
+				'description' => esc_html__( 'Brackets, spaces and dashes are added as the visitor types digits.', 'refraction' ),
+			] );
+			$this->add_control( 'phone_pattern', [
+				'label' => esc_html__( 'Pattern', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'placeholder' => '(###) ###-####',
+				'description' => esc_html__( '# is a digit; brackets, spaces, dashes, dots and a leading + are added. Empty: the format\'s own. A UK mobile: ##### ######.', 'refraction' ),
+				'condition' => [ 'phone_format!' => '' ],
+			] );
+		}
+
+		if ( 'country' === $type ) {
+			$this->add_control( 'country_flag', [
+				'label' => esc_html__( 'Show the flag', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+				'description' => esc_html__( 'The chosen country\'s flag at the left of the box.', 'refraction' ),
+			] );
+		}
+	}
+
 	/** A Choice field (one or many): it has looks, and its options can have an icon, a line of text and a badge. */
 	protected function is_choice(): bool {
 		return $this->has( 'options' ) && in_array( $this->field_type(), [ 'radio', 'checkbox' ], true );
@@ -282,6 +348,35 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 
 		if ( $this->is_choice() ) {
 			$this->register_choice_style();
+		}
+
+		if ( in_array( $this->field_type(), Schema::ICON_TYPES, true ) ) {
+			$this->start_controls_section( 'section_style_field_icon', [ 'label' => esc_html__( 'Icon in the box', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => [ 'field_icon[value]!' => '' ] ] );
+			$this->add_control( 'field_icon_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-color: {{VALUE}};' ] ] );
+			$this->add_control( 'field_icon_focus_color', [ 'label' => esc_html__( 'Color while typing', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-focus-color: {{VALUE}};' ] ] );
+			$this->add_responsive_control( 'field_icon_size', [ 'label' => esc_html__( 'Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 10, 'max' => 48 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-size: {{SIZE}}px;' ] ] );
+			$this->add_responsive_control( 'field_icon_offset', [ 'label' => esc_html__( 'Space from the edge', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-left: {{SIZE}}px;' ] ] );
+			$this->add_responsive_control( 'field_icon_text_gap', [ 'label' => esc_html__( 'Space before the text', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-gap: {{SIZE}}px;' ] ] );
+			$this->end_controls_section();
+		}
+
+		if ( 'name' === $this->field_type() ) {
+			$this->start_controls_section( 'section_style_name_parts', [ 'label' => esc_html__( 'Name parts', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+			$this->add_responsive_control( 'name_gap', [
+				'label' => esc_html__( 'Space between First Name and Last Name', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', '%' ],
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 80 ], 'em' => [ 'min' => 0, 'max' => 5 ], '%' => [ 'min' => 0, 'max' => 20 ] ],
+				'selectors' => [ '{{WRAPPER}} .rfb-name-row' => 'column-gap: {{SIZE}}{{UNIT}};' ],
+				'description' => esc_html__( 'Between all the name boxes side by side (also prefix and middle name).', 'refraction' ),
+			] );
+			$this->add_responsive_control( 'name_row_gap', [
+				'label' => esc_html__( 'Space when they wrap', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+				'selectors' => [ '{{WRAPPER}} .rfb-name-row' => 'row-gap: {{SIZE}}{{UNIT}};' ],
+			] );
+			$this->end_controls_section();
 		}
 
 		$this->start_controls_section( 'section_style_help', [ 'label' => esc_html__( 'Description and help', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
@@ -537,6 +632,11 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'time_step' => $s['time_step'] ?? 0,
 			'stepper' => $yes( 'stepper' ),
 			'suggestions' => (string) ( $s['suggestions'] ?? '' ),
+			'icon' => $s['field_icon'] ?? null,
+			'autogrow' => $yes( 'autogrow' ),
+			'phone_format' => (string) ( $s['phone_format'] ?? '' ),
+			'phone_pattern' => (string) ( $s['phone_pattern'] ?? '' ),
+			'country_flag' => $yes( 'country_flag' ),
 			'choice_look' => (string) ( $s['choice_look'] ?? 'list' ),
 			'choice_full' => $yes( 'choice_full' ),
 			'choice_columns' => $s['choice_columns'] ?? 0,

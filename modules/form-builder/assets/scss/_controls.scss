@@ -982,6 +982,77 @@ $rfb-widths: (
 		}
 	}
 
+	// ---- field extras (0.93.0): an icon at the left of the box, the country's flag, a long text that grows
+	.rfb-icon-box,
+	.rfb-flag-box {
+		position: relative;
+
+		> .rfb-input {
+			width: 100%;
+			padding-left: calc(var(--rfb-icon-left, 14px) + var(--rfb-icon-size, 18px) + var(--rfb-icon-gap, 10px));
+		}
+	}
+
+	.rfb-field-icon {
+		position: absolute;
+		top: 50%;
+		left: var(--rfb-icon-left, 14px);
+		z-index: 1;
+		display: inline-flex;
+		color: var(--rfb-icon-color, var(--rfb-muted));
+		font-size: var(--rfb-icon-size, 18px);
+		line-height: 1;
+		pointer-events: none;
+		transform: translateY(-50%);
+		transition: color 0.15s;
+
+		svg {
+			width: 1em;
+			height: 1em;
+		}
+	}
+
+	.rfb-icon-box:focus-within .rfb-field-icon {
+		color: var(--rfb-icon-focus-color, var(--rfb-primary));
+	}
+
+	// A long text: the icon stays by the first line.
+	.rfb-icon-box.is-tall .rfb-field-icon {
+		top: calc(var(--rfb-icon-top, 12px) + var(--rfb-icon-size, 18px) / 2);
+	}
+
+	.rfb-flag-box {
+		--rfb-icon-size: 24px;
+
+		.rfb-flag {
+			position: absolute;
+			top: 50%;
+			left: var(--rfb-icon-left, 14px);
+			z-index: 1;
+			width: var(--rfb-icon-size, 24px);
+			height: auto;
+			border-radius: 3px;
+			box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.12);
+			pointer-events: none;
+			transform: translateY(-50%);
+		}
+
+		// No country chosen yet: the box keeps its usual padding.
+		&:has(.rfb-flag[hidden]) > .rfb-input {
+			padding-left: 14px;
+		}
+	}
+
+	textarea.rfb-input[data-rfb-autogrow] {
+		overflow-y: hidden;
+		resize: none;
+	}
+
+	// Past the Tallest setting the box scrolls again (frontend.js turns this on).
+	textarea.rfb-input[data-rfb-autogrow].is-capped {
+		overflow-y: auto;
+	}
+
 	// ---- choice looks (0.92.0): a segmented bar, a filled pill switch, icon tiles and cards with a line of text. The real
 	// input stays in each label (keyboard, forms, summary); the look is drawn around it. Every color is a variable the
 	// field's Style tab can set, falling back on the form's own colors.

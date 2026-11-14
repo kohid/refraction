@@ -1094,6 +1094,110 @@
 		} );
 	}
 
+	/**
+	 * A phone box with a pattern (0.93.0): # is a digit, every other character is written for the visitor as the digits
+	 * reach it ("(555) 123-4567"). The caret stays after the same digit; deleting a bracket or dash deletes the digit
+	 * before it, so Backspace never gets stuck.
+	 */
+	function formatPhone( pattern, digits ) {
+		let out = '';
+		let next = 0;
+
+		for ( const ch of pattern ) {
+			if ( next >= digits.length ) {
+				break;
+			}
+
+			out += '#' === ch ? digits[ next++ ] : ch;
+		}
+
+		return out;
+	}
+
+	function initPhone( input ) {
+		const pattern = input.dataset.rfbPhone;
+		const slots = ( pattern.match( /#/g ) || [] ).length;
+		let deleting = false;
+
+		input.addEventListener( 'beforeinput', ( event ) => {
+			deleting = 'deleteContentBackward' === event.inputType && input.selectionStart === input.selectionEnd && input.selectionStart > 0 && /\D/.test( input.value[ input.selectionStart - 1 ] );
+
+			if ( deleting ) {
+				// Remove the digit before the bracket, space or dash instead.
+				event.preventDefault();
+				const before = input.value.slice( 0, input.selectionStart ).replace( /\D/g, '' ).slice( 0, -1 );
+				const after = input.value.slice( input.selectionStart ).replace( /\D/g, '' );
+				apply( before + after, before.length );
+				input.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+			}
+		} );
+
+		const apply = ( digits, caretDigits ) => {
+			const value = formatPhone( pattern, digits.slice( 0, slots ) );
+			input.value = value;
+
+			// Put the caret after the same number of digits as before.
+			let pos = 0;
+			let seen = 0;
+
+			while ( pos < value.length && seen < caretDigits ) {
+				if ( /\d/.test( value[ pos ] ) ) {
+					seen++;
+				}
+
+				pos++;
+			}
+
+			if ( input.ownerDocument.activeElement === input ) {
+				input.setSelectionRange( pos, pos );
+			}
+		};
+
+		input.addEventListener( 'input', ( event ) => {
+			if ( ! event.isTrusted && deleting ) {
+				deleting = false;
+				return;
+			}
+
+			const caretDigits = input.value.slice( 0, input.selectionStart ).replace( /\D/g, '' ).length;
+			apply( input.value.replace( /\D/g, '' ), caretDigits );
+		} );
+
+		if ( '' !== input.value ) {
+			apply( input.value.replace( /\D/g, '' ), input.value.length );
+		}
+	}
+
+	/** A long text that grows with what is typed (0.93.0), up to its max-height (Style: Tallest), then scrolls. */
+	function initAutogrow( box ) {
+		const fit = () => {
+			box.style.height = 'auto';
+			const max = parseFloat( getComputedStyle( box ).maxHeight );
+			const wanted = box.scrollHeight + box.offsetHeight - box.clientHeight;
+			box.style.height = wanted + 'px';
+			box.classList.toggle( 'is-capped', ! Number.isNaN( max ) && wanted > max );
+		};
+
+		box.addEventListener( 'input', fit );
+		fit();
+	}
+
+	/** The country's flag at the left of the box (0.93.0) follows the chosen country. */
+	function initFlag( holder ) {
+		const select = holder.querySelector( 'select' );
+		const flag = holder.querySelector( '.rfb-flag' );
+
+		select.addEventListener( 'change', () => {
+			const code = ( select.value || '' ).toLowerCase();
+
+			flag.hidden = ! /^[a-z]{2}$/.test( code );
+
+			if ( ! flag.hidden ) {
+				flag.src = holder.dataset.rfbFlags + code + '.svg';
+			}
+		} );
+	}
+
 	/** Closed weekdays and opening hours of a date or time box (min, max and step are the browser's own). */
 	function initWhen( input, form ) {
 		const i18n = form.dataset.rfbI18n ? JSON.parse( form.dataset.rfbI18n ) : {};
@@ -1188,6 +1292,9 @@
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( initTabs );
 		form.querySelectorAll( '.rfb-cards' ).forEach( initCards );
 		form.querySelectorAll( '[data-rfb-count]' ).forEach( initStepper );
+		form.querySelectorAll( 'input[data-rfb-phone]' ).forEach( initPhone );
+		form.querySelectorAll( 'textarea[data-rfb-autogrow]' ).forEach( initAutogrow );
+		form.querySelectorAll( '[data-rfb-flags]' ).forEach( initFlag );
 		form.querySelectorAll( 'input[data-rfb-closed], input[data-rfb-hours]' ).forEach( ( input ) => initWhen( input, form ) );
 
 		const update = () => {

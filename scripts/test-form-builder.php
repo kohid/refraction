@@ -743,5 +743,12 @@ $tour = S::clean_field( [ 'label' => 'Tour', 'type' => 'radio', 'options' => "Ca
 t( 'image cards: the look is kept, a picture is an attachment id; a row with nothing usable is dropped', 'images' === $tour['choice_look'] && 42 === $tour['option_extras']['Car Tour']['image'] && ! isset( $tour['option_extras']['Bus Tour'] ) );
 t( 'choice details: icons are class names and a library only (no markup, no uploaded SVG)', [ 'value' => 'rf-ph rf-ph-star', 'library' => 'phosphor-duotone' ] === $plan['option_extras']['pro']['icon'] && null === $plan['option_extras']['free']['icon'] && ! isset( $plan['option_extras']['team'] ) );
 
+// Field extras (0.93.0).
+$ph = static function ( array $raw ) { return S::clean_field( $raw + [ 'label' => 'Phone', 'type' => 'phone' ] ); };
+t( 'phone: no format keeps no pattern; a format without a pattern takes its own', '' === $ph( [] )['phone_pattern'] && '(###) ###-####' === $ph( [ 'phone_format' => 'national' ] )['phone_pattern'] && '+## ### ### ####' === $ph( [ 'phone_format' => 'international' ] )['phone_pattern'] );
+t( 'phone: a pattern of # and separators is kept; letters, digits or markup fall back on the format', '##### ######' === $ph( [ 'phone_format' => 'national', 'phone_pattern' => '##### ######' ] )['phone_pattern'] && '(###) ###-####' === $ph( [ 'phone_format' => 'national', 'phone_pattern' => '<b>###</b>' ] )['phone_pattern'] && '(###) ###-####' === $ph( [ 'phone_format' => 'national', 'phone_pattern' => '+44 ####' ] )['phone_pattern'] && '' === $ph( [ 'phone_format' => 'wild' ] )['phone_format'] );
+t( 'field icon: kept on boxes, dropped on choices and uploads; long text can grow', 'rf-ph rf-ph-magnifying-glass' === S::clean_field( [ 'label' => 'Q', 'type' => 'text', 'icon' => [ 'value' => 'rf-ph rf-ph-magnifying-glass', 'library' => 'phosphor-regular' ] ] )['icon']['value'] && null === S::clean_field( [ 'label' => 'Q', 'type' => 'radio', 'options' => 'A', 'icon' => [ 'value' => 'x y', 'library' => 'fa-solid' ] ] )['icon'] && S::clean_field( [ 'label' => 'N', 'type' => 'textarea', 'autogrow' => 1 ] )['autogrow'] && ! S::clean_field( [ 'label' => 'N', 'type' => 'text', 'autogrow' => 1 ] )['autogrow'] );
+t( 'country flag: on unless switched off (older forms get it too)', S::clean_field( [ 'label' => 'C', 'type' => 'country' ] )['country_flag'] && ! S::clean_field( [ 'label' => 'C', 'type' => 'country', 'country_flag' => false ] )['country_flag'] );
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

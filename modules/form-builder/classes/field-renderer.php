@@ -201,7 +201,18 @@ class Field_Renderer {
 		} else {
 			$value = null === $value ? $field['default'] : $value;
 			echo '<label class="' . esc_attr( $label_class ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$icon = self::field_icon( $field );
+
+			// An icon at the left of the box (0.93.0): the box keeps its own markup, the icon sits over its padding.
+			if ( '' !== $icon ) {
+				echo '<div class="rfb-icon-box' . ( 'textarea' === $field['type'] ? ' is-tall' : '' ) . '">' . $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+
 			self::control( $field, $value, $name, $id, $required, $described_attr, $ctx );
+
+			if ( '' !== $icon ) {
+				echo '</div>';
+			}
 		}
 
 		if ( '' !== $field['help'] ) {
@@ -225,7 +236,7 @@ class Field_Renderer {
 		}
 
 		if ( 'textarea' === $type ) {
-			echo '<textarea class="rfb-input" rows="4" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . $required . $described_attr . '>' . esc_textarea( (string) $value ) . '</textarea>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<textarea class="rfb-input" rows="4" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . ( ! empty( $field['autogrow'] ) ? ' data-rfb-autogrow' : '' ) . $required . $described_attr . '>' . esc_textarea( (string) $value ) . '</textarea>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			return;
 		}
 
@@ -242,13 +253,23 @@ class Field_Renderer {
 		}
 
 		if ( 'country' === $type ) {
-			echo '<select class="rfb-input" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" autocomplete="country"' . $required . $described_attr . '><option value="">' . esc_html( '' !== $field['placeholder'] ? $field['placeholder'] : __( 'Select a country...', 'refraction' ) ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$flag = ! empty( $field['country_flag'] );
+			$code = strtolower( (string) $value );
 
-			foreach ( Countries::all() as $code => $label ) {
-				echo '<option value="' . esc_attr( $code ) . '"' . selected( strtoupper( (string) $value ), $code, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( $flag ) {
+				// The chosen country's flag at the left of the box (bundled SVGs; the script swaps it when the country changes).
+				$flags = REFRACTION_ASSETS_URL . 'lib/flag-icons/4x3/';
+				$known = isset( Countries::all()[ strtoupper( $code ) ] );
+				echo '<div class="rfb-flag-box" data-rfb-flags="' . esc_url( $flags ) . '"><img class="rfb-flag" alt="" width="24" height="18" src="' . esc_url( $known ? $flags . $code . '.svg' : '' ) . '"' . ( $known ? '' : ' hidden' ) . '>';
 			}
 
-			echo '</select>';
+			echo '<select class="rfb-input" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" autocomplete="country"' . $required . $described_attr . '><option value="">' . esc_html( '' !== $field['placeholder'] ? $field['placeholder'] : __( 'Select a country...', 'refraction' ) ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+			foreach ( Countries::all() as $iso => $label ) {
+				echo '<option value="' . esc_attr( $iso ) . '"' . selected( strtoupper( (string) $value ), $iso, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+
+			echo '</select>' . ( $flag ? '</div>' : '' );
 			return;
 		}
 
@@ -276,6 +297,11 @@ class Field_Renderer {
 		}
 
 		$attributes .= self::when_attributes( $field );
+
+		if ( 'phone' === $type && '' !== ( $field['phone_pattern'] ?? '' ) ) {
+			// Brackets, spaces and dashes are added while typing (frontend.js); the server keeps the number as sent.
+			$attributes .= ' data-rfb-phone="' . esc_attr( $field['phone_pattern'] ) . '" maxlength="' . strlen( $field['phone_pattern'] ) . '" inputmode="tel" autocomplete="tel"';
+		}
 		$list = '';
 
 		if ( 'text' === $type && ! empty( $field['suggestions'] ) ) {
@@ -305,6 +331,25 @@ class Field_Renderer {
 	}
 
 	/** The number a choice or card adds to a Total, as a data attribute (nothing when it has none). */
+	/** The icon at the left of a field's box (0.93.0); '' when it has none (a number with minus and plus has none). */
+	private static function field_icon( array $field ): string {
+		if ( empty( $field['icon'] ) || ( 'number' === $field['type'] && ! empty( $field['stepper'] ) ) ) {
+			return '';
+		}
+
+		$html = (string) Icons_Manager::try_get_icon_html( $field['icon'], [ 'aria-hidden' => 'true' ] );
+
+		if ( '' === $html ) {
+			return '';
+		}
+
+		if ( wp_style_is( 'refraction-icons-' . $field['icon']['library'], 'registered' ) ) {
+			wp_enqueue_style( 'refraction-icons-' . $field['icon']['library'] );
+		}
+
+		return '<span class="rfb-field-icon" aria-hidden="true">' . $html . '</span>';
+	}
+
 	/** The picture, icon, line of text and badge of one choice (0.92.0); the look decides where each sits. */
 	private static function option_extra( array $extra, string $option_id, bool $with_image = false ): string {
 		$out = '';

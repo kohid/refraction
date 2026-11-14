@@ -29,6 +29,12 @@ class Schema {
 	const MAX_ICON_ITEMS = 30;
 	const MARKER_POSITIONS = [ 'left', 'right', 'top-left', 'top-right', 'hidden' ];
 	const MARKER_LOOKS = [ 'radio', 'tick', 'none' ];
+	/** Fields that can show an icon at the left of their box (0.93.0). */
+	const ICON_TYPES = [ 'text', 'textarea', 'email', 'phone', 'url', 'number', 'date', 'time', 'datetime', 'select' ];
+	/** Phone formats (0.93.0): as typed, or a pattern applied while typing (# is a digit). */
+	const PHONE_FORMATS = [ '', 'national', 'international' ];
+	const PHONE_PATTERNS = [ 'national' => '(###) ###-####', 'international' => '+## ### ### ####' ];
+
 	/** How a Choice field shows its options (0.92.0): a list, a segmented bar, a filled pill switch, icon tiles, cards or image cards. */
 	const CHOICE_LOOKS = [ 'list', 'segmented', 'pill', 'tiles', 'cards', 'images' ];
 
@@ -493,6 +499,12 @@ class Schema {
 			'time_step' => in_array( $type, [ 'time', 'datetime' ], true ) ? max( 0, min( 240, (int) ( $raw['time_step'] ?? 0 ) ) ) : 0,
 			'stepper' => 'number' === $type && ! empty( $raw['stepper'] ),
 			'suggestions' => 'text' === $type ? self::suggestions( $raw['suggestions'] ?? [] ) : [],
+			// Field extras (0.93.0): an icon in the box, a growing long text, a phone pattern, the country's flag.
+			'icon' => in_array( $type, self::ICON_TYPES, true ) ? self::option_icon( $raw['icon'] ?? null ) : null,
+			'autogrow' => 'textarea' === $type && ! empty( $raw['autogrow'] ),
+			'phone_format' => 'phone' === $type && in_array( $raw['phone_format'] ?? '', self::PHONE_FORMATS, true ) ? (string) ( $raw['phone_format'] ?? '' ) : '',
+			'phone_pattern' => 'phone' === $type ? self::phone_pattern( (string) ( $raw['phone_format'] ?? '' ), (string) ( $raw['phone_pattern'] ?? '' ) ) : '',
+			'country_flag' => 'country' === $type && ( ! array_key_exists( 'country_flag', $raw ) || ! empty( $raw['country_flag'] ) ),
 			// Choice looks (0.92.0).
 			'choice_look' => in_array( $type, [ 'radio', 'checkbox' ], true ) && in_array( $raw['choice_look'] ?? '', self::CHOICE_LOOKS, true ) ? $raw['choice_look'] : 'list',
 			'choice_full' => in_array( $type, [ 'radio', 'checkbox' ], true ) && ! empty( $raw['choice_full'] ),
@@ -630,6 +642,20 @@ class Schema {
 		}
 
 		return $extras;
+	}
+
+	/**
+	 * The pattern a formatted phone box writes while typing: # is a digit, spaces, brackets, dashes, dots and a leading + are
+	 * added for the visitor. Empty when the field keeps what is typed; the format's own pattern when none (or junk) is given.
+	 */
+	public static function phone_pattern( string $format, string $pattern ): string {
+		if ( ! isset( self::PHONE_PATTERNS[ $format ] ) ) {
+			return '';
+		}
+
+		$pattern = trim( $pattern );
+
+		return 1 === preg_match( '/^\+?[#()\-. ]{4,30}$/', $pattern ) && substr_count( $pattern, '#' ) >= 4 ? $pattern : self::PHONE_PATTERNS[ $format ];
 	}
 
 	/** An icon from the icon libraries ({ value, library }): class names and a library name only, nothing else. */
