@@ -167,7 +167,7 @@ async function main() {
 		await load();
 		check( 'connected', 'three circles, the first current; "Step 1/3" above the step', ( await v.locator( '.rfb-pg-connected li' ).count() ) === 3 && ( await v.locator( '.rfb-pg-connected li.is-current' ).textContent() ).includes( 'Your details' ) && ( await v.locator( '.rfb-step:not([hidden]) .rfb-step-count' ).textContent() ) === 'Step 1/3' );
 		await toStep2();
-		check( 'connected', 'after Next the first is done with a tick and the line to step 2 takes the color', ( await v.locator( '.rfb-pg-connected li' ).nth( 0 ).getAttribute( 'class' ) ).includes( 'is-done' ) && await v.locator( '.rfb-pg-connected li' ).nth( 0 ).locator( '.rfb-pg-check' ).isVisible() && ( await v.locator( '.rfb-pg-connected li' ).nth( 1 ).evaluate( ( li ) => getComputedStyle( li, '::before' ).backgroundColor ) ) === ( await v.locator( '.rfb-pg-connected li.is-current .rfb-pg-dot' ).evaluate( ( d ) => getComputedStyle( d ).backgroundColor ) ) );
+		check( 'connected', 'after Next the first is done with a tick, or its own icon when it has one (0.101.0), and the line to step 2 takes the color', ( await v.locator( '.rfb-pg-connected li' ).nth( 0 ).getAttribute( 'class' ) ).includes( 'is-done' ) && ( await v.locator( '.rfb-pg-connected li' ).nth( 0 ).locator( '.rfb-pg-check:visible, .rfb-pg-icon:visible' ).count() ) === 1 && ( await v.locator( '.rfb-pg-connected li' ).nth( 1 ).evaluate( ( li ) => getComputedStyle( li, '::before' ).backgroundColor ) ) === ( await v.locator( '.rfb-pg-connected li.is-current .rfb-pg-dot' ).evaluate( ( d ) => getComputedStyle( d ).backgroundColor ) ) );
 		await shot( 'connected' );
 
 		const variants = [
@@ -176,7 +176,7 @@ async function main() {
 			[ 'segments', async () => ( await v.locator( '.rfb-pg-segments li.is-done, .rfb-pg-segments li.is-current' ).count() ) === 2 && ( await v.locator( '.rfb-pg-segments li' ).count() ) === 3, 'two of three segments filled' ],
 			[ 'ring', async () => ( await v.locator( '.rfb-pg-center' ).textContent() ) === '2 of 3' && ( await v.locator( '.rfb-pg-text .rfb-pg-name' ).textContent() ) === 'Your car' && ( await v.locator( '.rfb-pg-next' ).textContent() ) === 'Next: Confirm', '"2 of 3", "Your car", "Next: Confirm"' ],
 			[ 'dots', async () => ( await v.locator( '.rfb-pg-center' ).textContent() ) === '67 %' && ( await v.locator( '.rfb-pg-dots i.is-on' ).count() ) === 8, '67 % with 8 of 12 dots' ],
-			[ 'chevrons', async () => ( await v.locator( '.rfb-pg-chevrons li.is-done .rfb-pg-check' ).isVisible() ) && ( await v.locator( '.rfb-pg-chevrons li.is-current' ).textContent() ).includes( 'Your car' ), 'a done arrow with a tick, the current one' ],
+			[ 'chevrons', async () => ( await v.locator( '.rfb-pg-chevrons li.is-done' ).locator( '.rfb-pg-check:visible, .rfb-pg-icon:visible' ).count() ) === 1 && ( await v.locator( '.rfb-pg-chevrons li.is-current' ).textContent() ).includes( 'Your car' ), 'a done arrow with a tick (or its icon), the current one' ],
 			[ 'bar_label', async () => ( await v.locator( '.rfb-progress-bar_label .rfb-pg-pct' ).textContent() ) === '67 %' && ( await v.locator( '.rfb-progress-bar_label .rfb-pg-name' ).textContent() ) === 'Your car' && ( await v.locator( '.rfb-pg-of' ).textContent() ) === 'Step 2 of 3', '67 %, "Your car", "Step 2 of 3"' ],
 		];
 
@@ -200,7 +200,7 @@ async function main() {
 		await v.fill( '[data-rfb-key="name"] input', 'Ann' );
 		await side.locator( 'li' ).nth( 1 ).locator( 'button' ).click();
 		await v.waitForTimeout( 200 );
-		check( 'sidebar', 'with the name filled it moves to step 2; step 1 shows a tick, step 3 (the next one) can be clicked', await v.locator( '.rfb-step' ).nth( 1 ).isVisible() && await side.locator( 'li' ).nth( 0 ).locator( '.rfb-pg-check' ).isVisible() && ! ( await side.locator( 'li' ).nth( 2 ).locator( 'button' ).isDisabled() ) );
+		check( 'sidebar', 'with the name filled it moves to step 2; step 1 shows a tick (or its icon), step 3 (the next one) can be clicked', await v.locator( '.rfb-step' ).nth( 1 ).isVisible() && ( await side.locator( 'li' ).nth( 0 ).locator( '.rfb-pg-check:visible, .rfb-pg-icon:visible' ).count() ) === 1 && ! ( await side.locator( 'li' ).nth( 2 ).locator( 'button' ).isDisabled() ) );
 		await side.locator( 'li' ).nth( 0 ).locator( 'button' ).click();
 		check( 'sidebar', 'clicking step 1 goes back at once; step 2 (visited, not done) has no tick', await v.locator( '.rfb-step' ).nth( 0 ).isVisible() && ! ( await side.locator( 'li' ).nth( 1 ).locator( '.rfb-pg-check' ).isVisible() ) && ( await side.locator( 'li' ).nth( 1 ).getAttribute( 'class' ) ).includes( 'is-visited' ) );
 		await shot( 'sidebar' );

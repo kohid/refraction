@@ -96,12 +96,38 @@ class Steps extends Widget_Nested_Base {
 		return '.rfb-btn.rfb-' . $which . '.rfb-' . $which . '.rfb-from-{{ID}}.rfb-from-{{ID}}.rfb-from-{{ID}}';
 	}
 
+	/** The step transition's kinds (0.100.0, more 0.101.0). */
+	const ANIMATIONS = [ 'fade', 'slide', 'slide_up', 'slide_down', 'slide_flow', 'zoom', 'zoom_out', 'flip', 'flip_x', 'blur', 'rotate', 'skew', 'bounce', 'drop' ];
+
+	/** The step transition as the script reads it: data-rfb-anim, -ms, -delay, -ease, -distance, -stagger; '' for none. */
+	public static function animation_attributes( array $settings ): string {
+		$kind = (string) ( $settings['step_animation'] ?? '' );
+
+		if ( ! in_array( $kind, self::ANIMATIONS, true ) ) {
+			return '';
+		}
+
+		$size = static function ( string $key, int $default, int $min, int $max ) use ( $settings ): int {
+			$value = $settings[ $key ]['size'] ?? '';
+
+			return is_numeric( $value ) ? (int) max( $min, min( $max, (int) $value ) ) : $default;
+		};
+		$ease = (string) ( $settings['step_animation_ease'] ?? 'smooth' );
+
+		return ' data-rfb-anim="' . esc_attr( $kind ) . '"'
+			. ' data-rfb-anim-ms="' . $size( 'step_animation_ms', 350, 100, 1500 ) . '"'
+			. ' data-rfb-anim-delay="' . $size( 'step_animation_delay', 0, 0, 1000 ) . '"'
+			. ' data-rfb-anim-ease="' . esc_attr( in_array( $ease, [ 'smooth', 'ease', 'in_out', 'linear', 'back', 'snappy' ], true ) ? $ease : 'smooth' ) . '"'
+			. ' data-rfb-anim-distance="' . $size( 'step_animation_distance', 48, 8, 300 ) . '"'
+			. ' data-rfb-anim-stagger="' . $size( 'step_animation_stagger', 0, 0, 300 ) . '"';
+	}
+
 	protected function register_controls() {
 		$this->start_controls_section( 'section_steps', [ 'label' => esc_html__( 'Steps', 'refraction' ) ] );
 		$step = new Repeater();
 		$step->add_control( 'step_title', [ 'label' => esc_html__( 'Step title', 'refraction' ), 'type' => Controls_Manager::TEXT, 'default' => esc_html__( 'Step', 'refraction' ), 'label_block' => true ] );
 		$step->add_control( 'step_description', [ 'label' => esc_html__( 'Description', 'refraction' ), 'type' => Controls_Manager::TEXT, 'label_block' => true ] );
-		$step->add_control( 'step_icon', [ 'label' => esc_html__( 'Icon', 'refraction' ), 'type' => Controls_Manager::ICONS, 'skin' => 'inline', 'label_block' => false, 'exclude_inline_options' => [ 'svg' ], 'description' => esc_html__( 'Shown by the Accordion layout.', 'refraction' ) ] );
+		$step->add_control( 'step_icon', [ 'label' => esc_html__( 'Icon', 'refraction' ), 'type' => Controls_Manager::ICONS, 'skin' => 'inline', 'label_block' => false, 'exclude_inline_options' => [ 'svg' ], 'description' => esc_html__( 'Shown in place of the step\'s number: in the progress, the sidebar and the accordion. Empty: the number.', 'refraction' ) ] );
 		$this->add_control( 'steps', [
 			'label' => esc_html__( 'Steps', 'refraction' ),
 			'type' => Control_Nested_Repeater::CONTROL_TYPE,
@@ -165,8 +191,17 @@ class Steps extends Widget_Nested_Base {
 				'fade' => esc_html__( 'Fade', 'refraction' ),
 				'slide' => esc_html__( 'Slide (from the side you go to)', 'refraction' ),
 				'slide_up' => esc_html__( 'Slide up', 'refraction' ),
+				'slide_down' => esc_html__( 'Slide down', 'refraction' ),
+				'slide_flow' => esc_html__( 'Slide up or down (with the direction)', 'refraction' ),
 				'zoom' => esc_html__( 'Zoom in', 'refraction' ),
+				'zoom_out' => esc_html__( 'Zoom out', 'refraction' ),
 				'flip' => esc_html__( 'Flip', 'refraction' ),
+				'flip_x' => esc_html__( 'Flip down', 'refraction' ),
+				'blur' => esc_html__( 'Blur in', 'refraction' ),
+				'rotate' => esc_html__( 'Rotate in', 'refraction' ),
+				'skew' => esc_html__( 'Skew in', 'refraction' ),
+				'bounce' => esc_html__( 'Bounce', 'refraction' ),
+				'drop' => esc_html__( 'Drop in', 'refraction' ),
 			],
 			'separator' => 'before',
 			'description' => esc_html__( 'Plays when Next, Back or a step in the progress is used. Visitors who ask for less motion get none.', 'refraction' ),
@@ -176,6 +211,41 @@ class Steps extends Widget_Nested_Base {
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 100, 'max' => 1500, 'step' => 50 ] ],
 			'default' => [ 'unit' => 'px', 'size' => 350 ],
+			'condition' => [ 'step_animation!' => '' ],
+		] );
+		$this->add_control( 'step_animation_delay', [
+			'label' => esc_html__( 'Delay (ms)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 1000, 'step' => 50 ] ],
+			'condition' => [ 'step_animation!' => '' ],
+		] );
+		$this->add_control( 'step_animation_ease', [
+			'label' => esc_html__( 'Easing', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'smooth',
+			'options' => [
+				'smooth' => esc_html__( 'Smooth (slows down at the end)', 'refraction' ),
+				'ease' => esc_html__( 'Ease', 'refraction' ),
+				'in_out' => esc_html__( 'Ease in and out', 'refraction' ),
+				'linear' => esc_html__( 'Linear', 'refraction' ),
+				'back' => esc_html__( 'Overshoot', 'refraction' ),
+				'snappy' => esc_html__( 'Snappy', 'refraction' ),
+			],
+			'condition' => [ 'step_animation!' => '' ],
+		] );
+		$this->add_control( 'step_animation_distance', [
+			'label' => esc_html__( 'Distance (px)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 8, 'max' => 300 ] ],
+			'default' => [ 'unit' => 'px', 'size' => 48 ],
+			'description' => esc_html__( 'How far slides, skews, rotations and drops travel.', 'refraction' ),
+			'condition' => [ 'step_animation' => [ 'slide', 'slide_up', 'slide_down', 'slide_flow', 'skew', 'rotate', 'drop' ] ],
+		] );
+		$this->add_control( 'step_animation_stagger', [
+			'label' => esc_html__( 'Field by field (ms between fields)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 300, 'step' => 10 ] ],
+			'description' => esc_html__( '0: the whole step at once. Otherwise each field comes in after the one before it.', 'refraction' ),
 			'condition' => [ 'step_animation!' => '' ],
 		] );
 		$this->add_control( 'side_heading', [
@@ -273,7 +343,7 @@ class Steps extends Widget_Nested_Base {
 		$buttons .= '' !== (string) ( $settings['step_progress'] ?? '' ) ? ' data-rfb-progress-style="' . esc_attr( sanitize_key( $settings['step_progress'] ) ) . '"' : '';
 		$buttons .= 'yes' === ( $settings['step_counter'] ?? '' ) ? ' data-rfb-counter' : '';
 		$animation = (string) ( $settings['step_animation'] ?? '' );
-		$buttons .= in_array( $animation, [ 'fade', 'slide', 'slide_up', 'zoom', 'flip' ], true ) ? ' data-rfb-anim="' . esc_attr( $animation ) . '" data-rfb-anim-ms="' . (int) max( 100, min( 1500, (int) ( $settings['step_animation_ms']['size'] ?? 350 ) ) ) . '"' : '';
+		$buttons .= self::animation_attributes( $settings );
 		$buttons .= '' !== trim( (string) ( $settings['side_heading'] ?? '' ) ) ? ' data-rfb-side-heading="' . esc_attr( $settings['side_heading'] ) . '"' : '';
 
 		echo '<div class="rfb-steps rfb-layout-' . esc_attr( $layout ) . '" data-rfb-steps' . $buttons . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
@@ -321,7 +391,7 @@ class Steps extends Widget_Nested_Base {
 			rfbButtons += ' data-rfb-' + which + '-id="' + _.escape( settings[ which + '_css_id' ] || '' ) + '"';
 		} );
 		#>
-		<div class="rfb-steps rfb-steps-editor rfb-layout-{{ rfbLayout }}" data-rfb-steps-preview data-rfb-layout="{{ rfbLayout }}" data-rfb-progress-style="{{ 'accordion' === rfbLayout ? '' : ( settings.step_progress || '' ) }}"<# if ( 'yes' === settings.step_counter && 'accordion' !== rfbLayout ) { #> data-rfb-counter<# } #> data-rfb-side-heading="{{ settings.side_heading || '' }}"<# if ( settings.step_animation ) { #> data-rfb-anim="{{ settings.step_animation }}" data-rfb-anim-ms="{{ settings.step_animation_ms && settings.step_animation_ms.size ? settings.step_animation_ms.size : 350 }}"<# } #> data-rfb-meta="{{ JSON.stringify( rfbMeta ) }}" data-rfb-i18n="<?php echo esc_attr( (string) wp_json_encode( Shortcodes::step_i18n() ) ); ?>"{{{ rfbButtons }}}>
+		<div class="rfb-steps rfb-steps-editor rfb-layout-{{ rfbLayout }}" data-rfb-steps-preview data-rfb-layout="{{ rfbLayout }}" data-rfb-progress-style="{{ 'accordion' === rfbLayout ? '' : ( settings.step_progress || '' ) }}"<# if ( 'yes' === settings.step_counter && 'accordion' !== rfbLayout ) { #> data-rfb-counter<# } #> data-rfb-side-heading="{{ settings.side_heading || '' }}"<# if ( settings.step_animation ) { var rfbSize = function( key, fallback ) { return settings[ key ] && '' !== settings[ key ].size && undefined !== settings[ key ].size ? settings[ key ].size : fallback; }; #> data-rfb-anim="{{ settings.step_animation }}" data-rfb-anim-ms="{{ rfbSize( 'step_animation_ms', 350 ) }}" data-rfb-anim-delay="{{ rfbSize( 'step_animation_delay', 0 ) }}" data-rfb-anim-ease="{{ settings.step_animation_ease || 'smooth' }}" data-rfb-anim-distance="{{ rfbSize( 'step_animation_distance', 48 ) }}" data-rfb-anim-stagger="{{ rfbSize( 'step_animation_stagger', 0 ) }}"<# } #> data-rfb-meta="{{ JSON.stringify( rfbMeta ) }}" data-rfb-i18n="<?php echo esc_attr( (string) wp_json_encode( Shortcodes::step_i18n() ) ); ?>"{{{ rfbButtons }}}>
 			<# _.each( settings.steps, function( step, index ) { #>
 			<div class="rfb-step-slot">
 				<div class="rfb-step-head rfb-t-step"><span class="rfb-step-number">{{{ index + 1 }}}</span><h3 class="rfb-step-title">{{{ step.step_title }}}</h3><# if ( step.step_description ) { #><p class="rfb-description">{{ step.step_description }}</p><# } #></div>

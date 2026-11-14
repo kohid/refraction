@@ -128,6 +128,15 @@ up, zoom or flip, 100 to 1500 ms, on the box as `data-rfb-anim` / `data-rfb-anim
 Web Animations API on the step coming in, on the site (not on the first step shown) and in the editor's preview; never
 with `prefers-reduced-motion: reduce`.
 
+0.101.0: more kinds (`slide_down`, `slide_flow` (up or down with the direction), `zoom_out`, `flip_x`, `blur`, `rotate`,
+`skew`, `bounce`, `drop`) and settings: `step_animation_delay`, `step_animation_ease` (smooth, ease, in_out, linear, back
+(overshoot), snappy), `step_animation_distance` (slides, skew, rotate, drop) and `step_animation_stagger` (ms between the
+step's head, fields and buttons, each animated in turn). `Steps::animation_attributes()` writes them as `data-rfb-anim-*`.
+
+Step icons (0.101.0): a step's `step_icon` takes the place of its number in the connected progress, the numbered steps,
+the arrows (beside the title), the sidebar and the accordion (`buildProgress( style, titles, i18n, icons )`). The icon
+stays in the done state (the colour shows it is done), instead of the tick a number gives way to.
+
 ## Limits
 
 - Building a form needs the page editor (JavaScript). The public form works without it (all steps on one page, server validation).
