@@ -151,7 +151,7 @@ async function main() {
 			add( row, { elType: 'widget', widgetType: 'rfb-field-email', settings: { field_label: 'Email', field_required: 'yes' } } );
 			const box = add( refraction.getPreviewContainer(), { elType: 'container', settings: {} } );
 			add( box, { elType: 'widget', widgetType: 'heading', settings: { title: 'Tell us more' } } );
-			add( box, { elType: 'widget', widgetType: 'rfb-field-currency', settings: { field_label: 'Budget', field_per: 'month', field_min: 5 } } );
+			add( box, { elType: 'widget', widgetType: 'rfb-field-currency', settings: { field_label: 'Budget', field_per: 'month', field_min: 5, currency_symbol: 'yes' } } );
 			add( box, { elType: 'widget', widgetType: 'rfb-field-select', settings: { field_label: 'Service', field_options: 'trim|Nail trimming\nbath|Bath', add_filter: 'yes' } } );
 			add( box, { elType: 'widget', widgetType: 'rfb-field-radio', settings: { field_label: 'Size', field_options: 'Small\nLarge', choice_inline: 'yes', choice_accent: '#ff0000' } } );
 			add( box, { elType: 'widget', widgetType: 'rfb-field-toggle', settings: { field_label: 'Agree to terms' } } );

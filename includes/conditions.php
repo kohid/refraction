@@ -82,7 +82,7 @@ class Conditions {
 			if ( ! empty( $term['terms'] ) ) {
 				$comparison_result = self::check( $term, $comparison );
 			} else {
-				preg_match( '/(\w+)(?:\[(\w+)])?/', $term['name'], $parsed_name );
+				preg_match( '/(@?\w+)(?:\[(\w+)])?/', $term['name'], $parsed_name );
 
 				$value = $comparison[ $parsed_name[1] ];
 

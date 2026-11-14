@@ -68,6 +68,14 @@ The screens follow the layout language of the Metronic 8 admin demo (cards with 
   - **Name parts**: Style > Name parts > Space between First Name and Last Name (`column-gap` of `.rfb-name-row`) and Space when they wrap.
   - Check: `scripts/check-field-extras.mjs`.
 
+- **Icons everywhere and Choice details by order (0.94.0)**:
+  - **Choice details** rows follow the choices' order unless a row names its choice (label or value); a name that matches nothing falls back on the row's place, a choice is never given twice, rows past the last choice are dropped (`Schema::option_extras`). The rows show only the parts the Look uses (picture: images; icon: segmented, pill, tiles, cards, images; line of text: tiles, cards, images; badge: all), and the whole list is hidden for List.
+  - **Repeater fields that read their widget**: a condition key starting with "@" (`'@choice_look' => 'images'`) reads the widget's setting. Editor: `controls/base.js` (`getOwnerSettings`, `rowValues`, re-checked when the widget's settings change) and `utils/control-conditions.js` (the "@" in names); server: `Controls_Stack::get_active_settings()` and `is_control_visible()`.
+  - **Country**: with Show the flag on, `initCountry` (frontend.js) puts a button in place of the select (the select stays, hidden, for sending, conditions, the summary and the browser's required check) and a list with a flag beside every country and a search box (arrow keys, Enter, Escape, typing filters). "Icon in the box" is shown while no country is chosen. The same script runs in the editor's preview for each field as it is drawn (`enhance()` on `frontend/element_ready/global`), so the flag and the list work there too.
+  - **Name**: Icon in the First Name box (`icon`) and Icon in the Last Name box (`icon_last`).
+  - **Amount**: Icon in the box; the currency symbol beside the box is opt-in (`currency_symbol`, off by default).
+  - Panel: fields with an icon get the categories "In the box" (icon, format, flag, growing text, currency symbol) and "Limits" (lowest and highest). Check: `scripts/check-field-icons.mjs`.
+
 ## Limits
 
 - Building a form needs the page editor (JavaScript). The public form works without it (all steps on one page, server validation).

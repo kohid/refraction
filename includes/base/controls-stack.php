@@ -1236,8 +1236,17 @@ abstract class Controls_Stack extends Base_Object {
 				$control_obj = $controls_objs[ $control['type'] ] ?? null;
 
 				if ( $control_obj instanceof Control_Repeater ) {
+					// A field's condition on "@name" reads its widget's "name" (as in the editor, controls/base.js).
+					$owner = [];
+
+					foreach ( $settings as $owner_key => $owner_value ) {
+						if ( is_string( $owner_key ) && ! is_array( $owner_value ) ) {
+							$owner[ '@' . $owner_key ] = $owner_value;
+						}
+					}
+
 					foreach ( $setting as & $item ) {
-						$item = $this->get_active_settings( $item, $control['fields'] );
+						$item = array_diff_key( $this->get_active_settings( (array) $item + $owner, $control['fields'] ), $owner );
 					}
 				}
 
@@ -1460,7 +1469,7 @@ abstract class Controls_Stack extends Base_Object {
 		}
 
 		foreach ( $control['condition'] as $condition_key => $condition_value ) {
-			preg_match( '/([a-z_\-0-9]+)(?:\[([a-z_]+)])?(!?)$/i', $condition_key, $condition_key_parts );
+			preg_match( '/(@?[a-z_\-0-9]+)(?:\[([a-z_]+)])?(!?)$/i', $condition_key, $condition_key_parts );
 
 			$pure_condition_key = $condition_key_parts[1];
 			$condition_sub_key = $condition_key_parts[2];

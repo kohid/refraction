@@ -94,7 +94,8 @@ export default class Conditions {
 				// A term consists of a condition name (id) to be examined, and a sub key if the condition source is
 				// an object. For example, a term can look like 'image_overlay[url]' (the 'url' is the sub key). Here
 				// we want to isolate the condition name and the sub key, so later it can be retrieved and examined.
-				const parsedName = term.name.match( /([\w-]+)(?:\[([\w-]+)])?/ ),
+				// A leading "@" (a repeater field reading its widget's setting) is part of the name.
+				const parsedName = term.name.match( /(@?[\w-]+)(?:\[([\w-]+)])?/ ),
 					conditionRealName = parsedName[ 1 ],
 					conditionSubKey = parsedName[ 2 ];
 

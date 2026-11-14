@@ -32,11 +32,12 @@ export default class ControlConditions extends Conditions {
 	convertConditionToConditions( conditionName, conditionValue, controlModel, values, controls ) {
 		// The first step is to isolate the term from the negative operator if exists. For example, a condition format
 		// can look like 'selected_icon[value]!', so we examine this term with a negative connotation.
-		const conditionNameParts = conditionName.match( /([\w-]+(?:\[[\w-]+])?)?(!?)$/i ),
+		// A leading "@" names a setting of the widget a repeater row belongs to (see controls/base.js rowValues()).
+		const conditionNameParts = conditionName.match( /(@?[\w-]+(?:\[[\w-]+])?)?(!?)$/i ),
 			conditionRealName = conditionNameParts[ 1 ],
 			isNegativeCondition = !! conditionNameParts[ 2 ];
 
-		const parsedControlName = conditionRealName.match( /([\w-]+)(?:\[([\w-]+)])?/ ),
+		const parsedControlName = conditionRealName.match( /(@?[\w-]+)(?:\[([\w-]+)])?/ ),
 			// ConditionNameWithoutSubKey example: the condition key 'image[url]' will give the value of 'image'.
 			conditionNameWithoutSubKey = parsedControlName[ 1 ],
 			// ConditionSubKey example: the condition key 'image[url]' will give the value of 'url'.
@@ -136,7 +137,7 @@ export default class ControlConditions extends Conditions {
 				// A term consists of a control name to be examined, and a sub key if needed. For example, a term
 				// can look like 'image_overlay[url]' (the 'url' is the sub key). Here we want to isolate the
 				// condition name and the sub key, so later it can be retrieved and examined.
-				const parsedName = term.name.match( /([\w-]+)(?:\[([\w-]+)])?/ ),
+				const parsedName = term.name.match( /(@?[\w-]+)(?:\[([\w-]+)])?/ ),
 					conditionRealName = parsedName[ 1 ],
 					conditionSubKey = parsedName[ 2 ];
 

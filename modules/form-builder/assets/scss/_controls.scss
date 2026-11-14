@@ -1037,10 +1037,147 @@ $rfb-widths: (
 			transform: translateY(-50%);
 		}
 
-		// No country chosen yet: the box keeps its usual padding.
-		&:has(.rfb-flag[hidden]) > .rfb-input {
+		// No country chosen yet and no icon: the box keeps its usual padding.
+		&:not(.has-icon):has(.rfb-flag[hidden]) > .rfb-input {
 			padding-left: 14px;
 		}
+
+		// The field's icon stands in while no country is chosen; the flag replaces it.
+		&:has(.rfb-flag:not([hidden])) > .rfb-field-icon {
+			display: none;
+		}
+
+		> .rfb-field-icon {
+			font-size: var(--rfb-icon-size, 20px);
+		}
+	}
+
+	// An amount with an icon: the icon box takes the input's place in the row of affixes.
+	.rfb-amount > .rfb-icon-box {
+		flex: 1 1 auto;
+		min-width: 0;
+
+		&:not(:last-child) > .rfb-input {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		&:not(:first-child) > .rfb-input {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
+
+	// The country list with flags (frontend.js initCountry): a button that looks like the box, and a list to search.
+	.rfb-cp-native {
+		position: absolute !important;
+		width: 1px !important;
+		height: 1px !important;
+		overflow: hidden;
+		clip-path: inset(50%);
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.rfb-cp-button {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		color: var(--rfb-input-text);
+		cursor: pointer;
+		text-align: left;
+
+		&::after {
+			content: "";
+			flex: none;
+			width: 8px;
+			height: 8px;
+			margin-left: auto;
+			border-right: 2px solid currentColor;
+			border-bottom: 2px solid currentColor;
+			opacity: 0.6;
+			transform: translateY(-2px) rotate(45deg);
+		}
+
+		&.is-empty {
+			color: $rfb-gray-500;
+		}
+
+		.rfb-cp-text {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	.rfb-cp-pop {
+		position: absolute;
+		top: calc(100% + 6px);
+		right: 0;
+		left: 0;
+		z-index: 30;
+		display: flex;
+		flex-direction: column;
+		max-height: 320px;
+		overflow: hidden;
+		border: 1px solid var(--rfb-input-border);
+		border-radius: var(--rfb-radius);
+		background: var(--rfb-form-bg, #fff);
+		box-shadow: 0 12px 32px rgba(16, 24, 40, 0.16);
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	.rfb-cp-search {
+		flex: none;
+		margin: 8px;
+		width: auto !important;
+		padding-left: 12px !important;
+	}
+
+	.rfb-cp-list {
+		flex: 1 1 auto;
+		margin: 0;
+		padding: 0 6px 6px;
+		overflow-y: auto;
+		list-style: none;
+	}
+
+	.rfb-cp-option {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 8px 10px;
+		border-radius: calc(var(--rfb-radius) - 2px);
+		color: var(--rfb-ink);
+		cursor: pointer;
+
+		img {
+			flex: none;
+			width: 22px;
+			height: 16.5px;
+			border-radius: 2px;
+			box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.12);
+		}
+
+		&.is-active {
+			background: color-mix(in srgb, var(--rfb-primary) 10%, transparent);
+		}
+
+		&[aria-selected="true"] {
+			font-weight: 700;
+		}
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	.rfb-cp-empty {
+		padding: 10px 14px;
+		color: var(--rfb-muted);
 	}
 
 	textarea.rfb-input[data-rfb-autogrow] {

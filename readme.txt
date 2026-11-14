@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.93.0
+Stable tag: 0.94.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,14 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.94.0 =
+* Form Builder: Choice details now follow the order of the choices: the first row is the first choice, unless a row names its choice. A row named differently from every choice (for example "Test 1" for choices 1, 2, 3) used to be dropped, so its picture and icon never showed; it now belongs to the choice in its place.
+* Form Builder: Choice details only show what the chosen Look uses: a picture for Image cards; an icon for the bar, pill, tiles, cards and image cards; a line of text for tiles, cards and image cards; a badge for all. The list is hidden for the plain List look.
+* Editor: a repeater field can depend on a setting of its widget (a condition on "@name"), in the panel and on the server.
+* Form Builder: the Country field's list opens with a flag beside every country and a search box; the chosen country's flag shows in the editor and on the site. "Icon in the box" sets the icon shown while no country is chosen.
+* Form Builder: Name fields have an icon for the First Name box and one for the Last Name box.
+* Form Builder: Amount fields take an icon in the box; the currency symbol beside the box is now off unless "Currency symbol beside the box" is switched on.
 
 = 0.93.0 =
 * Form Builder: an icon at the left of the box on text, long text, email, phone, website, number, date, time and dropdown fields (Solar, Phosphor or Font Awesome), with its color, color while typing, size and spacing in the Style tab.
