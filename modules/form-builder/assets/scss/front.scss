@@ -408,3 +408,43 @@
 .rfb-rep-remove .rfb-btn-icon {
 	font-size: var(--rfb-btn-icon-size, 18px);
 }
+
+// The Button widget's sizes and types on the form's buttons (0.99.0). Repeated classes outrank the form's own button
+// look; the Style tab's settings repeat theirs once more and win over these.
+$rfb-btn-sizes: (
+	xs: (10px 20px, 13px),
+	sm: (12px 24px, 15px),
+	md: (15px 30px, 16px),
+	lg: (20px 40px, 18px),
+	xl: (25px 50px, 20px),
+);
+
+@each $size, $spec in $rfb-btn-sizes {
+	.rfb-btn.rfb-size-#{$size}.rfb-size-#{$size}.rfb-size-#{$size}.rfb-size-#{$size} {
+		padding: nth($spec, 1);
+		font-size: nth($spec, 2);
+		min-height: 0;
+	}
+}
+
+$rfb-btn-types: (
+	info: (#0b7fc1, #096a9f),
+	success: (#16834a, #116c3c),
+	warning: (#b86a00, #995800),
+	danger: (#c8283f, #a71f33),
+);
+
+@each $type, $colors in $rfb-btn-types {
+	.rfb-btn.rfb-type-#{$type}.rfb-type-#{$type}.rfb-type-#{$type}.rfb-type-#{$type},
+	.rfb-rep-remove.rfb-type-#{$type}.rfb-type-#{$type}.rfb-type-#{$type}.rfb-type-#{$type} {
+		background: nth($colors, 1);
+		color: #fff;
+		fill: #fff;
+
+		&:hover,
+		&:focus {
+			background: nth($colors, 2);
+			color: #fff;
+		}
+	}
+}

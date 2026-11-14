@@ -2,9 +2,6 @@
 namespace Refraction\Modules\FormBuilder\Widgets;
 
 use Refraction\Controls_Manager;
-use Refraction\Group_Control_Border;
-use Refraction\Group_Control_Box_Shadow;
-use Refraction\Group_Control_Typography;
 use Refraction\Modules\FormBuilder\Classes\Form_Buttons;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Documents\Form_Document;
@@ -17,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** The form's submit button, placed and styled where you want it. Without one, the form prints a plain button at the end. */
 class Submit_Button extends Widget_Base {
+
+	/** The button, its class repeated so the Style tab wins over the form's own button look and the theme's. */
+	const BUTTON = '{{WRAPPER}} .rfb-btn.rfb-submit.rfb-submit.rfb-submit';
 
 	public function get_name() {
 		return 'rfb-submit';
@@ -68,27 +68,14 @@ class Submit_Button extends Widget_Base {
 			// A column of one: align-items places the button, and "stretch" makes it full width.
 			'selectors' => [ '{{WRAPPER}} .rfb-actions' => 'display: flex; flex-direction: column; align-items: {{VALUE}};' ],
 		] );
-		// An icon beside the text (0.95.0) and a hover animation (0.97.0), like the Button widget.
-		Form_Buttons::controls( $this, '', '{{WRAPPER}} .rfb-submit', [ 'heading' => esc_html__( 'Icon and animation', 'refraction' ) ] );
+		// The Button widget's Content settings (0.99.0): type, size, icon, its place and space, the button's ID. Links do
+		// not apply: this button sends the form.
+		Form_Buttons::controls( $this, '', self::BUTTON, [ 'heading' => esc_html__( 'Look and icon', 'refraction' ) ] );
 		$this->end_controls_section();
 
-		$button = '{{WRAPPER}} .rfb-submit';
+		// The Button widget's Style tab (0.99.0). Setting names stay those of 0.91 (typography, color_normal...).
 		$this->start_controls_section( 'section_button_style', [ 'label' => esc_html__( 'Button', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
-		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'typography', 'selector' => $button ] );
-		$this->start_controls_tabs( 'button_states' );
-
-		foreach ( [ 'normal' => [ esc_html__( 'Normal', 'refraction' ), '' ], 'hover' => [ esc_html__( 'Hover', 'refraction' ), ':hover' ] ] as $state => $spec ) {
-			$this->start_controls_tab( 'button_' . $state, [ 'label' => $spec[0] ] );
-			$this->add_control( 'color_' . $state, [ 'label' => esc_html__( 'Text color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . $spec[1] => 'color: {{VALUE}};' ] ] );
-			$this->add_control( 'bg_' . $state, [ 'label' => esc_html__( 'Background color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button . $spec[1] => 'background-color: {{VALUE}};' ] ] );
-			$this->add_group_control( Group_Control_Border::get_type(), [ 'name' => 'border_' . $state, 'selector' => $button . $spec[1] ] );
-			$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'shadow_' . $state, 'selector' => $button . $spec[1] ] );
-			$this->end_controls_tab();
-		}
-
-		$this->end_controls_tabs();
-		$this->add_responsive_control( 'radius', [ 'label' => esc_html__( 'Border radius', 'refraction' ), 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', '%' ], 'separator' => 'before', 'selectors' => [ $button => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
-		$this->add_responsive_control( 'padding', [ 'label' => esc_html__( 'Padding', 'refraction' ), 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ $button => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
+		Form_Buttons::style_controls( $this, '', self::BUTTON, [ 'legacy' => true ] );
 		$this->end_controls_section();
 	}
 
@@ -98,6 +85,6 @@ class Submit_Button extends Widget_Base {
 		$settings = $this->get_settings_for_display();
 
 		// In the editor the button does nothing; on the site it sends the form it sits in.
-		echo '<div class="rfb-actions"><button type="submit" class="rfb-btn rfb-btn-primary rfb-submit' . esc_attr( Form_Buttons::classes( $settings, '' ) ) . '">' . Form_Buttons::inner( $settings, '', $text, 'rfb-submit-icon', 'rfb-submit-text' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		echo '<div class="rfb-actions"><button type="submit"' . Form_Buttons::id_attribute( $settings, '' ) . ' class="rfb-btn rfb-btn-primary rfb-submit' . esc_attr( Form_Buttons::classes( $settings, '' ) ) . '">' . Form_Buttons::inner( $settings, '', $text, 'rfb-submit-icon', 'rfb-submit-text' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 	}
 }
