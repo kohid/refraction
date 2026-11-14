@@ -181,6 +181,20 @@ class Shortcodes {
 			'pickerClear' => __( 'Clear', 'refraction' ),
 			'pickerToday' => __( 'Today', 'refraction' ),
 			'pickerNow' => __( 'Now', 'refraction' ),
+			/* translators: 1: this step, 2: how many steps. */
+			'stepShort' => __( 'Step %1$d/%2$d', 'refraction' ),
+			/* translators: 1: this step, 2: how many steps. */
+			'ofSteps' => __( '%1$d of %2$d', 'refraction' ),
+			/* translators: %s: the next step's title. */
+			'nextStep' => __( 'Next: %s', 'refraction' ),
+			'lastStep' => __( 'Last step', 'refraction' ),
+			'stepsLabel' => __( 'Steps', 'refraction' ),
+			'stepDone' => __( 'Completed', 'refraction' ),
+			'stepNow' => __( 'In progress', 'refraction' ),
+			'stepTodo' => __( 'Not started', 'refraction' ),
+			'stepAllSet' => __( 'All set!', 'refraction' ),
+			'stepChange' => __( 'Change if needed', 'refraction' ),
+			'stepFill' => __( 'Fill in the details', 'refraction' ),
 			'pickerCheckout' => __( 'Now choose the check-out day', 'refraction' ),
 			'pickerNight' => __( '1 night', 'refraction' ),
 			/* translators: %d: number of nights. */

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.97.0
+Stable tag: 0.98.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.98.0 =
+* Form Builder: Steps widget > Layout and progress. Progress: circles joined by a line with ticks, a bar with the percentage under it, a bar with a knob and a percentage bubble, segments, a ring ("2 of 5") with the step and the next one, a ring of dots with the percentage, arrows, a bar with the percentage and the step name, or the earlier numbered steps and plain bar. Layout: progress on top, the steps in a sidebar beside the form (numbers, ticks, descriptions, a heading; a row on phones), or an accordion with one section per step (its icon, status Completed / In progress / Not started, "Step 2 of 4", Back and Next inside). Done steps can be clicked to go back. "Step 1/6" above each step, a per-step icon, and colors for the progress, sidebar and accordion.
 
 = 0.97.0 =
 * Form Builder: the form's own buttons have the Button widget's icon and hover animation settings: Submit (icon, left or right, space, size, now with a hover animation), the Repeater's Add button (the same) and Remove button (an icon in place of the cross, a hover animation), and the Steps' Back and Next buttons (Steps widget > Back and Next buttons; their texts stay in the form settings).
