@@ -171,6 +171,10 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			] );
 		}
 
+		if ( $this->has( 'date_limits' ) ) {
+			$this->register_booking_controls();
+		}
+
 		if ( $this->has( 'time_limits' ) ) {
 			$this->add_control( 'hours_heading', [ 'label' => esc_html__( 'Which times can be chosen', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
 			$this->add_control( 'time_min', [ 'label' => esc_html__( 'From', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => '08:00', 'description' => esc_html__( '24-hour time; empty: any time.', 'refraction' ) ] );
@@ -306,6 +310,45 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 
 	public function get_style_depends(): array {
 		return in_array( $this->field_type(), [ 'date', 'time', 'datetime' ], true ) ? [ 'flatpickr', 'refraction-form-builder-front' ] : [ 'refraction-form-builder-front' ];
+	}
+
+	/** Content (0.96.0): what a date books (one day, a stay, a flight, several days), no past days, dates that can not be booked. */
+	private function register_booking_controls(): void {
+		$date = 'date' === $this->field_type();
+
+		if ( $date ) {
+			$this->add_control( 'booking_heading', [ 'label' => esc_html__( 'Booking calendar', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+			$this->add_control( 'calendar', [
+				'label' => esc_html__( 'Calendar type', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'single',
+				'options' => [
+					'single' => esc_html__( 'One day', 'refraction' ),
+					'range' => esc_html__( 'A stay: check-in to check-out', 'refraction' ),
+					'flight' => esc_html__( 'A flight: departure and return (or one way)', 'refraction' ),
+					'multiple' => esc_html__( 'Several days', 'refraction' ),
+				],
+				'description' => esc_html__( 'A stay counts its nights in a Total ({field} * price per night); several days count how many.', 'refraction' ),
+			] );
+			$this->add_control( 'min_nights', [ 'label' => esc_html__( 'Fewest nights', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 365, 'placeholder' => '1', 'condition' => [ 'calendar' => 'range' ] ] );
+			$this->add_control( 'max_nights', [ 'label' => esc_html__( 'Most nights', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 365, 'description' => esc_html__( '0: no limit.', 'refraction' ), 'condition' => [ 'calendar' => 'range' ] ] );
+			$this->add_control( 'max_picks', [ 'label' => esc_html__( 'Most days', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 60, 'description' => esc_html__( '0: no limit.', 'refraction' ), 'condition' => [ 'calendar' => 'multiple' ] ] );
+			$this->add_control( 'inline', [ 'label' => esc_html__( 'Calendar on the page', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'Always open under the box, instead of opening when the box is clicked.', 'refraction' ), 'condition' => [ 'date_picker' => 'yes' ] ] );
+		}
+
+		$this->add_control( 'no_past', [
+			'label' => esc_html__( 'No past days', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'Today is the earliest day. Notice needed (hours) can push it later.', 'refraction' ),
+		] );
+		$this->add_control( 'unavailable', [
+			'label' => esc_html__( 'Dates that can not be booked', 'refraction' ),
+			'type' => Controls_Manager::TEXTAREA,
+			'rows' => 4,
+			'placeholder' => "2026-12-25
+2026-12-31..2027-01-02",
+			'description' => esc_html__( 'One per line: a day, or a stretch of days (from..to). Holidays, fully booked days.', 'refraction' ),
+		] );
 	}
 
 	/** A Choice field (one or many): it has looks, and its options can have an icon, a line of text and a badge. */
@@ -702,6 +745,13 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'icon' => $s['field_icon'] ?? null,
 			'icon_last' => $s['field_icon_last'] ?? null,
 			'picker' => $yes( 'date_picker' ),
+			'calendar' => (string) ( $s['calendar'] ?? 'single' ),
+			'no_past' => $yes( 'no_past' ),
+			'unavailable' => (string) ( $s['unavailable'] ?? '' ),
+			'min_nights' => $s['min_nights'] ?? 0,
+			'max_nights' => $s['max_nights'] ?? 0,
+			'max_picks' => $s['max_picks'] ?? 0,
+			'inline' => $yes( 'inline' ),
 			'currency_symbol' => $yes( 'currency_symbol' ),
 			'autogrow' => $yes( 'autogrow' ),
 			'phone_format' => (string) ( $s['phone_format'] ?? '' ),

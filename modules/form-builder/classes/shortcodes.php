@@ -181,6 +181,17 @@ class Shortcodes {
 			'pickerClear' => __( 'Clear', 'refraction' ),
 			'pickerToday' => __( 'Today', 'refraction' ),
 			'pickerNow' => __( 'Now', 'refraction' ),
+			'pickerCheckout' => __( 'Now choose the check-out day', 'refraction' ),
+			'pickerNight' => __( '1 night', 'refraction' ),
+			/* translators: %d: number of nights. */
+			'pickerNights' => __( '%d nights', 'refraction' ),
+			'pickerOneWay' => __( 'One way (choose a return day, or not)', 'refraction' ),
+			/* translators: %d: number of days between departure and return. */
+			'pickerReturn' => __( 'Return, %d days away', 'refraction' ),
+			/* translators: %d: number of days chosen. */
+			'pickerPicks' => __( '%d days', 'refraction' ),
+			/* translators: 1: days chosen, 2: most days. */
+			'pickerPicksOf' => __( '%1$d of %2$d days', 'refraction' ),
 			'countryNone' => __( 'No country matches.', 'refraction' ),
 			'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ),
 			'badType' => __( '%s is not an allowed file type.', 'refraction' ),

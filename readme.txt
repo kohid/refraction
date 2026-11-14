@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.95.0
+Stable tag: 0.96.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.96.0 =
+* Form Builder: Date fields are booking calendars. Calendar type: One day, A stay (check-in to check-out, with fewest and most nights), A flight (departure and return, or one way) and Several days (with a most). A stay counts its nights in a Total ({stay} * 80), several days count how many. Stays and flights show two months side by side on wide screens; a line under the calendar says "3 nights", "One way" or "2 of 3 days".
+* Form Builder: No past days (today is the earliest), and Dates that can not be booked (days or stretches such as 2026-12-31..2027-01-02, for holidays and fully booked days): the calendar greys them out, a stay can not cross one (the check-out morning may fall on one), and the server checks them again. "Calendar on the page" shows the calendar open under the box.
 
 = 0.95.0 =
 * Form Builder: Date, Time and Date & time fields open the form's own calendar and clock (the bundled flatpickr, styled from scratch in the forms' admin look): a white card with a bold month, rounded days, today in grey, the picked day in the form's main color, big bold hours and minutes, and Clear and Today (Now) buttons. The box shows "14 November 2026"; the answer is stored as before. Closed days can not be picked and times keep to the opening hours. "Calendar picker" (Content) switches back to the browser's own picker.

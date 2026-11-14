@@ -35,6 +35,14 @@ class Schema {
 	const PHONE_FORMATS = [ '', 'national', 'international' ];
 	const PHONE_PATTERNS = [ 'national' => '(###) ###-####', 'international' => '+## ### ### ####' ];
 
+	/** What a Date field books (0.96.0): one day, a stay (check-in to check-out), a flight (one way or return), several days. */
+	const CALENDARS = [ 'single', 'range', 'flight', 'multiple' ];
+	/** How a range is written in the answer, and several days. */
+	const RANGE_SEPARATOR = ' to ';
+	const DAYS_SEPARATOR = ', ';
+	/** Seconds in a day (this class runs without WordPress in its tests). */
+	const DAY = 86400;
+
 	/** How a Choice field shows its options (0.92.0): a list, a segmented bar, a filled pill switch, icon tiles, cards or image cards. */
 	const CHOICE_LOOKS = [ 'list', 'segmented', 'pill', 'tiles', 'cards', 'images' ];
 
@@ -508,6 +516,14 @@ class Schema {
 			'phone_format' => 'phone' === $type && in_array( $raw['phone_format'] ?? '', self::PHONE_FORMATS, true ) ? (string) ( $raw['phone_format'] ?? '' ) : '',
 			'phone_pattern' => 'phone' === $type ? self::phone_pattern( (string) ( $raw['phone_format'] ?? '' ), (string) ( $raw['phone_pattern'] ?? '' ) ) : '',
 			'country_flag' => 'country' === $type && ( ! array_key_exists( 'country_flag', $raw ) || ! empty( $raw['country_flag'] ) ),
+			// Booking calendar (0.96.0): what a date books, no past days, dates that can not be booked, nights and days.
+			'calendar' => 'date' === $type && in_array( $raw['calendar'] ?? '', self::CALENDARS, true ) ? (string) $raw['calendar'] : 'single',
+			'no_past' => in_array( $type, [ 'date', 'datetime' ], true ) && ! empty( $raw['no_past'] ),
+			'unavailable' => in_array( $type, [ 'date', 'datetime' ], true ) ? self::unavailable( $raw['unavailable'] ?? '' ) : [],
+			'min_nights' => 'date' === $type ? max( 0, min( 365, (int) ( $raw['min_nights'] ?? 0 ) ) ) : 0,
+			'max_nights' => 'date' === $type ? max( 0, min( 365, (int) ( $raw['max_nights'] ?? 0 ) ) ) : 0,
+			'max_picks' => 'date' === $type ? max( 0, min( 60, (int) ( $raw['max_picks'] ?? 0 ) ) ) : 0,
+			'inline' => 'date' === $type && ! empty( $raw['inline'] ),
 			// Dates and times open the form's own calendar and clock unless switched off (0.95.0).
 			'picker' => in_array( $type, [ 'date', 'time', 'datetime' ], true ) && ( ! array_key_exists( 'picker', $raw ) || ! empty( $raw['picker'] ) ),
 			// Choice looks (0.92.0).
@@ -539,6 +555,80 @@ class Schema {
 	}
 
 	/** Weekdays as numbers, 0 (Sunday) to 6 (Saturday). */
+	/**
+	 * Dates that can not be booked (0.96.0): one per line (or an array), a day ("2026-12-25") or a stretch of days
+	 * ("2026-12-24..2026-12-26", also with " to " or " - "). Anything else is left out.
+	 *
+	 * @return array<int,array{0:string,1:string}> [ from, to ] pairs, from <= to.
+	 */
+	public static function unavailable( $raw ): array {
+		$lines = is_array( $raw ) ? $raw : preg_split( '/[\r\n,;]+/', (string) $raw );
+		$out = [];
+
+		foreach ( (array) $lines as $line ) {
+			// A definition read back holds the pairs it stored.
+			if ( is_array( $line ) && 2 === count( $line ) ) {
+				$line = implode( '..', array_map( 'strval', array_values( $line ) ) );
+			}
+
+			if ( ! is_string( $line ) || ! preg_match( '/^\s*(\d{4}-\d{2}-\d{2})(?:\s*(?:\.\.|to|-|–)\s*(\d{4}-\d{2}-\d{2}))?\s*$/', $line, $m ) ) {
+				continue;
+			}
+
+			$from = $m[1];
+			$to = $m[2] ?? $from;
+
+			if ( ! self::valid_date( 'Y-m-d', $from ) || ! self::valid_date( 'Y-m-d', $to ) ) {
+				continue;
+			}
+
+			$out[] = $from <= $to ? [ $from, $to ] : [ $to, $from ];
+
+			if ( count( $out ) >= 200 ) {
+				break;
+			}
+		}
+
+		return $out;
+	}
+
+	/** Whether a "Y-m-d" day is one of the field's dates that can not be booked. */
+	private static function is_unavailable( array $field, string $date ): bool {
+		foreach ( (array) ( $field['unavailable'] ?? [] ) as $stretch ) {
+			if ( $date >= $stretch[0] && $date <= $stretch[1] ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/** The days of a Date field's answer: one, two (a stay or a return flight) or several, in "Y-m-d". */
+	public static function dates_of( array $field, string $value ): array {
+		$value = trim( $value );
+
+		if ( '' === $value ) {
+			return [];
+		}
+
+		$calendar = $field['calendar'] ?? 'single';
+
+		if ( 'multiple' === $calendar ) {
+			$parts = preg_split( '/\s*,\s*/', $value );
+		} elseif ( 'range' === $calendar || 'flight' === $calendar ) {
+			$parts = preg_split( '/\s+(?:to|-|–)\s+|\s*\.\.\s*/', $value );
+		} else {
+			$parts = [ $value ];
+		}
+
+		return array_values( array_filter( array_map( 'trim', (array) $parts ), static fn( $part ) => '' !== $part ) );
+	}
+
+	/** The nights between two "Y-m-d" days. */
+	public static function nights( string $from, string $to ): int {
+		return (int) round( ( strtotime( $to . ' 12:00:00 UTC' ) - strtotime( $from . ' 12:00:00 UTC' ) ) / self::DAY );
+	}
+
 	private static function weekdays( $raw ): array {
 		$days = array_map( 'intval', array_filter( is_array( $raw ) ? $raw : explode( ',', (string) $raw ), 'is_numeric' ) );
 
@@ -1228,6 +1318,10 @@ class Schema {
 					: $out( $value, false, self::t( 'Enter a link that starts with http:// or https://.' ) );
 
 			case 'date':
+				if ( 'single' !== ( $field['calendar'] ?? 'single' ) ) {
+					return self::validate_booking( $field, $value, $out );
+				}
+
 				return self::valid_date( 'Y-m-d', $value )
 					? $out( $value, false, self::when_problem( $field, $value, '' ) )
 					: $out( $value, false, self::t( 'Enter a valid date.' ) );
@@ -1272,6 +1366,84 @@ class Schema {
 		return new \DateTimeImmutable( 'now', function_exists( 'wp_timezone' ) ? wp_timezone() : null );
 	}
 
+	/**
+	 * A booking calendar's answer (0.96.0): a stay (check-in to check-out), a flight (departure, and a return or not) or
+	 * several days. Every day must be a real date the field allows; a stay keeps to its nights and no night of it may fall
+	 * on a date that can not be booked. The answer is stored tidied: days in order, written the same way each time.
+	 *
+	 * @param callable $out The validator's result builder ( value, skip, error ).
+	 */
+	private static function validate_booking( array $field, string $value, callable $out ): array {
+		$days = self::dates_of( $field, $value );
+		$calendar = $field['calendar'];
+
+		foreach ( $days as $day ) {
+			if ( ! self::valid_date( 'Y-m-d', $day ) ) {
+				return $out( $value, false, self::t( 'Enter a valid date.' ) );
+			}
+		}
+
+		sort( $days );
+		$days = array_values( array_unique( $days ) );
+
+		if ( 'multiple' === $calendar ) {
+			if ( $field['max_picks'] > 0 && count( $days ) > $field['max_picks'] ) {
+				return $out( $value, false, sprintf( self::t( 'Choose at most %d days.' ), $field['max_picks'] ) );
+			}
+
+			foreach ( $days as $day ) {
+				$problem = self::when_problem( $field, $day, '' );
+
+				if ( null !== $problem ) {
+					return $out( $value, false, $problem );
+				}
+			}
+
+			return $out( implode( self::DAYS_SEPARATOR, $days ), false );
+		}
+
+		// A stay or a flight: one or two days.
+		if ( count( $days ) > 2 ) {
+			return $out( $value, false, self::t( 'Enter a valid date.' ) );
+		}
+
+		if ( 'range' === $calendar && count( $days ) < 2 ) {
+			return $out( $value, false, self::t( 'Choose the check-out day too.' ) );
+		}
+
+		$problem = self::when_problem( $field, $days[0], '' );
+
+		if ( null === $problem && isset( $days[1] ) ) {
+			// A stay's check-out morning takes no night: a date that can not be booked is fine there.
+			$problem = self::when_problem( 'range' === $calendar ? [ 'unavailable' => [] ] + $field : $field, $days[1], '' );
+		}
+
+		if ( null !== $problem ) {
+			return $out( $value, false, $problem );
+		}
+
+		if ( 'range' === $calendar ) {
+			$nights = self::nights( $days[0], $days[1] );
+
+			if ( $nights < max( 1, $field['min_nights'] ) ) {
+				return $out( $value, false, sprintf( self::t( 'Choose at least %d nights.' ), max( 1, $field['min_nights'] ) ) );
+			}
+
+			if ( $field['max_nights'] > 0 && $nights > $field['max_nights'] ) {
+				return $out( $value, false, sprintf( self::t( 'Choose at most %d nights.' ), $field['max_nights'] ) );
+			}
+
+			// Every night of the stay must be free (the check-out morning itself may be).
+			for ( $day = $days[0]; $day < $days[1]; $day = gmdate( 'Y-m-d', strtotime( $day . ' 12:00:00 UTC' ) + self::DAY ) ) {
+				if ( self::is_unavailable( $field, $day ) ) {
+					return $out( $value, false, sprintf( self::t( '%s can not be booked. Please choose other days.' ), $day ) );
+				}
+			}
+		}
+
+		return $out( implode( self::RANGE_SEPARATOR, $days ), false );
+	}
+
 	/** The first date and time a booking may take (now plus the notice), and the last date, as the browser needs them. */
 	public static function when_limits( array $field ): array {
 		$now = self::now();
@@ -1314,11 +1486,16 @@ class Schema {
 
 		$day = (int) gmdate( 'w', (int) strtotime( $date . ' 12:00:00 UTC' ) );
 
-		if ( in_array( $day, $field['closed_days'], true ) ) {
+		if ( in_array( $day, $field['closed_days'], true ) || self::is_unavailable( $field, $date ) ) {
 			return self::t( 'That day is not available. Please choose another date.' );
 		}
 
 		$limits = self::when_limits( $field );
+
+		// No past days (0.96.0): today is the earliest.
+		if ( ! empty( $field['no_past'] ) && $date < self::now()->format( 'Y-m-d' ) ) {
+			return self::t( 'That day has passed. Please choose today or a later date.' );
+		}
 
 		if ( $field['notice_hours'] > 0 ) {
 			if ( '' !== $time && 'datetime' === $field['type'] && $date . 'T' . $time < $limits['min_datetime'] ) {
@@ -1365,6 +1542,15 @@ class Schema {
 				}, (array) $value ) );
 			case 'toggle':
 				return '1' === (string) $value ? 1.0 : 0.0;
+			case 'date':
+				// A stay counts its nights, a return flight the days away, several days how many (0.96.0).
+				$days = is_string( $value ) ? self::dates_of( $field, $value ) : [];
+
+				if ( 'multiple' === ( $field['calendar'] ?? 'single' ) ) {
+					return (float) count( $days );
+				}
+
+				return 2 === count( $days ) ? (float) self::nights( $days[0], $days[1] ) : 0.0;
 		}
 
 		return is_scalar( $value ) && is_numeric( $value ) ? (float) $value : 0.0;

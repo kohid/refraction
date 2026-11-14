@@ -746,6 +746,28 @@
 	};
 
 	/** The number a field adds to a Total (mirrors Schema::number_of). */
+	/**
+	 * The days of a booking calendar's answer, in "Y-m-d" and in order (0.96.0).
+	 *
+	 * @param {HTMLInputElement} input The date input with data-rfb-calendar.
+	 * @return {string[]} The days.
+	 */
+	function bookedDays( input ) {
+		const value = ( input.value || '' ).trim();
+
+		if ( '' === value ) {
+			return [];
+		}
+
+		const parts = 'multiple' === input.dataset.rfbCalendar ? value.split( /\s*,\s*/ ) : value.split( /\s+(?:to|-|–)\s+|\s*\.\.\s*/ );
+
+		return parts.map( ( part ) => part.trim() ).filter( ( part ) => /^\d{4}-\d{2}-\d{2}$/.test( part ) ).sort();
+	}
+
+	function nightsBetween( from, to ) {
+		return Math.round( ( Date.parse( to + 'T12:00:00Z' ) - Date.parse( from + 'T12:00:00Z' ) ) / 86400000 );
+	}
+
 	function numberOf( form, key ) {
 		const wrapper = form.querySelector( `[data-rfb-key="${ CSS.escape( key ) }"]` );
 
@@ -763,6 +785,19 @@
 
 		if ( 'choice_set' === type ) {
 			return pickedCards( wrapper ).reduce( ( sum, el ) => sum + numberOfEl( el ), 0 );
+		}
+
+		// A booking calendar: a stay's nights, a return flight's days away, how many days (as the server counts them).
+		const calendar = wrapper.querySelector( 'input[data-rfb-calendar]' );
+
+		if ( calendar ) {
+			const days = bookedDays( calendar );
+
+			if ( 'multiple' === calendar.dataset.rfbCalendar ) {
+				return days.length;
+			}
+
+			return 2 === days.length ? nightsBetween( days[ 0 ], days[ 1 ] ) : 0;
 		}
 
 		if ( 'select' === type ) {
@@ -1423,7 +1458,7 @@
 				copied.remove();
 			}
 
-			input.type = { date: 'date', time: 'time', datetime: 'datetime-local' }[ kind ] || 'date';
+			input.type = input.dataset.rfbCalendar ? 'text' : { date: 'date', time: 'time', datetime: 'datetime-local' }[ kind ] || 'date';
 		}
 		const form = input.closest( '[data-rfb-i18n]' );
 		const i18n = form ? JSON.parse( form.dataset.rfbI18n ) : {};
@@ -1438,8 +1473,88 @@
 			[ firstTime, lastTime ] = hours;
 		}
 
+		// The booking calendar (0.96.0): a stay, a flight (one way or return), several days, or one day.
+		const calendar = input.dataset.rfbCalendar || 'single';
+		const unavailable = input.dataset.rfbUnavailable ? JSON.parse( input.dataset.rfbUnavailable ) : [];
+		const [ minNights, maxNights ] = ( input.dataset.rfbNights || '0,0' ).split( ',' ).map( Number );
+		const maxPicks = Number( input.dataset.rfbPicks ) || 0;
+		const ymd = ( d ) => `${ d.getFullYear() }-${ String( d.getMonth() + 1 ).padStart( 2, '0' ) }-${ String( d.getDate() ).padStart( 2, '0' ) }`;
+		const isUnavailable = ( day ) => unavailable.some( ( [ from, to ] ) => day >= from && day <= to );
+		const isRange = 'range' === calendar || 'flight' === calendar;
+		const nextDay = ( day ) => ymd( new Date( Date.parse( day + 'T12:00:00Z' ) + 86400000 ) );
+		let picker = null;
+
+		// Whether a day can be clicked now: closed weekdays and unavailable dates never; for a stay's check-out, only days
+		// that keep to the nights and whose nights are all free (the check-out morning itself may be unavailable).
+		const blocked = ( date ) => {
+			if ( closed.includes( date.getDay() ) ) {
+				return true;
+			}
+
+			const day = ymd( date );
+			const picked = picker ? picker.selectedDates : [];
+
+			if ( 'range' === calendar && 1 === picked.length ) {
+				const anchor = ymd( picked[ 0 ] );
+				const [ from, to ] = day < anchor ? [ day, anchor ] : [ anchor, day ];
+				const nights = nightsBetween( from, to );
+
+				if ( 0 === nights ) {
+					return false;
+				}
+
+				if ( nights < Math.max( 1, minNights ) || ( maxNights > 0 && nights > maxNights ) ) {
+					return true;
+				}
+
+				for ( let night = from; night < to; night = nextDay( night ) ) {
+					if ( isUnavailable( night ) ) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			if ( 'multiple' === calendar && maxPicks > 0 && picked.length >= maxPicks && ! picked.some( ( p ) => ymd( p ) === day ) ) {
+				return true;
+			}
+
+			// A picked check-out day stays picked, even on an unavailable date (no night is spent there).
+			if ( 'range' === calendar && picked.some( ( p ) => ymd( p ) === day ) ) {
+				return false;
+			}
+
+			return isUnavailable( day );
+		};
+
+		// A line under the calendar: the nights of a stay, one way or return, how many days.
+		const summary = () => {
+			const picked = picker ? picker.selectedDates.map( ymd ).sort() : [];
+			let text = '';
+
+			if ( 'range' === calendar ) {
+				if ( 1 === picked.length ) {
+					text = i18n.pickerCheckout || 'Now choose the check-out day';
+				} else if ( 2 === picked.length ) {
+					const nights = nightsBetween( picked[ 0 ], picked[ 1 ] );
+					text = 1 === nights ? ( i18n.pickerNight || '1 night' ) : sprintf( i18n.pickerNights || '%d nights', nights );
+				}
+			} else if ( 'flight' === calendar ) {
+				if ( 1 === picked.length ) {
+					text = i18n.pickerOneWay || 'One way (choose a return day, or not)';
+				} else if ( 2 === picked.length ) {
+					text = sprintf( i18n.pickerReturn || 'Return, %d days away', nightsBetween( picked[ 0 ], picked[ 1 ] ) );
+				}
+			} else if ( 'multiple' === calendar && picked.length ) {
+				text = maxPicks ? sprintf( i18n.pickerPicksOf || '%1$d of %2$d days', picked.length, maxPicks ) : sprintf( i18n.pickerPicks || '%d days', picked.length );
+			}
+
+			return text;
+		};
+
 		const formats = {
-			date: { dateFormat: 'Y-m-d', altFormat: 'j F Y' },
+			date: 'single' === calendar ? { dateFormat: 'Y-m-d', altFormat: 'j F Y' } : { dateFormat: 'Y-m-d', altFormat: 'j M Y' },
 			time: { dateFormat: 'H:i', altFormat: 'H:i', enableTime: true, noCalendar: true },
 			datetime: { dateFormat: 'Y-m-d\\TH:i', altFormat: 'j F Y, H:i', enableTime: true },
 		};
@@ -1456,9 +1571,48 @@
 			minTime: firstTime,
 			maxTime: lastTime,
 			minuteIncrement: step >= 60 ? Math.round( step / 60 ) : 5,
-			disable: closed.length ? [ ( date ) => closed.includes( date.getDay() ) ] : [],
-			onReady( selected, value, picker ) {
-				const box = picker.calendarContainer;
+			// A stay or a flight: flatpickr will not let a range cross a disabled day, so its days are greyed out as they
+			// are drawn instead (it still will not pick them) and a stay can run over a closed weekday's night.
+			disable: ! isRange && ( closed.length || unavailable.length || 'single' !== calendar ) ? [ blocked ] : [],
+			onDayCreate( selected, value, instance, dayElem ) {
+				if ( isRange && dayElem.dateObj && blocked( dayElem.dateObj ) ) {
+					dayElem.classList.add( 'flatpickr-disabled' );
+				}
+			},
+			mode: { range: 'range', flight: 'range', multiple: 'multiple' }[ calendar ] || 'single',
+			conjunction: ', ',
+			locale: { rangeSeparator: ' to ' },
+			closeOnSelect: 'multiple' !== calendar,
+			showMonths: ( 'range' === calendar || 'flight' === calendar ) && view.innerWidth >= 720 ? 2 : 1,
+			inline: input.hasAttribute( 'data-rfb-inline' ),
+			onClose( selected, value, instance ) {
+				// Clicking away clears a range with one day; for a flight that day is a one-way trip: put it back.
+				if ( 'flight' === calendar && 1 === selected.length ) {
+					const departure = selected[ 0 ];
+
+					view.setTimeout( () => {
+						if ( 0 === instance.selectedDates.length ) {
+							instance.setDate( departure, true );
+						}
+					}, 0 );
+				}
+			},
+			onChange( selected, value, instance ) {
+				// The choice changes which days can be clicked next (a stay's nights, the most days).
+				instance.redraw();
+				const line = instance.calendarContainer.querySelector( '.rfb-fp-summary' );
+
+				if ( line ) {
+					line.textContent = summary();
+				}
+
+				// A stay needs its check-out day: say so on the box until it has one.
+				if ( 'range' === calendar && instance.altInput ) {
+					instance.altInput.setCustomValidity( 1 === selected.length ? ( i18n.pickerCheckout || 'Now choose the check-out day' ) : '' );
+				}
+			},
+			onReady( selected, value, instance ) {
+				const box = instance.calendarContainer;
 				const styles = view.getComputedStyle( input );
 
 				box.classList.add( 'rfb-fp' );
@@ -1473,9 +1627,11 @@
 				} );
 
 				// Clear and Today (Now for a time), like the browser's own picker.
+				picker = instance;
 				const foot = input.ownerDocument.createElement( 'div' );
 				foot.className = 'rfb-fp-foot';
-				foot.innerHTML = '<button type="button" class="rfb-fp-clear"></button><button type="button" class="rfb-fp-today"></button>';
+				foot.innerHTML = '<button type="button" class="rfb-fp-clear"></button><span class="rfb-fp-summary" aria-live="polite"></span><button type="button" class="rfb-fp-today"></button>';
+				foot.querySelector( '.rfb-fp-summary' ).textContent = summary();
 				foot.querySelector( '.rfb-fp-clear' ).textContent = i18n.pickerClear || 'Clear';
 				foot.querySelector( '.rfb-fp-today' ).textContent = 'time' === kind ? ( i18n.pickerNow || 'Now' ) : ( i18n.pickerToday || 'Today' );
 				foot.addEventListener( 'click', ( event ) => {
