@@ -11,6 +11,7 @@ function sanitize_textarea_field( $text ) { return strip_tags( $text ); }
 function esc_url_raw( $url ) { return filter_var( $url, FILTER_SANITIZE_URL ); }
 function wp_strip_all_tags( $text ) { return trim( strip_tags( $text ) ); }
 
+require $root . '/modules/ask-claude/classes/icon-sets.php';
 require $root . '/modules/ask-claude/classes/layout-sanitizer.php';
 require $root . '/modules/ask-claude/classes/claude-builder.php';
 require $root . '/modules/ask-claude/classes/prompt-builder.php';
@@ -179,6 +180,21 @@ t( 'box shadows and visual choices (shape dividers) are kept', 40.0 === ( $shado
 t( 'settings left out are reported for Claude: unknown names, and values that do not fit', in_array( 'unknown', $sx->ignored, true ) && in_array( 'bad_shadow (value)', $sx->ignored, true ) && [] === $sx->dropped );
 $nested = ( new L( function () { return null; }, function () { return ''; } ) )->settings( [ 'items' => [ [ 'item_title' => 'Q one', 'evil' => 'x' ] ] ], [ 'items' => [ 'type' => 'nested-elements-repeater', 'fields' => [ 'item_title' => [ 'type' => 'text', 'name' => 'item_title' ] ] ] ] );
 t( 'nested items: titles kept, unknown fields dropped', 'Q one' === ( $nested['items'][0]['item_title'] ?? '' ) && ! isset( $nested['items'][0]['evil'] ) );
+
+// ---- 0.91.0: Refraction's own icon sets (Solar, Phosphor) are accepted when the name exists in the set
+$I = 'Refraction\Modules\AskClaude\Classes\Icon_Sets';
+$il = $s->settings( [ 'icon_list' => [
+	[ 'text' => 'Solar', 'selected_icon' => [ 'value' => 'rf-solar rf-solar-plane', 'library' => 'solar-bold-duotone' ] ],
+	[ 'text' => 'Phosphor', 'selected_icon' => [ 'value' => 'rf-ph rf-ph-airplane-landing', 'library' => 'phosphor-duotone' ] ],
+	[ 'text' => 'Made up', 'selected_icon' => [ 'value' => 'rf-solar rf-solar-not-an-icon', 'library' => 'solar-bold-duotone' ] ],
+	[ 'text' => 'Wrong prefix', 'selected_icon' => [ 'value' => 'rf-ph rf-ph-plane', 'library' => 'solar-bold-duotone' ] ],
+	[ 'text' => 'Font Awesome', 'selected_icon' => [ 'value' => 'fas fa-phone', 'library' => 'fa-solid' ] ],
+] ], $controls['icon-list'] );
+$icons = array_map( function ( $row ) { return $row['selected_icon']['value'] ?? ''; }, $il['icon_list'] ?? [] );
+t( 'icons: Solar and Phosphor names that exist are kept, made-up names and wrong prefixes are not, Font Awesome still works', [ 'rf-solar rf-solar-plane', 'rf-ph rf-ph-airplane-landing', '', '', 'fas fa-phone' ] === $icons );
+t( 'icons: every Solar and Phosphor style is a library, with its names', 12 === count( $I::libraries() ) && count( $I::names( 'solar-linear' ) ) > 1000 && count( $I::names( 'phosphor-thin' ) ) > 1000 && [] === $I::names( 'solar-nope' ) );
+$found = $I::search( 'plane landing' );
+t( 'icons: search finds names with every word, as values to use', in_array( 'rf-ph rf-ph-airplane-landing', $found['phosphor'], true ) && ! in_array( 'rf-ph rf-ph-airplane', $found['phosphor'], true ) && in_array( 'rf-solar rf-solar-plane', $I::search( 'plane' )['solar'], true ) );
 
 echo "ask-claude: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

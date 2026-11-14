@@ -730,5 +730,25 @@ t( 'visitor email: reference, one answer, the summary (empty answers left out), 
 $summary = S::definition( [ 'label' => 'S', 'fields' => [ [ 'label' => 'Review', 'type' => 'summary', 'content' => 'Your booking' ] ] ] );
 t( 'summary is a layout block with its title', 'summary' === $summary['fields'][0]['type'] && 'Your booking' === $summary['fields'][0]['content'] && S::is_layout( 'summary' ) && ! S::has_value( 'summary' ) && S::has_value( 'total' ) );
 
+// Choice looks (0.92.0).
+$plan = S::clean_field( [ 'label' => 'Plan', 'type' => 'radio', 'options' => "free|Free\npro|Pro\nteam|Team", 'choice_look' => 'cards', 'choice_columns' => 9, 'option_extras' => [
+	[ 'choice' => 'Pro', 'text' => 'Unlimited projects', 'badge' => 'Save 28%', 'icon' => [ 'value' => 'rf-ph rf-ph-star', 'library' => 'phosphor-duotone' ] ],
+	[ 'choice' => 'free', 'text' => 'Up to 3 projects', 'icon' => [ 'value' => '"><script>', 'library' => 'phosphor-duotone' ] ],
+	[ 'choice' => 'Nope', 'text' => 'No such choice' ],
+	[ 'choice' => 'team', 'icon' => [ 'value' => 'x', 'library' => 'svg' ] ],
+] ] );
+t( 'choice look: kept when known, columns capped at 6, other types stay a list', 'cards' === $plan['choice_look'] && 6 === $plan['choice_columns'] && 'list' === S::clean_field( [ 'label' => 'A', 'type' => 'radio', 'options' => 'A', 'choice_look' => 'wild' ] )['choice_look'] && 'list' === S::clean_field( [ 'label' => 'A', 'type' => 'select', 'options' => 'A', 'choice_look' => 'tiles' ] )['choice_look'] );
+t( 'choice details: matched by label or value, keyed by value; unknown choices dropped', [ 'pro', 'free' ] === array_keys( $plan['option_extras'] ) && 'Unlimited projects' === $plan['option_extras']['pro']['text'] && 'Save 28%' === $plan['option_extras']['pro']['badge'] );
+$tour = S::clean_field( [ 'label' => 'Tour', 'type' => 'radio', 'options' => "Car Tour\nBus Tour", 'choice_look' => 'images', 'option_extras' => [ [ 'choice' => 'Car Tour', 'image' => [ 'id' => '42', 'url' => 'x.jpg' ] ], [ 'choice' => 'Bus Tour', 'image' => 'nope' ] ] ] );
+t( 'image cards: the look is kept, a picture is an attachment id; a row with nothing usable is dropped', 'images' === $tour['choice_look'] && 42 === $tour['option_extras']['Car Tour']['image'] && ! isset( $tour['option_extras']['Bus Tour'] ) );
+t( 'choice details: icons are class names and a library only (no markup, no uploaded SVG)', [ 'value' => 'rf-ph rf-ph-star', 'library' => 'phosphor-duotone' ] === $plan['option_extras']['pro']['icon'] && null === $plan['option_extras']['free']['icon'] && ! isset( $plan['option_extras']['team'] ) );
+
+// Field extras (0.93.0).
+$ph = static function ( array $raw ) { return S::clean_field( $raw + [ 'label' => 'Phone', 'type' => 'phone' ] ); };
+t( 'phone: no format keeps no pattern; a format without a pattern takes its own', '' === $ph( [] )['phone_pattern'] && '(###) ###-####' === $ph( [ 'phone_format' => 'national' ] )['phone_pattern'] && '+## ### ### ####' === $ph( [ 'phone_format' => 'international' ] )['phone_pattern'] );
+t( 'phone: a pattern of # and separators is kept; letters, digits or markup fall back on the format', '##### ######' === $ph( [ 'phone_format' => 'national', 'phone_pattern' => '##### ######' ] )['phone_pattern'] && '(###) ###-####' === $ph( [ 'phone_format' => 'national', 'phone_pattern' => '<b>###</b>' ] )['phone_pattern'] && '(###) ###-####' === $ph( [ 'phone_format' => 'national', 'phone_pattern' => '+44 ####' ] )['phone_pattern'] && '' === $ph( [ 'phone_format' => 'wild' ] )['phone_format'] );
+t( 'field icon: kept on boxes, dropped on choices and uploads; long text can grow', 'rf-ph rf-ph-magnifying-glass' === S::clean_field( [ 'label' => 'Q', 'type' => 'text', 'icon' => [ 'value' => 'rf-ph rf-ph-magnifying-glass', 'library' => 'phosphor-regular' ] ] )['icon']['value'] && null === S::clean_field( [ 'label' => 'Q', 'type' => 'radio', 'options' => 'A', 'icon' => [ 'value' => 'x y', 'library' => 'fa-solid' ] ] )['icon'] && S::clean_field( [ 'label' => 'N', 'type' => 'textarea', 'autogrow' => 1 ] )['autogrow'] && ! S::clean_field( [ 'label' => 'N', 'type' => 'text', 'autogrow' => 1 ] )['autogrow'] );
+t( 'country flag: on unless switched off (older forms get it too)', S::clean_field( [ 'label' => 'C', 'type' => 'country' ] )['country_flag'] && ! S::clean_field( [ 'label' => 'C', 'type' => 'country', 'country_flag' => false ] )['country_flag'] );
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );

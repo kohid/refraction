@@ -29,6 +29,14 @@ class Schema {
 	const MAX_ICON_ITEMS = 30;
 	const MARKER_POSITIONS = [ 'left', 'right', 'top-left', 'top-right', 'hidden' ];
 	const MARKER_LOOKS = [ 'radio', 'tick', 'none' ];
+	/** Fields that can show an icon at the left of their box (0.93.0). */
+	const ICON_TYPES = [ 'text', 'textarea', 'email', 'phone', 'url', 'number', 'date', 'time', 'datetime', 'select' ];
+	/** Phone formats (0.93.0): as typed, or a pattern applied while typing (# is a digit). */
+	const PHONE_FORMATS = [ '', 'national', 'international' ];
+	const PHONE_PATTERNS = [ 'national' => '(###) ###-####', 'international' => '+## ### ### ####' ];
+
+	/** How a Choice field shows its options (0.92.0): a list, a segmented bar, a filled pill switch, icon tiles, cards or image cards. */
+	const CHOICE_LOOKS = [ 'list', 'segmented', 'pill', 'tiles', 'cards', 'images' ];
 
 	/** @return array<string,string> field type => label */
 	public static function types(): array {
@@ -412,6 +420,7 @@ class Schema {
 		$parts = $raw['parts'] ?? [ 'first', 'last' ];
 		$parts = array_values( array_intersect( self::NAME_PARTS, array_map( 'trim', array_map( 'strval', is_array( $parts ) ? $parts : explode( ',', (string) $parts ) ) ) ) );
 		$tag_default = 'step' === $type ? 'h3' : 'div';
+		$options = self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [];
 		$layout_text = 'html' === $type ? self::html( $raw['content'] ?? '' ) : ( 'paragraph' === $type ? self::textarea( $raw['content'] ?? '', 2000 ) : self::text( $raw['content'] ?? '', 300 ) );
 
 		return [
@@ -419,7 +428,8 @@ class Schema {
 			'label' => '' !== $label ? $label : ( self::types()[ $type ] ?? '' ),
 			'type' => $type,
 			'required' => $has_value && ! self::is_container( $type ) && ! in_array( $type, [ 'hidden', 'total' ], true ) && 'card' !== $root && ! $is_card && ! empty( $raw['required'] ),
-			'options' => self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [],
+			'options' => $options,
+			'option_extras' => in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::option_extras( $raw['option_extras'] ?? [], $options ) : [],
 			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ) ?: ( 'signature' === $type ? self::t( 'Sign here' ) : '' ),
 			'help' => self::text( $raw['help'] ?? '', 200 ),
 			'width' => in_array( $raw['width'] ?? '', self::WIDTHS, true ) ? $raw['width'] : 'full',
@@ -489,6 +499,16 @@ class Schema {
 			'time_step' => in_array( $type, [ 'time', 'datetime' ], true ) ? max( 0, min( 240, (int) ( $raw['time_step'] ?? 0 ) ) ) : 0,
 			'stepper' => 'number' === $type && ! empty( $raw['stepper'] ),
 			'suggestions' => 'text' === $type ? self::suggestions( $raw['suggestions'] ?? [] ) : [],
+			// Field extras (0.93.0): an icon in the box, a growing long text, a phone pattern, the country's flag.
+			'icon' => in_array( $type, self::ICON_TYPES, true ) ? self::option_icon( $raw['icon'] ?? null ) : null,
+			'autogrow' => 'textarea' === $type && ! empty( $raw['autogrow'] ),
+			'phone_format' => 'phone' === $type && in_array( $raw['phone_format'] ?? '', self::PHONE_FORMATS, true ) ? (string) ( $raw['phone_format'] ?? '' ) : '',
+			'phone_pattern' => 'phone' === $type ? self::phone_pattern( (string) ( $raw['phone_format'] ?? '' ), (string) ( $raw['phone_pattern'] ?? '' ) ) : '',
+			'country_flag' => 'country' === $type && ( ! array_key_exists( 'country_flag', $raw ) || ! empty( $raw['country_flag'] ) ),
+			// Choice looks (0.92.0).
+			'choice_look' => in_array( $type, [ 'radio', 'checkbox' ], true ) && in_array( $raw['choice_look'] ?? '', self::CHOICE_LOOKS, true ) ? $raw['choice_look'] : 'list',
+			'choice_full' => in_array( $type, [ 'radio', 'checkbox' ], true ) && ! empty( $raw['choice_full'] ),
+			'choice_columns' => in_array( $type, [ 'radio', 'checkbox' ], true ) ? max( 0, min( 6, (int) ( $raw['choice_columns'] ?? 0 ) ) ) : 0,
 		];
 	}
 
@@ -574,6 +594,84 @@ class Schema {
 		}
 
 		return $items;
+	}
+
+	/**
+	 * What a Choice field shows with its options (0.92.0): an icon, a line of text, a badge and a picture (a media library
+	 * attachment id, shown by Image cards), keyed by the option's value.
+	 * Each row names its option by value or label ("choice"); rows for options that do not exist are dropped.
+	 *
+	 * @param array $raw     [ { choice, icon: { value, library }, text, badge, image: { id } } ] (or already keyed by value).
+	 * @param array $options The field's cleaned options.
+	 *
+	 * @return array<string,array{icon:array|null,text:string,badge:string,image:int}>
+	 */
+	public static function option_extras( $raw, array $options ): array {
+		$by_name = [];
+
+		foreach ( $options as $option ) {
+			$by_name[ strtolower( $option['label'] ) ] = $option['value'];
+			$by_name[ strtolower( $option['value'] ) ] = $option['value'];
+		}
+
+		$extras = [];
+
+		foreach ( is_array( $raw ) ? $raw : [] as $key => $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+
+			$name = strtolower( self::text( (string) ( $row['choice'] ?? ( is_string( $key ) ? $key : '' ) ), 120 ) );
+			$value = $by_name[ $name ] ?? null;
+
+			if ( null === $value || isset( $extras[ $value ] ) ) {
+				continue;
+			}
+
+			$image = $row['image'] ?? 0;
+			$extra = [
+				'icon' => self::option_icon( $row['icon'] ?? null ),
+				'text' => self::text( $row['text'] ?? '', 160 ),
+				'badge' => self::text( $row['badge'] ?? '', 30 ),
+				'image' => max( 0, (int) ( is_array( $image ) ? ( $image['id'] ?? 0 ) : $image ) ),
+			];
+
+			if ( $extra['icon'] || '' !== $extra['text'] || '' !== $extra['badge'] || $extra['image'] ) {
+				$extras[ $value ] = $extra;
+			}
+		}
+
+		return $extras;
+	}
+
+	/**
+	 * The pattern a formatted phone box writes while typing: # is a digit, spaces, brackets, dashes, dots and a leading + are
+	 * added for the visitor. Empty when the field keeps what is typed; the format's own pattern when none (or junk) is given.
+	 */
+	public static function phone_pattern( string $format, string $pattern ): string {
+		if ( ! isset( self::PHONE_PATTERNS[ $format ] ) ) {
+			return '';
+		}
+
+		$pattern = trim( $pattern );
+
+		return 1 === preg_match( '/^\+?[#()\-. ]{4,30}$/', $pattern ) && substr_count( $pattern, '#' ) >= 4 ? $pattern : self::PHONE_PATTERNS[ $format ];
+	}
+
+	/** An icon from the icon libraries ({ value, library }): class names and a library name only, nothing else. */
+	private static function option_icon( $icon ): ?array {
+		if ( ! is_array( $icon ) ) {
+			return null;
+		}
+
+		$value = trim( (string) ( $icon['value'] ?? '' ) );
+		$library = (string) ( $icon['library'] ?? '' );
+
+		if ( ! preg_match( '/^[a-z0-9][a-z0-9 _-]{1,80}$/i', $value ) || ! preg_match( '/^[a-z0-9][a-z0-9-]{1,40}$/', $library ) || 'svg' === $library ) {
+			return null;
+		}
+
+		return [ 'value' => $value, 'library' => $library ];
 	}
 
 	private static function number_or_null( $value ): ?float {

@@ -26,6 +26,7 @@ class Mcp_Tools {
 			'get_site' => [ 'The site: Refraction version, address, the global colors and fonts (use them through __globals__), and the page templates.', [], 'site' ],
 			'list_widgets' => [ 'Every widget that may be used: name - title (keywords) [holds containers].', [], 'widgets' ],
 			'get_widget_controls' => [ 'The settings of some widgets and/or "container", compact: name:type(allowed options), * when it has _tablet and _mobile copies; plus the fields of group controls and the settings every widget shares.', [ 'widgets' => [ 'type' => 'array', 'items' => $string ] ], 'controls', [ 'widgets' ] ],
+			'list_icons' => [ 'Refraction\'s own icons (Solar and Phosphor) whose names contain the words searched, with the value to use: {"value": "rf-solar rf-solar-<name>", "library": "solar-bold-duotone"} (styles bold-duotone, line-duotone, bold, linear, outline, broken) or {"value": "rf-ph rf-ph-<name>", "library": "phosphor-bold"} (weights regular, bold, fill, duotone, light, thin). Prefer them to Font Awesome.', [ 'search' => $string ], 'icons', [ 'search' ] ],
 			'list_media' => [ 'Files in the media library, newest first: id, title, alt, type, size, URL. Media settings take {"id": <id>}.', [ 'search' => $string, 'type' => [ 'type' => 'string', 'enum' => [ 'image', 'video', 'model', 'any' ] ] ], 'media' ],
 			'upload_media' => [ 'Adds a file to the media library from a public URL or base64 data (images, video, .glb). Returns its id.', [ 'url' => $string, 'data' => [ 'type' => 'string', 'description' => 'Base64 file content.' ], 'filename' => $string, 'title' => $string, 'alt' => $string ], 'upload', [ 'filename' ] ],
 			'list_pages' => [ 'Pages: id, title, status, address, whether Refraction edits them, and drafts made through this server.', [ 'search' => $string ], 'pages' ],
@@ -110,6 +111,10 @@ class Mcp_Tools {
 		$names = array_values( array_filter( array_map( 'strval', (array) $args['widgets'] ) ) );
 
 		return Prompt_Builder::controls( self::specs(), $names ?: [ 'container' ] );
+	}
+
+	private static function icons( array $args ): array {
+		return Icon_Sets::search( sanitize_text_field( (string) $args['search'] ) );
 	}
 
 	private static function media( array $args ): array {
