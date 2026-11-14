@@ -789,6 +789,71 @@
 		};
 	}
 
+	/**
+	 * Back or Next as the Steps widget sets it (icons and animations 0.97.0; type, size, text and ID 0.99.0): on the
+	 * site and in the editor's preview.
+	 *
+	 * @param {HTMLButtonElement} button The button.
+	 * @param {DOMStringMap}      data   The Steps widget box's data (data-rfb-back-icon is data.rfbBackIcon).
+	 * @param {string}            which  "rfbBack" or "rfbNext".
+	 * @param {string}            text   The form settings' text, when the widget has none.
+	 */
+	function dressStepButton( button, data, which, text ) {
+		const icon = data[ which + 'Icon' ] || '';
+		const label = document.createElement( 'span' );
+
+		label.className = 'rfb-btn-text';
+		label.textContent = data[ which + 'Text' ] || text;
+		button.appendChild( label );
+
+		if ( data[ which + 'Id' ] && ! document.getElementById( data[ which + 'Id' ] ) ) {
+			button.id = data[ which + 'Id' ];
+		}
+
+		if ( icon ) {
+			button.insertAdjacentHTML( 'right' === data[ which + 'Place' ] ? 'beforeend' : 'afterbegin', icon );
+		}
+
+		( data[ which + 'Class' ] || '' ).split( ' ' ).filter( Boolean ).forEach( ( name ) => button.classList.add( name ) );
+		button.style.cssText += data[ which + 'Style' ] || '';
+	}
+
+	/**
+	 * The step coming in (0.100.0): fade, slide (from the side the visitor goes to), slide up, zoom or flip, from the
+	 * Steps widget's data-rfb-anim and data-rfb-anim-ms. Nothing for visitors who ask for less motion.
+	 *
+	 * @param {HTMLElement}      step The step now shown.
+	 * @param {DOMStringMap|{}} data The Steps widget box's data.
+	 * @param {number}           dir  1 going forward, -1 going back.
+	 */
+	function animateStep( step, data, dir ) {
+		const kind = data && data.rfbAnim;
+
+		if ( ! kind || ! step.animate || ( window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) ) {
+			return;
+		}
+
+		const from = {
+			fade: {},
+			slide: { transform: 'translateX(' + ( dir * 48 ) + 'px)' },
+			slide_up: { transform: 'translateY(24px)' },
+			zoom: { transform: 'scale(.94)' },
+			flip: { transform: 'perspective(900px) rotateY(' + ( dir * -14 ) + 'deg)', transformOrigin: dir > 0 ? 'left center' : 'right center' },
+		}[ kind ];
+
+		if ( ! from ) {
+			return;
+		}
+
+		const to = { opacity: 1, transform: 'none' };
+
+		if ( from.transformOrigin ) {
+			to.transformOrigin = from.transformOrigin;
+		}
+
+		step.animate( [ Object.assign( { opacity: 0 }, from ), to ], { duration: Number( data.rfbAnimMs ) || 350, easing: 'cubic-bezier(.22,.8,.3,1)' } );
+	}
+
 	function initSteps( form ) {
 		// Steps are sections of the form itself, or of a Steps widget on a form built in the page editor.
 		const steps = Array.from( form.querySelectorAll( ':scope > [data-rfb-step], [data-rfb-steps] > [data-rfb-step]' ) );
@@ -820,6 +885,8 @@
 		const titles = steps.map( ( step, i ) => step.dataset.rfbTitle || sprintf( i18n.step || 'Step %1$d of %2$d', i + 1, steps.length ) );
 		let current = 0;
 		let reached = 0;
+		// The first step shows without the transition.
+		let started = false;
 
 		form.classList.add( 'rfb-multistep' );
 
@@ -874,34 +941,20 @@
 		// Icons and hover animations from the Steps widget (0.97.0): the icon markup is the server's own.
 		const look = steps[ 0 ].closest( '[data-rfb-steps]' );
 
-		[ [ back, 'rfbBack', backText ], [ next, 'rfbNext', nextText ] ].forEach( ( [ button, which, text ] ) => {
-			// The attribute data-rfb-back-icon is dataset.rfbBackIcon.
-			const data = look ? look.dataset : {};
-			const icon = data[ which + 'Icon' ] || '';
-			const label = document.createElement( 'span' );
-
-			label.className = 'rfb-btn-text';
-			// The Steps widget's own text and ID (0.99.0), else the form settings' text.
-			label.textContent = data[ which + 'Text' ] || text;
-
-			if ( data[ which + 'Id' ] && ! document.getElementById( data[ which + 'Id' ] ) ) {
-				button.id = data[ which + 'Id' ];
-			}
-			button.appendChild( label );
-
-			if ( icon ) {
-				button.insertAdjacentHTML( 'right' === data[ which + 'Place' ] ? 'beforeend' : 'afterbegin', icon );
-			}
-
-			( data[ which + 'Class' ] || '' ).split( ' ' ).filter( Boolean ).forEach( ( name ) => button.classList.add( name ) );
-			button.style.cssText += data[ which + 'Style' ] || '';
-		} );
+		dressStepButton( back, look ? look.dataset : {}, 'rfbBack', backText );
+		dressStepButton( next, look ? look.dataset : {}, 'rfbNext', nextText );
 		submit.prepend( next );
 		submit.prepend( back );
 
 		const show = ( index, focus ) => {
+			const previous = current;
+
 			current = Math.max( 0, Math.min( steps.length - 1, index ) );
 			steps.forEach( ( step, i ) => ( step.hidden = i !== current ) );
+
+			if ( started && previous !== current ) {
+				animateStep( steps[ current ], look ? look.dataset : {}, current > previous ? 1 : -1 );
+			}
 			back.hidden = 0 === current;
 
 			// On the last step Back sits next to the Submit button placed in that step.
@@ -986,6 +1039,184 @@
 		const withError = steps.findIndex( ( step ) => step.querySelector( '.has-error' ) );
 
 		show( withError > -1 ? withError : 0, withError > -1 );
+		started = true;
+	}
+
+	// ---------------------------------------------------------------- Steps in the editor's preview (0.100.0)
+
+	/** Which step each Steps widget shows in the editor, kept while the widget is drawn again. */
+	const previewAt = {};
+
+	/** The form's own settings (the cog) in the editor: progress display and Back / Next texts. */
+	const documentSetting = ( name, fallback ) => {
+		try {
+			const page = window.parent && window.parent.refraction && window.parent.refraction.settings && window.parent.refraction.settings.page;
+			const value = page && page.model ? page.model.get( name ) : '';
+
+			return value || fallback;
+		} catch ( e ) {
+			return fallback;
+		}
+	};
+
+	/**
+	 * The chosen layout, drawn in the editor as on the site: the progress, the sidebar or the accordion, "Step 1/6" and
+	 * Back / Next with their settings. One step shows at a time; the progress, the sidebar, the accordion's headers and
+	 * Back / Next move between steps (no checks in the editor), so each step's fields stay reachable.
+	 *
+	 * @param {HTMLElement} box The Steps widget's box (.rfb-steps-editor).
+	 */
+	function previewSteps( box ) {
+		if ( box.rfbPreview ) {
+			box.rfbPreview();
+			return;
+		}
+
+		const id = ( box.closest( '.refraction-element' ) || {} ).dataset?.id || '';
+		const i18n = box.dataset.rfbI18n ? JSON.parse( box.dataset.rfbI18n ) : {};
+		let observer = null;
+
+		const build = () => {
+			if ( observer ) {
+				observer.disconnect();
+			}
+
+			box.querySelectorAll( '.rfb-ed-built' ).forEach( ( el ) => el.remove() );
+
+			const slots = Array.from( box.children ).filter( ( el ) => el.classList.contains( 'rfb-step-slot' ) );
+			const meta = box.dataset.rfbMeta ? JSON.parse( box.dataset.rfbMeta ) : [];
+			const layout = box.dataset.rfbLayout || 'top';
+			const style = 'accordion' === layout ? 'none' : box.dataset.rfbProgressStyle || documentSetting( 'rfb_progress', 'steps' );
+			const titles = slots.map( ( slot, i ) => ( meta[ i ] && meta[ i ].title ) || sprintf( i18n.step || 'Step %1$d of %2$d', i + 1, slots.length ) );
+			const mark = ( el ) => {
+				el.classList.add( 'rfb-ed-built' );
+				return el;
+			};
+
+			slots.forEach( ( slot, i ) => {
+				slot.classList.add( 'rfb-step' );
+				slot.dataset.rfbDescription = ( meta[ i ] && meta[ i ].description ) || '';
+				slot.dataset.rfbIcon = ( meta[ i ] && meta[ i ].icon ) || '';
+			} );
+
+			if ( slots.length < 2 ) {
+				slots.forEach( ( slot ) => slot.classList.remove( 'rfb-ed-hidden' ) );
+				observe();
+				return;
+			}
+
+			let current = Math.min( previewAt[ id ] || 0, slots.length - 1 );
+			const show = ( index, animate ) => {
+				const previous = current;
+
+				current = Math.max( 0, Math.min( slots.length - 1, index ) );
+				previewAt[ id ] = current;
+				slots.forEach( ( slot, i ) => slot.classList.toggle( 'rfb-ed-hidden', i !== current ) );
+
+				// The transition chosen on the widget plays in the editor too.
+				if ( false !== animate && previous !== current ) {
+					animateStep( slots[ current ], box.dataset, current > previous ? 1 : -1 );
+				}
+				back.hidden = 0 === current;
+				next.hidden = current === slots.length - 1;
+
+				if ( progress ) {
+					progress.update( current );
+				}
+
+				if ( side ) {
+					side.update( current, slots.length - 1 );
+				}
+
+				if ( accordion ) {
+					accordion.update( current );
+					slots[ current ].append( nav );
+				} else {
+					slots[ slots.length - 1 ].after( nav );
+				}
+			};
+
+			const progress = buildProgress( style, titles, i18n );
+
+			if ( progress ) {
+				slots[ 0 ].before( mark( progress.el ) );
+				// The progress's steps move the preview between steps.
+				progress.el.querySelectorAll( 'li' ).forEach( ( li, i ) => li.addEventListener( 'click', () => show( i ) ) );
+			}
+
+			if ( box.hasAttribute( 'data-rfb-counter' ) ) {
+				slots.forEach( ( slot, i ) => {
+					const head = slot.querySelector( '.rfb-step-head' );
+					const count = mark( document.createElement( 'p' ) );
+
+					count.className += ' rfb-step-count';
+					count.textContent = sprintf( i18n.stepShort || 'Step %1$d/%2$d', i + 1, slots.length );
+
+					if ( head ) {
+						head.prepend( count );
+					}
+				} );
+			}
+
+			const side = 'sidebar' === layout ? buildSidebar( box, slots, titles, i18n, show ) : null;
+
+			if ( side ) {
+				mark( box.querySelector( ':scope > .rfb-steps-side' ) );
+			}
+
+			const accordion = 'accordion' === layout ? buildAccordion( slots, titles, i18n, show ) : null;
+
+			if ( accordion ) {
+				box.querySelectorAll( ':scope > .rfb-acc-step' ).forEach( mark );
+			}
+
+			const nav = mark( document.createElement( 'div' ) );
+			const back = document.createElement( 'button' );
+			const next = document.createElement( 'button' );
+
+			nav.className += ' rfb-actions rfb-step-nav';
+			back.type = next.type = 'button';
+			back.className = 'rfb-btn rfb-btn-light rfb-back';
+			next.className = 'rfb-btn rfb-btn-primary rfb-next';
+			dressStepButton( back, box.dataset, 'rfbBack', documentSetting( 'rfb_back_text', 'Back' ) );
+			dressStepButton( next, box.dataset, 'rfbNext', documentSetting( 'rfb_next_text', 'Next' ) );
+			back.addEventListener( 'click', ( event ) => {
+				event.stopPropagation();
+				show( current - 1 );
+			} );
+			next.addEventListener( 'click', ( event ) => {
+				event.stopPropagation();
+				show( current + 1 );
+			} );
+			nav.append( back, next );
+
+			show( current, false );
+			box.classList.add( 'rfb-ed-ready' );
+			observe();
+		};
+
+		// The editor moves the step boxes when it draws them, and adds or removes steps: draw again after each change.
+		const observe = () => {
+			if ( ! window.MutationObserver ) {
+				return;
+			}
+
+			if ( ! observer ) {
+				let timer = 0;
+
+				observer = new MutationObserver( ( records ) => {
+					if ( records.some( ( r ) => [ ...r.addedNodes, ...r.removedNodes ].some( ( n ) => n.classList && n.classList.contains( 'rfb-step-slot' ) ) ) ) {
+						clearTimeout( timer );
+						timer = setTimeout( build, 30 );
+					}
+				} );
+			}
+
+			observer.observe( box, { childList: true } );
+		};
+
+		box.rfbPreview = build;
+		build();
 	}
 
 	// ---------------------------------------------------------------- totals (0.90.0)
@@ -1941,6 +2172,9 @@
 		root.querySelectorAll( 'textarea[data-rfb-autogrow]' ).forEach( ( el ) => once( el ) && initAutogrow( el ) );
 		root.querySelectorAll( '[data-rfb-flags]' ).forEach( ( el ) => once( el ) && initCountry( el ) );
 		root.querySelectorAll( 'input[data-rfb-picker]' ).forEach( ( el ) => once( el ) && initPicker( el ) );
+
+		// The Steps widget's layout in the editor's preview (0.100.0).
+		( root.matches && root.matches( '[data-rfb-steps-preview]' ) ? [ root ] : Array.from( root.querySelectorAll( '[data-rfb-steps-preview]' ) ) ).forEach( previewSteps );
 	}
 
 	/** Closed weekdays and opening hours of a date or time box (min, max and step are the browser's own). */

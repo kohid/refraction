@@ -175,26 +175,12 @@ class Shortcodes {
 
 		$steps = Schema::steps( $definition );
 		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'], 'money' => $settings ];
-		$i18n = [
+		$i18n = self::step_i18n() + [
 			'required' => __( 'This field is required.', 'refraction' ),
 			'countrySearch' => __( 'Search countries', 'refraction' ),
 			'pickerClear' => __( 'Clear', 'refraction' ),
 			'pickerToday' => __( 'Today', 'refraction' ),
 			'pickerNow' => __( 'Now', 'refraction' ),
-			/* translators: 1: this step, 2: how many steps. */
-			'stepShort' => __( 'Step %1$d/%2$d', 'refraction' ),
-			/* translators: 1: this step, 2: how many steps. */
-			'ofSteps' => __( '%1$d of %2$d', 'refraction' ),
-			/* translators: %s: the next step's title. */
-			'nextStep' => __( 'Next: %s', 'refraction' ),
-			'lastStep' => __( 'Last step', 'refraction' ),
-			'stepsLabel' => __( 'Steps', 'refraction' ),
-			'stepDone' => __( 'Completed', 'refraction' ),
-			'stepNow' => __( 'In progress', 'refraction' ),
-			'stepTodo' => __( 'Not started', 'refraction' ),
-			'stepAllSet' => __( 'All set!', 'refraction' ),
-			'stepChange' => __( 'Change if needed', 'refraction' ),
-			'stepFill' => __( 'Fill in the details', 'refraction' ),
 			'pickerCheckout' => __( 'Now choose the check-out day', 'refraction' ),
 			'pickerNight' => __( '1 night', 'refraction' ),
 			/* translators: %d: number of nights. */
@@ -213,7 +199,6 @@ class Shortcodes {
 			'number' => __( 'Enter a number.', 'refraction' ),
 			'lowest' => __( 'The lowest allowed value is %s.', 'refraction' ),
 			'highest' => __( 'The highest allowed value is %s.', 'refraction' ),
-			'step' => __( 'Step %1$d of %2$d', 'refraction' ),
 			'progress' => __( 'Form progress', 'refraction' ),
 			'closedDay' => __( 'That day is not available. Please choose another date.', 'refraction' ),
 			'hours' => __( 'Choose a time between %1$s and %2$s.', 'refraction' ),
@@ -262,6 +247,28 @@ class Shortcodes {
 	}
 
 	/** The opening form tag with everything the submit handler checks (action, collection, time token, honeypot, nonce). */
+	/** The steps' texts, for the form's script and for the Steps widget's preview in the editor (0.100.0). */
+	public static function step_i18n(): array {
+		return [
+			/* translators: 1: this step, 2: how many steps. */
+			'step' => __( 'Step %1$d of %2$d', 'refraction' ),
+			/* translators: 1: this step, 2: how many steps. */
+			'stepShort' => __( 'Step %1$d/%2$d', 'refraction' ),
+			/* translators: 1: this step, 2: how many steps. */
+			'ofSteps' => __( '%1$d of %2$d', 'refraction' ),
+			/* translators: %s: the next step's title. */
+			'nextStep' => __( 'Next: %s', 'refraction' ),
+			'lastStep' => __( 'Last step', 'refraction' ),
+			'stepsLabel' => __( 'Steps', 'refraction' ),
+			'stepDone' => __( 'Completed', 'refraction' ),
+			'stepNow' => __( 'In progress', 'refraction' ),
+			'stepTodo' => __( 'Not started', 'refraction' ),
+			'stepAllSet' => __( 'All set!', 'refraction' ),
+			'stepChange' => __( 'Change if needed', 'refraction' ),
+			'stepFill' => __( 'Fill in the details', 'refraction' ),
+		];
+	}
+
 	private function form_open( string $slug, array $settings, array $i18n, string $class ): void {
 		echo '<form class="' . esc_attr( $class ) . '" method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" novalidate data-rfb-form data-rfb-issued="' . esc_attr( (string) time() ) . '" data-rfb-token-url="' . esc_url( add_query_arg( [ 'action' => self::ACTION_TOKEN, 'collection' => $slug ], admin_url( 'admin-ajax.php' ) ) ) . '" data-rfb-progress="' . esc_attr( $settings['progress'] ) . '" data-rfb-next="' . esc_attr( $settings['next_text'] ) . '" data-rfb-back="' . esc_attr( $settings['back_text'] ) . '" data-rfb-money="' . esc_attr( (string) wp_json_encode( Money::js( Money::config( $settings ) ) ) ) . '" data-rfb-i18n="' . esc_attr( (string) wp_json_encode( $i18n ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SUBMIT ) . '"><input type="hidden" name="collection" value="' . esc_attr( $slug ) . '"><input type="hidden" name="rfb_t" value="' . esc_attr( $this->time_token() ) . '">';

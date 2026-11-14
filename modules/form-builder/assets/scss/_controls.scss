@@ -2967,6 +2967,49 @@ $rfb-widths: (
 		margin-left: 8px;
 	}
 
+	// ---- the Steps widget's layout drawn in the editor (0.100.0): as on the site, one step at a time.
+	.rfb-steps-editor.rfb-ed-ready {
+		.rfb-step-slot {
+			padding: 0;
+			border: 0;
+		}
+
+		.rfb-step-number {
+			display: none;
+		}
+
+		// The step's head as on the site: "Step 1/6", the title, the description, one under the other.
+		.rfb-step-head {
+			display: block;
+		}
+
+		.rfb-ed-hidden {
+			display: none !important;
+		}
+
+		.rfb-progress li,
+		.rfb-step-nav .rfb-btn {
+			cursor: pointer;
+		}
+	}
+
+	.rfb-steps-editor.rfb-ed-ready.rfb-layout-accordion {
+		gap: 0;
+
+		.rfb-step-slot {
+			padding: 4px 24px 24px 84px;
+		}
+	}
+
+	// The editor's column gap would open space between the sidebar's many grid rows.
+	.rfb-steps-editor.rfb-ed-ready.rfb-layout-sidebar {
+		row-gap: 0;
+
+		> .rfb-progress {
+			margin-bottom: 16px;
+		}
+	}
+
 	// ---- icon list: items with an icon each
 	.rfb-il {
 		display: flex;
