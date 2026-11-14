@@ -5,6 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Group_Control_Typography;
 use Refraction\Modules\FormBuilder\Base\Field_Settings;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
+use Refraction\Modules\FormBuilder\Classes\Form_Buttons;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
 use Refraction\Repeater;
@@ -105,6 +106,12 @@ class Steps extends Widget_Nested_Base {
 		] );
 		$this->end_controls_section();
 
+		// Back and Next (0.97.0): icons and hover animations, like the Button widget. Their texts stay in the cog.
+		$this->start_controls_section( 'section_step_buttons', [ 'label' => esc_html__( 'Back and Next buttons', 'refraction' ) ] );
+		Form_Buttons::controls( $this, 'back', '', [ 'heading' => esc_html__( 'Back', 'refraction' ), 'position' => 'left' ] );
+		Form_Buttons::controls( $this, 'next', '', [ 'heading' => esc_html__( 'Next', 'refraction' ), 'position' => 'right' ] );
+		$this->end_controls_section();
+
 		$this->start_controls_section( 'section_style_steps', [ 'label' => esc_html__( 'Step titles', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
 		$this->add_control( 'step_title_color', [ 'label' => esc_html__( 'Title color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-step-title' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'step_title_typography', 'selector' => '{{WRAPPER}} .rfb-step-title' ] );
@@ -115,7 +122,18 @@ class Steps extends Widget_Nested_Base {
 	protected function render() {
 		$steps = array_values( (array) $this->get_settings_for_display( 'steps' ) );
 
-		echo '<div class="rfb-steps" data-rfb-steps>';
+		// The script builds Back and Next: it takes their icons, places and animations from here.
+		$settings = $this->get_settings_for_display();
+		$buttons = '';
+
+		foreach ( [ 'back', 'next' ] as $which ) {
+			$buttons .= ' data-rfb-' . $which . '-icon="' . esc_attr( Form_Buttons::icon( $settings, $which ) ) . '"';
+			$buttons .= ' data-rfb-' . $which . '-place="' . esc_attr( 'right' === ( $settings[ $which . '_icon_position' ] ?? ( 'next' === $which ? 'right' : 'left' ) ) ? 'right' : 'left' ) . '"';
+			$buttons .= ' data-rfb-' . $which . '-class="' . esc_attr( trim( Form_Buttons::classes( $settings, $which ) ) ) . '"';
+			$buttons .= ' data-rfb-' . $which . '-style="' . esc_attr( Form_Buttons::style( $settings, $which ) ) . '"';
+		}
+
+		echo '<div class="rfb-steps" data-rfb-steps' . $buttons . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
 
 		foreach ( $steps as $i => $step ) {
 			$title = (string) ( $step['step_title'] ?? '' );

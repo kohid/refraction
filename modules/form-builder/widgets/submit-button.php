@@ -5,7 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
-use Refraction\Icons_Manager;
+use Refraction\Modules\FormBuilder\Classes\Form_Buttons;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Documents\Form_Document;
 use Refraction\Plugin;
@@ -68,40 +68,8 @@ class Submit_Button extends Widget_Base {
 			// A column of one: align-items places the button, and "stretch" makes it full width.
 			'selectors' => [ '{{WRAPPER}} .rfb-actions' => 'display: flex; flex-direction: column; align-items: {{VALUE}};' ],
 		] );
-		// An icon beside the text (0.95.0), on the left or the right.
-		$this->add_control( 'icon', [
-			'label' => esc_html__( 'Icon', 'refraction' ),
-			'type' => Controls_Manager::ICONS,
-			'skin' => 'inline',
-			'label_block' => false,
-			'exclude_inline_options' => [ 'svg' ],
-			'separator' => 'before',
-		] );
-		$this->add_control( 'icon_position', [
-			'label' => esc_html__( 'Icon position', 'refraction' ),
-			'type' => Controls_Manager::CHOOSE,
-			'default' => 'left',
-			'toggle' => false,
-			'options' => [
-				'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
-				'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
-			],
-			'condition' => [ 'icon[value]!' => '' ],
-		] );
-		$this->add_responsive_control( 'icon_gap', [
-			'label' => esc_html__( 'Space between icon and text', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
-			'selectors' => [ '{{WRAPPER}} .rfb-submit' => 'gap: {{SIZE}}{{UNIT}};' ],
-			'condition' => [ 'icon[value]!' => '' ],
-		] );
-		$this->add_responsive_control( 'icon_size', [
-			'label' => esc_html__( 'Icon size', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'range' => [ 'px' => [ 'min' => 8, 'max' => 48 ] ],
-			'selectors' => [ '{{WRAPPER}} .rfb-submit-icon' => 'font-size: {{SIZE}}{{UNIT}};' ],
-			'condition' => [ 'icon[value]!' => '' ],
-		] );
+		// An icon beside the text (0.95.0) and a hover animation (0.97.0), like the Button widget.
+		Form_Buttons::controls( $this, '', '{{WRAPPER}} .rfb-submit', [ 'heading' => esc_html__( 'Icon and animation', 'refraction' ) ] );
 		$this->end_controls_section();
 
 		$button = '{{WRAPPER}} .rfb-submit';
@@ -128,17 +96,8 @@ class Submit_Button extends Widget_Base {
 		$text = (string) $this->get_settings_for_display( 'text' );
 		$text = '' !== trim( $text ) ? $text : __( 'Submit', 'refraction' );
 		$settings = $this->get_settings_for_display();
-		$icon = '';
-
-		if ( ! empty( $settings['icon']['value'] ) ) {
-			$icon = (string) Icons_Manager::try_get_icon_html( $settings['icon'], [ 'aria-hidden' => 'true' ] );
-			$icon = '' !== $icon ? '<span class="rfb-submit-icon" aria-hidden="true">' . $icon . '</span>' : '';
-		}
-
-		$right = 'right' === ( $settings['icon_position'] ?? 'left' );
-		$label = '<span class="rfb-submit-text">' . esc_html( $text ) . '</span>';
 
 		// In the editor the button does nothing; on the site it sends the form it sits in.
-		echo '<div class="rfb-actions"><button type="submit" class="rfb-btn rfb-btn-primary rfb-submit' . ( '' !== $icon ? ' has-icon' : '' ) . '">' . ( $right ? $label . $icon : $icon . $label ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		echo '<div class="rfb-actions"><button type="submit" class="rfb-btn rfb-btn-primary rfb-submit' . esc_attr( Form_Buttons::classes( $settings, '' ) ) . '">' . Form_Buttons::inner( $settings, '', $text, 'rfb-submit-icon', 'rfb-submit-text' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 	}
 }

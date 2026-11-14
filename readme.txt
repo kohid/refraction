@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.96.0
+Stable tag: 0.97.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.97.0 =
+* Form Builder: the form's own buttons have the Button widget's icon and hover animation settings: Submit (icon, left or right, space, size, now with a hover animation), the Repeater's Add button (the same) and Remove button (an icon in place of the cross, a hover animation), and the Steps' Back and Next buttons (Steps widget > Back and Next buttons; their texts stay in the form settings).
 
 = 0.96.0 =
 * Form Builder: Date fields are booking calendars. Calendar type: One day, A stay (check-in to check-out, with fewest and most nights), A flight (departure and return, or one way) and Several days (with a most). A stay counts its nights in a Total ({stay} * 80), several days count how many. Stays and flights show two months side by side on wide screens; a line under the calendar says "3 nights", "One way" or "2 of 3 days".

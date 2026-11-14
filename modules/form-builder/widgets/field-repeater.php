@@ -4,6 +4,7 @@ namespace Refraction\Modules\FormBuilder\Widgets;
 use Refraction\Controls_Manager;
 use Refraction\Modules\FormBuilder\Base\Nested_Field;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
+use Refraction\Modules\FormBuilder\Classes\Form_Buttons;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,6 +32,9 @@ class Field_Repeater extends Nested_Field {
 		$this->add_control( 'min_rows', [ 'label' => esc_html__( 'Minimum rows', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 20, 'default' => 0, 'separator' => 'before' ] );
 		$this->add_control( 'max_rows', [ 'label' => esc_html__( 'Maximum rows', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 50, 'default' => 10 ] );
 		$this->add_control( 'add_label', [ 'label' => esc_html__( 'Add button text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'default' => esc_html__( 'Add row', 'refraction' ) ] );
+		// The buttons' icons and hover animations (0.97.0), like the Button widget.
+		Form_Buttons::controls( $this, 'add', '{{WRAPPER}} [data-rfb-add]', [ 'heading' => esc_html__( 'Add button', 'refraction' ) ] );
+		Form_Buttons::controls( $this, 'remove', '{{WRAPPER}} .rfb-rep-remove', [ 'heading' => esc_html__( 'Remove button', 'refraction' ), 'text' => false ] );
 	}
 
 	protected function register_own_style_controls(): void {
@@ -64,7 +68,8 @@ class Field_Repeater extends Nested_Field {
 
 		echo '</div><template class="rfb-row-template">';
 		$this->row( $place, '__INDEX__', [] );
-		echo '</template><button type="button" class="rfb-btn rfb-btn-light-primary" data-rfb-add>' . esc_html( $field['add_label'] ) . '</button>';
+		$settings = $this->get_settings_for_display();
+		echo '</template><button type="button" class="rfb-btn rfb-btn-light-primary' . esc_attr( Form_Buttons::classes( $settings, 'add' ) ) . '" data-rfb-add>' . Form_Buttons::inner( $settings, 'add', $field['add_label'] ) . '</button>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 		echo $this->error( $place['path'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside.
 		echo '</fieldset></div>';
 	}
@@ -74,7 +79,9 @@ class Field_Repeater extends Nested_Field {
 		Editor_Forms::push_scope( $place['name'] . '[' . $index . ']', $place['path'] . '.' . $index, $values );
 		$this->print_child( 0 );
 		Editor_Forms::pop_scope();
-		echo '</div><button type="button" class="rfb-icon-btn rfb-rep-remove" data-rfb-remove aria-label="' . esc_attr__( 'Remove this row', 'refraction' ) . '">&times;</button></div>';
+		$settings = $this->get_settings_for_display();
+		$icon = Form_Buttons::icon( $settings, 'remove' );
+		echo '</div><button type="button" class="rfb-icon-btn rfb-rep-remove' . esc_attr( Form_Buttons::classes( $settings, 'remove' ) ) . '" data-rfb-remove aria-label="' . esc_attr__( 'Remove this row', 'refraction' ) . '">' . ( '' !== $icon ? $icon : '&times;' ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 	}
 
 	protected function content_template() {
@@ -84,7 +91,13 @@ class Field_Repeater extends Nested_Field {
 				<legend class="rfb-legend"><div class="rfb-legend-text">{{{ settings.field_label }}}</div></legend>
 				<# if ( settings.field_description ) { #><p class="rfb-description">{{{ settings.field_description }}}</p><# } #>
 				<div class="rfb-rows"><div class="rfb-rep-row"><div class="rfb-nested-body"></div></div></div>
-				<span class="rfb-btn rfb-btn-light-primary" data-rfb-add>{{{ settings.add_label }}}</span>
+				<#
+				var addIcon = settings.add_icon && settings.add_icon.value ? refraction.helpers.renderIcon( view, settings.add_icon, { 'aria-hidden': true }, 'i', 'object' ) : null;
+				var addIconHtml = addIcon && addIcon.rendered ? '<span class="rfb-btn-icon" aria-hidden="true">' + addIcon.value + '</span>' : '';
+				var addText = '<span class="rfb-btn-text">' + _.escape( settings.add_label ) + '</span>';
+				var addAnimation = settings.add_hover_animation ? ' refraction-animation-' + settings.add_hover_animation : '';
+				#>
+				<span class="rfb-btn rfb-btn-light-primary{{ addIconHtml ? ' has-icon' : '' }}{{ addAnimation }}" data-rfb-add>{{{ 'right' === settings.add_icon_position ? addText + addIconHtml : addIconHtml + addText }}}</span>
 			</fieldset>
 		</div>
 		<?php

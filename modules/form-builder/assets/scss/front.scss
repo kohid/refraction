@@ -382,17 +382,19 @@
 	}
 }
 
-// The submit button with an icon (0.95.0).
-.rfb-front .rfb-submit.has-icon,
-.rfb-submit.has-icon {
+// Form buttons with an icon (Submit 0.95.0; Add row, Back and Next 0.97.0).
+.rfb-front .rfb-btn.has-icon,
+.rfb-btn.has-icon {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	gap: 8px;
 }
 
+.rfb-btn-icon,
 .rfb-submit-icon {
 	display: inline-flex;
+	font-size: var(--rfb-btn-icon-size, 1em);
 	line-height: 1;
 
 	svg {
@@ -400,4 +402,9 @@
 		height: 1em;
 		fill: currentColor;
 	}
+}
+
+// An icon in place of the Repeater's remove cross (0.97.0).
+.rfb-rep-remove .rfb-btn-icon {
+	font-size: var(--rfb-btn-icon-size, 18px);
 }

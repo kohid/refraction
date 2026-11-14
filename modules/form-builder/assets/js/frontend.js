@@ -639,8 +639,27 @@
 		back.type = next.type = 'button';
 		back.className = 'rfb-btn rfb-btn-light rfb-back';
 		next.className = 'rfb-btn rfb-btn-primary rfb-next';
-		back.textContent = backText;
-		next.textContent = nextText;
+
+		// Icons and hover animations from the Steps widget (0.97.0): the icon markup is the server's own.
+		const look = steps[ 0 ].closest( '[data-rfb-steps]' );
+
+		[ [ back, 'rfbBack', backText ], [ next, 'rfbNext', nextText ] ].forEach( ( [ button, which, text ] ) => {
+			// data-rfb-back-icon is dataset.rfbBackIcon.
+			const data = look ? look.dataset : {};
+			const icon = data[ which + 'Icon' ] || '';
+			const label = document.createElement( 'span' );
+
+			label.className = 'rfb-btn-text';
+			label.textContent = text;
+			button.appendChild( label );
+
+			if ( icon ) {
+				button.insertAdjacentHTML( 'right' === data[ which + 'Place' ] ? 'beforeend' : 'afterbegin', icon );
+			}
+
+			( data[ which + 'Class' ] || '' ).split( ' ' ).filter( Boolean ).forEach( ( name ) => button.classList.add( name ) );
+			button.style.cssText += data[ which + 'Style' ] || '';
+		} );
 		submit.prepend( next );
 		submit.prepend( back );
 
