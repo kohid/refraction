@@ -321,7 +321,9 @@ class Field_Renderer {
 			$attributes .= ' list="' . esc_attr( $list ) . '" autocomplete="off"';
 		}
 
-		$input = '<input class="rfb-input" type="' . esc_attr( $html_types[ $type ] ?? 'text' ) . '" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $value ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . $attributes . $required . $described_attr . '>';
+		// A stay, a flight or several days is one text answer ("2026-11-16 to 2026-11-20"): a date box can not hold it.
+		$html_type = 'date' === $type && 'single' !== ( $field['calendar'] ?? 'single' ) ? 'text' : ( $html_types[ $type ] ?? 'text' );
+		$input = '<input class="rfb-input" type="' . esc_attr( $html_type ) . '" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $value ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . $attributes . $required . $described_attr . '>';
 
 		if ( 'number' === $type && ! empty( $field['stepper'] ) ) {
 			// A minus and a plus button around the box (the script wires them; without it the box still takes a number).
@@ -412,7 +414,27 @@ class Field_Renderer {
 
 		if ( 'time' !== $type ) {
 			$limits = Schema::when_limits( $field );
-			$out .= $field['notice_hours'] > 0 ? ' min="' . esc_attr( 'date' === $type ? $limits['min_date'] : $limits['min_datetime'] ) . '"' : '';
+			$today = Schema::now()->format( 'Y-m-d' );
+
+			if ( $field['notice_hours'] > 0 ) {
+				$out .= ' min="' . esc_attr( 'date' === $type ? $limits['min_date'] : $limits['min_datetime'] ) . '"';
+			} elseif ( ! empty( $field['no_past'] ) ) {
+				// No past days (0.96.0): today is the earliest.
+				$out .= ' min="' . esc_attr( 'date' === $type ? $today : $today . 'T00:00' ) . '"';
+			}
+
+			// The booking calendar (0.96.0): its kind, dates that can not be booked, nights, days, shown on the page.
+			if ( ! empty( $field['unavailable'] ) ) {
+				$out .= ' data-rfb-unavailable="' . esc_attr( (string) wp_json_encode( $field['unavailable'] ) ) . '"';
+			}
+
+			if ( 'date' === $type && 'single' !== $field['calendar'] ) {
+				$out .= ' data-rfb-calendar="' . esc_attr( $field['calendar'] ) . '"';
+				$out .= 'range' === $field['calendar'] ? ' data-rfb-nights="' . esc_attr( $field['min_nights'] . ',' . $field['max_nights'] ) . '"' : '';
+				$out .= 'multiple' === $field['calendar'] && $field['max_picks'] > 0 ? ' data-rfb-picks="' . (int) $field['max_picks'] . '"' : '';
+			}
+
+			$out .= ! empty( $field['inline'] ) ? ' data-rfb-inline' : '';
 			$out .= '' !== $limits['max_date'] ? ' max="' . esc_attr( 'date' === $type ? $limits['max_date'] : $limits['max_date'] . 'T23:59' ) . '"' : '';
 			$out .= $field['closed_days'] ? ' data-rfb-closed="' . esc_attr( implode( ',', $field['closed_days'] ) ) . '"' : '';
 		}

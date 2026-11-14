@@ -760,5 +760,27 @@ t( 'amount: the currency symbol beside the box only when asked', ! S::clean_fiel
 // Calendar and clock (0.95.0).
 t( 'dates and times use the form\'s calendar unless switched off; other fields never', S::clean_field( [ 'label' => 'D', 'type' => 'date' ] )['picker'] && S::clean_field( [ 'label' => 'T', 'type' => 'time', 'picker' => true ] )['picker'] && ! S::clean_field( [ 'label' => 'D', 'type' => 'datetime', 'picker' => false ] )['picker'] && ! S::clean_field( [ 'label' => 'X', 'type' => 'text', 'picker' => true ] )['picker'] );
 
+// Booking calendar (0.96.0).
+S::$now = new DateTimeImmutable( '2026-11-13 10:00' ); // a Friday
+$book = S::definition( [ 'label' => 'B', 'fields' => [
+	[ 'label' => 'Day', 'key' => 'day', 'type' => 'date', 'no_past' => 1, 'unavailable' => "2026-12-25\n2026-12-31..2027-01-01\nnot a date" ],
+	[ 'label' => 'Stay', 'key' => 'stay', 'type' => 'date', 'calendar' => 'range', 'min_nights' => 2, 'max_nights' => 7, 'unavailable' => '2026-11-20' ],
+	[ 'label' => 'Flight', 'key' => 'flight', 'type' => 'date', 'calendar' => 'flight', 'no_past' => 1 ],
+	[ 'label' => 'Days', 'key' => 'days', 'type' => 'date', 'calendar' => 'multiple', 'max_picks' => 3, 'closed_days' => [ '0' ] ],
+	[ 'label' => 'Nightly', 'key' => 'nightly', 'type' => 'total', 'formula' => '{stay} * 80 + {days} * 10' ],
+] ] );
+$bv = static function ( $input ) use ( $book ) { return S::validate( $book, $input ); };
+t( 'booking: a definition cleaned again keeps its unavailable dates', S::field( $book, 'day' )['unavailable'] === S::clean_field( S::field( $book, 'day' ) )['unavailable'] );
+t( 'booking: unavailable dates read as days and stretches (rubbish left out); the type and nights are kept', [ [ '2026-12-25', '2026-12-25' ], [ '2026-12-31', '2027-01-01' ] ] === S::field( $book, 'day' )['unavailable'] && 'range' === S::field( $book, 'stay' )['calendar'] && 2 === S::field( $book, 'stay' )['min_nights'] && 'single' === S::clean_field( [ 'label' => 'T', 'type' => 'time', 'calendar' => 'range' ] )['calendar'] );
+t( 'booking: no past days, and an unavailable day, are refused; tomorrow passes', isset( $bv( [ 'day' => '2026-11-12' ] )['errors']['day'] ) && isset( $bv( [ 'day' => '2026-12-25' ] )['errors']['day'] ) && isset( $bv( [ 'day' => '2027-01-01' ] )['errors']['day'] ) && ! isset( $bv( [ 'day' => '2026-11-14' ] )['errors']['day'] ) && ! isset( $bv( [ 'day' => '2026-11-13' ] )['errors']['day'] ) );
+$ok = $bv( [ 'stay' => '2026-11-24 to 2026-11-21' ] );
+t( 'stay: written either way round, stored in order; 3 nights count in a Total', ! isset( $ok['errors']['stay'] ) && '2026-11-21 to 2026-11-24' === $ok['values']['stay'] && '240.00' === $ok['values']['nightly'] );
+t( 'stay: one day, too few or too many nights, or a night that can not be booked, are refused', isset( $bv( [ 'stay' => '2026-11-21' ] )['errors']['stay'] ) && isset( $bv( [ 'stay' => '2026-11-21 to 2026-11-22' ] )['errors']['stay'] ) && isset( $bv( [ 'stay' => '2026-11-21 to 2026-11-30' ] )['errors']['stay'] ) && isset( $bv( [ 'stay' => '2026-11-18 to 2026-11-21' ] )['errors']['stay'] ) && ! isset( $bv( [ 'stay' => '2026-11-20' . ' to 2026-11-23' ] )['errors']['stay'] ) === false );
+t( 'stay: checking out on an unavailable morning is fine', ! isset( $bv( [ 'stay' => '2026-11-17 to 2026-11-20' ] )['errors']['stay'] ) );
+t( 'flight: one way (one day) or a return; the return can not be in the past', ! isset( $bv( [ 'flight' => '2026-11-20' ] )['errors']['flight'] ) && '2026-11-20 to 2026-11-27' === $bv( [ 'flight' => '2026-11-20 to 2026-11-27' ] )['values']['flight'] && isset( $bv( [ 'flight' => '2026-11-01 to 2026-11-20' ] )['errors']['flight'] ) );
+$md = $bv( [ 'days' => '2026-11-18, 2026-11-16,2026-11-17' ] );
+t( 'several days: tidied in order, counted in a Total, at most the maximum, no closed day', ! isset( $md['errors']['days'] ) && '2026-11-16, 2026-11-17, 2026-11-18' === $md['values']['days'] && '30.00' === $md['values']['nightly'] && isset( $bv( [ 'days' => '2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19' ] )['errors']['days'] ) && isset( $bv( [ 'days' => '2026-11-15' ] )['errors']['days'] ) );
+S::$now = null;
+
 echo "form-builder: $pass passed, $fail failed\n";
 exit( $fail ? 1 : 0 );
