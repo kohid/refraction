@@ -982,6 +982,441 @@ $rfb-widths: (
 		}
 	}
 
+	// ---- choice looks (0.92.0): a segmented bar, a filled pill switch, icon tiles and cards with a line of text. The real
+	// input stays in each label (keyboard, forms, summary); the look is drawn around it. Every color is a variable the
+	// field's Style tab can set, falling back on the form's own colors.
+	.rfb-look-segmented,
+	.rfb-look-pill,
+	.rfb-look-tiles,
+	.rfb-look-cards,
+	.rfb-look-images {
+		.rfb-check {
+			position: relative;
+			margin: 0;
+			border: 1px solid var(--rfb-ch-border, transparent);
+			border-radius: var(--rfb-ch-radius, 10px);
+			background: var(--rfb-ch-bg, transparent);
+			color: var(--rfb-ch-color, var(--rfb-muted));
+			cursor: pointer;
+			font-size: var(--rfb-font-size, 14px);
+			font-weight: 600;
+			line-height: 1.3;
+			transition: background-color 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.18s;
+
+			> input {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				margin: 0;
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			&:hover {
+				border-color: var(--rfb-ch-hover-border, var(--rfb-ch-border, transparent));
+				background: var(--rfb-ch-hover-bg, var(--rfb-ch-bg, transparent));
+				color: var(--rfb-ch-hover-color, var(--rfb-ink));
+
+				.rfb-opt-icon {
+					color: var(--rfb-ch-hover-icon, inherit);
+				}
+			}
+
+			&:has(input:checked) {
+				border-color: var(--rfb-ch-on-border, var(--rfb-primary));
+				background: var(--rfb-ch-on-bg, var(--rfb-input-bg, #fff));
+				color: var(--rfb-ch-on-color, var(--rfb-ink));
+
+				.rfb-opt-icon {
+					color: var(--rfb-ch-on-icon, inherit);
+				}
+			}
+
+			&:has(input:focus-visible) {
+				outline: 2px solid var(--rfb-focus, var(--rfb-primary));
+				outline-offset: 2px;
+			}
+
+			&:has(input:disabled) {
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
+		}
+
+		.rfb-opt-icon {
+			display: inline-flex;
+			color: var(--rfb-ch-icon, inherit);
+			font-size: var(--rfb-ch-icon-size, 20px);
+			line-height: 1;
+
+			svg {
+				width: 1em;
+				height: 1em;
+			}
+		}
+
+		.rfb-opt-text {
+			color: var(--rfb-ch-text, var(--rfb-muted));
+			font-size: 0.86em;
+			font-weight: 400;
+			line-height: 1.4;
+		}
+
+		// Options with a badge leave room above for it.
+		.rfb-choice-options:has(.has-badge) {
+			margin-top: 12px;
+		}
+	}
+
+	// A badge sits on the top edge of its option (Save 28%), in every look.
+	.rfb-opt-badge {
+		position: absolute;
+		top: 0;
+		right: 8px;
+		z-index: 1;
+		padding: 2px 8px;
+		border-radius: 999px;
+		background: var(--rfb-ch-badge-bg, #fff);
+		box-shadow: 0 1px 3px rgba(16, 24, 40, 0.16);
+		color: var(--rfb-ch-badge-color, var(--rfb-ink));
+		font-size: 10px;
+		font-weight: 800;
+		letter-spacing: 0.02em;
+		line-height: 1.5;
+		white-space: nowrap;
+		transform: translateY(-60%);
+	}
+
+	.rfb-check.has-badge {
+		position: relative;
+	}
+
+	// Segmented bar and pill switch: the options share one bar; the picked one is raised (segmented) or filled (pill).
+	.rfb-look-segmented,
+	.rfb-look-pill {
+		.rfb-choice-options {
+			display: inline-flex;
+			flex-wrap: wrap;
+			gap: var(--rfb-ch-gap, 4px);
+			max-width: 100%;
+			padding: 4px;
+			border: var(--rfb-ch-track-width, 1px) solid var(--rfb-ch-track-border, transparent);
+			border-radius: calc(var(--rfb-ch-radius, 10px) + 4px);
+			background: var(--rfb-ch-track, #eef1f5);
+		}
+
+		.rfb-check {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			min-height: 40px;
+			padding: 9px 22px;
+			text-align: center;
+		}
+
+		&.rfb-choice-full .rfb-choice-options {
+			display: flex;
+		}
+
+		&.rfb-choice-full .rfb-check {
+			flex: 1 1 0;
+		}
+	}
+
+	.rfb-look-segmented .rfb-check:has(input:checked) {
+		border-color: var(--rfb-ch-on-border, transparent);
+		background: var(--rfb-ch-on-bg, #fff);
+		box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 4px rgba(16, 24, 40, 0.1);
+	}
+
+	// Fully round unless the Style tab sets the corners (a fallback, so the field's own setting wins).
+	.rfb-look-pill {
+		.rfb-choice-options {
+			--rfb-ch-track-width: 2px;
+			border-color: var(--rfb-ch-track-border, var(--rfb-primary));
+			border-radius: calc(var(--rfb-ch-radius, 999px) + 4px);
+			background: var(--rfb-ch-track, transparent);
+		}
+
+		.rfb-check {
+			border-radius: var(--rfb-ch-radius, 999px);
+		}
+
+		.rfb-check:has(input:checked) {
+			border-color: var(--rfb-ch-on-border, transparent);
+			background: var(--rfb-ch-on-bg, var(--rfb-primary));
+			color: var(--rfb-ch-on-color, var(--rfb-button-text, #fff));
+		}
+	}
+
+	// Icon tiles: a grid of squares, icon above the name; the picked one gets the accent border, color and a dot.
+	.rfb-look-tiles {
+		.rfb-choice-options {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+			gap: var(--rfb-ch-gap, 10px);
+		}
+
+		// Set columns. Plain fractions only: a percentage in the tracks makes a phone-width flex column reserve the
+		// height of one tile per row.
+		.rfb-choice-options[style*="--rfb-ch-cols"] {
+			grid-template-columns: repeat(var(--rfb-ch-cols), minmax(0, 1fr));
+		}
+
+		.rfb-check {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			min-height: 92px;
+			padding: 16px 12px;
+			border: 1.5px solid var(--rfb-ch-border, color-mix(in srgb, var(--rfb-ink, #181c32) 16%, transparent));
+			background: var(--rfb-ch-bg, var(--rfb-input-bg, #fff));
+			text-align: center;
+
+			// The dot that marks the picked tile: top left unless Style > Selection mark places it.
+			&::before {
+				content: "";
+				position: absolute;
+				inset: var(--rfb-mark-t, var(--rfb-mark-y, 8px)) var(--rfb-mark-r, auto) var(--rfb-mark-b, auto) var(--rfb-mark-l, var(--rfb-mark-x, 8px));
+				width: var(--rfb-mark-size, 12px);
+				height: var(--rfb-mark-size, 12px);
+				border-radius: 50%;
+				background: var(--rfb-ch-mark, var(--rfb-primary));
+				opacity: 0;
+				transform: scale(0.4);
+				transition: opacity 0.18s, transform 0.18s;
+			}
+
+			&:has(input:checked) {
+				color: var(--rfb-ch-on-color, var(--rfb-primary));
+
+				&::before {
+					opacity: 1;
+					transform: none;
+				}
+			}
+		}
+
+		.rfb-opt-icon {
+			order: -1;
+			font-size: var(--rfb-ch-icon-size, 32px);
+		}
+	}
+
+	// Cards: a radio (or box) on the left, the name with its line of text, an icon on the right.
+	.rfb-look-cards {
+		.rfb-choice-options {
+			display: grid;
+			grid-template-columns: repeat(var(--rfb-ch-cols, 1), minmax(0, 1fr));
+			gap: var(--rfb-ch-gap, 10px);
+		}
+
+		.rfb-check {
+			display: grid;
+			grid-template-columns: auto minmax(0, 1fr) auto;
+			grid-template-areas: var(--rfb-cards-areas, "mark label icon" "mark text icon");
+			align-items: center;
+			column-gap: 14px;
+			row-gap: 2px;
+			padding: 14px 18px;
+			border: 1.5px solid var(--rfb-ch-border, color-mix(in srgb, var(--rfb-ink, #181c32) 16%, transparent));
+			background: var(--rfb-ch-bg, var(--rfb-input-bg, #fff));
+			color: var(--rfb-ch-color, var(--rfb-ink));
+
+			&::before {
+				content: "";
+				grid-area: mark;
+				align-self: var(--rfb-cards-mark-align, center);
+				width: var(--rfb-mark-size, 20px);
+				height: var(--rfb-mark-size, 20px);
+				translate: var(--rfb-mark-x, 0) var(--rfb-mark-y, 0);
+				box-sizing: border-box;
+				border: 2px solid var(--rfb-ch-border, color-mix(in srgb, var(--rfb-ink, #181c32) 28%, transparent));
+				border-radius: 50%;
+				background: transparent;
+				transition: border-color 0.18s, box-shadow 0.18s, background-color 0.18s;
+			}
+
+			&:has(input[type="checkbox"])::before {
+				border-radius: 6px;
+			}
+
+			&:has(input:checked) {
+				border-color: var(--rfb-ch-on-border, var(--rfb-ch-mark, var(--rfb-primary)));
+				background: var(--rfb-ch-on-bg, color-mix(in srgb, var(--rfb-ch-mark, var(--rfb-primary)) 9%, var(--rfb-input-bg, #fff)));
+
+				&::before {
+					border-color: var(--rfb-ch-mark, var(--rfb-primary));
+					background: var(--rfb-ch-mark, var(--rfb-primary));
+					box-shadow: inset 0 0 0 4px var(--rfb-input-bg, #fff);
+				}
+
+				.rfb-opt-text {
+					color: var(--rfb-ch-on-text, var(--rfb-ch-text, var(--rfb-muted)));
+				}
+			}
+		}
+
+		.rfb-opt-label {
+			grid-area: label;
+			font-weight: 700;
+		}
+
+		.rfb-opt-text {
+			grid-area: text;
+		}
+
+		// A card without a line of text is one row (Style > Selection mark can put the radio on the right).
+		.rfb-check:not(:has(.rfb-opt-text)) {
+			grid-template-areas: var(--rfb-cards-areas-1, "mark label icon");
+		}
+
+		.rfb-opt-icon {
+			grid-area: icon;
+			font-size: var(--rfb-ch-icon-size, 24px);
+		}
+	}
+
+	// Image cards: the choice's picture on top, its name below with a small radio; the picked card gets the accent
+	// border and a check badge on the picture (top right unless Style > Selection mark places it).
+	.rfb-look-images {
+		.rfb-choice-options {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+			gap: var(--rfb-ch-gap, 14px);
+		}
+
+		.rfb-choice-options[style*="--rfb-ch-cols"] {
+			grid-template-columns: repeat(var(--rfb-ch-cols), minmax(0, 1fr));
+		}
+
+		.rfb-check {
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+			gap: 10px;
+			padding: 10px 10px 14px;
+			border: 1.5px solid var(--rfb-ch-border, color-mix(in srgb, var(--rfb-ink, #181c32) 16%, transparent));
+			border-radius: var(--rfb-ch-radius, 14px);
+			background: var(--rfb-ch-bg, var(--rfb-input-bg, #fff));
+			color: var(--rfb-ch-color, var(--rfb-ink));
+
+			// The check badge.
+			&::before {
+				content: "";
+				position: absolute;
+				z-index: 2;
+				inset: var(--rfb-mark-t, var(--rfb-mark-y, 18px)) var(--rfb-mark-r, var(--rfb-mark-x, 18px)) var(--rfb-mark-b, auto) var(--rfb-mark-l, auto);
+				width: var(--rfb-mark-size, 30px);
+				height: var(--rfb-mark-size, 30px);
+				border-radius: 50%;
+				background: var(--rfb-ch-mark, var(--rfb-primary)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 58% no-repeat;
+				box-shadow: 0 2px 6px rgba(16, 24, 40, 0.25);
+				opacity: 0;
+				transform: scale(0.5);
+				transition: opacity 0.18s, transform 0.18s;
+			}
+
+			&:has(input:checked) {
+				border-color: var(--rfb-ch-on-border, var(--rfb-ch-mark, var(--rfb-primary)));
+
+				&::before {
+					opacity: 1;
+					transform: none;
+				}
+
+				.rfb-opt-label::before {
+					border-color: var(--rfb-ch-mark, var(--rfb-primary));
+					background: var(--rfb-ch-mark, var(--rfb-primary));
+					box-shadow: inset 0 0 0 3px var(--rfb-ch-on-bg, var(--rfb-input-bg, #fff));
+				}
+			}
+		}
+
+		.rfb-opt-media {
+			order: -2;
+			overflow: hidden;
+			border-radius: calc(var(--rfb-ch-radius, 14px) - 6px);
+			background: color-mix(in srgb, var(--rfb-ink, #181c32) 6%, transparent);
+
+			img {
+				display: block;
+				width: 100%;
+				height: auto;
+				aspect-ratio: var(--rfb-ch-ratio, 4 / 3);
+				object-fit: cover;
+			}
+		}
+
+		// No picture: the icon takes its place, centered.
+		.rfb-opt-icon {
+			order: -1;
+			justify-content: center;
+			padding: 18px 0 6px;
+			font-size: var(--rfb-ch-icon-size, 36px);
+		}
+
+		.rfb-opt-media ~ .rfb-opt-icon {
+			display: none;
+		}
+
+		.rfb-opt-label {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 0 4px;
+			font-weight: 600;
+
+			// The small radio beside the name.
+			&::before {
+				content: "";
+				flex: none;
+				width: 16px;
+				height: 16px;
+				box-sizing: border-box;
+				border: 2px solid color-mix(in srgb, var(--rfb-ink, #181c32) 45%, transparent);
+				border-radius: 50%;
+				transition: background-color 0.18s, border-color 0.18s;
+			}
+		}
+
+		.rfb-check:has(input[type="checkbox"]) .rfb-opt-label::before {
+			border-radius: 4px;
+		}
+
+		.rfb-opt-text {
+			padding: 0 4px;
+		}
+	}
+
+	// Phones: cards one under another, image cards two to a row (set columns are for wider screens).
+	@media (max-width: 600px) {
+		.rfb-look-cards .rfb-choice-options {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.rfb-look-images .rfb-choice-options[style*="--rfb-ch-cols"] {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rfb-look-segmented .rfb-check,
+		.rfb-look-pill .rfb-check,
+		.rfb-look-tiles .rfb-check,
+		.rfb-look-tiles .rfb-check::before,
+		.rfb-look-cards .rfb-check,
+		.rfb-look-cards .rfb-check::before,
+		.rfb-look-images .rfb-check,
+		.rfb-look-images .rfb-check::before,
+		.rfb-look-images .rfb-opt-label::before {
+			transition: none;
+		}
+	}
+
 	// ---- amount: a text box that writes 1,200.50 as you type, with the symbol and the period beside it
 	.rfb-amount {
 		display: flex;

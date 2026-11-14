@@ -2,6 +2,7 @@
 namespace Refraction\Modules\FormBuilder\Classes;
 
 use Refraction\Core\Utils\Icons;
+use Refraction\Icons_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -74,6 +75,14 @@ class Field_Renderer {
 
 		if ( in_array( $type, [ 'radio', 'checkbox' ], true ) && '' !== Field_Style::choice_class( $field, (array) ( $ctx['type_styles'] ?? [] ) ) ) {
 			$classes[] = Field_Style::choice_class( $field, (array) ( $ctx['type_styles'] ?? [] ) );
+		}
+
+		if ( in_array( $type, [ 'radio', 'checkbox' ], true ) && 'list' !== ( $field['choice_look'] ?? 'list' ) ) {
+			$classes[] = 'rfb-look-' . $field['choice_look'];
+
+			if ( ! empty( $field['choice_full'] ) ) {
+				$classes[] = 'rfb-choice-full';
+			}
 		}
 
 		if ( '' !== $field['css_class'] ) {
@@ -174,11 +183,14 @@ class Field_Renderer {
 			$picked = array_map( 'strval', (array) $value );
 			$suffix = 'radio' === $type ? '' : '[]';
 
-			echo '<div class="rfb-choice-options">';
+			$columns = (int) ( $field['choice_columns'] ?? 0 );
+			echo '<div class="rfb-choice-options"' . ( $columns ? ' style="--rfb-ch-cols:' . $columns . '"' : '' ) . '>';
 
 			foreach ( $field['options'] as $index => $option ) {
 				$option_id = $id . '-' . $index;
-				echo '<label class="rfb-check" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . '><span>' . esc_html( $option['label'] ) . '</span></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$extra = $field['option_extras'][ $option['value'] ] ?? null;
+				// The label stays right after the input: the Summary reads it from there.
+				echo '<label class="rfb-check' . ( $extra && $extra['icon'] ? ' has-icon' : '' ) . ( $extra && '' !== $extra['badge'] ? ' has-badge' : '' ) . '" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . ( $extra && '' !== $extra['text'] ? ' aria-describedby="' . esc_attr( $option_id . '-text' ) . '"' : '' ) . '><span class="rfb-opt-label">' . esc_html( $option['label'] ) . '</span>' . ( $extra ? self::option_extra( $extra, $option_id, 'images' === ( $field['choice_look'] ?? '' ) ) : '' ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '</div></fieldset>';
@@ -293,6 +305,39 @@ class Field_Renderer {
 	}
 
 	/** The number a choice or card adds to a Total, as a data attribute (nothing when it has none). */
+	/** The picture, icon, line of text and badge of one choice (0.92.0); the look decides where each sits. */
+	private static function option_extra( array $extra, string $option_id, bool $with_image = false ): string {
+		$out = '';
+
+		// Image cards show the choice's picture (decorative: the name says what it is).
+		if ( $with_image && $extra['image'] && wp_attachment_is_image( $extra['image'] ) ) {
+			$out .= '<span class="rfb-opt-media">' . wp_get_attachment_image( $extra['image'], 'medium_large', false, [ 'alt' => '', 'loading' => 'lazy', 'class' => 'rfb-opt-img' ] ) . '</span>';
+		}
+
+		if ( $extra['icon'] ) {
+			$html = (string) Icons_Manager::try_get_icon_html( $extra['icon'], [ 'aria-hidden' => 'true' ] );
+
+			if ( '' !== $html ) {
+				// Font libraries (Font Awesome) need their stylesheet; Solar and Phosphor load their own.
+				if ( wp_style_is( 'refraction-icons-' . $extra['icon']['library'], 'registered' ) ) {
+					wp_enqueue_style( 'refraction-icons-' . $extra['icon']['library'] );
+				}
+
+				$out .= '<span class="rfb-opt-icon" aria-hidden="true">' . $html . '</span>';
+			}
+		}
+
+		if ( '' !== $extra['text'] ) {
+			$out .= '<span class="rfb-opt-text" id="' . esc_attr( $option_id . '-text' ) . '">' . esc_html( $extra['text'] ) . '</span>';
+		}
+
+		if ( '' !== $extra['badge'] ) {
+			$out .= '<span class="rfb-opt-badge">' . esc_html( $extra['badge'] ) . '</span>';
+		}
+
+		return $out;
+	}
+
 	private static function number_attr( array $option ): string {
 		return isset( $option['number'] ) && null !== $option['number'] ? ' data-rfb-n="' . esc_attr( (string) (float) $option['number'] ) . '"' : '';
 	}
