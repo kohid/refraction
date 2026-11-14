@@ -589,6 +589,206 @@
 
 	// ---------------------------------------------------------------- steps
 
+	/**
+	 * The progress display of a multi-step form (0.98.0): its element and how it follows the current step.
+	 *
+	 * @param {string}   style  The look ("connected", "bar_percent", "slider", "segments", "ring", "dots", "chevrons",
+	 *                          "bar_label", "steps", "bar" or "none").
+	 * @param {string[]} titles The steps' titles.
+	 * @param {Object}   i18n   The form's texts.
+	 * @return {{el: HTMLElement, update: Function}|null} The display, or null for none.
+	 */
+	function buildProgress( style, titles, i18n ) {
+		if ( 'none' === style ) {
+			return null;
+		}
+
+		const n = titles.length;
+		const el = document.createElement( 'div' );
+		const pct = ( i ) => Math.round( ( i + 1 ) / n * 100 );
+		const esc = ( text ) => String( text ).replace( /[&<>"]/g, ( c ) => ( { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ c ] ) );
+		const check = '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+		const list = ( cls, item ) => '<ol class="' + cls + '">' + titles.map( ( title, i ) => item( title, i ) ).join( '' ) + '</ol>';
+		const mark = ( current ) => el.querySelectorAll( 'li' ).forEach( ( li, i ) => {
+			li.classList.toggle( 'is-current', i === current );
+			li.classList.toggle( 'is-done', i < current );
+			li.setAttribute( 'aria-current', i === current ? 'step' : 'false' );
+		} );
+		let update = mark;
+
+		el.className = 'rfb-progress rfb-progress-' + style;
+
+		switch ( style ) {
+			case 'connected':
+				el.innerHTML = list( 'rfb-pg-connected', ( title, i ) => '<li><span class="rfb-pg-dot"><span class="rfb-pg-num">' + ( i + 1 ) + '</span><span class="rfb-pg-check">' + check + '</span></span><span class="rfb-pg-name">' + esc( title ) + '</span></li>' );
+				break;
+			case 'chevrons':
+				el.innerHTML = list( 'rfb-pg-chevrons', ( title ) => '<li><span class="rfb-pg-check">' + check + '</span><span class="rfb-pg-name">' + esc( title ) + '</span></li>' );
+				break;
+			case 'segments':
+				el.innerHTML = list( 'rfb-pg-segments', ( title ) => '<li><span class="screen-reader-text">' + esc( title ) + '</span></li>' );
+				break;
+			case 'bar_percent':
+			case 'slider':
+			case 'bar_label':
+			case 'bar':
+				el.innerHTML = ( 'bar_label' === style ? '<div class="rfb-pg-line"><strong class="rfb-pg-pct"></strong><span class="rfb-pg-name"></span><span class="rfb-pg-of"></span></div>' : '' ) +
+					'<div class="rfb-bar" role="progressbar" aria-valuemin="1" aria-valuemax="' + n + '"><span></span>' + ( 'slider' === style ? '<i class="rfb-pg-knob"><b class="rfb-pg-bubble"></b></i>' : '' ) + '</div>' +
+					( 'bar_percent' === style ? '<p class="rfb-pg-pct" aria-hidden="true"></p>' : '' ) + ( 'bar' === style ? '<p class="rfb-progress-label" aria-live="polite"></p>' : '' );
+				update = ( current ) => {
+					const value = pct( current ) + '%';
+
+					el.querySelector( '.rfb-bar' ).setAttribute( 'aria-valuenow', String( current + 1 ) );
+					el.querySelector( '.rfb-bar' ).setAttribute( 'aria-valuetext', sprintf( i18n.step || 'Step %1$d of %2$d', current + 1, n ) + ': ' + titles[ current ] );
+					el.querySelector( '.rfb-bar span' ).style.width = value;
+					el.querySelectorAll( '.rfb-pg-pct, .rfb-pg-bubble' ).forEach( ( out ) => ( out.textContent = pct( current ) + ' %' ) );
+					el.style.setProperty( '--rfb-pg', value );
+
+					if ( 'bar_label' === style ) {
+						el.querySelector( '.rfb-pg-name' ).textContent = titles[ current ];
+						el.querySelector( '.rfb-pg-of' ).textContent = sprintf( i18n.step || 'Step %1$d of %2$d', current + 1, n );
+					}
+
+					if ( 'bar' === style ) {
+						el.querySelector( '.rfb-progress-label' ).textContent = sprintf( i18n.step || 'Step %1$d of %2$d', current + 1, n ) + ': ' + titles[ current ];
+					}
+				};
+				break;
+			case 'ring':
+			case 'dots':
+				el.innerHTML = '<div class="rfb-pg-round">' + ( 'ring' === style
+					? '<svg viewBox="0 0 64 64" aria-hidden="true"><circle class="rfb-pg-ring-track" cx="32" cy="32" r="28"/><circle class="rfb-pg-ring-fill" cx="32" cy="32" r="28" pathLength="100"/></svg>'
+					: '<span class="rfb-pg-dots" aria-hidden="true">' + Array.from( { length: 12 }, ( _, i ) => '<i style="--i:' + i + '"></i>' ).join( '' ) + '</span>' ) +
+					'<span class="rfb-pg-center"></span></div><div class="rfb-pg-text" aria-live="polite"><strong class="rfb-pg-name"></strong><span class="rfb-pg-next"></span></div>';
+				update = ( current ) => {
+					el.querySelector( '.rfb-pg-center' ).textContent = 'ring' === style ? sprintf( i18n.ofSteps || '%1$d of %2$d', current + 1, n ) : pct( current ) + ' %';
+					el.querySelector( '.rfb-pg-name' ).textContent = titles[ current ];
+					el.querySelector( '.rfb-pg-next' ).textContent = current < n - 1 ? sprintf( i18n.nextStep || 'Next: %s', titles[ current + 1 ] ) : ( i18n.lastStep || 'Last step' );
+					el.style.setProperty( '--rfb-pg-n', String( pct( current ) ) );
+					el.querySelectorAll( '.rfb-pg-dots i' ).forEach( ( dot, i ) => dot.classList.toggle( 'is-on', i < Math.round( pct( current ) / 100 * 12 ) ) );
+				};
+				break;
+			default:
+				el.innerHTML = list( 'rfb-stepper', ( title, i ) => '<li data-i="' + i + '"><span class="rfb-stepper-num">' + ( i + 1 ) + '</span><span class="rfb-stepper-title">' + esc( title ) + '</span></li>' );
+		}
+
+		return { el, update };
+	}
+
+	/**
+	 * The steps listed in a sidebar beside the form (0.98.0): number (a tick once done), title and description, a line
+	 * between them; done steps and the next one can be clicked.
+	 *
+	 * @param {HTMLElement}   box    The Steps widget's box.
+	 * @param {HTMLElement[]} steps  The steps.
+	 * @param {string[]}      titles Their titles.
+	 * @param {Object}        i18n   The form's texts.
+	 * @param {Function}      goTo   Moves to a step (through the checks when forward).
+	 * @return {{update: Function}} How it follows the current step.
+	 */
+	function buildSidebar( box, steps, titles, i18n, goTo ) {
+		const nav = document.createElement( 'nav' );
+		const heading = box.dataset.rfbSideHeading || '';
+
+		nav.className = 'rfb-steps-side';
+		nav.setAttribute( 'aria-label', i18n.stepsLabel || 'Steps' );
+
+		if ( heading ) {
+			const h = document.createElement( 'p' );
+			h.className = 'rfb-side-heading';
+			h.textContent = heading;
+			nav.appendChild( h );
+		}
+
+		const ol = document.createElement( 'ol' );
+
+		steps.forEach( ( step, i ) => {
+			const li = document.createElement( 'li' );
+			const button = document.createElement( 'button' );
+
+			button.type = 'button';
+			button.className = 'rfb-side-step';
+			button.innerHTML = '<span class="rfb-side-num"><span class="rfb-pg-num"></span><svg class="rfb-pg-check" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="rfb-side-text"><strong></strong><span></span></span>';
+			button.querySelector( '.rfb-pg-num' ).textContent = String( i + 1 );
+			button.querySelector( 'strong' ).textContent = titles[ i ];
+			button.querySelector( '.rfb-side-text span' ).textContent = step.dataset.rfbDescription || '';
+			button.addEventListener( 'click', () => goTo( i ) );
+			li.appendChild( button );
+			ol.appendChild( li );
+		} );
+
+		nav.appendChild( ol );
+		box.prepend( nav );
+
+		return {
+			update( current, reached ) {
+				ol.querySelectorAll( 'li' ).forEach( ( li, i ) => {
+					li.classList.toggle( 'is-current', i === current );
+					// Done: before the current step. Visited further on: can be clicked, but not ticked.
+					li.classList.toggle( 'is-done', i < current );
+					li.classList.toggle( 'is-visited', i > current && i <= reached );
+					li.querySelector( 'button' ).disabled = i > reached + 1;
+					li.querySelector( 'button' ).setAttribute( 'aria-current', i === current ? 'step' : 'false' );
+				} );
+			},
+		};
+	}
+
+	/**
+	 * Each step a section of an accordion (0.98.0): a header with its icon (or number), title, description, its status
+	 * (Completed, In progress, Not started) and where the form stands; the current step is open below its header.
+	 *
+	 * @param {HTMLElement[]} steps  The steps.
+	 * @param {string[]}      titles Their titles.
+	 * @param {Object}        i18n   The form's texts.
+	 * @param {Function}      goTo   Moves to a step (through the checks when forward).
+	 * @return {{update: Function}} How it follows the current step.
+	 */
+	function buildAccordion( steps, titles, i18n, goTo ) {
+		const heads = steps.map( ( step, i ) => {
+			const head = document.createElement( 'button' );
+
+			head.type = 'button';
+			head.className = 'rfb-acc-step';
+			head.innerHTML = '<span class="rfb-acc-step-icon"></span><span class="rfb-acc-step-main"><span class="rfb-acc-step-title"><strong></strong><em class="rfb-acc-status"></em></span><span class="rfb-acc-step-desc"></span></span><span class="rfb-acc-step-side"><strong></strong><span></span></span><span class="rfb-acc-chev" aria-hidden="true"></span>';
+			head.querySelector( '.rfb-acc-step-title strong' ).textContent = titles[ i ];
+			head.querySelector( '.rfb-acc-step-desc' ).textContent = step.dataset.rfbDescription || '';
+
+			// The step's icon is the server's own markup; without one, its number.
+			if ( step.dataset.rfbIcon ) {
+				head.querySelector( '.rfb-acc-step-icon' ).innerHTML = step.dataset.rfbIcon;
+			} else {
+				head.querySelector( '.rfb-acc-step-icon' ).textContent = String( i + 1 );
+				head.querySelector( '.rfb-acc-step-icon' ).classList.add( 'is-number' );
+			}
+
+			step.id = step.id || 'rfb-step-' + Math.random().toString( 36 ).slice( 2, 9 );
+			head.setAttribute( 'aria-controls', step.id );
+			head.addEventListener( 'click', () => goTo( i ) );
+			step.before( head );
+
+			return head;
+		} );
+
+		return {
+			update( current ) {
+				heads.forEach( ( head, i ) => {
+					const state = i < current ? 'done' : ( i === current && 'now' ) || 'todo';
+					const status = { done: i18n.stepDone || 'Completed', now: i18n.stepNow || 'In progress', todo: i18n.stepTodo || 'Not started' }[ state ];
+					const sideTop = { done: i18n.stepAllSet || 'All set!', now: sprintf( i18n.step || 'Step %1$d of %2$d', i + 1, steps.length ), todo: '' }[ state ];
+					const sideSub = { done: i18n.stepChange || 'Change if needed', now: i18n.stepFill || 'Fill in the details', todo: '' }[ state ];
+
+					head.className = 'rfb-acc-step is-' + state;
+					head.setAttribute( 'aria-expanded', i === current ? 'true' : 'false' );
+					head.disabled = i > current + 1;
+					head.querySelector( '.rfb-acc-status' ).textContent = status;
+					head.querySelector( '.rfb-acc-step-side strong' ).textContent = sideTop;
+					head.querySelector( '.rfb-acc-step-side span' ).textContent = sideSub;
+				} );
+			},
+		};
+	}
+
 	function initSteps( form ) {
 		// Steps are sections of the form itself, or of a Steps widget on a form built in the page editor.
 		const steps = Array.from( form.querySelectorAll( ':scope > [data-rfb-step], [data-rfb-steps] > [data-rfb-step]' ) );
@@ -613,25 +813,56 @@
 		}
 		const nextText = form.dataset.rfbNext || 'Next';
 		const backText = form.dataset.rfbBack || 'Back';
-		const style = form.dataset.rfbProgress || 'steps';
+		// Layout and progress (0.98.0): from the Steps widget, else the form settings.
+		const box = steps[ 0 ].closest( '[data-rfb-steps]' );
+		const layout = box && box.dataset.rfbLayout ? box.dataset.rfbLayout : 'top';
+		const style = 'accordion' === layout ? 'none' : ( box && box.dataset.rfbProgressStyle ) || form.dataset.rfbProgress || 'steps';
+		const titles = steps.map( ( step, i ) => step.dataset.rfbTitle || sprintf( i18n.step || 'Step %1$d of %2$d', i + 1, steps.length ) );
 		let current = 0;
+		let reached = 0;
 
 		form.classList.add( 'rfb-multistep' );
 
-		const progress = document.createElement( 'div' );
+		const progress = buildProgress( style, titles, i18n );
 
-		progress.className = 'rfb-progress rfb-progress-' + style;
+		if ( progress ) {
+			steps[ 0 ].parentNode.insertBefore( progress.el, steps[ 0 ] );
+		}
 
-		if ( 'none' !== style ) {
-			if ( 'bar' === style ) {
-				progress.innerHTML = '<div class="rfb-bar" role="progressbar" aria-valuemin="1" aria-valuemax="' + steps.length + '"><span></span></div><p class="rfb-progress-label" aria-live="polite"></p>';
-			} else {
-				progress.innerHTML = '<ol class="rfb-stepper">' + steps.map( ( step, i ) => '<li data-i="' + i + '"><span class="rfb-stepper-num">' + ( i + 1 ) + '</span><span class="rfb-stepper-title"></span></li>' ).join( '' ) + '</ol>';
-				progress.querySelectorAll( '.rfb-stepper-title' ).forEach( ( el, i ) => ( el.textContent = steps[ i ].dataset.rfbTitle || sprintf( i18n.step || 'Step %1$d of %2$d', i + 1, steps.length ) ) );
+		// Each step's count ("Step 1/6") above its title.
+		if ( box && box.hasAttribute( 'data-rfb-counter' ) ) {
+			steps.forEach( ( step, i ) => {
+				const head = step.querySelector( '.rfb-step-head' );
+				const count = document.createElement( 'p' );
+
+				count.className = 'rfb-step-count';
+				count.textContent = sprintf( i18n.stepShort || 'Step %1$d/%2$d', i + 1, steps.length );
+
+				if ( head ) {
+					head.prepend( count );
+				}
+			} );
+		}
+
+		// A step clicked in the sidebar or the accordion: back at once, forward only through the checks.
+		const goTo = ( index ) => {
+			for ( let i = current; i < index; i++ ) {
+				const bad = firstInvalid( steps[ i ] );
+
+				if ( bad ) {
+					show( i, false );
+					report( bad );
+					return;
+				}
 			}
 
-			steps[ 0 ].parentNode.insertBefore( progress, steps[ 0 ] );
-		}
+			if ( index <= reached + 1 ) {
+				show( index, true );
+			}
+		};
+
+		const side = 'sidebar' === layout && box ? buildSidebar( box, steps, titles, i18n, goTo ) : null;
+		const accordion = 'accordion' === layout ? buildAccordion( steps, titles, i18n, goTo ) : null;
 
 		const back = document.createElement( 'button' );
 		const next = document.createElement( 'button' );
@@ -644,7 +875,7 @@
 		const look = steps[ 0 ].closest( '[data-rfb-steps]' );
 
 		[ [ back, 'rfbBack', backText ], [ next, 'rfbNext', nextText ] ].forEach( ( [ button, which, text ] ) => {
-			// data-rfb-back-icon is dataset.rfbBackIcon.
+			// The attribute data-rfb-back-icon is dataset.rfbBackIcon.
 			const data = look ? look.dataset : {};
 			const icon = data[ which + 'Icon' ] || '';
 			const label = document.createElement( 'span' );
@@ -675,18 +906,23 @@
 				submitButton.hidden = current !== steps.length - 1;
 			}
 
-			const label = sprintf( i18n.step || 'Step %1$d of %2$d', current + 1, steps.length );
+			reached = Math.max( reached, current );
 
-			if ( 'bar' === style ) {
-				progress.querySelector( '.rfb-bar' ).setAttribute( 'aria-valuenow', String( current + 1 ) );
-				progress.querySelector( '.rfb-bar span' ).style.width = ( ( current + 1 ) / steps.length * 100 ) + '%';
-				progress.querySelector( '.rfb-progress-label' ).textContent = label + ( steps[ current ].dataset.rfbTitle ? ': ' + steps[ current ].dataset.rfbTitle : '' );
-			} else if ( 'steps' === style ) {
-				progress.querySelectorAll( 'li' ).forEach( ( li, i ) => {
-					li.classList.toggle( 'is-current', i === current );
-					li.classList.toggle( 'is-done', i < current );
-					li.setAttribute( 'aria-current', i === current ? 'step' : 'false' );
-				} );
+			if ( progress ) {
+				progress.update( current );
+			}
+
+			if ( side ) {
+				side.update( current, reached );
+			}
+
+			// The accordion keeps Back and Next inside the open step.
+			if ( accordion ) {
+				if ( ! ( current === steps.length - 1 && lastActions ) ) {
+					steps[ current ].append( submit );
+				}
+
+				accordion.update( current );
 			}
 
 			if ( focus ) {

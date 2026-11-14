@@ -724,6 +724,689 @@ $rfb-widths: (
 		font-weight: 600;
 	}
 
+	// ---- step progress looks and layouts (0.98.0); colors from the Steps widget's Style tab, else the form's
+	.rfb-progress {
+		--rfb-pg-on: var(--rfb-pg-active, var(--rfb-primary));
+		--rfb-pg-off: var(--rfb-pg-track, color-mix(in srgb, var(--rfb-pg-on) 14%, #fff));
+		color: var(--rfb-pg-text, var(--rfb-ink));
+	}
+
+	.rfb-progress .screen-reader-text {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+
+	.rfb-pg-check {
+		display: none;
+	}
+
+	// 1. Circles joined by a line, a tick once done.
+	.rfb-pg-connected {
+		display: flex;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			position: relative;
+			display: flex;
+			flex: 1 1 0;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			margin: 0;
+			color: var(--rfb-muted);
+			font-size: 13px;
+			font-weight: 600;
+			text-align: center;
+		}
+
+		// The line to the previous step.
+		li + li::before {
+			content: "";
+			position: absolute;
+			top: 20px;
+			right: calc(50% + 24px);
+			left: calc(-50% + 24px);
+			height: 2px;
+			border-radius: 2px;
+			background: var(--rfb-pg-off);
+		}
+
+		li.is-done + li::before,
+		li.is-done + li.is-current::before {
+			background: var(--rfb-pg-on);
+		}
+
+		.rfb-pg-dot {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			background: var(--rfb-pg-off);
+			color: var(--rfb-pg-on);
+			font-size: 15px;
+			font-weight: 700;
+		}
+
+		li.is-current {
+			color: var(--rfb-pg-on);
+
+			.rfb-pg-dot {
+				background: var(--rfb-pg-on);
+				box-shadow: 0 0 0 5px color-mix(in srgb, var(--rfb-pg-on) 18%, transparent);
+				color: #fff;
+			}
+		}
+
+		li.is-done {
+			color: var(--rfb-pg-text, var(--rfb-ink));
+
+			.rfb-pg-num {
+				display: none;
+			}
+
+			.rfb-pg-check {
+				display: inline-flex;
+			}
+		}
+	}
+
+	// 2, 3, 8. Bars.
+	.rfb-progress-bar_percent,
+	.rfb-progress-slider,
+	.rfb-progress-bar_label {
+		.rfb-bar {
+			overflow: visible;
+			background: var(--rfb-pg-off);
+
+			span {
+				background: var(--rfb-pg-on);
+			}
+		}
+	}
+
+	.rfb-progress-bar_percent .rfb-pg-pct {
+		margin: 8px 0 0;
+		color: var(--rfb-pg-on);
+		font-weight: 700;
+		text-align: center;
+	}
+
+	.rfb-progress-slider {
+		padding-top: 34px;
+
+		.rfb-bar {
+			position: relative;
+		}
+
+		.rfb-pg-knob {
+			position: absolute;
+			top: 50%;
+			left: var(--rfb-pg, 0%);
+			width: 18px;
+			height: 18px;
+			border: 3px solid var(--rfb-pg-on);
+			border-radius: 50%;
+			background: #fff;
+			transform: translate(-50%, -50%);
+			transition: left 0.25s;
+		}
+
+		.rfb-pg-bubble {
+			position: absolute;
+			bottom: calc(100% + 8px);
+			left: 50%;
+			padding: 3px 8px;
+			border-radius: 6px;
+			background: var(--rfb-pg-text, var(--rfb-ink));
+			color: #fff;
+			font-size: 12px;
+			font-style: normal;
+			font-weight: 700;
+			white-space: nowrap;
+			transform: translateX(-50%);
+		}
+	}
+
+	.rfb-progress-bar_label {
+		padding: 10px 14px 14px;
+		border-radius: var(--rfb-radius);
+		background: color-mix(in srgb, var(--rfb-pg-on) 8%, #fff);
+
+		.rfb-pg-line {
+			display: flex;
+			align-items: baseline;
+			gap: 10px;
+			margin-bottom: 8px;
+			font-size: 14px;
+		}
+
+		.rfb-pg-pct {
+			color: var(--rfb-pg-on);
+		}
+
+		.rfb-pg-name {
+			flex: 1 1 auto;
+			font-weight: 600;
+		}
+
+		.rfb-pg-of {
+			color: var(--rfb-muted);
+			font-size: 12px;
+		}
+	}
+
+	// 4. Segments.
+	.rfb-pg-segments {
+		display: flex;
+		gap: 8px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			flex: 1 1 0;
+			height: 8px;
+			margin: 0;
+			border-radius: 8px;
+			background: var(--rfb-pg-off);
+			transition: background-color 0.25s;
+		}
+
+		li.is-done,
+		li.is-current {
+			background: var(--rfb-pg-on);
+		}
+	}
+
+	// 5, 6. A ring (or a ring of dots) with the step and the next one beside it.
+	.rfb-progress-ring,
+	.rfb-progress-dots {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.rfb-pg-round {
+		position: relative;
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		width: 72px;
+		height: 72px;
+
+		svg {
+			position: absolute;
+			inset: 0;
+			transform: rotate(-90deg);
+		}
+
+		circle {
+			fill: none;
+			stroke-width: 5;
+		}
+
+		.rfb-pg-ring-track {
+			stroke: var(--rfb-pg-off);
+		}
+
+		.rfb-pg-ring-fill {
+			stroke: var(--rfb-pg-on);
+			stroke-dasharray: calc(var(--rfb-pg-n, 0) * 1) 100;
+			stroke-linecap: round;
+			transition: stroke-dasharray 0.3s;
+		}
+	}
+
+	.rfb-pg-center {
+		position: relative;
+		font-size: 13px;
+		font-weight: 700;
+	}
+
+	.rfb-pg-dots i {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 8px;
+		height: 8px;
+		margin: -4px 0 0 -4px;
+		border-radius: 50%;
+		background: var(--rfb-pg-off);
+		transform: rotate(calc(var(--i) * 30deg)) translateY(-31px);
+
+		&.is-on {
+			background: var(--rfb-pg-on);
+		}
+	}
+
+	.rfb-pg-text {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+
+		.rfb-pg-name {
+			color: var(--rfb-pg-on);
+			font-size: 17px;
+			font-weight: 700;
+		}
+
+		.rfb-pg-next {
+			font-size: 14px;
+		}
+	}
+
+	// 7. Arrows.
+	.rfb-pg-chevrons {
+		display: flex;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		border-radius: var(--rfb-radius);
+		list-style: none;
+
+		li {
+			display: flex;
+			flex: 1 1 0;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			min-width: 0;
+			margin: 0 0 0 -8px;
+			padding: 10px 14px 10px 22px;
+			background: var(--rfb-pg-off);
+			color: var(--rfb-muted);
+			font-size: 13px;
+			font-weight: 700;
+			clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);
+
+			&:first-child {
+				margin-left: 0;
+				padding-left: 14px;
+				clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+			}
+		}
+
+		li.is-current {
+			background: color-mix(in srgb, var(--rfb-pg-on) 28%, #fff);
+			color: var(--rfb-pg-on);
+		}
+
+		li.is-done {
+			background: var(--rfb-pg-on);
+			color: #fff;
+
+			.rfb-pg-check {
+				display: inline-flex;
+			}
+		}
+
+		.rfb-pg-name {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	.rfb-step-count {
+		margin: 0 0 4px;
+		color: var(--rfb-muted);
+		font-size: 13px;
+		font-weight: 600;
+	}
+
+	// Steps in a sidebar: the list on the left, the step and its buttons on the right.
+	.rfb-steps.rfb-layout-sidebar {
+		display: grid;
+		grid-template-columns: var(--rfb-side-w, 280px) minmax(0, 1fr);
+		column-gap: 32px;
+		align-items: start;
+
+		> :not(.rfb-steps-side) {
+			grid-column: 2;
+		}
+	}
+
+	.rfb-steps-side {
+		grid-row: 1 / span 99;
+		align-self: stretch;
+		padding: 24px 18px;
+		border-radius: calc(var(--rfb-radius) + 6px);
+		background: var(--rfb-side-bg, color-mix(in srgb, var(--rfb-ink) 4%, #fff));
+
+		.rfb-side-heading {
+			margin: 0 0 20px 8px;
+			color: var(--rfb-pg-text, var(--rfb-ink));
+			font-size: 22px;
+			font-weight: 700;
+			line-height: 1.25;
+		}
+
+		ol {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		li {
+			position: relative;
+			margin: 0;
+			padding-bottom: 14px;
+		}
+
+		// The line down to the next step.
+		li:not(:last-child)::after {
+			content: "";
+			position: absolute;
+			top: 44px;
+			bottom: 4px;
+			left: 23px;
+			width: 2px;
+			background: color-mix(in srgb, var(--rfb-ink) 14%, transparent);
+		}
+
+		li.is-done:not(:last-child)::after {
+			background: var(--rfb-pg-active, var(--rfb-primary));
+		}
+	}
+
+	.rfb-side-step {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		width: 100%;
+		padding: 8px;
+		border: 0;
+		border-radius: var(--rfb-radius);
+		background: transparent;
+		color: var(--rfb-muted);
+		cursor: pointer;
+		font: inherit;
+		text-align: left;
+
+		&:disabled {
+			cursor: default;
+			opacity: 0.6;
+		}
+
+		&:hover:not(:disabled),
+		&:focus-visible {
+			background: color-mix(in srgb, var(--rfb-ink) 6%, transparent);
+			outline: 0;
+		}
+
+		.rfb-side-num {
+			display: inline-flex;
+			flex: none;
+			align-items: center;
+			justify-content: center;
+			width: 30px;
+			height: 30px;
+			border: 2px solid currentColor;
+			border-radius: 50%;
+			font-size: 13px;
+			font-weight: 700;
+		}
+
+		.rfb-side-text {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			padding-top: 4px;
+
+			strong {
+				font-size: 15px;
+			}
+
+			span {
+				font-size: 13px;
+				line-height: 1.4;
+			}
+		}
+	}
+
+	.rfb-steps-side li.is-current .rfb-side-step {
+		background: var(--rfb-form-bg, #fff);
+		box-shadow: 0 1px 4px rgba(16, 24, 40, 0.08);
+		color: var(--rfb-pg-text, var(--rfb-ink));
+
+		.rfb-side-num {
+			border-color: var(--rfb-pg-active, var(--rfb-primary));
+			background: var(--rfb-pg-active, var(--rfb-primary));
+			color: #fff;
+		}
+	}
+
+	.rfb-steps-side li.is-visited .rfb-side-step {
+		color: var(--rfb-pg-text, var(--rfb-ink));
+	}
+
+	.rfb-steps-side li.is-done .rfb-side-step {
+		color: var(--rfb-pg-text, var(--rfb-ink));
+
+		.rfb-side-num {
+			border-color: var(--rfb-pg-active, var(--rfb-primary));
+			color: var(--rfb-pg-active, var(--rfb-primary));
+		}
+
+		.rfb-pg-num {
+			display: none;
+		}
+
+		.rfb-pg-check {
+			display: inline-flex;
+		}
+	}
+
+	// On a phone the sidebar becomes a row of numbers above the step.
+	@media (max-width: 767px) {
+		.rfb-steps.rfb-layout-sidebar {
+			display: block;
+		}
+
+		.rfb-steps-side {
+			margin-bottom: 20px;
+			padding: 12px;
+
+			.rfb-side-heading {
+				margin: 0 0 10px;
+				font-size: 18px;
+			}
+
+			ol {
+				display: flex;
+				gap: 6px;
+				overflow-x: auto;
+			}
+
+			li {
+				flex: none;
+				padding: 0;
+
+				&::after {
+					display: none;
+				}
+			}
+
+			.rfb-side-text span {
+				display: none;
+			}
+		}
+	}
+
+	// Accordion: each step under a header with its status; the open one shows its fields and buttons.
+	.rfb-steps.rfb-layout-accordion {
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, var(--rfb-ink) 10%, transparent);
+		border-radius: calc(var(--rfb-radius) + 6px);
+		background: var(--rfb-form-bg, #fff);
+
+		.rfb-step {
+			padding: 4px 24px 24px 84px;
+		}
+
+		.rfb-step-head {
+			display: none;
+		}
+
+		.rfb-acc-step + .rfb-step,
+		.rfb-step + .rfb-acc-step,
+		.rfb-acc-step + .rfb-acc-step {
+			border-top: 1px solid color-mix(in srgb, var(--rfb-ink) 8%, transparent);
+		}
+
+		.rfb-acc-step + .rfb-step {
+			border-top: 0;
+		}
+	}
+
+	.rfb-acc-step {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		width: 100%;
+		padding: 22px 24px;
+		border: 0;
+		background: transparent;
+		color: var(--rfb-pg-text, var(--rfb-ink));
+		cursor: pointer;
+		font: inherit;
+		text-align: left;
+
+		&:disabled {
+			cursor: default;
+		}
+
+		&.is-todo {
+			opacity: 0.45;
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--rfb-focus, var(--rfb-primary));
+			outline-offset: -2px;
+		}
+	}
+
+	.rfb-acc-step-icon {
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		color: var(--rfb-pg-active, var(--rfb-primary));
+		font-size: 34px;
+
+		svg {
+			width: 1em;
+			height: 1em;
+		}
+
+		&.is-number {
+			border: 2px solid currentColor;
+			border-radius: 50%;
+			font-size: 16px;
+			font-weight: 700;
+		}
+	}
+
+	.rfb-acc-step-main {
+		display: flex;
+		flex: 1 1 auto;
+		flex-direction: column;
+		gap: 3px;
+		min-width: 0;
+	}
+
+	.rfb-acc-step-title {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px 14px;
+
+		strong {
+			font-size: 17px;
+		}
+	}
+
+	.rfb-acc-status {
+		font-size: 13px;
+		font-style: normal;
+		font-weight: 700;
+	}
+
+	.rfb-acc-step.is-done .rfb-acc-status {
+		color: var(--rfb-acc-done, #12b886);
+	}
+
+	.rfb-acc-step.is-now .rfb-acc-status {
+		color: var(--rfb-acc-now, #e8a500);
+	}
+
+	.rfb-acc-step-desc {
+		color: var(--rfb-muted);
+		font-size: 14px;
+	}
+
+	.rfb-acc-step-side {
+		display: flex;
+		flex: none;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 2px;
+		text-align: right;
+
+		span {
+			color: var(--rfb-muted);
+			font-size: 13px;
+		}
+	}
+
+	.rfb-acc-chev {
+		flex: none;
+		width: 10px;
+		height: 10px;
+		border-right: 2px solid color-mix(in srgb, var(--rfb-ink) 35%, transparent);
+		border-bottom: 2px solid color-mix(in srgb, var(--rfb-ink) 35%, transparent);
+		transform: rotate(-45deg);
+		transition: transform 0.2s;
+	}
+
+	.rfb-acc-step[aria-expanded="true"] .rfb-acc-chev {
+		transform: rotate(45deg);
+	}
+
+	@media (max-width: 767px) {
+		.rfb-steps.rfb-layout-accordion .rfb-step {
+			padding: 4px 16px 20px;
+		}
+
+		.rfb-acc-step {
+			gap: 12px;
+			padding: 16px;
+		}
+
+		.rfb-acc-step-side {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rfb-pg-knob,
+		.rfb-pg-ring-fill,
+		.rfb-pg-segments li,
+		.rfb-acc-chev {
+			transition: none;
+		}
+	}
+
 	// ---- actions row and label layouts chosen in the Style tab
 	.rfb-actions {
 		display: flex;
