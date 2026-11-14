@@ -107,6 +107,14 @@ ControlBaseView = Marionette.CompositeView.extend( {
 
 		this.listenTo( settings, 'change', this.onAfterChange );
 
+		// A repeater field can depend on a setting of its widget: a condition on "@name" reads the widget's "name" (see
+		// rowValues()), so it is checked again when the widget's settings change.
+		const owner = this.getOwnerSettings();
+
+		if ( owner && this.hasOwnerCondition() ) {
+			this.listenTo( owner, 'change', this.onAfterChange );
+		}
+
 		if ( this.model.attributes.responsive ) {
 			this.onDeviceModeChange = this.onDeviceModeChange.bind( this );
 
@@ -126,11 +134,63 @@ ControlBaseView = Marionette.CompositeView.extend( {
 		this.toggleControlVisibility();
 	},
 
+	/**
+	 * The settings of the widget a repeater row belongs to, or null outside a repeater row.
+	 *
+	 * @return {Backbone.Model|null} The widget's settings.
+	 */
+	getOwnerSettings() {
+		let container = this.container;
+
+		if ( ! container || 'repeater' !== container.type ) {
+			return null;
+		}
+
+		while ( container && 'repeater' === container.type ) {
+			container = container.parent;
+		}
+
+		// The repeater's own holder sits between the row and the widget.
+		while ( container && ! container.settings?.controls ) {
+			container = container.parent;
+		}
+
+		return container ? container.settings : null;
+	},
+
+	hasOwnerCondition() {
+		const condition = this.model.get( 'condition' ) || {};
+
+		return Object.keys( condition ).some( ( name ) => name.startsWith( '@' ) );
+	},
+
+	/**
+	 * A repeater row's values, plus its widget's settings under "@name" when a condition asks for them.
+	 *
+	 * @param {Backbone.Model} settings - The row's settings.
+	 * @return {Object} The values to check the conditions against.
+	 */
+	rowValues( settings ) {
+		const owner = this.hasOwnerCondition() ? this.getOwnerSettings() : null;
+
+		if ( ! owner ) {
+			return settings.attributes;
+		}
+
+		const values = { ...settings.attributes };
+
+		Object.entries( owner.attributes ).forEach( ( [ name, value ] ) => {
+			values[ '@' + name ] = value;
+		} );
+
+		return values;
+	},
+
 	toggleControlVisibility() {
 		// TODO: this.elementSettingsModel is deprecated since 2.8.0.
 		const settings = this.container ? this.container.settings : this.elementSettingsModel;
 
-		var isVisible = refraction.helpers.isActiveControl( this.model, settings.attributes, settings.controls );
+		var isVisible = refraction.helpers.isActiveControl( this.model, this.rowValues( settings ), settings.controls );
 
 		this.$el.toggleClass( 'refraction-hidden-control', ! isVisible );
 

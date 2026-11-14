@@ -177,6 +177,8 @@ class Shortcodes {
 		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'], 'money' => $settings ];
 		$i18n = [
 			'required' => __( 'This field is required.', 'refraction' ),
+			'countrySearch' => __( 'Search countries', 'refraction' ),
+			'countryNone' => __( 'No country matches.', 'refraction' ),
 			'tooBig' => __( '%s is larger than the allowed size.', 'refraction' ),
 			'badType' => __( '%s is not an allowed file type.', 'refraction' ),
 			'tooMany' => __( 'You can choose at most %d files.', 'refraction' ),

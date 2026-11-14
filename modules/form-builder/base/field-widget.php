@@ -99,6 +99,7 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 		$this->register_field_extra_controls();
 
 		if ( $this->has( 'limits' ) ) {
+			$this->add_control( 'limits_heading', [ 'label' => esc_html__( 'Limits', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
 			$this->add_control( 'field_min', [ 'label' => esc_html__( 'Lowest', 'refraction' ), 'type' => Controls_Manager::NUMBER ] );
 			$this->add_control( 'field_max', [ 'label' => esc_html__( 'Highest', 'refraction' ), 'type' => Controls_Manager::NUMBER ] );
 		}
@@ -210,14 +211,34 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 		$type = $this->field_type();
 
 		if ( in_array( $type, Schema::ICON_TYPES, true ) ) {
-			$this->add_control( 'field_icon', [
-				'label' => esc_html__( 'Icon in the box', 'refraction' ),
+			$descriptions = [
+				'number' => esc_html__( 'Shown at the left of the box (not with the minus and plus buttons).', 'refraction' ),
+				'country' => esc_html__( 'Shown while no country is chosen ("Select a country..."); then the country\'s flag takes its place when Show the flag is on.', 'refraction' ),
+				'currency' => esc_html__( 'Shown at the left of the box, for example a currency icon.', 'refraction' ),
+			];
+			$icon = [
 				'type' => Controls_Manager::ICONS,
 				'skin' => 'inline',
 				'label_block' => false,
 				'exclude_inline_options' => [ 'svg' ],
+			];
+			$this->add_control( 'field_icon_heading', [ 'label' => esc_html__( 'In the box', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+			$this->add_control( 'field_icon', $icon + [
+				'label' => 'name' === $type ? esc_html__( 'Icon in the First Name box', 'refraction' ) : esc_html__( 'Icon in the box', 'refraction' ),
 				'separator' => 'before',
-				'description' => 'number' === $type ? esc_html__( 'Shown at the left of the box (not with the minus and plus buttons).', 'refraction' ) : esc_html__( 'Shown at the left of the box.', 'refraction' ),
+				'description' => $descriptions[ $type ] ?? esc_html__( 'Shown at the left of the box.', 'refraction' ),
+			] );
+
+			if ( 'name' === $type ) {
+				$this->add_control( 'field_icon_last', $icon + [ 'label' => esc_html__( 'Icon in the Last Name box', 'refraction' ) ] );
+			}
+		}
+
+		if ( 'currency' === $type ) {
+			$this->add_control( 'currency_symbol', [
+				'label' => esc_html__( 'Currency symbol beside the box', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'description' => esc_html__( 'The form\'s currency symbol (Form settings > Currency) next to the box. Off: use an icon in the box instead, or nothing.', 'refraction' ),
 			] );
 		}
 
@@ -306,15 +327,34 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'condition' => [ 'choice_look' => [ 'tiles', 'cards', 'images' ] ],
 		] );
 
+		// Each row's parts follow the Look ("@choice_look" is the widget's own Look, see controls/base.js).
 		$details = new Repeater();
 		$details->add_control( 'choice', [
 			'label' => esc_html__( 'Choice', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
-			'description' => esc_html__( 'The choice as written in Choices (its label or its value).', 'refraction' ),
+			'placeholder' => esc_html__( 'By order', 'refraction' ),
+			'description' => esc_html__( 'Its label or value from Choices. Empty: the rows follow the order of the choices (the first row is the first choice).', 'refraction' ),
 		] );
-		$details->add_control( 'icon', [ 'label' => esc_html__( 'Icon', 'refraction' ), 'type' => Controls_Manager::ICONS, 'skin' => 'inline', 'label_block' => false, 'exclude_inline_options' => [ 'svg' ] ] );
-		$details->add_control( 'image', [ 'label' => esc_html__( 'Picture', 'refraction' ), 'type' => Controls_Manager::MEDIA, 'description' => esc_html__( 'Shown by the Image cards look.', 'refraction' ) ] );
-		$details->add_control( 'text', [ 'label' => esc_html__( 'Line of text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Unlimited projects', 'refraction' ) ] );
+		$details->add_control( 'image', [
+			'label' => esc_html__( 'Picture', 'refraction' ),
+			'type' => Controls_Manager::MEDIA,
+			'condition' => [ '@choice_look' => 'images' ],
+		] );
+		$details->add_control( 'icon', [
+			'label' => esc_html__( 'Icon', 'refraction' ),
+			'type' => Controls_Manager::ICONS,
+			'skin' => 'inline',
+			'label_block' => false,
+			'exclude_inline_options' => [ 'svg' ],
+			'description' => esc_html__( 'Image cards show it when the choice has no picture.', 'refraction' ),
+			'condition' => [ '@choice_look' => [ 'segmented', 'pill', 'tiles', 'cards', 'images' ] ],
+		] );
+		$details->add_control( 'text', [
+			'label' => esc_html__( 'Line of text', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Unlimited projects', 'refraction' ),
+			'condition' => [ '@choice_look' => [ 'tiles', 'cards', 'images' ] ],
+		] );
 		$details->add_control( 'badge', [ 'label' => esc_html__( 'Badge', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Save 28%', 'refraction' ) ] );
 		$this->add_control( 'option_extras', [
 			'label' => esc_html__( 'Choice details', 'refraction' ),
@@ -322,8 +362,9 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'fields' => $details->get_controls(),
 			'default' => [],
 			'prevent_empty' => false,
-			'title_field' => '{{{ choice }}}',
-			'description' => esc_html__( 'Optional: a picture, an icon, a line of text and a badge for some choices.', 'refraction' ),
+			'title_field' => '{{{ choice || text || badge || "' . esc_js( __( 'Next choice', 'refraction' ) ) . '" }}}',
+			'description' => esc_html__( 'What this Look shows with each choice. Add one row per choice, in the same order.', 'refraction' ),
+			'condition' => [ 'choice_look!' => 'list' ],
 		] );
 	}
 
@@ -351,7 +392,15 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 		}
 
 		if ( in_array( $this->field_type(), Schema::ICON_TYPES, true ) ) {
-			$this->start_controls_section( 'section_style_field_icon', [ 'label' => esc_html__( 'Icon in the box', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => [ 'field_icon[value]!' => '' ] ] );
+			$this->start_controls_section( 'section_style_field_icon', [
+				'label' => esc_html__( 'Icon in the box', 'refraction' ),
+				'tab' => Controls_Manager::TAB_STYLE,
+				// The name field also has a Last Name icon; other fields only have the one.
+				'conditions' => [
+					'relation' => 'or',
+					'terms' => array_map( static fn( $control ) => [ 'name' => $control . '[value]', 'operator' => '!==', 'value' => '' ], 'name' === $this->field_type() ? [ 'field_icon', 'field_icon_last' ] : [ 'field_icon' ] ),
+				],
+			] );
 			$this->add_control( 'field_icon_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-color: {{VALUE}};' ] ] );
 			$this->add_control( 'field_icon_focus_color', [ 'label' => esc_html__( 'Color while typing', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-focus-color: {{VALUE}};' ] ] );
 			$this->add_responsive_control( 'field_icon_size', [ 'label' => esc_html__( 'Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 10, 'max' => 48 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-icon-size: {{SIZE}}px;' ] ] );
@@ -633,6 +682,8 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'stepper' => $yes( 'stepper' ),
 			'suggestions' => (string) ( $s['suggestions'] ?? '' ),
 			'icon' => $s['field_icon'] ?? null,
+			'icon_last' => $s['field_icon_last'] ?? null,
+			'currency_symbol' => $yes( 'currency_symbol' ),
 			'autogrow' => $yes( 'autogrow' ),
 			'phone_format' => (string) ( $s['phone_format'] ?? '' ),
 			'phone_pattern' => (string) ( $s['phone_pattern'] ?? '' ),

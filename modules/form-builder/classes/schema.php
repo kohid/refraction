@@ -30,7 +30,7 @@ class Schema {
 	const MARKER_POSITIONS = [ 'left', 'right', 'top-left', 'top-right', 'hidden' ];
 	const MARKER_LOOKS = [ 'radio', 'tick', 'none' ];
 	/** Fields that can show an icon at the left of their box (0.93.0). */
-	const ICON_TYPES = [ 'text', 'textarea', 'email', 'phone', 'url', 'number', 'date', 'time', 'datetime', 'select' ];
+	const ICON_TYPES = [ 'text', 'textarea', 'email', 'phone', 'url', 'number', 'date', 'time', 'datetime', 'select', 'country', 'currency', 'name' ];
 	/** Phone formats (0.93.0): as typed, or a pattern applied while typing (# is a digit). */
 	const PHONE_FORMATS = [ '', 'national', 'international' ];
 	const PHONE_PATTERNS = [ 'national' => '(###) ###-####', 'international' => '+## ### ### ####' ];
@@ -501,6 +501,9 @@ class Schema {
 			'suggestions' => 'text' === $type ? self::suggestions( $raw['suggestions'] ?? [] ) : [],
 			// Field extras (0.93.0): an icon in the box, a growing long text, a phone pattern, the country's flag.
 			'icon' => in_array( $type, self::ICON_TYPES, true ) ? self::option_icon( $raw['icon'] ?? null ) : null,
+			'icon_last' => 'name' === $type ? self::option_icon( $raw['icon_last'] ?? null ) : null,
+			// An amount shows the form's currency symbol beside its box only when asked (0.94.0); an icon can take its place.
+			'currency_symbol' => 'currency' === $type && ! empty( $raw['currency_symbol'] ),
 			'autogrow' => 'textarea' === $type && ! empty( $raw['autogrow'] ),
 			'phone_format' => 'phone' === $type && in_array( $raw['phone_format'] ?? '', self::PHONE_FORMATS, true ) ? (string) ( $raw['phone_format'] ?? '' ) : '',
 			'phone_pattern' => 'phone' === $type ? self::phone_pattern( (string) ( $raw['phone_format'] ?? '' ), (string) ( $raw['phone_pattern'] ?? '' ) ) : '',
@@ -615,14 +618,17 @@ class Schema {
 		}
 
 		$extras = [];
+		$position = -1;
 
 		foreach ( is_array( $raw ) ? $raw : [] as $key => $row ) {
 			if ( ! is_array( $row ) ) {
 				continue;
 			}
 
+			++$position;
 			$name = strtolower( self::text( (string) ( $row['choice'] ?? ( is_string( $key ) ? $key : '' ) ), 120 ) );
-			$value = $by_name[ $name ] ?? null;
+			// A row names its choice by label or value; otherwise (empty or not found) it is the choice in the same place.
+			$value = $by_name[ $name ] ?? ( $options[ $position ]['value'] ?? null );
 
 			if ( null === $value || isset( $extras[ $value ] ) ) {
 				continue;

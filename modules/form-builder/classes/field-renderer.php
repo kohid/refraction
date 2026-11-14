@@ -201,7 +201,7 @@ class Field_Renderer {
 		} else {
 			$value = null === $value ? $field['default'] : $value;
 			echo '<label class="' . esc_attr( $label_class ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			$icon = self::field_icon( $field );
+			$icon = in_array( $field['type'], [ 'country', 'currency' ], true ) ? '' : self::field_icon( $field );
 
 			// An icon at the left of the box (0.93.0): the box keeps its own markup, the icon sits over its padding.
 			if ( '' !== $icon ) {
@@ -255,12 +255,16 @@ class Field_Renderer {
 		if ( 'country' === $type ) {
 			$flag = ! empty( $field['country_flag'] );
 			$code = strtolower( (string) $value );
+			$icon = self::field_icon( $field );
+			$boxed = $flag || '' !== $icon;
 
-			if ( $flag ) {
-				// The chosen country's flag at the left of the box (bundled SVGs; the script swaps it when the country changes).
+			if ( $boxed ) {
+				// The chosen country's flag at the left of the box (bundled SVGs); before one is chosen, the field's icon. With
+				// the flag on, the script also turns the list into one with a flag beside each country (initCountry).
 				$flags = REFRACTION_ASSETS_URL . 'lib/flag-icons/4x3/';
-				$known = isset( Countries::all()[ strtoupper( $code ) ] );
-				echo '<div class="rfb-flag-box" data-rfb-flags="' . esc_url( $flags ) . '"><img class="rfb-flag" alt="" width="24" height="18" src="' . esc_url( $known ? $flags . $code . '.svg' : '' ) . '"' . ( $known ? '' : ' hidden' ) . '>';
+				$known = $flag && isset( Countries::all()[ strtoupper( $code ) ] );
+				echo '<div class="rfb-flag-box' . ( '' !== $icon ? ' has-icon' : '' ) . '"' . ( $flag ? ' data-rfb-flags="' . esc_url( $flags ) . '"' : '' ) . '>' . $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+				echo $flag ? '<img class="rfb-flag" alt="" width="24" height="18" src="' . esc_url( $known ? $flags . $code . '.svg' : '' ) . '"' . ( $known ? '' : ' hidden' ) . '>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '<select class="rfb-input" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" autocomplete="country"' . $required . $described_attr . '><option value="">' . esc_html( '' !== $field['placeholder'] ? $field['placeholder'] : __( 'Select a country...', 'refraction' ) ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -269,7 +273,7 @@ class Field_Renderer {
 				echo '<option value="' . esc_attr( $iso ) . '"' . selected( strtoupper( (string) $value ), $iso, false ) . '>' . esc_html( $label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
-			echo '</select>' . ( $flag ? '</div>' : '' );
+			echo '</select>' . ( $boxed ? '</div>' : '' );
 			return;
 		}
 
@@ -332,19 +336,21 @@ class Field_Renderer {
 
 	/** The number a choice or card adds to a Total, as a data attribute (nothing when it has none). */
 	/** The icon at the left of a field's box (0.93.0); '' when it has none (a number with minus and plus has none). */
-	private static function field_icon( array $field ): string {
-		if ( empty( $field['icon'] ) || ( 'number' === $field['type'] && ! empty( $field['stepper'] ) ) ) {
+	private static function field_icon( array $field, string $key = 'icon' ): string {
+		$icon = $field[ $key ] ?? null;
+
+		if ( empty( $icon ) || ( 'number' === $field['type'] && ! empty( $field['stepper'] ) ) ) {
 			return '';
 		}
 
-		$html = (string) Icons_Manager::try_get_icon_html( $field['icon'], [ 'aria-hidden' => 'true' ] );
+		$html = (string) Icons_Manager::try_get_icon_html( $icon, [ 'aria-hidden' => 'true' ] );
 
 		if ( '' === $html ) {
 			return '';
 		}
 
-		if ( wp_style_is( 'refraction-icons-' . $field['icon']['library'], 'registered' ) ) {
-			wp_enqueue_style( 'refraction-icons-' . $field['icon']['library'] );
+		if ( wp_style_is( 'refraction-icons-' . $icon['library'], 'registered' ) ) {
+			wp_enqueue_style( 'refraction-icons-' . $icon['library'] );
 		}
 
 		return '<span class="rfb-field-icon" aria-hidden="true">' . $html . '</span>';
@@ -440,11 +446,15 @@ class Field_Renderer {
 		$cfg = Money::config( (array) ( $ctx['money'] ?? [] ) );
 		$text = '' === (string) $value || ! is_numeric( $value ) ? (string) $value : Money::format( $value, $cfg );
 		$per = Money::per_label( $field['per'], $field['per_label'] );
-		$symbol = '' !== $cfg['currency_symbol'] ? '<span class="rfb-amount-affix rfb-amount-symbol" aria-hidden="true">' . esc_html( $cfg['currency_symbol'] ) . '</span>' : '';
+		// The currency symbol beside the box only when the field asks for it (0.94.0); an icon in the box can take its place.
+		$symbol = ! empty( $field['currency_symbol'] ) && '' !== $cfg['currency_symbol'] ? '<span class="rfb-amount-affix rfb-amount-symbol" aria-hidden="true">' . esc_html( $cfg['currency_symbol'] ) . '</span>' : '';
+		$icon = self::field_icon( $field );
 		$limits = ( null !== $field['min'] ? ' data-rfb-min="' . esc_attr( (string) $field['min'] ) . '"' : '' ) . ( null !== $field['max'] ? ' data-rfb-max="' . esc_attr( (string) $field['max'] ) . '"' : '' );
 
 		echo '<div class="rfb-amount' . ( 'after' === $cfg['currency_position'] ? ' is-after' : '' ) . '">' . ( 'after' === $cfg['currency_position'] ? '' : $symbol ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
-		echo '<input class="rfb-input rfb-amount-input" type="text" inputmode="decimal" autocomplete="off" data-rfb-amount id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $text ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . $limits . $required . $described_attr . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '' !== $icon ? '<div class="rfb-icon-box rfb-amount-input">' . $icon : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		echo '<input class="rfb-input' . ( '' !== $icon ? '' : ' rfb-amount-input' ) . '" type="text" inputmode="decimal" autocomplete="off" data-rfb-amount id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $text ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '"' . $limits . $required . $described_attr . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '' !== $icon ? '</div>' : '';
 		echo 'after' === $cfg['currency_position'] ? $symbol : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
 		echo '' !== $per ? '<span class="rfb-amount-affix rfb-amount-per">' . esc_html( $per ) . '</span>' : '';
 		echo '</div>';
@@ -641,7 +651,10 @@ class Field_Renderer {
 
 			$part_id = $id . '-' . $part;
 			$needed = $field['required'] && in_array( $part, [ 'first', 'last' ], true ) ? ' required aria-required="true"' : '';
-			echo '<div class="rfb-name-part rfb-name-' . esc_attr( $part ) . '"><input class="rfb-input" type="text" id="' . esc_attr( $part_id ) . '" name="' . esc_attr( $name . '[' . $part . ']' ) . '" value="' . esc_attr( (string) ( $value[ $part ] ?? '' ) ) . '" autocomplete="' . esc_attr( $autocomplete[ $part ] ) . '"' . $needed . '><label class="rfb-sublabel" for="' . esc_attr( $part_id ) . '">' . esc_html( $labels[ $part ] ) . '</label></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			// First and last name can each have an icon in their box (0.94.0).
+			$icon = 'first' === $part ? self::field_icon( $field ) : ( 'last' === $part ? self::field_icon( $field, 'icon_last' ) : '' );
+			$input = '<input class="rfb-input" type="text" id="' . esc_attr( $part_id ) . '" name="' . esc_attr( $name . '[' . $part . ']' ) . '" value="' . esc_attr( (string) ( $value[ $part ] ?? '' ) ) . '" autocomplete="' . esc_attr( $autocomplete[ $part ] ) . '"' . $needed . '>';
+			echo '<div class="rfb-name-part rfb-name-' . esc_attr( $part ) . '">' . ( '' !== $icon ? '<div class="rfb-icon-box">' . $icon . $input . '</div>' : $input ) . '<label class="rfb-sublabel" for="' . esc_attr( $part_id ) . '">' . esc_html( $labels[ $part ] ) . '</label></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		echo '</div></fieldset>';

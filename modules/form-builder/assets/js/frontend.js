@@ -1182,20 +1182,208 @@
 		fit();
 	}
 
-	/** The country's flag at the left of the box (0.93.0) follows the chosen country. */
-	function initFlag( holder ) {
+	/**
+	 * The Country field with flags (0.93.0, list 0.94.0): the chosen country's flag at the left of the box, and the list
+	 * opens as one with a flag beside each country, with a search box (a native list can not show pictures). The real
+	 * select stays in the form, so sending, conditions and the summary read it as before.
+	 *
+	 * @param {HTMLElement} holder The .rfb-flag-box with data-rfb-flags.
+	 */
+	function initCountry( holder ) {
 		const select = holder.querySelector( 'select' );
 		const flag = holder.querySelector( '.rfb-flag' );
+		const base = holder.dataset.rfbFlags;
+		const doc = holder.ownerDocument;
+		const flagUrl = ( code ) => base + code.toLowerCase() + '.svg';
+		const placeholder = select.options[ 0 ] && '' === select.options[ 0 ].value ? select.options[ 0 ].textContent : '';
+		const uid = select.id + '-cp';
 
-		select.addEventListener( 'change', () => {
-			const code = ( select.value || '' ).toLowerCase();
+		const button = doc.createElement( 'button' );
+		button.type = 'button';
+		button.className = 'rfb-input rfb-cp-button';
+		button.setAttribute( 'aria-haspopup', 'listbox' );
+		button.setAttribute( 'aria-expanded', 'false' );
+		button.setAttribute( 'aria-controls', uid + '-pop' );
 
-			flag.hidden = ! /^[a-z]{2}$/.test( code );
+		// The field's label and description now speak for the button.
+		const label = select.id ? doc.querySelector( 'label[for="' + select.id + '"]' ) : null;
 
-			if ( ! flag.hidden ) {
-				flag.src = holder.dataset.rfbFlags + code + '.svg';
+		if ( label ) {
+			label.id = label.id || uid + '-label';
+			button.setAttribute( 'aria-labelledby', label.id + ' ' + uid + '-text' );
+			label.htmlFor = uid + '-button';
+		}
+
+		button.id = uid + '-button';
+		[ 'aria-describedby', 'aria-invalid' ].forEach( ( name ) => select.hasAttribute( name ) && button.setAttribute( name, select.getAttribute( name ) ) );
+		button.innerHTML = '<span class="rfb-cp-text" id="' + uid + '-text"></span>';
+
+		const pop = doc.createElement( 'div' );
+		pop.className = 'rfb-cp-pop';
+		pop.id = uid + '-pop';
+		pop.hidden = true;
+		pop.innerHTML = '<input type="text" class="rfb-input rfb-cp-search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="' + uid + '-list"><ul class="rfb-cp-list" role="listbox" id="' + uid + '-list"></ul><p class="rfb-cp-empty" hidden></p>';
+
+		const search = pop.querySelector( '.rfb-cp-search' );
+		const list = pop.querySelector( '.rfb-cp-list' );
+		const empty = pop.querySelector( '.rfb-cp-empty' );
+		const i18n = holder.closest( '[data-rfb-i18n]' ) ? JSON.parse( holder.closest( '[data-rfb-i18n]' ).dataset.rfbI18n ) : {};
+		search.setAttribute( 'aria-label', i18n.countrySearch || 'Search countries' );
+		search.placeholder = i18n.countrySearch || 'Search countries';
+		empty.textContent = i18n.countryNone || 'No country matches.';
+
+		Array.from( select.options ).filter( ( o ) => '' !== o.value ).forEach( ( o ) => {
+			const li = doc.createElement( 'li' );
+			li.className = 'rfb-cp-option';
+			li.id = uid + '-' + o.value;
+			li.setAttribute( 'role', 'option' );
+			li.dataset.value = o.value;
+			li.innerHTML = '<img alt="" loading="lazy" width="22" height="16" src="' + flagUrl( o.value ) + '"><span></span>';
+			li.querySelector( 'span' ).textContent = o.textContent;
+			list.appendChild( li );
+		} );
+
+		select.classList.add( 'rfb-cp-native' );
+		select.tabIndex = -1;
+		select.setAttribute( 'aria-hidden', 'true' );
+		select.after( button, pop );
+
+		const options = () => Array.from( list.children ).filter( ( li ) => ! li.hidden );
+		let active = null;
+
+		const setActive = ( li ) => {
+			list.querySelectorAll( '.is-active' ).forEach( ( el ) => el.classList.remove( 'is-active' ) );
+			active = li;
+
+			if ( li ) {
+				li.classList.add( 'is-active' );
+				search.setAttribute( 'aria-activedescendant', li.id );
+				li.scrollIntoView( { block: 'nearest' } );
+			} else {
+				search.removeAttribute( 'aria-activedescendant' );
+			}
+		};
+
+		const show = () => {
+			const code = select.value;
+			const known = /^[A-Z]{2}$/.test( code );
+
+			button.querySelector( '.rfb-cp-text' ).textContent = known ? select.options[ select.selectedIndex ].textContent : placeholder;
+			button.classList.toggle( 'is-empty', ! known );
+			list.querySelectorAll( '[aria-selected]' ).forEach( ( li ) => li.removeAttribute( 'aria-selected' ) );
+
+			if ( known && list.querySelector( '[data-value="' + code + '"]' ) ) {
+				list.querySelector( '[data-value="' + code + '"]' ).setAttribute( 'aria-selected', 'true' );
+			}
+
+			if ( flag ) {
+				flag.hidden = ! known;
+
+				if ( known ) {
+					flag.src = flagUrl( code );
+				}
+			}
+		};
+
+		const filter = () => {
+			const words = search.value.trim().toLowerCase();
+
+			Array.from( list.children ).forEach( ( li ) => {
+				li.hidden = '' !== words && ! li.textContent.toLowerCase().includes( words );
+			} );
+			empty.hidden = options().length > 0;
+			setActive( options()[ 0 ] || null );
+		};
+
+		const open = () => {
+			pop.hidden = false;
+			button.setAttribute( 'aria-expanded', 'true' );
+			search.value = '';
+			filter();
+			setActive( list.querySelector( '[aria-selected="true"]' ) || options()[ 0 ] || null );
+			search.focus();
+		};
+
+		const close = ( focusButton ) => {
+			if ( pop.hidden ) {
+				return;
+			}
+
+			pop.hidden = true;
+			button.setAttribute( 'aria-expanded', 'false' );
+
+			if ( focusButton ) {
+				button.focus();
+			}
+		};
+
+		const pick = ( li ) => {
+			if ( ! li ) {
+				return;
+			}
+
+			select.value = li.dataset.value;
+			select.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+			select.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+			close( true );
+		};
+
+		button.addEventListener( 'click', () => ( pop.hidden ? open() : close( true ) ) );
+		button.addEventListener( 'keydown', ( event ) => {
+			if ( [ 'ArrowDown', 'ArrowUp', 'Enter', ' ' ].includes( event.key ) ) {
+				event.preventDefault();
+				open();
 			}
 		} );
+		search.addEventListener( 'input', filter );
+		search.addEventListener( 'keydown', ( event ) => {
+			const all = options();
+			const at = all.indexOf( active );
+
+			if ( 'ArrowDown' === event.key || 'ArrowUp' === event.key ) {
+				event.preventDefault();
+				setActive( all[ Math.max( 0, Math.min( all.length - 1, at + ( 'ArrowDown' === event.key ? 1 : -1 ) ) ) ] || null );
+			} else if ( 'Enter' === event.key ) {
+				event.preventDefault();
+				pick( active );
+			} else if ( 'Escape' === event.key ) {
+				event.preventDefault();
+				close( true );
+			} else if ( 'Tab' === event.key ) {
+				close( false );
+			}
+		} );
+		list.addEventListener( 'click', ( event ) => pick( event.target.closest( '.rfb-cp-option' ) ) );
+		list.addEventListener( 'mousemove', ( event ) => {
+			const li = event.target.closest( '.rfb-cp-option' );
+
+			if ( li && li !== active ) {
+				setActive( li );
+			}
+		} );
+		doc.addEventListener( 'pointerdown', ( event ) => {
+			if ( ! holder.contains( event.target ) ) {
+				close( false );
+			}
+		} );
+		// A required country left empty: the browser's message points at the button.
+		select.addEventListener( 'invalid', () => button.focus() );
+		select.addEventListener( 'change', show );
+		show();
+	}
+
+	/**
+	 * What each field box adds by itself (0.93.0 / 0.94.0): phone patterns, growing long texts, the country list with
+	 * flags. Run for each form, and in the editor's preview for each field as it is drawn. Safe to run twice.
+	 *
+	 * @param {HTMLElement} root A form, or a field widget in the editor.
+	 */
+	function enhance( root ) {
+		const once = ( el ) => ! el.dataset.rfbEnhanced && ( el.dataset.rfbEnhanced = '1' );
+
+		root.querySelectorAll( 'input[data-rfb-phone]' ).forEach( ( el ) => once( el ) && initPhone( el ) );
+		root.querySelectorAll( 'textarea[data-rfb-autogrow]' ).forEach( ( el ) => once( el ) && initAutogrow( el ) );
+		root.querySelectorAll( '[data-rfb-flags]' ).forEach( ( el ) => once( el ) && initCountry( el ) );
 	}
 
 	/** Closed weekdays and opening hours of a date or time box (min, max and step are the browser's own). */
@@ -1292,9 +1480,7 @@
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( initTabs );
 		form.querySelectorAll( '.rfb-cards' ).forEach( initCards );
 		form.querySelectorAll( '[data-rfb-count]' ).forEach( initStepper );
-		form.querySelectorAll( 'input[data-rfb-phone]' ).forEach( initPhone );
-		form.querySelectorAll( 'textarea[data-rfb-autogrow]' ).forEach( initAutogrow );
-		form.querySelectorAll( '[data-rfb-flags]' ).forEach( initFlag );
+		enhance( form );
 		form.querySelectorAll( 'input[data-rfb-closed], input[data-rfb-hours]' ).forEach( ( input ) => initWhen( input, form ) );
 
 		const update = () => {
@@ -1328,7 +1514,25 @@
 		} );
 	}
 
-	const boot = () => document.querySelectorAll( '[data-rfb-form]' ).forEach( init );
+	const boot = () => {
+		document.querySelectorAll( '[data-rfb-form]' ).forEach( init );
+		// The editor's preview draws fields one widget at a time and outside a form: enhance each as it is drawn.
+		document.querySelectorAll( '.rfb-field' ).forEach( ( field ) => enhance( field ) );
+	};
+
+	const editorHooks = () => {
+		const hooks = window.refractionFrontend && window.refractionFrontend.hooks;
+
+		if ( hooks && window.refractionFrontend.isEditMode && window.refractionFrontend.isEditMode() ) {
+			hooks.addAction( 'frontend/element_ready/global', ( $scope ) => $scope[ 0 ] && enhance( $scope[ 0 ] ) );
+		}
+	};
+
+	if ( window.refractionFrontend && window.refractionFrontend.hooks ) {
+		editorHooks();
+	} else {
+		window.addEventListener( 'refraction/frontend/init', editorHooks );
+	}
 
 	// Optimisation plugins can load this script after the page is ready (deferred or delayed scripts).
 	if ( 'loading' === document.readyState ) {
