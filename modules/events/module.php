@@ -85,6 +85,8 @@ class Module extends BaseModule {
 			add_action( 'add_meta_boxes_' . self::CPT, [ $this, 'add_meta_box' ] );
 			add_action( 'save_post_' . self::CPT, [ $this, 'save_meta_box' ] );
 			add_filter( 'views_edit-' . self::CPT, [ $this, 'list_links' ] );
+			// "New event": a wizard first (0.106.0).
+			new Classes\Event_Wizard();
 			add_filter( 'manage_' . self::CPT . '_posts_columns', [ $this, 'columns' ] );
 			add_action( 'manage_' . self::CPT . '_posts_custom_column', [ $this, 'column' ], 10, 2 );
 			add_filter( 'manage_edit-' . self::CPT . '_sortable_columns', [ $this, 'sortable_columns' ] );
@@ -431,7 +433,7 @@ class Module extends BaseModule {
 
 	/** Above the events table: make a new event in the page editor, and the categories. */
 	public function list_links( array $views ): array {
-		$views['rfe_new'] = '<a class="button button-primary" href="' . esc_url( self::new_event_url() ) . '">' . esc_html__( 'New event in the editor', 'refraction' ) . '</a>';
+		$views['rfe_new'] = Classes\Event_Wizard::button();
 		$views['rfe_bookings'] = '<a href="' . esc_url( Bookings::admin_url() ) . '">' . esc_html__( 'Bookings', 'refraction' ) . '</a>';
 		$views['rfe_types'] = '<a href="' . esc_url( admin_url( 'admin.php?page=' . self::TYPES_SLUG ) ) . '">' . esc_html__( 'Event types and their forms', 'refraction' ) . '</a>';
 		$views['rfe_categories'] = '<a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::CPT ) ) . '">' . esc_html__( 'Categories and colors', 'refraction' ) . '</a>';

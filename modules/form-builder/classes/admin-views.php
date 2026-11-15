@@ -90,8 +90,13 @@ class Admin_Views {
 		}
 	}
 
-	private function button( string $label, string $href, string $style = 'primary', string $icon = '' ): string {
-		return '<a class="rfb-btn rfb-btn-' . esc_attr( $style ) . '" href="' . esc_url( $href ) . '">' . $this->icon( $icon, 18 ) . esc_html( $label ) . '</a>';
+	private function button( string $label, string $href, string $style = 'primary', string $icon = '', string $attrs = '' ): string {
+		return '<a class="rfb-btn rfb-btn-' . esc_attr( $style ) . '" href="' . esc_url( $href ) . '"' . $attrs . '>' . $this->icon( $icon, 18 ) . esc_html( $label ) . '</a>';
+	}
+
+	/** "New form": opens the wizard (0.106.0); without the script it goes to the editor as before. */
+	private function new_form_button(): string {
+		return $this->button( __( 'New form', 'refraction' ), Editor_Forms::new_url(), 'primary', 'add', Wizard::opener( Wizard::DIALOG ) );
 	}
 
 	/** A collection's form is a Form page in the page editor; one made before that has no form to edit. */
@@ -113,8 +118,18 @@ class Admin_Views {
 			__( 'Builder', 'refraction' ),
 			__( 'Design your own forms and tables for bookings, listings, orders or anything you keep records of.', 'refraction' ),
 			[],
-			$this->button( __( 'New form', 'refraction' ), Editor_Forms::new_url(), 'primary', 'add' )
+			$this->new_form_button()
 		);
+		Wizard::render_form_wizard();
+
+		// Just made by the wizard: say so, and offer its form in the editor and its records.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$created = isset( $_GET['created'] ) ? Schema::slug( wp_unslash( $_GET['created'] ) ) : '';
+		$new = '' !== $created ? $this->collections->get( $created ) : null;
+
+		if ( $new ) {
+			echo '<div class="rfb-card rf-created" role="status"><div class="rfb-card-body"><span class="rfb-symbol rfb-symbol-light-success">' . $this->icon( 'check-circle', 24 ) . '</span><div class="rf-created__text"><h2>' . esc_html( sprintf( /* translators: %s: form name. */ __( '"%s" is ready', 'refraction' ), $new['label'] ) ) . '</h2><p>' . esc_html__( 'It is in your collections below. Open it in the editor to arrange its fields and design, or put it on a page with its shortcode.', 'refraction' ) . '</p></div><div class="rfb-actions">' . $this->design_button( $created ) . $this->button( __( 'Open records', 'refraction' ), $this->url( [ 'view' => 'records', 'collection' => $created ] ), 'light' ) . '</div></div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		}
 
 		// Starters (0.90.0): a ready-made form to begin from.
 		echo '<div class="rfb-card rfb-starters"><div class="rfb-card-body"><h2 class="rfb-starters-title">' . esc_html__( 'Start from a ready-made form', 'refraction' ) . '</h2>';
@@ -126,7 +141,7 @@ class Admin_Views {
 		echo '</div></div>';
 
 		if ( ! $all ) {
-			echo '<div class="rfb-card rfb-empty"><div class="rfb-card-body">' . $this->icon( 'layers', 40 ) . '<h2>' . esc_html__( 'Create your first collection', 'refraction' ) . '</h2><p>' . esc_html__( 'A collection is a set of records with the fields you choose, a status workflow, an admin table, and optionally a public form or list. Build its form in the page editor: drop fields from the Form Builder category and lay them out like any page.', 'refraction' ) . '</p>' . $this->button( __( 'New form', 'refraction' ), Editor_Forms::new_url(), 'primary', 'add' ) . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<div class="rfb-card rfb-empty"><div class="rfb-card-body">' . $this->icon( 'layers', 40 ) . '<h2>' . esc_html__( 'Create your first collection', 'refraction' ) . '</h2><p>' . esc_html__( 'A collection is a set of records with the fields you choose, a status workflow, an admin table, and optionally a public form or list. Build its form in the page editor: drop fields from the Form Builder category and lay them out like any page.', 'refraction' ) . '</p>' . $this->new_form_button() . '</div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$this->close();
 			return;
 		}
@@ -135,7 +150,7 @@ class Admin_Views {
 
 		foreach ( $all as $slug => $definition ) {
 			$counts = $this->records->counts( $definition );
-			echo '<div class="rfb-card rfb-collection"><div class="rfb-card-body">';
+			echo '<div class="rfb-card rfb-collection' . ( $slug === ( $new['slug'] ?? '' ) ? ' is-new' : '' ) . '" data-collection="' . esc_attr( $slug ) . '"><div class="rfb-card-body">';
 			echo '<div class="rfb-collection-head"><span class="rfb-symbol rfb-symbol-light-primary">' . $this->icon( $definition['icon'], 24 ) . '</span><div><h2><a href="' . esc_url( $this->url( [ 'view' => 'records', 'collection' => $slug ] ) ) . '">' . esc_html( $definition['label'] ) . '</a></h2>';
 			echo '<p>' . esc_html( $definition['description'] ) . '</p></div></div>';
 			echo '<div class="rfb-stat"><strong>' . esc_html( number_format_i18n( $counts['all'] ) ) . '</strong><span>' . esc_html__( 'records', 'refraction' ) . '</span></div>';

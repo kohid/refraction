@@ -114,6 +114,16 @@ const unlabelled = ( page ) => page.evaluate( () => Array.from( document.querySe
 	.filter( ( el ) => ! ( el.labels && el.labels.length ) && ! el.getAttribute( 'aria-label' ) && ! el.getAttribute( 'aria-labelledby' ) )
 	.map( ( el ) => `${ el.tagName }[name=${ el.name }]` ) );
 
+// Date and time boxes use the calendar picker (0.95.0): the value goes through it ('' clears it).
+const pickValue = ( pg, selector, value ) => pg.evaluate( ( [ sel, v ] ) => {
+	const input = document.querySelector( sel );
+	if ( input && input._flatpickr ) {
+		if ( v ) { input._flatpickr.setDate( v, true, /^\d{2}:\d{2}$/.test( v ) ? 'H:i' : 'Y-m-d' ); } else { input._flatpickr.clear(); }
+	} else if ( input ) {
+		input.value = v;
+	}
+}, [ selector, value ] );
+
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) { throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` ); }
 	mkdirSync( SHOTS, { recursive: true } );
@@ -187,8 +197,8 @@ async function main() {
 		await page.screenshot( { path: join( SHOTS, 'record-errors.png' ), fullPage: true } );
 		await page.fill( '#rfb-values-email', 'ada@example.com' );
 		await page.selectOption( '#rfb-values-service', 'Consultation' );
-		await page.fill( '#rfb-values-date', '2026-12-24' );
-		await page.fill( '#rfb-values-time', '14:30' );
+		await pickValue( page, '#rfb-values-date', '2026-12-24' );
+		await pickValue( page, '#rfb-values-time', '14:30' );
 		await page.fill( '#rfb-values-budget', '1500.5' );
 		await page.selectOption( '#rfb-status', 'confirmed' );
 		await Promise.all( [ page.waitForURL( /done=record-saved/ ), page.click( '.rfb-card-footer button[type=submit]' ) ] );
@@ -273,8 +283,8 @@ async function main() {
 			await visitor.fill( '#rfb-values-guest_name', values.name ?? '' );
 			await visitor.fill( '#rfb-values-email', values.email ?? '' );
 			if ( values.service ) { await visitor.selectOption( '#rfb-values-service', values.service ); }
-			await visitor.fill( '#rfb-values-date', values.date ?? '' );
-			await visitor.fill( '#rfb-values-time', values.time ?? '' );
+			await pickValue( visitor, '#rfb-values-date', values.date ?? '' );
+			await pickValue( visitor, '#rfb-values-time', values.time ?? '' );
 			if ( opts.honeypot ) { await visitor.evaluate( ( v ) => ( document.querySelector( 'input[name=rfb_website]' ).value = v ), opts.honeypot ); }
 			// `native` skips the page script's own checks so the server's validation is what gets tested.
 			await Promise.all( [ visitor.waitForNavigation(), opts.native ? visitor.evaluate( () => HTMLFormElement.prototype.submit.call( document.querySelector( '.rfb-form' ) ) ) : visitor.click( '.rfb-form button[type=submit]' ) ] );

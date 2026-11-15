@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.105.0
+Stable tag: 0.106.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.106.0 =
+* Form Builder: "New form" opens a wizard first: name it and say what it is for, choose its type (contact messages, bookings and appointments, orders and requests, sign-ups, surveys, a blank form, or a ready-made form), its options (one page or in steps, visitors can send it, email me each entry) and take a last look. The form is made with fitting fields, statuses and icon, added to your collections, and offered to edit in the editor.
+* Events: "New event" (and "Add New Event") opens a wizard: name and description, event type and categories (or a new one), when and where, then a draft or published. The event is added to the Events list, marked, with buttons to edit it in the editor, edit its details or view it.
 
 = 0.105.0 =
 * Form Builder and Event Builder: the Steps widget has its own Submit button, on the last step beside Back (Back, Next and Submit buttons > Submit): on by default, with its text (the form's when empty), type, size, icon, ID and the Button widget's Style settings, and it shows in Edit Mode. A Submit button widget placed anywhere in the form takes its place, so a form never gets two.

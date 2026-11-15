@@ -133,6 +133,8 @@ class Form_Document extends Library_Document {
 			'description' => esc_html__( 'The form title above is the name of the collection in Refraction > Builder.', 'refraction' ),
 		] );
 		$this->add_control( 'rfb_description', [ 'label' => esc_html__( 'Description', 'refraction' ), 'type' => Controls_Manager::TEXT ] );
+		// The collection's icon in Refraction > Builder, chosen by the new form wizard from the form's type (0.106.0).
+		$this->add_control( 'rfb_icon', [ 'type' => Controls_Manager::HIDDEN, 'default' => '' ] );
 		$this->add_control( 'rfb_success_message', [
 			'label' => esc_html__( 'Message after sending', 'refraction' ),
 			'type' => Controls_Manager::TEXTAREA,
@@ -326,6 +328,7 @@ class Form_Document extends Library_Document {
 			],
 			'singular' => $s['rfb_singular'] ?? '',
 			'description' => $s['rfb_description'] ?? '',
+		] + ( '' !== (string) ( $s['rfb_icon'] ?? '' ) ? [ 'icon' => (string) $s['rfb_icon'] ] : [] ) + [
 			'success_message' => $s['rfb_success_message'] ?? '',
 			'public_form' => $yes( $s['rfb_public_form'] ?? 'yes' ),
 			'public_list' => $yes( $s['rfb_public_list'] ?? '' ),
