@@ -98,3 +98,10 @@ mask layer, all intersected. The blob's grain uses the same texture, colour and 
 - `node scripts/check-organic-fx.mjs --site DIR --port N`: My Shapes upload/paste/refuse/rename/delete, masks (built-in
   and uploaded), blob, grain, floating shapes and words on desktop, phone counts with reduced motion, and the editor
   preview redrawing with an uploaded floating shape.
+
+## Global colours (0.104.0)
+
+Floating Shapes, Floating Text and Grain colours no longer turn the Global Colors link off: they have the globe like
+every colour. A colour linked to a global is saved as the link, not the value, so `global_colours_attribute()` prints
+the links as `data-rf-globals` (`{ setting: id }`) on the element, and `organic-fx.js` `withGlobalColours()` reads each
+value from the kit's `--e-global-color-<id>` (in the editor from the model's `__globals__`).

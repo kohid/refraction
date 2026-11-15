@@ -84,10 +84,12 @@ EditorView = ControlsStack.extend( {
 	},
 
 	/**
-	 * A long section is split by its headings ("Step Icon", "Progress Bar"...) into groups shown one at a time, with a
-	 * row of tabs under the section's title: General (the settings before the first heading) and one per heading.
-	 * Only sections with GROUP_MIN_CONTROLS or more top-level settings that make at least two groups; headings inside
-	 * inner tabs (Normal / Hover) or popovers do not split. The tab chosen is kept per element type and section.
+	 * A long section is split by its headings ("Step Icon", "Progress Bar"...) into groups: General (the settings
+	 * before the first heading) and one per heading. Since 0.104.0 they are an accordion: each group has a header row
+	 * in place, one group is open at a time (clicking the open one closes it), so the only tabs left in the panel are
+	 * the state tabs (Normal / Hover / Active...). Only sections with GROUP_MIN_CONTROLS or more top-level settings that
+	 * make at least two groups; headings inside inner tabs or popovers do not split. The group open is kept per element
+	 * type and section.
 	 */
 	groupSection() {
 		const $container = this.$childViewContainer || this.$el;
@@ -121,29 +123,30 @@ EditorView = ControlsStack.extend( {
 		}
 
 		const key = this.getNamespaceArray().join( ':' ) + '|' + this.activeSection;
-		const active = Math.min( shownGroups.get( key ) || 0, used.length - 1 );
-		const sectionView = this.children.find( ( view ) => this.activeSection === view.model.get( 'name' ) );
-		const $tabs = jQuery( '<div>', { class: 'rf-section-groups', role: 'tablist', 'aria-label': __( 'Groups of settings', 'refraction' ) } );
+		const stored = shownGroups.has( key ) ? shownGroups.get( key ) : 0;
+		const active = stored < 0 ? -1 : Math.min( stored, used.length - 1 );
 
 		used.forEach( ( group, index ) => {
-			jQuery( '<button>', { type: 'button', class: 'rf-section-groups__tab', role: 'tab', 'aria-selected': index === active ? 'true' : 'false', text: group.label } )
-				.toggleClass( 'is-active', index === active )
+			const open = index === active;
+			const $head = jQuery( '<div>', { class: 'rf-section-groups rf-acc' + ( open ? ' is-open' : '' ) } );
+
+			jQuery( '<button>', { type: 'button', class: 'rf-section-groups__tab rf-acc__head', 'aria-expanded': open ? 'true' : 'false' } )
+				.toggleClass( 'is-active', open )
+				.append( jQuery( '<span>', { class: 'rf-acc__label', text: group.label } ), jQuery( '<i>', { class: 'rf-acc__chevron', 'aria-hidden': 'true' } ) )
 				.on( 'click', () => {
-					shownGroups.set( key, index );
+					shownGroups.set( key, open ? -1 : index );
 					this.groupSection();
 				} )
-				.appendTo( $tabs );
+				.appendTo( $head );
+
+			group.views[ 0 ].$el.before( $head );
 
 			group.views.forEach( ( view ) => {
-				view.$el.toggleClass( 'rf-group-off', index !== active );
-				// The tab names the group: its heading is not repeated under it.
+				view.$el.toggleClass( 'rf-group-off', ! open );
+				// The header names the group: its heading is not repeated under it.
 				view.$el.toggleClass( 'rf-group-heading', view === group.heading );
 			} );
 		} );
-
-		if ( sectionView ) {
-			sectionView.$el.after( $tabs );
-		}
 
 		refraction.getPanelView().updateScrollbar();
 	},

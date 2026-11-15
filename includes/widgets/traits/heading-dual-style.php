@@ -293,6 +293,12 @@ class Heading_Dual_Style {
 			'condition' => $words,
 		] );
 
+		// Grouped like the shared section (Text, Mark Behind) plus Drawing: one accordion group each in the panel.
+		$category = static function ( string $name, string $label, array $condition ) use ( $el, $p ): void {
+			$el->add_control( $p . $name, [ 'label' => $label, 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category', 'condition' => $condition ] );
+		};
+		$category( 'cat_text', esc_html__( 'Text', 'refraction' ), $own );
+
 		// The fill first, the mark after it: the mark's background shorthand then replaces what the fill left.
 		$el->add_control( $p . 'fill', [
 			'label' => esc_html__( 'Text Fill', 'refraction' ),
@@ -320,6 +326,7 @@ class Heading_Dual_Style {
 		// nearly done (--rf-dual-p near 1), as the shared rule's --rf-dual-rc does.
 		$band = 'linear-gradient(90deg, var(--rf-dual-c) calc(var(--rf-dual-p) * 100%), transparent 0)';
 		$cap = 'color-mix(in srgb, var(--rf-dual-c) clamp(0%, calc((var(--rf-dual-p) - 0.94) * 1667%), 100%), transparent)';
+		$category( 'cat_mark', esc_html__( 'Mark Behind', 'refraction' ), $colored );
 		$el->add_control( $p . 'mark', [
 			'label' => esc_html__( 'Mark Behind', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -331,7 +338,6 @@ class Heading_Dual_Style {
 				'block' => esc_html__( 'Background', 'refraction' ),
 			],
 			'default' => 'round',
-			'separator' => 'before',
 			'selectors_dictionary' => [
 				'none' => 'background: none; padding: 0;',
 				'round' => '--rf-dual-h: var(--rf-dual-mh, 0.46em); padding: 0 var(--rf-dual-mx, 0.1em); border-radius: 0; background: radial-gradient(circle closest-side, var(--rf-dual-c) 97%, transparent) left 0 bottom var(--rf-dual-mo, 0.1em) / var(--rf-dual-h) var(--rf-dual-h) no-repeat, radial-gradient(circle closest-side, ' . $cap . ' 97%, transparent) right 0 bottom var(--rf-dual-mo, 0.1em) / var(--rf-dual-h) var(--rf-dual-h) no-repeat, ' . $band . ' left calc(var(--rf-dual-h) / 2) bottom var(--rf-dual-mo, 0.1em) / calc(100% - var(--rf-dual-h)) var(--rf-dual-h) no-repeat;',
@@ -358,7 +364,8 @@ class Heading_Dual_Style {
 			] );
 		}
 		$el->add_responsive_control( $p . 'mark_radius', [ 'label' => esc_html__( 'Mark Corners', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'em', 'px' ], 'range' => [ 'em' => [ 'max' => 1, 'step' => 0.01 ], 'px' => [ 'max' => 30 ] ], 'selectors' => [ $sel => '--rf-dual-mr: {{SIZE}}{{UNIT}};' ], 'condition' => $colored + [ $p . 'mark' => 'block' ] ] );
-		$el->add_control( $p . 'draw_duration', [ 'label' => esc_html__( 'Drawing Time (ms)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 100, 'max' => 4000, 'step' => 50, 'placeholder' => '800', 'selectors' => [ $sel => '--rf-dual-dur: {{VALUE}}ms;' ], 'description' => esc_html__( 'Used when Draw When Scrolled Into View is on in Highlighted Text (All Parts).', 'refraction' ), 'condition' => $marked, 'separator' => 'before' ] );
+		$category( 'cat_draw', esc_html__( 'Drawing', 'refraction' ), $marked );
+		$el->add_control( $p . 'draw_duration', [ 'label' => esc_html__( 'Drawing Time (ms)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 100, 'max' => 4000, 'step' => 50, 'placeholder' => '800', 'selectors' => [ $sel => '--rf-dual-dur: {{VALUE}}ms;' ], 'description' => esc_html__( 'Used when Draw When Scrolled Into View is on in Highlighted Text (All Parts).', 'refraction' ), 'condition' => $marked ] );
 		$el->add_control( $p . 'draw_delay', [ 'label' => esc_html__( 'Drawing Delay (ms)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 4000, 'step' => 50, 'placeholder' => '150', 'selectors' => [ $sel => '--rf-dual-delay: {{VALUE}}ms;' ], 'condition' => $marked ] );
 
 		$el->end_controls_section();
