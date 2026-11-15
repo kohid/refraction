@@ -68,6 +68,7 @@ export const BASE_ENTRIES = {
 	'form-builder-admin': 'modules/form-builder/assets/js/admin.js',
 	'form-builder-frontend': 'modules/form-builder/assets/js/frontend.js',
 	'form-builder-editor': 'modules/form-builder/assets/js/editor/index.js',
+	'form-builder-wizard': 'modules/form-builder/assets/js/wizard.js',
 	'display-conditions-editor': 'modules/display-conditions/assets/js/editor.js',
 	'custom-css-editor': 'modules/custom-css/assets/js/editor.js',
 	'motion-effects-frontend': 'modules/motion-effects/assets/js/motion.js',

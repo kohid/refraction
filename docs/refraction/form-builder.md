@@ -148,6 +148,19 @@ step, and the Submit shows only there. It is printed only when the form has no o
 Event button), and `has_submit()` counts the Steps widget's Submit, so the form's plain default button is left out. In
 Edit Mode `previewSteps()` adds it to the last step. The Position setting places Back and Submit on that row too.
 
+## New form wizard (0.106.0)
+
+Refraction > Builder > **New form** opens a dialog in steps (`classes/wizard.php`, `assets/js/wizard.js`,
+`assets/scss/wizard.scss`): **Name it** (form name, required; what it is for), **Choose its type** (`Wizard::kinds()`:
+contact, booking, order, registration, survey, blank, each with its icon, record name, statuses and starting fields; or a
+ready-made form from `Starters`), **Options** (one page or in steps, which puts the fields in a Steps widget, their
+details first; accept submissions; email each entry and to whom), **Last look** (the answers as chosen). Create posts to
+`admin-post.php?action=refraction_fb_wizard`, which makes the Form page with `documents->create()` and saves its
+elements and settings (`rfb_icon`, a hidden page setting, becomes the collection's icon): the save makes the collection,
+and the Builder page opens with a "ready" card offering **Edit form** and **Open records**, its card in the list marked.
+Without the script the button still goes to the editor. The same dialog makes events (modules/events, `Event_Wizard`).
+Check: `node scripts/check-new-wizard.mjs --site DIR --port N`.
+
 ## Limits
 
 - Building a form needs the page editor (JavaScript). The public form works without it (all steps on one page, server validation).

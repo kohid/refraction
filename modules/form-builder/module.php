@@ -55,6 +55,7 @@ class Module extends BaseModule {
 		if ( is_admin() ) {
 			$this->get_admin_page();
 			new Classes\Starters();
+			new Classes\Wizard();
 		}
 
 		add_action( 'refraction/editor-one/menu/register', [ $this, 'register_menu' ] );

@@ -190,3 +190,13 @@ show the template and could not find the event's content area. `Locations_Manage
 page as it is in the editor's preview of the page itself when the winning template has no content widget
 (`theme-post-content`, `woo-product-content`; filter `refraction/theme_builder/content_widgets`). The site still uses the
 template.
+
+## New event wizard (0.106.0)
+
+Events > **New event** (and the list's **Add New Event**) opens a dialog in steps (`classes/event-wizard.php`, the
+Builder's wizard dialog): **Name it** (name, required; short description, the excerpt), **Type and category** (an event
+type or none; categories, and a new category made on the way), **When and where** (starts, required; ends; all day;
+venue), **Last look** (a draft or published, and the answers). Create posts to
+`admin-post.php?action=refraction_event_wizard`: the event is made with the starter page of a new event, its details
+(`Event_Data::save()`), categories and type, and the list opens with it marked and a notice offering **Edit in the
+editor**, **Edit the details** and **View** / **Preview**.

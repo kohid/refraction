@@ -97,6 +97,10 @@ class Admin_Page {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
 
+		if ( '' === $view ) {
+			Wizard::enqueue();
+		}
+
 		if ( 'records' === $view ) {
 			wp_enqueue_script( 'refraction-form-builder-admin', REFRACTION_ASSETS_URL . 'js/form-builder-admin' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
 			wp_set_script_translations( 'refraction-form-builder-admin', 'refraction' );
