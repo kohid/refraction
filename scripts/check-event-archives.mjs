@@ -162,8 +162,13 @@ async function main() {
 		const sp = staff.p;
 		await sp.goto( formPage.url );
 		await sp.fill( '[name="values[event_title]"]', 'Soul Dance' );
-		await sp.fill( '[name="values[event_start]"]', '2031-05-02T19:00' );
-		await sp.fill( '[name="values[event_end]"]', '2031-05-02T22:00' );
+		// Date and time boxes use the calendar picker (0.95.0): the value goes through it.
+		const pick = ( name, value ) => sp.evaluate( ( [ n, v ] ) => {
+			const input = document.querySelector( `[name="values[${ n }]"]` );
+			if ( input._flatpickr ) { input._flatpickr.setDate( v, true, 'Y-m-d\\TH:i' ); } else { input.value = v; }
+		}, [ name, value ] );
+		await pick( 'event_start', '2031-05-02T19:00' );
+		await pick( 'event_end', '2031-05-02T22:00' );
 		await sp.fill( '[name="values[event_venue]"]', 'Studio 5' );
 		await sp.fill( '[name="values[dress_code]"]', 'Smart casual' );
 		await sp.fill( '[name="values[event_payment_url]"]', 'https://example.com/pay' );

@@ -339,12 +339,14 @@ class Editor_Forms {
 	}
 
 	/** Does this element tree have its own Submit button? */
-	public static function has_submit( array $elements ): bool {
+	public static function has_submit( array $elements, bool $count_steps = true ): bool {
 		foreach ( $elements as $element ) {
-			// The Submit button widget, or a button widget set to submit (the event form's Event button).
-			$is_submit = 'rfb-submit' === ( $element['widgetType'] ?? '' ) || 'submit' === ( $element['settings']['button_kind'] ?? '' );
+			// The Submit button widget, or a button widget set to submit (the event form's Event button), or a Steps
+			// widget with its own Submit button (0.105.0, on unless switched off; $count_steps false leaves it out).
+			$is_submit = 'rfb-submit' === ( $element['widgetType'] ?? '' ) || 'submit' === ( $element['settings']['button_kind'] ?? '' )
+				|| ( $count_steps && self::STEPS === ( $element['widgetType'] ?? '' ) && 'yes' === ( $element['settings']['submit_show'] ?? 'yes' ) );
 
-			if ( $is_submit || ( ! empty( $element['elements'] ) && self::has_submit( (array) $element['elements'] ) ) ) {
+			if ( $is_submit || ( ! empty( $element['elements'] ) && self::has_submit( (array) $element['elements'], $count_steps ) ) ) {
 				return true;
 			}
 		}

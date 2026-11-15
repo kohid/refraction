@@ -137,6 +137,17 @@ Step icons (0.101.0): a step's `step_icon` takes the place of its number in the 
 the arrows (beside the title), the sidebar and the accordion (`buildProgress( style, titles, i18n, icons )`). The icon
 stays in the done state (the colour shows it is done), instead of the tick a number gives way to.
 
+## The Steps widget's own Submit button (0.105.0)
+
+Steps widget > **Back, Next and Submit buttons** > **Submit**: `submit_show` (on by default), `submit_text` (empty: the
+form settings' submit text), and the Button widget's settings through `Form_Buttons` (`submit_*`, Style > Submit
+button, on `.rfb-steps-submit.rfb-from-<id>`). The server prints it at the end of the last step (`.rfb-actions.rfb-steps-actions`),
+so the step script's existing rule for a Submit in the last step applies: Back joins it there, Next never shows on that
+step, and the Submit shows only there. It is printed only when the form has no other submit button
+(`Editor_Forms::has_submit( $elements, false )`: a Submit button widget, or a button set to submit like the event form's
+Event button), and `has_submit()` counts the Steps widget's Submit, so the form's plain default button is left out. In
+Edit Mode `previewSteps()` adds it to the last step. The Position setting places Back and Submit on that row too.
+
 ## Limits
 
 - Building a form needs the page editor (JavaScript). The public form works without it (all steps on one page, server validation).

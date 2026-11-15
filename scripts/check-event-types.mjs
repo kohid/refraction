@@ -86,6 +86,12 @@ function page( title, elements ) {
 }
 const wrap = ( id, widgets ) => [ { id: `c${ id }`, elType: 'container', isInner: false, settings: {}, elements: widgets } ];
 
+// Date and time boxes use the calendar picker (0.95.0): the value goes through it.
+const pickDate = ( pg, name, value ) => pg.evaluate( ( [ n, v ] ) => {
+	const input = document.querySelector( `[name="values[${ n }]"]` );
+	if ( input._flatpickr ) { input._flatpickr.setDate( v, true, 'Y-m-d\\TH:i' ); } else { input.value = v; }
+}, [ name, value ] );
+
 async function main() {
 	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) {
 		throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` );
@@ -199,8 +205,8 @@ async function main() {
 		const options = await sp.$$eval( 'select[name="values[event_category]"] option', ( o ) => o.map( ( x ) => x.textContent.trim() ) );
 		check( 'form', 'the category field offers every category, the one added later too', options.includes( 'Music' ) && options.includes( 'Late Category' ), options.join( '|' ) );
 		await sp.fill( '[name="values[event_title]"]', 'Clay Basics' );
-		await sp.fill( '[name="values[event_start]"]', '2031-03-14T10:00' );
-		await sp.fill( '[name="values[event_end]"]', '2031-03-14T13:30' );
+		await pickDate( sp, 'event_start', '2031-03-14T10:00' );
+		await pickDate( sp, 'event_end', '2031-03-14T13:30' );
 		await sp.selectOption( 'select[name="values[event_category]"]', String( later ) );
 		await sp.fill( '[name="values[event_venue]"]', 'Studio 5' );
 		await sp.fill( '[name="values[event_organizer]"]', 'Clay Club' );
@@ -287,7 +293,7 @@ async function main() {
 		const staff2 = await login( 'staffer', 'staffer' );
 		await staff2.p.goto( formPage.url );
 		await staff2.p.fill( '[name="values[event_title]"]', 'Glaze Night' );
-		await staff2.p.fill( '[name="values[event_start]"]', '2031-04-01T19:00' );
+		await pickDate( staff2.p, 'event_start', '2031-04-01T19:00' );
 		await Promise.all( [ staff2.p.waitForNavigation(), staff2.p.click( 'form[data-rfb-form] button.rfb-submit' ) ] );
 		const second = JSON.parse( php( `$p = get_posts( [ 'post_type' => 'refraction_event', 'title' => 'Glaze Night', 'post_status' => 'any', 'numberposts' => 1 ] ); $id = $p[0]->ID ?? 0; $d = json_decode( get_post_meta( $id, '_refraction_data', true ), true ); echo wp_json_encode( [ 'status' => get_post_status( $id ), 'texts' => array_map( fn( $e ) => $e['settings']['title'] ?? $e['widgetType'], $d[0]['elements'] ?? [] ), 'ids' => array_column( $d[0]['elements'] ?? [], 'id' ), 'bg' => $d[0]['settings']['background_color'] ?? '' ] );` ) );
 		check( 'design', 'the type\'s page design is copied (with ids of its own) and the status setting applies', 'pending' === second.status && '#FFEEDD' === second.bg && second.texts.includes( 'Designed page' ) && ! second.ids.includes( 'dz02' ), JSON.stringify( second ) );
