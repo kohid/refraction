@@ -134,11 +134,11 @@ async function main() {
 		} );
 		await page.waitForTimeout( 1000 );
 		const sections = await page.$$eval( '.refraction-section-title', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ) );
-		check( 'panel', 'the Steps widget has "Back and Next buttons"', sections.includes( 'Back and Next buttons' ), sections.join( '|' ) );
+		check( 'panel', 'the Steps widget has "Back, Next and Submit buttons" (Submit 0.105.0)', sections.includes( 'Back, Next and Submit buttons' ), sections.join( '|' ) );
 		await page.locator( '.refraction-control-section_step_buttons' ).click();
 		await page.waitForTimeout( 400 );
 		const groups = await page.$$eval( '.rf-section-groups__tab', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ) );
-		check( 'panel', 'it holds General, Back and Next, each button with a type and an icon like the Button widget (hover animation: Style tab)', groups.join( '|' ) === 'General|Back|Next' && await ( async () => { await page.locator( '.rf-section-groups__tab:visible', { hasText: 'Back' } ).first().click(); await page.waitForTimeout( 400 ); return ( await page.locator( '.refraction-control-back_button_type:visible, .refraction-control-back_icon:visible' ).count() ) === 2; } )(), groups.join( '|' ) );
+		check( 'panel', 'it holds General, Back, Next and Submit, each button with a type and an icon like the Button widget (hover animation: Style tab)', groups.join( '|' ) === 'General|Back|Next|Submit' && await ( async () => { await page.locator( '.rf-section-groups__tab:visible', { hasText: 'Back' } ).first().click(); await page.waitForTimeout( 400 ); return ( await page.locator( '.refraction-control-back_button_type:visible, .refraction-control-back_icon:visible' ).count() ) === 2; } )(), groups.join( '|' ) );
 
 		await page.evaluate( () => $e.run( 'document/save/publish' ) );
 		await page.waitForTimeout( 3500 );

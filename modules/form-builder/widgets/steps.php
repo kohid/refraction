@@ -10,6 +10,7 @@ use Refraction\Modules\FormBuilder\Classes\Form_Buttons;
 use Refraction\Modules\FormBuilder\Classes\Shortcodes;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
+use Refraction\Plugin;
 use Refraction\Repeater;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -93,6 +94,9 @@ class Steps extends Widget_Nested_Base {
 	 * the Style tab wins over the form's own button look and the theme's.
 	 */
 	private static function button( string $which ): string {
+		// The widget's own Submit carries rfb-steps-submit (0.105.0): a Submit button widget's rfb-submit is not it.
+		$which = 'submit' === $which ? 'steps-submit' : $which;
+
 		return '.rfb-btn.rfb-' . $which . '.rfb-' . $which . '.rfb-from-{{ID}}.rfb-from-{{ID}}.rfb-from-{{ID}}';
 	}
 
@@ -138,7 +142,7 @@ class Steps extends Widget_Nested_Base {
 		] );
 		$this->add_control( 'steps_hint', [
 			'type' => Controls_Manager::RAW_HTML,
-			'raw' => esc_html__( 'Drop the fields of each step into its box. Back and Next texts and the progress display are in the form settings (the cog). Put the Submit button in the last step.', 'refraction' ),
+			'raw' => esc_html__( 'Drop the fields of each step into its box. Back and Next texts and the progress display are in the form settings (the cog). The Submit button shows on the last step (Back, Next and Submit buttons); a Submit button widget placed in the form takes its place.', 'refraction' ),
 			'content_classes' => 'refraction-descriptor',
 		] );
 		$this->end_controls_section();
@@ -259,7 +263,7 @@ class Steps extends Widget_Nested_Base {
 
 		// Back and Next: icons and hover animations (0.97.0), then the rest of the Button widget's settings (0.99.0). The
 		// script builds them, wherever the form puts them: the Style tab reaches them by a class naming this widget.
-		$this->start_controls_section( 'section_step_buttons', [ 'label' => esc_html__( 'Back and Next buttons', 'refraction' ) ] );
+		$this->start_controls_section( 'section_step_buttons', [ 'label' => esc_html__( 'Back, Next and Submit buttons', 'refraction' ) ] );
 		$this->add_responsive_control( 'nav_align', [
 			'label' => esc_html__( 'Position', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
@@ -269,8 +273,8 @@ class Steps extends Widget_Nested_Base {
 				'flex-end' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
 				'space-between' => [ 'title' => esc_html__( 'Space between', 'refraction' ), 'icon' => 'rficon-h-align-stretch' ],
 			],
-			'description' => esc_html__( 'Where Back and Next sit in their row, when they have a row of their own.', 'refraction' ),
-			'selectors' => [ '{{WRAPPER}} .rfb-step-nav' => 'display: flex; flex-wrap: wrap; justify-content: {{VALUE}};' ],
+			'description' => esc_html__( 'Where the buttons sit in their row: Back and Next, and Back and Submit on the last step.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rfb-step-nav, {{WRAPPER}} .rfb-steps-actions' => 'display: flex; flex-wrap: wrap; justify-content: {{VALUE}};' ],
 		] );
 
 		foreach ( [ 'back' => [ esc_html__( 'Back', 'refraction' ), 'left' ], 'next' => [ esc_html__( 'Next', 'refraction' ), 'right' ] ] as $which => $spec ) {
@@ -283,6 +287,24 @@ class Steps extends Widget_Nested_Base {
 			] );
 			Form_Buttons::controls( $this, $which, self::button( $which ), [ 'position' => $spec[1] ] );
 		}
+
+		// The Steps widget's own Submit button (0.105.0), on the last step beside Back.
+		$this->add_control( 'submit_heading_text', [ 'label' => esc_html__( 'Submit', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+		$this->add_control( 'submit_show', [
+			'label' => esc_html__( 'Submit button on the last step', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'A Submit button widget placed anywhere in the form takes its place.', 'refraction' ),
+		] );
+		$submit_on = [ 'submit_show' => 'yes' ];
+		$this->add_control( 'submit_text', [
+			'label' => esc_html__( 'Text', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Submit', 'refraction' ),
+			'description' => esc_html__( 'Empty: the text in the form settings (the cog).', 'refraction' ),
+			'condition' => $submit_on,
+		] );
+		Form_Buttons::controls( $this, 'submit', self::button( 'submit' ), [ 'position' => 'right', 'condition' => $submit_on ] );
 
 		$this->end_controls_section();
 
@@ -318,6 +340,32 @@ class Steps extends Widget_Nested_Base {
 		$this->start_controls_section( 'section_style_next', [ 'label' => esc_html__( 'Next button', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
 		Form_Buttons::style_controls( $this, 'next', self::button( 'next' ) );
 		$this->end_controls_section();
+		$this->start_controls_section( 'section_style_submit', [ 'label' => esc_html__( 'Submit button', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => [ 'submit_show' => 'yes' ] ] );
+		Form_Buttons::style_controls( $this, 'submit', self::button( 'submit' ) );
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Whether this widget prints its own Submit button (0.105.0): switched on, and no other submit button in the form (a
+	 * Submit button widget, or a button set to submit like the event form's), so a form never gets two.
+	 */
+	private function has_own_submit( array $settings ): bool {
+		if ( 'yes' !== ( $settings['submit_show'] ?? 'yes' ) ) {
+			return false;
+		}
+
+		$document = Plugin::$instance->documents->get_current();
+		$elements = $document ? (array) $document->get_elements_data() : (array) $this->get_data( 'elements' );
+
+		return ! Editor_Forms::has_submit( $elements, false );
+	}
+
+	/** The form's own submit text (the cog), else "Submit". */
+	private static function form_submit_text(): string {
+		$document = Plugin::$instance->documents->get_current();
+		$text = $document ? trim( (string) $document->get_settings( 'rfb_submit_text' ) ) : '';
+
+		return '' !== $text ? $text : __( 'Submit', 'refraction' );
 	}
 
 	protected function render() {
@@ -354,6 +402,14 @@ class Steps extends Widget_Nested_Base {
 			$icon = ! empty( $step['step_icon']['value'] ) ? (string) Icons_Manager::try_get_icon_html( $step['step_icon'], [ 'aria-hidden' => 'true' ] ) : '';
 			echo '<section class="rfb-step" data-rfb-step data-rfb-title="' . esc_attr( $title ) . '" data-rfb-description="' . esc_attr( $description ) . '" data-rfb-icon="' . esc_attr( $icon ) . '"><div class="rfb-step-head rfb-t-step"><h3 class="rfb-step-title">' . esc_html( $title ) . '</h3>' . ( '' !== $description ? '<p class="rfb-description">' . esc_html( $description ) . '</p>' : '' ) . '</div>';
 			$this->print_child( $i );
+
+			// The Submit button in the last step: the script puts Back beside it there and shows it on that step only.
+			if ( count( $steps ) - 1 === $i && $this->has_own_submit( $settings ) ) {
+				$text = trim( (string) ( $settings['submit_text'] ?? '' ) );
+				$text = '' !== $text ? $text : self::form_submit_text();
+				echo '<div class="rfb-actions rfb-steps-actions"><button type="submit"' . Form_Buttons::id_attribute( $settings, 'submit' ) . ' class="rfb-btn rfb-btn-primary rfb-submit rfb-steps-submit rfb-from-' . esc_attr( $this->get_id() ) . esc_attr( Form_Buttons::classes( $settings, 'submit' ) ) . '">' . Form_Buttons::inner( $settings, 'submit', $text ) . '</button></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+			}
+
 			echo '</section>';
 		}
 
@@ -377,7 +433,7 @@ class Steps extends Widget_Nested_Base {
 		} );
 		var rfbLayout = _.contains( [ 'top', 'sidebar', 'accordion' ], settings.step_layout ) ? settings.step_layout : 'top';
 		var rfbButtons = '';
-		_.each( [ 'back', 'next' ], function( which ) {
+		_.each( [ 'back', 'next', 'submit' ], function( which ) {
 			var icon = rfbIcon( settings[ which + '_icon' ] );
 			var classes = [ 'rfb-from-' + view.getID() ];
 			if ( icon ) { classes.push( 'has-icon' ); }
@@ -391,7 +447,7 @@ class Steps extends Widget_Nested_Base {
 			rfbButtons += ' data-rfb-' + which + '-id="' + _.escape( settings[ which + '_css_id' ] || '' ) + '"';
 		} );
 		#>
-		<div class="rfb-steps rfb-steps-editor rfb-layout-{{ rfbLayout }}" data-rfb-steps-preview data-rfb-layout="{{ rfbLayout }}" data-rfb-progress-style="{{ 'accordion' === rfbLayout ? '' : ( settings.step_progress || '' ) }}"<# if ( 'yes' === settings.step_counter && 'accordion' !== rfbLayout ) { #> data-rfb-counter<# } #> data-rfb-side-heading="{{ settings.side_heading || '' }}"<# if ( settings.step_animation ) { var rfbSize = function( key, fallback ) { return settings[ key ] && '' !== settings[ key ].size && undefined !== settings[ key ].size ? settings[ key ].size : fallback; }; #> data-rfb-anim="{{ settings.step_animation }}" data-rfb-anim-ms="{{ rfbSize( 'step_animation_ms', 350 ) }}" data-rfb-anim-delay="{{ rfbSize( 'step_animation_delay', 0 ) }}" data-rfb-anim-ease="{{ settings.step_animation_ease || 'smooth' }}" data-rfb-anim-distance="{{ rfbSize( 'step_animation_distance', 48 ) }}" data-rfb-anim-stagger="{{ rfbSize( 'step_animation_stagger', 0 ) }}"<# } #> data-rfb-meta="{{ JSON.stringify( rfbMeta ) }}" data-rfb-i18n="<?php echo esc_attr( (string) wp_json_encode( Shortcodes::step_i18n() ) ); ?>"{{{ rfbButtons }}}>
+		<div class="rfb-steps rfb-steps-editor rfb-layout-{{ rfbLayout }}" data-rfb-steps-preview data-rfb-layout="{{ rfbLayout }}" data-rfb-progress-style="{{ 'accordion' === rfbLayout ? '' : ( settings.step_progress || '' ) }}"<# if ( 'yes' === settings.step_counter && 'accordion' !== rfbLayout ) { #> data-rfb-counter<# } #> data-rfb-side-heading="{{ settings.side_heading || '' }}"<# if ( 'yes' === settings.submit_show ) { #> data-rfb-submit-show<# } #><# if ( settings.step_animation ) { var rfbSize = function( key, fallback ) { return settings[ key ] && '' !== settings[ key ].size && undefined !== settings[ key ].size ? settings[ key ].size : fallback; }; #> data-rfb-anim="{{ settings.step_animation }}" data-rfb-anim-ms="{{ rfbSize( 'step_animation_ms', 350 ) }}" data-rfb-anim-delay="{{ rfbSize( 'step_animation_delay', 0 ) }}" data-rfb-anim-ease="{{ settings.step_animation_ease || 'smooth' }}" data-rfb-anim-distance="{{ rfbSize( 'step_animation_distance', 48 ) }}" data-rfb-anim-stagger="{{ rfbSize( 'step_animation_stagger', 0 ) }}"<# } #> data-rfb-meta="{{ JSON.stringify( rfbMeta ) }}" data-rfb-i18n="<?php echo esc_attr( (string) wp_json_encode( Shortcodes::step_i18n() ) ); ?>"{{{ rfbButtons }}}>
 			<# _.each( settings.steps, function( step, index ) { #>
 			<div class="rfb-step-slot">
 				<div class="rfb-step-head rfb-t-step"><span class="rfb-step-number">{{{ index + 1 }}}</span><h3 class="rfb-step-title">{{{ step.step_title }}}</h3><# if ( step.step_description ) { #><p class="rfb-description">{{ step.step_description }}</p><# } #></div>

@@ -1097,6 +1097,27 @@
 	};
 
 	/**
+	 * Whether the form in the editor has a submit button besides the Steps widget's own (0.105.0): a Submit button
+	 * widget, or a button set to submit (the event form's Event button). Read from the editor's data, which exists
+	 * before the widgets are drawn (the server decides the same way, Editor_Forms::has_submit()).
+	 */
+	function formHasSubmit() {
+		try {
+			const editor = window.parent && window.parent.refraction;
+			const walk = ( container ) => ( container.children || [] ).some( ( child ) => {
+				const type = child.model && child.model.get( 'widgetType' );
+				const kind = child.settings && child.settings.get ? child.settings.get( 'button_kind' ) : '';
+
+				return 'rfb-submit' === type || 'submit' === kind || walk( child );
+			} );
+
+			return !! ( editor && editor.getPreviewContainer && walk( editor.getPreviewContainer() ) );
+		} catch ( e ) {
+			return false;
+		}
+	}
+
+	/**
 	 * The chosen layout, drawn in the editor as on the site: the progress, the sidebar or the accordion, "Step 1/6" and
 	 * Back / Next with their settings. One step shows at a time; the progress, the sidebar, the accordion's headers and
 	 * Back / Next move between steps (no checks in the editor), so each step's fields stay reachable.
@@ -1157,6 +1178,10 @@
 				back.hidden = 0 === current;
 				next.hidden = current === slots.length - 1;
 
+				if ( submit ) {
+					submit.hidden = current !== slots.length - 1 || formHasSubmit();
+				}
+
 				if ( progress ) {
 					progress.update( current );
 				}
@@ -1210,6 +1235,8 @@
 			const nav = mark( document.createElement( 'div' ) );
 			const back = document.createElement( 'button' );
 			const next = document.createElement( 'button' );
+			// The Steps widget's own Submit (0.105.0), on the last step, unless the form has another submit button.
+			const submit = box.hasAttribute( 'data-rfb-submit-show' ) && ! formHasSubmit() ? document.createElement( 'button' ) : null;
 
 			nav.className += ' rfb-actions rfb-step-nav';
 			back.type = next.type = 'button';
@@ -1226,6 +1253,13 @@
 				show( current + 1 );
 			} );
 			nav.append( back, next );
+
+			if ( submit ) {
+				submit.type = 'button';
+				submit.className = 'rfb-btn rfb-btn-primary rfb-steps-submit';
+				dressStepButton( submit, box.dataset, 'rfbSubmit', documentSetting( 'rfb_submit_text', 'Submit' ) );
+				nav.append( submit );
+			}
 
 			show( current, false );
 			box.classList.add( 'rfb-ed-ready' );
