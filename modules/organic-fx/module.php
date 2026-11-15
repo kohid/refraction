@@ -98,6 +98,7 @@ class Module extends BaseModule {
 
 		add_action( 'refraction/element/container/section_shape_divider/after_section_end', [ $this, 'container_controls' ] );
 		add_action( 'refraction/element/image/section_style_image/after_section_end', [ $this, 'image_controls' ] );
+		add_action( 'refraction/frontend/before_render', [ $this, 'global_colours_attribute' ] );
 		add_action( 'refraction/frontend/after_register_scripts', [ $this, 'register_assets' ] );
 		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_assets' ] );
 		add_action( 'refraction/frontend/after_enqueue_scripts', [ $this, 'enqueue' ] );
@@ -536,7 +537,7 @@ class Module extends BaseModule {
 			'description' => esc_html__( 'The grain is densest on this side and fades out across the element. Dispersion fades from the left unless you choose another side.', 'refraction' ),
 		] + $live );
 		$element->add_control( 'rf_grain_reach', [ 'label' => esc_html__( 'Fade Reach (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 5, 'max' => 100 ] ], 'default' => [ 'size' => 70 ] ] + $live );
-		$element->add_control( 'rf_grain_color', [ 'label' => esc_html__( 'Grain Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'global' => [ 'active' => false ], 'description' => esc_html__( 'Empty: dark ink (the classic film grain stays grey).', 'refraction' ) ] + $live );
+		$element->add_control( 'rf_grain_color', [ 'label' => esc_html__( 'Grain Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'description' => esc_html__( 'Empty: dark ink (the classic film grain stays grey).', 'refraction' ) ] + $live );
 		$element->add_control( 'rf_grain_amount', [ 'label' => esc_html__( 'Grain Amount', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.02, 'max' => 1, 'step' => 0.01 ] ], 'default' => [ 'size' => 0.25 ], 'selectors' => [ $layer => 'opacity: {{SIZE}};' ], 'condition' => $on ] );
 		$element->add_control( 'rf_grain_scale', [ 'label' => esc_html__( 'Grain Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 1, 'max' => 100 ] ], 'default' => [ 'size' => 50 ], 'description' => esc_html__( 'Higher = coarser patches, lower = finer.', 'refraction' ) ] + $live );
 		// The 0.68 size select, kept hidden so a saved Medium or Coarse still reaches the script.
@@ -545,6 +546,28 @@ class Module extends BaseModule {
 		$element->add_control( 'rf_grain_blend', [ 'label' => esc_html__( 'Blend', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'multiply', 'options' => [ 'multiply' => esc_html__( 'Darken (multiply)', 'refraction' ), 'overlay' => esc_html__( 'Overlay', 'refraction' ), 'soft-light' => esc_html__( 'Soft light', 'refraction' ), 'screen' => esc_html__( 'Lighten (screen)', 'refraction' ), 'normal' => esc_html__( 'Normal', 'refraction' ) ], 'selectors' => [ $layer => 'mix-blend-mode: {{VALUE}};' ], 'condition' => $on ] );
 		$element->add_control( 'rf_grain_over', [ 'label' => esc_html__( 'Also Over The Content', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'prefix_class' => 'rf-grain-over-', 'condition' => $on ] );
 		$element->end_controls_section();
+	}
+
+	/**
+	 * The global colours chosen for this module's colours (0.104.0), for the script: data-rf-globals="{ setting: id }".
+	 * A colour linked to a global is saved as the link, not the value, so data-settings carries nothing for it; the
+	 * script reads the value from the kit's --e-global-color-<id>.
+	 *
+	 * @param \Refraction\Element_Base $element The element being printed.
+	 */
+	public function global_colours_attribute( $element ): void {
+		$globals = (array) ( $element->get_settings( '__globals__' ) ?? [] );
+		$out = [];
+
+		foreach ( $globals as $key => $link ) {
+			if ( 0 === strpos( (string) $key, 'rf_' ) && preg_match( '/^globals\/colors\?id=([\w-]+)$/', (string) $link, $m ) ) {
+				$out[ $key ] = $m[1];
+			}
+		}
+
+		if ( $out ) {
+			$element->add_render_attribute( '_wrapper', 'data-rf-globals', (string) wp_json_encode( $out ) );
+		}
 	}
 
 	/** Shared: where a layer sits and which part of the element it uses. */
@@ -562,8 +585,8 @@ class Module extends BaseModule {
 				'label' => sprintf( esc_html__( 'Colour %d', 'refraction' ), $i ),
 				'type' => Controls_Manager::COLOR,
 				'default' => $defaults[ $i - 1 ] ?? '',
-				// The script reads the value, which a global colour link would hide.
-				'global' => [ 'active' => false ],
+				// A global colour works too (0.104.0): the script reads its value from the kit's CSS variable
+				// (data-rf-globals on the page, the model's __globals__ in the editor).
 				'frontend_available' => true,
 				'render_type' => 'template',
 				'condition' => $on,

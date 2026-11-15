@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.103.0
+Stable tag: 0.104.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.104.0 =
+* Editor: the groups of a long settings section (General, Shapes, Motion, Colors...) are now an accordion: a header row for each group, one open at a time, opened and closed in place. Tabs are left to the states only (Normal, Hover, Active, Focus, Selected).
+* Organic FX: Floating Shapes, Floating Text and Grain colours now have the globe like every other colour, to pick a Global Color; the shapes, text and grain take that colour on the site and in Edit Mode.
 
 = 0.103.0 =
 * Image Box and Icon Box: Style > Box > Hover has a Hover Animation for the whole box (Grow, Shrink, Pulse, Float, Bob, Buzz and the rest of the Button widget's list). The Icon Box also gets the Image Box's Box settings: background, border, rounded corners and shadow for Normal and Hover, padding.

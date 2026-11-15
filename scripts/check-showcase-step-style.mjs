@@ -193,8 +193,18 @@ async function main() {
 			if ( s && ! s.classList.contains( 'e-open' ) ) { s.querySelector( '.refraction-panel-heading' ).click(); }
 		} );
 		await a.waitForTimeout( 700 );
-		const own = await a.evaluate( () => [ 'rf_hl_heading_style', 'rf_hl_heading_fill', 'rf_hl_heading_color', 'rf_hl_heading_mark', 'rf_hl_heading_mark_color', 'rf_hl_heading_mark_height' ].filter( ( n ) => document.querySelector( '.refraction-control-' + n )?.offsetParent ) );
-		check( 'panel', 'Highlighted Text: Heading shows its own fill, color, mark and mark settings', 6 === own.length, own.join( '|' ) );
+		// Its groups are an accordion (0.104.0): General (Style), Text, Mark Behind, Drawing.
+		const shown = ( names ) => a.evaluate( ( list ) => list.filter( ( n ) => document.querySelector( '.refraction-control-' + n )?.offsetParent ), names );
+		const group = async ( label ) => {
+			await a.locator( '.refraction-control-section_rf_hl_style_heading ~ .rf-acc .rf-acc__head', { hasText: label } ).first().click();
+			await a.waitForTimeout( 500 );
+		};
+		const own = await shown( [ 'rf_hl_heading_style' ] );
+		await group( 'Text' );
+		own.push( ...await shown( [ 'rf_hl_heading_fill', 'rf_hl_heading_color' ] ) );
+		await group( 'Mark Behind' );
+		own.push( ...await shown( [ 'rf_hl_heading_mark', 'rf_hl_heading_mark_color', 'rf_hl_heading_mark_height' ] ) );
+		check( 'panel', 'Highlighted Text: Heading shows its own fill, color, mark and mark settings (groups General, Text, Mark Behind)', 6 === own.length, own.join( '|' ) );
 		await a.locator( '.refraction-control-section_rf_hl_style_heading' ).scrollIntoViewIfNeeded();
 		await a.screenshot( { path: join( SHOTS, 'panel-highlight-part.png' ), clip: { x: 0, y: 0, width: 420, height: 1000 } } );
 

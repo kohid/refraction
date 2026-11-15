@@ -52,6 +52,27 @@ import { SHAPES } from './shapes-data';
 		return fe && cid && fe.config && fe.config.elements && fe.config.elements.data ? fe.config.elements.data[ cid ] : null;
 	}
 
+	/**
+	 * Colours linked to a global colour (0.104.0): the link is saved, not the value, so the value comes from the kit's
+	 * CSS variable. links: { setting: id } (data-rf-globals on the page) or { setting: 'globals/colors?id=x' } (editor).
+	 *
+	 * @param {HTMLElement} el    The element.
+	 * @param {Object}      s     Its settings, completed in place.
+	 * @param {Object}      links The global links.
+	 */
+	function withGlobalColours( el, s, links ) {
+		Object.keys( links || {} ).forEach( ( key ) => {
+			const id = String( links[ key ] || '' ).replace( /^globals\/colors\?id=/, '' );
+			const value = id && 0 === key.indexOf( 'rf_' ) ? getComputedStyle( el ).getPropertyValue( '--e-global-color-' + id ).trim() : '';
+
+			if ( value ) {
+				s[ key ] = value;
+			}
+		} );
+
+		return s;
+	}
+
 	function settings( el ) {
 		const m = model( el );
 
@@ -65,11 +86,15 @@ import { SHAPES } from './shapes-data';
 				}
 			} );
 
-			return s;
+			const globals = m.attributes.__globals__;
+
+			return withGlobalColours( el, s, globals && globals.toJSON ? globals.toJSON() : globals );
 		}
 
 		try {
-			return JSON.parse( el.getAttribute( 'data-settings' ) || '{}' ) || {};
+			const s = JSON.parse( el.getAttribute( 'data-settings' ) || '{}' ) || {};
+
+			return withGlobalColours( el, s, JSON.parse( el.getAttribute( 'data-rf-globals' ) || '{}' ) );
 		} catch ( e ) {
 			return {};
 		}

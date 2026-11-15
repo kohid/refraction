@@ -62,6 +62,14 @@ General (before the first heading) and one per heading (the heading itself hides
 settings get `.rf-group-off` (display none, with their popover). The tab is kept per element type and section for the
 editing session (`shownGroups`). No widget had to change: giving a long section headings is enough.
 
+### An accordion (0.104.0)
+
+The groups are no longer a row of tabs: each group has a header row in place (`.rf-section-groups.rf-acc`, its button
+`.rf-section-groups__tab.rf-acc__head` with the label and a chevron), General first. One group is open at a time;
+clicking the open header closes it (the choice, `-1` for none, is kept per element type and section like before). Tabs
+in the panel are left to the states (Normal / Hover / Active / Focus / Selected), which stay inside their group.
+Check: `node scripts/check-panel-accordion.mjs --site DIR --port N`.
+
 ## Categories in every widget (0.88.0)
 
 Every widget was audited (`node scripts/audit-widget-panels.mjs --port N --all [--min 12] [--flagged out.txt]`: for each

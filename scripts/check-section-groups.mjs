@@ -116,7 +116,10 @@ async function main() {
 
 		await edit( 'ps1', 'Style' );
 		const sections = await a.$$eval( '.refraction-control-type-section', ( x ) => x.filter( ( e ) => e.offsetParent ).map( ( e ) => e.querySelector( '.refraction-panel-heading-title, .refraction-section-title' )?.textContent.trim() ) );
-		check( 'organised', 'Phone Showcase > Style has one section per part, in order: Highlighted Text, Pill, Heading, Description, Steps, Phone, Floating Cards, Buttons', 'Highlighted Text,Pill,Heading,Description,Steps,Phone,Floating Cards' === sections.slice( 0, 7 ).join() || 'Highlighted Text,Pill,Heading,Description,Steps,Phone,Floating Cards,Buttons' === sections.join(), sections.join() );
+		// 0.102.0: the shared section is "Highlighted Text (All Parts)", followed by one "Highlighted Text: <part>" per part
+		// with words; those follow the shared one and are left out of the order compared here.
+		const parts = sections.filter( ( t ) => ! /^Highlighted Text: /.test( t ) ).map( ( t ) => ( 'Highlighted Text (All Parts)' === t ? 'Highlighted Text' : t ) );
+		check( 'organised', 'Phone Showcase > Style has one section per part, in order: Highlighted Text, Pill, Heading, Description, Steps, Phone, Floating Cards, Buttons', 'Highlighted Text,Pill,Heading,Description,Steps,Phone,Floating Cards' === parts.slice( 0, 7 ).join() || 'Highlighted Text,Pill,Heading,Description,Steps,Phone,Floating Cards,Buttons' === parts.join(), sections.join() );
 
 		await openSection( 'section_style_steps' );
 		await a.waitForTimeout( 800 );

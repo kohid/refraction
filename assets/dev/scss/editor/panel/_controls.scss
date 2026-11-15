@@ -457,40 +457,78 @@
 	display: none !important;
 }
 
-// Groups of a long section (regions/panel/pages/editor.js groupSection()): a row of tabs under the section's title,
-// one group of settings shown at a time.
-.rf-section-groups {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 4px;
-	padding: 12px 20px 10px;
+// Groups of a long section (regions/panel/pages/editor.js groupSection()): an accordion (0.104.0), a header row per
+// group in place, one group open at a time. Tabs are left to the states (Normal / Hover / Active).
+.rf-section-groups.rf-acc {
+	padding: 0 20px;
 
-	&__tab {
-		flex: 1 1 auto;
-		min-width: 0;
-		padding: 7px 10px;
-		border: var(--e-a-border);
-		border-radius: 3px;
+	.refraction-control + &,
+	& + & {
+		border-block-start: var(--e-a-border);
+	}
+
+	.rf-acc__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		width: 100%;
+		padding: 12px 0;
+		border: 0;
 		background: transparent;
 		color: var(--e-a-color-txt);
-		font-size: 11px;
-		line-height: 1.2;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 1.3;
+		text-align: start;
 		cursor: pointer;
-		transition: background-color .2s, color .2s;
 
 		&:hover,
 		&:focus-visible {
-			background: var(--e-a-bg-hover);
+			color: var(--e-a-color-txt-accent);
 		}
 
-		&.is-active {
-			background: var(--e-a-bg-active);
+		&:focus-visible {
+			outline: 1px solid var(--e-a-border-color-focus, var(--e-a-border-color-bold));
+			outline-offset: 2px;
+		}
+	}
+
+	.rf-acc__label {
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	// A chevron drawn with borders: pointing right when closed, down when open.
+	.rf-acc__chevron {
+		flex: none;
+		width: 7px;
+		height: 7px;
+		margin-inline-end: 3px;
+		border-block-end: 1.5px solid currentColor;
+		border-inline-end: 1.5px solid currentColor;
+		transform: rotate(-45deg);
+		transition: transform .2s ease;
+		opacity: .7;
+	}
+
+	&.is-open {
+
+		.rf-acc__head {
 			color: var(--e-a-color-txt-accent);
-			border-color: var(--e-a-border-color-bold, var(--e-a-border-color));
 			font-weight: 600;
+		}
+
+		.rf-acc__chevron {
+			transform: rotate(45deg);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rf-acc__chevron {
+			transition: none;
 		}
 	}
 }
