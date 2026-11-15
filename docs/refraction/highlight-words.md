@@ -35,3 +35,11 @@ wrap_classes()` (server) and `wrapClasses()` in `highlight-preview.js` (editor p
 listed one deciding; text in no listed part is left alone. The widget's earlier `rf_hl_words` / `rf_hl_desc` stay as
 hidden controls and still apply until a part box is filled (a note in the panel says so). The Phone Showcase is the
 first: Label, Heading, Description, Step Titles, Step Texts, Buttons, Floating Cards.
+
+0.102.0: each part also gets its own Style section, **Highlighted Text: <part>** (`section_rf_hl_style_<key>`), shown
+once that part has words. **Style**: *Same as all highlighted text* (the shared section, now titled **Highlighted Text
+(All Parts)**) or *Its own style*: Text Fill (color or gradient, with its colors and angle), Text Color, Typography, Mark
+Behind (none, rounded highlighter, highlighter, underline, background), Mark Color, Thickness, Distance From The Bottom,
+Reach Past The Words, Mark Corners, Drawing Time and Delay (`rf_hl_<key>_*`, `Heading_Dual_Style::part_controls()`).
+The marks are written for that part only (`{{WRAPPER}} .<part class> .refraction-heading-dual`), so they win over the
+shared section; Draw When Scrolled Into View stays the shared section's switch.

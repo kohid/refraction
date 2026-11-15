@@ -120,3 +120,10 @@ and **Icon / Number Background** (`own_icon_color_<state>`, `own_icon_bg_<state>
 the Style tab's Hover and Active colors still apply to a step that only has its own Normal colors; its own Hover and
 Active win over the Style tab's. Check: `node scripts/check-box-style.mjs --site DIR --port N`.
 
+0.102.0: the heading reads **Style Of This Step**, and each tab has the step's whole style, in this order: **Background
+Color**, **Border Color** (`own_bg_<state>`, `own_border_<state>` on the step), **Icon / Number Color**, **Icon / Number
+Background**, **Title / Arrow Color** (`own_title_color_<state>`: the title and the arrow after it, `.rf-showcase__title`
+and `.rf-showcase__chevron`) and **Description Color** (`own_text_color_<state>`). Style > Steps' **Title Color** is now
+**Title / Arrow Color** too (same setting, `step_title_color_<state>`, now also on the arrow): the Style tab is the
+unified style of all steps, the step's own tabs override it for that step. Check: `node scripts/check-showcase-step-style.mjs`.
+

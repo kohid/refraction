@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.101.0
+Stable tag: 0.102.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.102.0 =
+* Phone Showcase: each step's "Icon Colors Of This Step" is now "Style Of This Step", with Normal / Hover / Active tabs for its Background Color, Border Color, Icon / Number Color, Icon / Number Background, Title / Arrow Color and Description Color. Style > Steps: Title Color is now Title / Arrow Color (it colors the arrow after the title too); it stays the unified style of all steps, each step's own style overrides it.
+* Highlight Words on widgets with parts (Phone Showcase): each part that has words to highlight gets its own Style section, "Highlighted Text: <part>", to keep the look of all highlighted text or give that part its own text fill, typography, mark, colors and drawing time. The shared section is now "Highlighted Text (All Parts)".
 
 = 0.101.0 =
 * Form Builder: a step's icon (Steps widget > Steps > Icon) now takes the place of its number everywhere: in the progress (circles joined by a line, numbered steps, arrows), the sidebar and the accordion; on the site and in Edit Mode. Without an icon, the number stays.

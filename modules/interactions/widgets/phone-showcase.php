@@ -164,9 +164,10 @@ class Phone_Showcase extends Widget_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-phone__shot{{CURRENT_ITEM}}' => 'background-color: {{VALUE}};' ],
 		] );
 
-		// This step's own icon colors (0.89.0), over the Style tab's: Normal (not the step shown), Hover and Active.
+		// This step's own style (icon colors 0.89.0; box, title / arrow and description colors 0.102.0), over the Style
+		// tab's Steps section: Normal (not the step shown), Hover and Active.
 		$steps->add_control( 'step_own_heading', [
-			'label' => esc_html__( 'Icon Colors Of This Step', 'refraction' ),
+			'label' => esc_html__( 'Style Of This Step', 'refraction' ),
 			'type' => Controls_Manager::HEADING,
 			'separator' => 'before',
 		] );
@@ -182,6 +183,18 @@ class Phone_Showcase extends Widget_Base {
 		] as $state => [ $label, $sel ] ) {
 			$steps->start_controls_tab( 'step_own_tab_' . $state, [ 'label' => $label ] );
 
+			$steps->add_control( 'own_bg_' . $state, [
+				'label' => esc_html__( 'Background Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sel => 'background-color: {{VALUE}};' ],
+			] );
+
+			$steps->add_control( 'own_border_' . $state, [
+				'label' => esc_html__( 'Border Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sel => 'border-color: {{VALUE}};' ],
+			] );
+
 			$steps->add_control( 'own_icon_color_' . $state, [
 				'label' => esc_html__( 'Icon / Number Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
@@ -192,6 +205,18 @@ class Phone_Showcase extends Widget_Base {
 				'label' => esc_html__( 'Icon / Number Background', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [ $sel . ' .rf-showcase__badge' => 'background-color: {{VALUE}};' ],
+			] );
+
+			$steps->add_control( 'own_title_color_' . $state, [
+				'label' => esc_html__( 'Title / Arrow Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sel . ' .rf-showcase__title, ' . $sel . ' .rf-showcase__chevron' => 'color: {{VALUE}};' ],
+			] );
+
+			$steps->add_control( 'own_text_color_' . $state, [
+				'label' => esc_html__( 'Description Color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $sel . ' .rf-showcase__text' => 'color: {{VALUE}};' ],
 			] );
 
 			$steps->end_controls_tab();
@@ -820,10 +845,11 @@ class Phone_Showcase extends Widget_Base {
 				'selectors' => [ $sel => 'border-color: {{VALUE}};' ],
 			] );
 
+			// The title and the arrow after it (0.102.0: the arrow too).
 			$this->add_control( 'step_title_color_' . $state, [
-				'label' => esc_html__( 'Title Color', 'refraction' ),
+				'label' => esc_html__( 'Title / Arrow Color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
-				'selectors' => [ $sel . ' .rf-showcase__title' => 'color: {{VALUE}};' ],
+				'selectors' => [ $sel . ' .rf-showcase__title, ' . $sel . ' .rf-showcase__chevron' => 'color: {{VALUE}};' ],
 			] );
 
 			$this->add_control( 'step_text_color_' . $state, [
