@@ -166,6 +166,13 @@ class Module extends BaseModule {
 		$terms[] = [ 'name' => 'rf_hl_words', 'operator' => '!==', 'value' => '' ];
 		$terms[] = [ 'name' => 'rf_hl_desc', 'operator' => '!==', 'value' => '' ];
 		Heading_Dual_Style::controls( $element, [ 'conditions' => [ 'relation' => 'or', 'terms' => $terms ] ] );
+
+		// Each part with words can also have its own look (0.102.0).
+		$element->update_control( 'section_rf_dual_style', [ 'label' => esc_html__( 'Highlighted Text (All Parts)', 'refraction' ) ] );
+
+		foreach ( $parts as $key => [ $label, $class ] ) {
+			Heading_Dual_Style::part_controls( $element, (string) $key, (string) $label, (string) $class );
+		}
 	}
 
 	/**

@@ -186,11 +186,11 @@ async function main() {
 		const row = await a.evaluate( () => {
 			const r = document.querySelectorAll( '.refraction-control-steps .refraction-repeater-fields' )[ 1 ];
 			return {
-				heading: !! [ ...r.querySelectorAll( '.refraction-control-type-heading' ) ].find( ( h ) => /Icon Colors Of This Step/.test( h.textContent ) && h.offsetParent ),
+				heading: !! [ ...r.querySelectorAll( '.refraction-control-type-heading' ) ].find( ( h ) => /Style Of This Step/.test( h.textContent ) && h.offsetParent ),
 				tabs: [ ...r.querySelectorAll( '.refraction-control-type-tab' ) ].filter( ( t ) => t.offsetParent ).map( ( t ) => t.textContent.trim() ).join(),
 			};
 		} );
-		check( 'panel', 'each step has "Icon Colors Of This Step" with Normal / Hover / Active tabs', row.heading && 'Normal,Hover,Active' === row.tabs, JSON.stringify( row ) );
+		check( 'panel', 'each step has "Style Of This Step" with Normal / Hover / Active tabs', row.heading && 'Normal,Hover,Active' === row.tabs, JSON.stringify( row ) );
 		await a.screenshot( { path: join( SHOTS, 'step-panel.png' ) } );
 
 		await edit( 'ib1', 'Style' );
