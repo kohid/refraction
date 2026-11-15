@@ -452,6 +452,10 @@ class Widget_Icon_Box extends Widget_Base {
 			]
 		);
 
+		// The card's own look, as on the Image Box (0.103.0): background, border, corners, shadow, padding, hover
+		// animation.
+		\Refraction\Includes\Widgets\Traits\Box_Style::controls( $this, 'icb_box', '{{WRAPPER}} .refraction-icon-box-wrapper', [ 'animation' => true ] );
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -1088,7 +1092,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$migrated = isset( $settings['__fa4_migrated']['selected_icon'] );
 		$is_new = ! isset( $settings['icon'] ) && Icons_Manager::is_migration_allowed();
 		?>
-		<div class="refraction-icon-box-wrapper">
+		<div class="refraction-icon-box-wrapper<?php echo esc_attr( \Refraction\Includes\Widgets\Traits\Box_Style::animation_class( $settings, 'icb_box' ) ); ?>">
 
 			<?php
 			$more_icons = $has_icon ? array_values( array_filter( (array) ( $settings['more_icons'] ?? [] ), static fn( $item ) => ! empty( $item['icon']['value'] ) ) ) : [];
@@ -1464,8 +1468,9 @@ class Widget_Icon_Box extends Widget_Base {
 
 		view.addInlineEditingAttributes( 'title_text', 'none' );
 		view.addInlineEditingAttributes( 'description_text' );
+		var boxAnimation = settings.icb_box_hover_animation && 'none' !== settings.icb_box_hover_animation ? ' refraction-animation-' + _.escape( settings.icb_box_hover_animation ) : '';
 		#>
-		<div class="refraction-icon-box-wrapper">
+		<div class="refraction-icon-box-wrapper{{ boxAnimation }}">
 
 			<# if ( hasIcon ) { #>
 			<div class="refraction-icon-box-icon{{ moreIcons.length ? ' has-more-icons' : '' }}">

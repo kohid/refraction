@@ -66,3 +66,20 @@ Check: `node scripts/check-iconbox-navpanel.mjs --site DIR --port N`.
   0.45 behaviour) or the icon itself, prefix class `refraction-icons-hover-on-<box|icon>`.
 - The panel's icon preview draws SVG libraries (Solar, Phosphor) from their SVG JSON (`controls/icons.js`); it showed
   nothing before.
+
+## 0.103.0
+
+- **Box hover animation**: Style > Box > Hover has **Hover Animation** (the Button widget's list: Grow, Shrink, Pulse,
+  Float, Bob, Buzz...) for the whole card, on the Image Box (`ib_box_hover_animation`) and the Icon Box
+  (`icb_box_hover_animation`). `Box_Style::controls( ..., [ 'animation' => true ] )` adds it and
+  `Box_Style::animation_class()` puts `refraction-animation-<name>` on the wrapper (site and editor template). The box's
+  Change Duration now eases `transform` too, so animations that move the card keep their easing.
+- **Icon Box > Style > Box** has the Image Box's Box settings (`icb_box_*`): Normal / Hover background, border, rounded
+  corners, shadow, padding, cutting the content to the corners.
+- **Fix: Image Box with Reveal text in Edit Mode.** Reveal's text effect (words, lines, letters) splits the text and keeps
+  the original markup to put back on teardown. The Image Box with the optimised markup has no inner wrapper, so the text
+  root is the widget element itself, which the editor draws again in place: the teardown then wrote the old markup over
+  the new one, so title, description and image never changed in Edit Mode (and the text showed twice). Teardown now puts
+  the text back only while its split words are still there (`modules/motion-effects/assets/js/reveal.js`).
+  Check: `node scripts/check-box-hover.mjs --site DIR --port N`.
+

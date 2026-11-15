@@ -12,7 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * A box's look (0.89.0): Normal / Hover tabs with background, border, rounded corners and shadow, then padding and
- * whether the content is cut to the corners. Used by the Image Box (its card) and Timed Slides (the slider).
+ * whether the content is cut to the corners. Used by the Image Box and Icon Box (their card) and Timed Slides (the
+ * slider). With `animation`, the Hover tab also has the Button widget's Hover Animation for the whole box (0.103.0);
+ * the widget puts animation_class() on the box.
  */
 class Box_Style {
 
@@ -24,10 +26,18 @@ class Box_Style {
 	 * @param string                    $selector The box (`{{WRAPPER}} .refraction-image-box-wrapper`).
 	 * @param array                     $options  `background` (bool, default true), `padding` (bool, default true),
 	 *                                            `clip` (bool: show the "cut the content to the corners" switch,
-	 *                                            default true; false when the box already hides what overflows).
+	 *                                            default true; false when the box already hides what overflows),
+	 *                                            `animation` (bool: a Hover Animation for the whole box, default false).
 	 */
+	/** The class a box with a Hover Animation takes (` refraction-animation-grow`), or ''. */
+	public static function animation_class( array $settings, string $prefix ): string {
+		$animation = (string) ( $settings[ $prefix . '_hover_animation' ] ?? '' );
+
+		return '' !== $animation && 'none' !== $animation ? ' refraction-animation-' . sanitize_html_class( $animation ) : '';
+	}
+
 	public static function controls( $el, string $prefix, string $selector, array $options = [] ): void {
-		$options += [ 'background' => true, 'padding' => true, 'clip' => true ];
+		$options += [ 'background' => true, 'padding' => true, 'clip' => true, 'animation' => false ];
 
 		$el->add_control( $prefix . '_heading', [
 			'label' => esc_html__( 'Box', 'refraction' ),
@@ -85,8 +95,17 @@ class Box_Style {
 					'type' => Controls_Manager::SLIDER,
 					'range' => [ 'px' => [ 'min' => 0, 'max' => 1500, 'step' => 50 ] ],
 					'default' => [ 'size' => 300, 'unit' => 'px' ],
-					'selectors' => [ $selector => 'transition: background-color {{SIZE}}ms, border-color {{SIZE}}ms, border-radius {{SIZE}}ms, box-shadow {{SIZE}}ms;' ],
+					// transform too: the hover animations that move the box (Grow, Shrink, Float...) keep easing.
+					'selectors' => [ $selector => 'transition: background-color {{SIZE}}ms, border-color {{SIZE}}ms, border-radius {{SIZE}}ms, box-shadow {{SIZE}}ms, transform {{SIZE}}ms;' ],
 				] );
+
+				if ( $options['animation'] ) {
+					$el->add_control( $prefix . '_hover_animation', [
+						'label' => esc_html__( 'Hover Animation', 'refraction' ),
+						'type' => Controls_Manager::HOVER_ANIMATION,
+						'description' => esc_html__( 'Moves the whole box when it is pointed at.', 'refraction' ),
+					] );
+				}
 			}
 
 			$el->end_controls_tab();

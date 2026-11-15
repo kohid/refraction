@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.102.0
+Stable tag: 0.103.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.103.0 =
+* Image Box and Icon Box: Style > Box > Hover has a Hover Animation for the whole box (Grow, Shrink, Pulse, Float, Bob, Buzz and the rest of the Button widget's list). The Icon Box also gets the Image Box's Box settings: background, border, rounded corners and shadow for Normal and Hover, padding.
+* Fix: an Image Box with a Reveal text effect (words, lines or letters) did not change in Edit Mode: its title, description and image stayed as they were, and the text showed twice. The editor's new content is no longer replaced by the old copy.
 
 = 0.102.0 =
 * Phone Showcase: each step's "Icon Colors Of This Step" is now "Style Of This Step", with Normal / Hover / Active tabs for its Background Color, Border Color, Icon / Number Color, Icon / Number Background, Title / Arrow Color and Description Color. Style > Steps: Title Color is now Title / Arrow Color (it colors the arrow after the title too); it stays the unified style of all steps, each step's own style overrides it.
