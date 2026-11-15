@@ -495,7 +495,10 @@
 			[ '--rf-rv-p', '--rf-rv-dist', '--rf-rv-dur', '--rf-rv-ease', '--rf-rv-delay' ].forEach( ( v ) => piece.el.style.removeProperty( v ) );
 		} );
 
-		if ( item.textRoot && item.textRoot.isConnected ) {
+		// Put the text back only while the split words are still there. In the editor a widget without an inner
+		// wrapper (Image Box with the optimised markup) is drawn again inside the same element: its new content must
+		// stay, not be replaced by the old copy (0.103.0: title, description and image did not change).
+		if ( item.textRoot && item.textRoot.isConnected && item.words && item.words.length && item.textRoot.contains( item.words[ 0 ] ) ) {
 			item.textRoot.innerHTML = item.original;
 		}
 

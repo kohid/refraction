@@ -354,7 +354,7 @@ class Widget_Image_Box extends Widget_Base {
 			]
 		);
 
-		Box_Style::controls( $this, 'ib_box', '{{WRAPPER}} .refraction-image-box-wrapper' );
+		Box_Style::controls( $this, 'ib_box', '{{WRAPPER}} .refraction-image-box-wrapper', [ 'animation' => true ] );
 
 		$this->end_controls_section();
 
@@ -808,7 +808,7 @@ class Widget_Image_Box extends Widget_Base {
 			return;
 		}
 
-		$html = '<div class="refraction-image-box-wrapper">';
+		$html = '<div class="refraction-image-box-wrapper' . esc_attr( Box_Style::animation_class( $settings, 'ib_box' ) ) . '">';
 
 		if ( ! empty( $settings['link']['url'] ) ) {
 			$this->add_link_attributes( 'link', $settings['link'] );
@@ -881,7 +881,8 @@ class Widget_Image_Box extends Widget_Base {
 			return;
 		}
 
-		var html = '<div class="refraction-image-box-wrapper">';
+		var boxAnimation = settings.ib_box_hover_animation && 'none' !== settings.ib_box_hover_animation ? ' refraction-animation-' + _.escape( settings.ib_box_hover_animation ) : '';
+		var html = '<div class="refraction-image-box-wrapper' + boxAnimation + '">';
 
 		if ( hasImage ) {
 			var image = {
