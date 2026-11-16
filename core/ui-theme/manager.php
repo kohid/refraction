@@ -35,6 +35,7 @@ class Manager {
 
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ], 20 );
+			add_filter( 'admin_body_class', [ $this, 'admin_body_class' ] );
 			add_action( 'refraction/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_settings_tab' ], 12 );
 		}
 
@@ -79,6 +80,24 @@ class Manager {
 			|| in_array( $post_type, $post_types, true );
 
 		return (bool) apply_filters( 'refraction/ui_theme/is_admin_screen', $is_ours, $screen );
+	}
+
+	/**
+	 * True where the admin design applies (0.107.0): Refraction's own screens, but not a block editor screen of one of
+	 * its post types, which keeps WordPress's own look.
+	 */
+	public function has_admin_design(): bool {
+		if ( ! $this->is_refraction_screen() ) {
+			return false;
+		}
+
+		$screen = get_current_screen();
+
+		return ! ( $screen && method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor() );
+	}
+
+	public function admin_body_class( $classes ) {
+		return $this->has_admin_design() ? $classes . ' rf-admin' : $classes;
 	}
 
 	/** True in the editor window; false in the preview iframe (a separate request) and on the site. */
@@ -134,6 +153,11 @@ class Manager {
 		wp_register_style( 'refraction-ui-theme-bridge', $this->url( 'ui-theme-bridge.css' ), [ 'refraction-ui-themes' ], REFRACTION_VERSION );
 		wp_enqueue_style( 'refraction-ui-theme-admin', $this->url( 'ui-theme-admin.css' ), [ 'refraction-ui-themes', 'refraction-ui-theme-bridge', 'refraction-admin' ], REFRACTION_VERSION );
 		wp_enqueue_script( 'refraction-ui-theme', $this->url( 'ui-theme.js' ), [], REFRACTION_VERSION, true );
+
+		// The admin design: page head, cards, tables, tabs and buttons, in the theme's colours (Automatic: its own).
+		if ( $this->has_admin_design() ) {
+			wp_enqueue_style( 'refraction-admin-design', $this->url( 'ui-admin-design.css' ), [ 'refraction-ui-theme-admin' ], REFRACTION_VERSION );
+		}
 		wp_localize_script( 'refraction-ui-theme', 'refractionUiTheme', $this->script_data() );
 	}
 
@@ -233,7 +257,7 @@ class Manager {
 				<?php foreach ( $choices as $id => $label ) :
 					$is_auto = Registry::AUTO === $id;
 					$checked = $id === $current;
-					$blurb = $is_auto ? __( 'Matches WordPress and your system', 'refraction' ) : $themes[ $id ]['blurb'];
+					$blurb = $is_auto ? __( 'Refraction\'s own light look', 'refraction' ) : $themes[ $id ]['blurb'];
 					$icon = $is_auto ? 'contrast' : $themes[ $id ]['icon'];
 					?>
 					<button type="button" class="refraction-ui-theme__card" role="radio"

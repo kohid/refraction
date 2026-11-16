@@ -5,7 +5,7 @@ A per-user theme for Refraction's own interface: its wp-admin screens and the ed
 ## What the user gets
 
 - Settings > Theme: a radiogroup of six cards, each with a live miniature of the editor drawn in that theme: Automatic, Daylight, Graphite, Ember, Blueprint, Contrast. Mouse, arrow keys (move and select), Home/End, Space/Enter. Choosing applies at once and saves to the user's account ("applies to your account").
-- Automatic (default) prints nothing: no attribute, so no theme CSS rule matches and the UI is exactly today's.
+- Automatic (default) prints no theme attribute: the theme skin does not apply and the admin design below shows in its own light palette.
 - Admins also get "Default for new users" (option `refraction_ui_theme_default`), used for people who have not chosen. An explicit Automatic choice beats the site default.
 - The editor's User Preferences panel has a "Refraction theme" select (same user meta), so people who cannot open Settings can still choose; it applies live.
 
@@ -19,6 +19,7 @@ A per-user theme for Refraction's own interface: its wp-admin screens and the ed
 | Palette bridge: `--e-one-palette-*` (admin layer) and `--e-a-*` (editor and shared widgets) point at the tokens | `assets/ui-theme/ui-theme-bridge.css` |
 | Admin skin and picker/miniature CSS | `assets/ui-theme/ui-theme-admin.css` |
 | Editor skin (React top bar, focus rings) | `assets/ui-theme/ui-theme-editor.css` |
+| Admin design (0.107.0): page head, cards, tables, tabs, buttons, notices on every Refraction screen | `assets/ui-theme/ui-admin-design.css` |
 | Picker behaviour | `assets/ui-theme/ui-theme.js` |
 | Editor preference control and live apply | `core/settings/editor-preferences/*`, `assets/dev/js/editor/components/settings/editor-preferences/manager.js` |
 
@@ -28,6 +29,18 @@ A per-user theme for Refraction's own interface: its wp-admin screens and the ed
 - Editor: the editor's own light/dark preference still works. A chosen Refraction theme wins because the bridge overrides the same custom properties; Automatic leaves them alone.
 - Ajax `refraction_save_ui_theme`: nonce `refraction_ui_theme`, capability `edit_posts`; `scope=site` needs `manage_options`; unknown values give 400; config reaches the script through a localized object (no inline script).
 - The WordPress admin menu, toolbar and other plugins' pages are not touched. The content area background of Refraction pages is painted.
+
+## Admin design (0.107.0)
+
+One look for every Refraction admin screen, written for Refraction (inspired by dashboard templates such as Metronic 8; no template code is used):
+
+- A page head: title and its line on the left, the main action (`.page-title-action`) on the right.
+- Content on cards: settings form tables (rows split by a dashed line), list tables (dashed row lines, muted header, row hover), postboxes, the Home shortcuts, the Theme Builder and Custom Code empty states, Custom Fonts / Icons panels, Role Manager rows, System Info sections, the Builder's cards.
+- Line tabs (`.nav-tab-wrapper`), pill view filters (`.subsubsub`), light secondary buttons, filled primary buttons, 36px fields with an accent focus ring, tinted notices (success, warning, error, info).
+- Scope: `body.rf-admin`, added by `Manager::admin_body_class()` where `Manager::has_admin_design()` is true: `is_refraction_screen()`, but not a block editor screen. The stylesheet `refraction-admin-design` loads after the theme skin. The WordPress menu, toolbar, Dashboard and other screens are not touched.
+- Colours: tokens `--rfa-*`. With a theme chosen each reads the theme's `--rf-*` token (light themes: tinted page under plain cards; Graphite, Ember, Blueprint: lighter cards on the darkest colour; Contrast: solid lines, not dashed). Automatic uses the design's own palette: page `#f3f5f9`, cards `#fff`, ink `#1b2034`, muted `#646b85`, accent `#0a6fc2` (white text on it clears 4.5:1).
+- The Builder (`--rfb-*`), the New form / New event wizards and the editor-one buttons (`--e-one-palette-primary-*`) are pointed at the same tokens, so they follow the theme too (before 0.107.0 they stayed white on the dark themes).
+- Check: `node scripts/check-admin-design.mjs --site DIR --port N [--shots DIR]`: for Automatic and all five themes, on all 16 menu pages: the class and stylesheet, page / card / primary-button colours equal to the theme's, card text and button text at least 4.5:1, no console errors; the New event wizard in Blueprint; the Dashboard and Posts screens untouched.
 
 ## Accessibility
 
