@@ -1007,6 +1007,76 @@ body.rf-admin #refraction-element-manager-wrap .MuiAlertTitle-root {
 	color: var(--rfa-ink);
 }
 
+/* ---------- 0.109.0: the Events area and the Builder's groups ---------- */
+/* The Events area's tabs (Events, Bookings, Categories, Event types) sit above each of its pages. */
+body.rf-admin #wpbody-content .rf-section-tabs {
+	max-width: 1320px;
+	margin: 20px 32px 0 12px;
+}
+
+body.rf-admin #wpbody-content .rf-section-tabs + .wrap,
+body.rf-admin #wpbody-content .rf-section-tabs ~ .wrap {
+	margin-top: 8px;
+}
+
+body.rf-admin #wpbody-content .rfe-types__intro {
+	max-width: 72ch;
+	margin: 0 0 20px;
+	color: var(--rfa-muted);
+}
+
+body.rf-admin #wpbody-content .rfe-types__code {
+	display: inline-block;
+	margin-top: 4px;
+	padding: 0;
+	background: none;
+	color: var(--rfa-muted);
+	font-size: 11px;
+	overflow-wrap: anywhere;
+}
+
+body.rf-admin #wpbody-content .rfe-types__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+body.rf-admin #wpbody-content .rfe-type-created__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+body.rf-admin #wpbody-content .rfe-types__table tbody > tr.is-new > * {
+	background: var(--rfa-pass-soft);
+}
+
+body.rf-admin #wpbody-content .rfe-types__empty {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+body.rf-admin #wpbody-content .rfe-types__empty p {
+	margin: 0;
+}
+
+/* The Builder's own group of event forms, under its heading. */
+body.rf-admin #wpbody-content .rfb-group-head {
+	margin: 32px 0 14px;
+}
+
+body.rf-admin #wpbody-content .rfb-group-head h2 {
+	margin: 0 0 4px;
+	font-size: 16px;
+}
+
+body.rf-admin #wpbody-content .rfb-group-head p {
+	margin: 0;
+}
+
 /* ---------- narrow screens ---------- */
 @media (max-width: 782px) {
 	body.rf-admin #wpbody-content > .wrap,
@@ -1025,6 +1095,43 @@ body.rf-admin #refraction-element-manager-wrap .MuiAlertTitle-root {
 
 	body.rf-admin #wpbody-content .form-table tr + tr td {
 		border-top: 0;
+	}
+
+	/* Event types: each type is a block, its actions wrap under it. */
+	body.rf-admin #wpbody-content .rfe-types__table thead {
+		display: none;
+	}
+
+	body.rf-admin #wpbody-content .rfe-types__table,
+	body.rf-admin #wpbody-content .rfe-types__table tbody,
+	body.rf-admin #wpbody-content .rfe-types__table tr,
+	body.rf-admin #wpbody-content .rfe-types__table td {
+		display: block;
+		width: auto;
+	}
+
+	body.rf-admin #wpbody-content .rfe-types__table tbody > tr > * {
+		padding: 6px 16px;
+	}
+
+	body.rf-admin #wpbody-content .rfe-types__table tbody > tr > :first-child {
+		padding-top: 16px;
+	}
+
+	body.rf-admin #wpbody-content .rfe-types__table tbody > tr > :last-child {
+		padding-bottom: 16px;
+	}
+
+	body.rf-admin #wpbody-content .rfe-types__table tbody > tr + tr > * {
+		border-top: 0;
+	}
+
+	body.rf-admin #wpbody-content .rfe-types__table tbody > tr + tr > :first-child {
+		border-top: 1px var(--rfa-dash, dashed) var(--rfa-line);
+	}
+
+	body.rf-admin #wpbody-content .rf-section-tabs {
+		margin: 12px 12px 0 0;
 	}
 }
 

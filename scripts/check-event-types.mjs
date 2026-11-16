@@ -144,8 +144,18 @@ async function main() {
 		const admin = await login( 'admin', 'admin' );
 		await admin.p.goto( `${ BASE }/wp-admin/admin.php?page=refraction-event-types` );
 		check( 'admin', 'Refraction > Event types lists none yet', /No event types yet/.test( await admin.p.textContent( '.wrap' ) ) );
-		await admin.p.fill( '#rfe-name', 'Workshop' );
-		await Promise.all( [ admin.p.waitForURL( /action=refraction/, { timeout: 90000 } ), admin.p.click( '.rfe-new-type button' ) ] );
+		await admin.p.goto( `${ BASE }/wp-admin/admin.php?page=refraction-event-types&wizard=type` );
+		// 0.109.0: the New event type wizard (no page design made here: this check makes them itself), then Design the form.
+		await admin.p.fill( '#rfw-rfe_name', 'Workshop' );
+		await admin.p.click( '#rf-wizard-event-type [data-rf-wizard-next]' );
+		await sleep( 250 );
+		await admin.p.click( '#rf-wizard-event-type [data-rf-wizard-next]' );
+		await sleep( 250 );
+		await admin.p.click( 'label[for="rfw-rfe_single"]' );
+		await admin.p.click( '#rf-wizard-event-type [data-rf-wizard-next]' );
+		await sleep( 250 );
+		await Promise.all( [ admin.p.waitForURL( /rfe_type_created=/, { timeout: 90000 } ), admin.p.click( '#rf-wizard-event-type [data-rf-wizard-submit]' ) ] );
+		await Promise.all( [ admin.p.waitForURL( /action=refraction/, { timeout: 90000 } ), admin.p.click( '.rfe-type-created a:has-text("Design the form")' ) ] );
 		await admin.p.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 90000 } );
 		await sleep( 2500 );
 		const editor = await admin.p.evaluate( () => {
@@ -162,7 +172,7 @@ async function main() {
 			return { type: refraction.config.document.type, widgets: types, cat: start?.categories, show: start?.show_in_panel };
 		} );
 		const wanted = [ 'title', 'start', 'end', 'all-day', 'category', 'venue', 'organizer', 'address', 'price', 'total-amount', 'ticket-limit', 'tickets-per-person', 'button', 'image', 'description' ];
-		check( 'editor', '"New event type" opens a Form page with every event field and a Submit button', 'rfb-form' === editor.type && wanted.every( ( w ) => editor.widgets.includes( 'rfb-field-event-' + w ) ) && 4 === editor.widgets.filter( ( w ) => 'rfb-field-event-button' === w ).length, JSON.stringify( editor.widgets ) );
+		check( 'editor', '"New event type" makes a Form page with every event field and a Submit button', 'rfb-form' === editor.type && wanted.every( ( w ) => editor.widgets.includes( 'rfb-field-event-' + w ) ) && 4 === editor.widgets.filter( ( w ) => 'rfb-field-event-button' === w ).length, JSON.stringify( editor.widgets ) );
 		check( 'editor', 'the event fields are in the Event Form category of a Form page', editor.cat && editor.cat.includes( 'refraction-event-fields' ) && false !== editor.show, JSON.stringify( editor ) );
 		await admin.p.evaluate( () => $e.route( 'panel/page-settings/settings' ) );
 		await sleep( 800 );

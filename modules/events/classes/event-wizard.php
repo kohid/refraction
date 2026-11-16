@@ -36,14 +36,9 @@ class Event_Wizard {
 	public function enqueue(): void {
 		if ( self::on_list() ) {
 			Wizard::enqueue();
-			// The "Add New Event" button at the top of the list opens the wizard too.
-			wp_add_inline_script( 'refraction-wizard', 'document.querySelectorAll(".page-title-action").forEach(function(a){a.setAttribute("data-rf-wizard-open","' . esc_js( self::DIALOG ) . '");});' );
+			// "Add New Event" at the top of the list opens the wizard; its link (a new tab, a middle click) is the editor.
+			wp_add_inline_script( 'refraction-wizard', 'document.querySelectorAll(".page-title-action").forEach(function(a){a.setAttribute("data-rf-wizard-open","' . esc_js( self::DIALOG ) . '");a.setAttribute("href",' . wp_json_encode( Module::new_event_url() ) . ');});' );
 		}
-	}
-
-	/** "New event": opens the wizard; without the script it goes to the editor as before. */
-	public static function button(): string {
-		return '<a class="button button-primary" href="' . esc_url( Module::new_event_url() ) . '"' . Wizard::opener( self::DIALOG ) . '>' . esc_html__( 'New event', 'refraction' ) . '</a>';
 	}
 
 	public function print_dialog(): void {

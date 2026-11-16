@@ -200,3 +200,31 @@ venue), **Last look** (a draft or published, and the answers). Create posts to
 `admin-post.php?action=refraction_event_wizard`: the event is made with the starter page of a new event, its details
 (`Event_Data::save()`), categories and type, and the list opens with it marked and a notice offering **Edit in the
 editor**, **Edit the details** and **View** / **Preview**.
+
+## One Events area, the New event type wizard and event forms in the Builder (0.109.0)
+
+- **One area**: Events, Bookings, Categories and Event types share a row of tabs (`Module::section_tabs()`, printed on
+  `all_admin_notices` for the WordPress lists and by the Event types page itself). The links that used to sit in the
+  events list's filter row ("New event", "Bookings", "Event types and their forms", "Categories and colors") are gone;
+  **Add New Event** opens the New event wizard. Event types is an admin tab only (`manage_options`).
+- **Event types page** says what a type is (a kind of event with its own form, address and page design) and that
+  sorting and calendar colours are Categories' job. Columns: the type (with its shortcode), its address, who can use
+  its form, its events; actions **Add an event** (the form on the site), **Design the form**, **Design the event
+  page**, **Design the archive**. With none yet, an empty state with **New event type**.
+- **New event type** opens a wizard (`Event_Types::render_wizard()`, the Builder's dialog): **Name it** (name,
+  required; address of its events), **Its form** (who can use it; whether its events are published, waiting for
+  review or drafts), **Page design** (make its event page design now, on by default; make the page that lists its
+  events now), **Last look**. It posts to `admin-post.php?action=refraction_new_event_type`; `Event_Types::create_type()`
+  makes the Form page through the document API (so its collection is made the usual way) with the answers in its page
+  settings (`rfe_who`, `rfe_status`, `rfe_base`), and `Event_Types::ensure_template()` makes the chosen Theme Builder
+  templates (the same code "Design the event page / archive" uses). It ends on Event types with "Workshop is ready",
+  the row marked and **Add an event**: nothing opens in the editor until you choose. `?wizard=type` opens the wizard.
+- **The type's form** starts with the heading "Workshop: add an event" and the submit button "Add the event" (it used
+  to say "New event" / "Create event", which read like making an event while designing the form).
+- **In the Builder**: its New form wizard offers **Events** ("Each entry becomes an event on your calendar"; admins
+  only) through `refraction/form_builder/wizard_kinds`; choosing it skips the layout question and makes an event type
+  (`refraction/form_builder/wizard_make`; visitors on = anyone may use the form, the email answers are kept), then
+  goes to Event types. The Builder page lists event forms in their own group, **Event forms**, after the other forms,
+  with a link to Events > Event types (`refraction/form_builder/collection_groups` and `..._group_headings`).
+- Check: `scripts/check-easier-create.mjs`. `check-event-types.mjs` and `check-event-archives.mjs` make their type
+  through the wizard.

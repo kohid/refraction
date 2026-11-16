@@ -210,3 +210,12 @@ Check: `node scripts/check-new-wizard.mjs --site DIR --port N`.
     | /inverness-tours/short-loch-ness-tour/ | tour | short-loch-ness |
 
     A "Book now" button elsewhere can link to the booking page with `?fill_service=golf` (and `&fill_tour=...`).
+
+## Events in the New form wizard, event forms grouped (0.109.0)
+
+- Filters for other modules: `refraction/form_builder/wizard_kinds` (extra kinds shown in the wizard, key => [ title,
+  text, icon ]), `refraction/form_builder/wizard_make` (return a URL to go to after making that kind elsewhere; '' to
+  let the Builder make a form), `refraction/form_builder/collection_groups` (slug => group) and
+  `refraction/form_builder/collection_group_headings` (group => [ title, text with links ]). The Events module uses
+  them for **Events** (an event type) and the **Event forms** group; see `docs/refraction/events.md`.
+- `data-rf-show-if` takes several rules joined by commas, all of which must hold (`kind!=starter:*,kind!=events`).

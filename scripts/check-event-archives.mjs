@@ -137,9 +137,18 @@ async function main() {
 
 		// ------------------------------------------------------------ the type, its address, a field of our own
 		const admin = await login( 'admin', 'admin' );
-		await admin.p.goto( `${ BASE }/wp-admin/admin.php?page=refraction-event-types` );
-		await admin.p.fill( '#rfe-name', 'Workshop' );
-		await Promise.all( [ admin.p.waitForURL( /action=refraction/, { timeout: 120000 } ), admin.p.click( '.rfe-new-type button' ) ] );
+		await admin.p.goto( `${ BASE }/wp-admin/admin.php?page=refraction-event-types&wizard=type` );
+		// 0.109.0: the New event type wizard (no page design made here: this check makes them itself), then Design the form.
+		await admin.p.fill( '#rfw-rfe_name', 'Workshop' );
+		await admin.p.click( '#rf-wizard-event-type [data-rf-wizard-next]' );
+		await sleep( 250 );
+		await admin.p.click( '#rf-wizard-event-type [data-rf-wizard-next]' );
+		await sleep( 250 );
+		await admin.p.click( 'label[for="rfw-rfe_single"]' );
+		await admin.p.click( '#rf-wizard-event-type [data-rf-wizard-next]' );
+		await sleep( 250 );
+		await Promise.all( [ admin.p.waitForURL( /rfe_type_created=/, { timeout: 120000 } ), admin.p.click( '#rf-wizard-event-type [data-rf-wizard-submit]' ) ] );
+		await Promise.all( [ admin.p.waitForURL( /action=refraction/, { timeout: 120000 } ), admin.p.click( '.rfe-type-created a:has-text("Design the form")' ) ] );
 		await openEditor( admin.p );
 		const formId = await admin.p.evaluate( () => refraction.config.document.id );
 		const panel = await admin.p.evaluate( () => [ 'rfb-field-event-gallery', 'rfb-field-event-button' ].map( ( w ) => refraction.widgetsCache[ w ] && refraction.widgetsCache[ w ].title + ':' + ( refraction.widgetsCache[ w ].keywords || [] ).join( ' ' ) ) );

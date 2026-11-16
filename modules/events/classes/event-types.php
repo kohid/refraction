@@ -9,6 +9,7 @@ use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Classes\Money;
 use Refraction\Modules\FormBuilder\Classes\Schema;
 use Refraction\Modules\FormBuilder\Classes\Uploads;
+use Refraction\Modules\FormBuilder\Classes\Wizard;
 use Refraction\Modules\FormBuilder\Documents\Form_Document;
 use Refraction\Modules\PageTemplates\Module as Page_Templates_Module;
 use Refraction\Plugin;
@@ -56,6 +57,21 @@ class Event_Types {
 		add_filter( 'refraction/form_builder/success_html', [ __CLASS__, 'success_html' ], 10, 2 );
 		add_action( 'admin_post_' . self::NEW_ACTION, [ __CLASS__, 'new_type' ] );
 		add_action( 'admin_post_' . self::DESIGN_ACTION, [ __CLASS__, 'design_template' ] );
+
+		// The Builder (0.109.0): "Events" in its New form wizard makes an event type; event forms are grouped apart.
+		add_filter( 'refraction/form_builder/wizard_kinds', [ __CLASS__, 'builder_kind' ] );
+		add_filter( 'refraction/form_builder/wizard_make', [ __CLASS__, 'builder_make' ], 10, 3 );
+		add_filter( 'refraction/form_builder/collection_groups', static fn( $groups, $all ) => $groups + array_fill_keys( array_keys( array_intersect_key( self::types(), (array) $all ) ), 'events' ), 10, 2 );
+		add_filter( 'refraction/form_builder/collection_group_headings', static fn( $headings ) => $headings + [
+			'events' => [
+				__( 'Event forms', 'refraction' ),
+				sprintf(
+					/* translators: %s: link to Events > Event types. */
+					__( 'Each one adds events of its type to your calendar. Their address and page design are under %s.', 'refraction' ),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=' . Module::TYPES_SLUG ) ) . '">' . esc_html__( 'Events > Event types', 'refraction' ) . '</a>'
+				),
+			],
+		] );
 
 		// Each type has an address of its own: /workshop/ lists its events, /workshop/<event>/ is one of them.
 		add_action( 'init', [ __CLASS__, 'add_rewrites' ], 20 );
@@ -246,6 +262,44 @@ class Event_Types {
 			: 'include/archive/tax/' . Module::TYPE_TAXONOMY . '/' . $term;
 	}
 
+	/** The type's Single (event page) or Archive template: the one already made, else a new one from the starter. */
+	public static function ensure_template( string $slug, string $kind, string $label ): int {
+		$id = self::template_for( $slug, $kind );
+
+		if ( $id ) {
+			return $id;
+		}
+
+		$id = wp_insert_post( [
+			'post_type' => 'refraction_library',
+			'post_status' => 'publish',
+			/* translators: %s: event type. */
+			'post_title' => sprintf( 'single' === $kind ? __( '%s: event page', 'refraction' ) : __( '%s: archive', 'refraction' ), $label ),
+		], true );
+
+		if ( is_wp_error( $id ) ) {
+			wp_die( esc_html( $id->get_error_message() ) );
+		}
+
+		update_post_meta( $id, '_refraction_edit_mode', 'builder' );
+		update_post_meta( $id, '_refraction_template_type', $kind );
+		update_post_meta( $id, '_refraction_version', REFRACTION_VERSION );
+		update_post_meta( $id, '_refraction_data', wp_slash( (string) wp_json_encode( 'single' === $kind ? self::single_starter() : self::archive_starter( $slug ) ) ) );
+		wp_set_object_terms( $id, $kind, 'refraction_library_type' );
+
+		// Preview Settings: an event of the type (Single), or the type's archive (Archive).
+		$term = self::term_id( $slug );
+		$sample = self::sample_event( $term );
+		update_post_meta( $id, '_refraction_page_settings', [
+			'refraction_preview_target' => 'single' === $kind
+				? [ 'source' => 'post:' . Module::CPT, 'id' => $sample ]
+				: [ 'source' => 'term:' . Module::TYPE_TAXONOMY, 'id' => $term ],
+		] );
+		Plugin::$instance->modules_manager->get_modules( 'theme-builder' )->get_store()->save_rules( $id, $kind, [ self::template_rule( $slug, $kind ) ] );
+
+		return (int) $id;
+	}
+
 	public static function design_template(): void {
 		check_admin_referer( self::DESIGN_ACTION );
 
@@ -262,36 +316,7 @@ class Event_Types {
 			exit;
 		}
 
-		$id = self::template_for( $slug, $kind );
-
-		if ( ! $id ) {
-			$id = wp_insert_post( [
-				'post_type' => 'refraction_library',
-				'post_status' => 'publish',
-				/* translators: %s: event type. */
-				'post_title' => sprintf( 'single' === $kind ? __( '%s: event page', 'refraction' ) : __( '%s: archive', 'refraction' ), $label ),
-			], true );
-
-			if ( is_wp_error( $id ) ) {
-				wp_die( esc_html( $id->get_error_message() ) );
-			}
-
-			update_post_meta( $id, '_refraction_edit_mode', 'builder' );
-			update_post_meta( $id, '_refraction_template_type', $kind );
-			update_post_meta( $id, '_refraction_version', REFRACTION_VERSION );
-			update_post_meta( $id, '_refraction_data', wp_slash( (string) wp_json_encode( 'single' === $kind ? self::single_starter() : self::archive_starter( $slug ) ) ) );
-			wp_set_object_terms( $id, $kind, 'refraction_library_type' );
-
-			// Preview Settings: an event of the type (Single), or the type's archive (Archive).
-			$term = self::term_id( $slug );
-			$sample = self::sample_event( $term );
-			update_post_meta( $id, '_refraction_page_settings', [
-				'refraction_preview_target' => 'single' === $kind
-					? [ 'source' => 'post:' . Module::CPT, 'id' => $sample ]
-					: [ 'source' => 'term:' . Module::TYPE_TAXONOMY, 'id' => $term ],
-			] );
-			Plugin::$instance->modules_manager->get_modules( 'theme-builder' )->get_store()->save_rules( $id, $kind, [ self::template_rule( $slug, $kind ) ] );
-		}
+		$id = self::ensure_template( $slug, $kind, $label );
 
 		$document = Plugin::$instance->documents->get( $id );
 		wp_safe_redirect( $document ? $document->get_edit_url() : admin_url( 'edit.php?post_type=refraction_library' ) );
@@ -356,20 +381,21 @@ class Event_Types {
 
 	/** Event types: collection slug => name. */
 	public static function types(): array {
-		static $types = null;
-
-		if ( null === $types ) {
-			$types = [];
+		if ( null === self::$types_cache ) {
+			self::$types_cache = [];
 
 			foreach ( ( new Collections() )->all() as $slug => $definition ) {
 				if ( self::is_type( $definition ) ) {
-					$types[ $slug ] = $definition['label'];
+					self::$types_cache[ $slug ] = $definition['label'];
 				}
 			}
 		}
 
-		return $types;
+		return self::$types_cache;
 	}
+
+	/** @var array|null Event types for this request; cleared when one is made. */
+	private static $types_cache = null;
 
 	/** The event type's settings (Events section of its Form page's page settings). */
 	public static function settings( string $slug ): array {
@@ -804,17 +830,119 @@ class Event_Types {
 
 	// ---------------------------------------------------------------- a new event type
 
-	/** The "New event type" form: a name, then the editor. */
-	public static function new_type_form(): string {
-		return '<form class="rfe-new-type" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">'
-			. '<input type="hidden" name="action" value="' . esc_attr( self::NEW_ACTION ) . '">'
-			. wp_nonce_field( self::NEW_ACTION, '_wpnonce', true, false )
-			. '<label class="screen-reader-text" for="rfe-name">' . esc_html__( 'Name of the event type', 'refraction' ) . '</label>'
-			. '<input type="text" id="rfe-name" name="rfe_name" required placeholder="' . esc_attr__( 'Workshop, Concert, Market...', 'refraction' ) . '"> '
-			. '<button type="submit" class="button button-primary">' . esc_html__( 'New event type', 'refraction' ) . '</button></form>';
+	const DIALOG = 'rf-wizard-event-type';
+
+	/** "New event type": opens the wizard (0.109.0); without the script it goes to the Event types page. */
+	public static function new_type_button( string $class = 'page-title-action' ): string {
+		return '<a class="' . esc_attr( $class ) . '" href="' . esc_url( admin_url( 'admin.php?page=' . Module::TYPES_SLUG . '&wizard=type' ) ) . '"' . Wizard::opener( self::DIALOG ) . '>' . esc_html__( 'New event type', 'refraction' ) . '</a>';
 	}
 
-	/** Makes a Form page with every event field already placed (in a sensible order) and opens it in the editor. */
+	/** The "New event type" wizard: name and address, its form, its page designs, a last look. */
+	public static function render_wizard(): void {
+		$steps = [
+			[
+				__( 'Name it', 'refraction' ),
+				__( 'The kind of event and its address', 'refraction' ),
+				Wizard::text( 'rfe_name', __( 'Event type', 'refraction' ), [ 'required' => true, 'placeholder' => __( 'Workshop', 'refraction' ), 'summary' => __( 'Name', 'refraction' ), 'help' => __( 'A kind of event with its own form, address and page design: Workshop, Concert, Market.', 'refraction' ) ] )
+				. Wizard::text( 'rfe_base', __( 'Address of its events', 'refraction' ), [ 'placeholder' => __( 'workshops', 'refraction' ), 'summary' => __( 'Address', 'refraction' ), 'help' => __( 'Its events live at /address/event-name/ and /address/ lists them. Empty: made from the name. Keep it different from your pages\' addresses.', 'refraction' ) ] ),
+			],
+			[
+				__( 'Its form', 'refraction' ),
+				__( 'Who adds events with it', 'refraction' ),
+				Wizard::choices( 'rfe_who', __( 'Who can use its form', 'refraction' ), [
+					'staff' => [ __( 'Staff', 'refraction' ), __( 'People who can write posts.', 'refraction' ), 'badge' ],
+					'logged_in' => [ __( 'Anyone logged in', 'refraction' ), __( 'Members of the site.', 'refraction' ), 'person' ],
+					'anyone' => [ __( 'Anyone', 'refraction' ), __( 'Visitors can send events in.', 'refraction' ), 'public' ],
+				], [ 'checked' => 'staff', 'columns' => 3, 'summary' => __( 'Form for', 'refraction' ) ] )
+				. Wizard::choices( 'rfe_status', __( 'Events sent with it are', 'refraction' ), [
+					'publish' => [ __( 'Published at once', 'refraction' ), '', 'public' ],
+					'pending' => [ __( 'Waiting for review', 'refraction' ), '', 'schedule' ],
+					'draft' => [ __( 'Drafts', 'refraction' ), '', 'edit' ],
+				], [ 'checked' => 'publish', 'columns' => 3, 'summary' => __( 'New events', 'refraction' ) ] ),
+			],
+			[
+				__( 'Page design', 'refraction' ),
+				__( 'How its events look', 'refraction' ),
+				'<p class="rf-wizard__intro">' . esc_html__( 'Theme Builder templates with the title, date, picture, details and booking buttons, shared by every event of the type. You can change them later.', 'refraction' ) . '</p>'
+				. Wizard::toggle( 'rfe_single', __( 'Make its event page design now', 'refraction' ), true )
+				. Wizard::toggle( 'rfe_archive', __( 'Make the page that lists its events now', 'refraction' ), false ),
+			],
+			[
+				__( 'Last look', 'refraction' ),
+				__( 'Check it, then make it', 'refraction' ),
+				Wizard::review( __( 'The type is made with its form and listed under Event types, with buttons to add an event, design its form or its pages. Nothing opens in the editor until you choose.', 'refraction' ) ),
+			],
+		];
+
+		Wizard::render( self::DIALOG, __( 'New event type', 'refraction' ), self::NEW_ACTION, $steps, __( 'Create event type', 'refraction' ) );
+	}
+
+	/**
+	 * Makes an event type: its Form page (holding every event field, which makes its collection) with the given
+	 * settings. Returns the type's key, '' when it could not be made.
+	 *
+	 * @param array $options who, status, base, and Form Builder settings (rfb_*) to add.
+	 */
+	public static function create_type( string $name, array $options = [] ): string {
+		$name = '' !== $name ? $name : __( 'New event type', 'refraction' );
+		$document = Plugin::$instance->documents->create( Form_Document::TYPE, [ 'post_title' => $name, 'post_status' => 'publish' ] );
+
+		if ( is_wp_error( $document ) || ! $document ) {
+			return '';
+		}
+
+		$settings = [
+			'rfe_who' => in_array( $options['who'] ?? '', [ 'anyone', 'logged_in', 'staff' ], true ) ? $options['who'] : 'staff',
+			'rfe_status' => in_array( $options['status'] ?? '', [ 'publish', 'pending', 'draft' ], true ) ? $options['status'] : 'publish',
+			'rfe_base' => sanitize_title( (string) ( $options['base'] ?? '' ) ),
+			'rfb_icon' => 'calendar-month',
+			'rfb_singular' => __( 'Event', 'refraction' ),
+		];
+
+		foreach ( $options as $key => $value ) {
+			if ( 0 === strpos( (string) $key, 'rfb_' ) ) {
+				$settings[ $key ] = $value;
+			}
+		}
+
+		$document->save( [ 'elements' => self::starter_form( $name ), 'settings' => $settings ] );
+		self::$types_cache = null;
+
+		return (string) get_post_meta( (int) $document->get_main_id(), Editor_Forms::META_COLLECTION, true );
+	}
+
+	/** "Events" among the Builder wizard's kinds (only for those who may make event types). */
+	public static function builder_kind( array $kinds ): array {
+		if ( current_user_can( 'manage_options' ) ) {
+			$kinds['events'] = [ __( 'Events', 'refraction' ), __( 'Each entry becomes an event on your calendar.', 'refraction' ), 'event' ];
+		}
+
+		return $kinds;
+	}
+
+	/** The Builder wizard chose "Events": the form is made as an event type, then Events > Event types shows it. */
+	public static function builder_make( string $url, string $kind, array $answers ): string {
+		if ( 'events' !== $kind || ! current_user_can( 'manage_options' ) ) {
+			return $url;
+		}
+
+		$slug = self::create_type( (string) $answers['name'], [
+			'who' => ! empty( $answers['public_form'] ) ? 'anyone' : 'staff',
+			'rfb_description' => (string) ( $answers['description'] ?? '' ),
+			'rfb_notify_enabled' => '' !== (string) ( $answers['notify_to'] ?? '' ) ? 'yes' : '',
+			'rfb_notify_to' => (string) ( $answers['notify_to'] ?? '' ),
+		] );
+
+		if ( '' === $slug ) {
+			return $url;
+		}
+
+		self::sync_terms();
+
+		return add_query_arg( 'rfe_type_created', $slug, admin_url( 'admin.php?page=' . Module::TYPES_SLUG ) );
+	}
+
+	/** The wizard's answers: the type, its page designs if asked for, then back to Event types with it marked. */
 	public static function new_type(): void {
 		check_admin_referer( self::NEW_ACTION );
 
@@ -822,32 +950,37 @@ class Event_Types {
 			wp_die( esc_html__( 'You are not allowed to do that.', 'refraction' ), 403 );
 		}
 
-		// The name gives the type its key (kept when it is renamed later, as events are tied to it).
-		$name = isset( $_POST['rfe_name'] ) ? sanitize_text_field( wp_unslash( $_POST['rfe_name'] ) ) : '';
-		$id = wp_insert_post( [ 'post_type' => 'refraction_library', 'post_status' => 'publish', 'post_title' => '' !== $name ? $name : __( 'New event type', 'refraction' ) ], true );
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Checked above.
+		$get = static fn( string $key ): string => isset( $_POST[ $key ] ) ? trim( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) : '';
+		// phpcs:enable
+		$types_page = admin_url( 'admin.php?page=' . Module::TYPES_SLUG );
+		$name = $get( 'rfe_name' );
 
-		if ( is_wp_error( $id ) ) {
-			wp_die( esc_html( $id->get_error_message() ) );
+		if ( '' === $name ) {
+			wp_safe_redirect( add_query_arg( 'wizard', 'type', $types_page ) );
+			exit;
 		}
 
-		update_post_meta( $id, '_refraction_edit_mode', 'builder' );
-		update_post_meta( $id, Form_Document::TYPE_META_KEY, Form_Document::TYPE );
-		update_post_meta( $id, '_refraction_version', REFRACTION_VERSION );
-		update_post_meta( $id, '_refraction_data', wp_slash( (string) wp_json_encode( self::starter_form() ) ) );
-		wp_set_object_terms( $id, Form_Document::TYPE, 'refraction_library_type' );
+		$slug = self::create_type( $name, [ 'who' => $get( 'rfe_who' ), 'status' => $get( 'rfe_status' ), 'base' => $get( 'rfe_base' ) ] );
 
-		$document = Plugin::$instance->documents->get( $id, false );
-
-		if ( $document instanceof Form_Document ) {
-			( new Editor_Forms( new Collections() ) )->sync( $document );
+		if ( '' === $slug ) {
+			wp_die( esc_html__( 'The event type could not be made.', 'refraction' ) );
 		}
 
-		wp_safe_redirect( Editor_Forms::edit_url( $id ) ?: admin_url( Module::ADMIN_SLUG ) );
+		self::sync_terms();
+
+		foreach ( [ 'single' => 'rfe_single', 'archive' => 'rfe_archive' ] as $kind => $answer ) {
+			if ( 'yes' === $get( $answer ) ) {
+				self::ensure_template( $slug, $kind, $name );
+			}
+		}
+
+		wp_safe_redirect( add_query_arg( 'rfe_type_created', $slug, $types_page ) );
 		exit;
 	}
 
 	/** A new event type's form: every event field, two to a row where they pair up, and the submit button. */
-	public static function starter_form(): array {
+	public static function starter_form( string $name = '' ): array {
 		$id = static fn() => \Refraction\Utils::generate_random_string();
 		$field = static fn( string $widget, array $settings = [] ) => [ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'rfb-field-event-' . $widget, 'settings' => $settings, 'elements' => [] ];
 		$row = static fn( array ...$widgets ) => [ 'id' => $id(), 'elType' => 'container', 'isInner' => true, 'settings' => [ 'flex_direction' => 'row', 'content_width' => 'full', 'flex_wrap' => 'wrap', 'padding' => [ 'unit' => 'px', 'top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0', 'isLinked' => true ] ], 'elements' => array_map( static fn( $w ) => $w + [ 'settings' => [] ], $widgets ) ];
@@ -858,7 +991,8 @@ class Event_Types {
 			'elType' => 'container',
 			'settings' => [ 'flex_gap' => [ 'unit' => 'px', 'size' => 16, 'column' => '16', 'row' => '16', 'isLinked' => true ] ],
 			'elements' => [
-				[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'heading', 'settings' => [ 'title' => __( 'New event', 'refraction' ), 'header_size' => 'h2' ], 'elements' => [] ],
+				// The form's own heading, for the people who use it: "Workshop: add an event".
+				[ 'id' => $id(), 'elType' => 'widget', 'widgetType' => 'heading', 'settings' => [ 'title' => '' !== $name ? sprintf( /* translators: %s: event type. */ __( '%s: add an event', 'refraction' ), $name ) : __( 'Add an event', 'refraction' ), 'header_size' => 'h2' ], 'elements' => [] ],
 				$field( 'title', [ 'field_required' => 'yes' ] ),
 				$row( $field( 'start', $half + [ 'field_required' => 'yes' ] ), $field( 'end', $half ) ),
 				$field( 'all-day' ),
@@ -873,7 +1007,7 @@ class Event_Types {
 				$field( 'image' ),
 				$field( 'gallery', [ 'file_max_files' => 6 ] ),
 				$field( 'description' ),
-				$field( 'button', [ 'button_kind' => 'submit', 'submit_text' => __( 'Create event', 'refraction' ) ] ),
+				$field( 'button', [ 'button_kind' => 'submit', 'submit_text' => __( 'Add the event', 'refraction' ) ] ),
 			],
 		] ];
 	}
