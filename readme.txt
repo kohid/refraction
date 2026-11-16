@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.107.0
+Stable tag: 0.108.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.108.0 =
+* Admin design, second pass: every remaining Refraction view now follows the Interface theme: the Element Manager (its table, filters, notice and buttons), the Custom Code editor (code colours on the dark themes) and its display conditions, the Custom Fonts variations, the Custom Icons panel, an opened role in Role Manager, Tools > Website Templates, the New Template dialog, and every Settings and Tools tab. On the dark themes none of them is left white or unreadable any more.
 
 = 0.107.0 =
 * Admin: one look for every Refraction screen (Home, Settings, Tools, Saved Templates, Theme Builder, Builder, Events, Event types, Floating Elements, Submissions, Custom Code, Custom Fonts, Custom Icons, Role Manager, System Info, Element Manager): a page head with the main action on the right, content on cards, tables with dashed row lines, line tabs, pill filters, light secondary buttons and tinted notices. It takes its colours from your Interface theme (Settings > Theme); Automatic uses Refraction's own light palette. The WordPress menu, toolbar and other admin screens are unchanged.

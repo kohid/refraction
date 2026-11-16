@@ -161,11 +161,11 @@ body.rf-admin #wpbody-content .form-table td p.description {
 	font-size: 12px;
 }
 
-body.rf-admin #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn) {
+body.rf-admin #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn):not(.refraction-button) {
 	color: var(--rfa-accent);
 }
 
-body.rf-admin #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn):hover {
+body.rf-admin #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn):not(.refraction-button):hover {
 	color: var(--rfa-accent-hover);
 }
 
@@ -411,6 +411,8 @@ body.rf-admin #wpbody-content .rtb-empty,
 body.rf-admin #wpbody-content .rcc-empty,
 body.rf-admin #wpbody-content .rf-cf__list,
 body.rf-admin #wpbody-content .rf-cf__add,
+body.rf-admin #wpbody-content .rf-ci-admin__add,
+body.rf-admin #wpbody-content .tab-import-export-kit__container,
 body.rf-admin #wpbody-content .refraction-system-info-section {
 	max-width: none;
 	border: 1px solid var(--rfa-line);
@@ -450,6 +452,13 @@ body.rf-admin #wpbody-content .form-table {
 	border-radius: var(--rfa-radius);
 	background: var(--rfa-card);
 	box-shadow: var(--rfa-shadow);
+}
+
+body.rf-admin #wpbody-content .form-table tbody,
+body.rf-admin #wpbody-content .form-table tr,
+body.rf-admin #wpbody-content .form-table th,
+body.rf-admin #wpbody-content .form-table td {
+	background: transparent;
 }
 
 body.rf-admin #wpbody-content .form-table > tbody {
@@ -765,6 +774,237 @@ body.rf-admin #wpbody-content .refraction-system-info-header {
 	align-items: center;
 	justify-content: space-between;
 	margin: 24px 32px 16px 12px;
+}
+
+/* ---------- 0.108.0: the remaining panels, dialogs and the Element Manager ---------- */
+/* Custom Fonts: each variation is a sunken panel inside the card. */
+body.rf-admin #wpbody-content .rf-cf__row {
+	border: 1px solid var(--rfa-line);
+	border-radius: var(--rfa-radius-sm);
+	background: var(--rfa-sunken);
+}
+
+body.rf-admin #wpbody-content .rf-cf__row legend,
+body.rf-admin #wpbody-content .rf-cf__field label,
+body.rf-admin #wpbody-content .rf-ci-admin__field label,
+body.rf-admin #wpbody-content .rf-ci-admin__add h2 {
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #wpbody-content .rf-ci-admin__add {
+	padding: 20px 24px;
+}
+
+body.rf-admin #wpbody-content .rf-ci-admin__rules,
+body.rf-admin #wpbody-content .rf-ci-admin__field .description {
+	color: var(--rfa-muted);
+}
+
+/* Role Manager: the open role's settings share its card. */
+body.rf-admin #wpbody-content .refraction-role-row .refraction-role-controls {
+	border-top: 1px var(--rfa-dash, dashed) var(--rfa-line);
+	border-radius: 0 0 var(--rfa-radius) var(--rfa-radius);
+	background: var(--rfa-card);
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #wpbody-content .refraction-role-control label,
+body.rf-admin #wpbody-content .refraction-role-control-warning strong {
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #wpbody-content .refraction-role-control-warning {
+	color: var(--rfa-muted);
+}
+
+/* Tools > Website Templates and the New Template dialog: Refraction's older .refraction-button. */
+body.rf-admin #wpbody-content .tab-import-export-kit__container {
+	padding: 20px 24px;
+}
+
+body.rf-admin #wpbody-content .tab-import-export-kit__box h2 {
+	color: var(--rfa-ink);
+}
+
+body.rf-admin .refraction-button.e-primary {
+	border-radius: var(--rfa-radius-sm);
+	background: var(--rfa-accent);
+	color: var(--rfa-accent-ink);
+}
+
+body.rf-admin .refraction-button.e-primary:hover,
+body.rf-admin .refraction-button.e-primary:focus {
+	background: var(--rfa-accent-hover);
+	color: var(--rfa-accent-ink);
+}
+
+body.rf-admin #refraction-new-template__form {
+	border-radius: var(--rfa-radius);
+	background: var(--rfa-card);
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #refraction-new-template__form__title,
+body.rf-admin #refraction-new-template__form .refraction-form-field__label {
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #refraction-new-template__form .refraction-form-field__select,
+body.rf-admin #refraction-new-template__form .refraction-form-field__text,
+body.rf-admin #refraction-new-template__form select,
+body.rf-admin #refraction-new-template__form input[type="text"] {
+	border: 1px solid var(--rfa-field-line);
+	border-radius: var(--rfa-radius-sm);
+	background-color: var(--rfa-card);
+	color: var(--rfa-ink);
+}
+
+/* Custom Code: the code box and the display conditions. */
+body.rf-admin #wpbody-content .CodeMirror {
+	border: 1px solid var(--rfa-field-line);
+	border-radius: var(--rfa-radius-sm);
+	background: var(--rfa-card);
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #wpbody-content .CodeMirror-gutters {
+	border-right-color: var(--rfa-line);
+	background: var(--rfa-sunken);
+}
+
+body.rf-admin #wpbody-content .CodeMirror-linenumber {
+	color: var(--rfa-muted);
+}
+
+body.rf-admin #wpbody-content .CodeMirror-activeline-background {
+	background: var(--rfa-accent-soft);
+}
+
+body.rf-admin #wpbody-content .CodeMirror-cursor {
+	border-left-color: var(--rfa-ink);
+}
+
+/* On the dark themes the code colours come from the theme (the stock ones are drawn for white). */
+html[data-refraction-theme="graphite"] body.rf-admin #wpbody-content .CodeMirror,
+html[data-refraction-theme="ember"] body.rf-admin #wpbody-content .CodeMirror,
+html[data-refraction-theme="blueprint"] body.rf-admin #wpbody-content .CodeMirror {
+	--rfa-code-key: var(--rf-accent);
+	--rfa-code-str: var(--rf-pass);
+	--rfa-code-num: var(--rf-warn);
+}
+
+body.rf-admin #wpbody-content .CodeMirror .cm-keyword,
+body.rf-admin #wpbody-content .CodeMirror .cm-tag {
+	color: var(--rfa-code-key, #7a1fa2);
+}
+
+body.rf-admin #wpbody-content .CodeMirror .cm-string,
+body.rf-admin #wpbody-content .CodeMirror .cm-string-2 {
+	color: var(--rfa-code-str, #a31515);
+}
+
+body.rf-admin #wpbody-content .CodeMirror .cm-number,
+body.rf-admin #wpbody-content .CodeMirror .cm-attribute,
+body.rf-admin #wpbody-content .CodeMirror .cm-atom {
+	color: var(--rfa-code-num, #0b5cad);
+}
+
+body.rf-admin #wpbody-content .CodeMirror .cm-comment {
+	color: var(--rfa-muted);
+}
+
+body.rf-admin #wpbody-content .CodeMirror .cm-def,
+body.rf-admin #wpbody-content .CodeMirror .cm-variable,
+body.rf-admin #wpbody-content .CodeMirror .cm-property,
+body.rf-admin #wpbody-content .CodeMirror .cm-qualifier,
+body.rf-admin #wpbody-content .CodeMirror .cm-bracket {
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #wpbody-content .rcc-cond__row {
+	border-radius: var(--rfa-radius-sm);
+	background: var(--rfa-sunken);
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #wpbody-content .rcc-cond__remove {
+	color: var(--rfa-muted);
+}
+
+body.rf-admin #wpbody-content .rcc-cond__remove:hover,
+body.rf-admin #wpbody-content .rcc-cond__remove:focus-visible {
+	color: var(--rfa-fail);
+}
+
+/* Element Manager (a React app on @elementor/ui): its paper, table and toolbar in the theme's colours. */
+body.rf-admin #refraction-element-manager-wrap .MuiPaper-root {
+	border-color: var(--rfa-line);
+	border-radius: var(--rfa-radius);
+	background: var(--rfa-card);
+	box-shadow: var(--rfa-shadow);
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiTableCell-root {
+	border-bottom: 1px var(--rfa-dash, dashed) var(--rfa-line);
+	background: transparent;
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiTableCell-head,
+body.rf-admin #refraction-element-manager-wrap .MuiTableSortLabel-root {
+	border-bottom-style: solid;
+	color: var(--rfa-muted);
+	font-weight: 600;
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiTableRow-hover:hover {
+	background: var(--rfa-sunken);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiTableCell-body .MuiBox-root,
+body.rf-admin #refraction-element-manager-wrap .MuiSelect-select,
+body.rf-admin #refraction-element-manager-wrap .MuiInputBase-input,
+body.rf-admin #refraction-element-manager-wrap .MuiSvgIcon-root {
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiOutlinedInput-notchedOutline {
+	border-color: var(--rfa-field-line);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiInputBase-root {
+	background: var(--rfa-card);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiButton-root:not(.Mui-disabled):not(.MuiButton-contained) {
+	border-color: var(--rfa-line);
+	color: var(--rfa-ink);
+}
+
+/* Disabled stays readable on the dark themes (the stock colour is black at 26%), just quieter. */
+body.rf-admin #refraction-element-manager-wrap .MuiButton-root.Mui-disabled {
+	border-color: var(--rfa-line);
+	color: var(--rfa-muted);
+	opacity: 0.75;
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiButton-contained:not(.Mui-disabled) {
+	background: var(--rfa-accent);
+	color: var(--rfa-accent-ink);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiAlert-root {
+	border: 1px solid var(--rfa-line);
+	border-left: 4px solid var(--rfa-warn);
+	border-radius: var(--rfa-radius-sm);
+	background: var(--rfa-warn-soft);
+	color: var(--rfa-ink);
+}
+
+body.rf-admin #refraction-element-manager-wrap .MuiAlert-message,
+body.rf-admin #refraction-element-manager-wrap .MuiAlertTitle-root {
+	color: var(--rfa-ink);
 }
 
 /* ---------- narrow screens ---------- */

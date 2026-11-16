@@ -72,11 +72,11 @@ html[data-refraction-theme] #wpbody-content .e-experiment__description {
 	color: var(--rf-text-dim);
 }
 
-html[data-refraction-theme] #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn) {
+html[data-refraction-theme] #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn):not(.refraction-button) {
 	color: var(--rf-accent);
 }
 
-html[data-refraction-theme] #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn):hover {
+html[data-refraction-theme] #wpbody-content a:not(.button):not(.nav-tab):not(.page-title-action):not(.rfb-btn):not(.refraction-button):hover {
 	color: var(--rf-accent-hover);
 }
 

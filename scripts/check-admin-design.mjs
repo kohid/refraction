@@ -11,6 +11,9 @@
  *   - text on cards and on the primary button clears WCAG AA (4.5:1);
  *   - no console errors.
  * Also: the WordPress Dashboard and Posts screens get neither the class nor the stylesheet.
+ * 0.108.0, every view (Settings and Tools tabs, Submissions settings, Role Manager opened, Element Manager, Custom
+ * Code editor, Custom Fonts / Icons, the New Template dialog, category screens), in Automatic and Blueprint: no text
+ * under 3:1 against what is behind it (disabled controls included), and on Blueprint no white box left.
  */
 import { createRequire } from 'node:module';
 import { mkdirSync } from 'node:fs';
@@ -222,6 +225,117 @@ for ( const path of [ '/wp-admin/index.php', '/wp-admin/edit.php' ] ) {
 		fail( `${ path } got the Refraction admin design` );
 	} else {
 		ok( `${ path } keeps WordPress's own look` );
+	}
+}
+
+// Every view: text readable against its background; on a dark theme, nothing left white.
+const VIEWS = [
+	...[ 'general', 'integrations', 'advanced', 'performance', 'experiments', 'theme', 'images' ].map( ( t ) => [ `settings ${ t }`, '/wp-admin/admin.php?page=refraction-settings', `#refraction-settings-tab-${ t }` ] ),
+	...[ 0, 1, 2, 3 ].map( ( i ) => [ `tools tab ${ i + 1 }`, '/wp-admin/admin.php?page=refraction-tools', `.nav-tab-wrapper a >> nth=${ i }` ] ),
+	[ 'submissions settings', '/wp-admin/admin.php?page=refraction-submissions', '.nav-tab-wrapper a >> nth=1' ],
+	[ 'role manager, a role open', '/wp-admin/admin.php?page=refraction-role-manager', '.refraction-role-toggle >> nth=0' ],
+	[ 'element manager', '/wp-admin/admin.php?page=refraction-element-manager' ],
+	[ 'custom code editor', '/wp-admin/admin.php?page=refraction-custom-code&edit=0' ],
+	[ 'custom fonts', '/wp-admin/admin.php?page=refraction-custom-fonts' ],
+	[ 'custom icons', '/wp-admin/admin.php?page=refraction-custom-icons' ],
+	[ 'new template dialog', '/wp-admin/post-new.php?post_type=refraction_library' ],
+	[ 'event categories', '/wp-admin/edit-tags.php?taxonomy=refraction_event_cat&post_type=refraction_event' ],
+];
+
+for ( const theme of [ 'auto', 'blueprint' ] ) {
+	await useTheme( theme );
+	let viewFails = 0;
+
+	for ( const [ name, path, click ] of VIEWS ) {
+		errors.length = 0;
+		await page.goto( BASE + path, { waitUntil: 'networkidle' } ).catch( () => {} );
+
+		if ( click ) {
+			await page.click( click ).catch( () => fail( `${ theme } / ${ name }: could not open (${ click })` ) );
+		}
+
+		await page.waitForTimeout( 600 );
+		const found = await page.evaluate( ( dark ) => {
+			const out = new Set();
+			const where = ( e ) => {
+				const parts = [];
+
+				for ( let x = e, i = 0; x && x !== document.body && i < 3; x = x.parentElement, i++ ) {
+					parts.unshift( x.tagName.toLowerCase() + ( x.id ? '#' + x.id : '' ) + ( x.classList.length ? '.' + [ ...x.classList ].slice( 0, 2 ).join( '.' ) : '' ) );
+				}
+
+				return parts.join( ' > ' );
+			};
+			const rgba = ( s ) => ( s.match( /[\d.]+/g ) || [] ).map( Number );
+			const solid = ( c ) => c.length >= 3 && ( undefined === c[ 3 ] || c[ 3 ] > 0.5 );
+			const lum = ( c ) => {
+				const [ r, g, b ] = c.slice( 0, 3 ).map( ( v ) => {
+					v /= 255;
+					return v <= 0.03928 ? v / 12.92 : ( ( v + 0.055 ) / 1.055 ) ** 2.4;
+				} );
+				return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+			};
+			const behind = ( e ) => {
+				for ( let x = e; x; x = x.parentElement ) {
+					const c = rgba( getComputedStyle( x ).backgroundColor );
+
+					if ( solid( c ) ) {
+						return c;
+					}
+				}
+
+				return [ 255, 255, 255 ];
+			};
+
+			for ( const e of document.querySelectorAll( 'body *' ) ) {
+				if ( e.closest( '#adminmenumain, #wpadminbar, .refraction-mini, .e-admin-top-bar, .screen-reader-text, #screen-meta-links' ) ) {
+					continue;
+				}
+
+				const box = e.getBoundingClientRect();
+				const cs = getComputedStyle( e );
+
+				if ( box.width < 20 || box.height < 10 || 'hidden' === cs.visibility || 0 === +cs.opacity ) {
+					continue;
+				}
+
+				const bg = rgba( cs.backgroundColor );
+
+				if ( dark && solid( bg ) && lum( bg ) > 0.85 && box.width > 80 && ! e.matches( 'input[type=checkbox], input[type=radio]' ) ) {
+					out.add( `white box: ${ where( e ) }` );
+				}
+
+				const color = rgba( cs.color );
+
+				if ( [ ...e.childNodes ].some( ( t ) => 3 === t.nodeType && t.textContent.trim() ) && solid( color ) ) {
+					const [ a, b ] = [ lum( color ), lum( behind( e ) ) ];
+					const ratio = ( Math.max( a, b ) + 0.05 ) / ( Math.min( a, b ) + 0.05 );
+
+					if ( ratio < 3 ) {
+						out.add( `text ${ ratio.toFixed( 1 ) }:1: ${ where( e ) }` );
+					}
+				}
+			}
+
+			return [ ...out ].slice( 0, 6 );
+		}, 'blueprint' === theme );
+
+		if ( errors.length ) {
+			found.push( `console: ${ errors[ 0 ] }` );
+		}
+
+		if ( found.length ) {
+			viewFails++;
+			found.forEach( ( f ) => fail( `${ theme } / ${ name }: ${ f }` ) );
+		}
+
+		if ( SHOTS && 'blueprint' === theme ) {
+			await page.screenshot( { path: join( SHOTS, `view-${ theme }-${ name.replace( /\W+/g, '-' ) }.png` ) } );
+		}
+	}
+
+	if ( ! viewFails ) {
+		ok( `${ theme }: ${ VIEWS.length } more views readable${ 'blueprint' === theme ? ', nothing left white' : '' }` );
 	}
 }
 
