@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.106.0
+Stable tag: 0.107.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.107.0 =
+* Admin: one look for every Refraction screen (Home, Settings, Tools, Saved Templates, Theme Builder, Builder, Events, Event types, Floating Elements, Submissions, Custom Code, Custom Fonts, Custom Icons, Role Manager, System Info, Element Manager): a page head with the main action on the right, content on cards, tables with dashed row lines, line tabs, pill filters, light secondary buttons and tinted notices. It takes its colours from your Interface theme (Settings > Theme); Automatic uses Refraction's own light palette. The WordPress menu, toolbar and other admin screens are unchanged.
+* Builder and the New form / New event wizards follow the Interface theme too (they stayed white on the dark themes).
 
 = 0.106.0 =
 * Form Builder: "New form" opens a wizard first: name it and say what it is for, choose its type (contact messages, bookings and appointments, orders and requests, sign-ups, surveys, a blank form, or a ready-made form), its options (one page or in steps, visitors can send it, email me each entry) and take a last look. The form is made with fitting fields, statuses and icon, added to your collections, and offered to edit in the editor.

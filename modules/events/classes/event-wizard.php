@@ -185,6 +185,7 @@ class Event_Wizard {
 		$links[] = '<a class="button" href="' . esc_url( (string) get_permalink( $id ) ) . '">' . esc_html( 'publish' === get_post_status( $id ) ? __( 'View', 'refraction' ) : __( 'Preview', 'refraction' ) ) . '</a>';
 
 		echo '<div class="notice notice-success rf-event-created"><p><strong>' . esc_html( sprintf( /* translators: %s: event name. */ __( '"%s" is in your events.', 'refraction' ), get_the_title( $id ) ) ) . '</strong> ' . esc_html( 'publish' === get_post_status( $id ) ? __( 'It is published.', 'refraction' ) : __( 'It is a draft until you publish it.', 'refraction' ) ) . '</p><p class="rf-event-created__actions">' . implode( ' ', $links ) . '</p></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
-		echo '<style>#post-' . (int) $id . ' td, #post-' . (int) $id . ' th { background: #e8fff3; } .rf-event-created__actions .button { margin-inline-end: 6px; }</style>';
+		// Two ids, so the mark wins over the admin design's table rows (0.107.0); a theme's own green tint when one is chosen.
+		echo '<style>#wpbody-content #post-' . (int) $id . ' > * { background: var(--rf-pass-soft, #e8fff3); } .rf-event-created__actions .button { margin-inline-end: 6px; }</style>';
 	}
 }

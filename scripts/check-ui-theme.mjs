@@ -84,24 +84,26 @@ async function main() {
 	const errs = () => errors.splice( 0 ).join( ' | ' );
 	await page.goto( `${ BASE }/wp-admin/admin.php?page=refraction-settings` );
 	const tabs = await page.evaluate( () => [ ...document.querySelectorAll( '#refraction-settings-tabs-wrapper a' ) ].map( ( a ) => a.textContent.trim() ) );
-	check( 'Tab', 'Theme tab sits after the five existing tabs', tabs.join() === 'General,Integrations,Advanced,Performance,Features,Theme', tabs.join() );
+	check( 'Tab', 'Theme tab sits after the five existing tabs', tabs.slice( 0, 6 ).join() === 'General,Integrations,Advanced,Performance,Features,Theme', tabs.join() );
 	check( 'Tab', 'no attribute on <html> by default (Automatic)', ( await attr( page ) ) === null );
 	const noCss = await page.evaluate( () => [ ...document.querySelectorAll( 'link[rel=stylesheet]' ) ].map( ( l ) => l.href ).filter( ( h ) => /ui-theme/.test( h ) ) );
 	const order = await page.evaluate( () => [ ...document.querySelectorAll( 'link[rel=stylesheet]' ) ].map( ( l ) => l.href ) );
 	const at = ( re ) => order.findIndex( ( h ) => re.test( h ) );
-	check( 'Tab', 'token CSS loads before Refraction admin.css, the skin after it', noCss.length === 3 && at( /ui-themes\.css/ ) < at( /\/css\/admin(\.min)?\.css/ ) && at( /\/css\/admin(\.min)?\.css/ ) < at( /ui-theme-admin\.css/ ), noCss.join( ' ' ) );
+	// 0.107.0: the admin design (ui-admin-design.css) loads last, after the skin.
+	check( 'Tab', 'token CSS loads before Refraction admin.css, the skin after it, the admin design last', noCss.length === 4 && at( /ui-themes\.css/ ) < at( /\/css\/admin(\.min)?\.css/ ) && at( /\/css\/admin(\.min)?\.css/ ) < at( /ui-theme-admin\.css/ ) && at( /ui-theme-admin\.css/ ) < at( /ui-admin-design\.css/ ), noCss.join( ' ' ) );
 	check( 'Tab', 'no inline script injected by the feature', ! ( await page.evaluate( () => [ ...document.scripts ].some( ( s ) => ! s.src && /data-refraction-theme|refraction_save_ui_theme/.test( s.textContent ) && ! /refractionUiTheme\s*=/.test( s.textContent ) ) ) ) );
 
-	// Baseline "today's look": the same page with the theme CSS blocked, versus Automatic with it loaded.
+	// Baseline: the same page with the theme files blocked (the admin design, 0.107.0, still loads), versus Automatic
+	// with them loaded: Automatic adds nothing of a theme.
 	await page.click( '#refraction-settings-tab-general' );
 	const withAuto = await snapshot( page, KEY_ADMIN );
 	const bare = await ctx.newPage();
-	await bare.route( '**/assets/ui-theme/**', ( r ) => r.abort() );
+	await bare.route( '**/assets/ui-theme/**', ( r ) => ( /ui-admin-design\.css/.test( r.request().url() ) ? r.continue() : r.abort() ) );
 	await bare.goto( `${ BASE }/wp-admin/admin.php?page=refraction-settings` );
 	await bare.click( '#refraction-settings-tab-general' );
 	const withoutFeature = await snapshot( bare, KEY_ADMIN );
 	await bare.close();
-	check( 'Automatic', 'computed styles equal the page without the feature', withAuto === withoutFeature, withAuto !== withoutFeature ? `${ withAuto.slice( 0, 160 ) } <> ${ withoutFeature.slice( 0, 160 ) }` : '' );
+	check( 'Automatic', 'computed styles equal the page without the theme files', withAuto === withoutFeature, withAuto !== withoutFeature ? `${ withAuto.slice( 0, 160 ) } <> ${ withoutFeature.slice( 0, 160 ) }` : '' );
 
 	// Picker by mouse
 	await page.click( '#refraction-settings-tab-theme' );
@@ -120,7 +122,8 @@ async function main() {
 		await page.waitForTimeout( 600 );
 		const a = await attr( page );
 		const bg = await css( page, '#wpcontent', 'backgroundColor' );
-		const want = await toRgb( page, await token( page, '--rf-bg' ) );
+		// The admin design (0.107.0): light themes put a tinted page (--rf-surface) under plain cards, dark ones use --rf-bg.
+		const want = await toRgb( page, await token( page, [ 'daylight', 'contrast' ].includes( t ) ? '--rf-surface' : '--rf-bg' ) );
 		const saved = wp( 'user', 'meta', 'get', '1', 'refraction_ui_theme' );
 		check( 'Picker', `click ${ t }: attribute, page colour from the token, saved in user meta`, a === t && bg === want && saved === t, `attr=${ a } bg=${ bg } want=${ want } meta=${ saved }` );
 		const exp = await page.evaluate( () => [ document.querySelector( '#refraction-ui-theme [aria-checked=true]' ).dataset.theme, document.getElementById( 'refraction-ui-theme-status' ).textContent ] );
@@ -159,7 +162,7 @@ async function main() {
 		await page.goto( `${ BASE }/wp-admin/${ path }` );
 		const a = await attr( page );
 		const bg = await css( page, '#wpcontent', 'backgroundColor' );
-		const want = await toRgb( page, await token( page, '--rf-bg' ) );
+		const want = await toRgb( page, await token( page, '--rf-bg' ) ); // Graphite, a dark theme: the page is --rf-bg.
 		const menu = await css( page, '#adminmenuwrap', 'backgroundColor' );
 		check( 'Admin skin', `${ name }: themed page, WordPress menu untouched`, a === 'graphite' && bg === want && menu !== want, `attr=${ a } bg=${ bg } menu=${ menu }` );
 	}
