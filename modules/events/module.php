@@ -84,7 +84,9 @@ class Module extends BaseModule {
 		if ( is_admin() ) {
 			add_action( 'add_meta_boxes_' . self::CPT, [ $this, 'add_meta_box' ] );
 			add_action( 'save_post_' . self::CPT, [ $this, 'save_meta_box' ] );
-			add_filter( 'views_edit-' . self::CPT, [ $this, 'list_links' ] );
+			// One Events area (0.109.0): Events, Bookings, Categories and Event types share a row of tabs.
+			add_action( 'all_admin_notices', [ $this, 'print_section_tabs' ] );
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_types_page' ] );
 			// "New event": a wizard first (0.106.0).
 			new Classes\Event_Wizard();
 			add_filter( 'manage_' . self::CPT . '_posts_columns', [ $this, 'columns' ] );
@@ -332,43 +334,68 @@ class Module extends BaseModule {
 	/** Refraction > Event types: each event form, its events, and the links to design it, use it and make a new one. */
 	public function render_types_page(): void {
 		$types = Event_Types::types();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$created = isset( $_GET['rfe_type_created'] ) ? sanitize_key( wp_unslash( $_GET['rfe_type_created'] ) ) : '';
+		$created = isset( $types[ $created ] ) ? $created : '';
+		$categories = admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::CPT );
+		echo self::section_tabs( 'types' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 		?>
-		<div class="wrap">
+		<div class="wrap rfe-types">
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Event types', 'refraction' ); ?></h1>
+			<?php echo Event_Types::new_type_button(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 			<hr class="wp-header-end">
-			<?php echo Event_Types::new_type_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
-			<p><?php esc_html_e( 'Each event type is a form you design in the editor with the Event Form fields (start, end, venue, tickets, price...). Your staff use the form to make events of that type: put it on a page with the Form Canvas widget (or a Shortcode widget with "Form Builder form"). Calendars and lists can show only some types.', 'refraction' ); ?></p>
-			<table class="widefat striped">
-				<thead><tr><th><?php esc_html_e( 'Event type', 'refraction' ); ?></th><th><?php esc_html_e( 'Who can use the form', 'refraction' ); ?></th><th><?php esc_html_e( 'Events', 'refraction' ); ?></th><th><?php esc_html_e( 'Shortcode', 'refraction' ); ?></th><th></th></tr></thead>
+			<p class="rfe-types__intro">
+				<?php esc_html_e( 'An event type is a kind of event with its own form, address and page design: workshops at /workshops/, concerts at /concerts/. To sort events and colour them in calendars, use Categories instead; most sites only need those.', 'refraction' ); ?>
+				<a href="<?php echo esc_url( $categories ); ?>"><?php esc_html_e( 'Categories', 'refraction' ); ?></a>
+			</p>
+			<?php if ( $created ) :
+				$settings = Event_Types::settings( $created );
+				?>
+				<div class="notice notice-success rfe-type-created" role="status">
+					<p><strong><?php echo esc_html( sprintf( /* translators: %s: event type. */ __( '"%s" is ready.', 'refraction' ), $types[ $created ] ) ); ?></strong>
+					<?php esc_html_e( 'Add its first event, or change its form or its pages whenever you like.', 'refraction' ); ?></p>
+					<p class="rfe-type-created__actions">
+						<a class="button button-primary" href="<?php echo esc_url( (string) get_permalink( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Add an event', 'refraction' ); ?></a>
+						<a class="button" href="<?php echo esc_url( \Refraction\Modules\FormBuilder\Classes\Editor_Forms::edit_url( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Design the form', 'refraction' ); ?></a>
+						<a class="button" href="<?php echo esc_url( Event_Types::design_url( $created, 'single' ) ); ?>"><?php esc_html_e( 'Design the event page', 'refraction' ); ?></a>
+					</p>
+				</div>
+			<?php endif; ?>
+			<?php if ( ! $types ) : ?>
+				<div class="rtb-empty rfe-types__empty">
+					<p><strong><?php esc_html_e( 'No event types yet.', 'refraction' ); ?></strong> <?php esc_html_e( 'Make one when a kind of event needs its own form, address or page design.', 'refraction' ); ?></p>
+					<?php echo Event_Types::new_type_button( 'button button-primary' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				</div>
+			<?php else : ?>
+			<table class="widefat rfe-types__table">
+				<thead><tr><th><?php esc_html_e( 'Event type', 'refraction' ); ?></th><th><?php esc_html_e( 'Address', 'refraction' ); ?></th><th><?php esc_html_e( 'Form for', 'refraction' ); ?></th><th><?php esc_html_e( 'Events', 'refraction' ); ?></th><th></th></tr></thead>
 				<tbody>
-				<?php if ( ! $types ) : ?>
-					<tr><td colspan="5"><?php esc_html_e( 'No event types yet. Name one above and press "New event type".', 'refraction' ); ?></td></tr>
-				<?php endif; ?>
 				<?php foreach ( $types as $slug => $label ) :
 					$settings = Event_Types::settings( $slug );
 					$count = count( get_posts( [ 'post_type' => self::CPT, 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids', 'meta_key' => Event_Data::META_PREFIX . 'type', 'meta_value' => $slug ] ) );
 					$who = [ 'staff' => __( 'Staff', 'refraction' ), 'logged_in' => __( 'Anyone logged in', 'refraction' ), 'anyone' => __( 'Anyone', 'refraction' ) ][ $settings['who'] ];
 					?>
-					<tr data-type="<?php echo esc_attr( $slug ); ?>">
-						<td><strong><?php echo esc_html( $label ); ?></strong></td>
+					<tr data-type="<?php echo esc_attr( $slug ); ?>"<?php echo $slug === $created ? ' class="is-new"' : ''; ?>>
+						<td><strong><?php echo esc_html( $label ); ?></strong><br><code class="rfe-types__code">[refraction_form collection="<?php echo esc_html( $slug ); ?>"]</code></td>
+						<td><a href="<?php echo esc_url( (string) get_term_link( Event_Types::term_id( $slug ), self::TYPE_TAXONOMY ) ); ?>"><?php echo esc_html( '/' . ( Event_Types::bases()[ $slug ] ?? $slug ) . '/' ); ?></a></td>
 						<td><?php echo esc_html( $who ); ?></td>
 						<td><a href="<?php echo esc_url( admin_url( self::ADMIN_SLUG . '&rfe_type=' . $slug ) ); ?>"><?php echo esc_html( number_format_i18n( $count ) ); ?></a></td>
-						<td><code>[refraction_form collection="<?php echo esc_html( $slug ); ?>"]</code></td>
-						<td>
+						<td class="rfe-types__actions">
 							<?php if ( $settings['doc'] ) : ?>
+								<a class="button button-primary" href="<?php echo esc_url( (string) get_permalink( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Add an event', 'refraction' ); ?></a>
 								<a class="button" href="<?php echo esc_url( \Refraction\Modules\FormBuilder\Classes\Editor_Forms::edit_url( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Design the form', 'refraction' ); ?></a>
-								<a class="button" href="<?php echo esc_url( (string) get_permalink( $settings['doc'] ) ); ?>"><?php esc_html_e( 'Use the form', 'refraction' ); ?></a>
 								<a class="button" href="<?php echo esc_url( Event_Types::design_url( $slug, 'single' ) ); ?>"><?php esc_html_e( 'Design the event page', 'refraction' ); ?></a>
 								<a class="button" href="<?php echo esc_url( Event_Types::design_url( $slug, 'archive' ) ); ?>"><?php esc_html_e( 'Design the archive', 'refraction' ); ?></a>
-								<a href="<?php echo esc_url( (string) get_term_link( Event_Types::term_id( $slug ), self::TYPE_TAXONOMY ) ); ?>"><?php echo esc_html( '/' . ( Event_Types::bases()[ $slug ] ?? $slug ) . '/' ); ?></a>
 							<?php endif; ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?php endif; ?>
 		</div>
 		<?php
+		Event_Types::render_wizard();
 	}
 
 	public function add_meta_box(): void {
@@ -431,14 +458,46 @@ class Module extends BaseModule {
 		Event::sync_to_settings( $post_id );
 	}
 
-	/** Above the events table: make a new event in the page editor, and the categories. */
-	public function list_links( array $views ): array {
-		$views['rfe_new'] = Classes\Event_Wizard::button();
-		$views['rfe_bookings'] = '<a href="' . esc_url( Bookings::admin_url() ) . '">' . esc_html__( 'Bookings', 'refraction' ) . '</a>';
-		$views['rfe_types'] = '<a href="' . esc_url( admin_url( 'admin.php?page=' . self::TYPES_SLUG ) ) . '">' . esc_html__( 'Event types and their forms', 'refraction' ) . '</a>';
-		$views['rfe_categories'] = '<a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::CPT ) ) . '">' . esc_html__( 'Categories and colors', 'refraction' ) . '</a>';
+	/** The tabs of the Events area: tab key => [ label, url ]. Event types only for those who may make them. */
+	public static function section_links(): array {
+		$links = [
+			'events' => [ __( 'Events', 'refraction' ), admin_url( self::ADMIN_SLUG ) ],
+			'bookings' => [ __( 'Bookings', 'refraction' ), Bookings::admin_url() ],
+			'categories' => [ __( 'Categories', 'refraction' ), admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::CPT ) ],
+		];
 
-		return $views;
+		if ( current_user_can( 'manage_options' ) ) {
+			$links['types'] = [ __( 'Event types', 'refraction' ), admin_url( 'admin.php?page=' . self::TYPES_SLUG ) ];
+		}
+
+		return $links;
+	}
+
+	public static function section_tabs( string $current ): string {
+		$html = '<nav class="nav-tab-wrapper rf-section-tabs" aria-label="' . esc_attr__( 'Events', 'refraction' ) . '">';
+
+		foreach ( self::section_links() as $key => [ $label, $url ] ) {
+			$html .= '<a class="nav-tab' . ( $key === $current ? ' nav-tab-active" aria-current="page' : '' ) . '" href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>';
+		}
+
+		return $html . '</nav>';
+	}
+
+	/** Which tab a WordPress screen of the Events area is: the events, bookings and category lists. */
+	public function print_section_tabs(): void {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$map = [ 'edit-' . self::CPT => 'events', 'edit-' . Bookings::CPT => 'bookings', 'edit-' . self::TAXONOMY => 'categories' ];
+
+		if ( $screen && isset( $map[ $screen->id ] ) ) {
+			echo self::section_tabs( $map[ $screen->id ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		}
+	}
+
+	public function enqueue_types_page(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['page'] ) && self::TYPES_SLUG === $_GET['page'] ) {
+			\Refraction\Modules\FormBuilder\Classes\Wizard::enqueue();
+		}
 	}
 
 	public function columns( array $columns ): array {

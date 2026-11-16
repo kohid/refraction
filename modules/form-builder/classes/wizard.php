@@ -196,6 +196,11 @@ class Wizard {
 			$kinds[ $key ] = [ $kind['title'], $kind['text'], $kind['icon'] ];
 		}
 
+		/**
+		 * Other kinds offered here and made elsewhere (0.109.0): key => [ title, text, icon ]. The Events module adds
+		 * "Events", made as an event type; refraction/form_builder/wizard_make handles it.
+		 */
+		$kinds = (array) apply_filters( 'refraction/form_builder/wizard_kinds', $kinds );
 		$starters = [];
 
 		foreach ( Starters::all() as $key => $starter ) {
@@ -221,7 +226,7 @@ class Wizard {
 				self::choices( 'layout', __( 'Layout', 'refraction' ), [
 					'single' => [ __( 'One page', 'refraction' ), __( 'Every field at once.', 'refraction' ), 'web' ],
 					'steps' => [ __( 'In steps', 'refraction' ), __( 'Their details first, then the rest, with Back and Next.', 'refraction' ), 'linear-scale' ],
-				], [ 'checked' => 'single', 'show_if' => 'kind!=starter:*' ] )
+				], [ 'checked' => 'single', 'show_if' => 'kind!=starter:*,kind!=events' ] )
 				. self::toggle( 'public_form', __( 'Accept submissions from visitors', 'refraction' ), true, __( 'Off: only you add records, from the admin.', 'refraction' ) )
 				. self::toggle( 'notify', __( 'Email me each new entry', 'refraction' ), true )
 				. self::text( 'notify_to', __( 'Send them to', 'refraction' ), [ 'type' => 'email', 'value' => (string) get_option( 'admin_email' ), 'show_if' => 'notify=yes', 'summary' => __( 'Emails go to', 'refraction' ) ] ),
@@ -291,6 +296,25 @@ class Wizard {
 
 		if ( '' === $name ) {
 			wp_safe_redirect( Admin_Page::url( [ 'wizard' => 'name' ] ) );
+			exit;
+		}
+
+		/**
+		 * A kind made elsewhere (an event type): the URL to go to once it is made, else ''.
+		 *
+		 * @param string $url
+		 * @param string $kind
+		 * @param array  $answers name, description, public_form, notify, notify_to.
+		 */
+		$elsewhere = (string) apply_filters( 'refraction/form_builder/wizard_make', '', $kind, [
+			'name' => $name,
+			'description' => $get( 'description' ),
+			'public_form' => 'yes' === $get( 'public_form' ),
+			'notify_to' => 'yes' === $get( 'notify' ) ? $notify_to : '',
+		] );
+
+		if ( '' !== $elsewhere ) {
+			wp_safe_redirect( $elsewhere );
 			exit;
 		}
 

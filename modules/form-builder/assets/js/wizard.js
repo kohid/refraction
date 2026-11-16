@@ -35,9 +35,10 @@
 			return '=' === m[ 2 ] ? hit : ! hit;
 		};
 
+		// Several rules joined by commas must all hold: "kind!=starter:*,kind!=events".
 		const applyRules = () => {
 			dialog.querySelectorAll( '[data-rf-show-if]' ).forEach( ( el ) => {
-				el.hidden = ! matches( el.getAttribute( 'data-rf-show-if' ) );
+				el.hidden = ! el.getAttribute( 'data-rf-show-if' ).split( ',' ).every( matches );
 			} );
 		};
 

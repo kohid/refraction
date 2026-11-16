@@ -146,9 +146,44 @@ class Admin_Views {
 			return;
 		}
 
+		/**
+		 * Collections shown in a group of their own (0.109.0): slug => group key. The Events module puts the event
+		 * types' forms in "events", with their heading and link.
+		 *
+		 * @param array $groups
+		 * @param array $all
+		 */
+		$grouped = (array) apply_filters( 'refraction/form_builder/collection_groups', [], $all );
+		$headings = (array) apply_filters( 'refraction/form_builder/collection_group_headings', [] );
+		$sets = [ '' => array_diff_key( $all, $grouped ) ];
+
+		foreach ( $grouped as $slug => $group ) {
+			if ( isset( $all[ $slug ] ) ) {
+				$sets[ (string) $group ][ $slug ] = $all[ $slug ];
+			}
+		}
+
+		foreach ( $sets as $group => $set ) {
+			if ( ! $set ) {
+				continue;
+			}
+
+			if ( '' !== $group ) {
+				[ $title, $text ] = array_pad( (array) ( $headings[ $group ] ?? [ $group, '' ] ), 2, '' );
+				echo '<div class="rfb-group-head" data-group="' . esc_attr( $group ) . '"><h2>' . esc_html( $title ) . '</h2>' . ( '' !== $text ? '<p class="rfb-muted">' . wp_kses_post( $text ) . '</p>' : '' ) . '</div>';
+			}
+
+			$this->collection_cards( $set, $new );
+		}
+
+		$this->close();
+	}
+
+	/** A grid of collection cards. */
+	private function collection_cards( array $set, ?array $new ): void {
 		echo '<div class="rfb-grid">';
 
-		foreach ( $all as $slug => $definition ) {
+		foreach ( $set as $slug => $definition ) {
 			$counts = $this->records->counts( $definition );
 			echo '<div class="rfb-card rfb-collection' . ( $slug === ( $new['slug'] ?? '' ) ? ' is-new' : '' ) . '" data-collection="' . esc_attr( $slug ) . '"><div class="rfb-card-body">';
 			echo '<div class="rfb-collection-head"><span class="rfb-symbol rfb-symbol-light-primary">' . $this->icon( $definition['icon'], 24 ) . '</span><div><h2><a href="' . esc_url( $this->url( [ 'view' => 'records', 'collection' => $slug ] ) ) . '">' . esc_html( $definition['label'] ) . '</a></h2>';
@@ -167,7 +202,6 @@ class Admin_Views {
 		}
 
 		echo '</div>';
-		$this->close();
 	}
 
 	/** Delete a collection: its records, uploads and Form page go with it. The name must be typed, so no stray click wipes it. */
