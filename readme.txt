@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.119.0
+Stable tag: 0.120.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.120.0 =
+* New widget: Dynamic Container. A list of containers (three to start, Add Item for more), each the same as a Container with all its settings. Per screen size it is a grid with its own number of columns (3 on desktop, 2 on tablets by default) or a row that scrolls sideways with no scrollbar and the next item peeking in (the default on phones), stopping at each item. Space between columns and rows, item height, items in view and room at the row's ends. Edit Mode shows the same layout.
 
 = 0.119.0 =
 * Showcase Wheel: floating images. Each slide can have up to five small pictures or icons around its picture (like the ingredients around a dish), each with a Content tab (picture or icon, where, animation: float, sway, turn, pulse) and a Style tab (size, turn, in front of or behind the picture, opacity, shadow, icon color). They turn with the picture on the wheel, and in the editor they can be dragged into place.

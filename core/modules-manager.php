@@ -137,6 +137,7 @@ class Modules_Manager {
 			'timed-slides',
 			'focus-stack',
 			'showcase-wheel',
+			'dynamic-container',
 			'woocommerce',
 			'form-builder',
 			'events',
