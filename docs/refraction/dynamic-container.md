@@ -18,8 +18,27 @@ widgets category. A list of containers laid out as a grid or as a row scrolling 
 - **Items in view** (row): 3.2 / 2.2 / 1.15 by default; a fraction lets the next item peek in. Each item is
   `(100% - (n - 1) × gap) / n` wide.
 - **Space between columns** and **rows** (16px), **Item height** (all as tall as the tallest in their row, or their own
-  height at the top, middle or bottom), **Stop at each item** (scroll snap, on), **Room at the row's ends** (padding and
-  scroll padding at both ends of the row).
+  height at the top, middle or bottom), **Stop at each item** (scroll snap, on), **Padding** (0.121.0, per screen size,
+  in either layout; in the row the left and right padding are also the scroll padding). 0.120.0's "Room at the row's
+  ends" (`edge`, now hidden) still counts where it was set and Padding is not.
+
+## Entrance (0.121.0)
+
+- **Animation**: fade in up / down / from the right / from the left, fade, zoom in / out, come into focus (blur), flip up,
+  rise and turn. **What appears**: each item then the widgets inside it, each item as a whole, or only the widgets inside
+  item by item. **Time between items**, **between the widgets in an item**, **Duration**, **Distance**, **Easing** (the
+  shared easings), **Play every time it comes into view**.
+- `assets/js/frontend/handlers/dynamic-container.js`: when the list comes into view (IntersectionObserver) the parts get
+  `rf-dc-a` and a delay (`--rf-dc-d`: item i × item gap, + widget k × inner gap); `.rf-dc.is-armed` hides them at their
+  start (`--rf-dc-from`, `--rf-dc-blur`), `.is-in` brings them in. When all have appeared the classes go, so the
+  containers' hover animations and the widgets' own effects work as before. Widgets with their own Reveal or entrance
+  animation are left alone. Reduced motion: nothing moves.
+
+## Items: Link and Hover Animation (0.121.0)
+
+Every Container (so every item) has a **Hover Animation** (`hover_animation`, `prefix_class` `refraction-animation-`,
+its CSS loaded with the page's assets) and its **Link** shows with the Default tag too: a container with a link and the
+Default tag is drawn as `<a>` (`Container::print_html_tag()`).
 
 ## How it works
 

@@ -5,6 +5,9 @@
 	grid-template-columns: repeat(var(--rf-dc-cols, 3), minmax(0, 1fr));
 	gap: var(--rf-dc-row-gap, 16px) var(--rf-dc-col-gap, 16px);
 	align-items: stretch;
+	// Padding (0.121.0); 0.120.0's "Room at the row's ends" (--rf-dc-edge) where it was set and Padding is not.
+	padding: var(--rf-dc-pt, 0px) var(--rf-dc-pr, var(--rf-dc-edge, 0px)) var(--rf-dc-pb, 0px) var(--rf-dc-pl, var(--rf-dc-edge, 0px));
+	scroll-padding-inline: var(--rf-dc-pl, var(--rf-dc-edge, 0px)) var(--rf-dc-pr, var(--rf-dc-edge, 0px));
 	// The scrolling row: no scrollbar shown (it still scrolls with a swipe, the trackpad or the keyboard).
 	overscroll-behavior-x: contain;
 	scrollbar-width: none;
@@ -27,7 +30,31 @@
 	}
 }
 
+// The Entrance (0.121.0, assets/js/frontend/handlers/dynamic-container.js): while armed the parts that will appear
+// wait hidden (from the chosen place); in view, each comes in after its own delay. The script then removes these
+// classes, so hover animations and the widgets' own effects work as before.
+.rf-dc.is-armed .rf-dc-a {
+	opacity: 0;
+	filter: var(--rf-dc-blur, none);
+	transform: var(--rf-dc-from, none);
+	transition: none;
+}
+
+.rf-dc.is-armed.is-in .rf-dc-a {
+	opacity: 1;
+	filter: none;
+	transform: none;
+	transition: opacity var(--rf-dc-dur, 700ms) var(--rf-dc-ease, ease) var(--rf-dc-d, 0ms), transform var(--rf-dc-dur, 700ms) var(--rf-dc-ease, ease) var(--rf-dc-d, 0ms), filter var(--rf-dc-dur, 700ms) var(--rf-dc-ease, ease) var(--rf-dc-d, 0ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
+
+	.rf-dc.is-armed .rf-dc-a {
+		opacity: 1;
+		filter: none;
+		transform: none;
+	}
+
 
 	.rf-dc {
 		scroll-behavior: auto;
