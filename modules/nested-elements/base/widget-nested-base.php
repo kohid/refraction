@@ -68,6 +68,15 @@ abstract class Widget_Nested_Base extends Widget_Base {
 	}
 
 	/**
+	 * Whether a slide (item) added in the editor starts as a copy of a default child's inner elements (0.111.0), so a
+	 * widget whose slides have a fixed inner layout (Focus Stack: Header, Content, Footer) gets it on every new slide
+	 * instead of an empty container. Off: a new item is an empty container, as before.
+	 */
+	protected function new_items_like_defaults(): bool {
+		return false;
+	}
+
+	/**
 	 * @inheritDoc
 	 *
 	 * To support nesting.
@@ -91,6 +100,7 @@ abstract class Widget_Nested_Base extends Widget_Base {
 				'repeater_title_setting' => $this->get_default_repeater_title_setting_key(),
 			],
 			'support_nesting' => true,
+			'new_items_like_defaults' => $this->new_items_like_defaults(),
 		] );
 	}
 

@@ -12,6 +12,10 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
   container is its **header**, the **last** its **footer**, the ones between its **content**. A new widget starts
   with three slides, each holding Header, Content and Footer containers with an example inside.
 - A slide with one container shows that container whether waiting or not.
+- **Add Slide** (0.111.0) gives the new slide its Header, Content and Footer containers with the example inside, like
+  the first three (`new_items_like_defaults()`, see `docs/refraction/editor-panel-speed.md`).
+- Each slide in the list has **When waiting, it shows**: *As set for the stack* (the Layout setting for its side),
+  *Its header* or *Its footer* (`waiting_part`; on the site in `data-rf-fs` as `parts`).
 
 ## Layout (Content tab)
 
@@ -52,6 +56,9 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
   (`justify-content` start for a header, end for a footer); entering cards grow from nothing, leaving ones shrink to
   nothing; the parts of the card that opens fade in after 45% of the motion, those of the card that folds fade out in
   the first 40%. Event `rf-focus-stack:change` (`detail.index`).
+- **Edit Mode** (0.111.0): the settings the script reads have `render_type: none` (the widget is not drawn again; the
+  handler rebuilds the stack from `onElementChange`), Stack and Turn have `ui`. A change applies in about 0.1 s (it took
+  about 1.8 s).
 - **Edit Mode**: the preview is the same stack (the handler runs there; the JS-read settings are
   `frontend_available`). It does not play by itself, follows the slide picked in the panel (with the motion), rebuilds
   when slides or their parts are added, removed or re-rendered, and when a layout or motion setting changes. A click on

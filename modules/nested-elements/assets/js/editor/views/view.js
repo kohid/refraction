@@ -45,10 +45,52 @@ export class View extends $e.components.get( 'nested-elements/nested-repeater' )
 
 		if ( 'js' === templateType ) {
 			editModel.setHtmlCache();
-			this.render();
+
+			if ( ! this.renderKeepingChildren() ) {
+				this.render();
+			}
 		} else {
 			editModel.renderRemoteServer();
 		}
+	}
+
+	/**
+	 * Redraws the widget's own markup and puts its existing child containers back in their places, instead of building
+	 * every child again (0.111.0). A full render rebuilt each slide or tab with every widget inside it and ran all their
+	 * handlers again: about 0.9 s for three short slides, on every settings change of the widget and every new slide.
+	 * The children stay the same views (their DOM, events and handlers), placed again through getChildViewContainer(),
+	 * so per-slot layouts (tabs) keep working. Falls back to a full render when the views do not match the models.
+	 *
+	 * @return {boolean} Whether it redrew this way.
+	 */
+	renderKeepingChildren() {
+		if ( ! this.isRendered || this.isDestroyed || this._isRendering || ! this.collection || ! this.children || ! this.children.length ) {
+			return false;
+		}
+
+		const views = this.collection.map( ( model ) => this.children.findByModel( model ) );
+
+		if ( views.length !== this.children.length || views.some( ( view ) => ! view || view.isDestroyed ) ) {
+			return false;
+		}
+
+		// Out of the DOM first: the template is written with jQuery's empty(), which would drop their data and events.
+		views.forEach( ( view ) => view.$el.detach() );
+
+		this._isRendering = true;
+		this.resetChildViewContainer();
+		this.triggerMethod( 'before:render', this );
+		this._renderTemplate();
+
+		views.forEach( ( view, index ) => {
+			view._index = index;
+			this.getChildViewContainer( this, view ).append( view.el );
+		} );
+
+		this._isRendering = false;
+		this.triggerMethod( 'render', this );
+
+		return true;
 	}
 }
 
