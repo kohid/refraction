@@ -140,6 +140,11 @@ class Focus_Stack extends Widget_Nested_Base {
 		return '.rf-fs__slides';
 	}
 
+	/** A slide added in the editor gets its Header, Content and Footer containers, like the first ones. */
+	protected function new_items_like_defaults(): bool {
+		return true;
+	}
+
 	// ---------------------------------------------------------------- controls
 
 	private static function choose( array $labels_icons ): array {
@@ -168,9 +173,22 @@ class Focus_Stack extends Widget_Nested_Base {
 			'description' => esc_html__( 'For the navigator and screen readers. The slide itself is the container under this widget: its first container is the header, its last the footer, the ones between the content.', 'refraction' ),
 		] );
 
+		$repeater->add_control( 'waiting_part', [
+			'label' => esc_html__( 'When waiting, it shows', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'As set for the stack', 'refraction' ),
+				'header' => esc_html__( 'Its header', 'refraction' ),
+				'footer' => esc_html__( 'Its footer', 'refraction' ),
+			],
+			'description' => esc_html__( 'What this slide shows while it waits before or after the current one. "As set for the stack": Layout > The next / previous slides show.', 'refraction' ),
+		] );
+
 		$this->add_control( 'slides', [
 			'label' => esc_html__( 'Slides', 'refraction' ),
 			'type' => Control_Nested_Repeater::CONTROL_TYPE,
+			'frontend_available' => true,
 			'fields' => $repeater->get_controls(),
 			'default' => [
 				[ 'slide_title' => esc_html__( 'Slide #1', 'refraction' ) ],
@@ -195,6 +213,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'orientation', [
 			'frontend_available' => true,
+			'render_type' => 'ui',
 			'label' => esc_html__( 'Stack', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => self::choose( [
@@ -208,6 +227,8 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'direction_v', [
 			'frontend_available' => true,
+			// Read by the script, which rebuilds the stack: no need to draw the widget again.
+			'render_type' => 'none',
 			'label' => esc_html__( 'Moves', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'down',
@@ -220,6 +241,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'direction_h', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Moves', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'left',
@@ -237,6 +259,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'next_part', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'The next slides show', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'header',
@@ -246,6 +269,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'prev_part', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'The previous slides show', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'footer',
@@ -254,6 +278,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'visible', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Waiting slides on each side', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '2',
@@ -266,6 +291,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'loop', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Go round', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
@@ -297,6 +323,7 @@ class Focus_Stack extends Widget_Nested_Base {
 			'default' => 'yes',
 			'description' => esc_html__( 'The header or footer of a slim side card reads from top to bottom.', 'refraction' ),
 			'prefix_class' => 'rf-fs-turn-',
+			'render_type' => 'ui',
 			'condition' => $horizontal,
 		] );
 
@@ -307,6 +334,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'duration', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Duration (ms)', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,
 			'min' => 100,
@@ -317,6 +345,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'easing', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Easing', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'smooth',
@@ -331,6 +360,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'fade_content', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Fade the content in', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
@@ -339,6 +369,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'autoplay', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Play by itself', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
@@ -348,6 +379,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'interval', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Each slide stays (ms)', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,
 			'min' => 800,
@@ -359,6 +391,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'pause_on_hover', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Wait while the pointer is on it', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
@@ -367,6 +400,7 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->add_control( 'click_waiting', [
 			'frontend_available' => true,
+			'render_type' => 'none',
 			'label' => esc_html__( 'Clicking a waiting slide opens it', 'refraction' ),
 			'type' => Controls_Manager::SWITCHER,
 			'default' => 'yes',
@@ -546,6 +580,8 @@ class Focus_Stack extends Widget_Nested_Base {
 			'interval' => max( 800, (int) ( $settings['interval'] ?? 3000 ) ),
 			'pause' => 'yes' === ( $settings['pause_on_hover'] ?? 'yes' ),
 			'click' => 'yes' === ( $settings['click_waiting'] ?? 'yes' ),
+			// Each slide's own choice ('' : as set for the stack).
+			'parts' => array_map( static fn( $slide ) => in_array( $slide['waiting_part'] ?? '', [ 'header', 'footer' ], true ) ? $slide['waiting_part'] : '', array_values( (array) ( $settings['slides'] ?? [] ) ) ),
 		] );
 	}
 

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.110.0
+Stable tag: 0.111.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.111.0 =
+* Focus Stack: each slide in the list has "When waiting, it shows" (as set for the stack, its header or its footer). Add Slide now gives the new slide its Header, Content and Footer containers.
+* Editor speed: nested widgets (Focus Stack, Timed Slides, Nested Carousel, Tabs, Accordion, Mega Menu...) no longer rebuild every slide and everything in it when a setting changes or a slide is added; only the widget's own markup is drawn again. Focus Stack: a setting applies in about 0.1 s instead of 1.8 s and a new slide in about 1.1 s instead of 2.1 s; Timed Slides and Nested Carousel add a slide two to three times faster.
 
 = 0.110.0 =
 * New widget: Focus Stack. The slide in focus is a whole card (its Header, Content and Footer containers); the slides before and after it wait as slim cards showing only their header or footer, and the ones two away smaller and fainter. Moving on, the waiting card opens into the current one, its content fading in, while the old one folds into a slim card on the other side. Up and down or side by side, either way round ("Moves"), with the part each side shows, how many wait, going round, duration and easing, playing by itself, click, arrow keys and swipe. Style the current card and the waiting ones: width, height, opacity, background, border, corners and shadow. Edit Mode shows the same stack and follows the slide you pick.

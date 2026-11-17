@@ -123,6 +123,9 @@ async function main() {
 
 	try {
 		const down = page( 'Focus stack down', stack( {} ) );
+		const own = stack( {} );
+		own[ 0 ].elements[ 0 ].settings.slides[ 1 ].waiting_part = 'footer';
+		const ownPart = page( 'Focus stack own part', own );
 		const upwards = page( 'Focus stack up', stack( { direction_v: 'up', next_part: 'footer', prev_part: 'header', visible: '1' } ) );
 		const side = page( 'Focus stack side', stack( { orientation: 'horizontal', stack_height: { unit: 'px', size: 360 } } ) );
 		const auto = page( 'Focus stack auto', stack( { autoplay: 'yes', interval: 900, duration: 300, pause_on_hover: '' }, 3 ) );
@@ -198,6 +201,12 @@ async function main() {
 		await p.click( '.rf-fs__slide:nth-child(1)' );
 		await p.waitForTimeout( 800 );
 		check( 'site', 'clicking the waiting slide 1 opens it again', 0 === byState( await state(), 'is-active' ).i );
+
+		// ------------------------------------------------------------ a slide's own choice
+		await p.goto( ownPart.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		st = await state();
+		check( 'per slide', 'slide 2 set to "Its footer" waits above showing its footer, while slide 3 (as set for the stack) shows its header', 'S2 footer' === st[ 1 ].visible.join() && 'before' === st[ 1 ].side && 'S3 header' === st[ 2 ].visible.join(), JSON.stringify( [ st[ 1 ], st[ 2 ] ] ) );
 
 		// ------------------------------------------------------------ moving up, parts swapped, one each side
 		await p.goto( upwards.url, { waitUntil: 'load' } );
@@ -310,6 +319,48 @@ async function main() {
 		await p.waitForTimeout( 1200 );
 		ed = await edState();
 		check( 'editor', 'picking slide 3 in the panel makes it the current one in the preview', 'is-active' === ed[ 2 ].state && 'S3 header,S3 content,S3 footer' === ed[ 2 ].visible, JSON.stringify( ed ) );
+
+		// A slide's own choice in the panel shows at once.
+		await p.evaluate( ( c ) => {
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 4 ], settings: { waiting_part: 'header' } } );
+		}, w );
+		await p.waitForTimeout( 1200 );
+		ed = await edState();
+		const slide5 = ed[ 4 ];
+		check( 'editor', 'setting slide 5 to "Its header" in the slide list shows its header in the preview at once', 'S5 header' === slide5.visible, JSON.stringify( ed ) );
+
+		// Speed (0.111.0): a setting the script reads does not draw the widget again; one that does keeps the slides.
+		const speed = await p.evaluate( async ( c ) => {
+			const preview = document.getElementById( 'refraction-preview-iframe' ).contentWindow;
+			const raf = () => new Promise( ( done ) => preview.requestAnimationFrame( () => preview.requestAnimationFrame( done ) ) );
+			const slideEl = () => c.view.$el[ 0 ].querySelector( '.rf-fs__slides > .rf-fs__slide' );
+			const before = slideEl();
+			before.__rfMark = 1;
+			let t0 = performance.now();
+			$e.run( 'document/elements/settings', { container: c, settings: { duration: 650 } } );
+			await raf();
+			const scriptSetting = performance.now() - t0;
+			t0 = performance.now();
+			$e.run( 'document/elements/settings', { container: c, settings: { stack_label: 'Our cards' } } );
+			await new Promise( ( done ) => setTimeout( done, 400 ) );
+			const templateSetting = performance.now() - t0;
+			return { scriptSetting: Math.round( scriptSetting ), templateSetting: Math.round( templateSetting ), kept: 1 === slideEl().__rfMark, label: c.view.$el[ 0 ].querySelector( '.rf-fs' ).getAttribute( 'aria-label' ) };
+		}, w );
+		check( 'speed', 'a setting the script reads applies without drawing the widget again (under 300 ms; it took about 1.8 s)', speed.scriptSetting < 300, JSON.stringify( speed ) );
+		check( 'speed', 'a setting that draws the widget again keeps its slide containers (same elements) and updates it', speed.kept && 'Our cards' === speed.label, JSON.stringify( speed ) );
+
+		// Add Slide: the new slide comes with its Header, Content and Footer containers.
+		const added = await p.evaluate( async ( c ) => {
+			const t0 = performance.now();
+			$e.run( 'document/repeater/insert', { container: c, name: 'slides', model: { slide_title: 'Slide 6' } } );
+			const ms = Math.round( performance.now() - t0 );
+			await new Promise( ( done ) => setTimeout( done, 1200 ) );
+			const last = c.children[ c.children.length - 1 ];
+			return { ms, count: c.children.length, parts: last.children.map( ( part ) => part.model.get( 'settings' ).get( '_title' ) ).join( '/' ), title: last.model.get( 'settings' ).get( '_title' ), widgets: last.children.reduce( ( n, part ) => n + part.children.length, 0 ) };
+		}, w );
+		check( 'editor', 'Add Slide gives the new slide its Header, Content and Footer containers (with examples)', 6 === added.count && 'Header/Content/Footer' === added.parts && added.widgets > 0 && /6/.test( added.title ), JSON.stringify( added ) );
+		await p.waitForTimeout( 800 );
+		check( 'editor', 'and the preview shows it as a waiting slide with its own part', 6 === ( await edState() ).length && 1 === ( await edState() ).filter( ( x ) => 'is-active' === x.state ).length, JSON.stringify( await edState() ) );
 
 		// A new Focus Stack from the panel: three slides, each with Header, Content and Footer.
 		const made = await p.evaluate( () => {

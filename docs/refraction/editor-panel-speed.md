@@ -99,3 +99,23 @@ picking one saves the shadow's color as `var(--e-global-color-ID)`, so it follow
 color with a ring (`.rf-shadow-global`); a color picked by hand unlinks it.
 
 Check: `node scripts/check-section-groups.mjs --site DIR --port N`.
+
+## Nested widgets: drawn again without rebuilding their slides (0.111.0)
+
+Measured in the editor (three short slides, `/tmp` probe with the Chrome profiler): every settings change that needed
+the widget drawn again, and every **Add Slide**, re-rendered the whole nested widget, which in Marionette rebuilds every
+child container with every widget inside it and runs all their handlers again (about 0.9 s of the 1 s render). Focus
+Stack: 1.8 s per settings change and 2.1 s per new slide; Timed Slides: 1.2 s per new slide; Nested Carousel: 0.5 s.
+
+- `modules/nested-elements/assets/js/editor/views/view.js` `renderKeepingChildren()`: the nested view redraws its own
+  template and puts the existing child views back through `getChildViewContainer()` (detached first, so jQuery's
+  `empty()` keeps their data and events). Used by `renderHTML()` for every nested widget (Tabs, Accordion, Carousel,
+  Timed Slides, Focus Stack, Mega Menu, Off-Canvas...); falls back to a full render when the views do not match the
+  models. Core's repeater insert/duplicate re-render goes through the same path.
+- Settings a widget's script reads should be `render_type: none` (and `frontend_available`), so the change reaches the
+  handler (`onElementChange`) without drawing the widget again; `prefix_class` controls `ui`.
+- After: Focus Stack 0.1 s per settings change and 1.1 s per new slide (now including its Header, Content and Footer
+  with six example widgets); Timed Slides 0.15 s and 0.35 s; Nested Carousel 0.1 s and 0.25 s. Colour changes (plain or
+  global) were already 60 to 100 ms on these widgets: they only change CSS.
+- `Widget_Nested_Base::new_items_like_defaults()`: a widget can have Add Slide copy a default child's settings and
+  inner elements (new ids) instead of an empty container (the insert hook `nested-repeater-create-container.js`).

@@ -60,6 +60,7 @@ export default class FocusStack extends Base {
 			interval: Math.max( 800, Number( s.interval ) || 3000 ),
 			pause: 'yes' === s.pause_on_hover,
 			click: 'yes' === s.click_waiting,
+			parts: ( s.slides || [] ).map( ( slide ) => ( [ 'header', 'footer' ].includes( slide.waiting_part ) ? slide.waiting_part : '' ) ),
 		};
 	}
 
@@ -110,7 +111,8 @@ export default class FocusStack extends Base {
 			const waiting = null !== d && 0 !== d;
 			// The next slides wait before the current one (above, or on the left) unless the stack moves the other way.
 			const side = waiting && ( d > 0 ) === ! o.reverse ? -1 : 1;
-			const keep = d > 0 ? o.next : o.prev;
+			// The slide's own choice, else the side's.
+			const keep = ( o.parts && o.parts[ i ] ) || ( d > 0 ? o.next : o.prev );
 
 			slide.classList.remove( ...STATES );
 			slide.classList.add( 'rf-fs__slide' );
@@ -453,7 +455,7 @@ export default class FocusStack extends Base {
 	}
 
 	onElementChange( propertyName ) {
-		if ( [ 'orientation', 'direction_v', 'direction_h', 'next_part', 'prev_part', 'visible', 'loop', 'duration', 'easing', 'fade_content', 'click_waiting' ].includes( propertyName ) ) {
+		if ( [ 'slides', 'orientation', 'direction_v', 'direction_h', 'next_part', 'prev_part', 'visible', 'loop', 'duration', 'easing', 'fade_content', 'click_waiting' ].includes( propertyName ) ) {
 			// After the wrapper got its new classes (orientation).
 			window.setTimeout( () => this.build(), 0 );
 		}
