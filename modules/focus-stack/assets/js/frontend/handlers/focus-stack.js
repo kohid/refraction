@@ -1,4 +1,5 @@
 import Base from 'refraction-frontend/handlers/base';
+import { easing } from 'refraction-frontend/utils/motion-easings';
 
 /**
  * Focus Stack (0.110.0). The slides are containers; in each one the first container is its header, the last its
@@ -12,13 +13,6 @@ import Base from 'refraction-frontend/handlers/base';
  * into view grow from nothing; cards leaving shrink to nothing. Keyboard (arrows), a swipe, a click on a waiting card
  * and, off Edit Mode, playing by itself. In Edit Mode it follows the slide picked in the panel.
  */
-const EASINGS = {
-	smooth: 'cubic-bezier(0.65, 0, 0.35, 1)',
-	snappy: 'cubic-bezier(0.2, 0.9, 0.1, 1)',
-	gentle: 'cubic-bezier(0.4, 0, 0.2, 1)',
-	spring: 'cubic-bezier(0.34, 1.4, 0.64, 1)',
-	linear: 'linear',
-};
 
 const STATES = [ 'is-active', 'is-waiting', 'is-near', 'is-far', 'is-hidden', 'is-before', 'is-after', 'is-next', 'is-prev' ];
 
@@ -72,7 +66,8 @@ export default class FocusStack extends Base {
 				return {
 					next: part( slide.slide_next ) || legacy,
 					prev: part( slide.slide_prev ) || legacy,
-					focus: FOCUS_OFF[ slide.slide_focus ] ? slide.slide_focus : '',
+					// Edit Mode can show the slide in focus its own way (0.116.0): "In focus in Edit Mode, it shows".
+					focus: ( FOCUS_OFF[ slide.slide_focus_edit ] && slide.slide_focus_edit ) || ( FOCUS_OFF[ slide.slide_focus ] ? slide.slide_focus : '' ),
 				};
 			} ),
 		};
@@ -225,7 +220,7 @@ export default class FocusStack extends Base {
 	animate( before, wasActive, oldOrder, partsBefore = new Map() ) {
 		const o = this.opts;
 		const duration = o.duration;
-		const easing = EASINGS[ o.easing ] || EASINGS.smooth;
+		const curve = easing( o.easing );
 		const after = this.list.map( ( slide ) => ( slide.classList.contains( 'is-hidden' ) ? null : slide.getBoundingClientRect() ) );
 		const partsAfter = this.partBoxes();
 		const size = ( r ) => ( { width: r.width + 'px', height: r.height + 'px' } );
@@ -268,7 +263,7 @@ export default class FocusStack extends Base {
 				frames[ 1 ].opacity = getComputedStyle( slide ).opacity;
 			}
 
-			this.motion.push( slide.animate( frames, { duration, easing } ) );
+			this.motion.push( slide.animate( frames, { duration, easing: curve } ) );
 
 			// A part that comes into sight or goes (its slide waits or is in focus, Focus shows) grows from nothing or
 			// shrinks to nothing, so nothing jumps when the motion ends.
@@ -289,7 +284,7 @@ export default class FocusStack extends Base {
 				this.motion.push( part.animate( [
 					{ height: ( was.shown ? was.height : 0 ) + 'px', opacity: was.shown ? 1 : 0 },
 					{ height: ( will.shown ? natural : 0 ) + 'px', opacity: will.shown ? 1 : 0 },
-				], { duration, easing } ) );
+				], { duration, easing: curve } ) );
 			} );
 
 			// The content of the card that opens fades in once it has room; that of the card that folds fades out.
@@ -380,7 +375,7 @@ export default class FocusStack extends Base {
 		this.motion = [];
 		this.ready = false;
 		root.style.setProperty( '--rf-fs-duration', this.opts.duration + 'ms' );
-		root.style.setProperty( '--rf-fs-easing', EASINGS[ this.opts.easing ] || EASINGS.smooth );
+		root.style.setProperty( '--rf-fs-easing', easing( this.opts.easing ) );
 
 		const picked = this.isEdit ? ( this.getEditSettings( 'activeItemIndex' ) || 1 ) - 1 : 0;
 		this.current = Math.min( Math.max( 0, picked ), Math.max( 0, this.list.length - 1 ) );

@@ -129,7 +129,7 @@ async function main() {
 		own[ 0 ].elements[ 0 ].settings.slides[ 1 ].waiting_part = 'footer';
 		const ownPart = page( 'Focus stack own part', own );
 		// 0.114.0: every slide chooses what it shows waiting as a next slide, as a previous one, and in focus.
-		const ownAll = stack( {} );
+		const ownAll = stack( { easing: 'bounce' } );
 		ownAll[ 0 ].elements[ 0 ].settings.slides[ 0 ].slide_focus = 'header_content';
 		ownAll[ 0 ].elements[ 0 ].settings.slides[ 1 ].slide_next = 'footer';
 		ownAll[ 0 ].elements[ 0 ].settings.slides[ 4 ].slide_prev = 'header';
@@ -224,6 +224,8 @@ async function main() {
 		await p.goto( ownAllPage.url, { waitUntil: 'load' } );
 		await p.waitForSelector( '.rf-fs.is-ready' );
 		st = await state();
+		const curve = await p.evaluate( () => document.querySelector( '.rf-fs' ).style.getPropertyValue( '--rf-fs-easing' ) );
+		check( 'easing', 'the new easings: "Bounce at the end" gives the stack a bounce curve (linear())', /^linear\(0, 0\.0047/.test( curve ), curve );
 		check( 'per slide', 'each slide\'s own choices: slide 1 in focus shows its header and content, slide 2 waits as the next one showing its footer, slide 5 as the previous one showing its header', 'S1 header,S1 content' === st[ 0 ].visible.join() && 'S2 footer' === st[ 1 ].visible.join() && 'before' === st[ 1 ].side && 'S5 header' === st[ 4 ].visible.join() && 'after' === st[ 4 ].side, JSON.stringify( [ st[ 0 ], st[ 1 ], st[ 4 ] ] ) );
 		await p.focus( '.rf-fs' );
 		await p.keyboard.press( 'ArrowUp' );
@@ -398,7 +400,23 @@ async function main() {
 				setTimeout( () => done( [ ...document.querySelectorAll( '.refraction-control-slides .refraction-control-title' ) ].map( ( x ) => x.textContent.trim() ) ), 600 );
 			}, 800 ) );
 		}, w );
-		check( 'editor', 'each slide in the list has its own "next", "previous" and "in focus" choices', [ 'Waiting as a next slide, it shows', 'Waiting as a previous slide, it shows', 'In focus, it shows' ].every( ( l ) => panelLabels.includes( l ) ), JSON.stringify( panelLabels ) );
+		check( 'editor', 'each slide in the list has its own "next", "previous", "in focus on the site" and "in focus in Edit Mode" choices', [ 'Waiting as a next slide, it shows', 'Waiting as a previous slide, it shows', 'In focus on the site, it shows', 'In focus in Edit Mode, it shows' ].every( ( l ) => panelLabels.includes( l ) ), JSON.stringify( panelLabels ) );
+		// In focus in Edit Mode (0.116.0): slide 3 shows its content only on the site, everything while editing.
+		await p.evaluate( ( c ) => {
+			c.model.get( 'editSettings' ).set( 'activeItemIndex', 3 );
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 2 ], settings: { slide_focus: 'content', slide_focus_edit: 'full' } } );
+		}, w );
+		await p.waitForTimeout( 1200 );
+		ed = await edState();
+		const editFull = ed[ 2 ].visible;
+		await p.evaluate( ( c ) => {
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 2 ], settings: { slide_focus_edit: '' } } );
+		}, w );
+		await p.waitForTimeout( 1200 );
+		ed = await edState();
+		check( 'editor', '"In focus in Edit Mode, it shows: Everything" shows all of slide 3 while editing although the site shows its content only; "As on the site" shows its content only', 'S3 header,S3 content,S3 footer' === editFull && 'S3 content' === ed[ 2 ].visible, JSON.stringify( { editFull, now: ed[ 2 ].visible } ) );
+		const easings = await p.evaluate( ( c ) => Object.keys( ( c.controls || c.settings.controls ).easing.options ), w );
+		check( 'editor', 'Easing offers the new curves (glide, speed up, sharp, anticipate, bounce, elastic...)', [ 'soft', 'glide', 'speed-up', 'sharp', 'anticipate', 'bounce', 'elastic' ].every( ( k ) => easings.includes( k ) ), easings.join() );
 		await p.evaluate( ( c ) => {
 			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 2 ], settings: { slide_focus: '' } } );
 		}, w );

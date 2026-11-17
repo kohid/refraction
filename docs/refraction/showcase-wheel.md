@@ -37,7 +37,7 @@ the new one turns in from above, both rotating, while the text and background cr
   picture), rounded rectangle or rectangle (around it and its label); **Labels**: under the current one, under every
   thumbnail, or none; **Arrows**: next only (after the thumbnails), previous and next, or none.
 - **Motion**: **Transition**: *Wheel* (the reference), *Slide* or *Fade*; for the wheel, **The new picture comes from**
-  above or below; duration and easing; **Turn the picture slowly** (for round pictures); **Play by itself**, each slide
+  above or below; duration and easing (the shared easings, see `docs/refraction/focus-stack.md`); **Turn the picture slowly** (for round pictures); **Play by itself**, each slide
   stays, wait while the pointer is on it.
 - **Style**: the box's corners, border and shadow; the picture's width, height at most, distance from the edge and
   shadow; the shape / arc size and the arc's thickness; the arc in a corner; the thumbnails' size, spacing, distance from the
@@ -59,3 +59,13 @@ the new one turns in from above, both rotating, while the text and background cr
 - Edit Mode: the preview is the same showcase; it does not play by itself, follows the slide picked in the panel, and
   rebuilds when slides come and go. The settings the script reads are `frontend_available` with `render_type: none`.
 - On phones (767px and under) the picture sits above the content.
+
+## The content coming in (0.116.0)
+
+Motion > **The content coming in**: **Animation** (*None*: it only fades with its slide; *Rise*, *Drop in*, *Slide in*
+the way the slides move, *Grow in*, *Come into focus*, *Wipe up*, *Swing in*), **One after another** (each widget of the
+slide's Content container, in order; off: the slide's parts as one) with the **Time between them**, **Starts after**
+(from the start of the change), **Duration**, **Distance** and **Easing** (default glide). The script animates the
+widgets with the Web Animations API (`fill: backwards`, so they wait hidden), only when a slide changes with motion; Edit
+Mode plays it when you pick a slide.
+
