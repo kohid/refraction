@@ -64,7 +64,17 @@ export default class FocusStack extends Base {
 			pause: 'yes' === s.pause_on_hover,
 			click: 'yes' === s.click_waiting,
 			focus: FOCUS_OFF[ s.focus_shows ] ? s.focus_shows : 'full',
-			parts: ( s.slides || [] ).map( ( slide ) => ( [ 'header', 'footer' ].includes( slide.waiting_part ) ? slide.waiting_part : '' ) ),
+			// Each slide's own choices ('': as set for every slide); "When waiting, it shows" (0.112) counts for both sides.
+			own: ( s.slides || [] ).map( ( slide ) => {
+				const part = ( v ) => ( [ 'header', 'footer' ].includes( v ) ? v : '' );
+				const legacy = part( slide.waiting_part );
+
+				return {
+					next: part( slide.slide_next ) || legacy,
+					prev: part( slide.slide_prev ) || legacy,
+					focus: FOCUS_OFF[ slide.slide_focus ] ? slide.slide_focus : '',
+				};
+			} ),
 		};
 	}
 
@@ -115,8 +125,9 @@ export default class FocusStack extends Base {
 			const waiting = null !== d && 0 !== d;
 			// The next slides wait before the current one (above, or on the left) unless the stack moves the other way.
 			const side = waiting && ( d > 0 ) === ! o.reverse ? -1 : 1;
-			// The slide's own choice, else the side's.
-			const keep = ( o.parts && o.parts[ i ] ) || ( d > 0 ? o.next : o.prev );
+			// The slide's own choices, else those for every slide.
+			const own = ( o.own && o.own[ i ] ) || {};
+			const keep = d > 0 ? ( own.next || o.next ) : ( own.prev || o.prev );
 
 			slide.classList.remove( ...STATES );
 			slide.classList.add( 'rf-fs__slide' );
@@ -143,7 +154,7 @@ export default class FocusStack extends Base {
 			const { parts } = this.parts( slide );
 			const shown = 'footer' === keep ? parts[ parts.length - 1 ] : parts[ 0 ];
 
-			const off = 0 === d ? ( FOCUS_OFF[ o.focus ] || [] ) : [];
+			const off = 0 === d ? ( FOCUS_OFF[ own.focus || o.focus ] || [] ) : [];
 
 			parts.forEach( ( part, k ) => {
 				const role = ( parts.length > 1 && 0 === k && 'header' ) || ( parts.length > 1 && k === parts.length - 1 && 'footer' ) || 'content';

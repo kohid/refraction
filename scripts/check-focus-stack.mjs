@@ -7,6 +7,8 @@
  *   into a slim card on the other side (sampled half way), then everything rests in its new place;
  * - "Moves: up" puts the next slides below; the parts shown are chosen per side; side by side: slim side cards with
  *   their text turned, the next on the right; playing by itself moves on; reduced motion moves at once;
+ * Per slide (0.114.0): next, previous and in-focus choices; a Reveal (fade up) header widget shows in waiting cards;
+ * clicking off, selecting a widget in a waiting slide in Edit Mode keeps the slide waiting.
  * In Edit Mode: the preview is the same stack, follows a changed setting at once and the slide picked in the panel,
  * and a new Focus Stack starts with three slides of Header, Content and Footer containers. No script or PHP errors.
  *
@@ -126,6 +128,16 @@ async function main() {
 		const own = stack( {} );
 		own[ 0 ].elements[ 0 ].settings.slides[ 1 ].waiting_part = 'footer';
 		const ownPart = page( 'Focus stack own part', own );
+		// 0.114.0: every slide chooses what it shows waiting as a next slide, as a previous one, and in focus.
+		const ownAll = stack( {} );
+		ownAll[ 0 ].elements[ 0 ].settings.slides[ 0 ].slide_focus = 'header_content';
+		ownAll[ 0 ].elements[ 0 ].settings.slides[ 1 ].slide_next = 'footer';
+		ownAll[ 0 ].elements[ 0 ].settings.slides[ 4 ].slide_prev = 'header';
+		const ownAllPage = page( 'Focus stack own choices', ownAll );
+		// A header widget revealed (fade up, every time): hidden, it sits lower, right out of the slim card.
+		const revealed = stack( { visible: '1', next_part: 'header', prev_part: 'header' } );
+		revealed[ 0 ].elements[ 0 ].elements.forEach( ( sl, k ) => sl.elements[ 0 ].elements.push( { id: id(), elType: 'widget', widgetType: 'heading', settings: { title: `Fleet ${ k + 1 }`, header_size: 'p', rf_reveal: 'fade-up', rf_reveal_trigger: 'always', rf_reveal_duration: 300 }, elements: [] } ) );
+		const revealPage = page( 'Focus stack reveal', revealed );
 		const focusOnly = page( 'Focus stack content only', stack( { focus_shows: 'content', next_part_justify: 'flex-start', next_part_gap: { unit: 'px', size: 30 }, prev_part_direction: 'column' } ) );
 		const upwards = page( 'Focus stack up', stack( { direction_v: 'up', next_part: 'footer', prev_part: 'header', visible: '1' } ) );
 		const side = page( 'Focus stack side', stack( { orientation: 'horizontal', stack_height: { unit: 'px', size: 360 } } ) );
@@ -208,6 +220,32 @@ async function main() {
 		await p.waitForSelector( '.rf-fs.is-ready' );
 		st = await state();
 		check( 'per slide', 'slide 2 set to "Its footer" waits above showing its footer, while slide 3 (as set for the stack) shows its header', 'S2 footer' === st[ 1 ].visible.join() && 'before' === st[ 1 ].side && 'S3 header' === st[ 2 ].visible.join(), JSON.stringify( [ st[ 1 ], st[ 2 ] ] ) );
+
+		await p.goto( ownAllPage.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		st = await state();
+		check( 'per slide', 'each slide\'s own choices: slide 1 in focus shows its header and content, slide 2 waits as the next one showing its footer, slide 5 as the previous one showing its header', 'S1 header,S1 content' === st[ 0 ].visible.join() && 'S2 footer' === st[ 1 ].visible.join() && 'before' === st[ 1 ].side && 'S5 header' === st[ 4 ].visible.join() && 'after' === st[ 4 ].side, JSON.stringify( [ st[ 0 ], st[ 1 ], st[ 4 ] ] ) );
+		await p.focus( '.rf-fs' );
+		await p.keyboard.press( 'ArrowUp' );
+		await p.waitForTimeout( 900 );
+		st = await state();
+		check( 'per slide', 'moving on, slide 2 in focus shows everything (as set for every slide) and slide 1, now previous, its footer', 'S2 header,S2 content,S2 footer' === st[ 1 ].visible.join() && 'S1 footer' === st[ 0 ].visible.join(), JSON.stringify( [ st[ 0 ], st[ 1 ] ] ) );
+
+		// ------------------------------------------------------------ a revealed widget in a waiting card shows
+		await p.goto( revealPage.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		await p.waitForTimeout( 1500 );
+		const revealOps = async () => p.evaluate( () => [ ...document.querySelectorAll( '.rf-fs__slides > .rf-fs__slide:not(.is-hidden)' ) ].map( ( sl ) => {
+			const w = [ ...sl.querySelectorAll( '.refraction-widget-heading' ) ].find( ( x ) => /Fleet/.test( x.textContent ) );
+			return sl.className.match( /is-(active|next|prev)/g ).join() + ':' + Number( getComputedStyle( w ).opacity ).toFixed( 2 );
+		} ) );
+		let ops = await revealOps();
+		check( 'reveal', 'a header widget with Reveal (fade up, every time) shows in the waiting cards too, not only in the current one', 3 === ops.length && ops.every( ( x ) => x.endsWith( ':1.00' ) ), JSON.stringify( ops ) );
+		await p.focus( '.rf-fs' );
+		await p.keyboard.press( 'ArrowUp' );
+		await p.waitForTimeout( 1800 );
+		ops = await revealOps();
+		check( 'reveal', 'and after moving on (cards folding and opening) every shown one is still there', 3 === ops.length && ops.every( ( x ) => x.endsWith( ':1.00' ) ), JSON.stringify( ops ) );
 
 		// ------------------------------------------------------------ the slide in focus shows its content only; waiting layout
 		await p.goto( focusOnly.url, { waitUntil: 'load' } );
@@ -342,14 +380,53 @@ async function main() {
 		ed = await edState();
 		check( 'editor', 'picking slide 3 in the panel makes it the current one in the preview', 'is-active' === ed[ 2 ].state && 'S3 header,S3 content,S3 footer' === ed[ 2 ].visible, JSON.stringify( ed ) );
 
-		// A slide's own choice in the panel shows at once.
+		// A slide's own choices in the panel show at once.
 		await p.evaluate( ( c ) => {
-			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 4 ], settings: { waiting_part: 'header' } } );
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 4 ], settings: { slide_next: 'footer' } } );
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 2 ], settings: { slide_focus: 'content_footer' } } );
 		}, w );
 		await p.waitForTimeout( 1200 );
 		ed = await edState();
-		const slide5 = ed[ 4 ];
-		check( 'editor', 'setting slide 5 to "Its header" in the slide list shows its header in the preview at once', 'S5 header' === slide5.visible, JSON.stringify( ed ) );
+		check( 'editor', 'in the slide list, slide 5 "Waiting as a next slide, it shows: Its footer" and slide 3 "In focus, it shows: content and footer" show in the preview at once', 'S5 footer' === ed[ 4 ].visible && 'S3 content,S3 footer' === ed[ 2 ].visible, JSON.stringify( ed ) );
+		const panelLabels = await p.evaluate( ( c ) => {
+			$e.run( 'panel/editor/open', { model: c.model, view: c.view } );
+			return new Promise( ( done ) => setTimeout( () => {
+				const item = document.querySelector( '.refraction-control-slides .refraction-repeater-row-tool, .refraction-control-slides .refraction-repeater-row-item-title' );
+				if ( item ) {
+					item.click();
+				}
+				setTimeout( () => done( [ ...document.querySelectorAll( '.refraction-control-slides .refraction-control-title' ) ].map( ( x ) => x.textContent.trim() ) ), 600 );
+			}, 800 ) );
+		}, w );
+		check( 'editor', 'each slide in the list has its own "next", "previous" and "in focus" choices', [ 'Waiting as a next slide, it shows', 'Waiting as a previous slide, it shows', 'In focus, it shows' ].every( ( l ) => panelLabels.includes( l ) ), JSON.stringify( panelLabels ) );
+		await p.evaluate( ( c ) => {
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 2 ], settings: { slide_focus: '' } } );
+		}, w );
+
+		// Selecting a widget in a waiting slide edits it there: the slide stays waiting, unless clicking opens it.
+		const clickWaiting = async ( setting, side ) => {
+			await p.evaluate( ( [ c, v ] ) => $e.run( 'document/elements/settings', { container: c, settings: { click_waiting: v } } ), [ w, setting ] );
+			await p.waitForTimeout( 800 );
+			const before = ( ( await edState() ).find( ( x ) => 'is-active' === x.state ) || {} ).visible || '';
+			const target = await frame.$( `.rf-fs__slide.is-waiting.is-near.is-${ side } .rf-fs__part.is-shown .refraction-widget-heading` );
+			const label = await target.evaluate( ( el ) => el.textContent.replace( /[\u200b]/g, '' ).trim() );
+			await target.click();
+			await p.waitForTimeout( 2000 );
+			const after = await edState();
+			const selected = await p.evaluate( () => {
+				const s = refraction.selection && refraction.selection.getElements ? refraction.selection.getElements() : [];
+				return s.length ? s[ 0 ].model.get( 'settings' ).get( 'title' ) : '';
+			} );
+			return { label, selected, before, active: ( after.find( ( x ) => 'is-active' === x.state ) || {} ).visible || '', after };
+		};
+		const kept = await clickWaiting( '', 'before' );
+		check( 'editor', '"Clicking a waiting slide opens it" off: selecting a heading in a waiting slide edits it where it is (the slide stays waiting)', kept.selected === kept.label && kept.before && kept.before === kept.active, JSON.stringify( kept ) );
+		const opened = await clickWaiting( 'yes', 'after' );
+		check( 'editor', 'on: selecting something in a waiting slide brings that slide into focus', opened.selected === opened.label && opened.active.startsWith( opened.label.replace( ' header', '' ).replace( ' footer', '' ) ), JSON.stringify( opened ) );
+		await p.evaluate( ( c ) => {
+			c.model.get( 'editSettings' ).set( 'activeItemIndex', 3 );
+		}, w );
+		await p.waitForTimeout( 1200 );
 
 		// Speed (0.111.0): a setting the script reads does not draw the widget again; one that does keeps the slides.
 		const speed = await p.evaluate( async ( c ) => {

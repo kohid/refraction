@@ -37,8 +37,11 @@ export class NestedRepeaterFocusCurrentEditedContainer extends ( $e.modules.hook
 			this.navigationMap = this.getNavigationMapForContainers( allParents.filter(
 				( container ) => 'container' === container.type && 'widget' === container.parent.type,
 			) ).filter( ( map ) => {
-				// Filter out paths that are the same as current.
-				return map.index !== map.current;
+				// Filter out paths that are the same as current, and items the widget keeps where they are because
+				// they are already in sight (Focus Stack: a waiting slide, when clicking it does not open it).
+				const view = map.container.view;
+
+				return map.index !== map.current && ! ( view && 'function' === typeof view.keepsItemInPlace && view.keepsItemInPlace( map.index ) );
 			} );
 		}
 

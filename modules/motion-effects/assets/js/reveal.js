@@ -379,21 +379,46 @@
 			return;
 		}
 
+		const show = () => {
+			if ( item.shown ) {
+				return;
+			}
+
+			item.shown = true;
+			item.el.setAttribute( 'data-rf-rv-state', 'in' );
+			item.pieces.forEach( ( piece ) => setP( piece, 1 ) );
+
+			if ( 'once' === item.cfg.trigger ) {
+				item.io.disconnect();
+
+				if ( item.near ) {
+					item.near.disconnect();
+				}
+
+				item.doneTimer = window.setTimeout( () => finish( item ), item.cfg.delay + ( ( item.groups - 1 ) * item.cfg.stagger ) + item.cfg.duration + 100 );
+			}
+		};
+
 		item.io = new IntersectionObserver( ( entries ) => {
 			entries.forEach( ( entry ) => {
-				if ( entry.isIntersecting && ! item.shown ) {
-					item.shown = true;
-					item.el.setAttribute( 'data-rf-rv-state', 'in' );
-					item.pieces.forEach( ( piece ) => setP( piece, 1 ) );
-
-					if ( 'once' === item.cfg.trigger ) {
-						item.io.disconnect();
-						item.doneTimer = window.setTimeout( () => finish( item ), item.cfg.delay + ( ( item.groups - 1 ) * item.cfg.stagger ) + item.cfg.duration + 100 );
-					}
+				if ( entry.isIntersecting ) {
+					show();
 				}
 			} );
 		}, { rootMargin: '0px 0px -' + item.cfg.offset + '% 0px' } );
 		item.io.observe( item.el );
+
+		// An element that moves while hidden (fade up, zoom...) can be moved right out of a box that clips it (a slim
+		// card, a slide): the browser then never sees it on screen and it would stay hidden for good. Its parent does not
+		// move: when the parent comes into sight, the element counts as in sight where it stands without the move.
+		if ( item.pieces.some( ( piece ) => piece.el === item.el ) && item.el.parentElement ) {
+			item.near = new IntersectionObserver( ( entries ) => {
+				if ( entries.some( ( entry ) => entry.isIntersecting ) && ! item.shown && inSightUnmoved( item ) ) {
+					show();
+				}
+			} );
+			item.near.observe( item.el.parentElement );
+		}
 
 		// "Every time": once it has left the screen completely, it is hidden again, ready to play.
 		if ( 'always' === item.cfg.trigger ) {
@@ -406,11 +431,34 @@
 						item.pieces.forEach( ( piece ) => setP( piece, 0 ) );
 						void item.el.offsetWidth; // eslint-disable-line no-void
 						item.el.classList.remove( 'rf-rv-instant' );
+
+						// Looked at again from its parent (it may have been hidden only by a box clipping it for a moment).
+						if ( item.near && item.el.parentElement ) {
+							item.near.unobserve( item.el.parentElement );
+							item.near.observe( item.el.parentElement );
+						}
 					}
 				} );
 			} );
 			item.out.observe( item.el );
 		}
+	}
+
+	/**
+	 * Whether the element, where it stands without its hidden-state move, is on screen (above the trigger line).
+	 * @param {Object} item
+	 */
+	function inSightUnmoved( item ) {
+		const el = item.el;
+		const before = el.style.transform;
+
+		el.style.transform = 'none';
+		const rect = el.getBoundingClientRect();
+		el.style.transform = before;
+
+		const vh = window.innerHeight || 1;
+
+		return ( rect.width > 0 || rect.height > 0 ) && rect.bottom > 0 && rect.top < vh * ( 1 - ( item.cfg.offset / 100 ) ) && rect.right > 0 && rect.left < ( window.innerWidth || 1 );
 	}
 
 	// Played once: the pieces let go of the reveal styles (transform, clip, filter), so the element's own Transform
@@ -486,7 +534,7 @@
 			return;
 		}
 
-		[ item.io, item.out ].forEach( ( o ) => o && o.disconnect() );
+		[ item.io, item.out, item.near ].forEach( ( o ) => o && o.disconnect() );
 		window.clearTimeout( item.doneTimer );
 		item.pieces.forEach( ( piece ) => {
 			piece.el.removeAttribute( 'data-rf-rv-piece' );
