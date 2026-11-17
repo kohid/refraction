@@ -1221,7 +1221,8 @@ export default class EditorBase extends Marionette.Application {
 
 		Events.dispatch( refractionCommon.elements.$window, 'refraction/loaded', null, 'refraction:loaded' );
 
-		$e.run( 'editor/documents/open', { id: this.config.initial_document.id } )
+		this.documentOpening = $e.run( 'editor/documents/open', { id: this.config.initial_document.id } );
+		this.documentOpening
 			.then( () => {
 				Events.dispatch( refractionCommon.elements.$window, 'refraction/init', null, 'refraction:init' );
 				this.initNavigator();
@@ -1229,6 +1230,16 @@ export default class EditorBase extends Marionette.Application {
 	}
 
 	onPreviewLoaded() {
+		// The page's own settings (refraction.config.document) come by AJAX, sent on a timer. In a background tab the browser
+		// slows timers to about once a second, so the preview can finish loading first; the panel needs those settings,
+		// and without them it failed ("reading 'panel'") and the loading screen stayed until the tab was visible again
+		// (0.117.0). Wait for them, then go on.
+		if ( ! this.config.document?.panel && this.documentOpening ) {
+			this.documentOpening.then( () => this.onPreviewLoaded() );
+
+			return;
+		}
+
 		const previewWindow = this.$preview[ 0 ].contentWindow;
 
 		if ( ! previewWindow.refractionFrontend ) {

@@ -129,3 +129,14 @@ element under the pointer is removed, no `mouseleave` comes, and the tooltip sta
 its element removed or hidden (checked every 250 ms, as the pointer may leave into the preview frame), hides it.
 `controls/base-data.js` also hides a control's tooltips before it is drawn again or destroyed. Check: the tooltip step
 of `scripts/check-focus-stack.mjs`.
+
+## Loading in a background tab (0.117.0)
+
+`EditorBase.onStart()` opens the document (`editor/documents/open`: an AJAX request, sent on a timer, then
+`documents/load` sets `refraction.config.document`) while the preview iframe loads. In a foreground tab the document
+always came first. In a background tab the browser slows timers to about once a second and pauses animation frames, so
+the preview could finish first: `onPreviewLoaded()` built the panel, whose templates read
+`refraction.config.document.panel`, threw "Cannot read properties of undefined (reading 'panel')", and the loading
+screen stayed until the tab was shown again. `onPreviewLoaded()` now waits for `this.documentOpening` when the document
+settings are not there yet. `scripts/check-logo-loader.mjs` runs the editor with a background tab's rules (hidden, no
+animation frames, timers at most once a second) and checks that it finishes loading.

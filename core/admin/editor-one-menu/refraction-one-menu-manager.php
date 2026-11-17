@@ -76,8 +76,9 @@ class Refraction_One_Menu_Manager {
 	}
 
 	private function get_menu_icon(): string {
-		// A prism: a triangle with a split beam leaving its right side. WordPress recolors `fill="black"`.
-		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" fill-rule="evenodd" d="M7.5 2.5 14 15.5H1L7.5 2.5Zm0 3.6L4.2 12.8h6.6L7.5 6.1Z"/><path fill="black" d="m13.1 8.1 6.4-2v1.6l-5.6 1.8-.8-1.4Zm1.6 2.2 4.8.4v1.5l-4.4.2-.4-2.1Z"/></svg>';
+		// The Refraction mark in one color (WordPress recolors `fill="black"`): the corner with its spectrum bars cut
+		// out, and the circle. The full-color logo is assets/images/refraction-logo.svg.
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><path fill="black" fill-rule="evenodd" d="M173.6 500 L0 500 L0 0 L500 0 L500 173.6 L173.6 173.6 L173.6 500ZM10 173.6 L165 219.7 L165 250 L10 250 L10 173.6ZM173.6 10 L219.7 165 L250 165 L250 10 L173.6 10ZM10 330 L10 270 L165 270 L165 330 L10 330ZM330 10 L270 10 L270 165 L330 165 L330 10ZM10 410 L10 350 L165 350 L165 410 L10 410ZM410 10 L350 10 L350 165 L410 165 L410 10ZM10 430 L10 490 L165 490 L165 430 L10 430ZM430 10 L490 10 L490 165 L430 165 L430 10ZM10 152.8 L165 198.8 L165 179.1 L10 24.1 L10 152.8ZM152.8 10 L198.8 165 L179.1 165 L24.1 10 L152.8 10Z"/><circle fill="black" cx="412.5" cy="412.5" r="77.5"/></svg>';
 
 		return 'data:image/svg+xml;base64,' . base64_encode( $svg ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}

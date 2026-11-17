@@ -20,8 +20,9 @@ How it is enforced:
 | Area | Change |
 | --- | --- |
 | Icon font | `assets/lib/eicons` is now `assets/lib/rficons`; family `eicons` -> `rficons`, class prefix `eicon-` -> `rficon-` in PHP, JS, SCSS, templates, CSS and the front-end icon manifest. The brand glyphs (`refraction`, `refraction-circle`, `refraction-square`) are an original prism mark; the upstream company glyph is emptied and its class removed; the TTF is written without glyph names; the EOT and SVG fonts (which still carried the old artwork) are gone. Third-party icon fonts (Font Awesome, etc.) are untouched. |
-| Loading screen / loaders | The editor and admin loader no longer draw the upstream bars; CSS draws a beam, a prism and three rays. |
-| Editor toolbar logo | New prism mark that still animates into the menu icon on hover. |
+| Logo (0.117.0) | The owner's logo: `assets/images/refraction-logo.svg` (a navy corner holding ten spectrum bars, and a black circle). One-color version (the corner with the bars cut out, and the circle) for the admin menu icon (`core/admin/editor-one-menu/refraction-one-menu-manager.php`), the onboarding icon and the `@elementor/ui` dialog vector (`scripts/vite/plugins/brand-ui.mjs`). The icon font's logo glyphs (`rficon-refraction`, `-circle`, `-square`) are drawn from the logo file (rule at the end of `assets/lib/rficons/css/refraction-icons(.min).css`). `logo-icon.png` (52 px) is rendered from it. Check: `scripts/check-logo-loader.mjs`. |
+| Loading screen / loaders | The editor, admin and block editor loader draw `assets/images/refraction-loader.svg`: the logo on a white rounded tile, its bars lighting up pair by pair from the corner outward and its circle breathing (CSS inside the SVG, still with reduced motion). The four loader boxes stay in the markup but are hidden. |
+| Editor toolbar logo | The logo on a white tile; on hover it fades into the menu icon (0.117.0). |
 | Onboarding package | Logo, wordmark, icon and theme-step logo components draw the Refraction mark; the theme step no longer installs anything (the install hook resolves locally). |
 | `@elementor/ui` DialogHeader | A build plugin (`scripts/vite/plugins/brand-ui.mjs`) swaps the logo vector shipped inside the third-party UI package. Every dialog already passes `logo={ false }`. |
 | Dashboard widget | The logo is the new glyph (same font class). |
@@ -64,4 +65,4 @@ Counts are for tracked files, excluding `docs/refraction/`, as of this commit (c
   without a name or logo. They are kept; replace them if you want fully original artwork.
 * `Angie` is the name of the upstream AI assistant; a few slugs and package names (`angie-widgets` category slug, MCP packages)
   keep it for compatibility with third-party extensions.
-* The admin menu icon, `logo-icon.png` (26 px) and the other raster marks are simple placeholders; a designer should replace them.
+* The admin menu icon and `logo-icon.png` are made from the owner's logo (0.117.0).
