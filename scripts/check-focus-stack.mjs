@@ -1,0 +1,343 @@
+#!/usr/bin/env node
+/**
+ * Focus Stack (0.110.0, SQLite test site, Chromium). On the site:
+ * - the current slide shows its header, content and footer; the next slides wait before it (above, the reference's
+ *   way) showing their header, the previous ones after it showing their footer; two away: narrower and fainter;
+ * - moving on (arrow key, click on a waiting card) the waiting card grows into the current one while the old one folds
+ *   into a slim card on the other side (sampled half way), then everything rests in its new place;
+ * - "Moves: up" puts the next slides below; the parts shown are chosen per side; side by side: slim side cards with
+ *   their text turned, the next on the right; playing by itself moves on; reduced motion moves at once;
+ * In Edit Mode: the preview is the same stack, follows a changed setting at once and the slide picked in the panel,
+ * and a new Focus Stack starts with three slides of Header, Content and Footer containers. No script or PHP errors.
+ *
+ * Usage: node scripts/check-focus-stack.mjs [--site /tmp/rf-fs-site] [--port 8945] [--shots /tmp/focus-stack-shots]
+ */
+import { execFileSync, spawn } from 'node:child_process';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+
+const require = createRequire( fileURLToPath( import.meta.url ) );
+const { chromium } = require( 'playwright' );
+
+const arg = ( n, d ) => ( process.argv.includes( `--${ n }` ) ? process.argv[ process.argv.indexOf( `--${ n }` ) + 1 ] : d );
+const SITE = arg( 'site', '/tmp/rf-fs-site' );
+const PORT = arg( 'port', '8945' );
+const SHOTS = arg( 'shots', '/tmp/focus-stack-shots' );
+const WPCLI = arg( 'wpcli', '/tmp/rsite-dl/wpcli.phar' );
+const BASE = `http://127.0.0.1:${ PORT }`;
+const WPDIR = join( SITE, 'wordpress' );
+const LOG = join( SITE, 'php-error.log' );
+
+let failures = 0;
+const check = ( area, name, pass, evidence = '' ) => {
+	if ( ! pass ) {
+		failures++;
+	}
+	console.log( `${ pass ? 'ok  ' : 'FAIL' }  ${ area } / ${ name }${ pass || ! evidence ? '' : ` -- ${ String( evidence ).slice( 0, 500 ) }` }` );
+};
+const sleep = ( ms ) => new Promise( ( r ) => setTimeout( r, ms ) );
+
+function findChromium() {
+	if ( process.env.CHROMIUM ) {
+		return process.env.CHROMIUM;
+	}
+	const root = '/opt/pw-browsers';
+	if ( ! existsSync( root ) ) {
+		return undefined;
+	}
+	for ( const d of readdirSync( root ).filter( ( x ) => /^chromium-\d+$/.test( x ) ).sort().reverse() ) {
+		for ( const sub of [ 'chrome-linux64/chrome', 'chrome-linux/chrome' ] ) {
+			if ( existsSync( join( root, d, sub ) ) ) {
+				return join( root, d, sub );
+			}
+		}
+	}
+	return undefined;
+}
+
+function wp( args, { allowFail = false } = {} ) {
+	try {
+		return execFileSync( 'php', [ '-d', 'memory_limit=512M', WPCLI, `--path=${ WPDIR }`, '--allow-root', ...args ], { encoding: 'utf8', stdio: [ 'ignore', 'pipe', 'pipe' ] } );
+	} catch ( e ) {
+		if ( allowFail ) {
+			return null;
+		}
+		throw new Error( `wp ${ args.join( ' ' ).slice( 0, 120 ) } failed: ${ String( e.stderr || e.message ).slice( 0, 600 ) }` );
+	}
+}
+const logSize = () => ( existsSync( LOG ) ? statSync( LOG ).size : 0 );
+const logTail = ( from ) => ( existsSync( LOG ) ? readFileSync( LOG, 'utf8' ).slice( from ) : '' );
+const up = async () => {
+	try {
+		await fetch( `${ BASE }/wp-login.php` ); return true;
+	} catch {
+		return false;
+	}
+};
+
+/** A published page whose editor data is the given elements; returns its id and address. */
+function page( title, elements ) {
+	const id = wp( [ 'post', 'create', '--post_type=page', '--post_status=publish', `--post_title=${ title }`, '--porcelain' ] ).trim();
+	wp( [ 'post', 'meta', 'update', id, '_refraction_edit_mode', 'builder' ] );
+	wp( [ 'post', 'meta', 'update', id, '_refraction_template_type', 'wp-page' ] );
+	wp( [ 'post', 'meta', 'update', id, '_refraction_data', JSON.stringify( elements ) ] );
+	wp( [ 'post', 'update', id, '--page_template=refraction_canvas' ] );
+	return { id, url: wp( [ 'post', 'list', '--post_type=page', `--post__in=${ id }`, '--field=url' ] ).trim() };
+}
+const box = ( id, settings, elements, isInner = false ) => ( { id, elType: 'container', settings: { content_width: 'full', ...settings }, elements, isInner } );
+
+let uid = 0;
+const id = () => 'fs' + ( ++uid ).toString( 16 ).padStart( 5, '0' );
+const heading = ( title ) => ( { id: id(), elType: 'widget', widgetType: 'heading', settings: { title, header_size: 'p' }, elements: [] } );
+const partBox = ( name, title, extra = {} ) => box( id(), { _title: name, padding: { unit: 'px', top: '12', right: '16', bottom: '12', left: '16', isLinked: false }, ...extra }, [ heading( title ) ], true );
+const slide = ( n ) => box( id(), { _title: `Slide #${ n }`, padding: { unit: 'px', top: '0', right: '0', bottom: '0', left: '0', isLinked: true }, flex_gap: { unit: 'px', size: 0, column: '0', row: '0', isLinked: true } }, [
+	partBox( 'Header', `S${ n } header` ),
+	partBox( 'Content', `S${ n } content`, { min_height: { unit: 'px', size: 160 } } ),
+	partBox( 'Footer', `S${ n } footer` ),
+], true );
+const stack = ( settings, n = 5 ) => [ box( id(), { content_width: 'boxed', boxed_width: { unit: 'px', size: 520 }, padding: { unit: 'px', top: '40', right: '20', bottom: '40', left: '20', isLinked: false } }, [ {
+	id: id(), elType: 'widget', widgetType: 'refraction-focus-stack',
+	settings: { slides: Array.from( { length: n }, ( _, i ) => ( { _id: id(), slide_title: `Slide ${ i + 1 }` } ) ), autoplay: '', duration: 600, ...settings },
+	elements: Array.from( { length: n }, ( _, i ) => slide( i + 1 ) ),
+} ] ) ];
+
+async function main() {
+	if ( ! existsSync( join( WPDIR, 'wp-config.php' ) ) ) {
+		throw new Error( `no WordPress at ${ WPDIR }; run scripts/setup-menu-test-site.sh` );
+	}
+	mkdirSync( SHOTS, { recursive: true } );
+
+	let server;
+	if ( ! ( await up() ) ) {
+		server = spawn( 'php', [ '-S', `127.0.0.1:${ PORT }`, '-t', WPDIR ], { stdio: 'ignore', env: { ...process.env, PHP_CLI_SERVER_WORKERS: '4' } } );
+		for ( let i = 0; i < 50 && ! ( await up() ); i++ ) {
+			await sleep( 200 );
+		}
+	}
+
+	const logStart = logSize();
+	const browser = await chromium.launch( { executablePath: findChromium(), args: [ '--no-sandbox' ] } );
+	const errors = [];
+
+	try {
+		const down = page( 'Focus stack down', stack( {} ) );
+		const upwards = page( 'Focus stack up', stack( { direction_v: 'up', next_part: 'footer', prev_part: 'header', visible: '1' } ) );
+		const side = page( 'Focus stack side', stack( { orientation: 'horizontal', stack_height: { unit: 'px', size: 360 } } ) );
+		const auto = page( 'Focus stack auto', stack( { autoplay: 'yes', interval: 900, duration: 300, pause_on_hover: '' }, 3 ) );
+
+		const ctx = await browser.newContext( { viewport: { width: 1280, height: 1100 } } );
+		const p = await ctx.newPage();
+		p.on( 'pageerror', ( e ) => errors.push( e.message ) );
+		p.on( 'console', ( m ) => {
+			if ( 'error' === m.type() && ! /favicon|Failed to load resource/.test( m.text() ) ) {
+				errors.push( m.text() );
+			}
+		} );
+		const shot = async ( name ) => {
+			const el = await p.$( '.rf-fs' ); if ( el ) {
+				await el.screenshot( { path: join( SHOTS, name ) } );
+			}
+		};
+
+		// Where every slide is: state, part shown, box.
+		const state = () => p.evaluate( () => [ ...document.querySelectorAll( '.rf-fs__slides > .rf-fs__slide' ) ].map( ( s, i ) => {
+			const r = s.getBoundingClientRect();
+			const visible = [ ...s.querySelectorAll( '.rf-fs__part' ) ].filter( ( x ) => x.offsetParent ).map( ( x ) => x.textContent.trim() );
+			const shown = s.querySelector( '.rf-fs__part.is-shown' );
+			return {
+				i,
+				state: [ 'is-active', 'is-near', 'is-far', 'is-hidden' ].find( ( c ) => s.classList.contains( c ) ),
+				side: [ 'before', 'after' ].find( ( x ) => s.classList.contains( 'is-' + x ) ) || '',
+				visible,
+				turned: shown ? getComputedStyle( shown ).writingMode : '',
+				top: Math.round( r.top ), bottom: Math.round( r.bottom ), left: Math.round( r.left ), right: Math.round( r.right ),
+				width: Math.round( r.width ), height: Math.round( r.height ),
+				opacity: Number( getComputedStyle( s ).opacity ),
+			};
+		} ) );
+		const byState = ( st, name, where ) => st.find( ( s ) => s.state === name && ( ! where || s.side === where ) );
+
+		// ------------------------------------------------------------ moving down (the reference)
+		await p.goto( down.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		await p.waitForTimeout( 300 );
+		let st = await state();
+		let act = byState( st, 'is-active' );
+		const nextNear = st[ 1 ];
+		const prevNear = st[ 4 ];
+		check( 'site', 'slide 1 is current and shows its header, content and footer', 0 === act.i && 'S1 header,S1 content,S1 footer' === act.visible.join(), JSON.stringify( act ) );
+		check( 'site', 'the next slide waits above, showing only its header', 'is-near' === nextNear.state && 'before' === nextNear.side && nextNear.bottom <= act.top && 'S2 header' === nextNear.visible.join(), JSON.stringify( nextNear ) );
+		check( 'site', 'the previous slide (going round) waits below, showing only its footer', 'is-near' === prevNear.state && 'after' === prevNear.side && prevNear.top >= act.bottom && 'S5 footer' === prevNear.visible.join(), JSON.stringify( prevNear ) );
+		const far = st[ 2 ];
+		check( 'site', 'two away: above the next one, narrower and fainter (76% wide, opacity 0.45); near ones 88%', 'is-far' === far.state && far.bottom <= nextNear.top && Math.abs( ( far.width / act.width ) - 0.76 ) < 0.02 && Math.abs( ( nextNear.width / act.width ) - 0.88 ) < 0.02 && Math.abs( far.opacity - 0.45 ) < 0.02, JSON.stringify( { far, nextNear, act: act.width } ) );
+		await shot( 'down-1.png' );
+
+		// Arrow up (towards the waiting next card): the next card grows down into the current one.
+		await p.focus( '.rf-fs' );
+		const growing = { before: nextNear.height };
+		await p.keyboard.press( 'ArrowUp' );
+		await p.waitForTimeout( 300 );
+		const mid = await state();
+		growing.mid = mid[ 1 ].height;
+		const anims = await p.evaluate( () => document.getAnimations().length );
+		await shot( 'down-mid.png' );
+		await p.waitForTimeout( 600 );
+		st = await state();
+		act = byState( st, 'is-active' );
+		growing.after = act.height;
+		check( 'motion', 'half way the next card is growing (taller than its slim card, not yet full) with animations running', anims > 0 && growing.mid > growing.before + 5 && growing.mid < growing.after - 5, JSON.stringify( { growing, anims } ) );
+		check( 'motion', 'then slide 2 is current with all its parts', 1 === act.i && 'S2 header,S2 content,S2 footer' === act.visible.join(), JSON.stringify( act ) );
+		const folded = st[ 0 ];
+		check( 'motion', 'and slide 1 has folded below it into a slim card showing its footer', 'is-near' === folded.state && 'after' === folded.side && folded.top >= act.bottom && 'S1 footer' === folded.visible.join(), JSON.stringify( folded ) );
+		check( 'motion', 'nothing left moving', 0 === ( await p.evaluate( () => document.querySelectorAll( '.rf-fs__slide.is-moving, .rf-fs__slide.is-leaving' ).length ) ) );
+		await shot( 'down-2.png' );
+
+		// A click on a waiting card opens it.
+		await p.click( '.rf-fs__slide:nth-child(1)' );
+		await p.waitForTimeout( 800 );
+		check( 'site', 'clicking the waiting slide 1 opens it again', 0 === byState( await state(), 'is-active' ).i );
+
+		// ------------------------------------------------------------ moving up, parts swapped, one each side
+		await p.goto( upwards.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		st = await state();
+		act = byState( st, 'is-active' );
+		check( 'reverse', '"Moves: up": the next slide waits below and shows its footer; the previous above shows its header', 'after' === st[ 1 ].side && st[ 1 ].top >= act.bottom && 'S2 footer' === st[ 1 ].visible.join() && 'before' === st[ 4 ].side && st[ 4 ].bottom <= act.top && 'S5 header' === st[ 4 ].visible.join(), JSON.stringify( [ st[ 1 ], st[ 4 ] ] ) );
+		check( 'reverse', 'one waiting slide on each side: the others are hidden', 2 === st.filter( ( s ) => 'is-near' === s.state ).length && 2 === st.filter( ( s ) => 'is-hidden' === s.state ).length, JSON.stringify( st.map( ( s ) => s.state ) ) );
+		await p.focus( '.rf-fs' );
+		await p.keyboard.press( 'ArrowDown' );
+		await p.waitForTimeout( 900 );
+		st = await state();
+		check( 'reverse', 'the arrow towards the next card (down) moves up: slide 2 current, slide 1 above it showing its header', 1 === byState( st, 'is-active' ).i && 'before' === st[ 0 ].side && 'S1 header' === st[ 0 ].visible.join(), JSON.stringify( st.map( ( s ) => [ s.state, s.side ] ) ) );
+		await shot( 'up.png' );
+
+		// ------------------------------------------------------------ side by side
+		await p.goto( side.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		st = await state();
+		act = byState( st, 'is-active' );
+		check( 'side', 'side by side: the next slide waits on the right, 64px wide, its header text turned', 'after' === st[ 1 ].side && st[ 1 ].left >= act.right && 64 === st[ 1 ].width && 'vertical-rl' === st[ 1 ].turned, JSON.stringify( st[ 1 ] ) );
+		check( 'side', 'the previous on the left, the current one filling the row 360px high', 'before' === st[ 4 ].side && st[ 4 ].right <= act.left && 360 === act.height, JSON.stringify( { prev: st[ 4 ], act } ) );
+		await p.focus( '.rf-fs' );
+		await p.keyboard.press( 'ArrowRight' );
+		await p.waitForTimeout( 900 );
+		check( 'side', 'the arrow towards the next card (right) moves the stack left: slide 2 current', 1 === byState( await state(), 'is-active' ).i );
+		await shot( 'side.png' );
+
+		// ------------------------------------------------------------ playing by itself, reduced motion
+		await p.goto( auto.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		await p.mouse.move( 5, 5 );
+		await p.waitForTimeout( 2600 );
+		check( 'autoplay', 'playing by itself it has moved on', 0 !== byState( await state(), 'is-active' ).i );
+
+		const rctx = await browser.newContext( { viewport: { width: 1280, height: 1100 }, reducedMotion: 'reduce' } );
+		const r = await rctx.newPage();
+		await r.goto( down.url, { waitUntil: 'load' } );
+		await r.waitForSelector( '.rf-fs.is-ready' );
+		await r.focus( '.rf-fs' );
+		await r.keyboard.press( 'ArrowUp' );
+		const instant = await r.evaluate( () => ( { anims: document.getAnimations().filter( ( a ) => 'running' === a.playState ).length, current: [ ...document.querySelectorAll( '.rf-fs__slide' ) ].findIndex( ( s ) => s.classList.contains( 'is-active' ) ) } ) );
+		check( 'motion', 'with reduced motion it moves at once, without animating', 0 === instant.anims && 1 === instant.current, JSON.stringify( instant ) );
+		await rctx.close();
+
+		// ------------------------------------------------------------ Edit Mode
+		await p.goto( `${ BASE }/wp-login.php` );
+		await p.fill( '#user_login', 'admin' );
+		await p.fill( '#user_pass', 'admin' );
+		await Promise.all( [ p.waitForURL( /wp-admin/, { timeout: 120000, waitUntil: 'commit' } ), p.click( '#wp-submit' ) ] );
+		await p.goto( `${ BASE }/wp-admin/post.php?post=${ down.id }&action=refraction`, { timeout: 120000 } );
+		await p.waitForFunction( () => window.refraction && window.$e && refraction.documents && refraction.documents.getCurrent() && document.querySelector( '.refraction-panel-category' ), null, { timeout: 120000 } );
+		await p.waitForTimeout( 2500 );
+		const frame = p.frame( { name: 'refraction-preview-iframe' } ) || p.frames().find( ( f ) => f.url().includes( 'refraction-preview' ) ) || p.frames()[ 1 ];
+		const edState = () => frame.evaluate( () => [ ...document.querySelectorAll( '.rf-fs__slides > .rf-fs__slide' ) ].map( ( s ) => ( {
+			state: [ 'is-active', 'is-near', 'is-far', 'is-hidden' ].find( ( c ) => s.classList.contains( c ) ),
+			side: [ 'before', 'after' ].find( ( x ) => s.classList.contains( 'is-' + x ) ) || '',
+			visible: [ ...s.querySelectorAll( '.rf-fs__part' ) ].filter( ( x ) => x.offsetParent ).map( ( x ) => x.textContent.trim() ).join(),
+		} ) ) );
+		const widget = () => p.evaluateHandle( () => {
+			const find = ( c ) => c.children.flatMap( ( x ) => [ x, ...find( x ) ] );
+			return find( refraction.getPreviewContainer() ).find( ( c ) => 'refraction-focus-stack' === c.model.get( 'widgetType' ) );
+		} );
+		await frame.waitForSelector( '.rf-fs.is-ready', { timeout: 20000 } );
+		let ed = await edState();
+		check( 'editor', 'Edit Mode shows the same stack: slide 1 whole, slide 2 above as its header, slide 5 below as its footer', 'is-active' === ed[ 0 ].state && 'S1 header,S1 content,S1 footer' === ed[ 0 ].visible && 'before' === ed[ 1 ].side && 'S2 header' === ed[ 1 ].visible && 'after' === ed[ 4 ].side && 'S5 footer' === ed[ 4 ].visible, JSON.stringify( ed ) );
+		const edShot = async ( name ) => {
+			await p.evaluate( () => {
+				try {
+					$e.run( 'panel/close' );
+				} catch ( e ) {}
+			} );
+			await frame.evaluate( () => {
+				const s = document.createElement( 'style' ); s.id = 'rf-shot'; s.textContent = '.refraction-element-overlay, .refraction-editor-element-settings { display: none !important; }'; document.head.appendChild( s );
+			} );
+			await p.waitForTimeout( 400 );
+			const el = await frame.$( '.rf-fs' );
+			if ( el ) {
+				await el.screenshot( { path: join( SHOTS, name ) } );
+			}
+			await frame.evaluate( () => document.getElementById( 'rf-shot' ).remove() );
+			await p.evaluate( () => {
+				try {
+					$e.run( 'panel/open' );
+				} catch ( e ) {}
+			} );
+		};
+		await edShot( 'editor-1.png' );
+
+		const w = await widget();
+		await p.evaluate( ( c ) => $e.run( 'document/elements/settings', { container: c, settings: { direction_v: 'up', next_part: 'footer' } } ), w );
+		await p.waitForTimeout( 1200 );
+		ed = await edState();
+		check( 'editor', 'changing "Moves" and "The next slides show" in the panel shows at once: next below, as its footer', 'after' === ed[ 1 ].side && 'S2 footer' === ed[ 1 ].visible, JSON.stringify( ed ) );
+		await p.evaluate( ( c ) => $e.run( 'document/elements/settings', { container: c, settings: { orientation: 'horizontal' } } ), w );
+		await p.waitForTimeout( 1500 );
+		const turned = await frame.evaluate( () => {
+			const s = [ ...document.querySelectorAll( '.rf-fs__slides > .rf-fs__slide' ) ][ 1 ];
+			return { horizontal: !! s.closest( '.rf-fs-o-horizontal' ), width: Math.round( s.getBoundingClientRect().width ), mode: getComputedStyle( s.querySelector( '.rf-fs__part.is-shown' ) ).writingMode };
+		} );
+		check( 'editor', 'switching to side by side shows slim side cards with turned text in Edit Mode', turned.horizontal && 64 === turned.width && 'vertical-rl' === turned.mode, JSON.stringify( turned ) );
+		await edShot( 'editor-side.png' );
+		await p.evaluate( ( c ) => $e.run( 'document/elements/settings', { container: c, settings: { orientation: 'vertical', direction_v: 'down', next_part: 'header' } } ), w );
+		await p.waitForTimeout( 1200 );
+
+		// Picking slide 3 in the panel shows it.
+		await p.evaluate( ( c ) => {
+			c.model.get( 'editSettings' ).set( 'activeItemIndex', 3 );
+		}, w );
+		await p.waitForTimeout( 1200 );
+		ed = await edState();
+		check( 'editor', 'picking slide 3 in the panel makes it the current one in the preview', 'is-active' === ed[ 2 ].state && 'S3 header,S3 content,S3 footer' === ed[ 2 ].visible, JSON.stringify( ed ) );
+
+		// A new Focus Stack from the panel: three slides, each with Header, Content and Footer.
+		const made = await p.evaluate( () => {
+			const root = $e.run( 'document/elements/create', { container: refraction.getPreviewContainer(), model: { elType: 'container', settings: {} }, options: { edit: false } } );
+			const fs = $e.run( 'document/elements/create', { container: root, model: { elType: 'widget', widgetType: 'refraction-focus-stack' }, options: { edit: false } } );
+			return fs.children.map( ( s ) => s.children.map( ( part ) => part.model.get( 'settings' ).get( '_title' ) ).join( '/' ) );
+		} );
+		check( 'editor', 'a new Focus Stack starts with three slides of Header, Content and Footer containers', 3 === made.length && made.every( ( m ) => 'Header/Content/Footer' === m ), JSON.stringify( made ) );
+		await p.waitForTimeout( 1500 );
+		const fresh = await frame.evaluate( () => {
+			const stacks = document.querySelectorAll( '.rf-fs' );
+			const s = stacks[ stacks.length - 1 ];
+			return { ready: s.classList.contains( 'is-ready' ), active: s.querySelectorAll( '.rf-fs__slide.is-active' ).length, waiting: s.querySelectorAll( '.rf-fs__slide.is-waiting' ).length };
+		} );
+		check( 'editor', 'and its preview is a stack at once (one current, two waiting)', fresh.ready && 1 === fresh.active && 2 === fresh.waiting, JSON.stringify( fresh ) );
+
+		check( 'errors', 'no script errors', 0 === errors.length, errors.slice( 0, 3 ).join( ' | ' ) );
+		const php = logTail( logStart ).split( '\n' ).filter( ( l ) => /PHP (Warning|Fatal|Parse|Deprecated)|PHP Notice/.test( l ) );
+		check( 'errors', 'no PHP warnings or errors', 0 === php.length, php.slice( 0, 3 ).join( ' | ' ) );
+	} finally {
+		await browser.close();
+		server?.kill();
+	}
+
+	console.log( failures ? `\n${ failures } check(s) failed` : '\nall focus stack checks passed' );
+	process.exit( failures ? 1 : 0 );
+}
+
+main().catch( ( e ) => {
+	console.error( e ); process.exit( 1 );
+} );
