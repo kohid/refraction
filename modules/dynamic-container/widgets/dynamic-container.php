@@ -4,6 +4,7 @@ namespace Refraction\Modules\DynamicContainer\Widgets;
 use Refraction\Controls_Manager;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
+use Refraction\Modules\ProWidgets\Classes\Motion_Easings;
 use Refraction\Modules\ProWidgets\Module as ProWidgets;
 use Refraction\Repeater;
 
@@ -16,8 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * with all its settings, laid out per screen size as a grid (its own number of columns) or as a row that scrolls
  * sideways with no scrollbar, the next item peeking in (the default on phones).
  *
- * Markup: .rf-dc > the item containers. The layout is CSS only (assets/scss/frontend.scss): the settings write custom
- * properties and the grid or row declarations for each screen size.
+ * Markup: .rf-dc > the item containers. The layout is CSS (assets/scss/frontend.scss): the settings write custom
+ * properties and the grid or row declarations for each screen size. The Entrance (0.121.0) is played by
+ * assets/js/frontend/handlers/dynamic-container.js.
  */
 class Dynamic_Container extends Widget_Nested_Base {
 
@@ -143,8 +145,8 @@ class Dynamic_Container extends Widget_Nested_Base {
 			'description' => esc_html__( 'Per screen size (the device icon). The row scrolls with a swipe or the trackpad, with no scrollbar shown.', 'refraction' ),
 			// Each layout's own declarations; the custom properties come from the settings below.
 			'selectors_dictionary' => [
-				'grid' => 'grid-auto-flow: row; grid-template-columns: repeat(var(--rf-dc-cols, 3), minmax(0, 1fr)); grid-auto-columns: auto; overflow-x: visible; scroll-snap-type: none; padding-inline: 0;',
-				'scroll' => 'grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: calc((100% - (var(--rf-dc-show, 1.15) - 1) * var(--rf-dc-col-gap, 16px)) / var(--rf-dc-show, 1.15)); overflow-x: auto; scroll-snap-type: var(--rf-dc-snap, x mandatory); padding-inline: var(--rf-dc-edge, 0px); scroll-padding-inline: var(--rf-dc-edge, 0px);',
+				'grid' => 'grid-auto-flow: row; grid-template-columns: repeat(var(--rf-dc-cols, 3), minmax(0, 1fr)); grid-auto-columns: auto; overflow-x: visible; scroll-snap-type: none;',
+				'scroll' => 'grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: calc((100% - (var(--rf-dc-show, 1.15) - 1) * var(--rf-dc-col-gap, 16px)) / var(--rf-dc-show, 1.15)); overflow-x: auto; scroll-snap-type: var(--rf-dc-snap, x mandatory);',
 			],
 			'selectors' => [ $list => '{{VALUE}}' ],
 		] );
@@ -216,13 +218,115 @@ class Dynamic_Container extends Widget_Nested_Base {
 			'selectors' => [ $list => '--rf-dc-snap: {{VALUE}};' ],
 		] );
 
+		// Padding around the items (0.121.0), in either layout: in the scrolling row, the left and right ones are also where
+		// a swipe lines an item up. 0.120.0's "Room at the row's ends" (edge) still counts where it was set and no padding is.
+		$this->add_responsive_control( 'list_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%', 'em', 'rem', 'vw' ],
+			'description' => esc_html__( 'Space around the items, per screen size. In the scrolling row the left and right padding keep the first and last items off the screen\'s edges.', 'refraction' ),
+			'selectors' => [ $list => '--rf-dc-pt: {{TOP}}{{UNIT}}; --rf-dc-pr: {{RIGHT}}{{UNIT}}; --rf-dc-pb: {{BOTTOM}}{{UNIT}}; --rf-dc-pl: {{LEFT}}{{UNIT}};' ],
+			'separator' => 'before',
+		] );
+
 		$this->add_responsive_control( 'edge', [
-			'label' => esc_html__( 'Room at the row\'s ends', 'refraction' ),
-			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ 'px', '%' ],
-			'range' => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
-			'description' => esc_html__( 'In the scrolling row: space before the first item and after the last, so they do not touch the screen\'s edge.', 'refraction' ),
+			'type' => Controls_Manager::HIDDEN,
 			'selectors' => [ $list => '--rf-dc-edge: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->end_controls_section();
+
+		// ------------------------------------------------ Entrance (0.121.0)
+		$this->start_controls_section( 'section_entrance', [ 'label' => esc_html__( 'Entrance', 'refraction' ) ] );
+
+		$js = [ 'frontend_available' => true, 'render_type' => 'none' ];
+
+		$this->add_control( 'entrance', $js + [
+			'label' => esc_html__( 'Animation', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'None', 'refraction' ),
+				'fade-up' => esc_html__( 'Fade in up', 'refraction' ),
+				'fade-down' => esc_html__( 'Fade in down', 'refraction' ),
+				'fade-left' => esc_html__( 'Fade in from the right', 'refraction' ),
+				'fade-right' => esc_html__( 'Fade in from the left', 'refraction' ),
+				'fade' => esc_html__( 'Fade in', 'refraction' ),
+				'zoom-in' => esc_html__( 'Zoom in', 'refraction' ),
+				'zoom-out' => esc_html__( 'Zoom out', 'refraction' ),
+				'blur' => esc_html__( 'Come into focus (blur)', 'refraction' ),
+				'flip-up' => esc_html__( 'Flip up', 'refraction' ),
+				'rise' => esc_html__( 'Rise and turn', 'refraction' ),
+			],
+			'description' => esc_html__( 'When the list comes into view, the items appear one after another, in sync.', 'refraction' ),
+		] );
+
+		$on = [ 'entrance!' => '' ];
+
+		$this->add_control( 'entrance_parts', $js + [
+			'label' => esc_html__( 'What appears', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'cascade',
+			'options' => [
+				'cascade' => esc_html__( 'Each item, then the widgets inside it', 'refraction' ),
+				'items' => esc_html__( 'Each item as a whole', 'refraction' ),
+				'widgets' => esc_html__( 'Only the widgets inside, item by item', 'refraction' ),
+			],
+			'condition' => $on,
+		] );
+
+		$this->add_control( 'entrance_item_gap', $js + [
+			'label' => esc_html__( 'Time between items (ms)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 2000,
+			'step' => 10,
+			'default' => 120,
+			'condition' => $on,
+		] );
+
+		$this->add_control( 'entrance_inner_gap', $js + [
+			'label' => esc_html__( 'Time between the widgets in an item (ms)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 2000,
+			'step' => 10,
+			'default' => 80,
+			'condition' => $on + [ 'entrance_parts!' => 'items' ],
+		] );
+
+		$this->add_control( 'entrance_duration', $js + [
+			'label' => esc_html__( 'Duration (ms)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 100,
+			'max' => 3000,
+			'step' => 50,
+			'default' => 700,
+			'condition' => $on,
+		] );
+
+		$this->add_control( 'entrance_distance', $js + [
+			'label' => esc_html__( 'Distance (px)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 300,
+			'default' => 40,
+			'condition' => $on + [ 'entrance' => [ 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'rise' ] ],
+		] );
+
+		$this->add_control( 'entrance_easing', $js + [
+			'label' => esc_html__( 'Easing', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'glide',
+			'options' => Motion_Easings::options(),
+			'condition' => $on,
+		] );
+
+		$this->add_control( 'entrance_repeat', $js + [
+			'label' => esc_html__( 'Play every time it comes into view', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'Off: only the first time. In Edit Mode it plays when a setting here changes.', 'refraction' ),
+			'condition' => $on,
 		] );
 
 		$this->end_controls_section();

@@ -84,4 +84,7 @@ Mode plays it when you pick a slide.
   wheel, as in the reference (pin 621989398570754165: ingredients around a dish). In the editor they can be dragged.
 - **Thumbnails**: width and height (`thumb_size` is the width, `thumb_height`, empty: square).
 - Shape pickers show 12 shapes (3 rows of 4; a container query sizes the list) and scroll for the rest.
+- 0.121.0: the floating images are set up one at a time: **Edit floating image** (1 to 5, `fl_edit`) shows only that image's
+  settings. A panel rule (`:has()` on the checked tab, in the module's `editor_styles()`) hides the others by their
+  `rf-fl-N` class: a condition would also leave their CSS out.
 

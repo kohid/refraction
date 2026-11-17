@@ -271,6 +271,12 @@ class Container extends Element_Base {
 	protected function print_html_tag() {
 		$html_tag = $this->get_settings( 'html_tag' );
 
+		// A Link set on a container with the default tag makes it a link (0.121.0): the Link setting shows without
+		// choosing the "a" tag first.
+		if ( empty( $html_tag ) && ! empty( $this->get_settings_for_display( 'link' )['url'] ) ) {
+			$html_tag = 'a';
+		}
+
 		if ( empty( $html_tag ) ) {
 			$html_tag = 'div';
 		}
@@ -601,8 +607,12 @@ class Container extends Element_Base {
 				'type' => Controls_Manager::ALERT,
 				'alert_type' => 'warning',
 				'content' => esc_html__( 'Don’t add links to elements nested in this container - it will break the layout.', 'refraction' ),
-				'condition' => [
-					'html_tag' => 'a',
+				'conditions' => [
+					'relation' => 'or',
+					'terms' => [
+						[ 'name' => 'html_tag', 'operator' => '===', 'value' => 'a' ],
+						[ 'name' => 'link[url]', 'operator' => '!==', 'value' => '' ],
+					],
 				],
 			]
 		);
@@ -615,9 +625,21 @@ class Container extends Element_Base {
 				'dynamic' => [
 					'active' => true,
 				],
+				'description' => esc_html__( 'The whole container becomes a link (with the Default tag, it is drawn as a link).', 'refraction' ),
+				// With the Default tag too (0.121.0); another chosen tag (section, article...) keeps its tag and no link.
 				'condition' => [
-					'html_tag' => 'a',
+					'html_tag' => [ '', 'a' ],
 				],
+			]
+		);
+
+		// A hover animation for the whole container (0.121.0), as for buttons and images.
+		$this->add_control(
+			'hover_animation',
+			[
+				'label' => esc_html__( 'Hover Animation', 'refraction' ),
+				'type' => Controls_Manager::HOVER_ANIMATION,
+				'prefix_class' => 'refraction-animation-',
 			]
 		);
 

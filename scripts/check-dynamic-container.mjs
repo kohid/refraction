@@ -7,6 +7,8 @@
  * - settings: 4 columns on desktop; the scrolling row on desktop with 2.5 items in view; gaps.
  * In Edit Mode: a new Dynamic Container starts with three containers (Item #1 to #3) in a row of three; a changed
  * Columns setting shows at once; Add Item gives a fourth container like the others; the phone preview scrolls sideways.
+ * 0.121.0: the Entrance (items in sync, then the widgets inside), Padding on phones, a Container's Link (default tag)
+ * and Hover Animation.
  *
  * Usage: node scripts/check-dynamic-container.mjs [--site /tmp/rf-dc-site] [--port 8964] [--shots /tmp/dc-shots]
  */
@@ -84,6 +86,12 @@ async function main() {
 
 	const base = page( 'Dynamic container', grid( {} ) );
 	const four = page( 'Dynamic container four', grid( { columns: 4 }, 8 ) );
+	// 0.121.0: the Entrance, Padding, and a container's Link and Hover Animation.
+	const animated = grid( { entrance: 'fade-up', entrance_parts: 'cascade', entrance_item_gap: 150, entrance_inner_gap: 100, entrance_duration: 500, list_padding_mobile: { unit: 'px', top: '0', right: '12', bottom: '0', left: '12', isLinked: false } }, 4 );
+	animated[ 0 ].elements[ 0 ].elements[ 0 ].elements.push( { id: id(), elType: 'widget', widgetType: 'text-editor', settings: { editor: '<p>Second widget</p>' }, elements: [] } );
+	Object.assign( animated[ 0 ].elements[ 0 ].elements[ 1 ].settings, { link: { url: 'https://example.com/fleet', is_external: '', nofollow: '' }, hover_animation: 'grow' } );
+	const anim = page( 'Dynamic container entrance', animated );
+	const plainLink = page( 'Container link', [ { id: id(), elType: 'container', settings: { link: { url: 'https://example.com/plain' } }, elements: [ { id: id(), elType: 'widget', widgetType: 'heading', settings: { title: 'Linked box' }, elements: [] } ] } ] );
 	const row = page( 'Dynamic container row', grid( { layout: 'scroll', show: 2.5, column_gap: { unit: 'px', size: 24 } }, 6 ) );
 
 	const browser = await chromium.launch();
@@ -139,6 +147,51 @@ async function main() {
 		await pg.locator( '.rf-dc' ).screenshot( { path: join( SHOTS, 'desktop-row.png' ) } );
 		await ctx.close();
 
+		// ------------------------------------------------------------ the Entrance
+		( { pg, ctx } = await at( anim.url, 1280 ) );
+		const during = await pg.evaluate( () => {
+			const list = document.querySelector( '.rf-dc' );
+			const items = [ ...list.children ];
+			const d = ( el ) => el.style.getPropertyValue( '--rf-dc-d' );
+			const widgets = [ ...items[ 0 ].querySelectorAll( '.refraction-widget' ) ];
+			return { armed: list.classList.contains( 'is-armed' ), delays: items.map( d ), inner: widgets.map( d ), parts: list.querySelectorAll( '.rf-dc-a' ).length };
+		} );
+		check( 'entrance', 'fade in up, item by item (0, 150, 300, 450 ms), each item\'s widgets after it (100, 200 ms)', during.armed && '0ms,150ms,300ms,450ms' === during.delays.join() && '100ms,200ms' === during.inner.join() && during.parts >= 6, JSON.stringify( during ) );
+		const mid = await pg.evaluate( () => [ ...document.querySelector( '.rf-dc' ).children ].map( ( el ) => Math.round( Number( getComputedStyle( el ).opacity ) * 100 ) / 100 ) );
+		check( 'entrance', 'part way through, the items are coming in one after another (the first furthest, the last not yet all there)', mid[ 0 ] >= mid[ 1 ] && mid[ 1 ] >= mid[ 2 ] && mid[ 2 ] >= mid[ 3 ] && mid[ 3 ] < 1 && mid[ 0 ] > mid[ 3 ], JSON.stringify( mid ) );
+		await pg.waitForTimeout( 1600 );
+		const after = await pg.evaluate( () => {
+			const list = document.querySelector( '.rf-dc' );
+			return { left: list.querySelectorAll( '.rf-dc-a' ).length, armed: list.classList.contains( 'is-armed' ), opacity: [ ...list.children ].map( ( el ) => getComputedStyle( el ).opacity ).join(), transform: getComputedStyle( list.children[ 1 ] ).transform };
+		} );
+		check( 'entrance', 'then everything is in place and the entrance classes are gone (hover animations work as before)', 0 === after.left && ! after.armed && '1,1,1,1' === after.opacity && 'none' === after.transform, JSON.stringify( after ) );
+		const linked = await pg.evaluate( () => {
+			const el = document.querySelector( '.rf-dc' ).children[ 1 ];
+			return { tag: el.tagName, href: el.getAttribute( 'href' ), grow: el.classList.contains( 'refraction-animation-grow' ), css: !! document.querySelector( 'link[id^="e-animation-grow"]' ) };
+		} );
+		check( 'container', 'an item with a Link (default tag) is a link, and its Hover Animation (grow) applies with its CSS', 'A' === linked.tag && 'https://example.com/fleet' === linked.href && linked.grow && linked.css, JSON.stringify( linked ) );
+		await pg.hover( '.rf-dc > :nth-child(2)' );
+		await pg.waitForTimeout( 500 );
+		const grown = await pg.evaluate( () => getComputedStyle( document.querySelector( '.rf-dc' ).children[ 1 ] ).transform );
+		check( 'container', 'hovering it grows it', /^matrix\(1\.[01]/.test( grown ), grown );
+		await ctx.close();
+
+		( { pg, ctx } = await at( plainLink.url, 1280 ) );
+		const plain = await pg.evaluate( () => {
+			const el = [ ...document.querySelectorAll( '.e-con' ) ].find( ( c ) => /Linked box/.test( c.textContent ) );
+			return el ? el.tagName + ' ' + el.getAttribute( 'href' ) : '';
+		} );
+		check( 'container', 'any Container with a Link and the default tag is a link', 'A https://example.com/plain' === plain, plain );
+		await ctx.close();
+
+		( { pg, ctx } = await at( anim.url, 390 ) );
+		const pad = await pg.evaluate( () => {
+			const cs = getComputedStyle( document.querySelector( '.rf-dc' ) );
+			return cs.paddingLeft + ' ' + cs.paddingRight + ' ' + cs.paddingTop;
+		} );
+		check( 'padding', 'Padding on phones (12px left and right, 0 top) applies to the row', '12px 12px 0px' === pad, pad );
+		await ctx.close();
+
 		// ------------------------------------------------------------ Edit Mode
 		const blank = page( 'Dynamic container editor', [ { id: id(), elType: 'container', settings: {}, elements: [] } ] );
 		const ectx = await browser.newContext( { viewport: { width: 1500, height: 1000 } } );
@@ -190,6 +243,29 @@ async function main() {
 		} );
 		ed = await edLayout();
 		check( 'editor', 'Add Item gives a fourth container like the others (outline, height) and the preview shows it', 4 === added.count && 'solid' === added.border && 240 === added.minHeight && 4 === ed.items, JSON.stringify( { added, ed } ) );
+
+		// As a person would: the widget's panel open on Entrance, a choice in its Animation list.
+		await p.evaluate( async () => {
+			const find = ( c ) => c.children.flatMap( ( x ) => [ x, ...find( x ) ] );
+			const el = find( refraction.getPreviewContainer() ).find( ( c ) => c.id === window.__dc );
+			$e.run( 'panel/editor/open', { model: el.model, view: el.view } );
+			await new Promise( ( r ) => setTimeout( r, 600 ) );
+			const page = refraction.getPanelView().getCurrentPageView();
+			page.activateSection( 'section_entrance' );
+			page._renderChildren();
+			await new Promise( ( r ) => setTimeout( r, 400 ) );
+		} );
+		await frame.evaluate( () => {
+			window.__dcSeen = 0;
+			const list = document.querySelector( '.rf-dc' );
+			new MutationObserver( () => {
+				window.__dcSeen = Math.max( window.__dcSeen, list.querySelectorAll( '.rf-dc-a' ).length );
+			} ).observe( list, { attributes: true, subtree: true, attributeFilter: [ 'class' ] } );
+		} );
+		await p.selectOption( '.refraction-control-entrance select', 'zoom-in' );
+		await p.waitForTimeout( 2000 );
+		const replay = await frame.evaluate( () => ( { first: window.__dcSeen, after: document.querySelectorAll( '.rf-dc .rf-dc-a' ).length } ) );
+		check( 'editor', 'choosing an Entrance in the panel plays it in the preview', replay.first >= 3 && 0 === replay.after, JSON.stringify( replay ) );
 
 		await p.evaluate( () => refraction.changeDeviceMode( 'mobile' ) );
 		await p.waitForTimeout( 1500 );

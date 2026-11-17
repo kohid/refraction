@@ -196,22 +196,37 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'separator' => 'before',
 		] );
 
+		// Which floating image the settings below are for (0.121.0): a row of tabs, Image 1 to 5, instead of five long
+		// groups one under another.
+		$images = [];
+
+		for ( $n = 1; $n <= self::FLOATS; $n++ ) {
+			$images[ (string) $n ] = [ 'title' => (string) $n ];
+		}
+
+		$repeater->add_control( 'fl_edit', [
+			'label' => esc_html__( 'Edit floating image', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => $images,
+			'default' => '1',
+			'toggle' => false,
+			'label_block' => true,
+			'classes' => 'rf-shape-tabs rf-float-tabs',
+			'description' => esc_html__( 'Pick an image to set it up; only the first ones up to the number above show.', 'refraction' ),
+			'condition' => [ 'float_count!' => '0' ],
+		] );
+
 		for ( $n = 1; $n <= self::FLOATS; $n++ ) {
 			$p = 'fl' . $n . '_';
 			$on = [ 'float_count' => array_map( 'strval', range( $n, self::FLOATS ) ) ];
+			// Shown only while its tab is picked in "Edit" (a panel rule on the class, see editor_styles() in the module):
+			// a condition on "Edit" would also leave out this image's CSS.
+			$cls = 'rf-fl rf-fl-' . $n;
 			$el = '{{WRAPPER}} {{CURRENT_ITEM}} .rf-sw__float--' . $n;
 			[ $x, $y ] = self::FLOAT_PLACES[ $n ];
 
-			$repeater->add_control( $p . 'heading', [
-				/* translators: %d: Floating image number. */
-				'label' => sprintf( esc_html__( 'Floating image %d', 'refraction' ), $n ),
-				'type' => Controls_Manager::HEADING,
-				'separator' => 'before',
-				'condition' => $on,
-			] );
-
-			$repeater->start_controls_tabs( $p . 'tabs', [ 'condition' => $on ] );
-			$repeater->start_controls_tab( $p . 'tab_content', [ 'label' => esc_html__( 'Content', 'refraction' ), 'condition' => $on ] );
+			$repeater->start_controls_tabs( $p . 'tabs', [ 'classes' => $cls, 'condition' => $on ] );
+			$repeater->start_controls_tab( $p . 'tab_content', [ 'label' => esc_html__( 'Content', 'refraction' ), 'classes' => $cls, 'condition' => $on ] );
 
 			$repeater->add_control( $p . 'type', [
 				'label' => esc_html__( 'Show', 'refraction' ),
@@ -222,6 +237,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				],
 				'default' => 'image',
 				'toggle' => false,
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -229,6 +245,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'label' => esc_html__( 'Picture', 'refraction' ),
 				'type' => Controls_Manager::MEDIA,
 				'description' => esc_html__( 'A cut-out (PNG or SVG with a see-through background) looks best.', 'refraction' ),
+				'classes' => $cls,
 				'condition' => $on + [ $p . 'type!' => 'icon' ],
 			] );
 
@@ -236,6 +253,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'label' => esc_html__( 'Icon', 'refraction' ),
 				'type' => Controls_Manager::ICONS,
 				'default' => [ 'value' => 'fas fa-star', 'library' => 'fa-solid' ],
+				'classes' => $cls,
 				'condition' => $on + [ $p . 'type' => 'icon' ],
 			] );
 
@@ -246,6 +264,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'range' => [ '%' => [ 'min' => -50, 'max' => 150 ] ],
 				'default' => [ 'unit' => '%', 'size' => $x ],
 				'selectors' => [ $el => '--rf-sw-fx: {{SIZE}}%;' ],
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -257,6 +276,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'default' => [ 'unit' => '%', 'size' => $y ],
 				'selectors' => [ $el => '--rf-sw-fy: {{SIZE}}%;' ],
 				'description' => esc_html__( 'Of the picture\'s space, from its top left. Tip: in the editor, drag it into place (for the screen size shown).', 'refraction' ),
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -271,6 +291,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 					'spin' => esc_html__( 'Turn slowly', 'refraction' ),
 					'pulse' => esc_html__( 'Pulse', 'refraction' ),
 				],
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -279,11 +300,12 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => 1, 'max' => 30, 'step' => 0.5 ] ],
 				'selectors' => [ $el => '--rf-sw-ft: {{SIZE}}s;' ],
+				'classes' => $cls,
 				'condition' => $on + [ $p . 'motion!' => '' ],
 			] );
 
 			$repeater->end_controls_tab();
-			$repeater->start_controls_tab( $p . 'tab_style', [ 'label' => esc_html__( 'Style', 'refraction' ), 'condition' => $on ] );
+			$repeater->start_controls_tab( $p . 'tab_style', [ 'label' => esc_html__( 'Style', 'refraction' ), 'classes' => $cls, 'condition' => $on ] );
 
 			$repeater->add_responsive_control( $p . 'size', [
 				'label' => esc_html__( 'Size', 'refraction' ),
@@ -291,6 +313,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'size_units' => [ 'px', '%' ],
 				'range' => [ 'px' => [ 'min' => 12, 'max' => 400 ], '%' => [ 'min' => 2, 'max' => 80 ] ],
 				'selectors' => [ $el => '--rf-sw-fs: {{SIZE}}{{UNIT}};' ],
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -299,6 +322,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ],
 				'selectors' => [ $el => '--rf-sw-fr: {{SIZE}}deg;' ],
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -311,6 +335,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				],
 				'default' => 'front',
 				'toggle' => false,
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -319,6 +344,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
 				'selectors' => [ $el => 'opacity: {{SIZE}};' ],
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -326,6 +352,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'label' => esc_html__( 'Shadow', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
 				'default' => 'yes',
+				'classes' => $cls,
 				'condition' => $on,
 			] );
 
@@ -333,6 +360,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'label' => esc_html__( 'Icon color', 'refraction' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [ $el => 'color: {{VALUE}}; fill: {{VALUE}};' ],
+				'classes' => $cls,
 				'condition' => $on + [ $p . 'type' => 'icon' ],
 			] );
 

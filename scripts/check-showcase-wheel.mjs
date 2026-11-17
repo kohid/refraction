@@ -516,16 +516,30 @@ async function main() {
 			}
 			await new Promise( ( r ) => setTimeout( r, 300 ) );
 			const color = document.querySelector( '.refraction-control-deco_color' );
+			const colorShown = !! ( color && color.offsetParent );
+			const colorLabel = color ? color.querySelector( '.refraction-control-title' ).textContent.trim() : '';
+			// Floating images: three, and the Edit tabs show one image's settings at a time.
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 0 ], settings: { float_count: '3' } } );
+			await new Promise( ( r ) => setTimeout( r, 500 ) );
+			const tab2 = [ ...document.querySelectorAll( '.refraction-control-fl_edit label' ) ].find( ( l ) => '2' === ( l.textContent || '' ).trim() );
+			if ( tab2 ) {
+				tab2.click();
+			}
+			await new Promise( ( r ) => setTimeout( r, 400 ) );
+			const vis = ( sel ) => [ ...document.querySelectorAll( sel ) ].filter( ( el ) => el.offsetParent ).length;
+			const floatTabs = { tabs: document.querySelectorAll( '.refraction-control-fl_edit input' ).length, image2: vis( '.rf-fl-2' ), image1: vis( '.rf-fl-1' ), image3: vis( '.rf-fl-3' ) };
 			return {
+				floatTabs,
 				tabs,
-				colorShown: !! ( color && color.offsetParent ),
-				colorLabel: color ? color.querySelector( '.refraction-control-title' ).textContent.trim() : '',
+				colorShown,
+				colorLabel,
 				conditions,
 				...picker,
 			};
 		}, w );
 		check( 'editor', 'each slide\'s shape has Content and Style tabs; its color (no longer "Its color") is under Style', panel2.tabs.join( '/' ).includes( 'Content' ) && panel2.tabs.join( '/' ).includes( 'Style' ) && panel2.colorShown && 'Color' === panel2.colorLabel, JSON.stringify( panel2 ) );
 		check( 'editor', 'inside the tabs each setting keeps its own condition: for a shape, no Corner; with Built-in, the built-in shapes and not the uploaded ones', ! panel2.conditions.corner && panel2.conditions.builtin && ! panel2.conditions.uploaded, JSON.stringify( panel2.conditions ) );
+		check( 'editor', 'floating images: "Edit" tabs Image 1 to 5; picking Image 2 shows only its settings', panel2.floatTabs.tabs >= 5 && 0 === panel2.floatTabs.tabs % 5 && panel2.floatTabs.image2 > 3 && 0 === panel2.floatTabs.image1 && 0 === panel2.floatTabs.image3, JSON.stringify( panel2.floatTabs ) );
 		check( 'editor', 'the shape picker shows 12 shapes (3 rows) and scrolls for the rest', panel2.tiles > 12 && panel2.scrolls && panel2.rowsShown >= 2.8 && panel2.rowsShown <= 3.3, JSON.stringify( panel2 ) );
 
 		// Dragging a floating image and the picture writes the slide's own settings.

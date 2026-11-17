@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.120.0
+Stable tag: 0.121.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.121.0 =
+* Dynamic Container: Entrance. When the list comes into view its items appear one after another in sync (fade in up, down, from either side, fade, zoom in or out, come into focus, flip up, rise and turn), and the widgets inside each item after it, with the time between items and between widgets, duration, distance, easing and "every time it comes into view". Plays in Edit Mode when an Entrance setting changes.
+* Dynamic Container: Padding, per screen size, in either layout (replaces "Room at the row's ends", which still counts where it was set).
+* Containers: a Hover Animation (grow, shrink, pulse, float...) on every container, and the Link shows without choosing the "a" tag first: a container with a link and the default tag becomes a link. The items of a Dynamic Container are containers, so each has both.
+* Showcase Wheel: floating images are set up one at a time with tabs ("Edit floating image": 1 to 5) instead of five long groups.
 
 = 0.120.0 =
 * New widget: Dynamic Container. A list of containers (three to start, Add Item for more), each the same as a Container with all its settings. Per screen size it is a grid with its own number of columns (3 on desktop, 2 on tablets by default) or a row that scrolls sideways with no scrollbar and the next item peeking in (the default on phones), stopping at each item. Space between columns and rows, item height, items in view and room at the row's ends. Edit Mode shows the same layout.
