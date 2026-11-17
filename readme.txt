@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.117.0
+Stable tag: 0.118.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.118.0 =
+* Editor: on every widget, settings that appear only after a choice inside Normal / Hover tabs (Background > Color and Image after choosing Classic, the gradient's colors, a button's hover background...) landed inside the Normal / Hover row, squashed and hard to use. They now appear under the tabs, in order.
+* Showcase Wheel: the Motion section no longer shows "Duration" and "Easing" twice: the slide change and the content coming in each name their own. Phone Showcase: the first button's border color is labelled like the second's.
+* Checked every Refraction widget in the editor: each style setting changes the widget (scripts/audit-widget-settings.mjs).
 
 = 0.117.0 =
 * The new Refraction logo everywhere: the editor loading screen (the logo on a white tile, its spectrum bars lighting up in turn, still with reduced motion), the admin menu icon (in one color), the editor toolbar logo (it still turns into the menu icon on hover), the panel and light wordmarks, the logo icon (top bar) and the logo glyph used in the admin, the block editor button and the library.

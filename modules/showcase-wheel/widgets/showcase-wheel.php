@@ -431,7 +431,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		] );
 
 		$this->add_control( 'duration', $js + [
-			'label' => esc_html__( 'Duration (ms)', 'refraction' ),
+			'label' => esc_html__( 'Slide change duration (ms)', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,
 			'min' => 100,
 			'max' => 3000,
@@ -440,7 +440,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		] );
 
 		$this->add_control( 'easing', $js + [
-			'label' => esc_html__( 'Easing', 'refraction' ),
+			'label' => esc_html__( 'Slide change easing', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'smooth',
 			'options' => Motion_Easings::options(),
@@ -534,7 +534,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		] );
 
 		$this->add_control( 'content_duration', $js + [
-			'label' => esc_html__( 'Duration (ms)', 'refraction' ),
+			'label' => esc_html__( 'Content duration (ms)', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,
 			'min' => 100,
 			'max' => 3000,
@@ -544,7 +544,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		] );
 
 		$this->add_control( 'content_distance', $js + [
-			'label' => esc_html__( 'Distance (px)', 'refraction' ),
+			'label' => esc_html__( 'Content distance (px)', 'refraction' ),
 			'type' => Controls_Manager::NUMBER,
 			'min' => 0,
 			'max' => 300,
@@ -553,7 +553,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		] );
 
 		$this->add_control( 'content_easing', $js + [
-			'label' => esc_html__( 'Easing', 'refraction' ),
+			'label' => esc_html__( 'Content easing', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'glide',
 			'options' => Motion_Easings::options(),

@@ -140,3 +140,12 @@ the preview could finish first: `onPreviewLoaded()` built the panel, whose templ
 screen stayed until the tab was shown again. `onPreviewLoaded()` now waits for `this.documentOpening` when the document
 settings are not there yet. `scripts/check-logo-loader.mjs` runs the editor with a background tab's rules (hidden, no
 animation frames, timers at most once a second) and checks that it finishes loading.
+
+## Settings shown on a condition inside tabs (0.118.0)
+
+`insertControl()` (`assets/dev/js/editor/regions/panel/pages/editor.js`) places a control built on demand next to the
+nearest built control. A tab's own button (`type: tab`, "Normal" / "Hover") is moved into its tabs row by the
+inner-tabs behaviour, so placing next to it put the new control inside that row: Background > Color and Image after
+choosing Classic, on every widget's Advanced tab (and any Normal / Hover tabs with conditional settings). Tab buttons
+are no longer used as neighbours. Check: `scripts/check-panel-tabs.mjs`. `scripts/audit-widget-settings.mjs` sets each
+style setting of every Refraction widget in the editor and lists those that change nothing (none in 0.118.0).
