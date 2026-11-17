@@ -215,7 +215,9 @@ EditorView = ControlsStack.extend( {
 	insertControl( model, ordered ) {
 		const at = ordered.indexOf( model ),
 			view = this.addChild( model, this.getChildView( model ), at ),
-			viewOf = ( m ) => m && m !== model && this.children.findByModelCid( m.cid ),
+			// A tab's own button ("Normal", "Hover") sits inside its tabs row, not among the controls: never place next to
+			// it, or the control lands in that row (0.118.0: Background > Color and Image after choosing Classic).
+			viewOf = ( m ) => m && m !== model && 'tab' !== m.get( 'type' ) && this.children.findByModelCid( m.cid ),
 			next = ordered.slice( at + 1 ).map( viewOf ).find( Boolean ),
 			prev = ordered.slice( 0, at ).reverse().map( viewOf ).find( Boolean ),
 			inPopover = this.isInPopoverRange( model );

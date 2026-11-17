@@ -1130,7 +1130,7 @@ class Phone_Showcase extends Widget_Base {
 		$this->add_control( 'button_color', [ 'label' => esc_html__( 'Text Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'color: {{VALUE}}; fill: {{VALUE}};' ] ] );
 		$this->add_control( 'button_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $button => 'background-color: {{VALUE}};' ] ] );
 		$this->add_control( 'button_border', [
-			'label' => esc_html__( 'First Button Border Color', 'refraction' ),
+			'label' => esc_html__( 'Border Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'selectors' => [ $button => 'border-color: {{VALUE}};' ],
 		] );
