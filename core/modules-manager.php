@@ -135,6 +135,7 @@ class Modules_Manager {
 			'mega-menu',
 			'nested-carousel',
 			'timed-slides',
+			'focus-stack',
 			'woocommerce',
 			'form-builder',
 			'events',

@@ -1,0 +1,162 @@
+// Focus Stack (0.110.0): the current slide is a whole card, the others wait as slim cards (their header or footer)
+// before and after it. The script (assets/js/frontend/handlers/focus-stack.js) marks the slides and parts and moves
+// the cards; these rules are the resting states, so a slide looks right before and after any motion.
+.rf-fs {
+	--rf-fs-gap: 10px;
+	--rf-fs-near-size: 88%;
+	--rf-fs-far-size: 76%;
+	--rf-fs-near-opacity: 1;
+	--rf-fs-far-opacity: 0.45;
+	--rf-fs-side: 64px;
+	--rf-fs-height: 420px;
+	--rf-fs-active-radius: 18px;
+	--rf-fs-waiting-radius: 16px;
+	--rf-fs-duration: 700ms;
+	--rf-fs-easing: cubic-bezier(0.65, 0, 0.35, 1);
+
+	position: relative;
+	outline: none;
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 6px;
+		border-radius: 12px;
+	}
+}
+
+.rf-fs__slides {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--rf-fs-gap);
+}
+
+// A slide: a card. Its own container settings (background, border...) still apply over these.
+.rf-fs .rf-fs__slide {
+	--width: 100%;
+
+	flex: none;
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+	border: 1px solid rgba(17, 24, 39, 0.08);
+	border-radius: var(--rf-fs-active-radius);
+	background-color: #fff;
+	box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 10px 30px rgba(17, 24, 39, 0.07);
+	&.is-active {
+		min-height: var(--rf-fs-active-min, 0);
+	}
+
+	&.is-waiting {
+		border-radius: var(--rf-fs-waiting-radius);
+		box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+		cursor: pointer;
+	}
+
+	&.is-near {
+		width: var(--rf-fs-near-size);
+		opacity: var(--rf-fs-near-opacity);
+	}
+
+	&.is-far {
+		width: var(--rf-fs-far-size);
+		opacity: var(--rf-fs-far-opacity);
+	}
+
+	&.is-hidden:not(.is-leaving) {
+		display: none !important;
+	}
+
+	&.is-waiting:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+}
+
+// Once placed: opacity and corners follow a card's new place smoothly.
+.rf-fs.is-ready .rf-fs__slide {
+	transition: opacity var(--rf-fs-duration) var(--rf-fs-easing), border-radius var(--rf-fs-duration) var(--rf-fs-easing);
+}
+
+// Waiting: only its header or footer, filling the card (a set height centres it).
+.rf-fs .rf-fs__slide.is-waiting:not(.is-moving) {
+	height: var(--rf-fs-thick, auto);
+
+	.rf-fs__part:not(.is-shown) {
+		display: none !important;
+	}
+
+	.rf-fs__part.is-shown {
+		flex: 1 1 auto;
+		min-height: 0;
+		justify-content: center;
+	}
+}
+
+// Moving: every part in place at its own size, the card clipping them as it grows or folds.
+.rf-fs .rf-fs__slide.is-moving {
+	display: flex !important;
+	flex-direction: column;
+	min-height: 0;
+
+	.rf-fs__part {
+		flex-shrink: 0;
+	}
+}
+
+// Side by side: a row of a set height; the current card takes the room left.
+.rf-fs-o-horizontal {
+
+	.rf-fs__slides {
+		flex-direction: row;
+		align-items: center;
+		height: var(--rf-fs-height);
+	}
+
+	.rf-fs .rf-fs__slide {
+		width: auto;
+		height: 100%;
+
+		&.is-active {
+			flex: 1 1 0;
+			min-width: 0;
+		}
+
+		&.is-near {
+			width: var(--rf-fs-side);
+			height: var(--rf-fs-near-size);
+		}
+
+		&.is-far {
+			width: calc(var(--rf-fs-side) * 0.8);
+			height: var(--rf-fs-far-size);
+		}
+
+		&.is-moving {
+			flex: none;
+		}
+	}
+
+	.rf-fs .rf-fs__slide.is-waiting:not(.is-moving) {
+		height: var(--rf-fs-near-size);
+
+		&.is-far {
+			height: var(--rf-fs-far-size);
+		}
+	}
+}
+
+// Side cards read from top to bottom.
+.rf-fs-o-horizontal.rf-fs-turn-yes .rf-fs .rf-fs__slide.is-waiting:not(.is-moving) .rf-fs__part.is-shown {
+	writing-mode: vertical-rl;
+	align-items: center;
+	justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-fs.is-ready .rf-fs__slide {
+		transition: none;
+	}
+}

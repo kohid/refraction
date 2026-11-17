@@ -39,6 +39,7 @@ export const BASE_ENTRIES = {
 	'mega-menu': 'modules/mega-menu/assets/js/editor/index.js',
 	'nested-carousel': 'modules/nested-carousel/assets/js/editor/index.js',
 	'timed-slides': 'modules/timed-slides/assets/js/editor/index.js',
+	'focus-stack': 'modules/focus-stack/assets/js/editor/index.js',
 	'container-converter': 'modules/container-converter/assets/js/editor/module.js',
 	'web-cli': 'modules/web-cli/assets/js/index.js',
 	'import-export-admin': 'app/modules/import-export/assets/js/admin.js',
