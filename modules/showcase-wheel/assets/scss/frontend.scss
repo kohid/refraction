@@ -98,7 +98,7 @@
 	}
 
 	.rf-sw.has-nav & {
-		bottom: calc(var(--rf-sw-thumb) + var(--rf-sw-nav-inset) + 20px);
+		bottom: calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + 20px);
 	}
 }
 
@@ -106,11 +106,14 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	position: relative;
 	width: 100%;
 	height: 100%;
 	will-change: transform;
+	// The slide's own picture position (0.119.0): independent of the wheel's motion (which uses transform).
+	translate: var(--rf-sw-pic-x, 0px) var(--rf-sw-pic-y, 0px);
 
-	img {
+	> img {
 		display: block;
 		width: auto;
 		max-width: 100%;
@@ -120,7 +123,7 @@
 	}
 }
 
-.rf-sw-shadow-yes .rf-sw__picture img {
+.rf-sw-shadow-yes .rf-sw__picture > img {
 	filter: drop-shadow(0 22px 28px rgba(17, 24, 39, 0.28));
 }
 
@@ -130,7 +133,7 @@
 	}
 }
 
-.rf-sw-spin-yes .rf-sw__slot.is-active .rf-sw__picture img {
+.rf-sw-spin-yes .rf-sw__slot.is-active .rf-sw__picture > img {
 	animation: rf-sw-spin 48s linear infinite;
 }
 
@@ -140,11 +143,13 @@
 	top: 50%;
 	left: 50%;
 	z-index: -1;
-	width: calc(var(--rf-sw-deco) * 1%);
+	width: calc(var(--rf-sw-deco) * 1% * var(--rf-sw-deco-k, 1));
 	aspect-ratio: 1;
 	color: var(--rf-sw-deco-color);
 	pointer-events: none;
 	transform: translate(-50%, -50%);
+	translate: var(--rf-sw-deco-x, 0px) var(--rf-sw-deco-y, 0px);
+	rotate: var(--rf-sw-deco-r, 0deg);
 
 	&--arc {
 		box-sizing: border-box;
@@ -178,22 +183,23 @@
 	overflow: hidden;
 	pointer-events: none;
 
-	&::before {
-		content: "";
+	.rf-sw__corner-ring {
 		position: absolute;
 		box-sizing: border-box;
 		width: 200%;
 		height: 200%;
 		border: var(--rf-sw-corner-w) solid var(--rf-sw-deco-color);
 		border-radius: 50%;
-		transform: translate(calc(var(--rf-sw-cx) * var(--rf-sw-corner-d)), calc(var(--rf-sw-cy) * var(--rf-sw-corner-d)));
+		translate: calc(var(--rf-sw-cx) * var(--rf-sw-corner-d) + var(--rf-sw-deco-x, 0px)) calc(var(--rf-sw-cy) * var(--rf-sw-corner-d) + var(--rf-sw-deco-y, 0px));
+		scale: var(--rf-sw-deco-k, 1);
+		rotate: var(--rf-sw-deco-r, 0deg);
 	}
 
 	&--top-right {
 		top: 0;
 		right: 0;
 
-		&::before {
+		.rf-sw__corner-ring {
 			top: -100%;
 			left: 0;
 		}
@@ -205,7 +211,7 @@
 		top: 0;
 		left: 0;
 
-		&::before {
+		.rf-sw__corner-ring {
 			top: -100%;
 			left: -100%;
 		}
@@ -217,7 +223,7 @@
 		right: 0;
 		bottom: 0;
 
-		&::before {
+		.rf-sw__corner-ring {
 			top: 0;
 			left: 0;
 		}
@@ -230,10 +236,140 @@
 		bottom: 0;
 		left: 0;
 
-		&::before {
+		.rf-sw__corner-ring {
 			top: 0;
 			left: -100%;
 		}
+	}
+}
+
+// A slide's decoration moving (its Content tab, 0.119.0): only while the slide shows.
+@keyframes rf-sw-deco-float {
+	50% {
+		margin-top: -14px;
+	}
+}
+
+@keyframes rf-sw-deco-breathe {
+	50% {
+		scale: calc(var(--rf-sw-deco-k, 1) * 1.07);
+	}
+}
+
+@keyframes rf-sw-deco-spin {
+	to {
+		rotate: calc(var(--rf-sw-deco-r, 0deg) + 360deg);
+	}
+}
+
+@keyframes rf-sw-deco-wobble {
+	25% {
+		rotate: calc(var(--rf-sw-deco-r, 0deg) - 5deg);
+	}
+
+	75% {
+		rotate: calc(var(--rf-sw-deco-r, 0deg) + 5deg);
+	}
+}
+
+@each $m, $t in (float: 6s, breathe: 7s, spin: 40s, wobble: 5s) {
+	.rf-sw__slot.is-active.rf-sw-deco-#{$m} {
+		.rf-sw__deco,
+		.rf-sw__corner-ring {
+			animation: rf-sw-deco-#{$m} var(--rf-sw-deco-t, #{$t}) #{if($m == spin, linear, ease-in-out)} infinite;
+		}
+	}
+}
+
+// Floating images around the picture (0.119.0): placed by their middle in the picture's space, they turn with it.
+.rf-sw__float {
+	position: absolute;
+	top: var(--rf-sw-fy, 50%);
+	left: var(--rf-sw-fx, 50%);
+	z-index: 2;
+	width: var(--rf-sw-fs, 64px);
+	line-height: 0;
+	pointer-events: none;
+	transform: translate(-50%, -50%) rotate(var(--rf-sw-fr, 0deg));
+
+	.rf-sw__picture > & {
+		max-width: none;
+	}
+
+	img,
+	svg {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	i {
+		font-size: var(--rf-sw-fs, 64px);
+		line-height: 1;
+	}
+
+	&.has-shadow img,
+	&.has-shadow i,
+	&.has-shadow svg {
+		filter: drop-shadow(0 10px 14px rgba(17, 24, 39, 0.22));
+	}
+}
+
+// Layers: the picture above the ones set "behind the picture" (before it in the markup), under the others.
+.rf-sw__picture > .rf-sw__img {
+	position: relative;
+	z-index: 1;
+}
+
+.rf-sw__picture > .rf-sw__float:has(~ .rf-sw__img) {
+	z-index: 0;
+}
+
+@keyframes rf-sw-bob {
+	50% {
+		translate: 0 -10px;
+	}
+}
+
+@keyframes rf-sw-sway {
+	25% {
+		rotate: -7deg;
+	}
+
+	75% {
+		rotate: 7deg;
+	}
+}
+
+@keyframes rf-sw-pulse {
+	50% {
+		scale: 1.08;
+	}
+}
+
+.rf-sw__float-in {
+	display: block;
+}
+
+@each $m, $t in (bob: 4s, sway: 5s, spin: 18s, pulse: 3s) {
+	.rf-sw__slot.is-active .rf-sw__float--#{$m} .rf-sw__float-in {
+		animation: #{if($m == spin, rf-sw-spin, rf-sw-#{$m})} var(--rf-sw-ft, #{$t}) #{if($m == spin, linear, ease-in-out)} var(--rf-sw-fd, 0s) infinite;
+	}
+}
+
+// In the editor: floating images and the picture can be dragged into place (showcase-wheel.js).
+.rf-sw--edit {
+
+	.rf-sw__slot.is-active .rf-sw__float,
+	.rf-sw__slot.is-active .rf-sw__img {
+		cursor: grab;
+		pointer-events: auto;
+	}
+
+	.is-dragging {
+		cursor: grabbing;
+		outline: 2px dashed rgba(91, 108, 255, 0.8);
+		outline-offset: 4px;
 	}
 }
 
@@ -298,7 +434,7 @@
 	position: relative;
 	display: block;
 	width: var(--rf-sw-thumb);
-	height: var(--rf-sw-thumb);
+	height: var(--rf-sw-thumb-h, var(--rf-sw-thumb));
 
 	img {
 		position: relative;
@@ -421,8 +557,8 @@
 	}
 
 	.rf-sw.has-nav .rf-sw__slot > .e-con.e-con {
-		--padding-bottom: calc(var(--rf-sw-thumb) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
-		--padding-block-end: calc(var(--rf-sw-thumb) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
+		--padding-bottom: calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
+		--padding-block-end: calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
 	}
 
 	.rf-sw__nav {
@@ -437,7 +573,10 @@
 		transition: none;
 	}
 
-	.rf-sw-spin-yes .rf-sw__slot.is-active .rf-sw__picture img {
-		animation: none;
+	.rf-sw-spin-yes .rf-sw__slot.is-active .rf-sw__picture > img,
+	.rf-sw__slot.is-active .rf-sw__float-in,
+	.rf-sw__slot.is-active .rf-sw__deco,
+	.rf-sw__slot.is-active .rf-sw__corner-ring {
+		animation: none !important;
 	}
 }

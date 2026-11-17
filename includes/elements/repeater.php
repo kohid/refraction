@@ -109,8 +109,11 @@ class Repeater extends Element_Base {
 	public function add_control( $id, array $args, $options = [] ) {
 		$current_tab = $this->get_current_tab();
 
+		// Inside tabs, as for an element's own controls (Controls_Stack::handle_control_position()): the control keeps
+		// its own condition and also takes the tabs' one. array_merge() put the tabs' condition in place of the
+		// control's, so a list item's settings inside tabs with a condition ignored their own (0.119.0).
 		if ( null !== $current_tab ) {
-			$args = array_merge( $args, $current_tab );
+			$args = array_replace_recursive( $current_tab, $args );
 		}
 
 		return parent::add_control( $id, $args, $options );
