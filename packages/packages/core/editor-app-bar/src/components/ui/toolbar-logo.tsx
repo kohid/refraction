@@ -10,15 +10,34 @@ interface StyledRefractionLogoProps extends SvgIconProps {
 type ToolbarLogoProps = Omit< ToggleButtonProps, 'value' >;
 
 /**
- * Refraction mark. The first path is the prism, the other three are the rays. On hover the prism collapses and the
- * rays grow into the three bars of a menu icon (see the transforms in StyledRefractionLogo).
+ * The Refraction logo (0.117.0, assets/images/refraction-logo.svg) on a white tile; on hover it fades into the three
+ * bars of a menu icon (see StyledRefractionLogo).
+ *
+ * @param props The icon's props.
  */
 const RefractionLogo = ( props: SvgIconProps ) => {
 	return (
 		<SvgIcon viewBox="0 0 32 32" { ...props }>
-			<g>
+			<g className="rf-logo">
+				<rect width="32" height="32" rx="7" fill="#ffffff" />
+				<g transform="scale(0.064)">
+					<polygon points="173.636,500 0,500 0,0 500,0 500,173.636 173.636,173.636 173.636,500" fill="#092351" />
+					<polygon points="10,173.636 165,219.654 165,250 10,250 10,173.636" fill="#7fff00" />
+					<polygon points="173.636,10 219.654,165 250,165 250,10 173.636,10" fill="#00ffff" />
+					<polygon points="10,330 10,270 165,270 165,330 10,330" fill="#ffff00" />
+					<polygon points="330,10 270,10 270,165 330,165 330,10" fill="#007fff" />
+					<polygon points="10,410 10,350 165,350 165,410 10,410" fill="#ff7f00" />
+					<polygon points="410,10 350,10 350,165 410,165 410,10" fill="#0000ff" />
+					<polygon points="10,430 10,490 165,490 165,430 10,430" fill="#ff0000" />
+					<polygon points="430,10 490,10 490,165 430,165 430,10" fill="#7f00ff" />
+					<polygon points="10,152.773 165,198.791 165,179.142 10,24.142 10,152.773" fill="#00ff00" />
+					<polygon points="152.773,10 198.791,165 179.142,165 24.142,10 152.773,10" fill="#00ff7f" />
+					<circle cx="412.5" cy="412.5" r="77.5" fill="#000000" />
+					<circle cx="412.5" cy="412.5" r="76" fill="none" stroke="#ffffff" strokeWidth="3" />
+				</g>
+			</g>
+			<g className="rf-menu">
 				<circle cx="16" cy="16" r="16" />
-				<path fillRule="evenodd" d="M10.2 8.2 L15.4 22.4 L5.0 22.4 Z M10.2 14.0 L7.9 20.4 L12.5 20.4 Z" />
 				<path d="M22.4 9H9V11.7H22.4V9Z" />
 				<path d="M22.4 14.4004H9V17.1004H22.4V14.4004Z" />
 				<path d="M22.4 19.6992H9V22.3992H22.4V19.6992Z" />
@@ -42,32 +61,20 @@ const StyledToggleButton = styled( ToggleButton )( ( { theme } ) => ( {
 const StyledRefractionLogo = styled( RefractionLogo, {
 	shouldForwardProp: ( prop ) => prop !== 'showMenuIcon',
 } )< StyledRefractionLogoProps >( ( { theme, showMenuIcon } ) => ( {
-	'& path': {
-		fill: theme.palette.background.default,
-		transition: 'all 0.2s linear',
+	'& .rf-logo, & .rf-menu': {
+		transition: 'opacity 0.2s linear, transform 0.2s linear',
 		transformBox: 'fill-box',
-		transformOrigin: 'left center',
-		'&:first-of-type': {
-			// the prism: collapses into the baseline when the menu icon shows
-			transformOrigin: 'left bottom',
-			transitionDelay: ! showMenuIcon && '0.2s',
-			transform: showMenuIcon && 'translateY(-9px) scaleY(0)',
-		},
-		// the rays: short and fanned out next to the prism, full-width bars when the menu icon shows.
-		// Emotion automatically flips the x direction in RTL mode.
-		'&:not(:first-of-type)': {
-			transform: ! showMenuIcon && `translateX(${ theme.direction === 'rtl' ? '-6' : '6' }px) scaleX(0.55)`,
-		},
-		'&:nth-of-type(2)': {
-			transitionDelay: showMenuIcon ? '0' : '0.2s',
-			transform: ! showMenuIcon && `translateX(${ theme.direction === 'rtl' ? '-6' : '6' }px) rotate(-16deg) scaleX(0.55)`,
-		},
-		'&:nth-of-type(3)': {
-			transitionDelay: '0.1s',
-		},
-		'&:nth-of-type(4)': {
-			transitionDelay: showMenuIcon ? '0.2s' : '0',
-			transform: ! showMenuIcon && `translateX(${ theme.direction === 'rtl' ? '-6' : '6' }px) rotate(16deg) scaleX(0.55)`,
+		transformOrigin: 'center',
+	},
+	'& .rf-logo': {
+		opacity: showMenuIcon ? 0 : 1,
+		transform: showMenuIcon ? 'scale(0.8)' : 'none',
+	},
+	'& .rf-menu': {
+		opacity: showMenuIcon ? 1 : 0,
+		transform: showMenuIcon ? 'none' : 'scale(0.8)',
+		'& path': {
+			fill: theme.palette.background.default,
 		},
 	},
 } ) );

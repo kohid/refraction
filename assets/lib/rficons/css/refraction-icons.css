@@ -2097,3 +2097,5 @@
 .rficon-refraction-square:before {
   content: "\e813";
 }
+/* The Refraction logo (0.117.0): drawn from assets/images/refraction-logo.svg, not the font glyph. */
+.rficon-refraction:before,.rficon-refraction-circle:before,.rficon-refraction-square:before{content:"";display:inline-block;width:1em;height:1em;vertical-align:-0.14em;border-radius:22%;background:#fff url(../../../images/refraction-logo.svg) center/contain no-repeat}
