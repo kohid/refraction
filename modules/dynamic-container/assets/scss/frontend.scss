@@ -1,0 +1,35 @@
+// Dynamic Container (0.120.0): the items (containers) in a grid or a row scrolling sideways. The Layout setting writes
+// the grid or row declarations for each screen size (widgets/dynamic-container.php); these are the shared parts.
+.rf-dc {
+	display: grid;
+	grid-template-columns: repeat(var(--rf-dc-cols, 3), minmax(0, 1fr));
+	gap: var(--rf-dc-row-gap, 16px) var(--rf-dc-col-gap, 16px);
+	align-items: stretch;
+	// The scrolling row: no scrollbar shown (it still scrolls with a swipe, the trackpad or the keyboard).
+	overscroll-behavior-x: contain;
+	scrollbar-width: none;
+	-webkit-overflow-scrolling: touch;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	// The items: whole containers, as wide as their cell, lined up on a swipe.
+	> .e-con,
+	> .refraction-element {
+		--width: 100%;
+
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+		margin: 0;
+		scroll-snap-align: start;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-dc {
+		scroll-behavior: auto;
+	}
+}
