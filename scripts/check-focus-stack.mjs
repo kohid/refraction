@@ -126,6 +126,7 @@ async function main() {
 		const own = stack( {} );
 		own[ 0 ].elements[ 0 ].settings.slides[ 1 ].waiting_part = 'footer';
 		const ownPart = page( 'Focus stack own part', own );
+		const focusOnly = page( 'Focus stack content only', stack( { focus_shows: 'content', next_part_justify: 'flex-start', next_part_gap: { unit: 'px', size: 30 }, prev_part_direction: 'column' } ) );
 		const upwards = page( 'Focus stack up', stack( { direction_v: 'up', next_part: 'footer', prev_part: 'header', visible: '1' } ) );
 		const side = page( 'Focus stack side', stack( { orientation: 'horizontal', stack_height: { unit: 'px', size: 360 } } ) );
 		const auto = page( 'Focus stack auto', stack( { autoplay: 'yes', interval: 900, duration: 300, pause_on_hover: '' }, 3 ) );
@@ -207,6 +208,27 @@ async function main() {
 		await p.waitForSelector( '.rf-fs.is-ready' );
 		st = await state();
 		check( 'per slide', 'slide 2 set to "Its footer" waits above showing its footer, while slide 3 (as set for the stack) shows its header', 'S2 footer' === st[ 1 ].visible.join() && 'before' === st[ 1 ].side && 'S3 header' === st[ 2 ].visible.join(), JSON.stringify( [ st[ 1 ], st[ 2 ] ] ) );
+
+		// ------------------------------------------------------------ the slide in focus shows its content only; waiting layout
+		await p.goto( focusOnly.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-fs.is-ready' );
+		st = await state();
+		check( 'focus shows', '"Its content only": the slide in focus shows its content, not its header or footer', 'S1 content' === byState( st, 'is-active' ).visible.join(), JSON.stringify( byState( st, 'is-active' ) ) );
+		const layout = await p.evaluate( () => {
+			const shownPart = ( sel ) => getComputedStyle( document.querySelector( sel + ' .rf-fs__part.is-shown' ) );
+			const next = shownPart( '.rf-fs__slide.is-next.is-near' );
+			const prev = shownPart( '.rf-fs__slide.is-prev.is-near' );
+			return { nextJustify: next.justifyContent, nextGap: next.columnGap, prevDirection: prev.flexDirection };
+		} );
+		check( 'waiting layout', 'Waiting slides layout: the next slides\' header starts at the left with a 30px gap; the previous slides\' footer is a column', 'flex-start' === layout.nextJustify && '30px' === layout.nextGap && 'column' === layout.prevDirection, JSON.stringify( layout ) );
+		await p.focus( '.rf-fs' );
+		await p.keyboard.press( 'ArrowUp' );
+		await p.waitForTimeout( 300 );
+		const midParts = await p.evaluate( () => [ ...document.querySelectorAll( '.rf-fs__slides > .rf-fs__slide' ) ][ 1 ].querySelector( '.rf-fs__part--header' ).getBoundingClientRect().height );
+		await p.waitForTimeout( 600 );
+		st = await state();
+		check( 'focus shows', 'moving on, the opening slide\'s header shrinks away (half way part of it is still there) and it ends with its content only', midParts > 1 && 'S2 content' === byState( st, 'is-active' ).visible.join() && 'S1 footer' === st[ 0 ].visible.join(), JSON.stringify( { midParts, act: byState( st, 'is-active' ), s1: st[ 0 ] } ) );
+		await shot( 'content-only.png' );
 
 		// ------------------------------------------------------------ moving up, parts swapped, one each side
 		await p.goto( upwards.url, { waitUntil: 'load' } );
@@ -361,6 +383,32 @@ async function main() {
 		check( 'editor', 'Add Slide gives the new slide its Header, Content and Footer containers (with examples)', 6 === added.count && 'Header/Content/Footer' === added.parts && added.widgets > 0 && /6/.test( added.title ), JSON.stringify( added ) );
 		await p.waitForTimeout( 800 );
 		check( 'editor', 'and the preview shows it as a waiting slide with its own part', 6 === ( await edState() ).length && 1 === ( await edState() ).filter( ( x ) => 'is-active' === x.state ).length, JSON.stringify( await edState() ) );
+
+		// The panel's tooltips go away after a click that draws the control again (the "Row - horizontal" one stayed).
+		// The widget's container: its Direction buttons and the device switchers (a device change draws the panel again).
+		await p.evaluate( ( c ) => {
+			$e.run( 'document/elements/select', { container: c.parent } );
+		}, w );
+		await p.waitForTimeout( 1500 );
+		let triedTips = 0;
+		for ( let i = 0; i < 24; i++ ) {
+			const target = ( await p.$$( '#refraction-panel .tooltip-target' ) )[ i ];
+			if ( ! target ) {
+				break;
+			}
+			if ( ! ( await target.isVisible() ) ) {
+				continue;
+			}
+			triedTips++;
+			await target.hover();
+			await p.waitForTimeout( 400 );
+			await target.click( { force: true } ).catch( () => {} );
+			await p.waitForTimeout( 300 );
+			await p.mouse.move( 900, 600 );
+			await p.waitForTimeout( 400 );
+		}
+		const stuck = await p.evaluate( () => [ ...document.querySelectorAll( '.tipsy' ) ].filter( ( tip ) => tip.offsetParent && 'hidden' !== getComputedStyle( tip ).visibility ).map( ( tip ) => tip.textContent.trim() ) );
+		check( 'editor', 'after hovering and clicking the panel\'s tooltip targets (directions, devices...) no tooltip is left on screen', triedTips > 5 && 0 === stuck.length, JSON.stringify( { triedTips, stuck } ) );
 
 		// A new Focus Stack from the panel: three slides, each with Header, Content and Footer.
 		const made = await p.evaluate( () => {

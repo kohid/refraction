@@ -20,7 +20,10 @@ const EASINGS = {
 	linear: 'linear',
 };
 
-const STATES = [ 'is-active', 'is-waiting', 'is-near', 'is-far', 'is-hidden', 'is-before', 'is-after' ];
+const STATES = [ 'is-active', 'is-waiting', 'is-near', 'is-far', 'is-hidden', 'is-before', 'is-after', 'is-next', 'is-prev' ];
+
+// What the slide in focus shows (focus_shows): its parts left out.
+const FOCUS_OFF = { full: [], content: [ 'header', 'footer' ], header_content: [ 'footer' ], content_footer: [ 'header' ] };
 
 export default class FocusStack extends Base {
 	getDefaultSettings() {
@@ -60,6 +63,7 @@ export default class FocusStack extends Base {
 			interval: Math.max( 800, Number( s.interval ) || 3000 ),
 			pause: 'yes' === s.pause_on_hover,
 			click: 'yes' === s.click_waiting,
+			focus: FOCUS_OFF[ s.focus_shows ] ? s.focus_shows : 'full',
 			parts: ( s.slides || [] ).map( ( slide ) => ( [ 'header', 'footer' ].includes( slide.waiting_part ) ? slide.waiting_part : '' ) ),
 		};
 	}
@@ -127,7 +131,7 @@ export default class FocusStack extends Base {
 			slide.classList.add( place );
 
 			if ( waiting ) {
-				slide.classList.add( 1 === Math.abs( d ) ? 'is-near' : 'is-far', side < 0 ? 'is-before' : 'is-after' );
+				slide.classList.add( 1 === Math.abs( d ) ? 'is-near' : 'is-far', side < 0 ? 'is-before' : 'is-after', d > 0 ? 'is-next' : 'is-prev' );
 			}
 
 			// Visual place: what waits before the current slide comes first.
@@ -139,11 +143,17 @@ export default class FocusStack extends Base {
 			const { parts } = this.parts( slide );
 			const shown = 'footer' === keep ? parts[ parts.length - 1 ] : parts[ 0 ];
 
+			const off = 0 === d ? ( FOCUS_OFF[ o.focus ] || [] ) : [];
+
 			parts.forEach( ( part, k ) => {
+				const role = ( parts.length > 1 && 0 === k && 'header' ) || ( parts.length > 1 && k === parts.length - 1 && 'footer' ) || 'content';
+
 				part.classList.add( 'rf-fs__part' );
-				part.classList.toggle( 'rf-fs__part--header', 0 === k && parts.length > 1 );
-				part.classList.toggle( 'rf-fs__part--footer', k === parts.length - 1 && parts.length > 1 );
+				part.classList.toggle( 'rf-fs__part--header', 'header' === role );
+				part.classList.toggle( 'rf-fs__part--footer', 'footer' === role );
 				part.classList.toggle( 'is-shown', waiting && part === shown );
+				// In focus: the parts left out (Focus shows).
+				part.classList.toggle( 'is-off', off.includes( role ) );
 			} );
 		} );
 	}
@@ -179,20 +189,34 @@ export default class FocusStack extends Base {
 		}
 
 		const before = this.list.map( ( slide ) => ( slide.classList.contains( 'is-hidden' ) ? null : slide.getBoundingClientRect() ) );
+		const partsBefore = this.partBoxes();
 		const wasActive = this.list.map( ( slide ) => slide.classList.contains( 'is-active' ) );
 		const oldOrder = this.list.map( ( slide ) => slide.style.order );
 
 		this.current = i;
 		this.place();
 		this.$element[ 0 ].dispatchEvent( new CustomEvent( 'rf-focus-stack:change', { detail: { index: i } } ) );
-		this.animate( before, wasActive, oldOrder );
+		this.animate( before, wasActive, oldOrder, partsBefore );
 	}
 
-	animate( before, wasActive, oldOrder ) {
+	/** Every slide's parts: shown or not (display), and their height. */
+	partBoxes() {
+		const boxes = new Map();
+
+		this.list.forEach( ( slide ) => this.parts( slide ).parts.forEach( ( part ) => {
+			const shown = 'none' !== getComputedStyle( part ).display && ! slide.classList.contains( 'is-hidden' );
+			boxes.set( part, { shown, height: shown ? part.getBoundingClientRect().height : 0 } );
+		} ) );
+
+		return boxes;
+	}
+
+	animate( before, wasActive, oldOrder, partsBefore = new Map() ) {
 		const o = this.opts;
 		const duration = o.duration;
 		const easing = EASINGS[ o.easing ] || EASINGS.smooth;
 		const after = this.list.map( ( slide ) => ( slide.classList.contains( 'is-hidden' ) ? null : slide.getBoundingClientRect() ) );
+		const partsAfter = this.partBoxes();
 		const size = ( r ) => ( { width: r.width + 'px', height: r.height + 'px' } );
 		const flat = this.horizontal() ? { width: '0px' } : { height: '0px' };
 
@@ -235,13 +259,35 @@ export default class FocusStack extends Base {
 
 			this.motion.push( slide.animate( frames, { duration, easing } ) );
 
+			// A part that comes into sight or goes (its slide waits or is in focus, Focus shows) grows from nothing or
+			// shrinks to nothing, so nothing jumps when the motion ends.
+			const sized = new Set();
+
+			parts.forEach( ( part ) => {
+				const was = partsBefore.get( part ) || { shown: false, height: 0 };
+				const will = partsAfter.get( part ) || { shown: false, height: 0 };
+
+				if ( ! from || ! to || was.shown === will.shown ) {
+					return;
+				}
+
+				const natural = part.getBoundingClientRect().height;
+
+				sized.add( part );
+				part.classList.add( 'is-sizing' );
+				this.motion.push( part.animate( [
+					{ height: ( was.shown ? was.height : 0 ) + 'px', opacity: was.shown ? 1 : 0 },
+					{ height: ( will.shown ? natural : 0 ) + 'px', opacity: will.shown ? 1 : 0 },
+				], { duration, easing } ) );
+			} );
+
 			// The content of the card that opens fades in once it has room; that of the card that folds fades out.
 			if ( o.fade && wasActive[ i ] !== isActive ) {
 				parts.forEach( ( part ) => {
 					// Opening: all but the part it showed while waiting. Folding: all but the part it now shows.
 					const stays = isActive ? part.classList.contains( `rf-fs__part--${ keep }` ) : part.classList.contains( 'is-shown' );
 
-					if ( ! stays ) {
+					if ( ! stays && ! sized.has( part ) ) {
 						this.motion.push( part.animate( isActive
 							? [ { opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 } ]
 							: [ { opacity: 1 }, { opacity: 0, offset: 0.4 }, { opacity: 0 } ], { duration, easing: 'linear' } ) );
@@ -266,7 +312,10 @@ export default class FocusStack extends Base {
 				slide.style.order = '';
 			}
 
-			this.parts( slide ).holder.style.justifyContent = '';
+			const { holder, parts } = this.parts( slide );
+
+			holder.style.justifyContent = '';
+			parts.forEach( ( part ) => part.classList.remove( 'is-sizing' ) );
 		} );
 	}
 
@@ -455,7 +504,7 @@ export default class FocusStack extends Base {
 	}
 
 	onElementChange( propertyName ) {
-		if ( [ 'slides', 'orientation', 'direction_v', 'direction_h', 'next_part', 'prev_part', 'visible', 'loop', 'duration', 'easing', 'fade_content', 'click_waiting' ].includes( propertyName ) ) {
+		if ( [ 'slides', 'focus_shows', 'orientation', 'direction_v', 'direction_h', 'next_part', 'prev_part', 'visible', 'loop', 'duration', 'easing', 'fade_content', 'click_waiting' ].includes( propertyName ) ) {
 			// After the wrapper got its new classes (orientation).
 			window.setTimeout( () => this.build(), 0 );
 		}

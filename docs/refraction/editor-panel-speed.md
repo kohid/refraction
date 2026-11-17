@@ -119,3 +119,13 @@ Stack: 1.8 s per settings change and 2.1 s per new slide; Timed Slides: 1.2 s pe
   global) were already 60 to 100 ms on these widgets: they only change CSS.
 - `Widget_Nested_Base::new_items_like_defaults()`: a widget can have Add Slide copy a default child's settings and
   inner elements (new ids) instead of an empty container (the insert hook `nested-repeater-create-container.js`).
+
+## Tooltips left on screen (0.112.0)
+
+The panel's tooltips (`jQuery.tipsy`: choose buttons such as "Row - horizontal", the device switchers) only hide on
+their element's `mouseleave`. When a click draws the control again (a device switch draws the whole panel again) the
+element under the pointer is removed, no `mouseleave` comes, and the tooltip stayed. `assets/lib/tipsy/tipsy.js`
+(and `.min.js`, built with terser) now guards a shown hover tooltip: the next pointer move away from its element, or
+its element removed or hidden (checked every 250 ms, as the pointer may leave into the preview frame), hides it.
+`controls/base-data.js` also hides a control's tooltips before it is drawn again or destroyed. Check: the tooltip step
+of `scripts/check-focus-stack.mjs`.

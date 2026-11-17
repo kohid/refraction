@@ -87,11 +87,22 @@
 		display: none !important;
 	}
 
+	// It fills the card; its own layout (or Waiting slides layout) arranges what is in it.
 	.rf-fs__part.is-shown {
 		flex: 1 1 auto;
 		min-height: 0;
-		justify-content: center;
 	}
+}
+
+// In focus: the parts left out by "The slide in focus shows".
+.rf-fs .rf-fs__slide.is-active:not(.is-moving) .rf-fs__part.is-off {
+	display: none !important;
+}
+
+// A part growing into sight or shrinking away during the motion.
+.rf-fs .rf-fs__part.is-sizing {
+	overflow: hidden;
+	min-height: 0 !important;
 }
 
 // Moving: every part in place at its own size, the card clipping them as it grows or folds.
