@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.113.0
+Stable tag: 0.114.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.114.0 =
+* Focus Stack: every slide in the list now chooses what it shows waiting as a next slide, waiting as a previous slide, and in focus ("As set for every slide" uses the Layout settings, which now apply to every slide). A slide that used 0.111's "When waiting, it shows" keeps it, shown on that slide so it can be cleared.
+* Focus Stack in Edit Mode: selecting a widget inside a waiting slide edits it where it is; the slide only comes into focus when "Clicking a waiting slide opens it" is on.
+* Reveal: a widget that moves while hidden (fade up, zoom...) inside a box that clips it, such as a Focus Stack waiting card or a slide, could be moved right out of that box and then never play, staying invisible. It now plays when it comes into sight where it stands.
 
 = 0.113.0 =
 * New widget: Showcase Wheel, a product slider. Each slide is a container with its own background (Normal and Hover), overlay and border, holding a Content container on the left or the right; the slide's picture sits on the other side, with an optional arc or blob behind it (per slide, with its colour). Moving on, the pictures swing along a large wheel, the old one out and the new one in, while the slides cross-fade (or slide, or fade). Thumbnails left, in the middle or on the right, with a circle, rounded or square shape behind the current one, its label and a badge (a price), and arrows. Plays by itself, follows thumbnails, arrows, keys and swipes; on phones the picture sits at the top of the slide. Edit Mode shows the same showcase and follows the slide you pick.

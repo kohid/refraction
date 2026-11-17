@@ -14,15 +14,21 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
 - A slide with one container shows that container whether waiting or not.
 - **Add Slide** (0.111.0) gives the new slide its Header, Content and Footer containers with the example inside, like
   the first three (`new_items_like_defaults()`, see `docs/refraction/editor-panel-speed.md`).
-- Each slide in the list has **When waiting, it shows**: *As set for the stack* (the Layout setting for its side),
-  *Its header* or *Its footer* (`waiting_part`; on the site in `data-rf-fs` as `parts`).
+- Each slide in the list (0.114.0) chooses **Waiting as a next slide, it shows** and **Waiting as a previous slide, it
+  shows** (*As set for every slide*, *Its header* or *Its footer*: `slide_next`, `slide_prev`) and **In focus, it
+  shows** (*As set for every slide* or one of the choices of "The slide in focus shows": `slide_focus`). On the site
+  they are in `data-rf-fs` as `own: [{next, prev, focus}]`; `''` falls back to the Layout settings.
+- 0.111.0's **When waiting, it shows** (`waiting_part`, both sides) still counts where a slide set it and its next /
+  previous choice is "as set for every slide"; the control shows only on those slides ("Set before"), so it can be
+  cleared.
 
 ## Layout (Content tab)
 
 - **Stack**: up and down, or side by side (`orientation`, wrapper class `rf-fs-o-horizontal`).
 - **Moves** (the "vice versa"): up and down, *Down* (the next slide waits above, the reference's way) or *Up* (it
   waits below); side by side, *Left* (the next slide waits on the right) or *Right* (on the left).
-- **The next slides show** / **The previous slides show**: their header or their footer (defaults: header / footer).
+- **The next slides show** / **The previous slides show**: their header or their footer (defaults: header / footer),
+  for every slide that does not choose its own.
 - **The slide in focus shows** (0.112.0): everything (header, content and footer), its content only, its header and
   content, or its content and footer (`focus_shows`). The parts left out get `is-off` in focus and are hidden; they
   still show while the slide waits, if that is the part it shows. Moving on, a part coming into sight grows from
@@ -37,6 +43,10 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
 - **Duration**, **Easing** (smooth, snappy, gentle, springy, even), **Fade the content in**.
 - **Play by itself** with **Each slide stays** and **Wait while the pointer is on it** (also while focus is inside).
 - **Clicking a waiting slide opens it**. The arrow keys (towards the next card shows it) and a swipe always move it.
+  In Edit Mode a click selects what is in the card; when this is off, selecting a widget inside a waiting slide edits it
+  where it is (0.114.0). Otherwise the editor's nested-widget hook (`nested-repeater-focus-current-edited-container`)
+  picks the slide holding the selection and the stack brings it into focus. The hook asks the widget's view
+  (`keepsItemInPlace( index )`) whether to leave an item where it is.
 - `prefers-reduced-motion`: it moves at once, without animating.
 
 ## Style tab
@@ -75,3 +85,12 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
   a waiting card selects what is in it rather than opening it.
 - Styles: `assets/scss/frontend.scss` (`widget-focus-stack.css`). Editor model and view:
   `assets/js/editor/` (entry `focus-stack` in `scripts/vite/shared/entries.mjs`).
+
+## Reveal inside a waiting card
+
+A widget with Reveal that moves while hidden (fade up 40px, zoom...) can be moved right out of a slim waiting card,
+which clips its content. The browser's IntersectionObserver then never sees it and it stayed invisible (0.113.0 and
+before, also on the site). Since 0.114.0 Reveal (`modules/motion-effects/assets/js/reveal.js`) also watches the
+element's parent, which does not move: when the parent comes into sight and the element, where it stands without the
+move, is on screen, it plays.
+

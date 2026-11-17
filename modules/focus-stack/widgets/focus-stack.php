@@ -147,6 +147,16 @@ class Focus_Stack extends Widget_Nested_Base {
 
 	// ---------------------------------------------------------------- controls
 
+	/** What a slide in focus can show. */
+	private static function focus_options(): array {
+		return [
+			'full' => esc_html__( 'Everything: header, content and footer', 'refraction' ),
+			'content' => esc_html__( 'Its content only', 'refraction' ),
+			'header_content' => esc_html__( 'Its header and content', 'refraction' ),
+			'content_footer' => esc_html__( 'Its content and footer', 'refraction' ),
+		];
+	}
+
 	private static function choose( array $labels_icons ): array {
 		$options = [];
 
@@ -170,19 +180,53 @@ class Focus_Stack extends Widget_Nested_Base {
 			'type' => Controls_Manager::TEXT,
 			'default' => esc_html__( 'Slide', 'refraction' ),
 			'label_block' => true,
-			'description' => esc_html__( 'For the navigator and screen readers. The slide itself is the container under this widget: its first container is the header, its last the footer, the ones between the content.', 'refraction' ),
+			'description' => esc_html__( 'For the navigator and screen readers. The slide is the container under this widget: its first container is the header, its last the footer, the ones between the content.', 'refraction' ),
 		] );
 
-		$repeater->add_control( 'waiting_part', [
-			'label' => esc_html__( 'When waiting, it shows', 'refraction' ),
+		$stack = esc_html__( 'As set for every slide', 'refraction' );
+		$part_options = [
+			'' => $stack,
+			'header' => esc_html__( 'Its header', 'refraction' ),
+			'footer' => esc_html__( 'Its footer', 'refraction' ),
+		];
+
+		$repeater->add_control( 'slide_next', [
+			'label' => esc_html__( 'Waiting as a next slide, it shows', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
+			'label_block' => true,
+			'options' => $part_options,
+		] );
+
+		$repeater->add_control( 'slide_prev', [
+			'label' => esc_html__( 'Waiting as a previous slide, it shows', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'label_block' => true,
+			'options' => $part_options,
+		] );
+
+		// 0.112's "When waiting, it shows" (both sides): shown only on the slides that set it, so it can be cleared.
+		$repeater->add_control( 'waiting_part', [
+			'label' => esc_html__( 'Set before: when waiting, it shows', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'label_block' => true,
 			'options' => [
-				'' => esc_html__( 'As set for the stack', 'refraction' ),
-				'header' => esc_html__( 'Its header', 'refraction' ),
-				'footer' => esc_html__( 'Its footer', 'refraction' ),
+				'' => esc_html__( 'Not used (the two settings above)', 'refraction' ),
+				'header' => esc_html__( 'Its header (where the settings above are as set for every slide)', 'refraction' ),
+				'footer' => esc_html__( 'Its footer (where the settings above are as set for every slide)', 'refraction' ),
 			],
-			'description' => esc_html__( 'What this slide shows while it waits before or after the current one. "As set for the stack": Layout > The next / previous slides show.', 'refraction' ),
+			'condition' => [ 'waiting_part!' => '' ],
+		] );
+
+		$repeater->add_control( 'slide_focus', [
+			'label' => esc_html__( 'In focus, it shows', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'label_block' => true,
+			'options' => [ '' => $stack ] + self::focus_options(),
+			'description' => esc_html__( '"As set for every slide": Layout, under the slides.', 'refraction' ),
 		] );
 
 		$this->add_control( 'slides', [
@@ -261,6 +305,7 @@ class Focus_Stack extends Widget_Nested_Base {
 			'frontend_available' => true,
 			'render_type' => 'none',
 			'label' => esc_html__( 'The next slides show', 'refraction' ),
+			'description' => esc_html__( 'For every slide; each slide can choose its own in Slides.', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'header',
 			'options' => $parts,
@@ -282,13 +327,8 @@ class Focus_Stack extends Widget_Nested_Base {
 			'frontend_available' => true,
 			'render_type' => 'none',
 			'default' => 'full',
-			'options' => [
-				'full' => esc_html__( 'Everything: header, content and footer', 'refraction' ),
-				'content' => esc_html__( 'Its content only', 'refraction' ),
-				'header_content' => esc_html__( 'Its header and content', 'refraction' ),
-				'content_footer' => esc_html__( 'Its content and footer', 'refraction' ),
-			],
-			'description' => esc_html__( 'The parts left out still show while the slide waits, if that is the part it shows.', 'refraction' ),
+			'options' => self::focus_options(),
+			'description' => esc_html__( 'For every slide; each slide can choose its own in Slides. The parts left out still show while the slide waits, if that is the part it shows.', 'refraction' ),
 		] );
 
 		$this->add_control( 'visible', [
@@ -677,14 +717,31 @@ class Focus_Stack extends Widget_Nested_Base {
 			'duration' => max( 100, min( 3000, (int) ( $settings['duration'] ?? 700 ) ) ),
 			'easing' => (string) ( $settings['easing'] ?? 'smooth' ),
 			'fade' => 'yes' === ( $settings['fade_content'] ?? 'yes' ),
-			'focus' => in_array( $settings['focus_shows'] ?? 'full', [ 'full', 'content', 'header_content', 'content_footer' ], true ) ? $settings['focus_shows'] : 'full',
+			'focus' => array_key_exists( (string) ( $settings['focus_shows'] ?? 'full' ), self::focus_options() ) ? $settings['focus_shows'] : 'full',
 			'autoplay' => 'yes' === ( $settings['autoplay'] ?? 'yes' ),
 			'interval' => max( 800, (int) ( $settings['interval'] ?? 3000 ) ),
 			'pause' => 'yes' === ( $settings['pause_on_hover'] ?? 'yes' ),
 			'click' => 'yes' === ( $settings['click_waiting'] ?? 'yes' ),
-			// Each slide's own choice ('' : as set for the stack).
-			'parts' => array_map( static fn( $slide ) => in_array( $slide['waiting_part'] ?? '', [ 'header', 'footer' ], true ) ? $slide['waiting_part'] : '', array_values( (array) ( $settings['slides'] ?? [] ) ) ),
+			// Each slide's own choices ('' : as set for every slide). "When waiting, it shows" (0.112) counts for both sides.
+			'own' => array_map( static fn( $slide ) => self::own( $slide ), array_values( (array) ( $settings['slides'] ?? [] ) ) ),
 		] );
+	}
+
+	/**
+	 * One slide's own choices.
+	 * @param array $slide The slide's item in the Slides list.
+	 */
+	private static function own( $slide ): array {
+		$slide = (array) $slide;
+		$part = static fn( $value ) => in_array( $value, [ 'header', 'footer' ], true ) ? $value : '';
+		$legacy = $part( $slide['waiting_part'] ?? '' );
+		$focus = (string) ( $slide['slide_focus'] ?? '' );
+
+		return [
+			'next' => $part( $slide['slide_next'] ?? '' ) ?: $legacy,
+			'prev' => $part( $slide['slide_prev'] ?? '' ) ?: $legacy,
+			'focus' => array_key_exists( $focus, self::focus_options() ) ? $focus : '',
+		];
 	}
 
 	protected function render() {
