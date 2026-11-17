@@ -1,0 +1,361 @@
+// Showcase Wheel (0.113.0). Slides share one cell and cross-fade; each slide's picture sits on the side opposite its
+// content, the arc or blob behind it; the thumbnails lie over the bottom of the slides. The script
+// (assets/js/frontend/handlers/showcase-wheel.js) picks the slide and swings the pictures.
+.rf-sw {
+	--rf-sw-picture-w: 46%;
+	--rf-sw-picture-max: 380px;
+	--rf-sw-picture-edge: 4%;
+	--rf-sw-deco: 110;
+	--rf-sw-arc: 70px;
+	--rf-sw-deco-color: rgba(255, 255, 255, 0.7);
+	--rf-sw-thumb: 64px;
+	--rf-sw-thumb-gap: 18px;
+	--rf-sw-nav-inset: 32px;
+	--rf-sw-shape: rgba(255, 255, 255, 0.85);
+	--rf-sw-shape-radius: 16px;
+	--rf-sw-lift: 10px;
+	--rf-sw-phone-picture: 230px;
+	--rf-sw-duration: 800ms;
+	--rf-sw-easing: cubic-bezier(0.65, 0, 0.35, 1);
+
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	border-radius: 24px;
+	outline: none;
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 4px;
+	}
+}
+
+.rf-sw__slots {
+	display: grid;
+}
+
+// Every slide in the same cell; the current one shows.
+.rf-sw__slot {
+	position: relative;
+	grid-area: 1 / 1;
+	min-width: 0;
+	opacity: 0;
+	visibility: hidden;
+
+	> .e-con {
+		height: 100%;
+	}
+
+	&.is-active {
+		z-index: 1;
+		opacity: 1;
+		visibility: visible;
+	}
+
+	// The slide moving away stays in sight while it fades.
+	&.is-leaving {
+		z-index: 2;
+		visibility: visible;
+	}
+
+	// Content on the right: the slide's own row is pushed to the end.
+	&--right > .e-con {
+		--justify-content: flex-end;
+	}
+}
+
+.rf-sw.is-ready .rf-sw__slot {
+	transition: opacity var(--rf-sw-duration) var(--rf-sw-easing), visibility 0s linear var(--rf-sw-duration);
+
+	&.is-active,
+	&.is-leaving {
+		transition: opacity var(--rf-sw-duration) var(--rf-sw-easing), visibility 0s;
+	}
+}
+
+// The picture and what is behind it, on the side away from the content: a band from near the top to above the
+// thumbnails, the picture fitting inside it (never cut, whatever the slide's height).
+.rf-sw__visual {
+	position: absolute;
+	top: 5%;
+	bottom: 5%;
+	right: var(--rf-sw-picture-edge);
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--rf-sw-picture-w);
+	isolation: isolate;
+	pointer-events: none;
+
+	.rf-sw__slot--right > & {
+		right: auto;
+		left: var(--rf-sw-picture-edge);
+	}
+
+	.rf-sw.has-nav & {
+		bottom: calc(var(--rf-sw-thumb) + var(--rf-sw-nav-inset) + 20px);
+	}
+}
+
+.rf-sw__picture {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	will-change: transform;
+
+	img {
+		display: block;
+		width: auto;
+		max-width: 100%;
+		height: auto;
+		max-height: min(var(--rf-sw-picture-max), 100%);
+		object-fit: contain;
+	}
+}
+
+.rf-sw-shadow-yes .rf-sw__picture img {
+	filter: drop-shadow(0 22px 28px rgba(17, 24, 39, 0.28));
+}
+
+@keyframes rf-sw-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.rf-sw-spin-yes .rf-sw__slot.is-active .rf-sw__picture img {
+	animation: rf-sw-spin 48s linear infinite;
+}
+
+// Behind the picture: an arc (part of a large ring, off to the side) or a blob.
+.rf-sw__deco {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: -1;
+	width: calc(var(--rf-sw-deco) * 1%);
+	aspect-ratio: 1;
+	color: var(--rf-sw-deco-color);
+	pointer-events: none;
+	transform: translate(-50%, -50%);
+
+	&--arc {
+		box-sizing: border-box;
+		border: var(--rf-sw-arc) solid var(--rf-sw-deco-color);
+		border-radius: 50%;
+		transform: translate(-28%, -50%);
+
+		.rf-sw__slot--right & {
+			transform: translate(-72%, -50%);
+		}
+	}
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		fill: currentColor;
+	}
+}
+
+// ---------------------------------------------------------------- thumbnails and arrows
+.rf-sw__nav {
+	position: absolute;
+	right: var(--rf-sw-nav-inset);
+	bottom: var(--rf-sw-nav-inset);
+	left: var(--rf-sw-nav-inset);
+	z-index: 3;
+	display: flex;
+	align-items: flex-end;
+	gap: var(--rf-sw-thumb-gap);
+	pointer-events: none;
+
+	> * {
+		pointer-events: auto;
+	}
+}
+
+.rf-sw__thumbs {
+	display: flex;
+	align-items: flex-end;
+	gap: var(--rf-sw-thumb-gap);
+}
+
+.rf-sw .rf-sw__thumb {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	margin: 0;
+	padding: 6px 8px;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+	color: inherit;
+	font: inherit;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+
+	&:hover,
+	&:focus {
+		background: none;
+		color: inherit;
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+
+	&.is-active {
+		transform: translateY(calc(-1 * var(--rf-sw-lift)));
+	}
+}
+
+.rf-sw__thumb-img {
+	position: relative;
+	display: block;
+	width: var(--rf-sw-thumb);
+	height: var(--rf-sw-thumb);
+
+	img {
+		position: relative;
+		z-index: 1;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		transition: transform 0.3s;
+	}
+}
+
+.rf-sw__thumb:not(.is-active):hover .rf-sw__thumb-img img {
+	transform: scale(1.06);
+}
+
+// The shape behind the current thumbnail: rounded or square around it and its label; a circle around its picture.
+.rf-sw-shape-rounded .rf-sw__thumb.is-active::before,
+.rf-sw-shape-square .rf-sw__thumb.is-active::before,
+.rf-sw-shape-circle .rf-sw__thumb.is-active .rf-sw__thumb-img::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background: var(--rf-sw-shape);
+	box-shadow: 0 6px 18px rgba(17, 24, 39, 0.08);
+}
+
+.rf-sw-shape-rounded .rf-sw__thumb.is-active::before {
+	border-radius: var(--rf-sw-shape-radius);
+}
+
+.rf-sw-shape-circle .rf-sw__thumb.is-active .rf-sw__thumb-img::before {
+	inset: -6px;
+	border-radius: 50%;
+}
+
+.rf-sw__label,
+.rf-sw__badge {
+	position: relative;
+	z-index: 1;
+	display: none;
+	white-space: nowrap;
+}
+
+.rf-sw__label {
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.rf-sw__badge {
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #1b2034;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 600;
+}
+
+.rf-sw-labels-all .rf-sw__thumb .rf-sw__label,
+.rf-sw-labels-all .rf-sw__thumb .rf-sw__badge,
+.rf-sw-labels-current .rf-sw__thumb.is-active .rf-sw__label,
+.rf-sw-labels-current .rf-sw__thumb.is-active .rf-sw__badge {
+	display: block;
+}
+
+.rf-sw .rf-sw__arrow {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	align-self: center;
+	width: 38px;
+	height: 38px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.75);
+	color: #1b2034;
+	font-size: 18px;
+	cursor: pointer;
+	transition: transform 0.2s, background-color 0.2s;
+
+	&:hover {
+		transform: scale(1.08);
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+}
+
+// ---------------------------------------------------------------- narrow screens: the picture at the top of the slide
+@media (max-width: 767px) {
+
+	.rf-sw.rf-sw .rf-sw__visual,
+	.rf-sw.rf-sw .rf-sw__slot--right > .rf-sw__visual {
+		top: 24px;
+		right: auto;
+		bottom: auto;
+		left: 50%;
+		width: 70%;
+		height: var(--rf-sw-phone-picture);
+		transform: translateX(-50%);
+	}
+
+	// The slide's own content starts under the picture, and ends above the thumbnails (the current one raised, with its
+	// label and badge).
+	.rf-sw .rf-sw__slot > .e-con.e-con {
+		--padding-top: calc(var(--rf-sw-phone-picture) + 48px);
+		--padding-block-start: calc(var(--rf-sw-phone-picture) + 48px);
+	}
+
+	.rf-sw.has-nav .rf-sw__slot > .e-con.e-con {
+		--padding-bottom: calc(var(--rf-sw-thumb) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
+		--padding-block-end: calc(var(--rf-sw-thumb) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
+	}
+
+	.rf-sw__nav {
+		overflow-x: auto;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-sw.is-ready .rf-sw__slot,
+	.rf-sw .rf-sw__thumb {
+		transition: none;
+	}
+
+	.rf-sw-spin-yes .rf-sw__slot.is-active .rf-sw__picture img {
+		animation: none;
+	}
+}
