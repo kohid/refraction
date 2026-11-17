@@ -423,7 +423,14 @@ ControlBaseDataView = ControlBaseView.extend( {
 	},
 
 	onBeforeRender() {
+		// Drawn again (a value changed while the pointer was on a tooltip target): the old targets go without a
+		// mouseleave, so their tooltips would stay on screen.
+		this.hideTooltip();
 		this.setPlaceholderFromParent();
+	},
+
+	onBeforeDestroy() {
+		this.hideTooltip();
 	},
 
 	onRender() {
@@ -530,8 +537,15 @@ ControlBaseDataView = ControlBaseView.extend( {
 	},
 
 	hideTooltip() {
-		if ( this.ui.tooltipTargets.length ) {
-			this.ui.tooltipTargets.tipsy( 'hide' );
+		const targets = this.ui && this.ui.tooltipTargets;
+
+		// Before the first render the ui hash still holds selectors (strings), not the targets.
+		if ( targets && targets.length && 'function' === typeof targets.tipsy ) {
+			targets.each( function() {
+				if ( jQuery( this ).data( 'tipsy' ) ) {
+					jQuery( this ).tipsy( 'hide' );
+				}
+			} );
 		}
 	},
 

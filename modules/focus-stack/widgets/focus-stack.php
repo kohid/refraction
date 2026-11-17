@@ -276,6 +276,21 @@ class Focus_Stack extends Widget_Nested_Base {
 			'options' => $parts,
 		] );
 
+		$this->add_control( 'focus_shows', [
+			'label' => esc_html__( 'The slide in focus shows', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'frontend_available' => true,
+			'render_type' => 'none',
+			'default' => 'full',
+			'options' => [
+				'full' => esc_html__( 'Everything: header, content and footer', 'refraction' ),
+				'content' => esc_html__( 'Its content only', 'refraction' ),
+				'header_content' => esc_html__( 'Its header and content', 'refraction' ),
+				'content_footer' => esc_html__( 'Its content and footer', 'refraction' ),
+			],
+			'description' => esc_html__( 'The parts left out still show while the slide waits, if that is the part it shows.', 'refraction' ),
+		] );
+
 		$this->add_control( 'visible', [
 			'frontend_available' => true,
 			'render_type' => 'none',
@@ -441,6 +456,92 @@ class Focus_Stack extends Widget_Nested_Base {
 
 		$this->end_controls_section();
 
+		// ------------------------------------------------ Style: how the waiting slides lay out the part they show
+		$this->start_controls_section( 'section_style_waiting_layout', [
+			'label' => esc_html__( 'Waiting slides layout', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'waiting_layout_note', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'How the header or footer a waiting slide shows is laid out, for the next and the previous slides. Empty: as set on that container. In focus, every container is laid out its own way again.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+		] );
+
+		$this->start_controls_tabs( 'waiting_layout_tabs' );
+
+		foreach ( [ 'next' => esc_html__( 'Next', 'refraction' ), 'prev' => esc_html__( 'Previous', 'refraction' ) ] as $side => $side_label ) {
+			$selector = '{{WRAPPER}} .rf-fs__slide.is-' . $side . ':not(.is-moving) .rf-fs__part.is-shown';
+
+			$this->start_controls_tab( 'waiting_layout_' . $side, [ 'label' => $side_label ] );
+
+			$this->add_responsive_control( $side . '_part_padding', [
+				'label' => esc_html__( 'Padding', 'refraction' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em', 'rem', '%' ],
+				'selectors' => [ $selector => '--padding-top: {{TOP}}{{UNIT}}; --padding-right: {{RIGHT}}{{UNIT}}; --padding-bottom: {{BOTTOM}}{{UNIT}}; --padding-left: {{LEFT}}{{UNIT}}; --padding-block-start: {{TOP}}{{UNIT}}; --padding-inline-end: {{RIGHT}}{{UNIT}}; --padding-block-end: {{BOTTOM}}{{UNIT}}; --padding-inline-start: {{LEFT}}{{UNIT}};' ],
+			] );
+
+			$this->add_responsive_control( $side . '_part_direction', [
+				'label' => esc_html__( 'Direction', 'refraction' ),
+				'type' => Controls_Manager::CHOOSE,
+				'options' => self::choose( [
+					'row' => [ esc_html__( 'Row - horizontal', 'refraction' ), 'rficon-arrow-right' ],
+					'column' => [ esc_html__( 'Column - vertical', 'refraction' ), 'rficon-arrow-down' ],
+					'row-reverse' => [ esc_html__( 'Row - reversed', 'refraction' ), 'rficon-arrow-left' ],
+					'column-reverse' => [ esc_html__( 'Column - reversed', 'refraction' ), 'rficon-arrow-up' ],
+				] ),
+				'selectors_dictionary' => [
+					'row' => '--flex-direction: row; --container-widget-width: initial; --container-widget-height: 100%; --container-widget-flex-grow: 1; --container-widget-align-self: stretch;',
+					'column' => '--flex-direction: column; --container-widget-width: 100%; --container-widget-height: initial; --container-widget-flex-grow: 0; --container-widget-align-self: initial;',
+					'row-reverse' => '--flex-direction: row-reverse; --container-widget-width: initial; --container-widget-height: 100%; --container-widget-flex-grow: 1; --container-widget-align-self: stretch;',
+					'column-reverse' => '--flex-direction: column-reverse; --container-widget-width: 100%; --container-widget-height: initial; --container-widget-flex-grow: 0; --container-widget-align-self: initial;',
+				],
+				'selectors' => [ $selector => '{{VALUE}}' ],
+			] );
+
+			$this->add_responsive_control( $side . '_part_justify', [
+				'label' => esc_html__( 'Justify Content', 'refraction' ),
+				'type' => Controls_Manager::CHOOSE,
+				'label_block' => true,
+				'options' => self::choose( [
+					'flex-start' => [ esc_html__( 'Start', 'refraction' ), 'rficon-flex rficon-justify-start-h' ],
+					'center' => [ esc_html__( 'Center', 'refraction' ), 'rficon-flex rficon-justify-center-h' ],
+					'flex-end' => [ esc_html__( 'End', 'refraction' ), 'rficon-flex rficon-justify-end-h' ],
+					'space-between' => [ esc_html__( 'Space Between', 'refraction' ), 'rficon-flex rficon-justify-space-between-h' ],
+					'space-around' => [ esc_html__( 'Space Around', 'refraction' ), 'rficon-flex rficon-justify-space-around-h' ],
+					'space-evenly' => [ esc_html__( 'Space Evenly', 'refraction' ), 'rficon-flex rficon-justify-space-evenly-h' ],
+				] ),
+				'selectors' => [ $selector => '--justify-content: {{VALUE}};' ],
+			] );
+
+			$this->add_responsive_control( $side . '_part_align', [
+				'label' => esc_html__( 'Align Items', 'refraction' ),
+				'type' => Controls_Manager::CHOOSE,
+				'options' => self::choose( [
+					'flex-start' => [ esc_html__( 'Start', 'refraction' ), 'rficon-flex rficon-align-start-v' ],
+					'center' => [ esc_html__( 'Center', 'refraction' ), 'rficon-flex rficon-align-center-v' ],
+					'flex-end' => [ esc_html__( 'End', 'refraction' ), 'rficon-flex rficon-align-end-v' ],
+					'stretch' => [ esc_html__( 'Stretch', 'refraction' ), 'rficon-flex rficon-align-stretch-v' ],
+				] ),
+				'selectors' => [ $selector => '--align-items: {{VALUE}};' ],
+			] );
+
+			$this->add_responsive_control( $side . '_part_gap', [
+				'label' => esc_html__( 'Gap', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem' ],
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+				'selectors' => [ $selector => '--gap: {{SIZE}}{{UNIT}}; --row-gap: {{SIZE}}{{UNIT}}; --column-gap: {{SIZE}}{{UNIT}};' ],
+			] );
+
+			$this->end_controls_tab();
+		}
+
+		$this->end_controls_tabs();
+
+		$this->end_controls_section();
+
 		// ------------------------------------------------ Style: the waiting slides
 		$this->start_controls_section( 'section_style_waiting', [
 			'label' => esc_html__( 'Waiting slides', 'refraction' ),
@@ -576,6 +677,7 @@ class Focus_Stack extends Widget_Nested_Base {
 			'duration' => max( 100, min( 3000, (int) ( $settings['duration'] ?? 700 ) ) ),
 			'easing' => (string) ( $settings['easing'] ?? 'smooth' ),
 			'fade' => 'yes' === ( $settings['fade_content'] ?? 'yes' ),
+			'focus' => in_array( $settings['focus_shows'] ?? 'full', [ 'full', 'content', 'header_content', 'content_footer' ], true ) ? $settings['focus_shows'] : 'full',
 			'autoplay' => 'yes' === ( $settings['autoplay'] ?? 'yes' ),
 			'interval' => max( 800, (int) ( $settings['interval'] ?? 3000 ) ),
 			'pause' => 'yes' === ( $settings['pause_on_hover'] ?? 'yes' ),

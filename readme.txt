@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.111.0
+Stable tag: 0.112.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.112.0 =
+* Focus Stack: "The slide in focus shows" (everything, its content only, its header and content, or its content and footer); the parts left out grow and shrink away smoothly as slides move. New Style section "Waiting slides layout" with Next and Previous tabs: padding, direction, justify content, align items and gap of the header or footer a waiting slide shows (the widget no longer centres it).
+* Editor: a panel tooltip ("Row - horizontal", the device names...) no longer stays on screen when its control is drawn again or removed while the pointer is on it, such as after switching device.
 
 = 0.111.0 =
 * Focus Stack: each slide in the list has "When waiting, it shows" (as set for the stack, its header or its footer). Add Slide now gives the new slide its Header, Content and Footer containers.

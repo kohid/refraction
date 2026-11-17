@@ -77,10 +77,61 @@
 				} else {
 					$tip.css({visibility: 'visible', opacity: this.options.opacity});
 				}
+
+				this.guard();
+			}
+		},
+
+		// Refraction: a hover tooltip whose element was removed, hidden or drawn again under the pointer never gets
+		// its mouseleave, so it stayed on screen. While it shows, the next pointer move hides it unless the pointer is
+		// still over its element.
+		guard: function() {
+			this.unguard();
+
+			if (this.options.trigger != 'hover') {
+				return;
+			}
+
+			var self = this,
+				el = this.$element[0],
+				doc = el.ownerDocument;
+
+			this.guardHandler = function(event) {
+				var gone = !doc.contains(el) || !el.getClientRects().length,
+					away = event && event.target && event.target !== el && !el.contains(event.target);
+
+				if (gone || away) {
+					self.hoverState = 'out';
+					self.hide();
+				}
+			};
+			this.guardDoc = doc;
+			doc.addEventListener('mousemove', this.guardHandler, true);
+			// The pointer may leave into another document (the editor's preview frame): an element removed or hidden
+			// is also noticed without a move.
+			this.guardTimer = setInterval(function() {
+				if (!doc.contains(el) || !el.getClientRects().length) {
+					self.hoverState = 'out';
+					self.hide();
+				}
+			}, 250);
+		},
+
+		unguard: function() {
+			if (this.guardHandler) {
+				this.guardDoc.removeEventListener('mousemove', this.guardHandler, true);
+				this.guardHandler = null;
+			}
+
+			if (this.guardTimer) {
+				clearInterval(this.guardTimer);
+				this.guardTimer = null;
 			}
 		},
 
 		hide: function() {
+			this.unguard();
+
 			if (this.options.fade) {
 				this.tip().stop().fadeOut(function() { $(this).remove(); });
 			} else {

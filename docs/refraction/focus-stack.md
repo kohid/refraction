@@ -23,6 +23,10 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
 - **Moves** (the "vice versa"): up and down, *Down* (the next slide waits above, the reference's way) or *Up* (it
   waits below); side by side, *Left* (the next slide waits on the right) or *Right* (on the left).
 - **The next slides show** / **The previous slides show**: their header or their footer (defaults: header / footer).
+- **The slide in focus shows** (0.112.0): everything (header, content and footer), its content only, its header and
+  content, or its content and footer (`focus_shows`). The parts left out get `is-off` in focus and are hidden; they
+  still show while the slide waits, if that is the part it shows. Moving on, a part coming into sight grows from
+  nothing and one going shrinks to nothing (its height), so nothing jumps at the end.
 - **Waiting slides on each side**: none, one, or two (the second smaller and fainter).
 - **Go round**: after the last slide comes the first (on by default).
 - **Height** (side by side), **Current slide at least** (up and down), **Turn the waiting slides' text** (side by
@@ -41,6 +45,12 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
 - **Waiting slides**: space between cards; up and down: width next to the current one (88%) and two away (76%), a
   height (empty: the height of its header or footer); side by side: width (64px), height next to it (88%) and two away
   (76%); opacity next to it (1) and two away (0.45); background, border, corners, shadow.
+- **Waiting slides layout** (0.112.0), with a **Next** and a **Previous** tab: padding, direction, justify content,
+  align items and gap of the header or footer a waiting slide shows. They set the container's own layout variables
+  (`--padding-*`, `--flex-direction`, `--justify-content`, `--align-items`, `--row-gap`/`--column-gap`) on
+  `.rf-fs__slide.is-next` / `.is-prev` `:not(.is-moving) .rf-fs__part.is-shown`; empty keeps that container's own
+  layout, and in focus each container is laid out its own way again. The waiting part is no longer centred by the
+  widget (it was `justify-content: center`); its own layout or these settings decide.
 - A slide container's own settings (its background, border...) still apply; the parts are ordinary containers, styled
   like any other.
 
