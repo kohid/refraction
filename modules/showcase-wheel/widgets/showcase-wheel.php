@@ -10,6 +10,7 @@ use Refraction\Modules\OrganicFx\Classes\Pure_Organic;
 use Refraction\Modules\OrganicFx\Classes\Shapes_Repository;
 use Refraction\Modules\OrganicFx\Module as OrganicFx;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
+use Refraction\Modules\ProWidgets\Classes\Motion_Easings;
 use Refraction\Modules\ProWidgets\Module as ProWidgets;
 use Refraction\Repeater;
 use Refraction\Utils;
@@ -442,14 +443,9 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'label' => esc_html__( 'Easing', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'smooth',
-			'options' => [
-				'smooth' => esc_html__( 'Smooth', 'refraction' ),
-				'snappy' => esc_html__( 'Snappy', 'refraction' ),
-				'gentle' => esc_html__( 'Gentle', 'refraction' ),
-				'spring' => esc_html__( 'Springy', 'refraction' ),
-				'linear' => esc_html__( 'Even', 'refraction' ),
-			],
+			'options' => Motion_Easings::options(),
 		] );
+
 
 		$this->add_control( 'idle_spin', [
 			'label' => esc_html__( 'Turn the picture slowly', 'refraction' ),
@@ -483,6 +479,87 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'default' => 'yes',
 			'condition' => [ 'autoplay' => 'yes' ],
 		] );
+		// The slide's content coming in (0.116.0): the widgets of its Content container, together or one after another.
+		$this->add_control( 'content_heading', [
+			'label' => esc_html__( 'The content coming in', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
+
+		$this->add_control( 'content_motion', $js + [
+			'label' => esc_html__( 'Animation', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'fade-up',
+			'options' => [
+				'none' => esc_html__( 'None (it fades with its slide)', 'refraction' ),
+				'fade-up' => esc_html__( 'Rise', 'refraction' ),
+				'fade-down' => esc_html__( 'Drop in', 'refraction' ),
+				'slide' => esc_html__( 'Slide in (the way the slides move)', 'refraction' ),
+				'zoom' => esc_html__( 'Grow in', 'refraction' ),
+				'blur' => esc_html__( 'Come into focus (blur)', 'refraction' ),
+				'mask' => esc_html__( 'Wipe up', 'refraction' ),
+				'tilt' => esc_html__( 'Swing in (turning, like the wheel)', 'refraction' ),
+			],
+		] );
+
+		$on = [ 'content_motion!' => 'none' ];
+
+		$this->add_control( 'content_stagger', $js + [
+			'label' => esc_html__( 'One after another', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'Each widget in the slide\'s Content container comes in after the one before it. Off: the content comes in as one.', 'refraction' ),
+			'condition' => $on,
+		] );
+
+		$this->add_control( 'content_gap', $js + [
+			'label' => esc_html__( 'Time between them (ms)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 1000,
+			'step' => 10,
+			'default' => 90,
+			'condition' => $on + [ 'content_stagger' => 'yes' ],
+		] );
+
+		$this->add_control( 'content_delay', $js + [
+			'label' => esc_html__( 'Starts after (ms)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 3000,
+			'step' => 10,
+			'default' => 200,
+			'description' => esc_html__( 'From the start of the slide change.', 'refraction' ),
+			'condition' => $on,
+		] );
+
+		$this->add_control( 'content_duration', $js + [
+			'label' => esc_html__( 'Duration (ms)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 100,
+			'max' => 3000,
+			'step' => 50,
+			'default' => 700,
+			'condition' => $on,
+		] );
+
+		$this->add_control( 'content_distance', $js + [
+			'label' => esc_html__( 'Distance (px)', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 300,
+			'default' => 40,
+			'condition' => $on + [ 'content_motion' => [ 'fade-up', 'fade-down', 'slide', 'tilt' ] ],
+		] );
+
+		$this->add_control( 'content_easing', $js + [
+			'label' => esc_html__( 'Easing', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'glide',
+			'options' => Motion_Easings::options(),
+			'condition' => $on,
+		] );
+
 
 		$this->end_controls_section();
 

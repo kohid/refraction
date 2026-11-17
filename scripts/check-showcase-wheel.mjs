@@ -163,6 +163,11 @@ async function main() {
 		Object.assign( decorated[ 0 ].elements[ 0 ].settings.slides[ 1 ], { deco: 'blob', sw_blob_source: 'builtin', sw_blob_pick: 'blob-3' } );
 		Object.assign( decorated[ 0 ].elements[ 0 ].settings.slides[ 2 ], { deco: 'blob', sw_blob_source: 'mine', sw_blob_mine: 'my-kite' } );
 		const decoPage = page( 'Showcase wheel corner arc and shapes', decorated );
+		// 0.116.0: the content coming in, one widget after another.
+		const withTwo = wheel( pics, { content_motion: 'fade-up', content_stagger: 'yes', content_gap: 150, content_delay: 100, content_duration: 600, content_distance: 50 } );
+		withTwo[ 0 ].elements[ 0 ].elements.forEach( ( sl, k ) => sl.elements[ 0 ].elements.push( { id: id(), elType: 'widget', widgetType: 'text-editor', settings: { editor: `<p>Text ${ k + 1 }</p>` }, elements: [] } ) );
+		const contentPage = page( 'Showcase wheel content motion', withTwo );
+		const stillPage = page( 'Showcase wheel content still', wheel( pics, { content_motion: 'none' } ) );
 		const auto = page( 'Showcase wheel auto', wheel( pics, { autoplay: 'yes', interval: 1200, duration: 300, pause_on_hover: '' } ) );
 
 		const ctx = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
@@ -258,6 +263,34 @@ async function main() {
 			};
 		} );
 		check( 'options', 'thumbnails on the right, a circle behind the current one, labels under every thumbnail, both arrows', 'flex-end' === v.justify && v.nearRight && '50%' === v.circle && v.labels && 2 === v.arrows, JSON.stringify( v ) );
+		// ------------------------------------------------------------ the content coming in
+		const contentAnims = () => p.evaluate( () => {
+			const slot = document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' )[ 1 ];
+			return document.getAnimations().filter( ( a ) => a.effect && a.effect.target && a.effect.target !== slot && slot.contains( a.effect.target ) && ! a.effect.target.closest( '.rf-sw__visual' ) ).map( ( a ) => {
+				const t = a.effect.getTiming();
+				const first = a.effect.getKeyframes()[ 0 ];
+				return { what: a.effect.target.dataset.widget_type || a.effect.target.className.split( ' ' )[ 0 ], delay: t.delay, duration: t.duration, from: first.transform || '' };
+			} );
+		} );
+		await p.goto( contentPage.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-sw.is-ready' );
+		await p.click( '.rf-sw__next' );
+		await p.waitForTimeout( 60 );
+		const rising = await contentAnims();
+		const midContent = await p.evaluate( () => {
+			const w = document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' )[ 1 ].querySelector( '.refraction-widget-text-editor' );
+			return Number( getComputedStyle( w ).opacity );
+		} );
+		check( 'content', 'moving on, the new slide\'s content rises in one widget after another: the heading at 100 ms, the text 150 ms later, 600 ms each, from 50px lower', 2 === rising.length && 100 === rising[ 0 ].delay && 250 === rising[ 1 ].delay && 600 === rising[ 0 ].duration && /translateY\(50px\)/.test( rising[ 0 ].from ) && midContent < 0.05, JSON.stringify( { rising, midContent } ) );
+		await p.waitForTimeout( 1300 );
+		const settled = await p.evaluate( () => [ ...document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' )[ 1 ].querySelectorAll( '.refraction-widget' ) ].map( ( w ) => getComputedStyle( w ).opacity + ' ' + getComputedStyle( w ).transform ) );
+		check( 'content', 'then it rests in place, fully shown', settled.length && settled.every( ( x ) => '1 none' === x ), JSON.stringify( settled ) );
+		await p.goto( stillPage.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-sw.is-ready' );
+		await p.click( '.rf-sw__next' );
+		await p.waitForTimeout( 60 );
+		check( 'content', '"None": the content only fades with its slide (no animation of its own)', 0 === ( await contentAnims() ).length, JSON.stringify( await contentAnims() ) );
+
 		// ------------------------------------------------------------ arc in a corner, shapes, thumbnail spacing and shape box
 		await p.goto( decoPage.url, { waitUntil: 'load' } );
 		await p.waitForSelector( '.rf-sw.is-ready' );
@@ -365,9 +398,14 @@ async function main() {
 		await p.evaluate( ( c ) => {
 			c.model.get( 'editSettings' ).set( 'activeItemIndex', 2 );
 		}, w );
+		await p.waitForTimeout( 120 );
+		const edContent = await frame.evaluate( () => {
+			const slot = document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' )[ 1 ];
+			return document.getAnimations().filter( ( a ) => a.effect && a.effect.target && a.effect.target !== slot && slot.contains( a.effect.target ) && ! a.effect.target.closest( '.rf-sw__visual' ) ).length;
+		} );
 		await p.waitForTimeout( 1200 );
 		ed = await edState();
-		check( 'editor', 'picking slide 2 in the panel shows it, its picture on the left', 1 === ed.active && 'left' === ed.pictureSide, JSON.stringify( ed ) );
+		check( 'editor', 'picking slide 2 in the panel shows it, its picture on the left, its content coming in as on the site', 1 === ed.active && 'left' === ed.pictureSide && edContent >= 1, JSON.stringify( { ed, edContent } ) );
 		await p.evaluate( ( c ) => {
 			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 1 ], settings: { side: 'left' } } );
 		}, w );

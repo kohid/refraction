@@ -7,6 +7,7 @@ use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
+use Refraction\Modules\ProWidgets\Classes\Motion_Easings;
 use Refraction\Modules\ProWidgets\Module as ProWidgets;
 use Refraction\Repeater;
 
@@ -221,12 +222,20 @@ class Focus_Stack extends Widget_Nested_Base {
 		] );
 
 		$repeater->add_control( 'slide_focus', [
-			'label' => esc_html__( 'In focus, it shows', 'refraction' ),
+			'label' => esc_html__( 'In focus on the site, it shows', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'label_block' => true,
 			'options' => [ '' => $stack ] + self::focus_options(),
-			'description' => esc_html__( '"As set for every slide": Layout, under the slides.', 'refraction' ),
+		] );
+
+		$repeater->add_control( 'slide_focus_edit', [
+			'label' => esc_html__( 'In focus in Edit Mode, it shows', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'label_block' => true,
+			'options' => [ '' => esc_html__( 'As on the site', 'refraction' ) ] + self::focus_options(),
+			'description' => esc_html__( 'Only while editing, for example everything so the parts hidden on the site can be edited. "As set for every slide": Layout, under the slides.', 'refraction' ),
 		] );
 
 		$this->add_control( 'slides', [
@@ -404,14 +413,9 @@ class Focus_Stack extends Widget_Nested_Base {
 			'label' => esc_html__( 'Easing', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'smooth',
-			'options' => [
-				'smooth' => esc_html__( 'Smooth', 'refraction' ),
-				'snappy' => esc_html__( 'Snappy', 'refraction' ),
-				'gentle' => esc_html__( 'Gentle', 'refraction' ),
-				'spring' => esc_html__( 'Springy', 'refraction' ),
-				'linear' => esc_html__( 'Even', 'refraction' ),
-			],
+			'options' => Motion_Easings::options(),
 		] );
+
 
 		$this->add_control( 'fade_content', [
 			'frontend_available' => true,
@@ -715,7 +719,7 @@ class Focus_Stack extends Widget_Nested_Base {
 			'visible' => max( 0, min( 2, (int) ( $settings['visible'] ?? 2 ) ) ),
 			'loop' => 'yes' === ( $settings['loop'] ?? 'yes' ),
 			'duration' => max( 100, min( 3000, (int) ( $settings['duration'] ?? 700 ) ) ),
-			'easing' => (string) ( $settings['easing'] ?? 'smooth' ),
+			'easing' => Motion_Easings::clean( $settings['easing'] ?? 'smooth' ),
 			'fade' => 'yes' === ( $settings['fade_content'] ?? 'yes' ),
 			'focus' => array_key_exists( (string) ( $settings['focus_shows'] ?? 'full' ), self::focus_options() ) ? $settings['focus_shows'] : 'full',
 			'autoplay' => 'yes' === ( $settings['autoplay'] ?? 'yes' ),

@@ -16,7 +16,9 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
   the first three (`new_items_like_defaults()`, see `docs/refraction/editor-panel-speed.md`).
 - Each slide in the list (0.114.0) chooses **Waiting as a next slide, it shows** and **Waiting as a previous slide, it
   shows** (*As set for every slide*, *Its header* or *Its footer*: `slide_next`, `slide_prev`) and **In focus, it
-  shows** (*As set for every slide* or one of the choices of "The slide in focus shows": `slide_focus`). On the site
+  shows** (*As set for every slide* or one of the choices of "The slide in focus shows": `slide_focus`), labelled **In
+  focus on the site, it shows** since 0.116.0, and **In focus in Edit Mode, it shows** (`slide_focus_edit`: *As on the
+  site* or one of those choices; read only in Edit Mode, from the model, so the site's `data-rf-fs` does not carry it). On the site
   they are in `data-rf-fs` as `own: [{next, prev, focus}]`; `''` falls back to the Layout settings.
 - 0.111.0's **When waiting, it shows** (`waiting_part`, both sides) still counts where a slide set it and its next /
   previous choice is "as set for every slide"; the control shows only on those slides ("Set before"), so it can be
@@ -40,7 +42,10 @@ the old one folds into its own slim card on the other side. Check: `scripts/chec
 
 ## Motion
 
-- **Duration**, **Easing** (smooth, snappy, gentle, springy, even), **Fade the content in**.
+- **Duration**, **Easing**, **Fade the content in**. The easings (0.116.0, shared with Showcase Wheel): smooth, snappy,
+  gentle, soft, glide, speed up, sharp, springy, anticipate, bounce at the end, elastic, even. Labels:
+  `modules/pro-widgets/classes/motion-easings.php`; curves: `assets/dev/js/frontend/utils/motion-easings.js` (bounce and
+  elastic are `linear()` curves, springy where a browser lacks `linear()`).
 - **Play by itself** with **Each slide stays** and **Wait while the pointer is on it** (also while focus is inside).
 - **Clicking a waiting slide opens it**. The arrow keys (towards the next card shows it) and a swipe always move it.
   In Edit Mode a click selects what is in the card; when this is off, selecting a widget inside a waiting slide edits it

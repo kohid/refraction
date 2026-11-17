@@ -1,4 +1,5 @@
 import Base from 'refraction-frontend/handlers/base';
+import { easing } from 'refraction-frontend/utils/motion-easings';
 
 /**
  * Showcase Wheel (0.113.0). One slide shows at a time; moving on, the slides cross-fade (CSS on .is-active /
@@ -8,14 +9,10 @@ import Base from 'refraction-frontend/handlers/base';
  *  - slide: the pictures slide across; fade: no picture motion.
  * Thumbnails, arrows, the arrow keys and a swipe pick a slide; off Edit Mode it can play by itself. In Edit Mode it
  * follows the slide picked in the panel and rebuilds when slides come and go.
+ *
+ * The new slide's content can come in its own way (0.116.0): the widgets of its Content container rise, drop, slide,
+ * grow, come into focus, wipe up or swing in, together or one after another.
  */
-const EASINGS = {
-	smooth: 'cubic-bezier(0.65, 0, 0.35, 1)',
-	snappy: 'cubic-bezier(0.2, 0.9, 0.1, 1)',
-	gentle: 'cubic-bezier(0.4, 0, 0.2, 1)',
-	spring: 'cubic-bezier(0.34, 1.4, 0.64, 1)',
-	linear: 'linear',
-};
 
 // How far the wheel turns a picture out of (or into) sight, in degrees.
 const SWING = 62;
@@ -38,7 +35,14 @@ export default class ShowcaseWheel extends Base {
 			transition: [ 'wheel', 'slide', 'fade' ].includes( s.transition ) ? s.transition : 'wheel',
 			fromBelow: 'bottom' === s.swing,
 			duration: Math.max( 100, Math.min( 3000, Number( s.duration ) || 800 ) ),
-			easing: EASINGS[ s.easing ] || EASINGS.smooth,
+			easing: easing( s.easing ),
+			content: [ 'none', 'fade-up', 'fade-down', 'slide', 'zoom', 'blur', 'mask', 'tilt' ].includes( s.content_motion ) ? s.content_motion : 'fade-up',
+			stagger: 'yes' === s.content_stagger,
+			gap: Math.max( 0, Math.min( 1000, Number( s.content_gap ?? 90 ) || 0 ) ),
+			delay: Math.max( 0, Math.min( 3000, Number( s.content_delay ?? 200 ) || 0 ) ),
+			contentDuration: Math.max( 100, Math.min( 3000, Number( s.content_duration ) || 700 ) ),
+			distance: Math.max( 0, Math.min( 300, Number( s.content_distance ?? 40 ) || 0 ) ),
+			contentEasing: easing( s.content_easing || 'glide' ),
 			autoplay: 'yes' === s.autoplay,
 			interval: Math.max( 1000, Number( s.interval ) || 4000 ),
 			pause: 'yes' === s.pause_on_hover,
@@ -99,7 +103,7 @@ export default class ShowcaseWheel extends Base {
 		}
 
 		from.classList.add( 'is-leaving' );
-		this.motion = this.pictureMotion( from, to, step );
+		this.motion = this.pictureMotion( from, to, step ).concat( this.contentMotion( to, step ) );
 		this.leaveTimer = window.setTimeout( () => from.classList.remove( 'is-leaving' ), this.opts.duration );
 	}
 
@@ -155,6 +159,66 @@ export default class ShowcaseWheel extends Base {
 		move( into, to, true );
 
 		return animations;
+	}
+
+	/**
+	 * What comes in with a slide: the widgets of its Content container (one after another), or its parts as one.
+	 * @param {HTMLElement} slot
+	 */
+	contentItems( slot ) {
+		const slide = slot.querySelector( ':scope > .e-con' );
+
+		if ( ! slide ) {
+			return [];
+		}
+
+		const kids = ( el ) => Array.from( ( el.querySelector( ':scope > .e-con-inner' ) || el ).children ).filter( ( c ) => c.classList.contains( 'refraction-element' ) );
+		const parts = kids( slide );
+
+		if ( ! this.opts.stagger ) {
+			return parts;
+		}
+
+		// The widgets of the containers in the slide, in order (a part that is not a container comes in as it is).
+		return parts.flatMap( ( part ) => ( part.classList.contains( 'e-con' ) && kids( part ).length ? kids( part ) : [ part ] ) );
+	}
+
+	/**
+	 * The new slide's content coming in.
+	 * @param {HTMLElement} to
+	 * @param {number}      step
+	 */
+	contentMotion( to, step ) {
+		const o = this.opts;
+
+		if ( 'none' === o.content ) {
+			return [];
+		}
+
+		const d = o.distance;
+		const way = step < 0 ? -1 : 1;
+		const from = {
+			'fade-up': { transform: `translateY(${ d }px)`, opacity: 0 },
+			'fade-down': { transform: `translateY(${ -d }px)`, opacity: 0 },
+			slide: { transform: `translateX(${ way * d * 2 }px)`, opacity: 0 },
+			zoom: { transform: 'scale(0.9)', opacity: 0 },
+			blur: { filter: 'blur(12px)', opacity: 0 },
+			mask: { clipPath: 'inset(0 0 100% 0)', transform: `translateY(${ Math.round( d / 2 ) }px)`, opacity: 0 },
+			tilt: { transform: `translateY(${ d }px) rotate(${ way * 6 }deg)`, transformOrigin: '0 100%', opacity: 0 },
+		}[ o.content ];
+		const rest = { transform: 'none', filter: 'none', clipPath: 'inset(0 0 0% 0)', opacity: 1 };
+		const done = {};
+
+		Object.keys( from ).forEach( ( k ) => {
+			done[ k ] = 'transformOrigin' === k ? from[ k ] : rest[ k ];
+		} );
+
+		return this.contentItems( to ).map( ( el, k ) => el.animate( [ from, done ], {
+			duration: o.contentDuration,
+			easing: o.contentEasing,
+			delay: o.delay + ( o.stagger ? k * o.gap : 0 ),
+			fill: 'backwards',
+		} ) );
 	}
 
 	finishMotion() {
@@ -319,7 +383,7 @@ export default class ShowcaseWheel extends Base {
 	}
 
 	onElementChange( propertyName ) {
-		if ( [ 'transition', 'swing', 'duration', 'easing', 'autoplay', 'interval', 'pause_on_hover' ].includes( propertyName ) ) {
+		if ( [ 'transition', 'swing', 'duration', 'easing', 'autoplay', 'interval', 'pause_on_hover', 'content_motion', 'content_stagger', 'content_gap', 'content_delay', 'content_duration', 'content_distance', 'content_easing' ].includes( propertyName ) ) {
 			this.build();
 		}
 	}
