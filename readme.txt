@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.112.0
+Stable tag: 0.113.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.113.0 =
+* New widget: Showcase Wheel, a product slider. Each slide is a container with its own background (Normal and Hover), overlay and border, holding a Content container on the left or the right; the slide's picture sits on the other side, with an optional arc or blob behind it (per slide, with its colour). Moving on, the pictures swing along a large wheel, the old one out and the new one in, while the slides cross-fade (or slide, or fade). Thumbnails left, in the middle or on the right, with a circle, rounded or square shape behind the current one, its label and a badge (a price), and arrows. Plays by itself, follows thumbnails, arrows, keys and swipes; on phones the picture sits at the top of the slide. Edit Mode shows the same showcase and follows the slide you pick.
 
 = 0.112.0 =
 * Focus Stack: "The slide in focus shows" (everything, its content only, its header and content, or its content and footer); the parts left out grow and shrink away smoothly as slides move. New Style section "Waiting slides layout" with Next and Previous tabs: padding, direction, justify content, align items and gap of the header or footer a waiting slide shows (the widget no longer centres it).

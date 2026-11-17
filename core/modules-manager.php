@@ -136,6 +136,7 @@ class Modules_Manager {
 			'nested-carousel',
 			'timed-slides',
 			'focus-stack',
+			'showcase-wheel',
 			'woocommerce',
 			'form-builder',
 			'events',
