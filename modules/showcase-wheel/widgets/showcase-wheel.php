@@ -6,6 +6,9 @@ use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
+use Refraction\Modules\OrganicFx\Classes\Pure_Organic;
+use Refraction\Modules\OrganicFx\Classes\Shapes_Repository;
+use Refraction\Modules\OrganicFx\Module as OrganicFx;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
 use Refraction\Modules\ProWidgets\Module as ProWidgets;
 use Refraction\Repeater;
@@ -28,14 +31,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * decoration and the picture), then .rf-sw__nav (thumbnails, arrows). Script: assets/js/frontend/handlers.
  */
 class Showcase_Wheel extends Widget_Nested_Base {
-
-	/** Blob outlines for the decoration (viewBox 0 0 200 200), drawn for this widget. */
-	const BLOBS = [
-		'1' => 'M100,14 C138,12 178,40 184,82 C190,124 168,168 124,182 C82,196 34,178 20,136 C6,94 30,40 64,24 C76,18 88,15 100,14 Z',
-		'2' => 'M108,18 C150,22 186,58 182,104 C178,152 140,186 94,184 C50,182 16,150 18,104 C20,62 48,30 82,22 C90,20 99,17 108,18 Z',
-		'3' => 'M96,12 C128,10 170,30 180,70 C192,112 182,150 150,172 C120,192 70,192 42,168 C14,144 10,104 22,70 C34,36 64,14 96,12 Z',
-		'4' => 'M114,20 C148,26 174,52 182,90 C190,130 172,170 132,182 C96,194 52,184 30,154 C8,124 14,78 40,50 C60,28 86,16 114,20 Z',
-	];
 
 	public function get_name() {
 		return 'refraction-showcase-wheel';
@@ -141,6 +136,41 @@ class Showcase_Wheel extends Widget_Nested_Base {
 
 	// ---------------------------------------------------------------- controls
 
+	/** The uploaded shapes (My Shapes) as visual choices, as in Deco Blob. */
+	private static function my_shape_choices(): array {
+		$out = [];
+
+		foreach ( ( new Shapes_Repository() )->all() as $id => $shape ) {
+			$out[ $id ] = [ 'title' => esc_html( $shape['name'] ), 'image' => OrganicFx::thumb( $shape['d'], $shape['vb'], $shape['rule'] ) ];
+		}
+
+		return $out;
+	}
+
+	/**
+	 * A slide's shape: path data, viewBox and fill rule (uploaded, else built-in, else 0.113.0's numbered blobs).
+	 * @param array $slide
+	 */
+	private static function blob_data( array $slide ): array {
+		if ( 'mine' === ( $slide['sw_blob_source'] ?? '' ) ) {
+			$mine = ( new Shapes_Repository() )->all();
+			$id = (string) ( $slide['sw_blob_mine'] ?? '' );
+
+			if ( isset( $mine[ $id ] ) ) {
+				return [ 'd' => $mine[ $id ]['d'], 'vb' => $mine[ $id ]['vb'], 'rule' => $mine[ $id ]['rule'] ];
+			}
+		}
+
+		$id = (string) ( $slide['sw_blob_pick'] ?? '' );
+
+		if ( ! isset( Pure_Organic::SHAPES[ $id ] ) ) {
+			$old = (string) ( $slide['blob_shape'] ?? '' );
+			$id = in_array( $old, [ '1', '2', '3', '4' ], true ) ? 'blob-' . $old : 'blob-1';
+		}
+
+		return [ 'd' => Pure_Organic::path( $id ), 'vb' => '0 0 100 100', 'rule' => 'nonzero' ];
+	}
+
 	private static function choose( array $labels_icons ): array {
 		$options = [];
 
@@ -211,17 +241,73 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'default' => '',
 			'options' => [
 				'' => esc_html__( 'Nothing', 'refraction' ),
-				'arc' => esc_html__( 'An arc', 'refraction' ),
-				'blob' => esc_html__( 'A blob', 'refraction' ),
+				'corner' => esc_html__( 'An arc in a corner (a quarter circle)', 'refraction' ),
+				'blob' => esc_html__( 'A shape (Deco Blob shapes)', 'refraction' ),
+				'arc' => esc_html__( 'A ring behind the picture', 'refraction' ),
 			],
 		] );
 
-		$repeater->add_control( 'blob_shape', [
-			'label' => esc_html__( 'Blob shape', 'refraction' ),
+		$repeater->add_control( 'arc_corner', [
+			'label' => esc_html__( 'Corner', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
-			'default' => '1',
-			'options' => [ '1' => '1', '2' => '2', '3' => '3', '4' => '4' ],
-			'condition' => [ 'deco' => 'blob' ],
+			'default' => 'auto',
+			'options' => [
+				'auto' => esc_html__( 'Top, on the picture\'s side', 'refraction' ),
+				'top-left' => esc_html__( 'Top left', 'refraction' ),
+				'top-right' => esc_html__( 'Top right', 'refraction' ),
+				'bottom-left' => esc_html__( 'Bottom left', 'refraction' ),
+				'bottom-right' => esc_html__( 'Bottom right', 'refraction' ),
+			],
+			'condition' => [ 'deco' => 'corner' ],
+		] );
+
+		// The shape: the Deco Blob and Shape Mask shapes, built in or uploaded (Refraction > My Shapes).
+		$on_blob = [ 'deco' => 'blob' ];
+		$repeater->add_control( 'sw_blob_source', [
+			'label' => esc_html__( 'Shape', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [ 'builtin' => [ 'title' => esc_html__( 'Built-in', 'refraction' ) ], 'mine' => [ 'title' => esc_html__( 'Uploaded', 'refraction' ) ] ],
+			'default' => 'builtin',
+			'toggle' => false,
+			'label_block' => true,
+			'classes' => 'rf-shape-tabs',
+			'condition' => $on_blob,
+		] );
+
+		$repeater->add_control( 'sw_blob_pick', [
+			'label' => esc_html__( 'Built-in shapes', 'refraction' ),
+			'type' => Controls_Manager::VISUAL_CHOICE,
+			'label_block' => true,
+			'columns' => 4,
+			'toggle' => false,
+			'options' => OrganicFx::builtin_choices(),
+			'default' => 'blob-1',
+			'condition' => $on_blob + [ 'sw_blob_source!' => 'mine' ],
+		] );
+
+		$repeater->add_control( 'sw_blob_mine_upload', [
+			'type' => Controls_Manager::BUTTON,
+			'label' => esc_html__( 'Your shapes', 'refraction' ),
+			'text' => esc_html__( 'Upload or manage', 'refraction' ),
+			'event' => 'refraction:organicLibrary:sw_blob_mine',
+			'description' => esc_html__( 'The same shapes as Deco Blob and Shape Mask. Add an SVG (a file or pasted code), rename or delete your shapes.', 'refraction' ),
+			'condition' => $on_blob + [ 'sw_blob_source' => 'mine' ],
+		] );
+
+		$repeater->add_control( 'sw_blob_mine', [
+			'label' => esc_html__( 'Uploaded shapes', 'refraction' ),
+			'type' => Controls_Manager::VISUAL_CHOICE,
+			'label_block' => true,
+			'columns' => 4,
+			'toggle' => false,
+			'options' => self::my_shape_choices(),
+			'condition' => $on_blob + [ 'sw_blob_source' => 'mine' ],
+		] );
+
+		// 0.113.0's own four blobs (1 to 4): the first four built-in blobs.
+		$repeater->add_control( 'blob_shape', [
+			'type' => Controls_Manager::HIDDEN,
+			'default' => '',
 		] );
 
 		$repeater->add_control( 'deco_color', [
@@ -236,9 +322,9 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'type' => Control_Nested_Repeater::CONTROL_TYPE,
 			'fields' => $repeater->get_controls(),
 			'default' => [
-				[ 'slide_title' => esc_html__( 'Saloon', 'refraction' ), 'deco' => 'arc' ],
+				[ 'slide_title' => esc_html__( 'Saloon', 'refraction' ), 'deco' => 'corner' ],
 				[ 'slide_title' => esc_html__( 'Estate', 'refraction' ), 'deco' => 'blob' ],
-				[ 'slide_title' => esc_html__( 'People carrier', 'refraction' ), 'deco' => 'blob', 'blob_shape' => '3' ],
+				[ 'slide_title' => esc_html__( 'People carrier', 'refraction' ), 'deco' => 'blob', 'sw_blob_pick' => 'blob-3' ],
 			],
 			'title_field' => '{{{ slide_title }}}',
 			'button_text' => esc_html__( 'Add Slide', 'refraction' ),
@@ -488,7 +574,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'deco_size', [
-			'label' => esc_html__( 'Arc / blob size', 'refraction' ),
+			'label' => esc_html__( 'Shape / arc size', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ '%' ],
 			'range' => [ '%' => [ 'min' => 40, 'max' => 200 ] ],
@@ -504,6 +590,49 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'range' => [ 'px' => [ 'min' => 4, 'max' => 160 ] ],
 			'default' => [ 'unit' => 'px', 'size' => 70 ],
 			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-arc: {{SIZE}}px;' ],
+		] );
+
+		$this->end_controls_section();
+
+		// ------------------------------------------------ Style: the arc in a corner (a quarter circle)
+		$this->start_controls_section( 'section_style_corner', [
+			'label' => esc_html__( 'Arc in a corner', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'corner_note', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'For the slides whose "Behind the picture" is an arc in a corner; each slide sets its color and corner.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+		] );
+
+		$this->add_responsive_control( 'corner_size', [
+			'label' => esc_html__( 'Size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 40, 'max' => 900 ] ],
+			'default' => [ 'unit' => 'px', 'size' => 260 ],
+			'description' => esc_html__( 'The circle\'s radius.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-corner: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'corner_width', [
+			'label' => esc_html__( 'Thickness', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 2, 'max' => 400 ] ],
+			'default' => [ 'unit' => 'px', 'size' => 46 ],
+			'description' => esc_html__( 'As thick as the size: a filled quarter circle.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-corner-w: {{SIZE}}px;' ],
+		] );
+
+		$this->add_responsive_control( 'corner_distance', [
+			'label' => esc_html__( 'Distance from the corner', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => -200, 'max' => 200 ] ],
+			'description' => esc_html__( 'Moves the circle\'s centre out of the corner (more than zero) or into the slide (less).', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-corner-d: {{SIZE}}px;' ],
 		] );
 
 		$this->end_controls_section();
@@ -541,6 +670,15 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-nav-inset: {{SIZE}}px;' ],
 		] );
 
+		$this->add_responsive_control( 'label_gap', [
+			'label' => esc_html__( 'Space between picture and label', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+			'default' => [ 'unit' => 'px', 'size' => 4 ],
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-label-gap: {{SIZE}}px;' ],
+		] );
+
 		$this->add_control( 'shape_color', [
 			'label' => esc_html__( 'Shape color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
@@ -557,6 +695,47 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'default' => [ 'unit' => 'px', 'size' => 16 ],
 			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-shape-radius: {{SIZE}}px;' ],
 			'condition' => [ 'thumb_shape' => 'rounded' ],
+		] );
+
+		$no_shape = [ 'thumb_shape!' => 'none' ];
+
+		$this->add_responsive_control( 'shape_width', [
+			'label' => esc_html__( 'Shape width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 16, 'max' => 300 ] ],
+			'description' => esc_html__( 'Empty: around the thumbnail and its label (circle: around its picture).', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-shape-w: {{SIZE}}px;' ],
+			'condition' => $no_shape,
+		] );
+
+		$this->add_responsive_control( 'shape_height', [
+			'label' => esc_html__( 'Shape height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 16, 'max' => 300 ] ],
+			'description' => esc_html__( 'Empty: the same way as the width (a circle stays round when only the width is set).', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-shape-h: {{SIZE}}px;' ],
+			'condition' => $no_shape,
+		] );
+
+		$this->add_responsive_control( 'shape_x', [
+			'label' => esc_html__( 'Shape position: across', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => -100, 'max' => 100 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-shape-x: {{SIZE}}px;' ],
+			'condition' => $no_shape,
+		] );
+
+		$this->add_responsive_control( 'shape_y', [
+			'label' => esc_html__( 'Shape position: up and down', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => -100, 'max' => 100 ] ],
+			'description' => esc_html__( 'Moves the shape from its centre; below zero: to the left / up.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-shape-y: {{SIZE}}px;' ],
+			'condition' => $no_shape,
 		] );
 
 		$this->add_control( 'thumb_lift', [
@@ -623,23 +802,40 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		return [ 'image' => $image, 'thumb' => '' !== $thumb ? $thumb : $image, 'alt' => $alt ];
 	}
 
-	/** What sits behind a slide's picture: an arc, a blob, or nothing. */
+	/** What sits behind a slide's picture: an arc, a shape, or nothing (the arc in a corner is drawn on the slide). */
 	private static function deco( array $slide ): string {
 		$deco = (string) ( $slide['deco'] ?? '' );
-		$color = (string) ( $slide['deco_color'] ?? '' );
-		$style = '' !== $color ? ' style="--rf-sw-deco-color:' . esc_attr( $color ) . '"' : '';
+		$style = self::deco_style( $slide );
 
 		if ( 'arc' === $deco ) {
 			return '<span class="rf-sw__deco rf-sw__deco--arc"' . $style . ' aria-hidden="true"></span>';
 		}
 
 		if ( 'blob' === $deco ) {
-			$path = self::BLOBS[ (string) ( $slide['blob_shape'] ?? '1' ) ] ?? self::BLOBS['1'];
+			$shape = self::blob_data( $slide );
 
-			return '<span class="rf-sw__deco rf-sw__deco--blob"' . $style . ' aria-hidden="true"><svg viewBox="0 0 200 200" preserveAspectRatio="none"><path d="' . esc_attr( $path ) . '"/></svg></span>';
+			return '<span class="rf-sw__deco rf-sw__deco--blob"' . $style . ' aria-hidden="true"><svg viewBox="' . esc_attr( $shape['vb'] ) . '" preserveAspectRatio="none"><path fill-rule="' . esc_attr( $shape['rule'] ) . '" d="' . esc_attr( $shape['d'] ) . '"/></svg></span>';
 		}
 
 		return '';
+	}
+
+	private static function deco_style( array $slide ): string {
+		$color = (string) ( $slide['deco_color'] ?? '' );
+
+		return '' !== $color ? ' style="--rf-sw-deco-color:' . esc_attr( $color ) . '"' : '';
+	}
+
+	/** An arc in a corner of the slide: a quarter of a circle (ring) around that corner; at the top on the picture's side unless set. */
+	private static function corner( array $slide, string $side ): string {
+		if ( 'corner' !== ( $slide['deco'] ?? '' ) ) {
+			return '';
+		}
+
+		$corner = (string) ( $slide['arc_corner'] ?? 'auto' );
+		$corner = in_array( $corner, [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ], true ) ? $corner : ( 'left' === $side ? 'top-right' : 'top-left' );
+
+		return '<span class="rf-sw__corner rf-sw__corner--' . $corner . '"' . self::deco_style( $slide ) . ' aria-hidden="true"></span>';
 	}
 
 	private static function arrow( string $which ): string {
@@ -672,6 +868,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 					?>
 					<div class="rf-sw__slot rf-sw__slot--<?php echo esc_attr( $side ); ?><?php echo 0 === $index ? ' is-active' : ''; ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( '%d / %d%s', $index + 1, $total, '' !== trim( (string) ( $slide['slide_title'] ?? '' ) ) ? ' - ' . wp_strip_all_tags( $slide['slide_title'] ) : '' ) ); ?>"<?php echo 0 === $index ? '' : ' aria-hidden="true"'; ?>>
 						<?php $child->print_element(); ?>
+						<?php echo self::corner( $slide, $side ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 						<div class="rf-sw__visual" aria-hidden="<?php echo '' === $pic['alt'] ? 'true' : 'false'; ?>">
 							<?php echo self::deco( $slide ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 							<?php if ( '' !== $pic['image'] ) : ?>
@@ -726,12 +923,31 @@ class Showcase_Wheel extends Widget_Nested_Base {
 	}
 
 	protected function content_template() {
-		$blobs = wp_json_encode( self::BLOBS );
+		$builtin = wp_json_encode( Pure_Organic::paths() );
 		?>
 		<#
 		const slides = settings.slides || [];
 		const total = slides.length;
-		const blobs = <?php echo $blobs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static paths. ?>;
+		const builtin = <?php echo $builtin; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static paths. ?>;
+		const mine = ( window.refractionOrganicEditor && window.refractionOrganicEditor.shapes ) || {};
+		const shape = ( slide ) => {
+			if ( 'mine' === slide.sw_blob_source && mine[ slide.sw_blob_mine ] ) {
+				return mine[ slide.sw_blob_mine ];
+			}
+			let id = builtin[ slide.sw_blob_pick ] ? slide.sw_blob_pick : '';
+			if ( ! id ) {
+				id = [ '1', '2', '3', '4' ].includes( slide.blob_shape ) ? 'blob-' + slide.blob_shape : 'blob-1';
+			}
+			return { d: builtin[ id ], vb: '0 0 100 100', rule: 'nonzero' };
+		};
+		const corner = ( slide ) => {
+			if ( 'corner' !== slide.deco ) {
+				return '';
+			}
+			const at = [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ].includes( slide.arc_corner ) ? slide.arc_corner : ( 'right' === slide.side ? 'top-left' : 'top-right' );
+			const style = slide.deco_color ? ' style="--rf-sw-deco-color:' + _.escape( slide.deco_color ) + '"' : '';
+			return '<span class="rf-sw__corner rf-sw__corner--' + at + '"' + style + ' aria-hidden="true"></span>';
+		};
 		const pic = ( slide ) => {
 			const image = slide.image && slide.image.url ? slide.image.url : '';
 			const thumb = slide.thumb && slide.thumb.url ? slide.thumb.url : image;
@@ -743,7 +959,8 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				return '<span class="rf-sw__deco rf-sw__deco--arc"' + style + ' aria-hidden="true"></span>';
 			}
 			if ( 'blob' === slide.deco ) {
-				return '<span class="rf-sw__deco rf-sw__deco--blob"' + style + ' aria-hidden="true"><svg viewBox="0 0 200 200" preserveAspectRatio="none"><path d="' + ( blobs[ slide.blob_shape ] || blobs[ '1' ] ) + '"/></svg></span>';
+				const sh = shape( slide );
+				return '<span class="rf-sw__deco rf-sw__deco--blob"' + style + ' aria-hidden="true"><svg viewBox="' + _.escape( sh.vb ) + '" preserveAspectRatio="none"><path fill-rule="' + _.escape( sh.rule || 'nonzero' ) + '" d="' + _.escape( sh.d ) + '"/></svg></span>';
 			}
 			return '';
 		};
@@ -754,6 +971,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			<div class="rf-sw__slots">
 				<# _.each( slides, ( slide, index ) => { const p = pic( slide ); #>
 					<div class="rf-sw__slot rf-sw__slot--{{ 'right' === slide.side ? 'right' : 'left' }}{{ 0 === index ? ' is-active' : '' }}" role="group" aria-roledescription="slide" aria-label="{{ index + 1 }} / {{ total }}">
+						{{{ corner( slide ) }}}
 						<div class="rf-sw__visual" aria-hidden="true">
 							{{{ deco( slide ) }}}
 							<# if ( p.image ) { #><span class="rf-sw__picture"><img src="{{ p.image }}" alt=""></span><# } #>

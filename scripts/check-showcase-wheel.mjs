@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Showcase Wheel (0.113.0, SQLite test site, Chromium). On the site: each slide in its own container's background,
- * content and picture on the sides chosen per slide, the arc or blob behind the picture; the thumbnails (shape behind the
+ * content and picture on the sides chosen per slide, the arc in a corner, ring or Deco Blob shape (built-in or uploaded) behind the picture; the thumbnails (shape behind the
  * current one, raised, label and badge; circle, labels under all, position, arrows); the wheel motion half way (both
  * pictures turning) and the slide transition; thumbnails, arrows, keys, playing by itself, reduced motion and a phone.
  * In Edit Mode: the same showcase, the slide picked in the panel, a per-slide side changed at once, Add Slide.
@@ -153,6 +153,16 @@ async function main() {
 		const pics = pictures();
 		const main1 = page( 'Showcase wheel', wheel( pics ) );
 		const variant = page( 'Showcase wheel circle right', wheel( pics, { thumb_shape: 'circle', nav_position: 'right', labels: 'all', arrows: 'both', transition: 'slide' } ) );
+		// 0.115.0: an arc in a corner (a quarter circle), the Deco Blob shapes (built-in and uploaded), thumbnail spacing and shape box.
+		wp( [ 'option', 'update', 'refraction_my_shapes', JSON.stringify( { 'my-kite': { name: 'Kite', d: 'M5 0L10 5L5 10L0 5Z', vb: '0 0 10 10', rule: 'nonzero' } } ), '--format=json' ] );
+		const blob3 = wp( [ 'eval', 'echo \\Refraction\\Modules\\OrganicFx\\Classes\\Pure_Organic::path( "blob-3" );' ] ).trim();
+		const decorated = wheel( pics, { label_gap: { unit: 'px', size: 20 }, shape_width: { unit: 'px', size: 120 }, shape_height: { unit: 'px', size: 90 }, shape_x: { unit: 'px', size: 10 }, shape_y: { unit: 'px', size: -6 } } );
+		decorated[ 0 ].elements[ 0 ].settings.corner_size = { unit: 'px', size: 200 };
+		decorated[ 0 ].elements[ 0 ].settings.corner_width = { unit: 'px', size: 40 };
+		Object.assign( decorated[ 0 ].elements[ 0 ].settings.slides[ 0 ], { deco: 'corner', arc_corner: 'auto', deco_color: '#FF0000' } );
+		Object.assign( decorated[ 0 ].elements[ 0 ].settings.slides[ 1 ], { deco: 'blob', sw_blob_source: 'builtin', sw_blob_pick: 'blob-3' } );
+		Object.assign( decorated[ 0 ].elements[ 0 ].settings.slides[ 2 ], { deco: 'blob', sw_blob_source: 'mine', sw_blob_mine: 'my-kite' } );
+		const decoPage = page( 'Showcase wheel corner arc and shapes', decorated );
 		const auto = page( 'Showcase wheel auto', wheel( pics, { autoplay: 'yes', interval: 1200, duration: 300, pause_on_hover: '' } ) );
 
 		const ctx = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
@@ -248,6 +258,39 @@ async function main() {
 			};
 		} );
 		check( 'options', 'thumbnails on the right, a circle behind the current one, labels under every thumbnail, both arrows', 'flex-end' === v.justify && v.nearRight && '50%' === v.circle && v.labels && 2 === v.arrows, JSON.stringify( v ) );
+		// ------------------------------------------------------------ arc in a corner, shapes, thumbnail spacing and shape box
+		await p.goto( decoPage.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-sw.is-ready' );
+		const deco = await p.evaluate( () => {
+			const slots = [ ...document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' ) ];
+			const arc = slots[ 0 ].querySelector( '.rf-sw__corner' );
+			const r = arc && arc.getBoundingClientRect();
+			const sr = slots[ 0 ].getBoundingClientRect();
+			const ring = arc && getComputedStyle( arc, '::before' );
+			const path = ( k ) => slots[ k ].querySelector( '.rf-sw__deco--blob path' );
+			const thumb = document.querySelector( '.rf-sw__thumb.is-active' );
+			const before = getComputedStyle( thumb, '::before' );
+			return {
+				corner: r ? ( Math.abs( r.right - sr.right ) < 2 && Math.abs( r.top - sr.top ) < 2 ? 'top right' : 'elsewhere' ) : '',
+				box: r ? Math.round( r.width ) + 'x' + Math.round( r.height ) : '',
+				ring: ring ? ring.borderTopWidth + ' ' + ring.borderTopColor + ' ' + ring.borderTopLeftRadius + ' ' + Math.round( parseFloat( ring.width ) ) : '',
+				builtin: path( 1 ) ? path( 1 ).getAttribute( 'd' ) : '',
+				mine: path( 2 ) ? path( 2 ).getAttribute( 'd' ) : '',
+				mineBox: path( 2 ) ? path( 2 ).closest( 'svg' ).getAttribute( 'viewBox' ) : '',
+				gap: getComputedStyle( thumb ).rowGap,
+				shapeW: before.width,
+				shapeH: before.height,
+				shapeMove: before.transform,
+			};
+		} );
+		check( 'corner arc', 'a slide set to "An arc in a corner" shows a quarter of a 200px circle (a 40px red ring centred on the corner) in the top corner on its picture\'s side', 'top right' === deco.corner && '200x200' === deco.box && '40px rgb(255, 0, 0) 50% 400' === deco.ring, JSON.stringify( deco ) );
+		check( 'shapes', 'the shape behind the picture is a Deco Blob shape: a built-in one (Blob: bean) and an uploaded one (My Shapes, its own viewBox)', deco.builtin === blob3 && 'M5 0L10 5L5 10L0 5Z' === deco.mine && '0 0 10 10' === deco.mineBox, JSON.stringify( { builtin: deco.builtin.slice( 0, 40 ), blob3: blob3.slice( 0, 40 ), mine: deco.mine, box: deco.mineBox } ) );
+		// A matrix moving by (-50% of 120 + 10, -50% of 90 - 6) = (-50, -51).
+		check( 'thumbs', 'thumbnail settings: 20px between picture and label; the shape 120 x 90, moved 10px across and 6px up from its centre', '20px' === deco.gap && '120px' === deco.shapeW && '90px' === deco.shapeH && /matrix\(1, 0, 0, 1, -50, -51\)/.test( deco.shapeMove ), JSON.stringify( deco ) );
+		await shot( 'corner-arc-shapes.png' );
+		await p.goto( variant.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-sw.is-ready' );
+
 		await p.click( '.rf-sw__next' );
 		await p.waitForTimeout( 200 );
 		const slideMid = await p.evaluate( () => getComputedStyle( document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' )[ 1 ].querySelector( '.rf-sw__picture' ) ).transform );
@@ -331,6 +374,41 @@ async function main() {
 		await p.waitForTimeout( 1500 );
 		ed = await edState();
 		check( 'editor', 'setting slide 2\'s content to the left in the slide list moves its picture to the right at once', 1 === ed.active && 'right' === ed.pictureSide && ed.filled, JSON.stringify( ed ) );
+		// The new settings show in Edit Mode at once.
+		await p.evaluate( ( c ) => {
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 1 ], settings: { deco: 'corner', arc_corner: 'bottom-left' } } );
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 2 ], settings: { deco: 'blob', sw_blob_source: 'mine', sw_blob_mine: 'my-kite' } } );
+			$e.run( 'document/elements/settings', { container: c, settings: { label_gap: { unit: 'px', size: 14 }, shape_width: { unit: 'px', size: 100 } } } );
+		}, w );
+		await p.waitForTimeout( 1800 );
+		const edDeco = await frame.evaluate( () => {
+			const slots = [ ...document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' ) ];
+			const arc = slots[ 1 ].querySelector( '.rf-sw__corner' );
+			const path = slots[ 2 ].querySelector( '.rf-sw__deco--blob path' );
+			const thumb = document.querySelector( '.rf-sw__thumb.is-active' );
+			return {
+				corner: arc ? [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ].find( ( c ) => arc.classList.contains( 'rf-sw__corner--' + c ) ) : '',
+				mine: path ? path.getAttribute( 'd' ) : '',
+				gap: getComputedStyle( thumb ).rowGap,
+				shapeW: getComputedStyle( thumb, '::before' ).width,
+			};
+		} );
+		check( 'editor', 'in Edit Mode a slide\'s arc in a corner (bottom left), an uploaded shape, the label spacing and the shape width show at once', 'bottom-left' === edDeco.corner && 'M5 0L10 5L5 10L0 5Z' === edDeco.mine && '14px' === edDeco.gap && '100px' === edDeco.shapeW, JSON.stringify( edDeco ) );
+		const panel = await p.evaluate( ( c ) => {
+			$e.run( 'panel/editor/open', { model: c.model, view: c.view } );
+			return new Promise( ( done ) => setTimeout( () => {
+				const rows = document.querySelectorAll( '.refraction-control-slides .refraction-repeater-row-item-title' );
+				if ( rows[ 2 ] ) {
+					rows[ 2 ].click();
+				}
+				setTimeout( () => done( {
+					tabs: [ ...document.querySelectorAll( '.refraction-control-sw_blob_source label' ) ].map( ( l ) => l.textContent.trim() ).join( '/' ),
+					upload: !! document.querySelector( '.refraction-control-sw_blob_mine_upload button' ),
+					tiles: document.querySelectorAll( '.refraction-control-sw_blob_mine .refraction-visual-choice-option, .refraction-control-sw_blob_mine input[type=radio]' ).length,
+				} ), 700 );
+			}, 900 ) );
+		}, w );
+		check( 'editor', 'each slide\'s shape has the Deco Blob pickers: Built-in / Uploaded, "Upload or manage", and the uploaded shapes as tiles', /Built-in/.test( panel.tabs ) && /Uploaded/.test( panel.tabs ) && panel.upload && panel.tiles >= 1, JSON.stringify( panel ) );
 		const added = await p.evaluate( async ( c ) => {
 			$e.run( 'document/repeater/insert', { container: c, name: 'slides', model: { slide_title: 'Minibus' } } );
 			await new Promise( ( done ) => setTimeout( done, 1500 ) );

@@ -14,6 +14,10 @@
 	--rf-sw-shape: rgba(255, 255, 255, 0.85);
 	--rf-sw-shape-radius: 16px;
 	--rf-sw-lift: 10px;
+	--rf-sw-label-gap: 4px;
+	--rf-sw-corner: 260px;
+	--rf-sw-corner-w: 46px;
+	--rf-sw-corner-d: 0px;
 	--rf-sw-phone-picture: 230px;
 	--rf-sw-duration: 800ms;
 	--rf-sw-easing: cubic-bezier(0.65, 0, 0.35, 1);
@@ -161,6 +165,78 @@
 	}
 }
 
+// An arc in a corner of the slide: a ring centred on that corner, so a quarter of it shows (the box clips the rest).
+// Distance moves the centre out of the corner (or into the slide).
+.rf-sw__corner {
+	--rf-sw-cx: 1;
+	--rf-sw-cy: -1;
+
+	position: absolute;
+	z-index: 1;
+	width: var(--rf-sw-corner);
+	height: var(--rf-sw-corner);
+	overflow: hidden;
+	pointer-events: none;
+
+	&::before {
+		content: "";
+		position: absolute;
+		box-sizing: border-box;
+		width: 200%;
+		height: 200%;
+		border: var(--rf-sw-corner-w) solid var(--rf-sw-deco-color);
+		border-radius: 50%;
+		transform: translate(calc(var(--rf-sw-cx) * var(--rf-sw-corner-d)), calc(var(--rf-sw-cy) * var(--rf-sw-corner-d)));
+	}
+
+	&--top-right {
+		top: 0;
+		right: 0;
+
+		&::before {
+			top: -100%;
+			left: 0;
+		}
+	}
+
+	&--top-left {
+		--rf-sw-cx: -1;
+
+		top: 0;
+		left: 0;
+
+		&::before {
+			top: -100%;
+			left: -100%;
+		}
+	}
+
+	&--bottom-right {
+		--rf-sw-cy: 1;
+
+		right: 0;
+		bottom: 0;
+
+		&::before {
+			top: 0;
+			left: 0;
+		}
+	}
+
+	&--bottom-left {
+		--rf-sw-cx: -1;
+		--rf-sw-cy: 1;
+
+		bottom: 0;
+		left: 0;
+
+		&::before {
+			top: 0;
+			left: -100%;
+		}
+	}
+}
+
 // ---------------------------------------------------------------- thumbnails and arrows
 .rf-sw__nav {
 	position: absolute;
@@ -189,7 +265,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 4px;
+	gap: var(--rf-sw-label-gap);
 	margin: 0;
 	padding: 6px 8px;
 	border: 0;
@@ -240,15 +316,20 @@
 }
 
 // The shape behind the current thumbnail: rounded or square around it and its label; a circle around its picture.
+// Its width, height and position from its centre can be set (empty: it fits around them).
 .rf-sw-shape-rounded .rf-sw__thumb.is-active::before,
 .rf-sw-shape-square .rf-sw__thumb.is-active::before,
 .rf-sw-shape-circle .rf-sw__thumb.is-active .rf-sw__thumb-img::before {
 	content: "";
 	position: absolute;
-	inset: 0;
+	top: 50%;
+	left: 50%;
 	z-index: 0;
+	width: var(--rf-sw-shape-w, 100%);
+	height: var(--rf-sw-shape-h, 100%);
 	background: var(--rf-sw-shape);
 	box-shadow: 0 6px 18px rgba(17, 24, 39, 0.08);
+	transform: translate(calc(-50% + var(--rf-sw-shape-x, 0px)), calc(-50% + var(--rf-sw-shape-y, 0px)));
 }
 
 .rf-sw-shape-rounded .rf-sw__thumb.is-active::before {
@@ -256,7 +337,8 @@
 }
 
 .rf-sw-shape-circle .rf-sw__thumb.is-active .rf-sw__thumb-img::before {
-	inset: -6px;
+	width: var(--rf-sw-shape-w, calc(100% + 12px));
+	height: var(--rf-sw-shape-h, var(--rf-sw-shape-w, calc(100% + 12px)));
 	border-radius: 50%;
 }
 
