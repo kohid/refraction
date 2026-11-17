@@ -9,7 +9,8 @@ import { __, sprintf } from '@wordpress/i18n';
  */
 
 const cfg = window.refractionOrganicEditor || { shapes: {}, textures: {} };
-const SHAPE_CONTROLS = [ 'rf_mask_mine', 'rf_blob_mine' ];
+// The uploaded-shape pickers (Showcase Wheel: one per slide, inside its Slides list).
+const SHAPE_CONTROLS = [ 'rf_mask_mine', 'rf_blob_mine', 'sw_blob_mine' ];
 const SHAPE_SELECTS = [ 'rf_blob_line_shape', 'rf_fs_shapes' ];
 const TEXTURE_CONTROLS = [ 'rf_grain_texture' ];
 const BUILT_IN_TEXTURES = [ 'film', 'speckle', 'chalk', 'brush', 'fibre', 'halftone', 'dispersion', 'strokes', 'splatter', 'scratches' ];
@@ -63,6 +64,13 @@ function controlDefs( names ) {
 	const visit = ( controls ) => {
 		if ( controls && 'object' === typeof controls ) {
 			names.forEach( ( n ) => controls[ n ] && found.push( controls[ n ] ) );
+			// A list's own fields (Showcase Wheel: each slide's shape).
+			Object.values( controls ).forEach( ( c ) => {
+				if ( c && c.fields && 'object' === typeof c.fields ) {
+					const fields = Array.isArray( c.fields ) ? Object.fromEntries( c.fields.filter( ( f ) => f && f.name ).map( ( f ) => [ f.name, f ] ) ) : c.fields;
+					names.forEach( ( n ) => fields[ n ] && found.push( fields[ n ] ) );
+				}
+			} );
 		}
 	};
 	const r = window.refraction;
@@ -123,16 +131,22 @@ function refreshOptions() {
 	// The open panel: give its controls the new lists and draw them again.
 	try {
 		const page = window.refraction.getPanelView().getCurrentPageView();
+		const redraw = ( view ) => {
+			( view && view.children && view.children.toArray ? view.children.toArray() : [] ).forEach( ( child ) => {
+				const name = child.model && child.model.get && child.model.get( 'name' );
+				const def = name && controlDefs( [ name ] )[ 0 ];
 
-		( page.children ? page.children.toArray() : [] ).forEach( ( child ) => {
-			const name = child.model && child.model.get( 'name' );
-			const def = name && controlDefs( [ name ] )[ 0 ];
+				if ( def && [ ...SHAPE_CONTROLS, ...SHAPE_SELECTS, ...TEXTURE_CONTROLS ].includes( name ) ) {
+					child.model.set( 'options', def.options );
+					child.render();
+				} else {
+					// The rows of a list and their controls.
+					redraw( child );
+				}
+			} );
+		};
 
-			if ( def && [ ...SHAPE_CONTROLS, ...SHAPE_SELECTS, ...TEXTURE_CONTROLS ].includes( name ) ) {
-				child.model.set( 'options', def.options );
-				child.render();
-			}
-		} );
+		redraw( page );
 	} catch ( e ) {}
 
 	// The preview: mask classes and paths of the shapes, urls of the textures.
@@ -403,7 +417,7 @@ function open( kind, container, target ) {
 				state.fresh = new Set( added );
 				refreshOptions();
 
-				if ( shapes && ( 'rf_mask_mine' === target || 'rf_blob_mine' === target ) ) {
+				if ( shapes && SHAPE_CONTROLS.includes( target ) ) {
 					apply( container, { [ target.replace( /_mine$/, '' ) + '_source' ]: 'mine', [ target ]: added[ 0 ] } );
 				} else if ( ! shapes && 'rf_grain_texture' === target ) {
 					apply( container, { rf_grain_texture: added[ 0 ] } );
@@ -486,7 +500,7 @@ function open( kind, container, target ) {
 			}
 
 			const use = el( 'button', { type: 'button', text: __( 'Use', 'refraction' ), onclick: () => {
-				if ( shapes && ( 'rf_mask_mine' === target || 'rf_blob_mine' === target ) ) {
+				if ( shapes && SHAPE_CONTROLS.includes( target ) ) {
 					apply( container, { [ target.replace( /_mine$/, '' ) + '_source' ]: 'mine', [ target ]: id } );
 				} else if ( ! shapes ) {
 					apply( container, { rf_grain_texture: id } );

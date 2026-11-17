@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.114.0
+Stable tag: 0.115.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.115.0 =
+* Showcase Wheel: "Behind the picture" can be a shape from Deco Blob and Shape Mask, built in or uploaded (the same Built-in / Uploaded pickers and "Upload or manage" library, per slide), or an arc in a corner: a quarter of a circle around a corner of the slide (its color and corner per slide; size, thickness and distance from the corner under Style > Arc in a corner). The large ring behind the picture stays as an option.
+* Showcase Wheel thumbnails: the space between the picture and its label, and the width, height and position of the shape behind the current thumbnail.
 
 = 0.114.0 =
 * Focus Stack: every slide in the list now chooses what it shows waiting as a next slide, waiting as a previous slide, and in focus ("As set for every slide" uses the Layout settings, which now apply to every slide). A slide that used 0.111's "When waiting, it shows" keeps it, shown on that slide so it can be cleared.

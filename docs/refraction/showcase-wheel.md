@@ -19,8 +19,17 @@ the new one turns in from above, both rotating, while the text and background cr
   text and a button); **Add Slide** gives the new slide its Content container and background the same way.
 - In the slide list, each slide has: **Label** (under its thumbnail, and for screen readers), **Badge** (a small tag
   such as a price), **Picture** and its description, **Thumbnail** (empty: the picture), **Content on the** left (picture
-  on the right) or right (picture on the left), and **Behind the picture**: nothing, an **arc** (part of a large ring
-  off to the side) or a **blob** (four outlines), with its colour.
+  on the right) or right (picture on the left), and **Behind the picture**: nothing, an **arc in a corner**, a
+  **shape** or a **ring behind the picture** (`arc`: part of a large ring off to the side).
+- **Shape** (0.115.0): the Deco Blob / Shape Mask shapes, with the same pickers: *Built-in* (`sw_blob_pick`, the
+  `Pure_Organic` shapes, viewBox 0 0 100 100) or *Uploaded* (`sw_blob_mine`, My Shapes with their own viewBox and fill
+  rule) and **Upload or manage**, which opens the Organic FX library (`refraction:organicLibrary:sw_blob_mine`; the
+  library fills the list's fields and the open slide rows too). 0.113.0's numbered blobs (`blob_shape` 1 to 4) show as
+  the first four built-in blobs. Its colour: **Its color**.
+- **Arc in a corner** (0.115.0, `corner`): a quarter of a circle: a ring centred on a corner of the slide, the rest
+  clipped (`.rf-sw__corner--top-right` etc.). Per slide its **Corner** (`arc_corner`: top on the picture's side, or any
+  of the four) and **Its color**; Style > **Arc in a corner**: size (the radius), thickness (as thick as the size: a
+  filled quarter circle) and distance from the corner (moves the centre out of the corner or into the slide).
 
 ## Settings
 
@@ -31,8 +40,10 @@ the new one turns in from above, both rotating, while the text and background cr
   above or below; duration and easing; **Turn the picture slowly** (for round pictures); **Play by itself**, each slide
   stays, wait while the pointer is on it.
 - **Style**: the box's corners, border and shadow; the picture's width, height at most, distance from the edge and
-  shadow; the arc / blob size and the arc's thickness; the thumbnails' size, spacing, distance from the edges, shape
-  colour and corners, how far the current one rises, label and badge colours and typography, arrow colours.
+  shadow; the shape / arc size and the arc's thickness; the arc in a corner; the thumbnails' size, spacing, distance from the
+  edges, **space between picture and label**, shape colour and corners, **shape width, height and position** (from its
+  centre; empty: fitted around the thumbnail and its label, or its picture for the circle; a circle with only a width
+  stays round), how far the current one rises, label and badge colours and typography, arrow colours.
 
 ## How it works
 

@@ -159,7 +159,7 @@ class Module extends BaseModule {
 	public function editor_styles() {
 		$css = '.rf-shape-tabs .refraction-choices{display:flex}.rf-shape-tabs .refraction-choices label{flex:1;width:auto;padding:6px 8px;font-size:12px;line-height:1.4}'
 			. '.rf-shape-tabs .refraction-choices label i{display:none}.rf-shape-tabs .refraction-choices label .refraction-screen-only{position:static;width:auto;height:auto;clip:auto;margin:0;overflow:visible}'
-			. '.refraction-control-rf_mask .refraction-visual-choice-label img,.refraction-control-rf_mask_mine .refraction-visual-choice-label img,.refraction-control-rf_blob_shape .refraction-visual-choice-label img,.refraction-control-rf_blob_mine .refraction-visual-choice-label img{padding:6px;aspect-ratio:1;object-fit:contain}';
+			. '.refraction-control-rf_mask .refraction-visual-choice-label img,.refraction-control-rf_mask_mine .refraction-visual-choice-label img,.refraction-control-rf_blob_shape .refraction-visual-choice-label img,.refraction-control-rf_blob_mine .refraction-visual-choice-label img,.refraction-control-sw_blob_pick .refraction-visual-choice-label img,.refraction-control-sw_blob_mine .refraction-visual-choice-label img{padding:6px;aspect-ratio:1;object-fit:contain}';
 		wp_register_style( 'refraction-organic-fx-editor', false, [], REFRACTION_VERSION );
 		wp_enqueue_style( 'refraction-organic-fx-editor' );
 		wp_add_inline_style( 'refraction-organic-fx-editor', $css );
@@ -197,14 +197,14 @@ class Module extends BaseModule {
 	}
 
 	/** A grey thumbnail of a shape for the visual pickers. */
-	private static function thumb( string $d, string $vb = '0 0 100 100', string $rule = 'nonzero' ): string {
+	public static function thumb( string $d, string $vb = '0 0 100 100', string $rule = 'nonzero' ): string {
 		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' . $vb . '" preserveAspectRatio="xMidYMid meet"><path fill="#A4AFB7" fill-rule="' . $rule . '" d="' . $d . '"/></svg>';
 
 		return 'data:image/svg+xml,' . rawurlencode( $svg );
 	}
 
 	/** Built-in shapes as visual choices. */
-	private static function builtin_choices(): array {
+	public static function builtin_choices(): array {
 		$out = [];
 
 		foreach ( Pure_Organic::paths() as $id => $d ) {
